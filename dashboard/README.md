@@ -102,11 +102,14 @@ The dashboard connects to your existing PostgreSQL database. Update the connecti
 ```python
 def get_db_connection():
     return psycopg2.connect(
-        host="localhost",
-        database="ai_agency",
-        user="danieljacobs"
+        host=os.getenv("DB_HOST", "localhost"),
+        database=os.getenv("DB_NAME", "ai_agency"),
+        user=os.getenv("DB_USER", "danieljacobs"),
+        password=os.getenv("DB_PASSWORD", "")
     )
 ```
+
+**Note**: The dashboard now supports environment variables for secure configuration. Update `start_dashboard.sh` to use environment variables instead of hardcoded credentials.
 
 ### Custom Metadata Extraction
 You can customize metadata extraction by modifying the `extract_enhanced_metadata()` function in `dashboard.py`.
@@ -146,12 +149,14 @@ dashboard/
 
 ## 🔄 Integration with Your RAG System
 
-The dashboard integrates seamlessly with your existing RAG system:
+The dashboard integrates seamlessly with your existing DSPy RAG system:
 
-- **Database Integration**: Reads from your existing `documents` and `document_chunks` tables
-- **Metadata Enhancement**: Automatically enhances existing documents with new metadata
+- **Database Integration**: Reads from your existing `documents` and `document_chunks` tables in `dspy-rag-system/config/database/schema.sql`
+- **Metadata Enhancement**: Automatically enhances existing documents with new metadata using `dspy-rag-system/src/utils/metadata_extractor.py` patterns
+- **AI Integration**: Ready for integration with Mistral 7B Instruct for intelligent metadata extraction
 - **Real-time Updates**: Reflects changes from your watch folder and processing pipeline
 - **Query Logging**: Displays recent RAG queries (if `query_logs` table exists)
+- **Testing Integration**: Follows patterns from `dspy-rag-system/tests/` for comprehensive testing
 
 ## 🚨 Troubleshooting
 
@@ -179,11 +184,11 @@ The dashboard runs in debug mode by default. Check the console output for detail
 
 ## 🔮 Future Enhancements
 
-- **Metadata Editing**: In-place metadata editing interface
-- **Bulk Operations**: Batch metadata updates
-- **Export Features**: Export document lists and metadata
-- **Advanced Analytics**: Processing time analytics and trends
-- **User Management**: Multi-user support with permissions
+- **AI-Powered Metadata**: Integration with DSPy RAG system for intelligent metadata extraction
+- **Security Improvements**: Environment variable configuration and input validation
+- **Performance Optimization**: Database indexing and query optimization
+- **Testing Framework**: Comprehensive test suite following `dspy-rag-system/tests/` patterns
+- **Error Handling**: Enhanced error recovery and graceful degradation
 - **Real-time Updates**: WebSocket-based live updates
 
 ## 📞 Support
