@@ -119,7 +119,7 @@ analysis = analyze_query_complexity("What are the differences and comparisons?")
 - **Total Chunks**: 65+ stored in PostgreSQL
 - **File Types**: .txt, .md, .pdf, .csv
 - **Database**: PostgreSQL with pgvector
-- **LLM**: Mistral-7B via Ollama
+- **LLM**: Mistral 7B Instruct via Ollama
 - **Framework**: DSPy with enhanced pre-RAG and post-RAG logic
 
 ### **Enhanced Capabilities**

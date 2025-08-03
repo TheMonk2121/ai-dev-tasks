@@ -2,7 +2,7 @@
 
 ## 🎯 What This System Does
 
-This is a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B + Yi-Coder). It provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+This is a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). It provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
 ---
 
@@ -18,8 +18,8 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 │  └── Process Management (03_process-task-list.md)            │
 ├─────────────────────────────────────────────────────────────────┤
 │  🤖 AI Execution Layer                                      │
-│  ├── Mistral 7B (Planning & Reasoning)                      │
-│  ├── Yi-Coder (Code Implementation)                         │
+│  ├── Mistral 7B Instruct (Planning & Reasoning)             │
+│  ├── Yi-Coder-9B-Chat-Q6_K (Code Implementation)          │
 │  └── State Management (.ai_state.json)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │  🔧 Core Systems                                            │
@@ -51,7 +51,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 ### Phase 2: AI Execution
 1. **State Loading** → AI loads context from `.ai_state.json`
 2. **Task Selection** → AI picks next executable task
-3. **Implementation** → Yi-Coder writes code, Mistral 7B plans
+3. **Implementation** → Yi-Coder-9B-Chat-Q6_K writes code, Mistral 7B Instruct plans
 4. **Validation** → AI runs tests and validates completion
 5. **State Update** → Progress saved, next task selected
 
@@ -140,7 +140,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 
 ### 2. AI Execution Layer
 
-#### **Mistral 7B Agent**
+#### **Mistral 7B Instruct Agent**
 - **Role**: Planning, reasoning, and human interaction
 - **Responsibilities**:
   - Parse PRDs and generate tasks
@@ -150,7 +150,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
   - **Parse backlog scoring** for prioritization decisions
   - **Use score metadata** to inform task selection
 
-#### **Yi-Coder Agent**
+#### **Yi-Coder-9B-Chat-Q6_K Agent**
 - **Role**: Code implementation and technical execution
 - **Responsibilities**:
   - Write and test code
@@ -632,7 +632,7 @@ sudo supervisorctl update
 
 ### For System Administrators
 1. **Setup Infrastructure**: PostgreSQL, Python environment
-2. **Configure AI Agents**: Mistral 7B, Yi-Coder setup
+2. **Configure AI Agents**: Mistral 7B Instruct, Yi-Coder-9B-Chat-Q6_K setup
 3. **Deploy Dashboard**: Monitor system performance
 4. **Setup Notifications**: Configure alert systems
 

@@ -1,6 +1,6 @@
 # Process Task List - AI-Optimized Execution
 
-Guidelines for executing task lists generated from PRDs using AI agents (Mistral 7B + Yi-Coder).
+Guidelines for executing task lists generated from PRDs using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K).
 
 ---
 
@@ -26,8 +26,8 @@ Guidelines for executing task lists generated from PRDs using AI agents (Mistral
 
 3. **Execute Task**
    - Follow steps in "Do:" section
-   - Use Yi-Coder for code implementation
-   - Use Mistral 7B for reasoning and planning
+   - Use Yi-Coder-9B-Chat-Q6_K for code implementation
+   - Use Mistral 7B Instruct for reasoning and planning
 
 4. **Validate Completion**
    - Run all "Done when:" criteria

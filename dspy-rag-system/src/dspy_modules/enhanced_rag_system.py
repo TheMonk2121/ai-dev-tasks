@@ -281,10 +281,10 @@ class ReActReasoner(Module):
 # ---------- Enhanced RAG System ----------
 
 class MistralLLM(dspy.Module):
-    """DSPy module for Mistral via Ollama with connection pooling and retry logic"""
+    """DSPy module for Mistral 7B Instruct via Ollama with connection pooling and retry logic"""
     
     def __init__(self, base_url: str = "http://localhost:11434", 
-                 model: str = "mistral", timeout: int = 30):
+                 model: str = "mistral:7b-instruct", timeout: int = 30):
         super().__init__()
         self.base_url = base_url
         self.model = model
@@ -301,7 +301,7 @@ class MistralLLM(dspy.Module):
         self._session = sess
     
     def forward(self, prompt: str) -> str:
-        """Generate response using Mistral via Ollama"""
+        """Generate response using Mistral 7B Instruct via Ollama"""
         
         try:
             response = self._session.post(

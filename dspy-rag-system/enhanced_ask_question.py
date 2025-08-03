@@ -133,7 +133,7 @@ def main():
             print(f"✅ Connected to RAG system")
             print(f"📊 Knowledge base: {stats.get('total_chunks', 0)} chunks")
         
-        print("✅ Connected to Mistral via Ollama")
+        print("✅ Connected to Mistral 7B Instruct via Ollama")
         print("💡 Ask questions about your documents!")
         print("   Type 'help' for available commands")
         print("   Type 'quit' to exit")

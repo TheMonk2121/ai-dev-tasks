@@ -22,7 +22,7 @@ Your DSPy RAG system is now complete with full DSPy → RAG → Mistral integrat
 
 ### **✅ DSPy Integration (NEW!)**
 - **DSPy RAGSystem** - Complete DSPy module for RAG operations
-- **Mistral Integration** - Connected to your Ollama/Mistral setup
+- **Mistral 7B Instruct Integration** - Connected to your Ollama/Mistral setup
 - **Query Interface** - Interactive question asking via `ask_question.py`
 - **Full Pipeline** - Complete DSPy → RAG → Mistral flow
 
@@ -48,6 +48,7 @@ Your DSPy RAG system is now complete with full DSPy → RAG → Mistral integrat
 ### **2. Mistral-7B - Your AI Brain**
 - **What it is**: A large language model (think of it as a very smart AI that can understand and generate text)
 - **How you're running it**: Through Ollama (a tool that lets you run AI models on your own computer)
+- **Model**: Mistral 7B Instruct
 - **What it does**: Takes your questions and generates intelligent answers
 
 ### **3. DSPy - Your AI's Programming Framework**
@@ -252,7 +253,7 @@ You → ask_question.py → DSPy RAGSystem → VectorStore → PostgreSQL → Mi
 
 ### **DSPy Integration Stats**
 - **RAGSystem Module**: Complete DSPy module
-- **Mistral Connection**: Connected to Ollama
+- **Mistral 7B Instruct Connection**: Connected to Ollama
 - **Query Interface**: Interactive question asking
 - **Full Pipeline**: DSPy → RAG → Mistral working
 

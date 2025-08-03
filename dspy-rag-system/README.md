@@ -67,6 +67,7 @@ python3 src/dashboard.py
 ### **2. Mistral-7B - Your AI Brain**
 - **What it is**: A large language model (think of it as a very smart AI that can understand and generate text)
 - **How you're running it**: Through Ollama (a tool that lets you run AI models on your own computer)
+- **Model**: Mistral 7B Instruct
 - **What it does**: Takes your questions and generates intelligent answers
 
 ### **3. DSPy - Your AI's Programming Framework**
@@ -222,7 +223,7 @@ You've built a **programmable AI research assistant** that can:
 - macOS (tested on 24.4.0)
 - Python 3.9+
 - PostgreSQL with pgvector extension
-- Ollama with Mistral-7B model
+- Ollama with Mistral 7B Instruct model
 
 ## **🚀 Quick Commands**
 

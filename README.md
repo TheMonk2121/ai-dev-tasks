@@ -78,7 +78,7 @@ You'll now have a well-structured task list optimized for AI execution, with cle
 
 ### 4️⃣ Execute Tasks with AI-Optimized Processing
 
-To ensure methodical progress and allow for verification, we'll use `03_process-task-list.md`. This system is designed for AI agents (Mistral 7B + Yi-Coder) with strategic human oversight.
+To ensure methodical progress and allow for verification, we'll use `03_process-task-list.md`. This system is designed for AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K) with strategic human oversight.
 
 1. Create or ensure you have the `03_process-task-list.md` file accessible.
 2. In your AI tool, tell the AI to start with the first task:
@@ -126,6 +126,7 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 
 ### **Configuration & Setup:**
 * **`200_naming-conventions.md`**: Explains the file naming conventions and organization structure.
+* **`201_model-configuration.md`**: Documents the specific AI model setup (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K).
 
 ### **System Documentation:**
 * **`README.md`**: This file - comprehensive guide to the AI Dev Tasks workflow.

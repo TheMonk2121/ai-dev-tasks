@@ -44,7 +44,7 @@ A prioritized list of future enhancements and features for the AI development ec
 | B‑010 | n8n Workflow Integration                  | 🔥  | 1        | todo   | Enable automated task execution | n8n + PostgreSQL | Event ledger |
 <!--score: {bv:3, tc:3, rr:4, le:5, effort:1, deps:[]}-->
 <!--score_total: 15.0-->
-| B‑011 | Yi-Coder Integration into Cursor          | 🔥  | 5        | todo   | Enable AI code generation directly within IDE for faster development | Cursor API + Yi-Coder + local LLM | Yi-Coder setup |
+| B‑011 | Yi-Coder-9B-Chat-Q6_K Integration into Cursor | 🔥  | 5        | todo   | Enable AI code generation directly within IDE for faster development | Cursor API + Yi-Coder-9B-Chat-Q6_K + LM Studio | Yi-Coder setup |
 <!--score: {bv:5, tc:4, rr:3, le:5, effort:5, deps:[]}-->
 <!--score_total: 3.4-->
 | B‑012 | Advanced Testing Framework                | 📈  | 5        | todo   | Improve code quality and reliability | AI-generated tests | Testing system |

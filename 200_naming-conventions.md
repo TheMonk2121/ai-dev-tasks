@@ -18,13 +18,14 @@ Advanced features and automation systems:
 - **`100_backlog-automation.md`** - AI-BACKLOG-META system
 - **`101_n8n-setup.md`** - n8n workflow configuration (future)
 - **`102_ai-agent-config.md`** - AI agent configuration (future)
-- **`103_yi-coder-integration.md`** - Yi-Coder IDE integration (future)
+- **`103_yi-coder-integration.md`** - Yi-Coder-9B-Chat-Q6_K IDE integration (future)
 
 #### **`200-299` - Configuration & Setup**
 Configuration files and setup guides:
 - **`200_naming-conventions.md`** - This file
-- **`201_environment-setup.md`** - Development environment setup (future)
-- **`202_deployment-guide.md`** - Production deployment (future)
+- **`201_model-configuration.md`** - AI model configuration and setup
+- **`202_environment-setup.md`** - Development environment setup (future)
+- **`203_deployment-guide.md`** - Production deployment (future)
 
 #### **`300-399` - Templates & Examples**
 Reusable templates and example files:
@@ -103,7 +104,7 @@ Comprehensive documentation and guides:
 - Setup instructions and configuration guides
 - One-time setup or maintenance tasks
 - Include step-by-step instructions
-- Examples: environment setup, deployment, configuration
+- Examples: environment setup, deployment, configuration, model setup
 
 ### **Templates & Examples (300-399):**
 - Reusable templates and example files
@@ -164,6 +165,7 @@ Comprehensive documentation and guides:
 
 ### **Configuration & Setup (200-299):**
 - `200_naming-conventions.md` - This file
+- `201_model-configuration.md` - AI model configuration and setup
 
 ### **System Documentation:**
 - `README.md` - Comprehensive workflow guide

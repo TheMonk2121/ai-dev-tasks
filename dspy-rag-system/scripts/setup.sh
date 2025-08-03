@@ -67,7 +67,7 @@ if curl -s http://localhost:11434/api/tags | grep -q "mistral"; then
     print_success "Mistral-7B model is available"
 else
     print_warning "Mistral-7B model not found. You may need to pull it:"
-    print_status "Run: ollama pull mistral"
+    print_status "Run: ollama pull mistral:7b-instruct"
 fi
 
 print_status "Setting up Python virtual environment..."
@@ -148,7 +148,7 @@ DATABASE_URL=postgresql://ai_user:ai_password@localhost:5432/ai_agency
 
 # Ollama Configuration
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=mistral
+OLLAMA_MODEL=mistral:7b-instruct
 
 # Vector Store Configuration
 EMBEDDING_MODEL=all-MiniLM-L6-v2
@@ -196,7 +196,7 @@ cat > docs/setup.md << 'EOF'
 
 1. **Python 3.8+** - Already installed
 2. **PostgreSQL** - Running with pgvector extension
-3. **Ollama** - Running with Mistral-7B model
+3. **Ollama** - Running with Mistral 7B Instruct model
 4. **n8n** - Your existing n8n instance
 
 ## Quick Start
