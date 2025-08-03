@@ -1,70 +1,8 @@
 # 🎯 AI Development Ecosystem - Product Backlog
 
-A prioritized list of future enhancements and features for the AI development ecosystem. Use this file to identify the next high-impact improvements to work on.
+A prioritized list of future enhancements and features for the AI development ecosystem. 
 
-## 📋 How to Use This Backlog
-
-### For PRD Creation
-1. **Select a high-priority item** from the backlog
-2. **Use the PRD template**: `@01_create-prd.md`
-3. **Generate tasks**: `@02_generate-tasks.md`
-4. **Execute with AI**: `@03_process-task-list.md`
-
-### Priority Levels & Logic
-
-**🔥 Critical (Priority 1)** - Must-have for solo development
-- **Foundation features** that enable other work
-- **Security & observability** for safe development
-- **Core functionality** that blocks other features
-- **Immediate value** with low effort (1-3 points)
-
-**⭐ High (Priority 2)** - Significant value for development
-- **User experience improvements** that reduce friction
-- **Productivity enhancements** that speed up development
-- **Quality improvements** that prevent issues
-- **Moderate effort** (3-5 points)
-
-**📈 Medium (Priority 3)** - Nice-to-have improvements
-- **Integration features** that extend capabilities
-- **Automation features** that reduce manual work
-- **Performance improvements** for better experience
-- **Higher effort** (5-8 points)
-
-**🔧 Low (Priority 4)** - Technical debt & research
-- **Technical debt** and maintenance
-- **Research & innovation** features
-- **Advanced capabilities** for future use
-- **Highest effort** (8-13 points)
-
-### Prioritization Criteria (in order):
-1. **Dependencies** - Items with no dependencies come first
-2. **Effort** - Lower points (1-3) before higher points (5-13)
-3. **Impact** - Foundation features before nice-to-have
-4. **Risk** - Security and observability before experimental features
-
-### AI Scoring System
-
-The backlog uses an automated scoring system to help prioritize items:
-
-**Scoring Formula**: `(Business Value + Time Criticality + Risk Reduction + Learning Enablement) / Effort`
-
-**Score Ranges**:
-- **5.0+**: Critical priority (🔥)
-- **3.0-4.9**: High priority (⭐)
-- **1.5-2.9**: Medium priority (📈)
-- **<1.5**: Low priority (🔧)
-
-**Scoring Metadata**: Each item may include HTML comments with scoring data:
-```html
-<!--score: {bv:5, tc:3, rr:5, le:4, effort:3, deps:[]}-->
-<!--score_total: 5.7-->
-```
-
-**AI Instructions**: When parsing backlog items, AI agents should:
-1. Look for `<!--score_total: X.X-->` comments
-2. Use scores for prioritization when available
-3. Fall back to human priority tags if scores are missing
-4. Consider dependencies before starting any item
+**📋 For usage instructions and scoring details, see `100_backlog-guide.md`**
 
 ---
 
@@ -143,28 +81,6 @@ The backlog uses an automated scoring system to help prioritize items:
 | B‑023 | Development Readiness Enhancements         | 🔧  | 5        | todo   | Ensure system stability for solo development | Performance metrics + load testing | Development |
 | B‑024 | Automated Sprint Planning                  | 🔧  | 2        | todo   | Automate sprint planning and backlog selection | AI planning + automation | Backlog system |
 | B‑025 | Database Event-Driven Status Updates      | 🔧  | 3        | todo   | Automatically update backlog status via database events | PostgreSQL triggers + event system | Event ledger |
-
----
-
-## 📊 Backlog Management
-
-### Selection Criteria
-
-When choosing the next item to work on, consider:
-
-1. **User Impact**: How many users will benefit and by how much?
-2. **Technical Risk**: What's the complexity and potential for issues?
-3. **Dependencies**: What other systems or features does this depend on?
-4. **Resource Requirements**: What skills and time are needed?
-5. **Strategic Alignment**: How does this align with long-term goals?
-
-### PRD Creation Workflow
-
-1. **Select Item**: Choose a high-priority item from this backlog
-2. **Create PRD**: Use `@01_create-prd.md` to create detailed requirements
-3. **Generate Tasks**: Use `@02_generate-tasks.md` to break down implementation
-4. **Execute**: Use `@03_process-task-list.md` for AI-driven development
-5. **Update Backlog**: Mark completed items and add new discoveries
 
 ---
 

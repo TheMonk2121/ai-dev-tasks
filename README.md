@@ -35,12 +35,7 @@ For systematic development, start by selecting a high-impact feature from the ba
 
 *💡 **Pro Tip**: Check `200_naming-conventions.md` to understand the file organization and naming patterns used in this project.*
 
-#### 🎯 **AI Scoring System**
-The backlog uses an automated scoring system to help prioritize items:
-- **Formula**: `(Business Value + Time Criticality + Risk Reduction + Learning Enablement) / Effort`
-- **Score Ranges**: 5.0+ (🔥), 3.0-4.9 (⭐), 1.5-2.9 (📈), <1.5 (🔧)
-- **AI Integration**: AI agents automatically parse scores for prioritization
-- **Fallback**: Human priority tags used when scores are missing
+*📋 **For detailed backlog usage instructions and scoring system, see `100_backlog-guide.md`*
 
 ### 1️⃣ Create a Product Requirement Document (PRD)
 

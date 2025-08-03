@@ -67,7 +67,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 
 ### 1. Planning & Management System
 
-#### **Backlog Management Engine** (`00_backlog.md`)
+#### **Backlog Management Engine** (`00_backlog.md` + `100_backlog-guide.md`)
 - **Purpose**: Machine-readable roadmap for systematic feature development
 - **Input**: Comprehensive analysis of system needs and opportunities
 - **Output**: Structured table with IDs, points, status, and metadata
@@ -614,14 +614,14 @@ sudo supervisorctl update
 ### For New Users
 1. **Clone Repository**: `git clone https://github.com/TheMonk2121/ai-dev-tasks.git`
 2. **Read README**: Understand the basic workflow
-3. **Review Backlog**: Check `00_backlog.md` for high-impact features
+3. **Review Backlog**: Check `00_backlog.md` for high-impact features (see `100_backlog-guide.md` for usage)
 4. **Start with PRD**: Use `01_create-prd.md` for your first feature
 5. **Generate Tasks**: Use `02_generate-tasks.md` to create implementation plan
 6. **Execute with AI**: Use `03_process-task-list.md` for AI-driven development
 7. **Review Organization**: Check `200_naming-conventions.md` to understand file structure
 
 ### For Advanced Users
-1. **Review Backlog**: Check `00_backlog.md` for systematic development planning
+1. **Review Backlog**: Check `00_backlog.md` for systematic development planning (see `100_backlog-guide.md` for usage)
 2. **Explore DSPy System**: Check `dspy-rag-system/` for document processing
 3. **Review N8N Workflows**: Understand automation capabilities
 4. **Customize Workflows**: Adapt templates for your specific needs
