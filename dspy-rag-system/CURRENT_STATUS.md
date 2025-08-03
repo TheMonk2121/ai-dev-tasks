@@ -57,17 +57,14 @@ Your insight about using DSPy **both before and after the RAG step** has been fu
 ### **Enhanced Core System**
 - `src/dspy_modules/enhanced_rag_system.py` - Complete enhanced RAG system with critical fixes
 - `enhanced_ask_question.py` - Interactive interface with DSPy analysis
-- `test_enhanced_pipeline.py` - Comprehensive test suite validating all fixes
 - `ENHANCED_DSPY_GUIDE.md` - Complete implementation guide
 
 ### **Dashboard Module**
 - `src/dashboard.py` - Hardened Flask dashboard with security fixes
 - `src/templates/dashboard.html` - Responsive web interface
-- `test_dashboard_hardened.py` - Comprehensive test suite for dashboard fixes
 
 ### **Metadata Extractor Module**
 - `src/utils/metadata_extractor.py` - Enhanced with schema validation, regex safety, and caching
-- `test_metadata_fixes.py` - Comprehensive test suite (27 tests) validating all critical fixes
 
 ---
 
@@ -204,13 +201,7 @@ EnhancedRAGSystem
 ### **1. Immediate Testing**
 ```bash
 # Test the enhanced system with critical fixes
-python3 test_enhanced_pipeline.py
-
-# Test the hardened dashboard
-python3 test_dashboard_hardened.py
-
-# Test the metadata extractor fixes
-python3 test_metadata_fixes.py
+python3 test_enhanced_rag_system.py
 
 # Try complex questions like:
 "What are the differences between the old and new systems and how do they compare in terms of performance and reliability?"
@@ -257,9 +248,7 @@ This approach addresses the fundamental limitations of traditional RAG systems a
 ## **📚 Documentation**
 
 - `ENHANCED_DSPY_GUIDE.md` - Complete implementation guide
-- `test_enhanced_pipeline.py` - Comprehensive test suite validating all fixes
-- `test_dashboard_hardened.py` - Dashboard security and performance tests
-- `test_metadata_fixes.py` - Metadata extractor critical fix validation
+- `test_enhanced_rag_system.py` - Comprehensive test suite validating all fixes
 - `enhanced_ask_question.py` - Interactive interface with examples
 
 **Ready for production use with enhanced DSPy capabilities and all critical fixes implemented!** 🎯 

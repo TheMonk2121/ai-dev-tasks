@@ -172,13 +172,9 @@ The system includes 12 comprehensive test files covering all components:
 - **`test_logger.py`** (6.7KB) - Logging and monitoring
 
 #### **Integration Tests**
-- **`test_enhanced_pipeline.py`** (19KB) - End-to-end processing
 - **`test_watch_folder.py`** (22KB) - File watching system
-- **`test_dashboard_simple.py`** (11KB) - Dashboard functionality
-- **`test_dashboard_hardened.py`** (20KB) - Production dashboard
 
 #### **Quality Assurance Tests**
-- **`test_metadata_fixes.py`** (17KB) - Metadata validation
 - **`test_logger.py`** (6.7KB) - System monitoring
 
 ### **Testing Methodology**
