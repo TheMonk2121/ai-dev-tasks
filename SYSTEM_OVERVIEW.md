@@ -173,6 +173,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
   - Vector store with PostgreSQL + PGVector
   - Enhanced RAG system with DSPy integration
   - Dashboard for monitoring and interaction
+  - **Test Suite**: Organized in `tests/` directory with comprehensive coverage
 
 #### **N8N Workflow System**
 - **Purpose**: Automation and integration workflows
@@ -214,24 +215,27 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 ## 🧪 Testing Framework & Quality Assurance
 
 ### **Comprehensive Test Suite**
-The system includes 12 comprehensive test files covering all components:
+The system includes 8 comprehensive test files organized in `tests/` directory:
 
 #### **Core System Tests**
-- **`test_rag_system.py`** (18KB) - RAG system functionality
-- **`test_enhanced_rag_system.py`** (19KB) - Enhanced RAG with DSPy
-- **`test_vector_store.py`** (15KB) - Vector database operations
-- **`test_document_processor.py`** (12KB) - Document processing pipeline
+- **`tests/test_rag_system.py`** (18KB) - RAG system functionality
+- **`tests/test_enhanced_rag_system.py`** (19KB) - Enhanced RAG with DSPy
+- **`tests/test_vector_store.py`** (15KB) - Vector database operations
+- **`tests/test_document_processor.py`** (12KB) - Document processing pipeline
 
 #### **Utility Tests**
-- **`test_metadata_extractor.py`** (12KB) - Metadata extraction
-- **`test_tokenizer.py`** (9.5KB) - Text processing and chunking
-- **`test_logger.py`** (6.7KB) - Logging and monitoring
+- **`tests/test_metadata_extractor.py`** (12KB) - Metadata extraction
+- **`tests/test_tokenizer.py`** (9.5KB) - Text processing and chunking
+- **`tests/test_logger.py`** (6.7KB) - Logging and monitoring
 
 #### **Integration Tests**
-- **`test_watch_folder.py`** (22KB) - File watching system
+- **`tests/test_watch_folder.py`** (22KB) - File watching system
 
-#### **Quality Assurance Tests**
-- **`test_logger.py`** (6.7KB) - System monitoring
+### **Test Organization**
+- **`tests/` Directory**: All test files organized in dedicated subfolder
+- **`tests/README.md`**: Comprehensive documentation for running tests
+- **`run_tests.sh`**: Convenient test runner script with multiple options
+- **Test Categories**: Unit tests, integration tests, and system tests
 
 ### **Testing Methodology**
 - **Unit Tests**: Individual component testing with mocks

@@ -241,4 +241,10 @@ python3 add_document.py path/to/file.txt
 
 # Test CSV functionality
 python3 test_csv_functionality.py
+
+# Run tests
+./run_tests.sh all          # Run all tests
+./run_tests.sh unit         # Run unit tests only
+./run_tests.sh integration  # Run integration tests only
+./run_tests.sh coverage     # Run with coverage report
 ``` 
