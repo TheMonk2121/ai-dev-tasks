@@ -41,10 +41,12 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 ## 🔄 Development Workflow (High-Level Process)
 
 ### Phase 1: Planning & Requirements
-1. **Idea Input** → User describes feature/requirement
-2. **PRD Creation** → AI generates comprehensive requirements document
-3. **Task Breakdown** → AI creates detailed, AI-optimized task list
-4. **Dependency Mapping** → Tasks ordered with clear dependencies
+1. **Backlog Selection** → Choose feature from structured table (B-001, B-002, etc.)
+2. **Idea Input** → User describes feature/requirement (or use backlog item)
+3. **PRD Creation** → AI generates comprehensive requirements document
+4. **Task Breakdown** → AI creates detailed, AI-optimized task list
+5. **Dependency Mapping** → Tasks ordered with clear dependencies
+6. **Status Update** → Update backlog status as work progresses
 
 ### Phase 2: AI Execution
 1. **State Loading** → AI loads context from `.ai_state.json`
@@ -65,9 +67,31 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 
 ### 1. Planning & Management System
 
+#### **Backlog Management Engine** (`00_backlog.md`)
+- **Purpose**: Machine-readable roadmap for systematic feature development
+- **Input**: Comprehensive analysis of system needs and opportunities
+- **Output**: Structured table with IDs, points, status, and metadata
+- **Features**:
+  - Machine-readable table format (B-001, B-002, etc.)
+  - Points-based effort estimation (1, 2, 3, 5, 8, 13)
+  - Status tracking (todo, in-progress, done)
+  - Dependency mapping and tech footprint
+  - AI-BACKLOG-META automation commands
+  - **AI Scoring System**: Automated prioritization using `(BV + TC + RR + LE) / Effort` formula
+  - **Score Metadata**: HTML comments with scoring data for AI parsing
+  - **n8n Scrubber Workflow**: Automated score calculation and updates
+
+#### **File Organization System** (`200_naming-conventions.md`)
+- **Purpose**: Maintain consistent file organization and naming
+- **Features**:
+  - Structured naming conventions (00-09, 100-199, 200-299, etc.)
+  - Category-based file organization
+  - Scalable structure for future additions
+  - Clear guidelines for contributors
+
 #### **PRD Creation Engine** (`01_create-prd.md`)
 - **Purpose**: Transform user ideas into structured requirements
-- **Input**: Natural language feature descriptions
+- **Input**: Natural language feature descriptions or backlog items
 - **Output**: Comprehensive PRD with testing strategy and acceptance criteria
 - **AI Optimization**: Includes machine-verifiable completion criteria
 
@@ -87,6 +111,33 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
   - HotFix generation for error recovery
   - Strategic human oversight
 
+#### **File Organization System** (`200_naming-conventions.md`)
+- **Purpose**: Maintain consistent file organization and naming
+- **Features**:
+  - Structured naming conventions (00-09, 100-199, 200-299, etc.)
+  - Category-based file organization
+  - Scalable structure for future additions
+  - Clear guidelines for contributors
+
+### **AI Scoring & Automation System**
+
+#### **Scoring Engine**
+- **Formula**: `(Business Value + Time Criticality + Risk Reduction + Learning Enablement) / Effort`
+- **Score Ranges**: 5.0+ (🔥), 3.0-4.9 (⭐), 1.5-2.9 (📈), <1.5 (🔧)
+- **Metadata Format**: HTML comments with JSON scoring data
+- **AI Integration**: Automatic parsing and prioritization by AI agents
+- **Fallback System**: Human priority tags when scores are missing
+
+#### **n8n Backlog Scrubber Workflow**
+- **Purpose**: Automate score calculation and backlog maintenance
+- **Features**:
+  - Reads backlog.md file and parses scoring metadata
+  - Calculates new scores using the scoring formula
+  - Updates `<!--score_total: X.X-->` comments automatically
+  - Handles missing metadata gracefully
+  - Provides audit trail for all changes
+- **Integration**: Works with AI-BACKLOG-META system for seamless automation
+
 ### 2. AI Execution Layer
 
 #### **Mistral 7B Agent**
@@ -96,6 +147,8 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
   - Manage state and dependencies
   - Handle human checkpoints
   - Generate HotFix tasks
+  - **Parse backlog scoring** for prioritization decisions
+  - **Use score metadata** to inform task selection
 
 #### **Yi-Coder Agent**
 - **Role**: Code implementation and technical execution
@@ -104,6 +157,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
   - Implement features
   - Debug and optimize
   - Validate completion criteria
+  - **Consider scoring data** for implementation priorities
 
 #### **State Management System**
 - **File**: `.ai_state.json`
@@ -127,6 +181,8 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
   - Notification systems
   - Integration with external services
   - Error handling and recovery
+  - **Backlog Scrubber Workflow**: Automated score calculation and updates
+  - **AI-BACKLOG-META Integration**: Machine-readable command processing
 
 #### **Dashboard System** (`dashboard/`)
 - **Purpose**: Real-time monitoring and interaction
@@ -554,15 +610,21 @@ sudo supervisorctl update
 ### For New Users
 1. **Clone Repository**: `git clone https://github.com/TheMonk2121/ai-dev-tasks.git`
 2. **Read README**: Understand the basic workflow
-3. **Start with PRD**: Use `01_create-prd.md` for your first feature
-4. **Generate Tasks**: Use `02_generate-tasks.md` to create implementation plan
-5. **Execute with AI**: Use `03_process-task-list.md` for AI-driven development
+3. **Review Backlog**: Check `00_backlog.md` for high-impact features
+4. **Start with PRD**: Use `01_create-prd.md` for your first feature
+5. **Generate Tasks**: Use `02_generate-tasks.md` to create implementation plan
+6. **Execute with AI**: Use `03_process-task-list.md` for AI-driven development
+7. **Review Organization**: Check `200_naming-conventions.md` to understand file structure
 
 ### For Advanced Users
-1. **Explore DSPy System**: Check `dspy-rag-system/` for document processing
-2. **Review N8N Workflows**: Understand automation capabilities
-3. **Customize Workflows**: Adapt templates for your specific needs
-4. **Extend Functionality**: Add new AI agents or systems
+1. **Review Backlog**: Check `00_backlog.md` for systematic development planning
+2. **Explore DSPy System**: Check `dspy-rag-system/` for document processing
+3. **Review N8N Workflows**: Understand automation capabilities
+4. **Customize Workflows**: Adapt templates for your specific needs
+5. **Extend Functionality**: Add new AI agents or systems
+6. **Setup Scoring System**: Configure n8n scrubber for automated prioritization
+7. **Use AI-BACKLOG-META**: Leverage machine-readable commands for automation
+8. **Review Naming Conventions**: Check `200_naming-conventions.md` for file organization
 
 ### For System Administrators
 1. **Setup Infrastructure**: PostgreSQL, Python environment
@@ -595,6 +657,8 @@ sudo supervisorctl update
 - **Advanced Error Recovery**: Predictive error detection and prevention
 - **Performance Optimization**: Improved state management and caching
 - **Integration Expansion**: More external service connections
+- **Enhanced Scoring**: Machine learning-based score optimization
+- **Automated Backlog Management**: Self-organizing backlog with AI agents
 
 ### Research Areas
 - **Agent Specialization**: Domain-specific AI agents

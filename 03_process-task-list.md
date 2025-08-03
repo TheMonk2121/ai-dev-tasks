@@ -10,10 +10,19 @@ Guidelines for executing task lists generated from PRDs using AI agents (Mistral
 1. **Load Context**
    - Read task list from markdown file
    - Load `.ai_state.json` if present (file list, commit hash, test results)
+   - Consider backlog priorities for task selection when multiple tasks are available
+   - Parse backlog table for status and dependency information
+   - **Parse backlog scoring** when available (`<!--score_total: X.X-->` comments)
+   - **Use scores for task prioritization** - higher scores indicate higher priority
+   - **Fall back to human priority tags** when scores are missing
 
 2. **Select Next Task**
    - Find task with status `[ ]` where all dependencies are `[x]`
    - Skip tasks marked `[!]` (blocked)
+   - Prioritize tasks based on backlog impact estimates when possible
+   - Check backlog dependencies before starting tasks
+   - **Consider backlog scores** for task selection when available
+   - **Prioritize high-scoring items** when multiple tasks are ready
 
 3. **Execute Task**
    - Follow steps in "Do:" section
@@ -32,6 +41,15 @@ Guidelines for executing task lists generated from PRDs using AI agents (Mistral
 6. **Check for Pause**
    - If `🛑 Pause After: yes` AND `Auto-Advance: no` → wait for human input
    - Otherwise continue to next task
+
+7. **Update Backlog** (Optional)
+   - Mark completed features in backlog as implemented
+   - Update status from "todo" to "done" in backlog table
+   - Add new discoveries or requirements to backlog
+   - Update effort estimates based on actual implementation time
+   - Execute AI-BACKLOG-META commands for automated updates
+   - **Update scoring metadata** if effort estimates change significantly
+   - **Re-calculate scores** if business value or priorities shift
 
 ---
 

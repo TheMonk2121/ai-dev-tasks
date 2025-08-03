@@ -9,8 +9,8 @@ Stop wrestling with monolithic AI requests and start guiding your AI collaborato
 Building complex features with AI can sometimes feel like a black box. This workflow aims to bring structure, clarity, and control to the process by:
 
 1. **Defining Scope:** Clearly outlining what needs to be built with a Product Requirement Document (PRD).
-2. **Detailed Planning:** Breaking down the PRD into a granular, actionable task list.
-3. **Iterative Implementation:** Guiding the AI to tackle one task at a time, allowing you to review and approve each change.
+2. **Detailed Planning:** Breaking down the PRD into a granular, actionable task list optimized for AI execution.
+3. **AI-Optimized Implementation:** Guiding AI agents to tackle tasks efficiently with strategic human checkpoints.
 
 This structured approach helps ensure the AI stays on track, makes it easier to debug issues, and gives you confidence in the generated code.
 
@@ -18,19 +18,44 @@ This structured approach helps ensure the AI stays on track, makes it easier to 
 
 Here's the step-by-step process using the `.md` files in this repository:
 
+### 0️⃣ Select from Backlog (Optional)
+
+For systematic development, start by selecting a high-impact feature from the backlog:
+
+1. Ensure you have the `00_backlog.md` file from this repository accessible.
+2. Review the prioritized table and select a feature based on:
+   - **Points**: Lower numbers (1-3) for quick wins, higher (5-13) for complex features
+   - **Priority**: 🔥 Critical, ⭐ High, 📈 Medium, 🔧 Low
+   - **Status**: Choose "todo" items for new work
+   - **Dependencies**: Check if prerequisites are completed
+   - **Scores**: Higher scores (5.0+) indicate higher priority items
+
+3. Use the backlog item ID (e.g., B-001) as input for PRD creation in the next step.
+4. The AI can automatically parse the table format and generate PRDs using the AI-BACKLOG-META command.
+
+*💡 **Pro Tip**: Check `200_naming-conventions.md` to understand the file organization and naming patterns used in this project.*
+
+#### 🎯 **AI Scoring System**
+The backlog uses an automated scoring system to help prioritize items:
+- **Formula**: `(Business Value + Time Criticality + Risk Reduction + Learning Enablement) / Effort`
+- **Score Ranges**: 5.0+ (🔥), 3.0-4.9 (⭐), 1.5-2.9 (📈), <1.5 (🔧)
+- **AI Integration**: AI agents automatically parse scores for prioritization
+- **Fallback**: Human priority tags used when scores are missing
+
 ### 1️⃣ Create a Product Requirement Document (PRD)
 
 First, lay out the blueprint for your feature. A PRD clarifies what you're building, for whom, and why.
 
 You can create a lightweight PRD directly within your AI tool of choice:
 
-1. Ensure you have the `create-prd.md` file from this repository accessible.
+1. Ensure you have the `01_create-prd.md` file from this repository accessible.
 2. In your AI tool, initiate PRD creation:
 
     ```text
-    Use @create-prd.md
+    Use @01_create-prd.md
     Here's the feature I want to build: [Describe your feature in detail]
-    Reference these files to help you: [Optional: @file1.py @file2.ts]
+    Backlog ID: [e.g., B-001 for Real-time Mission Dashboard]
+    Reference these files to help you: [Optional: @file1.py @file2.ts @00_backlog.md]
     ```
     *(Pro Tip: For Cursor users, MAX mode is recommended for complex PRDs if your budget allows for more comprehensive generation.)*
 
@@ -38,13 +63,13 @@ You can create a lightweight PRD directly within your AI tool of choice:
 
 ### 2️⃣ Generate Your Task List from the PRD
 
-With your PRD drafted (e.g., `MyFeature-PRD.md`), the next step is to generate a detailed, step-by-step implementation plan for your AI Developer.
+With your PRD drafted (e.g., `MyFeature-PRD.md`), the next step is to generate a detailed, step-by-step implementation plan optimized for AI execution.
 
-1. Ensure you have `generate-tasks.md` accessible.
+1. Ensure you have `02_generate-tasks.md` accessible.
 2. In your AI tool, use the PRD to create tasks:
 
     ```text
-    Now take @MyFeature-PRD.md and create tasks using @generate-tasks.md
+    Now take @MyFeature-PRD.md and create tasks using @02_generate-tasks.md
     ```
     *(Note: Replace `@MyFeature-PRD.md` with the actual filename of the PRD you generated in step 1.)*
 
@@ -52,32 +77,34 @@ With your PRD drafted (e.g., `MyFeature-PRD.md`), the next step is to generate a
 
 ### 3️⃣ Examine Your Task List
 
-You'll now have a well-structured task list, often with tasks and sub-tasks, ready for the AI to start working on. This provides a clear roadmap for implementation.
+You'll now have a well-structured task list optimized for AI execution, with clear dependencies, priorities, and strategic human checkpoints. This provides a clear roadmap for implementation.
 
 ![Example of a generated task list](https://pbs.twimg.com/media/Go6GNuOWsAEcSDm?format=jpg&name=medium)
 
-### 4️⃣ Instruct the AI to Work Through Tasks (and Mark Completion)
+### 4️⃣ Execute Tasks with AI-Optimized Processing
 
-To ensure methodical progress and allow for verification, we'll use `process-task-list.md`. This command instructs the AI to focus on one task at a time and wait for your go-ahead before moving to the next.
+To ensure methodical progress and allow for verification, we'll use `03_process-task-list.md`. This system is designed for AI agents (Mistral 7B + Yi-Coder) with strategic human oversight.
 
-1. Create or ensure you have the `process-task-list.md` file accessible.
-2. In your AI tool, tell the AI to start with the first task (e.g., `1.1`):
+1. Create or ensure you have the `03_process-task-list.md` file accessible.
+2. In your AI tool, tell the AI to start with the first task:
 
     ```text
-    Please start on task 1.1 and use @process-task-list.md
+    Please start on task T-1 and use @03_process-task-list.md
     ```
-    *(Important: You only need to reference `@process-task-list.md` for the *first* task. The instructions within it guide the AI for subsequent tasks.)*
+    *(Important: You only need to reference `@03_process-task-list.md` for the *first* task. The instructions within it guide the AI for subsequent tasks.)*
 
-    The AI will attempt the task and then prompt you to review.
+    The AI will attempt the task and then pause only when necessary for human review.
 
     ![Example of starting on a task with process-task-list.md](https://pbs.twimg.com/media/Go6I41KWcAAAlHc?format=jpg&name=medium)
 
-### 5️⃣ Review, Approve, and Progress ✅
+### 5️⃣ AI-Optimized Execution with Strategic Checkpoints ✅
 
-As the AI completes each task, you review the changes.
-
-* If the changes are good, simply reply with "yes" (or a similar affirmative) to instruct the AI to mark the task complete and move to the next one.
-* If changes are needed, provide feedback to the AI to correct the current task before moving on.
+The AI system will automatically:
+- **Execute tasks efficiently** with state caching and auto-advance
+- **Handle errors gracefully** with automatic HotFix task generation
+- **Pause strategically** only for high-risk operations (deployments, database changes)
+- **Track progress** with clear status indicators (`[ ]`, `[x]`, `[!]`)
+- **Prioritize by scores** when available for optimal task selection
 
 You'll see a satisfying list of completed items grow, providing a clear visual of your feature coming to life!
 
@@ -93,100 +120,65 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 
 ## 🗂️ Files in this Repository
 
-* **`create-prd.md`**: Guides the AI in generating a Product Requirement Document for your feature.
-* **`generate-tasks.md`**: Takes a PRD markdown file as input and helps the AI break it down into a detailed, step-by-step implementation task list.
-* **`process-task-list.md`**: Instructs the AI on how to process the generated task list, tackling one task at a time and waiting for your approval before proceeding. (This file also contains logic for the AI to mark tasks as complete).
+### **Core Workflow Files:**
+* **`00_backlog.md`**: Prioritized list of future enhancements and features for systematic development planning with AI scoring system.
+* **`01_create-prd.md`**: Guides the AI in generating a Product Requirement Document for your feature.
+* **`02_generate-tasks.md`**: Takes the PRD markdown file as input and helps the AI break it down into a detailed, AI-optimized implementation task list.
+* **`03_process-task-list.md`**: Instructs AI agents on how to process the generated task list with state management, auto-advance, and HotFix generation.
+
+### **Automation & Tools:**
+* **`100_backlog-automation.md`**: Documents the AI-BACKLOG-META system for automated backlog management and scoring.
+
+### **Configuration & Setup:**
+* **`200_naming-conventions.md`**: Explains the file naming conventions and organization structure.
+
+### **System Documentation:**
+* **`README.md`**: This file - comprehensive guide to the AI Dev Tasks workflow.
+* **`SYSTEM_OVERVIEW.md`**: Detailed technical overview of the entire AI development ecosystem.
+
+## 🎯 Quick Reference
+
+### **Score Ranges for Prioritization:**
+- **5.0+**: Critical priority (🔥) - Foundation features, security, core functionality
+- **3.0-4.9**: High priority (⭐) - UX improvements, productivity enhancements
+- **1.5-2.9**: Medium priority (📈) - Integration features, automation
+- **<1.5**: Low priority (🔧) - Technical debt, research, advanced capabilities
+
+### **Effort Points:**
+- **1-3 points**: Quick wins, low complexity
+- **5 points**: Moderate complexity, significant value
+- **8-13 points**: Complex features, high effort
+
+### **AI Agent Instructions:**
+- Parse `<!--score_total: X.X-->` comments for prioritization
+- Use scores when available, fall back to human priority tags
+- Consider dependencies before starting any item
 
 ## 🌟 Benefits
 
-* **Structured Development:** Enforces a clear process from idea to code.
-* **Step-by-Step Verification:** Allows you to review and approve AI-generated code at each small step, ensuring quality and control.
-* **Manages Complexity:** Breaks down large features into smaller, digestible tasks for the AI, reducing the chance of it getting lost or generating overly complex, incorrect code.
-* **Improved Reliability:** Offers a more dependable approach to leveraging AI for significant development work compared to single, large prompts.
-* **Clear Progress Tracking:** Provides a visual representation of completed tasks, making it easy to see how much has been done and what's next.
+### Systematic Development
+- **Prioritized Backlog** - Structured roadmap for feature development
+- **Impact-Based Selection** - Choose features based on user value and effort
+- **Consistent Workflow** - Standardized PRD → Tasks → Execution process
+- **Progress Tracking** - Clear visibility into development priorities
+- **Data-Driven Decisions** - AI scoring system for objective prioritization
 
-## 🛠️ How to Use
+### AI-Optimized Efficiency
+- **State Caching** - AI maintains context across tasks without reloading
+- **Auto-Advance** - Minimal human intervention for routine tasks
+- **HotFix Generation** - Automatic error recovery with structured fix tasks
+- **Strategic Pausing** - Human oversight only when necessary
+- **Score-Based Prioritization** - AI agents use scoring data for optimal task selection
 
-1. **Clone or Download:** Get these `.md` files into your project or a central location where your AI tool can access them.
-2. **Follow the Workflow:** Systematically use the `.md` files in your AI assistant as described in the workflow above.
-3. **Adapt and Iterate:**
-    * Feel free to modify the prompts within the `.md` files to better suit your specific needs or coding style.
-    * If the AI struggles with a task, try rephrasing your initial feature description or breaking down tasks even further.
+### Quality Assurance
+- **Machine-Verifiable** - All completion criteria are automated
+- **Regression Testing** - HotFixes include tests to prevent recurrence
+- **Progress Tracking** - Clear status indicators for oversight
+- **Error Recovery** - Structured approach to handling failures
 
-## Tool-Specific Instructions
+### Safety & Control
+- **Strategic Checkpoints** - Human review for high-risk operations
+- **Safety Rules** - Clear guidelines for when to pause
+- **Error Limits** - Stop execution after consecutive failures
+- **State Persistence** - Maintain context across execution sessions
 
-### Cursor
-
-Cursor users can follow the workflow described above, using the `.md` files directly in the Agent chat:
-
-1. Ensure you have the files from this repository accessible
-2. In Cursor's Agent chat, reference files with `@` (e.g., `@create-prd.md`)
-3. Follow the 5-step workflow as outlined above
-4. **MAX Mode for PRDs:** Using MAX mode in Cursor for PRD creation can yield more thorough results if your budget supports it
-
-### Claude Code
-
-To use these tools with Claude Code:
-
-1. **Copy files to your repo**: Copy the three `.md` files to a subdirectory in your project (e.g., `/ai-dev-tasks`)
-
-2. **Reference in CLAUDE.md**: Add these lines to your project's `./CLAUDE.md` file:
-   ```
-   # AI Dev Tasks
-   Use these files when I request structured feature development using PRDs:
-   /ai-dev-tasks/create-prd.md
-   /ai-dev-tasks/generate-tasks.md
-   /ai-dev-tasks/process-task-list.md
-   ```
-
-3. **Create custom commands** (optional): For easier access, create these files in `.claude/commands/`:
-   - `.claude/commands/create-prd.md` with content:
-     ```
-     Please use the structured workflow in /ai-dev-tasks/create-prd.md to help me create a PRD for a new feature.
-     ```
-   - `.claude/commands/generate-tasks.md` with content:
-     ```
-     Please generate tasks from the PRD using /ai-dev-tasks/generate-tasks.md
-     If not explicitly told which PRD to use, generate a list of PRDs and ask the user to select one under `/tasks` or create a new one using `create-prd.md`:
-     - assume it's stored under `/tasks` and has a filename starting with `prd-` (e.g., `prd-[name].md`)
-     - it should not already have a corresponding task list in `/tasks` (e.g., `tasks-prd-[name].md`)
-     - **always** ask the user to confirm the PRD file name before proceeding
-     Make sure to provide options in number lists so I can respond easily (if multiple options).
-     ```
-   - `.claude/commands/process-task-list.md` with content:
-     ```
-     Please process the task list using /ai-dev-tasks/process-task-list.md
-     ```
-
-   Make sure to restart Claude Code after adding these files (`/exit`).
-   Then use commands like `/create-prd` to quickly start the workflow.
-   Note: This setup can also be adopted for a global level across all your projects, please refer to the Claude Code documentation [here](https://docs.anthropic.com/en/docs/claude-code/memory) and [here](https://docs.anthropic.com/en/docs/claude-code/common-workflows#create-personal-slash-commands).
-
-### Other Tools
-
-For other AI-powered IDEs or CLIs:
-
-1. Copy the `.md` files to your project
-2. Reference them according to your tool's documentation
-3. Follow the same workflow principles
-
-## 💡 Tips for Success
-
-* **Be Specific:** The more context and clear instructions you provide (both in your initial feature description and any clarifications), the better the AI's output will be.
-* **Use a Capable Model:** The free version of Cursor currently uses less capable AI models that often struggle to follow the structured instructions in this workflow. For best results, consider upgrading to the Pro plan to ensure consistent, accurate task execution.
-* **MAX Mode for PRDs:** As mentioned, using MAX mode in Cursor for PRD creation (`create-prd.mdc`) can yield more thorough and higher-quality results if your budget supports it.
-* **Correct File Tagging:** Always ensure you're accurately tagging the PRD filename (e.g., `@MyFeature-PRD.md`) when generating tasks.
-* **Patience and Iteration:** AI is a powerful tool, but it's not magic. Be prepared to guide, correct, and iterate. This workflow is designed to make that iteration process smoother.
-
-## 🤝 Contributing
-
-Got ideas to improve these `.md` files or have new ones that fit this workflow? Contributions are welcome!
-
-Please feel free to:
-
-* Open an issue to discuss changes or suggest new features.
-* Submit a pull request with your enhancements.
-
----
-
-Happy AI-assisted developing!
