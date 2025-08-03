@@ -1,0 +1,10 @@
+dspy==2.4.6
+psycopg2-binary==2.9.7
+sentence-transformers==2.2.2
+PyMuPDF==1.23.8
+watchdog==3.0.0
+pgvector==0.2.4
+tiktoken==0.5.2
+flask==2.3.3
+flask-socketio==5.3.6
+python-socketio==5.8.0 

@@ -1,0 +1,180 @@
+# Process Task List - AI-Optimized Execution
+
+Guidelines for executing task lists generated from PRDs using AI agents (Mistral 7B + Yi-Coder).
+
+---
+
+## 1. Execution Loop
+
+### Core Process
+1. **Load Context**
+   - Read task list from markdown file
+   - Load `.ai_state.json` if present (file list, commit hash, test results)
+
+2. **Select Next Task**
+   - Find task with status `[ ]` where all dependencies are `[x]`
+   - Skip tasks marked `[!]` (blocked)
+
+3. **Execute Task**
+   - Follow steps in "Do:" section
+   - Use Yi-Coder for code implementation
+   - Use Mistral 7B for reasoning and planning
+
+4. **Validate Completion**
+   - Run all "Done when:" criteria
+   - If any fail → mark task `[!]` and create HotFix task
+   - If all pass → mark task `[x]`
+
+5. **Update State**
+   - Write/update `.ai_state.json` with current state
+   - Update progress tracking
+
+6. **Check for Pause**
+   - If `🛑 Pause After: yes` AND `Auto-Advance: no` → wait for human input
+   - Otherwise continue to next task
+
+---
+
+## 2. Task Status Tracking
+
+| Status | Meaning |
+|--------|---------|
+| `[ ]` | Not started |
+| `[x]` | Completed successfully |
+| `[!]` | Blocked/needs fix |
+
+---
+
+## 3. Auto-Advance Configuration
+
+### Task Template Addition
+```markdown
+**Auto-Advance**: yes | no
+```
+
+### Default Rules
+- **Auto-Advance: yes** for Medium and Low priority tasks
+- **Auto-Advance: no** for Critical tasks, deployment changes, database migrations
+- **Auto-Advance: no** when `🛑 Pause After: yes`
+
+---
+
+## 4. State Management
+
+### .ai_state.json Structure
+```json
+{
+  "last_commit": "abc123",
+  "file_list": ["src/main.py", "tests/test_main.py"],
+  "test_results": {"passed": 15, "failed": 0},
+  "current_task": "T-5",
+  "completed_tasks": ["T-1", "T-2", "T-3", "T-4"]
+}
+```
+
+### State Operations
+- **Load**: Read state at start of execution
+- **Save**: Update after each task completion
+- **Ignore**: Add to .gitignore (never commit)
+
+---
+
+## 5. HotFix Task Generation
+
+### When to Create HotFix
+- Any "Done when:" criteria fails
+- Uncaught exception during execution
+- Test suite failure
+
+### HotFix Task Template
+```markdown
+### T-HotFix-<n> Fix <short description>
+**Priority**: Critical
+**Time**: 1-2 hours
+**Depends on**: [failed_task_id]
+
+**Do**:
+1. Reproduce the error
+2. Fix the issue
+3. Add regression test
+4. Re-run failing validation
+
+**Done when**:
+- Original task's "Done when" criteria pass
+- New regression test passes
+
+**Auto-Advance**: no
+**🛑 Pause After**: yes
+**When Ready Prompt**: "HotFix complete - retry original task?"
+```
+
+---
+
+## 6. Error Handling
+
+### Safety Rules
+- **Database Changes**: Always pause for human review
+- **Deployment Scripts**: Always pause for human review
+- **Consecutive Failures**: Stop execution after 2 consecutive failures
+- **Uncaught Exceptions**: Generate HotFix task and pause
+
+### Recovery Process
+1. Generate HotFix task with error details
+2. Execute HotFix task
+3. Retry original task
+4. Continue normal execution
+
+---
+
+## 7. Progress Tracking
+
+### Simple Progress
+- Count completed tasks: `[x]` vs total tasks
+- Update progress in task list header
+- Track blocked tasks: `[!]`
+
+### Completion Validation
+- All tasks marked `[x]` or `[!]`
+- No tasks with status `[ ]`
+- All "Done when" criteria validated
+
+---
+
+## 8. Human Checkpoints
+
+### When to Pause
+- Critical priority tasks
+- Database migrations
+- Deployment changes
+- HotFix completions
+- User explicitly requests pause
+
+### Checkpoint Process
+1. Display "When Ready Prompt"
+2. Wait for user input
+3. Continue execution on user approval
+4. Handle user feedback if provided
+
+---
+
+## 9. File Maintenance
+
+### Required Files
+- Task list markdown file
+- `.ai_state.json` (auto-generated, gitignored)
+- Source code files
+- Test files
+
+### Git Operations
+- Commit after each completed task
+- Use conventional commit messages
+- Never commit `.ai_state.json`
+
+---
+
+This approach ensures:
+- **Efficient AI execution** with state caching
+- **Automatic error recovery** with HotFix tasks
+- **Minimal human intervention** with smart pausing
+- **Clear progress tracking** for oversight
+- **Safe execution** with appropriate checkpoints

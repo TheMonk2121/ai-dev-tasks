@@ -1,0 +1,95 @@
+1_Economic & Employment Data
+Institute for Demographic and Socioeconomic Research for TXDot Ellis County Employment and Education Area Report.rtf
+Bureau of Economic Analysis BLS Income and expenditure dynamics by income quintile.csv
+Bureau of Economic Analysis BLS LAUS Unemployment Rates for Large Metropolitan Areas.csv
+Institute for Demographic and Socioeconomic Research for TXDot Ellis County Commuting Area Report.rtf
+Bureau of Economic Analysis BEA GDP by County Metro and Other 2023.csv
+Bureau of Labor Statistics US BLS QCEW 2022 Annual 62 NAICS 62 Health care and social assistance.csv
+TLS Texas Labor Analysis North Central Education Training Gap Analysis Report.csv
+TLS Texas Labor Analysis North Central Business Hospital Tourism Gap Analysis Report.csv
+TLS Texas Labor Analysis North Central Transportation Distribution Logistics Gap Analysis Report.csv
+Bureau of Labor Statistics US BLS QCEW 2023 Annual 7225 NAICS 7225 Restaurants and other eating places.csv
+Bureau of Labor Statistics US BLS QCEW 2023 Annual 62 NAICS 62 Health care and social assistance.csv
+Bureau of Labor Statistics US BLS QCEW 2023 Annual 54 NAICS 54 Professional, scientific, and technical services.csv
+Bureau of Economic Analysis BLS CES Total Private Employment Seasonally Adjusted 2015-2024.csv
+Bureau of Economic Analysis BLS CES Retail Trade Employment Seasonally Adjusteed 2015-2024.csv
+TLS Texas Labor Analysis North Central Architecture Construction Fianance Gap Analysis Report.csv
+Bureau of Labor Statistics US BLS QCEW 2022 Annual 56 NAICS 56 Administrative and support and waste management and remediation services.csv
+Bureau of Labor Statistics US BLS QCEW 2023 Annual 56 NAICS 56 Administrative and support and waste management and remediation services.csv
+Bureau of Labor Statistics US BLS QCEW 2023 Annual 44-45 NAICS 44-45 Retail trade.csv
+Bureau of Labor Statistics US BLS QCEW 2023 Annual 722 NAICS 722 Food services and drinking places.csv
+Bureau of Labor Statistics US BLS QCEW 2022 Annual 44-45 NAICS 44-45 Retail trade.csv
+Bureau of Labor Statistics US BLS QCEW 2022 Annual 7225 NAICS 7225 Restaurants and other eating places.csv
+Bureau of Economic Analysis BLS CES  Government Employment Seasonally Adjusted 2015-2024.csv
+Bureau of Economic Analysis BEA Personal Income County 2021-2023.csv
+Institute for Demographic and Socioeconomic Research for TXDot Ellis County Commuting Area Report.csv
+Bureau of Labor Statistics US BLS QCEW 2023 Annual 53 NAICS 53 Real estate and rental and leasing.csv
+Bureau of Labor Statistics US BLS QCEW 2023 Annual 52 NAICS 52 Finance and insurance.csv
+Bureau of Economic Analysis BLS LAUS Unemployment Rates for States.csv
+Bureau of Economic Analysis BLS CES Leisure and Hospitality Employment Seasonally Adjusted 2015-2024.csv
+Bureau of Labor Statistics US BLS QCEW 2022 Annual 722 NAICS 722 Food services and drinking places.csv
+Bureau of Economic Analysis BLS LAUS Unemployment Rates for Metropolitan Areas.csv
+Bureau of Economic Analysis BLS CES Construction Employement Seasonally Adjusted 2015-2024.csv
+Bureau of Labor Statistics US BLS QCEW 2022 Annual 10 10 Total all industries.csv
+Bureau of Labor Statistics US BLS QCEW 2023 Annual 10 10 Total all industries.csv
+Bureau of Economic Analysis BLS CES Health Care and Social Assistance Employment Seasonally Adjusted 2015-2024.csv
+Bureau of Economic Analysis BLS Expenditure trends by major category 2020 to 2023.csv
+Bureau of Economic Analysis BLS LAUS Labor force data by county.csv
+Bureau of Economic Analysis BLS CES Professional and Business Services Employment Seasonally Adjusted 2015-2024.csv
+5_Comparable Mixed-Use Developments & Case Studies
+ESRI Community Profile - West End - 5-10-15 Community Profile DATA.csv
+ESRI Tapestry Segmentation Area Profile - West End - 5-10-15 Min DT - 12-19-24.pdf
+ESRI Community Profile - West End - 5-10-15 Consumer Spending DATA.csv
+ESRI Community Profile - West End - 5-10-15 Min 2024 Population by age DATA.csv
+ESRI Community Profile - West End - 5-10-15 Min DATA.csv
+ESRI Community Profile - West End - 5-10-15 Household Income_Housing Unit by Value DATA.csv
+Texas Comptroller Sales Tax NAICS-2023.csv
+Texas Comptroller Sales Tax NAICS-2024.csv
+ESRI Community Profile - West End - 5-10-15 Min 2020 Households by tenure DATA.csv
+ESRI Community Profile - West End - 5-10-15 Min 2024 Home Value and Income DATA.csv
+ESRI Community Profile - West End - 5-10-15 Min DT - 12-19-24.pdf
+ESRI Community Profile - West End - 5-10-15 Min 2020 Household Population DATA.csv
+ESRI Tapestry Segmentation Area Profile - West End - 5-10-15 Min DT - 12-19-24.xlsx
+ESRI Community Profile - West End - 5-10-15 Min 2024 Population by Marital Status DATA.csv
+ESRI Tapestry Segmentation Area Profile - West End - Insights Report.docx
+2_Retail Demand & Leakage Analysis
+PLACERAI Visitor Journey - West End Prior Favorite Chains DATA.csv
+PLACERAI Trade Area - West End -EcoDev - Dec 1, 2023 - Nov 30, 2024.pdf
+PLACERAI Trade Area - West End Trade Area Heat Map.png
+PLACERAI Visitor Journey - West End Prior Favorite Places DATA.csv
+Texas Comptroller retail-sector-2024.csv
+PLACERAI Visitor Journey - West End Prior Post Compare DATA.csv
+Texas Comptroller retail-sector-2023.csv
+PLACERAI Visitor Journey - West End -EcoDev - Dec 1, 2023 - Nov 30, 2024.pdf
+US CENSUS QuickFacts Total Retail Sales 2022 Per Capita.csv
+US CENSUS QuickFacts Total Retail Sales 2022.csv
+PLACERAI Trade Area - West End Visitation_Data.csv
+3_Zoning_Land Use_Incentives
+Texas Comptroller ch312-abatement.csv
+Texas Comptroller Waxahachie_Ellis_County_TIRZ_Data.csv
+Texas Comptroller ch380.csv
+Texas Comptroller ch312-abatement-zone-detail.csv
+Texas Comptroller ch312-abatement-zone.csv
+Texas Comptroller ch312-abatement-report.csv
+Texas Comptroller ch311-tirz-report.csv
+Texas Comptroller Ellis ch380.csv
+Texas Comptroller ch312-abatement-report-detail.csv
+Texas Comptroller ch312-abatement-detail.csv
+4_Infrastructure_Mobility Data
+TXDOT Ellis_County_5-Year_AADT_Data.csv
+TXDOT Ellis_County_Ramp_AADT_Data.csv
+TXDOT Dallas_County_Annual_AADT_Data.csv
+TXDOT Ellis_County_Annual_AADT_Data.csv
+TXDOT Dallas_County_5-Year_AADT_Data.csv
+TXDOT Dallas_County_Ramp_AADT_Data.csv
+TXDOT Ramp_AADT_Traffic_Counts.csv
+TXDOT 5_Year_Statewide_AADT_Traffic_Counts.csv
+6_Demographics & Supporting Data
+US CENSUS ACS 5Y DP03 Selected Economic Characteristics Ellis County 2023.csv
+US CENSUS QuickFacts Total Employer Establishments 2022.csv
+US CENSUS QuickFacts Total Employment Percent Change 2022.csv
+US CENSUS QuickFacts Total Nonemployer Establishments 2022.csv
+US CENSUS QuickFacts Median Household Income 2019-2023.csv
+US CENSUS QuickFacts Population Percent Change Apr 1 2020 - July 1 2024.csv
+US CENSUS QuickFacts Total Employment 2022.csv
+US CENSUS QuickFacts Total Annual Payroll 2022.csv

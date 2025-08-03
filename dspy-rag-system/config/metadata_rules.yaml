@@ -1,0 +1,152 @@
+# Metadata Extraction Rules Configuration
+# This file defines how documents are categorized and tagged based on filename patterns
+
+categories:
+  - name: "Testing & Samples"
+    priority: "low"
+    weight: 1
+    keywords: ["test_", "sample_", "example_", "_test", "_sample", "_example"]
+    tags: ["test", "sample", "example"]
+    description: "Test files and sample data"
+    
+  - name: "Pricing & Billing"
+    priority: "high"
+    weight: 5
+    keywords: ["pricing", "price", "cost", "billing", "quote", "invoice", "payment"]
+    tags: ["pricing", "billing", "financial"]
+    description: "Pricing information and billing documents"
+    
+  - name: "Legal & Contracts"
+    priority: "high"
+    weight: 5
+    keywords: ["contract", "agreement", "legal", "terms", "nda", "nda_", "legal_"]
+    tags: ["legal", "contract", "agreement"]
+    description: "Legal documents and contracts"
+    
+  - name: "Marketing & Campaigns"
+    priority: "medium"
+    weight: 3
+    keywords: ["marketing", "campaign", "ad", "promotion", "advertising"]
+    tags: ["marketing", "campaign", "advertising"]
+    description: "Marketing materials and campaigns"
+    
+  - name: "Client & Customer Data"
+    priority: "medium"
+    weight: 4
+    keywords: ["client", "customer", "user", "profile", "client_", "customer_"]
+    tags: ["client", "customer", "user"]
+    description: "Client and customer information"
+    
+  - name: "Financial Records"
+    priority: "high"
+    weight: 5
+    keywords: ["invoice", "receipt", "payment", "financial", "accounting"]
+    tags: ["financial", "invoice", "payment"]
+    description: "Financial records and accounting documents"
+    
+  - name: "Reports & Analytics"
+    priority: "medium"
+    weight: 3
+    keywords: ["report", "analytics", "data", "metrics", "report_", "analytics_"]
+    tags: ["report", "analytics", "data"]
+    description: "Reports and analytical data"
+    
+  - name: "Technical & Code"
+    priority: "medium"
+    weight: 3
+    keywords: ["source", "code", "script", "config", "technical", "development"]
+    tags: ["technical", "code", "development"]
+    description: "Technical documentation and code"
+    
+  - name: "Documentation & Guides"
+    priority: "medium"
+    weight: 2
+    keywords: ["manual", "guide", "documentation", "help", "readme", "docs"]
+    tags: ["documentation", "guide", "manual"]
+    description: "Documentation and user guides"
+
+# File type specific rules
+file_types:
+  csv:
+    content_type: "structured_data"
+    tags: ["data"]
+    special_rules:
+      - if_contains: ["pricing", "price", "cost"]
+        add_tags: ["pricing_data"]
+  
+  pdf:
+    content_type: "document"
+    tags: ["document"]
+  
+  doc:
+    content_type: "document"
+    tags: ["document"]
+  
+  docx:
+    content_type: "document"
+    tags: ["document"]
+  
+  txt:
+    content_type: "text"
+    tags: ["text"]
+  
+  md:
+    content_type: "text"
+    tags: ["text", "markdown"]
+  
+  jpg:
+    content_type: "image"
+    tags: ["image"]
+  
+  jpeg:
+    content_type: "image"
+    tags: ["image"]
+  
+  png:
+    content_type: "image"
+    tags: ["image"]
+  
+  gif:
+    content_type: "image"
+    tags: ["image"]
+
+# Priority rules (applied after category detection)
+priority_rules:
+  high_priority:
+    keywords: ["urgent", "important", "critical", "priority", "final"]
+    weight: 3
+  
+  low_priority:
+    keywords: ["draft", "temp", "backup", "old", "archive"]
+    weight: 1
+
+# Content analysis keywords (for content preview)
+content_keywords:
+  - "confidential"
+  - "private"
+  - "internal"
+  - "public"
+  - "draft"
+  - "final"
+  - "urgent"
+  - "important"
+
+# Date extraction patterns
+date_patterns:
+  - pattern: "\\d{4}[-_]\\d{2}[-_]\\d{2}"
+    format: "%Y-%m-%d"
+  - pattern: "\\d{2}[-_]\\d{2}[-_]\\d{4}"
+    format: "%m-%d-%Y"
+
+# Version extraction patterns
+version_patterns:
+  - pattern: "v(\\d+\\.\\d+\\.\\d+)"
+    group: 1
+  - pattern: "version[-_](\\d+\\.\\d+)"
+    group: 1
+
+# Size categories (in bytes)
+size_categories:
+  small: 1048576    # 1MB
+  medium: 10485760  # 10MB
+  large: 104857600  # 100MB 
