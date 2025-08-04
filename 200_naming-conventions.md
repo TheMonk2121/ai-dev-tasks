@@ -18,7 +18,7 @@ Advanced features and automation systems:
 - **`100_backlog-automation.md`** - AI-BACKLOG-META system
 - **`101_n8n-setup.md`** - n8n workflow configuration (future)
 - **`102_ai-agent-config.md`** - AI agent configuration (future)
-- **`103_yi-coder-integration.md`** - Yi-Coder-9B-Chat-Q6_K IDE integration (future)
+- **`103_yi-coder-integration.md`** - Yi-Coder-9B-Chat-Q6_K IDE integration
 
 #### **`200-299` - Configuration & Setup**
 Configuration files and setup guides:
@@ -162,6 +162,7 @@ Comprehensive documentation and guides:
 
 ### **Automation & Tools (100-199):**
 - `100_backlog-automation.md` - AI-BACKLOG-META system
+- `103_yi-coder-integration.md` - Yi-Coder-9B-Chat-Q6_K IDE integration
 
 ### **Configuration & Setup (200-299):**
 - `200_naming-conventions.md` - This file

@@ -60,22 +60,170 @@ This document outlines the specific AI model configuration for the AI Dev Tasks 
 
 ### **Yi-Coder-9B-Chat-Q6_K Setup**
 
-1. **Install LM Studio**:
-   - Download from [LM Studio](https://lmstudio.ai/)
-   - Install and launch the application
+#### **Prerequisites**
+| Component | macOS Command | Linux (Ubuntu 22.04) | Notes |
+|-----------|---------------|----------------------|-------|
+| Homebrew | built-in | — | Package manager (macOS) |
+| Git & curl | `brew install git curl` | `sudo apt install git curl` | For CLI download/testing |
+| LM Studio ≥ 0.2.18 | `brew install --cask lm-studio` or download DMG from https://lmstudio.ai/ | AppImage on website | Runs the model & exposes OpenAI-compatible API |
+| (Optional) huggingface-hub CLI | `pip install --upgrade huggingface-hub` | same | Enables command-line model downloads |
 
-2. **Download Model**:
-   - Search for "Yi-Coder-9B-Chat-Q6_K" in LM Studio
-   - Download the model (approximately 6GB)
+#### **Download the Model**
 
-3. **Configure Model**:
-   - Set context window: 4096 tokens
-   - Enable code generation optimizations
-   - Configure for local inference
+**Option A: Inside LM Studio (GUI – easiest)**
+1. Launch LM Studio → Models
+2. Search "Yi-Coder-9B-Chat-GGUF"
+3. Click Download on Yi-Coder-9B-Chat-Q6_K.gguf (≈ 4.9 GB)
+4. Wait for checksum to finish
 
-4. **Start Local Server**:
-   - In LM Studio, start the local server
-   - Default URL: `http://localhost:1234`
+**Option B: Command-line (offline / scripted)**
+```bash
+# create a models folder
+mkdir -p ~/lmstudio/models/yi-coder
+cd ~/lmstudio/models/yi-coder
+
+# pull only the Q6_K file
+huggingface-cli download \
+  TheBloke/Yi-Coder-9B-Chat-GGUF \
+  Yi-Coder-9B-Chat-Q6_K.gguf \
+  --local-dir . --resume-download
+```
+
+After manual download, click Models → Add local model in LM Studio and point to the .gguf file.
+
+#### **Configure the Model in LM Studio**
+
+**Load Tab Settings:**
+- Context Length: 8092
+- GPU Offload: 48 / 48 (full)
+- Evaluation Batch Size: 384
+- Offload KV Cache to GPU: On
+- Flash Attention: On
+- K / V Cache Quantization: (optional) q8_0 for both
+
+**Prompt Tab Settings:**
+1. Select Template (Jinja) and paste the full template:
+```jinja
+{# --- optional system message --- #}
+{% if messages and messages[0].get('role') == 'system' %}
+<|im_start|>system
+{{ messages[0]['content'] | trim }}
+<|im_end|>
+{% set start_index = 1 %}
+{% else %}
+{% set start_index = 0 %}
+{% endif %}
+
+{# --- history loop --- #}
+{% for m in messages[start_index:] %}
+{% if m['role'] in ['user', 'assistant'] %}
+<|im_start|>{{ m['role'] }}
+{{ m['content'] | trim }}
+<|im_end|>
+{% endif %}
+{% endfor %}
+
+{# --- assistant preamble --- #}
+<|im_start|>assistant
+```
+
+2. Additional Stop Strings:
+```
+<|im_start|>
+<|im_end|>
+```
+
+3. System Prompt (1-liner):
+```
+You are Yi-Coder, a deterministic coding assistant. Output runnable code.
+```
+
+4. Toggle Reasoning Section Parsing → OFF
+
+**Inference Tab Settings:**
+- Temperature: 0.35
+- Top-K / Top-P: 40 / 0.9
+- Repeat Penalty: 1.1
+- Min-P Sampling: Off
+- Limit Response Length: On, 2048 tokens
+- Context Overflow: Truncate Middle
+- CPU Threads: 12
+
+Click Save.
+
+#### **Start the Local API Server**
+1. In LM Studio, hit "Start API Server"
+2. Default port is 1234. Confirm you see:
+```
+OpenAI-compatible server listening on http://localhost:1234
+```
+
+3. Quick test:
+```bash
+curl http://localhost:1234/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+        "model": "Yi-Coder-9B-Chat-Q6_K",
+        "messages": [{"role":"user","content":"print(2+2)"}],
+        "temperature":0.2
+      }'
+```
+Expected JSON should contain "4".
+
+#### **Wire it into Cursor IDE**
+1. Cursor → Settings → Experimental → Local Models
+   (or open `~/.cursor/config.json` manually)
+
+2. Add:
+```jsonc
+{
+  "customModels": [
+    {
+      "title": "Yi-Coder Local",
+      "model": "yi-coder",
+      "baseURL": "http://localhost:1234/v1",
+      "apiKey": ""
+    }
+  ],
+  "defaultModel": "yi-coder"
+}
+```
+
+3. Save, restart Cursor, and choose "Yi-Coder Local" as the chat model
+
+#### **Smoke-test in Cursor**
+Open a new chat:
+```python
+# Python
+def add(a, b):
+    return a + b
+```
+Ask: "Write a pytest function that validates add()."
+
+You should get a deterministic, runnable test without `<think>` artifacts.
+
+#### **Routine Tips & Troubleshooting**
+| Symptom | Fix |
+|---------|-----|
+| NaNs or gibberish output | Toggle Flash Attention → Off and retry |
+| OOM error | Quantize KV-cache (q8_0) or drop context length to 6k |
+| Slow first token | Increase Evaluation Batch Size to 512 if VRAM allows |
+| Cursor shows `<im_start` | Check stop strings configuration |
+
+#### **At-a-glance Command Recap**
+```bash
+# 1. install LM Studio (macOS)
+brew install --cask lm-studio
+
+# 2. download Yi-Coder Q6_K (CLI option)
+huggingface-cli download TheBloke/Yi-Coder-9B-Chat-GGUF \
+    Yi-Coder-9B-Chat-Q6_K.gguf --local-dir ~/lmstudio/models/yi-coder
+
+# 3. launch LM Studio GUI → add local model
+# 4. paste template, set sliders, start API server (port 1234)
+# 5. curl test
+# 6. add local model entry in ~/.cursor/config.json
+```
 
 ## 📊 **Model Integration**
 
@@ -97,7 +245,7 @@ The models work together in the AI Dev Tasks workflow:
 OLLAMA_BASE_URL=http://localhost:11434
 OLLAMA_MODEL=mistral:7b-instruct
 
-# LM Studio Configuration (for future Yi-Coder integration)
+# LM Studio Configuration (for Yi-Coder integration)
 LM_STUDIO_URL=http://localhost:1234
 YI_CODER_MODEL=Yi-Coder-9B-Chat-Q6_K
 ```
@@ -120,6 +268,7 @@ YI_CODER_MODEL=Yi-Coder-9B-Chat-Q6_K
 - **File Operations**: Efficient at creating and modifying files
 - **Technical Implementation**: Strong at translating requirements to code
 - **Test Generation**: Good at creating test cases
+- **Deterministic Output**: Consistent, runnable code without artifacts
 
 ## 🔄 **Model Switching**
 
@@ -154,7 +303,7 @@ If one model is unavailable:
 ## 🔮 **Future Enhancements**
 
 ### **Planned Improvements**
-- **Yi-Coder Integration**: Direct integration with Cursor IDE
+- **Yi-Coder Integration**: Direct integration with Cursor IDE (B-011 in backlog)
 - **Model Switching**: Automatic selection based on task type
 - **Performance Tuning**: Optimize prompts for each model
 - **Context Optimization**: Better state management between models
