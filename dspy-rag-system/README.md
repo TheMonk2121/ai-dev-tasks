@@ -1,10 +1,31 @@
 # 🚀 DSPy RAG System
 
-A fully functional Retrieval Augmented Generation (RAG) system built with DSPy, PostgreSQL, and automatic file processing. **Now with complete DSPy → RAG → Mistral integration, CSV support, and production-ready critical fixes!**
+A fully functional Retrieval Augmented Generation (RAG) system built with DSPy, PostgreSQL, and automatic file processing. **Now with complete DSPy → RAG → Mistral integration, CSV support, and production-ready critical fixes!** This system implements the v0.3.1 Ultra-Minimal Router architecture with progressive complexity and runtime guard-rails.
 
 ## **✅ Status: PRODUCTION-READY WITH ENHANCED DSPy INTEGRATION & CRITICAL FIXES**
 
 Your DSPy RAG system is now **production-ready** with comprehensive security hardening, performance optimizations, and robust error handling! Drop files (including CSV) into the watch folder and ask questions using the full DSPy → RAG → Mistral pipeline.
+
+### **🏗️ v0.3.1 Ultra-Minimal Router Architecture**
+```python
+# Core Configuration
+ENABLED_AGENTS = ["IntentRouter", "RetrievalAgent", "CodeAgent"]
+MODELS = {
+    "mistral-7b-instruct": "warm",  # Always resident
+    "yi-coder-9b-chat-q6_k": "lazy"  # Load on demand
+}
+FEATURE_FLAGS = {
+    "DEEP_REASONING": 0,
+    "CLARIFIER": 0
+}
+MEMORY_STORE = "postgres_diff_no_tombstones"
+```
+
+**Runtime Guard-Rails:**
+- **RAM Pressure Checks**: Prevent memory exhaustion
+- **Model Janitor**: Unload idle models automatically
+- **Fast-Path Bypass**: Skip complex routing for simple queries
+- **Progressive Complexity**: Add features only when needed
 
 ### **🔧 Recent Critical Fixes Implemented:**
 - ✅ **Enhanced DSPy RAG System** - Pre-RAG and post-RAG DSPy logic

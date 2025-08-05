@@ -17,9 +17,11 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 │  ├── Task Generation (02_generate-tasks.md)                  │
 │  └── Process Management (03_process-task-list.md)            │
 ├─────────────────────────────────────────────────────────────────┤
-│  🤖 AI Execution Layer                                      │
+│  🤖 AI Execution Layer (v0.3.1)                            │
 │  ├── Mistral 7B Instruct (Planning & Reasoning)             │
 │  ├── Yi-Coder-9B-Chat-Q6_K (Code Implementation)          │
+│  ├── Error Policy & Retry Logic                             │
+│  ├── RAM Guard & Resource Management                         │
 │  └── State Management (.ai_state.json)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │  🔧 Core Systems                                            │
@@ -140,6 +142,17 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 
 ### 2. AI Execution Layer
 
+#### **v0.3.1 Ultra-Minimal Router Architecture**
+- **Core Agents**: IntentRouter, RetrievalAgent, CodeAgent
+- **Model Management**: 
+  - Mistral 7B Instruct (warm - always resident)
+  - Yi-Coder-9B-Chat-Q6_K (lazy - load on demand)
+- **Runtime Guard-Rails**: RAM pressure checks and model janitor
+- **Fast-Path Bypass**: Skip complex routing for simple queries (<50 chars)
+- **Feature Flags**: DEEP_REASONING=0, CLARIFIER=0 (default)
+- **Error Policy & Retries**: Configurable retry with backoff
+- **Environment Variables**: POOL_MIN/POOL_MAX, MODEL_IDLE_EVICT_SECS, MAX_RAM_PRESSURE
+
 #### **Mistral 7B Instruct Agent**
 - **Role**: Planning, reasoning, and human interaction
 - **Responsibilities**:
@@ -168,12 +181,15 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 
 #### **DSPy RAG System** (`dspy-rag-system/`)
 - **Purpose**: Intelligent document processing and question answering
+- **Architecture**: v0.3.1 Ultra-Minimal Router with progressive complexity
 - **Components**:
   - Document processor with metadata extraction
   - Vector store with PostgreSQL + PGVector
   - Enhanced RAG system with DSPy integration
   - Dashboard for monitoring and interaction
   - **Test Suite**: Organized in `tests/` directory with comprehensive coverage
+- **Memory Persistence**: Postgres delta snapshots (no tombstones initially)
+- **Performance**: RAM pressure guards and model janitor for resource management
 
 #### **N8N Workflow System**
 - **Purpose**: Automation and integration workflows
@@ -669,6 +685,22 @@ sudo supervisorctl update
 - **Learning Systems**: Continuous improvement from execution patterns
 - **Automated Testing**: Enhanced test generation and validation
 - **Deployment Automation**: Streamlined production deployment
+
+---
+
+## 📚 **Documentation References**
+
+### **Core Architecture**
+- **`docs/ARCHITECTURE.md`**: Comprehensive v0.3.1 architecture documentation
+- **`docs/CONFIG_REFERENCE.md`**: Complete configuration reference and schema
+
+### **Implementation Guides**
+- **`201_model-configuration.md`**: AI model setup and configuration
+- **`103_yi-coder-integration.md`**: Yi-Coder IDE integration guide
+
+### **System Documentation**
+- **`104_dspy-development-context.md`**: DSPy development context and status
+- **`200_naming-conventions.md`**: File organization and naming conventions
 
 ---
 

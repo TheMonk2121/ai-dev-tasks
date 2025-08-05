@@ -19,6 +19,7 @@ Advanced features and automation systems:
 - **`101_n8n-setup.md`** - n8n workflow configuration (future)
 - **`102_ai-agent-config.md`** - AI agent configuration (future)
 - **`103_yi-coder-integration.md`** - Yi-Coder-9B-Chat-Q6_K IDE integration
+- **`104_dspy-development-context.md`** - DSPy development context for deep research
 
 #### **`200-299` - Configuration & Setup**
 Configuration files and setup guides:
@@ -38,6 +39,8 @@ Comprehensive documentation and guides:
 - **`400_troubleshooting.md`** - Common issues and solutions (future)
 - **`401_best-practices.md`** - Development best practices (future)
 - **`402_migration-guide.md`** - System migration guides (future)
+- **`docs/ARCHITECTURE.md`** - Comprehensive v0.3.1 architecture documentation
+- **`docs/CONFIG_REFERENCE.md`** - Complete configuration reference and schema
 
 ## 🚀 **Adding New Files**
 

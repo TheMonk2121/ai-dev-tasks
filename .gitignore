@@ -44,6 +44,8 @@ Thumbs.db
 
 # Logs
 *.log
+watch_folder*.log
+watch_folder_error*.log
 
 # Temporary files
 *.tmp

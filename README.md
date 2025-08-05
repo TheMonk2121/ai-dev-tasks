@@ -4,6 +4,61 @@ Welcome to **AI Dev Tasks**! This repository provides a collection of markdown f
 
 Stop wrestling with monolithic AI requests and start guiding your AI collaborator step-by-step!
 
+## 🚀 Quick Start
+
+### Quick Start Box
+```bash
+# One-liner to get started
+make run-local
+
+# Or with custom configuration
+DEEP_REASONING=0 CLARIFIER=0 make run-local
+```
+
+**Environment Variables to Configure:**
+- `DEEP_REASONING=0` - Disable ReasoningAgent + Mixtral (default)
+- `CLARIFIER=0` - Disable ClarifierAgent (default)
+- `POOL_MIN=1` - Minimum database connections
+- `POOL_MAX=10` - Maximum database connections
+- `MODEL_IDLE_EVICT_SECS=600` - Idle model eviction time
+- `MAX_RAM_PRESSURE=85` - Maximum RAM usage percentage
+- `ENABLED_AGENTS=IntentRouter,RetrievalAgent,CodeAgent` - Comma-separated agent list
+- `METRICS_PORT=9100` - Prometheus metrics endpoint port
+- `REDIS_URL=redis://localhost:6379` - Redis for rate limiting persistence
+- `HEALTH_CHECK_TIMEOUT=30` - Health check timeout in seconds
+- `READY_CHECK_TIMEOUT=10` - Readiness check timeout in seconds
+
+**Config hot-reload:**
+```bash
+curl -X POST http://localhost:5000/admin/reload-config
+```
+
+**Override enabled agents:**
+```bash
+ENABLED_AGENTS=IntentRouter,RetrievalAgent make run-local
+```
+
+**Health & Metrics:**
+```bash
+# Health check
+curl http://localhost:5000/health
+
+# Metrics endpoint
+curl http://localhost:9100/metrics
+
+# Readiness check
+curl http://localhost:5000/ready
+```
+
+**Configuration Validation:**
+```bash
+# Validate system configuration
+python3 scripts/validate_config.py
+
+# Check configuration syntax
+python3 -c "import json; json.load(open('config/system.json'))"
+```
+
 ## ✨ The Core Idea
 
 Building complex features with AI can sometimes feel like a black box. This workflow aims to bring structure, clarity, and control to the process by:
@@ -78,7 +133,7 @@ You'll now have a well-structured task list optimized for AI execution, with cle
 
 ### 4️⃣ Execute Tasks with AI-Optimized Processing
 
-To ensure methodical progress and allow for verification, we'll use `03_process-task-list.md`. This system is designed for AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K) with strategic human oversight.
+To ensure methodical progress and allow for verification, we'll use `03_process-task-list.md`. This system is designed for AI agents using the v0.3.1 Ultra-Minimal Router architecture (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K) with strategic human oversight.
 
 1. Create or ensure you have the `03_process-task-list.md` file accessible.
 2. In your AI tool, tell the AI to start with the first task:

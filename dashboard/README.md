@@ -1,6 +1,6 @@
 # Document Management Dashboard
 
-A modern, interactive web dashboard for managing and visualizing documents in your RAG system with enhanced metadata capabilities.
+A modern, interactive web dashboard for managing and visualizing documents in your RAG system with enhanced metadata capabilities. This dashboard integrates with the v0.3.1 Ultra-Minimal Router architecture for intelligent document processing and analysis.
 
 ## 🚀 Quick Start
 

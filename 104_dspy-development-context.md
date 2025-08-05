@@ -19,6 +19,46 @@ This document provides comprehensive context about the current DSPy implementati
 5. **Interactive Interface** (`enhanced_ask_question.py`)
 6. **Web Dashboard** (`src/dashboard.py`)
 
+## 🚀 **Agreed Architecture: v0.3.1 Ultra-Minimal Router**
+
+### **Phase 1: Ultra-Minimal Implementation**
+```python
+# v0.3.1 Ultra-Minimal Configuration
+ENABLED_AGENTS = ["IntentRouter", "RetrievalAgent", "CodeAgent"]
+MODELS = {
+    "mistral-7b-instruct": "warm",  # Always resident
+    "yi-coder-9b-chat-q6_k": "lazy"  # Load on demand
+}
+FEATURE_FLAGS = {
+    "DEEP_REASONING": 0,
+    "CLARIFIER": 0
+}
+MEMORY_STORE = "postgres_diff_no_tombstones"
+```
+
+### **Runtime Guard-Rails**
+```python
+# RAM pressure check before loading
+if psutil.virtual_memory().percent > 85:
+    raise ResourceBusyError("High RAM pressure, try again later.")
+
+# Model janitor coroutine
+for name, mdl in model_pool.items():
+    if mdl.last_used > 600 and mdl.size_gb > 15:
+        mdl.unload()
+```
+
+### **Fast-Path Bypass**
+```python
+# Fast-path bypass (<50 chars & no code tokens)
+def is_fast_path(query: str) -> bool:
+    return len(query) < 50 and "code" not in query.lower()
+
+# Two flows:
+# Fast path → RetrievalAgent
+# Full path → Clarifier → Intent → Plan → loop
+```
+
 ## 📊 **Current Architecture**
 
 ### **DSPy Module Structure**
@@ -215,26 +255,29 @@ response = rag.ask("What is DSPy?", use_cot=True, use_react=False)
 
 ## 🚀 **Development Roadmap**
 
-### **Short-term Improvements (1-2 weeks)**
-1. **Yi-Coder Integration**: Add code generation capabilities
-2. **Enhanced Testing**: Comprehensive DSPy module testing
-3. **Performance Monitoring**: Add detailed metrics collection
-4. **Error Handling**: Improve error recovery and logging
+### **Phase 1: Ultra-Minimal Implementation (1 week)** ✅ **COMPLETED**
+1. **Core Agents**: IntentRouter, RetrievalAgent, CodeAgent
+2. **Model Management**: Mistral 7B (warm), Yi-Coder (lazy)
+3. **Fast-Path Bypass**: Skip complex routing for simple queries
+4. **RAM Pressure Guards**: Prevent memory exhaustion
+5. **Postgres Delta Snapshots**: Memory persistence without tombstones
+6. **Error Policy & Retry Logic**: Configurable retry with backoff
+7. **Environment-Driven Pool**: POOL_MIN/POOL_MAX configuration
+8. **RAM Guard Variables**: MODEL_IDLE_EVICT_SECS, MAX_RAM_PRESSURE
+
+### **Phase 2: Enhanced Features (1 week)** 🔄 **IN PROGRESS**
+1. **ReasoningAgent**: Add when DEEP_REASONING=1
+2. **Mixtral Integration**: Lazy loading for complex reasoning
+3. **Performance Monitoring**: Measure latency and memory usage
+4. **Error Recovery**: Improved error handling and retry logic
 5. **Documentation**: Complete API documentation
 
-### **Medium-term Enhancements (1-3 months)**
-1. **Multi-modal Support**: Add image and audio processing
-2. **Advanced Reasoning**: Implement more DSPy patterns
-3. **Model Switching**: Automatic model selection based on task
-4. **Distributed Storage**: Support for multiple databases
-5. **Cloud Deployment**: Docker containerization and cloud support
-
-### **Long-term Vision (3-6 months)**
-1. **Advanced DSPy Patterns**: Implement complex reasoning chains
-2. **Auto-optimization**: Self-improving prompt engineering
-3. **Multi-agent Coordination**: Multiple AI agent collaboration
-4. **Real-time Learning**: Continuous model improvement
-5. **Enterprise Features**: Multi-tenant support and advanced security
+### **Phase 3: Advanced Features (1 week)**
+1. **ClarifierAgent**: Add when CLARIFIER=1
+2. **SelfAnswerAgent**: For simple queries
+3. **GeneratePlan**: For complex planning tasks
+4. **Redis Cache**: For embeddings and frequent queries
+5. **WebSocket Streaming**: Real-time updates
 
 ## 📊 **Current Code Quality**
 

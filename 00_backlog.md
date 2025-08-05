@@ -8,7 +8,10 @@ A prioritized list of future enhancements and features for the AI development ec
 
 | ID  | Title                                   | 🔥P | 🎯Points | Status | Problem/Outcome | Tech Footprint | Dependencies |
 |-----|-----------------------------------------|-----|----------|--------|-----------------|----------------|--------------|
-| B‑001 | Real-time Mission Dashboard           | 🔥  | 3        | todo   | Need live visibility into AI task execution | PostgreSQL + Flask UI | None |
+| B‑000 | v0.3.1-rc3 Core Hardening | 🔥  | 3        | in-progress   | Implement critical security and reliability fixes for production readiness | DSPy + PostgreSQL + Security + Monitoring | None |
+<!--score: {bv:5, tc:5, rr:5, le:5, effort:3, deps:[]}-->
+<!--score_total: 6.7-->
+| B‑001 | Real-time Mission Dashboard           | 🔥  | 3        | todo   | Need live visibility into AI task execution | PostgreSQL + Flask UI | v0.3.1-rc3 Core Hardening |
 <!--score: {bv:5, tc:3, rr:5, le:4, effort:3, deps:[]}-->
 <!--score_total: 5.7-->
 | B‑002 | Advanced Error Recovery & Prevention  | 🔥  | 5        | todo   | Reduce development friction with intelligent error handling | AI analysis + HotFix generation | Enhanced RAG system |
@@ -26,7 +29,7 @@ A prioritized list of future enhancements and features for the AI development ec
 
 ---
 
-| B‑006 | Enhanced Dashboard with Real-time Updates | ⭐  | 5        | todo   | Improve development visibility and feedback | WebSocket + live updates | Mission Dashboard |
+| B‑006 | Enhanced Dashboard with Real-time Updates | ⭐  | 5        | todo   | Improve development visibility and feedback | WebSocket + live updates | B-001 Real-time Mission Dashboard |
 <!--score: {bv:4, tc:2, rr:2, le:2, effort:5, deps:[]}-->
 <!--score_total: 2.0-->
 | B‑007 | Metadata Editing & Bulk Operations           | ⭐  | 3        | todo   | Improve document management efficiency | In-place editing + batch ops | Document system |
@@ -81,6 +84,8 @@ A prioritized list of future enhancements and features for the AI development ec
 | B‑023 | Development Readiness Enhancements         | 🔧  | 5        | todo   | Ensure system stability for solo development | Performance metrics + load testing | Development |
 | B‑024 | Automated Sprint Planning                  | 🔧  | 2        | todo   | Automate sprint planning and backlog selection | AI planning + automation | Backlog system |
 | B‑025 | Database Event-Driven Status Updates      | 🔧  | 3        | todo   | Automatically update backlog status via database events | PostgreSQL triggers + event system | Event ledger |
+| B‑026 | Secrets Management                        | 🔥  | 2        | todo   | Secure credential management with environment validation | Keyring + env validation + startup checks | None |
+| B‑027 | Health & Readiness Endpoints             | 🔥  | 2        | todo   | Kubernetes-ready health checks with dependency monitoring | /health + /ready endpoints + JSON status | None |
 
 ---
 

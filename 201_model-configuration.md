@@ -1,15 +1,32 @@
-# 🤖 Model Configuration Guide
+# 🤖 v0.3.1 Model Configuration Guide
 
 This document outlines the specific AI model configuration for the AI Dev Tasks project.
 
+**Fast-Path Note:** The system includes intelligent query routing with fast-path bypass for simple queries (<50 chars, no code tokens).
+
 ## 🎯 **Current Model Setup**
 
-### **Primary AI Agents**
+### **v0.3.1 Ultra-Minimal Router Architecture**
+
+#### **Core Configuration**
+```python
+ENABLED_AGENTS = ["IntentRouter", "RetrievalAgent", "CodeAgent"]
+MODELS = {
+    "mistral-7b-instruct": "warm",  # Always resident
+    "yi-coder-9b-chat-q6_k": "lazy"  # Load on demand
+}
+FEATURE_FLAGS = {
+    "DEEP_REASONING": 0,
+    "CLARIFIER": 0
+}
+MEMORY_STORE = "postgres_diff_no_tombstones"
+```
 
 #### **1. Mistral 7B Instruct**
 - **Purpose**: Planning, reasoning, and human interaction
 - **Platform**: Ollama
 - **Model Name**: `mistral:7b-instruct`
+- **Status**: **Warm** (always resident)
 - **Configuration**: 
   - Base URL: `http://localhost:11434`
   - Timeout: 30 seconds
@@ -24,6 +41,7 @@ This document outlines the specific AI model configuration for the AI Dev Tasks 
 - **Purpose**: Code implementation and technical execution
 - **Platform**: LM Studio
 - **Model Name**: `Yi-Coder-9B-Chat-Q6_K`
+- **Status**: **Lazy** (load on demand)
 - **Configuration**:
   - Local deployment via LM Studio
   - Optimized for code generation
@@ -150,6 +168,67 @@ You are Yi-Coder, a deterministic coding assistant. Output runnable code.
 - CPU Threads: 12
 
 Click Save.
+
+## 🛡️ **Runtime Guard-Rails**
+
+### **RAM Pressure Management**
+```python
+# RAM pressure check before loading
+if psutil.virtual_memory().percent > 85:
+    raise ResourceBusyError("High RAM pressure, try again later.")
+```
+
+### **Model Janitor Coroutine**
+```python
+# Unload big weights after 10 min idle
+for name, mdl in model_pool.items():
+    if mdl.last_used > 600 and mdl.size_gb > 15:
+        mdl.unload()
+```
+
+### **Fast-Path Bypass**
+```python
+# Fast-path bypass (<50 chars & no code tokens)
+def is_fast_path(query: str) -> bool:
+    return len(query) < 50 and "code" not in query.lower()
+
+# Two flows:
+# Fast path → RetrievalAgent
+# Full path → Clarifier → Intent → Plan → loop
+```
+
+### **Model Memory Requirements**
+| Model | Size (8-bit) | Status | Load Strategy |
+|-------|--------------|--------|---------------|
+| Mistral 7B Instruct | ~8GB | Warm | Always resident |
+| Yi-Coder-9B-Chat-Q6_K | ~19GB | Lazy | Load on demand |
+| Mixtral-8x7B | ~25GB | Lazy | Only if DEEP_REASONING=1 |
+
+### **Mixtral-8x7B Configuration**
+- **Size**: 25GB (8-bit quantization)
+- **Activation**: Only when `DEEP_REASONING=1`
+- **Fallback**: Q4_K_M quantization (~21GB) if RAM pressure is high
+- **Use Case**: Deep reasoning and complex analysis tasks
+
+### **RAM-Guard & Idle-Evict System**
+The system implements comprehensive resource management using environment variables:
+
+- **`MODEL_IDLE_EVICT_SECS=600`**: Unload models idle for 10+ minutes
+- **`MAX_RAM_PRESSURE=85`**: Prevent loading if RAM usage > 85%
+
+```python
+async def model_janitor():
+    """Unload idle models to free memory"""
+    while True:
+        for name, model in model_pool.items():
+            idle_time = time.time() - model.last_used
+            if idle_time > MODEL_IDLE_EVICT_SECS and model.size_gb > 15:
+                await model.unload()
+        await asyncio.sleep(60)
+```
+
+### **Quantization Fallback**
+If you ever need all three models resident, drop Mixtral to Q4_K_M (~21 GB) and Yi-Coder to Q5 (~15 GB).
 
 #### **Start the Local API Server**
 1. In LM Studio, hit "Start API Server"
