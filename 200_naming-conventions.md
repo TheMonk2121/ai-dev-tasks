@@ -163,6 +163,7 @@ Comprehensive documentation and guides:
 ### **Automation & Tools (100-199):**
 - `100_backlog-automation.md` - AI-BACKLOG-META system
 - `103_yi-coder-integration.md` - Yi-Coder-9B-Chat-Q6_K IDE integration
+- `104_dspy-development-context.md` - DSPy development context for deep research
 
 ### **Configuration & Setup (200-299):**
 - `200_naming-conventions.md` - This file
