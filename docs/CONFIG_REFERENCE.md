@@ -148,6 +148,7 @@ The system configuration file defines the core architecture, agents, models, and
   "max_retries": "number",       // Required: Maximum retry attempts
   "backoff_factor": "number",    // Required: Exponential backoff multiplier
   "timeout_seconds": "number",   // Required: Default timeout
+  "llm_timeout_seconds": "number", // Optional: LLM-specific timeout (default 90)
   "fatal_errors": "array"       // Required: Non-retryable error types
 }
 ```
@@ -174,10 +175,19 @@ The system configuration file defines the core architecture, agents, models, and
 #### Security Schema
 ```json
 {
-  "prompt_blocklist_regex": "array",  // Required: Blocked patterns for prompt injection
+  "prompt_blocklist": "array",        // Required: Blocked patterns for prompt injection
+  "prompt_whitelist": "array",        // Optional: Allowed patterns (overrides blocklist)
   "file_validation": "object"         // Required: File validation rules
 }
 ```
+
+#### Security → Prompt Block-list
+The system uses regex-based prompt sanitization with configurable block-list and optional whitelist:
+
+**Default Block-list**: `["{{", "}}", "<script>"]`
+**Optional Whitelist**: `["<b>", "<i>"]` (allows specific HTML tags)
+
+**Logic**: If whitelist is provided, only whitelisted patterns are allowed. Otherwise, block-list patterns are rejected.
 
 ### `monitoring`
 - **Type**: Object
@@ -226,6 +236,12 @@ MAX_RAM_PRESSURE=85                # Maximum RAM usage percentage
 ### System Configuration
 ```bash
 ENABLED_AGENTS=IntentRouter,RetrievalAgent,CodeAgent  # Comma-separated agent list
+```
+
+### Security Configuration
+```bash
+LLM_TIMEOUT_SEC=90                 # Overrides llm_timeout_seconds for all agents
+SECURITY_MAX_FILE_MB=100           # Overrides file_validation.max_size_mb (default 50)
 ```
 
 ## Configuration Examples

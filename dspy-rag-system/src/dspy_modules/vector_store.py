@@ -16,15 +16,30 @@ import psycopg2
 from psycopg2.extras import RealDictCursor, execute_values
 from psycopg2.pool import SimpleConnectionPool
 from sentence_transformers import SentenceTransformer
+from ..utils.retry_wrapper import retry_database
+from ..utils.database_resilience import get_database_manager, execute_query, execute_transaction
 
 # Global connection pool
 _POOL: Optional[SimpleConnectionPool] = None
 
 def _get_pool(conn_str: str) -> SimpleConnectionPool:
-    """Get or create the global connection pool"""
+    """Get or create the global connection pool with timeout configuration"""
     global _POOL
     if _POOL is None:
-        _POOL = SimpleConnectionPool(minconn=1, maxconn=10, dsn=conn_str)
+        # Load timeout configuration
+        from ..utils.timeout_config import get_timeout_config
+        timeout_config = get_timeout_config()
+        
+        # Create pool with timeout settings
+        _POOL = SimpleConnectionPool(
+            minconn=1, 
+            maxconn=10, 
+            dsn=conn_str,
+            # Add connection timeout parameters
+            options=f"-c statement_timeout={timeout_config.db_read_timeout}s "
+                   f"-c idle_in_transaction_session_timeout={timeout_config.db_write_timeout}s"
+        )
+        
         # Register pgvector adapter once
         with _POOL.getconn() as conn:
             try:
@@ -65,93 +80,95 @@ class VectorStore(Module):
         else:
             raise ValueError(f"Unknown operation: {operation}")
     
+    @retry_database
     def _store_chunks(self, chunks: List[str], metadata: Dict[str, Any]) -> Dict[str, Any]:
         """Store document chunks with embeddings in PostgreSQL using bulk insert"""
         
+        # Generate embeddings for chunks
+        embeddings = self.model.encode(chunks, convert_to_numpy=True)
+        
+        # Use UUID for document_id to prevent collisions
+        doc_id = metadata.get("document_id") or uuid.uuid4().hex
+        
+        # Prepare bulk insert data
+        chunk_rows = [
+            (doc_id, i, chunk, emb.astype(np.float32))
+            for i, (chunk, emb) in enumerate(zip(chunks, embeddings))
+        ]
+        
+        # Use database resilience manager
+        db_manager = get_database_manager()
+        
+        # Set connection timeout
+        from ..utils.timeout_config import get_timeout_config
+        timeout_config = get_timeout_config()
+        
         try:
-            # Generate embeddings for chunks
-            embeddings = self.model.encode(chunks, convert_to_numpy=True)
-            
-            # Use UUID for document_id to prevent collisions
-            doc_id = metadata.get("document_id") or uuid.uuid4().hex
-            
-            # Prepare bulk insert data
-            chunk_rows = [
-                (doc_id, i, chunk, emb.astype(np.float32))
-                for i, (chunk, emb) in enumerate(zip(chunks, embeddings))
-            ]
-            
-            # Get connection from pool
-            pool = _get_pool(self.conn_str)
-            conn = pool.getconn()
-            
-            try:
-                with conn, conn.cursor() as cur:
-                    # Bulk insert chunks
-                    execute_values(
-                        cur,
-                        """
-                        INSERT INTO document_chunks
-                             (document_id, chunk_index, content, embedding)
-                        VALUES %s
-                        """,
-                        chunk_rows,
-                        template="(%s,%s,%s,%s)"
-                    )
-                    
-                    # Insert/update document record
-                    cur.execute("""
-                        INSERT INTO documents
-                               (document_id, filename, file_type, file_size,
-                                chunk_count, metadata)
-                        VALUES (%s,%s,%s,%s,%s,%s)
-                        ON CONFLICT (document_id)
-                        DO UPDATE SET chunk_count = EXCLUDED.chunk_count,
-                                      metadata = EXCLUDED.metadata,
-                                      updated_at = CURRENT_TIMESTAMP
-                    """, (
-                        doc_id,
-                        metadata.get("filename"),
-                        metadata.get("file_type"),
-                        metadata.get("file_size", 0),
-                        len(chunks),
-                        json.dumps(metadata),
-                    ))
+            with conn, conn.cursor() as cur:
+                # Set statement timeout for this connection
+                cur.execute(f"SET statement_timeout = {timeout_config.db_write_timeout * 1000}")
+                # Bulk insert chunks
+                execute_values(
+                    cur,
+                    """
+                    INSERT INTO document_chunks
+                         (document_id, chunk_index, content, embedding)
+                    VALUES %s
+                    """,
+                    chunk_rows,
+                    template="(%s,%s,%s,%s)"
+                )
                 
-                return {
-                    "status": "success",
-                    "document_id": doc_id,
-                    "chunks_stored": len(chunks)
-                }
-                
-            except Exception as e:
-                conn.rollback()
-                return {
-                    "status": "error",
-                    "error": str(e)
-                }
-            finally:
-                pool.putconn(conn)
-                
-        except Exception as e:
+                # Insert/update document record
+                cur.execute("""
+                    INSERT INTO documents
+                           (document_id, filename, file_type, file_size,
+                            chunk_count, metadata)
+                    VALUES (%s,%s,%s,%s,%s,%s)
+                    ON CONFLICT (document_id)
+                    DO UPDATE SET chunk_count = EXCLUDED.chunk_count,
+                                  metadata = EXCLUDED.metadata,
+                                  updated_at = CURRENT_TIMESTAMP
+                """, (
+                    doc_id,
+                    metadata.get("filename"),
+                    metadata.get("file_type"),
+                    metadata.get("file_size", 0),
+                    len(chunks),
+                    json.dumps(metadata),
+                ))
+            
             return {
-                "status": "error",
-                "error": str(e)
+                "status": "success",
+                "document_id": doc_id,
+                "chunks_stored": len(chunks)
             }
+            
+        except Exception as e:
+            conn.rollback()
+            raise
+        finally:
+            pool.putconn(conn)
     
+    @retry_database
     def _search(self, query: str, limit: int = 5) -> Dict[str, Any]:
         """Search for similar chunks using vector similarity"""
         
+        # Generate embedding for query
+        query_emb = self.model.encode([query])[0].astype(np.float32)
+        
+        # Use database resilience manager
+        db_manager = get_database_manager()
+        
+        # Set connection timeout
+        from ..utils.timeout_config import get_timeout_config
+        timeout_config = get_timeout_config()
+        
         try:
-            # Generate embedding for query
-            query_emb = self.model.encode([query])[0].astype(np.float32)
-            
-            # Get connection from pool
-            pool = _get_pool(self.conn_str)
-            conn = pool.getconn()
-            
-            try:
+            with db_manager.get_connection() as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    # Set statement timeout for this connection
+                    cur.execute(f"SET statement_timeout = {timeout_config.db_read_timeout * 1000}")
                     cur.execute("""
                         SELECT document_id, chunk_index, content,
                                1 - (embedding <=> %s) AS similarity
@@ -179,29 +196,17 @@ class VectorStore(Module):
                     "total_results": len(formatted_results)
                 }
                 
-            except Exception as e:
-                return {
-                    "status": "error",
-                    "error": str(e)
-                }
-            finally:
-                pool.putconn(conn)
-                
         except Exception as e:
-            return {
-                "status": "error",
-                "error": str(e)
-            }
+            raise
     
     def _delete_document(self, document_id: str) -> Dict[str, Any]:
         """Delete all chunks for a specific document"""
         
         try:
-            pool = _get_pool(self.conn_str)
-            conn = pool.getconn()
+            db_manager = get_database_manager()
             
-            try:
-                with conn, conn.cursor() as cur:
+            with db_manager.get_connection() as conn:
+                with conn.cursor() as cur:
                     # Delete chunks
                     cur.execute("""
                         DELETE FROM document_chunks 
@@ -220,15 +225,6 @@ class VectorStore(Module):
                     "message": "Document and all chunks deleted"
                 }
                 
-            except Exception as e:
-                conn.rollback()
-                return {
-                    "status": "error",
-                    "error": str(e)
-                }
-            finally:
-                pool.putconn(conn)
-                
         except Exception as e:
             return {
                 "status": "error",
@@ -239,10 +235,9 @@ class VectorStore(Module):
         """Retrieve all chunks for a specific document"""
         
         try:
-            pool = _get_pool(self.conn_str)
-            conn = pool.getconn()
+            db_manager = get_database_manager()
             
-            try:
+            with db_manager.get_connection() as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
                     cur.execute("""
                         SELECT chunk_index, content, created_at
@@ -268,14 +263,6 @@ class VectorStore(Module):
                     "total_chunks": len(formatted_results)
                 }
                 
-            except Exception as e:
-                return {
-                    "status": "error",
-                    "error": str(e)
-                }
-            finally:
-                pool.putconn(conn)
-                
         except Exception as e:
             return {
                 "status": "error",
@@ -286,10 +273,9 @@ class VectorStore(Module):
         """Get database statistics"""
         
         try:
-            pool = _get_pool(self.conn_str)
-            conn = pool.getconn()
+            db_manager = get_database_manager()
             
-            try:
+            with db_manager.get_connection() as conn:
                 with conn.cursor() as cur:
                     # Get total chunks
                     cur.execute("SELECT COUNT(*) FROM document_chunks")
@@ -321,14 +307,6 @@ class VectorStore(Module):
                     "total_conversations": total_conversations,
                     "document_types": document_types
                 }
-                
-            except Exception as e:
-                return {
-                    "status": "error",
-                    "error": str(e)
-                }
-            finally:
-                pool.putconn(conn)
                 
         except Exception as e:
             return {

@@ -109,7 +109,7 @@ Parse backlog for top 3 todo items by priority
 ### Status Definitions
 - `todo`: Not started
 - `in-progress`: Currently being worked on
-- `done`: Completed
+- `✅ done`: Completed (moved to "Completed Items" section)
 - `blocked`: Cannot start due to dependencies
 
 ### Update Triggers
@@ -117,6 +117,7 @@ Parse backlog for top 3 todo items by priority
 - **New Discovery**: Add new requirements to backlog
 - **Effort Adjustment**: Update points based on actual time
 - **Priority Change**: Recalculate based on new information
+- **Timestamp Updates**: Update *Last Updated* and add *Previously Updated* for history
 
 ## Benefits
 
@@ -152,7 +153,7 @@ Parse backlog for top 3 todo items by priority
 - Report parsing errors clearly
 - Maintain backward compatibility
 
-## n8n Backlog Scrubber Workflow
+## n8n Backlog Scrubber Workflow ✅ **IMPLEMENTED**
 
 ### Overview
 The n8n backlog scrubber automatically calculates and updates scoring metadata in the backlog file. This workflow:
@@ -163,59 +164,78 @@ The n8n backlog scrubber automatically calculates and updates scoring metadata i
 4. **Updates** the `<!--score_total: X.X-->` comments
 5. **Writes** the updated file back
 
-### Setup Instructions
+### Implementation Status ✅ **COMPLETED**
 
-#### 1. Create n8n Workflow
-Create a new workflow in n8n with the following nodes:
+**Location**: `dspy-rag-system/src/n8n_workflows/backlog_scrubber.py`
+**Webhook Server**: `dspy-rag-system/src/n8n_workflows/backlog_webhook.py`
+**Documentation**: `dspy-rag-system/docs/N8N_BACKLOG_SCRUBBER_GUIDE.md`
+**Tests**: `dspy-rag-system/tests/test_backlog_scrubber.py`
 
-**Node 1: HTTP Request (Read File)**
-- Method: GET
-- URL: `file:///path/to/ai-dev-tasks/00_backlog.md`
-- Response Format: Text
+### Features Implemented
 
-**Node 2: Function (Parse and Calculate)**
-```javascript
-// Parse scoring metadata and calculate totals
-const raw = $input.all()[0].json;
-const updated = raw.replace(/<!--score: (.*?)-->/g, (match, json) => {
-  try {
-    const o = JSON.parse(json);
-    const total = ((o.bv + o.tc + o.rr + o.le) / o.effort).toFixed(1);
-    return `${match}\n<!--score_total: ${total}-->`;
-  } catch (e) {
-    return match; // Keep original if parsing fails
-  }
-});
-return { updatedMarkdown: updated };
+#### Core Functionality
+- ✅ **Automated Score Calculation**: Python-based implementation with robust parsing
+- ✅ **Webhook Integration**: RESTful API for n8n workflows
+- ✅ **Validation & Error Handling**: Comprehensive input validation and error recovery
+- ✅ **Backup Protection**: Automatic file backups before updates
+- ✅ **Statistics & Monitoring**: Real-time statistics and health checks
+
+#### n8n Integration
+- ✅ **Webhook Endpoint**: `/webhook/backlog-scrubber` for triggering scrubs
+- ✅ **Health Checks**: `/health` endpoint for monitoring
+- ✅ **Statistics**: `/stats` endpoint for metrics
+- ✅ **Dry Run Support**: Test mode for safe operations
+
+#### Advanced Features
+- ✅ **Comprehensive Testing**: 20 unit and integration tests
+- ✅ **Demo Script**: Complete demonstration of all features
+- ✅ **Documentation**: Complete setup and usage guide
+- ✅ **Production Ready**: Error handling, logging, and monitoring
+
+### Usage
+
+#### Standalone Usage
+```bash
+# Run the backlog scrubber directly
+python3 src/n8n_workflows/backlog_scrubber.py
+
+# With custom backlog path
+python3 src/n8n_workflows/backlog_scrubber.py --backlog-path /path/to/backlog.md
+
+# Dry run (show changes without writing)
+python3 src/n8n_workflows/backlog_scrubber.py --dry-run
 ```
 
-**Node 3: HTTP Request (Write File)**
-- Method: POST
-- URL: `file:///path/to/ai-dev-tasks/00_backlog.md`
-- Body: `{{ $json.updatedMarkdown }}`
+#### Webhook Server
+```bash
+# Start the webhook server
+python3 src/n8n_workflows/backlog_webhook.py
 
-#### 2. Schedule Execution
-- **Manual Trigger**: Run when adding new items
-- **Scheduled**: Run weekly to recalculate scores
-- **Webhook**: Trigger from other workflows
+# With custom configuration
+python3 src/n8n_workflows/backlog_webhook.py --host 0.0.0.0 --port 5001 --debug
+```
 
-#### 3. Error Handling
-- Validate JSON parsing
-- Handle missing metadata gracefully
-- Log calculation errors
-- Rollback on failure
+#### n8n Workflow Integration
+1. **Webhook Trigger**: Create webhook trigger in n8n
+2. **HTTP Request**: Add HTTP request node to call backlog scrubber
+3. **Function Node**: Add function node to process response
+4. **Schedule**: Set up manual or scheduled triggers
 
 ### Benefits
-- **Automatic Scoring**: No manual calculation needed
-- **Consistent Updates**: All scores use same formula
-- **Error Prevention**: Validates data before updating
-- **Audit Trail**: Logs all changes for review
+- ✅ **Automatic Scoring**: No manual calculation needed
+- ✅ **Consistent Updates**: All scores use same formula
+- ✅ **Error Prevention**: Validates data before updating
+- ✅ **Audit Trail**: Logs all changes for review
+- ✅ **Webhook Integration**: Trigger from n8n workflows
+- ✅ **Health Monitoring**: Real-time status checks
+- ✅ **Backup Protection**: Automatic file backups
+- ✅ **Validation**: Comprehensive score validation
 
 ### Integration with AI Workflow
 The AI agents can now:
-1. **Read** pre-calculated scores from `<!--score_total: X.X-->`
-2. **Prioritize** items based on scores
-3. **Fall back** to human priority tags when scores missing
-4. **Trigger** re-scoring when priorities change
+1. ✅ **Read** pre-calculated scores from `<!--score_total: X.X-->`
+2. ✅ **Prioritize** items based on scores
+3. ✅ **Fall back** to human priority tags when scores missing
+4. ✅ **Trigger** re-scoring when priorities change
 
 This creates a **self-maintaining backlog** that stays prioritized without manual intervention. 

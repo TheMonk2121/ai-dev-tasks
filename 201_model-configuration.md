@@ -7,6 +7,7 @@ This document outlines the specific AI model configuration for the AI Dev Tasks 
 ## 🎯 **Current Model Setup**
 
 ### **v0.3.1 Ultra-Minimal Router Architecture**
+**C-2: Central Retry Wrapper** - ✅ **COMPLETED** - Configurable retry logic with exponential backoff implemented and tested.
 
 #### **Core Configuration**
 ```python
@@ -198,11 +199,11 @@ def is_fast_path(query: str) -> bool:
 ```
 
 ### **Model Memory Requirements**
-| Model | Size (8-bit) | Status | Load Strategy |
-|-------|--------------|--------|---------------|
-| Mistral 7B Instruct | ~8GB | Warm | Always resident |
-| Yi-Coder-9B-Chat-Q6_K | ~19GB | Lazy | Load on demand |
-| Mixtral-8x7B | ~25GB | Lazy | Only if DEEP_REASONING=1 |
+| Model | Size (8-bit) | Status | Load Strategy | Timeout |
+|-------|--------------|--------|---------------|---------|
+| Mistral 7B Instruct | ~8GB | Warm | Always resident | 30s |
+| Yi-Coder-9B-Chat-Q6_K | ~19GB | Lazy | Load on demand | 30s |
+| Mixtral-8x7B | ~25GB | Lazy | Only if DEEP_REASONING=1 | 90s |
 
 ### **Mixtral-8x7B Configuration**
 - **Size**: 25GB (8-bit quantization)
@@ -215,6 +216,7 @@ The system implements comprehensive resource management using environment variab
 
 - **`MODEL_IDLE_EVICT_SECS=600`**: Unload models idle for 10+ minutes
 - **`MAX_RAM_PRESSURE=85`**: Prevent loading if RAM usage > 85%
+- **LLM timeout default**: 30s for standard models, Mixtral override 90s
 
 ```python
 async def model_janitor():

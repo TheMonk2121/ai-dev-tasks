@@ -34,6 +34,13 @@ try:
     from dspy_modules.document_processor import DocumentProcessor
     from utils.logger import get_logger
     from utils.metadata_extractor import MetadataExtractor
+    from utils.validator import (
+        validate_file_path, validate_file_size, validate_string_length,
+        sanitize_filename, SecurityError, ValidationError
+    )
+    from utils.secrets_manager import validate_startup_secrets, setup_secrets_interactive
+    from monitoring.production_monitor import initialize_production_monitoring
+    from monitoring.health_endpoints import create_health_endpoints
     LOG = get_logger("dashboard")
 except ImportError as e:
     logging.basicConfig(level=logging.INFO)
@@ -61,6 +68,10 @@ class DashboardConfig:
     MAX_WORKERS = int(os.getenv("DASHBOARD_WORKERS", "4"))
     PROCESSING_TIMEOUT = int(os.getenv("PROCESSING_TIMEOUT", "300"))
     
+    # Load timeout configuration
+    from .utils.timeout_config import get_timeout_config
+    TIMEOUT_CONFIG = get_timeout_config()
+    
     # UI settings
     REFRESH_INTERVAL = int(os.getenv("REFRESH_INTERVAL", "5000"))  # 5 seconds
     MAX_QUERY_LENGTH = int(os.getenv("MAX_QUERY_LENGTH", "1000"))
@@ -72,6 +83,20 @@ app.config.from_object(DashboardConfig)
 
 # Initialize SocketIO for real-time updates
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+# Initialize production monitoring
+production_monitor = None
+health_endpoints = None
+try:
+    production_monitor = initialize_production_monitoring(
+        service_name="ai-dev-tasks",
+        service_version="0.3.1",
+        environment=os.getenv("ENVIRONMENT", "development")
+    )
+    health_endpoints = create_health_endpoints(app)
+    LOG.info("Production monitoring initialized")
+except Exception as e:
+    LOG.warning(f"Production monitoring not available: {e}")
 
 # Rate limiting (D-2)
 _RATE = defaultdict(lambda: deque())   # No maxlen - we control it manually
@@ -184,9 +209,19 @@ def format_file_size(size_bytes: int) -> str:
     return f"{size_bytes:.1f} TB"
 
 def initialize_components():
-    """Initialize RAG system components"""
+    """Initialize RAG system components with secrets validation (C-8)"""
     try:
         LOG.info("Initializing RAG system components...")
+        
+        # Validate secrets on startup (C-8)
+        LOG.info("🔐 Validating secrets on startup...")
+        if not validate_startup_secrets():
+            LOG.error("❌ Secrets validation failed")
+            LOG.info("🔧 Starting interactive secrets setup...")
+            if not setup_secrets_interactive():
+                LOG.error("❌ Interactive secrets setup failed")
+                return False
+            LOG.info("✅ Secrets setup completed")
         
         # Initialize vector store
         state.vector_store = VectorStore(DashboardConfig.POSTGRES_DSN)
@@ -206,6 +241,11 @@ def initialize_components():
             DashboardConfig.OLLAMA_BASE_URL
         )
         LOG.info("✅ Enhanced RAG interface initialized")
+        
+        # Start production monitoring if available
+        if production_monitor:
+            production_monitor.start_monitoring(interval_seconds=30)
+            LOG.info("✅ Production monitoring started")
         
         # Update stats
         try:
@@ -312,7 +352,7 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    """Handle file upload with security hardening (D-1)"""
+    """Handle file upload with comprehensive input validation (C-7)"""
     try:
         if 'file' not in request.files:
             return jsonify({'error': 'No file provided'}), 400
@@ -321,16 +361,20 @@ def upload_file():
         if file.filename == '':
             return jsonify({'error': 'No file selected'}), 400
         
-        # Path traversal protection (check original filename before sanitization)
-        original_filename = file.filename
-        if '..' in original_filename or '/' in original_filename or '\\' in original_filename:
-            return jsonify({'error': 'Bad filename'}), 400
-        
-        # Secure filename validation
-        filename = secure_filename(file.filename)
-        ext = Path(filename).suffix.lower()
-        if ext not in DashboardConfig.ALLOWED_EXTENSIONS:
-            return jsonify({'error': 'File type not allowed'}), 400
+        # Comprehensive input validation
+        try:
+            # Validate file path and extension
+            validate_file_path(file.filename, list(DashboardConfig.ALLOWED_EXTENSIONS))
+            
+            # Sanitize filename
+            filename = sanitize_filename(secure_filename(file.filename))
+            
+            # Validate string length
+            validate_string_length(filename, min_length=1, max_length=255)
+            
+        except (SecurityError, ValidationError) as e:
+            LOG.warning(f"File validation failed: {e}")
+            return jsonify({'error': f'File validation failed: {e}'}), 400
         
         # Secure upload directory with path confinement
         upload_dir = Path(app.config['UPLOAD_FOLDER']).resolve()
@@ -339,12 +383,35 @@ def upload_file():
         
         # Double-check path confinement
         if not str(file_path).startswith(str(upload_dir)):
+            LOG.warning(f"Path traversal attempt: {file_path}")
             return jsonify({'error': 'Path traversal detected'}), 400
         
+        # Save file temporarily to check size
         file.save(str(file_path))
+        
+        try:
+            # Validate file size
+            validate_file_size(str(file_path), max_size_mb=50)
+            
+            # Validate file content (basic check)
+            validate_file_content(str(file_path), max_lines=10000)
+            
+        except (SecurityError, ValidationError) as e:
+            # Clean up invalid file
+            if file_path.exists():
+                file_path.unlink()
+            LOG.warning(f"File content validation failed: {e}")
+            return jsonify({'error': f'File content validation failed: {e}'}), 400
         
         # Start async processing
         state.executor.submit(process_file_async, file_path)
+        
+        LOG.info(f"File uploaded successfully: {filename}", extra={
+            'component': 'dashboard',
+            'action': 'file_upload',
+            'filename': filename,
+            'file_size': file_path.stat().st_size
+        })
         
         return jsonify({
             'success': True,
@@ -360,28 +427,50 @@ def upload_file():
 
 @app.route('/query', methods=['POST'])
 def query_rag():
-    """Handle RAG queries with rate limiting (D-2)"""
+    """Handle RAG queries with comprehensive input validation (C-7)"""
     try:
         # Rate limiting check
         ip = request.remote_addr or 'unknown'
         if not _check_rate(ip):
             return jsonify({'error': 'Rate limit exceeded'}), 429
         
-        data = request.get_json()
-        query = data.get('query', '').strip()
+        # Validate JSON structure
+        try:
+            data = request.get_json()
+            if not data:
+                return jsonify({'error': 'Invalid JSON data'}), 400
+            
+            query = data.get('query', '').strip()
+            
+        except Exception as e:
+            LOG.warning(f"JSON parsing error: {e}")
+            return jsonify({'error': 'Invalid JSON format'}), 400
         
-        if not query:
-            return jsonify({'error': 'Query is required'}), 400
-        
-        if len(query) > DashboardConfig.MAX_QUERY_LENGTH:
-            return jsonify({'error': f'Query too long (max {DashboardConfig.MAX_QUERY_LENGTH} chars)'}), 400
+        # Comprehensive query validation
+        try:
+            # Validate query presence
+            if not query:
+                return jsonify({'error': 'Query is required'}), 400
+            
+            # Validate string length
+            validate_string_length(query, min_length=1, max_length=DashboardConfig.MAX_QUERY_LENGTH)
+            
+            # Validate query complexity
+            validate_query_complexity(query, max_tokens=1000)
+            
+            # Sanitize prompt for security
+            sanitized_query = sanitize_prompt(query)
+            
+        except (SecurityError, ValidationError) as e:
+            LOG.warning(f"Query validation failed: {e}")
+            return jsonify({'error': f'Query validation failed: {e}'}), 400
         
         if not state.rag_interface:
             return jsonify({'error': 'RAG system not available'}), 503
         
         # Process query with enhanced DSPy processing
         start_time = time.time()
-        result = state.rag_interface.ask(query)
+        result = state.rag_interface.ask(sanitized_query)
         response_time = time.time() - start_time
         
         if result.get('status') == 'success':
@@ -389,7 +478,15 @@ def query_rag():
             sources = result.get('sources', [])
             
             # Add to history
-            state.add_query_to_history(query, response, sources, response_time)
+            state.add_query_to_history(sanitized_query, response, sources, response_time)
+            
+            LOG.info(f"Query processed successfully", extra={
+                'component': 'dashboard',
+                'action': 'query_processed',
+                'query_length': len(sanitized_query),
+                'response_time': response_time,
+                'fast_path': result.get('fast_path', False)
+            })
             
             return jsonify({
                 'success': True,
@@ -398,10 +495,12 @@ def query_rag():
                 'response_time': response_time,
                 'rewritten_query': result.get('rewritten_query', ''),
                 'reasoning': result.get('reasoning', ''),
-                'confidence': result.get('confidence', 0.8)
+                'confidence': result.get('confidence', 0.8),
+                'fast_path': result.get('fast_path', False)
             })
         else:
             error_msg = result.get('error', 'Unknown error')
+            LOG.error(f"RAG query failed: {error_msg}")
             return jsonify({'error': error_msg}), 500
             
     except Exception as e:
@@ -500,6 +599,35 @@ def health_check():
             'timestamp': datetime.now().isoformat()
         }), 500
 
+@app.route('/api/monitoring')
+def monitoring_data():
+    """Production monitoring data endpoint"""
+    try:
+        if not production_monitor:
+            return jsonify({
+                "error": "Production monitoring not available",
+                "timestamp": datetime.now().isoformat()
+            }), 503
+        
+        # Get monitoring data
+        health_status = production_monitor.get_health_status()
+        security_events = production_monitor.get_security_events(hours=1)
+        system_metrics = production_monitor.get_system_metrics(minutes=30)
+        
+        return jsonify({
+            "health": health_status,
+            "security_events": security_events,
+            "system_metrics": system_metrics,
+            "timestamp": datetime.now().isoformat()
+        }), 200
+        
+    except Exception as e:
+        LOG.error(f"Monitoring data error: {e}")
+        return jsonify({
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }), 503
+
 # SocketIO events
 @socketio.on('connect')
 def handle_connect():
@@ -564,39 +692,59 @@ def not_found(e):
 
 def main():
     """Main function to run the dashboard"""
-    print("🚀 DSPy RAG System Dashboard")
-    print("=" * 40)
+    LOG.info("🚀 DSPy RAG System Dashboard starting", extra={
+        'component': 'dashboard',
+        'action': 'startup',
+        'version': '2.0'
+    })
     
     # Initialize components
     if not initialize_components():
-        print("❌ Failed to initialize components")
+        LOG.error("❌ Failed to initialize components", extra={
+            'component': 'dashboard',
+            'action': 'initialization',
+            'status': 'failed'
+        })
         return
     
     # Create upload directory
     upload_dir = Path(DashboardConfig.UPLOAD_FOLDER)
     upload_dir.mkdir(exist_ok=True)
     
-    print(f"\n📊 Dashboard Configuration:")
-    print(f"   - Upload folder: {DashboardConfig.UPLOAD_FOLDER}")
-    print(f"   - Max file size: {format_file_size(DashboardConfig.MAX_CONTENT_LENGTH)}")
-    print(f"   - Allowed extensions: {', '.join(DashboardConfig.ALLOWED_EXTENSIONS)}")
-    print(f"   - Workers: {DashboardConfig.MAX_WORKERS}")
-    print(f"   - Ollama URL: {DashboardConfig.OLLAMA_BASE_URL}")
-    print(f"   - Model: {DashboardConfig.OLLAMA_MODEL}")
+    LOG.info("📊 Dashboard Configuration", extra={
+        'component': 'dashboard',
+        'action': 'configuration',
+        'upload_folder': DashboardConfig.UPLOAD_FOLDER,
+        'max_file_size': format_file_size(DashboardConfig.MAX_CONTENT_LENGTH),
+        'allowed_extensions': list(DashboardConfig.ALLOWED_EXTENSIONS),
+        'workers': DashboardConfig.MAX_WORKERS,
+        'ollama_url': DashboardConfig.OLLAMA_BASE_URL,
+        'model': DashboardConfig.OLLAMA_MODEL
+    })
     
-    print(f"\n🌐 Starting dashboard server...")
-    print(f"   - Local: http://localhost:5000")
-    print(f"   - Health check: http://localhost:5000/api/health")
-    print(f"\n⏹️  Press Ctrl+C to stop")
-    print("-" * 40)
+    LOG.info("🌐 Starting dashboard server", extra={
+        'component': 'dashboard',
+        'action': 'server_start',
+        'host': '0.0.0.0',
+        'port': 5000,
+        'health_url': 'http://localhost:5000/api/health'
+    })
     
     try:
         # Run with SocketIO
         socketio.run(app, host='0.0.0.0', port=5000, debug=False)
     except KeyboardInterrupt:
-        print("\n⏹️  Stopping dashboard...")
+        LOG.info("⏹️  Stopping dashboard", extra={
+            'component': 'dashboard',
+            'action': 'shutdown',
+            'reason': 'keyboard_interrupt'
+        })
         state.executor.shutdown(wait=True)
-        print("✅ Dashboard stopped")
+        LOG.info("✅ Dashboard stopped", extra={
+            'component': 'dashboard',
+            'action': 'shutdown',
+            'status': 'completed'
+        })
 
 if __name__ == "__main__":
     main() 

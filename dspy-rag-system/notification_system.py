@@ -64,13 +64,24 @@ class NotificationSystem:
     def send_terminal_notification(self, title, message):
         """Send terminal notification"""
         try:
+            logger.info("🔔 Terminal notification sent", extra={
+                'component': 'notification_system',
+                'action': 'terminal_notification',
+                'title': title,
+                'message': message,
+                'timestamp': datetime.now().isoformat()
+            })
             print(f"\n🔔 NOTIFICATION: {title}")
             print(f"   {message}")
             print(f"   Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             print("=" * 50)
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to send terminal notification: {e}")
+            logger.error(f"❌ Failed to send terminal notification: {e}", extra={
+                'component': 'notification_system',
+                'action': 'terminal_notification_error',
+                'error': str(e)
+            })
             return False
     
     def send_desktop_notification(self, title, message, subtitle=""):
@@ -139,6 +150,10 @@ class NotificationSystem:
 
 def setup_notifications():
     """Set up notification system"""
+    logger.info("🔔 Setting up RAG Notification System", extra={
+        'component': 'notification_system',
+        'action': 'setup_start'
+    })
     print("🔔 Setting up RAG Notification System...")
     print("=" * 50)
     
@@ -146,8 +161,18 @@ def setup_notifications():
     try:
         subprocess.run(['terminal-notifier', '-help'], 
                       capture_output=True, check=True)
+        logger.info("✅ terminal-notifier available", extra={
+            'component': 'notification_system',
+            'action': 'terminal_notifier_check',
+            'status': 'available'
+        })
         print("✅ terminal-notifier available")
     except:
+        logger.warning("⚠️  terminal-notifier not installed", extra={
+            'component': 'notification_system',
+            'action': 'terminal_notifier_check',
+            'status': 'not_installed'
+        })
         print("⚠️  terminal-notifier not installed")
         print("   Install with: brew install terminal-notifier")
     
@@ -159,8 +184,18 @@ def setup_notifications():
     )
     
     if test_success:
+        logger.info("✅ macOS notifications working", extra={
+            'component': 'notification_system',
+            'action': 'macos_test',
+            'status': 'success'
+        })
         print("✅ macOS notifications working")
     else:
+        logger.error("❌ macOS notifications not working", extra={
+            'component': 'notification_system',
+            'action': 'macos_test',
+            'status': 'failed'
+        })
         print("❌ macOS notifications not working")
     
     return notification_system

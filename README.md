@@ -8,12 +8,30 @@ Stop wrestling with monolithic AI requests and start guiding your AI collaborato
 
 ### Quick Start Box
 ```bash
+# Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r dspy-rag-system/requirements.txt
+
 # One-liner to get started
 make run-local
 
 # Or with custom configuration
 DEEP_REASONING=0 CLARIFIER=0 make run-local
 ```
+
+**Virtual Environment Setup:**
+The project uses a virtual environment to prevent dependency conflicts. Always activate it before running:
+```bash
+source venv/bin/activate  # On macOS/Linux
+# or
+venv\Scripts\activate     # On Windows
+```
+
+**Large LLMs Note:**
+Large LLMs (Mixtral) require `LLM_TIMEOUT_SEC>=90` for optimal performance.
 
 **Environment Variables to Configure:**
 - `DEEP_REASONING=0` - Disable ReasoningAgent + Mixtral (default)
@@ -27,6 +45,45 @@ DEEP_REASONING=0 CLARIFIER=0 make run-local
 - `REDIS_URL=redis://localhost:6379` - Redis for rate limiting persistence
 - `HEALTH_CHECK_TIMEOUT=30` - Health check timeout in seconds
 - `READY_CHECK_TIMEOUT=10` - Readiness check timeout in seconds
+
+**Timeout Configuration:**
+- `DB_CONNECT_TIMEOUT=10` - Database connection timeout (seconds)
+- `DB_READ_TIMEOUT=30` - Database read timeout (seconds)
+- `DB_WRITE_TIMEOUT=60` - Database write timeout (seconds)
+- `DB_POOL_TIMEOUT=20` - Database pool timeout (seconds)
+- `HTTP_CONNECT_TIMEOUT=10` - HTTP connection timeout (seconds)
+- `HTTP_READ_TIMEOUT=30` - HTTP read timeout (seconds)
+- `HTTP_TOTAL_TIMEOUT=120` - HTTP total timeout (seconds)
+- `PDF_PROCESSING_TIMEOUT=300` - PDF processing timeout (seconds)
+- `FILE_UPLOAD_TIMEOUT=600` - File upload timeout (seconds)
+- `CHUNK_PROCESSING_TIMEOUT=120` - Chunk processing timeout (seconds)
+- `LLM_REQUEST_TIMEOUT=120` - LLM request timeout (seconds)
+- `LLM_STREAM_TIMEOUT=300` - LLM stream timeout (seconds)
+- `STARTUP_TIMEOUT=60` - System startup timeout (seconds)
+
+**Security Configuration:**
+- `SECURITY_ENABLED=true` - Enable security scanning
+- `SECURITY_SCAN_ON_STARTUP=true` - Run security scan on startup
+- `SECURITY_VULNERABILITY_THRESHOLD=medium` - Vulnerability threshold
+- `SECURITY_AUTO_FIX=false` - Auto-fix security issues
+- `SECURITY_REPORT_FILE=security-report.json` - Security report file
+- `SECURITY_MAX_FILE_SIZE=104857600` - Maximum file size (100MB)
+- `SECURITY_TOKEN_LENGTH=32` - Security token length
+- `LLM_TIMEOUT_SEC=90` - Overrides agent timeouts (optional)
+- `SECURITY_MAX_FILE_MB=100` - Raise default 50 MB cap (optional)
+
+**Production Monitoring Configuration:**
+- `ENVIRONMENT=production` - Set environment (development, staging, production)
+- `OTLP_ENDPOINT=http://localhost:4317` - OpenTelemetry endpoint (optional)
+- `MONITORING_INTERVAL=30` - Monitoring cycle interval in seconds
+- `HEALTH_CHECK_TIMEOUT=5` - Health check timeout in seconds
+
+**Database Resilience Configuration:**
+- `POSTGRES_DSN=postgresql://user:pass@host:port/db` - Database connection string
+- `DB_MIN_CONNECTIONS=1` - Minimum database connections in pool
+- `DB_MAX_CONNECTIONS=10` - Maximum database connections in pool
+- `DB_CONNECTION_TIMEOUT=30` - Database connection timeout in seconds
+- `DB_HEALTH_CHECK_INTERVAL=60` - Database health check interval in seconds
 
 **Config hot-reload:**
 ```bash
@@ -48,6 +105,15 @@ curl http://localhost:9100/metrics
 
 # Readiness check
 curl http://localhost:5000/ready
+
+# Production monitoring data
+curl http://localhost:5000/api/monitoring
+
+# Dependencies health check
+curl http://localhost:5000/api/health/dependencies
+
+# Database health status
+curl http://localhost:5000/api/database/health
 ```
 
 **Configuration Validation:**
@@ -57,6 +123,23 @@ python3 scripts/validate_config.py
 
 # Check configuration syntax
 python3 -c "import json; json.load(open('config/system.json'))"
+```
+
+**Security Scanning:**
+```bash
+# Run comprehensive security scan
+python3 scripts/security_scan.py
+
+# Run security scan with failure on vulnerabilities
+python3 scripts/security_scan.py --fail-on-vulnerabilities
+
+# Run security scan with verbose output
+python3 scripts/security_scan.py --verbose
+
+# Run individual security tools
+python3 -m bandit -r src/
+python3 -m safety check
+python3 -m pip_audit
 ```
 
 ## ✨ The Core Idea

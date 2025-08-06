@@ -2,9 +2,12 @@
 
 A fully functional Retrieval Augmented Generation (RAG) system built with DSPy, PostgreSQL, and automatic file processing. **Now with complete DSPy → RAG → Mistral integration, CSV support, and production-ready critical fixes!** This system implements the v0.3.1 Ultra-Minimal Router architecture with progressive complexity and runtime guard-rails.
 
-## **✅ Status: PRODUCTION-READY WITH ENHANCED DSPy INTEGRATION & CRITICAL FIXES**
+## **✅ Status: PRODUCTION-READY WITH ENHANCED DSPy INTEGRATION & PRODUCTION MONITORING**
 
-Your DSPy RAG system is now **production-ready** with comprehensive security hardening, performance optimizations, and robust error handling! Drop files (including CSV) into the watch folder and ask questions using the full DSPy → RAG → Mistral pipeline.
+Your DSPy RAG system is now **production-ready** with comprehensive security hardening, performance optimizations, robust error handling, and production monitoring! Drop files (including CSV) into the watch folder and ask questions using the full DSPy → RAG → Mistral pipeline.
+
+**B-000: v0.3.1-rc3 Core Hardening** - ✅ **COMPLETED** - Comprehensive database resilience with connection pooling, health monitoring, retry logic, and production-ready error handling.
+**B-003: Production Security & Monitoring** - ✅ **COMPLETED** - Comprehensive production monitoring system with security alerts, health checks, OpenTelemetry integration, and Kubernetes-ready endpoints.
 
 ### **🏗️ v0.3.1 Ultra-Minimal Router Architecture**
 ```python
@@ -28,6 +31,9 @@ MEMORY_STORE = "postgres_diff_no_tombstones"
 - **Progressive Complexity**: Add features only when needed
 
 ### **🔧 Recent Critical Fixes Implemented:**
+- ✅ **B-000: v0.3.1-rc3 Core Hardening** - Database resilience with connection pooling, health monitoring, retry logic, and production-ready error handling
+- ✅ **B-003: Production Security & Monitoring** - Comprehensive monitoring system with security alerts, health checks, OpenTelemetry integration
+- ✅ **C-2: Central Retry Wrapper** - Configurable retry logic with exponential backoff
 - ✅ **Enhanced DSPy RAG System** - Pre-RAG and post-RAG DSPy logic
 - ✅ **Dashboard Security Hardening** - Upload protection, rate limiting, thread safety
 - ✅ **VectorStore Performance** - Connection pooling, caching, bulk operations
@@ -36,6 +42,16 @@ MEMORY_STORE = "postgres_diff_no_tombstones"
 - ✅ **Document Processor** - UUID-based IDs, PyMuPDF integration, security validation
 
 ## **🎯 Quick Start**
+
+### **0. Environment Setup**
+```bash
+# Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
 
 ### **1. Add Documents (Drag & Drop)**
 ```bash
@@ -76,6 +92,8 @@ python3 src/dashboard.py
 
 # Access at: http://localhost:5000
 # Features: File upload, RAG queries, real-time updates, system monitoring
+# Production monitoring: /api/monitoring for system metrics and security events
+# Health checks: /health and /ready endpoints for Kubernetes deployment
 ```
 
 ## **🔧 Your Tech Stack: How It All Works Together**

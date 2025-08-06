@@ -17,9 +17,12 @@ from utils.logger import get_logger, log_with_context, log_document_processing, 
 
 def test_basic_logging():
     """Test basic logging functionality"""
-    print("🧪 Testing basic logging...")
-    
     logger = get_logger("test_basic")
+    
+    logger.info("🧪 Testing basic logging", extra={
+        'component': 'test_logger',
+        'action': 'basic_test_start'
+    })
     
     # Test different log levels
     logger.debug("Debug message")
@@ -27,13 +30,20 @@ def test_basic_logging():
     logger.warning("Warning message")
     logger.error("Error message")
     
-    print("✅ Basic logging test passed")
+    logger.info("✅ Basic logging test passed", extra={
+        'component': 'test_logger',
+        'action': 'basic_test_complete',
+        'status': 'success'
+    })
 
 def test_context_logging():
     """Test context logging with various data types"""
-    print("🧪 Testing context logging...")
-    
     logger = get_logger("test_context")
+    
+    logger.info("🧪 Testing context logging", extra={
+        'component': 'test_logger',
+        'action': 'context_test_start'
+    })
     
     # Test with different context types
     log_with_context(logger, "Processing document", 
@@ -46,13 +56,20 @@ def test_context_logging():
                     numeric_field=42,
                     float_field=3.14)
     
-    print("✅ Context logging test passed")
+    logger.info("✅ Context logging test passed", extra={
+        'component': 'test_logger',
+        'action': 'context_test_complete',
+        'status': 'success'
+    })
 
 def test_document_processing_logging():
     """Test document processing specific logging"""
-    print("🧪 Testing document processing logging...")
-    
     logger = get_logger("test_document")
+    
+    logger.info("🧪 Testing document processing logging", extra={
+        'component': 'test_logger',
+        'action': 'document_test_start'
+    })
     
     log_document_processing(logger, 
                           document_id="doc_456",
@@ -61,13 +78,20 @@ def test_document_processing_logging():
                           chunk_count=10,
                           processing_time_ms=2500)
     
-    print("✅ Document processing logging test passed")
+    logger.info("✅ Document processing logging test passed", extra={
+        'component': 'test_logger',
+        'action': 'document_test_complete',
+        'status': 'success'
+    })
 
 def test_error_logging():
     """Test error logging with exceptions"""
-    print("🧪 Testing error logging...")
-    
     logger = get_logger("test_error")
+    
+    logger.info("🧪 Testing error logging", extra={
+        'component': 'test_logger',
+        'action': 'error_test_start'
+    })
     
     try:
         # Simulate an error
@@ -77,13 +101,20 @@ def test_error_logging():
                              document_id="doc_789",
                              stage="error_test")
     
-    print("✅ Error logging test passed")
+    logger.info("✅ Error logging test passed", extra={
+        'component': 'test_logger',
+        'action': 'error_test_complete',
+        'status': 'success'
+    })
 
 def test_sensitive_data_redaction():
     """Test that sensitive data is redacted"""
-    print("🧪 Testing sensitive data redaction...")
-    
     logger = get_logger("test_redaction")
+    
+    logger.info("🧪 Testing sensitive data redaction", extra={
+        'component': 'test_logger',
+        'action': 'redaction_test_start'
+    })
     
     # Test with sensitive fields
     log_with_context(logger, "Testing redaction",
@@ -92,22 +123,31 @@ def test_sensitive_data_redaction():
                     auth_key="auth_key_here",
                     normal_field="this_should_not_be_redacted")
     
-    print("✅ Sensitive data redaction test passed")
+    logger.info("✅ Sensitive data redaction test passed", extra={
+        'component': 'test_logger',
+        'action': 'redaction_test_complete',
+        'status': 'success'
+    })
 
 def test_file_logging():
     """Test file logging with rotation"""
-    print("🧪 Testing file logging...")
+    logger = get_logger("test_file_logging")
+    
+    logger.info("🧪 Testing file logging", extra={
+        'component': 'test_logger',
+        'action': 'file_test_start'
+    })
     
     # Create temporary log file
     with tempfile.NamedTemporaryFile(suffix='.log', delete=False) as tmp:
         log_file = tmp.name
     
     try:
-        logger = get_logger("test_file", log_file=log_file)
+        file_logger = get_logger("test_file", log_file=log_file)
         
         # Write some logs
         for i in range(10):
-            logger.info(f"Test log message {i}", extra={'iteration': i})
+            file_logger.info(f"Test log message {i}", extra={'iteration': i})
         
         # Check that file was created and contains logs
         if os.path.exists(log_file):
@@ -119,11 +159,25 @@ def test_file_logging():
                     assert 'timestamp' in first_line
                     assert 'level' in first_line
                     assert 'message' in first_line
-                    print("✅ File logging test passed")
+                    logger.info("✅ File logging test passed", extra={
+                        'component': 'test_logger',
+                        'action': 'file_test_complete',
+                        'status': 'success'
+                    })
                 else:
-                    print("❌ File logging failed - no logs written")
+                    logger.error("❌ File logging failed - no logs written", extra={
+                        'component': 'test_logger',
+                        'action': 'file_test_complete',
+                        'status': 'failed',
+                        'reason': 'no_logs_written'
+                    })
         else:
-            print("❌ File logging failed - file not created")
+            logger.error("❌ File logging failed - file not created", extra={
+                'component': 'test_logger',
+                'action': 'file_test_complete',
+                'status': 'failed',
+                'reason': 'file_not_created'
+            })
             
     finally:
         # Clean up
@@ -132,14 +186,23 @@ def test_file_logging():
 
 def test_logger_singleton():
     """Test that logger singleton pattern works"""
-    print("🧪 Testing logger singleton...")
+    logger = get_logger("test_singleton")
+    
+    logger.info("🧪 Testing logger singleton", extra={
+        'component': 'test_logger',
+        'action': 'singleton_test_start'
+    })
     
     logger1 = get_logger("singleton_test")
     logger2 = get_logger("singleton_test")
     
     # Should be the same object
     assert logger1 is logger2
-    print("✅ Logger singleton test passed")
+    logger.info("✅ Logger singleton test passed", extra={
+        'component': 'test_logger',
+        'action': 'singleton_test_complete',
+        'status': 'success'
+    })
 
 def test_json_serialization_safety():
     """Test JSON serialization with problematic objects"""

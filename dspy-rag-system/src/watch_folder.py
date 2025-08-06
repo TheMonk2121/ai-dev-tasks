@@ -189,38 +189,53 @@ def setup_watch_folder():
 def main():
     """Main function to run the watch folder"""
     
-    print("🚀 DSPy RAG System - Watch Folder 2.0")
-    print("=" * 40)
+    LOG.info("🚀 DSPy RAG System - Watch Folder 2.0 starting", extra={
+        'component': 'watch_folder',
+        'action': 'startup',
+        'version': '2.0'
+    })
     
     # Get configuration from environment variables
     watch_dir = os.getenv("WATCH_DIR", "watch_folder")
     processed_dir = os.getenv("PROCESSED_DIR", "processed_documents")
     workers = int(os.getenv("WORKERS", "4"))
     
-    print(f"\n📁 Watch folder: {watch_dir}")
-    print(f"📁 Processed folder: {processed_dir}")
-    print(f"🔧 Workers: {workers}")
-    print("\n📄 Supported file types:")
-    print("   - Text files (.txt)")
-    print("   - Markdown files (.md)")
-    print("   - PDF files (.pdf)")
-    print("   - CSV files (.csv)")
-    print("\n🔄 The system will automatically:")
-    print("   1. Detect new files")
-    print("   2. Wait for file stability")
-    print("   3. Process and chunk them")
-    print("   4. Add them to your knowledge base")
-    print("   5. Move them to the processed folder")
-    print("\n⏹️  Press Ctrl+C to stop watching")
-    print("-" * 40)
+    LOG.info("📁 Watch folder configuration", extra={
+        'component': 'watch_folder',
+        'action': 'configuration',
+        'watch_dir': watch_dir,
+        'processed_dir': processed_dir,
+        'workers': workers,
+        'supported_extensions': list(SAFE_EXT)
+    })
+    
+    LOG.info("🔄 Watch folder workflow", extra={
+        'component': 'watch_folder',
+        'action': 'workflow_description',
+        'steps': [
+            'Detect new files',
+            'Wait for file stability',
+            'Process and chunk them',
+            'Add them to your knowledge base',
+            'Move them to the processed folder'
+        ]
+    })
     
     with WatchService(watch_dir, processed_dir, workers):
         try:
             while True:
                 time.sleep(1)
         except KeyboardInterrupt:
-            print("\n⏹️  Stopping watch folder...")
-            print("✅ Watch folder stopped")
+            LOG.info("⏹️  Stopping watch folder", extra={
+                'component': 'watch_folder',
+                'action': 'shutdown',
+                'reason': 'keyboard_interrupt'
+            })
+            LOG.info("✅ Watch folder stopped", extra={
+                'component': 'watch_folder',
+                'action': 'shutdown',
+                'status': 'completed'
+            })
 
 if __name__ == "__main__":
     main() 

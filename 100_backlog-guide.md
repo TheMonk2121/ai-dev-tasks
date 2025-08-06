@@ -130,12 +130,49 @@ For systematic development:
 - Add new discoveries and ideas
 - Re-score items if priorities change
 - Update dependencies as items are completed
+- Move completed items to "Completed Items" section
 
 **Monthly Tasks:**
 - Review all items for relevance
 - Remove obsolete items
 - Re-prioritize based on current needs
 - Update scoring for changed priorities
+- Archive old completed items if needed
+
+### Completion Tracking
+
+**When an item is completed:**
+1. **Move to "Completed Items" section** at the bottom of the backlog
+2. **Update status** to `✅ done`
+3. **Add completion date** in YYYY-MM-DD format
+4. **Include implementation notes** for future reference
+5. **Remove from active backlog** to keep it focused
+
+**Implementation Notes Format:**
+- Brief description of what was implemented
+- Key technologies or approaches used
+- Any important decisions or trade-offs
+- Links to relevant documentation or code
+
+### Timestamp Updates
+
+**When making changes to the backlog:**
+1. **Update Last Updated timestamp** to current date and time
+2. **Add Previously Updated line** above Last Updated for history tracking
+3. **Use 24-hour format** (HH:MM) for granular tracking
+4. **Include time** for better tracking of changes
+
+**Timestamp Format:**
+```
+*Previously Updated: YYYY-MM-DD HH:MM*
+*Last Updated: YYYY-MM-DD HH:MM*
+```
+
+**Example:**
+```
+*Previously Updated: 2024-08-05 23:58*
+*Last Updated: 2024-08-05 23:59*
+```
 
 ## 🔧 Automation Features
 
@@ -176,19 +213,19 @@ The system includes an automated workflow that:
 ## 🎯 Quick Reference
 
 ### High-Priority Items (Score 5.0+)
-- B-003: Production Security & Monitoring (8.5)
-- B-004: n8n Backlog Scrubber Workflow (8.5)
+- B-003: Production Security & Monitoring (8.5) ✅ **COMPLETED**
+- B-004: n8n Backlog Scrubber Workflow (8.5) ✅ **COMPLETED**
 - B-001: Real-time Mission Dashboard (5.7)
 
 ### Quick Wins (Effort 1-3 points)
-- B-010: n8n Workflow Integration (1 point)
-- B-003: Production Security & Monitoring (2 points)
-- B-004: n8n Backlog Scrubber Workflow (2 points)
+- B-010: n8n Workflow Integration (1 point) ✅ **COMPLETED**
+- B-003: Production Security & Monitoring (2 points) ✅ **COMPLETED**
+- B-004: n8n Backlog Scrubber Workflow (2 points) ✅ **COMPLETED**
 
 ### Foundation Items (No Dependencies)
 - B-001: Real-time Mission Dashboard
-- B-003: Production Security & Monitoring
-- B-004: n8n Backlog Scrubber Workflow
+- B-003: Production Security & Monitoring ✅ **COMPLETED**
+- B-004: n8n Backlog Scrubber Workflow ✅ **COMPLETED**
 
 ---
 

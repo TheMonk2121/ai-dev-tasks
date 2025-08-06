@@ -19,6 +19,12 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import tiktoken
 from .vector_store import VectorStore
+from ..utils.retry_wrapper import retry_llm, TimeoutError
+# Import input validation utilities
+from ..utils.validator import (
+    sanitize_prompt, validate_string_length, validate_query_complexity,
+    SecurityError, ValidationError
+)
 
 _LOG = logging.getLogger("enhanced_rag_system")
 
@@ -31,13 +37,25 @@ def _token_trim(text: str, limit: int, encoder_name: str = "cl100k_base") -> str
         return text
     return enc.decode(tokens[-limit:])
 
-def _sanitize(user_prompt: str) -> str:
-    """Prevent prompt injection attacks"""
-    blocklist = ["ignore previous", "system:", "assistant:", "ignore all previous"]
-    lowered = user_prompt.lower()
-    if any(b in lowered for b in blocklist):
-        raise ValueError("Prompt contains disallowed patterns")
-    return user_prompt
+def _validate_input(question: str) -> str:
+    """Comprehensive input validation for user queries"""
+    try:
+        # Validate string length
+        validate_string_length(question, min_length=1, max_length=5000)
+        
+        # Validate query complexity
+        validate_query_complexity(question, max_tokens=1000)
+        
+        # Sanitize prompt for security
+        sanitized = sanitize_prompt(question)
+        
+        return sanitized
+    except (SecurityError, ValidationError) as e:
+        _LOG.error(f"Input validation failed: {e}")
+        raise
+    except Exception as e:
+        _LOG.error(f"Unexpected validation error: {e}")
+        raise ValidationError(f"Input validation error: {e}")
 
 # ---------- DSPy Signatures ----------
 
@@ -117,6 +135,43 @@ def _complexity(chunks: List[str]) -> float:
     # Never divide by zero - use max(len(chunks), 1)
     return total_tokens / max(len(chunks), 1)
 
+def _should_use_fast_path(query: str, config: Dict[str, Any]) -> bool:
+    """Determine if query should use fast-path bypass"""
+    if not config.get("enabled", True):
+        return False
+    
+    # Check length
+    max_length = config.get("max_length", 50)
+    if len(query) > max_length:
+        return False
+    
+    # Check for excluded tokens
+    exclude_tokens = config.get("exclude_tokens", ["code", "def", "class", "import"])
+    query_lower = query.lower()
+    for token in exclude_tokens:
+        if token in query_lower:
+            return False
+    
+    return True
+
+def _load_fast_path_config() -> Dict[str, Any]:
+    """Load fast-path configuration from system.json"""
+    try:
+        config_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config', 'system.json')
+        if os.path.exists(config_path):
+            with open(config_path, 'r') as f:
+                system_config = json.load(f)
+                return system_config.get("fast_path", {})
+    except Exception as e:
+        _LOG.warning(f"Could not load fast-path config: {e}")
+    
+    # Default configuration
+    return {
+        "enabled": True,
+        "max_length": 50,
+        "exclude_tokens": ["code", "def", "class", "import"]
+    }
+
 # ---------- Pre-RAG Modules ----------
 
 class QueryRewriter(Module):
@@ -129,8 +184,8 @@ class QueryRewriter(Module):
     def forward(self, query: str, domain_context: str = "") -> Dict[str, Any]:
         """Rewrite query for better retrieval"""
         
-        # Sanitize input
-        query = _sanitize(query)
+        # Comprehensive input validation
+        query = _validate_input(query)
         
         # Use DSPy to rewrite the query with domain context in signature
         result = self.predict(
@@ -155,7 +210,7 @@ class QueryDecomposer(Module):
     def forward(self, query: str) -> List[str]:
         """Decompose complex query into sub-queries"""
         
-        query = _sanitize(query)
+        query = _validate_input(query)
         
         result = self.predict(
             original_query=query,
@@ -176,7 +231,7 @@ class AnswerSynthesizer(Module):
     def forward(self, question: str, retrieved_chunks: List[Dict]) -> Dict[str, Any]:
         """Synthesize answer from retrieved chunks"""
         
-        question = _sanitize(question)
+        question = _validate_input(question)
         
         # Format retrieved chunks for DSPy
         chunks_text = "\n\n".join([
@@ -206,7 +261,7 @@ class ChainOfThoughtReasoner(Module):
     def forward(self, question: str, context: str) -> Dict[str, Any]:
         """Apply Chain-of-Thought reasoning"""
         
-        question = _sanitize(question)
+        question = _validate_input(question)
         
         result = self.predict(
             question=question,
@@ -228,7 +283,7 @@ class ReActReasoner(Module):
     def forward(self, question: str, context: str) -> Dict[str, Any]:
         """Apply ReAct reasoning pattern with loop guard"""
         
-        question = _sanitize(question)
+        question = _validate_input(question)
         
         # Use the loop-guarded ReAct implementation
         answer, thought, action, observation = self._run_react_with_guard(question, context)
@@ -284,30 +339,41 @@ class MistralLLM(dspy.Module):
     """DSPy module for Mistral 7B Instruct via Ollama with connection pooling and retry logic"""
     
     def __init__(self, base_url: str = "http://localhost:11434", 
-                 model: str = "mistral:7b-instruct", timeout: int = 30):
+                 model: str = "mistral:7b-instruct", timeout: int = None):
         super().__init__()
         self.base_url = base_url
         self.model = model
-        self.timeout = timeout
         
-        # Create session with retry logic
+        # Load timeout configuration
+        from ..utils.timeout_config import get_timeout_config
+        timeout_config = get_timeout_config()
+        self.timeout = timeout or timeout_config.llm_request_timeout
+        
+        # Create session with retry logic and timeout configuration
         sess = requests.Session()
         retry = Retry(
             total=4, 
             backoff_factor=0.5,
             status_forcelist=[502, 503, 504]
         )
-        sess.mount("http://", HTTPAdapter(max_retries=retry))
+        adapter = HTTPAdapter(max_retries=retry)
+        sess.mount("http://", adapter)
+        sess.mount("https://", adapter)
+        
+        # Set default timeout for all requests
+        sess.timeout = (timeout_config.http_connect_timeout, timeout_config.http_read_timeout)
         self._session = sess
     
     def forward(self, prompt: str) -> str:
         """Generate response using Mistral 7B Instruct via Ollama"""
         
-        try:
+        # Use retry_llm with model-specific timeout
+        @retry_llm
+        def _call_ollama(prompt: str, model: str) -> str:
             response = self._session.post(
                 f"{self.base_url}/api/generate",
                 json={
-                    "model": self.model,
+                    "model": model,
                     "prompt": prompt,
                     "stream": False
                 },
@@ -315,7 +381,9 @@ class MistralLLM(dspy.Module):
             )
             response.raise_for_status()
             return response.json()["response"].strip()
-                
+        
+        try:
+            return _call_ollama(prompt, self.model)
         except Exception as e:
             _LOG.error("Ollama call failed: %s", e, exc_info=True)
             raise
@@ -354,13 +422,19 @@ class EnhancedRAGSystem(Module):
         start_time = time.time()
         
         try:
-            # Sanitize input
-            question = _sanitize(question)
+            # Comprehensive input validation
+            question = _validate_input(question)
             
             # Check cache for identical queries
             cache_key = (question, max_results, use_cot, use_react)
             if cache_key in _response_cache:
                 return _response_cache[cache_key]
+            
+            # === FAST-PATH BYPASS CHECK ===
+            fast_path_config = _load_fast_path_config()
+            if _should_use_fast_path(question, fast_path_config):
+                _LOG.info("⚡ Fast-path: Bypassing complex routing for simple query")
+                return self._fast_path_query(question, max_results, start_time)
             
             # === PRE-RAG: Query Rewriting and Decomposition ===
             _LOG.info("🔄 Pre-RAG: Rewriting query")
@@ -454,6 +528,60 @@ class EnhancedRAGSystem(Module):
                 "error": str(e),
                 "question": question,
                 "latency_ms": int((time.time() - start_time) * 1000)
+            }
+    
+    def _fast_path_query(self, question: str, max_results: int, start_time: float) -> Dict[str, Any]:
+        """Fast-path bypass for simple queries - direct retrieval and synthesis"""
+        
+        try:
+            _LOG.info(f"⚡ Fast-path: Direct retrieval for '{question}'")
+            
+            # Direct retrieval without query rewriting
+            search_results = self.vector_store("search", query=question, limit=max_results)
+            
+            if search_results["status"] != "success" or not search_results["results"]:
+                return {
+                    "status": "no_results",
+                    "message": "No relevant information found in knowledge base",
+                    "question": question,
+                    "rewritten_query": question,  # No rewriting in fast-path
+                    "latency_ms": int((time.time() - start_time) * 1000),
+                    "fast_path": True
+                }
+            
+            # Simple answer synthesis without complex reasoning
+            retrieved_chunks = search_results["results"]
+            context_chunks = [chunk.get("content", "") for chunk in retrieved_chunks]
+            context = "\n\n".join(context_chunks)
+            context = _token_trim(context, self.ctx_limit)
+            
+            # Use simple answer synthesis
+            synthesis_result = self.answer_synthesizer(question, retrieved_chunks)
+            
+            response = {
+                "status": "success",
+                "answer": synthesis_result["answer"],
+                "sources": [chunk.get("document_id", "") for chunk in retrieved_chunks],
+                "question": question,
+                "rewritten_query": question,  # No rewriting in fast-path
+                "sub_queries": [question],  # Single query in fast-path
+                "reasoning": synthesis_result.get("reasoning", ""),
+                "confidence": synthesis_result.get("confidence", 0.8),
+                "retrieved_chunks": len(retrieved_chunks),
+                "latency_ms": int((time.time() - start_time) * 1000),
+                "fast_path": True
+            }
+            
+            return response
+            
+        except Exception as e:
+            _LOG.exception("Fast-path query error")
+            return {
+                "status": "error",
+                "error": str(e),
+                "question": question,
+                "latency_ms": int((time.time() - start_time) * 1000),
+                "fast_path": True
             }
     
     def get_stats(self) -> Dict[str, Any]:

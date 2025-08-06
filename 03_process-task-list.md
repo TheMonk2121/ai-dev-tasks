@@ -44,12 +44,16 @@ Guidelines for executing task lists generated from PRDs using AI agents (Mistral
 
 7. **Update Backlog** (Optional)
    - Mark completed features in backlog as implemented
-   - Update status from "todo" to "done" in backlog table
+   - **Move completed items to "Completed Items" section** in backlog
+   - Update status from "todo" to "✅ done" in backlog table
+   - Add completion date and implementation notes
    - Add new discoveries or requirements to backlog
    - Update effort estimates based on actual implementation time
    - Execute AI-BACKLOG-META commands for automated updates
    - **Update scoring metadata** if effort estimates change significantly
    - **Re-calculate scores** if business value or priorities shift
+   - **Update timestamp**: Change *Last Updated: YYYY-MM-DD HH:MM* to current time
+   - **Add history**: Move current *Last Updated* to *Previously Updated* line
 
 ---
 

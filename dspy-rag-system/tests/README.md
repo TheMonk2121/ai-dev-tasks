@@ -10,7 +10,8 @@ This directory contains all test files for the DSPy RAG system.
 - `test_logger.py` - Tests for logging functionality
 - `test_metadata_extractor.py` - Tests for metadata extraction and categorization
 - `test_rag_system.py` - Tests for the basic RAG system
-- `test_retry_policy.py` - Tests for retry wrapper and error handling
+- `test_retry_policy.py` - Tests for retry wrapper and error handling (C-2 completed)
+- `test_timeout_config.py` - Tests for global timeout configuration (C-3 completed)
 - `test_tokenizer.py` - Tests for token-aware text chunking
 - `test_vector_store.py` - Tests for vector storage and search
 - `test_watch_folder.py` - Tests for file watching and processing
@@ -55,7 +56,7 @@ python -m pytest tests/test_enhanced_rag_system.py -v
 ### Unit Tests
 - `test_fast_path.py` - Unit tests for fast-path detection and routing
 - `test_logger.py` - Pure unit tests, no external dependencies
-- `test_retry_policy.py` - Unit tests for retry wrapper and error handling
+- `test_retry_policy.py` - Unit tests for retry wrapper and error handling (C-2 completed)
 - `test_tokenizer.py` - Unit tests for text processing
 - `test_metadata_extractor.py` - Unit tests for metadata extraction
 

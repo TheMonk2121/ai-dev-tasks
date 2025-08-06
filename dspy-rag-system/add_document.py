@@ -150,7 +150,10 @@ def main():
     
     # Check if file path provided
     if len(sys.argv) < 2:
-        logger.info("No file path provided, showing usage")
+        logger.info("No file path provided, showing usage", extra={
+            'component': 'add_document',
+            'action': 'usage_display'
+        })
         print("Usage: python3 add_document.py <file_path>")
         print("\nExample:")
         print("  python3 add_document.py my_document.pdf")
@@ -171,7 +174,9 @@ def main():
     if success:
         logger.info(f"Document addition completed successfully", extra={
             'file_path': file_path,
-            'stage': 'complete'
+            'stage': 'complete',
+            'component': 'add_document',
+            'action': 'document_added'
         })
         print(f"\n🎉 Document '{file_path}' successfully added to RAG system!")
         print("💡 You can now query this document using the RAG system.")
@@ -179,7 +184,9 @@ def main():
     else:
         logger.error(f"Document addition failed", extra={
             'file_path': file_path,
-            'stage': 'failed'
+            'stage': 'failed',
+            'component': 'add_document',
+            'action': 'document_failed'
         })
         print(f"\n❌ Failed to add document '{file_path}' to RAG system.")
 

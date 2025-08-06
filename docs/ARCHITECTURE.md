@@ -233,33 +233,55 @@ else:
     "max_retries": 3,
     "backoff_factor": 2.0,
     "timeout_seconds": 30,
+    "llm_timeout_seconds": 90,
     "fatal_errors": ["ResourceBusyError", "AuthenticationError"]
   }
 }
 ```
 
-### Error-Policy & Retry Loop
+### Error Policy & Retry Loop
+| Setting | Value | Description |
+|---------|-------|-------------|
+| `timeout_seconds` (global) | 30 | Default timeout for all operations |
+| `llm_timeout_seconds` | 90 | Applies to Mixtral calls only |
+| Per-agent override | via `timeout` key | Individual agent timeout configuration |
+
+### C-2: Central Retry Wrapper Implementation
 The system implements configurable error handling with automatic retry logic. Each agent call is wrapped with a retry decorator that uses the error_policy configuration to determine retry behavior.
 
+**Location**: `src/utils/retry_wrapper.py`
+
+**Key Features**:
+- Configuration-driven retry policies from `config/system.json`
+- Exponential backoff with jitter to prevent thundering herd
+- Fatal error detection and immediate failure
+- Convenience decorators for HTTP, database, and LLM operations
+
+**Integration**:
 ```python
-@retry(
-    max_retries=error_policy["max_retries"],
-    backoff_factor=error_policy["backoff_factor"]
-)
+@retry_llm
 def agent_call(agent, query):
     """Make agent call with automatic retry using error_policy configuration"""
     return agent.forward(query)
+
+@retry_database
+def database_operation():
+    """Database operations with automatic retry"""
+    return vector_store.search(query)
 ```
 
 The retry decorator automatically handles transient failures while respecting fatal error types defined in the configuration.
 
 ## 9. Security & Input Validation
 
-### Input Validation Hardening
+### Security – Prompt Sanitisation
 ```python
 def sanitize_prompt(prompt: str) -> str:
     """Sanitize user input to prevent injection attacks"""
-    blocklist = ["<script>", "javascript:", "eval(", "exec("]
+    # Regex block-list for security
+    blocklist = ["{{", "}}", "<script>"]
+    whitelist = ["<b>", "<i>"]  # Optional whitelist tags
+    
     for pattern in blocklist:
         if pattern in prompt.lower():
             raise SecurityError(f"Blocked pattern detected: {pattern}")
@@ -270,6 +292,12 @@ def validate_file_path(file_path: str) -> bool:
     # Implementation details
     return True
 ```
+
+### Security – File Validation
+| Setting | Default | Override | Rationale |
+|---------|---------|----------|-----------|
+| `max_size_mb` | 50 | `SECURITY_MAX_FILE_MB` | Prevents OOM on >50MB PDFs but can be raised if RAM ≥32GB |
+| `allowed_ext` | ["txt","md","pdf","csv"] | Configurable | File type restrictions |
 
 ### Secrets Management
 ```python

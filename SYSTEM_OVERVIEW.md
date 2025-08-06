@@ -40,6 +40,29 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 
 ---
 
+## 🔒 Security & Reliability Features
+
+### **Security Measures**
+- **Prompt sanitisation**: Regex-based block-list with optional whitelist
+- **File validation**: Configurable size limits with environment override
+- **Input validation**: Comprehensive sanitization across all modules
+- **Secrets management**: Environment-based credential handling
+- **Error handling**: Configurable retry policies with fatal error detection
+- **Production monitoring**: Real-time security event tracking and alerting
+- **Health checks**: Kubernetes-ready health endpoints with dependency monitoring
+- **System metrics**: CPU, memory, disk, and network usage monitoring
+- **Database resilience**: Connection pooling with health monitoring and retry logic
+
+### **Reliability Features**
+- **Agent-level LLM timeout**: Mixtral = 90s (configurable per agent)
+- **Global timeouts**: Centralized configuration for all operations
+- **Resource management**: RAM pressure checks and model janitor
+- **Structured logging**: Comprehensive audit trail with sensitive data redaction
+- **Database resilience**: Connection pooling with health monitoring and retry logic
+- **Error recovery**: Graceful degradation and comprehensive error handling
+
+---
+
 ## 🔄 Development Workflow (High-Level Process)
 
 ### Phase 1: Planning & Requirements
@@ -151,6 +174,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 - **Fast-Path Bypass**: Skip complex routing for simple queries (<50 chars)
 - **Feature Flags**: DEEP_REASONING=0, CLARIFIER=0 (default)
 - **Error Policy & Retries**: Configurable retry with backoff
+- **Agent-level LLM timeout**: Mixtral = 90s (configurable per agent)
 - **Environment Variables**: POOL_MIN/POOL_MAX, MODEL_IDLE_EVICT_SECS, MAX_RAM_PRESSURE
 
 #### **Mistral 7B Instruct Agent**
@@ -208,6 +232,10 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
   - Document processing visualization
   - Interactive question answering
   - Performance metrics
+  - Production monitoring integration
+  - Health check endpoints (`/health`, `/ready`)
+  - Security event tracking
+  - System metrics collection
 
 ### 4. Supporting Infrastructure
 
@@ -225,6 +253,8 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 - **Purpose**: Alert users to system events
 - **Features**: Email, Slack, and custom integrations
 - **Triggers**: Processing completion, errors, system status
+- **Production monitoring**: Real-time security alerts and health notifications
+- **Alert callbacks**: Configurable alert handlers for critical events
 
 ---
 
@@ -667,6 +697,10 @@ sudo supervisorctl update
 - **Logs**: Detailed execution tracking
 - **Notifications**: Alert system for issues
 - **State Files**: Progress tracking and context
+- **Production Monitor**: Security events, health checks, system metrics
+- **Health Endpoints**: Kubernetes-ready `/health` and `/ready` endpoints
+- **OpenTelemetry**: Distributed tracing for production debugging
+- **Database Resilience**: Connection pooling with health monitoring and retry logic
 
 ---
 

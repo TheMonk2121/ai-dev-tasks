@@ -6,6 +6,7 @@ This document provides comprehensive context about the current DSPy implementati
 
 ### **Current Implementation Status**
 - **Status**: ✅ **ENHANCED DSPy RAG System Implemented**
+- **C-2: Central Retry Wrapper**: ✅ **COMPLETED** - Configurable retry logic with exponential backoff
 - **Architecture**: Pre-RAG and Post-RAG DSPy integration
 - **Model Integration**: Mistral 7B Instruct via Ollama
 - **Database**: PostgreSQL with pgvector extension
@@ -271,6 +272,8 @@ response = rag.ask("What is DSPy?", use_cot=True, use_react=False)
 3. **Performance Monitoring**: Measure latency and memory usage
 4. **Error Recovery**: Improved error handling and retry logic
 5. **Documentation**: Complete API documentation
+6. **Implement regex prompt-sanitiser**: Enhanced security with block-list and whitelist
+7. **Add llm_timeout_seconds per-agent setting**: Configurable timeouts for large models
 
 ### **Phase 3: Advanced Features (1 week)**
 1. **ClarifierAgent**: Add when CLARIFIER=1
