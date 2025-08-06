@@ -257,6 +257,7 @@ When rehydrating an AI model's memory or sharing context with other models, star
 - `001_create-prd.md`
 - `002_generate-tasks.md`
 - `003_process-task-list.md`
+- `400_prd-optimization-guide.md`
 
 ## **Memory Scaffolding Integration**
 

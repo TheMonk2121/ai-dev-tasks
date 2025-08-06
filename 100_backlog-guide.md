@@ -19,11 +19,104 @@ This backlog system is part of a comprehensive AI-powered development ecosystem 
 - **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
 - **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
 
+## 🤖 AI vs Human Execution Responsibilities
+
+### **What AI Can Execute (Automated)**
+✅ **Code Implementation**: Full implementation of features, bug fixes, and improvements
+✅ **File Management**: Creating, modifying, and organizing code files
+✅ **Testing**: Writing and running comprehensive test suites
+✅ **Documentation**: Updating technical documentation and comments
+✅ **Configuration**: Setting up config files, environment variables, dependencies
+✅ **Integration**: Connecting different system components and APIs
+✅ **Error Handling**: Implementing retry logic, validation, and error recovery
+✅ **Performance Optimization**: Code optimization, caching, and efficiency improvements
+✅ **Security Implementation**: Input validation, sanitization, and security measures
+✅ **Backlog Updates**: Updating status, progress, and completion tracking
+
+### **What Human Must Execute (Manual)**
+🔒 **Strategic Decisions**: Choosing which backlog items to prioritize
+🔒 **Business Requirements**: Defining what features should do and why
+🔒 **Architecture Decisions**: High-level system design and technology choices
+🔒 **External Integrations**: API keys, credentials, and third-party service setup
+🔒 **Deployment**: Production deployments, server configuration, and infrastructure
+🔒 **User Testing**: Real-world testing and feedback collection
+🔒 **Business Logic Validation**: Ensuring features meet business needs
+🔒 **Resource Allocation**: Deciding time, budget, and priority trade-offs
+🔒 **Stakeholder Communication**: Reporting progress and managing expectations
+🔒 **Legal/Compliance**: Ensuring adherence to regulations and policies
+
+### **Collaborative Tasks (AI + Human)**
+🤝 **PRD Creation**: AI drafts, human reviews and approves
+🤝 **Task Breakdown**: AI suggests, human prioritizes and adjusts
+🤝 **Code Review**: AI implements, human reviews for business logic
+🤝 **Testing Strategy**: AI writes tests, human validates coverage
+🤝 **Documentation**: AI drafts, human ensures clarity and completeness
+
+### **Workflow Examples**
+
+**AI-Only Execution:**
+```
+User: "Execute B-002: Advanced Error Recovery & Prevention"
+AI: ✅ Implements error pattern recognition, HotFix templates, model-specific handling
+AI: ✅ Updates backlog status, creates tests, writes documentation
+AI: ✅ Reports completion with summary
+```
+
+**Human-Required Execution:**
+```
+User: "We need to integrate with Stripe for payments"
+AI: "I can implement the Stripe API integration code, but you'll need to:
+- Provide Stripe API keys and webhook endpoints
+- Set up Stripe dashboard configuration
+- Test with real payment flows
+- Handle compliance and security requirements"
+```
+
+**Collaborative Execution:**
+```
+User: "Create a PRD for B-011: Yi-Coder Integration"
+AI: ✅ Drafts comprehensive PRD with technical details
+User: 🔍 Reviews and adjusts business requirements
+AI: ✅ Updates PRD based on feedback
+User: ✅ Approves final PRD for implementation
+```
+
+### **How to Identify Execution Type**
+
+**Look for these indicators in backlog items:**
+
+**🔒 Human Required:**
+- Mentions "API keys", "credentials", "external services"
+- Requires "business requirements" or "stakeholder input"
+- Involves "deployment", "infrastructure", "production"
+- Mentions "compliance", "legal", "policies"
+- Requires "user testing" or "feedback collection"
+
+**✅ AI Can Execute:**
+- Pure code implementation (features, bugs, improvements)
+- Internal system integration
+- Testing and documentation
+- Configuration and setup (with provided details)
+- Error handling and optimization
+
+**🤝 Collaborative:**
+- PRD creation and review
+- Architecture decisions with implementation
+- Business logic validation
+- Complex feature requirements
+
+**Quick Decision Tree:**
+1. **Does it require external credentials/APIs?** → Human Required
+2. **Does it need business requirements definition?** → Collaborative
+3. **Is it pure code implementation?** → AI Can Execute
+4. **Does it involve deployment/infrastructure?** → Human Required
+5. **Is it internal system work?** → AI Can Execute
+
 ### For PRD Creation
 1. **Select a high-priority item** from `000_backlog.md`
 2. **Use the PRD template**: `@001_create-prd.md`
 3. **Generate tasks**: `@002_generate-tasks.md`
-4. **Execute with AI**: `@003_process-task-list.md`
+4. **Execute with AI**: Execute backlog item directly (003 optional via `default_executor` flag)
 
 ### Priority Levels & Logic
 
@@ -125,8 +218,8 @@ When choosing the next item to work on, consider:
 ### PRD Creation Workflow
 
 1. **Select Item**: Choose a high-priority item from `000_backlog.md`
-2. **Create PRD**: Use `@001_create-prd.md` to create detailed requirements
-3. **Generate Tasks**: Use `@002_generate-tasks.md` to break down implementation
+2. **Create PRD**: Use `@001_create-prd.md` (skip for items < 5 pts & score≥3.0) → else create detailed requirements
+3. **Generate Tasks**: Use `@002_generate-tasks.md` to break down implementation (parses PRD or backlog directly)
 4. **Execute**: Use `@003_process-task-list.md` for AI-driven development
 5. **Update Backlog**: Mark completed items and add new discoveries
 
@@ -191,6 +284,26 @@ For systematic development:
 
 ## 🔧 Automation Features
 
+### PRD Optimization System
+
+The system now includes intelligent PRD generation that reduces overhead for smaller backlog items:
+
+#### **Decision Rule**
+- **Skip PRD**: Items with `points < 5` AND `score_total >= 3.0`
+- **Generate PRD**: Items with `points >= 5` OR `score_total < 3.0`
+
+#### **Benefits**
+- **Performance**: ~4k → <1k tokens for small items
+- **Speed**: ~20s → ~7s turnaround for 3-point items
+- **Efficiency**: Direct backlog parsing for simple items
+- **Quality**: Full PRD process for complex items
+
+#### **Implementation**
+- **Metadata**: Added to `000_backlog.md` with decision rules
+- **Workflow**: Updated `001_create-prd.md` with auto-skip logic
+- **Task Generation**: Enhanced `002_generate-tasks.md` to parse backlog directly
+- **Helper Script**: `scripts/prd_decision_helper.py` for automated decisions
+
 ### AI-BACKLOG-META Commands
 
 The backlog supports machine-readable commands for automation:
@@ -198,13 +311,16 @@ The backlog supports machine-readable commands for automation:
 ```yaml
 <!-- AI-BACKLOG-META
 next_prd_command: |
-  Use @001_create-prd.md with backlog_id=B-001
+  Use @001_create-prd.md with backlog_id=B-001 (skip if points<5 AND score≥3.0)
 sprint_planning: |
   Run make plan sprint=next to pull the top 3 todo backlog items, auto-generate PRDs, tasks, and a fresh execution queue
 scoring_system: |
   Parse <!--score_total: X.X--> comments for prioritization
   Use human priority tags as fallback when scores missing
   Consider dependencies before starting any item
+prd_decision_rule: |
+  Skip PRD generation for items with points<5 AND score_total>=3.0
+  Generate PRD for items with points>=5 OR score_total<3.0
 -->
 ```
 

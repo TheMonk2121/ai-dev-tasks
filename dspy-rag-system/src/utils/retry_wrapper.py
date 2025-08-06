@@ -13,6 +13,15 @@ from typing import Callable, Any, Dict, Optional, List, Type
 from requests.exceptions import Timeout, RequestException
 import psycopg2
 
+# Import error pattern recognition
+try:
+    from .error_pattern_recognition import analyze_error_pattern, suggest_recovery_strategy
+    from .hotfix_templates import generate_hotfix_template
+    from .model_specific_handling import handle_model_error
+    ERROR_PATTERN_ANALYSIS_AVAILABLE = True
+except ImportError:
+    ERROR_PATTERN_ANALYSIS_AVAILABLE = False
+
 logger = logging.getLogger(__name__)
 
 class RetryableError(Exception):
@@ -147,6 +156,57 @@ def retry(
                     return func(*args, **kwargs)
                 except Exception as e:
                     last_exception = e
+                    
+                    # Analyze error pattern if available
+                    if ERROR_PATTERN_ANALYSIS_AVAILABLE:
+                        try:
+                            # Extract context from function and arguments
+                            context = {
+                                'function_name': func.__name__,
+                                'attempt': attempt + 1,
+                                'model_id': kwargs.get('model_id') or kwargs.get('model')
+                            }
+                            
+                            analysis = analyze_error_pattern(str(e), type(e).__name__, context)
+                            
+                            if analysis.matched_patterns:
+                                logger.info(f"Error pattern analysis: {len(analysis.matched_patterns)} patterns matched, "
+                                           f"severity: {analysis.severity_score:.2f}")
+                                
+                                # Log recovery suggestions
+                                recovery_strategies = suggest_recovery_strategy(analysis)
+                                if recovery_strategies:
+                                    logger.info(f"Recovery suggestions: {', '.join(recovery_strategies[:3])}")
+                                
+                                # Apply model-specific handling if available
+                                if analysis.model_specific_handling:
+                                    logger.info(f"Applying model-specific handling: {analysis.model_specific_handling}")
+                                
+                                # Generate HotFix template if available
+                                try:
+                                    hotfix_template = generate_hotfix_template(analysis, context)
+                                    if hotfix_template:
+                                        logger.info(f"Generated HotFix template: {hotfix_template.name}")
+                                        logger.info(f"Template category: {hotfix_template.category}")
+                                        logger.info(f"Estimated time: {hotfix_template.estimated_time}")
+                                except Exception as hotfix_error:
+                                    logger.warning(f"HotFix template generation failed: {hotfix_error}")
+                                
+                                # Apply model-specific handling if model_id is available
+                                try:
+                                    model_id = context.get('model_id') if context else None
+                                    if model_id:
+                                        model_response = handle_model_error(str(e), model_id, context)
+                                        logger.info(f"Model-specific recovery: {model_response.recovery_action}")
+                                        if model_response.fallback_model:
+                                            logger.info(f"Suggested fallback: {model_response.fallback_model}")
+                                        logger.info(f"Recovery confidence: {model_response.confidence:.2f}")
+                                        logger.info(f"Estimated time: {model_response.estimated_time}")
+                                except Exception as model_error:
+                                    logger.warning(f"Model-specific handling failed: {model_error}")
+                                    
+                        except Exception as analysis_error:
+                            logger.warning(f"Error pattern analysis failed: {analysis_error}")
                     
                     # Check if this is a fatal error
                     if is_fatal_error(e, fatal_errors_actual):

@@ -4,10 +4,15 @@ A prioritized list of future enhancements and features for the AI development ec
 
 **📋 For usage instructions and scoring details, see `100_backlog-guide.md`**
 
+**🤖 Execution Guide**: Items marked with `<!-- default_executor: 003_process-task-list.md -->` can be executed directly by AI. Items requiring external credentials, business decisions, or deployment should be marked with `<!-- human_required: true -->`.
+
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
 <!-- AUTOMATION_FILES: 100_backlog-automation.md, 100_backlog-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Current priorities and development roadmap for AI context -->
+<!-- PRD_DECISION_RULE: points<5 AND score_total>=3.0 -->
+<!-- PRD_THRESHOLD_POINTS: 5 -->
+<!-- PRD_SKIP_IF_SCORE_GE: 3.0 -->
 
 ---
 
@@ -22,9 +27,11 @@ A prioritized list of future enhancements and features for the AI development ec
 | B‑001 | Real-time Mission Dashboard           | 🔥  | 3        | ✅ done   | Need live visibility into AI task execution | PostgreSQL + Flask UI | v0.3.1-rc3 Core Hardening |
 <!--score: {bv:5, tc:3, rr:5, le:4, effort:3, deps:[]}-->
 <!--score_total: 5.7-->
-| B‑002 | Advanced Error Recovery & Prevention  | 🔥  | 5        | todo   | Reduce development friction with intelligent error handling | AI analysis + HotFix generation | Enhanced RAG system |
+| B‑002 | Advanced Error Recovery & Prevention  | 🔥  | 5        | ✅ done   | Reduce development friction with intelligent error handling | AI analysis + HotFix generation | Enhanced RAG system |
 <!--score: {bv:5, tc:4, rr:6, le:4, effort:5, deps:[]}-->
 <!--score_total: 3.8-->
+<!-- default_executor: 003_process-task-list.md -->
+<!--progress: All tasks completed - Error Pattern Recognition, HotFix Templates, Model-Specific Handling-->
 | B‑003 | Production Security & Monitoring      | 🔥  | 2        | ✅ done   | Prevent data corruption and enable debugging | File validation + OpenTelemetry | None |
 <!--score: {bv:2, tc:4, rr:8, le:3, effort:2, deps:[]}-->
 <!--score_total: 8.5-->
@@ -52,12 +59,17 @@ A prioritized list of future enhancements and features for the AI development ec
 | B‑009 | API Integration & Local Development        | 📈  | 5        | todo   | Extend capabilities with API calls | API clients + local tools | External APIs |
 <!--score: {bv:4, tc:3, rr:3, le:4, effort:5, deps:[]}-->
 <!--score_total: 2.8-->
+<!-- human_required: true -->
+<!-- reason: Requires external API credentials and business requirements definition -->
 | B‑010 | n8n Workflow Integration                  | 🔥  | 1        | ✅ done   | Enable automated task execution | n8n + PostgreSQL | Event ledger |
 <!--score: {bv:3, tc:3, rr:4, le:5, effort:1, deps:[]}-->
 <!--score_total: 15.0-->
 | B‑011 | Yi-Coder-9B-Chat-Q6_K Integration into Cursor | 🔥  | 5        | todo   | Enable AI code generation directly within IDE for faster development | Cursor API + Yi-Coder-9B-Chat-Q6_K + LM Studio | Yi-Coder setup |
 <!--score: {bv:5, tc:4, rr:3, le:5, effort:5, deps:[]}-->
 <!--score_total: 3.4-->
+<!-- default_executor: 003_process-task-list.md -->
+<!-- human_required: true -->
+<!-- reason: Requires Cursor API credentials and LM Studio setup -->
 | B‑012 | Advanced Testing Framework                | 📈  | 5        | todo   | Improve code quality and reliability | AI-generated tests | Testing system |
 <!--score: {bv:4, tc:2, rr:3, le:3, effort:5, deps:[]}-->
 <!--score_total: 2.4-->
@@ -93,7 +105,11 @@ A prioritized list of future enhancements and features for the AI development ec
 | B‑024 | Automated Sprint Planning                  | 🔧  | 2        | todo   | Automate sprint planning and backlog selection | AI planning + automation | Backlog system |
 | B‑025 | Database Event-Driven Status Updates      | 🔧  | 3        | todo   | Automatically update backlog status via database events | PostgreSQL triggers + event system | Event ledger |
 | B‑026 | Secrets Management                        | 🔥  | 2        | todo   | Secure credential management with environment validation | Keyring + env validation + startup checks | None |
+<!-- human_required: true -->
+<!-- reason: Requires business decisions on which secrets to manage and deployment configuration -->
 | B‑027 | Health & Readiness Endpoints             | 🔥  | 2        | todo   | Kubernetes-ready health checks with dependency monitoring | /health + /ready endpoints + JSON status | None |
+<!-- human_required: true -->
+<!-- reason: Requires deployment environment configuration and business requirements for health checks -->
 | B‑028 | Implement regex prompt‑sanitiser & whitelist | 🔥  | 3        | ✅ done | Enhanced prompt security with regex-based sanitization | Regex patterns + whitelist logic + security validation | None |
 | B‑029 | Expose llm_timeout_seconds override in agents | 🔥  | 2        | ✅ done | Per-agent LLM timeout configuration for large models | Agent timeout config + Mixtral 90s override | None |
 | B‑030 | Env override for SECURITY_MAX_FILE_MB | ⚙️  | 1        | ✅ done | Flexible file size limits with environment override | File validation + env config + OOM prevention | None |
@@ -152,6 +168,11 @@ scoring_system: |
   Parse <!--score_total: X.X--> comments for prioritization
   Use human priority tags as fallback when scores missing
   Consider dependencies before starting any item
+execution_responsibility: |
+  Check <!-- default_executor: 003_process-task-list.md --> for AI-executable items
+  Check <!-- human_required: true --> for items requiring human input
+  Items with external APIs, credentials, or deployment need human involvement
+  Pure code implementation can be executed by AI
 completion_tracking: |
   Move completed items to "Completed Items" section
   Update status to "✅ done" with completion date
@@ -164,6 +185,6 @@ timestamp_updates: |
 
 ---
 
-*Previously Updated: 2024-08-06 07:15*
-*Last Updated: 2024-08-06 08:25*
+*Previously Updated: 2024-08-06 08:25*
+*Last Updated: 2024-08-06 09:15*
 *Next Review: [Monthly Review Cycle]* 

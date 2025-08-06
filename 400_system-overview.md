@@ -20,7 +20,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 │  🎯 Planning Layer                                           │
 │  ├── PRD Creation (001_create-prd.md)                        │
 │  ├── Task Generation (002_generate-tasks.md)                  │
-│  └── Process Management (003_process-task-list.md)            │
+│  └── Process Management (003_process-task-list.md) [Legacy]   │
 ├─────────────────────────────────────────────────────────────────┤
 │  🤖 AI Execution Layer (v0.3.1)                            │
 │  ├── Mistral 7B Instruct (Planning & Reasoning)             │
@@ -79,11 +79,11 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 6. **Status Update** → Update backlog status as work progresses
 
 ### Phase 2: AI Execution
-1. **State Loading** → AI loads context from `.ai_state.json`
-2. **Task Selection** → AI picks next executable task
+1. **State Loading** → AI loads context from `.ai_state.json` (when using 003)
+2. **Task Selection** → AI picks next executable task OR executes backlog item directly
 3. **Implementation** → Yi-Coder-9B-Chat-Q6_K writes code, Mistral 7B Instruct plans
 4. **Validation** → AI runs tests and validates completion
-5. **State Update** → Progress saved, next task selected
+5. **State Update** → Progress saved, next task selected (when using 003)
 
 ### Phase 3: Quality & Deployment
 1. **Error Recovery** → HotFix tasks for failed validations

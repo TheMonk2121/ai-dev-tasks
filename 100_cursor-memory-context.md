@@ -35,12 +35,14 @@ AI Development Ecosystem
 ## 🔄 Development Workflow
 
 ### **Current Process**
-1. **Backlog Selection** → Choose from `000_backlog.md` (B-001, B-002, etc.)
-2. **PRD Creation** → Use `001_create-prd.md` workflow
-3. **Task Generation** → Use `002_generate-tasks.md` workflow  
-4. **AI Execution** → Use `003_process-task-list.md` workflow
-5. **State Management** → `.ai_state.json` for context persistence
+1. **Backlog Selection** → Pick top scored item from `000_backlog.md`
+2. **PRD Creation** (skip for items < 5 pts & score≥3.0) → else use `001_create-prd.md` workflow
+3. **Task Generation** → Use `002_generate-tasks.md` workflow (parses PRD or backlog directly)
+4. **AI Execution** → Execute backlog item directly (loads `003_process-task-list.md` only if `default_executor` flag present)
+5. **State Management** → `.ai_state.json` for context persistence (when using 003)
 6. **Research Framework** → Use `500_memory-arch-research.md` for systematic research
+
+**Note**: `003_process-task-list.md` is optional; invoked via backlog meta-tag when `<!-- default_executor: 003_process-task-list.md -->` is present.
 
 ### **File Organization**
 - **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
@@ -53,11 +55,11 @@ AI Development Ecosystem
 
 
 ### **Immediate Focus (Next 1-2 weeks)**
-1. **B‑002**: Advanced Error Recovery & Prevention (🔥 points)
+1. **B‑011**: Yi-Coder-9B-Chat-Q6_K Integration into Cursor (🔥 points)
    - todo
-2. **B‑011**: Yi-Coder-9B-Chat-Q6_K Integration into Cursor (🔥 points)
+2. **B‑026**: Secrets Management (🔥 points)
    - todo
-3. **B‑026**: Secrets Management (🔥 points)
+3. **B‑027**: Health & Readiness Endpoints (🔥 points)
    - todo
 ### **Infrastructure Status**
 - ✅ **v0.3.1-rc3 Core Hardening** - Production ready
@@ -66,6 +68,10 @@ AI Development Ecosystem
 - ✅ **n8n Backlog Scrubber** - Automated prioritization
 
 ### **Recently Completed**
+- ✅ **B‑002**: Advanced Error Recovery & Prevention (✅ done)
+  - Error Pattern Recognition System with 15+ error patterns
+  - HotFix Template Generation with 3 template categories
+  - Model-Specific Error Handling for 5+ AI models
 - ✅ **C‑033**: n8n Workflow Integration Implementation (✅ done)
 - ✅ **C‑034**: n8n Backlog Scrubber Workflow Implementation (✅ done)
 - ✅ **C‑035**: Real-time Mission Dashboard Implementation (✅ done)
@@ -86,8 +92,8 @@ AI Development Ecosystem
 
 ### **When Adding New Features**
 1. **Add to backlog** with proper scoring (see `100_backlog-guide.md`)
-2. **Create PRD** using `001_create-prd.md` workflow
-3. **Generate tasks** using `002_generate-tasks.md` workflow
+2. **Create PRD** (skip for items < 5 pts & score≥3.0) → else use `001_create-prd.md` workflow
+3. **Generate tasks** using `002_generate-tasks.md` workflow (parses PRD or backlog directly)
 4. **Execute** using `003_process-task-list.md` workflow
 
 ### **When Debugging Issues**
@@ -133,5 +139,5 @@ AI Development Ecosystem
 
 ---
 
-*Last Updated: 2024-08-06 08:25*
+*Last Updated: 2024-08-06 09:15*
 *Next Review: When changing development focus* 

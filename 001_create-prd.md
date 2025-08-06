@@ -1,5 +1,8 @@
 # Create PRD Rule
 
+<!-- backlog_id:B-XXX points:🟢<n> -->
+<!-- auto_skip_if: points<5 AND score_total>=3.0 -->
+
 You are an expert Product Requirements Document (PRD) creator. Your role is to create comprehensive, actionable PRDs that guide development teams through implementation with clear requirements, testing criteria, and quality gates.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
@@ -135,6 +138,10 @@ This PRD creation process is part of a comprehensive AI-powered development ecos
 
 ```markdown
 # Product Requirements Document: [Project Name]
+
+> ⚠️ **Auto-Skip Note**  
+> This PRD was generated because either `points≥5` or `score_total<3.0`.  
+> Remove this banner if you manually forced PRD creation.
 
 ## 1. Executive Summary
 [Project overview, success metrics, timeline, stakeholders]

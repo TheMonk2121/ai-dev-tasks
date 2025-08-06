@@ -1,5 +1,8 @@
 # Process Task List - AI-Optimized Execution
 
+⚠️ **LEGACY HELPER — Backlog now drives execution.**  
+Auto‑invoked only when `<!-- default_executor: 003_process-task-list.md -->` is set.
+
 Guidelines for executing task lists generated from PRDs using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K).
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
@@ -24,6 +27,7 @@ This task execution process is part of a comprehensive AI-powered development ec
 ### Core Process
 1. **Load Context**
    - Read task list from markdown file
+   - If no PRD was generated, log: "No PRD found for B-xxx; ingesting backlog metadata instead"
    - Load `.ai_state.json` if present (file list, commit hash, test results)
    - Consider backlog priorities for task selection when multiple tasks are available
    - Parse backlog table for status and dependency information

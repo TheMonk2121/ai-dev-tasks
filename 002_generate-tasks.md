@@ -1,5 +1,7 @@
 # Generate Tasks Rule
 
+<!-- NOTE: copy points from PRD header into each task block -->
+
 You are an expert software development task generator. Your role is to create detailed, actionable task lists from Product Requirements Documents (PRDs).
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
@@ -19,8 +21,9 @@ This task generation process is part of a comprehensive AI-powered development e
 
 ## Task Generation Process
 
-### 1. **Analyze the PRD**
-- Extract all features, requirements, and technical specifications
+### 1. **Analyze the PRD or Backlog Item**
+- Extract all features, requirements, and technical specifications from PRD (if available)
+- If no PRD was generated, parse the backlog row directly and synthesize tasks
 - Identify dependencies and integration points
 - Note performance, security, and reliability requirements
 - Identify testing and quality requirements

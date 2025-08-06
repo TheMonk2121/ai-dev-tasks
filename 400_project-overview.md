@@ -221,13 +221,13 @@ You'll now have a well-structured task list optimized for AI execution, with cle
 
 ### 4️⃣ Execute Tasks with AI-Optimized Processing
 
-To ensure methodical progress and allow for verification, we'll use `003_process-task-list.md`. This system is designed for AI agents using the v0.3.1 Ultra-Minimal Router architecture (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K) with strategic human oversight.
+To ensure methodical progress and allow for verification, we'll use `003_process-task-list.md` (optional). This system is designed for AI agents using the v0.3.1 Ultra-Minimal Router architecture (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K) with strategic human oversight.
 
 1. Create or ensure you have the `003_process-task-list.md` file accessible.
 2. In your AI tool, tell the AI to start with the first task:
 
     ```text
-    Please start on task T-1 and use @003_process-task-list.md
+    Please start on task T-1 and use @003_process-task-list.md (optional)
     ```
     *(Important: You only need to reference `@003_process-task-list.md` for the *first* task. The instructions within it guide the AI for subsequent tasks.)*
 
@@ -262,7 +262,7 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 * **`000_backlog.md`**: Prioritized list of future enhancements and features for systematic development planning with AI scoring system.
 * **`001_create-prd.md`**: Guides the AI in generating a Product Requirement Document for your feature.
 * **`002_generate-tasks.md`**: Takes the PRD markdown file as input and helps the AI break it down into a detailed, AI-optimized implementation task list.
-* **`003_process-task-list.md`**: Instructs AI agents on how to process the generated task list with state management, auto-advance, and HotFix generation.
+* **`003_process-task-list.md`**: Instructs AI agents on how to process the generated task list with state management, auto-advance, and HotFix generation (optional legacy helper).
 
 ### **Automation & Tools:**
 * **`100_backlog-automation.md`**: Documents the AI-BACKLOG-META system for automated backlog management and scoring.

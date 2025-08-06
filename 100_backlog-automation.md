@@ -48,6 +48,8 @@ parse_backlog: |
 generate_prd: |
   Use @001_create-prd.md with backlog_id=B-XXX
   Include all metadata from backlog table
+  Skip PRD generation for items with points<5 AND score_total>=3.0
+  Generate PRD for items with points>=5 OR score_total<3.0
 ```
 
 ### Update Status
@@ -78,16 +80,25 @@ points_calculation: |
   Ensure points fit within capacity
 ```
 
+### Default Executor
+```yaml
+default_executor: |
+  If present, the specified file is auto-loaded before task execution.
+  Example: <!-- default_executor: 003_process-task-list.md -->
+```
+
 ## Integration with Workflow Files
 
 ### 001_create-prd.md
 - Parse backlog ID (B-001, B-002, etc.)
 - Extract metadata from backlog table
+- Apply PRD decision rule (skip for points<5 AND score≥3.0)
 - Use AI-BACKLOG-META commands for automated PRD generation
 
 ### 002_generate-tasks.md
 - Consider backlog prioritization and impact estimates
 - Parse backlog metadata (points, dependencies, tech footprint)
+- Parse PRD or backlog directly based on PRD decision rule
 - Use points-based effort estimation for task sizing
 - Track backlog status updates as tasks are completed
 
