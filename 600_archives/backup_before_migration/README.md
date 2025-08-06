@@ -5,7 +5,7 @@ Welcome to **AI Dev Tasks**! This repository provides a collection of markdown f
 Stop wrestling with monolithic AI requests and start guiding your AI collaborator step-by-step!
 
 <!-- CONTEXT_REFERENCE: CONTEXT_PRIORITY_GUIDE.md -->
-<!-- ESSENTIAL_FILES: README.md, 400_system-overview.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: README.md, SYSTEM_OVERVIEW.md, 00_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, SETUP_REQUIREMENTS.md -->
 <!-- MEMORY_CONTEXT: HIGH - Project overview and workflow guide for AI context -->
 
@@ -165,7 +165,7 @@ Here's the step-by-step process using the `.md` files in this repository:
 
 For systematic development, start by selecting a high-impact feature from the backlog:
 
-1. Ensure you have the `000_backlog.md` file from this repository accessible.
+1. Ensure you have the `00_backlog.md` file from this repository accessible.
 2. Review the prioritized table and select a feature based on:
    - **Points**: Lower numbers (1-3) for quick wins, higher (5-13) for complex features
    - **Priority**: 🔥 Critical, ⭐ High, 📈 Medium, 🔧 Low
@@ -186,14 +186,14 @@ First, lay out the blueprint for your feature. A PRD clarifies what you're build
 
 You can create a lightweight PRD directly within your AI tool of choice:
 
-1. Ensure you have the `001_create-prd.md` file from this repository accessible.
+1. Ensure you have the `01_create-prd.md` file from this repository accessible.
 2. In your AI tool, initiate PRD creation:
 
     ```text
-    Use @001_create-prd.md
+    Use @01_create-prd.md
     Here's the feature I want to build: [Describe your feature in detail]
     Backlog ID: [e.g., B-001 for Real-time Mission Dashboard]
-    Reference these files to help you: [Optional: @file1.py @file2.ts @000_backlog.md]
+    Reference these files to help you: [Optional: @file1.py @file2.ts @00_backlog.md]
     ```
     *(Pro Tip: For Cursor users, MAX mode is recommended for complex PRDs if your budget allows for more comprehensive generation.)*
 
@@ -203,11 +203,11 @@ You can create a lightweight PRD directly within your AI tool of choice:
 
 With your PRD drafted (e.g., `MyFeature-PRD.md`), the next step is to generate a detailed, step-by-step implementation plan optimized for AI execution.
 
-1. Ensure you have `002_generate-tasks.md` accessible.
+1. Ensure you have `02_generate-tasks.md` accessible.
 2. In your AI tool, use the PRD to create tasks:
 
     ```text
-    Now take @MyFeature-PRD.md and create tasks using @002_generate-tasks.md
+    Now take @MyFeature-PRD.md and create tasks using @02_generate-tasks.md
     ```
     *(Note: Replace `@MyFeature-PRD.md` with the actual filename of the PRD you generated in step 1.)*
 
@@ -221,15 +221,15 @@ You'll now have a well-structured task list optimized for AI execution, with cle
 
 ### 4️⃣ Execute Tasks with AI-Optimized Processing
 
-To ensure methodical progress and allow for verification, we'll use `003_process-task-list.md`. This system is designed for AI agents using the v0.3.1 Ultra-Minimal Router architecture (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K) with strategic human oversight.
+To ensure methodical progress and allow for verification, we'll use `03_process-task-list.md`. This system is designed for AI agents using the v0.3.1 Ultra-Minimal Router architecture (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K) with strategic human oversight.
 
-1. Create or ensure you have the `003_process-task-list.md` file accessible.
+1. Create or ensure you have the `03_process-task-list.md` file accessible.
 2. In your AI tool, tell the AI to start with the first task:
 
     ```text
-    Please start on task T-1 and use @003_process-task-list.md
+    Please start on task T-1 and use @03_process-task-list.md
     ```
-    *(Important: You only need to reference `@003_process-task-list.md` for the *first* task. The instructions within it guide the AI for subsequent tasks.)*
+    *(Important: You only need to reference `@03_process-task-list.md` for the *first* task. The instructions within it guide the AI for subsequent tasks.)*
 
     The AI will attempt the task and then pause only when necessary for human review.
 
@@ -259,10 +259,10 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 ## 🗂️ Files in this Repository
 
 ### **Core Workflow Files:**
-* **`000_backlog.md`**: Prioritized list of future enhancements and features for systematic development planning with AI scoring system.
-* **`001_create-prd.md`**: Guides the AI in generating a Product Requirement Document for your feature.
-* **`002_generate-tasks.md`**: Takes the PRD markdown file as input and helps the AI break it down into a detailed, AI-optimized implementation task list.
-* **`003_process-task-list.md`**: Instructs AI agents on how to process the generated task list with state management, auto-advance, and HotFix generation.
+* **`00_backlog.md`**: Prioritized list of future enhancements and features for systematic development planning with AI scoring system.
+* **`01_create-prd.md`**: Guides the AI in generating a Product Requirement Document for your feature.
+* **`02_generate-tasks.md`**: Takes the PRD markdown file as input and helps the AI break it down into a detailed, AI-optimized implementation task list.
+* **`03_process-task-list.md`**: Instructs AI agents on how to process the generated task list with state management, auto-advance, and HotFix generation.
 
 ### **Automation & Tools:**
 * **`100_backlog-automation.md`**: Documents the AI-BACKLOG-META system for automated backlog management and scoring.
@@ -273,7 +273,7 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 
 ### **System Documentation:**
 * **`README.md`**: This file - comprehensive guide to the AI Dev Tasks workflow.
-* **`400_system-overview.md`**: Detailed technical overview of the entire AI development ecosystem.
+* **`SYSTEM_OVERVIEW.md`**: Detailed technical overview of the entire AI development ecosystem.
 
 ## 🎯 Quick Reference
 

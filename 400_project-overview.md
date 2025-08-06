@@ -4,8 +4,8 @@ Welcome to **AI Dev Tasks**! This repository provides a collection of markdown f
 
 Stop wrestling with monolithic AI requests and start guiding your AI collaborator step-by-step!
 
-<!-- CONTEXT_REFERENCE: CONTEXT_PRIORITY_GUIDE.md -->
-<!-- ESSENTIAL_FILES: README.md, 400_system-overview.md, 000_backlog.md -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, SETUP_REQUIREMENTS.md -->
 <!-- MEMORY_CONTEXT: HIGH - Project overview and workflow guide for AI context -->
 
@@ -272,7 +272,7 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 * **`201_model-configuration.md`**: Documents the specific AI model setup (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K).
 
 ### **System Documentation:**
-* **`README.md`**: This file - comprehensive guide to the AI Dev Tasks workflow.
+* **`400_project-overview.md`**: This file - comprehensive guide to the AI Dev Tasks workflow.
 * **`400_system-overview.md`**: Detailed technical overview of the entire AI development ecosystem.
 
 ## 🎯 Quick Reference

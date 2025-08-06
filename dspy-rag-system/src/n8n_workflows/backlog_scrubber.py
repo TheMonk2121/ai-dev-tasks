@@ -36,7 +36,7 @@ class BacklogScrubber:
         if backlog_path is None:
             # Default to the main backlog file
             project_root = Path(__file__).parent.parent.parent.parent
-            backlog_path = project_root / "00_backlog.md"
+            backlog_path = project_root / "000_backlog.md"
         
         self.backlog_path = Path(backlog_path)
         self.backup_path = self.backlog_path.with_suffix('.backup')

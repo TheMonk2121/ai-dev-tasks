@@ -2,6 +2,21 @@
 
 This document provides comprehensive context about the current DSPy implementation in the AI Dev Tasks system for deep research analysis.
 
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md -->
+<!-- SYSTEM_FILES: dspy-rag-system/README.md, dspy-rag-system/docs/CURRENT_STATUS.md -->
+<!-- CONFIG_FILES: 201_model-configuration.md -->
+<!-- MEMORY_CONTEXT: MEDIUM - Deep technical context for DSPy implementation -->
+
+### **AI Development Ecosystem Context**
+This DSPy implementation is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+
+**Key Components:**
+- **Planning Layer**: PRD Creation, Task Generation, Process Management
+- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
+- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
+- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
+
 ## 🎯 **System Overview**
 
 ### **Current Implementation Status**

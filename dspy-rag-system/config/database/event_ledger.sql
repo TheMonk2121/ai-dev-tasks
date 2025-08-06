@@ -85,7 +85,7 @@ INSERT INTO workflow_definitions (workflow_id, name, description, definition) VA
                 "type": "httpRequest",
                 "parameters": {
                     "method": "GET",
-                    "url": "file:///path/to/ai-dev-tasks/00_backlog.md"
+                    "url": "file:///path/to/ai-dev-tasks/000_backlog.md"
                 }
             },
             {
@@ -100,7 +100,7 @@ INSERT INTO workflow_definitions (workflow_id, name, description, definition) VA
                 "type": "httpRequest",
                 "parameters": {
                     "method": "POST",
-                    "url": "file:///path/to/ai-dev-tasks/00_backlog.md"
+                    "url": "file:///path/to/ai-dev-tasks/000_backlog.md"
                 }
             }
         ]

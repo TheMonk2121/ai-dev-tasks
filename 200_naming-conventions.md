@@ -1,185 +1,131 @@
-# 📁 File Naming Conventions
+# File Naming Conventions & Memory Scaffolding Guidelines
 
-This document explains the naming conventions used in the AI Dev Tasks project to help you understand the file organization and add new files consistently.
+<!-- MEMORY_CONTEXT: MEDIUM - File organization and documentation guidelines for maintaining memory scaffolding -->
 
-## 🎯 **Naming Pattern: `[Number]_[Description].md`**
+**For memory-scaffolding patterns see 401_memory-scaffolding-guide.md**
 
-### **Number Prefixes:**
+## 📋 Overview
 
-#### **`00-09` - Core Workflow Files**
-Essential files that form the main development workflow:
-- **`00_backlog.md`** - Product backlog with scoring system
-- **`01_create-prd.md`** - PRD creation guidelines
-- **`02_generate-tasks.md`** - Task generation from PRDs
-- **`03_process-task-list.md`** - AI task execution
+This document defines the file naming conventions and memory scaffolding guidelines for the AI development ecosystem. The system is designed to be understandable by both humans and large language models (LLMs).
 
-#### **`100-199` - Automation & Tools**
-Advanced features and automation systems:
-- **`100_backlog-automation.md`** - AI-BACKLOG-META system
-- **`101_n8n-setup.md`** - n8n workflow configuration (future)
-- **`102_ai-agent-config.md`** - AI agent configuration (future)
-- **`103_yi-coder-integration.md`** - Yi-Coder-9B-Chat-Q6_K IDE integration
-- **`104_dspy-development-context.md`** - DSPy development context for deep research
+## 🔢 Number Prefixes
 
-#### **`200-299` - Configuration & Setup**
-Configuration files and setup guides:
-- **`200_naming-conventions.md`** - This file
-- **`201_model-configuration.md`** - AI model configuration and setup
-- **`202_environment-setup.md`** - Development environment setup (future)
-- **`203_deployment-guide.md`** - Production deployment (future)
+Files are categorized by purpose using numeric prefixes:
 
-#### **`300-399` - Templates & Examples**
-Reusable templates and example files:
-- **`300_prd-template.md`** - Standard PRD template (future)
-- **`301_task-template.md`** - Standard task template (future)
-- **`302_example-prd.md`** - Example PRD (future)
+- **`000-009`** – Core Workflow (PRD creation, task generation, execution)
+- **`100-199`** – Automation & Tools (backlog management, memory context)
+- **`200-299`** – Configuration & Setup (model config, setup requirements)
+- **`300-399`** – Templates & Examples (documentation examples, templates)
+- **`400-499`** – Documentation & Guides (project overview, system overview, context guides)
+- **`500-599`** – Testing & Observability (test harnesses, monitoring, security validation)
+- **`600-699`** – Archives & Completion Records (historical summaries, completion records)
 
-#### **`400-499` - Documentation & Guides**
-Comprehensive documentation and guides:
-- **`400_troubleshooting.md`** - Common issues and solutions (future)
-- **`401_best-practices.md`** - Development best practices (future)
-- **`402_migration-guide.md`** - System migration guides (future)
-- **`docs/ARCHITECTURE.md`** - Comprehensive v0.3.1 architecture documentation
-- **`docs/CONFIG_REFERENCE.md`** - Complete configuration reference and schema
+## 📝 File Naming Rules
 
-## 🚀 **Adding New Files**
+### ✅ Correct Examples
+- `000_backlog.md` (three-digit prefix, single underscore, kebab-case)
+- `100_cursor-memory-context.md` (automation category)
+- `400_project-overview.md` (documentation category)
+- `500_test-harness-guide.md` (testing category)
 
-### **When Adding Core Workflow Files:**
-- Use `04_`, `05_`, etc. for additional workflow steps
-- Keep them essential and widely used
-- Examples: `04_deploy-feature.md`, `05_test-feature.md`
+### ❌ Incorrect Examples
+- `99_misc.md` (needs three-digit prefix)
+- `100_backlog_automation.md` (second underscore disallowed)
+- `100-backlog-automation.md` (missing required first underscore)
 
-### **When Adding Automation Tools:**
-- Use `101_`, `102_`, etc. for automation features
-- Focus on AI integration and automation
-- Examples: `101_github-integration.md`, `102_slack-notifications.md`
+## 🧠 Memory Scaffolding Documentation Guidelines
 
-### **When Adding Configuration:**
-- Use `201_`, `202_`, etc. for setup and configuration
-- Include step-by-step instructions
-- Examples: `201_database-setup.md`, `202_ssl-config.md`
+### Content Structure
+Each file should include:
+1. **Memory Context Comment**: `<!-- MEMORY_CONTEXT: [HIGH|MEDIUM|LOW] - [description] -->`
+2. **Context Reference**: `<!-- CONTEXT_REFERENCE: [related-file].md -->`
+3. **Clear Purpose**: What this file is for and when to read it
+4. **Related Files**: Links to other relevant documentation
 
-### **When Adding Templates:**
-- Use `301_`, `302_`, etc. for reusable templates
-- Make them copy-paste friendly
-- Examples: `301_api-prd-template.md`, `302_microservice-template.md`
+### Memory Context Levels
+- **HIGH**: Read first for instant context (core workflow, system overview)
+- **MEDIUM**: Read when working on specific workflows (PRD creation, task generation)
+- **LOW**: Read for detailed implementation (specific integrations, configurations)
 
-### **When Adding Documentation:**
-- Use `401_`, `402_`, etc. for comprehensive guides
-- Focus on user education and troubleshooting
-- Examples: `401_performance-tuning.md`, `402_security-hardening.md`
+### Quality Checklist
+- [ ] Clear, descriptive filename
+- [ ] Memory context comment included
+- [ ] Purpose and usage explained
+- [ ] Related files referenced
+- [ ] Content is current and accurate
+- [ ] Follows established patterns
 
-## 📋 **File Naming Rules**
+## 🔄 Migration Tracking
 
-### **Format:**
-```
-[Number]_[kebab-case-description].md
-```
+File renames and structural changes are tracked via Git issues rather than static tables in documentation. This ensures:
 
-### **Examples:**
-- ✅ `100_backlog-automation.md`
-- ✅ `201_environment-setup.md`
-- ✅ `301_api-prd-template.md`
-- ❌ `100_backlog_automation.md` (use hyphens, not underscores)
-- ❌ `100-backlog-automation.md` (include underscore after number)
+- **Current Information**: No stale references in documentation
+- **Version Control**: Full history of changes
+- **AI-Friendly**: Easy to parse and understand
+- **Human-Friendly**: Standard development workflow
 
-### **Description Guidelines:**
-- **Use kebab-case**: lowercase with hyphens
-- **Be descriptive**: clearly indicate the file's purpose
-- **Keep it concise**: 2-4 words maximum
-- **Use nouns**: focus on what the file contains
+## 🛠️ Implementation Tools
 
-## 🎯 **Category Guidelines**
+### Collision Detection
+The `scripts/check-number-unique.sh` script runs as a warning-only pre-commit hook to detect duplicate numeric prefixes in HIGH priority files (000-099, 400-499, 500-599).
 
-### **Core Workflow (00-09):**
-- Essential for every development project
-- Used in the main workflow sequence
-- Should be referenced in README.md
-- Examples: backlog, PRD creation, task generation, execution
+### Memory Hierarchy Display
+Use `python3 scripts/show_memory_hierarchy.py` to display the current memory context hierarchy for human understanding.
 
-### **Automation & Tools (100-199):**
-- Advanced features that enhance the workflow
-- Optional but powerful additions
-- Focus on AI integration and automation
-- Examples: n8n workflows, AI agent configuration, integrations
+### Memory Context Updates
+Use `python3 scripts/update_cursor_memory.py` to automatically update memory context based on backlog priorities.
 
-### **Configuration & Setup (200-299):**
-- Setup instructions and configuration guides
-- One-time setup or maintenance tasks
-- Include step-by-step instructions
-- Examples: environment setup, deployment, configuration, model setup
+## 📚 Current Project Structure
 
-### **Templates & Examples (300-399):**
-- Reusable templates and example files
-- Copy-paste friendly content
-- Show best practices and patterns
-- Examples: PRD templates, task templates, example projects
+### Core Workflow (000-009)
+- `000_backlog.md` - Product backlog and current priorities
+- `001_create-prd.md` - PRD creation workflow
+- `002_generate-tasks.md` - Task generation workflow
+- `003_process-task-list.md` - AI task execution workflow
 
-### **Documentation & Guides (400-499):**
-- Comprehensive documentation and troubleshooting
-- User education and problem-solving
-- Include troubleshooting and best practices
-- Examples: troubleshooting guides, best practices, migration guides
+### Automation & Tools (100-199)
+- `100_cursor-memory-context.md` - Primary memory scaffold for Cursor AI
+- `100_backlog-guide.md` - Backlog management guide
+- `100_backlog-automation.md` - Backlog automation details
+- `103_yi-coder-integration.md` - Yi-Coder integration guide
+- `104_dspy-development-context.md` - DSPy development context
 
-## 🔄 **Migration Strategy**
-
-### **When Renaming Existing Files:**
-1. **Update all references** in other files
-2. **Update README.md** file list
-3. **Update SYSTEM_OVERVIEW.md** if applicable
-4. **Test the workflow** to ensure nothing breaks
-
-### **When Adding New Categories:**
-1. **Update this file** with the new category
-2. **Add examples** of what belongs in the category
-3. **Update README.md** if the category is user-facing
-4. **Consider adding** a category-specific guide
-
-## 📊 **File Organization Benefits**
-
-### **For Users:**
-- **Quick Recognition**: Know what type of file by the number
-- **Logical Grouping**: Related files are numbered together
-- **Easy Navigation**: Find files by category
-- **Clear Purpose**: File names indicate their role
-
-### **For Contributors:**
-- **Consistent Structure**: Clear rules for adding files
-- **Scalable Organization**: Room for growth in each category
-- **Maintainable**: Easy to understand and update
-- **Professional**: Organized and professional appearance
-
-### **For AI Agents:**
-- **Predictable Patterns**: Can understand file organization
-- **Category Awareness**: Know what type of content to expect
-- **Workflow Integration**: Understand file relationships
-- **Automation Friendly**: Easy to parse and categorize
-
-## 🎯 **Current Project Structure**
-
-### **Core Workflow (00-09):**
-- `00_backlog.md` - Product backlog with AI scoring system
-- `01_create-prd.md` - PRD creation guidelines
-- `02_generate-tasks.md` - Task generation from PRDs
-- `03_process-task-list.md` - AI task execution
-
-### **Automation & Tools (100-199):**
-- `100_backlog-automation.md` - AI-BACKLOG-META system
-- `103_yi-coder-integration.md` - Yi-Coder-9B-Chat-Q6_K IDE integration
-- `104_dspy-development-context.md` - DSPy development context for deep research
-
-### **Configuration & Setup (200-299):**
+### Configuration & Setup (200-299)
 - `200_naming-conventions.md` - This file
-- `201_model-configuration.md` - AI model configuration and setup
+- `201_model-configuration.md` - AI model configuration
+- `202_setup-requirements.md` - Environment setup requirements
 
-### **System Documentation:**
-- `README.md` - Comprehensive workflow guide
-- `SYSTEM_OVERVIEW.md` - Technical system overview
+### Templates & Examples (300-399)
+- `300_documentation-example.md` - Documentation example template
 
-### **Subsystems:**
-- `dashboard/` - Real-time monitoring dashboard
-- `dspy-rag-system/` - Document processing and RAG system
+### Documentation & Guides (400-499)
+- `400_project-overview.md` - Project overview and workflow guide
+- `400_system-overview.md` - Technical architecture and system overview
+- `400_context-priority-guide.md` - Context priority guide for memory rehydration
+- `400_memory-context-guide.md` - Memory context system guide
+- `400_timestamp-update-guide.md` - Timestamp update procedures
+- `400_current-status.md` - Current system status and health
+- `400_dspy-integration-guide.md` - DSPy integration guide
+- `400_mistral7b-instruct-integration-guide.md` - Mistral 7B integration guide
+- `400_n8n-setup-guide.md` - n8n setup and configuration guide
+- `400_mission-dashboard-guide.md` - Mission dashboard guide
+- `400_n8n-backlog-scrubber-guide.md` - n8n backlog scrubber guide
 
----
+### Archives & Completion Records (500-599)
+- `500_c9-completion-summary.md` - Historical completion record
+- `500_c10-completion-summary.md` - Historical completion record
+- `500_memory-arch-benchmarks.md` - Memory architecture benchmark results
+- `500_memory-arch-research.md` - Memory architecture research framework
 
-*This naming convention ensures the AI Dev Tasks project remains organized, scalable, and user-friendly as it grows.* 
+## 🚀 Adding New Categories
+
+### Testing & Observability (500-599)
+Examples: `500_test-harness-guide.md`, `501_red-team-suite.md`, `502_monitoring-dashboard.md`
+
+### Versioning
+Use `_vN` suffix **only** when the file's public contract changes (breaking changes). For minor edits, append to the embedded **Change Log** table.
+
+## 🔗 Related Files
+
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- SYSTEM_FILES: 400_system-overview.md --> 

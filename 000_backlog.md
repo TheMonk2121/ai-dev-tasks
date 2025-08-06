@@ -4,6 +4,11 @@ A prioritized list of future enhancements and features for the AI development ec
 
 **📋 For usage instructions and scoring details, see `100_backlog-guide.md`**
 
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
+<!-- AUTOMATION_FILES: 100_backlog-automation.md, 100_backlog-guide.md -->
+<!-- MEMORY_CONTEXT: HIGH - Current priorities and development roadmap for AI context -->
+
 ---
 
 | ID  | Title                                   | 🔥P | 🎯Points | Status | Problem/Outcome | Tech Footprint | Dependencies |
@@ -14,7 +19,7 @@ A prioritized list of future enhancements and features for the AI development ec
 <!--progress: C-2 completed (retry_wrapper.py), C-3 completed (timeout_config.py), C-4 completed (structured_logging), C-5 completed (security_libraries), C-6 completed (fast_path_bypass), C-7 completed (input_validation), C-8 completed (secrets_management), C-9 completed (database_resilience)-->
 <!--score: {bv:5, tc:5, rr:5, le:5, effort:3, deps:[]}-->
 <!--score_total: 6.7-->
-| B‑001 | Real-time Mission Dashboard           | 🔥  | 3        | todo   | Need live visibility into AI task execution | PostgreSQL + Flask UI | v0.3.1-rc3 Core Hardening |
+| B‑001 | Real-time Mission Dashboard           | 🔥  | 3        | ✅ done   | Need live visibility into AI task execution | PostgreSQL + Flask UI | v0.3.1-rc3 Core Hardening |
 <!--score: {bv:5, tc:3, rr:5, le:4, effort:3, deps:[]}-->
 <!--score_total: 5.7-->
 | B‑002 | Advanced Error Recovery & Prevention  | 🔥  | 5        | todo   | Reduce development friction with intelligent error handling | AI analysis + HotFix generation | Enhanced RAG system |
@@ -92,6 +97,10 @@ A prioritized list of future enhancements and features for the AI development ec
 | B‑028 | Implement regex prompt‑sanitiser & whitelist | 🔥  | 3        | ✅ done | Enhanced prompt security with regex-based sanitization | Regex patterns + whitelist logic + security validation | None |
 | B‑029 | Expose llm_timeout_seconds override in agents | 🔥  | 2        | ✅ done | Per-agent LLM timeout configuration for large models | Agent timeout config + Mixtral 90s override | None |
 | B‑030 | Env override for SECURITY_MAX_FILE_MB | ⚙️  | 1        | ✅ done | Flexible file size limits with environment override | File validation + env config + OOM prevention | None |
+| B‑031 | Vector Database Foundation Enhancement | 🔥  | 3        | todo   | Improve RAG system with advanced vector database capabilities | PostgreSQL + PGVector + advanced indexing | Enhanced RAG system |
+| B‑032 | Memory Context System Architecture Research | 🔥  | 8        | todo   | Optimize memory hierarchy for different AI model capabilities (7B vs 70B) | Literature review + benchmark harness + design recommendations | Improved retrieval F1 by ≥10% on 7B models |
+| B‑032‑C1 | Implement generation cache (Postgres) & add cache columns to episodic_logs | 🔥  | 3        | todo   | Add cache-augmented generation support with similarity scoring | PostgreSQL + cache_hit + similarity_score + last_verified | B-032 Memory Context System Architecture Research |
+| B‑033 | Documentation Reference Updates | 🔥  | 2        | ✅ done   | Update outdated file references in documentation | Documentation review + reference updates | File naming convention migration |
 
 ---
 
@@ -110,6 +119,8 @@ A prioritized list of future enhancements and features for the AI development ec
 | C‑032 | Database Connection Pooling & Resilience Implementation | 🔥  | 3        | ✅ done | 2024-08-06 | Comprehensive database resilience system with connection pooling, health monitoring, retry logic, OpenTelemetry integration, graceful degradation, comprehensive test suite |
 | C‑033 | n8n Workflow Integration Implementation | 🔥  | 1        | ✅ done | 2024-08-06 | Comprehensive n8n workflow integration with event-driven architecture, automated task execution, background event processing service, database integration, comprehensive test suite |
 | C‑034 | n8n Backlog Scrubber Workflow Implementation | 🔥  | 2        | ✅ done | 2024-08-06 | Comprehensive backlog scrubber with automated scoring, webhook integration, validation, backup protection, comprehensive test suite, and n8n workflow integration |
+| C‑035 | Real-time Mission Dashboard Implementation | 🔥  | 3        | ✅ done | 2024-08-06 | Comprehensive real-time mission dashboard with live AI task execution monitoring, mission tracking, progress updates, metrics collection, WebSocket integration, modern UI, and comprehensive test suite |
+| C‑036 | Documentation Reference Updates Implementation | 🔥  | 2        | ✅ done | 2024-08-06 | Updated all documentation files to reference correct file names after naming convention migration, ensuring consistency across the codebase |
 
 ---
 
@@ -125,16 +136,16 @@ These items require manual setup or configuration on your end before they can be
 | S‑004 | Ollama & Mistral 7B Setup            | 🔥  | 1        | setup-required | Ollama installation + Mistral model download | See `201_model-configuration.md` |
 | S‑005 | LM Studio & Yi-Coder Setup           | 🔥  | 1        | setup-required | LM Studio installation + Yi-Coder model download | See `103_yi-coder-integration.md` |
 | S‑006 | PostgreSQL Database Setup             | 🔥  | 1        | setup-required | PostgreSQL installation + database creation | See `docs/ARCHITECTURE.md` |
-| S‑007 | Virtual Environment Setup             | ⚙️  | 1        | setup-required | Python virtual environment + dependencies | See `README.md` |
+| S‑007 | Virtual Environment Setup             | ⚙️  | 1        | setup-required | Python virtual environment + dependencies | See `400_project-overview.md` |
 | S‑008 | Cursor IDE Configuration              | 🔥  | 1        | setup-required | Cursor IDE + Yi-Coder integration | See `103_yi-coder-integration.md` |
 | S‑009 | Secrets Management Setup              | 🔥  | 1        | setup-required | Environment secrets configuration | See `C8_COMPLETION_SUMMARY.md` |
-| S‑010 | System Dependencies                   | ⚙️  | 1        | setup-required | System packages and tools | See `SYSTEM_OVERVIEW.md` |
+| S‑010 | System Dependencies                   | ⚙️  | 1        | setup-required | System packages and tools | See `400_system-overview.md` |
 
 ---
 
 <!-- AI-BACKLOG-META
 next_prd_command: |
-  Use @01_create-prd.md with backlog_id=B-001
+  Use @001_create-prd.md with backlog_id=B-001
 sprint_planning: |
   Run make plan sprint=next to pull the top 3 todo backlog items, auto-generate PRDs, tasks, and a fresh execution queue
 scoring_system: |
@@ -153,6 +164,6 @@ timestamp_updates: |
 
 ---
 
-*Previously Updated: 2024-08-05 23:62*
-*Last Updated: 2024-08-06 03:20*
+*Previously Updated: 2024-08-06 07:15*
+*Last Updated: 2024-08-06 08:25*
 *Next Review: [Monthly Review Cycle]* 

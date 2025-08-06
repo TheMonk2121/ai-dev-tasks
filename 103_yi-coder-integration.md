@@ -2,6 +2,21 @@
 
 This document provides comprehensive instructions for integrating Yi-Coder-9B-Chat-Q6_K with Cursor IDE for enhanced AI-powered development.
 
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- SYSTEM_FILES: 400_system-overview.md, dspy-rag-system/README.md -->
+<!-- CONFIG_FILES: 201_model-configuration.md -->
+<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
+<!-- MEMORY_CONTEXT: LOW - Yi-Coder integration details for specific implementation tasks -->
+
+### **AI Development Ecosystem Context**
+This Yi-Coder integration is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+
+**Key Components:**
+- **Planning Layer**: PRD Creation, Task Generation, Process Management
+- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
+- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
+- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
+
 ## 🎯 **Overview**
 
 Yi-Coder-9B-Chat-Q6_K is a specialized coding model that provides deterministic, runnable code output without artifacts. This integration enables AI-assisted development directly within your IDE.
@@ -324,8 +339,8 @@ huggingface-cli download TheBloke/Yi-Coder-9B-Chat-GGUF \
 - **Environment Variables**: Add to your shell profile
 
 ### **Integration Points**
-- **AI Dev Tasks**: Follows `03_process-task-list.md` workflow
-- **Backlog System**: Tracks progress in `00_backlog.md`
+- **AI Dev Tasks**: Follows `003_process-task-list.md` workflow
+- **Backlog System**: Tracks progress in `000_backlog.md`
 - **Testing**: Uses patterns from `dspy-rag-system/tests/`
 - **Documentation**: Updates `201_model-configuration.md`
 

@@ -1,5 +1,10 @@
 # AI Development Ecosystem - System Overview
 
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 104_dspy-development-context.md -->
+<!-- SYSTEM_FILES: dspy-rag-system/400_project-overview.md, dspy-rag-system/docs/CURRENT_STATUS.md -->
+<!-- MEMORY_CONTEXT: HIGH - Technical architecture and system overview for AI context -->
+
 ## 🎯 What This System Does
 
 This is a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). It provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
@@ -13,9 +18,9 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 │                    AI Development Ecosystem                    │
 ├─────────────────────────────────────────────────────────────────┤
 │  🎯 Planning Layer                                           │
-│  ├── PRD Creation (01_create-prd.md)                        │
-│  ├── Task Generation (02_generate-tasks.md)                  │
-│  └── Process Management (03_process-task-list.md)            │
+│  ├── PRD Creation (001_create-prd.md)                        │
+│  ├── Task Generation (002_generate-tasks.md)                  │
+│  └── Process Management (003_process-task-list.md)            │
 ├─────────────────────────────────────────────────────────────────┤
 │  🤖 AI Execution Layer (v0.3.1)                            │
 │  ├── Mistral 7B Instruct (Planning & Reasoning)             │
@@ -92,7 +97,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 
 ### 1. Planning & Management System
 
-#### **Backlog Management Engine** (`00_backlog.md` + `100_backlog-guide.md`)
+#### **Backlog Management Engine** (`000_backlog.md` + `100_backlog-guide.md`)
 - **Purpose**: Machine-readable roadmap for systematic feature development
 - **Input**: Comprehensive analysis of system needs and opportunities
 - **Output**: Structured table with IDs, points, status, and metadata
@@ -114,13 +119,13 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
   - Scalable structure for future additions
   - Clear guidelines for contributors
 
-#### **PRD Creation Engine** (`01_create-prd.md`)
+#### **PRD Creation Engine** (`001_create-prd.md`)
 - **Purpose**: Transform user ideas into structured requirements
 - **Input**: Natural language feature descriptions or backlog items
 - **Output**: Comprehensive PRD with testing strategy and acceptance criteria
 - **AI Optimization**: Includes machine-verifiable completion criteria
 
-#### **Task Generation Engine** (`02_generate-tasks.md`)
+#### **Task Generation Engine** (`002_generate-tasks.md`)
 - **Purpose**: Break PRDs into AI-executable tasks
 - **Features**: 
   - 2-4 hour timeboxes for efficiency
@@ -128,7 +133,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
   - Strategic human checkpoints
   - Machine-verifiable completion criteria
 
-#### **Process Management Engine** (`03_process-task-list.md`)
+#### **Process Management Engine** (`003_process-task-list.md`)
 - **Purpose**: Execute tasks with AI agents
 - **Features**:
   - State caching with `.ai_state.json`
@@ -279,7 +284,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 ### **Test Organization**
 - **`tests/` Directory**: All test files organized in dedicated subfolder
-- **`tests/README.md`**: Comprehensive documentation for running tests
+- **`tests/400_project-overview.md`**: Comprehensive documentation for running tests
 - **`run_tests.sh`**: Convenient test runner script with multiple options
 - **Test Categories**: Unit tests, integration tests, and system tests
 
@@ -551,9 +556,9 @@ sudo supervisorctl update
 ### **Cursor IDE Integration**
 
 #### **Development Workflow**
-- **PRD Creation**: Use `01_create-prd.md` in Cursor
-- **Task Generation**: Use `02_generate-tasks.md` for implementation
-- **Task Execution**: Use `03_process-task-list.md` for AI-driven development
+- **PRD Creation**: Use `001_create-prd.md` in Cursor
+- **Task Generation**: Use `002_generate-tasks.md` for implementation
+- **Task Execution**: Use `003_process-task-list.md` for AI-driven development
 - **State Management**: Automatic `.ai_state.json` handling
 
 #### **AI Agent Configuration**
@@ -660,14 +665,14 @@ sudo supervisorctl update
 ### For New Users
 1. **Clone Repository**: `git clone https://github.com/TheMonk2121/ai-dev-tasks.git`
 2. **Read README**: Understand the basic workflow
-3. **Review Backlog**: Check `00_backlog.md` for high-impact features (see `100_backlog-guide.md` for usage)
-4. **Start with PRD**: Use `01_create-prd.md` for your first feature
-5. **Generate Tasks**: Use `02_generate-tasks.md` to create implementation plan
-6. **Execute with AI**: Use `03_process-task-list.md` for AI-driven development
+3. **Review Backlog**: Check `000_backlog.md` for high-impact features (see `100_backlog-guide.md` for usage)
+4. **Start with PRD**: Use `001_create-prd.md` for your first feature
+5. **Generate Tasks**: Use `002_generate-tasks.md` to create implementation plan
+6. **Execute with AI**: Use `003_process-task-list.md` for AI-driven development
 7. **Review Organization**: Check `200_naming-conventions.md` to understand file structure
 
 ### For Advanced Users
-1. **Review Backlog**: Check `00_backlog.md` for systematic development planning (see `100_backlog-guide.md` for usage)
+1. **Review Backlog**: Check `000_backlog.md` for systematic development planning (see `100_backlog-guide.md` for usage)
 2. **Explore DSPy System**: Check `dspy-rag-system/` for document processing
 3. **Review N8N Workflows**: Understand automation capabilities
 4. **Customize Workflows**: Adapt templates for your specific needs

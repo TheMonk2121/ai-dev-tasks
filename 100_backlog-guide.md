@@ -2,13 +2,28 @@
 
 A comprehensive guide for using the AI Development Ecosystem backlog system. This guide explains how to work with the backlog, understand prioritization, and use the AI scoring system.
 
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
+<!-- AUTOMATION_FILES: 100_backlog-automation.md -->
+<!-- SYSTEM_FILES: 400_system-overview.md, dspy-rag-system/README.md -->
+<!-- MEMORY_CONTEXT: LOW - Backlog management guide for specific workflow tasks -->
+
 ## 🎯 How to Use the Backlog
 
+### **AI Development Ecosystem Context**
+This backlog system is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+
+**Key Components:**
+- **Planning Layer**: PRD Creation, Task Generation, Process Management
+- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
+- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
+- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
+
 ### For PRD Creation
-1. **Select a high-priority item** from `00_backlog.md`
-2. **Use the PRD template**: `@01_create-prd.md`
-3. **Generate tasks**: `@02_generate-tasks.md`
-4. **Execute with AI**: `@03_process-task-list.md`
+1. **Select a high-priority item** from `000_backlog.md`
+2. **Use the PRD template**: `@001_create-prd.md`
+3. **Generate tasks**: `@002_generate-tasks.md`
+4. **Execute with AI**: `@003_process-task-list.md`
 
 ### Priority Levels & Logic
 
@@ -109,10 +124,10 @@ When choosing the next item to work on, consider:
 
 ### PRD Creation Workflow
 
-1. **Select Item**: Choose a high-priority item from `00_backlog.md`
-2. **Create PRD**: Use `@01_create-prd.md` to create detailed requirements
-3. **Generate Tasks**: Use `@02_generate-tasks.md` to break down implementation
-4. **Execute**: Use `@03_process-task-list.md` for AI-driven development
+1. **Select Item**: Choose a high-priority item from `000_backlog.md`
+2. **Create PRD**: Use `@001_create-prd.md` to create detailed requirements
+3. **Generate Tasks**: Use `@002_generate-tasks.md` to break down implementation
+4. **Execute**: Use `@003_process-task-list.md` for AI-driven development
 5. **Update Backlog**: Mark completed items and add new discoveries
 
 ### Sprint Planning
@@ -183,7 +198,7 @@ The backlog supports machine-readable commands for automation:
 ```yaml
 <!-- AI-BACKLOG-META
 next_prd_command: |
-  Use @01_create-prd.md with backlog_id=B-001
+  Use @001_create-prd.md with backlog_id=B-001
 sprint_planning: |
   Run make plan sprint=next to pull the top 3 todo backlog items, auto-generate PRDs, tasks, and a fresh execution queue
 scoring_system: |
@@ -204,10 +219,10 @@ The system includes an automated workflow that:
 
 ## 📚 Related Files
 
-- **`00_backlog.md`** - The actual backlog items and table
-- **`01_create-prd.md`** - PRD creation template
-- **`02_generate-tasks.md`** - Task generation from PRDs
-- **`03_process-task-list.md`** - AI execution of tasks
+- **`000_backlog.md`** - The actual backlog items and table
+- **`001_create-prd.md`** - PRD creation template
+- **`002_generate-tasks.md`** - Task generation from PRDs
+- **`003_process-task-list.md`** - AI execution of tasks
 - **`100_backlog-automation.md`** - Automation system documentation
 
 ## 🎯 Quick Reference

@@ -280,7 +280,7 @@ class N8nWorkflowManager:
         """Handle backlog scrubber workflow"""
         try:
             # Read backlog file
-            backlog_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '00_backlog.md')
+            backlog_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '000_backlog.md')
             with open(backlog_path, 'r') as f:
                 content = f.read()
             

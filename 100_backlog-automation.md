@@ -2,9 +2,22 @@
 
 This document describes the AI-BACKLOG-META system for automated backlog management and how it integrates with the AI development workflow.
 
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
+<!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
+
 ## Overview
 
 The AI-BACKLOG-META system provides machine-readable commands and metadata that AI agents can parse to automate backlog management tasks. This reduces manual work and ensures consistency across the development workflow.
+
+### **AI Development Ecosystem Context**
+This system is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+
+**Key Components:**
+- **Planning Layer**: PRD Creation, Task Generation, Process Management
+- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
+- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
+- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
 
 ## Backlog Table Format
 
@@ -33,7 +46,7 @@ parse_backlog: |
 ### Generate PRD
 ```yaml
 generate_prd: |
-  Use @01_create-prd.md with backlog_id=B-XXX
+  Use @001_create-prd.md with backlog_id=B-XXX
   Include all metadata from backlog table
 ```
 
@@ -67,18 +80,18 @@ points_calculation: |
 
 ## Integration with Workflow Files
 
-### 01_create-prd.md
+### 001_create-prd.md
 - Parse backlog ID (B-001, B-002, etc.)
 - Extract metadata from backlog table
 - Use AI-BACKLOG-META commands for automated PRD generation
 
-### 02_generate-tasks.md
+### 002_generate-tasks.md
 - Consider backlog prioritization and impact estimates
 - Parse backlog metadata (points, dependencies, tech footprint)
 - Use points-based effort estimation for task sizing
 - Track backlog status updates as tasks are completed
 
-### 03_process-task-list.md
+### 003_process-task-list.md
 - Consider backlog priorities for task selection
 - Parse backlog table for status and dependency information
 - Check backlog dependencies before starting tasks
@@ -89,7 +102,7 @@ points_calculation: |
 ### Starting a New Feature
 ```bash
 # AI agent reads backlog and creates PRD
-Use @01_create-prd.md with backlog_id=B-001
+Use @001_create-prd.md with backlog_id=B-001
 ```
 
 ### Updating Progress
