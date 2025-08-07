@@ -342,6 +342,31 @@ DEVELOPMENT_WORKFLOW = {
     "merge_strategy": "Squash and merge for feature branches"
 }
 
+# Branching Decision Framework
+BRANCHING_DECISIONS = {
+    "always_branch": [
+        "New backlog items (B-XXX)",
+        "Research implementations",
+        "Breaking changes",
+        "Major refactoring",
+        "Experimental features"
+    ],
+    "direct_commit": [
+        "Quick typo fixes",
+        "Timestamp updates",
+        "Minor documentation updates",
+        "Configuration changes",
+        "Small bug fixes"
+    ],
+    "consider_branch": [
+        "Medium-sized features",
+        "Documentation overhauls",
+        "Testing improvements",
+        "Performance optimizations"
+    ]
+}
+```
+
 # Example workflow
 git checkout -b feature/B-071-contributing-guidelines
 # Make changes

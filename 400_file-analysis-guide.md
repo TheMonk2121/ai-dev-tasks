@@ -9,6 +9,50 @@
 <!-- IMPLEMENTATION_STACK: 104_dspy-development-context.md, 202_setup-requirements.md, 201_model-configuration.md -->
 <!-- MEMORY_CONTEXT: HIGH - Essential analysis methodology for maintaining documentation integrity -->
 
+## 🚨 **MANDATORY ANALYSIS CHECKLIST**
+
+**⚠️ CRITICAL: You MUST complete ALL steps below before suggesting ANY file deletion or deprecation!**
+
+### **Step 1: Context Loading (REQUIRED - 2-3 minutes)**
+- [ ] **Read `100_cursor-memory-context.md`** - Current project state and priorities
+- [ ] **Read `000_backlog.md`** - Active development items and dependencies  
+- [ ] **Read `400_system-overview.md`** - Technical architecture understanding
+- [ ] **Read `400_project-overview.md`** - High-level project goals
+
+### **Step 2: File Organization Understanding (REQUIRED - 1-2 minutes)**
+- [ ] **Read `200_naming-conventions.md`** - File categorization system (000-699 prefixes)
+- [ ] **Read `400_context-priority-guide.md`** - Memory scaffolding and file priorities
+- [ ] **Understand file tiers**: Tier 1 (CRITICAL), Tier 2 (HIGH), Tier 3 (MEDIUM), Tier 4 (LOW)
+
+### **Step 3: Cross-Reference Analysis (REQUIRED - 2-3 minutes)**
+- [ ] **Find ALL files that reference the target file** using `grep_search`
+- [ ] **Count references**: High value = many references, Orphaned = 0 references
+- [ ] **Check if referenced by core files**: `100_cursor-memory-context.md`, `000_backlog.md`, `400_system-overview.md`
+- [ ] **Check if referenced by active backlog items** or dependencies
+
+### **Step 4: Content Analysis (REQUIRED - 2-3 minutes)**
+- [ ] **Check content freshness**: Current timestamps, model references, workflow descriptions
+- [ ] **Verify model alignment**: Current models vs legacy models (Mistral, Yi-Coder, Mixtral)
+- [ ] **Assess workflow integration**: Active workflows vs deprecated features
+- [ ] **Check memory context importance**: `<!-- MEMORY_CONTEXT: HIGH/MEDIUM/LOW -->`
+
+### **Step 5: Safety Validation (REQUIRED - 1-2 minutes)**
+- [ ] **Show all cross-references** before suggesting removal
+- [ ] **Explain why it might be legacy** with specific evidence
+- [ ] **Provide alternative locations** for valuable content
+- [ ] **Suggest archiving** rather than deletion for high-value files
+- [ ] **Get explicit user approval** for high-risk operations
+
+### **Step 6: Tier-Based Decision (REQUIRED)**
+- **Tier 1 (CRITICAL)**: NEVER suggest removal - core workflow files, primary memory context
+- **Tier 2 (HIGH)**: Extensive analysis required - documentation guides, setup requirements
+- **Tier 3 (MEDIUM)**: Archive rather than delete - files in `600_archives/`, legacy files
+- **Tier 4 (LOW)**: Safe to remove with validation - duplicates, outdated test files
+
+**⚠️ FAILURE TO COMPLETE ANY STEP ABOVE MEANS YOU CANNOT SUGGEST FILE DELETION!**
+
+---
+
 ## 🎯 **Overview**
 
 This guide provides a **systematic 6-phase process** for analyzing files to determine if they are obsolete, legacy, or should be retained. It builds on our existing documentation foundation (`200_naming-conventions.md`, `400_context-priority-guide.md`, `500_maintenance-safety-research.md`) and adds the missing **"how to analyze"** methodology.

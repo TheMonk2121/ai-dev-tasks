@@ -171,6 +171,26 @@ This document provides a **comprehensive development roadmap** for the AI develo
 - **Goals**: Multi-model coordination system
 - **Timeline**: Q2 2025
 
+### **Knowledge Graph & Vector Graph Integration (Q3 2025)**
+
+#### **B-085: Vector Graph Foundation Research**
+- **Priority**: 🔧 **MEDIUM** - 5 points
+- **Dependencies**: B-077 (Hybrid Search) completion
+- **Goals**: Research and evaluate vector graph technologies for complex relationship queries
+- **Timeline**: Q3 2025
+
+#### **B-086: Knowledge Graph Implementation**
+- **Priority**: 🔧 **MEDIUM** - 8 points
+- **Dependencies**: B-085 completion
+- **Goals**: Implement knowledge graph for entity-relationship mapping and multi-hop reasoning
+- **Timeline**: Q3 2025
+
+#### **B-087: Hybrid Vector + Graph Search**
+- **Priority**: 🔧 **MEDIUM** - 6 points
+- **Dependencies**: B-086 completion
+- **Goals**: Combine vector similarity with graph traversal for advanced query capabilities
+- **Timeline**: Q4 2025
+
 ### **Future Migration (Q3 2025)**
 
 #### **B-037: Yi-Coder Migration (Future)**
@@ -198,6 +218,7 @@ This document provides a **comprehensive development roadmap** for the AI develo
 - 📋 **Advanced Monitoring Systems** - Performance optimization
 - 📋 **Distributed Architecture** - Scalability improvements
 - 📋 **Cloud Integration** - Deployment flexibility
+- 📋 **Vector Graph Integration** - Knowledge graph capabilities for complex relationship queries
 
 ## 📈 **Success Metrics & KPIs**
 
@@ -232,6 +253,9 @@ B-045 (RAG Schema) → B-046 (Benchmark)
 B-046 (Benchmark) → B-047 (Auto-router)
 B-011 (Cursor Native AI) → B-034, B-035, B-036 (Specialized Agents)
 B-034, B-035, B-036 → B-038 (Advanced Orchestration)
+B-077 (Hybrid Search) → B-085 (Vector Graph Research)
+B-085 (Vector Graph Research) → B-086 (Knowledge Graph Implementation)
+B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 ```
 
 ### **Resource Allocation**

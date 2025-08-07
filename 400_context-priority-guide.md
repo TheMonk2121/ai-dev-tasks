@@ -42,6 +42,7 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
 1. **`100_cursor-memory-context.md`** - **CRITICAL**
    - **Primary memory scaffold** for instant project state
    - Provides current development focus, recent completions, system architecture
+   - **NEW**: Contains complete documentation inventory and context-specific guidance
    - Takes 30 seconds to read, provides 80% of needed context
    - Essential for understanding "what's happening right now"
 

@@ -25,6 +25,7 @@ from ..utils.validator import (
     sanitize_prompt, validate_string_length, validate_query_complexity,
     SecurityError, ValidationError
 )
+from .cursor_model_router import create_cursor_model_router, CursorModel
 
 _LOG = logging.getLogger("enhanced_rag_system")
 
@@ -436,6 +437,9 @@ class EnhancedRAGSystem(Module):
         self.cot_reasoner = ChainOfThoughtReasoner()
         self.react_reasoner = ReActReasoner()
         
+        # Initialize Cursor model router for context engineering
+        self.cursor_router = create_cursor_model_router()
+        
         self.ctx_limit = ctx_token_limit
     
     def forward(self, question: str, max_results: int = 5, 
@@ -459,6 +463,20 @@ class EnhancedRAGSystem(Module):
             if _should_use_fast_path(question, fast_path_config):
                 _LOG.info("⚡ Fast-path: Bypassing complex routing for simple query")
                 return self._fast_path_query(question, max_results, start_time)
+            
+            # === CONTEXT ENGINEERING: Cursor Model Routing ===
+            _LOG.info("🎯 Context Engineering: Routing to best Cursor model")
+            routing_result = self.cursor_router.route_query(
+                query=question,
+                urgency="medium",
+                complexity=None  # Will be auto-analyzed
+            )
+            
+            if routing_result["status"] == "success":
+                _LOG.info(f"Selected model: {routing_result['selected_model']}")
+                _LOG.info(f"Context engineering: {routing_result['context_engineering']}")
+            else:
+                _LOG.warning(f"Model routing failed: {routing_result.get('error', 'Unknown error')}")
             
             # === PRE-RAG: Query Rewriting and Decomposition ===
             _LOG.info("🔄 Pre-RAG: Rewriting query")
@@ -539,6 +557,18 @@ class EnhancedRAGSystem(Module):
                 "retrieved_chunks": len(unique_chunks),
                 "latency_ms": int((time.time() - start_time) * 1000)
             }
+            
+            # Add context engineering information to response
+            if routing_result["status"] == "success":
+                response["context_engineering"] = {
+                    "selected_model": routing_result["selected_model"],
+                    "engineered_prompt": routing_result["engineered_prompt"],
+                    "context_engineering": routing_result["context_engineering"],
+                    "prompt_pattern": routing_result["prompt_pattern"],
+                    "model_instructions": routing_result["model_instructions"],
+                    "capabilities": routing_result["capabilities"],
+                    "routing_metadata": routing_result["routing_metadata"]
+                }
             
             # Cache the result
             _response_cache[cache_key] = response
