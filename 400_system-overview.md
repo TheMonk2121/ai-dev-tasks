@@ -2,6 +2,7 @@
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- CORE_SYSTEM: 400_project-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
+<!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- IMPLEMENTATION_STACK: 104_dspy-development-context.md, 202_setup-requirements.md, 201_model-configuration.md -->
 <!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_security-best-practices-guide.md, 400_performance-optimization-guide.md -->

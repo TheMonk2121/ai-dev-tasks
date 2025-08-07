@@ -57,6 +57,12 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
    - Essential for understanding the broader technical landscape
    - Helps with implementation decisions and system integration
 
+4. **`400_development-roadmap.md`** - **CRITICAL**
+   - Provides comprehensive development timeline and strategic planning
+   - Shows current sprint, next 3 sprints, and quarterly goals
+   - Essential for understanding project milestones and progress tracking
+   - Helps with strategic planning and resource allocation
+
 #### **📋 Crucial Ancillary Files (Read as Needed)**
 
 4. **`400_context-priority-guide.md`** - **IMPORTANT**
@@ -300,6 +306,7 @@ Use these reference patterns in other documents:
 | File | Purpose | Why Critical? | Cross-Reference |
 |------|---------|---------------|-----------------|
 | `000_backlog.md` | Central product backlog with prioritization, dependencies, and roadmap | Shows the project's direction and current priorities | `<!-- CONTEXT_REFERENCE: 000_backlog.md -->` |
+| `400_development-roadmap.md` | Comprehensive development roadmap with timelines, milestones, and strategic planning | Provides strategic planning context and progress tracking | `<!-- CONTEXT_REFERENCE: 400_development-roadmap.md -->` |
 | `100_backlog-automation.md` | AI-BACKLOG-META system and n8n workflow orchestration | Demonstrates automated project management | `<!-- CONTEXT_REFERENCE: 100_backlog-automation.md -->` |
 | `001_create-prd.md` | Process for creating Product Requirement Documents | Defines scope → implementation flow | `<!-- CONTEXT_REFERENCE: 001_create-prd.md -->` |
 | `002_generate-tasks.md` | Rules for breaking PRDs into executable task lists | Shows how high-level requirements become actionable | `<!-- CONTEXT_REFERENCE: 002_generate-tasks.md -->` |

@@ -4,6 +4,7 @@
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
+<!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
 <!-- MEMORY_CONTEXT: HIGH - This file serves as the primary memory scaffold for Cursor AI -->
 
 ## 🎯 Purpose

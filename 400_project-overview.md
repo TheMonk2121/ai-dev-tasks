@@ -6,6 +6,7 @@ Stop wrestling with monolithic AI requests and start guiding your AI collaborato
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- CORE_SYSTEM: 400_system-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
+<!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
 <!-- MEMORY_CONTEXT: HIGH - Project overview and workflow guide for AI context -->

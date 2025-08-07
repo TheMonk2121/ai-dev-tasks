@@ -9,6 +9,7 @@ A prioritized list of future enhancements and features for the AI development ec
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 100_cursor-memory-context.md -->
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
+<!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
 <!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
 <!-- EXECUTION_ENGINE: scripts/process_tasks.py -->
 <!-- AUTOMATION_FILES: 100_backlog-automation.md, 100_backlog-guide.md -->
