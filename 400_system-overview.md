@@ -32,6 +32,9 @@
 | Testing | #testing | Strategy and gates | Testing guide |
 
 <!-- ANCHOR: architecture -->
+<a id="architecture"></a>
+
+## Architecture
 
 ├─────────────────────────────────────────────────────────────────┤
 │  🔧 Core Systems                                            │
@@ -49,6 +52,9 @@
 ```text
 
 ---
+
+<!-- ANCHOR: security -->
+<a id="security"></a>
 
 ## 🔒 Security & Reliability Features
 
@@ -74,6 +80,9 @@
 - **Error recovery**: Graceful degradation and comprehensive error handling
 
 ---
+
+<!-- ANCHOR: workflow -->
+<a id="workflow"></a>
 
 ## 🔄 Development Workflow (High-Level Process)
 
@@ -103,6 +112,9 @@
 4. **Feedback Integration** → Continuous improvement loop
 
 ---
+
+<!-- ANCHOR: core-components -->
+<a id="core-components"></a>
 
 ## 🧩 Core Components (Detailed View)
 
@@ -294,6 +306,9 @@
 
 ---
 
+<!-- ANCHOR: testing -->
+<a id="testing"></a>
+
 ## 🧪 Testing Framework & Quality Assurance
 
 ### **Comprehensive Test Suite**
@@ -433,6 +448,9 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 - **Error Events**: Exception handling, recovery attempts, failure notifications
 
 ---
+
+<!-- ANCHOR: deployment -->
+<a id="deployment"></a>
 
 ## ⚙️ Configuration and Setup
 
@@ -668,6 +686,9 @@ sudo supervisorctl update
 
 ---
 
+<!-- ANCHOR: integration -->
+<a id="integration"></a>
+
 ## 🔧 Technical Implementation (Micro View)
 
 ### State Management
@@ -717,6 +738,9 @@ sudo supervisorctl update
 
 ---
 
+<!-- ANCHOR: migration -->
+<a id="migration"></a>
+
 ## 🎯 Use Cases & Applications
 
 ### 1. Feature Development
@@ -744,6 +768,9 @@ sudo supervisorctl update
 - **Output**: Automated customer onboarding
 
 ---
+
+<!-- ANCHOR: performance -->
+<a id="performance"></a>
 
 ## 🚀 Getting Started
 

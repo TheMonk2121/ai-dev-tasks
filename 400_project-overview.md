@@ -32,6 +32,13 @@
 | Security | 400_security-best-practices-guide.md |
 | Setup | 202_setup-requirements.md |
 
+<!-- ANCHOR: quick-start -->
+<a id="quick-start"></a>
+
+## Quick Start (Canonical)
+
+See the steps above; this anchor is stable for cross-references.
+
 - `CLARIFIER=0` - Disable ClarifierAgent (default)
 - `POOL_MIN=1` - Minimum database connections
 - `POOL_MAX=10` - Maximum database connections
