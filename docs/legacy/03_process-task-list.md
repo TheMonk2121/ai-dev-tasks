@@ -1,53 +1,8 @@
-# Process Task List - AI-Optimized Execution
-
-Guidelines for executing task lists generated from PRDs using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K).
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md -->
-<!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Core workflow for AI task execution -->
-<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_database_migration_procedures.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-### **AI Development Ecosystem Context**
-This task execution process is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
-**Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
-- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
-- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
-
----
-
-## 1. Execution Loop
-
-### Core Process
-1. **Load Context**
-   - Read task list from markdown file
-   - Load `.ai_state.json` if present (file list, commit hash, test results)
-   - Consider backlog priorities for task selection when multiple tasks are available
-   - Parse backlog table for status and dependency information
-   - **Parse backlog scoring** when available (`<!--score_total: X.X-->` comments)
-   - **Use scores for task prioritization** - higher scores indicate higher priority
-   - **Fall back to human priority tags** when scores are missing
-
-2. **Select Next Task**
-   - Find task with status `[ ]` where all dependencies are `[x]`
-   - Skip tasks marked `[!]` (blocked)
-   - Prioritize tasks based on backlog impact estimates when possible
-   - Check backlog dependencies before starting tasks
-   - **Consider backlog scores** for task selection when available
-   - **Prioritize high-scoring items** when multiple tasks are ready
-
-3. **Execute Task**
-   - Follow steps in "Do:" section
-   - Use Yi-Coder-9B-Chat-Q6_K for code implementation
    - Use Mistral 7B Instruct for reasoning and planning
 
 4. **Validate Completion**

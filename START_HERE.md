@@ -1,53 +1,8 @@
-# 🚀 Start Here - AI Development Ecosystem
-
-> **Welcome!** This guide helps you navigate the comprehensive AI development ecosystem documentation without getting overwhelmed. Choose your path based on what you want to accomplish.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
-<!-- NAVIGATION_GUIDE: START_HERE.md -->
-<!-- MEMORY_CONTEXT: HIGH - Primary navigation guide for human users -->
-
 <!-- MODULE_REFERENCE: 102_memory-context-state.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines_additional_resources.md -->
-<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
-## 🎯 **Quick Navigation - Choose Your Path**
 
-### **I'm New Here - What is this project?**
-→ **Start with**: `400_project-overview.md` (5-minute overview)
-→ **Then read**: `400_system-overview_advanced_features.md` (technical architecture)
-→ **Next**: `000_backlog.md` (current priorities and roadmap)
-
-### **I want to understand the current state**
-→ **Start with**: `100_cursor-memory-context.md` (instant project state)
-→ **Then read**: `000_backlog.md` (what's being built)
-→ **Next**: `400_system-overview_advanced_features.md` (how it all works)
-
-### **I want to contribute to development**
-→ **Start with**: `400_contributing-guidelines_additional_resources.md` (development standards)
-→ **Then read**: `000_backlog.md` (what needs to be done)
-→ **Next**: `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md` (workflow)
-
-### **I want to set up the development environment**
-→ **Start with**: `202_setup-requirements.md` (environment setup)
-→ **Then read**: `201_model-configuration.md` (AI model setup)
-→ **Next**: `400_deployment-environment-guide_additional_resources.md` (deployment)
-
-### **I want to understand the AI system**
-→ **Start with**: `104_dspy-development-context.md` (deep technical context)
-→ **Then read**: `400_system-overview_advanced_features.md` (system architecture)
-→ **Next**: `400_metadata-collection-guide.md` (how data flows)
-
-### **I want to work on a specific feature**
-→ **Start with**: `000_backlog.md` (find your feature)
 → **Then read**: `001_create-prd.md` (create requirements)
 → **Next**: `002_generate-tasks.md` → `003_process-task-list.md` (execute)
 

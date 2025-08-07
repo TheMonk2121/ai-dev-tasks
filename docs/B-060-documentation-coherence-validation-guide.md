@@ -1,53 +1,7 @@
-# 📋 B-060 Documentation Coherence Validation System Guide
-
-## 🎯 Overview
-
-The Documentation Coherence Validation System (B-060) implements lightweight doc-linter with Cursor AI semantic checking for the AI development ecosystem. This system ensures documentation coherence through automated validation, cross-reference checking, and AI-enhanced semantic analysis.
-
-## 🏗️ System Architecture
-
-### **Core Components**
-
-1. **Main Validator** (`scripts/doc_coherence_validator.py`)
-   - Primary validation engine
-   - Cross-reference validation
-   - File naming convention checking
-   - Backlog reference validation
-   - Memory context coherence checking
-   - Cursor AI semantic validation
-
-2. **Pre-commit Hook** (`scripts/pre_commit_doc_validation.sh`)
-   - Automatic validation before commits
-   - Critical file change detection
-   - Integration with git workflow
-
-3. **Test Suite** (`tests/test_doc_coherence_validator.py`)
-   - Comprehensive unit tests
-   - Integration tests
-   - Edge case coverage
-
-### **Validation Tasks**
-
-| Task | Purpose | Dependencies |
-|------|---------|--------------|
-| Cross-reference validation | Validates `<!-- --><!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
-` comment patterns | None |
-| File naming conventions | Checks three-digit prefix system | None |
-| Backlog reference validation | Ensures backlog item references exist | `000_backlog.md` |
-| Memory context coherence | Validates memory context consistency | `100_cursor-memory-context.md` |
-| Cursor AI semantic validation | AI-enhanced coherence checking | Cursor AI availability |
-| Validation report generation | Creates comprehensive reports | All previous tasks |
-
-## 🚀 Quick Start
-
-### **Basic Usage**
 
 ```bash
 # Run validation in dry-run mode (default)
@@ -150,7 +104,6 @@ Validates all `<!-- -->` comment patterns in documentation files.
 
 **Example:**
 ```markdown
-<!-- CONTEXT_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 ```
 

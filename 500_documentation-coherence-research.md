@@ -1,53 +1,4 @@
-# 🔬 Deep Research: Documentation Coherence & Cognitive Scaffolding System
-
-## 🎯 Research Objective
-Analyze how we maintain coherence across all important documents in the AI development ecosystem, with particular focus on the cognitive scaffolding system that serves two crucial purposes: (1) rehydrating Cursor AI with crucial information, and (2) ensuring the right documents get updated when changes are made. Research the hierarchy of files and how it impacts AI analysis of the project.
-
-## 🔍 **Documentation Context Management Patterns**
-
-### **Pattern 1: Modular Documentation & Chunking**
-**Effectiveness**: High. Modular docs directly tackle the comprehensiveness vs. overload trade-off.
-**Recommendation**: Embrace this fully. Audit any documentation file over ~300 lines and consider splitting.
-
-**Implementation Strategy**:
-- Break documentation into well-defined, focused modules
-- Each chunk should cover a distinct topic or subtopic in full
-- Cross-reference modules explicitly rather than combining everything into one file
-- Use our three-digit prefix system as natural chunk boundaries
-
-### **Pattern 2: Quick Reference & Summaries Up Front**
-**Effectiveness**: Medium-High. Summaries ensure key points are available even if AI doesn't read everything.
-**Recommendation**: Continue and enhance this pattern. Create an "AI Handbook" one-pager.
-
-**Implementation Strategy**:
-- Each documentation piece should have a concise "quick reference" section
-- Highlight the most critical points (especially safety or process rules)
-- Create TL;DRs at the top of important documents
-- Maintain a single source of truth for must-follow rules
-
-### **Pattern 3: Retrieval-Augmented Context (Search instead of Preload)**
-**Effectiveness**: Very High. This pattern can virtually solve the "AI didn't see that part of the doc" issue.
-**Recommendation**: This pattern should be implemented. Build or use a vector store for our docs.
-
-**Implementation Strategy**:
-- Use retrieval mechanism to provide only relevant snippets
-- Index documentation by embeddings for semantic search
-- Query index for most relevant pieces based on current query/task
-- Supply retrieved text in prompt with clear delimitation
-
-### **Pattern 4: Mandatory Checklist Enforcement via Multi-Turn Interaction**
-**Effectiveness**: High for compliance, Medium for efficiency.
-**Recommendation**: Use this pattern selectively. Implement for high-risk operations only.
-
-**Implementation Strategy**:
-- Break AI's task into multiple turns corresponding to each step
-- Verify completion of each step before proceeding
-- Use explicit confirmation or separate mechanism checking off steps
-- Apply to high-risk scenarios like file deletions or major changes
-
-### **Pattern 5: Always-On Critical Rule Reminders (System Prompts or Persistent Context)**
-**Effectiveness**: Medium-High. This ensures general principles are followed.
-**Recommendation**: Extract 5-10 bullet points of absolute must-follow rules.
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
 **Implementation Strategy**:
 - Maintain a set of critical rules that are always provided to the AI
@@ -105,21 +56,9 @@ Our system uses a three-digit prefix naming convention to establish hierarchy:
 Files use structured comment patterns to establish relationships:
 
 ```markdown
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
-<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: B-011-DEVELOPER-DOCUMENTATION_context_management_system.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ```
 
 ### **Cognitive Scaffolding Components**

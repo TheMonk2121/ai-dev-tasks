@@ -1,53 +1,7 @@
-# Memory Context System Architecture Research
-
-<!-- MEMORY_CONTEXT: HIGH - Research framework for optimizing memory hierarchy across different AI model capabilities -->
-
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-## 🎯 Research Sprint Overview
-
-**Duration**: 4 development days  
-**Branch**: `exp/memory-arch`  
-**Focus**: Optimize memory hierarchy for different AI model capabilities (7B vs 70B)
-
-## 📋 Research Questions
-
-### 1. Hierarchy Depth vs. Token Budget
-- What is the optimal folder/priority granularity for 7B (8k ctx) vs 70B (32k ctx) models?
-- How can we bootstrap in ≤1k tokens for 7B while allowing 70B to exploit richer links?
-
-### 2. Explicit vs. Implicit Metadata
-- When does YAML front-matter materially outperform HTML comments for retrieval accuracy?
-- Could dual-encoding (front-matter + hidden comment fallback) be auto-generated?
-
-### 3. Resilience Over Time
-- How do we version or alias files so semantic embeddings don't break when filenames change?
-- What migration patterns minimize "orphan chunks" in vector DBs?
-
-### 4. Overflow Handling
-- Best summarization/compression heuristics when context > 8k
-- Sliding-window vs. memory-cache vs. hierarchy summarizer
-
-### 5. Model-Specific Adaptation
-- What metadata or chunk sizing should change for Mistral 7B vs Mixtral 8×7B vs GPT-4o?
-
-## 🚀 Deliverables
-
-| Deliverable | Description | ETA | Status |
-|-------------|-------------|-----|--------|
-| A. Literature digest | 2-page summary of cognitive-science & AI-retrieval papers | 1 day | todo |
-| B. Benchmark harness | Script for testing memory structures across models | 2 days | todo |
-| C. Design recommendations | Updated 400_memory-context-guide.md with optimal patterns | 0.5 day | todo |
-| D. Proof-of-concept PR | Implement new front-matter on one HIGH file | 0.5 day | todo |
-
-## 🧪 Benchmark Framework
-
-### Test Structures
-- **Structure A**: Flat list + HTML comments (current)
-- **Structure B**: Three-tier hierarchy + YAML front-matter (proposed)
 
 ### Models to Test
 - Mistral 7B Instruct (8k context)
@@ -126,6 +80,5 @@ vs baseline performance at 8k tokens.
 
 ## 📚 Related Files
 
-<!-- CONTEXT_REFERENCE: 400_memory-context-guide.md -->
 <!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md --> 

@@ -1,52 +1,7 @@
-# 🤖 Yi-Coder-9B-Chat-Q6_K IDE Integration Guide
-
-This document provides comprehensive instructions for integrating Yi-Coder-9B-Chat-Q6_K with Cursor IDE for enhanced AI-powered development.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md, dspy-rag-system/README.md -->
-<!-- CONFIG_FILES: 201_model-configuration.md -->
-<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
-<!-- MEMORY_CONTEXT: LOW - Yi-Coder integration details for specific implementation tasks -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-### **AI Development Ecosystem Context**
-This Yi-Coder integration is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
-
-**Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
-- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
-- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
-
-## 🎯 **Overview**
-
-Yi-Coder-9B-Chat-Q6_K is a specialized coding model that provides deterministic, runnable code output without artifacts. This integration enables AI-assisted development directly within your IDE.
-
-**Backlog Item**: B-011 (Yi-Coder-9B-Chat-Q6_K Integration into Cursor)
-
-## 📋 **Prerequisites**
-
-### **System Requirements**
-- **macOS**: 14.5+ (tested on M4 Max, 48 GB VRAM)
-- **Linux**: Ubuntu 22.04+ (AppImage available)
-- **RAM**: 16GB+ recommended
-- **Storage**: 5GB+ for model download
-
-### **Required Components**
-| Component | macOS Command | Linux (Ubuntu 22.04) | Notes |
-|-----------|---------------|----------------------|-------|
-| Homebrew | built-in | — | Package manager (macOS) |
-| Git & curl | `brew install git curl` | `sudo apt install git curl` | For CLI download/testing |
-| LM Studio ≥ 0.2.18 | `brew install --cask lm-studio` or download DMG from https://lmstudio.ai/ | AppImage on website | Runs the model & exposes OpenAI-compatible API |
-| (the execution engine) huggingface-hub CLI | `pip install --upgrade huggingface-hub` | same | Enables command-line model downloads |
-
-## 🚀 **Installation Steps**
 
 ### **Step 1: Download the Model**
 

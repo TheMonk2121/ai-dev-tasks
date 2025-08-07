@@ -1,5 +1,6 @@
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+
 # 🔧 n8n Workflow Integration Setup Guide
 
 This guide documents the setup requirements for the n8n workflow integration system.

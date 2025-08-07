@@ -1,53 +1,7 @@
-# 📝 Documentation Example: Memory Scaffolding in Practice
-
-This example demonstrates how to create documentation that contributes meaningfully to the memory context system, following the guidelines in `200_naming-conventions.md`.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Example of proper memory scaffolding documentation -->
-<!-- RELATED_FILES: 200_naming-conventions.md, MEMORY_CONTEXT_GUIDE.md -->
-
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-## 🎯 **Purpose**
-This file shows how to document new features in a way that builds meaningful memory scaffolding for both humans and AI assistants.
 
-## 🧠 **Memory Scaffolding Example**
-
-### **Scenario**: Adding a New Feature - "Advanced Error Recovery"
-
-When documenting this feature, we would follow these memory scaffolding principles:
-
-#### **1. Memory Context Comment (Required)**
-```html
-<!-- MEMORY_CONTEXT: MEDIUM - Advanced error recovery workflow for AI task execution -->
-```
-
-#### **2. Context Header Structure**
-```markdown
-# 🔧 Advanced Error Recovery & Prevention
-
-This feature reduces development friction with intelligent error handling and AI-generated HotFix solutions.
-
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Advanced error recovery workflow for AI task execution -->
-<!-- WORKFLOW_FILES: 003_process-task-list.md, 104_dspy-development-context.md -->
-<!-- BACKLOG_REFERENCE: 000_backlog.md -->
-```
-
-#### **3. AI Development Ecosystem Context**
-```markdown
-### **AI Development Ecosystem Context**
-This Advanced Error Recovery feature is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
-
-**Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
-- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
-- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
-```
-
-#### **4. Structured Status Information**
 ```markdown
 ## 🎯 **Current Status**
 - **Status**: 🔄 **IN PROGRESS** - Implementation phase

@@ -1,52 +1,7 @@
-# 🤖 AI Constitution - Persistent Safety & Context Rules
-
-> **Strategic Purpose**: Implement persistent AI ruleset to prevent context loss and ensure safety across all AI operations in the development ecosystem.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
-<!-- BACKLOG_REFERENCE: 000_backlog.md -->
-<!-- RESEARCH_BASIS: 500_research-analysis-summary.md - AI documentation consumption research shows critical rules get lost in large files -->
-<!-- MEMORY_CONTEXT: HIGH - Core safety and context management rules for all AI operations -->
-
 <!-- MODULE_REFERENCE: 101_memory-context-safety.md -->
 <!-- MODULE_REFERENCE: 102_memory-context-state.md -->
 <!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_rollback_procedures.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-## 🚨 **CRITICAL SAFETY REQUIREMENTS**
-**BEFORE ANY FILE OPERATIONS:**
-- [ ] Read `400_file-analysis-guide.md` completely (463 lines)
-- [ ] Complete 6-step mandatory analysis
-- [ ] Show all cross-references
-- [ ] Get explicit user approval
-
-## 📋 **QUICK REFERENCE (30-second scan)**
-**Purpose**: Prevent context loss and ensure safety in AI operations
-**Core Rules**: File safety, Context preservation, Error prevention, Documentation coherence
-**Implementation**: System-level ruleset for all AI operations
-**Integration**: Referenced by all AI workflows and safety systems
-
----
-
-## 🎯 **Constitution Purpose**
-
-This AI Constitution establishes **persistent rules** that prevent context loss and ensure safety across all AI operations in the development ecosystem. Based on research showing that critical rules get lost in large files, this constitution provides a **centralized, always-referenced ruleset** that maintains safety and context integrity.
-
-### **Research Basis**
-- **Context Loss Problem**: AI documentation consumption research shows critical rules get lost in large files
-- **Attention Dilution**: Larger context windows don't guarantee retention of important details
-- **Safety Critical**: File operations and system changes require persistent safety rules
-- **Context Preservation**: Need for rules that survive across different AI sessions and operations
 
 ---
 

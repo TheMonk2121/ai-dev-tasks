@@ -1,53 +1,6 @@
-# AI Development Ecosystem - System Overview
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
-<!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
-<!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
-<!-- IMPLEMENTATION_STACK: 104_dspy-development-context.md, 202_setup-requirements.md, 201_model-configuration.md -->
-<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_security-best-practices-guide.md, 400_performance-optimization-guide.md -->
-<!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 104_dspy-development-context.md -->
-<!-- SYSTEM_FILES: dspy-rag-system/400_project-overview.md, dspy-rag-system/docs/CURRENT_STATUS.md -->
-<!-- MEMORY_CONTEXT: HIGH - Technical architecture and system overview for AI context -->
-
 <!-- MODULE_REFERENCE: 101_memory-context-safety.md -->
-## 🚨 CRITICAL SAFETY REQUIREMENTS
-**BEFORE ANY FILE OPERATIONS:**
-- [ ] Read `400_file-analysis-guide.md` completely (463 lines)
-- [ ] Complete 6-step mandatory analysis
-- [ ] Show all cross-references
-- [ ] Get explicit user approval
 
-## 📋 QUICK REFERENCE (30-second scan)
-**System:** Cursor Native AI + Specialized Agents + DSPy RAG
-**Architecture:** Planning → AI Execution → Core Systems → Infrastructure
-**Key Tech:** PostgreSQL + PGVector + n8n + Dashboard
-**Security:** Prompt sanitization + File validation + Input validation
-**Workflow:** Backlog → PRD → Tasks → AI Execution → Quality → Deployment
-
-## 🎯 What This System Does
-
-This is a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). It provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
-
----
-
-## 🏗️ System Architecture (Macro View)
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AI Development Ecosystem                    │
-├─────────────────────────────────────────────────────────────────┤
-│  🎯 Planning Layer                                           │
-│  ├── PRD Creation (001_create-prd.md)                        │
-│  ├── Task Generation (002_generate-tasks.md)                  │
-│  └── Process Management (003_process-task-list.md) [Legacy]   │
-├─────────────────────────────────────────────────────────────────┤
-│  🤖 AI Execution Layer (v0.3.1)                            │
-│  ├── Cursor Native AI (Foundation)                          │
-│  ├── Specialized Agents (Enhancements)                      │
-│  ├── Error Policy & Retry Logic                             │
-│  ├── RAM Guard & Resource Management                         │
-│  └── State Management (.ai_state.json)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │  🔧 Core Systems                                            │
 │  ├── DSPy RAG System (Document Processing)                  │

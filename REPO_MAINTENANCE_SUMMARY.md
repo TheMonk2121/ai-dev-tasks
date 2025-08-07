@@ -1,7 +1,8 @@
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide_quality_gates.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+
 # 🔧 Repository Maintenance Summary
 
 **Date**: 2024-08-07  

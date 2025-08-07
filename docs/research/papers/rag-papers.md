@@ -1,4 +1,6 @@
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+
 # RAG Research Papers
 
 > **External Research**: Academic papers and research sources for RAG (Retrieval-Augmented Generation) systems.

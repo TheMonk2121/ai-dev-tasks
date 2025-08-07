@@ -1,53 +1,7 @@
-# 📚 Research Infrastructure Guide: LLM-Accessible Knowledge Management
-
-> **Strategic Knowledge Management**: Comprehensive system for storing and organizing research sources that inform our documentation and are accessible to LLMs.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
-<!-- RESEARCH_SYSTEM: 500_research-infrastructure-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Research infrastructure for LLM-accessible knowledge management -->
-
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-## 🎯 **Overview**
-
-This guide establishes a **systematic approach** for storing research sources, academic papers, tutorials, and case studies that inform our documentation and are easily accessible to LLMs in Cursor. The system integrates with our existing cognitive scaffolding to ensure research sources are discoverable and contextual.
-
-### **Why This Infrastructure Matters**
-- **LLM Context Enhancement**: Provides additional sources for more informed responses
-- **Documentation Validation**: Ensures our documentation is backed by research
-- **Knowledge Continuity**: Preserves research insights across AI sessions
-- **Decision Support**: Informs technical decisions with academic backing
-- **Learning Acceleration**: Speeds up onboarding with curated research
-
-## 📁 **Storage Structure**
-
-### **1. Primary Research Repository: `500_*` Files**
-
-#### **Core Research Files (500-599)**
-```
-500_research-infrastructure-guide.md          # This file
-500_ai-development-research.md               # AI development methodology
-500_dspy-research.md                        # DSPy framework research
-500_rag-system-research.md                  # RAG system research
-500_model-integration-research.md           # Model integration research
-500_documentation-research.md               # Documentation strategy research
-500_security-research.md                    # Security best practices research
-500_performance-research.md                 # Performance optimization research
-500_benchmarks-research.md                  # Benchmark and evaluation research
-500_cognitive-scaffolding-research.md       # Cognitive scaffolding research
-```
-
-#### **Research File Template**
-```markdown
-# [Topic] Research Sources
-
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_system-overview_advanced_features.md, [related-core-file].md -->
-<!-- RESEARCH_SOURCES: docs/research/papers/[topic]-papers.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Research sources for [topic] -->
 
 ## 📚 Academic Papers
 - **[Paper Title]** - [Authors], [Year]
@@ -106,7 +60,6 @@ docs/research/
 ```markdown
 # [Topic] External Sources
 
-<!-- CONTEXT_REFERENCE: 500_[topic]-research.md -->
 <!-- RESEARCH_CATEGORY: [papers|articles|tutorials|case-studies|benchmarks] -->
 <!-- MEMORY_CONTEXT: LOW - External sources for [topic] -->
 
@@ -164,8 +117,6 @@ docs/research/
 
 #### **Add Research Files to Context Priority Guide**
 ```markdown
-| `500_ai-development-research.md` | Research sources for AI development methodology | Academic papers, articles, and case studies | `<!-- CONTEXT_REFERENCE: 500_ai-development-research.md -->` |
-| `docs/research/papers/ai-development-papers.md` | External academic sources for AI development | Peer-reviewed papers and research findings | `<!-- CONTEXT_REFERENCE: docs/research/papers/ai-development-papers.md -->` |
 ```
 
 ### **3. Research Discovery System**
@@ -176,7 +127,6 @@ Create `500_research-index.md` to serve as a research discovery hub:
 ```markdown
 # 📚 Research Index: LLM-Accessible Knowledge Hub
 
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- RESEARCH_SYSTEM: 500_research-infrastructure-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Research discovery hub for LLM context -->
 

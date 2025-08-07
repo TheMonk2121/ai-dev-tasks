@@ -1,6 +1,7 @@
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+
 # 🚀 DSPy RAG System - Current Status
 
 ## **✅ System Status: FULLY OPERATIONAL WITH DSPy INTEGRATION, CSV SUPPORT, PRODUCTION MONITORING & CORE HARDENING**

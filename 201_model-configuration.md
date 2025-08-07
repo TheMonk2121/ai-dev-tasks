@@ -1,53 +1,8 @@
-# 🤖 v0.3.1 Model Configuration Guide
-
-This document outlines the specific AI model configuration for the AI Dev Tasks project.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md, dspy-rag-system/README.md -->
-<!-- INTEGRATION_FILES: 103_yi-coder-integration.md -->
-<!-- ARCHITECTURE_FILES: 104_dspy-development-context.md -->
-<!-- MEMORY_CONTEXT: LOW - Model configuration details for specific setup tasks -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-### **AI Development Ecosystem Context**
-This model configuration is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
-**Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
-- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
-- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
-
-**Fast-Path Note:** The system includes intelligent query routing with fast-path bypass for simple queries (<50 chars, no code tokens).
-
-## 🎯 **Current Model Setup**
-
-### **v0.3.1 Ultra-Minimal Router Architecture**
-**C-2: Central Retry Wrapper** - ✅ **COMPLETED** - Configurable retry logic with exponential backoff implemented and tested.
-
-#### **Core Configuration**
-```python
-ENABLED_AGENTS = ["IntentRouter", "RetrievalAgent", "CodeAgent"]
-MODELS = {
-    "mistral-7b-instruct": "warm",  # Always resident
-    "yi-coder-9b-chat-q6_k": "lazy"  # Load on demand
-}
-FEATURE_FLAGS = {
-    "DEEP_REASONING": 0,
-    "CLARIFIER": 0
-}
-MEMORY_STORE = "postgres_diff_no_tombstones"
-```
-
-#### **1. Cursor Native AI**
-- **Purpose**: Foundation for code generation and completion
-- **Platform**: Cursor IDE
-- **Model Name**: Built-in AI models
-- **Status**: **Always Available** (native integration)
 - **Configuration**: 
   - Integrated with Cursor IDE
   - Automatic context awareness

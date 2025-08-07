@@ -1,53 +1,8 @@
-# 📋 Backlog Management Guide
-
-A comprehensive guide for using the AI Development Ecosystem backlog system. This guide explains how to work with the backlog, understand prioritization, and use the AI scoring system.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
-<!-- AUTOMATION_FILES: 100_backlog-automation.md -->
-<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md, dspy-rag-system/README.md -->
-<!-- MEMORY_CONTEXT: LOW - Backlog management guide for specific workflow tasks -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-## 🎯 How to Use the Backlog
 
-### **AI Development Ecosystem Context**
-This backlog system is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
-
-**Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
-- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
-- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
-
-## 🤖 AI vs Human Execution Responsibilities
-
-### **What AI Can Execute (Automated)**
-✅ **Code Implementation**: Full implementation of features, bug fixes, and improvements
-✅ **File Management**: Creating, modifying, and organizing code files
-✅ **Testing**: Writing and running comprehensive test suites
-✅ **Documentation**: Updating technical documentation and comments
-✅ **Configuration**: Setting up config files, environment variables, dependencies
-✅ **Integration**: Connecting different system components and APIs
-✅ **Error Handling**: Implementing retry logic, validation, and error recovery
-✅ **Performance Optimization**: Code optimization, caching, and efficiency improvements
-✅ **Security Implementation**: Input validation, sanitization, and security measures
-✅ **Backlog Updates**: Updating status, progress, and completion tracking
-
-### **What Human Must Execute (Manual)**
-🔒 **Strategic Decisions**: Choosing which backlog items to prioritize
-🔒 **Business Requirements**: Defining what features should do and why
-🔒 **Architecture Decisions**: High-level system design and technology choices
-🔒 **External Integrations**: API keys, credentials, and third-party service setup
-🔒 **Deployment**: Production deployments, server configuration, and infrastructure
-🔒 **User Testing**: Real-world testing and feedback collection
 🔒 **Business Logic Validation**: Ensuring features meet business needs
 🔒 **Resource Allocation**: Deciding time, budget, and priority trade-offs
 🔒 **Stakeholder Communication**: Reporting progress and managing expectations

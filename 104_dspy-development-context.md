@@ -1,53 +1,7 @@
-# 🤖 DSPy Development Context - Deep Research Analysis
-
-This document provides comprehensive context about the current DSPy implementation in the AI Dev Tasks system for deep research analysis.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- IMPLEMENTATION_STACK: 202_setup-requirements.md, 201_model-configuration.md -->
-<!-- DEPLOYMENT_GUIDE: 400_deployment-environment-guide.md -->
-<!-- SECURITY_FRAMEWORK: 400_security-best-practices-guide.md -->
-<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_performance-optimization-guide.md -->
-<!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md -->
-<!-- SYSTEM_FILES: dspy-rag-system/README.md, dspy-rag-system/docs/CURRENT_STATUS.md -->
-<!-- CONFIG_FILES: 201_model-configuration.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Deep technical context for DSPy implementation -->
-
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
-
-## 🔎 TL;DR
-
-- What: Deep technical context for DSPy integration in this repo
-- Who: Developers needing DSPy internals and extension points
-- When: After reading `100_cursor-memory-context.md` and `400_system-overview.md`
-- Key: Core components, guard-rails, module structure, and where source lives
-- Next: See anchors below to jump straight to what you need
-
-## ⚡ AI Rehydration Quick Start
-
-Read these sections if you need DSPy details fast:
-
-- Core components → module responsibilities and file paths
-- Runtime guard-rails → safety constraints before running heavy ops
-- Module structure → signatures and reasoning patterns (excerpts only)
-
-Note: Long code excerpts are trimmed. See linked source files for full implementations.
-
-<!-- LOCAL_CONTEXT_INDEX: {
-  "anchors": {
-    "system-overview": "## 🎯 **System Overview**",
-    "core-components": "### **Core Components**",
-    "runtime-guard-rails": "### **Runtime Guard-Rails**",
-    "fast-path": "### **Fast-Path Bypass**",
-    "module-structure": "### **DSPy Module Structure**",
-    "vector-store": "#### **3. Enhanced Vector Store Integration (Research-Based)**",
-    "document-processor": "#### **4. Document Processor**",
-    "roadmap": "## 🚀 **Development Roadmap**"
-  }
-} -->
 
 ### **AI Development Ecosystem Context**
 
@@ -159,6 +113,7 @@ def is_fast_path(query: str) -> bool:
 Excerpts only; see `src/dspy_modules/enhanced_rag_system.py` and related modules for full implementations.
 
 #### **1. Enhanced RAG System (`enhanced_rag_system.py`)**
+
 ```python
 
 # Core DSPy Signatures
@@ -334,6 +289,7 @@ class ResearchAgent(Module):
 <!-- ANCHOR: vector-store -->
 
 #### **3. Enhanced Vector Store Integration (Research-Based)**
+
 ```python
 class HybridVectorStore(Module):
     def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
@@ -399,6 +355,7 @@ class HybridVectorStore(Module):
 <!-- ANCHOR: document-processor -->
 
 #### **4. Document Processor**
+
 ```python
 class DocumentProcessor(Module):
     def forward(self, document_path: str) -> Dict[str, Any]:
@@ -458,6 +415,7 @@ class DocumentProcessor(Module):
 ## 🎯 **Current Usage Patterns**
 
 ### **Interactive Interface**
+
 ```bash
 
 # Run enhanced interface
@@ -473,6 +431,7 @@ react "Compare approaches"        # Force ReAct reasoning
 ```
 
 ### **Web Dashboard**
+
 ```bash
 
 # Run hardened web dashboard
@@ -491,6 +450,7 @@ python3 src/dashboard.py
 ```
 
 ### **Programmatic Usage**
+
 ```python
 from dspy_modules.enhanced_rag_system import create_enhanced_rag_interface
 
@@ -601,6 +561,7 @@ response = rag.ask("What is DSPy?", use_cot=True, use_react=False)
 ## 🎯 **Research-Based Enhancements (Implementation Ready)**
 
 ### **1. Teleprompter Optimization (Research-Based)**
+
 ```python
 class TeleprompterOptimizer(Module):
     def forward(self, module: Module, training_examples: List[Dict]) -> Module:
@@ -634,6 +595,7 @@ class TeleprompterOptimizer(Module):
 ```
 
 ### **2. DSPy Caching Configuration (Research-Based)**
+
 ```python
 
 # Enable DSPy caching for performance optimization
@@ -660,6 +622,7 @@ class CachedDSPyModule(Module):
 ```
 
 ### **3. Enhanced Document Processor (Research-Based)**
+
 ```python
 class EnhancedDocumentProcessor(Module):
     def forward(self, document_path: str) -> Dict[str, Any]:

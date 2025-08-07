@@ -1,17 +1,8 @@
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_rollback_procedures.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: B-011-DEVELOPER-DOCUMENTATION_context_management_system.md -->
-<!-- MODULE_REFERENCE: 400_integration-patterns-guide_api_design_principles.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+
 # Context Management System Design
 
 ## Overview

@@ -1,53 +1,7 @@
-# AI-BACKLOG-META: Automated Backlog Management
-
-This document describes the AI-BACKLOG-META system for automated backlog management and how it integrates with the AI development workflow.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
-<!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
-
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
-## Overview
 
-The AI-BACKLOG-META system provides machine-readable commands and metadata that AI agents can parse to automate backlog management tasks. This reduces manual work and ensures consistency across the development workflow.
-
-### **AI Development Ecosystem Context**
-This system is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
-
-**Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
-- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
-- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
-
-## Backlog Table Format
-
-The backlog uses a structured Markdown table with the following fields:
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| `ID` | Unique identifier | `B-001`, `B-002` |
-| `Title` | Feature name | `Real-time Mission Dashboard` |
-| `🔥P` | Human priority | `🔥`, `⭐`, `📈`, `🔧` |
-| `🎯Points` | Effort estimate | `1`, `2`, `3`, `5`, `8`, `13` |
-| `Status` | Current state | `todo`, `in-progress`, `done` |
-| `Problem/Outcome` | What it solves | `Need live visibility into AI task execution` |
-| `Tech Footprint` | Technologies involved | `PostgreSQL + Flask UI` |
-| `Dependencies` | Prerequisites | `None`, `Event ledger` |
-
-## AI-BACKLOG-META Commands
-
-### Parse Backlog
-```yaml
-parse_backlog: |
-  Extract all todo items with their metadata
-  Return sorted list by priority and score
-```
-
-### Generate PRD
-```yaml
 generate_prd: |
   Use @001_create-prd.md with backlog_id=B-XXX
   Include all metadata from backlog table

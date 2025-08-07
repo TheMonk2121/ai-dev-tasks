@@ -1,52 +1,7 @@
-# 📚 Memory Context Guidance - Context-Specific Help
-
-> Deprecation Notice: Prefer `100_cursor-memory-context.md` (AI Rehydration Quick Start, Always-On Rules) and `400_context-priority-guide.md` (priority tiers & cross-reference map).
-
-> **Strategic Purpose**: Context-specific guidance and quick reference information for different types of tasks and operations.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
-<!-- PARENT_MODULE: 100_cursor-memory-context.md -->
-<!-- MEMORY_CONTEXT: HIGH - Context-specific guidance and quick reference -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
-<!-- MODULE_REFERENCE: 400_integration-patterns-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
-## 📊 Documentation Utilization Checklist
-
-**Before starting any task, ensure you've checked:**
-- [ ] **Current state** in `100_cursor-memory-context.md`
-- [ ] **Priorities** in `000_backlog.md`
-- [ ] **Technical context** in `400_system-overview_advanced_features.md`
-- [ ] **Relevant guides** in 400-series for specific tasks
-- [ ] **Research findings** in 500-series for research tasks
-- [ ] **Domain-specific docs** for B/C-series items
-- [ ] **Analysis methodology** for file operations
-
-**📚 Quick Navigation Tools:**
-- **Complete inventory**: `python3 scripts/documentation_navigator.py inventory`
-- **Context guidance**: `python3 scripts/documentation_navigator.py guidance`
-- **Task-specific files**: `python3 scripts/documentation_navigator.py find <task_type>`
-
-**This ensures full utilization of our comprehensive documentation system!** 🎯
-
-## 🎯 Context-Specific Guidance
-
-### **For New Sessions (First 2-3 minutes):**
-1. **`100_cursor-memory-context.md`** - Current project state
-2. **`000_backlog.md`** - Current priorities
-3. **`400_system-overview_advanced_features.md`** - Technical architecture
 
 ### **For Development Tasks:**
 - **Planning**: `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md`

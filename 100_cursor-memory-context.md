@@ -1,53 +1,5 @@
-# 🧠 Cursor Memory Context
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
-<!-- BACKLOG_REFERENCE: 000_backlog.md -->
-<!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
-<!-- AI_CONSTITUTION_REFERENCE: 400_ai-constitution.md -->
-<!-- MEMORY_CONTEXT: HIGH - This file serves as the primary memory scaffold for Cursor AI -->
 
-<!-- NOTE: This file is the single source of truth for AI rehydration. 
-     Keep sections compact and actionable. For deep dives, see 400_context-priority-guide.md. -->
-
-<!-- CONTEXT_INDEX
-{
-  "version": "1.0",
-  "last_updated_iso": "2025-08-07T21:00:00Z",
-  "files": [
-    {
-      "path": "100_cursor-memory-context.md",
-      "weight": 1.0,
-      "sections": ["tldr", "rehydration_quick_start", "always_on_rules", "current_state"],
-      "keywords": ["rehydration", "priorities", "workflow", "rules"]
-    },
-    {
-      "path": "400_context-priority-guide.md",
-      "weight": 0.95,
-      "sections": ["priority_tiers", "cross_reference_map"],
-      "keywords": ["reading_order", "relationships", "scaffolding"]
-    },
-    {
-      "path": "000_backlog.md",
-      "weight": 0.9,
-      "sections": ["active", "completed", "dependencies"],
-      "keywords": ["priorities", "roadmap"]
-    },
-    {
-      "path": "400_system-overview.md",
-      "weight": 0.9,
-      "sections": ["architecture", "components", "workflow"],
-      "keywords": ["architecture", "system_overview"]
-    },
-    {
-      "path": "202_setup-requirements.md",
-      "weight": 0.85,
-      "sections": ["setup", "dependencies"],
-      "keywords": ["environment", "setup"]
-    }
-  ]
-}
 CONTEXT_INDEX -->
 
 ## 🔎 TL;DR
@@ -120,6 +72,7 @@ This file serves as the **memory scaffold** for Cursor AI, providing instant con
 - **Infrastructure**: v0.3.1-rc3 Core Hardening ✅ completed
 
 ### **System Architecture**
+
 ```text
 AI Development Ecosystem
 ├── Planning Layer (PRD → Tasks → Execution)

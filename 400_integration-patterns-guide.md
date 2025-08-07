@@ -1,53 +1,5 @@
-# 🔗 Integration Patterns & API Documentation
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
-<!-- BACKLOG_REFERENCE: 000_backlog.md -->
-<!-- MEMORY_CONTEXT: HIGH - Essential integration documentation for system architecture -->
-<!-- BACKLOG_ITEM: B-068 Integration Patterns & API Documentation -->
 
-## 🎯 Purpose
-This document provides comprehensive integration patterns, API documentation, and component communication guidelines for the AI development ecosystem. It ensures seamless interaction between system components while maintaining scalability and reliability.
-
-## 📋 Table of Contents
-1. [System Architecture](#system-architecture)
-2. [API Design Principles](#api-design-principles)
-3. [Component Integration](#component-integration)
-4. [Communication Patterns](#communication-patterns)
-5. [Data Flow](#data-flow)
-6. [Error Handling](#error-handling)
-7. [Security Integration](#security-integration)
-8. [Performance Integration](#performance-integration)
-9. [Testing Integration](#testing-integration)
-10. [Deployment Integration](#deployment-integration)
-
----
-
-## 🏗️ System Architecture
-
-### **Integration Architecture Overview**
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                Integration Layers                          │
-├─────────────────────────────────────────────────────────────┤
-│ 1. External APIs (n8n, Cursor AI, External Services)     │
-│ 2. Internal APIs (REST, GraphQL, WebSocket)              │
-│ 3. Message Queues (Event-driven Communication)            │
-│ 4. Database Layer (PostgreSQL, Vector Store)             │
-│ 5. AI Model Layer (Cursor Native AI, Specialized Agents)│
-│ 6. Core Services (Authentication, Monitoring, Logging)    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### **Component Integration Map**
-
-| Component | Primary Interface | Secondary Interface | Data Format |
-|-----------|------------------|-------------------|-------------|
-| **AI Models** | REST API | WebSocket | JSON |
-| **Database** | SQL | Connection Pool | Structured Data |
-| **n8n Workflows** | HTTP Webhooks | REST API | JSON |
-| **Dashboard** | WebSocket | REST API | JSON/HTML |
 | **Monitoring** | REST API | Event Stream | Metrics |
 | **Security** | Middleware | API Gateway | Headers |
 

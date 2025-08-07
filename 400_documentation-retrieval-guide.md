@@ -1,53 +1,8 @@
-# 📚 Documentation Retrieval System Guide
-
-> **Strategic Purpose**: Comprehensive guide for using the RAG-based documentation retrieval system to provide relevant context on-demand and solve context overload.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
-<!-- IMPLEMENTATION_FILES: scripts/documentation_indexer.py, dspy-rag-system/src/dspy_modules/documentation_retrieval.py, scripts/documentation_retrieval_cli.py -->
-<!-- RESEARCH_BASIS: 500_research-implementation-summary.md -->
-<!-- MEMORY_CONTEXT: HIGH - Documentation retrieval system implementation guide -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
-## 🚨 **CRITICAL SAFETY REQUIREMENTS**
-**BEFORE ANY FILE OPERATIONS:**
-- [ ] Read `400_file-analysis-guide.md` completely (463 lines)
-- [ ] Complete 6-step mandatory analysis
-- [ ] Show all cross-references
-- [ ] Get explicit user approval
 
-**🤖 AI CONSTITUTION COMPLIANCE:**
-- [ ] Follow `400_ai-constitution.md` rules for all AI operations
-- [ ] Maintain context preservation and safety requirements
-- [ ] Validate against constitution rules before any changes
-
-## 🎯 **System Overview**
-
-### **Problem Solved**
-The Documentation Retrieval System addresses **context overload** by implementing RAG (Retrieval-Augmented Generation) for documentation, providing relevant context on-demand instead of requiring AI to read entire documentation files.
-
-### **Key Benefits**
-- **Context Overload Solution**: Provides only relevant documentation snippets
-- **Intelligent Retrieval**: Uses semantic search to find most relevant content
-- **Multi-Source Synthesis**: Combines information from multiple documentation sources
-- **Confidence Scoring**: Indicates reliability of retrieved context
-- **Category Filtering**: Allows focused search in specific documentation areas
-
-### **Research Foundation**
-Based on industry analysis showing RAG solves context overload:
-- **Microsoft's Cognitive Search**: Azure OpenAI + Cognitive Search pattern
-- **Hugging Face's Chunking**: Semantic chunking and retrieval strategies
 - **Google's Documentation**: CLeAR framework for structured documentation
 - **GitHub Copilot**: Repository-specific instruction patterns
 

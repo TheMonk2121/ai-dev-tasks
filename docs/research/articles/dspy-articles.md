@@ -1,6 +1,7 @@
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+
 # DSPy Articles
 
 > **External Research**: Industry articles and blog posts about DSPy framework.

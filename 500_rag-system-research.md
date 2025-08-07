@@ -1,53 +1,6 @@
-# Advanced RAG System Research: Hybrid Search & Intelligent Retrieval
-
-> **RAG Research**: Comprehensive research findings on advanced Retrieval-Augmented Generation systems for our AI development ecosystem.
-
-<!-- CONTEXT_REFERENCE: 500_research-analysis-summary.md -->
-<!-- CORE_SYSTEM: 400_system-overview_advanced_features.md, dspy-rag-system/ -->
-<!-- RESEARCH_SOURCES: docs/research/papers/rag-papers.md -->
-<!-- EXTERNAL_SOURCES: docs/research/articles/rag-articles.md -->
-<!-- TUTORIAL_SOURCES: docs/research/tutorials/rag-tutorials.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - RAG research for advanced retrieval implementation -->
-
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-## 📚 **Research Overview**
 
-This document contains comprehensive research findings on advanced RAG (Retrieval-Augmented Generation) systems, focusing on hybrid search, intelligent chunking, multi-stage retrieval, and span-level grounding for our AI development ecosystem.
-
-## 🎯 **Key Research Findings**
-
-### **1. Hybrid Retrieval is Essential**
-**Source**: "Searching for Best Practices in RAG" (ACL 2024), RAGFlow Blog (2024)
-**Key Insight**: Relying solely on vector similarity can miss exact matches or rare terms.
-
-**Implementation Impact**:
-- **Combined Approach**: Dense vectors (semantic recall) + sparse search (BM25/keyword) for precise matches
-- **Improved Recall**: Significantly improves real-world QA recall compared to pure vector search
-- **Flexible Integration**: Many vector DBs (like Qdrant) added BM25 in 2024
-- **Performance**: Best practice is to combine both methods and merge results
-
-**Our Application**:
-- Add PostgreSQL full-text search alongside PGVector
-- Implement result merging with weighting heuristics
-- Use our three-digit prefix system for semantic chunking
-- Enable hybrid search for all RAG operations
-
-### **2. Intelligent Chunking Strategies**
-**Source**: "Searching for Best Practices in RAG" (ACL 2024), RAGFlow Blog (2024)
-**Key Insight**: How we split documents into chunks greatly impacts RAG results.
-
-**Implementation Impact**:
-- **Semantic Boundaries**: Avoid blind size-based splitting, use semantic boundaries
-- **Prefix System**: Our three-digit prefix system provides natural chunk boundaries
-- **Sliding Windows**: Use overlapping chunks to avoid "Lost in the Middle" problem
-- **Layout Awareness**: Consider document structure for intelligent chunking
-
-**Our Application**:
-- Use prefix boundaries (001, 002, etc.) as semantic chunk units
-- Implement sliding windows for large documents
-- Store chunk metadata with source information
 - Enable chunk-level retrieval and citation
 
 ### **3. Multi-Stage Retrieval**

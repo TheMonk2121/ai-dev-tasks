@@ -153,18 +153,23 @@ class DocumentationIndexer:
             return None
     
     def _extract_metadata(self, content: str) -> Dict[str, Any]:
-        """Extract metadata from HTML comments in the content"""
-        metadata = {}
-        
-        # Extract HTML comments
-        comment_pattern = r'<!--\s*([^:]+):\s*([^>]+)\s*-->'
-        matches = re.findall(comment_pattern, content)
-        
-        for key, value in matches:
-            key = key.strip().lower().replace(' ', '_')
-            value = value.strip()
-            metadata[key] = value
-        
+        """Extract minimal metadata: CONTEXT_REFERENCE, MODULE_REFERENCE[], CONTEXT_INDEX"""
+        metadata: Dict[str, Any] = {"module_reference": []}
+
+        # Only capture CONTEXT_REFERENCE and MODULE_REFERENCE
+        m_ctx = re.findall(r'<!--\s*CONTEXT_REFERENCE:\s*([^>]+)\s*-->', content)
+        if m_ctx:
+            metadata["context_reference"] = m_ctx[0].strip()
+
+        m_mods = re.findall(r'<!--\s*MODULE_REFERENCE:\s*([^>]+)\s*-->', content)
+        for v in m_mods:
+            v = v.strip()
+            # Skip deprecated module references to split/advanced/lens variants
+            lv = v.lower()
+            if lv.endswith("_additional_resources.md") or lv.endswith("_advanced_features.md") or "_lens_" in lv:
+                continue
+            metadata["module_reference"].append(v)
+
         # Parse CONTEXT_INDEX JSON block if present
         try:
             ctx_start = content.find("<!-- CONTEXT_INDEX")

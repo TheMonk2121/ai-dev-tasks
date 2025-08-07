@@ -1,53 +1,4 @@
-# Metadata Collection Quick Reference
-
-> **Quick Reference**: Essential metadata operations and commands for the AI development ecosystem.
-
-## 🚀 **Essential Commands**
-
-### **Task Execution & Status**
-```bash
-# List all tasks
-python3 scripts/process_tasks.py list
-
-# List tasks by status
-python3 scripts/process_tasks.py list --status pending
-python3 scripts/process_tasks.py list --status completed
-
-# List tasks by priority
-python3 scripts/process_tasks.py list --priority 🔥
-
-# Get execution status
-python3 scripts/process_tasks.py status
-
-# Execute specific task
-python3 scripts/process_tasks.py execute B-049
-
-# Auto-execute top priority tasks
-python3 scripts/process_tasks.py auto --max-tasks 5
-```
-
-### **Backlog Analysis**
-```bash
-# Parse backlog and show statistics
-python3 scripts/backlog_parser.py --stats
-
-# Export backlog as JSON
-python3 scripts/backlog_parser.py --export backlog.json
-
-# Validate backlog structure
-python3 scripts/backlog_parser.py --validate
-```
-
-### **State Management**
-```bash
-# Get task execution history
-python3 scripts/state_manager.py --task B-049 --history
-
-# Get performance statistics
-python3 scripts/state_manager.py --stats
-
-# Reset task state
-python3 scripts/state_manager.py --reset B-049
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
 # Export execution data
 python3 scripts/state_manager.py --export execution_data.json
@@ -309,13 +260,8 @@ python3 scripts/state_manager.py --export-csv metrics.csv
 **Last Updated**: 2024-08-07  
 **Related Documentation**: `400_metadata-collection-guide.md`
 
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- WORKFLOW_INTEGRATION: 003_process-task-list.md, scripts/process_tasks.py -->
 <!-- IMPLEMENTATION_CONTEXT: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- QUICK_REFERENCE: 400_metadata-quick-reference.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Quick reference for metadata operations -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_backlog_analysis_examples.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->

@@ -1,53 +1,6 @@
-# 🔧 Setup Requirements - Manual Configuration Needed
-
-This document lists all items that require manual setup or configuration on your end before they can be fully utilized.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md, dspy-rag-system/README.md -->
-<!-- CONFIG_FILES: 201_model-configuration.md, docs/CONFIG_REFERENCE.md -->
-<!-- INTEGRATION_FILES: 103_yi-coder-integration.md -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-### **AI Development Ecosystem Context**
-This setup guide is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
-
-**Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
-- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
-- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
-
-## 📋 **Setup Required Items**
-
-### **S-001: n8n Installation & Configuration** 🔥
-**Status**: `setup-required`  
-**Priority**: High  
-**Setup Required**: n8n installation + API key + webhook setup  
-**Setup Instructions**: See `dspy-rag-system/docs/N8N_SETUP_GUIDE.md`
-
-**Information Needed from n8n:**
-- **n8n Base URL**: Your n8n instance URL (default: http://localhost:5678)
-- **API Key**: Generated from n8n Settings → API Keys
-- **Webhook URLs**: For each workflow you want to trigger
-- **Workflow IDs**: Identifiers for your n8n workflows
-
-### **S-002: PostgreSQL Event Ledger Schema** 🔥
-**Status**: `setup-required`  
-**Priority**: High  
-**Setup Required**: Database schema creation  
-**Setup Instructions**: Run `config/database/event_ledger.sql` in PostgreSQL
-
-**Commands:**
-```bash
-# Connect to PostgreSQL
-psql -h localhost -U your_user -d your_database
-
-# Execute the schema
-\i dspy-rag-system/config/database/event_ledger.sql
-```
 
 ### **S-003: Environment Configuration** ⚙️
 **Status**: `setup-required`  

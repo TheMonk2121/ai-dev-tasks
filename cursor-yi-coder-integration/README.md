@@ -1,6 +1,7 @@
-<!-- MODULE_REFERENCE: 400_contributing-guidelines_additional_resources.md -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: B-011-DEVELOPER-DOCUMENTATION_context_management_system.md -->
 <!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
+
 # Yi-Coder Integration for Cursor
 
 AI-powered code generation extension for Cursor IDE using Yi-Coder-9B-Chat-Q6_K model.

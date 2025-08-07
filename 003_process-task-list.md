@@ -1,52 +1,7 @@
-# Process Task List - AI-Optimized Execution
-
-⚠️ **LEGACY HELPER — Backlog now drives execution.**  
-Auto‑invoked only when `<!-- default_executor: 003_process-task-list.md --><!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_database_migration_procedures.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-` is set.
-
-Guidelines for executing task lists generated from PRDs using AI agents (Cursor Native AI + Specialized Agents).
-
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- WORKFLOW_CHAIN: 000_backlog.md → 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
-<!-- WORKFLOW_NEXT: scripts/process_tasks.py -->
-<!-- WORKFLOW_PREV: 002_generate-tasks.md -->
-<!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
-<!-- EXECUTION_ENGINE: scripts/process_tasks.py, scripts/state_manager.py, scripts/error_handler.py -->
-<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md -->
-<!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
-<!-- AI_CONSTITUTION_REFERENCE: 400_ai-constitution.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Core workflow for AI task execution -->
-<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
-
-### **AI Development Ecosystem Context**
-This task execution process is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
-
-**Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
-- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
-- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
-
----
-
-## 1. Execution Loop
-
-### Core Process
-1. **Load Context**
-   - Read task list from markdown file
-   - If no PRD was generated, log: "No PRD found for B-xxx; ingesting backlog metadata instead"
-   - Load `.ai_state.json` if present (file list, commit hash, test results)
-   - Consider backlog priorities for task selection when multiple tasks are available
-   - Parse backlog table for status and dependency information
-   - **Parse backlog scoring** when available (`<!--score_total: X.X-->` comments)
-   - **Use scores for task prioritization** - higher scores indicate higher priority
-   - **Fall back to human priority tags** when scores are missing
-   - **Validate against AI Constitution** (`400_ai-constitution.md`) for all operations
 
 2. **Select Next Task**
    - Find task with status `[ ]` where all dependencies are `[x]`

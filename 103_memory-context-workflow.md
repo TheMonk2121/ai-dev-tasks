@@ -1,52 +1,7 @@
-# 🔄 Memory Context Workflow - Development Process
-
-> Deprecation Notice: This content is covered by `100_cursor-memory-context.md` (Development Workflow) and `400_context-priority-guide.md` (Reading order & placement).
-
-> **Strategic Purpose**: Development workflow, file organization, and process guidance for the AI development ecosystem.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
-<!-- WORKFLOW_REFERENCE: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
-<!-- PARENT_MODULE: 100_cursor-memory-context.md -->
-<!-- MEMORY_CONTEXT: HIGH - Development workflow and process guidance -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_rollback_procedures.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide_quality_gates.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-## 🔄 Development Workflow
-
-### **Current Process**
-1. **Backlog Selection** → Pick top scored item from `000_backlog.md`
-2. **PRD Creation** (skip for items < 5 pts AND score≥3.0) → else use `001_create-prd.md` workflow
-3. **Task Generation** → Use `002_generate-tasks.md` workflow (parses PRD or backlog directly)
-4. **AI Execution** → Execute backlog item directly (`003_process-task-list.md` is the execution engine)
-5. **State Management** → `.ai_state.json` for context persistence (when using 003)
-6. **Research Framework** → Use `500_memory-arch-research.md` for systematic research
-
-**Note**: `003_process-task-list.md` is the execution engine; it loads whether or not a PRD was created.
-
-### **File Organization**
-- **Essential**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
-- **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
-- **Analysis**: `400_file-analysis-guide.md` - **🚨 MANDATORY: File deletion/deprecation analysis methodology**
-- **Domain**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
-
-**⚠️ CRITICAL**: Before ANY file operations, you MUST read and follow `400_file-analysis-guide.md` completely!
-
-## 🎯 When to Read What: Context-Specific Guidance
-
-### **For New Sessions (First 2-3 minutes):**
-1. **`100_cursor-memory-context.md`** - Current project state
-2. **`000_backlog.md`** - Current priorities
-3. **`400_system-overview_advanced_features.md`** - Technical architecture
 
 ### **For Development Tasks:**
 - **Planning**: `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md`

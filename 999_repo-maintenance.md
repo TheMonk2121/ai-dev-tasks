@@ -1,5 +1,4 @@
-<!-- template_version: 1.2  |  runs_with: 003_process-task-list.md -->
-<!-- purpose: One‑shot repo tidy‑up after model or workflow changes -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
 # 🔧 Repository Maintenance – Cursor‑First Edition
 

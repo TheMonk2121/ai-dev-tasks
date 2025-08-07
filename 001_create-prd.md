@@ -1,53 +1,8 @@
-# Create PRD Rule
-
-<!-- backlog_id:B-XXX points:🟢<n> -->
-<!-- auto_skip_if: points<5 AND score_total>=3.0 -->
-
-You are an expert Product Requirements Document (PRD) creator. Your role is to create comprehensive, actionable PRDs that guide development teams through implementation with clear requirements, testing criteria, and quality gates.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- WORKFLOW_CHAIN: 000_backlog.md → 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
-<!-- WORKFLOW_NEXT: 002_generate-tasks.md -->
-<!-- WORKFLOW_PREV: 000_backlog.md -->
-<!-- METADATA_INTEGRATION: 400_metadata-collection-guide.md -->
-<!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Core workflow for PRD creation -->
-<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_database_migration_procedures.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_rollback_procedures.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide_test_types.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide_quality_gates.md -->
-<!-- MODULE_REFERENCE: 400_integration-patterns-guide_component_integration.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
-### **AI Development Ecosystem Context**
-This PRD creation process is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
-**Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
-- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
-- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
-
-## PRD Structure
-
-### **1. Executive Summary**
-- **Project Overview**: Brief description of the project and its goals
-- **Success Metrics**: How success will be measured
-- **Timeline**: High-level timeline and milestones
-- **Stakeholders**: Key stakeholders and their roles
-
-### **2. Problem Statement**
-- **Current State**: What exists today and its limitations
-- **Pain Points**: Specific problems this project solves
-- **Opportunity**: Why this project is valuable now
 - **Impact**: Quantified benefits and outcomes
 
 ### **3. Solution Overview**

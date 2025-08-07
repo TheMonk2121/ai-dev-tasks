@@ -1,52 +1,7 @@
-# 📚 Documentation Guide
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Documentation navigation and organization guide -->
-<!-- RELATED_FILES: docs/beginner/what-we-build.md, docs/intermediate/system-overview.md, docs/advanced/technical-architecture.md -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_beginner_lens_what_were_building.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_intermediate_lens_how_the_system_works.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-## 🎯 **Three-Lens Documentation System**
-
-This documentation is organized using a **three-lens system** that provides different levels of detail for different audiences:
-
-### **🔍 Beginner Lens** (Non-Technical)
-**For**: Stakeholders, new team members, business users
-**Purpose**: Understand what we're building and why it matters
-**Content**: High-level vision, business value, user benefits
-
-### **🔧 Intermediate Lens** (Technical but Accessible)
-**For**: Developers, product managers, technical leads
-**Purpose**: Understand how the system works and its components
-**Content**: Architecture overview, workflows, key technologies
-
-### **⚙️ Advanced Lens** (Deep Technical)
-**For**: Core developers, architects, technical contributors
-**Purpose**: Implement and extend the system
-**Content**: Code architecture, technical decisions, implementation patterns
-
-## 📋 **Documentation Structure**
-
-```
-docs/
-├── 400_project-overview.md      # This navigation guide
-├── 100_ai-development-ecosystem.md # Three-lens comprehensive guide
-├── ARCHITECTURE.md             # DSPy implementation details
-└── CONFIG_REFERENCE.md         # Configuration reference
-```
-
-## 🚀 **Getting Started**
 
 ### **New to the Project?**
 1. **Start with Beginner Lens** → `100_ai-development-ecosystem_advanced_lens_technical_implementation.md#beginner-lens`

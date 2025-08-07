@@ -1,53 +1,6 @@
-# 🤝 Contributing Guidelines & Development Standards
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
-<!-- BACKLOG_REFERENCE: 000_backlog.md -->
-<!-- MEMORY_CONTEXT: HIGH - Essential development standards for maintaining code quality -->
-<!-- BACKLOG_ITEM: B-071 Contributing Guidelines & Development Standards -->
-
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
 
-## 🎯 Purpose
-This document provides comprehensive guidelines for contributing to the AI development ecosystem, ensuring consistent code quality and development standards for solo development workflow.
-
-## 📋 Table of Contents
-1. [Development Philosophy](#development-philosophy)
-2. [Code Standards](#code-standards)
-3. [Testing Guidelines](#testing-guidelines)
-4. [Documentation Standards](#documentation-standards)
-5. [Security Basics](#security-basics)
-6. [Performance Guidelines](#performance-guidelines)
-7. [Simple Workflow](#simple-workflow)
-8. [Quality Checklist](#quality-checklist)
-
----
-
-## 🧠 Development Philosophy
-
-### **Core Principles for Solo Development**
-
-```python
-# Development Philosophy Principles
-DEVELOPMENT_PRINCIPLES = {
-    "quality_first": "Code quality and reliability over speed",
-    "documentation_driven": "Documentation guides development",
-    "testing_required": "All code must be tested",
-    "security_mindset": "Security is built-in, not bolted on",
-    "solo_developer_optimized": "Optimized for solo development workflow",
-    "continuous_improvement": "Always learning and improving"
-}
-```
-
-### **Simple Development Workflow**
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                Solo Development Workflow                   │
-├─────────────────────────────────────────────────────────────┤
-│ 1. Plan → Define requirements and scope                    │
-│ 2. Design → Create architecture and documentation          │
-│ 3. Implement → Write code with tests                      │
 │ 4. Test → Basic testing and validation                    │
 │ 5. Review → Self-review and quality checks                │
 │ 6. Deploy → Simple deployment with monitoring              │

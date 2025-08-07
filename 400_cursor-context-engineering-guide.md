@@ -1,53 +1,8 @@
-# 🎯 Cursor Native AI Context Engineering Guide
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
-<!-- BACKLOG_REFERENCE: 000_backlog.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 100_cursor-memory-context.md -->
-<!-- INTEGRATION_FILES: 104_dspy-development-context.md -->
-<!-- MEMORY_CONTEXT: HIGH - Context engineering strategies for Cursor Native AI model routing -->
-
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-## 🎯 Overview
 
-This guide explains how to leverage **context engineering** with DSPy to intelligently steer Cursor's native AI models toward optimal performance. The system uses DSPy's structured reasoning to analyze task characteristics and select the best model from Cursor's available options.
-
-### **Available Cursor Native AI Models**
-- **Claude 3 Opus**: High-context (200K tokens), complex reasoning, large codebases
-- **GPT-4 Turbo**: Fast, cost-efficient, structured tasks, code generation
-- **Mixtral 8x7B**: Balanced performance, moderate complexity, cost-efficient
-- **Mistral 7B Instruct**: Fastest, simple tasks, quick completions
-
-## 🧠 Context Engineering Strategy
-
-### **1. Task Analysis & Model Selection**
-
-The system analyzes queries using DSPy signatures to determine:
-
-```python
-class ModelRoutingSignature(Signature):
-    query = InputField(desc="The user's query or task")
-    context_size = InputField(desc="Estimated context size in tokens")
-    task_type = InputField(desc="Type of task (reasoning, coding, analysis, etc.)")
-    urgency = InputField(desc="Urgency level (low, medium, high)")
-    complexity = InputField(desc="Task complexity (simple, moderate, complex)")
-    selected_model = OutputField(desc="Selected Cursor model")
-    reasoning = OutputField(desc="Reasoning for model selection")
-    confidence = OutputField(desc="Confidence in selection (0-1)")
-    context_engineering = OutputField(desc="Context engineering strategy for the model")
-```
-
-### **2. Model Capabilities Mapping**
-
-Each model has defined capabilities and best-use scenarios:
-
-| Model | Context Window | Reasoning | Code Gen | Speed | Cost | Best For |
-|-------|----------------|-----------|----------|-------|------|----------|
 | Claude 3 Opus | 200K | 0.95 | 0.85 | 0.6 | 0.4 | Complex reasoning, large codebases |
 | GPT-4 Turbo | 128K | 0.9 | 0.9 | 0.8 | 0.7 | Structured tasks, code generation |
 | Mixtral 8x7B | 32K | 0.75 | 0.8 | 0.85 | 0.9 | Balanced tasks, moderate complexity |

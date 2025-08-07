@@ -1,6 +1,7 @@
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+
 # Monitoring Articles
 
 > **External Research**: Industry articles and blog posts about system monitoring and observability.

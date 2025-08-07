@@ -1,53 +1,7 @@
-# Metadata Collection & Analytics Guide
-
-> **AI Discovery**: This document provides comprehensive information about the metadata collection system, data sources, usage patterns, and analytics capabilities within the AI development ecosystem.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
-<!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
-<!-- EXECUTION_ENGINE: scripts/process_tasks.py, scripts/state_manager.py, scripts/error_handler.py -->
-<!-- IMPLEMENTATION_STACK: 104_dspy-development-context.md, 202_setup-requirements.md, 201_model-configuration.md -->
-<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide_additional_resources.md, 400_security-best-practices-guide.md, 400_performance-optimization-guide_additional_resources.md -->
-<!-- QUICK_REFERENCE: 400_metadata-quick-reference.md -->
-<!-- MEMORY_CONTEXT: HIGH - Comprehensive metadata collection and analytics documentation -->
-
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-## 📊 **Overview**
 
-The AI development ecosystem includes a sophisticated metadata collection and analytics system that enables intelligent task execution, performance optimization, and data-driven decision making. This guide documents the metadata sources, collection methods, usage patterns, and analytics capabilities.
-
-## 🎯 **Metadata Collection Sources**
-
-### **1. Backlog File (`000_backlog.md`)**
-
-**Primary Data Source**: The main product backlog containing all task definitions and metadata.
-
-**Collected Metadata**:
-- **Task Identification**: ID, title, priority level, point estimates
-- **Execution Context**: Description, tech footprint, dependencies
-- **Scoring Data**: Business value, technical complexity, risk reduction, learning effect, effort
-- **Human Requirements**: Flags for tasks requiring human input and reasons
-- **Progress Tracking**: Completion status, timestamps, progress comments
-- **AI Meta Information**: Next PRD commands, sprint planning, scoring systems, execution responsibility
-
-**Example Metadata Structure**:
-```json
-{
-  "id": "B‑049",
-  "title": "Convert 003 Process Task List to Python Script",
-  "priority": "🔥",
-  "points": 3,
-  "status": "pending",
-  "description": "Automate core execution engine for all backlog items",
-  "tech_footprint": "Python CLI + State Management + Error Handling",
-  "dependencies": [],
-  "score_total": 5.3,
-  "human_required": false,
-  "human_reason": null,
-  "progress": "Complete implementation with comprehensive CLI script..."
 }
 ```
 

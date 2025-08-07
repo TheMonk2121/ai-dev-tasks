@@ -1,53 +1,8 @@
-# File Naming Conventions & Memory Scaffolding Guidelines
-
-<!-- MEMORY_CONTEXT: MEDIUM - File organization and documentation guidelines for maintaining memory scaffolding -->
-
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 102_memory-context-state.md -->
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
-**For memory-scaffolding patterns see 401_memory-scaffolding-guide.md**
 
-## 📋 Overview
-
-This document defines the file naming conventions and memory scaffolding guidelines for the AI development ecosystem. The system is designed to be understandable by both humans and large language models (LLMs).
-
-## 🔄 File Naming System Flow & Decision Process
-
-### **How Our File Naming System Works**
-
-Our file naming system uses a **three-digit prefix hierarchy** that serves both **human comprehension** and **AI analysis**. The system operates on a **semantic ordering principle** where files are grouped by purpose and priority, making it immediately clear to both humans and AI what each file contains and how important it is. The prefixes create a **lexicographical ordering** that naturally guides reading sequence - when you list files alphabetically, the most critical context files appear first.
-
-The **naming flow** works through a **cascading decision process**: First, determine the file's **primary purpose** (planning, implementation, domain-specific, etc.), then assign the appropriate **prefix range**, and finally add a **descriptive name** that clearly indicates the content. This creates a **self-documenting system** where the filename itself provides instant context about the file's role in the ecosystem.
-
-### **Naming Decision Process**
-
-**Step 1: Purpose Check**
-- Is this **planning** (backlog, PRDs, tasks)?
-- Is this **implementation** (code, configuration, setup)?
-- Is this **documentation** (guides, overviews, context)?
-- Is this **research** (analysis, benchmarks, completion summaries)?
-
-**Step 2: Priority Assessment**
-- Is this **essential context** (read first for understanding)?
-- Is this **implementation detail** (read when working on specific areas)?
-- Is this **domain-specific** (read for specialized knowledge)?
-
-**Step 3: Prefix Assignment**
-- **000-099**: Core planning and context (backlog, project overview, system overview)
-- **100-199**: Memory and guides (memory context, backlog guide, automation patterns)
-- **200-299**: Configuration and setup (naming conventions, model config, setup requirements)
-- **300-399**: Reserved for future use or testing documentation
 - **400-499**: Architecture and overview (system overview, project overview, context priority guide)
 - **500+**: Research and meta-documentation (completion summaries, research notes, benchmarks)
 
@@ -173,7 +128,6 @@ The result is a **living naming system** that scales with your project while mai
 - **How does this fit into the cognitive scaffolding?**
 
 **Add appropriate cross-references:**
-- `<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->`
 - `<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md -->`
 - `<!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md -->`
 
@@ -239,7 +193,6 @@ Files are categorized by purpose using numeric prefixes:
 ### Content Structure
 Each file should include:
 1. **Memory Context Comment**: `<!-- MEMORY_CONTEXT: [HIGH|MEDIUM|LOW] - [description] -->`
-2. **Context Reference**: `<!-- CONTEXT_REFERENCE: [related-file].md -->`
 3. **Clear Purpose**: What this file is for and when to read it
 4. **Related Files**: Links to other relevant documentation
 
@@ -328,5 +281,4 @@ Use `_vN` suffix **only** when the file's public contract changes (breaking chan
 
 ## 🔗 Related Files
 
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- SYSTEM_FILES: 400_system-overview_advanced_features.md --> 

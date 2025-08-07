@@ -1,53 +1,8 @@
-# 🚨 Memory Context Safety - Critical Requirements
-
-> Deprecation Notice: This file is superseded by sections in `100_cursor-memory-context.md`.
-> See: TL;DR, Always-On Critical Rules, and Safety Requirements.
-
-> **Strategic Purpose**: Comprehensive safety requirements and file analysis guidelines for all AI operations in the development ecosystem.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
-<!-- AI_CONSTITUTION_REFERENCE: 400_ai-constitution.md -->
-<!-- PARENT_MODULE: 100_cursor-memory-context.md -->
-<!-- MEMORY_CONTEXT: HIGH - Critical safety requirements for all AI operations -->
-
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
-<!-- MODULE_REFERENCE: 400_integration-patterns-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-## 🚨 CRITICAL SAFETY REQUIREMENTS
 
-### **⚠️ MANDATORY: File Analysis Before Any File Operations**
-**BEFORE suggesting ANY file deletion, deprecation, or archiving, you MUST:**
-
-1. **Read `400_file-analysis-guide.md`** - Complete the 6-step mandatory analysis
-2. **Complete ALL steps** - No exceptions, no shortcuts
-3. **Show cross-references** - Prove you've done the analysis
-4. **Get user approval** - For any high-risk operations
-
-**🚨 FAILURE TO FOLLOW THESE STEPS MEANS YOU CANNOT SUGGEST FILE OPERATIONS!**
-
-**📋 Quick Checklist:**
-- [ ] Read `400_file-analysis-guide.md` (463 lines - READ ALL OF IT)
-- [ ] Complete 6-step mandatory analysis
-- [ ] Show all cross-references
-- [ ] Provide detailed reasoning
-- [ ] Get explicit user approval
-
-### **🤖 AI CONSTITUTION COMPLIANCE**
-**For all AI operations, follow the AI Constitution rules:**
-
-- [ ] Follow `400_ai-constitution.md` rules for all AI operations
 - [ ] Maintain context preservation and safety requirements
 - [ ] Validate against constitution rules before any changes
 - [ ] Use constitution compliance checker for validation

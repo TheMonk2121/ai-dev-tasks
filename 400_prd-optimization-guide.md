@@ -1,53 +1,7 @@
-# 📋 PRD Optimization Guide
-
-A comprehensive guide for the intelligent PRD generation system that reduces overhead for smaller backlog items while maintaining quality for complex features.
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
-<!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
-<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - PRD optimization system for efficient development workflow -->
-
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-## 🎯 **Overview**
-
-The PRD optimization system implements intelligent decision-making to reduce unnecessary overhead for smaller backlog items while maintaining comprehensive planning for complex features.
-
-### **AI Development Ecosystem Context**
-This PRD optimization is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
-
-**Key Components:**
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
-- **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
-- **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
-
-## 📊 **Decision Rule**
-
-### **Core Logic**
-```python
-if points < 5 and score_total >= 3.0:
-    skip_prd_generation()
-    parse_backlog_directly()
-else:
-    generate_full_prd()
-```
-
-### **Decision Criteria**
-
-#### **Skip PRD Generation When:**
-- **Points < 5**: Small, focused items meant to be completed quickly
-- **Score ≥ 3.0**: Backlog already contains sufficient business value and technical context
-- **Combined**: Items that are both small and well-defined
-
-#### **Generate PRD When:**
-- **Points ≥ 5**: Complex items requiring detailed planning
-- **Score < 3.0**: Items needing clarification or additional context
-- **Either condition**: Ensures quality planning for ambiguous or complex work
 
 ### **Examples**
 

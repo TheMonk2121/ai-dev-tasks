@@ -1,53 +1,8 @@
-# 🚀 AI Dev Tasks 🤖
-
-Welcome to **AI Dev Tasks**! This repository provides a collection of markdown files designed to supercharge your feature development workflow with AI-powered IDEs and CLIs. Originally built for [Cursor](https://cursor.sh/), these tools work with any AI coding assistant including Claude Code, Windsurf, and others. By leveraging these structured prompts, you can systematically approach building features, from ideation to implementation, with built-in checkpoints for verification.
-
-Stop wrestling with monolithic AI requests and start guiding your AI collaborator step-by-step!
-
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
-<!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
-<!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
-<!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
-<!-- MEMORY_CONTEXT: HIGH - Project overview and workflow guide for AI context -->
-
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-## 🚀 Quick Start
 
-### Quick Start Box
-```bash
-# Create and activate virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install dependencies
-pip install -r dspy-rag-system/requirements.txt
-
-# One-liner to get started
-make run-local
-
-# Or with custom configuration
-DEEP_REASONING=0 CLARIFIER=0 make run-local
-```
-
-**Virtual Environment Setup:**
-The project uses a virtual environment to prevent dependency conflicts. Always activate it before running:
-```bash
-source venv/bin/activate  # On macOS/Linux
-# or
-venv\Scripts\activate     # On Windows
-```
-
-**Large LLMs Note:**
-Large LLMs (Mixtral) require `LLM_TIMEOUT_SEC>=90` for optimal performance.
-
-**Environment Variables to Configure:**
-- `DEEP_REASONING=0` - Disable ReasoningAgent + Mixtral (default)
 - `CLARIFIER=0` - Disable ClarifierAgent (default)
 - `POOL_MIN=1` - Minimum database connections
 - `POOL_MAX=10` - Maximum database connections
