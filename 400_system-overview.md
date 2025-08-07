@@ -741,6 +741,7 @@ sudo supervisorctl update
 
 ### **Implementation Guides**
 - **`201_model-configuration.md`**: AI model setup and configuration
+- **`400_file-analysis-guide.md`**: Systematic file analysis methodology
 - **`103_yi-coder-integration.md`**: External model integration guide (legacy)
 
 ### **System Documentation**

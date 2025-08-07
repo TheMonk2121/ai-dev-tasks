@@ -50,6 +50,7 @@ AI Development Ecosystem
 ### **File Organization**
 - **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
+- **Analysis**: `400_file-analysis-guide.md` - Systematic file analysis methodology
 - **Domain**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
 
 ## 🎯 Current Priorities

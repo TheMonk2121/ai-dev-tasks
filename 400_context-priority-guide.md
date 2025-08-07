@@ -305,6 +305,7 @@ Use these reference patterns in other documents:
 | `002_generate-tasks.md` | Rules for breaking PRDs into executable task lists | Shows how high-level requirements become actionable | `<!-- CONTEXT_REFERENCE: 002_generate-tasks.md -->` |
 | `003_process-task-list.md` | AI agent execution loop, state management, and error recovery | Core orchestration of AI-driven development | `<!-- CONTEXT_REFERENCE: 003_process-task-list.md -->` |
 | `400_metadata-collection-guide.md` | Metadata collection system, analytics, and data-driven decision making | Comprehensive data collection and usage patterns | `<!-- CONTEXT_REFERENCE: 400_metadata-collection-guide.md -->` |
+| `400_file-analysis-guide.md` | Systematic file analysis methodology for legacy detection and obsolescence assessment | Comprehensive analysis process for maintaining documentation integrity | `<!-- CONTEXT_REFERENCE: 400_file-analysis-guide.md -->` |
 | `dspy-rag-system/src/dashboard.py` | Main dashboard orchestration and API endpoints | Central coordination point | `<!-- CONTEXT_REFERENCE: dspy-rag-system/src/dashboard.py -->` |
 | `dspy-rag-system/src/mission_dashboard/mission_dashboard.py` | Real-time mission tracking orchestration | Live AI task monitoring | `<!-- CONTEXT_REFERENCE: dspy-rag-system/src/mission_dashboard/mission_dashboard.py -->` |
 | `dspy-rag-system/src/n8n_workflows/backlog_webhook.py` | n8n integration webhook server | External system integration | `<!-- CONTEXT_REFERENCE: dspy-rag-system/src/n8n_workflows/backlog_webhook.py -->` |
