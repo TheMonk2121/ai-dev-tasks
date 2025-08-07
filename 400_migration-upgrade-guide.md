@@ -1,5 +1,16 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
+# Migration & Upgrade Guide
+
+<!-- ANCHOR: tldr -->
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+- Purpose: safe migrations and upgrades with pre/post validation and rollback
+- Read after: memory → backlog → system overview
+- Outputs: pre-checks, scripts, validation, monitoring, emergency procedures
+
 - **Zero Data Loss**: 100% data integrity preservation
 - **Minimal Downtime**: < 5 minutes of downtime per upgrade
 - **High Success Rate**: 95% successful upgrade rate
@@ -11,6 +22,7 @@
 ## Upgrade Philosophy
 
 ### **Risk Management Approach**
+
 - **Incremental Upgrades**: Small, manageable changes
 - **Comprehensive Testing**: All upgrades tested before production
 - **Rollback Planning**: Every upgrade has a rollback plan
@@ -18,6 +30,7 @@
 - **Documentation Requirements**: All changes documented
 
 ### **Automation Strategy**
+
 - **Scripted Procedures**: Automated upgrade scripts
 - **Validation Automation**: Automated pre and post-upgrade validation
 - **Rollback Automation**: Automated rollback procedures
@@ -25,6 +38,7 @@
 - **Documentation Automation**: Automated documentation updates
 
 ### **Quality Gates**
+
 - **Pre-Upgrade Validation**: System health and compatibility checks
 - **Upgrade Execution**: Monitored and controlled upgrade process
 - **Post-Upgrade Validation**: Functionality and performance verification
@@ -36,6 +50,7 @@
 ## Pre-Upgrade Procedures
 
 ### **System Health Assessment**
+
 - **Database Health**: Verify database connectivity and performance
 - **Application Health**: Check application status and functionality
 - **Infrastructure Health**: Validate infrastructure components
@@ -43,6 +58,7 @@
 - **Monitoring Health**: Ensure monitoring systems are operational
 
 ### **Backup Procedures**
+
 - **Database Backup**: Complete database backup before upgrades
 - **Configuration Backup**: Backup all configuration files
 - **Code Backup**: Version control and code backup
@@ -50,6 +66,7 @@
 - **Documentation Backup**: Backup current documentation state
 
 ### **Compatibility Validation**
+
 - **Version Compatibility**: Check version compatibility matrices
 - **Dependency Validation**: Verify all dependencies are compatible
 - **Configuration Validation**: Validate configuration compatibility
@@ -57,6 +74,7 @@
 - **API Validation**: Check API compatibility and contracts
 
 ### **Resource Assessment**
+
 - **Storage Requirements**: Verify sufficient storage for upgrades
 - **Memory Requirements**: Check memory availability for upgrades
 - **CPU Requirements**: Validate CPU capacity for upgrade processes
@@ -70,6 +88,7 @@
 ### **PostgreSQL Schema Migrations**
 
 #### **Pre-Migration Checklist**
+
 - [ ] Database backup completed
 - [ ] Schema compatibility validated
 - [ ] Migration scripts tested in staging
@@ -87,6 +106,7 @@ COMMIT;
 ```
 
 #### **Post-Migration Validation**
+
 - [ ] Schema changes applied correctly
 - [ ] Data integrity maintained
 - [ ] Performance impact assessed
@@ -97,7 +117,9 @@ COMMIT;
 
 #### **Large Dataset Migration**
 ```python
+
 # Example: Batch data migration script
+
 import psycopg2
 import logging
 from typing import List, Dict, Any
@@ -117,10 +139,12 @@ def migrate_large_dataset(batch_size: int = 1000) -> bool:
         cursor = conn.cursor()
         
         # Get total count
+
         cursor.execute("SELECT COUNT(*) FROM episodic_logs")
         total_records = cursor.fetchone()[0]
         
         # Process in batches
+
         for offset in range(0, total_records, batch_size):
             cursor.execute("""
                 UPDATE episodic_logs 
@@ -160,10 +184,13 @@ COMMIT;
 
 #### **Pre-Upgrade Validation**
 ```bash
+
 # Check current package versions
+
 pip freeze > requirements_current.txt
 
 # Test upgrade in virtual environment
+
 python -m venv test_upgrade_env
 source test_upgrade_env/bin/activate
 pip install -r requirements.txt --upgrade
@@ -172,7 +199,9 @@ python -m pytest tests/
 
 #### **Production Upgrade Script**
 ```bash
+
 #!/bin/bash
+
 # upgrade_packages.sh
 
 set -e
@@ -180,15 +209,19 @@ set -e
 echo "Starting package upgrade process..."
 
 # Backup current requirements
+
 cp requirements.txt requirements_backup_$(date +%Y%m%d_%H%M%S).txt
 
 # Create upgrade log
+
 echo "Package upgrade started at $(date)" > upgrade.log
 
 # Upgrade packages
+
 pip install -r requirements.txt --upgrade >> upgrade.log 2>&1
 
 # Run tests
+
 python -m pytest tests/ >> upgrade.log 2>&1
 
 if [ $? -eq 0 ]; then
@@ -206,7 +239,9 @@ fi
 
 #### **Blue-Green Deployment**
 ```yaml
+
 # Example: Kubernetes blue-green deployment
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -224,12 +259,18 @@ spec:
         version: green
     spec:
       containers:
+
       - name: ai-app
+
         image: ai-development-ecosystem:latest
         ports:
+
         - containerPort: 5000
+
         env:
+
         - name: DATABASE_URL
+
           valueFrom:
             secretKeyRef:
               name: db-secret
@@ -250,7 +291,9 @@ spec:
 
 #### **Rollback Script**
 ```bash
+
 #!/bin/bash
+
 # rollback_deployment.sh
 
 set -e
@@ -258,10 +301,12 @@ set -e
 echo "Starting deployment rollback..."
 
 # Switch traffic back to blue deployment
+
 kubectl patch service ai-development-ecosystem-service \
   -p '{"spec":{"selector":{"version":"blue"}}}'
 
 # Scale down green deployment
+
 kubectl scale deployment ai-development-ecosystem-green --replicas=0
 
 echo "Rollback completed successfully"
@@ -275,7 +320,9 @@ echo "Rollback completed successfully"
 
 #### **Container Update Script**
 ```bash
+
 #!/bin/bash
+
 # upgrade_containers.sh
 
 set -e
@@ -283,13 +330,16 @@ set -e
 echo "Starting container upgrade process..."
 
 # Pull latest images
+
 docker-compose pull
 
 # Backup current containers
+
 docker-compose down
 docker-compose up -d --force-recreate
 
 # Health check
+
 sleep 30
 if curl -f http://localhost:5000/health; then
     echo "Container upgrade completed successfully"
@@ -304,6 +354,7 @@ fi
 ### **Kubernetes Cluster Upgrades**
 
 #### **Cluster Upgrade Checklist**
+
 - [ ] Backup cluster configuration
 - [ ] Update control plane components
 - [ ] Update worker node components
@@ -313,7 +364,9 @@ fi
 
 #### **Node Upgrade Procedure**
 ```bash
+
 #!/bin/bash
+
 # upgrade_kubernetes_node.sh
 
 set -e
@@ -323,12 +376,15 @@ NODE_NAME=$1
 echo "Upgrading Kubernetes node: $NODE_NAME"
 
 # Drain node
+
 kubectl drain $NODE_NAME --ignore-daemonsets --delete-emptydir-data
 
 # Upgrade node components
+
 ssh $NODE_NAME "sudo apt-get update && sudo apt-get upgrade -y"
 
 # Uncordon node
+
 kubectl uncordon $NODE_NAME
 
 echo "Node upgrade completed: $NODE_NAME"
@@ -342,7 +398,9 @@ echo "Node upgrade completed: $NODE_NAME"
 
 #### **Model Compatibility Check**
 ```python
+
 # Example: Model compatibility validation
+
 import torch
 import transformers
 from typing import Dict, Any
@@ -359,15 +417,19 @@ def validate_model_compatibility(model_path: str, expected_version: str) -> Dict
         Dict containing validation results
     """
     try:
+
         # Load model
+
         model = transformers.AutoModel.from_pretrained(model_path)
         tokenizer = transformers.AutoTokenizer.from_pretrained(model_path)
         
         # Check model version
+
         model_version = model.config.model_type
         tokenizer_version = tokenizer.__class__.__name__
         
         # Validate compatibility
+
         compatibility_check = {
             "model_loaded": True,
             "version_match": model_version == expected_version,
@@ -393,7 +455,9 @@ def validate_model_compatibility(model_path: str, expected_version: str) -> Dict
 
 #### **Model Upgrade Script**
 ```bash
+
 #!/bin/bash
+
 # upgrade_ai_model.sh
 
 set -e
@@ -404,9 +468,11 @@ NEW_VERSION=$2
 echo "Upgrading AI model: $MODEL_NAME to version $NEW_VERSION"
 
 # Backup current model
+
 cp -r models/$MODEL_NAME models/${MODEL_NAME}_backup_$(date +%Y%m%d_%H%M%S)
 
 # Download new model
+
 python -c "
 from transformers import AutoModel, AutoTokenizer
 model = AutoModel.from_pretrained('$MODEL_NAME')
@@ -416,6 +482,7 @@ tokenizer.save_pretrained('models/$MODEL_NAME')
 "
 
 # Validate new model
+
 python validate_model.py models/$MODEL_NAME
 
 if [ $? -eq 0 ]; then
@@ -436,7 +503,9 @@ fi
 
 #### **Configuration Migration Script**
 ```python
+
 # Example: Environment configuration migration
+
 import os
 import json
 from typing import Dict, Any
@@ -452,19 +521,24 @@ def migrate_environment_config(config_path: str) -> bool:
         bool: True if migration successful
     """
     try:
+
         # Load current configuration
+
         with open(config_path, 'r') as f:
             config = json.load(f)
         
         # Apply migration rules
+
         migrated_config = apply_migration_rules(config)
         
         # Backup original
+
         backup_path = f"{config_path}.backup"
         with open(backup_path, 'w') as f:
             json.dump(config, f, indent=2)
         
         # Write migrated configuration
+
         with open(config_path, 'w') as f:
             json.dump(migrated_config, f, indent=2)
         
@@ -479,6 +553,7 @@ def apply_migration_rules(config: Dict[str, Any]) -> Dict[str, Any]:
     migrated = config.copy()
     
     # Example migration rules
+
     if "database" in migrated:
         if "url" not in migrated["database"]:
             migrated["database"]["url"] = migrated["database"].get("connection_string", "")
@@ -516,6 +591,7 @@ def validate_configuration_compatibility(config_path: str) -> Dict[str, Any]:
         }
         
         # Check required fields
+
         required_fields = ["database", "ai_models", "monitoring"]
         for field in required_fields:
             if field not in config:
@@ -523,11 +599,13 @@ def validate_configuration_compatibility(config_path: str) -> Dict[str, Any]:
                 validation_results["valid"] = False
         
         # Check field types
+
         if "database" in config and not isinstance(config["database"], dict):
             validation_results["errors"].append("Database configuration must be an object")
             validation_results["valid"] = False
         
         # Check for deprecated fields
+
         deprecated_fields = ["old_database_url", "legacy_timeout"]
         for field in deprecated_fields:
             if field in config:
@@ -570,7 +648,9 @@ COMMIT;
 
 #### **Data Rollback Script**
 ```python
+
 # Example: Data rollback procedure
+
 import psycopg2
 import logging
 from typing import List, Dict, Any
@@ -590,10 +670,12 @@ def rollback_data_changes(backup_file: str) -> bool:
         cursor = conn.cursor()
         
         # Restore from backup
+
         with open(backup_file, 'r') as f:
             backup_data = json.load(f)
         
         # Apply rollback
+
         for table_name, data in backup_data.items():
             cursor.execute(f"DELETE FROM {table_name}")
             for row in data:
@@ -618,7 +700,9 @@ def rollback_data_changes(backup_file: str) -> bool:
 
 #### **Code Rollback Script**
 ```bash
+
 #!/bin/bash
+
 # rollback_application.sh
 
 set -e
@@ -626,16 +710,20 @@ set -e
 echo "Starting application rollback..."
 
 # Get current commit hash
+
 CURRENT_COMMIT=$(git rev-parse HEAD)
 
 # Rollback to previous commit
+
 git reset --hard HEAD~1
 
 # Restart application
+
 docker-compose down
 docker-compose up -d
 
 # Health check
+
 sleep 30
 if curl -f http://localhost:5000/health; then
     echo "Application rollback completed successfully"
@@ -652,7 +740,9 @@ fi
 
 #### **Environment Rollback Script**
 ```bash
+
 #!/bin/bash
+
 # rollback_configuration.sh
 
 set -e
@@ -660,12 +750,15 @@ set -e
 echo "Starting configuration rollback..."
 
 # Restore environment variables
+
 cp .env.backup .env
 
 # Restore configuration files
+
 cp config/backup/* config/
 
 # Restart services to apply changes
+
 docker-compose down
 docker-compose up -d
 
@@ -680,7 +773,9 @@ echo "Configuration rollback completed successfully"
 
 #### **System Health Check**
 ```python
+
 # Example: Pre-upgrade system health check
+
 import requests
 import psycopg2
 import redis
@@ -702,7 +797,9 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
     }
     
     try:
+
         # Check database
+
         conn = psycopg2.connect(os.getenv("DATABASE_URL"))
         cursor = conn.cursor()
         cursor.execute("SELECT 1")
@@ -715,7 +812,9 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
         print(f"Database health check failed: {e}")
     
     try:
+
         # Check application
+
         response = requests.get("http://localhost:5000/health", timeout=5)
         if response.status_code == 200:
             health_results["application"] = True
@@ -724,7 +823,9 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
         print(f"Application health check failed: {e}")
     
     try:
+
         # Check AI models
+
         mistral_response = requests.get(f"{os.getenv('MISTRAL_7B_URL')}/health", timeout=5)
         yi_coder_response = requests.get(f"{os.getenv('YI_CODER_URL')}/health", timeout=5)
         if mistral_response.status_code == 200 and yi_coder_response.status_code == 200:
@@ -734,7 +835,9 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
         print(f"AI models health check failed: {e}")
     
     try:
+
         # Check monitoring
+
         redis_client = redis.from_url(os.getenv("REDIS_URL"))
         redis_client.ping()
         health_results["monitoring"] = True
@@ -743,6 +846,7 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
         print(f"Monitoring health check failed: {e}")
     
     # Overall health
+
     health_results["overall"] = all([
         health_results["database"],
         health_results["application"],
@@ -757,7 +861,9 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
 
 #### **Functionality Testing**
 ```python
+
 # Example: Post-upgrade functionality testing
+
 def post_upgrade_validation() -> Dict[str, Any]:
     """
     Perform comprehensive post-upgrade validation.
@@ -775,7 +881,9 @@ def post_upgrade_validation() -> Dict[str, Any]:
     }
     
     try:
+
         # Test database queries
+
         conn = psycopg2.connect(os.getenv("DATABASE_URL"))
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM episodic_logs")
@@ -790,7 +898,9 @@ def post_upgrade_validation() -> Dict[str, Any]:
         print(f"Database validation failed: {e}")
     
     try:
+
         # Test API endpoints
+
         endpoints = ["/health", "/ready", "/metrics"]
         for endpoint in endpoints:
             response = requests.get(f"http://localhost:5000{endpoint}", timeout=5)
@@ -802,7 +912,9 @@ def post_upgrade_validation() -> Dict[str, Any]:
         print(f"API validation failed: {e}")
     
     try:
+
         # Test AI model inference
+
         test_prompt = "Hello, world!"
         response = requests.post(
             f"{os.getenv('MISTRAL_7B_URL')}/generate",
@@ -816,6 +928,7 @@ def post_upgrade_validation() -> Dict[str, Any]:
         print(f"AI model validation failed: {e}")
     
     # Overall validation
+
     validation_results["overall"] = all([
         validation_results["database_queries"],
         validation_results["api_endpoints"],
@@ -829,7 +942,9 @@ def post_upgrade_validation() -> Dict[str, Any]:
 
 #### **Upgrade Impact Assessment**
 ```python
+
 # Example: Performance impact assessment
+
 import time
 import psutil
 from typing import Dict, Any
@@ -851,16 +966,19 @@ def assess_upgrade_impact() -> Dict[str, Any]:
     }
     
     # Measure system resources
+
     impact_results["cpu_usage"] = psutil.cpu_percent(interval=1)
     impact_results["memory_usage"] = psutil.virtual_memory().percent
     impact_results["disk_usage"] = psutil.disk_usage('/').percent
     
     # Measure response time
+
     start_time = time.time()
     response = requests.get("http://localhost:5000/health", timeout=5)
     impact_results["response_time"] = time.time() - start_time
     
     # Determine if impact is acceptable
+
     impact_results["acceptable"] = (
         impact_results["cpu_usage"] < 80 and
         impact_results["memory_usage"] < 80 and
@@ -878,7 +996,9 @@ def assess_upgrade_impact() -> Dict[str, Any]:
 
 #### **Real-time Metrics**
 ```python
+
 # Example: Upgrade monitoring metrics
+
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Any
@@ -906,7 +1026,9 @@ def track_upgrade_progress(upgrade_id: str, metrics: UpgradeMetrics) -> None:
         upgrade_id: Unique identifier for upgrade
         metrics: Upgrade metrics object
     """
+
     # Store metrics in database or monitoring system
+
     metrics_data = {
         "upgrade_id": upgrade_id,
         "start_time": metrics.start_time.isoformat(),
@@ -918,6 +1040,7 @@ def track_upgrade_progress(upgrade_id: str, metrics: UpgradeMetrics) -> None:
     }
     
     # Send to monitoring system
+
     requests.post(
         f"{os.getenv('MONITORING_URL')}/upgrade-metrics",
         json=metrics_data
@@ -928,11 +1051,17 @@ def track_upgrade_progress(upgrade_id: str, metrics: UpgradeMetrics) -> None:
 
 #### **Upgrade Alerts**
 ```yaml
+
 # Example: Prometheus alerting rules for upgrades
+
 groups:
+
   - name: upgrade_alerts
+
     rules:
+
       - alert: UpgradeFailed
+
         expr: upgrade_status == 0
         for: 1m
         labels:
@@ -942,6 +1071,7 @@ groups:
           description: "System upgrade has failed and requires immediate attention"
       
       - alert: UpgradeRollback
+
         expr: rollback_triggered == 1
         for: 0m
         labels:
@@ -951,6 +1081,7 @@ groups:
           description: "System rollback has been triggered due to upgrade failure"
       
       - alert: UpgradePerformanceDegradation
+
         expr: response_time > 2.0
         for: 5m
         labels:
@@ -967,56 +1098,74 @@ groups:
 ### **Common Upgrade Issues**
 
 #### **Database Connection Issues**
+
 **Symptoms:**
+
 - Database connection timeouts
 - Connection pool exhaustion
 - Authentication failures
 
 **Solutions:**
 ```bash
+
 # Check database connectivity
+
 psql $DATABASE_URL -c "SELECT 1"
 
 # Check connection pool status
+
 psql $DATABASE_URL -c "SELECT * FROM pg_stat_activity;"
 
 # Restart database connection pool
+
 docker-compose restart postgres
 ```
 
 #### **Application Startup Issues**
+
 **Symptoms:**
+
 - Application fails to start
 - Health check failures
 - Port binding conflicts
 
 **Solutions:**
 ```bash
+
 # Check application logs
+
 docker-compose logs ai-app
 
 # Check port availability
+
 netstat -tulpn | grep :5000
 
 # Restart application
+
 docker-compose restart ai-app
 ```
 
 #### **AI Model Loading Issues**
+
 **Symptoms:**
+
 - Model loading failures
 - Inference timeouts
 - Memory allocation errors
 
 **Solutions:**
 ```bash
+
 # Check model files
+
 ls -la models/
 
 # Check GPU memory
+
 nvidia-smi
 
 # Restart AI model services
+
 docker-compose restart mistral7b yi-coder
 ```
 
@@ -1024,7 +1173,9 @@ docker-compose restart mistral7b yi-coder
 
 #### **Critical System Failure**
 ```bash
+
 #!/bin/bash
+
 # emergency_recovery.sh
 
 set -e
@@ -1032,15 +1183,19 @@ set -e
 echo "Starting emergency recovery procedures..."
 
 # Stop all services
+
 docker-compose down
 
 # Restore from latest backup
+
 cp backups/latest/* .
 
 # Restart services
+
 docker-compose up -d
 
 # Verify recovery
+
 sleep 30
 if curl -f http://localhost:5000/health; then
     echo "Emergency recovery completed successfully"
@@ -1055,6 +1210,7 @@ fi
 ## Best Practices
 
 ### **Upgrade Planning**
+
 - **Schedule Upgrades**: Plan upgrades during low-traffic periods
 - **Test in Staging**: Always test upgrades in staging environment first
 - **Document Changes**: Document all changes and procedures
@@ -1062,6 +1218,7 @@ fi
 - **Monitor Closely**: Monitor system during and after upgrades
 
 ### **Risk Mitigation**
+
 - **Incremental Changes**: Make small, incremental changes
 - **Comprehensive Testing**: Test all upgrade procedures thoroughly
 - **Backup Everything**: Backup all data and configurations
@@ -1069,6 +1226,7 @@ fi
 - **Plan for Failure**: Always plan for upgrade failures
 
 ### **Performance Optimization**
+
 - **Minimize Downtime**: Design upgrades for minimal downtime
 - **Optimize Resources**: Optimize resource usage during upgrades
 - **Monitor Performance**: Monitor performance impact during upgrades
@@ -1076,6 +1234,7 @@ fi
 - **Test Performance**: Test performance impact before production
 
 ### **Security Considerations**
+
 - **Secure Access**: Secure access to upgrade procedures
 - **Audit Logging**: Log all upgrade activities
 - **Data Protection**: Protect sensitive data during upgrades
@@ -1089,6 +1248,7 @@ fi
 ### **Critical System Failure Response**
 
 #### **Immediate Actions**
+
 1. **Stop Upgrade**: Immediately stop the upgrade process
 2. **Assess Impact**: Assess the impact of the failure
 3. **Initiate Rollback**: Initiate rollback procedures
@@ -1097,7 +1257,9 @@ fi
 
 #### **Recovery Procedures**
 ```bash
+
 #!/bin/bash
+
 # critical_failure_recovery.sh
 
 set -e
@@ -1105,13 +1267,16 @@ set -e
 echo "Critical system failure detected. Starting recovery procedures..."
 
 # Emergency stop all services
+
 docker-compose down
 
 # Restore from last known good state
+
 git reset --hard HEAD~1
 docker-compose up -d
 
 # Verify system recovery
+
 sleep 60
 if curl -f http://localhost:5000/health; then
     echo "Critical failure recovery completed successfully"
@@ -1125,7 +1290,9 @@ fi
 
 #### **Emergency Backup Procedures**
 ```bash
+
 #!/bin/bash
+
 # emergency_backup.sh
 
 set -e
@@ -1133,19 +1300,24 @@ set -e
 echo "Creating emergency backup..."
 
 # Create timestamped backup
+
 BACKUP_DIR="emergency_backup_$(date +%Y%m%d_%H%M%S)"
 mkdir -p $BACKUP_DIR
 
 # Backup database
+
 pg_dump $DATABASE_URL > $BACKUP_DIR/database_backup.sql
 
 # Backup configuration
+
 cp -r config/ $BACKUP_DIR/
 
 # Backup application data
+
 cp -r data/ $BACKUP_DIR/
 
 # Backup logs
+
 cp -r logs/ $BACKUP_DIR/
 
 echo "Emergency backup completed: $BACKUP_DIR"

@@ -1,6 +1,18 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
+# Performance Optimization Guide
+
+<!-- ANCHOR: tldr -->
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+- Purpose: performance baselines, strategies, monitoring, and scaling
+- Read after: system overview; reference during optimization work
+- Outputs: metrics, caching, DB/app tuning, testing and gates
+
 #### **4. Quality Metrics**
+
 - **Error Rate**: Percentage of failed requests
 - **Availability**: System uptime percentage
 - **Accuracy**: AI model response quality
@@ -23,7 +35,7 @@
 
 ### **Performance-Optimized Architecture**
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                Performance Layers                          │
 ├─────────────────────────────────────────────────────────────┤
@@ -40,7 +52,9 @@
 
 #### **1. AI Model Performance**
 ```python
+
 # Model performance configuration
+
 MODEL_PERFORMANCE_CONFIG = {
     "mistral-7b": {
         "max_tokens": 2048,
@@ -74,7 +88,9 @@ SET default_statistics_target = 100;
 
 #### **3. Application Performance**
 ```python
+
 # Application performance settings
+
 APP_PERFORMANCE_CONFIG = {
     "max_workers": 4,
     "timeout": 30,
@@ -92,15 +108,21 @@ APP_PERFORMANCE_CONFIG = {
 
 #### **Prompt Optimization**
 ```python
+
 # Optimized prompt engineering
+
 def optimize_prompt(prompt: str) -> str:
+
     # Remove unnecessary context
+
     prompt = remove_redundant_context(prompt)
     
     # Use few-shot examples for better performance
+
     prompt = add_few_shot_examples(prompt)
     
     # Limit prompt length for faster processing
+
     if len(prompt) > 2000:
         prompt = truncate_prompt(prompt, 2000)
     
@@ -109,7 +131,9 @@ def optimize_prompt(prompt: str) -> str:
 
 #### **Model Caching**
 ```python
+
 # Response caching for repeated queries
+
 def cache_ai_response(prompt: str, response: str):
     cache_key = generate_cache_key(prompt)
     cache.set(cache_key, response, ttl=3600)
@@ -121,12 +145,17 @@ def get_cached_response(prompt: str) -> Optional[str]:
 
 #### **Batch Processing**
 ```python
+
 # Batch AI requests for efficiency
+
 def batch_ai_requests(requests: List[str]) -> List[str]:
+
     # Group similar requests
+
     batched_requests = group_similar_requests(requests)
     
     # Process in batches
+
     responses = []
     for batch in batched_requests:
         batch_response = process_batch(batch)
@@ -148,30 +177,44 @@ CREATE INDEX idx_vector_store_embedding ON vector_store USING ivfflat (embedding
 
 #### **Query Optimization**
 ```python
+
 # Optimized database queries
+
 def optimize_query(query: str) -> str:
+
     # Use prepared statements
+
     # Limit result sets
+
     # Use appropriate indexes
+
     # Avoid N+1 queries
+
     return optimized_query
 
 # Connection pooling
+
 def get_db_connection():
     return connection_pool.get_connection()
 ```
 
 #### **Data Archiving**
 ```python
+
 # Archive old data for performance
+
 def archive_old_data():
+
     # Archive logs older than 30 days
+
     archive_date = datetime.now() - timedelta(days=30)
     
     # Move to archive table
+
     move_to_archive(archive_date)
     
     # Clean up main tables
+
     cleanup_old_data(archive_date)
 ```
 
@@ -179,25 +222,39 @@ def archive_old_data():
 
 #### **Code Optimization**
 ```python
+
 # Performance-optimized code patterns
+
 def optimized_function():
+
     # Use async/await for I/O operations
+
     # Implement proper error handling
+
     # Use efficient data structures
+
     # Minimize memory allocations
+
     pass
 
 # Memory management
+
 def manage_memory():
+
     # Use generators for large datasets
+
     # Implement proper cleanup
+
     # Monitor memory usage
+
     pass
 ```
 
 #### **Caching Strategy**
 ```python
+
 # Multi-level caching
+
 CACHE_STRATEGY = {
     "l1": "memory_cache",      # Fastest, limited size
     "l2": "redis_cache",       # Medium speed, larger size
@@ -205,18 +262,22 @@ CACHE_STRATEGY = {
 }
 
 def get_cached_data(key: str):
+
     # Try L1 cache first
+
     result = l1_cache.get(key)
     if result:
         return result
     
     # Try L2 cache
+
     result = l2_cache.get(key)
     if result:
         l1_cache.set(key, result)  # Populate L1
         return result
     
     # Get from database
+
     result = database.get(key)
     l2_cache.set(key, result)  # Populate L2
     return result
@@ -230,7 +291,9 @@ def get_cached_data(key: str):
 
 #### **System Metrics**
 ```python
+
 # System monitoring configuration
+
 SYSTEM_MONITORING = {
     "cpu_threshold": 80,
     "memory_threshold": 85,
@@ -253,7 +316,9 @@ def monitor_system_health():
 
 #### **Application Metrics**
 ```python
+
 # Application performance monitoring
+
 APP_METRICS = {
     "response_time": [],
     "error_rate": 0,
@@ -262,21 +327,27 @@ APP_METRICS = {
 }
 
 def track_application_metrics():
+
     # Track response times
+
     response_time = measure_response_time()
     APP_METRICS["response_time"].append(response_time)
     
     # Calculate moving average
+
     avg_response_time = calculate_moving_average(APP_METRICS["response_time"])
     
     # Alert if performance degrades
+
     if avg_response_time > 5.0:
         alert_slow_response_time(avg_response_time)
 ```
 
 #### **AI Model Metrics**
 ```python
+
 # AI model performance tracking
+
 AI_MODEL_METRICS = {
     "mistral-7b": {
         "response_times": [],
@@ -296,10 +367,12 @@ def track_ai_model_performance(model_name: str, response_time: float):
     AI_MODEL_METRICS[model_name]["response_times"].append(response_time)
     
     # Calculate performance statistics
+
     avg_time = calculate_average(AI_MODEL_METRICS[model_name]["response_times"])
     max_time = max(AI_MODEL_METRICS[model_name]["response_times"])
     
     # Alert if performance degrades
+
     if avg_time > MODEL_PERFORMANCE_CONFIG[model_name]["response_time_target"]:
         alert_slow_ai_model(model_name, avg_time)
 ```
@@ -360,7 +433,9 @@ def track_ai_model_performance(model_name: str, response_time: float):
 
 #### **Performance Alerts**
 ```python
+
 # Performance alert configuration
+
 PERFORMANCE_ALERTS = {
     "critical": {
         "cpu_usage": 90,
@@ -377,13 +452,16 @@ PERFORMANCE_ALERTS = {
 }
 
 def check_performance_alerts():
+
     # Check system metrics
+
     if cpu_usage > PERFORMANCE_ALERTS["critical"]["cpu_usage"]:
         send_critical_alert("High CPU Usage", cpu_usage)
     elif cpu_usage > PERFORMANCE_ALERTS["warning"]["cpu_usage"]:
         send_warning_alert("Elevated CPU Usage", cpu_usage)
     
     # Check application metrics
+
     if avg_response_time > PERFORMANCE_ALERTS["critical"]["response_time"]:
         send_critical_alert("Slow Response Time", avg_response_time)
 ```
@@ -396,7 +474,9 @@ def check_performance_alerts():
 
 #### **Load Test Configuration**
 ```python
+
 # Load testing setup
+
 LOAD_TEST_CONFIG = {
     "users": 10,
     "duration": 300,  # 5 minutes
@@ -405,20 +485,26 @@ LOAD_TEST_CONFIG = {
 }
 
 def run_load_test():
+
     # Simulate multiple users
+
     for user in range(LOAD_TEST_CONFIG["users"]):
         start_user_session(user)
     
     # Monitor performance under load
+
     monitor_performance_metrics()
     
     # Generate load test report
+
     generate_load_test_report()
 ```
 
 #### **Stress Testing**
 ```python
+
 # Stress testing configuration
+
 STRESS_TEST_CONFIG = {
     "max_users": 100,
     "max_duration": 600,  # 10 minutes
@@ -426,11 +512,14 @@ STRESS_TEST_CONFIG = {
 }
 
 def run_stress_test():
+
     # Gradually increase load
+
     for user_count in range(10, STRESS_TEST_CONFIG["max_users"], 10):
         run_load_test_with_users(user_count)
         
         # Check if system breaks
+
         if error_rate > STRESS_TEST_CONFIG["failure_threshold"]:
             log_stress_test_failure(user_count)
             break
@@ -440,7 +529,9 @@ def run_stress_test():
 
 #### **Benchmark Tests**
 ```python
+
 # Performance benchmarks
+
 BENCHMARK_TESTS = {
     "ai_response_time": test_ai_response_time,
     "database_query_time": test_database_query_time,
@@ -457,9 +548,11 @@ def run_performance_benchmarks():
         results[test_name] = result
     
     # Compare with baselines
+
     compare_with_baselines(results)
     
     # Generate benchmark report
+
     generate_benchmark_report(results)
 ```
 
@@ -467,15 +560,21 @@ def run_performance_benchmarks():
 
 #### **Automated Testing**
 ```python
+
 # Continuous performance testing
+
 def continuous_performance_testing():
+
     # Run tests every hour
+
     schedule.every().hour.do(run_performance_tests)
     
     # Run load tests daily
+
     schedule.every().day.at("02:00").do(run_load_tests)
     
     # Run stress tests weekly
+
     schedule.every().sunday.at("03:00").do(run_stress_tests)
     
     while True:
@@ -491,7 +590,9 @@ def continuous_performance_testing():
 
 #### **Load Balancing**
 ```python
+
 # Load balancer configuration
+
 LOAD_BALANCER_CONFIG = {
     "algorithm": "round_robin",
     "health_check_interval": 30,
@@ -499,7 +600,9 @@ LOAD_BALANCER_CONFIG = {
 }
 
 def setup_load_balancer():
+
     # Configure multiple application instances
+
     instances = [
         "app-instance-1:5000",
         "app-instance-2:5000",
@@ -507,23 +610,31 @@ def setup_load_balancer():
     ]
     
     # Setup load balancer
+
     load_balancer = setup_nginx_load_balancer(instances)
     
     # Configure health checks
+
     setup_health_checks(load_balancer)
 ```
 
 #### **Database Scaling**
 ```python
+
 # Database scaling strategies
+
 def scale_database():
+
     # Read replicas for read-heavy workloads
+
     setup_read_replicas()
     
     # Connection pooling for connection management
+
     setup_connection_pooling()
     
     # Query optimization for better performance
+
     optimize_database_queries()
 ```
 
@@ -531,7 +642,9 @@ def scale_database():
 
 #### **Resource Optimization**
 ```python
+
 # Vertical scaling configuration
+
 VERTICAL_SCALING_CONFIG = {
     "cpu_cores": 8,
     "memory_gb": 32,
@@ -540,16 +653,21 @@ VERTICAL_SCALING_CONFIG = {
 }
 
 def optimize_resources():
+
     # Optimize CPU usage
+
     optimize_cpu_usage()
     
     # Optimize memory usage
+
     optimize_memory_usage()
     
     # Optimize disk I/O
+
     optimize_disk_io()
     
     # Optimize network usage
+
     optimize_network_usage()
 ```
 
@@ -557,7 +675,9 @@ def optimize_resources():
 
 #### **Auto-scaling Configuration**
 ```python
+
 # Auto-scaling setup
+
 AUTO_SCALING_CONFIG = {
     "min_instances": 2,
     "max_instances": 10,
@@ -567,14 +687,18 @@ AUTO_SCALING_CONFIG = {
 }
 
 def setup_auto_scaling():
+
     # Monitor resource usage
+
     monitor_resource_usage()
     
     # Scale up when needed
+
     if cpu_usage > AUTO_SCALING_CONFIG["scale_up_threshold"]:
         scale_up_instances()
     
     # Scale down when possible
+
     if cpu_usage < AUTO_SCALING_CONFIG["scale_down_threshold"]:
         scale_down_instances()
 ```
@@ -587,38 +711,53 @@ def setup_auto_scaling():
 
 #### **Slow Response Times**
 ```python
+
 # Troubleshoot slow response times
+
 def troubleshoot_slow_response():
+
     # Check AI model performance
+
     check_ai_model_performance()
     
     # Check database performance
+
     check_database_performance()
     
     # Check network latency
+
     check_network_latency()
     
     # Check resource usage
+
     check_resource_usage()
     
     # Generate troubleshooting report
+
     generate_troubleshooting_report()
 ```
 
 #### **High Resource Usage**
 ```python
+
 # Troubleshoot high resource usage
+
 def troubleshoot_high_resource_usage():
+
     # Identify resource-intensive processes
+
     identify_resource_intensive_processes()
     
     # Check for memory leaks
+
     check_for_memory_leaks()
     
     # Check for CPU-intensive operations
+
     check_cpu_intensive_operations()
     
     # Optimize resource usage
+
     optimize_resource_usage()
 ```
 
@@ -636,7 +775,9 @@ def troubleshoot_high_resource_usage():
 
 #### **Debugging Tools**
 ```python
+
 # Performance debugging tools
+
 DEBUGGING_TOOLS = {
     "profiler": "cProfile",
     "memory_profiler": "memory_profiler",
@@ -646,13 +787,17 @@ DEBUGGING_TOOLS = {
 }
 
 def debug_performance_issue():
+
     # Use profiling tools
+
     profile_application()
     
     # Analyze bottlenecks
+
     analyze_bottlenecks()
     
     # Generate debugging report
+
     generate_debugging_report()
 ```
 
@@ -664,23 +809,37 @@ def debug_performance_issue():
 
 #### **Efficient Algorithms**
 ```python
+
 # Use efficient algorithms and data structures
+
 def optimized_algorithm():
+
     # Use sets for O(1) lookups
+
     # Use generators for memory efficiency
+
     # Use list comprehensions for readability
+
     # Avoid nested loops when possible
+
     pass
 ```
 
 #### **Memory Management**
 ```python
+
 # Proper memory management
+
 def manage_memory():
+
     # Use context managers for resource cleanup
+
     # Implement proper garbage collection
+
     # Monitor memory usage
+
     # Use memory-efficient data structures
+
     pass
 ```
 
@@ -700,12 +859,19 @@ LIMIT 100;
 
 #### **Connection Management**
 ```python
+
 # Proper connection management
+
 def manage_database_connections():
+
     # Use connection pooling
+
     # Close connections properly
+
     # Monitor connection usage
+
     # Implement connection timeouts
+
     pass
 ```
 
@@ -713,13 +879,21 @@ def manage_database_connections():
 
 #### **Multi-level Caching**
 ```python
+
 # Implement multi-level caching
+
 def implement_caching_strategy():
+
     # L1: Memory cache (fastest)
+
     # L2: Redis cache (medium)
+
     # L3: Database cache (slowest)
+
     # Implement cache invalidation
+
     # Monitor cache hit rates
+
     pass
 ```
 
@@ -727,13 +901,21 @@ def implement_caching_strategy():
 
 #### **Comprehensive Monitoring**
 ```python
+
 # Comprehensive monitoring setup
+
 def setup_comprehensive_monitoring():
+
     # Monitor all system components
+
     # Set appropriate thresholds
+
     # Implement alerting
+
     # Track historical data
+
     # Generate performance reports
+
     pass
 ```
 
@@ -742,6 +924,7 @@ def setup_comprehensive_monitoring():
 ## 📋 Performance Checklist
 
 ### **Daily Performance Tasks**
+
 - [ ] Review performance metrics and alerts
 - [ ] Check system resource usage
 - [ ] Monitor AI model performance
@@ -749,6 +932,7 @@ def setup_comprehensive_monitoring():
 - [ ] Check for performance anomalies
 
 ### **Weekly Performance Tasks**
+
 - [ ] Run performance benchmarks
 - [ ] Analyze performance trends
 - [ ] Optimize slow queries
@@ -756,6 +940,7 @@ def setup_comprehensive_monitoring():
 - [ ] Update performance documentation
 
 ### **Monthly Performance Tasks**
+
 - [ ] Conduct performance audit
 - [ ] Run load and stress tests
 - [ ] Review scaling strategies
@@ -763,6 +948,7 @@ def setup_comprehensive_monitoring():
 - [ ] Optimize system configuration
 
 ### **Quarterly Performance Tasks**
+
 - [ ] Review and update performance strategy
 - [ ] Conduct capacity planning
 - [ ] Update performance tools
@@ -777,8 +963,11 @@ def setup_comprehensive_monitoring():
 
 #### **System Monitoring**
 ```python
+
 # System monitoring script
+
 #!/usr/bin/env python3
+
 # system_monitor.py
 
 import psutil
@@ -800,8 +989,11 @@ def monitor_system():
 
 #### **Application Monitoring**
 ```python
+
 # Application monitoring script
+
 #!/usr/bin/env python3
+
 # app_monitor.py
 
 import time
@@ -831,8 +1023,11 @@ def monitor_application():
 
 #### **Load Testing Script**
 ```python
+
 # Load testing script
+
 #!/usr/bin/env python3
+
 # load_test.py
 
 import requests
@@ -854,6 +1049,7 @@ def load_test(url, num_requests, concurrent_users):
         })
     
     # Start concurrent requests
+
     threads = []
     for _ in range(concurrent_users):
         for _ in range(num_requests // concurrent_users):
@@ -862,10 +1058,12 @@ def load_test(url, num_requests, concurrent_users):
             thread.start()
     
     # Wait for all threads to complete
+
     for thread in threads:
         thread.join()
     
     # Calculate statistics
+
     response_times = [r["response_time"] for r in results]
     avg_response_time = statistics.mean(response_times)
     max_response_time = max(response_times)
@@ -880,8 +1078,11 @@ def load_test(url, num_requests, concurrent_users):
 
 #### **Performance Profiler**
 ```python
+
 # Performance profiler
+
 #!/usr/bin/env python3
+
 # performance_profiler.py
 
 import cProfile
@@ -908,16 +1109,19 @@ def profile_function(func, *args, **kwargs):
 ## 📚 Additional Resources
 
 ### **Performance Documentation**
+
 - **Python Performance**: https://docs.python.org/3/library/profile.html
 - **PostgreSQL Performance**: https://www.postgresql.org/docs/current/performance.html
 - **AI Model Optimization**: https://huggingface.co/docs/transformers/performance
 
 ### **Monitoring Tools**
+
 - **Prometheus**: https://prometheus.io/
 - **Grafana**: https://grafana.com/
 - **Datadog**: https://www.datadoghq.com/
 
 ### **Performance Testing Tools**
+
 - **Locust**: https://locust.io/
 - **Apache Bench**: https://httpd.apache.org/docs/2.4/programs/ab.html
 - **JMeter**: https://jmeter.apache.org/

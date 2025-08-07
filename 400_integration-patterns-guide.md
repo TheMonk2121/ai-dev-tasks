@@ -1,5 +1,16 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
+# Integration Patterns Guide
+
+<!-- ANCHOR: tldr -->
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+- Purpose: API, DB, n8n, messaging integration patterns with resilience
+- Read after: memory → backlog → system overview
+- Outputs: standard interfaces, error handling, retry/circuit breaker, monitoring hooks
+
 | **Monitoring** | REST API | Event Stream | Metrics |
 | **Security** | Middleware | API Gateway | Headers |
 
@@ -11,7 +22,9 @@
 
 #### **Core Endpoints**
 ```python
+
 # AI Model API endpoints
+
 AI_MODEL_ENDPOINTS = {
     "generate": "/api/v1/ai/generate",
     "chat": "/api/v1/ai/chat", 
@@ -20,6 +33,7 @@ AI_MODEL_ENDPOINTS = {
 }
 
 # Database API endpoints
+
 DATABASE_ENDPOINTS = {
     "logs": "/api/v1/db/logs",
     "vectors": "/api/v1/db/vectors",
@@ -27,6 +41,7 @@ DATABASE_ENDPOINTS = {
 }
 
 # Workflow API endpoints
+
 WORKFLOW_ENDPOINTS = {
     "execute": "/api/v1/workflow/execute",
     "status": "/api/v1/workflow/status",
@@ -36,7 +51,9 @@ WORKFLOW_ENDPOINTS = {
 
 #### **API Response Format**
 ```python
+
 # Standard API response structure
+
 API_RESPONSE_FORMAT = {
     "success": bool,
     "data": dict,
@@ -46,6 +63,7 @@ API_RESPONSE_FORMAT = {
 }
 
 # Example response
+
 {
     "success": True,
     "data": {
@@ -63,7 +81,9 @@ API_RESPONSE_FORMAT = {
 
 #### **Schema Definition**
 ```graphql
+
 # AI Development Ecosystem GraphQL Schema
+
 type Query {
     aiResponse(prompt: String!, model: String): AIResponse
     workflowStatus(id: ID!): WorkflowStatus
@@ -92,7 +112,9 @@ type WorkflowStatus {
 
 #### **Real-time Updates**
 ```python
+
 # WebSocket message format
+
 WEBSOCKET_MESSAGE_FORMAT = {
     "type": "update|error|complete",
     "component": "ai|workflow|dashboard",
@@ -101,6 +123,7 @@ WEBSOCKET_MESSAGE_FORMAT = {
 }
 
 # WebSocket event handlers
+
 WEBSOCKET_EVENTS = {
     "ai_generation_start": handle_ai_generation_start,
     "ai_generation_progress": handle_ai_generation_progress,
@@ -119,7 +142,9 @@ WEBSOCKET_EVENTS = {
 
 #### **Model Interface**
 ```python
+
 # AI model integration interface
+
 class AIModelInterface:
     def __init__(self, model_name: str, config: dict):
         self.model_name = model_name
@@ -163,7 +188,9 @@ class AIModelInterface:
 
 #### **Model Factory**
 ```python
+
 # AI model factory for different models
+
 class AIModelFactory:
     @staticmethod
     def create_model(model_name: str) -> AIModelInterface:
@@ -181,7 +208,9 @@ class AIModelFactory:
 
 #### **Database Interface**
 ```python
+
 # Database integration interface
+
 class DatabaseInterface:
     def __init__(self, connection_string: str):
         self.connection_string = connection_string
@@ -227,7 +256,9 @@ class DatabaseInterface:
 
 #### **Workflow Interface**
 ```python
+
 # n8n workflow integration interface
+
 class N8nWorkflowInterface:
     def __init__(self, base_url: str, api_key: str):
         self.base_url = base_url
@@ -283,17 +314,23 @@ class N8nWorkflowInterface:
 
 #### **Request-Response Pattern**
 ```python
+
 # Synchronous request-response pattern
+
 def synchronous_ai_request(prompt: str, model: str) -> dict:
     """Synchronous AI request"""
     try:
+
         # Initialize AI model
+
         ai_model = AIModelFactory.create_model(model)
         
         # Generate response
+
         response = ai_model.generate(prompt)
         
         # Log interaction
+
         log_entry = {
             "timestamp": datetime.now(),
             "user_id": get_current_user_id(),
@@ -315,7 +352,9 @@ def synchronous_ai_request(prompt: str, model: str) -> dict:
 
 #### **Event-Driven Pattern**
 ```python
+
 # Asynchronous event-driven pattern
+
 class EventDrivenAI:
     def __init__(self):
         self.event_queue = Queue()
@@ -328,18 +367,22 @@ class EventDrivenAI:
         request["request_id"] = request_id
         
         # Add to event queue
+
         self.event_queue.put(request)
         
         return request_id
     
     def get_result(self, request_id: str) -> dict:
         """Get asynchronous request result"""
+
         # Check if result is ready
+
         result = self._get_cached_result(request_id)
         if result:
             return result
         
         # Check if still processing
+
         if self._is_processing(request_id):
             return {"status": "processing"}
         
@@ -367,7 +410,9 @@ class EventDrivenAI:
 
 #### **Redis Message Queue**
 ```python
+
 # Redis message queue implementation
+
 class RedisMessageQueue:
     def __init__(self, redis_url: str):
         self.redis_client = redis.from_url(redis_url)
@@ -399,7 +444,7 @@ class RedisMessageQueue:
 
 ### **1. AI Request Flow**
 
-```
+```text
 User Request → API Gateway → Authentication → AI Model → Database → Response
      ↓              ↓              ↓              ↓           ↓         ↓
   Validate      Rate Limit    Check Perms    Generate    Log Data   Format
@@ -407,7 +452,7 @@ User Request → API Gateway → Authentication → AI Model → Database → Re
 
 ### **2. Workflow Execution Flow**
 
-```
+```text
 Trigger → n8n Workflow → AI Model → Database → Dashboard → User
    ↓           ↓            ↓          ↓          ↓         ↓
 Webhook    Execute      Process    Store      Update    Notify
@@ -415,7 +460,7 @@ Webhook    Execute      Process    Store      Update    Notify
 
 ### **3. Monitoring Data Flow**
 
-```
+```text
 System → Metrics Collector → Time Series DB → Dashboard → Alerts
   ↓            ↓                ↓              ↓         ↓
 Events    Aggregate        Store Data     Visualize   Notify
@@ -429,7 +474,9 @@ Events    Aggregate        Store Data     Visualize   Notify
 
 #### **Standard Error Responses**
 ```python
+
 # Standard error response format
+
 ERROR_RESPONSES = {
     "validation_error": {
         "code": 400,
@@ -474,7 +521,9 @@ def handle_api_error(error_type: str, details: dict = None) -> dict:
 
 #### **Exponential Backoff**
 ```python
+
 # Retry logic with exponential backoff
+
 def retry_with_backoff(func, max_retries: int = 3, base_delay: float = 1.0):
     """Retry function with exponential backoff"""
     for attempt in range(max_retries):
@@ -492,7 +541,9 @@ def retry_with_backoff(func, max_retries: int = 3, base_delay: float = 1.0):
 
 #### **Circuit Breaker Implementation**
 ```python
+
 # Circuit breaker pattern
+
 class CircuitBreaker:
     def __init__(self, failure_threshold: int = 5, recovery_timeout: int = 60):
         self.failure_threshold = failure_threshold
@@ -539,7 +590,9 @@ class CircuitBreaker:
 
 #### **JWT Token Authentication**
 ```python
+
 # JWT authentication middleware
+
 class JWTAuthentication:
     def __init__(self, secret_key: str):
         self.secret_key = secret_key
@@ -567,7 +620,9 @@ class JWTAuthentication:
 
 #### **Token Bucket Rate Limiter**
 ```python
+
 # Token bucket rate limiter
+
 class TokenBucketRateLimiter:
     def __init__(self, capacity: int, refill_rate: float):
         self.capacity = capacity
@@ -602,7 +657,9 @@ class TokenBucketRateLimiter:
 
 #### **Multi-level Cache**
 ```python
+
 # Multi-level cache integration
+
 class MultiLevelCache:
     def __init__(self):
         self.l1_cache = {}  # Memory cache
@@ -610,11 +667,14 @@ class MultiLevelCache:
     
     def get(self, key: str):
         """Get value from cache"""
+
         # Try L1 cache first
+
         if key in self.l1_cache:
             return self.l1_cache[key]
         
         # Try L2 cache
+
         value = self.l2_cache.get(key)
         if value:
             self.l1_cache[key] = value  # Populate L1
@@ -624,7 +684,9 @@ class MultiLevelCache:
     
     def set(self, key: str, value, ttl: int = 3600):
         """Set value in cache"""
+
         # Set in both caches
+
         self.l1_cache[key] = value
         self.l2_cache.setex(key, ttl, value)
 ```
@@ -633,7 +695,9 @@ class MultiLevelCache:
 
 #### **Database Connection Pool**
 ```python
+
 # Database connection pool
+
 class DatabaseConnectionPool:
     def __init__(self, connection_string: str, max_connections: int = 10):
         self.connection_string = connection_string
@@ -664,7 +728,9 @@ class DatabaseConnectionPool:
 
 #### **Integration Test Framework**
 ```python
+
 # Integration test framework
+
 class IntegrationTestFramework:
     def __init__(self, base_url: str):
         self.base_url = base_url
@@ -705,7 +771,9 @@ class IntegrationTestFramework:
 
 #### **API Load Testing**
 ```python
+
 # API load testing
+
 def load_test_api(endpoint: str, num_requests: int = 100):
     """Load test API endpoint"""
     results = []
@@ -743,33 +811,42 @@ def load_test_api(endpoint: str, num_requests: int = 100):
 
 #### **Docker Configuration**
 ```dockerfile
+
 # Dockerfile for AI development ecosystem
+
 FROM python:3.11-slim
 
 # Install system dependencies
+
 RUN apt-get update && apt-get install -y \
     postgresql-client \
     redis-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
+
 WORKDIR /app
 
 # Copy requirements and install Python dependencies
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
+
 COPY . .
 
 # Expose ports
+
 EXPOSE 5000 8000
 
 # Health check
+
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:5000/health || exit 1
 
 # Start application
+
 CMD ["python", "app.py"]
 ```
 
@@ -777,7 +854,9 @@ CMD ["python", "app.py"]
 
 #### **Kubernetes Deployment**
 ```yaml
+
 # Kubernetes deployment configuration
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -793,17 +872,25 @@ spec:
         app: ai-development-ecosystem
     spec:
       containers:
+
       - name: ai-app
+
         image: ai-development-ecosystem:latest
         ports:
+
         - containerPort: 5000
+
         env:
+
         - name: DATABASE_URL
+
           valueFrom:
             secretKeyRef:
               name: db-secret
               key: url
+
         - name: REDIS_URL
+
           valueFrom:
             secretKeyRef:
               name: redis-secret
@@ -834,6 +921,7 @@ spec:
 ## 📋 Integration Checklist
 
 ### **API Integration Checklist**
+
 - [ ] RESTful API design implemented
 - [ ] GraphQL schema defined
 - [ ] WebSocket communication configured
@@ -844,6 +932,7 @@ spec:
 - [ ] API versioning strategy defined
 
 ### **Component Integration Checklist**
+
 - [ ] AI model interfaces implemented
 - [ ] Database integration configured
 - [ ] n8n workflow integration tested
@@ -854,6 +943,7 @@ spec:
 - [ ] Testing integration automated
 
 ### **Deployment Integration Checklist**
+
 - [ ] Docker containers configured
 - [ ] Kubernetes manifests created
 - [ ] Environment variables managed
@@ -869,7 +959,9 @@ spec:
 
 ### **1. API Documentation Generator**
 ```python
+
 # API documentation generator
+
 def generate_api_docs():
     """Generate API documentation"""
     docs = {
@@ -879,6 +971,7 @@ def generate_api_docs():
     }
     
     # Generate endpoint documentation
+
     for endpoint in API_ENDPOINTS:
         docs["endpoints"].append({
             "path": endpoint["path"],
@@ -889,6 +982,7 @@ def generate_api_docs():
         })
     
     # Generate schema documentation
+
     for schema in API_SCHEMAS:
         docs["schemas"].append({
             "name": schema["name"],
@@ -901,12 +995,15 @@ def generate_api_docs():
 
 ### **2. Integration Test Runner**
 ```python
+
 # Integration test runner
+
 def run_integration_tests():
     """Run all integration tests"""
     test_results = []
     
     # Test API endpoints
+
     api_tests = [
         test_ai_generation,
         test_workflow_execution,
@@ -936,16 +1033,19 @@ def run_integration_tests():
 ## 📚 Additional Resources
 
 ### **Integration Documentation**
+
 - **REST API Design**: https://restfulapi.net/
 - **GraphQL Documentation**: https://graphql.org/
 - **WebSocket Protocol**: https://tools.ietf.org/html/rfc6455
 
 ### **Integration Tools**
+
 - **Postman**: https://www.postman.com/
 - **Insomnia**: https://insomnia.rest/
 - **Swagger**: https://swagger.io/
 
 ### **Testing Tools**
+
 - **Pytest**: https://docs.pytest.org/
 - **Locust**: https://locust.io/
 - **JMeter**: https://jmeter.apache.org/
