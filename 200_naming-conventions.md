@@ -65,6 +65,136 @@ The naming system **integrates seamlessly** with our development workflow. When 
 
 The result is a **living naming system** that scales with your project while maintaining the cognitive scaffolding that makes the documentation coherent and AI-friendly. Each new file automatically fits into the existing hierarchy, making it easy for both humans and AI to understand its role and importance in the overall system.
 
+## 🔄 File Generation Decision Process
+
+### **Step 1: Determine if a File is Needed**
+
+**Ask these questions:**
+- **Is this information that will be referenced multiple times?** (If yes → file)
+- **Is this a process or workflow that others/AI will need to follow?** (If yes → file)
+- **Is this context that will help with future decisions?** (If yes → file)
+- **Is this a one-off note or temporary information?** (If no → don't create file)
+
+**Examples of when to create files:**
+- ✅ **Workflow processes** (`001_create-prd.md`, `002_generate-tasks.md`)
+- ✅ **System documentation** (`400_system-overview.md`, `400_project-overview.md`)
+- ✅ **Configuration guides** (`201_model-configuration.md`, `202_setup-requirements.md`)
+- ✅ **Completion summaries** (`500_*` files for historical context)
+- ✅ **Research findings** (`500_memory-arch-research.md`)
+
+**Examples of when NOT to create files:**
+- ❌ **Temporary notes** (use comments or inline documentation)
+- ❌ **One-off decisions** (document in existing relevant files)
+- ❌ **Quick fixes** (document in commit messages or existing files)
+
+### **Step 2: Determine File Purpose and Priority**
+
+**Analyze the content type:**
+- **Planning/Strategy** → High priority (000-099, 400-499)
+- **Implementation/Technical** → Medium priority (100-199, 200-299)
+- **Research/Analysis** → Lower priority (500+)
+- **Configuration/Setup** → Medium priority (200-299)
+
+**Assess the audience:**
+- **Essential for everyone** → High priority (read first)
+- **Important for specific workflows** → Medium priority (read when relevant)
+- **Specialized knowledge** → Lower priority (read when needed)
+
+**Consider the lifecycle:**
+- **Always relevant** → High priority (core documentation)
+- **Sometimes relevant** → Medium priority (workflow guides)
+- **Rarely relevant** → Lower priority (specialized guides)
+
+### **Step 3: Choose the Right Prefix Range**
+
+**000-099: Core Planning & Context**
+- Backlog, project overview, system overview
+- Files that give immediate understanding of the project
+- Essential for anyone working on the project
+
+**100-199: Memory & Guides**
+- Memory context, backlog guide, automation patterns
+- Files that help with ongoing work and decision-making
+- Important for regular development activities
+
+**200-299: Configuration & Setup**
+- Naming conventions, model config, setup requirements
+- Files that help with environment and tool setup
+- Important when setting up or configuring
+
+**400-499: Architecture & Overview**
+- System overview, project overview, context priority guide
+- Files that explain the big picture and relationships
+- Essential for understanding the system architecture
+
+**500+: Research & Meta**
+- Completion summaries, research notes, benchmarks
+- Files that provide historical context and analysis
+- Useful for learning from past work
+
+### **Step 4: Create Descriptive, Self-Documenting Names**
+
+**Follow these naming principles:**
+- **Clear purpose**: The name should indicate what the file contains
+- **Consistent format**: `prefix_descriptive-name.md`
+- **Kebab-case**: Lowercase with hyphens for readability
+- **Avoid ambiguity**: Make it clear what the file is for
+
+**Examples of good names:**
+- ✅ `100_cursor-memory-context.md` (clear purpose)
+- ✅ `400_system-overview.md` (descriptive)
+- ✅ `201_model-configuration.md` (specific domain)
+- ✅ `500_memory-arch-research.md` (research focus)
+
+**Examples of bad names:**
+- ❌ `misc.md` (unclear purpose)
+- ❌ `stuff.md` (not descriptive)
+- ❌ `temp.md` (temporary feeling)
+
+### **Step 5: Consider Cross-References and Integration**
+
+**Think about relationships:**
+- **What other files reference this information?**
+- **What files should this file reference?**
+- **How does this fit into the cognitive scaffolding?**
+
+**Add appropriate cross-references:**
+- `<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->`
+- `<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md -->`
+- `<!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md -->`
+
+**Consider AI rehydration:**
+- **Will Cursor AI need this for context?**
+- **Is this information that should be loaded early or late?**
+- **Does this belong in the memory context or as a reference?**
+
+### **Step 6: Validate Against Existing Patterns**
+
+**Check for consistency:**
+- **Are there similar files in the same prefix range?**
+- **Does this follow the established naming patterns?**
+- **Is this the right level of detail for this priority?**
+
+**Consider the cognitive scaffolding:**
+- **Does this file help or hurt the AI's understanding?**
+- **Is this information better placed in an existing file?**
+- **Will this file be discoverable by the AI?**
+
+### **Example Decision Process**
+
+**Scenario**: Need to document a new workflow for automated testing
+
+**Step 1**: ✅ **File needed** - This is a process others will follow
+**Step 2**: **Purpose** = Implementation workflow, **Priority** = Medium (important for specific tasks)
+**Step 3**: **Prefix** = 100-199 (workflow guides)
+**Step 4**: **Name** = `101_automated-testing-workflow.md`
+**Step 5**: **Cross-references** = Reference `400_context-priority-guide.md`, essential files
+**Step 6**: **Validation** = Consistent with other workflow files, appropriate priority
+
+**Result**: Creates `101_automated-testing-workflow.md` with proper cross-references and integration into the cognitive scaffolding system.
+
+This process ensures that every file created serves a clear purpose, fits into the existing structure, and contributes to the overall coherence of the documentation system.
+
 ## 🔢 Number Prefixes
 
 Files are categorized by purpose using numeric prefixes:

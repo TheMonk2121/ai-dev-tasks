@@ -105,6 +105,11 @@ When Cursor AI restarts, it follows a **structured reading strategy**: First rea
 
 See `400_context-priority-guide.md` for complete AI file analysis strategy and reading patterns.
 
+### **File Generation Decision Process**
+When creating new files, follow a **6-step decision process**: 1) Determine if file is needed (reusable info vs. temporary), 2) Assess purpose and priority (planning vs. implementation vs. research), 3) Choose prefix range (000-099 for core, 100-199 for guides, etc.), 4) Create descriptive name (kebab-case, self-documenting), 5) Add cross-references and consider AI rehydration, 6) Validate against existing patterns.
+
+See `200_naming-conventions.md` for complete file generation decision process and guidelines.
+
 ### **When Working on Features**
 1. **Check `000_backlog.md`** for current priorities and dependencies
 2. **Use existing workflows** (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
