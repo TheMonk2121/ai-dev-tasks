@@ -100,6 +100,11 @@ Our **three-digit prefix hierarchy** creates semantic ordering for both humans a
 
 See `200_naming-conventions.md` for complete naming guidelines and decision process.
 
+### **AI File Analysis Strategy**
+When Cursor AI restarts, it follows a **structured reading strategy**: First reads `100_cursor-memory-context.md` (30 seconds, 80% context), then `000_backlog.md` (current priorities), then `400_system-overview.md` (technical architecture). Ancillary files are read as needed for specific tasks. Scripts are only read when implementation details are required.
+
+See `400_context-priority-guide.md` for complete AI file analysis strategy and reading patterns.
+
 ### **When Working on Features**
 1. **Check `000_backlog.md`** for current priorities and dependencies
 2. **Use existing workflows** (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)

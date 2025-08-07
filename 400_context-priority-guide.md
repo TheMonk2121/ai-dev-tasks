@@ -33,6 +33,89 @@ The system achieves **solidity through structure** while maintaining **elasticit
 
 The result is a **living documentation system** that's robust enough to prevent critical failures but flexible enough to adapt to your evolving needs as a solo developer. It's designed to scale with your project while maintaining the coherence that makes it valuable to both you and the AI systems that rely on it.
 
+### **AI File Analysis Strategy**
+
+When Cursor AI restarts or needs to rehydrate context, it follows a **structured reading strategy** designed to maximize efficiency while maintaining comprehensive understanding:
+
+#### ** Primary Go-To Files (Read First - 2-3 minutes)**
+
+1. **`100_cursor-memory-context.md`** - **CRITICAL**
+   - **Primary memory scaffold** for instant project state
+   - Provides current development focus, recent completions, system architecture
+   - Takes 30 seconds to read, provides 80% of needed context
+   - Essential for understanding "what's happening right now"
+
+2. **`000_backlog.md`** - **CRITICAL**
+   - Shows current priorities and active development items
+   - Reveals development roadmap and blocking dependencies
+   - Essential for understanding project direction and next steps
+   - Helps identify what's urgent vs. what can wait
+
+3. **`400_system-overview.md`** - **CRITICAL**
+   - Provides technical architecture and "system-of-systems" context
+   - Shows how all components work together
+   - Essential for understanding the broader technical landscape
+   - Helps with implementation decisions and system integration
+
+#### **📋 Crucial Ancillary Files (Read as Needed)**
+
+4. **`400_context-priority-guide.md`** - **IMPORTANT**
+   - When understanding file organization and relationships
+   - When finding related files for specific tasks
+   - When understanding the cognitive scaffolding system
+   - When navigating the documentation hierarchy
+
+5. **`400_project-overview.md`** - **IMPORTANT**
+   - When understanding high-level project purpose
+   - When needing quick start information or workflow overview
+   - When understanding the overall development approach
+   - When onboarding to the project
+
+6. **`200_naming-conventions.md`** - **IMPORTANT**
+   - When understanding file organization principles
+   - When suggesting new file names or understanding existing ones
+   - When understanding the three-digit prefix system
+   - When maintaining documentation consistency
+
+#### **🔧 Script and Code Analysis Strategy**
+
+**Scripts (Read When Relevant):**
+- **`scripts/repo_maintenance.py`** - When discussing repository maintenance, file organization, or automation
+- **`scripts/update_cursor_memory.py`** - When discussing memory context updates or automation
+- **`dspy-rag-system/`** files - When discussing core AI system, RAG capabilities, or technical implementation
+
+**Code Analysis Pattern:**
+1. **Start with documentation** to understand system architecture
+2. **Read scripts only when** task requires implementation details
+3. **Focus on specific script** relevant to current task
+4. **Use documentation** to understand what code should do before reading it
+
+#### ** Reading Pattern Efficiency**
+
+**First 2-3 minutes:**
+- Read `100_cursor-memory-context.md` for instant context
+- Check `000_backlog.md` for current priorities
+- Scan `400_system-overview.md` for technical context
+
+**As needed during conversation:**
+- Reference `400_context-priority-guide.md` when discussing file organization
+- Check specific scripts when implementation details are needed
+- Use `200_naming-conventions.md` when discussing file naming
+
+**For complex tasks:**
+- Read relevant workflow files (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
+- Check specific domain files based on task type
+- Reference completion summaries for historical context
+
+#### ** Why This Strategy Works**
+
+**Efficiency**: Three-digit prefix system makes finding right files quick
+**Context Preservation**: Memory context file provides instant project state
+**Scalability**: Can dive deeper into specific areas as needed
+**AI-Friendly**: File organization designed for AI consumption
+
+**Key Insight**: Don't need to read everything - need to read **right things in right order** for current task. Cognitive scaffolding system makes this possible by organizing files by priority and purpose.
+
 ### **Context Sharing Protocol**
 When sharing context with other AI models, use this structured approach:
 
