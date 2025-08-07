@@ -1,6 +1,10 @@
 # 🔒 Security Best Practices & Threat Model
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_performance-optimization-guide.md -->
+<!-- IMPLEMENTATION_STACK: 104_dspy-development-context.md, 202_setup-requirements.md -->
+<!-- MONITORING_SYSTEM: dspy-rag-system/src/monitoring/ -->
+<!-- METRICS_COLLECTION: 400_metadata-collection-guide.md -->
 <!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- MEMORY_CONTEXT: HIGH - Critical security documentation for AI development environment -->

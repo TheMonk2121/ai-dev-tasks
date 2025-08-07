@@ -308,3 +308,10 @@ python3 scripts/state_manager.py --export-csv metrics.csv
 **Quick Reference Version**: 1.0  
 **Last Updated**: 2024-08-07  
 **Related Documentation**: `400_metadata-collection-guide.md`
+
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
+<!-- WORKFLOW_INTEGRATION: 003_process-task-list.md, scripts/process_tasks.py -->
+<!-- IMPLEMENTATION_CONTEXT: 104_dspy-development-context.md, 202_setup-requirements.md -->
+<!-- QUICK_REFERENCE: 400_metadata-quick-reference.md -->
+<!-- MEMORY_CONTEXT: MEDIUM - Quick reference for metadata operations -->

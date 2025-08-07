@@ -2,6 +2,15 @@
 
 > **AI Discovery**: This document provides comprehensive information about the metadata collection system, data sources, usage patterns, and analytics capabilities within the AI development ecosystem.
 
+<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
+<!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
+<!-- EXECUTION_ENGINE: scripts/process_tasks.py, scripts/state_manager.py, scripts/error_handler.py -->
+<!-- IMPLEMENTATION_STACK: 104_dspy-development-context.md, 202_setup-requirements.md, 201_model-configuration.md -->
+<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_security-best-practices-guide.md, 400_performance-optimization-guide.md -->
+<!-- QUICK_REFERENCE: 400_metadata-quick-reference.md -->
+<!-- MEMORY_CONTEXT: HIGH - Comprehensive metadata collection and analytics documentation -->
+
 ## 📊 **Overview**
 
 The AI development ecosystem includes a sophisticated metadata collection and analytics system that enables intelligent task execution, performance optimization, and data-driven decision making. This guide documents the metadata sources, collection methods, usage patterns, and analytics capabilities.

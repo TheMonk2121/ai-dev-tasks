@@ -1,6 +1,10 @@
 # 🧪 Testing Strategy & Quality Assurance Guide
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- QUALITY_FRAMEWORK: 400_security-best-practices-guide.md, 400_performance-optimization-guide.md -->
+<!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
+<!-- IMPLEMENTATION_CONTEXT: 104_dspy-development-context.md, 202_setup-requirements.md -->
+<!-- MONITORING_SYSTEM: dspy-rag-system/src/monitoring/ -->
 <!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- MEMORY_CONTEXT: HIGH - Essential testing documentation for maintaining code quality -->

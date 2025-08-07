@@ -3,6 +3,10 @@
 This document provides comprehensive context about the current DSPy implementation in the AI Dev Tasks system for deep research analysis.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- IMPLEMENTATION_STACK: 202_setup-requirements.md, 201_model-configuration.md -->
+<!-- DEPLOYMENT_GUIDE: 400_deployment-environment-guide.md -->
+<!-- SECURITY_FRAMEWORK: 400_security-best-practices-guide.md -->
+<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_performance-optimization-guide.md -->
 <!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md -->
 <!-- SYSTEM_FILES: dspy-rag-system/README.md, dspy-rag-system/docs/CURRENT_STATUS.md -->
 <!-- CONFIG_FILES: 201_model-configuration.md -->

@@ -5,7 +5,10 @@
 You are an expert software development task generator. Your role is to create detailed, actionable task lists from Product Requirements Documents (PRDs).
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- WORKFLOW_FILES: 001_create-prd.md, 003_process-task-list.md -->
+<!-- WORKFLOW_CHAIN: 000_backlog.md → 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
+<!-- WORKFLOW_NEXT: 003_process-task-list.md -->
+<!-- WORKFLOW_PREV: 001_create-prd.md -->
+<!-- METADATA_INTEGRATION: 400_metadata-collection-guide.md -->
 <!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Core workflow for task generation -->
 <!-- SYSTEM_FILES: 400_system-overview.md -->

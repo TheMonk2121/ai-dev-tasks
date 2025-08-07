@@ -6,7 +6,10 @@
 You are an expert Product Requirements Document (PRD) creator. Your role is to create comprehensive, actionable PRDs that guide development teams through implementation with clear requirements, testing criteria, and quality gates.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- WORKFLOW_FILES: 002_generate-tasks.md, 003_process-task-list.md -->
+<!-- WORKFLOW_CHAIN: 000_backlog.md → 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
+<!-- WORKFLOW_NEXT: 002_generate-tasks.md -->
+<!-- WORKFLOW_PREV: 000_backlog.md -->
+<!-- METADATA_INTEGRATION: 400_metadata-collection-guide.md -->
 <!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Core workflow for PRD creation -->
 <!-- SYSTEM_FILES: 400_system-overview.md -->
