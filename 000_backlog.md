@@ -8,8 +8,9 @@
 - [ ] Get explicit user approval
 
 ## 📋 QUICK REFERENCE (30-second scan)
-**Top Priority:** B-011 (Cursor Native AI Integration) - ✅ done
-**Next Priority:** B-031 (Vector Database Enhancement) - 3 points
+**Top Priority:** B-070 (AI Constitution Implementation) - 🔥 3 points
+**Next Priority:** B-071 (Memory Context File Splitting) - 🔥 4 points
+**Following:** B-072 (Documentation Retrieval System Enhancement) - 🔥 5 points
 **Execution:** Use `003_process-task-list.md` for AI-executable items
 **Human Required:** Items with `<!-- human_required: true -->`
 
@@ -98,6 +99,41 @@ A prioritized list of future enhancements and features for the AI development ec
 | B‑039 | GitHub Actions CI/CD Automation           | 📈  | 4        | todo   | Automate testing and deployment with GitHub Actions | GitHub Actions + YAML workflows + CI/CD | B-012 Advanced Testing Framework |
 <!--score: {bv:3, tc:2, rr:2, le:3, effort:4, deps:[]}-->
 <!--score_total: 2.5-->
+
+---
+
+| B‑070 | AI Constitution Implementation           | 🔥  | 3        | todo   | Create persistent AI ruleset to prevent context loss and ensure safety | System prompt + critical rules | Documentation context management |
+<!--score: {bv:5, tc:3, rr:5, le:4, effort:3, deps:[]}-->
+<!--score_total: 5.7-->
+<!--research: 500_research-analysis-summary.md - AI documentation consumption research shows critical rules get lost in large files-->
+| B‑071 | Memory Context File Splitting           | 🔥  | 4        | todo   | Split 378-line memory file into focused modules for better AI consumption | File organization + cross-references | B-070 AI Constitution Implementation |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:4, deps:[]}-->
+<!--score_total: 4.5-->
+<!--research: 500_documentation-coherence-research.md - Modular documentation patterns improve AI comprehension-->
+| B‑072 | Documentation Retrieval System Enhancement | 🔥  | 5        | todo   | Implement RAG for documentation to provide relevant context on-demand | PGVector + DSPy + retrieval | B-031 Vector Database Enhancement |
+<!--score: {bv:5, tc:4, rr:5, le:5, effort:5, deps:[]}-->
+<!--score_total: 4.8-->
+<!--research: 500_research-implementation-summary.md - Industry analysis shows RAG solves context overload-->
+| B‑073 | Giant Guide File Splitting              | 📈  | 8        | todo   | Split 1,400+ line guide files into focused 200-300 line modules | File organization + content analysis | B-071 Memory Context File Splitting |
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:8, deps:[]}-->
+<!--score_total: 2.0-->
+<!--research: 500_maintenance-safety-research.md - Research shows files over 300 lines cause attention dilution-->
+| B‑074 | Multi-Turn Process Enforcement          | 📈  | 6        | todo   | Implement mandatory checklist enforcement for high-risk operations | Multi-turn prompts + validation | B-070 AI Constitution Implementation |
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:6, deps:[]}-->
+<!--score_total: 2.8-->
+<!--research: 500_research-analysis-summary.md - Mandatory process enforcement patterns prevent context misses-->
+| B‑075 | Quick Reference System Implementation   | ⭐  | 3        | todo   | Add 30-second scan sections to all critical files for rapid context | Documentation templates + quick refs | B-071 Memory Context File Splitting |
+<!--score: {bv:3, tc:2, rr:3, le:2, effort:3, deps:[]}-->
+<!--score_total: 3.3-->
+<!--research: 500_documentation-coherence-research.md - Quick reference patterns ensure key points are available-->
+| B‑076 | B-011 Project File Cleanup              | ⭐  | 2        | todo   | Archive B-011 project files and extract essential info to core docs | File archiving + content extraction | B-073 Giant Guide File Splitting |
+<!--score: {bv:2, tc:1, rr:2, le:1, effort:2, deps:[]}-->
+<!--score_total: 4.0-->
+<!--research: 500_maintenance-safety-research.md - Legacy file cleanup improves documentation coherence-->
+| B‑077 | Documentation Context Monitoring        | 📈  | 4        | todo   | Implement monitoring for context failures and documentation QA loop | Monitoring + feedback system | B-072 Documentation Retrieval System Enhancement |
+<!--score: {bv:3, tc:2, rr:4, le:3, effort:4, deps:[]}-->
+<!--score_total: 3.0-->
+<!--research: 500_research-analysis-summary.md - Ongoing QA loop prevents context drift-->
 <!-- human_required: true -->
 <!-- reason: Requires GitHub repository configuration and CI/CD setup decisions -->
 
