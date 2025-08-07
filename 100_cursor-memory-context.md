@@ -95,6 +95,11 @@ Our documentation system uses **cognitive scaffolding** with three-digit prefixe
 
 See `400_context-priority-guide.md` for complete documentation strategy and file organization.
 
+### **File Naming System**
+Our **three-digit prefix hierarchy** creates semantic ordering for both humans and AI. The naming flow uses a **cascading decision process**: purpose check → priority assessment → prefix assignment → descriptive naming → cross-reference integration. This creates a **self-documenting system** where filenames provide instant context about their role in the ecosystem.
+
+See `200_naming-conventions.md` for complete naming guidelines and decision process.
+
 ### **When Working on Features**
 1. **Check `000_backlog.md`** for current priorities and dependencies
 2. **Use existing workflows** (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)

@@ -8,6 +8,63 @@
 
 This document defines the file naming conventions and memory scaffolding guidelines for the AI development ecosystem. The system is designed to be understandable by both humans and large language models (LLMs).
 
+## 🔄 File Naming System Flow & Decision Process
+
+### **How Our File Naming System Works**
+
+Our file naming system uses a **three-digit prefix hierarchy** that serves both **human comprehension** and **AI analysis**. The system operates on a **semantic ordering principle** where files are grouped by purpose and priority, making it immediately clear to both humans and AI what each file contains and how important it is. The prefixes create a **lexicographical ordering** that naturally guides reading sequence - when you list files alphabetically, the most critical context files appear first.
+
+The **naming flow** works through a **cascading decision process**: First, determine the file's **primary purpose** (planning, implementation, domain-specific, etc.), then assign the appropriate **prefix range**, and finally add a **descriptive name** that clearly indicates the content. This creates a **self-documenting system** where the filename itself provides instant context about the file's role in the ecosystem.
+
+### **Naming Decision Process**
+
+**Step 1: Purpose Check**
+- Is this **planning** (backlog, PRDs, tasks)?
+- Is this **implementation** (code, configuration, setup)?
+- Is this **documentation** (guides, overviews, context)?
+- Is this **research** (analysis, benchmarks, completion summaries)?
+
+**Step 2: Priority Assessment**
+- Is this **essential context** (read first for understanding)?
+- Is this **implementation detail** (read when working on specific areas)?
+- Is this **domain-specific** (read for specialized knowledge)?
+
+**Step 3: Prefix Assignment**
+- **000-099**: Core planning and context (backlog, project overview, system overview)
+- **100-199**: Memory and guides (memory context, backlog guide, automation patterns)
+- **200-299**: Configuration and setup (naming conventions, model config, setup requirements)
+- **300-399**: Reserved for future use or testing documentation
+- **400-499**: Architecture and overview (system overview, project overview, context priority guide)
+- **500+**: Research and meta-documentation (completion summaries, research notes, benchmarks)
+
+**Step 4: Descriptive Naming**
+- Use clear, descriptive names that indicate content
+- Follow kebab-case convention (lowercase with hyphens)
+- Avoid multiple underscores or special characters
+- Make the filename self-documenting
+
+**Step 5: Cross-Reference Integration**
+- Ensure the file can be referenced in the context priority guide
+- Add appropriate HTML comment references
+- Consider AI rehydration needs
+
+### **Integration with Development Workflow**
+
+The naming system **integrates seamlessly** with our development workflow. When creating new files, the process is:
+1. **Check existing patterns** in the same prefix range for consistency
+2. **Follow the naming conventions** documented in this file
+3. **Add cross-references** using HTML comment patterns
+4. **Update the context priority guide** if the file belongs in a documented tier
+5. **Consider AI rehydration** - will this file be needed for context sharing?
+
+**Quality Assurance:**
+- **Consistency checks** ensure similar files use similar naming patterns
+- **Cross-reference validation** ensures new files are properly linked
+- **Context priority guide updates** keep the documentation hierarchy current
+- **AI-friendly naming** ensures files are discoverable by Cursor AI
+
+The result is a **living naming system** that scales with your project while maintaining the cognitive scaffolding that makes the documentation coherent and AI-friendly. Each new file automatically fits into the existing hierarchy, making it easy for both humans and AI to understand its role and importance in the overall system.
+
 ## 🔢 Number Prefixes
 
 Files are categorized by purpose using numeric prefixes:
