@@ -110,6 +110,11 @@ When creating new files, follow a **6-step decision process**: 1) Determine if f
 
 See `200_naming-conventions.md` for complete file generation decision process and guidelines.
 
+### **Documentation Placement Logic**
+When determining where to place new documentation, follow a **5-step process**: 1) Assess content type and scope (system-wide vs. workflow vs. setup), 2) Choose primary location based on content (400-499 for concepts, 200-299 for processes), 3) Determine if multiple locations needed (core concepts get quick reference + detailed), 4) Consider reading pattern (immediate vs. when relevant vs. when needed), 5) Add cross-references for discovery.
+
+See `400_context-priority-guide.md` for complete documentation placement logic and guidelines.
+
 ### **When Working on Features**
 1. **Check `000_backlog.md`** for current priorities and dependencies
 2. **Use existing workflows** (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
