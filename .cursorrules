@@ -1,0 +1,90 @@
+# Cursor AI Memory Context Rules
+
+## 🧠 Memory Context System
+
+This project uses a sophisticated memory context system to maintain state across Cursor AI sessions. The key file is `100_cursor-memory-context.md` which provides instant context about the AI development ecosystem.
+
+### **When Starting a New Session**
+1. **Always read `100_cursor-memory-context.md` first** - this gives you the current project state
+2. **Check `000_backlog.md`** for current priorities and dependencies  
+3. **Review `400_system-overview.md`** if you need deeper technical context
+4. **Use existing workflows** (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
+
+### **Memory Context Hierarchy (Reading Order)**
+**HIGH Priority (Read First):**
+- `100_cursor-memory-context.md` - Memory scaffold and current state
+- `400_system-overview.md` - Technical architecture  
+- `000_backlog.md` - Current priorities and roadmap
+- `400_project-overview.md` - Project overview and workflow
+
+**MEDIUM Priority (Read as Needed):**
+- `001_create-prd.md` - PRD creation workflow
+- `002_generate-tasks.md` - Task generation workflow
+- `003_process-task-list.md` - AI execution workflow
+- `104_dspy-development-context.md` - Deep technical context
+
+**LOW Priority (Read for Specific Tasks):**
+- `103_yi-coder-integration.md` - Integration details
+- `201_model-configuration.md` - Model setup
+- `100_backlog-guide.md` - Backlog management
+
+### **When Working on Features**
+1. **Follow the development guidelines** in `100_cursor-memory-context.md`
+2. **Use the existing file organization** from `400_context-priority-guide.md`
+3. **Update completion summaries** when finishing major features
+4. **Run `python scripts/update_cursor_memory.py`** to keep memory context current
+
+### **When Adding New Features**
+1. **Add to backlog** with proper scoring (see `100_backlog-guide.md`)
+2. **Create PRD** using `001_create-prd.md` workflow
+3. **Generate tasks** using `002_generate-tasks.md` workflow
+4. **Execute** using `003_process-task-list.md` workflow
+
+### **Key Files for Context**
+- **Memory Context**: `100_cursor-memory-context.md` (current state)
+- **System Overview**: `400_system-overview.md` (technical architecture)
+- **Backlog**: `000_backlog.md` (priorities and status)
+- **Setup**: `202_setup-requirements.md` (environment setup)
+
+### **Current Development Focus**
+- **B-002**: Advanced Error Recovery & Prevention (5 points) ✅ completed
+- **B-011**: Cursor Native AI + Specialized Agents Integration (5 points)
+- **Infrastructure**: v0.3.1-rc3 Core Hardening ✅ completed
+
+### **System Architecture**
+- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
+- **Framework**: DSPy with PostgreSQL vector store
+- **Automation**: n8n workflows for backlog management
+- **Monitoring**: Real-time mission dashboard
+- **Security**: Comprehensive input validation and prompt sanitization
+
+### **Development Workflow**
+1. **Backlog Selection** → Choose from `000_backlog.md` (B-001, B-002, etc.)
+2. **PRD Creation** → Use `001_create-prd.md` workflow
+3. **Task Generation** → Use `002_generate-tasks.md` workflow
+4. **AI Execution** → Use `003_process-task-list.md` workflow
+5. **State Management** → `.ai_state.json` for context persistence
+
+### **When Debugging Issues**
+1. **Check `dspy-rag-system/docs/CURRENT_STATUS.md`** for system health
+2. **Review error logs** in `dspy-rag-system/src/utils/logger.py`
+3. **Use retry wrapper** from `dspy-rag-system/src/utils/retry_wrapper.py`
+4. **Check security validation** from `dspy-rag-system/src/utils/prompt_sanitizer.py`
+
+### **Key Commands**
+- **Start Dashboard**: `./dspy-rag-system/start_mission_dashboard.sh`
+- **Run Tests**: `./dspy-rag-system/run_tests.sh`
+- **Quick Start**: `./dspy-rag-system/quick_start.sh`
+- **Update Memory**: `python scripts/update_cursor_memory.py`
+
+### **File Organization**
+- **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
+- **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
+- **Domain**: `100_backlog-guide.md`, `103_yi-coder-integration.md`
+
+### **Memory State Updates**
+- **When to update**: After completing backlog items, changing focus, adding features
+- **How to update**: Run `python scripts/update_cursor_memory.py`
+- **What gets updated**: Priorities, completed items, system status, timestamps
+
+Remember: This is a sophisticated AI development ecosystem. Always check the memory context first, then dive deeper into specific files as needed. 

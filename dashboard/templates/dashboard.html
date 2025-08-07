@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Management Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>📁 Document Management Dashboard</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh</button>
+                <span class="status-indicator" id="status-indicator">●</span>
+            </div>
+        </header>
+
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <h2>📊 Processing Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.total_documents }}</div>
+                    <div class="stat-label">Total Documents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number stat-success">{{ stats.completed }}</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number stat-warning">{{ stats.pending }}</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number stat-error">{{ stats.failed }}</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.total_chunks }}</div>
+                    <div class="stat-label">Total Chunks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.recent_activity }}</div>
+                    <div class="stat-label">Recent Activity (24h)</div>
+                </div>
+            </div>
+            
+            <!-- Enhanced Statistics -->
+            {% if stats.category_breakdown or stats.file_type_breakdown %}
+            <div class="enhanced-stats">
+                <div class="stats-row">
+                    {% if stats.category_breakdown %}
+                    <div class="stat-breakdown">
+                        <h3>📂 Categories</h3>
+                        <div class="breakdown-list">
+                            {% for category, count in stats.category_breakdown.items() %}
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">{{ category }}</span>
+                                <span class="breakdown-count">{{ count }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if stats.file_type_breakdown %}
+                    <div class="stat-breakdown">
+                        <h3>📄 File Types</h3>
+                        <div class="breakdown-list">
+                            {% for file_type, count in stats.file_type_breakdown.items() %}
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">{{ file_type }}</span>
+                                <span class="breakdown-count">{{ count }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if stats.avg_file_size %}
+                <div class="size-stats">
+                    <h3>📏 File Size Statistics</h3>
+                    <div class="size-stats-grid">
+                        <div class="size-stat">
+                            <span class="size-label">Average</span>
+                            <span class="size-value">{{ (stats.avg_file_size / 1024)|round(1) }} KB</span>
+                        </div>
+                        <div class="size-stat">
+                            <span class="size-label">Largest</span>
+                            <span class="size-value">{{ (stats.max_file_size / 1024)|round(1) }} KB</span>
+                        </div>
+                        <div class="size-stat">
+                            <span class="size-label">Smallest</span>
+                            <span class="size-value">{{ (stats.min_file_size / 1024)|round(1) }} KB</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Documents Section -->
+        <section class="documents-section">
+            <div class="section-header">
+                <h2>📄 Documents</h2>
+                <div class="filters">
+                    <input type="text" id="search-input" placeholder="🔍 Search documents..." class="search-input">
+                    <select id="priority-filter" class="filter-select">
+                        <option value="">All Priorities</option>
+                        <option value="high">High Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="low">Low Priority</option>
+                    </select>
+                    <select id="category-filter" class="filter-select">
+                        <option value="">All Categories</option>
+                        <option value="Pricing & Billing">Pricing & Billing</option>
+                        <option value="Legal & Contracts">Legal & Contracts</option>
+                        <option value="Marketing & Campaigns">Marketing & Campaigns</option>
+                        <option value="Client & Customer Data">Client & Customer Data</option>
+                        <option value="Reports & Analytics">Reports & Analytics</option>
+                        <option value="Technical & Code">Technical & Code</option>
+                        <option value="Testing & Samples">Testing & Samples</option>
+                        <option value="Documentation & Guides">Documentation & Guides</option>
+                        <option value="Financial Records">Financial Records</option>
+                        <option value="Uncategorized">Uncategorized</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="documents-grid" id="documents-container">
+                {% for doc in documents %}
+                <div class="document-card priority-{{ doc.priority }}" 
+                     data-filename="{{ doc.filename }}" 
+                     data-priority="{{ doc.priority }}"
+                     data-category="{{ doc.category }}">
+                    <div class="document-header">
+                        <h3 class="document-title">{{ doc.filename }}</h3>
+                        <div class="document-meta">
+                            <span class="file-type">📄 {{ doc.file_type }}</span>
+                            <span class="file-size">📏 {{ doc.file_size|filesizeformat }}</span>
+                            <span class="priority-badge priority-{{ doc.priority }}">⭐ {{ doc.priority|title }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="document-info">
+                        <p><strong>Category:</strong> {{ doc.category }}</p>
+                        <p><strong>Status:</strong> 
+                            <span class="status-badge status-{{ doc.status }}">
+                                {% if doc.status == 'completed' %}✅{% elif doc.status == 'pending' %}⏳{% else %}❌{% endif %}
+                                {{ doc.status|title }}
+                            </span>
+                        </p>
+                        <p><strong>Chunks:</strong> {{ doc.chunk_count }}</p>
+                        <p><strong>Content Type:</strong> 
+                            <span class="content-type-badge content-type-{{ doc.content_type }}">
+                                {{ doc.content_type|replace('_', ' ')|title }}
+                            </span>
+                        </p>
+                        <p><strong>Size Category:</strong> 
+                            <span class="size-category-badge size-{{ doc.size_category }}">
+                                {{ doc.size_category|title }}
+                            </span>
+                        </p>
+                        {% if doc.version %}
+                        <p><strong>Version:</strong> {{ doc.version }}</p>
+                        {% endif %}
+                        {% if doc.extracted_date %}
+                        <p><strong>Extracted Date:</strong> {{ doc.extracted_date }}</p>
+                        {% endif %}
+                        <p><strong>Added:</strong> {{ doc.created_at.strftime('%Y-%m-%d %H:%M') if doc.created_at else 'Unknown' }}</p>
+                    </div>
+                    
+                    {% if doc.tags %}
+                    <div class="document-tags">
+                        {% for tag in doc.tags %}
+                        <span class="tag">🏷️ {{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if doc.notes %}
+                    <div class="document-notes">
+                        <p class="notes">📝 {{ doc.notes }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Enhanced Metadata Actions -->
+                    <div class="document-actions">
+                        <button class="action-btn-small" onclick="viewMetadata('{{ doc.filename }}')">
+                            🔍 View Metadata
+                        </button>
+                        <button class="action-btn-small" onclick="editMetadata('{{ doc.filename }}')">
+                            ✏️ Edit
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% if not documents %}
+            <div class="empty-state">
+                <p>📭 No documents found</p>
+                <p>Add some documents to your watch folder to see them here!</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Recent RAG Queries Section -->
+        {% if queries %}
+        <section class="queries-section">
+            <h2>🔍 Recent RAG Queries</h2>
+            <div class="queries-list">
+                {% for query in queries %}
+                <div class="query-card">
+                    <div class="query-question">
+                        <strong>❓ Question:</strong> {{ query.question }}
+                    </div>
+                    <div class="query-answer">
+                        <strong>✅ Answer:</strong> {{ query.answer }}
+                    </div>
+                    <div class="query-meta">
+                        <span>⚡ {{ query.response_time }}s</span>
+                        <span>📅 {{ query.created_at.strftime('%Y-%m-%d %H:%M') if query.created_at else 'Unknown' }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Quick Actions -->
+        <section class="actions-section">
+            <h2>🔧 Quick Actions</h2>
+            <div class="actions-grid">
+                <button class="action-btn" onclick="testRAGQuery()">
+                    🧪 Test RAG Query
+                </button>
+                <button class="action-btn" onclick="viewSystemHealth()">
+                    💚 System Health
+                </button>
+                <button class="action-btn" onclick="exportData()">
+                    📤 Export Data
+                </button>
+                <button class="action-btn" onclick="refreshData()">
+                    🔄 Refresh All
+                </button>
+                <button class="action-btn" onclick="updateAllMetadata()">
+                    🔄 Update Metadata
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Metadata Modal -->
+    <div id="metadata-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Document Metadata</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="metadata-content">
+                <!-- Metadata content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html> 
