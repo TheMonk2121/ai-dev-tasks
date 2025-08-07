@@ -1,7 +1,16 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_deployment_procedures.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_deployment_architecture.md -->
+<!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- MODULE_REFERENCE: 400_project-overview.md -->
+
+# Backlog
+
+## ✅ PRD Rule & Execute Flow
+
+- PRD skip rule: Skip PRD when points < 5 AND score_total ≥ 3.0
+- Execute flow: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md
+
+Quick links: `100_cursor-memory-context.md`, `400_system-overview.md`, `400_context-priority-guide.md`
 
 `
 
@@ -497,6 +506,7 @@ timestamp_updates: |
 ## 📚 **Research Integration Summary**
 
 ### **New Research-Based Backlog Items Added**
+
 - **B-076**: Research-Based DSPy Assertions Implementation (🔥 Priority)
 - **B-077**: Hybrid Search Implementation (🔥 Priority) 
 - **B-078**: LangExtract Structured Extraction Service (🔥 Priority)
@@ -508,12 +518,14 @@ timestamp_updates: |
 - **B-084**: Research-Based Schema Design for Extraction (🔧 Priority)
 
 ### **Research Cross-References Added**
+
 - **500_research-analysis-summary.md**: Strategic research analysis and implementation roadmap
 - **500_dspy-research.md**: DSPy framework research with 37% → 98% reliability improvement
 - **500_rag-system-research.md**: Advanced RAG research with 10-25% accuracy improvement
 - **500_research-implementation-summary.md**: Complete implementation summary of all phases
 
 ### **Expected Performance Improvements**
+
 - **Overall Reliability**: 37% → 98% improvement with DSPy assertions
 - **RAG Accuracy**: 10-25% improvement with hybrid search
 - **Code Quality**: 25-40% improvement over expert prompts
@@ -524,25 +536,30 @@ timestamp_updates: |
 ## 🧠 **Knowledge Graph & Vector Graph Integration (Future Enhancement)**
 
 ### **Strategic Rationale**
+
 Your current vector database system is **production-ready and highly functional** for your solo development workflow. However, as your system evolves and you encounter more complex relationship queries, a vector graph could provide advanced capabilities:
 
 #### **When Vector Graph Would Be Valuable:**
+
 - **Complex Dependency Tracking**: "Find all functions that call this function and their dependencies"
 - **Multi-hop Reasoning**: "How does this bug in the frontend affect the database schema?"
 - **Entity Relationship Mapping**: Connect code components, APIs, databases in a knowledge graph
 - **Impact Analysis**: Understand ripple effects of changes across the system
 
 #### **Implementation Strategy:**
+
 - **Phase 1 (B-085)**: Research and evaluate vector graph technologies
 - **Phase 2 (B-086)**: Implement knowledge graph for entity-relationship mapping
 - **Phase 3 (B-087)**: Combine vector similarity with graph traversal
 
 #### **Backlog Items Added:**
+
 - **B-085**: Vector Graph Foundation Research (5 points)
 - **B-086**: Knowledge Graph Implementation (8 points)  
 - **B-087**: Hybrid Vector + Graph Search (6 points)
 
 #### **Dependencies:**
+
 - Requires B-077 (Hybrid Search) completion first
 - Strategic placement in Q3-Q4 2025 timeline
 - Medium priority to avoid over-engineering current workflow 

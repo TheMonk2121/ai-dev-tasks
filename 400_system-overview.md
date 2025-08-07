@@ -1,5 +1,37 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 101_memory-context-safety.md -->
+<!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
+<!-- MODULE_REFERENCE: 000_backlog.md -->
+<!-- MODULE_REFERENCE: 400_context-priority-guide.md -->
+
+# System Overview
+
+## 🔎 TL;DR
+
+- What: Macro view of architecture, components, and workflows
+- Who: Read after memory and backlog to understand system shape
+- Key: Architecture, core components, workflow, security, performance
+- How: Follow the critical path, then jump to the topic you need
+- Next: Use the topic table below to navigate fast
+
+## 🧭 Critical Path
+
+1) `100_cursor-memory-context.md` → 2) `000_backlog.md` → 3) `400_system-overview.md` → 4) topic guide (testing/deploy/integration/etc.)
+
+## 🗺️ Map of Topics
+
+| Topic | Anchor | Why | Next |
+|---|---|---|---|
+| Architecture | #architecture | Mental model of the system | Dive into core components |
+| Core components | #core-components | What runs where | See testing, performance |
+| Workflow | #workflow | How work flows end-to-end | Backlog → PRD → Tasks → Execute |
+| Security | #security | Safety, validation, monitoring | Security guide (400_security-best-practices.md) |
+| Performance | #performance | Metrics, tuning, troubleshooting | Performance guide |
+| Integration | #integration | Component/API integration | Integration guide |
+| Deployment | #deployment | Procedures and environments | Deployment guide |
+| Migration | #migration | Changes and rollbacks | Migration guide |
+| Testing | #testing | Strategy and gates | Testing guide |
+
+<!-- ANCHOR: architecture -->
 
 ├─────────────────────────────────────────────────────────────────┤
 │  🔧 Core Systems                                            │
@@ -14,13 +46,14 @@
 │  ├── Notification System (Alerts)                           │
 │  └── Error Recovery (HotFix Generation)                     │
 └─────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 
 ## 🔒 Security & Reliability Features
 
 ### **Security Measures**
+
 - **Prompt sanitisation**: Regex-based block-list with optional whitelist
 - **File validation**: Configurable size limits with environment override
 - **Input validation**: Comprehensive sanitization across all modules
@@ -32,6 +65,7 @@
 - **Database resilience**: Connection pooling with health monitoring and retry logic
 
 ### **Reliability Features**
+
 - **Agent-level LLM timeout**: Large models = 90s (configurable per agent)
 - **Global timeouts**: Centralized configuration for all operations
 - **Resource management**: RAM pressure checks and model janitor
@@ -44,6 +78,7 @@
 ## 🔄 Development Workflow (High-Level Process)
 
 ### Phase 1: Planning & Requirements
+
 1. **Backlog Selection** → Choose feature from structured table (B-001, B-002, etc.)
 2. **Idea Input** → User describes feature/requirement (or use backlog item)
 3. **PRD Creation** → AI generates comprehensive requirements document
@@ -52,6 +87,7 @@
 6. **Status Update** → Update backlog status as work progresses
 
 ### Phase 2: AI Execution
+
 1. **State Loading** → AI loads context from `.ai_state.json` (when using 003)
 2. **Task Selection** → AI picks next executable task OR executes backlog item directly
 3. **Implementation** → Cursor Native AI writes code, Specialized Agents provide enhancements
@@ -60,6 +96,7 @@
 6. **State Update** → Progress saved, next task selected (when using 003)
 
 ### Phase 3: Quality & Deployment
+
 1. **Error Recovery** → HotFix tasks for failed validations
 2. **Human Checkpoints** → Strategic pauses for high-risk operations
 3. **Deployment** → Automated deployment with monitoring
@@ -72,7 +109,9 @@
 ### 1. Planning & Management System
 
 #### **Backlog Management Engine** (`000_backlog.md` + `100_backlog-guide.md`)
+
 #### **Extraction Pipeline** (LangExtract + n8n Integration)
+
 - **Purpose**: Machine-readable roadmap for systematic feature development
 - **Input**: Comprehensive analysis of system needs and opportunities
 - **Output**: Structured table with IDs, points, status, and metadata
@@ -87,6 +126,7 @@
   - **n8n Scrubber Workflow**: Automated score calculation and updates
 
 #### **File Organization System** (`200_naming-conventions.md`)
+
 - **Purpose**: Maintain consistent file organization and naming
 - **Features**:
   - Structured naming conventions (00-09, 100-199, 200-299, etc.)
@@ -95,12 +135,14 @@
   - Clear guidelines for contributors
 
 #### **PRD Creation Engine** (`001_create-prd.md`)
+
 - **Purpose**: Transform user ideas into structured requirements
 - **Input**: Natural language feature descriptions or backlog items
 - **Output**: Comprehensive PRD with testing strategy and acceptance criteria
 - **AI Optimization**: Includes machine-verifiable completion criteria
 
 #### **Task Generation Engine** (`002_generate-tasks.md`)
+
 - **Purpose**: Break PRDs into AI-executable tasks
 - **Features**: 
   - 2-4 hour timeboxes for efficiency
@@ -109,6 +151,7 @@
   - Machine-verifiable completion criteria
 
 #### **Process Management Engine** (`003_process-task-list.md`)
+
 - **Purpose**: Execute tasks with AI agents
 - **Features**:
   - State caching with `.ai_state.json`
@@ -117,6 +160,7 @@
   - Strategic human oversight
 
 #### **File Organization System** (`200_naming-conventions.md`)
+
 - **Purpose**: Maintain consistent file organization and naming
 - **Features**:
   - Structured naming conventions (00-09, 100-199, 200-299, etc.)
@@ -127,6 +171,7 @@
 ### **AI Scoring & Automation System**
 
 #### **Scoring Engine**
+
 - **Formula**: `(Business Value + Time Criticality + Risk Reduction + Learning Enablement) / Effort`
 - **Score Ranges**: 5.0+ (🔥), 3.0-4.9 (⭐), 1.5-2.9 (📈), <1.5 (🔧)
 - **Metadata Format**: HTML comments with JSON scoring data
@@ -134,6 +179,7 @@
 - **Fallback System**: Human priority tags when scores are missing
 
 #### **n8n Backlog Scrubber Workflow**
+
 - **Purpose**: Automate score calculation and backlog maintenance
 - **Features**:
   - Reads backlog.md file and parses scoring metadata
@@ -146,6 +192,7 @@
 ### 2. AI Execution Layer
 
 #### **v0.3.1 Ultra-Minimal Router Architecture**
+
 - **Core Agents**: IntentRouter, RetrievalAgent, CodeAgent
 - **Model Management**: 
   - Cursor Native AI (foundation - always available)
@@ -158,6 +205,7 @@
 - **Environment Variables**: POOL_MIN/POOL_MAX, MODEL_IDLE_EVICT_SECS, MAX_RAM_PRESSURE
 
 #### **Cursor Native AI Agent**
+
 - **Role**: Planning, reasoning, and human interaction
 - **Responsibilities**:
   - Parse PRDs and generate tasks
@@ -168,6 +216,7 @@
   - **Use score metadata** to inform task selection
 
 #### **Specialized Agents**
+
 - **Role**: Code implementation and technical execution
 - **Responsibilities**:
   - Write and test code
@@ -177,6 +226,7 @@
   - **Consider scoring data** for implementation priorities
 
 #### **State Management System**
+
 - **File**: `.ai_state.json`
 - **Purpose**: Maintain context across task boundaries
 - **Data**: File lists, commit hashes, test results, progress tracking
@@ -184,6 +234,7 @@
 ### 3. Core AI Systems
 
 #### **DSPy RAG System** (`dspy-rag-system/`)
+
 - **Purpose**: Intelligent document processing and question answering
 - **Architecture**: v0.3.1 Ultra-Minimal Router with progressive complexity
 - **Components**:
@@ -196,6 +247,7 @@
 - **Performance**: RAM pressure guards and model janitor for resource management
 
 #### **N8N Workflow System**
+
 - **Purpose**: Automation and integration workflows
 - **Features**:
   - Document processing automation
@@ -206,6 +258,7 @@
   - **AI-BACKLOG-META Integration**: Machine-readable command processing
 
 #### **Dashboard System** (`dashboard/`)
+
 - **Purpose**: Real-time monitoring and interaction
 - **Features**:
   - System status monitoring
@@ -220,16 +273,19 @@
 ### 4. Supporting Infrastructure
 
 #### **Database Layer**
+
 - **PostgreSQL**: Primary data storage
 - **PGVector**: Vector embeddings for similarity search
 - **Schema**: Optimized for document processing and metadata
 
 #### **File Processing System**
+
 - **Watch Folder**: Monitors for new documents
 - **Document Processor**: Extracts text and metadata
 - **Tokenizer**: Breaks documents into searchable chunks
 
 #### **Notification System**
+
 - **Purpose**: Alert users to system events
 - **Features**: Email, Slack, and custom integrations
 - **Triggers**: Processing completion, errors, system status
@@ -241,29 +297,35 @@
 ## 🧪 Testing Framework & Quality Assurance
 
 ### **Comprehensive Test Suite**
+
 The system includes 8 comprehensive test files organized in `tests/` directory:
 
 #### **Core System Tests**
+
 - **`tests/test_rag_system.py`** (18KB) - RAG system functionality
 - **`tests/test_enhanced_rag_system.py`** (19KB) - Enhanced RAG with DSPy
 - **`tests/test_vector_store.py`** (15KB) - Vector database operations
 - **`tests/test_document_processor.py`** (12KB) - Document processing pipeline
 
 #### **Utility Tests**
+
 - **`tests/test_metadata_extractor.py`** (12KB) - Metadata extraction
 - **`tests/test_tokenizer.py`** (9.5KB) - Text processing and chunking
 - **`tests/test_logger.py`** (6.7KB) - Logging and monitoring
 
 #### **Integration Tests**
+
 - **`tests/test_watch_folder.py`** (22KB) - File watching system
 
 ### **Test Organization**
+
 - **`tests/` Directory**: All test files organized in dedicated subfolder
 - **`tests/400_project-overview.md`**: Comprehensive documentation for running tests
 - **`run_tests.sh`**: Convenient test runner script with multiple options
 - **Test Categories**: Unit tests, integration tests, and system tests
 
 ### **Testing Methodology**
+
 - **Unit Tests**: Individual component testing with mocks
 - **Integration Tests**: Component interaction testing
 - **System Tests**: End-to-end workflow validation
@@ -271,6 +333,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 - **Security Tests**: Vulnerability and validation testing
 
 ### **Quality Gates**
+
 - **Code Coverage**: Minimum 80% coverage requirement
 - **Performance Benchmarks**: Response time and throughput validation
 - **Security Validation**: Input validation and access control testing
@@ -283,18 +346,21 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 ### **DSPy RAG System Architecture**
 
 #### **Enhanced RAG System** (`src/dspy_modules/enhanced_rag_system.py`)
+
 - **DSPy Integration**: Declarative programming for AI reasoning
 - **Multi-Modal Processing**: Text, metadata, and structured data
 - **Context Management**: Intelligent context selection and management
 - **Response Generation**: High-quality, contextually relevant responses
 
 #### **Document Processor** (`src/dspy_modules/document_processor.py`)
+
 - **Multi-Format Support**: PDF, DOC, TXT, CSV, and more
 - **Metadata Extraction**: Automatic categorization and tagging
 - **Content Chunking**: Intelligent text segmentation
 - **Quality Validation**: Content quality and completeness checks
 
 #### **Vector Store** (`src/dspy_modules/vector_store.py`)
+
 - **PostgreSQL + PGVector**: Scalable vector storage
 - **Similarity Search**: Efficient semantic search capabilities
 - **Index Management**: Automatic indexing and optimization
@@ -303,6 +369,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 ### **Enhanced Metadata System**
 
 #### **Metadata Extractor** (`src/utils/metadata_extractor.py`)
+
 - **Automatic Categorization**: 9 main categories with smart detection
 - **Priority Assignment**: High/Medium/Low based on content analysis
 - **Content Type Detection**: Structured data, documents, text, images
@@ -311,6 +378,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 - **Date Extraction**: Pattern-based date identification
 
 #### **Categorization System**
+
 | Category | Keywords | Priority | Use Case |
 |----------|----------|----------|----------|
 | **Pricing & Billing** | pricing, cost, billing | High | Financial documents |
@@ -326,6 +394,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 ### **Dashboard Monitoring System**
 
 #### **Real-Time Features**
+
 - **Live Statistics**: Processing stats, category breakdowns, file analytics
 - **Interactive Filtering**: Search by filename, category, tags, priority
 - **Document Cards**: Rich visual representation with metadata badges
@@ -333,6 +402,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 - **System Health**: Real-time status monitoring and alerts
 
 #### **Advanced Analytics**
+
 - **Processing Statistics**: Total documents, completion rates, error tracking
 - **Category Breakdown**: Visual representation of document distribution
 - **File Type Analysis**: Breakdown by extension and content type
@@ -340,6 +410,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 - **Recent Activity**: Documents added in last 24 hours
 
 #### **API Endpoints**
+
 - **`GET /api/documents`** - JSON list of all documents
 - **`GET /api/stats`** - Processing statistics
 - **`GET /api/metadata/<filename>`** - Metadata for specific document
@@ -348,12 +419,14 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 ### **Notification System**
 
 #### **Multi-Channel Alerts**
+
 - **Email Notifications**: Processing completion, errors, system status
 - **Slack Integration**: Real-time alerts and status updates
 - **Custom Webhooks**: Integration with external systems
 - **In-App Notifications**: Dashboard-based alert system
 
 #### **Alert Triggers**
+
 - **Processing Events**: Document completion, failures, errors
 - **System Events**: Health checks, performance issues, capacity warnings
 - **User Events**: Manual triggers, scheduled reports, status updates
@@ -367,15 +440,18 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 #### **PostgreSQL Configuration**
 ```bash
+
 # Install PostgreSQL and PGVector
+
 sudo apt-get install postgresql postgresql-contrib
 sudo apt-get install postgresql-14-pgvector  # For Ubuntu 22.04
 
 # Create database and user
+
 sudo -u postgres createdb ai_agency
 sudo -u postgres createuser danieljacobs
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ai_agency TO danieljacobs;"
-```
+```text
 
 #### **Database Schema**
 ```sql
@@ -409,74 +485,91 @@ CREATE TABLE query_logs (
     response_time FLOAT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-```
+```text
 
 ### **Environment Setup**
 
 #### **Python Environment**
 ```bash
+
 # Create virtual environment
+
 python3 -m venv venv
 source venv/bin/activate
 
 # Install dependencies
+
 pip install -r requirements-dspy.txt
 pip install -r dashboard/requirements.txt
-```
+```text
 
 #### **System Dependencies**
 ```bash
+
 # Install system packages
+
 sudo apt-get update
 sudo apt-get install -y python3-pip python3-venv postgresql postgresql-contrib
 
 # Install Python packages
+
 pip install flask psycopg2-binary dspy-ai transformers torch
-```
+```text
 
 ### **Deployment Procedures**
 
 #### **Development Setup**
 ```bash
+
 # Clone repository
+
 git clone https://github.com/TheMonk2121/ai-dev-tasks.git
 cd ai-dev-tasks
 
 # Setup DSPy system
+
 cd dspy-rag-system
 ./setup_dspy.sh
 
 # Start dashboard
+
 cd ../dashboard
 ./start_dashboard.sh
-```
+```text
 
 #### **Production Deployment**
 ```bash
+
 # Setup production environment
+
 sudo apt-get install nginx supervisor
 
 # Configure nginx for dashboard
+
 sudo nano /etc/nginx/sites-available/ai-dashboard
 
 # Setup supervisor for background processes
+
 sudo nano /etc/supervisor/conf.d/ai-processes.conf
 
 # Start services
+
 sudo systemctl restart nginx
 sudo supervisorctl reread
 sudo supervisorctl update
-```
+```text
 
 ### **System Requirements**
 
 #### **Minimum Requirements**
+
 - **CPU**: 4 cores (8+ recommended)
 - **RAM**: 8GB (16GB+ recommended)
 - **Storage**: 50GB SSD
 - **OS**: Ubuntu 22.04 LTS or macOS 12+
 
 #### **Recommended Requirements**
+
 - **CPU**: 8+ cores
 - **RAM**: 32GB
 - **Storage**: 200GB NVMe SSD
@@ -489,6 +582,7 @@ sudo supervisorctl update
 ### **File Watching System**
 
 #### **Real-Time Document Processing**
+
 - **Watch Folder**: Monitors specified directories for new files
 - **Automatic Processing**: Triggers processing pipeline on file detection
 - **Multi-Format Support**: Handles PDF, DOC, TXT, CSV, and more
@@ -496,7 +590,9 @@ sudo supervisorctl update
 
 #### **Processing Pipeline**
 ```python
+
 # File watching workflow
+
 1. File Detection → Watch folder detects new file
 2. Validation → Check file format and size
 3. Processing → Extract text and metadata
@@ -504,11 +600,13 @@ sudo supervisorctl update
 5. Embedding → Generate vector embeddings
 6. Storage → Save to PostgreSQL + PGVector
 7. Notification → Alert completion status
-```
+
+```text
 
 ### **Enhanced Metadata Extraction**
 
 #### **Intelligent Categorization**
+
 - **Pattern Recognition**: Filename and content pattern analysis
 - **Keyword Detection**: Business-specific keyword identification
 - **Context Analysis**: Content context and relationship detection
@@ -526,11 +624,12 @@ sudo supervisorctl update
   "extracted_date": "2024-01-15",
   "processing_status": "completed"
 }
-```
+```text
 
 ### **Cursor IDE Integration**
 
 #### **Development Workflow**
+
 - **PRD Creation**: Use `001_create-prd.md` in Cursor
 - **Task Generation**: Use `002_generate-tasks.md` for implementation
 - **Task Execution**: Use `003_process-task-list.md` for AI-driven development
@@ -549,17 +648,19 @@ sudo supervisorctl update
   ],
   "defaultModel": "cursor-native-ai"
 }
-```
+```text
 
 ### **Performance Optimization**
 
 #### **Caching Strategies**
+
 - **State Caching**: `.ai_state.json` for context persistence
 - **Vector Caching**: Redis for frequently accessed embeddings
 - **Result Caching**: Memoization for repeated queries
 - **Connection Pooling**: Database connection optimization
 
 #### **Scalability Features**
+
 - **Horizontal Scaling**: Multiple processing nodes
 - **Load Balancing**: Distributed processing across nodes
 - **Queue Management**: Redis-based job queuing
@@ -578,21 +679,25 @@ sudo supervisorctl update
   "current_task": "T-5",
   "completed_tasks": ["T-1", "T-2", "T-3", "T-4"]
 }
-```
+```text
 
 ### Task Template
 ```markdown
+
 ### T-<number> <Task Name>
+
 **Priority**: Critical | High | Medium | Low
 **Time**: <2-4 hours>
 **Depends on**: [T-1, T-2] or "None"
 
 **Do**:
+
 1. <specific step 1>
 2. <specific step 2>
 3. <specific step 3>
 
 **Done when**:
+
 - <testable outcome 1>
 - <testable outcome 2>
 - <testable outcome 3>
@@ -600,9 +705,10 @@ sudo supervisorctl update
 **Auto-Advance**: yes | no
 **🛑 Pause After**: yes | no
 **When Ready Prompt**: "<brief question for human review>"
-```
+```text
 
 ### Error Recovery Process
+
 1. **Detection**: Task validation fails
 2. **HotFix Generation**: Create structured fix task
 3. **Implementation**: AI implements fix with regression test
@@ -614,21 +720,25 @@ sudo supervisorctl update
 ## 🎯 Use Cases & Applications
 
 ### 1. Feature Development
+
 - **Input**: "I want to add user authentication"
 - **Process**: PRD → Tasks → AI Implementation → Deployment
 - **Output**: Working authentication system
 
 ### 2. System Integration
+
 - **Input**: "Connect our app to Slack notifications"
 - **Process**: PRD → Tasks → AI Implementation → Testing
 - **Output**: Automated Slack integration
 
 ### 3. Document Processing
+
 - **Input**: "Process PDFs and answer questions about them"
 - **Process**: PRD → Tasks → AI Implementation → RAG System
 - **Output**: Intelligent document Q&A system
 
 ### 4. Workflow Automation
+
 - **Input**: "Automate our customer onboarding process"
 - **Process**: PRD → Tasks → AI Implementation → N8N Workflows
 - **Output**: Automated customer onboarding
@@ -638,6 +748,7 @@ sudo supervisorctl update
 ## 🚀 Getting Started
 
 ### For New Users
+
 1. **Clone Repository**: `git clone https://github.com/TheMonk2121/ai-dev-tasks.git`
 2. **Read README**: Understand the basic workflow
 3. **Review Backlog**: Check `000_backlog.md` for high-impact features (see `100_backlog-guide.md` for usage)
@@ -647,6 +758,7 @@ sudo supervisorctl update
 7. **Review Organization**: Check `200_naming-conventions.md` to understand file structure
 
 ### For Advanced Users
+
 1. **Review Backlog**: Check `000_backlog.md` for systematic development planning (see `100_backlog-guide.md` for usage)
 2. **Explore DSPy System**: Check `dspy-rag-system/` for document processing
 3. **Review N8N Workflows**: Understand automation capabilities
@@ -657,6 +769,7 @@ sudo supervisorctl update
 8. **Review Naming Conventions**: Check `200_naming-conventions.md` for file organization
 
 ### For System Administrators
+
 1. **Setup Infrastructure**: PostgreSQL, Python environment
 2. **Configure AI Agents**: Cursor Native AI, Specialized Agents setup
 3. **Deploy Dashboard**: Monitor system performance
@@ -667,12 +780,14 @@ sudo supervisorctl update
 ## 🔍 System Monitoring
 
 ### Key Metrics
+
 - **Task Completion Rate**: Percentage of tasks completed successfully
 - **Error Recovery Time**: Time from error detection to HotFix completion
 - **Human Intervention Rate**: Frequency of required human checkpoints
 - **System Performance**: Response times and resource usage
 
 ### Monitoring Tools
+
 - **Dashboard**: Real-time system status
 - **Logs**: Detailed execution tracking
 - **Notifications**: Alert system for issues
@@ -687,6 +802,7 @@ sudo supervisorctl update
 ## 🔮 Future Enhancements
 
 ### Planned Features
+
 - **Multi-Agent Coordination**: Enhanced collaboration between AI agents
 - **Advanced Error Recovery**: Predictive error detection and prevention
 - **Performance Optimization**: Improved state management and caching
@@ -695,6 +811,7 @@ sudo supervisorctl update
 - **Automated Backlog Management**: Self-organizing backlog with AI agents
 
 ### Research Areas
+
 - **Agent Specialization**: Domain-specific AI agents
 - **Learning Systems**: Continuous improvement from execution patterns
 - **Automated Testing**: Enhanced test generation and validation
@@ -705,15 +822,18 @@ sudo supervisorctl update
 ## 📚 **Documentation References**
 
 ### **Core Architecture**
+
 - **`docs/ARCHITECTURE.md`**: Comprehensive v0.3.1 architecture documentation
 - **`docs/CONFIG_REFERENCE.md`**: Complete configuration reference and schema
 
 ### **Implementation Guides**
+
 - **`201_model-configuration.md`**: AI model setup and configuration
 - **`400_file-analysis-guide.md`**: Systematic file analysis methodology
 - **`103_yi-coder-integration.md`**: External model integration guide (legacy)
 
 ### **System Documentation**
+
 - **`104_dspy-development-context.md`**: DSPy development context and status
 - **`200_naming-conventions.md`**: File organization and naming conventions
 

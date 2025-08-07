@@ -1,7 +1,36 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
+<!-- MODULE_REFERENCE: 000_backlog.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
+
+# Project Overview
+
+## 🔎 TL;DR
+
+- What: Purpose, quick start, and core flow for this repo
+- Who: New sessions, quick orientation, human readers
+- Flow: Memory → Backlog → System Overview → Topic Guide
+- Next: Use Quick Start and the mini map below
+
+## ⚡ Quick Start
+
+1) Read `100_cursor-memory-context.md` (current state)
+2) Check `000_backlog.md` (priorities)
+3) Scan `400_system-overview.md` (architecture)
+4) Jump to topic guide (testing/deploy/integration/etc.)
+
+## 🗺️ Mini Map
+
+| Topic | File |
+|---|---|
+| System overview | 400_system-overview.md |
+| Testing | 400_testing-strategy-guide.md |
+| Deployment | 400_deployment-environment-guide.md |
+| Integration | 400_integration-patterns-guide.md |
+| Migration | 400_migration-upgrade-guide.md |
+| Performance | 400_performance-optimization-guide.md |
+| Security | 400_security-best-practices-guide.md |
+| Setup | 202_setup-requirements.md |
 
 - `CLARIFIER=0` - Disable ClarifierAgent (default)
 - `POOL_MIN=1` - Minimum database connections
@@ -15,6 +44,7 @@
 - `READY_CHECK_TIMEOUT=10` - Readiness check timeout in seconds
 
 **Timeout Configuration:**
+
 - `DB_CONNECT_TIMEOUT=10` - Database connection timeout (seconds)
 - `DB_READ_TIMEOUT=30` - Database read timeout (seconds)
 - `DB_WRITE_TIMEOUT=60` - Database write timeout (seconds)
@@ -30,6 +60,7 @@
 - `STARTUP_TIMEOUT=60` - System startup timeout (seconds)
 
 **Security Configuration:**
+
 - `SECURITY_ENABLED=true` - Enable security scanning
 - `SECURITY_SCAN_ON_STARTUP=true` - Run security scan on startup
 - `SECURITY_VULNERABILITY_THRESHOLD=medium` - Vulnerability threshold
@@ -41,12 +72,14 @@
 - `SECURITY_MAX_FILE_MB=100` - Raise default 50 MB cap (the execution engine)
 
 **Production Monitoring Configuration:**
+
 - `ENVIRONMENT=production` - Set environment (development, staging, production)
 - `OTLP_ENDPOINT=http://localhost:4317` - OpenTelemetry endpoint (the execution engine)
 - `MONITORING_INTERVAL=30` - Monitoring cycle interval in seconds
 - `HEALTH_CHECK_TIMEOUT=5` - Health check timeout in seconds
 
 **Database Resilience Configuration:**
+
 - `POSTGRES_DSN=postgresql://user:pass@host:port/db` - Database connection string
 - `DB_MIN_CONNECTIONS=1` - Minimum database connections in pool
 - `DB_MAX_CONNECTIONS=10` - Maximum database connections in pool
@@ -65,46 +98,61 @@ ENABLED_AGENTS=IntentRouter,RetrievalAgent make run-local
 
 **Health & Metrics:**
 ```bash
+
 # Health check
+
 curl http://localhost:5000/health
 
 # Metrics endpoint
+
 curl http://localhost:9100/metrics
 
 # Readiness check
+
 curl http://localhost:5000/ready
 
 # Production monitoring data
+
 curl http://localhost:5000/api/monitoring
 
 # Dependencies health check
+
 curl http://localhost:5000/api/health/dependencies
 
 # Database health status
+
 curl http://localhost:5000/api/database/health
 ```
 
 **Configuration Validation:**
 ```bash
+
 # Validate system configuration
+
 python3 scripts/validate_config.py
 
 # Check configuration syntax
+
 python3 -c "import json; json.load(open('config/system.json'))"
 ```
 
 **Security Scanning:**
 ```bash
+
 # Run comprehensive security scan
+
 python3 scripts/security_scan.py
 
 # Run security scan with failure on vulnerabilities
+
 python3 scripts/security_scan.py --fail-on-vulnerabilities
 
 # Run security scan with verbose output
+
 python3 scripts/security_scan.py --verbose
 
 # Run individual security tools
+
 python3 -m bandit -r src/
 python3 -m safety check
 python3 -m pip_audit
@@ -201,6 +249,7 @@ To ensure methodical progress and allow for verification, we'll use `003_process
 ### 5️⃣ AI-Optimized Execution with Strategic Checkpoints ✅
 
 The AI system will automatically:
+
 - **Execute tasks efficiently** with state caching and auto-advance
 - **Handle errors gracefully** with automatic HotFix task generation
 - **Pause strategically** only for high-risk operations (deployments, database changes)
@@ -226,36 +275,43 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 ## 🗂️ Files in this Repository
 
 ### **Core Workflow Files:**
+
 * **`000_backlog.md`**: Prioritized list of future enhancements and features for systematic development planning with AI scoring system.
 * **`001_create-prd.md`**: Guides the AI in generating a Product Requirement Document for your feature.
 * **`002_generate-tasks.md`**: Takes the PRD markdown file as input and helps the AI break it down into a detailed, AI-optimized implementation task list.
 * **`003_process-task-list.md`**: Instructs AI agents on how to process the generated task list with state management, auto-advance, and HotFix generation (the execution engine).
 
 ### **Automation & Tools:**
+
 * **`100_backlog-automation.md`**: Documents the AI-BACKLOG-META system for automated backlog management and scoring.
 
 ### **Configuration & Setup:**
+
 * **`200_naming-conventions.md`**: Explains the file naming conventions and organization structure.
 * **`201_model-configuration.md`**: Documents the specific AI model setup (Cursor Native AI + Specialized Agents).
 
 ### **System Documentation:**
+
 * **`400_project-overview.md`**: This file - comprehensive guide to the AI Dev Tasks workflow.
 * **`400_system-overview_advanced_features.md`**: Detailed technical overview of the entire AI development ecosystem.
 
 ## 🎯 Quick Reference
 
 ### **Score Ranges for Prioritization:**
+
 - **5.0+**: Critical priority (🔥) - Foundation features, security, core functionality
 - **3.0-4.9**: High priority (⭐) - UX improvements, productivity enhancements
 - **1.5-2.9**: Medium priority (📈) - Integration features, automation
 - **<1.5**: Low priority (🔧) - Technical debt, research, advanced capabilities
 
 ### **Effort Points:**
+
 - **1-3 points**: Quick wins, low complexity
 - **5 points**: Moderate complexity, significant value
 - **8-13 points**: Complex features, high effort
 
 ### **AI Agent Instructions:**
+
 - Parse `<!--score_total: X.X-->` comments for prioritization
 - Use scores when available, fall back to human priority tags
 - Consider dependencies before starting any item
@@ -263,6 +319,7 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 ## 🌟 Benefits
 
 ### Systematic Development
+
 - **Prioritized Backlog** - Structured roadmap for feature development
 - **Impact-Based Selection** - Choose features based on user value and effort
 - **Consistent Workflow** - Standardized PRD → Tasks → Execution process
@@ -270,6 +327,7 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 - **Data-Driven Decisions** - AI scoring system for objective prioritization
 
 ### AI-Optimized Efficiency
+
 - **State Caching** - AI maintains context across tasks without reloading
 - **Auto-Advance** - Minimal human intervention for routine tasks
 - **HotFix Generation** - Automatic error recovery with structured fix tasks
@@ -277,12 +335,14 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 - **Score-Based Prioritization** - AI agents use scoring data for optimal task selection
 
 ### Quality Assurance
+
 - **Machine-Verifiable** - All completion criteria are automated
 - **Regression Testing** - HotFixes include tests to prevent recurrence
 - **Progress Tracking** - Clear status indicators for oversight
 - **Error Recovery** - Structured approach to handling failures
 
 ### Safety & Control
+
 - **Strategic Checkpoints** - Human review for high-risk operations
 - **Safety Rules** - Clear guidelines for when to pause
 - **Error Limits** - Stop execution after consecutive failures
