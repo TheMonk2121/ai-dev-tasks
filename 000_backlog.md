@@ -7,6 +7,7 @@ A prioritized list of future enhancements and features for the AI development ec
 **🤖 Execution Guide**: Items can be executed directly by AI using `003_process-task-list.md` as the execution engine. Items requiring external credentials, business decisions, or deployment should be marked with `<!-- human_required: true -->`.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
 <!-- AUTOMATION_FILES: 100_backlog-automation.md, 100_backlog-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Current priorities and development roadmap for AI context -->

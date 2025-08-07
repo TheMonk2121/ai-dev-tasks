@@ -6,6 +6,7 @@ Auto‑invoked only when `<!-- default_executor: 003_process-task-list.md -->` i
 Guidelines for executing task lists generated from PRDs using AI agents (Cursor Native AI + Specialized Agents).
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md -->
 <!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Core workflow for AI task execution -->

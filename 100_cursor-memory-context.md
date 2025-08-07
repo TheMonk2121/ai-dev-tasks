@@ -1,6 +1,7 @@
 # 🧠 Cursor Memory Context
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- MEMORY_CONTEXT: HIGH - This file serves as the primary memory scaffold for Cursor AI -->

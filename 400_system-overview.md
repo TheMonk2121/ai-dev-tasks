@@ -1,6 +1,7 @@
 # AI Development Ecosystem - System Overview
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 104_dspy-development-context.md -->
 <!-- SYSTEM_FILES: dspy-rag-system/400_project-overview.md, dspy-rag-system/docs/CURRENT_STATUS.md -->
 <!-- MEMORY_CONTEXT: HIGH - Technical architecture and system overview for AI context -->
