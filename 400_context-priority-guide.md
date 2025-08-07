@@ -1,7 +1,31 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
-<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- MODULE_REFERENCE: 400_project-overview.md -->
+<!-- MODULE_REFERENCE: 000_backlog.md -->
+
+# Context Priority Guide
+
+<!-- ANCHOR: overview -->
+
+### Map of Maps (Top Navigation)
+
+| Topic | File | Anchor | When to read | Why |
+|---|---|---|---|---|
+| System overview | 400_system-overview.md | — | After memory + backlog | Architecture mental model |
+| Backlog & priorities | 000_backlog.md | — | Always for work selection | Current focus and dependencies |
+| Testing | 400_testing-strategy-guide.md | — | Before writing tests | Strategy, pyramid, quality gates |
+| Deployment | 400_deployment-environment-guide.md | — | Before shipping | Procedures, rollback, monitoring |
+| Migration | 400_migration-upgrade-guide.md | — | Before/after breaking changes | Pre-checks, validation, rollback |
+| Integration | 400_integration-patterns-guide.md | — | Before integrating components | Patterns, data flow, error handling |
+| Performance | 400_performance-optimization-guide.md | — | Before/after perf changes | Metrics, tuning, troubleshooting |
+| Security | 400_security-best-practices-guide.md | — | Before risky changes | Threat model, validation, response |
+| Setup | 202_setup-requirements.md | — | New env or machine | One-stop environment setup |
+| Model config | 201_model-configuration.md | — | Model/runtime changes | Clear, reproducible config |
+| DSPy context | 104_dspy-development-context.md | — | Deep implementation | Reasoning, modules, guard-rails |
+
+### Critical Path
+
+1) 100_cursor-memory-context.md → 2) 000_backlog.md → 3) 400_system-overview.md → 4) topic guide (testing/deploy/etc.)
 
 ### **AI File Analysis Strategy**
 
@@ -57,11 +81,13 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
 #### **🔧 Script and Code Analysis Strategy**
 
 **Scripts (Read When Relevant):**
+
 - **`scripts/repo_maintenance.py`** - When discussing repository maintenance, file organization, or automation
 - **`scripts/update_cursor_memory.py`** - When discussing memory context updates or automation
 - **`dspy-rag-system/`** files - When discussing core AI system, RAG capabilities, or technical implementation
 
 **Code Analysis Pattern:**
+
 1. **Start with documentation** to understand system architecture
 2. **Read scripts only when** task requires implementation details
 3. **Focus on specific script** relevant to current task
@@ -70,16 +96,19 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
 #### ** Reading Pattern Efficiency**
 
 **First 2-3 minutes:**
+
 - Read `100_cursor-memory-context.md` for instant context
 - Check `000_backlog.md` for current priorities
 - Scan `400_system-overview.md` for technical context
 
 **As needed during conversation:**
+
 - Reference `400_context-priority-guide.md` when discussing file organization
 - Check specific scripts when implementation details are needed
 - Use `200_naming-conventions.md` when discussing file naming
 
 **For complex tasks:**
+
 - Read relevant workflow files (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
 - Check specific domain files based on task type
 - Reference completion summaries for historical context
@@ -100,6 +129,7 @@ When determining where to place new documentation content, follow this **structu
 #### ** Step 1: Assess the Content Type and Scope**
 
 **Analyze what the content is:**
+
 - **System-wide concept** → High-level documentation (400-499)
 - **Process or workflow** → Workflow documentation (000-099, 100-199)
 - **Configuration or setup** → Setup documentation (200-299)
@@ -107,6 +137,7 @@ When determining where to place new documentation content, follow this **structu
 - **Memory or context** → Memory documentation (100-199)
 
 **Determine the audience:**
+
 - **Everyone needs to know** → Essential files (000-099, 400-499)
 - **Specific workflows need** → Workflow files (100-199)
 - **Setup/configuration needs** → Setup files (200-299)
@@ -115,31 +146,37 @@ When determining where to place new documentation content, follow this **structu
 #### ** Step 2: Choose Primary Location Based on Content**
 
 **For system-wide concepts:**
+
 - **`400_context-priority-guide.md`** - File organization, cognitive scaffolding, AI analysis strategies
-- **`400_system-overview_advanced_features.md`** - Technical architecture, system relationships
+- **`400_system-overview.md`** - Technical architecture, system relationships
 - **`400_project-overview.md`** - High-level project purpose and workflow
 
 **For processes and workflows:**
+
 - **`200_naming-conventions.md`** - File naming, generation processes, conventions
 - **`100_backlog-guide.md`** - Backlog management processes
 - **`001_create-prd.md`** - PRD creation workflows
 
 **For memory and context:**
+
 - **`100_cursor-memory-context.md`** - Quick reference summaries
 - **`400_context-priority-guide.md`** - Detailed explanations
 
 **For configuration and setup:**
+
 - **`201_model-configuration.md`** - Model setup processes
 - **`202_setup-requirements.md`** - Environment setup
 
 #### ** Step 3: Determine if Multiple Locations Are Needed**
 
 **Ask these questions:**
+
 - **Is this a core concept that affects multiple areas?** → Multiple locations
 - **Is this a specific process for one workflow?** → Single location
 - **Is this a quick reference that should be easily accessible?** → Memory context + detailed location
 
 **Examples of multi-location content:**
+
 - **File naming system** → `200_naming-conventions.md` (detailed) + `100_cursor-memory-context.md` (quick reference)
 - **AI analysis strategy** → `400_context-priority-guide.md` (detailed) + `100_cursor-memory-context.md` (quick reference)
 - **Documentation strategy** → `400_context-priority-guide.md` (detailed) + `100_cursor-memory-context.md` (summary)
@@ -147,12 +184,14 @@ When determining where to place new documentation content, follow this **structu
 #### ** Step 4: Consider the Reading Pattern**
 
 **Think about when someone would need this information:**
+
 - **Immediate context** → Memory context file (read first)
 - **When working on specific tasks** → Workflow files (read when relevant)
 - **When setting up or configuring** → Setup files (read when needed)
 - **When understanding the system** → Overview files (read for big picture)
 
 **Consider the cognitive scaffolding:**
+
 - **High priority** → Files read first (000-099, 400-499)
 - **Medium priority** → Files read when relevant (100-199, 200-299)
 - **Lower priority** → Files read when needed (500+)
@@ -160,6 +199,7 @@ When determining where to place new documentation content, follow this **structu
 #### ** Step 5: Add Cross-References for Discovery**
 
 **Ensure the content is discoverable:**
+
 - **Add cross-references** between related files
 - **Update context priority guide** if it's a new concept
 - **Consider AI rehydration** - will Cursor AI need this for context?
@@ -169,24 +209,29 @@ When determining where to place new documentation content, follow this **structu
 **Scenario**: Need to document a new file naming system explanation
 
 **Step 1: Content Analysis**
+
 - **Type**: Process/workflow (file naming system)
 - **Scope**: System-wide (affects all file creation)
 - **Audience**: Everyone creating files
 
 **Step 2: Primary Location**
+
 - **`200_naming-conventions.md`** - Dedicated file for naming conventions
 - **`100_cursor-memory-context.md`** - Quick reference for instant access
 
 **Step 3: Multi-location Decision**
+
 - ✅ **Multiple locations needed** - Core concept that affects multiple areas
 - **Detailed explanation** in `200_naming-conventions.md`
 - **Quick reference** in `100_cursor-memory-context.md`
 
 **Step 4: Reading Pattern**
+
 - **Memory context** - Read first for instant understanding
 - **Naming conventions** - Read when working on file organization
 
 **Step 5: Cross-References**
+
 - **Cross-reference** between the two files
 - **Update context priority guide** to include the new content
 
@@ -203,57 +248,69 @@ When determining where to place new documentation content, follow this **structu
 The key insight is that **good documentation placement follows the natural way people think about and use information**, while also considering how AI systems like Cursor will consume and navigate the content.
 
 ### **Context Sharing Protocol**
+
 When sharing context with other AI models, use this structured approach:
 
 #### **Level 1: Essential Context (5 files)**
-```
+```text
+
 1. 400_project-overview.md - Project overview and workflow
-2. 400_system-overview_advanced_features.md - Technical architecture
+2. 400_system-overview.md - Technical architecture
 3. 000_backlog.md - Current priorities and status
 4. dspy-rag-system/400_project-overview.md - Core system status
 5. docs/400_project-overview.md - Three-lens documentation guide
+
 ```
 
 #### **Level 2: Implementation Context (10 files)**
+
 Add these for implementation tasks:
-```
+```text
+
 6. 104_dspy-development-context.md - Deep technical context
 7. 202_setup-requirements.md - Environment setup
 8. 201_model-configuration.md - AI model configuration
 9. 100_backlog-automation.md - Automation patterns
 10. dspy-rag-system/docs/CURRENT_STATUS.md - Real-time status
+
 ```
 
 #### **Level 3: Domain Context (15 files)**
+
 Add these for domain-specific tasks:
-```
+```text
 11-15. Tier 3 files (Core modules & agent logic)
 16-20. Tier 4 files (Config & environment)
 21-25. Tier 5 files (Domain assets)
 ```
 
 ### **Cross-Reference System**
+
 Use these reference patterns in other documents:
 
 #### **In PRDs and Task Lists:**
 ```markdown
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
 ```
 
 #### **In Code Comments:**
 ```python
+
 # CONTEXT: See 400_context-priority-guide.md for file organization
-# ESSENTIAL: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md
+
+# ESSENTIAL: 400_project-overview.md, 400_system-overview.md, 000_backlog.md
+
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
+
 # DOMAIN: 100_backlog-guide.md, CURSOR_NATIVE_AI_STRATEGY.md
 ```
 
 #### **In Documentation:**
 ```markdown
 > **Context Reference**: See `400_context-priority-guide.md` for complete file organization
-> **Essential Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
+> **Essential Files**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 > **Domain Files**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
 ```
@@ -261,36 +318,42 @@ Use these reference patterns in other documents:
 ## Priority Tiers (Macro → Micro)
 
 ### **Tier 1: Top-level Architecture & Purpose**
+
 *Files that give a 5-second mental map of the whole stack*
 
 | File | Purpose | Why First? | Cross-Reference |
 |------|---------|-------------|-----------------|
 
 ### **Tier 2: Data-flow & Orchestration Specs**
+
 *Files showing how components talk to each other*
 
 | File | Purpose | Why Critical? | Cross-Reference |
 |------|---------|---------------|-----------------|
 
 ### **Tier 3: Core Modules & Agent Logic**
+
 *Files explaining the brains of the operation*
 
 | File | Purpose | Why Essential? | Cross-Reference |
 |------|---------|----------------|-----------------|
 
 ### **Tier 4: Config & Environment**
+
 *Files for reproducing or mutating the system*
 
 | File | Purpose | Why Important? | Cross-Reference |
 |------|---------|----------------|-----------------|
 
 ### **Tier 5: Domain Assets**
+
 *Files needed for high-quality generation after architecture is understood*
 
 | File | Purpose | Why Valuable? | Cross-Reference |
 |------|---------|---------------|-----------------|
 
 ### **Tier 6: Reference & Edge Cases**
+
 *Files valuable for fine-tuning or debugging*
 
 | File | Purpose | Why Useful? | Cross-Reference |
@@ -301,51 +364,61 @@ Use these reference patterns in other documents:
 When rehydrating an AI model's memory or sharing context with other models, start with these **top 10 files** for maximum context efficiency:
 
 ### **1. `400_project-overview.md`** 
+
 - **Purpose**: 5-second mental map of the entire project
 - **Key Info**: AI development workflow, quick start, core concepts
 - **When to Use**: First file to read for any new context
 
-### **2. `400_system-overview_advanced_features.md`**
+### **2. `400_system-overview.md`**
+
 - **Purpose**: Technical architecture overview
 - **Key Info**: System components, security features, reliability measures
 - **When to Use**: Understanding the complete technical stack
 
 ### **3. `000_backlog.md`**
+
 - **Purpose**: Current priorities and roadmap
 - **Key Info**: Active tasks, completed items, dependencies
 - **When to Use**: Understanding what's being built and what's done
 
 ### **4. `dspy-rag-system/400_project-overview.md`**
+
 - **Purpose**: Core system status and features
 - **Key Info**: DSPy RAG system capabilities, current features
 - **When to Use**: Understanding the main AI system
 
 ### **5. `docs/ARCHITECTURE.md`**
+
 - **Purpose**: DSPy implementation details
 - **Key Info**: Router architecture, modules, chains, agent catalog
 - **When to Use**: Deep technical understanding of AI system
 
 ### **6. `104_dspy-development-context.md`**
+
 - **Purpose**: Deep technical context
 - **Key Info**: Research analysis, current architecture, critical fixes
 - **When to Use**: Understanding the AI reasoning system
 
 ### **7. `202_setup-requirements.md`**
+
 - **Purpose**: Environment setup requirements
 - **Key Info**: Manual setup items, dependencies, configuration
 - **When to Use**: Reproducing or modifying the system
 
 ### **8. `201_model-configuration.md`**
+
 - **Purpose**: AI model configuration
 - **Key Info**: Mistral, Yi-Coder setup, model parameters
 - **When to Use**: Understanding AI model setup and capabilities
 
 ### **9. `100_backlog-automation.md`**
+
 - **Purpose**: Orchestration patterns
 - **Key Info**: AI-BACKLOG-META system, n8n workflows
 - **When to Use**: Understanding automated processes
 
 ### **10. `dspy-rag-system/docs/CURRENT_STATUS.md`**
+
 - **Purpose**: Real-time system state
 - **Key Info**: Working features, operational status
 - **When to Use**: Understanding current system capabilities
@@ -353,17 +426,20 @@ When rehydrating an AI model's memory or sharing context with other models, star
 ## **Usage Guidelines**
 
 ### **For Memory Rehydration**
+
 1. Start with Tier 1 files (README, SYSTEM_OVERVIEW)
 2. Move to Tier 2 for data flow understanding
 3. Reference Tier 3 for specific implementation questions
 4. Use Tier 4-6 as needed for detailed context
 
 ### **For Context Sharing**
+
 1. Share the top 10 essential files first
 2. Add specific files based on the task at hand
 3. Include relevant Tier 5-6 files for domain-specific questions
 
 ### **For Problem Solving**
+
 1. Check `000_backlog.md` for current priorities
 2. Review relevant Tier 3 files for implementation details
 3. Reference Tier 6 files for debugging context
@@ -372,26 +448,31 @@ When rehydrating an AI model's memory or sharing context with other models, star
 ## **File Categories by Use Case**
 
 ### **Architecture Understanding**
+
 - Tier 1 files
 - `docs/ARCHITECTURE.md`
 - `104_dspy-development-context.md`
 
 ### **Current Development Status**
+
 - `000_backlog.md`
 - `dspy-rag-system/docs/CURRENT_STATUS.md`
 - `dspy-rag-system/400_project-overview.md`
 
 ### **Implementation Details**
+
 - Tier 3 files
 - `dspy-rag-system/src/` directory
 - `tests/` directory
 
 ### **Environment Setup**
+
 - `202_setup-requirements.md`
 - `201_model-configuration.md`
 - `docs/CONFIG_REFERENCE.md`
 
 ### **Process Understanding**
+
 - `100_backlog-automation.md`
 - `001_create-prd.md`
 - `002_generate-tasks.md`
@@ -401,14 +482,15 @@ When rehydrating an AI model's memory or sharing context with other models, star
 ## **Memory Scaffolding Integration**
 
 ### **Cross-Reference Implementation**
+
 To integrate this guide with other documents, add these references:
 
 #### **In 400_project-overview.md:**
 ```markdown
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
 ```
 
-#### **In 400_system-overview_advanced_features.md:**
+#### **In 400_system-overview.md:**
 ```markdown
 <!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 104_dspy-development-context.md -->
 ```
@@ -419,20 +501,22 @@ To integrate this guide with other documents, add these references:
 ```
 
 ### **AI Model Context Sharing**
+
 When sharing context with other AI models, use this structured approach:
 
 #### **Quick Context (5 files):**
-```
+```text
 400_context-priority-guide.md
 400_project-overview.md
-400_system-overview_advanced_features.md
+400_system-overview.md
 000_backlog.md
 dspy-rag-system/400_project-overview.md
 ```
 
 #### **Full Context (15 files):**
+
 Add these to the quick context:
-```
+```text
 docs/ARCHITECTURE.md
 104_dspy-development-context.md
 202_setup-requirements.md
@@ -446,6 +530,7 @@ dspy-rag-system/docs/CURRENT_STATUS.md
 ```
 
 #### **Domain-Specific Context (20+ files):**
+
 Add relevant Tier 3-6 files based on the specific task or domain.
 
 ## **Maintenance Notes**
