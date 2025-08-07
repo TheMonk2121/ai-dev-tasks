@@ -135,6 +135,36 @@ A prioritized list of future enhancements and features for the AI development ec
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-052-a"]}-->
 <!--score_total: 8.0-->
 
+| B‑052‑e | Auto-Push Prompt for Repo Maintenance | 🔧  | 1        | todo   | Add interactive prompt to push changes to GitHub after maintenance | Interactive Prompt + Git Status Check + User Confirmation | B-052-a Safety & Lint Tests |
+<!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:["B-052-a"]}-->
+<!--score_total: 9.0-->
+
+| B‑052‑f | Enhanced Repository Maintenance Safety System | 🔥  | 3.5      | todo   | Implement comprehensive safety system to prevent critical file archiving | Reference Tracking + Critical File Protection + Git Hooks + Recovery | B-052-a Safety & Lint Tests |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:3.5, deps:["B-052-a"]}-->
+<!--score_total: 5.1-->
+<!--progress: Consensus reached on multi-layer safety approach with local-first implementation-->
+
+| B‑060 | Documentation Coherence Validation System | 🔥  | 2        | todo   | Implement lightweight doc-linter with Cursor AI semantic checking | Local Pre-commit Hooks + Cursor AI + Reference Validation | B-052-a Safety & Lint Tests |
+<!--score: {bv:5, tc:4, rr:4, le:4, effort:2, deps:["B-052-a"]}-->
+<!--score_total: 5.3-->
+<!--progress: Consensus reached on AI-enhanced validation with local-first implementation-->
+
+| B‑061 | Memory Context Auto-Update Helper | 🔧  | 1        | todo   | Create script to update memory context from backlog with fenced sections | Backlog → Memory Helper + Fenced Sections + Dry-run | B-060 Documentation Coherence Validation System |
+<!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:["B-060"]}-->
+<!--score_total: 9.0-->
+
+| B‑062 | Context Priority Guide Auto-Generation | 🔧  | 0.5      | todo   | Create regen_guide.py to auto-generate context priority guide from file headers | Guide Generation + Cross-Reference Aggregation + Tier Lists | B-060 Documentation Coherence Validation System |
+<!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-060"]}-->
+<!--score_total: 8.0-->
+
+| B‑063 | Documentation Recovery & Rollback System | 🔧  | 1        | todo   | Implement rollback_doc.sh and git snapshot system for doc recovery | Git Snapshots + Rollback Script + Dashboard Integration | B-060 Documentation Coherence Validation System |
+<!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:["B-060"]}-->
+<!--score_total: 9.0-->
+
+| B‑064 | Naming Convention Category Table | 🔧  | 0.5      | todo   | Add category table to 200_naming-conventions.md clarifying current buckets | Category Documentation + Prefix Clarification + No Mass Renaming | B-060 Documentation Coherence Validation System |
+<!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-060"]}-->
+<!--score_total: 8.0-->
+
 ---
 
 | B‑014 | Agent Specialization Framework              | 🔧  | 13       | todo   | Enable domain-specific AI capabilities | Agent framework + training | AI system |
@@ -280,6 +310,6 @@ timestamp_updates: |
 
 ---
 
-*Previously Updated: 2024-08-07 04:30*
-*Last Updated: 2024-08-07 05:00*
+*Previously Updated: 2024-08-07 05:30*
+*Last Updated: 2024-08-07 05:45*
 *Next Review: [Monthly Review Cycle]* 
