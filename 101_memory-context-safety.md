@@ -1,9 +1,12 @@
 # 🚨 Memory Context Safety - Critical Requirements
 
+> Deprecation Notice: This file is superseded by sections in `100_cursor-memory-context.md`.
+> See: TL;DR, Always-On Critical Rules, and Safety Requirements.
+
 > **Strategic Purpose**: Comprehensive safety requirements and file analysis guidelines for all AI operations in the development ecosystem.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 <!-- AI_CONSTITUTION_REFERENCE: 400_ai-constitution.md -->
 <!-- PARENT_MODULE: 100_cursor-memory-context.md -->
 <!-- MEMORY_CONTEXT: HIGH - Critical safety requirements for all AI operations -->

@@ -1,9 +1,11 @@
 # 📋 Memory Context State - Current Project Status
 
+> Deprecation Notice: This content is summarized in `100_cursor-memory-context.md` under Current Project State and Current Priorities. Prefer that file.
+
 > **Strategic Purpose**: Current project state, priorities, and infrastructure status for the AI development ecosystem.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- PARENT_MODULE: 100_cursor-memory-context.md -->
 <!-- MEMORY_CONTEXT: HIGH - Current project state and priorities -->

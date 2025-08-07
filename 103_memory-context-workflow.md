@@ -1,9 +1,11 @@
 # 🔄 Memory Context Workflow - Development Process
 
+> Deprecation Notice: This content is covered by `100_cursor-memory-context.md` (Development Workflow) and `400_context-priority-guide.md` (Reading order & placement).
+
 > **Strategic Purpose**: Development workflow, file organization, and process guidance for the AI development ecosystem.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 <!-- WORKFLOW_REFERENCE: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
 <!-- PARENT_MODULE: 100_cursor-memory-context.md -->
 <!-- MEMORY_CONTEXT: HIGH - Development workflow and process guidance -->

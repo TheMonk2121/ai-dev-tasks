@@ -165,6 +165,21 @@ class DocumentationIndexer:
             value = value.strip()
             metadata[key] = value
         
+        # Parse CONTEXT_INDEX JSON block if present
+        try:
+            ctx_start = content.find("<!-- CONTEXT_INDEX")
+            if ctx_start != -1:
+                ctx_end = content.find("CONTEXT_INDEX -->", ctx_start)
+                if ctx_end != -1:
+                    ctx_block = content[ctx_start:ctx_end]
+                    json_start = ctx_block.find("{")
+                    if json_start != -1:
+                        ctx_json = ctx_block[json_start:]
+                        metadata["context_index"] = json.loads(ctx_json)
+        except Exception:
+            # Non-fatal: ignore bad/missing context index
+            pass
+
         return metadata
     
     def _determine_category(self, file_path: Path, content: str) -> str:

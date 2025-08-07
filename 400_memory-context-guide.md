@@ -1,4 +1,7 @@
-# 🧠 Memory Context System Guide
+# 🧠 Memory Context System Guide (Deprecated)
+
+> This content is consolidated into `400_context-priority-guide.md`.
+> Use `100_cursor-memory-context.md` as the single rehydration entry point.
 
 This guide explains how the memory context system works for both humans and AI assistants in the AI Development Ecosystem.
 
@@ -16,7 +19,7 @@ These files provide instant context about the project:
 | File | Purpose | For Humans | For AI |
 |------|---------|------------|---------|
 | `100_cursor-memory-context.md` | Memory scaffold | Current state overview | Primary context source |
-| `400_system-overview_advanced_features.md` | Technical architecture | System understanding | Technical context |
+| `400_system-overview.md` | Technical architecture | System understanding | Technical context |
 | `000_backlog.md` | Current priorities | What to work on next | Development roadmap |
 | `400_project-overview.md` | Project overview | Quick start guide | Workflow understanding |
 

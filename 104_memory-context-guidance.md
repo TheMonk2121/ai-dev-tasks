@@ -1,9 +1,11 @@
 # 📚 Memory Context Guidance - Context-Specific Help
 
+> Deprecation Notice: Prefer `100_cursor-memory-context.md` (AI Rehydration Quick Start, Always-On Rules) and `400_context-priority-guide.md` (priority tiers & cross-reference map).
+
 > **Strategic Purpose**: Context-specific guidance and quick reference information for different types of tasks and operations.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 <!-- PARENT_MODULE: 100_cursor-memory-context.md -->
 <!-- MEMORY_CONTEXT: HIGH - Context-specific guidance and quick reference -->
 

@@ -11,7 +11,7 @@ This document provides a prioritized list of files in the `ai-dev-tasks` project
 
 ### **Documentation Strategy Evolution & Safeguards**
 
-Our documentation system has evolved from a **manual, ad-hoc approach** to a **structured cognitive scaffolding system** designed specifically for AI rehydration. The key insight was recognizing that documentation serves two distinct purposes: **human comprehension** and **AI context restoration**. Our three-digit prefix system (`100_cursor-memory-context.md`, `400_system-overview_advanced_features.md`, etc.) creates semantic ordering that guides both humans and AI through the correct reading sequence. The HTML cross-reference comments (`<!-- CONTEXT_REFERENCE: --><!-- MODULE_REFERENCE: 101_memory-context-safety.md -->
+Our documentation system has evolved from a **manual, ad-hoc approach** to a **structured cognitive scaffolding system** designed specifically for AI rehydration. The key insight was recognizing that documentation serves two distinct purposes: **human comprehension** and **AI context restoration**. Our three-digit prefix system (`100_cursor-memory-context.md`, `400_system-overview.md`, etc.) creates semantic ordering that guides both humans and AI through the correct reading sequence. The HTML cross-reference comments (`<!-- CONTEXT_REFERENCE: --><!-- MODULE_REFERENCE: 101_memory-context-safety.md -->
 <!-- MODULE_REFERENCE: 102_memory-context-state.md -->
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
 <!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
@@ -19,8 +19,8 @@ Our documentation system has evolved from a **manual, ad-hoc approach** to a **s
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide_rollback_procedures.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
@@ -68,7 +68,7 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
    - Essential for understanding project direction and next steps
    - Helps identify what's urgent vs. what can wait
 
-3. **`400_system-overview_advanced_features.md`** - **CRITICAL**
+3. **`400_system-overview.md`** - **CRITICAL**
    - Provides technical architecture and "system-of-systems" context
    - Shows how all components work together
    - Essential for understanding the broader technical landscape
@@ -118,7 +118,7 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
 **First 2-3 minutes:**
 - Read `100_cursor-memory-context.md` for instant context
 - Check `000_backlog.md` for current priorities
-- Scan `400_system-overview_advanced_features.md` for technical context
+- Scan `400_system-overview.md` for technical context
 
 **As needed during conversation:**
 - Reference `400_context-priority-guide.md` when discussing file organization

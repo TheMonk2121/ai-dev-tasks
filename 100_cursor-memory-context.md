@@ -2,32 +2,81 @@
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
 <!-- AI_CONSTITUTION_REFERENCE: 400_ai-constitution.md -->
 <!-- MEMORY_CONTEXT: HIGH - This file serves as the primary memory scaffold for Cursor AI -->
 
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_rollback_procedures.md -->
-<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_troubleshooting_guide.md -->
-<!-- MODULE_REFERENCE: 400_integration-patterns-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
-<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- NOTE: This file is the single source of truth for AI rehydration. 
+     Keep sections compact and actionable. For deep dives, see 400_context-priority-guide.md. -->
+
+<!-- CONTEXT_INDEX
+{
+  "version": "1.0",
+  "last_updated_iso": "2025-08-07T21:00:00Z",
+  "files": [
+    {
+      "path": "100_cursor-memory-context.md",
+      "weight": 1.0,
+      "sections": ["tldr", "rehydration_quick_start", "always_on_rules", "current_state"],
+      "keywords": ["rehydration", "priorities", "workflow", "rules"]
+    },
+    {
+      "path": "400_context-priority-guide.md",
+      "weight": 0.95,
+      "sections": ["priority_tiers", "cross_reference_map"],
+      "keywords": ["reading_order", "relationships", "scaffolding"]
+    },
+    {
+      "path": "000_backlog.md",
+      "weight": 0.9,
+      "sections": ["active", "completed", "dependencies"],
+      "keywords": ["priorities", "roadmap"]
+    },
+    {
+      "path": "400_system-overview.md",
+      "weight": 0.9,
+      "sections": ["architecture", "components", "workflow"],
+      "keywords": ["architecture", "system_overview"]
+    },
+    {
+      "path": "202_setup-requirements.md",
+      "weight": 0.85,
+      "sections": ["setup", "dependencies"],
+      "keywords": ["environment", "setup"]
+    }
+  ]
+}
+CONTEXT_INDEX -->
+
+## 🔎 TL;DR
+- Single source for AI rehydration and human quick scan
+- Read order: `100_cursor-memory-context.md` → `000_backlog.md` → `400_system-overview.md` → `400_context-priority-guide.md`
+- Always follow safety rules; never delete/move without the checklist
+- Use consolidated 400-series guides (no split modules)
+- Focus on Cursor-based LLM context only (no external model specifics)
+- Keep changes small; update this file after major shifts
+
+## ⚡ AI Rehydration Quick Start
+1) Read these files in order (1–2 min total):
+- `100_cursor-memory-context.md` – current state and rules
+- `000_backlog.md` – priorities and dependencies
+- `400_system-overview.md` – architecture and components
+- `400_context-priority-guide.md` – relationships and reading order
+2) Commands
+- Start tests: `./dspy-rag-system/run_tests.sh`
+- Start dashboard: `./dspy-rag-system/start_mission_dashboard.sh`
+- Quick inventory: `python3 scripts/documentation_navigator.py inventory`
+
+## 🛡️ Always-On Critical Rules
+- Follow `400_file-analysis-guide.md` before any deletion/move/depredation
+- Preserve coherence: update cross-references when editing core files
+- Use consolidated guides (single-file sources) for deployment, migration, integration, performance, testing, system overview, few-shot
+- Keep this file updated after backlog or architecture changes
+- Prefer local-first, simple workflows; avoid unnecessary complexity
+- Focus context on Cursor-based LLMs only
+
 ## 🚨 CRITICAL SAFETY REQUIREMENTS
 **BEFORE ANY FILE OPERATIONS:**
 - [ ] Read `400_file-analysis-guide.md` completely (463 lines)
