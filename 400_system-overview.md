@@ -63,7 +63,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 - **Database resilience**: Connection pooling with health monitoring and retry logic
 
 ### **Reliability Features**
-- **Agent-level LLM timeout**: Mixtral = 90s (configurable per agent)
+- **Agent-level LLM timeout**: Large models = 90s (configurable per agent)
 - **Global timeouts**: Centralized configuration for all operations
 - **Resource management**: RAM pressure checks and model janitor
 - **Structured logging**: Comprehensive audit trail with sensitive data redaction
@@ -185,7 +185,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 - **Fast-Path Bypass**: Skip complex routing for simple queries (<50 chars)
 - **Feature Flags**: DEEP_REASONING=0, CLARIFIER=0 (default)
 - **Error Policy & Retries**: Configurable retry with backoff
-- **Agent-level LLM timeout**: Mixtral = 90s (configurable per agent)
+- **Agent-level LLM timeout**: Large models = 90s (configurable per agent)
 - **Environment Variables**: POOL_MIN/POOL_MAX, MODEL_IDLE_EVICT_SECS, MAX_RAM_PRESSURE
 
 #### **Cursor Native AI Agent**
@@ -572,7 +572,7 @@ sudo supervisorctl update
 {
   "customModels": [
     {
-      "title": "Mistral Local",
+      "title": "Cursor Native AI Local",
       "model": "mistral",
       "baseURL": "http://localhost:11434/v1",
       "apiKey": ""
@@ -741,7 +741,7 @@ sudo supervisorctl update
 
 ### **Implementation Guides**
 - **`201_model-configuration.md`**: AI model setup and configuration
-- **`103_yi-coder-integration.md`**: Yi-Coder IDE integration guide
+- **`103_yi-coder-integration.md`**: External model integration guide (legacy)
 
 ### **System Documentation**
 - **`104_dspy-development-context.md`**: DSPy development context and status

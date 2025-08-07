@@ -203,7 +203,7 @@ class DocumentProcessor(Module):
 - **Total Chunks**: 65+ stored in PostgreSQL
 - **File Types**: .txt, .md, .pdf, .csv
 - **Database**: PostgreSQL with pgvector
-- **LLM**: Mistral 7B Instruct via Ollama
+- **LLM**: Cursor Native AI via Cursor IDE
 - **Framework**: DSPy with enhanced pre-RAG and post-RAG logic
 
 ### **Enhanced Capabilities**
@@ -253,8 +253,8 @@ response = rag.ask("What is DSPy?", use_cot=True, use_react=False)
 ## 🔍 **Current Limitations & Areas for Improvement**
 
 ### **Technical Limitations**
-1. **Model Dependency**: Currently tied to Mistral 7B Instruct
-2. **Context Window**: Limited to 3500 tokens for Mistral
+1. **Model Dependency**: Currently tied to Cursor Native AI
+2. **Context Window**: Limited to 3500 tokens for Cursor Native AI
 3. **Single Database**: PostgreSQL only, no distributed storage
 4. **Local Only**: No cloud deployment or scaling
 5. **Memory Usage**: Large models require significant VRAM
@@ -267,7 +267,7 @@ response = rag.ask("What is DSPy?", use_cot=True, use_react=False)
 5. **Advanced Reasoning**: Limited to CoT and ReAct patterns
 
 ### **Integration Opportunities**
-1. **Yi-Coder Integration**: Not yet integrated for code generation
+1. **External Model Integration**: Not yet integrated for code generation
 2. **Dashboard Enhancement**: Could leverage DSPy for metadata extraction
 3. **Backlog Integration**: No automated backlog processing
 4. **Testing Framework**: Limited DSPy-specific testing
@@ -277,7 +277,7 @@ response = rag.ask("What is DSPy?", use_cot=True, use_react=False)
 
 ### **Phase 1: Ultra-Minimal Implementation (1 week)** ✅ **COMPLETED**
 1. **Core Agents**: IntentRouter, RetrievalAgent, CodeAgent
-2. **Model Management**: Mistral 7B (warm), Yi-Coder (lazy)
+2. **Model Management**: Cursor Native AI (warm), External models (lazy)
 3. **Fast-Path Bypass**: Skip complex routing for simple queries
 4. **RAM Pressure Guards**: Prevent memory exhaustion
 5. **Postgres Delta Snapshots**: Memory persistence without tombstones
@@ -287,7 +287,7 @@ response = rag.ask("What is DSPy?", use_cot=True, use_react=False)
 
 ### **Phase 2: Enhanced Features (1 week)** 🔄 **IN PROGRESS**
 1. **ReasoningAgent**: Add when DEEP_REASONING=1
-2. **Mixtral Integration**: Lazy loading for complex reasoning
+2. **Large Model Integration**: Lazy loading for complex reasoning
 3. **Performance Monitoring**: Measure latency and memory usage
 4. **Error Recovery**: Improved error handling and retry logic
 5. **Documentation**: Complete API documentation
@@ -349,7 +349,7 @@ response = rag.ask("What is DSPy?", use_cot=True, use_react=False)
 
 ### **Integration & Extensibility**
 1. How well does the system integrate with the broader AI Dev Tasks workflow?
-2. What opportunities exist for integrating with Yi-Coder and other models?
+2. What opportunities exist for integrating with external models and other AI systems?
 3. How extensible is the current DSPy module architecture?
 4. What new DSPy patterns could be implemented?
 

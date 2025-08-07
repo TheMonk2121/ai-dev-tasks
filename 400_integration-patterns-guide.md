@@ -35,7 +35,7 @@ This document provides comprehensive integration patterns, API documentation, an
 │ 2. Internal APIs (REST, GraphQL, WebSocket)              │
 │ 3. Message Queues (Event-driven Communication)            │
 │ 4. Database Layer (PostgreSQL, Vector Store)             │
-│ 5. AI Model Layer (Mistral, Yi-Coder, Specialized Agents)│
+│ 5. AI Model Layer (Cursor Native AI, Specialized Agents)│
 │ 6. Core Services (Authentication, Monitoring, Logging)    │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -215,10 +215,10 @@ class AIModelInterface:
 class AIModelFactory:
     @staticmethod
     def create_model(model_name: str) -> AIModelInterface:
-        if model_name == "mistral-7b":
-            return MistralModel()
-        elif model_name == "yi-coder":
-            return YiCoderModel()
+        if model_name == "cursor-native-ai":
+            return CursorNativeAIModel()
+        elif model_name == "external-model":
+            return ExternalModel()
         elif model_name == "specialized-agent":
             return SpecializedAgentModel()
         else:

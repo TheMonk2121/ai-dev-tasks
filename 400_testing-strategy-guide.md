@@ -43,7 +43,7 @@ Our testing strategy follows a **quality-first approach** with these principles:
 def test_ai_model_generation():
     """Test AI model generation functionality"""
     # Arrange
-    model = AIModelFactory.create_model("mistral-7b")
+    model = AIModelFactory.create_model("cursor-native-ai")
     prompt = "Hello, how are you?"
     
     # Act
@@ -53,7 +53,7 @@ def test_ai_model_generation():
     assert response["success"] == True
     assert "content" in response["data"]
     assert len(response["data"]["content"]) > 0
-    assert response["data"]["model"] == "mistral-7b"
+    assert response["data"]["model"] == "cursor-native-ai"
 ```
 
 #### **2. Behavior-Driven Development (BDD)**
@@ -217,7 +217,7 @@ class TestAIIntegration(unittest.TestCase):
         response = self.client.post('/api/v1/ai/generate', json={
             "prompt": test_prompt,
             "user_id": test_user_id,
-            "model": "mistral-7b"
+            "model": "cursor-native-ai"
         })
         
         # Assert
@@ -228,7 +228,7 @@ class TestAIIntegration(unittest.TestCase):
         # Verify database logging
         log_entry = self.db.get_latest_log(test_user_id)
         self.assertEqual(log_entry["prompt"], test_prompt)
-        self.assertEqual(log_entry["model_type"], "mistral-7b")
+        self.assertEqual(log_entry["model_type"], "cursor-native-ai")
     
     def test_workflow_execution_integration(self):
         """Test n8n workflow execution integration"""
@@ -276,7 +276,7 @@ class TestAIEcosystemE2E(unittest.TestCase):
         
         # Select model
         model_select = self.driver.find_element(By.ID, "model-select")
-        model_select.select_by_value("mistral-7b")
+        model_select.select_by_value("cursor-native-ai")
         
         # Submit request
         submit_button = self.driver.find_element(By.ID, "generate-button")
@@ -481,8 +481,8 @@ class TestAIModels(unittest.TestCase):
     def setUp(self):
         """Set up AI model test environment"""
         self.models = {
-            "mistral-7b": AIModelFactory.create_model("mistral-7b"),
-            "yi-coder": AIModelFactory.create_model("yi-coder")
+            "cursor-native-ai": AIModelFactory.create_model("cursor-native-ai"),
+"external-model": AIModelFactory.create_model("external-model")
         }
     
     def test_model_response_quality(self):
@@ -556,7 +556,7 @@ def benchmark_ai_models():
         "Very long prompt with extensive context and multiple requirements"
     ]
     
-    for model_name in ["mistral-7b", "yi-coder"]:
+    for model_name in ["cursor-native-ai", "external-model"]:
         model = AIModelFactory.create_model(model_name)
         model_results = {}
         
@@ -612,7 +612,7 @@ def test_prompt_injection():
         "<!-- --><script>alert('xss')</script><!-- -->"
     ]
     
-    for model_name in ["mistral-7b", "yi-coder"]:
+    for model_name in ["cursor-native-ai", "external-model"]:
         model = AIModelFactory.create_model(model_name)
         
         for prompt in injection_prompts:

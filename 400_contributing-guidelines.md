@@ -133,7 +133,7 @@ class AIEcosystemConfig:
 # Function Standards
 def process_ai_request(
     prompt: str,
-    model_name: str = "mistral-7b",
+    model_name: str = "cursor-native-ai",
     max_tokens: int = 1000,
     temperature: float = 0.7
 ) -> Dict[str, Any]:
@@ -322,7 +322,7 @@ class StructuredLogger:
 
 # Usage example
 logger = StructuredLogger("ai_ecosystem")
-logger.log_ai_request("Generate Python function", "mistral-7b", 2.5)
+logger.log_ai_request("Generate Python function", "cursor-native-ai", 2.5)
 ```
 
 ---
