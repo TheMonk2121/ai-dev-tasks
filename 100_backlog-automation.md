@@ -11,11 +11,11 @@ This document describes the AI-BACKLOG-META system for automated backlog managem
 The AI-BACKLOG-META system provides machine-readable commands and metadata that AI agents can parse to automate backlog management tasks. This reduces manual work and ensures consistency across the development workflow.
 
 ### **AI Development Ecosystem Context**
-This system is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+This system is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
 **Key Components:**
 - **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
+- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
 - **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
 - **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
 

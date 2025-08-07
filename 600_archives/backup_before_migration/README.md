@@ -74,12 +74,12 @@ Large LLMs (Mixtral) require `LLM_TIMEOUT_SEC>=90` for optimal performance.
 - `SECURITY_REPORT_FILE=security-report.json` - Security report file
 - `SECURITY_MAX_FILE_SIZE=104857600` - Maximum file size (100MB)
 - `SECURITY_TOKEN_LENGTH=32` - Security token length
-- `LLM_TIMEOUT_SEC=90` - Overrides agent timeouts (optional)
-- `SECURITY_MAX_FILE_MB=100` - Raise default 50 MB cap (optional)
+- `LLM_TIMEOUT_SEC=90` - Overrides agent timeouts (the execution engine)
+- `SECURITY_MAX_FILE_MB=100` - Raise default 50 MB cap (the execution engine)
 
 **Production Monitoring Configuration:**
 - `ENVIRONMENT=production` - Set environment (development, staging, production)
-- `OTLP_ENDPOINT=http://localhost:4317` - OpenTelemetry endpoint (optional)
+- `OTLP_ENDPOINT=http://localhost:4317` - OpenTelemetry endpoint (the execution engine)
 - `MONITORING_INTERVAL=30` - Monitoring cycle interval in seconds
 - `HEALTH_CHECK_TIMEOUT=5` - Health check timeout in seconds
 
@@ -161,7 +161,7 @@ This structured approach helps ensure the AI stays on track, makes it easier to 
 
 Here's the step-by-step process using the `.md` files in this repository:
 
-### 0️⃣ Select from Backlog (Optional)
+### 0️⃣ Select from Backlog (the execution engine)
 
 For systematic development, start by selecting a high-impact feature from the backlog:
 

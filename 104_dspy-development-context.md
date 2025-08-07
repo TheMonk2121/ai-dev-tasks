@@ -9,11 +9,11 @@ This document provides comprehensive context about the current DSPy implementati
 <!-- MEMORY_CONTEXT: MEDIUM - Deep technical context for DSPy implementation -->
 
 ### **AI Development Ecosystem Context**
-This DSPy implementation is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+This DSPy implementation is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
 **Key Components:**
 - **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
+- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
 - **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
 - **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
 
@@ -23,7 +23,7 @@ This DSPy implementation is part of a comprehensive AI-powered development ecosy
 - **Status**: ✅ **ENHANCED DSPy RAG System Implemented**
 - **C-2: Central Retry Wrapper**: ✅ **COMPLETED** - Configurable retry logic with exponential backoff
 - **Architecture**: Pre-RAG and Post-RAG DSPy integration
-- **Model Integration**: Mistral 7B Instruct via Ollama
+- **Model Integration**: Cursor Native AI + Specialized Agents
 - **Database**: PostgreSQL with pgvector extension
 - **Framework**: DSPy with enhanced reasoning capabilities
 
@@ -42,8 +42,8 @@ This DSPy implementation is part of a comprehensive AI-powered development ecosy
 # v0.3.1 Ultra-Minimal Configuration
 ENABLED_AGENTS = ["IntentRouter", "RetrievalAgent", "CodeAgent"]
 MODELS = {
-    "mistral-7b-instruct": "warm",  # Always resident
-    "yi-coder-9b-chat-q6_k": "lazy"  # Load on demand
+    "cursor-native-ai": "always",  # Always available
+    "specialized-agents": "on-demand"  # Load when needed
 }
 FEATURE_FLAGS = {
     "DEEP_REASONING": 0,

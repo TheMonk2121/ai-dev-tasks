@@ -3,7 +3,7 @@
 ⚠️ **LEGACY HELPER — Backlog now drives execution.**  
 Auto‑invoked only when `<!-- default_executor: 003_process-task-list.md -->` is set.
 
-Guidelines for executing task lists generated from PRDs using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K).
+Guidelines for executing task lists generated from PRDs using AI agents (Cursor Native AI + Specialized Agents).
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md -->
@@ -12,11 +12,11 @@ Guidelines for executing task lists generated from PRDs using AI agents (Mistral
 <!-- SYSTEM_FILES: 400_system-overview.md -->
 
 ### **AI Development Ecosystem Context**
-This task execution process is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+This task execution process is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
 **Key Components:**
 - **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
+- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
 - **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
 - **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
 
@@ -45,8 +45,8 @@ This task execution process is part of a comprehensive AI-powered development ec
 
 3. **Execute Task**
    - Follow steps in "Do:" section
-   - Use Yi-Coder-9B-Chat-Q6_K for code implementation
-   - Use Mistral 7B Instruct for reasoning and planning
+   - Use Cursor Native AI for reasoning and planning
+   - Use Specialized Agents for code implementation
 
 4. **Validate Completion**
    - Run all "Done when:" criteria
@@ -61,7 +61,7 @@ This task execution process is part of a comprehensive AI-powered development ec
    - If `🛑 Pause After: yes` AND `Auto-Advance: no` → wait for human input
    - Otherwise continue to next task
 
-7. **Update Backlog** (Optional)
+7. **Update Backlog** (the execution engine)
    - Mark completed features in backlog as implemented
    - **Move completed items to "Completed Items" section** in backlog
    - Update status from "todo" to "✅ done" in backlog table

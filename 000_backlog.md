@@ -4,7 +4,7 @@ A prioritized list of future enhancements and features for the AI development ec
 
 **📋 For usage instructions and scoring details, see `100_backlog-guide.md`**
 
-**🤖 Execution Guide**: Items marked with `<!-- default_executor: 003_process-task-list.md -->` can be executed directly by AI. Items requiring external credentials, business decisions, or deployment should be marked with `<!-- human_required: true -->`.
+**🤖 Execution Guide**: Items can be executed directly by AI using `003_process-task-list.md` as the execution engine. Items requiring external credentials, business decisions, or deployment should be marked with `<!-- human_required: true -->`.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
@@ -64,18 +64,76 @@ A prioritized list of future enhancements and features for the AI development ec
 | B‑010 | n8n Workflow Integration                  | 🔥  | 1        | ✅ done   | Enable automated task execution | n8n + PostgreSQL | Event ledger |
 <!--score: {bv:3, tc:3, rr:4, le:5, effort:1, deps:[]}-->
 <!--score_total: 15.0-->
-| B‑011 | Yi-Coder-9B-Chat-Q6_K Integration into Cursor | 🔥  | 5        | todo   | Enable AI code generation directly within IDE for faster development | Cursor API + Yi-Coder-9B-Chat-Q6_K + LM Studio | Yi-Coder setup |
+| B‑011 | Cursor Native AI + Specialized Agents Integration | 🔥  | 5        | ✅ done   | Enable AI code generation using Cursor native AI + specialized agents | Cursor Native AI + Specialized Agents | Cursor setup |
 <!--score: {bv:5, tc:4, rr:3, le:5, effort:5, deps:[]}-->
 <!--score_total: 3.4-->
-<!-- default_executor: 003_process-task-list.md -->
-<!-- human_required: true -->
-<!-- reason: Requires Cursor API credentials and LM Studio setup -->
-| B‑012 | Advanced Testing Framework                | 📈  | 5        | todo   | Improve code quality and reliability | AI-generated tests | Testing system |
+<!--progress: All phases completed - T-1.1 through T-4.3, comprehensive documentation, deployment guides, performance optimization-->
+| B‑012 | Advanced Testing Framework                | 📈  | 5        | ✅ done   | Improve code quality and reliability | AI-generated tests | Testing system |
 <!--score: {bv:4, tc:2, rr:3, le:3, effort:5, deps:[]}-->
 <!--score_total: 2.4-->
-| B‑013 | Local Development Automation               | 📈  | 3        | todo   | Streamline local development workflow | Scripts + automation | Local tools |
+<!--progress: T-4.1 completed (comprehensive_test_suite.py, ci_test_runner.py, test_infrastructure_validation)-->
+| B‑013 | Local Development Automation               | 📈  | 3        | ✅ done   | Streamline local development workflow | Scripts + automation | Local tools |
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:3, deps:[]}-->
 <!--score_total: 3.0-->
+<!--progress: T-4.2 completed (performance_optimization.py, test_performance_optimization.py, performance_benchmarks_validation)-->
+| B‑039 | GitHub Actions CI/CD Automation           | 📈  | 4        | todo   | Automate testing and deployment with GitHub Actions | GitHub Actions + YAML workflows + CI/CD | B-012 Advanced Testing Framework |
+<!--score: {bv:3, tc:2, rr:2, le:3, effort:4, deps:[]}-->
+<!--score_total: 2.5-->
+<!-- human_required: true -->
+<!-- reason: Requires GitHub repository configuration and CI/CD setup decisions -->
+
+| B‑043 | LangExtract Pilot w/ Stratified 20-doc Set | 🔥  | 3        | todo   | Evaluate LangExtract vs. manual extraction for transcript pipeline | LangExtract + Gemini Flash + Validation | Extraction Pipeline |
+<!--score: {bv:4, tc:3, rr:3, le:4, effort:3, deps:[]}-->
+<!--score_total: 4.2-->
+
+| B‑044 | n8n LangExtract Service (Stateless, Spillover, Override) | 📈  | 3        | todo   | Build n8n node for LangExtract with configurable extraction | n8n + LangExtract + POST /extract endpoint | B-043 LangExtract Pilot |
+<!--score: {bv:4, tc:3, rr:3, le:4, effort:3, deps:["B-043"]}-->
+<!--score_total: 4.2-->
+
+| B‑045 | RAG Schema Patch (Span*, Validated_flag, Raw_score) | 🔧  | 1        | todo   | Update RAG schema for span-level grounding and validation | PostgreSQL + Schema Migration + Zero Downtime | B-044 n8n LangExtract Service |
+<!--score: {bv:3, tc:2, rr:2, le:3, effort:1, deps:["B-044"]}-->
+<!--score_total: 4.0-->
+
+| B‑046 | 4-way Cost/Latency Benchmark (Flash-Lite, Mixtral, Vertex-Flash, Distil-Roberta) | 📈  | 2        | todo   | Benchmark extraction performance and cost across multiple models | Benchmarking + Cost Analysis + Annotator Hours | B-043 LangExtract Pilot |
+<!--score: {bv:4, tc:3, rr:3, le:3, effort:2, deps:["B-043"]}-->
+<!--score_total: 3.5-->
+
+| B‑047 | Auto-router (Inline vs Remote Extraction) | 🔧  | 2        | todo   | Implement smart routing for extraction based on document size | Router Logic + Config Flags + Latency Optimization | B-044 n8n LangExtract Service |
+<!--score: {bv:3, tc:3, rr:2, le:3, effort:2, deps:["B-044"]}-->
+<!--score_total: 3.3-->
+
+| B‑048 | Confidence Calibration (Blocked) | 🔧  | 3        | todo   | Calibrate confidence scores with isotonic regression | Calibration + 2k Gold Spans + Probability Mapping | B-046 4-way Benchmark |
+<!--score: {bv:3, tc:2, rr:2, le:3, effort:3, deps:["B-046"]}-->
+<!--score_total: 2.8-->
+
+| B‑049 | Convert 003 Process Task List to Python Script | 🔥  | 3        | todo   | Automate core execution engine for all backlog items | Python CLI + State Management + Error Handling | Core Workflow |
+<!--score: {bv:5, tc:4, rr:4, le:4, effort:3, deps:[]}-->
+<!--score_total: 5.3-->
+
+| B‑050 | Enhance 002 Task Generation with Automation | 📈  | 2        | todo   | Add automation to task generation workflow | Task Parsing + Dependency Analysis + Template Generation | B-049 003 Script |
+<!--score: {bv:4, tc:3, rr:3, le:3, effort:2, deps:["B-049"]}-->
+<!--score_total: 5.5-->
+
+| B‑051 | Create PRD Skeleton Generator for 001 | 🔧  | 1        | todo   | Add light automation to PRD creation workflow | Skeleton Generation + Template Pre-fill + Cursor Integration | B-050 002 Enhancement |
+<!--score: {bv:3, tc:2, rr:2, le:2, effort:1, deps:["B-050"]}-->
+<!--score_total: 4.0-->
+
+| B‑052‑a | Safety & Lint Tests for repo-maintenance | 🔧  | 1        | ✅ done   | Add pre-flight git check, word-boundary regex, and unit tests | Git Safety + Regex Fix + Pytest Coverage | Maintenance Automation |
+<!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:[]}-->
+<!--score_total: 9.0-->
+<!--progress: Pre-flight git check, word-boundary regex, and comprehensive unit tests implemented-->
+
+| B‑052‑b | Config Externalization to TOML + Ignore | 🔧  | 1        | todo   | Move hard-coded patterns to TOML config and add .maintenanceignore | TOML Config + Ignore File + Pattern Management | B-052-a Safety & Lint Tests |
+<!--score: {bv:3, tc:2, rr:2, le:3, effort:1, deps:["B-052-a"]}-->
+<!--score_total: 5.0-->
+
+| B‑052‑c | Hash-Cache + Optional Threading | 🔧  | 1        | todo   | Add hash caching and profile-based threading for performance | Hash Caching + Performance Profiling + Threading | B-052-b Config Externalization |
+<!--score: {bv:3, tc:2, rr:2, le:2, effort:1, deps:["B-052-b"]}-->
+<!--score_total: 4.5-->
+
+| B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧  | 0.5      | todo   | Add GitHub Action to run maintenance script on PRs | GitHub Actions + Dry-Run + PR Gate | B-052-a Safety & Lint Tests |
+<!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-052-a"]}-->
+<!--score_total: 8.0-->
 
 ---
 
@@ -100,6 +158,43 @@ A prioritized list of future enhancements and features for the AI development ec
 | B‑019 | Code Quality Improvements                   | 🔧  | 5        | todo   | Improve maintainability | Refactoring + documentation | Codebase |
 | B‑020 | Tokenizer Enhancements                     | 🔧  | 2        | todo   | Improve text processing capabilities | SentencePiece + optimization | Tokenizer |
 | B‑021 | Local Security Hardening                   | 🔧  | 3        | todo   | Protect local development environment | Input validation + API security | Local security + APIs |
+| B‑022 | Performance Monitoring                     | 🔧  | 2        | todo   | Improve system observability | Metrics + alerts | Monitoring |
+| B‑023 | Development Readiness Enhancements         | 🔧  | 5        | todo   | Ensure system stability for solo development | Performance metrics + load testing | Development |
+| B‑024 | Automated Sprint Planning                  | 🔧  | 2        | todo   | Automate sprint planning and backlog selection | AI planning + automation | Backlog system |
+| B‑025 | Database Event-Driven Status Updates      | 🔧  | 3        | todo   | Automatically update backlog status via database events | PostgreSQL triggers + event system | Event ledger |
+| B‑026 | Secrets Management                        | 🔥  | 2        | todo   | Secure credential management with environment validation | Keyring + env validation + startup checks | None |
+<!-- human_required: true -->
+<!-- reason: Requires business decisions on which secrets to manage and deployment configuration -->
+| B‑027 | Health & Readiness Endpoints             | 🔥  | 2        | todo   | Kubernetes-ready health checks with dependency monitoring | /health + /ready endpoints + JSON status | None |
+<!-- human_required: true -->
+<!-- reason: Requires deployment environment configuration and business requirements for health checks -->
+| B‑028 | Implement regex prompt‑sanitiser & whitelist | 🔥  | 3        | ✅ done | Enhanced prompt security with regex-based sanitization | Regex patterns + whitelist logic + security validation | None |
+| B‑029 | Expose llm_timeout_seconds override in agents | 🔥  | 2        | ✅ done | Per-agent LLM timeout configuration for large models | Agent timeout config + Mixtral 90s override | None |
+| B‑030 | Env override for SECURITY_MAX_FILE_MB | ⚙️  | 1        | ✅ done | Flexible file size limits with environment override | File validation + env config + OOM prevention | None |
+| B‑031 | Vector Database Foundation Enhancement | 🔥  | 3        | todo   | Improve RAG system with advanced vector database capabilities | PostgreSQL + PGVector + advanced indexing | Enhanced RAG system |
+| B‑032 | Memory Context System Architecture Research | 🔥  | 8        | todo   | Optimize memory hierarchy for different AI model capabilities (7B vs 70B) | Literature review + benchmark harness + design recommendations | Improved retrieval F1 by ≥10% on 7B models |
+| B‑032‑C1 | Implement generation cache (Postgres) & add cache columns to episodic_logs | 🔥  | 3        | todo   | Add cache-augmented generation support with similarity scoring | PostgreSQL + cache_hit + similarity_score + last_verified | B-032 Memory Context System Architecture Research |
+| B‑033 | Documentation Reference Updates | 🔥  | 2        | ✅ done   | Update outdated file references in documentation | Documentation review + reference updates | File naming convention migration |
+
+---
+
+## 🚀 Future Model Roadmap
+
+| B‑034 | Deep Research Agent Integration | 🔥  | 5        | todo   | Add specialized research agent for complex analysis | Research Agent + Cursor Native AI | B-011 Cursor Native AI Integration |
+<!--score: {bv:5, tc:3, rr:4, le:4, effort:5, deps:[]}-->
+<!--score_total: 3.2-->
+| B‑035 | Coder Agent Specialization | 🔥  | 5        | todo   | Add specialized coding agent for best practices | Coder Agent + Cursor Native AI | B-011 Cursor Native AI Integration |
+<!--score: {bv:5, tc:4, rr:3, le:4, effort:5, deps:[]}-->
+<!--score_total: 3.2-->
+| B‑036 | General Query Agent Enhancement | 🔥  | 3        | todo   | Add general assistance agent for documentation | Query Agent + Cursor Native AI | B-011 Cursor Native AI Integration |
+<!--score: {bv:4, tc:3, rr:2, le:3, effort:3, deps:[]}-->
+<!--score_total: 4.0-->
+| B‑037 | Yi-Coder Migration (Future) | 🔧  | 8        | todo   | Migrate to Yi-Coder when GGUF compatibility resolved | Yi-Coder + Ollama + Manual Setup | B-011 Cursor Native AI Integration |
+<!--score: {bv:4, tc:2, rr:3, le:4, effort:8, deps:[]}-->
+<!--score_total: 1.6-->
+| B‑038 | Advanced Model Orchestration | 🔧  | 13       | todo   | Implement multi-model coordination system | Model Orchestration + Agent Coordination | B-034, B-035, B-036 |
+<!--score: {bv:3, tc:2, rr:2, le:4, effort:13, deps:[]}-->
+<!--score_total: 0.8-->
 | B‑022 | Performance Monitoring                     | 🔧  | 2        | todo   | Improve system observability | Metrics + alerts | Monitoring |
 | B‑023 | Development Readiness Enhancements         | 🔧  | 5        | todo   | Ensure system stability for solo development | Performance metrics + load testing | Development |
 | B‑024 | Automated Sprint Planning                  | 🔧  | 2        | todo   | Automate sprint planning and backlog selection | AI planning + automation | Backlog system |
@@ -185,6 +280,6 @@ timestamp_updates: |
 
 ---
 
-*Previously Updated: 2024-08-06 08:25*
-*Last Updated: 2024-08-06 09:15*
+*Previously Updated: 2024-08-07 04:30*
+*Last Updated: 2024-08-07 05:00*
 *Next Review: [Monthly Review Cycle]* 

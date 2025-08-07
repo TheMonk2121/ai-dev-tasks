@@ -11,43 +11,45 @@ This file serves as the **memory scaffold** for Cursor AI, providing instant con
 ## 📋 Current Project State
 
 ### **Active Development Focus**
-- **Current Sprint**: B-032-C1 (Cache-Augmented Generation Implementation) - 3 points
-- **Next Priority**: B-002 (Advanced Error Recovery & Prevention) - 5 points
-- **Following**: B-011 (Yi-Coder-9B-Chat-Q6_K Integration) - 5 points  
+- **Current Sprint**: B-011 (Cursor Native AI + Specialized Agents Integration) - 5 points
+- **Next Priority**: B-031 (Vector Database Foundation Enhancement) - 3 points
+- **Following**: B-032 (Memory Context System Architecture Research) - 8 points  
 - **Infrastructure**: v0.3.1-rc3 Core Hardening ✅ completed
 
 ### **System Architecture**
 ```
 AI Development Ecosystem
 ├── Planning Layer (PRD → Tasks → Execution)
-├── AI Execution Layer (Mistral 7B + Yi-Coder)
+├── AI Execution Layer (Cursor Native AI + Specialized Agents)
 ├── Core Systems (DSPy RAG + n8n + Dashboard)
+├── Extraction Layer (LangExtract → Entity/Attribute Extraction)
 └── Infrastructure (PostgreSQL + Monitoring)
 ```
 
 ### **Key Technologies**
-- **AI Models**: Mistral 7B Instruct (planning), Yi-Coder-9B-Chat-Q6_K (coding)
+- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
 - **Framework**: DSPy with PostgreSQL vector store
 - **Automation**: n8n workflows for backlog management
 - **Monitoring**: Real-time mission dashboard
 - **Security**: Comprehensive input validation and prompt sanitization
+- **Extraction**: LangExtract (Gemini Flash) for entity/attribute extraction
 
 ## 🔄 Development Workflow
 
 ### **Current Process**
 1. **Backlog Selection** → Pick top scored item from `000_backlog.md`
-2. **PRD Creation** (skip for items < 5 pts & score≥3.0) → else use `001_create-prd.md` workflow
+2. **PRD Creation** (skip for items < 5 pts AND score≥3.0) → else use `001_create-prd.md` workflow
 3. **Task Generation** → Use `002_generate-tasks.md` workflow (parses PRD or backlog directly)
-4. **AI Execution** → Execute backlog item directly (loads `003_process-task-list.md` only if `default_executor` flag present)
+4. **AI Execution** → Execute backlog item directly (`003_process-task-list.md` is the execution engine; it loads whether or not a PRD was created)
 5. **State Management** → `.ai_state.json` for context persistence (when using 003)
 6. **Research Framework** → Use `500_memory-arch-research.md` for systematic research
 
-**Note**: `003_process-task-list.md` is optional; invoked via backlog meta-tag when `<!-- default_executor: 003_process-task-list.md -->` is present.
+**Note**: `003_process-task-list.md` is the execution engine; it loads whether or not a PRD was created.
 
 ### **File Organization**
 - **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
-- **Domain**: `100_backlog-guide.md`, `103_yi-coder-integration.md`
+- **Domain**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
 
 ## 🎯 Current Priorities
 
@@ -55,11 +57,11 @@ AI Development Ecosystem
 
 
 ### **Immediate Focus (Next 1-2 weeks)**
-1. **B‑011**: Yi-Coder-9B-Chat-Q6_K Integration into Cursor (🔥 points)
+1. **B‑011**: Cursor Native AI + Specialized Agents Integration (🔥 points)
    - todo
-2. **B‑026**: Secrets Management (🔥 points)
+2. **B‑031**: Vector Database Foundation Enhancement (🔥 points)
    - todo
-3. **B‑027**: Health & Readiness Endpoints (🔥 points)
+3. **B‑032**: Memory Context System Architecture Research (🔥 points)
    - todo
 ### **Infrastructure Status**
 - ✅ **v0.3.1-rc3 Core Hardening** - Production ready
@@ -92,7 +94,7 @@ AI Development Ecosystem
 
 ### **When Adding New Features**
 1. **Add to backlog** with proper scoring (see `100_backlog-guide.md`)
-2. **Create PRD** (skip for items < 5 pts & score≥3.0) → else use `001_create-prd.md` workflow
+2. **Create PRD** (skip for items < 5 pts AND score≥3.0) → else use `001_create-prd.md` workflow
 3. **Generate tasks** using `002_generate-tasks.md` workflow (parses PRD or backlog directly)
 4. **Execute** using `003_process-task-list.md` workflow
 
@@ -122,6 +124,11 @@ AI Development Ecosystem
 - **Start Dashboard**: `./dspy-rag-system/start_mission_dashboard.sh`
 - **Run Tests**: `./dspy-rag-system/run_tests.sh`
 - **Quick Start**: `./dspy-rag-system/quick_start.sh`
+
+### **Maintenance Rituals**
+- **Run `python3 scripts/repo_maintenance.py --apply`** after model or doc changes
+- **Validate consistency** with grep for model references
+- **Check PRD skip rules** are consistent across files
 
 ## 🔄 Memory State Updates
 

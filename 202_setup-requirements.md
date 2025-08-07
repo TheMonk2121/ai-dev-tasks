@@ -8,11 +8,11 @@ This document lists all items that require manual setup or configuration on your
 <!-- INTEGRATION_FILES: 103_yi-coder-integration.md -->
 
 ### **AI Development Ecosystem Context**
-This setup guide is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+This setup guide is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
 **Key Components:**
 - **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
+- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
 - **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
 - **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
 
@@ -69,32 +69,29 @@ POLL_INTERVAL=30
 MAX_EVENTS_PER_CYCLE=10
 ```
 
-### **S-004: Ollama & Mistral 7B Setup** 🔥
+### **S-004: Cursor IDE Setup** 🔥
 **Status**: `setup-required`  
 **Priority**: High  
-**Setup Required**: Ollama installation + Mistral model download  
-**Setup Instructions**: See `201_model-configuration.md`
+**Setup Required**: Cursor IDE installation and configuration  
+**Setup Instructions**: See `CURSOR_NATIVE_AI_STRATEGY.md`
 
 **Commands:**
 ```bash
-# Install Ollama
-curl -fsSL https://ollama.ai/install.sh | sh
+# Install Cursor IDE
+# Download from https://cursor.sh/
 
-# Pull Mistral model
-ollama pull mistral:7b-instruct
-
-# Start Ollama
-ollama serve
+# Configure Cursor
+# Enable AI features in settings
 
 # Verify installation
-ollama list
+# Test AI code generation
 ```
 
-### **S-005: LM Studio & Yi-Coder Setup** 🔥
+### **S-005: Specialized Agents Setup** 🔥
 **Status**: `setup-required`  
 **Priority**: High  
-**Setup Required**: LM Studio installation + Yi-Coder model download  
-**Setup Instructions**: See `103_yi-coder-integration.md`
+**Setup Required**: Specialized agent configuration  
+**Setup Instructions**: See `CURSOR_NATIVE_AI_STRATEGY.md`
 
 **Prerequisites:**
 - **macOS**: LM Studio ≥ 0.2.18 (`brew install --cask lm-studio`)

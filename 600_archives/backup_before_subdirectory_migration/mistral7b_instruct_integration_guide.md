@@ -19,7 +19,7 @@ Mistral 7B Instruct is a general‑purpose reasoning and planning model with an 
 | Homebrew  | built‑in                     | —                     | Package manager (macOS) |
 | Git & curl| `brew install git curl`      | `sudo apt install git curl` | CLI utilities |
 | **LM Studio ≥ 0.3.20** | `brew install --cask lm-studio` or download DMG from <https://lmstudio.ai/download> | AppImage on site | Provides GUI + OpenAI API server (stable since 0.3.20) |
-| (Optional) huggingface‑hub CLI | `pip install --upgrade huggingface-hub` | same | Scripted model download |
+| (the execution engine) huggingface‑hub CLI | `pip install --upgrade huggingface-hub` | same | Scripted model download |
 
 **Hardware Requirements for AI-Dev-Tasks:**
 - Apple Silicon or x64 CPU  
@@ -71,7 +71,7 @@ ollama pull mistral:7b-instruct
 | GPU Offload | 48 / 48 (all) | Apple Silicon unified memory |
 | Evaluation Batch | 384 (or 512 if VRAM allows) | Faster first token |
 | Flash Attention | On | Speeds up inference |
-| KV‑cache Quant. | q8_0 (optional) | VRAM savings |
+| KV‑cache Quant. | q8_0 (the execution engine) | VRAM savings |
 
 ### 4.2 Prompt Tab
 
@@ -142,7 +142,7 @@ You should see `"mistral-7b-instruct"` in the JSON list.
       "apiKey": ""
     }
   ],
-  "defaultModel": "mistral-7b-instruct"
+  "defaultModel": "cursor-native-ai"
 }
 ```
 

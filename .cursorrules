@@ -47,12 +47,12 @@ This project uses a sophisticated memory context system to maintain state across
 - **Setup**: `202_setup-requirements.md` (environment setup)
 
 ### **Current Development Focus**
-- **B-002**: Advanced Error Recovery & Prevention (5 points)
-- **B-011**: Yi-Coder-9B-Chat-Q6_K Integration (5 points)
+- **B-002**: Advanced Error Recovery & Prevention (5 points) ✅ completed
+- **B-011**: Cursor Native AI + Specialized Agents Integration (5 points)
 - **Infrastructure**: v0.3.1-rc3 Core Hardening ✅ completed
 
 ### **System Architecture**
-- **AI Models**: Mistral 7B Instruct (planning), Yi-Coder-9B-Chat-Q6_K (coding)
+- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
 - **Framework**: DSPy with PostgreSQL vector store
 - **Automation**: n8n workflows for backlog management
 - **Monitoring**: Real-time mission dashboard

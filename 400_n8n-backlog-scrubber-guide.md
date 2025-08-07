@@ -188,7 +188,7 @@ Response:
 
 ### Environment Variables
 
-- `BACKLOG_PATH`: Path to backlog.md file (optional)
+- `BACKLOG_PATH`: Path to backlog.md file (the execution engine)
 - `ENVIRONMENT`: Environment (development, staging, production)
 - `LOG_LEVEL`: Logging level (DEBUG, INFO, WARNING, ERROR)
 

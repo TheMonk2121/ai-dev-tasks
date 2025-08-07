@@ -37,7 +37,7 @@ Yi-Coder-9B-Chat-Q6_K is a specialized coding model that provides deterministic,
 | Homebrew | built-in | — | Package manager (macOS) |
 | Git & curl | `brew install git curl` | `sudo apt install git curl` | For CLI download/testing |
 | LM Studio ≥ 0.2.18 | `brew install --cask lm-studio` or download DMG from https://lmstudio.ai/ | AppImage on website | Runs the model & exposes OpenAI-compatible API |
-| (Optional) huggingface-hub CLI | `pip install --upgrade huggingface-hub` | same | Enables command-line model downloads |
+| (the execution engine) huggingface-hub CLI | `pip install --upgrade huggingface-hub` | same | Enables command-line model downloads |
 
 ## 🚀 **Installation Steps**
 
@@ -72,7 +72,7 @@ After manual download, click Models → Add local model in LM Studio and point t
 - Evaluation Batch Size: 384
 - Offload KV Cache to GPU: On
 - Flash Attention: On
-- K / V Cache Quantization: (optional) q8_0 for both
+- K / V Cache Quantization: (the execution engine) q8_0 for both
 
 #### **Prompt Tab Settings**
 1. Select Template (Jinja) and paste the full template:
@@ -158,7 +158,7 @@ Expected JSON should contain "4".
       "apiKey": ""
     }
   ],
-  "defaultModel": "yi-coder"
+  "defaultModel": "cursor-native-ai"
 }
 ```
 

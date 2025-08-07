@@ -72,7 +72,7 @@ python -m pytest tests/test_enhanced_rag_system.py -v
 - **pytest** - Test framework
 - **PostgreSQL** - For vector store tests
 - **Ollama/Mistral** - For RAG system tests
-- **pytest-cov** - For coverage reporting (optional)
+- **pytest-cov** - For coverage reporting (the execution engine)
 
 ## Notes
 

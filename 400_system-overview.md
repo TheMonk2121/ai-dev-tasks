@@ -7,7 +7,7 @@
 
 ## 🎯 What This System Does
 
-This is a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). It provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+This is a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). It provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
 ---
 
@@ -23,8 +23,8 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 │  └── Process Management (003_process-task-list.md) [Legacy]   │
 ├─────────────────────────────────────────────────────────────────┤
 │  🤖 AI Execution Layer (v0.3.1)                            │
-│  ├── Mistral 7B Instruct (Planning & Reasoning)             │
-│  ├── Yi-Coder-9B-Chat-Q6_K (Code Implementation)          │
+│  ├── Cursor Native AI (Foundation)                          │
+│  ├── Specialized Agents (Enhancements)                      │
 │  ├── Error Policy & Retry Logic                             │
 │  ├── RAM Guard & Resource Management                         │
 │  └── State Management (.ai_state.json)                      │
@@ -81,9 +81,10 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 ### Phase 2: AI Execution
 1. **State Loading** → AI loads context from `.ai_state.json` (when using 003)
 2. **Task Selection** → AI picks next executable task OR executes backlog item directly
-3. **Implementation** → Yi-Coder-9B-Chat-Q6_K writes code, Mistral 7B Instruct plans
-4. **Validation** → AI runs tests and validates completion
-5. **State Update** → Progress saved, next task selected (when using 003)
+3. **Implementation** → Cursor Native AI writes code, Specialized Agents provide enhancements
+4. **Extraction** → LangExtract handles entity/attribute extraction upstream of semantic-gravity scoring
+5. **Validation** → AI runs tests and validates completion
+6. **State Update** → Progress saved, next task selected (when using 003)
 
 ### Phase 3: Quality & Deployment
 1. **Error Recovery** → HotFix tasks for failed validations
@@ -98,6 +99,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 ### 1. Planning & Management System
 
 #### **Backlog Management Engine** (`000_backlog.md` + `100_backlog-guide.md`)
+#### **Extraction Pipeline** (LangExtract + n8n Integration)
 - **Purpose**: Machine-readable roadmap for systematic feature development
 - **Input**: Comprehensive analysis of system needs and opportunities
 - **Output**: Structured table with IDs, points, status, and metadata
@@ -173,8 +175,8 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 #### **v0.3.1 Ultra-Minimal Router Architecture**
 - **Core Agents**: IntentRouter, RetrievalAgent, CodeAgent
 - **Model Management**: 
-  - Mistral 7B Instruct (warm - always resident)
-  - Yi-Coder-9B-Chat-Q6_K (lazy - load on demand)
+  - Cursor Native AI (foundation - always available)
+- Specialized Agents (enhancements - load on demand)
 - **Runtime Guard-Rails**: RAM pressure checks and model janitor
 - **Fast-Path Bypass**: Skip complex routing for simple queries (<50 chars)
 - **Feature Flags**: DEEP_REASONING=0, CLARIFIER=0 (default)
@@ -182,7 +184,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 - **Agent-level LLM timeout**: Mixtral = 90s (configurable per agent)
 - **Environment Variables**: POOL_MIN/POOL_MAX, MODEL_IDLE_EVICT_SECS, MAX_RAM_PRESSURE
 
-#### **Mistral 7B Instruct Agent**
+#### **Cursor Native AI Agent**
 - **Role**: Planning, reasoning, and human interaction
 - **Responsibilities**:
   - Parse PRDs and generate tasks
@@ -192,7 +194,7 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
   - **Parse backlog scoring** for prioritization decisions
   - **Use score metadata** to inform task selection
 
-#### **Yi-Coder-9B-Chat-Q6_K Agent**
+#### **Specialized Agents**
 - **Role**: Code implementation and technical execution
 - **Responsibilities**:
   - Write and test code
@@ -572,7 +574,7 @@ sudo supervisorctl update
       "apiKey": ""
     }
   ],
-  "defaultModel": "mistral"
+  "defaultModel": "cursor-native-ai"
 }
 ```
 
@@ -683,7 +685,7 @@ sudo supervisorctl update
 
 ### For System Administrators
 1. **Setup Infrastructure**: PostgreSQL, Python environment
-2. **Configure AI Agents**: Mistral 7B Instruct, Yi-Coder-9B-Chat-Q6_K setup
+2. **Configure AI Agents**: Cursor Native AI, Specialized Agents setup
 3. **Deploy Dashboard**: Monitor system performance
 4. **Setup Notifications**: Configure alert systems
 

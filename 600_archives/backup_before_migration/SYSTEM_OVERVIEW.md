@@ -572,7 +572,7 @@ sudo supervisorctl update
       "apiKey": ""
     }
   ],
-  "defaultModel": "mistral"
+  "defaultModel": "cursor-native-ai"
 }
 ```
 

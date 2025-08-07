@@ -74,12 +74,12 @@ Large LLMs (Mixtral) require `LLM_TIMEOUT_SEC>=90` for optimal performance.
 - `SECURITY_REPORT_FILE=security-report.json` - Security report file
 - `SECURITY_MAX_FILE_SIZE=104857600` - Maximum file size (100MB)
 - `SECURITY_TOKEN_LENGTH=32` - Security token length
-- `LLM_TIMEOUT_SEC=90` - Overrides agent timeouts (optional)
-- `SECURITY_MAX_FILE_MB=100` - Raise default 50 MB cap (optional)
+- `LLM_TIMEOUT_SEC=90` - Overrides agent timeouts (the execution engine)
+- `SECURITY_MAX_FILE_MB=100` - Raise default 50 MB cap (the execution engine)
 
 **Production Monitoring Configuration:**
 - `ENVIRONMENT=production` - Set environment (development, staging, production)
-- `OTLP_ENDPOINT=http://localhost:4317` - OpenTelemetry endpoint (optional)
+- `OTLP_ENDPOINT=http://localhost:4317` - OpenTelemetry endpoint (the execution engine)
 - `MONITORING_INTERVAL=30` - Monitoring cycle interval in seconds
 - `HEALTH_CHECK_TIMEOUT=5` - Health check timeout in seconds
 
@@ -161,7 +161,7 @@ This structured approach helps ensure the AI stays on track, makes it easier to 
 
 Here's the step-by-step process using the `.md` files in this repository:
 
-### 0️⃣ Select from Backlog (Optional)
+### 0️⃣ Select from Backlog (the execution engine)
 
 For systematic development, start by selecting a high-impact feature from the backlog:
 
@@ -221,13 +221,13 @@ You'll now have a well-structured task list optimized for AI execution, with cle
 
 ### 4️⃣ Execute Tasks with AI-Optimized Processing
 
-To ensure methodical progress and allow for verification, we'll use `003_process-task-list.md` (optional). This system is designed for AI agents using the v0.3.1 Ultra-Minimal Router architecture (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K) with strategic human oversight.
+To ensure methodical progress and allow for verification, we'll use `003_process-task-list.md` (the execution engine). This system is designed for AI agents using the v0.3.1 Ultra-Minimal Router architecture (Cursor Native AI + Specialized Agents) with strategic human oversight.
 
 1. Create or ensure you have the `003_process-task-list.md` file accessible.
 2. In your AI tool, tell the AI to start with the first task:
 
     ```text
-    Please start on task T-1 and use @003_process-task-list.md (optional)
+    Please start on task T-1 and use @003_process-task-list.md (the execution engine)
     ```
     *(Important: You only need to reference `@003_process-task-list.md` for the *first* task. The instructions within it guide the AI for subsequent tasks.)*
 
@@ -246,6 +246,10 @@ The AI system will automatically:
 
 You'll see a satisfying list of completed items grow, providing a clear visual of your feature coming to life!
 
+### 6️⃣ Maintenance & Consistency (the execution engine)
+
+After making model changes or large documentation updates, run `999_repo-maintenance.md` to ensure consistency across all files.
+
 ![Example of a progressing task list with completed items](https://pbs.twimg.com/media/Go6KrXZWkAA_UuX?format=jpg&name=medium)
 
 While it's not always perfect, this method has proven to be a very reliable way to build out larger features with AI assistance.
@@ -262,14 +266,14 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 * **`000_backlog.md`**: Prioritized list of future enhancements and features for systematic development planning with AI scoring system.
 * **`001_create-prd.md`**: Guides the AI in generating a Product Requirement Document for your feature.
 * **`002_generate-tasks.md`**: Takes the PRD markdown file as input and helps the AI break it down into a detailed, AI-optimized implementation task list.
-* **`003_process-task-list.md`**: Instructs AI agents on how to process the generated task list with state management, auto-advance, and HotFix generation (optional legacy helper).
+* **`003_process-task-list.md`**: Instructs AI agents on how to process the generated task list with state management, auto-advance, and HotFix generation (the execution engine).
 
 ### **Automation & Tools:**
 * **`100_backlog-automation.md`**: Documents the AI-BACKLOG-META system for automated backlog management and scoring.
 
 ### **Configuration & Setup:**
 * **`200_naming-conventions.md`**: Explains the file naming conventions and organization structure.
-* **`201_model-configuration.md`**: Documents the specific AI model setup (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K).
+* **`201_model-configuration.md`**: Documents the specific AI model setup (Cursor Native AI + Specialized Agents).
 
 ### **System Documentation:**
 * **`400_project-overview.md`**: This file - comprehensive guide to the AI Dev Tasks workflow.

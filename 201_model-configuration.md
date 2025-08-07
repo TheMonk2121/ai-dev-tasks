@@ -9,11 +9,11 @@ This document outlines the specific AI model configuration for the AI Dev Tasks 
 <!-- MEMORY_CONTEXT: LOW - Model configuration details for specific setup tasks -->
 
 ### **AI Development Ecosystem Context**
-This model configuration is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+This model configuration is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
 **Key Components:**
 - **Planning Layer**: PRD Creation, Task Generation, Process Management
-- **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
+- **AI Execution Layer**: Cursor Native AI (Foundation), Specialized Agents (Enhancements)
 - **Core Systems**: DSPy RAG System, N8N Workflows, Dashboard, Testing Framework
 - **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
 
@@ -38,35 +38,35 @@ FEATURE_FLAGS = {
 MEMORY_STORE = "postgres_diff_no_tombstones"
 ```
 
-#### **1. Mistral 7B Instruct**
-- **Purpose**: Planning, reasoning, and human interaction
-- **Platform**: Ollama
-- **Model Name**: `mistral:7b-instruct`
-- **Status**: **Warm** (always resident)
+#### **1. Cursor Native AI**
+- **Purpose**: Foundation for code generation and completion
+- **Platform**: Cursor IDE
+- **Model Name**: Built-in AI models
+- **Status**: **Always Available** (native integration)
 - **Configuration**: 
-  - Base URL: `http://localhost:11434`
-  - Timeout: 30 seconds
-  - Context Window: 3500 tokens
+  - Integrated with Cursor IDE
+  - Automatic context awareness
+  - File and project understanding
 - **Responsibilities**:
-  - Task planning and reasoning
-  - Human interaction and communication
-  - Error analysis and recovery planning
-  - Backlog scoring and prioritization
+  - Code generation and completion
+  - Context-aware assistance
+  - File and project analysis
+  - Real-time development support
 
-#### **2. Yi-Coder-9B-Chat-Q6_K**
-- **Purpose**: Code implementation and technical execution
-- **Platform**: LM Studio
-- **Model Name**: `Yi-Coder-9B-Chat-Q6_K`
-- **Status**: **Lazy** (load on demand)
+#### **2. Specialized Agents**
+- **Purpose**: Enhanced capabilities for specific tasks
+- **Platform**: Cursor IDE + External Agents
+- **Model Name**: Various specialized models
+- **Status**: **On-Demand** (load when needed)
 - **Configuration**:
-  - Local deployment via LM Studio
-  - Optimized for code generation
-  - Quantized for efficiency (Q6_K)
+  - Agent-based architecture
+  - Specialized for specific domains
+  - Modular and extensible
 - **Responsibilities**:
-  - Code implementation
-  - Technical execution
-  - File creation and modification
-  - Test generation
+  - Deep research and analysis
+  - Specialized coding patterns
+  - Documentation and explanations
+  - Advanced problem solving
 
 ## 🔧 **Setup Instructions**
 
@@ -100,7 +100,7 @@ MEMORY_STORE = "postgres_diff_no_tombstones"
 | Homebrew | built-in | — | Package manager (macOS) |
 | Git & curl | `brew install git curl` | `sudo apt install git curl` | For CLI download/testing |
 | LM Studio ≥ 0.2.18 | `brew install --cask lm-studio` or download DMG from https://lmstudio.ai/ | AppImage on website | Runs the model & exposes OpenAI-compatible API |
-| (Optional) huggingface-hub CLI | `pip install --upgrade huggingface-hub` | same | Enables command-line model downloads |
+| (the execution engine) huggingface-hub CLI | `pip install --upgrade huggingface-hub` | same | Enables command-line model downloads |
 
 #### **Download the Model**
 
@@ -133,7 +133,7 @@ After manual download, click Models → Add local model in LM Studio and point t
 - Evaluation Batch Size: 384
 - Offload KV Cache to GPU: On
 - Flash Attention: On
-- K / V Cache Quantization: (optional) q8_0 for both
+- K / V Cache Quantization: (the execution engine) q8_0 for both
 
 **Prompt Tab Settings:**
 1. Select Template (Jinja) and paste the full template:
@@ -281,7 +281,7 @@ Expected JSON should contain "4".
       "apiKey": ""
     }
   ],
-  "defaultModel": "yi-coder"
+  "defaultModel": "cursor-native-ai"
 }
 ```
 

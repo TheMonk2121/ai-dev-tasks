@@ -292,7 +292,7 @@ You → ask_question.py → DSPy RAGSystem → VectorStore → PostgreSQL → Mi
 - **Query Interface**: Interactive question asking
 - **Full Pipeline**: DSPy → RAG → Mistral working
 
-## **🎯 Next Steps (Optional)**
+## **🎯 Next Steps (the execution engine)**
 
 ### **If You Want Notifications Later**
 ```bash

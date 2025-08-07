@@ -55,6 +55,7 @@ Use these reference patterns in other documents:
 # CONTEXT: See 400_context-priority-guide.md for file organization
 # ESSENTIAL: 400_project-overview.md, 400_system-overview.md, 000_backlog.md
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
+# DOMAIN: 100_backlog-guide.md, CURSOR_NATIVE_AI_STRATEGY.md
 ```
 
 #### **In Documentation:**
@@ -62,6 +63,7 @@ Use these reference patterns in other documents:
 > **Context Reference**: See `400_context-priority-guide.md` for complete file organization
 > **Essential Files**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
+> **Domain Files**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
 ```
 
 ## Priority Tiers (Macro → Micro)

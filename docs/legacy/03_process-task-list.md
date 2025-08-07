@@ -57,7 +57,7 @@ This task execution process is part of a comprehensive AI-powered development ec
    - If `🛑 Pause After: yes` AND `Auto-Advance: no` → wait for human input
    - Otherwise continue to next task
 
-7. **Update Backlog** (Optional)
+7. **Update Backlog** (the execution engine)
    - Mark completed features in backlog as implemented
    - **Move completed items to "Completed Items" section** in backlog
    - Update status from "todo" to "✅ done" in backlog table
