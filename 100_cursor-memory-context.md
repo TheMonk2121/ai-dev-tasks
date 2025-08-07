@@ -70,6 +70,16 @@ AI Development Ecosystem
 - ✅ **n8n Backlog Scrubber** - Automated prioritization
 
 ### **Recently Completed**
+- ✅ **B‑065**: Error Recovery & Troubleshooting Guide (✅ done)
+  - Comprehensive troubleshooting guide with emergency procedures
+  - Automated recovery scripts for database and system issues
+  - Integration with B-002 Advanced Error Recovery & Prevention system
+  - Step-by-step workflows and monitoring procedures
+- ✅ **B‑060**: Documentation Coherence Validation System (✅ done)
+  - Comprehensive validation system with cross-reference checking
+  - File naming convention validation and backlog reference validation
+  - Memory context coherence checking and Cursor AI semantic validation
+  - Pre-commit hooks, test suite, and complete documentation
 - ✅ **B‑002**: Advanced Error Recovery & Prevention (✅ done)
   - Error Pattern Recognition System with 15+ error patterns
   - HotFix Template Generation with 3 template categories
