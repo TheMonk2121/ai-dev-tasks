@@ -85,6 +85,16 @@ AI Development Ecosystem
 
 ## 🛠️ Development Guidelines
 
+### **Documentation Strategy & Safeguards**
+Our documentation system uses **cognitive scaffolding** with three-digit prefixes and HTML cross-references to maintain coherence. The system balances **structure** (rigid naming conventions) with **elasticity** (automated validation and AI-assisted updates). Key safeguards include:
+- **Automated validation** with Cursor AI semantic checking
+- **Fenced sections** for safe automated updates
+- **Git snapshots** and rollback procedures
+- **Cross-reference integrity** through automated validation
+- **Single source of truth** principle to prevent drift
+
+See `400_context-priority-guide.md` for complete documentation strategy and file organization.
+
 ### **When Working on Features**
 1. **Check `000_backlog.md`** for current priorities and dependencies
 2. **Use existing workflows** (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
