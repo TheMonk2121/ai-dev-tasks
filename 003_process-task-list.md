@@ -1,7 +1,23 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_database_migration_procedures.md -->
+<!-- MODULE_REFERENCE: 000_backlog.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+
+# Process Task List
+
+<!-- ANCHOR: tldr -->
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+- Role: Secondary, stable execution engine
+- Use: When you need a deterministic run-loop with pause points, HotFix, and state handling
+- Backlog note: If using `000_backlog.md` directly, reference this file only for the first task; it self-directs thereafter
+
+<!-- ANCHOR: run -->
+<a id="run"></a>
+
+## Run loop
 
 2. **Select Next Task**
    - Find task with status `[ ]` where all dependencies are `[x]`
@@ -10,6 +26,9 @@
    - Check backlog dependencies before starting tasks
    - **Consider backlog scores** for task selection when available
    - **Prioritize high-scoring items** when multiple tasks are ready
+
+<!-- ANCHOR: pause-points -->
+<a id="pause-points"></a>
 
 3. **Execute Task**
    - Follow steps in "Do:" section
@@ -20,6 +39,9 @@
    - Run all "Done when:" criteria
    - If any fail → mark task `[!]` and create HotFix task
    - If all pass → mark task `[x]`
+
+<!-- ANCHOR: state -->
+<a id="state"></a>
 
 5. **Update State**
    - Write/update `.ai_state.json` with current state
@@ -62,11 +84,15 @@
 ```
 
 ### Default Rules
+
 - **Auto-Advance: yes** for Medium and Low priority tasks
 - **Auto-Advance: no** for Critical tasks, deployment changes, database migrations
 - **Auto-Advance: no** when `🛑 Pause After: yes`
 
 ---
+
+<!-- ANCHOR: hotfix -->
+<a id="hotfix"></a>
 
 ## 4. State Management
 
@@ -82,6 +108,7 @@
 ```
 
 ### State Operations
+
 - **Load**: Read state at start of execution
 - **Save**: Update after each task completion
 - **Ignore**: Add to .gitignore (never commit)
@@ -91,24 +118,29 @@
 ## 5. HotFix Task Generation
 
 ### When to Create HotFix
+
 - Any "Done when:" criteria fails
 - Uncaught exception during execution
 - Test suite failure
 
 ### HotFix Task Template
 ```markdown
+
 ### T-HotFix-<n> Fix <short description>
+
 **Priority**: Critical
 **Time**: 1-2 hours
 **Depends on**: [failed_task_id]
 
 **Do**:
+
 1. Reproduce the error
 2. Fix the issue
 3. Add regression test
 4. Re-run failing validation
 
 **Done when**:
+
 - Original task's "Done when" criteria pass
 - New regression test passes
 
@@ -122,12 +154,14 @@
 ## 6. Error Handling
 
 ### Safety Rules
+
 - **Database Changes**: Always pause for human review
 - **Deployment Scripts**: Always pause for human review
 - **Consecutive Failures**: Stop execution after 2 consecutive failures
 - **Uncaught Exceptions**: Generate HotFix task and pause
 
 ### Recovery Process
+
 1. Generate HotFix task with error details
 2. Execute HotFix task
 3. Retry original task
@@ -135,14 +169,19 @@
 
 ---
 
+<!-- ANCHOR: completion-checks -->
+<a id="completion-checks"></a>
+
 ## 7. Progress Tracking
 
 ### Simple Progress
+
 - Count completed tasks: `[x]` vs total tasks
 - Update progress in task list header
 - Track blocked tasks: `[!]`
 
 ### Completion Validation
+
 - All tasks marked `[x]` or `[!]`
 - No tasks with status `[ ]`
 - All "Done when" criteria validated
@@ -152,6 +191,7 @@
 ## 8. Human Checkpoints
 
 ### When to Pause
+
 - Critical priority tasks
 - Database migrations
 - Deployment changes
@@ -159,6 +199,7 @@
 - User explicitly requests pause
 
 ### Checkpoint Process
+
 1. Display "When Ready Prompt"
 2. Wait for user input
 3. Continue execution on user approval
@@ -169,12 +210,14 @@
 ## 9. File Maintenance
 
 ### Required Files
+
 - Task list markdown file
 - `.ai_state.json` (auto-generated, gitignored)
 - Source code files
 - Test files
 
 ### Git Operations
+
 - Commit after each completed task
 - Use conventional commit messages
 - Never commit `.ai_state.json`
@@ -182,6 +225,7 @@
 ---
 
 This approach ensures:
+
 - **Efficient AI execution** with state caching
 - **Automatic error recovery** with HotFix tasks
 - **Minimal human intervention** with smart pausing

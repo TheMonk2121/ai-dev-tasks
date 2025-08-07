@@ -1,17 +1,42 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines_security_standards.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide_quality_gates.md -->
+<!-- MODULE_REFERENCE: 000_backlog.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
 
-- **Integration & Testing** - Component integration and validation
+ # Generate Tasks
+
+ <!-- ANCHOR: tldr -->
+ <a id="tldr"></a>
+
+ ## 🔎 TL;DR
+
+ - Input: PRD file or Backlog ID
+ - Output: 2–4 hour tasks with deps, timebox, auto-advance, pause-after, done-when
+ - Handoff: Feed generated list to `003_process-task-list.md` (secondary execution engine)
+
+ <!-- ANCHOR: workflow -->
+ <a id="workflow"></a>
+
+ ## Workflow
+
+ - Parse PRD or `000_backlog.md` row to derive tasks
+ - Enforce quality gates and acceptance criteria per task
+
+ - **Integration & Testing** - Component integration and validation
 - **Performance & Security** - Optimization and hardening
 - **Documentation & Deployment** - Final preparation and launch
 
+<!-- ANCHOR: template -->
+<a id="template"></a>
+
 ### 3. **Task Format Requirements**
+
 Each task must include:
 
 ```markdown
+
 ### Task Name
+
 **Priority:** [Critical/High/Medium/Low]
 **Estimated Time:** [X hours/days]
 **Dependencies:** [List of prerequisite tasks]
@@ -20,11 +45,13 @@ Each task must include:
 [Clear, actionable description]
 
 **Acceptance Criteria:**
+
 - [ ] [Specific, testable criteria]
 - [ ] [Another criterion]
 - [ ] [Performance benchmarks if applicable]
 
 **Testing Requirements:**
+
 - [ ] **Unit Tests** - [Specific test scenarios]
 - [ ] **Integration Tests** - [Component interaction tests]
 - [ ] **Performance Tests** - [Benchmarks and thresholds]
@@ -36,11 +63,13 @@ Each task must include:
 [Technical details, considerations, or warnings]
 
 **Quality Gates:**
+
 - [ ] **Code Review** - All code has been reviewed
 - [ ] **Tests Passing** - All tests pass with required coverage
 - [ ] **Performance Validated** - Meets performance requirements
 - [ ] **Security Reviewed** - Security implications considered
 - [ ] **Documentation Updated** - Relevant docs updated
+
 ```
 
 ## **Enhanced Testing Methodology**
@@ -48,6 +77,7 @@ Each task must include:
 ### **Comprehensive Test Coverage Requirements:**
 
 #### **1. Unit Tests**
+
 - **Purpose**: Test individual components in isolation
 - **Coverage**: All public methods and critical private methods
 - **Requirements**: 
@@ -57,6 +87,7 @@ Each task must include:
   - Test configuration variations
 
 #### **2. Integration Tests**
+
 - **Purpose**: Test component interactions and workflows
 - **Coverage**: End-to-end workflows and data flows
 - **Requirements**:
@@ -66,6 +97,7 @@ Each task must include:
   - Verify API contracts and interfaces
 
 #### **3. Performance Tests**
+
 - **Purpose**: Validate performance under load and stress
 - **Coverage**: Response times, throughput, resource usage
 - **Requirements**:
@@ -75,6 +107,7 @@ Each task must include:
   - Test concurrent request handling
 
 #### **4. Security Tests**
+
 - **Purpose**: Validate security controls and vulnerability prevention
 - **Coverage**: Input validation, access control, data protection
 - **Requirements**:
@@ -84,6 +117,7 @@ Each task must include:
   - Verify secure communication protocols
 
 #### **5. Resilience Tests**
+
 - **Purpose**: Test system behavior under failure conditions
 - **Coverage**: Error handling, recovery, graceful degradation
 - **Requirements**:
@@ -93,6 +127,7 @@ Each task must include:
   - Verify logging and monitoring under stress
 
 #### **6. Edge Case Tests**
+
 - **Purpose**: Test boundary conditions and unusual scenarios
 - **Coverage**: Large inputs, special characters, malformed data
 - **Requirements**:
@@ -107,13 +142,18 @@ Each task must include:
 ```python
 def test_component_functionality():
     """Test description with clear purpose"""
+
     # Setup - Prepare test data and mocks
+
     # Execute - Call the function under test
+
     # Assert - Verify expected outcomes
+
     # Cleanup - Restore state if needed
 ```
 
 #### **Test Quality Requirements:**
+
 - **Isolation**: Tests should not depend on each other
 - **Deterministic**: Tests should produce consistent results
 - **Fast**: Unit tests should complete in milliseconds
@@ -121,6 +161,7 @@ def test_component_functionality():
 - **Comprehensive**: Cover happy path, error cases, and edge cases
 
 #### **Performance Benchmarks:**
+
 - **Response Time**: Define acceptable latency thresholds
 - **Throughput**: Specify requests per second requirements
 - **Resource Usage**: Set memory and CPU limits
@@ -130,14 +171,18 @@ def test_component_functionality():
 
 ### **Implementation Status Tracking:**
 ```markdown
+
 ## Implementation Status
+
 ### Overall Progress
+
 - **Total Tasks:** [X] completed out of [Y] total
 - **Current Phase:** [Planning/Implementation/Testing/Deployment]
 - **Estimated Completion:** [Date or percentage]
 - **Blockers:** [List any current blockers]
 
 ### Quality Gates
+
 - [ ] **Code Review Completed** - All code has been reviewed
 - [ ] **Tests Passing** - All unit and integration tests pass
 - [ ] **Documentation Updated** - All relevant docs updated
@@ -146,9 +191,11 @@ def test_component_functionality():
 - [ ] **User Acceptance** - Feature validated with users
 - [ ] **Resilience Tested** - Error handling and recovery validated
 - [ ] **Edge Cases Covered** - Boundary conditions tested
+
 ```
 
 ### **Testing Checklist for Each Task:**
+
 - [ ] **Unit Tests Written** - All public methods tested
 - [ ] **Integration Tests Created** - Component interactions tested
 - [ ] **Performance Tests Implemented** - Benchmarks and thresholds defined
@@ -163,38 +210,48 @@ def test_component_functionality():
 Generate a comprehensive task list with the following structure:
 
 ```markdown
+
 # Task List: [Project Name]
 
 ## Overview
+
 [Brief description of the project and its goals]
 
 ## Implementation Phases
 
 ### Phase 1: Environment Setup
+
 [Tasks for infrastructure and dependencies]
 
 ### Phase 2: Core Implementation  
+
 [Tasks for main functionality development]
 
 ### Phase 3: Integration & Testing
+
 [Tasks for component integration and validation]
 
 ### Phase 4: Performance & Security
+
 [Tasks for optimization and hardening]
 
 ### Phase 5: Documentation & Deployment
+
 [Tasks for final preparation and launch]
 
 ## Quality Metrics
+
 - **Test Coverage Target**: [X]%
 - **Performance Benchmarks**: [Specific metrics]
 - **Security Requirements**: [Security standards]
 - **Reliability Targets**: [Uptime and error rates]
 
 ## Risk Mitigation
+
 - **Technical Risks**: [Identified risks and mitigation strategies]
 - **Timeline Risks**: [Schedule risks and contingency plans]
 - **Resource Risks**: [Resource constraints and solutions]
+
 ```
 
 ## **Special Instructions**
