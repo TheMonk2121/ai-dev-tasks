@@ -7,6 +7,20 @@
 <!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
 <!-- MEMORY_CONTEXT: HIGH - This file serves as the primary memory scaffold for Cursor AI -->
 
+## 🚨 CRITICAL SAFETY REQUIREMENTS
+**BEFORE ANY FILE OPERATIONS:**
+- [ ] Read `400_file-analysis-guide.md` completely (463 lines)
+- [ ] Complete 6-step mandatory analysis
+- [ ] Show all cross-references
+- [ ] Get explicit user approval
+
+## 📋 QUICK REFERENCE (30-second scan)
+**Current Focus:** B-011 (Cursor Native AI + Specialized Agents) - 5 points
+**Next Priority:** B-031 (Vector Database Enhancement) - 3 points
+**System:** Cursor Native AI + Specialized Agents + DSPy RAG
+**Workflow:** Backlog → PRD → Tasks → AI Execution
+**Critical Files:** `000_backlog.md`, `400_system-overview.md`, `400_file-analysis-guide.md`
+
 ## 🎯 Purpose
 This file serves as the **memory scaffold** for Cursor AI, providing instant context about the AI development ecosystem without requiring the AI to read multiple files.
 
@@ -53,6 +67,8 @@ AI Development Ecosystem
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 - **Analysis**: `400_file-analysis-guide.md` - **🚨 MANDATORY: File deletion/deprecation analysis methodology**
 - **Domain**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
+
+**⚠️ CRITICAL**: Before ANY file operations, you MUST read and follow `400_file-analysis-guide.md` completely!
 
 ## 🎯 Current Priorities
 
@@ -106,6 +122,25 @@ AI Development Ecosystem
 4. **Get explicit user approval** for high-risk operations
 
 **This is NON-NEGOTIABLE** - failure to follow these steps means you cannot suggest file deletion!
+
+## 🚨 CRITICAL SAFETY REQUIREMENTS
+
+### **⚠️ MANDATORY: File Analysis Before Any File Operations**
+**BEFORE suggesting ANY file deletion, deprecation, or archiving, you MUST:**
+
+1. **Read `400_file-analysis-guide.md`** - Complete the 6-step mandatory analysis
+2. **Complete ALL steps** - No exceptions, no shortcuts
+3. **Show cross-references** - Prove you've done the analysis
+4. **Get user approval** - For any high-risk operations
+
+**🚨 FAILURE TO FOLLOW THESE STEPS MEANS YOU CANNOT SUGGEST FILE OPERATIONS!**
+
+**📋 Quick Checklist:**
+- [ ] Read `400_file-analysis-guide.md` (463 lines - READ ALL OF IT)
+- [ ] Complete 6-step mandatory analysis
+- [ ] Show all cross-references
+- [ ] Provide detailed reasoning
+- [ ] Get explicit user approval
 
 ### **📚 Complete Documentation Inventory**
 

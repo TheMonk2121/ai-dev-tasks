@@ -1,5 +1,18 @@
 # 🎯 AI Development Ecosystem - Product Backlog
 
+## 🚨 CRITICAL SAFETY REQUIREMENTS
+**BEFORE ANY FILE OPERATIONS:**
+- [ ] Read `400_file-analysis-guide.md` completely (463 lines)
+- [ ] Complete 6-step mandatory analysis
+- [ ] Show all cross-references
+- [ ] Get explicit user approval
+
+## 📋 QUICK REFERENCE (30-second scan)
+**Top Priority:** B-011 (Cursor Native AI Integration) - ✅ done
+**Next Priority:** B-031 (Vector Database Enhancement) - 3 points
+**Execution:** Use `003_process-task-list.md` for AI-executable items
+**Human Required:** Items with `<!-- human_required: true -->`
+
 A prioritized list of future enhancements and features for the AI development ecosystem. 
 
 **📋 For usage instructions and scoring details, see `100_backlog-guide.md`**

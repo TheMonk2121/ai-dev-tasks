@@ -10,6 +10,20 @@
 <!-- SYSTEM_FILES: dspy-rag-system/400_project-overview.md, dspy-rag-system/docs/CURRENT_STATUS.md -->
 <!-- MEMORY_CONTEXT: HIGH - Technical architecture and system overview for AI context -->
 
+## 🚨 CRITICAL SAFETY REQUIREMENTS
+**BEFORE ANY FILE OPERATIONS:**
+- [ ] Read `400_file-analysis-guide.md` completely (463 lines)
+- [ ] Complete 6-step mandatory analysis
+- [ ] Show all cross-references
+- [ ] Get explicit user approval
+
+## 📋 QUICK REFERENCE (30-second scan)
+**System:** Cursor Native AI + Specialized Agents + DSPy RAG
+**Architecture:** Planning → AI Execution → Core Systems → Infrastructure
+**Key Tech:** PostgreSQL + PGVector + n8n + Dashboard
+**Security:** Prompt sanitization + File validation + Input validation
+**Workflow:** Backlog → PRD → Tasks → AI Execution → Quality → Deployment
+
 ## 🎯 What This System Does
 
 This is a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). It provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
