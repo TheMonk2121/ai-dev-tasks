@@ -307,6 +307,8 @@ Use these reference patterns in other documents:
 | `400_metadata-collection-guide.md` | Metadata collection system, analytics, and data-driven decision making | Comprehensive data collection and usage patterns | `<!-- CONTEXT_REFERENCE: 400_metadata-collection-guide.md -->` |
 | `400_file-analysis-guide.md` | Systematic file analysis methodology for legacy detection and obsolescence assessment | Comprehensive analysis process for maintaining documentation integrity | `<!-- CONTEXT_REFERENCE: 400_file-analysis-guide.md -->` |
 | `500_research-infrastructure-guide.md` | Research infrastructure for LLM-accessible knowledge management | Academic papers, articles, tutorials, and case studies | `<!-- CONTEXT_REFERENCE: 500_research-infrastructure-guide.md -->` |
+| `500_research-summary.md` | Central research summary for AI development ecosystem | Research findings and implementation guidance | `<!-- CONTEXT_REFERENCE: 500_research-summary.md -->` |
+| `500_dspy-research.md` | DSPy framework research and implementation guidance | DSPy patterns, best practices, and integration | `<!-- CONTEXT_REFERENCE: 500_dspy-research.md -->` |
 | `dspy-rag-system/src/dashboard.py` | Main dashboard orchestration and API endpoints | Central coordination point | `<!-- CONTEXT_REFERENCE: dspy-rag-system/src/dashboard.py -->` |
 | `dspy-rag-system/src/mission_dashboard/mission_dashboard.py` | Real-time mission tracking orchestration | Live AI task monitoring | `<!-- CONTEXT_REFERENCE: dspy-rag-system/src/mission_dashboard/mission_dashboard.py -->` |
 | `dspy-rag-system/src/n8n_workflows/backlog_webhook.py` | n8n integration webhook server | External system integration | `<!-- CONTEXT_REFERENCE: dspy-rag-system/src/n8n_workflows/backlog_webhook.py -->` |
