@@ -3,12 +3,15 @@
 > **RAG Research**: Comprehensive research findings on advanced Retrieval-Augmented Generation systems for our AI development ecosystem.
 
 <!-- CONTEXT_REFERENCE: 500_research-analysis-summary.md -->
-<!-- CORE_SYSTEM: 400_system-overview.md, dspy-rag-system/ -->
+<!-- CORE_SYSTEM: 400_system-overview_advanced_features.md, dspy-rag-system/ -->
 <!-- RESEARCH_SOURCES: docs/research/papers/rag-papers.md -->
 <!-- EXTERNAL_SOURCES: docs/research/articles/rag-articles.md -->
 <!-- TUTORIAL_SOURCES: docs/research/tutorials/rag-tutorials.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - RAG research for advanced retrieval implementation -->
 
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ## 📚 **Research Overview**
 
 This document contains comprehensive research findings on advanced RAG (Retrieval-Augmented Generation) systems, focusing on hybrid search, intelligent chunking, multi-stage retrieval, and span-level grounding for our AI development ecosystem.
@@ -281,5 +284,5 @@ class MultiStageRetriever:
 ---
 
 **Last Updated**: 2024-08-07  
-**Related Documentation**: `500_research-analysis-summary.md`, `400_system-overview.md`  
+**Related Documentation**: `500_research-analysis-summary.md`, `400_system-overview_advanced_features.md`  
 **Status**: Research findings ready for implementation

@@ -59,6 +59,10 @@ Each file includes a memory context comment that explains its role:
 <!-- MEMORY_CONTEXT: HIGH - This file serves as the primary memory scaffold for Cursor AI -->
 <!-- MEMORY_CONTEXT: MEDIUM - Core workflow for PRD creation -->
 <!-- MEMORY_CONTEXT: LOW - Yi-Coder integration details for specific implementation tasks -->
+<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 ```
 
 ### **Comment Format**

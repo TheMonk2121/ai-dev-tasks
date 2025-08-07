@@ -1,3 +1,6 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 # Monitoring Articles
 
 > **External Research**: Industry articles and blog posts about system monitoring and observability.
@@ -12,7 +15,7 @@
 
 ## 🔗 **Related Documentation**
 - `500_monitoring-research.md` - Our internal monitoring research summary
-- `400_system-overview.md` - System architecture overview
+- `400_system-overview_advanced_features.md` - System architecture overview
 
 ## 📖 **Key Insights**
 - Industry monitoring best practices

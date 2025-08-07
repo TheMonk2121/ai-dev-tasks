@@ -6,8 +6,16 @@ You are an expert software development task generator. Your role is to create de
 <!-- WORKFLOW_FILES: 001_create-prd.md, 03_process-task-list.md -->
 <!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Core workflow for task generation -->
-<!-- SYSTEM_FILES: 400_system-overview.md -->
+<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines_security_standards.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide_quality_gates.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide_component_integration.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
 ### **AI Development Ecosystem Context**
 This task generation process is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 

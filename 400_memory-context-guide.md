@@ -16,7 +16,7 @@ These files provide instant context about the project:
 | File | Purpose | For Humans | For AI |
 |------|---------|------------|---------|
 | `100_cursor-memory-context.md` | Memory scaffold | Current state overview | Primary context source |
-| `400_system-overview.md` | Technical architecture | System understanding | Technical context |
+| `400_system-overview_advanced_features.md` | Technical architecture | System understanding | Technical context |
 | `000_backlog.md` | Current priorities | What to work on next | Development roadmap |
 | `400_project-overview.md` | Project overview | Quick start guide | Workflow understanding |
 
@@ -59,6 +59,10 @@ Each file includes a memory context comment that explains its role:
 <!-- MEMORY_CONTEXT: HIGH - This file serves as the primary memory scaffold for Cursor AI -->
 <!-- MEMORY_CONTEXT: MEDIUM - Core workflow for PRD creation -->
 <!-- MEMORY_CONTEXT: LOW - Yi-Coder integration details for specific implementation tasks -->
+<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 ```
 
 ### **Comment Format**
@@ -162,7 +166,7 @@ FROM episodic_logs;
 
 ### **For New Team Members**
 1. Read `100_cursor-memory-context.md` for current state
-2. Review `400_system-overview.md` for technical architecture
+2. Review `400_system-overview_advanced_features.md` for technical architecture
 3. Check `000_backlog.md` for current priorities
 4. Use workflow files (`01_`, `02_`, `03_`) for development
 

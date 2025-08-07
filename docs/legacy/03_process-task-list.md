@@ -6,8 +6,14 @@ Guidelines for executing task lists generated from PRDs using AI agents (Mistral
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md -->
 <!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Core workflow for AI task execution -->
-<!-- SYSTEM_FILES: 400_system-overview.md -->
+<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_database_migration_procedures.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 ### **AI Development Ecosystem Context**
 This task execution process is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 

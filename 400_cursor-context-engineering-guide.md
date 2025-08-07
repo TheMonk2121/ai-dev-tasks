@@ -1,12 +1,18 @@
 # 🎯 Cursor Native AI Context Engineering Guide
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- CORE_SYSTEM: 400_project-overview.md, 100_cursor-memory-context.md -->
 <!-- INTEGRATION_FILES: 104_dspy-development-context.md -->
 <!-- MEMORY_CONTEXT: HIGH - Context engineering strategies for Cursor Native AI model routing -->
 
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ## 🎯 Overview
 
 This guide explains how to leverage **context engineering** with DSPy to intelligently steer Cursor's native AI models toward optimal performance. The system uses DSPy's structured reasoning to analyze task characteristics and select the best model from Cursor's available options.
@@ -320,7 +326,7 @@ CONTEXT_ENGINEERING_PATTERNS = {
 
 - **B-011 Implementation Summary**: Cursor Native AI Integration details
 - **104_dspy-development-context.md**: DSPy framework overview
-- **400_system-overview.md**: System architecture
+- **400_system-overview_advanced_features.md**: System architecture
 - **dspy-rag-system/README.md**: RAG system documentation
 
 ---

@@ -6,8 +6,21 @@ You are an expert Product Requirements Document (PRD) creator. Your role is to c
 <!-- WORKFLOW_FILES: 02_generate-tasks.md, 03_process-task-list.md -->
 <!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Core workflow for PRD creation -->
-<!-- SYSTEM_FILES: 400_system-overview.md -->
+<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_database_migration_procedures.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_rollback_procedures.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide_test_types.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide_quality_gates.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide_component_integration.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
 ### **AI Development Ecosystem Context**
 This PRD creation process is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 

@@ -10,6 +10,7 @@
 <!-- SYSTEM_FILES: dspy-rag-system/400_project-overview.md, dspy-rag-system/docs/CURRENT_STATUS.md -->
 <!-- MEMORY_CONTEXT: HIGH - Technical architecture and system overview for AI context -->
 
+<!-- MODULE_REFERENCE: 101_memory-context-safety.md -->
 ## 🚨 CRITICAL SAFETY REQUIREMENTS
 **BEFORE ANY FILE OPERATIONS:**
 - [ ] Read `400_file-analysis-guide.md` completely (463 lines)

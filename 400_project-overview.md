@@ -5,12 +5,18 @@ Welcome to **AI Dev Tasks**! This repository provides a collection of markdown f
 Stop wrestling with monolithic AI requests and start guiding your AI collaborator step-by-step!
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_system-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
+<!-- CORE_SYSTEM: 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
 <!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
 <!-- MEMORY_CONTEXT: HIGH - Project overview and workflow guide for AI context -->
 
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 ## 🚀 Quick Start
 
 ### Quick Start Box
@@ -279,7 +285,7 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 
 ### **System Documentation:**
 * **`400_project-overview.md`**: This file - comprehensive guide to the AI Dev Tasks workflow.
-* **`400_system-overview.md`**: Detailed technical overview of the entire AI development ecosystem.
+* **`400_system-overview_advanced_features.md`**: Detailed technical overview of the entire AI development ecosystem.
 
 ## 🎯 Quick Reference
 

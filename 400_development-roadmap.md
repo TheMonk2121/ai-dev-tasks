@@ -3,10 +3,21 @@
 > **Strategic Planning**: Comprehensive roadmap for the AI development ecosystem, consolidating all timeline information and strategic planning.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
 <!-- ROADMAP_SYSTEM: 400_development-roadmap.md -->
 <!-- MEMORY_CONTEXT: HIGH - Strategic roadmap for development planning and progress tracking -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: B-011-DEVELOPER-DOCUMENTATION_specialized_agent_framework.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ## 🎯 **Roadmap Overview**
 
 This document provides a **comprehensive development roadmap** for the AI development ecosystem, consolidating timeline information from the backlog, memory context, and individual PRDs into a single strategic planning document.
@@ -313,7 +324,7 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 - **`003_process-task-list.md`** - AI execution workflow
 
 ### **System Documentation**
-- **`400_system-overview.md`** - Technical architecture
+- **`400_system-overview_advanced_features.md`** - Technical architecture
 - **`400_project-overview.md`** - High-level project overview
 - **`104_dspy-development-context.md`** - DSPy implementation details
 

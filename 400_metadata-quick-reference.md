@@ -315,3 +315,7 @@ python3 scripts/state_manager.py --export-csv metrics.csv
 <!-- IMPLEMENTATION_CONTEXT: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- QUICK_REFERENCE: 400_metadata-quick-reference.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Quick reference for metadata operations -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_backlog_analysis_examples.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->

@@ -6,6 +6,9 @@ This document describes the AI-BACKLOG-META system for automated backlog managem
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
 <!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
 
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
 ## Overview
 
 The AI-BACKLOG-META system provides machine-readable commands and metadata that AI agents can parse to automate backlog management tasks. This reduces manual work and ensures consistency across the development workflow.

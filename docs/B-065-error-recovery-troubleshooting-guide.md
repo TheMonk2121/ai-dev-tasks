@@ -1,3 +1,9 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_troubleshooting_guide.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 # 🔧 B-065 Error Recovery & Troubleshooting Guide
 
 ## 🎯 Overview

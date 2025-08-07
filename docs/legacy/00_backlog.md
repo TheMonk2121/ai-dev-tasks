@@ -9,6 +9,15 @@ A prioritized list of future enhancements and features for the AI development ec
 <!-- AUTOMATION_FILES: 100_backlog-automation.md, 100_backlog-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Current priorities and development roadmap for AI context -->
 
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ---
 
 | ID  | Title                                   | 🔥P | 🎯Points | Status | Problem/Outcome | Tech Footprint | Dependencies |
@@ -135,7 +144,7 @@ These items require manual setup or configuration on your end before they can be
 | S‑007 | Virtual Environment Setup             | ⚙️  | 1        | setup-required | Python virtual environment + dependencies | See `400_project-overview.md` |
 | S‑008 | Cursor IDE Configuration              | 🔥  | 1        | setup-required | Cursor IDE + Yi-Coder integration | See `103_yi-coder-integration.md` |
 | S‑009 | Secrets Management Setup              | 🔥  | 1        | setup-required | Environment secrets configuration | See `C8_COMPLETION_SUMMARY.md` |
-| S‑010 | System Dependencies                   | ⚙️  | 1        | setup-required | System packages and tools | See `400_system-overview.md` |
+| S‑010 | System Dependencies                   | ⚙️  | 1        | setup-required | System packages and tools | See `400_system-overview_advanced_features.md` |
 
 ---
 

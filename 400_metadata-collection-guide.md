@@ -3,14 +3,18 @@
 > **AI Discovery**: This document provides comprehensive information about the metadata collection system, data sources, usage patterns, and analytics capabilities within the AI development ecosystem.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 <!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
 <!-- EXECUTION_ENGINE: scripts/process_tasks.py, scripts/state_manager.py, scripts/error_handler.py -->
 <!-- IMPLEMENTATION_STACK: 104_dspy-development-context.md, 202_setup-requirements.md, 201_model-configuration.md -->
-<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_security-best-practices-guide.md, 400_performance-optimization-guide.md -->
+<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide_additional_resources.md, 400_security-best-practices-guide.md, 400_performance-optimization-guide_additional_resources.md -->
 <!-- QUICK_REFERENCE: 400_metadata-quick-reference.md -->
 <!-- MEMORY_CONTEXT: HIGH - Comprehensive metadata collection and analytics documentation -->
 
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ## 📊 **Overview**
 
 The AI development ecosystem includes a sophisticated metadata collection and analytics system that enables intelligent task execution, performance optimization, and data-driven decision making. This guide documents the metadata sources, collection methods, usage patterns, and analytics capabilities.

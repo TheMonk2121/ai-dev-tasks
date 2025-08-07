@@ -11,6 +11,20 @@ This document contains all patches and edits for implementing Cache-Augmented Ge
 
 <!-- MEMORY_CONTEXT: MEDIUM - File organization and documentation guidelines for maintaining memory scaffolding -->
 
+<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ## 📋 Overview
 
 This document defines the file naming conventions and memory scaffolding guidelines for the AI development ecosystem. The system is designed to be understandable by both humans and large language models (LLMs).
@@ -111,7 +125,7 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 ### Documentation & Guides (400-499)
 - `400_project-overview.md` - Project overview and workflow guide
-- `400_system-overview.md` - Comprehensive technical architecture
+- `400_system-overview_advanced_features.md` - Comprehensive technical architecture
 - `400_context-priority-guide.md` - File priority and context guide
 - `400_memory-context-guide.md` - Memory context system guide
 - `400_current-status.md` - Real-time system status
@@ -206,7 +220,7 @@ Use these reference patterns in other documents:
 #### **In PRDs and Task Lists:**
 ```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
 ```
@@ -214,14 +228,14 @@ Use these reference patterns in other documents:
 #### **In Code Comments:**
 ```python
 # CONTEXT: See 400_context-priority-guide.md for file organization
-# ESSENTIAL: 400_project-overview.md, 400_system-overview.md, 000_backlog.md
+# ESSENTIAL: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
 ```
 
 #### **In Documentation:**
 ```markdown
 > **Context Reference**: See `400_context-priority-guide.md` for complete file organization
-> **Essential Files**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
+> **Essential Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 ```
 
@@ -262,7 +276,7 @@ Use these reference patterns in other documents:
 ### Best Practices
 
 #### **File Organization**
-- **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
+- **Essential**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 - **Domain**: `100_backlog-guide.md`, `103_yi-coder-integration.md`
 
@@ -378,7 +392,7 @@ The memory context system provides structured information to AI models in order 
 |------|---------|--------------|----------------|
 | `000_backlog.md` | Current priorities | What to work on next | Development roadmap |
 | `100_cursor-memory-context.md` | Memory scaffold | Instant context | Current state |
-| `400_system-overview.md` | Technical architecture | Deep technical work | System design |
+| `400_system-overview_advanced_features.md` | Technical architecture | Deep technical work | System design |
 | `400_project-overview.md` | Project overview | New features | Project scope |
 
 ### **Cache Freshness & Confidence**

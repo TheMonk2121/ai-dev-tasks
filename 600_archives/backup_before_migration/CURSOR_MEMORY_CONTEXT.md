@@ -1,10 +1,19 @@
 # 🧠 Cursor Memory Context
 
 <!-- CONTEXT_REFERENCE: CONTEXT_PRIORITY_GUIDE.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- BACKLOG_REFERENCE: 00_backlog.md -->
 <!-- MEMORY_CONTEXT: HIGH - This file serves as the primary memory scaffold for Cursor AI -->
 
+<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ## 🎯 Purpose
 This file serves as the **memory scaffold** for Cursor AI, providing instant context about the AI development ecosystem without requiring the AI to read multiple files.
 
@@ -41,7 +50,7 @@ AI Development Ecosystem
 5. **State Management** → `.ai_state.json` for context persistence
 
 ### **File Organization**
-- **Essential**: `400_project-overview.md`, `400_system-overview.md`, `00_backlog.md`
+- **Essential**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `00_backlog.md`
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 - **Domain**: `100_backlog-guide.md`, `103_yi-coder-integration.md`
 
@@ -90,7 +99,7 @@ AI Development Ecosystem
 ## 📚 Quick Reference
 
 ### **Key Files for Context**
-- **System Overview**: `400_system-overview.md` (745 lines)
+- **System Overview**: `400_system-overview_advanced_features.md` (745 lines)
 - **Current Status**: `dspy-rag-system/docs/CURRENT_STATUS.md`
 - **Backlog**: `00_backlog.md` (163 lines)
 - **Setup**: `202_setup-requirements.md` (268 lines)

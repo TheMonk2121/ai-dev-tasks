@@ -2,6 +2,20 @@
 
 <!-- MEMORY_CONTEXT: MEDIUM - File organization and documentation guidelines for maintaining memory scaffolding -->
 
+<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 **For memory-scaffolding patterns see 401_memory-scaffolding-guide.md**
 
 ## 📋 Overview
@@ -77,7 +91,7 @@ The result is a **living naming system** that scales with your project while mai
 
 **Examples of when to create files:**
 - ✅ **Workflow processes** (`001_create-prd.md`, `002_generate-tasks.md`)
-- ✅ **System documentation** (`400_system-overview.md`, `400_project-overview.md`)
+- ✅ **System documentation** (`400_system-overview_advanced_features.md`, `400_project-overview.md`)
 - ✅ **Configuration guides** (`201_model-configuration.md`, `202_setup-requirements.md`)
 - ✅ **Completion summaries** (`500_*` files for historical context)
 - ✅ **Research findings** (`500_memory-arch-research.md`)
@@ -142,7 +156,7 @@ The result is a **living naming system** that scales with your project while mai
 
 **Examples of good names:**
 - ✅ `100_cursor-memory-context.md` (clear purpose)
-- ✅ `400_system-overview.md` (descriptive)
+- ✅ `400_system-overview_advanced_features.md` (descriptive)
 - ✅ `201_model-configuration.md` (specific domain)
 - ✅ `500_memory-arch-research.md` (research focus)
 
@@ -160,7 +174,7 @@ The result is a **living naming system** that scales with your project while mai
 
 **Add appropriate cross-references:**
 - `<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->`
-- `<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md -->`
+- `<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md -->`
 - `<!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md -->`
 
 **Consider AI rehydration:**
@@ -287,7 +301,7 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 ### Documentation & Guides (400-499)
 - `400_project-overview.md` - Project overview and workflow guide
-- `400_system-overview.md` - Technical architecture and system overview
+- `400_system-overview_advanced_features.md` - Technical architecture and system overview
 - `400_context-priority-guide.md` - Context priority guide for memory rehydration
 - `400_memory-context-guide.md` - Memory context system guide
 - `400_timestamp-update-guide.md` - Timestamp update procedures
@@ -315,4 +329,4 @@ Use `_vN` suffix **only** when the file's public contract changes (breaking chan
 ## 🔗 Related Files
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_FILES: 400_system-overview.md --> 
+<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md --> 

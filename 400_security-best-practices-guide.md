@@ -1,15 +1,20 @@
 # 🔒 Security Best Practices & Threat Model
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_performance-optimization-guide.md -->
+<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide_additional_resources.md, 400_performance-optimization-guide_additional_resources.md -->
 <!-- IMPLEMENTATION_STACK: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- MONITORING_SYSTEM: dspy-rag-system/src/monitoring/ -->
 <!-- METRICS_COLLECTION: 400_metadata-collection-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- MEMORY_CONTEXT: HIGH - Critical security documentation for AI development environment -->
 <!-- BACKLOG_ITEM: B-066 Security Best Practices & Threat Model -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines_security_standards.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
 ## 🎯 Purpose
 This document provides comprehensive security guidelines, threat modeling, and incident response procedures for the AI development ecosystem. It protects against data breaches, unauthorized access, and system compromise while maintaining development velocity.
 

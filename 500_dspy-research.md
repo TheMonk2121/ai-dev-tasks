@@ -3,12 +3,19 @@
 > **DSPy Research**: Comprehensive research findings and implementation guidance for the DSPy framework in our AI development ecosystem.
 
 <!-- CONTEXT_REFERENCE: 500_research-analysis-summary.md -->
-<!-- CORE_SYSTEM: 104_dspy-development-context.md, 400_system-overview.md -->
+<!-- CORE_SYSTEM: 104_dspy-development-context.md, 400_system-overview_advanced_features.md -->
 <!-- RESEARCH_SOURCES: docs/research/papers/dspy-papers.md -->
 <!-- EXTERNAL_SOURCES: docs/research/articles/dspy-articles.md -->
 <!-- TUTORIAL_SOURCES: docs/research/tutorials/dspy-tutorials.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - DSPy research for implementation guidance -->
 
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_backlog_analysis_examples.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ## 📚 **Research Overview**
 
 This document contains comprehensive research findings on the DSPy framework (Declarative Self-improving Python), focusing on advanced reasoning patterns, RAG integration, and production-ready implementations for our AI development ecosystem.
@@ -98,7 +105,7 @@ This document contains comprehensive research findings on the DSPy framework (De
 
 ### **Current DSPy Implementation**
 - **`104_dspy-development-context.md`** - Current DSPy implementation details
-- **`400_system-overview.md`** - System architecture and DSPy integration
+- **`400_system-overview_advanced_features.md`** - System architecture and DSPy integration
 - **`dspy-rag-system/`** - Current DSPy RAG system implementation
 
 ### **Related Backlog Items**

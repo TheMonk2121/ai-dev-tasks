@@ -3,11 +3,18 @@
 This document provides comprehensive instructions for integrating Yi-Coder-9B-Chat-Q6_K with Cursor IDE for enhanced AI-powered development.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_FILES: 400_system-overview.md, dspy-rag-system/README.md -->
+<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md, dspy-rag-system/README.md -->
 <!-- CONFIG_FILES: 201_model-configuration.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
 <!-- MEMORY_CONTEXT: LOW - Yi-Coder integration details for specific implementation tasks -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ### **AI Development Ecosystem Context**
 This Yi-Coder integration is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 

@@ -4,14 +4,27 @@ This document provides comprehensive context about the current DSPy implementati
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- IMPLEMENTATION_STACK: 202_setup-requirements.md, 201_model-configuration.md -->
-<!-- DEPLOYMENT_GUIDE: 400_deployment-environment-guide.md -->
+<!-- DEPLOYMENT_GUIDE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- SECURITY_FRAMEWORK: 400_security-best-practices-guide.md -->
-<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_performance-optimization-guide.md -->
+<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide_additional_resources.md, 400_performance-optimization-guide_additional_resources.md -->
 <!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md -->
 <!-- SYSTEM_FILES: dspy-rag-system/README.md, dspy-rag-system/docs/CURRENT_STATUS.md -->
 <!-- CONFIG_FILES: 201_model-configuration.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Deep technical context for DSPy implementation -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ### **AI Development Ecosystem Context**
 This DSPy implementation is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 

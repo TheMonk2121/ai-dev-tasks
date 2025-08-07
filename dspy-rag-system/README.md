@@ -1,3 +1,8 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 # 🚀 DSPy RAG System
 
 A fully functional Retrieval Augmented Generation (RAG) system built with DSPy, PostgreSQL, and automatic file processing. **Now with complete DSPy → RAG → Mistral integration, CSV support, and production-ready critical fixes!** This system implements the v0.3.1 Ultra-Minimal Router architecture with progressive complexity and runtime guard-rails.

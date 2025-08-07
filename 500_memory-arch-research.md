@@ -2,6 +2,11 @@
 
 <!-- MEMORY_CONTEXT: HIGH - Research framework for optimizing memory hierarchy across different AI model capabilities -->
 
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 ## 🎯 Research Sprint Overview
 
 **Duration**: 4 development days  
@@ -122,5 +127,5 @@ vs baseline performance at 8k tokens.
 ## 📚 Related Files
 
 <!-- CONTEXT_REFERENCE: 400_memory-context-guide.md -->
-<!-- SYSTEM_FILES: 400_system-overview.md -->
+<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md --> 

@@ -2,11 +2,32 @@
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
+<!-- AI_CONSTITUTION_REFERENCE: 400_ai-constitution.md -->
 <!-- MEMORY_CONTEXT: HIGH - This file serves as the primary memory scaffold for Cursor AI -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_rollback_procedures.md -->
+<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_troubleshooting_guide.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ## 🚨 CRITICAL SAFETY REQUIREMENTS
 **BEFORE ANY FILE OPERATIONS:**
 - [ ] Read `400_file-analysis-guide.md` completely (463 lines)
@@ -14,12 +35,17 @@
 - [ ] Show all cross-references
 - [ ] Get explicit user approval
 
+**🤖 AI CONSTITUTION COMPLIANCE:**
+- [ ] Follow `400_ai-constitution.md` rules for all AI operations
+- [ ] Maintain context preservation and safety requirements
+- [ ] Validate against constitution rules before any changes
+
 ## 📋 QUICK REFERENCE (30-second scan)
 **Current Focus:** B-011 (Cursor Native AI + Specialized Agents) - 5 points
 **Next Priority:** B-031 (Vector Database Enhancement) - 3 points
 **System:** Cursor Native AI + Specialized Agents + DSPy RAG
 **Workflow:** Backlog → PRD → Tasks → AI Execution
-**Critical Files:** `000_backlog.md`, `400_system-overview.md`, `400_file-analysis-guide.md`
+**Critical Files:** `000_backlog.md`, `400_system-overview_advanced_features.md`, `400_file-analysis-guide.md`
 
 ## 🎯 Purpose
 This file serves as the **memory scaffold** for Cursor AI, providing instant context about the AI development ecosystem without requiring the AI to read multiple files.
@@ -63,7 +89,7 @@ AI Development Ecosystem
 **Note**: `003_process-task-list.md` is the execution engine; it loads whether or not a PRD was created.
 
 ### **File Organization**
-- **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
+- **Essential**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 - **Analysis**: `400_file-analysis-guide.md` - **🚨 MANDATORY: File deletion/deprecation analysis methodology**
 - **Domain**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
@@ -147,7 +173,7 @@ AI Development Ecosystem
 #### **🎯 CRITICAL FILES (Read First)**
 - **`100_cursor-memory-context.md`** - Primary memory scaffold (this file)
 - **`000_backlog.md`** - Current priorities and development roadmap
-- **`400_system-overview.md`** - Technical architecture and system-of-systems
+- **`400_system-overview_advanced_features.md`** - Technical architecture and system-of-systems
 - **`400_project-overview.md`** - High-level project goals and workflow
 
 #### **📋 WORKFLOW FILES (Development Process)**
@@ -165,15 +191,15 @@ AI Development Ecosystem
 - **`400_cursor-context-engineering-guide.md`** - Context engineering implementation
 
 #### **🔧 OPERATIONAL GUIDES (Production & Maintenance)**
-- **`400_testing-strategy-guide.md`** - Testing methodologies and frameworks
+- **`400_testing-strategy-guide_additional_resources.md`** - Testing methodologies and frameworks
 - **`400_security-best-practices-guide.md`** - Security implementation and validation
-- **`400_performance-optimization-guide.md`** - Performance tuning and monitoring
-- **`400_deployment-environment-guide.md`** - Deployment and environment management
-- **`400_migration-upgrade-guide.md`** - System migration and upgrade procedures
-- **`400_integration-patterns-guide.md`** - Integration patterns and best practices
+- **`400_performance-optimization-guide_additional_resources.md`** - Performance tuning and monitoring
+- **`400_deployment-environment-guide_additional_resources.md`** - Deployment and environment management
+- **`400_migration-upgrade-guide_ai_model_upgrade_procedures.md`** - System migration and upgrade procedures
+- **`400_integration-patterns-guide_additional_resources.md`** - Integration patterns and best practices
 - **`400_metadata-collection-guide.md`** - Metadata collection and management
 - **`400_metadata-quick-reference.md`** - Quick metadata reference
-- **`400_few-shot-context-examples.md`** - Few-shot learning examples
+- **`400_few-shot-context-examples_additional_resources.md`** - Few-shot learning examples
 - **`400_prd-optimization-guide.md`** - PRD optimization techniques
 - **`400_n8n-backlog-scrubber-guide.md`** - n8n workflow automation
 - **`400_mistral7b-instruct-integration-guide.md`** - Mistral integration (legacy)
@@ -200,8 +226,8 @@ AI Development Ecosystem
 - **`CURSOR_NATIVE_AI_STRATEGY.md`** - Cursor Native AI strategy (supports B-011)
 - **`B-011-PRD.md`** - Cursor Native AI + Specialized Agents PRD
 - **`B-011-Tasks.md`** - Cursor Native AI implementation tasks
-- **`B-011-DEPLOYMENT-GUIDE.md`** - B-011 deployment guide
-- **`B-011-DEVELOPER-DOCUMENTATION.md`** - B-011 developer docs
+- **`B-011-DEPLOYMENT-GUIDE_backup_recovery.md`** - B-011 deployment guide
+- **`B-011-DEVELOPER-DOCUMENTATION_api_documentation.md`** - B-011 developer docs
 - **`B-011-USER-DOCUMENTATION.md`** - B-011 user documentation
 - **`B-049-PRD.md`** - Domain-specific PRD
 - **`B-049-Tasks.md`** - Domain-specific tasks
@@ -234,14 +260,14 @@ AI Development Ecosystem
 #### **For New Sessions (First 2-3 minutes):**
 1. **`100_cursor-memory-context.md`** - Current project state
 2. **`000_backlog.md`** - Current priorities
-3. **`400_system-overview.md`** - Technical architecture
+3. **`400_system-overview_advanced_features.md`** - Technical architecture
 
 #### **For Development Tasks:**
 - **Planning**: `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md`
 - **Implementation**: `104_dspy-development-context.md` + relevant 400-series guides
-- **Testing**: `400_testing-strategy-guide.md`
+- **Testing**: `400_testing-strategy-guide_additional_resources.md`
 - **Security**: `400_security-best-practices-guide.md`
-- **Performance**: `400_performance-optimization-guide.md`
+- **Performance**: `400_performance-optimization-guide_additional_resources.md`
 
 #### **For Research Tasks:**
 - **Overview**: `500_research-summary.md`
@@ -255,10 +281,10 @@ AI Development Ecosystem
 - **Organization**: `400_context-priority-guide.md`
 
 #### **For System Integration:**
-- **Architecture**: `400_system-overview.md`
-- **Patterns**: `400_integration-patterns-guide.md`
-- **Deployment**: `400_deployment-environment-guide.md`
-- **Migration**: `400_migration-upgrade-guide.md`
+- **Architecture**: `400_system-overview_advanced_features.md`
+- **Patterns**: `400_integration-patterns-guide_additional_resources.md`
+- **Deployment**: `400_deployment-environment-guide_additional_resources.md`
+- **Migration**: `400_migration-upgrade-guide_ai_model_upgrade_procedures.md`
 
 #### **For Context Engineering:**
 - **Strategy**: `400_cursor-context-engineering-guide.md`
@@ -270,7 +296,7 @@ AI Development Ecosystem
 **Before starting any task, ensure you've checked:**
 - [ ] **Current state** in `100_cursor-memory-context.md`
 - [ ] **Priorities** in `000_backlog.md`
-- [ ] **Technical context** in `400_system-overview.md`
+- [ ] **Technical context** in `400_system-overview_advanced_features.md`
 - [ ] **Relevant guides** in 400-series for specific tasks
 - [ ] **Research findings** in 500-series for research tasks
 - [ ] **Domain-specific docs** for B/C-series items
@@ -299,7 +325,7 @@ Our **three-digit prefix hierarchy** creates semantic ordering for both humans a
 See `200_naming-conventions.md` for complete naming guidelines and decision process.
 
 ### **AI File Analysis Strategy**
-When Cursor AI restarts, it follows a **structured reading strategy**: First reads `100_cursor-memory-context.md` (30 seconds, 80% context), then `000_backlog.md` (current priorities), then `400_system-overview.md` (technical architecture). Ancillary files are read as needed for specific tasks. Scripts are only read when implementation details are required.
+When Cursor AI restarts, it follows a **structured reading strategy**: First reads `100_cursor-memory-context.md` (30 seconds, 80% context), then `000_backlog.md` (current priorities), then `400_system-overview_advanced_features.md` (technical architecture). Ancillary files are read as needed for specific tasks. Scripts are only read when implementation details are required.
 
 See `400_context-priority-guide.md` for complete AI file analysis strategy and reading patterns.
 
@@ -335,7 +361,7 @@ See `400_context-priority-guide.md` for complete documentation placement logic a
 ## 📚 Quick Reference
 
 ### **Key Files for Context**
-- **System Overview**: `400_system-overview.md` (745 lines)
+- **System Overview**: `400_system-overview_advanced_features.md` (745 lines)
 - **Current Status**: `dspy-rag-system/docs/CURRENT_STATUS.md`
 - **Backlog**: `000_backlog.md` (163 lines)
 - **Setup**: `202_setup-requirements.md` (268 lines)

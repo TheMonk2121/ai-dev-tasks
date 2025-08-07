@@ -5,6 +5,15 @@
 <!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Deep research for workflow optimization -->
 
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide_quality_gates.md -->
+<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ## 🎯 Research Objective
 
 Conduct deep research to identify improvement opportunities for the core workflow files (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`) based on current system evolution and backlog priorities.

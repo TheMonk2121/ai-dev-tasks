@@ -1,3 +1,7 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_deployment_architecture.md -->
+<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 # DSPy Router Architecture v0.3.1
 
 ## 1. Overview

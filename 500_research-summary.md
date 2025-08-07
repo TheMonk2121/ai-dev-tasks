@@ -4,9 +4,12 @@
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- RESEARCH_SYSTEM: 500_research-infrastructure-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
 <!-- MEMORY_CONTEXT: HIGH - Central research summary for AI development ecosystem -->
 
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ## 🎯 **Research Overview**
 
 This document serves as the central hub for all research findings related to our AI development ecosystem. It provides executive summaries and links to detailed research files for each major component of our system.
@@ -36,10 +39,10 @@ This document serves as the central hub for all research findings related to our
 
 ### **Current System Components**
 - **DSPy Integration**: See `104_dspy-development-context.md`
-- **RAG System**: See `400_system-overview.md`
-- **Agent Framework**: See `400_system-overview.md`
-- **Performance**: See `400_performance-optimization-guide.md`
-- **Monitoring**: See `400_system-overview.md`
+- **RAG System**: See `400_system-overview_advanced_features.md`
+- **Agent Framework**: See `400_system-overview_advanced_features.md`
+- **Performance**: See `400_performance-optimization-guide_additional_resources.md`
+- **Monitoring**: See `400_system-overview_advanced_features.md`
 
 ### **Backlog Priorities**
 - **B-043**: LangExtract Pilot with stratified document sets

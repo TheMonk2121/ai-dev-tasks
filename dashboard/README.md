@@ -1,3 +1,7 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 # Document Management Dashboard
 
 A modern, interactive web dashboard for managing and visualizing documents in your RAG system with enhanced metadata capabilities. This dashboard integrates with the v0.3.1 Ultra-Minimal Router architecture for intelligent document processing and analysis.

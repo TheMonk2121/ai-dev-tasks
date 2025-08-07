@@ -7,6 +7,10 @@ tags: [memory, scaffolding]
 
 <!-- MEMORY_CONTEXT: HIGH - Memory scaffolding patterns and guidelines for AI context -->
 
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ## 🧠 Memory Scaffolding Documentation Guidelines
 
 ### Content Structure
@@ -35,7 +39,7 @@ Use these reference patterns in other documents:
 #### **In PRDs and Task Lists:**
 ```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
 ```
@@ -43,14 +47,14 @@ Use these reference patterns in other documents:
 #### **In Code Comments:**
 ```python
 # CONTEXT: See 400_context-priority-guide.md for file organization
-# ESSENTIAL: 400_project-overview.md, 400_system-overview.md, 000_backlog.md
+# ESSENTIAL: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
 ```
 
 #### **In Documentation:**
 ```markdown
 > **Context Reference**: See `400_context-priority-guide.md` for complete file organization
-> **Essential Files**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
+> **Essential Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 ```
 
@@ -91,7 +95,7 @@ Use these reference patterns in other documents:
 ### Best Practices
 
 #### **File Organization**
-- **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
+- **Essential**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 - **Domain**: `100_backlog-guide.md`, `103_yi-coder-integration.md`
 

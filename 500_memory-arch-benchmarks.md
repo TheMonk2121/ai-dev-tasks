@@ -1,3 +1,6 @@
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 # Memory Context System Architecture Benchmark Results
 
 Generated: 2025-08-06T03:45:41.364391

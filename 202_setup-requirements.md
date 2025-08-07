@@ -3,10 +3,14 @@
 This document lists all items that require manual setup or configuration on your end before they can be fully utilized.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_FILES: 400_system-overview.md, dspy-rag-system/README.md -->
+<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md, dspy-rag-system/README.md -->
 <!-- CONFIG_FILES: 201_model-configuration.md, docs/CONFIG_REFERENCE.md -->
 <!-- INTEGRATION_FILES: 103_yi-coder-integration.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 ### **AI Development Ecosystem Context**
 This setup guide is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
@@ -191,7 +195,7 @@ N8N_API_KEY=your_n8n_api_key
 **Status**: `setup-required`  
 **Priority**: Medium  
 **Setup Required**: System packages and tools  
-**Setup Instructions**: See `400_system-overview.md`
+**Setup Instructions**: See `400_system-overview_advanced_features.md`
 
 **System Packages:**
 ```bash

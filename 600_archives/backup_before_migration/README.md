@@ -9,6 +9,12 @@ Stop wrestling with monolithic AI requests and start guiding your AI collaborato
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, SETUP_REQUIREMENTS.md -->
 <!-- MEMORY_CONTEXT: HIGH - Project overview and workflow guide for AI context -->
 
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 ## 🚀 Quick Start
 
 ### Quick Start Box

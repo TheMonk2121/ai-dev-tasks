@@ -3,10 +3,14 @@
 > **Strategic Knowledge Management**: Comprehensive system for storing and organizing research sources that inform our documentation and are accessible to LLMs.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
 <!-- RESEARCH_SYSTEM: 500_research-infrastructure-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Research infrastructure for LLM-accessible knowledge management -->
 
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ## 🎯 **Overview**
 
 This guide establishes a **systematic approach** for storing research sources, academic papers, tutorials, and case studies that inform our documentation and are easily accessible to LLMs in Cursor. The system integrates with our existing cognitive scaffolding to ensure research sources are discoverable and contextual.
@@ -41,7 +45,7 @@ This guide establishes a **systematic approach** for storing research sources, a
 # [Topic] Research Sources
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_system-overview.md, [related-core-file].md -->
+<!-- CORE_SYSTEM: 400_system-overview_advanced_features.md, [related-core-file].md -->
 <!-- RESEARCH_SOURCES: docs/research/papers/[topic]-papers.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Research sources for [topic] -->
 

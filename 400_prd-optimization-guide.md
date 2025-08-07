@@ -5,9 +5,14 @@ A comprehensive guide for the intelligent PRD generation system that reduces ove
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
 <!-- BACKLOG_FILES: 000_backlog.md, 100_backlog-guide.md -->
-<!-- SYSTEM_FILES: 400_system-overview.md -->
+<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - PRD optimization system for efficient development workflow -->
 
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 ## 🎯 **Overview**
 
 The PRD optimization system implements intelligent decision-making to reduce unnecessary overhead for smaller backlog items while maintaining comprehensive planning for complex features.

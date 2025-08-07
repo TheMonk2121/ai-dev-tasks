@@ -1,3 +1,7 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 # 🤖 DSPy RAG Integration Guide
 
 ## **✅ DSPy Integration Successfully Implemented with Cursor Native AI!**

@@ -1,3 +1,8 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 # n8n Backlog Scrubber Workflow Guide
 
 ## Overview

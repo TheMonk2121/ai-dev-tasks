@@ -15,6 +15,11 @@ Successfully implemented intelligent PRD generation system that reduces overhead
 <!-- PRD_DECISION_RULE: points<5 AND score_total>=3.0 -->
 <!-- PRD_THRESHOLD_POINTS: 5 -->
 <!-- PRD_SKIP_IF_SCORE_GE: 3.0 -->
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 ```
 
 ### **2. PRD Creation Workflow (`001_create-prd.md`)**

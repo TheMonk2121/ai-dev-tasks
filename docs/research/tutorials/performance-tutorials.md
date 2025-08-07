@@ -1,3 +1,9 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 # Performance Tutorials
 
 > **External Research**: Tutorials and guides for system performance optimization.
@@ -12,7 +18,7 @@
 
 ## 🔗 **Related Documentation**
 - `500_performance-research.md` - Our internal performance research summary
-- `400_system-overview.md` - System architecture overview
+- `400_system-overview_advanced_features.md` - System architecture overview
 
 ## 📖 **Key Insights**
 - Step-by-step optimization guides

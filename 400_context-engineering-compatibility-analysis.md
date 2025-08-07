@@ -1,12 +1,15 @@
 # 🎯 Context Engineering Compatibility Analysis
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- CORE_SYSTEM: 400_project-overview.md, 100_cursor-memory-context.md -->
 <!-- INTEGRATION_FILES: 104_dspy-development-context.md -->
 <!-- MEMORY_CONTEXT: HIGH - Compatibility analysis for context engineering with current setup -->
 
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 ## 🎯 **Your Current Setup Analysis**
 
 ### **Infrastructure Stack**

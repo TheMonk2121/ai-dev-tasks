@@ -1,3 +1,7 @@
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide_quality_gates.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 # 🔧 Repository Maintenance Summary
 
 **Date**: 2024-08-07  
@@ -11,7 +15,7 @@
 ### ✅ T-1: Align Model References
 **Updated files to reference "Cursor-Native AI (default); Mistral & Yi optional":**
 
-- **`400_system-overview.md`**: Changed `"defaultModel": "mistral"` → `"defaultModel": "cursor-native-ai"`
+- **`400_system-overview_advanced_features.md`**: Changed `"defaultModel": "mistral"` → `"defaultModel": "cursor-native-ai"`
 - **`201_model-configuration.md`**: Changed `"defaultModel": "yi-coder"` → `"defaultModel": "cursor-native-ai"`
 - **`400_mistral7b-instruct-integration-guide.md`**: Changed `"defaultModel": "mistral-7b-instruct"` → `"defaultModel": "cursor-native-ai"`
 - **`103_yi-coder-integration.md`**: Changed `"defaultModel": "yi-coder"` → `"defaultModel": "cursor-native-ai"`
@@ -69,7 +73,7 @@
 ## 📊 Changes Summary
 
 **Files Modified**: 6
-- `400_system-overview.md`
+- `400_system-overview_advanced_features.md`
 - `201_model-configuration.md`
 - `400_mistral7b-instruct-integration-guide.md`
 - `103_yi-coder-integration.md`

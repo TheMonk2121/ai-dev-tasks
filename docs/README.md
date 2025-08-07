@@ -4,6 +4,19 @@
 <!-- MEMORY_CONTEXT: HIGH - Documentation navigation and organization guide -->
 <!-- RELATED_FILES: docs/beginner/what-we-build.md, docs/intermediate/system-overview.md, docs/advanced/technical-architecture.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_beginner_lens_what_were_building.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_intermediate_lens_how_the_system_works.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ## 🎯 **Three-Lens Documentation System**
 
 This documentation is organized using a **three-lens system** that provides different levels of detail for different audiences:
@@ -36,17 +49,17 @@ docs/
 ## 🚀 **Getting Started**
 
 ### **New to the Project?**
-1. **Start with Beginner Lens** → `docs/100_ai-development-ecosystem.md#beginner-lens`
+1. **Start with Beginner Lens** → `100_ai-development-ecosystem_advanced_lens_technical_implementation.md#beginner-lens`
    - Understand what we're building
    - Learn why it matters
    - See the business value
 
-2. **Move to Intermediate Lens** → `docs/100_ai-development-ecosystem.md#intermediate-lens`
+2. **Move to Intermediate Lens** → `100_ai-development-ecosystem_advanced_lens_technical_implementation.md#intermediate-lens`
    - Learn how the system works
    - Understand the architecture
    - See the key technologies
 
-3. **Dive into Advanced Lens** → `docs/100_ai-development-ecosystem.md#advanced-lens`
+3. **Dive into Advanced Lens** → `100_ai-development-ecosystem_advanced_lens_technical_implementation.md#advanced-lens`
    - Get implementation details
    - Understand technical decisions
    - See code examples
@@ -59,19 +72,19 @@ docs/
 ## 🎯 **Audience Guide**
 
 ### **For Stakeholders & Business Users**
-**Start Here**: `docs/100_ai-development-ecosystem.md#beginner-lens`
+**Start Here**: `100_ai-development-ecosystem_advanced_lens_technical_implementation.md#beginner-lens`
 - **What you'll learn**: Project vision, business value, key benefits
 - **Time investment**: 10-15 minutes
 - **Next step**: Share with your technical team
 
 ### **For Product Managers & Technical Leads**
-**Start Here**: `docs/100_ai-development-ecosystem.md#intermediate-lens`
+**Start Here**: `100_ai-development-ecosystem_advanced_lens_technical_implementation.md#intermediate-lens`
 - **What you'll learn**: System architecture, workflows, key components
 - **Time investment**: 20-30 minutes
 - **Next step**: Plan your implementation strategy
 
 ### **For Developers & Architects**
-**Start Here**: `docs/100_ai-development-ecosystem.md#advanced-lens`
+**Start Here**: `100_ai-development-ecosystem_advanced_lens_technical_implementation.md#advanced-lens`
 - **What you'll learn**: Implementation details, code patterns, technical decisions
 - **Time investment**: 45-60 minutes
 - **Next step**: Set up your development environment
@@ -153,7 +166,7 @@ Three-Lens Document
 
 ### **Project Documentation**
 - **400_project-overview.md**: Main project overview and quick start
-- **400_system-overview.md**: Comprehensive technical overview
+- **400_system-overview_advanced_features.md**: Comprehensive technical overview
 - **000_backlog.md**: Current priorities and development roadmap
 
 ### **Technical Documentation**

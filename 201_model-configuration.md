@@ -3,11 +3,16 @@
 This document outlines the specific AI model configuration for the AI Dev Tasks project.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- SYSTEM_FILES: 400_system-overview.md, dspy-rag-system/README.md -->
+<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md, dspy-rag-system/README.md -->
 <!-- INTEGRATION_FILES: 103_yi-coder-integration.md -->
 <!-- ARCHITECTURE_FILES: 104_dspy-development-context.md -->
 <!-- MEMORY_CONTEXT: LOW - Model configuration details for specific setup tasks -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 ### **AI Development Ecosystem Context**
 This model configuration is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 

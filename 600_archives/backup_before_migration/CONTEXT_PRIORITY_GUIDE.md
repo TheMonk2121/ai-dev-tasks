@@ -15,7 +15,7 @@ When sharing context with other AI models, use this structured approach:
 #### **Level 1: Essential Context (5 files)**
 ```
 1. 400_project-overview.md - Project overview and workflow
-2. 400_system-overview.md - Technical architecture
+2. 400_system-overview_advanced_features.md - Technical architecture
 3. 00_backlog.md - Current priorities and status
 4. dspy-rag-system/400_project-overview.md - Core system status
 5. docs/400_project-overview.md - Three-lens documentation guide
@@ -45,22 +45,32 @@ Use these reference patterns in other documents:
 #### **In PRDs and Task Lists:**
 ```markdown
 <!-- CONTEXT_REFERENCE: CONTEXT_PRIORITY_GUIDE.md -->
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 00_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 00_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
+<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ```
 
 #### **In Code Comments:**
 ```python
 # CONTEXT: See CONTEXT_PRIORITY_GUIDE.md for file organization
-# ESSENTIAL: 400_project-overview.md, 400_system-overview.md, 00_backlog.md
+# ESSENTIAL: 400_project-overview.md, 400_system-overview_advanced_features.md, 00_backlog.md
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
 ```
 
 #### **In Documentation:**
 ```markdown
 > **Context Reference**: See `CONTEXT_PRIORITY_GUIDE.md` for complete file organization
-> **Essential Files**: `400_project-overview.md`, `400_system-overview.md`, `00_backlog.md`
+> **Essential Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `00_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 ```
 
@@ -72,7 +82,7 @@ Use these reference patterns in other documents:
 | File | Purpose | Why First? | Cross-Reference |
 |------|---------|-------------|-----------------|
 | `400_project-overview.md` | Main project entry point with high-level overview, quick start, and core AI development workflow | Gives immediate understanding of the project's purpose and workflow | `<!-- CONTEXT_REFERENCE: 400_project-overview.md -->` |
-| `400_system-overview.md` | Comprehensive technical overview of the entire AI development ecosystem | Provides the "system-of-systems" context | `<!-- CONTEXT_REFERENCE: 400_system-overview.md -->` |
+| `400_system-overview_advanced_features.md` | Comprehensive technical overview of the entire AI development ecosystem | Provides the "system-of-systems" context | `<!-- CONTEXT_REFERENCE: 400_system-overview_advanced_features.md -->` |
 | `dspy-rag-system/400_project-overview.md` | DSPy RAG system overview with current status and features | Shows the core AI system's capabilities | `<!-- CONTEXT_REFERENCE: dspy-rag-system/400_project-overview.md -->` |
 | `dspy-rag-system/docs/CURRENT_STATUS.md` | Real-time status of all system components and features | Current operational state of the entire stack | `<!-- CONTEXT_REFERENCE: dspy-rag-system/docs/CURRENT_STATUS.md -->` |
 
@@ -157,11 +167,11 @@ When rehydrating an AI model's memory or sharing context with other models, star
 - **When to Use**: First file to read for any new context
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 400_project-overview.md -->`
 
-### **2. `400_system-overview.md`**
+### **2. `400_system-overview_advanced_features.md`**
 - **Purpose**: Technical architecture overview
 - **Key Info**: System components, security features, reliability measures
 - **When to Use**: Understanding the complete technical stack
-- **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 400_system-overview.md -->`
+- **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 400_system-overview_advanced_features.md -->`
 
 ### **3. `00_backlog.md`**
 - **Purpose**: Current priorities and roadmap
@@ -266,10 +276,10 @@ To integrate this guide with other documents, add these references:
 #### **In 400_project-overview.md:**
 ```markdown
 <!-- CONTEXT_REFERENCE: CONTEXT_PRIORITY_GUIDE.md -->
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 00_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 00_backlog.md -->
 ```
 
-#### **In 400_system-overview.md:**
+#### **In 400_system-overview_advanced_features.md:**
 ```markdown
 <!-- CONTEXT_REFERENCE: CONTEXT_PRIORITY_GUIDE.md -->
 <!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 104_dspy-development-context.md -->
@@ -288,7 +298,7 @@ When sharing context with other AI models, use this structured approach:
 ```
 CONTEXT_PRIORITY_GUIDE.md
 400_project-overview.md
-400_system-overview.md
+400_system-overview_advanced_features.md
 00_backlog.md
 dspy-rag-system/400_project-overview.md
 ```

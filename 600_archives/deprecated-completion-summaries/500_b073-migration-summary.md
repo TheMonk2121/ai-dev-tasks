@@ -1,0 +1,504 @@
+# Giant Guide Reference Migration Summary
+
+**Migration Date**: 2025-08-07 14:57
+
+## Files Updated
+- `500_b065-completion-summary.md`
+- `000_backlog.md`
+- `500_performance-research.md`
+- `500_memory-arch-research.md`
+- `500_b031-completion-summary.md`
+- `LM_STUDIO_SETUP.md`
+- `B-011-Tasks.md`
+- `400_metadata-collection-guide.md`
+- `400_cursor-context-engineering-guide.md`
+- `500_research-infrastructure-guide.md`
+- `500_dspy-research.md`
+- `400_project-overview.md`
+- `500_b071-completion-summary.md`
+- `B-049-PRD.md`
+- `REPO_MAINTENANCE_SUMMARY.md`
+- `002_generate-tasks.md`
+- `103_memory-context-workflow.md`
+- `400_prd-optimization-guide.md`
+- `500_research-summary.md`
+- `START_HERE.md`
+- `B-049-Tasks.md`
+- `104_memory-context-guidance.md`
+- `400_documentation-retrieval-guide.md`
+- `400_security-best-practices-guide.md`
+- `400_mission-dashboard-guide.md`
+- `cursor_native_ai_assessment.md`
+- `500_c10-completion-summary.md`
+- `401_memory-scaffolding-guide.md`
+- `104_dspy-development-context.md`
+- `500_b002-completion-summary.md`
+- `README.md`
+- `FUTURE_YI_CODER_MIGRATION.md`
+- `400_development-roadmap.md`
+- `workflow_improvement_research.md`
+- `500_b071-migration-summary.md`
+- `B-072-Tasks.md`
+- `400_n8n-setup-guide.md`
+- `400_context-engineering-compatibility-analysis.md`
+- `999_repo-maintenance.md`
+- `500_b072-completion-summary.md`
+- `200_naming-conventions.md`
+- `500_memory-arch-benchmarks.md`
+- `DOCUMENTATION_UPDATE_SUMMARY.md`
+- `400_mistral7b-instruct-integration-guide.md`
+- `102_memory-context-state.md`
+- `B-011-PRD.md`
+- `400_ai-constitution.md`
+- `201_model-configuration.md`
+- `500_research-implementation-summary.md`
+- `B-072-PRD.md`
+- `003_process-task-list.md`
+- `specialized_agent_requirements.md`
+- `400_file-analysis-guide.md`
+- `500_maintenance-safety-research.md`
+- `101_memory-context-safety.md`
+- `500_agent-orchestration-research.md`
+- `202_setup-requirements.md`
+- `500_b070-completion-summary.md`
+- `500_rag-system-research.md`
+- `500_documentation-coherence-research.md`
+- `B-011-IMPLEMENTATION-SUMMARY.md`
+- `500_b060-completion-summary.md`
+- `100_backlog-automation.md`
+- `500_prd-optimization-implementation-summary.md`
+- `400_metadata-quick-reference.md`
+- `400_memory-context-guide.md`
+- `400_context-priority-guide.md`
+- `400_n8n-backlog-scrubber-guide.md`
+- `500_monitoring-research.md`
+- `400_dspy-integration-guide.md`
+- `100_cursor-memory-context.md`
+- `400_current-status.md`
+- `103_yi-coder-integration.md`
+- `100_cursor-memory-context.md`
+- `300_documentation-example.md`
+- `context_management_design.md`
+- `001_create-prd.md`
+- `500_c9-completion-summary.md`
+- `400_cross-reference-strengthening-plan.md`
+- `B-011-USER-DOCUMENTATION.md`
+- `500_research-analysis-summary.md`
+- `CURSOR_NATIVE_AI_MIGRATION_SUMMARY.md`
+- `100_backlog-guide.md`
+- `600_archives/backup_before_migration/CURSOR_MEMORY_CONTEXT.md`
+- `600_archives/backup_before_migration/DOCUMENTATION_EXAMPLE.md`
+- `600_archives/backup_before_migration/SYSTEM_OVERVIEW.md`
+- `600_archives/backup_before_migration/README.md`
+- `600_archives/backup_before_migration/CONTEXT_PRIORITY_GUIDE.md`
+- `600_archives/backup_before_migration/MEMORY_CONTEXT_GUIDE.md`
+- `600_archives/backup_before_migration/SETUP_REQUIREMENTS.md`
+- `600_archives/backup_before_core_migration/02_generate-tasks.md`
+- `600_archives/backup_before_core_migration/01_create-prd.md`
+- `600_archives/implementation-notes/CAG_IMPLEMENTATION_PATCHES.md`
+- `600_archives/implementation-notes/FILE_NAMING_MIGRATION_SUMMARY.md`
+- `600_archives/backup_before_subdirectory_migration/mistral7b_instruct_integration_guide.md`
+- `600_archives/backup_before_subdirectory_migration/CURRENT_STATUS.md`
+- `node_modules/queue-microtask/README.md`
+- `node_modules/globals/readme.md`
+- `node_modules/has-tostringtag/README.md`
+- `node_modules/eslint-scope/CHANGELOG.md`
+- `node_modules/eslint-scope/README.md`
+- `node_modules/type-fest/readme.md`
+- `node_modules/@eslint/js/README.md`
+- `node_modules/@eslint/eslintrc/README.md`
+- `node_modules/acorn/CHANGELOG.md`
+- `node_modules/acorn/README.md`
+- `node_modules/file-entry-cache/changelog.md`
+- `node_modules/@nodelib/fs.scandir/README.md`
+- `node_modules/proxy-from-env/README.md`
+- `node_modules/ignore/README.md`
+- `node_modules/tslib/README.md`
+- `node_modules/argparse/CHANGELOG.md`
+- `node_modules/picomatch/README.md`
+- `node_modules/is-glob/README.md`
+- `node_modules/typescript/README.md`
+- `node_modules/flat-cache/changelog.md`
+- `node_modules/inherits/README.md`
+- `node_modules/get-intrinsic/README.md`
+- `node_modules/keyv/README.md`
+- `node_modules/@typescript-eslint/typescript-estree/README.md`
+- `node_modules/@typescript-eslint/eslint-plugin/docs/rules/no-dynamic-delete.md`
+- `node_modules/@ungap/structured-clone/README.md`
+- `node_modules/js-yaml/CHANGELOG.md`
+- `node_modules/eslint-visitor-keys/README.md`
+- `node_modules/find-up/readme.md`
+- `node_modules/chalk/readme.md`
+- `node_modules/supports-color/readme.md`
+- `node_modules/path-key/readme.md`
+- `node_modules/fill-range/README.md`
+- `node_modules/word-wrap/README.md`
+- `node_modules/has-symbols/README.md`
+- `node_modules/doctrine/CHANGELOG.md`
+- `node_modules/doctrine/README.md`
+- `node_modules/graphemer/README.md`
+- `node_modules/is-number/README.md`
+- `node_modules/tsutils/CHANGELOG.md`
+- `node_modules/uri-js/README.md`
+- `node_modules/form-data/README.md`
+- `node_modules/espree/README.md`
+- `node_modules/eslint/README.md`
+- `node_modules/eslint/node_modules/eslint-scope/README.md`
+- `node_modules/glob/README.md`
+- `node_modules/fast-levenshtein/README.md`
+- `node_modules/to-regex-range/README.md`
+- `node_modules/follow-redirects/README.md`
+- `node_modules/micromatch/README.md`
+- `node_modules/fast-glob/README.md`
+- `node_modules/is-extglob/README.md`
+- `node_modules/axios/CHANGELOG.md`
+- `node_modules/axios/MIGRATION_GUIDE.md`
+- `node_modules/braces/README.md`
+- `node_modules/which/README.md`
+- `node_modules/ajv/README.md`
+- `node_modules/@eslint-community/eslint-utils/README.md`
+- `node_modules/@eslint-community/regexpp/README.md`
+- `node_modules/ws/README.md`
+- `node_modules/debug/README.md`
+- `node_modules/mime-db/README.md`
+- `node_modules/isexe/README.md`
+- `dspy-rag-system/README.md`
+- `dspy-rag-system/docs/DSPY_INTEGRATION_GUIDE.md`
+- `dspy-rag-system/docs/mistral7b_instruct_integration_guide.md`
+- `dspy-rag-system/docs/CURRENT_STATUS.md`
+- `docs/B-065-error-recovery-troubleshooting-guide.md`
+- `docs/ARCHITECTURE.md`
+- `docs/CONFIG_REFERENCE.md`
+- `docs/README.md`
+- `docs/B-060-documentation-coherence-validation-guide.md`
+- `docs/research/papers/agent-orchestration-papers.md`
+- `docs/research/papers/dspy-papers.md`
+- `docs/research/papers/monitoring-papers.md`
+- `docs/research/papers/documentation-context-management-papers.md`
+- `docs/research/papers/performance-papers.md`
+- `docs/research/papers/rag-papers.md`
+- `docs/research/articles/agent-orchestration-articles.md`
+- `docs/research/articles/dspy-articles.md`
+- `docs/research/articles/performance-articles.md`
+- `docs/research/articles/rag-articles.md`
+- `docs/research/articles/monitoring-articles.md`
+- `docs/research/tutorials/performance-tutorials.md`
+- `docs/research/tutorials/rag-tutorials.md`
+- `docs/research/tutorials/agent-orchestration-tutorials.md`
+- `docs/research/tutorials/dspy-tutorials.md`
+- `docs/research/tutorials/monitoring-tutorials.md`
+- `docs/legacy/DSPY_INTEGRATION_GUIDE.md`
+- `docs/legacy/C9_COMPLETION_SUMMARY.md`
+- `docs/legacy/C10_COMPLETION_SUMMARY.md`
+- `docs/legacy/03_process-task-list.md`
+- `docs/legacy/N8N_SETUP_GUIDE.md`
+- `docs/legacy/MISSION_DASHBOARD_GUIDE.md`
+- `docs/legacy/00_backlog.md`
+- `docs/legacy/N8N_BACKLOG_SCRUBBER_GUIDE.md`
+- `dashboard/README.md`
+- `cursor-yi-coder-integration/README.md`
+- `venv/lib/python3.9/site-packages/nltk-3.9.1.dist-info/README.md`
+- `venv/lib/python3.9/site-packages/huggingface_hub/templates/modelcard_template.md`
+- `venv/lib/python3.9/site-packages/litellm/proxy/client/README.md`
+- `venv/lib/python3.9/site-packages/litellm/proxy/client/cli/README.md`
+- `venv/lib/python3.9/site-packages/litellm/integrations/dotprompt/README.md`
+- `migration/rename-tracker.md`
+- `500_b065-completion-summary.md`
+- `000_backlog.md`
+- `500_performance-research.md`
+- `500_memory-arch-research.md`
+- `500_b031-completion-summary.md`
+- `LM_STUDIO_SETUP.md`
+- `B-011-Tasks.md`
+- `400_metadata-collection-guide.md`
+- `400_cursor-context-engineering-guide.md`
+- `500_research-infrastructure-guide.md`
+- `500_dspy-research.md`
+- `400_project-overview.md`
+- `500_b071-completion-summary.md`
+- `B-049-PRD.md`
+- `REPO_MAINTENANCE_SUMMARY.md`
+- `002_generate-tasks.md`
+- `103_memory-context-workflow.md`
+- `400_prd-optimization-guide.md`
+- `500_research-summary.md`
+- `START_HERE.md`
+- `B-049-Tasks.md`
+- `104_memory-context-guidance.md`
+- `400_documentation-retrieval-guide.md`
+- `400_security-best-practices-guide.md`
+- `400_mission-dashboard-guide.md`
+- `cursor_native_ai_assessment.md`
+- `500_c10-completion-summary.md`
+- `401_memory-scaffolding-guide.md`
+- `104_dspy-development-context.md`
+- `README.md`
+- `FUTURE_YI_CODER_MIGRATION.md`
+- `400_development-roadmap.md`
+- `workflow_improvement_research.md`
+- `500_b071-migration-summary.md`
+- `B-072-Tasks.md`
+- `400_n8n-setup-guide.md`
+- `400_context-engineering-compatibility-analysis.md`
+- `500_b072-completion-summary.md`
+- `200_naming-conventions.md`
+- `500_memory-arch-benchmarks.md`
+- `DOCUMENTATION_UPDATE_SUMMARY.md`
+- `400_mistral7b-instruct-integration-guide.md`
+- `102_memory-context-state.md`
+- `B-011-PRD.md`
+- `400_ai-constitution.md`
+- `201_model-configuration.md`
+- `500_research-implementation-summary.md`
+- `B-072-PRD.md`
+- `003_process-task-list.md`
+- `specialized_agent_requirements.md`
+- `400_file-analysis-guide.md`
+- `500_maintenance-safety-research.md`
+- `101_memory-context-safety.md`
+- `202_setup-requirements.md`
+- `500_b070-completion-summary.md`
+- `500_rag-system-research.md`
+- `500_documentation-coherence-research.md`
+- `B-011-IMPLEMENTATION-SUMMARY.md`
+- `500_b060-completion-summary.md`
+- `500_prd-optimization-implementation-summary.md`
+- `400_metadata-quick-reference.md`
+- `400_memory-context-guide.md`
+- `400_context-priority-guide.md`
+- `400_n8n-backlog-scrubber-guide.md`
+- `400_dspy-integration-guide.md`
+- `100_cursor-memory-context.md`
+- `400_current-status.md`
+- `103_yi-coder-integration.md`
+- `100_cursor-memory-context.md`
+- `300_documentation-example.md`
+- `context_management_design.md`
+- `001_create-prd.md`
+- `500_c9-completion-summary.md`
+- `400_cross-reference-strengthening-plan.md`
+- `B-011-USER-DOCUMENTATION.md`
+- `500_research-analysis-summary.md`
+- `CURSOR_NATIVE_AI_MIGRATION_SUMMARY.md`
+- `100_backlog-guide.md`
+- `600_archives/backup_before_migration/CURSOR_MEMORY_CONTEXT.md`
+- `600_archives/backup_before_migration/DOCUMENTATION_EXAMPLE.md`
+- `600_archives/backup_before_migration/SYSTEM_OVERVIEW.md`
+- `600_archives/backup_before_migration/README.md`
+- `600_archives/backup_before_migration/CONTEXT_PRIORITY_GUIDE.md`
+- `600_archives/backup_before_migration/MEMORY_CONTEXT_GUIDE.md`
+- `600_archives/backup_before_migration/SETUP_REQUIREMENTS.md`
+- `600_archives/backup_before_core_migration/02_generate-tasks.md`
+- `600_archives/backup_before_core_migration/01_create-prd.md`
+- `600_archives/implementation-notes/CAG_IMPLEMENTATION_PATCHES.md`
+- `600_archives/implementation-notes/FILE_NAMING_MIGRATION_SUMMARY.md`
+- `600_archives/backup_before_subdirectory_migration/mistral7b_instruct_integration_guide.md`
+- `600_archives/backup_before_subdirectory_migration/CURRENT_STATUS.md`
+- `node_modules/queue-microtask/README.md`
+- `node_modules/globals/readme.md`
+- `node_modules/has-tostringtag/README.md`
+- `node_modules/eslint-scope/CHANGELOG.md`
+- `node_modules/eslint-scope/README.md`
+- `node_modules/type-fest/readme.md`
+- `node_modules/@eslint/js/README.md`
+- `node_modules/@eslint/eslintrc/README.md`
+- `node_modules/acorn/CHANGELOG.md`
+- `node_modules/acorn/README.md`
+- `node_modules/file-entry-cache/changelog.md`
+- `node_modules/@nodelib/fs.scandir/README.md`
+- `node_modules/proxy-from-env/README.md`
+- `node_modules/ignore/README.md`
+- `node_modules/tslib/README.md`
+- `node_modules/argparse/CHANGELOG.md`
+- `node_modules/picomatch/README.md`
+- `node_modules/is-glob/README.md`
+- `node_modules/typescript/README.md`
+- `node_modules/flat-cache/changelog.md`
+- `node_modules/inherits/README.md`
+- `node_modules/get-intrinsic/README.md`
+- `node_modules/keyv/README.md`
+- `node_modules/@typescript-eslint/typescript-estree/README.md`
+- `node_modules/@typescript-eslint/eslint-plugin/docs/rules/no-dynamic-delete.md`
+- `node_modules/@ungap/structured-clone/README.md`
+- `node_modules/js-yaml/CHANGELOG.md`
+- `node_modules/eslint-visitor-keys/README.md`
+- `node_modules/find-up/readme.md`
+- `node_modules/chalk/readme.md`
+- `node_modules/supports-color/readme.md`
+- `node_modules/path-key/readme.md`
+- `node_modules/fill-range/README.md`
+- `node_modules/word-wrap/README.md`
+- `node_modules/has-symbols/README.md`
+- `node_modules/doctrine/CHANGELOG.md`
+- `node_modules/doctrine/README.md`
+- `node_modules/graphemer/README.md`
+- `node_modules/is-number/README.md`
+- `node_modules/uri-js/README.md`
+- `node_modules/form-data/README.md`
+- `node_modules/espree/README.md`
+- `node_modules/eslint/README.md`
+- `node_modules/eslint/node_modules/eslint-scope/README.md`
+- `node_modules/glob/README.md`
+- `node_modules/fast-levenshtein/README.md`
+- `node_modules/to-regex-range/README.md`
+- `node_modules/follow-redirects/README.md`
+- `node_modules/micromatch/README.md`
+- `node_modules/fast-glob/README.md`
+- `node_modules/is-extglob/README.md`
+- `node_modules/axios/CHANGELOG.md`
+- `node_modules/axios/MIGRATION_GUIDE.md`
+- `node_modules/braces/README.md`
+- `node_modules/which/README.md`
+- `node_modules/ajv/README.md`
+- `node_modules/@eslint-community/eslint-utils/README.md`
+- `node_modules/@eslint-community/regexpp/README.md`
+- `node_modules/ws/README.md`
+- `node_modules/debug/README.md`
+- `node_modules/mime-db/README.md`
+- `node_modules/isexe/README.md`
+- `dspy-rag-system/README.md`
+- `dspy-rag-system/docs/DSPY_INTEGRATION_GUIDE.md`
+- `dspy-rag-system/docs/mistral7b_instruct_integration_guide.md`
+- `dspy-rag-system/docs/CURRENT_STATUS.md`
+- `docs/B-065-error-recovery-troubleshooting-guide.md`
+- `docs/ARCHITECTURE.md`
+- `docs/CONFIG_REFERENCE.md`
+- `docs/README.md`
+- `docs/B-060-documentation-coherence-validation-guide.md`
+- `docs/research/papers/dspy-papers.md`
+- `docs/research/papers/performance-papers.md`
+- `docs/research/articles/agent-orchestration-articles.md`
+- `docs/research/articles/dspy-articles.md`
+- `docs/research/articles/performance-articles.md`
+- `docs/research/articles/rag-articles.md`
+- `docs/research/articles/monitoring-articles.md`
+- `docs/research/tutorials/performance-tutorials.md`
+- `docs/research/tutorials/rag-tutorials.md`
+- `docs/research/tutorials/agent-orchestration-tutorials.md`
+- `docs/research/tutorials/dspy-tutorials.md`
+- `docs/research/tutorials/monitoring-tutorials.md`
+- `docs/legacy/DSPY_INTEGRATION_GUIDE.md`
+- `docs/legacy/C9_COMPLETION_SUMMARY.md`
+- `docs/legacy/C10_COMPLETION_SUMMARY.md`
+- `docs/legacy/03_process-task-list.md`
+- `docs/legacy/N8N_SETUP_GUIDE.md`
+- `docs/legacy/MISSION_DASHBOARD_GUIDE.md`
+- `docs/legacy/00_backlog.md`
+- `docs/legacy/N8N_BACKLOG_SCRUBBER_GUIDE.md`
+- `dashboard/README.md`
+- `cursor-yi-coder-integration/README.md`
+- `venv/lib/python3.9/site-packages/nltk-3.9.1.dist-info/README.md`
+- `venv/lib/python3.9/site-packages/huggingface_hub/templates/modelcard_template.md`
+- `venv/lib/python3.9/site-packages/litellm/proxy/client/README.md`
+- `venv/lib/python3.9/site-packages/litellm/proxy/client/cli/README.md`
+- `venv/lib/python3.9/site-packages/litellm/integrations/dotprompt/README.md`
+- `migration/rename-tracker.md`
+
+## Original Files Split
+- **400_deployment-environment-guide.md** → 15 modules
+  - `400_deployment-environment-guide_additional_resources.md`
+  - `400_deployment-environment-guide_configuration_management.md`
+  - `400_deployment-environment-guide_deployment_architecture.md`
+  - ... and 12 more modules
+- **400_few-shot-context-examples.md** → 15 modules
+  - `400_few-shot-context-examples_additional_resources.md`
+  - `400_few-shot-context-examples_backlog_analysis_examples.md`
+  - `400_few-shot-context-examples_best_practices.md`
+  - ... and 12 more modules
+- **400_contributing-guidelines.md** → 24 modules
+  - `400_contributing-guidelines_additional_resources.md`
+  - `400_contributing-guidelines_checklist.md`
+  - `400_contributing-guidelines_code_standards.md`
+  - ... and 21 more modules
+- **400_migration-upgrade-guide.md** → 15 modules
+  - `400_migration-upgrade-guide_ai_model_upgrade_procedures.md`
+  - `400_migration-upgrade-guide_application_upgrade_procedures.md`
+  - `400_migration-upgrade-guide_best_practices.md`
+  - ... and 12 more modules
+- **400_testing-strategy-guide.md** → 12 modules
+  - `400_testing-strategy-guide_additional_resources.md`
+  - `400_testing-strategy-guide_ai_model_testing.md`
+  - `400_testing-strategy-guide_continuous_testing.md`
+  - ... and 9 more modules
+- **B-011-DEPLOYMENT-GUIDE.md** → 10 modules
+  - `B-011-DEPLOYMENT-GUIDE_backup_recovery.md`
+  - `B-011-DEPLOYMENT-GUIDE_deployment_prerequisites.md`
+  - `B-011-DEPLOYMENT-GUIDE_local_development_deployment.md`
+  - ... and 7 more modules
+- **B-011-DEVELOPER-DOCUMENTATION.md** → 15 modules
+  - `B-011-DEVELOPER-DOCUMENTATION_api_documentation.md`
+  - `B-011-DEVELOPER-DOCUMENTATION_architecture_overview.md`
+  - `B-011-DEVELOPER-DOCUMENTATION_cicd_pipeline.md`
+  - ... and 12 more modules
+- **400_integration-patterns-guide.md** → 15 modules
+  - `400_integration-patterns-guide_additional_resources.md`
+  - `400_integration-patterns-guide_api_design_principles.md`
+  - `400_integration-patterns-guide_communication_patterns.md`
+  - ... and 12 more modules
+- **400_performance-optimization-guide.md** → 13 modules
+  - `400_performance-optimization-guide_additional_resources.md`
+  - `400_performance-optimization-guide_best_practices.md`
+  - `400_performance-optimization-guide_monitoring_setup.md`
+  - ... and 10 more modules
+- **docs/100_ai-development-ecosystem.md** → 4 modules
+  - `100_ai-development-ecosystem_advanced_lens_technical_implementation.md`
+  - `100_ai-development-ecosystem_beginner_lens_what_were_building.md`
+  - `100_ai-development-ecosystem_intermediate_lens_how_the_system_works.md`
+  - ... and 1 more modules
+- **400_system-overview.md** → 17 modules
+  - `400_system-overview_advanced_features.md`
+  - `400_system-overview_component_deep_dives.md`
+  - `400_system-overview_configuration_and_setup.md`
+  - ... and 14 more modules
+
+## Context Mapping
+- `deployment` → `400_deployment-environment-guide_`
+- `environment` → `400_deployment-environment-guide_`
+- `deployment procedures` → `400_deployment-environment-guide_deployment_procedures.md`
+- `environment setup` → `400_deployment-environment-guide_environment_setup.md`
+- `deployment architecture` → `400_deployment-environment-guide_deployment_architecture.md`
+- `few-shot` → `400_few-shot-context-examples_`
+- `context examples` → `400_few-shot-context-examples_`
+- `context engineering` → `400_few-shot-context-examples_context_engineering_fundamentals.md`
+- `backlog analysis` → `400_few-shot-context-examples_backlog_analysis_examples.md`
+- `memory context` → `400_few-shot-context-examples_memory_context_examples.md`
+- `contributing` → `400_contributing-guidelines_`
+- `code standards` → `400_contributing-guidelines_code_standards.md`
+- `testing standards` → `400_contributing-guidelines_testing_standards.md`
+- `security standards` → `400_contributing-guidelines_security_standards.md`
+- `performance standards` → `400_contributing-guidelines_performance_standards.md`
+- `migration` → `400_migration-upgrade-guide_`
+- `upgrade` → `400_migration-upgrade-guide_`
+- `database migration` → `400_migration-upgrade-guide_database_migration_procedures.md`
+- `application upgrade` → `400_migration-upgrade-guide_application_upgrade_procedures.md`
+- `rollback procedures` → `400_migration-upgrade-guide_rollback_procedures.md`
+- `testing strategy` → `400_testing-strategy-guide_`
+- `testing pyramid` → `400_testing-strategy-guide_testing_pyramid.md`
+- `test types` → `400_testing-strategy-guide_test_types.md`
+- `quality gates` → `400_testing-strategy-guide_quality_gates.md`
+- `ai model testing` → `400_testing-strategy-guide_ai_model_testing.md`
+- `B-011 deployment` → `B-011-DEPLOYMENT-GUIDE_`
+- `production deployment` → `B-011-DEPLOYMENT-GUIDE_production_deployment.md`
+- `monitoring alerting` → `B-011-DEPLOYMENT-GUIDE_monitoring_alerting.md`
+- `troubleshooting guide` → `B-011-DEPLOYMENT-GUIDE_troubleshooting_guide.md`
+- `B-011 developer` → `B-011-DEVELOPER-DOCUMENTATION_`
+- `specialized agent framework` → `B-011-DEVELOPER-DOCUMENTATION_specialized_agent_framework.md`
+- `context management system` → `B-011-DEVELOPER-DOCUMENTATION_context_management_system.md`
+- `performance optimization system` → `B-011-DEVELOPER-DOCUMENTATION_performance_optimization_system.md`
+- `integration patterns` → `400_integration-patterns-guide_`
+- `api design` → `400_integration-patterns-guide_api_design_principles.md`
+- `component integration` → `400_integration-patterns-guide_component_integration.md`
+- `communication patterns` → `400_integration-patterns-guide_communication_patterns.md`
+- `performance optimization` → `400_performance-optimization-guide_`
+- `performance metrics` → `400_performance-optimization-guide_performance_metrics.md`
+- `optimization strategies` → `400_performance-optimization-guide_optimization_strategies.md`
+- `scaling guidelines` → `400_performance-optimization-guide_scaling_guidelines.md`
+- `ai development ecosystem` → `100_ai-development-ecosystem_`
+- `three lens documentation` → `100_ai-development-ecosystem_three_lens_documentation_system.md`
+- `beginner lens` → `100_ai-development-ecosystem_beginner_lens_what_were_building.md`
+- `intermediate lens` → `100_ai-development-ecosystem_intermediate_lens_how_the_system_works.md`
+- `advanced lens` → `100_ai-development-ecosystem_advanced_lens_technical_implementation.md`
+- `system overview` → `400_system-overview_`
+- `system architecture` → `400_system-overview_system_architecture_macro_view.md`
+- `core components` → `400_system-overview_core_components_detailed_view.md`
+- `development workflow` → `400_system-overview_development_workflow_high_level_process.md`

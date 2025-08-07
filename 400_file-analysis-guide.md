@@ -3,12 +3,18 @@
 > **Strategic Analysis**: Comprehensive methodology for determining file obsolescence, legacy status, and retention decisions while maintaining system integrity.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
 <!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
-<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_security-best-practices-guide.md, 400_performance-optimization-guide.md -->
+<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide_additional_resources.md, 400_security-best-practices-guide.md, 400_performance-optimization-guide_additional_resources.md -->
 <!-- IMPLEMENTATION_STACK: 104_dspy-development-context.md, 202_setup-requirements.md, 201_model-configuration.md -->
 <!-- MEMORY_CONTEXT: HIGH - Essential analysis methodology for maintaining documentation integrity -->
 
+<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 ## 🚨 **MANDATORY ANALYSIS CHECKLIST**
 
 **⚠️ CRITICAL: You MUST complete ALL steps below before suggesting ANY file deletion or deprecation!**
@@ -16,7 +22,7 @@
 ### **Step 1: Context Loading (REQUIRED - 2-3 minutes)**
 - [ ] **Read `100_cursor-memory-context.md`** - Current project state and priorities
 - [ ] **Read `000_backlog.md`** - Active development items and dependencies  
-- [ ] **Read `400_system-overview.md`** - Technical architecture understanding
+- [ ] **Read `400_system-overview_advanced_features.md`** - Technical architecture understanding
 - [ ] **Read `400_project-overview.md`** - High-level project goals
 
 ### **Step 2: File Organization Understanding (REQUIRED - 1-2 minutes)**
@@ -27,7 +33,7 @@
 ### **Step 3: Cross-Reference Analysis (REQUIRED - 2-3 minutes)**
 - [ ] **Find ALL files that reference the target file** using `grep_search`
 - [ ] **Count references**: High value = many references, Orphaned = 0 references
-- [ ] **Check if referenced by core files**: `100_cursor-memory-context.md`, `000_backlog.md`, `400_system-overview.md`
+- [ ] **Check if referenced by core files**: `100_cursor-memory-context.md`, `000_backlog.md`, `400_system-overview_advanced_features.md`
 - [ ] **Check if referenced by active backlog items** or dependencies
 
 ### **Step 4: Content Analysis (REQUIRED - 2-3 minutes)**
@@ -73,7 +79,7 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 **Files to Read**:
 1. **`100_cursor-memory-context.md`** - Current project state and priorities
 2. **`000_backlog.md`** - Active development items and roadmap
-3. **`400_system-overview.md`** - Technical architecture understanding
+3. **`400_system-overview_advanced_features.md`** - Technical architecture understanding
 4. **`400_project-overview.md`** - High-level project goals
 
 **Time Investment**: 2-3 minutes
@@ -96,7 +102,7 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 
 **Tier 1 (CRITICAL - Never Remove)**
 - **Criteria**: Core workflow files, primary memory context, active development items
-- **Examples**: `000_backlog.md`, `100_cursor-memory-context.md`, `400_system-overview.md`
+- **Examples**: `000_backlog.md`, `100_cursor-memory-context.md`, `400_system-overview_advanced_features.md`
 - **Action**: **NEVER suggest removal** - these are the foundation of our system
 
 **Tier 2 (HIGH - Review Carefully)**
@@ -120,7 +126,7 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 **Check Cross-Reference Tags**:
 ```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md -->
 <!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md -->
 <!-- MEMORY_CONTEXT: HIGH - Essential analysis methodology -->
 ```
@@ -391,7 +397,7 @@ python3 scripts/system_health_check.py
 
 ### **Example 3: Analyzing a Core Documentation File**
 
-**File**: `400_system-overview.md`
+**File**: `400_system-overview_advanced_features.md`
 **Analysis Process**:
 
 1. **Context Loading**: This is a Tier 1 critical file

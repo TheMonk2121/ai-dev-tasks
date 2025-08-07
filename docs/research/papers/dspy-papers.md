@@ -1,3 +1,6 @@
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
 # DSPy Research Papers
 
 > **External Research**: Academic papers and research sources for DSPy framework.
@@ -40,7 +43,7 @@
 ## 🔗 **Related Documentation**
 - `500_dspy-research.md` - Our internal DSPy research summary
 - `104_dspy-development-context.md` - Our DSPy implementation
-- `400_system-overview.md` - System architecture overview
+- `400_system-overview_advanced_features.md` - System architecture overview
 
 ## 📖 **Key Insights**
 - Structured prompt programming improves maintainability

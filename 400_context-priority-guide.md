@@ -11,7 +11,23 @@ This document provides a prioritized list of files in the `ai-dev-tasks` project
 
 ### **Documentation Strategy Evolution & Safeguards**
 
-Our documentation system has evolved from a **manual, ad-hoc approach** to a **structured cognitive scaffolding system** designed specifically for AI rehydration. The key insight was recognizing that documentation serves two distinct purposes: **human comprehension** and **AI context restoration**. Our three-digit prefix system (`100_cursor-memory-context.md`, `400_system-overview.md`, etc.) creates semantic ordering that guides both humans and AI through the correct reading sequence. The HTML cross-reference comments (`<!-- CONTEXT_REFERENCE: -->`) establish explicit relationships between files, creating a web of interconnected knowledge that prevents context fragmentation.
+Our documentation system has evolved from a **manual, ad-hoc approach** to a **structured cognitive scaffolding system** designed specifically for AI rehydration. The key insight was recognizing that documentation serves two distinct purposes: **human comprehension** and **AI context restoration**. Our three-digit prefix system (`100_cursor-memory-context.md`, `400_system-overview_advanced_features.md`, etc.) creates semantic ordering that guides both humans and AI through the correct reading sequence. The HTML cross-reference comments (`<!-- CONTEXT_REFERENCE: --><!-- MODULE_REFERENCE: 101_memory-context-safety.md -->
+<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_rollback_procedures.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
+`) establish explicit relationships between files, creating a web of interconnected knowledge that prevents context fragmentation.
 
 The breakthrough came when we realized that **static documentation** wasn't sufficient for a rapidly evolving AI development ecosystem. We needed **living documentation** that could adapt to changes while maintaining coherence. This led to the development of the memory context system (`100_cursor-memory-context.md`) as the primary AI rehydration mechanism, supported by the context priority guide (`400_context-priority-guide.md`) that maps the entire knowledge hierarchy.
 
@@ -52,7 +68,7 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
    - Essential for understanding project direction and next steps
    - Helps identify what's urgent vs. what can wait
 
-3. **`400_system-overview.md`** - **CRITICAL**
+3. **`400_system-overview_advanced_features.md`** - **CRITICAL**
    - Provides technical architecture and "system-of-systems" context
    - Shows how all components work together
    - Essential for understanding the broader technical landscape
@@ -102,7 +118,7 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
 **First 2-3 minutes:**
 - Read `100_cursor-memory-context.md` for instant context
 - Check `000_backlog.md` for current priorities
-- Scan `400_system-overview.md` for technical context
+- Scan `400_system-overview_advanced_features.md` for technical context
 
 **As needed during conversation:**
 - Reference `400_context-priority-guide.md` when discussing file organization
@@ -146,7 +162,7 @@ When determining where to place new documentation content, follow this **structu
 
 **For system-wide concepts:**
 - **`400_context-priority-guide.md`** - File organization, cognitive scaffolding, AI analysis strategies
-- **`400_system-overview.md`** - Technical architecture, system relationships
+- **`400_system-overview_advanced_features.md`** - Technical architecture, system relationships
 - **`400_project-overview.md`** - High-level project purpose and workflow
 
 **For processes and workflows:**
@@ -238,7 +254,7 @@ When sharing context with other AI models, use this structured approach:
 #### **Level 1: Essential Context (5 files)**
 ```
 1. 400_project-overview.md - Project overview and workflow
-2. 400_system-overview.md - Technical architecture
+2. 400_system-overview_advanced_features.md - Technical architecture
 3. 000_backlog.md - Current priorities and status
 4. dspy-rag-system/400_project-overview.md - Core system status
 5. docs/400_project-overview.md - Three-lens documentation guide
@@ -268,7 +284,7 @@ Use these reference patterns in other documents:
 #### **In PRDs and Task Lists:**
 ```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
 ```
@@ -276,7 +292,7 @@ Use these reference patterns in other documents:
 #### **In Code Comments:**
 ```python
 # CONTEXT: See 400_context-priority-guide.md for file organization
-# ESSENTIAL: 400_project-overview.md, 400_system-overview.md, 000_backlog.md
+# ESSENTIAL: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
 # DOMAIN: 100_backlog-guide.md, CURSOR_NATIVE_AI_STRATEGY.md
 ```
@@ -284,7 +300,7 @@ Use these reference patterns in other documents:
 #### **In Documentation:**
 ```markdown
 > **Context Reference**: See `400_context-priority-guide.md` for complete file organization
-> **Essential Files**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
+> **Essential Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 > **Domain Files**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
 ```
@@ -297,7 +313,7 @@ Use these reference patterns in other documents:
 | File | Purpose | Why First? | Cross-Reference |
 |------|---------|-------------|-----------------|
 | `400_project-overview.md` | Main project entry point with high-level overview, quick start, and core AI development workflow | Gives immediate understanding of the project's purpose and workflow | `<!-- CONTEXT_REFERENCE: 400_project-overview.md -->` |
-| `400_system-overview.md` | Comprehensive technical overview of the entire AI development ecosystem | Provides the "system-of-systems" context | `<!-- CONTEXT_REFERENCE: 400_system-overview.md -->` |
+| `400_system-overview_advanced_features.md` | Comprehensive technical overview of the entire AI development ecosystem | Provides the "system-of-systems" context | `<!-- CONTEXT_REFERENCE: 400_system-overview_advanced_features.md -->` |
 | `dspy-rag-system/400_project-overview.md` | DSPy RAG system overview with current status and features | Shows the core AI system's capabilities | `<!-- CONTEXT_REFERENCE: dspy-rag-system/400_project-overview.md -->` |
 | `dspy-rag-system/docs/CURRENT_STATUS.md` | Real-time status of all system components and features | Current operational state of the entire stack | `<!-- CONTEXT_REFERENCE: dspy-rag-system/docs/CURRENT_STATUS.md -->` |
 
@@ -388,11 +404,11 @@ When rehydrating an AI model's memory or sharing context with other models, star
 - **When to Use**: First file to read for any new context
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 400_project-overview.md -->`
 
-### **2. `400_system-overview.md`**
+### **2. `400_system-overview_advanced_features.md`**
 - **Purpose**: Technical architecture overview
 - **Key Info**: System components, security features, reliability measures
 - **When to Use**: Understanding the complete technical stack
-- **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 400_system-overview.md -->`
+- **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 400_system-overview_advanced_features.md -->`
 
 ### **3. `000_backlog.md`**
 - **Purpose**: Current priorities and roadmap
@@ -498,10 +514,10 @@ To integrate this guide with other documents, add these references:
 #### **In 400_project-overview.md:**
 ```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 ```
 
-#### **In 400_system-overview.md:**
+#### **In 400_system-overview_advanced_features.md:**
 ```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 104_dspy-development-context.md -->
@@ -520,7 +536,7 @@ When sharing context with other AI models, use this structured approach:
 ```
 400_context-priority-guide.md
 400_project-overview.md
-400_system-overview.md
+400_system-overview_advanced_features.md
 000_backlog.md
 dspy-rag-system/400_project-overview.md
 ```

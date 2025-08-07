@@ -1,3 +1,5 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 # Configuration Reference v0.3.1
 
 This document provides a comprehensive reference for the DSPy Router system configuration.

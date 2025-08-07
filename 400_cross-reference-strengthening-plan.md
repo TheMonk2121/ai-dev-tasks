@@ -9,6 +9,16 @@
 #### **1. Base Pattern (Most Common)**
 ```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ```
 - **Coverage**: ~80% of files
 - **Purpose**: Links to central navigation guide
@@ -18,7 +28,7 @@
 #### **2. Specialized Tags (Emerging)**
 ```markdown
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
-<!-- SYSTEM_REFERENCE: 400_system-overview.md -->
+<!-- SYSTEM_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
 ```
@@ -52,10 +62,10 @@
 ### **Phase 1: Semantic Grouping Enhancement**
 
 #### **1.1 Core System Group**
-**Files**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`, `100_cursor-memory-context.md`
+**Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`, `100_cursor-memory-context.md`
 **Cross-References**:
 ```markdown
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 <!-- MEMORY_SCAFFOLD: 100_cursor-memory-context.md -->
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 ```
@@ -74,15 +84,15 @@
 **Cross-References**:
 ```markdown
 <!-- IMPLEMENTATION_STACK: 104_dspy-development-context.md, 202_setup-requirements.md, 201_model-configuration.md -->
-<!-- DEPLOYMENT_GUIDE: 400_deployment-environment-guide.md -->
+<!-- DEPLOYMENT_GUIDE: 400_deployment-environment-guide_additional_resources.md -->
 <!-- SECURITY_FRAMEWORK: 400_security-best-practices-guide.md -->
 ```
 
 #### **1.4 Quality Assurance Group**
-**Files**: `400_testing-strategy-guide.md`, `400_security-best-practices-guide.md`, `400_performance-optimization-guide.md`
+**Files**: `400_testing-strategy-guide_additional_resources.md`, `400_security-best-practices-guide.md`, `400_performance-optimization-guide_additional_resources.md`
 **Cross-References**:
 ```markdown
-<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide.md, 400_security-best-practices-guide.md, 400_performance-optimization-guide.md -->
+<!-- QUALITY_FRAMEWORK: 400_testing-strategy-guide_additional_resources.md, 400_security-best-practices-guide.md, 400_performance-optimization-guide_additional_resources.md -->
 <!-- MONITORING_SYSTEM: dspy-rag-system/src/monitoring/ -->
 <!-- METRICS_COLLECTION: 400_metadata-collection-guide.md -->
 ```
@@ -93,11 +103,11 @@
 **Pattern**: If A references B, B should reference A
 **Example**:
 ```markdown
-# In 400_system-overview.md
+# In 400_system-overview_advanced_features.md
 <!-- CORE_SYSTEM: 400_project-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
 
 # In 400_project-overview.md  
-<!-- CORE_SYSTEM: 400_system-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
+<!-- CORE_SYSTEM: 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
 ```
 
 #### **2.2 Workflow Chain References**
@@ -120,14 +130,14 @@
 **Example**:
 ```markdown
 <!-- QUICK_REFERENCE: 400_metadata-quick-reference.md -->
-<!-- RELATED_GUIDES: 400_security-best-practices-guide.md, 400_testing-strategy-guide.md -->
+<!-- RELATED_GUIDES: 400_security-best-practices-guide.md, 400_testing-strategy-guide_additional_resources.md -->
 ```
 
 #### **3.2 Implementation Context**
 **Pattern**: Link implementation guides to related documentation
 **Example**:
 ```markdown
-<!-- IMPLEMENTATION_GUIDES: 400_integration-patterns-guide.md, 400_deployment-environment-guide.md -->
+<!-- IMPLEMENTATION_GUIDES: 400_integration-patterns-guide_additional_resources.md, 400_deployment-environment-guide_additional_resources.md -->
 <!-- SETUP_GUIDES: 202_setup-requirements.md, 201_model-configuration.md -->
 ```
 
@@ -157,7 +167,7 @@
    - Add metadata system references
    - Add workflow chain references
 
-2. **Update `400_system-overview.md`**
+2. **Update `400_system-overview_advanced_features.md`**
    - Add bidirectional references to project overview and backlog
    - Add implementation stack references
    - Add quality framework references
@@ -200,7 +210,7 @@
    - Add performance optimization references
 
 ### **Step 4: Quality Framework Enhancement**
-1. **Update `400_testing-strategy-guide.md`**
+1. **Update `400_testing-strategy-guide_additional_resources.md`**
    - Add quality framework references
    - Add metadata system references
    - Add implementation context references
@@ -210,7 +220,7 @@
    - Add implementation stack references
    - Add monitoring system references
 
-3. **Update `400_performance-optimization-guide.md`**
+3. **Update `400_performance-optimization-guide_additional_resources.md`**
    - Add quality framework references
    - Add metadata system references
    - Add monitoring system references

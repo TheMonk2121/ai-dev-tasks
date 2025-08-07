@@ -1,3 +1,5 @@
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 # Migration Tracker
 
 Populated by script

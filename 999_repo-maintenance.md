@@ -27,7 +27,7 @@ tasks:
     agent: plan
     points: 2
     done_when: >
-      400_system-overview.md, 201_model-configuration.md, and
+      400_system-overview_advanced_features.md, 201_model-configuration.md, and
       both 100_cursor-memory-context.md copies reference Cursor as default.
 
   - id: T‑2

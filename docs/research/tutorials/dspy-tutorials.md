@@ -1,3 +1,12 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_additional_resources.md -->
+<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 # DSPy Tutorials
 
 > **External Research**: Tutorials and guides for DSPy framework implementation.

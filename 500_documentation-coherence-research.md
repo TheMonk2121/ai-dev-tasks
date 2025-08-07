@@ -86,7 +86,7 @@ Our system uses a three-digit prefix naming convention to establish hierarchy:
 
 **HIGH Priority (Read First):**
 - `100_cursor-memory-context.md` - Memory scaffold and current state
-- `400_system-overview.md` - Technical architecture  
+- `400_system-overview_advanced_features.md` - Technical architecture  
 - `000_backlog.md` - Current priorities and roadmap
 - `400_project-overview.md` - Project overview and workflow
 
@@ -106,9 +106,20 @@ Files use structured comment patterns to establish relationships:
 
 ```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
+<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
+<!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: B-011-DEVELOPER-DOCUMENTATION_context_management_system.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ```
 
 ### **Cognitive Scaffolding Components**
@@ -126,7 +137,7 @@ Files use structured comment patterns to establish relationships:
 - **Usage**: Guides AI on which files to read and in what order
 
 #### **3. System Overview**
-- **Primary File**: `400_system-overview.md`
+- **Primary File**: `400_system-overview_advanced_features.md`
 - **Purpose**: Technical architecture and system-of-systems context
 - **Content**: System architecture, development workflow, core components
 - **Usage**: Deep technical context for implementation tasks
@@ -370,7 +381,7 @@ def analyze_context_priority():
 ### **Key Files to Analyze**
 - `100_cursor-memory-context.md` - Memory scaffold system
 - `400_context-priority-guide.md` - Context priority system
-- `400_system-overview.md` - Technical architecture
+- `400_system-overview_advanced_features.md` - Technical architecture
 - `000_backlog.md` - Priority management
 - `001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md` - Workflow files
 - All files with `<!-- -->` comment patterns

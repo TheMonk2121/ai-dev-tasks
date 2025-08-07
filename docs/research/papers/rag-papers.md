@@ -1,3 +1,4 @@
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 # RAG Research Papers
 
 > **External Research**: Academic papers and research sources for RAG (Retrieval-Augmented Generation) systems.
@@ -34,7 +35,7 @@
 
 ## 🔗 **Related Documentation**
 - `500_rag-system-research.md` - Our internal RAG research summary
-- `400_system-overview.md` - System architecture overview
+- `400_system-overview_advanced_features.md` - System architecture overview
 - `dspy-rag-system/` - Our RAG implementation
 
 ## 📖 **Key Insights**

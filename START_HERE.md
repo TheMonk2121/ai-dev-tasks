@@ -3,35 +3,47 @@
 > **Welcome!** This guide helps you navigate the comprehensive AI development ecosystem documentation without getting overwhelmed. Choose your path based on what you want to accomplish.
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
 <!-- NAVIGATION_GUIDE: START_HERE.md -->
 <!-- MEMORY_CONTEXT: HIGH - Primary navigation guide for human users -->
 
+<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines_additional_resources.md -->
+<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
 ## 🎯 **Quick Navigation - Choose Your Path**
 
 ### **I'm New Here - What is this project?**
 → **Start with**: `400_project-overview.md` (5-minute overview)
-→ **Then read**: `400_system-overview.md` (technical architecture)
+→ **Then read**: `400_system-overview_advanced_features.md` (technical architecture)
 → **Next**: `000_backlog.md` (current priorities and roadmap)
 
 ### **I want to understand the current state**
 → **Start with**: `100_cursor-memory-context.md` (instant project state)
 → **Then read**: `000_backlog.md` (what's being built)
-→ **Next**: `400_system-overview.md` (how it all works)
+→ **Next**: `400_system-overview_advanced_features.md` (how it all works)
 
 ### **I want to contribute to development**
-→ **Start with**: `400_contributing-guidelines.md` (development standards)
+→ **Start with**: `400_contributing-guidelines_additional_resources.md` (development standards)
 → **Then read**: `000_backlog.md` (what needs to be done)
 → **Next**: `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md` (workflow)
 
 ### **I want to set up the development environment**
 → **Start with**: `202_setup-requirements.md` (environment setup)
 → **Then read**: `201_model-configuration.md` (AI model setup)
-→ **Next**: `400_deployment-environment-guide.md` (deployment)
+→ **Next**: `400_deployment-environment-guide_additional_resources.md` (deployment)
 
 ### **I want to understand the AI system**
 → **Start with**: `104_dspy-development-context.md` (deep technical context)
-→ **Then read**: `400_system-overview.md` (system architecture)
+→ **Then read**: `400_system-overview_advanced_features.md` (system architecture)
 → **Next**: `400_metadata-collection-guide.md` (how data flows)
 
 ### **I want to work on a specific feature**
@@ -47,7 +59,7 @@
 | `400_project-overview.md` | **Main entry point** - What this project is | 5 minutes | First time here |
 | `100_cursor-memory-context.md` | **Current state** - What's happening now | 2 minutes | Understanding current work |
 | `000_backlog.md` | **Roadmap** - What's being built | 10 minutes | Contributing or planning |
-| `400_system-overview.md` | **Architecture** - How it all works | 15 minutes | Technical understanding |
+| `400_system-overview_advanced_features.md` | **Architecture** - How it all works | 15 minutes | Technical understanding |
 
 ### **🛠️ Development Workflow (Step by Step)**
 | File | Purpose | Reading Time | When to Use |
@@ -62,37 +74,37 @@
 |------|---------|--------------|-------------|
 | `202_setup-requirements.md` | Environment setup guide | 20 minutes | First-time setup |
 | `201_model-configuration.md` | AI model configuration | 15 minutes | Setting up AI models |
-| `400_deployment-environment-guide.md` | Production deployment | 30 minutes | Going to production |
+| `400_deployment-environment-guide_additional_resources.md` | Production deployment | 30 minutes | Going to production |
 
 ### **🎯 Quality & Standards**
 | File | Purpose | Reading Time | When to Use |
 |------|---------|--------------|-------------|
-| `400_contributing-guidelines.md` | Development standards | 20 minutes | Contributing code |
-| `400_testing-strategy-guide.md` | Testing approach | 25 minutes | Writing tests |
+| `400_contributing-guidelines_additional_resources.md` | Development standards | 20 minutes | Contributing code |
+| `400_testing-strategy-guide_additional_resources.md` | Testing approach | 25 minutes | Writing tests |
 | `400_security-best-practices-guide.md` | Security guidelines | 30 minutes | Security concerns |
-| `400_performance-optimization-guide.md` | Performance guidelines | 25 minutes | Performance issues |
+| `400_performance-optimization-guide_additional_resources.md` | Performance guidelines | 25 minutes | Performance issues |
 
 ### **📊 Data & Analytics**
 | File | Purpose | Reading Time | When to Use |
 |------|---------|--------------|-------------|
 | `400_metadata-collection-guide.md` | How data flows | 20 minutes | Understanding data |
 | `400_metadata-quick-reference.md` | Quick commands | 5 minutes | Using the system |
-| `400_integration-patterns-guide.md` | How components connect | 25 minutes | Integration work |
+| `400_integration-patterns-guide_additional_resources.md` | How components connect | 25 minutes | Integration work |
 
 ## 🚀 **Common Scenarios - What You Want to Do**
 
 ### **Scenario 1: "I'm new and want to understand this project"**
-**Path**: `400_project-overview.md` → `400_system-overview.md` → `000_backlog.md`
+**Path**: `400_project-overview.md` → `400_system-overview_advanced_features.md` → `000_backlog.md`
 **Time**: 30 minutes
 **Outcome**: You'll understand what this project is, how it works, and what's being built
 
 ### **Scenario 2: "I want to contribute to development"**
-**Path**: `400_contributing-guidelines.md` → `000_backlog.md` → `001_create-prd.md`
+**Path**: `400_contributing-guidelines_additional_resources.md` → `000_backlog.md` → `001_create-prd.md`
 **Time**: 45 minutes
 **Outcome**: You'll know how to contribute, what needs work, and how to start
 
 ### **Scenario 3: "I want to set up the development environment"**
-**Path**: `202_setup-requirements.md` → `201_model-configuration.md` → `400_deployment-environment-guide.md`
+**Path**: `202_setup-requirements.md` → `201_model-configuration.md` → `400_deployment-environment-guide_additional_resources.md`
 **Time**: 60 minutes
 **Outcome**: You'll have a working development environment
 
@@ -102,7 +114,7 @@
 **Outcome**: You'll have a clear plan and can start building
 
 ### **Scenario 5: "I want to understand the AI system"**
-**Path**: `104_dspy-development-context.md` → `400_system-overview.md` → `400_metadata-collection-guide.md`
+**Path**: `104_dspy-development-context.md` → `400_system-overview_advanced_features.md` → `400_metadata-collection-guide.md`
 **Time**: 60 minutes
 **Outcome**: You'll understand how the AI system works and how to use it
 
@@ -167,24 +179,24 @@ Each file contains cross-references to related documents:
 ### **By Topic**
 - **AI Models**: `201_model-configuration.md`, `104_dspy-development-context.md`
 - **Security**: `400_security-best-practices-guide.md`
-- **Testing**: `400_testing-strategy-guide.md`
-- **Performance**: `400_performance-optimization-guide.md`
-- **Deployment**: `400_deployment-environment-guide.md`
-- **Integration**: `400_integration-patterns-guide.md`
+- **Testing**: `400_testing-strategy-guide_additional_resources.md`
+- **Performance**: `400_performance-optimization-guide_additional_resources.md`
+- **Deployment**: `400_deployment-environment-guide_additional_resources.md`
+- **Integration**: `400_integration-patterns-guide_additional_resources.md`
 
 ### **By Task**
 - **Setup**: `202_setup-requirements.md` → `201_model-configuration.md`
-- **Development**: `400_contributing-guidelines.md` → `001_create-prd.md`
-- **Testing**: `400_testing-strategy-guide.md`
-- **Deployment**: `400_deployment-environment-guide.md`
+- **Development**: `400_contributing-guidelines_additional_resources.md` → `001_create-prd.md`
+- **Testing**: `400_testing-strategy-guide_additional_resources.md`
+- **Deployment**: `400_deployment-environment-guide_additional_resources.md`
 - **Monitoring**: `400_metadata-collection-guide.md`
 
 ### **By Role**
-- **New Contributor**: `400_contributing-guidelines.md` → `000_backlog.md`
+- **New Contributor**: `400_contributing-guidelines_additional_resources.md` → `000_backlog.md`
 - **Developer**: `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md`
-- **DevOps**: `400_deployment-environment-guide.md` → `400_performance-optimization-guide.md`
+- **DevOps**: `400_deployment-environment-guide_additional_resources.md` → `400_performance-optimization-guide_additional_resources.md`
 - **Security**: `400_security-best-practices-guide.md`
-- **Architect**: `400_system-overview.md` → `104_dspy-development-context.md`
+- **Architect**: `400_system-overview_advanced_features.md` → `104_dspy-development-context.md`
 
 ## 🚨 **Need Help?**
 
@@ -200,7 +212,7 @@ Each file contains cross-references to related documents:
 
 ### **If you're stuck:**
 1. **Check `000_backlog.md`** for current priorities
-2. **Review `400_system-overview.md`** for technical context
+2. **Review `400_system-overview_advanced_features.md`** for technical context
 3. **Use `400_metadata-quick-reference.md`** for commands
 
 ## 🎉 **You're Ready!**

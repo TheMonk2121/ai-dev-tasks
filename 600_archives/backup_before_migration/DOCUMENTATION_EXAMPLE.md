@@ -6,6 +6,9 @@ This example demonstrates how to create documentation that contributes meaningfu
 <!-- MEMORY_CONTEXT: MEDIUM - Example of proper memory scaffolding documentation -->
 <!-- RELATED_FILES: 200_naming-conventions.md, MEMORY_CONTEXT_GUIDE.md -->
 
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 ## 🎯 **Purpose**
 This file shows how to document new features in a way that builds meaningful memory scaffolding for both humans and AI assistants.
 

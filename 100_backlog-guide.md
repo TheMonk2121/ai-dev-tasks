@@ -5,9 +5,17 @@ A comprehensive guide for using the AI Development Ecosystem backlog system. Thi
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- WORKFLOW_FILES: 001_create-prd.md, 002_generate-tasks.md, 003_process-task-list.md -->
 <!-- AUTOMATION_FILES: 100_backlog-automation.md -->
-<!-- SYSTEM_FILES: 400_system-overview.md, dspy-rag-system/README.md -->
+<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md, dspy-rag-system/README.md -->
 <!-- MEMORY_CONTEXT: LOW - Backlog management guide for specific workflow tasks -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ## 🎯 How to Use the Backlog
 
 ### **AI Development Ecosystem Context**

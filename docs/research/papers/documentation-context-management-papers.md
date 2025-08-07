@@ -4,9 +4,10 @@
 
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- RESEARCH_SYSTEM: 500_research-analysis-summary.md -->
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 000_backlog.md, 100_cursor-memory-context.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md, 100_cursor-memory-context.md -->
 <!-- MEMORY_CONTEXT: HIGH - Research findings for documentation context management -->
 
+<!-- MODULE_REFERENCE: B-011-DEVELOPER-DOCUMENTATION_context_management_system.md -->
 ## 🎯 **Research Overview**
 
 ### **Research Objective**

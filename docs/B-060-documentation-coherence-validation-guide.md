@@ -30,7 +30,15 @@ The Documentation Coherence Validation System (B-060) implements lightweight doc
 
 | Task | Purpose | Dependencies |
 |------|---------|--------------|
-| Cross-reference validation | Validates `<!-- -->` comment patterns | None |
+| Cross-reference validation | Validates `<!-- --><!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
+<!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
+` comment patterns | None |
 | File naming conventions | Checks three-digit prefix system | None |
 | Backlog reference validation | Ensures backlog item references exist | `000_backlog.md` |
 | Memory context coherence | Validates memory context consistency | `100_cursor-memory-context.md` |
@@ -90,7 +98,7 @@ The system validates these priority files by default:
 ```python
 priority_files = {
     'memory_context': ['100_cursor-memory-context.md'],
-    'system_overview': ['400_system-overview.md'],
+    'system_overview': ['400_system-overview_advanced_features.md'],
     'backlog': ['000_backlog.md'],
     'project_overview': ['400_project-overview.md'],
     'context_priority': ['400_context-priority-guide.md']
@@ -142,7 +150,7 @@ Validates all `<!-- -->` comment patterns in documentation files.
 
 **Example:**
 ```markdown
-<!-- CONTEXT_REFERENCE: 400_system-overview.md -->
+<!-- CONTEXT_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 ```
 
@@ -157,7 +165,7 @@ Validates the three-digit prefix naming system.
 
 **Valid Examples:**
 - `100_cursor-memory-context.md`
-- `400_system-overview.md`
+- `400_system-overview_advanced_features.md`
 - `000_backlog.md`
 
 **Invalid Examples:**
@@ -271,7 +279,7 @@ repos:
 #### **Broken Cross-References**
 ```
 [WARNING] Found 2 broken cross-references:
-  100_cursor-memory-context.md -> 400_system-overview.md (File not found)
+  100_cursor-memory-context.md -> 400_system-overview_advanced_features.md (File not found)
 ```
 
 **Solution:** Fix the cross-reference or create the missing file.

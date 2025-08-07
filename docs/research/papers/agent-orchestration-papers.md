@@ -1,3 +1,5 @@
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide_communication_patterns.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 # Agent Orchestration Research Papers
 
 > **External Research**: Academic papers and research sources for multi-agent systems and orchestration.
@@ -12,7 +14,7 @@
 
 ## 🔗 **Related Documentation**
 - `500_agent-orchestration-research.md` - Our internal agent orchestration research summary
-- `400_system-overview.md` - System architecture overview
+- `400_system-overview_advanced_features.md` - System architecture overview
 
 ## 📖 **Key Insights**
 - Agent communication patterns
