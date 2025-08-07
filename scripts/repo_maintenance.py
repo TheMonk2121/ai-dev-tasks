@@ -427,13 +427,15 @@ def main():
                        help='Apply changes (overrides --dry-run)')
     parser.add_argument('--auto-commit', action='store_true', default=False,
                        help='Automatically commit changes')
+    parser.add_argument('--skip-git-check', action='store_true', default=False,
+                       help='Skip git preflight checks')
     
     args = parser.parse_args()
     
     # Determine dry_run setting
     dry_run = not args.apply
     
-    maintenance = RepoMaintenance(dry_run=dry_run, auto_commit=args.auto_commit)
+    maintenance = RepoMaintenance(dry_run=dry_run, auto_commit=args.auto_commit, skip_git_check=args.skip_git_check)
     success = maintenance.run_all_tasks()
     
     sys.exit(0 if success else 1)
