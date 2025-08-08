@@ -24,14 +24,19 @@ This project uses a sophisticated memory context system to maintain state across
 - `104_dspy-development-context.md` - Deep technical context
 
 **LOW Priority (Read for Specific Tasks):**
-- `103_yi-coder-integration.md` - Integration details
 - `100_backlog-guide.md` - Backlog management
+
+### Exclusions (Policy)
+- Ignore `600_archives/**` and `docs/legacy/**` when reading or linking
+- Route legacy integrations/model-specific guides to `600_archives/**`
+- After archiving or major doc moves, run `python scripts/update_cursor_memory.py`
 
 ### **When Working on Features**
 1. **Follow the development guidelines** in `100_cursor-memory-context.md`
 2. **Use the existing file organization** from `400_context-priority-guide.md`
 3. **Update completion summaries** when finishing major features
 4. **Run `python scripts/update_cursor_memory.py`** to keep memory context current
+5. **Code reuse**: Before writing new code, apply the find-or-build heuristic (search-before-write, 70% reuse, tests-first) in `400_file-analysis-guide.md`
 
 ### **When Adding New Features**
 1. **Add to backlog** with proper scoring (see `100_backlog-guide.md`)
@@ -79,7 +84,7 @@ This project uses a sophisticated memory context system to maintain state across
 ### **File Organization**
 - **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
-- **Domain**: `100_backlog-guide.md`, `103_yi-coder-integration.md`
+- **Domain**: `100_backlog-guide.md`
 
 ### **Memory State Updates**
 - **When to update**: After completing backlog items, changing focus, adding features
