@@ -1,4 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- ARCHIVED: Historical setup. See `400_n8n-setup-guide.md` for current setup. -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 
 # 🔧 n8n Workflow Integration Setup Guide

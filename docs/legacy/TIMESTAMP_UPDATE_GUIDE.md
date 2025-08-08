@@ -1,4 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- ARCHIVED: Historical procedure. Current process is automated in scripts/update_cursor_memory.py. -->
 
 - **Documentation**: Reference this guide in all backlog-related docs
 

@@ -1,4 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- ARCHIVED: Historical guide. For current n8n scrubber, see `400_n8n-backlog-scrubber-guide.md`. -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->

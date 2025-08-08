@@ -1,4 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- ARCHIVED: Historical backlog. Use `000_backlog.md` for current priorities. -->
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->

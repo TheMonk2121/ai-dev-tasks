@@ -1,4 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- ARCHIVED: Historical integration guide. Use `104_dspy-development-context.md` and `400_dspy-integration-guide.md` for current DSPy guidance. -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
