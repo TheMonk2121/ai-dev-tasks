@@ -29,7 +29,7 @@
 
 ### **For Context Engineering:**
 - **Strategy**: `400_cursor-context-engineering-guide.md`
-- **Compatibility**: `400_context-engineering-compatibility-analysis.md`
+- **Compatibility**: `400_cursor-context-engineering-guide.md` (appendix)
 - **Implementation**: `104_dspy-development-context.md`
 
 ## 🛠️ When Working on Features

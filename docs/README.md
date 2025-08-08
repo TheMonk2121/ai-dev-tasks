@@ -125,8 +125,8 @@ Three-Lens Document
 - **000_backlog.md**: Current priorities and development roadmap
 
 ### **Technical Documentation**
-- **docs/ARCHITECTURE.md**: DSPy implementation details
-- **docs/CONFIG_REFERENCE.md**: Configuration reference
+- **400_system-overview.md**: Canonical architecture
+- **202_setup-requirements.md**: Configuration overview and setup
 - **dspy-rag-system/docs/**: Core system documentation
 
 ### **Development Workflows**

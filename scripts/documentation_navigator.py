@@ -124,8 +124,7 @@ def get_context_guidance() -> Dict[str, List[str]]:
             "400_migration-upgrade-guide.md - Migration"
         ],
         "CONTEXT_ENGINEERING": [
-            "400_cursor-context-engineering-guide.md - Strategy",
-            "400_context-engineering-compatibility-analysis.md - Compatibility",
+            "400_cursor-context-engineering-guide.md - Strategy & Compatibility",
             "104_dspy-development-context.md - Implementation"
         ]
     }
