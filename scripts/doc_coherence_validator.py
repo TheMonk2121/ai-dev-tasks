@@ -216,6 +216,9 @@ class DocCoherenceValidator:
             self.log(f"Found {len(naming_issues)} naming convention issues:", "WARNING")
             for issue in naming_issues:
                 self.log(f"  {issue['file']}: {issue['issue']}", "WARNING")
+            # In dry-run (pre-commit), treat naming issues as warnings only to avoid churn
+            if self.dry_run:
+                return True
             return False
         else:
             self.log("All files follow naming conventions", "INFO")

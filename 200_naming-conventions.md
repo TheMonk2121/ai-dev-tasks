@@ -3,6 +3,26 @@
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 
+## Category Table (Accepted Exceptions & Deferrals)
+
+The three‑digit prefix is the default. The following categories are accepted exceptions (no rename required) or deferrals (tracked in backlog; rename not urgent). Use this table during PR review to triage naming warnings without churn.
+
+- Accepted (no rename)
+  - Root entrypoints: `README.md`, `LICENSE.md`
+  - External or generated docs referenced by tooling (kept as‑is)
+  - Archived/historical under `600_archives/**` and `docs/legacy/**`
+
+- Deferred (rename later via B‑064)
+  - System overviews predating the current scheme: `docs/ARCHITECTURE.md` (archived overview)
+  - Legacy config reference: `docs/CONFIG_REFERENCE.md` (archived; canonical moved to `202_setup-requirements.md`)
+  - Third‑party status files: `dspy-rag-system/docs/CURRENT_STATUS.md`
+  - Research helper indices under `docs/research/**` (papers, articles, tutorials)
+
+Reviewer guidance
+- If a file matches “Accepted”, do not request a rename.
+- If a file matches “Deferred”, allow merge and, if useful, add a note to B‑064 with the path.
+- Do not rename files in `600_archives/**` or `docs/legacy/**`.
+
 - **400-499**: Architecture and overview (system overview, project overview, context priority guide)
 - **500+**: Research and meta-documentation (completion summaries, research notes, benchmarks)
 
@@ -240,7 +260,6 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 - `100_cursor-memory-context.md` - Primary memory scaffold for Cursor AI
 - `100_backlog-guide.md` - Backlog management guide
 - `100_backlog-automation.md` - Backlog automation details
-- `103_yi-coder-integration.md` - Yi-Coder integration guide
 - `104_dspy-development-context.md` - DSPy development context
 
 ### Configuration & Setup (200-299)
@@ -258,7 +277,6 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 - `400_timestamp-update-guide.md` - Timestamp update procedures
 - `400_current-status.md` - Current system status and health
 - `400_dspy-integration-guide.md` - DSPy integration guide
-- `400_mistral7b-instruct-integration-guide.md` - Mistral 7B integration guide
 - `400_n8n-setup-guide.md` - n8n setup and configuration guide
 - `400_mission-dashboard-guide.md` - Mission dashboard guide
 - `400_n8n-backlog-scrubber-guide.md` - n8n backlog scrubber guide
