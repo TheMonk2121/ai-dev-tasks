@@ -1098,6 +1098,21 @@ groups:
 
 ## Troubleshooting Guide
 
+### Troubleshooting quick start
+```bash
+# Comprehensive health check
+python scripts/system_health_check.py
+
+# Database checks (connection, schema, pool)
+python -c "from dspy_rag_system.src.utils.database_resilience import check_connection, verify_schema, reset_connection_pool; check_connection(); verify_schema(); reset_connection_pool()"
+
+# AI model status and fallback
+python -c "from dspy_rag_system.src.utils.model_specific_handling import check_all_models, test_fallback_models; check_all_models(); test_fallback_models()"
+
+# Emergency rollback
+./scripts/rollback.sh
+```
+
 ### **Common Upgrade Issues**
 
 #### **Database Connection Issues**

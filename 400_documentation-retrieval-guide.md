@@ -80,6 +80,21 @@ python scripts/documentation_retrieval_cli.py task "analyze RAG performance" --t
 python scripts/documentation_retrieval_cli.py task "update backlog priorities" --task-type workflow
 ```
 
+#### Validator quick start
+```bash
+# Dry-run (no changes)
+python scripts/doc_coherence_validator.py
+
+# Apply fixes
+python scripts/doc_coherence_validator.py --no-dry-run
+
+# Install pre-commit hook for automatic checks
+./scripts/pre_commit_doc_validation.sh --install
+
+# Run pre-commit validation manually
+./scripts/pre_commit_doc_validation.sh
+```
+
 #### **4. Get Relevant Context**
 ```bash
 # Get general context

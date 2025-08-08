@@ -169,25 +169,25 @@ curl -X POST http://localhost:5002/api/missions \
 ### Document Processing
 - **Purpose**: Process and analyze uploaded documents
 - **Agents**: IntentRouter, RetrievalAgent
-- **Models**: mistral:7b-instruct, yi-coder:9b-chat-q6_k
+- **Models**: cursor-native-ai (default), specialized agents as configured
 - **Metrics**: Processing time, accuracy, token usage
 
 ### Code Generation
 - **Purpose**: Generate code for various tasks
 - **Agents**: CodeAgent
-- **Models**: yi-coder:9b-chat-q6_k
+- **Models**: cursor-native-ai (primary), specialized agents as configured
 - **Metrics**: Code quality, generation time, token usage
 
 ### System Monitoring
 - **Purpose**: Health checks and performance monitoring
 - **Agents**: MonitoringAgent
-- **Models**: mistral:7b-instruct
+- **Models**: cursor-native-ai (default)
 - **Metrics**: System health, response times, error rates
 
 ### Data Analysis
 - **Purpose**: Analytics and reporting
 - **Agents**: AnalyticsAgent
-- **Models**: mistral:7b-instruct
+- **Models**: cursor-native-ai (default)
 - **Metrics**: Analysis accuracy, processing time, data volume
 
 ## 📈 Metrics & Analytics
@@ -280,6 +280,9 @@ python3 demo_mission_dashboard.py stats
 
 ## 🔍 Troubleshooting
 
+### Quick start
+- For rollback, health checks, and emergency recovery, see `400_migration-upgrade-guide.md` (Troubleshooting quick start).
+
 ### Common Issues
 
 #### Dashboard Not Starting
@@ -370,7 +373,7 @@ export ENVIRONMENT=production
   "result": {"status": "completed"},
   "metadata": {"type": "document_processing"},
   "agent_type": "IntentRouter",
-  "model_used": "mistral:7b-instruct",
+  "model_used": "cursor-native-ai",
   "tokens_used": 1500,
   "cost_estimate": 0.15
 }
