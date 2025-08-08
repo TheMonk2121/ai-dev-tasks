@@ -120,7 +120,7 @@ Commands:
 **Next Priority:** B-031 (Vector Database Enhancement) - 3 points
 **System:** Cursor Native AI + Specialized Agents + DSPy RAG
 **Workflow:** Backlog → PRD → Tasks → AI Execution
-**Critical Files:** `000_backlog.md`, `400_system-overview.md`, `400_file-analysis-guide.md`
+**Critical Files:** `README.md`, `000_backlog.md`, `400_system-overview.md`, `400_file-analysis-guide.md`, `400_documentation-retrieval-guide.md`
 
 ## 🎯 Purpose
 
@@ -133,6 +133,7 @@ This file serves as the **memory scaffold** for Cursor AI, providing instant con
 - **Current Sprint**: Align with `000_backlog.md` (see Current Priorities)
 - **Next Priorities**: Follow `000_backlog.md` ordering and scores
 - **Infrastructure**: v0.3.1-rc3 Core Hardening ✅ completed
+- **Validator**: Use `scripts/doc_coherence_validator.py` (or pre-commit hook) after doc changes
 
 ### **System Architecture**
 

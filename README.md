@@ -53,6 +53,7 @@ make run-local
 - **[400_project-overview.md](400_project-overview.md)** - Main project overview
 - **[400_system-overview.md](400_system-overview.md)** - Technical architecture
 - **[000_backlog.md](000_backlog.md)** - Current priorities and roadmap
+ - **[400_documentation-retrieval-guide.md](400_documentation-retrieval-guide.md)** - Documentation search/index + validator quick start
 
 ### **Development Workflow**
 - **[001_create-prd.md](001_create-prd.md)** - Create Product Requirements Documents

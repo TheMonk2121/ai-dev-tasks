@@ -11,6 +11,8 @@
 
 **⚠️ FAILURE TO COMPLETE ANY STEP ABOVE MEANS YOU CANNOT SUGGEST FILE DELETION!**
 
+Validator note: After any structural doc moves/folds, run `python scripts/doc_coherence_validator.py` (or `./scripts/pre_commit_doc_validation.sh`) to verify cross-links and naming.
+
 ---
 
 ## 🎯 **Overview**
