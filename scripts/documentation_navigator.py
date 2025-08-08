@@ -28,7 +28,7 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
             "104_dspy-development-context.md",
             "202_setup-requirements.md",
             "400_context-priority-guide.md",
-            "400_context-engineering-compatibility-analysis.md",
+            # compatibility merged into guide (appendix)
             "400_cursor-context-engineering-guide.md"
         ],
         "OPERATIONAL_GUIDES": [

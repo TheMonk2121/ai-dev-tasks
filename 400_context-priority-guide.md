@@ -481,7 +481,7 @@ When rehydrating an AI model's memory or sharing context with other models, star
 ### **Environment Setup**
 
 - `202_setup-requirements.md`
-- `docs/CONFIG_REFERENCE.md`
+- (CONFIG_REFERENCE archived; see 202 for config overview)
 
 ### **Process Understanding**
 

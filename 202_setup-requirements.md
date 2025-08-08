@@ -74,7 +74,7 @@ MAX_EVENTS_PER_CYCLE=10
 
 **Prerequisites:**
 
-<!-- Optional local model instructions moved to cursor-yi-coder-integration/README.md to keep core docs Cursor-native -->
+<!-- Optional local model instructions archived under 600_archives/legacy-integrations to keep core docs Cursor-native -->
 
 ### **S-006: PostgreSQL Database Setup** 🔥
 
@@ -127,7 +127,7 @@ pip install -r dspy-rag-system/requirements.txt
 **Status**: `setup-required`  
 **Priority**: High  
 **Setup Required**: Cursor IDE (Cursor-native AI is default). Local Code Model integration is optional.  
-**Setup Instructions**: For optional Local Code Model integration, see `cursor-yi-coder-integration/README.md`
+**Setup Instructions**: For optional Local Code Model integration, see `600_archives/legacy-integrations/cursor-yi-coder-integration/README.md`
 
 **Cursor Configuration:**
 
@@ -203,7 +203,7 @@ pip install flask psycopg2-binary dspy-ai transformers torch
 
 curl http://localhost:5678/healthz
 
-# (Optional) Local model checks have been moved to cursor-yi-coder-integration/README.md
+# (Optional) Local model checks are archived under 600_archives/legacy-integrations/cursor-yi-coder-integration/README.md
 
 # Test database connection
 
