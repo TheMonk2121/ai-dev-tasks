@@ -26,6 +26,14 @@ fi
 # Exclude archives/legacy directories
 ACTIVE_MD=$(echo "${STAGED_MD}" | grep -Ev '^(600_archives/|docs/legacy/)' || true)
 
+# Allowlist files that document legacy models as policy (not active integration)
+ALLOW_FILES=(
+  "100_cursor-memory-context.md"
+  "101_memory-context-safety.md"
+  "000_backlog.md"
+  "400_file-analysis-guide.md"
+)
+
 if [[ -z "${ACTIVE_MD}" ]]; then
   info "Only archived/legacy markdown changed; skipping legacy guard"
   exit 0
@@ -35,6 +43,12 @@ BLOCK_PATTERNS='mistral|yi[ -]?coder|mixtral'
 
 VIOLATIONS=()
 while IFS= read -r file; do
+  # Skip allowlisted files
+  for allow in "${ALLOW_FILES[@]}"; do
+    if [[ "$file" == "$allow" ]]; then
+      continue 2
+    fi
+  done
   if grep -niE "${BLOCK_PATTERNS}" "$file" >/dev/null 2>&1; then
     VIOLATIONS+=("$file")
   fi

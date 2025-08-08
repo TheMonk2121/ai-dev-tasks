@@ -856,6 +856,7 @@ sudo supervisorctl update
 ### **Implementation Guides**
 
 - **`400_file-analysis-guide.md`**: Systematic file analysis methodology
+  - Includes the find‑or‑build (code reuse) heuristic: search before writing, 70% reuse rule, tests‑first, and backlinking
 <!-- Removed legacy external model integration link to keep Cursor-native as the primary path -->
 
 ### **System Documentation**

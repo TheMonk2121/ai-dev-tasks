@@ -10,6 +10,7 @@
 - Purpose: test types, pyramid, gates, tooling, and CI integration
 - Read after: system overview; use during planning and PRD/testing phases
 - Outputs: quality gates, coverage targets, performance/security testing hooks
+ - Write a minimal test first when adding a new module; see find‑or‑build heuristic in `400_file-analysis-guide.md`
     
 
     # Assert

@@ -122,6 +122,11 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
 
 **Key Insight**: Don't need to read everything - need to read **right things in right order** for current task. Cognitive scaffolding system makes this possible by organizing files by priority and purpose.
 
+#### Find‑or‑build (code reuse) heuristic
+- Before writing new code: run a quick repo search (exclude archives) and check 400_/500_ for existing modules.
+- If an existing module covers ≥70% of the need, extend it; otherwise create a new module in the owner component (see `400_system-overview.md`).
+- Add a minimal test first and backlink the module in the relevant 400_* guide; if research‑driven, add a line in the paired 500_* file.
+
 ### **Documentation Placement Logic Flow**
 
 When determining where to place new documentation content, follow this **structured decision process** designed to maximize discoverability and coherence:

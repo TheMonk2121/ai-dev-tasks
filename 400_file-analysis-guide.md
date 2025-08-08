@@ -217,6 +217,29 @@ python3 scripts/system_health_check.py
 
 ## 🔍 **Specific Analysis Methods**
 
+### Find‑or‑build (code reuse) heuristic
+
+Use this checklist before writing new Python code to reduce duplication and keep code discoverable.
+
+- Search‑before‑write (1–2 min)
+  - Write a 1–2 line spec and 3–5 keywords
+  - Search active repo (exclude archives):
+    - `rg -n "keyword1|keyword2" scripts/ dspy-rag-system/src/ tests/ -g '!600_archives/**' -g '!docs/legacy/**'`
+  - Also scan 400_/500_ for references to existing modules
+- Decide reuse vs new
+  - Reuse/extend if an existing module covers ≥70% of the need (same inputs/outputs, same layer)
+  - Write new if candidates are legacy/archived, violate current patterns, or require heavy refactors
+- Safety checks
+  - Do not base work on files under `600_archives/**` or `docs/legacy/**`
+  - Verify no active 400_* guide already points to a module that does this
+  - Ensure no overlapping script exists in `scripts/**`
+- If you write new
+  - Place it where `400_system-overview.md` indicates (component ownership)
+  - Add a minimal test first (mirrors existing test style in `tests/**`)
+  - Add a brief backlink in the relevant 400_* guide (Implementation refs)
+  - If research‑backed, add a line in the paired 500_* file (Backlog link + implementation refs)
+
+
 ### **For Each File, Check:**
 
 #### **1. Cross-Reference Count**
