@@ -173,10 +173,14 @@ AI Development Ecosystem
 
 ## 🎯 Current Priorities
 
+
 ### **Immediate Focus (Next 1-2 weeks)**
-
-See `000_backlog.md` → Current Priorities for the live list and scores.
-
+1. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
+   - todo
+2. **B‑076**: Research-Based DSPy Assertions Implementation (🔥 points)
+   - todo
+3. **B‑077**: Hybrid Search Implementation (Dense + Sparse) (🔥 points)
+   - todo
 ### **Infrastructure Status**
 
 - ✅ **v0.3.1-rc3 Core Hardening** - Production ready
