@@ -22,6 +22,7 @@
 | Topic | Anchor | Why | Next |
 |---|---|---|---|
 | Architecture | #architecture | Mental model of the system | Dive into core components |
+| Context management | #context-management | How context is stored, cached, and shared | See integration patterns |
 | Core components | #core-components | What runs where | See testing, performance |
 | Workflow | #workflow | How work flows end-to-end | Backlog → PRD → Tasks → Execute |
 | Security | #security | Safety, validation, monitoring | Security guide (400_security-best-practices-guide.md) |
@@ -50,6 +51,25 @@
 │  └── Error Recovery (HotFix Generation)                     │
 └─────────────────────────────────────────────────────────────────┘
 ```text
+
+---
+
+<!-- ANCHOR: context-management -->
+<a id="context-management"></a>
+
+## Context Management
+
+- Components
+  - Context Store: PostgreSQL tables for persistent context (see `dspy-rag-system/config/database/schema.sql`)
+  - Context Cache: in-memory cache (optional Redis) for hot context
+  - Context API: CRUD + search + relationships endpoints
+  - Agent Context Handlers: per-agent read/write of context
+- Data model (minimal)
+  - id (uuid), type (project|file|user|agent), source, content{text,metadata}, relationships{parent,children,related}, timestamps
+- Where to implement
+  - API patterns: see `400_integration-patterns-guide.md` (Context API)
+  - Caching/TTL/invalidation: see `400_performance-optimization-guide.md`
+  - Test fixtures and isolation: see `400_testing-strategy-guide.md`
 
 ---
 

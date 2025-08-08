@@ -19,6 +19,22 @@
 ## 🔌 API Design Principles
 
 ### **1. RESTful API Design**
+#### Context API (summary)
+```http
+# Create context
+POST /api/context { type, content, relationships }
+
+# Get / Update / Delete context
+GET|PUT|DELETE /api/context/{id}
+
+# Search
+GET /api/context/search?query=...&type=...
+
+# Relationships
+POST /api/context/{id}/relationships { target_context_id, relationship_type, strength }
+GET /api/context/{id}/relationships
+```
+
 
 #### **Core Endpoints**
 ```python
@@ -68,7 +84,7 @@ API_RESPONSE_FORMAT = {
     "success": True,
     "data": {
         "response": "AI generated content",
-        "model": "mistral-7b",
+        "model": "cursor-native-ai",
         "tokens_used": 150
     },
     "error": None,
@@ -741,7 +757,7 @@ class IntegrationTestFramework:
         url = f"{self.base_url}/api/v1/ai/generate"
         data = {
             "prompt": "Hello, how are you?",
-            "model": "mistral-7b"
+            "model": "cursor-native-ai"
         }
         
         response = self.session.post(url, json=data)

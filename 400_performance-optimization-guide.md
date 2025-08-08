@@ -56,19 +56,12 @@
 # Model performance configuration
 
 MODEL_PERFORMANCE_CONFIG = {
-    "mistral-7b": {
+    "cursor-native-ai": {
         "max_tokens": 2048,
         "temperature": 0.7,
         "response_time_target": 3.0,
-        "memory_usage": "4GB",
-        "concurrent_requests": 2
-    },
-    "yi-coder": {
-        "max_tokens": 4096,
-        "temperature": 0.3,
-        "response_time_target": 5.0,
-        "memory_usage": "8GB",
-        "concurrent_requests": 1
+        "memory_usage": "n/a",
+        "concurrent_requests": 4
     }
 }
 ```
@@ -95,7 +88,7 @@ APP_PERFORMANCE_CONFIG = {
     "max_workers": 4,
     "timeout": 30,
     "connection_pool_size": 10,
-    "cache_ttl": 3600,
+    "cache_ttl": 3600,  # Context cache TTL; ensure explicit invalidation on updates
     "rate_limit": 100  # requests per minute
 }
 ```
@@ -349,13 +342,7 @@ def track_application_metrics():
 # AI model performance tracking
 
 AI_MODEL_METRICS = {
-    "mistral-7b": {
-        "response_times": [],
-        "error_count": 0,
-        "token_usage": 0,
-        "cache_hit_rate": 0
-    },
-    "yi-coder": {
+    "cursor-native-ai": {
         "response_times": [],
         "error_count": 0,
         "token_usage": 0,
@@ -402,12 +389,8 @@ def track_ai_model_performance(model_name: str, response_time: float):
     <div class="metric-card">
         <h3>AI Model Performance</h3>
         <div class="metric">
-            <span class="label">Mistral-7B Response Time:</span>
-            <span class="value" id="mistral-response-time">2.3s</span>
-        </div>
-        <div class="metric">
-            <span class="label">Yi-Coder Response Time:</span>
-            <span class="value" id="yi-response-time">4.1s</span>
+            <span class="label">Cursor-Native Response Time:</span>
+            <span class="value" id="cursor-response-time">2.3s</span>
         </div>
         <div class="metric">
             <span class="label">Cache Hit Rate:</span>
