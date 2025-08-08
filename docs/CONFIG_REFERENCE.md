@@ -1,9 +1,9 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 
-# Configuration Reference v0.3.1
+# Configuration Reference v0.3.1 (Archived)
 
-This document provides a comprehensive reference for the DSPy Router system configuration.
+This file is archived. Canonical configuration guidance now lives in `202_setup-requirements.md` (Configuration Overview) and `400_system-overview.md` (architecture context). Use this file only for historical reference.
 
 ## System Configuration (`config/system.json`)
 
@@ -17,7 +17,7 @@ The system configuration file defines the core architecture, agents, models, and
   "enabled_agents": ["IntentRouter", "RetrievalAgent", "CodeAgent"],
   "agents": {
     "IntentRouter": {
-      "model_id": "mistral-7b-instruct",
+      "model_id": "cursor-native",
       "signature": "IntentSignature",
       "timeout": 30,
       "retry_policy": {
@@ -26,37 +26,30 @@ The system configuration file defines the core architecture, agents, models, and
       }
     },
     "RetrievalAgent": {
-      "model_id": "mistral-7b-instruct",
+      "model_id": "cursor-native",
       "signature": "RetrievalSignature",
       "timeout": 60,
       "max_results": 5
     },
     "CodeAgent": {
-      "model_id": "yi-coder-9b-chat-q6_k",
+      "model_id": "cursor-native",
       "signature": "CodeSignature",
       "timeout": 120,
       "temperature": 0.35
     }
   },
   "models": {
-    "mistral-7b-instruct": {
+    "cursor-native": {
       "type": "warm",
       "base_url": "http://localhost:11434",
       "context_window": 3500,
       "size_gb": 8
     },
-    "yi-coder-9b-chat-q6_k": {
-      "type": "lazy",
-      "base_url": "http://localhost:1234",
-      "context_window": 8092,
-      "size_gb": 19
-    },
-    "mixtral-8x7b": {
+    "cursor-native-large": {
       "type": "lazy",
       "base_url": "http://localhost:11434",
       "context_window": 32000,
-      "size_gb": 25,
-      "enabled_when": "DEEP_REASONING=1"
+      "size_gb": 25
     }
   },
   "memory": {

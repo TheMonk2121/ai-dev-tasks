@@ -253,3 +253,21 @@ Once all setup items are completed:
 4. **Create your first workflow** in n8n
 
 The system will be fully operational once all setup requirements are met! 
+
+## 🧩 Configuration Overview (moved here)
+
+- Canonical config lives in `config/system.json`.
+- Keys to know: `enabled_agents`, per‑agent settings (`model_id`, `signature`, `timeout`, `retry_policy`), `memory` (postgres delta), `error_policy` (retries, backoff, timeouts), `fast_path` (enabled, max_length, exclude_tokens).
+- Environment overrides: DB_*, POOL_*, ENABLED_AGENTS, LLM_TIMEOUT_SEC, SECURITY_MAX_FILE_MB, MODEL_IDLE_EVICT_SECS, MAX_RAM_PRESSURE.
+- Hot‑reload (if enabled): `curl -X POST http://localhost:5000/admin/reload-config`.
+
+Minimal example (trimmed):
+```json
+{
+  "version": "0.3.1",
+  "enabled_agents": ["IntentRouter", "RetrievalAgent", "CodeAgent"],
+  "memory": { "type": "postgres_delta" },
+  "error_policy": { "max_retries": 3, "backoff_factor": 2.0, "timeout_seconds": 30 },
+  "fast_path": { "enabled": true, "max_length": 50 }
+}
+```

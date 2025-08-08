@@ -850,8 +850,8 @@ sudo supervisorctl update
 
 ### **Core Architecture**
 
-- **`104_dspy-development-context.md`**: DSPy modules, assertions, and advanced patterns
-- **`202_setup-requirements.md`**: Environment and configuration reference
+- **`104_dspy-development-context.md`**: DSPy modules, assertions, advanced patterns
+- **`202_setup-requirements.md`**: Environment and configuration (Configuration Overview)
 
 ### **Implementation Guides**
 
