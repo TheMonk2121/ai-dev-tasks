@@ -5,7 +5,7 @@
 
 # Mistral 7B Instruct Integration Guide (Legacy/Alternative)
 
-> ⚠️ **Note: This guide is for legacy/alternative setup. The current system uses Cursor Native AI as the primary foundation.**
+> ⚠️ Archived for historical reference. The active system uses Cursor Native AI as the primary foundation. For current guidance, see `400_system-overview.md` and `202_setup-requirements.md`.
 
 ## 1. Overview
 

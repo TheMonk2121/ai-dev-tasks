@@ -1,6 +1,9 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 
+# Archived for historical reference
+> This guide documents a legacy local-model setup (Yi‑Coder via LM Studio). The active system uses Cursor Native AI. For current guidance, see `400_system-overview.md` and `202_setup-requirements.md`.
+
 # LM Studio Setup Guide for Yi-Coder Integration
 
 ## Prerequisites
