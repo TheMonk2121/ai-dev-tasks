@@ -15,8 +15,6 @@ Quick links: `100_cursor-memory-context.md`, `400_system-overview.md`, `400_cont
 <!-- ANCHOR: current-priorities -->
 <a id="current-priorities"></a>
 
-`
-
 A prioritized list of future enhancements and features for the AI development ecosystem. 
 
 **📋 For usage instructions and scoring details, see `100_backlog-guide.md`**

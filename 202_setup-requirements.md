@@ -1,8 +1,18 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+
+# Setup Requirements
+
+<!-- ANCHOR: tldr -->
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+- Purpose: One-stop local setup (venv, DB, deps)
+- Read after: project/system overview; use for fresh envs
+- Outputs: verified env with health checks
 
 ### **S-003: Environment Configuration** ⚙️
+
 **Status**: `setup-required`  
 **Priority**: Medium  
 **Setup Required**: Environment variables setup  
@@ -10,11 +20,14 @@
 
 **Required Environment Variables:**
 ```bash
+
 # n8n Configuration
+
 N8N_BASE_URL=http://localhost:5678
 N8N_API_KEY=your_api_key_here
 
 # Database Configuration
+
 POSTGRES_DSN=postgresql://user:pass@host:port/db
 DB_MIN_CONNECTIONS=1
 DB_MAX_CONNECTIONS=10
@@ -22,11 +35,13 @@ DB_CONNECTION_TIMEOUT=30
 DB_HEALTH_CHECK_INTERVAL=60
 
 # Event Processing
+
 POLL_INTERVAL=30
 MAX_EVENTS_PER_CYCLE=10
 ```
 
 ### **S-004: Cursor IDE Setup** 🔥
+
 **Status**: `setup-required`  
 **Priority**: High  
 **Setup Required**: Cursor IDE installation and configuration  
@@ -34,33 +49,41 @@ MAX_EVENTS_PER_CYCLE=10
 
 **Commands:**
 ```bash
+
 # Install Cursor IDE
+
 # Download from https://cursor.sh/
 
 # Configure Cursor
+
 # Enable AI features in settings
 
 # Verify installation
+
 # Test AI code generation
 ```
 
 ### **S-005: Specialized Agents Setup** 🔥
+
 **Status**: `setup-required`  
 **Priority**: High  
 **Setup Required**: Specialized agent configuration  
 **Setup Instructions**: See `CURSOR_NATIVE_AI_STRATEGY.md`
 
 **Prerequisites:**
+
 - **macOS**: LM Studio ≥ 0.2.18 (`brew install --cask lm-studio`)
 - **Linux**: Download AppImage from https://lmstudio.ai/
 - **Storage**: 5GB+ for model download
 
 **Model Download:**
+
 1. Launch LM Studio → Models
 2. Search "Yi-Coder-9B-Chat-GGUF"
 3. Download Yi-Coder-9B-Chat-Q6_K.gguf (≈ 4.9 GB)
 
 **LM Studio Configuration:**
+
 - Context Length: 8092
 - GPU Offload: 48 / 48 (full)
 - Evaluation Batch Size: 384
@@ -68,6 +91,7 @@ MAX_EVENTS_PER_CYCLE=10
 - Flash Attention: On
 
 ### **S-006: PostgreSQL Database Setup** 🔥
+
 **Status**: `setup-required`  
 **Priority**: High  
 **Setup Required**: PostgreSQL installation + database creation  
@@ -75,20 +99,25 @@ MAX_EVENTS_PER_CYCLE=10
 
 **Commands:**
 ```bash
+
 # Install PostgreSQL (Ubuntu)
+
 sudo apt-get install postgresql postgresql-contrib
 sudo apt-get install postgresql-14-pgvector
 
 # Create database and user
+
 sudo -u postgres createuser danieljacobs
 sudo -u postgres createdb ai_agency
 sudo -u postgres psql -c "ALTER USER danieljacobs WITH PASSWORD 'your_password';"
 
 # Enable pgvector extension
+
 sudo -u postgres psql ai_agency -c "CREATE EXTENSION IF NOT EXISTS vector;"
 ```
 
 ### **S-007: Virtual Environment Setup** ⚙️
+
 **Status**: `setup-required`  
 **Priority**: Medium  
 **Setup Required**: Python virtual environment + dependencies  
@@ -96,24 +125,30 @@ sudo -u postgres psql ai_agency -c "CREATE EXTENSION IF NOT EXISTS vector;"
 
 **Commands:**
 ```bash
+
 # Create and activate virtual environment
+
 python3 -m venv venv
 source venv/bin/activate
 
 # Install dependencies
+
 pip install -r dspy-rag-system/requirements.txt
 ```
 
 ### **S-008: Cursor IDE Configuration** 🔥
+
 **Status**: `setup-required`  
 **Priority**: High  
 **Setup Required**: Cursor IDE + Yi-Coder integration  
 **Setup Instructions**: See `103_yi-coder-integration.md`
 
 **Cursor Configuration:**
+
 1. Open Cursor Settings
 2. Go to AI → Custom Models
 3. Add Yi-Coder configuration:
+
    ```json
    {
      "name": "Yi-Coder-9B-Chat-Q6_K",
@@ -123,6 +158,7 @@ pip install -r dspy-rag-system/requirements.txt
    ```
 
 ### **S-009: Secrets Management Setup** 🔥
+
 **Status**: `setup-required`  
 **Priority**: High  
 **Setup Required**: Environment secrets configuration  
@@ -130,21 +166,27 @@ pip install -r dspy-rag-system/requirements.txt
 
 **Required Secrets:**
 ```bash
+
 # Database
+
 POSTGRES_DSN=postgresql://user:pass@host:port/db
 DB_PASSWORD=your_database_password
 
 # Dashboard
+
 DASHBOARD_SECRET_KEY=your_secret_key
 
 # AI Models
+
 OLLAMA_API_KEY=your_ollama_key
 
 # n8n (if using authentication)
+
 N8N_API_KEY=your_n8n_api_key
 ```
 
 ### **S-010: System Dependencies** ⚙️
+
 **Status**: `setup-required`  
 **Priority**: Medium  
 **Setup Required**: System packages and tools  
@@ -152,13 +194,17 @@ N8N_API_KEY=your_n8n_api_key
 
 **System Packages:**
 ```bash
+
 # Ubuntu/Debian
+
 sudo apt-get install -y python3-pip python3-venv postgresql postgresql-contrib git curl
 
 # macOS
+
 brew install git curl python3 postgresql
 
 # Python packages
+
 pip install flask psycopg2-binary dspy-ai transformers torch
 ```
 
@@ -166,23 +212,30 @@ pip install flask psycopg2-binary dspy-ai transformers torch
 
 ### **Test Commands**
 ```bash
+
 # Test n8n connectivity
+
 curl http://localhost:5678/healthz
 
 # Test Ollama
+
 ollama list
 
 # Test LM Studio
+
 curl http://localhost:1234/v1/models
 
 # Test database connection
+
 python3 -c "from src.utils.database_resilience import get_database_manager; print('Database OK')"
 
 # Test event processing
+
 python3 demo_n8n_integration.py
 ```
 
 ### **Verification Checklist**
+
 - [ ] n8n is running and accessible
 - [ ] Ollama is running with Mistral model
 - [ ] LM Studio is running with Yi-Coder model
@@ -206,11 +259,13 @@ If you encounter issues:
 Once all setup items are completed:
 
 1. **Start the event processor service**:
+
    ```bash
    python3 src/n8n_workflows/n8n_event_processor.py --daemon
    ```
 
 2. **Test the complete system**:
+
    ```bash
    make run-local
    ```
