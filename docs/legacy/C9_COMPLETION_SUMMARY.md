@@ -1,6 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 
 # 🎯 B-003 Production Security & Monitoring - Completion Summary

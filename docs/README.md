@@ -1,7 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
 
 ### **New to the Project?**
 1. **Start with Beginner Lens** → `100_ai-development-ecosystem_advanced_lens_technical_implementation.md#beginner-lens`

@@ -1,7 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
 
 ### **For Development Tasks:**
 - **Planning**: `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md`

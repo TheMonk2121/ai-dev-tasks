@@ -26,6 +26,18 @@ def is_deprecated_module(value: str) -> bool:
     blocked_suffixes = ["_additional_resources.md", "_advanced_features.md"]
     if any(lowered.endswith(s) for s in blocked_suffixes):
         return True
+    # Drop references to split-module style filenames we consolidated
+    split_markers = [
+        "400_system-overview_",
+        "400_deployment-environment-guide_",
+        "400_integration-patterns-guide_",
+        "400_migration-upgrade-guide_",
+        "400_performance-optimization-guide_",
+        "400_testing-strategy-guide_",
+        "400_few-shot-context-examples_",
+    ]
+    if any(lowered.startswith(m) for m in split_markers):
+        return True
     if "_lens_" in lowered:
         return True
     return False

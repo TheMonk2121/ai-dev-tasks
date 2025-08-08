@@ -1,6 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide_quality_gates.md -->
 <!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
 
 ## 🔍 Deep Research Questions

@@ -1,7 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_backlog_analysis_examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
 
 # Mistral 7B Instruct Integration Guide
 

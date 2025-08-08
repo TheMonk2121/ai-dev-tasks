@@ -1,9 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
 
-<!--score_total: 2.0-->
 | B‑007 | Metadata Editing & Bulk Operations           | ⭐  | 3        | todo   | Improve document management efficiency | In-place editing + batch ops | Document system |
 <!--score: {bv:3, tc:1, rr:1, le:1, effort:3, deps:[]}-->
 <!--score_total: 2.0-->

@@ -1,6 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 102_memory-context-state.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
 <!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
 
 # 🚀 AI Development Ecosystem

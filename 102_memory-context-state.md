@@ -1,7 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
 
 ### **Immediate Focus (Next 1-2 weeks)**
 1. **B‑071**: Memory Context File Splitting (🔥 4 points) - **CURRENT TASK**

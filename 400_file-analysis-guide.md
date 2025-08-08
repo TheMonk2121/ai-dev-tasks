@@ -1,7 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 102_memory-context-state.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
 
 ### **Step 6: Tier-Based Decision (REQUIRED)**
 - **Tier 1 (CRITICAL)**: NEVER suggest removal - core workflow files, primary memory context

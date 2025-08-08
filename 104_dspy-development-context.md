@@ -1,7 +1,27 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
+<!-- MODULE_REFERENCE: 000_backlog.md -->
+
+# DSPy Development Context
+
+<!-- ANCHOR: tldr -->
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+- Purpose: Deep technical context for DSPy integration and RAG
+- Read after: `100_cursor-memory-context.md` → `000_backlog.md` → `400_system-overview.md`
+- Key: modules, guard-rails, fast-path, vector store, document processor, roadmap
+
+<!-- ANCHOR: quick-start -->
+<a id="quick-start"></a>
+
+## ⚡ Quick Start
+
+- Run dashboard: `python3 dspy-rag-system/src/dashboard.py`
+- Ask questions: `python3 dspy-rag-system/enhanced_ask_question.py`
+- Run tests: `./dspy-rag-system/run_tests.sh`
 
 ### **AI Development Ecosystem Context**
 

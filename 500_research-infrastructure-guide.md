@@ -1,5 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 

@@ -1,6 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_backlog_analysis_examples.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 
 - Implement `dspy.Assert` for code compilation validation

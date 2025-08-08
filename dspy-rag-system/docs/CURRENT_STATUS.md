@@ -1,7 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 
 # 🚀 DSPy RAG System - Current Status
 

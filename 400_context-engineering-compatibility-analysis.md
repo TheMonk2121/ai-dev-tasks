@@ -1,5 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 
 - **Enhancement**: Provides intelligent prompts for each model

@@ -120,7 +120,7 @@ class DocCoherenceValidator:
         all_references = {}
         broken_references = []
         
-        # Collect all cross-references
+        # Collect all cross-references (only core header tags)
         for file_path in self.markdown_files:
             content = self.read_file(file_path)
             if not content:
@@ -128,6 +128,9 @@ class DocCoherenceValidator:
                 
             references = self.cross_reference_pattern.findall(content)
             for ref_type, ref_target in references:
+                # Ignore non-core tags like ANCHOR, ESSENTIAL_FILES, etc.
+                if ref_type not in {"CONTEXT_REFERENCE", "MODULE_REFERENCE"}:
+                    continue
                 if ref_type not in all_references:
                     all_references[ref_type] = []
                 all_references[ref_type].append((str(file_path), ref_target.strip()))

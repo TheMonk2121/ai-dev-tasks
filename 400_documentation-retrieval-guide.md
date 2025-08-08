@@ -1,7 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 
 - **Google's Documentation**: CLeAR framework for structured documentation
 - **GitHub Copilot**: Repository-specific instruction patterns

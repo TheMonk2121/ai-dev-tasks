@@ -1,7 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_rollback_procedures.md -->
 
 # Context Management System Design
 

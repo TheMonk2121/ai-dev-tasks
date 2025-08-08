@@ -1,7 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_troubleshooting_guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
 
 # 🔧 B-065 Error Recovery & Troubleshooting Guide
 

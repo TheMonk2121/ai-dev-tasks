@@ -1,7 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples_context_engineering_fundamentals.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 
 | Claude 3 Opus | 200K | 0.95 | 0.85 | 0.6 | 0.4 | Complex reasoning, large codebases |
 | GPT-4 Turbo | 128K | 0.9 | 0.9 | 0.8 | 0.7 | Structured tasks, code generation |

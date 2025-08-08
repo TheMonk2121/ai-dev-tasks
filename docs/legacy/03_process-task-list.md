@@ -1,6 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_ai_model_upgrade_procedures.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide_database_migration_procedures.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 
    - Use Mistral 7B Instruct for reasoning and planning

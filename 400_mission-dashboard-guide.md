@@ -1,7 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_contributing-guidelines_code_standards.md -->
 <!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide_performance_metrics.md -->
 
 # Real-time Mission Dashboard Guide
 
