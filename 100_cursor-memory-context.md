@@ -286,7 +286,7 @@ AI Development Ecosystem
 - **`400_migration-upgrade-guide.md`** - System migration and upgrade procedures
 - **`400_integration-patterns-guide.md`** - Integration patterns and best practices
 - **`400_metadata-collection-guide.md`** - Metadata collection and management
-- **`400_metadata-quick-reference.md`** - Quick metadata reference
+- Quick metadata reference: see `400_metadata-collection-guide.md` (Quick reference section)
 - **`400_few-shot-context-examples.md`** - Few-shot learning examples
 - **`400_prd-optimization-guide.md`** - PRD optimization techniques
 - **`400_n8n-backlog-scrubber-guide.md`** - n8n workflow automation

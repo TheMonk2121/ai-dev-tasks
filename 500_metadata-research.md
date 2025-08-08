@@ -1,6 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_metadata-collection-guide.md -->
-<!-- MODULE_REFERENCE: 400_metadata-quick-reference.md -->
+<!-- MODULE_REFERENCE: 400_metadata-collection-guide.md -->
 
 # Metadata & Governance Research
 
@@ -27,12 +27,12 @@ Backlog link: B-007, B-045
  
 ## Implementation References
 - 400_metadata-collection-guide.md (taxonomy/governance)
-- 400_metadata-quick-reference.md (field quick ref)
+- 400_metadata-collection-guide.md (field quick ref)
 - scripts/documentation_indexer.py (emit fields)
 - dspy-rag-system/config/database/vector_enhancement_schema.sql (columns)
 
  
 ## Citations
 - 400_metadata-collection-guide.md
-- 400_metadata-quick-reference.md
+- 400_metadata-collection-guide.md
 

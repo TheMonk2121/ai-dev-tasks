@@ -411,6 +411,15 @@ def analyze_task_correlations():
 
 ## 📋 **Best Practices**
 
+## ⚡ Quick reference (folded)
+- Key sources: `000_backlog.md` (scores, deps, status), `task_execution.db` (executions, perf, retries), error system (categories, severity, recovery)
+- Common commands:
+  - Performance stats: `python3 scripts/state_manager.py --stats`
+  - Error stats: `python3 scripts/error_handler.py --stats`
+  - Validate deps: `python3 scripts/process_tasks.py validate`
+  - Export tasks: `python3 scripts/process_tasks.py list --format json > tasks.json`
+  - Export metrics (CSV): `python3 scripts/state_manager.py --export-csv metrics.csv`
+
 ### **1. Data Quality**
 
 - **Validation**: Ensure all metadata is properly validated before storage

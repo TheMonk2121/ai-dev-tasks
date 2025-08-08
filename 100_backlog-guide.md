@@ -36,7 +36,7 @@ AI: "I can implement the Stripe API integration code, but you'll need to:
 
 **Collaborative Execution:**
 ```
-User: "Create a PRD for B-011: Yi-Coder Integration"
+User: "Create a PRD for B-011: Future Model Migration"
 AI: ✅ Drafts comprehensive PRD with technical details
 User: 🔍 Reviews and adjusts business requirements
 AI: ✅ Updates PRD based on feedback
@@ -243,6 +243,8 @@ For systematic development:
 *Previously Updated: 2024-08-05 23:58*
 *Last Updated: 2024-08-05 23:59*
 ```
+
+Note: The standalone `400_timestamp-update-guide.md` has been folded here.
 
 ## 🔧 Automation Features
 

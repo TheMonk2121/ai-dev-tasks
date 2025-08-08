@@ -120,7 +120,7 @@ python3 scripts/process_tasks.py status
 1. **Use this README (Start Here)** for navigation guidance
 2. **Check [000_backlog.md](000_backlog.md)** for current priorities
 3. **Review [400_system-overview.md](400_system-overview.md)** for technical context
-4. **Use [400_metadata-quick-reference.md](400_metadata-quick-reference.md)** for commands
+4. **Use the quick reference in [400_metadata-collection-guide.md](400_metadata-collection-guide.md#-quick-reference)** for commands
 
 ---
 
