@@ -20,7 +20,7 @@
 ## ⚡ Quick Start
 
 - Run dashboard: `python3 dspy-rag-system/src/dashboard.py`
-- Ask questions: `python3 dspy-rag-system/enhanced_ask_question.py`
+- Ask questions: [archived CLI demo in `600_archives/legacy-integrations/python/enhanced_ask_question.py`]
 - Run tests: `./dspy-rag-system/run_tests.sh`
 
 ### **AI Development Ecosystem Context**
@@ -54,11 +54,11 @@ High-level summary of DSPy’s role in the ecosystem and implementation status.
 
 ### **Core Components**
 
-1. **Enhanced RAG System** (`src/dspy_modules/enhanced_rag_system.py`)
-2. **Basic RAG System** (`src/dspy_modules/rag_system.py`)
+1. [Archived] Enhanced RAG System (`600_archives/legacy-integrations/python/enhanced_rag_system.py`)
+2. [Archived] Basic RAG System (`600_archives/legacy-integrations/python/rag_system.py`)
 3. **Vector Store** (`src/dspy_modules/vector_store.py`)
 4. **Document Processor** (`src/dspy_modules/document_processor.py`)
-5. **Interactive Interface** (`enhanced_ask_question.py`)
+5. [Archived] Interactive Interface (`600_archives/legacy-integrations/python/enhanced_ask_question.py`)
 6. **Web Dashboard** (`src/dashboard.py`)
 
 ## 🚀 **Enhanced Architecture: v0.3.2 Research-Optimized Router**

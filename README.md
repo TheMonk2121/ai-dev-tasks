@@ -1,5 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
 
@@ -51,7 +51,7 @@ make run-local
 ### **Core Documentation**
 - **[README.md](README.md)** - Start here navigation
 - **[400_project-overview.md](400_project-overview.md)** - Main project overview
-- **[400_system-overview_advanced_features.md](400_system-overview_advanced_features.md)** - Technical architecture
+- **[400_system-overview.md](400_system-overview.md)** - Technical architecture
 - **[000_backlog.md](000_backlog.md)** - Current priorities and roadmap
 
 ### **Development Workflow**
@@ -61,13 +61,13 @@ make run-local
 
 ### **Setup & Configuration**
 - **[202_setup-requirements.md](202_setup-requirements.md)** - Environment setup
-- **[400_deployment-environment-guide_additional_resources.md](400_deployment-environment-guide_additional_resources.md)** - Production deployment
+- **[400_deployment-environment-guide.md](400_deployment-environment-guide.md)** - Production deployment
 
 ### **Quality & Standards**
-- **[400_contributing-guidelines_additional_resources.md](400_contributing-guidelines_additional_resources.md)** - Development standards
-- **[400_testing-strategy-guide_additional_resources.md](400_testing-strategy-guide_additional_resources.md)** - Testing approach
+- **[400_contributing-guidelines.md](400_contributing-guidelines.md)** - Development standards
+- **[400_testing-strategy-guide.md](400_testing-strategy-guide.md)** - Testing approach
 - **[400_security-best-practices-guide.md](400_security-best-practices-guide.md)** - Security guidelines
-- **[400_performance-optimization-guide_additional_resources.md](400_performance-optimization-guide_additional_resources.md)** - Performance guidelines
+- **[400_performance-optimization-guide.md](400_performance-optimization-guide.md)** - Performance guidelines
 
 ## 🤖 **AI System Components**
 
@@ -119,7 +119,7 @@ python3 scripts/process_tasks.py status
 
 1. **Use this README (Start Here)** for navigation guidance
 2. **Check [000_backlog.md](000_backlog.md)** for current priorities
-3. **Review [400_system-overview_advanced_features.md](400_system-overview_advanced_features.md)** for technical context
+3. **Review [400_system-overview.md](400_system-overview.md)** for technical context
 4. **Use [400_metadata-quick-reference.md](400_metadata-quick-reference.md)** for commands
 
 ---

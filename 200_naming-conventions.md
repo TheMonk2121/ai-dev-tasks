@@ -1,5 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
+<!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 

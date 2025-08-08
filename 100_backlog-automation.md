@@ -148,7 +148,7 @@ The n8n backlog scrubber automatically calculates and updates scoring metadata i
 
 **Location**: `dspy-rag-system/src/n8n_workflows/backlog_scrubber.py`
 **Webhook Server**: `dspy-rag-system/src/n8n_workflows/backlog_webhook.py`
-**Documentation**: `dspy-rag-system/docs/N8N_BACKLOG_SCRUBBER_GUIDE.md`
+**Documentation**: `400_n8n-backlog-scrubber-guide.md`
 **Tests**: `dspy-rag-system/tests/test_backlog_scrubber.py`
 
 ### Features Implemented

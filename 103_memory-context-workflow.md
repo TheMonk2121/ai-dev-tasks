@@ -6,9 +6,9 @@
 ### **For Development Tasks:**
 - **Planning**: `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md`
 - **Implementation**: `104_dspy-development-context.md` + relevant 400-series guides
-- **Testing**: `400_testing-strategy-guide_additional_resources.md`
+- **Testing**: `400_testing-strategy-guide.md`
 - **Security**: `400_security-best-practices-guide.md`
-- **Performance**: `400_performance-optimization-guide_additional_resources.md`
+- **Performance**: `400_performance-optimization-guide.md`
 
 ### **For Research Tasks:**
 - **Overview**: `500_research-summary.md`
@@ -22,10 +22,10 @@
 - **Organization**: `400_context-priority-guide.md`
 
 ### **For System Integration:**
-- **Architecture**: `400_system-overview_advanced_features.md`
-- **Patterns**: `400_integration-patterns-guide_additional_resources.md`
-- **Deployment**: `400_deployment-environment-guide_additional_resources.md`
-- **Migration**: `400_migration-upgrade-guide_ai_model_upgrade_procedures.md`
+- **Architecture**: `400_system-overview.md`
+- **Patterns**: `400_integration-patterns-guide.md`
+- **Deployment**: `400_deployment-environment-guide.md`
+- **Migration**: `400_migration-upgrade-guide.md`
 
 ### **For Context Engineering:**
 - **Strategy**: `400_cursor-context-engineering-guide.md`

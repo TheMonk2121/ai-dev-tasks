@@ -1,7 +1,5 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 101_memory-context-safety.md -->
-<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
-<!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
+<!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
 
 ---
 
