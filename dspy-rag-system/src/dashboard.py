@@ -62,7 +62,7 @@ class DashboardConfig:
     
     # Ollama settings
     OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-    OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "mistral:7b-instruct")
+    OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "cursor-native-ai")
     
     # Processing settings
     MAX_WORKERS = int(os.getenv("DASHBOARD_WORKERS", "4"))

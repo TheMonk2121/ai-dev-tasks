@@ -79,9 +79,10 @@ DB_PASSWORD=ai_password
 # Dashboard Configuration
 DASHBOARD_SECRET_KEY=your-secure-secret-key-here
 
-# Ollama Configuration
+# Model Configuration
+# Prefer Cursor-native by default; override per environment as needed
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=mistral:7b-instruct
+OLLAMA_MODEL=cursor-native-ai
 
 # Optional Configuration
 API_KEY=your-api-key-here

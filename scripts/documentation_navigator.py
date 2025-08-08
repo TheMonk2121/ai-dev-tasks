@@ -42,8 +42,7 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
             "400_metadata-quick-reference.md",
             "400_few-shot-context-examples.md",
             "400_prd-optimization-guide.md",
-            "400_n8n-backlog-scrubber-guide.md",
-            "400_mistral7b-instruct-integration-guide.md"
+            "400_n8n-backlog-scrubber-guide.md"
         ],
         "RESEARCH_DOCUMENTATION": [
             "500_research-summary.md",

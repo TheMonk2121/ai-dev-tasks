@@ -40,7 +40,7 @@ class DocCoherenceValidator:
             'REPO_MAINTENANCE_SUMMARY.md',
             '600_archives/',
             # Known non-prefixed allowed files
-            'START_HERE.md',
+            # START_HERE.md archived; keep excluded implicitly via archives/legacy
             'DOCUMENTATION_UPDATE_SUMMARY.md',
             'RESEARCH_INTEGRATION_QUICK_START.md',
             'RESEARCH_DISPERSAL_SUMMARY.md',
