@@ -368,7 +368,7 @@ Use these reference patterns in other documents:
 |------|---------|---------------|-----------------|
 | `100_backlog-guide.md` | Backlog usage and scoring | Enables objective prioritization | `000_backlog.md` |
 | `400_few-shot-context-examples.md` | Few-shot prompts by task | Boosts quality and consistency | All 400-series topic guides |
-| `400_prd-optimization-guide.md` | Better PRDs, faster | Improves plan quality before implementation | `001_create-prd.md` |
+| `001_create-prd.md` (skip rule) | Better PRDs, faster | Improves plan quality before implementation | `002_generate-tasks.md` |
 
 ### **Tier 6: Reference & Edge Cases**
 
@@ -494,7 +494,7 @@ When rehydrating an AI model's memory or sharing context with other models, star
 - `001_create-prd.md`
 - `002_generate-tasks.md`
 - `003_process-task-list.md`
-- `400_prd-optimization-guide.md`
+  
 
 ## **Memory Scaffolding Integration**
 

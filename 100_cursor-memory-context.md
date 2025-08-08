@@ -289,7 +289,7 @@ AI Development Ecosystem
 - **`400_metadata-collection-guide.md`** - Metadata collection and management
 - Quick metadata reference: see `400_metadata-collection-guide.md` (Quick reference section)
 - **`400_few-shot-context-examples.md`** - Few-shot learning examples
-- **`400_prd-optimization-guide.md`** - PRD optimization techniques
+-- PRD optimization: see `001_create-prd.md` (skip rule), `002_generate-tasks.md` (PRD-less path), and `100_backlog-guide.md` (decision matrix)
 - **`400_n8n-backlog-scrubber-guide.md`** - n8n workflow automation
 
 #### **📊 RESEARCH DOCUMENTATION (500-Series)**

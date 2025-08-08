@@ -22,6 +22,11 @@
  - Parse PRD or `000_backlog.md` row to derive tasks
  - Enforce quality gates and acceptance criteria per task
 
+### PRD-less path
+- If PRD is skipped per rule (points < 5 AND score_total ≥ 3.0), parse `000_backlog.md` directly
+- Use backlog metadata (scores, deps) to size/schedule tasks
+- Log that PRD was skipped; proceed with standard task format and gates
+
  - **Integration & Testing** - Component integration and validation
 - **Performance & Security** - Optimization and hardening
 - **Documentation & Deployment** - Final preparation and launch

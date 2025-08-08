@@ -256,6 +256,14 @@ The system now includes intelligent PRD generation that reduces overhead for sma
 - **Skip PRD**: Items with `points < 5` AND `score_total >= 3.0`
 - **Generate PRD**: Items with `points >= 5` OR `score_total < 3.0`
 
+#### Decision matrix (quick reference)
+| Points | Score | PRD Decision | Rationale |
+|--------|-------|--------------|-----------|
+| < 5 | ≥ 3.0 | Skip | Small, well-defined |
+| < 5 | < 3.0 | Generate | Small but unclear |
+| ≥ 5 | Any | Generate | Complex work |
+| Any | < 3.0 | Generate | Needs clarification |
+
 #### **Benefits**
 - **Performance**: ~4k → <1k tokens for small items
 - **Speed**: ~20s → ~7s turnaround for 3-point items

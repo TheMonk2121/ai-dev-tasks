@@ -4,7 +4,7 @@
 
 # PRD Optimization Research
 
-> Synthesis focused on decision rules and effects; implementation lives in `400_prd-optimization-guide.md` and scripts.
+> Synthesis focused on decision rules and effects; implementation now lives in `001_create-prd.md` (skip rule), `002_generate-tasks.md` (PRD-less path), and `100_backlog-guide.md` (decision matrix). The legacy guide is archived: `600_archives/docs/400_prd-optimization-guide.md`.
 
 - **Savings**: 75% reduction in context overhead
 
@@ -95,7 +95,7 @@ python3 scripts/prd_decision_helper.py "$(cat 000_backlog.md)" "B-013"
 
 ### **Generate PRD (Full Planning)**
 
-- **B-011**: Yi-Coder Integration (5 points, 3.4 score) ✅ Generate
+- **B-011**: Cursor Native AI + Specialized Agents Integration (5 points, 3.4 score) ✅ Generate
 - **B-002**: Advanced Error Recovery (5 points, 3.8 score) ✅ Generate
 - **B-014**: Agent Specialization (13 points, 0.8 score) ✅ Generate
 

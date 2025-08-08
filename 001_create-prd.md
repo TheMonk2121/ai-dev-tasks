@@ -11,7 +11,7 @@
 ## 🔎 TL;DR
 
 - Purpose: Turn a backlog item into a concise, testable PRD
-- PRD Skip Rule: Skip when points < 5 AND score_total ≥ 3.0
+- PRD Skip Rule: Skip when points < 5 AND score_total ≥ 3.0 (see decision matrix in `100_backlog-guide.md`)
 - Output: Clear scope, acceptance criteria, quality gates
 - Handoff: Feed this PRD into `002_generate-tasks.md`
 
@@ -28,7 +28,7 @@
 
 ### PRD Skip Rule (canonical)
 
-- Skip PRD when: points < 5 AND score_total ≥ 3.0
+- Skip PRD when: points < 5 AND score_total ≥ 3.0 (backlog metadata `<!--score_total: X.X-->`)
 - Otherwise, create a PRD with machine-verifiable acceptance criteria
 
 <!-- ANCHOR: template -->
