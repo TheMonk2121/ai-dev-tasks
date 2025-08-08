@@ -355,6 +355,27 @@ python scripts/documentation_retrieval_cli.py stats --format json
 
 *Last Updated: 2024-08-07*
 *Next Review: When system features change*
+## 🔄 Research integration workflow
+
+### Automation features
+- Authoritative store + dispersal: `scripts/research_dispersal_automation.py`
+- Assisted mapping/checklists: `scripts/research_integration_helper.py`
+- One-shot runner: `scripts/run_research_dispersal.py`
+
+### Manual review checklist
+- [ ] Review complete research file accuracy
+- [ ] Extract to 500_ buckets with cross-references
+- [ ] Update 400_ anchor files with implementation-focused content
+- [ ] Add/update backlog items if applicable
+- [ ] Test any new scripts; update cross-references
+
+### Critical safety notes
+Before running:
+- Commit current state, verify targets exist and are writable, validate research quality
+
+After running:
+- Review extracted sections, anchors, tests, and links; commit integration
+
 
 <!-- GUIDE_METADATA
 version: 1.0

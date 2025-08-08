@@ -32,6 +32,11 @@ RESEARCH_INDEX -->
 - Use as the single entry for research retrieval and updates
 - Pattern: research → actionable patterns → implementation refs → citations
 
+### Research Access (shortcuts)
+- Complete sources: `docs/research/papers/documentation-context-management-papers.md`
+- Pattern research: `500_documentation-coherence-research.md`
+- Safety research: `500_maintenance-safety-research.md`
+
 <!-- ANCHOR: key-findings -->
 <a id="key-findings"></a>
 
