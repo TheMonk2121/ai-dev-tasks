@@ -14,6 +14,8 @@
 <!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ## 🚨 **CRITICAL SAFETY REQUIREMENTS**
 **BEFORE ANY FILE OPERATIONS:**
 - [ ] Read `400_file-analysis-guide.md` completely (463 lines)

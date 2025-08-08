@@ -15,6 +15,9 @@ Stop wrestling with monolithic AI requests and start guiding your AI collaborato
 <!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 ## 🚀 Quick Start
 
 ### Quick Start Box

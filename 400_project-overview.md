@@ -1,8 +1,13 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 000_backlog.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # Project Overview
 
 ## 🔎 TL;DR
@@ -16,14 +21,14 @@
 
 1) Read `100_cursor-memory-context.md` (current state)
 2) Check `000_backlog.md` (priorities)
-3) Scan `400_system-overview.md` (architecture)
+3) Scan `400_system-overview_advanced_features.md` (architecture)
 4) Jump to topic guide (testing/deploy/integration/etc.)
 
 ## 🗺️ Mini Map
 
 | Topic | File |
 |---|---|
-| System overview | 400_system-overview.md |
+| System overview | 400_system-overview_advanced_features.md |
 | Testing | 400_testing-strategy-guide.md |
 | Deployment | 400_deployment-environment-guide.md |
 | Integration | 400_integration-patterns-guide.md |

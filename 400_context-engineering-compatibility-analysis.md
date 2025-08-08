@@ -1,6 +1,7 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
 - **Enhancement**: Provides intelligent prompts for each model
 
 #### **3. Local Model Integration**

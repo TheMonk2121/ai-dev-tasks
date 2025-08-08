@@ -2,6 +2,7 @@
 <!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 # 🎯 B-010: n8n Workflow Integration - Completion Summary
 
 **Status**: ✅ **COMPLETED**  

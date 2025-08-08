@@ -1,3 +1,7 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
 # B-011: Cursor Native AI + Specialized Agents Integration - Deployment Guide
 
 ## 📖 Overview

@@ -1,6 +1,8 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
 
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # DSPy Research Papers
 
 > **External Research**: Academic papers and research sources for DSPy framework.

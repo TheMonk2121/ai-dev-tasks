@@ -1,3 +1,5 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 # Legacy Project Deliverables
 
 **Archive Date**: 2024-08-07  

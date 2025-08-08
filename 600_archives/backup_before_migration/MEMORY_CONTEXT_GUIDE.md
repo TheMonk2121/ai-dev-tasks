@@ -63,6 +63,7 @@ Each file includes a memory context comment that explains its role:
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
 <!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
 ```
 
 ### **Comment Format**

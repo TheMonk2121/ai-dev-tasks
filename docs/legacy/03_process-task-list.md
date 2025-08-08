@@ -1,7 +1,8 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 
-   - Use Mistral 7B Instruct for reasoning and planning
+   <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+- Use Mistral 7B Instruct for reasoning and planning
 
 4. **Validate Completion**
    - Run all "Done when:" criteria

@@ -8,6 +8,8 @@
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # File Naming Migration Summary
 
 ## ✅ **Migration Completed Successfully**

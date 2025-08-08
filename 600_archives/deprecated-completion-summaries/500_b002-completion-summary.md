@@ -1,4 +1,6 @@
 <!-- MODULE_REFERENCE: 400_system-overview_core_components_detailed_view.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # B-002 Completion Summary: Advanced Error Recovery & Prevention
 
 ## 🎯 Overview

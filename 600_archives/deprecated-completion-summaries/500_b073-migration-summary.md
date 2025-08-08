@@ -1,3 +1,13 @@
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # Giant Guide Reference Migration Summary
 
 **Migration Date**: 2025-08-07 14:57
@@ -445,7 +455,7 @@
   - `100_ai-development-ecosystem_beginner_lens_what_were_building.md`
   - `100_ai-development-ecosystem_intermediate_lens_how_the_system_works.md`
   - ... and 1 more modules
-- **400_system-overview.md** → 17 modules
+- **400_system-overview_advanced_features.md** → 17 modules
   - `400_system-overview_advanced_features.md`
   - `400_system-overview_component_deep_dives.md`
   - `400_system-overview_configuration_and_setup.md`

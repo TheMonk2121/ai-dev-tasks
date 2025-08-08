@@ -1,3 +1,5 @@
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 # Deprecated Completion Summaries
 
 **Archive Date**: 2024-08-07  

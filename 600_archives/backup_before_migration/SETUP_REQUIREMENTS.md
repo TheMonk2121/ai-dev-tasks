@@ -11,6 +11,7 @@ This document lists all items that require manual setup or configuration on your
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide_environment_setup.md -->
 <!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
 ### **AI Development Ecosystem Context**
 This setup guide is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 

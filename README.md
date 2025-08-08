@@ -2,6 +2,11 @@
 <!-- MODULE_REFERENCE: 102_memory-context-state.md -->
 <!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # 🚀 AI Development Ecosystem
 
 > **Welcome to the AI Development Ecosystem!** This repository contains a comprehensive AI-powered development system with sophisticated documentation, automated workflows, and intelligent task management.

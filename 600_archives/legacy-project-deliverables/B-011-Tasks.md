@@ -6,6 +6,7 @@
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide_additional_resources.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
 # Task List: B-011 Cursor Native AI + Specialized Agents Integration
 
 ## Overview

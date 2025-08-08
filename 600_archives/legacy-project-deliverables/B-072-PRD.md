@@ -11,6 +11,8 @@
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
 # Product Requirements Document: B-072 Migration & Upgrade Procedures Guide
 
 > ⚠️ **Auto-Skip Note**  

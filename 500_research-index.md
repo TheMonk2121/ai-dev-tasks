@@ -1,5 +1,9 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
 # Research Index
 
 <!-- RESEARCH_INDEX

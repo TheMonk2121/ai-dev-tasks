@@ -1,6 +1,11 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 102_memory-context-state.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 → **Then read**: `001_create-prd.md` (create requirements)
 → **Next**: `002_generate-tasks.md` → `003_process-task-list.md` (execute)
 

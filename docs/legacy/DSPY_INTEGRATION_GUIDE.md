@@ -1,5 +1,9 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # 🤖 DSPy RAG Integration Guide
 
 ## **✅ DSPy Integration Successfully Implemented!**

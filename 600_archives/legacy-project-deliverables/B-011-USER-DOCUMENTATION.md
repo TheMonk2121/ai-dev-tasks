@@ -9,6 +9,10 @@
 <!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # B-011: Cursor Native AI + Specialized Agents Integration - User Documentation
 
 ## 📖 Overview

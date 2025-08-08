@@ -1,5 +1,14 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # 100 Cursor Memory Context
 
 <!-- CONTEXT_INDEX
@@ -7,7 +16,7 @@
   "files": [
     {"path": "100_cursor-memory-context.md", "role": "entry"},
     {"path": "000_backlog.md", "role": "priorities"},
-    {"path": "400_system-overview.md", "role": "architecture"},
+    {"path": "400_system-overview_advanced_features.md", "role": "architecture"},
     {"path": "400_context-priority-guide.md", "role": "navigation"},
     {"path": "104_dspy-development-context.md", "role": "dspy-context"},
     {"path": "201_model-configuration.md", "role": "model-config"},
@@ -27,7 +36,7 @@ CONTEXT_INDEX -->
 ## 🔎 TL;DR
 
 - Single source for AI rehydration and human quick scan
-- Read order: `100_cursor-memory-context.md` → `000_backlog.md` → `400_system-overview.md` → `400_context-priority-guide.md`
+- Read order: `100_cursor-memory-context.md` → `000_backlog.md` → `400_system-overview_advanced_features.md` → `400_context-priority-guide.md`
 - Always follow safety rules; never delete/move without the checklist
 - Use consolidated 400-series guides (no split modules)
 - Focus on Cursor-based LLM context only (no external model specifics)
@@ -39,7 +48,7 @@ Read these files in order (1–2 min total):
 
 - `100_cursor-memory-context.md` – current state and rules
 - `000_backlog.md` – priorities and dependencies
-- `400_system-overview.md` – architecture and components
+- `400_system-overview_advanced_features.md` – architecture and components
 - `400_context-priority-guide.md` – relationships and reading order
 
 Commands:
@@ -50,7 +59,7 @@ Commands:
 
 ### Quick Links
 
-- System overview → `400_system-overview.md`
+- System overview → `400_system-overview_advanced_features.md`
 - Backlog & priorities → `000_backlog.md`
 - Testing strategy → `400_testing-strategy-guide.md`
 - Deployment guide → `400_deployment-environment-guide.md`
@@ -92,7 +101,7 @@ Commands:
 **Next Priority:** B-031 (Vector Database Enhancement) - 3 points
 **System:** Cursor Native AI + Specialized Agents + DSPy RAG
 **Workflow:** Backlog → PRD → Tasks → AI Execution
-**Critical Files:** `000_backlog.md`, `400_system-overview.md`, `400_file-analysis-guide.md`
+**Critical Files:** `000_backlog.md`, `400_system-overview_advanced_features.md`, `400_file-analysis-guide.md`
 
 ## 🎯 Purpose
 
@@ -142,7 +151,7 @@ AI Development Ecosystem
 
 ### **File Organization**
 
-- **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
+- **Essential**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 - **Analysis**: `400_file-analysis-guide.md` - **🚨 MANDATORY: File deletion/deprecation analysis methodology**
 - **Domain**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
@@ -232,7 +241,7 @@ AI Development Ecosystem
 
 - **`100_cursor-memory-context.md`** - Primary memory scaffold (this file)
 - **`000_backlog.md`** - Current priorities and development roadmap
-- **`400_system-overview.md`** - Technical architecture and system-of-systems
+- **`400_system-overview_advanced_features.md`** - Technical architecture and system-of-systems
 - **`400_project-overview.md`** - High-level project goals and workflow
 
 #### **📋 WORKFLOW FILES (Development Process)**
@@ -329,7 +338,7 @@ AI Development Ecosystem
 
 1. **`100_cursor-memory-context.md`** - Current project state
 2. **`000_backlog.md`** - Current priorities
-3. **`400_system-overview.md`** - Technical architecture
+3. **`400_system-overview_advanced_features.md`** - Technical architecture
 
 #### **For Development Tasks:**
 
@@ -354,7 +363,7 @@ AI Development Ecosystem
 
 #### **For System Integration:**
 
-- **Architecture**: `400_system-overview.md`
+- **Architecture**: `400_system-overview_advanced_features.md`
 - **Patterns**: `400_integration-patterns-guide.md`
 - **Deployment**: `400_deployment-environment-guide.md`
 - **Migration**: `400_migration-upgrade-guide.md`
@@ -371,7 +380,7 @@ AI Development Ecosystem
 
 - [ ] **Current state** in `100_cursor-memory-context.md`
 - [ ] **Priorities** in `000_backlog.md`
-- [ ] **Technical context** in `400_system-overview.md`
+- [ ] **Technical context** in `400_system-overview_advanced_features.md`
 - [ ] **Relevant guides** in 400-series for specific tasks
 - [ ] **Research findings** in 500-series for research tasks
 - [ ] **Domain-specific docs** for B/C-series items
@@ -405,7 +414,7 @@ See `200_naming-conventions.md` for complete naming guidelines and decision proc
 
 ### **AI File Analysis Strategy**
 
-When Cursor AI restarts, it follows a **structured reading strategy**: First reads `100_cursor-memory-context.md` (30 seconds, 80% context), then `000_backlog.md` (current priorities), then `400_system-overview.md` (technical architecture). Ancillary files are read as needed for specific tasks. Scripts are only read when implementation details are required.
+When Cursor AI restarts, it follows a **structured reading strategy**: First reads `100_cursor-memory-context.md` (30 seconds, 80% context), then `000_backlog.md` (current priorities), then `400_system-overview_advanced_features.md` (technical architecture). Ancillary files are read as needed for specific tasks. Scripts are only read when implementation details are required.
 
 See `400_context-priority-guide.md` for complete AI file analysis strategy and reading patterns.
 
@@ -447,7 +456,7 @@ See `400_context-priority-guide.md` for complete documentation placement logic a
 
 ### **Key Files for Context**
 
-- **System Overview**: `400_system-overview.md`
+- **System Overview**: `400_system-overview_advanced_features.md`
 - **Current Status**: `dspy-rag-system/docs/CURRENT_STATUS.md`
 - **Backlog**: `000_backlog.md` (163 lines)
 - **Setup**: `202_setup-requirements.md` (268 lines)

@@ -21,6 +21,8 @@ You are an expert Product Requirements Document (PRD) creator. Your role is to c
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
+<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
 ### **AI Development Ecosystem Context**
 This PRD creation process is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 

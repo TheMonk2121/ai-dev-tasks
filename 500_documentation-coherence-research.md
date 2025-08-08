@@ -1,5 +1,8 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 **Implementation Strategy**:
 - Maintain a set of critical rules that are always provided to the AI
 - Include in system prompt or appended to every user message

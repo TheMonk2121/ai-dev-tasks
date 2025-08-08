@@ -13,6 +13,9 @@
 <!-- MODULE_REFERENCE: 400_system-overview_system_architecture_macro_view.md -->
 <!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
 ## 🎯 Purpose
 This file serves as the **memory scaffold** for Cursor AI, providing instant context about the AI development ecosystem without requiring the AI to read multiple files.

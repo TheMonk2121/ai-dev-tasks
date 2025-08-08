@@ -1,8 +1,14 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- MODULE_REFERENCE: 400_project-overview.md -->
 <!-- MODULE_REFERENCE: 000_backlog.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # Context Priority Guide
 
 <!-- ANCHOR: overview -->
@@ -11,7 +17,7 @@
 
 | Topic | File | Anchor | When to read | Why |
 |---|---|---|---|---|
-| System overview | 400_system-overview.md | — | After memory + backlog | Architecture mental model |
+| System overview | 400_system-overview_advanced_features.md | — | After memory + backlog | Architecture mental model |
 | Backlog & priorities | 000_backlog.md | — | Always for work selection | Current focus and dependencies |
 | Testing | 400_testing-strategy-guide.md | — | Before writing tests | Strategy, pyramid, quality gates |
 | Deployment | 400_deployment-environment-guide.md | — | Before shipping | Procedures, rollback, monitoring |
@@ -25,7 +31,7 @@
 
 ### Critical Path
 
-1) 100_cursor-memory-context.md → 2) 000_backlog.md → 3) 400_system-overview.md → 4) topic guide (testing/deploy/etc.)
+1) 100_cursor-memory-context.md → 2) 000_backlog.md → 3) 400_system-overview_advanced_features.md → 4) topic guide (testing/deploy/etc.)
 
 ### **AI File Analysis Strategy**
 
@@ -46,7 +52,7 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
    - Essential for understanding project direction and next steps
    - Helps identify what's urgent vs. what can wait
 
-3. **`400_system-overview.md`** - **CRITICAL**
+3. **`400_system-overview_advanced_features.md`** - **CRITICAL**
    - Provides technical architecture and "system-of-systems" context
    - Shows how all components work together
    - Essential for understanding the broader technical landscape
@@ -99,7 +105,7 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
 
 - Read `100_cursor-memory-context.md` for instant context
 - Check `000_backlog.md` for current priorities
-- Scan `400_system-overview.md` for technical context
+- Scan `400_system-overview_advanced_features.md` for technical context
 
 **As needed during conversation:**
 
@@ -148,7 +154,7 @@ When determining where to place new documentation content, follow this **structu
 **For system-wide concepts:**
 
 - **`400_context-priority-guide.md`** - File organization, cognitive scaffolding, AI analysis strategies
-- **`400_system-overview.md`** - Technical architecture, system relationships
+- **`400_system-overview_advanced_features.md`** - Technical architecture, system relationships
 - **`400_project-overview.md`** - High-level project purpose and workflow
 
 **For processes and workflows:**
@@ -255,7 +261,7 @@ When sharing context with other AI models, use this structured approach:
 ```text
 
 1. 400_project-overview.md - Project overview and workflow
-2. 400_system-overview.md - Technical architecture
+2. 400_system-overview_advanced_features.md - Technical architecture
 3. 000_backlog.md - Current priorities and status
 4. dspy-rag-system/400_project-overview.md - Core system status
 5. docs/400_project-overview.md - Three-lens documentation guide
@@ -290,7 +296,7 @@ Use these reference patterns in other documents:
 
 #### **In PRDs and Task Lists:**
 ```markdown
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
 ```
@@ -300,7 +306,7 @@ Use these reference patterns in other documents:
 
 # CONTEXT: See 400_context-priority-guide.md for file organization
 
-# ESSENTIAL: 400_project-overview.md, 400_system-overview.md, 000_backlog.md
+# ESSENTIAL: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md
 
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
 
@@ -310,7 +316,7 @@ Use these reference patterns in other documents:
 #### **In Documentation:**
 ```markdown
 > **Context Reference**: See `400_context-priority-guide.md` for complete file organization
-> **Essential Files**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
+> **Essential Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 > **Domain Files**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
 ```
@@ -369,7 +375,7 @@ When rehydrating an AI model's memory or sharing context with other models, star
 - **Key Info**: AI development workflow, quick start, core concepts
 - **When to Use**: First file to read for any new context
 
-### **2. `400_system-overview.md`**
+### **2. `400_system-overview_advanced_features.md`**
 
 - **Purpose**: Technical architecture overview
 - **Key Info**: System components, security features, reliability measures
@@ -487,10 +493,10 @@ To integrate this guide with other documents, add these references:
 
 #### **In 400_project-overview.md:**
 ```markdown
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 ```
 
-#### **In 400_system-overview.md:**
+#### **In 400_system-overview_advanced_features.md:**
 ```markdown
 <!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 104_dspy-development-context.md -->
 ```
@@ -508,7 +514,7 @@ When sharing context with other AI models, use this structured approach:
 ```text
 400_context-priority-guide.md
 400_project-overview.md
-400_system-overview.md
+400_system-overview_advanced_features.md
 000_backlog.md
 dspy-rag-system/400_project-overview.md
 ```

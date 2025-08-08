@@ -1,3 +1,4 @@
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 # Deprecated Memory Context Guides
 
 Archive Date: 2025-08-07

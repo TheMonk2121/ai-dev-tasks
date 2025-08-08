@@ -1,8 +1,14 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
 <!-- MODULE_REFERENCE: 000_backlog.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # DSPy Development Context
 
 <!-- ANCHOR: tldr -->
@@ -11,7 +17,7 @@
 ## 🔎 TL;DR
 
 - Purpose: Deep technical context for DSPy integration and RAG
-- Read after: `100_cursor-memory-context.md` → `000_backlog.md` → `400_system-overview.md`
+- Read after: `100_cursor-memory-context.md` → `000_backlog.md` → `400_system-overview_advanced_features.md`
 - Key: modules, guard-rails, fast-path, vector store, document processor, roadmap
 
 <!-- ANCHOR: quick-start -->

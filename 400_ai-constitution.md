@@ -3,6 +3,11 @@
 <!-- MODULE_REFERENCE: 102_memory-context-state.md -->
 <!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
 
+<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ---
 
 ## 📜 **CORE CONSTITUTION RULES**

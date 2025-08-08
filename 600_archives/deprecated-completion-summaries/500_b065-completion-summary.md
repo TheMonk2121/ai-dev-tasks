@@ -9,6 +9,8 @@
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
 <!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview.md -->
 # ✅ B-065 Completion Summary: Error Recovery & Troubleshooting Guide
 
 ## 🎯 Implementation Overview

@@ -10,8 +10,10 @@ tags: [memory, scaffolding]
 <!-- MEMORY_CONTEXT: HIGH - Memory scaffolding patterns and guidelines for AI context -->
 
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
+<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
 ## 🧠 Memory Scaffolding Documentation Guidelines
 

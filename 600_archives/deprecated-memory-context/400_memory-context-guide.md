@@ -19,7 +19,7 @@ These files provide instant context about the project:
 | File | Purpose | For Humans | For AI |
 |------|---------|------------|---------|
 | `100_cursor-memory-context.md` | Memory scaffold | Current state overview | Primary context source |
-| `400_system-overview.md` | Technical architecture | System understanding | Technical context |
+| `400_system-overview_advanced_features.md` | Technical architecture | System understanding | Technical context |
 | `000_backlog.md` | Current priorities | What to work on next | Development roadmap |
 | `400_project-overview.md` | Project overview | Quick start guide | Workflow understanding |
 
@@ -66,6 +66,7 @@ Each file includes a memory context comment that explains its role:
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples_memory_context_examples.md -->
 <!-- MODULE_REFERENCE: 100_ai-development-ecosystem_advanced_lens_technical_implementation.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
 ```
 
 ### **Comment Format**

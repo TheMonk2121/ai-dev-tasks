@@ -1,5 +1,8 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 
+<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 ### **Immediate Focus (Next 1-2 weeks)**
 1. **B‑071**: Memory Context File Splitting (🔥 4 points) - **CURRENT TASK**
    - Split 378-line memory file into focused modules for better AI consumption
