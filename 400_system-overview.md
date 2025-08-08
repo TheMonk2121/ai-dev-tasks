@@ -200,26 +200,10 @@
   - Scalable structure for future additions
   - Clear guidelines for contributors
 
-### **AI Scoring & Automation System**
+### **Backlog scoring & automation**
 
-#### **Scoring Engine**
-
-- **Formula**: `(Business Value + Time Criticality + Risk Reduction + Learning Enablement) / Effort`
-- **Score Ranges**: 5.0+ (🔥), 3.0-4.9 (⭐), 1.5-2.9 (📈), <1.5 (🔧)
-- **Metadata Format**: HTML comments with JSON scoring data
-- **AI Integration**: Automatic parsing and prioritization by AI agents
-- **Fallback System**: Human priority tags when scores are missing
-
-#### **n8n Backlog Scrubber Workflow**
-
-- **Purpose**: Automate score calculation and backlog maintenance
-- **Features**:
-  - Reads backlog.md file and parses scoring metadata
-  - Calculates new scores using the scoring formula
-  - Updates `<!--score_total: X.X-->` comments automatically
-  - Handles missing metadata gracefully
-  - Provides audit trail for all changes
-- **Integration**: Works with AI-BACKLOG-META system for seamless automation
+- Canonical scoring details (formula, ranges, metadata, AI usage) live in `100_backlog-guide.md` → see “AI Scoring System” and “n8n Backlog Scrubber”.
+- This overview defers to that guide to avoid duplication; agents consume those rules when planning and prioritizing.
 
 ### 2. AI Execution Layer
 
