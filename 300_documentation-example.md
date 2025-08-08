@@ -1,6 +1,8 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 
+> Example/template file. Not part of active workflows. See `200_naming-conventions.md` (Templates & Examples) and `400_documentation-retrieval-guide.md` (documentation pattern usage).
+
 ```markdown
 ## 🎯 **Current Status**
 - **Status**: 🔄 **IN PROGRESS** - Implementation phase
