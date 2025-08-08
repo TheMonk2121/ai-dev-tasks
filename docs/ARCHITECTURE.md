@@ -1,7 +1,7 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 
-# DSPy Router Architecture v0.3.1
+# DSPy Router Architecture v0.3.1 (Archived Overview)
 
 ## 1. Overview
 
@@ -80,9 +80,9 @@ class FullPathChain(Chain):
 
 | Agent | Purpose | Signature | Model | Status |
 |-------|---------|-----------|-------|--------|
-| **IntentRouter** | Query intent classification | IntentSignature | Mistral 7B Instruct | ✅ Enabled |
-| **RetrievalAgent** | Document search & retrieval | RetrievalSignature | Mistral 7B Instruct | ✅ Enabled |
-| **CodeAgent** | Code generation & testing | CodeSignature | Yi-Coder-9B-Chat-Q6_K | ✅ Enabled |
+| **IntentRouter** | Query intent classification | IntentSignature | Cursor Native AI | ✅ Enabled |
+| **RetrievalAgent** | Document search & retrieval | RetrievalSignature | Cursor Native AI | ✅ Enabled |
+| **CodeAgent** | Code generation & testing | CodeSignature | Cursor Native AI | ✅ Enabled |
 | **ClarifierAgent** | Query clarification | ClarifierSignature | Mistral 7B Instruct | 🔧 Disabled |
 | **ReasoningAgent** | Deep reasoning & analysis | ReasoningSignature | Mixtral-8x7B | 🔧 Disabled |
 | **SelfAnswerAgent** | Simple direct answers | AnswerSignature | Mistral 7B Instruct | 🔧 Disabled |
@@ -184,9 +184,7 @@ The system uses environment-driven connection pool settings:
 ### Model Memory Requirements
 | Model | Size (8-bit) | Status | Load Strategy |
 |-------|--------------|--------|---------------|
-| Mistral 7B Instruct | ~8GB | Warm | Always resident |
-| Yi-Coder-9B-Chat-Q6_K | ~19GB | Lazy | Load on demand |
-| Mixtral-8x7B | ~25GB | Lazy | Only if DEEP_REASONING=1 |
+| Cursor Native (default) | n/a | Warm | Primary path |
 
 *See `202_setup-requirements.md` for environment setup and configuration.*
 
@@ -353,4 +351,4 @@ kubectl apply -f k8s/dspy-router.yaml
 
 *This architecture provides a solid foundation for intelligent query processing with progressive complexity and robust resource management.*
 
-**See `docs/CONFIG_REFERENCE.md` for exhaustive schema documentation.** 
+Note: This file is retained for historical architecture context. For the canonical architecture, see `400_system-overview.md`. Configuration details are consolidated in `202_setup-requirements.md`.

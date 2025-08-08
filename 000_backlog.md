@@ -512,7 +512,7 @@ These items require manual setup or configuration on your end before they can be
 | S‑003 | Environment Configuration             | ⚙️  | 1        | setup-required | Environment variables setup | Configure N8N_BASE_URL, N8N_API_KEY, POSTGRES_DSN |
 | S‑004 | Cursor Native AI Setup               | 🔥  | 1        | setup-required | Cursor IDE configuration | See `202_setup-requirements.md` |
 | S‑005 | Optional Local Model Integration     | 📈  | 1        | backlog        | If needed later, see optional guide | See `cursor-yi-coder-integration/README.md` |
-| S‑006 | PostgreSQL Database Setup             | 🔥  | 1        | setup-required | PostgreSQL installation + database creation | See `docs/ARCHITECTURE.md` |
+| S‑006 | PostgreSQL Database Setup             | 🔥  | 1        | setup-required | PostgreSQL installation + database creation | See `400_system-overview.md` |
 | S‑007 | Virtual Environment Setup             | ⚙️  | 1        | setup-required | Python virtual environment + dependencies | See `400_project-overview.md` |
 | S‑008 | Cursor IDE Configuration             | 🔥  | 1        | setup-required | Cursor IDE configuration | See `202_setup-requirements.md` |
 | S‑009 | Secrets Management Setup              | 🔥  | 1        | setup-required | Environment secrets configuration | See `C8_COMPLETION_SUMMARY.md` |

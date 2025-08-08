@@ -850,8 +850,8 @@ sudo supervisorctl update
 
 ### **Core Architecture**
 
-- **`docs/ARCHITECTURE.md`**: Comprehensive v0.3.1 architecture documentation
-- **`docs/CONFIG_REFERENCE.md`**: Complete configuration reference and schema
+- **`104_dspy-development-context.md`**: DSPy modules, assertions, and advanced patterns
+- **`202_setup-requirements.md`**: Environment and configuration reference
 
 ### **Implementation Guides**
 
