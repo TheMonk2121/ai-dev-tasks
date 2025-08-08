@@ -13,6 +13,16 @@ Sync tasks with `000_backlog.md`.
 - [ ] **Coder Agent**: Add specialized coding assistance
 - [ ] **Query Agent**: Enhance general query handling
 
+#### Specialized Agent Requirements (folded from archived `specialized_agent_requirements.md`)
+- Architecture: Cursor Native AI foundation + Research, Coder, Documentation agents with shared context
+- Integration: Unified command palette, context sharing across agents
+- Research Agent: deep technical/architecture/performance/security research; analysis/synthesis; report generation
+- Coder Agent: code analysis, generation, refactoring, security/performance review; test generation
+- Documentation Agent: technical writing, structure optimization, explanations; export formats
+- Shared Context: persistent storage, selective sharing, conflict resolution; access control and audit logging
+- Performance targets: sub‑second context access; agent responses 2–5s typical; concurrency supported
+- Roadmap tie‑in: implement agent framework, shared context, UI integration; then specialized capabilities and comprehensive testing
+
 #### **Phase 4: Testing & Documentation (Week 5)**
 - [ ] **Integration Testing**: Comprehensive system testing
 - [ ] **Documentation**: Update all related documentation

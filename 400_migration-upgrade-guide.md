@@ -21,7 +21,7 @@
 
 ## Upgrade Philosophy
 ### Completed Migrations (summaries)
-- Native-first migration: Migrated from dual-model approach to Cursor Native AI + Specialized Agents. See archived details in `600_archives/CURSOR_NATIVE_AI_MIGRATION_SUMMARY.md`.
+- Native-first migration: Migrated from dual-model approach to Cursor Native AI + Specialized Agents. See archived details in `600_archives/legacy-project-deliverables/CURSOR_NATIVE_AI_MIGRATION_SUMMARY.md`.
 
 ### **Risk Management Approach**
 
