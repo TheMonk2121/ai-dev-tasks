@@ -94,6 +94,11 @@ Commands:
 - Prefer local-first, simple workflows; avoid unnecessary complexity
 - Focus context on Cursor-based LLMs only
 
+### Legacy Content Policy (Read First)
+- Exclusions: `docs/legacy/**`, `600_archives/**` are reference-only.
+- Legacy integrations (Mistral, Yi‑Coder, Mixtral) must not appear in active docs; keep under `600_archives/`.
+- Before archiving/moving: follow `400_file-analysis-guide.md`. After changes: run `python3 scripts/update_cursor_memory.py`.
+
 ## 🚨 CRITICAL SAFETY REQUIREMENTS
 
 **BEFORE ANY FILE OPERATIONS:**
@@ -172,6 +177,7 @@ AI Development Ecosystem
 **⚠️ CRITICAL**: Before ANY file operations, you MUST read and follow `400_file-analysis-guide.md` completely!
 
 ## 🎯 Current Priorities
+
 
 
 ### **Immediate Focus (Next 1-2 weeks)**

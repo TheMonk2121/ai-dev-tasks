@@ -184,10 +184,10 @@ class DocCoherenceValidator:
         naming_issues = []
         # Allowlist of accepted non-prefixed files
         allowed = {
-            'README.md', 'LICENSE.md', 'START_HERE.md', 'DOCUMENTATION_UPDATE_SUMMARY.md',
+            'README.md', 'LICENSE.md', 'DOCUMENTATION_UPDATE_SUMMARY.md',
             'RESEARCH_INTEGRATION_QUICK_START.md', 'RESEARCH_DISPERSAL_SUMMARY.md',
-            'CURSOR_NATIVE_AI_STRATEGY.md', 'MODEL_COMPATIBILITY_ANALYSIS.md',
-            'cursor_native_ai_assessment.md', 'LM_STUDIO_SETUP.md', 'workflow_improvement_research.md'
+            'CURSOR_NATIVE_AI_STRATEGY.md', 'cursor_native_ai_assessment.md',
+            'workflow_improvement_research.md'
         }
         
         for file_path in self.markdown_files:
