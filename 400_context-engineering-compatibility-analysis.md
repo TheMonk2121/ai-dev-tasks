@@ -1,14 +1,9 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+<!-- ARCHIVED: Merged into 400_cursor-context-engineering-guide.md (Compatibility appendix). Cursor-native is primary; local/alt model notes retained only for history. -->
 
 - **Enhancement**: Provides intelligent prompts for each model
 
-#### **3. Local Model Integration**
-- **Status**: ✅ **COMPATIBLE WITH MODIFICATIONS**
-- **Current**: Ollama + Mistral-7B-Instruct working
-- **Enhancement**: Can add more models to Ollama (Yi-Coder, Mixtral)
-- **Integration**: Context engineering can route to local models
+#### **3. Local Model Integration (Historical)**
+Status: Archived. Cursor-native is the primary path. Local/alt model notes retained for history only.
 
 #### **4. Workflow Integration**
 - **Status**: ✅ **FULLY COMPATIBLE**
@@ -17,7 +12,7 @@
 
 ### **⚠️ What Needs Verification**
 
-#### **1. Cursor Model Access**
+#### **1. Cursor Model Access (Historical)**
 ```python
 # Need to verify these models are actually available in your Cursor
 CURSOR_MODELS_TO_VERIFY = [
@@ -34,7 +29,7 @@ CURSOR_MODELS_TO_VERIFY = [
 3. Verify all 4 models are available
 4. Test Auto mode routing
 
-#### **2. Local Model Expansion**
+#### **2. Local Model Expansion (Historical)**
 ```bash
 # Current working setup
 ollama run mistral
@@ -49,7 +44,7 @@ ollama pull codellama:7b-instruct
 2. Verify API compatibility with your existing setup
 3. Test performance with multiple models
 
-#### **3. DSPy Model Integration**
+#### **3. DSPy Model Integration (Historical)**
 ```python
 # Current DSPy setup in your system
 class MistralLLM(dspy.Module):

@@ -268,7 +268,7 @@ AI Development Ecosystem
 - **`104_dspy-development-context.md`** - DSPy framework implementation details
 - **`202_setup-requirements.md`** - Environment setup and dependencies
 - **`400_context-priority-guide.md`** - Memory scaffolding and file organization
-- **`400_context-engineering-compatibility-analysis.md`** - Context engineering compatibility
+- **`400_cursor-context-engineering-guide.md`** - Context engineering strategy and compatibility (appendix)
 - **`400_cursor-context-engineering-guide.md`** - Context engineering implementation
 
 #### **🔧 OPERATIONAL GUIDES (Production & Maintenance)**
@@ -381,7 +381,7 @@ AI Development Ecosystem
 #### **For Context Engineering:**
 
 - **Strategy**: `400_cursor-context-engineering-guide.md`
-- **Compatibility**: `400_context-engineering-compatibility-analysis.md`
+- **Compatibility**: `400_cursor-context-engineering-guide.md`
 - **Implementation**: `104_dspy-development-context.md`
 
 ### **📊 Documentation Utilization Checklist**
