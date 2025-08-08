@@ -1,6 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+
 # Few-Shot Research
 
 <!-- ANCHOR: tldr -->

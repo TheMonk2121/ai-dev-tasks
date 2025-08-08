@@ -3,7 +3,6 @@
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
 
-<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
 # Create PRD
 
 <!-- ANCHOR: tldr -->

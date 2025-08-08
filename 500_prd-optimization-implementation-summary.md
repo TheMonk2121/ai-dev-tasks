@@ -1,8 +1,7 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
+
 # PRD Optimization Research
 
 > Synthesis focused on decision rules and effects; implementation lives in `400_prd-optimization-guide.md` and scripts.

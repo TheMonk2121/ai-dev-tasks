@@ -1,10 +1,8 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 102_memory-context-state.md -->
-
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+
 ### **Step 6: Tier-Based Decision (REQUIRED)**
 - **Tier 1 (CRITICAL)**: NEVER suggest removal - core workflow files, primary memory context
 - **Tier 2 (HIGH)**: Extensive analysis required - documentation guides, setup requirements

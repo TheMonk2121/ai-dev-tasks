@@ -1,9 +1,8 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
-<!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
+
 ### **For Development Tasks:**
 - **Planning**: `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md`
 - **Implementation**: `104_dspy-development-context.md` + relevant 400-series guides

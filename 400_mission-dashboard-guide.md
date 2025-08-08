@@ -1,11 +1,8 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines_code_standards.md -->
-<!-- MODULE_REFERENCE: B-011-DEPLOYMENT-GUIDE_production_deployment.md -->
-
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-<!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+
 # Real-time Mission Dashboard Guide
 
 ## Overview

@@ -1,5 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: B-011-DEVELOPER-DOCUMENTATION_context_management_system.md -->
 <!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
 
 # Yi-Coder Integration for Cursor

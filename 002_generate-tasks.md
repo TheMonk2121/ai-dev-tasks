@@ -1,11 +1,8 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 000_backlog.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
-
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
-<!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
+
 # Generate Tasks
 
  <!-- ANCHOR: tldr -->

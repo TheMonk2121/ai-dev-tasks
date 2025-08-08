@@ -35,8 +35,12 @@ def is_deprecated_module(value: str) -> bool:
         "400_performance-optimization-guide_",
         "400_testing-strategy-guide_",
         "400_few-shot-context-examples_",
+        "400_contributing-guidelines_",
     ]
     if any(lowered.startswith(m) for m in split_markers):
+        return True
+    # Drop project deliverable module refs
+    if lowered.startswith("b-011-") or lowered.startswith("b-049-") or lowered.startswith("b-072-"):
         return True
     if "_lens_" in lowered:
         return True

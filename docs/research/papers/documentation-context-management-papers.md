@@ -1,5 +1,4 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: B-011-DEVELOPER-DOCUMENTATION_context_management_system.md -->
 
 - **Retrieval-Augmented Generation (RAG)**: Search knowledge base for relevant chunks
 - **Memory Windows and Session Resets**: Monitor context window usage
