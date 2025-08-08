@@ -73,7 +73,7 @@ Your DSPy RAG system is now complete with full DSPy → RAG → Cursor Native AI
 
 ### **Available Guides:**
 - **[DSPy Integration Guide](DSPY_INTEGRATION_GUIDE.md)** - Complete DSPy setup and usage
-- **[Cursor Native AI Integration Guide](201_model-configuration.md)** - Cursor IDE setup and integration
+- **[Environment Setup](202_setup-requirements.md)** - Environment and Cursor IDE setup
 - **[Current Status](400_current-status.md)** - This file - system status and overview
 
 ## **🔧 Your Tech Stack: How It All Works Together**

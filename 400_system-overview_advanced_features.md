@@ -21,17 +21,17 @@
 
 #### **AI Agent Configuration**
 ```json
-{
-  "customModels": [
     {
-      "title": "Cursor Native AI Local",
-      "model": "mistral",
-      "baseURL": "http://localhost:11434/v1",
-      "apiKey": ""
+      "customModels": [
+        {
+          "title": "Cursor Native AI Local",
+          "model": "cursor-native-ai",
+          "baseURL": "http://localhost:11434/v1",
+          "apiKey": ""
+        }
+      ],
+      "defaultModel": "cursor-native-ai"
     }
-  ],
-  "defaultModel": "cursor-native-ai"
-}
 ```
 
 ### **Performance Optimization**

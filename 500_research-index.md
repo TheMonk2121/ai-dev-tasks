@@ -15,7 +15,10 @@
     {"400": "400_testing-strategy-guide.md", "500": "500_testing-research.md", "anchors": ["tldr","key-findings","actionable-patterns","implementation-refs","citations"]},
     {"400": "400_few-shot-context-examples.md", "500": "500_few-shot-research.md", "anchors": ["tldr","key-findings","actionable-patterns","implementation-refs","citations"]},
     {"400": "400_security-best-practices-guide.md", "500": "500_security-research.md", "anchors": ["tldr","key-findings","actionable-patterns","implementation-refs","citations"]},
-    {"400": "400_cursor-context-engineering-guide.md", "500": "500_context-engineering-research.md", "anchors": ["tldr","key-findings","actionable-patterns","implementation-refs","citations"]}
+    {"400": "400_cursor-context-engineering-guide.md", "500": "500_context-engineering-research.md", "anchors": ["tldr","key-findings","actionable-patterns","implementation-refs","citations"]},
+    {"400": "400_mission-dashboard-guide.md", "500": "500_mission-dashboard-research.md", "anchors": ["tldr","key-findings","actionable-patterns","implementation-refs","citations"]},
+    {"400": "400_metadata-collection-guide.md", "500": "500_metadata-research.md", "anchors": ["tldr","key-findings","actionable-patterns","implementation-refs","citations"]},
+    {"400": "400_mission-dashboard-guide.md", "500": "500_monitoring-research.md", "anchors": ["tldr","key-findings","actionable-patterns","implementation-refs","citations"]}
   ]
 }
 RESEARCH_INDEX -->

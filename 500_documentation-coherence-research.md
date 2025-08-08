@@ -51,7 +51,6 @@ Our system uses a three-digit prefix naming convention to establish hierarchy:
 
 **LOW Priority (Read for Specific Tasks):**
 - `103_yi-coder-integration.md` - Integration details
-- `201_model-configuration.md` - Model setup
 - `100_backlog-guide.md` - Backlog management
 
 #### **Cross-Reference System**

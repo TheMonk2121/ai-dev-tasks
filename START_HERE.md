@@ -28,7 +28,6 @@
 | File | Purpose | Reading Time | When to Use |
 |------|---------|--------------|-------------|
 | `202_setup-requirements.md` | Environment setup guide | 20 minutes | First-time setup |
-| `201_model-configuration.md` | AI model configuration | 15 minutes | Setting up AI models |
 | `400_deployment-environment-guide_additional_resources.md` | Production deployment | 30 minutes | Going to production |
 
 ### **🎯 Quality & Standards**
@@ -59,7 +58,7 @@
 **Outcome**: You'll know how to contribute, what needs work, and how to start
 
 ### **Scenario 3: "I want to set up the development environment"**
-**Path**: `202_setup-requirements.md` → `201_model-configuration.md` → `400_deployment-environment-guide_additional_resources.md`
+**Path**: `202_setup-requirements.md` → `400_deployment-environment-guide_additional_resources.md`
 **Time**: 60 minutes
 **Outcome**: You'll have a working development environment
 
@@ -132,7 +131,7 @@ Each file contains cross-references to related documents:
 ## 🔍 **Finding What You Need**
 
 ### **By Topic**
-- **AI Models**: `201_model-configuration.md`, `104_dspy-development-context.md`
+- **AI Models**: `104_dspy-development-context.md`
 - **Security**: `400_security-best-practices-guide.md`
 - **Testing**: `400_testing-strategy-guide_additional_resources.md`
 - **Performance**: `400_performance-optimization-guide_additional_resources.md`
@@ -140,7 +139,7 @@ Each file contains cross-references to related documents:
 - **Integration**: `400_integration-patterns-guide_additional_resources.md`
 
 ### **By Task**
-- **Setup**: `202_setup-requirements.md` → `201_model-configuration.md`
+- **Setup**: `202_setup-requirements.md`
 - **Development**: `400_contributing-guidelines_additional_resources.md` → `001_create-prd.md`
 - **Testing**: `400_testing-strategy-guide_additional_resources.md`
 - **Deployment**: `400_deployment-environment-guide_additional_resources.md`

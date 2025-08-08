@@ -5,15 +5,59 @@
 
 # Backlog
 
-## ✅ PRD Rule & Execute Flow
+<!-- ANCHOR: toc -->
+## Quick Navigation
+
+- [P0 Lane](#p0-lane)
+- [P1 Lane](#p1-lane)
+- [P2 Lane](#p2-lane)
+- [AI‑Executable Queue (003)](#ai-executable-queue-003)
+- [Live Backlog](#live-backlog)
+- [Completed Items](#completed-items)
+- [Setup Required Items](#setup-required-items)
+
+<!-- ANCHOR: governance-p0 -->
+## Governance P0 (Non-Negotiables)
+
+These must be addressed before or alongside feature work to maintain cognitive digestibility and safety.
+
+- **Critical Policies surfacing**: Add a "Critical Policies (Read First)" callout in `100_cursor-memory-context.md` (Safety Ops, Exclusions, Validators/Tests, Post‑Change `python3 scripts/update_cursor_memory.py`). Cross‑link from `400_system-overview.md` (Safety Ops anchor) and `400_context-priority-guide.md` (mini‑index).
+- **Cursor‑native focus cleanup**: Remove or annotate legacy model references (Mistral, Yi‑Coder) in `400_*` guides; add a validator check to prevent reintroduction.
+- **Research summaries consolidation**: Merge `500_research-summary.md` and `500_research-analysis-summary.md` into `500_research-index.md`; archive originals with deprecation notes.
+
+<!-- ANCHOR: p0-lane -->
+## P0 Lane
+- B‑052‑e — Auto-Push Prompt for Repo Maintenance (score 9.0)
+- B‑061 — Memory Context Auto-Update Helper (score 9.0)
+- B‑063 — Documentation Recovery & Rollback System (score 9.0)
+- B‑052‑d — CI GitHub Action (Dry-Run Gate) (score 8.0)
+- B‑062 — Context Priority Guide Auto-Generation (score 8.0)
+## P1 Lane
+- B‑064 — Naming Convention Category Table (score 8.0)
+- B‑074 — Few-Shot Integration with Documentation Tools (score 8.0)
+- B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0)
+- B‑084 — Research-Based Schema Design for Extraction (score 6.0)
+- B‑050 — Enhance 002 Task Generation with Automation (score 5.5)
+- B‑052‑f — Enhanced Repository Maintenance Safety System (score 5.1)
+- B‑052‑b — Config Externalization to TOML + Ignore (score 5.0)
+## P2 Lane
+- B‑076 — Research-Based DSPy Assertions Implementation (score 4.8)
+- B‑077 — Hybrid Search Implementation (Dense + Sparse) (score 4.5)
+- B‑052‑c — Hash-Cache + Optional Threading (score 4.5)
+- B‑018 — Local Notification System (score 4.5)
+- B‑043 — LangExtract Pilot w/ Stratified 20-doc Set (score 4.2)
+- B‑044 — n8n LangExtract Service (Stateless, Spillover, Override) (score 4.2)
+- B‑078 — LangExtract Structured Extraction Service (score 4.2)
+- B‑076 — B-011 Project File Cleanup (score 4.0)
+## AI-Executable Queue (003)
+## PRD Rule & Execute Flow
 
 - PRD skip rule: Skip PRD when points < 5 AND score_total ≥ 3.0
 - Execute flow: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md
 
-Quick links: `100_cursor-memory-context.md`, `400_system-overview_advanced_features.md`, `400_context-priority-guide.md`
+Quick links: `100_cursor-memory-context.md`, `400_system-overview.md`, `400_context-priority-guide.md`
 
 <!-- ANCHOR: current-priorities -->
-<a id="current-priorities"></a>
 
 A prioritized list of future enhancements and features for the AI development ecosystem. 
 
@@ -21,10 +65,10 @@ A prioritized list of future enhancements and features for the AI development ec
 
 **🤖 Execution Guide**: Items can be executed directly by AI using `003_process-task-list.md` as the execution engine. Items requiring external credentials, business decisions, or deployment should be marked with `<!-- human_required: true -->`.
 
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md, 100_cursor-memory-context.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md, 100_cursor-memory-context.md -->
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
-<!-- RESEARCH_SYSTEM: 500_research-analysis-summary.md, 500_dspy-research.md, 500_rag-system-research.md, 500_research-implementation-summary.md -->
+<!-- RESEARCH_SYSTEM: 500_research-index.md, 500_research-analysis-summary.md, 500_dspy-research.md, 500_rag-system-research.md -->
 <!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md -->
 <!-- EXECUTION_ENGINE: scripts/process_tasks.py -->
 <!-- AUTOMATION_FILES: 100_backlog-automation.md, 100_backlog-guide.md -->
@@ -34,6 +78,8 @@ A prioritized list of future enhancements and features for the AI development ec
 <!-- PRD_SKIP_IF_SCORE_GE: 3.0 -->
 
 ---
+
+## Live Backlog
 
 | ID  | Title                                   | 🔥P | 🎯Points | Status | Problem/Outcome | Tech Footprint | Dependencies |
 |-----|-----------------------------------------|-----|----------|--------|-----------------|----------------|--------------|
@@ -373,7 +419,7 @@ A prioritized list of future enhancements and features for the AI development ec
 <!-- human_required: true -->
 <!-- reason: Requires deployment environment configuration and business requirements for health checks -->
 | B‑028 | Implement regex prompt‑sanitiser & whitelist | 🔥  | 3        | ✅ done | Enhanced prompt security with regex-based sanitization | Regex patterns + whitelist logic + security validation | None |
-| B‑029 | Expose llm_timeout_seconds override in agents | 🔥  | 2        | ✅ done | Per-agent LLM timeout configuration for large models | Agent timeout config + Mixtral 90s override | None |
+| B‑029 | Expose llm_timeout_seconds override in agents | 🔥  | 2        | ✅ done | Per-agent LLM timeout configuration for large models | Agent timeout config | None |
 | B‑030 | Env override for SECURITY_MAX_FILE_MB | ⚙️  | 1        | ✅ done | Flexible file size limits with environment override | File validation + env config + OOM prevention | None |
 | B‑031 | Vector Database Foundation Enhancement | 🔥  | 3        | todo   | Improve RAG system with advanced vector database capabilities | PostgreSQL + PGVector + advanced indexing | Enhanced RAG system |
 | B‑032 | Memory Context System Architecture Research | 🔥  | 8        | todo   | Optimize memory hierarchy for different AI model capabilities (7B vs 70B) | Literature review + benchmark harness + design recommendations | Improved retrieval F1 by ≥10% on 7B models |
@@ -393,7 +439,7 @@ A prioritized list of future enhancements and features for the AI development ec
 | B‑036 | General Query Agent Enhancement | 🔥  | 3        | todo   | Add general assistance agent for documentation | Query Agent + Cursor Native AI | B-011 Cursor Native AI Integration |
 <!--score: {bv:4, tc:3, rr:2, le:3, effort:3, deps:[]}-->
 <!--score_total: 4.0-->
-| B‑037 | Yi-Coder Migration (Future) | 🔧  | 8        | todo   | Migrate to Yi-Coder when GGUF compatibility resolved | Yi-Coder + Ollama + Manual Setup | B-011 Cursor Native AI Integration |
+| B‑037 | External Model Integration (Future) | 🔧  | 8        | todo   | Evaluate optional local model(s) later; keep Cursor-native primary | Backlog placeholder only | B-011 Cursor Native AI Integration |
 <!--score: {bv:4, tc:2, rr:3, le:4, effort:8, deps:[]}-->
 <!--score_total: 1.6-->
 | B‑038 | Advanced Model Orchestration | 🔧  | 13       | todo   | Implement multi-model coordination system | Model Orchestration + Agent Coordination | B-034, B-035, B-036 |
@@ -410,7 +456,7 @@ A prioritized list of future enhancements and features for the AI development ec
 <!-- human_required: true -->
 <!-- reason: Requires deployment environment configuration and business requirements for health checks -->
 | B‑028 | Implement regex prompt‑sanitiser & whitelist | 🔥  | 3        | ✅ done | Enhanced prompt security with regex-based sanitization | Regex patterns + whitelist logic + security validation | None |
-| B‑029 | Expose llm_timeout_seconds override in agents | 🔥  | 2        | ✅ done | Per-agent LLM timeout configuration for large models | Agent timeout config + Mixtral 90s override | None |
+| B‑029 | Expose llm_timeout_seconds override in agents | 🔥  | 2        | ✅ done | Per-agent LLM timeout configuration for large models | Agent timeout config | None |
 | B‑030 | Env override for SECURITY_MAX_FILE_MB | ⚙️  | 1        | ✅ done | Flexible file size limits with environment override | File validation + env config + OOM prevention | None |
 | B‑031 | Vector Database Foundation Enhancement | 🔥  | 3        | todo   | Improve RAG system with advanced vector database capabilities | PostgreSQL + PGVector + advanced indexing | Enhanced RAG system |
 | B‑032 | Memory Context System Architecture Research | 🔥  | 8        | todo   | Optimize memory hierarchy for different AI model capabilities (7B vs 70B) | Literature review + benchmark harness + design recommendations | Improved retrieval F1 by ≥10% on 7B models |
@@ -419,7 +465,7 @@ A prioritized list of future enhancements and features for the AI development ec
 
 ---
 
-## ✅ **Completed Items**
+## Completed Items
 
 | ID  | Title                                   | 🔥P | 🎯Points | Status | Completion Date | Implementation Notes |
 |-----|-----------------------------------------|-----|----------|--------|-----------------|---------------------|
@@ -428,7 +474,7 @@ A prioritized list of future enhancements and features for the AI development ec
 | C‑007 | Input Validation Hardening Implementation | 🔥  | 2        | ✅ done | 2024-08-05 | Comprehensive input validation across all modules, security hardening for prompts and file paths, integrated with enhanced_rag_system.py and dashboard.py, comprehensive test suite |
 | C‑008 | Secrets Management Implementation | 🔥  | 2        | ✅ done | 2024-08-05 | Secure credential management with environment validation and keyring integration, startup checks for required secrets, interactive setup script, comprehensive test suite |
 | C‑028 | Implement regex prompt‑sanitiser & whitelist | 🔥  | 3        | ✅ done | 2024-08-05 | Enhanced prompt security with regex-based sanitization, configurable block-list and whitelist, comprehensive validation utilities, integrated with enhanced_rag_system.py, comprehensive test suite |
-| C‑029 | Expose llm_timeout_seconds override in agents | 🔥  | 2        | ✅ done | 2024-08-05 | Per-agent LLM timeout configuration for large models, Mixtral 90s override, environment variable support, integrated with retry_wrapper.py and enhanced_rag_system.py, comprehensive test suite |
+| C‑029 | Expose llm_timeout_seconds override in agents | 🔥  | 2        | ✅ done | 2024-08-05 | Per-agent LLM timeout configuration for large models, environment variable support, integrated with retry_wrapper.py and enhanced_rag_system.py, comprehensive test suite |
 | C‑030 | Env override for SECURITY_MAX_FILE_MB | ⚙️  | 1        | ✅ done | 2024-08-05 | Flexible file size limits with environment override, config hot-reload support, OOM prevention, integrated with prompt_sanitizer.py and config_manager.py, comprehensive test suite |
 | C‑031 | Production Security & Monitoring Implementation | 🔥  | 2        | ✅ done | 2024-08-06 | Comprehensive production monitoring system with security alerts, health checks, OpenTelemetry integration, Kubernetes-ready endpoints, system metrics collection, alert callbacks, comprehensive test suite |
 | C‑032 | Database Connection Pooling & Resilience Implementation | 🔥  | 3        | ✅ done | 2024-08-06 | Comprehensive database resilience system with connection pooling, health monitoring, retry logic, OpenTelemetry integration, graceful degradation, comprehensive test suite |
@@ -455,7 +501,7 @@ A prioritized list of future enhancements and features for the AI development ec
 
 ---
 
-## 🔧 **Setup Required Items**
+## Setup Required Items
 
 These items require manual setup or configuration on your end before they can be fully utilized:
 
@@ -464,13 +510,13 @@ These items require manual setup or configuration on your end before they can be
 | S‑001 | n8n Installation & Configuration      | 🔥  | 1        | setup-required | n8n installation + API key + webhook setup | See `dspy-rag-system/docs/N8N_SETUP_GUIDE.md` |
 | S‑002 | PostgreSQL Event Ledger Schema        | 🔥  | 1        | setup-required | Database schema creation | Run `config/database/event_ledger.sql` in PostgreSQL |
 | S‑003 | Environment Configuration             | ⚙️  | 1        | setup-required | Environment variables setup | Configure N8N_BASE_URL, N8N_API_KEY, POSTGRES_DSN |
-| S‑004 | Ollama & Mistral 7B Setup            | 🔥  | 1        | setup-required | Ollama installation + Mistral model download | See `201_model-configuration.md` |
-| S‑005 | LM Studio & Yi-Coder Setup           | 🔥  | 1        | setup-required | LM Studio installation + Yi-Coder model download | See `103_yi-coder-integration.md` |
+| S‑004 | Cursor Native AI Setup               | 🔥  | 1        | setup-required | Cursor IDE configuration | See `202_setup-requirements.md` |
+| S‑005 | Optional Local Model Integration     | 📈  | 1        | backlog        | If needed later, see optional guide | See `cursor-yi-coder-integration/README.md` |
 | S‑006 | PostgreSQL Database Setup             | 🔥  | 1        | setup-required | PostgreSQL installation + database creation | See `docs/ARCHITECTURE.md` |
 | S‑007 | Virtual Environment Setup             | ⚙️  | 1        | setup-required | Python virtual environment + dependencies | See `400_project-overview.md` |
-| S‑008 | Cursor IDE Configuration              | 🔥  | 1        | setup-required | Cursor IDE + Yi-Coder integration | See `103_yi-coder-integration.md` |
+| S‑008 | Cursor IDE Configuration             | 🔥  | 1        | setup-required | Cursor IDE configuration | See `202_setup-requirements.md` |
 | S‑009 | Secrets Management Setup              | 🔥  | 1        | setup-required | Environment secrets configuration | See `C8_COMPLETION_SUMMARY.md` |
-| S‑010 | System Dependencies                   | ⚙️  | 1        | setup-required | System packages and tools | See `400_system-overview_advanced_features.md` |
+| S‑010 | System Dependencies                   | ⚙️  | 1        | setup-required | System packages and tools | See `400_system-overview.md` |
 
 ---
 

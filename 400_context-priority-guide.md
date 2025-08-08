@@ -11,7 +11,7 @@
 
 | Topic | File | Anchor | When to read | Why |
 |---|---|---|---|---|
-| System overview | 400_system-overview_advanced_features.md | — | After memory + backlog | Architecture mental model |
+| System overview | 400_system-overview.md | — | After memory + backlog | Architecture mental model |
 | Backlog & priorities | 000_backlog.md | — | Always for work selection | Current focus and dependencies |
 | Testing | 400_testing-strategy-guide.md | — | Before writing tests | Strategy, pyramid, quality gates |
 | Deployment | 400_deployment-environment-guide.md | — | Before shipping | Procedures, rollback, monitoring |
@@ -20,12 +20,12 @@
 | Performance | 400_performance-optimization-guide.md | — | Before/after perf changes | Metrics, tuning, troubleshooting |
 | Security | 400_security-best-practices-guide.md | — | Before risky changes | Threat model, validation, response |
 | Setup | 202_setup-requirements.md | — | New env or machine | One-stop environment setup |
-| Model config | 201_model-configuration.md | — | Model/runtime changes | Clear, reproducible config |
+| Model config | 202_setup-requirements.md | — | Model/runtime changes | Clear, reproducible config |
 | DSPy context | 104_dspy-development-context.md | — | Deep implementation | Reasoning, modules, guard-rails |
 
 ### Critical Path
 
-1) 100_cursor-memory-context.md → 2) 000_backlog.md → 3) 400_system-overview_advanced_features.md → 4) topic guide (testing/deploy/etc.)
+1) 100_cursor-memory-context.md → 2) 000_backlog.md → 3) 400_system-overview.md → 4) topic guide (testing/deploy/etc.)
 
 ### **AI File Analysis Strategy**
 
@@ -46,7 +46,7 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
    - Essential for understanding project direction and next steps
    - Helps identify what's urgent vs. what can wait
 
-3. **`400_system-overview_advanced_features.md`** - **CRITICAL**
+3. **`400_system-overview.md`** - **CRITICAL**
    - Provides technical architecture and "system-of-systems" context
    - Shows how all components work together
    - Essential for understanding the broader technical landscape
@@ -99,7 +99,7 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
 
 - Read `100_cursor-memory-context.md` for instant context
 - Check `000_backlog.md` for current priorities
-- Scan `400_system-overview_advanced_features.md` for technical context
+- Scan `400_system-overview.md` for technical context
 
 **As needed during conversation:**
 
@@ -148,7 +148,7 @@ When determining where to place new documentation content, follow this **structu
 **For system-wide concepts:**
 
 - **`400_context-priority-guide.md`** - File organization, cognitive scaffolding, AI analysis strategies
-- **`400_system-overview_advanced_features.md`** - Technical architecture, system relationships
+- **`400_system-overview.md`** - Technical architecture, system relationships
 - **`400_project-overview.md`** - High-level project purpose and workflow
 
 **For processes and workflows:**
@@ -164,8 +164,7 @@ When determining where to place new documentation content, follow this **structu
 
 **For configuration and setup:**
 
-- **`201_model-configuration.md`** - Model setup processes
-- **`202_setup-requirements.md`** - Environment setup
+- **`202_setup-requirements.md`** - Environment setup and model/runtime changes
 
 #### ** Step 3: Determine if Multiple Locations Are Needed**
 
@@ -255,7 +254,7 @@ When sharing context with other AI models, use this structured approach:
 ```text
 
 1. 400_project-overview.md - Project overview and workflow
-2. 400_system-overview_advanced_features.md - Technical architecture
+2. 400_system-overview.md - Technical architecture
 3. 000_backlog.md - Current priorities and status
 4. dspy-rag-system/400_project-overview.md - Core system status
 5. docs/400_project-overview.md - Three-lens documentation guide
@@ -269,9 +268,8 @@ Add these for implementation tasks:
 
 6. 104_dspy-development-context.md - Deep technical context
 7. 202_setup-requirements.md - Environment setup
-8. 201_model-configuration.md - AI model configuration
-9. 100_backlog-automation.md - Automation patterns
-10. dspy-rag-system/docs/CURRENT_STATUS.md - Real-time status
+8. 100_backlog-automation.md - Automation patterns
+9. dspy-rag-system/docs/CURRENT_STATUS.md - Real-time status
 
 ```
 
@@ -290,9 +288,9 @@ Use these reference patterns in other documents:
 
 #### **In PRDs and Task Lists:**
 ```markdown
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
-<!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
+<!-- DOMAIN_FILES: 100_backlog-guide.md -->
 ```
 
 #### **In Code Comments:**
@@ -300,7 +298,7 @@ Use these reference patterns in other documents:
 
 # CONTEXT: See 400_context-priority-guide.md for file organization
 
-# ESSENTIAL: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md
+# ESSENTIAL: 400_project-overview.md, 400_system-overview.md, 000_backlog.md
 
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
 
@@ -310,7 +308,7 @@ Use these reference patterns in other documents:
 #### **In Documentation:**
 ```markdown
 > **Context Reference**: See `400_context-priority-guide.md` for complete file organization
-> **Essential Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
+> **Essential Files**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 > **Domain Files**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
 ```
@@ -323,6 +321,10 @@ Use these reference patterns in other documents:
 
 | File | Purpose | Why First? | Cross-Reference |
 |------|---------|-------------|-----------------|
+| `400_project-overview.md` | Project overview, quick start, core flow | Establishes purpose and the canonical workflow | `100_cursor-memory-context.md` (entry), `400_system-overview.md` |
+| `400_system-overview.md` | Architecture, components, workflows | Provides system-of-systems context for implementation | `docs/ARCHITECTURE.md`, `104_dspy-development-context.md` |
+| `100_cursor-memory-context.md` | Memory scaffold and current state | Fast rehydration for AIs; routing and safety | `400_context-priority-guide.md`, `000_backlog.md` |
+| `START_HERE.md` | Beginner-friendly start and navigation | Bridges newcomers into the core flow quickly | `100_cursor-memory-context.md`, `400_project-overview.md` |
 
 ### **Tier 2: Data-flow & Orchestration Specs**
 
@@ -330,6 +332,9 @@ Use these reference patterns in other documents:
 
 | File | Purpose | Why Critical? | Cross-Reference |
 |------|---------|---------------|-----------------|
+| `400_integration-patterns-guide.md` | Component/API integration patterns | Defines inter-module contracts and error handling | `400_system-overview.md`, `104_dspy-development-context.md` |
+| `400_deployment-environment-guide.md` | Environments and deployment flow | Ensures repeatable deploys and operational readiness | `202_setup-requirements.md`, `400_migration-upgrade-guide.md` |
+| `400_migration-upgrade-guide.md` | Migration safety and rollback | Prevents breakage during upgrades | `400_file-analysis-guide.md` |
 
 ### **Tier 3: Core Modules & Agent Logic**
 
@@ -337,6 +342,8 @@ Use these reference patterns in other documents:
 
 | File | Purpose | Why Essential? | Cross-Reference |
 |------|---------|----------------|-----------------|
+| `104_dspy-development-context.md` | DSPy modules/agents and reasoning | Directly drives implementation quality | `docs/ARCHITECTURE.md`, `400_system-overview.md` |
+| `dspy-rag-system/docs/CURRENT_STATUS.md` | Live system capabilities | Ground-truth status for agent decisions | `dspy-rag-system/` code, `400_system-overview.md` |
 
 ### **Tier 4: Config & Environment**
 
@@ -344,6 +351,9 @@ Use these reference patterns in other documents:
 
 | File | Purpose | Why Important? | Cross-Reference |
 |------|---------|----------------|-----------------|
+| `202_setup-requirements.md` | Environment setup and model/runtime changes | Canonical single source for setup | `400_deployment-environment-guide.md` |
+| `400_performance-optimization-guide.md` | Perf metrics and tuning | Avoids regressions, improves UX | `400_system-overview.md` |
+| `400_security-best-practices-guide.md` | Security model and checklists | Reduces risk and defines guardrails | `400_file-analysis-guide.md` |
 
 ### **Tier 5: Domain Assets**
 
@@ -351,6 +361,9 @@ Use these reference patterns in other documents:
 
 | File | Purpose | Why Valuable? | Cross-Reference |
 |------|---------|---------------|-----------------|
+| `100_backlog-guide.md` | Backlog usage and scoring | Enables objective prioritization | `000_backlog.md` |
+| `400_few-shot-context-examples.md` | Few-shot prompts by task | Boosts quality and consistency | All 400-series topic guides |
+| `400_prd-optimization-guide.md` | Better PRDs, faster | Improves plan quality before implementation | `001_create-prd.md` |
 
 ### **Tier 6: Reference & Edge Cases**
 
@@ -358,6 +371,8 @@ Use these reference patterns in other documents:
 
 | File | Purpose | Why Useful? | Cross-Reference |
 |------|---------|-------------|-----------------|
+| `400_file-analysis-guide.md` | Safe file operations | Mandatory before risky changes | All core docs |
+| `400_cross-reference-strengthening-plan.md` | Cross-ref policy | Maintains documentation integrity | `scripts/doc_coherence_validator.py` |
 
 ## **Essential Context Files for Model Rehydration**
 
@@ -369,7 +384,7 @@ When rehydrating an AI model's memory or sharing context with other models, star
 - **Key Info**: AI development workflow, quick start, core concepts
 - **When to Use**: First file to read for any new context
 
-### **2. `400_system-overview_advanced_features.md`**
+### **2. `400_system-overview.md`**
 
 - **Purpose**: Technical architecture overview
 - **Key Info**: System components, security features, reliability measures
@@ -405,10 +420,8 @@ When rehydrating an AI model's memory or sharing context with other models, star
 - **Key Info**: Manual setup items, dependencies, configuration
 - **When to Use**: Reproducing or modifying the system
 
-### **8. `201_model-configuration.md`**
-
-- **Purpose**: AI model configuration
-- **Key Info**: Mistral, Yi-Coder setup, model parameters
+<!-- Removed `201_model-configuration.md` as a standalone source; use `202_setup-requirements.md` -->
+- **Key Info**: Cursor-native AI setup, model routing at a high level
 - **When to Use**: Understanding AI model setup and capabilities
 
 ### **9. `100_backlog-automation.md`**
@@ -468,7 +481,6 @@ When rehydrating an AI model's memory or sharing context with other models, star
 ### **Environment Setup**
 
 - `202_setup-requirements.md`
-- `201_model-configuration.md`
 - `docs/CONFIG_REFERENCE.md`
 
 ### **Process Understanding**
@@ -487,10 +499,10 @@ To integrate this guide with other documents, add these references:
 
 #### **In 400_project-overview.md:**
 ```markdown
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
 ```
 
-#### **In 400_system-overview_advanced_features.md:**
+#### **In 400_system-overview.md:**
 ```markdown
 <!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 104_dspy-development-context.md -->
 ```
@@ -508,7 +520,7 @@ When sharing context with other AI models, use this structured approach:
 ```text
 400_context-priority-guide.md
 400_project-overview.md
-400_system-overview_advanced_features.md
+400_system-overview.md
 000_backlog.md
 dspy-rag-system/400_project-overview.md
 ```
@@ -520,7 +532,6 @@ Add these to the quick context:
 docs/ARCHITECTURE.md
 104_dspy-development-context.md
 202_setup-requirements.md
-201_model-configuration.md
 100_backlog-automation.md
 dspy-rag-system/docs/CURRENT_STATUS.md
 001_create-prd.md

@@ -33,11 +33,11 @@
 1. **Memory Context Priority**
    - ALWAYS read `100_cursor-memory-context.md` first in any new session
    - Check `000_backlog.md` for current priorities and dependencies
-   - Review `400_system-overview_advanced_features.md` for technical context
+   - Review `400_system-overview.md` for technical context
    - Use existing workflows (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
 
 2. **Context Hierarchy Enforcement**
-   - **HIGH Priority**: `100_cursor-memory-context.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
+   - **HIGH Priority**: `100_cursor-memory-context.md`, `400_system-overview.md`, `000_backlog.md`
    - **MEDIUM Priority**: `001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`
    - **LOW Priority**: Domain-specific files and implementation details
 
@@ -199,7 +199,7 @@
 
 ### **Core System Files**
 - `100_cursor-memory-context.md` - Primary memory scaffold
-- `400_system-overview_advanced_features.md` - Technical architecture
+- `400_system-overview.md` - Technical architecture
 - `000_backlog.md` - Current priorities and roadmap
 - `400_file-analysis-guide.md` - File safety requirements
 

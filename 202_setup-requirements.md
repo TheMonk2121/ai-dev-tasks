@@ -74,23 +74,7 @@ MAX_EVENTS_PER_CYCLE=10
 
 **Prerequisites:**
 
-- **macOS**: LM Studio ≥ 0.2.18 (`brew install --cask lm-studio`)
-- **Linux**: Download AppImage from https://lmstudio.ai/
-- **Storage**: 5GB+ for model download
-
-**Model Download:**
-
-1. Launch LM Studio → Models
-2. Search "Yi-Coder-9B-Chat-GGUF"
-3. Download Yi-Coder-9B-Chat-Q6_K.gguf (≈ 4.9 GB)
-
-**LM Studio Configuration:**
-
-- Context Length: 8092
-- GPU Offload: 48 / 48 (full)
-- Evaluation Batch Size: 384
-- Offload KV Cache to GPU: On
-- Flash Attention: On
+<!-- Optional local model instructions moved to cursor-yi-coder-integration/README.md to keep core docs Cursor-native -->
 
 ### **S-006: PostgreSQL Database Setup** 🔥
 
@@ -142,18 +126,18 @@ pip install -r dspy-rag-system/requirements.txt
 
 **Status**: `setup-required`  
 **Priority**: High  
-**Setup Required**: Cursor IDE + Yi-Coder integration  
-**Setup Instructions**: See `103_yi-coder-integration.md`
+**Setup Required**: Cursor IDE (Cursor-native AI is default). Local Code Model integration is optional.  
+**Setup Instructions**: For optional Local Code Model integration, see `cursor-yi-coder-integration/README.md`
 
 **Cursor Configuration:**
 
 1. Open Cursor Settings
 2. Go to AI → Custom Models
-3. Add Yi-Coder configuration:
+3. Add Local Code Model configuration:
 
    ```json
    {
-     "name": "Yi-Coder-9B-Chat-Q6_K",
+     "name": "Local Code Model-9B-Chat-Q6_K",
      "apiBase": "http://localhost:1234/v1",
      "apiKey": "lm-studio"
    }
@@ -192,7 +176,7 @@ N8N_API_KEY=your_n8n_api_key
 **Status**: `setup-required`  
 **Priority**: Medium  
 **Setup Required**: System packages and tools  
-**Setup Instructions**: See `400_system-overview_advanced_features.md`
+**Setup Instructions**: See `400_system-overview.md`
 
 **System Packages:**
 ```bash
@@ -219,13 +203,7 @@ pip install flask psycopg2-binary dspy-ai transformers torch
 
 curl http://localhost:5678/healthz
 
-# Test Ollama
-
-ollama list
-
-# Test LM Studio
-
-curl http://localhost:1234/v1/models
+# (Optional) Local model checks have been moved to cursor-yi-coder-integration/README.md
 
 # Test database connection
 
@@ -239,12 +217,10 @@ python3 demo_n8n_integration.py
 ### **Verification Checklist**
 
 - [ ] n8n is running and accessible
-- [ ] Ollama is running with Mistral model
-- [ ] LM Studio is running with Yi-Coder model
 - [ ] PostgreSQL is running with pgvector extension
 - [ ] Virtual environment is activated
 - [ ] All environment variables are set
-- [ ] Cursor IDE is configured with Yi-Coder
+- [ ] Cursor IDE is installed and configured
 - [ ] All secrets are properly configured
 
 ## 📞 **Support**

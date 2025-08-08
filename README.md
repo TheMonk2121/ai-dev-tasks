@@ -56,7 +56,6 @@ make run-local
 
 ### **Setup & Configuration**
 - **[202_setup-requirements.md](202_setup-requirements.md)** - Environment setup
-- **[201_model-configuration.md](201_model-configuration.md)** - AI model configuration
 - **[400_deployment-environment-guide_additional_resources.md](400_deployment-environment-guide_additional_resources.md)** - Production deployment
 
 ### **Quality & Standards**

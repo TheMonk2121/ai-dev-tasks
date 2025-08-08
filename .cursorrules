@@ -25,7 +25,6 @@ This project uses a sophisticated memory context system to maintain state across
 
 **LOW Priority (Read for Specific Tasks):**
 - `103_yi-coder-integration.md` - Integration details
-- `201_model-configuration.md` - Model setup
 - `100_backlog-guide.md` - Backlog management
 
 ### **When Working on Features**

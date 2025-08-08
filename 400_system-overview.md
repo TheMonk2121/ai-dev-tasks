@@ -24,7 +24,7 @@
 | Architecture | #architecture | Mental model of the system | Dive into core components |
 | Core components | #core-components | What runs where | See testing, performance |
 | Workflow | #workflow | How work flows end-to-end | Backlog → PRD → Tasks → Execute |
-| Security | #security | Safety, validation, monitoring | Security guide (400_security-best-practices.md) |
+| Security | #security | Safety, validation, monitoring | Security guide (400_security-best-practices-guide.md) |
 | Performance | #performance | Metrics, tuning, troubleshooting | Performance guide |
 | Integration | #integration | Component/API integration | Integration guide |
 | Deployment | #deployment | Procedures and environments | Deployment guide |
@@ -659,7 +659,7 @@ sudo supervisorctl update
   "customModels": [
     {
       "title": "Cursor Native AI Local",
-      "model": "mistral",
+      "model": "cursor-native-ai",
       "baseURL": "http://localhost:11434/v1",
       "apiKey": ""
     }
@@ -855,9 +855,8 @@ sudo supervisorctl update
 
 ### **Implementation Guides**
 
-- **`201_model-configuration.md`**: AI model setup and configuration
 - **`400_file-analysis-guide.md`**: Systematic file analysis methodology
-- **`103_yi-coder-integration.md`**: External model integration guide (legacy)
+<!-- Removed legacy external model integration link to keep Cursor-native as the primary path -->
 
 ### **System Documentation**
 

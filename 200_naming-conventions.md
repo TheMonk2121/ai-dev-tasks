@@ -47,7 +47,7 @@ The result is a **living naming system** that scales with your project while mai
 **Examples of when to create files:**
 - ✅ **Workflow processes** (`001_create-prd.md`, `002_generate-tasks.md`)
 - ✅ **System documentation** (`400_system-overview_advanced_features.md`, `400_project-overview.md`)
-- ✅ **Configuration guides** (`201_model-configuration.md`, `202_setup-requirements.md`)
+- ✅ **Configuration guides** (`202_setup-requirements.md`)
 - ✅ **Completion summaries** (`500_*` files for historical context)
 - ✅ **Research findings** (`500_memory-arch-research.md`)
 
@@ -112,7 +112,6 @@ The result is a **living naming system** that scales with your project while mai
 **Examples of good names:**
 - ✅ `100_cursor-memory-context.md` (clear purpose)
 - ✅ `400_system-overview_advanced_features.md` (descriptive)
-- ✅ `201_model-configuration.md` (specific domain)
 - ✅ `500_memory-arch-research.md` (research focus)
 
 **Examples of bad names:**
@@ -246,7 +245,6 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 ### Configuration & Setup (200-299)
 - `200_naming-conventions.md` - This file
-- `201_model-configuration.md` - AI model configuration
 - `202_setup-requirements.md` - Environment setup requirements
 
 ### Templates & Examples (300-399)

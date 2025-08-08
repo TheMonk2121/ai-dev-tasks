@@ -61,7 +61,6 @@ def display_memory_hierarchy():
         ],
         'LOW': [
             '103_yi-coder-integration.md',
-            '201_model-configuration.md',
             '100_backlog-guide.md'
         ]
     }

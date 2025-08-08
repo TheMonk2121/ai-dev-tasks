@@ -170,7 +170,6 @@ grep -r "PRD skip" .
 
 ### **LOW Priority (Read for Specific Tasks)**
 - `103_yi-coder-integration.md` - Integration details
-- `201_model-configuration.md` - Model setup
 - `100_backlog-guide.md` - Backlog management
 
 ## 🔄 Context Management

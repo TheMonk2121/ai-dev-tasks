@@ -16,14 +16,14 @@
 
 1) Read `100_cursor-memory-context.md` (current state)
 2) Check `000_backlog.md` (priorities)
-3) Scan `400_system-overview_advanced_features.md` (architecture)
+3) Scan `400_system-overview.md` (architecture)
 4) Jump to topic guide (testing/deploy/integration/etc.)
 
 ## 🗺️ Mini Map
 
 | Topic | File |
 |---|---|
-| System overview | 400_system-overview_advanced_features.md |
+| System overview | 400_system-overview.md |
 | Testing | 400_testing-strategy-guide.md |
 | Deployment | 400_deployment-environment-guide.md |
 | Integration | 400_integration-patterns-guide.md |
@@ -295,12 +295,11 @@ If you'd like to see this in action, I demonstrated it on [Claire Vo's "How I AI
 ### **Configuration & Setup:**
 
 * **`200_naming-conventions.md`**: Explains the file naming conventions and organization structure.
-* **`201_model-configuration.md`**: Documents the specific AI model setup (Cursor Native AI + Specialized Agents).
 
 ### **System Documentation:**
 
 * **`400_project-overview.md`**: This file - comprehensive guide to the AI Dev Tasks workflow.
-* **`400_system-overview_advanced_features.md`**: Detailed technical overview of the entire AI development ecosystem.
+* **`400_system-overview.md`**: Detailed technical overview of the entire AI development ecosystem.
 
 ## 🎯 Quick Reference
 

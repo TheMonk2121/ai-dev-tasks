@@ -60,9 +60,7 @@ All relevant documentation in `@ai-dev-tasks/` has been successfully updated to 
     - ✅ Added CURSOR_NATIVE_AI_STRATEGY.md to domain files
 
 ### **✅ Configuration Files**
-11. **`201_model-configuration.md`**
-    - ✅ Updated AI Development Ecosystem Context
-    - ✅ Changed AI Execution Layer description
+11. [Removed] `201_model-configuration.md` (content folded into `202_setup-requirements.md`)
     - ✅ Updated model configuration to reflect Cursor Native AI
     - ✅ Updated specialized agents configuration
 

@@ -27,7 +27,6 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
         "SYSTEM_ARCHITECTURE": [
             "104_dspy-development-context.md",
             "202_setup-requirements.md",
-            "201_model-configuration.md",
             "400_context-priority-guide.md",
             "400_context-engineering-compatibility-analysis.md",
             "400_cursor-context-engineering-guide.md"

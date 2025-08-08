@@ -2,6 +2,8 @@
 
 # Security Research
 
+Backlog link: B-066 (also B-003)
+
 <!-- ANCHOR: tldr -->
 <a id="tldr"></a>
 
@@ -13,20 +15,39 @@
 <!-- ANCHOR: key-findings -->
 <a id="key-findings"></a>
 
+ 
 ## Key Findings
+- Prompt-injection defenses require both input sanitation (deny-list + structure) and output constraints.
+- Secrets/PII must never appear in logs or model context; enforce redaction and allowlist IO.
+- Incident response runbooks (classify, contain, eradicate, recover) reduce time to resolution.
+- Least-privilege for local automation and file operations reduces blast radius.
 
 <!-- ANCHOR: actionable-patterns -->
 <a id="actionable-patterns"></a>
 
+ 
 ## Actionable Patterns
+- Input sanitizer: reject/flag injection phrases; strict schema for risky ops.
+- Output filter: redact PII/secrets; refuse disallowed content; add citation guard.
+- Secrets handling: environment validation at startup; no secrets in prompts/logs.
+- Runbooks: standardized steps for incident classes; test with adversarial prompts.
 
 <!-- ANCHOR: implementation-refs -->
 <a id="implementation-refs"></a>
 
+ 
 ## Implementation References
+- 400_security-best-practices-guide.md (controls matrix, runbooks)
+- dspy-rag-system/src/utils/prompt_sanitizer.py (expand rules)
+- dspy-rag-system/scripts/security_scan.py (automated checks)
+- dspy-rag-system/src/utils/logger.py (redaction)
 
 <!-- ANCHOR: citations -->
 <a id="citations"></a>
 
+ 
 ## Citations
+- 400_security-best-practices-guide.md
+- docs/research/papers/security-papers.md
+- docs/research/articles/monitoring-articles.md
 

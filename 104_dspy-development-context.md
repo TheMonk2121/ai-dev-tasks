@@ -11,7 +11,7 @@
 ## 🔎 TL;DR
 
 - Purpose: Deep technical context for DSPy integration and RAG
-- Read after: `100_cursor-memory-context.md` → `000_backlog.md` → `400_system-overview_advanced_features.md`
+- Read after: `100_cursor-memory-context.md` → `000_backlog.md` → `400_system-overview.md`
 - Key: modules, guard-rails, fast-path, vector store, document processor, roadmap
 
 <!-- ANCHOR: quick-start -->

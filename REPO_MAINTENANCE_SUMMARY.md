@@ -17,7 +17,7 @@
 **Updated files to reference "Cursor-Native AI (default); Mistral & Yi optional":**
 
 - **`400_system-overview_advanced_features.md`**: Changed `"defaultModel": "mistral"` → `"defaultModel": "cursor-native-ai"`
-- **`201_model-configuration.md`**: Changed `"defaultModel": "yi-coder"` → `"defaultModel": "cursor-native-ai"`
+- [Removed] `201_model-configuration.md`: consolidated into `202_setup-requirements.md`
 - **`400_mistral7b-instruct-integration-guide.md`**: Changed `"defaultModel": "mistral-7b-instruct"` → `"defaultModel": "cursor-native-ai"`
 - **`103_yi-coder-integration.md`**: Changed `"defaultModel": "yi-coder"` → `"defaultModel": "cursor-native-ai"`
 - **`README.md`**: Changed `(default: mistral)` → `(default: cursor-native-ai)`

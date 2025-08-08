@@ -13,6 +13,7 @@ Last Updated: 2024-08-07
 import re
 import logging
 from typing import List, Optional, Dict, Any, Tuple
+import argparse
 from pathlib import Path
 from datetime import datetime
 from dataclasses import dataclass, asdict
@@ -49,6 +50,7 @@ class Task:
     score_total: Optional[float] = None
     human_required: bool = False
     human_reason: Optional[str] = None
+    default_executor: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
@@ -260,6 +262,12 @@ class BacklogParser:
                             except ValueError:
                                 pass
                     metadata['score_breakdown'] = score_breakdown
+
+            # Parse default executor
+            elif comment_line.startswith('<!-- default_executor:'):
+                exec_match = re.search(r'default_executor:\s*([^\-]+)', comment_line)
+                if exec_match:
+                    metadata['default_executor'] = exec_match.group(1).strip()
         
         return metadata
     
@@ -409,6 +417,94 @@ class BacklogParser:
         }
         
         return stats
+
+    def _pending(self, task: Task) -> bool:
+        return task.status == TaskStatus.PENDING
+
+    def _score(self, task: Task) -> float:
+        return task.score_total if task.score_total is not None else 0.0
+
+    def _is_ai_executable(self, task: Task) -> bool:
+        if task.human_required:
+            return False
+        if task.status != TaskStatus.PENDING:
+            return False
+        return (task.default_executor or '').strip() == '003_process-task-list.md'
+
+    def generate_lanes(self, tasks: List[Task], p0_count: int = 5, p1_count: int = 7, p2_count: int = 8) -> Dict[str, List[Task]]:
+        """Create P0/P1/P2 lanes from pending tasks by score_total."""
+        pending = [t for t in tasks if self._pending(t)]
+        pending.sort(key=self._score, reverse=True)
+        lanes = {
+            'p0': pending[:p0_count],
+            'p1': pending[p0_count:p0_count+p1_count],
+            'p2': pending[p0_count+p1_count:p0_count+p1_count+p2_count],
+        }
+        return lanes
+
+    def generate_ai_exec_queue(self, tasks: List[Task], limit: int = 10) -> List[Task]:
+        """Create AI-executable queue ordered by score_total, limited."""
+        queue = [t for t in tasks if self._is_ai_executable(t)]
+        queue.sort(key=self._score, reverse=True)
+        return queue[:limit]
+
+    def _format_task_bullet(self, task: Task) -> str:
+        score = f"{task.score_total:.1f}" if task.score_total is not None else "-"
+        return f"- {task.id} — {task.title} (score {score})"
+
+    def render_sections_markdown(self, tasks: List[Task]) -> Dict[str, str]:
+        """Render markdown for P0/P1/P2 lanes and AI-exec queue."""
+        lanes = self.generate_lanes(tasks)
+        aiq = self.generate_ai_exec_queue(tasks)
+
+        p0_md = ["", *[self._format_task_bullet(t) for t in lanes['p0']], ""]
+        p1_md = ["", *[self._format_task_bullet(t) for t in lanes['p1']], ""]
+        p2_md = ["", *[self._format_task_bullet(t) for t in lanes['p2']], ""]
+        ai_md = ["", *[self._format_task_bullet(t) for t in aiq], ""]
+
+        return {
+            'P0 Lane': "\n".join(p0_md),
+            'P1 Lane': "\n".join(p1_md),
+            'P2 Lane': "\n".join(p2_md),
+            'AI-Executable Queue (003)': "\n".join(ai_md),
+        }
+
+    def inject_sections(self, backlog_file: str) -> bool:
+        """Replace section bodies under P0/P1/P2/AQ headers with auto-generated lists."""
+        tasks = self.parse_backlog(backlog_file)
+        sections = self.render_sections_markdown(tasks)
+
+        try:
+            path = Path(backlog_file)
+            text = path.read_text(encoding='utf-8')
+            lines = text.splitlines()
+
+            def replace_section(title: str, new_body_md: str):
+                header = f"## {title}"
+                try:
+                    start = next(i for i, ln in enumerate(lines) if ln.strip() == header)
+                except StopIteration:
+                    return
+                # find next header (## ) after start
+                end = None
+                for i in range(start + 1, len(lines)):
+                    if lines[i].startswith('## '):
+                        end = i
+                        break
+                if end is None:
+                    end = len(lines)
+                # keep the header line, replace content underneath with new_body_md
+                new_block = [lines[start], new_body_md.strip()] if new_body_md.strip() else [lines[start]]
+                lines[start:end] = new_block
+
+            for title, body in sections.items():
+                replace_section(title, body)
+
+            path.write_text("\n".join(lines) + "\n", encoding='utf-8')
+            return True
+        except Exception as e:
+            logger.error(f"Section injection failed: {e}")
+            return False
     
     def export_tasks_json(self, tasks: List[Task], output_file: str) -> bool:
         """Export tasks to JSON file."""
@@ -461,15 +557,16 @@ class BacklogParser:
         return filtered_tasks
 
 def main():
-    """Test the backlog parser."""
-    import argparse
+    """Backlog parser CLI with stats, export, and lane/queue generation/injection."""
     
-    parser = argparse.ArgumentParser(description="Backlog Parser Test")
+    parser = argparse.ArgumentParser(description="Backlog Parser")
     parser.add_argument('backlog_file', help='Path to backlog file')
     parser.add_argument('--export', help='Export to JSON file')
     parser.add_argument('--stats', action='store_true', help='Show statistics')
     parser.add_argument('--filter-status', help='Filter by status')
     parser.add_argument('--filter-priority', help='Filter by priority')
+    parser.add_argument('--generate-sections', action='store_true', help='Print P0/P1/P2 lanes and AI-exec queue markdown')
+    parser.add_argument('--write-sections', action='store_true', help='Inject P0/P1/P2 lanes and AI-exec queue into backlog file')
     
     args = parser.parse_args()
     
@@ -507,6 +604,19 @@ def main():
             print(f"Exported to {args.export}")
         else:
             print("Export failed")
+
+    if args.generate_sections:
+        sections = parser.render_sections_markdown(parsed.tasks)
+        print("\n# Generated Sections\n")
+        for title, md in sections.items():
+            print(f"## {title}")
+            print(md)
+
+    if args.write_sections:
+        if parser.inject_sections(args.backlog_file):
+            print("Sections injected successfully.")
+        else:
+            print("Section injection failed.")
 
 if __name__ == "__main__":
     main()

@@ -3,6 +3,21 @@
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
 
+Backlog link: B-076, B-079
+
+# DSPy Research
+
+## 🔎 TL;DR
+- Use LM Assertions to gate outputs (compile, tests, citation presence)
+- Use teleprompter (optimizer) to auto-select few-shot examples with a validation metric
+- Enable caching; consider async/Parallel for independent steps
+
+## Key Findings
+- Assertions move reliability from ad-hoc guardrails to code-enforced constraints; retries + Suggest feedback reduce failure propagation (docs/research/papers/dspy-papers.md)
+- Teleprompter compiles programs with example selection against a metric; small trainsets materially improve outputs for RAG QA/code (docs/research/tutorials/dspy-tutorials.md)
+- DSPy modules provide clean composition (loops/conditionals), aiding multi-hop retrieval and agent orchestration (docs/research/papers/dspy-papers.md)
+- Caching cuts cost/latency on repeated subcalls; exportable caches persist across sessions (docs/research/tutorials/dspy-tutorials.md)
+
 - Implement `dspy.Assert` for code compilation validation
 - Add assertions for test validation and documentation coherence
 - Create automatic retry logic for failed validations

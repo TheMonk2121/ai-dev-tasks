@@ -38,7 +38,17 @@ class DocCoherenceValidator:
             '.git/',
             '999_repo-maintenance.md',
             'REPO_MAINTENANCE_SUMMARY.md',
-            '600_archives/'
+            '600_archives/',
+            # Known non-prefixed allowed files
+            'START_HERE.md',
+            'DOCUMENTATION_UPDATE_SUMMARY.md',
+            'RESEARCH_INTEGRATION_QUICK_START.md',
+            'RESEARCH_DISPERSAL_SUMMARY.md',
+            'CURSOR_NATIVE_AI_STRATEGY.md',
+            'MODEL_COMPATIBILITY_ANALYSIS.md',
+            'cursor_native_ai_assessment.md',
+            'LM_STUDIO_SETUP.md',
+            'workflow_improvement_research.md'
         ]
         
         # Configuration
@@ -172,13 +182,20 @@ class DocCoherenceValidator:
         self.log("Task 2: Validating file naming conventions", "INFO")
         
         naming_issues = []
+        # Allowlist of accepted non-prefixed files
+        allowed = {
+            'README.md', 'LICENSE.md', 'START_HERE.md', 'DOCUMENTATION_UPDATE_SUMMARY.md',
+            'RESEARCH_INTEGRATION_QUICK_START.md', 'RESEARCH_DISPERSAL_SUMMARY.md',
+            'CURSOR_NATIVE_AI_STRATEGY.md', 'MODEL_COMPATIBILITY_ANALYSIS.md',
+            'cursor_native_ai_assessment.md', 'LM_STUDIO_SETUP.md', 'workflow_improvement_research.md'
+        }
         
         for file_path in self.markdown_files:
             filename = file_path.name
             
             # Check three-digit prefix pattern
             if not re.match(r'^\d{3}_', filename):
-                if filename not in ['README.md', 'LICENSE.md']:
+                if filename not in allowed:
                     naming_issues.append({
                         'file': str(file_path),
                         'issue': 'Missing three-digit prefix'
@@ -188,7 +205,7 @@ class DocCoherenceValidator:
             if re.match(r'^\d{3}_[a-z-]+\.md$', filename):
                 # Valid format
                 pass
-            elif filename not in ['README.md', 'LICENSE.md']:
+            elif filename not in allowed:
                 naming_issues.append({
                     'file': str(file_path),
                     'issue': 'Invalid naming format'

@@ -1,6 +1,23 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 
+# RAG System Research
+
+Backlog link: B-045, B-077
+
+## 🔎 TL;DR
+- Adopt hybrid retrieval (PGVector + Postgres FTS) with score/rank fusion
+- Re-index docs into ~200–300 token chunks with ~50 token overlap, track span offsets
+- Gate answers on span-grounded citations; add small, reproducible RAG eval set
+
+## Key Findings
+- Hybrid dense+sparse significantly improves recall/precision over pure vector search (see docs/research/papers/rag-papers.md; docs/research/articles/rag-articles.md)
+- Smaller, semantically coherent chunks (≈100–300 words/tokens) outperform large blocks; overlap prevents boundary loss (docs/research/articles/rag-articles.md; docs/research/tutorials/rag-tutorials.md)
+- Span-level grounding (character offsets) increases trust and enables automatic faithfulness checks (docs/research/articles/rag-articles.md)
+- Multi-stage retrieval (decomposition, PRF) helps complex queries at modest latency cost (docs/research/papers/rag-papers.md; docs/research/tutorials/rag-tutorials.md)
+- Knowledge-augmented variants (GraphRAG/KAG) benefit multi-hop, but can be phased in later (docs/research/papers/rag-papers.md)
+
+
 - Enable chunk-level retrieval and citation
 
 ### **3. Multi-Stage Retrieval**

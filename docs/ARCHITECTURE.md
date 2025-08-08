@@ -188,7 +188,7 @@ The system uses environment-driven connection pool settings:
 | Yi-Coder-9B-Chat-Q6_K | ~19GB | Lazy | Load on demand |
 | Mixtral-8x7B | ~25GB | Lazy | Only if DEEP_REASONING=1 |
 
-*See `201_model-configuration.md` for full setup & installation guide.*
+*See `202_setup-requirements.md` for environment setup and configuration.*
 
 ### RAM Guard Implementation
 ```python

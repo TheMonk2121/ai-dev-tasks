@@ -33,7 +33,7 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 **Files to Read**:
 1. **`100_cursor-memory-context.md`** - Current project state and priorities
 2. **`000_backlog.md`** - Active development items and roadmap
-3. **`400_system-overview_advanced_features.md`** - Technical architecture understanding
+3. **`400_system-overview.md`** - Technical architecture understanding
 4. **`400_project-overview.md`** - High-level project goals
 
 **Time Investment**: 2-3 minutes
@@ -56,7 +56,7 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 
 **Tier 1 (CRITICAL - Never Remove)**
 - **Criteria**: Core workflow files, primary memory context, active development items
-- **Examples**: `000_backlog.md`, `100_cursor-memory-context.md`, `400_system-overview_advanced_features.md`
+- **Examples**: `000_backlog.md`, `100_cursor-memory-context.md`, `400_system-overview.md`
 - **Action**: **NEVER suggest removal** - these are the foundation of our system
 
 **Tier 2 (HIGH - Review Carefully)**
@@ -79,7 +79,7 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 
 **Check Cross-Reference Tags**:
 ```markdown
-<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview_advanced_features.md -->
+<!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md -->
 <!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md -->
 <!-- MEMORY_CONTEXT: HIGH - Essential analysis methodology -->
 ```
