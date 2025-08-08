@@ -24,6 +24,9 @@ These must be addressed before or alongside feature work to maintain cognitive d
 - **Critical Policies surfacing**: Add a "Critical Policies (Read First)" callout in `100_cursor-memory-context.md` (Safety Ops, Exclusions, Validators/Tests, Post‑Change `python3 scripts/update_cursor_memory.py`). Cross‑link from `400_system-overview.md` (Safety Ops anchor) and `400_context-priority-guide.md` (mini‑index).
 - **Cursor‑native focus cleanup**: Remove or annotate legacy model references (Mistral, Yi‑Coder) in `400_*` guides; add a validator check to prevent reintroduction.
 - **Research summaries consolidation**: Merge `500_research-summary.md` and `500_research-analysis-summary.md` into `500_research-index.md`; archive originals with deprecation notes.
+- **Markdown lint remediation plan**:
+  - Config + light auto-fixes (30–60 minutes): Keep MD034 (no bare URLs) and MD040 (code fence language) enabled and fix across repo. Replace bare URLs with `[text](url)`. Add language tags to fenced code blocks. Run `scripts/fix_markdown_blanks.py` to settle heading/list spacing.
+  - Full cleanup (strict conformance without disabling) (2–4 hours): Remove inline HTML anchors, rework heading levels, and normalize spacing across long-form guides.
 
 <!-- ANCHOR: p0-lane -->
 ## P0 Lane

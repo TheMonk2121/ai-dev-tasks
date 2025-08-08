@@ -18,6 +18,9 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
             "400_system-overview.md",
             "400_project-overview.md"
         ],
+        "CODE_CONTEXT": [
+            "400_code-criticality-guide.md"
+        ],
         "WORKFLOW_FILES": [
             "001_create-prd.md",
             "002_generate-tasks.md", 

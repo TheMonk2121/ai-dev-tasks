@@ -34,8 +34,7 @@ DEV_CONFIG = {
         "password": "dev_password"
     },
     "ai_models": {
-        "mistral-7b": "local",
-        "yi-coder": "local"
+        "cursor-native-ai": "local"
     },
     "monitoring": {
         "level": "debug",
@@ -62,8 +61,7 @@ STAGING_CONFIG = {
         "password": "staging_password"
     },
     "ai_models": {
-        "mistral-7b": "staging-api",
-        "yi-coder": "staging-api"
+        "cursor-native-ai": "staging-api"
     },
     "monitoring": {
         "level": "info",
@@ -90,8 +88,7 @@ PROD_CONFIG = {
         "password": "prod_password"
     },
     "ai_models": {
-        "mistral-7b": "production-api",
-        "yi-coder": "production-api"
+        "cursor-native-ai": "production-api"
     },
     "monitoring": {
         "level": "warning",
@@ -382,10 +379,10 @@ python manage.py migrate
 cp .env.example .env
 echo "Please update .env with your local configuration"
 
-# Setup AI models
+# Setup AI models (lightweight validation)
 
-echo "Setting up AI models..."
-python scripts/setup_ai_models.py
+echo "Validating AI model environment..."
+python3 scripts/setup_ai_models.py --check-db --dsn "$POSTGRES_DSN"
 
 # Run tests
 
@@ -405,10 +402,9 @@ DEBUG=True
 DATABASE_URL=postgresql://dev_user:dev_password@localhost:5432/ai_dev_db
 REDIS_URL=redis://localhost:6379/0
 
-# AI Models
+# AI Models (Cursor-native)
 
-MISTRAL_7B_URL=http://localhost:8000
-YI_CODER_URL=http://localhost:8001
+CURSOR_NATIVE_AI_URL=http://localhost:8000
 
 # Security
 
@@ -468,10 +464,9 @@ DEBUG=False
 DATABASE_URL=postgresql://staging_user:staging_password@staging-db:5432/ai_staging_db
 REDIS_URL=redis://staging-redis:6379/0
 
-# AI Models
+# AI Models (Cursor-native)
 
-MISTRAL_7B_URL=https://staging-ai-api.example.com
-YI_CODER_URL=https://staging-ai-api.example.com
+CURSOR_NATIVE_AI_URL=https://staging-ai-api.example.com
 
 # Security
 
@@ -548,10 +543,9 @@ DEBUG=False
 DATABASE_URL=postgresql://prod_user:prod_password@prod-db:5432/ai_prod_db
 REDIS_URL=redis://prod-redis:6379/0
 
-# AI Models
+# AI Models (Cursor-native)
 
-MISTRAL_7B_URL=https://prod-ai-api.example.com
-YI_CODER_URL=https://prod-ai-api.example.com
+CURSOR_NATIVE_AI_URL=https://prod-ai-api.example.com
 
 # Security
 
@@ -787,8 +781,7 @@ class EnvironmentManager:
             database_url=os.getenv("DEV_DATABASE_URL", "postgresql://dev_user:dev_password@localhost:5432/ai_dev_db"),
             redis_url=os.getenv("DEV_REDIS_URL", "redis://localhost:6379/0"),
             ai_model_urls={
-                "mistral-7b": "http://localhost:8000",
-                "yi-coder": "http://localhost:8001"
+                "cursor-native-ai": os.getenv("DEV_CURSOR_NATIVE_AI_URL", "http://localhost:8000")
             },
             security_settings={
                 "auth_required": False,
@@ -808,8 +801,7 @@ class EnvironmentManager:
             database_url=os.getenv("STAGING_DATABASE_URL"),
             redis_url=os.getenv("STAGING_REDIS_URL"),
             ai_model_urls={
-                "mistral-7b": os.getenv("STAGING_MISTRAL_URL"),
-                "yi-coder": os.getenv("STAGING_YI_CODER_URL")
+                "cursor-native-ai": os.getenv("STAGING_CURSOR_NATIVE_AI_URL")
             },
             security_settings={
                 "auth_required": True,
@@ -829,8 +821,7 @@ class EnvironmentManager:
             database_url=os.getenv("PROD_DATABASE_URL"),
             redis_url=os.getenv("PROD_REDIS_URL"),
             ai_model_urls={
-                "mistral-7b": os.getenv("PROD_MISTRAL_URL"),
-                "yi-coder": os.getenv("PROD_YI_CODER_URL")
+                "cursor-native-ai": os.getenv("PROD_CURSOR_NATIVE_AI_URL")
             },
             security_settings={
                 "auth_required": True,
@@ -878,8 +869,8 @@ metadata:
   namespace: ai-ecosystem
 type: Opaque
 data:
-  mistral-url: aHR0cHM6Ly9wcm9kLWFpLWFwaS5leGFtcGxlLmNvbQo=
-  yi-coder-url: aHR0cHM6Ly9wcm9kLWFpLWFwaS5leGFtcGxlLmNvbQo=
+  cursor-native-ai-url: aHR0cHM6Ly9jdXJzb3ItbmF0aXZlLWFpLmV4YW1wbGUuY29tCg==
+  cursor-native-ai-url: aHR0cHM6Ly9wcm9kLWFpLWFwaS5leGFtcGxlLmNvbQo=
 ```
 
 #### **Secrets Management Script**
@@ -915,8 +906,7 @@ create_secrets() {
     # AI API secrets
 
     kubectl create secret generic ai-api-secret-$env \
-        --from-literal=mistral-url="$MISTRAL_URL" \
-        --from-literal=yi-coder-url="$YI_CODER_URL" \
+        --from-literal=cursor-native-ai-url="$CURSOR_NATIVE_AI_URL" \
         --namespace=ai-ecosystem
     
     echo "✅ Secrets created for $env environment"
@@ -997,12 +987,11 @@ def check_redis():
         return False
 
 def check_ai_models():
-    """Check AI model availability"""
+    """Check AI model availability (Cursor-native)"""
     try:
-        mistral_response = requests.get(f"{os.getenv('MISTRAL_7B_URL')}/health", timeout=5)
-        yi_coder_response = requests.get(f"{os.getenv('YI_CODER_URL')}/health", timeout=5)
-        return mistral_response.status_code == 200 and yi_coder_response.status_code == 200
-    except Exception as e:
+        cursor_native_response = requests.get(f"{os.getenv('CURSOR_NATIVE_AI_URL')}/health", timeout=5)
+        return cursor_native_response.status_code == 200
+    except Exception:
         return False
 
 @app.route('/health')
@@ -1386,7 +1375,7 @@ check_database() {
 check_ai_models() {
     echo "Checking AI model connectivity..."
     kubectl exec -n ai-ecosystem deployment/ai-development-ecosystem -- \
-        curl -f "$MISTRAL_7B_URL/health"
+        curl -f "$CURSOR_NATIVE_AI_URL/health"
 }
 
 # Main troubleshooting

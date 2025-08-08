@@ -64,6 +64,7 @@ Commands:
 - Backlog & priorities → `000_backlog.md`
 - Start here → `README.md`
 - Context priority guide → `400_context-priority-guide.md`
+- Critical Python code map → `400_code-criticality-guide.md`
 - Testing strategy → `400_testing-strategy-guide.md`
 - Deployment guide → `400_deployment-environment-guide.md`
 - Migration & upgrades → `400_migration-upgrade-guide.md`
@@ -121,6 +122,7 @@ Commands:
 **System:** Cursor Native AI + Specialized Agents + DSPy RAG
 **Workflow:** Backlog → PRD → Tasks → AI Execution
 **Critical Files:** `README.md`, `000_backlog.md`, `400_system-overview.md`, `400_file-analysis-guide.md`, `400_documentation-retrieval-guide.md`
+**Critical Code (Tier 1):** see `400_code-criticality-guide.md` (e.g., `scripts/process_tasks.py`, `scripts/state_manager.py`, `dspy-rag-system/src/dspy_modules/*` core modules)
 
 ## 🎯 Purpose
 

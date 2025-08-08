@@ -636,22 +636,29 @@ class StateManager:
             logger.info("State manager database connection closed")
 
 def main():
-    """Test the state manager."""
+    """CLI interface for the state manager (dev utilities)."""
     import argparse
+    import csv
     
-    parser = argparse.ArgumentParser(description="State Manager Test")
+    parser = argparse.ArgumentParser(description="State Manager CLI")
     parser.add_argument('--db', default='test_task_execution.db', help='Database path')
-    parser.add_argument('--task-id', default='B-049', help='Task ID to test')
+    parser.add_argument('--task-id', default='B-049', help='Task ID to operate on')
     parser.add_argument('--action', choices=['start', 'complete', 'status', 'history', 'stats', 'reset'],
                        default='status', help='Action to perform')
+    parser.add_argument('--stats', action='store_true', help='Shortcut to print statistics (alias of action=stats)')
+    parser.add_argument('--export-csv', metavar='FILE', help='Export performance metrics to CSV file')
     
     args = parser.parse_args()
+    
+    # Allow --stats as an alias
+    if args.stats:
+        args.action = 'stats'
     
     state_manager = StateManager(args.db)
     
     try:
         if args.action == 'start':
-            success = state_manager.start_task_execution(args.task_id, {"test": True})
+            success = state_manager.start_task_execution(args.task_id, {"trigger": "cli"})
             print(f"Started task execution: {success}")
         
         elif args.action == 'complete':
@@ -676,6 +683,16 @@ def main():
             print("Execution statistics:")
             for key, value in stats.items():
                 print(f"  {key}: {value}")
+            
+            # Optional CSV export
+            if args.export_csv:
+                # Compose a simple metrics row set from statistics
+                with open(args.export_csv, 'w', newline='') as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['metric', 'value'])
+                    for key, value in stats.items():
+                        writer.writerow([key, value])
+                print(f"Exported statistics to {args.export_csv}")
         
         elif args.action == 'reset':
             success = state_manager.reset_state()
