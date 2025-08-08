@@ -2,22 +2,27 @@
 <!-- MODULE_REFERENCE: 000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- MEMORY_CONTEXT: HIGH - Task generation workflow and planning -->
 
-# Generate Tasks
+## 🎯 Generate Tasks
 
- <!-- ANCHOR: tldr -->
- <a id="tldr"></a>
+<!-- ANCHOR: tldr -->
+<a id="tldr"></a>
 
- ## 🔎 TL;DR
+## 🎯 **Current Status**
 
- - Input: PRD file or Backlog ID
- - Output: 2–4 hour tasks with deps, timebox, auto-advance, pause-after, done-when
- - Handoff: Feed generated list to `003_process-task-list.md` (secondary execution engine)
+- **Status**: ✅ **ACTIVE** - Task generation workflow maintained
+- **Priority**: 🔥 Critical - Essential for project execution
+- **Points**: 4 - Moderate complexity, high importance
+- **Dependencies**: 400_context-priority-guide.md, 001_create-prd.md
+- **Next Steps**: Enhance task templates and automation
 
- <!-- ANCHOR: workflow -->
- <a id="workflow"></a>
 
- ## Workflow
+
+<!-- ANCHOR: workflow -->
+<a id="workflow"></a>
+
+## Workflow
 
  - Parse PRD or `000_backlog.md` row to derive tasks
  - Enforce quality gates and acceptance criteria per task
