@@ -15,6 +15,7 @@ import logging
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+import os
 from enum import Enum
 from typing import Dict, List, Optional, Any, Union
 from uuid import uuid4
@@ -371,8 +372,9 @@ class CursorAIIntegrationFramework:
         self.agents: Dict[AgentType, BaseAgent] = {}
         self.context_manager = ContextManager()
         self.active_agent: Optional[AgentType] = None
-        self.agent_switching_enabled = True
-        self.fallback_to_native = True
+        # Env-configurable toggles (defaults: enabled)
+        self.agent_switching_enabled = _env_bool("AGENT_SWITCHING_ENABLED", True)
+        self.fallback_to_native = _env_bool("FALLBACK_TO_NATIVE", True)
         
         # Initialize agents
         self._initialize_agents()
@@ -380,12 +382,31 @@ class CursorAIIntegrationFramework:
     def _initialize_agents(self):
         """Initialize all available agents."""
         self.agents[AgentType.NATIVE_AI] = CursorNativeAIAgent()
-        self.agents[AgentType.RESEARCH] = ResearchAgent()
-        self.agents[AgentType.CODER] = CoderAgent()
-        self.agents[AgentType.DOCUMENTATION] = DocumentationAgent()
+
+        # Feature flags to enable/disable specialized agents
+        if _env_bool("ENABLE_RESEARCH_AGENT", True):
+            self.agents[AgentType.RESEARCH] = ResearchAgent()
+        if _env_bool("ENABLE_CODER_AGENT", True):
+            self.agents[AgentType.CODER] = CoderAgent()
+        if _env_bool("ENABLE_DOCUMENTATION_AGENT", True):
+            self.agents[AgentType.DOCUMENTATION] = DocumentationAgent()
         
         # Set native AI as default
-        self.active_agent = AgentType.NATIVE_AI
+        default_agent = os.getenv("DEFAULT_ACTIVE_AGENT", AgentType.NATIVE_AI.value)
+        try:
+            parsed = AgentType(default_agent)
+            # Only set if present in initialized agents; else fallback to native
+            self.active_agent = parsed if parsed in self.agents else AgentType.NATIVE_AI
+        except Exception:
+            self.active_agent = AgentType.NATIVE_AI
+
+
+def _env_bool(name: str, default: bool) -> bool:
+    """Read boolean from environment with sensible defaults."""
+    val = os.getenv(name)
+    if val is None:
+        return default
+    return str(val).strip().lower() in {"1", "true", "yes", "on"}
     
     async def process_request(self, request: AgentRequest) -> AgentResponse:
         """Process request using the most appropriate agent."""

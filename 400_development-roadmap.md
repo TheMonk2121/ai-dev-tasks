@@ -3,6 +3,12 @@
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 
+### B-011 Native-first integration phases (folded from strategy doc)
+- Phase 1: Native AI foundation (assess capabilities, gap analysis)
+- Phase 2: Specialized agents (Research, Coder, Documentation)
+- Phase 3: Integration & optimization (agent coordination, context sharing)
+Sync tasks with `000_backlog.md`.
+
 - [ ] **Research Agent**: Implement deep research capabilities
 - [ ] **Coder Agent**: Add specialized coding assistance
 - [ ] **Query Agent**: Enhance general query handling
@@ -159,10 +165,10 @@
 
 ### **Future Migration (Q3 2025)**
 
-#### **B-037: Yi-Coder Migration (Future)**
+#### **B-037: Future Model Migration (Backlog)**
 - **Priority**: 🔧 **MEDIUM** - 8 points
 - **Dependencies**: GGUF compatibility resolution
-- **Goals**: Migrate to Yi-Coder when compatibility resolved
+- **Goals**: Evaluate future model options when compatibility and policy allow
 - **Timeline**: Q3 2025 (conditional)
 
 ## 🏗️ **Infrastructure Milestones**

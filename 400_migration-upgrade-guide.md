@@ -20,6 +20,8 @@
 ---
 
 ## Upgrade Philosophy
+### Completed Migrations (summaries)
+- Native-first migration: Migrated from dual-model approach to Cursor Native AI + Specialized Agents. See archived details in `600_archives/CURSOR_NATIVE_AI_MIGRATION_SUMMARY.md`.
 
 ### **Risk Management Approach**
 
@@ -824,12 +826,12 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
     
     try:
 
-        # Check AI models
-
-        mistral_response = requests.get(f"{os.getenv('MISTRAL_7B_URL')}/health", timeout=5)
-        yi_coder_response = requests.get(f"{os.getenv('YI_CODER_URL')}/health", timeout=5)
-        if mistral_response.status_code == 200 and yi_coder_response.status_code == 200:
-            health_results["ai_models"] = True
+        # Check AI model service (cursor-native or configured runtime)
+        model_url = os.getenv('CURSOR_NATIVE_AI_URL')
+        if model_url:
+            resp = requests.get(f"{model_url}/health", timeout=5)
+            if resp.status_code == 200:
+                health_results["ai_models"] = True
             
     except Exception as e:
         print(f"AI models health check failed: {e}")
@@ -913,16 +915,17 @@ def post_upgrade_validation() -> Dict[str, Any]:
     
     try:
 
-        # Test AI model inference
-
+        # Test AI model inference (cursor-native or configured runtime)
         test_prompt = "Hello, world!"
-        response = requests.post(
-            f"{os.getenv('MISTRAL_7B_URL')}/generate",
-            json={"prompt": test_prompt},
-            timeout=10
-        )
-        if response.status_code == 200:
-            validation_results["ai_model_inference"] = True
+        model_url = os.getenv('CURSOR_NATIVE_AI_URL')
+        if model_url:
+            response = requests.post(
+                f"{model_url}/generate",
+                json={"prompt": test_prompt},
+                timeout=10
+            )
+            if response.status_code == 200:
+                validation_results["ai_model_inference"] = True
             
     except Exception as e:
         print(f"AI model validation failed: {e}")
@@ -1166,7 +1169,7 @@ nvidia-smi
 
 # Restart AI model services
 
-docker-compose restart mistral7b yi-coder
+docker-compose restart cursor-native-ai
 ```
 
 ### **Emergency Recovery Procedures**

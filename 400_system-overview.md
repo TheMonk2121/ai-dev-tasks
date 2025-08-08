@@ -229,6 +229,7 @@
 - **Model Management**: 
   - Cursor Native AI (foundation - always available)
 - Specialized Agents (enhancements - load on demand)
+- Integration framework: see `cursor_ai_integration_framework.py` (env‑toggled agent switching and native fallback)
 - **Runtime Guard-Rails**: RAM pressure checks and model janitor
 - **Fast-Path Bypass**: Skip complex routing for simple queries (<50 chars)
 - **Feature Flags**: DEEP_REASONING=0, CLARIFIER=0 (default)
