@@ -1,16 +1,19 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 104_memory-context-guidance.md -->
-<!-- MODULE_REFERENCE: 400_system-overview_development_workflow_high_level_process.md -->
+
+# PRD Optimization Research
+
+> Synthesis focused on decision rules and effects; implementation lives in `400_prd-optimization-guide.md` and scripts.
 
 - **Savings**: 75% reduction in context overhead
 
 ### **Speed Improvements**
+
 - **Before**: ~20s turnaround for 3-point items
 - **After**: ~7s for items using direct backlog parsing
 - **Savings**: 65% faster execution
 
 ### **Quality Maintenance**
+
 - **Complex Items**: Unchanged (still get full PRD)
 - **Risk Management**: No change for high-risk items
 - **Dependencies**: Properly tracked in both scenarios
@@ -18,6 +21,7 @@
 ## 📚 **Documentation Updates**
 
 ### **Updated Files**
+
 1. **`100_cursor-memory-context.md`**
    - Updated development workflow to reflect PRD optimization
    - Added decision rule to workflow description
@@ -42,6 +46,7 @@
    - Updated timestamps for tracking
 
 ### **New Files**
+
 1. **`400_prd-optimization-guide.md`**
    - Comprehensive guide for the PRD optimization system
    - Technical details, usage examples, and best practices
@@ -56,16 +61,22 @@
 
 ### **Decision Helper Script Tests**
 ```bash
+
 # Test B-011 (5 points, 3.4 score) → Generate PRD ✅
+
 python3 scripts/prd_decision_helper.py "$(cat 000_backlog.md)" "B-011"
+
 # Output: Generate PRD: True (points >= 5 OR score < 3.0)
 
 # Test B-013 (3 points, 3.0 score) → Skip PRD ✅
+
 python3 scripts/prd_decision_helper.py "$(cat 000_backlog.md)" "B-013"
+
 # Output: Generate PRD: False (points < 5 AND score >= 3.0)
 ```
 
 ### **Workflow Integration Tests**
+
 - ✅ Backlog metadata parsing works correctly
 - ✅ PRD creation workflow handles auto-skip logic
 - ✅ Task generation works with both PRD and backlog parsing
@@ -75,11 +86,13 @@ python3 scripts/prd_decision_helper.py "$(cat 000_backlog.md)" "B-013"
 ## 🎯 **Decision Examples**
 
 ### **Skip PRD (Direct Backlog Parsing)**
+
 - **B-013**: Local Development Automation (3 points, 3.0 score) ✅ Skip
 - **B-018**: Local Notification System (2 points, 4.5 score) ✅ Skip
 - **B-020**: Tokenizer Enhancements (2 points, likely high score) ✅ Skip
 
 ### **Generate PRD (Full Planning)**
+
 - **B-011**: Yi-Coder Integration (5 points, 3.4 score) ✅ Generate
 - **B-002**: Advanced Error Recovery (5 points, 3.8 score) ✅ Generate
 - **B-014**: Agent Specialization (13 points, 0.8 score) ✅ Generate
@@ -96,12 +109,14 @@ def should_generate_prd(points: int, score: float) -> bool:
 ```
 
 ### **Backlog Parsing**
+
 - Extracts points from table format
 - Parses score from HTML comments
 - Handles missing data gracefully
 - Supports both dash formats (B-011 vs B‑011)
 
 ### **Workflow Integration**
+
 - **Seamless**: No changes to existing workflows
 - **Backward Compatible**: All existing functionality preserved
 - **Transparent**: Clear logging of decisions
@@ -110,12 +125,14 @@ def should_generate_prd(points: int, score: float) -> bool:
 ## 📋 **Usage Guidelines**
 
 ### **When to Use**
+
 - **Small Items**: 1-3 points with clear requirements
 - **Quick Wins**: Low-effort, high-value improvements
 - **Maintenance**: Bug fixes and minor enhancements
 - **Well-Defined**: Clear problem/outcome statements
 
 ### **When to Override**
+
 - **Complex Dependencies**: Even small items with many dependencies
 - **High Risk**: Security, deployment, or critical system changes
 - **Ambiguous Requirements**: Unclear problem or outcome statements
@@ -124,11 +141,13 @@ def should_generate_prd(points: int, score: float) -> bool:
 ## 🚀 **Next Steps**
 
 ### **Immediate**
+
 - Monitor performance benefits in real usage
 - Track decision accuracy and quality impact
 - Gather feedback on workflow efficiency
 
 ### **Future Enhancements**
+
 - **Metrics Dashboard**: Track PRD skip rates and performance
 - **Dynamic Thresholds**: Adjust decision rules based on usage patterns
 - **Quality Validation**: Ensure skipped PRDs don't impact quality
@@ -137,12 +156,14 @@ def should_generate_prd(points: int, score: float) -> bool:
 ## 📊 **Success Metrics**
 
 ### **Performance Targets**
+
 - **Token Reduction**: 75% reduction achieved ✅
 - **Speed Improvement**: 65% faster execution achieved ✅
 - **Quality Maintenance**: No degradation in output quality ✅
 - **Adoption Rate**: Seamless integration with existing workflows ✅
 
 ### **Quality Indicators**
+
 - **Decision Accuracy**: Correct PRD decisions for all test cases ✅
 - **Workflow Compatibility**: All existing functionality preserved ✅
 - **Documentation Quality**: Comprehensive guides and examples ✅

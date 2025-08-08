@@ -18,7 +18,8 @@
     {"path": "400_performance-optimization-guide.md", "role": "performance"},
     {"path": "400_testing-strategy-guide.md", "role": "testing"},
     {"path": "400_security-best-practices-guide.md", "role": "security"},
-    {"path": "400_few-shot-context-examples.md", "role": "few-shot"}
+    {"path": "400_few-shot-context-examples.md", "role": "few-shot"},
+    {"path": "500_research-index.md", "role": "research-index"}
   ]
 }
 CONTEXT_INDEX -->
