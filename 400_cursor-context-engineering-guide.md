@@ -3,32 +3,30 @@
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
 
-| Claude 3 Opus | 200K | 0.95 | 0.85 | 0.6 | 0.4 | Complex reasoning, large codebases |
-| GPT-4 Turbo | 128K | 0.9 | 0.9 | 0.8 | 0.7 | Structured tasks, code generation |
-| Mixtral 8x7B | 32K | 0.75 | 0.8 | 0.85 | 0.9 | Balanced tasks, moderate complexity |
-| Mistral 7B | 8K | 0.7 | 0.75 | 0.95 | 0.95 | Simple tasks, fast completions |
+> This guide is Cursor-native. Third-party model comparisons have been removed. Use task-type patterns and specialized agents to shape prompts for `cursor-native-ai`.
 
 ### **3. Context Engineering Patterns**
 
-Each model has specific context engineering strategies:
+Use task-type patterns (model-agnostic) to guide `cursor-native-ai` and specialized agents:
 
-#### **Claude 3 Opus**
 ```python
-CONTEXT_ENGINEERING_PATTERNS[ClaudeModel.CLAUDE_3_OPUS] = {
-    "reasoning": "Use step-by-step reasoning with explicit intermediate steps",
-    "coding": "Provide detailed context and explain architectural decisions",
-    "analysis": "Structure analysis with clear sections and evidence",
-    "prompt_pattern": "Let's approach this systematically. First, let me understand the context..."
-}
-```
-
-#### **GPT-4 Turbo**
-```python
-CONTEXT_ENGINEERING_PATTERNS[ClaudeModel.GPT_4_TURBO] = {
-    "reasoning": "Use structured reasoning with clear logical flow",
-    "coding": "Focus on clean, efficient code with good practices",
-    "analysis": "Provide concise analysis with actionable insights",
-    "prompt_pattern": "I'll help you with this. Let me break it down..."
+TASK_TYPE_PATTERNS = {
+    "reasoning": {
+        "style": "step-by-step with explicit intermediate steps",
+        "prompt": "Let's approach this systematically. First, summarize the context, then reason step-by-step to a conclusion."
+    },
+    "coding": {
+        "style": "clean, defensive, with tests-first mindset",
+        "prompt": "Implement the change with clear function boundaries and typing. Include a minimal test and note assumptions."
+    },
+    "analysis": {
+        "style": "evidence-backed, concise sections",
+        "prompt": "Provide a short analysis with evidence, alternatives, and a recommendation."
+    },
+    "debugging": {
+        "style": "hypothesis-driven",
+        "prompt": "Form hypotheses, run targeted checks, report findings, propose fix, and verification steps."
+    }
 }
 ```
 
@@ -80,9 +78,9 @@ response["context_engineering"] = {
     "selected_model": routing_result["selected_model"],
     "engineered_prompt": routing_result["engineered_prompt"],
     "context_engineering": routing_result["context_engineering"],
-    "prompt_pattern": routing_result["prompt_pattern"],
-    "model_instructions": routing_result["model_instructions"],
-    "capabilities": routing_result["capabilities"],
+    "prompt_pattern": TASK_TYPE_PATTERNS.get(routing_result.get("task_type", "reasoning"), {}).get("prompt"),
+    "model_instructions": "cursor-native-ai",
+    "capabilities": "specialized agents + task-type patterns",
     "routing_metadata": routing_result["routing_metadata"]
 }
 ```
@@ -125,15 +123,14 @@ def _analyze_complexity(self, query: str, context_size: int = None) -> str:
         return "simple"
 ```
 
-### **3. Model Selection Logic**
+### **3. Routing Logic (Cursor-native)**
 
-The DSPy router considers:
+Prefer `cursor-native-ai` by default; delegate to specialized agents based on task-type and context size. Keep logic simple and traceable:
 
-1. **Context Size**: Large contexts → Claude 3 Opus
-2. **Task Complexity**: Complex reasoning → Claude 3 Opus or GPT-4 Turbo
-3. **Speed Requirements**: Fast completions → Mistral 7B or Mixtral 8x7B
-4. **Cost Efficiency**: Budget constraints → Mixtral 8x7B or Mistral 7B
-5. **Code Generation**: Coding tasks → GPT-4 Turbo or Claude 3 Opus
+1. Task-type → choose pattern from `TASK_TYPE_PATTERNS`
+2. If retrieval-heavy → ensure citations and span offsets are requested
+3. If coding → enforce tests-first, explicit assumptions, and guardrails
+4. If long context → summarize and chunk before prompting
 
 ## 📊 Monitoring & Analytics
 
@@ -237,13 +234,12 @@ CONTEXT_ENGINEERING_PATTERNS = {
 3. **Progressive Complexity**: Start simple, add complexity as needed
 4. **Feedback Loops**: Monitor performance and adjust patterns
 
-### **2. Model Selection Guidelines**
+### **2. Prompting Guidelines (Cursor-native)**
 
-- **Large Codebases**: Claude 3 Opus (200K context)
-- **Fast Completions**: Mistral 7B or Mixtral 8x7B
-- **Complex Reasoning**: Claude 3 Opus or GPT-4 Turbo
-- **Cost Efficiency**: Mixtral 8x7B or Mistral 7B
-- **Code Generation**: GPT-4 Turbo or Claude 3 Opus
+- Large contexts: summarize, chunk, and request citations with span-level grounding
+- Speed-sensitive: request concise outputs; avoid unnecessary tool use
+- Complex reasoning: ask for intermediate steps and validation checks
+- Coding: specify interfaces, typing, tests-first, and constraints explicitly
 
 ### **3. Performance Optimization**
 
@@ -370,10 +366,7 @@ The monitoring dashboard shows:
 ⚡ Average Latency: 245.3ms
 
 📈 Model Distribution:
-  gpt-4-turbo: 12 (48.0%)
-  claude-3-opus: 8 (32.0%)
-  mixtral-8x7b: 3 (12.0%)
-  mistral-7b-instruct: 2 (8.0%)
+  cursor-native-ai: 25 (100.0%)
 
 🔄 Recent Activity:
   1. ✅ Implement a REST API with authentication
@@ -465,7 +458,7 @@ if result["validation"]["is_valid"]:
     engineered_prompt = result["engineered_prompt"]
 else:
     # Fallback to default model
-    selected_model = "gpt-4-turbo"
+    selected_model = "cursor-native-ai"
     print("⚠️ Using fallback model due to validation failure")
 ```
 
