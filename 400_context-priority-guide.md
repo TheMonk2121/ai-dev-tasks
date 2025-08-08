@@ -324,7 +324,7 @@ Use these reference patterns in other documents:
 | `400_project-overview.md` | Project overview, quick start, core flow | Establishes purpose and the canonical workflow | `100_cursor-memory-context.md` (entry), `400_system-overview.md` |
 | `400_system-overview.md` | Architecture, components, workflows | Provides system-of-systems context for implementation | `docs/ARCHITECTURE.md`, `104_dspy-development-context.md` |
 | `100_cursor-memory-context.md` | Memory scaffold and current state | Fast rehydration for AIs; routing and safety | `400_context-priority-guide.md`, `000_backlog.md` |
-| `START_HERE.md` | Beginner-friendly start and navigation | Bridges newcomers into the core flow quickly | `100_cursor-memory-context.md`, `400_project-overview.md` |
+| `README.md` | Beginner-friendly start and navigation | Bridges newcomers into the core flow quickly | `100_cursor-memory-context.md`, `400_project-overview.md` |
 
 ### **Tier 2: Data-flow & Orchestration Specs**
 

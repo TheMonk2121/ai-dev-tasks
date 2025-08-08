@@ -31,7 +31,7 @@ CONTEXT_INDEX -->
 ## 🔎 TL;DR
 
 - Single source for AI rehydration and human quick scan
- - Read order: `100_cursor-memory-context.md` → `START_HERE.md` → `000_backlog.md` → `400_system-overview.md` → `400_context-priority-guide.md`
+- Read order: `100_cursor-memory-context.md` → `README.md` → `000_backlog.md` → `400_system-overview.md` → `400_context-priority-guide.md`
 - Always follow safety rules; never delete/move without the checklist
 - Use consolidated 400-series guides (no split modules)
 - Focus on Cursor-based LLM context only (no external model specifics)
@@ -62,7 +62,7 @@ Commands:
 
 - System overview → `400_system-overview.md`
 - Backlog & priorities → `000_backlog.md`
-- Start here → `START_HERE.md`
+- Start here → `README.md`
 - Context priority guide → `400_context-priority-guide.md`
 - Testing strategy → `400_testing-strategy-guide.md`
 - Deployment guide → `400_deployment-environment-guide.md`

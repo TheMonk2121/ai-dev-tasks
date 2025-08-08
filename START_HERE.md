@@ -1,7 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 102_memory-context-state.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
+<!-- ARCHIVED: Merged into README.md. See README.md (Start Here) and 400_context-priority-guide.md -->
 
 → **Then read**: `001_create-prd.md` (create requirements)
 → **Next**: `002_generate-tasks.md` → `003_process-task-list.md` (execute)

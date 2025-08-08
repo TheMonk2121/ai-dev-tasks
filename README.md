@@ -9,7 +9,12 @@
 
 ## 🎯 **Start Here**
 
-**New to this project?** → **[START_HERE.md](START_HERE.md)** - Your guide to navigating this comprehensive documentation system
+New to this project? Follow this quick path:
+- Read the 5‑minute overview → [400_project-overview.md](400_project-overview.md)
+- Check priorities/roadmap → [000_backlog.md](000_backlog.md)
+- See current state → [100_cursor-memory-context.md](100_cursor-memory-context.md)
+- Understand architecture → [400_system-overview.md](400_system-overview.md)
+- Learn navigation rules → [400_context-priority-guide.md](400_context-priority-guide.md)
 
 **Want to understand what this is?** → **[400_project-overview.md](400_project-overview.md)** - 5-minute overview of the entire system
 
@@ -44,7 +49,7 @@ make run-local
 ## 📖 **Documentation Navigation**
 
 ### **Core Documentation**
-- **[START_HERE.md](START_HERE.md)** - Navigation guide for humans
+- **[README.md](README.md)** - Start here navigation
 - **[400_project-overview.md](400_project-overview.md)** - Main project overview
 - **[400_system-overview_advanced_features.md](400_system-overview_advanced_features.md)** - Technical architecture
 - **[000_backlog.md](000_backlog.md)** - Current priorities and roadmap
@@ -112,7 +117,7 @@ python3 scripts/process_tasks.py status
 
 ## 🎯 **Getting Help**
 
-1. **Start with [START_HERE.md](START_HERE.md)** for navigation guidance
+1. **Use this README (Start Here)** for navigation guidance
 2. **Check [000_backlog.md](000_backlog.md)** for current priorities
 3. **Review [400_system-overview_advanced_features.md](400_system-overview_advanced_features.md)** for technical context
 4. **Use [400_metadata-quick-reference.md](400_metadata-quick-reference.md)** for commands
