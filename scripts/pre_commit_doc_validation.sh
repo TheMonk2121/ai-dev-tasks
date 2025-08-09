@@ -19,17 +19,12 @@ fi
 
 echo "✅ Core documentation invariants passed."
 
-#!/bin/bash
-"""
-Pre-commit Documentation Validation Hook
-
-Automatically runs documentation coherence validation before commits.
-Integrates with the B-060 Documentation Coherence Validation System.
-
-Usage: This script is automatically called by git pre-commit hooks.
-"""
-
-set -e
+# Pre-commit Documentation Validation Hook
+#
+# Automatically runs documentation coherence validation before commits.
+# Integrates with the B-060 Documentation Coherence Validation System.
+#
+# Usage: This script is automatically called by git pre-commit hooks.
 
 # Colors for output
 RED='\033[0;31m'
@@ -66,7 +61,7 @@ check_environment() {
         log_error "Not in AI development ecosystem project root"
         exit 1
     fi
-    
+
     if [[ ! -f "$VALIDATOR_SCRIPT" ]]; then
         log_error "Documentation validator script not found: $VALIDATOR_SCRIPT"
         exit 1
@@ -77,27 +72,27 @@ check_environment() {
 check_staged_markdown() {
     local staged_md_files
     staged_md_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.md$' || true)
-    
+
     if [[ -z "$staged_md_files" ]]; then
         log_info "No markdown files staged for commit - skipping validation"
         return 0
     fi
-    
+
     log_info "Found staged markdown files:"
     echo "$staged_md_files" | while read -r file; do
         log_info "  - $file"
     done
-    
+
     return 1
 }
 
 # Run documentation validation
 run_validation() {
     log_info "Running documentation coherence validation..."
-    
+
     # Change to project root
     cd "$PROJECT_ROOT"
-    
+
     # Run validator in dry-run mode for pre-commit
     if python3 "$VALIDATOR_SCRIPT" --dry-run; then
         log_success "Documentation validation passed"
@@ -118,44 +113,44 @@ check_critical_files() {
         "400_system-overview.md"
         "400_project-overview.md"
     )
-    
+
     local has_critical_changes=false
-    
+
     for file in "${critical_files[@]}"; do
         if git diff --cached --name-only | grep -q "$file"; then
             log_warning "Critical file modified: $file"
             has_critical_changes=true
         fi
     done
-    
+
     if [[ "$has_critical_changes" == "true" ]]; then
         log_info "Critical files modified - running enhanced validation"
         return 0
     fi
-    
+
     return 1
 }
 
 # Main execution
 main() {
     log_info "Pre-commit documentation validation hook"
-    
+
     # Check environment
     check_environment
-    
+
     # Check if we have staged markdown files
     if check_staged_markdown; then
         log_success "No markdown files to validate"
         exit 0
     fi
-    
+
     # Check for critical file changes
     if check_critical_files; then
         log_info "Critical files detected - running full validation"
     else
         log_info "Running standard validation"
     fi
-    
+
     # Run validation
     if run_validation; then
         log_success "Pre-commit validation completed successfully"
