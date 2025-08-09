@@ -1,0 +1,75 @@
+{
+  "name": "yi-coder-integration",
+  "displayName": "Yi-Coder Integration",
+  "description": "AI-powered code generation using Yi-Coder-9B-Chat-Q6_K model",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "yi-coder.generateCode",
+        "title": "Yi-Coder: Generate Code"
+      },
+      {
+        "command": "yi-coder.completeCode",
+        "title": "Yi-Coder: Complete Code"
+      },
+      {
+        "command": "yi-coder.refactorCode",
+        "title": "Yi-Coder: Refactor Code"
+      }
+    ],
+    "configuration": {
+      "title": "Yi-Coder Integration",
+      "properties": {
+        "yi-coder.ollamaUrl": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Ollama server URL"
+        },
+        "yi-coder.modelName": {
+          "type": "string",
+          "default": "mistral",
+          "description": "Model name for code generation"
+        },
+        "yi-coder.maxTokens": {
+          "type": "number",
+          "default": 2048,
+          "description": "Maximum tokens for code generation"
+        },
+        "yi-coder.temperature": {
+          "type": "number",
+          "default": 0.7,
+          "description": "Temperature for code generation"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.90.0",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "eslint": "^8.26.0",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "ws": "^8.13.0",
+    "axios": "^1.4.0"
+  }
+}

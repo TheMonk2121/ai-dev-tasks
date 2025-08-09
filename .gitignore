@@ -65,6 +65,10 @@ node_modules/
 *.zip
 *.tar.gz
 
+# Allow project manifests
+!package.json
+!package-lock.json
+
 # AI execution state
 .ai_state.json dspy-rag-system/venv/
 
