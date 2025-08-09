@@ -1,0 +1,14 @@
+---
+applyIntelligently: true
+---
+
+# Code Quality Rules
+
+<repo_specific_rule description="Code quality standards that ensure maintainable, testable, and well-documented code while allowing necessary flexibility for complex implementations">
+
+- Type hints required in all Python files
+- Unit tests required for new features
+- Maximum function length: 50 lines
+- Document all public functions and classes
+- Use black for Python formatting
+</repo_specific_rule>

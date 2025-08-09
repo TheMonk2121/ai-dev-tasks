@@ -1,50 +1,81 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- MEMORY_CONTEXT: HIGH - Migration procedures and upgrade safety -->
 
-# Migration & Upgrade Guide
+## 🔄 Migration & Upgrade Guide
 
 <!-- ANCHOR: tldr -->
 <a id="tldr"></a>
 
+## 🎯 **Current Status**
+
+- **Status**: ✅ **ACTIVE** - Migration procedures maintained
+
+- **Priority**: 🔥 Critical - System upgrade safety
+
+- **Points**: 5 - High complexity, safety critical
+
+- **Dependencies**: 400_context-priority-guide.md, 400_deployment-environment-guide.md
+
+- **Next Steps**: Update procedures as system evolves
+
 ## 🔎 TL;DR
 
-- Purpose: safe migrations and upgrades with pre/post validation and rollback
-- Read after: memory → backlog → system overview
-- Outputs: pre-checks, scripts, validation, monitoring, emergency procedures
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
 
 - **Zero Data Loss**: 100% data integrity preservation
+
 - **Minimal Downtime**: < 5 minutes of downtime per upgrade
+
 - **High Success Rate**: 95% successful upgrade rate
+
 - **Fast Rollback**: < 5 minutes for emergency rollbacks
+
 - **Comprehensive Coverage**: 100% of procedures documented
 
 ---
 
 ## Upgrade Philosophy
+
 ### Completed Migrations (summaries)
+
 - Native-first migration: Migrated from dual-model approach to Cursor Native AI + Specialized Agents. See archived details in `600_archives/legacy-project-deliverables/CURSOR_NATIVE_AI_MIGRATION_SUMMARY.md`.
 
 ### **Risk Management Approach**
 
 - **Incremental Upgrades**: Small, manageable changes
+
 - **Comprehensive Testing**: All upgrades tested before production
+
 - **Rollback Planning**: Every upgrade has a rollback plan
+
 - **Monitoring Integration**: Real-time monitoring during upgrades
+
 - **Documentation Requirements**: All changes documented
 
 ### **Automation Strategy**
 
 - **Scripted Procedures**: Automated upgrade scripts
+
 - **Validation Automation**: Automated pre and post-upgrade validation
+
 - **Rollback Automation**: Automated rollback procedures
+
 - **Monitoring Automation**: Automated monitoring and alerting
+
 - **Documentation Automation**: Automated documentation updates
 
 ### **Quality Gates**
 
 - **Pre-Upgrade Validation**: System health and compatibility checks
+
 - **Upgrade Execution**: Monitored and controlled upgrade process
+
 - **Post-Upgrade Validation**: Functionality and performance verification
+
 - **Rollback Readiness**: Rollback procedures tested and ready
+
 - **Documentation Update**: All changes documented and versioned
 
 ---
@@ -54,33 +85,49 @@
 ### **System Health Assessment**
 
 - **Database Health**: Verify database connectivity and performance
+
 - **Application Health**: Check application status and functionality
+
 - **Infrastructure Health**: Validate infrastructure components
+
 - **AI Model Health**: Verify AI model availability and performance
+
 - **Monitoring Health**: Ensure monitoring systems are operational
 
 ### **Backup Procedures**
 
 - **Database Backup**: Complete database backup before upgrades
+
 - **Configuration Backup**: Backup all configuration files
+
 - **Code Backup**: Version control and code backup
+
 - **Model Backup**: Backup AI model files and configurations
+
 - **Documentation Backup**: Backup current documentation state
 
 ### **Compatibility Validation**
 
 - **Version Compatibility**: Check version compatibility matrices
+
 - **Dependency Validation**: Verify all dependencies are compatible
+
 - **Configuration Validation**: Validate configuration compatibility
+
 - **Data Validation**: Verify data format and structure compatibility
+
 - **API Validation**: Check API compatibility and contracts
 
 ### **Resource Assessment**
 
 - **Storage Requirements**: Verify sufficient storage for upgrades
+
 - **Memory Requirements**: Check memory availability for upgrades
+
 - **CPU Requirements**: Validate CPU capacity for upgrade processes
+
 - **Network Requirements**: Ensure network capacity for upgrades
+
 - **Time Requirements**: Estimate upgrade duration and plan accordingly
 
 ---
@@ -92,12 +139,17 @@
 #### **Pre-Migration Checklist**
 
 - [ ] Database backup completed
+
 - [ ] Schema compatibility validated
+
 - [ ] Migration scripts tested in staging
+
 - [ ] Rollback procedures prepared
+
 - [ ] Monitoring systems active
 
 #### **Migration Execution**
+
 ```sql
 -- Example: Add new column with default value
 BEGIN;
@@ -105,19 +157,25 @@ ALTER TABLE episodic_logs ADD COLUMN IF NOT EXISTS cache_hit BOOLEAN DEFAULT FAL
 ALTER TABLE episodic_logs ADD COLUMN IF NOT EXISTS similarity_score FLOAT DEFAULT 0.0;
 ALTER TABLE episodic_logs ADD COLUMN IF NOT EXISTS last_verified TIMESTAMP DEFAULT NOW();
 COMMIT;
+
 ```
 
 #### **Post-Migration Validation**
 
 - [ ] Schema changes applied correctly
+
 - [ ] Data integrity maintained
+
 - [ ] Performance impact assessed
+
 - [ ] Rollback procedures tested
+
 - [ ] Documentation updated
 
 ### **Data Migration Procedures**
 
 #### **Large Dataset Migration**
+
 ```python
 
 # Example: Batch data migration script
@@ -129,46 +187,48 @@ from typing import List, Dict, Any
 def migrate_large_dataset(batch_size: int = 1000) -> bool:
     """
     Migrate large datasets in batches to minimize downtime.
-    
+
     Args:
         batch_size: Number of records to process per batch
-        
+
     Returns:
         bool: True if migration successful, False otherwise
     """
     try:
         conn = psycopg2.connect(os.getenv("DATABASE_URL"))
         cursor = conn.cursor()
-        
+
         # Get total count
 
         cursor.execute("SELECT COUNT(*) FROM episodic_logs")
         total_records = cursor.fetchone()[0]
-        
+
         # Process in batches
 
         for offset in range(0, total_records, batch_size):
             cursor.execute("""
-                UPDATE episodic_logs 
-                SET cache_hit = FALSE, 
+                UPDATE episodic_logs
+                SET cache_hit = FALSE,
                     similarity_score = 0.0,
                     last_verified = NOW()
                 WHERE id BETWEEN %s AND %s
             """, (offset, offset + batch_size - 1))
-            
+
             conn.commit()
             logging.info(f"Processed batch {offset//batch_size + 1}")
-            
+
         cursor.close()
         conn.close()
         return True
-        
+
     except Exception as e:
         logging.error(f"Migration failed: {e}")
         return False
+
 ```
 
 #### **Rollback Procedures**
+
 ```sql
 -- Example: Rollback schema changes
 BEGIN;
@@ -176,6 +236,7 @@ ALTER TABLE episodic_logs DROP COLUMN IF EXISTS cache_hit;
 ALTER TABLE episodic_logs DROP COLUMN IF EXISTS similarity_score;
 ALTER TABLE episodic_logs DROP COLUMN IF EXISTS last_verified;
 COMMIT;
+
 ```
 
 ---
@@ -185,6 +246,7 @@ COMMIT;
 ### **Python Package Upgrades**
 
 #### **Pre-Upgrade Validation**
+
 ```bash
 
 # Check current package versions
@@ -197,9 +259,11 @@ python -m venv test_upgrade_env
 source test_upgrade_env/bin/activate
 pip install -r requirements.txt --upgrade
 python -m pytest tests/
+
 ```
 
 #### **Production Upgrade Script**
+
 ```bash
 
 #!/bin/bash
@@ -235,11 +299,13 @@ else
     echo "Rollback completed at $(date)" >> upgrade.log
     exit 1
 fi
+
 ```
 
 ### **Code Deployment Procedures**
 
 #### **Blue-Green Deployment**
+
 ```yaml
 
 # Example: Kubernetes blue-green deployment
@@ -289,9 +355,11 @@ spec:
             port: 5000
           initialDelaySeconds: 5
           periodSeconds: 5
+
 ```
 
 #### **Rollback Script**
+
 ```bash
 
 #!/bin/bash
@@ -312,6 +380,7 @@ kubectl patch service ai-development-ecosystem-service \
 kubectl scale deployment ai-development-ecosystem-green --replicas=0
 
 echo "Rollback completed successfully"
+
 ```
 
 ---
@@ -321,6 +390,7 @@ echo "Rollback completed successfully"
 ### **Docker Container Upgrades**
 
 #### **Container Update Script**
+
 ```bash
 
 #!/bin/bash
@@ -351,6 +421,7 @@ else
     docker-compose up -d
     exit 1
 fi
+
 ```
 
 ### **Kubernetes Cluster Upgrades**
@@ -358,13 +429,19 @@ fi
 #### **Cluster Upgrade Checklist**
 
 - [ ] Backup cluster configuration
+
 - [ ] Update control plane components
+
 - [ ] Update worker node components
+
 - [ ] Validate cluster health
+
 - [ ] Update cluster add-ons
+
 - [ ] Test application functionality
 
 #### **Node Upgrade Procedure**
+
 ```bash
 
 #!/bin/bash
@@ -390,6 +467,7 @@ ssh $NODE_NAME "sudo apt-get update && sudo apt-get upgrade -y"
 kubectl uncordon $NODE_NAME
 
 echo "Node upgrade completed: $NODE_NAME"
+
 ```
 
 ---
@@ -399,6 +477,7 @@ echo "Node upgrade completed: $NODE_NAME"
 ### **Model Version Management**
 
 #### **Model Compatibility Check**
+
 ```python
 
 # Example: Model compatibility validation
@@ -410,11 +489,11 @@ from typing import Dict, Any
 def validate_model_compatibility(model_path: str, expected_version: str) -> Dict[str, Any]:
     """
     Validate AI model compatibility before upgrade.
-    
+
     Args:
         model_path: Path to the model files
         expected_version: Expected model version
-        
+
     Returns:
         Dict containing validation results
     """
@@ -424,12 +503,12 @@ def validate_model_compatibility(model_path: str, expected_version: str) -> Dict
 
         model = transformers.AutoModel.from_pretrained(model_path)
         tokenizer = transformers.AutoTokenizer.from_pretrained(model_path)
-        
+
         # Check model version
 
         model_version = model.config.model_type
         tokenizer_version = tokenizer.__class__.__name__
-        
+
         # Validate compatibility
 
         compatibility_check = {
@@ -439,23 +518,25 @@ def validate_model_compatibility(model_path: str, expected_version: str) -> Dict
             "torch_compatible": torch.__version__ >= "1.9.0",
             "transformers_compatible": transformers.__version__ >= "4.20.0"
         }
-        
+
         return {
             "compatible": all(compatibility_check.values()),
             "checks": compatibility_check,
             "model_version": model_version,
             "tokenizer_version": tokenizer_version
         }
-        
+
     except Exception as e:
         return {
             "compatible": False,
             "error": str(e),
             "checks": {}
         }
+
 ```
 
 #### **Model Upgrade Script**
+
 ```bash
 
 #!/bin/bash
@@ -495,6 +576,7 @@ else
     mv models/${MODEL_NAME}_backup_* models/$MODEL_NAME
     exit 1
 fi
+
 ```
 
 ---
@@ -504,6 +586,7 @@ fi
 ### **Environment Variable Updates**
 
 #### **Configuration Migration Script**
+
 ```python
 
 # Example: Environment configuration migration
@@ -515,10 +598,10 @@ from typing import Dict, Any
 def migrate_environment_config(config_path: str) -> bool:
     """
     Migrate environment configuration to new format.
-    
+
     Args:
         config_path: Path to configuration file
-        
+
     Returns:
         bool: True if migration successful
     """
@@ -528,24 +611,24 @@ def migrate_environment_config(config_path: str) -> bool:
 
         with open(config_path, 'r') as f:
             config = json.load(f)
-        
+
         # Apply migration rules
 
         migrated_config = apply_migration_rules(config)
-        
+
         # Backup original
 
         backup_path = f"{config_path}.backup"
         with open(backup_path, 'w') as f:
             json.dump(config, f, indent=2)
-        
+
         # Write migrated configuration
 
         with open(config_path, 'w') as f:
             json.dump(migrated_config, f, indent=2)
-        
+
         return True
-        
+
     except Exception as e:
         print(f"Configuration migration failed: {e}")
         return False
@@ -553,45 +636,47 @@ def migrate_environment_config(config_path: str) -> bool:
 def apply_migration_rules(config: Dict[str, Any]) -> Dict[str, Any]:
     """Apply migration rules to configuration."""
     migrated = config.copy()
-    
+
     # Example migration rules
 
     if "database" in migrated:
         if "url" not in migrated["database"]:
             migrated["database"]["url"] = migrated["database"].get("connection_string", "")
-    
+
     if "ai_models" in migrated:
         for model in migrated["ai_models"]:
             if "timeout" not in model:
                 model["timeout"] = 30
-    
+
     return migrated
+
 ```
 
 ### **Configuration Validation**
 
 #### **Pre-Migration Validation**
+
 ```python
 def validate_configuration_compatibility(config_path: str) -> Dict[str, Any]:
     """
     Validate configuration compatibility before migration.
-    
+
     Args:
         config_path: Path to configuration file
-        
+
     Returns:
         Dict containing validation results
     """
     try:
         with open(config_path, 'r') as f:
             config = json.load(f)
-        
+
         validation_results = {
             "valid": True,
             "warnings": [],
             "errors": []
         }
-        
+
         # Check required fields
 
         required_fields = ["database", "ai_models", "monitoring"]
@@ -599,28 +684,29 @@ def validate_configuration_compatibility(config_path: str) -> Dict[str, Any]:
             if field not in config:
                 validation_results["errors"].append(f"Missing required field: {field}")
                 validation_results["valid"] = False
-        
+
         # Check field types
 
         if "database" in config and not isinstance(config["database"], dict):
             validation_results["errors"].append("Database configuration must be an object")
             validation_results["valid"] = False
-        
+
         # Check for deprecated fields
 
         deprecated_fields = ["old_database_url", "legacy_timeout"]
         for field in deprecated_fields:
             if field in config:
                 validation_results["warnings"].append(f"Deprecated field found: {field}")
-        
+
         return validation_results
-        
+
     except Exception as e:
         return {
             "valid": False,
             "errors": [f"Configuration validation failed: {e}"],
             "warnings": []
         }
+
 ```
 
 ---
@@ -630,6 +716,7 @@ def validate_configuration_compatibility(config_path: str) -> Dict[str, Any]:
 ### **Database Rollback**
 
 #### **Schema Rollback Script**
+
 ```sql
 -- Example: Rollback database schema changes
 BEGIN;
@@ -646,9 +733,11 @@ ALTER TABLE episodic_logs DROP COLUMN IF EXISTS last_verified;
 DROP INDEX IF EXISTS idx_new_feature;
 
 COMMIT;
+
 ```
 
 #### **Data Rollback Script**
+
 ```python
 
 # Example: Data rollback procedure
@@ -660,22 +749,22 @@ from typing import List, Dict, Any
 def rollback_data_changes(backup_file: str) -> bool:
     """
     Rollback data changes from backup file.
-    
+
     Args:
         backup_file: Path to backup file
-        
+
     Returns:
         bool: True if rollback successful
     """
     try:
         conn = psycopg2.connect(os.getenv("DATABASE_URL"))
         cursor = conn.cursor()
-        
+
         # Restore from backup
 
         with open(backup_file, 'r') as f:
             backup_data = json.load(f)
-        
+
         # Apply rollback
 
         for table_name, data in backup_data.items():
@@ -685,22 +774,24 @@ def rollback_data_changes(backup_file: str) -> bool:
                 columns = ', '.join(row.keys())
                 values = list(row.values())
                 cursor.execute(f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})", values)
-        
+
         conn.commit()
         cursor.close()
         conn.close()
-        
+
         logging.info("Data rollback completed successfully")
         return True
-        
+
     except Exception as e:
         logging.error(f"Data rollback failed: {e}")
         return False
+
 ```
 
 ### **Application Rollback**
 
 #### **Code Rollback Script**
+
 ```bash
 
 #!/bin/bash
@@ -736,11 +827,13 @@ else
     docker-compose up -d
     exit 1
 fi
+
 ```
 
 ### **Configuration Rollback**
 
 #### **Environment Rollback Script**
+
 ```bash
 
 #!/bin/bash
@@ -765,6 +858,7 @@ docker-compose down
 docker-compose up -d
 
 echo "Configuration rollback completed successfully"
+
 ```
 
 ---
@@ -774,6 +868,7 @@ echo "Configuration rollback completed successfully"
 ### **Pre-Upgrade Validation**
 
 #### **System Health Check**
+
 ```python
 
 # Example: Pre-upgrade system health check
@@ -786,7 +881,7 @@ from typing import Dict, Any
 def pre_upgrade_health_check() -> Dict[str, Any]:
     """
     Perform comprehensive health check before upgrade.
-    
+
     Returns:
         Dict containing health check results
     """
@@ -797,7 +892,7 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
         "monitoring": False,
         "overall": False
     }
-    
+
     try:
 
         # Check database
@@ -809,10 +904,10 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
         cursor.close()
         conn.close()
         health_results["database"] = True
-        
+
     except Exception as e:
         print(f"Database health check failed: {e}")
-    
+
     try:
 
         # Check application
@@ -820,22 +915,23 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
         response = requests.get("http://localhost:5000/health", timeout=5)
         if response.status_code == 200:
             health_results["application"] = True
-            
+
     except Exception as e:
         print(f"Application health check failed: {e}")
-    
+
     try:
 
         # Check AI model service (cursor-native or configured runtime)
+
         model_url = os.getenv('CURSOR_NATIVE_AI_URL')
         if model_url:
             resp = requests.get(f"{model_url}/health", timeout=5)
             if resp.status_code == 200:
                 health_results["ai_models"] = True
-            
+
     except Exception as e:
         print(f"AI models health check failed: {e}")
-    
+
     try:
 
         # Check monitoring
@@ -843,10 +939,10 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
         redis_client = redis.from_url(os.getenv("REDIS_URL"))
         redis_client.ping()
         health_results["monitoring"] = True
-        
+
     except Exception as e:
         print(f"Monitoring health check failed: {e}")
-    
+
     # Overall health
 
     health_results["overall"] = all([
@@ -855,13 +951,15 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
         health_results["ai_models"],
         health_results["monitoring"]
     ])
-    
+
     return health_results
+
 ```
 
 ### **Post-Upgrade Validation**
 
 #### **Functionality Testing**
+
 ```python
 
 # Example: Post-upgrade functionality testing
@@ -869,7 +967,7 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
 def post_upgrade_validation() -> Dict[str, Any]:
     """
     Perform comprehensive post-upgrade validation.
-    
+
     Returns:
         Dict containing validation results
     """
@@ -881,7 +979,7 @@ def post_upgrade_validation() -> Dict[str, Any]:
         "performance_metrics": False,
         "overall": False
     }
-    
+
     try:
 
         # Test database queries
@@ -892,13 +990,14 @@ def post_upgrade_validation() -> Dict[str, Any]:
         count = cursor.fetchone()[0]
         cursor.close()
         conn.close()
-        
+
         if count >= 0:  # Basic validation
+
             validation_results["database_queries"] = True
-            
+
     except Exception as e:
         print(f"Database validation failed: {e}")
-    
+
     try:
 
         # Test API endpoints
@@ -909,13 +1008,14 @@ def post_upgrade_validation() -> Dict[str, Any]:
             if response.status_code == 200:
                 validation_results["api_endpoints"] = True
                 break
-                
+
     except Exception as e:
         print(f"API validation failed: {e}")
-    
+
     try:
 
         # Test AI model inference (cursor-native or configured runtime)
+
         test_prompt = "Hello, world!"
         model_url = os.getenv('CURSOR_NATIVE_AI_URL')
         if model_url:
@@ -926,10 +1026,10 @@ def post_upgrade_validation() -> Dict[str, Any]:
             )
             if response.status_code == 200:
                 validation_results["ai_model_inference"] = True
-            
+
     except Exception as e:
         print(f"AI model validation failed: {e}")
-    
+
     # Overall validation
 
     validation_results["overall"] = all([
@@ -937,13 +1037,15 @@ def post_upgrade_validation() -> Dict[str, Any]:
         validation_results["api_endpoints"],
         validation_results["ai_model_inference"]
     ])
-    
+
     return validation_results
+
 ```
 
 ### **Performance Testing**
 
 #### **Upgrade Impact Assessment**
+
 ```python
 
 # Example: Performance impact assessment
@@ -955,7 +1057,7 @@ from typing import Dict, Any
 def assess_upgrade_impact() -> Dict[str, Any]:
     """
     Assess performance impact of upgrade.
-    
+
     Returns:
         Dict containing performance metrics
     """
@@ -967,19 +1069,19 @@ def assess_upgrade_impact() -> Dict[str, Any]:
         "throughput": 0.0,
         "acceptable": False
     }
-    
+
     # Measure system resources
 
     impact_results["cpu_usage"] = psutil.cpu_percent(interval=1)
     impact_results["memory_usage"] = psutil.virtual_memory().percent
     impact_results["disk_usage"] = psutil.disk_usage('/').percent
-    
+
     # Measure response time
 
     start_time = time.time()
     response = requests.get("http://localhost:5000/health", timeout=5)
     impact_results["response_time"] = time.time() - start_time
-    
+
     # Determine if impact is acceptable
 
     impact_results["acceptable"] = (
@@ -987,8 +1089,9 @@ def assess_upgrade_impact() -> Dict[str, Any]:
         impact_results["memory_usage"] < 80 and
         impact_results["response_time"] < 2.0
     )
-    
+
     return impact_results
+
 ```
 
 ---
@@ -998,6 +1101,7 @@ def assess_upgrade_impact() -> Dict[str, Any]:
 ### **Upgrade Monitoring Dashboard**
 
 #### **Real-time Metrics**
+
 ```python
 
 # Example: Upgrade monitoring metrics
@@ -1014,7 +1118,7 @@ class UpgradeMetrics:
     progress: float = 0.0
     errors: list = None
     warnings: list = None
-    
+
     def __post_init__(self):
         if self.errors is None:
             self.errors = []
@@ -1024,7 +1128,7 @@ class UpgradeMetrics:
 def track_upgrade_progress(upgrade_id: str, metrics: UpgradeMetrics) -> None:
     """
     Track upgrade progress in real-time.
-    
+
     Args:
         upgrade_id: Unique identifier for upgrade
         metrics: Upgrade metrics object
@@ -1041,18 +1145,20 @@ def track_upgrade_progress(upgrade_id: str, metrics: UpgradeMetrics) -> None:
         "errors": metrics.errors,
         "warnings": metrics.warnings
     }
-    
+
     # Send to monitoring system
 
     requests.post(
         f"{os.getenv('MONITORING_URL')}/upgrade-metrics",
         json=metrics_data
     )
+
 ```
 
 ### **Alerting Configuration**
 
 #### **Upgrade Alerts**
+
 ```yaml
 
 # Example: Prometheus alerting rules for upgrades
@@ -1072,7 +1178,7 @@ groups:
         annotations:
           summary: "Upgrade failed"
           description: "System upgrade has failed and requires immediate attention"
-      
+
       - alert: UpgradeRollback
 
         expr: rollback_triggered == 1
@@ -1082,7 +1188,7 @@ groups:
         annotations:
           summary: "Upgrade rollback triggered"
           description: "System rollback has been triggered due to upgrade failure"
-      
+
       - alert: UpgradePerformanceDegradation
 
         expr: response_time > 2.0
@@ -1092,6 +1198,7 @@ groups:
         annotations:
           summary: "Performance degradation during upgrade"
           description: "System performance has degraded during upgrade process"
+
 ```
 
 ---
@@ -1099,18 +1206,27 @@ groups:
 ## Troubleshooting Guide
 
 ### Troubleshooting quick start
+
 ```bash
+
 # Comprehensive health check
+
 python scripts/system_health_check.py
 
 # Database checks (connection, schema, pool)
-python -c "from dspy_rag_system.src.utils.database_resilience import check_connection, verify_schema, reset_connection_pool; check_connection(); verify_schema(); reset_connection_pool()"
+
+python -c "from dspy_rag_system.src.utils.database_resilience import check_connection, verify_schema,
+reset_connection_pool; check_connection(); verify_schema(); reset_connection_pool()"
 
 # AI model status and fallback
-python -c "from dspy_rag_system.src.utils.model_specific_handling import check_all_models, test_fallback_models; check_all_models(); test_fallback_models()"
+
+python -c "from dspy_rag_system.src.utils.model_specific_handling import check_all_models, test_fallback_models;
+check_all_models(); test_fallback_models()"
 
 # Emergency rollback
+
 ./scripts/rollback.sh
+
 ```
 
 ### **Common Upgrade Issues**
@@ -1120,10 +1236,13 @@ python -c "from dspy_rag_system.src.utils.model_specific_handling import check_a
 **Symptoms:**
 
 - Database connection timeouts
+
 - Connection pool exhaustion
+
 - Authentication failures
 
 **Solutions:**
+
 ```bash
 
 # Check database connectivity
@@ -1137,6 +1256,7 @@ psql $DATABASE_URL -c "SELECT * FROM pg_stat_activity;"
 # Restart database connection pool
 
 docker-compose restart postgres
+
 ```
 
 #### **Application Startup Issues**
@@ -1144,10 +1264,13 @@ docker-compose restart postgres
 **Symptoms:**
 
 - Application fails to start
+
 - Health check failures
+
 - Port binding conflicts
 
 **Solutions:**
+
 ```bash
 
 # Check application logs
@@ -1161,6 +1284,7 @@ netstat -tulpn | grep :5000
 # Restart application
 
 docker-compose restart ai-app
+
 ```
 
 #### **AI Model Loading Issues**
@@ -1168,10 +1292,13 @@ docker-compose restart ai-app
 **Symptoms:**
 
 - Model loading failures
+
 - Inference timeouts
+
 - Memory allocation errors
 
 **Solutions:**
+
 ```bash
 
 # Check model files
@@ -1185,11 +1312,13 @@ nvidia-smi
 # Restart AI model services
 
 docker-compose restart cursor-native-ai
+
 ```
 
 ### **Emergency Recovery Procedures**
 
 #### **Critical System Failure**
+
 ```bash
 
 #!/bin/bash
@@ -1221,6 +1350,7 @@ else
     echo "Emergency recovery failed"
     exit 1
 fi
+
 ```
 
 ---
@@ -1230,33 +1360,49 @@ fi
 ### **Upgrade Planning**
 
 - **Schedule Upgrades**: Plan upgrades during low-traffic periods
+
 - **Test in Staging**: Always test upgrades in staging environment first
+
 - **Document Changes**: Document all changes and procedures
+
 - **Prepare Rollback**: Always have rollback procedures ready
+
 - **Monitor Closely**: Monitor system during and after upgrades
 
 ### **Risk Mitigation**
 
 - **Incremental Changes**: Make small, incremental changes
+
 - **Comprehensive Testing**: Test all upgrade procedures thoroughly
+
 - **Backup Everything**: Backup all data and configurations
+
 - **Validate Assumptions**: Validate all assumptions before upgrades
+
 - **Plan for Failure**: Always plan for upgrade failures
 
 ### **Performance Optimization**
 
 - **Minimize Downtime**: Design upgrades for minimal downtime
+
 - **Optimize Resources**: Optimize resource usage during upgrades
+
 - **Monitor Performance**: Monitor performance impact during upgrades
+
 - **Scale Appropriately**: Scale resources as needed during upgrades
+
 - **Test Performance**: Test performance impact before production
 
 ### **Security Considerations**
 
 - **Secure Access**: Secure access to upgrade procedures
+
 - **Audit Logging**: Log all upgrade activities
+
 - **Data Protection**: Protect sensitive data during upgrades
+
 - **Access Control**: Implement proper access control for upgrades
+
 - **Security Validation**: Validate security after upgrades
 
 ---
@@ -1274,6 +1420,7 @@ fi
 5. **Document Incident**: Document the incident and response
 
 #### **Recovery Procedures**
+
 ```bash
 
 #!/bin/bash
@@ -1302,11 +1449,13 @@ else
     echo "Critical failure recovery failed. Manual intervention required."
     exit 1
 fi
+
 ```
 
 ### **Data Loss Prevention**
 
 #### **Emergency Backup Procedures**
+
 ```bash
 
 #!/bin/bash
@@ -1339,12 +1488,13 @@ cp -r data/ $BACKUP_DIR/
 cp -r logs/ $BACKUP_DIR/
 
 echo "Emergency backup completed: $BACKUP_DIR"
+
 ```
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2024-08-07  
-**Next Review**: 2024-08-14  
-**Status**: Production Ready  
+**Document Version**: 1.0
+**Last Updated**: 2024-08-07
+**Next Review**: 2024-08-14
+**Status**: Production Ready
 **Review Cycle**: Monthly

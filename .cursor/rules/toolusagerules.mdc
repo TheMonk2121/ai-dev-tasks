@@ -1,0 +1,13 @@
+---
+applyIntelligently: true
+---
+
+# Tool Usage Standards
+
+<repo_specific_rule description="Tool selection and usage guidelines that optimize efficiency and maintain consistent workflows across the project">
+
+- Prefer codebase_search over grep for semantic searches
+- Always use todo_write for tracking multi-step tasks
+- Use update_memory for important project decisions
+- Run linter checks before committing changes
+</repo_specific_rule>

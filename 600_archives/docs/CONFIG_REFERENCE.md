@@ -3,7 +3,8 @@
 
 # Configuration Reference v0.3.1 (Archived)
 
-This file is archived. Canonical configuration guidance now lives in `202_setup-requirements.md` (Configuration Overview) and `400_system-overview.md` (architecture context). Use this file only for historical reference.
+This file is archived. Canonical configuration guidance now lives in `202_setup-requirements.md` (Configuration
+Overview) and `400_system-overview.md` (architecture context). Use this file only for historical reference.
 
 ## System Configuration (`config/system.json`)
 
@@ -69,29 +70,43 @@ The system configuration file defines the core architecture, agents, models, and
     "exclude_tokens": ["code", "function", "class", "def"]
   }
 }
+
 ```
 
 ## Configuration Keys Reference
 
 ### `version`
+
 - **Type**: String
+
 - **Required**: Yes
+
 - **Description**: System version identifier
+
 - **Example**: `"0.3.1"`
 
 ### `enabled_agents`
+
 - **Type**: Array of strings
+
 - **Required**: Yes
+
 - **Description**: List of agent names to instantiate at startup
+
 - **Default**: `["IntentRouter", "RetrievalAgent", "CodeAgent"]`
+
 - **Environment Override**: `ENABLED_AGENTS` (comma-separated)
 
 ### `agents`
+
 - **Type**: Object
+
 - **Required**: Yes
+
 - **Description**: Agent-specific configuration
 
 #### Agent Configuration Schema
+
 ```json
 {
   "model_id": "string",           // Required: Model to use
@@ -101,14 +116,19 @@ The system configuration file defines the core architecture, agents, models, and
   "temperature": "number",        // Optional: Model temperature (0.0-1.0)
   "max_results": "number"         // Optional: Max results for retrieval
 }
+
 ```
 
 ### `models`
+
 - **Type**: Object
+
 - **Required**: Yes
+
 - **Description**: Model-specific configuration
 
 #### Model Configuration Schema
+
 ```json
 {
   "type": "warm|lazy",           // Required: Load strategy
@@ -117,28 +137,38 @@ The system configuration file defines the core architecture, agents, models, and
   "size_gb": "number",           // Required: Memory size in GB
   "enabled_when": "string"       // Optional: Feature flag condition
 }
+
 ```
 
 ### `memory`
+
 - **Type**: Object
+
 - **Required**: Yes
+
 - **Description**: Memory persistence configuration
 
 #### Memory Configuration Schema
+
 ```json
 {
   "type": "postgres_delta",      // Required: Memory store type
   "tombstones_enabled": "boolean", // Required: Enable tombstone support
   "cleanup_interval": "number"   // Optional: Cleanup interval in seconds
 }
+
 ```
 
 ### `error_policy`
+
 - **Type**: Object
+
 - **Required**: Yes
+
 - **Description**: Global error handling configuration
 
 #### Error Policy Schema
+
 ```json
 {
   "max_retries": "number",       // Required: Maximum retry attempts
@@ -147,37 +177,49 @@ The system configuration file defines the core architecture, agents, models, and
   "llm_timeout_seconds": "number", // Optional: LLM-specific timeout (default 90)
   "fatal_errors": "array"       // Required: Non-retryable error types
 }
+
 ```
 
 ### `fast_path`
+
 - **Type**: Object
+
 - **Required**: Yes
+
 - **Description**: Fast-path bypass configuration
 
 #### Fast-Path Schema
+
 ```json
 {
   "enabled": "boolean",          // Required: Enable fast-path
   "max_length": "number",        // Required: Max query length for fast-path
   "exclude_tokens": "array"     // Required: Tokens that disable fast-path
 }
+
 ```
 
 ### `security`
+
 - **Type**: Object
+
 - **Required**: Yes
+
 - **Description**: Security configuration
 
 #### Security Schema
+
 ```json
 {
   "prompt_blocklist": "array",        // Required: Blocked patterns for prompt injection
   "prompt_whitelist": "array",        // Optional: Allowed patterns (overrides blocklist)
   "file_validation": "object"         // Required: File validation rules
 }
+
 ```
 
 #### Security → Prompt Block-list
+
 The system uses regex-based prompt sanitization with configurable block-list and optional whitelist:
 
 **Default Block-list**: `["{{", "}}", "<script>"]`
@@ -186,11 +228,15 @@ The system uses regex-based prompt sanitization with configurable block-list and
 **Logic**: If whitelist is provided, only whitelisted patterns are allowed. Otherwise, block-list patterns are rejected.
 
 ### `monitoring`
+
 - **Type**: Object
+
 - **Required**: Yes
+
 - **Description**: Monitoring and health check configuration
 
 #### Monitoring Schema
+
 ```json
 {
   "metrics_enabled": "boolean",       // Required: Enable Prometheus metrics
@@ -198,51 +244,73 @@ The system uses regex-based prompt sanitization with configurable block-list and
   "health_endpoint": "string",        // Required: Health check endpoint
   "ready_endpoint": "string"          // Required: Readiness check endpoint
 }
+
 ```
 
 ## Environment Variables
 
 ### Database Configuration
+
 ```bash
 DB_NAME=ai_agency                    # Database name
+
 DB_USER=danieljacobs                # Database user
+
 DB_PASSWORD=your_password           # Database password
+
 PGSSL=require                       # SSL mode
+
 ```
 
 ### Connection Pool
+
 ```bash
 POOL_MIN=1                          # Minimum connections
+
 POOL_MAX=10                         # Maximum connections
+
 ```
 
 ### Feature Flags
+
 ```bash
 DEEP_REASONING=0                    # Enable ReasoningAgent + Mixtral
+
 CLARIFIER=0                         # Enable ClarifierAgent
+
 TOMBSTONES=0                        # Enable tombstone support
+
 ```
 
 ### Resource Management
+
 ```bash
 MODEL_IDLE_EVICT_SECS=600          # Idle model eviction time
+
 MAX_RAM_PRESSURE=85                # Maximum RAM usage percentage
+
 ```
 
 ### System Configuration
+
 ```bash
 ENABLED_AGENTS=IntentRouter,RetrievalAgent,CodeAgent  # Comma-separated agent list
+
 ```
 
 ### Security Configuration
+
 ```bash
 LLM_TIMEOUT_SEC=90                 # Overrides llm_timeout_seconds for all agents
+
 SECURITY_MAX_FILE_MB=100           # Overrides file_validation.max_size_mb (default 50)
+
 ```
 
 ## Configuration Examples
 
 ### Minimal Configuration
+
 ```json
 {
   "version": "0.3.1",
@@ -290,14 +358,16 @@ SECURITY_MAX_FILE_MB=100           # Overrides file_validation.max_size_mb (defa
     "exclude_tokens": ["code", "def", "class", "import"]
   }
 }
+
 ```
 
 ### Full Configuration with All Agents
+
 ```json
 {
   "version": "0.3.1",
   "enabled_agents": [
-    "IntentRouter", "RetrievalAgent", "CodeAgent", 
+    "IntentRouter", "RetrievalAgent", "CodeAgent",
     "ClarifierAgent", "ReasoningAgent"
   ],
   "agents": {
@@ -367,11 +437,13 @@ SECURITY_MAX_FILE_MB=100           # Overrides file_validation.max_size_mb (defa
     "exclude_tokens": ["code", "function", "class", "def"]
   }
 }
+
 ```
 
 ## Configuration Validation
 
 ### JSON Schema Validation
+
 The system validates configuration against a JSON schema:
 
 ```json
@@ -388,13 +460,19 @@ The system validates configuration against a JSON schema:
     "fast_path": {"type": "object"}
   }
 }
+
 ```
+
 ```
 
 ### Runtime Validation
+
 - All enabled agents must have corresponding configurations
+
 - All agent model_ids must have corresponding model configurations
+
 - Memory configuration must be valid for the specified type
+
 - Error policy must have required fields
 
 ## Configuration Hot-Reloading
@@ -402,14 +480,19 @@ The system validates configuration against a JSON schema:
 The system supports hot-reloading of configuration changes:
 
 ```bash
+
 # Reload configuration without restart
+
 curl -X POST http://localhost:5000/admin/reload-config
 
 # Check current configuration
+
 curl http://localhost:5000/admin/config
 
 # Hot-reload with environment variable changes
+
 ENABLED_AGENTS=IntentRouter,RetrievalAgent make run-local
+
 ```
 
 ## Troubleshooting
@@ -424,16 +507,21 @@ ENABLED_AGENTS=IntentRouter,RetrievalAgent make run-local
 ### Debug Commands
 
 ```bash
+
 # Validate configuration
+
 python -c "import json; json.load(open('config/system.json'))"
 
 # Check environment variables
+
 env | grep -E "(DB_|POOL_|DEEP_|CLARIFIER|MODEL_|MAX_RAM)"
 
 # Test database connection
+
 python -c "import psycopg2; psycopg2.connect('postgresql://user:pass@localhost/db')"
+
 ```
 
 ---
 
-*This configuration reference provides comprehensive documentation for the DSPy Router system configuration.* 
+*This configuration reference provides comprehensive documentation for the DSPy Router system configuration.*

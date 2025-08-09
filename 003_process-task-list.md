@@ -2,6 +2,7 @@
 <!-- MODULE_REFERENCE: 000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MEMORY_CONTEXT: HIGH - Task execution engine and workflow automation -->
 
 # Process Task List
 
@@ -10,9 +11,21 @@
 
 ## 🔎 TL;DR
 
-- Role: Secondary, stable execution engine
-- Use: When you need a deterministic run-loop with pause points, HotFix, and state handling
-- Backlog note: If using `000_backlog.md` directly, reference this file only for the first task; it self-directs thereafter
+| what this file is | read when | do next |
+|---|---|---|
+| Execution engine for processing task lists with state, auto‑advance, and HotFix | When running or modifying the AI task execution workflow | 1) Prepare a task list; 2) Start the Run loop; 3) Update `.ai_state.json`; 4) Use HotFix flow on failures |
+
+## 🎯 **Current Status**
+
+- **Status**: ✅ **ACTIVE** - Task execution engine maintained
+
+- **Priority**: 🔥 Critical - Essential for workflow automation
+
+- **Points**: 4 - Moderate complexity, high importance
+
+- **Dependencies**: 400_context-priority-guide.md, 000_backlog.md
+
+- **Next Steps**: Enhance error handling and state management
 
 <!-- ANCHOR: run -->
 <a id="run"></a>
@@ -79,14 +92,18 @@
 ## 3. Auto-Advance Configuration
 
 ### Task Template Addition
+
 ```markdown
 **Auto-Advance**: yes | no
+
 ```
 
 ### Default Rules
 
 - **Auto-Advance: yes** for Medium and Low priority tasks
+
 - **Auto-Advance: no** for Critical tasks, deployment changes, database migrations
+
 - **Auto-Advance: no** when `🛑 Pause After: yes`
 
 ---
@@ -97,6 +114,7 @@
 ## 4. State Management
 
 ### .ai_state.json Structure
+
 ```json
 {
   "last_commit": "abc123",
@@ -105,12 +123,15 @@
   "current_task": "T-5",
   "completed_tasks": ["T-1", "T-2", "T-3", "T-4"]
 }
+
 ```
 
 ### State Operations
 
 - **Load**: Read state at start of execution
+
 - **Save**: Update after each task completion
+
 - **Ignore**: Add to .gitignore (never commit)
 
 ---
@@ -120,10 +141,13 @@
 ### When to Create HotFix
 
 - Any "Done when:" criteria fails
+
 - Uncaught exception during execution
+
 - Test suite failure
 
 ### HotFix Task Template
+
 ```markdown
 
 ### T-HotFix-<n> Fix <short description>
@@ -142,11 +166,13 @@
 **Done when**:
 
 - Original task's "Done when" criteria pass
+
 - New regression test passes
 
 **Auto-Advance**: no
 **🛑 Pause After**: yes
 **When Ready Prompt**: "HotFix complete - retry original task?"
+
 ```
 
 ---
@@ -156,8 +182,11 @@
 ### Safety Rules
 
 - **Database Changes**: Always pause for human review
+
 - **Deployment Scripts**: Always pause for human review
+
 - **Consecutive Failures**: Stop execution after 2 consecutive failures
+
 - **Uncaught Exceptions**: Generate HotFix task and pause
 
 ### Recovery Process
@@ -177,13 +206,17 @@
 ### Simple Progress
 
 - Count completed tasks: `[x]` vs total tasks
+
 - Update progress in task list header
+
 - Track blocked tasks: `[!]`
 
 ### Completion Validation
 
 - All tasks marked `[x]` or `[!]`
+
 - No tasks with status `[ ]`
+
 - All "Done when" criteria validated
 
 ---
@@ -193,9 +226,13 @@
 ### When to Pause
 
 - Critical priority tasks
+
 - Database migrations
+
 - Deployment changes
+
 - HotFix completions
+
 - User explicitly requests pause
 
 ### Checkpoint Process
@@ -212,14 +249,19 @@
 ### Required Files
 
 - Task list markdown file
+
 - `.ai_state.json` (auto-generated, gitignored)
+
 - Source code files
+
 - Test files
 
 ### Git Operations
 
 - Commit after each completed task
+
 - Use conventional commit messages
+
 - Never commit `.ai_state.json`
 
 ---
@@ -227,7 +269,11 @@
 This approach ensures:
 
 - **Efficient AI execution** with state caching
+
 - **Automatic error recovery** with HotFix tasks
+
 - **Minimal human intervention** with smart pausing
+
 - **Clear progress tracking** for oversight
+
 - **Safe execution** with appropriate checkpoints

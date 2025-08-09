@@ -9,18 +9,25 @@
 
 ## 🔎 TL;DR
 
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
+
 - Purpose: One-stop local setup (venv, DB, deps)
+
 - Read after: project/system overview; use for fresh envs
+
 - Outputs: verified env with health checks
 
 ### **S-003: Environment Configuration** ⚙️
 
-**Status**: `setup-required`  
-**Priority**: Medium  
-**Setup Required**: Environment variables setup  
+**Status**: `setup-required`
+**Priority**: Medium
+**Setup Required**: Environment variables setup
 **Setup Instructions**: Configure N8N_BASE_URL, N8N_API_KEY, POSTGRES_DSN
 
 **Required Environment Variables:**
+
 ```bash
 
 # n8n Configuration
@@ -40,16 +47,18 @@ DB_HEALTH_CHECK_INTERVAL=60
 
 POLL_INTERVAL=30
 MAX_EVENTS_PER_CYCLE=10
+
 ```
 
 ### **S-004: Cursor IDE Setup** 🔥
 
-**Status**: `setup-required`  
-**Priority**: High  
-**Setup Required**: Cursor IDE installation and configuration  
+**Status**: `setup-required`
+**Priority**: High
+**Setup Required**: Cursor IDE installation and configuration
 **Setup Instructions**: See `CURSOR_NATIVE_AI_STRATEGY.md`
 
 **Commands:**
+
 ```bash
 
 # Install Cursor IDE
@@ -63,27 +72,30 @@ MAX_EVENTS_PER_CYCLE=10
 # Verify installation
 
 # Test AI code generation
+
 ```
 
 ### **S-005: Specialized Agents Setup** 🔥
 
-**Status**: `setup-required`  
-**Priority**: High  
-**Setup Required**: Specialized agent configuration  
+**Status**: `setup-required`
+**Priority**: High
+**Setup Required**: Specialized agent configuration
 **Setup Instructions**: See `CURSOR_NATIVE_AI_STRATEGY.md`
 
 **Prerequisites:**
 
-<!-- Optional local model instructions archived under 600_archives/legacy-integrations to keep core docs Cursor-native -->
+<!-- Optional local model instructions archived under 600_archives/legacy-integrations to keep core docs Cursor-native
+-->
 
 ### **S-006: PostgreSQL Database Setup** 🔥
 
-**Status**: `setup-required`  
-**Priority**: High  
-**Setup Required**: PostgreSQL installation + database creation  
+**Status**: `setup-required`
+**Priority**: High
+**Setup Required**: PostgreSQL installation + database creation
 **Setup Instructions**: See `400_system-overview.md` (Architecture) and `104_dspy-development-context.md` (modules)
 
 **Commands:**
+
 ```bash
 
 # Install PostgreSQL (Ubuntu)
@@ -100,16 +112,18 @@ sudo -u postgres psql -c "ALTER USER danieljacobs WITH PASSWORD 'your_password';
 # Enable pgvector extension
 
 sudo -u postgres psql ai_agency -c "CREATE EXTENSION IF NOT EXISTS vector;"
+
 ```
 
 ### **S-007: Virtual Environment Setup** ⚙️
 
-**Status**: `setup-required`  
-**Priority**: Medium  
-**Setup Required**: Python virtual environment + dependencies  
+**Status**: `setup-required`
+**Priority**: Medium
+**Setup Required**: Python virtual environment + dependencies
 **Setup Instructions**: See `400_project-overview.md`
 
 **Commands:**
+
 ```bash
 
 # Create and activate virtual environment
@@ -120,14 +134,15 @@ source venv/bin/activate
 # Install dependencies
 
 pip install -r dspy-rag-system/requirements.txt
+
 ```
 
 ### **S-008: Cursor IDE Configuration** 🔥
 
-**Status**: `setup-required`  
-**Priority**: High  
-**Setup Required**: Cursor IDE (Cursor-native AI is default). Local Code Model integration is optional.  
-**Setup Instructions**: For optional Local Code Model integration, see `600_archives/legacy-integrations/cursor-yi-coder-integration/README.md`
+**Status**: `setup-required`
+**Priority**: High
+**Setup Required**: Cursor IDE (Cursor-native AI is default). Local Code Model integration is optional.
+**Setup Instructions**: For optional Local Code Model integration, see `600_archives/legacy-integrations/`
 
 **Cursor Configuration:**
 
@@ -145,12 +160,13 @@ pip install -r dspy-rag-system/requirements.txt
 
 ### **S-009: Secrets Management Setup** 🔥
 
-**Status**: `setup-required`  
-**Priority**: High  
-**Setup Required**: Environment secrets configuration  
+**Status**: `setup-required`
+**Priority**: High
+**Setup Required**: Environment secrets configuration
 **Setup Instructions**: See `C8_COMPLETION_SUMMARY.md`
 
 **Required Secrets:**
+
 ```bash
 
 # Database
@@ -169,16 +185,18 @@ OLLAMA_API_KEY=your_ollama_key
 # n8n (if using authentication)
 
 N8N_API_KEY=your_n8n_api_key
+
 ```
 
 ### **S-010: System Dependencies** ⚙️
 
-**Status**: `setup-required`  
-**Priority**: Medium  
-**Setup Required**: System packages and tools  
+**Status**: `setup-required`
+**Priority**: Medium
+**Setup Required**: System packages and tools
 **Setup Instructions**: See `400_system-overview.md`
 
 **System Packages:**
+
 ```bash
 
 # Ubuntu/Debian
@@ -192,18 +210,20 @@ brew install git curl python3 postgresql
 # Python packages
 
 pip install flask psycopg2-binary dspy-ai transformers torch
+
 ```
 
 ## 🧪 **Testing Setup**
 
 ### **Test Commands**
+
 ```bash
 
 # Test n8n connectivity
 
 curl http://localhost:5678/healthz
 
-# (Optional) Local model checks are archived under 600_archives/legacy-integrations/cursor-yi-coder-integration/README.md
+# (Optional) Local model checks are archived under 600_archives/legacy-integrations/
 
 # Test database connection
 
@@ -212,15 +232,21 @@ python3 -c "from src.utils.database_resilience import get_database_manager; prin
 # Test event processing
 
 python3 demo_n8n_integration.py
+
 ```
 
 ### **Verification Checklist**
 
 - [ ] n8n is running and accessible
+
 - [ ] PostgreSQL is running with pgvector extension
+
 - [ ] Virtual environment is activated
+
 - [ ] All environment variables are set
+
 - [ ] Cursor IDE is installed and configured
+
 - [ ] All secrets are properly configured
 
 ## 📞 **Support**
@@ -252,16 +278,20 @@ Once all setup items are completed:
 
 4. **Create your first workflow** in n8n
 
-The system will be fully operational once all setup requirements are met! 
+The system will be fully operational once all setup requirements are met!
 
 ## 🧩 Configuration Overview (moved here)
 
 - Canonical config lives in `config/system.json`.
+
 - Keys to know: `enabled_agents`, per‑agent settings (`model_id`, `signature`, `timeout`, `retry_policy`), `memory` (postgres delta), `error_policy` (retries, backoff, timeouts), `fast_path` (enabled, max_length, exclude_tokens).
+
 - Environment overrides: DB_*, POOL_*, ENABLED_AGENTS, LLM_TIMEOUT_SEC, SECURITY_MAX_FILE_MB, MODEL_IDLE_EVICT_SECS, MAX_RAM_PRESSURE.
+
 - Hot‑reload (if enabled): `curl -X POST http://localhost:5000/admin/reload-config`.
 
 Minimal example (trimmed):
+
 ```json
 {
   "version": "0.3.1",
@@ -270,4 +300,5 @@ Minimal example (trimmed):
   "error_policy": { "max_retries": 3, "backoff_factor": 2.0, "timeout_seconds": 30 },
   "fast_path": { "enabled": true, "max_length": 50 }
 }
+
 ```

@@ -12,16 +12,24 @@ import json
 import argparse
 import logging
 from typing import Dict, Any, Optional
+from pathlib import Path
+import re
 
 # Add the dspy-rag-system to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'dspy-rag-system', 'src'))
 
-from dspy_modules.documentation_retrieval import (
-    create_documentation_retrieval_service,
-    get_relevant_context,
-    search_documentation,
-    get_task_context
-)
+try:
+    from dspy_modules.documentation_retrieval import (
+        create_documentation_retrieval_service,
+        get_relevant_context,
+        search_documentation,
+        get_task_context
+    )
+except Exception:
+    create_documentation_retrieval_service = None  # type: ignore
+    get_relevant_context = None  # type: ignore
+    search_documentation = None  # type: ignore
+    get_task_context = None  # type: ignore
 from documentation_indexer import DocumentationIndexer
 
 # Configure logging
@@ -36,12 +44,15 @@ class DocumentationRetrievalCLI:
             db_connection_string = os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
         
         self.db_conn_str = db_connection_string
-        self.service = create_documentation_retrieval_service(db_connection_string)
+        self.service = create_documentation_retrieval_service(db_connection_string) if create_documentation_retrieval_service else None
         self.indexer = DocumentationIndexer(db_connection_string)
     
     def search(self, query: str, category: str = None, limit: int = 5, format_output: str = "json") -> None:
         """Search documentation"""
         try:
+            if not self.service:
+                print(json.dumps({"error": "Retrieval service unavailable"}, indent=2))
+                return
             results = self.service.search_documentation(query, category, limit)
             self._print_results(results, format_output)
         except Exception as e:
@@ -51,6 +62,9 @@ class DocumentationRetrievalCLI:
     def get_context(self, query: str, context_type: str = "general", format_output: str = "json") -> None:
         """Get relevant context for a query"""
         try:
+            if not self.service:
+                print(json.dumps({"error": "Retrieval service unavailable"}, indent=2))
+                return
             results = self.service.forward(query, context_type)
             self._print_results(results, format_output)
         except Exception as e:
@@ -60,6 +74,9 @@ class DocumentationRetrievalCLI:
     def get_task_context(self, task_description: str, task_type: str = "development", format_output: str = "json") -> None:
         """Get context for a specific task"""
         try:
+            if not self.service:
+                print(json.dumps({"error": "Retrieval service unavailable"}, indent=2))
+                return
             results = self.service.get_context_for_task(task_description, task_type)
             self._print_results(results, format_output)
         except Exception as e:
@@ -125,6 +142,10 @@ class DocumentationRetrievalCLI:
                 print("Sources:")
                 for source in metadata["sources"]:
                     print(f"  - {source}")
+                    # Attempt to show At-a-glance for each local source
+                    ag = self._read_at_a_glance_for_file(source)
+                    if ag:
+                        print(f"    At-a-glance: {ag.get('what','')} | {ag.get('read_when','')} | {ag.get('do_next','')}")
                 print()
             
             if "categories" in metadata and metadata["categories"]:
@@ -141,6 +162,27 @@ class DocumentationRetrievalCLI:
                     print(f"Chunk {i}:")
                     print(chunk["content"][:200] + "..." if len(chunk["content"]) > 200 else chunk["content"])
                     print()
+
+    def _read_at_a_glance_for_file(self, file_path_str: str) -> Optional[Dict[str, str]]:
+        """Read a local file and extract the At-a-glance table (what/read/do_next)."""
+        try:
+            p = Path(file_path_str)
+            if not p.exists() and (Path('.')/file_path_str).exists():
+                p = Path('.')/file_path_str
+            if not p.exists() or p.suffix.lower() != '.md':
+                return None
+            content = p.read_text(encoding='utf-8')
+            # Find TL;DR block
+            m = re.search(r'^(?:<a\s+id="tldr"\s*>\s*</a>\s*\n)?##\s+🔎\s+TL;DR\s*$([\s\S]*?)(?=^##\s+|\Z)', content, flags=re.MULTILINE)
+            if not m:
+                return None
+            tldr_block = m.group(1)
+            t = re.search(r'^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$[\s\S]*?^\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*$', tldr_block, flags=re.MULTILINE)
+            if not t:
+                return None
+            return {"what": t.group(1).strip(), "read_when": t.group(2).strip(), "do_next": t.group(3).strip()}
+        except Exception:
+            return None
     
     def _print_summary_results(self, results: Dict[str, Any]) -> None:
         """Print a summary of results"""
@@ -195,6 +237,9 @@ Examples:
   
   # Get statistics
   python documentation_retrieval_cli.py stats
+  
+  # Show At-a-glance for specific files
+  python documentation_retrieval_cli.py glance 100_cursor-memory-context.md 400_project-overview.md
         """
     )
     
@@ -232,6 +277,10 @@ Examples:
     
     # Stats command
     stats_parser = subparsers.add_parser("stats", help="Get documentation statistics")
+
+    # Glance command
+    glance_parser = subparsers.add_parser("glance", help="Show At-a-glance for files")
+    glance_parser.add_argument("files", nargs="+", help="One or more markdown files")
     
     args = parser.parse_args()
     
@@ -254,6 +303,12 @@ Examples:
             cli.index_documentation(args.root_path, args.format)
         elif args.command == "stats":
             cli.get_stats(args.format)
+        elif args.command == "glance":
+            out = {}
+            for f in args.files:
+                ag = cli._read_at_a_glance_for_file(f)
+                out[f] = ag or {"error": "At-a-glance not found"}
+            print(json.dumps(out, indent=2))
         else:
             parser.print_help()
     

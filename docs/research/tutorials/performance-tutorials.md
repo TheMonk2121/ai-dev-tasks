@@ -5,24 +5,49 @@
 
 # Performance Tutorials
 
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
+
+- **what this file is**: Quick summary of Performance Tutorials.
+
+- **read when**: When you need a fast orientation or before using this file in a workflow.
+
+- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+
+
 > **External Research**: Tutorials and guides for system performance optimization.
 
 ## 📚 **Tutorials**
 
 ### **System Performance Optimization Guide**
+
 - **Source**: Performance Best Practices
+
 - **Key Insight**: Step-by-step performance optimization
+
 - **Application**: Guides our performance optimization
+
 - **Link**: [To be added]
 
 ## 🔗 **Related Documentation**
+
 - `500_performance-research.md` - Our internal performance research summary
+
 - `400_system-overview_advanced_features.md` - System architecture overview
 
 ## 📖 **Key Insights**
+
 - Step-by-step optimization guides
+
 - Best practices for production deployment
+
 - Performance monitoring patterns
 
 ## 🎯 **Implementation Impact**
+
 These tutorials provide practical implementation guidance for our performance optimization.

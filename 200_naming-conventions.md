@@ -3,7 +3,15 @@
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 
-## Category Table (Accepted Exceptions & Deferrals)
+# Category Table (Accepted Exceptions & Deferrals)
+
+## 🔎 TL;DR {#tldr}
+
+- **what this file is**: Quick summary of Category Table (Accepted Exceptions & Deferrals).
+
+- **read when**: When you need a fast orientation or before using this file in a workflow.
+
+- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
 The three‑digit prefix is the default. The following categories are accepted exceptions (no rename required) or deferrals (tracked in backlog; rename not urgent). Use this table during PR review to triage naming warnings without churn.
 
@@ -21,23 +29,31 @@ The three‑digit prefix is the default. The following categories are accepted e
 Reviewer guidance
 
 - If a file matches “Accepted”, do not request a rename.
+
 - If a file matches “Deferred”, allow merge and, if useful, add a note to B‑064 with the path.
+
 - Do not rename files in `600_archives/**` or `docs/legacy/**`.
 
 - **400-499**: Architecture and overview (system overview, project overview, context priority guide)
+
 - **500+**: Research and meta-documentation (completion summaries, research notes, benchmarks)
 
 **Step 4: Descriptive Naming**
 
 - Use clear, descriptive names that indicate content
+
 - Follow kebab-case convention (lowercase with hyphens)
+
 - Avoid multiple underscores or special characters
+
 - Make the filename self-documenting
 
 **Step 5: Cross-Reference Integration**
 
 - Ensure the file can be referenced in the context priority guide
+
 - Add appropriate HTML comment references
+
 - Consider AI rehydration needs
 
 ### **Integration with Development Workflow**
@@ -53,8 +69,11 @@ The naming system **integrates seamlessly** with our development workflow. When 
 **Quality Assurance:**
 
 - **Consistency checks** ensure similar files use similar naming patterns
+
 - **Cross-reference validation** ensures new files are properly linked
+
 - **Context priority guide updates** keep the documentation hierarchy current
+
 - **AI-friendly naming** ensures files are discoverable by Cursor AI
 
 The result is a **living naming system** that scales with your project while maintaining the cognitive scaffolding that makes the documentation coherent and AI-friendly. Each new file automatically fits into the existing hierarchy, making it easy for both humans and AI to understand its role and importance in the overall system.
@@ -66,22 +85,31 @@ The result is a **living naming system** that scales with your project while mai
 **Ask these questions:**
 
 - **Is this information that will be referenced multiple times?** (If yes → file)
+
 - **Is this a process or workflow that others/AI will need to follow?** (If yes → file)
+
 - **Is this context that will help with future decisions?** (If yes → file)
+
 - **Is this a one-off note or temporary information?** (If no → don't create file)
 
 **Examples of when to create files:**
 
 - ✅ **Workflow processes** (`001_create-prd.md`, `002_generate-tasks.md`)
+
 - ✅ **System documentation** (`400_system-overview_advanced_features.md`, `400_project-overview.md`)
+
 - ✅ **Configuration guides** (`202_setup-requirements.md`)
+
 - ✅ **Completion summaries** (`500_*` files for historical context)
+
 - ✅ **Research findings** (`500_memory-arch-research.md`)
 
 **Examples of when NOT to create files:**
 
 - ❌ **Temporary notes** (use comments or inline documentation)
+
 - ❌ **One-off decisions** (document in existing relevant files)
+
 - ❌ **Quick fixes** (document in commit messages or existing files)
 
 ### **Step 2: Determine File Purpose and Priority**
@@ -89,20 +117,27 @@ The result is a **living naming system** that scales with your project while mai
 **Analyze the content type:**
 
 - **Planning/Strategy** → High priority (000-099, 400-499)
+
 - **Implementation/Technical** → Medium priority (100-199, 200-299)
+
 - **Research/Analysis** → Lower priority (500+)
+
 - **Configuration/Setup** → Medium priority (200-299)
 
 **Assess the audience:**
 
 - **Essential for everyone** → High priority (read first)
+
 - **Important for specific workflows** → Medium priority (read when relevant)
+
 - **Specialized knowledge** → Lower priority (read when needed)
 
 **Consider the lifecycle:**
 
 - **Always relevant** → High priority (core documentation)
+
 - **Sometimes relevant** → Medium priority (workflow guides)
+
 - **Rarely relevant** → Lower priority (specialized guides)
 
 ### **Step 3: Choose the Right Prefix Range**
@@ -110,31 +145,41 @@ The result is a **living naming system** that scales with your project while mai
 **000-099: Core Planning & Context**
 
 - Backlog, project overview, system overview
+
 - Files that give immediate understanding of the project
+
 - Essential for anyone working on the project
 
 **100-199: Memory & Guides**
 
 - Memory context, backlog guide, automation patterns
+
 - Files that help with ongoing work and decision-making
+
 - Important for regular development activities
 
 **200-299: Configuration & Setup**
 
 - Naming conventions, model config, setup requirements
+
 - Files that help with environment and tool setup
+
 - Important when setting up or configuring
 
 **400-499: Architecture & Overview**
 
 - System overview, project overview, context priority guide
+
 - Files that explain the big picture and relationships
+
 - Essential for understanding the system architecture
 
 **500+: Research & Meta**
 
 - Completion summaries, research notes, benchmarks
+
 - Files that provide historical context and analysis
+
 - Useful for learning from past work
 
 ### **Step 4: Create Descriptive, Self-Documenting Names**
@@ -142,20 +187,27 @@ The result is a **living naming system** that scales with your project while mai
 **Follow these naming principles:**
 
 - **Clear purpose**: The name should indicate what the file contains
+
 - **Consistent format**: `prefix_descriptive-name.md`
+
 - **Kebab-case**: Lowercase with hyphens for readability
+
 - **Avoid ambiguity**: Make it clear what the file is for
 
 **Examples of good names:**
 
 - ✅ `100_cursor-memory-context.md` (clear purpose)
+
 - ✅ `400_system-overview_advanced_features.md` (descriptive)
+
 - ✅ `500_memory-arch-research.md` (research focus)
 
 **Examples of bad names:**
 
 - ❌ `misc.md` (unclear purpose)
+
 - ❌ `stuff.md` (not descriptive)
+
 - ❌ `temp.md` (temporary feeling)
 
 ### **Step 5: Add AI API Comments and Cross-References**
@@ -163,7 +215,9 @@ The result is a **living naming system** that scales with your project while mai
 **Add appropriate AI API comments:**
 
 - **HIGH priority files**: Must include CONTEXT_REFERENCE and MEMORY_CONTEXT
+
 - **MEDIUM priority files**: Should include MODULE_REFERENCE and MEMORY_CONTEXT
+
 - **Cross-references**: Always validate that referenced files exist
 
 **Examples:**
@@ -172,6 +226,7 @@ The result is a **living naming system** that scales with your project while mai
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Core workflow guide -->
 <!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md -->
+
 ```
 
 ### **Step 6: Validate Against Existing Patterns**
@@ -179,13 +234,17 @@ The result is a **living naming system** that scales with your project while mai
 **Check for consistency:**
 
 - **Are there similar files in the same prefix range?**
+
 - **Does this follow the established naming patterns?**
+
 - **Is this the right level of detail for this priority?**
 
 **Consider the cognitive scaffolding:**
 
 - **Does this file help or hurt the AI's understanding?**
+
 - **Is this information better placed in an existing file?**
+
 - **Will this file be discoverable by the AI?**
 
 ### **Example Decision Process**
@@ -222,14 +281,19 @@ This table clarifies the buckets for our numeric prefixes, making it easier to c
 ### ✅ Correct Examples
 
 - `000_backlog.md` (three-digit prefix, single underscore, kebab-case)
+
 - `100_cursor-memory-context.md` (automation category)
+
 - `400_project-overview.md` (documentation category)
+
 - `500_test-harness-guide.md` (testing category)
 
 ### ❌ Incorrect Examples
 
 - `99_misc.md` (needs three-digit prefix)
+
 - `100_backlog_automation.md` (second underscore disallowed)
+
 - `100-backlog-automation.md` (missing required first underscore)
 
 ## 📝 Document Formatting Standards
@@ -237,27 +301,88 @@ This table clarifies the buckets for our numeric prefixes, making it easier to c
 ### Header Structure Rules
 
 - **Single h1 per document**: Use filename as the implicit h1 title
+
 - **Main content starts with h2**: `## 🎯 **Current Status` or `## 📋 **Overview`
+
 - **Consistent emoji usage**: Use emojis for visual hierarchy and AI parsing
+
 - **No h1 in content**: All content headings should be h2 or lower
+
 - **Hierarchical structure**: Use h2 for main sections, h3 for subsections, h4 for details
+
+## 🔐 Core Documentation Invariants
+
+- Purpose: Single normative source for core documentation requirements. Validator enforces these invariants.
+
+### Required top metadata header (HTML comments)
+
+- HIGH‑priority docs must include:
+  - `<!-- CONTEXT_REFERENCE: <file> -->`
+  - `<!-- MEMORY_CONTEXT: <LEVEL> - <description> -->`
+
+- `MODULE_REFERENCE` is required when a closely related implementation module exists.
+
+- See: 🤖 AI API Documentation Standards (below)
+
+### TL;DR + At‑a‑glance
+
+- TL;DR section is required in core docs
+  - A single explicit anchor is allowed: `<a id="tldr"></a>`
+  - Heading: `## 🔎 TL;DR`
+
+- Immediately after TL;DR, include a 3‑column “At‑a‑glance” table with exact headers:
+
+| what this file is | read when | do next |
+|---|---|---|
+| _one‑line purpose_ | _trigger moments_ | _2–3 links/actions_ |
+
+### Stable Anchors (kebab‑case)
+
+- Required anchors per doc type (must exist as section anchors):
+  - `100_cursor-memory-context.md`: `tldr`, `quick-start`, `quick-links`, `commands`
+  - `400_project-overview.md`: `tldr`, `quick-start`, `mini-map`
+  - `400_context-priority-guide.md`: `tldr`, `critical-path`, `ai-file-analysis-strategy`, `documentation-placement-logic`
+  - `000_backlog.md`: `tldr`, `p0-lane`, `ai-executable-queue-003`, `live-backlog`
+  - `200_naming-conventions.md`: `tldr`, `file-generation`, `formatting-standards`, `ai-api-standards`
+  - `100_backlog-guide.md`: `tldr`, `scoring`, `prd-rule`, `selection-criteria`
+
+### Canonical link targets (link, don’t duplicate)
+
+- Quick Start → `400_project-overview.md`
+
+- Critical Path → `400_context-priority-guide.md`
+
+- PRD/Scoring → `100_backlog-guide.md`
+
+### Anchor policy (phased)
+
+- Only TL;DR may use an explicit HTML anchor (`<a id="tldr"></a>`). All other anchors must be heading‑based.
+- Rollout: validator warns first; flips to errors after link hygiene completes.
 
 ### Table Usage Mandate
 
 Markdown tables are the **required standard** for presenting structured data:
 
 - **Status tracking**: Use tables for backlog items, task lists, and progress tracking
+
 - **Decision records**: Structure decisions with clear columns for date, decision, rationale, impact
+
 - **Priority matrices**: Use tables for comparing options or categorizing items
+
 - **Stakeholder information**: Organize roles, responsibilities, and contact information
+
 - **Cross-reference matrices**: Map relationships between files and components
 
 ### Internal Linking Standards
 
 - **Primary method**: Use auto-generated heading IDs `[Link Text](#-section-title)`
+
 - **Critical sections**: Allow explicit IDs for stability `[Link Text](#explicit-id)`
+
 - **Cross-file linking**: Use relative paths with anchor links
+
 - **AI-friendly linking**: Include context in link text for better AI parsing
+
 - **Validation**: Ensure all referenced sections exist
 
 ## 🤖 AI API Documentation Standards
@@ -276,15 +401,21 @@ The HTML comments in our documentation serve as a **formal API for AI consumptio
 ### Usage Patterns
 
 - **HIGH priority files**: Must include CONTEXT_REFERENCE and MEMORY_CONTEXT
+
 - **MEDIUM priority files**: Should include MODULE_REFERENCE and MEMORY_CONTEXT
+
 - **Cross-references**: Always validate that referenced files exist
+
 - **Consistency**: Use consistent comment patterns across similar file types
 
 ### AI Rehydration Optimization
 
 - **Structured data**: Use consistent patterns for status, priority, points
+
 - **Explicit relationships**: Always include cross-references
+
 - **Actionable information**: Include next steps and dependencies
+
 - **Context preservation**: Use memory context comments
 
 ## 🧠 Memory Scaffolding Documentation Guidelines
@@ -303,19 +434,29 @@ Each file should include:
 ### Memory Context Levels
 
 - **HIGH**: Read first for instant context (core workflow, system overview)
+
 - **MEDIUM**: Read when working on specific workflows (PRD creation, task generation)
+
 - **LOW**: Read for detailed implementation (specific integrations, configurations)
 
 ### Quality Checklist
 
 - [ ] Clear, descriptive filename
+
 - [ ] Memory context comment included
+
 - [ ] Purpose and usage explained
+
 - [ ] Related files referenced
+
 - [ ] Content is current and accurate
+
 - [ ] Follows established patterns
+
 - [ ] Structured data in tables (where applicable)
+
 - [ ] Internal links validated
+
 - [ ] AI API comments present and accurate
 
 ## 🔄 Migration Tracking
@@ -323,8 +464,11 @@ Each file should include:
 File renames and structural changes are tracked via Git issues rather than static tables in documentation. This ensures:
 
 - **Current Information**: No stale references in documentation
+
 - **Version Control**: Full history of changes
+
 - **AI-Friendly**: Easy to parse and understand
+
 - **Human-Friendly**: Standard development workflow
 
 ## 🛠️ Implementation Tools
@@ -346,20 +490,27 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 ### Core Workflow (000-009)
 
 - `000_backlog.md` - Product backlog and current priorities
+
 - `001_create-prd.md` - PRD creation workflow
+
 - `002_generate-tasks.md` - Task generation workflow
+
 - `003_process-task-list.md` - AI task execution workflow
 
 ### Automation & Tools (100-199)
 
 - `100_cursor-memory-context.md` - Primary memory scaffold for Cursor AI
+
 - `100_backlog-guide.md` - Backlog management guide
+
 - `100_backlog-automation.md` - Backlog automation details
+
 - `104_dspy-development-context.md` - DSPy development context
 
 ### Configuration & Setup (200-299)
 
 - `200_naming-conventions.md` - This file
+
 - `202_setup-requirements.md` - Environment setup requirements
 
 ### Templates & Examples (300-399)
@@ -369,21 +520,33 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 ### Documentation & Guides (400-499)
 
 - `400_project-overview.md` - Project overview and workflow guide
+
 - `400_system-overview_advanced_features.md` - Technical architecture and system overview
+
 - `400_context-priority-guide.md` - Context priority guide for memory rehydration
+
 - `400_memory-context-guide.md` - Memory context system guide
+
 - `400_timestamp-update-guide.md` - Timestamp update procedures
+
 - `400_current-status.md` - Current system status and health
+
 - `400_dspy-integration-guide.md` - DSPy integration guide
+
 - `400_n8n-setup-guide.md` - n8n setup and configuration guide
+
 - `400_mission-dashboard-guide.md` - Mission dashboard guide
+
 - `400_n8n-backlog-scrubber-guide.md` - n8n backlog scrubber guide
 
 ### Archives & Completion Records (500-599)
 
 - `500_c9-completion-summary.md` - Historical completion record
+
 - `500_c10-completion-summary.md` - Historical completion record
+
 - `500_memory-arch-benchmarks.md` - Memory architecture benchmark results
+
 - `500_memory-arch-research.md` - Memory architecture research framework
 
 ## 🚀 Adding New Categories
@@ -401,8 +564,11 @@ Use `_vN` suffix **only** when the file's public contract changes (breaking chan
 This naming conventions guide is a **living document** that evolves with the project. We encourage continuous improvement and welcome proposals for:
 
 - **New patterns**: As the project grows, new documentation patterns may emerge
+
 - **Refinements**: Improvements to existing conventions based on usage experience
+
 - **AI enhancements**: Better ways to support AI collaboration and cognitive scaffolding
+
 - **Automation**: Tools and scripts to enforce and validate these standards
 
 ### Proposing Changes
@@ -418,8 +584,11 @@ When proposing changes to this document:
 ### Continuous Improvement Process
 
 - **Regular review**: Periodically assess how well these conventions serve the project
+
 - **Feedback collection**: Gather input from both human developers and AI assistants
+
 - **Pattern evolution**: Allow the system to grow organically while maintaining coherence
+
 - **Quality preservation**: Ensure all changes maintain or improve the AI-friendly nature of the documentation
 
 ## 🔗 Related Files

@@ -19,8 +19,12 @@ import re
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'dspy-rag-system', 'src'))
 
-from dspy_modules.vector_store import HybridVectorStore
-from utils.database_resilience import get_database_manager
+try:
+    from dspy_modules.vector_store import HybridVectorStore
+    from utils.database_resilience import get_database_manager
+except Exception as _e:
+    HybridVectorStore = None  # type: ignore
+    get_database_manager = None  # type: ignore
 
 _LOG = logging.getLogger("documentation_indexer")
 
@@ -29,8 +33,13 @@ class DocumentationIndexer:
     
     def __init__(self, db_connection_string: str):
         self.db_conn_str = db_connection_string
-        self.vector_store = HybridVectorStore(db_connection_string)
-        self.db_manager = get_database_manager(db_connection_string)
+        if HybridVectorStore is not None and get_database_manager is not None:
+            self.vector_store = HybridVectorStore(db_connection_string)
+            self.db_manager = get_database_manager(db_connection_string)
+        else:
+            self.vector_store = None
+            self.db_manager = None
+            _LOG.warning("DSPy modules unavailable; limited functionality (stats/index disabled)")
         
         # Documentation file patterns
         self.doc_patterns = [
@@ -122,8 +131,13 @@ class DocumentationIndexer:
             # Generate file hash
             file_hash = hashlib.md5(content.encode()).hexdigest()
             
-            # Extract metadata from HTML comments
+            # Extract metadata from HTML comments and TL;DR/At-a-glance
             metadata = self._extract_metadata(content)
+            tldr_text, at_a_glance = self._extract_tldr_and_at_a_glance(content)
+            if tldr_text:
+                metadata["tldr"] = tldr_text
+            if at_a_glance:
+                metadata["at_a_glance"] = at_a_glance
             
             # Determine category
             category = self._determine_category(file_path, content)
@@ -186,6 +200,37 @@ class DocumentationIndexer:
             pass
 
         return metadata
+
+    def _extract_tldr_and_at_a_glance(self, content: str) -> Tuple[Optional[str], Optional[Dict[str, str]]]:
+        """Extract TL;DR text and the At-a-glance table (what/read/do_next)."""
+        try:
+            # Find TL;DR heading (after optional explicit anchor)
+            tldr_start = None
+            # Look for the heading line
+            for m in re.finditer(r'^(?:<a\s+id="tldr"\s*>\s*</a>\s*\n)?##\s+🔎\s+TL;DR\s*$', content, flags=re.MULTILINE):
+                tldr_start = m.end()
+                break
+            if tldr_start is None:
+                return None, None
+            # Capture until next H2 heading
+            tldr_rest = content[tldr_start:]
+            next_h2 = re.search(r'^##\s+', tldr_rest, flags=re.MULTILINE)
+            tldr_block = tldr_rest[:next_h2.start()] if next_h2 else tldr_rest
+            tldr_text = tldr_block.strip()
+
+            # Parse At-a-glance table headers and first data row
+            table_match = re.search(r'^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$[\s\S]*?^\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*$',
+                                    tldr_block, flags=re.MULTILINE)
+            at_a_glance = None
+            if table_match:
+                at_a_glance = {
+                    "what": table_match.group(1).strip(),
+                    "read_when": table_match.group(2).strip(),
+                    "do_next": table_match.group(3).strip(),
+                }
+            return (tldr_text if tldr_text else None), at_a_glance
+        except Exception:
+            return None, None
     
     def _determine_category(self, file_path: Path, content: str) -> str:
         """Determine the category of a documentation file"""
@@ -387,6 +432,8 @@ class DocumentationIndexer:
         if category:
             search_params["category"] = category
         
+        if not self.vector_store:
+            return {"error": "Vector store unavailable"}
         results = self.vector_store.forward(operation="search", **search_params)
         
         # Add search metadata
@@ -402,7 +449,7 @@ class DocumentationIndexer:
         # For now, return basic info
         return {
             "indexed_at": datetime.now().isoformat(),
-            "vector_store_stats": self.vector_store.get_stats(),
+            "vector_store_stats": (self.vector_store.get_stats() if self.vector_store else {}),
         }
 
 

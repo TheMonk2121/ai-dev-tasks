@@ -7,8 +7,14 @@
 
 ## 🔎 TL;DR
 
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
+
 - What: End-to-end view of the project’s AI development ecosystem
+
 - Read order: memory → backlog → system overview → this
+
 - Use: Orientation, architecture, workflows, and reference links
 
 <!-- ANCHOR: collaboration -->
@@ -17,8 +23,11 @@
 #### **Collaboration**
 
 - **Shared project memory** that never forgets
+
 - **Clear workflows** that everyone can follow
+
 - **Instant onboarding** for new team members
+
 - **Better communication** through structured documentation
 
 ---
@@ -28,7 +37,8 @@
 
 ## 🏗️ **System Architecture**
 
-Our AI development ecosystem is built around a **multi-layered architecture** that combines AI planning, code generation, and automated workflows.
+Our AI development ecosystem is built around a **multi-layered architecture** that combines AI planning, code
+generation, and automated workflows.
 
 ### **Core Components**
 
@@ -42,8 +52,8 @@ Our AI development ecosystem is built around a **multi-layered architecture** th
 │  └── Process Management (003_process-task-list.md)            │
 ├─────────────────────────────────────────────────────────────────┤
 │  🤖 AI Execution Layer (v0.3.1)                            │
-│  ├── Mistral 7B Instruct (Planning & Reasoning)             │
-│  ├── Yi-Coder-9B-Chat-Q6_K (Code Implementation)          │
+│  ├── Cursor Native AI (Foundation)                          │
+│  ├── Specialized Agents (Enhancements)                      │
 │  ├── Error Policy & Retry Logic                             │
 │  ├── RAM Guard & Resource Management                         │
 │  └── State Management (.ai_state.json)                      │
@@ -60,6 +70,7 @@ Our AI development ecosystem is built around a **multi-layered architecture** th
 │  ├── Notification System (Alerts)                           │
 │  └── Error Recovery (HotFix Generation)                     │
 └─────────────────────────────────────────────────────────────────┘
+
 ```
 
 ---
@@ -82,7 +93,7 @@ Our AI development ecosystem is built around a **multi-layered architecture** th
 
 1. **State Loading** → AI loads context from `.ai_state.json`
 2. **Task Selection** → AI picks next executable task
-3. **Implementation** → Yi-Coder-9B-Chat-Q6_K writes code, Mistral 7B Instruct plans
+3. **Implementation** → AI executes tasks (Cursor Native AI + specialized agents)
 4. **Validation** → AI runs tests and validates completion
 5. **State Update** → Progress saved, next task selected
 
@@ -98,21 +109,11 @@ Our AI development ecosystem is built around a **multi-layered architecture** th
 <!-- ANCHOR: models -->
 <a id="models"></a>
 
-## 🤖 **AI Models & Their Roles**
+## 🤖 **AI Foundation & Agents**
 
-### **Mistral 7B Instruct (Planning & Reasoning)**
+- **Cursor Native AI (Foundation)**: Planning, reasoning, and code assistance integrated within Cursor IDE.
 
-- **Purpose**: Strategic planning, requirements analysis, task breakdown
-- **Strengths**: Reasoning, problem-solving, workflow design
-- **Integration**: Ollama with 90-second timeout for complex reasoning
-- **Use Cases**: PRD creation, task generation, error analysis
-
-### **Yi-Coder-9B-Chat-Q6_K (Code Implementation)**
-
-- **Purpose**: Code generation, implementation, technical execution
-- **Strengths**: Code quality, language-specific patterns, debugging
-- **Integration**: LM Studio with optimized code generation
-- **Use Cases**: Feature implementation, bug fixes, code reviews
+- **Specialized Agents (Enhancements)**: On-demand domain capabilities (e.g., research, documentation) layered on top of Cursor Native AI.
 
 ---
 
@@ -124,22 +125,31 @@ Our AI development ecosystem is built around a **multi-layered architecture** th
 ### **DSPy RAG System**
 
 - **Purpose**: Document processing and intelligent retrieval
+
 - **Components**: Enhanced RAG, vector store, document processor
+
 - **Features**: Smart query routing, context-aware responses
+
 - **Integration**: PostgreSQL with pgvector for semantic search
 
 ### **N8N Workflows**
 
 - **Purpose**: Automation and orchestration
+
 - **Components**: Backlog scrubber, webhook integration, event processing
+
 - **Features**: Automated scoring, status updates, notifications
+
 - **Integration**: REST APIs and database triggers
 
 ### **Real-time Dashboard**
 
 - **Purpose**: Live monitoring and visibility
+
 - **Components**: Mission tracker, progress updates, metrics collection
+
 - **Features**: WebSocket updates, real-time status, performance monitoring
+
 - **Integration**: Flask web server with live data feeds
 
 ---
@@ -151,61 +161,13 @@ Our AI development ecosystem is built around a **multi-layered architecture** th
 
 ### **AI Model Integration**
 
-#### **Mistral 7B Instruct Configuration**
-```python
-
-# Model Configuration
-
-MODEL_CONFIG = {
-    "mistral-7b-instruct": {
-        "base_url": "http://localhost:11434",
-        "model": "mistral:7b-instruct",
-        "timeout": 90,  # seconds for complex reasoning
-        "temperature": 0.7,
-        "max_tokens": 3500,
-        "context_window": 8000
-    }
-}
-
-# Usage Pattern
-
-class PlanningAgent:
-    def __init__(self):
-        self.llm = OllamaLLM(**MODEL_CONFIG["mistral-7b-instruct"])
-        self.signature = PlanningSignature()
-    
-    def plan_feature(self, requirement: str) -> Plan:
-        return self.llm(self.signature, requirement=requirement)
-```
-
-#### **Yi-Coder-9B-Chat-Q6_K Configuration**
-```python
-
-# Model Configuration
-
-YI_CODER_CONFIG = {
-    "base_url": "http://localhost:1234/v1",
-    "model": "Yi-Coder-9B-Chat-Q6_K",
-    "timeout": 120,  # seconds for code generation
-    "temperature": 0.2,  # Lower for deterministic code
-    "max_tokens": 4000,
-    "context_window": 32000
-}
-
-# Usage Pattern
-
-class CodeAgent:
-    def __init__(self):
-        self.llm = OpenAILLM(**YI_CODER_CONFIG)
-        self.signature = CodeGenerationSignature()
-    
-    def generate_code(self, task: str, context: str) -> Code:
-        return self.llm(self.signature, task=task, context=context)
-```
+Local or legacy model configuration details are archived. Active docs focus on Cursor Native AI as the default
+foundation with optional specialized agents.
 
 ### **DSPy Implementation**
 
 #### **Core Signatures**
+
 ```python
 
 # Planning Signature
@@ -235,11 +197,13 @@ class ErrorRecoverySignature(Signature):
     fix = OutputField(desc="Proposed fix or workaround")
     explanation = OutputField(desc="Explanation of the fix")
     prevention = OutputField(desc="How to prevent similar errors")
+
 ```
 
 ### **Database Schema**
 
 #### **Event Ledger Table**
+
 ```sql
 CREATE TABLE event_ledger (
     id SERIAL PRIMARY KEY,
@@ -251,11 +215,13 @@ CREATE TABLE event_ledger (
 );
 
 -- Index for efficient querying
-CREATE INDEX idx_event_ledger_type_timestamp 
+CREATE INDEX idx_event_ledger_type_timestamp
 ON event_ledger(event_type, timestamp);
+
 ```
 
 #### **Vector Store Schema**
+
 ```sql
 -- Enable pgvector extension
 CREATE EXTENSION IF NOT EXISTS vector;
@@ -270,8 +236,9 @@ CREATE TABLE documents (
 );
 
 -- Index for similarity search
-CREATE INDEX idx_documents_embedding 
+CREATE INDEX idx_documents_embedding
 ON documents USING ivfflat (embedding vector_cosine_ops);
+
 ```
 
 ---
@@ -284,16 +251,23 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 ### **Security Features**
 
 - **Prompt Sanitization**: Regex-based block-list with optional whitelist
+
 - **File Validation**: Configurable size limits with environment override
+
 - **Input Validation**: Comprehensive sanitization across all modules
+
 - **Secrets Management**: Environment-based credential handling
+
 - **Production Monitoring**: Real-time security event tracking
 
 ### **Reliability Features**
 
 - **Error Recovery**: Configurable retry policies with fatal error detection
+
 - **Resource Management**: RAM pressure checks and model janitor
+
 - **Database Resilience**: Connection pooling with health monitoring
+
 - **Graceful Degradation**: System continues working even with failures
 
 ---
@@ -306,22 +280,27 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 ### **AI Framework**
 
 - **DSPy**: Advanced reasoning and multi-step chains
+
 - **PostgreSQL + PGVector**: Vector storage and semantic search
-- **Ollama**: Local model serving for Mistral 7B
-- **LM Studio**: Local model serving for Yi-Coder
 
 ### **Automation & Monitoring**
 
 - **N8N**: Workflow automation and orchestration
+
 - **Flask**: Web dashboard and API endpoints
+
 - **WebSocket**: Real-time updates and notifications
+
 - **OpenTelemetry**: Observability and monitoring
 
 ### **Development Tools**
 
 - **Cursor IDE**: Primary development environment
+
 - **Git**: Version control and collaboration
+
 - **Python**: Core implementation language
+
 - **Docker**: Containerization and deployment
 
 ---
@@ -334,15 +313,21 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 ### **Current Performance**
 
 - **Response Time**: <2 seconds for most queries
-- **Context Window**: 8k tokens for Mistral, 32k for Yi-Coder
+
+- **Context Window**: Per Cursor model; see Cursor documentation
+
 - **Concurrent Users**: Single developer optimized
+
 - **Memory Usage**: <16GB RAM for full system
 
 ### **Scalability Considerations**
 
 - **Model Pooling**: Lazy loading for large models
+
 - **Database Optimization**: Connection pooling and indexing
+
 - **Caching Strategy**: Redis for frequently accessed data
+
 - **Horizontal Scaling**: Stateless design for multi-instance deployment
 
 ---
@@ -355,22 +340,31 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 ### **Solo Developers**
 
 - Get AI assistance that understands your project
+
 - Reduce time spent on repetitive tasks
+
 - Catch errors before they become problems
+
 - Maintain high code quality with less effort
 
 ### **Development Teams**
 
 - Standardize workflows across the team
+
 - Share knowledge and best practices
+
 - Onboard new team members quickly
+
 - Maintain consistent quality standards
 
 ### **Project Managers**
 
 - Get clear visibility into project progress
+
 - Understand technical decisions and trade-offs
+
 - Reduce risk through early error detection
+
 - Improve team productivity and satisfaction
 
 ---
@@ -383,15 +377,21 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 ### **Before (Traditional Development)**
 
 - Developer spends hours writing boilerplate code
+
 - Errors are discovered late in the process
+
 - Project knowledge is scattered across files
+
 - New team members take weeks to get up to speed
 
 ### **After (With Our System)**
 
 - AI generates boilerplate code in minutes
+
 - Errors are caught and fixed automatically
+
 - All project knowledge is organized and searchable
+
 - New team members understand the project in hours
 
 ### **Success Stories**
@@ -399,10 +399,14 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 Teams using our system report:
 
 - **50% reduction** in development time
+
 - **90% fewer** late-stage bugs
+
 - **80% faster** onboarding for new developers
+
 - **Consistent quality** across all team members
 
 ---
 
-*This comprehensive document provides a unified view of our AI development ecosystem, combining business value, technical architecture, and implementation details for all audiences.* 
+*This comprehensive document provides a unified view of our AI development ecosystem, combining business value,
+technical architecture, and implementation details for all audiences.*

@@ -3,15 +3,35 @@
 
 # DSPy Articles
 
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
+
+- **what this file is**: Quick summary of DSPy Articles.
+
+- **read when**: When you need a fast orientation or before using this file in a workflow.
+
+- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+
+
 > **External Research**: Industry articles and blog posts about DSPy framework.
 
 ## 📚 **Articles**
 
 ### **VMware Case Study**
+
 - **Source**: VMware Internal Research
+
 - **Key Insight**: Used DSPy to optimize internal RAG pipelines
+
 - **Application**: Guides our RAG optimization approach
+
 - **Link**: [To be added]
+
 - **Key Findings**:
   - Applied DSPy to optimize internal RAG pipelines
   - Improved retrieval accuracy through structured optimization
@@ -19,10 +39,15 @@
   - Reduced costs through intelligent caching
 
 ### **Moody's Case Study**
+
 - **Source**: Moody's Analytics
+
 - **Key Insight**: Applied DSPy for finance workflows
+
 - **Application**: Guides our specialized agent development
+
 - **Link**: [To be added]
+
 - **Key Findings**:
   - Applied DSPy for finance-specific workflows
   - Enhanced reliability through assertion-based validation
@@ -30,10 +55,15 @@
   - Structured approach to complex reasoning chains
 
 ### **Community Examples**
+
 - **Source**: DSPy Community
+
 - **Key Insight**: Early adopters in agents and RAG applications
+
 - **Application**: Guides our implementation patterns
+
 - **Link**: [To be added]
+
 - **Key Findings**:
   - Early adopters successfully applied DSPy to agents
   - RAG applications benefit from structured optimization
@@ -41,14 +71,21 @@
   - Real-world validation of DSPy approaches
 
 ## 🔗 **Related Documentation**
+
 - `500_dspy-research.md` - Our internal DSPy research summary
+
 - `104_dspy-development-context.md` - Our DSPy implementation
 
 ## 📖 **Key Insights**
+
 - Industry best practices for DSPy
+
 - Implementation patterns
+
 - Production deployment considerations
+
 - Real-world case studies and validation
 
 ## 🎯 **Implementation Impact**
+
 These articles provide practical guidance for our DSPy implementation.

@@ -1,3 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Pre-commit gate for core documentation invariants (Phase 1)
+# - Enforces invariants and anchor policy (warn-only for non-TLDR anchors)
+# - Emits docs_health.json for telemetry
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT_DIR"
+
+echo "🔎 Running core documentation invariants validator (only changed + core set)..."
+python3 scripts/doc_coherence_validator.py --enforce-invariants --check-anchors --emit-json docs_health.json --only-changed --rules config/validator_rules.json
+
+RC=$?
+if [ $RC -ne 0 ]; then
+  echo "❌ Documentation invariants check failed. Please address the issues above."
+  exit $RC
+fi
+
+echo "✅ Core documentation invariants passed."
+
 #!/bin/bash
 """
 Pre-commit Documentation Validation Hook

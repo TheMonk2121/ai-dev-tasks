@@ -20,7 +20,9 @@ import hashlib
 import difflib
 
 class DocCoherenceValidator:
-    def __init__(self, dry_run: bool = True, check_all: bool = False, target_file: Optional[str] = None):
+    def __init__(self, dry_run: bool = True, check_all: bool = False, target_file: Optional[str] = None,
+                 enforce_invariants: bool = False, check_anchors: bool = False, emit_json: Optional[str] = None,
+                 safe_fix: bool = False, only_changed: bool = False, rules_path: Optional[str] = 'config/validator_rules.json', strict_anchors: bool = False):
         self.dry_run = dry_run
         self.check_all = check_all
         self.target_file = target_file
@@ -28,7 +30,22 @@ class DocCoherenceValidator:
         self.errors = []
         self.warnings = []
         self.validation_results = {}
+        self.enforce_invariants = enforce_invariants
+        self.check_anchors_flag = check_anchors
+        self.emit_json_path = emit_json
+        self.safe_fix = safe_fix
+        self.only_changed = only_changed
+        self.rules = self._load_rules(rules_path)
+        self.strict_anchors = strict_anchors
         
+        # VS Code markdown rules patterns
+        self.heading_increment_pattern = re.compile(r'^#{1,6}\s')  # MD001
+        self.heading_style_pattern = re.compile(r'^(#{1,6}|\={3,}|\-{3,})')  # MD003
+        self.list_indent_pattern = re.compile(r'^\s*[-*+]\s')  # MD007
+        self.trailing_spaces_pattern = re.compile(r'\s+$')  # MD009
+        self.hard_tabs_pattern = re.compile(r'\t')  # MD010
+        self.line_length_pattern = re.compile(r'^.{121,}$')  # MD013 (120 chars)
+
         # Exclude patterns (must be defined before _get_markdown_files)
         self.exclude_patterns = [
             'venv/',
@@ -59,6 +76,10 @@ class DocCoherenceValidator:
         self.cross_reference_pattern = re.compile(r'<!--\s*([A-Z_]+):\s*([^>]+)\s*-->')
         self.file_reference_pattern = re.compile(r'`([^`]+\.md)`')
         self.backlog_reference_pattern = re.compile(r'B‑\d+')
+        self.tldr_anchor_pattern = re.compile(r'<a\s+id="tldr"\s*>\s*</a>|<a\s+id="tldr"\s*>', re.IGNORECASE)
+        self.tldr_heading_pattern = re.compile(r'^##\s+🔎\s+TL;DR\s*$', re.MULTILINE)
+        self.at_a_glance_header_pattern = re.compile(r'^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$', re.MULTILINE)
+        self.html_anchor_pattern = re.compile(r'<a\s+id="([^"]+)"\s*>', re.IGNORECASE)
         
         # Priority file patterns
         self.priority_files = {
@@ -90,11 +111,34 @@ class DocCoherenceValidator:
 
     def _get_markdown_files(self) -> List[Path]:
         """Get all markdown files to validate."""
-        files = []
+        all_files = []
         for file_path in Path('.').rglob('*.md'):
             if not self._should_exclude(file_path):
-                files.append(file_path)
-        return files
+                all_files.append(file_path)
+        if not self.only_changed:
+            return all_files
+        # Filter by git diff
+        try:
+            diff = subprocess.run(['git', 'diff', '--name-only', '--cached'], capture_output=True, text=True)
+            changed = set(p.strip() for p in diff.stdout.splitlines() if p.strip().endswith('.md'))
+        except Exception:
+            changed = set()
+        priority = {
+            '100_cursor-memory-context.md',
+            '400_system-overview.md',
+            '000_backlog.md',
+            '400_project-overview.md',
+            '400_context-priority-guide.md'
+        }
+        return [p for p in all_files if p.name in priority or str(p) in changed]
+
+    def _load_rules(self, rules_path: Optional[str]) -> Dict:
+        try:
+            if rules_path and Path(rules_path).exists():
+                return json.loads(Path(rules_path).read_text())
+        except Exception:
+            pass
+        return { 'canonical_links': {}, 'stable_anchors': {} }
 
     def _should_exclude(self, file_path: Path) -> bool:
         """Check if file should be excluded from validation."""
@@ -145,8 +189,11 @@ class DocCoherenceValidator:
                     all_references[ref_type] = []
                 all_references[ref_type].append((str(file_path), ref_target.strip()))
         
-        # Validate file references
-        existing_files = {f.name for f in self.markdown_files}
+        # Validate file references (use full repo set to avoid only-changed false negatives)
+        try:
+            all_md_names = {p.name for p in Path('.').rglob('*.md') if not self._should_exclude(p)}
+        except Exception:
+            all_md_names = {f.name for f in self.markdown_files}
         
         for ref_type, refs in all_references.items():
             for source_file, target in refs:
@@ -159,7 +206,7 @@ class DocCoherenceValidator:
                         'type': ref_type,
                         'issue': 'File not found'
                     })
-                elif target_path.suffix == '.md' and target_path.name not in existing_files:
+                elif target_path.suffix == '.md' and target_path.name not in all_md_names:
                     broken_references.append({
                         'source': source_file,
                         'target': target,
@@ -413,12 +460,150 @@ class DocCoherenceValidator:
         
         if not self.dry_run:
             with open(report_file, 'w') as f:
-                json.dump(report, f, indent=2)
+                json.dump(report, f, indent=2, sort_keys=True)
             self.log(f"Validation report written to {report_file}", "INFO")
         else:
             self.log(f"[DRY-RUN] Would write validation report to {report_file}", "INFO")
         
         return True
+
+    def task_enforce_invariants(self) -> bool:
+        if not self.enforce_invariants:
+            return True
+        self.log("Enforcing core documentation invariants", "INFO")
+        passed = True
+        for file_path in self.markdown_files:
+            content = self.read_file(file_path)
+            if not content:
+                continue
+            issues = []
+            # Metadata header
+            if '<!-- CONTEXT_REFERENCE:' not in content or '<!-- MEMORY_CONTEXT:' not in content:
+                issues.append('Missing metadata header (CONTEXT_REFERENCE or MEMORY_CONTEXT)')
+            # TL;DR anchor and heading
+            if not self.tldr_anchor_pattern.search(content) or not self.tldr_heading_pattern.search(content):
+                issues.append('Missing TL;DR anchor or heading')
+            # At-a-glance table header
+            if not self.at_a_glance_header_pattern.search(content):
+                issues.append('Missing At-a-glance table after TL;DR')
+            # Canonical links (best-effort string presence check)
+            if self.rules['canonical_links'].get('quick_start') and self.rules['canonical_links']['quick_start'] not in content and 'Quick Start' in content:
+                issues.append('Quick Start present but missing canonical link to 400_project-overview.md')
+            if self.rules['canonical_links'].get('critical_path') and self.rules['canonical_links']['critical_path'] not in content and 'Critical Path' in content:
+                issues.append('Critical Path present but missing canonical link to 400_context-priority-guide.md')
+            if self.rules['canonical_links'].get('prd_scoring') and self.rules['canonical_links']['prd_scoring'] not in content and ('PRD' in content or 'Scoring' in content):
+                issues.append('PRD/Scoring mentioned but missing canonical link to 100_backlog-guide.md')
+            if issues:
+                passed = False
+                self.warnings.append({ 'file': str(file_path), 'invariant_issues': issues })
+                # Safe fix scaffolding (TL;DR + At-a-glance)
+                if self.safe_fix:
+                    new_content = content
+                    if not self.tldr_anchor_pattern.search(new_content):
+                        new_content = new_content.replace('\n##', '\n<a id="tldr"></a>\n\n##', 1) if '\n##' in new_content else (f'<a id="tldr"></a>\n\n## 🔎 TL;DR\n\n| what this file is | read when | do next |\n|---|---|---|\n|  |  |  |\n\n' + new_content)
+                    if not self.tldr_heading_pattern.search(new_content):
+                        new_content = new_content.replace('<a id="tldr"></a>', '<a id="tldr"></a>\n\n## 🔎 TL;DR')
+                    if not self.at_a_glance_header_pattern.search(new_content):
+                        new_content = new_content.replace('## 🔎 TL;DR', '## 🔎 TL;DR\n\n| what this file is | read when | do next |\n|---|---|---|\n|  |  |  |', 1)
+                    if new_content != content:
+                        if self.write_file(file_path, new_content):
+                            self.changes_made.append(str(file_path))
+        return passed
+
+    def task_check_anchors(self) -> bool:
+        if not self.check_anchors_flag:
+            return True
+        self.log("Checking anchors (warn for non-TLDR explicit anchors)", "INFO")
+        ok = True
+        for file_path in self.markdown_files:
+            content = self.read_file(file_path)
+            if not content:
+                continue
+            for match in self.html_anchor_pattern.finditer(content):
+                anchor_id = match.group(1)
+                if anchor_id.lower() != 'tldr':
+                    ok = False
+                    self.warnings.append({ 'file': str(file_path), 'anchor': anchor_id, 'issue': 'Non-TLDR explicit anchor - replace with heading-based anchor' })
+        # Emit JSON if requested
+        if self.emit_json_path:
+            data = {
+                'warnings': self.warnings,
+                'files_checked': len(self.markdown_files)
+            }
+            try:
+                with open(self.emit_json_path, 'w') as f:
+                    json.dump(data, f, indent=2, sort_keys=True)
+                self.log(f"Anchor report written to {self.emit_json_path}", "INFO")
+            except Exception as e:
+                self.log(f"Failed to write {self.emit_json_path}: {e}", "WARNING")
+        # In strict mode, treat any non-TLDR explicit anchors as errors
+        if self.strict_anchors and not ok:
+            self.errors.append('Non-TLDR explicit anchors found (strict mode)')
+        return ok if not self.strict_anchors else ok and True
+
+    def task_7_validate_markdown_rules(self) -> bool:
+        """Validate VS Code markdown rules compliance."""
+        self.log("Task 7: Validating VS Code markdown rules", "INFO")
+        
+        markdown_issues = []
+        
+        for file_path in self.markdown_files:
+            content = self.read_file(file_path)
+            if not content:
+                continue
+            
+            lines = content.splitlines()
+            prev_heading_level = 0
+            
+            for line_num, line in enumerate(lines, 1):
+                # MD001: Heading increment
+                if self.heading_increment_pattern.match(line):
+                    current_level = len(line.split()[0])  # Count #s
+                    if prev_heading_level > 0 and current_level > prev_heading_level + 1:
+                        markdown_issues.append({
+                            'file': str(file_path),
+                            'line': line_num,
+                            'rule': 'MD001',
+                            'issue': 'Heading levels should only increment by one level'
+                        })
+                    prev_heading_level = current_level
+                
+                # MD009: Trailing spaces
+                if self.trailing_spaces_pattern.search(line):
+                    markdown_issues.append({
+                        'file': str(file_path),
+                        'line': line_num,
+                        'rule': 'MD009',
+                        'issue': 'Trailing spaces detected'
+                    })
+                
+                # MD010: Hard tabs
+                if self.hard_tabs_pattern.search(line):
+                    markdown_issues.append({
+                        'file': str(file_path),
+                        'line': line_num,
+                        'rule': 'MD010',
+                        'issue': 'Hard tabs detected'
+                    })
+                
+                # MD013: Line length
+                if self.line_length_pattern.match(line):
+                    markdown_issues.append({
+                        'file': str(file_path),
+                        'line': line_num,
+                        'rule': 'MD013',
+                        'issue': 'Line length exceeds 120 characters'
+                    })
+        
+        # Report results
+        if markdown_issues:
+            self.log(f"Found {len(markdown_issues)} markdown rule violations:", "WARNING")
+            for issue in markdown_issues:
+                self.log(f"  {issue['file']}:{issue['line']} - {issue['rule']}: {issue['issue']}", "WARNING")
+            return False
+        else:
+            self.log("All files pass VS Code markdown rules", "INFO")
+            return True
 
     def run_all_validations(self) -> bool:
         """Run all validation tasks."""
@@ -430,6 +615,7 @@ class DocCoherenceValidator:
             ("Backlog reference validation", self.task_3_validate_backlog_references),
             ("Memory context coherence", self.task_4_validate_memory_context_coherence),
             ("Cursor AI semantic validation", self.task_5_cursor_ai_semantic_validation),
+            ("VS Code markdown rules", self.task_7_validate_markdown_rules),
             ("Generate validation report", self.task_6_generate_validation_report)
         ]
         
@@ -465,6 +651,13 @@ def main():
                        help='Check specific file only')
     parser.add_argument('--no-dry-run', action='store_true',
                        help='Actually make changes (not dry-run)')
+    parser.add_argument('--enforce-invariants', action='store_true', help='Enforce core doc invariants')
+    parser.add_argument('--check-anchors', action='store_true', help='Check anchors and flag non-TLDR explicit anchors')
+    parser.add_argument('--emit-json', type=str, help='Emit JSON report to path (e.g., docs_health.json)')
+    parser.add_argument('--fix', action='store_true', help='Safely scaffold missing TL;DR / At-a-glance')
+    parser.add_argument('--only-changed', action='store_true', help='Validate only changed files plus priority set')
+    parser.add_argument('--rules', type=str, default='config/validator_rules.json', help='Path to validator rules JSON')
+    parser.add_argument('--strict-anchors', action='store_true', help='Treat non-TLDR explicit anchors as errors')
     
     args = parser.parse_args()
     
@@ -475,11 +668,22 @@ def main():
     validator = DocCoherenceValidator(
         dry_run=dry_run,
         check_all=args.check_all,
-        target_file=args.file
+        target_file=args.file,
+        enforce_invariants=args.enforce_invariants,
+        check_anchors=args.check_anchors,
+        emit_json=args.emit_json,
+        safe_fix=args.fix,
+        only_changed=args.only_changed,
+        rules_path=args.rules,
+        strict_anchors=args.strict_anchors
     )
     
     # Run validations
     success = validator.run_all_validations()
+    if args.enforce_invariants:
+        success = validator.task_enforce_invariants() and success
+    if args.check_anchors:
+        success = validator.task_check_anchors() and success
     
     # Exit with appropriate code
     sys.exit(0 if success else 1)

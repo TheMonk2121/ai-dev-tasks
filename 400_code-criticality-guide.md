@@ -1,21 +1,40 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- MEMORY_CONTEXT: HIGH - Critical code identification and prioritization -->
 
-# Critical Python Code Map
+<a id="tldr"></a>
+
+## 🗺️ Critical Python Code Map
 
 ## 🔎 TL;DR
 
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
+
 - Purpose: Single source of truth for prioritized, most‑critical `.py` files
+
 - Read when: You need to understand the operational code backbone fast
+
 - Quick jump:
   - Tier 1 (Critical): `scripts/process_tasks.py`, `scripts/state_manager.py`, `dspy-rag-system/src/dspy_modules/cursor_model_router.py`, `dspy-rag-system/src/dspy_modules/vector_store.py`, `dspy-rag-system/src/dspy_modules/document_processor.py`
 
 ---
 
-## 🎯 Scope
+## 🎯 **Current Status**
 
-This guide identifies and maintains a prioritized list of the most crucial Python modules that power the AI development ecosystem (task orchestration, state, AI routing, RAG data layer, and reliability). It complements system architecture docs and the memory context quick references.
+- **Status**: ✅ **ACTIVE** - Maintained and current
+
+- **Priority**: 🔥 Critical - Core system documentation
+
+- **Points**: 3 - Low complexity, high importance
+
+- **Dependencies**: 400_system-overview.md, 100_cursor-memory-context.md
+
+- **Next Steps**: Update when new critical modules are added
+
+## 🎯 Scope
 
 ## ✅ Prioritized List (by tiers)
 
@@ -53,8 +72,11 @@ This guide identifies and maintains a prioritized list of the most crucial Pytho
 ### Tier 3 — Supporting (reliability/utilities)
 
 - `dspy-rag-system/src/utils/retry_wrapper.py` — Retry/Backoff Policies
+
 - `scripts/system_health_check.py` — Health checks & diagnostics
+
 - `dspy-rag-system/src/utils/config_manager.py` — Centralized config handling
+
 - `dspy-rag-system/src/utils/logger.py` — Structured logging helpers
 
 ---
@@ -62,10 +84,15 @@ This guide identifies and maintains a prioritized list of the most crucial Pytho
 ## 🧭 Criteria for Criticality
 
 - Orchestration impact: Breaks workflow if unavailable (`process_tasks.py`)
+
 - State integrity: Affects persistence or recovery (`state_manager.py`)
+
 - AI routing/quality: Determines model choice and context (`cursor_model_router.py`)
+
 - Data path: Indexing/retrieval correctness/perf (`vector_store.py`, `document_processor.py`)
+
 - Production resilience: Keeps system healthy under failure (`database_resilience.py`)
+
 - Safety & security: Prevents unsafe inputs/operations (`prompt_sanitizer.py`)
 
 ---
@@ -89,7 +116,9 @@ This guide identifies and maintains a prioritized list of the most crucial Pytho
 ## 🔗 Cross‑References
 
 - Memory quick ref → `100_cursor-memory-context.md`
+
 - Architecture overview → `400_system-overview.md`
+
 - Context/navigation → `400_context-priority-guide.md`
 
 ## 🗒️ Change Log

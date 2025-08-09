@@ -1,0 +1,22 @@
+# Version History
+
+## TL;DR
+
+- Tracks notable changes to the DSPy RAG system.
+- Highlights security, reliability, and integration milestones.
+
+## v0.3.1-rc3
+
+- Core hardening: database resilience, connection pooling, retry logic
+- Production monitoring: health checks, OpenTelemetry, alerts
+- Dashboard security hardening and watch-folder stability polling
+
+## v0.3.0
+
+- Enhanced DSPy integration with pre/post-RAG logic
+- Mission dashboard with real-time WebSocket updates
+
+## v0.2.x
+
+- CSV ingestion support and vector enhancements
+- Error recovery and retry wrapper foundations

@@ -1,0 +1,10 @@
+# Git Workflow
+
+<repo_specific_rule description="Git and PR standards">
+
+- Commit messages must be descriptive and reference issues
+- PRs require documentation updates when applicable
+- Feature branches named: feature/description
+- Bug fix branches named: fix/description
+- Squash commits before merging
+</repo_specific_rule>

@@ -1,14 +1,29 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- MEMORY_CONTEXT: MEDIUM - Integration research and patterns -->
 
-# Integration Research
+## 🔌 Integration Research
 
 <!-- ANCHOR: tldr -->
 <a id="tldr"></a>
 
 ## 🔎 TL;DR
 
-- API/DB/n8n patterns, retries/circuit breaker, monitoring hooks
-- Mirrors `400_integration-patterns-guide.md`
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
+
+## 🎯 **Current Status**
+
+- **Status**: 📝 **PLANNED** - Research file created, content pending
+
+- **Priority**: 🔧 Medium - Research for future implementation
+
+- **Points**: 2 - Research and planning effort
+
+- **Dependencies**: 400_context-priority-guide.md
+
+- **Next Steps**: Populate with integration research findings
+
 
 <!-- ANCHOR: key-findings -->
 <a id="key-findings"></a>

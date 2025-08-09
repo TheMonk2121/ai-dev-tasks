@@ -1,0 +1,10 @@
+# Project Organization
+
+<repo_specific_rule description="Project structure and organization">
+
+- New features go in src/features/
+- Utils in src/utils/
+- Tests mirror source structure in tests/
+- Config files in config/
+- Documentation in docs/
+</repo_specific_rule>

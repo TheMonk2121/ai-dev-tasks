@@ -2,28 +2,71 @@
 <!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MEMORY_CONTEXT: HIGH - File analysis and safety procedures -->
+
+# 🔍 File Analysis Guide
+
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
+
+- **what this file is**: Quick summary of 🔍 File Analysis Guide.
+
+- **read when**: When you need a fast orientation or before using this file in a workflow.
+
+- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+
+
+## 🎯 **Current Status**
+
+- **Status**: ✅ **ACTIVE** - File analysis procedures maintained
+
+- **Priority**: 🔥 Critical - Prevents critical file loss
+
+- **Points**: 4 - Moderate complexity, safety critical
+
+- **Dependencies**: 400_context-priority-guide.md, 100_cursor-memory-context.md
+
+- **Next Steps**: Update analysis procedures as system evolves
 
 ### **Step 6: Tier-Based Decision (REQUIRED)**
+
 - **Tier 1 (CRITICAL)**: NEVER suggest removal - core workflow files, primary memory context
+
 - **Tier 2 (HIGH)**: Extensive analysis required - documentation guides, setup requirements
+
 - **Tier 3 (MEDIUM)**: Archive rather than delete - files in `600_archives/`, legacy files
+
 - **Tier 4 (LOW)**: Safe to remove with validation - duplicates, outdated test files
 
 **⚠️ FAILURE TO COMPLETE ANY STEP ABOVE MEANS YOU CANNOT SUGGEST FILE DELETION!**
 
-Validator note: After any structural doc moves/folds, run `python scripts/doc_coherence_validator.py` (or `./scripts/pre_commit_doc_validation.sh`) to verify cross-links and naming.
+Validator note: After any structural doc moves/folds, run `python scripts/doc_coherence_validator.py` (or
+`./scripts/pre_commit_doc_validation.sh`) to verify cross-links and naming.
 
 ---
 
 ## 🎯 **Overview**
 
-This guide provides a **systematic 6-phase process** for analyzing files to determine if they are obsolete, legacy, or should be retained. It builds on our existing documentation foundation (`200_naming-conventions.md`, `400_context-priority-guide.md`, `500_maintenance-safety-research.md`) and adds the missing **"how to analyze"** methodology.
+This guide provides a **systematic 6-phase process** for analyzing files to determine if they are obsolete, legacy, or
+should be retained. It builds on our existing documentation foundation (`200_naming-conventions.md`,
+`400_context-priority-guide.md`, `500_maintenance-safety-research.md`) and adds the missing **"how to analyze"**
+methodology.
 
 ### **Why This Guide Exists**
+
 - **Prevents critical file loss** through systematic analysis
+
 - **Maintains cognitive scaffolding** by preserving essential documentation
+
 - **Reduces documentation bloat** by identifying truly obsolete files
+
 - **Ensures consistency** with our file organization system
+
 - **Provides safety mechanisms** for high-risk operations
 
 ## 🧠 **Analysis Logic Flow**
@@ -31,6 +74,7 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 ### **Phase 1: Context Loading & Memory Rehydration**
 
 #### **Step 1: Read Core Memory Context**
+
 **Purpose**: Understand current project state before analysis
 **Files to Read**:
 1. **`100_cursor-memory-context.md`** - Current project state and priorities
@@ -42,6 +86,7 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 **Output**: Clear understanding of what's currently important
 
 #### **Step 2: Understand File Organization System**
+
 **Purpose**: Grasp the file categorization and priority system
 **Files to Read**:
 1. **`200_naming-conventions.md`** - File categorization system (000-699 prefixes)
@@ -54,41 +99,60 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 ### **Phase 2: Systematic File Analysis**
 
 #### **Step 3: Categorize Files by Priority Tiers**
+
 **Purpose**: Apply our established priority system to files being analyzed
 
 **Tier 1 (CRITICAL - Never Remove)**
+
 - **Criteria**: Core workflow files, primary memory context, active development items
+
 - **Examples**: `000_backlog.md`, `100_cursor-memory-context.md`, `400_system-overview.md`
+
 - **Action**: **NEVER suggest removal** - these are the foundation of our system
 
 **Tier 2 (HIGH - Review Carefully)**
+
 - **Criteria**: Documentation guides, setup requirements, model configuration
+
 - **Examples**: `400_*` documentation files, `104_dspy-development-context.md`, `202_setup-requirements.md`
+
 - **Action**: **Extensive analysis required** before any changes
 
 **Tier 3 (MEDIUM - Potential Legacy)**
+
 - **Criteria**: Files in `600_archives/`, files with "legacy" or "backup" in name
+
 - **Examples**: Files in `600_archives/`, `103_yi-coder-integration.md` (marked as legacy)
+
 - **Action**: **Archive rather than delete** - preserve for historical context
 
 **Tier 4 (LOW - Candidate for Removal)**
+
 - **Criteria**: Duplicate files, outdated test files, unused subdirectories
+
 - **Examples**: Duplicate files with different naming conventions, old test files
+
 - **Action**: **Safe to remove** with proper validation
 
 #### **Step 4: Cross-Reference Analysis**
+
 **Purpose**: Understand file relationships and dependencies
 
 **Check Cross-Reference Tags**:
+
 ```markdown
 <!-- CORE_SYSTEM: 400_project-overview.md, 400_system-overview.md -->
 <!-- WORKFLOW_CHAIN: 001_create-prd.md → 002_generate-tasks.md -->
 <!-- MEMORY_CONTEXT: HIGH - Essential analysis methodology -->
+
 ```
 
 **Dependency Mapping**:
+
 - **High Value**: Files referenced by many others
+
 - **Potential Legacy**: Files that reference many others but aren't referenced themselves
+
 - **Orphaned**: Files not referenced anywhere
 
 **Analysis Questions**:
@@ -100,41 +164,61 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 ### **Phase 3: Content Analysis**
 
 #### **Step 5: Content Relevance Check**
+
 **Purpose**: Assess if file content reflects current system state
 
 **Timestamps**:
+
 - **Last Updated**: When was the file last modified?
+
 - **Content Age**: Does it reflect current system architecture?
+
 - **Model References**: Does it reference current models (Cursor Native AI) or legacy models?
 
 **Content Freshness Indicators**:
+
 - ✅ **Current**: References Cursor Native AI, current workflows, active backlog items
+
 - ⚠️ **Mixed**: Some current references, some outdated
+
 - ❌ **Outdated**: References legacy models (Mistral, Yi-Coder), old workflows, deprecated features
 
 **Workflow Alignment**:
+
 - ✅ **Aligned**: Matches current workflows and system architecture
+
 - ⚠️ **Partially Aligned**: Some current elements, some outdated
+
 - ❌ **Misaligned**: Contradicts current workflows or architecture
 
 #### **Step 6: Usage Pattern Analysis**
+
 **Purpose**: Determine if files are actively used or orphaned
 
 **Active Usage Indicators**:
+
 - Referenced in current documentation
+
 - Part of active workflows
+
 - Used for AI memory context
+
 - Referenced in recent commits
 
 **Orphaned File Indicators**:
+
 - Not referenced by any current files
+
 - Not part of active workflows
+
 - Not used for AI memory context
+
 - No recent activity or updates
 
 ### **Phase 4: Risk Assessment**
 
 #### **Step 7: Impact Analysis**
+
 **Purpose**: Understand the consequences of removing or archiving a file
 
 **Before Suggesting Removal**:
@@ -150,12 +234,17 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 4. What AI memory context relies on this file?
 
 #### **Step 8: Safety Gates**
+
 **Purpose**: Implement multiple layers of protection
 
 **Safety Checks**:
+
 - **Never remove Tier 1 files** without explicit user approval
+
 - **Always show cross-references** before suggesting removal
+
 - **Provide reasoning** for why a file might be obsolete
+
 - **Suggest alternatives** if a file contains valuable information
 
 **Safety Mechanisms**:
@@ -167,25 +256,34 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 ### **Phase 5: Documentation Strategy**
 
 #### **Step 9: Legacy Documentation**
+
 **Purpose**: Preserve valuable information while maintaining system cleanliness
 
 **For Files That Are Truly Legacy**:
+
 - **Move to `600_archives/`** rather than delete
+
 - **Add deprecation notices** explaining why they're archived
+
 - **Update cross-references** to point to current alternatives
+
 - **Maintain searchability** for historical context
 
 **Archive Structure**:
+
 ```
+
 600_archives/
 ├── backup_before_core_migration/
 ├── backup_before_migration/
 ├── backup_before_subdirectory_migration/
 ├── implementation-notes/
 └── legacy_integrations/
+
 ```
 
 #### **Step 10: Cross-Reference Updates**
+
 **Purpose**: Maintain system integrity after changes
 
 **Update Process**:
@@ -197,6 +295,7 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 ### **Phase 6: Validation & Testing**
 
 #### **Step 11: System Validation**
+
 **Purpose**: Ensure changes don't break the system
 
 **Validation Steps**:
@@ -206,15 +305,21 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 4. **Check documentation** for consistency
 
 **Testing Commands**:
+
 ```bash
+
 # Check for broken references
+
 python3 scripts/repo_maintenance.py --dry-run
 
 # Validate memory context
+
 python3 scripts/update_cursor_memory.py --validate
 
 # Test system health
+
 python3 scripts/system_health_check.py
+
 ```
 
 ## 🔍 **Specific Analysis Methods**
@@ -228,13 +333,16 @@ Use this checklist before writing new Python code to reduce duplication and keep
   - Search active repo (exclude archives):
     - `rg -n "keyword1|keyword2" scripts/ dspy-rag-system/src/ tests/ -g '!600_archives/**' -g '!docs/legacy/**'`
   - Also scan 400_/500_ for references to existing modules
+
 - Decide reuse vs new
   - Reuse/extend if an existing module covers ≥70% of the need (same inputs/outputs, same layer)
   - Write new if candidates are legacy/archived, violate current patterns, or require heavy refactors
+
 - Safety checks
   - Do not base work on files under `600_archives/**` or `docs/legacy/**`
   - Verify no active 400_* guide already points to a module that does this
   - Ensure no overlapping script exists in `scripts/**`
+
 - If you write new
   - Place it where `400_system-overview.md` indicates (component ownership)
   - Add a minimal test first (mirrors existing test style in `tests/**`)
@@ -245,51 +353,69 @@ Use this checklist before writing new Python code to reduce duplication and keep
 ### **For Each File, Check:**
 
 #### **1. Cross-Reference Count**
+
 **Method**: Count how many other files reference this one
 **Tools**: `grep_search`, cross-reference HTML comments
 **Threshold**: Files with 0 references are candidates for removal
 
 #### **2. Content Freshness**
+
 **Method**: Check if content reflects current system state
 **Indicators**: Model references, workflow descriptions, timestamps
 **Red Flags**: References to "Mistral", "Yi-Coder", "Mixtral" (unless in backlog)
 
 #### **3. Model Alignment**
+
 **Method**: Check if file references current models or legacy ones
 **Current Models**: Cursor Native AI, Specialized Agents
 **Legacy Models**: Mistral, Yi-Coder, Mixtral (unless in backlog)
 
 #### **4. Workflow Integration**
+
 **Method**: Check if file is part of active workflows
 **Active Workflows**: PRD creation, task generation, AI execution
 **Inactive Workflows**: Legacy integrations, deprecated features
 
 #### **5. Memory Context**
+
 **Method**: Check if file is used for AI memory rehydration
 **High Priority**: Files with `<!-- MEMORY_CONTEXT: HIGH -->`
 **Medium Priority**: Files with `<!-- MEMORY_CONTEXT: MEDIUM -->`
 **Low Priority**: Files with `<!-- MEMORY_CONTEXT: LOW -->`
 
 #### **6. Documentation Chain**
+
 **Method**: Check if file is in the documentation hierarchy
 **Core Files**: Referenced in `400_context-priority-guide.md`
 **Ancillary Files**: Referenced by core files
 **Orphaned Files**: Not referenced anywhere
 
 ### **Red Flags That Suggest Legacy Status:**
+
 - References to "Mistral", "Yi-Coder", "Mixtral" (unless in backlog)
+
 - Files in `600_archives/` directory
+
 - Files with "backup" or "legacy" in name
+
 - Files not referenced by any current documentation
+
 - Files with outdated timestamps
+
 - Files that contradict current system architecture
 
 ### **Green Flags That Suggest Keep:**
+
 - Referenced by multiple current files
+
 - Part of core workflow chain
+
 - Used for AI memory context
+
 - Contains current model references
+
 - Aligned with current system architecture
+
 - Recently updated
 
 ## 🛡️ **Safety Mechanisms**
@@ -297,26 +423,31 @@ Use this checklist before writing new Python code to reduce duplication and keep
 ### **Before Suggesting Any Removal:**
 
 #### **1. Show All Cross-References**
+
 **Method**: Display all files that reference the target file
 **Command**: `grep_search` for file references
 **Output**: List of all files that would be affected
 
 #### **2. Explain Why It Might Be Legacy**
+
 **Method**: Provide clear reasoning based on analysis
 **Criteria**: Content freshness, model alignment, workflow integration
 **Evidence**: Specific examples of outdated content
 
 #### **3. Provide Alternative Locations**
+
 **Method**: Suggest where valuable content should be moved
 **Options**: Archive, merge with current files, update in place
 **Reasoning**: Why the alternative is better
 
 #### **4. Suggest Archiving**
+
 **Method**: Recommend `600_archives/` rather than deletion
 **Benefits**: Preserves historical context, maintains searchability
 **Structure**: Organized by migration or change type
 
 #### **5. Get Explicit User Approval**
+
 **Method**: Require confirmation for high-risk operations
 **Tiers**: Different approval levels based on file importance
 **Documentation**: Record decisions for future reference
@@ -324,21 +455,25 @@ Use this checklist before writing new Python code to reduce duplication and keep
 ### **For Critical Files:**
 
 #### **1. Never Suggest Removal**
+
 **Criteria**: Tier 1 files, core memory context, active workflows
 **Protection**: Multiple validation layers before any changes
 **Documentation**: Clear reasoning for any suggested changes
 
 #### **2. Always Show Impact Analysis**
+
 **Method**: Comprehensive analysis of what would break
 **Tools**: Cross-reference analysis, dependency mapping
 **Output**: Clear understanding of consequences
 
 #### **3. Provide Migration Path**
+
 **Method**: Show how to safely transition content
 **Options**: Update in place, merge with other files, archive
 **Safety**: Multiple checkpoints and validation steps
 
 #### **4. Maintain Backward Compatibility**
+
 **Method**: Ensure changes don't break existing workflows
 **Testing**: Validate all affected systems
 **Documentation**: Update all references
@@ -392,55 +527,89 @@ Use this checklist before writing new Python code to reduce duplication and keep
 ### **Before Analyzing Any File:**
 
 - [ ] Read `100_cursor-memory-context.md` for current state
+
 - [ ] Check `000_backlog.md` for active priorities
+
 - [ ] Review `400_context-priority-guide.md` for file importance
+
 - [ ] Understand the file's tier classification
+
 - [ ] Check all cross-references to the file
+
 - [ ] Assess content freshness and model alignment
+
 - [ ] Evaluate workflow integration
+
 - [ ] Consider memory context importance
+
 - [ ] Perform impact analysis
+
 - [ ] Implement safety mechanisms
+
 - [ ] Get user approval for high-risk changes
+
 - [ ] Update all references after changes
+
 - [ ] Validate system integrity
 
 ### **Red Flags (Legacy Indicators):**
+
 - [ ] References legacy models (Mistral, Yi-Coder, Mixtral)
+
 - [ ] Located in `600_archives/` directory
+
 - [ ] Contains "backup" or "legacy" in filename
+
 - [ ] Not referenced by any current files
+
 - [ ] Outdated timestamps
+
 - [ ] Contradicts current system architecture
 
 ### **Green Flags (Keep Indicators):**
+
 - [ ] Referenced by multiple current files
+
 - [ ] Part of core workflow chain
+
 - [ ] Used for AI memory context
+
 - [ ] Contains current model references
+
 - [ ] Aligned with current system architecture
+
 - [ ] Recently updated
 
 ## 📚 **Related Documentation**
 
 ### **Core Analysis Tools:**
+
 - **`200_naming-conventions.md`** - File categorization system
+
 - **`400_context-priority-guide.md`** - Memory scaffolding and file priorities
+
 - **`500_maintenance-safety-research.md`** - Safety mechanisms and critical file protection
+
 - **`999_repo-maintenance.md`** - Systematic maintenance procedures
 
 ### **Implementation Scripts:**
+
 - **`scripts/repo_maintenance.py`** - Automated maintenance and validation
+
 - **`scripts/update_cursor_memory.py`** - Memory context updates
+
 - **`scripts/system_health_check.py`** - System validation
 
 ### **Archive Structure:**
+
 - **`600_archives/`** - Organized legacy content
+
 - **`docs/legacy/`** - Alternative archive location
+
 - **Migration tracking** - Historical change documentation
 
 ---
 
-**Last Updated**: 2024-08-07  
-**Related Documentation**: `400_context-priority-guide.md`, `500_maintenance-safety-research.md`  
+**Last Updated**: 2024-08-07
+**Related Documentation**: `400_context-priority-guide.md`, `500_maintenance-safety-research.md`
 **Status**: Active analysis methodology for maintaining documentation integrity

@@ -4,17 +4,27 @@
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Task generation workflow and planning -->
 
-## 🎯 Generate Tasks
+# Generate Tasks
 
 <!-- ANCHOR: tldr -->
 <a id="tldr"></a>
 
+## 🔎 TL;DR
+
+| what this file is | read when | do next |
+|---|---|---|
+| Task generation workflow that breaks down PRDs or backlog items into executable tasks with testing, quality gates, and acceptance criteria | When you need to convert a PRD or backlog item into actionable tasks | 1) Parse PRD/backlog item; 2) Use task template; 3) Add testing requirements; 4) Set quality gates |
+
 ## 🎯 **Current Status**
 
 - **Status**: ✅ **ACTIVE** - Task generation workflow maintained
+
 - **Priority**: 🔥 Critical - Essential for project execution
+
 - **Points**: 4 - Moderate complexity, high importance
+
 - **Dependencies**: 400_context-priority-guide.md, 001_create-prd.md
+
 - **Next Steps**: Enhance task templates and automation
 
 
@@ -28,12 +38,17 @@
  - Enforce quality gates and acceptance criteria per task
 
 ### PRD-less path
+
 - If PRD is skipped per rule (points < 5 AND score_total ≥ 3.0), parse `000_backlog.md` directly
+
 - Use backlog metadata (scores, deps) to size/schedule tasks
+
 - Log that PRD was skipped; proceed with standard task format and gates
 
  - **Integration & Testing** - Component integration and validation
+
 - **Performance & Security** - Optimization and hardening
+
 - **Documentation & Deployment** - Final preparation and launch
 
 <!-- ANCHOR: template -->
@@ -57,16 +72,23 @@ Each task must include:
 **Acceptance Criteria:**
 
 - [ ] [Specific, testable criteria]
+
 - [ ] [Another criterion]
+
 - [ ] [Performance benchmarks if applicable]
 
 **Testing Requirements:**
 
 - [ ] **Unit Tests** - [Specific test scenarios]
+
 - [ ] **Integration Tests** - [Component interaction tests]
+
 - [ ] **Performance Tests** - [Benchmarks and thresholds]
+
 - [ ] **Security Tests** - [Vulnerability and validation tests]
+
 - [ ] **Resilience Tests** - [Error handling and failure scenarios]
+
 - [ ] **Edge Case Tests** - [Boundary conditions and unusual inputs]
 
 **Implementation Notes:**
@@ -75,9 +97,13 @@ Each task must include:
 **Quality Gates:**
 
 - [ ] **Code Review** - All code has been reviewed
+
 - [ ] **Tests Passing** - All tests pass with required coverage
+
 - [ ] **Performance Validated** - Meets performance requirements
+
 - [ ] **Security Reviewed** - Security implications considered
+
 - [ ] **Documentation Updated** - Relevant docs updated
 
 ```
@@ -89,8 +115,10 @@ Each task must include:
 #### **1. Unit Tests**
 
 - **Purpose**: Test individual components in isolation
+
 - **Coverage**: All public methods and critical private methods
-- **Requirements**: 
+
+- **Requirements**:
   - Mock external dependencies
   - Test edge cases and error conditions
   - Validate input/output contracts
@@ -99,7 +127,9 @@ Each task must include:
 #### **2. Integration Tests**
 
 - **Purpose**: Test component interactions and workflows
+
 - **Coverage**: End-to-end workflows and data flows
+
 - **Requirements**:
   - Test with real external services (when safe)
   - Validate data transformation and persistence
@@ -109,7 +139,9 @@ Each task must include:
 #### **3. Performance Tests**
 
 - **Purpose**: Validate performance under load and stress
+
 - **Coverage**: Response times, throughput, resource usage
+
 - **Requirements**:
   - Benchmark against defined thresholds
   - Test with realistic data volumes
@@ -119,7 +151,9 @@ Each task must include:
 #### **4. Security Tests**
 
 - **Purpose**: Validate security controls and vulnerability prevention
+
 - **Coverage**: Input validation, access control, data protection
+
 - **Requirements**:
   - Test injection attacks (SQL, XSS, prompt injection)
   - Validate authentication and authorization
@@ -129,7 +163,9 @@ Each task must include:
 #### **5. Resilience Tests**
 
 - **Purpose**: Test system behavior under failure conditions
+
 - **Coverage**: Error handling, recovery, graceful degradation
+
 - **Requirements**:
   - Test network failures and timeouts
   - Validate error recovery mechanisms
@@ -139,7 +175,9 @@ Each task must include:
 #### **6. Edge Case Tests**
 
 - **Purpose**: Test boundary conditions and unusual scenarios
+
 - **Coverage**: Large inputs, special characters, malformed data
+
 - **Requirements**:
   - Test with maximum/minimum values
   - Validate Unicode and special character handling
@@ -149,6 +187,7 @@ Each task must include:
 ### **Test Implementation Standards:**
 
 #### **Test Structure:**
+
 ```python
 def test_component_functionality():
     """Test description with clear purpose"""
@@ -160,26 +199,35 @@ def test_component_functionality():
     # Assert - Verify expected outcomes
 
     # Cleanup - Restore state if needed
+
 ```
 
 #### **Test Quality Requirements:**
 
 - **Isolation**: Tests should not depend on each other
+
 - **Deterministic**: Tests should produce consistent results
+
 - **Fast**: Unit tests should complete in milliseconds
+
 - **Clear**: Test names and assertions should be self-documenting
+
 - **Comprehensive**: Cover happy path, error cases, and edge cases
 
 #### **Performance Benchmarks:**
 
 - **Response Time**: Define acceptable latency thresholds
+
 - **Throughput**: Specify requests per second requirements
+
 - **Resource Usage**: Set memory and CPU limits
+
 - **Scalability**: Test with increasing load levels
 
 ## **Quality Gates Integration**
 
 ### **Implementation Status Tracking:**
+
 ```markdown
 
 ## Implementation Status
@@ -187,19 +235,29 @@ def test_component_functionality():
 ### Overall Progress
 
 - **Total Tasks:** [X] completed out of [Y] total
+
 - **Current Phase:** [Planning/Implementation/Testing/Deployment]
+
 - **Estimated Completion:** [Date or percentage]
+
 - **Blockers:** [List any current blockers]
 
 ### Quality Gates
 
 - [ ] **Code Review Completed** - All code has been reviewed
+
 - [ ] **Tests Passing** - All unit and integration tests pass
+
 - [ ] **Documentation Updated** - All relevant docs updated
+
 - [ ] **Performance Validated** - Performance meets requirements
+
 - [ ] **Security Reviewed** - Security implications considered
+
 - [ ] **User Acceptance** - Feature validated with users
+
 - [ ] **Resilience Tested** - Error handling and recovery validated
+
 - [ ] **Edge Cases Covered** - Boundary conditions tested
 
 ```
@@ -207,12 +265,19 @@ def test_component_functionality():
 ### **Testing Checklist for Each Task:**
 
 - [ ] **Unit Tests Written** - All public methods tested
+
 - [ ] **Integration Tests Created** - Component interactions tested
+
 - [ ] **Performance Tests Implemented** - Benchmarks and thresholds defined
+
 - [ ] **Security Tests Added** - Vulnerability checks implemented
+
 - [ ] **Resilience Tests Included** - Error scenarios covered
+
 - [ ] **Edge Case Tests Written** - Boundary conditions tested
+
 - [ ] **Test Documentation Updated** - Test procedures documented
+
 - [ ] **CI/CD Integration** - Tests run automatically
 
 ## **Output Format**
@@ -233,7 +298,7 @@ Generate a comprehensive task list with the following structure:
 
 [Tasks for infrastructure and dependencies]
 
-### Phase 2: Core Implementation  
+### Phase 2: Core Implementation
 
 [Tasks for main functionality development]
 
@@ -252,14 +317,19 @@ Generate a comprehensive task list with the following structure:
 ## Quality Metrics
 
 - **Test Coverage Target**: [X]%
+
 - **Performance Benchmarks**: [Specific metrics]
+
 - **Security Requirements**: [Security standards]
+
 - **Reliability Targets**: [Uptime and error rates]
 
 ## Risk Mitigation
 
 - **Technical Risks**: [Identified risks and mitigation strategies]
+
 - **Timeline Risks**: [Schedule risks and contingency plans]
+
 - **Resource Risks**: [Resource constraints and solutions]
 
 ```
@@ -283,4 +353,5 @@ Generate a comprehensive task list with the following structure:
 15. **Use scoring metadata** to inform task sizing and dependencies
 16. **Parse scoring comments** (`<!--score: {bv:X, tc:X, rr:X, le:X, effort:X}-->`) for context
 
-This enhanced approach ensures that every task includes thorough testing requirements and quality gates, leading to more robust and reliable implementations.
+This enhanced approach ensures that every task includes thorough testing requirements and quality gates, leading to more
+robust and reliable implementations.

@@ -1,49 +1,75 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- MEMORY_CONTEXT: HIGH - Integration patterns and API design -->
 
-# Integration Patterns Guide
+## 🔌 Integration Patterns Guide
 
 <!-- ANCHOR: tldr -->
 <a id="tldr"></a>
 
+## 🎯 **Current Status**
+
+- **Status**: ✅ **ACTIVE** - Integration patterns maintained
+
+- **Priority**: 🔥 Critical - System integration and API design
+
+- **Points**: 5 - High complexity, essential for system operation
+
+- **Dependencies**: 400_context-priority-guide.md, 400_system-overview.md
+
+- **Next Steps**: Update patterns as new integrations are added
+
 ## 🔎 TL;DR
 
-- Purpose: API, DB, n8n, messaging integration patterns with resilience
-- Read after: memory → backlog → system overview
-- Outputs: standard interfaces, error handling, retry/circuit breaker, monitoring hooks
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
 
-| **Monitoring** | REST API | Event Stream | Metrics |
-| **Security** | Middleware | API Gateway | Headers |
+- **what this file is**: Integration patterns and API design for components and external systems.
+
+- **read when**: Designing or modifying APIs, events, websockets, or cross-component flows.
+
+- **do next**: See "API Design Principles", "Component Integration", and "Communication Patterns".
+
+- **anchors**: `api design principles`, `component integration`, `communication patterns`, `data flow`, `error handling`, `security integration`
 
 ---
 
 ## 🔌 API Design Principles
 
 ### **1. RESTful API Design**
+
 #### Context API (summary)
+
 ```http
+
 # Create context
+
 POST /api/context { type, content, relationships }
 
 # Get / Update / Delete context
+
 GET|PUT|DELETE /api/context/{id}
 
 # Search
+
 GET /api/context/search?query=...&type=...
 
 # Relationships
+
 POST /api/context/{id}/relationships { target_context_id, relationship_type, strength }
 GET /api/context/{id}/relationships
+
 ```
 
-
 #### **Core Endpoints**
+
 ```python
 
 # AI Model API endpoints
 
 AI_MODEL_ENDPOINTS = {
     "generate": "/api/v1/ai/generate",
-    "chat": "/api/v1/ai/chat", 
+    "chat": "/api/v1/ai/chat",
     "code": "/api/v1/ai/code",
     "analyze": "/api/v1/ai/analyze"
 }
@@ -63,9 +89,11 @@ WORKFLOW_ENDPOINTS = {
     "status": "/api/v1/workflow/status",
     "history": "/api/v1/workflow/history"
 }
+
 ```
 
 #### **API Response Format**
+
 ```python
 
 # Standard API response structure
@@ -91,11 +119,13 @@ API_RESPONSE_FORMAT = {
     "timestamp": "2024-08-07T08:45:00Z",
     "request_id": "req_123456"
 }
+
 ```
 
 ### **2. GraphQL Integration**
 
 #### **Schema Definition**
+
 ```graphql
 
 # AI Development Ecosystem GraphQL Schema
@@ -122,11 +152,13 @@ type WorkflowStatus {
     result: String
     error: String
 }
+
 ```
 
 ### **3. WebSocket Communication**
 
 #### **Real-time Updates**
+
 ```python
 
 # WebSocket message format
@@ -148,6 +180,7 @@ WEBSOCKET_EVENTS = {
     "workflow_execution_progress": handle_workflow_execution_progress,
     "workflow_execution_complete": handle_workflow_execution_complete
 }
+
 ```
 
 ---
@@ -157,6 +190,7 @@ WEBSOCKET_EVENTS = {
 ### **1. AI Model Integration**
 
 #### **Model Interface**
+
 ```python
 
 # AI model integration interface
@@ -166,7 +200,7 @@ class AIModelInterface:
         self.model_name = model_name
         self.config = config
         self.client = self._initialize_client()
-    
+
     def generate(self, prompt: str, **kwargs) -> dict:
         """Generate AI response"""
         try:
@@ -183,7 +217,7 @@ class AIModelInterface:
                 "error": str(e),
                 "model": self.model_name
             }
-    
+
     def chat(self, messages: list, **kwargs) -> dict:
         """Chat with AI model"""
         try:
@@ -200,9 +234,11 @@ class AIModelInterface:
                 "error": str(e),
                 "model": self.model_name
             }
+
 ```
 
 #### **Model Factory**
+
 ```python
 
 # AI model factory for different models
@@ -218,11 +254,13 @@ class AIModelFactory:
             return SpecializedAgentModel()
         else:
             raise ValueError(f"Unknown model: {model_name}")
+
 ```
 
 ### **2. Database Integration**
 
 #### **Database Interface**
+
 ```python
 
 # Database integration interface
@@ -231,7 +269,7 @@ class DatabaseInterface:
     def __init__(self, connection_string: str):
         self.connection_string = connection_string
         self.pool = self._create_connection_pool()
-    
+
     def execute_query(self, query: str, params: dict = None) -> dict:
         """Execute database query"""
         try:
@@ -249,11 +287,11 @@ class DatabaseInterface:
                 "success": False,
                 "error": str(e)
             }
-    
+
     def insert_log(self, log_entry: dict) -> dict:
         """Insert log entry"""
         query = """
-        INSERT INTO episodic_logs 
+        INSERT INTO episodic_logs
         (timestamp, user_id, model_type, prompt, response, tokens_used)
         VALUES (%s, %s, %s, %s, %s, %s)
         """
@@ -266,11 +304,13 @@ class DatabaseInterface:
             log_entry["tokens_used"]
         )
         return self.execute_query(query, params)
+
 ```
 
 ### **3. n8n Workflow Integration**
 
 #### **Workflow Interface**
+
 ```python
 
 # n8n workflow integration interface
@@ -280,16 +320,16 @@ class N8nWorkflowInterface:
         self.base_url = base_url
         self.api_key = api_key
         self.session = self._create_session()
-    
+
     def execute_workflow(self, workflow_id: str, data: dict) -> dict:
         """Execute n8n workflow"""
         try:
             url = f"{self.base_url}/api/v1/workflows/{workflow_id}/execute"
             headers = {"Authorization": f"Bearer {self.api_key}"}
-            
+
             response = self.session.post(url, json=data, headers=headers)
             response.raise_for_status()
-            
+
             return {
                 "success": True,
                 "execution_id": response.json()["execution_id"],
@@ -300,16 +340,16 @@ class N8nWorkflowInterface:
                 "success": False,
                 "error": str(e)
             }
-    
+
     def get_workflow_status(self, execution_id: str) -> dict:
         """Get workflow execution status"""
         try:
             url = f"{self.base_url}/api/v1/executions/{execution_id}"
             headers = {"Authorization": f"Bearer {self.api_key}"}
-            
+
             response = self.session.get(url, headers=headers)
             response.raise_for_status()
-            
+
             return {
                 "success": True,
                 "status": response.json()["status"],
@@ -320,6 +360,7 @@ class N8nWorkflowInterface:
                 "success": False,
                 "error": str(e)
             }
+
 ```
 
 ---
@@ -329,6 +370,7 @@ class N8nWorkflowInterface:
 ### **1. Synchronous Communication**
 
 #### **Request-Response Pattern**
+
 ```python
 
 # Synchronous request-response pattern
@@ -340,11 +382,11 @@ def synchronous_ai_request(prompt: str, model: str) -> dict:
         # Initialize AI model
 
         ai_model = AIModelFactory.create_model(model)
-        
+
         # Generate response
 
         response = ai_model.generate(prompt)
-        
+
         # Log interaction
 
         log_entry = {
@@ -355,18 +397,20 @@ def synchronous_ai_request(prompt: str, model: str) -> dict:
             "response": response["content"],
             "tokens_used": response["tokens_used"]
         }
-        
+
         db_interface = DatabaseInterface(get_db_connection_string())
         db_interface.insert_log(log_entry)
-        
+
         return response
     except Exception as e:
         return {"success": False, "error": str(e)}
+
 ```
 
 ### **2. Asynchronous Communication**
 
 #### **Event-Driven Pattern**
+
 ```python
 
 # Asynchronous event-driven pattern
@@ -376,18 +420,18 @@ class EventDrivenAI:
         self.event_queue = Queue()
         self.workers = []
         self._start_workers()
-    
+
     def submit_request(self, request: dict) -> str:
         """Submit asynchronous AI request"""
         request_id = generate_request_id()
         request["request_id"] = request_id
-        
+
         # Add to event queue
 
         self.event_queue.put(request)
-        
+
         return request_id
-    
+
     def get_result(self, request_id: str) -> dict:
         """Get asynchronous request result"""
 
@@ -396,22 +440,23 @@ class EventDrivenAI:
         result = self._get_cached_result(request_id)
         if result:
             return result
-        
+
         # Check if still processing
 
         if self._is_processing(request_id):
             return {"status": "processing"}
-        
+
         return {"status": "not_found"}
-    
+
     def _start_workers(self):
         """Start background workers"""
         for _ in range(4):  # 4 worker threads
+
             worker = threading.Thread(target=self._worker_loop)
             worker.daemon = True
             worker.start()
             self.workers.append(worker)
-    
+
     def _worker_loop(self):
         """Worker thread loop"""
         while True:
@@ -420,11 +465,13 @@ class EventDrivenAI:
                 self._process_request(request)
             except Empty:
                 continue
+
 ```
 
 ### **3. Message Queue Pattern**
 
 #### **Redis Message Queue**
+
 ```python
 
 # Redis message queue implementation
@@ -433,7 +480,7 @@ class RedisMessageQueue:
     def __init__(self, redis_url: str):
         self.redis_client = redis.from_url(redis_url)
         self.pubsub = self.redis_client.pubsub()
-    
+
     def publish_event(self, channel: str, event: dict):
         """Publish event to channel"""
         try:
@@ -441,7 +488,7 @@ class RedisMessageQueue:
             return {"success": True}
         except Exception as e:
             return {"success": False, "error": str(e)}
-    
+
     def subscribe_to_channel(self, channel: str, callback):
         """Subscribe to channel with callback"""
         try:
@@ -452,6 +499,7 @@ class RedisMessageQueue:
                     callback(event)
         except Exception as e:
             print(f"Subscription error: {e}")
+
 ```
 
 ---
@@ -464,6 +512,7 @@ class RedisMessageQueue:
 User Request → API Gateway → Authentication → AI Model → Database → Response
      ↓              ↓              ↓              ↓           ↓         ↓
   Validate      Rate Limit    Check Perms    Generate    Log Data   Format
+
 ```
 
 ### **2. Workflow Execution Flow**
@@ -472,6 +521,7 @@ User Request → API Gateway → Authentication → AI Model → Database → Re
 Trigger → n8n Workflow → AI Model → Database → Dashboard → User
    ↓           ↓            ↓          ↓          ↓         ↓
 Webhook    Execute      Process    Store      Update    Notify
+
 ```
 
 ### **3. Monitoring Data Flow**
@@ -480,6 +530,7 @@ Webhook    Execute      Process    Store      Update    Notify
 System → Metrics Collector → Time Series DB → Dashboard → Alerts
   ↓            ↓                ↓              ↓         ↓
 Events    Aggregate        Store Data     Visualize   Notify
+
 ```
 
 ---
@@ -489,6 +540,7 @@ Events    Aggregate        Store Data     Visualize   Notify
 ### **1. API Error Handling**
 
 #### **Standard Error Responses**
+
 ```python
 
 # Standard error response format
@@ -531,11 +583,13 @@ def handle_api_error(error_type: str, details: dict = None) -> dict:
     error_response = ERROR_RESPONSES.get(error_type, ERROR_RESPONSES["internal_error"])
     error_response["details"] = details or {}
     return error_response
+
 ```
 
 ### **2. Retry Logic**
 
 #### **Exponential Backoff**
+
 ```python
 
 # Retry logic with exponential backoff
@@ -548,14 +602,16 @@ def retry_with_backoff(func, max_retries: int = 3, base_delay: float = 1.0):
         except Exception as e:
             if attempt == max_retries - 1:
                 raise e
-            
+
             delay = base_delay * (2 ** attempt)
             time.sleep(delay)
+
 ```
 
 ### **3. Circuit Breaker Pattern**
 
 #### **Circuit Breaker Implementation**
+
 ```python
 
 # Circuit breaker pattern
@@ -567,7 +623,7 @@ class CircuitBreaker:
         self.failure_count = 0
         self.last_failure_time = None
         self.state = "CLOSED"  # CLOSED, OPEN, HALF_OPEN
-    
+
     def call(self, func, *args, **kwargs):
         """Execute function with circuit breaker"""
         if self.state == "OPEN":
@@ -575,7 +631,7 @@ class CircuitBreaker:
                 self.state = "HALF_OPEN"
             else:
                 raise Exception("Circuit breaker is OPEN")
-        
+
         try:
             result = func(*args, **kwargs)
             self._on_success()
@@ -583,19 +639,20 @@ class CircuitBreaker:
         except Exception as e:
             self._on_failure()
             raise e
-    
+
     def _on_success(self):
         """Handle successful call"""
         self.failure_count = 0
         self.state = "CLOSED"
-    
+
     def _on_failure(self):
         """Handle failed call"""
         self.failure_count += 1
         self.last_failure_time = time.time()
-        
+
         if self.failure_count >= self.failure_threshold:
             self.state = "OPEN"
+
 ```
 
 ---
@@ -605,6 +662,7 @@ class CircuitBreaker:
 ### **1. API Authentication**
 
 #### **JWT Token Authentication**
+
 ```python
 
 # JWT authentication middleware
@@ -612,7 +670,7 @@ class CircuitBreaker:
 class JWTAuthentication:
     def __init__(self, secret_key: str):
         self.secret_key = secret_key
-    
+
     def authenticate(self, token: str) -> dict:
         """Authenticate JWT token"""
         try:
@@ -622,7 +680,7 @@ class JWTAuthentication:
             return {"success": False, "error": "Token expired"}
         except jwt.InvalidTokenError:
             return {"success": False, "error": "Invalid token"}
-    
+
     def generate_token(self, user_id: str) -> str:
         """Generate JWT token"""
         payload = {
@@ -630,11 +688,13 @@ class JWTAuthentication:
             "exp": datetime.utcnow() + timedelta(hours=24)
         }
         return jwt.encode(payload, self.secret_key, algorithm="HS256")
+
 ```
 
 ### **2. Rate Limiting**
 
 #### **Token Bucket Rate Limiter**
+
 ```python
 
 # Token bucket rate limiter
@@ -645,24 +705,25 @@ class TokenBucketRateLimiter:
         self.refill_rate = refill_rate
         self.tokens = capacity
         self.last_refill = time.time()
-    
+
     def allow_request(self, user_id: str) -> bool:
         """Check if request is allowed"""
         self._refill_tokens()
-        
+
         if self.tokens >= 1:
             self.tokens -= 1
             return True
         return False
-    
+
     def _refill_tokens(self):
         """Refill tokens based on time passed"""
         now = time.time()
         time_passed = now - self.last_refill
         tokens_to_add = time_passed * self.refill_rate
-        
+
         self.tokens = min(self.capacity, self.tokens + tokens_to_add)
         self.last_refill = now
+
 ```
 
 ---
@@ -672,6 +733,7 @@ class TokenBucketRateLimiter:
 ### **1. Caching Integration**
 
 #### **Multi-level Cache**
+
 ```python
 
 # Multi-level cache integration
@@ -679,8 +741,9 @@ class TokenBucketRateLimiter:
 class MultiLevelCache:
     def __init__(self):
         self.l1_cache = {}  # Memory cache
+
         self.l2_cache = redis.Redis()  # Redis cache
-    
+
     def get(self, key: str):
         """Get value from cache"""
 
@@ -688,16 +751,17 @@ class MultiLevelCache:
 
         if key in self.l1_cache:
             return self.l1_cache[key]
-        
+
         # Try L2 cache
 
         value = self.l2_cache.get(key)
         if value:
             self.l1_cache[key] = value  # Populate L1
+
             return value
-        
+
         return None
-    
+
     def set(self, key: str, value, ttl: int = 3600):
         """Set value in cache"""
 
@@ -705,11 +769,13 @@ class MultiLevelCache:
 
         self.l1_cache[key] = value
         self.l2_cache.setex(key, ttl, value)
+
 ```
 
 ### **2. Connection Pooling**
 
 #### **Database Connection Pool**
+
 ```python
 
 # Database connection pool
@@ -720,20 +786,21 @@ class DatabaseConnectionPool:
         self.max_connections = max_connections
         self.pool = Queue(maxsize=max_connections)
         self._initialize_pool()
-    
+
     def _initialize_pool(self):
         """Initialize connection pool"""
         for _ in range(self.max_connections):
             connection = psycopg2.connect(self.connection_string)
             self.pool.put(connection)
-    
+
     def get_connection(self):
         """Get connection from pool"""
         return self.pool.get()
-    
+
     def return_connection(self, connection):
         """Return connection to pool"""
         self.pool.put(connection)
+
 ```
 
 ---
@@ -743,6 +810,7 @@ class DatabaseConnectionPool:
 ### **1. API Testing**
 
 #### **Integration Test Framework**
+
 ```python
 
 # Integration test framework
@@ -751,7 +819,7 @@ class IntegrationTestFramework:
     def __init__(self, base_url: str):
         self.base_url = base_url
         self.session = requests.Session()
-    
+
     def test_ai_generation(self):
         """Test AI generation endpoint"""
         url = f"{self.base_url}/api/v1/ai/generate"
@@ -759,14 +827,14 @@ class IntegrationTestFramework:
             "prompt": "Hello, how are you?",
             "model": "cursor-native-ai"
         }
-        
+
         response = self.session.post(url, json=data)
         assert response.status_code == 200
-        
+
         result = response.json()
         assert result["success"] == True
         assert "content" in result["data"]
-    
+
     def test_workflow_execution(self):
         """Test workflow execution endpoint"""
         url = f"{self.base_url}/api/v1/workflow/execute"
@@ -774,18 +842,20 @@ class IntegrationTestFramework:
             "workflow_id": "test_workflow",
             "input_data": {"test": "data"}
         }
-        
+
         response = self.session.post(url, json=data)
         assert response.status_code == 200
-        
+
         result = response.json()
         assert result["success"] == True
         assert "execution_id" in result["data"]
+
 ```
 
 ### **2. Load Testing**
 
 #### **API Load Testing**
+
 ```python
 
 # API load testing
@@ -793,14 +863,14 @@ class IntegrationTestFramework:
 def load_test_api(endpoint: str, num_requests: int = 100):
     """Load test API endpoint"""
     results = []
-    
+
     for i in range(num_requests):
         start_time = time.time()
-        
+
         try:
             response = requests.post(endpoint, json={"test": "data"})
             end_time = time.time()
-            
+
             results.append({
                 "request_id": i,
                 "response_time": end_time - start_time,
@@ -815,8 +885,9 @@ def load_test_api(endpoint: str, num_requests: int = 100):
                 "success": False,
                 "error": str(e)
             })
-    
+
     return results
+
 ```
 
 ---
@@ -826,6 +897,7 @@ def load_test_api(endpoint: str, num_requests: int = 100):
 ### **1. Container Integration**
 
 #### **Docker Configuration**
+
 ```dockerfile
 
 # Dockerfile for AI development ecosystem
@@ -864,11 +936,13 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 # Start application
 
 CMD ["python", "app.py"]
+
 ```
 
 ### **2. Kubernetes Integration**
 
 #### **Kubernetes Deployment**
+
 ```yaml
 
 # Kubernetes deployment configuration
@@ -930,6 +1004,7 @@ spec:
             port: 5000
           initialDelaySeconds: 5
           periodSeconds: 5
+
 ```
 
 ---
@@ -939,34 +1014,55 @@ spec:
 ### **API Integration Checklist**
 
 - [ ] RESTful API design implemented
+
 - [ ] GraphQL schema defined
+
 - [ ] WebSocket communication configured
+
 - [ ] Authentication middleware integrated
+
 - [ ] Rate limiting implemented
+
 - [ ] Error handling standardized
+
 - [ ] API documentation generated
+
 - [ ] API versioning strategy defined
 
 ### **Component Integration Checklist**
 
 - [ ] AI model interfaces implemented
+
 - [ ] Database integration configured
+
 - [ ] n8n workflow integration tested
+
 - [ ] Dashboard real-time updates working
+
 - [ ] Monitoring integration active
+
 - [ ] Security integration verified
+
 - [ ] Performance integration optimized
+
 - [ ] Testing integration automated
 
 ### **Deployment Integration Checklist**
 
 - [ ] Docker containers configured
+
 - [ ] Kubernetes manifests created
+
 - [ ] Environment variables managed
+
 - [ ] Secrets management implemented
+
 - [ ] Health checks configured
+
 - [ ] Load balancing configured
+
 - [ ] Monitoring deployed
+
 - [ ] Backup strategies implemented
 
 ---
@@ -974,6 +1070,7 @@ spec:
 ## 🛠️ Tools & Scripts
 
 ### **1. API Documentation Generator**
+
 ```python
 
 # API documentation generator
@@ -985,7 +1082,7 @@ def generate_api_docs():
         "schemas": [],
         "examples": []
     }
-    
+
     # Generate endpoint documentation
 
     for endpoint in API_ENDPOINTS:
@@ -996,7 +1093,7 @@ def generate_api_docs():
             "parameters": endpoint["parameters"],
             "responses": endpoint["responses"]
         })
-    
+
     # Generate schema documentation
 
     for schema in API_SCHEMAS:
@@ -1005,11 +1102,13 @@ def generate_api_docs():
             "properties": schema["properties"],
             "required": schema["required"]
         })
-    
+
     return docs
+
 ```
 
 ### **2. Integration Test Runner**
+
 ```python
 
 # Integration test runner
@@ -1017,7 +1116,7 @@ def generate_api_docs():
 def run_integration_tests():
     """Run all integration tests"""
     test_results = []
-    
+
     # Test API endpoints
 
     api_tests = [
@@ -1025,7 +1124,7 @@ def run_integration_tests():
         test_workflow_execution,
         test_database_operations
     ]
-    
+
     for test in api_tests:
         try:
             result = test()
@@ -1040,8 +1139,9 @@ def run_integration_tests():
                 "status": "FAIL",
                 "error": str(e)
             })
-    
+
     return test_results
+
 ```
 
 ---
@@ -1051,19 +1151,25 @@ def run_integration_tests():
 ### **Integration Documentation**
 
 - **REST API Design**: https://restfulapi.net/
+
 - **GraphQL Documentation**: https://graphql.org/
+
 - **WebSocket Protocol**: https://tools.ietf.org/html/rfc6455
 
 ### **Integration Tools**
 
 - **Postman**: https://www.postman.com/
+
 - **Insomnia**: https://insomnia.rest/
+
 - **Swagger**: https://swagger.io/
 
 ### **Testing Tools**
 
 - **Pytest**: https://docs.pytest.org/
+
 - **Locust**: https://locust.io/
+
 - **JMeter**: https://jmeter.apache.org/
 
 ---

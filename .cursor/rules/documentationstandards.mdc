@@ -1,0 +1,14 @@
+---
+alwaysApply: true
+---
+
+# Documentation Standards
+
+<repo_specific_rule description="Documentation formatting and organization">
+
+- All documentation must follow markdown standards
+- Each document must have a single h1 title matching filename
+- TL;DR section required at top of core docs
+- Cross-references must be maintained between related files
+- Documentation hierarchy: 000-099 (core), 100-199 (guides), etc.
+</repo_specific_rule>

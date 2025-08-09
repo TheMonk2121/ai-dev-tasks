@@ -2,19 +2,51 @@
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- MEMORY_CONTEXT: MEDIUM - n8n automation and backlog management -->
 
-# n8n Backlog Scrubber Workflow Guide
+## 🔄 n8n Backlog Scrubber Workflow Guide
+
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
+
+- **what this file is**: Quick summary of 🔄 n8n Backlog Scrubber Workflow Guide.
+
+- **read when**: When you need a fast orientation or before using this file in a workflow.
+
+- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+
+
+## 🎯 **Current Status**
+
+- **Status**: ✅ **ACTIVE** - n8n backlog scrubber operational
+
+- **Priority**: ⚡ High - Automated backlog management
+
+- **Points**: 4 - Moderate complexity, ongoing maintenance
+
+- **Dependencies**: 400_context-priority-guide.md, 400_deployment-environment-guide.md
+
+- **Next Steps**: Enhance automation features and add new workflows
 
 ## Overview
 
-The n8n Backlog Scrubber Workflow automatically calculates and updates scoring metadata in the backlog file. This system provides:
-
 - **Automated Scoring**: No manual calculation needed
+
 - **Consistent Updates**: All scores use the same formula
+
 - **Error Prevention**: Validates data before updating
+
 - **Audit Trail**: Logs all changes for review
+
 - **Webhook Integration**: Trigger from n8n workflows
+
 - **Health Monitoring**: Real-time status checks
+
 - **Backup Protection**: Automatic file backups
 
 ## Architecture
@@ -44,14 +76,21 @@ The n8n Backlog Scrubber Workflow automatically calculates and updates scoring m
 The backlog scrubber uses the following formula to calculate priority scores:
 
 ```
+
 Score = (BV + TC + RR + LE) / Effort
+
 ```
 
 Where:
+
 - **BV** (Business Value): 0-10 scale
-- **TC** (Technical Complexity): 0-10 scale  
+
+- **TC** (Technical Complexity): 0-10 scale
+
 - **RR** (Risk/Reward): 0-10 scale
+
 - **LE** (Learning Experience): 0-10 scale
+
 - **Effort**: Estimated effort in story points
 
 ## Usage
@@ -59,34 +98,47 @@ Where:
 ### Standalone Usage
 
 ```bash
+
 # Run the backlog scrubber directly
+
 python3 src/n8n_workflows/backlog_scrubber.py
 
 # With custom backlog path
+
 python3 src/n8n_workflows/backlog_scrubber.py --backlog-path /path/to/backlog.md
 
 # Dry run (show changes without writing)
+
 python3 src/n8n_workflows/backlog_scrubber.py --dry-run
 
 # Verbose output
+
 python3 src/n8n_workflows/backlog_scrubber.py --verbose
+
 ```
 
 ### Webhook Server
 
 ```bash
+
 # Start the webhook server
+
 python3 src/n8n_workflows/backlog_webhook.py
 
 # With custom configuration
+
 python3 src/n8n_workflows/backlog_webhook.py --host 0.0.0.0 --port 5001 --debug
+
 ```
 
 ### Demo Script
 
 ```bash
+
 # Run comprehensive demo
+
 python3 demo_backlog_scrubber.py
+
 ```
 
 ## API Endpoints
@@ -96,15 +148,18 @@ python3 demo_backlog_scrubber.py
 **POST** `/webhook/backlog-scrubber`
 
 Request body:
+
 ```json
 {
   "action": "scrub",
   "dry_run": false,
   "backlog_path": "optional/path/to/backlog.md"
 }
+
 ```
 
 Response:
+
 ```json
 {
   "success": true,
@@ -115,6 +170,7 @@ Response:
   "errors_found": 0,
   "timestamp": "2024-08-06T03:17:11.590241"
 }
+
 ```
 
 ### Health Check
@@ -122,12 +178,14 @@ Response:
 **GET** `/health`
 
 Response:
+
 ```json
 {
   "status": "healthy",
   "service": "backlog-scrubber-webhook",
   "timestamp": "2024-08-06T03:17:11.590241"
 }
+
 ```
 
 ### Statistics
@@ -135,6 +193,7 @@ Response:
 **GET** `/stats`
 
 Response:
+
 ```json
 {
   "success": true,
@@ -146,6 +205,7 @@ Response:
   },
   "timestamp": "2024-08-06T03:17:11.590241"
 }
+
 ```
 
 ## n8n Integration
@@ -165,7 +225,7 @@ Response:
    ```javascript
    // Process backlog scrubber response
    const response = $input.all()[0].json;
-   
+
    if (response.success) {
        return {
            success: true,
@@ -194,65 +254,97 @@ Response:
 ### Environment Variables
 
 - `BACKLOG_PATH`: Path to backlog.md file (the execution engine)
+
 - `ENVIRONMENT`: Environment (development, staging, production)
+
 - `LOG_LEVEL`: Logging level (DEBUG, INFO, WARNING, ERROR)
 
 ### Command Line Options
 
 #### Backlog Scrubber
+
 - `--backlog-path`: Path to backlog.md file
+
 - `--dry-run`: Show changes without writing
+
 - `--verbose`: Verbose output
 
 #### Webhook Server
+
 - `--host`: Host to bind to (default: 0.0.0.0)
+
 - `--port`: Port to bind to (default: 5001)
+
 - `--debug`: Enable debug mode
+
 - `--backlog-path`: Path to backlog.md file
 
 ## Error Handling
 
 ### Validation Errors
+
 - Invalid score components (out of range)
+
 - Missing required fields
+
 - Malformed JSON in metadata
 
 ### File Errors
+
 - Backlog file not found
+
 - Permission denied
+
 - Disk space issues
 
 ### Network Errors
+
 - Webhook server unavailable
+
 - Timeout issues
+
 - Connection problems
 
 ## Monitoring
 
 ### Health Checks
+
 - Service status monitoring
+
 - Response time tracking
+
 - Error rate monitoring
 
 ### Statistics
+
 - Items processed per run
+
 - Scores updated
+
 - Errors encountered
+
 - Last run timestamp
 
 ### Logging
+
 - Structured logging with timestamps
+
 - Error tracking and reporting
+
 - Audit trail for all operations
 
 ## Backup and Recovery
 
 ### Automatic Backups
+
 - Creates `.backup` file before updates
+
 - Preserves original content
+
 - Timestamped backup files
 
 ### Recovery Process
+
 1. Stop the webhook server
 2. Restore from backup file
 3. Restart the service
@@ -261,18 +353,27 @@ Response:
 ## Security Considerations
 
 ### Input Validation
+
 - Validates all score components
+
 - Checks for malicious content
+
 - Sanitizes file paths
 
 ### Access Control
+
 - Webhook authentication (if needed)
+
 - IP whitelisting (if needed)
+
 - Rate limiting (if needed)
 
 ### Data Protection
+
 - No sensitive data in logs
+
 - Secure file handling
+
 - Backup encryption (if needed)
 
 ## Troubleshooting
@@ -297,67 +398,104 @@ Response:
 ### Debug Mode
 
 Enable debug mode for detailed logging:
+
 ```bash
 python3 src/n8n_workflows/backlog_webhook.py --debug
+
 ```
 
 ### Log Analysis
 
 Check logs for:
+
 - Parsing errors
+
 - Validation failures
+
 - Network issues
+
 - Performance metrics
 
 ## Performance
 
 ### Optimization
+
 - Efficient regex patterns
+
 - Minimal file I/O
+
 - Cached calculations
+
 - Background processing
 
 ### Scalability
+
 - Stateless design
+
 - Horizontal scaling support
+
 - Load balancing ready
+
 - Database integration ready
 
 ## Future Enhancements
 
 ### Planned Features
+
 - Database integration
+
 - Real-time notifications
+
 - Advanced scoring algorithms
+
 - Machine learning integration
+
 - Multi-file support
+
 - Version control integration
 
 ### Integration Points
+
 - Git hooks
+
 - CI/CD pipelines
+
 - Monitoring systems
+
 - Alert systems
+
 - Dashboard integration
 
 ## Support
 
 ### Documentation
+
 - This guide
+
 - Code comments
+
 - API documentation
+
 - Example workflows
 
 ### Testing
+
 - Unit tests
+
 - Integration tests
+
 - Performance tests
+
 - Security tests
 
 ### Maintenance
+
 - Regular updates
+
 - Security patches
+
 - Performance monitoring
+
 - Backup verification
 
 ---
@@ -393,4 +531,4 @@ Check logs for:
    - Verify backup integrity
    - Update as needed
 
-The n8n Backlog Scrubber Workflow is now ready for production deployment! 
+The n8n Backlog Scrubber Workflow is now ready for production deployment!

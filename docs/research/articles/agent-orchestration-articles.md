@@ -4,24 +4,49 @@
 
 # Agent Orchestration Articles
 
+<a id="tldr"></a>
+
+## 🔎 TL;DR
+
+| what this file is | read when | do next |
+|---|---|---|
+|  |  |  |
+
+- **what this file is**: Quick summary of Agent Orchestration Articles.
+
+- **read when**: When you need a fast orientation or before using this file in a workflow.
+
+- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+
+
 > **External Research**: Industry articles and blog posts about multi-agent systems and orchestration.
 
 ## 📚 **Articles**
 
 ### **Multi-Agent System Best Practices**
+
 - **Source**: Industry Best Practices
+
 - **Key Insight**: Agent orchestration strategies
+
 - **Application**: Guides our multi-agent system design
+
 - **Link**: [To be added]
 
 ## 🔗 **Related Documentation**
+
 - `500_agent-orchestration-research.md` - Our internal agent orchestration research summary
+
 - `400_system-overview_advanced_features.md` - System architecture overview
 
 ## 📖 **Key Insights**
+
 - Industry best practices for multi-agent systems
+
 - Orchestration patterns
+
 - Real-world deployment considerations
 
 ## 🎯 **Implementation Impact**
+
 These articles provide practical guidance for our multi-agent system.

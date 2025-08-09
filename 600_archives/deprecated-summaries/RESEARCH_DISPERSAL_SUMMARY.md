@@ -5,4 +5,5 @@
 > - `400_documentation-retrieval-guide.md` (Research integration workflow)
 
 ## Archived: Research Dispersal Summary
+
 See the files above for current guidance.

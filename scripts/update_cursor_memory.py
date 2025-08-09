@@ -12,6 +12,11 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+FENCE_PRIORITIES_START = "<!-- AUTO:current_priorities:start -->"
+FENCE_PRIORITIES_END = "<!-- AUTO:current_priorities:end -->"
+FENCE_HEALTH_START = "<!-- AUTO:doc_health:start -->"
+FENCE_HEALTH_END = "<!-- AUTO:doc_health:end -->"
+
 def extract_backlog_priorities():
     """Extract current priorities from 000_backlog.md"""
     backlog_file = Path("000_backlog.md")
@@ -81,6 +86,58 @@ def extract_completed_items():
     
     return completed[-3:]  # Last 3 completed
 
+def _replace_between_fences(text: str, start_marker: str, end_marker: str, replacement: str) -> str:
+    if start_marker in text and end_marker in text:
+        pattern = re.compile(re.escape(start_marker) + r"[\s\S]*?" + re.escape(end_marker))
+        return pattern.sub(start_marker + "\n" + replacement.strip() + "\n" + end_marker, text)
+    return text
+
+
+def load_doc_health():
+    """Load health telemetry from docs_health.json or validation report."""
+    health = {
+        'files_checked': None,
+        'anchor_warnings': 0,
+        'invariant_warnings': 0,
+        'timestamp': datetime.now().isoformat(timespec='seconds')
+    }
+    # Preferred source
+    health_path = Path('docs_health.json')
+    if health_path.exists():
+        try:
+            data = json.loads(health_path.read_text())
+            health['files_checked'] = data.get('files_checked')
+            warnings = data.get('warnings', [])
+            health['anchor_warnings'] = sum(1 for w in warnings if 'anchor' in w)
+        except Exception:
+            pass
+    # Fallback to validation report
+    report_path = Path('docs/validation_report.json')
+    if report_path.exists():
+        try:
+            data = json.loads(report_path.read_text())
+            health['timestamp'] = data.get('timestamp', health['timestamp'])
+            # Invariant warnings recorded in validation_results? We store warnings list
+            warnings = data.get('warnings', [])
+            health['invariant_warnings'] = sum(1 for w in warnings if isinstance(w, dict) and 'invariant_issues' in w)
+            if health['files_checked'] is None:
+                health['files_checked'] = data.get('files_checked')
+        except Exception:
+            pass
+    return health
+
+
+def render_doc_health_block(health: dict) -> str:
+    lines = []
+    lines.append("### Documentation Health")
+    lines.append("")
+    lines.append(f"- Files checked: {health.get('files_checked', 'n/a')}")
+    lines.append(f"- Anchor warnings: {health.get('anchor_warnings', 0)}")
+    lines.append(f"- Invariant warnings: {health.get('invariant_warnings', 0)}")
+    lines.append(f"- Last run: {health.get('timestamp')}")
+    return "\n".join(lines)
+
+
 def update_memory_context():
     """Update CURSOR_MEMORY_CONTEXT.md with current state"""
     
@@ -97,20 +154,28 @@ def update_memory_context():
     with open(memory_file, 'r') as f:
         content = f.read()
     
-    # Update priorities section
+    # Build Current Priorities block (rendered as list)
     if priorities:
-        priorities_text = "\n### **Immediate Focus (Next 1-2 weeks)**\n"
+        block = []
+        block.append("### **Immediate Focus (Next 1-2 weeks)**")
         for i, priority in enumerate(priorities, 1):
-            priorities_text += f"{i}. **{priority['id']}**: {priority['title']} ({priority['points']} points)\n"
-            priorities_text += f"   - {priority['problem']}\n"
-        
-        # Replace existing priorities section
-        content = re.sub(
-            r'### \*\*Immediate Focus \(Next 1-2 weeks\)\*\*.*?(?=### \*\*Infrastructure Status\*\*)',
-            priorities_text,
-            content,
-            flags=re.DOTALL
-        )
+            block.append(f"{i}. **{priority['id']}**: {priority['title']} ({priority['points']} points)")
+            block.append(f"   - {priority['problem']}")
+        priorities_text = "\n".join(block) + "\n"
+
+        # Preferred: replace between fences
+        fenced_priorities = priorities_text.strip()
+        content_after_fence_try = _replace_between_fences(content, FENCE_PRIORITIES_START, FENCE_PRIORITIES_END, fenced_priorities)
+        if content_after_fence_try != content:
+            content = content_after_fence_try
+        else:
+            # Fallback: legacy section replacement
+            content = re.sub(
+                r'### \*\*Immediate Focus \(Next 1-2 weeks\)\*\*.*?(?=### \*\*Infrastructure Status\*\*)',
+                "\n" + priorities_text,
+                content,
+                flags=re.DOTALL
+            )
     
     # Update completed items
     if completed:
@@ -130,7 +195,15 @@ def update_memory_context():
                     flags=re.DOTALL
                 )
     
-    # Update timestamp
+    # Insert/replace Doc Health block
+    health = load_doc_health()
+    health_text = render_doc_health_block(health)
+    content = _replace_between_fences(content, FENCE_HEALTH_START, FENCE_HEALTH_END, health_text)
+    if FENCE_HEALTH_START not in content or FENCE_HEALTH_END not in content:
+        # Append a fenced Doc Health section if missing
+        content += "\n\n" + FENCE_HEALTH_START + "\n" + health_text + "\n" + FENCE_HEALTH_END + "\n"
+
+    # Update timestamp (keep existing format if present)
     content = re.sub(
         r'\*Last Updated: \d{4}-\d{2}-\d{2}\*',
         f'*Last Updated: {datetime.now().strftime("%Y-%m-%d")}*',
