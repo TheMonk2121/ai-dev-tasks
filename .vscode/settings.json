@@ -84,11 +84,21 @@
     "cSpell.enabled": true,
     "cSpell.words": [
         "backlog",
+        "cursorpyright",
         "dspy",
+        "esbenp",
+        "linkify",
         "markdownlint",
         "pylint",
         "pytest",
-        "toml"
+        "pgvector",
+        "plpgsql",
+        "toml",
+        "Segoe",
+        "BlinkMacSystemFont",
+        "Ubuntu",
+        "Droid",
+        "pycache"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [
