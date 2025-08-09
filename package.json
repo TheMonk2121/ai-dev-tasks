@@ -9,7 +9,11 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:yi-coder.generateCode",
+    "onCommand:yi-coder.completeCode",
+    "onCommand:yi-coder.refactorCode"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
