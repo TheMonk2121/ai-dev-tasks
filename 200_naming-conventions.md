@@ -2,8 +2,11 @@
 <!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- markdownlint-disable MD041 -->
 
-# Category Table (Accepted Exceptions & Deferrals)
+# Naming Conventions
+
+## Category Table (Accepted Exceptions & Deferrals)
 
 ## 🔎 TL;DR {#tldr}
 
@@ -12,6 +15,10 @@
 - **read when**: When you need a fast orientation or before using this file in a workflow.
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+
+| what this file is | read when | do next |
+|---|---|---|
+| Naming conventions and structure for project docs | Creating/reviewing new docs or renaming files | Follow the steps in File Generation, update cross-references, validate anchors |
 
 The three‑digit prefix is the default. The following categories are accepted exceptions (no rename required) or deferrals (tracked in backlog; rename not urgent). Use this table during PR review to triage naming warnings without churn.
 
@@ -26,7 +33,7 @@ The three‑digit prefix is the default. The following categories are accepted e
   - Third‑party status files: `dspy-rag-system/docs/CURRENT_STATUS.md`
   - Research helper indices under `docs/research/**` (papers, articles, tutorials)
 
-Reviewer guidance
+### Reviewer guidance
 
 - If a file matches “Accepted”, do not request a rename.
 
@@ -38,25 +45,21 @@ Reviewer guidance
 
 - **500+**: Research and meta-documentation (completion summaries, research notes, benchmarks)
 
-**Step 4: Descriptive Naming**
+## 🔢 Prefix Category Table
 
-- Use clear, descriptive names that indicate content
+This table clarifies the buckets for our numeric prefixes, making it easier to categorize and find files.
 
-- Follow kebab-case convention (lowercase with hyphens)
+| Prefix Range | Category Name                 | Purpose                                                                 | Examples                                                              |
+| :----------- | :---------------------------- | :---------------------------------------------------------------------- | :-------------------------------------------------------------------- |
+| `000-099`    | Core Workflow & Planning      | Core processes, backlog, PRDs, and high-level project plans.            | `000_backlog.md`, `001_create-prd.md`                                 |
+| `100-199`    | Guides & Automation           | Memory context, workflow guides, and automation tools.                  | `100_cursor-memory-context.md`, `100_backlog-guide.md`                |
+| `200-299`    | Configuration & Setup         | Environment setup, naming conventions, and tool configuration.          | `200_naming-conventions.md`, `202_setup-requirements.md`              |
+| `300-399`    | Templates & Examples          | Reusable templates, documentation examples, and few-shot prompts.       | `300_documentation-example.md`, `400_few-shot-context-examples.md`    |
+| `400-499`    | System Architecture & Overviews | High-level system design, project overviews, and context guides.        | `400_system-overview.md`, `400_project-overview.md`                   |
+| `500-599`    | Research, Testing & Analysis  | Research, benchmarks, testing, observability, and completion summaries. | `500_dspy-research.md`, `500_test-harness-guide.md`                   |
+| `600-999`    | Archives & Legacy             | Deprecated files, historical archives, and legacy documentation.        | `600_archives/`, `docs/legacy/`                                       |
 
-- Avoid multiple underscores or special characters
-
-- Make the filename self-documenting
-
-**Step 5: Cross-Reference Integration**
-
-- Ensure the file can be referenced in the context priority guide
-
-- Add appropriate HTML comment references
-
-- Consider AI rehydration needs
-
-### **Integration with Development Workflow**
+### Integration with Development Workflow
 
 The naming system **integrates seamlessly** with our development workflow. When creating new files, the process is:
 
@@ -66,7 +69,7 @@ The naming system **integrates seamlessly** with our development workflow. When 
 4. **Update the context priority guide** if the file belongs in a documented tier
 5. **Consider AI rehydration** - will this file be needed for context sharing?
 
-**Quality Assurance:**
+#### Quality Assurance
 
 - **Consistency checks** ensure similar files use similar naming patterns
 
@@ -78,11 +81,11 @@ The naming system **integrates seamlessly** with our development workflow. When 
 
 The result is a **living naming system** that scales with your project while maintaining the cognitive scaffolding that makes the documentation coherent and AI-friendly. Each new file automatically fits into the existing hierarchy, making it easy for both humans and AI to understand its role and importance in the overall system.
 
-## 🔄 File Generation Decision Process
+## 🔄 File Generation {#file-generation}
 
-### **Step 1: Determine if a File is Needed**
+### Step 1: Determine if a File is Needed
 
-**Ask these questions:**
+#### Ask these questions
 
 - **Is this information that will be referenced multiple times?** (If yes → file)
 
@@ -92,7 +95,7 @@ The result is a **living naming system** that scales with your project while mai
 
 - **Is this a one-off note or temporary information?** (If no → don't create file)
 
-**Examples of when to create files:**
+#### Examples of when to create files
 
 - ✅ **Workflow processes** (`001_create-prd.md`, `002_generate-tasks.md`)
 
@@ -104,7 +107,7 @@ The result is a **living naming system** that scales with your project while mai
 
 - ✅ **Research findings** (`500_memory-arch-research.md`)
 
-**Examples of when NOT to create files:**
+#### Examples of when NOT to create files
 
 - ❌ **Temporary notes** (use comments or inline documentation)
 
@@ -112,9 +115,9 @@ The result is a **living naming system** that scales with your project while mai
 
 - ❌ **Quick fixes** (document in commit messages or existing files)
 
-### **Step 2: Determine File Purpose and Priority**
+### Step 2: Determine File Purpose and Priority
 
-**Analyze the content type:**
+#### Analyze the content type
 
 - **Planning/Strategy** → High priority (000-099, 400-499)
 
@@ -124,7 +127,7 @@ The result is a **living naming system** that scales with your project while mai
 
 - **Configuration/Setup** → Medium priority (200-299)
 
-**Assess the audience:**
+#### Assess the audience
 
 - **Essential for everyone** → High priority (read first)
 
@@ -132,7 +135,7 @@ The result is a **living naming system** that scales with your project while mai
 
 - **Specialized knowledge** → Lower priority (read when needed)
 
-**Consider the lifecycle:**
+#### Consider the lifecycle
 
 - **Always relevant** → High priority (core documentation)
 
@@ -140,7 +143,7 @@ The result is a **living naming system** that scales with your project while mai
 
 - **Rarely relevant** → Lower priority (specialized guides)
 
-### **Step 3: Choose the Right Prefix Range**
+### Step 3: Choose the Right Prefix Range
 
 **000-099: Core Planning & Context**
 
@@ -182,9 +185,9 @@ The result is a **living naming system** that scales with your project while mai
 
 - Useful for learning from past work
 
-### **Step 4: Create Descriptive, Self-Documenting Names**
+### Step 4: Create Descriptive, Self-Documenting Names
 
-**Follow these naming principles:**
+#### Follow these naming principles
 
 - **Clear purpose**: The name should indicate what the file contains
 
@@ -194,7 +197,7 @@ The result is a **living naming system** that scales with your project while mai
 
 - **Avoid ambiguity**: Make it clear what the file is for
 
-**Examples of good names:**
+#### Examples of good names
 
 - ✅ `100_cursor-memory-context.md` (clear purpose)
 
@@ -202,7 +205,7 @@ The result is a **living naming system** that scales with your project while mai
 
 - ✅ `500_memory-arch-research.md` (research focus)
 
-**Examples of bad names:**
+#### Examples of bad names
 
 - ❌ `misc.md` (unclear purpose)
 
@@ -210,9 +213,9 @@ The result is a **living naming system** that scales with your project while mai
 
 - ❌ `temp.md` (temporary feeling)
 
-### **Step 5: Add AI API Comments and Cross-References**
+### Step 5: Add AI API Comments and Cross-References
 
-**Add appropriate AI API comments:**
+#### Add appropriate AI API comments
 
 - **HIGH priority files**: Must include CONTEXT_REFERENCE and MEMORY_CONTEXT
 
@@ -220,7 +223,7 @@ The result is a **living naming system** that scales with your project while mai
 
 - **Cross-references**: Always validate that referenced files exist
 
-**Examples:**
+#### Examples
 
 ```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
@@ -229,9 +232,9 @@ The result is a **living naming system** that scales with your project while mai
 
 ```
 
-### **Step 6: Validate Against Existing Patterns**
+### Step 6: Validate Against Existing Patterns
 
-**Check for consistency:**
+#### Check for consistency
 
 - **Are there similar files in the same prefix range?**
 
@@ -239,7 +242,7 @@ The result is a **living naming system** that scales with your project while mai
 
 - **Is this the right level of detail for this priority?**
 
-**Consider the cognitive scaffolding:**
+#### Consider the cognitive scaffolding
 
 - **Does this file help or hurt the AI's understanding?**
 
@@ -247,7 +250,7 @@ The result is a **living naming system** that scales with your project while mai
 
 - **Will this file be discoverable by the AI?**
 
-### **Example Decision Process**
+### Example Decision Process
 
 **Scenario**: Need to document a new workflow for automated testing
 
@@ -262,19 +265,7 @@ The result is a **living naming system** that scales with your project while mai
 
 This process ensures that every file created serves a clear purpose, fits into the existing structure, and contributes to the overall coherence of the documentation system.
 
-## 🔢 Prefix Category Table
-
-This table clarifies the buckets for our numeric prefixes, making it easier to categorize and find files.
-
-| Prefix Range | Category Name                 | Purpose                                                                 | Examples                                                              |
-| :----------- | :---------------------------- | :---------------------------------------------------------------------- | :-------------------------------------------------------------------- |
-| `000-099`    | Core Workflow & Planning      | Core processes, backlog, PRDs, and high-level project plans.            | `000_backlog.md`, `001_create-prd.md`                                 |
-| `100-199`    | Guides & Automation           | Memory context, workflow guides, and automation tools.                  | `100_cursor-memory-context.md`, `100_backlog-guide.md`                |
-| `200-299`    | Configuration & Setup         | Environment setup, naming conventions, and tool configuration.          | `200_naming-conventions.md`, `202_setup-requirements.md`              |
-| `300-399`    | Templates & Examples          | Reusable templates, documentation examples, and few-shot prompts.       | `300_documentation-example.md`, `400_few-shot-context-examples.md`    |
-| `400-499`    | System Architecture & Overviews | High-level system design, project overviews, and context guides.        | `400_system-overview.md`, `400_project-overview.md`                   |
-| `500-599`    | Research, Testing & Analysis  | Research, benchmarks, testing, observability, and completion summaries. | `500_dspy-research.md`, `500_test-harness-guide.md`                   |
-| `600-999`    | Archives & Legacy             | Deprecated files, historical archives, and legacy documentation.        | `600_archives/`, `docs/legacy/`                                       |
+<!-- Section moved earlier: Prefix Category Table -->
 
 ## 📝 File Naming Rules
 
@@ -296,7 +287,7 @@ This table clarifies the buckets for our numeric prefixes, making it easier to c
 
 - `100-backlog-automation.md` (missing required first underscore)
 
-## 📝 Document Formatting Standards
+## 📝 Formatting Standards {#formatting-standards}
 
 ### Header Structure Rules
 
@@ -385,7 +376,7 @@ Markdown tables are the **required standard** for presenting structured data:
 
 - **Validation**: Ensure all referenced sections exist
 
-## 🤖 AI API Documentation Standards
+## 🤖 AI API Standards {#ai-api-standards}
 
 The HTML comments in our documentation serve as a **formal API for AI consumption**. These comments enable cognitive scaffolding and context rehydration.
 
@@ -594,3 +585,4 @@ When proposing changes to this document:
 ## 🔗 Related Files
 
 <!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
+<!-- markdownlint-enable MD041 -->
