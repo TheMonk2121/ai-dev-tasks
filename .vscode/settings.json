@@ -1,0 +1,125 @@
+{
+    // Markdown Settings (based on 200_naming-conventions.md)
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.wordWrap": "on",
+        "editor.rulers": [
+            120
+        ],
+        "editor.unicodeHighlight.ambiguousCharacters": false,
+        "editor.unicodeHighlight.invisibleCharacters": false,
+        "editor.suggest.showReferences": true,
+        "editor.snippetSuggestions": "top"
+    },
+    // Markdown Extension Settings
+    "markdown.extension.toc.updateOnSave": true,
+    "markdown.extension.toc.orderedList": true,
+    "markdown.validate.enabled": true,
+    "markdown.preview.breaks": true,
+    "markdown.preview.linkify": true,
+    "markdown.preview.typographer": true,
+    "markdown.preview.fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif",
+    "markdown.preview.fontSize": 14,
+    // Markdownlint Configuration (from our standards)
+    "markdownlint.config": {
+        "MD009": false,
+        "MD013": false,
+        "MD024": false,
+        "MD029": {
+            "style": "ordered"
+        },
+        "MD031": false,
+        "MD036": false,
+        "MD034": true,
+        "MD040": true
+    },
+    // Python Settings (for scripts/)
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.autoImportUserSymbols": true,
+    "python.analysis.autoImportPreferredFormat": "absolute",
+    "python.analysis.extraPaths": [
+        "dspy-rag-system/src"
+    ],
+    "python.formatting.provider": "black",
+    // Disable built-in linting to avoid conflicts; use Ruff extension instead
+    "python.linting.enabled": false,
+    "python.linting.pylintEnabled": false,
+    "python.testing.pytestEnabled": true,
+    // Use Black as the default formatter for Python files
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    // Git Settings
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    // GitLens settings retained; Git Graph removed from recommendations
+    // File Management
+    "files.associations": {
+        "*.md": "markdown",
+        "*.jsonc": "jsonc",
+        "*.toml": "toml"
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    // Search & Navigation
+    "search.exclude": {
+        "**/600_archives/**": true,
+        "**/docs/legacy/**": true,
+        "**/__pycache__": true,
+        "**/.git": true
+    },
+    // Shell and SQL tooling
+    "shellcheck.enable": true,
+    "sqlfluff.linter.run": "onSave",
+    "sqlfluff.fixOnSave": true,
+    // Spell Checker Settings
+    "cSpell.enabled": true,
+    "cSpell.words": [
+        "backlog",
+        "dspy",
+        "markdownlint",
+        "pylint",
+        "pytest",
+        "toml"
+    ],
+    "cSpell.allowCompoundWords": true,
+    "cSpell.ignorePaths": [
+        "600_archives/**",
+        "docs/legacy/**"
+    ],
+    // Todo Tree Configuration
+    "todo-tree.general.tags": [
+        "TODO",
+        "FIXME",
+        "BUG",
+        "HACK",
+        "NOTE",
+        "REVIEW"
+    ],
+    "todo-tree.highlights.defaultHighlight": {
+        "foreground": "white",
+        "background": "#ffbd2a",
+        "icon": "alert",
+        "type": "text-and-comment"
+    },
+    // Path Intellisense
+    "path-intellisense.autoSlashAfterDirectory": true,
+    "path-intellisense.extensionOnImport": true,
+    // Editor General Settings
+    "editor.formatOnSave": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+    "editor.suggestSelection": "first",
+    "editor.linkedEditing": true,
+    "editor.stickyScroll.enabled": true,
+    "workbench.editor.highlightModifiedTabs": true,
+    "cursorpyright.analysis.autoImportCompletions": true,
+    "cursorpyright.analysis.extraPaths": [
+        "dspy-rag-system/src"
+    ],
+    "cursorpyright.analysis.typeCheckingMode": "basic"
+}

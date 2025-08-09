@@ -34,7 +34,10 @@ wheels/
 *.exe
 
 # IDE
-.vscode/
+# Keep most of .vscode ignored but allow committing specific workspace config files
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
@@ -86,4 +89,3 @@ __pycache__/
 out/
 test/*.js
 test/*.js.map
-
