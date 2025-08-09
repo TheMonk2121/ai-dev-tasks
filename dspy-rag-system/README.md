@@ -64,25 +64,7 @@ MEMORY_STORE = "postgres_diff_no_tombstones"
 
 - **Progressive Complexity**: Add features only when needed
 
-### **🔧 Recent Critical Fixes Implemented:**
-
-- ✅ **B-000: v0.3.1-rc3 Core Hardening** - Database resilience with connection pooling, health monitoring, retry logic, and production-ready error handling
-
-- ✅ **B-003: Production Security & Monitoring** - Comprehensive monitoring system with security alerts, health checks, OpenTelemetry integration
-
-- ✅ **C-2: Central Retry Wrapper** - Configurable retry logic with exponential backoff
-
-- ✅ **Enhanced DSPy RAG System** - Pre-RAG and post-RAG DSPy logic
-
-- ✅ **Dashboard Security Hardening** - Upload protection, rate limiting, thread safety
-
-- ✅ **VectorStore Performance** - Connection pooling, caching, bulk operations
-
-- ✅ **Watch Folder Security** - Command injection prevention, file stability polling
-
-- ✅ **Metadata Extractor** - Schema validation, regex safety, date parsing cache
-
-- ✅ **Document Processor** - UUID-based IDs, PyMuPDF integration, security validation
+> For recent changes and fixes, see [Version History](./docs/VERSION_HISTORY.md).
 
 ## **🎯 Quick Start**
 

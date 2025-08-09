@@ -10,6 +10,12 @@
 - Core hardening: database resilience, connection pooling, retry logic
 - Production monitoring: health checks, OpenTelemetry, alerts
 - Dashboard security hardening and watch-folder stability polling
+- Central retry wrapper with configurable exponential backoff
+- Enhanced DSPy RAG: pre-RAG and post-RAG logic
+- VectorStore performance: pooling, caching, bulk ops
+- Watch folder security: command injection prevention, stability polling
+- Metadata extractor: schema validation, regex safety, date parsing cache
+- Document processor: UUID-based IDs, PyMuPDF integration, security validation
 
 ## v0.3.0
 
