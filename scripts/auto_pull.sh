@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="/Users/danieljacobs/Documents/cursor-projects/ai-dev-tasks"
+REPO="/Users/danieljacobs/Code/ai-dev-tasks"
 LOG="$REPO/.git/autopull.log"
 
 cd "$REPO"
