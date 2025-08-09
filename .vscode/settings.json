@@ -47,9 +47,13 @@
     "python.linting.enabled": false,
     "python.linting.pylintEnabled": false,
     "python.testing.pytestEnabled": true,
-    // Use Black as the default formatter for Python files
+    // Use Black as the default formatter for Python files and run Ruff fixes/imports on save
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": true,
+            "source.organizeImports.ruff": true
+        }
     },
     // Git Settings
     "git.enableSmartCommit": true,
@@ -117,6 +121,7 @@
     "editor.linkedEditing": true,
     "editor.stickyScroll.enabled": true,
     "workbench.editor.highlightModifiedTabs": true,
+    // Ruff settings migrated away from legacy ruff-lsp; fixes/imports handled via codeActionsOnSave
     "cursorpyright.analysis.autoImportCompletions": true,
     "cursorpyright.analysis.extraPaths": [
         "dspy-rag-system/src"
