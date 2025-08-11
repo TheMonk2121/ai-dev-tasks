@@ -8,6 +8,16 @@
 
 ## 🔎 TL;DR {#tldr}
 
+| what this file is | read when | do next |
+|---|---|---|
+| PRD creation workflow and template | Before starting high-risk or 5+ point backlog items | Use `002_generate-tasks.md` to create tasks from PRD |
+
+- **what this file is**: Systematic PRD creation workflow with comprehensive testing requirements and quality gates
+
+- **read when**: Before starting high-risk projects, 5+ point items, or when backlog score < 3.0
+
+- **do next**: Create PRD using template, then use `002_generate-tasks.md` to generate implementation tasks
+
 ## 🎯 **Current Status**
 
 - **Status**: ✅ **ACTIVE** - PRD creation workflow maintained
