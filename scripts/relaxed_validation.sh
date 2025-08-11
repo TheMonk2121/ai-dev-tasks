@@ -60,7 +60,7 @@ git add .
 
 # Run markdownlint with relaxed config
 echo "🔍 Running markdownlint with relaxed rules..."
-MARKDOWN_OUTPUT=$(markdownlint --config "$TEMP_CONFIG" *.md 2>/dev/null || true)
+MARKDOWN_OUTPUT=$(markdownlint --config "$TEMP_CONFIG" ./*.md 2>/dev/null || true)
 if [ -z "$MARKDOWN_OUTPUT" ]; then
     echo "✅ Markdown validation passed (relaxed rules)"
 else
@@ -71,7 +71,7 @@ else
     echo ""
     echo "💡 These are structural issues that must be fixed before committing."
     echo "   Line length violations are ignored."
-    
+
     # Clean up temp config
     rm "$TEMP_CONFIG"
     exit 1

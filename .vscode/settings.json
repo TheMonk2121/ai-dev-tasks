@@ -89,6 +89,7 @@
         "esbenp",
         "linkify",
         "markdownlint",
+        "mdformat",
         "pylint",
         "pytest",
         "pgvector",

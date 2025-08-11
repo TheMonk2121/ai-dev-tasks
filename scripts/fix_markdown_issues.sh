@@ -16,19 +16,19 @@ if ! command -v markdownlint &> /dev/null; then
 fi
 
 echo "📋 Current markdown issues:"
-markdownlint *.md 2>/dev/null || true
+markdownlint ./*.md 2>/dev/null || true
 echo ""
 
 echo "🔍 Analyzing files with issues..."
 
 # Fix line length issues (MD013) - wrap long lines
 echo "📏 Fixing line length issues (MD013)..."
-for file in *.md; do
+for file in ./*.md; do
     if [ -f "$file" ]; then
         echo "  Processing: $file"
         # This is a simple approach - in practice you'd want more sophisticated line wrapping
         # For now, we'll just report the issues
-        LONG_LINES=$(markdownlint "$file" 2>/dev/null | grep "MD013" | wc -l)
+        LONG_LINES=$(markdownlint "$file" 2>/dev/null | grep -c "MD013" || echo "0")
         if [ "$LONG_LINES" -gt 0 ]; then
             echo "    ⚠️  $LONG_LINES long lines found (manual fix needed)"
         fi
@@ -37,9 +37,9 @@ done
 
 # Fix heading level issues (MD001)
 echo "📝 Fixing heading level issues (MD001)..."
-for file in *.md; do
+for file in ./*.md; do
     if [ -f "$file" ]; then
-        HEADING_ISSUES=$(markdownlint "$file" 2>/dev/null | grep "MD001" | wc -l)
+        HEADING_ISSUES=$(markdownlint "$file" 2>/dev/null | grep -c "MD001" || echo "0")
         if [ "$HEADING_ISSUES" -gt 0 ]; then
             echo "    ⚠️  Heading level issues in $file (manual fix needed)"
         fi

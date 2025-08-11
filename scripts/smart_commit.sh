@@ -27,7 +27,6 @@ echo ""
 
 # Get staged files
 STAGED_FILES=$(git diff --cached --name-only 2>/dev/null || echo "")
-CHANGED_FILES=$(git diff --name-only 2>/dev/null || echo "")
 
 # If no staged files, stage all changes
 if [ -z "$STAGED_FILES" ]; then
