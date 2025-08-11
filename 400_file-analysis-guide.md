@@ -10,13 +10,13 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-|  |  |  |
+| File analysis and safety procedures | Before suggesting file deletion/movement | Follow 6-step analysis process and safety checklist |
 
-- **what this file is**: Quick summary of 🔍 File Analysis Guide.
+- **what this file is**: Systematic 6-phase process for analyzing files to determine if they are obsolete, legacy, or should be retained
 
-- **read when**: When you need a fast orientation or before using this file in a workflow.
+- **read when**: Before suggesting ANY file deletion, deprecation, or archiving operations
 
-- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+- **do next**: Complete the 6-step mandatory analysis process and safety checklist before making recommendations
 
 ## 🎯 **Current Status**
 
