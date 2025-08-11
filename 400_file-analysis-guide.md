@@ -6,9 +6,7 @@
 
 # 🔍 File Analysis Guide
 
-<a id="tldr"></a>
-
-## 🔎 TL;DR
+## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |
 |---|---|---|
@@ -19,7 +17,6 @@
 - **read when**: When you need a fast orientation or before using this file in a workflow.
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
-
 
 ## 🎯 **Current Status**
 
@@ -76,7 +73,9 @@ methodology.
 #### **Step 1: Read Core Memory Context**
 
 **Purpose**: Understand current project state before analysis
+
 **Files to Read**:
+
 1. **`100_cursor-memory-context.md`** - Current project state and priorities
 2. **`000_backlog.md`** - Active development items and roadmap
 3. **`400_system-overview.md`** - Technical architecture understanding
@@ -88,7 +87,9 @@ methodology.
 #### **Step 2: Understand File Organization System**
 
 **Purpose**: Grasp the file categorization and priority system
+
 **Files to Read**:
+
 1. **`200_naming-conventions.md`** - File categorization system (000-699 prefixes)
 2. **`400_context-priority-guide.md`** - Memory scaffolding and file priorities
 3. **`400_memory-context-guide.md`** - How files relate to AI memory rehydration
@@ -122,7 +123,7 @@ methodology.
 
 - **Criteria**: Files in `600_archives/`, files with "legacy" or "backup" in name
 
-- **Examples**: Files in `600_archives/`, `103_yi-coder-integration.md` (marked as legacy)
+- **Examples**: Files in `600_archives/`, legacy integration files (marked as legacy)
 
 - **Action**: **Archive rather than delete** - preserve for historical context
 
@@ -156,6 +157,7 @@ methodology.
 - **Orphaned**: Files not referenced anywhere
 
 **Analysis Questions**:
+
 1. How many files reference this file?
 2. How many files does this file reference?
 3. Are the references current and accurate?
@@ -181,7 +183,7 @@ methodology.
 
 - ⚠️ **Mixed**: Some current references, some outdated
 
-- ❌ **Outdated**: References legacy models (Mistral, Yi-Coder), old workflows, deprecated features
+- ❌ **Outdated**: References legacy models (legacy integrations), old workflows, deprecated features
 
 **Workflow Alignment**:
 
@@ -222,12 +224,14 @@ methodology.
 **Purpose**: Understand the consequences of removing or archiving a file
 
 **Before Suggesting Removal**:
+
 1. **Check all cross-references** to the file
 2. **Verify it's not in active workflows**
 3. **Confirm it's not part of core memory context**
 4. **Ensure it's not referenced in current documentation**
 
 **Impact Assessment Questions**:
+
 1. What would break if this file were removed?
 2. What workflows depend on this file?
 3. What documentation references this file?
@@ -248,6 +252,7 @@ methodology.
 - **Suggest alternatives** if a file contains valuable information
 
 **Safety Mechanisms**:
+
 1. **Dry-run analysis** - Show what would happen without making changes
 2. **Cross-reference validation** - Ensure all references are checked
 3. **Impact assessment** - Show what would break
@@ -271,15 +276,13 @@ methodology.
 
 **Archive Structure**:
 
-```
-
+```text
 600_archives/
 ├── backup_before_core_migration/
 ├── backup_before_migration/
 ├── backup_before_subdirectory_migration/
 ├── implementation-notes/
 └── legacy_integrations/
-
 ```
 
 #### **Step 10: Cross-Reference Updates**
@@ -287,6 +290,7 @@ methodology.
 **Purpose**: Maintain system integrity after changes
 
 **Update Process**:
+
 1. **Find all references** to the file being changed
 2. **Update references** to point to current alternatives
 3. **Validate references** to ensure they're accurate
@@ -299,6 +303,7 @@ methodology.
 **Purpose**: Ensure changes don't break the system
 
 **Validation Steps**:
+
 1. **Run maintenance scripts** to check for broken references
 2. **Test AI memory rehydration** to ensure context is preserved
 3. **Verify workflows** still function correctly
@@ -349,7 +354,6 @@ Use this checklist before writing new Python code to reduce duplication and keep
   - Add a brief backlink in the relevant 400_* guide (Implementation refs)
   - If research‑backed, add a line in the paired 500_* file (Backlog link + implementation refs)
 
-
 ### **For Each File, Check:**
 
 #### **1. Cross-Reference Count**
@@ -362,13 +366,13 @@ Use this checklist before writing new Python code to reduce duplication and keep
 
 **Method**: Check if content reflects current system state
 **Indicators**: Model references, workflow descriptions, timestamps
-**Red Flags**: References to "Mistral", "Yi-Coder", "Mixtral" (unless in backlog)
+**Red Flags**: References to legacy models (legacy integrations) (unless in backlog)
 
 #### **3. Model Alignment**
 
 **Method**: Check if file references current models or legacy ones
 **Current Models**: Cursor Native AI, Specialized Agents
-**Legacy Models**: Mistral, Yi-Coder, Mixtral (unless in backlog)
+**Legacy Models**: Legacy integrations (unless in backlog)
 
 #### **4. Workflow Integration**
 
@@ -392,7 +396,7 @@ Use this checklist before writing new Python code to reduce duplication and keep
 
 ### **Red Flags That Suggest Legacy Status:**
 
-- References to "Mistral", "Yi-Coder", "Mixtral" (unless in backlog)
+- References to legacy models (legacy integrations) (unless in backlog)
 
 - Files in `600_archives/` directory
 
@@ -482,12 +486,12 @@ Use this checklist before writing new Python code to reduce duplication and keep
 
 ### **Example 1: Analyzing a Legacy Integration File**
 
-**File**: `103_yi-coder-integration.md`
+**File**: Legacy integration file
 **Analysis Process**:
 
 1. **Context Loading**: Check current system uses Cursor Native AI
 2. **Cross-Reference Analysis**: Find files that reference this
-3. **Content Analysis**: Check for Yi-Coder references (legacy)
+3. **Content Analysis**: Check for legacy model references (legacy)
 4. **Risk Assessment**: Determine impact of archiving
 5. **Documentation Strategy**: Move to `600_archives/legacy_integrations/`
 6. **Validation**: Update all references to current alternatives
@@ -554,7 +558,7 @@ Use this checklist before writing new Python code to reduce duplication and keep
 
 ### **Red Flags (Legacy Indicators):**
 
-- [ ] References legacy models (Mistral, Yi-Coder, Mixtral)
+- [ ] References legacy models (legacy integrations)
 
 - [ ] Located in `600_archives/` directory
 
