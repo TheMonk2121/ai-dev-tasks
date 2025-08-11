@@ -6,8 +6,7 @@
 
 # 📝 Create PRD
 
-<!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+## 🔎 TL;DR {#tldr}
 
 ## 🎯 **Current Status**
 
@@ -21,26 +20,19 @@
 
 - **Next Steps**: Enhance PRD templates and validation
 
-<!-- ANCHOR: when-to-use -->
-<a id="when-to-use"></a>
-
-## When to use
+## When to use {#when-to-use}
 
 - Use for high-risk or 5+ point items, or when score_total < 3.0
 
 - Optional for smaller items where acceptance criteria are obvious
 
-<!-- ANCHOR: prd-skip-rule -->
-<a id="prd-skip-rule"></a>
-
-### PRD Skip Rule (canonical)
+### PRD Skip Rule (canonical) {#prd-skip-rule}
 
 - Skip PRD when: points < 5 AND score_total ≥ 3.0 (backlog metadata `<!--score_total: X.X-->`)
 
 - Otherwise, create a PRD with machine-verifiable acceptance criteria
 
-<!-- ANCHOR: template -->
-<a id="template"></a>
+## Template {#template}
 
 - **Impact**: Quantified benefits and outcomes
 
@@ -286,16 +278,12 @@
 14. **Consider backlog scoring** for prioritization when available
 15. **Use scoring metadata** to inform effort and dependency planning
 
-<!-- ANCHOR: acceptance-criteria -->
-<a id="acceptance-criteria"></a>
+## Acceptance Criteria {#acceptance-criteria}
 
 This enhanced approach ensures that every PRD includes thorough testing requirements and quality gates, leading to more
 robust and reliable implementations.
 
-<!-- ANCHOR: handoff-to-002 -->
-<a id="handoff-to-002"></a>
-
-## Handoff to task generation
+## Handoff to task generation {#handoff-to-002}
 
 - Next step: Use `002_generate-tasks.md` with this PRD (or a Backlog ID)
 
