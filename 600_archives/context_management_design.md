@@ -14,8 +14,7 @@ sharing between Cursor's native AI and specialized agents.
 
 ### **High-Level Architecture**
 
-```
-
+```text
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Cursor IDE    │    │  Context Store  │    │ Specialized     │
 │                 │◄──►│                 │◄──►│ Agents          │
@@ -28,7 +27,6 @@ sharing between Cursor's native AI and specialized agents.
 │  Context API    │    │  Context Cache  │    │  Agent Context  │
 │                 │    │                 │    │  Handlers       │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-
 ```
 
 ### **Component Overview**
@@ -439,21 +437,18 @@ CREATE INDEX idx_access_log_created ON context_access_log(created_at);
 
 ### **Context Creation Flow**
 
-```
-
+```text
 1. User Action → Agent Request
 2. Context Retrieval → Get relevant context from store
 3. Context Processing → Agent processes with context
 4. Context Update → Update context with new information
 5. Context Storage → Store updated context
 6. Context Broadcasting → Notify other agents of updates
-
 ```
 
 ### **Context Sharing Flow**
 
-```
-
+```text
 1. Agent A → Request context for specific task
 2. Context Store → Retrieve relevant context
 3. Context Filtering → Filter based on permissions and relevance
@@ -461,19 +456,16 @@ CREATE INDEX idx_access_log_created ON context_access_log(created_at);
 5. Context Usage → Agent A uses context for processing
 6. Context Update → Agent A updates context with results
 7. Context Broadcasting → Notify other agents of updates
-
 ```
 
 ### **Context Cleanup Flow**
 
-```
-
+```text
 1. Context Monitoring → Monitor context usage and age
 2. Context Analysis → Analyze context relevance and importance
 3. Context Archival → Archive old or unused context
 4. Context Deletion → Delete irrelevant or expired context
 5. Context Optimization → Optimize remaining context
-
 ```
 
 ## 🧪 **Testing Strategy**

@@ -36,9 +36,9 @@ CONTEXT_INDEX -->
 
 - Read order: `100_cursor-memory-context.md` → `README.md` → `000_backlog.md` → `400_system-overview.md` → `400_context-priority-guide.md`
 
-- Always follow safety rules; never delete/move without the checklist
+- Always follow safety rules in `400_file-analysis-guide.md`; never delete/move without the 6-step mandatory analysis checklist
 
-- Use consolidated 400-series guides (no split modules)
+- Use consolidated 400-series guides (comprehensive single-file documentation like `400_system-overview.md`, `400_testing-strategy-guide.md`, etc.) - no split modules
 
 - Focus on Cursor-based LLM context only (no external model specifics)
 

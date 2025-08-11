@@ -8,7 +8,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 CREATE TABLE IF NOT EXISTS document_chunks (
     id SERIAL PRIMARY KEY,
     content TEXT NOT NULL,
-    embedding VECTOR(384), -- Mistral-7B embedding dimension
+    embedding VECTOR(384), -- Cursor AI embedding dimension
     metadata JSONB DEFAULT '{}',
     document_id VARCHAR(255),
     chunk_index INTEGER,
@@ -60,4 +60,4 @@ CREATE TRIGGER update_document_chunks_updated_at BEFORE UPDATE ON document_chunk
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_documents_updated_at BEFORE UPDATE ON documents
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column(); 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

@@ -1,0 +1,79 @@
+{
+  "name": "yi-coder-integration",
+  "displayName": "Yi-Coder Integration",
+  "description": "AI-powered code generation using Yi-Coder-9B-Chat-Q6_K model",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:yi-coder.generateCode",
+    "onCommand:yi-coder.completeCode",
+    "onCommand:yi-coder.refactorCode"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "yi-coder.generateCode",
+        "title": "Yi-Coder: Generate Code"
+      },
+      {
+        "command": "yi-coder.completeCode",
+        "title": "Yi-Coder: Complete Code"
+      },
+      {
+        "command": "yi-coder.refactorCode",
+        "title": "Yi-Coder: Refactor Code"
+      }
+    ],
+    "configuration": {
+      "title": "Yi-Coder Integration",
+      "properties": {
+        "yi-coder.lmStudioUrl": {
+          "type": "string",
+          "default": "http://localhost:1234",
+          "description": "LM Studio server URL"
+        },
+        "yi-coder.modelName": {
+          "type": "string",
+          "default": "Yi-Coder-9B-Chat-Q6_K",
+          "description": "Model name for code generation"
+        },
+        "yi-coder.maxTokens": {
+          "type": "number",
+          "default": 2048,
+          "description": "Maximum tokens for code generation"
+        },
+        "yi-coder.temperature": {
+          "type": "number",
+          "default": 0.7,
+          "description": "Temperature for code generation"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "eslint": "^8.26.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "ws": "^8.13.0",
+    "axios": "^1.4.0"
+  }
+} 

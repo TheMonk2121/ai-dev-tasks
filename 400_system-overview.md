@@ -1,10 +1,10 @@
+# 🏗️ System Overview
+
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - System architecture and technical overview -->
-
-## 🏗️ System Overview
 
 ## 🎯 **Current Status**
 
@@ -18,7 +18,7 @@
 
 - **Next Steps**: Update as system architecture evolves
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -55,7 +55,7 @@
 | Testing | #testing | Strategy and gates | Testing guide |
 
 <!-- ANCHOR: architecture -->
-<a id="architecture"></a>
+{#architecture}
 
 ## Architecture
 
@@ -78,7 +78,7 @@
 ---
 
 <!-- ANCHOR: context-management -->
-<a id="context-management"></a>
+{#context-management}
 
 ## Context Management
 
@@ -99,7 +99,7 @@
 ---
 
 <!-- ANCHOR: security -->
-<a id="security"></a>
+{#security}
 
 ## 🔒 Security & Reliability Features
 
@@ -140,7 +140,7 @@
 ---
 
 <!-- ANCHOR: workflow -->
-<a id="workflow"></a>
+{#workflow}
 
 ## 🔄 Development Workflow (High-Level Process)
 
@@ -172,7 +172,7 @@
 ---
 
 <!-- ANCHOR: core-components -->
-<a id="core-components"></a>
+{#core-components}
 
 ## 🧩 Core Components (Detailed View)
 
@@ -388,7 +388,7 @@
 ---
 
 <!-- ANCHOR: testing -->
-<a id="testing"></a>
+{#testing}
 
 ## 🧪 Testing Framework & Quality Assurance
 
@@ -577,7 +577,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 ---
 
 <!-- ANCHOR: deployment -->
-<a id="deployment"></a>
+{#deployment}
 
 ## ⚙️ Configuration and Setup
 
@@ -852,7 +852,7 @@ sudo supervisorctl update
 ---
 
 <!-- ANCHOR: integration -->
-<a id="integration"></a>
+{#integration}
 
 ## 🔧 Technical Implementation (Micro View)
 
@@ -910,7 +910,7 @@ sudo supervisorctl update
 ---
 
 <!-- ANCHOR: migration -->
-<a id="migration"></a>
+{#migration}
 
 ## 🎯 Use Cases & Applications
 
@@ -949,7 +949,7 @@ sudo supervisorctl update
 ---
 
 <!-- ANCHOR: performance -->
-<a id="performance"></a>
+{#performance}
 
 ## 🚀 Getting Started
 
