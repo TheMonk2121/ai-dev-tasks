@@ -130,7 +130,7 @@ Read these files in order (1–2 min total):
 
 - Exclusions: `docs/legacy/**`, `600_archives/**` are reference-only.
 
-- Legacy integrations (Mistral, Yi‑Coder, Mixtral) must not appear in active docs; keep under `600_archives/`.
+- Legacy integrations must not appear in active docs; keep under `600_archives/`.
 
 - Before archiving/moving: follow `400_file-analysis-guide.md`. After changes: run `python3 scripts/update_cursor_memory.py`.
 
