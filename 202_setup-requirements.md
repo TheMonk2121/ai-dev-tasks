@@ -331,6 +331,7 @@ pip install -r dashboard/requirements.txt
 ```
 
 #### **System Dependencies**
+
 ```bash
 # Ubuntu/Debian
 sudo apt-get update
@@ -374,6 +375,7 @@ cd ../dashboard
 - **Setup Required**: Production environment configuration
 
 #### **Production Deployment**
+
 ```bash
 # Setup production environment
 sudo apt-get install nginx supervisor
@@ -393,6 +395,7 @@ sudo supervisorctl update
 ### **System Requirements**
 
 #### **Minimum Requirements**
+
 - **CPU**: 4 cores (8+ recommended)
 - **RAM**: 8GB (16GB+ recommended)
 - **Storage**: 50GB SSD
@@ -408,6 +411,7 @@ sudo supervisorctl update
 ## 🧪 Testing Setup
 
 ### **Test Commands**
+
 ```bash
 
 # Test n8n connectivity
@@ -427,6 +431,7 @@ python3 demo_n8n_integration.py
 ```
 
 ### **Verification Checklist**
+
 - [ ] n8n is running and accessible
 
 - [ ] PostgreSQL is running with pgvector extension

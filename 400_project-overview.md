@@ -106,6 +106,8 @@ Here's the step-by-step process using the `.md` files in this repository:
 
 For systematic development, start by selecting a high-impact feature from the backlog:
 
+```text
+
 1. Ensure you have the `000_backlog.md` file from this repository accessible.
 2. Review the prioritized table and select a feature based on:
 - **Points**: Lower numbers (1-3) for quick wins, higher (5-13) for complex features
@@ -113,9 +115,9 @@ For systematic development, start by selecting a high-impact feature from the ba
 - **Status**: Choose "todo" items for new work
 - **Dependencies**: Check if prerequisites are completed
 - **Scores**: Higher scores (5.0+) indicate higher priority items
-
 3. Use the backlog item ID (e.g., B-001) as input for PRD creation in the next step.
 4. The AI can automatically parse the table format and generate PRDs using the AI-BACKLOG-META command.
+```
 
 - 💡 **Pro Tip**: Check `200_naming-conventions.md` to understand the file organization and naming patterns used in this
 project.*
@@ -134,7 +136,8 @@ You can create a lightweight PRD directly within your AI tool of choice:
     Here's the feature I want to build: [Describe your feature in detail]
     Backlog ID: [e.g., B-001 for Real-time Mission Dashboard]
     Reference these files to help you: [Optional: @file1.py @file2.ts @000_backlog.md]
-    ```text*(Pro Tip: For Cursor users, MAX mode is recommended for complex PRDs if your budget allows for more comprehensive
+
+(Pro Tip: For Cursor users, MAX mode is recommended for complex PRDs if your budget allows for more comprehensive
 generation.)*![Example of initiating PRD creation](https://pbs.twimg.com/media/Go6DDlyX0AAS7JE?format=jpg&name=large)
 
 ### 2️⃣ Generate Your Task List from the PRD
@@ -167,7 +170,9 @@ Agents) with strategic human oversight.
 
     ```text
     Please start on task T-1 and use @003_process-task-list.md (the execution engine)
-    ```*(Important: You only need to reference `@003_process-task-list.md` for the *first* task. The instructions within it
+    ```
+
+    *(Important: You only need to reference `@003_process-task-list.md` for the *first* task. The instructions within it
 guide the AI for subsequent tasks.)*The AI will attempt the task and then pause only when necessary for human review.
 
 ![Example of starting on a task with
