@@ -59,26 +59,33 @@
 
 ## 🛠️ When Working on Features
 
-### **Feature Development Process**1.**Check `000_backlog.md`**for current priorities and dependencies
+### **Feature Development Process**
+
+1.**Check `000_backlog.md`**for current priorities and dependencies
 2.**Use existing workflows**(`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
 3.**Follow naming conventions**from `200_naming-conventions.md`
 4.**Update completion summaries**when finishing major features
 5.**Use research framework**(`500_memory-arch-research.md`) for systematic research
 
-### **Feature Addition Process**1.**Add to backlog**with proper scoring (see `100_backlog-guide.md`)
+### **Feature Addition Process**
+
+1.**Add to backlog**with proper scoring (see `100_backlog-guide.md`)
 2.**Create PRD**(skip for items < 5 pts AND score≥3.0) → else use `001_create-prd.md` workflow
 3.**Generate tasks**using `002_generate-tasks.md` workflow (parses PRD or backlog directly)
 4.**Execute**using `003_process-task-list.md` workflow
 
-### **Debugging Process**1.**Check `dspy-rag-system/docs/CURRENT_STATUS.md`**for system health
+### **Debugging Process**
+
+1.**Check `dspy-rag-system/docs/CURRENT_STATUS.md`**for system health
 2.**Review error logs**in `dspy-rag-system/src/utils/logger.py`
 3.**Use retry wrapper**from `dspy-rag-system/src/utils/retry_wrapper.py`
 4.**Check security validation**from `dspy-rag-system/src/utils/prompt_sanitizer.py`
 
 ## 📊 Documentation Strategy & Safeguards
 
-### **Cognitive Scaffolding System**Our documentation system uses**cognitive scaffolding**with three-digit prefixes and HTML cross-references to maintain
-coherence. The system balances**structure**(rigid naming conventions) with**elasticity**(automated validation and
+### **Cognitive Scaffolding System**
+
+Our documentation system uses **cognitive scaffolding** with three-digit prefixes and HTML cross-references to maintain coherence. The system balances**structure**(rigid naming conventions) with**elasticity**(automated validation and
 AI-assisted updates).
 
 ### **Key Safeguards**-**Automated validation**with Cursor AI semantic checking
@@ -91,18 +98,25 @@ AI-assisted updates).
 
 - **Single source of truth**principle to prevent drift
 
-### **File Naming System**Our**three-digit prefix hierarchy**creates semantic ordering for both humans and AI. The naming flow uses a**cascading decision process**: purpose check → priority assessment → prefix assignment → descriptive naming →
+### **File Naming System**
+
+Our **three-digit prefix hierarchy** creates semantic ordering for both humans and AI. The naming flow uses a **cascading decision process**: purpose check → priority assessment → prefix assignment → descriptive naming →
 cross-reference integration. This creates a **self-documenting system**where filenames provide instant context about
 their role in the ecosystem.
 
-### **AI File Analysis Strategy**When Cursor AI restarts, it follows a**structured reading strategy**: First reads `100_cursor-memory-context.md` (30
+### **AI File Analysis Strategy**
+
+When Cursor AI restarts, it follows a **structured reading strategy**: First reads `100_cursor-memory-context.md` (30
 seconds, 80% context), then `000_backlog.md` (current priorities), then `400_system-overview_advanced_features.md`
 (technical architecture). Ancillary files are read as needed for specific tasks. Scripts are only read when
 implementation details are required.
 
 ## 🔧 Process Guidelines
 
-### **File Generation Decision Process**When creating new files, follow a**6-step decision process**:
+### **File Generation Decision Process**
+
+When creating new files, follow a **6-step decision process**:
+
 1. **Determine if file is needed**(reusable info vs. temporary)
 2.**Assess purpose and priority**(planning vs. implementation vs. research)
 3.**Choose prefix range**(000-099 for core, 100-199 for guides, etc.)
@@ -110,13 +124,15 @@ implementation details are required.
 5.**Add cross-references**and consider AI rehydration
 6.**Validate against existing patterns**###**Documentation Placement Logic**When determining where to place new documentation, follow a**5-step process**:
 
-1. **Assess content type and scope**(system-wide vs. workflow vs. setup)
+1.**Assess content type and scope**(system-wide vs. workflow vs. setup)
 2.**Choose primary location**based on content (400-499 for concepts, 200-299 for processes)
 3.**Determine if multiple locations needed**(core concepts get quick reference + detailed)
 4.**Consider reading pattern**(immediate vs. when relevant vs. when needed)
 5.**Add cross-references**for discovery
 
-### **Workflow Chain Preservation**Maintain the**workflow chain**: `000_backlog.md` → `001_create-prd.md` → `002_generate-tasks.md` →
+### **Workflow Chain Preservation**
+
+Maintain the **workflow chain**: `000_backlog.md` → `001_create-prd.md` → `002_generate-tasks.md` →
 `003_process-task-list.md`
 
 - **Backlog**: Source of truth for priorities and scoring
