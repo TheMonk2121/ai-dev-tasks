@@ -4,7 +4,6 @@
 <!-- MEMORY_CONTEXT: MEDIUM - Metadata collection and analysis -->
 # 📊 Metadata Collection Guide
 
-
 ## 📊 Metadata Collection Guide
 
 {#tldr}
@@ -563,7 +562,9 @@ def analyze_task_correlations():
 
 - Resource utilization tracking
 
-## 📋 **Best Practices**## ⚡ Quick reference
+## 📋 **Best Practices**
+
+## ⚡ Quick reference {#quick-reference}
 
 - Key sources: `000_backlog.md` (scores, deps, status), `task_execution.db` (executions, perf, retries), error system (categories, severity, recovery)
 

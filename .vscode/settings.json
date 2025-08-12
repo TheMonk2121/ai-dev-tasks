@@ -84,6 +84,7 @@
     "cSpell.enabled": true,
     "cSpell.words": [
         "backlog",
+        "createdb",
         "cursorpyright",
         "dspy",
         "elif",
@@ -96,8 +97,10 @@
         "pytest",
         "pgvector",
         "plpgsql",
+        "psql",
         "psutil",
-        "toml",
+        "sanitisation",
+        "sanitiser",
         "Segoe",
         "BlinkMacSystemFont",
         "Ubuntu",
@@ -105,7 +108,9 @@
         "pycache",
         "Negotiables",
         "regen",
-        "sanitiser"
+        "supervisorctl",
+        "toml",
+        "venv"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

@@ -3,8 +3,8 @@
 <!-- MODULE_REFERENCE: 000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Project overview and quick start guide -->
+<!-- WORKFLOW_MASTER: This file is the canonical source for development workflow -->
 # 📋 Project Overview
-
 
 ## 📋 Project Overview
 
@@ -61,143 +61,30 @@
 
 See the steps above; this anchor is stable for cross-references.
 
-- `CLARIFIER=0` - Disable ClarifierAgent (default)
+**For complete configuration details, see `202_setup-requirements.md`**
 
-- `POOL_MIN=1` - Minimum database connections
+<!-- CONFIGURATION_REFERENCE: 202_setup-requirements.md -->
 
-- `POOL_MAX=10` - Maximum database connections
+**Essential Environment Variables for Quick Start:**
+```bash
+# Core settings for immediate use
+ENABLED_AGENTS=IntentRouter,RetrievalAgent,CodeAgent
+POSTGRES_DSN=postgresql://user:pass@host:port/db
+N8N_BASE_URL=http://localhost:5678
+N8N_API_KEY=your_api_key_here
+```
 
-- `MODEL_IDLE_EVICT_SECS=600` - Idle model eviction time
-
-- `MAX_RAM_PRESSURE=85` - Maximum RAM usage percentage
-
-- `ENABLED_AGENTS=IntentRouter,RetrievalAgent,CodeAgent` - Comma-separated agent list
-
-- `METRICS_PORT=9100` - Prometheus metrics endpoint port
-
-- `REDIS_URL=redis://localhost:6379` - Redis for rate limiting persistence
-
-- `HEALTH_CHECK_TIMEOUT=30` - Health check timeout in seconds
-
-- `READY_CHECK_TIMEOUT=10` - Readiness check timeout in seconds
-
-- *Timeout Configuration:**- `DB_CONNECT_TIMEOUT=10` - Database connection timeout (seconds)
-
-- `DB_READ_TIMEOUT=30` - Database read timeout (seconds)
-
-- `DB_WRITE_TIMEOUT=60` - Database write timeout (seconds)
-
-- `DB_POOL_TIMEOUT=20` - Database pool timeout (seconds)
-
-- `HTTP_CONNECT_TIMEOUT=10` - HTTP connection timeout (seconds)
-
-- `HTTP_READ_TIMEOUT=30` - HTTP read timeout (seconds)
-
-- `HTTP_TOTAL_TIMEOUT=120` - HTTP total timeout (seconds)
-
-- `PDF_PROCESSING_TIMEOUT=300` - PDF processing timeout (seconds)
-
-- `FILE_UPLOAD_TIMEOUT=600` - File upload timeout (seconds)
-
-- `CHUNK_PROCESSING_TIMEOUT=120` - Chunk processing timeout (seconds)
-
-- `LLM_REQUEST_TIMEOUT=120` - LLM request timeout (seconds)
-
-- `LLM_STREAM_TIMEOUT=300` - LLM stream timeout (seconds)
-
-- `STARTUP_TIMEOUT=60` - System startup timeout (seconds)**Security Configuration:**- `SECURITY_ENABLED=true` - Enable security scanning
-
-- `SECURITY_SCAN_ON_STARTUP=true` - Run security scan on startup
-
-- `SECURITY_VULNERABILITY_THRESHOLD=medium` - Vulnerability threshold
-
-- `SECURITY_AUTO_FIX=false` - Auto-fix security issues
-
-- `SECURITY_REPORT_FILE=security-report.json` - Security report file
-
-- `SECURITY_MAX_FILE_SIZE=104857600` - Maximum file size (100MB)
-
-- `SECURITY_TOKEN_LENGTH=32` - Security token length
-
-- `LLM_TIMEOUT_SEC=90` - Overrides agent timeouts (the execution engine)
-
-- `SECURITY_MAX_FILE_MB=100` - Raise default 50 MB cap (the execution engine)**Production Monitoring Configuration:**- `ENVIRONMENT=production` - Set environment (development, staging, production)
-
-- `OTLP_ENDPOINT=<http://localhost:4317`> - OpenTelemetry endpoint (the execution engine)
-
-- `MONITORING_INTERVAL=30` - Monitoring cycle interval in seconds
-
-- `HEALTH_CHECK_TIMEOUT=5` - Health check timeout in seconds**Database Resilience Configuration:**- `POSTGRES_DSN=postgresql://user:pass@host:port/db` - Database connection string
-
-- `DB_MIN_CONNECTIONS=1` - Minimum database connections in pool
-
-- `DB_MAX_CONNECTIONS=10` - Maximum database connections in pool
-
-- `DB_CONNECTION_TIMEOUT=30` - Database connection timeout in seconds
-
-- `DB_HEALTH_CHECK_INTERVAL=60` - Database health check interval in seconds**Config hot-reload:**```bash
-curl -X POST <http://localhost:5000/admin/reload-config>
-
-```markdown**Override enabled agents:**```bash
-ENABLED_AGENTS=IntentRouter,RetrievalAgent make run-local
-
-```markdown**Health & Metrics:**```bash
-
+**Quick Commands:**
+```bash
 # Health check
+curl http://localhost:5000/health
 
-curl <http://localhost:5000/health>
+# Start system
+make run-local
 
-# Metrics endpoint
-
-curl <http://localhost:9100/metrics>
-
-# Readiness check
-
-curl <http://localhost:5000/ready>
-
-# Production monitoring data
-
-curl <http://localhost:5000/api/monitoring>
-
-# Dependencies health check
-
-curl <http://localhost:5000/api/health/dependencies>
-
-# Database health status
-
-curl <http://localhost:5000/api/database/health>
-
-```markdown**Configuration Validation:**```bash
-
-# Validate system configuration
-
+# Validate configuration
 python3 scripts/validate_config.py
-
-# Check configuration syntax
-
-python3 -c "import json; json.load(open('config/system.json'))"
-
-```markdown**Security Scanning:**```bash
-
-# Run comprehensive security scan
-
-python3 scripts/security_scan.py
-
-# Run security scan with failure on vulnerabilities
-
-python3 scripts/security_scan.py --fail-on-vulnerabilities
-
-# Run security scan with verbose output
-
-python3 scripts/security_scan.py --verbose
-
-# Run individual security tools
-
-python3 -m bandit -r src/
-python3 -m safety check
-python3 -m pip_audit
-
-```sql
+```
 
 ## ✨ The Core Idea
 
@@ -221,11 +108,11 @@ For systematic development, start by selecting a high-impact feature from the ba
 
 1. Ensure you have the `000_backlog.md` file from this repository accessible.
 2. Review the prioritized table and select a feature based on:
-  - **Points**: Lower numbers (1-3) for quick wins, higher (5-13) for complex features
-  - **Priority**: 🔥 Critical, ⭐ High, 📈 Medium, 🔧 Low
-  - **Status**: Choose "todo" items for new work
-  - **Dependencies**: Check if prerequisites are completed
-  - **Scores**: Higher scores (5.0+) indicate higher priority items
+- **Points**: Lower numbers (1-3) for quick wins, higher (5-13) for complex features
+- **Priority**: 🔥 Critical, ⭐ High, 📈 Medium, 🔧 Low
+- **Status**: Choose "todo" items for new work
+- **Dependencies**: Check if prerequisites are completed
+- **Scores**: Higher scores (5.0+) indicate higher priority items
 
 3. Use the backlog item ID (e.g., B-001) as input for PRD creation in the next step.
 4. The AI can automatically parse the table format and generate PRDs using the AI-BACKLOG-META command.
@@ -413,4 +300,3 @@ podcast](https://www.youtube.com/watch?v=fD4ktSkNCw4).
 - **Error Limits**- Stop execution after consecutive failures
 
 - **State Persistence** - Maintain context across execution sessions
-
