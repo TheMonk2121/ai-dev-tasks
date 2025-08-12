@@ -99,7 +99,10 @@
         "BlinkMacSystemFont",
         "Ubuntu",
         "Droid",
-        "pycache"
+        "pycache",
+        "Negotiables",
+        "regen",
+        "sanitiser"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [
