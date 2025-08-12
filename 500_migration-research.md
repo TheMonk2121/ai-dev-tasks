@@ -3,7 +3,6 @@
 <!-- MEMORY_CONTEXT: MEDIUM - Migration research and patterns -->
 # 🔄 Migration & Upgrade Research
 
-
 ## 🔄 Migration & Upgrade Research
 
 <!-- ANCHOR: tldr -->
@@ -44,4 +43,3 @@
 {#citations}
 
 ## Citations
-
