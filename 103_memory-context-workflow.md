@@ -107,7 +107,7 @@ their role in the ecosystem.
 ### **AI File Analysis Strategy**
 
 When Cursor AI restarts, it follows a **structured reading strategy**: First reads `100_cursor-memory-context.md` (30
-seconds, 80% context), then `000_backlog.md` (current priorities), then `400_system-overview_advanced_features.md`
+seconds, 80% context), then `000_backlog.md` (current priorities), then `400_system-overview.md`
 (technical architecture). Ancillary files are read as needed for specific tasks. Scripts are only read when
 implementation details are required.
 

@@ -75,7 +75,7 @@ should be retained. It builds on our existing documentation foundation (`200_nam
 
 1. **`200_naming-conventions.md`**- File categorization system (000-699 prefixes)
 2.**`400_context-priority-guide.md`**- Memory scaffolding and file priorities
-3.**`400_memory-context-guide.md`**- How files relate to AI memory rehydration**Time Investment**: 1-2 minutes
+3.**`400_context-priority-guide.md`**- How files relate to AI memory rehydration**Time Investment**: 1-2 minutes
 - *Output**: Understanding of file importance tiers and relationships
 
 ### **Phase 2: Systematic File Analysis**####**Step 3: Categorize Files by Priority Tiers**

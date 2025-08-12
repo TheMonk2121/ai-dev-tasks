@@ -99,7 +99,7 @@ The result is a**living naming system**that scales with your project while maint
 
 - ✅**Workflow processes**(`001_create-prd.md`, `002_generate-tasks.md`)
 
-- ✅**System documentation**(`400_system-overview_advanced_features.md`, `400_project-overview.md`)
+- ✅**System documentation**(`400_system-overview.md`, `400_project-overview.md`)
 
 - ✅**Configuration guides**(`202_setup-requirements.md`)
 
@@ -181,7 +181,7 @@ The result is a**living naming system**that scales with your project while maint
 
 - ✅ `100_cursor-memory-context.md` (clear purpose)
 
-- ✅ `400_system-overview_advanced_features.md` (descriptive)
+- ✅ `400_system-overview.md` (descriptive)
 
 - ✅ `500_memory-arch-research.md` (research focus)
 
@@ -208,7 +208,7 @@ The result is a**living naming system**that scales with your project while maint
 ```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Core workflow guide -->
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md -->
 
 ```
 
@@ -488,7 +488,7 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 - `400_project-overview.md` - Project overview and workflow guide
 
-- `400_system-overview_advanced_features.md` - Technical architecture and system overview
+- `400_system-overview.md` - Technical architecture and system overview
 
 - `400_context-priority-guide.md` - Context priority guide for memory rehydration
 
@@ -560,5 +560,5 @@ When proposing changes to this document:
 
 ## 🔗 Related Files
 
-<!-- SYSTEM_FILES: 400_system-overview_advanced_features.md -->
+<!-- SYSTEM_FILES: 400_system-overview.md -->
 <!-- markdownlint-enable MD041 -->
