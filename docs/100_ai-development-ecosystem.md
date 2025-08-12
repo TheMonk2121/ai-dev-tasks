@@ -20,7 +20,7 @@
 <!-- ANCHOR: collaboration -->
 {#collaboration}
 
-#### **Collaboration**-**Shared project memory**that never forgets
+### **Collaboration**-**Shared project memory**that never forgets
 
 - **Clear workflows**that everyone can follow
 
@@ -33,10 +33,14 @@
 <!-- ANCHOR: system-architecture -->
 {#system-architecture}
 
-## 🏗️**System Architecture**Our AI development ecosystem is built around a**multi-layered architecture**that combines AI planning, code
+## 🏗️**System Architecture**
+
+Our AI development ecosystem is built around a**multi-layered architecture**that combines AI planning, code
 generation, and automated workflows.
 
-### **Core Components**```text
+### **Core Components**
+
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    AI Development Ecosystem                    │
 ├─────────────────────────────────────────────────────────────────┤
@@ -322,7 +326,7 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - New team members understand the project in hours
 
-### **Success Stories**Teams using our system report:
+### **Success Stories** Teams using our system report
 
 - **50% reduction**in development time
 

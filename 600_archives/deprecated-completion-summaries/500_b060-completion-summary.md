@@ -1,3 +1,5 @@
+> Archived for historical reference. The B-060 Documentation Coherence Validation System is active and working in `scripts/doc_coherence_validator.py`.
+
 # ✅ B-060 Completion Summary: Documentation Coherence Validation System
 
 ## 🎯 Implementation Overview

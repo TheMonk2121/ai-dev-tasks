@@ -10,7 +10,11 @@
 This document provides a comprehensive design for the shared context management system that enables seamless context
 sharing between Cursor's native AI and specialized agents.
 
-## 🎯 **System Architecture**###**High-Level Architecture**```text
+## 🎯 **System Architecture**
+
+### **High-Level Architecture**
+
+```text
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Cursor IDE    │    │  Context Store  │    │ Specialized     │
 │                 │◄──►│                 │◄──►│ Agents          │
@@ -25,13 +29,17 @@ sharing between Cursor's native AI and specialized agents.
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```text
 
-### **Component Overview**1.**Context Store**: Centralized database for persistent context storage
-2. **Context Cache**: In-memory cache for fast context access
-3. **Context API**: RESTful API for context operations
-4. **Agent Context Handlers**: Agent-specific context processing
-5. **Cursor Context Integration**: Native AI context integration
+### **Component Overview*
+1. Context Store**: Centralized database for persistent context storage
+2. Context Cache: In-memory cache for fast context access
+3. Context API: RESTful API for context operations
+4. Agent Context Handlers: Agent-specific context processing
+5. Cursor Context Integration: Native AI context integration
 
-## 📊 **Data Model Design**###**Core Context Schema**####**Context Entity**```json
+## 📊 **Data Model Design**
+###**Core Context Schema**
+
+####**Context Entity**```json
 {
   "id": "uuid",
   "type": "project|file|user|agent",

@@ -215,7 +215,9 @@ AI Development Ecosystem
 
 ### **🚨 MANDATORY: File Deletion/Deprecation Analysis**
 
-- *Before suggesting ANY file deletion or deprecation, you MUST:**1.**Run the analysis checklist**: `python3 scripts/file_analysis_checklist.py <target_file>`
+- *Before suggesting ANY file deletion or deprecation, you MUST:
+
+1. Run the analysis checklist**: `python3 scripts/file_analysis_checklist.py <target_file>`
 2. **Follow the 6-step process**in `400_file-analysis-guide.md`
 3.**Complete ALL steps**before making recommendations
 4.**Get explicit user approval**for high-risk operations**This is NON-NEGOTIABLE**- failure to follow these steps means you cannot suggest file deletion!
@@ -364,7 +366,9 @@ AI Development Ecosystem
 
 - **`research_agent_implementation.py`**- Research agent
 
-### **🎯 When to Read What: Context-Specific Guidance**####**For New Sessions (First 2-3 minutes):**1.**`100_cursor-memory-context.md`**- Current project state
+### **🎯 When to Read What: Context-Specific Guidance**####**For New Sessions (First 2-3 minutes)
+
+1.**`100_cursor-memory-context.md`**- Current project state
 2.**`000_backlog.md`**- Current priorities
 3.**`400_system-overview.md`**- Technical architecture
 
@@ -428,7 +432,9 @@ AI Development Ecosystem
 
 - *This ensures full utilization of our comprehensive documentation system!**🎯
 
-### **Documentation Strategy & Safeguards**Our documentation system uses**cognitive scaffolding**with three-digit prefixes and HTML cross-references to maintain
+### **Documentation Strategy & Safeguards**
+
+Our documentation system uses**cognitive scaffolding**with three-digit prefixes and HTML cross-references to maintain
 coherence. The system balances**structure**(rigid naming conventions) with**elasticity**(automated validation and
 AI-assisted updates). Key safeguards include:
 
@@ -444,52 +450,72 @@ AI-assisted updates). Key safeguards include:
 
 See `400_context-priority-guide.md` for complete documentation strategy and file organization.
 
-### **File Naming System**Our**three-digit prefix hierarchy**creates semantic ordering for both humans and AI. The naming flow uses a**cascading decision process**: purpose check → priority assessment → prefix assignment → descriptive naming →
-cross-reference integration. This creates a **self-documenting system**where filenames provide instant context about
+### **File Naming System**
+
+Our **three-digit prefix hierarchy** creates semantic ordering for both humans and AI. The naming flow uses a**cascading decision process**: purpose check → priority assessment → prefix assignment → descriptive naming →
+cross-reference integration. This creates a **self-documenting system** where filenames provide instant context about
 their role in the ecosystem.
 
 See `200_naming-conventions.md` for complete naming guidelines and decision process.
 
-### **AI File Analysis Strategy**When Cursor AI restarts, it follows a**structured reading strategy**: First reads `100_cursor-memory-context.md` (30
+### **AI File Analysis Strategy**
+
+When Cursor AI restarts, it follows a**structured reading strategy**: First reads `100_cursor-memory-context.md` (30
 seconds, 80% context), then `000_backlog.md` (current priorities), then `400_system-overview.md` (technical
 architecture). Ancillary files are read as needed for specific tasks. Scripts are only read when implementation details
 are required.
 
 See `400_context-priority-guide.md` for complete AI file analysis strategy and reading patterns.
 
-### **File Generation Decision Process**When creating new files, follow a**6-step decision process**: 1) Determine if file is needed (reusable info vs.
+### **File Generation Decision Process**
+
+When creating new files, follow a**6-step decision process**: 1) Determine if file is needed (reusable info vs.
 temporary), 2) Assess purpose and priority (planning vs. implementation vs. research), 3) Choose prefix range (000-099
 for core, 100-199 for guides, etc.), 4) Create descriptive name (kebab-case, self-documenting), 5) Add cross-references
 and consider AI rehydration, 6) Validate against existing patterns.
 
 See `200_naming-conventions.md` for complete file generation decision process and guidelines.
 
-### **Documentation Placement Logic**When determining where to place new documentation, follow a**5-step process**: 1) Assess content type and scope
-(system-wide vs. workflow vs. setup), 2) Choose primary location based on content (400-499 for concepts, 200-299 for
-processes), 3) Determine if multiple locations needed (core concepts get quick reference + detailed), 4) Consider
-reading pattern (immediate vs. when relevant vs. when needed), 5) Add cross-references for discovery.
+### **Documentation Placement Logic**
+
+When determining where to place new documentation, follow a **5-step process**:
+
+1) Assess content type and scope
+(system-wide vs. workflow vs. setup),
+2) Choose primary location based on content (400-499 for concepts, 200-299 for processes)
+3) Determine if multiple locations needed (core concepts get quick reference + detailed)
+4) Consider reading pattern (immediate vs. when relevant vs. when needed)
+5) Add cross-references for discovery.
 
 See `400_context-priority-guide.md` for complete documentation placement logic and guidelines.
 
-### **When Working on Features**1.**Check `000_backlog.md`**for current priorities and dependencies
+### **When Working on Features**
+
+1.**Check `000_backlog.md`**for current priorities and dependencies
 2.**Use existing workflows**(`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
 3.**Follow naming conventions**from `200_naming-conventions.md`
 4.**Update completion summaries**when finishing major features
 5.**Use research framework**(`500_memory-arch-research.md`) for systematic research
 
-### **When Adding New Features**1.**Add to backlog**with proper scoring (see `100_backlog-guide.md`)
-2.**Create PRD**(skip for items < 5 pts AND score≥3.0) → else use `001_create-prd.md` workflow
-3.**Generate tasks**using `002_generate-tasks.md` workflow (parses PRD or backlog directly)
-4.**Execute**using `003_process-task-list.md` workflow
+### **When Adding New Features**
 
-### **When Debugging Issues**1.**Check `dspy-rag-system/docs/CURRENT_STATUS.md`**for system health
-2.**Review error logs**in `dspy-rag-system/src/utils/logger.py`
-3.**Use retry wrapper**from `dspy-rag-system/src/utils/retry_wrapper.py`
-4.**Check security validation**from `dspy-rag-system/src/utils/prompt_sanitizer.py`
+1.**Add to backlog** with proper scoring (see `100_backlog-guide.md`)
+2.**Create PRD** (skip for items < 5 pts AND score≥3.0) → else use `001_create-prd.md` workflow
+3.**Generate tasks** using `002_generate-tasks.md` workflow (parses PRD or backlog directly)
+4.**Execute** using `003_process-task-list.md` workflow
+
+### **When Debugging Issues
+
+1. Check `dspy-rag-system/docs/CURRENT_STATUS.md`**for system health
+2.**Review error logs** in `dspy-rag-system/src/utils/logger.py`
+3.**Use retry wrapper** from `dspy-rag-system/src/utils/retry_wrapper.py`
+4.**Check security validation** from `dspy-rag-system/src/utils/prompt_sanitizer.py`
 
 ## 📚 Quick Reference
 
-### **Key Files for Context**-**System Overview**: `400_system-overview.md`
+### **Key Files for Context**-
+
+**System Overview**: `400_system-overview.md`
 
 - **Current Status**: `dspy-rag-system/docs/CURRENT_STATUS.md`
 
@@ -509,13 +535,17 @@ See `400_context-priority-guide.md` for complete documentation placement logic a
 
 - **Tests**: `tests/`
 
-### **Key Commands**-**Start Dashboard**: `./dspy-rag-system/start_mission_dashboard.sh`
+### **Key Commands
+
+-**Start Dashboard**: `./dspy-rag-system/start_mission_dashboard.sh`
 
 - **Run Tests**: `./dspy-rag-system/run_tests.sh`
 
 - **Quick Start**: `./dspy-rag-system/quick_start.sh`
 
-### **Maintenance Rituals**-**Run `python3 scripts/repo_maintenance.py --apply`**after model or doc changes
+### **Maintenance Rituals**
+
+-**Run `python3 scripts/repo_maintenance.py --apply`**after model or doc changes
 
 - **Validate consistency**with grep for model references
 
@@ -531,7 +561,9 @@ See `400_context-priority-guide.md` for complete documentation placement logic a
 
 - When updating system architecture
 
-### **Update Process**1. Update current priorities section
+### **Update Process**
+
+1. Update current priorities section
 2. Update system status
 3. Update development guidelines if needed
 4. Update quick reference if new files/directories added
