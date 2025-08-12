@@ -41,8 +41,12 @@
 
 - --
 
-## 🎯**Overview**This guide provides a**systematic 6-phase process**for analyzing files to determine if they are obsolete, legacy, or
-should be retained. It builds on our existing documentation foundation (`200_naming-conventions.md`,
+## 🎯**Overview**
+
+This guide provides a **systematic 6-phase process** for analyzing files to determine if they are obsolete, legacy, or
+should be retained.
+
+It builds on our existing documentation foundation (`200_naming-conventions.md`,
 `400_context-priority-guide.md`, `500_maintenance-safety-research.md`) and adds the missing**"how to analyze"**methodology.
 
 ### **Why This Guide Exists**-**Prevents critical file loss**through systematic analysis
@@ -61,13 +65,14 @@ should be retained. It builds on our existing documentation foundation (`200_nam
 
 - *Files to Read**:
 
-1. **`100_cursor-memory-context.md`**- Current project state and priorities
-2.**`000_backlog.md`**- Active development items and roadmap
-3.**`400_system-overview.md`**- Technical architecture understanding
-4.**`400_project-overview.md`**- High-level project goals**Time Investment**: 2-3 minutes
+1. **`100_cursor-memory-context.md`** - Current project state and priorities
+2.**`000_backlog.md`** - Active development items and roadmap
+3.**`400_system-overview.md`** - Technical architecture understanding
+4.**`400_project-overview.md`** - High-level project goals **Time Investment**: 2-3 minutes
+
 - *Output**: Clear understanding of what's currently important
 
-#### **Step 2: Understand File Organization System**
+### **Step 2: Understand File Organization System**
 
 - *Purpose**: Grasp the file categorization and priority system
 
@@ -76,6 +81,7 @@ should be retained. It builds on our existing documentation foundation (`200_nam
 1. **`200_naming-conventions.md`**- File categorization system (000-699 prefixes)
 2.**`400_context-priority-guide.md`**- Memory scaffolding and file priorities
 3.**`400_context-priority-guide.md`**- How files relate to AI memory rehydration**Time Investment**: 1-2 minutes
+
 - *Output**: Understanding of file importance tiers and relationships
 
 ### **Phase 2: Systematic File Analysis**####**Step 3: Categorize Files by Priority Tiers**
@@ -371,7 +377,7 @@ Use this checklist before writing new Python code to reduce duplication and keep
 - *Command**: `grep_search` for file references
 - *Output**: List of all files that would be affected
 
-#### **2. Explain Why It Might Be Legacy**
+### **2. Explain Why It Might Be Legacy**
 
 - *Method**: Provide clear reasoning based on analysis
 - *Criteria**: Content freshness, model alignment, workflow integration

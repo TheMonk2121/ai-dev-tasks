@@ -119,13 +119,13 @@ Read these files in order (1–2 min total):
 
 - Use consolidated guides (single-file sources) for deployment, migration, integration, performance, testing, system overview, few-shot
 
-- Keep this file updated after backlog or architecture changes
+- Keep this file updated after architecture changes
 
 - Prefer local-first, simple workflows; avoid unnecessary complexity
 
 - Focus context on Cursor-based LLMs only
 
-### Legacy Content Policy (Read First)
+### Legacy Content Policy
 
 - Exclusions: `docs/legacy/**`, `600_archives/**` are reference-only.
 
@@ -147,11 +147,6 @@ Read these files in order (1–2 min total):
 
 - [ ] Validate against constitution rules before any changes
 
-## 📋 QUICK REFERENCE (30-second scan)**Current Focus:**B-011 (Cursor Native AI + Specialized Agents) - 5 points**Next Priority:**B-031 (Vector Database Enhancement) - 3 points**System:**Cursor Native AI + Specialized Agents + DSPy RAG**Workflow:**Backlog → PRD → Tasks → AI Execution**Critical Files:**`README.md`, `000_backlog.md`, `400_system-overview.md`, `400_file-analysis-guide.md`
-
-`400_documentation-retrieval-guide.md`**Critical Code (Tier 1):** see `400_code-criticality-guide.md` (e.g., `scripts/process_tasks.py`,
-`scripts/state_manager.py`, `dspy-rag-system/src/dspy_modules/*` core modules)
-
 ## 🎯 Purpose
 
 This file serves as the **memory scaffold**for Cursor AI, providing instant context about the AI development ecosystem
@@ -162,8 +157,6 @@ without requiring the AI to read multiple files.
 ### **Active Development Focus**-**Current Sprint**: Align with `000_backlog.md` (see Current Priorities)
 
 - **Next Priorities**: Follow `000_backlog.md` ordering and scores
-
-- **Infrastructure**: v0.3.1-rc3 Core Hardening ✅ completed
 
 - **Validator**: Use `scripts/doc_coherence_validator.py` (or pre-commit hook) after doc changes
 
