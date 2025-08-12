@@ -216,11 +216,28 @@ The result is a**living naming system**that scales with your project while maint
 
 #### Check for consistency
 
-- **Are there similar files in the same prefix range?**-**Does this follow the established naming patterns?**-**Is this the right level of detail for this priority?**#### Consider the cognitive scaffolding
+- **Are there similar files in the same prefix range?**
+- **Does this follow the established naming patterns?**
+- **Is this the right level of detail for this priority?**
 
-- **Does this file help or hurt the AI's understanding?**-**Is this information better placed in an existing file?**-**Will this file be discoverable by the AI?**### Example Decision Process**Scenario**: Need to document a new workflow for automated testing
+#### Consider the cognitive scaffolding
 
-- *Step 1**: ✅ **File needed**- This is a process others will follow**Step 2**: **Purpose**= Implementation workflow,**Priority**= Medium (important for specific tasks)**Step 3**: **Prefix**= 100-199 (workflow guides)**Step 4**: **Name**= `101_automated-testing-workflow.md`**Step 5**: **AI API**= Add MODULE_REFERENCE and MEMORY_CONTEXT comments**Step 6**: **Validation**= Consistent with other workflow files, appropriate priority**Result**: Creates `101_automated-testing-workflow.md` with proper AI API comments and integration into the cognitive scaffolding system.
+- **Does this file help or hurt the AI's understanding?**
+- **Is this information better placed in an existing file?**
+- **Will this file be discoverable by the AI?**
+
+### Example Decision Process
+
+**Scenario**: Need to document a new workflow for automated testing
+
+- **Step 1**: ✅ **File needed** - This is a process others will follow
+- **Step 2**: **Purpose** = Implementation workflow, **Priority** = Medium (important for specific tasks)
+- **Step 3**: **Prefix** = 100-199 (workflow guides)
+- **Step 4**: **Name** = `101_automated-testing-workflow.md`
+- **Step 5**: **AI API** = Add MODULE_REFERENCE and MEMORY_CONTEXT comments
+- **Step 6**: **Validation** = Consistent with other workflow files, appropriate priority
+
+**Result**: Creates `101_automated-testing-workflow.md` with proper AI API comments and integration into the cognitive scaffolding system.
 
 This process ensures that every file created serves a clear purpose, fits into the existing structure, and contributes to the overall coherence of the documentation system.
 
@@ -252,7 +269,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 - **Single h1 per document**: Use filename as the implicit h1 title
 
-- **Main content starts with h2**: `## 🎯 **Current Status` or `## 📋 **Overview`
+- **Main content starts with h2**: `## 🎯 Current Status` or `## 📋 Overview`
 
 - **Consistent emoji usage**: Use emojis for visual hierarchy and AI parsing
 
@@ -284,7 +301,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 | what this file is | read when | do next |
 |---|---|---|
-| _one‑line purpose_|_trigger moments_|_2–3 links/actions_ |
+|_one‑line purpose_|_trigger moments_|_2–3 links/actions_ |
 
 ### Stable Anchors (kebab‑case)
 
@@ -311,7 +328,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 ### Table Usage Mandate
 
-Markdown tables are the **required standard**for presenting structured data:
+Markdown tables are the **required standard** for presenting structured data:
 
 - **Status tracking**: Use tables for backlog items, task lists, and progress tracking
 
@@ -507,11 +524,11 @@ Examples: `500_test-harness-guide.md`, `501_red-team-suite.md`, `502_monitoring-
 
 ### Versioning
 
-Use `_vN` suffix **only**when the file's public contract changes (breaking changes). For minor edits, append to the embedded**Change Log**table.
+Use `_vN` suffix **only** when the file's public contract changes (breaking changes). For minor edits, append to the embedded **Change Log** table.
 
 ## 🔄 Living Document Policy
 
-This naming conventions guide is a**living document**that evolves with the project. We encourage continuous improvement and welcome proposals for:
+This naming conventions guide is a **living document** that evolves with the project. We encourage continuous improvement and welcome proposals for:
 
 - **New patterns**: As the project grows, new documentation patterns may emerge
 
