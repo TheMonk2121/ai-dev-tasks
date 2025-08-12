@@ -2,10 +2,12 @@
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
 <!-- MODULE_REFERENCE: 000_backlog.md -->
 <!-- MEMORY_CONTEXT: HIGH - PRD for local-first phone notification utility -->
+# Product Requirements Document: Local Phone Notification on Task Completion
+
 
 ## Product Requirements Document: Local Phone Notification on Task Completion
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -18,7 +20,6 @@
 - **read when**: When you need a fast orientation or before using this file in a workflow.
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
-
 
 ### 1. Executive Summary
 
@@ -198,12 +199,12 @@ recipient = "+15551234567"  # or Apple ID email
 account_label = "iMessage"   # optional
 
 [ntfy]
-server = "https://ntfy.sh"   # or your self-hosted URL
+server = "<https://ntfy.sh">   # or your self-hosted URL
 
 topic = "my-unique-topic-name"
 token = ""                  # optional
 
-```
+```text
 
 ### Appendix: Example Usage
 

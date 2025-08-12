@@ -3,10 +3,12 @@
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Development timeline and strategic planning -->
+# 🗺️ Development Roadmap
+
 
 ## 🗺️ Development Roadmap
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -20,10 +22,7 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Strategic planning maintained
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Strategic planning maintained
 
 - **Priority**: 🔥 Critical - Project direction and milestones
 
@@ -66,21 +65,13 @@ Sync tasks with `000_backlog.md`.
 
 - Roadmap tie‑in: implement agent framework, shared context, UI integration; then specialized capabilities and comprehensive testing
 
-#### **Phase 4: Testing & Documentation (Week 5)**
-
-- [ ] **Integration Testing**: Comprehensive system testing
+#### **Phase 4: Testing & Documentation (Week 5)**- [ ]**Integration Testing**: Comprehensive system testing
 
 - [ ] **Documentation**: Update all related documentation
 
 - [ ] **Deployment**: Production-ready implementation
 
-## 🎯 **Next 3 Sprints (September-October 2024)**
-
-### **Sprint 1: Advanced RAG & Extraction (September 2024)**
-
-#### **B-043: LangExtract Pilot w/ Stratified 20-doc Set**
-
-- **Priority**: 🔥 **HIGH** - 3 points
+## 🎯 **Next 3 Sprints (September-October 2024)**###**Sprint 1: Advanced RAG & Extraction (September 2024)**####**B-043: LangExtract Pilot w/ Stratified 20-doc Set**-**Priority**: 🔥 **HIGH**- 3 points
 
 - **Timeline**: Week 1-2
 
@@ -88,9 +79,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Goals**: Implement LangExtract for entity/attribute extraction
 
-#### **B-044: n8n LangExtract Service (Stateless, Spillover, Override)**
-
-- **Priority**: 🔥 **HIGH** - 3 points
+#### **B-044: n8n LangExtract Service (Stateless, Spillover, Override)**-**Priority**: 🔥 **HIGH**- 3 points
 
 - **Timeline**: Week 2-3
 
@@ -98,9 +87,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Goals**: Automated extraction service with n8n integration
 
-#### **B-045: RAG Schema Patch (Span*, Validated_flag, Raw_score)**
-
-- **Priority**: 🔥 **HIGH** - 2 points
+#### **B-045: RAG Schema Patch (Span*, Validated_flag, Raw_score)**-**Priority**: 🔥 **HIGH**- 2 points
 
 - **Timeline**: Week 3-4
 
@@ -108,11 +95,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Goals**: Enhanced RAG system with advanced schema
 
-### **Sprint 2: Performance & Benchmarking (October 2024)**
-
-#### **B-046: 4-way Cost/Latency Benchmark**
-
-- **Priority**: 🔥 **HIGH** - 4 points
+### **Sprint 2: Performance & Benchmarking (October 2024)**####**B-046: 4-way Cost/Latency Benchmark**-**Priority**: 🔥 **HIGH**- 4 points
 
 - **Timeline**: Week 1-2
 
@@ -120,9 +103,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Goals**: Comprehensive performance benchmarking across models
 
-#### **B-047: Auto-router (Inline vs Remote Extraction)**
-
-- **Priority**: 🔥 **HIGH** - 3 points
+#### **B-047: Auto-router (Inline vs Remote Extraction)**-**Priority**: 🔥 **HIGH**- 3 points
 
 - **Timeline**: Week 2-3
 
@@ -130,9 +111,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Goals**: Intelligent routing for extraction methods
 
-#### **B-048: Confidence Calibration (Blocked)**
-
-- **Priority**: 🔧 **MEDIUM** - 2 points
+#### **B-048: Confidence Calibration (Blocked)**-**Priority**: 🔧 **MEDIUM**- 2 points
 
 - **Timeline**: Week 3-4
 
@@ -140,39 +119,25 @@ Sync tasks with `000_backlog.md`.
 
 - **Goals**: Model confidence calibration system
 
-### **Sprint 3: Infrastructure & Automation (October 2024)**
-
-#### **B-050: Enhance 002 Task Generation with Automation**
-
-- **Priority**: 🔧 **MEDIUM** - 2 points
+### **Sprint 3: Infrastructure & Automation (October 2024)**####**B-050: Enhance 002 Task Generation with Automation**-**Priority**: 🔧 **MEDIUM**- 2 points
 
 - **Timeline**: Week 1-2
 
 - **Goals**: Automated task generation improvements
 
-#### **B-051: Create PRD Skeleton Generator for 001**
-
-- **Priority**: 🔧 **MEDIUM** - 2 points
+#### **B-051: Create PRD Skeleton Generator for 001**-**Priority**: 🔧 **MEDIUM**- 2 points
 
 - **Timeline**: Week 2-3
 
 - **Goals**: Automated PRD template generation
 
-#### **B-052 Series: Enhanced Repository Maintenance**
-
-- **Priority**: 🔧 **MEDIUM** - 8 points total
+#### **B-052 Series: Enhanced Repository Maintenance**-**Priority**: 🔧 **MEDIUM**- 8 points total
 
 - **Timeline**: Week 3-4
 
 - **Goals**: Comprehensive repository maintenance automation
 
-## 📊 **Quarterly Goals (Q4 2024)**
-
-### **Q4 2024 Objectives**
-
-#### **Q4 Goal 1: Advanced AI Model Integration**
-
-- **Target**: Complete B-011 (Cursor Native AI + Specialized Agents)
+## 📊 **Quarterly Goals (Q4 2024)**###**Q4 2024 Objectives**####**Q4 Goal 1: Advanced AI Model Integration**-**Target**: Complete B-011 (Cursor Native AI + Specialized Agents)
 
 - **Success Metrics**:
   - 3 specialized agents operational
@@ -181,9 +146,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: August-September 2024
 
-#### **Q4 Goal 2: Advanced RAG System**
-
-- **Target**: Complete B-043, B-044, B-045 (LangExtract + RAG Enhancement)
+#### **Q4 Goal 2: Advanced RAG System**-**Target**: Complete B-043, B-044, B-045 (LangExtract + RAG Enhancement)
 
 - **Success Metrics**:
   - Entity/attribute extraction operational
@@ -192,9 +155,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: September-October 2024
 
-#### **Q4 Goal 3: Performance Optimization**
-
-- **Target**: Complete B-046, B-047 (Benchmarking + Auto-routing)
+#### **Q4 Goal 3: Performance Optimization**-**Target**: Complete B-046, B-047 (Benchmarking + Auto-routing)
 
 - **Success Metrics**:
   - 4-way benchmark results
@@ -203,9 +164,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: October 2024
 
-#### **Q4 Goal 4: Infrastructure Automation**
-
-- **Target**: Complete B-050, B-051, B-052 series
+#### **Q4 Goal 4: Infrastructure Automation**-**Target**: Complete B-050, B-051, B-052 series
 
 - **Success Metrics**:
   - Automated task generation
@@ -214,13 +173,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: October-November 2024
 
-## 🚀 **Future Model Roadmap (2025)**
-
-### **Advanced Agent Specialization (Q1 2025)**
-
-#### **B-034: Deep Research Agent Integration**
-
-- **Priority**: 🔥 **HIGH** - 5 points
+## 🚀 **Future Model Roadmap (2025)**###**Advanced Agent Specialization (Q1 2025)**####**B-034: Deep Research Agent Integration**-**Priority**: 🔥 **HIGH**- 5 points
 
 - **Dependencies**: B-011 completion
 
@@ -228,9 +181,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: Q1 2025
 
-#### **B-035: Coder Agent Specialization**
-
-- **Priority**: 🔥 **HIGH** - 5 points
+#### **B-035: Coder Agent Specialization**-**Priority**: 🔥 **HIGH**- 5 points
 
 - **Dependencies**: B-011 completion
 
@@ -238,9 +189,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: Q1 2025
 
-#### **B-036: General Query Agent Enhancement**
-
-- **Priority**: 🔥 **HIGH** - 3 points
+#### **B-036: General Query Agent Enhancement**-**Priority**: 🔥 **HIGH**- 3 points
 
 - **Dependencies**: B-011 completion
 
@@ -248,11 +197,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: Q1 2025
 
-### **Advanced Model Orchestration (Q2 2025)**
-
-#### **B-038: Advanced Model Orchestration**
-
-- **Priority**: 🔧 **MEDIUM** - 13 points
+### **Advanced Model Orchestration (Q2 2025)**####**B-038: Advanced Model Orchestration**-**Priority**: 🔧 **MEDIUM**- 13 points
 
 - **Dependencies**: B-034, B-035, B-036 completion
 
@@ -260,11 +205,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: Q2 2025
 
-### **Knowledge Graph & Vector Graph Integration (Q3 2025)**
-
-#### **B-085: Vector Graph Foundation Research**
-
-- **Priority**: 🔧 **MEDIUM** - 5 points
+### **Knowledge Graph & Vector Graph Integration (Q3 2025)**####**B-085: Vector Graph Foundation Research**-**Priority**: 🔧 **MEDIUM**- 5 points
 
 - **Dependencies**: B-077 (Hybrid Search) completion
 
@@ -272,9 +213,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: Q3 2025
 
-#### **B-086: Knowledge Graph Implementation**
-
-- **Priority**: 🔧 **MEDIUM** - 8 points
+#### **B-086: Knowledge Graph Implementation**-**Priority**: 🔧 **MEDIUM**- 8 points
 
 - **Dependencies**: B-085 completion
 
@@ -282,9 +221,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: Q3 2025
 
-#### **B-087: Hybrid Vector + Graph Search**
-
-- **Priority**: 🔧 **MEDIUM** - 6 points
+#### **B-087: Hybrid Vector + Graph Search**-**Priority**: 🔧 **MEDIUM**- 6 points
 
 - **Dependencies**: B-086 completion
 
@@ -292,11 +229,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: Q4 2025
 
-### **Future Migration (Q3 2025)**
-
-#### **B-037: Future Model Migration (Backlog)**
-
-- **Priority**: 🔧 **MEDIUM** - 8 points
+### **Future Migration (Q3 2025)**####**B-037: Future Model Migration (Backlog)**-**Priority**: 🔧 **MEDIUM**- 8 points
 
 - **Dependencies**: GGUF compatibility resolution
 
@@ -304,79 +237,57 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: Q3 2025 (conditional)
 
-## 🏗️ **Infrastructure Milestones**
+## 🏗️ **Infrastructure Milestones**###**Completed Infrastructure (2024)**- ✅**v0.3.1-rc3 Core Hardening**- Production ready
 
-### **Completed Infrastructure (2024)**
+- ✅**Real-time Mission Dashboard**- Live AI task monitoring
 
-- ✅ **v0.3.1-rc3 Core Hardening** - Production ready
+- ✅**Production Security & Monitoring**- Comprehensive security
 
-- ✅ **Real-time Mission Dashboard** - Live AI task monitoring
+- ✅**n8n Backlog Scrubber**- Automated prioritization
 
-- ✅ **Production Security & Monitoring** - Comprehensive security
+- ✅**Database Connection Pooling**- Enhanced resilience
 
-- ✅ **n8n Backlog Scrubber** - Automated prioritization
+- ✅**Comprehensive Documentation**- All guides completed
 
-- ✅ **Database Connection Pooling** - Enhanced resilience
+### **Upcoming Infrastructure (Q4 2024)**- 🔄**B-031: Vector Database Foundation Enhancement**- 3 points
 
-- ✅ **Comprehensive Documentation** - All guides completed
+- 🔄**B-032: Memory Context System Architecture Research**- 8 points
 
-### **Upcoming Infrastructure (Q4 2024)**
+- 🔄**B-032-C1: Generation Cache Implementation**- 3 points
 
-- 🔄 **B-031: Vector Database Foundation Enhancement** - 3 points
+### **Future Infrastructure (2025)**- 📋**Advanced Monitoring Systems**- Performance optimization
 
-- 🔄 **B-032: Memory Context System Architecture Research** - 8 points
+- 📋**Distributed Architecture**- Scalability improvements
 
-- 🔄 **B-032-C1: Generation Cache Implementation** - 3 points
+- 📋**Cloud Integration**- Deployment flexibility
 
-### **Future Infrastructure (2025)**
+- 📋**Vector Graph Integration**- Knowledge graph capabilities for complex relationship queries
 
-- 📋 **Advanced Monitoring Systems** - Performance optimization
-
-- 📋 **Distributed Architecture** - Scalability improvements
-
-- 📋 **Cloud Integration** - Deployment flexibility
-
-- 📋 **Vector Graph Integration** - Knowledge graph capabilities for complex relationship queries
-
-## 📈 **Success Metrics & KPIs**
-
-### **Development Velocity**
-
-- **Sprint Completion Rate**: Target 90%+ sprint completion
+## 📈**Success Metrics & KPIs**###**Development Velocity**-**Sprint Completion Rate**: Target 90%+ sprint completion
 
 - **Points Per Sprint**: Target 8-12 points per sprint
 
 - **Documentation Coverage**: 100% of new features documented
 
-### **System Performance**
-
-- **Response Time**: <2 seconds for AI queries
+### **System Performance**-**Response Time**: <2 seconds for AI queries
 
 - **Uptime**: 99.9% system availability
 
 - **Error Rate**: <1% error rate in production
 
-### **Quality Metrics**
-
-- **Test Coverage**: >90% code coverage
+### **Quality Metrics**-**Test Coverage**: >90% code coverage
 
 - **Documentation Quality**: All guides comprehensive and current
 
 - **Security Score**: Zero critical security vulnerabilities
 
-### **Research Integration**
-
-- **Research Utilization**: 80%+ of research findings implemented
+### **Research Integration**-**Research Utilization**: 80%+ of research findings implemented
 
 - **Innovation Rate**: 2-3 new research integrations per quarter
 
 - **Academic Alignment**: Regular updates from latest research
 
-## 🔄 **Dependency Management**
-
-### **Critical Dependencies**
-
-```
+## 🔄 **Dependency Management**###**Critical Dependencies**```text
 
 B-011 (Cursor Native AI) → B-043, B-044, B-045 (LangExtract + RAG)
 B-043 (LangExtract Pilot) → B-044 (n8n Service)
@@ -391,9 +302,7 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
 ```
 
-### **Resource Allocation**
-
-- **Primary Focus**: B-011 completion (Foundation)
+### **Resource Allocation**-**Primary Focus**: B-011 completion (Foundation)
 
 - **Secondary Focus**: B-043 through B-047 (RAG Enhancement)
 
@@ -401,19 +310,13 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
 - **Infrastructure**: B-031 (Vector Database Enhancement)
 
-## 🎯 **Risk Management**
-
-### **Technical Risks**
-
-- **Model Integration Complexity**: B-011 may require more time than estimated
+## 🎯 **Risk Management**###**Technical Risks**-**Model Integration Complexity**: B-011 may require more time than estimated
 
 - **Performance Bottlenecks**: B-046 benchmarking may reveal significant issues
 
 - **Dependency Delays**: Any delay in B-011 affects multiple downstream items
 
-### **Mitigation Strategies**
-
-- **Incremental Implementation**: Break complex items into smaller phases
+### **Mitigation Strategies**-**Incremental Implementation**: Break complex items into smaller phases
 
 - **Parallel Development**: Work on independent items simultaneously
 
@@ -421,19 +324,13 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
 - **Regular Reviews**: Weekly progress reviews and adjustment
 
-### **Contingency Plans**
-
-- **B-011 Delay**: Focus on B-031 and B-032 (independent items)
+### **Contingency Plans**-**B-011 Delay**: Focus on B-031 and B-032 (independent items)
 
 - **Performance Issues**: Prioritize B-046 benchmarking early
 
 - **Research Gaps**: Use existing documentation as foundation
 
-## 📋 **Progress Tracking**
-
-### **Current Progress (August 2024)**
-
-- **Completed Items**: 47 items (C-002 through C-047)
+## 📋 **Progress Tracking**###**Current Progress (August 2024)**-**Completed Items**: 47 items (C-002 through C-047)
 
 - **Total Points Earned**: 89 points
 
@@ -441,50 +338,36 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
 - **Next Sprint**: B-043, B-044, B-045 (8 points total)
 
-### **Quarterly Progress**
-
-- **Q3 2024**: 47 items completed, 89 points earned
+### **Quarterly Progress**-**Q3 2024**: 47 items completed, 89 points earned
 
 - **Q4 2024 Target**: 15-20 items, 25-30 points
 
 - **2025 Target**: Advanced agent specialization and orchestration
 
-### **Success Indicators**
-
-- **On Track**: B-011 completion by end of August
+### **Success Indicators**-**On Track**: B-011 completion by end of August
 
 - **At Risk**: B-032 (Memory Context Research) - 8 points, complex
 
 - **Blocked**: B-048 (Confidence Calibration) - Requires research
 
-## 🔗 **Related Documentation**
+## 🔗 **Related Documentation**###**Core Planning Documents**-**`000_backlog.md`**- Detailed backlog with scoring and dependencies
 
-### **Core Planning Documents**
+- **`100_cursor-memory-context.md`**- Current project state and priorities
 
-- **`000_backlog.md`** - Detailed backlog with scoring and dependencies
+- **`400_context-priority-guide.md`**- File organization and memory scaffolding
 
-- **`100_cursor-memory-context.md`** - Current project state and priorities
+### **Implementation Guides**-**`001_create-prd.md`**- PRD creation workflow
 
-- **`400_context-priority-guide.md`** - File organization and memory scaffolding
+- **`002_generate-tasks.md`**- Task generation workflow
 
-### **Implementation Guides**
+- **`003_process-task-list.md`**- AI execution workflow
 
-- **`001_create-prd.md`** - PRD creation workflow
+### **System Documentation**-**`400_system-overview_advanced_features.md`**- Technical architecture
 
-- **`002_generate-tasks.md`** - Task generation workflow
+- **`400_project-overview.md`**- High-level project overview
 
-- **`003_process-task-list.md`** - AI execution workflow
+- **`104_dspy-development-context.md`**- DSPy implementation details
 
-### **System Documentation**
-
-- **`400_system-overview_advanced_features.md`** - Technical architecture
-
-- **`400_project-overview.md`** - High-level project overview
-
-- **`104_dspy-development-context.md`** - DSPy implementation details
-
----
-
-**Last Updated**: 2024-08-07
-**Related Documentation**: `000_backlog.md`, `100_cursor-memory-context.md`, `400_context-priority-guide.md`
-**Status**: Active roadmap for strategic development planning
+- --**Last Updated**: 2024-08-07
+- *Related Documentation**: `000_backlog.md`, `100_cursor-memory-context.md`, `400_context-priority-guide.md`
+- *Status**: Active roadmap for strategic development planning

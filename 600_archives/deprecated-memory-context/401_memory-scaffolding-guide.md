@@ -1,7 +1,7 @@
----
+- --
 context: HIGH
 tags: [memory, scaffolding]
----
+- --
 
 # Memory Scaffolding Documentation Guidelines (Deprecated)
 
@@ -52,19 +52,15 @@ Each file should include:
 
 Use these reference patterns in other documents:
 
-#### **In PRDs and Task Lists:**
-
-```markdown
+#### **In PRDs and Task Lists:**```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
 
-```
+```text
 
-#### **In Code Comments:**
-
-```python
+#### **In Code Comments:**```python
 
 # CONTEXT: See 400_context-priority-guide.md for file organization
 
@@ -72,12 +68,10 @@ Use these reference patterns in other documents:
 
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
 
-```
+```text
 
-#### **In Documentation:**
-
-```markdown
-> **Context Reference**: See `400_context-priority-guide.md` for complete file organization
+#### **In Documentation:**```markdown
+>**Context Reference**: See `400_context-priority-guide.md` for complete file organization
 > **Essential Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 
@@ -85,9 +79,7 @@ Use these reference patterns in other documents:
 
 ### Memory Context Integration
 
-#### **For AI Agents**
-
-- **Structured Data**: Easy to parse and understand
+#### **For AI Agents**-**Structured Data**: Easy to parse and understand
 
 - **Consistent Format**: Predictable metadata structure
 
@@ -95,9 +87,7 @@ Use these reference patterns in other documents:
 
 - **Dependency Management**: Clear prerequisite tracking
 
-#### **For Developers**
-
-- **Reduced Overhead**: Less manual memory maintenance
+#### **For Developers**-**Reduced Overhead**: Less manual memory maintenance
 
 - **Better Prioritization**: Data-driven decision making
 
@@ -107,9 +97,7 @@ Use these reference patterns in other documents:
 
 ### Implementation Notes
 
-#### **Parsing Rules**
-
-- Use regex to extract table rows
+#### **Parsing Rules**- Use regex to extract table rows
 
 - Parse HTML comments for metadata
 
@@ -117,9 +105,7 @@ Use these reference patterns in other documents:
 
 - Validate dependencies before processing
 
-#### **Command Execution**
-
-- Execute memory context commands in order
+#### **Command Execution**- Execute memory context commands in order
 
 - Rollback changes if any step fails
 
@@ -127,9 +113,7 @@ Use these reference patterns in other documents:
 
 - Handle errors gracefully
 
-#### **Error Handling**
-
-- Skip invalid entries
+#### **Error Handling**- Skip invalid entries
 
 - Use fallback values when metadata is missing
 
@@ -139,25 +123,19 @@ Use these reference patterns in other documents:
 
 ### Best Practices
 
-#### **File Organization**
-
-- **Essential**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
+#### **File Organization**-**Essential**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 
 - **Domain**: `100_backlog-guide.md`, `103_yi-coder-integration.md`
 
-#### **Memory State Updates**
-
-- **When to update**: After completing backlog items, changing focus, adding features
+#### **Memory State Updates**-**When to update**: After completing backlog items, changing focus, adding features
 
 - **How to update**: Run `python scripts/update_cursor_memory.py`
 
 - **What gets updated**: Priorities, completed items, system status, timestamps
 
-#### **Quality Standards**
-
-- **Clear Purpose**: Every file should have a clear, single purpose
+#### **Quality Standards**-**Clear Purpose**: Every file should have a clear, single purpose
 
 - **Consistent Format**: Follow established patterns for metadata
 

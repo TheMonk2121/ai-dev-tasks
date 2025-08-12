@@ -22,37 +22,37 @@ The n8n Backlog Scrubber Workflow automatically calculates and updates scoring m
 
 ### Components
 
-1. **BacklogScrubber Class** (`src/n8n_workflows/backlog_scrubber.py`)
-   - Core scoring logic and file management
-   - Handles parsing, validation, and updates
-   - Provides statistics and error handling
+1. **BacklogScrubber Class**(`src/n8n_workflows/backlog_scrubber.py`)
+  - Core scoring logic and file management
+  - Handles parsing, validation, and updates
+  - Provides statistics and error handling
 
-2. **Webhook Server** (`src/n8n_workflows/backlog_webhook.py`)
-   - Flask-based webhook endpoint
-   - RESTful API for n8n integration
-   - Health checks and monitoring
+2.**Webhook Server**(`src/n8n_workflows/backlog_webhook.py`)
+  - Flask-based webhook endpoint
+  - RESTful API for n8n integration
+  - Health checks and monitoring
 
-3. **Demo Script** (`demo_backlog_scrubber.py`)
-   - Comprehensive demonstration of features
-   - Testing and validation utilities
+3.**Demo Script**(`demo_backlog_scrubber.py`)
+  - Comprehensive demonstration of features
+  - Testing and validation utilities
 
-4. **Test Suite** (`tests/test_backlog_scrubber.py`)
-   - Unit and integration tests
-   - Comprehensive coverage of all features
+4.**Test Suite**(`tests/test_backlog_scrubber.py`)
+  - Unit and integration tests
+  - Comprehensive coverage of all features
 
 ## Scoring Formula
 
 The backlog scrubber uses the following formula to calculate priority scores:
 
-```
+```text
 Score = (BV + TC + RR + LE) / Effort
 ```
 
 Where:
-- **BV** (Business Value): 0-10 scale
-- **TC** (Technical Complexity): 0-10 scale  
-- **RR** (Risk/Reward): 0-10 scale
-- **LE** (Learning Experience): 0-10 scale
+- **BV**(Business Value): 0-10 scale
+- **TC**(Technical Complexity): 0-10 scale  
+- **RR**(Risk/Reward): 0-10 scale
+- **LE**(Learning Experience): 0-10 scale
 - **Effort**: Estimated effort in story points
 
 ## Usage
@@ -71,7 +71,7 @@ python3 src/n8n_workflows/backlog_scrubber.py --dry-run
 
 # Verbose output
 python3 src/n8n_workflows/backlog_scrubber.py --verbose
-```
+```text
 
 ### Webhook Server
 
@@ -81,20 +81,20 @@ python3 src/n8n_workflows/backlog_webhook.py
 
 # With custom configuration
 python3 src/n8n_workflows/backlog_webhook.py --host 0.0.0.0 --port 5001 --debug
-```
+```text
 
 ### Demo Script
 
 ```bash
 # Run comprehensive demo
 python3 demo_backlog_scrubber.py
-```
+```markdown
 
 ## API Endpoints
 
 ### Webhook Endpoint
 
-**POST** `/webhook/backlog-scrubber`
+- *POST**`/webhook/backlog-scrubber`
 
 Request body:
 ```json
@@ -103,7 +103,7 @@ Request body:
   "dry_run": false,
   "backlog_path": "optional/path/to/backlog.md"
 }
-```
+```yaml
 
 Response:
 ```json
@@ -116,11 +116,9 @@ Response:
   "errors_found": 0,
   "timestamp": "2024-08-06T03:17:11.590241"
 }
-```
+```yaml
 
-### Health Check
-
-**GET** `/health`
+### Health Check**GET**`/health`
 
 Response:
 ```json
@@ -129,11 +127,9 @@ Response:
   "service": "backlog-scrubber-webhook",
   "timestamp": "2024-08-06T03:17:11.590241"
 }
-```
+```yaml
 
-### Statistics
-
-**GET** `/stats`
+### Statistics**GET**`/stats`
 
 Response:
 ```json
@@ -147,23 +143,20 @@ Response:
   },
   "timestamp": "2024-08-06T03:17:11.590241"
 }
-```
+```yaml
 
 ## n8n Integration
 
 ### Workflow Structure
 
-1. **Webhook Trigger**
-   - Path: `backlog-scrubber`
-   - Method: `POST`
+1.**Webhook Trigger**- Path: `backlog-scrubber`
+  - Method: `POST`
 
-2. **HTTP Request Node**
-   - URL: `http://localhost:5001/webhook/backlog-scrubber`
-   - Method: `POST`
-   - Body: `{{ $json }}`
+2.**HTTP Request Node**- URL: `<http://localhost:5001/webhook/backlog-scrubber`>
+  - Method: `POST`
+  - Body: `{{ $json }}`
 
-3. **Function Node**
-   ```javascript
+3.**Function Node**```javascript
    // Process backlog scrubber response
    const response = $input.all()[0].json;
    
@@ -181,11 +174,11 @@ Response:
            message: "Backlog scrub failed"
        };
    }
-   ```
+   ```yaml
 
 ### Trigger Options
 
-1. **Manual Trigger**: Run when adding new items
+1.**Manual Trigger**: Run when adding new items
 2. **Scheduled**: Run weekly to recalculate scores
 3. **Webhook**: Trigger from other workflows
 4. **File Change**: Trigger when backlog.md is modified
@@ -280,27 +273,24 @@ Response:
 
 ### Common Issues
 
-1. **JSON Parsing Errors**
-   - Check metadata format in backlog
-   - Ensure proper quote escaping
-   - Validate JSON structure
+1. **JSON Parsing Errors**- Check metadata format in backlog
+  - Ensure proper quote escaping
+  - Validate JSON structure
 
-2. **File Permission Errors**
-   - Check file permissions
-   - Verify directory access
-   - Ensure write permissions
+2.**File Permission Errors**- Check file permissions
+  - Verify directory access
+  - Ensure write permissions
 
-3. **Webhook Connection Issues**
-   - Verify server is running
-   - Check port configuration
-   - Test network connectivity
+3.**Webhook Connection Issues**- Verify server is running
+  - Check port configuration
+  - Test network connectivity
 
 ### Debug Mode
 
 Enable debug mode for detailed logging:
 ```bash
 python3 src/n8n_workflows/backlog_webhook.py --debug
-```
+```yaml
 
 ### Log Analysis
 
@@ -361,37 +351,33 @@ Check logs for:
 - Performance monitoring
 - Backup verification
 
----
+- --
 
 ## Quick Start
 
-1. **Install Dependencies**
-   ```bash
+1.**Install Dependencies**```bash
    pip install -r requirements.txt
-   ```
+   ```text
 
-2. **Start Webhook Server**
-   ```bash
+2.**Start Webhook Server**```bash
    python3 src/n8n_workflows/backlog_webhook.py
+   ```text
+
+3.**Test Integration**```bash
+   curl -X POST <http://localhost:5001/webhook/backlog-scrubber> \
+    - H "Content-Type: application/json" \
+    - d '{"action": "scrub", "dry_run": true}'
    ```
 
-3. **Test Integration**
-   ```bash
-   curl -X POST http://localhost:5001/webhook/backlog-scrubber \
-     -H "Content-Type: application/json" \
-     -d '{"action": "scrub", "dry_run": true}'
-   ```
+4.**Configure n8n**- Create webhook trigger
+  - Add HTTP request node
+  - Add function node for processing
+  - Test the workflow
 
-4. **Configure n8n**
-   - Create webhook trigger
-   - Add HTTP request node
-   - Add function node for processing
-   - Test the workflow
-
-5. **Monitor and Maintain**
-   - Check health endpoint regularly
-   - Monitor logs for errors
-   - Verify backup integrity
-   - Update as needed
+5.**Monitor and Maintain**
+  - Check health endpoint regularly
+  - Monitor logs for errors
+  - Verify backup integrity
+  - Update as needed
 
 The n8n Backlog Scrubber Workflow is now ready for production deployment! 

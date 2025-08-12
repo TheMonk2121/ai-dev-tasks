@@ -5,23 +5,17 @@
 This document provides a prioritized list of files in the `ai-dev-tasks` project, organized by importance from macro to
 micro view of the AI stack. This guide is designed for:
 
-- **Memory rehydration** for AI assistants
+- **Memory rehydration**for AI assistants
 
-- **Context sharing** with other models
+- **Context sharing**with other models
 
-- **Quick onboarding** of new team members
+- **Quick onboarding**of new team members
 
-- **Understanding the complete AI development ecosystem**
+- **Understanding the complete AI development ecosystem**## 🧠 Memory Scaffolding System
 
-## 🧠 Memory Scaffolding System
+### **Context Sharing Protocol**When sharing context with other AI models, use this structured approach:
 
-### **Context Sharing Protocol**
-
-When sharing context with other AI models, use this structured approach:
-
-#### **Level 1: Essential Context (5 files)**
-
-```
+#### **Level 1: Essential Context (5 files)**```text
 
 1. 400_project-overview.md - Project overview and workflow
 2. 400_system-overview_advanced_features.md - Technical architecture
@@ -31,11 +25,9 @@ When sharing context with other AI models, use this structured approach:
 
 ```
 
-#### **Level 2: Implementation Context (10 files)**
+#### **Level 2: Implementation Context (10 files)**Add these for implementation tasks:
 
-Add these for implementation tasks:
-
-```
+```text
 
 6. 104_dspy-development-context.md - Deep technical context
 7. 202_setup-requirements.md - Environment setup
@@ -45,11 +37,9 @@ Add these for implementation tasks:
 
 ```
 
-#### **Level 3: Domain Context (15 files)**
+#### **Level 3: Domain Context (15 files)**Add these for domain-specific tasks:
 
-Add these for domain-specific tasks:
-
-```
+```text
 
 11-15. Tier 3 files (Core modules & agent logic)
 16-20. Tier 4 files (Config & environment)
@@ -57,13 +47,9 @@ Add these for domain-specific tasks:
 
 ```
 
-### **Cross-Reference System**
+### **Cross-Reference System**Use these reference patterns in other documents:
 
-Use these reference patterns in other documents:
-
-#### **In PRDs and Task Lists:**
-
-```markdown
+#### **In PRDs and Task Lists:**```markdown
 <!-- CONTEXT_REFERENCE: CONTEXT_PRIORITY_GUIDE.md -->
 <!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 00_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
@@ -82,11 +68,9 @@ Use these reference patterns in other documents:
 <!-- MODULE_REFERENCE: 400_system-overview_advanced_features.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
 
-```
+```text
 
-#### **In Code Comments:**
-
-```python
+#### **In Code Comments:**```python
 
 # CONTEXT: See CONTEXT_PRIORITY_GUIDE.md for file organization
 
@@ -94,24 +78,20 @@ Use these reference patterns in other documents:
 
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
 
-```
+```text
 
-#### **In Documentation:**
-
-```markdown
-> **Context Reference**: See `CONTEXT_PRIORITY_GUIDE.md` for complete file organization
+#### **In Documentation:**```markdown
+>**Context Reference**: See `CONTEXT_PRIORITY_GUIDE.md` for complete file organization
 > **Essential Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `00_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 
-```
+```html
 
 ## Priority Tiers (Macro → Micro)
 
 ### **Tier 1: Top-level Architecture & Purpose**
 
-*Files that give a 5-second mental map of the whole stack*
-
-| File | Purpose | Why First? | Cross-Reference |
+- Files that give a 5-second mental map of the whole stack*| File | Purpose | Why First? | Cross-Reference |
 |------|---------|-------------|-----------------|
 | `400_project-overview.md` | Main project entry point with high-level overview, quick start, and core AI development workflow | Gives immediate understanding of the project's purpose and workflow | `<!-- CONTEXT_REFERENCE: 400_project-overview.md -->` |
 | `400_system-overview_advanced_features.md` | Comprehensive technical overview of the entire AI development ecosystem | Provides the "system-of-systems" context | `<!-- CONTEXT_REFERENCE: 400_system-overview_advanced_features.md -->` |
@@ -120,9 +100,7 @@ Use these reference patterns in other documents:
 
 ### **Tier 2: Data-flow & Orchestration Specs**
 
-*Files showing how components talk to each other*
-
-| File | Purpose | Why Critical? | Cross-Reference |
+- Files showing how components talk to each other*| File | Purpose | Why Critical? | Cross-Reference |
 |------|---------|---------------|-----------------|
 | `00_backlog.md` | Central product backlog with prioritization, dependencies, and roadmap | Shows the project's direction and current priorities | `<!-- CONTEXT_REFERENCE: 00_backlog.md -->` |
 | `100_backlog-automation.md` | AI-BACKLOG-META system and n8n workflow orchestration | Demonstrates automated project management | `<!-- CONTEXT_REFERENCE: 100_backlog-automation.md -->` |
@@ -135,9 +113,7 @@ Use these reference patterns in other documents:
 
 ### **Tier 3: Core Modules & Agent Logic**
 
-*Files explaining the brains of the operation*
-
-| File | Purpose | Why Essential? | Cross-Reference |
+- Files explaining the brains of the operation*| File | Purpose | Why Essential? | Cross-Reference |
 |------|---------|----------------|-----------------|
 | `104_dspy-development-context.md` | Deep research analysis of DSPy implementation | Explains the AI reasoning system | `<!-- CONTEXT_REFERENCE: 104_dspy-development-context.md -->` |
 | `docs/ARCHITECTURE.md` | DSPy Router architecture (v0.3.1) with signatures, modules, chains | Core AI system architecture | `<!-- CONTEXT_REFERENCE: docs/ARCHITECTURE.md -->` |
@@ -150,9 +126,7 @@ Use these reference patterns in other documents:
 
 ### **Tier 4: Config & Environment**
 
-*Files for reproducing or mutating the system*
-
-| File | Purpose | Why Important? | Cross-Reference |
+- Files for reproducing or mutating the system*| File | Purpose | Why Important? | Cross-Reference |
 |------|---------|----------------|-----------------|
 | `202_setup-requirements.md` | Manual setup items (n8n, PostgreSQL, Ollama, LM Studio) | Environment reproduction | `<!-- CONTEXT_REFERENCE: 202_setup-requirements.md -->` |
 | `201_model-configuration.md` | AI model configuration (Mistral, Yi-Coder) | AI model setup | `<!-- CONTEXT_REFERENCE: 201_model-configuration.md -->` |
@@ -165,9 +139,7 @@ Use these reference patterns in other documents:
 
 ### **Tier 5: Domain Assets**
 
-*Files needed for high-quality generation after architecture is understood*
-
-| File | Purpose | Why Valuable? | Cross-Reference |
+- Files needed for high-quality generation after architecture is understood*| File | Purpose | Why Valuable? | Cross-Reference |
 |------|---------|---------------|-----------------|
 | `100_backlog-guide.md` | Backlog system usage guide and prioritization rules | Domain knowledge | `<!-- CONTEXT_REFERENCE: 100_backlog-guide.md -->` |
 | `103_yi-coder-integration.md` | Yi-Coder integration with Cursor IDE | Tool integration | `<!-- CONTEXT_REFERENCE: 103_yi-coder-integration.md -->` |
@@ -180,9 +152,7 @@ Use these reference patterns in other documents:
 
 ### **Tier 6: Reference & Edge Cases**
 
-*Files valuable for fine-tuning or debugging*
-
-| File | Purpose | Why Useful? | Cross-Reference |
+- Files valuable for fine-tuning or debugging*| File | Purpose | Why Useful? | Cross-Reference |
 |------|---------|-------------|-----------------|
 | `C9_COMPLETION_SUMMARY.md` | B-003 completion reference | Historical context | `<!-- CONTEXT_REFERENCE: C9_COMPLETION_SUMMARY.md -->` |
 | `C10_COMPLETION_SUMMARY.md` | B-010 completion reference | Historical context | `<!-- CONTEXT_REFERENCE: C10_COMPLETION_SUMMARY.md -->` |
@@ -194,14 +164,10 @@ Use these reference patterns in other documents:
 | `dspy-rag-system/watch_folder.log` | System logs | Debugging | `<!-- CONTEXT_REFERENCE: dspy-rag-system/watch_folder.log -->` |
 | `dspy-rag-system/watch_folder_error.log` | Error logs | Debugging | `<!-- CONTEXT_REFERENCE: dspy-rag-system/watch_folder_error.log -->` |
 
-## **Essential Context Files for Model Rehydration**
-
-When rehydrating an AI model's memory or sharing context with other models, start with these **top 10 files** for
+## **Essential Context Files for Model Rehydration**When rehydrating an AI model's memory or sharing context with other models, start with these**top 10 files**for
 maximum context efficiency:
 
-### **1. `400_project-overview.md`**
-
-- **Purpose**: 5-second mental map of the entire project
+### **1. `400_project-overview.md`**-**Purpose**: 5-second mental map of the entire project
 
 - **Key Info**: AI development workflow, quick start, core concepts
 
@@ -209,9 +175,7 @@ maximum context efficiency:
 
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 400_project-overview.md -->`
 
-### **2. `400_system-overview_advanced_features.md`**
-
-- **Purpose**: Technical architecture overview
+### **2. `400_system-overview_advanced_features.md`**-**Purpose**: Technical architecture overview
 
 - **Key Info**: System components, security features, reliability measures
 
@@ -219,9 +183,7 @@ maximum context efficiency:
 
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 400_system-overview_advanced_features.md -->`
 
-### **3. `00_backlog.md`**
-
-- **Purpose**: Current priorities and roadmap
+### **3. `00_backlog.md`**-**Purpose**: Current priorities and roadmap
 
 - **Key Info**: Active tasks, completed items, dependencies
 
@@ -229,9 +191,7 @@ maximum context efficiency:
 
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 00_backlog.md -->`
 
-### **4. `dspy-rag-system/400_project-overview.md`**
-
-- **Purpose**: Core system status and features
+### **4. `dspy-rag-system/400_project-overview.md`**-**Purpose**: Core system status and features
 
 - **Key Info**: DSPy RAG system capabilities, current features
 
@@ -239,9 +199,7 @@ maximum context efficiency:
 
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: dspy-rag-system/400_project-overview.md -->`
 
-### **5. `docs/ARCHITECTURE.md`**
-
-- **Purpose**: DSPy implementation details
+### **5. `docs/ARCHITECTURE.md`**-**Purpose**: DSPy implementation details
 
 - **Key Info**: Router architecture, modules, chains, agent catalog
 
@@ -249,9 +207,7 @@ maximum context efficiency:
 
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: docs/ARCHITECTURE.md -->`
 
-### **6. `104_dspy-development-context.md`**
-
-- **Purpose**: Deep technical context
+### **6. `104_dspy-development-context.md`**-**Purpose**: Deep technical context
 
 - **Key Info**: Research analysis, current architecture, critical fixes
 
@@ -259,9 +215,7 @@ maximum context efficiency:
 
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 104_dspy-development-context.md -->`
 
-### **7. `202_setup-requirements.md`**
-
-- **Purpose**: Environment setup requirements
+### **7. `202_setup-requirements.md`**-**Purpose**: Environment setup requirements
 
 - **Key Info**: Manual setup items, dependencies, configuration
 
@@ -269,9 +223,7 @@ maximum context efficiency:
 
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 202_setup-requirements.md -->`
 
-### **8. `201_model-configuration.md`**
-
-- **Purpose**: AI model configuration
+### **8. `201_model-configuration.md`**-**Purpose**: AI model configuration
 
 - **Key Info**: Mistral, Yi-Coder setup, model parameters
 
@@ -279,9 +231,7 @@ maximum context efficiency:
 
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 201_model-configuration.md -->`
 
-### **9. `100_backlog-automation.md`**
-
-- **Purpose**: Orchestration patterns
+### **9. `100_backlog-automation.md`**-**Purpose**: Orchestration patterns
 
 - **Key Info**: AI-BACKLOG-META system, n8n workflows
 
@@ -289,9 +239,7 @@ maximum context efficiency:
 
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: 100_backlog-automation.md -->`
 
-### **10. `dspy-rag-system/docs/CURRENT_STATUS.md`**
-
-- **Purpose**: Real-time system state
+### **10. `dspy-rag-system/docs/CURRENT_STATUS.md`**-**Purpose**: Real-time system state
 
 - **Key Info**: Working features, operational status
 
@@ -299,65 +247,45 @@ maximum context efficiency:
 
 - **Cross-Reference**: `<!-- CONTEXT_REFERENCE: dspy-rag-system/docs/CURRENT_STATUS.md -->`
 
-## **Usage Guidelines**
-
-### **For Memory Rehydration**
-
-1. Start with Tier 1 files (README, SYSTEM_OVERVIEW)
+## **Usage Guidelines**###**For Memory Rehydration**1. Start with Tier 1 files (README, SYSTEM_OVERVIEW)
 2. Move to Tier 2 for data flow understanding
 3. Reference Tier 3 for specific implementation questions
 4. Use Tier 4-6 as needed for detailed context
 
-### **For Context Sharing**
-
-1. Share the top 10 essential files first
+### **For Context Sharing**1. Share the top 10 essential files first
 2. Add specific files based on the task at hand
 3. Include relevant Tier 5-6 files for domain-specific questions
 
-### **For Problem Solving**
-
-1. Check `00_backlog.md` for current priorities
+### **For Problem Solving**1. Check `00_backlog.md` for current priorities
 2. Review relevant Tier 3 files for implementation details
 3. Reference Tier 6 files for debugging context
 4. Use Tier 4 files for environment setup issues
 
-## **File Categories by Use Case**
-
-### **Architecture Understanding**
-
-- Tier 1 files
+## **File Categories by Use Case**###**Architecture Understanding**- Tier 1 files
 
 - `docs/ARCHITECTURE.md`
 
 - `104_dspy-development-context.md`
 
-### **Current Development Status**
-
-- `00_backlog.md`
+### **Current Development Status**- `00_backlog.md`
 
 - `dspy-rag-system/docs/CURRENT_STATUS.md`
 
 - `dspy-rag-system/400_project-overview.md`
 
-### **Implementation Details**
-
-- Tier 3 files
+### **Implementation Details**- Tier 3 files
 
 - `dspy-rag-system/src/` directory
 
 - `tests/` directory
 
-### **Environment Setup**
-
-- `202_setup-requirements.md`
+### **Environment Setup**- `202_setup-requirements.md`
 
 - `201_model-configuration.md`
 
 - `docs/CONFIG_REFERENCE.md`
 
-### **Process Understanding**
-
-- `100_backlog-automation.md`
+### **Process Understanding**- `100_backlog-automation.md`
 
 - `01_create-prd.md`
 
@@ -365,43 +293,29 @@ maximum context efficiency:
 
 - `03_process-task-list.md`
 
-## **Memory Scaffolding Integration**
+## **Memory Scaffolding Integration**###**Cross-Reference Implementation**To integrate this guide with other documents, add these references:
 
-### **Cross-Reference Implementation**
-
-To integrate this guide with other documents, add these references:
-
-#### **In 400_project-overview.md:**
-
-```markdown
+#### **In 400_project-overview.md:**```markdown
 <!-- CONTEXT_REFERENCE: CONTEXT_PRIORITY_GUIDE.md -->
 <!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 00_backlog.md -->
 
-```
+```text
 
-#### **In 400_system-overview_advanced_features.md:**
-
-```markdown
+#### **In 400_system-overview_advanced_features.md:**```markdown
 <!-- CONTEXT_REFERENCE: CONTEXT_PRIORITY_GUIDE.md -->
 <!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 104_dspy-development-context.md -->
 
-```
+```text
 
-#### **In 00_backlog.md:**
-
-```markdown
+#### **In 00_backlog.md:**```markdown
 <!-- CONTEXT_REFERENCE: CONTEXT_PRIORITY_GUIDE.md -->
 <!-- WORKFLOW_FILES: 01_create-prd.md, 02_generate-tasks.md, 03_process-task-list.md -->
 
-```
+```text
 
-### **AI Model Context Sharing**
+### **AI Model Context Sharing**When sharing context with other AI models, use this structured approach:
 
-When sharing context with other AI models, use this structured approach:
-
-#### **Quick Context (5 files):**
-
-```
+#### **Quick Context (5 files):**```
 
 CONTEXT_PRIORITY_GUIDE.md
 400_project-overview.md
@@ -409,11 +323,9 @@ CONTEXT_PRIORITY_GUIDE.md
 00_backlog.md
 dspy-rag-system/400_project-overview.md
 
-```
+```text
 
-#### **Full Context (15 files):**
-
-Add these to the quick context:
+#### **Full Context (15 files):**Add these to the quick context:
 
 ```
 
@@ -430,13 +342,9 @@ dspy-rag-system/docs/CURRENT_STATUS.md
 
 ```
 
-#### **Domain-Specific Context (20+ files):**
+#### **Domain-Specific Context (20+ files):**Add relevant Tier 3-6 files based on the specific task or domain.
 
-Add relevant Tier 3-6 files based on the specific task or domain.
-
-## **Maintenance Notes**
-
-- **Last Updated**: 2024-08-06
+## **Maintenance Notes**-**Last Updated**: 2024-08-06
 
 - **Priority Structure**: Follows "macro → micro" rule
 

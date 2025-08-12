@@ -3,6 +3,8 @@
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Research index and discovery hub -->
+# 📚 Research Index
+
 
 ## 📚 Research Index
 
@@ -36,7 +38,7 @@
 RESEARCH_INDEX -->
 
 <!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -44,9 +46,7 @@ RESEARCH_INDEX -->
 |---|---|---|
 |  |  |  |
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Research index maintained and current
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research index maintained and current
 
 - **Priority**: 🔥 High - Critical for research discovery
 
@@ -55,7 +55,6 @@ RESEARCH_INDEX -->
 - **Dependencies**: 400_context-priority-guide.md, 400_deployment-environment-guide.md, 400_few-shot-context-examples.md, 400_migration-upgrade-guide.md
 
 - **Next Steps**: Maintain research index and cross-references
-
 
 ### Research Access (shortcuts)
 
@@ -66,7 +65,7 @@ RESEARCH_INDEX -->
 - Safety research: `500_maintenance-safety-research.md`
 
 <!-- ANCHOR: key-findings -->
-<a id="key-findings"></a>
+{#key-findings}
 
 ## Key Findings (Index-level)
 
@@ -75,7 +74,7 @@ RESEARCH_INDEX -->
 - Keep raw sources in `docs/research/`; 500_ holds curated syntheses
 
 <!-- ANCHOR: actionable-patterns -->
-<a id="actionable-patterns"></a>
+{#actionable-patterns}
 
 ## Actionable Patterns (How to use)
 
@@ -84,21 +83,21 @@ RESEARCH_INDEX -->
 - Each pattern should include success criteria and quality gates
 
 <!-- ANCHOR: implementation-refs -->
-<a id="implementation-refs"></a>
+{#implementation-refs}
 
 ## Implementation References
 
 - Cross-link to code when applicable (e.g., `dspy-rag-system/src/...`)
 
 <!-- ANCHOR: citations -->
-<a id="citations"></a>
+{#citations}
 
 ## Citations
 
 - Cite span-level references from `docs/research/` (papers, articles, tutorials)
 
----
+- --
 
-*Last Updated: 2025-08-08*
-*Next Review: Monthly*
+- Last Updated: 2025-08-08*
+- Next Review: Monthly*
 

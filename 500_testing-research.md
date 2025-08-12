@@ -7,7 +7,7 @@
 Backlog link: B-012
 
 <!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -15,9 +15,7 @@ Backlog link: B-012
 |---|---|---|
 | Research on testing approaches and gates for this repo | Designing/adjusting tests or debugging flaky model-eval checks | Apply `400_testing-strategy-guide.md`; run `./dspy-rag-system/run_tests.sh` or `run_comprehensive_tests.sh` |
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Research file with content
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
 
 - **Priority**: 🔧 Medium - Research for implementation
 
@@ -27,9 +25,7 @@ Backlog link: B-012
 
 - **Next Steps**: Implement testing patterns and quality assurance
 
-
 <!-- ANCHOR: key-findings -->
-
 
 ## Key Findings
 
@@ -42,10 +38,9 @@ Backlog link: B-012
 - CI should gate on RAG metrics (e.g., retrieval recall@k, citation faithfulness) and on basic security tests (prompt-injection refusal, PII redaction).
 
 - Flake management: constrained reruns (1–2) and tolerance bands reduce false negatives while still catching drift.
- - Align test oracles with span-grounded citations: sentence-level faithfulness against retrieved chunks improves precision of failures (400_documentation-retrieval-guide.md).
+- Align test oracles with span-grounded citations: sentence-level faithfulness against retrieved chunks improves precision of failures (400_documentation-retrieval-guide.md).
 
 <!-- ANCHOR: actionable-patterns -->
-
 
 ## Actionable Patterns
 
@@ -58,10 +53,9 @@ Backlog link: B-012
 - Security checks: adversarial prompts must be refused; outputs must not contain PII/secrets (regex screens) before passing.
 
 - Flake policy: allow up to 2 reruns only for model-eval tests; record variance and alert on significant drift.
- - Deterministic harnesses for non-LLM code (indexers, sanitizers) ensure reproducible failures separate from model noise (400_testing-strategy-guide.md).
+- Deterministic harnesses for non-LLM code (indexers, sanitizers) ensure reproducible failures separate from model noise (400_testing-strategy-guide.md).
 
 <!-- ANCHOR: implementation-refs -->
-
 
 ## Implementation References
 
@@ -74,7 +68,6 @@ Backlog link: B-012
 - dspy-rag-system/tests/test_validation_and_monitoring.py (observability hooks)
 
 <!-- ANCHOR: citations -->
-
 
 ## Citations
 

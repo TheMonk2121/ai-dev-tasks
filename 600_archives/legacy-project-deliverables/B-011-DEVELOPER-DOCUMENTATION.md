@@ -10,16 +10,16 @@
 
 This document provides comprehensive developer documentation for the AI Development Ecosystem with Cursor Native AI integration and specialized agents. It covers architecture, APIs, development guidelines, and contribution workflows.
 
-**Version**: 1.0.0  
-**Last Updated**: 2024-08-07  
-**Status**: Production Ready
+- *Version**: 1.0.0  
+- *Last Updated**: 2024-08-07  
+- *Status**: Production Ready
 
----
+- --
 
 ## 🏗️ Architecture Overview
 
 ### System Architecture
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    AI Development Ecosystem                 │
 ├─────────────────────────────────────────────────────────────┤
@@ -45,7 +45,7 @@ This document provides comprehensive developer documentation for the AI Developm
 - **Performance Optimization**: Real-time monitoring and optimization
 - **Cursor Integration**: Native AI capabilities integration
 
----
+- --
 
 ## 🧠 Specialized Agent Framework
 
@@ -72,7 +72,7 @@ class BaseSpecializedAgent(ABC):
     def can_handle(self, request: Dict[str, Any]) -> bool:
         """Check if this agent can handle the request."""
         pass
-```
+```text
 
 ### Agent Capabilities
 ```python
@@ -97,7 +97,7 @@ class AgentCapability(Enum):
     EXPLANATION_GENERATION = "explanation_generation"
     CONTENT_OPTIMIZATION = "content_optimization"
     FORMAT_SUPPORT = "format_support"
-```
+```text
 
 ### Research Agent Implementation
 ```python
@@ -133,7 +133,7 @@ class ResearchAgent(BaseSpecializedAgent):
             request.get("type") == "research" and
             request.get("analysis_type") in [cap.value for cap in self.capabilities]
         )
-```
+```text
 
 ### Coder Agent Implementation
 ```python
@@ -163,7 +163,7 @@ class CoderAgent(BaseSpecializedAgent):
         
         # Format response
         return self._format_code_analysis_response(analysis)
-```
+```text
 
 ### Documentation Agent Implementation
 ```python
@@ -194,9 +194,9 @@ class DocumentationAgent(BaseSpecializedAgent):
         
         # Format response
         return self._format_documentation_response(doc_content)
-```
+```text
 
----
+- --
 
 ## 🔄 Context Management System
 
@@ -218,7 +218,7 @@ class ContextData:
     visibility: ContextVisibility = ContextVisibility.PRIVATE
     size_bytes: int = 0
     access_count: int = 0
-```
+```text
 
 ### Context Store Implementation
 ```python
@@ -252,7 +252,7 @@ class ContextStore:
             conn.commit()
             conn.close()
             return context.id
-```
+```text
 
 ### Context Manager Implementation
 ```python
@@ -284,9 +284,9 @@ class ContextManager:
         await self.cache.set(context_id, context)
         
         return context_id
-```
+```text
 
----
+- --
 
 ## ⚡ Performance Optimization System
 
@@ -299,7 +299,7 @@ class PerformanceMetric(Enum):
     CONCURRENT_AGENTS = "concurrent_agents"
     RESPONSE_TIME = "response_time"
     THROUGHPUT = "throughput"
-```
+```text
 
 ### Performance Monitor
 ```python
@@ -327,7 +327,7 @@ class PerformanceMonitor:
                 self.metrics[metric].status = "passed"
             else:
                 self.metrics[metric].status = "failed"
-```
+```text
 
 ### Agent Switching Optimizer
 ```python
@@ -368,9 +368,9 @@ class AgentSwitchingOptimizer:
         except Exception as e:
             logger.error(f"Agent switch optimization failed: {e}")
             return time.time() - start_time
-```
+```yaml
 
----
+- --
 
 ## 🔧 Development Guidelines
 
@@ -403,7 +403,7 @@ async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Processing error: {e}")
         return {"error": str(e), "status": "processing_failed"}
-```
+```text
 
 ### Logging
 ```python
@@ -425,7 +425,7 @@ logger = logging.getLogger(__name__)
 logger.info("Processing request")
 logger.warning("Performance alert triggered")
 logger.error("Request failed", exc_info=True)
-```
+```text
 
 ### Testing
 ```python
@@ -450,7 +450,7 @@ class TestResearchAgent:
         assert "findings" in result
         assert "sources" in result
         assert "confidence" in result
-```
+```text
 
 ### Performance Testing
 ```python
@@ -470,9 +470,9 @@ async def test_agent_switching_performance():
     # Benchmark: agent switching < 2 seconds
     assert switch_time < 2.0, f"Agent switching took {switch_time:.3f}s, expected < 2.0s"
     assert total_time < 3.0, f"Total test time {total_time:.3f}s, expected < 3.0s"
-```
+```text
 
----
+- --
 
 ## 🚀 Deployment Architecture
 
@@ -492,7 +492,7 @@ python test_performance_optimization.py
 
 # Start development server
 python main.py --dev
-```
+```text
 
 ### Production Deployment
 ```bash
@@ -512,7 +512,7 @@ pm2 start ecosystem.config.js
 
 # Monitor performance
 pm2 monit
-```
+```text
 
 ### Docker Deployment
 ```dockerfile
@@ -535,7 +535,7 @@ ENV PYTHONPATH=/app
 EXPOSE 8000
 
 CMD ["python", "main.py"]
-```
+```text
 
 ### Kubernetes Deployment
 ```yaml
@@ -571,9 +571,9 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "500m"
-```
+```text
 
----
+- --
 
 ## 🔒 Security Guidelines
 
@@ -614,7 +614,7 @@ def _is_safe_query(query: str) -> bool:
             return False
     
     return True
-```
+```text
 
 ### Agent Isolation
 ```python
@@ -647,9 +647,9 @@ class AgentIsolation:
         except Exception as e:
             logger.error(f"Agent error: {e}")
             return {"error": str(e), "status": "error"}
-```
+```text
 
----
+- --
 
 ## 📊 Monitoring & Observability
 
@@ -678,7 +678,7 @@ class MetricsCollector:
             "metrics": self.metrics,
             "summary": self._calculate_summary()
         }
-```
+```text
 
 ### Health Checks
 ```python
@@ -708,9 +708,9 @@ class HealthChecker:
                 }
         
         return results
-```
+```bash
 
----
+- --
 
 ## 🔄 CI/CD Pipeline
 
@@ -755,7 +755,7 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         file: ./coverage.xml
-```
+```text
 
 ### Deployment Pipeline
 ```yaml
@@ -782,9 +782,9 @@ jobs:
       run: |
         # Deploy to production environment
         echo "Deploying to production..."
-```
+```text
 
----
+- --
 
 ## 📚 API Documentation
 
@@ -820,7 +820,7 @@ async def get_performance_report():
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy", "timestamp": time.time()}
-```
+```text
 
 ### WebSocket API
 ```python
@@ -845,15 +845,15 @@ async def websocket_endpoint(websocket: WebSocket):
             
     except Exception as e:
         await websocket.send_json({"error": str(e)})
-```
+```bash
 
----
+- --
 
 ## 🛠️ Development Tools
 
 ### Development Scripts
 ```bash
-#!/bin/bash
+# !/bin/bash
 # scripts/dev-setup.sh
 
 echo "Setting up development environment..."
@@ -873,11 +873,11 @@ python -c "from context_management_implementation import ContextManager; Context
 pytest tests/ -v
 
 echo "Development environment ready!"
-```
+```text
 
 ### Performance Testing Script
 ```bash
-#!/bin/bash
+# !/bin/bash
 # scripts/performance-test.sh
 
 echo "Running performance tests..."
@@ -903,9 +903,9 @@ print(f'Agent Switch Time: {result:.3f}s')
 "
 
 echo "Performance tests completed!"
-```
+```sql
 
----
+- --
 
 ## 📝 Contribution Guidelines
 
@@ -925,7 +925,7 @@ type(scope): description
 [optional body]
 
 [optional footer]
-```
+```yaml
 
 Examples:
 - `feat(agents): add new research capability`
@@ -938,7 +938,7 @@ Examples:
 - Integration tests for agent interactions
 - Security tests for input validation
 
----
+- --
 
 ## 🔍 Debugging Guide
 
@@ -956,7 +956,7 @@ print(f"Agent Status: {status}")
 # Check agent logs
 import logging
 logging.getLogger("specialized_agent_framework").setLevel(logging.DEBUG)
-```
+```text
 
 #### Performance Issues
 ```python
@@ -972,7 +972,7 @@ import psutil
 process = psutil.Process()
 memory_mb = process.memory_info().rss / 1024 / 1024
 print(f"Memory Usage: {memory_mb:.2f} MB")
-```
+```text
 
 #### Context Loading Issues
 ```python
@@ -990,9 +990,9 @@ cursor = conn.cursor()
 cursor.execute("SELECT COUNT(*) FROM contexts")
 count = cursor.fetchone()[0]
 print(f"Total contexts: {count}")
-```
+```bash
 
----
+- --
 
 ## 📞 Support & Maintenance
 
@@ -1022,6 +1022,6 @@ cp config/settings.yaml backup/settings_$(date +%Y%m%d).yaml
 tar -czf backup/logs_$(date +%Y%m%d).tar.gz logs/
 ```
 
----
+- --
 
-*This developer documentation is maintained as part of the AI Development Ecosystem project. For updates and contributions, see the project repository.*
+- This developer documentation is maintained as part of the AI Development Ecosystem project. For updates and contributions, see the project repository.*

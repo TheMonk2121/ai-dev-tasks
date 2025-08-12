@@ -5,7 +5,7 @@
 
 # RAG Articles
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -19,14 +19,9 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
 > **External Research**: Industry articles and blog posts about RAG systems.
 
-## 📚 **Articles**
-
-### **RAGFlow Blog (2024)**
-
-- **Source**: RAGFlow Blog
+## 📚 **Articles**###**RAGFlow Blog (2024)**-**Source**: RAGFlow Blog
 
 - **Key Insight**: Hybrid search and intelligent chunking strategies
 
@@ -40,9 +35,7 @@
   - Use semantic boundaries and sliding windows to avoid "Lost in the Middle" problem
   - Layout awareness for document structure consideration
 
-### **Qdrant "RAG Evaluation Guide" (2024)**
-
-- **Source**: Qdrant Documentation
+### **Qdrant "RAG Evaluation Guide" (2024)**-**Source**: Qdrant Documentation
 
 - **Key Insight**: Rigorous evaluation metrics for RAG systems
 
@@ -55,9 +48,7 @@
   - Rigorous evaluation metrics for RAG systems
   - Performance optimization strategies for production deployment
 
-### **LangExtract Documentation (2025)**
-
-- **Source**: LangExtract Official Documentation
+### **LangExtract Documentation (2025)**-**Source**: LangExtract Official Documentation
 
 - **Key Insight**: Span-level grounding for precise fact extraction
 
@@ -71,15 +62,11 @@
   - Traceability for "According to Doc 045, lines 10-15" citations
   - Hallucination prevention through text tethering
 
-## 🔗 **Related Documentation**
-
-- `500_rag-system-research.md` - Our internal RAG research summary
+## 🔗 **Related Documentation**- `500_rag-system-research.md` - Our internal RAG research summary
 
 - `400_system-overview_advanced_features.md` - System architecture overview
 
-## 📖 **Key Insights**
-
-- Industry best practices for RAG implementation
+## 📖**Key Insights**- Industry best practices for RAG implementation
 
 - Performance optimization strategies
 
@@ -89,6 +76,6 @@
 
 - Intelligent chunking strategies
 
-## 🎯 **Implementation Impact**
+## 🎯**Implementation Impact**
 
 These articles provide practical guidance for our RAG system deployment.

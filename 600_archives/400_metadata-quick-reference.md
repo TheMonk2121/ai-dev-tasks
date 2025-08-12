@@ -8,11 +8,9 @@ reference section).
 
 python3 scripts/state_manager.py --export execution_data.json
 
-```
+```text
 
-### **Error Analysis**
-
-```bash
+### **Error Analysis**```bash
 
 # Get error statistics
 
@@ -26,13 +24,9 @@ python3 scripts/error_handler.py --export-report error_analysis.json
 
 python3 scripts/error_handler.py --clear
 
-```
+```text
 
-## 📊 **Key Metadata Sources**
-
-### **1. Backlog File (`000_backlog.md`)**
-
-- **Task IDs**: B-001, B-002, etc.
+## 📊**Key Metadata Sources**###**1. Backlog File (`000_backlog.md`)**-**Task IDs**: B-001, B-002, etc.
 
 - **Priorities**: 🔥 (Critical), 📈 (High), ⭐ (Medium), 🔧 (Low)
 
@@ -42,9 +36,7 @@ python3 scripts/error_handler.py --clear
 
 - **Status**: todo, pending, completed, failed
 
-### **2. Execution Database (`task_execution.db`)**
-
-- **Execution Records**: Start time, completion time, error messages
+### **2. Execution Database (`task_execution.db`)**-**Execution Records**: Start time, completion time, error messages
 
 - **Performance Metrics**: Average execution time, success rate
 
@@ -52,9 +44,7 @@ python3 scripts/error_handler.py --clear
 
 - **Task Metadata**: Title, priority, points, description
 
-### **3. Error Handling System**
-
-- **Error Categories**: network, file_system, database, permission, timeout
+### **3. Error Handling System**-**Error Categories**: network, file_system, database, permission, timeout
 
 - **Severity Levels**: low, medium, high, critical
 
@@ -62,11 +52,7 @@ python3 scripts/error_handler.py --clear
 
 - **Error Patterns**: Frequency analysis and trends
 
-## 🎯 **Common Usage Patterns**
-
-### **Task Prioritization**
-
-```python
+## 🎯 **Common Usage Patterns**###**Task Prioritization**```python
 
 # Sort by priority and score
 
@@ -77,11 +63,9 @@ tasks.sort(key=lambda t: (t.priority.value, t.score_total or 0), reverse=True)
 if not self._check_dependencies(task):
     logger.warning(f"Task {task.id} dependencies not met")
 
-```
+```text
 
-### **Performance Monitoring**
-
-```python
+### **Performance Monitoring**```python
 
 # Track execution patterns
 
@@ -93,11 +77,9 @@ success_rate = performance_metrics.get_success_rate(task_id)
 if success_rate < 0.8:
     increase_retry_delay()
 
-```
+```text
 
-### **Error Recovery**
-
-```python
+### **Error Recovery**```python
 
 # Classify errors automatically
 
@@ -108,13 +90,9 @@ severity = error_handler.determine_severity(error, context)
 
 recovery_action = error_handler._get_recovery_action(error_info)
 
-```
+```text
 
-## 📈 **Analytics Commands**
-
-### **Performance Analysis**
-
-```bash
+## 📈**Analytics Commands**###**Performance Analysis**```bash
 
 # Get comprehensive statistics
 
@@ -128,11 +106,9 @@ python3 scripts/process_tasks.py list --format json | jq '.[] | select(.avg_exec
 
 python3 scripts/process_tasks.py list --format json | jq '.[] | select(.retry_count > 3)'
 
-```
+```text
 
-### **Error Pattern Analysis**
-
-```bash
+### **Error Pattern Analysis**```bash
 
 # Get error statistics by category
 
@@ -146,11 +122,9 @@ python3 scripts/error_handler.py --export-report error_trends.json
 
 python3 scripts/error_handler.py --stats --recovery-rates
 
-```
+```text
 
-### **Dependency Analysis**
-
-```bash
+### **Dependency Analysis**```bash
 
 # Validate all dependencies
 
@@ -164,13 +138,9 @@ python3 scripts/process_tasks.py validate --show-missing
 
 python3 scripts/backlog_parser.py --export-deps dependency_graph.json
 
-```
+```text
 
-## 🔧 **Database Schema Reference**
-
-### **Task Executions Table**
-
-```sql
+## 🔧**Database Schema Reference**###**Task Executions Table**```sql
 task_executions:
   task_id TEXT PRIMARY KEY,
   status TEXT NOT NULL,
@@ -184,11 +154,9 @@ task_executions:
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
-```
+```text
 
-### **Performance Metrics Table**
-
-```sql
+### **Performance Metrics Table**```sql
 performance_metrics:
   task_id TEXT PRIMARY KEY,
   avg_execution_time REAL,
@@ -200,47 +168,33 @@ performance_metrics:
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
-```
+```bash
 
-## 🚨 **Error Categories & Recovery**
-
-### **Network Errors**
-
-- **Symptoms**: Connection timeouts, HTTP errors
+## 🚨**Error Categories & Recovery**###**Network Errors**-**Symptoms**: Connection timeouts, HTTP errors
 
 - **Recovery**: Retry with exponential backoff
 
 - **Commands**: `python3 scripts/error_handler.py --retry-network`
 
-### **File System Errors**
-
-- **Symptoms**: Permission denied, file not found
+### **File System Errors**-**Symptoms**: Permission denied, file not found
 
 - **Recovery**: Cleanup temporary files and retry
 
 - **Commands**: `python3 scripts/error_handler.py --cleanup-files`
 
-### **Database Errors**
-
-- **Symptoms**: SQL errors, connection failures
+### **Database Errors**-**Symptoms**: SQL errors, connection failures
 
 - **Recovery**: Reconnect and retry
 
 - **Commands**: `python3 scripts/error_handler.py --reconnect-db`
 
-### **Timeout Errors**
-
-- **Symptoms**: Operation timeouts
+### **Timeout Errors**-**Symptoms**: Operation timeouts
 
 - **Recovery**: Extend timeout and retry
 
 - **Commands**: `python3 scripts/error_handler.py --extend-timeout`
 
-## 📋 **Status Codes Reference**
-
-### **Task Status**
-
-- `todo`: Task not started
+## 📋 **Status Codes Reference**###**Task Status**- `todo`: Task not started
 
 - `pending`: Task ready to execute
 
@@ -250,9 +204,7 @@ performance_metrics:
 
 - `failed`: Task failed with error
 
-### **Priority Levels**
-
-- `🔥`: Critical priority
+### **Priority Levels**- `🔥`: Critical priority
 
 - `📈`: High priority
 
@@ -260,9 +212,7 @@ performance_metrics:
 
 - `🔧`: Low priority
 
-### **Error Severity**
-
-- `low`: Minor issues, non-critical
+### **Error Severity**- `low`: Minor issues, non-critical
 
 - `medium`: Moderate issues, some impact
 
@@ -270,11 +220,7 @@ performance_metrics:
 
 - `critical`: System-breaking issues
 
-## 🔄 **Workflow Integration**
-
-### **Automated Sprint Planning**
-
-```bash
+## 🔄**Workflow Integration**###**Automated Sprint Planning**```bash
 
 # Execute top 5 priority tasks
 
@@ -288,11 +234,9 @@ python3 scripts/process_tasks.py auto --priority 🔥 --max-tasks 3
 
 python3 scripts/process_tasks.py auto --exclude-human --max-tasks 10
 
-```
+```text
 
-### **Continuous Monitoring**
-
-```bash
+### **Continuous Monitoring**```bash
 
 # Monitor execution status
 
@@ -306,13 +250,9 @@ watch -n 60 'python3 scripts/error_handler.py --stats'
 
 watch -n 120 'python3 scripts/state_manager.py --stats'
 
-```
+```javascript
 
-## 📊 **Export & Reporting**
-
-### **JSON Exports**
-
-```bash
+## 📊**Export & Reporting**###**JSON Exports**```bash
 
 # Export all tasks
 
@@ -326,11 +266,9 @@ python3 scripts/state_manager.py --export history.json
 
 python3 scripts/error_handler.py --export-report errors.json
 
-```
+```text
 
-### **CSV Reports**
-
-```bash
+### **CSV Reports**```bash
 
 # Export task summary
 
@@ -342,45 +280,33 @@ python3 scripts/state_manager.py --export-csv metrics.csv
 
 ```
 
-## 🎯 **Best Practices**
-
-### **Data Quality**
-
-- Always validate metadata before storage
+## 🎯**Best Practices**###**Data Quality**- Always validate metadata before storage
 
 - Maintain consistent data formats
 
 - Capture all relevant metadata fields
 
-### **Performance**
-
-- Use proper database indexing
+### **Performance**- Use proper database indexing
 
 - Cache frequently accessed metadata
 
 - Compress historical data
 
-### **Security**
-
-- Implement access controls for sensitive metadata
+### **Security**- Implement access controls for sensitive metadata
 
 - Define clear data retention policies
 
 - Log all metadata access and modifications
 
-### **Scalability**
-
-- Design for horizontal scaling
+### **Scalability**- Design for horizontal scaling
 
 - Partition large datasets
 
 - Archive old data to maintain performance
 
----
-
-**Quick Reference Version**: 1.0
-**Last Updated**: 2024-08-07
-**Related Documentation**: `400_metadata-collection-guide.md`
+- --**Quick Reference Version**: 1.0
+- *Last Updated**: 2024-08-07
+- *Related Documentation**: `400_metadata-collection-guide.md`
 
 <!-- METADATA_SYSTEM: 400_metadata-collection-guide.md -->
 <!-- WORKFLOW_INTEGRATION: 003_process-task-list.md, scripts/process_tasks.py -->

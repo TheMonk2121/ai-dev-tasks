@@ -3,10 +3,12 @@
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Documentation retrieval and indexing system -->
+# 📚 Documentation Retrieval Guide
+
 
 ## 📚 Documentation Retrieval Guide
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -20,10 +22,7 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Documentation retrieval system operational
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Documentation retrieval system operational
 
 - **Priority**: ⚡ High - Essential for context provision
 
@@ -37,13 +36,7 @@
 
 - **GitHub Copilot**: Repository-specific instruction patterns
 
-## 🏗️ **System Architecture**
-
-### **Core Components**
-
-#### **1. Documentation Indexer**
-
-- **Purpose**: Scans and indexes all documentation files
+## 🏗️ **System Architecture**###**Core Components**####**1. Documentation Indexer**-**Purpose**: Scans and indexes all documentation files
 
 - **File**: `scripts/documentation_indexer.py`
 
@@ -53,9 +46,7 @@
   - Content chunking for optimal retrieval
   - Category-based organization
 
-#### **2. Documentation Retrieval Service**
-
-- **Purpose**: Main service for context provision
+#### **2. Documentation Retrieval Service**-**Purpose**: Main service for context provision
 
 - **File**: `dspy-rag-system/src/dspy_modules/documentation_retrieval.py`
 
@@ -65,9 +56,7 @@
   - Context synthesis from multiple sources
   - Task-specific context provision
 
-#### **3. CLI Interface**
-
-- **Purpose**: Easy command-line access to the system
+#### **3. CLI Interface**-**Purpose**: Easy command-line access to the system
 
 - **File**: `scripts/documentation_retrieval_cli.py`
 
@@ -77,9 +66,7 @@
   - Index documentation files
   - View system statistics
 
-### **Integration Points**
-
-- **DSPy RAG System**: Leverages existing enhanced RAG infrastructure
+### **Integration Points**-**DSPy RAG System**: Leverages existing enhanced RAG infrastructure
 
 - **Vector Store**: Uses PostgreSQL with PGVector for semantic search
 
@@ -87,13 +74,7 @@
 
 - **Memory Context**: Integrates with modular memory system
 
-## 📋 **Usage Guide**
-
-### **Quick Start**
-
-#### **1. Index Documentation**
-
-```bash
+## 📋 **Usage Guide**###**Quick Start**####**1. Index Documentation**```bash
 
 # Index all documentation files
 
@@ -103,11 +84,9 @@ python scripts/documentation_indexer.py
 
 python scripts/documentation_indexer.py --root-path ./docs
 
-```
+```text
 
-#### **2. Search Documentation**
-
-```bash
+#### **2. Search Documentation**```bash
 
 # Basic search
 
@@ -121,11 +100,9 @@ python scripts/documentation_retrieval_cli.py search "file operations" --categor
 
 python scripts/documentation_retrieval_cli.py search "DSPy implementation" --limit 10
 
-```
+```text
 
-#### **3. Get Context for Tasks**
-
-```bash
+#### **3. Get Context for Tasks**```bash
 
 # Get context for development task
 
@@ -139,7 +116,7 @@ python scripts/documentation_retrieval_cli.py task "analyze RAG performance" --t
 
 python scripts/documentation_retrieval_cli.py task "update backlog priorities" --task-type workflow
 
-```
+```text
 
 #### Validator quick start
 
@@ -161,11 +138,9 @@ python scripts/doc_coherence_validator.py --no-dry-run
 
 ./scripts/pre_commit_doc_validation.sh
 
-```
+```text
 
-#### **4. Get Relevant Context**
-
-```bash
+#### **4. Get Relevant Context**```bash
 
 # Get general context
 
@@ -179,44 +154,30 @@ python scripts/documentation_retrieval_cli.py context "file operations" --type w
 
 python scripts/documentation_retrieval_cli.py context "DSPy modules" --type implementation
 
-```
+```text
 
-### **Output Formats**
-
-#### **JSON Format (Default)**
-
-```bash
+### **Output Formats**####**JSON Format (Default)**```bash
 python scripts/documentation_retrieval_cli.py search "RAG implementation" --format json
 
-```
+```text
 
 Returns structured JSON with all metadata and results.
 
-#### **Text Format**
-
-```bash
+#### **Text Format**```bash
 python scripts/documentation_retrieval_cli.py search "RAG implementation" --format text
 
-```
+```text
 
 Returns human-readable text with context and summaries.
 
-#### **Summary Format**
-
-```bash
+#### **Summary Format**```bash
 python scripts/documentation_retrieval_cli.py search "RAG implementation" --format summary
 
-```
+```text
 
 Returns concise summary with confidence scores and source counts.
 
-## 🔧 **Advanced Usage**
-
-### **Programmatic Access**
-
-#### **Direct Service Usage**
-
-```python
+## 🔧**Advanced Usage**###**Programmatic Access**####**Direct Service Usage**```python
 from dspy_modules.documentation_retrieval import create_documentation_retrieval_service
 
 # Create service
@@ -235,11 +196,9 @@ search_result = service.search_documentation("file operations", "workflow")
 
 task_context = service.get_context_for_task("implement indexing", "development")
 
-```
+```text
 
-#### **Utility Functions**
-
-```python
+#### **Utility Functions**```python
 from dspy_modules.documentation_retrieval import get_relevant_context, search_documentation, get_task_context
 
 # Get relevant context
@@ -254,13 +213,9 @@ results = search_documentation("file operations", "workflow")
 
 task_context = get_task_context("implement documentation indexing", "development")
 
-```
+```text
 
-### **Category System**
-
-#### **Available Categories**
-
-- **core**: Core system files (100_*.md, 000_*.md, 400_*.md)
+### **Category System**####**Available Categories**-**core**: Core system files (100_*.md, 000_*.md, 400_*.md)
 
 - **workflow**: Workflow files (001_*.md, 002_*.md, 003_*.md)
 
@@ -271,11 +226,9 @@ task_context = get_task_context("implement documentation indexing", "development
 - **guides**: Guide files (400_*-guide.md, 400_*-strategy.md)
 
 - **completion**: Completion summaries (500_*-completion-summary.md)
- - **examples**: Templates and examples (e.g., `300_documentation-example.md`)
+- **examples**: Templates and examples (e.g., `300_documentation-example.md`)
 
-#### **Context Types**
-
-- **general**: General context for any query
+#### **Context Types**-**general**: General context for any query
 
 - **workflow**: Workflow and process context
 
@@ -287,9 +240,7 @@ task_context = get_task_context("implement documentation indexing", "development
 
 - **guides**: Guide and strategy context
 
-### **Task Types**
-
-- **development**: Development and implementation tasks
+### **Task Types**-**development**: Development and implementation tasks
 
 - **research**: Research and analysis tasks
 
@@ -301,11 +252,7 @@ task_context = get_task_context("implement documentation indexing", "development
 
 - **deployment**: Deployment and operations tasks
 
-## 📊 **Performance and Monitoring**
-
-### **System Statistics**
-
-```bash
+## 📊 **Performance and Monitoring**###**System Statistics**```bash
 
 # Get system statistics
 
@@ -315,11 +262,9 @@ python scripts/documentation_retrieval_cli.py stats
 
 python scripts/documentation_retrieval_cli.py stats --format summary
 
-```
+```text
 
-### **Performance Metrics**
-
-- **Indexing Speed**: Number of files indexed per minute
+### **Performance Metrics**-**Indexing Speed**: Number of files indexed per minute
 
 - **Search Latency**: Average response time for queries
 
@@ -327,9 +272,7 @@ python scripts/documentation_retrieval_cli.py stats --format summary
 
 - **Coverage**: Percentage of documentation covered by search
 
-### **Quality Assurance**
-
-- **Confidence Scoring**: All results include confidence scores
+### **Quality Assurance**-**Confidence Scoring**: All results include confidence scores
 
 - **Source Attribution**: Clear indication of source documents
 
@@ -337,11 +280,7 @@ python scripts/documentation_retrieval_cli.py stats --format summary
 
 - **Context Synthesis**: Intelligent combination of multiple sources
 
-## 🔄 **Integration with Existing Systems**
-
-### **DSPy RAG System Integration**
-
-The documentation retrieval system integrates seamlessly with the existing DSPy RAG system:
+## 🔄 **Integration with Existing Systems**###**DSPy RAG System Integration**The documentation retrieval system integrates seamlessly with the existing DSPy RAG system:
 
 - **Shared Vector Store**: Uses the same PostgreSQL + PGVector infrastructure
 
@@ -351,9 +290,7 @@ The documentation retrieval system integrates seamlessly with the existing DSPy 
 
 - **Error Handling**: Follows the same error handling patterns
 
-### **AI Constitution Compliance**
-
-All operations follow the AI Constitution rules:
+### **AI Constitution Compliance**All operations follow the AI Constitution rules:
 
 - **Safety Validation**: All queries validated for safety
 
@@ -363,9 +300,7 @@ All operations follow the AI Constitution rules:
 
 - **Documentation Coherence**: Preserves documentation structure
 
-### **Memory Context Integration**
-
-Works with the modular memory context system:
+### **Memory Context Integration**Works with the modular memory context system:
 
 - **Core Module**: Primary memory scaffold integration
 
@@ -377,11 +312,7 @@ Works with the modular memory context system:
 
 - **Guidance Module**: Context-specific guidance integration
 
-## 🎯 **Use Cases**
-
-### **Development Tasks**
-
-```bash
+## 🎯 **Use Cases**###**Development Tasks**```bash
 
 # Get context for implementing new feature
 
@@ -391,11 +322,9 @@ python scripts/documentation_retrieval_cli.py task "implement file splitting" --
 
 python scripts/documentation_retrieval_cli.py context "error handling patterns" --type implementation
 
-```
+```text
 
-### **Research Tasks**
-
-```bash
+### **Research Tasks**```bash
 
 # Get context for research analysis
 
@@ -405,11 +334,9 @@ python scripts/documentation_retrieval_cli.py task "analyze RAG performance" --t
 
 python scripts/documentation_retrieval_cli.py context "research findings" --type research
 
-```
+```text
 
-### **Workflow Tasks**
-
-```bash
+### **Workflow Tasks**```bash
 
 # Get context for process improvement
 
@@ -419,11 +346,9 @@ python scripts/documentation_retrieval_cli.py task "optimize workflow" --task-ty
 
 python scripts/documentation_retrieval_cli.py context "backlog prioritization" --type workflow
 
-```
+```text
 
-### **File Operations**
-
-```bash
+### **File Operations**```bash
 
 # Get context for file deletion
 
@@ -433,13 +358,9 @@ python scripts/documentation_retrieval_cli.py context "file deletion safety" --t
 
 python scripts/documentation_retrieval_cli.py context "file modification workflow" --type workflow
 
-```
+```text
 
-## 🔧 **Configuration and Customization**
-
-### **Database Configuration**
-
-```bash
+## 🔧**Configuration and Customization**###**Database Configuration**```bash
 
 # Set database URL
 
@@ -449,7 +370,7 @@ export DATABASE_URL="postgresql://user:pass@localhost/dspy_rag"
 
 python scripts/documentation_retrieval_cli.py search "query" --db-url "postgresql://custom:url"
 
-```
+```text
 
 ### **Indexing Configuration**
 
@@ -461,24 +382,18 @@ indexer = DocumentationIndexer(db_connection_string)
 indexer.doc_patterns = ["*.md", "*.txt", "*.rst", "*.py"]
 indexer.exclude_patterns = ["node_modules/**", "venv/**", ".git/**"]
 
-```
+```text
 
-### **Search Configuration**
-
-```python
+### **Search Configuration**```python
 
 # Custom search parameters
 
 service = create_documentation_retrieval_service(db_connection_string)
 result = service.forward("query", "context_type", max_results=10)
 
-```
+```sql
 
-## 📈 **Best Practices**
-
-### **Query Optimization**
-
-- **Be Specific**: Use specific terms rather than general ones
+## 📈**Best Practices**###**Query Optimization**-**Be Specific**: Use specific terms rather than general ones
 
 - **Use Categories**: Filter by relevant categories when possible
 
@@ -486,9 +401,7 @@ result = service.forward("query", "context_type", max_results=10)
 
 - **Task Context**: Use task-specific context types
 
-### **Context Usage**
-
-- **Review Confidence**: Check confidence scores before using context
+### **Context Usage**-**Review Confidence**: Check confidence scores before using context
 
 - **Verify Sources**: Review source documents for accuracy
 
@@ -496,9 +409,7 @@ result = service.forward("query", "context_type", max_results=10)
 
 - **Update Regularly**: Re-index documentation when files change
 
-### **System Maintenance**
-
-- **Regular Indexing**: Index documentation after significant changes
+### **System Maintenance**-**Regular Indexing**: Index documentation after significant changes
 
 - **Monitor Performance**: Track search latency and accuracy
 
@@ -506,13 +417,7 @@ result = service.forward("query", "context_type", max_results=10)
 
 - **Backup Data**: Regular backups of indexed documentation
 
-## 🔄 **Troubleshooting**
-
-### **Common Issues**
-
-#### **No Results Found**
-
-```bash
+## 🔄 **Troubleshooting**###**Common Issues**####**No Results Found**```bash
 
 # Check if documentation is indexed
 
@@ -522,27 +427,21 @@ python scripts/documentation_retrieval_cli.py stats
 
 python scripts/documentation_retrieval_cli.py index
 
-```
+```sql
 
-#### **Low Confidence Scores**
-
-- **Refine Query**: Use more specific terms
+#### **Low Confidence Scores**-**Refine Query**: Use more specific terms
 
 - **Check Categories**: Ensure relevant categories are included
 
 - **Update Index**: Re-index documentation if files have changed
 
-#### **Slow Performance**
-
-- **Check Database**: Verify database connection and performance
+#### **Slow Performance**-**Check Database**: Verify database connection and performance
 
 - **Optimize Queries**: Use more specific queries
 
 - **Limit Results**: Reduce the number of results requested
 
-### **Debugging**
-
-```bash
+### **Debugging**```bash
 
 # Enable debug logging
 
@@ -555,11 +454,7 @@ python scripts/documentation_retrieval_cli.py stats --format json
 
 ```
 
-## 🎯 **Future Enhancements**
-
-### **Planned Features**
-
-- **Real-time Indexing**: Automatic indexing of changed files
+## 🎯**Future Enhancements**###**Planned Features**-**Real-time Indexing**: Automatic indexing of changed files
 
 - **Advanced Filtering**: More sophisticated category and metadata filtering
 
@@ -567,9 +462,7 @@ python scripts/documentation_retrieval_cli.py stats --format json
 
 - **Performance Optimization**: Enhanced search algorithms
 
-### **Integration Opportunities**
-
-- **IDE Integration**: Direct integration with development environments
+### **Integration Opportunities**-**IDE Integration**: Direct integration with development environments
 
 - **CI/CD Integration**: Automated context provision in pipelines
 
@@ -577,10 +470,10 @@ python scripts/documentation_retrieval_cli.py stats --format json
 
 - **API Expansion**: RESTful API for external access
 
----
+- --
 
-*Last Updated: 2024-08-07*
-*Next Review: When system features change*
+- Last Updated: 2024-08-07*
+- Next Review: When system features change*
 
 ## 🔄 Research integration workflow
 
@@ -614,7 +507,6 @@ After running:
 
 - Review extracted sections, anchors, tests, and links; commit integration
 
-
 <!-- GUIDE_METADATA
 version: 1.0
 creation_date: 2024-08-07
@@ -622,4 +514,4 @@ implementation_files: scripts/documentation_indexer.py, dspy-rag-system/src/dspy
 scripts/documentation_retrieval_cli.py
 research_basis: 500_research-implementation-summary.md
 integration: DSPy RAG System, AI Constitution, Memory Context System
--->
+- ->

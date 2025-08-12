@@ -1,14 +1,14 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Few-shot examples and patterns -->
+# 🎯 Few-Shot Context Examples
+
 
 ## 🎯 Few-Shot Context Examples
 
 <!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+{#tldr}
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Few-shot examples maintained
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Few-shot examples maintained
 
 - **Priority**: 📋 Medium - Pattern library and examples
 
@@ -24,30 +24,23 @@
 |---|---|---|
 |  |  |  |
 
-**Expected Output:** What the AI should produce
-**Pattern:** The underlying pattern to recognize
-**Validation:** How to verify the output
+- *Expected Output:**What the AI should produce**Pattern:**The underlying pattern to recognize**Validation:**How to verify the output
 
 ```text
 
----
+- --
 
 ## 📚 Documentation Coherence Examples
 
 ### **1. File Naming Convention Validation**
 
-**Context:** Validating file naming conventions across the project
-**Input:**
-
-```markdown
+- *Context:**Validating file naming conventions across the project**Input:**```markdown
 
 # Check if this file follows naming conventions
 
 filename: "400_security-best-practices-guide.md"
 
-```text
-
-**Expected Output:**
+```text**Expected Output:**
 
 ```json
 {
@@ -61,23 +54,15 @@ filename: "400_security-best-practices-guide.md"
 
 ```text
 
-**Pattern:** `400_` prefix indicates high-priority documentation with context references
-**Validation:** Check for required HTML comments and cross-references
+- *Pattern:**`400_` prefix indicates high-priority documentation with context references**Validation:**Check for required HTML comments and cross-references
 
 ### **2. Cross-Reference Validation**
 
-**Context:** Ensuring documentation files reference each other correctly
-**Input:**
-
-```markdown
+- *Context:**Ensuring documentation files reference each other correctly**Input:**```markdown
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- MEMORY_CONTEXT: HIGH - Essential security documentation -->
 
-```text
-
-**Expected Output:**
-
-```json
+```text**Expected Output:**```json
 {
   "references_valid": true,
   "context_file_exists": true,
@@ -86,17 +71,11 @@ filename: "400_security-best-practices-guide.md"
   "coherence_score": 0.95
 }
 
-```text
-
-**Pattern:** HTML comments with specific reference patterns
-**Validation:** Verify referenced files exist and are accessible
+```text**Pattern:**HTML comments with specific reference patterns**Validation:**Verify referenced files exist and are accessible
 
 ### **3. Documentation Structure Validation**
 
-**Context:** Validating documentation structure and completeness
-**Input:**
-
-```markdown
+- *Context:**Validating documentation structure and completeness**Input:**```markdown
 
 # Document Title
 
@@ -113,15 +92,7 @@ Brief description
 
 Content here
 
----
-
-*Last Updated: 2024-08-07*
-
-```text
-
-**Expected Output:**
-
-```json
+- --*Last Updated: 2024-08-07*```text**Expected Output:**```json
 {
   "structure_valid": true,
   "has_purpose": true,
@@ -131,30 +102,20 @@ Content here
   "completeness_score": 0.9
 }
 
-```text
+```text**Pattern:**Standard documentation structure with required elements**Validation:**Check for all required sections and formatting
 
-**Pattern:** Standard documentation structure with required elements
-**Validation:** Check for all required sections and formatting
-
----
+- --
 
 ## 📋 Backlog Analysis Examples
 
 ### **1. Priority Scoring Analysis**
 
-**Context:** Analyzing backlog item priority and scoring
-**Input:**
-
-```markdown
+- *Context:**Analyzing backlog item priority and scoring**Input:**```markdown
 | B‑073 | Few-Shot Context Engineering Examples | 🔥  | 1        | todo   | Create AI context engineering examples | Few-Shot Examples + AI Pattern Recognition | B-060 Documentation Coherence Validation System |
 <!--score: {bv:5, tc:3, rr:4, le:4, effort:1, deps:["B-060"]}-->
 <!--score_total: 6.7-->
 
-```text
-
-**Expected Output:**
-
-```json
+```text**Expected Output:**```json
 {
   "priority": "🔥",
   "points": 1,
@@ -169,26 +130,16 @@ Content here
   "recommendation": "high_priority"
 }
 
-```text
-
-**Pattern:** Backlog item with scoring metadata
-**Validation:** Verify scoring consistency and dependency status
+```text**Pattern:**Backlog item with scoring metadata**Validation:**Verify scoring consistency and dependency status
 
 ### **2. Dependency Chain Analysis**
 
-**Context:** Analyzing dependency relationships between backlog items
-**Input:**
-
-```markdown
+- *Context:**Analyzing dependency relationships between backlog items**Input:**```markdown
 B-073 → B-060 (completed)
 B-074 → B-073 (todo)
 B-075 → B-074 (todo)
 
-```text
-
-**Expected Output:**
-
-```json
+```text**Expected Output:**```json
 {
   "dependency_chain": ["B-060", "B-073", "B-074", "B-075"],
   "blocked_items": ["B-074", "B-075"],
@@ -197,24 +148,14 @@ B-075 → B-074 (todo)
   "execution_order": ["B-073", "B-074", "B-075"]
 }
 
-```text
-
-**Pattern:** Dependency graph with status tracking
-**Validation:** Ensure no circular dependencies and proper execution order
+```text**Pattern:**Dependency graph with status tracking**Validation:**Ensure no circular dependencies and proper execution order
 
 ### **3. Completion Status Tracking**
 
-**Context:** Tracking completion status and implementation notes
-**Input:**
-
-```markdown
+- *Context:**Tracking completion status and implementation notes**Input:**```markdown
 | C‑043 | Deployment & Environment Management Guide Implementation | 📈  | 2        | ✅ done | 2024-08-07 | Comprehensive deployment documentation with environment strategy, deployment architecture, configuration management, monitoring, rollback procedures, security deployment, and deployment automation |
 
-```text
-
-**Expected Output:**
-
-```json
+```text**Expected Output:**```json
 {
   "status": "completed",
   "completion_date": "2024-08-07",
@@ -224,29 +165,19 @@ B-075 → B-074 (todo)
   "next_review": "monthly"
 }
 
-```text
+```text**Pattern:**Completed item with implementation details**Validation:**Verify completion date and implementation completeness
 
-**Pattern:** Completed item with implementation details
-**Validation:** Verify completion date and implementation completeness
-
----
+- --
 
 ## 🧠 Memory Context Examples
 
 ### **1. Memory Hierarchy Recognition**
 
-**Context:** Understanding memory context hierarchy and priority levels
-**Input:**
-
-```markdown
+- *Context:**Understanding memory context hierarchy and priority levels**Input:**```markdown
 <!-- MEMORY_CONTEXT: HIGH - Essential deployment documentation for production readiness -->
 <!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 
-```text
-
-**Expected Output:**
-
-```json
+```text**Expected Output:**```json
 {
   "memory_level": "HIGH",
   "context_files": ["400_context-priority-guide.md", "400_system-overview.md"],
@@ -255,27 +186,17 @@ B-075 → B-074 (todo)
   "readiness_level": "production"
 }
 
-```text
-
-**Pattern:** Memory context with priority and reference patterns
-**Validation:** Check memory level consistency and file accessibility
+```text**Pattern:**Memory context with priority and reference patterns**Validation:**Check memory level consistency and file accessibility
 
 ### **2. Cognitive Scaffolding Recognition**
 
-**Context:** Recognizing cognitive scaffolding patterns in documentation
-**Input:**
-
-```markdown
+- *Context:**Recognizing cognitive scaffolding patterns in documentation**Input:**```markdown
 <!-- SYSTEM_REFERENCE: 400_system-overview.md -->
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 <!-- MEMORY_CONTEXT: HIGH - Essential AI context engineering for coherence validation -->
 <!-- BACKLOG_ITEM: B-073 Few-Shot Context Engineering Examples -->
 
-```text
-
-**Expected Output:**
-
-```json
+```text**Expected Output:**```json
 {
   "scaffolding_type": "comprehensive",
   "reference_count": 4,
@@ -285,24 +206,14 @@ B-075 → B-074 (todo)
   "validation_required": true
 }
 
-```text
-
-**Pattern:** Comprehensive scaffolding with multiple reference types
-**Validation:** Verify all references are valid and accessible
+```text**Pattern:**Comprehensive scaffolding with multiple reference types**Validation:**Verify all references are valid and accessible
 
 ### **3. Context Priority Recognition**
 
-**Context:** Understanding context priority based on file naming and metadata
-**Input:**
-
-```markdown
+- *Context:**Understanding context priority based on file naming and metadata**Input:**```markdown
 Files: ["100_cursor-memory-context.md", "400_system-overview.md", "000_backlog.md"]
 
-```text
-
-**Expected Output:**
-
-```json
+```text**Expected Output:**```json
 {
   "reading_order": [
     "100_cursor-memory-context.md",
@@ -317,31 +228,21 @@ Files: ["100_cursor-memory-context.md", "400_system-overview.md", "000_backlog.m
   "context_hierarchy": "memory → system → backlog"
 }
 
-```text
+```text**Pattern:**File naming convention indicating priority and reading order**Validation:**Ensure proper reading sequence and priority alignment
 
-**Pattern:** File naming convention indicating priority and reading order
-**Validation:** Ensure proper reading sequence and priority alignment
-
----
+- --
 
 ## 💻 Code Generation Examples
 
 ### **1. Python Function Generation**
 
-**Context:** Generating Python functions with proper error handling and documentation
-**Input:**
-
-```python
+- *Context:**Generating Python functions with proper error handling and documentation**Input:**```python
 
 # Generate a function to validate file naming conventions
 
 # Requirements: Check 400_ prefix, validate HTML comments, verify cross-references
 
-```text
-
-**Expected Output:**
-
-```python
+```text**Expected Output:**```python
 def validate_file_naming_conventions(filename: str) -> dict:
     """
     Validate file naming conventions and structure.
@@ -394,27 +295,17 @@ def validate_file_naming_conventions(filename: str) -> dict:
             "recommendation": "Check file accessibility and format"
         }
 
-```text
-
-**Pattern:** Comprehensive function with error handling, documentation, and validation
-**Validation:** Test with various file types and error conditions
+```text**Pattern:**Comprehensive function with error handling, documentation, and validation**Validation:**Test with various file types and error conditions
 
 ### **2. Configuration Generation**
 
-**Context:** Generating configuration files with proper structure and validation
-**Input:**
-
-```python
+- *Context:**Generating configuration files with proper structure and validation**Input:**```python
 
 # Generate a configuration for the AI development ecosystem
 
 # Requirements: Environment variables, security settings, monitoring config
 
-```text
-
-**Expected Output:**
-
-```python
+```text**Expected Output:**```python
 
 # config/ai_ecosystem_config.py
 
@@ -470,29 +361,21 @@ class AIEcosystemConfig:
             "warnings": warnings
         }
 
-```text
+```text**Pattern:**Structured configuration with validation and environment awareness**Validation:**Test with different environments and settings
 
-**Pattern:** Structured configuration with validation and environment awareness
-**Validation:** Test with different environments and settings
-
----
+- --
 
 ## 🔧 Error Recovery Examples
 
 ### **1. Database Connection Recovery**
 
-**Context:** Handling database connection failures with retry logic
-**Input:**
-
-```python
+- *Context:**Handling database connection failures with retry logic**Input:**```python
 
 # Database connection failed with error: connection timeout
 
 # Requirements: Implement retry logic with exponential backoff
 
-```text
-
-**Expected Output:**
+```text**Expected Output:**
 
 ```python
 import time
@@ -513,7 +396,7 @@ def retry_database_connection(max_retries: int = 3, base_delay: float = 1.0):
                 except psycopg2.OperationalError as e:
                     last_exception = e
                     if attempt < max_retries - 1:
-                        delay = base_delay * (2 ** attempt)
+                        delay = base_delay *(2**attempt)
                         print(f"Database connection failed, retrying in {delay}s...")
                         time.sleep(delay)
                     else:
@@ -537,27 +420,17 @@ try:
 except Exception as e:
     print(f"Database connection failed: {e}")
 
-```text
-
-**Pattern:** Retry decorator with exponential backoff and proper error handling
-**Validation:** Test with various database error conditions
+```text**Pattern:**Retry decorator with exponential backoff and proper error handling**Validation:**Test with various database error conditions
 
 ### **2. File Validation Recovery**
 
-**Context:** Recovering from file validation errors with fallback strategies
-**Input:**
-
-```python
+- *Context:**Recovering from file validation errors with fallback strategies**Input:**```python
 
 # File validation failed: missing required HTML comments
 
 # Requirements: Implement fallback validation and recovery
 
-```text
-
-**Expected Output:**
-
-```python
+```text**Expected Output:**```python
 def validate_file_with_fallback(filename: str) -> dict:
     """Validate file with fallback strategies"""
 
@@ -571,8 +444,7 @@ def validate_file_with_fallback(filename: str) -> dict:
 
     fallback_result = validate_file_basic(filename)
     if fallback_result["valid"]:
-        return {
-            **fallback_result,
+        return {**fallback_result,
             "warning": "Using fallback validation - some features may be limited"
         }
 
@@ -632,29 +504,21 @@ def attempt_file_recovery(filename: str) -> dict:
 
 ```text
 
-**Pattern:** Multi-level validation with fallback and recovery strategies
-**Validation:** Test with various file corruption scenarios
+- *Pattern:**Multi-level validation with fallback and recovery strategies**Validation:**Test with various file corruption scenarios
 
----
+- --
 
 ## 🔗 Integration Pattern Examples
 
 ### **1. API Integration Pattern**
 
-**Context:** Integrating external APIs with proper error handling and retry logic
-**Input:**
-
-```python
+- *Context:**Integrating external APIs with proper error handling and retry logic**Input:**```python
 
 # Integrate with external AI model API
 
 # Requirements: Handle timeouts, rate limiting, and authentication
 
-```text
-
-**Expected Output:**
-
-```python
+```text**Expected Output:**```python
 import requests
 import time
 from typing import Dict, Any, Optional
@@ -705,7 +569,7 @@ class AIModelClient:
             except requests.exceptions.Timeout:
                 if attempt < max_retries - 1:
                     print(f"Timeout, retrying... (attempt {attempt + 1})")
-                    time.sleep(2 ** attempt)  # Exponential backoff
+                    time.sleep(2**attempt)  # Exponential backoff
 
                     continue
                 else:
@@ -727,30 +591,20 @@ class AIModelClient:
 
 # Usage example
 
-client = AIModelClient("https://api.example.com", "your-api-key")
+client = AIModelClient("<https://api.example.com",> "your-api-key")
 result = client.generate_response("Generate a Python function for file validation")
 
-```text
-
-**Pattern:** Robust API client with retry logic, rate limiting, and error handling
-**Validation:** Test with various API response scenarios
+```text**Pattern:**Robust API client with retry logic, rate limiting, and error handling**Validation:**Test with various API response scenarios
 
 ### **2. Database Integration Pattern**
 
-**Context:** Integrating with PostgreSQL database with connection pooling and resilience
-**Input:**
-
-```python
+- *Context:**Integrating with PostgreSQL database with connection pooling and resilience**Input:**```python
 
 # Integrate with PostgreSQL database
 
 # Requirements: Connection pooling, transaction management, error recovery
 
-```text
-
-**Expected Output:**
-
-```python
+```text**Expected Output:**```python
 import psycopg2
 from psycopg2.pool import SimpleConnectionPool
 from contextlib import contextmanager
@@ -834,31 +688,21 @@ db_manager = DatabaseManager("postgresql://localhost/ai_dev")
 health = db_manager.health_check()
 print(f"Database healthy: {health['healthy']}")
 
-```text
+```text**Pattern:**Database manager with connection pooling, transaction management, and health checks**Validation:**Test with various database scenarios and error conditions
 
-**Pattern:** Database manager with connection pooling, transaction management, and health checks
-**Validation:** Test with various database scenarios and error conditions
-
----
+- --
 
 ## 🧪 Testing Strategy Examples
 
 ### **1. Unit Test Pattern**
 
-**Context:** Creating comprehensive unit tests for AI ecosystem components
-**Input:**
-
-```python
+- *Context:**Creating comprehensive unit tests for AI ecosystem components**Input:**```python
 
 # Create unit tests for file validation function
 
 # Requirements: Test various scenarios, edge cases, and error conditions
 
-```text
-
-**Expected Output:**
-
-```python
+```text**Expected Output:**```python
 import pytest
 from unittest.mock import patch, mock_open
 from pathlib import Path
@@ -882,15 +726,11 @@ class TestFileValidation:
 
         1. [Section 1](#section-1)
 
-
         ## Section 1
 
         Content here
 
-        ---
-
-        *Last Updated: 2024-08-07*
-        """
+        - --*Last Updated: 2024-08-07*"""
 
         with patch("builtins.open", mock_open(read_data=valid_content)):
             result = validate_file_structure("400_test-document.md")
@@ -964,27 +804,17 @@ def mock_file_system(sample_files):
         mock_exists.return_value = True
         yield mock_exists
 
-```text
-
-**Pattern:** Comprehensive test suite with parametrized tests, fixtures, and edge case coverage
-**Validation:** Ensure all test scenarios pass and provide good coverage
+```text**Pattern:**Comprehensive test suite with parametrized tests, fixtures, and edge case coverage**Validation:**Ensure all test scenarios pass and provide good coverage
 
 ### **2. Integration Test Pattern**
 
-**Context:** Creating integration tests for AI ecosystem components
-**Input:**
-
-```python
+- *Context:**Creating integration tests for AI ecosystem components**Input:**```python
 
 # Create integration tests for database and API interactions
 
 # Requirements: Test real interactions, error scenarios, and performance
 
-```text
-
-**Expected Output:**
-
-```python
+```text**Expected Output:**```python
 import pytest
 import requests
 from unittest.mock import patch, Mock
@@ -1015,7 +845,7 @@ class TestIntegrationScenarios:
 
         # Test integration
 
-        client = AIModelClient("https://api.example.com", "test-key")
+        client = AIModelClient("<https://api.example.com",> "test-key")
         result = client.generate_response("Test prompt")
 
         assert result["success"] is True
@@ -1103,7 +933,7 @@ class TestPerformance:
         mock_response.json.return_value = {"content": "Fast response"}
         mock_api_client.return_value.post.return_value = mock_response
 
-        client = AIModelClient("https://api.example.com", "test-key")
+        client = AIModelClient("<https://api.example.com",> "test-key")
 
         import time
         start_time = time.time()
@@ -1119,29 +949,21 @@ class TestPerformance:
 
         assert execution_time < 2.0  # Less than 2 seconds
 
-```text
+```text**Pattern:**Integration tests with performance benchmarks and error scenario coverage**Validation:**Ensure integration points work correctly and perform well
 
-**Pattern:** Integration tests with performance benchmarks and error scenario coverage
-**Validation:** Ensure integration points work correctly and perform well
-
----
+- --
 
 ## 🚀 Deployment Examples
 
 ### **1. Docker Deployment Pattern**
 
-**Context:** Creating Docker deployment configuration for AI ecosystem
-**Input:**
-
-```dockerfile
+- *Context:**Creating Docker deployment configuration for AI ecosystem**Input:**```dockerfile
 
 # Create Dockerfile for AI development ecosystem
 
 # Requirements: Multi-stage build, security, optimization
 
-```text
-
-**Expected Output:**
+```text**Expected Output:**
 
 ```dockerfile
 
@@ -1160,9 +982,7 @@ ENV PIP_NO_CACHE_DIR=1
 RUN apt-get update && apt-get install -y \
     postgresql-client \
     curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# Create non-root user
+    && rm -rf /var/lib/apt/lists/*# Create non-root user
 
 RUN groupadd -r aiuser && useradd -r -g aiuser aiuser
 
@@ -1194,7 +1014,7 @@ USER aiuser
 # Health check
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5000/health || exit 1
+    CMD curl -f <http://localhost:5000/health> || exit 1
 
 # Expose port
 
@@ -1204,27 +1024,17 @@ EXPOSE 5000
 
 CMD ["python", "app.py"]
 
-```text
-
-**Pattern:** Secure, optimized Docker configuration with health checks
-**Validation:** Test build process and container security
+```text**Pattern:**Secure, optimized Docker configuration with health checks**Validation:**Test build process and container security
 
 ### **2. Kubernetes Deployment Pattern**
 
-**Context:** Creating Kubernetes deployment for AI ecosystem
-**Input:**
-
-```yaml
+- *Context:**Creating Kubernetes deployment for AI ecosystem**Input:**```yaml
 
 # Create Kubernetes deployment configuration
 
 # Requirements: High availability, monitoring, scaling
 
-```text
-
-**Expected Output:**
-
-```yaml
+```text**Expected Output:**```yaml
 
 # k8s/deployment.yaml
 
@@ -1332,7 +1142,7 @@ spec:
         emptyDir: {}
       securityContext:
         fsGroup: 1000
----
+- --
 apiVersion: v1
 kind: Service
 metadata:
@@ -1349,7 +1159,7 @@ spec:
     targetPort: 5000
     name: http
   type: LoadBalancer
----
+- --
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -1380,18 +1190,13 @@ spec:
         type: Utilization
         averageUtilization: 80
 
-```text
+```text**Pattern:**Production-ready Kubernetes deployment with monitoring, scaling, and security**Validation:**Test deployment, scaling, and monitoring functionality
 
-**Pattern:** Production-ready Kubernetes deployment with monitoring, scaling, and security
-**Validation:** Test deployment, scaling, and monitoring functionality
-
----
+- --
 
 ## 📋 Best Practices
 
-### **1. Context Engineering Best Practices**
-
-```python
+### **1. Context Engineering Best Practices**```python
 
 # Best practices for few-shot context engineering
 
@@ -1425,9 +1230,7 @@ CONTEXT_BEST_PRACTICES = {
 
 ```text
 
-### **2. Validation Best Practices**
-
-```python
+### **2. Validation Best Practices**```python
 
 # Best practices for validation and testing
 
@@ -1454,9 +1257,7 @@ VALIDATION_BEST_PRACTICES = {
 
 ```text
 
-### **3. Documentation Best Practices**
-
-```python
+### **3. Documentation Best Practices**```python
 
 # Best practices for documentation and examples
 
@@ -1483,36 +1284,30 @@ DOCUMENTATION_BEST_PRACTICES = {
 
 ```text
 
----
+- --
 
 ## 📚 Additional Resources
 
-### **Context Engineering Resources**
-
-- **AI Pattern Recognition**: Understanding AI model behavior patterns
+### **Context Engineering Resources**-**AI Pattern Recognition**: Understanding AI model behavior patterns
 
 - **Cognitive Scaffolding**: Building mental frameworks for AI systems
 
 - **Documentation Coherence**: Maintaining logical consistency in documentation
 
-### **Testing Resources**
-
-- **Unit Testing**: Testing individual components in isolation
+### **Testing Resources**-**Unit Testing**: Testing individual components in isolation
 
 - **Integration Testing**: Testing component interactions
 
 - **Performance Testing**: Testing system performance under load
 
-### **Deployment Resources**
-
-- **Container Orchestration**: Managing containerized applications
+### **Deployment Resources**-**Container Orchestration**: Managing containerized applications
 
 - **Infrastructure as Code**: Defining infrastructure through code
 
 - **Continuous Deployment**: Automating deployment processes
 
----
+- --
 
-*Last Updated: 2024-08-07*
-*Next Review: Monthly*
-*Context Engineering Level: Advanced*
+- Last Updated: 2024-08-07*
+- Next Review: Monthly*
+- Context Engineering Level: Advanced*

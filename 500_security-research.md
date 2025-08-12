@@ -1,12 +1,14 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Security research and best practices -->
+# 🔒 Security Research
+
 
 ## 🔒 Security Research
 
 Backlog link: B-066 (also B-003)
 
 <!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -14,9 +16,7 @@ Backlog link: B-066 (also B-003)
 |---|---|---|
 |  |  |  |
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Research file with content
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
 
 - **Priority**: 🔧 Medium - Research for implementation
 
@@ -26,10 +26,8 @@ Backlog link: B-066 (also B-003)
 
 - **Next Steps**: Implement security patterns and best practices
 
-
 <!-- ANCHOR: key-findings -->
-<a id="key-findings"></a>
-
+{#key-findings}
 
 ## Key Findings
 
@@ -42,8 +40,7 @@ Backlog link: B-066 (also B-003)
 - Least-privilege for local automation and file operations reduces blast radius.
 
 <!-- ANCHOR: actionable-patterns -->
-<a id="actionable-patterns"></a>
-
+{#actionable-patterns}
 
 ## Actionable Patterns
 
@@ -56,8 +53,7 @@ Backlog link: B-066 (also B-003)
 - Runbooks: standardized steps for incident classes; test with adversarial prompts.
 
 <!-- ANCHOR: implementation-refs -->
-<a id="implementation-refs"></a>
-
+{#implementation-refs}
 
 ## Implementation References
 
@@ -70,8 +66,7 @@ Backlog link: B-066 (also B-003)
 - dspy-rag-system/src/utils/logger.py (redaction)
 
 <!-- ANCHOR: citations -->
-<a id="citations"></a>
-
+{#citations}
 
 ## Citations
 

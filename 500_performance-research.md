@@ -1,10 +1,12 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Performance research and optimization patterns -->
+# ⚡ Performance Research
+
 
 ## ⚡ Performance Research
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -18,13 +20,9 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
 Backlog link: B-005
 
-
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Research file with content
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
 
 - **Priority**: 🔧 Medium - Research for implementation
 
@@ -34,8 +32,6 @@ Backlog link: B-005
 
 - **Next Steps**: Implement performance optimization patterns
 
-
-
 ## Key Findings
 
 - Token and retrieval overhead dominate; caching and selective context cut latency/cost fast.
@@ -43,8 +39,6 @@ Backlog link: B-005
 - PG indexes (HNSW/GIN FTS) and query plans materially affect retrieval time.
 
 - Streaming responses improve perceived latency without hurting accuracy.
-
-
 
 ## Actionable Patterns
 
@@ -54,8 +48,6 @@ Backlog link: B-005
 
 - Stream responses for long generations; enforce context size limits.
 
-
-
 ## Implementation References
 
 - 400_performance-optimization-guide.md (targets/knobs)
@@ -63,8 +55,6 @@ Backlog link: B-005
 - performance_optimization.py (profiling helpers)
 
 - dspy-rag-system/config/database/ (index DDL)
-
-
 
 ## Citations
 

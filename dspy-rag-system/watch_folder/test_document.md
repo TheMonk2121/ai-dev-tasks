@@ -1,4 +1,6 @@
-<a id="tldr"></a>
+# 🔎 TL;DR
+
+{#tldr}
 
 ## 🔎 TL;DR
 

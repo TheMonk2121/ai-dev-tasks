@@ -13,15 +13,9 @@ This document lists all items that require manual setup or configuration on your
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
 
-### **AI Development Ecosystem Context**
-
-This setup guide is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software
+### **AI Development Ecosystem Context**This setup guide is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software
 using AI agents (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). The ecosystem provides structured workflows, automated
-task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
-
-**Key Components:**
-
-- **Planning Layer**: PRD Creation, Task Generation, Process Management
+task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.**Key Components:**-**Planning Layer**: PRD Creation, Task Generation, Process Management
 
 - **AI Execution Layer**: Mistral 7B Instruct (Planning), Yi-Coder-9B-Chat-Q6_K (Implementation)
 
@@ -29,18 +23,12 @@ task processing, and intelligent error recovery to make AI-assisted development 
 
 - **Supporting Infrastructure**: PostgreSQL + PGVector, File Watching, Notification System
 
-## 📋 **Setup Required Items**
+## 📋 **Setup Required Items**###**S-001: n8n Installation & Configuration**🔥**Status**: `setup-required`
+- *Priority**: High
+- *Setup Required**: n8n installation + API key + webhook setup
+- *Setup Instructions**: See `dspy-rag-system/docs/N8N_SETUP_GUIDE.md`
 
-### **S-001: n8n Installation & Configuration** 🔥
-
-**Status**: `setup-required`
-**Priority**: High
-**Setup Required**: n8n installation + API key + webhook setup
-**Setup Instructions**: See `dspy-rag-system/docs/N8N_SETUP_GUIDE.md`
-
-**Information Needed from n8n:**
-
-- **n8n Base URL**: Your n8n instance URL (default: http://localhost:5678)
+- *Information Needed from n8n:**-**n8n Base URL**: Your n8n instance URL (default: <http://localhost:5678>)
 
 - **API Key**: Generated from n8n Settings → API Keys
 
@@ -48,16 +36,12 @@ task processing, and intelligent error recovery to make AI-assisted development 
 
 - **Workflow IDs**: Identifiers for your n8n workflows
 
-### **S-002: PostgreSQL Event Ledger Schema** 🔥
+### **S-002: PostgreSQL Event Ledger Schema**🔥**Status**: `setup-required`
+- *Priority**: High
+- *Setup Required**: Database schema creation
+- *Setup Instructions**: Run `config/database/event_ledger.sql` in PostgreSQL
 
-**Status**: `setup-required`
-**Priority**: High
-**Setup Required**: Database schema creation
-**Setup Instructions**: Run `config/database/event_ledger.sql` in PostgreSQL
-
-**Commands:**
-
-```bash
+- *Commands:**```bash
 
 # Connect to PostgreSQL
 
@@ -67,22 +51,18 @@ psql -h localhost -U your_user -d your_database
 
 \i dspy-rag-system/config/database/event_ledger.sql
 
-```
+```markdown
 
-### **S-003: Environment Configuration** ⚙️
+### **S-003: Environment Configuration**⚙️**Status**: `setup-required`
+- *Priority**: Medium
+- *Setup Required**: Environment variables setup
+- *Setup Instructions**: Configure N8N_BASE_URL, N8N_API_KEY, POSTGRES_DSN
 
-**Status**: `setup-required`
-**Priority**: Medium
-**Setup Required**: Environment variables setup
-**Setup Instructions**: Configure N8N_BASE_URL, N8N_API_KEY, POSTGRES_DSN
-
-**Required Environment Variables:**
-
-```bash
+- *Required Environment Variables:**```bash
 
 # n8n Configuration
 
-N8N_BASE_URL=http://localhost:5678
+N8N_BASE_URL=<http://localhost:5678>
 N8N_API_KEY=your_api_key_here
 
 # Database Configuration
@@ -98,22 +78,18 @@ DB_HEALTH_CHECK_INTERVAL=60
 POLL_INTERVAL=30
 MAX_EVENTS_PER_CYCLE=10
 
-```
+```markdown
 
-### **S-004: Ollama & Mistral 7B Setup** 🔥
+### **S-004: Ollama & Mistral 7B Setup**🔥**Status**: `setup-required`
+- *Priority**: High
+- *Setup Required**: Ollama installation + Mistral model download
+- *Setup Instructions**: See `201_model-configuration.md`
 
-**Status**: `setup-required`
-**Priority**: High
-**Setup Required**: Ollama installation + Mistral model download
-**Setup Instructions**: See `201_model-configuration.md`
-
-**Commands:**
-
-```bash
+- *Commands:**```bash
 
 # Install Ollama
 
-curl -fsSL https://ollama.ai/install.sh | sh
+curl -fsSL <https://ollama.ai/install.sh> | sh
 
 # Pull Mistral model
 
@@ -127,31 +103,22 @@ ollama serve
 
 ollama list
 
-```
+```markdown
 
-### **S-005: LM Studio & Yi-Coder Setup** 🔥
+### **S-005: LM Studio & Yi-Coder Setup**🔥**Status**: `setup-required`
+- *Priority**: High
+- *Setup Required**: LM Studio installation + Yi-Coder model download
+- *Setup Instructions**: See `103_yi-coder-integration.md`
 
-**Status**: `setup-required`
-**Priority**: High
-**Setup Required**: LM Studio installation + Yi-Coder model download
-**Setup Instructions**: See `103_yi-coder-integration.md`
+- *Prerequisites:**-**macOS**: LM Studio ≥ 0.2.18 (`brew install --cask lm-studio`)
 
-**Prerequisites:**
-
-- **macOS**: LM Studio ≥ 0.2.18 (`brew install --cask lm-studio`)
-
-- **Linux**: Download AppImage from https://lmstudio.ai/
+- **Linux**: Download AppImage from <https://lmstudio.ai/>
 
 - **Storage**: 5GB+ for model download
 
-**Model Download:**
-1. Launch LM Studio → Models
+- *Model Download:**1. Launch LM Studio → Models
 2. Search "Yi-Coder-9B-Chat-GGUF"
-3. Download Yi-Coder-9B-Chat-Q6_K.gguf (≈ 4.9 GB)
-
-**LM Studio Configuration:**
-
-- Context Length: 8092
+3. Download Yi-Coder-9B-Chat-Q6_K.gguf (≈ 4.9 GB)**LM Studio Configuration:**- Context Length: 8092
 
 - GPU Offload: 48 / 48 (full)
 
@@ -161,16 +128,12 @@ ollama list
 
 - Flash Attention: On
 
-### **S-006: PostgreSQL Database Setup** 🔥
+### **S-006: PostgreSQL Database Setup**🔥**Status**: `setup-required`
+- *Priority**: High
+- *Setup Required**: PostgreSQL installation + database creation
+- *Setup Instructions**: See `docs/ARCHITECTURE.md`
 
-**Status**: `setup-required`
-**Priority**: High
-**Setup Required**: PostgreSQL installation + database creation
-**Setup Instructions**: See `docs/ARCHITECTURE.md`
-
-**Commands:**
-
-```bash
+- *Commands:**```bash
 
 # Install PostgreSQL (Ubuntu)
 
@@ -187,18 +150,14 @@ sudo -u postgres psql -c "ALTER USER danieljacobs WITH PASSWORD 'your_password';
 
 sudo -u postgres psql ai_agency -c "CREATE EXTENSION IF NOT EXISTS vector;"
 
-```
+```markdown
 
-### **S-007: Virtual Environment Setup** ⚙️
+### **S-007: Virtual Environment Setup**⚙️**Status**: `setup-required`
+- *Priority**: Medium
+- *Setup Required**: Python virtual environment + dependencies
+- *Setup Instructions**: See `README.md`
 
-**Status**: `setup-required`
-**Priority**: Medium
-**Setup Required**: Python virtual environment + dependencies
-**Setup Instructions**: See `README.md`
-
-**Commands:**
-
-```bash
+- *Commands:**```bash
 
 # Create and activate virtual environment
 
@@ -209,37 +168,30 @@ source venv/bin/activate
 
 pip install -r dspy-rag-system/requirements.txt
 
-```
+```markdown
 
-### **S-008: Cursor IDE Configuration** 🔥
+### **S-008: Cursor IDE Configuration**🔥**Status**: `setup-required`
+- *Priority**: High
+- *Setup Required**: Cursor IDE + Yi-Coder integration
+- *Setup Instructions**: See `103_yi-coder-integration.md`
 
-**Status**: `setup-required`
-**Priority**: High
-**Setup Required**: Cursor IDE + Yi-Coder integration
-**Setup Instructions**: See `103_yi-coder-integration.md`
-
-**Cursor Configuration:**
-1. Open Cursor Settings
+- *Cursor Configuration:**1. Open Cursor Settings
 2. Go to AI → Custom Models
 3. Add Yi-Coder configuration:
    ```json
    {
      "name": "Yi-Coder-9B-Chat-Q6_K",
-     "apiBase": "http://localhost:1234/v1",
+     "apiBase": "<http://localhost:1234/v1",>
      "apiKey": "lm-studio"
    }
-   ```
+   ```markdown
 
-### **S-009: Secrets Management Setup** 🔥
+### **S-009: Secrets Management Setup**🔥**Status**: `setup-required`
+- *Priority**: High
+- *Setup Required**: Environment secrets configuration
+- *Setup Instructions**: See `C8_COMPLETION_SUMMARY.md`
 
-**Status**: `setup-required`
-**Priority**: High
-**Setup Required**: Environment secrets configuration
-**Setup Instructions**: See `C8_COMPLETION_SUMMARY.md`
-
-**Required Secrets:**
-
-```bash
+- *Required Secrets:**```bash
 
 # Database
 
@@ -258,18 +210,14 @@ OLLAMA_API_KEY=your_ollama_key
 
 N8N_API_KEY=your_n8n_api_key
 
-```
+```markdown
 
-### **S-010: System Dependencies** ⚙️
+### **S-010: System Dependencies**⚙️**Status**: `setup-required`
+- *Priority**: Medium
+- *Setup Required**: System packages and tools
+- *Setup Instructions**: See `SYSTEM_OVERVIEW.md`
 
-**Status**: `setup-required`
-**Priority**: Medium
-**Setup Required**: System packages and tools
-**Setup Instructions**: See `SYSTEM_OVERVIEW.md`
-
-**System Packages:**
-
-```bash
+- *System Packages:**```bash
 
 # Ubuntu/Debian
 
@@ -283,17 +231,13 @@ brew install git curl python3 postgresql
 
 pip install flask psycopg2-binary dspy-ai transformers torch
 
-```
+```text
 
-## 🧪 **Testing Setup**
-
-### **Test Commands**
-
-```bash
+## 🧪**Testing Setup**###**Test Commands**```bash
 
 # Test n8n connectivity
 
-curl http://localhost:5678/healthz
+curl <http://localhost:5678/healthz>
 
 # Test Ollama
 
@@ -301,7 +245,7 @@ ollama list
 
 # Test LM Studio
 
-curl http://localhost:1234/v1/models
+curl <http://localhost:1234/v1/models>
 
 # Test database connection
 
@@ -311,11 +255,9 @@ python3 -c "from src.utils.database_resilience import get_database_manager; prin
 
 python3 demo_n8n_integration.py
 
-```
+```text
 
-### **Verification Checklist**
-
-- [ ] n8n is running and accessible
+### **Verification Checklist**- [ ] n8n is running and accessible
 
 - [ ] Ollama is running with Mistral model
 
@@ -331,31 +273,27 @@ python3 demo_n8n_integration.py
 
 - [ ] All secrets are properly configured
 
-## 📞 **Support**
+## 📞**Support**If you encounter issues:
 
-If you encounter issues:
-
-1. **Check the logs**: Look for error messages in console output
+1.**Check the logs**: Look for error messages in console output
 2. **Verify connectivity**: Test each component separately
 3. **Review configuration**: Ensure all environment variables are set
 4. **Check permissions**: Verify API keys and database user permissions
 
-## 🚀 **Next Steps**
+## 🚀 **Next Steps**Once all setup items are completed:
 
-Once all setup items are completed:
-
-1. **Start the event processor service**:
+1.**Start the event processor service**:
    ```bash
    python3 src/n8n_workflows/n8n_event_processor.py --daemon
-   ```
+   ```text
 
 2. **Test the complete system**:
    ```bash
    make run-local
    ```
 
-3. **Monitor the system** using the provided endpoints
+3. **Monitor the system**using the provided endpoints
 
-4. **Create your first workflow** in n8n
+4.**Create your first workflow** in n8n
 
 The system will be fully operational once all setup requirements are met!

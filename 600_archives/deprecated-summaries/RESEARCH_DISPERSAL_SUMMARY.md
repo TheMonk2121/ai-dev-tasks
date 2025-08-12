@@ -1,4 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+# Archived: Research Dispersal Summary
+
 
 > Archived for historical reference. This summary has been folded into:
 > - `500_research-index.md` (Research Access shortcuts)

@@ -2,36 +2,32 @@
 <!-- ARCHIVED: Historical workflow. Use `003_process-task-list.md` for current execution. -->
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+# 4. **Validate Completion**- Use Mistral 7B Instruct for reasoning and planning
 
-- Use Mistral 7B Instruct for reasoning and planning
+4.**Validate Completion**- Run all "Done when:" criteria
+  - If any fail → mark task `[!]` and create HotFix task
+  - If all pass → mark task `[x]`
 
-4. **Validate Completion**
-   - Run all "Done when:" criteria
-   - If any fail → mark task `[!]` and create HotFix task
-   - If all pass → mark task `[x]`
+5.**Update State**- Write/update `.ai_state.json` with current state
+  - Update progress tracking
 
-5. **Update State**
-   - Write/update `.ai_state.json` with current state
-   - Update progress tracking
+6.**Check for Pause**- If `🛑 Pause After: yes` AND `Auto-Advance: no` → wait for human input
+  - Otherwise continue to next task
 
-6. **Check for Pause**
-   - If `🛑 Pause After: yes` AND `Auto-Advance: no` → wait for human input
-   - Otherwise continue to next task
+7.**Update Backlog**(the execution engine)
+  - Mark completed features in backlog as implemented
+  - **Move completed items to "Completed Items" section**in backlog
+  - Update status from "todo" to "✅ done" in backlog table
+  - Add completion date and implementation notes
+  - Add new discoveries or requirements to backlog
+  - Update effort estimates based on actual implementation time
+  - Execute AI-BACKLOG-META commands for automated updates
+  - **Update scoring metadata**if effort estimates change significantly
+  - **Re-calculate scores**if business value or priorities shift
+  - **Update timestamp**: Change *Last Updated: YYYY-MM-DD HH:MM*to current time
+  - **Add history**: Move current *Last Updated*to*Previously Updated*line
 
-7. **Update Backlog** (the execution engine)
-   - Mark completed features in backlog as implemented
-   - **Move completed items to "Completed Items" section** in backlog
-   - Update status from "todo" to "✅ done" in backlog table
-   - Add completion date and implementation notes
-   - Add new discoveries or requirements to backlog
-   - Update effort estimates based on actual implementation time
-   - Execute AI-BACKLOG-META commands for automated updates
-   - **Update scoring metadata** if effort estimates change significantly
-   - **Re-calculate scores** if business value or priorities shift
-   - **Update timestamp**: Change *Last Updated: YYYY-MM-DD HH:MM* to current time
-   - **Add history**: Move current *Last Updated* to *Previously Updated* line
-
----
+- --
 
 ## 2. Task Status Tracking
 
@@ -41,21 +37,20 @@
 | `[x]` | Completed successfully |
 | `[!]` | Blocked/needs fix |
 
----
+- --
 
 ## 3. Auto-Advance Configuration
 
 ### Task Template Addition
-```markdown
-**Auto-Advance**: yes | no
-```
+```markdown**Auto-Advance**: yes | no
+```text
 
 ### Default Rules
-- **Auto-Advance: yes** for Medium and Low priority tasks
-- **Auto-Advance: no** for Critical tasks, deployment changes, database migrations
-- **Auto-Advance: no** when `🛑 Pause After: yes`
+- **Auto-Advance: yes**for Medium and Low priority tasks
+- **Auto-Advance: no**for Critical tasks, deployment changes, database migrations
+- **Auto-Advance: no**when `🛑 Pause After: yes`
 
----
+- --
 
 ## 4. State Management
 
@@ -68,14 +63,14 @@
   "current_task": "T-5",
   "completed_tasks": ["T-1", "T-2", "T-3", "T-4"]
 }
-```
+```yaml
 
 ### State Operations
 - **Load**: Read state at start of execution
 - **Save**: Update after each task completion
 - **Ignore**: Add to .gitignore (never commit)
 
----
+- --
 
 ## 5. HotFix Task Generation
 
@@ -87,26 +82,26 @@
 ### HotFix Task Template
 ```markdown
 ### T-HotFix-<n> Fix <short description>
-**Priority**: Critical
-**Time**: 1-2 hours
-**Depends on**: [failed_task_id]
+- *Priority**: Critical
+- *Time**: 1-2 hours
+- *Depends on**: [failed_task_id]
 
-**Do**:
+- *Do**:
 1. Reproduce the error
 2. Fix the issue
 3. Add regression test
 4. Re-run failing validation
 
-**Done when**:
+- *Done when**:
 - Original task's "Done when" criteria pass
 - New regression test passes
 
-**Auto-Advance**: no
-**🛑 Pause After**: yes
-**When Ready Prompt**: "HotFix complete - retry original task?"
+- *Auto-Advance**: no
+- *🛑 Pause After**: yes
+- *When Ready Prompt**: "HotFix complete - retry original task?"
 ```
 
----
+- --
 
 ## 6. Error Handling
 
@@ -122,7 +117,7 @@
 3. Retry original task
 4. Continue normal execution
 
----
+- --
 
 ## 7. Progress Tracking
 
@@ -136,7 +131,7 @@
 - No tasks with status `[ ]`
 - All "Done when" criteria validated
 
----
+- --
 
 ## 8. Human Checkpoints
 
@@ -153,7 +148,7 @@
 3. Continue execution on user approval
 4. Handle user feedback if provided
 
----
+- --
 
 ## 9. File Maintenance
 
@@ -168,11 +163,11 @@
 - Use conventional commit messages
 - Never commit `.ai_state.json`
 
----
+- --
 
 This approach ensures:
-- **Efficient AI execution** with state caching
-- **Automatic error recovery** with HotFix tasks
-- **Minimal human intervention** with smart pausing
-- **Clear progress tracking** for oversight
+- **Efficient AI execution**with state caching
+- **Automatic error recovery**with HotFix tasks
+- **Minimal human intervention**with smart pausing
+- **Clear progress tracking**for oversight
 - **Safe execution** with appropriate checkpoints

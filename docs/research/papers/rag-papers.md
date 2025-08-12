@@ -3,7 +3,7 @@
 
 # RAG Research Papers
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -17,14 +17,9 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
 > **External Research**: Academic papers and research sources for RAG (Retrieval-Augmented Generation) systems.
 
-## 📚 **Papers**
-
-### **"Searching for Best Practices in RAG" (ACL 2024)**
-
-- **Authors**: ACL 2024 Research Team
+## 📚 **Papers**###**"Searching for Best Practices in RAG" (ACL 2024)**-**Authors**: ACL 2024 Research Team
 
 - **Key Insight**: Hybrid search (dense + sparse) significantly improves RAG performance
 
@@ -38,9 +33,7 @@
   - Significantly improves real-world QA recall compared to pure vector search
   - Many vector DBs (like Qdrant) added BM25 in 2024
 
-### **Microsoft GraphRAG (2024)**
-
-- **Authors**: Microsoft Research
+### **Microsoft GraphRAG (2024)**-**Authors**: Microsoft Research
 
 - **Key Insight**: Knowledge graphs can augment traditional RAG for complex reasoning
 
@@ -54,9 +47,7 @@
   - Integrate structured and unstructured information
   - Handle queries requiring connecting disparate facts
 
-### **KAG: Knowledge-Augmented Generation (2024)**
-
-- **Authors**: [Research Team]
+### **KAG: Knowledge-Augmented Generation (2024)**-**Authors**: [Research Team]
 
 - **Key Insight**: Advanced knowledge integration techniques
 
@@ -64,17 +55,13 @@
 
 - **Citation**: [Full citation to be added]
 
-## 🔗 **Related Documentation**
-
-- `500_rag-system-research.md` - Our internal RAG research summary
+## 🔗 **Related Documentation**- `500_rag-system-research.md` - Our internal RAG research summary
 
 - `400_system-overview_advanced_features.md` - System architecture overview
 
 - `dspy-rag-system/` - Our RAG implementation
 
-## 📖 **Key Insights**
-
-- Hybrid retrieval is essential for optimal performance
+## 📖**Key Insights**- Hybrid retrieval is essential for optimal performance
 
 - Span-level grounding improves citation accuracy
 
@@ -84,6 +71,6 @@
 
 - Intelligent chunking strategies significantly impact results
 
-## 🎯 **Implementation Impact**
+## 🎯**Implementation Impact**
 
 This research directly informs our RAG system design and implementation choices.

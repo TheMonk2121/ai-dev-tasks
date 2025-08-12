@@ -63,7 +63,7 @@ The Real-time Mission Dashboard provides live visibility into AI task execution 
 - Professional dark theme
 
 ### Data Flow
-```
+```sql
 User Action → API Endpoint → Mission Tracker → Database
                 ↓
             WebSocket Event → Frontend Update
@@ -78,24 +78,20 @@ User Action → API Endpoint → Mission Tracker → Database
 
 ### Quick Start
 
-1. **Clone and navigate to the project:**
-   ```bash
+1. **Clone and navigate to the project:**```bash
    cd dspy-rag-system
-   ```
+   ```text
 
-2. **Install dependencies:**
-   ```bash
+2.**Install dependencies:**```bash
    pip install -r requirements.txt
-   ```
+   ```text
 
-3. **Start the dashboard:**
-   ```bash
+3.**Start the dashboard:**```bash
    ./start_mission_dashboard.sh
-   ```
+   ```yaml
 
-4. **Access the dashboard:**
-   - URL: http://localhost:5002
-   - Health check: http://localhost:5002/api/health
+4.**Access the dashboard:**- URL: <http://localhost:5002>
+  - Health check: <http://localhost:5002/api/health>
 
 ### Environment Variables
 
@@ -113,14 +109,14 @@ User Action → API Endpoint → Mission Tracker → Database
 
 #### Via API
 ```bash
-curl -X POST http://localhost:5002/api/missions \
-  -H "Content-Type: application/json" \
-  -d '{
+curl -X POST <http://localhost:5002/api/missions> \
+  - H "Content-Type: application/json" \
+  - d '{
     "title": "Document Processing",
     "description": "Process uploaded documents",
     "priority": "high"
   }'
-```
+```html
 
 #### Via Dashboard
 1. Click "New Mission" button
@@ -129,7 +125,7 @@ curl -X POST http://localhost:5002/api/missions \
 
 ### Mission Lifecycle
 
-1. **Create Mission**: Initialize with title, description, priority
+1.**Create Mission**: Initialize with title, description, priority
 2. **Start Mission**: Begin execution with agent and model info
 3. **Update Progress**: Real-time progress updates (0-100%)
 4. **Complete/Fail**: Finalize with results, tokens, and cost
@@ -213,7 +209,7 @@ curl -X POST http://localhost:5002/api/missions \
 
 ### Database Configuration
 ```sql
--- Mission tracking table
+- - Mission tracking table
 CREATE TABLE missions (
     id VARCHAR(255) PRIMARY KEY,
     title TEXT NOT NULL,
@@ -234,7 +230,7 @@ CREATE TABLE missions (
     cost_estimate FLOAT
 );
 
--- Mission metrics table
+- - Mission metrics table
 CREATE TABLE mission_metrics (
     id SERIAL PRIMARY KEY,
     timestamp TIMESTAMP NOT NULL,
@@ -247,7 +243,7 @@ CREATE TABLE mission_metrics (
     total_tokens INTEGER,
     total_cost FLOAT
 );
-```
+```text
 
 ### Security Configuration
 - **Rate Limiting**: 100 requests per minute per IP
@@ -265,7 +261,7 @@ python3 -m pytest tests/test_mission_dashboard.py -v
 # Run specific test categories
 python3 -m pytest tests/test_mission_dashboard.py::TestMissionTracker -v
 python3 -m pytest tests/test_mission_dashboard.py::TestMissionDashboardAPI -v
-```
+```text
 
 ### Demo Script
 ```bash
@@ -277,7 +273,7 @@ python3 demo_mission_dashboard.py run
 
 # Show statistics
 python3 demo_mission_dashboard.py stats
-```
+```bash
 
 ## 🔍 Troubleshooting
 
@@ -318,7 +314,7 @@ COPY . .
 EXPOSE 5002
 
 CMD ["python3", "src/mission_dashboard/mission_dashboard.py"]
-```
+```text
 
 ### Environment Configuration
 ```bash
@@ -328,7 +324,7 @@ export MISSION_DASHBOARD_HOST=0.0.0.0
 export MISSION_DASHBOARD_SECRET_KEY=your-secure-secret-key
 export POSTGRES_DSN=postgresql://user:pass@host:5432/db
 export ENVIRONMENT=production
-```
+```text
 
 ### Monitoring and Alerting
 - **Health checks**: Regular health endpoint monitoring
@@ -375,7 +371,7 @@ export ENVIRONMENT=production
   "tokens_used": 1500,
   "cost_estimate": 0.15
 }
-```
+```text
 
 ### Metrics Object
 ```json
@@ -416,8 +412,8 @@ export ENVIRONMENT=production
 
 This project is part of the AI Development Ecosystem and follows the same licensing terms as the main project.
 
----
+- --
 
-**Last Updated**: 2024-08-06  
-**Version**: 1.0.0  
-**Status**: Production Ready ✅ 
+- *Last Updated**: 2024-08-06  
+- *Version**: 1.0.0  
+- *Status**: Production Ready ✅ 

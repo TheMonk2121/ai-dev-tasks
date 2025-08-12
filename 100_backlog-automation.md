@@ -13,7 +13,7 @@ generate_prd: |
 
 ### Update Status
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -158,7 +158,7 @@ Parse backlog for top 3 todo items by priority
 
 - **Priority Change**: Recalculate based on new information
 
-- **Timestamp Updates**: Update *Last Updated* and add *Previously Updated* for history
+- **Timestamp Updates**: Update *Last Updated*and add*Previously Updated*for history
 
 ## Benefits
 
@@ -214,24 +214,22 @@ Parse backlog for top 3 todo items by priority
 
 - Maintain backward compatibility
 
-## n8n Backlog Scrubber Workflow ✅ **IMPLEMENTED**
-
-### Overview
+## n8n Backlog Scrubber Workflow ✅ **IMPLEMENTED**### Overview
 
 The n8n backlog scrubber automatically calculates and updates scoring metadata in the backlog file. This workflow:
 
-1. **Reads** the backlog.md file
-2. **Parses** scoring metadata from HTML comments
-3. **Calculates** new scores using the formula: `(BV + TC + RR + LE) / Effort`
-4. **Updates** the `<!--score_total: X.X-->` comments
-5. **Writes** the updated file back
+1.**Reads**the backlog.md file
+2.**Parses**scoring metadata from HTML comments
+3.**Calculates**new scores using the formula: `(BV + TC + RR + LE) / Effort`
+4.**Updates**the `<!--score_total: X.X-->` comments
+5.**Writes**the updated file back
 
-### Implementation Status ✅ **COMPLETED**
+### Implementation Status ✅**COMPLETED**
 
-**Location**: `dspy-rag-system/src/n8n_workflows/backlog_scrubber.py`
-**Webhook Server**: `dspy-rag-system/src/n8n_workflows/backlog_webhook.py`
-**Documentation**: `400_n8n-backlog-scrubber-guide.md`
-**Tests**: `dspy-rag-system/tests/test_backlog_scrubber.py`
+- *Location**: `dspy-rag-system/src/n8n_workflows/backlog_scrubber.py`
+- *Webhook Server**: `dspy-rag-system/src/n8n_workflows/backlog_webhook.py`
+- *Documentation**: `400_n8n-backlog-scrubber-guide.md`
+- *Tests**: `dspy-rag-system/tests/test_backlog_scrubber.py`
 
 ### Features Implemented
 
@@ -330,9 +328,9 @@ python3 src/n8n_workflows/backlog_webhook.py --host 0.0.0.0 --port 5001 --debug
 
 The AI agents can now:
 
-1. ✅ **Read** pre-calculated scores from `<!--score_total: X.X-->`
-2. ✅ **Prioritize** items based on scores
-3. ✅ **Fall back** to human priority tags when scores missing
-4. ✅ **Trigger** re-scoring when priorities change
+1. ✅ **Read**pre-calculated scores from `<!--score_total: X.X-->`
+2. ✅**Prioritize**items based on scores
+3. ✅**Fall back**to human priority tags when scores missing
+4. ✅**Trigger**re-scoring when priorities change
 
-This creates a **self-maintaining backlog** that stays prioritized without manual intervention.
+This creates a**self-maintaining backlog** that stays prioritized without manual intervention.

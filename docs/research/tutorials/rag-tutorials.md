@@ -4,7 +4,7 @@
 
 # RAG Tutorials
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -18,14 +18,9 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
 > **External Research**: Tutorials and guides for RAG system implementation.
 
-## 📚 **Tutorials**
-
-### **Hybrid Search Implementation**
-
-- **Source**: Industry Best Practices
+## 📚 **Tutorials**###**Hybrid Search Implementation**-**Source**: Industry Best Practices
 
 - **Key Insight**: Combining dense and sparse retrieval methods
 
@@ -39,9 +34,7 @@
   - Use three-digit prefix system for semantic chunking
   - Enable hybrid search for all RAG operations
 
-### **Multi-stage Retrieval**
-
-- **Source**: Research Best Practices
+### **Multi-stage Retrieval**-**Source**: Research Best Practices
 
 - **Key Insight**: Query decomposition and iterative refinement
 
@@ -55,9 +48,7 @@
   - Enable "Find X then using that find Y" queries
   - Allow agents to refine queries based on initial results
 
-### **Span-level Grounding**
-
-- **Source**: LangExtract Documentation (2025)
+### **Span-level Grounding**-**Source**: LangExtract Documentation (2025)
 
 - **Key Insight**: Character offset tracking and citation
 
@@ -71,9 +62,7 @@
   - Enable precise source attribution
   - Add validation against original text
 
-### **DSPy RAG Integration**
-
-- **Source**: DSPy Documentation
+### **DSPy RAG Integration**-**Source**: DSPy Documentation
 
 - **Key Insight**: Multi-step and async chains for RAG implementation
 
@@ -87,15 +76,11 @@
   - Structure long workflows as DSPy modules
   - Enable parallel execution for independent modules
 
-## 🔗 **Related Documentation**
-
-- `500_rag-system-research.md` - Our internal RAG research summary
+## 🔗 **Related Documentation**- `500_rag-system-research.md` - Our internal RAG research summary
 
 - `104_dspy-development-context.md` - Our DSPy implementation
 
-## 📖 **Key Insights**
-
-- Step-by-step implementation guides
+## 📖**Key Insights**- Step-by-step implementation guides
 
 - Best practices for production deployment
 
@@ -105,6 +90,6 @@
 
 - Multi-stage retrieval techniques
 
-## 🎯 **Implementation Impact**
+## 🎯**Implementation Impact**
 
 These tutorials provide practical implementation guidance for our RAG system.

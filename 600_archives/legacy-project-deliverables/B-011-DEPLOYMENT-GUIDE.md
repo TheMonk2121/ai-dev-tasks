@@ -8,11 +8,11 @@
 
 This document provides comprehensive deployment documentation and procedures for the AI Development Ecosystem with Cursor Native AI integration and specialized agents. It covers production deployment, monitoring, troubleshooting, and maintenance procedures.
 
-**Version**: 1.0.0  
-**Last Updated**: 2024-08-07  
-**Status**: Production Ready
+- *Version**: 1.0.0  
+- *Last Updated**: 2024-08-07  
+- *Status**: Production Ready
 
----
+- --
 
 ## 🚀 Deployment Prerequisites
 
@@ -35,7 +35,7 @@ docker>=20.10
 docker-compose>=1.29
 pm2>=5.0 (for Node.js process management)
 nginx>=1.18 (for reverse proxy)
-```
+```text
 
 ### Environment Setup
 ```bash
@@ -50,16 +50,16 @@ sudo chown ai-ecosystem:ai-ecosystem /opt/ai-ecosystem
 # Install Python dependencies
 sudo apt update
 sudo apt install -y python3.9 python3.9-venv python3.9-dev
-```
+```text
 
----
+- --
 
 ## 🔧 Local Development Deployment
 
 ### Step 1: Environment Setup
 ```bash
 # Clone repository
-git clone https://github.com/TheMonk2121/ai-dev-tasks.git
+git clone <https://github.com/TheMonk2121/ai-dev-tasks.git>
 cd ai-dev-tasks
 
 # Create virtual environment
@@ -69,7 +69,7 @@ source venv/bin/activate
 # Install dependencies
 pip install --upgrade pip
 pip install -r requirements.txt
-```
+```text
 
 ### Step 2: Configuration
 ```bash
@@ -100,7 +100,7 @@ database:
   backup_enabled: true
   backup_interval_hours: 24
 EOF
-```
+```text
 
 ### Step 3: Database Initialization
 ```bash
@@ -121,7 +121,7 @@ tables = cursor.fetchall()
 print(f'Database tables: {tables}')
 conn.close()
 "
-```
+```text
 
 ### Step 4: Verification
 ```bash
@@ -136,9 +136,9 @@ python test_performance_optimization.py
 
 # Start development server
 python main.py --dev
-```
+```text
 
----
+- --
 
 ## 🏭 Production Deployment
 
@@ -155,7 +155,7 @@ sudo apt install -y python3.9 python3.9-venv python3.9-dev git nginx
 # Create application user
 sudo useradd -m -s /bin/bash ai-ecosystem
 sudo usermod -aG sudo ai-ecosystem
-```
+```text
 
 #### Step 2: Application Deployment
 ```bash
@@ -163,7 +163,7 @@ sudo usermod -aG sudo ai-ecosystem
 sudo su - ai-ecosystem
 
 # Clone repository
-git clone https://github.com/TheMonk2121/ai-dev-tasks.git
+git clone <https://github.com/TheMonk2121/ai-dev-tasks.git>
 cd ai-dev-tasks
 
 # Create virtual environment
@@ -176,7 +176,7 @@ pip install -r requirements.txt
 
 # Create production configuration
 mkdir -p config logs backup
-```
+```text
 
 #### Step 3: Production Configuration
 ```bash
@@ -221,7 +221,7 @@ EOF
 # Create data directory
 sudo mkdir -p /opt/ai-ecosystem/data
 sudo chown ai-ecosystem:ai-ecosystem /opt/ai-ecosystem/data
-```
+```text
 
 #### Step 4: Service Configuration
 ```bash
@@ -254,7 +254,7 @@ sudo systemctl start ai-ecosystem
 
 # Check service status
 sudo systemctl status ai-ecosystem
-```
+```text
 
 #### Step 5: Nginx Configuration
 ```bash
@@ -265,7 +265,7 @@ server {
     server_name your-domain.com;
 
     location / {
-        proxy_pass http://127.0.0.1:8000;
+        proxy_pass <http://127.0.0.1:8000;>
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -277,7 +277,7 @@ server {
     }
 
     location /health {
-        proxy_pass http://127.0.0.1:8000/health;
+        proxy_pass <http://127.0.0.1:8000/health;>
         access_log off;
     }
 }
@@ -287,7 +287,7 @@ EOF
 sudo ln -s /etc/nginx/sites-available/ai-ecosystem /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
-```
+```text
 
 ### Method 2: Docker Deployment
 
@@ -300,9 +300,7 @@ FROM python:3.9-slim
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set working directory
+    && rm -rf /var/lib/apt/lists/*# Set working directory
 WORKDIR /app
 
 # Copy requirements and install Python dependencies
@@ -327,11 +325,11 @@ EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/health')"
+    CMD python -c "import requests; requests.get('<http://localhost:8000/health'>)"
 
 # Start application
 CMD ["python", "main.py"]
-```
+```text
 
 #### Step 2: Docker Compose
 ```yaml
@@ -353,7 +351,7 @@ services:
       - ./backup:/app/backup
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      test: ["CMD", "python", "-c", "import requests; requests.get('<http://localhost:8000/health'>)"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -370,7 +368,7 @@ services:
     depends_on:
       - ai-ecosystem
     restart: unless-stopped
-```
+```text
 
 #### Step 3: Deployment Commands
 ```bash
@@ -385,7 +383,7 @@ docker-compose logs -f ai-ecosystem
 
 # Scale services
 docker-compose up -d --scale ai-ecosystem=3
-```
+```text
 
 ### Method 3: Kubernetes Deployment
 
@@ -396,7 +394,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: ai-ecosystem
----
+- --
 # k8s/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -414,7 +412,7 @@ data:
       context_load_timeout: 1.0
       max_memory_mb: 100
       max_concurrent_agents: 10
-```
+```text
 
 #### Step 2: Deployment
 ```yaml
@@ -481,7 +479,7 @@ spec:
           claimName: ai-ecosystem-data
       - name: logs
         emptyDir: {}
-```
+```text
 
 #### Step 3: Service and Ingress
 ```yaml
@@ -499,7 +497,7 @@ spec:
     port: 80
     targetPort: 8000
   type: ClusterIP
----
+- --
 # k8s/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -520,7 +518,7 @@ spec:
             name: ai-ecosystem-service
             port:
               number: 80
-```
+```text
 
 #### Step 4: Deployment Commands
 ```bash
@@ -539,9 +537,9 @@ kubectl get ingress -n ai-ecosystem
 
 # View logs
 kubectl logs -f deployment/ai-ecosystem -n ai-ecosystem
-```
+```text
 
----
+- --
 
 ## 📊 Monitoring & Alerting
 
@@ -555,7 +553,7 @@ import json
 def check_health():
     """Check application health."""
     try:
-        response = requests.get("http://localhost:8000/health", timeout=10)
+        response = requests.get("<http://localhost:8000/health",> timeout=10)
         if response.status_code == 200:
             return True, response.json()
         else:
@@ -566,7 +564,7 @@ def check_health():
 def check_performance():
     """Check performance metrics."""
     try:
-        response = requests.get("http://localhost:8000/api/performance/report", timeout=10)
+        response = requests.get("<http://localhost:8000/api/performance/report",> timeout=10)
         if response.status_code == 200:
             metrics = response.json()
             
@@ -585,11 +583,11 @@ def check_performance():
             return False, {"error": f"HTTP {response.status_code}"}
     except Exception as e:
         return False, {"error": str(e)}
-```
+```text
 
 ### Monitoring Script
 ```bash
-#!/bin/bash
+# !/bin/bash
 # scripts/monitor.sh
 
 LOG_FILE="/var/log/ai-ecosystem-monitor.log"
@@ -600,7 +598,7 @@ check_health() {
     python3 -c "
 import requests
 try:
-    response = requests.get('http://localhost:8000/health', timeout=10)
+    response = requests.get('<http://localhost:8000/health',> timeout=10)
     if response.status_code == 200:
         print('HEALTHY')
     else:
@@ -615,7 +613,7 @@ check_performance() {
     python3 -c "
 import requests
 try:
-    response = requests.get('http://localhost:8000/api/performance/report', timeout=10)
+    response = requests.get('<http://localhost:8000/api/performance/report',> timeout=10)
     if response.status_code == 200:
         metrics = response.json()
         memory_mb = metrics['metrics']['memory_usage']['current']
@@ -652,7 +650,7 @@ while true; do
     
     sleep 60
 done
-```
+```text
 
 ### Prometheus Configuration
 ```yaml
@@ -666,7 +664,7 @@ scrape_configs:
       - targets: ['localhost:8000']
     metrics_path: '/metrics'
     scrape_interval: 30s
-```
+```text
 
 ### Grafana Dashboard
 ```json
@@ -707,17 +705,16 @@ scrape_configs:
     ]
   }
 }
-```
+```markdown
 
----
+- --
 
 ## 🛠️ Troubleshooting Guide
 
 ### Common Issues
 
-#### Issue 1: Application Won't Start
-**Symptoms**: Service fails to start, logs show errors
-**Diagnosis**:
+#### Issue 1: Application Won't Start**Symptoms**: Service fails to start, logs show errors
+- *Diagnosis**:
 ```bash
 # Check service status
 sudo systemctl status ai-ecosystem
@@ -728,52 +725,52 @@ sudo journalctl -u ai-ecosystem -f
 # Check Python environment
 source venv/bin/activate
 python -c "import sys; print(sys.path)"
-```
+```markdown
 
-**Solutions**:
+- *Solutions**:
 1. **Missing dependencies**: `pip install -r requirements.txt`
 2. **Permission issues**: `sudo chown -R ai-ecosystem:ai-ecosystem /opt/ai-ecosystem`
 3. **Database issues**: Reinitialize database
 4. **Port conflicts**: Check if port 8000 is available
 
 #### Issue 2: High Memory Usage
-**Symptoms**: Memory usage > 100MB, slow performance
-**Diagnosis**:
+- *Symptoms**: Memory usage > 100MB, slow performance
+- *Diagnosis**:
 ```bash
 # Check memory usage
 ps aux | grep python
 free -h
 
 # Check performance metrics
-curl http://localhost:8000/api/performance/report
-```
+curl <http://localhost:8000/api/performance/report>
+```markdown
 
-**Solutions**:
+- *Solutions**:
 1. **Restart application**: `sudo systemctl restart ai-ecosystem`
 2. **Clear caches**: Restart to clear agent and context caches
 3. **Reduce concurrent agents**: Update configuration
 4. **Memory optimization**: Check for memory leaks
 
 #### Issue 3: Agent Not Responding
-**Symptoms**: Agent requests timeout or fail
-**Diagnosis**:
+- *Symptoms**: Agent requests timeout or fail
+- *Diagnosis**:
 ```bash
 # Check agent status
-curl http://localhost:8000/api/agents/status
+curl <http://localhost:8000/api/agents/status>
 
 # Check agent logs
 tail -f logs/ai_ecosystem.log | grep -i agent
-```
+```markdown
 
-**Solutions**:
+- *Solutions**:
 1. **Restart agent framework**: Restart the application
 2. **Check agent configuration**: Verify agent settings
 3. **Clear agent cache**: Restart to clear agent cache
 4. **Check dependencies**: Ensure all agent dependencies are installed
 
 #### Issue 4: Database Errors
-**Symptoms**: Context operations fail, database errors in logs
-**Diagnosis**:
+- *Symptoms**: Context operations fail, database errors in logs
+- *Diagnosis**:
 ```bash
 # Check database file
 ls -la context_store.db
@@ -783,27 +780,27 @@ sqlite3 context_store.db "PRAGMA integrity_check;"
 
 # Check database size
 du -h context_store.db
-```
+```markdown
 
-**Solutions**:
+- *Solutions**:
 1. **Database corruption**: Restore from backup
 2. **Permission issues**: Fix file permissions
 3. **Disk space**: Check available disk space
 4. **Database locks**: Restart application
 
 #### Issue 5: Performance Issues
-**Symptoms**: Slow response times, high latency
-**Diagnosis**:
+- *Symptoms**: Slow response times, high latency
+- *Diagnosis**:
 ```bash
 # Check performance metrics
-curl http://localhost:8000/api/performance/report
+curl <http://localhost:8000/api/performance/report>
 
 # Check system resources
 top
 iostat 1 5
-```
+```markdown
 
-**Solutions**:
+- *Solutions**:
 1. **Optimize configuration**: Adjust performance settings
 2. **Scale horizontally**: Add more instances
 3. **Optimize database**: Add indexes, optimize queries
@@ -818,13 +815,13 @@ sudo systemctl status ai-ecosystem
 sudo journalctl -u ai-ecosystem -f
 
 # Check performance
-curl -s http://localhost:8000/api/performance/report | jq
+curl -s <http://localhost:8000/api/performance/report> | jq
 
 # Check health
-curl -s http://localhost:8000/health
+curl -s <http://localhost:8000/health>
 
 # Check agent status
-curl -s http://localhost:8000/api/agents/status
+curl -s <http://localhost:8000/api/agents/status>
 
 # Check database
 sqlite3 context_store.db ".tables"
@@ -838,15 +835,15 @@ netstat -tlnp | grep 8000
 # Check disk usage
 df -h
 du -sh /opt/ai-ecosystem/data/
-```
+```text
 
----
+- --
 
 ## 🔄 Backup & Recovery
 
 ### Backup Procedures
 ```bash
-#!/bin/bash
+# !/bin/bash
 # scripts/backup.sh
 
 BACKUP_DIR="/opt/ai-ecosystem/backup"
@@ -873,11 +870,11 @@ find "$BACKUP_DIR" -name "*.yaml" -mtime +30 -delete
 find "$BACKUP_DIR" -name "*.tar.gz" -mtime +30 -delete
 
 echo "Backup completed: $DATE"
-```
+```text
 
 ### Recovery Procedures
 ```bash
-#!/bin/bash
+# !/bin/bash
 # scripts/recover.sh
 
 BACKUP_DIR="/opt/ai-ecosystem/backup"
@@ -906,16 +903,16 @@ tar -xzf "$BACKUP_DIR/logs_$RESTORE_DATE.tar.gz"
 sudo systemctl start ai-ecosystem
 
 echo "Recovery completed from backup: $RESTORE_DATE"
-```
+```text
 
 ### Automated Backup
 ```bash
 # Add to crontab
 # crontab -e
-0 2 * * * /opt/ai-ecosystem/scripts/backup.sh >> /var/log/ai-ecosystem-backup.log 2>&1
-```
+0 2 * * */opt/ai-ecosystem/scripts/backup.sh >> /var/log/ai-ecosystem-backup.log 2>&1
+```text
 
----
+- --
 
 ## 🔒 Security Hardening
 
@@ -927,7 +924,7 @@ sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw deny 8000/tcp  # Deny direct access to app port
 sudo ufw enable
-```
+```bash
 
 ### SSL/TLS Configuration
 ```bash
@@ -939,8 +936,8 @@ sudo certbot --nginx -d your-domain.com
 
 # Auto-renewal
 sudo crontab -e
-0 12 * * * /usr/bin/certbot renew --quiet
-```
+0 12* * */usr/bin/certbot renew --quiet
+```text
 
 ### Security Headers
 ```nginx
@@ -961,16 +958,16 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
     
     location / {
-        proxy_pass http://127.0.0.1:8000;
+        proxy_pass <http://127.0.0.1:8000;>
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
-```
+```text
 
----
+- --
 
 ## 📈 Performance Optimization
 
@@ -998,21 +995,21 @@ if os.getenv("ENVIRONMENT") == "production":
         "monitoring_interval": 30,
         "memory_limit_mb": 200,
     })
-```
+```text
 
 ### Database Optimization
 ```sql
--- Database optimization
+- - Database optimization
 PRAGMA journal_mode = WAL;
 PRAGMA synchronous = NORMAL;
 PRAGMA cache_size = 10000;
 PRAGMA temp_store = MEMORY;
 
--- Create indexes for better performance
+- - Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_contexts_type ON contexts(type);
 CREATE INDEX IF NOT EXISTS idx_contexts_created_at ON contexts(created_at);
 CREATE INDEX IF NOT EXISTS idx_contexts_owner_id ON contexts(owner_id);
-```
+```text
 
 ### System Optimization
 ```bash
@@ -1027,7 +1024,7 @@ echo "vm.dirty_background_ratio = 5" >> /etc/sysctl.conf
 sudo sysctl -p
 ```
 
----
+- --
 
 ## 📞 Support & Maintenance
 
@@ -1048,6 +1045,6 @@ sudo sysctl -p
 - Maintain troubleshooting knowledge base
 - Update monitoring and alerting procedures
 
----
+- --
 
-*This deployment guide is maintained as part of the AI Development Ecosystem project. For updates and contributions, see the project repository.*
+- This deployment guide is maintained as part of the AI Development Ecosystem project. For updates and contributions, see the project repository.*

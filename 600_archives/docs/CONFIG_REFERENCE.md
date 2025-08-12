@@ -42,13 +42,13 @@ The system configuration file defines the core architecture, agents, models, and
   "models": {
     "cursor-native": {
       "type": "warm",
-      "base_url": "http://localhost:11434",
+      "base_url": "<http://localhost:11434",>
       "context_window": 3500,
       "size_gb": 8
     },
     "cursor-native-large": {
       "type": "lazy",
-      "base_url": "http://localhost:11434",
+      "base_url": "<http://localhost:11434",>
       "context_window": 32000,
       "size_gb": 25
     }
@@ -71,7 +71,7 @@ The system configuration file defines the core architecture, agents, models, and
   }
 }
 
-```
+```text
 
 ## Configuration Keys Reference
 
@@ -117,7 +117,7 @@ The system configuration file defines the core architecture, agents, models, and
   "max_results": "number"         // Optional: Max results for retrieval
 }
 
-```
+```text
 
 ### `models`
 
@@ -138,7 +138,7 @@ The system configuration file defines the core architecture, agents, models, and
   "enabled_when": "string"       // Optional: Feature flag condition
 }
 
-```
+```text
 
 ### `memory`
 
@@ -157,7 +157,7 @@ The system configuration file defines the core architecture, agents, models, and
   "cleanup_interval": "number"   // Optional: Cleanup interval in seconds
 }
 
-```
+```text
 
 ### `error_policy`
 
@@ -178,7 +178,7 @@ The system configuration file defines the core architecture, agents, models, and
   "fatal_errors": "array"       // Required: Non-retryable error types
 }
 
-```
+```text
 
 ### `fast_path`
 
@@ -197,7 +197,7 @@ The system configuration file defines the core architecture, agents, models, and
   "exclude_tokens": "array"     // Required: Tokens that disable fast-path
 }
 
-```
+```text
 
 ### `security`
 
@@ -216,16 +216,16 @@ The system configuration file defines the core architecture, agents, models, and
   "file_validation": "object"         // Required: File validation rules
 }
 
-```
+```markdown
 
 #### Security → Prompt Block-list
 
 The system uses regex-based prompt sanitization with configurable block-list and optional whitelist:
 
-**Default Block-list**: `["{{", "}}", "<script>"]`
-**Optional Whitelist**: `["<b>", "<i>"]` (allows specific HTML tags)
+- *Default Block-list**: `["{{", "}}", "<script>"]`
+- *Optional Whitelist**: `["<b>", "<i>"]` (allows specific HTML tags)
 
-**Logic**: If whitelist is provided, only whitelisted patterns are allowed. Otherwise, block-list patterns are rejected.
+- *Logic**: If whitelist is provided, only whitelisted patterns are allowed. Otherwise, block-list patterns are rejected.
 
 ### `monitoring`
 
@@ -245,7 +245,7 @@ The system uses regex-based prompt sanitization with configurable block-list and
   "ready_endpoint": "string"          // Required: Readiness check endpoint
 }
 
-```
+```text
 
 ## Environment Variables
 
@@ -260,7 +260,7 @@ DB_PASSWORD=your_password           # Database password
 
 PGSSL=require                       # SSL mode
 
-```
+```text
 
 ### Connection Pool
 
@@ -269,7 +269,7 @@ POOL_MIN=1                          # Minimum connections
 
 POOL_MAX=10                         # Maximum connections
 
-```
+```text
 
 ### Feature Flags
 
@@ -280,7 +280,7 @@ CLARIFIER=0                         # Enable ClarifierAgent
 
 TOMBSTONES=0                        # Enable tombstone support
 
-```
+```text
 
 ### Resource Management
 
@@ -289,14 +289,14 @@ MODEL_IDLE_EVICT_SECS=600          # Idle model eviction time
 
 MAX_RAM_PRESSURE=85                # Maximum RAM usage percentage
 
-```
+```text
 
 ### System Configuration
 
 ```bash
 ENABLED_AGENTS=IntentRouter,RetrievalAgent,CodeAgent  # Comma-separated agent list
 
-```
+```text
 
 ### Security Configuration
 
@@ -305,7 +305,7 @@ LLM_TIMEOUT_SEC=90                 # Overrides llm_timeout_seconds for all agent
 
 SECURITY_MAX_FILE_MB=100           # Overrides file_validation.max_size_mb (default 50)
 
-```
+```text
 
 ## Configuration Examples
 
@@ -331,13 +331,13 @@ SECURITY_MAX_FILE_MB=100           # Overrides file_validation.max_size_mb (defa
   "models": {
     "mistral-7b-instruct": {
       "type": "warm",
-      "base_url": "http://localhost:11434",
+      "base_url": "<http://localhost:11434",>
       "context_window": 3500,
       "size_gb": 8
     },
     "yi-coder-9b-chat-q6_k": {
       "type": "lazy",
-      "base_url": "http://localhost:1234",
+      "base_url": "<http://localhost:1234",>
       "context_window": 8092,
       "size_gb": 19
     }
@@ -359,7 +359,7 @@ SECURITY_MAX_FILE_MB=100           # Overrides file_validation.max_size_mb (defa
   }
 }
 
-```
+```text
 
 ### Full Configuration with All Agents
 
@@ -402,19 +402,19 @@ SECURITY_MAX_FILE_MB=100           # Overrides file_validation.max_size_mb (defa
   "models": {
     "mistral-7b-instruct": {
       "type": "warm",
-      "base_url": "http://localhost:11434",
+      "base_url": "<http://localhost:11434",>
       "context_window": 3500,
       "size_gb": 8
     },
     "yi-coder-9b-chat-q6_k": {
       "type": "lazy",
-      "base_url": "http://localhost:1234",
+      "base_url": "<http://localhost:1234",>
       "context_window": 8092,
       "size_gb": 19
     },
     "mixtral-8x7b": {
       "type": "lazy",
-      "base_url": "http://localhost:11434",
+      "base_url": "<http://localhost:11434",>
       "context_window": 32000,
       "size_gb": 25,
       "enabled_when": "DEEP_REASONING=1"
@@ -438,7 +438,7 @@ SECURITY_MAX_FILE_MB=100           # Overrides file_validation.max_size_mb (defa
   }
 }
 
-```
+```text
 
 ## Configuration Validation
 
@@ -448,7 +448,7 @@ The system validates configuration against a JSON schema:
 
 ```json
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "<http://json-schema.org/draft-07/schema#",>
   "type": "object",
   "required": ["version", "agents", "models", "memory", "error_policy", "fast_path"],
   "properties": {
@@ -461,7 +461,7 @@ The system validates configuration against a JSON schema:
   }
 }
 
-```
+```text
 
 ```
 
@@ -483,17 +483,17 @@ The system supports hot-reloading of configuration changes:
 
 # Reload configuration without restart
 
-curl -X POST http://localhost:5000/admin/reload-config
+curl -X POST <http://localhost:5000/admin/reload-config>
 
 # Check current configuration
 
-curl http://localhost:5000/admin/config
+curl <http://localhost:5000/admin/config>
 
 # Hot-reload with environment variable changes
 
 ENABLED_AGENTS=IntentRouter,RetrievalAgent make run-local
 
-```
+```text
 
 ## Troubleshooting
 
@@ -522,6 +522,6 @@ python -c "import psycopg2; psycopg2.connect('postgresql://user:pass@localhost/d
 
 ```
 
----
+- --
 
-*This configuration reference provides comprehensive documentation for the DSPy Router system configuration.*
+- This configuration reference provides comprehensive documentation for the DSPy Router system configuration.*

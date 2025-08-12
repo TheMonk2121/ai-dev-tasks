@@ -7,7 +7,7 @@
 # Generate Tasks
 
 <!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -15,9 +15,7 @@
 |---|---|---|
 | Task generation workflow that breaks down PRDs or backlog items into executable tasks with testing, quality gates, and acceptance criteria | When you need to convert a PRD or backlog item into actionable tasks | 1) Parse PRD/backlog item; 2) Use task template; 3) Add testing requirements; 4) Set quality gates |
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Task generation workflow maintained
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Task generation workflow maintained
 
 - **Priority**: 🔥 Critical - Essential for project execution
 
@@ -27,15 +25,13 @@
 
 - **Next Steps**: Enhance task templates and automation
 
-
-
 <!-- ANCHOR: workflow -->
-<a id="workflow"></a>
+{#workflow}
 
 ## Workflow
 
- - Parse PRD or `000_backlog.md` row to derive tasks
- - Enforce quality gates and acceptance criteria per task
+- Parse PRD or `000_backlog.md` row to derive tasks
+- Enforce quality gates and acceptance criteria per task
 
 ### PRD-less path
 
@@ -45,76 +41,46 @@
 
 - Log that PRD was skipped; proceed with standard task format and gates
 
- - **Integration & Testing** - Component integration and validation
+- **Integration & Testing**- Component integration and validation
 
-- **Performance & Security** - Optimization and hardening
+- **Performance & Security**- Optimization and hardening
 
-- **Documentation & Deployment** - Final preparation and launch
+- **Documentation & Deployment**- Final preparation and launch
 
 <!-- ANCHOR: template -->
-<a id="template"></a>
+{#template}
 
-### 3. **Task Format Requirements**
-
-Each task must include:
+### 3.**Task Format Requirements**Each task must include:
 
 ```markdown
 
-### Task Name
-
-**Priority:** [Critical/High/Medium/Low]
-**Estimated Time:** [X hours/days]
-**Dependencies:** [List of prerequisite tasks]
-
-**Description:**
-[Clear, actionable description]
-
-**Acceptance Criteria:**
-
-- [ ] [Specific, testable criteria]
+### Task Name**Priority:**[Critical/High/Medium/Low]**Estimated Time:**[X hours/days]**Dependencies:**[List of prerequisite tasks]**Description:**[Clear, actionable description]**Acceptance Criteria:**- [ ] [Specific, testable criteria]
 
 - [ ] [Another criterion]
 
-- [ ] [Performance benchmarks if applicable]
+- [ ] [Performance benchmarks if applicable]**Testing Requirements:**- [ ]**Unit Tests**- [Specific test scenarios]
 
-**Testing Requirements:**
+- [ ]**Integration Tests**- [Component interaction tests]
 
-- [ ] **Unit Tests** - [Specific test scenarios]
+- [ ]**Performance Tests**- [Benchmarks and thresholds]
 
-- [ ] **Integration Tests** - [Component interaction tests]
+- [ ]**Security Tests**- [Vulnerability and validation tests]
 
-- [ ] **Performance Tests** - [Benchmarks and thresholds]
+- [ ]**Resilience Tests**- [Error handling and failure scenarios]
 
-- [ ] **Security Tests** - [Vulnerability and validation tests]
+- [ ]**Edge Case Tests**- [Boundary conditions and unusual inputs]**Implementation Notes:**[Technical details, considerations, or warnings]**Quality Gates:**- [ ]**Code Review**- All code has been reviewed
 
-- [ ] **Resilience Tests** - [Error handling and failure scenarios]
+- [ ]**Tests Passing**- All tests pass with required coverage
 
-- [ ] **Edge Case Tests** - [Boundary conditions and unusual inputs]
+- [ ]**Performance Validated**- Meets performance requirements
 
-**Implementation Notes:**
-[Technical details, considerations, or warnings]
+- [ ]**Security Reviewed**- Security implications considered
 
-**Quality Gates:**
+- [ ]**Documentation Updated**- Relevant docs updated
 
-- [ ] **Code Review** - All code has been reviewed
+```yaml
 
-- [ ] **Tests Passing** - All tests pass with required coverage
-
-- [ ] **Performance Validated** - Meets performance requirements
-
-- [ ] **Security Reviewed** - Security implications considered
-
-- [ ] **Documentation Updated** - Relevant docs updated
-
-```
-
-## **Enhanced Testing Methodology**
-
-### **Comprehensive Test Coverage Requirements:**
-
-#### **1. Unit Tests**
-
-- **Purpose**: Test individual components in isolation
+## **Enhanced Testing Methodology**###**Comprehensive Test Coverage Requirements:**####**1. Unit Tests**-**Purpose**: Test individual components in isolation
 
 - **Coverage**: All public methods and critical private methods
 
@@ -124,9 +90,7 @@ Each task must include:
   - Validate input/output contracts
   - Test configuration variations
 
-#### **2. Integration Tests**
-
-- **Purpose**: Test component interactions and workflows
+#### **2. Integration Tests**-**Purpose**: Test component interactions and workflows
 
 - **Coverage**: End-to-end workflows and data flows
 
@@ -136,9 +100,7 @@ Each task must include:
   - Test error propagation between components
   - Verify API contracts and interfaces
 
-#### **3. Performance Tests**
-
-- **Purpose**: Validate performance under load and stress
+#### **3. Performance Tests**-**Purpose**: Validate performance under load and stress
 
 - **Coverage**: Response times, throughput, resource usage
 
@@ -148,9 +110,7 @@ Each task must include:
   - Measure memory usage and cleanup
   - Test concurrent request handling
 
-#### **4. Security Tests**
-
-- **Purpose**: Validate security controls and vulnerability prevention
+#### **4. Security Tests**-**Purpose**: Validate security controls and vulnerability prevention
 
 - **Coverage**: Input validation, access control, data protection
 
@@ -160,9 +120,7 @@ Each task must include:
   - Test data sanitization and validation
   - Verify secure communication protocols
 
-#### **5. Resilience Tests**
-
-- **Purpose**: Test system behavior under failure conditions
+#### **5. Resilience Tests**-**Purpose**: Test system behavior under failure conditions
 
 - **Coverage**: Error handling, recovery, graceful degradation
 
@@ -172,9 +130,7 @@ Each task must include:
   - Test resource exhaustion scenarios
   - Verify logging and monitoring under stress
 
-#### **6. Edge Case Tests**
-
-- **Purpose**: Test boundary conditions and unusual scenarios
+#### **6. Edge Case Tests**-**Purpose**: Test boundary conditions and unusual scenarios
 
 - **Coverage**: Large inputs, special characters, malformed data
 
@@ -184,11 +140,7 @@ Each task must include:
   - Test concurrent access and race conditions
   - Verify behavior with corrupted or incomplete data
 
-### **Test Implementation Standards:**
-
-#### **Test Structure:**
-
-```python
+### **Test Implementation Standards:**####**Test Structure:**```python
 def test_component_functionality():
     """Test description with clear purpose"""
 
@@ -200,11 +152,9 @@ def test_component_functionality():
 
     # Cleanup - Restore state if needed
 
-```
+```bash
 
-#### **Test Quality Requirements:**
-
-- **Isolation**: Tests should not depend on each other
+#### **Test Quality Requirements:**-**Isolation**: Tests should not depend on each other
 
 - **Deterministic**: Tests should produce consistent results
 
@@ -214,9 +164,7 @@ def test_component_functionality():
 
 - **Comprehensive**: Cover happy path, error cases, and edge cases
 
-#### **Performance Benchmarks:**
-
-- **Response Time**: Define acceptable latency thresholds
+#### **Performance Benchmarks:**-**Response Time**: Define acceptable latency thresholds
 
 - **Throughput**: Specify requests per second requirements
 
@@ -224,65 +172,57 @@ def test_component_functionality():
 
 - **Scalability**: Test with increasing load levels
 
-## **Quality Gates Integration**
-
-### **Implementation Status Tracking:**
-
-```markdown
+## **Quality Gates Integration**###**Implementation Status Tracking:**```markdown
 
 ## Implementation Status
 
 ### Overall Progress
 
-- **Total Tasks:** [X] completed out of [Y] total
+- **Total Tasks:**[X] completed out of [Y] total
 
-- **Current Phase:** [Planning/Implementation/Testing/Deployment]
+- **Current Phase:**[Planning/Implementation/Testing/Deployment]
 
-- **Estimated Completion:** [Date or percentage]
+- **Estimated Completion:**[Date or percentage]
 
-- **Blockers:** [List any current blockers]
+- **Blockers:**[List any current blockers]
 
 ### Quality Gates
 
-- [ ] **Code Review Completed** - All code has been reviewed
+- [ ]**Code Review Completed**- All code has been reviewed
 
-- [ ] **Tests Passing** - All unit and integration tests pass
+- [ ]**Tests Passing**- All unit and integration tests pass
 
-- [ ] **Documentation Updated** - All relevant docs updated
+- [ ]**Documentation Updated**- All relevant docs updated
 
-- [ ] **Performance Validated** - Performance meets requirements
+- [ ]**Performance Validated**- Performance meets requirements
 
-- [ ] **Security Reviewed** - Security implications considered
+- [ ]**Security Reviewed**- Security implications considered
 
-- [ ] **User Acceptance** - Feature validated with users
+- [ ]**User Acceptance**- Feature validated with users
 
-- [ ] **Resilience Tested** - Error handling and recovery validated
+- [ ]**Resilience Tested**- Error handling and recovery validated
 
-- [ ] **Edge Cases Covered** - Boundary conditions tested
+- [ ]**Edge Cases Covered**- Boundary conditions tested
 
-```
+```bash
 
-### **Testing Checklist for Each Task:**
+### **Testing Checklist for Each Task:**- [ ]**Unit Tests Written**- All public methods tested
 
-- [ ] **Unit Tests Written** - All public methods tested
+- [ ]**Integration Tests Created**- Component interactions tested
 
-- [ ] **Integration Tests Created** - Component interactions tested
+- [ ]**Performance Tests Implemented**- Benchmarks and thresholds defined
 
-- [ ] **Performance Tests Implemented** - Benchmarks and thresholds defined
+- [ ]**Security Tests Added**- Vulnerability checks implemented
 
-- [ ] **Security Tests Added** - Vulnerability checks implemented
+- [ ]**Resilience Tests Included**- Error scenarios covered
 
-- [ ] **Resilience Tests Included** - Error scenarios covered
+- [ ]**Edge Case Tests Written**- Boundary conditions tested
 
-- [ ] **Edge Case Tests Written** - Boundary conditions tested
+- [ ]**Test Documentation Updated**- Test procedures documented
 
-- [ ] **Test Documentation Updated** - Test procedures documented
+- [ ]**CI/CD Integration**- Tests run automatically
 
-- [ ] **CI/CD Integration** - Tests run automatically
-
-## **Output Format**
-
-Generate a comprehensive task list with the following structure:
+## **Output Format**Generate a comprehensive task list with the following structure:
 
 ```markdown
 
@@ -334,24 +274,22 @@ Generate a comprehensive task list with the following structure:
 
 ```
 
-## **Special Instructions**
-
-1. **Always include comprehensive testing requirements** for every task
-2. **Specify performance benchmarks** where applicable
-3. **Include security considerations** for all user-facing features
-4. **Add resilience testing** for critical system components
-5. **Consider edge cases** and boundary conditions
-6. **Define quality gates** for each major milestone
-7. **Include monitoring and observability** requirements
-8. **Specify error handling** and recovery procedures
-9. **Align with backlog priorities** when planning task dependencies and effort
-10. **Consider impact estimates** from backlog to ensure appropriate task scope
-11. **Parse backlog table format** when provided with backlog ID
-12. **Use points-based estimation** for task effort planning
-13. **Track backlog status updates** as tasks are completed
-14. **Consider backlog scoring** for task prioritization when available
-15. **Use scoring metadata** to inform task sizing and dependencies
-16. **Parse scoring comments** (`<!--score: {bv:X, tc:X, rr:X, le:X, effort:X}-->`) for context
+## **Special Instructions**1.**Always include comprehensive testing requirements**for every task
+2.**Specify performance benchmarks**where applicable
+3.**Include security considerations**for all user-facing features
+4.**Add resilience testing**for critical system components
+5.**Consider edge cases**and boundary conditions
+6.**Define quality gates**for each major milestone
+7.**Include monitoring and observability**requirements
+8.**Specify error handling**and recovery procedures
+9.**Align with backlog priorities**when planning task dependencies and effort
+10.**Consider impact estimates**from backlog to ensure appropriate task scope
+11.**Parse backlog table format**when provided with backlog ID
+12.**Use points-based estimation**for task effort planning
+13.**Track backlog status updates**as tasks are completed
+14.**Consider backlog scoring**for task prioritization when available
+15.**Use scoring metadata**to inform task sizing and dependencies
+16.**Parse scoring comments** (`<!--score: {bv:X, tc:X, rr:X, le:X, effort:X}-->`) for context
 
 This enhanced approach ensures that every task includes thorough testing requirements and quality gates, leading to more
 robust and reliable implementations.

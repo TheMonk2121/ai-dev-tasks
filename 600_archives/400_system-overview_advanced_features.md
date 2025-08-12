@@ -1,4 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+# "category": "Pricing & Billing",
+
 
   "category": "Pricing & Billing",
   "priority": "high",
@@ -10,13 +12,9 @@
   "processing_status": "completed"
 }
 
-```
+```text
 
-### **Cursor IDE Integration**
-
-#### **Development Workflow**
-
-- **PRD Creation**: Use `001_create-prd.md` in Cursor
+### **Cursor IDE Integration**####**Development Workflow**-**PRD Creation**: Use `001_create-prd.md` in Cursor
 
 - **Task Generation**: Use `002_generate-tasks.md` for implementation
 
@@ -24,15 +22,13 @@
 
 - **State Management**: Automatic `.ai_state.json` handling
 
-#### **AI Agent Configuration**
-
-```json
+#### **AI Agent Configuration**```json
     {
       "customModels": [
         {
           "title": "Cursor Native AI Local",
           "model": "cursor-native-ai",
-          "baseURL": "http://localhost:11434/v1",
+          "baseURL": "<http://localhost:11434/v1",>
           "apiKey": ""
         }
       ],
@@ -41,11 +37,7 @@
 
 ```
 
-### **Performance Optimization**
-
-#### **Caching Strategies**
-
-- **State Caching**: `.ai_state.json` for context persistence
+### **Performance Optimization**####**Caching Strategies**-**State Caching**: `.ai_state.json` for context persistence
 
 - **Vector Caching**: Redis for frequently accessed embeddings
 
@@ -53,9 +45,7 @@
 
 - **Connection Pooling**: Database connection optimization
 
-#### **Scalability Features**
-
-- **Horizontal Scaling**: Multiple processing nodes
+#### **Scalability Features**-**Horizontal Scaling**: Multiple processing nodes
 
 - **Load Balancing**: Distributed processing across nodes
 
@@ -63,4 +53,4 @@
 
 - **Resource Monitoring**: Real-time resource usage tracking
 
----
+- --

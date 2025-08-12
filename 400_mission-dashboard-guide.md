@@ -3,10 +3,12 @@
 <!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Mission dashboard and monitoring system -->
+# 🎯 Real-time Mission Dashboard Guide
+
 
 ## 🎯 Real-time Mission Dashboard Guide
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -20,10 +22,7 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Mission dashboard operational
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Mission dashboard operational
 
 - **Priority**: ⚡ High - Real-time monitoring and management
 
@@ -127,7 +126,7 @@ metrics, and interactive mission management.
 
 ### Data Flow
 
-```
+```sql
 
 User Action → API Endpoint → Mission Tracker → Database
                 ↓
@@ -147,24 +146,20 @@ User Action → API Endpoint → Mission Tracker → Database
 
 ### Quick Start
 
-1. **Clone and navigate to the project:**
-   ```bash
+1. **Clone and navigate to the project:**```bash
    cd dspy-rag-system
-   ```
+   ```text
 
-2. **Install dependencies:**
-   ```bash
+2.**Install dependencies:**```bash
    pip install -r requirements.txt
-   ```
+   ```text
 
-3. **Start the dashboard:**
-   ```bash
+3.**Start the dashboard:**```bash
    ./start_mission_dashboard.sh
-   ```
+   ```yaml
 
-4. **Access the dashboard:**
-   - URL: http://localhost:5002
-   - Health check: http://localhost:5002/api/health
+4.**Access the dashboard:**- URL: <http://localhost:5002>
+  - Health check: <http://localhost:5002/api/health>
 
 ### Environment Variables
 
@@ -183,15 +178,15 @@ User Action → API Endpoint → Mission Tracker → Database
 #### Via API
 
 ```bash
-curl -X POST http://localhost:5002/api/missions \
-  -H "Content-Type: application/json" \
-  -d '{
+curl -X POST <http://localhost:5002/api/missions> \
+  - H "Content-Type: application/json" \
+  - d '{
     "title": "Document Processing",
     "description": "Process uploaded documents",
     "priority": "high"
   }'
 
-```
+```html
 
 #### Via Dashboard
 
@@ -201,7 +196,7 @@ curl -X POST http://localhost:5002/api/missions \
 
 ### Mission Lifecycle
 
-1. **Create Mission**: Initialize with title, description, priority
+1.**Create Mission**: Initialize with title, description, priority
 2. **Start Mission**: Begin execution with agent and model info
 3. **Update Progress**: Real-time progress updates (0-100%)
 4. **Complete/Fail**: Finalize with results, tokens, and cost
@@ -332,7 +327,7 @@ curl -X POST http://localhost:5002/api/missions \
 ### Database Configuration
 
 ```sql
--- Mission tracking table
+- - Mission tracking table
 CREATE TABLE missions (
     id VARCHAR(255) PRIMARY KEY,
     title TEXT NOT NULL,
@@ -353,7 +348,7 @@ CREATE TABLE missions (
     cost_estimate FLOAT
 );
 
--- Mission metrics table
+- - Mission metrics table
 CREATE TABLE mission_metrics (
     id SERIAL PRIMARY KEY,
     timestamp TIMESTAMP NOT NULL,
@@ -367,7 +362,7 @@ CREATE TABLE mission_metrics (
     total_cost FLOAT
 );
 
-```
+```text
 
 ### Security Configuration
 
@@ -394,7 +389,7 @@ python3 -m pytest tests/test_mission_dashboard.py -v
 python3 -m pytest tests/test_mission_dashboard.py::TestMissionTracker -v
 python3 -m pytest tests/test_mission_dashboard.py::TestMissionDashboardAPI -v
 
-```
+```text
 
 ### Demo Script
 
@@ -412,7 +407,7 @@ python3 demo_mission_dashboard.py run
 
 python3 demo_mission_dashboard.py stats
 
-```
+```bash
 
 ## 🔍 Troubleshooting
 
@@ -472,7 +467,7 @@ EXPOSE 5002
 
 CMD ["python3", "src/mission_dashboard/mission_dashboard.py"]
 
-```
+```text
 
 ### Environment Configuration
 
@@ -486,7 +481,7 @@ export MISSION_DASHBOARD_SECRET_KEY=your-secure-secret-key
 export POSTGRES_DSN=postgresql://user:pass@host:5432/db
 export ENVIRONMENT=production
 
-```
+```text
 
 ### Monitoring and Alerting
 
@@ -549,7 +544,7 @@ export ENVIRONMENT=production
   "cost_estimate": 0.15
 }
 
-```
+```text
 
 ### Metrics Object
 
@@ -601,8 +596,8 @@ export ENVIRONMENT=production
 
 This project is part of the AI Development Ecosystem and follows the same licensing terms as the main project.
 
----
+- --
 
-**Last Updated**: 2024-08-06
-**Version**: 1.0.0
-**Status**: Production Ready ✅
+- *Last Updated**: 2024-08-06
+- *Version**: 1.0.0
+- *Status**: Production Ready ✅

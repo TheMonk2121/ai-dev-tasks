@@ -32,11 +32,11 @@ This is a comprehensive AI-powered development ecosystem that transforms ideas i
 (Mistral 7B Instruct + Yi-Coder-9B-Chat-Q6_K). It provides structured workflows, automated task processing, and
 intelligent error recovery to make AI-assisted development efficient and reliable.
 
----
+- --
 
 ## 🏗️ System Architecture (Macro View)
 
-```
+```text
 
 ┌─────────────────────────────────────────────────────────────────┐
 │                    AI Development Ecosystem                    │
@@ -68,13 +68,11 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 ```
 
----
+- --
 
 ## 🔒 Security & Reliability Features
 
-### **Security Measures**
-
-- **Prompt sanitisation**: Regex-based block-list with optional whitelist
+### **Security Measures**-**Prompt sanitisation**: Regex-based block-list with optional whitelist
 
 - **File validation**: Configurable size limits with environment override
 
@@ -92,9 +90,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 - **Database resilience**: Connection pooling with health monitoring and retry logic
 
-### **Reliability Features**
-
-- **Agent-level LLM timeout**: Mixtral = 90s (configurable per agent)
+### **Reliability Features**-**Agent-level LLM timeout**: Mixtral = 90s (configurable per agent)
 
 - **Global timeouts**: Centralized configuration for all operations
 
@@ -106,41 +102,41 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 - **Error recovery**: Graceful degradation and comprehensive error handling
 
----
+- --
 
 ## 🔄 Development Workflow (High-Level Process)
 
 ### Phase 1: Planning & Requirements
 
-1. **Backlog Selection** → Choose feature from structured table (B-001, B-002, etc.)
-2. **Idea Input** → User describes feature/requirement (or use backlog item)
-3. **PRD Creation** → AI generates comprehensive requirements document
-4. **Task Breakdown** → AI creates detailed, AI-optimized task list
-5. **Dependency Mapping** → Tasks ordered with clear dependencies
-6. **Status Update** → Update backlog status as work progresses
+1. **Backlog Selection**→ Choose feature from structured table (B-001, B-002, etc.)
+2.**Idea Input**→ User describes feature/requirement (or use backlog item)
+3.**PRD Creation**→ AI generates comprehensive requirements document
+4.**Task Breakdown**→ AI creates detailed, AI-optimized task list
+5.**Dependency Mapping**→ Tasks ordered with clear dependencies
+6.**Status Update**→ Update backlog status as work progresses
 
 ### Phase 2: AI Execution
 
-1. **State Loading** → AI loads context from `.ai_state.json`
-2. **Task Selection** → AI picks next executable task
-3. **Implementation** → Yi-Coder-9B-Chat-Q6_K writes code, Mistral 7B Instruct plans
-4. **Validation** → AI runs tests and validates completion
-5. **State Update** → Progress saved, next task selected
+1.**State Loading**→ AI loads context from `.ai_state.json`
+2.**Task Selection**→ AI picks next executable task
+3.**Implementation**→ Yi-Coder-9B-Chat-Q6_K writes code, Mistral 7B Instruct plans
+4.**Validation**→ AI runs tests and validates completion
+5.**State Update**→ Progress saved, next task selected
 
 ### Phase 3: Quality & Deployment
 
-1. **Error Recovery** → HotFix tasks for failed validations
-2. **Human Checkpoints** → Strategic pauses for high-risk operations
-3. **Deployment** → Automated deployment with monitoring
-4. **Feedback Integration** → Continuous improvement loop
+1.**Error Recovery**→ HotFix tasks for failed validations
+2.**Human Checkpoints**→ Strategic pauses for high-risk operations
+3.**Deployment**→ Automated deployment with monitoring
+4.**Feedback Integration**→ Continuous improvement loop
 
----
+- --
 
 ## 🧩 Core Components (Detailed View)
 
 ### 1. Planning & Management System
 
-#### **Backlog Management Engine** (`00_backlog.md` + `100_backlog-guide.md`)
+#### **Backlog Management Engine**(`00_backlog.md` + `100_backlog-guide.md`)
 
 - **Purpose**: Machine-readable roadmap for systematic feature development
 
@@ -158,7 +154,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
   - **Score Metadata**: HTML comments with scoring data for AI parsing
   - **n8n Scrubber Workflow**: Automated score calculation and updates
 
-#### **File Organization System** (`200_naming-conventions.md`)
+#### **File Organization System**(`200_naming-conventions.md`)
 
 - **Purpose**: Maintain consistent file organization and naming
 
@@ -168,7 +164,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
   - Scalable structure for future additions
   - Clear guidelines for contributors
 
-#### **PRD Creation Engine** (`01_create-prd.md`)
+#### **PRD Creation Engine**(`01_create-prd.md`)
 
 - **Purpose**: Transform user ideas into structured requirements
 
@@ -178,7 +174,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 - **AI Optimization**: Includes machine-verifiable completion criteria
 
-#### **Task Generation Engine** (`02_generate-tasks.md`)
+#### **Task Generation Engine**(`02_generate-tasks.md`)
 
 - **Purpose**: Break PRDs into AI-executable tasks
 
@@ -188,7 +184,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
   - Strategic human checkpoints
   - Machine-verifiable completion criteria
 
-#### **Process Management Engine** (`03_process-task-list.md`)
+#### **Process Management Engine**(`03_process-task-list.md`)
 
 - **Purpose**: Execute tasks with AI agents
 
@@ -198,7 +194,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
   - HotFix generation for error recovery
   - Strategic human oversight
 
-#### **File Organization System** (`200_naming-conventions.md`)
+#### **File Organization System**(`200_naming-conventions.md`)
 
 - **Purpose**: Maintain consistent file organization and naming
 
@@ -208,11 +204,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
   - Scalable structure for future additions
   - Clear guidelines for contributors
 
-### **AI Scoring & Automation System**
-
-#### **Scoring Engine**
-
-- **Formula**: `(Business Value + Time Criticality + Risk Reduction + Learning Enablement) / Effort`
+### **AI Scoring & Automation System**####**Scoring Engine**-**Formula**: `(Business Value + Time Criticality + Risk Reduction + Learning Enablement) / Effort`
 
 - **Score Ranges**: 5.0+ (🔥), 3.0-4.9 (⭐), 1.5-2.9 (📈), <1.5 (🔧)
 
@@ -222,9 +214,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 - **Fallback System**: Human priority tags when scores are missing
 
-#### **n8n Backlog Scrubber Workflow**
-
-- **Purpose**: Automate score calculation and backlog maintenance
+#### **n8n Backlog Scrubber Workflow**-**Purpose**: Automate score calculation and backlog maintenance
 
 - **Features**:
   - Reads backlog.md file and parses scoring metadata
@@ -237,9 +227,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 ### 2. AI Execution Layer
 
-#### **v0.3.1 Ultra-Minimal Router Architecture**
-
-- **Core Agents**: IntentRouter, RetrievalAgent, CodeAgent
+#### **v0.3.1 Ultra-Minimal Router Architecture**-**Core Agents**: IntentRouter, RetrievalAgent, CodeAgent
 
 - **Model Management**:
   - Mistral 7B Instruct (warm - always resident)
@@ -257,32 +245,26 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 - **Environment Variables**: POOL_MIN/POOL_MAX, MODEL_IDLE_EVICT_SECS, MAX_RAM_PRESSURE
 
-#### **Mistral 7B Instruct Agent**
-
-- **Role**: Planning, reasoning, and human interaction
+#### **Mistral 7B Instruct Agent**-**Role**: Planning, reasoning, and human interaction
 
 - **Responsibilities**:
   - Parse PRDs and generate tasks
   - Manage state and dependencies
   - Handle human checkpoints
   - Generate HotFix tasks
-  - **Parse backlog scoring** for prioritization decisions
-  - **Use score metadata** to inform task selection
+  - **Parse backlog scoring**for prioritization decisions
+  - **Use score metadata**to inform task selection
 
-#### **Yi-Coder-9B-Chat-Q6_K Agent**
-
-- **Role**: Code implementation and technical execution
+#### **Yi-Coder-9B-Chat-Q6_K Agent**-**Role**: Code implementation and technical execution
 
 - **Responsibilities**:
   - Write and test code
   - Implement features
   - Debug and optimize
   - Validate completion criteria
-  - **Consider scoring data** for implementation priorities
+  - **Consider scoring data**for implementation priorities
 
-#### **State Management System**
-
-- **File**: `.ai_state.json`
+#### **State Management System**-**File**: `.ai_state.json`
 
 - **Purpose**: Maintain context across task boundaries
 
@@ -290,7 +272,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 ### 3. Core AI Systems
 
-#### **DSPy RAG System** (`dspy-rag-system/`)
+#### **DSPy RAG System**(`dspy-rag-system/`)
 
 - **Purpose**: Intelligent document processing and question answering
 
@@ -307,9 +289,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 - **Performance**: RAM pressure guards and model janitor for resource management
 
-#### **N8N Workflow System**
-
-- **Purpose**: Automation and integration workflows
+#### **N8N Workflow System**-**Purpose**: Automation and integration workflows
 
 - **Features**:
   - Document processing automation
@@ -319,7 +299,7 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
   - **Backlog Scrubber Workflow**: Automated score calculation and updates
   - **AI-BACKLOG-META Integration**: Machine-readable command processing
 
-#### **Dashboard System** (`dashboard/`)
+#### **Dashboard System**(`dashboard/`)
 
 - **Purpose**: Real-time monitoring and interaction
 
@@ -335,25 +315,19 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 ### 4. Supporting Infrastructure
 
-#### **Database Layer**
-
-- **PostgreSQL**: Primary data storage
+#### **Database Layer**-**PostgreSQL**: Primary data storage
 
 - **PGVector**: Vector embeddings for similarity search
 
 - **Schema**: Optimized for document processing and metadata
 
-#### **File Processing System**
-
-- **Watch Folder**: Monitors for new documents
+#### **File Processing System**-**Watch Folder**: Monitors for new documents
 
 - **Document Processor**: Extracts text and metadata
 
 - **Tokenizer**: Breaks documents into searchable chunks
 
-#### **Notification System**
-
-- **Purpose**: Alert users to system events
+#### **Notification System**-**Purpose**: Alert users to system events
 
 - **Features**: Email, Slack, and custom integrations
 
@@ -363,39 +337,29 @@ intelligent error recovery to make AI-assisted development efficient and reliabl
 
 - **Alert callbacks**: Configurable alert handlers for critical events
 
----
+- --
 
 ## 🧪 Testing Framework & Quality Assurance
 
-### **Comprehensive Test Suite**
+### **Comprehensive Test Suite**The system includes 8 comprehensive test files organized in `tests/` directory:
 
-The system includes 8 comprehensive test files organized in `tests/` directory:
+#### **Core System Tests**-**`tests/test_rag_system.py`**(18KB) - RAG system functionality
 
-#### **Core System Tests**
+- **`tests/test_enhanced_rag_system.py`**(19KB) - Enhanced RAG with DSPy
 
-- **`tests/test_rag_system.py`** (18KB) - RAG system functionality
+- **`tests/test_vector_store.py`**(15KB) - Vector database operations
 
-- **`tests/test_enhanced_rag_system.py`** (19KB) - Enhanced RAG with DSPy
+- **`tests/test_document_processor.py`**(12KB) - Document processing pipeline
 
-- **`tests/test_vector_store.py`** (15KB) - Vector database operations
+#### **Utility Tests**-**`tests/test_metadata_extractor.py`**(12KB) - Metadata extraction
 
-- **`tests/test_document_processor.py`** (12KB) - Document processing pipeline
+- **`tests/test_tokenizer.py`**(9.5KB) - Text processing and chunking
 
-#### **Utility Tests**
+- **`tests/test_logger.py`**(6.7KB) - Logging and monitoring
 
-- **`tests/test_metadata_extractor.py`** (12KB) - Metadata extraction
+#### **Integration Tests**-**`tests/test_watch_folder.py`**(22KB) - File watching system
 
-- **`tests/test_tokenizer.py`** (9.5KB) - Text processing and chunking
-
-- **`tests/test_logger.py`** (6.7KB) - Logging and monitoring
-
-#### **Integration Tests**
-
-- **`tests/test_watch_folder.py`** (22KB) - File watching system
-
-### **Test Organization**
-
-- **`tests/` Directory**: All test files organized in dedicated subfolder
+### **Test Organization**-**`tests/` Directory**: All test files organized in dedicated subfolder
 
 - **`tests/400_project-overview.md`**: Comprehensive documentation for running tests
 
@@ -403,9 +367,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **Test Categories**: Unit tests, integration tests, and system tests
 
-### **Testing Methodology**
-
-- **Unit Tests**: Individual component testing with mocks
+### **Testing Methodology**-**Unit Tests**: Individual component testing with mocks
 
 - **Integration Tests**: Component interaction testing
 
@@ -415,9 +377,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **Security Tests**: Vulnerability and validation testing
 
-### **Quality Gates**
-
-- **Code Coverage**: Minimum 80% coverage requirement
+### **Quality Gates**-**Code Coverage**: Minimum 80% coverage requirement
 
 - **Performance Benchmarks**: Response time and throughput validation
 
@@ -425,13 +385,11 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **Documentation**: Comprehensive documentation requirements
 
----
+- --
 
 ## 🔧 Component Deep Dives
 
-### **DSPy RAG System Architecture**
-
-#### **Enhanced RAG System** (`src/dspy_modules/enhanced_rag_system.py`)
+### **DSPy RAG System Architecture**####**Enhanced RAG System**(`src/dspy_modules/enhanced_rag_system.py`)
 
 - **DSPy Integration**: Declarative programming for AI reasoning
 
@@ -441,7 +399,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **Response Generation**: High-quality, contextually relevant responses
 
-#### **Document Processor** (`src/dspy_modules/document_processor.py`)
+#### **Document Processor**(`src/dspy_modules/document_processor.py`)
 
 - **Multi-Format Support**: PDF, DOC, TXT, CSV, and more
 
@@ -451,7 +409,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **Quality Validation**: Content quality and completeness checks
 
-#### **Vector Store** (`src/dspy_modules/vector_store.py`)
+#### **Vector Store**(`src/dspy_modules/vector_store.py`)
 
 - **PostgreSQL + PGVector**: Scalable vector storage
 
@@ -461,9 +419,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **Query Optimization**: Fast retrieval with relevance ranking
 
-### **Enhanced Metadata System**
-
-#### **Metadata Extractor** (`src/utils/metadata_extractor.py`)
+### **Enhanced Metadata System**####**Metadata Extractor**(`src/utils/metadata_extractor.py`)
 
 - **Automatic Categorization**: 9 main categories with smart detection
 
@@ -477,25 +433,19 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **Date Extraction**: Pattern-based date identification
 
-#### **Categorization System**
-
-| Category | Keywords | Priority | Use Case |
+#### **Categorization System**| Category | Keywords | Priority | Use Case |
 |----------|----------|----------|----------|
-| **Pricing & Billing** | pricing, cost, billing | High | Financial documents |
-| **Legal & Contracts** | contract, legal, terms | High | Legal compliance |
-| **Marketing & Campaigns** | marketing, campaign, ad | Medium | Marketing materials |
-| **Client & Customer Data** | client, customer, user | Medium | Customer information |
-| **Reports & Analytics** | report, analytics, data | Medium | Business intelligence |
-| **Technical & Code** | source, code, script | Medium | Development files |
-| **Testing & Samples** | test, sample, example | Low | Development testing |
-| **Documentation & Guides** | manual, guide, help | Medium | User documentation |
-| **Financial Records** | invoice, receipt, payment | High | Financial tracking |
+|**Pricing & Billing**| pricing, cost, billing | High | Financial documents |
+|**Legal & Contracts**| contract, legal, terms | High | Legal compliance |
+|**Marketing & Campaigns**| marketing, campaign, ad | Medium | Marketing materials |
+|**Client & Customer Data**| client, customer, user | Medium | Customer information |
+|**Reports & Analytics**| report, analytics, data | Medium | Business intelligence |
+|**Technical & Code**| source, code, script | Medium | Development files |
+|**Testing & Samples**| test, sample, example | Low | Development testing |
+|**Documentation & Guides**| manual, guide, help | Medium | User documentation |
+|**Financial Records**| invoice, receipt, payment | High | Financial tracking |
 
-### **Dashboard Monitoring System**
-
-#### **Real-Time Features**
-
-- **Live Statistics**: Processing stats, category breakdowns, file analytics
+### **Dashboard Monitoring System**####**Real-Time Features**-**Live Statistics**: Processing stats, category breakdowns, file analytics
 
 - **Interactive Filtering**: Search by filename, category, tags, priority
 
@@ -505,9 +455,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **System Health**: Real-time status monitoring and alerts
 
-#### **Advanced Analytics**
-
-- **Processing Statistics**: Total documents, completion rates, error tracking
+#### **Advanced Analytics**-**Processing Statistics**: Total documents, completion rates, error tracking
 
 - **Category Breakdown**: Visual representation of document distribution
 
@@ -517,21 +465,15 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **Recent Activity**: Documents added in last 24 hours
 
-#### **API Endpoints**
+#### **API Endpoints**-**`GET /api/documents`**- JSON list of all documents
 
-- **`GET /api/documents`** - JSON list of all documents
+- **`GET /api/stats`**- Processing statistics
 
-- **`GET /api/stats`** - Processing statistics
+- **`GET /api/metadata/<filename>`**- Metadata for specific document
 
-- **`GET /api/metadata/<filename>`** - Metadata for specific document
+- **`GET /health`**- System health check
 
-- **`GET /health`** - System health check
-
-### **Notification System**
-
-#### **Multi-Channel Alerts**
-
-- **Email Notifications**: Processing completion, errors, system status
+### **Notification System**####**Multi-Channel Alerts**-**Email Notifications**: Processing completion, errors, system status
 
 - **Slack Integration**: Real-time alerts and status updates
 
@@ -539,9 +481,7 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **In-App Notifications**: Dashboard-based alert system
 
-#### **Alert Triggers**
-
-- **Processing Events**: Document completion, failures, errors
+#### **Alert Triggers**-**Processing Events**: Document completion, failures, errors
 
 - **System Events**: Health checks, performance issues, capacity warnings
 
@@ -549,15 +489,11 @@ The system includes 8 comprehensive test files organized in `tests/` directory:
 
 - **Error Events**: Exception handling, recovery attempts, failure notifications
 
----
+- --
 
 ## ⚙️ Configuration and Setup
 
-### **Database Setup**
-
-#### **PostgreSQL Configuration**
-
-```bash
+### **Database Setup**####**PostgreSQL Configuration**```bash
 
 # Install PostgreSQL and PGVector
 
@@ -570,12 +506,10 @@ sudo -u postgres createdb ai_agency
 sudo -u postgres createuser danieljacobs
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ai_agency TO danieljacobs;"
 
-```
+```text
 
-#### **Database Schema**
-
-```sql
--- Documents table
+#### **Database Schema**```sql
+- - Documents table
 CREATE TABLE documents (
     id SERIAL PRIMARY KEY,
     filename VARCHAR(255) NOT NULL,
@@ -587,7 +521,7 @@ CREATE TABLE documents (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Document chunks table
+- - Document chunks table
 CREATE TABLE document_chunks (
     id SERIAL PRIMARY KEY,
     document_id INTEGER REFERENCES documents(id),
@@ -597,7 +531,7 @@ CREATE TABLE document_chunks (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Query logs table
+- - Query logs table
 CREATE TABLE query_logs (
     id SERIAL PRIMARY KEY,
     question TEXT NOT NULL,
@@ -606,13 +540,9 @@ CREATE TABLE query_logs (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-```
-
-### **Environment Setup**
-
-#### **Python Environment**
-
 ```bash
+
+### **Environment Setup**####**Python Environment**```bash
 
 # Create virtual environment
 
@@ -624,11 +554,9 @@ source venv/bin/activate
 pip install -r requirements-dspy.txt
 pip install -r dashboard/requirements.txt
 
-```
+```text
 
-#### **System Dependencies**
-
-```bash
+#### **System Dependencies**```bash
 
 # Install system packages
 
@@ -639,17 +567,13 @@ sudo apt-get install -y python3-pip python3-venv postgresql postgresql-contrib
 
 pip install flask psycopg2-binary dspy-ai transformers torch
 
-```
+```text
 
-### **Deployment Procedures**
-
-#### **Development Setup**
-
-```bash
+### **Deployment Procedures**####**Development Setup**```bash
 
 # Clone repository
 
-git clone https://github.com/TheMonk2121/ai-dev-tasks.git
+git clone <https://github.com/TheMonk2121/ai-dev-tasks.git>
 cd ai-dev-tasks
 
 # Setup DSPy system
@@ -662,11 +586,9 @@ cd dspy-rag-system
 cd ../dashboard
 ./start_dashboard.sh
 
-```
+```text
 
-#### **Production Deployment**
-
-```bash
+#### **Production Deployment**```bash
 
 # Setup production environment
 
@@ -686,13 +608,9 @@ sudo systemctl restart nginx
 sudo supervisorctl reread
 sudo supervisorctl update
 
-```
+```text
 
-### **System Requirements**
-
-#### **Minimum Requirements**
-
-- **CPU**: 4 cores (8+ recommended)
+### **System Requirements**####**Minimum Requirements**-**CPU**: 4 cores (8+ recommended)
 
 - **RAM**: 8GB (16GB+ recommended)
 
@@ -700,9 +618,7 @@ sudo supervisorctl update
 
 - **OS**: Ubuntu 22.04 LTS or macOS 12+
 
-#### **Recommended Requirements**
-
-- **CPU**: 8+ cores
+#### **Recommended Requirements**-**CPU**: 8+ cores
 
 - **RAM**: 32GB
 
@@ -710,15 +626,11 @@ sudo supervisorctl update
 
 - **GPU**: NVIDIA GPU with 8GB+ VRAM (for AI processing)
 
----
+- --
 
 ## 🚀 Advanced Features
 
-### **File Watching System**
-
-#### **Real-Time Document Processing**
-
-- **Watch Folder**: Monitors specified directories for new files
+### **File Watching System**####**Real-Time Document Processing**-**Watch Folder**: Monitors specified directories for new files
 
 - **Automatic Processing**: Triggers processing pipeline on file detection
 
@@ -726,9 +638,7 @@ sudo supervisorctl update
 
 - **Error Recovery**: Automatic retry and error handling
 
-#### **Processing Pipeline**
-
-```python
+#### **Processing Pipeline**```python
 
 # File watching workflow
 
@@ -740,13 +650,9 @@ sudo supervisorctl update
 6. Storage → Save to PostgreSQL + PGVector
 7. Notification → Alert completion status
 
-```
+```text
 
-### **Enhanced Metadata Extraction**
-
-#### **Intelligent Categorization**
-
-- **Pattern Recognition**: Filename and content pattern analysis
+### **Enhanced Metadata Extraction**####**Intelligent Categorization**-**Pattern Recognition**: Filename and content pattern analysis
 
 - **Keyword Detection**: Business-specific keyword identification
 
@@ -754,9 +660,7 @@ sudo supervisorctl update
 
 - **Priority Assignment**: Automatic priority based on content type
 
-#### **Metadata Fields**
-
-```json
+#### **Metadata Fields**```json
 {
   "category": "Pricing & Billing",
   "priority": "high",
@@ -768,13 +672,9 @@ sudo supervisorctl update
   "processing_status": "completed"
 }
 
-```
+```text
 
-### **Cursor IDE Integration**
-
-#### **Development Workflow**
-
-- **PRD Creation**: Use `01_create-prd.md` in Cursor
+### **Cursor IDE Integration**####**Development Workflow**-**PRD Creation**: Use `01_create-prd.md` in Cursor
 
 - **Task Generation**: Use `02_generate-tasks.md` for implementation
 
@@ -782,28 +682,22 @@ sudo supervisorctl update
 
 - **State Management**: Automatic `.ai_state.json` handling
 
-#### **AI Agent Configuration**
-
-```json
+#### **AI Agent Configuration**```json
 {
   "customModels": [
     {
       "title": "Mistral Local",
       "model": "mistral",
-      "baseURL": "http://localhost:11434/v1",
+      "baseURL": "<http://localhost:11434/v1",>
       "apiKey": ""
     }
   ],
   "defaultModel": "cursor-native-ai"
 }
 
-```
+```text
 
-### **Performance Optimization**
-
-#### **Caching Strategies**
-
-- **State Caching**: `.ai_state.json` for context persistence
+### **Performance Optimization**####**Caching Strategies**-**State Caching**: `.ai_state.json` for context persistence
 
 - **Vector Caching**: Redis for frequently accessed embeddings
 
@@ -811,9 +705,7 @@ sudo supervisorctl update
 
 - **Connection Pooling**: Database connection optimization
 
-#### **Scalability Features**
-
-- **Horizontal Scaling**: Multiple processing nodes
+#### **Scalability Features**-**Horizontal Scaling**: Multiple processing nodes
 
 - **Load Balancing**: Distributed processing across nodes
 
@@ -821,7 +713,7 @@ sudo supervisorctl update
 
 - **Resource Monitoring**: Real-time resource usage tracking
 
----
+- --
 
 ## 🔧 Technical Implementation (Micro View)
 
@@ -836,7 +728,7 @@ sudo supervisorctl update
   "completed_tasks": ["T-1", "T-2", "T-3", "T-4"]
 }
 
-```
+```text
 
 ### Task Template
 
@@ -844,16 +736,16 @@ sudo supervisorctl update
 
 ### T-<number> <Task Name>
 
-**Priority**: Critical | High | Medium | Low
-**Time**: <2-4 hours>
-**Depends on**: [T-1, T-2] or "None"
+- *Priority**: Critical | High | Medium | Low
+- *Time**: <2-4 hours>
+- *Depends on**: [T-1, T-2] or "None"
 
-**Do**:
+- *Do**:
 1. <specific step 1>
 2. <specific step 2>
 3. <specific step 3>
 
-**Done when**:
+- *Done when**:
 
 - <testable outcome 1>
 
@@ -861,9 +753,9 @@ sudo supervisorctl update
 
 - <testable outcome 3>
 
-**Auto-Advance**: yes | no
-**🛑 Pause After**: yes | no
-**When Ready Prompt**: "<brief question for human review>"
+- *Auto-Advance**: yes | no
+- *🛑 Pause After**: yes | no
+- *When Ready Prompt**: "<brief question for human review>"
 
 ```
 
@@ -875,7 +767,7 @@ sudo supervisorctl update
 4. **Retry**: Re-run original task validation
 5. **Continue**: Resume normal execution
 
----
+- --
 
 ## 🎯 Use Cases & Applications
 
@@ -911,13 +803,13 @@ sudo supervisorctl update
 
 - **Output**: Automated customer onboarding
 
----
+- --
 
 ## 🚀 Getting Started
 
 ### For New Users
 
-1. **Clone Repository**: `git clone https://github.com/TheMonk2121/ai-dev-tasks.git`
+1. **Clone Repository**: `git clone <https://github.com/TheMonk2121/ai-dev-tasks.git`>
 2. **Read README**: Understand the basic workflow
 3. **Review Backlog**: Check `00_backlog.md` for high-impact features (see `100_backlog-guide.md` for usage)
 4. **Start with PRD**: Use `01_create-prd.md` for your first feature
@@ -943,7 +835,7 @@ sudo supervisorctl update
 3. **Deploy Dashboard**: Monitor system performance
 4. **Setup Notifications**: Configure alert systems
 
----
+- --
 
 ## 🔍 System Monitoring
 
@@ -975,7 +867,7 @@ sudo supervisorctl update
 
 - **Database Resilience**: Connection pooling with health monitoring and retry logic
 
----
+- --
 
 ## 🔮 Future Enhancements
 
@@ -1003,29 +895,21 @@ sudo supervisorctl update
 
 - **Deployment Automation**: Streamlined production deployment
 
----
+- --
 
-## 📚 **Documentation References**
-
-### **Core Architecture**
-
-- **`docs/ARCHITECTURE.md`**: Comprehensive v0.3.1 architecture documentation
+## 📚 **Documentation References**###**Core Architecture**-**`docs/ARCHITECTURE.md`**: Comprehensive v0.3.1 architecture documentation
 
 - **`docs/CONFIG_REFERENCE.md`**: Complete configuration reference and schema
 
-### **Implementation Guides**
-
-- **`201_model-configuration.md`**: AI model setup and configuration
+### **Implementation Guides**-**`201_model-configuration.md`**: AI model setup and configuration
 
 - **`103_yi-coder-integration.md`**: Yi-Coder IDE integration guide
 
-### **System Documentation**
-
-- **`104_dspy-development-context.md`**: DSPy development context and status
+### **System Documentation**-**`104_dspy-development-context.md`**: DSPy development context and status
 
 - **`200_naming-conventions.md`**: File organization and naming conventions
 
----
+- --
 
 This system represents a comprehensive approach to AI-assisted development, combining structured workflows with
 intelligent automation to create a powerful development ecosystem.

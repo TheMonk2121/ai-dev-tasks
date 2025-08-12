@@ -1,14 +1,14 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Performance optimization and monitoring -->
+# ⚡ Performance Optimization Guide
+
 
 ## ⚡ Performance Optimization Guide
 
 <!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+{#tldr}
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Performance optimization maintained
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Performance optimization maintained
 
 - **Priority**: 🔥 Critical - System performance and scalability
 
@@ -32,9 +32,7 @@
 
 - **anchors**: `system architecture`, `optimization strategies`, `monitoring setup`, `performance testing`, `scaling guidelines`, `performance checklist`
 
-#### **4. Quality Metrics**
-
-- **Error Rate**: Percentage of failed requests
+#### **4. Quality Metrics**-**Error Rate**: Percentage of failed requests
 
 - **Availability**: System uptime percentage
 
@@ -42,24 +40,20 @@
 
 - **User Satisfaction**: Response relevance and helpfulness
 
-### **Performance Baselines**
-
-| Metric | Baseline | Target | Critical |
+### **Performance Baselines**| Metric | Baseline | Target | Critical |
 |--------|----------|--------|----------|
-| **AI Response Time** | < 5 seconds | < 3 seconds | > 10 seconds |
-| **Database Query Time** | < 100ms | < 50ms | > 500ms |
-| **Dashboard Load Time** | < 2 seconds | < 1 second | > 5 seconds |
-| **CPU Usage** | < 70% | < 50% | > 90% |
-| **Memory Usage** | < 80% | < 60% | > 95% |
-| **Error Rate** | < 1% | < 0.1% | > 5% |
+|**AI Response Time**| < 5 seconds | < 3 seconds | > 10 seconds |
+|**Database Query Time**| < 100ms | < 50ms | > 500ms |
+|**Dashboard Load Time**| < 2 seconds | < 1 second | > 5 seconds |
+|**CPU Usage**| < 70% | < 50% | > 90% |
+|**Memory Usage**| < 80% | < 60% | > 95% |
+|**Error Rate**| < 1% | < 0.1% | > 5% |
 
----
+- --
 
 ## 🏗️ System Architecture
 
-### **Performance-Optimized Architecture**
-
-```text
+### **Performance-Optimized Architecture**```text
 ┌─────────────────────────────────────────────────────────────┐
 │                Performance Layers                          │
 ├─────────────────────────────────────────────────────────────┤
@@ -71,13 +65,9 @@
 │ 6. Network Layer (High Bandwidth)                        │
 └─────────────────────────────────────────────────────────────┘
 
-```
+```text
 
-### **Component Performance Characteristics**
-
-#### **1. AI Model Performance**
-
-```python
+### **Component Performance Characteristics**####**1. AI Model Performance**```python
 
 # Model performance configuration
 
@@ -91,13 +81,11 @@ MODEL_PERFORMANCE_CONFIG = {
     }
 }
 
-```
+```text
 
-#### **2. Database Performance**
-
-```sql
--- Performance-optimized database configuration
--- PostgreSQL performance settings
+#### **2. Database Performance**```sql
+- - Performance-optimized database configuration
+- - PostgreSQL performance settings
 SET shared_buffers = '256MB';
 SET effective_cache_size = '1GB';
 SET work_mem = '4MB';
@@ -106,11 +94,9 @@ SET checkpoint_completion_target = 0.9;
 SET wal_buffers = '16MB';
 SET default_statistics_target = 100;
 
-```
+```text
 
-#### **3. Application Performance**
-
-```python
+#### **3. Application Performance**```python
 
 # Application performance settings
 
@@ -124,17 +110,13 @@ APP_PERFORMANCE_CONFIG = {
 
 }
 
-```
+```text
 
----
+- --
 
 ## ⚡ Optimization Strategies
 
-### **1. AI Model Optimization**
-
-#### **Prompt Optimization**
-
-```python
+### **1. AI Model Optimization**####**Prompt Optimization**```python
 
 # Optimized prompt engineering
 
@@ -155,11 +137,9 @@ def optimize_prompt(prompt: str) -> str:
 
     return prompt
 
-```
+```text
 
-#### **Model Caching**
-
-```python
+#### **Model Caching**```python
 
 # Response caching for repeated queries
 
@@ -171,11 +151,9 @@ def get_cached_response(prompt: str) -> Optional[str]:
     cache_key = generate_cache_key(prompt)
     return cache.get(cache_key)
 
-```
+```text
 
-#### **Batch Processing**
-
-```python
+#### **Batch Processing**```python
 
 # Batch AI requests for efficiency
 
@@ -194,24 +172,18 @@ def batch_ai_requests(requests: List[str]) -> List[str]:
 
     return responses
 
-```
+```text
 
-### **2. Database Optimization**
-
-#### **Indexing Strategy**
-
-```sql
--- Performance-optimized indexes
+### **2. Database Optimization**####**Indexing Strategy**```sql
+- - Performance-optimized indexes
 CREATE INDEX idx_episodic_logs_timestamp ON episodic_logs(timestamp);
 CREATE INDEX idx_episodic_logs_user_id ON episodic_logs(user_id);
 CREATE INDEX idx_episodic_logs_model_type ON episodic_logs(model_type);
 CREATE INDEX idx_vector_store_embedding ON vector_store USING ivfflat (embedding);
 
-```
+```text
 
-#### **Query Optimization**
-
-```python
+#### **Query Optimization**```python
 
 # Optimized database queries
 
@@ -232,11 +204,9 @@ def optimize_query(query: str) -> str:
 def get_db_connection():
     return connection_pool.get_connection()
 
-```
+```text
 
-#### **Data Archiving**
-
-```python
+#### **Data Archiving**```python
 
 # Archive old data for performance
 
@@ -254,13 +224,9 @@ def archive_old_data():
 
     cleanup_old_data(archive_date)
 
-```
+```text
 
-### **3. Application Optimization**
-
-#### **Code Optimization**
-
-```python
+### **3. Application Optimization**####**Code Optimization**```python
 
 # Performance-optimized code patterns
 
@@ -288,11 +254,9 @@ def manage_memory():
 
     pass
 
-```
+```text
 
-#### **Caching Strategy**
-
-```python
+#### **Caching Strategy**```python
 
 # Multi-level caching
 
@@ -328,17 +292,13 @@ def get_cached_data(key: str):
 
     return result
 
-```
+```text
 
----
+- --
 
 ## 📊 Monitoring Setup
 
-### **1. Real-time Monitoring**
-
-#### **System Metrics**
-
-```python
+### **1. Real-time Monitoring**####**System Metrics**```python
 
 # System monitoring configuration
 
@@ -362,11 +322,9 @@ def monitor_system_health():
     if memory_usage > SYSTEM_MONITORING["memory_threshold"]:
         alert_high_memory_usage(memory_usage)
 
-```
+```text
 
-#### **Application Metrics**
-
-```python
+#### **Application Metrics**```python
 
 # Application performance monitoring
 
@@ -393,11 +351,9 @@ def track_application_metrics():
     if avg_response_time > 5.0:
         alert_slow_response_time(avg_response_time)
 
-```
+```text
 
-#### **AI Model Metrics**
-
-```python
+#### **AI Model Metrics**```python
 
 # AI model performance tracking
 
@@ -423,13 +379,9 @@ def track_ai_model_performance(model_name: str, response_time: float):
     if avg_time > MODEL_PERFORMANCE_CONFIG[model_name]["response_time_target"]:
         alert_slow_ai_model(model_name, avg_time)
 
-```
+```text
 
-### **2. Performance Dashboard**
-
-#### **Real-time Dashboard**
-
-```html
+### **2. Performance Dashboard**####**Real-time Dashboard**```html
 <!-- Performance dashboard template -->
 <div class="performance-dashboard">
     <div class="metric-card">
@@ -473,13 +425,9 @@ def track_ai_model_performance(model_name: str, response_time: float):
     </div>
 </div>
 
-```
+```text
 
-### **3. Alerting System**
-
-#### **Performance Alerts**
-
-```python
+### **3. Alerting System**####**Performance Alerts**```python
 
 # Performance alert configuration
 
@@ -512,17 +460,13 @@ def check_performance_alerts():
     if avg_response_time > PERFORMANCE_ALERTS["critical"]["response_time"]:
         send_critical_alert("Slow Response Time", avg_response_time)
 
-```
+```text
 
----
+- --
 
 ## 🧪 Performance Testing
 
-### **1. Load Testing**
-
-#### **Load Test Configuration**
-
-```python
+### **1. Load Testing**####**Load Test Configuration**```python
 
 # Load testing setup
 
@@ -550,11 +494,9 @@ def run_load_test():
 
     generate_load_test_report()
 
-```
+```text
 
-#### **Stress Testing**
-
-```python
+#### **Stress Testing**```python
 
 # Stress testing configuration
 
@@ -579,13 +521,9 @@ def run_stress_test():
             log_stress_test_failure(user_count)
             break
 
-```
+```text
 
-### **2. Performance Benchmarking**
-
-#### **Benchmark Tests**
-
-```python
+### **2. Performance Benchmarking**####**Benchmark Tests**```python
 
 # Performance benchmarks
 
@@ -612,13 +550,9 @@ def run_performance_benchmarks():
 
     generate_benchmark_report(results)
 
-```
+```text
 
-### **3. Continuous Performance Testing**
-
-#### **Automated Testing**
-
-```python
+### **3. Continuous Performance Testing**####**Automated Testing**```python
 
 # Continuous performance testing
 
@@ -640,17 +574,13 @@ def continuous_performance_testing():
         schedule.run_pending()
         time.sleep(60)
 
-```
+```text
 
----
+- --
 
 ## 📈 Scaling Guidelines
 
-### **1. Horizontal Scaling**
-
-#### **Load Balancing**
-
-```python
+### **1. Horizontal Scaling**####**Load Balancing**```python
 
 # Load balancer configuration
 
@@ -678,11 +608,9 @@ def setup_load_balancer():
 
     setup_health_checks(load_balancer)
 
-```
+```text
 
-#### **Database Scaling**
-
-```python
+#### **Database Scaling**```python
 
 # Database scaling strategies
 
@@ -700,13 +628,9 @@ def scale_database():
 
     optimize_database_queries()
 
-```
+```text
 
-### **2. Vertical Scaling**
-
-#### **Resource Optimization**
-
-```python
+### **2. Vertical Scaling**####**Resource Optimization**```python
 
 # Vertical scaling configuration
 
@@ -735,13 +659,9 @@ def optimize_resources():
 
     optimize_network_usage()
 
-```
+```text
 
-### **3. Auto-scaling**
-
-#### **Auto-scaling Configuration**
-
-```python
+### **3. Auto-scaling**####**Auto-scaling Configuration**```python
 
 # Auto-scaling setup
 
@@ -769,17 +689,13 @@ def setup_auto_scaling():
     if cpu_usage < AUTO_SCALING_CONFIG["scale_down_threshold"]:
         scale_down_instances()
 
-```
+```text
 
----
+- --
 
 ## 🔧 Troubleshooting
 
-### **1. Performance Issues**
-
-#### **Slow Response Times**
-
-```python
+### **1. Performance Issues**####**Slow Response Times**```python
 
 # Troubleshoot slow response times
 
@@ -805,11 +721,9 @@ def troubleshoot_slow_response():
 
     generate_troubleshooting_report()
 
-```
+```text
 
-#### **High Resource Usage**
-
-```python
+#### **High Resource Usage**```python
 
 # Troubleshoot high resource usage
 
@@ -831,23 +745,17 @@ def troubleshoot_high_resource_usage():
 
     optimize_resource_usage()
 
-```
+```bash
 
-### **2. Common Performance Problems**
-
-| Problem | Symptoms | Solutions |
+### **2. Common Performance Problems**| Problem | Symptoms | Solutions |
 |---------|----------|-----------|
-| **Slow AI Responses** | High latency, timeouts | Optimize prompts, enable caching, scale models |
-| **Database Bottlenecks** | Slow queries, connection errors | Add indexes, optimize queries, connection pooling |
-| **Memory Leaks** | Increasing memory usage | Profile memory, fix leaks, restart services |
-| **High CPU Usage** | Slow system, high load | Optimize code, scale horizontally, load balance |
-| **Network Issues** | Timeouts, connection errors | Check bandwidth, optimize network, use CDN |
+|**Slow AI Responses**| High latency, timeouts | Optimize prompts, enable caching, scale models |
+|**Database Bottlenecks**| Slow queries, connection errors | Add indexes, optimize queries, connection pooling |
+|**Memory Leaks**| Increasing memory usage | Profile memory, fix leaks, restart services |
+|**High CPU Usage**| Slow system, high load | Optimize code, scale horizontally, load balance |
+|**Network Issues**| Timeouts, connection errors | Check bandwidth, optimize network, use CDN |
 
-### **3. Performance Debugging**
-
-#### **Debugging Tools**
-
-```python
+### **3. Performance Debugging**####**Debugging Tools**```python
 
 # Performance debugging tools
 
@@ -873,17 +781,13 @@ def debug_performance_issue():
 
     generate_debugging_report()
 
-```
+```text
 
----
+- --
 
 ## ✅ Best Practices
 
-### **1. Code Optimization**
-
-#### **Efficient Algorithms**
-
-```python
+### **1. Code Optimization**####**Efficient Algorithms**```python
 
 # Use efficient algorithms and data structures
 
@@ -899,11 +803,9 @@ def optimized_algorithm():
 
     pass
 
-```
+```text
 
-#### **Memory Management**
-
-```python
+#### **Memory Management**```python
 
 # Proper memory management
 
@@ -919,27 +821,21 @@ def manage_memory():
 
     pass
 
-```
+```text
 
-### **2. Database Optimization**
-
-#### **Query Optimization**
-
-```sql
--- Optimize database queries
--- Use appropriate indexes
--- Limit result sets
--- Use prepared statements
--- Avoid N+1 queries
-SELECT * FROM episodic_logs
+### **2. Database Optimization**####**Query Optimization**```sql
+- - Optimize database queries
+- - Use appropriate indexes
+- - Limit result sets
+- - Use prepared statements
+- - Avoid N+1 queries
+SELECT* FROM episodic_logs
 WHERE timestamp > NOW() - INTERVAL '1 day'
 LIMIT 100;
 
-```
+```text
 
-#### **Connection Management**
-
-```python
+#### **Connection Management**```python
 
 # Proper connection management
 
@@ -955,13 +851,9 @@ def manage_database_connections():
 
     pass
 
-```
+```text
 
-### **3. Caching Strategy**
-
-#### **Multi-level Caching**
-
-```python
+### **3. Caching Strategy**####**Multi-level Caching**```python
 
 # Implement multi-level caching
 
@@ -979,13 +871,9 @@ def implement_caching_strategy():
 
     pass
 
-```
+```text
 
-### **4. Monitoring Best Practices**
-
-#### **Comprehensive Monitoring**
-
-```python
+### **4. Monitoring Best Practices**####**Comprehensive Monitoring**```python
 
 # Comprehensive monitoring setup
 
@@ -1003,15 +891,13 @@ def setup_comprehensive_monitoring():
 
     pass
 
-```
+```sql
 
----
+- --
 
 ## 📋 Performance Checklist
 
-### **Daily Performance Tasks**
-
-- [ ] Review performance metrics and alerts
+### **Daily Performance Tasks**- [ ] Review performance metrics and alerts
 
 - [ ] Check system resource usage
 
@@ -1021,9 +907,7 @@ def setup_comprehensive_monitoring():
 
 - [ ] Check for performance anomalies
 
-### **Weekly Performance Tasks**
-
-- [ ] Run performance benchmarks
+### **Weekly Performance Tasks**- [ ] Run performance benchmarks
 
 - [ ] Analyze performance trends
 
@@ -1033,9 +917,7 @@ def setup_comprehensive_monitoring():
 
 - [ ] Update performance documentation
 
-### **Monthly Performance Tasks**
-
-- [ ] Conduct performance audit
+### **Monthly Performance Tasks**- [ ] Conduct performance audit
 
 - [ ] Run load and stress tests
 
@@ -1045,9 +927,7 @@ def setup_comprehensive_monitoring():
 
 - [ ] Optimize system configuration
 
-### **Quarterly Performance Tasks**
-
-- [ ] Review and update performance strategy
+### **Quarterly Performance Tasks**- [ ] Review and update performance strategy
 
 - [ ] Conduct capacity planning
 
@@ -1057,19 +937,15 @@ def setup_comprehensive_monitoring():
 
 - [ ] Plan performance improvements
 
----
+- --
 
 ## 🛠️ Tools & Scripts
 
-### **1. Performance Monitoring Tools**
-
-#### **System Monitoring**
-
-```python
+### **1. Performance Monitoring Tools**####**System Monitoring**```python
 
 # System monitoring script
 
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 
 # system_monitor.py
 
@@ -1089,15 +965,13 @@ def monitor_system():
         print(json.dumps(metrics))
         time.sleep(60)
 
-```
+```text
 
-#### **Application Monitoring**
-
-```python
+#### **Application Monitoring**```python
 
 # Application monitoring script
 
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 
 # app_monitor.py
 
@@ -1108,7 +982,7 @@ import json
 def monitor_application():
     while True:
         try:
-            response = requests.get("http://localhost:5000/health")
+            response = requests.get("<http://localhost:5000/health">)
             metrics = {
                 "response_time": response.elapsed.total_seconds(),
                 "status_code": response.status_code,
@@ -1123,17 +997,13 @@ def monitor_application():
         print(json.dumps(metrics))
         time.sleep(30)
 
-```
+```text
 
-### **2. Performance Testing Tools**
-
-#### **Load Testing Script**
-
-```python
+### **2. Performance Testing Tools**####**Load Testing Script**```python
 
 # Load testing script
 
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 
 # load_test.py
 
@@ -1180,17 +1050,13 @@ def load_test(url, num_requests, concurrent_users):
     print(f"Max Response Time: {max_response_time:.2f}s")
     print(f"Min Response Time: {min_response_time:.2f}s")
 
-```
+```text
 
-### **3. Performance Analysis Tools**
-
-#### **Performance Profiler**
-
-```python
+### **3. Performance Analysis Tools**####**Performance Profiler**```python
 
 # Performance profiler
 
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 
 # performance_profiler.py
 
@@ -1198,7 +1064,7 @@ import cProfile
 import pstats
 import io
 
-def profile_function(func, *args, **kwargs):
+def profile_function(func,*args, **kwargs):
     profiler = cProfile.Profile()
     profiler.enable()
 
@@ -1214,36 +1080,30 @@ def profile_function(func, *args, **kwargs):
 
 ```
 
----
+- --
 
 ## 📚 Additional Resources
 
-### **Performance Documentation**
+### **Performance Documentation**-**Python Performance**: <https://docs.python.org/3/library/profile.html>
 
-- **Python Performance**: https://docs.python.org/3/library/profile.html
+- **PostgreSQL Performance**: <https://www.postgresql.org/docs/current/performance.html>
 
-- **PostgreSQL Performance**: https://www.postgresql.org/docs/current/performance.html
+- **AI Model Optimization**: <https://huggingface.co/docs/transformers/performance>
 
-- **AI Model Optimization**: https://huggingface.co/docs/transformers/performance
+### **Monitoring Tools**-**Prometheus**: <https://prometheus.io/>
 
-### **Monitoring Tools**
+- **Grafana**: <https://grafana.com/>
 
-- **Prometheus**: https://prometheus.io/
+- **Datadog**: <https://www.datadoghq.com/>
 
-- **Grafana**: https://grafana.com/
+### **Performance Testing Tools**-**Locust**: <https://locust.io/>
 
-- **Datadog**: https://www.datadoghq.com/
+- **Apache Bench**: <https://httpd.apache.org/docs/2.4/programs/ab.html>
 
-### **Performance Testing Tools**
+- **JMeter**: <https://jmeter.apache.org/>
 
-- **Locust**: https://locust.io/
+- --
 
-- **Apache Bench**: https://httpd.apache.org/docs/2.4/programs/ab.html
-
-- **JMeter**: https://jmeter.apache.org/
-
----
-
-*Last Updated: 2024-08-07*
-*Next Review: Monthly*
-*Performance Level: Optimized*
+- Last Updated: 2024-08-07*
+- Next Review: Monthly*
+- Performance Level: Optimized*

@@ -3,7 +3,7 @@
 # AI Development Ecosystem
 
 <!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -18,31 +18,25 @@
 - Use: Orientation, architecture, workflows, and reference links
 
 <!-- ANCHOR: collaboration -->
-<a id="collaboration"></a>
+{#collaboration}
 
-#### **Collaboration**
+#### **Collaboration**-**Shared project memory**that never forgets
 
-- **Shared project memory** that never forgets
+- **Clear workflows**that everyone can follow
 
-- **Clear workflows** that everyone can follow
+- **Instant onboarding**for new team members
 
-- **Instant onboarding** for new team members
+- **Better communication**through structured documentation
 
-- **Better communication** through structured documentation
-
----
+- --
 
 <!-- ANCHOR: system-architecture -->
-<a id="system-architecture"></a>
+{#system-architecture}
 
-## 🏗️ **System Architecture**
-
-Our AI development ecosystem is built around a **multi-layered architecture** that combines AI planning, code
+## 🏗️**System Architecture**Our AI development ecosystem is built around a**multi-layered architecture**that combines AI planning, code
 generation, and automated workflows.
 
-### **Core Components**
-
-```text
+### **Core Components**```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    AI Development Ecosystem                    │
 ├─────────────────────────────────────────────────────────────────┤
@@ -71,60 +65,46 @@ generation, and automated workflows.
 │  └── Error Recovery (HotFix Generation)                     │
 └─────────────────────────────────────────────────────────────────┘
 
-```
+```json
 
----
+- --
 
 <!-- ANCHOR: development-workflow -->
-<a id="development-workflow"></a>
+{#development-workflow}
 
-## 🔄 **Development Workflow**
+## 🔄**Development Workflow**###**Phase 1: Planning & Requirements**1.**Backlog Selection**→ Choose feature from structured table (B-001, B-002, etc.)
+2.**Idea Input**→ User describes feature/requirement (or use backlog item)
+3.**PRD Creation**→ AI generates comprehensive requirements document
+4.**Task Breakdown**→ AI creates detailed, AI-optimized task list
+5.**Dependency Mapping**→ Tasks ordered with clear dependencies
+6.**Status Update**→ Update backlog status as work progresses
 
-### **Phase 1: Planning & Requirements**
+### **Phase 2: AI Execution**1.**State Loading**→ AI loads context from `.ai_state.json`
+2.**Task Selection**→ AI picks next executable task
+3.**Implementation**→ AI executes tasks (Cursor Native AI + specialized agents)
+4.**Validation**→ AI runs tests and validates completion
+5.**State Update**→ Progress saved, next task selected
 
-1. **Backlog Selection** → Choose feature from structured table (B-001, B-002, etc.)
-2. **Idea Input** → User describes feature/requirement (or use backlog item)
-3. **PRD Creation** → AI generates comprehensive requirements document
-4. **Task Breakdown** → AI creates detailed, AI-optimized task list
-5. **Dependency Mapping** → Tasks ordered with clear dependencies
-6. **Status Update** → Update backlog status as work progresses
+### **Phase 3: Quality & Deployment**1.**Error Recovery**→ HotFix tasks for failed validations
+2.**Human Checkpoints**→ Strategic pauses for high-risk operations
+3.**Deployment**→ Automated deployment with monitoring
+4.**Feedback Integration**→ Continuous improvement loop
 
-### **Phase 2: AI Execution**
-
-1. **State Loading** → AI loads context from `.ai_state.json`
-2. **Task Selection** → AI picks next executable task
-3. **Implementation** → AI executes tasks (Cursor Native AI + specialized agents)
-4. **Validation** → AI runs tests and validates completion
-5. **State Update** → Progress saved, next task selected
-
-### **Phase 3: Quality & Deployment**
-
-1. **Error Recovery** → HotFix tasks for failed validations
-2. **Human Checkpoints** → Strategic pauses for high-risk operations
-3. **Deployment** → Automated deployment with monitoring
-4. **Feedback Integration** → Continuous improvement loop
-
----
+- --
 
 <!-- ANCHOR: models -->
-<a id="models"></a>
+{#models}
 
-## 🤖 **AI Foundation & Agents**
-
-- **Cursor Native AI (Foundation)**: Planning, reasoning, and code assistance integrated within Cursor IDE.
+## 🤖**AI Foundation & Agents**-**Cursor Native AI (Foundation)**: Planning, reasoning, and code assistance integrated within Cursor IDE.
 
 - **Specialized Agents (Enhancements)**: On-demand domain capabilities (e.g., research, documentation) layered on top of Cursor Native AI.
 
----
+- --
 
 <!-- ANCHOR: core-systems -->
-<a id="core-systems"></a>
+{#core-systems}
 
-## 🔧 **Core Systems**
-
-### **DSPy RAG System**
-
-- **Purpose**: Document processing and intelligent retrieval
+## 🔧 **Core Systems**###**DSPy RAG System**-**Purpose**: Document processing and intelligent retrieval
 
 - **Components**: Enhanced RAG, vector store, document processor
 
@@ -132,9 +112,7 @@ generation, and automated workflows.
 
 - **Integration**: PostgreSQL with pgvector for semantic search
 
-### **N8N Workflows**
-
-- **Purpose**: Automation and orchestration
+### **N8N Workflows**-**Purpose**: Automation and orchestration
 
 - **Components**: Backlog scrubber, webhook integration, event processing
 
@@ -142,9 +120,7 @@ generation, and automated workflows.
 
 - **Integration**: REST APIs and database triggers
 
-### **Real-time Dashboard**
-
-- **Purpose**: Live monitoring and visibility
+### **Real-time Dashboard**-**Purpose**: Live monitoring and visibility
 
 - **Components**: Mission tracker, progress updates, metrics collection
 
@@ -152,23 +128,15 @@ generation, and automated workflows.
 
 - **Integration**: Flask web server with live data feeds
 
----
+- --
 
 <!-- ANCHOR: implementation -->
-<a id="implementation"></a>
+{#implementation}
 
-## ⚙️ **Technical Implementation**
-
-### **AI Model Integration**
-
-Local or legacy model configuration details are archived. Active docs focus on Cursor Native AI as the default
+## ⚙️ **Technical Implementation**###**AI Model Integration**Local or legacy model configuration details are archived. Active docs focus on Cursor Native AI as the default
 foundation with optional specialized agents.
 
-### **DSPy Implementation**
-
-#### **Core Signatures**
-
-```python
+### **DSPy Implementation**####**Core Signatures**```python
 
 # Planning Signature
 
@@ -198,13 +166,9 @@ class ErrorRecoverySignature(Signature):
     explanation = OutputField(desc="Explanation of the fix")
     prevention = OutputField(desc="How to prevent similar errors")
 
-```
+```text
 
-### **Database Schema**
-
-#### **Event Ledger Table**
-
-```sql
+### **Database Schema**####**Event Ledger Table**```sql
 CREATE TABLE event_ledger (
     id SERIAL PRIMARY KEY,
     event_type VARCHAR(50) NOT NULL,
@@ -214,19 +178,17 @@ CREATE TABLE event_ledger (
     processed BOOLEAN DEFAULT FALSE
 );
 
--- Index for efficient querying
+- - Index for efficient querying
 CREATE INDEX idx_event_ledger_type_timestamp
 ON event_ledger(event_type, timestamp);
 
-```
+```text
 
-#### **Vector Store Schema**
-
-```sql
--- Enable pgvector extension
+#### **Vector Store Schema**```sql
+- - Enable pgvector extension
 CREATE EXTENSION IF NOT EXISTS vector;
 
--- Documents table
+- - Documents table
 CREATE TABLE documents (
     id SERIAL PRIMARY KEY,
     content TEXT NOT NULL,
@@ -235,22 +197,18 @@ CREATE TABLE documents (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Index for similarity search
+- - Index for similarity search
 CREATE INDEX idx_documents_embedding
 ON documents USING ivfflat (embedding vector_cosine_ops);
 
 ```
 
----
+- --
 
 <!-- ANCHOR: security-reliability -->
-<a id="security-reliability"></a>
+{#security-reliability}
 
-## 🔒 **Security & Reliability**
-
-### **Security Features**
-
-- **Prompt Sanitization**: Regex-based block-list with optional whitelist
+## 🔒**Security & Reliability**###**Security Features**-**Prompt Sanitization**: Regex-based block-list with optional whitelist
 
 - **File Validation**: Configurable size limits with environment override
 
@@ -260,9 +218,7 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - **Production Monitoring**: Real-time security event tracking
 
-### **Reliability Features**
-
-- **Error Recovery**: Configurable retry policies with fatal error detection
+### **Reliability Features**-**Error Recovery**: Configurable retry policies with fatal error detection
 
 - **Resource Management**: RAM pressure checks and model janitor
 
@@ -270,22 +226,16 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - **Graceful Degradation**: System continues working even with failures
 
----
+- --
 
 <!-- ANCHOR: key-technologies -->
-<a id="key-technologies"></a>
+{#key-technologies}
 
-## 🚀 **Key Technologies**
-
-### **AI Framework**
-
-- **DSPy**: Advanced reasoning and multi-step chains
+## 🚀 **Key Technologies**###**AI Framework**-**DSPy**: Advanced reasoning and multi-step chains
 
 - **PostgreSQL + PGVector**: Vector storage and semantic search
 
-### **Automation & Monitoring**
-
-- **N8N**: Workflow automation and orchestration
+### **Automation & Monitoring**-**N8N**: Workflow automation and orchestration
 
 - **Flask**: Web dashboard and API endpoints
 
@@ -293,9 +243,7 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - **OpenTelemetry**: Observability and monitoring
 
-### **Development Tools**
-
-- **Cursor IDE**: Primary development environment
+### **Development Tools**-**Cursor IDE**: Primary development environment
 
 - **Git**: Version control and collaboration
 
@@ -303,16 +251,12 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - **Docker**: Containerization and deployment
 
----
+- --
 
 <!-- ANCHOR: performance-scalability -->
-<a id="performance-scalability"></a>
+{#performance-scalability}
 
-## 📈 **Performance & Scalability**
-
-### **Current Performance**
-
-- **Response Time**: <2 seconds for most queries
+## 📈 **Performance & Scalability**###**Current Performance**-**Response Time**: <2 seconds for most queries
 
 - **Context Window**: Per Cursor model; see Cursor documentation
 
@@ -320,9 +264,7 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - **Memory Usage**: <16GB RAM for full system
 
-### **Scalability Considerations**
-
-- **Model Pooling**: Lazy loading for large models
+### **Scalability Considerations**-**Model Pooling**: Lazy loading for large models
 
 - **Database Optimization**: Connection pooling and indexing
 
@@ -330,16 +272,12 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - **Horizontal Scaling**: Stateless design for multi-instance deployment
 
----
+- --
 
 <!-- ANCHOR: audiences -->
-<a id="audiences"></a>
+{#audiences}
 
-## 🎯 **Who This Is For**
-
-### **Solo Developers**
-
-- Get AI assistance that understands your project
+## 🎯 **Who This Is For**###**Solo Developers**- Get AI assistance that understands your project
 
 - Reduce time spent on repetitive tasks
 
@@ -347,9 +285,7 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - Maintain high code quality with less effort
 
-### **Development Teams**
-
-- Standardize workflows across the team
+### **Development Teams**- Standardize workflows across the team
 
 - Share knowledge and best practices
 
@@ -357,9 +293,7 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - Maintain consistent quality standards
 
-### **Project Managers**
-
-- Get clear visibility into project progress
+### **Project Managers**- Get clear visibility into project progress
 
 - Understand technical decisions and trade-offs
 
@@ -367,16 +301,12 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - Improve team productivity and satisfaction
 
----
+- --
 
 <!-- ANCHOR: impact -->
-<a id="impact"></a>
+{#impact}
 
-## 📊 **Real-World Impact**
-
-### **Before (Traditional Development)**
-
-- Developer spends hours writing boilerplate code
+## 📊**Real-World Impact**###**Before (Traditional Development)**- Developer spends hours writing boilerplate code
 
 - Errors are discovered late in the process
 
@@ -384,9 +314,7 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - New team members take weeks to get up to speed
 
-### **After (With Our System)**
-
-- AI generates boilerplate code in minutes
+### **After (With Our System)**- AI generates boilerplate code in minutes
 
 - Errors are caught and fixed automatically
 
@@ -394,19 +322,15 @@ ON documents USING ivfflat (embedding vector_cosine_ops);
 
 - New team members understand the project in hours
 
-### **Success Stories**
+### **Success Stories**Teams using our system report:
 
-Teams using our system report:
+- **50% reduction**in development time
 
-- **50% reduction** in development time
+- **90% fewer**late-stage bugs
 
-- **90% fewer** late-stage bugs
+- **80% faster**onboarding for new developers
 
-- **80% faster** onboarding for new developers
+- **Consistent quality**across all team members
 
-- **Consistent quality** across all team members
-
----
-
-*This comprehensive document provides a unified view of our AI development ecosystem, combining business value,
+- --*This comprehensive document provides a unified view of our AI development ecosystem, combining business value,
 technical architecture, and implementation details for all audiences.*

@@ -2,8 +2,10 @@
 <!-- MODULE_REFERENCE: 100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
 <!-- MEMORY_CONTEXT: HIGH - Critical code identification and prioritization -->
+# 🗺️ Critical Python Code Map
 
-<a id="tldr"></a>
+
+{#tldr}
 
 ## 🗺️ Critical Python Code Map
 
@@ -20,11 +22,9 @@
 - Quick jump:
   - Tier 1 (Critical): `scripts/process_tasks.py`, `scripts/state_manager.py`, `dspy-rag-system/src/dspy_modules/cursor_model_router.py`, `dspy-rag-system/src/dspy_modules/vector_store.py`, `dspy-rag-system/src/dspy_modules/document_processor.py`
 
----
+- --
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Maintained and current
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Maintained and current
 
 - **Priority**: 🔥 Critical - Core system documentation
 
@@ -41,19 +41,19 @@
 ### Tier 1 — Critical (never break without a plan)
 
 1. `scripts/process_tasks.py` — Task Execution Engine (orchestrator)
-   - Core CLI to execute backlog items end‑to‑end; handles orchestration, error handling, and state transitions.
+  - Core CLI to execute backlog items end‑to‑end; handles orchestration, error handling, and state transitions.
 
 2. `scripts/state_manager.py` — Execution/State Persistence
-   - Central state tracking across task boundaries; execution history, retries, progress, and metadata.
+  - Central state tracking across task boundaries; execution history, retries, progress, and metadata.
 
 3. `dspy-rag-system/src/dspy_modules/cursor_model_router.py` — AI Model Routing & Context Engineering
-   - Intelligent model selection for Cursor Native AI; validation, reasoning, and prompt/context strategies.
+  - Intelligent model selection for Cursor Native AI; validation, reasoning, and prompt/context strategies.
 
 4. `dspy-rag-system/src/dspy_modules/vector_store.py` — Hybrid Vector Store (dense + sparse)
-   - PGVector + text search; storage, retrieval, span‑level grounding; core RAG data path.
+  - PGVector + text search; storage, retrieval, span‑level grounding; core RAG data path.
 
 5. `dspy-rag-system/src/dspy_modules/document_processor.py` — Document Ingestion & Chunking
-   - Validates, extracts metadata, chunks, and prepares documents for indexing and retrieval.
+  - Validates, extracts metadata, chunks, and prepares documents for indexing and retrieval.
 
 ### Tier 2 — High (production infrastructure)
 
@@ -79,7 +79,7 @@
 
 - `dspy-rag-system/src/utils/logger.py` — Structured logging helpers
 
----
+- --
 
 ## 🧭 Criteria for Criticality
 
@@ -95,23 +95,23 @@
 
 - Safety & security: Prevents unsafe inputs/operations (`prompt_sanitizer.py`)
 
----
+- --
 
 ## 🔄 Maintenance Workflow
 
 1) Update this guide when:
-   - A new module becomes part of the execution critical path
-   - Responsibilities split/merge across modules
-   - Reliability/security features change the operational backbone
+  - A new module becomes part of the execution critical path
+  - Responsibilities split/merge across modules
+  - Reliability/security features change the operational backbone
 2) Also update cross‑links in:
-   - `100_cursor-memory-context.md` (Quick Links)
-   - `400_system-overview.md` (architecture references if needed)
-   - `scripts/documentation_navigator.py` (inventory)
+  - `100_cursor-memory-context.md` (Quick Links)
+  - `400_system-overview.md` (architecture references if needed)
+  - `scripts/documentation_navigator.py` (inventory)
 3) Validation:
-   - Run `./dspy-rag-system/run_tests.sh` (where applicable)
-   - Run `python3 scripts/doc_coherence_validator.py` for cross‑references
+  - Run `./dspy-rag-system/run_tests.sh` (where applicable)
+  - Run `python3 scripts/doc_coherence_validator.py` for cross‑references
 
----
+- --
 
 ## 🔗 Cross‑References
 

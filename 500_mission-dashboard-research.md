@@ -1,10 +1,12 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_mission-dashboard-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Mission dashboard research and patterns -->
+# 🎯 Mission Dashboard Research
+
 
 ## 🎯 Mission Dashboard Research
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -18,13 +20,9 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
 Backlog link: B-001, B-006
 
-
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Research file with content
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
 
 - **Priority**: 🔧 Medium - Research for implementation
 
@@ -34,8 +32,6 @@ Backlog link: B-001, B-006
 
 - **Next Steps**: Implement dashboard patterns and KPIs
 
-
-
 ## Key Findings
 
 - Solo/local-first UX benefits from compact KPIs: active tasks, p95 latency, error rate, tokens/task.
@@ -43,8 +39,6 @@ Backlog link: B-001, B-006
 - Linking to traces per task dramatically speeds debugging.
 
 - Noise reduction: collapse verbose logs; show only anomalies by default.
-
-
 
 ## Actionable Patterns
 
@@ -54,8 +48,6 @@ Backlog link: B-001, B-006
 
 - Alert banners for breached SLOs; click-through to guidance.
 
-
-
 ## Implementation References
 
 - 400_mission-dashboard-guide.md (UI patterns)
@@ -63,8 +55,6 @@ Backlog link: B-001, B-006
 - dashboard/templates/dashboard.html, static/js/app.js (wire KPIs)
 
 - dspy-rag-system/src/mission_dashboard/ (data feed)
-
-
 
 ## Citations
 

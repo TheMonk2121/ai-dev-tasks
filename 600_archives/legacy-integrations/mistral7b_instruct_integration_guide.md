@@ -11,19 +11,17 @@
 
 Mistral 7B Instruct is a general‑purpose reasoning and planning model with an 8 k token context window. This guide shows how to run Mistral locally as an alternative to Cursor Native AI, expose an OpenAI‑compatible API, and wire it into the broader AI‑Dev‑Tasks workflow.
 
-**🎯 Current System Architecture:**
-- **Cursor Native AI**: Primary foundation for code generation and completion
+- *🎯 Current System Architecture:**-**Cursor Native AI**: Primary foundation for code generation and completion
 - **Specialized Agents**: On-demand enhanced capabilities for specific tasks
 - **Mistral 7B Instruct**: Alternative/legacy option for local model usage
 - **DSPy Router**: Intelligent model selection based on task type
 
-**🎯 Legacy Integration with Our Stack:**
-- **Mistral 7B Instruct**: Planning, analysis, critique, task breakdown
+- *🎯 Legacy Integration with Our Stack:**-**Mistral 7B Instruct**: Planning, analysis, critique, task breakdown
 - **Yi-Coder-9B-Chat-Q6_K**: Code generation and implementation
 - **DSPy Router**: Intelligent model selection based on task type
 - **Cursor IDE**: Direct integration for development workflow
 
----
+- --
 
 ## 2. Prerequisites
 
@@ -31,25 +29,20 @@ Mistral 7B Instruct is a general‑purpose reasoning and planning model with an 
 |-----------|------------------------------|-----------------------|-------|
 | Homebrew  | built‑in                     | —                     | Package manager (macOS) |
 | Git & curl| `brew install git curl`      | `sudo apt install git curl` | CLI utilities |
-| **LM Studio ≥ 0.3.20** | `brew install --cask lm-studio` or download DMG from <https://lmstudio.ai/download> | AppImage on site | Provides GUI + OpenAI API server (stable since 0.3.20) |
-| (the execution engine) huggingface‑hub CLI | `pip install --upgrade huggingface-hub` | same | Scripted model download |
-
-**Hardware Requirements for AI-Dev-Tasks:**
-- Apple Silicon or x64 CPU  
-- **16 GB+ RAM** (32 GB recommended for Q6_K or higher)  
+| **LM Studio ≥ 0.3.20**| `brew install --cask lm-studio` or download DMG from <https://lmstudio.ai/download> | AppImage on site | Provides GUI + OpenAI API server (stable since 0.3.20) |
+| (the execution engine) huggingface‑hub CLI | `pip install --upgrade huggingface-hub` | same | Scripted model download |**Hardware Requirements for AI-Dev-Tasks:**- Apple Silicon or x64 CPU  
+- **16 GB+ RAM**(32 GB recommended for Q6_K or higher)  
 - 6 GB+ free disk for the model file  
 - For GPU offload: Apple Silicon unified memory or CUDA/OpenCL card with ≥ 12 GB VRAM
 - **Unified Memory (Apple M-class)**: Shared RAM for CPU and GPU, impacting VRAM considerations
 
----
+- --
 
 ## 3. Installation Paths
 
 ### Path A – LM Studio GUI (Recommended for AI-Dev-Tasks)
 
-1. **Open LM Studio → Models**  
-2. Search **"Mistral‑7B‑Instruct‑GGUF"**  
-3. Download *Mistral-7B-Instruct-Q6_K.gguf* (≈ 5.8 GB)  
+1. **Open LM Studio → Models**2. Search**"Mistral‑7B‑Instruct‑GGUF"**3. Download*Mistral-7B-Instruct-Q6_K.gguf*(≈ 5.8 GB)  
 4. Wait for checksum to finish
 
 ### Path B – Command‑line download (Offline / Scripted)
@@ -59,20 +52,20 @@ mkdir -p ~/lmstudio/models/mistral-7b-instruct
 cd ~/lmstudio/models/mistral-7b-instruct
 
 huggingface-cli download TheBloke/Mistral-7B-Instruct-v0.2-GGUF mistral-7b-instruct-v0.2.Q6_K.gguf --local-dir . --resume-download
-```
+```bash
 
-After download: **Models → Add local model** and point to the `.gguf` file.
+After download:**Models → Add local model**and point to the `.gguf` file.
 
 ### Path C – Ollama (Headless Alternative)
 
 ```bash
-curl https://ollama.ai/install.sh | sh        # one‑liner installer
+curl <https://ollama.ai/install.sh> | sh        # one‑liner installer
 ollama pull mistral:7b-instruct
-```
+```text
 
-> **Trade‑off**: Ollama is memory‑efficient and auto‑exposes an API, but LM Studio gives finer control over prompt templates and GPU allocation. **For AI-Dev-Tasks, LM Studio is recommended** for better integration with our DSPy router.
+>**Trade‑off**: Ollama is memory‑efficient and auto‑exposes an API, but LM Studio gives finer control over prompt templates and GPU allocation. **For AI-Dev-Tasks, LM Studio is recommended**for better integration with our DSPy router.
 
----
+- --
 
 ## 4. Configure the Model (LM Studio)
 
@@ -102,7 +95,7 @@ LM Studio ships with a built‑in "mistral‑instruct" template. Use it unchange
 {{ m.content | trim }}
 {% endif -%}
 {% endfor %}
-```
+```html
 
 - **Stop Strings**: `[/INST]`, `</s>`  
 - **Default System Prompt**:  
@@ -110,7 +103,7 @@ LM Studio ships with a built‑in "mistral‑instruct" template. Use it unchange
   You are Mistral, a concise, insightful planning assistant for AI-Dev-Tasks. 
   You excel at breaking down complex requirements, analyzing code, and creating actionable plans.
   Output plain text unless code is required.
-  ```
+  ```html
 
 ### 4.3 Inference Tab
 
@@ -125,25 +118,24 @@ LM Studio ships with a built‑in "mistral‑instruct" template. Use it unchange
 
 Click **Save**.
 
----
+- --
 
 ## 5. Start the API Server
 
-1. LM Studio → *Start API Server* (default `http://localhost:1234`)  
+1. LM Studio → *Start API Server*(default `<http://localhost:1234`>)  
 2. Verify:
 
 ```bash
-curl http://localhost:1234/v1/models
-```
+curl <http://localhost:1234/v1/models>
+```text
 
 You should see `"mistral-7b-instruct"` in the JSON list.
 
----
+- --
 
 ## 6. Wire into Cursor IDE
 
-1. Cursor → **Settings → Experimental → Local Models**  
-   (or edit `~/.cursor/config.json`)
+1. Cursor →**Settings → Experimental → Local Models**(or edit `~/.cursor/config.json`)
 
 ```jsonc
 {
@@ -151,25 +143,21 @@ You should see `"mistral-7b-instruct"` in the JSON list.
     {
       "title": "Mistral 7B Local",
       "model": "mistral-7b-instruct",
-      "baseURL": "http://localhost:1234/v1",
+      "baseURL": "<http://localhost:1234/v1",>
       "apiKey": ""
     }
   ],
   "defaultModel": "cursor-native-ai"
 }
-```
+```markdown
 
-2. Restart Cursor → select **Mistral 7B Local** in Chat.
-
-**Smoke test**
-
-```text
+2. Restart Cursor → select**Mistral 7B Local**in Chat.**Smoke test**```text
 User: Summarize the SOLID principles in 100 words.
-```
+```text
 
 You should receive a concise, bullet‑free summary.
 
----
+- --
 
 ## 7. AI-Dev-Tasks Workflow Integration
 
@@ -190,7 +178,7 @@ Add to your shell profile (`~/.zshrc`, `~/.bashrc`):
 
 ```bash
 # LM Studio
-export LM_STUDIO_URL=http://localhost:1234
+export LM_STUDIO_URL=<http://localhost:1234>
 export MISTRAL_MODEL=mistral-7b-instruct
 
 # Yi‑Coder for codegen
@@ -199,7 +187,7 @@ export YI_CODER_MODEL=Yi-Coder-9B-Chat-Q6_K
 # AI-Dev-Tasks Configuration
 export AI_DEV_TASKS_MODEL_ROUTER=true
 export AI_DEV_TASKS_FAST_PATH_BYPASS=true
-```
+```text
 
 ### 7.3 DSPy Router Integration
 
@@ -215,9 +203,9 @@ if is_planning_task(query):
     return mistral_client.chat(query)
 elif is_coding_task(query):
     return yi_coder_client.chat(query)
-```
+```text
 
----
+- --
 
 ## 8. Usage Patterns for AI-Dev-Tasks
 
@@ -227,7 +215,7 @@ elif is_coding_task(query):
 [INST] Analyze this PRD for completeness and identify missing requirements:
 [PRD content here]
 [/INST]
-```
+```text
 
 ### 8.2 Task Breakdown
 
@@ -235,7 +223,7 @@ elif is_coding_task(query):
 [INST] Break down this feature into 3-5 implementable tasks:
 [Feature description here]
 [/INST]
-```
+```text
 
 ### 8.3 Code Review
 
@@ -250,7 +238,7 @@ Paste code or a PR diff:
 
 [Code here]
 [/INST]
-```
+```text
 
 ### 8.4 Error Analysis
 
@@ -258,9 +246,9 @@ Paste code or a PR diff:
 [INST] Analyze this error and suggest a fix:
 [Error message and stack trace]
 [/INST]
-```
+```bash
 
----
+- --
 
 ## 9. Troubleshooting
 
@@ -272,7 +260,7 @@ Paste code or a PR diff:
 | Slow first token | Raise evaluation batch or GPU offload | Consider fast-path bypass for simple queries |
 | Connection refused | Verify LM Studio API running and port open | Check if other models (Yi-Coder) are also affected |
 
----
+- --
 
 ## 10. Performance Monitoring
 
@@ -300,9 +288,9 @@ def monitor_model_performance(model_name, start_time):
     # Log to our structured logging system
     logger.info(f"Model {model_name} response time: {response_time:.2f}s")
     logger.info(f"Memory usage: {memory_usage}%")
-```
+```bash
 
----
+- --
 
 ## 11. Future Enhancements
 
@@ -319,7 +307,7 @@ def monitor_model_performance(model_name, start_time):
 - **v0.4.0**: Advanced model selection based on task complexity
 - **v0.5.0**: Multi-model conversation chains
 
----
+- --
 
 ## 12. Best Practices
 
@@ -337,7 +325,7 @@ def monitor_model_performance(model_name, start_time):
 3. **Structured logging**: All model interactions are logged with context
 4. **Error handling**: Use our retry wrapper for API calls
 
----
+- --
 
 ## 13. Quick Reference
 
@@ -350,12 +338,12 @@ brew install --cask lm-studio
 # 2. Download model (CLI)
 huggingface-cli download TheBloke/Mistral-7B-Instruct-v0.2-GGUF \
     mistral-7b-instruct-v0.2.Q6_K.gguf \
-    --local-dir ~/lmstudio/models/mistral-7b-instruct
+    - -local-dir ~/lmstudio/models/mistral-7b-instruct
 
 # 3. LM Studio → Add local model → Save settings
 # 4. Start API server on port 1234
 # 5. Cursor config as shown above
-```
+```javascript
 
 ### 13.2 Config Files
 
@@ -368,7 +356,7 @@ huggingface-cli download TheBloke/Mistral-7B-Instruct-v0.2-GGUF \
 
 ```bash
 # Required for AI-Dev-Tasks
-export LM_STUDIO_URL=http://localhost:1234
+export LM_STUDIO_URL=<http://localhost:1234>
 export MISTRAL_MODEL=mistral-7b-instruct
 export YI_CODER_MODEL=Yi-Coder-9B-Chat-Q6_K
 
@@ -377,7 +365,7 @@ export AI_DEV_TASKS_MODEL_ROUTER=true
 export AI_DEV_TASKS_FAST_PATH_BYPASS=true
 ```
 
----
+- --
 
 ## 14. Integration with Our Backlog
 
@@ -388,17 +376,15 @@ This guide supports several backlog items:
 - **B-015**: Learning Systems & Continuous Improvement
 - **B-017**: Advanced DSPy Features
 
----
+- --
 
 ### Why these choices?
 
-- **Q6_K quantization** balances speed with accuracy; Q4 economies if RAM‑bound.  
-- **Temperature 0.6** keeps answers creative enough for planning tasks; drop to 0.35 if you need deterministic phrasing.  
-- **8192 context** because most production prompt chains fit; long‑context variants aren't yet stable.  
-- **Separate planning vs. coding models** follows the "single responsibility" principle and lessons from paired‑LM papers.  
-- **Integration with AI-Dev-Tasks** ensures consistent workflow and monitoring across all models.
+- **Q6_K quantization**balances speed with accuracy; Q4 economies if RAM‑bound.  
+- **Temperature 0.6**keeps answers creative enough for planning tasks; drop to 0.35 if you need deterministic phrasing.  
+- **8192 context**because most production prompt chains fit; long‑context variants aren't yet stable.  
+- **Separate planning vs. coding models**follows the "single responsibility" principle and lessons from paired‑LM papers.  
+- **Integration with AI-Dev-Tasks**ensures consistent workflow and monitoring across all models.
 
----
-
-*Last Updated: 2024-08-05 23:59*
-*Integration Status: Ready for v0.3.1 deployment* 
+- --*Last Updated: 2024-08-05 23:59*
+- Integration Status: Ready for v0.3.1 deployment* 

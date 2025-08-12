@@ -3,11 +3,13 @@
 <!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
 <!-- MEMORY_CONTEXT: HIGH - Security practices and threat mitigation -->
+# 🔒 Security Best Practices Guide
+
 
 ## 🔒 Security Best Practices Guide
 
 <!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -23,9 +25,7 @@
 
 - **anchors**: `security architecture`, `access control`, `data protection`, `network security`, `ai model security`, `incident response`, `security checklist`
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Security practices maintained
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Security practices maintained
 
 - **Priority**: 🔥 Critical - System security and threat mitigation
 
@@ -35,10 +35,7 @@
 
 - **Next Steps**: Update security practices as threats evolve
 
-
-#### **3. AI-Specific Threats**
-
-- **Prompt Injection**: Manipulating AI models to bypass security controls
+#### **3. AI-Specific Threats**-**Prompt Injection**: Manipulating AI models to bypass security controls
 
 - **Model Poisoning**: Corrupting training data or model weights
 
@@ -46,9 +43,7 @@
 
 - **Privacy Violations**: AI models revealing sensitive information from training data
 
-### **Risk Assessment Matrix**
-
-| Threat | Likelihood | Impact | Risk Level | Mitigation |
+### **Risk Assessment Matrix**| Threat | Likelihood | Impact | Risk Level | Mitigation |
 |--------|------------|--------|------------|------------|
 | Prompt Injection | High | High | 🔴 Critical | Input validation, prompt sanitization |
 | Data Exfiltration | Medium | High | 🟡 High | Access controls, encryption |
@@ -56,13 +51,11 @@
 | Configuration Errors | High | Medium | 🟡 High | Automated validation, testing |
 | Accidental Data Exposure | High | High | 🔴 Critical | Pre-commit hooks, scanning |
 
----
+- --
 
 ## 🏗️ Security Architecture
 
-### **Defense in Depth Strategy**
-
-```text
+### **Defense in Depth Strategy**```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Security Layers                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -74,137 +67,103 @@
 │ 6. Monitoring & Response (Logs, Alerts, IR)              │
 └─────────────────────────────────────────────────────────────┘
 
-```
+```text
 
-### **Security Components**
-
-#### **1. Input Validation System**
-
-- **Location**: `dspy-rag-system/src/utils/prompt_sanitizer.py`
+### **Security Components**####**1. Input Validation System**-**Location**: `dspy-rag-system/src/utils/prompt_sanitizer.py`
 
 - **Purpose**: Sanitize all AI prompts and user inputs
 
 - **Features**: Regex patterns, whitelist logic, security validation
 
-#### **2. Access Control System**
-
-- **Location**: `dspy-rag-system/src/utils/security.py`
+#### **2. Access Control System**-**Location**: `dspy-rag-system/src/utils/security.py`
 
 - **Purpose**: Manage user permissions and authentication
 
 - **Features**: Role-based access, session management
 
-#### **3. Secrets Management**
-
-- **Location**: `dspy-rag-system/src/utils/secrets_manager.py`
+#### **3. Secrets Management**-**Location**: `dspy-rag-system/src/utils/secrets_manager.py`
 
 - **Purpose**: Secure credential storage and retrieval
 
 - **Features**: Environment validation, keyring integration
 
-#### **4. Monitoring & Alerting**
-
-- **Location**: `dspy-rag-system/src/monitoring/`
+#### **4. Monitoring & Alerting**-**Location**: `dspy-rag-system/src/monitoring/`
 
 - **Purpose**: Real-time security monitoring and incident detection
 
 - **Features**: Health checks, metrics collection, alert callbacks
 
----
+- --
 
 ## 🔐 Access Control
 
-### **Authentication Methods**
-
-#### **1. Local Development Authentication**
-
-```python
+### **Authentication Methods**####**1. Local Development Authentication**```python
 
 # Environment-based authentication
 
 SECURITY_AUTH_METHOD = "environment"
 SECURITY_REQUIRED_VARS = ["N8N_API_KEY", "POSTGRES_DSN"]
 
-```
+```text
 
-#### **2. API Authentication**
-
-```python
+#### **2. API Authentication**```python
 
 # API key validation
 
 def validate_api_key(api_key: str) -> bool:
     return api_key in SECURITY_ALLOWED_KEYS
 
-```
+```text
 
-#### **3. Database Access Control**
-
-```sql
--- Role-based database access
+#### **3. Database Access Control**```sql
+- - Role-based database access
 CREATE ROLE ai_developer WITH LOGIN PASSWORD 'secure_password';
 GRANT SELECT, INSERT, UPDATE ON episodic_logs TO ai_developer;
 GRANT USAGE ON SCHEMA public TO ai_developer;
 
-```
+```bash
 
-### **Permission Levels**
-
-| Role | Permissions | Access Level |
+### **Permission Levels**| Role | Permissions | Access Level |
 |------|-------------|--------------|
-| **Admin** | Full system access | All components |
-| **Developer** | Code and data access | Development environment |
-| **AI Agent** | Limited API access | Specific endpoints |
-| **Monitor** | Read-only access | Logs and metrics |
+|**Admin**| Full system access | All components |
+|**Developer**| Code and data access | Development environment |
+|**AI Agent**| Limited API access | Specific endpoints |
+|**Monitor**| Read-only access | Logs and metrics |
 
----
+- --
 
 ## 🛡️ Data Protection
 
-### **Encryption Standards**
-
-#### **1. Data at Rest**
-
-- **Database**: PostgreSQL with encrypted connections
+### **Encryption Standards**####**1. Data at Rest**-**Database**: PostgreSQL with encrypted connections
 
 - **Files**: Sensitive files encrypted with AES-256
 
 - **Secrets**: Keyring integration for secure storage
 
-#### **2. Data in Transit**
-
-- **HTTPS**: All web communications encrypted
+#### **2. Data in Transit**-**HTTPS**: All web communications encrypted
 
 - **API**: TLS 1.3 for all API communications
 
 - **Database**: SSL/TLS for database connections
 
-#### **3. AI Model Data**
-
-- **Input Sanitization**: All prompts validated and sanitized
+#### **3. AI Model Data**-**Input Sanitization**: All prompts validated and sanitized
 
 - **Output Filtering**: AI responses filtered for sensitive data
 
 - **Cache Security**: Vector cache encrypted and access-controlled
 
-### **Data Classification**
-
-| Classification | Examples | Protection Level |
+### **Data Classification**| Classification | Examples | Protection Level |
 |----------------|----------|------------------|
-| **Public** | Documentation, guides | Basic access control |
-| **Internal** | Development notes, configs | Role-based access |
-| **Confidential** | API keys, passwords | Encryption required |
-| **Restricted** | User data, model outputs | Strict access controls |
+|**Public**| Documentation, guides | Basic access control |
+|**Internal**| Development notes, configs | Role-based access |
+|**Confidential**| API keys, passwords | Encryption required |
+|**Restricted**| User data, model outputs | Strict access controls |
 
----
+- --
 
 ## 🌐 Network Security
 
-### **Local Development Security**
-
-#### **1. Firewall Configuration**
-
-```bash
+### **Local Development Security**####**1. Firewall Configuration**```bash
 
 # Allow only necessary ports
 
@@ -216,35 +175,27 @@ sudo ufw allow 5000/tcp  # Flask dashboard
 
 sudo ufw enable
 
-```
+```text
 
-#### **2. VPN Requirements**
-
-- **Development**: VPN required for external API access
+#### **2. VPN Requirements**-**Development**: VPN required for external API access
 
 - **Production**: All external communications through VPN
 
 - **Monitoring**: VPN logs monitored for suspicious activity
 
-#### **3. Network Segmentation**
-
-```text
+#### **3. Network Segmentation**```text
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Development   │    │   AI Models     │    │   Database      │
 │   Environment   │◄──►│   (Local/API)   │◄──►│   (PostgreSQL)  │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 
-```
+```text
 
----
+- --
 
 ## 🤖 AI Model Security
 
-### **Prompt Security**
-
-#### **1. Input Validation**
-
-```python
+### **Prompt Security**####**1. Input Validation**```python
 
 # From prompt_sanitizer.py
 
@@ -262,7 +213,7 @@ def sanitize_prompt(prompt: str) -> str:
 
     return prompt.strip()
 
-```
+```text
 
 #### **2. Output Filtering**
 
@@ -285,11 +236,9 @@ def filter_ai_output(output: str) -> str:
 
     return output
 
-```
+```text
 
-#### **3. Model Access Control**
-
-```python
+#### **3. Model Access Control**```python
 
 # Model-specific security
 
@@ -306,26 +255,20 @@ MODEL_SECURITY_CONFIG = {
     }
 }
 
-```
+```yaml
 
-### **AI Model Threats & Mitigations**
-
-| Threat | Description | Mitigation |
+### **AI Model Threats & Mitigations**| Threat | Description | Mitigation |
 |--------|-------------|------------|
-| **Prompt Injection** | Malicious prompts to bypass controls | Input sanitization, output filtering |
-| **Data Leakage** | AI revealing sensitive training data | Output filtering, access controls |
-| **Model Poisoning** | Corrupting model with malicious data | Training data validation |
-| **Resource Abuse** | Excessive API calls or token usage | Rate limiting, usage monitoring |
+|**Prompt Injection**| Malicious prompts to bypass controls | Input sanitization, output filtering |
+|**Data Leakage**| AI revealing sensitive training data | Output filtering, access controls |
+|**Model Poisoning**| Corrupting model with malicious data | Training data validation |
+|**Resource Abuse**| Excessive API calls or token usage | Rate limiting, usage monitoring |
 
----
+- --
 
 ## 🚨 Incident Response
 
-### **Incident Classification**
-
-#### **1. Critical Incidents (Response: < 1 hour)**
-
-- Data breach or unauthorized access
+### **Incident Classification**####**1. Critical Incidents (Response: < 1 hour)**- Data breach or unauthorized access
 
 - System compromise or malware detection
 
@@ -333,9 +276,7 @@ MODEL_SECURITY_CONFIG = {
 
 - Network intrusion attempts
 
-#### **2. High Priority (Response: < 4 hours)**
-
-- Failed authentication attempts
+#### **2. High Priority (Response: < 4 hours)**- Failed authentication attempts
 
 - Unusual system behavior
 
@@ -343,19 +284,13 @@ MODEL_SECURITY_CONFIG = {
 
 - Configuration errors
 
-#### **3. Medium Priority (Response: < 24 hours)**
-
-- Minor security alerts
+#### **3. Medium Priority (Response: < 24 hours)**- Minor security alerts
 
 - Performance issues
 
 - Documentation updates needed
 
-### **Response Procedures**
-
-#### **1. Detection & Alerting**
-
-```python
+### **Response Procedures**####**1. Detection & Alerting**```python
 
 # Security monitoring setup
 
@@ -373,15 +308,13 @@ def security_alert(incident_type: str, details: dict):
 
     trigger_incident_response(incident_type)
 
-```
+```text
 
-#### **2. Containment Procedures**
-
-```bash
+#### **2. Containment Procedures**```bash
 
 # Emergency containment script
 
-#!/bin/bash
+# !/bin/bash
 
 # emergency_containment.sh
 
@@ -391,11 +324,9 @@ echo "2. Blocking suspicious IP addresses..."
 echo "3. Disabling compromised accounts..."
 echo "4. Initiating backup procedures..."
 
-```
+```text
 
-#### **3. Recovery Procedures**
-
-```python
+#### **3. Recovery Procedures**```python
 
 # Recovery automation
 
@@ -409,26 +340,20 @@ def initiate_recovery(incident_type: str):
         restore_clean_environment()
         validate_system_integrity()
 
-```
+```text
 
-### **Incident Response Team**
-
-| Role | Responsibilities | Contact |
+### **Incident Response Team**| Role | Responsibilities | Contact |
 |------|------------------|---------|
-| **Incident Commander** | Overall response coordination | Primary developer |
-| **Technical Lead** | Technical investigation and remediation | AI system expert |
-| **Communications** | Stakeholder updates and documentation | Documentation lead |
-| **Legal/Compliance** | Regulatory requirements and reporting | External consultant |
+|**Incident Commander**| Overall response coordination | Primary developer |
+|**Technical Lead**| Technical investigation and remediation | AI system expert |
+|**Communications**| Stakeholder updates and documentation | Documentation lead |
+|**Legal/Compliance**| Regulatory requirements and reporting | External consultant |
 
----
+- --
 
 ## 📊 Security Monitoring
 
-### **Monitoring Components**
-
-#### **1. Real-time Monitoring**
-
-```python
+### **Monitoring Components**####**1. Real-time Monitoring**```python
 
 # Security monitoring setup
 
@@ -444,11 +369,9 @@ SECURITY_MONITORING_CONFIG = {
 
 }
 
-```
+```bash
 
-#### **2. Security Metrics**
-
-- **Authentication Failures**: Track failed login attempts
+#### **2. Security Metrics**-**Authentication Failures**: Track failed login attempts
 
 - **API Usage Patterns**: Monitor for unusual API calls
 
@@ -456,9 +379,7 @@ SECURITY_MONITORING_CONFIG = {
 
 - **Data Access Patterns**: Track database access patterns
 
-#### **3. Alert Channels**
-
-```python
+#### **3. Alert Channels**```python
 
 # Alert configuration
 
@@ -469,13 +390,9 @@ ALERT_CHANNELS = {
     "low": ["logs"]
 }
 
-```
-
-### **Security Dashboard**
-
-#### **1. Real-time Security Status**
-
 ```text
+
+### **Security Dashboard**####**1. Real-time Security Status**```text
 🔒 Security Dashboard
 ├── 🟢 System Status: Secure
 ├── 🟡 Active Alerts: 2
@@ -484,25 +401,11 @@ ALERT_CHANNELS = {
 
 ```
 
-#### **2. Security Metrics**
-
-- **Vulnerability Scan Results**
-
-- **Access Control Status**
-
-- **Encryption Status**
-
-- **Backup Status**
-
----
+#### **2. Security Metrics**-**Vulnerability Scan Results**-**Access Control Status**-**Encryption Status**-**Backup Status**---
 
 ## 📋 Compliance & Standards
 
-### **Security Standards**
-
-#### **1. OWASP Top 10 Compliance**
-
-- **A01:2021 - Broken Access Control**: Implemented role-based access
+### **Security Standards**####**1. OWASP Top 10 Compliance**-**A01:2021 - Broken Access Control**: Implemented role-based access
 
 - **A02:2021 - Cryptographic Failures**: TLS 1.3, AES-256 encryption
 
@@ -512,9 +415,7 @@ ALERT_CHANNELS = {
 
 - **A05:2021 - Security Misconfiguration**: Automated configuration validation
 
-#### **2. AI Security Best Practices**
-
-- **Input Validation**: All AI inputs sanitized
+#### **2. AI Security Best Practices**-**Input Validation**: All AI inputs sanitized
 
 - **Output Filtering**: AI outputs filtered for sensitive data
 
@@ -522,9 +423,7 @@ ALERT_CHANNELS = {
 
 - **Monitoring**: AI interactions logged and monitored
 
-#### **3. Data Protection Standards**
-
-- **Encryption**: Data encrypted at rest and in transit
+#### **3. Data Protection Standards**-**Encryption**: Data encrypted at rest and in transit
 
 - **Access Controls**: Principle of least privilege
 
@@ -532,9 +431,7 @@ ALERT_CHANNELS = {
 
 - **Data Classification**: Sensitive data properly classified
 
-### **Compliance Checklist**
-
-- [ ] **Access Controls**: Role-based access implemented
+### **Compliance Checklist**- [ ]**Access Controls**: Role-based access implemented
 
 - [ ] **Encryption**: Data encrypted at rest and in transit
 
@@ -554,13 +451,11 @@ ALERT_CHANNELS = {
 
 - [ ] **Training**: Security awareness training completed
 
----
+- --
 
 ## ✅ Security Checklist
 
-### **Daily Security Tasks**
-
-- [ ] Review security alerts and logs
+### **Daily Security Tasks**- [ ] Review security alerts and logs
 
 - [ ] Check system performance and resource usage
 
@@ -570,9 +465,7 @@ ALERT_CHANNELS = {
 
 - [ ] Review access control logs
 
-### **Weekly Security Tasks**
-
-- [ ] Run vulnerability scans
+### **Weekly Security Tasks**- [ ] Run vulnerability scans
 
 - [ ] Review and update security configurations
 
@@ -582,9 +475,7 @@ ALERT_CHANNELS = {
 
 - [ ] Review AI model security settings
 
-### **Monthly Security Tasks**
-
-- [ ] Conduct security audit
+### **Monthly Security Tasks**- [ ] Conduct security audit
 
 - [ ] Review and update threat model
 
@@ -594,9 +485,7 @@ ALERT_CHANNELS = {
 
 - [ ] Review compliance status
 
-### **Quarterly Security Tasks**
-
-- [ ] Conduct penetration testing
+### **Quarterly Security Tasks**- [ ] Conduct penetration testing
 
 - [ ] Review and update security policies
 
@@ -606,96 +495,76 @@ ALERT_CHANNELS = {
 
 - [ ] Review and update risk assessments
 
----
+- --
 
 ## 🚨 Emergency Procedures
 
-### **Immediate Response (0-15 minutes)**
+### **Immediate Response (0-15 minutes)**1.**Assess the situation**- Determine incident type and severity
+2.**Contain the threat**- Isolate affected systems
+3.**Alert stakeholders**- Notify incident response team
+4.**Document everything**- Begin incident documentation
 
-1. **Assess the situation** - Determine incident type and severity
-2. **Contain the threat** - Isolate affected systems
-3. **Alert stakeholders** - Notify incident response team
-4. **Document everything** - Begin incident documentation
+### **Short-term Response (15 minutes - 4 hours)**1.**Investigate root cause**- Determine how the incident occurred
+2.**Implement fixes**- Apply security patches or configuration changes
+3.**Monitor systems**- Watch for additional threats
+4.**Communicate status**- Update stakeholders on progress
 
-### **Short-term Response (15 minutes - 4 hours)**
+### **Long-term Response (4 hours - 1 week)**1.**Complete investigation**- Full technical and forensic analysis
+2.**Implement permanent fixes**- Address root causes
+3.**Update procedures**- Improve security based on lessons learned
+4.**Document lessons learned**- Update security documentation
 
-1. **Investigate root cause** - Determine how the incident occurred
-2. **Implement fixes** - Apply security patches or configuration changes
-3. **Monitor systems** - Watch for additional threats
-4. **Communicate status** - Update stakeholders on progress
+### **Recovery Procedures**1.**System restoration**- Restore systems from clean backups
+2.**Security validation**- Verify systems are secure
+3.**Monitoring enhancement**- Improve monitoring based on incident
+4.**Training updates**- Update security training materials
 
-### **Long-term Response (4 hours - 1 week)**
-
-1. **Complete investigation** - Full technical and forensic analysis
-2. **Implement permanent fixes** - Address root causes
-3. **Update procedures** - Improve security based on lessons learned
-4. **Document lessons learned** - Update security documentation
-
-### **Recovery Procedures**
-
-1. **System restoration** - Restore systems from clean backups
-2. **Security validation** - Verify systems are secure
-3. **Monitoring enhancement** - Improve monitoring based on incident
-4. **Training updates** - Update security training materials
-
----
+- --
 
 ## 📞 Emergency Contacts
 
-### **Primary Contacts**
-
-- **Security Lead**: Primary developer (24/7)
+### **Primary Contacts**-**Security Lead**: Primary developer (24/7)
 
 - **Technical Lead**: AI system expert
 
 - **Management**: Project stakeholder
 
-### **External Contacts**
-
-- **Cybersecurity Consultant**: External security expert
+### **External Contacts**-**Cybersecurity Consultant**: External security expert
 
 - **Legal Counsel**: For compliance and legal issues
 
 - **Insurance Provider**: For incident reporting
 
-### **Emergency Numbers**
-
-- **Security Hotline**: [Internal number]
+### **Emergency Numbers**-**Security Hotline**: [Internal number]
 
 - **IT Support**: [Internal number]
 
 - **External Security**: [External number]
 
----
+- --
 
 ## 📚 Additional Resources
 
-### **Security Documentation**
+### **Security Documentation**-**OWASP Top 10**: <https://owasp.org/Top10/>
 
-- **OWASP Top 10**: https://owasp.org/Top10/
+- **AI Security Guidelines**: <https://ai.gov/security/>
 
-- **AI Security Guidelines**: https://ai.gov/security/
+- **NIST Cybersecurity Framework**: <https://www.nist.gov/cyberframework>
 
-- **NIST Cybersecurity Framework**: https://www.nist.gov/cyberframework
-
-### **Tools and Scripts**
-
-- **Security Scanner**: `scripts/security_scan.py`
+### **Tools and Scripts**-**Security Scanner**: `scripts/security_scan.py`
 
 - **Vulnerability Checker**: `scripts/vulnerability_check.py`
 
 - **Incident Response**: `scripts/incident_response.py`
 
-### **Training Resources**
-
-- **Security Awareness Training**: Quarterly sessions
+### **Training Resources**-**Security Awareness Training**: Quarterly sessions
 
 - **Incident Response Drills**: Monthly exercises
 
 - **AI Security Training**: Specialized training for AI systems
 
----
+- --
 
-*Last Updated: 2024-08-07*
-*Next Review: Monthly*
-*Security Level: Confidential*
+- Last Updated: 2024-08-07*
+- Next Review: Monthly*
+- Security Level: Confidential*

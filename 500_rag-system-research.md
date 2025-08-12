@@ -1,10 +1,12 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - RAG system research and implementation patterns -->
+# 🔍 RAG System Research
+
 
 ## 🔍 RAG System Research
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -18,12 +20,9 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
 Backlog link: B-045, B-077
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Research file with comprehensive content
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with comprehensive content
 
 - **Priority**: 🔥 High - Critical for RAG implementation
 
@@ -32,7 +31,6 @@ Backlog link: B-045, B-077
 - **Dependencies**: 400_context-priority-guide.md, 400_performance-optimization-guide.md
 
 - **Next Steps**: Implement RAG patterns and optimizations
-
 
 ## Key Findings
 
@@ -50,10 +48,10 @@ Backlog link: B-045, B-077
 
 ### **3. Multi-Stage Retrieval**
 
-**Source**: "Searching for Best Practices in RAG" (ACL 2024)
-**Key Insight**: For tough queries, iterative retrieval can help.
+- *Source**: "Searching for Best Practices in RAG" (ACL 2024)
+- *Key Insight**: For tough queries, iterative retrieval can help.
 
-**Implementation Impact**:
+- *Implementation Impact**:
 
 - **Query Decomposition**: Break complex questions into sub-questions
 
@@ -63,7 +61,7 @@ Backlog link: B-045, B-077
 
 - **Iterative Refinement**: Allow agents to refine queries based on initial results
 
-**Our Application**:
+- *Our Application**:
 
 - Implement query decomposition for complex questions
 
@@ -75,10 +73,10 @@ Backlog link: B-045, B-077
 
 ### **4. Span-Level Grounding**
 
-**Source**: LangExtract Documentation (2025), Microsoft GraphRAG (2024)
-**Key Insight**: Every extracted piece of information should be grounded to its source text.
+- *Source**: LangExtract Documentation (2025), Microsoft GraphRAG (2024)
+- *Key Insight**: Every extracted piece of information should be grounded to its source text.
 
-**Implementation Impact**:
+- *Implementation Impact**:
 
 - **Precise Citations**: Store character offsets for exact source attribution
 
@@ -88,7 +86,7 @@ Backlog link: B-045, B-077
 
 - **Hallucination Prevention**: Tether facts to real text to prevent errors
 
-**Our Application**:
+- *Our Application**:
 
 - Store document offsets in vector metadata
 
@@ -100,10 +98,10 @@ Backlog link: B-045, B-077
 
 ### **5. Advanced RAG Architectures**
 
-**Source**: Microsoft GraphRAG (2024), KAG: Knowledge-Augmented Generation (2024)
-**Key Insight**: Knowledge graphs can augment traditional RAG for complex reasoning.
+- *Source**: Microsoft GraphRAG (2024), KAG: Knowledge-Augmented Generation (2024)
+- *Key Insight**: Knowledge graphs can augment traditional RAG for complex reasoning.
 
-**Implementation Impact**:
+- *Implementation Impact**:
 
 - **GraphRAG**: Use LLMs to build knowledge graphs from document corpus
 
@@ -113,7 +111,7 @@ Backlog link: B-045, B-077
 
 - **Complex Queries**: Handle queries requiring connecting disparate facts
 
-**Our Application**:
+- *Our Application**:
 
 - Use cross-references as graph edges in our documentation
 
@@ -123,21 +121,15 @@ Backlog link: B-045, B-077
 
 - Integrate structured extraction with RAG
 
-## 🔗 **Implementation Integration**
+## 🔗 **Implementation Integration**###**Current RAG Implementation**-**`dspy-rag-system/`**- Current RAG system implementation
 
-### **Current RAG Implementation**
+- **PostgreSQL + PGVector**- Vector database foundation
 
-- **`dspy-rag-system/`** - Current RAG system implementation
+- **Basic Retrieval**- Simple vector similarity search
 
-- **PostgreSQL + PGVector** - Vector database foundation
+- **Document Processing**- Basic chunking and indexing
 
-- **Basic Retrieval** - Simple vector similarity search
-
-- **Document Processing** - Basic chunking and indexing
-
-### **Related Backlog Items**
-
-- **B-045**: RAG Schema Patch (Span*, Validated_flag, Raw_score)
+### **Related Backlog Items**-**B-045**: RAG Schema Patch (Span*, Validated_flag, Raw_score)
 
 - **B-046**: 4-way Cost/Latency Benchmark
 
@@ -147,11 +139,7 @@ Backlog link: B-045, B-077
 
 - **B-044**: n8n LangExtract Service (Automated extraction)
 
-## 📊 **Research Sources**
-
-### **Academic Papers**
-
-- **`docs/research/papers/rag-papers.md`** - Academic research on RAG
+## 📊 **Research Sources**###**Academic Papers**-**`docs/research/papers/rag-papers.md`**- Academic research on RAG
 
 - **"Searching for Best Practices in RAG" (ACL 2024)**: Comprehensive RAG workflow evaluation
 
@@ -159,9 +147,7 @@ Backlog link: B-045, B-077
 
 - **KAG: Knowledge-Augmented Generation (2024)**: Advanced knowledge integration
 
-### **Industry Articles**
-
-- **`docs/research/articles/rag-articles.md`** - Industry best practices
+### **Industry Articles**-**`docs/research/articles/rag-articles.md`**- Industry best practices
 
 - **RAGFlow Blog (2024)**: "Rise of RAG in 2024" industry review
 
@@ -169,9 +155,7 @@ Backlog link: B-045, B-077
 
 - **LangExtract Documentation (2025)**: Span-level grounding techniques
 
-### **Implementation Tutorials**
-
-- **`docs/research/tutorials/rag-tutorials.md`** - Implementation guides
+### **Implementation Tutorials**-**`docs/research/tutorials/rag-tutorials.md`**- Implementation guides
 
 - **Hybrid Search Implementation**: Combining dense and sparse retrieval
 
@@ -179,13 +163,7 @@ Backlog link: B-045, B-077
 
 - **Span-level Grounding**: Character offset tracking and citation
 
-## 🚀 **Implementation Recommendations**
-
-### **Immediate Actions (Next 2-4 weeks)**
-
-#### **1. Implement Hybrid Search**
-
-- [ ] **Add PostgreSQL Full-Text Search**: Implement BM25 alongside PGVector
+## 🚀 **Implementation Recommendations**###**Immediate Actions (Next 2-4 weeks)**####**1. Implement Hybrid Search**- [ ]**Add PostgreSQL Full-Text Search**: Implement BM25 alongside PGVector
 
 - [ ] **Result Merging**: Create intelligent merging of dense and sparse results
 
@@ -193,9 +171,7 @@ Backlog link: B-045, B-077
 
 - [ ] **Performance Optimization**: Ensure hybrid search doesn't impact latency
 
-#### **2. Enhance Chunking Strategy**
-
-- [ ] **Semantic Chunking**: Use prefix boundaries as chunk units
+#### **2. Enhance Chunking Strategy**- [ ]**Semantic Chunking**: Use prefix boundaries as chunk units
 
 - [ ] **Sliding Windows**: Implement overlapping chunks for large documents
 
@@ -203,9 +179,7 @@ Backlog link: B-045, B-077
 
 - [ ] **Chunk Validation**: Ensure chunks maintain semantic coherence
 
-#### **3. Add Span-Level Grounding**
-
-- [ ] **Offset Tracking**: Store character offsets in vector metadata
+#### **3. Add Span-Level Grounding**- [ ]**Offset Tracking**: Store character offsets in vector metadata
 
 - [ ] **Citation System**: Implement precise source attribution
 
@@ -213,11 +187,7 @@ Backlog link: B-045, B-077
 
 - [ ] **Citation Format**: Standardize citation format for answers
 
-### **Medium-term Enhancements (Next 1-2 months)**
-
-#### **4. Multi-Stage Retrieval**
-
-- [ ] **Query Decomposition**: Implement complex query breakdown
+### **Medium-term Enhancements (Next 1-2 months)**####**4. Multi-Stage Retrieval**- [ ]**Query Decomposition**: Implement complex query breakdown
 
 - [ ] **Pseudo-relevance Feedback**: Add query expansion capabilities
 
@@ -225,9 +195,7 @@ Backlog link: B-045, B-077
 
 - [ ] **Iterative Refinement**: Allow query refinement based on results
 
-#### **5. Knowledge Graph Integration**
-
-- [ ] **Graph Construction**: Use cross-references as graph edges
+#### **5. Knowledge Graph Integration**- [ ]**Graph Construction**: Use cross-references as graph edges
 
 - [ ] **Graph Traversal**: Implement path finding for complex queries
 
@@ -235,11 +203,7 @@ Backlog link: B-045, B-077
 
 - [ ] **Multi-hop Queries**: Enable queries requiring multiple steps
 
-### **Long-term Strategy (Next 3-6 months)**
-
-#### **6. Advanced Features**
-
-- [ ] **Multi-modal RAG**: Handle images, diagrams, and rich content
+### **Long-term Strategy (Next 3-6 months)**####**6. Advanced Features**- [ ]**Multi-modal RAG**: Handle images, diagrams, and rich content
 
 - [ ] **Real-time Updates**: Enable live document updates and re-indexing
 
@@ -247,11 +211,7 @@ Backlog link: B-045, B-077
 
 - [ ] **Advanced Evaluation**: Implement comprehensive RAG evaluation metrics
 
-## 🎯 **Specific Implementation Patterns**
-
-### **Hybrid Search Implementation**
-
-```python
+## 🎯 **Specific Implementation Patterns**###**Hybrid Search Implementation**```python
 class HybridRetriever:
     def __init__(self, vector_store, text_search):
         self.vector_store = vector_store  # PGVector
@@ -283,11 +243,9 @@ class HybridRetriever:
 
         pass
 
-```
+```text
 
-### **Span-Level Grounding**
-
-```python
+### **Span-Level Grounding**```python
 class SpanTrackedChunk:
     def __init__(self, text, doc_id, start_offset, end_offset):
         self.text = text
@@ -303,11 +261,9 @@ class RAGWithSpans:
         chunks = self.retriever.search(query)
         return [SpanTrackedChunk(c.text, c.doc_id, c.start, c.end) for c in chunks]
 
-```
+```text
 
-### **Multi-Stage Retrieval**
-
-```python
+### **Multi-Stage Retrieval**```python
 class MultiStageRetriever:
     def decompose_query(self, query):
 
@@ -336,66 +292,50 @@ class MultiStageRetriever:
 
 ```
 
-## 📈 **Expected Performance Improvements**
+## 📈**Expected Performance Improvements**###**Retrieval Accuracy**-**10-25% improvement**with hybrid search over pure vector search
 
-### **Retrieval Accuracy**
+- **Better recall**for exact matches and rare terms
 
-- **10-25% improvement** with hybrid search over pure vector search
+- **Improved precision**through intelligent result merging
 
-- **Better recall** for exact matches and rare terms
+- **Enhanced coverage**for complex queries
 
-- **Improved precision** through intelligent result merging
+### **System Performance**-**Faster response times**through optimized chunking
 
-- **Enhanced coverage** for complex queries
+- **Reduced latency**with intelligent caching
 
-### **System Performance**
+- **Better scalability**with efficient indexing
 
-- **Faster response times** through optimized chunking
+- **Cost optimization**through smart retrieval strategies
 
-- **Reduced latency** with intelligent caching
+### **User Experience**-**Precise citations**with span-level grounding
 
-- **Better scalability** with efficient indexing
+- **Transparent answers**with source attribution
 
-- **Cost optimization** through smart retrieval strategies
+- **Confidence indicators**for retrieved information
 
-### **User Experience**
+- **Traceable reasoning**for complex queries
 
-- **Precise citations** with span-level grounding
-
-- **Transparent answers** with source attribution
-
-- **Confidence indicators** for retrieved information
-
-- **Traceable reasoning** for complex queries
-
-## 🔄 **Integration with Current System**
-
-### **RAG System Enhancement**
-
-- **Current**: Basic PGVector implementation in `dspy-rag-system/`
+## 🔄**Integration with Current System**###**RAG System Enhancement**-**Current**: Basic PGVector implementation in `dspy-rag-system/`
 
 - **Enhancement**: Add hybrid search, intelligent chunking, span tracking
 
 - **Integration**: Connect with existing PostgreSQL setup and DSPy modules
 
-### **Documentation Integration**
-
-- **Current**: Three-digit prefix system for organization
+### **Documentation Integration**-**Current**: Three-digit prefix system for organization
 
 - **Enhancement**: Use prefixes as semantic chunk boundaries
 
 - **Integration**: Connect with cognitive scaffolding for context
 
-### **Agent Framework Integration**
-
-- **Current**: Basic retrieval in agents
+### **Agent Framework Integration**-**Current**: Basic retrieval in agents
 
 - **Enhancement**: Multi-stage retrieval and knowledge graph traversal
 
 - **Integration**: Connect with specialized agents for complex reasoning
 
----
+- --
 
-**Last Updated**: 2024-08-07
-**Related Documentation**: `500_research-analysis-summary.md`, `400_system-overview_advanced_features.md`
-**Status**: Research findings ready for implementation
+- *Last Updated**: 2024-08-07
+- *Related Documentation**: `500_research-analysis-summary.md`, `400_system-overview_advanced_features.md`
+- *Status**: Research findings ready for implementation

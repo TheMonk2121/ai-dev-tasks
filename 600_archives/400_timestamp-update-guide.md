@@ -1,4 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+# Benefits
+
 
 > Archived for historical reference. Timestamp guidance now lives in `100_backlog-guide.md` (Timestamp Updates).
 
@@ -14,7 +16,7 @@
 
 - **Context Preservation**: Maintains change history for future reference
 
----
+- --
 
-**Note**: This guide ensures consistent timestamp updates across all backlog modifications, even when working outside
+- *Note**: This guide ensures consistent timestamp updates across all backlog modifications, even when working outside
 the main context window.

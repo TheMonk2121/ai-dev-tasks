@@ -2,10 +2,12 @@
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Metadata collection and analysis -->
+# 📊 Metadata Collection Guide
+
 
 ## 📊 Metadata Collection Guide
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -19,10 +21,7 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Metadata collection system operational
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Metadata collection system operational
 
 - **Priority**: ⚡ High - Data collection and analysis
 
@@ -34,18 +33,18 @@
 
 }
 
-```
+```markdown
 
-**Collection Method**: `scripts/backlog_parser.py` - Robust parser with regex patterns and HTML comment extraction.
+- *Collection Method**: `scripts/backlog_parser.py` - Robust parser with regex patterns and HTML comment extraction.
 
 ### **2. Execution State Database (`task_execution.db`)**
 
-**Primary Data Source**: SQLite database for persistent state tracking and execution history.
+- *Primary Data Source**: SQLite database for persistent state tracking and execution history.
 
-**Database Schema**:
+- *Database Schema**:
 
 ```sql
--- Task execution records
+- - Task execution records
 task_executions:
   task_id TEXT PRIMARY KEY,
   status TEXT NOT NULL,
@@ -59,7 +58,7 @@ task_executions:
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
--- Task metadata storage
+- - Task metadata storage
 task_metadata:
   task_id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
@@ -74,7 +73,7 @@ task_metadata:
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
--- Detailed execution history
+- - Detailed execution history
 execution_history:
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   task_id TEXT NOT NULL,
@@ -84,7 +83,7 @@ execution_history:
   metadata TEXT,
   FOREIGN KEY (task_id) REFERENCES task_executions (task_id)
 
--- Performance metrics
+- - Performance metrics
 performance_metrics:
   task_id TEXT PRIMARY KEY,
   avg_execution_time REAL,
@@ -96,15 +95,15 @@ performance_metrics:
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
-```
+```markdown
 
-**Collection Method**: `scripts/state_manager.py` - Comprehensive state management with automatic metrics calculation.
+- *Collection Method**: `scripts/state_manager.py` - Comprehensive state management with automatic metrics calculation.
 
 ### **3. Error Handling System**
 
-**Primary Data Source**: Error classification, recovery actions, and retry statistics.
+- *Primary Data Source**: Error classification, recovery actions, and retry statistics.
 
-**Error Categories**:
+- *Error Categories**:
 
 ```python
 NETWORK = "network"      # Connection, timeout, HTTP errors
@@ -123,9 +122,9 @@ EXECUTION = "execution"   # Runtime, subprocess errors
 
 UNKNOWN = "unknown"       # Unclassified errors
 
-```
+```markdown
 
-**Error Severity Levels**:
+- *Error Severity Levels**:
 
 ```python
 LOW = "low"           # Minor issues, non-critical
@@ -136,9 +135,9 @@ HIGH = "high"         # Significant issues, high impact
 
 CRITICAL = "critical" # System-breaking issues
 
-```
+```markdown
 
-**Collected Error Metadata**:
+- *Collected Error Metadata**:
 
 - **Error Classification**: Type, severity, category, context
 
@@ -150,15 +149,13 @@ CRITICAL = "critical" # System-breaking issues
 
 - **Error Patterns**: Frequency analysis and trend detection
 
-**Collection Method**: `scripts/error_handler.py` - Advanced error handling with automatic classification and recovery.
+- *Collection Method**: `scripts/error_handler.py` - Advanced error handling with automatic classification and recovery.
 
-## 🎯 **Metadata Usage Patterns**
+## 🎯 **Metadata Usage Patterns**###**1. Intelligent Task Prioritization**
 
-### **1. Intelligent Task Prioritization**
+- *Usage**: Automatically prioritize tasks based on multiple factors.
 
-**Usage**: Automatically prioritize tasks based on multiple factors.
-
-**Implementation**:
+- *Implementation**:
 
 ```python
 
@@ -171,9 +168,9 @@ tasks.sort(key=lambda t: (t.priority.value, t.score_total or 0), reverse=True)
 if not self._check_dependencies(task):
     logger.warning(f"Task {task.id} dependencies not met")
 
-```
+```markdown
 
-**Metadata Factors**:
+- *Metadata Factors**:
 
 - **Priority Level**: 🔥 (Critical), 📈 (High), ⭐ (Medium), 🔧 (Low)
 
@@ -185,9 +182,9 @@ if not self._check_dependencies(task):
 
 ### **2. Performance Optimization**
 
-**Usage**: Track and optimize execution performance based on historical data.
+- *Usage**: Track and optimize execution performance based on historical data.
 
-**Implementation**:
+- *Implementation**:
 
 ```python
 
@@ -201,9 +198,9 @@ success_rate = performance_metrics.get_success_rate(task_id)
 if success_rate < 0.8:
     increase_retry_delay()
 
-```
+```markdown
 
-**Key Metrics**:
+- *Key Metrics**:
 
 - **Average Execution Time**: Historical execution duration
 
@@ -215,9 +212,9 @@ if success_rate < 0.8:
 
 ### **3. Error Recovery & Prevention**
 
-**Usage**: Automatic error classification and recovery procedures.
+- *Usage**: Automatic error classification and recovery procedures.
 
-**Implementation**:
+- *Implementation**:
 
 ```python
 
@@ -230,9 +227,9 @@ severity = error_handler.determine_severity(error, context)
 
 recovery_action = error_handler._get_recovery_action(error_info)
 
-```
+```markdown
 
-**Recovery Actions**:
+- *Recovery Actions**:
 
 - **Network Errors**: Retry with exponential backoff
 
@@ -246,9 +243,9 @@ recovery_action = error_handler._get_recovery_action(error_info)
 
 ### **4. Dependency Management**
 
-**Usage**: Validate and track task dependencies to ensure proper execution order.
+- *Usage**: Validate and track task dependencies to ensure proper execution order.
 
-**Implementation**:
+- *Implementation**:
 
 ```python
 
@@ -258,9 +255,9 @@ missing_deps = engine.validate_dependencies()
 for task_id, deps in missing_deps.items():
     logger.warning(f"Task {task_id} missing dependencies: {deps}")
 
-```
+```markdown
 
-**Dependency Tracking**:
+- *Dependency Tracking**:
 
 - **Prerequisite Tasks**: Tasks that must complete first
 
@@ -272,9 +269,9 @@ for task_id, deps in missing_deps.items():
 
 ### **5. Progress Tracking & Reporting**
 
-**Usage**: Real-time progress monitoring and comprehensive reporting.
+- *Usage**: Real-time progress monitoring and comprehensive reporting.
 
-**Implementation**:
+- *Implementation**:
 
 ```python
 
@@ -285,9 +282,9 @@ print(f"Total tasks: {status['total_tasks']}")
 print(f"Pending tasks: {status['pending_tasks']}")
 print(f"Success rate: {status['success_rate']}%")
 
-```
+```markdown
 
-**Progress Metrics**:
+- *Progress Metrics**:
 
 - **Execution Status**: Running, completed, failed, pending
 
@@ -297,13 +294,11 @@ print(f"Success rate: {status['success_rate']}%")
 
 - **Resource Utilization**: Current system resource usage
 
-## 📈 **Advanced Analytics Capabilities**
+## 📈 **Advanced Analytics Capabilities**###**1. Task Performance Analysis**
 
-### **1. Task Performance Analysis**
+- *Usage**: Generate comprehensive performance reports and identify optimization opportunities.
 
-**Usage**: Generate comprehensive performance reports and identify optimization opportunities.
-
-**Implementation**:
+- *Implementation**:
 
 ```python
 
@@ -314,9 +309,9 @@ print(f"Average execution time: {stats['avg_execution_time']:.2f}s")
 print(f"Overall success rate: {stats['success_rate']:.1f}%")
 print(f"Total retries: {stats['total_retries']}")
 
-```
+```markdown
 
-**Analytics Metrics**:
+- *Analytics Metrics**:
 
 - **Execution Time Analysis**: Average, median, 95th percentile
 
@@ -328,9 +323,9 @@ print(f"Total retries: {stats['total_retries']}")
 
 ### **2. Error Pattern Recognition**
 
-**Usage**: Analyze error trends and implement preventive measures.
+- *Usage**: Analyze error trends and implement preventive measures.
 
-**Implementation**:
+- *Implementation**:
 
 ```python
 
@@ -340,9 +335,9 @@ error_stats = error_handler.get_error_statistics()
 print(f"Most common error category: {max(error_stats['by_category'])}")
 print(f"Recovery success rate: {error_stats['recovery_success_rate']:.1f}%")
 
-```
+```markdown
 
-**Pattern Analysis**:
+- *Pattern Analysis**:
 
 - **Error Frequency**: Most common error types and categories
 
@@ -354,9 +349,9 @@ print(f"Recovery success rate: {error_stats['recovery_success_rate']:.1f}%")
 
 ### **3. Resource Optimization**
 
-**Usage**: Identify performance bottlenecks and optimize resource allocation.
+- *Usage**: Identify performance bottlenecks and optimize resource allocation.
 
-**Implementation**:
+- *Implementation**:
 
 ```python
 
@@ -365,9 +360,9 @@ print(f"Recovery success rate: {error_stats['recovery_success_rate']:.1f}%")
 slow_tasks = [t for t in tasks if t.avg_execution_time > 300]
 high_retry_tasks = [t for t in tasks if t.retry_count > 3]
 
-```
+```markdown
 
-**Optimization Metrics**:
+- *Optimization Metrics**:
 
 - **Slow Task Identification**: Tasks exceeding performance thresholds
 
@@ -379,9 +374,9 @@ high_retry_tasks = [t for t in tasks if t.retry_count > 3]
 
 ### **4. Predictive Analytics**
 
-**Usage**: Predict task success and execution time based on historical data.
+- *Usage**: Predict task success and execution time based on historical data.
 
-**Implementation**:
+- *Implementation**:
 
 ```python
 
@@ -393,9 +388,9 @@ def predict_success(task_id):
     avg_time = calculate_avg_time(history)
     return success_rate > 0.8 and avg_time < 600
 
-```
+```markdown
 
-**Prediction Models**:
+- *Prediction Models**:
 
 - **Success Probability**: Likelihood of task completion
 
@@ -405,9 +400,7 @@ def predict_success(task_id):
 
 - **Risk Assessment**: Probability of errors or failures
 
-## 🔄 **Metadata Flow Architecture**
-
-```
+## 🔄 **Metadata Flow Architecture**```
 
 000_backlog.md → BacklogParser → Task Objects
                     ↓
@@ -417,22 +410,18 @@ Execution Engine → ErrorHandler → Recovery Actions
                     ↓
 Performance Metrics → Analytics → Optimization
 
-```
-
-**Data Flow Stages**:
+```markdown**Data Flow Stages**:
 1. **Collection**: Extract metadata from various sources
 2. **Processing**: Parse, validate, and structure data
 3. **Storage**: Persist data in appropriate databases
 4. **Analysis**: Generate insights and patterns
 5. **Optimization**: Apply insights to improve performance
 
-## 🚀 **Real-World Usage Examples**
+## 🚀 **Real-World Usage Examples**###**1. Automated Sprint Planning**
 
-### **1. Automated Sprint Planning**
+- *Command**: `python3 scripts/process_tasks.py auto --max-tasks 5`
 
-**Command**: `python3 scripts/process_tasks.py auto --max-tasks 5`
-
-**Process**:
+- *Process**:
 1. Parse backlog for pending tasks
 2. Sort by priority and score
 3. Validate dependencies
@@ -441,9 +430,9 @@ Performance Metrics → Analytics → Optimization
 
 ### **2. Performance Monitoring**
 
-**Command**: `python3 scripts/process_tasks.py status`
+- *Command**: `python3 scripts/process_tasks.py status`
 
-**Output**:
+- *Output**:
 
 ```
 
@@ -460,13 +449,13 @@ Recent executions:
   B-049: completed (2024-08-07T17:00:00)
   B-072: completed (2024-08-07T16:15:00)
 
-```
+```yaml
 
 ### **3. Error Analysis**
 
-**Command**: `python3 scripts/error_handler.py --export-report error_analysis.json`
+- *Command**: `python3 scripts/error_handler.py --export-report error_analysis.json`
 
-**Report Contents**:
+- *Report Contents**:
 
 - Error frequency by category
 
@@ -480,15 +469,15 @@ Recent executions:
 
 ### **4. Dependency Validation**
 
-**Command**: `python3 scripts/process_tasks.py validate`
+- *Command**: `python3 scripts/process_tasks.py validate`
 
-**Output**:
+- *Output**:
 
 ```
 
 All dependencies are satisfied
 
-```
+```text
 
 or
 
@@ -498,13 +487,11 @@ Missing dependencies found:
   B-050: B-049
   B-051: B-050
 
-```
+```yaml
 
-## 🔮 **Future Metadata Enhancements**
+## 🔮 **Future Metadata Enhancements**###**1. Machine Learning Integration**
 
-### **1. Machine Learning Integration**
-
-**Predictive Success Modeling**:
+- *Predictive Success Modeling**:
 
 - Use historical data to predict task success probability
 
@@ -512,7 +499,7 @@ Missing dependencies found:
 
 - Develop anomaly detection for unusual execution patterns
 
-**Implementation Ideas**:
+- *Implementation Ideas**:
 
 ```python
 
@@ -528,11 +515,11 @@ def detect_execution_anomalies(execution_data):
     anomalies = anomaly_detector.detect(execution_data)
     return anomalies
 
-```
+```yaml
 
 ### **2. Advanced Analytics**
 
-**Trend Analysis**:
+- *Trend Analysis**:
 
 - Long-term performance trend identification
 
@@ -540,7 +527,7 @@ def detect_execution_anomalies(execution_data):
 
 - Capacity planning based on historical patterns
 
-**Correlation Analysis**:
+- *Correlation Analysis**:
 
 ```python
 
@@ -558,7 +545,7 @@ def analyze_task_correlations():
 
 ### **3. Real-time Monitoring**
 
-**Live Dashboards**:
+- *Live Dashboards**:
 
 - Real-time execution monitoring with live updates
 
@@ -566,7 +553,7 @@ def analyze_task_correlations():
 
 - Performance threshold monitoring and notifications
 
-**Dashboard Features**:
+- *Dashboard Features**:
 
 - Live task execution status
 
@@ -576,9 +563,7 @@ def analyze_task_correlations():
 
 - Resource utilization tracking
 
-## 📋 **Best Practices**
-
-## ⚡ Quick reference
+## 📋 **Best Practices**## ⚡ Quick reference
 
 - Key sources: `000_backlog.md` (scores, deps, status), `task_execution.db` (executions, perf, retries), error system (categories, severity, recovery)
 
@@ -590,41 +575,31 @@ def analyze_task_correlations():
 
 - Export metrics (CSV): `python3 scripts/state_manager.py --stats --export-csv metrics.csv`
 
-### **1. Data Quality**
-
-- **Validation**: Ensure all metadata is properly validated before storage
+### **1. Data Quality**-**Validation**: Ensure all metadata is properly validated before storage
 
 - **Consistency**: Maintain consistent data formats across all sources
 
 - **Completeness**: Capture all relevant metadata fields for comprehensive analysis
 
-### **2. Performance Optimization**
-
-- **Indexing**: Proper database indexing for fast queries
+### **2. Performance Optimization**-**Indexing**: Proper database indexing for fast queries
 
 - **Caching**: Cache frequently accessed metadata
 
 - **Compression**: Compress historical data to save storage space
 
-### **3. Privacy & Security**
-
-- **Access Control**: Implement proper access controls for sensitive metadata
+### **3. Privacy & Security**-**Access Control**: Implement proper access controls for sensitive metadata
 
 - **Data Retention**: Define clear data retention policies
 
 - **Audit Logging**: Log all metadata access and modifications
 
-### **4. Scalability**
-
-- **Horizontal Scaling**: Design for horizontal scaling as data grows
+### **4. Scalability**-**Horizontal Scaling**: Design for horizontal scaling as data grows
 
 - **Partitioning**: Partition large datasets for better performance
 
 - **Archiving**: Archive old data to maintain performance
 
-## 🎯 **Conclusion**
-
-The metadata collection and analytics system provides a comprehensive foundation for intelligent automation, performance
+## 🎯 **Conclusion**The metadata collection and analytics system provides a comprehensive foundation for intelligent automation, performance
 optimization, and data-driven decision making in the AI development ecosystem. By leveraging this rich metadata, teams
 can:
 
@@ -639,8 +614,8 @@ can:
 This system transforms the development process from reactive to proactive, enabling teams to build more efficiently and
 reliably.
 
----
+- --
 
-**Document Version**: 1.0
-**Last Updated**: 2024-08-07
-**Next Review**: [Monthly Review Cycle]
+- *Document Version**: 1.0
+- *Last Updated**: 2024-08-07
+- *Next Review**: [Monthly Review Cycle]

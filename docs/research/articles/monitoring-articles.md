@@ -4,7 +4,7 @@
 
 # Monitoring Articles
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -18,14 +18,9 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
 > **External Research**: Industry articles and blog posts about system monitoring and observability.
 
-## 📚 **Articles**
-
-### **System Monitoring Best Practices**
-
-- **Source**: Industry Best Practices
+## 📚 **Articles**###**System Monitoring Best Practices**-**Source**: Industry Best Practices
 
 - **Key Insight**: Monitoring and observability strategies
 
@@ -33,20 +28,16 @@
 
 - **Link**: [To be added]
 
-## 🔗 **Related Documentation**
-
-- `500_monitoring-research.md` - Our internal monitoring research summary
+## 🔗 **Related Documentation**- `500_monitoring-research.md` - Our internal monitoring research summary
 
 - `400_system-overview_advanced_features.md` - System architecture overview
 
-## 📖 **Key Insights**
-
-- Industry monitoring best practices
+## 📖**Key Insights**- Industry monitoring best practices
 
 - Observability patterns
 
 - Real-world deployment considerations
 
-## 🎯 **Implementation Impact**
+## 🎯**Implementation Impact**
 
 These articles provide practical guidance for our monitoring system.

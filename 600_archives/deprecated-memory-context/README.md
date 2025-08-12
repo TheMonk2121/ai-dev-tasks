@@ -19,4 +19,3 @@ Use instead:
 
 - `400_context-priority-guide.md`
 
-

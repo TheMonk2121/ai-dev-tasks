@@ -3,13 +3,10 @@
 <!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
 <!-- MEMORY_CONTEXT: HIGH - AI context engineering and model routing -->
-
-> This guide is Cursor-native. Third-party model comparisons have been removed. Use task-type patterns and specialized
+# 🎯 **Current Status**> This guide is Cursor-native. Third-party model comparisons have been removed. Use task-type patterns and specialized
 agents to shape prompts for `cursor-native-ai`.
 
-## 🎯 **Current Status**
-
-<a id="tldr"></a>
+## 🎯**Current Status**{#tldr}
 
 ## 🔎 TL;DR
 
@@ -23,8 +20,7 @@ agents to shape prompts for `cursor-native-ai`.
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
-- **Status**: ✅ **ACTIVE** - AI context engineering system operational
+- **Status**: ✅ **ACTIVE**- AI context engineering system operational
 
 - **Priority**: 🔥 Critical - Core AI routing and context management
 
@@ -34,9 +30,7 @@ agents to shape prompts for `cursor-native-ai`.
 
 - **Next Steps**: Monitor routing accuracy and optimize patterns
 
-### **3. Context Engineering Patterns**
-
-Use task-type patterns (model-agnostic) to guide `cursor-native-ai` and specialized agents:
+### **3. Context Engineering Patterns**Use task-type patterns (model-agnostic) to guide `cursor-native-ai` and specialized agents:
 
 ```python
 TASK_TYPE_PATTERNS = {
@@ -58,13 +52,11 @@ TASK_TYPE_PATTERNS = {
     }
 }
 
-```
+```text
 
 ## 🔧 Implementation
 
-### **1. Basic Usage**
-
-```python
+### **1. Basic Usage**```python
 from dspy_rag_system.src.dspy_modules.cursor_model_router import create_cursor_model_router
 
 # Create router
@@ -84,11 +76,9 @@ print(f"Selected model: {result['selected_model']}")
 print(f"Context engineering: {result['context_engineering']}")
 print(f"Engineered prompt: {result['engineered_prompt']}")
 
-```
+```text
 
-### **2. Integration with DSPy RAG System**
-
-The context engineering is integrated into the enhanced RAG system:
+### **2. Integration with DSPy RAG System**The context engineering is integrated into the enhanced RAG system:
 
 ```python
 
@@ -105,11 +95,9 @@ if routing_result["status"] == "success":
     _LOG.info(f"Selected model: {routing_result['selected_model']}")
     _LOG.info(f"Context engineering: {routing_result['context_engineering']}")
 
-```
+```text
 
-### **3. Response Enhancement**
-
-The RAG system response includes context engineering information:
+### **3. Response Enhancement**The RAG system response includes context engineering information:
 
 ```python
 response["context_engineering"] = {
@@ -122,13 +110,11 @@ response["context_engineering"] = {
     "routing_metadata": routing_result["routing_metadata"]
 }
 
-```
+```text
 
 ## 🎯 Context Engineering Strategies
 
-### **1. Task Type Analysis**
-
-The system automatically analyzes task types:
+### **1. Task Type Analysis**The system automatically analyzes task types:
 
 ```python
 def _analyze_task_type(self, query: str) -> str:
@@ -145,11 +131,9 @@ def _analyze_task_type(self, query: str) -> str:
     else:
         return "general"
 
-```
+```text
 
-### **2. Complexity Analysis**
-
-```python
+### **2. Complexity Analysis**```python
 def _analyze_complexity(self, query: str, context_size: int = None) -> str:
     word_count = len(query.split())
 
@@ -162,11 +146,9 @@ def _analyze_complexity(self, query: str, context_size: int = None) -> str:
     else:
         return "simple"
 
-```
+```bash
 
-### **3. Routing Logic (Cursor-native)**
-
-Prefer `cursor-native-ai` by default; delegate to specialized agents based on task-type and context size. Keep logic
+### **3. Routing Logic (Cursor-native)**Prefer `cursor-native-ai` by default; delegate to specialized agents based on task-type and context size. Keep logic
 simple and traceable:
 
 1. Task-type → choose pattern from `TASK_TYPE_PATTERNS`
@@ -176,19 +158,15 @@ simple and traceable:
 
 ## 📊 Monitoring & Analytics
 
-### **1. Routing Statistics**
-
-```python
+### **1. Routing Statistics**```python
 stats = router.get_routing_stats()
 print(f"Total routes: {stats['total_routes']}")
 print(f"Model distribution: {stats['model_distribution']}")
 print(f"Average confidence: {stats['average_confidence']}")
 
-```
+```bash
 
-### **2. Performance Metrics**
-
-- **Routing Accuracy**: How often the selected model performs optimally
+### **2. Performance Metrics**-**Routing Accuracy**: How often the selected model performs optimally
 
 - **Context Engineering Effectiveness**: Impact of engineered prompts
 
@@ -198,9 +176,7 @@ print(f"Average confidence: {stats['average_confidence']}")
 
 ## 🔄 Integration with Existing Workflows
 
-### **1. PRD Creation Workflow**
-
-```python
+### **1. PRD Creation Workflow**```python
 
 # In 001_create-prd.md workflow
 
@@ -213,11 +189,9 @@ result = router.route_query(
 
 # Use selected model for PRD generation
 
-```
+```text
 
-### **2. Task Generation Workflow**
-
-```python
+### **2. Task Generation Workflow**```python
 
 # In 002_generate-tasks.md workflow
 
@@ -229,11 +203,9 @@ result = router.route_query(
 
 # Use selected model for task breakdown
 
-```
+```text
 
-### **3. Code Implementation Workflow**
-
-```python
+### **3. Code Implementation Workflow**```python
 
 # In 003_process-task-list.md workflow
 
@@ -245,13 +217,11 @@ result = router.route_query(
 
 # Use selected model for code generation
 
-```
+```sql
 
 ## 🛠️ Configuration
 
-### **1. Model Capabilities**
-
-Update model capabilities in `cursor_model_router.py`:
+### **1. Model Capabilities**Update model capabilities in `cursor_model_router.py`:
 
 ```python
 CURSOR_MODEL_CAPABILITIES = {
@@ -268,11 +238,9 @@ CURSOR_MODEL_CAPABILITIES = {
 
 }
 
-```
+```text
 
-### **2. Context Engineering Patterns**
-
-Customize prompt patterns:
+### **2. Context Engineering Patterns**Customize prompt patterns:
 
 ```python
 CONTEXT_ENGINEERING_PATTERNS = {
@@ -285,20 +253,16 @@ CONTEXT_ENGINEERING_PATTERNS = {
 
 }
 
-```
+```yaml
 
 ## 🎯 Best Practices
 
-### **1. Context Engineering Principles**
-
-1. **Task-Specific Patterns**: Use different patterns for different task types
+### **1. Context Engineering Principles**1.**Task-Specific Patterns**: Use different patterns for different task types
 2. **Model Strengths**: Leverage each model's unique capabilities
 3. **Progressive Complexity**: Start simple, add complexity as needed
 4. **Feedback Loops**: Monitor performance and adjust patterns
 
-### **2. Prompting Guidelines (Cursor-native)**
-
-- Large contexts: summarize, chunk, and request citations with span-level grounding
+### **2. Prompting Guidelines (Cursor-native)**- Large contexts: summarize, chunk, and request citations with span-level grounding
 
 - Speed-sensitive: request concise outputs; avoid unnecessary tool use
 
@@ -306,9 +270,7 @@ CONTEXT_ENGINEERING_PATTERNS = {
 
 - Coding: specify interfaces, typing, tests-first, and constraints explicitly
 
-### **3. Performance Optimization**
-
-- **Caching**: Cache routing decisions for similar queries
+### **3. Performance Optimization**-**Caching**: Cache routing decisions for similar queries
 
 - **Fast-Path**: Bypass complex routing for simple queries
 
@@ -318,9 +280,7 @@ CONTEXT_ENGINEERING_PATTERNS = {
 
 ## 🔮 Future Enhancements
 
-### **1. Learning-Based Routing**
-
-- **Historical Performance**: Learn from past model selections
+### **1. Learning-Based Routing**-**Historical Performance**: Learn from past model selections
 
 - **User Feedback**: Incorporate user satisfaction scores
 
@@ -328,9 +288,7 @@ CONTEXT_ENGINEERING_PATTERNS = {
 
 - **Adaptive Patterns**: Adjust context engineering based on results
 
-### **2. Advanced Context Engineering**
-
-- **Multi-Model Orchestration**: Use multiple models for complex tasks
+### **2. Advanced Context Engineering**-**Multi-Model Orchestration**: Use multiple models for complex tasks
 
 - **Dynamic Prompt Generation**: Generate prompts based on real-time analysis
 
@@ -338,9 +296,7 @@ CONTEXT_ENGINEERING_PATTERNS = {
 
 - **Cost Optimization**: Balance performance with cost constraints
 
-### **3. Integration Opportunities**
-
-- **n8n Workflows**: Integrate with n8n for automated routing
+### **3. Integration Opportunities**-**n8n Workflows**: Integrate with n8n for automated routing
 
 - **Dashboard Monitoring**: Real-time routing analytics
 
@@ -348,7 +304,7 @@ CONTEXT_ENGINEERING_PATTERNS = {
 
 - **Plugin System**: Allow custom routing strategies
 
----
+- --
 
 ## 📚 Related Documentation
 
@@ -360,18 +316,14 @@ CONTEXT_ENGINEERING_PATTERNS = {
 
 - **dspy-rag-system/README.md**: RAG system documentation
 
----
+- --
 
 ## 🔍 Validation & Monitoring
 
-### **How to Verify the System is Working (Not Hallucinating)**
-
-The context engineering system includes comprehensive validation and monitoring to ensure it's making real decisions and
+### **How to Verify the System is Working (Not Hallucinating)**The context engineering system includes comprehensive validation and monitoring to ensure it's making real decisions and
 not hallucinating.
 
-#### **1. Validation System**
-
-The system validates routing decisions using multiple checks:
+#### **1. Validation System**The system validates routing decisions using multiple checks:
 
 ```python
 class ModelRoutingValidator:
@@ -388,11 +340,9 @@ class ModelRoutingValidator:
 
         # Detect hallucination if multiple checks fail
 
-```
+```text
 
-#### **2. Hallucination Detection**
-
-The system detects potential hallucination using:
+#### **2. Hallucination Detection**The system detects potential hallucination using:
 
 - **Low Confidence**: Suspiciously low or high confidence scores
 
@@ -402,9 +352,7 @@ The system detects potential hallucination using:
 
 - **Invalid Strategies**: Context engineering strategies that don't align with model capabilities
 
-#### **3. Monitoring Dashboard**
-
-Use the monitoring dashboard to track system performance:
+#### **3. Monitoring Dashboard**Use the monitoring dashboard to track system performance:
 
 ```bash
 
@@ -416,11 +364,9 @@ python dspy-rag-system/monitor_context_engineering.py
 
 python dspy-rag-system/monitor_context_engineering.py --mode batch --save-report
 
-```
+```text
 
-#### **4. Validation Test Suite**
-
-Run comprehensive validation tests:
+#### **4. Validation Test Suite**Run comprehensive validation tests:
 
 ```bash
 
@@ -428,7 +374,7 @@ Run comprehensive validation tests:
 
 python dspy-rag-system/test_validation_and_monitoring.py
 
-```
+```bash
 
 This test suite validates:
 
@@ -440,21 +386,17 @@ This test suite validates:
 
 - ✅ Anomaly detection
 
-#### **5. Key Validation Metrics**
-
-Monitor these metrics to ensure the system is working correctly:
+#### **5. Key Validation Metrics**Monitor these metrics to ensure the system is working correctly:
 
 | Metric | Target | What It Means |
 |--------|--------|---------------|
-| **Success Rate** | >95% | System is routing successfully |
-| **Hallucination Rate** | <5% | System is making real decisions |
-| **Model Selection Accuracy** | >80% | Correct models for task types |
-| **Average Confidence** | 0.7-0.9 | Reasonable confidence levels |
-| **Average Latency** | <1000ms | System is responsive |
+|**Success Rate**| >95% | System is routing successfully |
+|**Hallucination Rate**| <5% | System is making real decisions |
+|**Model Selection Accuracy**| >80% | Correct models for task types |
+|**Average Confidence**| 0.7-0.9 | Reasonable confidence levels |
+|**Average Latency**| <1000ms | System is responsive |
 
-#### **6. Real-Time Monitoring**
-
-The monitoring dashboard shows:
+#### **6. Real-Time Monitoring**The monitoring dashboard shows:
 
 ```
 
@@ -476,21 +418,17 @@ The monitoring dashboard shows:
   2. ✅ Analyze performance implications
      Model: claude-3-opus | Confidence: 0.92 | Latency: 320.1ms
 
-```
+```yaml
 
-#### **7. Validation Checks**
+#### **7. Validation Checks**Each routing decision is validated against:
 
-Each routing decision is validated against:
-
-1. **Model Existence**: Selected model must be in available models list
+1.**Model Existence**: Selected model must be in available models list
 2. **Confidence Reasonableness**: Confidence score between 0.0 and 1.0
 3. **Reasoning Quality**: Reasoning contains specific patterns and keywords
 4. **Capability Match**: Model capabilities align with task requirements
 5. **Strategy Validity**: Context engineering strategy matches model strengths
 
-#### **8. Anomaly Detection**
-
-The system detects anomalies:
+#### **8. Anomaly Detection**The system detects anomalies:
 
 - **High Latency**: Routes taking >5 seconds
 
@@ -502,9 +440,7 @@ The system detects anomalies:
 
 #### **9. How to Interpret Results**
 
-**✅ System Working Correctly:**
-
-- Success rate >95%
+- *✅ System Working Correctly:**- Success rate >95%
 
 - Hallucination rate <5%
 
@@ -512,11 +448,7 @@ The system detects anomalies:
 
 - Confidence scores in reasonable range (0.7-0.9)
 
-- Latency under 1000ms
-
-**🚨 Potential Issues:**
-
-- High hallucination rate (>10%)
+- Latency under 1000ms**🚨 Potential Issues:**- High hallucination rate (>10%)
 
 - All routes to same model
 
@@ -526,19 +458,15 @@ The system detects anomalies:
 
 - Poor reasoning quality
 
-#### **10. Troubleshooting**
+#### **10. Troubleshooting**If validation fails:
 
-If validation fails:
-
-1. **Check Model Availability**: Ensure all models are accessible
+1.**Check Model Availability**: Ensure all models are accessible
 2. **Review Reasoning Quality**: Look for vague or nonsensical reasoning
 3. **Verify Task Analysis**: Ensure task type and complexity are correctly identified
 4. **Monitor Performance**: Check for system bottlenecks or errors
 5. **Update Patterns**: Refine context engineering patterns if needed
 
-#### **11. Continuous Monitoring**
-
-Set up continuous monitoring:
+#### **11. Continuous Monitoring**Set up continuous monitoring:
 
 ```python
 
@@ -563,11 +491,9 @@ if result["validation"]["hallucination_detected"]:
 report = router.get_comprehensive_report()
 print("System Status:", report["performance_report"])
 
-```
+```text
 
-#### **12. Integration with Existing Workflows**
-
-Add validation to your existing workflows:
+#### **12. Integration with Existing Workflows**Add validation to your existing workflows:
 
 ```python
 
@@ -592,7 +518,5 @@ else:
 This validation system ensures your context engineering is making real, intelligent decisions rather than hallucinating
 model selections.
 
----
-
-*This guide provides comprehensive context engineering strategies for leveraging Cursor's native AI models through
+- --*This guide provides comprehensive context engineering strategies for leveraging Cursor's native AI models through
 DSPy-based intelligent routing.*

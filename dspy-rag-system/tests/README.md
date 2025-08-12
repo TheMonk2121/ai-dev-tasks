@@ -1,4 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+# Test Categories
+
 
 python -m pytest tests/test_enhanced_rag_system.py -v
 
@@ -6,7 +8,7 @@ python -m pytest tests/test_enhanced_rag_system.py -v
 
 ## Test Categories
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -19,7 +21,6 @@ python -m pytest tests/test_enhanced_rag_system.py -v
 - **read when**: When you need a fast orientation or before using this file in a workflow.
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
-
 
 ### Unit Tests
 
@@ -47,11 +48,11 @@ python -m pytest tests/test_enhanced_rag_system.py -v
 
 ## Test Requirements
 
-- **pytest** - Test framework
+- **pytest**- Test framework
 
-- **PostgreSQL** - For vector store tests
+- **PostgreSQL**- For vector store tests
 
-- **Optional local model runner** - For legacy/local RAG system tests (see archives)
+- **Optional local model runner**- For legacy/local RAG system tests (see archives)
 
 - **pytest-cov** - For coverage reporting (the execution engine)
 

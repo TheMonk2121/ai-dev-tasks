@@ -2,10 +2,12 @@
 <!-- MODULE_REFERENCE: 400_metadata-collection-guide.md -->
 <!-- MODULE_REFERENCE: 400_metadata-collection-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Metadata research and governance patterns -->
+# 📊 Metadata & Governance Research
+
 
 ## 📊 Metadata & Governance Research
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -19,13 +21,9 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
 Backlog link: B-007, B-045
 
-
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Research file with content
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
 
 - **Priority**: 🔧 Medium - Research for implementation
 
@@ -35,8 +33,6 @@ Backlog link: B-007, B-045
 
 - **Next Steps**: Implement metadata governance patterns
 
-
-
 ## Key Findings
 
 - Consistent identifiers (doc_id, chunk_id) and span offsets enable grounding, audits, and reproducibility.
@@ -45,8 +41,6 @@ Backlog link: B-007, B-045
 
 - Governance requires PII classification and redaction policies at ingestion and logging.
 
-
-
 ## Actionable Patterns
 
 - Field dictionary: doc_id, source_path, section, chunk_id, start_offset, end_offset, owner, updated_at, provenance, validated_flag, raw_score.
@@ -54,8 +48,6 @@ Backlog link: B-007, B-045
 - Ingestion hooks in indexer to populate fields; validators to reject incomplete records.
 
 - Query helpers: by owner, by updated_since, by provenance for review workflows.
-
-
 
 ## Implementation References
 
@@ -66,8 +58,6 @@ Backlog link: B-007, B-045
 - scripts/documentation_indexer.py (emit fields)
 
 - dspy-rag-system/config/database/vector_enhancement_schema.sql (columns)
-
-
 
 ## Citations
 

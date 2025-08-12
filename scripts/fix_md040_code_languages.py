@@ -6,12 +6,13 @@ Adds language specifications to code blocks that don't have them.
 
 import glob
 import re
+from typing import Dict, List
 
 
-def detect_code_language(content):
+def detect_code_language(content: str) -> str:
     """Attempt to detect the language based on content patterns."""
     # Common patterns for different languages
-    patterns = {
+    patterns: Dict[str, List[str]] = {
         "python": [
             r"import\s+\w+",
             r"def\s+\w+\s*\(",
@@ -82,7 +83,7 @@ def detect_code_language(content):
     }
 
     # Count matches for each language
-    language_scores = {}
+    language_scores: Dict[str, int] = {}
     for lang, lang_patterns in patterns.items():
         score = 0
         for pattern in lang_patterns:
@@ -93,7 +94,7 @@ def detect_code_language(content):
 
     # Return the language with the highest score, or 'text' as default
     if language_scores:
-        return max(language_scores, key=language_scores.get)
+        return max(language_scores.keys(), key=lambda k: language_scores[k])
     return "text"
 
 

@@ -28,7 +28,7 @@ AI-powered code generation extension for Cursor IDE using Yi-Coder-9B-Chat-Q6_K 
 1. Download and install [LM Studio](https://lmstudio.ai/)
 2. Download the Yi-Coder-9B-Chat-Q6_K model
 3. Load the model in LM Studio
-4. Start the LM Studio server on `http://localhost:1234`
+4. Start the LM Studio server on `<http://localhost:1234`>
 
 ### 2. Build and Install Extension
 
@@ -45,7 +45,7 @@ npm run compile
 
 # Package the extension (the execution engine)
 npm run package
-```
+```sql
 
 ### 3. Install in Cursor
 
@@ -60,16 +60,16 @@ The extension can be configured through Cursor's settings:
 
 ```json
 {
-  "yi-coder.lmStudioUrl": "http://localhost:1234",
+  "yi-coder.lmStudioUrl": "<http://localhost:1234",>
   "yi-coder.modelName": "Yi-Coder-9B-Chat-Q6_K",
   "yi-coder.maxTokens": 2048,
   "yi-coder.temperature": 0.7
 }
-```
+```html
 
 ### Configuration Options
 
-- **lmStudioUrl**: URL of the LM Studio server (default: http://localhost:1234)
+- **lmStudioUrl**: URL of the LM Studio server (default: <http://localhost:1234>)
 - **modelName**: Name of the model in LM Studio (default: cursor-native-ai)
 - **maxTokens**: Maximum tokens for code generation (default: 2048)
 - **temperature**: Temperature for code generation (default: 0.7)
@@ -80,9 +80,9 @@ The extension can be configured through Cursor's settings:
 
 The extension provides three main commands:
 
-1. **Yi-Coder: Generate Code** - Generate code based on current context
-2. **Yi-Coder: Complete Code** - Complete code at cursor position
-3. **Yi-Coder: Refactor Code** - Refactor selected code
+1. **Yi-Coder: Generate Code**- Generate code based on current context
+2.**Yi-Coder: Complete Code**- Complete code at cursor position
+3.**Yi-Coder: Refactor Code**- Refactor selected code
 
 ### Keyboard Shortcuts
 
@@ -124,7 +124,7 @@ cursor-yi-coder-integration/
 ├── package.json              # Extension manifest
 ├── tsconfig.json             # TypeScript configuration
 └── README.md                 # This file
-```
+```text
 
 ### Building
 
@@ -140,7 +140,7 @@ npm test
 
 # Lint code
 npm run lint
-```
+```text
 
 ### Testing
 
@@ -150,26 +150,26 @@ npm test
 
 # Run integration tests
 npm run test:integration
-```
+```yaml
 
 ## Architecture
 
 ### Components
 
-1. **Extension Entry Point** (`extension.ts`)
-   - Registers commands with Cursor
-   - Handles command execution
-   - Manages extension lifecycle
+1.**Extension Entry Point**(`extension.ts`)
+  - Registers commands with Cursor
+  - Handles command execution
+  - Manages extension lifecycle
 
-2. **Yi-Coder Client** (`yiCoderClient.ts`)
-   - Communicates with LM Studio
-   - Handles API requests and responses
-   - Manages model configuration
+2.**Yi-Coder Client**(`yiCoderClient.ts`)
+  - Communicates with LM Studio
+  - Handles API requests and responses
+  - Manages model configuration
 
-3. **Context Manager** (`contextManager.ts`)
-   - Extracts code context
-   - Manages conversation history
-   - Handles project structure analysis
+3.**Context Manager**(`contextManager.ts`)
+  - Extracts code context
+  - Manages conversation history
+  - Handles project structure analysis
 
 ### Communication Flow
 
@@ -184,20 +184,17 @@ npm run test:integration
 
 ### Common Issues
 
-1. **LM Studio Connection Failed**
-   - Ensure LM Studio is running
-   - Check the server URL in settings
-   - Verify the model is loaded
+1.**LM Studio Connection Failed**- Ensure LM Studio is running
+  - Check the server URL in settings
+  - Verify the model is loaded
 
-2. **Extension Not Loading**
-   - Check Cursor's extension logs
-   - Verify TypeScript compilation
-   - Restart Cursor IDE
+2.**Extension Not Loading**- Check Cursor's extension logs
+  - Verify TypeScript compilation
+  - Restart Cursor IDE
 
-3. **Code Generation Fails**
-   - Check LM Studio logs
-   - Verify model configuration
-   - Check network connectivity
+3.**Code Generation Fails**- Check LM Studio logs
+  - Verify model configuration
+  - Check network connectivity
 
 ### Debug Mode
 
@@ -215,20 +212,17 @@ This will show detailed logs in Cursor's Developer Console.
 
 ### Optimization Tips
 
-1. **Model Configuration**
-   - Use appropriate temperature settings
-   - Limit max tokens for faster responses
-   - Use quantized models for better performance
+1.**Model Configuration**- Use appropriate temperature settings
+  - Limit max tokens for faster responses
+  - Use quantized models for better performance
 
-2. **Context Management**
-   - Limit context size for large files
-   - Use function-level context when possible
-   - Clear conversation history periodically
+2.**Context Management**- Limit context size for large files
+  - Use function-level context when possible
+  - Clear conversation history periodically
 
-3. **Resource Usage**
-   - Monitor memory usage
-   - Use appropriate timeout settings
-   - Implement caching for repeated requests
+3.**Resource Usage**- Monitor memory usage
+  - Use appropriate timeout settings
+  - Implement caching for repeated requests
 
 ## Security
 
@@ -241,15 +235,14 @@ This will show detailed logs in Cursor's Developer Console.
 
 ### Best Practices
 
-1. **Input Validation**
-   - All user inputs are validated
-   - Malicious code is filtered
-   - Context size is limited
+1.**Input Validation**- All user inputs are validated
+  - Malicious code is filtered
+  - Context size is limited
 
-2. **Error Handling**
-   - Graceful degradation on failures
-   - Secure error messages
-   - Automatic retry mechanisms
+2.**Error Handling**
+  - Graceful degradation on failures
+  - Secure error messages
+  - Automatic retry mechanisms
 
 ## Contributing
 

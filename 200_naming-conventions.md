@@ -61,25 +61,25 @@ This table clarifies the buckets for our numeric prefixes, making it easier to c
 
 ### Integration with Development Workflow
 
-The naming system **integrates seamlessly** with our development workflow. When creating new files, the process is:
+The naming system **integrates seamlessly**with our development workflow. When creating new files, the process is:
 
-1. **Check existing patterns** in the same prefix range for consistency
-2. **Follow the naming conventions** documented in this file
-3. **Add cross-references** using HTML comment patterns
-4. **Update the context priority guide** if the file belongs in a documented tier
-5. **Consider AI rehydration** - will this file be needed for context sharing?
+1.**Check existing patterns**in the same prefix range for consistency
+2.**Follow the naming conventions**documented in this file
+3.**Add cross-references**using HTML comment patterns
+4.**Update the context priority guide**if the file belongs in a documented tier
+5.**Consider AI rehydration**- will this file be needed for context sharing?
 
 #### Quality Assurance
 
-- **Consistency checks** ensure similar files use similar naming patterns
+- **Consistency checks**ensure similar files use similar naming patterns
 
-- **Cross-reference validation** ensures new files are properly linked
+- **Cross-reference validation**ensures new files are properly linked
 
-- **Context priority guide updates** keep the documentation hierarchy current
+- **Context priority guide updates**keep the documentation hierarchy current
 
-- **AI-friendly naming** ensures files are discoverable by Cursor AI
+- **AI-friendly naming**ensures files are discoverable by Cursor AI
 
-The result is a **living naming system** that scales with your project while maintaining the cognitive scaffolding that makes the documentation coherent and AI-friendly. Each new file automatically fits into the existing hierarchy, making it easy for both humans and AI to understand its role and importance in the overall system.
+The result is a**living naming system**that scales with your project while maintaining the cognitive scaffolding that makes the documentation coherent and AI-friendly. Each new file automatically fits into the existing hierarchy, making it easy for both humans and AI to understand its role and importance in the overall system.
 
 ## 🔄 File Generation {#file-generation}
 
@@ -87,99 +87,79 @@ The result is a **living naming system** that scales with your project while mai
 
 #### Ask these questions
 
-- **Is this information that will be referenced multiple times?** (If yes → file)
+- **Is this information that will be referenced multiple times?**(If yes → file)
 
-- **Is this a process or workflow that others/AI will need to follow?** (If yes → file)
+- **Is this a process or workflow that others/AI will need to follow?**(If yes → file)
 
-- **Is this context that will help with future decisions?** (If yes → file)
+- **Is this context that will help with future decisions?**(If yes → file)
 
-- **Is this a one-off note or temporary information?** (If no → don't create file)
+- **Is this a one-off note or temporary information?**(If no → don't create file)
 
 #### Examples of when to create files
 
-- ✅ **Workflow processes** (`001_create-prd.md`, `002_generate-tasks.md`)
+- ✅**Workflow processes**(`001_create-prd.md`, `002_generate-tasks.md`)
 
-- ✅ **System documentation** (`400_system-overview_advanced_features.md`, `400_project-overview.md`)
+- ✅**System documentation**(`400_system-overview_advanced_features.md`, `400_project-overview.md`)
 
-- ✅ **Configuration guides** (`202_setup-requirements.md`)
+- ✅**Configuration guides**(`202_setup-requirements.md`)
 
-- ✅ **Completion summaries** (`500_*` files for historical context)
+- ✅**Completion summaries** (`500_*` files for historical context)
 
-- ✅ **Research findings** (`500_memory-arch-research.md`)
+- ✅ **Research findings**(`500_memory-arch-research.md`)
 
 #### Examples of when NOT to create files
 
-- ❌ **Temporary notes** (use comments or inline documentation)
+- ❌**Temporary notes**(use comments or inline documentation)
 
-- ❌ **One-off decisions** (document in existing relevant files)
+- ❌**One-off decisions**(document in existing relevant files)
 
-- ❌ **Quick fixes** (document in commit messages or existing files)
+- ❌**Quick fixes**(document in commit messages or existing files)
 
 ### Step 2: Determine File Purpose and Priority
 
 #### Analyze the content type
 
-- **Planning/Strategy** → High priority (000-099, 400-499)
+- **Planning/Strategy**→ High priority (000-099, 400-499)
 
-- **Implementation/Technical** → Medium priority (100-199, 200-299)
+- **Implementation/Technical**→ Medium priority (100-199, 200-299)
 
-- **Research/Analysis** → Lower priority (500+)
+- **Research/Analysis**→ Lower priority (500+)
 
-- **Configuration/Setup** → Medium priority (200-299)
+- **Configuration/Setup**→ Medium priority (200-299)
 
 #### Assess the audience
 
-- **Essential for everyone** → High priority (read first)
+- **Essential for everyone**→ High priority (read first)
 
-- **Important for specific workflows** → Medium priority (read when relevant)
+- **Important for specific workflows**→ Medium priority (read when relevant)
 
-- **Specialized knowledge** → Lower priority (read when needed)
+- **Specialized knowledge**→ Lower priority (read when needed)
 
 #### Consider the lifecycle
 
-- **Always relevant** → High priority (core documentation)
+- **Always relevant**→ High priority (core documentation)
 
-- **Sometimes relevant** → Medium priority (workflow guides)
+- **Sometimes relevant**→ Medium priority (workflow guides)
 
-- **Rarely relevant** → Lower priority (specialized guides)
+- **Rarely relevant**→ Lower priority (specialized guides)
 
-### Step 3: Choose the Right Prefix Range
-
-**000-099: Core Planning & Context**
-
-- Backlog, project overview, system overview
+### Step 3: Choose the Right Prefix Range**000-099: Core Planning & Context**- Backlog, project overview, system overview
 
 - Files that give immediate understanding of the project
 
-- Essential for anyone working on the project
-
-**100-199: Memory & Guides**
-
-- Memory context, backlog guide, automation patterns
+- Essential for anyone working on the project**100-199: Memory & Guides**- Memory context, backlog guide, automation patterns
 
 - Files that help with ongoing work and decision-making
 
-- Important for regular development activities
-
-**200-299: Configuration & Setup**
-
-- Naming conventions, model config, setup requirements
+- Important for regular development activities**200-299: Configuration & Setup**- Naming conventions, model config, setup requirements
 
 - Files that help with environment and tool setup
 
-- Important when setting up or configuring
-
-**400-499: Architecture & Overview**
-
-- System overview, project overview, context priority guide
+- Important when setting up or configuring**400-499: Architecture & Overview**- System overview, project overview, context priority guide
 
 - Files that explain the big picture and relationships
 
-- Essential for understanding the system architecture
-
-**500+: Research & Meta**
-
-- Completion summaries, research notes, benchmarks
+- Essential for understanding the system architecture**500+: Research & Meta**- Completion summaries, research notes, benchmarks
 
 - Files that provide historical context and analysis
 
@@ -236,32 +216,11 @@ The result is a **living naming system** that scales with your project while mai
 
 #### Check for consistency
 
-- **Are there similar files in the same prefix range?**
+- **Are there similar files in the same prefix range?**-**Does this follow the established naming patterns?**-**Is this the right level of detail for this priority?**#### Consider the cognitive scaffolding
 
-- **Does this follow the established naming patterns?**
+- **Does this file help or hurt the AI's understanding?**-**Is this information better placed in an existing file?**-**Will this file be discoverable by the AI?**### Example Decision Process**Scenario**: Need to document a new workflow for automated testing
 
-- **Is this the right level of detail for this priority?**
-
-#### Consider the cognitive scaffolding
-
-- **Does this file help or hurt the AI's understanding?**
-
-- **Is this information better placed in an existing file?**
-
-- **Will this file be discoverable by the AI?**
-
-### Example Decision Process
-
-**Scenario**: Need to document a new workflow for automated testing
-
-**Step 1**: ✅ **File needed** - This is a process others will follow
-**Step 2**: **Purpose** = Implementation workflow, **Priority** = Medium (important for specific tasks)
-**Step 3**: **Prefix** = 100-199 (workflow guides)
-**Step 4**: **Name** = `101_automated-testing-workflow.md`
-**Step 5**: **AI API** = Add MODULE_REFERENCE and MEMORY_CONTEXT comments
-**Step 6**: **Validation** = Consistent with other workflow files, appropriate priority
-
-**Result**: Creates `101_automated-testing-workflow.md` with proper AI API comments and integration into the cognitive scaffolding system.
+- *Step 1**: ✅ **File needed**- This is a process others will follow**Step 2**: **Purpose**= Implementation workflow,**Priority**= Medium (important for specific tasks)**Step 3**: **Prefix**= 100-199 (workflow guides)**Step 4**: **Name**= `101_automated-testing-workflow.md`**Step 5**: **AI API**= Add MODULE_REFERENCE and MEMORY_CONTEXT comments**Step 6**: **Validation**= Consistent with other workflow files, appropriate priority**Result**: Creates `101_automated-testing-workflow.md` with proper AI API comments and integration into the cognitive scaffolding system.
 
 This process ensures that every file created serves a clear purpose, fits into the existing structure, and contributes to the overall coherence of the documentation system.
 
@@ -318,14 +277,14 @@ This process ensures that every file created serves a clear purpose, fits into t
 ### TL;DR + At‑a‑glance
 
 - TL;DR section is required in core docs
-  - A single explicit anchor is allowed: `<a id="tldr"></a>`
+  - A single explicit anchor is allowed: `{#tldr}`
   - Heading: `## 🔎 TL;DR`
 
 - Immediately after TL;DR, include a 3‑column “At‑a‑glance” table with exact headers:
 
 | what this file is | read when | do next |
 |---|---|---|
-| _one‑line purpose_ | _trigger moments_ | _2–3 links/actions_ |
+| _one‑line purpose_|_trigger moments_|_2–3 links/actions_ |
 
 ### Stable Anchors (kebab‑case)
 
@@ -347,12 +306,12 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 ### Anchor policy (phased)
 
-- Only TL;DR may use an explicit HTML anchor (`<a id="tldr"></a>`). All other anchors must be heading‑based.
+- Only TL;DR may use an explicit HTML anchor (`{#tldr}`). All other anchors must be heading‑based.
 - Rollout: validator warns first; flips to errors after link hygiene completes.
 
 ### Table Usage Mandate
 
-Markdown tables are the **required standard** for presenting structured data:
+Markdown tables are the **required standard**for presenting structured data:
 
 - **Status tracking**: Use tables for backlog items, task lists, and progress tracking
 
@@ -548,11 +507,11 @@ Examples: `500_test-harness-guide.md`, `501_red-team-suite.md`, `502_monitoring-
 
 ### Versioning
 
-Use `_vN` suffix **only** when the file's public contract changes (breaking changes). For minor edits, append to the embedded **Change Log** table.
+Use `_vN` suffix **only**when the file's public contract changes (breaking changes). For minor edits, append to the embedded**Change Log**table.
 
 ## 🔄 Living Document Policy
 
-This naming conventions guide is a **living document** that evolves with the project. We encourage continuous improvement and welcome proposals for:
+This naming conventions guide is a**living document**that evolves with the project. We encourage continuous improvement and welcome proposals for:
 
 - **New patterns**: As the project grows, new documentation patterns may emerge
 

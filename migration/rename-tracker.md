@@ -3,7 +3,7 @@
 
 # Migration Tracker
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -16,7 +16,6 @@
 - **read when**: When you need a fast orientation or before using this file in a workflow.
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
-
 
 Populated by script
 

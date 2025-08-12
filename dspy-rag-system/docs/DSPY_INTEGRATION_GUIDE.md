@@ -4,7 +4,7 @@
 
 # 🤖 DSPy RAG Integration Guide
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -18,31 +18,20 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
-## **✅ DSPy Integration Successfully Implemented with Cursor Native AI!**
-
-Your DSPy RAG system now has complete DSPy → RAG → AI integration with Cursor Native AI as the foundation! Here's
+## **✅ DSPy Integration Successfully Implemented with Cursor Native AI!**Your DSPy RAG system now has complete DSPy → RAG → AI integration with Cursor Native AI as the foundation! Here's
 everything you need to know.
 
-## **🎯 What's New:**
+## **🎯 What's New:**###**✅ Complete DSPy Pipeline**-**DSPy RAGSystem**- Full DSPy module for RAG operations
 
-### **✅ Complete DSPy Pipeline**
+- **Cursor Native AI Integration**- Primary AI foundation for code generation and completion
 
-- **DSPy RAGSystem** - Full DSPy module for RAG operations
+- **Specialized Agents**- On-demand enhanced capabilities for specific tasks
 
-- **Cursor Native AI Integration** - Primary AI foundation for code generation and completion
+- **Interactive Query Interface**- Ask questions via `enhanced_ask_question.py`
 
-- **Specialized Agents** - On-demand enhanced capabilities for specific tasks
+- **Full Pipeline**- Complete DSPy → RAG → AI flow
 
-- **Interactive Query Interface** - Ask questions via `enhanced_ask_question.py`
-
-- **Full Pipeline** - Complete DSPy → RAG → AI flow
-
-## **🔧 Your Tech Stack: How It All Works Together**
-
-### **1. Cursor IDE - Your AI-Powered Development Environment**
-
-- **What it is**: A code editor with AI built right into it
+## **🔧 Your Tech Stack: How It All Works Together**###**1. Cursor IDE - Your AI-Powered Development Environment**-**What it is**: A code editor with AI built right into it
 
 - **What you're doing**: Using it to write and manage your AI system
 
@@ -50,9 +39,7 @@ everything you need to know.
 
 - **Current Role**: Primary AI foundation for code generation and completion
 
-### **2. Cursor Native AI - Your Primary AI Brain**
-
-- **What it is**: Built-in AI models within Cursor IDE
+### **2. Cursor Native AI - Your Primary AI Brain**-**What it is**: Built-in AI models within Cursor IDE
 
 - **What it does**: Takes your questions and generates intelligent answers
 
@@ -60,9 +47,7 @@ everything you need to know.
 
 - **Benefits**: Native integration, automatic context awareness, no setup required
 
-### **3. Specialized Agents - Your Enhanced Capabilities**
-
-- **What they are**: Domain-specific AI agents for specialized tasks
+### **3. Specialized Agents - Your Enhanced Capabilities**-**What they are**: Domain-specific AI agents for specialized tasks
 
 - **What they do**: Provide enhanced capabilities for research, coding patterns, and documentation
 
@@ -70,19 +55,15 @@ everything you need to know.
 
 - **Benefits**: Specialized expertise, modular architecture, extensible framework
 
-### **4. DSPy - Your AI's Programming Framework**
-
-- **What DSPy is**: A framework that helps you program AI models more systematically
+### **4. DSPy - Your AI's Programming Framework**-**What DSPy is**: A framework that helps you program AI models more systematically
 
 - **What it does for you**:
-  - **Structures your AI interactions** - Instead of just chatting, it creates organized workflows
-  - **Improves prompt engineering** - Makes your AI prompts more effective and reliable
-  - **Enables memory and learning** - Your AI can remember past interactions and learn from them
-  - **Creates reusable components** - Build AI modules you can use over and over
+  - **Structures your AI interactions**- Instead of just chatting, it creates organized workflows
+  - **Improves prompt engineering**- Makes your AI prompts more effective and reliable
+  - **Enables memory and learning**- Your AI can remember past interactions and learn from them
+  - **Creates reusable components**- Build AI modules you can use over and over
 
-### **5. RAG System - Your AI's Memory**
-
-- **What RAG means**: "Retrieval Augmented Generation" (fancy way of saying "find relevant info, then generate an answer")
+### **5. RAG System - Your AI's Memory**-**What RAG means**: "Retrieval Augmented Generation" (fancy way of saying "find relevant info, then generate an answer")
 
 - **How it works**:
   1. You ask a question
@@ -90,28 +71,20 @@ everything you need to know.
   3. It combines that information with AI reasoning
   4. You get a comprehensive, well-informed answer
 
-### **6. PostgreSQL + pgvector - Your Knowledge Base**
-
-- **What it is**: A database that stores your documents and their AI representations
+### **6. PostgreSQL + pgvector - Your Knowledge Base**-**What it is**: A database that stores your documents and their AI representations
 
 - **What it does**: Keeps your knowledge organized and searchable
 
 - **Why it's powerful**: Can find relevant information quickly and accurately
 
-## **🚀 How DSPy Makes This Different from ChatGPT**
-
-### **ChatGPT (Standard LLM):**
-
-```
+## **🚀 How DSPy Makes This Different from ChatGPT**###**ChatGPT (Standard LLM):**```text
 
 You: "What's in my documents?"
 ChatGPT: "I don't have access to your documents. I can only help with general knowledge."
 
 ```
 
-### **Your DSPy RAG System:**
-
-```
+### **Your DSPy RAG System:**```text
 
 You: "What's in my documents?"
 DSPy RAG:
@@ -122,39 +95,29 @@ DSPy RAG:
 
 ```
 
-## **🔍 How DSPy Works with Your Tools**
-
-### **The DSPy Pipeline:**
-
-```
+## **🔍 How DSPy Works with Your Tools**###**The DSPy Pipeline:**```text
 
 Your Question → DSPy RAGSystem → Vector Search → Cursor Native AI → Answer
 
 ```
 
-### **Step-by-Step Process:**
+### **Step-by-Step Process:**1.**You ask a question**→ "Who has the highest salary?"
 
-1. **You ask a question** → "Who has the highest salary?"
+2.**DSPy RAGSystem**takes over:
+  - **Searches your documents**using vector similarity
+  - **Finds relevant chunks**from your CSV data
+  - **Prepares context**for Cursor Native AI
 
-2. **DSPy RAGSystem** takes over:
-   - **Searches your documents** using vector similarity
-   - **Finds relevant chunks** from your CSV data
-   - **Prepares context** for Cursor Native AI
+3.**Cursor Native AI**receives:
+  - Your original question
+  - Relevant document chunks
+  - DSPy's structured prompt
 
-3. **Cursor Native AI** receives:
-   - Your original question
-   - Relevant document chunks
-   - DSPy's structured prompt
+4.**Cursor Native AI generates**an answer based on your actual data
 
-4. **Cursor Native AI generates** an answer based on your actual data
+5.**You get**a thoughtful, informed response
 
-5. **You get** a thoughtful, informed response
-
-## **🎯 Why DSPy Makes This Powerful**
-
-### **vs. Standard ChatGPT:**
-
-| **ChatGPT** | **Your DSPy RAG System** |
+## **🎯 Why DSPy Makes This Powerful**###**vs. Standard ChatGPT:**|**ChatGPT**|**Your DSPy RAG System**|
 |-------------|---------------------------|
 | ❌ No access to your files | ✅ Reads your actual documents |
 | ❌ Generic responses | ✅ Answers based on your data |
@@ -162,9 +125,7 @@ Your Question → DSPy RAGSystem → Vector Search → Cursor Native AI → Answ
 | ❌ Can't learn from your data | ✅ Learns from your documents |
 | ❌ Requires internet | ✅ Runs completely on your computer |
 
-### **vs. Basic RAG Systems:**
-
-| **Basic RAG** | **Your DSPy RAG** |
+### **vs. Basic RAG Systems:**|**Basic RAG**|**Your DSPy RAG**|
 |---------------|-------------------|
 | ❌ Simple prompt/response | ✅ Structured AI programming |
 | ❌ No learning capability | ✅ Can improve over time |
@@ -173,87 +134,60 @@ Your Question → DSPy RAGSystem → Vector Search → Cursor Native AI → Answ
 
 ## ** Real-World Example**
 
-**You have a CSV file with employee data:**
-
-```
+- *You have a CSV file with employee data:**```text
 
 Name, Age, City, Occupation, Salary
 John Smith, 32, New York, Software Engineer, 85000
 Sarah Johnson, 28, San Francisco, Data Scientist, 95000
 
-```
+```**You ask:**"Who has the highest salary?"**DSPy RAG System:**1.**DSPy RAGSystem**receives your question
+2.**Vector search**finds the CSV data chunks
+3.**DSPy prepares**a structured prompt for Cursor Native AI
+4.**Cursor Native AI analyzes**the data and answers: "Sarah Johnson has the highest salary at $95,000"
+5.**DSPy returns**the structured response with sources
 
-**You ask:** "Who has the highest salary?"
+## **🔍 Why This Is Revolutionary**###**For Beginners:**-**No coding required**to ask questions
 
-**DSPy RAG System:**
-1. **DSPy RAGSystem** receives your question
-2. **Vector search** finds the CSV data chunks
-3. **DSPy prepares** a structured prompt for Cursor Native AI
-4. **Cursor Native AI analyzes** the data and answers: "Sarah Johnson has the highest salary at $95,000"
-5. **DSPy returns** the structured response with sources
+- **Drag and drop**files to add them
 
-## **🔍 Why This Is Revolutionary**
+- **Natural language**questions (no special syntax)
 
-### **For Beginners:**
+- **Automatic processing**- just drop files and they're ready to query
 
-- **No coding required** to ask questions
+- **Better than ChatGPT**- actually reads your documents!
 
-- **Drag and drop** files to add them
+### **For Junior Techs:**-**Programmable AI**- DSPy lets you create reusable AI components
 
-- **Natural language** questions (no special syntax)
+- **Structured workflows**- organized, predictable AI interactions
 
-- **Automatic processing** - just drop files and they're ready to query
+- **Local processing**- your data stays on your computer
 
-- **Better than ChatGPT** - actually reads your documents!
+- **Extensible system**- easy to add new capabilities
 
-### **For Junior Techs:**
+- **Memory persistence**- AI remembers past interactions
 
-- **Programmable AI** - DSPy lets you create reusable AI components
+## **📊 What You've Accomplished**✅**65+ document chunks**stored and searchable
+✅**Multiple file types**supported (.txt, .md, .pdf, .csv)
+✅**Automatic processing**- just drop files in the watch folder
+✅**Smart search**- finds relevant information quickly
+✅**Local AI**- everything runs on your computer
+✅**Interactive interface**- ask questions naturally
+✅**DSPy integration**- programmable AI workflows
+✅**Better than ChatGPT**- actually uses your documents!
 
-- **Structured workflows** - organized, predictable AI interactions
+## **🎉 The Bottom Line**You've built a**programmable AI research assistant**that can:
 
-- **Local processing** - your data stays on your computer
+- **Remember everything**you've shown it
 
-- **Extensible system** - easy to add new capabilities
+- **Find relevant information**quickly
 
-- **Memory persistence** - AI remembers past interactions
+- **Answer questions**intelligently
 
-## **📊 What You've Accomplished**
+- **Learn from your documents**automatically
 
-✅ **65+ document chunks** stored and searchable
-✅ **Multiple file types** supported (.txt, .md, .pdf, .csv)
-✅ **Automatic processing** - just drop files in the watch folder
-✅ **Smart search** - finds relevant information quickly
-✅ **Local AI** - everything runs on your computer
-✅ **Interactive interface** - ask questions naturally
-✅ **DSPy integration** - programmable AI workflows
-✅ **Better than ChatGPT** - actually uses your documents!
-
-## **🎉 The Bottom Line**
-
-You've built a **programmable AI research assistant** that can:
-
-- **Remember everything** you've shown it
-
-- **Find relevant information** quickly
-
-- **Answer questions** intelligently
-
-- **Learn from your documents** automatically
-
-- **Work better than ChatGPT** for your specific data
-
-**It's like having a super-smart assistant who's read all your files, can answer any question about them, and gets
-smarter over time!** 🚀
-
-**The key difference: ChatGPT is a general AI that doesn't know your data. Your DSPy RAG system is a specialized AI that
-knows everything in your documents and can answer questions about them intelligently.**
-
-## **🏗️ System Architecture**
-
-### **Core Components:**
-
-```
+- **Work better than ChatGPT**for your specific data**It's like having a super-smart assistant who's read all your files, can answer any question about them, and gets
+smarter over time!**🚀**The key difference: ChatGPT is a general AI that doesn't know your data. Your DSPy RAG system is a specialized AI that
+knows everything in your documents and can answer questions about them intelligently.**##**🏗️ System Architecture**###**Core Components:**```text
 
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Your Files    │    │   DSPy RAG      │    │   PostgreSQL    │
@@ -269,18 +203,12 @@ knows everything in your documents and can answer questions about them intellige
 
 ```
 
-### **DSPy Modules:**
+### **DSPy Modules:**1.**RAGSystem**- Main orchestrator
+2.**AICoreLLM**- DSPy module for AI foundation
+3.**RAGSignature**- Structured input/output
+4.**VectorStore**- DSPy-compatible vector storage
 
-1. **RAGSystem** - Main orchestrator
-2. **AICoreLLM** - DSPy module for AI foundation
-3. **RAGSignature** - Structured input/output
-4. **VectorStore** - DSPy-compatible vector storage
-
-## **🚀 Usage Guide**
-
-### **1. Start the System**
-
-```bash
+## **🚀 Usage Guide**###**1. Start the System**```bash
 
 # Activate virtual environment
 
@@ -290,11 +218,9 @@ source venv/bin/activate
 
 python3 ask_question.py
 
-```
+```text
 
-### **2. Ask Questions**
-
-```bash
+### **2. Ask Questions**```bash
 
 # Interactive mode
 
@@ -302,11 +228,9 @@ python3 ask_question.py
 ❓ Your question: "Who has the highest salary in my CSV data?"
 ❓ Your question: "Summarize the main topics discussed"
 
-```
+```text
 
-### **3. Add Documents**
-
-```bash
+### **3. Add Documents**```bash
 
 # Drop files into watch_folder/ (automatic)
 
@@ -314,11 +238,9 @@ python3 ask_question.py
 
 python3 add_document.py path/to/file.txt
 
-```
+```text
 
-### **4. Check System Status**
-
-```bash
+### **4. Check System Status**```bash
 
 # Check database stats
 
@@ -332,8 +254,4 @@ print(f'Total chunks: {stats.get(\"total_chunks\", 0)}')
 
 ```
 
-## **🔧 Technical Details**
-
-### **DSPy Integration Points:**
-
-1. **RAGSystem Module** (`
+## **🔧 Technical Details**###**DSPy Integration Points:**1.**RAGSystem Module** (`

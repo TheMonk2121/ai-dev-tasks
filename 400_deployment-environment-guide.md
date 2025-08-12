@@ -1,10 +1,12 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Deployment procedures and environment management -->
+# 🚀 Deployment & Environment Guide
+
 
 ## 🚀 Deployment & Environment Guide
 
 <!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -21,11 +23,9 @@
 - **anchors**: `tldr`, `quick-start`, `deployment architecture`, `environment setup`, `deployment procedures`, `monitoring & health checks`, `rollback procedures`
 
 <!-- ANCHOR: quick-start -->
-<a id="quick-start"></a>
+{#quick-start}
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Deployment procedures maintained
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Deployment procedures maintained
 
 - **Priority**: 🔥 Critical - Production deployment safety
 
@@ -37,9 +37,7 @@
 
 ## ⚡ Quick Start
 
-#### **Development Environment**
-
-```python
+#### **Development Environment**```python
 
 # Development environment configuration
 
@@ -64,11 +62,9 @@ DEV_CONFIG = {
     }
 }
 
-```
+```text
 
-#### **Staging Environment**
-
-```python
+#### **Staging Environment**```python
 
 # Staging environment configuration
 
@@ -93,11 +89,9 @@ STAGING_CONFIG = {
     }
 }
 
-```
+```text
 
-#### **Production Environment**
-
-```python
+#### **Production Environment**```python
 
 # Production environment configuration
 
@@ -123,15 +117,13 @@ PROD_CONFIG = {
     }
 }
 
-```
+```text
 
----
+- --
 
 ## 🏗️ Deployment Architecture
 
-### **Deployment Architecture Overview**
-
-```text
+### **Deployment Architecture Overview**```text
 ┌─────────────────────────────────────────────────────────────┐
 │                Deployment Architecture                     │
 ├─────────────────────────────────────────────────────────────┤
@@ -144,13 +136,9 @@ PROD_CONFIG = {
 │ 7. Logging Stack (ELK Stack)                             │
 └─────────────────────────────────────────────────────────────┘
 
-```
+```text
 
-### **Container Architecture**
-
-#### **Docker Compose Configuration**
-
-```yaml
+### **Container Architecture**####**Docker Compose Configuration**```yaml
 
 # docker-compose.yml
 
@@ -179,7 +167,7 @@ services:
 
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      test: ["CMD", "curl", "-f", "<http://localhost:5000/health">]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -281,13 +269,9 @@ volumes:
   model_data:
   grafana_data:
 
-```
+```text
 
-### **Kubernetes Deployment**
-
-#### **Kubernetes Manifests**
-
-```yaml
+### **Kubernetes Deployment**####**Kubernetes Manifests**```yaml
 
 # k8s/deployment.yaml
 
@@ -349,7 +333,7 @@ spec:
             port: 5000
           initialDelaySeconds: 5
           periodSeconds: 5
----
+- --
 apiVersion: v1
 kind: Service
 metadata:
@@ -366,19 +350,15 @@ spec:
     targetPort: 5000
   type: LoadBalancer
 
-```
+```text
 
----
+- --
 
 ## ⚙️ Environment Setup
 
-### **1. Development Environment Setup**
+### **1. Development Environment Setup**####**Local Development Setup**```bash
 
-#### **Local Development Setup**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # setup-dev.sh
 
@@ -420,11 +400,9 @@ pytest tests/
 
 echo "✅ Development environment setup complete!"
 
-```
+```text
 
-#### **Development Environment Variables**
-
-```bash
+#### **Development Environment Variables**```bash
 
 # .env.development
 
@@ -435,7 +413,7 @@ REDIS_URL=redis://localhost:6379/0
 
 # AI Models (Cursor-native)
 
-CURSOR_NATIVE_AI_URL=http://localhost:8000
+CURSOR_NATIVE_AI_URL=<http://localhost:8000>
 
 # Security
 
@@ -448,15 +426,11 @@ RATE_LIMITING=False
 LOG_LEVEL=DEBUG
 MONITORING_ENABLED=True
 
-```
+```text
 
-### **2. Staging Environment Setup**
+### **2. Staging Environment Setup**####**Staging Deployment Script**```bash
 
-#### **Staging Deployment Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # deploy-staging.sh
 
@@ -486,11 +460,9 @@ pytest tests/smoke/ -v
 
 echo "✅ Staging deployment complete!"
 
-```
+```text
 
-#### **Staging Environment Variables**
-
-```bash
+#### **Staging Environment Variables**```bash
 
 # .env.staging
 
@@ -501,7 +473,7 @@ REDIS_URL=redis://staging-redis:6379/0
 
 # AI Models (Cursor-native)
 
-CURSOR_NATIVE_AI_URL=https://staging-ai-api.example.com
+CURSOR_NATIVE_AI_URL=<https://staging-ai-api.example.com>
 
 # Security
 
@@ -514,15 +486,11 @@ RATE_LIMITING=True
 LOG_LEVEL=INFO
 MONITORING_ENABLED=True
 
-```
+```text
 
-### **3. Production Environment Setup**
+### **3. Production Environment Setup**####**Production Deployment Script**```bash
 
-#### **Production Deployment Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # deploy-production.sh
 
@@ -569,11 +537,9 @@ echo "Updating monitoring..."
 
 echo "✅ Production deployment complete!"
 
-```
+```text
 
-#### **Production Environment Variables**
-
-```bash
+#### **Production Environment Variables**```bash
 
 # .env.production
 
@@ -584,7 +550,7 @@ REDIS_URL=redis://prod-redis:6379/0
 
 # AI Models (Cursor-native)
 
-CURSOR_NATIVE_AI_URL=https://prod-ai-api.example.com
+CURSOR_NATIVE_AI_URL=<https://prod-ai-api.example.com>
 
 # Security
 
@@ -598,19 +564,15 @@ SSL_REQUIRED=True
 LOG_LEVEL=WARNING
 MONITORING_ENABLED=True
 
-```
+```text
 
----
+- --
 
 ## 🚀 Deployment Procedures
 
-### **1. Blue-Green Deployment**
+### **1. Blue-Green Deployment**####**Blue-Green Deployment Script**```bash
 
-#### **Blue-Green Deployment Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # blue-green-deploy.sh
 
@@ -662,13 +624,9 @@ kubectl scale deployment ai-development-ecosystem-$OLD_ENV --replicas=0
 
 echo "✅ Blue-Green deployment complete!"
 
-```
+```text
 
-### **2. Rolling Deployment**
-
-#### **Rolling Deployment Configuration**
-
-```yaml
+### **2. Rolling Deployment**####**Rolling Deployment Configuration**```yaml
 
 # k8s/rolling-deployment.yaml
 
@@ -713,15 +671,11 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 10
 
-```
+```text
 
-### **3. Canary Deployment**
+### **3. Canary Deployment**####**Canary Deployment Script**```bash
 
-#### **Canary Deployment Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # canary-deploy.sh
 
@@ -776,17 +730,13 @@ else
     exit 1
 fi
 
-```
+```text
 
----
+- --
 
 ## ⚙️ Configuration Management
 
-### **1. Environment Configuration**
-
-#### **Configuration Management System**
-
-```python
+### **1. Environment Configuration**####**Configuration Management System**```python
 
 # config/environment_manager.py
 
@@ -828,7 +778,7 @@ class EnvironmentManager:
             database_url=os.getenv("DEV_DATABASE_URL", "postgresql://dev_user:dev_password@localhost:5432/ai_dev_db"),
             redis_url=os.getenv("DEV_REDIS_URL", "redis://localhost:6379/0"),
             ai_model_urls={
-                "cursor-native-ai": os.getenv("DEV_CURSOR_NATIVE_AI_URL", "http://localhost:8000")
+                "cursor-native-ai": os.getenv("DEV_CURSOR_NATIVE_AI_URL", "<http://localhost:8000">)
             },
             security_settings={
                 "auth_required": False,
@@ -881,13 +831,9 @@ class EnvironmentManager:
             }
         )
 
-```
+```text
 
-### **2. Secrets Management**
-
-#### **Kubernetes Secrets**
-
-```yaml
+### **2. Secrets Management**####**Kubernetes Secrets**```yaml
 
 # k8s/secrets.yaml
 
@@ -901,7 +847,7 @@ data:
   url: cG9zdGdyZXNxbDovL3Byb2RfdXNlcjpwcm9kX3Bhc3N3b3JkQHByb2QtZGI6NTQzMi9haV9wcm9kX2Ri
   username: cHJvZF91c2Vy
   password: cHJvZF9wYXNzd29yZAo=
----
+- --
 apiVersion: v1
 kind: Secret
 metadata:
@@ -910,7 +856,7 @@ metadata:
 type: Opaque
 data:
   url: cmVkaXM6Ly9wcm9kLXJlZGlzOjYzNzkvMAo=
----
+- --
 apiVersion: v1
 kind: Secret
 metadata:
@@ -921,13 +867,11 @@ data:
   cursor-native-ai-url: aHR0cHM6Ly9jdXJzb3ItbmF0aXZlLWFpLmV4YW1wbGUuY29tCg==
   cursor-native-ai-url: aHR0cHM6Ly9wcm9kLWFpLWFwaS5leGFtcGxlLmNvbQo=
 
-```
+```text
 
-#### **Secrets Management Script**
+#### **Secrets Management Script**```bash
 
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # manage-secrets.sh
 
@@ -943,22 +887,22 @@ create_secrets() {
     # Database secrets
 
     kubectl create secret generic db-secret-$env \
-        --from-literal=url="$DATABASE_URL" \
-        --from-literal=username="$DB_USERNAME" \
-        --from-literal=password="$DB_PASSWORD" \
-        --namespace=ai-ecosystem
+        - -from-literal=url="$DATABASE_URL" \
+        - -from-literal=username="$DB_USERNAME" \
+        - -from-literal=password="$DB_PASSWORD" \
+        - -namespace=ai-ecosystem
 
     # Redis secrets
 
     kubectl create secret generic redis-secret-$env \
-        --from-literal=url="$REDIS_URL" \
-        --namespace=ai-ecosystem
+        - -from-literal=url="$REDIS_URL" \
+        - -namespace=ai-ecosystem
 
     # AI API secrets
 
     kubectl create secret generic ai-api-secret-$env \
-        --from-literal=cursor-native-ai-url="$CURSOR_NATIVE_AI_URL" \
-        --namespace=ai-ecosystem
+        - -from-literal=cursor-native-ai-url="$CURSOR_NATIVE_AI_URL" \
+        - -namespace=ai-ecosystem
 
     echo "✅ Secrets created for $env environment"
 }
@@ -973,9 +917,9 @@ update_secrets() {
     # Update database secrets
 
     kubectl patch secret db-secret-$env \
-        --type='json' \
-        -p="[{\"op\": \"replace\", \"path\": \"/data/url\", \"value\": \"$DATABASE_URL\"}]" \
-        --namespace=ai-ecosystem
+        - -type='json' \
+        - p="[{\"op\": \"replace\", \"path\": \"/data/url\", \"value\": \"$DATABASE_URL\"}]" \
+        - -namespace=ai-ecosystem
 
     echo "✅ Secrets updated for $env environment"
 }
@@ -988,24 +932,19 @@ case "$1" in
         ;;
     "update")
         update_secrets "$2"
-        ;;
-    *)
+        ;;*)
         echo "Usage: $0 {create|update} {development|staging|production}"
         exit 1
         ;;
 esac
 
-```
+```text
 
----
+- --
 
 ## 📊 Monitoring & Health Checks
 
-### **1. Health Check Endpoints**
-
-#### **Health Check Implementation**
-
-```python
+### **1. Health Check Endpoints**####**Health Check Implementation**```python
 
 # health_checks.py
 
@@ -1089,13 +1028,9 @@ def metrics():
 
     pass
 
-```
+```text
 
-### **2. Monitoring Dashboard**
-
-#### **Grafana Dashboard Configuration**
-
-```json
+### **2. Monitoring Dashboard**####**Grafana Dashboard Configuration**```json
 {
   "dashboard": {
     "title": "AI Development Ecosystem",
@@ -1144,19 +1079,15 @@ def metrics():
   }
 }
 
-```
+```text
 
----
+- --
 
 ## 🔄 Rollback Procedures
 
-### **1. Automated Rollback**
+### **1. Automated Rollback**####**Rollback Script**```bash
 
-#### **Rollback Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # rollback.sh
 
@@ -1197,15 +1128,11 @@ else
     exit 1
 fi
 
-```
+```text
 
-### **2. Database Rollback**
+### **2. Database Rollback**####**Database Rollback Script**```bash
 
-#### **Database Rollback Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # rollback-database.sh
 
@@ -1231,19 +1158,15 @@ done
 
 echo "✅ Database rollback complete!"
 
-```
+```bash
 
----
+- --
 
 ## 🔒 Security Deployment
 
-### **1. SSL/TLS Configuration**
+### **1. SSL/TLS Configuration**####**SSL Certificate Management**```bash
 
-#### **SSL Certificate Management**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # setup-ssl.sh
 
@@ -1267,18 +1190,14 @@ if [ "$ENV" = "production" ]; then
 
     # Configure automatic renewal
 
-    echo "0 12 * * * /usr/bin/certbot renew --quiet" | crontab -
+    echo "0 12* * */usr/bin/certbot renew --quiet" | crontab -
 fi
 
 echo "✅ SSL/TLS setup complete!"
 
-```
+```text
 
-### **2. Security Headers**
-
-#### **Security Headers Configuration**
-
-```python
+### **2. Security Headers**####**Security Headers Configuration**```python
 
 # security_headers.py
 
@@ -1303,17 +1222,13 @@ Talisman(app,
     session_cookie_httponly=True
 )
 
-```
+```text
 
----
+- --
 
 ## ⚡ Performance Optimization
 
-### **1. Resource Optimization**
-
-#### **Resource Limits Configuration**
-
-```yaml
+### **1. Resource Optimization**####**Resource Limits Configuration**```yaml
 
 # k8s/resource-limits.yaml
 
@@ -1345,11 +1260,9 @@ spec:
 
           value: "1"
 
-```
+```text
 
-### **2. Caching Configuration**
-
-#### **Redis Caching Setup**
+### **2. Caching Configuration**####**Redis Caching Setup**
 
 ```python
 
@@ -1391,19 +1304,15 @@ def cache_result(ttl=3600):
         return wrapper
     return decorator
 
-```
+```text
 
----
+- --
 
 ## 🔧 Troubleshooting
 
-### **1. Common Deployment Issues**
+### **1. Common Deployment Issues**####**Troubleshooting Guide**```bash
 
-#### **Troubleshooting Guide**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # troubleshoot.sh
 
@@ -1469,22 +1378,17 @@ case "$1" in
         check_services
         check_database
         check_ai_models
-        ;;
-    *)
+        ;;*)
         echo "Usage: $0 {pods|services|database|ai-models|all}"
         exit 1
         ;;
 esac
 
-```
+```text
 
-### **2. Performance Troubleshooting**
+### **2. Performance Troubleshooting**####**Performance Analysis Script**```bash
 
-#### **Performance Analysis Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # performance-analysis.sh
 
@@ -1516,17 +1420,15 @@ kubectl exec -n ai-ecosystem deployment/ai-development-ecosystem -- \
 
 echo "Application Metrics:"
 kubectl exec -n ai-ecosystem deployment/ai-development-ecosystem -- \
-    curl -s http://localhost:5000/metrics
+    curl -s <http://localhost:5000/metrics>
 
-```
+```bash
 
----
+- --
 
 ## 📋 Deployment Checklist
 
-### **Pre-Deployment Checklist**
-
-- [ ] All tests pass (unit, integration, e2e)
+### **Pre-Deployment Checklist**- [ ] All tests pass (unit, integration, e2e)
 
 - [ ] Code review completed
 
@@ -1544,9 +1446,7 @@ kubectl exec -n ai-ecosystem deployment/ai-development-ecosystem -- \
 
 - [ ] Backup completed
 
-### **Deployment Checklist**
-
-- [ ] Health checks pass
+### **Deployment Checklist**- [ ] Health checks pass
 
 - [ ] Smoke tests pass
 
@@ -1562,9 +1462,7 @@ kubectl exec -n ai-ecosystem deployment/ai-development-ecosystem -- \
 
 - [ ] Rollback plan ready
 
-### **Post-Deployment Checklist**
-
-- [ ] Application responding correctly
+### **Post-Deployment Checklist**- [ ] Application responding correctly
 
 - [ ] Database connections stable
 
@@ -1580,17 +1478,13 @@ kubectl exec -n ai-ecosystem deployment/ai-development-ecosystem -- \
 
 - [ ] Documentation updated
 
----
+- --
 
 ## 🛠️ Deployment Tools
 
-### **1. Deployment Automation**
+### **1. Deployment Automation**####**Deployment Pipeline Script**```bash
 
-#### **Deployment Pipeline Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # deploy-pipeline.sh
 
@@ -1661,15 +1555,11 @@ fi
 
 echo "✅ Deployment pipeline completed successfully!"
 
-```
+```text
 
-### **2. Environment Management**
+### **2. Environment Management**####**Environment Management Script**```bash
 
-#### **Environment Management Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # manage-environments.sh
 
@@ -1719,8 +1609,7 @@ case "$1" in
         ;;
     "delete")
         delete_environment "$2"
-        ;;
-    *)
+        ;;*)
         echo "Usage: $0 {create|delete} {environment_name}"
         exit 1
         ;;
@@ -1728,36 +1617,30 @@ esac
 
 ```
 
----
+- --
 
 ## 📚 Additional Resources
 
-### **Deployment Documentation**
+### **Deployment Documentation**-**Kubernetes Documentation**: <https://kubernetes.io/docs/>
 
-- **Kubernetes Documentation**: https://kubernetes.io/docs/
+- **Docker Documentation**: <https://docs.docker.com/>
 
-- **Docker Documentation**: https://docs.docker.com/
+- **Helm Documentation**: <https://helm.sh/docs/>
 
-- **Helm Documentation**: https://helm.sh/docs/
+### **Monitoring Tools**-**Prometheus**: <https://prometheus.io/>
 
-### **Monitoring Tools**
+- **Grafana**: <https://grafana.com/>
 
-- **Prometheus**: https://prometheus.io/
+- **ELK Stack**: <https://www.elastic.co/elk-stack>
 
-- **Grafana**: https://grafana.com/
+### **Deployment Best Practices**-**12-Factor App**: <https://12factor.net/>
 
-- **ELK Stack**: https://www.elastic.co/elk-stack
+- **GitOps**: <https://www.gitops.tech/>
 
-### **Deployment Best Practices**
+- **Infrastructure as Code**: <https://www.terraform.io/>
 
-- **12-Factor App**: https://12factor.net/
+- --
 
-- **GitOps**: https://www.gitops.tech/
-
-- **Infrastructure as Code**: https://www.terraform.io/
-
----
-
-*Last Updated: 2024-08-07*
-*Next Review: Monthly*
-*Deployment Level: Production Ready*
+- Last Updated: 2024-08-07*
+- Next Review: Monthly*
+- Deployment Level: Production Ready*

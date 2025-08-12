@@ -32,29 +32,25 @@ processing and analysis.
 
 ### Installation & Startup
 
-1. **Navigate to the dashboard directory:**
-   ```bash
+1. **Navigate to the dashboard directory:**```bash
    cd dashboard
-   ```
+   ```text
 
-2. **Install dependencies:**
-   ```bash
+2.**Install dependencies:**```bash
    python3 -m pip install -r requirements.txt
-   ```
+   ```text
 
-3. **Start the dashboard:**
-   ```bash
+3.**Start the dashboard:**```bash
    ./start_dashboard.sh
-   ```
+   ```text
 
    Or manually:
    ```bash
    python3 dashboard.py
-   ```
+   ```html
 
-4. **Access the dashboard:**
-   - Main Dashboard: [http://localhost:5001](http://localhost:5001)
-   - Health Check: [http://localhost:5001/health](http://localhost:5001/health)
+4.**Access the dashboard:**- Main Dashboard: [<http://localhost:5001>](http://localhost:5001)
+  - Health Check: [<http://localhost:5001/health>](http://localhost:5001/health)
 
 ## 📊 Features
 
@@ -104,29 +100,29 @@ The system automatically categorizes documents into these categories:
 
 | Category | Keywords | Priority |
 |----------|----------|----------|
-| **Pricing & Billing** | pricing, price, cost, billing | High |
-| **Legal & Contracts** | contract, agreement, legal, terms | High |
-| **Marketing & Campaigns** | marketing, campaign, ad, promotion | Medium |
-| **Client & Customer Data** | client, customer, user, profile | Medium |
-| **Reports & Analytics** | report, analytics, data, metrics | Medium |
-| **Technical & Code** | source, code, script, config | Medium |
-| **Testing & Samples** | test, sample, example | Low |
-| **Documentation & Guides** | manual, guide, documentation, help | Medium |
-| **Financial Records** | invoice, receipt, payment | High |
+| **Pricing & Billing**| pricing, price, cost, billing | High |
+|**Legal & Contracts**| contract, agreement, legal, terms | High |
+|**Marketing & Campaigns**| marketing, campaign, ad, promotion | Medium |
+|**Client & Customer Data**| client, customer, user, profile | Medium |
+|**Reports & Analytics**| report, analytics, data, metrics | Medium |
+|**Technical & Code**| source, code, script, config | Medium |
+|**Testing & Samples**| test, sample, example | Low |
+|**Documentation & Guides**| manual, guide, documentation, help | Medium |
+|**Financial Records**| invoice, receipt, payment | High |
 
 ## 🎨 Content Type Badges
 
 Documents are automatically tagged with content types:
 
-- **📊 Structured Data** (CSV files)
+- **📊 Structured Data**(CSV files)
 
-- **📄 Document** (PDF, DOC, DOCX)
+- **📄 Document**(PDF, DOC, DOCX)
 
-- **📝 Text** (TXT, MD)
+- **📝 Text**(TXT, MD)
 
-- **🖼️ Image** (JPG, PNG, GIF)
+- **🖼️ Image**(JPG, PNG, GIF)
 
-- **❓ Unknown** (other file types)
+- **❓ Unknown**(other file types)
 
 ## 📏 Size Categories
 
@@ -153,9 +149,9 @@ def get_db_connection():
         password=os.getenv("DB_PASSWORD", "")
     )
 
-```
+```markdown
 
-**Note**: The dashboard now supports environment variables for secure configuration. Update `start_dashboard.sh` to use
+- *Note**: The dashboard now supports environment variables for secure configuration. Update `start_dashboard.sh` to use
 environment variables instead of hardcoded credentials.
 
 ### Custom Metadata Extraction
@@ -185,13 +181,13 @@ dashboard/
     └── js/
         └── app.js          # Interactive functionality
 
-```
+```markdown
 
 ## 🎯 Usage Examples
 
 ### Viewing Document Metadata
 
-1. Open the dashboard at [http://localhost:5001](http://localhost:5001)
+1. Open the dashboard at [<http://localhost:5001>](http://localhost:5001)
 2. Click "🔍 View Metadata" on any document card
 3. View detailed metadata in the modal popup
 
@@ -223,9 +219,7 @@ The dashboard integrates seamlessly with your existing DSPy RAG system:
 
 ### Common Issues
 
-**Port 5000/5001 already in use:**
-
-```bash
+- *Port 5000/5001 already in use:**```bash
 
 # Find and kill the process
 
@@ -233,19 +227,11 @@ lsof -ti:5001 | xargs kill -9
 
 # Or use a different port in dashboard.py
 
-```
-
-**Database connection failed:**
-
-- Ensure PostgreSQL is running
+```**Database connection failed:**- Ensure PostgreSQL is running
 
 - Check database credentials in `dashboard.py`
 
-- Verify `ai_agency` database exists
-
-**No documents showing:**
-
-- Check if documents exist in your database
+- Verify `ai_agency` database exists**No documents showing:**- Check if documents exist in your database
 
 - Verify the `documents` table structure
 
@@ -278,7 +264,7 @@ For issues or questions:
 3. Ensure all dependencies are installed
 4. Check file permissions on the dashboard directory
 
----
+- --
 
-**Dashboard Status**: ✅ Ready for production use with your RAG system
-**C-2: Central Retry Wrapper**: ✅ **COMPLETED** - Configurable retry logic with exponential backoff
+- *Dashboard Status**: ✅ Ready for production use with your RAG system
+- *C-2: Central Retry Wrapper**: ✅ **COMPLETED** - Configurable retry logic with exponential backoff

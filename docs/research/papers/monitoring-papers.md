@@ -3,7 +3,7 @@
 
 # Monitoring Research Papers
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -17,14 +17,9 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
 > **External Research**: Academic papers and research sources for system monitoring and observability.
 
-## 📚 **Papers**
-
-### **System Monitoring and Observability**
-
-- **Authors**: [Research Team]
+## 📚 **Papers**###**System Monitoring and Observability**-**Authors**: [Research Team]
 
 - **Key Insight**: Strategies for comprehensive system monitoring
 
@@ -32,20 +27,16 @@
 
 - **Citation**: [Full citation to be added]
 
-## 🔗 **Related Documentation**
-
-- `500_monitoring-research.md` - Our internal monitoring research summary
+## 🔗 **Related Documentation**- `500_monitoring-research.md` - Our internal monitoring research summary
 
 - `400_system-overview_advanced_features.md` - System architecture overview
 
-## 📖 **Key Insights**
-
-- Monitoring strategies
+## 📖**Key Insights**- Monitoring strategies
 
 - Observability patterns
 
 - Alert and notification systems
 
-## 🎯 **Implementation Impact**
+## 🎯**Implementation Impact**
 
 This research informs our monitoring and observability approach.

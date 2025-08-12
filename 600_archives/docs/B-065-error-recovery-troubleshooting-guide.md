@@ -16,9 +16,7 @@ troubleshooting workflows for all major components.
 
 ## 🏗️ System Architecture
 
-### **Error Recovery Layers**
-
-```
+### **Error Recovery Layers**```text
 
 ┌─────────────────────────────────────────────────────────────┐
 │                    User Interface Layer                     │
@@ -36,35 +34,29 @@ troubleshooting workflows for all major components.
 
 ```
 
-### **Core Components**
+### **Core Components**1.**Error Pattern Recognition**(`error_pattern_recognition.py`)
+  - 15+ predefined error patterns
+  - Real-time error analysis and classification
+  - Severity scoring and confidence calculation
 
-1. **Error Pattern Recognition** (`error_pattern_recognition.py`)
-   - 15+ predefined error patterns
-   - Real-time error analysis and classification
-   - Severity scoring and confidence calculation
+2.**HotFix Template System**(`hotfix_templates.py`)
+  - 3 template categories with structured content
+  - Variable substitution and customization
+  - Step-by-step recovery procedures
 
-2. **HotFix Template System** (`hotfix_templates.py`)
-   - 3 template categories with structured content
-   - Variable substitution and customization
-   - Step-by-step recovery procedures
+3.**Model-Specific Handler**(`model_specific_handling.py`)
+  - 5+ model configurations
+  - Fallback model selection
+  - Parameter adjustment strategies
 
-3. **Model-Specific Handler** (`model_specific_handling.py`)
-   - 5+ model configurations
-   - Fallback model selection
-   - Parameter adjustment strategies
-
-4. **Enhanced Retry Wrapper** (`retry_wrapper.py`)
-   - Integrated error pattern analysis
-   - Automatic retry with exponential backoff
-   - HotFix template generation
+4.**Enhanced Retry Wrapper**(`retry_wrapper.py`)
+  - Integrated error pattern analysis
+  - Automatic retry with exponential backoff
+  - HotFix template generation
 
 ## 🚨 Emergency Procedures
 
-### **Critical System Failures**
-
-#### **1. Complete System Down**
-
-```bash
+### **Critical System Failures**####**1. Complete System Down**```bash
 
 # Immediate Response
 
@@ -73,11 +65,9 @@ troubleshooting workflows for all major components.
 3. Restart core services: ./dspy-rag-system/quick_start.sh
 4. Verify database: python -c "from dspy_rag_system.src.utils.database_resilience import check_connection; check_connection()"
 
-```
+```text
 
-#### **2. Database Connection Issues**
-
-```bash
+#### **2. Database Connection Issues**```bash
 
 # Database Recovery
 
@@ -86,11 +76,9 @@ troubleshooting workflows for all major components.
 3. Restart database: sudo systemctl restart postgresql
 4. Verify schema: python -c "from dspy_rag_system.src.utils.database_resilience import verify_schema; verify_schema()"
 
-```
+```text
 
-#### **3. AI Model Failures**
-
-```bash
+#### **3. AI Model Failures**```bash
 
 # Model Recovery
 
@@ -99,15 +87,11 @@ troubleshooting workflows for all major components.
 3. Restart model services: ./scripts/restart_models.sh
 4. Verify model responses: python scripts/test_model_responses.py
 
-```
+```text
 
 ## 🔍 Troubleshooting Workflows
 
-### **Workflow 1: System Diagnostics**
-
-#### **Step 1: Health Check**
-
-```bash
+### **Workflow 1: System Diagnostics**####**Step 1: Health Check**```bash
 
 # Run comprehensive health check
 
@@ -117,11 +101,9 @@ python scripts/system_health_check.py
 
 python -c "from dspy_rag_system.src.utils.validator import run_health_checks; run_health_checks()"
 
-```
+```text
 
-#### **Step 2: Log Analysis**
-
-```bash
+#### **Step 2: Log Analysis**```bash
 
 # Check recent errors
 
@@ -131,11 +113,9 @@ grep -i "error\|exception\|failed" dspy-rag-system/watch_folder.log | tail -20
 
 tail -f dspy-rag-system/watch_folder_error.log
 
-```
+```text
 
-#### **Step 3: Component Testing**
-
-```bash
+#### **Step 3: Component Testing**```bash
 
 # Test database
 
@@ -149,13 +129,9 @@ python -c "from dspy_rag_system.src.utils.model_specific_handling import test_al
 
 python -c "from dspy_rag_system.src.utils.enhanced_file_validator import test_file_processing; test_file_processing()"
 
-```
+```text
 
-### **Workflow 2: Error Pattern Recognition**
-
-#### **Step 1: Error Classification**
-
-```python
+### **Workflow 2: Error Pattern Recognition**####**Step 1: Error Classification**```python
 from dspy_rag_system.src.utils.error_pattern_recognition import ErrorPatternRecognizer
 
 # Initialize recognizer
@@ -172,11 +148,9 @@ print(f"Severity: {result.severity}")
 print(f"Confidence: {result.confidence}")
 print(f"Recovery Strategy: {result.recovery_strategy}")
 
-```
+```text
 
-#### **Step 2: HotFix Generation**
-
-```python
+#### **Step 2: HotFix Generation**```python
 from dspy_rag_system.src.utils.hotfix_templates import HotFixTemplateGenerator
 
 # Generate HotFix
@@ -189,11 +163,9 @@ hotfix = generator.generate_hotfix("database_connection_timeout", {
 
 print(hotfix.content)
 
-```
+```text
 
-#### **Step 3: Model-Specific Recovery**
-
-```python
+#### **Step 3: Model-Specific Recovery**```python
 from dspy_rag_system.src.utils.model_specific_handling import ModelSpecificHandler
 
 # Handle model-specific error
@@ -204,13 +176,9 @@ recovery = handler.handle_model_error("mistral_7b", "timeout_error")
 print(f"Fallback Model: {recovery.fallback_model}")
 print(f"Adjusted Parameters: {recovery.adjusted_parameters}")
 
-```
+```text
 
-### **Workflow 3: Recovery Procedures**
-
-#### **Database Recovery**
-
-```bash
+### **Workflow 3: Recovery Procedures**####**Database Recovery**```bash
 
 # 1. Check connection
 
@@ -228,11 +196,9 @@ python -c "from dspy_rag_system.src.utils.database_resilience import verify_sche
 
 python -c "from dspy_rag_system.src.utils.database_resilience import test_queries; test_queries()"
 
-```
+```text
 
-#### **AI Model Recovery**
-
-```bash
+#### **AI Model Recovery**```bash
 
 # 1. Check model status
 
@@ -253,11 +219,9 @@ adjust_model_parameters('mistral_7b', 'timeout_error')"
 python -c "from dspy_rag_system.src.utils.model_specific_handling import verify_model_responses;
 verify_model_responses()"
 
-```
+```text
 
-#### **File Processing Recovery**
-
-```bash
+#### **File Processing Recovery**```bash
 
 # 1. Check file permissions
 
@@ -273,19 +237,17 @@ validate_file_integrity()"
 
 python -c "from dspy_rag_system.src.utils.enhanced_file_validator import reset_file_processing; reset_file_processing()"
 
-```
+```markdown
 
 ## 🛠️ Common Issues & Solutions
 
-### **Issue Category 1: Database Errors**
+### **Issue Category 1: Database Errors**####**Connection Timeout**
 
-#### **Connection Timeout**
+- *Symptoms**: `Connection timeout to database`
+- *Severity**: High
+- *Recovery Time**: 2-5 minutes
 
-**Symptoms**: `Connection timeout to database`
-**Severity**: High
-**Recovery Time**: 2-5 minutes
-
-**Solution**:
+- *Solution**:
 
 ```bash
 
@@ -305,15 +267,15 @@ python -c "from dspy_rag_system.src.utils.database_resilience import test_connec
 
 python -c "from dspy_rag_system.src.utils.database_resilience import reset_connection_pool; reset_connection_pool()"
 
-```
+```markdown
 
 #### **Authentication Failure**
 
-**Symptoms**: `Authentication failed for user`
-**Severity**: Critical
-**Recovery Time**: 5-10 minutes
+- *Symptoms**: `Authentication failed for user`
+- *Severity**: Critical
+- *Recovery Time**: 5-10 minutes
 
-**Solution**:
+- *Solution**:
 
 ```bash
 
@@ -331,17 +293,15 @@ verify_database_credentials()"
 python -c "from dspy_rag_system.src.utils.secrets_manager import reset_database_credentials;
 reset_database_credentials()"
 
-```
+```markdown
 
-### **Issue Category 2: AI Model Errors**
+### **Issue Category 2: AI Model Errors**####**Model Timeout**
 
-#### **Model Timeout**
+- *Symptoms**: `Model response timeout`
+- *Severity**: Medium
+- *Recovery Time**: 1-3 minutes
 
-**Symptoms**: `Model response timeout`
-**Severity**: Medium
-**Recovery Time**: 1-3 minutes
-
-**Solution**:
+- *Solution**:
 
 ```bash
 
@@ -360,15 +320,15 @@ switch_to_fallback('mistral_7b', 'gpt-3.5-turbo')"
 python -c "from dspy_rag_system.src.utils.model_specific_handling import adjust_timeout; adjust_timeout('mistral_7b',
 120)"
 
-```
+```markdown
 
 #### **Model Not Found**
 
-**Symptoms**: `Model not found or unavailable`
-**Severity**: High
-**Recovery Time**: 3-5 minutes
+- *Symptoms**: `Model not found or unavailable`
+- *Severity**: High
+- *Recovery Time**: 3-5 minutes
 
-**Solution**:
+- *Solution**:
 
 ```bash
 
@@ -386,17 +346,15 @@ check_model_availability()"
 python -c "from dspy_rag_system.src.utils.model_specific_handling import switch_to_available_model;
 switch_to_available_model()"
 
-```
+```markdown
 
-### **Issue Category 3: File Processing Errors**
+### **Issue Category 3: File Processing Errors**####**File Not Found**
 
-#### **File Not Found**
+- *Symptoms**: `File not found: /path/to/file`
+- *Severity**: Medium
+- *Recovery Time**: 1-2 minutes
 
-**Symptoms**: `File not found: /path/to/file`
-**Severity**: Medium
-**Recovery Time**: 1-2 minutes
-
-**Solution**:
+- *Solution**:
 
 ```bash
 
@@ -414,15 +372,15 @@ validate_file_path('/path/to/file')"
 
 python -c "from dspy_rag_system.src.utils.enhanced_file_validator import reset_file_processing; reset_file_processing()"
 
-```
+```markdown
 
 #### **Permission Denied**
 
-**Symptoms**: `Permission denied: /path/to/file`
-**Severity**: High
-**Recovery Time**: 2-3 minutes
+- *Symptoms**: `Permission denied: /path/to/file`
+- *Severity**: High
+- *Recovery Time**: 2-3 minutes
 
-**Solution**:
+- *Solution**:
 
 ```bash
 
@@ -439,17 +397,15 @@ chmod 644 /path/to/file
 python -c "from dspy_rag_system.src.utils.enhanced_file_validator import verify_file_access;
 verify_file_access('/path/to/file')"
 
-```
+```markdown
 
-### **Issue Category 4: Security Violations**
+### **Issue Category 4: Security Violations**####**Blocked Pattern Detected**
 
-#### **Blocked Pattern Detected**
+- *Symptoms**: `Security violation: blocked pattern detected`
+- *Severity**: Critical
+- *Recovery Time**: 1-2 minutes
 
-**Symptoms**: `Security violation: blocked pattern detected`
-**Severity**: Critical
-**Recovery Time**: 1-2 minutes
-
-**Solution**:
+- *Solution**:
 
 ```bash
 
@@ -465,16 +421,12 @@ python -c "from dspy_rag_system.src.utils.prompt_sanitizer import validate_input
 
 python -c "from dspy_rag_system.src.utils.prompt_sanitizer import reset_security_settings; reset_security_settings()"
 
-```
+```text
 
 ## 📊 Monitoring & Alerting
 
-### **Health Check Scripts**
-
-#### **System Health Check**
-
-```bash
-#!/bin/bash
+### **Health Check Scripts**####**System Health Check**```bash
+# !/bin/bash
 
 # scripts/system_health_check.sh
 
@@ -498,11 +450,9 @@ python -c "from dspy_rag_system.src.utils.prompt_sanitizer import check_security
 
 echo "=== Health Check Complete ==="
 
-```
+```text
 
-#### **Error Monitoring**
-
-```python
+#### **Error Monitoring**```python
 
 # scripts/monitor_errors.py
 
@@ -533,15 +483,11 @@ def send_alert(error):
 
     pass
 
-```
+```text
 
 ## 🔄 Recovery Automation
 
-### **Automated Recovery Scripts**
-
-#### **Database Recovery**
-
-```python
+### **Automated Recovery Scripts**####**Database Recovery**```python
 
 # scripts/auto_recover_database.py
 
@@ -566,11 +512,9 @@ def auto_recover_database():
         else:
             print("Database recovery failed, manual intervention required")
 
-```
+```text
 
-#### **Model Recovery**
-
-```python
+#### **Model Recovery**```python
 
 # scripts/auto_recover_models.py
 
@@ -596,9 +540,7 @@ def auto_recover_models():
 
 ## 📚 Reference Materials
 
-### **Error Pattern Reference**
-
-| Error Type | Pattern | Severity | Recovery Time |
+### **Error Pattern Reference**| Error Type | Pattern | Severity | Recovery Time |
 |------------|---------|----------|---------------|
 | Database Connection Timeout | `Connection timeout` | High | 2-5 min |
 | Model Timeout | `Model response timeout` | Medium | 1-3 min |
@@ -607,36 +549,26 @@ def auto_recover_models():
 | Security Violation | `Security violation` | Critical | 1-2 min |
 | Authentication Failed | `Authentication failed` | Critical | 5-10 min |
 
-### **Recovery Strategy Matrix**
-
-| Issue | Primary Strategy | Fallback Strategy | Manual Intervention |
+### **Recovery Strategy Matrix**| Issue | Primary Strategy | Fallback Strategy | Manual Intervention |
 |-------|-----------------|-------------------|-------------------|
 | Database Timeout | Reset connection pool | Restart PostgreSQL | Check network |
 | Model Timeout | Switch to fallback model | Adjust parameters | Restart model service |
 | File Processing | Reset file processing | Check permissions | Verify file existence |
 | Security Violation | Reset security settings | Validate input | Review security logs |
 
-### **Contact Information**
-
-#### **Emergency Contacts**
-
-- **System Administrator**: [Contact Info]
+### **Contact Information**####**Emergency Contacts**-**System Administrator**: [Contact Info]
 
 - **Database Administrator**: [Contact Info]
 
 - **Security Team**: [Contact Info]
 
-#### **Escalation Procedures**
-
-1. **Level 1**: Automated recovery (0-5 minutes)
+#### **Escalation Procedures**1.**Level 1**: Automated recovery (0-5 minutes)
 2. **Level 2**: Manual intervention (5-15 minutes)
 3. **Level 3**: Expert assistance (15+ minutes)
 
 ## 🎯 Success Metrics
 
-### **Recovery Time Targets**
-
-- **Critical Issues**: < 5 minutes
+### **Recovery Time Targets**-**Critical Issues**: < 5 minutes
 
 - **High Severity**: < 10 minutes
 
@@ -644,9 +576,7 @@ def auto_recover_models():
 
 - **Low Severity**: < 30 minutes
 
-### **System Reliability**
-
-- **Uptime Target**: 99.9%
+### **System Reliability**-**Uptime Target**: 99.9%
 
 - **Mean Time to Recovery**: < 10 minutes
 
@@ -654,10 +584,10 @@ def auto_recover_models():
 
 - **Automated Recovery Rate**: > 80%
 
----
+- --
 
-**Implementation Status**: ✅ **COMPLETED**
-**Last Updated**: 2024-08-07
-**Next Review**: Monthly review cycle
-**Dependencies**: B-002 ✅, B-060 ✅
-**Dependent Items**: B-066 (Security Guide) - enabled
+- *Implementation Status**: ✅ **COMPLETED**
+- *Last Updated**: 2024-08-07
+- *Next Review**: Monthly review cycle
+- *Dependencies**: B-002 ✅, B-060 ✅
+- *Dependent Items**: B-066 (Security Guide) - enabled

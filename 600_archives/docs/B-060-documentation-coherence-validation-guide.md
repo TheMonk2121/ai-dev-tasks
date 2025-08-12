@@ -1,4 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+# (Validator quick start).
+
 
 > Archived for historical reference. Active validator usage now lives in `400_documentation-retrieval-guide.md`
 (Validator quick start).
@@ -24,11 +26,9 @@ python scripts/doc_coherence_validator.py --file 100_cursor-memory-context.md
 
 python scripts/doc_coherence_validator.py --check-all
 
-```
+```text
 
-### **Pre-commit Hook Setup**
-
-```bash
+### **Pre-commit Hook Setup**```bash
 
 # Install pre-commit hook
 
@@ -42,11 +42,9 @@ python scripts/doc_coherence_validator.py --check-all
 
 ./scripts/pre_commit_doc_validation.sh
 
-```
+```text
 
-### **Running Tests**
-
-```bash
+### **Running Tests**```bash
 
 # Run all tests
 
@@ -60,13 +58,11 @@ python -m pytest tests/test_doc_coherence_validator.py::TestDocCoherenceValidato
 
 python -m pytest tests/test_doc_coherence_validator.py --cov=scripts.doc_coherence_validator
 
-```
+```text
 
 ## 📋 Configuration
 
-### **Priority Files**
-
-The system validates these priority files by default:
+### **Priority Files**The system validates these priority files by default:
 
 ```python
 priority_files = {
@@ -77,11 +73,9 @@ priority_files = {
     'context_priority': ['400_context-priority-guide.md']
 }
 
-```
+```text
 
-### **Exclude Patterns**
-
-Files matching these patterns are excluded from validation:
+### **Exclude Patterns**Files matching these patterns are excluded from validation:
 
 ```python
 exclude_patterns = [
@@ -95,7 +89,7 @@ exclude_patterns = [
     '600_archives/'
 ]
 
-```
+```text
 
 ### **Validation Patterns**
 
@@ -115,86 +109,44 @@ file_reference_pattern = re.compile(r'`([^`]+\.md)`')
 
 backlog_reference_pattern = re.compile(r'B‑\d+')
 
-```
+```yaml
 
 ## 🔧 Validation Tasks
 
-### **Task 1: Cross-Reference Validation**
-
-Validates all `<!-- -->` comment patterns in documentation files.
-
-**Checks:**
-
-- File existence for referenced targets
+### **Task 1: Cross-Reference Validation**Validates all `<!-- -->` comment patterns in documentation files.**Checks:**- File existence for referenced targets
 
 - Markdown file references
 
-- Cross-reference syntax
-
-**Example:**
-
-```markdown
+- Cross-reference syntax**Example:**```markdown
 <!-- BACKLOG_REFERENCE: 000_backlog.md -->
 
-```
+```yaml
 
-### **Task 2: File Naming Conventions**
-
-Validates the three-digit prefix naming system.
-
-**Rules:**
-
-- Files must have three-digit prefix (e.g., `100_`, `400_`)
+### **Task 2: File Naming Conventions**Validates the three-digit prefix naming system.**Rules:**- Files must have three-digit prefix (e.g., `100_`, `400_`)
 
 - Exceptions: `README.md`, `LICENSE.md`
 
-- Descriptive names after prefix
-
-**Valid Examples:**
-
-- `100_cursor-memory-context.md`
+- Descriptive names after prefix**Valid Examples:**- `100_cursor-memory-context.md`
 
 - `400_system-overview_advanced_features.md`
 
-- `000_backlog.md`
-
-**Invalid Examples:**
-
-- `invalid_file.md` (no prefix)
+- `000_backlog.md`**Invalid Examples:**- `invalid_file.md` (no prefix)
 
 - `100.md` (no descriptive name)
 
-### **Task 3: Backlog Reference Validation**
-
-Ensures all backlog item references exist in the backlog file.
-
-**Checks:**
-
-- References to `B‑XXX` items
+### **Task 3: Backlog Reference Validation**Ensures all backlog item references exist in the backlog file.**Checks:**- References to `B‑XXX` items
 
 - Validates against `000_backlog.md`
 
 - Reports invalid references
 
-### **Task 4: Memory Context Coherence**
-
-Validates memory context consistency with other documentation.
-
-**Checks:**
-
-- Current sprint references exist in backlog
+### **Task 4: Memory Context Coherence**Validates memory context consistency with other documentation.**Checks:**- Current sprint references exist in backlog
 
 - Architectural consistency with system overview
 
 - Terminology consistency
 
-### **Task 5: Cursor AI Semantic Validation**
-
-Uses Cursor AI for semantic coherence checking.
-
-**Features:**
-
-- Internal consistency analysis
+### **Task 5: Cursor AI Semantic Validation**Uses Cursor AI for semantic coherence checking.**Features:**- Internal consistency analysis
 
 - Cross-reference validation
 
@@ -202,21 +154,11 @@ Uses Cursor AI for semantic coherence checking.
 
 - Completeness checking
 
-- Clarity assessment
-
-**Requirements:**
-
-- Cursor AI must be available (`cursor` command)
+- Clarity assessment**Requirements:**- Cursor AI must be available (`cursor` command)
 
 - Falls back to basic validation if unavailable
 
-### **Task 6: Validation Report Generation**
-
-Creates comprehensive validation reports.
-
-**Output:**
-
-- JSON report in `docs/validation_report.json`
+### **Task 6: Validation Report Generation**Creates comprehensive validation reports.**Output:**- JSON report in `docs/validation_report.json`
 
 - Timestamp and validation results
 
@@ -226,9 +168,7 @@ Creates comprehensive validation reports.
 
 ## 🛠️ Advanced Usage
 
-### **Custom Validation Rules**
-
-You can extend the validator with custom rules:
+### **Custom Validation Rules**You can extend the validator with custom rules:
 
 ```python
 class CustomDocValidator(DocCoherenceValidator):
@@ -238,11 +178,9 @@ class CustomDocValidator(DocCoherenceValidator):
 
         return True
 
-```
+```text
 
-### **Integration with CI/CD**
-
-Add to your CI pipeline:
+### **Integration with CI/CD**Add to your CI pipeline:
 
 ```yaml
 
@@ -262,11 +200,9 @@ jobs:
       - name: Run documentation validation
         run: python scripts/doc_coherence_validator.py --no-dry-run
 
-```
+```text
 
-### **Pre-commit Integration**
-
-Add to `.pre-commit-config.yaml`:
+### **Pre-commit Integration**Add to `.pre-commit-config.yaml`:
 
 ```yaml
 repos:
@@ -278,58 +214,38 @@ repos:
         language: system
         files: \.md$
 
-```
+```text
 
 ## 🔍 Troubleshooting
 
-### **Common Issues**
-
-#### **Cursor AI Not Available**
-
-```
+### **Common Issues**####**Cursor AI Not Available**```
 
 [WARNING] Cursor AI not available - using basic validation only
 
-```
+```markdown**Solution:**Install Cursor AI or run without semantic validation.
 
-**Solution:** Install Cursor AI or run without semantic validation.
-
-#### **Broken Cross-References**
-
-```
+#### **Broken Cross-References**```
 
 [WARNING] Found 2 broken cross-references:
   100_cursor-memory-context.md -> 400_system-overview_advanced_features.md (File not found)
 
-```
+```markdown**Solution:**Fix the cross-reference or create the missing file.
 
-**Solution:** Fix the cross-reference or create the missing file.
-
-#### **Naming Convention Issues**
-
-```
+#### **Naming Convention Issues**```
 
 [WARNING] Found 1 naming convention issues:
   invalid_file.md: Missing three-digit prefix
 
-```
+```bash**Solution:**Rename file to follow three-digit prefix convention.
 
-**Solution:** Rename file to follow three-digit prefix convention.
-
-#### **Invalid Backlog References**
-
-```
+#### **Invalid Backlog References**```
 
 [WARNING] Found 1 invalid backlog references:
   memory_context.md: B-999 (Invalid backlog item reference)
 
-```
+```markdown**Solution:**Remove invalid reference or add item to backlog.
 
-**Solution:** Remove invalid reference or add item to backlog.
-
-### **Debug Mode**
-
-Enable debug logging:
+### **Debug Mode**Enable debug logging:
 
 ```python
 import logging
@@ -338,11 +254,9 @@ logging.basicConfig(level=logging.DEBUG)
 validator = DocCoherenceValidator(dry_run=True)
 validator.run_all_validations()
 
-```
+```text
 
-### **Validation Report Analysis**
-
-Check the validation report for detailed information:
+### **Validation Report Analysis**Check the validation report for detailed information:
 
 ```bash
 
@@ -354,28 +268,17 @@ cat docs/validation_report.json | jq '.'
 
 cat docs/validation_report.json | jq '.validation_results'
 
-```
+```text
 
 ## 📊 Performance Considerations
 
-### **Optimization Tips**
-
-1. **Use `--file` for single file validation**
-2. **Run in dry-run mode for testing**
-3. **Exclude large directories in exclude_patterns**
-4. **Use pre-commit hooks for automatic validation**
-
-### **Memory Usage**
-
-- **Small projects**: < 50MB memory usage
+### **Optimization Tips**1.**Use `--file` for single file validation**2.**Run in dry-run mode for testing**3.**Exclude large directories in exclude_patterns**4.**Use pre-commit hooks for automatic validation**###**Memory Usage**-**Small projects**: < 50MB memory usage
 
 - **Large projects**: ~100MB memory usage
 
 - **Cursor AI calls**: Additional memory per file
 
-### **Execution Time**
-
-- **Basic validation**: 1-5 seconds
+### **Execution Time**-**Basic validation**: 1-5 seconds
 
 - **Full validation**: 10-30 seconds
 
@@ -383,34 +286,28 @@ cat docs/validation_report.json | jq '.validation_results'
 
 ## 🔄 Maintenance
 
-### **Regular Validation**
-
-Run validation regularly to maintain coherence:
+### **Regular Validation**Run validation regularly to maintain coherence:
 
 ```bash
 
 # Daily validation (add to cron)
 
-0 9 * * * cd /path/to/project && python scripts/doc_coherence_validator.py --dry-run
+0 9* * *cd /path/to/project && python scripts/doc_coherence_validator.py --dry-run
 
 # Pre-commit validation (automatic)
 
 # Install pre-commit hook for automatic validation
 
-```
+```sql
 
-### **Updating Validation Rules**
-
-To add new validation rules:
+### **Updating Validation Rules**To add new validation rules:
 
 1. Add new task method to `DocCoherenceValidator`
 2. Update `run_all_validations()` method
 3. Add corresponding tests
 4. Update documentation
 
-### **Monitoring Validation Health**
-
-Track validation success over time:
+### **Monitoring Validation Health**Track validation success over time:
 
 ```bash
 
@@ -445,9 +342,7 @@ with open('docs/validation_report.json') as f:
 
 ## 🎯 Success Metrics
 
-### **Validation Coverage**
-
-- ✅ All priority files validated
+### **Validation Coverage**- ✅ All priority files validated
 
 - ✅ Cross-references checked
 
@@ -457,9 +352,7 @@ with open('docs/validation_report.json') as f:
 
 - ✅ Memory context coherence maintained
 
-### **Performance Metrics**
-
-- ⚡ Validation completes in < 30 seconds
+### **Performance Metrics**- ⚡ Validation completes in < 30 seconds
 
 - 📊 < 5% false positive rate
 
@@ -467,9 +360,7 @@ with open('docs/validation_report.json') as f:
 
 - 💾 < 100MB memory usage
 
-### **Integration Metrics**
-
-- 🔗 Pre-commit hooks working
+### **Integration Metrics**- 🔗 Pre-commit hooks working
 
 - 🧪 Test suite passing
 
@@ -477,8 +368,6 @@ with open('docs/validation_report.json') as f:
 
 - 🛠️ Maintenance procedures established
 
----
-
-**Implementation Status**: ✅ Complete
-**Last Updated**: 2024-08-07
-**Next Review**: Monthly review cycle
+- --**Implementation Status**: ✅ Complete
+- *Last Updated**: 2024-08-07
+- *Next Review**: Monthly review cycle

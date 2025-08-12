@@ -3,7 +3,7 @@
 This document contains all patches and edits for implementing Cache-Augmented Generation (CAG) and resolving legacy
 naming convention conflicts.
 
----
+- --
 
 ## PATCH 1: 200_naming-conventions.md - Convert to Three-Digit Ranges
 
@@ -40,19 +40,19 @@ The system is designed to be understandable by both humans and large language mo
 
 Files are categorized by purpose using numeric prefixes:
 
-- **`000-009`** – Core Workflow (PRD creation, task generation, execution)
+- **`000-009`**– Core Workflow (PRD creation, task generation, execution)
 
-- **`100-199`** – Automation & Tools (backlog management, memory context)
+- **`100-199`**– Automation & Tools (backlog management, memory context)
 
-- **`200-299`** – Configuration & Setup (model config, setup requirements)
+- **`200-299`**– Configuration & Setup (model config, setup requirements)
 
-- **`300-399`** – Templates & Examples (documentation examples, templates)
+- **`300-399`**– Templates & Examples (documentation examples, templates)
 
-- **`400-499`** – Documentation & Guides (project overview, system overview, context guides)
+- **`400-499`**– Documentation & Guides (project overview, system overview, context guides)
 
-- **`500-599`** – Testing & Observability (test harnesses, monitoring, security validation)
+- **`500-599`**– Testing & Observability (test harnesses, monitoring, security validation)
 
-- **`600-699`** – Archives & Completion Records (historical summaries, completion records)
+- **`600-699`**– Archives & Completion Records (historical summaries, completion records)
 
 ## 📝 File Naming Rules
 
@@ -74,14 +74,10 @@ Files are categorized by purpose using numeric prefixes:
 
 - `100-backlog-automation.md` (missing required first underscore)
 
-## 🧠 Memory Scaffolding Documentation Guidelines
-
-**For memory-scaffolding patterns see 401_memory-scaffolding-guide.md**
-
-### Content Structure
+## 🧠 Memory Scaffolding Documentation Guidelines**For memory-scaffolding patterns see 401_memory-scaffolding-guide.md**### Content Structure
 
 Each file should include:
-1. **Memory Context Comment**: `<!-- MEMORY_CONTEXT: [HIGH|MEDIUM|LOW] - [description] -->`
+1.**Memory Context Comment**: `<!-- MEMORY_CONTEXT: [HIGH|MEDIUM|LOW] - [description] -->`
 2. **Context Reference**: `<!-- CONTEXT_REFERENCE: [related-file].md -->`
 3. **Clear Purpose**: What this file is for and when to read it
 4. **Related Files**: Links to other relevant documentation
@@ -213,9 +209,9 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 - `600_completion-records/` - Directory for historical completion records
 
-```
+```text
 
----
+- --
 
 ## PATCH 2: 200_naming-conventions.md - Remove Static Tables
 
@@ -235,9 +231,9 @@ File renames and structural changes are tracked via Git issues rather than stati
 
 For migration tracking, see: migration/rename-tracker.md
 
-```
+```text
 
----
+- --
 
 ## PATCH 3: 200_naming-conventions.md - Add Call-Out
 
@@ -247,21 +243,19 @@ For migration tracking, see: migration/rename-tracker.md
 
 <!-- MEMORY_CONTEXT: MEDIUM - File organization and documentation guidelines for maintaining memory scaffolding -->
 
-**For memory-scaffolding patterns see 401_memory-scaffolding-guide.md**
+- *For memory-scaffolding patterns see 401_memory-scaffolding-guide.md**## 📋 Overview
 
-## 📋 Overview
+```text
 
-```
-
----
+- --
 
 ## NEW FILE: 401_memory-scaffolding-guide.md
 
 ```markdown
----
+- --
 context: HIGH
 tags: [memory, scaffolding]
----
+- --
 
 # Memory Scaffolding Documentation Guidelines
 
@@ -272,7 +266,7 @@ tags: [memory, scaffolding]
 ### Content Structure
 
 Each file should include:
-1. **Memory Context Comment**: `<!-- MEMORY_CONTEXT: [HIGH|MEDIUM|LOW] - [description] -->`
+1.**Memory Context Comment**: `<!-- MEMORY_CONTEXT: [HIGH|MEDIUM|LOW] - [description] -->`
 2. **Context Reference**: `<!-- CONTEXT_REFERENCE: [related-file].md -->`
 3. **Clear Purpose**: What this file is for and when to read it
 4. **Related Files**: Links to other relevant documentation
@@ -303,19 +297,15 @@ Each file should include:
 
 Use these reference patterns in other documents:
 
-#### **In PRDs and Task Lists:**
-
-```markdown
+#### **In PRDs and Task Lists:**```markdown
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 103_yi-coder-integration.md -->
 
-```
+```text
 
-#### **In Code Comments:**
-
-```python
+#### **In Code Comments:**```python
 
 # CONTEXT: See 400_context-priority-guide.md for file organization
 
@@ -323,22 +313,18 @@ Use these reference patterns in other documents:
 
 # IMPLEMENTATION: 104_dspy-development-context.md, 202_setup-requirements.md
 
-```
+```text
 
-#### **In Documentation:**
-
-```markdown
-> **Context Reference**: See `400_context-priority-guide.md` for complete file organization
+#### **In Documentation:**```markdown
+>**Context Reference**: See `400_context-priority-guide.md` for complete file organization
 > **Essential Files**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 > **Implementation Files**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 
-```
+```yaml
 
 ### Memory Context Integration
 
-#### **For AI Agents**
-
-- **Structured Data**: Easy to parse and understand
+#### **For AI Agents**-**Structured Data**: Easy to parse and understand
 
 - **Consistent Format**: Predictable metadata structure
 
@@ -346,9 +332,7 @@ Use these reference patterns in other documents:
 
 - **Dependency Management**: Clear prerequisite tracking
 
-#### **For Developers**
-
-- **Reduced Overhead**: Less manual memory maintenance
+#### **For Developers**-**Reduced Overhead**: Less manual memory maintenance
 
 - **Better Prioritization**: Data-driven decision making
 
@@ -358,9 +342,7 @@ Use these reference patterns in other documents:
 
 ### Implementation Notes
 
-#### **Parsing Rules**
-
-- Use regex to extract table rows
+#### **Parsing Rules**- Use regex to extract table rows
 
 - Parse HTML comments for metadata
 
@@ -368,9 +350,7 @@ Use these reference patterns in other documents:
 
 - Validate dependencies before processing
 
-#### **Command Execution**
-
-- Execute memory context commands in order
+#### **Command Execution**- Execute memory context commands in order
 
 - Rollback changes if any step fails
 
@@ -378,9 +358,7 @@ Use these reference patterns in other documents:
 
 - Handle errors gracefully
 
-#### **Error Handling**
-
-- Skip invalid entries
+#### **Error Handling**- Skip invalid entries
 
 - Use fallback values when metadata is missing
 
@@ -390,25 +368,19 @@ Use these reference patterns in other documents:
 
 ### Best Practices
 
-#### **File Organization**
-
-- **Essential**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
+#### **File Organization**-**Essential**: `400_project-overview.md`, `400_system-overview_advanced_features.md`, `000_backlog.md`
 
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 
 - **Domain**: `100_backlog-guide.md`, `103_yi-coder-integration.md`
 
-#### **Memory State Updates**
-
-- **When to update**: After completing backlog items, changing focus, adding features
+#### **Memory State Updates**-**When to update**: After completing backlog items, changing focus, adding features
 
 - **How to update**: Run `python scripts/update_cursor_memory.py`
 
 - **What gets updated**: Priorities, completed items, system status, timestamps
 
-#### **Quality Standards**
-
-- **Clear Purpose**: Every file should have a clear, single purpose
+#### **Quality Standards**-**Clear Purpose**: Every file should have a clear, single purpose
 
 - **Consistent Format**: Follow established patterns for metadata
 
@@ -418,7 +390,7 @@ Use these reference patterns in other documents:
 
 ```
 
----
+- --
 
 ## CAG EDIT 1: 520_log-specification.md - Add Cache Columns
 
@@ -438,11 +410,11 @@ CREATE TABLE episodic_logs (
 
 CREATE INDEX ON episodic_logs (cache_hit, similarity_score DESC);
 
-```
+```markdown
 
-**Note:** The `verification_frequency_hours` column may be NULL if defaults are inferred from usage patterns.
+- *Note:**The `verification_frequency_hours` column may be NULL if defaults are inferred from usage patterns.
 
----
+- --
 
 ## CAG EDIT 2: 300_prompt-library-core.md - Add Cache Metadata
 
@@ -457,15 +429,15 @@ CREATE INDEX ON episodic_logs (cache_hit, similarity_score DESC);
 Each prompt should include YAML front-matter with the following fields:
 
 ```yaml
----
+- --
 context: MEDIUM
 tags: [prompt, library]
 cacheable: true
 similarity_threshold: 0.90
 verification_frequency_hours: 24
----
+- --
 
-```
+```text
 
 ### Cache Metadata Fields
 
@@ -480,43 +452,43 @@ verification_frequency_hours: 24
 #### FAQ-Style Prompt (Cacheable)
 
 ```yaml
----
+- --
 context: MEDIUM
 tags: [faq, cacheable]
 cacheable: true
 similarity_threshold: 0.85
 verification_frequency_hours: 48
----
+- --
 
-```
+```text
 
 #### Dynamic Prompt (Not Cacheable)
 
 ```yaml
----
+- --
 context: MEDIUM
 tags: [dynamic, real-time]
 cacheable: false
----
+- --
 
-```
+```text
 
 #### Research Prompt (Conditionally Cacheable)
 
 ```yaml
----
+- --
 context: HIGH
 tags: [research, analysis]
 cacheable: true
 similarity_threshold: 0.95
 verification_frequency_hours: 12
----
+- --
+
+```text
 
 ```
 
-```
-
----
+- --
 
 ## CAG EDIT 3: 400_memory-context-guide.md - Add Cache Freshness Section
 
@@ -524,9 +496,7 @@ verification_frequency_hours: 12
 
 ## 🧠 Memory Context System
 
-### **How It Works**
-
-The memory context system provides structured information to AI models in order of importance:
+### **How It Works**The memory context system provides structured information to AI models in order of importance:
 
 | File | Purpose | When to Read | Memory Context |
 |------|---------|--------------|----------------|
@@ -535,56 +505,46 @@ The memory context system provides structured information to AI models in order 
 | `400_system-overview_advanced_features.md` | Technical architecture | Deep technical work | System design |
 | `400_project-overview.md` | Project overview | New features | Project scope |
 
-### **Cache Freshness & Confidence**
+### **Cache Freshness & Confidence**The memory context system includes cache-augmented generation (CAG) for improved performance:
 
-The memory context system includes cache-augmented generation (CAG) for improved performance:
-
-#### **Cache Hit Detection**
-
-- **Similarity Threshold**: Default 0.90, configurable per prompt
+#### **Cache Hit Detection**-**Similarity Threshold**: Default 0.90, configurable per prompt
 
 - **Cache Age**: Computed as `(now - last_verified)` in hours
 
-- **Confidence Score**: `similarity_score * freshness_factor`
+- **Confidence Score**: `similarity_score *freshness_factor`
 
-#### **Cache Freshness Rules**
-
-- **High Confidence**: similarity_score ≥ 0.93 AND cache_hit = true
+#### **Cache Freshness Rules**-**High Confidence**: similarity_score ≥ 0.93 AND cache_hit = true
 
 - **Medium Confidence**: similarity_score ≥ 0.85 AND cache_age < 24 hours
 
 - **Low Confidence**: similarity_score < 0.85 OR cache_age > 48 hours
 
-#### **Cache Management**
-
-- **Nightly Purge**: Moves stale cache entries to `600_archives/`
+#### **Cache Management**-**Nightly Purge**: Moves stale cache entries to `600_archives/`
 
 - **Verification Frequency**: Configurable per prompt (default: 24 hours)
 
 - **Derived Metrics**: Available via `v_cache_metrics` view
 
-#### **Cache Confidence View**
-
-```sql
+#### **Cache Confidence View**```sql
 CREATE VIEW v_cache_metrics AS
-SELECT *,
+SELECT*,
        EXTRACT(epoch FROM (now() - last_verified))/3600 AS cache_age_hours,
        CASE
          WHEN similarity_score >= 0.93 AND cache_hit THEN similarity_score
-         ELSE similarity_score * 0.8
+         ELSE similarity_score *0.8
        END AS cache_confidence_score
 FROM episodic_logs;
 
-```
+```text
 
 ```
 
----
+- --
 
 ## CAG EDIT 4: tests/prompt_eval.py - Add Threshold Sweeping
 
 ```python
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 """
 Prompt evaluation harness with cache-augmented generation support.
 """
@@ -628,7 +588,7 @@ class PromptEvaluator:
         step = (end - start) / (self.config.sweep_steps - 1)
 
         for i in range(self.config.sweep_steps):
-            threshold = start + (i * step)
+            threshold = start + (i* step)
             metrics = self.evaluate_threshold(threshold)
             results.append({
                 'threshold': threshold,
@@ -645,10 +605,10 @@ class PromptEvaluator:
         # Mock implementation - replace with actual evaluation
 
         return {
-            'f1': 0.85 + (threshold - 0.80) * 0.1,
-            'latency': 150 - (threshold - 0.80) * 50,
-            'tokens': 1000 - (threshold - 0.80) * 200,
-            'cache_hits': 0.3 + (threshold - 0.80) * 0.4
+            'f1': 0.85 + (threshold - 0.80) *0.1,
+            'latency': 150 - (threshold - 0.80)* 50,
+            'tokens': 1000 - (threshold - 0.80) *200,
+            'cache_hits': 0.3 + (threshold - 0.80)* 0.4
         }
 
     def run_evaluation(self, prompt_category: str = None) -> Dict[str, Any]:
@@ -713,9 +673,9 @@ def main():
 if __name__ == "__main__":
     main()
 
-```
+```text
 
----
+- --
 
 ## BACKLOG UPDATE: Add B-032-C1 to 000_backlog.md
 
@@ -723,21 +683,19 @@ if __name__ == "__main__":
 | B‑032 | Memory Context System Architecture Research | 🔥  | 8        | todo   | Optimize memory hierarchy for different AI model capabilities (7B vs 70B) | Literature review + benchmark harness + design recommendations | Improved retrieval F1 by ≥10% on 7B models |
 | B‑032‑C1 | Implement generation cache (Postgres) & add cache columns to episodic_logs | 🔥  | 3        | todo   | Add cache-augmented generation support with similarity scoring | PostgreSQL + cache_hit + similarity_score + last_verified | B-032 Memory Context System Architecture Research |
 
----
+- --
 
 ```
 
----
+- --
 
-**Implementation Complete**
+- *Implementation Complete**All patches and CAG-related edits are ready for implementation. The changes include:
 
-All patches and CAG-related edits are ready for implementation. The changes include:
-
-1. ✅ **Naming Convention Updates**: Three-digit prefixes and proper categorization
+1. ✅**Naming Convention Updates**: Three-digit prefixes and proper categorization
 2. ✅ **Memory Scaffolding Guide**: Dedicated HIGH-priority file for scaffolding patterns
 3. ✅ **Cache-Augmented Generation**: Complete implementation with threshold sweeping
 4. ✅ **Database Schema**: Cache columns added to episodic_logs table
 5. ✅ **Evaluation Framework**: Threshold sweeping and dynamic threshold support
 6. ✅ **Documentation Updates**: Cache freshness rules and confidence scoring
 
-**Ready for PR submission.** 🚀
+- *Ready for PR submission.** 🚀

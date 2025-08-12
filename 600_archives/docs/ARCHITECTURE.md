@@ -45,7 +45,7 @@ class CodeSignature(Signature):
     code = OutputField(desc="Generated code")
     tests = OutputField(desc="Generated tests")
 
-```
+```text
 
 ### DSPy Modules
 
@@ -73,7 +73,7 @@ class CodeAgent(Module):
 
         # Create tests
 
-```
+```text
 
 ### DSPy Chains
 
@@ -89,22 +89,22 @@ class FullPathChain(Chain):
         self.retrieval = RetrievalAgent()
         self.reasoning = ReasoningAgent()
 
-```
+```text
 
 ## 3. Agent Catalog
 
 | Agent | Purpose | Signature | Model | Status |
 |-------|---------|-----------|-------|--------|
-| **IntentRouter** | Query intent classification | IntentSignature | Cursor Native AI | ✅ Enabled |
-| **RetrievalAgent** | Document search & retrieval | RetrievalSignature | Cursor Native AI | ✅ Enabled |
-| **CodeAgent** | Code generation & testing | CodeSignature | Cursor Native AI | ✅ Enabled |
-| **ClarifierAgent** | Query clarification | ClarifierSignature | Mistral 7B Instruct | 🔧 Disabled |
-| **ReasoningAgent** | Deep reasoning & analysis | ReasoningSignature | Mixtral-8x7B | 🔧 Disabled |
-| **SelfAnswerAgent** | Simple direct answers | AnswerSignature | Mistral 7B Instruct | 🔧 Disabled |
-| **GeneratePlan** | Task planning & decomposition | PlanSignature | Mistral 7B Instruct | 🔧 Disabled |
-| **SchemaAgent** | Schema validation & generation | SchemaSignature | Mistral 7B Instruct | 🔧 Disabled |
-| **ComparisonAgent** | Multi-option comparison | ComparisonSignature | Mistral 7B Instruct | 🔧 Disabled |
-| **ReflectionAgent** | Self-evaluation & improvement | ReflectionSignature | Mistral 7B Instruct | 🔧 Disabled |
+| **IntentRouter**| Query intent classification | IntentSignature | Cursor Native AI | ✅ Enabled |
+|**RetrievalAgent**| Document search & retrieval | RetrievalSignature | Cursor Native AI | ✅ Enabled |
+|**CodeAgent**| Code generation & testing | CodeSignature | Cursor Native AI | ✅ Enabled |
+|**ClarifierAgent**| Query clarification | ClarifierSignature | Mistral 7B Instruct | 🔧 Disabled |
+|**ReasoningAgent**| Deep reasoning & analysis | ReasoningSignature | Mixtral-8x7B | 🔧 Disabled |
+|**SelfAnswerAgent**| Simple direct answers | AnswerSignature | Mistral 7B Instruct | 🔧 Disabled |
+|**GeneratePlan**| Task planning & decomposition | PlanSignature | Mistral 7B Instruct | 🔧 Disabled |
+|**SchemaAgent**| Schema validation & generation | SchemaSignature | Mistral 7B Instruct | 🔧 Disabled |
+|**ComparisonAgent**| Multi-option comparison | ComparisonSignature | Mistral 7B Instruct | 🔧 Disabled |
+|**ReflectionAgent**| Self-evaluation & improvement | ReflectionSignature | Mistral 7B Instruct | 🔧 Disabled |
 
 ## 4. Default Flow Diagram
 
@@ -118,7 +118,7 @@ RetrievalAgent ↻ retry
     ↓
 Direct Answer
 
-```
+```text
 
 ### Full-Path Flow (Complex Queries)
 
@@ -139,7 +139,7 @@ Intent Classification
     ↓
 Response Generation
 
-```
+```text
 
 ## 5. Runtime Flags Matrix
 
@@ -175,14 +175,14 @@ CLARIFIER=0
 MODEL_IDLE_EVICT_SECS=600
 MAX_RAM_PRESSURE=85
 
-```
+```text
 
 ## 6. Memory & Persistence Scheme
 
 ### Postgres Delta Snapshots
 
 ```sql
--- Memory persistence without tombstones
+- - Memory persistence without tombstones
 CREATE TABLE agent_memory (
     id UUID PRIMARY KEY,
     session_id TEXT NOT NULL,
@@ -192,11 +192,11 @@ CREATE TABLE agent_memory (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Index for efficient queries
+- - Index for efficient queries
 CREATE INDEX idx_agent_memory_session ON agent_memory(session_id);
 CREATE INDEX idx_agent_memory_agent ON agent_memory(agent_name);
 
-```
+```text
 
 ### Connection Pool Configuration
 
@@ -224,9 +224,7 @@ The system uses environment-driven connection pool settings:
 |-------|--------------|--------|---------------|
 | Cursor Native (default) | n/a | Warm | Primary path |
 
-*See `202_setup-requirements.md` for environment setup and configuration.*
-
-### RAM Guard Implementation
+- See `202_setup-requirements.md` for environment setup and configuration.*### RAM Guard Implementation
 
 ```python
 def assert_ram_ok(size_gb: float) -> None:
@@ -234,10 +232,10 @@ def assert_ram_ok(size_gb: float) -> None:
     current_usage = psutil.virtual_memory().percent
     max_pressure = int(os.getenv("MAX_RAM_PRESSURE", "85"))
 
-    if current_usage + (size_gb * 100 / total_ram) > max_pressure:
+    if current_usage + (size_gb* 100 / total_ram) > max_pressure:
         raise ResourceBusyError(f"RAM pressure would exceed {max_pressure}%")
 
-```
+```text
 
 ### Model Janitor Coroutine
 
@@ -251,7 +249,7 @@ async def model_janitor():
                 await model.unload()
         await asyncio.sleep(60)
 
-```
+```text
 
 ## 8. Error Handling & Retry Policy
 
@@ -271,7 +269,7 @@ if is_fast_path(query):
 else:
     return FullPathChain.forward(query)   # Full processing
 
-```
+```text
 
 ### Error Policy Configuration
 
@@ -286,7 +284,7 @@ else:
   }
 }
 
-```
+```yaml
 
 ### Error Policy & Retry Loop
 
@@ -301,9 +299,9 @@ else:
 The system implements configurable error handling with automatic retry logic. Each agent call is wrapped with a retry
 decorator that uses the error_policy configuration to determine retry behavior.
 
-**Location**: `src/utils/retry_wrapper.py`
+- *Location**: `src/utils/retry_wrapper.py`
 
-**Key Features**:
+- *Key Features**:
 
 - Configuration-driven retry policies from `config/system.json`
 
@@ -313,7 +311,7 @@ decorator that uses the error_policy configuration to determine retry behavior.
 
 - Convenience decorators for HTTP, database, and LLM operations
 
-**Integration**:
+- *Integration**:
 
 ```python
 @retry_llm
@@ -326,7 +324,7 @@ def database_operation():
     """Database operations with automatic retry"""
     return vector_store.search(query)
 
-```
+```text
 
 The retry decorator automatically handles transient failures while respecting fatal error types defined in the
 configuration.
@@ -354,7 +352,7 @@ def validate_file_path(file_path: str) -> bool:
 
     return True
 
-```
+```text
 
 ### Security – File Validation
 
@@ -373,7 +371,7 @@ def validate_secrets() -> None:
     if missing:
         raise ConfigurationError(f"Missing required secrets: {missing}")
 
-```
+```yaml
 
 ## 10. Performance Benchmarks
 
@@ -413,9 +411,9 @@ DEEP_REASONING=1 CLARIFIER=0 make run-local
 
 # Hot-reload configuration
 
-curl -X POST http://localhost:5000/admin/reload-config
+curl -X POST <http://localhost:5000/admin/reload-config>
 
-```
+```text
 
 ### Production Deployment
 
@@ -431,9 +429,9 @@ kubectl apply -f k8s/dspy-router.yaml
 
 ```
 
----
+- --
 
-*This architecture provides a solid foundation for intelligent query processing with progressive complexity and robust
+- This architecture provides a solid foundation for intelligent query processing with progressive complexity and robust
 resource management.*
 
 Note: This file is retained for historical architecture context. For the canonical architecture, see

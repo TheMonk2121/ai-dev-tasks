@@ -5,23 +5,15 @@
 
 This guide documents the setup requirements for the n8n workflow integration system.
 
-## 📋 **Prerequisites**
-
-### **1. n8n Installation**
-
-You need to have n8n installed and running. The system expects n8n to be available at `http://localhost:5678` by
-default.
-
-**Installation Options:**
-
-```bash
+## 📋 **Prerequisites**###**1. n8n Installation**You need to have n8n installed and running. The system expects n8n to be available at `<http://localhost:5678`> by
+default.**Installation Options:**```bash
 
 # Option 1: Docker (Recommended)
 
 docker run -it --rm \
-  --name n8n \
-  -p 5678:5678 \
-  -v ~/.n8n:/home/node/.n8n \
+  - -name n8n \
+  - p 5678:5678 \
+  - v ~/.n8n:/home/node/.n8n \
   n8nio/n8n
 
 # Option 2: npm
@@ -31,17 +23,11 @@ n8n start
 
 # Option 3: Direct download
 
-# Download from https://n8n.io/
+# Download from <https://n8n.io/>
 
-```
+```markdown
 
-### **2. Database Setup**
-
-The event ledger schema needs to be created in your PostgreSQL database.
-
-**Run the schema:**
-
-```bash
+### **2. Database Setup**The event ledger schema needs to be created in your PostgreSQL database.**Run the schema:**```bash
 
 # Connect to your PostgreSQL database
 
@@ -51,21 +37,15 @@ psql -h localhost -U your_user -d your_database
 
 \i dspy-rag-system/config/database/event_ledger.sql
 
-```
+```html
 
-## 🔑 **Required Information from n8n**
-
-### **1. n8n Base URL**
-
-- **Default**: `http://localhost:5678`
+## 🔑**Required Information from n8n**###**1. n8n Base URL**-**Default**: `<http://localhost:5678`>
 
 - **Custom**: Your n8n instance URL if different
 
 - **How to find**: Check your n8n installation URL
 
-### **2. n8n API Key (Optional but Recommended)**
-
-- **Location**: n8n Settings → API Keys
+### **2. n8n API Key (Optional but Recommended)**-**Location**: n8n Settings → API Keys
 
 - **How to create**:
   1. Open n8n in your browser
@@ -75,11 +55,9 @@ psql -h localhost -U your_user -d your_database
 
 - **Purpose**: Authentication for secure workflow execution
 
-### **3. Webhook URLs**
+### **3. Webhook URLs**For each workflow you want to trigger, you need the webhook URL:
 
-For each workflow you want to trigger, you need the webhook URL:
-
-- **Format**: `http://localhost:5678/webhook/{workflow-id}`
+- **Format**: `<http://localhost:5678/webhook/{workflow-id}`>
 
 - **How to find**:
   1. Open your workflow in n8n
@@ -87,17 +65,13 @@ For each workflow you want to trigger, you need the webhook URL:
   3. Copy the webhook URL from the node
   4. Note the workflow ID from the URL
 
-## ⚙️ **Configuration**
-
-### **Environment Variables**
-
-Add these to your environment or `.env` file:
+## ⚙️ **Configuration**###**Environment Variables**Add these to your environment or `.env` file:
 
 ```bash
 
 # n8n Configuration
 
-N8N_BASE_URL=http://localhost:5678
+N8N_BASE_URL=<http://localhost:5678>
 N8N_API_KEY=your_api_key_here
 
 # Database Configuration (if not already set)
@@ -113,46 +87,38 @@ DB_HEALTH_CHECK_INTERVAL=60
 POLL_INTERVAL=30
 MAX_EVENTS_PER_CYCLE=10
 
-```
+```yaml
 
-### **Workflow Setup**
-
-1. **Create Backlog Scrubber Workflow**:
-   - Create a new workflow in n8n
-   - Add a "Webhook" trigger node
-   - Add a "HTTP Request" node to read the backlog file
-   - Add a "Function" node to calculate scores
-   - Add a "HTTP Request" node to write the updated file
-   - Note the workflow ID for configuration
+### **Workflow Setup**1.**Create Backlog Scrubber Workflow**:
+  - Create a new workflow in n8n
+  - Add a "Webhook" trigger node
+  - Add a "HTTP Request" node to read the backlog file
+  - Add a "Function" node to calculate scores
+  - Add a "HTTP Request" node to write the updated file
+  - Note the workflow ID for configuration
 
 2. **Create Task Executor Workflow**:
-   - Create a new workflow in n8n
-   - Add a "Webhook" trigger node
-   - Add nodes to handle different task types
-   - Configure error handling and logging
-   - Note the workflow ID for configuration
+  - Create a new workflow in n8n
+  - Add a "Webhook" trigger node
+  - Add nodes to handle different task types
+  - Configure error handling and logging
+  - Note the workflow ID for configuration
 
-## 🧪 **Testing the Connection**
-
-### **1. Test n8n Connectivity**
-
-```bash
+## 🧪 **Testing the Connection**###**1. Test n8n Connectivity**```bash
 
 # Test if n8n is accessible
 
-curl http://localhost:5678/healthz
+curl <http://localhost:5678/healthz>
 
 # Test webhook endpoint (replace with your workflow ID)
 
-curl -X POST http://localhost:5678/webhook/your-workflow-id \
-  -H "Content-Type: application/json" \
-  -d '{"test": "data"}'
+curl -X POST <http://localhost:5678/webhook/your-workflow-id> \
+  - H "Content-Type: application/json" \
+  - d '{"test": "data"}'
 
-```
+```text
 
-### **2. Test Database Connection**
-
-```bash
+### **2. Test Database Connection**```bash
 
 # Test database connectivity
 
@@ -162,49 +128,41 @@ manager = get_database_manager()
 print('Database connection successful')
 "
 
-```
+```text
 
-### **3. Test Event Processing**
-
-```bash
+### **3. Test Event Processing**```bash
 
 # Run the demo script
 
 python3 demo_n8n_integration.py
 
-```
+```yaml
 
-## 🔍 **Troubleshooting**
-
-### **Common Issues**
-
-1. **n8n not accessible**:
-   - Check if n8n is running: `curl http://localhost:5678/healthz`
-   - Verify the port is correct (default: 5678)
-   - Check firewall settings
+## 🔍**Troubleshooting**###**Common Issues**1.**n8n not accessible**:
+  - Check if n8n is running: `curl <http://localhost:5678/healthz`>
+  - Verify the port is correct (default: 5678)
+  - Check firewall settings
 
 2. **Database connection failed**:
-   - Verify PostgreSQL is running
-   - Check connection string in environment variables
-   - Ensure the event ledger schema is created
+  - Verify PostgreSQL is running
+  - Check connection string in environment variables
+  - Ensure the event ledger schema is created
 
 3. **Webhook not working**:
-   - Verify the workflow ID is correct
-   - Check if the webhook trigger node is active
-   - Ensure the workflow is published
+  - Verify the workflow ID is correct
+  - Check if the webhook trigger node is active
+  - Ensure the workflow is published
 
 4. **API Key authentication failed**:
-   - Verify the API key is correct
-   - Check if API key authentication is enabled in n8n
-   - Ensure the key has proper permissions
+  - Verify the API key is correct
+  - Check if API key authentication is enabled in n8n
+  - Ensure the key has proper permissions
 
-### **Debug Commands**
-
-```bash
+### **Debug Commands**```bash
 
 # Check n8n status
 
-curl -s http://localhost:5678/healthz | jq
+curl -s <http://localhost:5678/healthz> | jq
 
 # Test database connection
 
@@ -226,30 +184,26 @@ except Exception as e:
     print(f'Event creation failed: {e}')
 "
 
-```
+```text
 
-## 📞 **Support**
+## 📞**Support**If you encounter issues:
 
-If you encounter issues:
-
-1. **Check the logs**: Look for error messages in the console output
+1.**Check the logs**: Look for error messages in the console output
 2. **Verify connectivity**: Test n8n and database connections separately
 3. **Review configuration**: Ensure all environment variables are set correctly
 4. **Check permissions**: Verify API keys and database user permissions
 
-## 🚀 **Next Steps**
+## 🚀 **Next Steps**Once the setup is complete:
 
-Once the setup is complete:
-
-1. **Start the event processor service**:
+1.**Start the event processor service**:
    ```bash
    python3 src/n8n_workflows/n8n_event_processor.py --daemon
    ```
 
-2. **Create your first workflow** in n8n
+2. **Create your first workflow**in n8n
 
-3. **Test the integration** using the demo script
+3.**Test the integration**using the demo script
 
-4. **Monitor the system** using the provided endpoints
+4.**Monitor the system** using the provided endpoints
 
 The n8n workflow integration is now ready for production use!

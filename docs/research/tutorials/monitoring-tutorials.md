@@ -4,7 +4,7 @@
 
 # Monitoring Tutorials
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -18,14 +18,9 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
 > **External Research**: Tutorials and guides for system monitoring and observability.
 
-## 📚 **Tutorials**
-
-### **System Monitoring Implementation Guide**
-
-- **Source**: Monitoring Best Practices
+## 📚 **Tutorials**###**System Monitoring Implementation Guide**-**Source**: Monitoring Best Practices
 
 - **Key Insight**: Step-by-step monitoring implementation
 
@@ -33,20 +28,16 @@
 
 - **Link**: [To be added]
 
-## 🔗 **Related Documentation**
-
-- `500_monitoring-research.md` - Our internal monitoring research summary
+## 🔗 **Related Documentation**- `500_monitoring-research.md` - Our internal monitoring research summary
 
 - `400_system-overview_advanced_features.md` - System architecture overview
 
-## 📖 **Key Insights**
-
-- Step-by-step monitoring guides
+## 📖**Key Insights**- Step-by-step monitoring guides
 
 - Best practices for production deployment
 
 - Observability patterns
 
-## 🎯 **Implementation Impact**
+## 🎯**Implementation Impact**
 
 These tutorials provide practical implementation guidance for our monitoring system.

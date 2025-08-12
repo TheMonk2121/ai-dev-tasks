@@ -18,9 +18,9 @@
 ### 1.1 Start LM Studio Server
 
 1. Open LM Studio application
-2. Go to **Local Server** tab
-3. Click **Start Server** button
-4. Verify server is running on `http://localhost:1234`
+2. Go to **Local Server**tab
+3. Click**Start Server**button
+4. Verify server is running on `<http://localhost:1234`>
 
 ### 1.2 Configure Server Settings
 
@@ -34,27 +34,27 @@
 
 ### 2.1 Find Yi-Coder Model
 
-1. In LM Studio, go to **Search** tab
+1. In LM Studio, go to **Search**tab
 2. Search for "Yi-Coder-9B-Chat-Q6_K"
 3. Look for the model with these specifications:
-   - **Model**: Yi-Coder-9B-Chat-Q6_K
-   - **Format**: GGUF
-   - **Size**: ~6GB
-   - **Quantization**: Q6_K
+  - **Model**: Yi-Coder-9B-Chat-Q6_K
+  - **Format**: GGUF
+  - **Size**: ~6GB
+  - **Quantization**: Q6_K
 
 ### 2.2 Download Model
 
-1. Click **Download** on the Yi-Coder model
+1. Click **Download**on the Yi-Coder model
 2. Wait for download to complete (may take 10-30 minutes)
-3. Verify model appears in **My Models** tab
+3. Verify model appears in**My Models**tab
 
 ## Step 3: Load Model in LM Studio
 
 ### 3.1 Load Model
 
-1. Go to **My Models** tab
+1. Go to**My Models**tab
 2. Find Yi-Coder-9B-Chat-Q6_K
-3. Click **Load** button
+3. Click**Load**button
 4. Wait for model to load into memory
 
 ### 3.2 Configure Model Settings
@@ -73,9 +73,9 @@ Use the test script to verify model is working:
 
 ```bash
 # Test basic model response
-curl -X POST http://localhost:1234/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
+curl -X POST <http://localhost:1234/v1/chat/completions> \
+  - H "Content-Type: application/json" \
+  - d '{
     "model": "Yi-Coder-9B-Chat-Q6_K",
     "messages": [
       {"role": "user", "content": "Write a simple Python function to calculate fibonacci numbers"}
@@ -84,7 +84,7 @@ curl -X POST http://localhost:1234/v1/chat/completions \
     "max_tokens": 500,
     "stream": false
   }'
-```
+```text
 
 ### 4.2 Expected Response
 
@@ -100,7 +100,7 @@ You should receive a JSON response with generated code:
     }
   ]
 }
-```
+```yaml
 
 ## Step 5: Performance Optimization
 
@@ -127,42 +127,23 @@ Monitor these metrics:
 
 ### 6.1 Common Issues
 
-**Server Not Starting**
-- Check if port 1234 is available
+- *Server Not Starting**- Check if port 1234 is available
 - Restart LM Studio
-- Check firewall settings
-
-**Model Not Loading**
-- Verify sufficient RAM (8GB+)
+- Check firewall settings**Model Not Loading**- Verify sufficient RAM (8GB+)
 - Check disk space (6GB+ for model)
-- Try loading with lower context length
-
-**Slow Response Times**
-- Reduce context length
+- Try loading with lower context length**Slow Response Times**- Reduce context length
 - Lower temperature setting
 - Close other applications
-- Use GPU acceleration if available
-
-**Memory Issues**
-- Reduce context length
+- Use GPU acceleration if available**Memory Issues**- Reduce context length
 - Close other applications
 - Restart LM Studio
 - Check system memory usage
 
-### 6.2 Error Messages
-
-**"Connection refused"**
-- LM Studio server not running
+### 6.2 Error Messages**"Connection refused"**- LM Studio server not running
 - Wrong port number
-- Firewall blocking connection
-
-**"Model not found"**
-- Model not loaded in LM Studio
+- Firewall blocking connection**"Model not found"**- Model not loaded in LM Studio
 - Wrong model name in request
-- Model file corrupted
-
-**"Out of memory"**
-- Insufficient RAM
+- Model file corrupted**"Out of memory"**- Insufficient RAM
 - Context length too high
 - Too many concurrent requests
 

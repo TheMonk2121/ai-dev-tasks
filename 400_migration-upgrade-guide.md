@@ -1,14 +1,14 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Migration procedures and upgrade safety -->
+# 🔄 Migration & Upgrade Guide
+
 
 ## 🔄 Migration & Upgrade Guide
 
 <!-- ANCHOR: tldr -->
-<a id="tldr"></a>
+{#tldr}
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Migration procedures maintained
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Migration procedures maintained
 
 - **Priority**: 🔥 Critical - System upgrade safety
 
@@ -34,7 +34,7 @@
 
 - **Comprehensive Coverage**: 100% of procedures documented
 
----
+- --
 
 ## Upgrade Philosophy
 
@@ -42,9 +42,7 @@
 
 - Native-first migration: Migrated from dual-model approach to Cursor Native AI + Specialized Agents. See archived details in `600_archives/legacy-project-deliverables/CURSOR_NATIVE_AI_MIGRATION_SUMMARY.md`.
 
-### **Risk Management Approach**
-
-- **Incremental Upgrades**: Small, manageable changes
+### **Risk Management Approach**-**Incremental Upgrades**: Small, manageable changes
 
 - **Comprehensive Testing**: All upgrades tested before production
 
@@ -54,9 +52,7 @@
 
 - **Documentation Requirements**: All changes documented
 
-### **Automation Strategy**
-
-- **Scripted Procedures**: Automated upgrade scripts
+### **Automation Strategy**-**Scripted Procedures**: Automated upgrade scripts
 
 - **Validation Automation**: Automated pre and post-upgrade validation
 
@@ -66,9 +62,7 @@
 
 - **Documentation Automation**: Automated documentation updates
 
-### **Quality Gates**
-
-- **Pre-Upgrade Validation**: System health and compatibility checks
+### **Quality Gates**-**Pre-Upgrade Validation**: System health and compatibility checks
 
 - **Upgrade Execution**: Monitored and controlled upgrade process
 
@@ -78,13 +72,11 @@
 
 - **Documentation Update**: All changes documented and versioned
 
----
+- --
 
 ## Pre-Upgrade Procedures
 
-### **System Health Assessment**
-
-- **Database Health**: Verify database connectivity and performance
+### **System Health Assessment**-**Database Health**: Verify database connectivity and performance
 
 - **Application Health**: Check application status and functionality
 
@@ -94,9 +86,7 @@
 
 - **Monitoring Health**: Ensure monitoring systems are operational
 
-### **Backup Procedures**
-
-- **Database Backup**: Complete database backup before upgrades
+### **Backup Procedures**-**Database Backup**: Complete database backup before upgrades
 
 - **Configuration Backup**: Backup all configuration files
 
@@ -106,9 +96,7 @@
 
 - **Documentation Backup**: Backup current documentation state
 
-### **Compatibility Validation**
-
-- **Version Compatibility**: Check version compatibility matrices
+### **Compatibility Validation**-**Version Compatibility**: Check version compatibility matrices
 
 - **Dependency Validation**: Verify all dependencies are compatible
 
@@ -118,9 +106,7 @@
 
 - **API Validation**: Check API compatibility and contracts
 
-### **Resource Assessment**
-
-- **Storage Requirements**: Verify sufficient storage for upgrades
+### **Resource Assessment**-**Storage Requirements**: Verify sufficient storage for upgrades
 
 - **Memory Requirements**: Check memory availability for upgrades
 
@@ -130,15 +116,11 @@
 
 - **Time Requirements**: Estimate upgrade duration and plan accordingly
 
----
+- --
 
 ## Database Migration Procedures
 
-### **PostgreSQL Schema Migrations**
-
-#### **Pre-Migration Checklist**
-
-- [ ] Database backup completed
+### **PostgreSQL Schema Migrations**####**Pre-Migration Checklist**- [ ] Database backup completed
 
 - [ ] Schema compatibility validated
 
@@ -148,21 +130,17 @@
 
 - [ ] Monitoring systems active
 
-#### **Migration Execution**
-
-```sql
--- Example: Add new column with default value
+#### **Migration Execution**```sql
+- - Example: Add new column with default value
 BEGIN;
 ALTER TABLE episodic_logs ADD COLUMN IF NOT EXISTS cache_hit BOOLEAN DEFAULT FALSE;
 ALTER TABLE episodic_logs ADD COLUMN IF NOT EXISTS similarity_score FLOAT DEFAULT 0.0;
 ALTER TABLE episodic_logs ADD COLUMN IF NOT EXISTS last_verified TIMESTAMP DEFAULT NOW();
 COMMIT;
 
-```
+```text
 
-#### **Post-Migration Validation**
-
-- [ ] Schema changes applied correctly
+#### **Post-Migration Validation**- [ ] Schema changes applied correctly
 
 - [ ] Data integrity maintained
 
@@ -172,9 +150,7 @@ COMMIT;
 
 - [ ] Documentation updated
 
-### **Data Migration Procedures**
-
-#### **Large Dataset Migration**
+### **Data Migration Procedures**####**Large Dataset Migration**
 
 ```python
 
@@ -225,29 +201,23 @@ def migrate_large_dataset(batch_size: int = 1000) -> bool:
         logging.error(f"Migration failed: {e}")
         return False
 
-```
+```text
 
-#### **Rollback Procedures**
-
-```sql
--- Example: Rollback schema changes
+#### **Rollback Procedures**```sql
+- - Example: Rollback schema changes
 BEGIN;
 ALTER TABLE episodic_logs DROP COLUMN IF EXISTS cache_hit;
 ALTER TABLE episodic_logs DROP COLUMN IF EXISTS similarity_score;
 ALTER TABLE episodic_logs DROP COLUMN IF EXISTS last_verified;
 COMMIT;
 
-```
+```bash
 
----
+- --
 
 ## Application Upgrade Procedures
 
-### **Python Package Upgrades**
-
-#### **Pre-Upgrade Validation**
-
-```bash
+### **Python Package Upgrades**####**Pre-Upgrade Validation**```bash
 
 # Check current package versions
 
@@ -260,13 +230,13 @@ source test_upgrade_env/bin/activate
 pip install -r requirements.txt --upgrade
 python -m pytest tests/
 
-```
+```text
 
 #### **Production Upgrade Script**
 
 ```bash
 
-#!/bin/bash
+# !/bin/bash
 
 # upgrade_packages.sh
 
@@ -300,13 +270,9 @@ else
     exit 1
 fi
 
-```
+```text
 
-### **Code Deployment Procedures**
-
-#### **Blue-Green Deployment**
-
-```yaml
+### **Code Deployment Procedures**####**Blue-Green Deployment**```yaml
 
 # Example: Kubernetes blue-green deployment
 
@@ -356,13 +322,11 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
 
-```
+```text
 
-#### **Rollback Script**
+#### **Rollback Script**```bash
 
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # rollback_deployment.sh
 
@@ -373,7 +337,7 @@ echo "Starting deployment rollback..."
 # Switch traffic back to blue deployment
 
 kubectl patch service ai-development-ecosystem-service \
-  -p '{"spec":{"selector":{"version":"blue"}}}'
+  - p '{"spec":{"selector":{"version":"blue"}}}'
 
 # Scale down green deployment
 
@@ -381,19 +345,15 @@ kubectl scale deployment ai-development-ecosystem-green --replicas=0
 
 echo "Rollback completed successfully"
 
-```
+```sql
 
----
+- --
 
 ## Infrastructure Upgrade Procedures
 
-### **Docker Container Upgrades**
+### **Docker Container Upgrades**####**Container Update Script**```bash
 
-#### **Container Update Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # upgrade_containers.sh
 
@@ -413,7 +373,7 @@ docker-compose up -d --force-recreate
 # Health check
 
 sleep 30
-if curl -f http://localhost:5000/health; then
+if curl -f <http://localhost:5000/health;> then
     echo "Container upgrade completed successfully"
 else
     echo "Container upgrade failed, rolling back..."
@@ -422,13 +382,9 @@ else
     exit 1
 fi
 
-```
+```sql
 
-### **Kubernetes Cluster Upgrades**
-
-#### **Cluster Upgrade Checklist**
-
-- [ ] Backup cluster configuration
+### **Kubernetes Cluster Upgrades**####**Cluster Upgrade Checklist**- [ ] Backup cluster configuration
 
 - [ ] Update control plane components
 
@@ -440,11 +396,9 @@ fi
 
 - [ ] Test application functionality
 
-#### **Node Upgrade Procedure**
+#### **Node Upgrade Procedure**```bash
 
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # upgrade_kubernetes_node.sh
 
@@ -468,17 +422,13 @@ kubectl uncordon $NODE_NAME
 
 echo "Node upgrade completed: $NODE_NAME"
 
-```
+```text
 
----
+- --
 
 ## AI Model Upgrade Procedures
 
-### **Model Version Management**
-
-#### **Model Compatibility Check**
-
-```python
+### **Model Version Management**####**Model Compatibility Check**```python
 
 # Example: Model compatibility validation
 
@@ -533,13 +483,13 @@ def validate_model_compatibility(model_path: str, expected_version: str) -> Dict
             "checks": {}
         }
 
-```
+```text
 
 #### **Model Upgrade Script**
 
 ```bash
 
-#!/bin/bash
+# !/bin/bash
 
 # upgrade_ai_model.sh
 
@@ -573,21 +523,17 @@ if [ $? -eq 0 ]; then
 else
     echo "Model upgrade failed, rolling back..."
     rm -rf models/$MODEL_NAME
-    mv models/${MODEL_NAME}_backup_* models/$MODEL_NAME
+    mv models/${MODEL_NAME}_backup_*models/$MODEL_NAME
     exit 1
 fi
 
-```
+```text
 
----
+- --
 
 ## Configuration Migration Procedures
 
-### **Environment Variable Updates**
-
-#### **Configuration Migration Script**
-
-```python
+### **Environment Variable Updates**####**Configuration Migration Script**```python
 
 # Example: Environment configuration migration
 
@@ -650,13 +596,9 @@ def apply_migration_rules(config: Dict[str, Any]) -> Dict[str, Any]:
 
     return migrated
 
-```
+```text
 
-### **Configuration Validation**
-
-#### **Pre-Migration Validation**
-
-```python
+### **Configuration Validation**####**Pre-Migration Validation**```python
 def validate_configuration_compatibility(config_path: str) -> Dict[str, Any]:
     """
     Validate configuration compatibility before migration.
@@ -707,38 +649,32 @@ def validate_configuration_compatibility(config_path: str) -> Dict[str, Any]:
             "warnings": []
         }
 
-```
+```text
 
----
+- --
 
 ## Rollback Procedures
 
-### **Database Rollback**
-
-#### **Schema Rollback Script**
-
-```sql
--- Example: Rollback database schema changes
+### **Database Rollback**####**Schema Rollback Script**```sql
+- - Example: Rollback database schema changes
 BEGIN;
 
--- Rollback table changes
+- - Rollback table changes
 DROP TABLE IF EXISTS new_feature_table;
 
--- Rollback column changes
+- - Rollback column changes
 ALTER TABLE episodic_logs DROP COLUMN IF EXISTS cache_hit;
 ALTER TABLE episodic_logs DROP COLUMN IF EXISTS similarity_score;
 ALTER TABLE episodic_logs DROP COLUMN IF EXISTS last_verified;
 
--- Rollback index changes
+- - Rollback index changes
 DROP INDEX IF EXISTS idx_new_feature;
 
 COMMIT;
 
-```
+```text
 
-#### **Data Rollback Script**
-
-```python
+#### **Data Rollback Script**```python
 
 # Example: Data rollback procedure
 
@@ -770,7 +706,7 @@ def rollback_data_changes(backup_file: str) -> bool:
         for table_name, data in backup_data.items():
             cursor.execute(f"DELETE FROM {table_name}")
             for row in data:
-                placeholders = ', '.join(['%s'] * len(row))
+                placeholders = ', '.join(['%s']* len(row))
                 columns = ', '.join(row.keys())
                 values = list(row.values())
                 cursor.execute(f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})", values)
@@ -786,15 +722,11 @@ def rollback_data_changes(backup_file: str) -> bool:
         logging.error(f"Data rollback failed: {e}")
         return False
 
-```
+```text
 
-### **Application Rollback**
+### **Application Rollback**####**Code Rollback Script**```bash
 
-#### **Code Rollback Script**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # rollback_application.sh
 
@@ -818,7 +750,7 @@ docker-compose up -d
 # Health check
 
 sleep 30
-if curl -f http://localhost:5000/health; then
+if curl -f <http://localhost:5000/health;> then
     echo "Application rollback completed successfully"
 else
     echo "Application rollback failed, restoring to $CURRENT_COMMIT"
@@ -828,15 +760,13 @@ else
     exit 1
 fi
 
-```
+```text
 
-### **Configuration Rollback**
-
-#### **Environment Rollback Script**
+### **Configuration Rollback**####**Environment Rollback Script**
 
 ```bash
 
-#!/bin/bash
+# !/bin/bash
 
 # rollback_configuration.sh
 
@@ -850,7 +780,7 @@ cp .env.backup .env
 
 # Restore configuration files
 
-cp config/backup/* config/
+cp config/backup/*config/
 
 # Restart services to apply changes
 
@@ -859,17 +789,13 @@ docker-compose up -d
 
 echo "Configuration rollback completed successfully"
 
-```
+```text
 
----
+- --
 
 ## Validation & Testing
 
-### **Pre-Upgrade Validation**
-
-#### **System Health Check**
-
-```python
+### **Pre-Upgrade Validation**####**System Health Check**```python
 
 # Example: Pre-upgrade system health check
 
@@ -912,7 +838,7 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
 
         # Check application
 
-        response = requests.get("http://localhost:5000/health", timeout=5)
+        response = requests.get("<http://localhost:5000/health",> timeout=5)
         if response.status_code == 200:
             health_results["application"] = True
 
@@ -954,11 +880,9 @@ def pre_upgrade_health_check() -> Dict[str, Any]:
 
     return health_results
 
-```
+```text
 
-### **Post-Upgrade Validation**
-
-#### **Functionality Testing**
+### **Post-Upgrade Validation**####**Functionality Testing**
 
 ```python
 
@@ -1004,7 +928,7 @@ def post_upgrade_validation() -> Dict[str, Any]:
 
         endpoints = ["/health", "/ready", "/metrics"]
         for endpoint in endpoints:
-            response = requests.get(f"http://localhost:5000{endpoint}", timeout=5)
+            response = requests.get(f"<http://localhost:5000{endpoint}",> timeout=5)
             if response.status_code == 200:
                 validation_results["api_endpoints"] = True
                 break
@@ -1040,13 +964,9 @@ def post_upgrade_validation() -> Dict[str, Any]:
 
     return validation_results
 
-```
+```text
 
-### **Performance Testing**
-
-#### **Upgrade Impact Assessment**
-
-```python
+### **Performance Testing**####**Upgrade Impact Assessment**```python
 
 # Example: Performance impact assessment
 
@@ -1079,7 +999,7 @@ def assess_upgrade_impact() -> Dict[str, Any]:
     # Measure response time
 
     start_time = time.time()
-    response = requests.get("http://localhost:5000/health", timeout=5)
+    response = requests.get("<http://localhost:5000/health",> timeout=5)
     impact_results["response_time"] = time.time() - start_time
 
     # Determine if impact is acceptable
@@ -1092,17 +1012,13 @@ def assess_upgrade_impact() -> Dict[str, Any]:
 
     return impact_results
 
-```
+```text
 
----
+- --
 
 ## Monitoring & Observability
 
-### **Upgrade Monitoring Dashboard**
-
-#### **Real-time Metrics**
-
-```python
+### **Upgrade Monitoring Dashboard**####**Real-time Metrics**```python
 
 # Example: Upgrade monitoring metrics
 
@@ -1153,13 +1069,9 @@ def track_upgrade_progress(upgrade_id: str, metrics: UpgradeMetrics) -> None:
         json=metrics_data
     )
 
-```
+```text
 
-### **Alerting Configuration**
-
-#### **Upgrade Alerts**
-
-```yaml
+### **Alerting Configuration**####**Upgrade Alerts**```yaml
 
 # Example: Prometheus alerting rules for upgrades
 
@@ -1199,9 +1111,9 @@ groups:
           summary: "Performance degradation during upgrade"
           description: "System performance has degraded during upgrade process"
 
-```
+```text
 
----
+- --
 
 ## Troubleshooting Guide
 
@@ -1227,23 +1139,15 @@ check_all_models(); test_fallback_models()"
 
 ./scripts/rollback.sh
 
-```
+```yaml
 
-### **Common Upgrade Issues**
+### **Common Upgrade Issues**####**Database Connection Issues**
 
-#### **Database Connection Issues**
-
-**Symptoms:**
-
-- Database connection timeouts
+- *Symptoms:**- Database connection timeouts
 
 - Connection pool exhaustion
 
-- Authentication failures
-
-**Solutions:**
-
-```bash
+- Authentication failures**Solutions:**```bash
 
 # Check database connectivity
 
@@ -1251,27 +1155,21 @@ psql $DATABASE_URL -c "SELECT 1"
 
 # Check connection pool status
 
-psql $DATABASE_URL -c "SELECT * FROM pg_stat_activity;"
+psql $DATABASE_URL -c "SELECT* FROM pg_stat_activity;"
 
 # Restart database connection pool
 
 docker-compose restart postgres
 
-```
+```yaml
 
 #### **Application Startup Issues**
 
-**Symptoms:**
-
-- Application fails to start
+- *Symptoms:**- Application fails to start
 
 - Health check failures
 
-- Port binding conflicts
-
-**Solutions:**
-
-```bash
+- Port binding conflicts**Solutions:**```bash
 
 # Check application logs
 
@@ -1285,21 +1183,15 @@ netstat -tulpn | grep :5000
 
 docker-compose restart ai-app
 
-```
+```yaml
 
 #### **AI Model Loading Issues**
 
-**Symptoms:**
-
-- Model loading failures
+- *Symptoms:**- Model loading failures
 
 - Inference timeouts
 
-- Memory allocation errors
-
-**Solutions:**
-
-```bash
+- Memory allocation errors**Solutions:**```bash
 
 # Check model files
 
@@ -1313,15 +1205,13 @@ nvidia-smi
 
 docker-compose restart cursor-native-ai
 
-```
+```text
 
-### **Emergency Recovery Procedures**
-
-#### **Critical System Failure**
+### **Emergency Recovery Procedures**####**Critical System Failure**
 
 ```bash
 
-#!/bin/bash
+# !/bin/bash
 
 # emergency_recovery.sh
 
@@ -1335,7 +1225,7 @@ docker-compose down
 
 # Restore from latest backup
 
-cp backups/latest/* .
+cp backups/latest/*.
 
 # Restart services
 
@@ -1344,22 +1234,20 @@ docker-compose up -d
 # Verify recovery
 
 sleep 30
-if curl -f http://localhost:5000/health; then
+if curl -f <http://localhost:5000/health;> then
     echo "Emergency recovery completed successfully"
 else
     echo "Emergency recovery failed"
     exit 1
 fi
 
-```
+```text
 
----
+- --
 
 ## Best Practices
 
-### **Upgrade Planning**
-
-- **Schedule Upgrades**: Plan upgrades during low-traffic periods
+### **Upgrade Planning**-**Schedule Upgrades**: Plan upgrades during low-traffic periods
 
 - **Test in Staging**: Always test upgrades in staging environment first
 
@@ -1369,9 +1257,7 @@ fi
 
 - **Monitor Closely**: Monitor system during and after upgrades
 
-### **Risk Mitigation**
-
-- **Incremental Changes**: Make small, incremental changes
+### **Risk Mitigation**-**Incremental Changes**: Make small, incremental changes
 
 - **Comprehensive Testing**: Test all upgrade procedures thoroughly
 
@@ -1381,9 +1267,7 @@ fi
 
 - **Plan for Failure**: Always plan for upgrade failures
 
-### **Performance Optimization**
-
-- **Minimize Downtime**: Design upgrades for minimal downtime
+### **Performance Optimization**-**Minimize Downtime**: Design upgrades for minimal downtime
 
 - **Optimize Resources**: Optimize resource usage during upgrades
 
@@ -1393,9 +1277,7 @@ fi
 
 - **Test Performance**: Test performance impact before production
 
-### **Security Considerations**
-
-- **Secure Access**: Secure access to upgrade procedures
+### **Security Considerations**-**Secure Access**: Secure access to upgrade procedures
 
 - **Audit Logging**: Log all upgrade activities
 
@@ -1405,25 +1287,19 @@ fi
 
 - **Security Validation**: Validate security after upgrades
 
----
+- --
 
 ## Emergency Procedures
 
-### **Critical System Failure Response**
-
-#### **Immediate Actions**
-
-1. **Stop Upgrade**: Immediately stop the upgrade process
+### **Critical System Failure Response**####**Immediate Actions**1.**Stop Upgrade**: Immediately stop the upgrade process
 2. **Assess Impact**: Assess the impact of the failure
 3. **Initiate Rollback**: Initiate rollback procedures
 4. **Notify Stakeholders**: Notify relevant stakeholders
 5. **Document Incident**: Document the incident and response
 
-#### **Recovery Procedures**
+#### **Recovery Procedures**```bash
 
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # critical_failure_recovery.sh
 
@@ -1443,22 +1319,18 @@ docker-compose up -d
 # Verify system recovery
 
 sleep 60
-if curl -f http://localhost:5000/health; then
+if curl -f <http://localhost:5000/health;> then
     echo "Critical failure recovery completed successfully"
 else
     echo "Critical failure recovery failed. Manual intervention required."
     exit 1
 fi
 
-```
+```text
 
-### **Data Loss Prevention**
+### **Data Loss Prevention**####**Emergency Backup Procedures**```bash
 
-#### **Emergency Backup Procedures**
-
-```bash
-
-#!/bin/bash
+# !/bin/bash
 
 # emergency_backup.sh
 
@@ -1491,10 +1363,8 @@ echo "Emergency backup completed: $BACKUP_DIR"
 
 ```
 
----
-
-**Document Version**: 1.0
-**Last Updated**: 2024-08-07
-**Next Review**: 2024-08-14
-**Status**: Production Ready
-**Review Cycle**: Monthly
+- --**Document Version**: 1.0
+- *Last Updated**: 2024-08-07
+- *Next Review**: 2024-08-14
+- *Status**: Production Ready
+- *Review Cycle**: Monthly

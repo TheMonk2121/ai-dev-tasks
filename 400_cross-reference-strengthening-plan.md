@@ -1,10 +1,12 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_testing-strategy-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Cross-reference policy and validation -->
+# 🔗 Cross-Reference Strengthening Plan (v2)
+
 
 ## 🔗 Cross-Reference Strengthening Plan (v2)
 
-<a id="tldr"></a>
+{#tldr}
 
 ## 🔎 TL;DR
 
@@ -18,10 +20,7 @@
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - Cross-reference policy enforced
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Cross-reference policy enforced
 
 - **Priority**: 📋 Medium - Documentation integrity
 
