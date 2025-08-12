@@ -30,45 +30,51 @@
 
 ## Run loop
 
-2. **Select Next Task**- Find task with status `[ ]` where all dependencies are `[x]`
-  - Skip tasks marked `[!]` (blocked)
-  - Prioritize tasks based on backlog impact estimates when possible
-  - Check backlog dependencies before starting tasks
-  - **Consider backlog scores**for task selection when available
-  - **Prioritize high-scoring items**when multiple tasks are ready
+1. **Select Next Task** - Find task with status `[ ]` where all dependencies are `[x]`
+
+- Skip tasks marked `[!]` (blocked)
+- Prioritize tasks based on backlog impact estimates when possible
+- Check backlog dependencies before starting tasks
+- **Consider backlog scores** for task selection when available
+- **Prioritize high-scoring items** when multiple tasks are ready
 
 <!-- ANCHOR: pause-points -->
 {#pause-points}
 
-3.**Execute Task**- Follow steps in "Do:" section
-  - Use Cursor Native AI for reasoning and planning
-  - Use Specialized Agents for code implementation
+1. **Execute Task** - Follow steps in "Do:" section
 
-4.**Validate Completion**- Run all "Done when:" criteria
-  - If any fail → mark task `[!]` and create HotFix task
-  - If all pass → mark task `[x]`
+- Use Cursor Native AI for reasoning and planning
+- Use Specialized Agents for code implementation
+
+1. **Validate Completion** - Run all "Done when:" criteria
+
+- If any fail → mark task `[!]` and create HotFix task
+- If all pass → mark task `[x]`
 
 <!-- ANCHOR: state -->
 {#state}
 
-5.**Update State**- Write/update `.ai_state.json` with current state
-  - Update progress tracking
+1. **Update State** - Write/update `.ai_state.json` with current state
 
-6.**Check for Pause**- If `🛑 Pause After: yes` AND `Auto-Advance: no` → wait for human input
-  - Otherwise continue to next task
+- Update progress tracking
 
-7.**Update Backlog**(the execution engine)
-  - Mark completed features in backlog as implemented
-  - **Move completed items to "Completed Items" section**in backlog
-  - Update status from "todo" to "✅ done" in backlog table
-  - Add completion date and implementation notes
-  - Add new discoveries or requirements to backlog
-  - Update effort estimates based on actual implementation time
-  - Execute AI-BACKLOG-META commands for automated updates
-  - **Update scoring metadata**if effort estimates change significantly
-  - **Re-calculate scores**if business value or priorities shift
-  - **Update timestamp**: Change *Last Updated: YYYY-MM-DD HH:MM*to current time
-  - **Add history**: Move current *Last Updated*to*Previously Updated*line
+1. **Check for Pause** - If `🛑 Pause After: yes` AND `Auto-Advance: no` → wait for human input
+
+- Otherwise continue to next task
+
+1. **Update Backlog** (the execution engine)
+
+- Mark completed features in backlog as implemented
+- **Move completed items to "Completed Items" section** in backlog
+- Update status from "todo" to "✅ done" in backlog table
+- Add completion date and implementation notes
+- Add new discoveries or requirements to backlog
+- Update effort estimates based on actual implementation time
+- Execute AI-BACKLOG-META commands for automated updates
+- **Update scoring metadata** if effort estimates change significantly
+- **Re-calculate scores** if business value or priorities shift
+- **Update timestamp**: Change *Last Updated: YYYY-MM-DD HH:MM* to current time
+- **Add history**: Move current *Last Updated* to *Previously Updated* line
 
 - --
 
@@ -92,11 +98,11 @@
 
 ### Default Rules
 
-- **Auto-Advance: yes**for Medium and Low priority tasks
+- **Auto-Advance: yes** for Medium and Low priority tasks
 
-- **Auto-Advance: no**for Critical tasks, deployment changes, database migrations
+- **Auto-Advance: no** for Critical tasks, deployment changes, database migrations
 
-- **Auto-Advance: no**when `🛑 Pause After: yes`
+- **Auto-Advance: no** when `🛑 Pause After: yes`
 
 - --
 
@@ -260,12 +266,12 @@
 
 This approach ensures:
 
-- **Efficient AI execution**with state caching
+- **Efficient AI execution** with state caching
 
-- **Automatic error recovery**with HotFix tasks
+- **Automatic error recovery** with HotFix tasks
 
-- **Minimal human intervention**with smart pausing
+- **Minimal human intervention** with smart pausing
 
-- **Clear progress tracking**for oversight
+- **Clear progress tracking** for oversight
 
 - **Safe execution** with appropriate checkpoints
