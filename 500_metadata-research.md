@@ -4,7 +4,6 @@
 <!-- MEMORY_CONTEXT: MEDIUM - Metadata research and governance patterns -->
 # 📊 Metadata & Governance Research
 
-
 ## 📊 Metadata & Governance Research
 
 {#tldr}

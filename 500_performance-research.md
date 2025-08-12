@@ -3,7 +3,6 @@
 <!-- MEMORY_CONTEXT: MEDIUM - Performance research and optimization patterns -->
 # ⚡ Performance Research
 
-
 ## ⚡ Performance Research
 
 {#tldr}
@@ -36,7 +35,7 @@ Backlog link: B-005
 
 - Token and retrieval overhead dominate; caching and selective context cut latency/cost fast.
 
-- PG indexes (HNSW/GIN FTS) and query plans materially affect retrieval time.
+- PG indexes (HNSW/GIN FTS) and query plans materially affect retrieval time.  # cSpell:ignore HNSW
 
 - Streaming responses improve perceived latency without hurting accuracy.
 

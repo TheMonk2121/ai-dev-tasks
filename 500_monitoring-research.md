@@ -2,7 +2,6 @@
 <!-- MEMORY_CONTEXT: MEDIUM - Monitoring research and observability patterns -->
 # 📊 Monitoring & Observability Research
 
-
 ## 📊 Monitoring & Observability Research
 
 {#tldr}
