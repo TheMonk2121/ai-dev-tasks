@@ -8,7 +8,7 @@ This document summarizes the comprehensive optimization of the vector store modu
 
 ### **Benchmark Results (Phase 3)**
 - **Vector Search**: 48ms average (EXCELLENT - < 100ms)
-- **Hybrid Search**: 2ms average (EXCELLENT - < 200ms)  
+- **Hybrid Search**: 2ms average (EXCELLENT - < 200ms)
 - **Cache Performance**: 18.5x speedup (EXCELLENT - > 2x)
 - **Document Insertion**: 157ms average per document
 
@@ -26,12 +26,12 @@ This document summarizes the comprehensive optimization of the vector store modu
 #### **1.1 Database Schema Updates**
 ```sql
 -- Added span tracking columns
-ALTER TABLE document_chunks 
+ALTER TABLE document_chunks
 ADD COLUMN IF NOT EXISTS start_offset INTEGER DEFAULT 0,
 ADD COLUMN IF NOT EXISTS end_offset INTEGER DEFAULT 0;
 
 -- Added document metadata columns
-ALTER TABLE documents 
+ALTER TABLE documents
 ADD COLUMN IF NOT EXISTS document_id TEXT,
 ADD COLUMN IF NOT EXISTS metadata JSONB;
 
@@ -79,8 +79,8 @@ def _query_embedding(model_name: str, query: str) -> bytes:
 
 #### **3.2 Proper Score Fusion**
 ```python
-def _fuse_dense_sparse(rows_dense: List[Dict], rows_sparse: List[Dict], 
-                      limit: int, method: str = "zscore", 
+def _fuse_dense_sparse(rows_dense: List[Dict], rows_sparse: List[Dict],
+                      limit: int, method: str = "zscore",
                       w_dense: float = 0.7, w_sparse: float = 0.3) -> List[Dict]:
     """Z-score normalization with configurable weights"""
 ```
