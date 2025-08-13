@@ -58,14 +58,14 @@
 find . -name "*.md" -not -path "./venv/*" -not -path "./node_modules/*" -not -path "./.git/*" -exec sh -c 'echo "" >> "$1"' _ {} \;
 ```markdown
 
-#### 1.2 MD012 - Multiple Blank Lines (111 issues)
+## 1.2 MD012 - Multiple Blank Lines (111 issues)
 - *Automation Level:** ✅ Fully Automated
 ```bash
 # Use sed to remove multiple consecutive blank lines
 find . -name "*.md" -not -path "./venv/*" -not -path "./node_modules/*" -not -path "./.git/*" -exec sed -i '' '/^$/N;/^\n$/D' {} \;
 ```yaml
 
-#### 1.3 MD040 - Code Block Languages (86 issues)
+## 1.3 MD040 - Code Block Languages (86 issues)
 - *Automation Level:**🔶 Semi-Automated
 - Create script to detect unlabeled code blocks and add appropriate language tags
 - Focus on common patterns: ```` → ````text`, ```` → ````python`, etc.
@@ -83,7 +83,7 @@ find . -name "*.md" -not -path "./venv/*" -not -path "./node_modules/*" -not -pa
 find . -name "*.md" -not -path "./venv/*" -not -path "./node_modules/*" -not -path "./.git/*" -exec sed -i '' 's|https://[^[:space:]]*|<&>|g' {} \;
 ```yaml
 
-#### 2.3 MD041 - Missing H1 Headings (62 issues)
+## 2.3 MD041 - Missing H1 Headings (62 issues)
 - *Automation Level:**🔶 Semi-Automated
 - Add H1 headings after comment blocks
 - Requires manual review for appropriate titles
@@ -118,9 +118,9 @@ find . -name "*.md" -not -path "./venv/*" -not -path "./node_modules/*" -not -pa
 find . -name "*.md" -not -path "./venv/*" -not -path "./node_modules/*" -not -path "./.git/*" -exec sed -i '' 's/\*\* \([^*]*\) \*\*/**\1**/g' {} \;
 ```
 
-### Phase 5: Final Cleanup (Week 4)
+## Phase 5: Final Cleanup (Week 4)
 
-#### 5.1 MD001 - Heading Increment (9 issues)
+### 5.1 MD001 - Heading Increment (9 issues)
 
 - *Automation Level:**🔶 Semi-Automated
 - Fix heading level jumps (e.g., h2 → h4)

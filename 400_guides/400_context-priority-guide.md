@@ -313,7 +313,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 ```text
 
-### **In Documentation:**```markdown
+## **In Documentation:**```markdown
 >**Context Reference**: See `400_guides/400_context-priority-guide.md` for complete file organization
 > **Essential Files**: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
 > **Implementation Files**: `100_memory/100_memory/104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
@@ -469,7 +469,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 ## **Memory Scaffolding Integration**###**Cross-Reference Implementation**To integrate this guide with other documents, add these references:
 
-#### **In 400_guides/400_project-overview.md:**```markdown
+### **In 400_guides/400_project-overview.md:**```markdown
 <!-- ESSENTIAL_FILES: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md, 000_core/000_backlog.md -->
 
 ```text

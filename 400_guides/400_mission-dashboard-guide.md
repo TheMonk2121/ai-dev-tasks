@@ -390,7 +390,7 @@ python3 -m pytest tests/test_mission_dashboard.py::TestMissionDashboardAPI -v
 
 ```text
 
-### Demo Script
+## Demo Script
 
 ```bash
 
@@ -482,7 +482,7 @@ export ENVIRONMENT=production
 
 ```text
 
-### Monitoring and Alerting
+## Monitoring and Alerting
 
 - **Health checks**: Regular health endpoint monitoring
 

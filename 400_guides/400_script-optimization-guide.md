@@ -57,7 +57,7 @@ class CachedBacklogParser:
         hash_file.write_text(self.get_backlog_hash(file_path))
 ```
 
-#### **Performance Targets**:
+## **Performance Targets**:
 - **Current**: ~2-3 seconds
 - **Target**: <500ms (80% improvement)
 - **Memory**: <50MB
@@ -108,7 +108,7 @@ class OptimizedConflictChecker:
         return results
 ```
 
-#### **Performance Targets**:
+## **Performance Targets**:
 - **Current**: ~5-10 seconds
 - **Target**: <2 seconds (75% improvement)
 - **Memory**: <30MB
@@ -162,7 +162,7 @@ class OptimizedTaskManager:
                     raise e
 ```
 
-#### **Performance Targets**:
+## **Performance Targets**:
 - **Current**: ~10-30 seconds for full execution
 - **Target**: <5 seconds (80% improvement)
 - **Memory**: <100MB
@@ -226,7 +226,7 @@ class OptimizedDocValidator:
         return issues
 ```
 
-#### **Performance Targets**:
+## **Performance Targets**:
 - **Current**: ~15-45 seconds for full validation
 - **Target**: <5 seconds (85% improvement)
 - **Memory**: <80MB
@@ -287,7 +287,7 @@ class OptimizedConflictAuditor:
         return await loop.run_in_executor(None, check_func)
 ```
 
-#### **Performance Targets**:
+## **Performance Targets**:
 - **Current**: ~30-90 seconds for full audit
 - **Target**: <15 seconds (75% improvement)
 - **Memory**: <120MB
@@ -323,7 +323,7 @@ python scripts/performance_benchmark.py --iterations 5
 python scripts/performance_benchmark.py --script update_cursor_memory --iterations 10
 ```
 
-### **Track Improvements**:
+## **Track Improvements**:
 ```bash
 # Save baseline results
 python scripts/performance_benchmark.py --save baseline_results.json

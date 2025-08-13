@@ -33,7 +33,7 @@ MAX_RAM_PRESSURE=85  # Maximum RAM usage percentage
 LLM_TIMEOUT_SEC=90  # Overrides agent timeouts (the execution engine)
 ```
 
-#### **Database Configuration**
+## **Database Configuration**
 
 ```bash
 # Connection Settings
@@ -52,7 +52,7 @@ DB_CONNECTION_TIMEOUT=30  # Database connection timeout in seconds
 DB_HEALTH_CHECK_INTERVAL=60  # Database health check interval in seconds
 ```
 
-#### **Network & HTTP Configuration**
+## **Network & HTTP Configuration**
 
 ```bash
 # HTTP Timeouts
@@ -66,7 +66,7 @@ READY_CHECK_TIMEOUT=10  # Readiness check timeout in seconds
 METRICS_PORT=9100  # Prometheus metrics endpoint port
 ```
 
-#### **Processing Timeouts**
+## **Processing Timeouts**
 
 ```bash
 # File Processing
@@ -80,7 +80,7 @@ LLM_STREAM_TIMEOUT=300  # LLM stream timeout (seconds)
 STARTUP_TIMEOUT=60  # System startup timeout (seconds)
 ```
 
-#### **Security Configuration**
+## **Security Configuration**
 
 ```bash
 # Security Settings
@@ -94,7 +94,7 @@ SECURITY_MAX_FILE_MB=100  # Raise default 50 MB cap (the execution engine)
 SECURITY_TOKEN_LENGTH=32  # Security token length
 ```
 
-#### **Production Monitoring Configuration**
+## **Production Monitoring Configuration**
 
 ```bash
 # Monitoring Settings
@@ -104,7 +104,7 @@ MONITORING_INTERVAL=30  # Monitoring cycle interval in seconds
 HEALTH_CHECK_TIMEOUT=5  # Health check timeout in seconds
 ```
 
-#### **External Services**
+## **External Services**
 
 ```bash
 # n8n Configuration
@@ -119,9 +119,9 @@ POLL_INTERVAL=30
 MAX_EVENTS_PER_CYCLE=10
 ```
 
-### **Configuration Commands**
+## **Configuration Commands**
 
-#### **Config Hot-Reload**
+### **Config Hot-Reload**
 
 ```bash
 curl -X POST http://localhost:5000/admin/reload-config
@@ -155,7 +155,7 @@ curl http://localhost:5000/api/health/dependencies
 curl http://localhost:5000/api/database/health
 ```
 
-#### **Configuration Validation**
+## **Configuration Validation**
 
 ```bash
 # Validate system configuration
@@ -165,7 +165,7 @@ python3 scripts/validate_config.py
 python3 -c "import json; json.load(open('config/system.json'))"
 ```
 
-#### **Security Scanning**
+## **Security Scanning**
 
 ```bash
 # Run comprehensive security scan
@@ -183,7 +183,7 @@ python3 -m safety check
 python3 -m pip_audit
 ```
 
-### **S-003: Environment Configuration**
+## **S-003: Environment Configuration**
 
 ⚙️ **Status**: `setup-required`
 
@@ -215,7 +215,7 @@ MAX_EVENTS_PER_CYCLE=10
 
 ```
 
-### **S-004: Cursor IDE Setup**
+## **S-004: Cursor IDE Setup**
 
 🔥 **Status**: `setup-required`
 
@@ -241,7 +241,7 @@ MAX_EVENTS_PER_CYCLE=10
 
 ```
 
-### **S-005: Specialized Agents Setup**
+## **S-005: Specialized Agents Setup**
 
 🔥 **Status**: `setup-required`
 
@@ -276,7 +276,7 @@ sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ai_agency TO danielja
 
 ```
 
-#### **Database Schema**
+## **Database Schema**
 
 ```sql
 -- Documents table
@@ -330,7 +330,7 @@ pip install -r requirements-dspy.txt
 pip install -r dashboard/requirements.txt
 ```
 
-#### **System Dependencies**
+## **System Dependencies**
 
 ```bash
 # Ubuntu/Debian
@@ -344,14 +344,14 @@ brew install git curl python3 postgresql
 pip install flask psycopg2-binary dspy-ai transformers torch  # cSpell:ignore psycopg2-binary
 ```
 
-### **S-008: Development Setup**
+## **S-008: Development Setup**
 
 🔥 **Status**: `setup-required`
 
 - **Priority**: High
 - **Setup Required**: Repository setup and initial configuration
 
-#### **Development Setup**
+### **Development Setup**
 
 ```bash
 # Clone repository
@@ -367,14 +367,14 @@ cd ../dashboard
 ./start_dashboard.sh
 ```
 
-### **S-009: Production Deployment Setup**
+## **S-009: Production Deployment Setup**
 
 🔥 **Status**: `setup-required`
 
 - **Priority**: Medium
 - **Setup Required**: Production environment configuration
 
-#### **Production Deployment**
+### **Production Deployment**
 
 ```bash
 # Setup production environment
@@ -392,9 +392,9 @@ sudo supervisorctl reread
 sudo supervisorctl update
 ```
 
-### **System Requirements**
+## **System Requirements**
 
-#### **Minimum Requirements**
+### **Minimum Requirements**
 
 - **CPU**: 4 cores (8+ recommended)
 - **RAM**: 8GB (16GB+ recommended)
@@ -430,7 +430,7 @@ python3 demo_n8n_integration.py
 
 ```
 
-### **Verification Checklist**
+## **Verification Checklist**
 
 - [ ] n8n is running and accessible
 

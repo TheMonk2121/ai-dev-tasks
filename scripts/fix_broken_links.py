@@ -12,7 +12,7 @@ import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 
 @dataclass
@@ -72,7 +72,9 @@ class BrokenLinksFixer:
             "@000_core/003_process-task-list.md": "000_core/003_process-task-list.md",
             "@MyFeature-PRD.md": "MyFeature-PRD.md",
             # Fix relative paths
-            "../400_guides/400_comprehensive-coding-best-practices.md": "400_guides/400_comprehensive-coding-best-practices.md",
+            "../400_guides/400_comprehensive-coding-best-practices.md": (
+                "400_guides/400_comprehensive-coding-best-practices.md"
+            ),
             # Remove command references
             "markdownlint ./*.md": None,  # This is a command, not a file
             # Files that don't exist and should be removed
@@ -89,7 +91,6 @@ class BrokenLinksFixer:
             "400_markdown-fix-plan.md": None,
             "600_archives/legacy-project-deliverables/CURSOR_NATIVE_AI_MIGRATION_SUMMARY.md": None,
             "600_archives/docs/400_prd-optimization-guide.md": None,
-            "500_research-analysis-summary.md": None,
             "500_b002-completion-summary.md": None,
             "500_b031-completion-summary.md": None,
             "500_b060-completion-summary.md": None,
@@ -121,7 +122,7 @@ class BrokenLinksFixer:
 
         return broken_links
 
-    def find_file_in_project(self, filename: str) -> str:
+    def find_file_in_project(self, filename: str) -> Union[str, None]:
         """Find a file in the project using git ls-files."""
         try:
             result = subprocess.run(["git", "ls-files", f"*{filename}"], capture_output=True, text=True, timeout=10)
@@ -235,7 +236,8 @@ def main():
     if not Path(args.json_file).exists():
         print(f"❌ JSON file not found: {args.json_file}")
         print(
-            "💡 Run: python3 scripts/doc_coherence_validator.py --dry-run --workers 4 --emit-json broken_links_analysis.json"
+            "💡 Run: python3 scripts/doc_coherence_validator.py "
+            "--dry-run --workers 4 --emit-json broken_links_analysis.json"
         )
         return 1
 

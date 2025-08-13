@@ -97,7 +97,7 @@ python3 scripts/prd_decision_helper.py "$(cat 000_core/000_backlog.md)" "B-013"
 
 ```text
 
-### **Workflow Integration Tests**- ✅ Backlog metadata parsing works correctly
+## **Workflow Integration Tests**- ✅ Backlog metadata parsing works correctly
 
 - ✅ PRD creation workflow handles auto-skip logic
 

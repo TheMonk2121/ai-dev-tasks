@@ -90,7 +90,7 @@
   - Validate input/output contracts
   - Test configuration variations
 
-#### **2. Integration Tests**-**Purpose**: Test component interactions and workflows
+### **2. Integration Tests**-**Purpose**: Test component interactions and workflows
 
 - **Coverage**: End-to-end workflows and data flows
 

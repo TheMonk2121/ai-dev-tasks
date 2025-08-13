@@ -324,6 +324,8 @@ class OptimizedDocCoherenceValidator:
         any_tabs = False
         fixed_tabs = 0
         fixed_trailing = 0
+        fixed_headings = 0
+        last_heading_level: Optional[int] = None
 
         out_lines: List[str] = []
         for i, line in enumerate(lines, 1):
@@ -341,10 +343,22 @@ class OptimizedDocCoherenceValidator:
                 if self.safe_fix:
                     fixed_trailing += 1
 
-            # Heading levels
+            # Heading levels (with optional auto-fix for skipped levels)
             level = self._check_headings(trimmed)
-            if level is not None:
-                heading_levels.append((i, level))
+            effective_level = level
+            if level is not None and last_heading_level is not None and level > last_heading_level + 1:
+                if self.safe_fix:
+                    # Reduce heading level to only +1 deeper than previous
+                    target_level = min(6, last_heading_level + 1)
+                    # Extract heading text after hashes and one space
+                    heading_text = trimmed[level + 1 :].lstrip() if len(trimmed) > level + 1 else ""
+                    trimmed = ("#" * target_level) + " " + heading_text
+                    effective_level = target_level
+                    fixed_headings += 1
+                # If not fixing, the post-pass will record the error
+            if effective_level is not None:
+                heading_levels.append((i, effective_level))
+                last_heading_level = effective_level
 
             # --- fixes (optional) ---
             out_line = trimmed
@@ -366,6 +380,9 @@ class OptimizedDocCoherenceValidator:
                 fixes.append(f"Replaced tabs with spaces on {fixed_tabs} line(s)")
             else:
                 warnings.append("Contains hard tabs")
+
+        if self.safe_fix and fixed_headings > 0:
+            fixes.append(f"Fixed heading level skips on {fixed_headings} line(s)")
 
         # TL;DR checks
         require_tldr = self.rules.get("require_tldr", True)

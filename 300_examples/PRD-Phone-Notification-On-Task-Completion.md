@@ -205,7 +205,7 @@ token = ""                  # optional
 
 ```text
 
-### Appendix: Example Usage
+## Appendix: Example Usage
 
 ```bash
 

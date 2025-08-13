@@ -12,7 +12,7 @@
 
 - **Ensuring Critical Guidelines Aren't Missed**: Mark crucial guidelines in metadata
 
-### **Mandatory Process Enforcement Patterns**{#tldr}
+## **Mandatory Process Enforcement Patterns**{#tldr}
 
 ## 🔎 TL;DR
 

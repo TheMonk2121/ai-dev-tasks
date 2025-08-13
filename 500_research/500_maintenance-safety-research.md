@@ -335,7 +335,7 @@ def classify_critical_files():
     pass
 ```
 
-### Safety System Design
+## Safety System Design
 
 ```python
 # Multi-layer safety system

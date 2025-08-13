@@ -172,7 +172,7 @@ class ErrorRecoverySignature(Signature):
 
 ```text
 
-### **Database Schema**####**Event Ledger Table**```sql
+## **Database Schema**####**Event Ledger Table**```sql
 CREATE TABLE event_ledger (
     id SERIAL PRIMARY KEY,
     event_type VARCHAR(50) NOT NULL,
@@ -188,7 +188,7 @@ ON event_ledger(event_type, timestamp);
 
 ```text
 
-#### **Vector Store Schema**```sql
+### **Vector Store Schema**```sql
 - - Enable pgvector extension
 CREATE EXTENSION IF NOT EXISTS vector;
 

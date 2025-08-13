@@ -237,7 +237,7 @@ lsof -ti:5001 | xargs kill -9
 
 - Check database permissions
 
-### Debug Mode
+## Debug Mode
 
 The dashboard runs in debug mode by default. Check the console output for detailed error messages.
 

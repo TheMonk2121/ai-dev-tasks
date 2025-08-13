@@ -67,7 +67,7 @@ pip install -r requirements.txt
 
 ```text
 
-### **1. Add Documents (Drag & Drop)**```bash
+## **1. Add Documents (Drag & Drop)**```bash
 
 # Simply drag files into:
 
@@ -93,7 +93,7 @@ watch_folder/
 
 ```text
 
-### **2. Ask Questions (Enhanced!)**```bash
+## **2. Ask Questions (Enhanced!)**```bash
 
 # Interactive question interface with DSPy analysis
 
@@ -115,7 +115,7 @@ source venv/bin/activate && python3 enhanced_ask_question.py
 
 ```text
 
-### **3. Web Dashboard (Production-Ready)**```bash
+## **3. Web Dashboard (Production-Ready)**```bash
 
 # Run the hardened web dashboard
 
@@ -131,7 +131,7 @@ python3 src/dashboard.py
 
 ```text
 
-### **4. Mission Dashboard (NEW!)**```bash
+## **4. Mission Dashboard (NEW!)**```bash
 
 # Run the real-time mission dashboard
 

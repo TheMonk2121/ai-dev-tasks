@@ -244,7 +244,7 @@ def security_alert(incident_type: str, details: dict):
 
 ```text
 
-#### **2. Containment Procedures**```bash
+## **2. Containment Procedures**```bash
 
 # Emergency containment script
 
@@ -260,7 +260,7 @@ echo "4. Initiating backup procedures..."
 
 ```text
 
-#### **3. Recovery Procedures**```python
+## **3. Recovery Procedures**```python
 
 # Recovery automation
 
@@ -276,7 +276,7 @@ def initiate_recovery(incident_type: str):
 
 ```text
 
-### **Incident Response Team**| Role | Responsibilities | Contact |
+## **Incident Response Team**| Role | Responsibilities | Contact |
 |------|------------------|---------|
 |**Incident Commander**| Overall response coordination | Primary developer |
 |**Technical Lead**| Technical investigation and remediation | AI system expert |
@@ -305,7 +305,7 @@ SECURITY_MONITORING_CONFIG = {
 
 ```bash
 
-#### **2. Security Metrics**-**Authentication Failures**: Track failed login attempts
+## **2. Security Metrics**-**Authentication Failures**: Track failed login attempts
 
 - **API Usage Patterns**: Monitor for unusual API calls
 
@@ -313,7 +313,7 @@ SECURITY_MONITORING_CONFIG = {
 
 - **Data Access Patterns**: Track database access patterns
 
-#### **3. Alert Channels**```python
+### **3. Alert Channels**```python
 
 # Alert configuration
 
@@ -326,7 +326,7 @@ ALERT_CHANNELS = {
 
 ```text
 
-### **Security Dashboard**####**1. Real-time Security Status**```text
+## **Security Dashboard**####**1. Real-time Security Status**```text
 🔒 Security Dashboard
 ├── 🟢 System Status: Secure
 ├── 🟡 Active Alerts: 2
@@ -335,7 +335,7 @@ ALERT_CHANNELS = {
 
 ```
 
-#### **2. Security Metrics**-**Vulnerability Scan Results**-**Access Control Status**-**Encryption Status**-**Backup Status**---
+### **2. Security Metrics**-**Vulnerability Scan Results**-**Access Control Status**-**Encryption Status**-**Backup Status**---
 
 ## 📋 Compliance & Standards
 

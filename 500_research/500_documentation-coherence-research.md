@@ -245,7 +245,7 @@ def analyze_update_propagation():
     pass
 ```
 
-### **Cognitive Scaffolding Analysis**
+## **Cognitive Scaffolding Analysis**
 
 ```python
 # Memory context system analysis

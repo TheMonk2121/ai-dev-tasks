@@ -126,7 +126,7 @@ find .cache/conflict_check -name "*.pkl" -mtime +7 -delete
 find .cache/doc_validator -name "*.pkl" -mtime +7 -delete
 ```
 
-### **Performance Regression Testing**
+## **Performance Regression Testing**
 ```bash
 # Baseline comparison
 python3 scripts/performance_benchmark.py --save baseline.json

@@ -90,7 +90,7 @@ DSPY_CACHE_ENABLED = True  # Enable DSPy caching for performance
 
 <!-- ANCHOR: runtime-guard-rails -->
 
-### Runtime Guard-Rails
+## Runtime Guard-Rails
 
 Operational safety checks to prevent overload and maintain stability.
 
@@ -108,7 +108,7 @@ for name, mdl in model_pool.items():
 
 <!-- ANCHOR: fast-path -->
 
-### Fast-Path Bypass
+## Fast-Path Bypass
 
 Short-circuit path for trivial queries that don't need deep reasoning.
 
@@ -165,7 +165,7 @@ class ReActSignature(Signature):
     observation = OutputField(desc="Result of the action")
     answer = OutputField(desc="Final answer based on reasoning")
 
-#### 2. Core DSPy Modules
+## 2. Core DSPy Modules
 
 **QueryRewriter Module:**
 ```python
@@ -275,7 +275,7 @@ class ResearchAgent(Module):
 
 <!-- ANCHOR: vector-store -->
 
-#### 3. Enhanced Vector Store Integration (Research-Based)
+### 3. Enhanced Vector Store Integration (Research-Based)
 
 ```python
 class HybridVectorStore(Module):
@@ -398,7 +398,7 @@ cot "Explain the benefits"        # Force Chain-of-Thought
 react "Compare approaches"        # Force ReAct reasoning
 ```
 
-### Web Dashboard
+## Web Dashboard
 
 ```bash
 # Run hardened web dashboard
@@ -411,7 +411,7 @@ python3 src/dashboard.py
 # - Document metadata visualization
 ```
 
-### Programmatic Usage
+## Programmatic Usage
 
 ```python
 from dspy_modules.enhanced_rag_system import create_enhanced_rag_interface
@@ -569,7 +569,7 @@ class CachedDSPyModule(Module):
         pass
 ```
 
-### 3. Enhanced Document Processor (Research-Based)
+## 3. Enhanced Document Processor (Research-Based)
 
 ```python
 class EnhancedDocumentProcessor(Module):

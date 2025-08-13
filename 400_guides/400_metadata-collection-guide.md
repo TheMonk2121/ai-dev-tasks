@@ -167,7 +167,7 @@ recovery_action = error_handler._get_recovery_action(error_info)
 
 - **Timeout Errors**: Extend timeout and retry
 
-### **4. Dependency Management**
+## **4. Dependency Management**
 
 - *Usage**: Validate and track task dependencies to ensure proper execution order.
 
@@ -193,7 +193,7 @@ for task_id, deps in missing_deps.items():
 
 - **Dependency Chains**: Multi-level dependency resolution
 
-### **5. Progress Tracking & Reporting**
+## **5. Progress Tracking & Reporting**
 
 - *Usage**: Real-time progress monitoring and comprehensive reporting.
 
@@ -247,7 +247,7 @@ print(f"Total retries: {stats['total_retries']}")
 
 - **Resource Efficiency**: CPU, memory, and I/O utilization
 
-### **2. Error Pattern Recognition**
+## **2. Error Pattern Recognition**
 
 - *Usage**: Analyze error trends and implement preventive measures.
 
@@ -273,7 +273,7 @@ print(f"Recovery success rate: {error_stats['recovery_success_rate']:.1f}%")
 
 - **Temporal Patterns**: Error occurrence timing and frequency
 
-### **3. Resource Optimization**
+## **3. Resource Optimization**
 
 - *Usage**: Identify performance bottlenecks and optimize resource allocation.
 
@@ -298,7 +298,7 @@ high_retry_tasks = [t for t in tasks if t.retry_count > 3]
 
 - **Capacity Planning**: Predict future resource requirements
 
-### **4. Predictive Analytics**
+## **4. Predictive Analytics**
 
 - *Usage**: Predict task success and execution time based on historical data.
 
@@ -443,7 +443,7 @@ def detect_execution_anomalies(execution_data):
 
 ```yaml
 
-### **2. Advanced Analytics**
+## **2. Advanced Analytics**
 
 - *Trend Analysis**:
 
@@ -469,7 +469,7 @@ def analyze_task_correlations():
 
 ```
 
-### **3. Real-time Monitoring**
+## **3. Real-time Monitoring**
 
 - *Live Dashboards**:
 

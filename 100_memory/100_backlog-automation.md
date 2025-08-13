@@ -11,7 +11,7 @@ generate_prd: |
 
 ```text
 
-### Update Status
+## Update Status
 
 {#tldr}
 
@@ -116,7 +116,7 @@ Use @000_core/001_create-prd.md with backlog_id=B-001
 
 ```text
 
-### Updating Progress
+## Updating Progress
 
 ```bash
 
@@ -126,7 +126,7 @@ Update backlog item B-001 status to "done"
 
 ```text
 
-### Sprint Planning
+## Sprint Planning
 
 ```bash
 
@@ -285,7 +285,7 @@ python3 src/n8n_workflows/backlog_scrubber.py --dry-run
 
 ```text
 
-#### Webhook Server
+## Webhook Server
 
 ```bash
 
@@ -299,7 +299,7 @@ python3 src/n8n_workflows/backlog_webhook.py --host 0.0.0.0 --port 5001 --debug
 
 ```text
 
-#### n8n Workflow Integration
+## n8n Workflow Integration
 
 1. **Webhook Trigger**: Create webhook trigger in n8n
 2. **HTTP Request**: Add HTTP request node to call backlog scrubber

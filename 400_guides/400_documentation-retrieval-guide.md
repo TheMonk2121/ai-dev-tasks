@@ -45,7 +45,7 @@
   - Content chunking for optimal retrieval
   - Category-based organization
 
-#### **2. Documentation Retrieval Service**-**Purpose**: Main service for context provision
+### **2. Documentation Retrieval Service**-**Purpose**: Main service for context provision
 
 - **File**: `dspy-rag-system/src/dspy_modules/documentation_retrieval.py`
 
@@ -85,7 +85,7 @@ python scripts/documentation_indexer.py --root-path ./docs
 
 ```text
 
-#### **2. Search Documentation**```bash
+## **2. Search Documentation**```bash
 
 # Basic search
 
@@ -101,7 +101,7 @@ python scripts/documentation_retrieval_cli.py search "DSPy implementation" --lim
 
 ```text
 
-#### **3. Get Context for Tasks**```bash
+## **3. Get Context for Tasks**```bash
 
 # Get context for development task
 
@@ -117,7 +117,7 @@ python scripts/documentation_retrieval_cli.py task "update backlog priorities" -
 
 ```text
 
-#### Validator quick start
+## Validator quick start
 
 ```bash
 
@@ -139,7 +139,7 @@ python scripts/doc_coherence_validator.py --no-dry-run
 
 ```text
 
-#### **4. Get Relevant Context**```bash
+## **4. Get Relevant Context**```bash
 
 # Get general context
 
@@ -155,14 +155,14 @@ python scripts/documentation_retrieval_cli.py context "DSPy modules" --type impl
 
 ```text
 
-### **Output Formats**####**JSON Format (Default)**```bash
+## **Output Formats**####**JSON Format (Default)**```bash
 python scripts/documentation_retrieval_cli.py search "RAG implementation" --format json
 
 ```text
 
 Returns structured JSON with all metadata and results.
 
-#### **Text Format**```bash
+### **Text Format**```bash
 python scripts/documentation_retrieval_cli.py search "RAG implementation" --format text
 
 ```text
@@ -197,7 +197,7 @@ task_context = service.get_context_for_task("implement indexing", "development")
 
 ```text
 
-#### **Utility Functions**```python
+## **Utility Functions**```python
 from dspy_modules.documentation_retrieval import get_relevant_context, search_documentation, get_task_context
 
 # Get relevant context
@@ -214,7 +214,7 @@ task_context = get_task_context("implement documentation indexing", "development
 
 ```text
 
-### **Category System**####**Available Categories**-**core**: Core system files (100_*.md, 000_*.md, 400_*.md)
+## **Category System**####**Available Categories**-**core**: Core system files (100_*.md, 000_*.md, 400_*.md)
 
 - **workflow**: Workflow files (001_*.md, 002_*.md, 003_*.md)
 
@@ -227,7 +227,7 @@ task_context = get_task_context("implement documentation indexing", "development
 - **completion**: Completion summaries (500_*-completion-summary.md)
 - **examples**: Templates and examples (e.g., `300_examples/300_documentation-example.md`)
 
-#### **Context Types**-**general**: General context for any query
+### **Context Types**-**general**: General context for any query
 
 - **workflow**: Workflow and process context
 
@@ -263,7 +263,7 @@ python scripts/documentation_retrieval_cli.py stats --format summary
 
 ```text
 
-### **Performance Metrics**-**Indexing Speed**: Number of files indexed per minute
+## **Performance Metrics**-**Indexing Speed**: Number of files indexed per minute
 
 - **Search Latency**: Average response time for queries
 
@@ -323,7 +323,7 @@ python scripts/documentation_retrieval_cli.py context "error handling patterns" 
 
 ```text
 
-### **Research Tasks**```bash
+## **Research Tasks**```bash
 
 # Get context for research analysis
 
@@ -335,7 +335,7 @@ python scripts/documentation_retrieval_cli.py context "research findings" --type
 
 ```text
 
-### **Workflow Tasks**```bash
+## **Workflow Tasks**```bash
 
 # Get context for process improvement
 
@@ -347,7 +347,7 @@ python scripts/documentation_retrieval_cli.py context "backlog prioritization" -
 
 ```text
 
-### **File Operations**```bash
+## **File Operations**```bash
 
 # Get context for file deletion
 
@@ -371,7 +371,7 @@ python scripts/documentation_retrieval_cli.py search "query" --db-url "postgresq
 
 ```text
 
-### **Indexing Configuration**
+## **Indexing Configuration**
 
 ```python
 
@@ -383,7 +383,7 @@ indexer.exclude_patterns = ["node_modules/**", "venv/**", ".git/**"]
 
 ```text
 
-### **Search Configuration**```python
+## **Search Configuration**```python
 
 # Custom search parameters
 
@@ -428,13 +428,13 @@ python scripts/documentation_retrieval_cli.py index
 
 ```sql
 
-#### **Low Confidence Scores**-**Refine Query**: Use more specific terms
+## **Low Confidence Scores**-**Refine Query**: Use more specific terms
 
 - **Check Categories**: Ensure relevant categories are included
 
 - **Update Index**: Re-index documentation if files have changed
 
-#### **Slow Performance**-**Check Database**: Verify database connection and performance
+### **Slow Performance**-**Check Database**: Verify database connection and performance
 
 - **Optimize Queries**: Use more specific queries
 

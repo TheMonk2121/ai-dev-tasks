@@ -247,7 +247,7 @@ class CodeGenerationModule(dspy.Module):
 
 ```text
 
-### **DSPy RAG Integration**```python
+## **DSPy RAG Integration**```python
 class RAGModule(dspy.Module):
     def __init__(self, vector_store):
         super().__init__()

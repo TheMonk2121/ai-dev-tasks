@@ -220,7 +220,7 @@ python3 ask_question.py
 
 ```text
 
-### **2. Ask Questions**```bash
+## **2. Ask Questions**```bash
 
 # Interactive mode
 
@@ -230,7 +230,7 @@ python3 ask_question.py
 
 ```text
 
-### **3. Add Documents**```bash
+## **3. Add Documents**```bash
 
 # Drop files into watch_folder/ (automatic)
 
@@ -240,7 +240,7 @@ python3 add_document.py path/to/file.txt
 
 ```text
 
-### **4. Check System Status**```bash
+## **4. Check System Status**```bash
 
 # Check database stats
 

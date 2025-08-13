@@ -58,7 +58,7 @@ GET /api/context/{id}/relationships
 
 ```text
 
-#### **Core Endpoints**```python
+## **Core Endpoints**```python
 
 # AI Model API endpoints
 
@@ -87,7 +87,7 @@ WORKFLOW_ENDPOINTS = {
 
 ```text
 
-#### **API Response Format**```python
+## **API Response Format**```python
 
 # Standard API response structure
 
@@ -115,7 +115,7 @@ API_RESPONSE_FORMAT = {
 
 ```text
 
-### **2. GraphQL Integration**####**Schema Definition**```graphql
+## **2. GraphQL Integration**####**Schema Definition**```graphql
 
 # AI Development Ecosystem GraphQL Schema
 
@@ -144,7 +144,7 @@ type WorkflowStatus {
 
 ```text
 
-### **3. WebSocket Communication**####**Real-time Updates**```python
+## **3. WebSocket Communication**####**Real-time Updates**```python
 
 # WebSocket message format
 
@@ -218,7 +218,7 @@ class AIModelInterface:
 
 ```text
 
-#### **Model Factory**```python
+## **Model Factory**```python
 
 # AI model factory for different models
 
@@ -236,7 +236,7 @@ class AIModelFactory:
 
 ```text
 
-### **2. Database Integration**####**Database Interface**```python
+## **2. Database Integration**####**Database Interface**```python
 
 # Database integration interface
 
@@ -282,7 +282,7 @@ class DatabaseInterface:
 
 ```text
 
-### **3. n8n Workflow Integration**####**Workflow Interface**```python
+## **3. n8n Workflow Integration**####**Workflow Interface**```python
 
 # n8n workflow integration interface
 
@@ -374,7 +374,7 @@ def synchronous_ai_request(prompt: str, model: str) -> dict:
 
 ```text
 
-### **2. Asynchronous Communication**####**Event-Driven Pattern**```python
+## **2. Asynchronous Communication**####**Event-Driven Pattern**```python
 
 # Asynchronous event-driven pattern
 
@@ -431,7 +431,7 @@ class EventDrivenAI:
 
 ```text
 
-### **3. Message Queue Pattern**####**Redis Message Queue**```python
+## **3. Message Queue Pattern**####**Redis Message Queue**```python
 
 # Redis message queue implementation
 
@@ -535,7 +535,7 @@ def handle_api_error(error_type: str, details: dict = None) -> dict:
 
 ```text
 
-### **2. Retry Logic**####**Exponential Backoff**```python
+## **2. Retry Logic**####**Exponential Backoff**```python
 
 # Retry logic with exponential backoff
 
@@ -553,7 +553,7 @@ def retry_with_backoff(func, max_retries: int = 3, base_delay: float = 1.0):
 
 ```text
 
-### **3. Circuit Breaker Pattern**####**Circuit Breaker Implementation**```python
+## **3. Circuit Breaker Pattern**####**Circuit Breaker Implementation**```python
 
 # Circuit breaker pattern
 
@@ -628,7 +628,7 @@ class JWTAuthentication:
 
 ```text
 
-### **2. Rate Limiting**####**Token Bucket Rate Limiter**```python
+## **2. Rate Limiting**####**Token Bucket Rate Limiter**```python
 
 # Token bucket rate limiter
 
@@ -701,7 +701,7 @@ class MultiLevelCache:
 
 ```text
 
-### **2. Connection Pooling**####**Database Connection Pool**```python
+## **2. Connection Pooling**####**Database Connection Pool**```python
 
 # Database connection pool
 
@@ -773,7 +773,7 @@ class IntegrationTestFramework:
 
 ```text
 
-### **2. Load Testing**####**API Load Testing**```python
+## **2. Load Testing**####**API Load Testing**```python
 
 # API load testing
 
@@ -852,7 +852,7 @@ CMD ["python", "app.py"]
 
 ```text
 
-### **2. Kubernetes Integration**####**Kubernetes Deployment**```yaml
+## **2. Kubernetes Integration**####**Kubernetes Deployment**```yaml
 
 # Kubernetes deployment configuration
 
@@ -1008,7 +1008,7 @@ def generate_api_docs():
 
 ```text
 
-### **2. Integration Test Runner**```python
+## **2. Integration Test Runner**```python
 
 # Integration test runner
 
