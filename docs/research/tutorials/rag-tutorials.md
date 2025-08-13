@@ -26,7 +26,7 @@
 
 - **Application**: Guides our hybrid search implementation
 
-- **Link**: [To be added]
+- **Link**: To be added
 
 - **Implementation Steps**:
   - Add PostgreSQL full-text search alongside PGVector
@@ -40,7 +40,7 @@
 
 - **Application**: Guides our complex query handling
 
-- **Link**: [To be added]
+- **Link**: To be added
 
 - **Implementation Steps**:
   - Break complex questions into sub-questions
@@ -54,7 +54,7 @@
 
 - **Application**: Informs our extraction and citation system
 
-- **Link**: [To be added]
+- **Link**: To be added
 
 - **Implementation Steps**:
   - Store character offsets in vector metadata
@@ -68,7 +68,7 @@
 
 - **Application**: Guides our DSPy RAG integration
 
-- **Link**: [To be added]
+- **Link**: To be added
 
 - **Implementation Steps**:
   - Integrate retrieval calls with LLM calls in loops

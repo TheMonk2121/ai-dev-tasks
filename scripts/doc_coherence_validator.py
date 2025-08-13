@@ -84,20 +84,23 @@ class DocCoherenceValidator:
         self.cross_reference_pattern = re.compile(r"<!--\s*([A-Z_]+):\s*([^>]+)\s*-->")
         self.file_reference_pattern = re.compile(r"`([^`]+\.md)`")
         self.backlog_reference_pattern = re.compile(r"B‑\d+")
-        self.tldr_anchor_pattern = re.compile(r'<a\s+id="tldr"\s*>\s*</a>|<a\s+id="tldr"\s*>|\{#tldr\}', re.IGNORECASE)
+        self.tldr_anchor_pattern = re.compile(
+            r'<a\s+id="tldr"\s*>\s*</a>|<a\s+id="tldr"\s*>|\{#tldr\}', re.IGNORECASE
+        )
         self.tldr_heading_pattern = re.compile(r"^##\s+🔎\s+TL;DR\s*$", re.MULTILINE)
         self.at_a_glance_header_pattern = re.compile(
-            r"^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$", re.MULTILINE
+            r"^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$",
+            re.MULTILINE,
         )
         self.html_anchor_pattern = re.compile(r'<a\s+id="([^"]+)"\s*>', re.IGNORECASE)
         self.markdown_anchor_pattern = re.compile(r"\{#([^}]+)\}", re.IGNORECASE)
 
         # Priority file patterns
         self.priority_files = {
-            "memory_context": ["100_cursor-memory-context.md"],
-            "system_overview": ["400_system-overview.md"],
-            "backlog": ["000_backlog.md"],
-            "project_overview": ["400_project-overview.md"],
+            "memory_context": ["100_memory/100_cursor-memory-context.md"],
+            "system_overview": ["400_guides/400_system-overview.md"],
+            "backlog": ["000_core/000_backlog.md"],
+            "project_overview": ["400_guides/400_project-overview.md"],
             "context_priority": ["400_context-priority-guide.md"],
         }
 
@@ -114,7 +117,9 @@ class DocCoherenceValidator:
                 self.log("Cursor AI available for semantic validation", "INFO")
                 return True
             else:
-                self.log("Cursor AI not available - using basic validation only", "WARNING")
+                self.log(
+                    "Cursor AI not available - using basic validation only", "WARNING"
+                )
                 return False
         except Exception as e:
             self.log(f"Error checking Cursor AI availability: {e}", "WARNING")
@@ -130,8 +135,14 @@ class DocCoherenceValidator:
             return all_files
         # Filter by git diff
         try:
-            diff = subprocess.run(["git", "diff", "--name-only", "--cached"], capture_output=True, text=True)
-            changed = set(p.strip() for p in diff.stdout.splitlines() if p.strip().endswith(".md"))
+            diff = subprocess.run(
+                ["git", "diff", "--name-only", "--cached"],
+                capture_output=True,
+                text=True,
+            )
+            changed = set(
+                p.strip() for p in diff.stdout.splitlines() if p.strip().endswith(".md")
+            )
         except Exception:
             changed = set()
         priority = {
@@ -202,7 +213,9 @@ class DocCoherenceValidator:
 
         # Validate file references (use full repo set to avoid only-changed false negatives)
         try:
-            all_md_names = {p.name for p in Path(".").rglob("*.md") if not self._should_exclude(p)}
+            all_md_names = {
+                p.name for p in Path(".").rglob("*.md") if not self._should_exclude(p)
+            }
         except Exception:
             all_md_names = {f.name for f in self.markdown_files}
 
@@ -212,18 +225,34 @@ class DocCoherenceValidator:
                 target_path = Path(target)
                 if not target_path.exists():
                     broken_references.append(
-                        {"source": source_file, "target": target, "type": ref_type, "issue": "File not found"}
+                        {
+                            "source": source_file,
+                            "target": target,
+                            "type": ref_type,
+                            "issue": "File not found",
+                        }
                     )
-                elif target_path.suffix == ".md" and target_path.name not in all_md_names:
+                elif (
+                    target_path.suffix == ".md" and target_path.name not in all_md_names
+                ):
                     broken_references.append(
-                        {"source": source_file, "target": target, "type": ref_type, "issue": "Markdown file not found"}
+                        {
+                            "source": source_file,
+                            "target": target,
+                            "type": ref_type,
+                            "issue": "Markdown file not found",
+                        }
                     )
 
         # Report results
         if broken_references:
-            self.log(f"Found {len(broken_references)} broken cross-references:", "WARNING")
+            self.log(
+                f"Found {len(broken_references)} broken cross-references:", "WARNING"
+            )
             for ref in broken_references:
-                self.log(f"  {ref['source']} -> {ref['target']} ({ref['issue']})", "WARNING")
+                self.log(
+                    f"  {ref['source']} -> {ref['target']} ({ref['issue']})", "WARNING"
+                )
             return False
         else:
             self.log("All cross-references are valid", "INFO")
@@ -252,14 +281,18 @@ class DocCoherenceValidator:
             # Check three-digit prefix pattern
             if not re.match(r"^\d{3}_", filename):
                 if filename not in allowed:
-                    naming_issues.append({"file": str(file_path), "issue": "Missing three-digit prefix"})
+                    naming_issues.append(
+                        {"file": str(file_path), "issue": "Missing three-digit prefix"}
+                    )
 
             # Check for descriptive names
             if re.match(r"^\d{3}_[a-z-]+\.md$", filename):
                 # Valid format
                 pass
             elif filename not in allowed:
-                naming_issues.append({"file": str(file_path), "issue": "Invalid naming format"})
+                naming_issues.append(
+                    {"file": str(file_path), "issue": "Invalid naming format"}
+                )
 
         # Report results
         if naming_issues:
@@ -279,12 +312,14 @@ class DocCoherenceValidator:
         self.log("Task 3: Validating backlog references", "INFO")
 
         # Read backlog to get valid item IDs
-        backlog_content = self.read_file(Path("000_backlog.md"))
+        backlog_content = self.read_file(Path("000_core/000_backlog.md"))
         if not backlog_content:
             self.log("Cannot read backlog file", "ERROR")
             return False
 
-        valid_backlog_items = set(self.backlog_reference_pattern.findall(backlog_content))
+        valid_backlog_items = set(
+            self.backlog_reference_pattern.findall(backlog_content)
+        )
 
         # Check references in other files
         invalid_references = []
@@ -301,14 +336,23 @@ class DocCoherenceValidator:
             for ref in references:
                 if ref not in valid_backlog_items:
                     invalid_references.append(
-                        {"file": str(file_path), "reference": ref, "issue": "Invalid backlog item reference"}
+                        {
+                            "file": str(file_path),
+                            "reference": ref,
+                            "issue": "Invalid backlog item reference",
+                        }
                     )
 
         # Report results
         if invalid_references:
-            self.log(f"Found {len(invalid_references)} invalid backlog references:", "WARNING")
+            self.log(
+                f"Found {len(invalid_references)} invalid backlog references:",
+                "WARNING",
+            )
             for ref in invalid_references:
-                self.log(f"  {ref['file']}: {ref['reference']} ({ref['issue']})", "WARNING")
+                self.log(
+                    f"  {ref['file']}: {ref['reference']} ({ref['issue']})", "WARNING"
+                )
             return False
         else:
             self.log("All backlog references are valid", "INFO")
@@ -318,7 +362,7 @@ class DocCoherenceValidator:
         """Validate memory context coherence with other documentation."""
         self.log("Task 4: Validating memory context coherence", "INFO")
 
-        memory_context = self.read_file(Path("100_cursor-memory-context.md"))
+        memory_context = self.read_file(Path("100_memory/100_cursor-memory-context.md"))
         if not memory_context:
             self.log("Cannot read memory context file", "ERROR")
             return False
@@ -326,7 +370,7 @@ class DocCoherenceValidator:
         coherence_issues = []
 
         # Check for consistency with backlog
-        backlog_content = self.read_file(Path("000_backlog.md"))
+        backlog_content = self.read_file(Path("000_core/000_backlog.md"))
         if backlog_content:
             # Extract current priorities from memory context
             priority_pattern = r"Current Sprint.*?B-\d+"
@@ -344,7 +388,7 @@ class DocCoherenceValidator:
                     )
 
         # Check for consistency with system overview
-        system_overview = self.read_file(Path("400_system-overview.md"))
+        system_overview = self.read_file(Path("400_guides/400_system-overview.md"))
         if system_overview:
             # Check for architectural consistency
             if "DSPy" in memory_context and "DSPy" not in system_overview:
@@ -393,7 +437,9 @@ class DocCoherenceValidator:
             self.log("All files pass semantic validation", "INFO")
             return True
 
-    def _validate_file_with_cursor_ai(self, file_path: Path, category: str) -> List[Dict]:
+    def _validate_file_with_cursor_ai(
+        self, file_path: Path, category: str
+    ) -> List[Dict]:
         """Validate a file using Cursor AI semantic checking."""
         issues = []
 
@@ -426,22 +472,41 @@ class DocCoherenceValidator:
             """
 
             # Run Cursor AI analysis
-            result = subprocess.run(["cursor", "chat", "--prompt", prompt], capture_output=True, text=True, timeout=30)
+            result = subprocess.run(
+                ["cursor", "chat", "--prompt", prompt],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
 
             if result.returncode == 0:
                 try:
                     response = json.loads(result.stdout)
                     for issue in response.get("issues", []):
-                        issues.append({"file": str(file_path), "issue": issue["description"], "type": issue["type"]})
+                        issues.append(
+                            {
+                                "file": str(file_path),
+                                "issue": issue["description"],
+                                "type": issue["type"],
+                            }
+                        )
                 except json.JSONDecodeError:
-                    self.log(f"Invalid JSON response from Cursor AI for {file_path}", "WARNING")
+                    self.log(
+                        f"Invalid JSON response from Cursor AI for {file_path}",
+                        "WARNING",
+                    )
             else:
-                self.log(f"Cursor AI validation failed for {file_path}: {result.stderr}", "WARNING")
+                self.log(
+                    f"Cursor AI validation failed for {file_path}: {result.stderr}",
+                    "WARNING",
+                )
 
         except subprocess.TimeoutExpired:
             self.log(f"Cursor AI validation timed out for {file_path}", "WARNING")
         except Exception as e:
-            self.log(f"Error running Cursor AI validation for {file_path}: {e}", "WARNING")
+            self.log(
+                f"Error running Cursor AI validation for {file_path}: {e}", "WARNING"
+            )
 
         return issues
 
@@ -450,7 +515,9 @@ class DocCoherenceValidator:
         self.log("Task 6: Generating validation report", "INFO")
 
         report = {
-            "timestamp": subprocess.run(["date"], capture_output=True, text=True).stdout.strip(),
+            "timestamp": subprocess.run(
+                ["date"], capture_output=True, text=True
+            ).stdout.strip(),
             "files_checked": len(self.markdown_files),
             "cursor_ai_enabled": self.cursor_ai_enabled,
             "validation_results": self.validation_results,
@@ -468,7 +535,9 @@ class DocCoherenceValidator:
                 json.dump(report, f, indent=2, sort_keys=True)
             self.log(f"Validation report written to {report_file}", "INFO")
         else:
-            self.log(f"[DRY-RUN] Would write validation report to {report_file}", "INFO")
+            self.log(
+                f"[DRY-RUN] Would write validation report to {report_file}", "INFO"
+            )
 
         return True
 
@@ -483,10 +552,17 @@ class DocCoherenceValidator:
                 continue
             issues = []
             # Metadata header
-            if "<!-- CONTEXT_REFERENCE:" not in content or "<!-- MEMORY_CONTEXT:" not in content:
-                issues.append("Missing metadata header (CONTEXT_REFERENCE or MEMORY_CONTEXT)")
+            if (
+                "<!-- CONTEXT_REFERENCE:" not in content
+                or "<!-- MEMORY_CONTEXT:" not in content
+            ):
+                issues.append(
+                    "Missing metadata header (CONTEXT_REFERENCE or MEMORY_CONTEXT)"
+                )
             # TL;DR anchor and heading
-            if not self.tldr_anchor_pattern.search(content) or not self.tldr_heading_pattern.search(content):
+            if not self.tldr_anchor_pattern.search(
+                content
+            ) or not self.tldr_heading_pattern.search(content):
                 issues.append("Missing TL;DR anchor or heading")
             # At-a-glance table header
             if not self.at_a_glance_header_pattern.search(content):
@@ -497,22 +573,30 @@ class DocCoherenceValidator:
                 and self.rules["canonical_links"]["quick_start"] not in content
                 and "Quick Start" in content
             ):
-                issues.append("Quick Start present but missing canonical link to 400_project-overview.md")
+                issues.append(
+                    "Quick Start present but missing canonical link to 400_project-overview.md"
+                )
             if (
                 self.rules["canonical_links"].get("critical_path")
                 and self.rules["canonical_links"]["critical_path"] not in content
                 and "Critical Path" in content
             ):
-                issues.append("Critical Path present but missing canonical link to 400_context-priority-guide.md")
+                issues.append(
+                    "Critical Path present but missing canonical link to 400_context-priority-guide.md"
+                )
             if (
                 self.rules["canonical_links"].get("prd_scoring")
                 and self.rules["canonical_links"]["prd_scoring"] not in content
                 and ("PRD" in content or "Scoring" in content)
             ):
-                issues.append("PRD/Scoring mentioned but missing canonical link to 100_backlog-guide.md")
+                issues.append(
+                    "PRD/Scoring mentioned but missing canonical link to 100_backlog-guide.md"
+                )
             if issues:
                 passed = False
-                self.warnings.append({"file": str(file_path), "invariant_issues": issues})
+                self.warnings.append(
+                    {"file": str(file_path), "invariant_issues": issues}
+                )
                 # Safe fix scaffolding (TL;DR + At-a-glance)
                 if self.safe_fix:
                     new_content = content
@@ -528,7 +612,9 @@ class DocCoherenceValidator:
                             )
                         )
                     if not self.tldr_heading_pattern.search(new_content):
-                        new_content = new_content.replace('<a id="tldr"></a>', '<a id="tldr"></a>\n\n## 🔎 TL;DR')
+                        new_content = new_content.replace(
+                            '<a id="tldr"></a>', '<a id="tldr"></a>\n\n## 🔎 TL;DR'
+                        )
                     if not self.at_a_glance_header_pattern.search(new_content):
                         new_content = new_content.replace(
                             "## 🔎 TL;DR",
@@ -575,7 +661,10 @@ class DocCoherenceValidator:
                     )
         # Emit JSON if requested
         if self.emit_json_path:
-            data = {"warnings": self.warnings, "files_checked": len(self.markdown_files)}
+            data = {
+                "warnings": self.warnings,
+                "files_checked": len(self.markdown_files),
+            }
             try:
                 with open(self.emit_json_path, "w") as f:
                     json.dump(data, f, indent=2, sort_keys=True)
@@ -606,7 +695,10 @@ class DocCoherenceValidator:
                 # MD001: Heading increment (temporarily disabled for markdown cleanup)
                 if self.heading_increment_pattern.match(line):
                     current_level = len(line.split()[0])  # Count #s
-                    if prev_heading_level > 0 and current_level > prev_heading_level + 1:
+                    if (
+                        prev_heading_level > 0
+                        and current_level > prev_heading_level + 1
+                    ):
                         # Temporarily disabled for markdown cleanup
                         # markdown_issues.append(
                         #     {
@@ -622,13 +714,23 @@ class DocCoherenceValidator:
                 # MD009: Trailing spaces
                 if self.trailing_spaces_pattern.search(line):
                     markdown_issues.append(
-                        {"file": str(file_path), "line": line_num, "rule": "MD009", "issue": "Trailing spaces detected"}
+                        {
+                            "file": str(file_path),
+                            "line": line_num,
+                            "rule": "MD009",
+                            "issue": "Trailing spaces detected",
+                        }
                     )
 
                 # MD010: Hard tabs
                 if self.hard_tabs_pattern.search(line):
                     markdown_issues.append(
-                        {"file": str(file_path), "line": line_num, "rule": "MD010", "issue": "Hard tabs detected"}
+                        {
+                            "file": str(file_path),
+                            "line": line_num,
+                            "rule": "MD010",
+                            "issue": "Hard tabs detected",
+                        }
                     )
 
                 # MD013: Line length (temporarily disabled for markdown cleanup)
@@ -644,9 +746,14 @@ class DocCoherenceValidator:
 
         # Report results
         if markdown_issues:
-            self.log(f"Found {len(markdown_issues)} markdown rule violations:", "WARNING")
+            self.log(
+                f"Found {len(markdown_issues)} markdown rule violations:", "WARNING"
+            )
             for issue in markdown_issues:
-                self.log(f"  {issue['file']}:{issue['line']} - {issue['rule']}: {issue['issue']}", "WARNING")
+                self.log(
+                    f"  {issue['file']}:{issue['line']} - {issue['rule']}: {issue['issue']}",
+                    "WARNING",
+                )
             return False
         else:
             self.log("All files pass VS Code markdown rules", "INFO")
@@ -661,7 +768,10 @@ class DocCoherenceValidator:
             ("File naming conventions", self.task_2_validate_file_naming_conventions),
             ("Backlog reference validation", self.task_3_validate_backlog_references),
             ("Memory context coherence", self.task_4_validate_memory_context_coherence),
-            ("Cursor AI semantic validation", self.task_5_cursor_ai_semantic_validation),
+            (
+                "Cursor AI semantic validation",
+                self.task_5_cursor_ai_semantic_validation,
+            ),
             ("VS Code markdown rules", self.task_7_validate_markdown_rules),
             ("Generate validation report", self.task_6_generate_validation_report),
         ]
@@ -683,25 +793,65 @@ class DocCoherenceValidator:
         if all_passed:
             self.log("All validation tasks passed!", "INFO")
         else:
-            self.log("Some validation tasks failed. Check the warnings above.", "WARNING")
+            self.log(
+                "Some validation tasks failed. Check the warnings above.", "WARNING"
+            )
 
         return all_passed
 
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Documentation Coherence Validation System")
-    parser.add_argument("--dry-run", action="store_true", default=True, help="Run in dry-run mode (default)")
-    parser.add_argument("--check-all", action="store_true", help="Check all files (default: only priority files)")
+    parser = argparse.ArgumentParser(
+        description="Documentation Coherence Validation System"
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        default=True,
+        help="Run in dry-run mode (default)",
+    )
+    parser.add_argument(
+        "--check-all",
+        action="store_true",
+        help="Check all files (default: only priority files)",
+    )
     parser.add_argument("--file", type=str, help="Check specific file only")
-    parser.add_argument("--no-dry-run", action="store_true", help="Actually make changes (not dry-run)")
-    parser.add_argument("--enforce-invariants", action="store_true", help="Enforce core doc invariants")
-    parser.add_argument("--check-anchors", action="store_true", help="Check anchors and flag non-TLDR explicit anchors")
-    parser.add_argument("--emit-json", type=str, help="Emit JSON report to path (e.g., docs_health.json)")
-    parser.add_argument("--fix", action="store_true", help="Safely scaffold missing TL;DR / At-a-glance")
-    parser.add_argument("--only-changed", action="store_true", help="Validate only changed files plus priority set")
-    parser.add_argument("--rules", type=str, default="config/validator_rules.json", help="Path to validator rules JSON")
-    parser.add_argument("--strict-anchors", action="store_true", help="Treat non-TLDR explicit anchors as errors")
+    parser.add_argument(
+        "--no-dry-run", action="store_true", help="Actually make changes (not dry-run)"
+    )
+    parser.add_argument(
+        "--enforce-invariants", action="store_true", help="Enforce core doc invariants"
+    )
+    parser.add_argument(
+        "--check-anchors",
+        action="store_true",
+        help="Check anchors and flag non-TLDR explicit anchors",
+    )
+    parser.add_argument(
+        "--emit-json",
+        type=str,
+        help="Emit JSON report to path (e.g., docs_health.json)",
+    )
+    parser.add_argument(
+        "--fix", action="store_true", help="Safely scaffold missing TL;DR / At-a-glance"
+    )
+    parser.add_argument(
+        "--only-changed",
+        action="store_true",
+        help="Validate only changed files plus priority set",
+    )
+    parser.add_argument(
+        "--rules",
+        type=str,
+        default="config/validator_rules.json",
+        help="Path to validator rules JSON",
+    )
+    parser.add_argument(
+        "--strict-anchors",
+        action="store_true",
+        help="Treat non-TLDR explicit anchors as errors",
+    )
 
     args = parser.parse_args()
 

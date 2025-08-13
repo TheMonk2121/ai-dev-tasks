@@ -27,7 +27,7 @@
 
 - **Application**: Guides our DSPy RAG integration
 
-- **Link**: [To be added]
+- **Link**: To be added
 
 - **Implementation Steps**:
   - Integrate retrieval calls with LLM calls in loops
@@ -41,7 +41,7 @@
 
 - **Application**: Guides our performance optimization
 
-- **Link**: [To be added]
+- **Link**: To be added
 
 - **Implementation Steps**:
   - Configure DSPy caching for performance optimization
@@ -55,7 +55,7 @@
 
 - **Application**: Guides our validation system
 
-- **Link**: [To be added]
+- **Link**: To be added
 
 - **Implementation Steps**:
   - Implement `dspy.Assert` for code compilation validation
@@ -69,7 +69,7 @@
 
 - **Application**: Guides our prompt optimization
 
-- **Link**: [To be added]
+- **Link**: To be added
 
 - **Implementation Steps**:
   - Optimize RAG QA prompts using teleprompter

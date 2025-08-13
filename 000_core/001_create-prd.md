@@ -78,7 +78,7 @@
 
 ### **7. Quality Assurance Requirements**
 
-- **Code Quality Standards**: See [`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for comprehensive coding standards and quality gates
+- **Code Quality Standards**: See [`../400_guides/400_comprehensive-coding-best-practices.md`](../400_guides/400_comprehensive-coding-best-practices.md) for comprehensive coding standards and quality gates
 
 - **Performance Benchmarks**: Specific performance targets and thresholds
 
