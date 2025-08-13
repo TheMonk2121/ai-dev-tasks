@@ -169,7 +169,8 @@ AI Development Ecosystem
 └── Infrastructure (PostgreSQL + Monitoring)
 ```
 
-### **Key Technologies**-**AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
+### **Key Technologies**
+- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
 
 - **Framework**: DSPy with PostgreSQL vector store
 
@@ -195,11 +196,13 @@ AI Development Ecosystem
 
 <!-- WORKFLOW_REFERENCE: 400_project-overview.md -->
 
-### **File Organization**-**Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
+### **File Organization**
+- **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
 
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`
 
-- **Analysis**: `400_file-analysis-guide.md` - **🚨 MANDATORY: File deletion/deprecation analysis methodology**-**Domain**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
+- **Analysis**: `400_file-analysis-guide.md` - **🚨 MANDATORY: File deletion/deprecation analysis methodology**
+- **Domain**: `100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
 
 - *⚠️ CRITICAL**: Before ANY file operations, you MUST read and follow `400_file-analysis-guide.md` completely!
 
