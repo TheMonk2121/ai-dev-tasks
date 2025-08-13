@@ -6,9 +6,7 @@
 <!-- MODULE_REFERENCE: 400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - System architecture and technical overview -->
 
-## 🎯 **Current Status**
-
-- **Status**: ✅ **ACTIVE** - System overview maintained
+## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- System overview maintained
 
 - **Priority**: 🔥 Critical - Essential for technical understanding
 
@@ -24,7 +22,7 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Technical architecture and component overview for the AI development ecosystem | You need the technical mental model or are integrating components | Jump to `#architecture` and `#core-components`; then review relevant 400-series guides |
+|  |  |  |
 
 - **what this file is**: Architecture map and component responsibilities for the AI development ecosystem.
 
