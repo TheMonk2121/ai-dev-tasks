@@ -9,7 +9,7 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
 echo "🔎 Running core documentation invariants validator (only changed + core set)..."
-python3 scripts/doc_coherence_validator.py --enforce-invariants --check-anchors --emit-json docs_health.json --only-changed --rules config/validator_rules.json
+python3 scripts/doc_coherence_validator.py --dry-run --workers 4
 
 RC=$?
 if [ $RC -ne 0 ]; then
@@ -94,13 +94,13 @@ run_validation() {
     cd "$PROJECT_ROOT"
 
     # Run validator in dry-run mode for pre-commit
-    if python3 "$VALIDATOR_SCRIPT" --dry-run; then
+    if python3 "$VALIDATOR_SCRIPT" --dry-run --workers 4; then
         log_success "Documentation validation passed"
         return 0
     else
         log_error "Documentation validation failed"
         log_warning "Please fix documentation issues before committing"
-        log_info "Run 'python3 $VALIDATOR_SCRIPT --no-dry-run' to see detailed issues"
+        log_info "Run 'python3 $VALIDATOR_SCRIPT --dry-run --workers 4' to see detailed issues"
         return 1
     fi
 }

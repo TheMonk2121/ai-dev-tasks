@@ -20,6 +20,7 @@
 
 - Quick jump:
   - Tier 1 (Critical): `scripts/process_tasks.py`, `scripts/state_manager.py`, `dspy-rag-system/src/dspy_modules/cursor_model_router.py`, `dspy-rag-system/src/dspy_modules/vector_store.py`, `dspy-rag-system/src/dspy_modules/document_processor.py`
+  - Tier 3 (Supporting): `scripts/performance_benchmark.py` — Performance monitoring & optimization
 
 - --
 
@@ -78,6 +79,8 @@
 - `dspy-rag-system/src/utils/retry_wrapper.py` — Retry/Backoff Policies
 
 - `scripts/system_health_check.py` — Health checks & diagnostics
+
+- `scripts/performance_benchmark.py` — Performance monitoring & optimization
 
 - `dspy-rag-system/src/utils/config_manager.py` — Centralized config handling
 

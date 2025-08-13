@@ -1,0 +1,39 @@
+name: Quick Conflict Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  quick-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install tqdm
+      - name: Run quick conflict check (JSON)
+        run: |
+          python scripts/quick_conflict_check.py --json
+
+  docs-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Validate docs (dry run)
+        run: |
+          python scripts/doc_coherence_validator.py --dry-run --workers 4

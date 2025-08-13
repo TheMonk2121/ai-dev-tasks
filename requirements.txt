@@ -1,0 +1,27 @@
+# AI Development Tasks - Core Requirements
+# Essential dependencies for the AI development ecosystem
+
+# System monitoring and performance
+psutil>=5.9.0           # System resource monitoring
+
+# Core development tools
+click>=8.0.0            # Command line interface
+pyyaml>=6.0             # YAML configuration files
+python-dotenv>=1.0.0    # Environment variable management
+
+# Data processing and analysis
+pandas>=2.0.0           # Data manipulation and analysis
+numpy>=1.24.0           # Numerical computing
+
+# Documentation and validation
+markdown>=3.4.0         # Markdown processing
+pydantic>=2.0.0         # Data validation
+
+# Testing and quality
+pytest>=7.0.0           # Testing framework
+pytest-cov>=4.0.0       # Coverage reporting
+
+# Optional: Advanced features
+# Uncomment as needed:
+# openai>=1.0.0          # OpenAI API integration
+# anthropic>=0.7.0       # Anthropic API integration

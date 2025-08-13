@@ -186,7 +186,7 @@ class OptimizedQuickConflictChecker:
             self.log("✅ No package manager conflicts", "INFO")
             return True
 
-    def run_parallel_checks(self) -> Dict[str, bool]:
+    def run_parallel_checks(self) -> Dict[str, Any]:
         """Run all checks in parallel with early exit."""
         self.log("Starting optimized quick conflict check...", "INFO")
 
@@ -237,11 +237,11 @@ class OptimizedQuickConflictChecker:
         execution_time = time.time() - start_time
 
         return {
-            "execution_time": execution_time,
+            "execution_time": float(execution_time),
             "results": results,
-            "issues": self.issues,
-            "warnings": self.warnings,
-            "all_passed": len(self.issues) == 0,
+            "issues": list(self.issues),
+            "warnings": list(self.warnings),
+            "all_passed": bool(len(self.issues) == 0),
         }
 
 
