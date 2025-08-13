@@ -81,6 +81,7 @@ else
 fi
 
 # Activate virtual environment
+# shellcheck disable=SC1091
 source venv/bin/activate
 
 print_status "Installing Python dependencies..."
@@ -213,7 +214,7 @@ cat > docs/setup.md << 'EOF'
    sys.path.append('src')
    from dspy_modules.document_processor import DocumentProcessor
    from dspy_modules.vector_store import VectorStore
-   
+
    # Test document processing
    processor = DocumentProcessor()
    result = processor('your_document.pdf')
@@ -227,7 +228,7 @@ cat > docs/setup.md << 'EOF'
    import sys
    sys.path.append('src')
    from dspy_modules.vector_store import VectorStore
-   
+
    vector_store = VectorStore('postgresql://ai_user:ai_password@localhost:5432/ai_agency')
    result = vector_store('search', query='Your question here?')
    print(f'Found {result[\"total_results\"]} relevant chunks')
@@ -333,4 +334,4 @@ echo "🔧 Configuration: .env"
 echo "🧪 Tests: tests/"
 echo ""
 
-print_success "Your DSPy RAG system is ready to use with Cursor + Mistral-7B + PostgreSQL!" 
+print_success "Your DSPy RAG system is ready to use with Cursor + Mistral-7B + PostgreSQL!"

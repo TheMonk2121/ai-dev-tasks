@@ -184,7 +184,14 @@
         "sdist",
         "Sdist",
         "dylib",
-        "Dylib"
+        "Dylib",
+        "tsvector",
+        "plainto",
+        "tsquery",
+        "tobytes",
+        "ndarray",
+        "hnsw",
+        "HNSW"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [
