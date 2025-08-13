@@ -117,8 +117,9 @@ restore_from_backup() {
     local backup_file
 
     if [ -d "$BACKUP_DIR" ]; then
-        backup_file=$(ls -t "$BACKUP_DIR/${file}."* 2>/dev/null | head -1)
-        if [ -n "$backup_file" ]; then
+        # Use find with stat for cross-platform compatibility (avoids SC2012)
+        backup_file=$(find "$BACKUP_DIR" -name "${file}.*" -type f -exec stat -f "%m %N" {} \; 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2-)
+        if [ -n "$backup_file" ] && [ -f "$backup_file" ]; then
             log_info "Restoring $file from $backup_file"
             cp "$backup_file" "$file"
             log_success "Restored $file"
