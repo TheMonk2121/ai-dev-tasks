@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="/Users/danieljacobs/Code/ai-dev-tasks"
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO="$(dirname "$SCRIPT_DIR")"
 LOG="$REPO/.git/autopull.log"
 
 cd "$REPO"

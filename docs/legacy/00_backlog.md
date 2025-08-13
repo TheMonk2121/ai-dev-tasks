@@ -1,8 +1,8 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- ARCHIVED: Historical backlog. Use `000_backlog.md` for current priorities. -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- ARCHIVED: Historical backlog. Use `000_core/000_backlog.md` for current priorities. -->
 <!-- MODULE_REFERENCE: 103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
 # Backlog
 
 
@@ -91,10 +91,10 @@
 | S‑001 | n8n Installation & Configuration      | 🔥  | 1        | setup-required | n8n installation + API key + webhook setup | See `dspy-rag-system/docs/N8N_SETUP_GUIDE.md` |
 | S‑002 | PostgreSQL Event Ledger Schema        | 🔥  | 1        | setup-required | Database schema creation | Run `config/database/event_ledger.sql` in PostgreSQL |
 | S‑003 | Environment Configuration             | ⚙️  | 1        | setup-required | Environment variables setup | Configure N8N_BASE_URL, N8N_API_KEY, POSTGRES_DSN |
-| S‑004 | Ollama & Mistral 7B Setup            | 🔥  | 1        | setup-required | Ollama installation + Mistral model download | See `202_setup-requirements.md` |
+| S‑004 | Ollama & Mistral 7B Setup            | 🔥  | 1        | setup-required | Ollama installation + Mistral model download | See `200_setup/202_setup-requirements.md` |
 | S‑005 | LM Studio & Yi-Coder Setup           | 🔥  | 1        | setup-required | LM Studio installation + Yi-Coder model download | See `103_yi-coder-integration.md` |
 | S‑006 | PostgreSQL Database Setup             | 🔥  | 1        | setup-required | PostgreSQL installation + database creation | See `docs/ARCHITECTURE.md` |
-| S‑007 | Virtual Environment Setup             | ⚙️  | 1        | setup-required | Python virtual environment + dependencies | See `400_project-overview.md` |
+| S‑007 | Virtual Environment Setup             | ⚙️  | 1        | setup-required | Python virtual environment + dependencies | See `400_guides/400_project-overview.md` |
 | S‑008 | Cursor IDE Configuration              | 🔥  | 1        | setup-required | Cursor IDE + Yi-Coder integration | See `103_yi-coder-integration.md` |
 | S‑009 | Secrets Management Setup              | 🔥  | 1        | setup-required | Environment secrets configuration | See `C8_COMPLETION_SUMMARY.md` |
 | S‑010 | System Dependencies                   | ⚙️  | 1        | setup-required | System packages and tools | See `400_system-overview_advanced_features.md` |

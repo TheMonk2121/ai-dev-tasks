@@ -1,6 +1,6 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_integration-patterns-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 
 # DSPy Research Papers
 
@@ -68,7 +68,7 @@
 
 - `104_dspy-development-context.md` - Our DSPy implementation
 
-- `400_system-overview.md` - System architecture overview
+- `400_guides/400_system-overview.md` - System architecture overview
 
 ## 📖**Key Insights**- Structured prompt programming improves maintainability
 

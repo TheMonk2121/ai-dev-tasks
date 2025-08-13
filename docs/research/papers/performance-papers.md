@@ -1,6 +1,6 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 
 # Performance Research Papers
 
@@ -30,7 +30,7 @@
 
 ## 🔗 **Related Documentation**- `500_performance-research.md` - Our internal performance research summary
 
-- `400_system-overview.md` - System architecture overview
+- `400_guides/400_system-overview.md` - System architecture overview
 
 ## 📖**Key Insights**- Performance monitoring strategies
 

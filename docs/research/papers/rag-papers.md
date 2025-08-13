@@ -1,5 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 
 # RAG Research Papers
 
@@ -57,7 +57,7 @@
 
 ## 🔗 **Related Documentation**- `500_rag-system-research.md` - Our internal RAG research summary
 
-- `400_system-overview.md` - System architecture overview
+- `400_guides/400_system-overview.md` - System architecture overview
 
 - `dspy-rag-system/` - Our RAG implementation
 

@@ -1,6 +1,6 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- ARCHIVED: Historical workflow. Use `003_process-task-list.md` for current execution. -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- ARCHIVED: Historical workflow. Use `000_core/003_process-task-list.md` for current execution. -->
+<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
 # 4. **Validate Completion**- Use Mistral 7B Instruct for reasoning and planning
 

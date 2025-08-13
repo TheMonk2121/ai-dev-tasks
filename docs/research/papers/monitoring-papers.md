@@ -1,5 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 
 # Monitoring Research Papers
 
@@ -29,7 +29,7 @@
 
 ## 🔗 **Related Documentation**- `500_monitoring-research.md` - Our internal monitoring research summary
 
-- `400_system-overview.md` - System architecture overview
+- `400_guides/400_system-overview.md` - System architecture overview
 
 ## 📖**Key Insights**- Monitoring strategies
 

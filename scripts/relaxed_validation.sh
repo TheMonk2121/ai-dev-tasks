@@ -44,7 +44,9 @@ cat > "$TEMP_CONFIG" << 'EOF'
   "MD043": true,
   "MD044": true,
   "MD045": true,
-  "MD046": true,
+  "MD046": {
+    "style": "fenced"
+  },
   "MD047": true,
   "MD048": true,
   "MD049": true,

@@ -1,0 +1,31 @@
+# Conflict Detection Tools Requirements
+# For use with 400_comprehensive-coding-best-practices.md
+
+# Core conflict detection tools
+pycycle>=0.1.0          # Circular dependency detection
+bandit>=1.7.0           # Security scanning
+safety>=2.0.0           # Dependency vulnerability scanning
+psutil>=5.9.0           # System resource monitoring
+
+# Dependency analysis
+pipdeptree>=2.0.0       # Dependency tree visualization
+
+# Code quality tools
+black>=23.0.0           # Code formatting
+isort>=5.12.0           # Import sorting
+ruff>=0.1.0             # Fast Python linter
+
+# Testing and validation
+pytest>=7.0.0           # Testing framework
+pytest-cov>=4.0.0       # Coverage reporting
+
+# Development tools
+pre-commit>=3.0.0       # Git hooks for quality checks
+
+# Optional: Performance monitoring
+memory-profiler>=0.60.0 # Memory usage profiling
+py-spy>=0.3.0           # Python profiler
+
+# Optional: Advanced analysis
+radon>=5.1.0            # Code complexity analysis
+mccabe>=0.7.0           # Cyclomatic complexity

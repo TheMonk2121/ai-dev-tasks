@@ -1,7 +1,7 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_contributing-guidelines.md -->
 # **New to the Project?**###**New to the Project?**{#tldr}
 
 ## 🔎 TL;DR
@@ -145,23 +145,23 @@ Three-Lens Document
 
 - [ ]**Language is clear**for the target audience
 
-## 📚**Additional Resources**###**Project Documentation**-**400_project-overview.md**: Main project overview and quick start
+## 📚**Additional Resources**###**Project Documentation**-**400_guides/400_project-overview.md**: Main project overview and quick start
 
-- **400_system-overview.md**: Comprehensive technical overview
+- **400_guides/400_system-overview.md**: Comprehensive technical overview
 
-- **000_backlog.md**: Current priorities and development roadmap
+- **000_core/000_backlog.md**: Current priorities and development roadmap
 
-### **Technical Documentation**-**400_system-overview.md**: Canonical architecture
+### **Technical Documentation**-**400_guides/400_system-overview.md**: Canonical architecture
 
-- **202_setup-requirements.md**: Configuration overview and setup
+- **200_setup/202_setup-requirements.md**: Configuration overview and setup
 
 - **dspy-rag-system/docs/**: Core system documentation
 
-### **Development Workflows**-**001_create-prd.md**: PRD creation workflow
+### **Development Workflows**-**000_core/001_create-prd.md**: PRD creation workflow
 
-- **002_generate-tasks.md**: Task generation workflow
+- **000_core/002_generate-tasks.md**: Task generation workflow
 
-- **003_process-task-list.md**: AI execution workflow
+- **000_core/003_process-task-list.md**: AI execution workflow
 
 - --
 

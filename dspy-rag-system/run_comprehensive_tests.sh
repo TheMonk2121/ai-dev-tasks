@@ -27,81 +27,78 @@ print_status() {
 # Function to check dependencies
 check_dependencies() {
     print_status "info" "Checking dependencies..."
-    
+
     # Check Python
     if ! command -v python3 &> /dev/null; then
         print_status "error" "Python3 is not installed"
         exit 1
     fi
-    
+
     # Check virtual environment
     if [ ! -d "venv" ]; then
         print_status "warning" "Virtual environment not found. Creating one..."
         python3 -m venv venv
+        # shellcheck disable=SC1091
         source venv/bin/activate
         pip install -r requirements.txt
     else
+        # shellcheck disable=SC1091
         source venv/bin/activate
     fi
-    
+
     # Check required packages
-    python3 -c "import pytest, coverage, psutil, bandit" 2>/dev/null
-    if [ $? -ne 0 ]; then
+    if ! python3 -c "import pytest, coverage, psutil, bandit" 2>/dev/null; then
         print_status "warning" "Installing missing test dependencies..."
         pip install pytest coverage psutil bandit pytest-cov pytest-mock
     fi
-    
+
     print_status "success" "Dependencies check complete"
 }
 
 # Function to run comprehensive test suite
 run_comprehensive_suite() {
     local options="$1"
-    
+
     print_status "info" "Running comprehensive test suite..."
-    
+
     # Change to the correct directory
-    cd "$(dirname "$0")"
-    
+    cd "$(dirname "$0")" || exit 1
+
     # Run the comprehensive test suite
-    python3 tests/comprehensive_test_suite.py $options
-    
-    local exit_code=$?
-    
-    if [ $exit_code -eq 0 ]; then
+    if python3 tests/comprehensive_test_suite.py "$options"; then
         print_status "success" "Comprehensive test suite completed successfully"
+        return 0
     else
         print_status "error" "Comprehensive test suite failed"
+        return 1
     fi
-    
-    return $exit_code
 }
 
 # Function to run specific test categories
 run_test_category() {
     local category=$1
     local options="$2"
-    
+
     print_status "info" "Running $category tests..."
-    
+
     case $category in
         "unit")
-            run_comprehensive_suite "--categories unit $options"
+            run_comprehensive_suite "--categories unit" "$options"
             ;;
         "integration")
-            run_comprehensive_suite "--categories integration $options"
+            run_comprehensive_suite "--categories integration" "$options"
             ;;
         "e2e")
-            run_comprehensive_suite "--categories e2e $options"
+            run_comprehensive_suite "--categories e2e" "$options"
             ;;
         "performance")
-            run_comprehensive_suite "--categories performance $options"
+            run_comprehensive_suite "--categories performance" "$options"
             ;;
         "security")
-            run_comprehensive_suite "--categories security $options"
+            run_comprehensive_suite "--categories security" "$options"
             ;;
         "quick")
-            run_comprehensive_suite "--categories unit integration --timeout 60 $options"
+            run_comprehensive_suite "--categories unit integration --timeout 60" "$options"
             ;;
         "full")
             run_comprehensive_suite "$options"
@@ -116,12 +113,12 @@ run_test_category() {
 # Function to run with coverage
 run_with_coverage() {
     local options="$1"
-    
+
     print_status "info" "Running tests with coverage analysis..."
-    
+
     # Run comprehensive suite with coverage
-    run_comprehensive_suite "--coverage-threshold 80.0 $options"
-    
+    run_comprehensive_suite "--coverage-threshold 80.0" "$options"
+
     # Generate HTML coverage report
     if [ -f ".coverage" ]; then
         coverage html
@@ -132,10 +129,10 @@ run_with_coverage() {
 # Function to run performance benchmarks
 run_performance_benchmarks() {
     print_status "info" "Running performance benchmarks..."
-    
+
     # Run performance tests with detailed metrics
     run_comprehensive_suite "--categories performance --timeout 600"
-    
+
     # Generate performance report
     if [ -f "test_report_*.json" ]; then
         python3 -c "
@@ -149,7 +146,7 @@ if reports:
     latest_report = max(reports, key=os.path.getctime)
     with open(latest_report) as f:
         data = json.load(f)
-    
+
     print('\\n📊 PERFORMANCE BENCHMARKS')
     print('=' * 40)
     print(f'Average Duration: {data[\"performance_metrics\"][\"average_duration_seconds\"]:.2f}s')
@@ -163,38 +160,47 @@ if reports:
 # Function to run security scan
 run_security_scan() {
     print_status "info" "Running security scan..."
-    
+
     # Run security tests
     run_comprehensive_suite "--categories security --no-report"
-    
+
     # Run additional security tools
     if command -v bandit &> /dev/null; then
         print_status "info" "Running bandit security scan..."
         bandit -r src/ -f json -o security_scan.json
     fi
-    
+
     if command -v safety &> /dev/null; then
         print_status "info" "Running safety check..."
         safety check --json --output safety_report.json
     fi
-    
+
     print_status "success" "Security scan complete"
 }
 
 # Function to generate test report
 generate_test_report() {
     print_status "info" "Generating comprehensive test report..."
-    
+
     # Run full test suite with report generation
     run_comprehensive_suite "--generate-report"
-    
+
     # Find and display the latest report
     if [ -f "test_summary_*.txt" ]; then
-        latest_summary=$(ls -t test_summary_*.txt | head -1)
-        echo ""
-        echo "📄 LATEST TEST SUMMARY"
-        echo "======================"
-        cat "$latest_summary"
+        # Use a portable approach that works on both macOS and Linux
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS
+            latest_summary=$(find . -maxdepth 1 -name "test_summary_*.txt" -type f -exec stat -f '%m %N' {} \; | sort -n | tail -1 | cut -d' ' -f2-)
+        else
+            # Linux
+            latest_summary=$(find . -maxdepth 1 -name "test_summary_*.txt" -type f -exec stat -c '%Y %n' {} \; | sort -n | tail -1 | cut -d' ' -f2-)
+        fi
+        if [ -n "$latest_summary" ]; then
+            echo ""
+            echo "📄 LATEST TEST SUMMARY"
+            echo "======================"
+            cat "$latest_summary"
+        fi
     fi
 }
 
@@ -262,4 +268,4 @@ case "${1:-help}" in
         show_help
         exit 1
         ;;
-esac 
+esac

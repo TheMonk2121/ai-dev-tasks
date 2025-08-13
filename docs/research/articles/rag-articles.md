@@ -1,7 +1,7 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
-<!-- MODULE_REFERENCE: 400_system-overview.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 
 # RAG Articles
 
@@ -64,7 +64,7 @@
 
 ## 🔗 **Related Documentation**- `500_rag-system-research.md` - Our internal RAG research summary
 
-- `400_system-overview.md` - System architecture overview
+- `400_guides/400_system-overview.md` - System architecture overview
 
 ## 📖**Key Insights**- Industry best practices for RAG implementation
 

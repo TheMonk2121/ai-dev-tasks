@@ -57,6 +57,17 @@ watch_folder_error*.log
 
 # Node modules (if any)
 node_modules/
+**/node_modules/
+
+# Large data files and caches
+*.csv
+*.json
+*.xml
+*.zip
+*.tar.gz
+.pytest_cache/
+__pycache__/
+**/__pycache__/
 
 # Large data files
 *.csv

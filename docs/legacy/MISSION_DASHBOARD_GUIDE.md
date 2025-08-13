@@ -1,8 +1,8 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
-<!-- ARCHIVED: Historical guide. For current dashboard, see `400_mission-dashboard-guide.md`. -->
-<!-- MODULE_REFERENCE: 400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_contributing-guidelines.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- ARCHIVED: Historical guide. For current dashboard, see `400_guides/400_mission-dashboard-guide.md`. -->
+<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_contributing-guidelines.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
 
 # Real-time Mission Dashboard Guide
 

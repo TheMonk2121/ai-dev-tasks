@@ -7,6 +7,7 @@ echo "================================"
 # Check if virtual environment exists
 if [ -d "venv" ]; then
     echo "✅ Virtual environment found"
+    # shellcheck disable=SC1091
     source venv/bin/activate
 else
     echo "⚠️  No virtual environment found. Tests may fail if dependencies aren't installed."
@@ -20,14 +21,14 @@ fi
 run_tests() {
     local test_path="$1"
     local options="$2"
-    
+
     echo ""
     echo "🔍 Running tests: $test_path"
     echo "Options: $options"
     echo "----------------------------------------"
-    
-    python3 -m pytest "$test_path" $options
-    
+
+    python3 -m pytest "$test_path" "$options"
+
     if [ $? -eq 0 ]; then
         echo "✅ Tests passed!"
     else
@@ -78,4 +79,4 @@ case "${1:-all}" in
         echo "  $0 unit         # Run unit tests only"
         echo "  $0 coverage     # Run with coverage report"
         ;;
-esac 
+esac

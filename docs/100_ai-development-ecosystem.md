@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 
 # AI Development Ecosystem
 
@@ -13,7 +13,7 @@
 
 - What: End-to-end view of the project’s AI development ecosystem
 
-- Read order: 400_project-overview.md → memory → backlog → system overview → this
+- Read order: 400_guides/400_project-overview.md → memory → backlog → system overview → this
 
 - Use: Orientation, architecture, workflows, and reference links
 
@@ -45,9 +45,9 @@ generation, and automated workflows.
 │                    AI Development Ecosystem                    │
 ├─────────────────────────────────────────────────────────────────┤
 │  🎯 Planning Layer (DSPy-based)                             │
-│  ├── PRD Creation (001_create-prd.md)                        │
-│  ├── Task Generation (002_generate-tasks.md)                  │
-│  └── Process Management (003_process-task-list.md)            │
+│  ├── PRD Creation (000_core/001_create-prd.md)                        │
+│  ├── Task Generation (000_core/002_generate-tasks.md)                  │
+│  └── Process Management (000_core/003_process-task-list.md)            │
 ├─────────────────────────────────────────────────────────────────┤
 │  🤖 AI Execution Layer (v0.3.1)                            │
 │  ├── Cursor Native AI (Foundation)                          │
