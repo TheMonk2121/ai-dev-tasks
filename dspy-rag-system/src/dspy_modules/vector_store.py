@@ -18,9 +18,8 @@ from dspy import Module
 from psycopg2 import errors
 from psycopg2.extras import RealDictCursor, execute_values
 from sentence_transformers import SentenceTransformer
-
-from ..utils.database_resilience import get_database_manager
-from ..utils.retry_wrapper import retry_database
+from utils.database_resilience import get_database_manager
+from utils.retry_wrapper import retry_database
 
 # ---------------------------
 # Model & embedding helpers
