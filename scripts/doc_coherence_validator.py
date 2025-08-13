@@ -9,8 +9,10 @@ Usage: python scripts/optimized_doc_coherence_validator.py [--dry-run] [--only-c
 """
 
 import argparse
+import hashlib
 import json
 import multiprocessing
+import os
 import pickle
 import re
 import subprocess
@@ -26,7 +28,7 @@ LIST_INDENT_PATTERN = re.compile(r"^\s*[-*+]\s")
 TRAILING_SPACES_PATTERN = re.compile(r"\s+$")
 HARD_TABS_PATTERN = re.compile(r"\t")
 LINE_LENGTH_PATTERN = re.compile(r"^.{121,}$")
-CROSS_REFERENCE_PATTERN = re.compile(r"<!--\s*([A-Z_]+):\s*([^>]+)\s*-->")
+CROSS_REFERENCE_PATTERN = re.compile(r"<!--\s*([A-Z_]+):\s*([^>]+?)\s*-->")
 FILE_REFERENCE_PATTERN = re.compile(r"`([^`]+\.md)`")
 BACKLOG_REFERENCE_PATTERN = re.compile(r"B‑\d+")
 TLDR_ANCHOR_PATTERN = re.compile(r'<a\s+id="tldr"\s*>\s*</a>|<a\s+id="tldr"\s*>|\{#tldr\}', re.IGNORECASE)
@@ -49,6 +51,7 @@ class OptimizedDocCoherenceValidator:
         safe_fix: bool = False,
         rules_path: Optional[str] = "config/validator_rules.json",
         strict_anchors: bool = False,
+        tab_width: int = 4,
     ):
         self.dry_run = dry_run
         self.only_changed = only_changed
@@ -58,21 +61,23 @@ class OptimizedDocCoherenceValidator:
         self.safe_fix = safe_fix
         self.rules = self._load_rules(rules_path)
         self.strict_anchors = strict_anchors
+        self.tab_width = max(1, tab_width)
 
         # Cache directory
         self.cache_dir = Path(".cache/doc_validator")
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
-        # Exclude patterns
+        # Exclude patterns - normalize to POSIX and split into dir prefixes vs exact files
         self.exclude_patterns = [
             "venv/",
             "node_modules/",
             "docs/legacy/",
             "__pycache__/",
             ".git/",
+            "600_archives/",
+            # File-level exclusions:
             "999_repo-maintenance.md",
             "REPO_MAINTENANCE_SUMMARY.md",
-            "600_archives/",
             "DOCUMENTATION_UPDATE_SUMMARY.md",
             "RESEARCH_INTEGRATION_QUICK_START.md",
             "RESEARCH_DISPERSAL_SUMMARY.md",
@@ -82,6 +87,16 @@ class OptimizedDocCoherenceValidator:
             "LM_STUDIO_SETUP.md",
             "workflow_improvement_research.md",
         ]
+
+        # Normalize to POSIX and split into dir prefixes vs exact files
+        self._skip_dir_prefixes = []
+        self._skip_files_exact = set()
+        for pat in self.exclude_patterns:
+            posix = pat.replace("\\", "/").lstrip("./")
+            if posix.endswith("/"):
+                self._skip_dir_prefixes.append(posix)
+            else:
+                self._skip_files_exact.add(posix)
 
         # Priority file patterns
         self.priority_files = {
@@ -106,18 +121,32 @@ class OptimizedDocCoherenceValidator:
                 pass
         return {}
 
-    def get_cache_key(self, file_path: Path) -> str:
-        """Generate cache key for a file."""
+    def _is_git_repo(self) -> bool:
+        """Check if current directory is a git repository."""
         try:
-            # Use git hash for cache invalidation
-            result = subprocess.run(
-                ["git", "log", "-1", "--format=%H", "--", str(file_path)], capture_output=True, text=True, timeout=5
+            r = subprocess.run(
+                ["git", "rev-parse", "--is-inside-work-tree"],
+                capture_output=True,
+                text=True,
+                timeout=3,
+                check=False,
             )
-            git_hash = result.stdout.strip()[:8] if result.returncode == 0 else "unknown"
+            return r.returncode == 0 and r.stdout.strip() == "true"
         except Exception:
-            git_hash = "unknown"
+            return False
 
-        return f"{file_path.name}_{git_hash}"
+    def _git(self, *args: str, timeout: int = 10) -> subprocess.CompletedProcess:
+        """Run git command with timeout."""
+        return subprocess.run(["git", *args], capture_output=True, text=True, timeout=timeout, check=False)
+
+    def get_cache_key(self, file_path: Path) -> str:
+        """Generate cache key for a file using mtime and size."""
+        try:
+            st = file_path.stat()
+            base = f"{file_path.as_posix()}|{st.st_mtime_ns}|{st.st_size}"
+        except FileNotFoundError:
+            base = f"{file_path.as_posix()}|missing"
+        return hashlib.blake2s(base.encode("utf-8"), digest_size=16).hexdigest()
 
     def load_cached_result(self, file_path: Path) -> Optional[Dict]:
         """Load cached validation result if available and valid."""
@@ -148,128 +177,257 @@ class OptimizedDocCoherenceValidator:
         except Exception:
             pass
 
+    def _should_validate_file(self, file_path: Path) -> bool:
+        """Check if file should be validated (not excluded)."""
+        rel = file_path.as_posix().lstrip("./")
+        if not rel.endswith(".md"):
+            return False
+        if any(rel.startswith(prefix) for prefix in self._skip_dir_prefixes):
+            return False
+        if rel in self._skip_files_exact:
+            return False
+        return True
+
+    def _list_tracked_markdown_with_git(self) -> List[Path]:
+        """Get tracked markdown files using git ls-files."""
+        try:
+            r = self._git("ls-files", "*.md", timeout=8)
+            if r.returncode == 0:
+                files = [Path(p.strip()) for p in r.stdout.splitlines() if p.strip()]
+                return [f for f in files if self._should_validate_file(f)]
+        except Exception:
+            pass
+        return []
+
+    def _walk_markdown_files(self) -> List[Path]:
+        """Walk directory tree for markdown files with pruning."""
+        files: List[Path] = []
+        for root, dirs, filenames in os.walk(".", topdown=True):
+            root_posix = root.replace("\\", "/").lstrip("./")
+
+            # Prune directories aggressively
+            if any(root_posix.startswith(prefix.rstrip("/")) for prefix in self._skip_dir_prefixes):
+                dirs[:] = []  # don't descend
+                continue
+
+            # Also prune children about to be visited
+            dirs[:] = [
+                d
+                for d in dirs
+                if not any((root_posix + "/" + d).startswith(prefix.rstrip("/")) for prefix in self._skip_dir_prefixes)
+            ]
+
+            for name in filenames:
+                if not name.endswith(".md"):
+                    continue
+                p = Path(root) / name
+                if self._should_validate_file(p):
+                    files.append(p)
+        return files
+
     def get_changed_markdown_files(self) -> Set[Path]:
-        """Get only changed Markdown files using git diff."""
+        """Get only changed Markdown files using git with robust fallbacks."""
         if not self.only_changed:
             return set()
 
+        candidates: Set[str] = set()
+        if not self._is_git_repo():
+            return set()
+
+        # Prefer diff against last commit, with fallbacks to staged/unstaged
+        commands = [
+            ["diff", "--name-only", "HEAD~1"],
+            ["diff", "--name-only", "HEAD"],
+            ["diff", "--name-only", "--cached"],
+        ]
+        for cmd in commands:
+            try:
+                r = self._git(*cmd, timeout=10)
+                if r.returncode == 0:
+                    for line in r.stdout.splitlines():
+                        line = line.strip()
+                        if line:
+                            candidates.add(line)
+            except Exception:
+                pass
+
+        # Also look at the working tree
         try:
-            # Get changed files from git
-            result = subprocess.run(
-                ["git", "diff", "--name-only", "HEAD~1"], capture_output=True, text=True, timeout=10
-            )
+            r = self._git("status", "--porcelain", timeout=10)
+            if r.returncode == 0:
+                for line in r.stdout.splitlines():
+                    # Format: "XY path"
+                    parts = line.strip().split(maxsplit=1)
+                    if len(parts) == 2:
+                        candidates.add(parts[1])
+        except Exception:
+            pass
 
-            if result.returncode == 0:
-                changed_files = set()
-                for line in result.stdout.strip().split("\n"):
-                    if line.strip() and line.endswith(".md"):
-                        file_path = Path(line.strip())
-                        if self._should_validate_file(file_path):
-                            changed_files.add(file_path)
-                return changed_files
-        except Exception as e:
-            self.warnings.append(f"Could not get changed files: {e}")
-
-        return set()
-
-    def _should_validate_file(self, file_path: Path) -> bool:
-        """Check if file should be validated (not excluded)."""
-        file_str = str(file_path)
-        return not any(pattern in file_str for pattern in self.exclude_patterns)
+        out: Set[Path] = set()
+        for c in candidates:
+            if c.endswith(".md"):
+                p = Path(c)
+                if self._should_validate_file(p) and p.exists():
+                    out.add(p)
+        return out
 
     def _get_markdown_files(self) -> List[Path]:
         """Get all Markdown files to validate."""
         if self.only_changed:
-            changed_files = self.get_changed_markdown_files()
-            if changed_files:
-                return list(changed_files)
-            else:
-                print("No changed Markdown files found")
-                return []
+            changed = self.get_changed_markdown_files()
+            return sorted(changed, key=lambda p: p.as_posix())
 
-        # Get all markdown files
-        markdown_files = []
-        for pattern in ["**/*.md", "*.md"]:
-            markdown_files.extend(Path(".").glob(pattern))
+        if self._is_git_repo():
+            files = self._list_tracked_markdown_with_git()
+            if files:
+                return files
 
-        # Filter out excluded files
-        return [f for f in markdown_files if self._should_validate_file(f)]
+        # Fallback: walk the tree with pruning
+        return self._walk_markdown_files()
+
+    def _check_headings(self, line: str) -> Optional[int]:
+        """Return heading level (1..6) if line is a Markdown ATX heading like '# Title', else None."""
+        if not line or line[0] != "#":
+            return None
+        # Count leading '#' up to 6 and require a following space
+        i = 0
+        n = len(line)
+        while i < n and i < 6 and line[i] == "#":
+            i += 1
+        if 1 <= i <= 6 and i < n and line[i] == " ":
+            return i
+        return None
 
     def validate_single_file(self, file_path: Path) -> Dict:
-        """Validate a single file using pre-compiled patterns."""
+        """Validate a single file using single-pass scanning."""
         # Check cache first
         cached_result = self.load_cached_result(file_path)
         if cached_result is not None:
             return cached_result
 
         try:
-            content = file_path.read_text(encoding="utf-8")
+            text = file_path.read_text(encoding="utf-8", errors="strict")
+        except UnicodeDecodeError:
+            text = file_path.read_text(encoding="utf-8", errors="replace")
         except Exception as e:
             return {"file": str(file_path), "errors": [f"Could not read file: {e}"], "warnings": [], "valid": False}
 
         errors = []
         warnings = []
+        fixes = []
 
-        # Use pre-compiled patterns for faster matching
-        lines = content.split("\n")
+        lines = text.splitlines()  # preserves no trailing '\n'
+        had_trailing_newline = text.endswith("\n")
 
-        # Check line length
+        # Single pass over lines
+        heading_levels = []
+        any_tabs = False
+        fixed_tabs = 0
+        fixed_trailing = 0
+
+        out_lines: List[str] = []
         for i, line in enumerate(lines, 1):
-            if LINE_LENGTH_PATTERN.match(line):
+            # --- checks ---
+            if len(line) > (self.rules.get("line_length_limit", 120)):
                 warnings.append(f"Line {i}: Line too long (>120 chars)")
 
-        # Check for hard tabs
-        if HARD_TABS_PATTERN.search(content):
-            warnings.append("Contains hard tabs")
+            if "\t" in line:
+                any_tabs = True
 
-        # Check for trailing spaces
-        for i, line in enumerate(lines, 1):
-            if TRAILING_SPACES_PATTERN.search(line):
-                warnings.append(f"Line {i}: Trailing spaces")
+            # Trailing whitespace
+            trimmed = line.rstrip(" \t")
+            if trimmed != line:
+                warnings.append(f"Line {i}: Trailing whitespace")
+                if self.safe_fix:
+                    fixed_trailing += 1
 
-        # Check heading increment
-        heading_levels = []
-        for i, line in enumerate(lines, 1):
-            match = HEADING_INCREMENT_PATTERN.match(line)
-            if match:
-                level = len(match.group().strip().split()[0])
+            # Heading levels
+            level = self._check_headings(trimmed)
+            if level is not None:
                 heading_levels.append((i, level))
 
-        for i in range(1, len(heading_levels)):
-            prev_level = heading_levels[i - 1][1]
-            curr_level = heading_levels[i][1]
-            if curr_level > prev_level + 1:
-                errors.append(f"Line {heading_levels[i][0]}: Heading level skipped")
+            # --- fixes (optional) ---
+            out_line = trimmed
+            if self.safe_fix and "\t" in out_line:
+                out_line = out_line.replace("\t", " " * self.tab_width)
+                fixed_tabs += 1
 
-        # Check for TL;DR section
-        if not TLDR_HEADING_PATTERN.search(content):
+            out_lines.append(out_line)
+
+        # Post-pass checks
+        for idx in range(1, len(heading_levels)):
+            prev_level = heading_levels[idx - 1][1]
+            curr_level = heading_levels[idx][1]
+            if curr_level > prev_level + 1:
+                errors.append(f"Line {heading_levels[idx][0]}: Heading level skipped")
+
+        if any_tabs:
+            if self.safe_fix and fixed_tabs > 0:
+                fixes.append(f"Replaced tabs with spaces on {fixed_tabs} line(s)")
+            else:
+                warnings.append("Contains hard tabs")
+
+        # TL;DR checks
+        require_tldr = self.rules.get("require_tldr", True)
+        if require_tldr and not (TLDR_HEADING_PATTERN.search(text) or TLDR_ANCHOR_PATTERN.search(text)):
             warnings.append("Missing TL;DR section")
 
-        # Check for at-a-glance table
-        if not AT_A_GLANCE_HEADER_PATTERN.search(content):
+        # At-a-glance table
+        require_glance = self.rules.get("require_at_a_glance", True)
+        if require_glance and not AT_A_GLANCE_HEADER_PATTERN.search(text):
             warnings.append("Missing at-a-glance table")
 
-        # Check cross-references
-        cross_refs = CROSS_REFERENCE_PATTERN.findall(content)
-        for ref_type, ref_target in cross_refs:
+        # Cross-references
+        for ref_type, ref_target in CROSS_REFERENCE_PATTERN.findall(text):
             if ref_type == "MODULE_REFERENCE":
-                target_path = Path(ref_target)
-                if not target_path.exists():
+                # Strip whitespace from reference target
+                ref_target = ref_target.strip()
+                # Check both relative to file dir and repo root
+                p1 = (file_path.parent / ref_target).resolve()
+                p2 = Path(ref_target).resolve()
+                if not p1.exists() and not p2.exists():
                     errors.append(f"Module reference not found: {ref_target}")
 
-        # Check file references
-        file_refs = FILE_REFERENCE_PATTERN.findall(content)
-        for file_ref in file_refs:
-            if not Path(file_ref).exists():
+        # Backtick file references (`foo.md`)
+        for file_ref in FILE_REFERENCE_PATTERN.findall(text):
+            p1 = file_path.parent / file_ref
+            p2 = Path(file_ref)
+            if not p1.exists() and not p2.exists():
                 warnings.append(f"File reference not found: {file_ref}")
 
-        # Check backlog references
-        backlog_refs = BACKLOG_REFERENCE_PATTERN.findall(content)
+        # Backlog references (maintain existing functionality)
+        backlog_refs = BACKLOG_REFERENCE_PATTERN.findall(text)
         for backlog_ref in backlog_refs:
             # Could add validation against actual backlog here
             pass
 
-        result = {"file": str(file_path), "errors": errors, "warnings": warnings, "valid": len(errors) == 0}
+        # Strict anchor mode: detect duplicate ids
+        if self.strict_anchors:
+            ids = [m.group(1) for m in HTML_ANCHOR_PATTERN.finditer(text)]
+            ids += [m.group(1) for m in MARKDOWN_ANCHOR_PATTERN.finditer(text)]
+            if len(ids) != len(set(ids)):
+                errors.append("Duplicate anchor IDs detected")
+
+        # Apply safe fixes if requested
+        if self.safe_fix:
+            if fixed_trailing > 0:
+                fixes.append(f"Trimmed trailing whitespace on {fixed_trailing} line(s)")
+            new_text = "\n".join(out_lines) + ("\n" if had_trailing_newline else "")
+            if new_text != text and not self.dry_run:
+                try:
+                    file_path.write_text(new_text, encoding="utf-8")
+                    self.changes_made.append(str(file_path))
+                except Exception as e:
+                    warnings.append(f"Failed to write safe fixes: {e}")
+
+        # Result
+        result = {
+            "file": str(file_path),
+            "errors": errors,
+            "warnings": warnings,
+            "fixes": fixes,
+            "valid": len(errors) == 0,
+        }
 
         # Cache the result
         self.save_cached_result(file_path, result)
@@ -297,6 +455,7 @@ class OptimizedDocCoherenceValidator:
                         "file": str(file_path),
                         "errors": [f"Validation error: {e}"],
                         "warnings": [],
+                        "fixes": [],
                         "valid": False,
                     }
 
@@ -337,6 +496,7 @@ class OptimizedDocCoherenceValidator:
             "invalid_files": len(markdown_files) - valid_files,
             "errors": all_errors,
             "warnings": all_warnings,
+            "changes_made": self.changes_made,
             "all_valid": len(all_errors) == 0,
         }
 
@@ -349,7 +509,9 @@ def main():
     parser.add_argument("--cache-ttl", type=int, default=300, help="Cache TTL in seconds")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--emit-json", help="Save results to JSON file")
-    parser.add_argument("--safe-fix", action="store_true", help="Apply safe fixes")
+    parser.add_argument("--safe-fix", action="store_true", help="Apply safe fixes (tabs->spaces, trim trailing)")
+    parser.add_argument("--tab-width", type=int, default=4, help="Spaces per tab when --safe-fix")
+    parser.add_argument("--strict-anchors", action="store_true", help="Fail on duplicate anchor ids")
 
     args = parser.parse_args()
 
@@ -360,6 +522,8 @@ def main():
         cache_ttl=args.cache_ttl,
         emit_json=args.emit_json,
         safe_fix=args.safe_fix,
+        strict_anchors=args.strict_anchors,
+        tab_width=args.tab_width,
     )
 
     results = validator.run_validation()
@@ -378,6 +542,8 @@ def main():
         print(f"Invalid files: {results['invalid_files']}")
         print(f"Errors: {len(results['errors'])}")
         print(f"Warnings: {len(results['warnings'])}")
+        if results["changes_made"]:
+            print(f"Files auto-fixed: {len(results['changes_made'])}")
 
         if results["errors"]:
             print("\nErrors:")
