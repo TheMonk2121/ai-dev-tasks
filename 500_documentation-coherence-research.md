@@ -51,7 +51,7 @@ conventions and cross-reference patterns.
 
 ### **File Hierarchy & Naming Conventions**####**Priority-Based File Organization**Our system uses a three-digit prefix naming convention to establish hierarchy:**HIGH Priority (Read First):**- `100_cursor-memory-context.md` - Memory scaffold and current state
 
-- `400_system-overview_advanced_features.md` - Technical architecture
+- `400_system-overview.md` - Technical architecture
 
 - `000_backlog.md` - Current priorities and roadmap
 
@@ -68,7 +68,7 @@ conventions and cross-reference patterns.
 #### **Cross-Reference System**Files use structured comment patterns to establish relationships:
 
 ```markdown
-<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview_advanced_features.md, 000_backlog.md -->
+<!-- ESSENTIAL_FILES: 400_project-overview.md, 400_system-overview.md, 000_backlog.md -->
 <!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_backlog-guide.md, 600_archives/legacy-integrations/ -->
 
@@ -399,7 +399,7 @@ def analyze_context_priority():
 
 - `400_context-priority-guide.md` - Context priority system
 
-- `400_system-overview_advanced_features.md` - Technical architecture
+- `400_system-overview.md` - Technical architecture
 
 - `000_backlog.md` - Priority management
 
