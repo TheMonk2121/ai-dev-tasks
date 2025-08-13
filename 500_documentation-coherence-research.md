@@ -74,36 +74,36 @@ conventions and cross-reference patterns.
 
 ```yaml
 
-### **Cognitive Scaffolding Components**####**1. Memory Context System**-**Primary File**: `100_cursor-memory-context.md`
+### **Cognitive Scaffolding Components**
 
-- **Purpose**: Instant context for Cursor AI without reading multiple files
+#### **1. Project Overview**
+- **Primary File**: `400_project-overview.md`
+- **Purpose**: Primary entry point and 5-minute overview of the entire system
+- **Content**: Project overview, quick start, core workflow, essential concepts
+- **Usage**: First file to read for any new context
 
+#### **2. Memory Context System**
+- **Primary File**: `100_cursor-memory-context.md`
+- **Purpose**: Primary memory scaffold for instant project state
 - **Content**: Current project state, priorities, system architecture, development guidelines
+- **Usage**: Second file to read for instant context rehydration
 
-- **Update Frequency**: After completing backlog items, changing focus, adding features
-
-#### **2. Context Priority Guide**-**Primary File**: `400_context-priority-guide.md`
-
+#### **3. Context Priority Guide**
+- **Primary File**: `400_context-priority-guide.md`
 - **Purpose**: Defines reading order and file relationships
-
 - **Content**: Memory scaffolding system, cross-reference patterns, priority tiers
-
 - **Usage**: Guides AI on which files to read and in what order
 
-#### **3. System Overview**-**Primary File**: `400_system-overview_advanced_features.md`
-
+#### **4. System Overview**
+- **Primary File**: `400_system-overview.md`
 - **Purpose**: Technical architecture and system-of-systems context
-
 - **Content**: System architecture, development workflow, core components
-
 - **Usage**: Deep technical context for implementation tasks
 
-#### **4. Backlog Management**-**Primary File**: `000_backlog.md`
-
+#### **5. Backlog Management**
+- **Primary File**: `000_backlog.md`
 - **Purpose**: Current priorities and development roadmap
-
 - **Content**: Prioritized backlog items, completion status, dependencies
-
 - **Usage**: Guides development focus and task selection
 
 ## 🔍 Research Questions

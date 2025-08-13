@@ -13,7 +13,7 @@
 
 - What: End-to-end view of the project’s AI development ecosystem
 
-- Read order: memory → backlog → system overview → this
+- Read order: 400_project-overview.md → memory → backlog → system overview → this
 
 - Use: Orientation, architecture, workflows, and reference links
 

@@ -50,8 +50,8 @@
 
 ## Critical Path
 
-1) `100_cursor-memory-context.md` → Primary memory scaffold (30s, 80% context)
-2) `README.md` → Quick start and navigation bridge
+1) `400_project-overview.md` → Primary entry point and workflow overview (5-minute overview)
+2) `100_cursor-memory-context.md` → Primary memory scaffold (30s, 80% context)
 3) `000_backlog.md` → Current priorities and dependencies
 4) `400_system-overview.md` → Technical architecture and components
 5) `400_context-priority-guide.md` → File relationships and reading order
@@ -65,30 +65,30 @@
 
 ## **AI File Analysis Strategy** When Cursor AI restarts or needs to rehydrate context, it follows a **structured reading strategy** designed to maximize efficiency while maintaining comprehensive understanding
 
-### **Primary Go-To Files (Read First - 2-3 minutes)**1.**`100_cursor-memory-context.md`**-**CRITICAL**-**Primary memory scaffold**for instant project state
+### **Primary Go-To Files (Read First - 2-3 minutes)**
 
-- Provides current development focus, recent completions, system architecture
-- **NEW**: Contains complete documentation inventory and context-specific guidance
-- Takes 30 seconds to read, provides 80% of needed context
-- Essential for understanding "what's happening right now"
+1. **`400_project-overview.md`** - **CRITICAL**
+   - **Primary entry point** for project understanding and workflow
+   - Provides 5-minute overview of the entire system
+   - Essential for understanding "what this project is and how to use it"
 
-2.**`000_backlog.md`**-**CRITICAL**- Shows current priorities and active development items
+2. **`100_cursor-memory-context.md`** - **CRITICAL**
+   - **Primary memory scaffold** for instant project state
+   - Provides current development focus, recent completions, system architecture
+   - Takes 30 seconds to read, provides 80% of needed context
+   - Essential for understanding "what's happening right now"
 
-- Reveals development roadmap and blocking dependencies
-- Essential for understanding project direction and next steps
-- Helps identify what's urgent vs. what can wait
+3. **`000_backlog.md`** - **CRITICAL**
+   - Shows current priorities and active development items
+   - Reveals development roadmap and blocking dependencies
+   - Essential for understanding project direction and next steps
+   - Helps identify what's urgent vs. what can wait
 
-3.**`400_system-overview.md`**-**CRITICAL**- Provides technical architecture and "system-of-systems" context
-
-- Shows how all components work together
-- Essential for understanding the broader technical landscape
-- Helps with implementation decisions and system integration
-
-4.**`400_development-roadmap.md`**-**CRITICAL**- Provides comprehensive development timeline and strategic planning
-
-- Shows current sprint, next 3 sprints, and quarterly goals
-- Essential for understanding project milestones and progress tracking
-- Helps with strategic planning and resource allocation
+4. **`400_system-overview.md`** - **CRITICAL**
+   - Provides technical architecture and "system-of-systems" context
+   - Shows how all components work together
+   - Essential for understanding the broader technical landscape
+   - Helps with implementation decisions and system integration
 
 ### **📋 Crucial Ancillary Files (Read as Needed)**1.**`400_context-priority-guide.md`**-**IMPORTANT**- When understanding file organization and relationships
 
@@ -121,18 +121,23 @@
 
 ### **Reading Pattern Efficiency**
 
-- *First 2-3 minutes:**- Read `100_cursor-memory-context.md` for instant context
+**First 2-3 minutes:**
 
+- Read `400_project-overview.md` for project overview and workflow
+- Read `100_cursor-memory-context.md` for instant context
 - Check `000_backlog.md` for current priorities
+- Scan `400_system-overview.md` for technical context
 
-- Scan `400_system-overview.md` for technical context**As needed during conversation:**- Reference `400_context-priority-guide.md` when discussing file organization
+**As needed during conversation:**
 
+- Reference `400_context-priority-guide.md` when discussing file organization
 - Check specific scripts when implementation details are needed
+- Use `200_naming-conventions.md` when discussing file naming
 
-- Use `200_naming-conventions.md` when discussing file naming**For complex tasks:**- Read relevant workflow files (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
+**For complex tasks:**
 
+- Read relevant workflow files (`001_create-prd.md`, `002_generate-tasks.md`, `003_process-task-list.md`)
 - Check specific domain files based on task type
-
 - Reference completion summaries for historical context
 
 ### **Why This Strategy Works**
@@ -318,12 +323,13 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 ## Priority Tiers (Macro → Micro)
 
-### **Tier 1: Top-level Architecture & Purpose**| File | Purpose | Why First? | Cross-Reference |
+### **Tier 1: Top-level Architecture & Purpose**
+| File | Purpose | Why First? | Cross-Reference |
 |------|---------|-------------|-----------------|
-| `400_project-overview.md` | Project overview, quick start, core flow | Establishes purpose and the canonical workflow | `100_cursor-memory-context.md` (entry), `400_system-overview.md` |
-| `400_system-overview.md` | Architecture, components, workflows | Provides system-of-systems context for implementation | `104_dspy-development-context.md` |
+| `400_project-overview.md` | Project overview, quick start, core flow | **Primary entry point** - establishes purpose and the canonical workflow | `100_cursor-memory-context.md` (memory), `400_system-overview.md` |
 | `100_cursor-memory-context.md` | Memory scaffold and current state | Fast rehydration for AIs; routing and safety | `400_context-priority-guide.md`, `000_backlog.md` |
-| `README.md` | Beginner-friendly start and navigation | Bridges newcomers into the core flow quickly | `100_cursor-memory-context.md`, `400_project-overview.md` |
+| `400_system-overview.md` | Architecture, components, workflows | Provides system-of-systems context for implementation | `104_dspy-development-context.md` |
+| `README.md` | Beginner-friendly start and navigation | Bridges newcomers into the core flow quickly | `400_project-overview.md`, `100_cursor-memory-context.md` |
 
 ### **Tier 2: Data-flow & Orchestration Specs**| File | Purpose | Why Critical? | Cross-Reference |
 |------|---------|---------------|-----------------|
@@ -353,43 +359,47 @@ while also considering how AI systems like Cursor will consume and navigate the 
 | `400_file-analysis-guide.md` | Safe file operations | Mandatory before risky changes | All core docs |
 | `400_cross-reference-strengthening-plan.md` | Cross-ref policy | Maintains documentation integrity | `scripts/doc_coherence_validator.py` |
 
-## **Essential Context Files for Model Rehydration**###**1. `400_project-overview.md`**-**Purpose**: 5-second mental map of the entire project
+## **Essential Context Files for Model Rehydration**
 
+### **1. `400_project-overview.md`**
+- **Purpose**: Primary entry point and 5-minute mental map of the entire project
 - **Key Info**: AI development workflow, quick start, core concepts
+- **When to Use**: **First file to read** for any new context
 
-- **When to Use**: First file to read for any new context
+### **2. `100_cursor-memory-context.md`**
+- **Purpose**: Primary memory scaffold for instant project state
+- **Key Info**: Current development focus, recent completions, system architecture
+- **When to Use**: Second file to read for instant context rehydration
 
-### **2. `400_system-overview.md`**-**Purpose**: Technical architecture overview
-
+### **3. `400_system-overview.md`**
+- **Purpose**: Technical architecture overview
 - **Key Info**: System components, security features, reliability measures
-
 - **When to Use**: Understanding the complete technical stack
 
-### **3. `000_backlog.md`**-**Purpose**: Current priorities and roadmap
-
+### **4. `000_backlog.md`**
+- **Purpose**: Current priorities and roadmap
 - **Key Info**: Active tasks, completed items, dependencies
-
 - **When to Use**: Understanding what's being built and what's done
 
-### **4. `dspy-rag-system/400_project-overview.md`**-**Purpose**: Core system status and features
+### **5. `dspy-rag-system/400_project-overview.md`**-**Purpose**: Core system status and features
 
 - **Key Info**: DSPy RAG system capabilities, current features
 
 - **When to Use**: Understanding the main AI system
 
-### **5. `docs/ARCHITECTURE.md`**-**Purpose**: DSPy implementation details
+### **6. `docs/ARCHITECTURE.md`**-**Purpose**: DSPy implementation details
 
 - **Key Info**: Router architecture, modules, chains, agent catalog
 
 - **When to Use**: Deep technical understanding of AI system
 
-### **6. `104_dspy-development-context.md`**-**Purpose**: Deep technical context
+### **7. `104_dspy-development-context.md`**-**Purpose**: Deep technical context
 
 - **Key Info**: Research analysis, current architecture, critical fixes
 
 - **When to Use**: Understanding the AI reasoning system
 
-### **7. `202_setup-requirements.md`**-**Purpose**: Environment setup requirements
+### **8. `202_setup-requirements.md`**-**Purpose**: Environment setup requirements
 
 - **Key Info**: Manual setup items, dependencies, configuration
 

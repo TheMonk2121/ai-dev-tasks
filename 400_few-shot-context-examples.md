@@ -216,16 +216,17 @@ Files: ["100_cursor-memory-context.md", "400_system-overview.md", "000_backlog.m
 ```text**Expected Output:**```json
 {
   "reading_order": [
+    "400_project-overview.md",
     "100_cursor-memory-context.md",
-    "400_system-overview.md",
-    "000_backlog.md"
+    "000_backlog.md",
+    "400_system-overview.md"
   ],
   "priority_levels": {
+    "400": "HIGH",
     "100": "HIGH",
-    "400": "MEDIUM",
     "000": "HIGH"
   },
-  "context_hierarchy": "memory → system → backlog"
+  "context_hierarchy": "project-overview → memory → backlog → system"
 }
 
 ```text**Pattern:**File naming convention indicating priority and reading order**Validation:**Ensure proper reading sequence and priority alignment
