@@ -92,7 +92,7 @@
   - id (uuid), type (project|file|user|agent), source, content{text,metadata}, relationships{parent,children,related}, timestamps
 
 - Where to implement
-  - API patterns: see `400_integration-patterns-guide.md` (Context API)
+  - API patterns: see `400_guides/400_integration-patterns-guide.md` (Context API)
   - Caching/TTL/invalidation: see `400_guides/400_performance-optimization-guide.md`
   - Test fixtures and isolation: see `400_guides/400_testing-strategy-guide.md`
 
@@ -178,7 +178,7 @@
   - **Score Metadata**: HTML comments with scoring data for AI parsing
   - **n8n Scrubber Workflow**: Automated score calculation and updates
 
-#### **File Organization System**(`200_naming-conventions.md`)
+#### **File Organization System**(`200_setup/200_setup/200_naming-conventions.md`)
 
 - **Purpose**: Maintain consistent file organization and naming
 
@@ -218,7 +218,7 @@
   - HotFix generation for error recovery
   - Strategic human oversight
 
-#### **File Organization System**(`200_naming-conventions.md`)
+#### **File Organization System**(`200_setup/200_setup/200_naming-conventions.md`)
 
 - **Purpose**: Maintain consistent file organization and naming
 
@@ -536,7 +536,7 @@
 4. **Start with PRD**: Use `000_core/001_create-prd.md` for your first feature
 5. **Generate Tasks**: Use `000_core/002_generate-tasks.md` to create implementation plan
 6. **Execute with AI**: Use `000_core/003_process-task-list.md` for AI-driven development
-7. **Review Organization**: Check `200_naming-conventions.md` to understand file structure
+7. **Review Organization**: Check `200_setup/200_setup/200_naming-conventions.md` to understand file structure
 
 ### For Advanced Users
 
@@ -547,7 +547,7 @@
 5. **Extend Functionality**: Add new AI agents or systems
 6. **Setup Scoring System**: Configure n8n scrubber for automated prioritization
 7. **Use AI-BACKLOG-META**: Leverage machine-readable commands for automation
-8. **Review Naming Conventions**: Check `200_naming-conventions.md` for file organization
+8. **Review Naming Conventions**: Check `200_setup/200_setup/200_naming-conventions.md` for file organization
 
 ### For System Administrators
 
@@ -618,7 +618,7 @@
 
 - --
 
-## 📚 **Documentation References**###**Core Architecture**-**`104_dspy-development-context.md`**: DSPy modules, assertions, advanced patterns
+## 📚 **Documentation References**###**Core Architecture**-**`100_memory/104_dspy-development-context.md`**: DSPy modules, assertions, advanced patterns
 
 - **`200_setup/202_setup-requirements.md`**: Environment and configuration (Configuration Overview)
 
@@ -627,9 +627,9 @@
 
 <!-- Removed legacy external model integration link to keep Cursor-native as the primary path -->
 
-### **System Documentation**-**`104_dspy-development-context.md`**: DSPy development context and status
+### **System Documentation**-**`100_memory/104_dspy-development-context.md`**: DSPy development context and status
 
-- **`200_naming-conventions.md`**: File organization and naming conventions
+- **`200_setup/200_setup/200_naming-conventions.md`**: File organization and naming conventions
 
 - --
 

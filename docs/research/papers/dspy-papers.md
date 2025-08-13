@@ -64,9 +64,9 @@
   - Performance and caching improvements
   - Enhanced integration patterns
 
-## 🔗 **Related Documentation**- `500_dspy-research.md` - Our internal DSPy research summary
+## 🔗 **Related Documentation**- `500_research/500_dspy-research.md` - Our internal DSPy research summary
 
-- `104_dspy-development-context.md` - Our DSPy implementation
+- `100_memory/104_dspy-development-context.md` - Our DSPy implementation
 
 - `400_guides/400_system-overview.md` - System architecture overview
 

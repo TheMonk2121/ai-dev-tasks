@@ -58,7 +58,7 @@ These must be addressed before or alongside feature work to maintain cognitive d
 
 - **Cursor‑native focus cleanup**: Remove or annotate legacy model references (Mistral, Yi‑Coder) in `400_*` guides; add a validator check to prevent reintroduction.
 
-- **Research summaries consolidation**: Merge `500_research-summary.md` and `500_research-analysis-summary.md` into `500_research-index.md`; archive originals with deprecation notes.
+- **Research summaries consolidation**: Merge `500_research/500_research-summary.md` and `500_research-analysis-summary.md` into `500_research/500_research-index.md`; archive originals with deprecation notes.
 
 - **Markdown lint remediation plan**:
   - Config + light auto-fixes (30–60 minutes): Keep MD034 (no bare URLs) and MD040 (code fence language) enabled and fix across repo. Replace bare URLs with `[text](url)`. Add language tags to fenced code blocks. Run `scripts/fix_markdown_blanks.py` to settle heading/list spacing.
@@ -137,7 +137,7 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- CORE_SYSTEM: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md, 100_memory/100_cursor-memory-context.md -->
 <!-- METADATA_SYSTEM: 400_guides/400_metadata-collection-guide.md -->
 <!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
-<!-- RESEARCH_SYSTEM: 500_research-index.md, 500_research-analysis-summary.md, 500_dspy-research.md,
+<!-- RESEARCH_SYSTEM: 500_research/500_research-index.md, 500_research-analysis-summary.md, 500_dspy-research.md,
 500_rag-system-research.md -->
 <!-- WORKFLOW_CHAIN: 000_core/001_create-prd.md → 000_core/002_generate-tasks.md → 000_core/003_process-task-list.md -->
 <!-- EXECUTION_ENGINE: scripts/process_tasks.py -->
@@ -712,7 +712,7 @@ These items require manual setup or configuration on your end before they can be
 | S‑006 | PostgreSQL Database Setup             | 🔥  | 1        | setup-required | PostgreSQL installation + database creation | See `400_guides/400_system-overview.md` |
 | S‑007 | Virtual Environment Setup             | ⚙️  | 1        | setup-required | Python virtual environment + dependencies | See `400_guides/400_project-overview.md` |
 | S‑008 | Cursor IDE Configuration             | 🔥  | 1        | setup-required | Cursor IDE configuration | See `200_setup/202_setup-requirements.md` |
-| S‑009 | Secrets Management Setup              | 🔥  | 1        | setup-required | Environment secrets configuration | See `C8_COMPLETION_SUMMARY.md` |
+| S‑009 | Secrets Management Setup              | 🔥  | 1        | setup-required | Environment secrets configuration | See `600_archives/C8_COMPLETION_SUMMARY.md` |
 | S‑010 | System Dependencies                   | ⚙️  | 1        | setup-required | System packages and tools | See `400_guides/400_system-overview.md` |
 
 - --

@@ -679,7 +679,7 @@ class EnhancedDocumentProcessor(Module):
 
 - `tests/` - Comprehensive test suite
 - `docs/` - System documentation
-- `CURRENT_STATUS.md` - Current implementation status
+- `dspy-rag-system/docs/CURRENT_STATUS.md` - Current implementation status
 
 ## 🎯 Success Metrics
 

@@ -32,7 +32,7 @@
 
 > Synthesis focused on decision rules and effects; implementation now lives in `000_core/001_create-prd.md` (skip rule),
 `000_core/002_generate-tasks.md` (PRD-less path), and `100_memory/100_backlog-guide.md` (decision matrix). The legacy guide is archived:
-`600_archives/docs/400_prd-optimization-guide.md`.
+`600_archives/docs/400_guides/400_prd-optimization-guide.md`.
 
 - **Savings**: 75% reduction in context overhead
 
@@ -58,7 +58,7 @@
 - Updated AI-BACKLOG-META commands
 - Enhanced workflow descriptions
 
-3.**`100_backlog-automation.md`**- Updated PRD generation commands
+3.**`100_memory/100_backlog-automation.md`**- Updated PRD generation commands
 
 - Enhanced workflow integration descriptions
 - Added decision rule to automation system
@@ -71,7 +71,7 @@
 
 - Updated timestamps for tracking
 
-### **New Files**1.**`400_prd-optimization-guide.md`**- Comprehensive guide for the PRD optimization system
+### **New Files**1.**`400_guides/400_prd-optimization-guide.md`**- Comprehensive guide for the PRD optimization system
 
 - Technical details, usage examples, and best practices
 - Decision matrix and quick reference

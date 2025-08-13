@@ -257,7 +257,7 @@ MAX_EVENTS_PER_CYCLE=10
 
 - **Priority**: High
 - **Setup Required**: PostgreSQL installation + database creation
-- **Setup Instructions**: See `400_guides/400_system-overview.md` (Architecture) and `104_dspy-development-context.md` (modules)
+- **Setup Instructions**: See `400_guides/400_system-overview.md` (Architecture) and `100_memory/104_dspy-development-context.md` (modules)
 
 - **Commands**:
 

@@ -28,7 +28,7 @@
 
 - **Citation**: [Full citation to be added]
 
-## 🔗 **Related Documentation**- `500_performance-research.md` - Our internal performance research summary
+## 🔗 **Related Documentation**- `500_research/500_performance-research.md` - Our internal performance research summary
 
 - `400_guides/400_system-overview.md` - System architecture overview
 

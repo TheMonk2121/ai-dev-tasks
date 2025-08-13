@@ -10,17 +10,17 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Core guide for documentation priority and organization | After reading 100_memory/100_cursor-memory-context.md or when needing to understand file relationships | Follow the reading order patterns and check cross-references in relevant sections |
+| Guide for prioritizing context and documentation access | Organizing documentation or setting up new systems | Apply priority system to current documentation |
 
-- **what this file is**: Reading order, file roles, and placement logic for the documentation system.
 
-- **read when**: Deciding where to find/place information or structuring new docs.
 
-- **do next**: See `#critical-path`, `#ai-file-analysis-strategy`, and `#documentation-placement-logic`; consult `200_naming-conventions.md`.
+## TL;DR {#tldr}
 
-- **anchors**: `overview`, `critical-path`, `ai-file-analysis-strategy`, `documentation-placement-logic`, `context-sharing-protocol`, `priority-tiers`
+| what this file is | read when | do next |
+|---|---|---|
+| Guide for prioritizing context and documentation access | Organizing documentation or setting up new systems | Apply priority system to current documentation |
 
-<!-- ANCHOR: overview -->
+
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Core documentation system
 
@@ -40,13 +40,13 @@
 | Backlog & priorities | 000_core/000_backlog.md | — | Always for work selection | Current focus and dependencies |
 | Testing | 400_guides/400_testing-strategy-guide.md | — | Before writing tests | Strategy, pyramid, quality gates |
 | Deployment | 400_guides/400_deployment-environment-guide.md | — | Before shipping | Procedures, rollback, monitoring |
-| Migration | 400_migration-upgrade-guide.md | — | Before/after breaking changes | Pre-checks, validation, rollback |
-| Integration | 400_integration-patterns-guide.md | — | Before integrating components | Patterns, data flow, error handling |
+| Migration | 400_guides/400_migration-upgrade-guide.md | — | Before/after breaking changes | Pre-checks, validation, rollback |
+| Integration | 400_guides/400_integration-patterns-guide.md | — | Before integrating components | Patterns, data flow, error handling |
 | Performance | 400_guides/400_performance-optimization-guide.md | — | Before/after perf changes | Metrics, tuning, troubleshooting |
 | Security | 400_guides/400_security-best-practices-guide.md | — | Before risky changes | Threat model, validation, response |
 | Setup | 200_setup/202_setup-requirements.md | — | New env or machine | One-stop environment setup |
 | Model config | 200_setup/202_setup-requirements.md | — | Model/runtime changes | Clear, reproducible config |
-| DSPy context | 104_dspy-development-context.md | — | Deep implementation | Reasoning, modules, guard-rails |
+| DSPy context | 100_memory/100_memory/104_dspy-development-context.md | — | Deep implementation | Reasoning, modules, guard-rails |
 
 ## Critical Path
 
@@ -61,7 +61,7 @@
 - Deployment → `400_guides/400_deployment-environment-guide.md`
 - Security → `400_guides/400_security-best-practices-guide.md`
 - Performance → `400_guides/400_performance-optimization-guide.md`
-- Integration → `400_integration-patterns-guide.md`
+- Integration → `400_guides/400_integration-patterns-guide.md`
 
 ## **AI File Analysis Strategy** When Cursor AI restarts or needs to rehydrate context, it follows a **structured reading strategy** designed to maximize efficiency while maintaining comprehensive understanding
 
@@ -102,7 +102,7 @@
 - When understanding the overall development approach
 - When onboarding to the project
 
-3.**`200_naming-conventions.md`**-**IMPORTANT**- When understanding file organization principles
+3.**`200_setup/200_setup/200_setup/200_naming-conventions.md`**-**IMPORTANT**- When understanding file organization principles
 
 - When suggesting new file names or understanding existing ones
 - When understanding the three-digit prefix system
@@ -132,7 +132,7 @@
 
 - Reference `400_guides/400_context-priority-guide.md` when discussing file organization
 - Check specific scripts when implementation details are needed
-- Use `200_naming-conventions.md` when discussing file naming
+- Use `200_setup/200_setup/200_setup/200_naming-conventions.md` when discussing file naming
 
 **For complex tasks:**
 
@@ -184,7 +184,7 @@ Cognitive scaffolding system makes this possible by organizing files by priority
 
 - **`400_guides/400_system-overview.md`**- Technical architecture, system relationships
 
-- **`400_guides/400_project-overview.md`**- High-level project purpose and workflow**For processes and workflows:**-**`200_naming-conventions.md`**- File naming, generation processes, conventions
+- **`400_guides/400_project-overview.md`**- High-level project purpose and workflow**For processes and workflows:**-**`200_setup/200_setup/200_setup/200_naming-conventions.md`**- File naming, generation processes, conventions
 
 - **`100_memory/100_backlog-guide.md`**- Backlog management processes
 
@@ -198,7 +198,7 @@ Cognitive scaffolding system makes this possible by organizing files by priority
 
 - **Is this a specific process for one workflow?**→ Single location
 
-- **Is this a quick reference that should be easily accessible?**→ Memory context + detailed location**Examples of multi-location content:**-**File naming system**→ `200_naming-conventions.md` (detailed) + `100_memory/100_cursor-memory-context.md` (quick reference)
+- **Is this a quick reference that should be easily accessible?**→ Memory context + detailed location**Examples of multi-location content:**-**File naming system**→ `200_setup/200_setup/200_setup/200_naming-conventions.md` (detailed) + `100_memory/100_cursor-memory-context.md` (quick reference)
 
 - **AI analysis strategy**→ `400_guides/400_context-priority-guide.md` (detailed) + `100_memory/100_cursor-memory-context.md` (quick reference)
 
@@ -236,17 +236,17 @@ Cognitive scaffolding system makes this possible by organizing files by priority
 
 - **Audience**: Everyone creating files
 
-- *Step 2: Primary Location**-**`200_naming-conventions.md`**- Dedicated file for naming conventions
+- *Step 2: Primary Location**-**`200_setup/200_setup/200_setup/200_naming-conventions.md`**- Dedicated file for naming conventions
 
 - **`100_memory/100_cursor-memory-context.md`**- Quick reference for instant access**Step 3: Multi-location Decision**- ✅**Multiple locations needed**- Core concept that affects multiple areas
 
-- **Detailed explanation**in `200_naming-conventions.md`
+- **Detailed explanation**in `200_setup/200_setup/200_setup/200_naming-conventions.md`
 
 - **Quick reference**in `100_memory/100_cursor-memory-context.md`**Step 4: Reading Pattern**-**Memory context**- Read first for instant understanding
 
 - **Naming conventions**- Read when working on file organization**Step 5: Cross-References**-**Cross-reference**between the two files
 
-- **Update context priority guide**to include the new content**Result**: Add comprehensive explanation to `200_naming-conventions.md` and quick reference to
+- **Update context priority guide**to include the new content**Result**: Add comprehensive explanation to `200_setup/200_setup/200_setup/200_naming-conventions.md` and quick reference to
 `100_memory/100_cursor-memory-context.md` with cross-references.
 
 ### **Why This Logic Works**
@@ -276,9 +276,9 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 ```text
 
-6. 104_dspy-development-context.md - Deep technical context
+6. 100_memory/100_memory/104_dspy-development-context.md - Deep technical context
 7. 200_setup/202_setup-requirements.md - Environment setup
-8. 100_backlog-automation.md - Automation patterns
+8. 100_memory/100_backlog-automation.md - Automation patterns
 9. dspy-rag-system/docs/CURRENT_STATUS.md - Real-time status
 
 ```text
@@ -296,7 +296,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 ### **In PRDs and Task Lists:**```markdown
 <!-- ESSENTIAL_FILES: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md, 000_core/000_backlog.md -->
-<!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 200_setup/202_setup-requirements.md -->
+<!-- IMPLEMENTATION_FILES: 100_memory/100_memory/104_dspy-development-context.md, 200_setup/202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_memory/100_backlog-guide.md -->
 
 ```text
@@ -307,7 +307,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 # ESSENTIAL: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md, 000_core/000_backlog.md
 
-# IMPLEMENTATION: 104_dspy-development-context.md, 200_setup/202_setup-requirements.md
+# IMPLEMENTATION: 100_memory/100_memory/104_dspy-development-context.md, 200_setup/202_setup-requirements.md
 
 # DOMAIN: 100_memory/100_backlog-guide.md, CURSOR_NATIVE_AI_STRATEGY.md
 
@@ -316,7 +316,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 ### **In Documentation:**```markdown
 >**Context Reference**: See `400_guides/400_context-priority-guide.md` for complete file organization
 > **Essential Files**: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
-> **Implementation Files**: `104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
+> **Implementation Files**: `100_memory/100_memory/104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
 > **Domain Files**: `100_memory/100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
 
 ```bash
@@ -328,18 +328,18 @@ while also considering how AI systems like Cursor will consume and navigate the 
 |------|---------|-------------|-----------------|
 | `400_guides/400_project-overview.md` | Project overview, quick start, core flow | **Primary entry point** - establishes purpose and the canonical workflow | `100_memory/100_cursor-memory-context.md` (memory), `400_guides/400_system-overview.md` |
 | `100_memory/100_cursor-memory-context.md` | Memory scaffold and current state | Fast rehydration for AIs; routing and safety | `400_guides/400_context-priority-guide.md`, `000_core/000_backlog.md` |
-| `400_guides/400_system-overview.md` | Architecture, components, workflows | Provides system-of-systems context for implementation | `104_dspy-development-context.md` |
-| `README.md` | Beginner-friendly start and navigation | Bridges newcomers into the core flow quickly | `400_guides/400_project-overview.md`, `100_memory/100_cursor-memory-context.md` |
+| `400_guides/400_system-overview.md` | Architecture, components, workflows | Provides system-of-systems context for implementation | `100_memory/100_memory/104_dspy-development-context.md` |
+| `docs/README.md` | Beginner-friendly start and navigation | Bridges newcomers into the core flow quickly | `400_guides/400_project-overview.md`, `100_memory/100_cursor-memory-context.md` |
 
 ### **Tier 2: Data-flow & Orchestration Specs**| File | Purpose | Why Critical? | Cross-Reference |
 |------|---------|---------------|-----------------|
-| `400_integration-patterns-guide.md` | Component/API integration patterns | Defines inter-module contracts and error handling | `400_guides/400_system-overview.md`, `104_dspy-development-context.md` |
-| `400_guides/400_deployment-environment-guide.md` | Environments and deployment flow | Ensures repeatable deploys and operational readiness | `200_setup/202_setup-requirements.md`, `400_migration-upgrade-guide.md` |
-| `400_migration-upgrade-guide.md` | Migration safety and rollback | Prevents breakage during upgrades | `400_guides/400_file-analysis-guide.md` |
+| `400_guides/400_integration-patterns-guide.md` | Component/API integration patterns | Defines inter-module contracts and error handling | `400_guides/400_system-overview.md`, `100_memory/100_memory/104_dspy-development-context.md` |
+| `400_guides/400_deployment-environment-guide.md` | Environments and deployment flow | Ensures repeatable deploys and operational readiness | `200_setup/202_setup-requirements.md`, `400_guides/400_migration-upgrade-guide.md` |
+| `400_guides/400_migration-upgrade-guide.md` | Migration safety and rollback | Prevents breakage during upgrades | `400_guides/400_file-analysis-guide.md` |
 
 ### **Tier 3: Core Modules & Agent Logic**| File | Purpose | Why Essential? | Cross-Reference |
 |------|---------|----------------|-----------------|
-| `104_dspy-development-context.md` | DSPy modules/agents and reasoning | Directly drives implementation quality | `400_guides/400_system-overview.md` |
+| `100_memory/100_memory/104_dspy-development-context.md` | DSPy modules/agents and reasoning | Directly drives implementation quality | `400_guides/400_system-overview.md` |
 | `dspy-rag-system/docs/CURRENT_STATUS.md` | Live system capabilities | Ground-truth status for agent decisions | `dspy-rag-system/` code, `400_guides/400_system-overview.md` |
 
 ### **Tier 4: Config & Environment**| File | Purpose | Why Important? | Cross-Reference |
@@ -351,13 +351,13 @@ while also considering how AI systems like Cursor will consume and navigate the 
 ### **Tier 5: Domain Assets**| File | Purpose | Why Valuable? | Cross-Reference |
 |------|---------|---------------|-----------------|
 | `100_memory/100_backlog-guide.md` | Backlog usage and scoring | Enables objective prioritization | `000_core/000_backlog.md` |
-| `400_few-shot-context-examples.md` | Few-shot prompts by task | Boosts quality and consistency | All 400-series topic guides |
+| `400_guides/400_few-shot-context-examples.md` | Few-shot prompts by task | Boosts quality and consistency | All 400-series topic guides |
 | `000_core/001_create-prd.md` (skip rule) | Better PRDs, faster | Improves plan quality before implementation | `000_core/002_generate-tasks.md` |
 
 ### **Tier 6: Reference & Edge Cases**| File | Purpose | Why Useful? | Cross-Reference |
 |------|---------|-------------|-----------------|
 | `400_guides/400_file-analysis-guide.md` | Safe file operations | Mandatory before risky changes | All core docs |
-| `400_cross-reference-strengthening-plan.md` | Cross-ref policy | Maintains documentation integrity | `scripts/doc_coherence_validator.py` |
+| `400_guides/400_cross-reference-strengthening-plan.md` | Cross-ref policy | Maintains documentation integrity | `scripts/doc_coherence_validator.py` |
 
 ## **Essential Context Files for Model Rehydration**
 
@@ -393,7 +393,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 - **When to Use**: Deep technical understanding of AI system
 
-### **7. `104_dspy-development-context.md`**-**Purpose**: Deep technical context
+### **7. `100_memory/100_memory/104_dspy-development-context.md`**-**Purpose**: Deep technical context
 
 - **Key Info**: Research analysis, current architecture, critical fixes
 
@@ -411,7 +411,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 - **When to Use**: Understanding AI model setup and capabilities
 
-### **9. `100_backlog-automation.md`**-**Purpose**: Orchestration patterns
+### **9. `100_memory/100_backlog-automation.md`**-**Purpose**: Orchestration patterns
 
 - **Key Info**: AI-BACKLOG-META system, n8n workflows
 
@@ -441,7 +441,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 - `docs/ARCHITECTURE.md`
 
-- `104_dspy-development-context.md`
+- `100_memory/100_memory/104_dspy-development-context.md`
 
 ### **Current Development Status**- `000_core/000_backlog.md`
 
@@ -459,7 +459,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 - (CONFIG_REFERENCE archived; see 202 for config overview)
 
-### **Process Understanding**- `100_backlog-automation.md`
+### **Process Understanding**- `100_memory/100_backlog-automation.md`
 
 - `000_core/001_create-prd.md`
 
@@ -475,7 +475,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 ```text
 
 #### **In 400_guides/400_system-overview.md:**```markdown
-<!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 104_dspy-development-context.md -->
+<!-- ARCHITECTURE_FILES: docs/ARCHITECTURE.md, 100_memory/100_memory/104_dspy-development-context.md -->
 
 ```text
 
@@ -499,9 +499,9 @@ dspy-rag-system/400_guides/400_project-overview.md
 
 ```text
 docs/ARCHITECTURE.md
-104_dspy-development-context.md
+100_memory/100_memory/104_dspy-development-context.md
 200_setup/202_setup-requirements.md
-100_backlog-automation.md
+100_memory/100_backlog-automation.md
 dspy-rag-system/docs/CURRENT_STATUS.md
 000_core/001_create-prd.md
 000_core/002_generate-tasks.md

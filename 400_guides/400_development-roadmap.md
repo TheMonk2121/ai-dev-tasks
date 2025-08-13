@@ -365,7 +365,7 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
 - **`400_guides/400_project-overview.md`**- High-level project overview
 
-- **`104_dspy-development-context.md`**- DSPy implementation details
+- **`100_memory/104_dspy-development-context.md`**- DSPy implementation details
 
 - --**Last Updated**: 2024-08-07
 - *Related Documentation**: `000_core/000_backlog.md`, `100_memory/100_cursor-memory-context.md`, `400_guides/400_context-priority-guide.md`

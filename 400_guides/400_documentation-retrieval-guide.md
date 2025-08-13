@@ -225,7 +225,7 @@ task_context = get_task_context("implement documentation indexing", "development
 - **guides**: Guide files (400_*-guide.md, 400_*-strategy.md)
 
 - **completion**: Completion summaries (500_*-completion-summary.md)
-- **examples**: Templates and examples (e.g., `300_documentation-example.md`)
+- **examples**: Templates and examples (e.g., `300_examples/300_documentation-example.md`)
 
 #### **Context Types**-**general**: General context for any query
 

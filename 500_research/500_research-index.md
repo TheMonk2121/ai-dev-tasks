@@ -59,9 +59,9 @@ RESEARCH_INDEX -->
 
 - Complete sources: `docs/research/papers/documentation-context-management-papers.md`
 
-- Pattern research: `500_documentation-coherence-research.md`
+- Pattern research: `500_research/500_documentation-coherence-research.md`
 
-- Safety research: `500_maintenance-safety-research.md`
+- Safety research: `500_research/500_maintenance-safety-research.md`
 
 <!-- ANCHOR: key-findings -->
 {#key-findings}

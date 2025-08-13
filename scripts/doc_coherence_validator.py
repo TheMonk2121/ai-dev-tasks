@@ -30,7 +30,7 @@ CROSS_REFERENCE_PATTERN = re.compile(r"<!--\s*([A-Z_]+):\s*([^>]+)\s*-->")
 FILE_REFERENCE_PATTERN = re.compile(r"`([^`]+\.md)`")
 BACKLOG_REFERENCE_PATTERN = re.compile(r"B‑\d+")
 TLDR_ANCHOR_PATTERN = re.compile(r'<a\s+id="tldr"\s*>\s*</a>|<a\s+id="tldr"\s*>|\{#tldr\}', re.IGNORECASE)
-TLDR_HEADING_PATTERN = re.compile(r"^##\s+🔎\s+TL;DR\s*$", re.MULTILINE)
+TLDR_HEADING_PATTERN = re.compile(r"^##\s+🔎\s+TL;DR\s*.*$", re.MULTILINE)
 AT_A_GLANCE_HEADER_PATTERN = re.compile(
     r"^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$", re.MULTILINE
 )

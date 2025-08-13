@@ -136,7 +136,7 @@ Backlog link: B-005
 
 ### Recent Incident Analysis
 
-- **What Happened**: Repository maintenance script archived `CURRENT_STATUS.md` and other critical files
+- **What Happened**: Repository maintenance script archived `dspy-rag-system/docs/CURRENT_STATUS.md` and other critical files
 - **Impact**: Documentation references became broken, system status tracking lost
 - **Root Cause**: Content-based duplicate detection without reference checking
 - **Recovery**: Manual restoration and updates to reflect current architecture

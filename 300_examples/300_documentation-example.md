@@ -3,7 +3,7 @@
 
 # Documentation Example
 
-> Example/template file. Not part of active workflows. See `200_naming-conventions.md` (Templates & Examples) and
+> Example/template file. Not part of active workflows. See `200_setup/200_naming-conventions.md` (Templates & Examples) and
 `400_guides/400_documentation-retrieval-guide.md` (documentation pattern usage).
 
 ```markdown

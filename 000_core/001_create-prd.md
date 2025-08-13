@@ -10,13 +10,10 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| PRD creation workflow and template | Before starting high-risk or 5+ point backlog items | Use `000_core/002_generate-tasks.md` to create tasks from PRD |
+| AI-powered Product Requirements Document creation process | Starting new feature development | Run workflow to generate PRD for selected backlog item |
 
-- **what this file is**: Systematic PRD creation workflow with comprehensive testing requirements and quality gates
 
-- **read when**: Before starting high-risk projects, 5+ point items, or when backlog score < 3.0
 
-- **do next**: Create PRD using template, then use `000_core/002_generate-tasks.md` to generate implementation tasks
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- PRD creation workflow maintained
 
@@ -78,7 +75,7 @@
 
 ### **7. Quality Assurance Requirements**
 
-- **Code Quality Standards**: See [`../400_guides/400_comprehensive-coding-best-practices.md`](../400_guides/400_comprehensive-coding-best-practices.md) for comprehensive coding standards and quality gates
+- **Code Quality Standards**: See [`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for comprehensive coding standards and quality gates
 
 - **Performance Benchmarks**: Specific performance targets and thresholds
 

@@ -12,7 +12,7 @@
     {"path": "100_memory/104_dspy-development-context.md", "role": "dspy-context"},
     {"path": "200_setup/202_setup-requirements.md", "role": "setup"},
     {"path": "400_guides/400_deployment-environment-guide.md", "role": "deployment"},
-    {"path": "400_integration-patterns-guide.md", "role": "integration"},
+    {"path": "400_guides/400_integration-patterns-guide.md", "role": "integration"},
     {"path": "400_guides/400_migration-upgrade-guide.md", "role": "migration"},
     {"path": "400_guides/400_performance-optimization-guide.md", "role": "performance"},
     {"path": "400_guides/400_testing-strategy-guide.md", "role": "testing"},
@@ -29,19 +29,17 @@ CONTEXT_INDEX -->
 
 | what this file is | read when | do next |
 |---|---|---|
-| Primary memory scaffold for AI rehydration and context management | At start of every new session or after major system changes | Read in order: 400_guides/400_project-overview.md → 100_memory/100_cursor-memory-context.md → 000_core/000_backlog.md → 400_guides/400_system-overview.md |
+| Primary memory scaffold for AI rehydration and context management | Starting new session or need current project state | Check backlog and system overview for next priorities |
 
-- Single source for AI rehydration and human quick scan
 
-- Read order: `400_guides/400_project-overview.md` → `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_guides/400_system-overview.md` → `400_guides/400_context-priority-guide.md`
 
-- Always follow safety rules in `400_guides/400_file-analysis-guide.md`; never delete/move without the 6-step mandatory analysis checklist
+## TL;DR {#tldr}
 
-- Use consolidated 400-series guides (comprehensive single-file documentation like `400_guides/400_system-overview.md`, `400_guides/400_testing-strategy-guide.md`, etc.) - no split modules
+| what this file is | read when | do next |
+|---|---|---|
+| Primary memory scaffold for AI rehydration and context management | Starting new session or need current project state | Check backlog and system overview for next priorities |
 
-- Focus on Cursor-based LLM context only (no external model specifics)
 
-- Keep changes small; update this file after major shifts
 
 ## ⚡ AI Rehydration Quick Start {#quick-start}
 
@@ -71,11 +69,11 @@ Read these files in order (1–2 min total):
 
 - Backlog & priorities → `000_core/000_backlog.md`
 
-- Start here → `README.md`
+- Start here → `docs/README.md`
 
 - Context priority guide → `400_guides/400_context-priority-guide.md`
 
-- Critical Python code map → `400_code-criticality-guide.md`
+- Critical Python code map → `400_guides/400_code-criticality-guide.md`
 
 - Testing strategy → `400_guides/400_testing-strategy-guide.md`
 
@@ -83,7 +81,7 @@ Read these files in order (1–2 min total):
 
 - Migration & upgrades → `400_guides/400_migration-upgrade-guide.md`
 
-- Integration patterns → `400_integration-patterns-guide.md`
+- Integration patterns → `400_guides/400_integration-patterns-guide.md`
 
 - Performance optimization → `400_guides/400_performance-optimization-guide.md`
 
@@ -207,7 +205,7 @@ AI Development Ecosystem
 
 - **Essential**: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
 
-- **Implementation**: `104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
+- **Implementation**: `100_memory/104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
 
 - **Analysis**: `400_guides/400_file-analysis-guide.md` - **🚨 MANDATORY: File deletion/deprecation analysis methodology**
 - **Domain**: `100_memory/100_backlog-guide.md`
@@ -267,6 +265,6 @@ AI Development Ecosystem
 1. **New Sessions**: `400_guides/400_project-overview.md` → `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_guides/400_system-overview.md`
 2. **Development**: `400_guides/400_project-overview.md` → workflow files → implementation guides
 3. **Research**: `500_research/500_research-index.md` → `500_research/500_dspy-research.md`, `500_research/500_rag-system-research.md`
-4. **File Management**: `400_guides/400_file-analysis-guide.md` (MANDATORY) → `200_naming-conventions.md`
+4. **File Management**: `400_guides/400_file-analysis-guide.md` (MANDATORY) → `200_setup/200_naming-conventions.md`
 
 <!-- CONTEXT_GUIDANCE_REFERENCE: 400_guides/400_documentation-reference.md -->

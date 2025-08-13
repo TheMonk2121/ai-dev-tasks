@@ -238,9 +238,9 @@
 
 - `500_research-analysis-summary.md` - Research basis for constitution
 
-- `500_documentation-coherence-research.md` - Documentation patterns
+- `500_research/500_documentation-coherence-research.md` - Documentation patterns
 
-- `500_maintenance-safety-research.md` - Safety research findings
+- `500_research/500_maintenance-safety-research.md` - Safety research findings
 
 ### **Implementation Support**
 

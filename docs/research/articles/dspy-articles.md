@@ -61,9 +61,9 @@
   - Community-driven best practices and patterns
   - Real-world validation of DSPy approaches
 
-## 🔗 **Related Documentation**- `500_dspy-research.md` - Our internal DSPy research summary
+## 🔗 **Related Documentation**- `500_research/500_dspy-research.md` - Our internal DSPy research summary
 
-- `104_dspy-development-context.md` - Our DSPy implementation
+- `100_memory/104_dspy-development-context.md` - Our DSPy implementation
 
 ## 📖**Key Insights**- Industry best practices for DSPy
 

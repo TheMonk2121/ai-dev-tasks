@@ -57,11 +57,11 @@ How this research has influenced our system design...
 ```bash
 500_research/
 ├── 500_research-infrastructure-guide.md    # This guide
-├── 500_research-index.md                   # Research discovery hub
-├── 500_ai-development-research.md          # AI development methodology
-├── 500_dspy-research.md                    # DSPy framework research
-├── 500_rag-system-research.md              # RAG system research
-├── 500_documentation-research.md           # Documentation strategy
+├── 500_research/500_research-index.md                   # Research discovery hub
+├── 500_research/500_ai-development-research.md          # AI development methodology
+├── 500_research/500_dspy-research.md                    # DSPy framework research
+├── 500_research/500_rag-system-research.md              # RAG system research
+├── 500_research/500_documentation-research.md           # Documentation strategy
 ├── 500_context-engineering-research.md     # Context engineering
 ├── 500_few-shot-research.md                # Few-shot learning
 ├── 500_integration-research.md             # System integration
@@ -161,7 +161,7 @@ docs/research/
 
 #### **Cross-Reference Research in Core Documentation**
 ```markdown
-<!-- RESEARCH_FOUNDATION: 500_ai-development-research.md -->
+<!-- RESEARCH_FOUNDATION: 500_research/500_ai-development-research.md -->
 <!-- ACADEMIC_SOURCES: docs/research/papers/ai-development-papers.md -->
 <!-- PRACTICAL_SOURCES: docs/research/tutorials/ai-development-tutorials.md -->
 <!-- CASE_STUDY_SOURCES: docs/research/case-studies/successful-ai-projects.md -->
@@ -172,14 +172,14 @@ docs/research/
 #### **Add Research Files to Context Priority Guide**
 ```markdown
 <!-- RESEARCH_CONTEXT: 500_research-infrastructure-guide.md -->
-<!-- RESEARCH_DISCOVERY: 500_research-index.md -->
-<!-- CORE_RESEARCH: 500_dspy-research.md, 500_rag-system-research.md -->
+<!-- RESEARCH_DISCOVERY: 500_research/500_research-index.md -->
+<!-- CORE_RESEARCH: 500_research/500_dspy-research.md, 500_research/500_rag-system-research.md -->
 ```
 
 ### **3. Research Discovery System**
 
 #### **Research Index File**
-Create `500_research-index.md` to serve as a research discovery hub:
+Create `500_research/500_research/500_research-index.md` to serve as a research discovery hub:
 
 ```markdown
 # 📚 Research Index: LLM-Accessible Knowledge Hub
@@ -190,26 +190,26 @@ Create `500_research-index.md` to serve as a research discovery hub:
 ## 🎯 Research Categories
 
 ### **AI Development Methodology**
-- **`500_ai-development-research.md`** - Core research sources
+- **`500_research/500_ai-development-research.md`** - Core research sources
 - **`docs/research/papers/ai-development-papers.md`** - Academic papers
 - **`docs/research/articles/llm-development-articles.md`** - Practical articles
 - **`docs/research/tutorials/ai-development-tutorials.md`** - Implementation tutorials
 - **`docs/research/case-studies/successful-ai-projects.md`** - Success stories
 
 ### **DSPy Framework**
-- **`500_dspy-research.md`** - Core DSPy research
+- **`500_research/500_dspy-research.md`** - Core DSPy research
 - **`docs/research/papers/dspy-papers.md`** - DSPy academic papers
 - **`docs/research/articles/dspy-articles.md`** - DSPy implementation articles
 - **`docs/research/tutorials/dspy-tutorials.md`** - DSPy tutorials
 
 ### **RAG Systems**
-- **`500_rag-system-research.md`** - Core RAG research
+- **`500_research/500_rag-system-research.md`** - Core RAG research
 - **`docs/research/papers/rag-papers.md`** - RAG academic papers
 - **`docs/research/articles/rag-articles.md`** - RAG implementation articles
 - **`docs/research/tutorials/rag-tutorials.md`** - RAG tutorials
 
 ### **Documentation Strategy**
-- **`500_documentation-research.md`** - Core documentation research
+- **`500_research/500_documentation-research.md`** - Core documentation research
 - **`docs/research/papers/documentation-context-management-papers.md`** - Cognitive scaffolding papers
 - **`docs/research/articles/documentation-articles.md`** - Documentation best practices
 - **`docs/research/case-studies/documentation-case-studies.md`** - Documentation examples
@@ -260,12 +260,12 @@ When LLMs need additional context, they can reference:
 
 1. **Primary Research**: `500_*` files for core research
 2. **External Sources**: `docs/research/` for detailed sources
-3. **Research Index**: `500_research-index.md` for discovery
+3. **Research Index**: `500_research/500_research/500_research-index.md` for discovery
 4. **Cross-References**: HTML comments for navigation
 
 #### **Context Loading Pattern**
 ```markdown
-<!-- RESEARCH_CONTEXT: 500_ai-development-research.md -->
+<!-- RESEARCH_CONTEXT: 500_research/500_ai-development-research.md -->
 <!-- ACADEMIC_SOURCES: docs/research/papers/ai-development-papers.md -->
 <!-- PRACTICAL_SOURCES: docs/research/tutorials/ai-development-tutorials.md -->
 <!-- CASE_STUDY_SOURCES: docs/research/case-studies/successful-ai-projects.md -->
@@ -295,7 +295,7 @@ When LLMs need additional context, they can reference:
 - **Benchmarks**: `docs/research/benchmarks/`
 
 ### **Research Discovery**
-- **Research Index**: `500_research-index.md`
+- **Research Index**: `500_research/500_research/500_research-index.md`
 - **Context Priority**: `400_guides/400_context-priority-guide.md`
 - **Memory Context**: `100_memory/100_cursor-memory-context.md`
 
@@ -307,5 +307,5 @@ When LLMs need additional context, they can reference:
 ---
 
 - **Last Updated**: 2024-08-07
-- **Related Documentation**: `400_guides/400_context-priority-guide.md`, `500_research-index.md`
+- **Related Documentation**: `400_guides/400_context-priority-guide.md`, `500_research/500_research/500_research-index.md`
 - **Status**: Active research infrastructure for LLM-accessible knowledge management

@@ -93,8 +93,8 @@ User: ✅ Approves final PRD for implementation
 ### For PRD Creation
 
 1.**Select a high-priority item**from `000_core/000_backlog.md`
-2.**Use the PRD template**: `@000_core/001_create-prd.md`
-3. **Generate tasks**: `@000_core/002_generate-tasks.md`
+2.**Use the PRD template**: `000_core/001_create-prd.md`
+3. **Generate tasks**: `000_core/002_generate-tasks.md`
 4. **Execute with AI**: Execute backlog item directly (000_core/003_process-task-list.md is the execution engine; it loads whether or not a PRD was created)
 
 ### Priority Levels & Logic
@@ -234,9 +234,9 @@ When choosing the next item to work on, consider:
 ### PRD Creation Workflow
 
 1. **Select Item**: Choose a high-priority item from `000_core/000_backlog.md`
-2. **Create PRD**: Use `@000_core/001_create-prd.md` (skip for items < 5 pts & score≥3.0) → else create detailed requirements
-3. **Generate Tasks**: Use `@000_core/002_generate-tasks.md` to break down implementation (parses PRD or backlog directly)
-4. **Execute**: Use `@000_core/003_process-task-list.md` for AI-driven development
+2. **Create PRD**: Use `000_core/001_create-prd.md` (skip for items < 5 pts & score≥3.0) → else create detailed requirements
+3. **Generate Tasks**: Use `000_core/002_generate-tasks.md` to break down implementation (parses PRD or backlog directly)
+4. **Execute**: Use `000_core/003_process-task-list.md` for AI-driven development
 5. **Update Backlog**: Mark completed items and add new discoveries
 
 ### Sprint Planning
@@ -287,7 +287,7 @@ For systematic development:
 - Last Updated: YYYY-MM-DD HH:MM*```markdown**Example:**```text*Previously Updated: 2024-08-05 23:58*
 - Last Updated: 2024-08-05 23:59*```html
 
-Note: The standalone `400_timestamp-update-guide.md` has been folded here.
+Note: The standalone `400_guides/400_timestamp-update-guide.md` has been folded here.
 
 ## 🔧 Automation Features
 
@@ -331,7 +331,7 @@ The backlog supports machine-readable commands for automation:
 ```yaml
 <!-- AI-BACKLOG-META
 next_prd_command: |
-  Use @000_core/001_create-prd.md with backlog_id=B-001 (skip if points<5 AND score≥3.0)
+  Use 000_core/001_create-prd.md with backlog_id=B-001 (skip if points<5 AND score≥3.0)
 sprint_planning: |
   Run make plan sprint=next to pull the top 3 todo backlog items, auto-generate PRDs, tasks, and a fresh execution queue
 scoring_system: |
@@ -369,7 +369,7 @@ The system includes an automated workflow that:
 
 - **`000_core/003_process-task-list.md`**- AI execution of tasks
 
-- **`100_backlog-automation.md`**- Automation system documentation
+- **`100_memory/100_backlog-automation.md`**- Automation system documentation
 
 ## 🎯 Quick Reference
 

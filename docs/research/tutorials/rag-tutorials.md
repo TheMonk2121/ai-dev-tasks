@@ -76,9 +76,9 @@
   - Structure long workflows as DSPy modules
   - Enable parallel execution for independent modules
 
-## 🔗 **Related Documentation**- `500_rag-system-research.md` - Our internal RAG research summary
+## 🔗 **Related Documentation**- `500_research/500_rag-system-research.md` - Our internal RAG research summary
 
-- `104_dspy-development-context.md` - Our DSPy implementation
+- `100_memory/104_dspy-development-context.md` - Our DSPy implementation
 
 ## 📖**Key Insights**- Step-by-step implementation guides
 

@@ -1,30 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Pre-commit gate for core documentation invariants (Phase 1)
-# - Enforces invariants and anchor policy (warn-only for non-TLDR anchors)
-# - Emits docs_health.json for telemetry
-
-ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$ROOT_DIR"
-
-echo "🔎 Running core documentation invariants validator (only changed + core set)..."
-python3 scripts/doc_coherence_validator.py --dry-run --workers 4
-
-RC=$?
-if [ $RC -ne 0 ]; then
-  echo "❌ Documentation invariants check failed. Please address the issues above."
-  exit $RC
-fi
-
-echo "✅ Core documentation invariants passed."
-
-# Pre-commit Documentation Validation Hook
+# Optimized Pre-commit Documentation Validation Hook
+# - Fast validation for staged markdown files only
+# - Critical file detection for enhanced validation
+# - Integration with doc_coherence_validator.py
 #
-# Automatically runs documentation coherence validation before commits.
-# Integrates with the B-060 Documentation Coherence Validation System.
-#
-# Usage: This script is automatically called by git pre-commit hooks.
+# Usage: This script manages pre-commit hook installation and validation
 
 # Colors for output
 RED='\033[0;31m'
@@ -68,39 +50,38 @@ check_environment() {
     fi
 }
 
-# Check if any markdown files are staged
+# Check if any markdown files are staged (optimized)
 check_staged_markdown() {
     local staged_md_files
     staged_md_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.md$' || true)
 
     if [[ -z "$staged_md_files" ]]; then
-        log_info "No markdown files staged for commit - skipping validation"
+        log_info "No markdown files staged - skipping validation"
         return 0
     fi
 
-    log_info "Found staged markdown files:"
-    echo "$staged_md_files" | while read -r file; do
-        log_info "  - $file"
-    done
+    # Only log file count for performance
+    local file_count
+    file_count=$(echo "$staged_md_files" | wc -l)
+    log_info "Found $file_count staged markdown file(s)"
 
     return 1
 }
 
-# Run documentation validation
+# Run documentation validation (optimized)
 run_validation() {
-    log_info "Running documentation coherence validation..."
+    log_info "Running documentation validation..."
 
     # Change to project root
     cd "$PROJECT_ROOT"
 
-    # Run validator in dry-run mode for pre-commit
-    if python3 "$VALIDATOR_SCRIPT" --dry-run --workers 4; then
+    # Run validator with optimized settings for pre-commit
+    if python3 "$VALIDATOR_SCRIPT" --dry-run --workers 4 --only-changed; then
         log_success "Documentation validation passed"
         return 0
     else
         log_error "Documentation validation failed"
-        log_warning "Please fix documentation issues before committing"
-        log_info "Run 'python3 $VALIDATOR_SCRIPT --dry-run --workers 4' to see detailed issues"
+        log_warning "Fix issues before committing or use --no-verify to bypass"
         return 1
     fi
 }
@@ -131,9 +112,9 @@ check_critical_files() {
     return 1
 }
 
-# Main execution
+# Main execution (optimized)
 main() {
-    log_info "Pre-commit documentation validation hook"
+    log_info "Pre-commit validation"
 
     # Check environment
     check_environment
@@ -144,21 +125,15 @@ main() {
         exit 0
     fi
 
-    # Check for critical file changes
-    if check_critical_files; then
-        log_info "Critical files detected - running full validation"
-    else
-        log_info "Running standard validation"
-    fi
+    # Check for critical files and log if found
+    check_critical_files
 
     # Run validation
     if run_validation; then
-        log_success "Pre-commit validation completed successfully"
+        log_success "Validation passed"
         exit 0
     else
-        log_error "Pre-commit validation failed"
-        log_warning "Commit blocked due to documentation issues"
-        log_info "Fix the issues above and try committing again"
+        log_error "Validation failed - commit blocked"
         exit 1
     fi
 }

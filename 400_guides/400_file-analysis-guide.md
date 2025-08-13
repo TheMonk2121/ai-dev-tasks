@@ -10,13 +10,17 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| File analysis and safety procedures | Before suggesting file deletion/movement | Follow 6-step analysis process and safety checklist |
+| Guide for analyzing and understanding file structures | Analyzing codebase or understanding file relationships | Apply analysis techniques to current files |
 
-- **what this file is**: Systematic 6-phase process for analyzing files to determine if they are obsolete, legacy, or should be retained
 
-- **read when**: Before suggesting ANY file deletion, deprecation, or archiving operations
 
-- **do next**: Complete the 6-step mandatory analysis process and safety checklist before making recommendations
+## TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Guide for analyzing and understanding file structures | Analyzing codebase or understanding file relationships | Apply analysis techniques to current files |
+
+
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- File analysis procedures maintained
 
@@ -46,8 +50,8 @@
 This guide provides a **systematic 6-phase process** for analyzing files to determine if they are obsolete, legacy, or
 should be retained.
 
-It builds on our existing documentation foundation (`200_naming-conventions.md`,
-`400_guides/400_context-priority-guide.md`, `500_maintenance-safety-research.md`) and adds the missing**"how to analyze"**methodology.
+It builds on our existing documentation foundation (`200_setup/200_naming-conventions.md`,
+`400_guides/400_context-priority-guide.md`, `500_research/500_maintenance-safety-research.md`) and adds the missing**"how to analyze"**methodology.
 
 ### **Why This Guide Exists**-**Prevents critical file loss**through systematic analysis
 
@@ -78,7 +82,7 @@ It builds on our existing documentation foundation (`200_naming-conventions.md`,
 
 - *Files to Read**:
 
-1. **`200_naming-conventions.md`**- File categorization system (000-699 prefixes)
+1. **`200_setup/200_naming-conventions.md`**- File categorization system (000-699 prefixes)
 2.**`400_guides/400_context-priority-guide.md`**- Memory scaffolding and file priorities
 3.**`400_guides/400_context-priority-guide.md`**- How files relate to AI memory rehydration**Time Investment**: 1-2 minutes
 
@@ -94,7 +98,7 @@ It builds on our existing documentation foundation (`200_naming-conventions.md`,
 
 - **Action**: **NEVER suggest removal**- these are the foundation of our system**Tier 2 (HIGH - Review Carefully)**-**Criteria**: Documentation guides, setup requirements, model configuration
 
-- **Examples**: `400_*` documentation files, `104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
+- **Examples**: `400_*` documentation files, `100_memory/104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
 
 - **Action**: **Extensive analysis required**before any changes**Tier 3 (MEDIUM - Potential Legacy)**-**Criteria**: Files in `600_archives/`, files with "legacy" or "backup" in name
 
@@ -517,11 +521,11 @@ Use this checklist before writing new Python code to reduce duplication and keep
 
 - [ ] Recently updated
 
-## 📚**Related Documentation**###**Core Analysis Tools:**-**`200_naming-conventions.md`**- File categorization system
+## 📚**Related Documentation**###**Core Analysis Tools:**-**`200_setup/200_naming-conventions.md`**- File categorization system
 
 - **`400_guides/400_context-priority-guide.md`**- Memory scaffolding and file priorities
 
-- **`500_maintenance-safety-research.md`**- Safety mechanisms and critical file protection
+- **`500_research/500_maintenance-safety-research.md`**- Safety mechanisms and critical file protection
 
 - **`999_repo-maintenance.md`**- Systematic maintenance procedures
 
@@ -538,5 +542,5 @@ Use this checklist before writing new Python code to reduce duplication and keep
 - **Migration tracking**- Historical change documentation
 
 - --**Last Updated**: 2024-08-07
-- *Related Documentation**: `400_guides/400_context-priority-guide.md`, `500_maintenance-safety-research.md`
+- *Related Documentation**: `400_guides/400_context-priority-guide.md`, `500_research/500_maintenance-safety-research.md`
 - *Status**: Active analysis methodology for maintaining documentation integrity

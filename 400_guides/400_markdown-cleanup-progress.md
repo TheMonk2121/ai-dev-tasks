@@ -1,5 +1,21 @@
 # Markdown Cleanup Progress Report
 
+## 🔎 TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Tracking progress of markdown formatting improvements | Reviewing documentation quality or planning cleanup | Continue cleanup work or update progress |
+
+
+
+## TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Tracking progress of markdown formatting improvements | Reviewing documentation quality or planning cleanup | Continue cleanup work or update progress |
+
+
+
 ## 🎯 Overview
 
 - *Goal:**Systematically fix all markdown linting issues to improve documentation quality and enable consistent pre-commit validation.**Total Issues Found:**1,715 across 164 markdown files**Current Issues:**1,462 (253 issues fixed)**Progress:**14.8% complete
@@ -44,7 +60,7 @@
 ### Analysis Tools
 
 1.**`analyze_markdown_issues.py`**- Comprehensive markdown issue analysis
-2.**`400_markdown-fix-plan.md`**- Detailed implementation plan
+2.**`400_guides/400_markdown-fix-plan.md`**- Detailed implementation plan
 
 ## 📈 Current Issue Distribution
 

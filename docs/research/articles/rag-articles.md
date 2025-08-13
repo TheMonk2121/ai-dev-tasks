@@ -62,7 +62,7 @@
   - Traceability for "According to Doc 045, lines 10-15" citations
   - Hallucination prevention through text tethering
 
-## 🔗 **Related Documentation**- `500_rag-system-research.md` - Our internal RAG research summary
+## 🔗 **Related Documentation**- `500_research/500_rag-system-research.md` - Our internal RAG research summary
 
 - `400_guides/400_system-overview.md` - System architecture overview
 

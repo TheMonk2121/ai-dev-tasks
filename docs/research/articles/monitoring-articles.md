@@ -28,7 +28,7 @@
 
 - **Link**: [To be added]
 
-## 🔗 **Related Documentation**- `500_monitoring-research.md` - Our internal monitoring research summary
+## 🔗 **Related Documentation**- `500_research/500_monitoring-research.md` - Our internal monitoring research summary
 
 - `400_guides/400_system-overview.md` - System architecture overview
 

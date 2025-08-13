@@ -24,7 +24,7 @@
 
 - Multi-agent coordination patterns and communication protocols
 
-- Mirrors `400_agent-orchestration-guide.md` (when created)
+- Mirrors `400_guides/400_agent-orchestration-guide.md` (when created)
 
 ## Key Findings
 

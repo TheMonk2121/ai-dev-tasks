@@ -62,6 +62,9 @@
 
 ### Tier 2 — High (production infrastructure)
 
+- `scripts/doc_coherence_validator.py` — Documentation Quality & Coherence Validation
+  - Primary validator for documentation integrity; cross-references, naming conventions, markdown compliance.
+
 - `dspy-rag-system/src/utils/database_resilience.py` — DB Resilience & Pooling
   - Connection pooling, health monitoring, retries, and graceful degradation.
 
@@ -100,6 +103,8 @@
 
 - Production resilience: Keeps system healthy under failure (`database_resilience.py`)
 
+- Documentation integrity: Ensures documentation quality and coherence (`doc_coherence_validator.py`)
+
 - Safety & security: Prevents unsafe inputs/operations (`prompt_sanitizer.py`)
 
 - --
@@ -135,4 +140,5 @@
 
 ## 🗒️ Change Log
 
+- v1.1: Added `doc_coherence_validator.py` to Tier 2 (High) - Documentation quality validation
 - v1.0 (initial): Added Tier 1–3 with criteria and maintenance steps

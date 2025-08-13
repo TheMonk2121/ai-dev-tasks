@@ -77,9 +77,9 @@
   - Fine-tune prompts for specific tasks
   - Enable continuous improvement of all AI operations
 
-## 🔗 **Related Documentation**- `500_dspy-research.md` - Our internal DSPy research summary
+## 🔗 **Related Documentation**- `500_research/500_dspy-research.md` - Our internal DSPy research summary
 
-- `104_dspy-development-context.md` - Our DSPy implementation
+- `100_memory/104_dspy-development-context.md` - Our DSPy implementation
 
 ## 📖**Key Insights**- Step-by-step implementation guides
 

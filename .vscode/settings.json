@@ -180,7 +180,11 @@
         "iftop",
         "Iftop",
         "ICML",
-        "Qube"
+        "Qube",
+        "sdist",
+        "Sdist",
+        "dylib",
+        "Dylib"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

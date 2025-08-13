@@ -53,12 +53,12 @@
   - `000_core/000_backlog.md` → modules: `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`
 
 - Workflow
-  - `000_core/001_create-prd.md` → modules: `400_guides/400_testing-strategy-guide.md`, `400_guides/400_deployment-environment-guide.md`, `400_migration-upgrade-guide.md`
+  - `000_core/001_create-prd.md` → modules: `400_guides/400_testing-strategy-guide.md`, `400_guides/400_deployment-environment-guide.md`, `400_guides/400_migration-upgrade-guide.md`
   - `000_core/002_generate-tasks.md` → modules: `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_testing-strategy-guide.md`
   - `000_core/003_process-task-list.md` → modules: `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_deployment-environment-guide.md`
 
 - Implementation essentials
-  - `104_dspy-development-context.md` → modules: `400_guides/400_system-overview.md`, `400_guides/400_testing-strategy-guide.md`, `000_core/000_backlog.md`
+  - `100_memory/104_dspy-development-context.md` → modules: `400_guides/400_system-overview.md`, `400_guides/400_testing-strategy-guide.md`, `000_core/000_backlog.md`
   - `200_setup/202_setup-requirements.md` → modules: `400_guides/400_deployment-environment-guide.md`, `400_guides/400_system-overview.md`
 
 - Consolidated reference guides

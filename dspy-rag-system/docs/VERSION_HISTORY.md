@@ -1,5 +1,13 @@
 # Version History
 
+## 🔎 TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Complete version history and changelog for DSPy RAG system | Checking system updates or understanding changes | Review recent changes or plan next version |
+
+
+
 ## TL;DR
 
 - Tracks notable changes to the DSPy RAG system.

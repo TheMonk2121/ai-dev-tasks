@@ -21,7 +21,7 @@
 
 - **Planning**: `000_core/001_create-prd.md` → `000_core/002_generate-tasks.md` → `000_core/003_process-task-list.md`
 
-- **Implementation**: `104_dspy-development-context.md` + relevant 400-series guides
+- **Implementation**: `100_memory/104_dspy-development-context.md` + relevant 400-series guides
 
 - **Testing**: `400_guides/400_testing-strategy-guide.md`
 
@@ -29,33 +29,33 @@
 
 - **Performance**: `400_guides/400_performance-optimization-guide.md`
 
-### **For Research Tasks:**-**Overview**: `500_research-summary.md`
+### **For Research Tasks:**-**Overview**: `500_research/500_research-summary.md`
 
 - **Methodology**: `500_research-analysis-summary.md`
 
-- **Implementation**: `500_research-implementation-summary.md`
+- **Implementation**: `500_research/500_research-implementation-summary.md`
 
 - **External Sources**: `docs/research/papers/`, `docs/research/articles/`, `docs/research/tutorials/`
 
 ### **For File Management:**-**Analysis**: `400_guides/400_file-analysis-guide.md` (MANDATORY)
 
-- **Naming**: `200_naming-conventions.md`
+- **Naming**: `200_setup/200_naming-conventions.md`
 
 - **Organization**: `400_guides/400_context-priority-guide.md`
 
 ### **For System Integration:**-**Architecture**: `400_guides/400_system-overview.md`
 
-- **Patterns**: `400_integration-patterns-guide.md`
+- **Patterns**: `400_guides/400_integration-patterns-guide.md`
 
 - **Deployment**: `400_guides/400_deployment-environment-guide.md`
 
-- **Migration**: `400_migration-upgrade-guide.md`
+- **Migration**: `400_guides/400_migration-upgrade-guide.md`
 
-### **For Context Engineering:**-**Strategy**: `400_cursor-context-engineering-guide.md`
+### **For Context Engineering:**-**Strategy**: `400_guides/400_cursor-context-engineering-guide.md`
 
-- **Compatibility**: `400_cursor-context-engineering-guide.md` (appendix)
+- **Compatibility**: `400_guides/400_cursor-context-engineering-guide.md` (appendix)
 
-- **Implementation**: `104_dspy-development-context.md`
+- **Implementation**: `100_memory/104_dspy-development-context.md`
 
 ## 🛠️ When Working on Features
 
@@ -63,9 +63,9 @@
 
 1.**Check `000_core/000_backlog.md`**for current priorities and dependencies
 2.**Use existing workflows**(`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`)
-3.**Follow naming conventions**from `200_naming-conventions.md`
+3.**Follow naming conventions**from `200_setup/200_naming-conventions.md`
 4.**Update completion summaries**when finishing major features
-5.**Use research framework**(`500_memory-arch-research.md`) for systematic research
+5.**Use research framework**(`500_research/500_memory-arch-research.md`) for systematic research
 
 ### **Feature Addition Process**
 

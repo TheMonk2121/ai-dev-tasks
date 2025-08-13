@@ -1,5 +1,21 @@
 # Markdown Linting Fix Plan
 
+## 🔎 TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Plan for fixing markdown formatting issues | Planning documentation improvements | Execute fix plan or update priorities |
+
+
+
+## TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Plan for fixing markdown formatting issues | Planning documentation improvements | Execute fix plan or update priorities |
+
+
+
 ## Analysis Summary
 
 - *Total Issues Found:**1,715 across 164 markdown files**Unique Rule Types:**16

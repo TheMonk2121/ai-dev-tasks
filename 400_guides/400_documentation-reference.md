@@ -37,11 +37,11 @@
 
 ### **🏗️ SYSTEM ARCHITECTURE FILES (Technical Implementation)**
 
-- **`104_dspy-development-context.md`** - DSPy framework implementation details
+- **`100_memory/104_dspy-development-context.md`** - DSPy framework implementation details
 - **`200_setup/202_setup-requirements.md`** - Environment setup and dependencies
 - **`400_guides/400_context-priority-guide.md`** - Memory scaffolding and file organization
-- **`400_cursor-context-engineering-guide.md`** - Context engineering strategy and compatibility (appendix)
-- **`400_cursor-context-engineering-guide.md`** - Context engineering implementation
+- **`400_guides/400_guides/400_cursor-context-engineering-guide.md`** - Context engineering strategy and compatibility (appendix)
+- **`400_guides/400_guides/400_cursor-context-engineering-guide.md`** - Context engineering implementation
 
 ### **🔧 OPERATIONAL GUIDES (Production & Maintenance)**
 
@@ -49,27 +49,27 @@
 - **`400_guides/400_security-best-practices-guide.md`** - Security implementation and validation
 - **`400_guides/400_performance-optimization-guide.md`** - Performance tuning and monitoring
 - **`400_guides/400_deployment-environment-guide.md`** - Deployment and environment management
-- **`400_migration-upgrade-guide.md`** - System migration and upgrade procedures
-- **`400_integration-patterns-guide.md`** - Integration patterns and best practices
+- **`400_guides/400_migration-upgrade-guide.md`** - System migration and upgrade procedures
+- **`400_guides/400_integration-patterns-guide.md`** - Integration patterns and best practices
 - **`400_guides/400_metadata-collection-guide.md`** - Metadata collection and management
   - Quick metadata reference: see `400_guides/400_metadata-collection-guide.md` (Quick reference section)
-- **`400_few-shot-context-examples.md`** - Few-shot learning examples
+- **`400_guides/400_few-shot-context-examples.md`** - Few-shot learning examples
   - PRD optimization: see `000_core/001_create-prd.md` (skip rule), `000_core/002_generate-tasks.md` (PRD-less path), and `100_memory/100_backlog-guide.md` (decision matrix)
-- **`400_n8n-backlog-scrubber-guide.md`** - n8n workflow automation
+- **`400_guides/400_n8n-backlog-scrubber-guide.md`** - n8n workflow automation
 
 ### **📊 RESEARCH DOCUMENTATION (500-Series)**
 
-- **`500_research-summary.md`** - Research overview and findings
+- **`500_research/500_research-summary.md`** - Research overview and findings
 - **`500_research-analysis-summary.md`** - Research analysis methodology
-- **`500_research-implementation-summary.md`** - Research implementation findings
-- **`500_research-infrastructure-guide.md`** - Research infrastructure setup
-- **`500_dspy-research.md`** - DSPy framework research findings
-- **`500_rag-system-research.md`** - RAG system research findings
-- **`500_documentation-coherence-research.md`** - Documentation coherence research
-- **`500_maintenance-safety-research.md`** - Repository maintenance safety
-- **`500_performance-research.md`** - Performance optimization research
-- **`500_monitoring-research.md`** - System monitoring research
-- **`500_agent-orchestration-research.md`** - Multi-agent orchestration research
+- **`500_research/500_research-implementation-summary.md`** - Research implementation findings
+- **`500_research/500_research-infrastructure-guide.md`** - Research infrastructure setup
+- **`500_research/500_dspy-research.md`** - DSPy framework research findings
+- **`500_research/500_rag-system-research.md`** - RAG system research findings
+- **`500_research/500_documentation-coherence-research.md`** - Documentation coherence research
+- **`500_research/500_maintenance-safety-research.md`** - Repository maintenance safety
+- **`500_research/500_performance-research.md`** - Performance optimization research
+- **`500_research/500_monitoring-research.md`** - System monitoring research
+- **`500_research/500_agent-orchestration-research.md`** - Multi-agent orchestration research
 
 ### **📁 EXTERNAL RESEARCH (docs/research/)**
 
@@ -80,8 +80,8 @@
 ### **🔍 ANALYSIS & MAINTENANCE FILES**
 
 - **`400_guides/400_file-analysis-guide.md`** - 🚨 MANDATORY: File deletion/deprecation analysis
-- **`200_naming-conventions.md`** - File naming and organization system
-- **`400_cross-reference-strengthening-plan.md`** - Cross-reference improvement plan
+- **`200_setup/200_naming-conventions.md`** - File naming and organization system
+- **`400_guides/400_cross-reference-strengthening-plan.md`** - Cross-reference improvement plan
 - **`999_repo-maintenance.md`** - Repository maintenance procedures
 
 ### **📈 COMPLETION SUMMARIES (500-Series)**
@@ -113,36 +113,36 @@
 ### **For Development Tasks**
 
 - **Planning**: `000_core/001_create-prd.md` → `000_core/002_generate-tasks.md` → `000_core/003_process-task-list.md`
-- **Implementation**: `104_dspy-development-context.md` + relevant 400-series guides
+- **Implementation**: `100_memory/104_dspy-development-context.md` + relevant 400-series guides
 - **Testing**: `400_guides/400_testing-strategy-guide.md`
 - **Security**: `400_guides/400_security-best-practices-guide.md`
 - **Performance**: `400_guides/400_performance-optimization-guide.md`
 
 ### **For Research Tasks**
 
-- **Overview**: `500_research-summary.md`
+- **Overview**: `500_research/500_research-summary.md`
 - **Methodology**: `500_research-analysis-summary.md`
-- **Implementation**: `500_research-implementation-summary.md`
+- **Implementation**: `500_research/500_research-implementation-summary.md`
 - **External Sources**: `docs/research/papers/`, `docs/research/articles/`, `docs/research/tutorials/`
 
 ### **For File Management**
 
 - **Analysis**: `400_guides/400_file-analysis-guide.md` (MANDATORY)
-- **Naming**: `200_naming-conventions.md`
+- **Naming**: `200_setup/200_naming-conventions.md`
 - **Organization**: `400_guides/400_context-priority-guide.md`
 
 ### **For System Integration**
 
 - **Architecture**: `400_guides/400_system-overview.md`
-- **Patterns**: `400_integration-patterns-guide.md`
+- **Patterns**: `400_guides/400_integration-patterns-guide.md`
 - **Deployment**: `400_guides/400_deployment-environment-guide.md`
-- **Migration**: `400_migration-upgrade-guide.md`
+- **Migration**: `400_guides/400_migration-upgrade-guide.md`
 
 ### **For Context Engineering**
 
-- **Strategy**: `400_cursor-context-engineering-guide.md`
-- **Compatibility**: `400_cursor-context-engineering-guide.md`
-- **Implementation**: `104_dspy-development-context.md`
+- **Strategy**: `400_guides/400_guides/400_cursor-context-engineering-guide.md`
+- **Compatibility**: `400_guides/400_guides/400_cursor-context-engineering-guide.md`
+- **Implementation**: `100_memory/104_dspy-development-context.md`
 
 ## 📊 Documentation Utilization Checklist
 

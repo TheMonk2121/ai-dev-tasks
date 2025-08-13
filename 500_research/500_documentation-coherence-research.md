@@ -61,7 +61,7 @@ Our system uses a three-digit prefix naming convention to establish hierarchy:
 - `000_core/001_create-prd.md` - PRD creation workflow
 - `000_core/002_generate-tasks.md` - Task generation workflow
 - `000_core/003_process-task-list.md` - AI execution workflow
-- `104_dspy-development-context.md` - Deep technical context
+- `100_memory/104_dspy-development-context.md` - Deep technical context
 
 **LOW Priority (Read for Specific Tasks):**
 
@@ -74,7 +74,7 @@ Files use structured comment patterns to establish relationships:
 
 ```markdown
 <!-- ESSENTIAL_FILES: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md, 000_core/000_backlog.md -->
-<!-- IMPLEMENTATION_FILES: 104_dspy-development-context.md, 200_setup/202_setup-requirements.md -->
+<!-- IMPLEMENTATION_FILES: 100_memory/104_dspy-development-context.md, 200_setup/202_setup-requirements.md -->
 <!-- DOMAIN_FILES: 100_memory/100_backlog-guide.md, 600_archives/legacy-integrations/ -->
 ```
 

@@ -1,5 +1,13 @@
 # System Service Guide
 
+## 🔎 TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Guide for managing and configuring system services | Setting up services or troubleshooting system issues | Configure services or resolve current issues |
+
+
+
 ## TL;DR
 
 - Run background processing as a long-lived service.

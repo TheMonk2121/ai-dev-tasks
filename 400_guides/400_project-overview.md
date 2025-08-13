@@ -119,7 +119,7 @@ For systematic development, start by selecting a high-impact feature from the ba
 4. The AI can automatically parse the table format and generate PRDs using the AI-BACKLOG-META command.
 ```
 
-- 💡 **Pro Tip**: Check `200_naming-conventions.md` to understand the file organization and naming patterns used in this
+- 💡 **Pro Tip**: Check `200_setup/200_naming-conventions.md` to understand the file organization and naming patterns used in this
 project.*
 
 - 📋 **For detailed backlog usage instructions and scoring system, see `100_memory/100_backlog-guide.md`*### 1️⃣ Create a Product Requirement Document (PRD)
@@ -149,8 +149,8 @@ plan optimized for AI execution.
 2. In your AI tool, use the PRD to create tasks:
 
     ```text
-    Now take @MyFeature-PRD.md and create tasks using @000_core/002_generate-tasks.md
-    ```text*(Note: Replace `@MyFeature-PRD.md` with the actual filename of the PRD you generated in step 1.)*![Example of generating tasks from PRD](https://pbs.twimg.com/media/Go6FITbWkAA-RCT?format=jpg&name=medium)
+    Now take MyFeature-PRD.md and create tasks using @000_core/002_generate-tasks.md
+    ```text*(Note: Replace `MyFeature-PRD.md` with the actual filename of the PRD you generated in step 1.)*![Example of generating tasks from PRD](https://pbs.twimg.com/media/Go6FITbWkAA-RCT?format=jpg&name=medium)
 
 ### 3️⃣ Examine Your Task List
 
@@ -169,10 +169,10 @@ Agents) with strategic human oversight.
 2. In your AI tool, tell the AI to start with the first task:
 
     ```text
-    Please start on task T-1 and use @000_core/003_process-task-list.md (the execution engine)
+    Please start on task T-1 and use 000_core/003_process-task-list.md (the execution engine)
     ```
 
-    *(Important: You only need to reference `@000_core/003_process-task-list.md` for the *first* task. The instructions within it
+    *(Important: You only need to reference `000_core/003_process-task-list.md` for the *first* task. The instructions within it
 guide the AI for subsequent tasks.)*The AI will attempt the task and then pause only when necessary for human review.
 
 ![Example of starting on a task with
@@ -226,11 +226,11 @@ podcast](https://www.youtube.com/watch?v=fD4ktSkNCw4).
 
 ### **Automation & Tools:**
 
-- **`100_backlog-automation.md`**: Documents the AI-BACKLOG-META system for automated backlog management and scoring.
+- **`100_memory/100_backlog-automation.md`**: Documents the AI-BACKLOG-META system for automated backlog management and scoring.
 
 ### **Configuration & Setup:**
 
-- **`200_naming-conventions.md`**: Explains the file naming conventions and organization structure.
+- **`200_setup/200_naming-conventions.md`**: Explains the file naming conventions and organization structure.
 
 ### **System Documentation:**
 

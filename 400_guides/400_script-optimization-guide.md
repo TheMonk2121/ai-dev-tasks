@@ -4,7 +4,10 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Optimization strategies for top 5 critical scripts | Before optimizing scripts or when performance issues arise | Run `python scripts/performance_benchmark.py` to baseline current performance, then implement optimizations in priority order |
+| Guide for optimizing script performance and efficiency | Optimizing scripts or improving performance | Apply optimization techniques to current scripts |
+
+
+
 
 ## 🎯 **Top 5 Critical Scripts & Optimization Priorities**
 

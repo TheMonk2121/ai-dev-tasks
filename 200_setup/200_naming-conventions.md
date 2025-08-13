@@ -6,44 +6,23 @@
 
 # Naming Conventions
 
-## Category Table (Accepted Exceptions & Deferrals)
-
 ## 🔎 TL;DR {#tldr}
-
-- **what this file is**: Quick summary of Category Table (Accepted Exceptions & Deferrals).
-
-- **read when**: When you need a fast orientation or before using this file in a workflow.
-
-- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
 | what this file is | read when | do next |
 |---|---|---|
-| Naming conventions and structure for project docs | Creating/reviewing new docs or renaming files | Follow the steps in File Generation, update cross-references, validate anchors |
+| File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to new files and update existing ones |
 
-The three‑digit prefix is the default. The following categories are accepted exceptions (no rename required) or deferrals (tracked in backlog; rename not urgent). Use this table during PR review to triage naming warnings without churn.
 
-- Accepted (no rename)
-  - Root entrypoints: `README.md`, `LICENSE.md`
-  - External or generated docs referenced by tooling (kept as‑is)
-  - Archived/historical under `600_archives/**` and `docs/legacy/**`
 
-- Deferred (rename later via B‑064)
-  - System overviews predating the current scheme: `docs/ARCHITECTURE.md` (archived overview)
-  - Legacy config reference: `docs/CONFIG_REFERENCE.md` (archived; canonical moved to `200_setup/202_setup-requirements.md`)
-  - Third‑party status files: `dspy-rag-system/docs/CURRENT_STATUS.md`
-  - Research helper indices under `docs/research/**` (papers, articles, tutorials)
+## TL;DR {#tldr}
 
-### Reviewer guidance
+| what this file is | read when | do next |
+|---|---|---|
+| File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to new files and update existing ones |
 
-- If a file matches “Accepted”, do not request a rename.
 
-- If a file matches “Deferred”, allow merge and, if useful, add a note to B‑064 with the path.
 
-- Do not rename files in `600_archives/**` or `docs/legacy/**`.
-
-- **400-499**: Architecture and overview (system overview, project overview, context priority guide)
-
-- **500+**: Research and meta-documentation (completion summaries, research notes, benchmarks)
+## Category Table (Accepted Exceptions & Deferrals)
 
 ## 🔢 Prefix Category Table
 
@@ -53,10 +32,10 @@ This table clarifies the buckets for our numeric prefixes, making it easier to c
 | :----------- | :---------------------------- | :---------------------------------------------------------------------- | :-------------------------------------------------------------------- |
 | `000-099`    | Core Workflow & Planning      | Core processes, backlog, PRDs, and high-level project plans.            | `000_core/000_backlog.md`, `000_core/001_create-prd.md`                                 |
 | `100-199`    | Guides & Automation           | Memory context, workflow guides, and automation tools.                  | `100_memory/100_cursor-memory-context.md`, `100_memory/100_backlog-guide.md`                |
-| `200-299`    | Configuration & Setup         | Environment setup, naming conventions, and tool configuration.          | `200_naming-conventions.md`, `200_setup/202_setup-requirements.md`              |
-| `300-399`    | Templates & Examples          | Reusable templates, documentation examples, and few-shot prompts.       | `300_documentation-example.md`, `400_few-shot-context-examples.md`    |
+| `200-299`    | Configuration & Setup         | Environment setup, naming conventions, and tool configuration.          | `200_setup/200_naming-conventions.md`, `200_setup/202_setup-requirements.md`              |
+| `300-399`    | Templates & Examples          | Reusable templates, documentation examples, and few-shot prompts.       | `300_examples/300_documentation-example.md`, `400_guides/400_few-shot-context-examples.md`    |
 | `400-499`    | System Architecture & Overviews | High-level system design, project overviews, and context guides.        | `400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`                   |
-| `500-599`    | Research, Testing & Analysis  | Research, benchmarks, testing, observability, and completion summaries. | `500_dspy-research.md`, `500_test-harness-guide.md`                   |
+| `500-599`    | Research, Testing & Analysis  | Research, benchmarks, testing, observability, and completion summaries. | `500_research/500_dspy-research.md`, `500_test-harness-guide.md`                   |
 | `600-999`    | Archives & Legacy             | Deprecated files, historical archives, and legacy documentation.        | `600_archives/`, `docs/legacy/`                                       |
 
 ### Integration with Development Workflow
@@ -105,7 +84,7 @@ The result is a**living naming system**that scales with your project while maint
 
 - ✅**Completion summaries** (`500_*` files for historical context)
 
-- ✅ **Research findings**(`500_memory-arch-research.md`)
+- ✅ **Research findings**(`500_research/500_memory-arch-research.md`)
 
 #### Examples of when NOT to create files
 
@@ -183,7 +162,7 @@ The result is a**living naming system**that scales with your project while maint
 
 - ✅ `400_guides/400_system-overview.md` (descriptive)
 
-- ✅ `500_memory-arch-research.md` (research focus)
+- ✅ `500_research/500_memory-arch-research.md` (research focus)
 
 #### Examples of bad names
 
@@ -310,7 +289,7 @@ This process ensures that every file created serves a clear purpose, fits into t
   - `400_guides/400_project-overview.md`: `tldr`, `quick-start`, `mini-map`
   - `400_guides/400_context-priority-guide.md`: `tldr`, `critical-path`, `ai-file-analysis-strategy`, `documentation-placement-logic`
   - `000_core/000_backlog.md`: `tldr`, `p0-lane`, `ai-executable-queue-003`, `live-backlog`
-  - `200_naming-conventions.md`: `tldr`, `file-generation`, `formatting-standards`, `ai-api-standards`
+  - `200_setup/200_naming-conventions.md`: `tldr`, `file-generation`, `formatting-standards`, `ai-api-standards`
   - `100_memory/100_backlog-guide.md`: `tldr`, `scoring`, `prd-rule`, `selection-criteria`
 
 ### Canonical link targets (link, don’t duplicate)
@@ -470,19 +449,19 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 - `100_memory/100_backlog-guide.md` - Backlog management guide
 
-- `100_backlog-automation.md` - Backlog automation details
+- `100_memory/100_backlog-automation.md` - Backlog automation details
 
-- `104_dspy-development-context.md` - DSPy development context
+- `100_memory/104_dspy-development-context.md` - DSPy development context
 
 ### Configuration & Setup (200-299)
 
-- `200_naming-conventions.md` - This file
+- `200_setup/200_naming-conventions.md` - This file
 
 - `200_setup/202_setup-requirements.md` - Environment setup requirements
 
 ### Templates & Examples (300-399)
 
-- `300_documentation-example.md` - Documentation example template
+- `300_examples/300_documentation-example.md` - Documentation example template
 
 ### Documentation & Guides (400-499)
 
@@ -494,17 +473,17 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 - `100_memory/100_cursor-memory-context.md` - Memory context system guide
 
-- `400_timestamp-update-guide.md` - Timestamp update procedures
+- `400_guides/400_timestamp-update-guide.md` - Timestamp update procedures
 
 - `400_current-status.md` - Current system status and health
 
 - `400_dspy-integration-guide.md` - DSPy integration guide
 
-- `400_n8n-setup-guide.md` - n8n setup and configuration guide
+- `400_guides/400_n8n-setup-guide.md` - n8n setup and configuration guide
 
 - `400_guides/400_mission-dashboard-guide.md` - Mission dashboard guide
 
-- `400_n8n-backlog-scrubber-guide.md` - n8n backlog scrubber guide
+- `400_guides/400_n8n-backlog-scrubber-guide.md` - n8n backlog scrubber guide
 
 ### Archives & Completion Records (500-599)
 
@@ -514,7 +493,7 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 - `500_memory-arch-benchmarks.md` - Memory architecture benchmark results
 
-- `500_memory-arch-research.md` - Memory architecture research framework
+- `500_research/500_memory-arch-research.md` - Memory architecture research framework
 
 ## 🚀 Adding New Categories
 

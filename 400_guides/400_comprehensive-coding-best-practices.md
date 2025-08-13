@@ -9,13 +9,17 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Comprehensive coding standards and conflict prevention system | Before writing code, during code review, or when troubleshooting issues | Follow the systematic approach: Quick Triage → Deep Audit → Prevention |
+| Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices to current development work |
 
-- **what this file is**: Integrated coding standards combining our existing practices with systematic conflict prevention
 
-- **read when**: Starting new development, during code review, troubleshooting "works on my machine" issues
 
-- **do next**: Use Quick Triage for immediate issues, Deep Audit for systematic problems, Prevention for long-term stability
+## TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices to current development work |
+
+
 
 ## 🎯 **Current Status**
 
@@ -283,7 +287,7 @@ echo "✅ Installation complete!"
 - **Memory Benchmark**: `scripts/memory_benchmark.py` - Memory performance testing
 - **Memory Hierarchy**: `scripts/show_memory_hierarchy.py` - Memory structure visualization
 
-#### **Repository Maintenance** (See [`400_contributing-guidelines.md`](400_contributing-guidelines.md))
+#### **Repository Maintenance** (See [`400_guides/400_contributing-guidelines.md`](400_guides/400_contributing-guidelines.md))
 
 - **Repository Maintenance**: `scripts/repo_maintenance.py` - Automated maintenance
 - **Database Recovery**: `scripts/auto_recover_database.py` - Database recovery

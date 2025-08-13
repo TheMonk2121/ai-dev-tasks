@@ -1,5 +1,13 @@
 # Watch Folder Guide
 
+## 🔎 TL;DR {#tldr}
+
+| what this file is | read when | do next |
+|---|---|---|
+| Guide for setting up and using folder monitoring | Setting up file monitoring or configuring watch services | Configure watch folders or monitor current setup |
+
+
+
 ## TL;DR
 
 - Drop files into `dspy-rag-system/watch_folder/` to auto-ingest.
@@ -12,7 +20,7 @@ The watch-folder service monitors `watch_folder/` and securely ingests new files
 
 ## Usage
 
-1. Start the environment and services as per `README.md`.
+1. Start the environment and services as per `docs/README.md`.
 2. Copy or drag files into `dspy-rag-system/watch_folder/`.
 3. Verify ingestion via the dashboard or logs.
 
