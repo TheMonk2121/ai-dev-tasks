@@ -2,7 +2,6 @@
 <!-- MEMORY_CONTEXT: MEDIUM - Few-shot examples and patterns -->
 # 🎯 Few-Shot Context Examples
 
-
 ## 🎯 Few-Shot Context Examples
 
 <!-- ANCHOR: tldr -->
