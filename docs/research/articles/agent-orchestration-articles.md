@@ -26,11 +26,11 @@
 
 - **Application**: Guides our multi-agent system design
 
-- **Link**: [To be added]
+- **Link**: To be added
 
 ## 🔗 **Related Documentation**- `500_agent-orchestration-research.md` - Our internal agent orchestration research summary
 
-- `400_system-overview_advanced_features.md` - System architecture overview
+- `400_system-overview.md` - System architecture overview
 
 ## 📖**Key Insights**- Industry best practices for multi-agent systems
 

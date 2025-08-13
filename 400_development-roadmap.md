@@ -5,7 +5,6 @@
 <!-- MEMORY_CONTEXT: HIGH - Development timeline and strategic planning -->
 # 🗺️ Development Roadmap
 
-
 ## 🗺️ Development Roadmap
 
 {#tldr}
@@ -79,7 +78,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Goals**: Implement LangExtract for entity/attribute extraction
 
-#### **B-044: n8n LangExtract Service (Stateless, Spillover, Override)**-**Priority**: 🔥 **HIGH**- 3 points
+### **B-044: n8n LangExtract Service (Stateless, Spillover, Override)**-**Priority**: 🔥 **HIGH**- 3 points
 
 - **Timeline**: Week 2-3
 
@@ -146,7 +145,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: August-September 2024
 
-#### **Q4 Goal 2: Advanced RAG System**-**Target**: Complete B-043, B-044, B-045 (LangExtract + RAG Enhancement)
+### **Q4 Goal 2: Advanced RAG System**-**Target**: Complete B-043, B-044, B-045 (LangExtract + RAG Enhancement)
 
 - **Success Metrics**:
   - Entity/attribute extraction operational
@@ -181,7 +180,7 @@ Sync tasks with `000_backlog.md`.
 
 - **Timeline**: Q1 2025
 
-#### **B-035: Coder Agent Specialization**-**Priority**: 🔥 **HIGH**- 5 points
+### **B-035: Coder Agent Specialization**-**Priority**: 🔥 **HIGH**- 5 points
 
 - **Dependencies**: B-011 completion
 
@@ -300,7 +299,7 @@ B-077 (Hybrid Search) → B-085 (Vector Graph Research)
 B-085 (Vector Graph Research) → B-086 (Knowledge Graph Implementation)
 B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
-```
+```text
 
 ### **Resource Allocation**-**Primary Focus**: B-011 completion (Foundation)
 
@@ -362,7 +361,7 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
 - **`003_process-task-list.md`**- AI execution workflow
 
-### **System Documentation**-**`400_system-overview_advanced_features.md`**- Technical architecture
+### **System Documentation**-**`400_system-overview.md`**- Technical architecture
 
 - **`400_project-overview.md`**- High-level project overview
 

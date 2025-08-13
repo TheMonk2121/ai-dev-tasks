@@ -20,13 +20,15 @@
 
 > **External Research**: Academic papers and research sources for DSPy framework.
 
-## 📚 **Papers**###**ICLR 2024 DSPy Pipeline Paper**-**Authors**: Stanford DSPy Team
+## 📚 **Papers**
+
+### **ICLR 2024 DSPy Pipeline Paper**-**Authors**: Stanford DSPy Team
 
 - **Key Insight**: Validated compiling prompt programs approach
 
 - **Application**: Validates our DSPy implementation approach
 
-- **Citation**: [Full citation to be added]
+- **Citation**: Full citation to be added
 
 - **Key Findings**:
   - DSPy enables "programming" AI reasoning pipelines instead of hand-crafting prompts
@@ -40,7 +42,7 @@
 
 - **Application**: Informs our assertion-based validation system
 
-- **Citation**: [Full citation to be added]
+- **Citation**: Full citation to be added
 
 - **Key Findings**:
   - LM Assertions provide constraints (hard or soft) on model outputs
@@ -54,7 +56,7 @@
 
 - **Application**: Guides our latest DSPy implementation
 
-- **Citation**: [Full citation to be added]
+- **Citation**: Full citation to be added
 
 - **Key Findings**:
   - Teleprompter optimization for continuous improvement
@@ -66,7 +68,7 @@
 
 - `104_dspy-development-context.md` - Our DSPy implementation
 
-- `400_system-overview_advanced_features.md` - System architecture overview
+- `400_system-overview.md` - System architecture overview
 
 ## 📖**Key Insights**- Structured prompt programming improves maintainability
 

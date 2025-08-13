@@ -170,6 +170,7 @@ AI Development Ecosystem
 ```
 
 ### **Key Technologies**
+
 - **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
 
 - **Framework**: DSPy with PostgreSQL vector store
@@ -197,6 +198,7 @@ AI Development Ecosystem
 <!-- WORKFLOW_REFERENCE: 400_project-overview.md -->
 
 ### **File Organization**
+
 - **Essential**: `400_project-overview.md`, `400_system-overview.md`, `000_backlog.md`
 
 - **Implementation**: `104_dspy-development-context.md`, `202_setup-requirements.md`

@@ -455,7 +455,7 @@ Use this checklist before writing new Python code to reduce duplication and keep
 
 ### **Example 3: Analyzing a Core Documentation File**
 
-- *File**: `400_system-overview_advanced_features.md`
+- *File**: `400_system-overview.md`
 - *Analysis Process**:
 
 1. **Context Loading**: This is a Tier 1 critical file

@@ -30,7 +30,7 @@
 
 ## 🔗 **Related Documentation**- `500_monitoring-research.md` - Our internal monitoring research summary
 
-- `400_system-overview_advanced_features.md` - System architecture overview
+- `400_system-overview.md` - System architecture overview
 
 ## 📖**Key Insights**- Industry monitoring best practices
 

@@ -1,522 +1,415 @@
 <!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: 400_system-overview.md -->
-<!-- MEMORY_CONTEXT: HIGH - AI context engineering and model routing -->
-# 🎯 **Current Status**> This guide is Cursor-native. Third-party model comparisons have been removed. Use task-type patterns and specialized
-agents to shape prompts for `cursor-native-ai`.
+<!-- MEMORY_CONTEXT: HIGH - Cursor-native context engineering strategies -->
 
-## 🎯**Current Status**{#tldr}
+# Cursor Context Engineering Guide
+
+<!-- ANCHOR: tldr -->
+{#tldr}
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
 |---|---|---|
-|  |  |  |
+| Guide for effective context engineering with Cursor Native AI | When optimizing AI interactions or improving prompt effectiveness | Apply task-type patterns and context strategies to your AI interactions |
 
-- **what this file is**: Quick summary of 🎯 **Current Status**.
+- **what this file is**: Strategies and patterns for effective context engineering with Cursor Native AI.
+- **read when**: When optimizing AI interactions, improving prompt effectiveness, or designing context strategies.
+- **do next**: Apply the task-type patterns and context strategies to your AI interactions.
 
-- **read when**: When you need a fast orientation or before using this file in a workflow.
+## 🎯 **Current Status**
 
-- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
-
-- **Status**: ✅ **ACTIVE**- AI context engineering system operational
-
-- **Priority**: 🔥 Critical - Core AI routing and context management
-
-- **Points**: 5 - High complexity, essential functionality
-
+- **Status**: ✅ **ACTIVE** - Cursor-native context engineering strategies
+- **Priority**: 🔥 Critical - Core AI interaction optimization
+- **Points**: 3 - Medium complexity, high importance
 - **Dependencies**: 400_context-priority-guide.md, 400_system-overview.md
+- **Next Steps**: Apply patterns and monitor effectiveness
 
-- **Next Steps**: Monitor routing accuracy and optimize patterns
+## 🧠 Context Engineering Fundamentals
 
-### **3. Context Engineering Patterns**Use task-type patterns (model-agnostic) to guide `cursor-native-ai` and specialized agents:
+### **What is Context Engineering?**
 
-```python
-TASK_TYPE_PATTERNS = {
-    "reasoning": {
-        "style": "step-by-step with explicit intermediate steps",
-"prompt": "Let's approach this systematically. First, summarize the context, then reason step-by-step to a conclusion."
-    },
-    "coding": {
-        "style": "clean, defensive, with tests-first mindset",
-"prompt": "Implement the change with clear function boundaries and typing. Include a minimal test and note assumptions."
-    },
-    "analysis": {
-        "style": "evidence-backed, concise sections",
-        "prompt": "Provide a short analysis with evidence, alternatives, and a recommendation."
-    },
-    "debugging": {
-        "style": "hypothesis-driven",
-        "prompt": "Form hypotheses, run targeted checks, report findings, propose fix, and verification steps."
-    }
-}
+Context engineering is the practice of structuring information and prompts to maximize AI understanding and response quality. For Cursor Native AI, this means:
+
+- **Task-Specific Patterns**: Using different approaches for different types of tasks
+- **Progressive Disclosure**: Revealing context in the right order and amount
+- **Clear Boundaries**: Defining what the AI should focus on and what it can assume
+- **Effective Framing**: Setting up the problem in a way that guides the AI toward good solutions
+
+### **Why Context Engineering Matters**
+
+- **Better Responses**: Well-engineered context leads to more accurate and useful responses
+- **Faster Iterations**: Clear context reduces back-and-forth clarification
+- **Consistent Quality**: Structured approaches produce more predictable results
+- **Efficient Use**: Makes the most of Cursor's capabilities without overwhelming it
+
+## 🎯 Task-Type Patterns
+
+### **1. Reasoning Tasks**
+
+**When to Use**: Analysis, explanation, decision-making, problem-solving
+
+**Pattern**:
+```text
+Let's approach this systematically:
+
+1. First, let me understand the context: [summarize key information]
+2. Then, I'll analyze the problem: [break down the issue]
+3. Finally, I'll provide a reasoned conclusion: [solution/recommendation]
+
+[Your specific question or task]
+```
+
+**Example**:
+```text
+Let's approach this systematically:
+
+1. First, let me understand the context: We're building a REST API for user management
+2. Then, I'll analyze the problem: Need to implement authentication with rate limiting
+3. Finally, I'll provide a reasoned conclusion: Best approach for our requirements
+
+What's the most effective way to implement JWT authentication with rate limiting for our user API?
+```
+
+### **2. Coding Tasks**
+
+**When to Use**: Implementation, refactoring, debugging, code review
+
+**Pattern**:
+```text
+I need to [specific coding task].
+
+Context:
+- [relevant code/files/constraints]
+- [requirements/constraints]
+- [existing patterns to follow]
+
+Please provide:
+- [specific deliverable]
+- [any tests or validation needed]
+- [assumptions you're making]
+```
+
+**Example**:
+```text
+I need to implement a user authentication middleware.
+
+Context:
+- Using Express.js with JWT
+- Need to handle rate limiting
+- Should follow existing error handling patterns
+
+Please provide:
+- The middleware function
+- Basic tests to validate it works
+- Any security considerations I should be aware of
+```
+
+### **3. Analysis Tasks**
+
+**When to Use**: Code review, performance analysis, architecture evaluation
+
+**Pattern**:
+```text
+Please analyze [what to analyze] with focus on:
+
+1. [specific aspect 1]
+2. [specific aspect 2]
+3. [specific aspect 3]
+
+Provide:
+- Key findings
+- Potential issues
+- Recommendations
+```
+
+**Example**:
+```text
+Please analyze this authentication implementation with focus on:
+
+1. Security vulnerabilities
+2. Performance implications
+3. Maintainability concerns
+
+Provide:
+- Key findings
+- Potential issues
+- Recommendations for improvement
+```
+
+### **4. Planning Tasks**
+
+**When to Use**: Architecture design, feature planning, system design
+
+**Pattern**:
+```text
+I'm planning [what you're planning].
+
+Requirements:
+- [requirement 1]
+- [requirement 2]
+- [requirement 3]
+
+Constraints:
+- [constraint 1]
+- [constraint 2]
+
+Please help me:
+- [specific planning need]
+- [any alternatives to consider]
+```
+
+**Example**:
+```text
+I'm planning a user management system.
+
+Requirements:
+- User registration and authentication
+- Role-based access control
+- Audit logging
+
+Constraints:
+- Must work with existing database schema
+- Should be scalable to 10k+ users
+
+Please help me:
+- Design the overall architecture
+- Identify potential bottlenecks
+- Suggest implementation phases
+```
+
+## 🔧 Context Engineering Strategies
+
+### **1. Progressive Disclosure**
+
+**Principle**: Reveal context in layers, starting with the most important information.
+
+**Strategy**:
+
+1. **Core Question**: Start with the main question or task
+2. **Essential Context**: Add only the context needed to understand the question
+3. **Supporting Details**: Include additional details that might be helpful
+4. **Constraints/Preferences**: Specify any limitations or preferences
+
+**Example**:
+```text
+❌ Poor: [Long explanation of everything before getting to the point]
+
+✅ Better:
+I need to implement user authentication. [Core question]
+We're using Express.js with JWT tokens. [Essential context]
+The API needs to handle 1000+ concurrent users. [Supporting detail]
+Must be compatible with our existing error handling middleware. [Constraint]
+```
+
+### **2. Clear Boundaries**
+
+**Principle**: Define what the AI should focus on and what it can assume.
+
+**Strategy**:
+
+- **Focus Areas**: Explicitly state what you want the AI to address
+- **Assumptions**: List what the AI can assume or doesn't need to worry about
+- **Scope**: Define the boundaries of the task
+
+**Example**:
+```text
+Focus on: The authentication logic and security considerations
+Assume: Database connection and basic Express setup are already configured
+Scope: Just the middleware function, not the full application setup
+```
+
+### **3. Effective Framing**
+
+**Principle**: Frame the problem in a way that guides the AI toward good solutions.
+
+**Strategy**:
+
+- **Problem Statement**: Clearly state what you're trying to solve
+- **Success Criteria**: Define what a good solution looks like
+- **Context**: Provide relevant background that influences the approach
+
+**Example**:
+```text
+Problem: Users are experiencing slow login times during peak hours
+Success Criteria: Login response time under 200ms, secure authentication
+Context: We're using JWT tokens, have 1000+ concurrent users, and need to maintain security
+```
+
+### **4. Structured Prompts**
+
+**Principle**: Use consistent structure to make prompts easier to understand and process.
+
+**Strategy**:
+```text
+TASK: [What you want done]
+CONTEXT: [Relevant background information]
+CONSTRAINTS: [Limitations or requirements]
+EXPECTED OUTPUT: [What format/level of detail you want]
+```
+
+## 📊 Context Engineering Patterns
+
+### **1. The Funnel Pattern**
+
+Start broad, then narrow down to specifics:
 
 ```text
+1. High-level overview of the problem
+2. Specific requirements and constraints
+3. Detailed question or task
+4. Expected output format
+```
 
-## 🔧 Implementation
+### **2. The Sandwich Pattern**
 
-### **1. Basic Usage**```python
-from dspy_rag_system.src.dspy_modules.cursor_model_router import create_cursor_model_router
-
-# Create router
-
-router = create_cursor_model_router()
-
-# Route a query
-
-result = router.route_query(
-    query="Implement a REST API with authentication and rate limiting",
-    urgency="medium",
-    complexity=None  # Auto-analyzed
-
-)
-
-print(f"Selected model: {result['selected_model']}")
-print(f"Context engineering: {result['context_engineering']}")
-print(f"Engineered prompt: {result['engineered_prompt']}")
+Context → Question → Context:
 
 ```text
+1. Initial context to set the scene
+2. Specific question or task
+3. Additional context that might influence the answer
+```
 
-### **2. Integration with DSPy RAG System**The context engineering is integrated into the enhanced RAG system:
+### **3. The Checklist Pattern**
 
-```python
-
-# In EnhancedRAGSystem.forward()
-
-routing_result = self.cursor_router.route_query(
-    query=question,
-    urgency="medium",
-    complexity=None  # Will be auto-analyzed
-
-)
-
-if routing_result["status"] == "success":
-    _LOG.info(f"Selected model: {routing_result['selected_model']}")
-    _LOG.info(f"Context engineering: {routing_result['context_engineering']}")
+Break complex tasks into clear steps:
 
 ```text
+Please help me with [task] by:
 
-### **3. Response Enhancement**The RAG system response includes context engineering information:
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
 
-```python
-response["context_engineering"] = {
-    "selected_model": routing_result["selected_model"],
-    "engineered_prompt": routing_result["engineered_prompt"],
-    "context_engineering": routing_result["context_engineering"],
-    "prompt_pattern": TASK_TYPE_PATTERNS.get(routing_result.get("task_type", "reasoning"), {}).get("prompt"),
-    "model_instructions": "cursor-native-ai",
-    "capabilities": "specialized agents + task-type patterns",
-    "routing_metadata": routing_result["routing_metadata"]
-}
-
-```text
-
-## 🎯 Context Engineering Strategies
-
-### **1. Task Type Analysis**The system automatically analyzes task types:
-
-```python
-def _analyze_task_type(self, query: str) -> str:
-    query_lower = query.lower()
-
-    if any(word in query_lower for word in ["code", "function", "class", "implement", "refactor"]):
-        return "coding"
-    elif any(word in query_lower for word in ["analyze", "explain", "understand", "why"]):
-        return "reasoning"
-    elif any(word in query_lower for word in ["test", "debug", "error", "fix"]):
-        return "debugging"
-    elif any(word in query_lower for word in ["design", "architecture", "plan"]):
-        return "planning"
-    else:
-        return "general"
-
-```text
-
-### **2. Complexity Analysis**```python
-def _analyze_complexity(self, query: str, context_size: int = None) -> str:
-    word_count = len(query.split())
-
-    if context_size and context_size > 50000:
-        return "complex"
-    elif word_count > 100 or len(query) > 1000:
-        return "complex"
-    elif word_count > 50 or len(query) > 500:
-        return "moderate"
-    else:
-        return "simple"
-
-```bash
-
-### **3. Routing Logic (Cursor-native)**Prefer `cursor-native-ai` by default; delegate to specialized agents based on task-type and context size. Keep logic
-simple and traceable:
-
-1. Task-type → choose pattern from `TASK_TYPE_PATTERNS`
-2. If retrieval-heavy → ensure citations and span offsets are requested
-3. If coding → enforce tests-first, explicit assumptions, and guardrails
-4. If long context → summarize and chunk before prompting
-
-## 📊 Monitoring & Analytics
-
-### **1. Routing Statistics**```python
-stats = router.get_routing_stats()
-print(f"Total routes: {stats['total_routes']}")
-print(f"Model distribution: {stats['model_distribution']}")
-print(f"Average confidence: {stats['average_confidence']}")
-
-```bash
-
-### **2. Performance Metrics**-**Routing Accuracy**: How often the selected model performs optimally
-
-- **Context Engineering Effectiveness**: Impact of engineered prompts
-
-- **Model Utilization**: Distribution across available models
-
-- **Response Quality**: User satisfaction with model selections
-
-## 🔄 Integration with Existing Workflows
-
-### **1. PRD Creation Workflow**```python
-
-# In 001_create-prd.md workflow
-
-router = create_cursor_model_router()
-result = router.route_query(
-    query=prd_requirements,
-    task_type="planning",
-    complexity="complex"
-)
-
-# Use selected model for PRD generation
-
-```text
-
-### **2. Task Generation Workflow**```python
-
-# In 002_generate-tasks.md workflow
-
-result = router.route_query(
-    query=prd_content,
-    task_type="reasoning",
-    complexity="moderate"
-)
-
-# Use selected model for task breakdown
-
-```text
-
-### **3. Code Implementation Workflow**```python
-
-# In 003_process-task-list.md workflow
-
-result = router.route_query(
-    query=implementation_task,
-    task_type="coding",
-    complexity="simple"
-)
-
-# Use selected model for code generation
-
-```sql
-
-## 🛠️ Configuration
-
-### **1. Model Capabilities**Update model capabilities in `cursor_model_router.py`:
-
-```python
-CURSOR_MODEL_CAPABILITIES = {
-    CursorModel.CLAUDE_3_OPUS: ModelCapabilities(
-        model=CursorModel.CLAUDE_3_OPUS,
-        max_context=200000,
-        reasoning_strength=0.95,
-        code_generation=0.85,
-        speed=0.6,
-        cost_efficiency=0.4,
-        best_for=["complex_reasoning", "large_codebases", "detailed_explanations"]
-    ),
-    # ... other models
-
-}
-
-```text
-
-### **2. Context Engineering Patterns**Customize prompt patterns:
-
-```python
-CONTEXT_ENGINEERING_PATTERNS = {
-    CursorModel.CLAUDE_3_OPUS: {
-        "reasoning": "Use step-by-step reasoning with explicit intermediate steps",
-        "coding": "Provide detailed context and explain architectural decisions",
-        "prompt_pattern": "Let's approach this systematically. First, let me understand the context..."
-    },
-    # ... other patterns
-
-}
-
-```yaml
+For each step, provide:
+- [specific deliverable]
+- [any considerations]
+```
 
 ## 🎯 Best Practices
 
-### **1. Context Engineering Principles**1.**Task-Specific Patterns**: Use different patterns for different task types
-2. **Model Strengths**: Leverage each model's unique capabilities
-3. **Progressive Complexity**: Start simple, add complexity as needed
-4. **Feedback Loops**: Monitor performance and adjust patterns
+### **1. Be Specific**
 
-### **2. Prompting Guidelines (Cursor-native)**- Large contexts: summarize, chunk, and request citations with span-level grounding
+- **Avoid**: Vague requests like "help me with authentication"
+- **Use**: Specific requests like "implement JWT middleware with rate limiting"
 
-- Speed-sensitive: request concise outputs; avoid unnecessary tool use
+### **2. Provide Context**
 
-- Complex reasoning: ask for intermediate steps and validation checks
+- **Avoid**: Asking questions without background
+- **Use**: Include relevant code, requirements, and constraints
 
-- Coding: specify interfaces, typing, tests-first, and constraints explicitly
+### **3. Set Expectations**
 
-### **3. Performance Optimization**-**Caching**: Cache routing decisions for similar queries
+- **Avoid**: Unclear output expectations
+- **Use**: Specify format, level of detail, and any specific requirements
 
-- **Fast-Path**: Bypass complex routing for simple queries
+### **4. Use Progressive Disclosure**
 
-- **Fallbacks**: Always have fallback models configured
+- **Avoid**: Dumping all information at once
+- **Use**: Reveal context in logical layers
 
-- **Monitoring**: Track routing accuracy and user satisfaction
+### **5. Define Boundaries**
+
+- **Avoid**: Unclear scope
+- **Use**: Explicitly state what's in and out of scope
+
+## 🔄 Integration with Workflows
+
+### **PRD Creation (001_create-prd.md)**
+
+Use reasoning patterns to structure requirements analysis:
+
+```text
+Let's approach this systematically:
+
+1. First, let me understand the context: [feature overview]
+2. Then, I'll analyze the requirements: [break down needs]
+3. Finally, I'll provide a structured PRD: [organized requirements]
+
+[Feature description]
+```
+
+### **Task Generation (002_generate-tasks.md)**
+
+Use planning patterns to break down work:
+
+```text
+I'm planning the implementation of [feature].
+
+Requirements:
+- [requirement 1]
+- [requirement 2]
+
+Constraints:
+- [constraint 1]
+- [constraint 2]
+
+Please help me:
+- Break this into implementable tasks
+- Identify dependencies and priorities
+- Suggest implementation order
+```
+
+### **Code Implementation (003_process-task-list.md)**
+
+Use coding patterns for implementation tasks:
+
+```text
+I need to implement [specific task].
+
+Context:
+- [relevant code/files]
+- [requirements/constraints]
+
+Please provide:
+- The implementation
+- Any tests needed
+- Assumptions you're making
+```
+
+## 📈 Monitoring Effectiveness
+
+### **Key Metrics**
+
+- **Response Quality**: Are you getting the level of detail and accuracy you need?
+- **Iteration Count**: How many back-and-forth exchanges are needed?
+- **Clarity**: Are the responses clear and actionable?
+- **Completeness**: Do responses address all aspects of your request?
+
+### **Improvement Strategies**
+
+- **Track Patterns**: Note which patterns work best for different task types
+- **Refine Context**: Adjust the amount and type of context you provide
+- **Iterate**: Use AI feedback to improve your context engineering
+- **Document**: Keep notes on what works well for future reference
 
 ## 🔮 Future Enhancements
 
-### **1. Learning-Based Routing**-**Historical Performance**: Learn from past model selections
+### **Potential Improvements**
 
-- **User Feedback**: Incorporate user satisfaction scores
+- **Context Templates**: Pre-built templates for common task types
+- **Context Validation**: Tools to check if context is complete and clear
+- **Performance Tracking**: Metrics on context engineering effectiveness
+- **Pattern Library**: Expanded collection of proven patterns
 
-- **A/B Testing**: Test different routing strategies
+### **Integration Opportunities**
 
-- **Adaptive Patterns**: Adjust context engineering based on results
+- **Workflow Integration**: Built-in context engineering in workflow files
+- **AI Feedback**: Use AI to suggest context improvements
+- **Automated Analysis**: Tools to analyze and improve context quality
 
-### **2. Advanced Context Engineering**-**Multi-Model Orchestration**: Use multiple models for complex tasks
-
-- **Dynamic Prompt Generation**: Generate prompts based on real-time analysis
-
-- **Semantic Routing**: Use semantic similarity for better routing
-
-- **Cost Optimization**: Balance performance with cost constraints
-
-### **3. Integration Opportunities**-**n8n Workflows**: Integrate with n8n for automated routing
-
-- **Dashboard Monitoring**: Real-time routing analytics
-
-- **API Endpoints**: Expose routing as a service
-
-- **Plugin System**: Allow custom routing strategies
-
-- --
+---
 
 ## 📚 Related Documentation
 
-- **B-011 Implementation Summary**: Cursor Native AI Integration details
-
-- **104_dspy-development-context.md**: DSPy framework overview
-
-- **400_system-overview_advanced_features.md**: System architecture
-
-- **dspy-rag-system/README.md**: RAG system documentation
-
-- --
-
-## 🔍 Validation & Monitoring
-
-### **How to Verify the System is Working (Not Hallucinating)**The context engineering system includes comprehensive validation and monitoring to ensure it's making real decisions and
-not hallucinating.
-
-#### **1. Validation System**The system validates routing decisions using multiple checks:
-
-```python
-class ModelRoutingValidator:
-    def validate_routing_decision(self, routing_result, query):
-        # Check 1: Model exists and is valid
-
-        # Check 2: Confidence score is reasonable (0.0-1.0)
-
-        # Check 3: Reasoning quality (specific patterns, length, keywords)
-
-        # Check 4: Model capability match (task-type alignment)
-
-        # Check 5: Context engineering strategy validity
-
-        # Detect hallucination if multiple checks fail
-
-```text
-
-#### **2. Hallucination Detection**The system detects potential hallucination using:
-
-- **Low Confidence**: Suspiciously low or high confidence scores
-
-- **Poor Reasoning**: Vague or nonsensical reasoning
-
-- **Model Mismatch**: Selected model doesn't match task requirements
-
-- **Invalid Strategies**: Context engineering strategies that don't align with model capabilities
-
-#### **3. Monitoring Dashboard**Use the monitoring dashboard to track system performance:
-
-```bash
-
-# Interactive monitoring
-
-python dspy-rag-system/monitor_context_engineering.py
-
-# Batch testing
-
-python dspy-rag-system/monitor_context_engineering.py --mode batch --save-report
-
-```text
-
-#### **4. Validation Test Suite**Run comprehensive validation tests:
-
-```bash
-
-# Run validation and monitoring tests
-
-python dspy-rag-system/test_validation_and_monitoring.py
-
-```bash
-
-This test suite validates:
-
-- ✅ Model routing accuracy
-
-- ✅ Hallucination detection
-
-- ✅ Performance monitoring
-
-- ✅ Anomaly detection
-
-#### **5. Key Validation Metrics**Monitor these metrics to ensure the system is working correctly:
-
-| Metric | Target | What It Means |
-|--------|--------|---------------|
-|**Success Rate**| >95% | System is routing successfully |
-|**Hallucination Rate**| <5% | System is making real decisions |
-|**Model Selection Accuracy**| >80% | Correct models for task types |
-|**Average Confidence**| 0.7-0.9 | Reasonable confidence levels |
-|**Average Latency**| <1000ms | System is responsive |
-
-#### **6. Real-Time Monitoring**The monitoring dashboard shows:
-
-```
-
-🎯 CURSOR CONTEXT ENGINEERING MONITORING DASHBOARD
-==================================================
-⏰ Uptime: 2.5 hours
-📊 Total Queries: 25
-✅ Success Rate: 96.0%
-🚨 Hallucination Rate: 4.0%
-🎯 Average Confidence: 0.82
-⚡ Average Latency: 245.3ms
-
-📈 Model Distribution:
-  cursor-native-ai: 25 (100.0%)
-
-🔄 Recent Activity:
-  1. ✅ Implement a REST API with authentication
-     Model: gpt-4-turbo | Confidence: 0.85 | Latency: 180.2ms
-  2. ✅ Analyze performance implications
-     Model: claude-3-opus | Confidence: 0.92 | Latency: 320.1ms
-
-```yaml
-
-#### **7. Validation Checks**Each routing decision is validated against:
-
-1.**Model Existence**: Selected model must be in available models list
-2. **Confidence Reasonableness**: Confidence score between 0.0 and 1.0
-3. **Reasoning Quality**: Reasoning contains specific patterns and keywords
-4. **Capability Match**: Model capabilities align with task requirements
-5. **Strategy Validity**: Context engineering strategy matches model strengths
-
-#### **8. Anomaly Detection**The system detects anomalies:
-
-- **High Latency**: Routes taking >5 seconds
-
-- **Repeated Failures**: 3+ consecutive failed routes
-
-- **Model Bias**: 80%+ routes to same model
-
-- **Hallucination Patterns**: Multiple validation failures
-
-#### **9. How to Interpret Results**
-
-- *✅ System Working Correctly:**- Success rate >95%
-
-- Hallucination rate <5%
-
-- Model distribution shows variety
-
-- Confidence scores in reasonable range (0.7-0.9)
-
-- Latency under 1000ms**🚨 Potential Issues:**- High hallucination rate (>10%)
-
-- All routes to same model
-
-- Very high or low confidence scores
-
-- High latency (>2000ms)
-
-- Poor reasoning quality
-
-#### **10. Troubleshooting**If validation fails:
-
-1.**Check Model Availability**: Ensure all models are accessible
-2. **Review Reasoning Quality**: Look for vague or nonsensical reasoning
-3. **Verify Task Analysis**: Ensure task type and complexity are correctly identified
-4. **Monitor Performance**: Check for system bottlenecks or errors
-5. **Update Patterns**: Refine context engineering patterns if needed
-
-#### **11. Continuous Monitoring**Set up continuous monitoring:
-
-```python
-
-# In your application
-
-from dspy_modules.cursor_model_router import create_validated_cursor_model_router
-
-router = create_validated_cursor_model_router()
-
-# Route with validation
-
-result = router.route_query("Your query here")
-
-# Check validation results
-
-if result["validation"]["hallucination_detected"]:
-    print("🚨 Potential hallucination detected!")
-    print("Recommendations:", result["validation"]["recommendations"])
-
-# Get comprehensive report
-
-report = router.get_comprehensive_report()
-print("System Status:", report["performance_report"])
-
-```text
-
-#### **12. Integration with Existing Workflows**Add validation to your existing workflows:
-
-```python
-
-# In 003_process-task-list.md workflow
-
-router = create_validated_cursor_model_router()
-result = router.route_query(task_description)
-
-if result["validation"]["is_valid"]:
-    # Use the selected model
-
-    selected_model = result["selected_model"]
-    engineered_prompt = result["engineered_prompt"]
-else:
-    # Fallback to default model
-
-    selected_model = "cursor-native-ai"
-    print("⚠️ Using fallback model due to validation failure")
-
-```
-
-This validation system ensures your context engineering is making real, intelligent decisions rather than hallucinating
-model selections.
-
-- --*This guide provides comprehensive context engineering strategies for leveraging Cursor's native AI models through
-DSPy-based intelligent routing.*
+- **400_few-shot-context-examples.md**: Examples of effective context engineering
+- **400_system-overview.md**: System architecture and components
+- **001_create-prd.md**: PRD creation workflow
+- **002_generate-tasks.md**: Task generation workflow
+- **003_process-task-list.md**: AI execution workflow
+
+---
+
+*This guide provides practical strategies for effective context engineering with Cursor Native AI, focusing on clear patterns and proven approaches.*

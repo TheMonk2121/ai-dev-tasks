@@ -25,7 +25,7 @@
 
 - **Application**: Informs our hybrid search implementation with PGVector + PostgreSQL full-text
 
-- **Citation**: [Full citation to be added]
+- **Citation**: Full citation to be added
 
 - **Key Findings**:
   - Relying solely on vector similarity can miss exact matches or rare terms
@@ -39,7 +39,7 @@
 
 - **Application**: Guides our knowledge graph integration approach
 
-- **Citation**: [Full citation to be added]
+- **Citation**: Full citation to be added
 
 - **Key Findings**:
   - Use LLMs to build knowledge graphs from document corpus
@@ -47,17 +47,17 @@
   - Integrate structured and unstructured information
   - Handle queries requiring connecting disparate facts
 
-### **KAG: Knowledge-Augmented Generation (2024)**-**Authors**: [Research Team]
+### **KAG: Knowledge-Augmented Generation (2024)**-**Authors**: Research Team
 
 - **Key Insight**: Advanced knowledge integration techniques
 
 - **Application**: Guides our knowledge integration approach
 
-- **Citation**: [Full citation to be added]
+- **Citation**: Full citation to be added
 
 ## 🔗 **Related Documentation**- `500_rag-system-research.md` - Our internal RAG research summary
 
-- `400_system-overview_advanced_features.md` - System architecture overview
+- `400_system-overview.md` - System architecture overview
 
 - `dspy-rag-system/` - Our RAG implementation
 

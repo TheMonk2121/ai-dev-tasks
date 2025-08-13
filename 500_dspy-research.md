@@ -5,7 +5,6 @@
 <!-- MEMORY_CONTEXT: HIGH - DSPy research and implementation patterns -->
 # 🔬 DSPy Research
 
-
 Backlog link: B-076, B-079
 
 ## 🔬 DSPy Research
@@ -129,7 +128,7 @@ Backlog link: B-076, B-079
 
 ## 🔗 **Implementation Integration**###**Current DSPy Implementation**-**`104_dspy-development-context.md`**- Current DSPy implementation details
 
-- **`400_system-overview_advanced_features.md`**- System architecture and DSPy integration
+- **`400_system-overview.md`**- System architecture and DSPy integration
 
 - **`dspy-rag-system/`**- Current DSPy RAG system implementation
 
@@ -177,7 +176,7 @@ Backlog link: B-076, B-079
 
 - [ ] **Enable Caching**: Configure DSPy caching for performance optimization
 
-#### **2. Create Specialized DSPy Modules**- [ ]**PlanAgent Module**: DSPy module for task planning and decomposition
+### **2. Create Specialized DSPy Modules**- [ ]**PlanAgent Module**: DSPy module for task planning and decomposition
 
 - [ ] **CodeAgent Module**: DSPy module for code generation with assertions
 
@@ -217,7 +216,9 @@ Backlog link: B-076, B-079
 
 - [ ] **Integration Ecosystem**: Build comprehensive DSPy-based AI ecosystem
 
-## 🎯 **Specific Code Patterns**###**DSPy Module Template**```python
+## 🎯 **Specific Code Patterns**###**DSPy Module Template**
+
+```python
 import dspy
 
 class SpecializedAgent(dspy.Module):

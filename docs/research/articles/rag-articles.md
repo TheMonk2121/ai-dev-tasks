@@ -64,7 +64,7 @@
 
 ## 🔗 **Related Documentation**- `500_rag-system-research.md` - Our internal RAG research summary
 
-- `400_system-overview_advanced_features.md` - System architecture overview
+- `400_system-overview.md` - System architecture overview
 
 ## 📖**Key Insights**- Industry best practices for RAG implementation
 

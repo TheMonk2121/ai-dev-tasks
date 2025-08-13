@@ -3,7 +3,6 @@
 <!-- MEMORY_CONTEXT: HIGH - RAG system research and implementation patterns -->
 # 🔍 RAG System Research
 
-
 ## 🔍 RAG System Research
 
 {#tldr}
@@ -171,7 +170,7 @@ Backlog link: B-045, B-077
 
 - [ ] **Performance Optimization**: Ensure hybrid search doesn't impact latency
 
-#### **2. Enhance Chunking Strategy**- [ ]**Semantic Chunking**: Use prefix boundaries as chunk units
+### **2. Enhance Chunking Strategy**- [ ]**Semantic Chunking**: Use prefix boundaries as chunk units
 
 - [ ] **Sliding Windows**: Implement overlapping chunks for large documents
 
@@ -211,7 +210,11 @@ Backlog link: B-045, B-077
 
 - [ ] **Advanced Evaluation**: Implement comprehensive RAG evaluation metrics
 
-## 🎯 **Specific Implementation Patterns**###**Hybrid Search Implementation**```python
+## 🎯 **Specific Implementation Patterns**
+
+### **Hybrid Search Implementation**
+
+```python
 class HybridRetriever:
     def __init__(self, vector_store, text_search):
         self.vector_store = vector_store  # PGVector
@@ -337,5 +340,5 @@ class MultiStageRetriever:
 - --
 
 - *Last Updated**: 2024-08-07
-- *Related Documentation**: `500_research-analysis-summary.md`, `400_system-overview_advanced_features.md`
+- *Related Documentation**: `500_research-analysis-summary.md`, `400_system-overview.md`
 - *Status**: Research findings ready for implementation

@@ -20,17 +20,17 @@
 
 > **External Research**: Academic papers and research sources for multi-agent systems and orchestration.
 
-## 📚 **Papers**###**Multi-Agent Orchestration**-**Authors**: [Research Team]
+## 📚 **Papers**###**Multi-Agent Orchestration**-**Authors**: Research Team
 
 - **Key Insight**: Strategies for coordinating multiple specialized agents
 
 - **Application**: Guides our multi-agent system design
 
-- **Citation**: [Full citation to be added]
+- **Citation**: Full citation to be added
 
 ## 🔗 **Related Documentation**- `500_agent-orchestration-research.md` - Our internal agent orchestration research summary
 
-- `400_system-overview_advanced_features.md` - System architecture overview
+- `400_system-overview.md` - System architecture overview
 
 ## 📖**Key Insights**- Agent communication patterns
 
