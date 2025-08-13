@@ -169,6 +169,24 @@ class DatabaseResilienceManager:
             # Test connection
             with conn.cursor() as cursor:
                 cursor.execute("SELECT 1")
+                # Verify the connection is working by fetching the result
+                result = cursor.fetchone()
+                if result is None:
+                    raise Exception("Connection test failed - no result")
+
+                # Handle both tuple and RealDictRow results
+                if isinstance(result, tuple):
+                    if len(result) == 0 or result[0] != 1:
+                        raise Exception(f"Connection test failed - unexpected tuple result: {result}")
+                else:
+                    # RealDictRow or similar object
+                    if hasattr(result, "__getitem__"):
+                        # Try to get the first value
+                        first_value = list(result.values())[0] if hasattr(result, "values") else result[0]
+                        if first_value != 1:
+                            raise Exception(f"Connection test failed - unexpected dict result: {result}")
+                    else:
+                        raise Exception(f"Connection test failed - unknown result type: {type(result)}")
 
             # Update statistics
             self._update_connection_stats()

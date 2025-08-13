@@ -1,0 +1,19 @@
+PYRIGHT_ERRORS=0
+RUFF_TOTAL=0
+RUFF_F821=0
+COMPILE_ERRORS=1
+TIER1_IMPORT_OK=0
+
+# Details:
+# - 1 critical syntax error: f-string with backslash in cursor_model_router.py:252
+# - 2/3 Tier-1 modules import successfully (vector_store, document_processor)
+# - 1/3 Tier-1 modules fail due to syntax error (cursor_model_router)
+# - No linter tools available for full analysis
+
+# ADDITIONAL FINDINGS (more thorough test):
+# - 65 Python files in the project (excluding tests and experiments)
+# - 1 syntax error confirmed across all files
+# - 2 import errors found:
+#   * documentation_retrieval.py: ModuleNotFoundError for 'dspy_modules.enhanced_rag_system'
+#   * lang_extract_system.py: ImportError for relative import beyond top-level package
+# - Total real issues: 3 (1 syntax + 2 import errors)

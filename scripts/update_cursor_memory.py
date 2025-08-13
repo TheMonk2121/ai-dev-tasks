@@ -1,91 +1,147 @@
 #!/usr/bin/env python3
 """
-Cursor Memory Context Updater
+Cursor Memory Context Auto-Update Helper (B-061)
 
-Automatically updates CURSOR_MEMORY_CONTEXT.md based on current backlog state
+Enhanced script to update 100_memory/100_cursor-memory-context.md based on current backlog state
 and system status. This ensures Cursor AI always has current context.
+
+Features:
+- Fenced sections for automated updates
+- Dry-run mode to preview changes
+- Improved backlog parsing
+- Better error handling and validation
 """
 
+import argparse
 import json
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
+# Fenced section markers for automated updates
 FENCE_PRIORITIES_START = "<!-- AUTO:current_priorities:start -->"
 FENCE_PRIORITIES_END = "<!-- AUTO:current_priorities:end -->"
 FENCE_HEALTH_START = "<!-- AUTO:doc_health:start -->"
 FENCE_HEALTH_END = "<!-- AUTO:doc_health:end -->"
+FENCE_COMPLETED_START = "<!-- AUTO:recently_completed:start -->"
+FENCE_COMPLETED_END = "<!-- AUTO:recently_completed:end -->"
 
 
-def extract_backlog_priorities():
-    """Extract current priorities from 000_backlog.md"""
-    backlog_file = Path("000_backlog.md")
+def parse_backlog_item(line: str) -> Optional[Dict[str, str]]:
+    """Parse a single backlog item line with improved error handling"""
+    if not line.strip() or "| B‑" not in line:
+        return None
+
+    try:
+        parts = [p.strip() for p in line.split("|")]
+        if len(parts) < 6:
+            return None
+
+        item_id = parts[1].strip()
+        title = parts[2].strip()
+        points = parts[3].strip()
+        status = parts[4].strip() if len(parts) > 4 else ""
+        problem = parts[5].strip() if len(parts) > 5 else ""
+
+        # Clean up the problem description
+        problem = re.sub(r"<!--.*?-->", "", problem).strip()
+
+        return {"id": item_id, "title": title, "points": points, "status": status, "problem": problem}
+    except Exception:
+        return None
+
+
+def extract_backlog_priorities() -> List[Dict[str, str]]:
+    """Extract current priorities from 000_core/000_backlog.md with improved parsing"""
+    backlog_file = Path("000_core/000_backlog.md")
     if not backlog_file.exists():
+        print(f"⚠️  Backlog file not found: {backlog_file}")
         return []
 
     priorities = []
 
-    with open(backlog_file, "r") as f:
-        content = f.read()
+    try:
+        with open(backlog_file, "r", encoding="utf-8") as f:
+            content = f.read()
 
-    # Extract todo items with 🔥 priority
-    lines = content.split("\n")
-    for line in lines:
-        if "| B‑" in line and "🔥" in line and "todo" in line:
-            # Parse backlog item
-            parts = [p.strip() for p in line.split("|")]
-            if len(parts) >= 8:
-                item_id = parts[1].strip()
-                title = parts[2].strip()
-                points = parts[3].strip()
-                problem = parts[5].strip()
+        # Extract todo items with 🔥 priority
+        lines = content.split("\n")
+        for line in lines:
+            if "| B‑" in line and "🔥" in line and "todo" in line:
+                item = parse_backlog_item(line)
+                if item:
+                    priorities.append(item)
 
-                # Clean up the problem description
-                problem = problem.replace("<!--score:", "").replace("-->", "").strip()
+        # Sort by priority (P0, P1, P2) and then by score
+        def priority_sort_key(item):
+            # Extract priority from ID (B-052-e, B-061, etc.)
+            priority_map = {"P0": 0, "P1": 1, "P2": 2}
+            # For now, sort by ID number as proxy for priority
+            try:
+                num = int(item["id"].split("-")[1])
+                return num
+            except:
+                return 999
 
-                priorities.append({"id": item_id, "title": title, "points": points, "problem": problem})
+        priorities.sort(key=priority_sort_key)
+        return priorities[:5]  # Top 5 priorities
 
-    return priorities[:3]  # Top 3 priorities
+    except Exception as e:
+        print(f"❌ Error parsing backlog: {e}")
+        return []
 
 
-def extract_completed_items():
-    """Extract recently completed items"""
-    backlog_file = Path("000_backlog.md")
+def extract_completed_items() -> List[Dict[str, str]]:
+    """Extract recently completed items with improved parsing"""
+    backlog_file = Path("000_core/000_backlog.md")
     if not backlog_file.exists():
         return []
 
     completed = []
 
-    with open(backlog_file, "r") as f:
-        content = f.read()
+    try:
+        with open(backlog_file, "r", encoding="utf-8") as f:
+            content = f.read()
 
-    # Look for completed items section
-    if "## ✅ **Completed Items**" in content:
-        completed_section = content.split("## ✅ **Completed Items**")[1].split("##")[0]
+        # Look for completed items section
+        if "## ✅ **Completed Items**" in content:
+            completed_section = content.split("## ✅ **Completed Items**")[1].split("##")[0]
 
-        # Extract last 3 completed items
-        lines = completed_section.split("\n")
-        for line in lines:
-            if "| C‑" in line and "✅ done" in line:
-                parts = [p.strip() for p in line.split("|")]
-                if len(parts) >= 6:
-                    item_id = parts[1].strip()
-                    title = parts[2].strip()
-                    completion_date = parts[5].strip()
+            # Extract completed items
+            lines = completed_section.split("\n")
+            for line in lines:
+                if "| B‑" in line and "✅ done" in line:
+                    item = parse_backlog_item(line)
+                    if item:
+                        completed.append(item)
 
-                    completed.append({"id": item_id, "title": title, "date": completion_date})
+        return completed[-5:]  # Last 5 completed
 
-    return completed[-3:]  # Last 3 completed
+    except Exception as e:
+        print(f"❌ Error parsing completed items: {e}")
+        return []
 
 
 def _replace_between_fences(text: str, start_marker: str, end_marker: str, replacement: str) -> str:
+    """Replace content between fenced markers"""
     if start_marker in text and end_marker in text:
         pattern = re.compile(re.escape(start_marker) + r"[\s\S]*?" + re.escape(end_marker))
         return pattern.sub(start_marker + "\n" + replacement.strip() + "\n" + end_marker, text)
     return text
 
 
-def load_doc_health():
+def _add_fenced_section(text: str, start_marker: str, end_marker: str, content: str) -> str:
+    """Add a new fenced section if it doesn't exist"""
+    if start_marker in text and end_marker in text:
+        return _replace_between_fences(text, start_marker, end_marker, content)
+    else:
+        # Add at the end before the last section
+        return text.rstrip() + "\n\n" + start_marker + "\n" + content + "\n" + end_marker + "\n"
+
+
+def load_doc_health() -> Dict[str, Any]:
     """Load health telemetry from docs_health.json or validation report."""
     health = {
         "files_checked": None,
@@ -93,6 +149,7 @@ def load_doc_health():
         "invariant_warnings": 0,
         "timestamp": datetime.now().isoformat(timespec="seconds"),
     }
+
     # Preferred source
     health_path = Path("docs_health.json")
     if health_path.exists():
@@ -103,25 +160,60 @@ def load_doc_health():
             health["anchor_warnings"] = sum(1 for w in warnings if "anchor" in w)
         except Exception:
             pass
+
     # Fallback to validation report
     report_path = Path("docs/validation_report.json")
     if report_path.exists():
         try:
             data = json.loads(report_path.read_text())
             health["timestamp"] = data.get("timestamp", health["timestamp"])
-            # Invariant warnings recorded in validation_results? We store warnings list
             warnings = data.get("warnings", [])
             health["invariant_warnings"] = sum(1 for w in warnings if isinstance(w, dict) and "invariant_issues" in w)
             if health["files_checked"] is None:
                 health["files_checked"] = data.get("files_checked")
         except Exception:
             pass
+
     return health
 
 
-def render_doc_health_block(health: dict) -> str:
+def render_priorities_block(priorities: List[Dict[str, str]]) -> str:
+    """Render priorities as a formatted block"""
+    if not priorities:
+        return "No current priorities found."
+
     lines = []
-    lines.append("### Documentation Health")
+    lines.append("### **Current Priorities**")
+    lines.append("")
+
+    for i, priority in enumerate(priorities, 1):
+        lines.append(f"{i}. **{priority['id']}**: {priority['title']} ({priority['points']} points)")
+        if priority["problem"]:
+            lines.append(f"   - {priority['problem']}")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+def render_completed_block(completed: List[Dict[str, str]]) -> str:
+    """Render completed items as a formatted block"""
+    if not completed:
+        return "No recently completed items."
+
+    lines = []
+    lines.append("### **Recently Completed**")
+    lines.append("")
+
+    for item in completed:
+        lines.append(f"- ✅ **{item['id']}**: {item['title']}")
+
+    return "\n".join(lines)
+
+
+def render_doc_health_block(health: Dict[str, Any]) -> str:
+    """Render documentation health as a formatted block"""
+    lines = []
+    lines.append("### **Documentation Health**")
     lines.append("")
     lines.append(f"- Files checked: {health.get('files_checked', 'n/a')}")
     lines.append(f"- Anchor warnings: {health.get('anchor_warnings', 0)}")
@@ -130,96 +222,99 @@ def render_doc_health_block(health: dict) -> str:
     return "\n".join(lines)
 
 
-def update_memory_context():
-    """Update CURSOR_MEMORY_CONTEXT.md with current state"""
+def update_memory_context(dry_run: bool = False) -> Tuple[bool, str]:
+    """Update 100_memory/100_cursor-memory-context.md with current state"""
 
     # Extract current state
     priorities = extract_backlog_priorities()
     completed = extract_completed_items()
+    health = load_doc_health()
 
     # Read current memory context
-    memory_file = Path("100_cursor-memory-context.md")
+    memory_file = Path("100_memory/100_cursor-memory-context.md")
     if not memory_file.exists():
-        print("❌ 100_cursor-memory-context.md not found")
-        return
+        return False, f"❌ Memory context file not found: {memory_file}"
 
-    with open(memory_file, "r") as f:
-        content = f.read()
+    try:
+        with open(memory_file, "r", encoding="utf-8") as f:
+            content = f.read()
+    except Exception as e:
+        return False, f"❌ Error reading memory context: {e}"
 
-    # Build Current Priorities block (rendered as list)
-    if priorities:
-        block = []
-        block.append("### **Immediate Focus (Next 1-2 weeks)**")
-        for i, priority in enumerate(priorities, 1):
-            block.append(f"{i}. **{priority['id']}**: {priority['title']} ({priority['points']} points)")
-            block.append(f"   - {priority['problem']}")
-        priorities_text = "\n".join(block) + "\n"
+    # Build updated content
+    updated_content = content
 
-        # Preferred: replace between fences
-        fenced_priorities = priorities_text.strip()
-        content_after_fence_try = _replace_between_fences(
-            content, FENCE_PRIORITIES_START, FENCE_PRIORITIES_END, fenced_priorities
-        )
-        if content_after_fence_try != content:
-            content = content_after_fence_try
-        else:
-            # Fallback: legacy section replacement
-            content = re.sub(
-                r"### \*\*Immediate Focus \(Next 1-2 weeks\)\*\*.*?(?=### \*\*Infrastructure Status\*\*)",
-                "\n" + priorities_text,
-                content,
-                flags=re.DOTALL,
-            )
-
-    # Update completed items
-    if completed:
-        completed_text = "\n### **Recently Completed**\n"
-        for item in completed:
-            completed_text += f"- ✅ **{item['id']}**: {item['title']} ({item['date']})\n"
-
-        # Add after infrastructure status
-        if "### **Infrastructure Status**" in content:
-            infrastructure_section = content.split("### **Infrastructure Status**")[1]
-            if "### **Recently Completed**" not in infrastructure_section:
-                # Insert after infrastructure status
-                content = re.sub(
-                    r"(### \*\*Infrastructure Status\*\*.*?)(\n## )",
-                    r"\1" + completed_text + r"\2",
-                    content,
-                    flags=re.DOTALL,
-                )
-
-    # Insert/replace Doc Health block
-    health = load_doc_health()
-    health_text = render_doc_health_block(health)
-    content = _replace_between_fences(content, FENCE_HEALTH_START, FENCE_HEALTH_END, health_text)
-    if FENCE_HEALTH_START not in content or FENCE_HEALTH_END not in content:
-        # Append a fenced Doc Health section if missing
-        content += "\n\n" + FENCE_HEALTH_START + "\n" + health_text + "\n" + FENCE_HEALTH_END + "\n"
-
-    # Update timestamp (keep existing format if present)
-    content = re.sub(
-        r"\*Last Updated: \d{4}-\d{2}-\d{2}\*", f'*Last Updated: {datetime.now().strftime("%Y-%m-%d")}*', content
+    # Update priorities section
+    priorities_text = render_priorities_block(priorities)
+    updated_content = _add_fenced_section(
+        updated_content, FENCE_PRIORITIES_START, FENCE_PRIORITIES_END, priorities_text
     )
 
-    # Write updated content
-    with open(memory_file, "w") as f:
-        f.write(content)
+    # Update completed items section
+    completed_text = render_completed_block(completed)
+    updated_content = _add_fenced_section(updated_content, FENCE_COMPLETED_START, FENCE_COMPLETED_END, completed_text)
 
-    print("✅ 100_cursor-memory-context.md updated successfully")
-    print(f"📋 Current priorities: {len(priorities)} items")
-    print(f"✅ Recent completions: {len(completed)} items")
+    # Update health section
+    health_text = render_doc_health_block(health)
+    updated_content = _add_fenced_section(updated_content, FENCE_HEALTH_START, FENCE_HEALTH_END, health_text)
+
+    # Update timestamp
+    updated_content = re.sub(
+        r"\*Last Updated: \d{4}-\d{2}-\d{2}\*",
+        f'*Last Updated: {datetime.now().strftime("%Y-%m-%d")}*',
+        updated_content,
+    )
+
+    # Show changes in dry-run mode
+    if dry_run:
+        print("🔍 DRY RUN - Preview of changes:")
+        print(f"📋 Priorities to update: {len(priorities)} items")
+        print(f"✅ Completed items to update: {len(completed)} items")
+        print(f"📊 Health data to update: {health.get('files_checked', 'n/a')} files checked")
+
+        if content != updated_content:
+            print("✅ Changes would be applied")
+            return True, "Dry run completed - changes would be applied"
+        else:
+            print("ℹ️  No changes needed")
+            return True, "Dry run completed - no changes needed"
+
+    # Write updated content
+    try:
+        with open(memory_file, "w", encoding="utf-8") as f:
+            f.write(updated_content)
+
+        return (
+            True,
+            f"✅ Memory context updated successfully\n📋 Priorities: {len(priorities)} items\n✅ Completed: {len(completed)} items",
+        )
+
+    except Exception as e:
+        return False, f"❌ Error writing memory context: {e}"
 
 
 def main():
-    """Main function"""
+    """Main function with command line argument support"""
+    parser = argparse.ArgumentParser(description="Update Cursor Memory Context")
+    parser.add_argument("--dry-run", action="store_true", help="Preview changes without applying them")
+    parser.add_argument("--verbose", action="store_true", help="Show detailed output")
+
+    args = parser.parse_args()
+
     print("🧠 Updating Cursor Memory Context...")
+    if args.dry_run:
+        print("🔍 Running in dry-run mode")
 
     try:
-        update_memory_context()
-        print("✅ Memory context updated successfully")
+        success, message = update_memory_context(dry_run=args.dry_run)
+        print(message)
+
+        if not success:
+            sys.exit(1)
+
     except Exception as e:
         print(f"❌ Error updating memory context: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -496,11 +496,10 @@ GitHub Actions + Dry-Run + PR Gate | B-052-a Safety & Lint Tests |
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-052-a"]}-->
 <!--score_total: 8.0-->
 
-| B‑052‑e | Auto-Push Prompt for Repo Maintenance | 🔧 | 1 | ✅ done | Add interactive prompt to push changes to GitHub
+| B‑052‑e | Auto-Push Prompt for Repo Maintenance | 🔧 | 1 | todo | Add interactive prompt to push changes to GitHub
 after maintenance | Interactive Prompt + Git Status Check + User Confirmation | B-052-a Safety & Lint Tests |
 <!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:["B-052-a"]}-->
 <!--score_total: 9.0-->
-<!--progress: Complete implementation with interactive prompt, git status checks, user confirmation, and shell wrapper-->
 
 | B‑052‑f | Enhanced Repository Maintenance Safety System | 🔥 | 3.5 | todo | Implement comprehensive safety system to
 prevent critical file archiving | Reference Tracking + Critical File Protection + Git Hooks + Recovery | B-052-a Safety
@@ -516,12 +515,11 @@ semantic checking | Local Pre-commit Hooks + Cursor AI + Reference Validation | 
 <!--progress: Complete implementation with comprehensive validation system, pre-commit hooks, test suite, and
 documentation-->
 
-| B‑061 | Memory Context Auto-Update Helper | 🔧 | 1 | ✅ done | Create script to update memory context from backlog with
+| B‑061 | Memory Context Auto-Update Helper | 🔧 | 1 | todo | Create script to update memory context from backlog with
 fenced sections | Backlog → Memory Helper + Fenced Sections + Dry-run | B-060 Documentation Coherence Validation System
 |
 <!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:["B-060"]}-->
 <!--score_total: 9.0-->
-<!--progress: Complete implementation with fenced sections, dry-run mode, improved parsing, and better error handling-->
 
 | B‑062 | Context Priority Guide Auto-Generation | 🔧 | 0.5 | todo | Create regen_guide.py to auto-generate context
 priority guide from file headers | Guide Generation + Cross-Reference Aggregation + Tier Lists | B-060 Documentation
@@ -529,12 +527,11 @@ Coherence Validation System |
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-060"]}-->
 <!--score_total: 8.0-->
 
-| B‑063 | Documentation Recovery & Rollback System | 🔧 | 1 | ✅ done | Implement rollback_doc.sh and git snapshot system
+| B‑063 | Documentation Recovery & Rollback System | 🔧 | 1 | todo | Implement rollback_doc.sh and git snapshot system
 for doc recovery | Git Snapshots + Rollback Script + Dashboard Integration | B-060 Documentation Coherence Validation
 System |
 <!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:["B-060"]}-->
 <!--score_total: 9.0-->
-<!--progress: Complete implementation with git snapshot system, rollback functionality, status monitoring, and proper error handling-->
 
 | B‑064 | Naming Convention Category Table | 🔧 | 0.5 | ✅ done | Add category table to 200_naming-conventions.md
 clarifying current buckets | Category Documentation + Prefix Clarification + No Mass Renaming | B-060 Documentation

@@ -29,7 +29,8 @@
     "python.analysis.autoImportUserSymbols": true,
     "python.analysis.autoImportPreferredFormat": "absolute",
     "python.analysis.extraPaths": [
-        "dspy-rag-system/src"
+        "dspy-rag-system/src",
+        "dspy-rag-system"
     ],
     "python.formatting.provider": "black",
     // Disable built-in linting to avoid conflicts; use Ruff extension instead
@@ -174,6 +175,7 @@
         "Mccabe",
         "setex",
         "Setex",
+        "Uncategorized",
         "Uncordon",
         "tulpn",
         "Tulpn",
@@ -194,8 +196,22 @@
         "tsquery",
         "tobytes",
         "ndarray",
+        "Chunker",
+        "chunker",
+        "fitz",
         "hnsw",
-        "HNSW"
+        "HNSW",
+        "zscore",
+        "TOPK",
+        "jsonify",
+        "MIXTRAL",
+        "pyright",
+        "PYRIGHT",
+        "rglob",
+        "doraise",
+        "OLLAMA",
+        "ollama",
+        "getcwd"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [
@@ -231,7 +247,8 @@
     // Ruff settings migrated away from legacy ruff-lsp; fixes/imports handled via codeActionsOnSave
     "cursorpyright.analysis.autoImportCompletions": true,
     "cursorpyright.analysis.extraPaths": [
-        "dspy-rag-system/src"
+        "dspy-rag-system/src",
+        "dspy-rag-system"
     ],
     "cursorpyright.analysis.typeCheckingMode": "basic"
 }

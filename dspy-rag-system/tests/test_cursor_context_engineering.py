@@ -12,7 +12,7 @@ import time
 # Add the src directory to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
-from dspy_modules.cursor_model_router import CursorModel, create_cursor_model_router
+from src.dspy_modules.cursor_model_router import CursorModel, create_cursor_model_router
 
 
 def test_context_engineering():

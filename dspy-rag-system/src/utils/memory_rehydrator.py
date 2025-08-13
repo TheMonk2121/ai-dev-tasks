@@ -28,7 +28,11 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from psycopg2.extras import RealDictCursor
 
-from ..dspy_modules.vector_store import HybridVectorStore  # public Module interface
+try:
+    from dspy_modules.vector_store import HybridVectorStore  # public Module interface
+except ImportError:
+    # Fallback for when running from outside src directory
+    from ..dspy_modules.vector_store import HybridVectorStore  # public Module interface
 
 # Repo-local imports: reuse your infra (no ad-hoc pooling)
 from .database_resilience import get_database_manager

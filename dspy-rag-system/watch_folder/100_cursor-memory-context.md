@@ -298,35 +298,3 @@ AI Development Ecosystem
 4. **File Management**: `400_guides/400_file-analysis-guide.md` (MANDATORY) → `200_setup/200_naming-conventions.md`
 
 <!-- CONTEXT_GUIDANCE_REFERENCE: 400_guides/400_documentation-reference.md -->
-
-<!-- AUTO:current_priorities:start -->
-### **Current Priorities**
-
-1. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
-   - todo
-
-2. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
-   - todo
-
-3. **B‑076**: Research-Based DSPy Assertions Implementation (🔥 points)
-   - todo
-
-4. **B‑078**: LangExtract Structured Extraction Service (🔥 points)
-   - todo
-
-5. **B‑052‑f**: Enhanced Repository Maintenance Safety System (🔥 points)
-   - todo
-<!-- AUTO:current_priorities:end -->
-
-<!-- AUTO:recently_completed:start -->
-No recently completed items.
-<!-- AUTO:recently_completed:end -->
-
-<!-- AUTO:doc_health:start -->
-### **Documentation Health**
-
-- Files checked: 5
-- Anchor warnings: 0
-- Invariant warnings: 0
-- Last run: Fri Aug  8 23:58:13 CDT 2025
-<!-- AUTO:doc_health:end -->

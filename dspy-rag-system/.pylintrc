@@ -1,0 +1,23 @@
+[MASTER]
+# Add the src directory to the Python path
+init-hook='import sys; sys.path.append("src")'
+
+[MESSAGES CONTROL]
+# Disable specific warnings that might be causing issues
+disable=C0114,C0115,C0116
+
+[REPORTS]
+# Set the output format
+output-format=text
+
+[FORMAT]
+# Maximum number of characters on a single line
+max-line-length=120
+
+[BASIC]
+# Regular expression which should only match function or class names
+good-names=i,j,k,ex,Run,_,id
+
+[MISCELLANEOUS]
+# List of note tags to take into consideration
+notes=
