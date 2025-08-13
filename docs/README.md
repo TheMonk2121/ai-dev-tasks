@@ -110,7 +110,8 @@ Three-Lens Document
 
 - [ ]**Language is clear**for the target audience
 
-## 📚**Additional Resources**###**Project Documentation**-**400_guides/400_project-overview.md**: Main project overview and quick start
+## 📚**Additional Resources**###**Project Documentation**-**400_guides/400_project-overview.md**: Main project overview
+and quick start
 
 - **400_guides/400_system-overview.md**: Comprehensive technical overview
 

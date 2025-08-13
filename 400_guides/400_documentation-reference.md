@@ -9,7 +9,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Complete documentation inventory and reference guide | When you need to find specific documentation or understand the full scope | Use the category sections below to locate the documentation you need |
+| Complete documentation inventory and reference guide | When you need to find specific documentation or understand the
+full scope | Use the category sections below to locate the documentation you need |
 
 ## 🎯 **Current Status**
 
@@ -40,7 +41,8 @@
 - **`100_memory/104_dspy-development-context.md`** - DSPy framework implementation details
 - **`200_setup/202_setup-requirements.md`** - Environment setup and dependencies
 - **`400_guides/400_context-priority-guide.md`** - Memory scaffolding and file organization
-- **`400_guides/400_guides/400_cursor-context-engineering-guide.md`** - Context engineering strategy and compatibility (appendix)
+- **`400_guides/400_guides/400_cursor-context-engineering-guide.md`** - Context engineering strategy and compatibility
+(appendix)
 - **`400_guides/400_guides/400_cursor-context-engineering-guide.md`** - Context engineering implementation
 
 ### **🔧 OPERATIONAL GUIDES (Production & Maintenance)**
@@ -54,7 +56,8 @@
 - **`400_guides/400_metadata-collection-guide.md`** - Metadata collection and management
   - Quick metadata reference: see `400_guides/400_metadata-collection-guide.md` (Quick reference section)
 - **`400_guides/400_few-shot-context-examples.md`** - Few-shot learning examples
-  - PRD optimization: see `000_core/001_create-prd.md` (skip rule), `000_core/002_generate-tasks.md` (PRD-less path), and `100_memory/100_backlog-guide.md` (decision matrix)
+- PRD optimization: see `000_core/001_create-prd.md` (skip rule), `000_core/002_generate-tasks.md` (PRD-less path), and
+`100_memory/100_backlog-guide.md` (decision matrix)
 - **`400_guides/400_n8n-backlog-scrubber-guide.md`** - n8n workflow automation
 
 ### **📊 RESEARCH DOCUMENTATION (500-Series)**

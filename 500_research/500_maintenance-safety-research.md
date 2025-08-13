@@ -7,13 +7,17 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Comprehensive research on repository maintenance safety and critical file protection systems | When implementing automated maintenance or safety systems | Review findings and implement recommended safety mechanisms |
+| Comprehensive research on repository maintenance safety and critical file protection systems | When implementing
+automated maintenance or safety systems | Review findings and implement recommended safety mechanisms |
 
-- **what this file is**: Deep research into repository maintenance safety, critical file protection, and automated safety systems to prevent accidental file loss.
+- **what this file is**: Deep research into repository maintenance safety, critical file protection, and automated
+safety systems to prevent accidental file loss.
 
-- **read when**: When implementing automated maintenance scripts, designing safety systems, or after experiencing file loss incidents.
+- **read when**: When implementing automated maintenance scripts, designing safety systems, or after experiencing file
+loss incidents.
 
-- **do next**: Review the implementation recommendations and safety patterns, then implement the multi-layer safety system.
+- **do next**: Review the implementation recommendations and safety patterns, then implement the multi-layer safety
+system.
 
 Backlog link: B-005
 
@@ -136,7 +140,8 @@ Backlog link: B-005
 
 ### Recent Incident Analysis
 
-- **What Happened**: Repository maintenance script archived `dspy-rag-system/docs/CURRENT_STATUS.md` and other critical files
+- **What Happened**: Repository maintenance script archived `dspy-rag-system/docs/CURRENT_STATUS.md` and other critical
+files
 - **Impact**: Documentation references became broken, system status tracking lost
 - **Root Cause**: Content-based duplicate detection without reference checking
 - **Recovery**: Manual restoration and updates to reflect current architecture

@@ -412,7 +412,8 @@ python3 demo_mission_dashboard.py stats
 
 ### Quick start
 
-- For rollback, health checks, and emergency recovery, see `400_guides/400_migration-upgrade-guide.md` (Troubleshooting quick start).
+- For rollback, health checks, and emergency recovery, see `400_guides/400_migration-upgrade-guide.md` (Troubleshooting
+quick start).
 
 ### Common Issues
 

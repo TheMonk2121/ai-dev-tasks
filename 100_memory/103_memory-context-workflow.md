@@ -62,7 +62,8 @@
 ### **Feature Development Process**
 
 1.**Check `000_core/000_backlog.md`**for current priorities and dependencies
-2.**Use existing workflows**(`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`)
+2.**Use existing workflows**(`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`,
+`000_core/003_process-task-list.md`)
 3.**Follow naming conventions**from `200_setup/200_naming-conventions.md`
 4.**Update completion summaries**when finishing major features
 5.**Use research framework**(`500_research/500_memory-arch-research.md`) for systematic research
@@ -85,7 +86,8 @@
 
 ### **Cognitive Scaffolding System**
 
-Our documentation system uses **cognitive scaffolding** with three-digit prefixes and HTML cross-references to maintain coherence. The system balances**structure**(rigid naming conventions) with**elasticity**(automated validation and
+Our documentation system uses **cognitive scaffolding** with three-digit prefixes and HTML cross-references to maintain
+coherence. The system balances**structure**(rigid naming conventions) with**elasticity**(automated validation and
 AI-assisted updates).
 
 ### **Key Safeguards**-**Automated validation**with Cursor AI semantic checking
@@ -100,13 +102,15 @@ AI-assisted updates).
 
 ### **File Naming System**
 
-Our **three-digit prefix hierarchy** creates semantic ordering for both humans and AI. The naming flow uses a **cascading decision process**: purpose check → priority assessment → prefix assignment → descriptive naming →
+Our **three-digit prefix hierarchy** creates semantic ordering for both humans and AI. The naming flow uses a
+**cascading decision process**: purpose check → priority assessment → prefix assignment → descriptive naming →
 cross-reference integration. This creates a **self-documenting system**where filenames provide instant context about
 their role in the ecosystem.
 
 ### **AI File Analysis Strategy**
 
-When Cursor AI restarts, it follows a **structured reading strategy**: First reads `100_memory/100_cursor-memory-context.md` (30
+When Cursor AI restarts, it follows a **structured reading strategy**: First reads
+`100_memory/100_cursor-memory-context.md` (30
 seconds, 80% context), then `000_core/000_backlog.md` (current priorities), then `400_guides/400_system-overview.md`
 (technical architecture). Ancillary files are read as needed for specific tasks. Scripts are only read when
 implementation details are required.
@@ -122,7 +126,8 @@ When creating new files, follow a **6-step decision process**:
 3.**Choose prefix range**(000-099 for core, 100-199 for guides, etc.)
 4.**Create descriptive name**(kebab-case, self-documenting)
 5.**Add cross-references**and consider AI rehydration
-6.**Validate against existing patterns**###**Documentation Placement Logic**When determining where to place new documentation, follow a**5-step process**:
+6.**Validate against existing patterns**###**Documentation Placement Logic**When determining where to place new
+documentation, follow a**5-step process**:
 
 1.**Assess content type and scope**(system-wide vs. workflow vs. setup)
 2.**Choose primary location**based on content (400-499 for concepts, 200-299 for processes)
@@ -132,7 +137,8 @@ When creating new files, follow a **6-step decision process**:
 
 ### **Workflow Chain Preservation**
 
-Maintain the **workflow chain**: `000_core/000_backlog.md` → `000_core/001_create-prd.md` → `000_core/002_generate-tasks.md` →
+Maintain the **workflow chain**: `000_core/000_backlog.md` → `000_core/001_create-prd.md` →
+`000_core/002_generate-tasks.md` →
 `000_core/003_process-task-list.md`
 
 - **Backlog**: Source of truth for priorities and scoring

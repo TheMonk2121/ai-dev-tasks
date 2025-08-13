@@ -4,7 +4,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Guide for setting up and using folder monitoring | Setting up file monitoring or configuring watch services | Configure watch folders or monitor current setup |
+| Guide for setting up and using folder monitoring | Setting up file monitoring or configuring watch services |
+Configure watch folders or monitor current setup |
 
 
 

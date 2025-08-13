@@ -10,7 +10,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to new files and update existing ones |
+| File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to
+new files and update existing ones |
 
 
 
@@ -18,7 +19,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to new files and update existing ones |
+| File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to
+new files and update existing ones |
 
 
 
@@ -29,14 +31,22 @@
 This table clarifies the buckets for our numeric prefixes, making it easier to categorize and find files.
 
 | Prefix Range | Category Name                 | Purpose                                                                 | Examples                                                              |
-| :----------- | :---------------------------- | :---------------------------------------------------------------------- | :-------------------------------------------------------------------- |
-| `000-099`    | Core Workflow & Planning      | Core processes, backlog, PRDs, and high-level project plans.            | `000_core/000_backlog.md`, `000_core/001_create-prd.md`                                 |
-| `100-199`    | Guides & Automation           | Memory context, workflow guides, and automation tools.                  | `100_memory/100_cursor-memory-context.md`, `100_memory/100_backlog-guide.md`                |
-| `200-299`    | Configuration & Setup         | Environment setup, naming conventions, and tool configuration.          | `200_setup/200_naming-conventions.md`, `200_setup/202_setup-requirements.md`              |
-| `300-399`    | Templates & Examples          | Reusable templates, documentation examples, and few-shot prompts.       | `300_examples/300_documentation-example.md`, `400_guides/400_few-shot-context-examples.md`    |
-| `400-499`    | System Architecture & Overviews | High-level system design, project overviews, and context guides.        | `400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`                   |
-| `500-599`    | Research, Testing & Analysis  | Research, benchmarks, testing, observability, and completion summaries. | `500_research/500_dspy-research.md`, `500_test-harness-guide.md`                   |
-| `600-999`    | Archives & Legacy             | Deprecated files, historical archives, and legacy documentation.        | `600_archives/`, `docs/legacy/`                                       |
+| :----------- | :---------------------------- | :----------------------------------------------------------------------
+| :-------------------------------------------------------------------- |
+| `000-099` | Core Workflow & Planning | Core processes, backlog, PRDs, and high-level project plans. |
+`000_core/000_backlog.md`, `000_core/001_create-prd.md` |
+| `100-199` | Guides & Automation | Memory context, workflow guides, and automation tools. |
+`100_memory/100_cursor-memory-context.md`, `100_memory/100_backlog-guide.md` |
+| `200-299` | Configuration & Setup | Environment setup, naming conventions, and tool configuration. |
+`200_setup/200_naming-conventions.md`, `200_setup/202_setup-requirements.md` |
+| `300-399` | Templates & Examples | Reusable templates, documentation examples, and few-shot prompts. |
+`300_examples/300_documentation-example.md`, `400_guides/400_few-shot-context-examples.md` |
+| `400-499` | System Architecture & Overviews | High-level system design, project overviews, and context guides. |
+`400_guides/400_system-overview.md`, `400_guides/400_project-overview.md` |
+| `500-599` | Research, Testing & Analysis | Research, benchmarks, testing, observability, and completion summaries. |
+`500_research/500_dspy-research.md`, `500_test-harness-guide.md` |
+| `600-999` | Archives & Legacy | Deprecated files, historical archives, and legacy documentation. | `600_archives/`,
+`docs/legacy/` |
 
 ### Integration with Development Workflow
 
@@ -58,7 +68,9 @@ The naming system **integrates seamlessly**with our development workflow. When c
 
 - **AI-friendly naming**ensures files are discoverable by Cursor AI
 
-The result is a**living naming system**that scales with your project while maintaining the cognitive scaffolding that makes the documentation coherent and AI-friendly. Each new file automatically fits into the existing hierarchy, making it easy for both humans and AI to understand its role and importance in the overall system.
+The result is a**living naming system**that scales with your project while maintaining the cognitive scaffolding that
+makes the documentation coherent and AI-friendly. Each new file automatically fits into the existing hierarchy, making
+it easy for both humans and AI to understand its role and importance in the overall system.
 
 ## 🔄 File Generation {#file-generation}
 
@@ -122,23 +134,28 @@ The result is a**living naming system**that scales with your project while maint
 
 - **Rarely relevant**→ Lower priority (specialized guides)
 
-### Step 3: Choose the Right Prefix Range**000-099: Core Planning & Context**- Backlog, project overview, system overview
+### Step 3: Choose the Right Prefix Range**000-099: Core Planning & Context**- Backlog, project overview, system
+overview
 
 - Files that give immediate understanding of the project
 
-- Essential for anyone working on the project**100-199: Memory & Guides**- Memory context, backlog guide, automation patterns
+- Essential for anyone working on the project**100-199: Memory & Guides**- Memory context, backlog guide, automation
+patterns
 
 - Files that help with ongoing work and decision-making
 
-- Important for regular development activities**200-299: Configuration & Setup**- Naming conventions, model config, setup requirements
+- Important for regular development activities**200-299: Configuration & Setup**- Naming conventions, model config,
+setup requirements
 
 - Files that help with environment and tool setup
 
-- Important when setting up or configuring**400-499: Architecture & Overview**- System overview, project overview, context priority guide
+- Important when setting up or configuring**400-499: Architecture & Overview**- System overview, project overview,
+context priority guide
 
 - Files that explain the big picture and relationships
 
-- Essential for understanding the system architecture**500+: Research & Meta**- Completion summaries, research notes, benchmarks
+- Essential for understanding the system architecture**500+: Research & Meta**- Completion summaries, research notes,
+benchmarks
 
 - Files that provide historical context and analysis
 

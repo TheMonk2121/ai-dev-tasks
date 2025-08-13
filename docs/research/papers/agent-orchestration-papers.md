@@ -28,7 +28,8 @@
 
 - **Citation**: Full citation to be added
 
-## 🔗 **Related Documentation**- `500_research/500_agent-orchestration-research.md` - Our internal agent orchestration research summary
+## 🔗 **Related Documentation**- `500_research/500_agent-orchestration-research.md` - Our internal agent orchestration
+research summary
 
 - `400_guides/400_system-overview.md` - System architecture overview
 

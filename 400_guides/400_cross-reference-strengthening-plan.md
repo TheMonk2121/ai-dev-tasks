@@ -44,25 +44,36 @@
 ## Cross-reference matrix
 
 - Primary entry points
-  - `100_memory/100_cursor-memory-context.md` → modules: `400_guides/400_context-priority-guide.md`, `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
-  - `400_guides/400_context-priority-guide.md` → modules: `400_guides/400_system-overview.md`, `400_guides/400_testing-strategy-guide.md`, `400_guides/400_deployment-environment-guide.md`
+- `100_memory/100_cursor-memory-context.md` → modules: `400_guides/400_context-priority-guide.md`,
+`400_guides/400_system-overview.md`, `000_core/000_backlog.md`
+- `400_guides/400_context-priority-guide.md` → modules: `400_guides/400_system-overview.md`,
+`400_guides/400_testing-strategy-guide.md`, `400_guides/400_deployment-environment-guide.md`
 
 - System and project overview
-  - `400_guides/400_system-overview.md` → modules: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_context-priority-guide.md`
-  - `400_guides/400_project-overview.md` → modules: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_system-overview.md`
-  - `000_core/000_backlog.md` → modules: `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`
+- `400_guides/400_system-overview.md` → modules: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`,
+`400_guides/400_context-priority-guide.md`
+- `400_guides/400_project-overview.md` → modules: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`,
+`400_guides/400_system-overview.md`
+- `000_core/000_backlog.md` → modules: `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`,
+`400_guides/400_project-overview.md`
 
 - Workflow
-  - `000_core/001_create-prd.md` → modules: `400_guides/400_testing-strategy-guide.md`, `400_guides/400_deployment-environment-guide.md`, `400_guides/400_migration-upgrade-guide.md`
-  - `000_core/002_generate-tasks.md` → modules: `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_testing-strategy-guide.md`
-  - `000_core/003_process-task-list.md` → modules: `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_deployment-environment-guide.md`
+- `000_core/001_create-prd.md` → modules: `400_guides/400_testing-strategy-guide.md`,
+`400_guides/400_deployment-environment-guide.md`, `400_guides/400_migration-upgrade-guide.md`
+- `000_core/002_generate-tasks.md` → modules: `000_core/000_backlog.md`, `400_guides/400_system-overview.md`,
+`400_guides/400_testing-strategy-guide.md`
+- `000_core/003_process-task-list.md` → modules: `000_core/000_backlog.md`, `400_guides/400_system-overview.md`,
+`400_guides/400_deployment-environment-guide.md`
 
 - Implementation essentials
-  - `100_memory/104_dspy-development-context.md` → modules: `400_guides/400_system-overview.md`, `400_guides/400_testing-strategy-guide.md`, `000_core/000_backlog.md`
-  - `200_setup/202_setup-requirements.md` → modules: `400_guides/400_deployment-environment-guide.md`, `400_guides/400_system-overview.md`
+- `100_memory/104_dspy-development-context.md` → modules: `400_guides/400_system-overview.md`,
+`400_guides/400_testing-strategy-guide.md`, `000_core/000_backlog.md`
+- `200_setup/202_setup-requirements.md` → modules: `400_guides/400_deployment-environment-guide.md`,
+`400_guides/400_system-overview.md`
 
 - Consolidated reference guides
-  - Each `400_*` guide → modules: `400_guides/400_system-overview.md` plus 1–2 relevant peers (e.g., testing/performance for integration)
+- Each `400_*` guide → modules: `400_guides/400_system-overview.md` plus 1–2 relevant peers (e.g., testing/performance
+for integration)
 
 ## Automation & guardrails
 

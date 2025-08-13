@@ -19,7 +19,8 @@
 
 - **do next**: Use `#⚡ Quick Start` for env setup; review `#🏗️ Deployment Architecture` and `#🚀 Deployment Procedures`.
 
-- **anchors**: `tldr`, `quick-start`, `deployment architecture`, `environment setup`, `deployment procedures`, `monitoring & health checks`, `rollback procedures`
+- **anchors**: `tldr`, `quick-start`, `deployment architecture`, `environment setup`, `deployment procedures`,
+`monitoring & health checks`, `rollback procedures`
 
 <!-- ANCHOR: quick-start -->
 {#quick-start}

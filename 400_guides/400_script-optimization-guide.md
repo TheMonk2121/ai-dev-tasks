@@ -4,7 +4,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Guide for optimizing script performance and efficiency | Optimizing scripts or improving performance | Apply optimization techniques to current scripts |
+| Guide for optimizing script performance and efficiency | Optimizing scripts or improving performance | Apply
+optimization techniques to current scripts |
 
 
 

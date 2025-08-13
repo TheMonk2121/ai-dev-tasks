@@ -33,15 +33,20 @@ Backlog link: B-045, B-077
 
 ## Key Findings
 
-- Hybrid dense+sparse significantly improves recall/precision over pure vector search (see docs/research/papers/rag-papers.md; docs/research/articles/rag-articles.md)
+- Hybrid dense+sparse significantly improves recall/precision over pure vector search (see
+docs/research/papers/rag-papers.md; docs/research/articles/rag-articles.md)
 
-- Smaller, semantically coherent chunks (≈100–300 words/tokens) outperform large blocks; overlap prevents boundary loss (docs/research/articles/rag-articles.md; docs/research/tutorials/rag-tutorials.md)
+- Smaller, semantically coherent chunks (≈100–300 words/tokens) outperform large blocks; overlap prevents boundary loss
+(docs/research/articles/rag-articles.md; docs/research/tutorials/rag-tutorials.md)
 
-- Span-level grounding (character offsets) increases trust and enables automatic faithfulness checks (docs/research/articles/rag-articles.md)
+- Span-level grounding (character offsets) increases trust and enables automatic faithfulness checks
+(docs/research/articles/rag-articles.md)
 
-- Multi-stage retrieval (decomposition, PRF) helps complex queries at modest latency cost (docs/research/papers/rag-papers.md; docs/research/tutorials/rag-tutorials.md)
+- Multi-stage retrieval (decomposition, PRF) helps complex queries at modest latency cost
+(docs/research/papers/rag-papers.md; docs/research/tutorials/rag-tutorials.md)
 
-- Knowledge-augmented variants (GraphRAG/KAG) benefit multi-hop, but can be phased in later (docs/research/papers/rag-papers.md)
+- Knowledge-augmented variants (GraphRAG/KAG) benefit multi-hop, but can be phased in later
+(docs/research/papers/rag-papers.md)
 
 - Enable chunk-level retrieval and citation
 
@@ -120,7 +125,8 @@ Backlog link: B-045, B-077
 
 - Integrate structured extraction with RAG
 
-## 🔗 **Implementation Integration**###**Current RAG Implementation**-**`dspy-rag-system/`**- Current RAG system implementation
+## 🔗 **Implementation Integration**###**Current RAG Implementation**-**`dspy-rag-system/`**- Current RAG system
+implementation
 
 - **PostgreSQL + PGVector**- Vector database foundation
 
@@ -162,7 +168,8 @@ Backlog link: B-045, B-077
 
 - **Span-level Grounding**: Character offset tracking and citation
 
-## 🚀 **Implementation Recommendations**###**Immediate Actions (Next 2-4 weeks)**####**1. Implement Hybrid Search**- [ ]**Add PostgreSQL Full-Text Search**: Implement BM25 alongside PGVector
+## 🚀 **Implementation Recommendations**###**Immediate Actions (Next 2-4 weeks)**####**1. Implement Hybrid Search**- [
+]**Add PostgreSQL Full-Text Search**: Implement BM25 alongside PGVector
 
 - [ ] **Result Merging**: Create intelligent merging of dense and sparse results
 
@@ -186,7 +193,8 @@ Backlog link: B-045, B-077
 
 - [ ] **Citation Format**: Standardize citation format for answers
 
-### **Medium-term Enhancements (Next 1-2 months)**####**4. Multi-Stage Retrieval**- [ ]**Query Decomposition**: Implement complex query breakdown
+### **Medium-term Enhancements (Next 1-2 months)**####**4. Multi-Stage Retrieval**- [ ]**Query Decomposition**:
+Implement complex query breakdown
 
 - [ ] **Pseudo-relevance Feedback**: Add query expansion capabilities
 
@@ -202,7 +210,8 @@ Backlog link: B-045, B-077
 
 - [ ] **Multi-hop Queries**: Enable queries requiring multiple steps
 
-### **Long-term Strategy (Next 3-6 months)**####**6. Advanced Features**- [ ]**Multi-modal RAG**: Handle images, diagrams, and rich content
+### **Long-term Strategy (Next 3-6 months)**####**6. Advanced Features**- [ ]**Multi-modal RAG**: Handle images,
+diagrams, and rich content
 
 - [ ] **Real-time Updates**: Enable live document updates and re-indexing
 

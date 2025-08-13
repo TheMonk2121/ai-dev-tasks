@@ -13,7 +13,9 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Task generation workflow that breaks down PRDs or backlog items into executable tasks with testing, quality gates, and acceptance criteria | When you need to convert a PRD or backlog item into actionable tasks | 1) Parse PRD/backlog item; 2) Use task template; 3) Add testing requirements; 4) Set quality gates |
+| Task generation workflow that breaks down PRDs or backlog items into executable tasks with testing, quality gates, and
+acceptance criteria | When you need to convert a PRD or backlog item into actionable tasks | 1) Parse PRD/backlog item;
+2) Use task template; 3) Add testing requirements; 4) Set quality gates |
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Task generation workflow maintained
 

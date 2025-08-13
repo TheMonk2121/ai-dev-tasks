@@ -10,7 +10,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Guide for prioritizing context and documentation access | Organizing documentation or setting up new systems | Apply priority system to current documentation |
+| Guide for prioritizing context and documentation access | Organizing documentation or setting up new systems | Apply
+priority system to current documentation |
 
 
 
@@ -18,7 +19,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Guide for prioritizing context and documentation access | Organizing documentation or setting up new systems | Apply priority system to current documentation |
+| Guide for prioritizing context and documentation access | Organizing documentation or setting up new systems | Apply
+priority system to current documentation |
 
 
 
@@ -40,13 +42,18 @@
 | Backlog & priorities | 000_core/000_backlog.md | — | Always for work selection | Current focus and dependencies |
 | Testing | 400_guides/400_testing-strategy-guide.md | — | Before writing tests | Strategy, pyramid, quality gates |
 | Deployment | 400_guides/400_deployment-environment-guide.md | — | Before shipping | Procedures, rollback, monitoring |
-| Migration | 400_guides/400_migration-upgrade-guide.md | — | Before/after breaking changes | Pre-checks, validation, rollback |
-| Integration | 400_guides/400_integration-patterns-guide.md | — | Before integrating components | Patterns, data flow, error handling |
-| Performance | 400_guides/400_performance-optimization-guide.md | — | Before/after perf changes | Metrics, tuning, troubleshooting |
-| Security | 400_guides/400_security-best-practices-guide.md | — | Before risky changes | Threat model, validation, response |
+| Migration | 400_guides/400_migration-upgrade-guide.md | — | Before/after breaking changes | Pre-checks, validation,
+rollback |
+| Integration | 400_guides/400_integration-patterns-guide.md | — | Before integrating components | Patterns, data flow,
+error handling |
+| Performance | 400_guides/400_performance-optimization-guide.md | — | Before/after perf changes | Metrics, tuning,
+troubleshooting |
+| Security | 400_guides/400_security-best-practices-guide.md | — | Before risky changes | Threat model, validation,
+response |
 | Setup | 200_setup/202_setup-requirements.md | — | New env or machine | One-stop environment setup |
 | Model config | 200_setup/202_setup-requirements.md | — | Model/runtime changes | Clear, reproducible config |
-| DSPy context | 100_memory/100_memory/104_dspy-development-context.md | — | Deep implementation | Reasoning, modules, guard-rails |
+| DSPy context | 100_memory/100_memory/104_dspy-development-context.md | — | Deep implementation | Reasoning, modules,
+guard-rails |
 
 ## Critical Path
 
@@ -63,7 +70,8 @@
 - Performance → `400_guides/400_performance-optimization-guide.md`
 - Integration → `400_guides/400_integration-patterns-guide.md`
 
-## **AI File Analysis Strategy** When Cursor AI restarts or needs to rehydrate context, it follows a **structured reading strategy** designed to maximize efficiency while maintaining comprehensive understanding
+## **AI File Analysis Strategy** When Cursor AI restarts or needs to rehydrate context, it follows a **structured
+reading strategy** designed to maximize efficiency while maintaining comprehensive understanding
 
 ### **Primary Go-To Files (Read First - 2-3 minutes)**
 
@@ -90,7 +98,8 @@
    - Essential for understanding the broader technical landscape
    - Helps with implementation decisions and system integration
 
-### **📋 Crucial Ancillary Files (Read as Needed)**1.**`400_guides/400_context-priority-guide.md`**-**IMPORTANT**- When understanding file organization and relationships
+### **📋 Crucial Ancillary Files (Read as Needed)**1.**`400_guides/400_context-priority-guide.md`**-**IMPORTANT**- When
+understanding file organization and relationships
 
 - When finding related files for specific tasks
 - When understanding the cognitive scaffolding system
@@ -102,7 +111,8 @@
 - When understanding the overall development approach
 - When onboarding to the project
 
-3.**`200_setup/200_setup/200_setup/200_naming-conventions.md`**-**IMPORTANT**- When understanding file organization principles
+3.**`200_setup/200_setup/200_setup/200_naming-conventions.md`**-**IMPORTANT**- When understanding file organization
+principles
 
 - When suggesting new file names or understanding existing ones
 - When understanding the three-digit prefix system
@@ -110,11 +120,13 @@
 
 ### **🔧 Script and Code Analysis Strategy**
 
-- *Scripts (Read When Relevant):**-**`scripts/repo_maintenance.py`**- When discussing repository maintenance, file organization, or automation
+- *Scripts (Read When Relevant):**-**`scripts/repo_maintenance.py`**- When discussing repository maintenance, file
+organization, or automation
 
 - **`scripts/update_cursor_memory.py`**- When discussing memory context updates or automation
 
-- **`dspy-rag-system/`**files - When discussing core AI system, RAG capabilities, or technical implementation**Code Analysis Pattern:**1.**Start with documentation**to understand system architecture
+- **`dspy-rag-system/`**files - When discussing core AI system, RAG capabilities, or technical implementation**Code
+Analysis Pattern:**1.**Start with documentation**to understand system architecture
 2.**Read scripts only when**task requires implementation details
 3.**Focus on specific script**relevant to current task
 4.**Use documentation**to understand what code should do before reading it
@@ -136,7 +148,8 @@
 
 **For complex tasks:**
 
-- Read relevant workflow files (`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`)
+- Read relevant workflow files (`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`,
+`000_core/003_process-task-list.md`)
 - Check specific domain files based on task type
 - Reference completion summaries for historical context
 
@@ -154,11 +167,14 @@ Cognitive scaffolding system makes this possible by organizing files by priority
 
 - Before writing new code: run a quick repo search (exclude archives) and check 400_/500_ for existing modules.
 
-- If an existing module covers ≥70% of the need, extend it; otherwise create a new module in the owner component (see `400_guides/400_system-overview.md`).
+- If an existing module covers ≥70% of the need, extend it; otherwise create a new module in the owner component (see
+`400_guides/400_system-overview.md`).
 
-- Add a minimal test first and backlink the module in the relevant 400_*guide; if research‑driven, add a line in the paired 500_*file.
+- Add a minimal test first and backlink the module in the relevant 400_*guide; if research‑driven, add a line in the
+paired 500_*file.
 
-## **Documentation Placement Logic Flow** When determining where to place new documentation content, follow this **structured decision process** designed to maximize discoverability and coherence
+## **Documentation Placement Logic Flow** When determining where to place new documentation content, follow this
+**structured decision process** designed to maximize discoverability and coherence
 
 ### **Step 1: Assess the Content Type and Scope**
 
@@ -170,7 +186,8 @@ Cognitive scaffolding system makes this possible by organizing files by priority
 
 - **Research or analysis**→ Research documentation (500+)
 
-- **Memory or context**→ Memory documentation (100-199)**Determine the audience:**-**Everyone needs to know**→ Essential files (000-099, 400-499)
+- **Memory or context**→ Memory documentation (100-199)**Determine the audience:**-**Everyone needs to know**→ Essential
+files (000-099, 400-499)
 
 - **Specific workflows need**→ Workflow files (100-199)
 
@@ -180,17 +197,22 @@ Cognitive scaffolding system makes this possible by organizing files by priority
 
 ### **Step 2: Choose Primary Location Based on Content**
 
-- *For system-wide concepts:**-**`400_guides/400_context-priority-guide.md`**- File organization, cognitive scaffolding, AI analysis strategies
+- *For system-wide concepts:**-**`400_guides/400_context-priority-guide.md`**- File organization, cognitive scaffolding,
+AI analysis strategies
 
 - **`400_guides/400_system-overview.md`**- Technical architecture, system relationships
 
-- **`400_guides/400_project-overview.md`**- High-level project purpose and workflow**For processes and workflows:**-**`200_setup/200_setup/200_setup/200_naming-conventions.md`**- File naming, generation processes, conventions
+- **`400_guides/400_project-overview.md`**- High-level project purpose and workflow**For processes and
+workflows:**-**`200_setup/200_setup/200_setup/200_naming-conventions.md`**- File naming, generation processes,
+conventions
 
 - **`100_memory/100_backlog-guide.md`**- Backlog management processes
 
-- **`000_core/001_create-prd.md`**- PRD creation workflows**For memory and context:**-**`100_memory/100_cursor-memory-context.md`**- Quick reference summaries
+- **`000_core/001_create-prd.md`**- PRD creation workflows**For memory and
+context:**-**`100_memory/100_cursor-memory-context.md`**- Quick reference summaries
 
-- **`400_guides/400_context-priority-guide.md`**- Detailed explanations**For configuration and setup:**-**`200_setup/202_setup-requirements.md`**- Environment setup and model/runtime changes
+- **`400_guides/400_context-priority-guide.md`**- Detailed explanations**For configuration and
+setup:**-**`200_setup/202_setup-requirements.md`**- Environment setup and model/runtime changes
 
 ### **Step 3: Determine if Multiple Locations Are Needed**
 
@@ -198,11 +220,15 @@ Cognitive scaffolding system makes this possible by organizing files by priority
 
 - **Is this a specific process for one workflow?**→ Single location
 
-- **Is this a quick reference that should be easily accessible?**→ Memory context + detailed location**Examples of multi-location content:**-**File naming system**→ `200_setup/200_setup/200_setup/200_naming-conventions.md` (detailed) + `100_memory/100_cursor-memory-context.md` (quick reference)
+- **Is this a quick reference that should be easily accessible?**→ Memory context + detailed location**Examples of
+multi-location content:**-**File naming system**→ `200_setup/200_setup/200_setup/200_naming-conventions.md` (detailed) +
+`100_memory/100_cursor-memory-context.md` (quick reference)
 
-- **AI analysis strategy**→ `400_guides/400_context-priority-guide.md` (detailed) + `100_memory/100_cursor-memory-context.md` (quick reference)
+- **AI analysis strategy**→ `400_guides/400_context-priority-guide.md` (detailed) +
+`100_memory/100_cursor-memory-context.md` (quick reference)
 
-- **Documentation strategy**→ `400_guides/400_context-priority-guide.md` (detailed) + `100_memory/100_cursor-memory-context.md` (summary)
+- **Documentation strategy**→ `400_guides/400_context-priority-guide.md` (detailed) +
+`100_memory/100_cursor-memory-context.md` (summary)
 
 ### **Step 4: Consider the Reading Pattern**
 
@@ -212,7 +238,8 @@ Cognitive scaffolding system makes this possible by organizing files by priority
 
 - **When setting up or configuring**→ Setup files (read when needed)
 
-- **When understanding the system**→ Overview files (read for big picture)**Consider the cognitive scaffolding:**-**High priority**→ Files read first (000-099, 400-499)
+- **When understanding the system**→ Overview files (read for big picture)**Consider the cognitive scaffolding:**-**High
+priority**→ Files read first (000-099, 400-499)
 
 - **Medium priority**→ Files read when relevant (100-199, 200-299)
 
@@ -236,17 +263,22 @@ Cognitive scaffolding system makes this possible by organizing files by priority
 
 - **Audience**: Everyone creating files
 
-- *Step 2: Primary Location**-**`200_setup/200_setup/200_setup/200_naming-conventions.md`**- Dedicated file for naming conventions
+- *Step 2: Primary Location**-**`200_setup/200_setup/200_setup/200_naming-conventions.md`**- Dedicated file for naming
+conventions
 
-- **`100_memory/100_cursor-memory-context.md`**- Quick reference for instant access**Step 3: Multi-location Decision**- ✅**Multiple locations needed**- Core concept that affects multiple areas
+- **`100_memory/100_cursor-memory-context.md`**- Quick reference for instant access**Step 3: Multi-location Decision**-
+✅**Multiple locations needed**- Core concept that affects multiple areas
 
 - **Detailed explanation**in `200_setup/200_setup/200_setup/200_naming-conventions.md`
 
-- **Quick reference**in `100_memory/100_cursor-memory-context.md`**Step 4: Reading Pattern**-**Memory context**- Read first for instant understanding
+- **Quick reference**in `100_memory/100_cursor-memory-context.md`**Step 4: Reading Pattern**-**Memory context**- Read
+first for instant understanding
 
-- **Naming conventions**- Read when working on file organization**Step 5: Cross-References**-**Cross-reference**between the two files
+- **Naming conventions**- Read when working on file organization**Step 5: Cross-References**-**Cross-reference**between
+the two files
 
-- **Update context priority guide**to include the new content**Result**: Add comprehensive explanation to `200_setup/200_setup/200_setup/200_naming-conventions.md` and quick reference to
+- **Update context priority guide**to include the new content**Result**: Add comprehensive explanation to
+`200_setup/200_setup/200_setup/200_naming-conventions.md` and quick reference to
 `100_memory/100_cursor-memory-context.md` with cross-references.
 
 ### **Why This Logic Works**

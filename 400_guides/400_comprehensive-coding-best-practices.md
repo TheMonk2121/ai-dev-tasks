@@ -9,7 +9,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices to current development work |
+| Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices
+to current development work |
 
 
 
@@ -17,7 +18,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices to current development work |
+| Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices
+to current development work |
 
 
 

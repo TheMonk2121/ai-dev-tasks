@@ -4,7 +4,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Final summary of completed script optimizations | After completing optimizations or reviewing performance improvements | All optimizations are complete and deployed - monitor performance and maintain as needed |
+| Final summary of completed script optimizations | After completing optimizations or reviewing performance improvements
+| All optimizations are complete and deployed - monitor performance and maintain as needed |
 
 
 

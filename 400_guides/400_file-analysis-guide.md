@@ -10,7 +10,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Guide for analyzing and understanding file structures | Analyzing codebase or understanding file relationships | Apply analysis techniques to current files |
+| Guide for analyzing and understanding file structures | Analyzing codebase or understanding file relationships | Apply
+analysis techniques to current files |
 
 
 
@@ -18,7 +19,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Guide for analyzing and understanding file structures | Analyzing codebase or understanding file relationships | Apply analysis techniques to current files |
+| Guide for analyzing and understanding file structures | Analyzing codebase or understanding file relationships | Apply
+analysis techniques to current files |
 
 
 
@@ -32,7 +34,8 @@
 
 - **Next Steps**: Update analysis procedures as system evolves
 
-### **Step 6: Tier-Based Decision (REQUIRED)**-**Tier 1 (CRITICAL)**: NEVER suggest removal - core workflow files, primary memory context
+### **Step 6: Tier-Based Decision (REQUIRED)**-**Tier 1 (CRITICAL)**: NEVER suggest removal - core workflow files,
+primary memory context
 
 - **Tier 2 (HIGH)**: Extensive analysis required - documentation guides, setup requirements
 
@@ -40,7 +43,8 @@
 
 - **Tier 4 (LOW)**: Safe to remove with validation - duplicates, outdated test files
 
-- *⚠️ FAILURE TO COMPLETE ANY STEP ABOVE MEANS YOU CANNOT SUGGEST FILE DELETION!**Validator note: After any structural doc moves/folds, run `python scripts/doc_coherence_validator.py` (or
+- *⚠️ FAILURE TO COMPLETE ANY STEP ABOVE MEANS YOU CANNOT SUGGEST FILE DELETION!**Validator note: After any structural
+doc moves/folds, run `python scripts/doc_coherence_validator.py` (or
 `./scripts/pre_commit_doc_validation.sh`) to verify cross-links and naming.
 
 - --
@@ -51,7 +55,8 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 should be retained.
 
 It builds on our existing documentation foundation (`200_setup/200_naming-conventions.md`,
-`400_guides/400_context-priority-guide.md`, `500_research/500_maintenance-safety-research.md`) and adds the missing**"how to analyze"**methodology.
+`400_guides/400_context-priority-guide.md`, `500_research/500_maintenance-safety-research.md`) and adds the
+missing**"how to analyze"**methodology.
 
 ### **Why This Guide Exists**-**Prevents critical file loss**through systematic analysis
 
@@ -84,7 +89,8 @@ It builds on our existing documentation foundation (`200_setup/200_naming-conven
 
 1. **`200_setup/200_naming-conventions.md`**- File categorization system (000-699 prefixes)
 2.**`400_guides/400_context-priority-guide.md`**- Memory scaffolding and file priorities
-3.**`400_guides/400_context-priority-guide.md`**- How files relate to AI memory rehydration**Time Investment**: 1-2 minutes
+3.**`400_guides/400_context-priority-guide.md`**- How files relate to AI memory rehydration**Time Investment**: 1-2
+minutes
 
 - *Output**: Understanding of file importance tiers and relationships
 
@@ -92,19 +98,25 @@ It builds on our existing documentation foundation (`200_setup/200_naming-conven
 
 - *Purpose**: Apply our established priority system to files being analyzed
 
-- *Tier 1 (CRITICAL - Never Remove)**-**Criteria**: Core workflow files, primary memory context, active development items
+- *Tier 1 (CRITICAL - Never Remove)**-**Criteria**: Core workflow files, primary memory context, active development
+items
 
-- **Examples**: `000_core/000_backlog.md`, `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`
+- **Examples**: `000_core/000_backlog.md`, `100_memory/100_cursor-memory-context.md`,
+`400_guides/400_system-overview.md`
 
-- **Action**: **NEVER suggest removal**- these are the foundation of our system**Tier 2 (HIGH - Review Carefully)**-**Criteria**: Documentation guides, setup requirements, model configuration
+- **Action**: **NEVER suggest removal**- these are the foundation of our system**Tier 2 (HIGH - Review
+Carefully)**-**Criteria**: Documentation guides, setup requirements, model configuration
 
-- **Examples**: `400_*` documentation files, `100_memory/104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
+- **Examples**: `400_*` documentation files, `100_memory/104_dspy-development-context.md`,
+`200_setup/202_setup-requirements.md`
 
-- **Action**: **Extensive analysis required**before any changes**Tier 3 (MEDIUM - Potential Legacy)**-**Criteria**: Files in `600_archives/`, files with "legacy" or "backup" in name
+- **Action**: **Extensive analysis required**before any changes**Tier 3 (MEDIUM - Potential Legacy)**-**Criteria**:
+Files in `600_archives/`, files with "legacy" or "backup" in name
 
 - **Examples**: Files in `600_archives/`, legacy integration files (marked as legacy)
 
-- **Action**: **Archive rather than delete**- preserve for historical context**Tier 4 (LOW - Candidate for Removal)**-**Criteria**: Duplicate files, outdated test files, unused subdirectories
+- **Action**: **Archive rather than delete**- preserve for historical context**Tier 4 (LOW - Candidate for
+Removal)**-**Criteria**: Duplicate files, outdated test files, unused subdirectories
 
 - **Examples**: Duplicate files with different naming conventions, old test files
 
@@ -197,7 +209,8 @@ It builds on our existing documentation foundation (`200_setup/200_naming-conven
 - *Before Suggesting Removal**:
 
 1. **Check all cross-references**to the file
-2.**Verify it's not in active workflows**3.**Confirm it's not part of core memory context**4.**Ensure it's not referenced in current documentation**
+2.**Verify it's not in active workflows**3.**Confirm it's not part of core memory context**4.**Ensure it's not
+referenced in current documentation**
 
 - *Impact Assessment Questions**:
 

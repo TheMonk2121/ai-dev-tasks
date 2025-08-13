@@ -19,7 +19,9 @@
 - Read when: You need to understand the operational code backbone fast
 
 - Quick jump:
-  - Tier 1 (Critical): `scripts/process_tasks.py`, `scripts/state_manager.py`, `dspy-rag-system/src/dspy_modules/cursor_model_router.py`, `dspy-rag-system/src/dspy_modules/vector_store.py`, `dspy-rag-system/src/dspy_modules/document_processor.py`
+- Tier 1 (Critical): `scripts/process_tasks.py`, `scripts/state_manager.py`,
+`dspy-rag-system/src/dspy_modules/cursor_model_router.py`, `dspy-rag-system/src/dspy_modules/vector_store.py`,
+`dspy-rag-system/src/dspy_modules/document_processor.py`
   - Tier 3 (Supporting): `scripts/performance_benchmark.py` — Performance monitoring & optimization
 
 - --

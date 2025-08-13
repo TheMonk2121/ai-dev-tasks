@@ -22,7 +22,9 @@
 
 ### 1. Executive Summary
 
-- Build a small, local-first utility to send a push-style notification to the user's phone whenever a local task completes. Default transport is macOS iMessage (no third-party accounts). Provide ntfy-based transport as cross-platform fallback (optional self-host).
+- Build a small, local-first utility to send a push-style notification to the user's phone whenever a local task
+completes. Default transport is macOS iMessage (no third-party accounts). Provide ntfy-based transport as cross-platform
+fallback (optional self-host).
 
 - Target usage: integrate into long-running scripts and build processes (CLI or wrapper).
 
@@ -30,13 +32,16 @@
 
 ### 2. Problem Statement
 
-- Long-running local tasks (e.g., installs, data processing, test suites) finish without immediate visibility. Developers want an immediate phone notification without standing up heavy infrastructure or managing complex credentials.
+- Long-running local tasks (e.g., installs, data processing, test suites) finish without immediate visibility.
+Developers want an immediate phone notification without standing up heavy infrastructure or managing complex
+credentials.
 
 - Constraints: solo developer, local-first preference, minimal setup, avoid over-complication.
 
 ### 3. Solution Overview
 
-- High-Level: Provide a CLI `notify-phone` and a helper `run-and-notify` wrapper that sends a phone notification on success/failure, with transports:
+- High-Level: Provide a CLI `notify-phone` and a helper `run-and-notify` wrapper that sends a phone notification on
+success/failure, with transports:
   - Transport A (default macOS): iMessage via AppleScript from macOS Messages to the user's own number/Apple ID.
   - Transport B (cross-platform): ntfy topic POST (public broker by default; optional self-host URL and token).
 
@@ -58,7 +63,8 @@
 ### 4. Functional Requirements
 
 - CLI: `notify-phone`
-  - Inputs: `--title`, `--body`, `--status [success|failure|info]`, `--transport [imessage|ntfy]` (optional), `--config`, `--dry-run`, `--verbose`.
+- Inputs: `--title`, `--body`, `--status [success|failure|info]`, `--transport [imessage|ntfy]` (optional), `--config`,
+`--dry-run`, `--verbose`.
   - Exit codes: 0 on send success; non-zero on transport failure.
   - Logging: info by default; verbose for diagnostics.
 
@@ -170,7 +176,8 @@
 
 - macOS iMessage dependency: requires iCloud login and Messages enabled; if blocked, use ntfy.
 
-- Privacy for ntfy public broker: messages visible to anyone with topic; mitigation: self-host + token or choose unguessable topic.
+- Privacy for ntfy public broker: messages visible to anyone with topic; mitigation: self-host + token or choose
+unguessable topic.
 
 - Network outages: iMessage/ntfy both require network; communicate failures clearly and exit non-zero.
 

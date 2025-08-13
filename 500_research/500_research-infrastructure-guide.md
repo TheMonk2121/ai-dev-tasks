@@ -8,11 +8,14 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Research infrastructure organization and LLM accessibility patterns | When setting up research systems or organizing knowledge | Follow the implementation workflow and use the research discovery system |
+| Research infrastructure organization and LLM accessibility patterns | When setting up research systems or organizing
+knowledge | Follow the implementation workflow and use the research discovery system |
 
-- **what this file is**: Comprehensive guide for organizing research infrastructure with LLM-accessible patterns and cross-referencing systems.
+- **what this file is**: Comprehensive guide for organizing research infrastructure with LLM-accessible patterns and
+cross-referencing systems.
 
-- **read when**: When setting up research systems, organizing knowledge repositories, or implementing LLM-accessible documentation patterns.
+- **read when**: When setting up research systems, organizing knowledge repositories, or implementing LLM-accessible
+documentation patterns.
 
 - **do next**: Follow the implementation workflow, use the research discovery system, and maintain cross-references.
 
@@ -24,7 +27,8 @@
 
 - **Points**: 4 - Research infrastructure and organization
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_few-shot-context-examples.md, 400_guides/400_performance-optimization-guide.md
+- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_few-shot-context-examples.md,
+400_guides/400_performance-optimization-guide.md
 
 - **Next Steps**: Maintain research infrastructure and cross-references
 
@@ -307,5 +311,6 @@ When LLMs need additional context, they can reference:
 ---
 
 - **Last Updated**: 2024-08-07
-- **Related Documentation**: `400_guides/400_context-priority-guide.md`, `500_research/500_research/500_research-index.md`
+- **Related Documentation**: `400_guides/400_context-priority-guide.md`,
+`500_research/500_research/500_research-index.md`
 - **Status**: Active research infrastructure for LLM-accessible knowledge management

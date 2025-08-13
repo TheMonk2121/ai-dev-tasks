@@ -101,7 +101,9 @@ performance_metrics:
 ### **3. Error Handling System**
 
 - **Primary Data Source**: Error classification, recovery actions, and retry statistics.
-- **Error Categories**: See [`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for comprehensive error handling patterns and implementation examples.
+- **Error Categories**: See
+[`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for
+comprehensive error handling patterns and implementation examples.
 - **Error Severity Levels**: See comprehensive guide for severity classification and handling strategies.
 - **Collected Error Metadata**:
   - **Error Classification**: Type, severity, category, context
@@ -109,12 +111,15 @@ performance_metrics:
   - **Retry Statistics**: Retry counts, delays, success rates
   - **Context Information**: System info, stack traces, timestamps
   - **Error Patterns**: Frequency analysis and trend detection
-- **Collection Method**: `scripts/error_handler.py` - Advanced error handling with automatic classification and recovery.
+- **Collection Method**: `scripts/error_handler.py` - Advanced error handling with automatic classification and
+recovery.
 
 ## 🎯 **Metadata Usage Patterns**###**1. Intelligent Task Prioritization**
 
 - **Usage**: Automatically prioritize tasks based on multiple factors.
-- **Implementation**: See [`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for comprehensive task prioritization patterns and implementation examples.
+- **Implementation**: See
+[`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for
+comprehensive task prioritization patterns and implementation examples.
 - **Metadata Factors**:
   - **Priority Level**: 🔥 (Critical), 📈 (High), ⭐ (Medium), 🔧 (Low)
   - **Score Total**: Combined business value, technical complexity, risk reduction
@@ -124,7 +129,9 @@ performance_metrics:
 ### **2. Performance Optimization**
 
 - **Usage**: Track and optimize execution performance based on historical data.
-- **Implementation**: See [`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for comprehensive performance optimization patterns and implementation examples.
+- **Implementation**: See
+[`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for
+comprehensive performance optimization patterns and implementation examples.
 
 - *Key Metrics**:
 

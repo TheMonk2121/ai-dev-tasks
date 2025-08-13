@@ -23,7 +23,8 @@
 |---|---|---|
 |  |  |  |
 
-- *Expected Output:**What the AI should produce**Pattern:**The underlying pattern to recognize**Validation:**How to verify the output
+- *Expected Output:**What the AI should produce**Pattern:**The underlying pattern to recognize**Validation:**How to
+verify the output
 
 ```text
 
@@ -53,7 +54,8 @@ filename: "400_guides/400_security-best-practices-guide.md"
 
 ```text
 
-- *Pattern:**`400_` prefix indicates high-priority documentation with context references**Validation:**Check for required HTML comments and cross-references
+- *Pattern:**`400_` prefix indicates high-priority documentation with context references**Validation:**Check for
+required HTML comments and cross-references
 
 ## **2. Cross-Reference Validation**
 

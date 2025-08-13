@@ -35,7 +35,8 @@
 
 - **GitHub Copilot**: Repository-specific instruction patterns
 
-## 🏗️ **System Architecture**###**Core Components**####**1. Documentation Indexer**-**Purpose**: Scans and indexes all documentation files
+## 🏗️ **System Architecture**###**Core Components**####**1. Documentation Indexer**-**Purpose**: Scans and indexes all
+documentation files
 
 - **File**: `scripts/documentation_indexer.py`
 

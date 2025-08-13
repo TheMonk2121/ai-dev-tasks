@@ -10,7 +10,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| AI-powered Product Requirements Document creation process | Starting new feature development | Run workflow to generate PRD for selected backlog item |
+| AI-powered Product Requirements Document creation process | Starting new feature development | Run workflow to
+generate PRD for selected backlog item |
 
 
 
@@ -65,7 +66,8 @@
 
 - **Usability Requirements**: User experience, accessibility, internationalization
 
-## **Enhanced Testing Requirements Section**###**6. Testing Strategy**-**Test Coverage Goals**: Percentage targets for different test types
+## **Enhanced Testing Requirements Section**###**6. Testing Strategy**-**Test Coverage Goals**: Percentage targets for
+different test types
 
 - **Testing Phases**: Unit, integration, system, and acceptance testing
 
@@ -75,7 +77,9 @@
 
 ### **7. Quality Assurance Requirements**
 
-- **Code Quality Standards**: See [`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for comprehensive coding standards and quality gates
+- **Code Quality Standards**: See
+[`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for
+comprehensive coding standards and quality gates
 
 - **Performance Benchmarks**: Specific performance targets and thresholds
 

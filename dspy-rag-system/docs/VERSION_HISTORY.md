@@ -4,7 +4,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Complete version history and changelog for DSPy RAG system | Checking system updates or understanding changes | Review recent changes or plan next version |
+| Complete version history and changelog for DSPy RAG system | Checking system updates or understanding changes | Review
+recent changes or plan next version |
 
 
 

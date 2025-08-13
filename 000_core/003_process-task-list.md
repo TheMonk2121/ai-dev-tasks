@@ -13,7 +13,9 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Execution engine for processing task lists with state, auto‑advance, and HotFix | When running or modifying the AI task execution workflow | 1) Prepare a task list; 2) Start the Run loop; 3) Update `.ai_state.json`; 4) Use HotFix flow on failures |
+| Execution engine for processing task lists with state, auto‑advance, and HotFix | When running or modifying the AI
+task execution workflow | 1) Prepare a task list; 2) Start the Run loop; 3) Update `.ai_state.json`; 4) Use HotFix flow
+on failures |
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Task execution engine maintained
 

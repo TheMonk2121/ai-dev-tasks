@@ -12,10 +12,13 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Deep technical context for DSPy integration and RAG system implementation | When working with DSPy modules, implementing RAG systems, or debugging AI agents | Review the architecture overview and implementation status, then check the roadmap for next steps |
+| Deep technical context for DSPy integration and RAG system implementation | When working with DSPy modules,
+implementing RAG systems, or debugging AI agents | Review the architecture overview and implementation status, then
+check the roadmap for next steps |
 
 - **Purpose**: Deep technical context for DSPy integration and RAG
-- **Read after**: `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_guides/400_system-overview.md`
+- **Read after**: `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` →
+`400_guides/400_system-overview.md`
 - **Key**: modules, guard-rails, fast-path, vector store, document processor, roadmap
 
 <!-- ANCHOR: quick-start -->
@@ -29,7 +32,9 @@
 
 ### AI Development Ecosystem Context
 
-This DSPy implementation is part of a comprehensive AI-powered development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
+This DSPy implementation is part of a comprehensive AI-powered development ecosystem that transforms ideas into working
+software using AI agents (Cursor Native AI + Specialized Agents). The ecosystem provides structured workflows, automated
+task processing, and intelligent error recovery to make AI-assisted development efficient and reliable.
 
 **Key Components:**
 

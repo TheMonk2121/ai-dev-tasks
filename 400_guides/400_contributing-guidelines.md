@@ -46,7 +46,8 @@
 
 ## 💻 Code Standards
 
-For comprehensive coding standards, error handling patterns, and implementation examples, see [400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md).
+For comprehensive coding standards, error handling patterns, and implementation examples, see
+[400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md).
 
 ### **Key Standards Overview**
 
@@ -980,7 +981,8 @@ REVIEW_CHECKLIST = {
 
 # Quality Checklist for Solo Development
 
-# For comprehensive quality gates and implementation details, see [400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md)
+# For comprehensive quality gates and implementation details, see
+[400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md)
 
 QUALITY_CHECKLIST = {
     "code_standards": [

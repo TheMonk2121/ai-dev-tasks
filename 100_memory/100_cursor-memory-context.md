@@ -29,7 +29,8 @@ CONTEXT_INDEX -->
 
 | what this file is | read when | do next |
 |---|---|---|
-| Primary memory scaffold for AI rehydration and context management | Starting new session or need current project state | Check backlog and system overview for next priorities |
+| Primary memory scaffold for AI rehydration and context management | Starting new session or need current project state
+| Check backlog and system overview for next priorities |
 
 
 
@@ -37,7 +38,8 @@ CONTEXT_INDEX -->
 
 | what this file is | read when | do next |
 |---|---|---|
-| Primary memory scaffold for AI rehydration and context management | Starting new session or need current project state | Check backlog and system overview for next priorities |
+| Primary memory scaffold for AI rehydration and context management | Starting new session or need current project state
+| Check backlog and system overview for next priorities |
 
 
 
@@ -105,13 +107,17 @@ Read these files in order (1–2 min total):
 
 ### Role → Files (at a glance)
 
-- Planner: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`, `400_guides/400_context-priority-guide.md`
+- Planner: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`,
+`400_guides/400_context-priority-guide.md`
 
-- Implementer: `100_memory/104_dspy-development-context.md`, relevant 400-series topic guides (testing, security, performance, integration, deployment)
+- Implementer: `100_memory/104_dspy-development-context.md`, relevant 400-series topic guides (testing, security,
+performance, integration, deployment)
 
-- Researcher: `500_research/500_research-index.md`, `500_research/500_dspy-research.md`, `500_research/500_rag-system-research.md`
+- Researcher: `500_research/500_research-index.md`, `500_research/500_dspy-research.md`,
+`500_research/500_rag-system-research.md`
 
-- Ops/Setup: `200_setup/202_setup-requirements.md`, `400_guides/400_deployment-environment-guide.md`, `400_guides/400_migration-upgrade-guide.md`
+- Ops/Setup: `200_setup/202_setup-requirements.md`, `400_guides/400_deployment-environment-guide.md`,
+`400_guides/400_migration-upgrade-guide.md`
 
 ## 🛡️ Always-On Critical Rules
 
@@ -119,7 +125,8 @@ Read these files in order (1–2 min total):
 
 - Preserve coherence: update cross-references when editing core files
 
-- Use consolidated guides (single-file sources) for deployment, migration, integration, performance, testing, system overview, few-shot
+- Use consolidated guides (single-file sources) for deployment, migration, integration, performance, testing, system
+overview, few-shot
 
 - Keep this file updated after architecture changes
 
@@ -133,7 +140,8 @@ Read these files in order (1–2 min total):
 
 - Legacy integrations must not appear in active docs; keep under `600_archives/`.
 
-- Before archiving/moving: follow `400_guides/400_file-analysis-guide.md`. After changes: run `python3 scripts/update_cursor_memory.py`.
+- Before archiving/moving: follow `400_guides/400_file-analysis-guide.md`. After changes: run `python3
+scripts/update_cursor_memory.py`.
 
 ## 🚨 CRITICAL SAFETY REQUIREMENTS
 
@@ -143,7 +151,8 @@ Read these files in order (1–2 min total):
 
 - [ ] Show all cross-references
 
-- [ ] Get explicit user approval**🤖 AI CONSTITUTION COMPLIANCE:**- [ ] Follow `400_guides/400_ai-constitution.md` rules for all AI operations
+- [ ] Get explicit user approval**🤖 AI CONSTITUTION COMPLIANCE:**- [ ] Follow `400_guides/400_ai-constitution.md` rules
+for all AI operations
 
 - [ ] Maintain context preservation and safety requirements
 

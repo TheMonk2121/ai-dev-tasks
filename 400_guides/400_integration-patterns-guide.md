@@ -29,7 +29,8 @@
 
 - **do next**: See "API Design Principles", "Component Integration", and "Communication Patterns".
 
-- **anchors**: `api design principles`, `component integration`, `communication patterns`, `data flow`, `error handling`, `security integration`
+- **anchors**: `api design principles`, `component integration`, `communication patterns`, `data flow`, `error
+handling`, `security integration`
 
 - --
 

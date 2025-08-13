@@ -24,17 +24,22 @@ with sophisticated documentation, automated workflows, and intelligent task mana
 
 ## 🎯**Start Here** New to this project? Follow this quick path
 
-1. **Read the 5‑minute overview** → [400_guides/400_project-overview.md](400_guides/400_project-overview.md) ← **START HERE**
+1. **Read the 5‑minute overview** → [400_guides/400_project-overview.md](400_guides/400_project-overview.md) ← **START
+HERE**
 2. **Check current state** → [100_memory/100_cursor-memory-context.md](100_memory/100_cursor-memory-context.md)
 3. **See priorities/roadmap** → [000_core/000_backlog.md](000_core/000_backlog.md)
 4. **Understand architecture** → [400_guides/400_system-overview.md](400_guides/400_system-overview.md)
 5. **Learn navigation rules** → [400_guides/400_context-priority-guide.md](400_guides/400_context-priority-guide.md)
 
-**Want to understand what this is?** → **[400_guides/400_project-overview.md](400_guides/400_project-overview.md)** - 5-minute overview of the entire system
-**Want to see the current state?** → **[100_memory/100_cursor-memory-context.md](100_memory/100_cursor-memory-context.md)** - Instant project state
-**Want to see what's being built?** → **[000_core/000_backlog.md](000_core/000_backlog.md)** - Current priorities and roadmap
+**Want to understand what this is?** → **[400_guides/400_project-overview.md](400_guides/400_project-overview.md)** -
+5-minute overview of the entire system
+**Want to see the current state?** →
+**[100_memory/100_cursor-memory-context.md](100_memory/100_cursor-memory-context.md)** - Instant project state
+**Want to see what's being built?** → **[000_core/000_backlog.md](000_core/000_backlog.md)** - Current priorities and
+roadmap
 
-## 📚**What This Project Is** This is a sophisticated AI development ecosystem that transforms ideas into working software using AI agents (Cursor Native AI + Specialized Agents). It provides
+## 📚**What This Project Is** This is a sophisticated AI development ecosystem that transforms ideas into working
+software using AI agents (Cursor Native AI + Specialized Agents). It provides
 
 - **Structured Workflows**: From ideation to implementation with built-in checkpoints
 

@@ -12,7 +12,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Guide for effective context engineering with Cursor Native AI | When optimizing AI interactions or improving prompt effectiveness | Apply task-type patterns and context strategies to your AI interactions |
+| Guide for effective context engineering with Cursor Native AI | When optimizing AI interactions or improving prompt
+effectiveness | Apply task-type patterns and context strategies to your AI interactions |
 
 - **what this file is**: Strategies and patterns for effective context engineering with Cursor Native AI.
 - **read when**: When optimizing AI interactions, improving prompt effectiveness, or designing context strategies.
@@ -30,7 +31,8 @@
 
 ### **What is Context Engineering?**
 
-Context engineering is the practice of structuring information and prompts to maximize AI understanding and response quality. For Cursor Native AI, this means:
+Context engineering is the practice of structuring information and prompts to maximize AI understanding and response
+quality. For Cursor Native AI, this means:
 
 - **Task-Specific Patterns**: Using different approaches for different types of tasks
 - **Progressive Disclosure**: Revealing context in the right order and amount
@@ -412,4 +414,5 @@ Please provide:
 
 ---
 
-*This guide provides practical strategies for effective context engineering with Cursor Native AI, focusing on clear patterns and proven approaches.*
+*This guide provides practical strategies for effective context engineering with Cursor Native AI, focusing on clear
+patterns and proven approaches.*

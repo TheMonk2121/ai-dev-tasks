@@ -46,12 +46,15 @@
   - ALWAYS read `100_memory/100_cursor-memory-context.md` first in any new session
   - Check `000_core/000_backlog.md` for current priorities and dependencies
   - Review `400_guides/400_system-overview.md` for technical context
-  - Use existing workflows (`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`)
+- Use existing workflows (`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`,
+`000_core/003_process-task-list.md`)
 
 - **2. Context Hierarchy Enforcement**
-  - **HIGH Priority**: `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
+- **HIGH Priority**: `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`,
+`000_core/000_backlog.md`
 
-  - **MEDIUM Priority**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`
+- **MEDIUM Priority**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`,
+`000_core/003_process-task-list.md`
 
   - **LOW Priority**: Domain-specific files and implementation details
 
@@ -84,7 +87,8 @@
 
 ### **Article IV: Documentation & Knowledge Management**
 
-- **1. Documentation Architecture** - Follow modular, (Mutually Exclusive, Collectively Exhaustive)-aligned documentation patterns
+- **1. Documentation Architecture** - Follow modular, (Mutually Exclusive, Collectively Exhaustive)-aligned
+documentation patterns
 
   - Use self-contained chunks with explicit links
   - Implement tiered importance and priority cues
@@ -106,7 +110,8 @@
 
 - **1. Workflow Chain Preservation**
 
-  - Maintain `000_core/000_backlog.md → 000_core/001_create-prd.md → 000_core/002_generate-tasks.md → 000_core/003_process-task-list.md` chain
+- Maintain `000_core/000_backlog.md → 000_core/001_create-prd.md → 000_core/002_generate-tasks.md →
+000_core/003_process-task-list.md` chain
   - Preserve execution engine patterns and state management
   - Maintain automation workflows and n8n integration
   - Preserve research framework and systematic analysis

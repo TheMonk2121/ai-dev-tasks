@@ -24,19 +24,23 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Technical architecture and component overview for the AI development ecosystem | You need the technical mental model or are integrating components | Jump to `#architecture` and `#core-components`; then review relevant 400-series guides |
+| Technical architecture and component overview for the AI development ecosystem | You need the technical mental model
+or are integrating components | Jump to `#architecture` and `#core-components`; then review relevant 400-series guides |
 
 - **what this file is**: Architecture map and component responsibilities for the AI development ecosystem.
 
 - **read when**: You need the technical mental model or are integrating components.
 
-- **do next**: Jump to `#architecture` and `#core-components`; then review `400_guides/400_testing-strategy-guide.md` and `400_guides/400_deployment-environment-guide.md`.
+- **do next**: Jump to `#architecture` and `#core-components`; then review `400_guides/400_testing-strategy-guide.md`
+and `400_guides/400_deployment-environment-guide.md`.
 
-- **anchors**: `architecture`, `context-management`, `core-components`, `workflow`, `security`, `performance`, `integration`, `deployment`, `testing`
+- **anchors**: `architecture`, `context-management`, `core-components`, `workflow`, `security`, `performance`,
+`integration`, `deployment`, `testing`
 
 ## 🧭 Critical Path
 
-1) `100_memory/100_cursor-memory-context.md` → 2) `000_core/000_backlog.md` → 3) `400_guides/400_system-overview.md` → 4) topic guide
+1) `100_memory/100_cursor-memory-context.md` → 2) `000_core/000_backlog.md` → 3) `400_guides/400_system-overview.md` →
+4) topic guide
 (testing/deploy/integration/etc.)
 
 ## 🗺️ Map of Topics
@@ -47,7 +51,8 @@
 | Context management | #context-management | How context is stored, cached, and shared | See integration patterns |
 | Core components | #core-components | What runs where | See testing, performance |
 | Workflow | #workflow | How work flows end-to-end | Backlog → PRD → Tasks → Execute |
-| Security | #security | Safety, validation, monitoring | Security guide (400_guides/400_security-best-practices-guide.md) |
+| Security | #security | Safety, validation, monitoring | Security guide
+(400_guides/400_security-best-practices-guide.md) |
 | Performance | #performance | Metrics, tuning, troubleshooting | Performance guide |
 | Integration | #integration | Component/API integration | Integration guide |
 | Deployment | #deployment | Procedures and environments | Deployment guide |

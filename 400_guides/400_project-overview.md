@@ -20,7 +20,8 @@
 
 - **read when**: Onboarding or kicking off a new feature.
 
-- **do next**: Read `100_memory/100_cursor-memory-context.md`, check `000_core/000_backlog.md`, then scan `400_guides/400_system-overview.md`.
+- **do next**: Read `100_memory/100_cursor-memory-context.md`, check `000_core/000_backlog.md`, then scan
+`400_guides/400_system-overview.md`.
 
 - **anchors**: `quick-start`, `mini-map`
 
@@ -119,10 +120,12 @@ For systematic development, start by selecting a high-impact feature from the ba
 4. The AI can automatically parse the table format and generate PRDs using the AI-BACKLOG-META command.
 ```
 
-- 💡 **Pro Tip**: Check `200_setup/200_naming-conventions.md` to understand the file organization and naming patterns used in this
+- 💡 **Pro Tip**: Check `200_setup/200_naming-conventions.md` to understand the file organization and naming patterns
+used in this
 project.*
 
-- 📋 **For detailed backlog usage instructions and scoring system, see `100_memory/100_backlog-guide.md`*### 1️⃣ Create a Product Requirement Document (PRD)
+- 📋 **For detailed backlog usage instructions and scoring system, see `100_memory/100_backlog-guide.md`*### 1️⃣ Create a
+Product Requirement Document (PRD)
 
 First, lay out the blueprint for your feature. A PRD clarifies what you're building, for whom, and why.
 
@@ -150,7 +153,8 @@ plan optimized for AI execution.
 
     ```text
     Now take MyFeature-PRD.md and create tasks using @000_core/002_generate-tasks.md
-    ```text*(Note: Replace `MyFeature-PRD.md` with the actual filename of the PRD you generated in step 1.)*![Example of generating tasks from PRD](https://pbs.twimg.com/media/Go6FITbWkAA-RCT?format=jpg&name=medium)
+```text*(Note: Replace `MyFeature-PRD.md` with the actual filename of the PRD you generated in step 1.)*![Example of
+generating tasks from PRD](https://pbs.twimg.com/media/Go6FITbWkAA-RCT?format=jpg&name=medium)
 
 ### 3️⃣ Examine Your Task List
 
@@ -161,7 +165,8 @@ strategic human checkpoints. This provides a clear roadmap for implementation.
 
 ### 4️⃣ Execute Tasks with AI-Optimized Processing
 
-To ensure methodical progress and allow for verification, we'll use `000_core/003_process-task-list.md` (the execution engine).
+To ensure methodical progress and allow for verification, we'll use `000_core/003_process-task-list.md` (the execution
+engine).
 This system is designed for AI agents using the v0.3.1 Ultra-Minimal Router architecture (Cursor Native AI + Specialized
 Agents) with strategic human oversight.
 
@@ -172,7 +177,8 @@ Agents) with strategic human oversight.
     Please start on task T-1 and use 000_core/003_process-task-list.md (the execution engine)
     ```
 
-    *(Important: You only need to reference `000_core/003_process-task-list.md` for the *first* task. The instructions within it
+*(Important: You only need to reference `000_core/003_process-task-list.md` for the *first* task. The instructions
+within it
 guide the AI for subsequent tasks.)*The AI will attempt the task and then pause only when necessary for human review.
 
 ![Example of starting on a task with
@@ -216,17 +222,21 @@ podcast](https://www.youtube.com/watch?v=fD4ktSkNCw4).
 
 ### **Core Workflow Files:**
 
-- **`000_core/000_backlog.md`**: Prioritized list of future enhancements and features for systematic development planning with AI scoring system.
+- **`000_core/000_backlog.md`**: Prioritized list of future enhancements and features for systematic development
+planning with AI scoring system.
 
 - **`000_core/001_create-prd.md`**: Guides the AI in generating a Product Requirement Document for your feature.
 
-- **`000_core/002_generate-tasks.md`**: Takes the PRD markdown file as input and helps the AI break it down into a detailed, AI-optimized implementation task list.
+- **`000_core/002_generate-tasks.md`**: Takes the PRD markdown file as input and helps the AI break it down into a
+detailed, AI-optimized implementation task list.
 
-- **`000_core/003_process-task-list.md`**: Instructs AI agents on how to process the generated task list with state management, auto-advance, and HotFix generation (the execution engine).
+- **`000_core/003_process-task-list.md`**: Instructs AI agents on how to process the generated task list with state
+management, auto-advance, and HotFix generation (the execution engine).
 
 ### **Automation & Tools:**
 
-- **`100_memory/100_backlog-automation.md`**: Documents the AI-BACKLOG-META system for automated backlog management and scoring.
+- **`100_memory/100_backlog-automation.md`**: Documents the AI-BACKLOG-META system for automated backlog management and
+scoring.
 
 ### **Configuration & Setup:**
 
@@ -240,7 +250,8 @@ podcast](https://www.youtube.com/watch?v=fD4ktSkNCw4).
 
 ## 🎯 Quick Reference
 
-### **Score Ranges for Prioritization:**-**5.0+**: Critical priority (🔥) - Foundation features, security, core functionality
+### **Score Ranges for Prioritization:**-**5.0+**: Critical priority (🔥) - Foundation features, security, core
+functionality
 
 - **3.0-4.9**: High priority (⭐) - UX improvements, productivity enhancements
 

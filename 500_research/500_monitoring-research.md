@@ -39,7 +39,8 @@ Backlog link: B-080 (also B-022, B-027)
 - Log redaction (PII/secrets) is necessary; store only essential details.
 
 - Sampling and batch exporters keep overhead low for local-first setups.
-- OTel conventions for LLMs standardize attributes (model name, token counts), improving portability (docs/research/papers/monitoring-papers.md).
+- OTel conventions for LLMs standardize attributes (model name, token counts), improving portability
+(docs/research/papers/monitoring-papers.md).
 
 ## Actionable Patterns
 

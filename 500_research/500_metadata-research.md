@@ -42,7 +42,8 @@ Backlog link: B-007, B-045
 
 ## Actionable Patterns
 
-- Field dictionary: doc_id, source_path, section, chunk_id, start_offset, end_offset, owner, updated_at, provenance, validated_flag, raw_score.
+- Field dictionary: doc_id, source_path, section, chunk_id, start_offset, end_offset, owner, updated_at, provenance,
+validated_flag, raw_score.
 
 - Ingestion hooks in indexer to populate fields; validators to reject incomplete records.
 

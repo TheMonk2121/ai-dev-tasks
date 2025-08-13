@@ -12,11 +12,14 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| One-stop local setup guide for environment, database, and dependencies | Setting up fresh development environment or troubleshooting setup issues | Follow setup steps in order, run verification checklist, start with S-003 Environment Configuration |
+| One-stop local setup guide for environment, database, and dependencies | Setting up fresh development environment or
+troubleshooting setup issues | Follow setup steps in order, run verification checklist, start with S-003 Environment
+Configuration |
 
 ## ⚙️ **Complete Configuration Reference**
 
-This section consolidates ALL configuration settings from across the system. For quick start, see `400_guides/400_project-overview.md`.
+This section consolidates ALL configuration settings from across the system. For quick start, see
+`400_guides/400_project-overview.md`.
 
 ### **Environment Variables**
 

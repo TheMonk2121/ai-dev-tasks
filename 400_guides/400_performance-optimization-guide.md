@@ -29,7 +29,8 @@
 
 - **do next**: Review "System Architecture", "Optimization Strategies", and "Monitoring Setup".
 
-- **anchors**: `system architecture`, `optimization strategies`, `monitoring setup`, `performance testing`, `scaling guidelines`, `performance checklist`
+- **anchors**: `system architecture`, `optimization strategies`, `monitoring setup`, `performance testing`, `scaling
+guidelines`, `performance checklist`
 
 ### **4. Quality Metrics**-**Error Rate**: Percentage of failed requests
 

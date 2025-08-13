@@ -4,7 +4,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Plan for fixing markdown formatting issues | Planning documentation improvements | Execute fix plan or update priorities |
+| Plan for fixing markdown formatting issues | Planning documentation improvements | Execute fix plan or update
+priorities |
 
 
 
@@ -12,7 +13,8 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Plan for fixing markdown formatting issues | Planning documentation improvements | Execute fix plan or update priorities |
+| Plan for fixing markdown formatting issues | Planning documentation improvements | Execute fix plan or update
+priorities |
 
 
 
@@ -62,7 +64,8 @@ find . -name "*.md" -not -path "./venv/*" -not -path "./node_modules/*" -not -pa
 - *Automation Level:** ✅ Fully Automated
 ```bash
 # Use sed to remove multiple consecutive blank lines
-find . -name "*.md" -not -path "./venv/*" -not -path "./node_modules/*" -not -path "./.git/*" -exec sed -i '' '/^$/N;/^\n$/D' {} \;
+find . -name "*.md" -not -path "./venv/*" -not -path "./node_modules/*" -not -path "./.git/*" -exec sed -i ''
+'/^$/N;/^\n$/D' {} \;
 ```yaml
 
 ## 1.3 MD040 - Code Block Languages (86 issues)

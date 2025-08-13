@@ -51,7 +51,8 @@ RESEARCH_INDEX -->
 
 - **Points**: 3 - Research organization and discovery
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_deployment-environment-guide.md, 400_few-shot-context-examples.md, 400_migration-upgrade-guide.md
+- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_deployment-environment-guide.md,
+400_few-shot-context-examples.md, 400_migration-upgrade-guide.md
 
 - **Next Steps**: Maintain research index and cross-references
 

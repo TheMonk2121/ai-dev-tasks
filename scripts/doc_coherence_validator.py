@@ -52,6 +52,7 @@ class OptimizedDocCoherenceValidator:
         rules_path: Optional[str] = "config/validator_rules.json",
         strict_anchors: bool = False,
         tab_width: int = 4,
+        wrap_long_lines: bool = False,
     ):
         self.dry_run = dry_run
         self.only_changed = only_changed
@@ -62,6 +63,7 @@ class OptimizedDocCoherenceValidator:
         self.rules = self._load_rules(rules_path)
         self.strict_anchors = strict_anchors
         self.tab_width = max(1, tab_width)
+        self.wrap_long_lines = wrap_long_lines
 
         # Cache directory
         self.cache_dir = Path(".cache/doc_validator")
@@ -325,10 +327,22 @@ class OptimizedDocCoherenceValidator:
         fixed_tabs = 0
         fixed_trailing = 0
         fixed_headings = 0
+        fixed_long_lines = 0
         last_heading_level: Optional[int] = None
+        in_code_block = False
+        code_block_marker = ""
 
         out_lines: List[str] = []
         for i, line in enumerate(lines, 1):
+            # Track code block state
+            if line.startswith("```"):
+                if not in_code_block:
+                    in_code_block = True
+                    code_block_marker = line
+                elif line == code_block_marker:
+                    in_code_block = False
+                    code_block_marker = ""
+
             # --- checks ---
             if len(line) > (self.rules.get("line_length_limit", 120)):
                 warnings.append(f"Line {i}: Line too long (>120 chars)")
@@ -362,6 +376,27 @@ class OptimizedDocCoherenceValidator:
 
             # --- fixes (optional) ---
             out_line = trimmed
+            # Wrap long lines (but not in code blocks)
+            if self.wrap_long_lines and len(out_line) > 120 and not in_code_block and not out_line.startswith("```"):
+                # Simple word-wrap at 120 chars, breaking at spaces
+                words = out_line.split()
+                wrapped_lines = []
+                current_line = ""
+                for word in words:
+                    if len(current_line + " " + word) <= 120:
+                        current_line += (" " + word) if current_line else word
+                    else:
+                        if current_line:
+                            wrapped_lines.append(current_line)
+                        current_line = word
+                if current_line:
+                    wrapped_lines.append(current_line)
+                # Replace the current line with wrapped lines
+                if len(wrapped_lines) > 1:
+                    out_lines.extend(wrapped_lines)
+                    fixed_long_lines += 1
+                    continue  # Skip adding the original line
+
             if self.safe_fix and "\t" in out_line:
                 out_line = out_line.replace("\t", " " * self.tab_width)
                 fixed_tabs += 1
@@ -383,6 +418,9 @@ class OptimizedDocCoherenceValidator:
 
         if self.safe_fix and fixed_headings > 0:
             fixes.append(f"Fixed heading level skips on {fixed_headings} line(s)")
+
+        if self.wrap_long_lines and fixed_long_lines > 0:
+            fixes.append(f"Wrapped long lines on {fixed_long_lines} line(s)")
 
         # TL;DR checks
         require_tldr = self.rules.get("require_tldr", True)
@@ -426,7 +464,7 @@ class OptimizedDocCoherenceValidator:
                 errors.append("Duplicate anchor IDs detected")
 
         # Apply safe fixes if requested
-        if self.safe_fix:
+        if self.safe_fix or self.wrap_long_lines:
             if fixed_trailing > 0:
                 fixes.append(f"Trimmed trailing whitespace on {fixed_trailing} line(s)")
             new_text = "\n".join(out_lines) + ("\n" if had_trailing_newline else "")
@@ -529,6 +567,7 @@ def main():
     parser.add_argument("--safe-fix", action="store_true", help="Apply safe fixes (tabs->spaces, trim trailing)")
     parser.add_argument("--tab-width", type=int, default=4, help="Spaces per tab when --safe-fix")
     parser.add_argument("--strict-anchors", action="store_true", help="Fail on duplicate anchor ids")
+    parser.add_argument("--wrap-long-lines", action="store_true", help="Wrap lines longer than 120 chars")
 
     args = parser.parse_args()
 
@@ -541,6 +580,7 @@ def main():
         safe_fix=args.safe_fix,
         strict_anchors=args.strict_anchors,
         tab_width=args.tab_width,
+        wrap_long_lines=args.wrap_long_lines,
     )
 
     results = validator.run_validation()
