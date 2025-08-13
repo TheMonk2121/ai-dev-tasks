@@ -1,7 +1,7 @@
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Research index and discovery hub -->
 # 📚 Research Index
 

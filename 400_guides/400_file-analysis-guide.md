@@ -1,7 +1,7 @@
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_migration-upgrade-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - File analysis and safety procedures -->
 
 # 🔍 File Analysis Guide
