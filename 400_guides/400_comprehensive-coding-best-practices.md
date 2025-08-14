@@ -1004,6 +1004,53 @@ ruff check --fix .
 ruff check --select I --fix .
 ```
 
+## **Import Resolution & Static Analysis**
+
+### **Pyright Configuration Best Practices**
+
+#### **"One Source Per Scope" Policy**
+- **Root scope** (repo open in Cursor): `pyrightconfig.json` handles repo-wide analysis
+- **Subproject scope** (dspy-rag-system/ opened directly): `dspy-rag-system/pyrightconfig.json` handles local development
+- **No conflicts**: Avoid `[tool.pyright]` in pyproject.toml files
+- **VS Code alignment**: `.vscode/settings.json` mirrors root pyrightconfig.json
+
+#### **Common Import Resolution Issues**
+```bash
+# Check Pyright configuration
+pyright --version
+pyright --project dspy-rag-system/
+
+# Troubleshoot import issues
+pyright --verbose dspy-rag-system/src/
+```
+
+#### **Configuration Files**
+```json
+// pyrightconfig.json (root)
+{
+  "pythonVersion": "3.9",
+  "typeCheckingMode": "basic",
+  "extraPaths": ["dspy-rag-system/src"],
+  "exclude": ["**/.venv/**", "**/__pycache__/**", "**/.pytest_cache/**"]
+}
+```
+
+### **Test Import Management**
+> **📖 For detailed test import guidance, see `dspy-rag-system/tests/README-dev.md`**
+
+- **Centralized setup**: Use `conftest.py` for import path management
+- **Static analysis compatibility**: `tests/__init__.py` handles sys.path for tools
+- **No manual sys.path**: Remove per-file path manipulation
+- **Dynamic imports**: Keep for legitimate use cases (database mocking, model switching)
+
+### **Quality Standards for Critical Files**
+> **📖 For detailed quality standards, see `400_guides/400_code-criticality-guide.md`**
+
+- **Tier 1/2 files**: Zero F841 errors allowed
+- **Pre-commit gates**: All linter checks must pass
+- **CI/CD integration**: F841 errors treated as failures
+- **Code review**: Unused variable patterns reviewed
+
 ## **Unused Variable Handling (F841)**
 
 ### **When to Fix vs. Ignore F841 Errors**
@@ -1076,8 +1123,8 @@ def test_with_unused_setup():
 ```
 
 ### **Test-Specific Guidelines:**
+> **📖 For comprehensive test variable management, see `dspy-rag-system/tests/README-dev.md`**
 
-#### **Variable Management in Tests**
 - **Avoid variable overwriting** in test functions
 - **Use descriptive variable names** for test data
 - **Remove unused test setup variables**
@@ -2046,6 +2093,15 @@ jobs:
 ```
 
 ## 📚 Additional Resources
+
+### **Specialized Development Guides**
+
+> **📖 For comprehensive guidance on specific development areas, see these specialized guides:**
+
+- **Test Development**: `dspy-rag-system/tests/README-dev.md` - Import management, variable handling, configuration policy
+- **Code Criticality**: `400_guides/400_code-criticality-guide.md` - Quality standards, tier-based requirements, quality gates
+- **File Analysis**: `400_guides/400_file-analysis-guide.md` - Mandatory 6-step analysis process
+- **Testing Strategy**: `400_guides/400_testing-strategy-guide.md` - Comprehensive testing approaches and frameworks
 
 ### **Development Resources**
 
