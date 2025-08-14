@@ -3,6 +3,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_testing-strategy-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Task generation workflow and planning -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 # Generate Tasks
 

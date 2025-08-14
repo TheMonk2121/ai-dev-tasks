@@ -9,6 +9,7 @@
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - System architecture and technical overview -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 ## 🎯 **Current Status**
 

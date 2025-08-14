@@ -3,6 +3,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Task execution engine and workflow automation -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 # Process Task List
 

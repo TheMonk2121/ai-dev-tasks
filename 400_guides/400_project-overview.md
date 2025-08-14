@@ -4,6 +4,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Project overview and quick start guide -->
 <!-- WORKFLOW_MASTER: This file is the canonical source for development workflow -->
+<!-- DATABASE_SYNC: REQUIRED -->
 # 📋 Project Overview
 
 ## 📋 Project Overview

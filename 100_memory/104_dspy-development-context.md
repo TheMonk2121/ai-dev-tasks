@@ -2,6 +2,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_testing-strategy-guide.md -->
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 # DSPy Development Context
 

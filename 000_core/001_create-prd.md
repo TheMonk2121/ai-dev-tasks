@@ -3,6 +3,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_testing-strategy-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - PRD creation workflow and requirements -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 # 📝 Create PRD
 

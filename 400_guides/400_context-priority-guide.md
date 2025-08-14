@@ -3,6 +3,7 @@
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - File organization and cognitive scaffolding system -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 <!-- ANCHOR_KEY: context-priority -->
 <!-- ANCHOR_PRIORITY: 30 -->

@@ -2,6 +2,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- CONFIGURATION_MASTER: This file is the single source of truth for all configuration -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 # Setup Requirements
 
