@@ -123,6 +123,15 @@
 - `dspy-rag-system/scripts/hydration_benchmark.py` — Performance Benchmarking
   - Comprehensive performance benchmarking and stress testing for hydration system.
 
+- `dspy-rag-system/src/n8n_workflows/hydration_monitor.py` — n8n Health Monitor
+  - Automated health monitoring and alerting for hydration system via n8n workflows.
+
+- `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py` — Performance Dashboard
+  - Real-time monitoring dashboard with metrics visualization and alert system.
+
+- `400_guides/400_hydration-integration-guide.md` — Integration Framework
+  - Comprehensive integration patterns and automation for hydration system.
+
 ## 🧭 Criteria for Criticality
 
 - Orchestration impact: Breaks workflow if unavailable (`process_tasks.py`)
@@ -150,6 +159,8 @@
 - Role-specific context: Optimizes context assembly for different roles (`400_guides/400_planner-hydration-guide.md`, `400_guides/400_implementer-hydration-guide.md`)
 
 - Testing & validation: Ensures system quality and performance (`400_guides/400_hydration-testing-guide.md`, `dspy-rag-system/tests/test_hydration_quality.py`, `dspy-rag-system/scripts/hydration_benchmark.py`)
+
+- Integration & automation: Provides monitoring and workflow automation (`dspy-rag-system/src/n8n_workflows/hydration_monitor.py`, `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py`, `400_guides/400_hydration-integration-guide.md`)
 
 - --
 
@@ -184,6 +195,7 @@
 
 ## 🗒️ Change Log
 
+- v1.5: Added hydration integration framework (Tier 3) - n8n health monitor, performance dashboard, and integration guide
 - v1.4: Added hydration testing framework (Tier 3) - Testing framework, quality validation, and performance benchmarking
 - v1.3: Added role-specific hydration guides (Tier 3) - Planner and implementer context strategies
 - v1.2: Added memory rehydrator (Tier 1), rollback system and anchor parser (Tier 2), maintenance automation (Tier 3) - Context assembly and documentation safety

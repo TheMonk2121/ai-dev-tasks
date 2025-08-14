@@ -96,7 +96,7 @@ def benchmark_memory_usage():
     print("=" * 50)
 
     try:
-        import psutil
+        import psutil  # type: ignore[import-untyped]
 
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
