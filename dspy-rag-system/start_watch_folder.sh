@@ -4,8 +4,22 @@
 echo "🚀 Starting DSPy RAG Watch Folder..."
 echo "======================================"
 
-# Activate virtual environment
-source venv/bin/activate
+# Activate virtual environment (try multiple locations)
+VENV_ACTIVATED=false
+for venv_path in "../venv/bin/activate" "venv/bin/activate" "../../venv/bin/activate"; do
+    if [ -f "$venv_path" ]; then
+        # shellcheck disable=SC1090
+        source "$venv_path"
+        VENV_ACTIVATED=true
+        echo "✅ Virtual environment activated: $venv_path"
+        break
+    fi
+done
+
+if [ "$VENV_ACTIVATED" = false ]; then
+    echo "⚠️  Virtual environment not found. Continuing without activation..."
+    echo "💡 To create a virtual environment: python3 -m venv venv"
+fi
 
 # Check if watch folder exists, if not create it
 if [ ! -d "watch_folder" ]; then
@@ -24,4 +38,4 @@ echo "⏹️  Press Ctrl+C to stop"
 echo "======================================"
 
 # Start the watch folder
-python3 watch_folder.py 
+python3 src/watch_folder.py
