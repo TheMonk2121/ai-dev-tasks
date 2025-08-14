@@ -244,6 +244,13 @@ MAX_EVENTS_PER_CYCLE=10
 
 ```
 
+### Model selection in Cursor
+
+- In-app model picker: Settings → AI → Models, or run “Change Model” from the Command Palette.
+- If you toggle Auto off, you currently see: GPT‑5, GPT‑5 High, GPT‑5 Fast, Claude 4 Sonnet (availability can vary by account/region).
+- For the full, up-to-date catalog, see the official list: [Cursor Docs: Models](https://docs.cursor.com/models).
+
+
 ## **S-005: Specialized Agents Setup**
 
 🔥 **Status**: `setup-required`

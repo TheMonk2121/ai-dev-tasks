@@ -6,13 +6,8 @@ Unit tests for the backlog scrubber functionality.
 import unittest
 import tempfile
 import json
-import os
-import sys
 from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock
-
-# Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from n8n_workflows.backlog_scrubber import BacklogScrubber
 

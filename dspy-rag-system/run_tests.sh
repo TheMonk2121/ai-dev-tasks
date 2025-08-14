@@ -15,6 +15,7 @@ if [ $# -eq 0 ]; then
     echo "  $0 --tiers 1 2 --kinds integration # Production integration"
     echo "  $0 --markers 'tier1 and not e2e'    # Custom expression"
     echo "  $0 --legacy-files                   # Force legacy mode"
+    echo "  $0 --strict-markers                 # Enable strict validation"
     echo "  $0 --show-suggestions               # Show all examples"
     echo ""
 fi
@@ -50,7 +51,7 @@ run_tests() {
 }
 
 # Check for marker-based arguments (new interface)
-if [[ "$*" == *"--tiers"* ]] || [[ "$*" == *"--kinds"* ]] || [[ "$*" == *"--markers"* ]] || [[ "$*" == *"--show-suggestions"* ]]; then
+if [[ "$*" == *"--tiers"* ]] || [[ "$*" == *"--kinds"* ]] || [[ "$*" == *"--markers"* ]] || [[ "$*" == *"--show-suggestions"* ]] || [[ "$*" == *"--strict-markers"* ]]; then
     echo "🚀 Using marker-based test selection..."
     echo "----------------------------------------"
 

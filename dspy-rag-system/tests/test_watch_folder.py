@@ -8,7 +8,6 @@ Based on 400_code-criticality-guide.md Tier 2 criteria
 import subprocess
 
 # Import our Watch Folder module
-import sys
 import tempfile
 import time
 from pathlib import Path
@@ -22,13 +21,11 @@ try:
 except ImportError:
     psutil = None
 
-sys.path.append("src")
 from src.watch_folder import RAGFileHandler, WatchService, _is_file_ready, _run_add_document
 
 # ============================================================================
 # FAST UNIT TESTS (No I/O, No Sleep)
 # ============================================================================
-
 
 def test_is_file_ready_stable(tmp_path):
     """Test file stability detection - FAST"""
@@ -36,12 +33,10 @@ def test_is_file_ready_stable(tmp_path):
     file_path.write_text("stable content")
     assert _is_file_ready(file_path, polls=1, delay=0.01)
 
-
 def test_is_file_ready_nonexistent(tmp_path):
     """Test file stability for non-existent files - FAST"""
     file_path = tmp_path / "nonexistent.txt"
     assert _is_file_ready(file_path) is False
-
 
 def test_run_add_document_success_mock(tmp_path):
     """Test successful add_document execution - MOCKED"""
@@ -55,7 +50,6 @@ def test_run_add_document_success_mock(tmp_path):
         assert result.returncode == 0
         assert "chunks stored: 3" in result.stdout
 
-
 def test_run_add_document_failure_mock(tmp_path):
     """Test failed add_document execution - MOCKED"""
     file_path = tmp_path / "test.txt"
@@ -68,11 +62,9 @@ def test_run_add_document_failure_mock(tmp_path):
         assert result.returncode == 1
         assert "Error: File not found" in result.stderr
 
-
 # ============================================================================
 # QUICK INTEGRATION TESTS (Minimal I/O, Fast Timeouts)
 # ============================================================================
-
 
 @pytest.fixture
 def temp_dirs():
@@ -84,7 +76,6 @@ def temp_dirs():
         processed_dir.mkdir()
         yield watch_dir, processed_dir
 
-
 def test_watch_service_context_manager(temp_dirs):
     """Test WatchService context manager - FAST"""
     watch_dir, processed_dir = temp_dirs
@@ -94,7 +85,6 @@ def test_watch_service_context_manager(temp_dirs):
         assert service.pool._max_workers == 1
 
     assert not service.observer.is_alive()
-
 
 def test_file_creation_handling_fast(temp_dirs):
     """Test file creation handling - FAST with mocked subprocess"""
@@ -116,7 +106,6 @@ def test_file_creation_handling_fast(temp_dirs):
             assert processed_file.exists()
             assert not test_file.exists()
 
-
 def test_unsupported_file_extension_fast(temp_dirs):
     """Test unsupported file extensions - FAST"""
     watch_dir, processed_dir = temp_dirs
@@ -133,11 +122,9 @@ def test_unsupported_file_extension_fast(temp_dirs):
         assert test_file.exists()
         assert not (processed_dir / "test.xyz").exists()
 
-
 # ============================================================================
 # SECURITY TESTS (Critical - No Sleep)
 # ============================================================================
-
 
 def test_command_injection_prevention(temp_dirs):
     """Test prevention of command injection attacks - CRITICAL"""
@@ -167,7 +154,6 @@ def test_command_injection_prevention(temp_dirs):
             assert cmd[1] == "add_document.py"
             assert cmd[2].endswith("-rm_rf.txt")
 
-
 def test_path_traversal_prevention(temp_dirs):
     """Test prevention of path traversal attacks - CRITICAL"""
     watch_dir, processed_dir = temp_dirs
@@ -187,11 +173,9 @@ def test_path_traversal_prevention(temp_dirs):
             processed_file = processed_dir / "passwd.txt"
             assert processed_file.exists()
 
-
 # ============================================================================
 # PERFORMANCE TESTS (Fast Benchmarks)
 # ============================================================================
-
 
 def test_concurrent_file_processing_fast(temp_dirs):
     """Test concurrent processing - FAST with minimal files"""
@@ -221,14 +205,12 @@ def test_concurrent_file_processing_fast(temp_dirs):
             # Processing should be fast
             assert processing_time < 2.0
 
-
 def test_memory_usage_fast(temp_dirs):
     """Test memory usage - FAST with minimal load"""
     if psutil is None:
         pytest.skip("psutil not available for memory testing")
 
-    import os
-
+    
     watch_dir, processed_dir = temp_dirs
 
     # Get initial memory usage
@@ -254,11 +236,9 @@ def test_memory_usage_fast(temp_dirs):
             # Memory increase should be reasonable (less than 50MB)
             assert memory_increase < 50 * 1024 * 1024
 
-
 # ============================================================================
 # RESILIENCE TESTS (Critical Error Handling)
 # ============================================================================
-
 
 def test_subprocess_failure_handling(temp_dirs):
     """Test subprocess failure handling - CRITICAL"""
@@ -279,7 +259,6 @@ def test_subprocess_failure_handling(temp_dirs):
             assert test_file.exists()
             assert not (processed_dir / "failing.txt").exists()
 
-
 def test_subprocess_timeout_handling(temp_dirs):
     """Test subprocess timeout handling - CRITICAL"""
     watch_dir, processed_dir = temp_dirs
@@ -299,11 +278,9 @@ def test_subprocess_timeout_handling(temp_dirs):
             assert test_file.exists()
             assert not (processed_dir / "timeout.txt").exists()
 
-
 # ============================================================================
 # QUICK SMOKE TESTS (Fast Validation)
 # ============================================================================
-
 
 def test_rag_file_handler_initialization(temp_dirs):
     """Test RAGFileHandler initialization - FAST"""
@@ -320,7 +297,6 @@ def test_rag_file_handler_initialization(temp_dirs):
         assert handler.processed == processed_dir
         pool.shutdown()
 
-
 def test_supported_extensions():
     """Test supported extensions - FAST"""
     from src.watch_folder import SAFE_EXT
@@ -330,7 +306,6 @@ def test_supported_extensions():
     assert ".pdf" in SAFE_EXT
     assert ".csv" in SAFE_EXT
     assert ".xyz" not in SAFE_EXT
-
 
 # ============================================================================
 # MAIN TEST RUNNER

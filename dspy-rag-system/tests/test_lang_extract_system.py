@@ -4,12 +4,7 @@ Test LangExtract System
 Validates research-based structured extraction with span-level grounding
 """
 
-import os
-import sys
 import unittest
-
-# Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from src.dspy_modules.lang_extract_system import (
     EntityExtractor,
@@ -18,7 +13,6 @@ from src.dspy_modules.lang_extract_system import (
     LangExtractSystem,
     evaluate_extraction_quality,
 )
-
 
 class TestLangExtractSystem(unittest.TestCase):
     """Test LangExtract system functionality"""
@@ -281,7 +275,6 @@ class TestLangExtractSystem(unittest.TestCase):
         count = result["count"]
         self.assertIsInstance(count, int)
         self.assertGreaterEqual(count, 0)
-
 
 if __name__ == "__main__":
     unittest.main()

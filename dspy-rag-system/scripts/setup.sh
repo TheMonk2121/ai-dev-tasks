@@ -5,7 +5,7 @@
 
 set -e  # Exit on any error
 
-echo "🚀 Setting up DSPy RAG System for Cursor + Mistral-7B"
+echo "🚀 Setting up DSPy RAG System for Cursor Native AI"
 
 # Colors for output
 RED='\033[0;31m'
@@ -56,19 +56,7 @@ if ! pg_isready -q; then
     print_status "You can start PostgreSQL with: brew services start postgresql"
 fi
 
-# Check if Ollama is running
-if ! curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
-    print_warning "Ollama is not running. Please start Ollama before continuing."
-    print_status "You can start Ollama with: ollama serve"
-fi
-
-# Check if Mistral-7B is available
-if curl -s http://localhost:11434/api/tags | grep -q "mistral"; then
-    print_success "Mistral-7B model is available"
-else
-    print_warning "Mistral-7B model not found. You may need to pull it:"
-    print_status "Run: ollama pull mistral:7b-instruct"
-fi
+# No local model runtime required for Cursor models
 
 print_status "Setting up Python virtual environment..."
 
@@ -147,9 +135,9 @@ if [ ! -f ".env" ]; then
 # Database Configuration
 DATABASE_URL=postgresql://ai_user:ai_password@localhost:5432/ai_agency
 
-# Ollama Configuration
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=mistral:7b-instruct
+# Cursor Model Configuration
+CURSOR_NATIVE_AI_ENABLED=true
+CURSOR_NATIVE_AI_MODEL=cursor-native-ai
 
 # Vector Store Configuration
 EMBEDDING_MODEL=all-MiniLM-L6-v2
@@ -197,7 +185,7 @@ cat > docs/setup.md << 'EOF'
 
 1. **Python 3.8+** - Already installed
 2. **PostgreSQL** - Running with pgvector extension
-3. **Ollama** - Running with Mistral 7B Instruct model
+3. **Cursor Native AI** - Enabled in Cursor IDE
 4. **n8n** - Your existing n8n instance
 
 ## Quick Start
@@ -229,7 +217,7 @@ cat > docs/setup.md << 'EOF'
    sys.path.append('src')
    from dspy_modules.vector_store import VectorStore
 
-   vector_store = VectorStore('postgresql://ai_user:ai_password@localhost:5432/ai_agency')
+    vector_store = VectorStore('postgresql://ai_user:ai_password@localhost:5432/ai_agency')
    result = vector_store('search', query='Your question here?')
    print(f'Found {result[\"total_results\"]} relevant chunks')
    "
@@ -239,7 +227,7 @@ cat > docs/setup.md << 'EOF'
 
 Edit the `.env` file to customize:
 - Database connection
-- Ollama settings
+- Cursor model settings
 - Vector store parameters
 - RAG configuration
 
@@ -334,4 +322,4 @@ echo "🔧 Configuration: .env"
 echo "🧪 Tests: tests/"
 echo ""
 
-print_success "Your DSPy RAG system is ready to use with Cursor + Mistral-7B + PostgreSQL!"
+print_success "Your DSPy RAG system is ready to use with Cursor Native AI + PostgreSQL!"

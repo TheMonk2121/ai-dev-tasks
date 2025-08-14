@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 """
-Comprehensive Testing Suite for DSPy RAG System
-T-4.1: Advanced Testing Framework Implementation
+⚠️ LEGACY COMPREHENSIVE TEST SUITE ⚠️
 
-This module provides a comprehensive testing framework with:
-- Advanced test categorization (Unit, Integration, E2E, Performance)
-- Test automation and CI/CD integration
-- Advanced coverage analysis
-- Performance benchmarking
-- Security testing
-- Test data management
+This file is LEGACY CODE and should NOT be used for new development.
+Use the new marker-based approach instead:
+
+✅ NEW APPROACH (Use This):
+  ./run_tests.sh --tiers 1 --kinds smoke    # Fast PR gate
+  ./run_tests.sh --tiers 1 --kinds unit     # Critical unit tests
+  ./run_tests.sh --tiers 1 2 --kinds integration  # Production integration
+
+❌ LEGACY APPROACH (Avoid):
+  python tests/comprehensive_test_suite.py  # This file
+
+This file is maintained for backward compatibility only.
 """
 
 import json
@@ -58,7 +62,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 # Import with fallbacks for missing modules
 try:
-    from src.utils.logger import setup_logger
+    from utils.logger import setup_logger
 except ImportError:
 
     def setup_logger(name):
@@ -714,6 +718,7 @@ def main():
     parser.add_argument(
         "--min-cov", type=float, help="Minimum coverage threshold (forwards to pytest --cov-fail-under)"
     )
+    parser.add_argument("--strict-markers", action="store_true", help="Enable strict marker validation")
 
     # Existing arguments
     parser.add_argument("--parallel", action="store_true", default=True, help="Run tests in parallel")
@@ -771,6 +776,10 @@ def main():
 
         # Build pytest arguments
         pytest_args = ["-q", "-ra"]  # Quiet with summary, as suggested by ChatGPT
+
+        # Add strict markers if requested
+        if args.strict_markers:
+            pytest_args.append("--strict-markers")
 
         if marker_expr:
             pytest_args.extend(["-m", marker_expr])

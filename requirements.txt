@@ -1,5 +1,9 @@
-# AI Development Tasks - Core Requirements
-# Essential dependencies for the AI development ecosystem
+# AI Development Tasks - Consolidated Requirements
+# Single source of truth for all project dependencies
+
+# =============================================================================
+# CORE SYSTEM DEPENDENCIES
+# =============================================================================
 
 # System monitoring and performance
 psutil>=5.9.0           # System resource monitoring
@@ -18,10 +22,83 @@ markdown>=3.4.0         # Markdown processing
 pydantic>=2.0.0         # Data validation
 
 # Testing and quality
-pytest>=7.0.0           # Testing framework
-pytest-cov>=4.0.0       # Coverage reporting
+pytest>=7.4.3           # Testing framework
+pytest-cov>=4.1.0       # Coverage reporting
+pytest-mock>=3.10.0     # Mocking for tests
 
-# Optional: Advanced features
+# =============================================================================
+# DSPY RAG SYSTEM DEPENDENCIES
+# =============================================================================
+
+# Core DSPy and ML dependencies
+dspy==2.6.27
+sentence-transformers==2.2.2
+tiktoken>=0.7.0
+
+# Database dependencies
+psycopg2-binary==2.9.7
+pgvector==0.2.4
+
+# Document processing
+PyMuPDF==1.23.8
+
+# Web framework and real-time communication
+flask==2.3.3
+flask-socketio==5.3.6
+python-socketio==5.8.0
+werkzeug>=2.3.0
+
+# HTTP and networking
+requests>=2.31.0
+urllib3>=2.0.0
+
+# File system and process management
+watchdog==3.0.0
+
+# Security and auditing
+bandit>=1.7.5
+safety>=2.3.0
+pip-audit>=2.6.0
+
+# Additional utilities
+keyring>=24.0.0
+
+# OpenTelemetry for production monitoring
+opentelemetry-api>=1.20.0
+opentelemetry-sdk>=1.20.0
+opentelemetry-exporter-otlp-proto-grpc>=1.20.0
+opentelemetry-instrumentation-requests>=0.40b0
+opentelemetry-instrumentation-flask>=0.40b0
+opentelemetry-instrumentation-logging>=0.40b0
+
+# =============================================================================
+# DEVELOPMENT AND ANALYSIS TOOLS
+# =============================================================================
+
+# Conflict detection tools
+pycycle>=0.1.0          # Circular dependency detection
+pipdeptree>=2.0.0       # Dependency tree visualization
+
+# Code quality tools
+black>=23.0.0           # Code formatting
+isort>=5.12.0           # Import sorting
+ruff>=0.1.0             # Fast Python linter
+
+# Development tools
+pre-commit>=3.0.0       # Git hooks for quality checks
+
+# Optional: Performance monitoring
+memory-profiler>=0.60.0 # Memory usage profiling
+py-spy>=0.3.0           # Python profiler
+
+# Optional: Advanced analysis
+radon>=5.1.0            # Code complexity analysis
+mccabe>=0.7.0           # Cyclomatic complexity
+
+# =============================================================================
+# OPTIONAL: ADVANCED FEATURES
+# =============================================================================
+
 # Uncomment as needed:
 # openai>=1.0.0          # OpenAI API integration
 # anthropic>=0.7.0       # Anthropic API integration

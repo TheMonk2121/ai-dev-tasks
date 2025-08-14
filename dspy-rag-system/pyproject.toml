@@ -8,16 +8,6 @@ version = "0.1.0"
 description = "DSPy RAG System"
 requires-python = ">=3.8"
 
-[tool.pyright]
-pythonVersion = "3.8"
-pythonPlatform = "Darwin"
-venvPath = ".."
-venv = "venv"
-extraPaths = ["src", "../venv/lib/python3.*/site-packages"]
-include = ["src", "*.py"]
-exclude = ["venv", "**/__pycache__", ".pytest_cache", "tests"]
-reportMissingImports = false
-reportMissingTypeStubs = false
 
 [tool.black]
 line-length = 120

@@ -1,78 +1,39 @@
 #!/bin/bash
-
-# DISABLED: Legacy pre-commit guard for legacy model mentions
-# This script is disabled and should not influence current work
-# Blocks commits that introduce references to legacy models in non-archived markdown files.
-
+# Legacy model reference guard (active)
+# Blocks commits that introduce references to legacy local model tools in active paths
 set -euo pipefail
 
-# DISABLED SCRIPT - Exit immediately
-echo "❌ This script is disabled and should not be used"
-echo "   Use the active pre-commit hook instead"
+# Get staged files
+STAGED=$(git diff --cached --name-only --diff-filter=ACM || true)
+if [[ -z "$STAGED" ]]; then
+  exit 0
+fi
+
+# Restrict to text files we care about
+FILES=$(echo "$STAGED" | grep -Ev '^(docs/legacy/|600_archives/)' || true)
+if [[ -z "$FILES" ]]; then
+  exit 0
+fi
+
+# Patterns to block (case-insensitive)
+BLOCK_PATTERNS='(ollama|lm[[:space:]-]?studio)'
+
+VIOLATIONS=()
+while IFS= read -r f; do
+  [[ -f "$f" ]] || continue
+  if grep -IinE "$BLOCK_PATTERNS" "$f" >/dev/null 2>&1; then
+    VIOLATIONS+=("$f")
+  fi
+done <<< "$FILES"
+
+if (( ${#VIOLATIONS[@]} > 0 )); then
+  printf "\n❌ Legacy model references detected in active files:\n" >&2
+  for f in "${VIOLATIONS[@]}"; do
+    printf "  - %s\n" "$f" >&2
+    grep -IinE "$BLOCK_PATTERNS" "$f" | sed 's/^/    > /' >&2
+  done
+  printf "\nMove content to docs/legacy/ or update to Cursor-native references. Commit blocked.\n" >&2
+  exit 1
+fi
+
 exit 0
-
-# DISABLED CODE BELOW - All code after exit 0 is unreachable
-# This code is preserved for reference but commented out to fix shellcheck warnings
-
-# RED='\033[0;31m'
-# GREEN='\033[0;32m'
-# YELLOW='\033[1;33m'
-# NC='\033[0m'
-
-# log() { echo -e "${1}"; }
-# info() { log "${YELLOW}[INFO]${NC} $1"; }
-# error() { log "${RED}[ERROR]${NC} $1"; }
-# success() { log "${GREEN}[SUCCESS]${NC} $1"; }
-
-# Get staged markdown files (Added/Copied/Modified)
-# STAGED_MD=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.md$' || true)
-
-# if [[ -z "${STAGED_MD}" ]]; then
-#   info "No markdown files staged; skipping legacy guard"
-#   exit 0
-# fi
-
-# Exclude archives/legacy directories
-# ACTIVE_MD=$(echo "${STAGED_MD}" | grep -Ev '^(600_archives/|docs/legacy/)' || true)
-
-# Allowlist files that document legacy models as policy (not active integration)
-# ALLOW_FILES=(
-#   "100_cursor-memory-context.md"
-#   "101_memory-context-safety.md"
-#   "000_backlog.md"
-#   "400_file-analysis-guide.md"
-# )
-
-# if [[ -z "${ACTIVE_MD}" ]]; then
-#   info "Only archived/legacy markdown changed; skipping legacy guard"
-#   exit 0
-# fi
-
-# BLOCK_PATTERNS='mistral|yi[ -]?coder|mixtral'
-
-# VIOLATIONS=()
-# while IFS= read -r file; do
-#   # Skip allowlisted files
-#   for allow in "${ALLOW_FILES[@]}"; do
-#     if [[ "$file" == "$allow" ]]; then
-#       continue 2
-#     fi
-#   done
-#   if grep -niE "${BLOCK_PATTERNS}" "$file" >/dev/null 2>&1; then
-#     VIOLATIONS+=("$file")
-#   fi
-# done <<< "${ACTIVE_MD}"
-
-# if (( ${#VIOLATIONS[@]} > 0 )); then
-#   error "Legacy model references detected in active docs:"
-#   for f in "${VIOLATIONS[@]}"; do
-#     echo "  - $f"
-#     # Show matching lines for context
-#     grep -niE "${BLOCK_PATTERNS}" "$f" | sed 's/^/    > /'
-#   done
-#   error "Commit blocked. Move content to 600_archives/ or update to Cursor-native references."
-#   exit 1
-# fi
-
-# success "No legacy references detected in active docs"
-# exit 0

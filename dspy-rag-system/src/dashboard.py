@@ -115,10 +115,6 @@ class DashboardConfig:
     CURSOR_NATIVE_AI_ENABLED = os.getenv("CURSOR_NATIVE_AI_ENABLED", "true").lower() == "true"
     CURSOR_NATIVE_AI_MODEL = os.getenv("CURSOR_NATIVE_AI_MODEL", "cursor-native-ai")
 
-    # Legacy Ollama settings (for backward compatibility)
-    OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-    OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "cursor-native-ai")
-
     # Processing settings
     MAX_WORKERS = int(os.getenv("DASHBOARD_WORKERS", "4"))
     PROCESSING_TIMEOUT = int(os.getenv("PROCESSING_TIMEOUT", "300"))
@@ -303,18 +299,10 @@ def initialize_components():
         LOG.info("✅ Metadata extractor initialized")
 
         # Initialize enhanced RAG interface with Cursor Native AI
-        if DashboardConfig.CURSOR_NATIVE_AI_ENABLED:
-            # Use Cursor Native AI (no external URL needed)
-            state.rag_interface = create_enhanced_rag_interface(
-                DashboardConfig.POSTGRES_DSN, None, DashboardConfig.CURSOR_NATIVE_AI_MODEL
-            )
-            LOG.info("✅ Enhanced RAG interface initialized with Cursor Native AI")
-        else:
-            # Fallback to legacy Ollama
-            state.rag_interface = create_enhanced_rag_interface(
-                DashboardConfig.POSTGRES_DSN, DashboardConfig.OLLAMA_BASE_URL, DashboardConfig.OLLAMA_MODEL
-            )
-            LOG.info("✅ Enhanced RAG interface initialized with Ollama")
+        state.rag_interface = create_enhanced_rag_interface(
+            DashboardConfig.POSTGRES_DSN, None, DashboardConfig.CURSOR_NATIVE_AI_MODEL
+        )
+        LOG.info("✅ Enhanced RAG interface initialized with Cursor Native AI")
 
         # Start production monitoring if available
         if production_monitor:
@@ -818,8 +806,7 @@ def main():
             "max_file_size": format_file_size(DashboardConfig.MAX_CONTENT_LENGTH),
             "allowed_extensions": list(DashboardConfig.ALLOWED_EXTENSIONS),
             "workers": DashboardConfig.MAX_WORKERS,
-            "ollama_url": DashboardConfig.OLLAMA_BASE_URL,
-            "model": DashboardConfig.OLLAMA_MODEL,
+            "cursor_model": DashboardConfig.CURSOR_NATIVE_AI_MODEL,
         },
     )
 

@@ -5,13 +5,8 @@ Tests for input validation utilities.
 
 import pytest
 import tempfile
-import os
-import sys
 from pathlib import Path
 from unittest.mock import patch, MagicMock
-
-# Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from utils.validator import (
     sanitize_prompt, validate_file_path, validate_file_size,

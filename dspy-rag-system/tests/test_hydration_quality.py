@@ -4,13 +4,9 @@ Hydration Quality Tests
 Comprehensive test suite for memory rehydrator quality validation
 """
 
-import sys
 import time
 
-sys.path.append("src")
-
 from src.utils.memory_rehydrator import build_hydration_bundle
-
 
 def test_planner_context_quality():
     """Test planner role context assembly quality"""
@@ -62,7 +58,6 @@ def test_planner_context_quality():
         traceback.print_exc()
         return False
 
-
 def test_implementer_context_quality():
     """Test implementer role context assembly quality"""
     print("\n🧪 Testing Implementer Context Quality")
@@ -112,7 +107,6 @@ def test_implementer_context_quality():
 
         traceback.print_exc()
         return False
-
 
 def test_performance_benchmarks():
     """Test performance benchmarks for bundle creation"""
@@ -165,7 +159,6 @@ def test_performance_benchmarks():
         traceback.print_exc()
         return False
 
-
 def test_token_budget_efficiency():
     """Test token budget efficiency and adherence"""
     print("\n🧪 Testing Token Budget Efficiency")
@@ -206,7 +199,6 @@ def test_token_budget_efficiency():
 
         traceback.print_exc()
         return False
-
 
 def test_workflow_integration():
     """Test hydration integration with real workflows"""
@@ -263,7 +255,6 @@ def test_workflow_integration():
         traceback.print_exc()
         return False
 
-
 def main():
     """Run all hydration quality tests"""
     print("🚀 Hydration Quality Test Suite")
@@ -298,7 +289,6 @@ def main():
     else:
         print("⚠️  Some tests failed. Check the output above.")
         return 1
-
 
 if __name__ == "__main__":
     exit(main())

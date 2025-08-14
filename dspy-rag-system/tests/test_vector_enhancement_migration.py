@@ -4,8 +4,6 @@ Test suite for Vector Database Enhancement Migration
 Tests the migration script and validates the enhanced schema.
 """
 
-import os
-import sys
 import unittest
 import psycopg2
 import tempfile
@@ -13,9 +11,6 @@ import shutil
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 import json
-
-# Add the src directory to the path
-sys.path.append(str(Path(__file__).parent.parent / "src"))
 
 from scripts.apply_vector_enhancement import VectorEnhancementMigration
 from utils.logger import get_logger

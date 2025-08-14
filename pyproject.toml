@@ -8,12 +8,6 @@ version = "0.1.0"
 description = "AI Development Tasks Ecosystem"
 requires-python = ">=3.8"
 
-[tool.pyright]
-pythonVersion = "3.8"
-pythonPlatform = "Darwin"
-venvPath = "."
-venv = "venv"
-extraPaths = ["venv/lib/python3.*/site-packages"]
 
 [tool.black]
 line-length = 120
@@ -26,3 +20,8 @@ exclude = ["venv", "600_archives", "docs/legacy", "**/__pycache__"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
+
+[tool.pytest.ini_options]
+# Keep your existing addopts; using -q here as a safe default:
+addopts = "-q"
+testpaths = ["dspy-rag-system/tests"]

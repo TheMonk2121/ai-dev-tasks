@@ -1,3 +1,13 @@
-Flask==2.3.3
-psycopg2-binary==2.9.7
-Werkzeug==2.3.7 
+# Dashboard Requirements
+# References root requirements.txt for version consistency
+# Add only dashboard-specific dependencies here
+
+# Reference root requirements for version consistency
+-r ../requirements.txt
+
+# =============================================================================
+# DASHBOARD-SPECIFIC DEPENDENCIES (if any)
+# =============================================================================
+
+# Add any dashboard-specific dependencies here
+# These should be truly additive and not conflict with root requirements

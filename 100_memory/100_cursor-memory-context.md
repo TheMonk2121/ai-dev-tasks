@@ -10,6 +10,7 @@
     {"path": "400_guides/400_system-overview.md", "role": "architecture"},
     {"path": "400_guides/400_context-priority-guide.md", "role": "navigation"},
     {"path": "100_memory/104_dspy-development-context.md", "role": "dspy-context"},
+    {"path": "dspy-rag-system/tests/README-dev.md", "role": "test-development"},
     {"path": "200_setup/202_setup-requirements.md", "role": "setup"},
     {"path": "400_guides/400_deployment-environment-guide.md", "role": "deployment"},
     {"path": "400_guides/400_integration-patterns-guide.md", "role": "integration"},
@@ -72,7 +73,8 @@ The memory rehydrator builds role-aware context bundles with this priority:
 
 ## 🛠️ Commands {#commands}
 
-- Start tests: `./dspy-rag-system/run_tests.sh`
+- Start tests: `./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke` (new marker-based approach)
+- Legacy tests: `./dspy-rag-system/run_tests.sh all` (legacy mode - avoid)
 
 - Start dashboard: `./dspy-rag-system/start_mission_dashboard.sh`
 
@@ -81,6 +83,22 @@ The memory rehydrator builds role-aware context bundles with this priority:
 - Quick conflict check: `python scripts/quick_conflict_check.py`
 
 - Comprehensive conflict audit: `python scripts/conflict_audit.py --full`
+
+## 🔧 Import Policy (CRITICAL)
+
+### **Current Approach (Use This):**
+- **Tests**: Use `conftest.py` for centralized import paths
+- **Scripts**: Use `setup_imports.py` for scripts outside pytest context
+- **No manual sys.path**: Remove per-file path manipulation
+
+### **Legacy Approach (Avoid):**
+- ❌ Manual `sys.path.insert()` in test files
+- ❌ `comprehensive_test_suite.py` for new development
+- ❌ Direct `src.utils` imports in tests
+
+### **Test Execution:**
+- ✅ **New**: `./run_tests.sh --tiers 1 --kinds smoke` (marker-based)
+- ❌ **Legacy**: `./run_tests.sh all` (file-based)
 
 <!-- ANCHOR_KEY: commands -->
 <!-- ANCHOR_PRIORITY: 25 -->
@@ -99,6 +117,8 @@ The memory rehydrator builds role-aware context bundles with this priority:
 - Critical Python code map → `400_guides/400_code-criticality-guide.md`
 
 - Testing strategy → `400_guides/400_testing-strategy-guide.md`
+
+- Test development guide → `dspy-rag-system/tests/README-dev.md`
 
 - Deployment guide → `400_guides/400_deployment-environment-guide.md`
 
@@ -135,7 +155,7 @@ The memory rehydrator builds role-aware context bundles with this priority:
 - Planner: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`,
 `400_guides/400_context-priority-guide.md`
 
-- Implementer: `100_memory/104_dspy-development-context.md`, relevant 400-series topic guides (testing, security,
+- Implementer: `100_memory/104_dspy-development-context.md`, `dspy-rag-system/tests/README-dev.md`, relevant 400-series topic guides (testing, security,
 performance, integration, deployment)
 
 - Researcher: `500_research/500_research-index.md`, `500_research/500_dspy-research.md`,
@@ -209,7 +229,7 @@ AI Development Ecosystem
 
 ### **Key Technologies**
 
-- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
+- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements). Cursor models only; legacy local model instructions are archived under `600_archives/**`.
 
 - **Framework**: DSPy with PostgreSQL vector store
 

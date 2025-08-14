@@ -5,13 +5,8 @@ Tests for enhanced file validator with OpenTelemetry integration
 
 import unittest
 import tempfile
-import os
-import sys
 import shutil
 from unittest.mock import patch, MagicMock
-
-# Add src to path for imports
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from utils.enhanced_file_validator import (
     EnhancedFileValidator, FileValidationError, FileCorruptionError,

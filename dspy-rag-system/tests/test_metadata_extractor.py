@@ -4,14 +4,9 @@ Test script for the improved metadata extractor
 Verifies all critical fixes and improvements
 """
 
-import sys
-import os
 import tempfile
 import json
 from pathlib import Path
-
-# Add src to path
-sys.path.append('src')
 
 from utils.metadata_extractor import ConfigDrivenMetadataExtractor
 

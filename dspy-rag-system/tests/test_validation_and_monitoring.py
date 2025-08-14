@@ -6,11 +6,6 @@ Tests that the system is working correctly and not hallucinating
 
 import json
 import logging
-import os
-import sys
-
-# Add the src directory to the path
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
 from src.dspy_modules.cursor_model_router import (
     CursorModel,
@@ -22,7 +17,6 @@ from src.dspy_modules.cursor_model_router import (
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 
 def test_validation_system():
     """Test the validation system for hallucination detection"""
@@ -133,7 +127,6 @@ def test_validation_system():
 
     return results
 
-
 def test_monitoring_system():
     """Test the monitoring system for anomaly detection"""
 
@@ -205,7 +198,6 @@ def test_monitoring_system():
     print(f"  Anomaly Count: {final_report.get('anomaly_count', 0)}")
 
     return results
-
 
 def test_real_routing_with_validation():
     """Test real routing with validation enabled"""
@@ -301,7 +293,6 @@ def test_real_routing_with_validation():
     print(json.dumps(comprehensive_report, indent=2))
 
     return results
-
 
 def test_hallucination_detection():
     """Test specific hallucination detection scenarios"""
@@ -399,7 +390,6 @@ def test_hallucination_detection():
 
     return results
 
-
 def main():
     """Run all validation and monitoring tests"""
 
@@ -459,7 +449,6 @@ def main():
         return 1
 
     return 0
-
 
 if __name__ == "__main__":
     exit(main())

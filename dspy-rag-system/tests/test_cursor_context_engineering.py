@@ -5,16 +5,14 @@ Demonstrates intelligent model routing using DSPy
 """
 
 import json
-import os
-import sys
 import time
 
-# Add the src directory to the path
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
+import pytest
 
 from src.dspy_modules.cursor_model_router import CursorModel, create_cursor_model_router
 
-
+@pytest.mark.tier1
+@pytest.mark.integration
 def test_context_engineering():
     """Test the context engineering system with various query types"""
 
@@ -39,7 +37,7 @@ def test_context_engineering():
         {
             "query": "Fix the syntax error in this function",
             "description": "Simple debugging task",
-            "expected_model": CursorModel.CURSOR_NATIVE_AI.value,
+            "expected_model": CursorModel.MISTRAL_7B_INSTRUCT.value,
         },
         {
             "query": "Design a microservices architecture for an e-commerce platform",
@@ -145,7 +143,8 @@ def test_context_engineering():
 
     return results
 
-
+@pytest.mark.tier1
+@pytest.mark.unit
 def test_context_engineering_patterns():
     """Test specific context engineering patterns for each model"""
 
@@ -169,7 +168,7 @@ def test_context_engineering_patterns():
         {
             "task_type": "debugging",
             "query": "Fix this JavaScript error: 'Cannot read property of undefined'",
-            "expected_model": CursorModel.CURSOR_NATIVE_AI.value,
+            "expected_model": CursorModel.MISTRAL_7B_INSTRUCT.value,
         },
         {
             "task_type": "planning",
@@ -191,7 +190,6 @@ def test_context_engineering_patterns():
             print(f"📋 Model instructions: {result['model_instructions']}")
         else:
             print(f"❌ Failed: {result.get('error', 'Unknown error')}")
-
 
 def test_complexity_analysis():
     """Test complexity analysis and its impact on model selection"""
@@ -231,7 +229,6 @@ def test_complexity_analysis():
             print(f"🤖 Selected model: {selected_model}")
             print(f"🧠 Reasoning: {result['reasoning']}")
 
-
 def main():
     """Run all context engineering tests"""
 
@@ -263,7 +260,6 @@ def main():
         return 1
 
     return 0
-
 
 if __name__ == "__main__":
     exit(main())

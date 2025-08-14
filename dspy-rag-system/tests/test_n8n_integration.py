@@ -7,16 +7,11 @@ and automated task execution.
 """
 
 import unittest
-import os
-import sys
 import json
 import time
 from unittest.mock import Mock, patch, MagicMock
 from datetime import datetime
 from typing import Dict, Any
-
-# Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from n8n_workflows.n8n_integration import (
     N8nWorkflowManager,

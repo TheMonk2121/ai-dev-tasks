@@ -24,14 +24,15 @@
     // Markdownlint Configuration (references external config file)
     "markdownlint.configFile": ".markdownlint.jsonc",
     // Python Settings (for scripts/)
+    "python.pythonPath": "/usr/bin/python3",
     "python.analysis.typeCheckingMode": "basic",
     "python.analysis.autoImportCompletions": true,
     "python.analysis.autoImportUserSymbols": true,
     "python.analysis.autoImportPreferredFormat": "absolute",
     "python.analysis.extraPaths": [
-        "dspy-rag-system/src",
-        "dspy-rag-system"
+        "dspy-rag-system/src"
     ],
+    "python.analysis.diagnosticMode": "workspace",
     "python.formatting.provider": "black",
     // Disable built-in linting to avoid conflicts; use Ruff extension instead
     "python.linting.enabled": false,
@@ -86,6 +87,7 @@
         "Cursorpyright",
         "dspy",
         "Dspy",
+        "dotenv",
         "elif",
         "Elif",
         "esbenp",
@@ -102,8 +104,10 @@
         "Markdownlint",
         "mdformat",
         "Mdformat",
+        "numpy",
         "pylint",
         "Pylint",
+        "pydantic",
         "pytest",
         "Pytest",
         "pgvector",
@@ -142,6 +146,7 @@
         "BlinkMacSystemFont",
         "Ubuntu",
         "Droid",
+        "socketio",
         "pycache",
         "Pycache",
         "getattr",
@@ -163,6 +168,7 @@
         "Regen",
         "supervisorctl",
         "Supervisorctl",
+        "tiktoken",
         "tqdm",
         "Tqdm",
         "tolower",
@@ -207,11 +213,18 @@
         "MIXTRAL",
         "pyright",
         "PYRIGHT",
+        "pyrightconfig",
         "rglob",
         "doraise",
         "OLLAMA",
         "ollama",
-        "getcwd"
+        "getcwd",
+        "cand",
+        "isready",
+        "vulns",
+        "tcpm",
+        "redef",
+        "werkzeug"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

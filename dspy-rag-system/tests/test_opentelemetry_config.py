@@ -5,12 +5,7 @@ Tests for OpenTelemetry configuration module
 
 import unittest
 import tempfile
-import os
-import sys
 from unittest.mock import patch, MagicMock
-
-# Add src to path for imports
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from utils.opentelemetry_config import (
     OpenTelemetryConfig, initialize_opentelemetry, get_tracer,

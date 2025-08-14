@@ -5,20 +5,14 @@ Tests all aspects of the enhanced vector database capabilities.
 """
 
 import json
-import os
-import sys
 import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
-
-# Add the src directory to the path
-sys.path.append(str(Path(__file__).parent.parent / "src"))
 
 from src.dspy_modules.enhanced_vector_store import EnhancedVectorStore
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
-
 
 class TestVectorDatabaseEnhancement(unittest.TestCase):
     """Test cases for Vector Database Foundation Enhancement (B-031)"""
@@ -344,7 +338,6 @@ class TestVectorDatabaseEnhancement(unittest.TestCase):
 
             logger.info("Vector index validation test passed")
 
-
 class TestVectorDatabaseIntegration(unittest.TestCase):
     """Integration tests for vector database enhancement"""
 
@@ -359,7 +352,6 @@ class TestVectorDatabaseIntegration(unittest.TestCase):
         # This test would measure actual performance improvements
         # For now, we'll test the benchmarking logic
         logger.info("Performance benchmark test skipped (requires database)")
-
 
 def run_vector_database_enhancement_tests():
     """Run all vector database enhancement tests"""
@@ -385,7 +377,6 @@ def run_vector_database_enhancement_tests():
     )
 
     return result.wasSuccessful()
-
 
 if __name__ == "__main__":
     success = run_vector_database_enhancement_tests()

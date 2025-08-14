@@ -7,15 +7,24 @@
 <!-- ANCHOR: tldr -->
 {#tldr}
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Testing strategy maintained
-
+## 🎯 **Current Status**
+- **Status**: ✅ **ACTIVE** - Testing strategy maintained
 - **Priority**: 🔥 Critical - Quality assurance and testing
-
 - **Points**: 5 - High complexity, quality critical
-
 - **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_system-overview.md
-
 - **Next Steps**: Update testing strategies as system evolves
+
+## 🚨 **IMPORTANT: Testing Approach Migration**
+
+### **Current Approach (Use This):**
+- **Marker-based testing**: Use `--tiers` and `--kinds` for test selection
+- **Centralized imports**: Use `conftest.py` for test import paths
+- **Pytest with markers**: `./run_tests.sh --tiers 1 --kinds smoke`
+
+### **Legacy Approach (Avoid):**
+- ❌ `comprehensive_test_suite.py` for new development
+- ❌ Manual `sys.path` manipulation in test files
+- ❌ File-based test selection (`./run_tests.sh all`)
 
 ## 🔎 TL;DR
 

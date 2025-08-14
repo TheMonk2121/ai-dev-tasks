@@ -4,7 +4,6 @@ Comprehensive test suite for Watch Folder module
 Based on deep research analysis with all critical fixes
 """
 
-import os
 import time
 import tempfile
 import shutil
@@ -16,8 +15,6 @@ import pytest
 import subprocess
 
 # Import our Watch Folder module
-import sys
-sys.path.append('src')
 from src.watch_folder import WatchService, _is_file_ready, _run_add_document, RAGFileHandler
 
 # Test configuration
@@ -585,8 +582,7 @@ def test_processing_speed_benchmark(temp_dirs):
 def test_memory_usage_benchmark(temp_dirs):
     """Benchmark memory usage during processing"""
     import psutil
-    import os
-    
+        
     watch_dir, processed_dir = temp_dirs
     
     # Get initial memory usage

@@ -4,16 +4,11 @@ Unit tests for Real-time Mission Dashboard
 Tests mission tracking, dashboard functionality, and API endpoints
 """
 
-import os
-import sys
 import json
 import time
 import unittest
 from datetime import datetime, timedelta
 from unittest.mock import Mock, patch, MagicMock
-
-# Add src to path for imports
-sys.path.append('src')
 
 try:
     from mission_dashboard.mission_tracker import (

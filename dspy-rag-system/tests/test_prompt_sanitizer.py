@@ -5,13 +5,8 @@ Tests for prompt sanitization functionality
 
 import unittest
 import tempfile
-import os
 import json
 from unittest.mock import patch, MagicMock
-
-# Add src to path for imports
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from utils.prompt_sanitizer import (
     sanitize_prompt, validate_file_path, validate_file_size,

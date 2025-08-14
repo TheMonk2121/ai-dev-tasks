@@ -45,6 +45,7 @@ priority system to current documentation |
 | System overview | 400_guides/400_system-overview.md | — | After memory + backlog | Architecture mental model |
 | Backlog & priorities | 000_core/000_backlog.md | — | Always for work selection | Current focus and dependencies |
 | Testing | 400_guides/400_testing-strategy-guide.md | — | Before writing tests | Strategy, pyramid, quality gates |
+| Test development | dspy-rag-system/tests/README-dev.md | — | When writing DSPy tests | Import paths, variable management, F841 |
 | Deployment | 400_guides/400_deployment-environment-guide.md | — | Before shipping | Procedures, rollback, monitoring |
 | Migration | 400_guides/400_migration-upgrade-guide.md | — | Before/after breaking changes | Pre-checks, validation,
 rollback |
@@ -69,6 +70,7 @@ guard-rails |
 6) Topic-specific guides based on task:
 
 - Testing → `400_guides/400_testing-strategy-guide.md`
+- Test development → `dspy-rag-system/tests/README-dev.md`
 - Deployment → `400_guides/400_deployment-environment-guide.md`
 - Security → `400_guides/400_security-best-practices-guide.md`
 - Performance → `400_guides/400_performance-optimization-guide.md`

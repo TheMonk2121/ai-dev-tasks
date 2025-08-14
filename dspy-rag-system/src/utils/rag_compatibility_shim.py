@@ -18,7 +18,7 @@ FALLBACK_MODE = os.getenv("RAG_SHIM_FALLBACK", "none").lower()  # "none" | "enha
 
 
 class _RAGShim:
-    def __init__(self, db_dsn: Optional[str], ollama_base_url: Optional[str], model: Optional[str]):
+    def __init__(self, db_dsn: Optional[str], _legacy_url: Optional[str], model: Optional[str]):
         self.db_dsn = db_dsn
         self.model = model or "cursor-native-ai"
         self._hybrid = None
@@ -141,6 +141,6 @@ class _RAGShim:
 
 
 def create_enhanced_rag_interface(
-    db_dsn: Optional[str] = None, ollama_base_url: Optional[str] = None, model: Optional[str] = None
+    db_dsn: Optional[str] = None, _legacy_url: Optional[str] = None, model: Optional[str] = None
 ) -> _RAGShim:
-    return _RAGShim(db_dsn, ollama_base_url, model)
+    return _RAGShim(db_dsn, _legacy_url, model)

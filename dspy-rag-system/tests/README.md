@@ -18,16 +18,45 @@
 
 ## 📋 Test Categories
 
-### Unit Tests
+### Tier-Based Criticality (Phase 3)
+- **Tier 1 (Critical)**: Core backbone components (vector_store, document_processor, memory_rehydrator)
+- **Tier 2 (High Priority)**: Production infrastructure (database_resilience, prompt_sanitizer, error_patterns)
+- **Tier 3 (Supporting)**: Utilities and helpers (logger, tokenizer, metadata_extractor)
 
+### Test Kinds
+- **unit**: Fast, no I/O tests
+- **integration**: Minimal I/O, fast timeouts
+- **e2e**: End-to-end workflows
+- **smoke**: Very fast, PR gate tests
+
+### Marker Usage Examples
+```bash
+# Fast PR gate
+./run_tests.sh --tiers 1 --kinds smoke
+
+# Critical unit tests
+./run_tests.sh --tiers 1 --kinds unit
+
+# Production integration tests
+./run_tests.sh --tiers 1 2 --kinds integration
+
+# Custom marker expressions
+./run_tests.sh --markers 'tier1 and not e2e'
+
+# Strict marker validation (CI/CD)
+./run_tests.sh --strict-markers
+```
+
+### Legacy Test Categories
+
+#### Unit Tests
 - `test_fast_path.py` - Unit tests for fast-path detection and routing
 - `test_logger.py` - Pure unit tests, no external dependencies
 - `test_retry_policy.py` - Unit tests for retry wrapper and error handling (C-2 completed)
 - `test_tokenizer.py` - Unit tests for text processing
 - `test_metadata_extractor.py` - Unit tests for metadata extraction
 
-### Integration Tests
-
+#### Integration Tests
 - `test_document_processor.py` - Tests document processing pipeline
 - `test_rag_system.py` - Tests RAG system integration
 - `test_enhanced_rag_system.py` - Tests enhanced DSPy RAG system

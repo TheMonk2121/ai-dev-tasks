@@ -985,6 +985,8 @@ exclude = [
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
+ignore = ["E501"]  # Line too long - handled by black
+# Note: F841 removed from ignore list to catch unused variables
 ```
 
 **Usage Commands**:
@@ -1001,6 +1003,153 @@ ruff check --fix .
 # Sort imports
 ruff check --select I --fix .
 ```
+
+## **Unused Variable Handling (F841)**
+
+### **When to Fix vs. Ignore F841 Errors**
+
+**✅ Fix These Cases:**
+- Variable overwriting in tests (e.g., `error_message = "x"; error_message = "y"`)
+- Unused return values from function calls
+- Dead code assignments
+- Unused test setup variables
+- Variables assigned but never referenced
+
+**⚠️ Consider Ignoring These Cases:**
+- Debug variables during development (use `_debug_var` naming)
+- Callback parameters that may not always be used
+- Test variables that are intentionally unused
+- Temporary variables during refactoring
+
+### **Best Practices:**
+
+#### **1. Use Unique Variable Names**
+```python
+# ❌ Bad: Variable overwriting
+def test_severity_scores():
+    error_message = "Security violation"
+    error_message = "File not found"  # Overwrites previous!
+
+# ✅ Good: Unique variable names
+def test_severity_scores():
+    critical_error = "Security violation"
+    medium_error = "File not found"
+```
+
+#### **2. Remove Unused Variables**
+```python
+# ❌ Bad: Unused variable
+def process_data(data):
+    result = transform(data)
+    unused_var = calculate_extra(data)  # Never used
+    return result
+
+# ✅ Good: Remove unused variable
+def process_data(data):
+    result = transform(data)
+    return result
+```
+
+#### **3. Use Descriptive Names for Test Data**
+```python
+# ❌ Bad: Generic names
+def test_multiple_patterns():
+    error = "Database timeout"
+    error = "Authentication failed"  # Overwrites
+
+# ✅ Good: Descriptive names
+def test_multiple_patterns():
+    timeout_error = "Database timeout"
+    auth_error = "Authentication failed"
+```
+
+#### **4. Handle Intentionally Unused Variables**
+```python
+# ✅ Good: Use underscore prefix
+def callback_function(event, _unused_context):
+    process_event(event)
+
+# ✅ Good: Use noqa comment for specific cases
+def test_with_unused_setup():
+    setup_data = create_test_data()  # noqa: F841
+    # setup_data used implicitly by test framework
+```
+
+### **Test-Specific Guidelines:**
+
+#### **Variable Management in Tests**
+- **Avoid variable overwriting** in test functions
+- **Use descriptive variable names** for test data
+- **Remove unused test setup variables**
+- **Keep dynamic imports** for legitimate use cases (database mocking, model switching)
+
+#### **Common Test Patterns**
+```python
+# ✅ Good: Test with unique variables
+def test_error_patterns():
+    # Test critical severity
+    critical_error = "Security violation: blocked pattern detected"
+    critical_analysis = analyze_error_pattern(critical_error, "SecurityError")
+    assert critical_analysis.severity_score == 1.0
+
+    # Test medium severity
+    medium_error = "File not found: /path/to/file"
+    medium_analysis = analyze_error_pattern(medium_error, "FileNotFoundError")
+    assert medium_analysis.severity_score == 0.5
+```
+
+### **Configuration Guidelines:**
+
+#### **Current Ruff Configuration**
+```toml
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]  # Line too long - handled by black
+# Note: F841 removed from ignore list to catch unused variables
+```
+
+#### **When to Use Per-File Ignores**
+```toml
+[tool.ruff.lint.per-file-ignores]
+# Only for specific, justified cases
+"legacy_file.py" = ["F841"]  # Legacy code that can't be easily fixed
+"generated_file.py" = ["F841"]  # Auto-generated code
+```
+
+### **Quality Gates Integration:**
+
+#### **Pre-commit Checks**
+```bash
+# Check for unused variables
+ruff check --select F841 .
+
+# Fix automatically fixable issues
+ruff check --select F841 --fix .
+```
+
+#### **CI/CD Integration**
+```bash
+# Fail on unused variables in critical files
+ruff check --select F841 dspy-rag-system/src/ scripts/
+
+# Allow warnings in test files (with review)
+ruff check --select F841 dspy-rag-system/tests/ || echo "Review F841 warnings in tests"
+```
+
+### **Migration Strategy:**
+
+#### **For Existing Code**
+1. **Identify F841 errors**: `ruff check --select F841 .`
+2. **Fix variable overwriting**: Use unique variable names
+3. **Remove unused variables**: Clean up dead code
+4. **Add noqa comments**: Only for justified cases
+5. **Update tests**: Apply test-specific guidelines
+
+#### **For New Code**
+1. **Follow best practices** from the start
+2. **Use descriptive variable names**
+3. **Avoid variable overwriting**
+4. **Remove unused variables immediately**
 
 ## **SQL Linting**
 

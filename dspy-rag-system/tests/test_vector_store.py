@@ -4,10 +4,7 @@ Comprehensive test suite for VectorStore module
 Based on deep research analysis with all critical fixes
 """
 
-import os
-
 # Import our VectorStore
-import sys
 import time
 import uuid
 
@@ -15,12 +12,10 @@ import numpy as np
 import psycopg2
 import pytest
 
-sys.path.append("src")
 from src.dspy_modules.vector_store import HybridVectorStore, _get_model
 
 # Test database configuration
 POSTGRES_DSN = os.getenv("PG_DSN_TEST", "postgresql://danieljacobs@localhost:5432/ai_agency")
-
 
 @pytest.fixture(scope="session")
 def db_conn():
@@ -79,17 +74,14 @@ def db_conn():
     except Exception as e:
         pytest.skip(f"Database connection failed: {e}")
 
-
 @pytest.fixture
 def store(db_conn):
     """Create HybridVectorStore instance for testing"""
     return HybridVectorStore(POSTGRES_DSN)
 
-
 # ============================================================================
 # UNIT TESTS
 # ============================================================================
-
 
 @pytest.mark.tier1
 @pytest.mark.unit
@@ -99,11 +91,9 @@ def test_singleton_model():
     vs2 = HybridVectorStore(POSTGRES_DSN)
     assert vs1.model is vs2.model  # Same object -> singleton
 
-
 def test_connection_pool_singleton():
     """Test that connection pool is a singleton - SKIPPED: No longer using global pool"""
     pytest.skip("No longer using global connection pool")
-
 
 @pytest.mark.tier1
 @pytest.mark.smoke
@@ -112,7 +102,6 @@ def test_model_caching():
     model1 = _get_model("all-MiniLM-L6-v2")
     model2 = _get_model("all-MiniLM-L6-v2")
     assert model1 is model2  # Cached model
-
 
 @pytest.mark.tier1
 @pytest.mark.unit
@@ -125,7 +114,6 @@ def test_embedding_generation():
     assert len(embeddings) == 2
     assert embeddings[0].dtype == np.float32 or embeddings[0].dtype == np.float64
     assert embeddings[0].shape[0] == 384  # all-MiniLM-L6-v2 dimension
-
 
 def test_uuid_document_id():
     """Test that document IDs are UUIDs to prevent collisions"""
@@ -140,11 +128,9 @@ def test_uuid_document_id():
     # Verify it's a valid UUID
     uuid.UUID(doc_id)
 
-
 # ============================================================================
 # INTEGRATION TESTS
 # ============================================================================
-
 
 @pytest.mark.tier1
 @pytest.mark.integration
@@ -166,7 +152,6 @@ def test_store_and_search(store):
     assert search["results"][0]["content"] == "alpha bravo"
     assert search["results"][0]["similarity_score"] > 0.5
 
-
 def test_delete_document(store):
     """Test document deletion"""
     chunks = ["one", "two"]
@@ -183,7 +168,6 @@ def test_delete_document(store):
     fetch = store("get_document_chunks", document_id=doc_id)
     assert fetch["total_chunks"] == 0
 
-
 def test_get_document_chunks(store):
     """Test retrieving document chunks"""
     chunks = ["first chunk", "second chunk", "third chunk"]
@@ -199,7 +183,6 @@ def test_get_document_chunks(store):
     assert result["chunks"][0]["content"] == "first chunk"
     assert result["chunks"][1]["content"] == "second chunk"
     assert result["chunks"][2]["content"] == "third chunk"
-
 
 def test_bulk_insert_performance(store):
     """Test bulk insert performance with many chunks"""
@@ -218,11 +201,9 @@ def test_bulk_insert_performance(store):
     elapsed = end_time - start_time
     assert elapsed < 30.0  # Should complete within 30 seconds
 
-
 # ============================================================================
 # PERFORMANCE TESTS
 # ============================================================================
-
 
 def test_connection_pool_reuse(store):
     """Test that connection pool reuse improves performance"""
@@ -241,7 +222,6 @@ def test_connection_pool_reuse(store):
 
     # Second search should be faster (crude but shows no reconnect cost)
     assert second_time < first_time * 2
-
 
 def test_embedding_model_singleton_performance():
     """Test that singleton model prevents repeated loads"""
@@ -264,11 +244,9 @@ def test_embedding_model_singleton_performance():
     # Verify both instances share the same model (singleton behavior)
     assert vs1.model is vs2.model
 
-
 # ============================================================================
 # SECURITY TESTS
 # ============================================================================
-
 
 def test_sql_injection_not_possible(store):
     """Test that SQL injection attempts are handled safely"""
@@ -283,7 +261,6 @@ def test_sql_injection_not_possible(store):
         res = store("search", query=evil_query, limit=1)
         assert res["status"] == "success"  # No crash
         # The evil query should just be treated as a normal search query
-
 
 def test_input_validation():
     """Test input validation for various edge cases"""
@@ -302,11 +279,9 @@ def test_input_validation():
     res = store("search", query=long_query, limit=1)
     assert res["status"] == "success"  # Should handle gracefully
 
-
 # ============================================================================
 # RESILIENCE TESTS
 # ============================================================================
-
 
 def test_database_connection_failure():
     """Test handling of database connection failures"""
@@ -316,7 +291,6 @@ def test_database_connection_failure():
     res = invalid_store("search", query="test", limit=1)
     assert res["status"] == "error"
     assert "error" in res
-
 
 def test_embedding_generation_failure():
     """Test handling of embedding generation failures"""
@@ -334,7 +308,6 @@ def test_embedding_generation_failure():
     # Should either succeed or fail gracefully, not crash
     assert res["status"] in ["success", "error"]
 
-
 def test_partial_failure_scenarios(store):
     """Test partial failure scenarios"""
     # Test with mixed valid/invalid data
@@ -345,11 +318,9 @@ def test_partial_failure_scenarios(store):
     # Should handle gracefully, either succeed or fail cleanly
     assert res["status"] in ["success", "error"]
 
-
 # ============================================================================
 # ERROR HANDLING TESTS
 # ============================================================================
-
 
 def test_unknown_operation():
     """Test handling of unknown operations"""
@@ -357,7 +328,6 @@ def test_unknown_operation():
 
     with pytest.raises(ValueError, match="Unknown operation"):
         store("unknown_operation", some_param="value")
-
 
 def test_missing_parameters():
     """Test handling of missing required parameters"""
@@ -375,7 +345,6 @@ def test_missing_parameters():
     res = store("delete_document")
     assert res["status"] == "error"
 
-
 def test_invalid_parameters():
     """Test handling of invalid parameter types"""
     store = HybridVectorStore(POSTGRES_DSN)
@@ -388,11 +357,9 @@ def test_invalid_parameters():
     res = store("search", query=123, limit=1)
     assert res["status"] == "error"
 
-
 # ============================================================================
 # STATISTICS TESTS
 # ============================================================================
-
 
 def test_get_stats(store):
     """Test database statistics retrieval"""
@@ -410,11 +377,9 @@ def test_get_stats(store):
     assert stats["total_chunks"] >= 1
     assert stats["total_documents"] >= 1
 
-
 # ============================================================================
 # EDGE CASE TESTS
 # ============================================================================
-
 
 def test_large_chunks(store):
     """Test handling of very large chunks"""
@@ -425,7 +390,6 @@ def test_large_chunks(store):
     res = store("store_chunks", chunks=chunks, metadata=meta)
     assert res["status"] == "success"
 
-
 def test_many_small_chunks(store):
     """Test handling of many small chunks"""
     chunks = [f"chunk_{i}" for i in range(50)]
@@ -434,7 +398,6 @@ def test_many_small_chunks(store):
     res = store("store_chunks", chunks=chunks, metadata=meta)
     assert res["status"] == "success"
     assert res["chunks_stored"] == 50
-
 
 def test_special_characters(store):
     """Test handling of special characters in content"""
@@ -450,11 +413,9 @@ def test_special_characters(store):
     res = store("store_chunks", chunks=special_chunks, metadata=meta)
     assert res["status"] == "success"
 
-
 # ============================================================================
 # BENCHMARK TESTS
 # ============================================================================
-
 
 def test_search_performance_benchmark(store):
     """Benchmark search performance"""
@@ -475,7 +436,6 @@ def test_search_performance_benchmark(store):
         assert elapsed < 5.0  # Should complete within 5 seconds
         assert result["status"] == "success"
 
-
 def test_bulk_insert_benchmark(store):
     """Benchmark bulk insert performance"""
     # Create large dataset
@@ -490,7 +450,6 @@ def test_bulk_insert_benchmark(store):
     assert result["status"] == "success"
     assert result["chunks_stored"] == 500
     assert elapsed < 60.0  # Should complete within 60 seconds
-
 
 # ============================================================================
 # MAIN TEST RUNNER

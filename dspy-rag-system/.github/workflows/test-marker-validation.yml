@@ -1,0 +1,52 @@
+name: Marker-Based Test Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-marker-validation:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov
+
+    - name: Run Tier-1 smoke tests (strict markers)
+      run: |
+        python3 tests/comprehensive_test_suite.py --tiers 1 --kinds smoke --strict-markers
+
+    - name: Run Tier-1 unit tests (strict markers)
+      run: |
+        python3 tests/comprehensive_test_suite.py --tiers 1 --kinds unit --strict-markers
+
+    - name: Run Tier-2 integration tests (strict markers)
+      run: |
+        python3 tests/comprehensive_test_suite.py --tiers 2 --kinds integration --strict-markers
+
+    - name: Run full test suite with coverage (strict markers)
+      run: |
+        python3 tests/comprehensive_test_suite.py --strict-markers --min-cov 20
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella

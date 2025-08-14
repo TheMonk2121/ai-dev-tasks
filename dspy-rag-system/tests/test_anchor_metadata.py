@@ -5,15 +5,17 @@ Test Anchor Metadata Parser
 Tests the HTML comment parsing and metadata extraction functionality.
 """
 
-import os
-import sys
+import pytest
 
-# Add src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+from utils.anchor_metadata_parser import (
+    AnchorMetadata,
+    extract_anchor_metadata,
+    validate_anchor_metadata,
+)
 
-from utils.anchor_metadata_parser import AnchorMetadata, extract_anchor_metadata, validate_anchor_metadata
 
-
+@pytest.mark.tier2
+@pytest.mark.unit
 def test_canonical_anchor_extraction():
     """Test extraction of canonical anchor keys"""
     print("🧪 Testing Canonical Anchor Extraction")
@@ -55,6 +57,8 @@ def test_canonical_anchor_extraction():
         print(f"✅ Priority: {metadata.anchor_priority}")
 
 
+@pytest.mark.tier2
+@pytest.mark.unit
 def test_role_pin_extraction():
     """Test extraction of role pins"""
     print("\n🧪 Testing Role Pin Extraction")
@@ -93,6 +97,8 @@ def test_role_pin_extraction():
         print(f"✅ Role pins: {metadata.role_pins}")
 
 
+@pytest.mark.tier2
+@pytest.mark.unit
 def test_custom_anchor_extraction():
     """Test extraction of custom anchor keys"""
     print("\n🧪 Testing Custom Anchor Extraction")

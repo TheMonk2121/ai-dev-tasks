@@ -1,0 +1,71 @@
+# AI Development Tasks - Dependency Constraints
+# Pin exact versions for production consistency
+# Use with: pip install -r requirements.txt -c requirements-constraints.txt
+
+# Core system dependencies
+psutil==5.9.5
+click==8.1.7
+pyyaml==6.0.1
+python-dotenv==1.0.0
+pandas==2.1.1
+numpy==1.24.3
+markdown==3.5.1
+pydantic==2.4.2
+
+# Testing and quality
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+
+# DSPy and ML dependencies
+dspy==2.6.27
+sentence-transformers==2.2.2
+tiktoken==0.5.1
+
+# Database dependencies
+psycopg2-binary==2.9.7
+pgvector==0.2.4
+
+# Document processing
+PyMuPDF==1.23.8
+
+# Web framework and real-time communication
+flask==2.3.3
+flask-socketio==5.3.6
+python-socketio==5.8.0
+werkzeug==2.3.7
+
+# HTTP and networking
+requests==2.31.0
+urllib3==2.0.7
+
+# File system and process management
+watchdog==3.0.0
+
+# Security and auditing
+bandit==1.7.5
+safety==2.3.5
+pip-audit==2.6.1
+
+# Additional utilities
+keyring==24.2.0
+
+# OpenTelemetry for production monitoring
+opentelemetry-api==1.20.0
+opentelemetry-sdk==1.20.0
+opentelemetry-exporter-otlp-proto-grpc==1.20.0
+opentelemetry-instrumentation-requests==0.40b0
+opentelemetry-instrumentation-flask==0.40b0
+opentelemetry-instrumentation-logging==0.40b0
+
+# Development and analysis tools
+pycycle==0.1.0
+pipdeptree==2.13.2
+black==23.9.1
+isort==5.12.0
+ruff==0.0.292
+pre-commit==3.5.0
+memory-profiler==0.61.0
+py-spy==0.3.14
+radon==5.1.0
+mccabe==0.7.0

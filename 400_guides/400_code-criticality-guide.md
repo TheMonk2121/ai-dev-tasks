@@ -183,6 +183,52 @@
 - Run `./dspy-rag-system/run_tests.sh` (where applicable)
 - Run `python3 scripts/doc_coherence_validator.py` for cross‑references
 
+## 🛡️ Code Quality Standards for Critical Files
+
+### Tier 1 & 2 Files Must:
+- **Pass all linter checks** (no F841, E501, etc.)
+- **Have comprehensive test coverage** (80%+ for Tier 1, 70%+ for Tier 2)
+- **Follow unused variable best practices** (see `400_guides/400_comprehensive-coding-best-practices.md`)
+- **Use proper import patterns** (conftest.py for tests, no manual sys.path)
+- **Have clear error handling** and logging
+
+### Quality Gates:
+- **Pre-commit**: All linter checks pass for Tier 1/2 files
+- **CI/CD**: F841 errors treated as failures for Tier 1/2 files
+- **Code Review**: Unused variable patterns reviewed
+- **Test Coverage**: Minimum coverage thresholds enforced
+
+### Linting Standards:
+```bash
+# Tier 1 & 2 files must pass all checks
+ruff check --select E,F,I dspy-rag-system/src/ scripts/
+
+# Test files should follow F841 best practices
+ruff check --select F841 dspy-rag-system/tests/
+```
+
+### F841 Error Prevention:
+- **Tier 1 files**: Zero F841 errors allowed
+- **Tier 2 files**: Zero F841 errors allowed
+- **Tier 3 files**: F841 errors should be reviewed and fixed when possible
+- **Test files**: Follow test variable management guidelines
+
+### Examples of Quality Standards:
+```python
+# ✅ Good: Tier 1/2 file with proper variable management
+def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
+    validated_data = validate_input(data)
+    processed_result = transform_data(validated_data)
+    return processed_result
+
+# ❌ Bad: Unused variable in critical file
+def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
+    validated_data = validate_input(data)
+    unused_var = calculate_extra(data)  # F841 error - not allowed in Tier 1/2
+    processed_result = transform_data(validated_data)
+    return processed_result
+```
+
 - --
 
 ## 🔗 Cross‑References
