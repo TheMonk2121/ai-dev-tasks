@@ -114,6 +114,15 @@
 - `400_guides/400_implementer-hydration-guide.md` — Implementer Context Strategy
   - Role-specific context assembly for technical implementation tasks.
 
+- `400_guides/400_hydration-testing-guide.md` — Testing Framework
+  - Comprehensive testing and validation framework for hydration system quality.
+
+- `dspy-rag-system/tests/test_hydration_quality.py` — Quality Validation
+  - Role-specific context quality tests and performance benchmarks.
+
+- `dspy-rag-system/scripts/hydration_benchmark.py` — Performance Benchmarking
+  - Comprehensive performance benchmarking and stress testing for hydration system.
+
 ## 🧭 Criteria for Criticality
 
 - Orchestration impact: Breaks workflow if unavailable (`process_tasks.py`)
@@ -139,6 +148,8 @@
 - Maintenance automation: Supports repository maintenance workflows (`auto_push_prompt.py`, `maintenance_push.sh`)
 
 - Role-specific context: Optimizes context assembly for different roles (`400_guides/400_planner-hydration-guide.md`, `400_guides/400_implementer-hydration-guide.md`)
+
+- Testing & validation: Ensures system quality and performance (`400_guides/400_hydration-testing-guide.md`, `dspy-rag-system/tests/test_hydration_quality.py`, `dspy-rag-system/scripts/hydration_benchmark.py`)
 
 - --
 
@@ -173,6 +184,7 @@
 
 ## 🗒️ Change Log
 
+- v1.4: Added hydration testing framework (Tier 3) - Testing framework, quality validation, and performance benchmarking
 - v1.3: Added role-specific hydration guides (Tier 3) - Planner and implementer context strategies
 - v1.2: Added memory rehydrator (Tier 1), rollback system and anchor parser (Tier 2), maintenance automation (Tier 3) - Context assembly and documentation safety
 - v1.1: Added `doc_coherence_validator.py` to Tier 2 (High) - Documentation quality validation
