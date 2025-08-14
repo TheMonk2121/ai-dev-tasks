@@ -5,10 +5,20 @@ Optimize vector database performance and analyze optimization opportunities.
 """
 import json
 import sys
+from pathlib import Path
 
-import psycopg2
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
 
-DB_DSN = "postgresql://danieljacobs@localhost:5432/ai_agency"
+from database_utils import (
+    execute_query,
+    get_chunk_size_analysis,
+    get_cross_reference_analysis,
+    get_database_stats,
+    get_db_connection,
+    get_duplicate_chunk_count,
+    get_storage_analysis,
+)
 
 
 def analyze_database_performance():
@@ -17,42 +27,18 @@ def analyze_database_performance():
     print("=" * 50)
 
     try:
-        conn = psycopg2.connect(DB_DSN)
-        cursor = conn.cursor()
-
-        # Database statistics
-        cursor.execute(
-            """
-            SELECT
-                COUNT(*) as total_documents,
-                SUM(chunk_count) as total_chunks,
-                AVG(file_size) as avg_file_size,
-                AVG(chunk_count) as avg_chunks_per_doc
-            FROM documents
-        """
-        )
-        stats = cursor.fetchone()
+        # Use context-aware database utilities
+        stats = get_database_stats("operational")
+        chunk_sizes = get_chunk_size_analysis("operational")
+        cross_refs = get_cross_reference_analysis("operational")
+        duplicates = get_duplicate_chunk_count("operational")
+        docs_size, chunks_size = get_storage_analysis("operational")
 
         print("📊 Database Statistics:")
-        print(f"  Total Documents: {stats[0]}")
-        print(f"  Total Chunks: {stats[1]}")
-        print(f"  Average File Size: {stats[2]:.0f} bytes")
-        print(f"  Average Chunks per Document: {stats[3]:.1f}")
-
-        # Chunk size analysis
-        cursor.execute(
-            """
-            SELECT
-                filename,
-                file_size,
-                chunk_count,
-                ROUND(file_size::numeric / chunk_count, 1) as avg_chunk_size
-            FROM documents
-            WHERE filename LIKE '400_%'
-            ORDER BY avg_chunk_size DESC
-        """
-        )
-        chunk_sizes = cursor.fetchall()
+        print(f"  Total Documents: {stats['total_documents']}")
+        print(f"  Total Chunks: {stats['total_chunks']}")
+        print(f"  Average File Size: {stats['avg_file_size']:.0f} bytes")
+        print(f"  Average Chunks per Document: {stats['avg_chunks_per_doc']:.1f}")
 
         print("\n📏 Chunk Size Analysis:")
         total_chunk_size = 0
@@ -63,20 +49,22 @@ def analyze_database_performance():
         avg_chunk_size = total_chunk_size / len(chunk_sizes) if chunk_sizes else 0
         print(f"  Average Chunk Size: {avg_chunk_size:.1f} characters")
 
-        # Index analysis
-        cursor.execute(
+        # Index analysis (still need direct connection for pg_indexes)
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT
+                    schemaname,
+                    tablename,
+                    indexname,
+                    indexdef
+                FROM pg_indexes
+                WHERE tablename IN ('documents', 'document_chunks')
+                ORDER BY tablename, indexname
             """
-            SELECT
-                schemaname,
-                tablename,
-                indexname,
-                indexdef
-            FROM pg_indexes
-            WHERE tablename IN ('documents', 'document_chunks')
-            ORDER BY tablename, indexname
-        """
-        )
-        indexes = cursor.fetchall()
+            )
+            indexes = cursor.fetchall()
 
         print("\n🔍 Index Analysis:")
         for schema, table, index, definition in indexes:
@@ -94,23 +82,6 @@ def analyze_database_performance():
                 )
             )
             print(f"  {table}.{index}: {index_type}")
-
-        # Cross-reference efficiency
-        cursor.execute(
-            """
-            SELECT
-                d.filename,
-                COUNT(dc.id) as chunks_with_refs,
-                d.chunk_count,
-                ROUND(COUNT(dc.id)::numeric / d.chunk_count * 100, 1) as coverage_pct
-            FROM documents d
-            LEFT JOIN document_chunks dc ON d.id::text = dc.document_id AND dc.content LIKE '%400_%'
-            WHERE d.filename LIKE '400_%'
-            GROUP BY d.filename, d.chunk_count
-            ORDER BY coverage_pct DESC
-        """
-        )
-        cross_refs = cursor.fetchall()
 
         print("\n🔗 Cross-Reference Efficiency:")
         total_coverage = 0
@@ -139,48 +110,30 @@ def analyze_database_performance():
         else:
             print(f"  ✅ Cross-reference coverage ({avg_coverage:.1f}%) is good")
 
-        # Check for potential optimizations
-        cursor.execute(
-            """
-            SELECT COUNT(*) as duplicate_chunks
-            FROM document_chunks dc1
-            JOIN document_chunks dc2 ON dc1.content = dc2.content AND dc1.id != dc2.id
-        """
-        )
-        duplicates = cursor.fetchone()[0]
-
         if duplicates > 0:
             print(f"  ⚠️  Found {duplicates} potential duplicate chunks")
             print("     Consider deduplication for storage optimization")
         else:
             print("  ✅ No duplicate chunks detected")
 
-        # Memory usage estimation
-        cursor.execute(
-            """
-            SELECT
-                pg_size_pretty(pg_total_relation_size('documents')) as docs_size,
-                pg_size_pretty(pg_total_relation_size('document_chunks')) as chunks_size
-        """
-        )
-        sizes = cursor.fetchone()
-
         print("\n💾 Storage Analysis:")
-        print(f"  Documents Table: {sizes[0]}")
-        print(f"  Document Chunks Table: {sizes[1]}")
-
-        cursor.close()
-        conn.close()
+        print(f"  Documents Table: {docs_size}")
+        print(f"  Document Chunks Table: {chunks_size}")
 
         return {
-            "stats": stats,
+            "stats": (
+                stats["total_documents"],
+                stats["total_chunks"],
+                stats["avg_file_size"],
+                stats["avg_chunks_per_doc"],
+            ),
             "chunk_sizes": chunk_sizes,
             "indexes": indexes,
             "cross_refs": cross_refs,
             "avg_chunk_size": avg_chunk_size,
             "avg_coverage": avg_coverage,
             "duplicates": duplicates,
-            "sizes": sizes,
+            "sizes": (docs_size, chunks_size),
         }
 
     except Exception as e:
@@ -194,12 +147,8 @@ def optimize_chunk_sizes():
     print("=" * 30)
 
     try:
-        conn = psycopg2.connect(DB_DSN)
-        cursor = conn.cursor()
-
-        # Find files with suboptimal chunk sizes
-        cursor.execute(
-            """
+        # Use context-aware database utilities
+        query = """
             SELECT
                 filename,
                 file_size,
@@ -209,8 +158,8 @@ def optimize_chunk_sizes():
             WHERE ABS(file_size::numeric / chunk_count - 500) > 100
             ORDER BY ABS(file_size::numeric / chunk_count - 500) DESC
         """
-        )
-        suboptimal = cursor.fetchall()
+
+        suboptimal = execute_query(query, context="operational")
 
         if not suboptimal:
             print("✅ All files have optimal chunk sizes")
@@ -221,9 +170,6 @@ def optimize_chunk_sizes():
             optimal_chunks = max(1, round(file_size / 500))
             print(f"  {filename}: {avg_chunk_size:.1f} chars/chunk (optimal: ~500)")
             print(f"    Current: {chunk_count} chunks, Optimal: {optimal_chunks} chunks")
-
-        cursor.close()
-        conn.close()
 
         return True
 

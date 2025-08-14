@@ -180,6 +180,8 @@
         "mccabe",
         "Mccabe",
         "noqa",
+        "os",
+        "Os",
         "setex",
         "Setex",
         "Uncategorized",
