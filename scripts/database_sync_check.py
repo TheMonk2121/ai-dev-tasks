@@ -4,194 +4,209 @@ Database Synchronization Checker
 Check if files with DATABASE_SYNC tags are current in the database.
 """
 import os
-import sys
 import re
+import sys
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "scripts"))
+# Add dspy-rag-system/scripts to path for imports
+dspy_scripts_path = Path(__file__).parent.parent / "dspy-rag-system" / "scripts"
+sys.path.insert(0, str(dspy_scripts_path))
 
-from database_utils import execute_query, execute_single_query, get_db_connection
+from database_utils import execute_single_query, get_db_connection
 
 
 def find_files_with_sync_tags() -> List[Tuple[str, str]]:
     """
     Find all files with DATABASE_SYNC tags.
-    
+
     Returns:
         List of (file_path, sync_type) tuples
     """
     sync_files = []
-    
+
     # Search for files with DATABASE_SYNC tags
     for root, dirs, files in os.walk("."):
         # Skip git and other directories
         if any(skip in root for skip in [".git", "__pycache__", "venv", "node_modules"]):
             continue
-            
+
         for file in files:
-            if file.endswith(('.md', '.txt', '.py')):
+            if file.endswith((".md", ".txt", ".py")):
                 file_path = os.path.join(root, file)
                 try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
+                    with open(file_path, "r", encoding="utf-8") as f:
                         content = f.read()
-                    
+
                     # Check for DATABASE_SYNC tags
-                    if 'DATABASE_SYNC:' in content:
+                    if "DATABASE_SYNC:" in content:
                         # Extract sync type
-                        match = re.search(r'DATABASE_SYNC:\s*(\w+)', content)
-                        sync_type = match.group(1) if match else 'REQUIRED'
+                        match = re.search(r"DATABASE_SYNC:\s*(\w+)", content)
+                        sync_type = match.group(1) if match else "REQUIRED"
                         sync_files.append((file_path, sync_type))
-                        
+
                 except Exception as e:
                     print(f"Warning: Could not read {file_path}: {e}")
-    
+
     return sync_files
 
 
 def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, Dict]:
     """
     Check synchronization status of files with database.
-    
+
     Args:
         sync_files: List of (file_path, sync_type) tuples
-        
+
     Returns:
         Dictionary with sync status for each file
     """
     sync_status = {}
-    
+
     for file_path, sync_type in sync_files:
         filename = os.path.basename(file_path)
         file_size = os.path.getsize(file_path)
-        
+
         try:
             # Check if file exists in database
             query = "SELECT file_size, updated_at FROM documents WHERE filename = %s"
             result = execute_single_query(query, (filename,), context="operational")
-            
+
             if result:
                 db_size, db_updated = result
                 is_current = file_size == db_size
-                
+
                 sync_status[file_path] = {
-                    'filename': filename,
-                    'sync_type': sync_type,
-                    'file_size': file_size,
-                    'db_size': db_size,
-                    'is_current': is_current,
-                    'needs_update': not is_current,
-                    'db_updated': db_updated,
-                    'exists_in_db': True
+                    "filename": filename,
+                    "sync_type": sync_type,
+                    "file_size": file_size,
+                    "db_size": db_size,
+                    "is_current": is_current,
+                    "needs_update": not is_current,
+                    "db_updated": db_updated,
+                    "exists_in_db": True,
                 }
             else:
                 sync_status[file_path] = {
-                    'filename': filename,
-                    'sync_type': sync_type,
-                    'file_size': file_size,
-                    'db_size': None,
-                    'is_current': False,
-                    'needs_update': True,
-                    'db_updated': None,
-                    'exists_in_db': False
+                    "filename": filename,
+                    "sync_type": sync_type,
+                    "file_size": file_size,
+                    "db_size": None,
+                    "is_current": False,
+                    "needs_update": True,
+                    "db_updated": None,
+                    "exists_in_db": False,
                 }
-                
+
         except Exception as e:
             sync_status[file_path] = {
-                'filename': filename,
-                'sync_type': sync_type,
-                'file_size': file_size,
-                'error': str(e),
-                'needs_update': True
+                "filename": filename,
+                "sync_type": sync_type,
+                "file_size": file_size,
+                "error": str(e),
+                "needs_update": True,
             }
-    
+
     return sync_status
 
 
 def update_database_file(file_path: str, status: Dict) -> bool:
     """
     Update a file in the database.
-    
+
     Args:
         file_path: Path to the file
         status: Status dictionary from check_database_sync_status
-        
+
     Returns:
         True if successful, False otherwise
     """
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
-        
+
         file_size = len(content)
-        filename = status['filename']
-        
+        filename = status["filename"]
+
         with get_db_connection() as conn:
             cursor = conn.cursor()
-            
-            if status['exists_in_db']:
+
+            if status["exists_in_db"]:
                 # Update existing file
                 cursor.execute("SELECT id FROM documents WHERE filename = %s", (filename,))
                 document_id = cursor.fetchone()[0]
-                
+
                 # Delete existing chunks
                 cursor.execute("DELETE FROM document_chunks WHERE document_id = %s::text", (document_id,))
-                
+
                 # Update document
-                cursor.execute("""
-                    UPDATE documents 
+                cursor.execute(
+                    """
+                    UPDATE documents
                     SET file_size = %s, updated_at = CURRENT_TIMESTAMP
                     WHERE id = %s
-                """, (file_size, document_id))
-                
+                """,
+                    (file_size, document_id),
+                )
+
             else:
                 # Insert new file
-                cursor.execute("""
+                cursor.execute(
+                    """
                     INSERT INTO documents (filename, file_size, file_path, file_type, created_at, updated_at)
                     VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                     RETURNING id
-                """, (filename, file_size, file_path, "markdown"))
+                """,
+                    (filename, file_size, file_path, "markdown"),
+                )
                 document_id = cursor.fetchone()[0]
-            
+
             # Re-chunk content
             chunk_size = 500
             chunks = []
             for i in range(0, len(content), chunk_size):
-                chunk_content = content[i:i + chunk_size]
-                chunks.append({
-                    'content': chunk_content,
-                    'chunk_index': len(chunks),
-                    'start_offset': i,
-                    'end_offset': min(i + chunk_size, len(content)),
-                    'metadata': f'{{"filename": "{filename}", "chunk_index": {len(chunks)}, "file_size": {file_size}}}'
-                })
-            
+                chunk_content = content[i : i + chunk_size]
+                chunks.append(
+                    {
+                        "content": chunk_content,
+                        "chunk_index": len(chunks),
+                        "start_offset": i,
+                        "end_offset": min(i + chunk_size, len(content)),
+                        "metadata": f'{{"filename": "{filename}", "chunk_index": {len(chunks)}, "file_size": {file_size}}}',
+                    }
+                )
+
             # Insert chunks
             for chunk in chunks:
-                cursor.execute("""
-                    INSERT INTO document_chunks 
+                cursor.execute(
+                    """
+                    INSERT INTO document_chunks
                     (document_id, content, chunk_index, start_offset, end_offset, metadata, created_at, updated_at)
                     VALUES (%s::text, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-                """, (
-                    document_id,
-                    chunk['content'],
-                    chunk['chunk_index'],
-                    chunk['start_offset'],
-                    chunk['end_offset'],
-                    chunk['metadata']
-                ))
-            
+                """,
+                    (
+                        document_id,
+                        chunk["content"],
+                        chunk["chunk_index"],
+                        chunk["start_offset"],
+                        chunk["end_offset"],
+                        chunk["metadata"],
+                    ),
+                )
+
             # Update chunk count
-            cursor.execute("""
-                UPDATE documents 
-                SET chunk_count = %s 
+            cursor.execute(
+                """
+                UPDATE documents
+                SET chunk_count = %s
                 WHERE id = %s
-            """, (len(chunks), document_id))
-            
+            """,
+                (len(chunks), document_id),
+            )
+
             conn.commit()
             return True
-            
+
     except Exception as e:
         print(f"Error updating {file_path}: {e}")
         return False
@@ -201,66 +216,66 @@ def main():
     """Main function for database synchronization check."""
     print("🔍 Database Synchronization Check")
     print("=" * 50)
-    
+
     # Find files with sync tags
     sync_files = find_files_with_sync_tags()
-    
+
     if not sync_files:
         print("✅ No files with DATABASE_SYNC tags found")
         return True
-    
+
     print(f"📋 Found {len(sync_files)} files with DATABASE_SYNC tags:")
     for file_path, sync_type in sync_files:
         print(f"  - {file_path} ({sync_type})")
-    
+
     # Check sync status
     sync_status = check_database_sync_status(sync_files)
-    
+
     # Report status
     needs_update = []
     current_files = []
-    
+
     for file_path, status in sync_status.items():
-        if status.get('needs_update', False):
+        if status.get("needs_update", False):
             needs_update.append((file_path, status))
         else:
             current_files.append((file_path, status))
-    
-    print(f"\n📊 Synchronization Status:")
+
+    print("\n📊 Synchronization Status:")
     print(f"  Current: {len(current_files)} files")
     print(f"  Need Update: {len(needs_update)} files")
-    
+
     if current_files:
-        print(f"\n✅ Current Files:")
+        print("\n✅ Current Files:")
         for file_path, status in current_files:
             print(f"  - {status['filename']} ({status['file_size']} bytes)")
-    
+
     if needs_update:
-        print(f"\n🔄 Files Needing Update:")
+        print("\n🔄 Files Needing Update:")
         for file_path, status in needs_update:
-            if status.get('exists_in_db'):
+            if status.get("exists_in_db"):
                 print(f"  - {status['filename']}: {status['db_size']} → {status['file_size']} bytes")
             else:
                 print(f"  - {status['filename']}: Not in database ({status['file_size']} bytes)")
-        
+
         # Ask for update permission
-        if len(sys.argv) > 1 and sys.argv[1] == '--auto-update':
+        if len(sys.argv) > 1 and sys.argv[1] == "--auto-update":
             print(f"\n🔄 Auto-updating {len(needs_update)} files...")
             success_count = 0
-            
+
             for file_path, status in needs_update:
                 if update_database_file(file_path, status):
                     print(f"  ✅ Updated {status['filename']}")
                     success_count += 1
                 else:
                     print(f"  ❌ Failed to update {status['filename']}")
-            
+
             print(f"\n📊 Update Results: {success_count}/{len(needs_update)} successful")
             return success_count == len(needs_update)
         else:
-            print(f"\n⚠️  Run with --auto-update to update these files")
+            print("\n⚠️  Run with --auto-update to update these files")
             return False
-    
+
     return True
 
 

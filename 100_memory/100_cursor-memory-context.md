@@ -144,7 +144,7 @@ The memory rehydrator builds role-aware context bundles with this priority:
 <!-- ANCHOR_PRIORITY: 20 -->
 <!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
 
-- Comprehensive coding standards → `400_guides/400_comprehensive-coding-best-practices.md`
+- Comprehensive coding standards → `400_guides/400_comprehensive-coding-best-practices.md` (includes "Undefined Name" error fixes, database query patterns, and systematic test file patterns)
 
 ### Stable Anchors
 

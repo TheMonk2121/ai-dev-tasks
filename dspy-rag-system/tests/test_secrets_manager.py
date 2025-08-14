@@ -3,6 +3,7 @@
 Tests for secrets management functionality.
 """
 
+import os
 from importlib import import_module
 from unittest.mock import MagicMock, patch
 
@@ -12,12 +13,13 @@ import pytest
 try:
     sm = import_module("utils.secrets_manager")
 except ModuleNotFoundError:
-        sm = import_module("utils.secrets_manager")
+    sm = import_module("utils.secrets_manager")
 
 SecretConfig = sm.SecretConfig
 SecretsManager = sm.SecretsManager
 setup_secrets_interactive = sm.setup_secrets_interactive
 validate_startup_secrets = sm.validate_startup_secrets
+
 
 class TestSecretConfig:
     """Test SecretConfig dataclass"""
@@ -41,6 +43,7 @@ class TestSecretConfig:
         assert config.required is False
         assert config.default == "default_value"
         assert config.sensitive is False
+
 
 class TestSecretsManager:
     """Test SecretsManager functionality"""
@@ -262,6 +265,7 @@ class TestSecretsManager:
 
         # No legacy local model URL in default config
 
+
 class TestSecretsValidation:
     """Test secrets validation functions"""
 
@@ -318,6 +322,7 @@ class TestSecretsValidation:
 
         assert not setup_secrets_interactive()
 
+
 class TestSecretsIntegration:
     """Test secrets integration with other components"""
 
@@ -364,6 +369,7 @@ class TestSecretsIntegration:
         # Cache key should be present
         cache_key = f"CACHE_TEST_SECRET_{hash(str(config))}"
         assert cache_key in manager.validation_cache
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

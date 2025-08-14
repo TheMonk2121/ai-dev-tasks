@@ -26,6 +26,7 @@ from monitoring.production_monitor import (
     initialize_production_monitoring,
 )
 
+
 class TestProductionMonitor(unittest.TestCase):
     """Test production monitoring functionality"""
 
@@ -233,6 +234,7 @@ class TestProductionMonitor(unittest.TestCase):
         self.assertEqual(custom_monitor.service_version, "1.0.0")
         self.assertEqual(custom_monitor.environment, "production")
 
+
 class TestHealthEndpointManager(unittest.TestCase):
     """Test health endpoint manager functionality"""
 
@@ -356,6 +358,7 @@ class TestHealthEndpointManager(unittest.TestCase):
 
         custom_manager = initialize_health_endpoints(custom_monitor)
         self.assertEqual(custom_manager.production_monitor, custom_monitor)
+
 
 if __name__ == "__main__":
     unittest.main()

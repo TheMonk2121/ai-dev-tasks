@@ -235,7 +235,7 @@ def suggest_cleanup_actions(categories, reference_counts, referenced_by):
     return recommendations
 
 
-def create_cleanup_report(categories, reference_counts, referenced_by, recommendations):
+def create_cleanup_report(categories, reference_counts, referenced_by, recommendations, duplicates):
     """Create a comprehensive cleanup report."""
     print("\n📋 Cleanup Report Generation")
     print("=" * 40)
@@ -251,6 +251,10 @@ def create_cleanup_report(categories, reference_counts, referenced_by, recommend
         "cross_references": {
             "most_referenced": dict(sorted(referenced_by.items(), key=lambda x: len(x[1]), reverse=True)[:10]),
             "most_referencing": dict(sorted(reference_counts.items(), key=lambda x: x[1], reverse=True)[:10]),
+        },
+        "duplicates": {
+            "count": len(duplicates),
+            "details": {str(k): v for k, v in list(duplicates.items())[:10]},  # Include first 10 duplicates
         },
         "recommendations": recommendations,
         "categories": categories,
@@ -283,7 +287,7 @@ def main():
     recommendations = suggest_cleanup_actions(categories, reference_counts, referenced_by)
 
     # Create cleanup report
-    report = create_cleanup_report(categories, reference_counts, referenced_by, recommendations)
+    report = create_cleanup_report(categories, reference_counts, referenced_by, recommendations, duplicates)
 
     print("\n✅ Documentation cleanup analysis complete!")
     print("📊 Summary:")

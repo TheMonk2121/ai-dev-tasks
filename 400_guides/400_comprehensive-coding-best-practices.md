@@ -290,7 +290,7 @@ echo "✅ Installation complete!"
 - **Memory Benchmark**: `scripts/memory_benchmark.py` - Memory performance testing
 - **Memory Hierarchy**: `scripts/show_memory_hierarchy.py` - Memory structure visualization
 
-#### **Repository Maintenance** (See [`400_guides/400_contributing-guidelines.md`](400_guides/400_contributing-guidelines.md))
+#### **Repository Maintenance** (See [`400_contributing-guidelines.md`](400_contributing-guidelines.md))
 
 - **Repository Maintenance**: `scripts/repo_maintenance.py` - Automated maintenance
 - **Database Recovery**: `scripts/auto_recover_database.py` - Database recovery
@@ -1024,6 +1024,112 @@ pyright --project dspy-rag-system/
 # Troubleshoot import issues
 pyright --verbose dspy-rag-system/src/
 ```
+
+#### **"Undefined Name" Errors (Ruff/Pyright)**
+
+**What these errors mean:**
+- **"Undefined name `os`"**: The code uses `os.environ` but `import os` is missing
+- **"Undefined name `sys`"**: The code uses `sys.path` but `import sys` is missing
+- **Static analysis tools**: Both Ruff and Pyright catch these before runtime to prevent `NameError` exceptions
+
+**Common causes and solutions:**
+
+1. **Missing imports** (most common):
+   ```python
+   # ❌ Error: os is not defined
+   os.environ['VAR'] = 'value'
+
+   # ✅ Solution: Add import
+   import os
+   os.environ['VAR'] = 'value'
+   ```
+
+2. **Typo in variable name**:
+   ```python
+   # ❌ Error: variable_name is not defined
+   print(variable_name)  # typo in variable name
+
+   # ✅ Solution: Fix the typo
+   print(variable_name)  # correct spelling
+   ```
+
+3. **Scope issues**:
+   ```python
+   # ❌ Error: variable not defined in current scope
+   def function():
+       print(global_var)  # global_var not in scope
+
+   # ✅ Solution: Use global or pass as parameter
+   def function():
+       global global_var
+       print(global_var)
+   ```
+
+4. **Database query results** (common in scripts):
+   ```python
+   # ❌ Error: Object of type None is not subscriptable
+   cursor.execute("SELECT id FROM documents WHERE filename = %s", (filename,))
+   document_id = cursor.fetchone()[0]  # fetchone() can return None
+
+   # ✅ Solution: Check for None before accessing
+   cursor.execute("SELECT id FROM documents WHERE filename = %s", (filename,))
+   result = cursor.fetchone()
+   if result is None:
+       print(f"Document not found: {filename}")
+       continue
+   document_id = result[0]
+   ```
+
+**Quick fix workflow:**
+```bash
+# 1. Identify the error
+ruff check tests/test_secrets_manager.py
+# Output: "Undefined name `os`" at line 333
+
+# 2. Add missing import
+# Add: import os at the top of the file
+
+# 3. Verify the fix
+ruff check tests/test_secrets_manager.py
+# Output: "All checks passed!"
+
+# 4. Run isort to ensure proper import ordering
+isort tests/test_secrets_manager.py
+```
+
+**Best practices to avoid these errors:**
+1. **Use linting tools**: Run Ruff/Pyright regularly to catch these early
+2. **IDE integration**: Most IDEs (like Cursor) show these errors in real-time
+3. **Import organization**: Use `isort` to keep imports organized and catch missing ones
+4. **Type hints**: Use type hints to help static analyzers catch more issues
+
+**Systematic fixes for test files:**
+```bash
+# Find all undefined name errors in tests
+ruff check dspy-rag-system/tests/ --select F821
+
+# Common missing imports in test files:
+# - import os (for file operations, environment variables)
+# - import sys (for sys.exit(), sys.path)
+# - import tempfile (for temporary file operations)
+
+# Quick fix pattern for test files:
+# 1. Add missing imports at the top
+# 2. Run isort to organize imports
+# 3. Verify with ruff check
+```
+
+**Common patterns in test files:**
+- **File operations**: `os.path.join()`, `os.path.exists()`, `os.unlink()` → need `import os`
+- **Environment variables**: `os.getenv()`, `os.environ` → need `import os`
+- **Process operations**: `os.getpid()` → need `import os`
+- **System operations**: `sys.exit()`, `sys.path` → need `import sys`
+- **Temporary files**: `tempfile.mkdtemp()` → need `import tempfile`
+
+**Common patterns in database scripts:**
+- **Database queries**: `cursor.fetchone()[0]` → can return `None`, need null check
+- **Query results**: `result = cursor.fetchone(); result[0]` → check `if result is not None`
+- **Aggregate queries**: `SUM()` can return `None` for empty tables → use `or 0` default
 
 #### **Configuration Files**
 ```json

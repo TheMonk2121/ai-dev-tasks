@@ -112,8 +112,15 @@ def check_database_consistency():
         # Print summary
         print("=" * 50)
         print("📊 Database Consistency Summary:")
-        print(f"  Total Documents: {db_stats[0]}")
-        print(f"  Total Chunks: {db_stats[1]}")
+
+        # Handle potential None values from database query
+        if db_stats is not None:
+            print(f"  Total Documents: {db_stats[0] or 0}")
+            print(f"  Total Chunks: {db_stats[1] or 0}")
+        else:
+            print("  Total Documents: 0")
+            print("  Total Chunks: 0")
+
         print(f"  Current Files: {len(current_files)}")
         print(f"  Outdated Files: {len(outdated_files)}")
         print(f"  Missing Files: {len(missing_files)}")
@@ -145,7 +152,7 @@ def check_database_consistency():
             "outdated_files": outdated_files,
             "missing_files": missing_files,
             "current_files": current_files,
-            "db_stats": db_stats,
+            "db_stats": db_stats or (0, 0),  # Provide default values if None
             "cross_ref_stats": cross_ref_stats,
         }
 
@@ -178,7 +185,11 @@ def update_outdated_files(outdated_files):
 
                 # Get document ID
                 cursor.execute("SELECT id FROM documents WHERE filename = %s", (filename,))
-                document_id = cursor.fetchone()[0]
+                result = cursor.fetchone()
+                if result is None:
+                    print(f"❌ Document not found in database: {filename}")
+                    continue
+                document_id = result[0]
 
                 # Delete existing chunks
                 cursor.execute("DELETE FROM document_chunks WHERE document_id = %s::text", (document_id,))
