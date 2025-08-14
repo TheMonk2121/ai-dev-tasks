@@ -15,7 +15,7 @@ sys.path.insert(0, str(dspy_scripts_path))
 
 # Import database utilities with error handling
 try:
-    from database_utils import execute_single_query, get_db_connection
+    from database_utils import execute_single_query, get_db_connection  # type: ignore
 except ImportError as e:
     print(f"Error: Could not import database_utils from {dspy_scripts_path}")
     print(f"Import error: {e}")
@@ -179,7 +179,11 @@ def update_database_file(file_path: str, status: Dict) -> bool:
                         "chunk_index": len(chunks),
                         "start_offset": i,
                         "end_offset": min(i + chunk_size, len(content)),
-                        "metadata": f'{{"filename": "{filename}", "chunk_index": {len(chunks)}, "file_size": {file_size}}}',
+                        "metadata": (
+                            f'{{"filename": "{filename}", '
+                            f'"chunk_index": {len(chunks)}, '
+                            f'"file_size": {file_size}}}'
+                        ),
                     }
                 )
 

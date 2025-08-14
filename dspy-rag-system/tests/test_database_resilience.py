@@ -10,6 +10,7 @@ import unittest
 from datetime import datetime
 from unittest.mock import MagicMock, Mock, patch
 
+import utils.database_resilience as db_resilience
 from utils.database_resilience import (
     ConnectionStats,
     DatabaseHealth,
