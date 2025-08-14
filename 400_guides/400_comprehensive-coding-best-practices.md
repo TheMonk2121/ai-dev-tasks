@@ -1043,6 +1043,37 @@ pyright --verbose dspy-rag-system/src/
 - **No manual sys.path**: Remove per-file path manipulation
 - **Dynamic imports**: Keep for legitimate use cases (database mocking, model switching)
 
+### **Database Operations & Static Analysis**
+> **📖 For database utilities, see `dspy-rag-system/scripts/database_utils.py`**
+
+#### **Context-Aware Database Utilities**
+- **Operational scripts**: Use `context="operational"` for fast development (assumes data exists)
+- **Production code**: Use `context="production"` for robust error handling
+- **No more Pyright errors**: Eliminates "Object of type None is not subscriptable" issues
+
+#### **Usage Patterns**
+```python
+# Operational scripts (fast development)
+from database_utils import get_database_stats
+stats = get_database_stats("operational")  # Assumes data exists
+print(f"Total: {stats['total_documents']}")
+
+# Production code (robust error handling)
+try:
+    stats = get_database_stats("production")  # Raises RuntimeError if no data
+    print(f"Total: {stats['total_documents']}")
+except RuntimeError as e:
+    print(f"Database error: {e}")
+```
+
+#### **Available Functions**
+- `get_database_stats(context)` - Database statistics
+- `get_chunk_size_analysis(context)` - Chunk size analysis
+- `get_cross_reference_analysis(context)` - Cross-reference analysis
+- `get_duplicate_chunk_count(context)` - Duplicate chunk count
+- `get_storage_analysis(context)` - Storage analysis
+- `execute_query(query, context)` - Execute queries with context-aware handling
+
 ### **Quality Standards for Critical Files**
 > **📖 For detailed quality standards, see `400_guides/400_code-criticality-guide.md`**
 

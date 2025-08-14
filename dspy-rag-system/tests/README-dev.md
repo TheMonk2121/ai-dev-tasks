@@ -66,3 +66,28 @@ def test_severity_scores():
 - **Remove unused test setup variables**
 - **Keep dynamic imports** for legitimate use cases (database mocking, model switching)
 - **Apply F841 best practices** from comprehensive coding guide
+
+## Database Operations in Tests
+
+### Context-Aware Database Utilities
+> **📖 For database utilities, see `dspy-rag-system/scripts/database_utils.py`**
+
+When writing tests that interact with the database, use the context-aware utilities:
+
+```python
+# For test scripts (operational context)
+from database_utils import get_database_stats
+stats = get_database_stats("operational")  # Fast, assumes data exists
+
+# For production-like tests (production context)
+try:
+    stats = get_database_stats("production")  # Robust error handling
+    assert stats['total_documents'] > 0
+except RuntimeError as e:
+    pytest.fail(f"Database not ready: {e}")
+```
+
+### Benefits
+- **No Pyright errors**: Eliminates "Object of type None is not subscriptable" issues
+- **Consistent patterns**: Same approach across all database operations
+- **Context-appropriate**: Fast for tests, robust for production code
