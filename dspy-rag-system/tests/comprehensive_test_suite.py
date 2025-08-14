@@ -679,35 +679,140 @@ def main():
     """Main entry point for comprehensive test suite"""
     import argparse
 
+    import pytest
+
+    # Import our marker utilities
+    try:
+        from framework.selectors import build_marker_expression, get_suggested_markers, validate_marker_expression
+    except ImportError:
+        # Fallback if framework not available
+        def build_marker_expression(*args, **kwargs) -> Optional[str]:
+            return None
+
+        def validate_marker_expression(expr: str) -> bool:
+            return True
+
+        def get_suggested_markers() -> dict:
+            return {}
+
     parser = argparse.ArgumentParser(description="Comprehensive Test Suite T-4.1")
+
+    # Legacy arguments (preserved for backward compatibility)
     parser.add_argument(
         "--categories",
         nargs="+",
         choices=["unit", "integration", "e2e", "performance", "security"],
         default=["unit", "integration", "e2e", "performance", "security"],
-        help="Test categories to run",
+        help="Test categories to run (legacy mode)",
     )
+
+    # New marker-based arguments
+    parser.add_argument("--tiers", nargs="*", default=[], help="Select tiers: 1 2 3 or tier1 tier2 tier3")
+    parser.add_argument("--kinds", nargs="*", default=[], help="Test kinds: unit integration e2e smoke")
+    parser.add_argument("--markers", default="", help="Raw pytest -m expression to combine/override")
+    parser.add_argument("--legacy-files", action="store_true", help="Force legacy file-list selection")
+    parser.add_argument(
+        "--min-cov", type=float, help="Minimum coverage threshold (forwards to pytest --cov-fail-under)"
+    )
+
+    # Existing arguments
     parser.add_argument("--parallel", action="store_true", default=True, help="Run tests in parallel")
     parser.add_argument("--workers", type=int, default=4, help="Number of parallel workers")
     parser.add_argument("--timeout", type=int, default=300, help="Test timeout in seconds")
     parser.add_argument("--coverage-threshold", type=float, default=80.0, help="Coverage threshold percentage")
     parser.add_argument("--no-security-scan", action="store_true", help="Skip security scanning")
     parser.add_argument("--no-report", action="store_true", help="Skip report generation")
+    parser.add_argument("--show-suggestions", action="store_true", help="Show suggested marker combinations")
 
-    args = parser.parse_args()
+    args, unknown = parser.parse_known_args()
 
-    config = TestSuiteConfig(
-        test_categories=args.categories,
-        parallel_execution=args.parallel,
-        max_workers=args.workers,
-        timeout_seconds=args.timeout,
-        coverage_threshold=args.coverage_threshold,
-        security_scan=not args.no_security_scan,
-        generate_report=not args.no_report,
-    )
+    # Handle suggestions
+    if args.show_suggestions:
+        suggestions = get_suggested_markers()
+        print("Suggested marker combinations:")
+        print("=" * 50)
+        for desc, expr in suggestions.items():
+            print(f"{desc:25} -> --markers '{expr}'")
+        print("\nExamples:")
+        print("  Fast PR Gate:     --tiers 1 --kinds smoke")
+        print("  Critical Units:   --tiers 1 --kinds unit")
+        print("  Production Tests: --tiers 1 2 --kinds integration")
+        print("  Custom:           --markers 'tier1 and not e2e'")
+        return
 
-    test_suite = ComprehensiveTestSuite(config)
-    report = test_suite.run_comprehensive_suite()
+    # Build marker expression
+    marker_expr = None
+    if args.tiers or args.kinds or args.markers:
+        marker_expr = build_marker_expression(tiers=args.tiers, kinds=args.kinds, extra_expr=args.markers)
+        logger.info(
+            f"🔧 Built marker expression: '{marker_expr}' from tiers={args.tiers}, kinds={args.kinds}, markers={args.markers}"
+        )
+
+        if marker_expr:
+            logger.info(f"🎯 Using marker expression: {marker_expr}")
+
+            # Validate marker expression
+            if not validate_marker_expression(marker_expr):
+                logger.warning("⚠️ Invalid marker expression, falling back to legacy mode")
+                marker_expr = None
+        else:
+            logger.info("ℹ️ No marker filter specified, running all tests")
+
+    # Handle legacy mode
+    if args.legacy_files:
+        logger.info("🔄 Legacy file-based selection active")
+        marker_expr = None
+
+    # Determine execution mode
+    logger.info(f"🔍 Execution decision: marker_expr='{marker_expr}', legacy_files={args.legacy_files}")
+    if marker_expr and not args.legacy_files:
+        # Marker-based execution
+        logger.info("🚀 Running marker-based test selection")
+
+        # Build pytest arguments
+        pytest_args = ["-q", "-ra"]  # Quiet with summary, as suggested by ChatGPT
+
+        if marker_expr:
+            pytest_args.extend(["-m", marker_expr])
+
+        # Add coverage if requested
+        if args.min_cov:
+            pytest_args.extend(["--cov=src", f"--cov-fail-under={args.min_cov}"])
+        else:
+            pytest_args.extend(["--cov=src", "--cov-report=term-missing"])
+
+        # Add unknown arguments (pass through to pytest)
+        pytest_args.extend(unknown)
+
+        # Run pytest directly
+        logger.info(f"🔧 pytest args: {' '.join(pytest_args)}")
+        exit_code = pytest.main(pytest_args)
+
+        # Generate basic report for marker-based runs
+        print("\n" + "=" * 60)
+        print("MARKER-BASED TEST EXECUTION SUMMARY")
+        print("=" * 60)
+        print(f"Marker Expression: {marker_expr}")
+        print(f"Exit Code: {exit_code}")
+        print("=" * 60)
+
+        sys.exit(exit_code)
+    else:
+        # Legacy execution (existing comprehensive suite)
+        logger.info("🔄 Running legacy comprehensive test suite")
+
+        config = TestSuiteConfig(
+            test_categories=args.categories,
+            parallel_execution=args.parallel,
+            max_workers=args.workers,
+            timeout_seconds=args.timeout,
+            coverage_threshold=args.coverage_threshold,
+            security_scan=not args.no_security_scan,
+            generate_report=not args.no_report,
+        )
+
+        test_suite = ComprehensiveTestSuite(config)
+        report = test_suite.run_comprehensive_suite()
 
     # Print summary
     print("\n" + "=" * 60)

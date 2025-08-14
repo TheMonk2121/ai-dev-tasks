@@ -16,6 +16,12 @@ from unittest import mock
 
 import pytest
 
+# Optional dependency for memory testing
+try:
+    import psutil  # type: ignore[import-untyped]
+except ImportError:
+    psutil = None
+
 sys.path.append("src")
 from src.watch_folder import RAGFileHandler, WatchService, _is_file_ready, _run_add_document
 
@@ -144,7 +150,7 @@ def test_command_injection_prevention(temp_dirs):
         return mock.Mock(returncode=0, stdout="success", stderr="")
 
     with mock.patch("src.watch_folder.subprocess.run", side_effect=mock_run):
-        with WatchService(str(watch_dir), str(processed_dir), workers=1) as service:
+        with WatchService(str(watch_dir), str(processed_dir), workers=1):
             # Create file with potentially malicious name
             malicious_file = watch_dir / "-rm_rf.txt"
             malicious_file.write_text("malicious content")
@@ -169,7 +175,7 @@ def test_path_traversal_prevention(temp_dirs):
     with mock.patch("src.watch_folder.subprocess.run") as mock_run:
         mock_run.return_value = mock.Mock(returncode=0, stdout="chunks stored: 1", stderr="")
 
-        with WatchService(str(watch_dir), str(processed_dir), workers=1) as service:
+        with WatchService(str(watch_dir), str(processed_dir), workers=1):
             # Create file with path traversal attempt
             traversal_file = watch_dir / "../../../etc/passwd.txt"
             traversal_file.write_text("malicious content")
@@ -194,7 +200,7 @@ def test_concurrent_file_processing_fast(temp_dirs):
     with mock.patch("src.watch_folder.subprocess.run") as mock_run:
         mock_run.return_value = mock.Mock(returncode=0, stdout="chunks stored: 1", stderr="")
 
-        with WatchService(str(watch_dir), str(processed_dir), workers=4) as service:
+        with WatchService(str(watch_dir), str(processed_dir), workers=4):
             # Create minimal files for testing
             start_time = time.time()
 
@@ -218,38 +224,35 @@ def test_concurrent_file_processing_fast(temp_dirs):
 
 def test_memory_usage_fast(temp_dirs):
     """Test memory usage - FAST with minimal load"""
-    try:
-        import os
-
-        import psutil
-
-        watch_dir, processed_dir = temp_dirs
-
-        # Get initial memory usage
-        process = psutil.Process(os.getpid())
-        initial_memory = process.memory_info().rss
-
-        with mock.patch("src.watch_folder.subprocess.run") as mock_run:
-            mock_run.return_value = mock.Mock(returncode=0, stdout="chunks stored: 1", stderr="")
-
-            with WatchService(str(watch_dir), str(processed_dir), workers=2) as service:
-                # Process minimal files
-                for i in range(10):  # Reduced from 50 to 10
-                    test_file = watch_dir / f"memory_{i}.txt"
-                    test_file.write_text(f"content {i}")
-
-                # Wait minimal time
-                time.sleep(1)
-
-                # Check final memory usage
-                final_memory = process.memory_info().rss
-                memory_increase = final_memory - initial_memory
-
-                # Memory increase should be reasonable (less than 50MB)
-                assert memory_increase < 50 * 1024 * 1024
-
-    except ImportError:
+    if psutil is None:
         pytest.skip("psutil not available for memory testing")
+
+    import os
+
+    watch_dir, processed_dir = temp_dirs
+
+    # Get initial memory usage
+    process = psutil.Process(os.getpid())  # type: ignore[attr-defined]
+    initial_memory = process.memory_info().rss
+
+    with mock.patch("src.watch_folder.subprocess.run") as mock_run:
+        mock_run.return_value = mock.Mock(returncode=0, stdout="chunks stored: 1", stderr="")
+
+        with WatchService(str(watch_dir), str(processed_dir), workers=2):
+            # Process minimal files
+            for i in range(10):  # Reduced from 50 to 10
+                test_file = watch_dir / f"memory_{i}.txt"
+                test_file.write_text(f"content {i}")
+
+            # Wait minimal time
+            time.sleep(1)
+
+            # Check final memory usage
+            final_memory = process.memory_info().rss
+            memory_increase = final_memory - initial_memory
+
+            # Memory increase should be reasonable (less than 50MB)
+            assert memory_increase < 50 * 1024 * 1024
 
 
 # ============================================================================
@@ -264,7 +267,7 @@ def test_subprocess_failure_handling(temp_dirs):
     with mock.patch("src.watch_folder.subprocess.run") as mock_run:
         mock_run.return_value = mock.Mock(returncode=1, stdout="", stderr="add_document.py failed")
 
-        with WatchService(str(watch_dir), str(processed_dir), workers=1) as service:
+        with WatchService(str(watch_dir), str(processed_dir), workers=1):
             # Create a test file
             test_file = watch_dir / "failing.txt"
             test_file.write_text("test content")
@@ -284,7 +287,7 @@ def test_subprocess_timeout_handling(temp_dirs):
     with mock.patch("src.watch_folder.subprocess.run") as mock_run:
         mock_run.side_effect = subprocess.TimeoutExpired("python3", 30)
 
-        with WatchService(str(watch_dir), str(processed_dir), workers=1) as service:
+        with WatchService(str(watch_dir), str(processed_dir), workers=1):
             # Create a test file
             test_file = watch_dir / "timeout.txt"
             test_file.write_text("test content")

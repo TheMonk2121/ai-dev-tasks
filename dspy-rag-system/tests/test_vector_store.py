@@ -91,6 +91,8 @@ def store(db_conn):
 # ============================================================================
 
 
+@pytest.mark.tier1
+@pytest.mark.unit
 def test_singleton_model():
     """Test that SentenceTransformer is a singleton to prevent repeated loads"""
     vs1 = HybridVectorStore(POSTGRES_DSN)
@@ -103,6 +105,8 @@ def test_connection_pool_singleton():
     pytest.skip("No longer using global connection pool")
 
 
+@pytest.mark.tier1
+@pytest.mark.smoke
 def test_model_caching():
     """Test that model loading is cached"""
     model1 = _get_model("all-MiniLM-L6-v2")
@@ -110,6 +114,8 @@ def test_model_caching():
     assert model1 is model2  # Cached model
 
 
+@pytest.mark.tier1
+@pytest.mark.unit
 def test_embedding_generation():
     """Test embedding generation with proper numpy types"""
     store = HybridVectorStore(POSTGRES_DSN)
@@ -140,6 +146,8 @@ def test_uuid_document_id():
 # ============================================================================
 
 
+@pytest.mark.tier1
+@pytest.mark.integration
 def test_store_and_search(store):
     """Test complete store and search workflow"""
     chunks = ["alpha bravo", "charlie delta", "echo foxtrot"]
