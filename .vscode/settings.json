@@ -179,6 +179,7 @@
         "Venv",
         "mccabe",
         "Mccabe",
+        "noqa",
         "setex",
         "Setex",
         "Uncategorized",
