@@ -108,6 +108,12 @@
 - `scripts/maintenance_push.sh` — Maintenance Push Wrapper
   - Shell wrapper for auto-push prompt integration into maintenance workflows.
 
+- `400_guides/400_planner-hydration-guide.md` — Planner Context Strategy
+  - Role-specific context assembly for strategic planning tasks.
+
+- `400_guides/400_implementer-hydration-guide.md` — Implementer Context Strategy
+  - Role-specific context assembly for technical implementation tasks.
+
 ## 🧭 Criteria for Criticality
 
 - Orchestration impact: Breaks workflow if unavailable (`process_tasks.py`)
@@ -131,6 +137,8 @@
 - Safety & security: Prevents unsafe inputs/operations (`prompt_sanitizer.py`)
 
 - Maintenance automation: Supports repository maintenance workflows (`auto_push_prompt.py`, `maintenance_push.sh`)
+
+- Role-specific context: Optimizes context assembly for different roles (`400_guides/400_planner-hydration-guide.md`, `400_guides/400_implementer-hydration-guide.md`)
 
 - --
 
@@ -165,6 +173,7 @@
 
 ## 🗒️ Change Log
 
+- v1.3: Added role-specific hydration guides (Tier 3) - Planner and implementer context strategies
 - v1.2: Added memory rehydrator (Tier 1), rollback system and anchor parser (Tier 2), maintenance automation (Tier 3) - Context assembly and documentation safety
 - v1.1: Added `doc_coherence_validator.py` to Tier 2 (High) - Documentation quality validation
 - v1.0 (initial): Added Tier 1–3 with criteria and maintenance steps
