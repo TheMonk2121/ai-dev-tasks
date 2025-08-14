@@ -7,8 +7,12 @@
   "files": [
     {"path": "100_memory/100_cursor-memory-context.md", "role": "entry"},
     {"path": "000_core/000_backlog.md", "role": "priorities"},
+    {"path": "400_guides/400_project-overview.md", "role": "project-overview"},
     {"path": "400_guides/400_system-overview.md", "role": "architecture"},
     {"path": "400_guides/400_context-priority-guide.md", "role": "navigation"},
+    {"path": "400_guides/400_ai-constitution.md", "role": "ai-safety"},
+    {"path": "400_guides/400_file-analysis-guide.md", "role": "file-analysis"},
+    {"path": "400_guides/400_code-criticality-guide.md", "role": "code-quality"},
     {"path": "100_memory/104_dspy-development-context.md", "role": "dspy-context"},
     {"path": "dspy-rag-system/tests/README-dev.md", "role": "test-development"},
     {"path": "200_setup/202_setup-requirements.md", "role": "setup"},
