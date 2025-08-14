@@ -12,7 +12,7 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-|  |  |  |
+| Single source of truth for prioritized, most‑critical `.py` files | You need to understand the operational code backbone fast | Update when new critical modules are added |
 
 - Purpose: Single source of truth for prioritized, most‑critical `.py` files
 
@@ -21,8 +21,9 @@
 - Quick jump:
 - Tier 1 (Critical): `scripts/process_tasks.py`, `scripts/state_manager.py`,
 `dspy-rag-system/src/dspy_modules/cursor_model_router.py`, `dspy-rag-system/src/dspy_modules/vector_store.py`,
-`dspy-rag-system/src/dspy_modules/document_processor.py`
-  - Tier 3 (Supporting): `scripts/performance_benchmark.py` — Performance monitoring & optimization
+`dspy-rag-system/src/dspy_modules/document_processor.py`, `dspy-rag-system/src/utils/memory_rehydrator.py`
+- Tier 2 (High): `scripts/doc_coherence_validator.py`, `scripts/rollback_doc.sh`, `dspy-rag-system/src/utils/anchor_metadata_parser.py`
+- Tier 3 (Supporting): `scripts/performance_benchmark.py`, `scripts/auto_push_prompt.py` — Performance monitoring & maintenance automation
 
 - --
 
@@ -62,6 +63,10 @@
 
 - Validates, extracts metadata, chunks, and prepares documents for indexing and retrieval.
 
+6. `dspy-rag-system/src/utils/memory_rehydrator.py` — Context Assembly & Role-Aware Hydration
+
+- Builds role-aware context bundles from Postgres; pinned anchors + task-scoped retrieval; core AI agent context system.
+
 ### Tier 2 — High (production infrastructure)
 
 - `scripts/doc_coherence_validator.py` — Documentation Quality & Coherence Validation
@@ -79,6 +84,12 @@
 - `dspy-rag-system/src/utils/prompt_sanitizer.py` — Input Security Guard‑Rails
   - Validation and sanitization for queries/content; foundational for safe operations.
 
+- `scripts/rollback_doc.sh` — Documentation Recovery & Rollback System
+  - Git snapshot system for documentation recovery; automated snapshots and rollback procedures.
+
+- `dspy-rag-system/src/utils/anchor_metadata_parser.py` — Anchor Metadata Extraction
+  - Extracts anchor metadata from HTML comments; maps to JSONB for memory rehydrator; critical for context assembly.
+
 ### Tier 3 — Supporting (reliability/utilities)
 
 - `dspy-rag-system/src/utils/retry_wrapper.py` — Retry/Backoff Policies
@@ -91,7 +102,11 @@
 
 - `dspy-rag-system/src/utils/logger.py` — Structured logging helpers
 
-- --
+- `scripts/auto_push_prompt.py` — Repository Maintenance Automation
+  - Interactive prompt for pushing changes after maintenance; git status checks and user confirmation.
+
+- `scripts/maintenance_push.sh` — Maintenance Push Wrapper
+  - Shell wrapper for auto-push prompt integration into maintenance workflows.
 
 ## 🧭 Criteria for Criticality
 
@@ -103,11 +118,19 @@
 
 - Data path: Indexing/retrieval correctness/perf (`vector_store.py`, `document_processor.py`)
 
+- Context assembly: Breaks AI agent context building (`memory_rehydrator.py`)
+
+- Documentation safety: Affects recovery and rollback capabilities (`rollback_doc.sh`)
+
+- Metadata extraction: Breaks context assembly pipeline (`anchor_metadata_parser.py`)
+
 - Production resilience: Keeps system healthy under failure (`database_resilience.py`)
 
 - Documentation integrity: Ensures documentation quality and coherence (`doc_coherence_validator.py`)
 
 - Safety & security: Prevents unsafe inputs/operations (`prompt_sanitizer.py`)
+
+- Maintenance automation: Supports repository maintenance workflows (`auto_push_prompt.py`, `maintenance_push.sh`)
 
 - --
 
@@ -142,5 +165,6 @@
 
 ## 🗒️ Change Log
 
+- v1.2: Added memory rehydrator (Tier 1), rollback system and anchor parser (Tier 2), maintenance automation (Tier 3) - Context assembly and documentation safety
 - v1.1: Added `doc_coherence_validator.py` to Tier 2 (High) - Documentation quality validation
 - v1.0 (initial): Added Tier 1–3 with criteria and maintenance steps
