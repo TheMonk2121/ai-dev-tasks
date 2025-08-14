@@ -13,7 +13,14 @@ from typing import Dict, List, Tuple
 dspy_scripts_path = Path(__file__).parent.parent / "dspy-rag-system" / "scripts"
 sys.path.insert(0, str(dspy_scripts_path))
 
-from database_utils import execute_single_query, get_db_connection
+# Import database utilities with error handling
+try:
+    from database_utils import execute_single_query, get_db_connection
+except ImportError as e:
+    print(f"Error: Could not import database_utils from {dspy_scripts_path}")
+    print(f"Import error: {e}")
+    print("Make sure dspy-rag-system is properly set up and database_utils.py exists")
+    sys.exit(1)
 
 
 def find_files_with_sync_tags() -> List[Tuple[str, str]]:

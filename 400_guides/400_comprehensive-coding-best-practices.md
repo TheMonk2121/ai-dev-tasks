@@ -2321,3 +2321,56 @@ This document integrates with your implemented AI development ecosystem by:
 - **Next Review**: Monthly
 - **Development Standards Level**: Production Ready with Conflict Prevention
 - **Optimized for**: Solo Development Workflow with Systematic Conflict Prevention
+
+## **Automated Database Synchronization**
+
+### **Git Hooks for Database Management**
+
+The repository now includes automated database synchronization through Git hooks:
+
+#### **Pre-commit Hook** (`.git/hooks/pre-commit`)
+- **Purpose**: Validates markdown files before commit
+- **Action**: Runs `doc_coherence_validator.py --dry-run`
+- **Behavior**: Blocks commit if validation fails
+
+#### **Post-commit Hook** (`.git/hooks/post-commit`)
+- **Purpose**: Automatically updates database after core documentation changes
+- **Trigger**: Changes to core files (`100_cursor-memory-context.md`, `000_backlog.md`, `400_comprehensive-coding-best-practices.md`)
+- **Actions**:
+  1. Runs `update_cursor_memory.py` to update memory context
+  2. Runs `database_sync_check.py --auto-update` to sync files with `DATABASE_SYNC: REQUIRED` tags
+
+#### **Pre-push Hook** (`.git/hooks/pre-push`)
+- **Purpose**: Ensures database is synchronized before pushing
+- **Action**: Runs `database_sync_check.py` and warns if updates are needed
+- **Behavior**: Allows user to continue or abort push
+
+### **DATABASE_SYNC Tags**
+
+Files that should be automatically synchronized with the database should include:
+```markdown
+<!-- DATABASE_SYNC: REQUIRED -->
+```
+
+**Current files with DATABASE_SYNC tags:**
+- `100_memory/100_cursor-memory-context.md`
+- `000_core/000_backlog.md`
+- `400_guides/400_comprehensive-coding-best-practices.md`
+- `dspy-rag-system/tests/README-dev.md`
+- `scripts/database_sync_check.py`
+
+### **Manual Database Management**
+
+```bash
+# Check database synchronization status
+python3 scripts/database_sync_check.py
+
+# Update all files with DATABASE_SYNC tags
+python3 scripts/database_sync_check.py --auto-update
+
+# Update memory context only
+python3 scripts/update_cursor_memory.py
+
+# Check database consistency (dspy-rag-system)
+cd dspy-rag-system && python3 scripts/database_maintenance.py
+```
