@@ -46,14 +46,12 @@ def test_planner_role():
         else:
             print("⚠️  Role-specific content not found (may not have anchor metadata yet)")
 
-        return True
-
     except Exception as e:
         print(f"❌ Planner test failed: {e}")
         import traceback
 
         traceback.print_exc()
-        return False
+        raise
 
 
 def test_implementer_role():
@@ -77,11 +75,8 @@ def test_implementer_role():
         # Validate metadata
         required_meta = ["role", "task", "limit", "fusion_method_used", "w_dense_used", "w_sparse_used"]
         for field in required_meta:
-            if field in bundle.meta:
-                print(f"✅ {field}: {bundle.meta[field]}")
-            else:
-                print(f"❌ Missing {field}")
-                return False
+            assert field in bundle.meta, f"Missing {field}"
+            print(f"✅ {field}: {bundle.meta[field]}")
 
         # Check for TL;DR in bundle
         if "TL;DR" in bundle.text or "TLDR" in bundle.text:
@@ -95,14 +90,12 @@ def test_implementer_role():
         else:
             print("⚠️  DSPy context not found (may not have anchor metadata yet)")
 
-        return True
-
     except Exception as e:
         print(f"❌ Implementer test failed: {e}")
         import traceback
 
         traceback.print_exc()
-        return False
+        raise
 
 
 def test_tier1_guard():
@@ -136,14 +129,12 @@ def test_tier1_guard():
         else:
             print("⚠️  Bundle has no sections")
 
-        return True
-
     except Exception as e:
         print(f"❌ Tier-1 guard test failed: {e}")
         import traceback
 
         traceback.print_exc()
-        return False
+        raise
 
 
 def test_fusion_configuration():
@@ -162,14 +153,12 @@ def test_fusion_configuration():
         print(f"Tokens used: {bundle.meta.get('tokens_est', 0)}")
         print(f"Elapsed time: {bundle.meta.get('elapsed_s', 0)}s")
 
-        return True
-
     except Exception as e:
         print(f"❌ Fusion configuration test failed: {e}")
         import traceback
 
         traceback.print_exc()
-        return False
+        raise
 
 
 def test_token_budget():
@@ -188,11 +177,8 @@ def test_token_budget():
         budget = bundle_small.meta.get("token_budget", 500)
         print(f"Tokens used: {tokens_used}, Budget: {budget}")
 
-        if tokens_used <= budget:
-            print("✅ Token budget enforced correctly")
-        else:
-            print(f"❌ Token budget exceeded: {tokens_used} > {budget}")
-            return False
+        assert tokens_used <= budget, f"Token budget exceeded: {tokens_used} > {budget}"
+        print("✅ Token budget enforced correctly")
 
         # Test with large budget
         bundle_large = build_hydration_bundle(role="implementer", task="Test large budget", token_budget=2000, limit=12)
@@ -202,14 +188,12 @@ def test_token_budget():
         budget = bundle_large.meta.get("token_budget", 2000)
         print(f"Tokens used: {tokens_used}, Budget: {budget}")
 
-        return True
-
     except Exception as e:
         print(f"❌ Token budget test failed: {e}")
         import traceback
 
         traceback.print_exc()
-        return False
+        raise
 
 
 def test_json_output():
@@ -233,20 +217,15 @@ def test_json_output():
         }
 
         # Validate JSON structure
-        if "text" in json_output and "sections" in json_output and "meta" in json_output:
-            print("✅ JSON structure valid")
-        else:
-            print("❌ JSON structure invalid")
-            return False
+        assert "text" in json_output and "sections" in json_output and "meta" in json_output, "JSON structure invalid"
+        print("✅ JSON structure valid")
 
         # Check sections
         sections = json_output["sections"]
-        if len(sections) > 0:
-            print(f"✅ JSON has {len(sections)} sections")
-            for i, section in enumerate(sections[:2]):  # Show first 2 sections
-                print(f"  Section {i+1}: {section['kind']} - {section['title']}")
-        else:
-            print("⚠️  JSON has no sections")
+        assert len(sections) > 0, "JSON has no sections"
+        print(f"✅ JSON has {len(sections)} sections")
+        for i, section in enumerate(sections[:2]):  # Show first 2 sections
+            print(f"  Section {i+1}: {section['kind']} - {section['title']}")
 
         # Check metadata
         meta = json_output["meta"]
@@ -257,14 +236,12 @@ def test_json_output():
             else:
                 print(f"❌ Missing meta field: {field}")
 
-        return True
-
     except Exception as e:
         print(f"❌ JSON output test failed: {e}")
         import traceback
 
         traceback.print_exc()
-        return False
+        raise
 
 
 def main():

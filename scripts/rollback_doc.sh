@@ -265,7 +265,7 @@ show_status() {
         echo "  Snapshots available: $snapshot_count"
 
         if [ "$snapshot_count" -gt 0 ]; then
-            latest_snapshot=$(ls -t "$SNAPSHOT_DIR"/*.json 2>/dev/null | head -1)
+            latest_snapshot=$(find "$SNAPSHOT_DIR" -name "*.json" -type f -printf '%T@ %p\n' | sort -nr | head -1 | cut -d' ' -f2-)
             if [ -n "$latest_snapshot" ]; then
                 latest_id=$(basename "$latest_snapshot" .json)
                 latest_time=$(jq -r '.timestamp' "$latest_snapshot" 2>/dev/null || echo "unknown")

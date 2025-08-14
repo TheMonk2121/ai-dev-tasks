@@ -44,19 +44,15 @@ def test_canonical_anchor_extraction():
         print(f"\nTesting: {test_case['name']}")
         metadata = extract_anchor_metadata(test_case["content"])
 
-        if metadata.anchor_key == test_case["expected_key"]:
-            print(f"✅ Anchor key: {metadata.anchor_key}")
-        else:
-            print(f"❌ Expected {test_case['expected_key']}, got {metadata.anchor_key}")
-            return False
+        assert (
+            metadata.anchor_key == test_case["expected_key"]
+        ), f"Expected {test_case['expected_key']}, got {metadata.anchor_key}"
+        print(f"✅ Anchor key: {metadata.anchor_key}")
 
-        if metadata.anchor_priority == test_case["expected_priority"]:
-            print(f"✅ Priority: {metadata.anchor_priority}")
-        else:
-            print(f"❌ Expected priority {test_case['expected_priority']}, got {metadata.anchor_priority}")
-            return False
-
-    return True
+        assert (
+            metadata.anchor_priority == test_case["expected_priority"]
+        ), f"Expected priority {test_case['expected_priority']}, got {metadata.anchor_priority}"
+        print(f"✅ Priority: {metadata.anchor_priority}")
 
 
 def test_role_pin_extraction():
@@ -91,13 +87,10 @@ def test_role_pin_extraction():
         print(f"\nTesting: {test_case['name']}")
         metadata = extract_anchor_metadata(test_case["content"])
 
-        if metadata.role_pins == test_case["expected_roles"]:
-            print(f"✅ Role pins: {metadata.role_pins}")
-        else:
-            print(f"❌ Expected {test_case['expected_roles']}, got {metadata.role_pins}")
-            return False
-
-    return True
+        assert (
+            metadata.role_pins == test_case["expected_roles"]
+        ), f"Expected {test_case['expected_roles']}, got {metadata.role_pins}"
+        print(f"✅ Role pins: {metadata.role_pins}")
 
 
 def test_custom_anchor_extraction():
@@ -125,26 +118,21 @@ def test_custom_anchor_extraction():
         print(f"\nTesting: {test_case['name']}")
         metadata = extract_anchor_metadata(test_case["content"])
 
-        if metadata.anchor_key == test_case["expected_key"]:
-            print(f"✅ Custom anchor key: {metadata.anchor_key}")
-        else:
-            print(f"❌ Expected {test_case['expected_key']}, got {metadata.anchor_key}")
-            return False
+        assert (
+            metadata.anchor_key == test_case["expected_key"]
+        ), f"Expected {test_case['expected_key']}, got {metadata.anchor_key}"
+        print(f"✅ Custom anchor key: {metadata.anchor_key}")
 
-        if metadata.anchor_priority == test_case["expected_priority"]:
-            print(f"✅ Priority: {metadata.anchor_priority}")
-        else:
-            print(f"❌ Expected priority {test_case['expected_priority']}, got {metadata.anchor_priority}")
-            return False
+        assert (
+            metadata.anchor_priority == test_case["expected_priority"]
+        ), f"Expected priority {test_case['expected_priority']}, got {metadata.anchor_priority}"
+        print(f"✅ Priority: {metadata.anchor_priority}")
 
         if "expected_roles" in test_case:
-            if metadata.role_pins == test_case["expected_roles"]:
-                print(f"✅ Role pins: {metadata.role_pins}")
-            else:
-                print(f"❌ Expected roles {test_case['expected_roles']}, got {metadata.role_pins}")
-                return False
-
-    return True
+            assert (
+                metadata.role_pins == test_case["expected_roles"]
+            ), f"Expected roles {test_case['expected_roles']}, got {metadata.role_pins}"
+            print(f"✅ Role pins: {metadata.role_pins}")
 
 
 def test_validation():
@@ -186,19 +174,11 @@ def test_validation():
         errors = validate_anchor_metadata(test_case["metadata"])
 
         if test_case["should_be_valid"]:
-            if not errors:
-                print("✅ Valid (no errors)")
-            else:
-                print(f"❌ Expected valid, got errors: {errors}")
-                return False
+            assert not errors, f"Expected valid, got errors: {errors}"
+            print("✅ Valid (no errors)")
         else:
-            if errors:
-                print(f"✅ Invalid (expected): {errors}")
-            else:
-                print("❌ Expected invalid, but no errors found")
-                return False
-
-    return True
+            assert errors, "Expected invalid, but no errors found"
+            print(f"✅ Invalid (expected): {errors}")
 
 
 def test_complex_extraction():
@@ -235,27 +215,19 @@ This section is pinned for researchers.
     metadata = extract_anchor_metadata(complex_content)
 
     # Should get the first anchor_key found
-    if metadata.anchor_key == "tldr":
-        print("✅ First anchor key extracted: tldr")
-    else:
-        print(f"❌ Expected 'tldr', got '{metadata.anchor_key}'")
-        return False
+    assert metadata.anchor_key == "tldr", f"Expected 'tldr', got '{metadata.anchor_key}'"
+    print("✅ First anchor key extracted: tldr")
 
     # Should get the first priority found
-    if metadata.anchor_priority == 0:
-        print("✅ First priority extracted: 0")
-    else:
-        print(f"❌ Expected 0, got {metadata.anchor_priority}")
-        return False
+    assert metadata.anchor_priority == 0, f"Expected 0, got {metadata.anchor_priority}"
+    print("✅ First priority extracted: 0")
 
     # Should get the first role_pins found
-    if metadata.role_pins == ["planner", "implementer"]:
-        print("✅ First role pins extracted: ['planner', 'implementer']")
-    else:
-        print(f"❌ Expected ['planner', 'implementer'], got {metadata.role_pins}")
-        return False
-
-    return True
+    assert metadata.role_pins == [
+        "planner",
+        "implementer",
+    ], f"Expected ['planner', 'implementer'], got {metadata.role_pins}"
+    print("✅ First role pins extracted: ['planner', 'implementer']")
 
 
 def test_to_dict_conversion():
@@ -268,26 +240,18 @@ def test_to_dict_conversion():
     result = metadata.to_dict()
     expected = {"anchor_key": "tldr", "anchor_priority": 0, "role_pins": ["planner", "implementer"]}
 
-    if result == expected:
-        print("✅ Dictionary conversion correct")
-        print(f"Result: {result}")
-    else:
-        print(f"❌ Expected {expected}, got {result}")
-        return False
+    assert result == expected, f"Expected {expected}, got {result}"
+    print("✅ Dictionary conversion correct")
+    print(f"Result: {result}")
 
     # Test with partial metadata
     partial_metadata = AnchorMetadata(anchor_key="quick-start")
     partial_result = partial_metadata.to_dict()
     partial_expected = {"anchor_key": "quick-start"}
 
-    if partial_result == partial_expected:
-        print("✅ Partial dictionary conversion correct")
-        print(f"Result: {partial_result}")
-    else:
-        print(f"❌ Expected {partial_expected}, got {partial_result}")
-        return False
-
-    return True
+    assert partial_result == partial_expected, f"Expected {partial_expected}, got {partial_result}"
+    print("✅ Partial dictionary conversion correct")
+    print(f"Result: {partial_result}")
 
 
 def main():

@@ -8,12 +8,12 @@ import logging
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature
 
-from utils.validator import sanitize_prompt, validate_string_length
+from ..utils.validator import sanitize_prompt, validate_string_length
 
 _LOG = logging.getLogger("cursor_model_router")
 
@@ -157,10 +157,10 @@ class CursorModelRouter(Module):
     def forward(
         self,
         query: str,
-        context_size: int = None,
-        task_type: str = None,
+        context_size: Optional[int] = None,
+        task_type: Optional[str] = None,
         urgency: str = "medium",
-        complexity: str = None,
+        complexity: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Route to the best Cursor model using context engineering"""
 
@@ -223,7 +223,7 @@ class CursorModelRouter(Module):
         else:
             return "general"
 
-    def _analyze_complexity(self, query: str, context_size: int = None) -> str:
+    def _analyze_complexity(self, query: str, context_size: Optional[int] = None) -> str:
         """Analyze query complexity"""
         word_count = len(query.split())
 
@@ -366,7 +366,7 @@ class ModelRoutingValidator:
         }
 
     def validate_routing_decision(
-        self, routing_result: Dict[str, Any], query: str, expected_model: str = None
+        self, routing_result: Dict[str, Any], query: str, expected_model: Optional[str] = None
     ) -> Dict[str, Any]:
         """Validate a routing decision for accuracy and potential hallucination"""
 
@@ -395,12 +395,16 @@ class ModelRoutingValidator:
             # Check 4: Model capability match
             task_type = routing_result.get("routing_metadata", {}).get("task_type", "general")
             complexity = routing_result.get("routing_metadata", {}).get("complexity", "simple")
-            capability_match = self._assess_model_capability_match(selected_model, task_type, complexity)
+            capability_match = 0.0
+            if selected_model is not None:
+                capability_match = self._assess_model_capability_match(selected_model, task_type, complexity)
             validation_result["validation_checks"]["capability_match"] = capability_match
 
             # Check 5: Context engineering strategy validity
             context_engineering = routing_result.get("context_engineering", "")
-            strategy_validity = self._validate_context_engineering_strategy(context_engineering, selected_model)
+            strategy_validity = 0.0
+            if selected_model is not None:
+                strategy_validity = self._validate_context_engineering_strategy(context_engineering, selected_model)
             validation_result["validation_checks"]["strategy_validity"] = strategy_validity
 
             # Calculate overall confidence
@@ -548,7 +552,11 @@ class ModelRoutingMonitor:
         }
 
     def log_routing_attempt(
-        self, query: str, routing_result: Dict[str, Any], latency_ms: float, validation_result: Dict[str, Any] = None
+        self,
+        query: str,
+        routing_result: Dict[str, Any],
+        latency_ms: float,
+        validation_result: Optional[Dict[str, Any]] = None,
     ):
         """Log a routing attempt for monitoring"""
 

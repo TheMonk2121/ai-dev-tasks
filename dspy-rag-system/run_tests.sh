@@ -27,9 +27,7 @@ run_tests() {
     echo "Options: $options"
     echo "----------------------------------------"
 
-    python3 -m pytest "$test_path" "$options"
-
-    if [ $? -eq 0 ]; then
+    if python3 -m pytest "$test_path" "$options"; then
         echo "✅ Tests passed!"
     else
         echo "❌ Tests failed!"

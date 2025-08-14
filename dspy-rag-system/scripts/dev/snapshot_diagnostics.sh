@@ -2,7 +2,6 @@
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
-SRC="dspy-rag-system/src"
 ART="$ROOT/.diagnostics"; mkdir -p "$ART"
 
 # 1) Pyright / BasedPyright (JSON) → count "error" diagnostics

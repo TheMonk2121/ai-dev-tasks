@@ -7,12 +7,12 @@ Implements span-level grounding and controlled generation for precise fact extra
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature
 
-from utils.validator import sanitize_prompt, validate_string_length
+from ..utils.validator import sanitize_prompt, validate_string_length
 
 _LOG = logging.getLogger("lang_extract_system")
 
@@ -286,7 +286,7 @@ class LangExtractSystem(Module):
         else:
             raise ValueError(f"Unknown operation: {operation}")
 
-    def _extract_entities(self, text: str, entity_types: List[str] = None) -> Dict[str, Any]:
+    def _extract_entities(self, text: str, entity_types: Union[List[str], None] = None) -> Dict[str, Any]:
         """Extract entities with span-level grounding"""
 
         if entity_types is None:
@@ -302,7 +302,7 @@ class LangExtractSystem(Module):
             "count": len(result["entities"]),
         }
 
-    def _extract_relations(self, text: str, relation_types: List[str] = None) -> Dict[str, Any]:
+    def _extract_relations(self, text: str, relation_types: Union[List[str], None] = None) -> Dict[str, Any]:
         """Extract relations with span-level grounding"""
 
         if relation_types is None:
