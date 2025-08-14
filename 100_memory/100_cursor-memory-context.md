@@ -12,6 +12,7 @@
     {"path": "100_memory/104_dspy-development-context.md", "role": "dspy-context"},
     {"path": "dspy-rag-system/tests/README-dev.md", "role": "test-development"},
     {"path": "200_setup/202_setup-requirements.md", "role": "setup"},
+    {"path": "400_guides/400_comprehensive-coding-best-practices.md", "role": "coding-standards"},
     {"path": "400_guides/400_deployment-environment-guide.md", "role": "deployment"},
     {"path": "400_guides/400_integration-patterns-guide.md", "role": "integration"},
     {"path": "400_guides/400_migration-upgrade-guide.md", "role": "migration"},
