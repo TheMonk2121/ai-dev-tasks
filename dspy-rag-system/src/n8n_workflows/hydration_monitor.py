@@ -14,7 +14,6 @@ from typing import Any, Dict, List
 # Add src to path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from src.utils.database_resilience import DatabaseResilienceManager
 from src.utils.logger import get_logger
 from src.utils.memory_rehydrator import build_hydration_bundle
 
@@ -58,13 +57,18 @@ class HydrationMonitor:
             if not connection_string:
                 raise ValueError("POSTGRES_DSN environment variable not set")
 
-            # Create database manager
-            db_manager = DatabaseResilienceManager(connection_string)
-            with db_manager.get_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute("SELECT 1")
-                cursor.fetchone()
-                cursor.close()
+            # Use direct connection for health check
+            import psycopg2
+
+            conn = psycopg2.connect(connection_string)
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM document_chunks")
+            result = cursor.fetchone()
+            count = result[0] if result else 0
+            cursor.close()
+            conn.close()
+
+            logger.info(f"Database health check successful: {count} chunks found")
             return True
         except Exception as e:
             logger.error(f"Database connection check failed: {e}")
