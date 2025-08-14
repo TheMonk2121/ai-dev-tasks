@@ -1,3 +1,4 @@
+<!-- DATABASE_SYNC: REQUIRED -->
 # Test Development Guide
 
 ## Import Path Management

@@ -2,6 +2,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
+<!-- DATABASE_SYNC: REQUIRED -->
 <!-- CONTEXT_INDEX
 {
   "files": [

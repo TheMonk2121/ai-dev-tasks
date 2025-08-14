@@ -3,6 +3,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_project-overview.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Current priorities and development roadmap -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 <!-- ANCHOR_KEY: backlog -->
 <!-- ANCHOR_PRIORITY: 10 -->

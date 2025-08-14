@@ -2,6 +2,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_contributing-guidelines.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_file-analysis-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Comprehensive coding standards and conflict prevention -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 # 🛡️ Comprehensive Coding Best Practices
 
