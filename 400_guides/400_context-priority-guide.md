@@ -4,6 +4,10 @@
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - File organization and cognitive scaffolding system -->
 
+<!-- ANCHOR_KEY: context-priority -->
+<!-- ANCHOR_PRIORITY: 30 -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
+
 # 🧠 Context Priority Guide
 
 ## 🔎 TL;DR {#tldr}
@@ -69,6 +73,35 @@ guard-rails |
 - Security → `400_guides/400_security-best-practices-guide.md`
 - Performance → `400_guides/400_performance-optimization-guide.md`
 - Integration → `400_guides/400_integration-patterns-guide.md`
+
+## 🧠 Hydration Integration
+
+### Role-Based Reading Paths
+- **Planner Path**: TL;DR → Backlog → System Overview → Context Priority
+- **Implementer Path**: TL;DR → DSPy Context → System Architecture → Context Priority
+- **Researcher Path**: TL;DR → Research Index → Context Priority
+
+### Memory Rehydrator Integration
+```python
+# Planner context
+bundle = build_hydration_bundle(
+    role="planner",
+    task="strategic planning",
+    token_budget=1200
+)
+
+# Implementer context
+bundle = build_hydration_bundle(
+    role="implementer",
+    task="code implementation",
+    token_budget=1200
+)
+```
+
+### Token Budget Allocation
+- **Pinned anchors**: ~400 tokens (stable backbone)
+- **Task-scoped content**: ~800 tokens (dynamic retrieval)
+- **Total budget**: ~1200 tokens (default)
 
 ## **AI File Analysis Strategy** When Cursor AI restarts or needs to rehydrate context, it follows a **structured
 reading strategy** designed to maximize efficiency while maintaining comprehensive understanding

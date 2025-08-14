@@ -1,3 +1,7 @@
+<!-- ANCHOR_KEY: system-overview -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+
 # 🏗️ System Overview
 
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
@@ -65,6 +69,10 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 <!-- ANCHOR: architecture -->
 {#architecture}
+
+<!-- ANCHOR_KEY: architecture -->
+<!-- ANCHOR_PRIORITY: 20 -->
+<!-- ROLE_PINS: ["implementer"] -->
 
 ## Architecture
 

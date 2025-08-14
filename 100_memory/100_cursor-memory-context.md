@@ -23,6 +23,10 @@
 }
 CONTEXT_INDEX -->
 
+<!-- ANCHOR_KEY: memory-context -->
+<!-- ANCHOR_PRIORITY: 0 -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
+
 # Cursor Memory Context
 
 ## 🔎 TL;DR {#tldr}

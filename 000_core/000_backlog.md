@@ -4,6 +4,10 @@
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Current priorities and development roadmap -->
 
+<!-- ANCHOR_KEY: backlog -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["planner"] -->
+
 # 📋 Backlog
 
 ## 🔎 TL;DR {#tldr}
@@ -78,6 +82,10 @@ across repo. Replace bare URLs with `[text](url)`. Add language tags to fenced c
 and normalize spacing across long-form guides.
 
 <!-- ANCHOR: p0-lane -->
+
+<!-- ANCHOR_KEY: p0-lane -->
+<!-- ANCHOR_PRIORITY: 5 -->
+<!-- ROLE_PINS: ["planner"] -->
 
 ## P0 Lane
 
