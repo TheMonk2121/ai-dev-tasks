@@ -185,25 +185,25 @@ def validate_planner_context(bundle) -> bool:
 
 ## 🔄 Integration with Planning Workflow
 
-#### **1. Initial Assessment**
+### **1. Initial Assessment**
 ```python
 # Get current state context
 context = get_planning_context("assess current project state")
 ```
 
-#### **2. Priority Review**
+### **2. Priority Review**
 ```python
 # Get priority-focused context
 context = get_priority_context()
 ```
 
-#### **3. Strategic Decision**
+### **3. Strategic Decision**
 ```python
 # Get architecture context for decision
 context = get_architecture_context("new feature integration")
 ```
 
-#### **4. Planning Session**
+### **4. Planning Session**
 ```python
 # Get comprehensive planning context
 context = get_planning_context("quarterly planning session")
