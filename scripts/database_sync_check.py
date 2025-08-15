@@ -177,8 +177,8 @@ def update_database_file(file_path: str, status: Dict) -> bool:
                     {
                         "content": chunk_content,
                         "chunk_index": len(chunks),
-                        "start_offset": i,
-                        "end_offset": min(i + chunk_size, len(content)),
+                        "line_start": i,
+                        "line_end": min(i + chunk_size, len(content)),
                         "metadata": (
                             f'{{"filename": "{filename}", '
                             f'"chunk_index": {len(chunks)}, '
@@ -192,15 +192,15 @@ def update_database_file(file_path: str, status: Dict) -> bool:
                 cursor.execute(
                     """
                     INSERT INTO document_chunks
-                    (document_id, content, chunk_index, start_offset, end_offset, metadata, created_at, updated_at)
+                    (document_id, content, chunk_index, line_start, line_end, metadata, created_at, updated_at)
                     VALUES (%s::text, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                 """,
                     (
                         document_id,
                         chunk["content"],
                         chunk["chunk_index"],
-                        chunk["start_offset"],
-                        chunk["end_offset"],
+                        chunk["line_start"],
+                        chunk["line_end"],
                         chunk["metadata"],
                     ),
                 )
