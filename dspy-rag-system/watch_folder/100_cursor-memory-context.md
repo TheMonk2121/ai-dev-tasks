@@ -2,15 +2,22 @@
 <!-- MODULE_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
+<!-- DATABASE_SYNC: REQUIRED -->
 <!-- CONTEXT_INDEX
 {
   "files": [
     {"path": "100_memory/100_cursor-memory-context.md", "role": "entry"},
     {"path": "000_core/000_backlog.md", "role": "priorities"},
+    {"path": "400_guides/400_project-overview.md", "role": "project-overview"},
     {"path": "400_guides/400_system-overview.md", "role": "architecture"},
     {"path": "400_guides/400_context-priority-guide.md", "role": "navigation"},
+    {"path": "400_guides/400_ai-constitution.md", "role": "ai-safety"},
+    {"path": "400_guides/400_file-analysis-guide.md", "role": "file-analysis"},
+    {"path": "400_guides/400_code-criticality-guide.md", "role": "code-quality"},
     {"path": "100_memory/104_dspy-development-context.md", "role": "dspy-context"},
+    {"path": "dspy-rag-system/tests/README-dev.md", "role": "test-development"},
     {"path": "200_setup/202_setup-requirements.md", "role": "setup"},
+    {"path": "400_guides/400_comprehensive-coding-best-practices.md", "role": "coding-standards"},
     {"path": "400_guides/400_deployment-environment-guide.md", "role": "deployment"},
     {"path": "400_guides/400_integration-patterns-guide.md", "role": "integration"},
     {"path": "400_guides/400_migration-upgrade-guide.md", "role": "migration"},
@@ -22,6 +29,10 @@
   ]
 }
 CONTEXT_INDEX -->
+
+<!-- ANCHOR_KEY: memory-context -->
+<!-- ANCHOR_PRIORITY: 0 -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
 
 # Cursor Memory Context
 
@@ -52,23 +63,48 @@ Read these files in order (1–2 min total):
 
 ## 🧠 Hydration Bundle Policy {#hydration-policy}
 
-The memory rehydrator builds role-aware context bundles with this priority:
+The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach:
 
-1. **Pinned Anchors** (stable backbone - always loaded first)
-   - TL;DR → quick-start → quick-links → commands
-   - Role-specific pins (planner → system overview/backlog, implementer → DSPy context)
+### **Core Philosophy**
+- **Semantic-first**: Vector search does the heavy lifting
+- **Tiny pins**: Only 200 tokens for guardrails (style, conventions, repo map)
+- **Kill-switches**: Simple CLI flags to disable features when needed
 
-2. **Task-Scoped Retrieval** (hybrid search via vector store)
-   - Top K anchor/chunk candidates based on current task
-   - Uses optimized vector store with span grounding
+### **Four-Slot Model**
+1. **Pinned Invariants** (≤200 tokens, hard cap)
+   - Project style TL;DR, repo topology, naming conventions
+   - Always present, pre-compressed micro-summaries
 
-3. **Token Budgeting** (~1,200 tokens default)
-   - Pins first, then anchor-like content, then general spans
-   - Trims soft layers first to keep stable anchors intact
+2. **Anchor Priors** (0-20% tokens, dynamic)
+   - Used for query expansion (not included in bundle)
+   - Soft inclusion only if they truly match query scope
+
+3. **Semantic Evidence** (50-80% tokens)
+   - Top chunks from HybridVectorStore (vector + BM25 fused)
+   - RRF fusion with deterministic tie-breaking
+
+4. **Recency/Diff Shots** (0-10% tokens)
+   - Recent changes, changelogs, "what moved lately"
+
+### **Configuration Options**
+```bash
+# Stability slider (0.0-1.0, default 0.6)
+python3 scripts/cursor_memory_rehydrate.py --stability 0.6
+
+# Kill-switches for debugging
+python3 scripts/cursor_memory_rehydrate.py --no-rrf --dedupe file --expand-query off
+
+# Environment variables
+export REHYDRATE_STABILITY=0.6
+export REHYDRATE_USE_RRF=1
+export REHYDRATE_DEDUPE="file+overlap"
+export REHYDRATE_EXPAND_QUERY="auto"
+```
 
 ## 🛠️ Commands {#commands}
 
-- Start tests: `./dspy-rag-system/run_tests.sh`
+- Start tests: `./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke` (new marker-based approach)
+- Legacy tests: `./dspy-rag-system/run_tests.sh all` (legacy mode - avoid)
 
 - Start dashboard: `./dspy-rag-system/start_mission_dashboard.sh`
 
@@ -77,6 +113,22 @@ The memory rehydrator builds role-aware context bundles with this priority:
 - Quick conflict check: `python scripts/quick_conflict_check.py`
 
 - Comprehensive conflict audit: `python scripts/conflict_audit.py --full`
+
+## 🔧 Import Policy (CRITICAL)
+
+### **Current Approach (Use This):**
+- **Tests**: Use `conftest.py` for centralized import paths
+- **Scripts**: Use `setup_imports.py` for scripts outside pytest context
+- **No manual sys.path**: Remove per-file path manipulation
+
+### **Legacy Approach (Avoid):**
+- ❌ Manual `sys.path.insert()` in test files
+- ❌ `comprehensive_test_suite.py` for new development
+- ❌ Direct `src.utils` imports in tests
+
+### **Test Execution:**
+- ✅ **New**: `./run_tests.sh --tiers 1 --kinds smoke` (marker-based)
+- ❌ **Legacy**: `./run_tests.sh all` (file-based)
 
 <!-- ANCHOR_KEY: commands -->
 <!-- ANCHOR_PRIORITY: 25 -->
@@ -96,6 +148,8 @@ The memory rehydrator builds role-aware context bundles with this priority:
 
 - Testing strategy → `400_guides/400_testing-strategy-guide.md`
 
+- Test development guide → `dspy-rag-system/tests/README-dev.md`
+
 - Deployment guide → `400_guides/400_deployment-environment-guide.md`
 
 - Migration & upgrades → `400_guides/400_migration-upgrade-guide.md`
@@ -114,7 +168,7 @@ The memory rehydrator builds role-aware context bundles with this priority:
 <!-- ANCHOR_PRIORITY: 20 -->
 <!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
 
-- Comprehensive coding standards → `400_guides/400_comprehensive-coding-best-practices.md`
+- Comprehensive coding standards → `400_guides/400_comprehensive-coding-best-practices.md` (includes "Undefined Name" error fixes, database query patterns, systematic test file patterns, and automated database synchronization)
 
 ### Stable Anchors
 
@@ -131,7 +185,7 @@ The memory rehydrator builds role-aware context bundles with this priority:
 - Planner: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`,
 `400_guides/400_context-priority-guide.md`
 
-- Implementer: `100_memory/104_dspy-development-context.md`, relevant 400-series topic guides (testing, security,
+- Implementer: `100_memory/104_dspy-development-context.md`, `dspy-rag-system/tests/README-dev.md`, relevant 400-series topic guides (testing, security,
 performance, integration, deployment)
 
 - Researcher: `500_research/500_research-index.md`, `500_research/500_dspy-research.md`,
@@ -205,7 +259,7 @@ AI Development Ecosystem
 
 ### **Key Technologies**
 
-- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
+- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements). Cursor models only; legacy local model instructions are archived under `600_archives/**`.
 
 - **Framework**: DSPy with PostgreSQL vector store
 
@@ -284,6 +338,32 @@ AI Development Ecosystem
 - **Architecture**: `100_memory/104_dspy-development-context.md`
 - **Coding Standards**: `400_guides/400_comprehensive-coding-best-practices.md` (NEW - conflict prevention system)
 
+### **🗄️ Vector Database Status**
+
+**Database**: PostgreSQL with pgvector extension
+**Status**: ✅ **FULLY SYNCHRONIZED** (2025-08-14)
+**Coverage**: 32 documents, 1,064 chunks
+**CONTEXT_INDEX**: 20/20 files indexed with role mapping
+
+#### **Database Health:**
+- **Core Files**: 11/11 files current and indexed
+- **400_guides**: 14/14 files current and indexed
+- **500_research**: 1/1 files current and indexed
+- **Cross-References**: 35% average coverage across all guides
+- **Semantic Search**: Full-text, vector similarity, and metadata search operational
+
+#### **AI Rehydration Capability:**
+- **Memory Rehydrator**: Can access all core documentation
+- **Role-Aware Context**: Builds context bundles based on CONTEXT_INDEX roles
+- **Task-Scoped Retrieval**: Hybrid search via vector store with span grounding
+- **Token Budgeting**: ~1,200 tokens default with pinned anchors first
+
+#### **Recent Database Updates:**
+- **P0 Critical**: Updated outdated files (100_cursor-memory-context.md, 000_backlog.md)
+- **P1 High**: Added 7 missing files from CONTEXT_INDEX
+- **Verification**: Complete database integrity check passed
+- **Cross-Reference Analysis**: All guides properly linked
+
 <!-- DOCUMENTATION_REFERENCE: 400_guides/400_documentation-reference.md -->
 
 ### **🎯 When to Read What: Context-Specific Guidance**
@@ -297,4 +377,58 @@ AI Development Ecosystem
 3. **Research**: `500_research/500_research-index.md` → `500_research/500_dspy-research.md`, `500_research/500_rag-system-research.md`
 4. **File Management**: `400_guides/400_file-analysis-guide.md` (MANDATORY) → `200_setup/200_naming-conventions.md`
 
+### **🔗 Cross-Reference System**
+
+**Status**: ✅ **FULLY OPERATIONAL** (2025-08-14)
+
+#### **CONTEXT_INDEX Coverage:**
+- **Total Files**: 20 files with role-based indexing
+- **Core Files**: 13 files (entry, priorities, architecture, navigation, etc.)
+- **Specialized Files**: 7 files (deployment, integration, migration, etc.)
+- **Role Mapping**: Each file assigned specific role for AI rehydration
+
+#### **Cross-Reference Quality:**
+- **High Coverage**: 400_context-priority-guide.md (72% cross-references)
+- **Medium Coverage**: 400_ai-constitution.md, 400_code-criticality-guide.md (38-48%)
+- **Low Coverage**: 400_deployment-environment-guide.md, 400_performance-optimization-guide.md (3-4%)
+- **Average Coverage**: 35% across all 400_guides files
+
+#### **Navigation Patterns:**
+- **Safety-First**: AI constitution and file analysis guides prominently referenced
+- **Quality-Focused**: Code criticality and testing strategy guides well-linked
+- **Development-Oriented**: Project overview and system overview central to navigation
+- **Specialized Access**: Deployment, integration, migration guides available for specific tasks
+
 <!-- CONTEXT_GUIDANCE_REFERENCE: 400_guides/400_documentation-reference.md -->
+
+<!-- AUTO:current_priorities:start -->
+### **Current Priorities**
+
+1. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
+   - todo
+
+2. **B‑094**: MCP Memory Rehydrator Server (🔥 points)
+   - todo
+
+3. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
+   - todo
+
+4. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
+   - todo
+
+5. **B‑076**: Research-Based DSPy Assertions Implementation (🔥 points)
+   - todo
+<!-- AUTO:current_priorities:end -->
+
+<!-- AUTO:recently_completed:start -->
+No recently completed items.
+<!-- AUTO:recently_completed:end -->
+
+<!-- AUTO:doc_health:start -->
+### **Documentation Health**
+
+- Files checked: 5
+- Anchor warnings: 0
+- Invariant warnings: 0
+- Last run: Fri Aug  8 23:58:13 CDT 2025
+<!-- AUTO:doc_health:end -->

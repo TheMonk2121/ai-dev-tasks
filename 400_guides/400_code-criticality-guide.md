@@ -63,9 +63,13 @@
 
 - Validates, extracts metadata, chunks, and prepares documents for indexing and retrieval.
 
-6. `dspy-rag-system/src/utils/memory_rehydrator.py` — Context Assembly & Role-Aware Hydration
+6. `dspy-rag-system/src/utils/memory_rehydrator.py` — Context Assembly & Role-Aware Hydration (Python)
 
 - Builds role-aware context bundles from Postgres; pinned anchors + task-scoped retrieval; core AI agent context system.
+
+7. `dspy-rag-system/src/utils/memory_rehydration.go` — Context Assembly & Role-Aware Hydration (Go)
+
+- Go implementation of memory rehydration system; Lean Hybrid with Kill-Switches approach; alternative to Python version.
 
 ### Tier 2 — High (production infrastructure)
 
@@ -108,29 +112,8 @@
 - `scripts/maintenance_push.sh` — Maintenance Push Wrapper
   - Shell wrapper for auto-push prompt integration into maintenance workflows.
 
-- `400_guides/400_planner-hydration-guide.md` — Planner Context Strategy
-  - Role-specific context assembly for strategic planning tasks.
-
-- `400_guides/400_implementer-hydration-guide.md` — Implementer Context Strategy
-  - Role-specific context assembly for technical implementation tasks.
-
-- `400_guides/400_hydration-testing-guide.md` — Testing Framework
-  - Comprehensive testing and validation framework for hydration system quality.
-
-- `dspy-rag-system/tests/test_hydration_quality.py` — Quality Validation
-  - Role-specific context quality tests and performance benchmarks.
-
-- `dspy-rag-system/scripts/hydration_benchmark.py` — Performance Benchmarking
-  - Comprehensive performance benchmarking and stress testing for hydration system.
-
-- `dspy-rag-system/src/n8n_workflows/hydration_monitor.py` — n8n Health Monitor
-  - Automated health monitoring and alerting for hydration system via n8n workflows.
-
-- `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py` — Performance Dashboard
-  - Real-time monitoring dashboard with metrics visualization and alert system.
-
-- `400_guides/400_hydration-integration-guide.md` — Integration Framework
-  - Comprehensive integration patterns and automation for hydration system.
+- `400_guides/400_hydration-system-guide.md` — Complete Hydration System
+  - Comprehensive guide covering integration, testing, and role-specific strategies for memory rehydration.
 
 ## 🧭 Criteria for Criticality
 
@@ -156,11 +139,11 @@
 
 - Maintenance automation: Supports repository maintenance workflows (`auto_push_prompt.py`, `maintenance_push.sh`)
 
-- Role-specific context: Optimizes context assembly for different roles (`400_guides/400_planner-hydration-guide.md`, `400_guides/400_implementer-hydration-guide.md`)
+- Role-specific context: Optimizes context assembly for different roles (`400_guides/400_hydration-system-guide.md`)
 
-- Testing & validation: Ensures system quality and performance (`400_guides/400_hydration-testing-guide.md`, `dspy-rag-system/tests/test_hydration_quality.py`, `dspy-rag-system/scripts/hydration_benchmark.py`)
+- Testing & validation: Ensures system quality and performance (`400_guides/400_hydration-system-guide.md`, `dspy-rag-system/tests/test_hydration_quality.py`, `dspy-rag-system/scripts/hydration_benchmark.py`)
 
-- Integration & automation: Provides monitoring and workflow automation (`dspy-rag-system/src/n8n_workflows/hydration_monitor.py`, `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py`, `400_guides/400_hydration-integration-guide.md`)
+- Integration & automation: Provides monitoring and workflow automation (`dspy-rag-system/src/n8n_workflows/hydration_monitor.py`, `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py`, `400_guides/400_hydration-system-guide.md`)
 
 - --
 

@@ -213,7 +213,25 @@ class DatabaseResilienceManager:
                 with conn.cursor() as cursor:
                     cursor.execute("SELECT 1")
                     result = cursor.fetchone()
-                    return result[0] == 1
+                    if result is None:
+                        return False
+
+                    # Handle both tuple and RealDictRow results
+                    if isinstance(result, tuple):
+                        return result[0] == 1
+                    elif hasattr(result, "__getitem__"):
+                        # RealDictRow or similar object
+                        try:
+                            # Try to get the first value safely
+                            if hasattr(result, "values"):
+                                first_value = list(result.values())[0]
+                            else:
+                                first_value = result[0]
+                            return first_value == 1
+                        except (IndexError, TypeError, KeyError):
+                            return False
+                    else:
+                        return False
         except Exception as e:
             logger.error(f"Database connection test failed: {e}")
             return False
@@ -251,17 +269,22 @@ class DatabaseResilienceManager:
 
                 # Handle both tuple and RealDictRow results
                 if isinstance(result, tuple):
-                    if len(result) == 0 or result[0] != 1:
-                        raise Exception(f"Connection test failed - unexpected tuple result: {result}")
-                else:
+                    if result[0] != 1:
+                        raise Exception("Connection test failed")
+                elif hasattr(result, "__getitem__"):
                     # RealDictRow or similar object
-                    if hasattr(result, "__getitem__"):
-                        # Try to get the first value
-                        first_value = list(result.values())[0] if hasattr(result, "values") else result[0]
+                    try:
+                        # Try to get the first value safely
+                        if hasattr(result, "values"):
+                            first_value = list(result.values())[0]
+                        else:
+                            first_value = result[0]
                         if first_value != 1:
-                            raise Exception(f"Connection test failed - unexpected dict result: {result}")
-                    else:
-                        raise Exception(f"Connection test failed - unknown result type: {type(result)}")
+                            raise Exception("Connection test failed")
+                    except (IndexError, TypeError, KeyError):
+                        raise Exception("Connection test failed - cannot extract value")
+                else:
+                    raise Exception("Connection test failed - unknown result type")
 
             # Update statistics
             self._update_connection_stats()
@@ -514,7 +537,16 @@ def get_database_manager() -> DatabaseResilienceManager:
     """Get the global database resilience manager instance"""
     global _database_manager
     if _database_manager is None:
-        connection_string = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+        # Use centralized configuration from root level
+        import importlib.util
+
+        config_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "200_setup", "201_database-config.py")
+        spec = importlib.util.spec_from_file_location("database_config", config_path)
+        if spec is None or spec.loader is None:
+            raise ImportError(f"Could not load database config from {config_path}")
+        database_config = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(database_config)
+        connection_string = database_config.get_database_url()
         _database_manager = DatabaseResilienceManager(connection_string)
     return _database_manager
 
@@ -523,7 +555,20 @@ def initialize_database_resilience(connection_string: Optional[str] = None) -> D
     """Initialize database resilience manager"""
     global _database_manager
     if connection_string is None:
-        connection_string = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+        # Use centralized configuration from root level
+        import importlib.util
+
+        config_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "200_setup", "201_database-config.py")
+        spec = importlib.util.spec_from_file_location("database_config", config_path)
+        if spec is None or spec.loader is None:
+            raise ImportError(f"Could not load database config from {config_path}")
+        database_config = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(database_config)
+        connection_string = database_config.get_database_url()
+
+        # Ensure connection_string is not None after loading from config
+        if connection_string is None:
+            raise ValueError("Database connection string could not be loaded from configuration")
 
     _database_manager = DatabaseResilienceManager(connection_string)
     return _database_manager

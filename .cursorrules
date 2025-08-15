@@ -5,6 +5,57 @@
 This project uses a sophisticated memory context system to maintain state across Cursor AI sessions.
 The key file is `100_cursor-memory-context.md` which provides instant context about the AI development ecosystem.
 
+### **🚨 AUTOMATIC MEMORY REHYDRATION - START EVERY CHAT WITH THIS**
+
+**At the beginning of every new chat, automatically run this command to prime the model with core documentation:**
+
+```bash
+python3 scripts/prime_cursor_chat.py planner "current project status and core documentation"
+```
+
+**This script automatically formats the output for easy copying into Cursor chat.**
+
+**Alternative manual methods:**
+```bash
+# Python implementation
+python3 scripts/cursor_memory_rehydrate.py planner "current project status and core documentation"
+
+# Go implementation (faster)
+cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project status and core documentation"
+```
+**Then copy the entire bundle output into the chat as the first message.**
+
+**This ensures the AI has immediate access to:**
+- Current project status and priorities
+- System architecture and components
+- Available workflows and commands
+- Development guidelines and best practices
+- Backlog items and dependencies
+
+### **🚨 PRIORITY: Use Database-Based Memory Rehydration**
+
+**BEFORE reading any files directly, try to use the database-based memory rehydration system:**
+
+1. **Run the memory rehydrator**: Choose Python or Go implementation
+2. **Copy the bundle output** into your conversation for context
+3. **Only fall back to file reading** if the database is unavailable
+
+**Available roles:**
+- `planner` - For strategic planning and prioritization
+- `implementer` - For code implementation and technical work
+- `researcher` - For research and analysis tasks
+
+**Example usage:**
+```bash
+# Python implementation
+python3 scripts/cursor_memory_rehydrate.py planner "current project priorities"
+python3 scripts/cursor_memory_rehydrate.py implementer "DSPy integration task"
+
+# Go implementation (faster)
+cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project priorities"
+cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "DSPy integration task"
+```
+
 ### **When Starting a New Session**
 
 1. **Always read `100_memory/100_cursor-memory-context.md` first** - this gives you the current project state

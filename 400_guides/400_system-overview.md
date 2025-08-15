@@ -459,19 +459,16 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 - **Query Optimization**: Fast retrieval with relevance ranking
 
-#### **Memory Rehydrator**(`src/utils/memory_rehydrator.py`)
+#### **Memory Rehydrator**(`src/utils/memory_rehydrator.py`, `src/utils/memory_rehydration.go`)
 
-- **Role-Aware Context Assembly**: Dynamic context bundles from Postgres
-
-- **Stable Anchors**: TL;DR → quick-start → quick-links → commands (always loaded)
-
-- **Role-Based Pinning**: Planner → System Overview/Backlog, Implementer → DSPy context
-
-- **Token Budgeting**: 1200 tokens default with pins-first policy
-
-- **Hybrid Retrieval**: Uses optimized vector store for task-scoped content
-
-- **Metadata Logging**: Tracks fusion settings and performance metrics
+- **Lean Hybrid with Kill-Switches**: Semantic-first approach with tiny pins
+- **Four-Slot Model**: Pinned invariants (≤200 tokens) + Anchor priors + Semantic evidence + Recency
+- **RRF Fusion**: Reciprocal Rank Fusion for vector + BM25 combination
+- **Deterministic Tie-breaking**: Stable sorting with file/path secondary keys
+- **Kill-Switches**: `--no-rrf`, `--dedupe`, `--expand-query` for debugging
+- **Stability Slider**: `--stability 0.0-1.0` controls anchor influence
+- **Multi-language**: Python (primary) and Go (alternative) implementations
+- **Current Status**: 1,939 chunks from 20 core documents, BM25 working excellently
 
 ### **Enhanced Metadata System**####**Metadata Extractor**(`src/utils/metadata_extractor.py`)
 

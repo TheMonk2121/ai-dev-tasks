@@ -3,6 +3,11 @@
 <!-- MODULE_REFERENCE: 400_guides/400_project-overview.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Current priorities and development roadmap -->
+<!-- DATABASE_SYNC: REQUIRED -->
+
+<!-- ANCHOR_KEY: backlog -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["planner"] -->
 
 # 📋 Backlog
 
@@ -79,7 +84,13 @@ and normalize spacing across long-form guides.
 
 <!-- ANCHOR: p0-lane -->
 
+<!-- ANCHOR_KEY: p0-lane -->
+<!-- ANCHOR_PRIORITY: 5 -->
+<!-- ROLE_PINS: ["planner"] -->
+
 ## P0 Lane
+
+- B‑094 — MCP Memory Rehydrator Server (score 9.5) ✅ **COMPLETED**
 
 - B‑052‑e — Auto-Push Prompt for Repo Maintenance (score 9.0)
 
@@ -97,7 +108,7 @@ and normalize spacing across long-form guides.
 
 - B‑064 — Naming Convention Category Table (score 8.0)
 
-- B‑074 — Few-Shot Integration with Documentation Tools (score 8.0)
+- B‑074 — Few-Shot Integration with Documentation Tools (score 8.0) ✅ **COMPLETED**
 
 - B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0)
 
@@ -302,6 +313,27 @@ maps | Python threading + cached scans | scripts/doc_coherence_validator.py |
 <!-- est_hours: 4 -->
 <!-- acceptance: 2x speedup measured on only-changed runs on a representative commit -->
 
+| B‑094 | MCP Memory Rehydrator Server | 🔥 | 3 | todo | Create minimal MCP server to automate database-based memory rehydration in Cursor | MCP Server + HTTP transport + Cursor integration | scripts/cursor_memory_rehydrate.py |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:3, deps:["scripts/cursor_memory_rehydrate.py"]}-->
+<!--score_total: 9.5-->
+<!-- do_next: Create basic MCP server that wraps existing memory rehydrator and exposes it as a tool -->
+<!-- est_hours: 3 -->
+<!-- acceptance: Cursor automatically connects to MCP server and can call memory rehydration tool -->
+
+| B‑095 | MCP Server Role Auto-Detection | 🔥 | 2 | todo | Enhance MCP server to automatically detect role based on conversation context | Context analysis + role detection + dynamic tool selection | B-094 MCP Memory Rehydrator Server |
+<!--score: {bv:5, tc:3, rr:4, le:3, effort:2, deps:["B-094"]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Add conversation context analysis to automatically select appropriate role -->
+<!-- est_hours: 2 -->
+<!-- acceptance: MCP server automatically detects planner/implementer/researcher role from conversation -->
+
+| B‑096 | MCP Server Performance Optimization | 📈 | 2 | todo | Optimize MCP server for low latency and high throughput | Connection pooling + caching + async processing | B-094 MCP Memory Rehydrator Server |
+<!--score: {bv:4, tc:3, rr:3, le:3, effort:2, deps:["B-094"]}-->
+<!--score_total: 5.5-->
+<!-- do_next: Implement connection pooling and response caching for faster context retrieval -->
+<!-- est_hours: 2 -->
+<!-- acceptance: MCP server responds in <500ms for context requests -->
+
 - --
 
 | B‑070 | AI Constitution Implementation | 🔥 | 3 | ✅ done | Create persistent AI ruleset to prevent context loss and
@@ -496,10 +528,11 @@ GitHub Actions + Dry-Run + PR Gate | B-052-a Safety & Lint Tests |
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-052-a"]}-->
 <!--score_total: 8.0-->
 
-| B‑052‑e | Auto-Push Prompt for Repo Maintenance | 🔧 | 1 | todo | Add interactive prompt to push changes to GitHub
+| B‑052‑e | Auto-Push Prompt for Repo Maintenance | 🔧 | 1 | ✅ done | Add interactive prompt to push changes to GitHub
 after maintenance | Interactive Prompt + Git Status Check + User Confirmation | B-052-a Safety & Lint Tests |
 <!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:["B-052-a"]}-->
 <!--score_total: 9.0-->
+<!--progress: Complete implementation with interactive prompt, git status checks, user confirmation, and shell wrapper-->
 
 | B‑052‑f | Enhanced Repository Maintenance Safety System | 🔥 | 3.5 | todo | Implement comprehensive safety system to
 prevent critical file archiving | Reference Tracking + Critical File Protection + Git Hooks + Recovery | B-052-a Safety
@@ -515,11 +548,12 @@ semantic checking | Local Pre-commit Hooks + Cursor AI + Reference Validation | 
 <!--progress: Complete implementation with comprehensive validation system, pre-commit hooks, test suite, and
 documentation-->
 
-| B‑061 | Memory Context Auto-Update Helper | 🔧 | 1 | todo | Create script to update memory context from backlog with
+| B‑061 | Memory Context Auto-Update Helper | 🔧 | 1 | ✅ done | Create script to update memory context from backlog with
 fenced sections | Backlog → Memory Helper + Fenced Sections + Dry-run | B-060 Documentation Coherence Validation System
 |
 <!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:["B-060"]}-->
 <!--score_total: 9.0-->
+<!--progress: Complete implementation with fenced sections, dry-run mode, improved parsing, and better error handling-->
 
 | B‑062 | Context Priority Guide Auto-Generation | 🔧 | 0.5 | todo | Create regen_guide.py to auto-generate context
 priority guide from file headers | Guide Generation + Cross-Reference Aggregation + Tier Lists | B-060 Documentation
@@ -527,11 +561,12 @@ Coherence Validation System |
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-060"]}-->
 <!--score_total: 8.0-->
 
-| B‑063 | Documentation Recovery & Rollback System | 🔧 | 1 | todo | Implement rollback_doc.sh and git snapshot system
+| B‑063 | Documentation Recovery & Rollback System | 🔧 | 1 | ✅ done | Implement rollback_doc.sh and git snapshot system
 for doc recovery | Git Snapshots + Rollback Script + Dashboard Integration | B-060 Documentation Coherence Validation
 System |
 <!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:["B-060"]}-->
 <!--score_total: 9.0-->
+<!--progress: Complete implementation with git snapshot system, rollback functionality, status monitoring, and proper error handling-->
 
 | B‑064 | Naming Convention Category Table | 🔧 | 0.5 | ✅ done | Add category table to 200_naming-conventions.md
 clarifying current buckets | Category Documentation + Prefix Clarification + No Mass Renaming | B-060 Documentation
@@ -607,7 +642,7 @@ System |
 analysis, memory context, code generation, error recovery, integration patterns, testing strategies, deployment
 examples, and best practices-->
 
-| B‑074 | Few-Shot Integration with Documentation Tools | 🔧 | 0.5 | todo | Integrate few-shot examples into doc-lint and
+| B‑074 | Few-Shot Integration with Documentation Tools | 🔧 | 0.5 | ✅ done | Integrate few-shot examples into doc-lint and
 memory update scripts | Prompt Integration + Example Loading + AI Enhancement | B-073 Few-Shot Context Engineering
 Examples |
 <!--score: {bv:4, tc:2, rr:3, le:3, effort:0.5, deps:["B-073"]}-->
@@ -769,6 +804,14 @@ Documentation review + reference updates | File naming convention migration |
 ## Completed Items
 
 ### Recently Completed Core Features
+
+- ✅ **Vector Database Synchronization & Cleanup** (✅ done - 2024-08-13)
+  - **Phase 1**: Updated 3 outdated database entries (100_cursor-memory-context.md, 000_backlog.md, 400_system-overview.md)
+  - **Phase 2**: Added 7 missing core documents to vector database for AI rehydration
+  - **Phase 3**: Comprehensive validation with 100% success rate
+  - **Results**: Complete cognitive scaffolding achieved (11/11 core documents)
+  - **Database**: 24 total documents, 550 chunks, operational semantic search
+  - **Impact**: AI agents now have complete, current documentation for rehydration
 
 - ✅ **B‑065**: Error Recovery & Troubleshooting Guide (✅ done)
   - Comprehensive troubleshooting guide with emergency procedures

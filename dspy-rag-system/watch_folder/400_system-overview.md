@@ -1,3 +1,7 @@
+<!-- ANCHOR_KEY: system-overview -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+
 # 🏗️ System Overview
 
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
@@ -5,6 +9,7 @@
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - System architecture and technical overview -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 ## 🎯 **Current Status**
 
@@ -65,6 +70,10 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 <!-- ANCHOR: architecture -->
 {#architecture}
+
+<!-- ANCHOR_KEY: architecture -->
+<!-- ANCHOR_PRIORITY: 20 -->
+<!-- ROLE_PINS: ["implementer"] -->
 
 ## Architecture
 
@@ -667,3 +676,17 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 This system represents a comprehensive approach to AI-assisted development, combining structured workflows with
 intelligent automation to create a powerful development ecosystem.
+
+## Supported Cursor models
+
+- For the authoritative, current list see the official documentation: [Cursor Docs: Models](https://docs.cursor.com/models).
+- In-app, use Settings → AI → Models or the “Change Model” command.
+- Supported providers and examples (non-exhaustive; align with Cursor):
+  - Anthropic: Claude 3.7 Sonnet, Claude 3.5 Sonnet, Claude 3.5 Haiku, Claude 4 Sonnet, Claude 4 Opus, Claude 4.1 Opus
+  - OpenAI: GPT‑5, GPT‑5 High, GPT‑5 Fast, GPT‑4.1, GPT‑4.5 Preview, GPT‑4o, GPT‑4o mini, o1, o1 Mini, o3, o3‑mini, o4‑mini
+  - Google: Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.0 Pro (exp)
+  - DeepSeek: DeepSeek R1, DeepSeek V3, DeepSeek V3.1
+  - xAI: Grok 4, Grok 3 Beta, Grok 3 Mini, Grok 2
+  - Cursor: Cursor Small
+
+Note: Legacy/local model tools (e.g., Ollama, LM Studio) are excluded from active docs and, if needed for reference, live only under `docs/legacy/**` or `600_archives/**`.

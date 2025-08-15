@@ -32,7 +32,8 @@ pytest-mock>=3.10.0     # Mocking for tests
 
 # Core DSPy and ML dependencies
 dspy==2.6.27
-sentence-transformers==2.2.2
+sentence-transformers>=5.0.0
+huggingface-hub>=0.30.0
 tiktoken>=0.7.0
 
 # Database dependencies
@@ -76,7 +77,7 @@ opentelemetry-instrumentation-logging>=0.40b0
 # =============================================================================
 
 # Conflict detection tools
-pycycle>=0.1.0          # Circular dependency detection
+pycycle>=0.0.8          # Circular dependency detection
 pipdeptree>=2.0.0       # Dependency tree visualization
 
 # Code quality tools

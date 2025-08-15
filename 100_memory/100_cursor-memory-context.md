@@ -25,6 +25,7 @@
     {"path": "400_guides/400_testing-strategy-guide.md", "role": "testing"},
     {"path": "400_guides/400_security-best-practices-guide.md", "role": "security"},
     {"path": "400_guides/400_few-shot-context-examples.md", "role": "few-shot"},
+    {"path": "400_guides/400_lean-hybrid-memory-system.md", "role": "memory-system"},
     {"path": "500_research-index.md", "role": "research-index"}
   ]
 }
@@ -63,31 +64,58 @@ Read these files in order (1–2 min total):
 
 ## 🧠 Hydration Bundle Policy {#hydration-policy}
 
-The memory rehydrator builds role-aware context bundles with this priority:
+The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach:
 
-1. **Pinned Anchors** (stable backbone - always loaded first)
-   - TL;DR → quick-start → quick-links → commands
-   - Role-specific pins (planner → system overview/backlog, implementer → DSPy context)
+### **Core Philosophy**
+- **Semantic-first**: Vector search does the heavy lifting
+- **Tiny pins**: Only 200 tokens for guardrails (style, conventions, repo map)
+- **Kill-switches**: Simple CLI flags to disable features when needed
 
-2. **Task-Scoped Retrieval** (hybrid search via vector store)
-   - Top K anchor/chunk candidates based on current task
-   - Uses optimized vector store with span grounding
+### **Four-Slot Model**
+1. **Pinned Invariants** (≤200 tokens, hard cap)
+   - Project style TL;DR, repo topology, naming conventions
+   - Always present, pre-compressed micro-summaries
 
-3. **Token Budgeting** (~1,200 tokens default)
-   - Pins first, then anchor-like content, then general spans
-   - Trims soft layers first to keep stable anchors intact
+2. **Anchor Priors** (0-20% tokens, dynamic)
+   - Used for query expansion (not included in bundle)
+   - Soft inclusion only if they truly match query scope
+
+3. **Semantic Evidence** (50-80% tokens)
+   - Top chunks from HybridVectorStore (vector + BM25 fused)
+   - RRF fusion with deterministic tie-breaking
+
+4. **Recency/Diff Shots** (0-10% tokens)
+   - Recent changes, changelogs, "what moved lately"
+
+### **Configuration Options**
+```bash
+# Stability slider (0.0-1.0, default 0.6)
+python3 scripts/cursor_memory_rehydrate.py --stability 0.6
+
+# Kill-switches for debugging
+python3 scripts/cursor_memory_rehydrate.py --no-rrf --dedupe file --expand-query off
+
+# Environment variables
+export REHYDRATE_STABILITY=0.6
+export REHYDRATE_USE_RRF=1
+export REHYDRATE_DEDUPE="file+overlap"
+export REHYDRATE_EXPAND_QUERY="auto"
+```
 
 ## 🛠️ Commands {#commands}
 
+### **Memory Rehydration (Choose One)**
+- **Python**: `python3 scripts/cursor_memory_rehydrate.py planner "current project status"`
+- **Go**: `cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project status"`
+
+### **Testing & Development**
 - Start tests: `./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke` (new marker-based approach)
 - Legacy tests: `./dspy-rag-system/run_tests.sh all` (legacy mode - avoid)
 
+### **System Management**
 - Start dashboard: `./dspy-rag-system/start_mission_dashboard.sh`
-
 - Quick inventory: `python3 scripts/documentation_navigator.py inventory`
-
 - Quick conflict check: `python scripts/quick_conflict_check.py`
-
 - Comprehensive conflict audit: `python scripts/conflict_audit.py --full`
 
 ## 🔧 Import Policy (CRITICAL)
@@ -383,16 +411,16 @@ AI Development Ecosystem
 1. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
    - todo
 
-2. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
+2. **B‑094**: MCP Memory Rehydrator Server (🔥 points)
    - todo
 
-3. **B‑076**: Research-Based DSPy Assertions Implementation (🔥 points)
+3. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
    - todo
 
-4. **B‑078**: LangExtract Structured Extraction Service (🔥 points)
+4. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
    - todo
 
-5. **B‑052‑f**: Enhanced Repository Maintenance Safety System (🔥 points)
+5. **B‑076**: Research-Based DSPy Assertions Implementation (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 

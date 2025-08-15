@@ -21,6 +21,15 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 
+# Import few-shot integration framework
+try:
+    from few_shot_integration import FewShotExampleLoader
+
+    FEW_SHOT_AVAILABLE = True
+except ImportError:
+    FEW_SHOT_AVAILABLE = False
+    print("⚠️  Few-shot integration not available - running in standard mode")
+
 # Pre-compile all regex patterns at module level for performance
 HEADING_INCREMENT_PATTERN = re.compile(r"^#{1,6}\s")
 HEADING_STYLE_PATTERN = re.compile(r"^(#{1,6}|\={3,}|\-{3,})")
@@ -53,6 +62,7 @@ class OptimizedDocCoherenceValidator:
         strict_anchors: bool = False,
         tab_width: int = 4,
         wrap_long_lines: bool = False,
+        enable_few_shot: bool = True,
     ):
         self.dry_run = dry_run
         self.only_changed = only_changed
@@ -64,6 +74,20 @@ class OptimizedDocCoherenceValidator:
         self.strict_anchors = strict_anchors
         self.tab_width = max(1, tab_width)
         self.wrap_long_lines = wrap_long_lines
+        self.enable_few_shot = enable_few_shot and FEW_SHOT_AVAILABLE
+
+        # Initialize few-shot integration if available
+        self.few_shot_loader = None
+        self.few_shot_patterns = []
+        if self.enable_few_shot:
+            try:
+                self.few_shot_loader = FewShotExampleLoader()
+                examples = self.few_shot_loader.load_examples_by_category("documentation_coherence")
+                self.few_shot_patterns = self.few_shot_loader.extract_patterns(examples)
+                print(f"✅ Loaded {len(self.few_shot_patterns)} few-shot patterns for documentation coherence")
+            except Exception as e:
+                print(f"⚠️  Failed to load few-shot patterns: {e}")
+                self.enable_few_shot = False
 
         # Cache directory
         self.cache_dir = Path(".cache/doc_validator")
@@ -475,6 +499,27 @@ class OptimizedDocCoherenceValidator:
                 except Exception as e:
                     warnings.append(f"Failed to write safe fixes: {e}")
 
+        # Apply few-shot enhanced validation if enabled
+        few_shot_results = {}
+        if self.enable_few_shot and self.few_shot_patterns and self.few_shot_loader:
+            try:
+                few_shot_results = self.few_shot_loader.apply_patterns_to_content(text, self.few_shot_patterns)
+
+                # Add few-shot suggestions to warnings
+                for suggestion in few_shot_results.get("validation_suggestions", []):
+                    if suggestion not in warnings:
+                        warnings.append(f"Few-shot suggestion: {suggestion}")
+
+                # Add pattern confidence information
+                if few_shot_results.get("matched_patterns"):
+                    pattern_info = []
+                    for pattern in few_shot_results["matched_patterns"]:
+                        pattern_info.append(f"{pattern['pattern']} (confidence: {pattern['confidence']:.2f})")
+                    warnings.append(f"Matched patterns: {', '.join(pattern_info)}")
+
+            except Exception as e:
+                warnings.append(f"Few-shot validation error: {e}")
+
         # Result
         result = {
             "file": str(file_path),
@@ -482,6 +527,7 @@ class OptimizedDocCoherenceValidator:
             "warnings": warnings,
             "fixes": fixes,
             "valid": len(errors) == 0,
+            "few_shot_results": few_shot_results if self.enable_few_shot else None,
         }
 
         # Cache the result
@@ -568,6 +614,7 @@ def main():
     parser.add_argument("--tab-width", type=int, default=4, help="Spaces per tab when --safe-fix")
     parser.add_argument("--strict-anchors", action="store_true", help="Fail on duplicate anchor ids")
     parser.add_argument("--wrap-long-lines", action="store_true", help="Wrap lines longer than 120 chars")
+    parser.add_argument("--no-few-shot", action="store_true", help="Disable few-shot enhanced validation")
 
     args = parser.parse_args()
 
@@ -581,6 +628,7 @@ def main():
         strict_anchors=args.strict_anchors,
         tab_width=args.tab_width,
         wrap_long_lines=args.wrap_long_lines,
+        enable_few_shot=not args.no_few_shot,
     )
 
     results = validator.run_validation()

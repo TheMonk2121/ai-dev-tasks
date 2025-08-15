@@ -11,7 +11,6 @@ __version__ = "1.0.0"
 # Importing here registers attributes on the package (used by tests mocking paths)
 from . import (
     anchor_metadata_parser,  # noqa: F401
-    config_manager,  # noqa: F401
     database_resilience,  # noqa: F401
     enhanced_file_validator,  # noqa: F401
     error_pattern_recognition,  # noqa: F401

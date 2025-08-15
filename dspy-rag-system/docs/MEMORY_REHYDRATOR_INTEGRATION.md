@@ -2,61 +2,114 @@
 
 ## 🎯 Overview
 
-The Memory Rehydrator (`src/utils/memory_rehydrator.py`) provides role-aware, task-scoped context assembly from Postgres. It replaces static Markdown file loading with dynamic context bundles.
+The Memory Rehydrator implements the **Lean Hybrid with Kill-Switches** approach for semantic-first memory rehydration. It provides role-aware, task-scoped context assembly from PostgreSQL with configurable complexity.
+
+**Available Implementations:**
+- **Python**: `src/utils/memory_rehydrator.py` (primary implementation)
+- **Go**: `src/utils/memory_rehydration.go` (alternative implementation)
 
 ## 🚀 Quick Start
 
 ### Basic Usage
 
+#### Python Implementation
 ```python
-from src.utils.memory_rehydrator import build_hydration_bundle
+from src.utils.memory_rehydrator import rehydrate
 
-# Create a planner bundle
-bundle = build_hydration_bundle(
-    role="planner",
-    task="Plan hybrid search rollout",
-    limit=8,
-    token_budget=1200
+# Create a context bundle with Lean Hybrid approach
+bundle = rehydrate(
+    query="Plan hybrid search rollout",
+    stability=0.6,  # Default stability slider
+    max_tokens=6000,
+    use_rrf=True,   # RRF fusion (vector + BM25)
+    dedupe="file+overlap",
+    expand_query="auto"
 )
 
 print(bundle.text)  # Formatted context
 print(bundle.meta)  # Metadata and performance info
 ```
 
+#### Go Implementation
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+    "github.com/ai-dev-tasks/dspy-rag-system/src/utils"
+)
+
+func main() {
+    config := &utils.Config{
+        Stability:   0.6,
+        MaxTokens:   6000,
+        UseRRF:      true,
+        Dedupe:      "file+overlap",
+        ExpandQuery: "auto",
+    }
+
+    bundle, err := utils.Rehydrate("Plan hybrid search rollout", config)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println(bundle.Text)  // Formatted context
+    fmt.Printf("%+v\n", bundle.Meta)  // Metadata and performance info
+}
+```
+
 ### CLI Usage
 
+#### Python CLI
 ```bash
-# Planner role
-python3 -m src.utils.memory_rehydrator \
-  --role planner \
-  --task "Plan hybrid search rollout" \
-  --limit 8 \
-  --budget 1200
+# Basic rehydration with Lean Hybrid defaults
+python3 scripts/cursor_memory_rehydrate.py planner "Plan hybrid search rollout"
 
-# Implementer role with JSON output
-python3 -m src.utils.memory_rehydrator \
-  --role implementer \
-  --task "Refactor vector store search path" \
-  --limit 8 \
-  --budget 1200 \
-  --json
+# With custom stability slider
+python3 scripts/cursor_memory_rehydrate.py implementer "DSPy integration task" --stability 0.8
+
+# Kill-switches for debugging
+python3 scripts/cursor_memory_rehydrate.py researcher "memory context" --no-rrf --dedupe file
+```
+
+#### Go CLI
+```bash
+# Build the Go CLI
+cd dspy-rag-system/src/utils
+go build -o memory_rehydration_cli memory_rehydration_cli.go
+
+# Basic rehydration with Lean Hybrid defaults
+./memory_rehydration_cli --query "Plan hybrid search rollout"
+
+# With custom stability slider
+./memory_rehydration_cli --query "DSPy integration task" --stability 0.8
+
+# Kill-switches for debugging
+./memory_rehydration_cli --query "memory context" --use-rrf=false --dedupe=file --expand-query=off
+
+# JSON output
+./memory_rehydration_cli --query "test query" --json
 ```
 
 ## 🧠 Architecture
 
-### Bundle Structure
+### Four-Slot Model
 
-1. **Pinned Anchors** (stable backbone)
-   - TL;DR → quick-start → quick-links → commands
-   - Role-specific pins (planner → system overview/backlog, implementer → DSPy context)
+1. **Pinned Invariants** (≤200 tokens, hard cap)
+   - Project style TL;DR, repo topology, naming conventions
+   - Always present, pre-compressed micro-summaries
 
-2. **Task-Scoped Retrieval** (hybrid search)
-   - Uses optimized vector store for relevant content
-   - Span-level grounding with citations
+2. **Anchor Priors** (0-20% tokens, dynamic)
+   - Used for query expansion (not included in bundle)
+   - Soft inclusion only if they truly match query scope
 
-3. **Token Budgeting** (~1,200 tokens default)
-   - Pins first, then anchor-like content, then general spans
-   - Trims soft layers first to keep stable anchors intact
+3. **Semantic Evidence** (50-80% tokens)
+   - Top chunks from HybridVectorStore (vector + BM25 fused)
+   - RRF fusion with deterministic tie-breaking
+
+4. **Recency/Diff Shots** (0-10% tokens)
+   - Recent changes, changelogs, "what moved lately"
 
 ### Role Mapping
 
@@ -71,44 +124,61 @@ python3 -m src.utils.memory_rehydrator \
 ### Environment Variables
 
 ```bash
-# Fusion method (zscore/rrf)
-REHYDRATE_FUSION_METHOD=zscore
+# Stability slider (0.0-1.0, default 0.6)
+export REHYDRATE_STABILITY=0.6
 
-# Weights for hybrid search
-REHYDRATE_W_DENSE=0.7
-REHYDRATE_W_SPARSE=0.3
-
-# Retrieval parameters
-REHYDRATE_TOPK=8
-REHYDRATE_TOKEN_BUDGET=1200
+# Kill-switches
+export REHYDRATE_USE_RRF=1
+export REHYDRATE_DEDUPE="file+overlap"
+export REHYDRATE_EXPAND_QUERY="auto"
 
 # Database connection
-POSTGRES_DSN=postgresql://danieljacobs@localhost:5432/ai_agency
+export POSTGRES_DSN=postgresql://danieljacobs@localhost:5432/ai_agency
 ```
+
+### Configuration Options
+
+#### **Stability Slider**
+- **Range**: 0.0-1.0 (default 0.6)
+- **Effect**: Controls anchor influence when semantic confidence is low
+- **Usage**: `--stability 0.8` for more anchor inclusion, `--stability 0.2` for semantic-first
+
+#### **Kill-Switches**
+- **`--no-rrf`**: Disable BM25+RRF fusion (pure vector search)
+- **`--dedupe file`**: Simple file-level deduplication only
+- **`--expand-query off`**: Disable automatic query expansion
 
 ### Database Requirements
 
-The memory rehydrator requires:
+The memory rehydrator requires the clean slate schema with first-class columns:
 
-1. **Existing Tables**: `document_chunks`, `documents` (from vector store)
-2. **Indexes**:
-   - `idx_documents_file_path` (for role-based filtering)
-   - `idx_dc_metadata_gin` (for JSONB anchor queries)
-3. **Anchor Metadata**: JSONB metadata with `anchor_key` and `role_pins`
+1. **Core Tables**: `document_chunks`, `documents` (from clean slate schema)
+2. **First-Class Columns**:
+   - `file_path` (for hot-path filtering)
+   - `is_anchor` (for fast anchor detection)
+   - `anchor_key` (for anchor-specific queries)
+   - `content_tsv` (for BM25 search)
+3. **Indexes**:
+   - `idx_document_chunks_content_tsv` (GIN for BM25)
+   - `idx_document_chunks_anchor_key` (for anchor filtering)
+   - `idx_document_chunks_embedding_hnsw` (HNSW for vector search)
 
 ## 📊 Performance
 
 ### Quality Gates
 
+- **BM25 Search**: < 100ms (EXCELLENT), < 200ms (GOOD)
+- **Vector Search**: < 100ms (EXCELLENT), < 200ms (GOOD)
 - **Memory Rehydration**: < 5s (EXCELLENT), < 10s (GOOD)
+- **Recall@10**: ≥ 0.8 for relevant queries
 - **Token Efficiency**: ≤ 1200 tokens for standard bundles
-- **Bundle Sections**: 3-8 sections typical
 
 ### Current Performance
 
-- **Bundle Creation**: ~3.6s first run, ~0.01-0.03s subsequent
-- **Token Usage**: Efficient budgeting (213 tokens for 4 sections)
-- **Vector Integration**: 5 dense results found, hybrid search operational
+- **Database**: 1,939 chunks from 20 core documents
+- **Search Speed**: BM25 < 50ms, Vector < 100ms
+- **Anchor Detection**: 26 anchor chunks across 10 anchor keys
+- **Token Budget**: ≤200 tokens for pins, rest for evidence
 
 ## 🔧 Integration Patterns
 
@@ -116,7 +186,7 @@ The memory rehydrator requires:
 
 ```python
 import dspy
-from src.utils.memory_rehydrator import build_hydration_bundle
+from src.utils.memory_rehydrator import rehydrate
 
 class ContextAwareAgent(dspy.Module):
     def __init__(self, role="planner"):
@@ -124,12 +194,14 @@ class ContextAwareAgent(dspy.Module):
         self.role = role
 
     def forward(self, task):
-        # Build context bundle
-        bundle = build_hydration_bundle(
-            role=self.role,
-            task=task,
-            limit=8,
-            token_budget=1200
+        # Build context bundle with Lean Hybrid approach
+        bundle = rehydrate(
+            query=task,
+            stability=0.6,
+            max_tokens=6000,
+            use_rrf=True,
+            dedupe="file+overlap",
+            expand_query="auto"
         )
 
         # Use bundle.text as context for LLM
@@ -142,10 +214,13 @@ class ContextAwareAgent(dspy.Module):
 
 ```python
 # Test with basic functionality
-python3 test_memory_rehydrator_basic.py
+python3 -c "from src.utils.memory_rehydrator import bm25_search; print(bm25_search('memory context', 3))"
 
-# Test with smoke tests (requires anchor metadata)
-python3 test_memory_rehydrator_smoke.py
+# Test vector search
+python3 -c "from src.utils.memory_rehydrator import vector_search; print(vector_search('DSPy system', 3))"
+
+# Test full rehydration pipeline
+python3 scripts/cursor_memory_rehydrate.py planner "test query"
 ```
 
 ## 🎯 Use Cases
@@ -159,8 +234,8 @@ Replace static Markdown loading with dynamic context:
 with open("100_memory/100_cursor-memory-context.md") as f:
     context = f.read()
 
-# After: Dynamic context assembly
-bundle = build_hydration_bundle(role="planner", task="current task")
+# After: Dynamic context assembly with Lean Hybrid
+bundle = rehydrate(query="current task", stability=0.6, max_tokens=6000)
 context = bundle.text
 ```
 
@@ -170,10 +245,10 @@ Different roles get different context:
 
 ```python
 # Planner gets system overview and backlog
-planner_bundle = build_hydration_bundle(role="planner", task="planning task")
+planner_bundle = rehydrate(query="planning task", stability=0.6, max_tokens=6000)
 
 # Implementer gets DSPy development context
-implementer_bundle = build_hydration_bundle(role="implementer", task="coding task")
+implementer_bundle = rehydrate(query="coding task", stability=0.6, max_tokens=6000)
 ```
 
 ### 3. Task-Scoped Retrieval
@@ -182,8 +257,8 @@ Context adapts to current task:
 
 ```python
 # Same role, different tasks
-bundle1 = build_hydration_bundle(role="implementer", task="vector store optimization")
-bundle2 = build_hydration_bundle(role="implementer", task="database schema design")
+bundle1 = rehydrate(query="vector store optimization", stability=0.6, max_tokens=6000)
+bundle2 = rehydrate(query="database schema design", stability=0.6, max_tokens=6000)
 ```
 
 ## 🔍 Troubleshooting
@@ -202,10 +277,11 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 # Check bundle metadata
-bundle = build_hydration_bundle(role="planner", task="debug task")
-print(f"Sections: {bundle.meta['sections']}")
-print(f"Tokens: {bundle.meta['tokens_est']}")
-print(f"Time: {bundle.meta['elapsed_s']}s")
+bundle = rehydrate(query="debug task", stability=0.6, max_tokens=6000)
+print(f"Stability: {bundle.meta['stability']}")
+print(f"Sim Top: {bundle.meta['sim_top']}")
+print(f"Use RRF: {bundle.meta['use_rrf']}")
+print(f"Evidence Tokens: {bundle.meta['evidence_tokens']}")
 ```
 
 ## 📈 Future Enhancements
@@ -227,5 +303,7 @@ print(f"Time: {bundle.meta['elapsed_s']}s")
 
 - **System Overview**: `400_guides/400_system-overview.md` (Memory Rehydrator section)
 - **Memory Context**: `100_memory/100_cursor-memory-context.md` (Hydration Bundle Policy)
+- **Lean Hybrid Guide**: `400_guides/400_lean-hybrid-memory-system.md` (Complete system guide)
 - **Vector Store**: `src/dspy_modules/vector_store.py` (Hybrid search implementation)
-- **Testing**: `test_memory_rehydrator_basic.py` (Basic functionality tests)
+- **Database Schema**: `clean_slate_schema.sql` (Clean slate schema with first-class columns)
+- **Code Criticality**: `400_guides/400_code-criticality-guide.md` (Tier 1 critical files)

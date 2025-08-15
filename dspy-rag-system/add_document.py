@@ -11,9 +11,14 @@ import time
 # Add src to path
 sys.path.append("src")
 
-from dspy_modules.document_processor import DocumentProcessor
-from dspy_modules.vector_store import HybridVectorStore
-from utils.logger import setup_logger
+try:
+    from dspy_modules.document_processor import DocumentProcessor
+    from dspy_modules.vector_store import HybridVectorStore
+    from utils.logger import setup_logger
+except ImportError as e:
+    print(f"❌ Import error: {e}")
+    print("Make sure you're running from the dspy-rag-system directory")
+    sys.exit(1)
 
 
 def add_document_to_rag(file_path):
@@ -69,8 +74,11 @@ def add_document_to_rag(file_path):
 
         vector_store = HybridVectorStore("postgresql://danieljacobs@localhost:5432/ai_agency")
 
+        # Extract text from chunk dictionaries
+        chunk_texts = [chunk["text"] for chunk in result["chunks"]]
+
         # Store chunks
-        store_result = vector_store("store_chunks", chunks=result["chunks"], metadata=result["metadata"])
+        store_result = vector_store("store_chunks", chunks=chunk_texts, metadata=result["metadata"])
 
         if store_result["status"] == "success":
             logger.info(
@@ -107,7 +115,7 @@ def query_knowledge_base(query, limit=3):
     logger.info("Querying knowledge base", extra={"query": query, "limit": limit, "stage": "query_start"})
 
     try:
-        vector_store = VectorStore("postgresql://danieljacobs@localhost:5432/ai_agency")
+        vector_store = HybridVectorStore("postgresql://danieljacobs@localhost:5432/ai_agency")
         results = vector_store("search", query=query, limit=limit)
 
         if results["status"] == "success":
@@ -135,10 +143,11 @@ def main():
 
     logger.info("Starting DSPy RAG System - Document Addition Tool")
 
-    # Check if file path provided
-    if len(sys.argv) < 2:
+    # Check if help is requested or no file path provided
+    if len(sys.argv) < 2 or sys.argv[1] in ["--help", "-h", "help"]:
         logger.info(
-            "No file path provided, showing usage", extra={"component": "add_document", "action": "usage_display"}
+            "Help requested or no file path provided, showing usage",
+            extra={"component": "add_document", "action": "usage_display"},
         )
         print("Usage: python3 add_document.py <file_path>")
         print("\nExample:")

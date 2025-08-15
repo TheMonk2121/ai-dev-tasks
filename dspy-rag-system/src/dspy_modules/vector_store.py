@@ -7,11 +7,14 @@ VectorStore DSPy Module (optimized)
 - Includes spans in dense results
 """
 
+# Standard library imports
 import json
+import logging
 import uuid
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
 
+# Third-party imports
 import numpy as np
 import torch
 from dspy import Module
@@ -19,8 +22,17 @@ from psycopg2 import errors
 from psycopg2.extras import RealDictCursor, execute_values
 from sentence_transformers import SentenceTransformer
 
-from utils.database_resilience import get_database_manager
-from utils.retry_wrapper import retry_database
+# Local imports
+try:
+    from utils.database_resilience import get_database_manager
+    from utils.retry_wrapper import retry_database
+except ImportError:
+    # Fallback for when running from outside src directory
+    from ..utils.database_resilience import get_database_manager
+    from ..utils.retry_wrapper import retry_database
+
+# Set up logging
+LOG = logging.getLogger(__name__)
 
 # ---------------------------
 # Model & embedding helpers
@@ -172,8 +184,12 @@ class HybridVectorStore(Module):
     def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
         if operation == "store_chunks":
             return self._store_chunks_with_spans(**kwargs)
+        elif operation == "search_vector":
+            return self._search_vector(**kwargs)  # raw dense rows
+        elif operation == "search_bm25":
+            return self._search_bm25(**kwargs)  # raw sparse rows
         elif operation == "search":
-            return self._hybrid_search(**kwargs)
+            return self._hybrid_search(**kwargs)  # legacy merged path
         elif operation == "delete_document":
             return self._delete_document(**kwargs)
         elif operation == "get_document_chunks":
@@ -207,6 +223,74 @@ class HybridVectorStore(Module):
     def _vector_search(self, query: str, limit: int) -> List[Dict[str, Any]]:
         """Dense vector search using pgvector with spans included."""
         return self._search_dense(query, limit)
+
+    def _search_vector(self, query: str, limit: int = 5) -> Dict[str, Any]:
+        """Raw vector search returning results with distance for canonicalization."""
+        q_emb = _query_embedding(self.model_name, query)
+
+        db_manager = get_database_manager()
+        try:
+            with db_manager.get_connection() as conn:
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    # Per-query tunables (best-effort, ignore if unsupported)
+                    if self.hnsw_ef_search is not None:
+                        try:
+                            cur.execute("SET LOCAL hnsw.ef_search = %s", (int(self.hnsw_ef_search),))
+                        except Exception:
+                            pass
+
+                    cur.execute(
+                        """
+                        SELECT
+                          id, document_id, chunk_index, file_path, line_start, line_end,
+                          content, is_anchor, anchor_key, metadata,
+                          (embedding <=> %s::vector) AS distance
+                        FROM document_chunks
+                        WHERE embedding IS NOT NULL
+                        ORDER BY embedding <=> %s::vector ASC,
+                                 file_path NULLS LAST,
+                                 chunk_index NULLS LAST,
+                                 id ASC
+                        LIMIT %s
+                        """,
+                        (q_emb, q_emb, limit),
+                    )
+                    rows = cur.fetchall()
+
+            return {"status": "success", "search_type": "vector", "results": list(rows)}
+
+        except Exception:
+            raise
+
+    def _search_bm25(self, query: str, limit: int = 5) -> Dict[str, Any]:
+        """Raw BM25 search returning results with ts_rank for canonicalization."""
+        db_manager = get_database_manager()
+
+        try:
+            with db_manager.get_connection() as conn:
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    cur.execute(
+                        """
+                        SELECT
+                          id, document_id, chunk_index, file_path, line_start, line_end,
+                          content, is_anchor, anchor_key, metadata,
+                          ts_rank_cd(content_tsv, websearch_to_tsquery('english', %s)) AS bm25
+                        FROM document_chunks
+                        WHERE content_tsv @@ websearch_to_tsquery('english', %s)
+                        ORDER BY bm25 DESC,
+                                 file_path NULLS LAST,
+                                 chunk_index NULLS LAST,
+                                 id ASC
+                        LIMIT %s
+                        """,
+                        (query, query, limit),
+                    )
+                    rows = cur.fetchall()
+
+            return {"status": "success", "search_type": "bm25", "results": list(rows)}
+
+        except Exception:
+            raise
 
     @retry_database
     def _search_dense(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
@@ -330,17 +414,17 @@ class HybridVectorStore(Module):
         doc_id = metadata.get("document_id") or uuid.uuid4().hex
 
         chunk_rows: List[Tuple] = []
-        current_offset = 0
         for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
             if isinstance(emb, torch.Tensor):
                 emb = emb.detach().cpu().numpy()
             emb = emb.astype(np.float32, copy=False)
 
-            start_offset = current_offset
-            end_offset = current_offset + len(chunk)
+            # Calculate line numbers for the chunk
+            # For now, use chunk index as line numbers (simplified approach)
+            line_start = i * 10 + 1  # Approximate line numbers
+            line_end = line_start + chunk.count("\n")
 
-            chunk_rows.append((doc_id, i, chunk, emb, start_offset, end_offset, json.dumps(metadata)))
-            current_offset = end_offset + 1  # newline
+            chunk_rows.append((doc_id, i, chunk, emb, line_start, line_end, json.dumps(metadata)))
 
         return self._insert_with_spans(chunk_rows, metadata, doc_id, len(chunks))
 
@@ -355,41 +439,90 @@ class HybridVectorStore(Module):
         try:
             with db_manager.get_connection() as conn:
                 with conn.cursor() as cur:
-                    # Bulk insert chunks with spans
+                    # Insert document record and get the generated ID
+                    cur.execute(
+                        """
+                        INSERT INTO documents
+                               (filename, file_path, file_type, file_size,
+                                chunk_count, status)
+                        VALUES (%s,%s,%s,%s,%s,%s)
+                        RETURNING id
+                        """,
+                        (
+                            metadata.get("filename"),
+                            metadata.get(
+                                "file_path", metadata.get("filename")
+                            ),  # Fallback to filename if file_path is missing
+                            metadata.get("file_type"),
+                            metadata.get("file_size", 0),
+                            chunk_count,
+                            "completed",
+                        ),
+                    )
+                    result = cur.fetchone()
+                    if result is None:
+                        raise Exception("Failed to insert document - no ID returned")
+                    document_id = result[0]
+
+                    # Update chunk rows with the correct document_id
+                    updated_chunk_rows = []
+                    for chunk_row in chunk_rows:
+                        updated_chunk_rows.append(
+                            (
+                                document_id,
+                                chunk_row[1],
+                                chunk_row[2],
+                                chunk_row[3],
+                                chunk_row[4],
+                                chunk_row[5],
+                                chunk_row[6],
+                            )
+                        )
+
+                    # Re-insert chunks with correct document_id and new schema
+                    updated_chunk_rows_with_schema = []
+                    for chunk_row in updated_chunk_rows:
+                        # Extract metadata to get anchor information
+                        chunk_metadata = json.loads(chunk_row[6]) if chunk_row[6] else {}
+                        is_anchor = chunk_metadata.get("is_anchor", False)
+                        anchor_key = chunk_metadata.get("anchor_key")
+                        file_path = chunk_metadata.get("file_path", metadata.get("file_path", metadata.get("filename")))
+
+                        updated_chunk_rows_with_schema.append(
+                            (
+                                chunk_row[0],  # document_id
+                                chunk_row[1],  # chunk_index
+                                file_path,  # file_path (first-class column)
+                                chunk_row[4],  # line_start
+                                chunk_row[5],  # line_end
+                                chunk_row[2],  # content
+                                chunk_row[3],  # embedding
+                                is_anchor,  # is_anchor (first-class column)
+                                anchor_key,  # anchor_key (first-class column)
+                                chunk_row[6],  # metadata (JSONB)
+                            )
+                        )
+
+                    # Insert with new schema including first-class columns
                     execute_values(
                         cur,
                         """
                         INSERT INTO document_chunks
-                             (document_id, chunk_index, content, embedding, start_offset, end_offset, metadata)
+                             (document_id, chunk_index, file_path, line_start, line_end,
+                              content, embedding, is_anchor, anchor_key, metadata)
                         VALUES %s
                         """,
-                        chunk_rows,
-                        template="(%s,%s,%s,%s,%s,%s,%s)",
+                        updated_chunk_rows_with_schema,
+                        template="(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                     )
-
-                    # Upsert document record
-                    cur.execute(
-                        """
-                        INSERT INTO documents
-                               (document_id, filename, file_type, file_size,
-                                chunk_count, metadata)
-                        VALUES (%s,%s,%s,%s,%s,%s)
-                        ON CONFLICT (document_id)
-                        DO UPDATE SET chunk_count = EXCLUDED.chunk_count,
-                                      metadata = EXCLUDED.metadata,
-                                      updated_at = CURRENT_TIMESTAMP
-                        """,
-                        (
-                            doc_id,
-                            metadata.get("filename"),
-                            metadata.get("file_type"),
-                            metadata.get("file_size", 0),
-                            chunk_count,
-                            json.dumps(metadata),
-                        ),
-                    )
-            return {"status": "success", "document_id": doc_id, "chunks_stored": chunk_count, "spans_tracked": True}
-        except Exception:
+            return {
+                "status": "success",
+                "document_id": document_id,
+                "chunks_stored": chunk_count,
+                "spans_tracked": True,
+            }
+        except Exception as e:
+            LOG.error(f"Error in _insert_with_spans: {e}")
             raise
 
     # ------------- Admin -------------

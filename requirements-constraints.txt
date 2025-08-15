@@ -59,7 +59,7 @@ opentelemetry-instrumentation-flask==0.40b0
 opentelemetry-instrumentation-logging==0.40b0
 
 # Development and analysis tools
-pycycle==0.1.0
+pycycle==0.0.8
 pipdeptree==2.13.2
 black==23.9.1
 isort==5.12.0

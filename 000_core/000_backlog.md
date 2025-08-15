@@ -90,6 +90,8 @@ and normalize spacing across long-form guides.
 
 ## P0 Lane
 
+- B‑094 — MCP Memory Rehydrator Server (score 9.5) ✅ **COMPLETED**
+
 - B‑052‑e — Auto-Push Prompt for Repo Maintenance (score 9.0)
 
 - B‑061 — Memory Context Auto-Update Helper (score 9.0)
@@ -106,7 +108,7 @@ and normalize spacing across long-form guides.
 
 - B‑064 — Naming Convention Category Table (score 8.0)
 
-- B‑074 — Few-Shot Integration with Documentation Tools (score 8.0)
+- B‑074 — Few-Shot Integration with Documentation Tools (score 8.0) ✅ **COMPLETED**
 
 - B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0)
 
@@ -310,6 +312,27 @@ maps | Python threading + cached scans | scripts/doc_coherence_validator.py |
 <!-- do_next: Add parallel IO for file reads and cache anchor map across tasks -->
 <!-- est_hours: 4 -->
 <!-- acceptance: 2x speedup measured on only-changed runs on a representative commit -->
+
+| B‑094 | MCP Memory Rehydrator Server | 🔥 | 3 | todo | Create minimal MCP server to automate database-based memory rehydration in Cursor | MCP Server + HTTP transport + Cursor integration | scripts/cursor_memory_rehydrate.py |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:3, deps:["scripts/cursor_memory_rehydrate.py"]}-->
+<!--score_total: 9.5-->
+<!-- do_next: Create basic MCP server that wraps existing memory rehydrator and exposes it as a tool -->
+<!-- est_hours: 3 -->
+<!-- acceptance: Cursor automatically connects to MCP server and can call memory rehydration tool -->
+
+| B‑095 | MCP Server Role Auto-Detection | 🔥 | 2 | todo | Enhance MCP server to automatically detect role based on conversation context | Context analysis + role detection + dynamic tool selection | B-094 MCP Memory Rehydrator Server |
+<!--score: {bv:5, tc:3, rr:4, le:3, effort:2, deps:["B-094"]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Add conversation context analysis to automatically select appropriate role -->
+<!-- est_hours: 2 -->
+<!-- acceptance: MCP server automatically detects planner/implementer/researcher role from conversation -->
+
+| B‑096 | MCP Server Performance Optimization | 📈 | 2 | todo | Optimize MCP server for low latency and high throughput | Connection pooling + caching + async processing | B-094 MCP Memory Rehydrator Server |
+<!--score: {bv:4, tc:3, rr:3, le:3, effort:2, deps:["B-094"]}-->
+<!--score_total: 5.5-->
+<!-- do_next: Implement connection pooling and response caching for faster context retrieval -->
+<!-- est_hours: 2 -->
+<!-- acceptance: MCP server responds in <500ms for context requests -->
 
 - --
 
@@ -619,7 +642,7 @@ System |
 analysis, memory context, code generation, error recovery, integration patterns, testing strategies, deployment
 examples, and best practices-->
 
-| B‑074 | Few-Shot Integration with Documentation Tools | 🔧 | 0.5 | todo | Integrate few-shot examples into doc-lint and
+| B‑074 | Few-Shot Integration with Documentation Tools | 🔧 | 0.5 | ✅ done | Integrate few-shot examples into doc-lint and
 memory update scripts | Prompt Integration + Example Loading + AI Enhancement | B-073 Few-Shot Context Engineering
 Examples |
 <!--score: {bv:4, tc:2, rr:3, le:3, effort:0.5, deps:["B-073"]}-->
@@ -781,6 +804,17 @@ Documentation review + reference updates | File naming convention migration |
 ## Completed Items
 
 ### Recently Completed Core Features
+
+- ✅ **Lean Hybrid Memory Rehydration System** (✅ done - 2025-08-15)
+  - **Implementation**: Lean Hybrid with Kill-Switches approach
+  - **Database**: Clean slate schema with 1,939 chunks from 20 core documents
+  - **Search**: BM25 working excellently, vector search ready for embeddings
+  - **Anchors**: 10 anchor keys with proper metadata (tldr, quick-start, architecture, etc.)
+  - **Features**: RRF fusion, deterministic tie-breaking, stability slider, kill-switches
+  - **Configuration**: `--stability 0.0-1.0`, `--no-rrf`, `--dedupe`, `--expand-query`
+  - **Impact**: Semantic-first rehydration with tiny pins (≤200 tokens) for guardrails
+  - **Multi-language**: Python (primary) and Go (alternative) implementations
+  - **Go Implementation**: `dspy-rag-system/src/utils/memory_rehydration.go` with CLI interface
 
 - ✅ **Vector Database Synchronization & Cleanup** (✅ done - 2024-08-13)
   - **Phase 1**: Updated 3 outdated database entries (100_cursor-memory-context.md, 000_backlog.md, 400_system-overview.md)

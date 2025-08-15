@@ -20,6 +20,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+# Import few-shot integration framework
+try:
+    from few_shot_integration import FewShotExampleLoader
+
+    FEW_SHOT_AVAILABLE = True
+except ImportError:
+    FEW_SHOT_AVAILABLE = False
+    print("⚠️  Few-shot integration not available - running in standard mode")
+
 # Fenced section markers for automated updates
 FENCE_PRIORITIES_START = "<!-- AUTO:current_priorities:start -->"
 FENCE_PRIORITIES_END = "<!-- AUTO:current_priorities:end -->"
@@ -29,8 +38,8 @@ FENCE_COMPLETED_START = "<!-- AUTO:recently_completed:start -->"
 FENCE_COMPLETED_END = "<!-- AUTO:recently_completed:end -->"
 
 
-def parse_backlog_item(line: str) -> Optional[Dict[str, str]]:
-    """Parse a single backlog item line with improved error handling"""
+def parse_backlog_item(line: str, few_shot_loader: Optional[FewShotExampleLoader] = None) -> Optional[Dict[str, str]]:
+    """Parse a single backlog item line with improved error handling and few-shot enhancement"""
     if not line.strip() or "| B‑" not in line:
         return None
 
@@ -48,19 +57,51 @@ def parse_backlog_item(line: str) -> Optional[Dict[str, str]]:
         # Clean up the problem description
         problem = re.sub(r"<!--.*?-->", "", problem).strip()
 
-        return {"id": item_id, "title": title, "points": points, "status": status, "problem": problem}
+        result = {"id": item_id, "title": title, "points": points, "status": status, "problem": problem}
+
+        # Apply few-shot enhancement if available
+        if few_shot_loader:
+            try:
+                # Load backlog analysis examples
+                examples = few_shot_loader.load_examples_by_category("backlog_analysis")
+                patterns = few_shot_loader.extract_patterns(examples)
+
+                # Apply patterns to the line
+                few_shot_results = few_shot_loader.apply_patterns_to_content(line, patterns)
+
+                # Add few-shot insights to the result
+                if few_shot_results.get("matched_patterns"):
+                    result["few_shot_insights"] = few_shot_results["matched_patterns"]
+
+                if few_shot_results.get("validation_suggestions"):
+                    result["validation_suggestions"] = few_shot_results["validation_suggestions"]
+
+            except Exception:
+                # Don't fail the parsing if few-shot enhancement fails
+                pass
+
+        return result
     except Exception:
         return None
 
 
-def extract_backlog_priorities() -> List[Dict[str, str]]:
-    """Extract current priorities from 000_core/000_backlog.md with improved parsing"""
+def extract_backlog_priorities(enable_few_shot: bool = True) -> List[Dict[str, str]]:
+    """Extract current priorities from 000_core/000_backlog.md with improved parsing and few-shot enhancement"""
     backlog_file = Path("000_core/000_backlog.md")
     if not backlog_file.exists():
         print(f"⚠️  Backlog file not found: {backlog_file}")
         return []
 
     priorities = []
+    few_shot_loader = None
+
+    # Initialize few-shot loader if enabled
+    if enable_few_shot and FEW_SHOT_AVAILABLE:
+        try:
+            few_shot_loader = FewShotExampleLoader()
+            print("✅ Few-shot enhancement enabled for backlog parsing")
+        except Exception as e:
+            print(f"⚠️  Failed to initialize few-shot loader: {e}")
 
     try:
         with open(backlog_file, "r", encoding="utf-8") as f:
@@ -70,19 +111,16 @@ def extract_backlog_priorities() -> List[Dict[str, str]]:
         lines = content.split("\n")
         for line in lines:
             if "| B‑" in line and "🔥" in line and "todo" in line:
-                item = parse_backlog_item(line)
+                item = parse_backlog_item(line, few_shot_loader)
                 if item:
                     priorities.append(item)
 
-        # Sort by priority (P0, P1, P2) and then by score
+        # Sort by ID number as proxy for priority
         def priority_sort_key(item):
-            # Extract priority from ID (B-052-e, B-061, etc.)
-            priority_map = {"P0": 0, "P1": 1, "P2": 2}
-            # For now, sort by ID number as proxy for priority
             try:
                 num = int(item["id"].split("-")[1])
                 return num
-            except:
+            except (ValueError, IndexError, KeyError):
                 return 999
 
         priorities.sort(key=priority_sort_key)
@@ -222,11 +260,11 @@ def render_doc_health_block(health: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def update_memory_context(dry_run: bool = False) -> Tuple[bool, str]:
+def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -> Tuple[bool, str]:
     """Update 100_memory/100_cursor-memory-context.md with current state"""
 
     # Extract current state
-    priorities = extract_backlog_priorities()
+    priorities = extract_backlog_priorities(enable_few_shot=enable_few_shot)
     completed = extract_completed_items()
     health = load_doc_health()
 
@@ -286,7 +324,9 @@ def update_memory_context(dry_run: bool = False) -> Tuple[bool, str]:
 
         return (
             True,
-            f"✅ Memory context updated successfully\n📋 Priorities: {len(priorities)} items\n✅ Completed: {len(completed)} items",
+            f"✅ Memory context updated successfully\n"
+            f"📋 Priorities: {len(priorities)} items\n"
+            f"✅ Completed: {len(completed)} items",
         )
 
     except Exception as e:
@@ -298,6 +338,7 @@ def main():
     parser = argparse.ArgumentParser(description="Update Cursor Memory Context")
     parser.add_argument("--dry-run", action="store_true", help="Preview changes without applying them")
     parser.add_argument("--verbose", action="store_true", help="Show detailed output")
+    parser.add_argument("--no-few-shot", action="store_true", help="Disable few-shot enhanced parsing")
 
     args = parser.parse_args()
 
@@ -306,7 +347,7 @@ def main():
         print("🔍 Running in dry-run mode")
 
     try:
-        success, message = update_memory_context(dry_run=args.dry_run)
+        success, message = update_memory_context(dry_run=args.dry_run, enable_few_shot=not args.no_few_shot)
         print(message)
 
         if not success:

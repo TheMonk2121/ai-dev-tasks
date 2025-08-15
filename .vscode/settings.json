@@ -113,6 +113,7 @@
         "pgvector",
         "Pgvector",
         "prio",
+        "priorit",
         "pycycle",
         "Pycycle",
         "pyproject",
@@ -227,7 +228,16 @@
         "vulns",
         "tcpm",
         "redef",
-        "werkzeug"
+        "werkzeug",
+        "dedupe",
+        "DEDUPE",
+        "toks",
+        "Jaccard",
+        "Canonicalizer",
+        "trgm",
+        "Println",
+        "DBDSN",
+        "RRFK"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

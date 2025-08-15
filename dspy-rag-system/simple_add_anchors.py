@@ -108,22 +108,42 @@ def add_document_simple(file_path):
                     "completed",
                 ),
             )
-            doc_id = cur.fetchone()[0]
+            result = cur.fetchone()
+            if result is None:
+                raise Exception("Failed to insert document record - no ID returned")
+            doc_id = result[0]
 
             # Insert chunks
             for chunk in chunks:
+                meta = chunk.get("metadata", {})
+                anchor_key = meta.get("anchor_key")
+                is_anchor = bool(anchor_key)
+
                 cur.execute(
                     """
-                    INSERT INTO document_chunks (content, metadata, document_id, chunk_index, start_offset, end_offset)
-                    VALUES (%s, %s, %s, %s, %s, %s)
+                    INSERT INTO document_chunks (
+                        document_id,
+                        chunk_index,
+                        file_path,
+                        line_start,
+                        line_end,
+                        content,
+                        is_anchor,
+                        anchor_key,
+                        metadata
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                     (
-                        chunk["content"],
-                        json.dumps(chunk.get("metadata", {})),
                         str(doc_id),
                         chunk["chunk_index"],
-                        chunk["start_offset"],
+                        file_path,
+                        chunk["start_offset"],  # use computed line offsets as line numbers
                         chunk["end_offset"],
+                        chunk["content"],
+                        is_anchor,
+                        anchor_key,
+                        json.dumps(meta),
                     ),
                 )
 
@@ -143,13 +163,21 @@ def main():
     """Main function"""
     print("🚀 Starting Simple Document Addition with Anchor Metadata")
 
-    # Core files with anchor metadata
-    core_files = [
-        "../100_memory/100_cursor-memory-context.md",
-        "../000_core/000_backlog.md",
-        "../100_memory/104_dspy-development-context.md",
-        "../400_guides/400_system-overview.md",
-    ]
+    # Process all markdown files in watch_folder
+    watch_folder = "watch_folder"
+    core_files = []
+
+    if os.path.exists(watch_folder):
+        for file in os.listdir(watch_folder):
+            if file.endswith(".md"):
+                file_path = os.path.join(watch_folder, file)
+                core_files.append(file_path)
+
+    if not core_files:
+        print("❌ No markdown files found in watch_folder")
+        return
+
+    print(f"📁 Found {len(core_files)} markdown files in watch_folder")
 
     success_count = 0
     total_count = len(core_files)
