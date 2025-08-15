@@ -27,10 +27,14 @@ def find_files_with_sync_tags() -> List[Tuple[str, str]]:
     """
     Find all files with DATABASE_SYNC tags.
 
+    Implements deduplication strategy: prioritize files in core directories
+    over watch_folder duplicates to establish single source of truth.
+
     Returns:
         List of (file_path, sync_type) tuples
     """
     sync_files = []
+    filename_to_path = {}  # Track best path for each filename
 
     # Search for files with DATABASE_SYNC tags
     for root, dirs, files in os.walk("."):
@@ -50,11 +54,30 @@ def find_files_with_sync_tags() -> List[Tuple[str, str]]:
                         # Extract sync type
                         match = re.search(r"DATABASE_SYNC:\s*(\w+)", content)
                         sync_type = match.group(1) if match else "REQUIRED"
-                        sync_files.append((file_path, sync_type))
+
+                        # Deduplication logic: prioritize core directories over watch_folder
+                        if file not in filename_to_path:
+                            filename_to_path[file] = (file_path, sync_type)
+                        else:
+                            # If we already have this file, check if current path is better
+                            existing_path, existing_sync = filename_to_path[file]
+
+                            # Priority order: core directories > watch_folder
+                            if "watch_folder" in existing_path and "watch_folder" not in file_path:
+                                # Current path is better (not in watch_folder)
+                                filename_to_path[file] = (file_path, sync_type)
+                            elif "watch_folder" in file_path and "watch_folder" not in existing_path:
+                                # Keep existing path (it's better)
+                                pass
+                            else:
+                                # Both in same category, keep the first one found
+                                pass
 
                 except Exception as e:
                     print(f"Warning: Could not read {file_path}: {e}")
 
+    # Convert to list format
+    sync_files = list(filename_to_path.values())
     return sync_files
 
 
