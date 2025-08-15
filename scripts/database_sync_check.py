@@ -132,7 +132,10 @@ def update_database_file(file_path: str, status: Dict) -> bool:
         with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
 
-        file_size = len(content)
+        # Use os.path.getsize for accurate file size in bytes
+        import os
+
+        file_size = os.path.getsize(file_path)
         filename = status["filename"]
 
         with get_db_connection() as conn:
