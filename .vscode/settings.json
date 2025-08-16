@@ -237,7 +237,19 @@
         "trgm",
         "Println",
         "DBDSN",
-        "RRFK"
+        "RRFK",
+        "UMAP",
+        "Cytoscape",
+        "Plotly",
+        "cose",
+        "httpx",
+        "yaxis",
+        "xaxis",
+        "nemo",
+        "NEMO",
+        "Nemo",
+        "nohup",
+        "pids"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

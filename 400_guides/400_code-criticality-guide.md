@@ -65,11 +65,19 @@
 
 6. `dspy-rag-system/src/utils/memory_rehydrator.py` — Context Assembly & Role-Aware Hydration (Python)
 
-- Builds role-aware context bundles from Postgres; pinned anchors + task-scoped retrieval; core AI agent context system.
+- Builds role-aware context bundles from Postgres; pinned anchors + task-scoped retrieval; industry-grade observability integration; core AI agent context system.
 
 7. `dspy-rag-system/src/utils/memory_rehydration.go` — Context Assembly & Role-Aware Hydration (Go)
 
 - Go implementation of memory rehydration system; Lean Hybrid with Kill-Switches approach; alternative to Python version.
+
+8. `dspy-rag-system/src/utils/structured_tracer.py` — Industry-Grade Structured Tracing
+
+- Stanford/Berkeley/Anthropic-grade observability; cryptographic verification; multi-layer logging; core debugging infrastructure.
+
+9. `dspy-rag-system/src/utils/self_critique.py` — Self-Critique Engine
+
+- Anthropic-style reflection checkpoints; bundle sufficiency evaluation; role-specific validation; bundle integrity verification.
 
 ### Tier 2 — High (production infrastructure)
 
@@ -126,6 +134,7 @@
 - Data path: Indexing/retrieval correctness/perf (`vector_store.py`, `document_processor.py`)
 
 - Context assembly: Breaks AI agent context building (`memory_rehydrator.py`)
+- Observability: Breaks debugging and verification capabilities (`structured_tracer.py`, `self_critique.py`)
 
 - Documentation safety: Affects recovery and rollback capabilities (`rollback_doc.sh`)
 

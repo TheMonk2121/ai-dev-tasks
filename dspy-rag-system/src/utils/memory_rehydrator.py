@@ -38,6 +38,8 @@ from .entity_overlay import (
     extract_entities_from_query,
     populate_related_entities,
 )
+from .self_critique import add_self_critique
+from .structured_tracer import trace_bundle_creation, tracer
 
 # Import HybridVectorStore for potential future integration
 # Note: This module currently uses direct database queries for specialized
@@ -512,7 +514,12 @@ def token_len(obj) -> int:
 
 
 def package_bundle(
-    pins: str, query_expansion_terms: List[str], evidence: List[Dict[str, Any]], debug: Dict[str, Any]
+    pins: str,
+    query_expansion_terms: List[str],
+    evidence: List[Dict[str, Any]],
+    debug: Dict[str, Any],
+    query: str = "",
+    role: str = "planner",
 ) -> Bundle:
     """Package final bundle for Cursor."""
     # Format evidence for display
@@ -528,6 +535,24 @@ def package_bundle(
     if query_expansion_terms:
         bundle_text += f"[QUERY EXPANSION]\nTerms: {', '.join(query_expansion_terms)}\n\n"
     bundle_text += "[EVIDENCE]\n" + "\n".join(evidence_text)
+
+    # Generate echo verification
+    echo_verification = tracer.generate_echo_verification(bundle_text)
+
+    # Add echo verification to bundle
+    bundle_text += "\n\n[ECHO VERIFICATION]\n"
+    bundle_text += f"Bundle Hash: {echo_verification['bundle_hash']}\n"
+    bundle_text += f"Pins Hash: {echo_verification['pins_hash']}\n"
+    bundle_text += f"Evidence Hashes: {', '.join(echo_verification['evidence_hashes'][:2])}\n"
+    if echo_verification.get("entity_expansion"):
+        bundle_text += f"Entities: {', '.join(echo_verification['entity_expansion'])}\n"
+    bundle_text += "\nBefore answering, verify you see:\n"
+    bundle_text += f"1. Pins content matching hash: {echo_verification['pins_hash'][:8]}...\n"
+    bundle_text += f"2. First 2 evidence chunks matching hashes: {', '.join([h[:8] + '...' for h in echo_verification['evidence_hashes'][:2]])}\n"
+    bundle_text += f"3. Bundle content matching hash: {echo_verification['bundle_hash'][:8]}...\n"
+
+    # Add self-critique
+    bundle_text = add_self_critique(bundle_text, query, role)
 
     # Create sections for metadata
     sections = []
@@ -641,6 +666,7 @@ def semantic_evidence_with_entity_expansion(
 # ---------- Main rehydration function ----------
 
 
+@trace_bundle_creation(query="", role="planner")
 def rehydrate(
     query: str,
     stability: float = DEFAULT_STABILITY,
@@ -655,6 +681,9 @@ def rehydrate(
 
     # 0) Pins (always tiny, pre-compressed)
     pins = load_guardrail_pins(PINS_CAP_TOKENS)
+
+    # Add pins to trace
+    tracer.add_pins([{"content": pins, "tokens": token_len(pins)}])
 
     # 1) Initial vector probe for confidence
     vec_probe = vector_search(query, k=K_VEC, db_dsn=db_dsn)
@@ -698,6 +727,10 @@ def rehydrate(
         ranked, expansion_metrics = semantic_evidence_with_entity_expansion(
             query=query, base_chunks=fused, use_entity_expansion=True, stability_threshold=stability, db_dsn=db_dsn
         )
+
+        # Add entity expansion to trace
+        if expansion_metrics.get("entities_found", 0) > 0:
+            tracer.add_entity_expansion(expansion_metrics.get("entities_extracted", []))
     else:
         ranked = fused
         expansion_metrics = {
@@ -746,7 +779,13 @@ def rehydrate(
             "evidence_tokens": used,
             **expansion_metrics,  # Include entity expansion metrics
         },
+        query=query,
+        role=role,
     )
+
+    # Add evidence to trace
+    tracer.add_evidence(evidence)
+
     return bundle
 
 

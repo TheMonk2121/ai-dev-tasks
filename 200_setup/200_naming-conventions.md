@@ -317,6 +317,8 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 - PRD/Scoring → `100_memory/100_backlog-guide.md`
 
+- README Organization → `400_guides/400_documentation-reference.md#readme-file-organization`
+
 ### Anchor policy (phased)
 
 - Only TL;DR may use an explicit HTML anchor (`{#tldr}`). All other anchors must be heading‑based.

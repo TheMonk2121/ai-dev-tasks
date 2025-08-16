@@ -64,12 +64,13 @@ Read these files in order (1–2 min total):
 
 ## 🧠 Hydration Bundle Policy {#hydration-policy}
 
-The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach:
+The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **Industry-Grade Observability**:
 
 ### **Core Philosophy**
 - **Semantic-first**: Vector search does the heavy lifting
 - **Tiny pins**: Only 200 tokens for guardrails (style, conventions, repo map)
 - **Kill-switches**: Simple CLI flags to disable features when needed
+- **Observability**: Stanford/Berkeley/Anthropic-grade structured tracing and verification
 
 ### **Four-Slot Model**
 1. **Pinned Invariants** (≤200 tokens, hard cap)
@@ -86,6 +87,12 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach:
 
 4. **Recency/Diff Shots** (0-10% tokens)
    - Recent changes, changelogs, "what moved lately"
+
+### **Observability Features**
+- **Structured Tracing**: Complete trace with cryptographic hashes
+- **Echo Verification**: Bundle integrity verification for models
+- **Self-Critique**: Anthropic-style reflection checkpoints
+- **Multi-Layer Logging**: Retrieval, assembly, execution tracking
 
 ### **Configuration Options**
 ```bash

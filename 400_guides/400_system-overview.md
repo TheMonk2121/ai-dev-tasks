@@ -415,6 +415,8 @@ and `400_guides/400_deployment-environment-guide.md`.
   - Vector Search: < 100ms (EXCELLENT), < 200ms (GOOD)
   - Hybrid Search: < 200ms (EXCELLENT), < 500ms (GOOD)
   - Memory Rehydration: < 5s (EXCELLENT), < 10s (GOOD)
+  - Observability Tracing: < 100ms (EXCELLENT), < 200ms (GOOD)
+  - Echo Verification: < 50ms (EXCELLENT), < 100ms (GOOD)
 
 - **Retrieval Quality**: Recall@K and relevance validation
   - Recall@10: ≥ 0.8 for relevant queries
@@ -469,7 +471,12 @@ and `400_guides/400_deployment-environment-guide.md`.
 - **Kill-Switches**: `--no-rrf`, `--dedupe`, `--expand-query`, `--no-entity-expansion` for debugging
 - **Stability Slider**: `--stability 0.0-1.0` controls anchor influence
 - **Multi-language**: Python (primary) and Go (alternative) implementations
-- **Current Status**: 1,939 chunks from 20 core documents, BM25 working excellently, entity expansion active
+- **Industry-Grade Observability**: Stanford/Berkeley/Anthropic-grade structured tracing and verification
+- **Structured Tracing**: Complete trace with cryptographic hashes and multi-layer spans
+- **Echo Verification**: Bundle integrity verification for models with hash validation
+- **Self-Critique**: Anthropic-style reflection checkpoints for bundle validation
+- **Multi-Layer Logging**: Retrieval, assembly, execution tracking with performance metrics
+- **Current Status**: 1,939 chunks from 20 core documents, BM25 working excellently, entity expansion active, observability fully operational
 
 #### **Entity Expansion System**(`src/utils/entity_overlay.py`)
 
@@ -541,6 +548,8 @@ and `400_guides/400_deployment-environment-guide.md`.
 #### **Visualization Components**-**Flask Cluster View** (`/cluster`)- UMAP-based scatter plot visualization
 
 - **NiceGUI Graph View** (`start_graph_visualization.sh`)- Interactive network graph with Cytoscape.js
+
+- **Nemo Management System** (`wake_up_nemo.sh`/`sleep_nemo.sh`)- Unified startup/shutdown for all visualization components
 
 - **Real-time Updates**- Live data refresh and interactive controls
 

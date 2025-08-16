@@ -22,7 +22,7 @@ if [[ ! -f "venv/bin/activate" ]]; then
     exit 1
 fi
 
-# shellcheck source=venv/bin/activate
+# shellcheck disable=SC1091
 source venv/bin/activate
 
 # Start in background

@@ -253,7 +253,10 @@ AI analysis strategies
 
 - **`400_guides/400_system-overview.md`**- Technical architecture, system relationships
 
-- **`400_guides/400_project-overview.md`**- High-level project purpose and workflow**For processes and
+- **`400_guides/400_project-overview.md`**- High-level project purpose and workflow
+
+- **`400_guides/400_documentation-reference.md`**- Complete documentation inventory and README organization
+- **`400_guides/400_observability-system.md`**- Industry-grade observability with structured tracing and verification**For processes and
 workflows:**-**`200_setup/200_setup/200_setup/200_naming-conventions.md`**- File naming, generation processes,
 conventions
 

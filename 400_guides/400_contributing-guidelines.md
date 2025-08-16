@@ -545,6 +545,8 @@ __version__= "1.0.0"__author__= "AI Development Team"
 
 ## **2. Project Documentation**####**README Standards**```markdown
 
+> **📖 For comprehensive README organization guidelines, see `400_guides/400_documentation-reference.md#readme-file-organization`**
+
 ## Project Name
 
 Brief description of the project and its purpose.

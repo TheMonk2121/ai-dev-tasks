@@ -56,6 +56,7 @@ full scope | Use the category sections below to locate the documentation you nee
 - **`400_guides/400_metadata-collection-guide.md`** - Metadata collection and management
   - Quick metadata reference: see `400_guides/400_metadata-collection-guide.md` (Quick reference section)
 - **`400_guides/400_few-shot-context-examples.md`** - Few-shot learning examples
+- **`400_guides/400_observability-system.md`** - Industry-grade observability with structured tracing and verification
 - PRD optimization: see `000_core/001_create-prd.md` (skip rule), `000_core/002_generate-tasks.md` (PRD-less path), and
 `100_memory/100_backlog-guide.md` (decision matrix)
 - **`400_guides/400_n8n-backlog-scrubber-guide.md`** - n8n workflow automation
@@ -146,6 +147,69 @@ full scope | Use the category sections below to locate the documentation you nee
 - **Strategy**: `400_guides/400_guides/400_cursor-context-engineering-guide.md`
 - **Compatibility**: `400_guides/400_guides/400_cursor-context-engineering-guide.md`
 - **Implementation**: `100_memory/104_dspy-development-context.md`
+
+## 📖 README File Organization
+
+### **README.md vs README-dev.md Decision Matrix**
+
+| What you're documenting | Use | Why |
+|---|---|---|
+| New user feature (Nemo startup) | `README.md` | Users need to know how to use it |
+| Test development guidelines | `README-dev.md` | Developers need technical details |
+| System architecture | `README.md` | Users need to understand the system |
+| Import path configuration | `README-dev.md` | Internal development concern |
+| Quick start instructions | `README.md` | User onboarding |
+| Database utility functions | `README-dev.md` | Internal development tool |
+| API endpoints | `README.md` | Users need to know available APIs |
+| Code organization policy | `README-dev.md` | Development team guidelines |
+
+### **Quick Rules of Thumb**
+
+**Use `README.md` if**:
+- A user would benefit from knowing this
+- It's about how to use the system
+- It's about features and capabilities
+- It's about getting started or workflows
+
+**Use `README-dev.md` if**:
+- Only developers need to know this
+- It's about how to develop or test
+- It's about internal technical details
+- It's about code organization or patterns
+
+### **README File Naming Conventions**
+
+- **`README.md`** - Primary user-facing documentation
+- **`README-dev.md`** - Developer-specific documentation
+- **`README-{component}.md`** - Component-specific documentation (e.g., `README-api.md`)
+- **`README-{environment}.md`** - Environment-specific documentation (e.g., `README-production.md`)
+
+### **Content Organization Guidelines**
+
+#### **README.md Content**
+- Project overview and purpose
+- Quick start instructions
+- Feature descriptions and capabilities
+- User workflows and examples
+- System architecture (high-level)
+- API endpoints and usage
+- Installation and setup (user perspective)
+
+#### **README-dev.md Content**
+- Development setup and environment
+- Testing guidelines and procedures
+- Code organization and patterns
+- Internal technical details
+- Debugging and troubleshooting
+- Contribution guidelines
+- Build and deployment processes
+
+### **Cross-Reference Integration**
+
+- **README.md** should reference relevant `README-dev.md` sections
+- **README-dev.md** should link back to user-facing features in `README.md`
+- Both should follow the established cross-reference patterns from `200_setup/200_naming-conventions.md`
+- Include memory context comments for AI rehydration
 
 ## 📊 Documentation Utilization Checklist
 
