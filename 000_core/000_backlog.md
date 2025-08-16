@@ -190,6 +190,15 @@ Coherence Validation System |
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#performance-optimization"] -->
 <!-- reference_cards: ["500_reference-cards.md#rag-lessons-from-jerry"] -->
 
+| B‑103 | Advanced Feedback Loops & Lessons Integration | 🔄 | 6 | todo | Integrate systematic feedback from linter/test errors and git commits into lessons learned | Feedback collection + Lessons aggregation + Backlog influence | B-101 Adaptive Routing |
+<!--score: {bv:4, tc:4, rr:4, le:5, lessons:5, effort:4, deps:["B-101"]}-->
+<!--score_total: 4.3-->
+<!-- do_next: Implement feedback loop system to capture and apply lessons from development process -->
+<!-- est_hours: 8 -->
+<!-- acceptance: Lessons from errors and commits automatically influence backlog prioritization -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#reference-discipline"] -->
+<!-- reference_cards: ["500_reference-cards.md#traceability"] -->
+
 | B‑075 | Few-Shot Cognitive Scaffolding Integration | ⭐ | 6 | ✅ done | Integrate few-shot examples into cognitive scaffolding for AI agents | Few-shot patterns + AI context engineering | B‑074 Few-Shot Integration with Documentation Tools |
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:6, lessons:4, deps:["B-074"]}-->
 <!--score_total: 6.0-->
