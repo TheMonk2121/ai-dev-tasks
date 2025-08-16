@@ -73,8 +73,8 @@ Focus on:
             # Extract echo verification from bundle
             echo_verification = self._extract_echo_verification(bundle_text)
 
-            # Generate critique prompt
-            prompt = self.critique_prompt_template.format(task=task, role=role, bundle_text=bundle_text)
+            # Generate critique prompt (for future LLM integration)
+            # prompt = self.critique_prompt_template.format(task=task, role=role, bundle_text=bundle_text)
 
             # For now, we'll simulate the critique
             # In production, this would call the LLM

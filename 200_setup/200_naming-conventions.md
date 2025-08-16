@@ -436,6 +436,83 @@ File renames and structural changes are tracked via Git issues rather than stati
 
 - **Human-Friendly**: Standard development workflow
 
+## 📋 PRD Lifecycle Management
+
+### PRD Naming Convention
+
+- **Active PRDs**: `PRD-{BacklogID}-{Descriptive-Name}.md`
+  - Example: `PRD-B-084-Research-Based-Schema-Design.md`
+  - Location: `000_core/` while project is active
+
+- **Completed PRDs**: Move to `600_archives/prds/` with metadata preservation
+  - Keep original filename for traceability
+  - Add completion metadata to preserve insights
+
+### PRD Lifecycle Stages
+
+1. **Active Development** (`000_core/`)
+   - PRD is being used for implementation
+   - Backlog item is `todo` or `in-progress`
+   - Cross-references in backlog point to active location
+
+2. **Completion** (Move to `600_archives/prds/`)
+   - Backlog item marked as `✅ done`
+   - PRD moved to archives with completion metadata
+   - Backlog cross-reference updated to archived location
+
+3. **Lessons Mining** (B-098 process)
+   - Extract lessons_applied from completed PRDs
+   - Identify reference_cards for 500_reference-cards.md
+   - Update backlog hygiene based on patterns
+
+### Metadata Preservation Requirements
+
+When archiving a PRD, **preserve these critical insights**:
+
+```markdown
+<!-- ARCHIVAL_METADATA -->
+<!-- completion_date: YYYY-MM-DD -->
+<!-- backlog_id: B-XXX -->
+<!-- implementation_notes: Brief summary of what was actually implemented -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#section"] -->
+<!-- reference_cards: ["500_reference-cards.md#section"] -->
+<!-- key_decisions: List of important decisions made during implementation -->
+<!-- trade_offs: Important trade-offs and their rationale -->
+<!-- success_metrics: What worked well and what didn't -->
+<!-- ARCHIVAL_METADATA -->
+```
+
+### Lessons Learned Extraction
+
+The B-098 process should extract:
+
+- **Implementation patterns** that worked well
+- **Common pitfalls** and how to avoid them
+- **Decision rationale** for future reference
+- **Trade-off analysis** for similar decisions
+- **Success metrics** and validation approaches
+- **Integration patterns** with existing systems
+
+### Reference Card Creation
+
+From archived PRDs, create entries in `500_reference-cards.md`:
+
+- **Evidence-based patterns** from research findings
+- **Validation approaches** that proved effective
+- **Performance benchmarks** and their context
+- **Security considerations** and mitigations
+- **Integration patterns** with existing infrastructure
+
+### Backlog Hygiene Updates
+
+Use archived PRDs to:
+
+- **Identify duplicates** across different projects
+- **Merge similar requirements** into unified backlog items
+- **Update scoring factors** based on actual implementation experience
+- **Refine acceptance criteria** based on what worked
+- **Improve estimation accuracy** from actual effort data
+
 ## 🛠️ Implementation Tools
 
 ### Collision Detection

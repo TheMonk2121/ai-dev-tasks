@@ -33,6 +33,30 @@ acceptance criteria | When you need to convert a PRD or backlog item into action
 
 ## Workflow
 
+### 🤖 **Automated Task Generation (Recommended)**
+
+For consistent, high-quality task generation, use the automated system:
+
+```bash
+# Generate tasks from PRD
+python3 scripts/task_generation_automation.py --prd <prd_file> --preview
+
+# Generate tasks from backlog item
+python3 scripts/task_generation_automation.py --backlog-id <backlog_id> --preview
+
+# Generate complete task list
+python3 scripts/task_generation_automation.py --prd <prd_file> --output-file tasks.md
+```
+
+The automation system provides:
+- **Consistent task templates** with all required sections
+- **Intelligent testing requirements** based on task type and complexity
+- **Priority-based quality gates** with appropriate review levels
+- **Dependency analysis** and task relationships
+- **Multiple output formats** (markdown, JSON, task lists)
+
+### 📝 **Manual Process (Fallback)**
+
 - Parse PRD or `000_core/000_backlog.md` row to derive tasks
 - Enforce quality gates and acceptance criteria per task
 

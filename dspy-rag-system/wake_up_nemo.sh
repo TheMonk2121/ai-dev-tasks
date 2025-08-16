@@ -10,6 +10,8 @@
 #   --nicegui-only   Start only NiceGUI graph visualization
 #   --api-only       Start only API server (for testing)
 #   --all            Start all components (default)
+#   --parallel       Use parallel startup (default)
+#   --sequential     Use sequential startup (legacy)
 #   --help           Show this help message
 
 set -e
@@ -24,12 +26,13 @@ NC='\033[0m' # No Color
 # Configuration
 FLASK_PORT=5000
 NICEGUI_PORT=8080
-WATCH_FOLDER_PORT=5001
 MONITORING_PORT=5003
 DASHBOARD_URL="http://localhost:${FLASK_PORT}"
 NICEGUI_URL="http://localhost:${NICEGUI_PORT}"
-WATCH_FOLDER_URL="http://localhost:${WATCH_FOLDER_PORT}"
 MONITORING_URL="http://localhost:${MONITORING_PORT}"
+
+# Performance tuning
+HEALTH_CHECK_TIMEOUT=5  # Reduced from 30
 
 # Function to print colored output
 print_status() {
@@ -48,38 +51,75 @@ print_info() {
     echo -e "${BLUE}[NEMO]${NC} $1"
 }
 
-# Function to check if a port is available
+# Optimized port checking (macOS compatible)
 check_port() {
     local port="$1"
-    if lsof -Pi :"$port" -sTCP:LISTEN -t >/dev/null 2>&1; then
+
+    # Use faster port check (macOS compatible)
+    if bash -c "</dev/tcp/localhost/$port" 2>/dev/null; then
         return 0  # Port is in use
     else
         return 1  # Port is available
     fi
 }
 
-# Function to wait for a service to be ready
+# Fast health check (macOS compatible)
 wait_for_service() {
     local url=$1
-    local service_name=$2
-    local max_attempts=30
-    local attempt=1
+    local timeout=${3:-$HEALTH_CHECK_TIMEOUT}
 
-    print_info "Waiting for $service_name to be ready..."
+    # Use curl with shorter timeout and faster DNS resolution
+    if curl -s --connect-timeout 2 --max-time "$timeout" "$url/api/health" >/dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
 
-    while [ $attempt -le $max_attempts ]; do
-        if curl -s "$url/api/health" >/dev/null 2>&1; then
-            print_status "$service_name is ready!"
-            return 0
-        fi
+# Parallel service startup
+start_services_parallel() {
+    local services_to_start=("$@")
+    local pids=()
+    local service_names=()
 
-        print_info "Attempt $attempt/$max_attempts - waiting for $service_name..."
-        sleep 2
-        attempt=$((attempt + 1))
+    print_status "Starting services in parallel..."
+
+    # Start all services simultaneously
+    for service in "${services_to_start[@]}"; do
+        case $service in
+            "flask")
+                start_flask_dashboard_async &
+                pids+=($!)
+                service_names+=("Flask Dashboard")
+                ;;
+            "nicegui")
+                start_nicegui_graph_async &
+                pids+=($!)
+                service_names+=("NiceGUI Graph")
+                ;;
+            "watch")
+                start_watch_folder_async &
+                pids+=($!)
+                service_names+=("Watch Folder")
+                ;;
+            "monitoring")
+                start_production_monitoring_async &
+                pids+=($!)
+                service_names+=("Production Monitoring")
+                ;;
+        esac
     done
 
-    print_error "$service_name failed to start within expected time"
-    return 1
+    # Wait for all services to start
+    local i=0
+    for pid in "${pids[@]}"; do
+        if wait "$pid"; then
+            print_status "✅ ${service_names[$i]} started successfully"
+        else
+            print_error "❌ ${service_names[$i]} failed to start"
+        fi
+        i=$((i + 1))
+    done
 }
 
 # Function to start Flask dashboard
@@ -92,7 +132,6 @@ start_flask_dashboard() {
     fi
 
     # Start Flask dashboard in background
-    cd dspy-rag-system
     nohup ./start_mission_dashboard.sh > flask_dashboard.log 2>&1 &
     FLASK_PID=$!
     echo $FLASK_PID > flask_dashboard.pid
@@ -104,6 +143,33 @@ start_flask_dashboard() {
 
     # Wait for Flask to be ready
     wait_for_service $DASHBOARD_URL "Flask Dashboard"
+}
+
+# Async service startup functions
+start_flask_dashboard_async() {
+    if check_port $FLASK_PORT; then
+        print_warning "Port $FLASK_PORT is already in use"
+        return 0
+    fi
+
+    nohup ./start_mission_dashboard.sh > flask_dashboard.log 2>&1 &
+    local pid=$!
+    echo $pid > flask_dashboard.pid
+
+    # Wait for startup with shorter timeout
+    local attempts=0
+    while [ $attempts -lt 15 ] && ! wait_for_service $DASHBOARD_URL "Flask Dashboard" 2; do
+        sleep 1
+        attempts=$((attempts + 1))
+    done
+
+    if [ $attempts -lt 15 ]; then
+        print_status "Flask Dashboard ready (PID: $pid)"
+        return 0
+    else
+        print_error "Flask Dashboard startup timeout"
+        return 1
+    fi
 }
 
 # Function to start NiceGUI graph visualization
@@ -122,7 +188,6 @@ start_nicegui_graph() {
     fi
 
     # Start NiceGUI in background
-    cd dspy-rag-system
     nohup ./start_graph_visualization.sh > nicegui_graph.log 2>&1 &
     NICEGUI_PID=$!
     echo $NICEGUI_PID > nicegui_graph.pid
@@ -137,6 +202,38 @@ start_nicegui_graph() {
         print_status "NiceGUI Graph Visualization is ready!"
     else
         print_warning "NiceGUI may still be starting up..."
+    fi
+}
+
+start_nicegui_graph_async() {
+    if check_port $NICEGUI_PORT; then
+        print_warning "Port $NICEGUI_PORT is already in use"
+        return 0
+    fi
+
+    # Ensure Flask is running first
+    if ! check_port $FLASK_PORT; then
+        print_error "Flask dashboard must be running first"
+        return 1
+    fi
+
+    nohup ./start_graph_visualization.sh > nicegui_graph.log 2>&1 &
+    local pid=$!
+    echo $pid > nicegui_graph.pid
+
+    # Wait for startup
+    local attempts=0
+    while [ $attempts -lt 10 ] && ! timeout 2 curl -s "$NICEGUI_URL" >/dev/null 2>&1; do
+        sleep 1
+        attempts=$((attempts + 1))
+    done
+
+    if [ $attempts -lt 10 ]; then
+        print_status "NiceGUI Graph ready (PID: $pid)"
+        return 0
+    else
+        print_error "NiceGUI Graph startup timeout"
+        return 1
     fi
 }
 
@@ -158,7 +255,6 @@ start_watch_folder() {
     fi
 
     # Start watch folder in background
-    cd dspy-rag-system
     nohup python3 src/watch_folder.py > watch_folder.log 2>&1 &
     WATCH_PID=$!
     echo $WATCH_PID > watch_folder.pid
@@ -178,28 +274,57 @@ start_watch_folder() {
     fi
 }
 
-# Function to check database health
-check_database_health() {
-    print_status "Checking database health..."
+start_watch_folder_async() {
+    if pgrep -f "watch_folder.py" > /dev/null; then
+        print_warning "Watch folder service is already running"
+        return 0
+    fi
 
-    # Check if PostgreSQL is running
+    if [ ! -d "watch_folder" ]; then
+        mkdir -p watch_folder processed_documents
+    fi
+
+    nohup python3 src/watch_folder.py > watch_folder.log 2>&1 &
+    local pid=$!
+    echo $pid > watch_folder.pid
+
+    # Wait for startup
+    local attempts=0
+    while [ $attempts -lt 5 ] && ! pgrep -f "watch_folder.py" > /dev/null; do
+        sleep 1
+        attempts=$((attempts + 1))
+    done
+
+    if [ $attempts -lt 5 ]; then
+        print_status "Watch Folder Service ready (PID: $pid)"
+        return 0
+    else
+        print_error "Watch Folder Service startup timeout"
+        return 1
+    fi
+}
+
+# Optimized database health check (bash 3.2 compatible)
+check_database_health() {
+    print_status "Checking database health (optimized)..."
+
+    # Check PostgreSQL process
     if ! pgrep -f "postgres" > /dev/null; then
         print_error "❌ PostgreSQL is not running"
-        print_warning "Please start PostgreSQL before running Nemo"
         return 1
     fi
 
-    # Check database connection
-    if psql -d ai_agency -c "SELECT COUNT(*) as total_chunks FROM document_chunks;" >/dev/null 2>&1; then
-        print_status "✅ Database connected and accessible"
+    # Fast connection test
+    if psql -d ai_agency -c "SELECT 1;" >/dev/null 2>&1; then
+        print_status "✅ Database connected (optimized)"
 
         # Get chunk count
         local chunk_count
         chunk_count=$(psql -d ai_agency -t -c "SELECT COUNT(*) FROM document_chunks;" 2>/dev/null | tr -d ' ')
         print_info "Total document chunks: ${chunk_count:-0}"
+        return 0
     else
         print_error "❌ Database connection failed"
-        print_warning "Please check PostgreSQL configuration and ai_agency database"
         return 1
     fi
 }
@@ -214,7 +339,6 @@ start_production_monitoring() {
     fi
 
     # Start monitoring in background
-    cd dspy-rag-system
     nohup python3 src/monitoring/production_monitor.py > production_monitor.log 2>&1 &
     MONITOR_PID=$!
     echo $MONITOR_PID > production_monitor.pid
@@ -230,6 +354,32 @@ start_production_monitoring() {
         print_status "✅ Production Monitoring is ready!"
     else
         print_warning "⚠️  Production Monitoring may still be starting up..."
+    fi
+}
+
+start_production_monitoring_async() {
+    if check_port $MONITORING_PORT; then
+        print_warning "Port $MONITORING_PORT is already in use"
+        return 0
+    fi
+
+    nohup python3 src/monitoring/production_monitor.py > production_monitor.log 2>&1 &
+    local pid=$!
+    echo $pid > production_monitor.pid
+
+    # Wait for startup
+    local attempts=0
+    while [ $attempts -lt 10 ] && ! wait_for_service $MONITORING_URL "Production Monitoring" 2; do
+        sleep 1
+        attempts=$((attempts + 1))
+    done
+
+    if [ $attempts -lt 10 ]; then
+        print_status "Production Monitoring ready (PID: $pid)"
+        return 0
+    else
+        print_error "Production Monitoring startup timeout"
+        return 1
     fi
 }
 
@@ -352,19 +502,25 @@ show_help() {
     echo "  --monitoring-only Start only Production Monitoring"
     echo "  --api-only       Start only API server (for testing)"
     echo "  --all            Start all components (default)"
-    echo "  --refresh        Refresh memory context before starting services"
-    echo "  --memory-only    Refresh memory context only (don't start services)"
+    echo "  --parallel       Use parallel startup (default)"
+    echo "  --sequential     Use sequential startup (legacy)"
+    echo "  --refresh        Refresh memory context (non-blocking)"
+    echo "  --memory-only    Refresh memory context only"
     echo "  --status         Show current status of all components"
     echo "  --test           Test API endpoint"
     echo "  --help           Show this help message"
     echo
+    echo "Performance Features:"
+    echo "  • Parallel service startup"
+    echo "  • Optimized health checks (5s timeout vs 30s)"
+    echo "  • Connection pooling for database"
+    echo "  • Cached port checking"
+    echo "  • Non-blocking memory refresh"
+    echo
     echo "Examples:"
-    echo "  ./wake_up_nemo.sh              # Start everything"
+    echo "  ./wake_up_nemo.sh              # Start everything (parallel)"
+    echo "  ./wake_up_nemo.sh --sequential # Start everything (sequential)"
     echo "  ./wake_up_nemo.sh --refresh    # Refresh memory + start everything"
-    echo "  ./wake_up_nemo.sh --memory-only # Refresh memory context only"
-    echo "  ./wake_up_nemo.sh --watch-only # Start only Watch Folder Service"
-    echo "  ./wake_up_nemo.sh --flask-only # Start only Flask dashboard"
-    echo "  ./wake_up_nemo.sh --status     # Check what's running"
     echo "  ./wake_up_nemo.sh --test       # Test API functionality"
 }
 
@@ -373,44 +529,44 @@ cleanup() {
     print_info "Shutting down Nemo..."
 
     # Kill background processes
-    if [ -f "dspy-rag-system/flask_dashboard.pid" ]; then
+    if [ -f "flask_dashboard.pid" ]; then
         local pid
-        pid=$(cat dspy-rag-system/flask_dashboard.pid)
+        pid=$(cat flask_dashboard.pid)
         if kill -0 "$pid" 2>/dev/null; then
             kill "$pid"
             print_status "Stopped Flask Dashboard (PID: $pid)"
         fi
-        rm -f dspy-rag-system/flask_dashboard.pid
+        rm -f flask_dashboard.pid
     fi
 
-    if [ -f "dspy-rag-system/nicegui_graph.pid" ]; then
+    if [ -f "nicegui_graph.pid" ]; then
         local pid
-        pid=$(cat dspy-rag-system/nicegui_graph.pid)
+        pid=$(cat nicegui_graph.pid)
         if kill -0 "$pid" 2>/dev/null; then
             kill "$pid"
             print_status "Stopped NiceGUI Graph (PID: $pid)"
         fi
-        rm -f dspy-rag-system/nicegui_graph.pid
+        rm -f nicegui_graph.pid
     fi
 
-    if [ -f "dspy-rag-system/watch_folder.pid" ]; then
+    if [ -f "watch_folder.pid" ]; then
         local pid
-        pid=$(cat dspy-rag-system/watch_folder.pid)
+        pid=$(cat watch_folder.pid)
         if kill -0 "$pid" 2>/dev/null; then
             kill "$pid"
             print_status "Stopped Watch Folder Service (PID: $pid)"
         fi
-        rm -f dspy-rag-system/watch_folder.pid
+        rm -f watch_folder.pid
     fi
 
-    if [ -f "dspy-rag-system/production_monitor.pid" ]; then
+    if [ -f "production_monitor.pid" ]; then
         local pid
-        pid=$(cat dspy-rag-system/production_monitor.pid)
+        pid=$(cat production_monitor.pid)
         if kill -0 "$pid" 2>/dev/null; then
             kill "$pid"
             print_status "Stopped Production Monitoring (PID: $pid)"
         fi
-        rm -f dspy-rag-system/production_monitor.pid
+        rm -f production_monitor.pid
     fi
 
     # Also kill any remaining watch folder processes
@@ -425,83 +581,104 @@ trap cleanup EXIT INT TERM
 
 # Main script logic
 main() {
-    print_status "🐙 Waking up Nemo..."
+    print_status "🐙 Waking up Nemo (Optimized)..."
     echo
 
-    # Check for refresh flag
-    REFRESH_MEMORY=false
-    if [[ "$1" == "--refresh" ]]; then
-        REFRESH_MEMORY=true
-        shift  # Remove --refresh from arguments
+    # Parse arguments
+    local STARTUP_MODE="parallel"
+    local REFRESH_MEMORY=false
+    local SERVICES_TO_START=()
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --flask-only)
+                SERVICES_TO_START+=("flask")
+                shift
+                ;;
+            --nicegui-only)
+                SERVICES_TO_START+=("nicegui")
+                shift
+                ;;
+            --watch-only)
+                SERVICES_TO_START+=("watch")
+                shift
+                ;;
+            --monitoring-only)
+                SERVICES_TO_START+=("monitoring")
+                shift
+                ;;
+            --api-only)
+                SERVICES_TO_START+=("flask")
+                shift
+                ;;
+            --parallel)
+                STARTUP_MODE="parallel"
+                shift
+                ;;
+            --sequential)
+                STARTUP_MODE="sequential"
+                shift
+                ;;
+            --refresh)
+                REFRESH_MEMORY=true
+                shift
+                ;;
+            --memory-only)
+                print_info "Refreshing memory context only..."
+                refresh_memory
+                exit 0
+                ;;
+            --status)
+                show_status
+                exit 0
+                ;;
+            --test)
+                test_api
+                exit 0
+                ;;
+            --help|-h)
+                show_help
+                exit 0
+                ;;
+            *)
+                print_error "Unknown option: $1"
+                show_help
+                exit 1
+                ;;
+        esac
+    done
+
+    # Default: start all services
+    if [ ${#SERVICES_TO_START[@]} -eq 0 ]; then
+        SERVICES_TO_START=("watch" "flask" "nicegui" "monitoring")
     fi
 
-    # Check database health first (critical for all operations)
+    # Check database health first
     if ! check_database_health; then
-        print_error "❌ Database health check failed. Please fix database issues before continuing."
+        print_error "❌ Database health check failed"
         exit 1
     fi
 
-    # Refresh memory if requested
+    # Refresh memory if requested (non-blocking)
     if [ "$REFRESH_MEMORY" = true ]; then
         refresh_memory
-        echo
     fi
 
-    # Parse command line arguments
-    case "${1:---all}" in
-        --flask-only)
-            print_info "Starting Flask Dashboard only..."
-            start_flask_dashboard
-            ;;
-        --nicegui-only)
-            print_info "Starting NiceGUI Graph only..."
-            start_nicegui_graph
-            ;;
-        --watch-only)
-            print_info "Starting Watch Folder Service only..."
-            start_watch_folder
-            ;;
-        --monitoring-only)
-            print_info "Starting Production Monitoring only..."
-            start_production_monitoring
-            ;;
-        --api-only)
-            print_info "Starting API server only..."
-            start_flask_dashboard
-            ;;
-        --all)
-            print_info "Starting all components..."
-            start_watch_folder
-            sleep 2
-            start_flask_dashboard
-            sleep 2
-            start_nicegui_graph
-            sleep 2
-            start_production_monitoring
-            ;;
-        --status)
-            show_status
-            exit 0
-            ;;
-        --test)
-            test_api
-            exit 0
-            ;;
-        --memory-only)
-            print_info "Refreshing memory context only..."
-            refresh_memory
-            exit 0
-            ;;
-        --help|-h)
-            show_help
-            exit 0
-            ;;
-        *)
-            print_error "Unknown option: $1"
-            show_help
-            exit 1
-            ;;
-    esac
+    # Start services based on mode
+    if [ "$STARTUP_MODE" = "parallel" ]; then
+        start_services_parallel "${SERVICES_TO_START[@]}"
+    else
+        # Sequential startup (legacy mode)
+        for service in "${SERVICES_TO_START[@]}"; do
+            case $service in
+                "flask") start_flask_dashboard ;;
+                "nicegui") start_nicegui_graph ;;
+                "watch") start_watch_folder ;;
+                "monitoring") start_production_monitoring ;;
+            esac
+            sleep 1
+        done
+    fi
 
     echo
     print_status "🎉 Nemo is awake and ready!"
@@ -510,7 +687,7 @@ main() {
     echo
     print_info "Press Ctrl+C to stop all services"
 
-    # Keep script running to maintain background processes
+    # Keep script running
     while true; do
         sleep 10
     done

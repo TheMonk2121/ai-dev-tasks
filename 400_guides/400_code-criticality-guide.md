@@ -84,6 +84,9 @@
 - `scripts/doc_coherence_validator.py` — Documentation Quality & Coherence Validation
   - Primary validator for documentation integrity; cross-references, naming conventions, markdown compliance.
 
+- `scripts/task_generation_automation.py` — Automated Task Generation System
+  - Parses PRDs and backlog items; generates consistent task templates with testing requirements and quality gates; core workflow automation.
+
 - `dspy-rag-system/src/utils/database_resilience.py` — DB Resilience & Pooling
   - Connection pooling, health monitoring, retries, and graceful degradation.
 

@@ -5,10 +5,12 @@ Unit tests for repo_maintenance.py
 Tests the core functionality of the repository maintenance script.
 """
 
-import pytest
-import tempfile
 import shutil
+import tempfile
 from pathlib import Path
+
+import pytest
+
 from scripts.repo_maintenance import RepoMaintenance
 
 

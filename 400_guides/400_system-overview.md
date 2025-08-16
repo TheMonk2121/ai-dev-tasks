@@ -217,6 +217,8 @@ and `400_guides/400_deployment-environment-guide.md`.
 - **AI Optimization**: Includes machine-verifiable completion criteria
 
 #### **Task Generation Engine**(`000_core/002_generate-tasks.md`)
+- **Automated Task Generation**: `scripts/task_generation_automation.py` - Parses PRDs and backlog items, generates consistent task templates with testing requirements and quality gates
+- **Enhanced Backlog Tracking**: `scripts/enhanced_backlog_tracking.py` - Timestamp tracking, stale item detection, and automated alerts for in-progress items
 
 - **Purpose**: Break PRDs into AI-executable tasks
 

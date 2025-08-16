@@ -87,6 +87,37 @@ class ScriptBenchmarker:
                 "command": [python_cmd, "scripts/optimized_conflict_audit.py", "--json"],
                 "description": "Optimized comprehensive conflict audit",
             },
+            # Nemo visualization system scripts
+            "wake_up_nemo_parallel": {
+                "command": ["./dspy-rag-system/wake_up_nemo.sh", "--parallel"],
+                "description": "Wake up Nemo (parallel startup)",
+                "timeout": 60,
+            },
+            "wake_up_nemo_sequential": {
+                "command": ["./dspy-rag-system/wake_up_nemo.sh", "--sequential"],
+                "description": "Wake up Nemo (sequential startup)",
+                "timeout": 120,
+            },
+            "sleep_nemo_fast": {
+                "command": ["./dspy-rag-system/sleep_nemo.sh", "--fast"],
+                "description": "Sleep Nemo (fast shutdown)",
+                "timeout": 30,
+            },
+            "sleep_nemo_graceful": {
+                "command": ["./dspy-rag-system/sleep_nemo.sh", "--graceful"],
+                "description": "Sleep Nemo (graceful shutdown)",
+                "timeout": 60,
+            },
+            "nemo_status": {
+                "command": ["./dspy-rag-system/wake_up_nemo.sh", "--status"],
+                "description": "Nemo status check",
+                "timeout": 10,
+            },
+            "nemo_api_test": {
+                "command": ["./dspy-rag-system/wake_up_nemo.sh", "--test"],
+                "description": "Nemo API test",
+                "timeout": 15,
+            },
         }
 
         self.results_dir = Path(".cache/benchmarks")

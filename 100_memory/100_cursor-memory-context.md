@@ -8,6 +8,7 @@
   "files": [
     {"path": "100_memory/100_cursor-memory-context.md", "role": "entry"},
     {"path": "000_core/000_backlog.md", "role": "priorities"},
+    {"path": "000_core/004_development-roadmap.md", "role": "roadmap"},
     {"path": "400_guides/400_project-overview.md", "role": "project-overview"},
     {"path": "400_guides/400_system-overview.md", "role": "architecture"},
     {"path": "400_guides/400_context-priority-guide.md", "role": "navigation"},
@@ -26,6 +27,10 @@
     {"path": "400_guides/400_security-best-practices-guide.md", "role": "security"},
     {"path": "400_guides/400_few-shot-context-examples.md", "role": "few-shot"},
     {"path": "400_guides/400_lean-hybrid-memory-system.md", "role": "memory-system"},
+    {"path": "scripts/task_generation_automation.py", "role": "automation"},
+    {"path": "scripts/enhanced_backlog_tracking.py", "role": "automation"},
+    {"path": "400_guides/400_enhanced-backlog-tracking-guide.md", "role": "quick-reference"},
+    {"path": "400_guides/400_task-generation-quick-reference.md", "role": "quick-reference"},
     {"path": "500_research-index.md", "role": "research-index"}
   ]
 }
@@ -126,8 +131,11 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - Comprehensive conflict audit: `python scripts/conflict_audit.py --full`
 
 ### **Visualization System**
-- **Wake up Nemo** (all services): `./dspy-rag-system/wake_up_nemo.sh` → Starts everything
-- **Sleep Nemo** (stop all): `./dspy-rag-system/sleep_nemo.sh` → Stops everything
+- **Wake up Nemo** (all services): `./dspy-rag-system/wake_up_nemo.sh` → Starts everything (parallel by default)
+- **Wake up Nemo** (sequential): `./dspy-rag-system/wake_up_nemo.sh --sequential` → Legacy sequential startup
+- **Sleep Nemo** (stop all): `./dspy-rag-system/sleep_nemo.sh` → Stops everything (fast by default)
+- **Sleep Nemo** (graceful): `./dspy-rag-system/sleep_nemo.sh --graceful` → Legacy graceful shutdown
+- **Performance test**: `python scripts/performance_benchmark.py --script wake_up_nemo_parallel --iterations 3`
 - Start Flask cluster view: `./dspy-rag-system/start_mission_dashboard.sh` → `http://localhost:5000/cluster`
 - Start NiceGUI network graph: `./dspy-rag-system/start_graph_visualization.sh` → `http://localhost:8080`
 - Test API endpoint: `curl "http://localhost:5000/graph-data?max_nodes=100"`

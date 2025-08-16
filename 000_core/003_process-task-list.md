@@ -278,3 +278,12 @@ This approach ensures:
 - **Clear progress tracking** for oversight
 
 - **Safe execution** with appropriate checkpoints
+
+## 🔄 Execution Flow
+
+1. **Parse Backlog**: Extract tasks and dependencies
+2. **Validate State**: Check `.ai_state.jsonl` for current context
+3. **Execute Tasks**: Run tasks in priority order
+4. **Update State**: Record progress in `.ai_state.jsonl`
+5. **Sync Roadmap**: Update `000_core/004_development-roadmap.md` with progress
+6. **Generate Report**: Create completion summary

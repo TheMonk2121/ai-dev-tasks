@@ -16,10 +16,12 @@ import os
 import pickle
 import re
 import subprocess
+import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Tuple
 
 # Import few-shot integration framework
 try:
@@ -47,6 +49,275 @@ AT_A_GLANCE_HEADER_PATTERN = re.compile(
 )
 HTML_ANCHOR_PATTERN = re.compile(r'<a\s+id="([^"]+)"\s*>', re.IGNORECASE)
 MARKDOWN_ANCHOR_PATTERN = re.compile(r"\{#([^}]+)\}", re.IGNORECASE)
+
+# Backlog compliance validator patterns
+ROW_RE = re.compile(
+    r"^\|\s*(B‑\d{3})\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|"
+)
+SCORE_RE = re.compile(r"<!--\s*score:\s*(\{.*?\})\s*-->", re.DOTALL | re.IGNORECASE)
+SCORE_TOTAL_RE = re.compile(r"<!--\s*score_total:\s*([0-9]+(?:\.[0-9]+)?)\s*-->", re.IGNORECASE)
+DO_NEXT_RE = re.compile(r"<!--\s*do_next:\s*(.*?)\s*-->", re.IGNORECASE)
+ACCEPTANCE_RE = re.compile(r"<!--\s*acceptance:\s*(.*?)\s*-->", re.IGNORECASE)
+EST_HOURS_RE = re.compile(r"<!--\s*est_hours:\s*([0-9]+(?:\.[0-9]+)?)\s*-->", re.IGNORECASE)
+LESSONS_APPLIED_RE = re.compile(r"<!--\s*lessons_applied:\s*(\[.*?\])\s*-->", re.DOTALL | re.IGNORECASE)
+REFERENCE_CARDS_RE = re.compile(r"<!--\s*reference_cards:\s*(\[.*?\])\s*-->", re.DOTALL | re.IGNORECASE)
+PRD_LINK_RE = re.compile(r"\(?(?:PRD|prd)\s*:\s*([^) \t]+)\)?")
+
+# Exit codes for backlog validator
+OK, FAIL, ERROR = 0, 2, 1
+
+# Required score keys for backlog validation
+REQUIRED_SCORE_KEYS = {"bv", "tc", "rr", "le", "lessons", "effort", "deps"}
+
+
+@dataclass
+class BacklogItem:
+    id: str
+    title: str
+    icon: str
+    points_raw: str
+    status: str
+    desc: str
+    line_idx: int
+
+    score_raw: Optional[str] = None
+    score_total: Optional[float] = None
+    score_obj: Optional[Dict] = None
+
+    do_next: Optional[str] = None
+    acceptance: Optional[str] = None
+    est_hours: Optional[float] = None
+
+    lessons_applied: Optional[str] = None
+    reference_cards: Optional[str] = None
+    prd_link: Optional[str] = None
+
+    # derived
+    points: Optional[float] = None
+    reasons_fail: List[str] = field(default_factory=list)
+    reasons_warn: List[str] = field(default_factory=list)
+
+
+# =========================
+# Backlog compliance validator
+# =========================
+
+
+def _safe_float(x: str) -> Optional[float]:
+    """Safely convert string to float, handling edge cases."""
+    try:
+        return float(x)
+    except Exception:
+        m = re.search(r"[\d.]+", x or "")
+        return float(m.group(0)) if m else None
+
+
+def _parse_score_map(s: str) -> Optional[Dict]:
+    """
+    Convert a JS-ish map to JSON and parse.
+    Requires keys: bv, tc, rr, le, lessons, effort, deps
+    """
+    if not s:
+        return None
+    # Put quotes around unquoted keys
+    j = re.sub(r"(\w+)\s*:", r'"\1":', s)
+    # Ensure single quotes to double
+    j = j.replace("'", '"')
+    try:
+        obj = json.loads(j)
+        if not isinstance(obj, dict):
+            return None
+        return obj
+    except Exception:
+        return None
+
+
+def _find_region(lines: List[str], start_idx: int) -> str:
+    """
+    Capture metadata lines until next table row or blank line break.
+    """
+    buff = []
+    i = start_idx + 1
+    while i < len(lines):
+        if ROW_RE.match(lines[i]) or (lines[i].strip() == "" and buff):
+            break
+        buff.append(lines[i])
+        i += 1
+    return "\n".join(buff)
+
+
+def parse_backlog(path: Path) -> List[BacklogItem]:
+    """Parse backlog file and extract items with metadata."""
+    lines = path.read_text(encoding="utf-8").splitlines()
+    items: List[BacklogItem] = []
+    i = 0
+    while i < len(lines):
+        m = ROW_RE.match(lines[i])
+        if not m:
+            i += 1
+            continue
+
+        item = BacklogItem(
+            id=m.group(1).strip(),
+            title=m.group(2).strip(),
+            icon=m.group(3).strip(),
+            points_raw=m.group(4).strip(),
+            status=m.group(5).strip().lower(),
+            desc=m.group(6).strip() + " | " + m.group(7).strip() + " | " + m.group(8).strip(),  # Combine last 3 columns
+            line_idx=i + 1,
+        )
+        item.points = _safe_float(item.points_raw)
+
+        region = _find_region(lines, i)
+
+        # score + total
+        ms = SCORE_RE.search(region)
+        if ms:
+            item.score_raw = ms.group(1)
+            if item.score_raw:  # Add null check
+                item.score_obj = _parse_score_map(item.score_raw)
+
+        mt = SCORE_TOTAL_RE.search(region)
+        if mt:
+            item.score_total = _safe_float(mt.group(1))
+
+        # working agreements
+        md = DO_NEXT_RE.search(region)
+        item.do_next = md.group(1).strip() if md else None
+        ma = ACCEPTANCE_RE.search(region)
+        item.acceptance = ma.group(1).strip() if ma else None
+        me = EST_HOURS_RE.search(region)
+        item.est_hours = _safe_float(me.group(1)) if me else None
+
+        # cross refs + PRD
+        ml = LESSONS_APPLIED_RE.search(region)
+        item.lessons_applied = ml.group(1).strip() if ml else None
+        mr = REFERENCE_CARDS_RE.search(region)
+        item.reference_cards = mr.group(1).strip() if mr else None
+
+        # scan desc + region for PRD
+        mp = PRD_LINK_RE.search(item.desc) or PRD_LINK_RE.search(region)
+        item.prd_link = mp.group(1) if mp else None
+
+        items.append(item)
+
+        # advance to next row or break at blank
+        i += 1
+    return items
+
+
+def check_item(item: BacklogItem) -> None:
+    """Apply validation rules to a backlog item."""
+    # --- FAIL: score must exist and parse
+    if item.score_obj is None:
+        item.reasons_fail.append("MISSING_SCORE_OR_BAD_FORMAT")
+    else:
+        missing = REQUIRED_SCORE_KEYS - set(item.score_obj.keys())
+        if missing:
+            item.reasons_fail.append(f"SCORE_MISSING_KEYS:{','.join(sorted(missing))}")
+        else:
+            # type checks
+            try:
+                for k in ["bv", "tc", "rr", "le", "lessons", "effort"]:
+                    _ = int(item.score_obj[k])
+                if not isinstance(item.score_obj["deps"], list):
+                    item.reasons_fail.append("SCORE_DEPS_NOT_LIST")
+            except Exception:
+                item.reasons_fail.append("SCORE_VALUES_INVALID")
+
+    # --- FAIL: lessons factor required
+    if not (item.score_obj and "lessons" in item.score_obj):
+        item.reasons_fail.append("MISSING_LESSONS_FACTOR")
+
+    # --- FAIL: PRD skip rule
+    # PRD required unless (points < 5 AND score_total >= 3.0)
+    if item.points is not None and item.score_total is not None:
+        skip = (item.points < 5) and (item.score_total >= 3.0)
+        if not skip and not item.prd_link:
+            item.reasons_fail.append("PRD_REQUIRED_MISSING_LINK")
+    else:
+        # If we can't compute the rule, mark format invalid
+        item.reasons_fail.append("MISSING_POINTS_OR_SCORE_TOTAL")
+
+    # --- WARN: TODO requires working agreements
+    if item.status in {"todo", "to-do"}:
+        if item.do_next is None:
+            item.reasons_warn.append("MISSING_DO_NEXT")
+        if item.acceptance is None:
+            item.reasons_warn.append("MISSING_ACCEPTANCE")
+        if item.est_hours is None:
+            item.reasons_warn.append("MISSING_EST_HOURS")
+
+    # --- WARN: Cross-reference pointers encouraged
+    if item.score_obj is not None:
+        if item.lessons_applied is None:
+            item.reasons_warn.append("MISSING_LESSONS_APPLIED_POINTER")
+        if item.reference_cards is None:
+            item.reasons_warn.append("MISSING_REFERENCE_CARDS_POINTER")
+
+    # --- WARN: DONE items should be moved out of active table (heuristic)
+    if item.status in {"done", "✅ done", "complete", "completed"}:
+        item.reasons_warn.append("DONE_ITEM_IN_ACTIVE_TABLE")
+
+
+def validate_backlog(path: str = "000_core/000_backlog.md") -> Tuple[int, str, dict]:
+    """
+    Validate backlog file for compliance with Phase 0 requirements.
+
+    Returns (exit_code, human_report, json_summary)
+    exit_code: 0 OK, 2 FAIL, 1 ERROR
+    """
+    try:
+        p = Path(path)
+        if not p.exists():
+            return ERROR, f"ERROR: Backlog file not found: {path}", {"error": "FILE_NOT_FOUND", "path": path}
+
+        items = parse_backlog(p)
+        if not items:
+            return ERROR, "ERROR: No backlog rows parsed. Check table format.", {"error": "NO_ROWS"}
+
+        fail_count, warn_count, pass_count = 0, 0, 0
+        report_lines: List[str] = []
+        json_items: List[Dict] = []
+
+        report_lines.append("Backlog Compliance Report")
+        report_lines.append("=" * 25)
+        report_lines.append("")
+
+        for it in items:
+            check_item(it)
+
+            status = "PASS"
+            if it.reasons_fail:
+                status = "FAIL"
+                fail_count += 1
+            elif it.reasons_warn:
+                status = "WARN"
+                warn_count += 1
+            else:
+                pass_count += 1
+
+            report_lines.append(f"Item {it.id} — {status}")
+            if it.reasons_fail:
+                for r in it.reasons_fail:
+                    report_lines.append(f"  FAIL: {r}")
+            if it.reasons_warn:
+                for r in it.reasons_warn:
+                    report_lines.append(f"  WARN: {r}")
+            report_lines.append("")
+
+            json_items.append(
+                {"id": it.id, "status": status, "reasons": it.reasons_fail + it.reasons_warn, "line": it.line_idx}
+            )
+
+        report_lines.append(f"Summary: {fail_count} FAIL, {warn_count} WARN, {pass_count} PASS")
+
+        exit_code = FAIL if fail_count > 0 else OK
+        summary = {"summary": {"fail": fail_count, "warn": warn_count, "pass": pass_count}, "items": json_items}
+        return exit_code, "\n".join(report_lines), summary
+
+    except Exception as e:
+        return ERROR, f"ERROR: {e}", {"error": "EXCEPTION", "message": str(e)}
 
 
 class OptimizedDocCoherenceValidator:
@@ -604,6 +875,10 @@ class OptimizedDocCoherenceValidator:
 
 def main():
     parser = argparse.ArgumentParser(description="Optimized documentation coherence validator")
+    parser.add_argument("--check", choices=["backlog"], help="Specific validation mode")
+    parser.add_argument("--path", default="000_core/000_backlog.md", help="Path to file for validation")
+    parser.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    parser.add_argument("--warn-only", action="store_true", help="Return OK even if FAIL found (migration mode)")
     parser.add_argument("--dry-run", action="store_true", help="Dry run mode")
     parser.add_argument("--only-changed", action="store_true", help="Only validate changed files")
     parser.add_argument("--workers", type=int, help="Number of worker threads")
@@ -618,6 +893,19 @@ def main():
 
     args = parser.parse_args()
 
+    # Handle backlog validation mode
+    if args.check == "backlog":
+        code, text_report, json_summary = validate_backlog(args.path)
+        if args.format == "json":
+            print(json.dumps(json_summary, indent=2))
+        else:
+            print(text_report)
+
+        if args.warn_only and code == FAIL:
+            sys.exit(OK)
+        sys.exit(code)
+
+    # Handle regular documentation validation
     validator = OptimizedDocCoherenceValidator(
         dry_run=args.dry_run,
         only_changed=args.only_changed,

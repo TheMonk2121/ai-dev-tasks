@@ -99,69 +99,94 @@ def main():
         default=os.getenv("REHYDRATE_EXPAND_QUERY", "auto"),
         help="Query expansion mode (default: auto)",
     )
-    parser.add_argument("--no-entity-expansion", action="store_true", help="Disable entity expansion")
-    parser.add_argument("--max-tokens", type=int, default=6000, help="Maximum tokens (default: 6000)")
-    parser.add_argument("--debug", action="store_true", help="Show debug information")
+    parser.add_argument(
+        "--no-entity-expansion",
+        action="store_true",
+        help="Disable entity-aware context expansion",
+    )
+    parser.add_argument(
+        "--few-shot-scaffolding",
+        action="store_true",
+        default=True,
+        help="Enable few-shot cognitive scaffolding (default: True)",
+    )
+    parser.add_argument(
+        "--no-few-shot-scaffolding",
+        action="store_true",
+        help="Disable few-shot cognitive scaffolding",
+    )
 
     args = parser.parse_args()
 
-    print("🧠 Building memory rehydration bundle...")
-    print(f"   Role: {args.role}")
-    print(f"   Task: {args.task}")
-    print(f"   Stability: {args.stability}")
-    print(f"   RRF: {'disabled' if args.no_rrf else 'enabled'}")
-    print(f"   Dedupe: {args.dedupe}")
-    print(f"   Query expansion: {args.expand_query}")
-    print(f"   Entity expansion: {'disabled' if args.no_entity_expansion else 'enabled'}")
-    print()
+    # Import memory rehydrator functions
+    try:
+        from utils.memory_rehydrator import rehydrate
+    except ImportError:
+        print("❌ Error: Could not import memory_rehydrator module")
+        print("Make sure you're running from the project root directory")
+        sys.exit(1)
+
+    # Auto-detect role if not specified
+    if args.role == "planner" and args.task != "general project context and current state":
+        detected_role = detect_role_from_task(args.task)
+        if detected_role != "planner":
+            print(f"🤖 Auto-detected role: {detected_role} (was: {args.role})")
+            args.role = detected_role
+
+    # Build the memory bundle
+    print(f"🧠 Building memory bundle for {args.role} role...")
+    print(f"📋 Task: {args.task}")
+    print(f"⚙️  Configuration: stability={args.stability}, dedupe={args.dedupe}, expand-query={args.expand_query}")
 
     try:
-        # Build the hydration bundle using new rehydrate function
-        sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
-        from utils.memory_rehydrator import rehydrate
-
         bundle = rehydrate(
             query=args.task,
             stability=args.stability,
-            max_tokens=args.max_tokens,
-            use_rrf=(not args.no_rrf),
+            use_rrf=not args.no_rrf,
             dedupe=args.dedupe,
             expand_query=args.expand_query,
-            use_entity_expansion=(not args.no_entity_expansion),
+            use_entity_expansion=not args.no_entity_expansion,
             role=args.role,
         )
 
-        # Format for Cursor
-        formatted_text = format_bundle_for_cursor(bundle.text, bundle.meta)
+        # Apply few-shot cognitive scaffolding if enabled
+        if args.few_shot_scaffolding and not args.no_few_shot_scaffolding:
+            try:
+                from few_shot_cognitive_scaffolding import FewShotCognitiveScaffolding
 
-        # Display the context
+                scaffolding = FewShotCognitiveScaffolding()
+                scaffold = scaffolding.create_cognitive_scaffold(args.role, args.task, "Base context")
+                bundle_text = scaffolding.inject_into_memory_rehydration(scaffold, bundle.text)
+                print(f"🎯 Applied few-shot cognitive scaffolding with {len(scaffold.few_shot_examples)} examples")
+            except ImportError:
+                print("⚠️  Few-shot scaffolding module not available, continuing without it")
+                bundle_text = bundle.text
+            except Exception as e:
+                print(f"⚠️  Few-shot scaffolding failed: {e}, continuing without it")
+                bundle_text = bundle.text
+        else:
+            bundle_text = bundle.text
+
+        # Format the bundle for Cursor
+        formatted_bundle = format_bundle_for_cursor(bundle_text, bundle.meta)
+
+        # Display the bundle
+        print("\n" + "=" * 80)
+        print("🧠 MEMORY REHYDRATION BUNDLE")
         print("=" * 80)
-        print("🎯 CURSOR AI MEMORY REHYDRATION BUNDLE")
+        print("Copy the content below into your Cursor conversation:")
         print("=" * 80)
-        print()
-        print(formatted_text)
-        print()
+        print(formatted_bundle)
         print("=" * 80)
-        print("📊 BUNDLE METADATA")
-        print("=" * 80)
-        print(f"Role: {bundle.meta.get('role', 'unknown')}")
-        print(f"Task: {bundle.meta.get('task', 'unknown')}")
-        print(f"Tokens: {bundle.meta.get('tokens_est', 'unknown')}")
-        print(f"Sections: {bundle.meta.get('sections', 'unknown')}")
-        print(f"Elapsed: {bundle.meta.get('elapsed_s', 'unknown')}s")
-        print(f"Dense results: {bundle.meta.get('dense_count', 'unknown')}")
-        print(f"Sparse results: {bundle.meta.get('sparse_count', 'unknown')}")
-        print()
-        print("💡 Copy the bundle text above into your Cursor conversation for context!")
-        print("🔧 Next time, try: python3 scripts/cursor_memory_rehydrate.py [role] [task]")
+        print("📊 Bundle Statistics:")
+        print(f"   • Total chunks: {bundle.meta.get('total_chunks', 'N/A')}")
+        print(f"   • Bundle size: {len(formatted_bundle)} characters")
+        print(f"   • Processing time: {bundle.meta.get('processing_time', 'N/A')}s")
+        print(f"   • Role: {args.role}")
+        print(f"   • Task: {args.task}")
 
     except Exception as e:
-        print(f"❌ Error building bundle: {e}")
-        print("\n🔧 Troubleshooting:")
-        print("1. Make sure PostgreSQL is running")
-        print("2. Check POSTGRES_DSN environment variable")
-        print("3. Verify database has document chunks")
-        print("4. Try: python3 scripts/cursor_memory_rehydrate.py planner 'test'")
+        print(f"❌ Error building memory bundle: {e}")
         sys.exit(1)
 
 

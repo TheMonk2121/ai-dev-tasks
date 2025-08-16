@@ -6,6 +6,7 @@ echo "================================================"
 
 # Get the current directory
 CURRENT_DIR=$(pwd)
+# shellcheck disable=SC2034
 SERVICE_NAME="dspy-rag-watch"
 
 # Create the service file
@@ -20,16 +21,16 @@ cat > ~/Library/LaunchAgents/com.danieljacobs.dspy-rag-watch.plist << EOF
     <array>
         <string>/bin/bash</string>
         <string>-c</string>
-        <string>cd $CURRENT_DIR && source venv/bin/activate && python3 watch_folder.py</string>
+        <string>cd ${CURRENT_DIR} && source venv/bin/activate && python3 watch_folder.py</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
     <true/>
     <key>StandardOutPath</key>
-    <string>$CURRENT_DIR/watch_folder.log</string>
+    <string>${CURRENT_DIR}/watch_folder.log</string>
     <key>StandardErrorPath</key>
-    <string>$CURRENT_DIR/watch_folder_error.log</string>
+    <string>${CURRENT_DIR}/watch_folder_error.log</string>
 </dict>
 </plist>
 EOF
@@ -48,4 +49,4 @@ echo "🔧 Commands to manage the service:"
 echo "   Start:   launchctl start com.danieljacobs.dspy-rag-watch"
 echo "   Stop:    launchctl stop com.danieljacobs.dspy-rag-watch"
 echo "   Status:  launchctl list | grep dspy-rag-watch"
-echo "   Unload:  launchctl unload ~/Library/LaunchAgents/com.danieljacobs.dspy-rag-watch.plist" 
+echo "   Unload:  launchctl unload ~/Library/LaunchAgents/com.danieljacobs.dspy-rag-watch.plist"

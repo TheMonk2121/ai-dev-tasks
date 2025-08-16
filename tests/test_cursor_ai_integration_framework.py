@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
-import os
 import asyncio
 import importlib
 
-from cursor_ai_integration_framework import (
-    CursorAIIntegrationFramework, AgentRequest, AgentType
-)
+from cursor_ai_integration_framework import AgentType
 
 
 def run(coro):

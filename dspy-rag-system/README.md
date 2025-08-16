@@ -138,7 +138,7 @@ python3 src/dashboard.py
 
 ```bash
 
-# Start ALL core services with one command (recommended)
+# Start ALL core services with one command (recommended - parallel startup)
 
 ./wake_up_nemo.sh
 
@@ -153,6 +153,11 @@ python3 src/dashboard.py
 ./wake_up_nemo.sh --nicegui-only    # NiceGUI Graph only
 ./wake_up_nemo.sh --monitoring-only # Production Monitoring only
 
+# Performance modes (new)
+
+./wake_up_nemo.sh --parallel        # Fast parallel startup (default)
+./wake_up_nemo.sh --sequential      # Legacy sequential startup
+
 # Refresh memory context only (for Cursor chat priming)
 
 ./wake_up_nemo.sh --memory-only
@@ -161,9 +166,20 @@ python3 src/dashboard.py
 
 ./wake_up_nemo.sh --status
 
-# Stop all services with one command
+# Stop all services with one command (fast shutdown)
 
 ./sleep_nemo.sh
+
+# Performance modes (new)
+
+./sleep_nemo.sh --fast              # Fast shutdown (default)
+./sleep_nemo.sh --graceful          # Legacy graceful shutdown
+./sleep_nemo.sh --force             # Force kill processes
+
+# Performance testing
+
+python scripts/performance_benchmark.py --script wake_up_nemo_parallel --iterations 3
+python scripts/performance_benchmark.py --script sleep_nemo_fast --iterations 3
 
 # Features: Complete system startup including:
 # - Database health checks

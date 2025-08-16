@@ -6,27 +6,25 @@ Validates that the documentation retrieval system properly provides
 relevant context on-demand to solve context overload.
 """
 
-import unittest
-import json
-import tempfile
 import os
-from pathlib import Path
-from unittest.mock import patch, MagicMock
 
 # Add the dspy-rag-system to the path
 import sys
+import unittest
+from unittest.mock import MagicMock, patch
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'dspy-rag-system', 'src'))
 
 from dspy_modules.documentation_retrieval import (
-    DocumentationRetrievalService,
-    DocumentationQueryProcessor,
-    DocumentationRetriever,
     ContextSynthesizer,
-    create_documentation_retrieval_service,
+    DocumentationQueryProcessor,
+    DocumentationRetrievalService,
+    DocumentationRetriever,
     get_relevant_context,
+    get_task_context,
     search_documentation,
-    get_task_context
 )
+
 
 class TestDocumentationRetrievalService(unittest.TestCase):
     """Test cases for the DocumentationRetrievalService class."""

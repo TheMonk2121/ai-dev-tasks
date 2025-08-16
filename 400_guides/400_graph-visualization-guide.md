@@ -73,11 +73,20 @@ curl "http://localhost:5000/graph-data?max_nodes=1000&include_knn=true&include_e
 
 ### **🐙 Nemo Management Commands**
 ```bash
-# Start everything
+# Start everything (parallel startup - recommended)
 ./dspy-rag-system/wake_up_nemo.sh
 
-# Stop everything
+# Performance modes
+./dspy-rag-system/wake_up_nemo.sh --parallel        # Fast parallel startup (default)
+./dspy-rag-system/wake_up_nemo.sh --sequential      # Legacy sequential startup
+
+# Stop everything (fast shutdown - recommended)
 ./dspy-rag-system/sleep_nemo.sh
+
+# Performance modes
+./dspy-rag-system/sleep_nemo.sh --fast              # Fast shutdown (default)
+./dspy-rag-system/sleep_nemo.sh --graceful          # Legacy graceful shutdown
+./dspy-rag-system/sleep_nemo.sh --force             # Force kill processes
 
 # Check status
 ./dspy-rag-system/wake_up_nemo.sh --status
@@ -88,6 +97,10 @@ curl "http://localhost:5000/graph-data?max_nodes=1000&include_knn=true&include_e
 # Start only specific components
 ./dspy-rag-system/wake_up_nemo.sh --flask-only
 ./dspy-rag-system/wake_up_nemo.sh --nicegui-only
+
+# Performance testing
+python scripts/performance_benchmark.py --script wake_up_nemo_parallel --iterations 3
+python scripts/performance_benchmark.py --script sleep_nemo_fast --iterations 3
 ```
 
 <!-- ANCHOR_KEY: architecture -->

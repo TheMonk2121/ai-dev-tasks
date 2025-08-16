@@ -6,15 +6,15 @@ Validates that the constitution compliance checker properly enforces
 AI Constitution rules for safety, context preservation, and error prevention.
 """
 
-import unittest
 import json
-import tempfile
 import os
-from pathlib import Path
-from unittest.mock import patch, MagicMock
 
 # Add the scripts directory to the path
 import sys
+import tempfile
+import unittest
+from unittest.mock import patch
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'scripts'))
 
 from constitution_compliance_checker import ConstitutionComplianceChecker, ConstitutionRule

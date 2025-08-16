@@ -249,7 +249,12 @@
         "NEMO",
         "Nemo",
         "nohup",
-        "pids"
+        "pids",
+        "agentic",
+        "mktime",
+        "pkill",
+        "prds",
+        "reqs"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

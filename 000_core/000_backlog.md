@@ -22,7 +22,7 @@ Check P0 lane and AI-executable queue; follow PRD skip rule |
 
 - **read when**: Selecting next work or checking dependencies and status.
 
-- **do next**: See `#p0-lane` and `#ai-executable-queue-003`; follow PRD rule in “PRD Rule & Execute Flow”.
+- **do next**: See `#p0-lane` and `#ai-executable-queue-003`; follow PRD rule in "PRD Rule & Execute Flow".
 
 - **anchors**: `p0-lane`, `p1-lane`, `p2-lane`, `ai-executable-queue-003`, `live-backlog`, `completed-items`
 
@@ -90,25 +90,11 @@ and normalize spacing across long-form guides.
 
 ## P0 Lane
 
-- B‑094 — MCP Memory Rehydrator Server (score 9.5) ✅ **COMPLETED**
-
-- B‑052‑e — Auto-Push Prompt for Repo Maintenance (score 9.0)
-
-- B‑061 — Memory Context Auto-Update Helper (score 9.0)
-
-- B‑063 — Documentation Recovery & Rollback System (score 9.0)
-
 - B‑052‑d — CI GitHub Action (Dry-Run Gate) (score 8.0)
 
 - B‑062 — Context Priority Guide Auto-Generation (score 8.0)
 
-- B‑065 — Comprehensive Coding Best Practices Integration (score 8.0) ✅ **COMPLETED**
-
 ## P1 Lane
-
-- B‑064 — Naming Convention Category Table (score 8.0)
-
-- B‑074 — Few-Shot Integration with Documentation Tools (score 8.0) ✅ **COMPLETED**
 
 - B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0)
 
@@ -124,8 +110,6 @@ and normalize spacing across long-form guides.
 
 - B‑076 — Research-Based DSPy Assertions Implementation (score 4.8)
 
-- B‑077 — Hybrid Search Implementation (Dense + Sparse) (score 4.5)
-
 - B‑052‑c — Hash-Cache + Optional Threading (score 4.5)
 
 - B‑018 — Local Notification System (score 4.5)
@@ -135,8 +119,6 @@ and normalize spacing across long-form guides.
 - B‑044 — n8n LangExtract Service (Stateless, Spillover, Override) (score 4.2)
 
 - B‑078 — LangExtract Structured Extraction Service (score 4.2)
-
-- B‑076 — B-011 Project File Cleanup (score 4.0)
 
 ## AI-Executable Queue (003)
 
@@ -180,87 +162,155 @@ Items requiring external credentials, business decisions, or deployment should b
 
 | ID  | Title                                   | 🔥P | 🎯Points | Status | Problem/Outcome | Tech Footprint | Dependencies |
 |-----|-----------------------------------------|-----|----------|--------|-----------------|----------------|--------------|
-| B‑000 | v0.3.1-rc3 Core Hardening | 🔥 | 3 | ✅ done | Implement critical security and reliability fixes for production
-readiness | DSPy + PostgreSQL + Security + Monitoring | None |
-<!--score: {bv:5, tc:5, rr:5, le:5, effort:3, deps:[]}-->
-<!--score_total: 6.7-->
-<!--progress: C-2 completed (retry_wrapper.py), C-3 completed (timeout_config.py), C-4 completed (structured_logging),
-C-5 completed (security_libraries), C-6 completed (fast_path_bypass), C-7 completed (input_validation), C-8 completed
-(secrets_management), C-9 completed (database_resilience)-->
-<!--score: {bv:5, tc:5, rr:5, le:5, effort:3, deps:[]}-->
-<!--score_total: 6.7-->
-| B‑001 | Real-time Mission Dashboard | 🔥 | 3 | ✅ done | Need live visibility into AI task execution | PostgreSQL +
-Flask UI | v0.3.1-rc3 Core Hardening |
-<!--score: {bv:5, tc:3, rr:5, le:4, effort:3, deps:[]}-->
-<!--score_total: 5.7-->
-| B‑002 | Advanced Error Recovery & Prevention | 🔥 | 5 | ✅ done | Reduce development friction with intelligent error
-handling | AI analysis + HotFix generation | Enhanced RAG system |
-<!--score: {bv:5, tc:4, rr:6, le:4, effort:5, deps:[]}-->
+| B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | todo | Add GitHub Action to run maintenance script on PRs | GitHub Actions + CI/CD | None |
+<!--score: {bv:3, tc:2, rr:3, le:3, effort:0.5, lessons:3, deps:[]}-->
+<!--score_total: 8.0-->
+<!-- do_next: Create GitHub Action workflow for automated maintenance script execution -->
+<!-- est_hours: 2 -->
+<!-- acceptance: PRs automatically trigger maintenance script validation -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#ci-cd-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#github-actions"] -->
+
+| B‑062 | Context Priority Guide Auto-Generation | 🔧 | 0.5 | todo | Create regen_guide.py to auto-generate context
+priority guide from file headers | Guide Generation + Cross-Reference Aggregation + Tier Lists | B-060 Documentation
+Coherence Validation System |
+<!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-060"]}-->
+<!--score_total: 8.0-->
+<!-- do_next: Implement automated context priority guide generation script -->
+<!-- est_hours: 2 -->
+<!-- acceptance: Context priority guide updates automatically when core docs change -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#documentation-automation"] -->
+<!-- reference_cards: ["500_reference-cards.md#documentation-generation"] -->
+
+| B‑075 | Few-Shot Cognitive Scaffolding Integration | ⭐ | 6 | ✅ done | Integrate few-shot examples into cognitive scaffolding for AI agents | Few-shot patterns + AI context engineering | B‑074 Few-Shot Integration with Documentation Tools |
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:6, lessons:4, deps:["B-074"]}-->
+<!--score_total: 6.0-->
+<!-- do_next: Implement few-shot cognitive scaffolding for AI agent context enhancement -->
+<!-- est_hours: 8 -->
+<!-- acceptance: AI agents use few-shot examples for improved context understanding -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#few-shot-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#cognitive-scaffolding"] -->
+<!-- PRD: 001_create-prd.md#B-075 -->
+<!-- completion_date: 2025-08-16 -->
+<!-- implementation_notes: Successfully implemented few-shot cognitive scaffolding integration. Created scripts/few_shot_cognitive_scaffolding.py with example extraction, role-based filtering, and memory rehydration integration. Extracted 356 examples from documentation, implemented pattern recognition, and integrated with cursor_memory_rehydrate.py. System now provides context-aware few-shot examples for AI agents, improving response quality and consistency. -->
+
+| B‑084 | Research-Based Schema Design for Extraction | 📈 | 6 | ✅ done | Design extraction schemas based on research findings | Schema design + research integration | Research framework |
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:6, lessons:4, deps:[]}-->
+<!--score_total: 6.0-->
+<!-- do_next: Research and design extraction schemas for improved data processing -->
+<!-- est_hours: 8 -->
+<!-- acceptance: Extraction schemas are research-backed and improve data quality -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#schema-design"] -->
+<!-- reference_cards: ["500_reference-cards.md#research-based-design"] -->
+<!-- PRD: 600_archives/prds/PRD-B-084-Research-Based-Schema-Design.md -->
+<!-- completion_date: 2025-08-16 -->
+<!-- implementation_notes: Successfully implemented research-based schema design system. Created scripts/research_based_schema_design.py with research analysis, pattern generation, schema creation, validation, and quality assessment. System extracts 44 findings from 20 research files, generates 4 research-based patterns (span-level grounding, multi-stage retrieval, metadata governance, DSPy assertions), and creates validated schemas for documentation, code, and research content types. Comprehensive test suite with 14 tests validates all functionality. Research coverage: 75%, average patterns per schema: 2.2, validation accuracy: 95%. System integrates with existing research infrastructure and provides foundation for improved extraction quality. PRD archived with complete metadata for lessons learned extraction (B-098). -->
+
+| B‑050 | Enhance 002 Task Generation with Automation | 🔥 | 5 | ✅ done | Automate task generation process for improved efficiency | Task automation + workflow enhancement | 600_archives/prds/PRD-B-050-Task-Generation-Automation.md |
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:5, lessons:4, deps:[]}-->
+<!--score_total: 5.5-->
+<!-- do_next: Implement automated task generation enhancements -->
+<!-- est_hours: 6 -->
+<!-- acceptance: Task generation is automated and produces higher quality tasks -->
+<!-- completion_date: 2025-08-16 -->
+<!-- implementation_notes: Created comprehensive task generation automation system with PRD parsing, backlog parsing, task template generation, testing requirements automation, quality gates, and output formatting. Includes full test suite with 27 tests covering all functionality. System successfully generates tasks from both PRDs and backlog items with appropriate complexity-based testing and priority-based quality gates. -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#task-automation"] -->
+<!-- reference_cards: ["500_reference-cards.md#workflow-automation"] -->
+<!-- PRD: 000_core/PRD-B-050-Task-Generation-Automation.md -->
+
+| B‑052‑f | Enhanced Repository Maintenance Safety System | 🔧 | 1 | todo | Improve repository maintenance safety with enhanced validation | Safety validation + repository management | B‑052‑a Safety & Lint Tests |
+<!--score: {bv:3, tc:2, rr:3, le:3, effort:1, lessons:3, deps:["B-052-a"]}-->
+<!--score_total: 5.1-->
+<!-- do_next: Implement enhanced safety validation for repository maintenance -->
+<!-- est_hours: 3 -->
+<!-- acceptance: Repository maintenance operations are safer with enhanced validation -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#safety-validation"] -->
+<!-- reference_cards: ["500_reference-cards.md#repository-safety"] -->
+
+| B‑052‑b | Config Externalization to TOML + Ignore | 🔧 | 1 | todo | Externalize configuration to TOML files with proper ignore patterns | TOML configuration + git ignore patterns | None |
+<!--score: {bv:3, tc:2, rr:3, le:3, effort:1, lessons:3, deps:[]}-->
+<!--score_total: 5.0-->
+<!-- do_next: Move configuration to TOML files with proper git ignore patterns -->
+<!-- est_hours: 2 -->
+<!-- acceptance: Configuration is externalized and properly ignored in version control -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#configuration-management"] -->
+<!-- reference_cards: ["500_reference-cards.md#toml-configuration"] -->
+
+| B‑076 | Research-Based DSPy Assertions Implementation | 📈 | 4 | todo | Implement DSPy assertions based on research findings | DSPy + assertions + research integration | DSPy framework |
+<!--score: {bv:3, tc:2, rr:3, le:3, effort:4, lessons:3, deps:[]}-->
+<!--score_total: 4.8-->
+<!-- do_next: Research and implement DSPy assertions for improved model reliability -->
+<!-- est_hours: 6 -->
+<!-- acceptance: DSPy assertions improve model reliability based on research -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#dspy-assertions"] -->
+<!-- reference_cards: ["500_reference-cards.md#dspy-framework"] -->
+
+| B‑052‑c | Hash-Cache + Optional Threading | 🔧 | 2 | todo | Implement hash-based caching with optional threading support | Caching + threading + performance optimization | None |
+<!--score: {bv:3, tc:2, rr:3, le:3, effort:2, lessons:3, deps:[]}-->
+<!--score_total: 4.5-->
+<!-- do_next: Implement hash-based caching system with optional threading -->
+<!-- est_hours: 4 -->
+<!-- acceptance: Hash-based caching improves performance with optional threading support -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#caching-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#performance-optimization"] -->
+
+| B‑018 | Local Notification System | ⭐ | 2 | todo | Improve local development experience with notifications | Desktop notifications + local system integration | Local system APIs |
+<!--score: {bv:3, tc:2, rr:2, le:2, effort:2, lessons:3, deps:[]}-->
+<!--score_total: 4.5-->
+<!-- do_next: Implement local notification system for development feedback -->
+<!-- est_hours: 4 -->
+<!-- acceptance: Local notifications improve development experience and feedback -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#notification-systems"] -->
+<!-- reference_cards: ["500_reference-cards.md#local-development"] -->
+
+| B‑043 | LangExtract Pilot w/ Stratified 20-doc Set | 📈 | 3 | todo | Pilot LangExtract with stratified document set for validation | LangExtract + document processing + validation | LangExtract framework |
+<!--score: {bv:3, tc:2, rr:3, le:3, effort:3, lessons:3, deps:[]}-->
+<!--score_total: 4.2-->
+<!-- do_next: Implement LangExtract pilot with stratified document validation -->
+<!-- est_hours: 5 -->
+<!-- acceptance: LangExtract pilot validates extraction quality with stratified documents -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#extraction-validation"] -->
+<!-- reference_cards: ["500_reference-cards.md#langextract"] -->
+
+| B‑044 | n8n LangExtract Service (Stateless, Spillover, Override) | 📈 | 3 | todo | Create stateless n8n service for LangExtract with spillover and override | n8n + LangExtract + service architecture | n8n workflow system |
+<!--score: {bv:3, tc:2, rr:3, le:3, effort:3, lessons:3, deps:[]}-->
+<!--score_total: 4.2-->
+<!-- do_next: Implement stateless n8n LangExtract service with advanced features -->
+<!-- est_hours: 5 -->
+<!-- acceptance: n8n LangExtract service handles stateless processing with spillover and override -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#service-architecture"] -->
+<!-- reference_cards: ["500_reference-cards.md#n8n-workflows"] -->
+
+| B‑078 | LangExtract Structured Extraction Service | 📈 | 3 | todo | Implement structured extraction service using LangExtract | LangExtract + structured extraction + service design | LangExtract framework |
+<!--score: {bv:3, tc:2, rr:3, le:3, effort:3, lessons:3, deps:[]}-->
+<!--score_total: 4.2-->
+<!-- do_next: Build structured extraction service using LangExtract framework -->
+<!-- est_hours: 5 -->
+<!-- acceptance: Structured extraction service provides reliable data extraction -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#structured-extraction"] -->
+<!-- reference_cards: ["500_reference-cards.md#extraction-services"] -->
+
+| B‑098 | Mine Archived PRDs for Lessons and Reference Cards | 🧠 | 5 | todo | Extract systematic lessons and cross-references from archived PRDs (600_) to feed into lessons_applied, reference_cards, and backlog hygiene | PRD analysis + lessons extraction + reference card creation | 600_archives/ |
+<!--score: {bv:4, tc:3, rr:3, le:5, lessons:4, effort:3, deps:[]}-->
 <!--score_total: 3.8-->
-<!-- default_executor: 000_core/003_process-task-list.md -->
-<!--progress: All tasks completed - Error Pattern Recognition, HotFix Templates, Model-Specific Handling-->
-| B‑003 | Production Security & Monitoring | 🔥 | 2 | ✅ done | Prevent data corruption and enable debugging | File
-validation + OpenTelemetry | None |
-<!--score: {bv:2, tc:4, rr:8, le:3, effort:2, deps:[]}-->
-<!--score_total: 8.5-->
-| B‑004 | n8n Backlog Scrubber Workflow | 🔥 | 2 | ✅ done | Enable automated scoring and prioritization for all future
-projects | n8n + JavaScript + file I/O | None |
-<!--score: {bv:5, tc:3, rr:4, le:5, effort:2, deps:[]}-->
-<!--score_total: 8.5-->
-| B‑005 | Performance Optimization Suite | 📈 | 8 | todo | Improve system scalability and user experience | Caching +
-monitoring | Performance metrics |
-<!--score: {bv:4, tc:2, rr:3, le:3, effort:8, deps:[]}-->
-<!--score_total: 1.5-->
+<!-- do_next: Design script/workflow to parse archived PRDs -->
+<!-- est_hours: 5 -->
+<!-- acceptance: At least 3 lessons and 2 reference cards extracted -->
+<!-- lessons_applied: [] -->
+<!-- reference_cards: [] -->
 
-- --
-
-| B‑006 | Enhanced Dashboard with Real-time Updates | ⭐ | 5 | todo | Improve development visibility and feedback |
-WebSocket + live updates | B-001 Real-time Mission Dashboard |
-<!--score: {bv:4, tc:2, rr:2, le:2, effort:5, deps:[]}-->
-<!--score_total: 2.0-->
-| B‑007 | Metadata Editing & Bulk Operations | ⭐ | 3 | todo | Improve document management efficiency | In-place editing
-+ batch ops | Document system |
-<!--score: {bv:3, tc:1, rr:1, le:1, effort:3, deps:[]}-->
-<!--score_total: 2.0-->
-| B‑008 | Enhanced PRD Creation with AI Templates | ⭐ | 5 | todo | Accelerate project planning | AI wizard + templates |
-PRD system |
-<!--score: {bv:4, tc:2, rr:2, le:3, effort:5, deps:[]}-->
-<!--score_total: 2.2-->
-
-- --
-
-| B‑009 | API Integration & Local Development | 📈 | 5 | todo | Extend capabilities with API calls | API clients + local
-tools | External APIs |
-<!--score: {bv:4, tc:3, rr:3, le:4, effort:5, deps:[]}-->
-<!--score_total: 2.8-->
-<!-- human_required: true -->
-<!-- reason: Requires external API credentials and business requirements definition -->
-| B‑010 | n8n Workflow Integration | 🔥 | 1 | ✅ done | Enable automated task execution | n8n + PostgreSQL | Event ledger
-|
-<!--score: {bv:3, tc:3, rr:4, le:5, effort:1, deps:[]}-->
-<!--score_total: 15.0-->
-| B‑011 | Cursor Native AI + Specialized Agents Integration | 🔥 | 5 | ✅ done | Enable AI code generation using Cursor
-native AI + specialized agents | Cursor Native AI + Specialized Agents | Cursor setup |
-<!--score: {bv:5, tc:4, rr:3, le:5, effort:5, deps:[]}-->
-<!--score_total: 3.4-->
-<!--progress: All phases completed - T-1.1 through T-4.3, comprehensive documentation, deployment guides, performance
-optimization-->
-<!--research: 500_dspy-research.md - DSPy assertions provide 37% → 98% reliability improvement-->
-| B‑012 | Advanced Testing Framework | 📈 | 5 | ✅ done | Improve code quality and reliability | AI-generated tests |
-Testing system |
-<!--score: {bv:4, tc:2, rr:3, le:3, effort:5, deps:[]}-->
-<!--score_total: 2.4-->
-<!--progress: T-4.1 completed (comprehensive_test_suite.py, ci_test_runner.py, test_infrastructure_validation)-->
-| B‑013 | Local Development Automation | 📈 | 3 | ✅ done | Streamline local development workflow | Scripts + automation |
-Local tools |
-<!--score: {bv:3, tc:2, rr:2, le:2, effort:3, deps:[]}-->
-<!--score_total: 3.0-->
-<!--progress: T-4.2 completed (performance_optimization.py, test_performance_optimization.py,
-performance_benchmarks_validation)-->
-| B‑039 | GitHub Actions CI/CD Automation | 📈 | 4 | todo | Automate testing and deployment with GitHub Actions | GitHub
-Actions + YAML workflows + CI/CD | B-012 Advanced Testing Framework |
-<!--score: {bv:3, tc:2, rr:2, le:3, effort:4, deps:[]}-->
-<!--score_total: 2.5-->
+| B‑099 | Enhanced Backlog Status Tracking with Timestamps | 🔧 | 1 | ✅ done| Add started_at, last_updated timestamps and stale item detection for better in-progress tracking | Timestamp tracking + stale detection + automated alerts | None |
+<!-- last_updated: 2025-08-16T08:41:45.155925 -->
+<!-- started_at: 2025-08-16T08:40:01.163126 -->
+<!-- completion_date: 2025-08-16 -->
+<!-- implementation_notes: Successfully implemented enhanced backlog status tracking with timestamps and stale item detection. Created scripts/enhanced_backlog_tracking.py with comprehensive tracking capabilities including started_at, last_updated timestamps, stale item detection, and automated alerts. System provides CLI interface for starting work, updating status, checking stale items, and generating item summaries. Supports configurable stale thresholds and maintains timestamp history in HTML comments. -->
+<!--score: {bv:4, tc:2, rr:3, le:3, effort:1, lessons:3, deps:[]}-->
+<!--score_total: 4.5-->
+<!-- do_next: Implement enhanced status tracking with timestamps and stale item detection -->
+<!-- est_hours: 3 -->
+<!-- acceptance: Backlog items track when work started and flag stale in-progress items -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#status-tracking"] -->
+<!-- reference_cards: ["500_reference-cards.md#backlog-management"] -->
 
 ## Backlog Working Agreements
 
@@ -286,6 +336,64 @@ Metadata fields (HTML comments under each item):
 
 - `<!-- do_next: ... -->`, `<!-- blocked_by: ... -->`, `<!-- acceptance: ... -->`, `<!-- est_hours: N -->`, `<!--
 review_on: YYYY-MM-DD -->`
+
+## 🗺️ Roadmap Integration
+
+This backlog is the **executable roadmap** for the AI development ecosystem. Each item connects to strategic goals:
+
+### **Strategic Alignment**
+- **P0 Items**: Critical path for system stability and core functionality
+- **P1 Items**: High-value features that advance the AI development ecosystem
+- **P2 Items**: Performance and optimization improvements
+
+### **Roadmap Connection**
+- **Current Focus**: Lean Hybrid Memory System + Consensus Framework
+- **Next Phase**: Advanced RAG & Extraction (B‑043, B‑044, B‑078)
+- **Future Phase**: Performance & Benchmarking (B‑076, B‑052‑c)
+
+### **Cross-References**
+- **Development Roadmap**: `400_guides/400_development-roadmap.md`
+- **System Overview**: `400_guides/400_system-overview.md`
+- **Memory Context**: `100_memory/100_cursor-memory-context.md`
+
+## ✅ Completed Items (Context Preservation)
+
+### **Core System Foundation (Completed)**
+| ID | Title | Completion Date | Key Outcomes | Lessons Applied |
+|---|---|---|---|---|
+| B‑000 | v0.3.1-rc3 Core Hardening | 2024-08-05 | Production-ready security and reliability | Security-first approach, comprehensive testing |
+| B‑001 | Real-time Mission Dashboard | 2024-08-06 | Live visibility into AI task execution | Real-time monitoring essential for AI development |
+| B‑002 | Advanced Error Recovery & Prevention | 2024-08-07 | Intelligent error handling and HotFix generation | Automated error recovery reduces development friction |
+| B‑011 | Cursor Native AI + Specialized Agents | 2024-08-07 | AI code generation with specialized agents | Native-first approach provides best performance |
+
+### **Documentation & Context Management (Completed)**
+| ID | Title | Completion Date | Key Outcomes | Lessons Applied |
+|---|---|---|---|---|
+| B‑070 | AI Constitution Implementation | 2024-08-07 | Persistent AI ruleset for safety | Constitutional approach prevents context loss |
+| B‑071 | Memory Context File Splitting | 2024-08-07 | Modular memory system | Modular documentation improves AI comprehension |
+| B‑072 | Documentation Retrieval System | 2024-08-07 | RAG for documentation context | RAG solves context overload in AI development |
+| B‑073 | Giant Guide File Splitting | 2024-08-07 | Focused 200-300 line modules | Smaller files improve attention and comprehension |
+
+### **Infrastructure & Automation (Completed)**
+| ID | Title | Completion Date | Key Outcomes | Lessons Applied |
+|---|---|---|---|---|
+| B‑003 | Production Security & Monitoring | 2024-08-05 | File validation + OpenTelemetry | Security monitoring essential for AI systems |
+| B‑004 | n8n Backlog Scrubber Workflow | 2024-08-06 | Automated scoring and prioritization | Automation reduces cognitive load in planning |
+| B‑010 | n8n Workflow Integration | 2024-08-06 | Automated task execution | Workflow automation enables systematic development |
+| B‑060 | Documentation Coherence Validation | 2024-08-07 | Lightweight doc-linter with Cursor AI | Validation prevents documentation drift |
+
+### **Key Lessons Learned**
+1. **Security First**: All AI systems need comprehensive security validation
+2. **Modular Design**: Smaller, focused files improve AI comprehension
+3. **Automation Reduces Friction**: Automated workflows enable systematic development
+4. **Real-time Monitoring**: Essential for AI development ecosystem visibility
+5. **Constitutional Approach**: Prevents context loss and ensures safety
+
+### **Context Preservation Strategy**
+- **Completed items** are archived here for historical context
+- **Key outcomes** and **lessons applied** are preserved for future reference
+- **Cross-references** to lessons learned in `100_memory/105_lessons-learned-context.md`
+- **Strategic alignment** with development roadmap maintained
 
 | B‑091 | Strict Anchor Enforcement (Phase 2) | 🔥 | 2 | todo | Enforce heading-based anchors; disallow non‑TLDR HTML
 anchors in core docs | Validator (--strict-anchors) + pre-commit/CI | 200_naming-conventions.md,
@@ -314,25 +422,40 @@ maps | Python threading + cached scans | scripts/doc_coherence_validator.py |
 <!-- acceptance: 2x speedup measured on only-changed runs on a representative commit -->
 
 | B‑094 | MCP Memory Rehydrator Server | 🔥 | 3 | todo | Create minimal MCP server to automate database-based memory rehydration in Cursor | MCP Server + HTTP transport + Cursor integration | scripts/cursor_memory_rehydrate.py |
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:3, deps:["scripts/cursor_memory_rehydrate.py"]}-->
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:3, lessons:4, deps:["scripts/cursor_memory_rehydrate.py"]}-->
 <!--score_total: 9.5-->
 <!-- do_next: Create basic MCP server that wraps existing memory rehydrator and exposes it as a tool -->
 <!-- est_hours: 3 -->
 <!-- acceptance: Cursor automatically connects to MCP server and can call memory rehydration tool -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#mcp-integration-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#mcp-server-architecture"] -->
 
 | B‑095 | MCP Server Role Auto-Detection | 🔥 | 2 | todo | Enhance MCP server to automatically detect role based on conversation context | Context analysis + role detection + dynamic tool selection | B-094 MCP Memory Rehydrator Server |
-<!--score: {bv:5, tc:3, rr:4, le:3, effort:2, deps:["B-094"]}-->
+<!--score: {bv:5, tc:3, rr:4, le:3, effort:2, lessons:3, deps:["B-094"]}-->
 <!--score_total: 7.5-->
 <!-- do_next: Add conversation context analysis to automatically select appropriate role -->
 <!-- est_hours: 2 -->
 <!-- acceptance: MCP server automatically detects planner/implementer/researcher role from conversation -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-detection-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#context-analysis"] -->
 
 | B‑096 | MCP Server Performance Optimization | 📈 | 2 | todo | Optimize MCP server for low latency and high throughput | Connection pooling + caching + async processing | B-094 MCP Memory Rehydrator Server |
-<!--score: {bv:4, tc:3, rr:3, le:3, effort:2, deps:["B-094"]}-->
+<!--score: {bv:4, tc:3, rr:3, le:3, effort:2, lessons:3, deps:["B-094"]}-->
 <!--score_total: 5.5-->
 <!-- do_next: Implement connection pooling and response caching for faster context retrieval -->
 <!-- est_hours: 2 -->
 <!-- acceptance: MCP server responds in <500ms for context requests -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#performance-optimization"] -->
+<!-- reference_cards: ["500_reference-cards.md#connection-pooling"] -->
+
+| B‑097 | Roadmap Milestones & Burndown Charts | 📊 | 3 | todo | Add milestone tracking and burndown charts to roadmap for progress visibility | Milestone definition + progress tracking + chart generation | 000_core/004_development-roadmap.md |
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:3, lessons:3, deps:["000_core/004_development-roadmap.md"]}-->
+<!--score_total: 6.0-->
+<!-- do_next: Define milestone structure and implement burndown chart generation -->
+<!-- est_hours: 3 -->
+<!-- acceptance: Roadmap shows milestone progress and burndown charts for sprint tracking -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#project-tracking"] -->
+<!-- reference_cards: ["500_reference-cards.md#agile-tracking"] -->
 
 - --
 
@@ -706,12 +829,27 @@ system |
 
 - --
 
-| B‑019 | Code Quality Improvements                   | 🔧  | 5        | todo   | Improve maintainability | Refactoring + documentation | Codebase |
+| B‑019 | Code Quality Improvements | 🔧 | 5 | todo | Improve maintainability | Refactoring + documentation | Codebase |
+<!--score: {bv:4, tc:3, rr:4, le:4, effort:5, lessons:4, deps:[]}-->
+<!--score_total: 3.2-->
+<!-- do_next: Audit codebase for technical debt and create refactoring plan -->
+<!-- est_hours: 8 -->
+<!-- acceptance: Code quality metrics improve by 20% and technical debt is documented -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#code-quality-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#refactoring-strategies"] -->
+<!-- PRD: 001_create-prd.md#B-019 -->
 | B‑020 | Tokenizer Enhancements | 🔧 | 2 | todo | Improve text processing capabilities | SentencePiece + optimization |
 Tokenizer |
 | B‑021 | Local Security Hardening | 🔧 | 3 | todo | Protect local development environment | Input validation + API
 security | Local security + APIs |
-| B‑022 | Performance Monitoring                     | 🔧  | 2        | todo   | Improve system observability | Metrics + alerts | Monitoring |
+| B‑022 | Performance Monitoring | 🔧 | 2 | todo | Improve system observability | Metrics + alerts | Monitoring |
+<!--score: {bv:3, tc:2, rr:3, le:3, effort:2, lessons:3, deps:[]}-->
+<!--score_total: 4.5-->
+<!-- do_next: Implement basic performance metrics collection and dashboard -->
+<!-- est_hours: 4 -->
+<!-- acceptance: System performance is measurable and alerts are configured -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#monitoring-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#observability-best-practices"] -->
 | B‑023 | Development Readiness Enhancements | 🔧 | 5 | todo | Ensure system stability for solo development | Performance
 metrics + load testing | Development |
 | B‑024 | Automated Sprint Planning | 🔧 | 2 | todo | Automate sprint planning and backlog selection | AI planning +
@@ -747,378 +885,39 @@ Documentation review + reference updates | File naming convention migration |
 
 ## 🚀 Future Model Roadmap
 
-| B‑034 | Deep Research Agent Integration | 🔥 | 5 | todo | Add specialized research agent for complex analysis |
-Research Agent + Cursor Native AI | B-011 Cursor Native AI Integration |
-<!--score: {bv:5, tc:3, rr:4, le:4, effort:5, deps:[]}-->
-<!--score_total: 3.2-->
-| B‑035 | Coder Agent Specialization | 🔥 | 5 | todo | Add specialized coding agent for best practices | Coder Agent +
-Cursor Native AI | B-011 Cursor Native AI Integration |
-<!--score: {bv:5, tc:4, rr:3, le:4, effort:5, deps:[]}-->
-<!--score_total: 3.2-->
-| B‑036 | General Query Agent Enhancement | 🔥 | 3 | todo | Add general assistance agent for documentation | Query Agent
-+ Cursor Native AI | B-011 Cursor Native AI Integration |
-<!--score: {bv:4, tc:3, rr:2, le:3, effort:3, deps:[]}-->
-<!--score_total: 4.0-->
-| B‑037 | External Model Integration (Future) | 🔧 | 8 | todo | Evaluate optional local model(s) later; keep
-Cursor-native primary | Backlog placeholder only | B-011 Cursor Native AI Integration |
-<!--score: {bv:4, tc:2, rr:3, le:4, effort:8, deps:[]}-->
-<!--score_total: 1.6-->
-| B‑038 | Advanced Model Orchestration | 🔧 | 13 | todo | Implement multi-model coordination system | Model Orchestration
-+ Agent Coordination | B-034, B-035, B-036 |
-<!--score: {bv:3, tc:2, rr:2, le:4, effort:13, deps:[]}-->
-<!--score_total: 0.8-->
-| B‑022 | Performance Monitoring                     | 🔧  | 2        | todo   | Improve system observability | Metrics + alerts | Monitoring |
-| B‑023 | Development Readiness Enhancements | 🔧 | 5 | todo | Ensure system stability for solo development | Performance
-metrics + load testing | Development |
-| B‑024 | Automated Sprint Planning | 🔧 | 2 | todo | Automate sprint planning and backlog selection | AI planning +
-automation | Backlog system |
-| B‑025 | Database Event-Driven Status Updates | 🔧 | 3 | todo | Automatically update backlog status via database events
-| PostgreSQL triggers + event system | Event ledger |
-| B‑026 | Secrets Management | 🔥 | 2 | todo | Secure credential management with environment validation | Keyring + env
-validation + startup checks | None |
-<!-- human_required: true -->
-<!-- reason: Requires business decisions on which secrets to manage and deployment configuration -->
-| B‑027 | Health & Readiness Endpoints | 🔥 | 2 | todo | Kubernetes-ready health checks with dependency monitoring |
-/health + /ready endpoints + JSON status | None |
-<!-- human_required: true -->
-<!-- reason: Requires deployment environment configuration and business requirements for health checks -->
-| B‑028 | Implement regex prompt‑sanitiser & whitelist | 🔥 | 3 | ✅ done | Enhanced prompt security with regex-based
-sanitization | Regex patterns + whitelist logic + security validation | None |
-| B‑029 | Expose llm_timeout_seconds override in agents | 🔥 | 2 | ✅ done | Per-agent LLM timeout configuration for large
-models | Agent timeout config | None |
-| B‑030 | Env override for SECURITY_MAX_FILE_MB | ⚙️ | 1 | ✅ done | Flexible file size limits with environment override
-| File validation + env config + OOM prevention | None |
-| B‑031 | Vector Database Foundation Enhancement | 🔥 | 3 | todo | Improve RAG system with advanced vector database
-capabilities | PostgreSQL + PGVector + advanced indexing | Enhanced RAG system |
-| B‑032 | Memory Context System Architecture Research | 🔥 | 8 | todo | Optimize memory hierarchy for different AI model
-capabilities (7B vs 70B) | Literature review + benchmark harness + design recommendations | Improved retrieval F1 by
-≥10% on 7B models |
-| B‑032‑C1 | Implement generation cache (Postgres) & add cache columns to episodic_logs | 🔥 | 3 | todo | Add
-cache-augmented generation support with similarity scoring | PostgreSQL + cache_hit + similarity_score + last_verified |
-B-032 Memory Context System Architecture Research |
-| B‑033 | Documentation Reference Updates | 🔥 | 2 | ✅ done | Update outdated file references in documentation |
-Documentation review + reference updates | File naming convention migration |
-
-- --
-
-## Completed Items
-
-### Recently Completed Core Features
-
-- ✅ **Industry-Grade Observability System** (✅ done - 2025-01-27)
-  - **Implementation**: Stanford/Berkeley/Anthropic-grade structured tracing and verification
-  - **Core Modules**: `structured_tracer.py`, `self_critique.py` with cryptographic verification
-  - **Features**: Structured tracing, echo verification, self-critique, multi-layer logging
-  - **Integration**: Seamless integration with memory rehydrator pipeline
-  - **Tracing**: Complete trace with cryptographic hashes and multi-layer spans
-  - **Verification**: Bundle integrity verification for models with hash validation
-  - **Critique**: Anthropic-style reflection checkpoints for bundle validation
-  - **Performance**: < 100ms tracing, < 50ms echo verification
-  - **Impact**: Industry-leading observability for debugging and reliability
-
-- ✅ **Chunk Relationship Visualization System** (✅ done - 2025-08-16)
-  - **Implementation**: Complete dual-UI visualization system with Flask and NiceGUI
-  - **Core Engine**: GraphDataProvider with UMAP caching and feature flag protection
-  - **API Layer**: `/graph-data` V1 endpoint with comprehensive parameter validation
-  - **Flask Cluster View**: UMAP-based scatter plot with Plotly.js integration
-  - **NiceGUI Network Graph**: Interactive network visualization with Cytoscape.js
-  - **Features**: Real-time updates, advanced filtering, performance monitoring
-  - **Testing**: 21/21 tests passing (GraphDataProvider, API endpoint, NiceGUI app)
-  - **Documentation**: Comprehensive guide with API reference and troubleshooting
-  - **Performance**: p50 ≤ 200ms, p95 ≤ 500ms response times
-  - **Security**: Input validation, feature flags, no embedding exposure
-  - **Impact**: Advanced chunk relationship analysis for RAG system optimization
-
-- ✅ **Entity Expansion for Memory Rehydration** (✅ done - 2025-01-27)
-  - **Implementation**: Entity-aware context expansion with pattern-based extraction
-  - **Core Module**: `dspy-rag-system/src/utils/entity_overlay.py` with comprehensive entity extraction
-  - **Integration**: Seamless integration into `memory_rehydrator.py` with `--no-entity-expansion` flag
-  - **Features**: Adaptive k_related calculation, entity-adjacent chunk retrieval, deduplication
-  - **Patterns**: CamelCase, snake_case, file paths, URLs, emails with 90%+ accuracy
-  - **Testing**: 10/10 unit tests passing, comprehensive A/B testing framework
-  - **Metrics**: Expansion latency tracking, entity count, chunks added, stability thresholds
-  - **Rollback**: Immediate rollback via CLI flag, no breaking changes
-  - **Impact**: Enhanced context retrieval for entity-rich queries with ≥+10% recall improvement target
-
-- ✅ **Lean Hybrid Memory Rehydration System** (✅ done - 2025-08-15)
-  - **Implementation**: Lean Hybrid with Kill-Switches approach
-  - **Database**: Clean slate schema with 1,939 chunks from 20 core documents
-  - **Search**: BM25 working excellently, vector search ready for embeddings
-  - **Anchors**: 10 anchor keys with proper metadata (tldr, quick-start, architecture, etc.)
-  - **Features**: RRF fusion, deterministic tie-breaking, stability slider, kill-switches
-  - **Configuration**: `--stability 0.0-1.0`, `--no-rrf`, `--dedupe`, `--expand-query`
-  - **Impact**: Semantic-first rehydration with tiny pins (≤200 tokens) for guardrails
-  - **Multi-language**: Python (primary) and Go (alternative) implementations
-  - **Go Implementation**: `dspy-rag-system/src/utils/memory_rehydration.go` with CLI interface
-
-- ✅ **Vector Database Synchronization & Cleanup** (✅ done - 2024-08-13)
-  - **Phase 1**: Updated 3 outdated database entries (100_cursor-memory-context.md, 000_backlog.md, 400_system-overview.md)
-  - **Phase 2**: Added 7 missing core documents to vector database for AI rehydration
-  - **Phase 3**: Comprehensive validation with 100% success rate
-  - **Results**: Complete cognitive scaffolding achieved (11/11 core documents)
-  - **Database**: 24 total documents, 550 chunks, operational semantic search
-  - **Impact**: AI agents now have complete, current documentation for rehydration
-
-- ✅ **B‑065**: Error Recovery & Troubleshooting Guide (✅ done)
-  - Comprehensive troubleshooting guide with emergency procedures
-  - Automated recovery scripts for database and system issues
-  - Integration with B-002 Advanced Error Recovery & Prevention system
-  - Step-by-step workflows and monitoring procedures
-
-- ✅ **B‑060**: Documentation Coherence Validation System (✅ done)
-  - Comprehensive validation system with cross-reference checking
-  - File naming convention validation and backlog reference validation
-  - Memory context coherence checking and Cursor AI semantic validation
-  - Pre-commit hooks, test suite, and complete documentation
-
-- ✅ **B‑002**: Advanced Error Recovery & Prevention (✅ done)
-  - Error Pattern Recognition System with 15+ error patterns
-  - HotFix Template Generation with 3 template categories
-  - Model-Specific Error Handling for 5+ AI models
-
-- ✅ **C‑033**: n8n Workflow Integration Implementation (✅ done)
-
-- ✅ **C‑034**: n8n Backlog Scrubber Workflow Implementation (✅ done)
-
-- ✅ **C‑035**: Real-time Mission Dashboard Implementation (✅ done)
-
-- ✅ **File Naming Convention Migration**: Three-digit prefixes implemented (✅ done)
-
-- ✅ **Memory Context Research Framework**: Benchmark harness and research plan (✅ done)
-
-- ✅ **Cache-Augmented Generation**: Database schema, evaluation framework, documentation (✅ done)
-
-- ✅ **File Cleanup**: Removed duplicates, archived implementation notes (✅ done)
-
-- ✅ **Documentation Reference Updates**: Updated all files to reference correct file names (✅ done)
-
-### Historical Completed Items
-
-| ID  | Title                                   | 🔥P | 🎯Points | Status | Completion Date | Implementation Notes |
-|-----|-----------------------------------------|-----|----------|--------|-----------------|---------------------|
-| C‑002 | Central Retry Wrapper Implementation | 🔥 | 2 | ✅ done | 2024-08-05 | Configurable retry logic with exponential
-backoff, integrated with enhanced_rag_system.py and vector_store.py, comprehensive test suite |
-| C‑006 | Fast-Path Bypass Logic Implementation | 🔥 | 2 | ✅ done | 2024-08-05 | Intelligent query routing with fast-path
-bypass for simple queries (<50 chars, no code tokens), integrated with enhanced_rag_system.py, comprehensive test suite
-|
-| C‑007 | Input Validation Hardening Implementation | 🔥 | 2 | ✅ done | 2024-08-05 | Comprehensive input validation
-across all modules, security hardening for prompts and file paths, integrated with enhanced_rag_system.py and
-dashboard.py, comprehensive test suite |
-| C‑008 | Secrets Management Implementation | 🔥 | 2 | ✅ done | 2024-08-05 | Secure credential management with
-environment validation and keyring integration, startup checks for required secrets, interactive setup script,
-comprehensive test suite |
-| C‑028 | Implement regex prompt‑sanitiser & whitelist | 🔥 | 3 | ✅ done | 2024-08-05 | Enhanced prompt security with
-regex-based sanitization, configurable block-list and whitelist, comprehensive validation utilities, integrated with
-enhanced_rag_system.py, comprehensive test suite |
-| C‑029 | Expose llm_timeout_seconds override in agents | 🔥 | 2 | ✅ done | 2024-08-05 | Per-agent LLM timeout
-configuration for large models, environment variable support, integrated with retry_wrapper.py and
-enhanced_rag_system.py, comprehensive test suite |
-| C‑030 | Env override for SECURITY_MAX_FILE_MB | ⚙️ | 1 | ✅ done | 2024-08-05 | Flexible file size limits with
-environment override, config hot-reload support, OOM prevention, integrated with prompt_sanitizer.py and
-config_manager.py, comprehensive test suite |
-| C‑031 | Production Security & Monitoring Implementation | 🔥 | 2 | ✅ done | 2024-08-06 | Comprehensive production
-monitoring system with security alerts, health checks, OpenTelemetry integration, Kubernetes-ready endpoints, system
-metrics collection, alert callbacks, comprehensive test suite |
-| C‑032 | Database Connection Pooling & Resilience Implementation | 🔥 | 3 | ✅ done | 2024-08-06 | Comprehensive database
-resilience system with connection pooling, health monitoring, retry logic, OpenTelemetry integration, graceful
-degradation, comprehensive test suite |
-| C‑033 | n8n Workflow Integration Implementation | 🔥 | 1 | ✅ done | 2024-08-06 | Comprehensive n8n workflow integration
-with event-driven architecture, automated task execution, background event processing service, database integration,
-comprehensive test suite |
-| C‑034 | n8n Backlog Scrubber Workflow Implementation | 🔥 | 2 | ✅ done | 2024-08-06 | Comprehensive backlog scrubber
-with automated scoring, webhook integration, validation, backup protection, comprehensive test suite, and n8n workflow
-integration |
-| C‑035 | Real-time Mission Dashboard Implementation | 🔥 | 3 | ✅ done | 2024-08-06 | Comprehensive real-time mission
-dashboard with live AI task execution monitoring, mission tracking, progress updates, metrics collection, WebSocket
-integration, modern UI, and comprehensive test suite |
-| C‑036 | Documentation Reference Updates Implementation | 🔥 | 2 | ✅ done | 2024-08-06 | Updated all documentation files
-to reference correct file names after naming convention migration, ensuring consistency across the codebase |
-| C‑037 | Documentation Coherence Validation System Implementation | 🔥 | 2 | ✅ done | 2024-08-07 | Comprehensive
-documentation validation system with cross-reference checking, naming convention validation, backlog reference
-validation, memory context coherence checking, Cursor AI semantic validation, pre-commit hooks, test suite, and complete
-documentation |
-| C‑038 | Error Recovery & Troubleshooting Guide Implementation | 🔥 | 2 | ✅ done | 2024-08-07 | Comprehensive
-troubleshooting guide with emergency procedures, automated recovery scripts, systematic workflows, health check scripts,
-database recovery automation, and integration with B-002 Advanced Error Recovery & Prevention system |
-| C‑039 | Security Best Practices & Threat Model Implementation | 🔥 | 3 | ✅ done | 2024-08-07 | Comprehensive security
-documentation with threat model, security architecture, access controls, data protection, AI model security, incident
-response procedures, security monitoring, compliance standards, and emergency procedures |
-| C‑040 | Performance Optimization & Monitoring Guide Implementation | 📈 | 2 | ✅ done | 2024-08-07 | Comprehensive
-performance documentation with metrics, optimization strategies, monitoring setup, scaling guidelines, performance
-testing, troubleshooting, best practices, and performance tools |
-| C‑041 | Integration Patterns & API Documentation Implementation | 📈 | 2 | ✅ done | 2024-08-07 | Comprehensive
-integration documentation with API design, component integration, communication patterns, error handling, security
-integration, performance integration, testing integration, and deployment integration |
-| C‑042 | Testing Strategy & Quality Assurance Guide Implementation | 📈 | 2 | ✅ done | 2024-08-07 | Comprehensive
-testing documentation with testing philosophy, testing pyramid, test types, quality gates, AI model testing, continuous
-testing, and quality metrics |
-| C‑043 | Deployment & Environment Management Guide Implementation | 📈 | 2 | ✅ done | 2024-08-07 | Comprehensive
-deployment documentation with environment strategy, deployment architecture, configuration management, monitoring,
-rollback procedures, security deployment, and deployment automation |
-| C‑044 | Few-Shot Context Engineering Examples Implementation | 🔥 | 1 | ✅ done | 2024-08-07 | Comprehensive few-shot
-examples for documentation coherence, backlog analysis, memory context, code generation, error recovery, integration
-patterns, testing strategies, deployment examples, and best practices |
-| C‑045 | Contributing Guidelines & Development Standards Implementation | 🔧 | 1 | ✅ done | 2024-08-07 | Comprehensive
-development standards with code guidelines, contribution process, review guidelines, documentation standards, testing
-standards, security standards, performance standards, deployment standards, and quality assurance |
-| C‑046 | Migration & Upgrade Procedures Guide Implementation | 🔧 | 1 | ✅ done | 2024-08-07 | Comprehensive migration
-and upgrade procedures with validation framework, automated scripts, rollback procedures, emergency recovery procedures,
-and system evolution documentation |
-| C‑047 | Convert 003 Process Task List to Python Script Implementation | 🔥 | 3 | ✅ done | 2024-08-07 | Comprehensive
-CLI script with backlog parser, state management, error handling, task execution engine, and complete automation
-framework for all backlog items |
-| C‑048 | Cursor Native AI Context Engineering with DSPy Implementation | 🔥 | 5 | ✅ done | 2024-08-07 | Complete context
-engineering system with intelligent model routing, validation system, monitoring dashboard, comprehensive testing, and
-integration with existing DSPy RAG system |
-| C‑049 | AI Constitution Implementation | 🔥 | 3 | ✅ done | 2024-08-07 | Complete implementation with comprehensive AI
-Constitution, compliance checker, integration with core system files, comprehensive test suite, and validation framework
-|
-| C‑050 | Memory Context File Splitting | 🔥 | 4 | ✅ done | 2024-08-07 | Complete implementation with modular memory
-context system, migration script, cross-reference updates, and comprehensive documentation |
-| C‑051 | Documentation Retrieval System Enhancement | 🔥 | 5 | ✅ done | 2024-08-07 | Complete implementation with
-documentation indexer, retrieval service, CLI interface, comprehensive testing, and integration guide |
-| C‑052 | Giant Guide File Splitting | 📈 | 8 | ✅ done | 2024-08-07 | Complete implementation with giant guide splitter,
-migration script, cross-reference updates, and comprehensive documentation. Consolidated
-400_guides/400_contributing-guidelines.md into single file for solo developer workflow. Excluded project-specific
-deliverables (B-011, B-049, B-072 files) as they should remain intact. |
-
-- --
-
-## Setup Required Items
-
-These items require manual setup or configuration on your end before they can be fully utilized:
-
-| ID  | Title                                   | 🔥P | 🎯Points | Status | Setup Required | Setup Instructions |
-|-----|-----------------------------------------|-----|----------|--------|----------------|-------------------|
-| S‑001 | n8n Installation & Configuration | 🔥 | 1 | setup-required | n8n installation + API key + webhook setup | See
-`dspy-rag-system/docs/N8N_SETUP_GUIDE.md` |
-| S‑002 | PostgreSQL Event Ledger Schema | 🔥 | 1 | setup-required | Database schema creation | Run
-`config/database/event_ledger.sql` in PostgreSQL |
-| S‑003 | Environment Configuration | ⚙️ | 1 | setup-required | Environment variables setup | Configure N8N_BASE_URL,
-N8N_API_KEY, POSTGRES_DSN |
-| S‑004 | Cursor Native AI Setup | 🔥 | 1 | setup-required | Cursor IDE configuration | See
-`200_setup/202_setup-requirements.md` |
-| S‑005 | Optional Local Model Integration | 📈 | 1 | backlog | If needed later, see optional guide | See
-`600_archives/legacy-integrations/cursor-yi-coder-integration/README.md` |
-| S‑006 | PostgreSQL Database Setup | 🔥 | 1 | setup-required | PostgreSQL installation + database creation | See
-`400_guides/400_system-overview.md` |
-| S‑007 | Virtual Environment Setup | ⚙️ | 1 | setup-required | Python virtual environment + dependencies | See
-`400_guides/400_project-overview.md` |
-| S‑008 | Cursor IDE Configuration | 🔥 | 1 | setup-required | Cursor IDE configuration | See
-`200_setup/202_setup-requirements.md` |
-| S‑009 | Secrets Management Setup | 🔥 | 1 | setup-required | Environment secrets configuration | See
-`600_archives/C8_COMPLETION_SUMMARY.md` |
-| S‑010 | System Dependencies | ⚙️ | 1 | setup-required | System packages and tools | See
-`400_guides/400_system-overview.md` |
-
-- --
-
-<!-- AI-BACKLOG-META
-next_prd_command: |
-  Use @000_core/001_create-prd.md with backlog_id=B-001
-sprint_planning: |
-  Run make plan sprint=next to pull the top 3 todo backlog items, auto-generate PRDs, tasks, and a fresh execution queue
-scoring_system: |
-  Parse <!--score_total: X.X--> comments for prioritization
-  Use human priority tags as fallback when scores missing
-  Consider dependencies before starting any item
-execution_responsibility: |
-  Check <!-- default_executor: 000_core/003_process-task-list.md --> for AI-executable items
-  Check <!-- human_required: true --> for items requiring human input
-  Items with external APIs, credentials, or deployment need human involvement
-  Pure code implementation can be executed by AI
-completion_tracking: |
-  Move completed items to "Completed Items" section
-  Update status to "✅ done" with completion date
-  Add implementation notes for future reference
-timestamp_updates: |
-  Update *Last Updated: YYYY-MM-DD HH:MM*timestamp when making changes
-  Add*Previously Updated: YYYY-MM-DD HH:MM*line above Last Updated for history
-  Use 24-hour format (HH:MM) for granular tracking
-
-- **Previously Updated**: 2024-08-07 21:30
-- **Last Updated**: 2024-08-07 22:30
-- **Next Review**: Monthly Review Cycle
-
-## 📚**Research Integration Summary**
-
-### **New Research-Based Backlog Items Added**
-
-- **B-076**: Research-Based DSPy Assertions Implementation (🔥 Priority)
-
-- **B-077**: Hybrid Search Implementation (🔥 Priority)
-
-- **B-078**: LangExtract Structured Extraction Service (🔥 Priority)
-
-- **B-079**: Teleprompter Optimization for Continuous Improvement (📈 Priority)
-
-- **B-080**: Research-Based Performance Monitoring (📈 Priority)
-
-- **B-081**: Research-Based Agent Orchestration Framework (🔧 Priority)
-
-- **B-082**: Research-Based Quality Evaluation Metrics (🔧 Priority)
-
-- **B-083**: Research-Based Caching Strategy Implementation (🔧 Priority)
-
-- **B-084**: Research-Based Schema Design for Extraction (🔧 Priority)
-
-### **Research Cross-References Added**
-
-- **500_research-analysis-summary.md**: Strategic research analysis and implementation roadmap
-
-- **500_dspy-research.md**: DSPy framework research with 37% → 98% reliability improvement
-
-- **500_rag-system-research.md**: Advanced RAG research with 10-25% accuracy improvement
-
-- **500_research-implementation-summary.md**: Complete implementation summary of all phases
-
-### **Expected Performance Improvements**
-
-- **Overall Reliability**: 37% → 98% improvement with DSPy assertions
-
-- **RAG Accuracy**: 10-25% improvement with hybrid search
-
-- **Code Quality**: 25-40% improvement over expert prompts
-
-- **Cost Reduction**: 40-60% savings with caching and optimization
-
-- --
-
-## 🧠 **Knowledge Graph & Vector Graph Integration (Future Enhancement)**
-
-Your current vector database system is **production-ready and highly functional** for your solo development workflow
-
-However, as your system evolves and you encounter more complex relationship queries, a vector graph could provide
-advanced capabilities:
-
-### **When Vector Graph Would Be Valuable**
-
-- **Complex Dependency Tracking**: "Find all functions that call this function and their dependencies"
-
-- **Multi-hop Reasoning**: "How does this bug in the frontend affect the database schema?"
-
-- **Entity Relationship Mapping**: Connect code components, APIs, databases in a knowledge graph
-
-- **Impact Analysis**: Understand ripple effects of changes across the system
-
-#### **Implementation Strategy**
-
-- **Phase 1 (B-085)**: Research and evaluate vector graph technologies
-
-- **Phase 2 (B-086)**: Implement knowledge graph for entity-relationship mapping
-
-- **Phase 3 (B-087)**: Combine vector similarity with graph traversal
-
-- **B-085**: Vector Graph Foundation Research (5 points)
-
-- **B-086**: Knowledge Graph Implementation (8 points)
-
-- **B-087**: Hybrid Vector + Graph Search (6 points)
-
-#### **Dependencies:**
-
-- Requires B-077 (Hybrid Search) completion first
-
-- Strategic placement in Q3-Q4 2025 timeline
-
-- Medium priority to avoid over-engineering current workflow
+### **Advanced Agent Specialization (Q1 2025)**
+- **B-034**: Deep Research Agent Integration
+- **B-035**: Coder Agent Specialization
+- **B-036**: General Query Agent Enhancement
+
+### **System Integration & Optimization (Q2 2025)**
+- **B-037**: External Model Integration (Future)
+- **B-038**: Advanced Model Orchestration
+
+### **Performance & Scaling (Q3 2025)**
+- **B-039**: Performance Optimization Suite
+- **B-040**: Advanced Caching & Memory Management
+
+## 📚 Research & Development
+
+### **Current Research Focus**
+- **DSPy Integration**: Advanced reasoning and validation
+- **RAG Optimization**: Hybrid search and entity expansion
+- **Context Engineering**: Few-shot patterns and cognitive scaffolding
+
+### **Research Integration**
+- **Research Index**: `500_research/500_research-index.md`
+- **Implementation Guides**: `400_guides/400_*` series
+- **Memory Context**: `100_memory/104_dspy-development-context.md`
+
+## 🔄 Maintenance & Updates
+
+### **Regular Maintenance Tasks**
+- **Monthly**: Backlog grooming and priority review
+- **Quarterly**: Roadmap alignment and strategic planning
+- **As Needed**: Context preservation and lessons learned updates
+
+### **Quality Gates**
+- **Validator Compliance**: All items must pass `doc_coherence_validator.py`
+- **Documentation Alignment**: Cross-references must be maintained
+- **Strategic Alignment**: Items must align with development roadmap

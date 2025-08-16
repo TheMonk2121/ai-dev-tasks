@@ -17,7 +17,7 @@ import hashlib
 import json
 import time
 import uuid
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -148,6 +148,11 @@ class StructuredTracer:
         for key, value in outputs.items():
             self.current_span.output_hashes[key] = self._hash_content(value)
 
+        # At this point, both current_trace and current_span are guaranteed to be non-None
+        # due to the checks at the beginning of the method
+        assert self.current_trace is not None
+        assert self.current_span is not None
+
         logger.debug(
             f"Ended span: {self.current_span.operation}",
             extra={
@@ -256,9 +261,53 @@ class StructuredTracer:
         self.generate_echo_verification(bundle_text)
 
         # Save trace to disk
+        # At this point, current_trace is guaranteed to be non-None due to the check at the beginning
+        assert self.current_trace is not None
         trace_file = self.trace_dir / f"{self.current_trace.trace_id}.json"
         with open(trace_file, "w") as f:
-            json.dump(asdict(self.current_trace), f, indent=2, default=str)
+            # Convert dataclass to dict manually
+            trace_dict = {
+                "trace_id": self.current_trace.trace_id,
+                "query": self.current_trace.query,
+                "role": self.current_trace.role,
+                "timestamp": self.current_trace.timestamp,
+                "pins": self.current_trace.pins,
+                "evidence": self.current_trace.evidence,
+                "entity_expansion": self.current_trace.entity_expansion,
+                "bundle_hash": self.current_trace.bundle_hash,
+                "evidence_hashes": self.current_trace.evidence_hashes,
+                "pins_hash": self.current_trace.pins_hash,
+                "retrieval_time_ms": self.current_trace.retrieval_time_ms,
+                "assembly_time_ms": self.current_trace.assembly_time_ms,
+                "total_time_ms": self.current_trace.total_time_ms,
+                "stability": self.current_trace.stability,
+                "max_tokens": self.current_trace.max_tokens,
+                "use_rrf": self.current_trace.use_rrf,
+                "dedupe": self.current_trace.dedupe,
+                "expand_query": self.current_trace.expand_query,
+                "use_entity_expansion": self.current_trace.use_entity_expansion,
+                "spans": [
+                    {
+                        "span_id": span.span_id,
+                        "parent_id": span.parent_id,
+                        "operation": span.operation,
+                        "start_time": span.start_time,
+                        "end_time": span.end_time,
+                        "duration_ms": span.duration_ms,
+                        "inputs": span.inputs,
+                        "outputs": span.outputs,
+                        "input_hashes": span.input_hashes,
+                        "output_hashes": span.output_hashes,
+                        "error": span.error,
+                        "error_type": span.error_type,
+                        "tags": span.tags,
+                        "metadata": span.metadata,
+                    }
+                    for span in self.current_trace.spans
+                ],
+                "echo_verification": self.current_trace.echo_verification,
+            }
+            json.dump(trace_dict, f, indent=2, default=str)
 
         # Log human-readable trace
         self._log_human_readable_trace()
@@ -346,7 +395,7 @@ def trace_bundle_creation(query: str, role: str = "planner", **config):
                 tracer.end_span(bundle=result)
 
                 # End trace
-                trace = tracer.end_trace(result.text if hasattr(result, "text") else str(result))
+                tracer.end_trace(result.text if hasattr(result, "text") else str(result))
 
                 return result
 
