@@ -34,7 +34,20 @@
 
 ## 🚀 Quick Start
 
-### **Flask Cluster Visualization**
+### **🐙 Wake Up Nemo (Recommended)**
+```bash
+# Start all visualization components with one command
+./dspy-rag-system/wake_up_nemo.sh
+
+# This starts:
+# - Flask Dashboard (port 5000)
+# - NiceGUI Graph (port 8080)
+# - API endpoint (/graph-data)
+```
+
+### **Individual Components**
+
+#### **Flask Cluster Visualization**
 ```bash
 # Start the main dashboard
 ./dspy-rag-system/start_mission_dashboard.sh
@@ -43,7 +56,7 @@
 # Open: http://localhost:5000/cluster
 ```
 
-### **NiceGUI Network Graph**
+#### **NiceGUI Network Graph**
 ```bash
 # Start the graph visualization app
 ./dspy-rag-system/start_graph_visualization.sh
@@ -56,6 +69,25 @@
 ```bash
 # Get visualization data directly
 curl "http://localhost:5000/graph-data?max_nodes=1000&include_knn=true&include_entity=true"
+```
+
+### **🐙 Nemo Management Commands**
+```bash
+# Start everything
+./dspy-rag-system/wake_up_nemo.sh
+
+# Stop everything
+./dspy-rag-system/sleep_nemo.sh
+
+# Check status
+./dspy-rag-system/wake_up_nemo.sh --status
+
+# Test API
+./dspy-rag-system/wake_up_nemo.sh --test
+
+# Start only specific components
+./dspy-rag-system/wake_up_nemo.sh --flask-only
+./dspy-rag-system/wake_up_nemo.sh --nicegui-only
 ```
 
 <!-- ANCHOR_KEY: architecture -->

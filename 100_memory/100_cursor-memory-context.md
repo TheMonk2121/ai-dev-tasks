@@ -119,6 +119,8 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - Comprehensive conflict audit: `python scripts/conflict_audit.py --full`
 
 ### **Visualization System**
+- **Wake up Nemo** (all services): `./dspy-rag-system/wake_up_nemo.sh` → Starts everything
+- **Sleep Nemo** (stop all): `./dspy-rag-system/sleep_nemo.sh` → Stops everything
 - Start Flask cluster view: `./dspy-rag-system/start_mission_dashboard.sh` → `http://localhost:5000/cluster`
 - Start NiceGUI network graph: `./dspy-rag-system/start_graph_visualization.sh` → `http://localhost:8080`
 - Test API endpoint: `curl "http://localhost:5000/graph-data?max_nodes=100"`

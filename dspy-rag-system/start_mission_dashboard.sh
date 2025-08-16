@@ -1,8 +1,6 @@
 #!/bin/bash
-"""
-Startup script for Real-time Mission Dashboard
-Handles environment setup and launches the dashboard
-"""
+# Startup script for Real-time Mission Dashboard
+# Handles environment setup and launches the dashboard
 
 set -e
 
@@ -51,7 +49,7 @@ echo "🔍 Checking Python version..."
 if command_exists python3; then
     PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
     echo "   Python version: $PYTHON_VERSION"
-    
+
     # Check if version is 3.8 or higher
     if python3 -c "import sys; exit(0 if sys.version_info >= (3, 8) else 1)" 2>/dev/null; then
         print_status "Python version is compatible"
@@ -78,6 +76,7 @@ fi
 
 # Activate virtual environment
 echo "🔧 Activating virtual environment..."
+# shellcheck disable=SC1091
 source "$VENV_PATH/bin/activate"
 print_status "Virtual environment activated"
 
@@ -160,4 +159,4 @@ python3 src/mission_dashboard/mission_dashboard.py 2>&1 | tee logs/mission_dashb
 
 # Handle exit
 echo ""
-echo -e "${BLUE}🛑 Mission Dashboard stopped${NC}" 
+echo -e "${BLUE}🛑 Mission Dashboard stopped${NC}"
