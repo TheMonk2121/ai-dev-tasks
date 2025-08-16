@@ -431,3 +431,105 @@ Context priority guide content.
 
 if __name__ == "__main__":
     pytest.main([__file__])
+
+
+# --- B-100 and B-102 Test Cases ---
+import textwrap
+
+from scripts.doc_coherence_validator import validate_backlog
+
+
+def write_backlog(tmp_path: Path, content: str) -> Path:
+    """Helper to write test backlog content."""
+    p = tmp_path / "000_backlog.md"
+    p.write_text(textwrap.dedent(content), encoding="utf-8")
+    return p
+
+
+def test_b100_b102_pass(tmp_path: Path, monkeypatch):
+    """Test PASS case: item with multi-rep + cross-refs."""
+    # env: strict features on
+    monkeypatch.setenv("VALIDATOR_REQUIRE_MULTI_REP", "1")
+    monkeypatch.setenv("VALIDATOR_REQUIRE_XREF", "1")
+    monkeypatch.setenv("VALIDATOR_STRICT_STALE_XREF", "0")
+
+    # create referenced file to satisfy xref existence
+    ref_file = tmp_path / "500_reference-cards.md"
+    ref_file.write_text("# rag-lessons-from-jerry\ncontent", encoding="utf-8")
+
+    content = """
+    | B-100 | Multi-rep demo | 🔄 | 5 | todo | Example with summary+refs |
+    <!--score: {"bv":4,"tc":3,"rr":3,"le":5,"lessons":4,"effort":3,"deps":[]}-->
+    <!--score_total: 3.7-->
+    <!-- lessons_applied: ["500_reference-cards.md#rag-lessons-from-jerry"] -->
+    """
+
+    path = write_backlog(tmp_path, content)
+    code, report, summary = validate_backlog(str(path))
+    assert code == 0, f"Expected PASS, got report:\n{report}"
+
+
+def test_b100_fail_insufficient_reps(tmp_path: Path, monkeypatch):
+    """Test FAIL case: insufficient representations."""
+    monkeypatch.setenv("VALIDATOR_REQUIRE_MULTI_REP", "1")
+    monkeypatch.setenv("VALIDATOR_REQUIRE_XREF", "0")
+
+    content = """
+    | B-101 | Raw only demo | 🧪 | 3 | todo | No summary, no refs |
+    """
+    path = write_backlog(tmp_path, content)
+    code, report, summary = validate_backlog(str(path))
+    assert code == 2
+    assert "INSUFFICIENT_REPRESENTATIONS" in report
+
+
+def test_b102_fail_missing_xref(tmp_path: Path, monkeypatch):
+    """Test FAIL case: missing cross-references."""
+    monkeypatch.setenv("VALIDATOR_REQUIRE_MULTI_REP", "0")
+    monkeypatch.setenv("VALIDATOR_REQUIRE_XREF", "1")
+
+    content = """
+    | B-102 | No xrefs demo | 🧪 | 3 | todo | Missing references |
+    <!--score: {"bv":3,"tc":2,"rr":2,"le":3,"lessons":3,"effort":2,"deps":[]}-->
+    <!--score_total: 3.1-->
+    """
+    path = write_backlog(tmp_path, content)
+    code, report, summary = validate_backlog(str(path))
+    assert code == 2
+    assert "MISSING_CROSS_REFERENCE" in report
+
+
+def test_stale_xref_warn(tmp_path: Path, monkeypatch):
+    """Test WARN case: stale cross-references (non-strict mode)."""
+    monkeypatch.setenv("VALIDATOR_REQUIRE_MULTI_REP", "0")
+    monkeypatch.setenv("VALIDATOR_REQUIRE_XREF", "1")
+    monkeypatch.setenv("VALIDATOR_STRICT_STALE_XREF", "0")
+
+    content = """
+    | B-103 | Stale xref warn | 🧪 | 3 | todo | Has xref but file missing |
+    <!--score: {"bv":3,"tc":2,"rr":2,"le":3,"lessons":3,"effort":2,"deps":[]}-->
+    <!--score_total: 3.1-->
+    <!-- lessons_applied: ["500_reference-cards.md#rag-lessons-from-jerry"] -->
+    """
+    path = write_backlog(tmp_path, content)
+    code, report, summary = validate_backlog(str(path))
+    assert code in (0, 2)  # could still fail for other rules
+    assert "STALE_CROSS_REFERENCE" in report
+
+
+def test_stale_xref_fail_strict(tmp_path: Path, monkeypatch):
+    """Test FAIL case: stale cross-references (strict mode)."""
+    monkeypatch.setenv("VALIDATOR_REQUIRE_MULTI_REP", "0")
+    monkeypatch.setenv("VALIDATOR_REQUIRE_XREF", "1")
+    monkeypatch.setenv("VALIDATOR_STRICT_STALE_XREF", "1")
+
+    content = """
+    | B-104 | Stale xref fail | 🧪 | 3 | todo | Strict mode |
+    <!--score: {"bv":3,"tc":2,"rr":2,"le":3,"lessons":3,"effort":2,"deps":[]}-->
+    <!--score_total: 3.1-->
+    <!-- reference_cards: ["500_reference-cards.md#rag-lessons-from-jerry"] -->
+    """
+    path = write_backlog(tmp_path, content)
+    code, report, summary = validate_backlog(str(path))
+    assert code == 2
+    assert "STALE_CROSS_REFERENCE" in report
