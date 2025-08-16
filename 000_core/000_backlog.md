@@ -94,6 +94,8 @@ and normalize spacing across long-form guides.
 
 - B‑062 — Context Priority Guide Auto-Generation (score 8.0)
 
+- B‑103 — Repo Layout Normalization (score 4.3)
+
 ## P1 Lane
 
 - B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0)
@@ -197,6 +199,34 @@ Coherence Validation System |
 <!-- implementation_notes: Successfully implemented comprehensive feedback loop system with linter/test/git feedback collection, pattern analysis, lessons extraction, and backlog recommendations. System collected 423 feedback items and generated 176 lessons with 169 backlog recommendations. Added 16 comprehensive tests with mocked subprocess calls. -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#reference-discipline"] -->
 <!-- reference_cards: ["500_reference-cards.md#traceability"] -->
+
+| B‑104 | Full Consensus Framework Integration | 🔄 | 8 | ✅ done | Implement complete consensus framework with strawman proposals, red team/blue team roles, and consensus validation | Consensus rounds + Role management + Validation checkpoints | B-103 Advanced Feedback Loops |
+<!--score: {bv:5, tc:5, rr:5, le:5, lessons:5, effort:6, deps:["B-103"]}-->
+<!--score_total: 5.2-->
+<!-- completion_date: 2025-08-16 -->
+<!-- implementation_notes: Successfully implemented complete consensus framework with strawman proposals, red team/blue team roles, consensus rounds, validation checkpoints, and integration with existing Tier 1/2 infrastructure. Created scripts/consensus_framework.py (1207 lines), scripts/consensus_integration.py for infrastructure integration, and comprehensive test workflow. System supports full consensus lifecycle from proposal creation to finalization with role-based validation and implementation guidance. Integrated with existing process_tasks.py, state_manager.py, doc_coherence_validator.py, and feedback_loop_system.py infrastructure. -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#consensus-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#consensus-framework"] -->
+
+| B‑105 | Comprehensive Test Suite Update | 🔧 | 4 | todo | Update comprehensive test suite to cover all consensus framework components and integration points | Test coverage + Integration testing + Quality assurance | B-104 Full Consensus Framework Integration |
+<!--score: {bv:4, tc:4, rr:3, le:4, lessons:4, effort:4, deps:["B-104"]}-->
+<!--score_total: 4.0-->
+<!-- do_next: Create comprehensive test suite for consensus framework and integration components -->
+<!-- est_hours: 8 -->
+<!-- acceptance: All consensus framework components have comprehensive test coverage with integration tests -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#testing-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#test-coverage"] -->
+
+
+
+| B‑106 | File Organization & Management Cleanup | 🔧 | 3 | todo | Clean up file organization issues including duplicate pyproject.toml files, misplaced 500_ files, and 400_ files in wrong locations | File organization + Directory structure + Configuration management | B-103 Repo Layout Normalization (P0) |
+<!--score: {bv:3, tc:3, rr:3, le:4, lessons:4, effort:3, deps:["B-103"]}-->
+<!--score_total: 3.4-->
+<!-- do_next: Audit and reorganize files according to established directory structure and naming conventions -->
+<!-- est_hours: 6 -->
+<!-- acceptance: All files are in correct directories with proper naming conventions, no duplicate configuration files -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#file-organization"] -->
+<!-- reference_cards: ["500_reference-cards.md#project-structure"] -->
 
 | B‑075 | Few-Shot Cognitive Scaffolding Integration | ⭐ | 6 | ✅ done | Integrate few-shot examples into cognitive scaffolding for AI agents | Few-shot patterns + AI context engineering | B‑074 Few-Shot Integration with Documentation Tools |
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:6, lessons:4, deps:["B-074"]}-->

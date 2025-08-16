@@ -218,45 +218,123 @@ comprehensive coding standards and quality gates
 
 [High-level solution, key features, technical approach, integration points]
 
-## 4. Functional Requirements
+## 4. Technical Context & AI Development Patterns
+
+### **Tech Stack**
+- **AI Framework**: DSPy with PostgreSQL vector store
+- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
+- **Backend**: Python 3.9+, FastAPI, PostgreSQL with pgvector
+- **Frontend**: Mission Dashboard (real-time monitoring)
+- **Infrastructure**: Docker, n8n workflows, Redis cache
+- **Testing**: pytest, comprehensive test suites
+
+### **Repository Layout**
+```
+ai-dev-tasks/
+├── 000_core/          # Backlog, workflows (PRD, task generation, execution)
+├── 100_memory/        # Context files (memory scaffold, development context)
+├── 400_guides/        # Documentation (guides, best practices, standards)
+├── dspy-rag-system/   # Main AI system implementation
+│   ├── src/
+│   │   ├── dspy_modules/     # DSPy modules and agents
+│   │   ├── utils/            # Utilities (database, monitoring, etc.)
+│   │   └── monitoring/       # Health monitoring and metrics
+│   └── tests/                # Comprehensive test suites
+└── scripts/           # Automation and utility scripts
+```
+
+### **How AI Should Work Here**
+When generating changes, prefer these targets and patterns:
+
+**DSPy Development:**
+- New modules: `dspy-rag-system/src/dspy_modules/`
+- Database operations: `dspy-rag-system/src/utils/database_resilience.py`
+- Monitoring: `dspy-rag-system/src/monitoring/`
+- Tests: `dspy-rag-system/tests/` (comprehensive test suites)
+
+**Documentation:**
+- Core workflows: `000_core/` (PRD, task generation, execution)
+- Memory context: `100_memory/` (current state, development context)
+- Guides: `400_guides/` (best practices, standards, patterns)
+
+**Always:**
+- Use DSPy assertions for validation and reliability
+- Add comprehensive tests with 80%+ coverage
+- Update memory context files when changing system state
+- Follow file naming conventions (400_, 500_, etc.)
+- Include cross-references for documentation coherence
+- Use the retry wrapper for database operations
+- Add monitoring and observability hooks
+
+### **Coding Standards**
+- **Python**: PEP 8, type hints, comprehensive docstrings
+- **DSPy**: Use assertions, teleprompter for optimization, clean module composition
+- **Testing**: pytest with fixtures, comprehensive coverage, performance benchmarks
+- **Documentation**: Markdown with cross-references, TL;DR sections, structured metadata
+
+### **Common AI Development Tasks**
+- **Add new DSPy module**: `dspy-rag-system/src/dspy_modules/` → tests → docs → memory context
+- **Add new guide**: `400_guides/` → cross-references → validation → database sync
+- **Update memory context**: `100_memory/` → cross-reference validation → coherence check
+- **Add monitoring**: `dspy-rag-system/src/monitoring/` → health endpoints → dashboard
+- **Database changes**: Migration → model updates → resilience testing → rollback plan
+
+## 5. Functional Requirements
 
 [User stories, feature specifications, data requirements, API requirements]
 
-## 5. Non-Functional Requirements
+## 6. Non-Functional Requirements
 
 [Performance, security, reliability, usability requirements]
 
-## 6. Testing Strategy
+## 7. Testing Strategy
 
 [Test coverage goals, testing phases, automation requirements, test environments]
 
-## 7. Quality Assurance Requirements
+## 8. Quality Assurance Requirements
 
 [Code quality standards, performance benchmarks, security validation, user acceptance criteria]
 
-## 8. Implementation Quality Gates
+## 9. Implementation Quality Gates
 
 [Development phase gates and completion criteria]
 
-## 9. Testing Requirements by Component
+## 10. Testing Requirements by Component
 
 [Detailed testing requirements for each component type]
 
-## 10. Monitoring and Observability
+## 11. Monitoring and Observability
 
 [Logging, metrics, alerting, dashboard, troubleshooting requirements]
 
-## 11. Deployment and Release Requirements
+## 12. Deployment and Release Requirements
 
 [Environment setup, deployment process, configuration management, database migrations, feature flags]
 
-## 12. Risk Assessment and Mitigation
+## 13. Risk Assessment and Mitigation
 
 [Technical risks, timeline risks, resource risks, and mitigation strategies]
 
-## 13. Success Criteria
+## 14. Success Criteria
 
 [Measurable success criteria and acceptance criteria]
+
+## 15. Quality Gates & Commands
+
+### **Development Quality Gates**
+- **Format**: `python3 scripts/fix_markdown_issues.sh`
+- **Tests**: `./dspy-rag-system/run_tests.sh`
+- **Documentation**: `python3 scripts/doc_coherence_validator.py`
+- **Database**: `python3 scripts/database_sync_check.py`
+- **Memory**: `python3 scripts/cursor_memory_rehydrate.py planner "validate context"`
+
+### **Pre-commit Checklist**
+- [ ] All tests pass with 80%+ coverage
+- [ ] Documentation cross-references validated
+- [ ] Memory context updated if system state changed
+- [ ] Database sync status current
+- [ ] Performance benchmarks met
+- [ ] Security considerations addressed
 
 ```
 

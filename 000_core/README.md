@@ -2,6 +2,7 @@
 <!-- MODULE_REFERENCE: ../100_memory/100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: ../400_guides/400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: ../400_guides/400_contributing-guidelines.md -->
+<!-- DATABASE_SYNC: REQUIRED -->
 
 # 🚀 AI Development Ecosystem
 

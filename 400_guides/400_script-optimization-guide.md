@@ -1,3 +1,4 @@
+<!-- DATABASE_SYNC: REQUIRED -->
 # Script Optimization Guide
 
 ## 🔎 TL;DR {#tldr}

@@ -2,6 +2,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
 <!-- MEMORY_CONTEXT: HIGH - Strategic development roadmap and timeline -->
+<!-- DATABASE_SYNC: REQUIRED -->
 # 🗺️ Development Roadmap
 
 ## 🔎 TL;DR

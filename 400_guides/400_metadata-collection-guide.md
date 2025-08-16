@@ -1,3 +1,4 @@
+<!-- DATABASE_SYNC: REQUIRED -->
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->

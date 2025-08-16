@@ -1,3 +1,4 @@
+<!-- DATABASE_SYNC: REQUIRED -->
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Performance optimization and monitoring -->
 # ⚡ Performance Optimization Guide

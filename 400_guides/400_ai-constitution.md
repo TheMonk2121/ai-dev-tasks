@@ -1,5 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
+<!-- DATABASE_SYNC: REQUIRED -->
 # 📜 **CORE CONSTITUTION RULES**---
 
 ## 📜**CORE CONSTITUTION RULES**{#tldr}
@@ -89,6 +90,27 @@
 
 - **1. Documentation Architecture** - Follow modular, (Mutually Exclusive, Collectively Exhaustive)-aligned
 documentation patterns
+
+### **Article V: Governance & Repository Management**
+
+- **1. Repo Layout & Import Resolution Governance** - All issues related to:
+  - File organization (e.g. duplicate configs, split test dirs)
+  - Import resolution conflicts
+  - Environment setup for deterministic execution
+  - Configuration file consolidation
+  - Directory structure normalization
+
+  **Are automatically classified as P0 Governance Items**. They are non-negotiable prerequisites for feature work and block all dependent backlog items until resolved.
+
+- **2. Priority Structure Enforcement**
+  - **P0 Lane**: Governance/trust issues (repo structure, import resolution, validator configuration)
+  - **🔥 Critical**: Feature work (implementation, new capabilities, performance optimization)
+  - **Dependencies**: All feature work must wait for P0 governance items to be resolved
+
+- **3. Governance Decision Authority**
+  - P0 items require immediate attention and cannot be deferred
+  - Feature work blocked by P0 items must be paused until governance is resolved
+  - All AI systems must respect P0 governance priority over feature development
 
   - Use self-contained chunks with explicit links
   - Implement tiered importance and priority cues
@@ -285,16 +307,20 @@ documentation patterns
 
 ---
 
-- **Constitution Version**: 1.0
+- **Constitution Version**: 1.1
 - **Implementation Date**: 2024-08-07
+- **Last Updated**: 2025-08-16
 - **Research Basis**: 500_research-analysis-summary.md
 - **Integration Status**: Active
+- **Governance Rule**: Added Article V - Repo Layout & Import Resolution Governance
 
 <!-- CONSTITUTION_METADATA
-version: 1.0
+version: 1.1
 implementation_date: 2024-08-07
+last_updated: 2025-08-16
 research_basis: 500_research-analysis-summary.md
 integration_status: active
 compliance_required: true
 safety_critical: true
+governance_rule_added: 2025-08-16
 - ->

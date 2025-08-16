@@ -8,6 +8,11 @@ version = "0.1.0"
 description = "AI Development Tasks Ecosystem"
 requires-python = ">=3.8"
 
+# Configuration Consolidation (B-103 Phase 2)
+# Archived duplicate configs: 600_archives/config-consolidation/
+# - dspy-rag-system-pyproject.toml.backup
+# - dspy-rag-system-pytest.ini.backup
+
 
 [tool.black]
 line-length = 120
@@ -16,11 +21,26 @@ target-version = ["py39"]
 [tool.ruff]
 line-length = 120
 target-version = "py39"
-exclude = ["venv", "600_archives", "docs/legacy", "**/__pycache__"]
+exclude = [
+    "venv",
+    "600_archives",
+    "docs/legacy",
+    "**/__pycache__",
+    ".pytest_cache",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 ignore = ["E501"]        # Line too long - handled by black
+
+[tool.ruff.lint.per-file-ignores]
+"setup_imports.py" = ["E501"]
+"add_chunks_to_existing.py" = ["E501"]
+"add_anchor_documents.py" = ["E501"]
+"dspy-rag-system/src/dspy_modules/vector_store.py" = ["E501"]
+"dspy-rag-system/src/dspy_modules/lang_extract_system.py" = ["E501"]
+"dspy-rag-system/src/dspy_modules/cursor_model_router.py" = ["E501"]
+"dspy-rag-system/src/dspy_modules/documentation_retrieval.py" = ["E501"]
 
 [tool.pytest.ini_options]
 # Keep your existing addopts; using -q here as a safe default:
