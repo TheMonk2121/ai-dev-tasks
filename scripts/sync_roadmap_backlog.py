@@ -38,11 +38,7 @@ COMPLETION_DATE_RE = re.compile(r"<!--\s*completion_date:\s*(\d{4}-\d{2}-\d{2})\
 
 def run_backlog_validation(backlog_path="000_core/000_backlog.md", warn_only=True) -> int:
     """Run backlog validation before sync."""
-    cmd = [
-        sys.executable, "scripts/doc_coherence_validator.py",
-        "--check", "backlog",
-        "--path", backlog_path
-    ]
+    cmd = [sys.executable, "scripts/doc_coherence_validator.py", "--check", "backlog", "--path", backlog_path]
     if warn_only:
         cmd.append("--warn-only")
     print("[sync] Running backlog validator:", " ".join(cmd))
