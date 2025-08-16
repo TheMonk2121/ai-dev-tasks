@@ -707,6 +707,91 @@ def monitoring_data():
         return jsonify({"error": str(e), "timestamp": datetime.now().isoformat()}), 503
 
 
+@app.route("/graph-data")
+def get_graph_data():
+    """Get chunk relationship data for visualization"""
+    try:
+        # Check feature flag
+        feature_flag_enabled = os.getenv("GRAPH_VISUALIZATION_ENABLED", "true").lower() == "true"
+        if not feature_flag_enabled:
+            return jsonify({"error": "Graph visualization feature is disabled"}), 403
+
+        # Get query parameters with validation
+        query = request.args.get("q", type=str)
+        include_knn = request.args.get("include_knn", "true", type=str).lower() == "true"
+        include_entity = request.args.get("include_entity", "true", type=str).lower() == "true"
+        min_sim = request.args.get("min_sim", 0.5, type=float)
+        max_nodes = request.args.get("max_nodes", 2000, type=int)
+
+        # Input validation
+        if min_sim < 0.0 or min_sim > 1.0:
+            return jsonify({"error": "min_sim must be between 0.0 and 1.0"}), 400
+
+        if max_nodes < 1 or max_nodes > 10000:
+            return jsonify({"error": "max_nodes must be between 1 and 10000"}), 400
+
+        # Validate query length if provided
+        if query and len(query) > DashboardConfig.MAX_QUERY_LENGTH:
+            return jsonify({"error": f"Query too long (max {DashboardConfig.MAX_QUERY_LENGTH} characters)"}), 400
+
+        # Initialize GraphDataProvider if not already done
+        if not hasattr(state, "graph_data_provider"):
+            from utils.database_resilience import DatabaseResilienceManager
+            from utils.graph_data_provider import GraphDataProvider
+
+            db_manager = DatabaseResilienceManager(DashboardConfig.POSTGRES_DSN)
+            state.graph_data_provider = GraphDataProvider(
+                db_manager=db_manager,
+                max_nodes=max_nodes,
+                cache_enabled=True,
+                feature_flag_enabled=feature_flag_enabled,
+            )
+
+        # Get graph data
+        graph_data = state.graph_data_provider.get_graph_data(
+            query=query,
+            include_knn=include_knn,
+            include_entity=include_entity,
+            min_sim=min_sim,
+            max_nodes=max_nodes,
+        )
+
+        # Convert to JSON-serializable format
+        response_data = {
+            "nodes": [
+                {
+                    "id": node.id,
+                    "label": node.label,
+                    "anchor": node.anchor,
+                    "coords": list(node.coords),
+                    "category": node.category,
+                }
+                for node in graph_data.nodes
+            ],
+            "edges": [
+                {
+                    "source": edge.source,
+                    "target": edge.target,
+                    "type": edge.type,
+                    "weight": edge.weight,
+                }
+                for edge in graph_data.edges
+            ],
+            "elapsed_ms": graph_data.elapsed_ms,
+            "v": graph_data.v,
+            "truncated": graph_data.truncated,
+        }
+
+        return jsonify(response_data)
+
+    except ValueError as e:
+        LOG.warning(f"Graph data validation error: {e}")
+        return jsonify({"error": str(e)}), 400
+    except Exception:
+        LOG.exception("Graph data error")
+        return jsonify({"error": "Internal server error"}), 500
+
+
 # SocketIO events
 @socketio.on("connect")
 def handle_connect():
