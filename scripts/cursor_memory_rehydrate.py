@@ -99,6 +99,7 @@ def main():
         default=os.getenv("REHYDRATE_EXPAND_QUERY", "auto"),
         help="Query expansion mode (default: auto)",
     )
+    parser.add_argument("--no-entity-expansion", action="store_true", help="Disable entity expansion")
     parser.add_argument("--max-tokens", type=int, default=6000, help="Maximum tokens (default: 6000)")
     parser.add_argument("--debug", action="store_true", help="Show debug information")
 
@@ -111,6 +112,7 @@ def main():
     print(f"   RRF: {'disabled' if args.no_rrf else 'enabled'}")
     print(f"   Dedupe: {args.dedupe}")
     print(f"   Query expansion: {args.expand_query}")
+    print(f"   Entity expansion: {'disabled' if args.no_entity_expansion else 'enabled'}")
     print()
 
     try:
@@ -125,6 +127,7 @@ def main():
             use_rrf=(not args.no_rrf),
             dedupe=args.dedupe,
             expand_query=args.expand_query,
+            use_entity_expansion=(not args.no_entity_expansion),
             role=args.role,
         )
 

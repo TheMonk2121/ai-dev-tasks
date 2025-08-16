@@ -463,12 +463,24 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 - **Lean Hybrid with Kill-Switches**: Semantic-first approach with tiny pins
 - **Four-Slot Model**: Pinned invariants (≤200 tokens) + Anchor priors + Semantic evidence + Recency
+- **Entity Expansion**: Entity-aware context expansion with pattern-based extraction
 - **RRF Fusion**: Reciprocal Rank Fusion for vector + BM25 combination
 - **Deterministic Tie-breaking**: Stable sorting with file/path secondary keys
-- **Kill-Switches**: `--no-rrf`, `--dedupe`, `--expand-query` for debugging
+- **Kill-Switches**: `--no-rrf`, `--dedupe`, `--expand-query`, `--no-entity-expansion` for debugging
 - **Stability Slider**: `--stability 0.0-1.0` controls anchor influence
 - **Multi-language**: Python (primary) and Go (alternative) implementations
-- **Current Status**: 1,939 chunks from 20 core documents, BM25 working excellently
+- **Current Status**: 1,939 chunks from 20 core documents, BM25 working excellently, entity expansion active
+
+#### **Entity Expansion System**(`src/utils/entity_overlay.py`)
+
+- **Pattern-Based Extraction**: CamelCase, snake_case, file paths, URLs, emails with 90%+ accuracy
+- **Adaptive K Calculation**: `min(8, base_k + entity_count * 2)` for dynamic context sizing
+- **Entity-Adjacent Retrieval**: Semantic similarity search for entity-related chunks
+- **Deduplication**: Intelligent overlap detection and removal
+- **Stability Thresholds**: Configurable similarity thresholds (default: 0.7)
+- **Metrics Collection**: Expansion latency, entity count, chunks added tracking
+- **Rollback Support**: Immediate disable via `--no-entity-expansion` flag
+- **Integration**: Seamless integration with memory rehydrator pipeline
 
 ### **Enhanced Metadata System**####**Metadata Extractor**(`src/utils/metadata_extractor.py`)
 

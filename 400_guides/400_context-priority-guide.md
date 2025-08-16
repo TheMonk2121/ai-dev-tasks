@@ -99,6 +99,20 @@ bundle = build_hydration_bundle(
     task="code implementation",
     token_budget=1200
 )
+
+# Entity expansion enabled (default)
+bundle = rehydrate(
+    query="How to implement HybridVectorStore?",
+    use_entity_expansion=True,  # Extracts: ["HybridVectorStore", "How", "implement"]
+    max_tokens=1200
+)
+
+# Entity expansion disabled
+bundle = rehydrate(
+    query="How to implement HybridVectorStore?",
+    use_entity_expansion=False,  # No entity extraction
+    max_tokens=1200
+)
 ```
 
 ### Token Budget Allocation

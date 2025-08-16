@@ -1,0 +1,10 @@
+{"qid":"G001","query":"What is the current project status?","gold_doc_ids":[1,5]}
+{"qid":"G002","query":"How do I set up the development environment?","gold_doc_ids":[2,7]}
+{"qid":"G003","query":"What are the main features of this system?","gold_doc_ids":[3,9]}
+{"qid":"G004","query":"How to run tests for the project?","gold_doc_ids":[4,11]}
+{"qid":"G005","query":"What is the architecture overview?","gold_doc_ids":[5,13]}
+{"qid":"G006","query":"How to deploy the application?","gold_doc_ids":[6,15]}
+{"qid":"G007","query":"What are the coding standards?","gold_doc_ids":[7,17]}
+{"qid":"G008","query":"How to contribute to the project?","gold_doc_ids":[8,19]}
+{"qid":"G009","query":"What is the testing strategy?","gold_doc_ids":[9,21]}
+{"qid":"G010","query":"How to monitor system performance?","gold_doc_ids":[10,23]}

@@ -49,6 +49,24 @@ The Lean Hybrid system prioritizes **semantic relevance** over static pins while
 4. **Recency/Diff Shots** (0-10% tokens)
    - Recent changes, changelogs, "what moved lately"
 
+### **Entity Expansion Enhancement**
+The system now includes **entity-aware context expansion** that enhances semantic evidence retrieval:
+
+- **Pattern-Based Extraction**: Identifies entities like CamelCase classes, snake_case functions, file paths, URLs, and emails
+- **Adaptive Context Sizing**: Dynamically adjusts `k_related` based on entity count: `min(8, base_k + entity_count * 2)`
+- **Entity-Adjacent Retrieval**: Finds semantically related chunks for extracted entities
+- **Stability Thresholds**: Configurable similarity thresholds (default: 0.7) prevent low-quality matches
+- **Zero Overhead**: No performance impact when no entities are found
+- **Rollback Support**: Immediate disable via `--no-entity-expansion` flag
+
+**Example Usage:**
+```bash
+# Query with entities: "How do I implement HybridVectorStore?"
+# Extracted entities: ["HybridVectorStore", "How", "I", "implement"]
+# Adaptive k_related: min(8, 2 + 4*2) = 8
+# Result: Enhanced context with entity-related chunks
+```
+
 ## 🔧 **Configuration Options**
 
 ### **Stability Slider**
@@ -83,6 +101,13 @@ python3 scripts/cursor_memory_rehydrate.py --expand-query off
 
 # Go implementation
 cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test" --expand-query=off
+
+# Disable entity expansion
+# Python implementation
+python3 scripts/cursor_memory_rehydrate.py --no-entity-expansion
+
+# Go implementation
+cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test" --use-entity-expansion=false
 ```
 
 ### **Environment Variables**
@@ -91,6 +116,7 @@ export REHYDRATE_STABILITY=0.6
 export REHYDRATE_USE_RRF=1
 export REHYDRATE_DEDUPE="file+overlap"
 export REHYDRATE_EXPAND_QUERY="auto"
+export REHYDRATE_USE_ENTITY_EXPANSION=1
 ```
 
 ## 📊 **Database Schema**

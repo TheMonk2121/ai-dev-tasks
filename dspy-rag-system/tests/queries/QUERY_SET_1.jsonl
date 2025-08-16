@@ -1,0 +1,10 @@
+{"qid":"E001","query":"How do I implement entity expansion in memory_rehydrator.py?","gold_doc_ids":[12,34]}
+{"qid":"E002","query":"What is the HybridVectorStore class and how does it work?","gold_doc_ids":[15,28]}
+{"qid":"E003","query":"Explain the database_resilience.py module and its functions","gold_doc_ids":[8,22]}
+{"qid":"E004","query":"How to use the semantic_evidence_with_entity_expansion function?","gold_doc_ids":[12,45]}
+{"qid":"E005","query":"What are the patterns for entity extraction in entity_overlay.py?","gold_doc_ids":[12,67]}
+{"qid":"E006","query":"Explain the RRF fusion algorithm in memory_rehydrator.py","gold_doc_ids":[15,33]}
+{"qid":"E007","query":"How does the calculate_adaptive_k_related function work?","gold_doc_ids":[12,78]}
+{"qid":"E008","query":"What is the purpose of the fetch_entity_adjacent_chunks function?","gold_doc_ids":[12,89]}
+{"qid":"E009","query":"Explain the populate_related_entities function in entity_overlay.py","gold_doc_ids":[12,91]}
+{"qid":"E010","query":"How to configure the --no-entity-expansion flag in the CLI?","gold_doc_ids":[12,23]}

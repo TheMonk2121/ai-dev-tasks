@@ -33,6 +33,11 @@ from psycopg2.extras import RealDictCursor
 
 # Repo-local imports: reuse your infra (no ad-hoc pooling)
 from .database_resilience import get_database_manager
+from .entity_overlay import (
+    calculate_adaptive_k_related,
+    extract_entities_from_query,
+    populate_related_entities,
+)
 
 # Import HybridVectorStore for potential future integration
 # Note: This module currently uses direct database queries for specialized
@@ -556,6 +561,83 @@ def package_bundle(
     return Bundle(text=bundle_text, sections=sections, meta=debug)
 
 
+# ---------- Entity expansion integration ----------
+
+
+def semantic_evidence_with_entity_expansion(
+    query: str,
+    base_chunks: List[Dict[str, Any]],
+    use_entity_expansion: bool = True,
+    stability_threshold: float = 0.7,
+    db_dsn: Optional[str] = None,
+) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+    """
+    Enhance semantic evidence with entity expansion.
+
+    Args:
+        query: Input query
+        base_chunks: Base chunks from semantic search
+        use_entity_expansion: Whether to enable entity expansion
+        stability_threshold: Minimum similarity threshold for entity chunks
+        db_dsn: Database connection string
+
+    Returns:
+        Tuple of (expanded_chunks, expansion_metrics)
+    """
+    if not use_entity_expansion:
+        return base_chunks, {
+            "expansion_used": False,
+            "entities_found": 0,
+            "expansion_latency_ms": 0.0,
+            "chunks_added": 0,
+        }
+
+    # Extract entities from query
+    entities = extract_entities_from_query(query)
+
+    if not entities:
+        return base_chunks, {
+            "expansion_used": True,
+            "entities_found": 0,
+            "expansion_latency_ms": 0.0,
+            "chunks_added": 0,
+        }
+
+    # Calculate adaptive k_related based on entity count
+    k_related = calculate_adaptive_k_related(base_k=2, entity_count=len(entities))
+
+    # Populate with entity-related chunks
+    expanded_chunks = populate_related_entities(
+        base_chunks=base_chunks,
+        entities=entities,
+        k_related=k_related,
+        stability_threshold=stability_threshold,
+        db_dsn=db_dsn,
+    )
+
+    # Calculate metrics
+    chunks_added = len(expanded_chunks) - len(base_chunks)
+
+    # Get expansion latency from first entity-related chunk
+    expansion_latency_ms = 0.0
+    for chunk in expanded_chunks:
+        if chunk.get("entity_related"):
+            expansion_latency_ms = chunk.get("expansion_metadata", {}).get("expansion_latency_ms", 0.0)
+            break
+
+    expansion_metrics = {
+        "expansion_used": True,
+        "entities_found": len(entities),
+        "entity_types": [entity.entity_type for entity in entities],
+        "k_related": k_related,
+        "expansion_latency_ms": expansion_latency_ms,
+        "chunks_added": chunks_added,
+        "stability_threshold": stability_threshold,
+    }
+
+    return expanded_chunks, expansion_metrics
+
+
 # ---------- Main rehydration function ----------
 
 
@@ -566,6 +648,7 @@ def rehydrate(
     use_rrf: bool = USE_RRF,
     dedupe: str = DEDUPE_MODE,
     expand_query: str = EXPAND_QUERY,
+    use_entity_expansion: bool = True,
     role: str = "planner",
     db_dsn: str = DEFAULT_PG_DSN,
 ) -> Bundle:
@@ -610,8 +693,21 @@ def rehydrate(
                 d["score"] += eps
         fused.sort(key=lambda d: (-d["score"], d.get("file", ""), d.get("path", "")))
 
-    # 6) Cheap diversity / dedupe
-    ranked = fused
+    # 6) Entity expansion (if enabled)
+    if use_entity_expansion:
+        ranked, expansion_metrics = semantic_evidence_with_entity_expansion(
+            query=query, base_chunks=fused, use_entity_expansion=True, stability_threshold=stability, db_dsn=db_dsn
+        )
+    else:
+        ranked = fused
+        expansion_metrics = {
+            "expansion_used": False,
+            "entities_found": 0,
+            "expansion_latency_ms": 0.0,
+            "chunks_added": 0,
+        }
+
+    # 7) Cheap diversity / dedupe
     if dedupe.startswith("file"):
         ranked = round_robin_by_file(ranked, per_file=PER_FILE_ROUND_ROBIN)
     if dedupe.endswith("overlap"):
@@ -640,6 +736,7 @@ def rehydrate(
             "use_rrf": bool(use_rrf),
             "dedupe": dedupe,
             "expand_query": expand_query,
+            "use_entity_expansion": use_entity_expansion,
             "k_vec": K_VEC,
             "k_lex": K_LEX if use_rrf else 0,
             "rrf_k0": RRF_K0,
@@ -647,6 +744,7 @@ def rehydrate(
             "per_file": PER_FILE_ROUND_ROBIN,
             "pins_tokens": token_len(pins),
             "evidence_tokens": used,
+            **expansion_metrics,  # Include entity expansion metrics
         },
     )
     return bundle
@@ -715,6 +813,7 @@ def _main():
     p.add_argument("--no-rrf", action="store_true", help="Disable BM25+RRF fusion")
     p.add_argument("--dedupe", choices=["file", "file+overlap"], default=DEDUPE_MODE, help="Deduplication mode")
     p.add_argument("--expand-query", choices=["off", "auto"], default=EXPAND_QUERY, help="Query expansion mode")
+    p.add_argument("--no-entity-expansion", action="store_true", help="Disable entity expansion")
     p.add_argument("--max-tokens", type=int, default=6000, help="Maximum tokens")
     p.add_argument("--json", action="store_true", help="Emit JSON (sections + meta) instead of formatted text")
     args = p.parse_args()
@@ -726,6 +825,7 @@ def _main():
         use_rrf=(not args.no_rrf),
         dedupe=args.dedupe,
         expand_query=args.expand_query,
+        use_entity_expansion=(not args.no_entity_expansion),
         role=args.role,
     )
 
