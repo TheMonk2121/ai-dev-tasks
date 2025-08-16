@@ -69,6 +69,11 @@ OK, FAIL, ERROR = 0, 2, 1
 # Required score keys for backlog validation
 REQUIRED_SCORE_KEYS = {"bv", "tc", "rr", "le", "lessons", "effort", "deps"}
 
+# Environment flags for B-100 and B-102 validation
+REQUIRE_MULTI_REP = os.getenv("VALIDATOR_REQUIRE_MULTI_REP", "1") == "1"
+REQUIRE_XREF = os.getenv("VALIDATOR_REQUIRE_XREF", "1") == "1"
+STRICT_STALE_XREF = os.getenv("VALIDATOR_STRICT_STALE_XREF", "0") == "1"
+
 
 @dataclass
 class BacklogItem:
@@ -96,6 +101,87 @@ class BacklogItem:
     points: Optional[float] = None
     reasons_fail: List[str] = field(default_factory=list)
     reasons_warn: List[str] = field(default_factory=list)
+
+
+# --- B-100: Multi-representation validation helpers ---
+def _has_summary_rep(item: BacklogItem) -> bool:
+    """Check if item has summary representation (score_obj or score_total)."""
+    if item.score_obj and isinstance(item.score_obj, dict):
+        return True
+    if item.score_total is not None:
+        return True
+    return False
+
+
+def _has_refs_rep(item: BacklogItem) -> bool:
+    """Check if item has cross-reference representation."""
+    return bool(item.lessons_applied or item.reference_cards)
+
+
+def _representation_count(item: BacklogItem) -> int:
+    """Count representations: raw (1) + summary (0/1) + refs (0/1)."""
+    raw = 1  # the backlog row itself (always present if parsed)
+    summary = 1 if _has_summary_rep(item) else 0
+    refs = 1 if _has_refs_rep(item) else 0
+    return raw + summary + refs
+
+
+# --- B-102: Cross-reference validation helpers ---
+def _parse_json_array_literal(s: Optional[str]) -> List[str]:
+    """Parse JSON array from lessons_applied or reference_cards."""
+    if not s:
+        return []
+    try:
+        return json.loads(s)
+    except Exception:
+        # try to coerce trailing commas or single quotes
+        j = s.replace("'", '"').replace(",]", "]").replace(", ]", "]")
+        try:
+            return json.loads(j)
+        except Exception:
+            return []
+
+
+def _xref_targets(item: BacklogItem) -> List[str]:
+    """Extract all cross-reference targets from item."""
+    x = []
+    x += _parse_json_array_literal(item.lessons_applied)
+    x += _parse_json_array_literal(item.reference_cards)
+    # Normalize whitespace
+    return [t.strip() for t in x if isinstance(t, str) and t.strip()]
+
+
+def _target_exists_in_repo(target: str) -> bool:
+    """
+    Check if cross-reference target exists in repo.
+
+    Supports:
+    - "file#anchor" (e.g., '500_reference-cards.md#rag-lessons-from-jerry')
+    - bare file paths
+    - http(s) links (treated as existing)
+    """
+    if target.startswith("http://") or target.startswith("https://"):
+        return True
+
+    # split anchor
+    file_part = target.split("#", 1)[0]
+    if not file_part:
+        return False
+
+    p = Path(file_part)
+    if not p.exists():
+        return False
+
+    if "#" not in target:
+        return True
+
+    # Anchor check (best-effort): ensure anchor text appears in file
+    try:
+        text = p.read_text(encoding="utf-8", errors="ignore")
+        anchor = target.split("#", 1)[1].strip().lower()
+        return (("#" + anchor) in text.lower()) or (anchor in text.lower())
+    except Exception:
+        return False
 
 
 # =========================
@@ -258,6 +344,33 @@ def check_item(item: BacklogItem) -> None:
     # --- WARN: DONE items should be moved out of active table (heuristic)
     if item.status in {"done", "✅ done", "complete", "completed"}:
         item.reasons_warn.append("DONE_ITEM_IN_ACTIVE_TABLE")
+
+    # --- B-100: Multi-representation requirement (raw + summary and/or refs)
+    if REQUIRE_MULTI_REP:
+        if _representation_count(item) < 2:
+            item.reasons_fail.append("INSUFFICIENT_REPRESENTATIONS(<2)")
+        else:
+            # nudge if exactly 2 (encourage best practice 3), but not a fail
+            if _representation_count(item) == 2:
+                item.reasons_warn.append("CONSIDER_ADDING_THIRD_REPRESENTATION")
+
+    # --- B-102: Cross-reference enforcement (at least one)
+    if REQUIRE_XREF:
+        if not _has_refs_rep(item):
+            item.reasons_fail.append("MISSING_CROSS_REFERENCE(lessons_applied_or_reference_cards)")
+        else:
+            # stale link detection (best-effort)
+            targets = _xref_targets(item)
+            stale = []
+            for t in targets:
+                if not _target_exists_in_repo(t):
+                    stale.append(t)
+            if stale:
+                msg = "STALE_CROSS_REFERENCE:" + ",".join(stale)
+                if STRICT_STALE_XREF:
+                    item.reasons_fail.append(msg)
+                else:
+                    item.reasons_warn.append(msg)
 
 
 def validate_backlog(path: str = "000_core/000_backlog.md") -> Tuple[int, str, dict]:
