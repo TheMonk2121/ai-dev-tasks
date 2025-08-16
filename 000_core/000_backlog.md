@@ -182,6 +182,15 @@ Coherence Validation System |
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#documentation-automation"] -->
 <!-- reference_cards: ["500_reference-cards.md#documentation-generation"] -->
 
+| B‑101 | Adaptive Routing in Consensus Framework | 🔄 | 5 | todo | Route different query types through optimized pipelines | Query analysis + Pipeline selection + Performance optimization | B-100 Multi-representation indexing |
+<!--score: {bv:4, tc:3, rr:4, le:4, lessons:4, effort:3, deps:["B-100"]}-->
+<!--score_total: 3.9-->
+<!-- do_next: Implement query type detection and pipeline routing logic -->
+<!-- est_hours: 6 -->
+<!-- acceptance: Pointed queries use fast path, broad queries use comprehensive analysis -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#performance-optimization"] -->
+<!-- reference_cards: ["500_reference-cards.md#rag-lessons-from-jerry"] -->
+
 | B‑075 | Few-Shot Cognitive Scaffolding Integration | ⭐ | 6 | ✅ done | Integrate few-shot examples into cognitive scaffolding for AI agents | Few-shot patterns + AI context engineering | B‑074 Few-Shot Integration with Documentation Tools |
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:6, lessons:4, deps:["B-074"]}-->
 <!--score_total: 6.0-->
