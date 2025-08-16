@@ -15,8 +15,6 @@ import time
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from .database_resilience import get_database_manager
-
 
 @dataclass
 class Entity:
@@ -192,7 +190,6 @@ def fetch_entity_adjacent_chunks(
     if not entities:
         return []
 
-    db = get_database_manager()
     related_chunks = []
 
     # Extract entity texts for search
@@ -203,13 +200,16 @@ def fetch_entity_adjacent_chunks(
 
     try:
         # Use vector search to find related chunks
-        from .memory_rehydrator import vector_search
+        from .memory_rehydrator import DEFAULT_PG_DSN, vector_search
 
         # Calculate total k for all entities
         total_k = len(entities) * k_per_entity
 
+        # Use provided db_dsn or default, ensuring it's not None
+        effective_dsn = db_dsn if db_dsn is not None else DEFAULT_PG_DSN
+
         # Search for related chunks
-        search_results = vector_search(search_query, k=total_k, db_dsn=db_dsn)
+        search_results = vector_search(search_query, k=total_k, db_dsn=effective_dsn)
 
         # Filter by stability threshold
         for chunk in search_results:

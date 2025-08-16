@@ -98,3 +98,8 @@ When adding new features or making significant changes, please update this chang
 - Files added/modified
 - Breaking changes (if any)
 - Migration notes (if needed)
+
+[Unreleased]: https://github.com/your-username/ai-dev-tasks/compare/v1.3.0...HEAD
+[2025-01-27]: https://github.com/your-username/ai-dev-tasks/compare/v1.2.0...v1.3.0
+[2025-08-15]: https://github.com/your-username/ai-dev-tasks/compare/v1.1.0...v1.2.0
+[2024-08-13]: https://github.com/your-username/ai-dev-tasks/compare/v1.0.0...v1.1.0

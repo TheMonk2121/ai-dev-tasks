@@ -54,14 +54,12 @@ def run_test(queries: List[Dict[str, Any]], use_entity_expansion: bool, test_nam
         print(f"   Processing {qid}: {query[:50]}...")
 
         try:
-            start_time = time.time()
             bundle = rehydrate(
                 query=query,
                 use_entity_expansion=use_entity_expansion,
                 max_tokens=1200,  # Target token limit
                 role="planner",
             )
-            end_time = time.time()
 
             # Extract metrics
             entities_found = bundle.meta.get("entities_found", 0)
@@ -82,7 +80,10 @@ def run_test(queries: List[Dict[str, Any]], use_entity_expansion: bool, test_nam
                 results["queries_with_expansion"] += 1
 
             print(
-                f"     Entities: {entities_found}, Chunks added: {chunks_added}, Latency: {expansion_latency:.2f}ms, Tokens: {tokens}"
+                f"     Entities: {entities_found}, "
+                f"Chunks added: {chunks_added}, "
+                f"Latency: {expansion_latency:.2f}ms, "
+                f"Tokens: {tokens}"
             )
 
         except Exception as e:

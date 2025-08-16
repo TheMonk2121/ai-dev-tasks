@@ -14,6 +14,15 @@ fi
 
 # Activate virtual environment and start watch folder
 echo "🔧 Starting watch folder..."
+
+# Check if virtual environment exists
+if [[ ! -f "venv/bin/activate" ]]; then
+    echo "❌ Virtual environment not found at venv/bin/activate"
+    echo "💡 Please run: python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt"
+    exit 1
+fi
+
+# shellcheck source=venv/bin/activate
 source venv/bin/activate
 
 # Start in background
@@ -40,4 +49,4 @@ echo "======================================"
 
 # Wait for user to stop
 trap "echo 'Stopping...'; pkill -f watch_folder.py; exit" INT
-wait 
+wait

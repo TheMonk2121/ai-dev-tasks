@@ -3,7 +3,13 @@
 Test script for DocumentProcessor with all critical fixes
 """
 
+import os
+import sys
+
+import pytest
+
 from src.dspy_modules.document_processor import DocumentIngestionPipeline, DocumentProcessor
+
 
 def create_temp_file_in_current_dir(suffix=".txt", content="Test content"):
     """Create a temporary file in the current directory for testing"""
@@ -12,7 +18,6 @@ def create_temp_file_in_current_dir(suffix=".txt", content="Test content"):
         f.write(content)
     return temp_file
 
-import pytest
 
 @pytest.mark.tier1
 @pytest.mark.unit
@@ -56,6 +61,7 @@ def test_basic_document_processing():
         if os.path.exists(test_file):
             os.unlink(test_file)
 
+
 @pytest.mark.tier1
 @pytest.mark.integration
 def test_pdf_extraction():
@@ -72,6 +78,11 @@ def test_pdf_extraction():
         # This will fail with PyMuPDF since it's not a real PDF, but we can test the error handling
         try:
             result = processor(test_file)
+            # Validate the result if processing succeeds
+            assert result is not None
+            assert "document_id" in result
+            assert "chunks" in result
+            assert len(result["chunks"]) > 0
             print("✅ PDF extraction passed (with fallback)")
         except Exception as e:
             if "No extractable text" in str(e) or "Error reading PDF" in str(e):
@@ -86,6 +97,7 @@ def test_pdf_extraction():
     finally:
         if os.path.exists(test_file):
             os.unlink(test_file)
+
 
 def test_csv_processing():
     """Test CSV processing with streaming"""
@@ -114,6 +126,7 @@ def test_csv_processing():
     finally:
         if os.path.exists(test_file):
             os.unlink(test_file)
+
 
 @pytest.mark.tier1
 @pytest.mark.unit
@@ -149,6 +162,7 @@ def test_security_validation():
 
     return True
 
+
 def test_large_file_handling():
     """Test handling of large files"""
     print("🔍 Testing large file handling...")
@@ -178,6 +192,7 @@ def test_large_file_handling():
     finally:
         if os.path.exists(test_file):
             os.unlink(test_file)
+
 
 def test_error_handling():
     """Test error handling for various scenarios"""
@@ -211,6 +226,7 @@ def test_error_handling():
             os.unlink(test_file)
 
     return True
+
 
 @pytest.mark.tier1
 @pytest.mark.integration
@@ -259,6 +275,7 @@ def test_pipeline_integration():
         if os.path.exists(test_file):
             os.unlink(test_file)
 
+
 def test_structured_chunks():
     """Test structured chunk creation"""
     print("🔍 Testing structured chunks...")
@@ -289,6 +306,7 @@ def test_structured_chunks():
     finally:
         if os.path.exists(test_file):
             os.unlink(test_file)
+
 
 def test_metadata_integration():
     """Test metadata extraction integration"""
@@ -323,6 +341,7 @@ def test_metadata_integration():
     finally:
         if os.path.exists(test_file):
             os.unlink(test_file)
+
 
 def main():
     """Run all tests"""
@@ -359,6 +378,7 @@ def main():
         print("⚠️  Some tests failed. Please review the issues above.")
 
     return passed == total
+
 
 if __name__ == "__main__":
     success = main()
