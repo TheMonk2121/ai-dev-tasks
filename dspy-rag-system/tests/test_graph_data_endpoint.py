@@ -49,7 +49,7 @@ class TestGraphDataEndpoint(TestCase):
 
         mock_provider.get_graph_data.return_value = mock_graph_data
 
-        with patch("utils.database_resilience.DatabaseResilienceManager") as mock_db_manager:
+        with patch("utils.database_resilience.DatabaseResilienceManager"):
             with patch("utils.graph_data_provider.GraphDataProvider") as mock_graph_provider_class:
                 mock_graph_provider_class.return_value = mock_provider
 
@@ -214,7 +214,7 @@ class TestGraphDataEndpoint(TestCase):
 
         mock_provider.get_graph_data.return_value = mock_graph_data
 
-        with patch("utils.database_resilience.DatabaseResilienceManager") as mock_db_manager:
+        with patch("utils.database_resilience.DatabaseResilienceManager"):
             with patch("utils.graph_data_provider.GraphDataProvider") as mock_graph_provider_class:
                 mock_graph_provider_class.return_value = mock_provider
 
