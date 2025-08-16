@@ -260,6 +260,20 @@ comprehensive coding standards and quality gates
 
 ```
 
+## **Cross-References (required for active items)**
+
+**Lessons Applied**
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#topic", "500_reference-cards.md#rag-lessons-from-jerry"] -->
+
+**Reference Cards**
+<!-- reference_cards: ["500_reference-cards.md#traceability"] -->
+
+## **Representations (require ≥2 for active items)**
+
+- **Raw**: PRD content (this document)
+- **Summary**: `<!--score: {...}-->` + `<!--score_total: ...-->`
+- **References**: lessons_applied / reference_cards
+
 ## **Special Instructions**
 
 1. **Always include comprehensive testing requirements** for every component
