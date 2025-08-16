@@ -12,7 +12,7 @@
 
 **Context**: Early backlog items lacked systematic cross-references, leading to orphaned requirements and lost context.
 
-**Implementation**: 
+**Implementation**:
 - Every active backlog item must have `lessons_applied` and/or `reference_cards`
 - Validator enforces cross-reference requirements (B-102)
 - Stale link detection prevents broken references

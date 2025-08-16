@@ -8,7 +8,7 @@
 
 ## RAG Lessons from Jerry (LlamaIndex talk) {#rag-lessons-from-jerry}
 
-**Why this matters**  
+**Why this matters**
 Naive RAG fails on complex docs; advanced parsing + multi-representation + reflection reduces hallucinations. We map these lessons to governance scaffolding to prevent "naive governance".
 
 **Key principles → Repo mappings**
