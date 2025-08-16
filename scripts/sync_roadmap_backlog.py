@@ -12,7 +12,9 @@ Usage:
 """
 
 import argparse
+import os
 import re
+import subprocess
 import sys
 from dataclasses import dataclass
 from datetime import datetime
@@ -32,6 +34,19 @@ SCORE_RE = re.compile(r"<!--\s*score:\s*(\{.*?\})\s*-->", re.DOTALL | re.IGNOREC
 SCORE_TOTAL_RE = re.compile(r"<!--\s*score_total:\s*([0-9]+(?:\.[0-9]+)?)\s*-->", re.IGNORECASE)
 STATUS_RE = re.compile(r"<!--\s*status:\s*(.*?)\s*-->", re.IGNORECASE)
 COMPLETION_DATE_RE = re.compile(r"<!--\s*completion_date:\s*(\d{4}-\d{2}-\d{2})\s*-->", re.IGNORECASE)
+
+
+def run_backlog_validation(backlog_path="000_core/000_backlog.md", warn_only=True) -> int:
+    """Run backlog validation before sync."""
+    cmd = [
+        sys.executable, "scripts/doc_coherence_validator.py",
+        "--check", "backlog",
+        "--path", backlog_path
+    ]
+    if warn_only:
+        cmd.append("--warn-only")
+    print("[sync] Running backlog validator:", " ".join(cmd))
+    return subprocess.call(cmd)
 
 
 @dataclass
@@ -373,6 +388,13 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Pre-sync validation (warn-only by default)
+    warn_only = os.getenv("ROADMAP_VALIDATOR_WARN_ONLY", "1") == "1"
+    code = run_backlog_validation(warn_only=warn_only)
+    if code != 0 and not warn_only:
+        print("[sync] Validation failed; aborting sync.")
+        sys.exit(code)
 
     sync = RoadmapBacklogSync(dry_run=args.dry_run)
 
