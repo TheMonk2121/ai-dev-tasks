@@ -178,6 +178,7 @@ class DashboardState:
         self.vector_store: Optional[VectorStoreProtocol] = None
         self.document_processor: Optional[DocumentProcessorProtocol] = None
         self.metadata_extractor: Optional[MetadataExtractor] = None
+        self.graph_data_provider: Optional[Any] = None
 
         # Thread-safe executor with proper shutdown (D-4)
         self.executor = ThreadPoolExecutor(max_workers=DashboardConfig.MAX_WORKERS)
@@ -410,6 +411,12 @@ def process_file_async(file_path: Path):
 def index():
     """Main dashboard page"""
     return render_template("dashboard.html", config=DashboardConfig)
+
+
+@app.route("/cluster")
+def cluster_visualization():
+    """Cluster visualization page for chunk relationships"""
+    return render_template("cluster.html", config=DashboardConfig)
 
 
 @app.route("/upload", methods=["POST"])
