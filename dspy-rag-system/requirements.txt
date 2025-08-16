@@ -11,3 +11,7 @@
 
 # Add any DSPy RAG system specific dependencies here
 # These should be truly additive and not conflict with root requirements
+
+# NiceGUI for interactive graph visualization
+nicegui>=1.4.0
+httpx>=0.24.0

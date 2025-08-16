@@ -742,7 +742,7 @@ def get_graph_data():
             return jsonify({"error": f"Query too long (max {DashboardConfig.MAX_QUERY_LENGTH} characters)"}), 400
 
         # Initialize GraphDataProvider if not already done
-        if not hasattr(state, "graph_data_provider"):
+        if not hasattr(state, "graph_data_provider") or state.graph_data_provider is None:
             from utils.database_resilience import DatabaseResilienceManager
             from utils.graph_data_provider import GraphDataProvider
 
@@ -753,6 +753,10 @@ def get_graph_data():
                 cache_enabled=True,
                 feature_flag_enabled=feature_flag_enabled,
             )
+
+        # Check if GraphDataProvider is available
+        if state.graph_data_provider is None:
+            return jsonify({"error": "Graph data provider not available"}), 503
 
         # Get graph data
         graph_data = state.graph_data_provider.get_graph_data(

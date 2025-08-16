@@ -25,15 +25,10 @@ class TestGraphDataEndpoint(TestCase):
         self.app.config["TESTING"] = True
         self.client = self.app.test_client()
 
-        # Mock the state object
-        with patch("src.dashboard.state") as mock_state:
-            self.mock_state = mock_state
-            self.mock_state.graph_data_provider = None
-            self.mock_state.vector_store = Mock()
-            self.mock_state.vector_store.get_statistics.return_value = {
-                "total_documents": 10,
-                "total_chunks": 100,
-            }
+        # Reset the real state for each test
+        from src.dashboard import state
+
+        state.graph_data_provider = None
 
     def test_get_graph_data_success(self):
         """Test successful graph data retrieval."""
@@ -89,8 +84,8 @@ class TestGraphDataEndpoint(TestCase):
 
         mock_provider.get_graph_data.return_value = mock_graph_data
 
-        with patch("src.dashboard.DatabaseResilienceManager"):
-            with patch("src.dashboard.GraphDataProvider") as mock_graph_provider_class:
+        with patch("utils.database_resilience.DatabaseResilienceManager"):
+            with patch("utils.graph_data_provider.GraphDataProvider") as mock_graph_provider_class:
                 mock_graph_provider_class.return_value = mock_provider
 
                 # Make request with query
@@ -116,8 +111,8 @@ class TestGraphDataEndpoint(TestCase):
 
         mock_provider.get_graph_data.return_value = mock_graph_data
 
-        with patch("src.dashboard.DatabaseResilienceManager"):
-            with patch("src.dashboard.GraphDataProvider") as mock_graph_provider_class:
+        with patch("utils.database_resilience.DatabaseResilienceManager"):
+            with patch("utils.graph_data_provider.GraphDataProvider") as mock_graph_provider_class:
                 mock_graph_provider_class.return_value = mock_provider
 
                 # Make request with all parameters
@@ -180,8 +175,8 @@ class TestGraphDataEndpoint(TestCase):
         mock_provider = Mock()
         mock_provider.get_graph_data.side_effect = ValueError("Test error")
 
-        with patch("src.dashboard.DatabaseResilienceManager"):
-            with patch("src.dashboard.GraphDataProvider") as mock_graph_provider_class:
+        with patch("utils.database_resilience.DatabaseResilienceManager"):
+            with patch("utils.graph_data_provider.GraphDataProvider") as mock_graph_provider_class:
                 mock_graph_provider_class.return_value = mock_provider
 
                 response = self.client.get("/graph-data")
@@ -196,8 +191,8 @@ class TestGraphDataEndpoint(TestCase):
         mock_provider = Mock()
         mock_provider.get_graph_data.side_effect = Exception("Internal error")
 
-        with patch("src.dashboard.DatabaseResilienceManager"):
-            with patch("src.dashboard.GraphDataProvider") as mock_graph_provider_class:
+        with patch("utils.database_resilience.DatabaseResilienceManager"):
+            with patch("utils.graph_data_provider.GraphDataProvider") as mock_graph_provider_class:
                 mock_graph_provider_class.return_value = mock_provider
 
                 response = self.client.get("/graph-data")
@@ -219,8 +214,8 @@ class TestGraphDataEndpoint(TestCase):
 
         mock_provider.get_graph_data.return_value = mock_graph_data
 
-        with patch("src.dashboard.DatabaseResilienceManager") as mock_db_manager:
-            with patch("src.dashboard.GraphDataProvider") as mock_graph_provider_class:
+        with patch("utils.database_resilience.DatabaseResilienceManager") as mock_db_manager:
+            with patch("utils.graph_data_provider.GraphDataProvider") as mock_graph_provider_class:
                 mock_graph_provider_class.return_value = mock_provider
 
                 # Make request
@@ -248,8 +243,8 @@ class TestGraphDataEndpoint(TestCase):
 
         mock_provider.get_graph_data.return_value = mock_graph_data
 
-        with patch("src.dashboard.DatabaseResilienceManager"):
-            with patch("src.dashboard.GraphDataProvider") as mock_graph_provider_class:
+        with patch("utils.database_resilience.DatabaseResilienceManager"):
+            with patch("utils.graph_data_provider.GraphDataProvider") as mock_graph_provider_class:
                 mock_graph_provider_class.return_value = mock_provider
 
                 # Make first request
@@ -283,8 +278,8 @@ class TestGraphDataEndpoint(TestCase):
 
         mock_provider.get_graph_data.return_value = mock_graph_data
 
-        with patch("src.dashboard.DatabaseResilienceManager"):
-            with patch("src.dashboard.GraphDataProvider") as mock_graph_provider_class:
+        with patch("utils.database_resilience.DatabaseResilienceManager"):
+            with patch("utils.graph_data_provider.GraphDataProvider") as mock_graph_provider_class:
                 mock_graph_provider_class.return_value = mock_provider
 
                 response = self.client.get("/graph-data")

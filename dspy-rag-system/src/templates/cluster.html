@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chunk Cluster Visualization - DSPy RAG System</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -13,7 +14,7 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <!-- Socket.IO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
-    
+
     <style>
         :root {
             --primary-color: #6366f1;
@@ -24,13 +25,13 @@
             --dark-color: #1f2937;
             --light-color: #f9fafb;
         }
-        
+
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         .dashboard-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -39,23 +40,23 @@
             margin: 20px;
             padding: 30px;
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 30px;
         }
-        
+
         .header h1 {
             color: var(--dark-color);
             font-weight: 700;
             margin-bottom: 10px;
         }
-        
+
         .header p {
             color: #6b7280;
             font-size: 1.1rem;
         }
-        
+
         .controls-card {
             background: white;
             border-radius: 15px;
@@ -63,7 +64,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             margin-bottom: 25px;
         }
-        
+
         .visualization-card {
             background: white;
             border-radius: 15px;
@@ -71,7 +72,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             min-height: 600px;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             border: none;
@@ -80,24 +81,24 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
         }
-        
+
         .form-control {
             border-radius: 10px;
             border: 2px solid #e5e7eb;
             padding: 12px 15px;
             transition: border-color 0.3s ease;
         }
-        
+
         .form-control:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
-        
+
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -107,12 +108,17 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
-        
+
         .stats-badge {
             background: var(--light-color);
             border-radius: 20px;
@@ -124,33 +130,34 @@
             margin-bottom: 10px;
             display: inline-block;
         }
-        
+
         .nav-link {
             color: var(--primary-color);
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
         }
-        
+
         .nav-link:hover {
             color: var(--secondary-color);
         }
-        
+
         .form-check-input:checked {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
         }
-        
+
         .range-slider {
             width: 100%;
         }
-        
+
         .range-value {
             font-weight: 600;
             color: var(--primary-color);
         }
     </style>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="dashboard-container">
@@ -160,29 +167,33 @@
                 <p>Interactive visualization of document chunk relationships using UMAP dimensionality reduction</p>
                 <a href="/" class="nav-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
             </div>
-            
+
             <!-- Controls -->
             <div class="controls-card">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="queryInput" class="form-label">Search Query (Optional)</label>
-                            <input type="text" class="form-control" id="queryInput" placeholder="Enter search query to filter chunks...">
+                            <input type="text" class="form-control" id="queryInput"
+                                placeholder="Enter search query to filter chunks...">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="maxNodesInput" class="form-label">Max Nodes</label>
-                            <input type="number" class="form-control" id="maxNodesInput" value="2000" min="100" max="10000">
+                            <input type="number" class="form-control" id="maxNodesInput" value="2000" min="100"
+                                max="10000">
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label for="minSimSlider" class="form-label">Minimum Similarity: <span class="range-value" id="minSimValue">0.5</span></label>
-                            <input type="range" class="form-range range-slider" id="minSimSlider" min="0.0" max="1.0" step="0.1" value="0.5">
+                            <label for="minSimSlider" class="form-label">Minimum Similarity: <span class="range-value"
+                                    id="minSimValue">0.5</span></label>
+                            <input type="range" class="form-range range-slider" id="minSimSlider" min="0.0" max="1.0"
+                                step="0.1" value="0.5">
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -213,7 +224,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Statistics -->
             <div class="row mb-3">
                 <div class="col-12">
@@ -223,7 +234,7 @@
                     <div class="stats-badge" id="truncatedStatus" style="display: none;">Truncated</div>
                 </div>
             </div>
-            
+
             <!-- Visualization -->
             <div class="visualization-card">
                 <div id="clusterPlot" style="width: 100%; height: 550px;"></div>
@@ -235,77 +246,77 @@
         // Global variables
         let currentData = null;
         let plot = null;
-        
+
         // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Set up range slider value display
             const minSimSlider = document.getElementById('minSimSlider');
             const minSimValue = document.getElementById('minSimValue');
-            
-            minSimSlider.addEventListener('input', function() {
+
+            minSimSlider.addEventListener('input', function () {
                 minSimValue.textContent = this.value;
             });
-            
+
             // Load initial data
             loadGraphData();
         });
-        
+
         // Load graph data from API
         async function loadGraphData() {
             const loadBtn = document.getElementById('loadDataBtn');
             const originalText = loadBtn.innerHTML;
-            
+
             try {
                 // Show loading state
                 loadBtn.innerHTML = '<span class="loading-spinner"></span> Loading...';
                 loadBtn.disabled = true;
-                
+
                 // Build query parameters
                 const params = new URLSearchParams();
-                
+
                 const query = document.getElementById('queryInput').value.trim();
                 if (query) {
                     params.append('q', query);
                 }
-                
+
                 const maxNodes = document.getElementById('maxNodesInput').value;
                 params.append('max_nodes', maxNodes);
-                
+
                 const minSim = document.getElementById('minSimSlider').value;
                 params.append('min_sim', minSim);
-                
+
                 const includeKnn = document.getElementById('includeKnnCheck').checked;
                 params.append('include_knn', includeKnn);
-                
+
                 const includeEntity = document.getElementById('includeEntityCheck').checked;
                 params.append('include_entity', includeEntity);
-                
+
                 // Make API request
                 const startTime = performance.now();
                 const response = await fetch(`/graph-data?${params.toString()}`);
                 const endTime = performance.now();
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
-                
+
                 const data = await response.json();
                 currentData = data;
-                
+
                 // Update statistics
                 document.getElementById('nodeCount').textContent = `Nodes: ${data.nodes.length}`;
                 document.getElementById('edgeCount').textContent = `Edges: ${data.edges.length}`;
                 document.getElementById('loadTime').textContent = `Load Time: ${Math.round(data.elapsed_ms)}ms`;
-                
+
                 if (data.truncated) {
                     document.getElementById('truncatedStatus').style.display = 'inline-block';
                 } else {
                     document.getElementById('truncatedStatus').style.display = 'none';
                 }
-                
+
                 // Create visualization
                 createClusterPlot(data);
-                
+
             } catch (error) {
                 console.error('Error loading graph data:', error);
                 alert(`Error loading visualization: ${error.message}`);
@@ -315,7 +326,7 @@
                 loadBtn.disabled = false;
             }
         }
-        
+
         // Create cluster plot using Plotly
         function createClusterPlot(data) {
             // Prepare node data
@@ -324,7 +335,7 @@
             const nodeLabels = data.nodes.map(node => node.label);
             const nodeCategories = data.nodes.map(node => node.category);
             const nodeAnchors = data.nodes.map(node => node.anchor);
-            
+
             // Create color mapping for categories
             const categoryColors = {
                 'anchor': '#ef4444',
@@ -332,9 +343,9 @@
                 'code': '#6366f1',
                 'other': '#6b7280'
             };
-            
+
             const nodeColors = nodeCategories.map(cat => categoryColors[cat] || categoryColors['other']);
-            
+
             // Create node trace
             const nodeTrace = {
                 x: nodeX,
@@ -351,7 +362,7 @@
                     opacity: 0.8
                 },
                 text: nodeLabels,
-                hovertemplate: 
+                hovertemplate:
                     '<b>%{text}</b><br>' +
                     'Category: %{customdata[0]}<br>' +
                     'Anchor: %{customdata[1] || "None"}<br>' +
@@ -360,30 +371,30 @@
                 customdata: nodeCategories.map((cat, i) => [cat, nodeAnchors[i]]),
                 name: 'Chunks'
             };
-            
+
             // Prepare edge data if edges exist
             let edgeTraces = [];
             if (data.edges && data.edges.length > 0) {
                 // Group edges by type
                 const knnEdges = data.edges.filter(edge => edge.type === 'knn');
                 const entityEdges = data.edges.filter(edge => edge.type === 'entity');
-                
+
                 // Create KNN edge trace
                 if (knnEdges.length > 0) {
                     const knnTrace = createEdgeTrace(knnEdges, data.nodes, '#8b5cf6', 'KNN Edges');
                     edgeTraces.push(knnTrace);
                 }
-                
+
                 // Create entity edge trace
                 if (entityEdges.length > 0) {
                     const entityTrace = createEdgeTrace(entityEdges, data.nodes, '#f59e0b', 'Entity Edges');
                     edgeTraces.push(entityTrace);
                 }
             }
-            
+
             // Combine all traces
             const traces = [nodeTrace, ...edgeTraces];
-            
+
             // Layout configuration
             const layout = {
                 title: {
@@ -415,7 +426,7 @@
                 },
                 margin: { l: 50, r: 50, t: 80, b: 50 }
             };
-            
+
             // Create or update plot
             if (plot) {
                 Plotly.react('clusterPlot', traces, layout);
@@ -423,27 +434,27 @@
                 plot = Plotly.newPlot('clusterPlot', traces, layout);
             }
         }
-        
+
         // Create edge trace for Plotly
         function createEdgeTrace(edges, nodes, color, name) {
             const nodeMap = {};
             nodes.forEach((node, index) => {
                 nodeMap[node.id] = index;
             });
-            
+
             const edgeX = [];
             const edgeY = [];
-            
+
             edges.forEach(edge => {
                 const sourceIndex = nodeMap[edge.source];
                 const targetIndex = nodeMap[edge.target];
-                
+
                 if (sourceIndex !== undefined && targetIndex !== undefined) {
                     edgeX.push(nodes[sourceIndex].coords[0], nodes[targetIndex].coords[0], null);
                     edgeY.push(nodes[sourceIndex].coords[1], nodes[targetIndex].coords[1], null);
                 }
             });
-            
+
             return {
                 x: edgeX,
                 y: edgeY,
@@ -459,7 +470,7 @@
                 name: name
             };
         }
-        
+
         // Reset view to default
         function resetView() {
             if (plot) {
@@ -469,7 +480,7 @@
                 });
             }
         }
-        
+
         // Auto-refresh every 30 seconds if data is available
         setInterval(() => {
             if (currentData) {
@@ -478,4 +489,5 @@
         }, 30000);
     </script>
 </body>
+
 </html>
