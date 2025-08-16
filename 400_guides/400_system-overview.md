@@ -536,6 +536,18 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 - **`GET /health`**- System health check
 
+- **`GET /graph-data`**- Chunk relationship visualization data (V1 API)
+
+#### **Visualization Components**-**Flask Cluster View** (`/cluster`)- UMAP-based scatter plot visualization
+
+- **NiceGUI Graph View** (`start_graph_visualization.sh`)- Interactive network graph with Cytoscape.js
+
+- **Real-time Updates**- Live data refresh and interactive controls
+
+- **Advanced Filtering**- Query-based filtering, similarity thresholds, edge type toggles
+
+- **Performance Monitoring**- Response time tracking and cache hit rates
+
 ### **Notification System**####**Multi-Channel Alerts**-**Email Notifications**: Processing completion, errors, system status
 
 - **Slack Integration**: Real-time alerts and status updates

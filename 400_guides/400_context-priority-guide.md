@@ -56,6 +56,7 @@ error handling |
 troubleshooting |
 | Security | 400_guides/400_security-best-practices-guide.md | — | Before risky changes | Threat model, validation,
 response |
+| Visualization | 400_guides/400_graph-visualization-guide.md | — | Using chunk relationship visualization | API reference, troubleshooting, examples |
 | Setup | 200_setup/202_setup-requirements.md | — | New env or machine | One-stop environment setup |
 | Model config | 200_setup/202_setup-requirements.md | — | Model/runtime changes | Clear, reproducible config |
 | DSPy context | 100_memory/100_memory/104_dspy-development-context.md | — | Deep implementation | Reasoning, modules,

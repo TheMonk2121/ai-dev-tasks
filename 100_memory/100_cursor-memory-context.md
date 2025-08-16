@@ -118,6 +118,12 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - Quick conflict check: `python scripts/quick_conflict_check.py`
 - Comprehensive conflict audit: `python scripts/conflict_audit.py --full`
 
+### **Visualization System**
+- Start Flask cluster view: `./dspy-rag-system/start_mission_dashboard.sh` → `http://localhost:5000/cluster`
+- Start NiceGUI network graph: `./dspy-rag-system/start_graph_visualization.sh` → `http://localhost:8080`
+- Test API endpoint: `curl "http://localhost:5000/graph-data?max_nodes=100"`
+- Run visualization tests: `python3 -m pytest dspy-rag-system/tests/test_graph_data_provider.py -v`
+
 ## 🔧 Import Policy (CRITICAL)
 
 ### **Current Approach (Use This):**
@@ -163,6 +169,8 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - Performance optimization → `400_guides/400_performance-optimization-guide.md`
 
 - Security best practices → `400_guides/400_security-best-practices-guide.md`
+
+- Graph visualization guide → `400_guides/400_graph-visualization-guide.md`
 
 - Environment setup → `200_setup/202_setup-requirements.md`
 
