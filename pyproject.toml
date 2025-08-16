@@ -25,4 +25,4 @@ ignore = ["E501"]        # Line too long - handled by black
 [tool.pytest.ini_options]
 # Keep your existing addopts; using -q here as a safe default:
 addopts = "-q"
-testpaths = ["dspy-rag-system/tests"]
+testpaths = ["tests"]
