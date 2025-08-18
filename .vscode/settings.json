@@ -24,7 +24,7 @@
     // Markdownlint Configuration (references external config file)
     "markdownlint.configFile": ".markdownlint.jsonc",
     // Python Settings (for scripts/)
-    "python.pythonPath": "/usr/bin/python3",
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/bin/python",
     "python.analysis.typeCheckingMode": "basic",
     "python.analysis.autoImportCompletions": true,
     "python.analysis.autoImportUserSymbols": true,
@@ -276,7 +276,11 @@
         "zeroization",
         "zeroize",
         "cands",
-        "ACMR"
+        "ACMR",
+        "banaly",
+        "befficienc",
+        "qtype",
+        "serializability"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

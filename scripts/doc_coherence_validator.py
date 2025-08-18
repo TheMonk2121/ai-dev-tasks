@@ -5,7 +5,7 @@ Optimized Documentation Coherence Validation System
 Enhanced version with parallel processing, only-changed mode, and caching.
 Target: 50% performance improvement (0.80s → <0.40s)
 
-Usage: python scripts/optimized_doc_coherence_validator.py [--dry-run] [--only-changed] [--workers N] [--json]
+Usage: python scripts/doc_coherence_validator.py [--dry-run] [--only-changed] [--workers N] [--json]
 """
 
 import argparse
@@ -44,7 +44,9 @@ LINE_LENGTH_PATTERN = re.compile(r"^.{121,}$")
 CROSS_REFERENCE_PATTERN = re.compile(r"<!--\s*([A-Z_]+):\s*([^>]+?)\s*-->")
 FILE_REFERENCE_PATTERN = re.compile(r"`([^`]+\.md)`")
 BACKLOG_REFERENCE_PATTERN = re.compile(r"B-\d+")
-TLDR_ANCHOR_PATTERN = re.compile(r'<a\s+id="tldr"\s*>\s*</a>|<a\s+id="tldr"\s*>|\{#tldr\}', re.IGNORECASE)
+TLDR_ANCHOR_PATTERN = re.compile(
+    r'<a\s+id="tldr"\s*>\s*</a>|<a\s+id="tldr"\s*>|\{#tldr\}', re.IGNORECASE
+)
 TLDR_HEADING_PATTERN = re.compile(r"^##\s+🔎\s+TL;DR\s*.*$", re.MULTILINE)
 AT_A_GLANCE_HEADER_PATTERN = re.compile(
     r"^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$", re.MULTILINE
@@ -194,7 +196,11 @@ def check_markdown_references(
         tick_refs.add((_normalize_ref(raw), raw))
 
     # Case policy: default on in CI, or via env
-    lowercase_env = os.getenv("VALIDATOR_ENFORCE_LOWERCASE", "").lower() in {"1", "true", "yes"}
+    lowercase_env = os.getenv("VALIDATOR_ENFORCE_LOWERCASE", "").lower() in {
+        "1",
+        "true",
+        "yes",
+    }
     enforce_case = enforce_lowercase or lowercase_env or ("--ci" in sys.argv)
 
     # Check links (error on miss)
@@ -205,7 +211,9 @@ def check_markdown_references(
             if _exists_case_sensitive(cand):
                 # Case policy check (applies to resolved only)
                 if enforce_case and any(ch.isupper() for ch in raw):
-                    errors.append(f"Case policy: reference '{raw}' should be lowercase.")
+                    errors.append(
+                        f"Case policy: reference '{raw}' should be lowercase."
+                    )
                 if aliased:
                     alias_hits += 1
                 resolved = True
@@ -220,7 +228,9 @@ def check_markdown_references(
         for cand in cands:
             if _exists_case_sensitive(cand):
                 if enforce_case and any(ch.isupper() for ch in raw):
-                    warnings.append(f"Case policy: reference '{raw}' should be lowercase.")
+                    warnings.append(
+                        f"Case policy: reference '{raw}' should be lowercase."
+                    )
                 warnings.append(f"Use Markdown link instead of backtick for: {raw}")
                 if aliased:
                     alias_hits += 1
@@ -237,7 +247,8 @@ def check_markdown_references(
 # --- END: reference checker utilities ---
 # Enhanced pragma regex with expiration and reason
 PRAGMA_RE = re.compile(
-    r"<!--\s*validator:allow\s+([a-z\-]+)(?:;\s*expires=([^;]+))?(?:;\s*reason=([^>]+))?\s*-->", re.I
+    r"<!--\s*validator:allow\s+([a-z\-]+)(?:;\s*expires=([^;]+))?(?:;\s*reason=([^>]+))?\s*-->",
+    re.I,
 )
 
 # Backlog compliance validator patterns
@@ -245,12 +256,20 @@ ROW_RE = re.compile(
     r"^\|\s*(B-\d{3})\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|"
 )
 SCORE_RE = re.compile(r"<!--\s*score:\s*(\{.*?\})\s*-->", re.DOTALL | re.IGNORECASE)
-SCORE_TOTAL_RE = re.compile(r"<!--\s*score_total:\s*([0-9]+(?:\.[0-9]+)?)\s*-->", re.IGNORECASE)
+SCORE_TOTAL_RE = re.compile(
+    r"<!--\s*score_total:\s*([0-9]+(?:\.[0-9]+)?)\s*-->", re.IGNORECASE
+)
 DO_NEXT_RE = re.compile(r"<!--\s*do_next:\s*(.*?)\s*-->", re.IGNORECASE)
 ACCEPTANCE_RE = re.compile(r"<!--\s*acceptance:\s*(.*?)\s*-->", re.IGNORECASE)
-EST_HOURS_RE = re.compile(r"<!--\s*est_hours:\s*([0-9]+(?:\.[0-9]+)?)\s*-->", re.IGNORECASE)
-LESSONS_APPLIED_RE = re.compile(r"<!--\s*lessons_applied:\s*(\[.*?\])\s*-->", re.DOTALL | re.IGNORECASE)
-REFERENCE_CARDS_RE = re.compile(r"<!--\s*reference_cards:\s*(\[.*?\])\s*-->", re.DOTALL | re.IGNORECASE)
+EST_HOURS_RE = re.compile(
+    r"<!--\s*est_hours:\s*([0-9]+(?:\.[0-9]+)?)\s*-->", re.IGNORECASE
+)
+LESSONS_APPLIED_RE = re.compile(
+    r"<!--\s*lessons_applied:\s*(\[.*?\])\s*-->", re.DOTALL | re.IGNORECASE
+)
+REFERENCE_CARDS_RE = re.compile(
+    r"<!--\s*reference_cards:\s*(\[.*?\])\s*-->", re.DOTALL | re.IGNORECASE
+)
 PRD_LINK_RE = re.compile(r"\(?(?:PRD|prd)\s*:\s*([^) \t]+)\)?")
 
 # Exit codes for backlog validator
@@ -346,7 +365,9 @@ def warn(msg: str):
     print(f"⚠️  WARN: {msg}", file=stream)
 
 
-def _posix_rel(p: Union[str, os.PathLike[str]], root: Union[str, os.PathLike[str]]) -> str:
+def _posix_rel(
+    p: Union[str, os.PathLike[str]], root: Union[str, os.PathLike[str]]
+) -> str:
     """Convert path to repo-relative POSIX format for consistent reporting."""
     ps = os.fspath(p)
     rs = os.fspath(root)
@@ -387,7 +408,15 @@ README_GOVERNANCE_ENABLED = os.getenv("VALIDATOR_README_GOVERNANCE_ENABLED", "1"
 STRICT_README_GOVERNANCE = os.getenv("VALIDATOR_STRICT_README_GOVERNANCE", "0") == "1"
 
 # README scoping constants
-README_SCOPE_DIRS = {"", "000_core", "400_guides", "500_reference", "docs", "dspy-rag-system", "dashboard"}
+README_SCOPE_DIRS = {
+    "",
+    "000_core",
+    "400_guides",
+    "500_reference",
+    "docs",
+    "dspy-rag-system",
+    "dashboard",
+}
 README_IGNORE_SEGMENTS = (
     "/.git/",
     "/.github/",
@@ -488,7 +517,9 @@ def parse_expiry(s: str) -> datetime.datetime:
     """Parse expiry date with timezone handling"""
     s = s.strip()
     if len(s) == 10 and s[4] == "-" and s[7] == "-":  # YYYY-MM-DD
-        return datetime.datetime.fromisoformat(s).replace(hour=23, minute=59, second=59, tzinfo=datetime.timezone.utc)
+        return datetime.datetime.fromisoformat(s).replace(
+            hour=23, minute=59, second=59, tzinfo=datetime.timezone.utc
+        )
     if s.endswith("Z"):
         s = s.replace("Z", "+00:00")
     dt = datetime.datetime.fromisoformat(s)
@@ -594,7 +625,9 @@ def validate_archive_immutability_files(files):
             continue
 
         if current_sha != expected_sha:
-            _dbg(f"SHA MISMATCH ({posix}): current={current_sha} expected={expected_sha}")
+            _dbg(
+                f"SHA MISMATCH ({posix}): current={current_sha} expected={expected_sha}"
+            )
             violations.append(path)
         else:
             # Good: enrolled & bytes match
@@ -661,7 +694,9 @@ def validate_readme_governance_files(files):
                 has_purpose = "## purpose" in content or "### purpose" in content
                 has_usage = "## usage" in content or "### usage" in content
                 has_owner = "## owner" in content or "### owner" in content
-                has_last_reviewed = "## last reviewed" in content or "### last reviewed" in content
+                has_last_reviewed = (
+                    "## last reviewed" in content or "### last reviewed" in content
+                )
 
                 # If all required sections are present, consider it valid
                 if has_purpose and has_usage and has_owner and has_last_reviewed:
@@ -706,7 +741,9 @@ def validate_multirep_xref_files(files, *, root=".", ledger=None):
         except Exception:
             txt = ""
 
-        if _pragma_allows(txt, "xref-missing") or _ledger_allows(ledger, relpath, "xref-missing"):
+        if _pragma_allows(txt, "xref-missing") or _ledger_allows(
+            ledger, relpath, "xref-missing"
+        ):
             continue
 
         violations.append(path)
@@ -754,7 +791,9 @@ def build_report(files, *, root=".", ledger=None):
         except Exception:
             # Treat unreadable files as no references checked; archive/other rules may still report
             continue
-        errs, warns, alias_hits = check_markdown_references(Path(path), text, enforce_lowercase=("--ci" in sys.argv))
+        errs, warns, alias_hits = check_markdown_references(
+            Path(path), text, enforce_lowercase=("--ci" in sys.argv)
+        )
         if errs:
             references_violation_count += len(errs)
             references_impacted.append(_posix_rel(path, root_abs_for_refs))
@@ -766,7 +805,10 @@ def build_report(files, *, root=".", ledger=None):
         "shadow_fork": {"violations": len(shad), "fail": SHADOW_FAIL},
         "readme": {"violations": len(read), "fail": README_FAIL},
         "multirep": {"violations": len(mult), "fail": MULTIREP_FAIL},
-        "references": {"violations": references_violation_count, "fail": REFERENCES_FAIL},
+        "references": {
+            "violations": references_violation_count,
+            "fail": REFERENCES_FAIL,
+        },
     }
     # Normalize paths to repo-relative POSIX for consistent reporting
     root_abs = os.path.abspath(root)
@@ -823,11 +865,10 @@ class BacklogItem:
 # --- B-100: Multi-representation validation helpers ---
 def _has_summary_rep(item: BacklogItem) -> bool:
     """Check if item has summary representation (score_obj or score_total)."""
-    if item.score_obj and isinstance(item.score_obj, dict):
-        return True
-    if item.score_total is not None:
-        return True
-    return False
+    return bool(
+        (item.score_obj and isinstance(item.score_obj, dict))
+        or (item.score_total is not None)
+    )
 
 
 def _has_refs_rep(item: BacklogItem) -> bool:
@@ -966,7 +1007,11 @@ def parse_backlog(path: Path) -> list[BacklogItem]:
             icon=m.group(3).strip(),
             points_raw=m.group(4).strip(),
             status=m.group(5).strip().lower(),
-            desc=m.group(6).strip() + " | " + m.group(7).strip() + " | " + m.group(8).strip(),  # Combine last 3 columns
+            desc=m.group(6).strip()
+            + " | "
+            + m.group(7).strip()
+            + " | "
+            + m.group(8).strip(),  # Combine last 3 columns
             line_idx=i + 1,
         )
         item.points = _safe_float(item.points_raw)
@@ -1074,7 +1119,9 @@ def check_item(item: BacklogItem) -> None:
     # --- B-102: Cross-reference enforcement (at least one)
     if REQUIRE_XREF:
         if not _has_refs_rep(item):
-            item.reasons_fail.append("MISSING_CROSS_REFERENCE(lessons_applied_or_reference_cards)")
+            item.reasons_fail.append(
+                "MISSING_CROSS_REFERENCE(lessons_applied_or_reference_cards)"
+            )
         else:
             # stale link detection (best-effort)
             targets = _xref_targets(item)
@@ -1148,7 +1195,9 @@ def _git_changed_with_status(diff_range: Optional[str]) -> list[tuple[str, str]]
     try:
         if diff_range:
             out = subprocess.check_output(
-                ["git", "diff", "--name-status", diff_range], text=True, stderr=subprocess.DEVNULL
+                ["git", "diff", "--name-status", diff_range],
+                text=True,
+                stderr=subprocess.DEVNULL,
             )
             pairs = []
             for line in out.splitlines():
@@ -1163,13 +1212,17 @@ def _git_changed_with_status(diff_range: Optional[str]) -> list[tuple[str, str]]
                     pairs.append((status[0], parts[1]))
             # include untracked
             untracked = subprocess.check_output(
-                ["git", "ls-files", "--others", "--exclude-standard"], text=True, stderr=subprocess.DEVNULL
+                ["git", "ls-files", "--others", "--exclude-standard"],
+                text=True,
+                stderr=subprocess.DEVNULL,
             ).splitlines()
             pairs.extend([("A", p) for p in untracked])
             return pairs
         else:
             # local fallback: porcelain
-            out = subprocess.check_output(["git", "status", "--porcelain"], text=True, stderr=subprocess.DEVNULL)
+            out = subprocess.check_output(
+                ["git", "status", "--porcelain"], text=True, stderr=subprocess.DEVNULL
+            )
             pairs = []
             for line in out.splitlines():
                 if not line.strip():
@@ -1251,7 +1304,13 @@ def validate_readme_governance(root: Path, strict_fail: bool) -> dict:
                 content = readme_file.read_text(encoding="utf-8", errors="ignore")
 
                 # Check for required sections (case-insensitive)
-                required_sections = ["purpose", "usage", "integration", "owner", "last reviewed"]
+                required_sections = [
+                    "purpose",
+                    "usage",
+                    "integration",
+                    "owner",
+                    "last reviewed",
+                ]
                 content_lower = content.lower()
 
                 missing_sections = []
@@ -1269,7 +1328,9 @@ def validate_readme_governance(root: Path, strict_fail: bool) -> dict:
                 # Check minimum length (80 words unless pointer stub)
                 word_count = len(content.split())
                 has_repo_links = (
-                    "400_guides/" in content or "500_reference-cards.md" in content or "401_consensus-log.md" in content
+                    "400_guides/" in content
+                    or "500_reference-cards.md" in content
+                    or "401_consensus-log.md" in content
                 )
 
                 if word_count < 80 and not has_repo_links:
@@ -1308,7 +1369,9 @@ def validate_archive_immutable(root: Path, strict_fail: bool) -> dict:
     changed = _git_changed_with_status(diff_range)
     if not changed:
         # Non-fatal: we couldn't compute changes; emit a gentle WARN so CI can surface it
-        results["warn"].append("ARCHIVE_IMMUTABLE: Unable to detect changed files (no git context).")
+        results["warn"].append(
+            "ARCHIVE_IMMUTABLE: Unable to detect changed files (no git context)."
+        )
         return results
 
     for status, path in changed:
@@ -1347,11 +1410,19 @@ def validate_backlog(path: str = "000_core/000_backlog.md") -> tuple[int, str, d
     try:
         p = Path(path)
         if not p.exists():
-            return ERROR, f"ERROR: Backlog file not found: {path}", {"error": "FILE_NOT_FOUND", "path": path}
+            return (
+                ERROR,
+                f"ERROR: Backlog file not found: {path}",
+                {"error": "FILE_NOT_FOUND", "path": path},
+            )
 
         items = parse_backlog(p)
         if not items:
-            return ERROR, "ERROR: No backlog rows parsed. Check table format.", {"error": "NO_ROWS"}
+            return (
+                ERROR,
+                "ERROR: No backlog rows parsed. Check table format.",
+                {"error": "NO_ROWS"},
+            )
 
         fail_count, warn_count, pass_count = 0, 0, 0
         report_lines: list[str] = []
@@ -1384,13 +1455,23 @@ def validate_backlog(path: str = "000_core/000_backlog.md") -> tuple[int, str, d
             report_lines.append("")
 
             json_items.append(
-                {"id": it.id, "status": status, "reasons": it.reasons_fail + it.reasons_warn, "line": it.line_idx}
+                {
+                    "id": it.id,
+                    "status": status,
+                    "reasons": it.reasons_fail + it.reasons_warn,
+                    "line": it.line_idx,
+                }
             )
 
-        report_lines.append(f"Summary: {fail_count} FAIL, {warn_count} WARN, {pass_count} PASS")
+        report_lines.append(
+            f"Summary: {fail_count} FAIL, {warn_count} WARN, {pass_count} PASS"
+        )
 
         exit_code = FAIL if fail_count > 0 else OK
-        summary = {"summary": {"fail": fail_count, "warn": warn_count, "pass": pass_count}, "items": json_items}
+        summary = {
+            "summary": {"fail": fail_count, "warn": warn_count, "pass": pass_count},
+            "items": json_items,
+        }
         return exit_code, "\n".join(report_lines), summary
 
     except Exception as e:
@@ -1434,9 +1515,13 @@ class DocCoherenceValidator:
         if self.enable_few_shot:
             try:
                 self.few_shot_loader = FewShotExampleLoader()
-                examples = self.few_shot_loader.load_examples_by_category("documentation_coherence")
+                examples = self.few_shot_loader.load_examples_by_category(
+                    "documentation_coherence"
+                )
                 self.few_shot_patterns = self.few_shot_loader.extract_patterns(examples)
-                print(f"✅ Loaded {len(self.few_shot_patterns)} few-shot patterns for documentation coherence")
+                print(
+                    f"✅ Loaded {len(self.few_shot_patterns)} few-shot patterns for documentation coherence"
+                )
             except Exception as e:
                 print(f"⚠️  Failed to load few-shot patterns: {e}")
                 self.enable_few_shot = False
@@ -1515,7 +1600,9 @@ class DocCoherenceValidator:
 
     def _git(self, *args: str, timeout: int = 10) -> subprocess.CompletedProcess:
         """Run git command with timeout."""
-        return subprocess.run(["git", *args], capture_output=True, text=True, timeout=timeout, check=False)
+        return subprocess.run(
+            ["git", *args], capture_output=True, text=True, timeout=timeout, check=False
+        )
 
     def get_cache_key(self, file_path: Path) -> str:
         """Generate cache key for a file using mtime and size."""
@@ -1562,9 +1649,7 @@ class DocCoherenceValidator:
             return False
         if any(rel.startswith(prefix) for prefix in self._skip_dir_prefixes):
             return False
-        if rel in self._skip_files_exact:
-            return False
-        return True
+        return rel not in self._skip_files_exact
 
     def _list_tracked_markdown_with_git(self) -> list[Path]:
         """Get tracked markdown files using git ls-files."""
@@ -1584,7 +1669,10 @@ class DocCoherenceValidator:
             root_posix = root.replace("\\", "/").lstrip("./")
 
             # Prune directories aggressively
-            if any(root_posix.startswith(prefix.rstrip("/")) for prefix in self._skip_dir_prefixes):
+            if any(
+                root_posix.startswith(prefix.rstrip("/"))
+                for prefix in self._skip_dir_prefixes
+            ):
                 dirs[:] = []  # don't descend
                 continue
 
@@ -1592,7 +1680,10 @@ class DocCoherenceValidator:
             dirs[:] = [
                 d
                 for d in dirs
-                if not any((root_posix + "/" + d).startswith(prefix.rstrip("/")) for prefix in self._skip_dir_prefixes)
+                if not any(
+                    (root_posix + "/" + d).startswith(prefix.rstrip("/"))
+                    for prefix in self._skip_dir_prefixes
+                )
             ]
 
             for name in filenames:
@@ -1712,7 +1803,12 @@ class DocCoherenceValidator:
         except UnicodeDecodeError:
             text = file_path.read_text(encoding="utf-8", errors="replace")
         except Exception as e:
-            return {"file": str(file_path), "errors": [f"Could not read file: {e}"], "warnings": [], "valid": False}
+            return {
+                "file": str(file_path),
+                "errors": [f"Could not read file: {e}"],
+                "warnings": [],
+                "valid": False,
+            }
 
         errors = []
         warnings = []
@@ -1760,15 +1856,21 @@ class DocCoherenceValidator:
             # Heading levels (with optional auto-fix for skipped levels)
             level = self._check_headings(trimmed)
             effective_level = level
-            if level is not None and last_heading_level is not None and level > last_heading_level + 1:
-                if self.safe_fix:
-                    # Reduce heading level to only +1 deeper than previous
-                    target_level = min(6, last_heading_level + 1)
-                    # Extract heading text after hashes and one space
-                    heading_text = trimmed[level + 1 :].lstrip() if len(trimmed) > level + 1 else ""
-                    trimmed = ("#" * target_level) + " " + heading_text
-                    effective_level = target_level
-                    fixed_headings += 1
+            if (
+                level is not None
+                and last_heading_level is not None
+                and level > last_heading_level + 1
+                and self.safe_fix
+            ):
+                # Reduce heading level to only +1 deeper than previous
+                target_level = min(6, last_heading_level + 1)
+                # Extract heading text after hashes and one space
+                heading_text = (
+                    trimmed[level + 1 :].lstrip() if len(trimmed) > level + 1 else ""
+                )
+                trimmed = ("#" * target_level) + " " + heading_text
+                effective_level = target_level
+                fixed_headings += 1
                 # If not fixing, the post-pass will record the error
             if effective_level is not None:
                 heading_levels.append((i, effective_level))
@@ -1777,7 +1879,12 @@ class DocCoherenceValidator:
             # --- fixes (optional) ---
             out_line = trimmed
             # Wrap long lines (but not in code blocks)
-            if self.wrap_long_lines and len(out_line) > 120 and not in_code_block and not out_line.startswith("```"):
+            if (
+                self.wrap_long_lines
+                and len(out_line) > 120
+                and not in_code_block
+                and not out_line.startswith("```")
+            ):
                 # Simple word-wrap at 120 chars, breaking at spaces
                 words = out_line.split()
                 wrapped_lines = []
@@ -1824,7 +1931,9 @@ class DocCoherenceValidator:
 
         # TL;DR checks
         require_tldr = self.rules.get("require_tldr", True)
-        if require_tldr and not (TLDR_HEADING_PATTERN.search(text) or TLDR_ANCHOR_PATTERN.search(text)):
+        if require_tldr and not (
+            TLDR_HEADING_PATTERN.search(text) or TLDR_ANCHOR_PATTERN.search(text)
+        ):
             warnings.append("Missing TL;DR section")
 
         # At-a-glance table
@@ -1870,7 +1979,9 @@ class DocCoherenceValidator:
         few_shot_results = {}
         if self.enable_few_shot and self.few_shot_patterns and self.few_shot_loader:
             try:
-                few_shot_results = self.few_shot_loader.apply_patterns_to_content(text, self.few_shot_patterns)
+                few_shot_results = self.few_shot_loader.apply_patterns_to_content(
+                    text, self.few_shot_patterns
+                )
 
                 # Add few-shot suggestions to warnings
                 for suggestion in few_shot_results.get("validation_suggestions", []):
@@ -1881,7 +1992,9 @@ class DocCoherenceValidator:
                 if few_shot_results.get("matched_patterns"):
                     pattern_info = []
                     for pattern in few_shot_results["matched_patterns"]:
-                        pattern_info.append(f"{pattern['pattern']} (confidence: {pattern['confidence']:.2f})")
+                        pattern_info.append(
+                            f"{pattern['pattern']} (confidence: {pattern['confidence']:.2f})"
+                        )
                     warnings.append(f"Matched patterns: {', '.join(pattern_info)}")
 
             except Exception as e:
@@ -1919,7 +2032,10 @@ class DocCoherenceValidator:
         print(f"Validating {len(files)} files with {self.max_workers} workers...")
 
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            future_to_file = {executor.submit(self.validate_single_file, file_path): file_path for file_path in files}
+            future_to_file = {
+                executor.submit(self.validate_single_file, file_path): file_path
+                for file_path in files
+            }
 
             for future in as_completed(future_to_file):
                 file_path = future_to_file[future]
@@ -1946,7 +2062,13 @@ class DocCoherenceValidator:
         markdown_files = self._get_markdown_files()
 
         if not markdown_files:
-            return {"execution_time": 0.0, "files_checked": 0, "errors": [], "warnings": [], "all_valid": True}
+            return {
+                "execution_time": 0.0,
+                "files_checked": 0,
+                "errors": [],
+                "warnings": [],
+                "all_valid": True,
+            }
 
         # Validate files in parallel
         validation_results = self.validate_files_parallel(markdown_files)
@@ -1959,8 +2081,12 @@ class DocCoherenceValidator:
         for result in validation_results.values():
             if result["valid"]:
                 valid_files += 1
-            all_errors.extend([f"{result['file']}: {error}" for error in result["errors"]])
-            all_warnings.extend([f"{result['file']}: {warning}" for warning in result["warnings"]])
+            all_errors.extend(
+                [f"{result['file']}: {error}" for error in result["errors"]]
+            )
+            all_warnings.extend(
+                [f"{result['file']}: {warning}" for warning in result["warnings"]]
+            )
 
         execution_time = time.time() - start_time
 
@@ -1977,26 +2103,68 @@ class DocCoherenceValidator:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Optimized documentation coherence validator")
+    parser = argparse.ArgumentParser(
+        description="Optimized documentation coherence validator"
+    )
     parser.add_argument("--check", choices=["backlog"], help="Specific validation mode")
-    parser.add_argument("--path", default="000_core/000_backlog.md", help="Path to file for validation")
-    parser.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
-    parser.add_argument("--warn-only", action="store_true", help="Return OK even if FAIL found (migration mode)")
+    parser.add_argument(
+        "--path", default="000_core/000_backlog.md", help="Path to file for validation"
+    )
+    parser.add_argument(
+        "--format", choices=["text", "json"], default="text", help="Output format"
+    )
+    parser.add_argument(
+        "--warn-only",
+        action="store_true",
+        help="Return OK even if FAIL found (migration mode)",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Dry run mode")
-    parser.add_argument("--only-changed", action="store_true", help="Only validate changed files")
+    parser.add_argument(
+        "--only-changed", action="store_true", help="Only validate changed files"
+    )
     parser.add_argument("--workers", type=int, help="Number of worker threads")
-    parser.add_argument("--cache-ttl", type=int, default=300, help="Cache TTL in seconds")
+    parser.add_argument(
+        "--cache-ttl", type=int, default=300, help="Cache TTL in seconds"
+    )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
-    parser.add_argument("--ci", action="store_true", help="CI mode - always run all checks")
+    parser.add_argument(
+        "--ci", action="store_true", help="CI mode - always run all checks"
+    )
     parser.add_argument("--emit-json", help="Save results to JSON file")
-    parser.add_argument("--safe-fix", action="store_true", help="Apply safe fixes (tabs->spaces, trim trailing)")
-    parser.add_argument("--tab-width", type=int, default=4, help="Spaces per tab when --safe-fix")
-    parser.add_argument("--strict-anchors", action="store_true", help="Fail on duplicate anchor ids")
-    parser.add_argument("--wrap-long-lines", action="store_true", help="Wrap lines longer than 120 chars")
-    parser.add_argument("--no-few-shot", action="store_true", help="Disable few-shot enhanced validation")
-    parser.add_argument("--root", default=".", help="Root directory for validation (default: current directory)")
-    parser.add_argument("--exceptions", default=None, help="JSON ledger with validator exceptions")
-    parser.add_argument("--base", default=os.getenv("DIFF_BASE_SHA"), help="Base commit SHA for diff context")
+    parser.add_argument(
+        "--safe-fix",
+        action="store_true",
+        help="Apply safe fixes (tabs->spaces, trim trailing)",
+    )
+    parser.add_argument(
+        "--tab-width", type=int, default=4, help="Spaces per tab when --safe-fix"
+    )
+    parser.add_argument(
+        "--strict-anchors", action="store_true", help="Fail on duplicate anchor ids"
+    )
+    parser.add_argument(
+        "--wrap-long-lines",
+        action="store_true",
+        help="Wrap lines longer than 120 chars",
+    )
+    parser.add_argument(
+        "--no-few-shot",
+        action="store_true",
+        help="Disable few-shot enhanced validation",
+    )
+    parser.add_argument(
+        "--root",
+        default=".",
+        help="Root directory for validation (default: current directory)",
+    )
+    parser.add_argument(
+        "--exceptions", default=None, help="JSON ledger with validator exceptions"
+    )
+    parser.add_argument(
+        "--base",
+        default=os.getenv("DIFF_BASE_SHA"),
+        help="Base commit SHA for diff context",
+    )
     parser.add_argument(
         "--head",
         default=os.getenv("GITHUB_SHA", "HEAD"),
@@ -2025,7 +2193,9 @@ def main():
     ledger = _load_ledger(args.exceptions)
 
     # Helper: return changed markdown files between base and head using robust parsing
-    def _git_diff_changed_md(base_sha: Optional[str], head_sha: Optional[str]) -> list[str]:
+    def _git_diff_changed_md(
+        base_sha: Optional[str], head_sha: Optional[str]
+    ) -> list[str]:
         if not base_sha or not head_sha:
             return []
         try:

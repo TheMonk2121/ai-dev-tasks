@@ -8,6 +8,7 @@ Comprehensive tests for query type classification and pipeline routing.
 import json
 
 import pytest
+
 from adaptive_routing import AdaptiveRouter, QueryType
 
 
@@ -36,13 +37,19 @@ class TestAdaptiveRouting:
 
     def test_broad_query_classification(self):
         """Test classification of broad queries."""
-        queries = ["Explore the comprehensive architecture of our system", "Study the patterns in our API design"]
+        queries = [
+            "Explore the comprehensive architecture of our system",
+            "Study the patterns in our API design",
+        ]
 
         for query in queries:
             analysis = self.router.analyze_query(query)
             # Allow for flexibility in classification - the important thing is pipeline selection
             assert analysis.confidence > 0.3
-            assert "comprehensive" in analysis.suggested_pipeline or "fast_path" in analysis.suggested_pipeline
+            assert (
+                "comprehensive" in analysis.suggested_pipeline
+                or "fast_path" in analysis.suggested_pipeline
+            )
 
     def test_analytical_query_classification(self):
         """Test classification of analytical queries."""
@@ -57,7 +64,10 @@ class TestAdaptiveRouting:
             # Allow for some flexibility in classification
             assert analysis.query_type in [QueryType.ANALYTICAL, QueryType.POINTED]
             assert analysis.confidence > 0.3
-            assert "comprehensive" in analysis.suggested_pipeline or "fast_path" in analysis.suggested_pipeline
+            assert (
+                "comprehensive" in analysis.suggested_pipeline
+                or "fast_path" in analysis.suggested_pipeline
+            )
 
     def test_creative_query_classification(self):
         """Test classification of creative queries."""
@@ -72,7 +82,10 @@ class TestAdaptiveRouting:
             # Allow for some flexibility in classification
             assert analysis.query_type in [QueryType.CREATIVE, QueryType.POINTED]
             assert analysis.confidence > 0.3
-            assert "creative" in analysis.suggested_pipeline or "fast_path" in analysis.suggested_pipeline
+            assert (
+                "creative" in analysis.suggested_pipeline
+                or "fast_path" in analysis.suggested_pipeline
+            )
 
     def test_complexity_calculation(self):
         """Test query complexity calculation."""
@@ -91,7 +104,14 @@ class TestAdaptiveRouting:
         query = "How do I implement adaptive routing in Python with machine learning?"
         analysis = self.router.analyze_query(query)
 
-        expected_keywords = ["implement", "adaptive", "routing", "python", "machine", "learning"]
+        expected_keywords = [
+            "implement",
+            "adaptive",
+            "routing",
+            "python",
+            "machine",
+            "learning",
+        ]
         for keyword in expected_keywords:
             assert keyword in analysis.keywords
 
@@ -182,13 +202,17 @@ class TestAdaptiveRouting:
         # Test pointed patterns
         pointed_patterns = patterns[QueryType.POINTED]
         test_query = "What is the specific error in this implementation?"
-        matches = sum(len(pattern.findall(test_query.lower())) for pattern in pointed_patterns)
+        matches = sum(
+            len(pattern.findall(test_query.lower())) for pattern in pointed_patterns
+        )
         assert matches > 0
 
         # Test broad patterns
         broad_patterns = patterns[QueryType.BROAD]
         test_query = "Explore and analyze the comprehensive overview of our system"
-        matches = sum(len(pattern.findall(test_query.lower())) for pattern in broad_patterns)
+        matches = sum(
+            len(pattern.findall(test_query.lower())) for pattern in broad_patterns
+        )
         assert matches > 0
 
     def test_confidence_normalization(self):
