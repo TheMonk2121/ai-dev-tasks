@@ -196,3 +196,27 @@ B‑076 (DSPy Assertions) → B‑050 (Entity Expansion)
 **Last Updated**: 2025-08-16 08:02
 **Next Review**: Weekly sprint planning
 **Backlog Sync**: Auto-updates with `000_core/000_backlog.md` changes
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 004_development-roadmap.md
+# Generated: 2025-08-17T21:51:36.734335
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Core Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

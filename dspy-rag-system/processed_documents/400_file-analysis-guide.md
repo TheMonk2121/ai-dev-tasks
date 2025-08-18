@@ -557,3 +557,27 @@ Use this checklist before writing new Python code to reduce duplication and keep
 - --**Last Updated**: 2024-08-07
 - *Related Documentation**: `400_guides/400_context-priority-guide.md`, `500_research/500_maintenance-safety-research.md`
 - *Status**: Active analysis methodology for maintaining documentation integrity
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_file-analysis-guide.md
+# Generated: 2025-08-17T21:49:49.333123
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

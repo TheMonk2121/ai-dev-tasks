@@ -11,6 +11,18 @@
 |---|---|---|
 | Comprehensive guide for enhanced backlog status tracking with timestamps | When you need to track work progress or identify stale items | Use the CLI commands to start work, update status, and check for stale items |
 
+## 🎯 **Current Status**
+
+- **Status**: ✅ **ACTIVE** - Enhanced backlog tracking system operational
+
+- **Priority**: 🔧 Medium - Useful for workflow management
+
+- **Points**: 2 - Low complexity, workflow enhancement
+
+- **Dependencies**: 000_core/000_backlog.md, scripts/enhanced_backlog_tracking.py
+
+- **Next Steps**: Integrate with governance system and CI/CD pipeline
+
 ## 🚀 Quick Start
 
 ### **Start Work on an Item**
@@ -224,3 +236,23 @@ python3 scripts/enhanced_backlog_tracking.py --help
 **Last Updated**: 2025-08-16
 **Status**: ✅ **ACTIVE** - Fully implemented and tested
 **Implementation**: `scripts/enhanced_backlog_tracking.py`
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_enhanced-backlog-tracking-guide.md
+# Generated: 2025-08-17T17:47:03.918696
+
+## Missing sections to add:
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

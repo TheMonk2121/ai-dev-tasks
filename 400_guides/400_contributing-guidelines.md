@@ -1128,3 +1128,23 @@ SELF_REVIEW_QUESTIONS = [
 - Next Review: Monthly*
 - Development Standards Level: Production Ready*
 - Optimized for Solo Development Workflow*
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_contributing-guidelines.md
+# Generated: 2025-08-17T17:47:03.910468
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+<!-- README_AUTOFIX_END -->

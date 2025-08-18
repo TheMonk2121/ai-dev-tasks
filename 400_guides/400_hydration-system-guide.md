@@ -1157,3 +1157,27 @@ bundle = build_hydration_bundle(role="implementer", task="code implementation", 
 - Memory usage: < 100MB for 10 bundles
 - Success rate: > 95%
 - Token efficiency: > 80%
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_hydration-system-guide.md
+# Generated: 2025-08-17T17:47:03.925797
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

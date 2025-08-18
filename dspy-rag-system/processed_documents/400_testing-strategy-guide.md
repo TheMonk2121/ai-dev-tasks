@@ -1145,3 +1145,27 @@ if __name__ == "__main__":
 - Last Updated: 2024-08-07*
 - Next Review: Monthly*
 - Testing Level: Comprehensive*
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_testing-strategy-guide.md
+# Generated: 2025-08-17T21:49:49.335588
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

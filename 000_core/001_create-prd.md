@@ -380,3 +380,27 @@ robust and reliable implementations.
 - Next step: Use `000_core/002_generate-tasks.md` with this PRD (or a Backlog ID)
 
 - Input → PRD file; Output → 2–4 hour tasks with dependencies and gates
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 001_create-prd.md
+# Generated: 2025-08-17T21:51:36.731892
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Core Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

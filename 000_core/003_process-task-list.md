@@ -287,3 +287,27 @@ This approach ensures:
 4. **Update State**: Record progress in `.ai_state.jsonl`
 5. **Sync Roadmap**: Update `000_core/004_development-roadmap.md` with progress
 6. **Generate Report**: Create completion summary
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 003_process-task-list.md
+# Generated: 2025-08-17T21:51:36.733585
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Core Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

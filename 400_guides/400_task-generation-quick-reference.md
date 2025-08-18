@@ -11,6 +11,18 @@
 |---|---|---|
 | Quick reference for automated task generation system | When you need to generate tasks from PRDs or backlog items | Use the automation commands to generate consistent, high-quality tasks |
 
+## 🎯 **Current Status**
+
+- **Status**: ✅ **ACTIVE** - Task generation automation system operational
+
+- **Priority**: 🔧 Medium - Workflow automation enhancement
+
+- **Points**: 2 - Low complexity, workflow improvement
+
+- **Dependencies**: 000_core/002_generate-tasks.md, scripts/task_generation_automation.py
+
+- **Next Steps**: Integrate with backlog management and enhance automation features
+
 ## 🚀 Quick Start Commands
 
 ### Generate Tasks from PRD
@@ -159,3 +171,27 @@ python3 -m pytest ../tests/test_task_generation_automation.py -m integration -v
 **Last Updated**: 2025-08-16
 **Status**: ✅ **ACTIVE** - Fully integrated and tested
 **Test Status**: 27/27 tests passing ✅
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_task-generation-quick-reference.md
+# Generated: 2025-08-17T17:47:03.944457
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

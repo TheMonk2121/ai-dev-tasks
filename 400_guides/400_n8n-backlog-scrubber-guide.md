@@ -523,3 +523,19 @@ Check logs for:
 - Update as needed
 
 The n8n Backlog Scrubber Workflow is now ready for production deployment!
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_n8n-backlog-scrubber-guide.md
+# Generated: 2025-08-17T17:47:03.934377
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+<!-- README_AUTOFIX_END -->

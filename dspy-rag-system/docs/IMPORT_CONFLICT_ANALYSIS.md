@@ -223,3 +223,32 @@ dspy-rag-system/
 ---
 
 **Note**: This analysis focuses on the technical conflicts. The human factor (solo developer, local-first environment) means we can make breaking changes if needed, but we need a solution that works immediately and doesn't create more problems than it solves.
+
+<!-- xref-autofix:begin -->
+<!-- Cross-references to add: -->
+- [Setup imports](dspy-rag-system/IMPORT_SOLUTION.md)
+<!-- xref-autofix:end -->
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for IMPORT_CONFLICT_ANALYSIS.md
+# Generated: 2025-08-17T21:49:49.328176
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

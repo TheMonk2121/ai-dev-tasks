@@ -83,3 +83,27 @@
 ## 🎯**Implementation Impact**
 
 This research validates our DSPy usage and guides our implementation approach.
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for dspy-papers.md
+# Generated: 2025-08-17T21:51:24.316935
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

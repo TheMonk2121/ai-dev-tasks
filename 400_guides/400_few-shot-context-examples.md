@@ -1314,3 +1314,19 @@ DOCUMENTATION_BEST_PRACTICES = {
 - Last Updated: 2024-08-07*
 - Next Review: Monthly*
 - Context Engineering Level: Advanced*
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_few-shot-context-examples.md
+# Generated: 2025-08-17T17:47:03.920503
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+<!-- README_AUTOFIX_END -->

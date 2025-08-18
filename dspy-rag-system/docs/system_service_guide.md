@@ -39,3 +39,23 @@ This guide explains running the RAG pipeline components as system services (loca
 
 - Ensure environment variables and DB connectivity
 - Check logs for failed retries and circuit-breaker events
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for system_service_guide.md
+# Generated: 2025-08-17T21:49:49.329618
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

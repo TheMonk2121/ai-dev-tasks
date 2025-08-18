@@ -226,3 +226,23 @@ def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
 - v1.2: Added memory rehydrator (Tier 1), rollback system and anchor parser (Tier 2), maintenance automation (Tier 3) - Context assembly and documentation safety
 - v1.1: Added `doc_coherence_validator.py` to Tier 2 (High) - Documentation quality validation
 - v1.0 (initial): Added Tier 1–3 with criteria and maintenance steps
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_code-criticality-guide.md
+# Generated: 2025-08-17T21:49:49.331519
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+<!-- README_AUTOFIX_END -->

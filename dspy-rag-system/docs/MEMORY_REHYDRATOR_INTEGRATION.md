@@ -307,3 +307,27 @@ print(f"Evidence Tokens: {bundle.meta['evidence_tokens']}")
 - **Vector Store**: `src/dspy_modules/vector_store.py` (Hybrid search implementation)
 - **Database Schema**: `clean_slate_schema.sql` (Clean slate schema with first-class columns)
 - **Code Criticality**: `400_guides/400_code-criticality-guide.md` (Tier 1 critical files)
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for MEMORY_REHYDRATOR_INTEGRATION.md
+# Generated: 2025-08-17T21:49:49.329116
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

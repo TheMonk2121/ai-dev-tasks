@@ -990,6 +990,57 @@ ignore = ["E501"]  # Line too long - handled by black
 # Note: F841 removed from ignore list to catch unused variables
 ```
 
+## **Import Standards**
+
+### **Required Import Order**
+1. **Standard library imports** (os, sys, json, pathlib, etc.)
+2. **Third-party imports** (requests, psycopg2, etc.)
+3. **Local imports** (from utils import ...)
+
+### **Common Import Patterns**
+```python
+# Standard library imports (always first)
+import os
+import sys
+import json
+import tempfile
+from pathlib import Path
+from typing import Dict, List, Optional
+
+# Third-party imports
+import requests
+import psycopg2
+
+# Local imports
+from utils.logger import setup_logger
+```
+
+### **Import Validation Rules**
+- **No undefined names**: All used modules must be imported
+- **No unused imports**: Remove imports that aren't used
+- **Explicit imports**: Use `import os` not just `os.environ`
+
+### **F-string Best Practices**
+```python
+# ✅ Good - f-string with placeholders
+name = "World"
+print(f"Hello {name}")
+
+# ❌ Bad - f-string without placeholders
+print(f"Hello World")  # Should be: print("Hello World")
+
+# ✅ Good - complex f-string
+print(f"Count: {len(items)} items")
+
+# ❌ Bad - unnecessary f-string
+print(f"Count: 5")  # Should be: print("Count: 5")
+```
+
+### **Variable Management**
+- **No unused variables**: Remove variables that aren't used
+- **Clear variable names**: Use descriptive names
+- **Scope management**: Keep variables in appropriate scope
+
 **Usage Commands**:
 ```bash
 # Format code with Black
@@ -2374,3 +2425,27 @@ python3 scripts/update_cursor_memory.py
 # Check database consistency (dspy-rag-system)
 cd dspy-rag-system && python3 scripts/database_maintenance.py
 ```
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_comprehensive-coding-best-practices.md
+# Generated: 2025-08-17T17:47:03.906269
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

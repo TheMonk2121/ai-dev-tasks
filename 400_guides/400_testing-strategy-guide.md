@@ -27,6 +27,77 @@
 - ❌ Manual `sys.path` manipulation in test files
 - ❌ File-based test selection (`./run_tests.sh all`)
 
+## 🎯 **Test Tiers & Execution Strategy**
+
+### **Test Tiers (PR / Nightly / Weekly)**
+
+**PR Path (≤5 min, fast):**
+```bash
+pytest -m "not slow and not e2e" -q
+scripts/doc_coherence_validator.py --ci --json  # changed-files aware
+scripts/validator_ratchet.py  # block increases intersecting changed files
+scripts/validator_metrics.py  # persist metrics
+```
+*Job summary: counters table + top impacted files*
+
+**Nightly (2 AM UTC):**
+```bash
+pytest -m "not e2e" -q
+# then optional: pytest -m e2e
+# Full validator scan (no changed-files)
+scripts/anchor_drift_check.py
+scripts/ledger_sweep.py
+# Counters update + flip manager
+```
+
+**Weekly:**
+```bash
+# Chaos drill, schema guard verification, owners summary
+pytest -m e2e
+scripts/validator_schema_guard.py
+scripts/weekly_metrics_with_owners.py
+```
+
+### **Validator Testing Patterns**
+
+**Archive Enrollment & Immutability:**
+- ✅ `test_archive_enrolled_file_not_flagged()` - Enrolled files pass validation
+- ✅ `test_archive_modified_file_flagged_in_fail_mode()` - Modified files fail validation
+- ✅ Git blob SHA format validation
+- ✅ Path normalization (repo-relative POSIX)
+
+**Exception Ledger & Pragmas:**
+- ✅ `test_ledger_key_synonyms_respected()` - Key synonym handling
+- ✅ `test_pragma_and_ledger_merge_behavior()` - Pragma + ledger merging
+- ✅ Expiry date validation
+- ✅ Exception precedence rules
+
+**Governance Tools:**
+- ✅ `test_schema_guard_honors_pinned_version()` - Schema version validation
+- ✅ `test_ratchet_blocks_changed_file_regressions()` - Regression prevention
+- ✅ `test_anchor_drift_detects_removed_heading()` - Broken link detection
+- ✅ `test_readme_hotspots_handles_invalid_or_empty_report()` - Data resilience
+
+### **JSON Purity & Path Normalization Expectations**
+
+**JSON Output Purity:**
+- ✅ All WARN/INFO messages routed to `stderr` when `--json` is set
+- ✅ `stdout` contains only pure JSON
+- ✅ `test_stdout_pure_json_warnings_to_stderr()` validates this
+
+**Path Normalization:**
+- ✅ All `impacted_files` paths are repo-relative POSIX format
+- ✅ No absolute paths in validator reports
+- ✅ `test_impacted_files_are_posix_relative()` validates this
+
+### **Flip Counters & Drift Checks to Nightly**
+
+**Nightly Governance Tasks:**
+- ✅ Anchor drift detection (`scripts/anchor_drift_check.py`)
+- ✅ Ledger sweep for expired exceptions (`scripts/ledger_sweep.py`)
+- ✅ Counter updates and flip manager automation
+- ✅ Schema guard verification
+
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
@@ -1146,3 +1217,27 @@ if __name__ == "__main__":
 - Last Updated: 2024-08-07*
 - Next Review: Monthly*
 - Testing Level: Comprehensive*
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_testing-strategy-guide.md
+# Generated: 2025-08-17T17:47:03.947162
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

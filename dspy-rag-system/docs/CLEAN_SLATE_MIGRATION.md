@@ -229,3 +229,23 @@ This migration is based on ChatGPT's recommendations for:
 - Optimized indexes for performance
 - Deterministic ordering for consistent results
 - Solo-developer ergonomics with strict mode toggle
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for CLEAN_SLATE_MIGRATION.md
+# Generated: 2025-08-17T21:49:49.325519
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

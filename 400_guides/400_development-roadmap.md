@@ -380,3 +380,27 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 - --**Last Updated**: 2024-08-07
 - *Related Documentation**: `000_core/000_backlog.md`, `100_memory/100_cursor-memory-context.md`, `400_guides/400_context-priority-guide.md`
 - *Status**: Active roadmap for strategic development planning
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_development-roadmap.md
+# Generated: 2025-08-17T17:47:03.915857
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

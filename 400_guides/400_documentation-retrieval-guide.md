@@ -516,3 +516,27 @@ scripts/documentation_retrieval_cli.py
 research_basis: 500_research-implementation-summary.md
 integration: DSPy RAG System, AI Constitution, Memory Context System
 - ->
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_documentation-retrieval-guide.md
+# Generated: 2025-08-17T17:47:03.918116
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

@@ -100,3 +100,8 @@ RESEARCH_INDEX -->
 
 - Last Updated: 2025-08-08*
 - Next Review: Monthly*
+
+<!-- xref-autofix:begin -->
+<!-- Cross-references to add: -->
+- [Documentation Coherence Research](500_research/500_documentation-coherence-research.md)
+<!-- xref-autofix:end -->

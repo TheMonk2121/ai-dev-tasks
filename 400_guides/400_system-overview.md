@@ -23,6 +23,50 @@
 
 - **Next Steps**: Update as system architecture evolves
 
+## 📋 **Job Summary Interpretation Guide**
+
+### **Clean-Day Counters Table**
+```
+| Category | Days | Target |
+|---|---:|---:|
+| archive | 2 | 3 |
+| shadow_fork | 0 | 7 |
+| multirep | 1 | 5 |
+| readme | 0 | 14 |
+```
+
+**What it means**: Shows how many consecutive clean days each validator category has achieved vs. their target for FAIL mode activation.
+
+**Action**: When a category reaches its target, it's ready for a flip to FAIL mode.
+
+### **Ratchet Failures**
+```
+❌ RATCHET FAIL: readme increased (15 → 18) and overlaps changed files
+```
+
+**What it means**: A PR is trying to increase violations in a category that intersects with changed files.
+
+**Action**: Fix the violations in changed files before merging.
+
+### **Near-Expiry Warnings**
+```
+⚠️ WARN: 000_core/000_backlog.md has xref-missing exception expiring in 3 days
+```
+
+**What it means**: A waiver in the exception ledger is about to expire.
+
+**Action**: Convert the waiver to a real fix (add links, README sections) before expiry.
+
+### **Validator Flip Status**
+```
+✅ Archive Flip: Ready (3/3 clean days)
+❌ Shadow Flip: Not ready (0/7 clean days)
+```
+
+**What it means**: Shows which categories are ready for FAIL mode activation.
+
+**Action**: Ready categories can be flipped via workflow dispatch.
+
 {#tldr}
 
 ## 🔎 TL;DR
@@ -453,15 +497,34 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 - **Quality Validation**: Content quality and completeness checks
 
-#### **Vector Store**(`src/dspy_modules/vector_store.py`)
+#### **Vector Store Layer**(`src/vector_store/`)
 
-- **PostgreSQL + PGVector**: Scalable vector storage
+**Core vs Perf Architecture:**
 
-- **Similarity Search**: Efficient semantic search capabilities
+**CoreVectorStore (core.py):**
+- Stable baseline with hybrid search capabilities
+- Wraps HybridVectorStore for dense+sparse fusion
+- Default for general use cases
+- Features: span-based search, stable API surface
 
-- **Index Management**: Automatic indexing and optimization
+**PerfVectorStore (perf.py):**
+- Performance-focused with monitoring and caching
+- Wraps EnhancedVectorStore for production features
+- Used for monitoring scripts and performance-critical applications
+- Features: performance monitoring, caching, health checks, index management
 
-- **Query Optimization**: Fast retrieval with relevance ranking
+**Factory Pattern:**
+- `get_vector_store(mode="core|perf")` with environment fallback
+- Unified interface via `IVectorStore` protocol
+- Explicit mode selection prevents confusion
+
+**Protocol Interface:**
+- `add_documents(docs)` - Add documents to store
+- `similarity_search(query_embedding, top_k=5)` - Search for similar vectors
+- `get_stats()` - Get store statistics
+- `get_health_status()` - Get health status
+
+See `500_reference-cards.md` for detailed migration guide and usage examples.
 
 #### **Memory Rehydrator**(`src/utils/memory_rehydrator.py`, `src/utils/memory_rehydration.go`)
 
@@ -663,6 +726,55 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 - --
 
+## 🧪 Testing Infrastructure
+
+### **Test Execution**
+- **Primary Runner**: `tests/comprehensive_test_suite.py` - Marker-based test selection with `--tiers` and `--kinds`
+- **Legacy Runner**: `dspy-rag-system/run_tests.sh` - Backward compatibility
+- **Comprehensive Runner**: `dspy-rag-system/run_comprehensive_tests.sh` - Full test suite
+- **CI Runner**: `dspy-rag-system/ci_test_runner.py` - Automated CI/CD integration
+
+### **Test Organization**
+- **Test Directory**: `tests/` with unified import resolution
+- **Configuration**: `tests/conftest.py` - Centralized import paths with validation
+- **Categories**: Unit, Integration, E2E, Performance, Security, Property, Prompt tests
+
+### **CI Matrix**
+- **PR Job**: Tier-1 + Unit/Integration (target <5 min)
+- **Nightly**: Tier-1-2 + E2E + Property tests
+- **Weekly**: Full suite + Coverage + Security scan
+
+### **Trust-Building Tests**
+- **E2E**: `tests/e2e/test_vector_store_modes_e2e.py` - Dual vector store facade testing
+- **Property**: `tests/property/test_shadow_fork_filename_rules.py` - Hypothesis-based filename validation
+- **Prompt**: `tests/ai/test_prompt_contracts.py` - Prompt contract structure validation
+
+### **Backlog CLI**
+- **Generator**: `scripts/backlog_cli.py` - Create normalized backlog items
+- **Commands**: `create-backlog-item`, `link-prd`, `add-crossref`, `close-item`
+- **Structure**: `backlog_items/{B-xxx-kebab-title}/` with `prd.md`, `tasks.md`, `status.json`
+- **Integration**: Cross-references to lessons learned and reference cards
+- **Preflight Validation**: Runs validator before creating items, aborts on FAIL mode violations
+
+### **Validator Enforcement**
+- **Categories**: Archive, Shadow Fork, README, Multi-Rep/XRef
+- **Modes**: WARN (default) → FAIL (after clean day targets)
+- **Targets**: Archive (3 days), Shadow Fork (7 days), README (14 days), Multi-Rep (5 days)
+- **CI Integration**: `.github/workflows/validator.yml` with conditional failures
+- **Flip Management**: `scripts/validator_flip_manager.py` tracks clean days and automates flips
+- **Pre-commit**: Lightweight validator runs on shadow-fork and archive checks
+
+### **README Governance & Autofix**
+- **Required Sections**: Purpose, Usage, Owner, Last Reviewed (with synonyms support)
+- **Autofix Tool**: `scripts/readme_autofix.py` - Idempotent section insertion with markers
+- **Constants**: `scripts/readme_consts.py` - Single source of truth for synonyms and patterns
+- **CI Proof**: `.github/workflows/readme-autofix-proof.yml` - Demonstrates ≥70% reduction without touching working tree
+- **Scope**: `400_guides/`, `000_core/`, `100_memory/`, `200_setup/`, `300_examples/`, `500_reference-cards.md`
+- **Owner Inference**: Automatic owner assignment based on file path patterns
+- **Markers**: `<!-- README_AUTOFIX_START -->` / `<!-- README_AUTOFIX_END -->` for surgical updates
+- **Idempotent**: Multiple runs produce identical results (timestamp normalization)
+- **Synonyms**: "Overview" → Purpose, "How to Use" → Usage, "Last Updated" → Last Reviewed
+
 ## 🔮 Future Enhancements
 
 ### Planned Features
@@ -722,3 +834,32 @@ intelligent automation to create a powerful development ecosystem.
   - Cursor: Cursor Small
 
 Note: Legacy/local model tools (e.g., Ollama, LM Studio) are excluded from active docs and, if needed for reference, live only under `docs/legacy/**` or `600_archives/**`.
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_system-overview.md
+# Generated: 2025-08-17T17:47:03.943901
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->
+
+<!-- xref-autofix:begin -->
+<!-- Cross-references to add: -->
+- [Run tests](400_guides/400_migration-upgrade-guide.md)
+<!-- xref-autofix:end -->

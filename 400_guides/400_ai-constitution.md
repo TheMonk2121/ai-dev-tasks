@@ -9,13 +9,25 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-|  |  |  |
+| Core constitution rules and safety guidelines for AI development | Before any file operations or high-risk changes | Follow the mandatory file analysis and safety procedures |
 
-- **what this file is**: Quick summary of 📜 **CORE CONSTITUTION RULES**.
+- **what this file is**: Core constitution rules and safety guidelines for AI development ecosystem.
 
-- **read when**: When you need a fast orientation or before using this file in a workflow.
+- **read when**: Before any file operations, high-risk changes, or when establishing safety protocols.
 
-- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+- **do next**: Follow the mandatory file analysis procedures and safety validation steps.
+
+## 🎯 **Current Status**
+
+- **Status**: ✅ **ACTIVE** - Core constitution rules maintained and enforced
+
+- **Priority**: 🔥 Critical - Essential for safety and governance
+
+- **Points**: 5 - High complexity, safety importance
+
+- **Dependencies**: 400_guides/400_file-analysis-guide.md, 100_memory/100_cursor-memory-context.md
+
+- **Next Steps**: Regular review and enforcement of constitution rules
 
 ### **Article I: File Safety & Analysis**
 
@@ -102,12 +114,18 @@ documentation patterns
 
   **Are automatically classified as P0 Governance Items**. They are non-negotiable prerequisites for feature work and block all dependent backlog items until resolved.
 
-- **2. Priority Structure Enforcement**
-  - **P0 Lane**: Governance/trust issues (repo structure, import resolution, validator configuration)
+- **2. Archive Immutability** - All files under `600_archives/` are immutable after archival:
+  - **Disallowed**: Content edits, renames, or deletions of existing archived files
+  - **Allowed**: Adding new files (fresh archives), and adding separate context notes in `600_archives/NOTES/`
+  - **Amendment Process**: Any update must be a new file (amendment note), not an edit of the archived file
+  - **Enforcement**: Validator will WARN (migration window) then FAIL (blocking) on archive modifications
+
+- **3. Priority Structure Enforcement**
+  - **P0 Lane**: Governance/trust issues (repo structure, import resolution, validator configuration, archive integrity)
   - **🔥 Critical**: Feature work (implementation, new capabilities, performance optimization)
   - **Dependencies**: All feature work must wait for P0 governance items to be resolved
 
-- **3. Governance Decision Authority**
+- **4. Governance Decision Authority**
   - P0 items require immediate attention and cannot be deferred
   - Feature work blocked by P0 items must be paused until governance is resolved
   - All AI systems must respect P0 governance priority over feature development
@@ -307,20 +325,48 @@ documentation patterns
 
 ---
 
-- **Constitution Version**: 1.1
+- **Constitution Version**: 1.2
 - **Implementation Date**: 2024-08-07
-- **Last Updated**: 2025-08-16
+- **Last Updated**: 2025-08-17
 - **Research Basis**: 500_research-analysis-summary.md
 - **Integration Status**: Active
-- **Governance Rule**: Added Article V - Repo Layout & Import Resolution Governance
+- **Governance Rules**:
+  - Article V - Repo Layout & Import Resolution Governance
+  - Article V.2 - Archive Immutability
 
 <!-- CONSTITUTION_METADATA
-version: 1.1
+version: 1.2
 implementation_date: 2024-08-07
-last_updated: 2025-08-16
+last_updated: 2025-08-17
 research_basis: 500_research-analysis-summary.md
 integration_status: active
 compliance_required: true
 safety_critical: true
-governance_rule_added: 2025-08-16
+governance_rules_added:
+  - repo_layout_governance: 2025-08-16
+  - archive_immutability: 2025-08-17
 - ->
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_ai-constitution.md
+# Generated: 2025-08-17T17:47:03.899246
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

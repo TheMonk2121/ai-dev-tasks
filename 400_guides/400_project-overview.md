@@ -317,3 +317,23 @@ functionality
 - **Error Limits**- Stop execution after consecutive failures
 
 - **State Persistence** - Maintain context across execution sessions
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_project-overview.md
+# Generated: 2025-08-17T17:47:03.938735
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+<!-- README_AUTOFIX_END -->

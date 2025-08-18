@@ -36,3 +36,19 @@ The watch-folder service monitors `watch_folder/` and securely ingests new files
 - Ensure the watcher is running (`start_watch_folder.sh` or integrated runner).
 - Check logs for validation errors.
 - Confirm PostgreSQL/pgvector is reachable.
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for watch_folder_guide.md
+# Generated: 2025-08-17T21:49:49.329747
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+<!-- README_AUTOFIX_END -->

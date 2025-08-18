@@ -179,3 +179,27 @@ You are my **technical consultant** for resolving these conflicts. Here's our pr
 - **Local-first**: No team coordination required
 
 **Start by analyzing the 10 critical files I'll provide. Focus on the pyproject.toml conflicts first, as they're causing the most immediate import resolution issues.**
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for CHATGPT_DUPLICATE_RESOLUTION_PROMPT_V2.md
+# Generated: 2025-08-17T21:49:49.324992
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

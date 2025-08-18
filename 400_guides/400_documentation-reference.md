@@ -238,3 +238,27 @@ full scope | Use the category sections below to locate the documentation you nee
 - **Validation**: Run `scripts/doc_coherence_validator.py` after updates
 
 This file ensures full utilization of our comprehensive documentation system!
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_documentation-reference.md
+# Generated: 2025-08-17T17:47:03.916925
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

@@ -338,3 +338,27 @@ psql postgresql://danieljacobs@localhost:5432/ai_agency -c "REINDEX INDEX idx_do
 2. **Performance Tuning**: Adjust constants based on usage patterns
 3. **Monitoring**: Add performance monitoring and alerting
 4. **Documentation**: Update related guides with new system details
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_lean-hybrid-memory-system.md
+# Generated: 2025-08-17T17:47:03.928940
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

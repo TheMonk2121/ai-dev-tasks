@@ -42,3 +42,27 @@ research summary
 ## 🎯**Implementation Impact**
 
 This research informs our multi-agent system architecture.
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for agent-orchestration-papers.md
+# Generated: 2025-08-17T21:51:24.316046
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

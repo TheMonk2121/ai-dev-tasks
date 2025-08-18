@@ -472,3 +472,27 @@ dashboard.update_metrics(trace.metrics)
 - **Self-Critique**: `dspy-rag-system/src/utils/self_critique.py` (Critique engine)
 - **Logger**: `dspy-rag-system/src/utils/logger.py` (Structured logging)
 - **Code Criticality**: `400_guides/400_code-criticality-guide.md` (Tier 1 critical files)
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_observability-system.md
+# Generated: 2025-08-17T17:47:03.935537
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

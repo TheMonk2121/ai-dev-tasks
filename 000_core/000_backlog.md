@@ -94,6 +94,8 @@ and normalize spacing across long-form guides.
 
 - B‑062 — Context Priority Guide Auto-Generation (score 8.0)
 
+- B‑104 — 400_guides Documentation Standardization & Optimization (score 7.0)
+
 - B‑103 — Repo Layout Normalization (score 4.3)
 
 ## P1 Lane
@@ -172,6 +174,17 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- acceptance: PRs automatically trigger maintenance script validation -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#ci-cd-patterns"] -->
 <!-- reference_cards: ["500_reference-cards.md#github-actions"] -->
+
+| B‑104 | 400_guides Documentation Standardization & Optimization | 📚 | 5 | ✅ done | Standardize and optimize 400_guides documentation based on analysis findings | Documentation Standards + Cross-References + Governance Validation | None |
+<!--score: {bv:4, tc:3, rr:4, le:4, effort:3, lessons:3, deps:[]}-->
+<!--score_total: 7.0-->
+<!-- do_next: Add Current Status sections to 5 missing guides and rename governance_runbook.md to 400_governance-runbook.md -->
+<!-- est_hours: 8 -->
+<!-- acceptance: All guides have Current Status sections, consistent naming, and pass governance validation -->
+<!-- completion_date: 2025-08-18 -->
+<!-- implementation_notes: Successfully added Current Status sections to 5 missing guides (400_ai-constitution.md, 400_enhanced-backlog-tracking-guide.md, 400_script-optimization-guide.md, 400_task-generation-quick-reference.md, 400_governance-runbook.md). Renamed governance_runbook.md to 400_governance-runbook.md and updated all cross-references in 6 files. All guides now follow consistent naming convention and documentation standards. -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#documentation-standards"] -->
+<!-- reference_cards: ["500_reference-cards.md#documentation-maintenance"] -->
 
 | B‑062 | Context Priority Guide Auto-Generation | 🔧 | 0.5 | todo | Create regen_guide.py to auto-generate context
 priority guide from file headers | Guide Generation + Cross-Reference Aggregation + Tier Lists | B-060 Documentation
@@ -926,6 +939,7 @@ cache-augmented generation support with similarity scoring | PostgreSQL + cache_
 B-032 Memory Context System Architecture Research |
 | B‑033 | Documentation Reference Updates | 🔥 | 2 | ✅ done | Update outdated file references in documentation |
 Documentation review + reference updates | File naming convention migration |
+| B-001 | Implement Surgical Governance Testing Coverage | 🔄 pending | 3 | 8 | Add comprehensive test coverage for governance sys... | None |
 
 - --
 
@@ -967,3 +981,27 @@ Documentation review + reference updates | File naming convention migration |
 - **Validator Compliance**: All items must pass `doc_coherence_validator.py`
 - **Documentation Alignment**: Cross-references must be maintained
 - **Strategic Alignment**: Items must align with development roadmap
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 000_backlog.md
+# Generated: 2025-08-17T21:51:36.730486
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Core Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

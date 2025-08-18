@@ -1,401 +1,233 @@
 # Reference Cards
 
-## 🔎 TL;DR {#tldr}
-
-| what this file is | read when | do next |
-|---|---|---|
-| External evidence and best practices for consensus framework | Implementing new features or validating decisions | Use as cross-references in backlog items and PRDs |
-
-## RAG Lessons from Jerry (LlamaIndex talk) {#rag-lessons-from-jerry}
-
-**Why this matters**
-Naive RAG fails on complex docs; advanced parsing + multi-representation + reflection reduces hallucinations. We map these lessons to governance scaffolding to prevent "naive governance".
-
-**Key principles → Repo mappings**
-- *Garbage in, garbage out* → Phase 0 backlog validator; PRD template hygiene.
-- *Multi-representations per node* (table, caption, summary) → Backlog/PRD items must have raw + summary + refs (B-100).
-- *Page-level chunking as strong baseline* → Treat Consensus Checkpoints as semantic "page-chunks" in `.ai_state.jsonl`.
-- *Reflection layers* (retrieval + synthesis) → Validator + post-mortem lessons at each consensus round.
-- *Routing by query type* → Adaptive routing (B-101) for pointed vs. broad decisions.
-
-**Adopted backlog items**
-- **B-100**: Multi-representation indexing (raw + summary + refs)
-- **B-101**: Adaptive routing (pointed vs. broad queries)
-- **B-102**: Cross-reference enforcement (traceability)
-
-## Multi-representation Indexing {#multi-representation-indexing}
-
-**Context**: From RAG research showing that storing multiple representations of the same content improves retrieval accuracy.
-
-**Implementation**: Each backlog/PRD item stores:
-1. **Raw**: The original content (backlog row, PRD document)
-2. **Summary**: Structured metadata (scores, totals, key metrics)
-3. **References**: Cross-links to lessons and external evidence
-
-**Benefits**:
-- Better semantic search across different query types
-- Improved context retrieval for AI agents
-- Reduced hallucination through multiple validation layers
-
-## Traceability {#traceability}
-
-**Context**: From software engineering best practices for requirements traceability.
-
-**Implementation**: Every active backlog item must link to:
-- At least one `lessons_applied` (internal knowledge)
-- At least one `reference_cards` (external evidence)
-
-**Benefits**:
-- Prevents orphaned requirements
-- Ensures decisions are grounded in evidence
-- Enables systematic learning from past implementations
-
-## Cognitive Scaffolding {#cognitive-scaffolding}
-
-**Context**: From cognitive science research on how structured examples improve learning and decision-making.
-
-**Implementation**: Few-shot examples injected into AI memory rehydration to provide:
-- Pattern recognition for common scenarios
-- Decision frameworks for complex choices
-- Quality standards for outputs
-
-**Benefits**:
-- Consistent AI behavior across sessions
-- Improved context understanding
-- Reduced cognitive load for users
-
-## Research-Based Design {#research-based-design}
-
-**Context**: From evidence-based software engineering practices.
-
-**Implementation**: Schema design and extraction patterns based on:
-- Academic research findings
-- Industry best practices
-- Empirical validation results
-
-**Benefits**:
-- More robust and validated solutions
-- Reduced trial-and-error development
-- Systematic knowledge accumulation
-
-## Workflow Automation {#workflow-automation}
-
-**Context**: From DevOps and CI/CD best practices for reducing manual overhead.
-
-**Implementation**: Automated task generation from PRDs and backlog items including:
-- Consistent template application
-- Dynamic testing requirements
-- Quality gate enforcement
-
-**Benefits**:
-- Reduced manual effort
-- Consistent quality standards
-- Faster iteration cycles
-
-## DSPy Framework {#dspy-framework}
-
-**Context**: From Stanford's DSPy research on declarative LLM programming.
-
-**Implementation**: Framework for building reliable AI systems with:
-- Declarative program structure
-- Automatic optimization
-- Built-in validation
-
-**Benefits**:
-- More reliable AI behavior
-- Easier debugging and maintenance
-- Systematic performance optimization
-
-## MCP Server Architecture {#mcp-server-architecture}
-
-**Context**: From Model Context Protocol for AI agent tool integration.
-
-**Implementation**: Standardized interfaces for:
-- Tool discovery and invocation
-- Context sharing between agents
-- Resource management
-
-**Benefits**:
-- Interoperable AI systems
-- Reduced integration complexity
-- Scalable agent architectures
-
-## Context Analysis {#context-analysis}
-
-**Context**: From information retrieval and NLP research on context understanding.
-
-**Implementation**: Systematic analysis of:
-- Context relevance and quality
-- Information density and coverage
-- Temporal and semantic relationships
-
-**Benefits**:
-- Better context selection
-- Improved AI understanding
-- Reduced context pollution
-
-## Connection Pooling {#connection-pooling}
-
-**Context**: From database performance optimization research.
-
-**Implementation**: Efficient resource management for:
-- Database connections
-- API rate limiting
-- Memory allocation
-
-**Benefits**:
-- Improved performance
-- Better resource utilization
-- Reduced system overhead
-
-## Agile Tracking {#agile-tracking}
-
-**Context**: From agile methodology research and best practices.
-
-**Implementation**: Systematic tracking of:
-- Sprint progress and velocity
-- Burndown charts and milestones
-- Team capacity and dependencies
-
-**Benefits**:
-- Better project visibility
-- Improved planning accuracy
-- Faster delivery cycles
-
-## Code Quality Patterns {#code-quality-patterns}
-
-**Context**: From software engineering research on code quality and maintainability.
-
-**Implementation**: Systematic patterns for:
-- Code organization and structure
-- Error handling and resilience
-- Testing and validation
-
-**Benefits**:
-- More maintainable code
-- Reduced technical debt
-- Better developer productivity
-
-## Refactoring Strategies {#refactoring-strategies}
-
-**Context**: From software evolution and refactoring research.
-
-**Implementation**: Systematic approaches for:
-- Identifying refactoring opportunities
-- Planning and executing changes
-- Validating improvements
-
-**Benefits**:
-- Safer code evolution
-- Improved system design
-- Reduced maintenance costs
-
-## Observability Best Practices {#observability-best-practices}
-
-**Context**: From SRE and DevOps research on system observability.
-
-**Implementation**: Comprehensive monitoring including:
-- Metrics, logging, and tracing
-- Alerting and incident response
-- Performance analysis
-
-**Benefits**:
-- Better system reliability
-- Faster incident resolution
-- Improved user experience
-
-## Local Development {#local-development}
-
-**Context**: From developer productivity research and tooling best practices.
-
-**Implementation**: Optimized local development environment with:
-- Fast feedback loops
-- Integrated tooling
-- Consistent environments
-
-**Benefits**:
-- Faster development cycles
-- Better developer experience
-- Reduced environment issues
-
-## LangExtract {#langextract}
-
-**Context**: From information extraction and NLP research.
-
-**Implementation**: Advanced extraction capabilities for:
-- Structured data extraction
-- Schema validation
-- Quality assessment
-
-**Benefits**:
-- More accurate data extraction
-- Better data quality
-- Reduced manual processing
-
-## N8N Workflows {#n8n-workflows}
-
-**Context**: From workflow automation and integration research.
-
-**Implementation**: Visual workflow automation for:
-- Process orchestration
-- Data transformation
-- System integration
-
-**Benefits**:
-- Reduced manual work
-- Better process consistency
-- Improved system integration
-
-## Extraction Services {#extraction-services}
-
-**Context**: From microservices and API design research.
-
-**Implementation**: Specialized services for:
-- Content extraction and processing
-- Schema validation and transformation
-- Quality assessment and feedback
-
-**Benefits**:
-- Better separation of concerns
-- Improved scalability
-- Easier maintenance
-
-## Backlog Management {#backlog-management}
-
-**Context**: From product management and agile research.
-
-**Implementation**: Systematic backlog practices including:
-- Prioritization frameworks
-- Estimation techniques
-- Progress tracking
-
-**Benefits**:
-- Better product planning
-- Improved team alignment
-- Faster value delivery
-
-## Project Tracking {#project-tracking}
-
-**Context**: From project management research and best practices.
-
-**Implementation**: Comprehensive project tracking including:
-- Milestone management
-- Risk assessment
-- Resource allocation
-
-**Benefits**:
-- Better project visibility
-- Improved decision making
-- Reduced project risks
-
-## Status Tracking {#status-tracking}
-
-**Context**: From workflow management and process optimization research.
-
-**Implementation**: Automated status tracking for:
-- Work item progress
-- Time tracking and estimation
-- Stale item detection
-
-**Benefits**:
-- Better progress visibility
-- Improved planning accuracy
-- Reduced manual overhead
-
-## Notification Systems {#notification-systems}
-
-**Context**: From human-computer interaction research on notification design.
-
-**Implementation**: Intelligent notification systems for:
-- Context-aware alerts
-- Priority-based filtering
-- User preference management
-
-**Benefits**:
-- Better user experience
-- Reduced notification fatigue
-- Improved information flow
-
-## Service Architecture {#service-architecture}
-
-**Context**: From distributed systems and microservices research.
-
-**Implementation**: Robust service architecture including:
-- Service discovery and communication
-- Fault tolerance and resilience
-- Performance optimization
-
-**Benefits**:
-- Better system reliability
-- Improved scalability
-- Easier maintenance
-
-## Extraction Validation {#extraction-validation}
-
-**Context**: From data quality and validation research.
-
-**Implementation**: Systematic validation for:
-- Data accuracy and completeness
-- Schema compliance
-- Business rule enforcement
-
-**Benefits**:
-- Better data quality
-- Reduced errors
-- Improved trust in data
-
-## Structured Extraction {#structured-extraction}
-
-**Context**: From information extraction and NLP research.
-
-**Implementation**: Advanced extraction techniques for:
-- Semi-structured data processing
-- Schema inference and validation
-- Quality assessment
-
-**Benefits**:
-- More accurate extraction
-- Better data structure
-- Reduced manual processing
-
-## Performance Optimization {#performance-optimization}
-
-**Context**: From systems performance research and optimization techniques.
-
-**Implementation**: Systematic performance optimization including:
-- Profiling and bottleneck identification
-- Resource optimization
-- Caching and acceleration
-
-**Benefits**:
-- Better system performance
-- Improved user experience
-- Reduced resource costs
-
-## Role Detection Patterns {#role-detection-patterns}
-
-**Context**: From AI agent and multi-agent systems research.
-
-**Implementation**: Intelligent role detection for:
-- Context-aware agent selection
-- Task-specific optimization
-- Resource allocation
-
-**Benefits**:
-- Better agent utilization
-- Improved task completion
-- Reduced resource waste
-
-## MCP Integration Patterns {#mcp-integration-patterns}
-
-**Context**: From AI agent integration and tool usage research.
-
-**Implementation**: Standardized patterns for:
-- Tool discovery and registration
-- Context sharing and management
-- Resource coordination
-
-**Benefits**:
-- Better agent interoperability
-- Improved tool utilization
-- Reduced integration complexity
+Quick reference for key architectural decisions and implementations.
+
+## Vector Store Split (Core vs Perf)
+
+### Overview
+The vector store layer is split into two complementary implementations to serve different use cases while maintaining a unified interface.
+
+### CoreVectorStore (core.py)
+**Purpose:** Stable baseline with hybrid search capabilities
+**Implementation:** Wraps HybridVectorStore
+**Features:**
+- Dense + sparse fusion
+- Span-based search
+- Stable API surface
+- Default for general use
+
+**Usage:**
+```python
+from vector_store import CoreVectorStore
+vs = CoreVectorStore(db_connection_string)
+```
+
+### PerfVectorStore (perf.py)
+**Purpose:** Performance-focused with monitoring and caching
+**Implementation:** Wraps EnhancedVectorStore
+**Features:**
+- Performance monitoring
+- Caching layer
+- Health checks
+- Index management
+- Production metrics
+
+**Usage:**
+```python
+from vector_store import PerfVectorStore
+vs = PerfVectorStore(db_connection_string, dimension=384)
+```
+
+### Factory Pattern
+**Purpose:** Unified interface with explicit mode selection
+**Usage:**
+```python
+from vector_store import get_vector_store
+
+# Explicit mode selection
+vs = get_vector_store(mode="perf", db_connection_string=dsn)
+
+# Environment-driven (VECTOR_STORE_MODE=perf)
+vs = get_vector_store(db_connection_string=dsn)
+```
+
+### Protocol Interface
+**Purpose:** Minimal shared surface for both implementations
+**Methods:**
+- `add_documents(docs)` - Add documents to store
+- `similarity_search(query_embedding, top_k=5)` - Search for similar vectors
+- `get_stats()` - Get store statistics
+- `get_health_status()` - Get health status
+
+### Migration Guide
+**From EnhancedVectorStore:**
+```python
+# Old
+from dspy_modules.enhanced_vector_store import EnhancedVectorStore
+vs = EnhancedVectorStore(dsn)
+
+# New
+from vector_store import get_vector_store
+vs = get_vector_store(mode="perf", db_connection_string=dsn)
+```
+
+**From HybridVectorStore:**
+```python
+# Old
+from dspy_modules.vector_store import HybridVectorStore
+vs = HybridVectorStore(dsn)
+
+# New
+from vector_store import get_vector_store
+vs = get_vector_store(mode="core", db_connection_string=dsn)
+```
+
+### Governance
+- **Shadow Fork Prevention:** No more `_enhanced.py` or `_optimized.py` variants
+- **Documentation Required:** All vector store changes must update docs
+- **Validator Enforcement:** WARN → FAIL after migration complete
+
+### Testing
+- **E2E Tests**: `tests/e2e/test_vector_store_modes_e2e.py` validates both modes
+- **Facade Testing**: Tests use explicit mode selection, no environment detection
+- **Offline Operation**: Tests work without network dependencies
+- **Minimal Assertions**: Focus on API presence and basic behavior
+
+## Validator Enforcement
+
+### Categories
+- **Archive**: Prevents modification of archived files
+- **Shadow Fork**: Prevents `_enhanced.py` and `_optimized.py` patterns
+- **README**: Ensures README files follow governance rules
+- **Multi-Rep/XRef**: Validates cross-references and multi-representation
+
+### Flip Criteria
+- **Archive**: 3 consecutive clean days
+- **Shadow Fork**: 7 consecutive clean days
+- **README**: 14 consecutive clean days (after cleanup)
+- **Multi-Rep**: 5 consecutive clean days (after cleanup)
+
+### Environment Flags
+```bash
+export VALIDATOR_ARCHIVE_FAIL=0    # Flip to 1 when ready
+export VALIDATOR_SHADOW_FAIL=0     # Flip to 1 when ready
+export VALIDATOR_README_FAIL=0     # Flip to 1 when ready
+export VALIDATOR_MULTIREP_FAIL=0   # Flip to 1 when ready
+```
+
+### Exceptions
+Use pragmas for surgical exceptions:
+```html
+<!-- validator:allow xref-missing -->
+<!-- validator:allow multi-rep-missing -->
+```
+
+### Rollback Policy
+If any flipped category shows >5% false positives in 48h, revert with consensus note.
+
+## Consensus Framework Reference
+
+**Purpose**: Structured decision-making process for complex technical decisions
+**Use When**: Making architectural decisions, evaluating proposals, resolving conflicts
+**Process**: 5-phase consensus framework with role-based validation
+
+### 5-Phase Consensus Process
+
+#### Phase 1: Strawman Proposal Creation
+- **Purpose**: Create initial proposal for review
+- **Deliverable**: Structured proposal with context, assumptions, success criteria
+- **Key Elements**:
+  - Clear title and description
+  - Proposer identification
+  - Context and references
+  - Assumptions and constraints
+  - Success criteria
+
+#### Phase 2: Red Team Review
+- **Purpose**: Critical analysis and risk assessment
+- **Focus Areas**: Risks, alternatives, challenges
+- **Deliverable**: Critique with severity scoring
+- **Key Elements**:
+  - Critique points
+  - Risk assessment
+  - Challenge questions
+  - Alternative approaches
+  - Severity score (0.0-1.0)
+
+#### Phase 3: Blue Team Review
+- **Purpose**: Support and enhancement suggestions
+- **Focus Areas**: Support, enhancements, implementation
+- **Deliverable**: Support analysis with confidence scoring
+- **Key Elements**:
+  - Support points
+  - Enhancement suggestions
+  - Implementation guidance
+  - Success indicators
+  - Confidence score (0.0-1.0)
+
+#### Phase 4: Consensus Feedback
+- **Purpose**: Multi-participant discussion and refinement
+- **Participants**: All stakeholders provide feedback
+- **Deliverable**: Refined proposal with consensus score
+- **Key Elements**:
+  - Participant feedback
+  - Proposal refinements
+  - Consensus score calculation
+  - Next steps identification
+
+#### Phase 5: Validation Checkpoint
+- **Purpose**: Final validation and decision
+- **Validation Levels**: Basic (0.5), Standard (0.7), Strict (0.8), Expert (0.9)
+- **Deliverable**: Final decision with implementation guidance
+- **Key Elements**:
+  - Criteria assessment
+  - Overall score calculation
+  - Pass/fail determination
+  - Implementation priority
+  - Timeline and resource requirements
+
+### Success Criteria
+- **Minimum Consensus Score**: 0.7
+- **Minimum Validation Score**: 0.7
+- **Minimum Participants**: 3
+- **Maximum Rounds**: 5 (configurable)
+- **Round Timeout**: 24 hours
+
+### Implementation Guidance
+- Use structured templates for each phase
+- Maintain clear role separation (Red Team vs Blue Team)
+- Document all decisions and rationale
+- Track consensus scores and validation metrics
+- Provide clear next steps for accepted proposals
+
+## Traceability Reference
+
+**Purpose**: Track relationships between requirements, implementation, and validation
+**Use When**: Managing complex features, ensuring compliance, debugging issues
+**Process**: Bidirectional traceability with automated validation
+
+### Traceability Matrix
+
+| Component | Input | Output | Validation |
+|-----------|-------|--------|------------|
+| Requirements | User stories, PRDs | Backlog items | Acceptance criteria |
+| Implementation | Backlog items | Code, tests, docs | Test coverage |
+| Validation | Code, tests | Test results | Quality metrics |
+| Deployment | Validated code | Production system | Monitoring alerts |
+
+### Traceability Tools
+- **Backlog Parser**: Extracts requirements from markdown
+- **Test Coverage**: Maps tests to requirements
+- **Documentation Links**: Cross-references between docs
+- **Validation Checkpoints**: Ensures quality gates
+
+### Best Practices
+- Maintain bidirectional links
+- Automate traceability validation
+- Update links when requirements change
+- Use consistent naming conventions
+- Document traceability decisions
+
+## B-001: Implement Surgical Governance Testing Coverage
+
+Add comprehensive test coverage for governance system using surgical approach - extend existing test suites with focused test cases for archive enrollment, path normalization, JSON purity, and governance tools

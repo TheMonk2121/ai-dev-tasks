@@ -133,3 +133,27 @@ and quick start
 
 - This three-lens documentation system ensures that everyone can find the information they need at the right level of
 detail, from business stakeholders to technical developers.*
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for README.md
+# Generated: 2025-08-17T21:51:24.314601
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

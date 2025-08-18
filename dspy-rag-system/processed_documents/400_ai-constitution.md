@@ -298,3 +298,27 @@ integration_status: active
 compliance_required: true
 safety_critical: true
 - ->
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_ai-constitution.md
+# Generated: 2025-08-17T21:49:49.330595
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

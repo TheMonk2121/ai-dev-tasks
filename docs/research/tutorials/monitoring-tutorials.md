@@ -41,3 +41,27 @@
 ## 🎯**Implementation Impact**
 
 These tutorials provide practical implementation guidance for our monitoring system.
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for monitoring-tutorials.md
+# Generated: 2025-08-17T21:51:24.318237
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

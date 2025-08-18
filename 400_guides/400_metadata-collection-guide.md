@@ -556,3 +556,27 @@ reliably.
 - *Document Version**: 1.0
 - *Last Updated**: 2024-08-07
 - **Next Review**: Monthly Review Cycle
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_metadata-collection-guide.md
+# Generated: 2025-08-17T17:47:03.930352
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+Documentation Team
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->
