@@ -1036,6 +1036,59 @@ print(f"Count: {len(items)} items")
 print(f"Count: 5")  # Should be: print("Count: 5")
 ```
 
+### **Unicode Character Best Practices (RUF001 Prevention)**
+
+**Problem**: Unicode characters like emojis, dashes, and symbols can cause RUF001 errors due to ambiguity.
+
+#### **Common Unicode Issues and Solutions**
+```python
+# ❌ Bad - Ambiguous Unicode characters
+print("File not found – check path")  # EN DASH (–)
+print("Status: ℹ️  No changes")       # INFORMATION SOURCE (ℹ)
+print("Warning ⚠️  System down")      # WARNING SIGN (⚠)
+print("Success ✅ Operation complete") # WHITE HEAVY CHECK MARK (✅)
+print("Error ❌ Failed to connect")   # CROSS MARK (❌)
+print("Task B‑001 completed")         # NON-BREAKING HYPHEN (‑)
+
+# ✅ Good - Standard ASCII characters
+print("File not found - check path")  # HYPHEN-MINUS (-)
+print("Status: i No changes")         # LATIN SMALL LETTER I (i)
+print("Warning ! System down")        # EXCLAMATION MARK (!)
+print("Success OK Operation complete") # ASCII text
+print("Error X Failed to connect")    # LATIN CAPITAL LETTER X (X)
+print("Task B-001 completed")         # HYPHEN-MINUS (-)
+```
+
+#### **Unicode Character Mapping**
+| Unicode Character | Name | ASCII Replacement | Usage |
+|------------------|------|------------------|-------|
+| `–` | EN DASH | `-` | Ranges, dates |
+| `—` | EM DASH | `-` | Punctuation |
+| `‑` | NON-BREAKING HYPHEN | `-` | URLs, identifiers |
+| `ℹ` | INFORMATION SOURCE | `i` | Status indicators |
+| `⚠` | WARNING SIGN | `!` | Warnings |
+| `✅` | WHITE HEAVY CHECK MARK | `OK` | Success indicators |
+| `❌` | CROSS MARK | `X` | Error indicators |
+
+#### **Prevention Strategies**
+1. **Use ASCII characters**: Stick to standard ASCII for code strings
+2. **Avoid copy-paste**: Don't copy Unicode characters from web pages or documents
+3. **Editor settings**: Configure editors to show Unicode characters visibly
+4. **Linting**: Use Ruff RUF001 checks to catch these early
+5. **Templates**: Use ASCII-only templates for new code
+
+#### **Automated Fixing**
+```bash
+# Check for RUF001 errors
+ruff check --select RUF001 .
+
+# Fix automatically (when possible)
+ruff check --select RUF001 --fix .
+
+# Custom script for complex cases
+python3.12 scripts/fix_ruf001_errors.py
+```
+
 ### **Variable Management**
 - **No unused variables**: Remove variables that aren't used
 - **Clear variable names**: Use descriptive names
@@ -1436,6 +1489,33 @@ ruff check --select PT009,B007,SIM117,RUF001,RUF013,SIM102,F841 --fix scripts/ d
 3. **Test After Each Phase**: Ensure fixes don't break functionality
 4. **Document Patterns**: Record successful strategies for future reference
 5. **Consider Template Safety**: Fix patterns that could propagate to new code
+
+#### **Template Safety Guidelines**
+**Problem**: Errors in existing code get copied when using it as a template for new files.
+
+**Prevention Strategies**:
+1. **Fix Before Copying**: Always lint and fix source files before using as templates
+2. **Use Clean Templates**: Maintain a set of error-free template files
+3. **Automated Checks**: Run linting on new files immediately after creation
+4. **Pattern Recognition**: Identify and fix common patterns that propagate:
+   - Unicode characters (RUF001)
+   - Unused imports (F401)
+   - Formatting issues (I001)
+   - Unused variables (F841)
+
+**Template Creation Process**:
+```bash
+# 1. Start with existing file
+cp existing_file.py new_file.py
+
+# 2. Fix any errors in the template
+ruff check --fix new_file.py
+
+# 3. Verify template is clean
+ruff check new_file.py
+
+# 4. Then customize for new use case
+```
 
 ### **Efficiency Scoring Integration**
 
