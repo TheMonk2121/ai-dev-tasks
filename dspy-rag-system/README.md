@@ -386,3 +386,27 @@ python3 test_csv_functionality.py
 ./run_tests.sh integration  # Run integration tests only
 ./run_tests.sh coverage     # Run with coverage report
 ```
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for README.md
+# Generated: 2025-08-17T21:49:49.323744
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->

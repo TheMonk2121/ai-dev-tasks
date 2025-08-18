@@ -1,0 +1,293 @@
+# Testing and Validation Rules
+
+## 🧪 TESTING AND VALIDATION RULES
+
+This project uses comprehensive testing and validation to ensure code quality and system reliability.
+
+### **Test Categories**
+
+**Tier-based Testing:**
+```bash
+# Tier 1: Critical tests (must pass)
+python -m pytest tests/ -m "tier1"
+
+# Tier 2: High priority tests
+python -m pytest tests/ -m "tier2"
+
+# Tier 3: Supporting tests
+python -m pytest tests/ -m "tier3"
+```
+
+**Test Types:**
+```bash
+# Unit tests
+python -m pytest tests/ -m "kind_unit"
+
+# Integration tests
+python -m pytest tests/ -m "kind_integration"
+
+# End-to-end tests
+python -m pytest tests/ -m "kind_e2e"
+
+# Smoke tests
+python -m pytest tests/ -m "kind_smoke"
+
+# Performance tests
+python -m pytest tests/ -m "kind_performance"
+
+# Security tests
+python -m pytest tests/ -m "kind_security"
+
+# Property-based tests
+python -m pytest tests/ -m "kind_property"
+
+# Prompt contract tests
+python -m pytest tests/ -m "kind_prompt"
+
+# Governance tests
+python -m pytest tests/ -m "governance"
+```
+
+### **Test Configuration**
+
+**Pytest Configuration (pyproject.toml):**
+```toml
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+markers = [
+    # Tier markers for test criticality
+    "tier1: Critical tests (must pass)",
+    "tier2: High priority tests",
+    "tier3: Supporting tests",
+    # Kind markers for test types
+    "kind_unit: Unit tests",
+    "kind_integration: Integration tests",
+    "kind_e2e: End-to-end tests",
+    "kind_smoke: Smoke tests",
+    "kind_performance: Performance tests",
+    "kind_security: Security tests",
+    "kind_property: Property-based tests",
+    "kind_prompt: Prompt contract tests",
+    # Governance markers for validator testing
+    "governance: Governance system tests",
+    "archive: Archive immutability tests",
+    "xref: Cross-reference validation tests",
+    "linkcheck: Link validation tests",
+    "slow: Slow-running tests",
+    "e2e: End-to-end tests",
+]
+```
+
+### **Validation Commands**
+
+**Core Validation:**
+```bash
+# Governance validation
+make gov/validate
+
+# Coding standards validation
+python scripts/validate_coding_standards.py
+
+# Documentation validation
+python scripts/doc_coherence_validator.py --ci --json
+
+# Link validation
+python scripts/link_check.py
+```
+
+**Specialized Validation:**
+```bash
+# Shadow fork validation
+make gov/shadow-fix DRY_RUN=1
+
+# Archive validation
+make gov/archive-zeroize DRY_RUN=1
+
+# XRef validation
+make gov/xref SCOPE=400_guides
+
+# README validation
+make gov/readme-fix SCOPE=000_core
+```
+
+### **Test Execution**
+
+**Comprehensive Test Suite:**
+```bash
+# Run all tests
+python -m pytest tests/
+
+# Run with coverage
+python -m pytest tests/ --cov=scripts --cov=dspy-rag-system
+
+# Run specific test file
+python -m pytest tests/test_specific_module.py
+
+# Run tests in parallel
+python -m pytest tests/ -n auto
+
+# Run tests with timeout
+python -m pytest tests/ --timeout=30
+```
+
+**Performance Testing:**
+```bash
+# Performance benchmarks
+python scripts/performance_benchmark.py
+
+# Entity expansion testing
+python scripts/ab_test_entity_expansion.py
+
+# Database resilience testing
+python scripts/demo_database_resilience.py
+
+# Vector store benchmarking
+python dspy-rag-system/benchmark_vector_store.py
+```
+
+### **Quality Gates**
+
+**Pre-commit Validation:**
+1. **Unit tests**: `python -m pytest tests/ -m "tier1 and kind_unit"`
+2. **Coding standards**: `python scripts/validate_coding_standards.py`
+3. **Governance**: `make gov/validate`
+4. **Documentation**: `python scripts/doc_coherence_validator.py --ci --json`
+
+**CI/CD Validation:**
+```bash
+# Full test suite
+python -m pytest tests/ -m "tier1 or tier2"
+
+# Governance check
+make gov/validate
+
+# Documentation coherence
+python scripts/doc_coherence_validator.py --ci --json
+
+# Link validation
+python scripts/link_check.py
+```
+
+### **Test Organization**
+
+**Test Structure:**
+```
+tests/
+├── ai/                    # AI-specific tests
+│   └── test_prompt_contracts.py
+├── e2e/                   # End-to-end tests
+│   └── test_vector_store_modes_e2e.py
+├── linkcheck/             # Link validation tests
+│   └── test_internal_links.py
+├── property/              # Property-based tests
+│   └── test_shadow_fork_filename_rules.py
+├── validator/             # Governance tests
+│   ├── test_anchor_drift_check.py
+│   ├── test_exception_ledger.py
+│   └── test_fail_modes.py
+├── xref/                  # Cross-reference tests
+│   ├── test_scanner_dryrun.py
+│   ├── test_slugify.py
+│   └── test_writer_idempotent.py
+└── conftest.py           # Test configuration
+```
+
+### **Validation Scripts**
+
+**Coding Standards Validation:**
+```bash
+# Run validation
+python scripts/validate_coding_standards.py
+
+# Output includes:
+# - Unused imports (F401)
+# - Unnecessary f-strings (F541)
+# - Unused variables (F841)
+```
+
+**Documentation Validation:**
+```bash
+# Full documentation validation
+python scripts/doc_coherence_validator.py --ci --json
+
+# Specific category validation
+python scripts/doc_coherence_validator.py --check shadow-fork --check archive
+```
+
+**Link Validation:**
+```bash
+# Check internal links
+python scripts/link_check.py
+
+# Check external links
+python scripts/link_check.py --external
+```
+
+### **Error Handling and Recovery**
+
+**Test Error Handling:**
+```bash
+# Error handler testing
+python scripts/error_handler.py --test-error network
+python scripts/error_handler.py --test-error database
+python scripts/error_handler.py --test-error file
+python scripts/error_handler.py --test-error permission
+python scripts/error_handler.py --test-error timeout
+```
+
+**System Health Monitoring:**
+```bash
+# Check system status
+cat dspy-rag-system/docs/CURRENT_STATUS.md
+
+# Monitor context engineering
+python scripts/monitor_context_engineering.py
+
+# Production monitoring
+python scripts/demo_production_monitoring.py
+```
+
+### **Test Data and Fixtures**
+
+**Test Data Management:**
+```bash
+# Test documents
+ls dspy-rag-system/test_documents/
+
+# Test queries
+ls tests/queries/
+
+# Test fixtures
+ls tests/framework/
+```
+
+**Database Testing:**
+```bash
+# Database resilience testing
+python scripts/demo_database_resilience.py
+
+# Database sync check
+python scripts/database_sync_check.py
+
+# Database maintenance
+python dspy-rag-system/scripts/database_maintenance.py
+```
+
+### **Continuous Integration**
+
+**CI/CD Pipeline:**
+```bash
+# Run CI test runner
+python dspy-rag-system/ci_test_runner.py
+
+# Run comprehensive tests
+./dspy-rag-system/run_comprehensive_tests.sh
+
+# Run tests with reporting
+python dspy-rag-system/ci_test_runner.py --generate-report
+```
+
+Remember: Comprehensive testing and validation ensure code quality and system reliability.
+Always run appropriate tests before committing and fix any validation failures.

@@ -6,10 +6,13 @@ Comprehensive tests for query type classification and pipeline routing.
 """
 
 import json
+import os
+import sys
 
 import pytest
 
-from scripts.adaptive_routing import AdaptiveRouter, QueryType
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
+from adaptive_routing import AdaptiveRouter, QueryType
 
 
 class TestAdaptiveRouting:

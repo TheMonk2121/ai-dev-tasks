@@ -1,0 +1,152 @@
+name: Validator Enforcement
+on: [push, pull_request]
+
+jobs:
+  validator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Set validator environment
+        run: |
+          echo "VALIDATOR_REQUIRE_MULTI_REP=1" >> $GITHUB_ENV
+          echo "VALIDATOR_REQUIRE_XREF=1" >> $GITHUB_ENV
+          echo "VALIDATOR_STRICT_STALE_XREF=0" >> $GITHUB_ENV
+          echo "VALIDATOR_CHECK_MODE=all" >> $GITHUB_ENV
+          echo "VALIDATOR_CI_MODE=1" >> $GITHUB_ENV
+          echo "VALIDATOR_ARCHIVE_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_SHADOW_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_README_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_MULTIREP_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_CHANGED_FILES_ONLY=0" >> $GITHUB_ENV
+
+      - name: Get changed files
+        if: env.VALIDATOR_CHANGED_FILES_ONLY == '1'
+        id: changed
+        uses: tj-actions/changed-files@v42
+
+      - name: Run validator and write JSON
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report.json
+
+      - name: Generate metrics
+        run: |
+          python3 scripts/validator_metrics.py --input validator_report.json --output metrics/validator_counts.json
+          echo "Metrics generated"
+
+      - name: Check ledger additions
+        if: github.event_name == 'pull_request'
+        run: python3 scripts/check_ledger_additions.py
+
+      - name: Upload validator report
+        uses: actions/upload-artifact@v4
+        with:
+          name: validator_report
+          path: validator_report.json
+
+      - name: Ratchet gate (readme + multirep)
+        if: github.event_name == 'pull_request'
+        env:
+          CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
+        run: |
+          python3 scripts/validator_ratchet.py --report validator_report.json
+          echo "Ratchet check completed"
+
+      - name: Gate on active FAIL categories
+        env:
+          CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
+          CHANGED_FILES_ONLY: ${{ env.VALIDATOR_CHANGED_FILES_ONLY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          changed = set(os.getenv("CHANGED_FILES","").split())
+          changed_only = os.getenv("CHANGED_FILES_ONLY") == "1"
+          r = json.load(open('validator_report.json'))
+
+          def intersects(cat):
+              files = set(r.get("impacted_files", {}).get(cat, []))
+              return bool(changed & files) if changed else False
+
+          fail = 0
+          for cat, info in r.get("categories", {}).items():
+              v = info.get("violations", 0)
+              if info.get("fail") and v > 0:
+                  if changed_only and changed and not intersects(cat):
+                      continue
+                  print(f"FAIL: {cat} has {v} violations in FAIL mode")
+                  fail = 2
+          sys.exit(fail)
+          PY
+
+      - name: Generate job summary
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          try:
+              r = json.load(open('validator_report.json'))
+              print("## Validator Report Summary")
+              print()
+              print("| Category | Violations | Fail Mode |")
+              print("|----------|------------|-----------|")
+              for cat, info in r.get("categories", {}).items():
+                  fail_flag = "✅" if info.get("fail") else "❌"
+                  print(f"| {cat} | {info.get('violations', 0)} | {fail_flag} |")
+              print()
+              print("### Top Impacted Files")
+              print()
+              for cat, files in r.get("impacted_files", {}).items():
+                  if files:
+                      print(f"**{cat}:**")
+                      for f in files[:5]:
+                          print(f"- {f}")
+                      if len(files) > 5:
+                          print(f"- ... and {len(files) - 5} more")
+                      print()
+          except Exception as e:
+              print(f"Error generating summary: {e}")
+          PY
+
+      - name: Show clean-day counters
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          def show(path):
+              r = subprocess.run(["git","show",f"bot/validator-state:{path}"], capture_output=True, text=True)
+              return json.loads(r.stdout) if r.returncode==0 else {}
+          counters = show("data/validator_counters.json")
+          targets  = {"archive":3,"shadow_fork":7,"multirep":5,"readme":14}
+          print("## Clean-day counters")
+          print("| Category | Days | Target |")
+          print("|---|---:|---:|")
+          for k,v in counters.items():
+              print(f"| {k} | {v} | {targets.get(k,'-')} |")
+          PY
+
+      - name: Update flip counters and open PRs when due
+        if: always() && github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          python3 scripts/validator_flip_manager.py validator_report.json
+
+      - name: Persist counters and metrics to state branch
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "validator-bot"
+          git config user.email "validator-bot@users.noreply.github.com"
+          git fetch origin bot/validator-state:bot/validator-state || true
+          git checkout -B bot/validator-state || git checkout bot/validator-state
+          cp -f data/validator_counters.json data/validator_counters.json
+          cp -f metrics/validator_counts.json metrics/validator_counts.json
+          git add data/validator_counters.json metrics/validator_counts.json
+          git commit -m "chore(validator): update counters and metrics" || echo "No changes"
+          git push origin bot/validator-state

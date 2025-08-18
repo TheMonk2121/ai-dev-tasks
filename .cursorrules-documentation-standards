@@ -1,0 +1,289 @@
+# Documentation Standards
+
+## 📚 DOCUMENTATION STANDARDS
+
+This project maintains comprehensive documentation with strict standards for consistency and usability.
+
+### **Required Document Sections**
+
+**Core Document Structure:**
+```markdown
+# Document Title
+
+## TL;DR
+Brief summary of the document's purpose and key points.
+
+## Purpose
+Clear explanation of what this document covers and why it exists.
+
+## Usage
+How to use the information or tools described in this document.
+
+## Owner
+AI Development Team - [Specific Role/Component]
+
+## Last Reviewed
+YYYY-MM-DD
+
+## Governance Status
+| Category | Violations | Status |
+|----------|------------|--------|
+| archive | 0 | ✅ Clean |
+| shadow_fork | 0 | ✅ Clean |
+| readme | 0 | ✅ Clean |
+| multirep | 0 | ✅ Clean |
+
+*Last updated: YYYY-MM-DD HH:MM UTC*
+```
+
+### **File Organization Standards**
+
+**Directory Structure:**
+```
+000_core/          # Core workflows and backlog management
+├── 000_backlog.md
+├── 001_create-prd.md
+├── 002_generate-tasks.md
+├── 003_process-task-list.md
+└── 004_development-roadmap.md
+
+100_memory/        # Memory context and development state
+├── 100_cursor-memory-context.md
+├── 100_backlog-guide.md
+└── 104_dspy-development-context.md
+
+200_setup/         # Environment setup and configuration
+├── 200_naming-conventions.md
+├── 201_database-config.py
+└── 202_setup-requirements.md
+
+400_guides/        # Development guides and runbooks
+├── 400_comprehensive-coding-best-practices.md
+├── 400_system-overview.md
+├── 400_project-overview.md
+└── [40+ additional guides]
+
+500_research/      # Research and reference materials
+├── 500_research-index.md
+├── 500_dspy-research.md
+└── [research materials]
+
+600_archives/      # Archived and legacy content
+└── [archived files]
+```
+
+### **Naming Conventions**
+
+**File Naming:**
+- **Core files**: `000_` prefix for essential workflows
+- **Memory files**: `100_` prefix for AI context
+- **Setup files**: `200_` prefix for configuration
+- **Guide files**: `400_` prefix for documentation
+- **Research files**: `500_` prefix for reference materials
+- **Archive files**: `600_` prefix for legacy content
+
+**Document Naming:**
+- **Use descriptive names**: `400_comprehensive-coding-best-practices.md`
+- **Use hyphens for spaces**: `400_system-overview.md`
+- **Include category prefix**: Always start with numeric category
+- **Use lowercase**: All filenames in lowercase
+
+### **Cross-Reference Standards**
+
+**Relative Paths:**
+```markdown
+# ✅ Good - Use relative paths
+See [System Overview](../400_guides/400_system-overview.md) for details.
+
+# ❌ Bad - Use absolute paths
+See [System Overview](/400_guides/400_system-overview.md) for details.
+```
+
+**Cross-Reference Validation:**
+```bash
+# Validate cross-references
+python scripts/link_check.py
+
+# Fix broken links
+python scripts/fix_broken_links.py
+
+# Update cross-references
+python scripts/xref_apply.py --scope 400_guides
+```
+
+### **Documentation Validation**
+
+**Core Validation Commands:**
+```bash
+# Full documentation validation
+python scripts/doc_coherence_validator.py --ci --json
+
+# Specific category validation
+python scripts/doc_coherence_validator.py --check shadow-fork --check archive
+
+# Link validation
+python scripts/link_check.py
+
+# Documentation retrieval
+python scripts/documentation_retrieval_cli.py --help
+```
+
+**Validation Categories:**
+- **archive**: Archive immutability (target: 3 days clean)
+- **shadow_fork**: Shadow fork naming (target: 7 days clean)
+- **readme**: README compliance (target: 14 days clean)
+- **multirep**: Multi-repo consistency (target: 5 days clean)
+
+### **Documentation Maintenance**
+
+**Regular Maintenance:**
+```bash
+# Add TL;DR sections
+python scripts/add_tldr_sections.py
+
+# Fix duplicate TL;DR sections
+python scripts/fix_duplicate_tldr.py
+
+# Fix duplicate paths
+python scripts/fix_duplicate_paths.py
+
+# Fix markdown issues
+python scripts/fix_markdown_issues.sh
+```
+
+**Markdown Fixes:**
+```bash
+# Fix specific markdown issues
+python scripts/fix_md004_list_style.py
+python scripts/fix_md040_code_languages.py
+python scripts/fix_md007_list_indentation.py
+python scripts/fix_md018_heading_spaces.py
+python scripts/fix_md037_emphasis_spacing.py
+python scripts/fix_md041_missing_h1.py
+python scripts/fix_md034_bare_urls.py
+python scripts/fix_md033_html_anchors.py
+python scripts/fix_md012_multiple_blanks.py
+python scripts/fix_md047_trailing_newlines.py
+```
+
+### **Documentation Workflow**
+
+**Pre-commit Documentation:**
+1. **Validate links**: `python scripts/link_check.py`
+2. **Check coherence**: `python scripts/doc_coherence_validator.py --ci --json`
+3. **Fix markdown**: `python scripts/fix_markdown_issues.sh`
+4. **Update cross-references**: `python scripts/xref_apply.py --scope directory`
+
+**Post-commit Documentation:**
+1. **Update documentation index**: `python scripts/documentation_indexer.py`
+2. **Generate metrics**: `python scripts/weekly_metrics_with_owners.py`
+3. **Update status badge**: `python scripts/generate_status_badge.py`
+
+### **Documentation Tools**
+
+**Core Tools:**
+```bash
+# Documentation coherence validator
+python scripts/doc_coherence_validator.py --help
+
+# Link checker
+python scripts/link_check.py --help
+
+# Documentation navigator
+python scripts/documentation_navigator.py --help
+
+# Documentation retrieval CLI
+python scripts/documentation_retrieval_cli.py --help
+```
+
+**Specialized Tools:**
+```bash
+# README autofix
+python scripts/readme_autofix.py --scope 400_guides
+
+# XRef scanner
+python scripts/xref_apply.py --scope 400_guides
+
+# Archive manifest rebuild
+python scripts/archive_manifest_rebuild.py
+```
+
+### **Documentation Quality Gates**
+
+**All documentation must pass:**
+- **Link validation**: All internal and external links working
+- **Cross-reference coherence**: All references valid and consistent
+- **Markdown compliance**: Proper markdown formatting
+- **Governance compliance**: No violations in documentation categories
+- **TL;DR sections**: All core documents have TL;DR sections
+
+### **Documentation Templates**
+
+**Guide Template:**
+```markdown
+# Guide Title
+
+## TL;DR
+Brief summary of the guide's purpose and key points.
+
+## Purpose
+Clear explanation of what this guide covers and why it exists.
+
+## Usage
+How to use the information or tools described in this guide.
+
+## Owner
+AI Development Team - [Specific Role/Component]
+
+## Last Reviewed
+YYYY-MM-DD
+
+## Detailed Content
+[Main content of the guide]
+
+## Related Documents
+- [Related Guide 1](../400_guides/400_related-guide-1.md)
+- [Related Guide 2](../400_guides/400_related-guide-2.md)
+```
+
+**README Template:**
+```markdown
+# Project Name
+
+## TL;DR
+Brief summary of the project's purpose and key features.
+
+## Purpose
+Clear explanation of what this project does and why it exists.
+
+## Usage
+How to use the project and its main features.
+
+## Owner
+AI Development Team - [Specific Role/Component]
+
+## Last Reviewed
+YYYY-MM-DD
+
+## Governance Status
+| Category | Violations | Status |
+|----------|------------|--------|
+| archive | 0 | ✅ Clean |
+| shadow_fork | 0 | ✅ Clean |
+| readme | 0 | ✅ Clean |
+| multirep | 0 | ✅ Clean |
+
+*Last updated: YYYY-MM-DD HH:MM UTC*
+
+## Quick Start
+[Quick start instructions]
+
+## Project Structure
+[Project structure overview]
+
+## Key Commands
+[Key commands and usage]
+```
+
+Remember: Comprehensive, well-organized documentation is essential for project maintainability and collaboration.
+Always validate documentation before committing and maintain cross-reference consistency.

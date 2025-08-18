@@ -1,0 +1,1077 @@
+--- /Users/danieljacobs/Code/ai-dev-tasks/dspy-rag-system/src/dspy_modules/vector_store.py
++++ /Users/danieljacobs/Code/ai-dev-tasks/dspy-rag-system/src/dspy_modules/enhanced_vector_store.py
+@@ -1,615 +1,469 @@
+ #!/usr/bin/env python3
+ """
+-VectorStore DSPy Module (optimized)
+-- Unifies DB access via database_resilience manager
+-- Fixes dense result contract & hybrid merge
+-- Adds query-embed LRU cache and proper score fusion
+-- Includes spans in dense results
++Enhanced Vector Store Module
++Leverages advanced PostgreSQL + PGVector capabilities with performance monitoring,
++caching, and health checks for improved RAG system performance.
+ """
+ 
+-# Standard library imports
++import os
++import sys
++import psycopg2
+ import json
+-import logging
+-import uuid
+-from functools import lru_cache
+-from typing import Any, Dict, List, Optional, Tuple
++import hashlib
++import time
++from typing import List, Dict, Any, Optional, Tuple
++from pathlib import Path
++import numpy as np
++from datetime import datetime, timedelta
+ 
+-# Third-party imports
+-import numpy as np
+-import torch
+-from dspy import Module
+-from psycopg2 import errors
+-from psycopg2.extras import RealDictCursor, execute_values
+-from sentence_transformers import SentenceTransformer
++# Add the src directory to the path
++sys.path.append(str(Path(__file__).parent.parent))
+ 
+-# Local imports
+-try:
+-    from utils.database_resilience import get_database_manager
+-    from utils.retry_wrapper import retry_database
+-except ImportError:
+-    # Fallback for when running from outside src directory
+-    from ..utils.database_resilience import get_database_manager
+-    from ..utils.retry_wrapper import retry_database
++from utils.logger import get_logger
++logger = get_logger(__name__)
+ 
+-# Set up logging
+-LOG = logging.getLogger(__name__)
++class EnhancedVectorStore:
++    """
++    Enhanced vector store with advanced PostgreSQL + PGVector capabilities
++    including performance monitoring, caching, and health checks.
++    """
++    
++    def __init__(self, db_connection_string: str, dimension: int = 384):
++        self.db_connection_string = db_connection_string
++        self.dimension = dimension
++        
++    def _get_query_hash(self, query: str) -> str:
++        """Generate a hash for the query for caching and performance tracking"""
++        return hashlib.md5(query.encode()).hexdigest()
++    
++    def _record_performance(self, operation_type: str, query_hash: str, 
++                          execution_time_ms: int, result_count: int, 
++                          cache_hit: bool = False) -> None:
++        """Record performance metrics for vector operations"""
++        try:
++            conn = psycopg2.connect(self.db_connection_string)
++            with conn.cursor() as cursor:
++                cursor.execute("""
++                    SELECT record_vector_performance(%s, %s, %s, %s, %s)
++                """, (operation_type, query_hash, execution_time_ms, result_count, cache_hit))
++                conn.commit()
++            conn.close()
++        except Exception as e:
++            logger.warning(f"Failed to record performance metrics: {e}")
++    
++    def _get_cache_entry(self, cache_key: str) -> Optional[Dict[str, Any]]:
++        """Get cached embedding data"""
++        try:
++            conn = psycopg2.connect(self.db_connection_string)
++            with conn.cursor() as cursor:
++                cursor.execute("""
++                    SELECT embedding_data, last_accessed 
++                    FROM vector_cache 
++                    WHERE cache_key = %s AND (expires_at IS NULL OR expires_at > CURRENT_TIMESTAMP)
++                """, (cache_key,))
++                result = cursor.fetchone()
++                
++                if result:
++                    # Update last accessed
++                    cursor.execute("""
++                        UPDATE vector_cache 
++                        SET last_accessed = CURRENT_TIMESTAMP 
++                        WHERE cache_key = %s
++                    """, (cache_key,))
++                    conn.commit()
++                    
++                    return {
++                        'embedding_data': result[0],
++                        'last_accessed': result[1]
++                    }
++            conn.close()
++        except Exception as e:
++            logger.warning(f"Failed to get cache entry: {e}")
++        return None
++    
++    def _set_cache_entry(self, cache_key: str, embedding_data: Dict[str, Any], 
++                        expires_at: Optional[datetime] = None) -> None:
++        """Set cached embedding data"""
++        try:
++            conn = psycopg2.connect(self.db_connection_string)
++            with conn.cursor() as cursor:
++                cursor.execute("""
++                    INSERT INTO vector_cache (cache_key, embedding_data, expires_at)
++                    VALUES (%s, %s, %s)
++                    ON CONFLICT (cache_key) 
++                    DO UPDATE SET 
++                        embedding_data = EXCLUDED.embedding_data,
++                        expires_at = EXCLUDED.expires_at,
++                        last_accessed = CURRENT_TIMESTAMP
++                """, (cache_key, json.dumps(embedding_data), expires_at))
++                conn.commit()
++            conn.close()
++        except Exception as e:
++            logger.warning(f"Failed to set cache entry: {e}")
++    
++    def _clean_expired_cache(self) -> int:
++        """Clean expired cache entries"""
++        try:
++            conn = psycopg2.connect(self.db_connection_string)
++            with conn.cursor() as cursor:
++                cursor.execute("SELECT clean_expired_vector_cache()")
++                deleted_count = cursor.fetchone()[0]
++                conn.commit()
++            conn.close()
++            return deleted_count
++        except Exception as e:
++            logger.warning(f"Failed to clean expired cache: {e}")
++            return 0
++    
++    def add_documents(self, documents: List[Dict[str, Any]]) -> bool:
++        """
++        Add documents to the vector store with enhanced performance tracking
++        
++        Args:
++            documents: List of documents with content and metadata
++            
++        Returns:
++            bool: Success status
++        """
++        start_time = time.time()
++        
++        try:
++            conn = psycopg2.connect(self.db_connection_string)
++            with conn.cursor() as cursor:
++                for doc in documents:
++                    # Insert document
++                    cursor.execute("""
++                        INSERT INTO documents (filename, file_path, file_type, file_size, status)
++                        VALUES (%s, %s, %s, %s, %s)
++                        RETURNING id
++                    """, (
++                        doc.get('filename', 'unknown'),
++                        doc.get('file_path', ''),
++                        doc.get('file_type', 'text'),
++                        doc.get('file_size', 0),
++                        'processed'
++                    ))
++                    doc_id = cursor.fetchone()[0]
++                    
++                    # Insert chunks
++                    chunks = doc.get('chunks', [])
++                    for i, chunk in enumerate(chunks):
++                        embedding = chunk.get('embedding')
++                        if embedding:
++                            cursor.execute("""
++                                INSERT INTO document_chunks 
++                                (content, embedding, metadata, document_id, chunk_index)
++                                VALUES (%s, %s, %s, %s, %s)
++                            """, (
++                                chunk['content'],
++                                embedding,
++                                json.dumps(chunk.get('metadata', {})),
++                                str(doc_id),
++                                i
++                            ))
++                
++                conn.commit()
++            conn.close()
++            
++            execution_time = int((time.time() - start_time) * 1000)
++            self._record_performance('add_documents', 'batch', execution_time, len(documents))
++            
++            logger.info(f"Successfully added {len(documents)} documents")
++            return True
++            
++        except Exception as e:
++            logger.error(f"Failed to add documents: {e}")
++            return False
++    
++    def similarity_search(self, query_embedding: List[float], 
++                         top_k: int = 5, 
++                         use_cache: bool = True) -> List[Dict[str, Any]]:
++        """
++        Perform similarity search with caching and performance monitoring
++        
++        Args:
++            query_embedding: Query embedding vector
++            top_k: Number of results to return
++            use_cache: Whether to use caching
++            
++        Returns:
++            List of similar documents with scores
++        """
++        start_time = time.time()
++        query_hash = self._get_query_hash(str(query_embedding))
++        cache_hit = False
++        
++        # Try cache first
++        if use_cache:
++            cache_key = f"search_{query_hash}"
++            cached_result = self._get_cache_entry(cache_key)
++            if cached_result:
++                cache_hit = True
++                execution_time = int((time.time() - start_time) * 1000)
++                self._record_performance('similarity_search', query_hash, execution_time, 
++                                      len(cached_result['embedding_data']), True)
++                return cached_result['embedding_data']
++        
++        try:
++            conn = psycopg2.connect(self.db_connection_string)
++            with conn.cursor() as cursor:
++                # Perform similarity search
++                cursor.execute("""
++                    SELECT 
++                        dc.content,
++                        dc.metadata,
++                        dc.document_id,
++                        dc.chunk_index,
++                        1 - (dc.embedding <=> %s::vector) as similarity_score
++                    FROM document_chunks dc
++                    WHERE dc.embedding IS NOT NULL
++                    ORDER BY dc.embedding <=> %s::vector
++                    LIMIT %s
++                """, (query_embedding, query_embedding, top_k))
++                
++                results = []
++                for row in cursor.fetchall():
++                    results.append({
++                        'content': row[0],
++                        'metadata': row[1] if isinstance(row[1], dict) else (json.loads(row[1]) if row[1] else {}),
++                        'document_id': row[2],
++                        'chunk_index': row[3],
++                        'similarity_score': float(row[4])
++                    })
++                
++            conn.close()
++            
++            execution_time = int((time.time() - start_time) * 1000)
++            self._record_performance('similarity_search', query_hash, execution_time, len(results), cache_hit)
++            
++            # Cache the result
++            if use_cache and results:
++                cache_key = f"search_{query_hash}"
++                expires_at = datetime.now() + timedelta(hours=1)  # Cache for 1 hour
++                self._set_cache_entry(cache_key, results, expires_at)
++            
++            return results
++            
++        except Exception as e:
++            logger.error(f"Failed to perform similarity search: {e}")
++            return []
++    
++    def get_health_status(self) -> Dict[str, Any]:
++        """
++        Get comprehensive health status of the vector store
++        
++        Returns:
++            Dict with health status information
++        """
++        try:
++            conn = psycopg2.connect(self.db_connection_string)
++            with conn.cursor() as cursor:
++                cursor.execute("SELECT get_vector_health_status()")
++                health_status = cursor.fetchone()[0]
++            conn.close()
++            
++            # Add additional health checks
++            health_status['cache_cleanup_needed'] = self._clean_expired_cache()
++            health_status['timestamp'] = datetime.now().isoformat()
++            
++            return health_status
++            
++        except Exception as e:
++            logger.error(f"Failed to get health status: {e}")
++            return {'error': str(e)}
++    
++    def create_vector_index(self, table_name: str, column_name: str, 
++                          index_type: str = 'hnsw', parameters: Dict[str, Any] = None) -> bool:
++        """
++        Create a vector index for improved search performance
++        
++        Args:
++            table_name: Name of the table to index
++            column_name: Name of the vector column
++            index_type: Type of index (hnsw, ivfflat)
++            parameters: Index parameters
++            
++        Returns:
++            bool: Success status
++        """
++        try:
++            conn = psycopg2.connect(self.db_connection_string)
++            with conn.cursor() as cursor:
++                # Record index creation
++                index_name = f"idx_{table_name}_{column_name}_{index_type}"
++                cursor.execute("""
++                    INSERT INTO vector_indexes (index_name, table_name, column_name, index_type, parameters, status)
++                    VALUES (%s, %s, %s, %s, %s, %s)
++                """, (
++                    index_name,
++                    table_name,
++                    column_name,
++                    index_type,
++                    json.dumps(parameters or {}),
++                    'creating'
++                ))
++                
++                # Create the actual index
++                if index_type == 'hnsw':
++                    cursor.execute(f"""
++                        CREATE INDEX {index_name} 
++                        ON {table_name} USING hnsw ({column_name} vector_cosine_ops)
++                    """)
++                elif index_type == 'ivfflat':
++                    cursor.execute(f"""
++                        CREATE INDEX {index_name} 
++                        ON {table_name} USING ivfflat ({column_name} vector_cosine_ops)
++                    """)
++                
++                # Update status
++                cursor.execute("""
++                    UPDATE vector_indexes 
++                    SET status = 'active', updated_at = CURRENT_TIMESTAMP
++                    WHERE index_name = %s
++                """, (index_name,))
++                
++                conn.commit()
++            conn.close()
++            
++            logger.info(f"Successfully created vector index: {index_name}")
++            return True
++            
++        except Exception as e:
++            logger.error(f"Failed to create vector index: {e}")
++            return False
++    
++    def get_performance_metrics(self, hours: int = 24) -> List[Dict[str, Any]]:
++        """
++        Get performance metrics for the specified time period
++        
++        Args:
++            hours: Number of hours to look back
++            
++        Returns:
++            List of performance metrics
++        """
++        try:
++            conn = psycopg2.connect(self.db_connection_string)
++            with conn.cursor() as cursor:
++                cursor.execute("""
++                    SELECT 
++                        operation_type,
++                        AVG(execution_time_ms) as avg_execution_time,
++                        MAX(execution_time_ms) as max_execution_time,
++                        COUNT(*) as operation_count,
++                        AVG(result_count) as avg_result_count,
++                        SUM(CASE WHEN cache_hit THEN 1 ELSE 0 END) as cache_hits,
++                        COUNT(*) as total_operations
++                    FROM vector_performance_metrics
++                    WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '%s hours'
++                    GROUP BY operation_type
++                    ORDER BY avg_execution_time DESC
++                """, (hours,))
++                
++                results = []
++                for row in cursor.fetchall():
++                    results.append({
++                        'operation_type': row[0],
++                        'avg_execution_time_ms': float(row[1]) if row[1] else 0,
++                        'max_execution_time_ms': row[2],
++                        'operation_count': row[3],
++                        'avg_result_count': float(row[4]) if row[4] else 0,
++                        'cache_hit_rate': float(row[5]) / row[6] if row[6] > 0 else 0,
++                        'total_operations': row[6]
++                    })
++                
++            conn.close()
++            return results
++            
++        except Exception as e:
++            logger.error(f"Failed to get performance metrics: {e}")
++            return []
++    
++    def optimize_performance(self) -> Dict[str, Any]:
++        """
++        Optimize vector store performance based on metrics
++        
++        Returns:
++            Dict with optimization recommendations
++        """
++        try:
++            # Get recent performance metrics
++            metrics = self.get_performance_metrics(hours=1)
++            
++            recommendations = {
++                'cache_cleanup': 0,
++                'index_creation': [],
++                'performance_issues': []
++            }
++            
++            # Check for cache cleanup
++            recommendations['cache_cleanup'] = self._clean_expired_cache()
++            
++            # Analyze performance issues
++            for metric in metrics:
++                if metric['avg_execution_time_ms'] > 100:  # More than 100ms
++                    recommendations['performance_issues'].append({
++                        'operation': metric['operation_type'],
++                        'avg_time_ms': metric['avg_execution_time_ms'],
++                        'suggestion': 'Consider creating HNSW index for faster searches'
++                    })
++                
++                if metric['cache_hit_rate'] < 0.5:  # Less than 50% cache hit rate
++                    recommendations['performance_issues'].append({
++                        'operation': metric['operation_type'],
++                        'cache_hit_rate': metric['cache_hit_rate'],
++                        'suggestion': 'Consider increasing cache size or TTL'
++                    })
++            
++            # Suggest index creation if needed
++            if not self._has_vector_index('document_chunks', 'embedding'):
++                recommendations['index_creation'].append({
++                    'table': 'document_chunks',
++                    'column': 'embedding',
++                    'type': 'hnsw',
++                    'reason': 'No vector index found for similarity search'
++                })
++            
++            return recommendations
++            
++        except Exception as e:
++            logger.error(f"Failed to optimize performance: {e}")
++            return {'error': str(e)}
++    
++    def _has_vector_index(self, table_name: str, column_name: str) -> bool:
++        """Check if a vector index exists for the given table and column"""
++        try:
++            conn = psycopg2.connect(self.db_connection_string)
++            with conn.cursor() as cursor:
++                cursor.execute("""
++                    SELECT COUNT(*) FROM vector_indexes 
++                    WHERE table_name = %s AND column_name = %s AND status = 'active'
++                """, (table_name, column_name))
++                count = cursor.fetchone()[0]
++            conn.close()
++            return count > 0
++        except Exception as e:
++            logger.warning(f"Failed to check vector index: {e}")
++            return False
+ 
+-# ---------------------------
+-# Model & embedding helpers
+-# ---------------------------
+-
+-
+-@lru_cache(maxsize=1)
+-def _get_model(name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
+-    """Singleton model loader to prevent repeated loads"""
+-    return SentenceTransformer(name)
+-
+-
+-@lru_cache(maxsize=1024)
+-def _cached_query_embedding_bytes(model_name: str, text: str) -> bytes:
+-    """Cache query embeddings by (model, text) as bytes to minimize memory overhead."""
+-    emb = _get_model(model_name).encode([text], convert_to_numpy=True)[0]
+-    if isinstance(emb, torch.Tensor):
+-        emb = emb.detach().cpu().numpy()
+-    emb = emb.astype(np.float32, copy=False)
+-    return emb.tobytes()
+-
+-
+-def _query_embedding(model_name: str, text: str) -> np.ndarray:
+-    return np.frombuffer(_cached_query_embedding_bytes(model_name, text), dtype=np.float32)
+-
+-
+-# ---------------------------
+-# Score normalization & fusion
+-# ---------------------------
+-
+-
+-def _zscore(scores: List[float]) -> List[float]:
+-    if not scores:
+-        return []
+-    mu = float(np.mean(scores))
+-    sigma = float(np.std(scores))
+-    if sigma == 0.0:
+-        # Avoid division by zero; all equal -> zeros
+-        return [0.0 for _ in scores]
+-    return [(s - mu) / sigma for s in scores]
+-
+-
+-def _rrf_ranks(scores: List[float]) -> Dict[int, int]:
+-    # Higher score = better rank 1..N
+-    order = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
+-    return {idx: rank + 1 for rank, idx in enumerate(order)}
+-
+-
+-def _fuse_dense_sparse(
+-    rows_dense: List[Dict[str, Any]],
+-    rows_sparse: List[Dict[str, Any]],
+-    limit: int,
+-    method: str = "zscore",  # or "rrf"
+-    w_dense: float = 0.6,
+-    w_sparse: float = 0.4,
+-) -> List[Dict[str, Any]]:
+-    """
+-    Merge by key=(document_id, chunk_index) with either zscore fusion or RRF.
+-    Ensures comparable scales across modalities.
+-    """
+-
+-    # Build maps
+-    def key(r):
+-        return (r["document_id"], r["chunk_index"])
+-
+-    d_map = {key(r): r for r in rows_dense}
+-    s_map = {key(r): r for r in rows_sparse}
+-
+-    # Union keys
+-    all_keys = list({*d_map.keys(), *s_map.keys()})
+-
+-    # Prepare aligned score lists
+-    dense_scores = [d_map.get(k, {}).get("score_dense", 0.0) for k in all_keys]
+-    sparse_scores = [s_map.get(k, {}).get("score_sparse", 0.0) for k in all_keys]
+-
+-    fused_scores: List[float] = []
+-
+-    if method == "rrf":
+-        # Reciprocal Rank Fusion (stable when distributions are weird)
+-        k_dense = _rrf_ranks(dense_scores)
+-        k_sparse = _rrf_ranks(sparse_scores)
+-        # RRF: w/(60+rank) — 60 is conventional; tweak if needed
+-        fused_scores = [
+-            w_dense * (1.0 / (60.0 + k_dense.get(i, 60.0))) + w_sparse * (1.0 / (60.0 + k_sparse.get(i, 60.0)))
+-            for i in range(len(all_keys))
+-        ]
+-    else:
+-        # z-score normalize and weight
+-        zd = _zscore(dense_scores)
+-        zs = _zscore(sparse_scores)
+-        fused_scores = [w_dense * zd[i] + w_sparse * zs[i] for i in range(len(all_keys))]
+-
+-    # Construct merged rows
+-    merged: List[Dict[str, Any]] = []
+-    for i, k in enumerate(all_keys):
+-        d = d_map.get(k)
+-        s = s_map.get(k)
+-        base = d or s or {}
+-        row = {
+-            "document_id": base.get("document_id"),
+-            "chunk_index": base.get("chunk_index"),
+-            "content": base.get("content", ""),
+-            "score_dense": float(d.get("score_dense", 0.0)) if d else 0.0,
+-            "score_sparse": float(s.get("score_sparse", 0.0)) if s else 0.0,
+-            "hybrid_score": float(fused_scores[i]),
+-            "found_by": "both" if (d and s) else ("dense" if d else "sparse"),
+-            "start_offset": base.get("start_offset", 0),
+-            "end_offset": base.get("end_offset", len(base.get("content", ""))),
+-        }
+-        merged.append(row)
+-
+-    merged.sort(key=lambda r: r["hybrid_score"], reverse=True)
+-    return merged[: max(1, int(limit))]
+-
+-
+-# ---------------------------
+-# Main module
+-# ---------------------------
+-
+-
+-class HybridVectorStore(Module):
+-    """DSPy module for hybrid vector storage and retrieval (dense + sparse)"""
+-
+-    def __init__(
+-        self,
+-        db_connection_string: str,
+-        model_name: str = "all-MiniLM-L6-v2",
+-        metric: str = "cosine",  # "cosine", "l2", or "ip"
+-        fusion: str = "zscore",  # "zscore" or "rrf"
+-        w_dense: float = 0.6,
+-        w_sparse: float = 0.4,
+-        ivfflat_probes: Optional[int] = None,  # e.g., 10, only if using IVF
+-        hnsw_ef_search: Optional[int] = None,  # e.g., 80, only if using HNSW
+-        use_websearch_tsquery: bool = True,
+-    ):
+-        super().__init__()
+-        self.conn_str = db_connection_string
+-        self.model_name = model_name
+-        self.model = _get_model(model_name)
+-        self.dim = self.model.get_sentence_embedding_dimension()
+-        self.metric = metric
+-        self.fusion = fusion
+-        self.w_dense = w_dense
+-        self.w_sparse = w_sparse
+-        self.ivfflat_probes = ivfflat_probes
+-        self.hnsw_ef_search = hnsw_ef_search
+-        self.use_websearch_tsquery = use_websearch_tsquery
+-
+-    def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
+-        if operation == "store_chunks":
+-            return self._store_chunks_with_spans(**kwargs)
+-        elif operation == "search_vector":
+-            return self._search_vector(**kwargs)  # raw dense rows
+-        elif operation == "search_bm25":
+-            return self._search_bm25(**kwargs)  # raw sparse rows
+-        elif operation == "search":
+-            return self._hybrid_search(**kwargs)  # legacy merged path
+-        elif operation == "delete_document":
+-            return self._delete_document(**kwargs)
+-        elif operation == "get_document_chunks":
+-            return self._get_document_chunks(**kwargs)
+-        else:
+-            raise ValueError(f"Unknown operation: {operation}")
+-
+-    # ------------- Search -------------
+-
+-    def _hybrid_search(self, query: str, limit: int = 5) -> Dict[str, Any]:
+-        # Dense + sparse
+-        rows_dense = self._vector_search(query, limit)
+-        rows_sparse = self._text_search(query, limit)
+-        merged = _fuse_dense_sparse(
+-            rows_dense, rows_sparse, limit, method=self.fusion, w_dense=self.w_dense, w_sparse=self.w_sparse
+-        )
+-
+-        # Add simple citation from spans
+-        for r in merged:
+-            r["citation"] = f"Doc {r['document_id']}, chars {r['start_offset']}-{r['end_offset']}"
+-
+-        return {
+-            "status": "success",
+-            "search_type": "hybrid",
+-            "dense_count": len(rows_dense),
+-            "sparse_count": len(rows_sparse),
+-            "merged_count": len(merged),
+-            "results": merged,
+-        }
+-
+-    def _vector_search(self, query: str, limit: int) -> List[Dict[str, Any]]:
+-        """Dense vector search using pgvector with spans included."""
+-        return self._search_dense(query, limit)
+-
+-    def _search_vector(self, query: str, limit: int = 5) -> Dict[str, Any]:
+-        """Raw vector search returning results with distance for canonicalization."""
+-        q_emb = _query_embedding(self.model_name, query)
+-
+-        db_manager = get_database_manager()
+-        try:
+-            with db_manager.get_connection() as conn:
+-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+-                    # Per-query tunables (best-effort, ignore if unsupported)
+-                    if self.hnsw_ef_search is not None:
+-                        try:
+-                            cur.execute("SET LOCAL hnsw.ef_search = %s", (int(self.hnsw_ef_search),))
+-                        except Exception:
+-                            pass
+-
+-                    cur.execute(
+-                        """
+-                        SELECT
+-                          id, document_id, chunk_index, file_path, line_start, line_end,
+-                          content, is_anchor, anchor_key, metadata,
+-                          (embedding <=> %s::vector) AS distance
+-                        FROM document_chunks
+-                        WHERE embedding IS NOT NULL
+-                        ORDER BY embedding <=> %s::vector ASC,
+-                                 file_path NULLS LAST,
+-                                 chunk_index NULLS LAST,
+-                                 id ASC
+-                        LIMIT %s
+-                        """,
+-                        (q_emb, q_emb, limit),
+-                    )
+-                    rows = cur.fetchall()
+-
+-            return {"status": "success", "search_type": "vector", "results": list(rows)}
+-
+-        except Exception:
+-            raise
+-
+-    def _search_bm25(self, query: str, limit: int = 5) -> Dict[str, Any]:
+-        """Raw BM25 search returning results with ts_rank for canonicalization."""
+-        db_manager = get_database_manager()
+-
+-        try:
+-            with db_manager.get_connection() as conn:
+-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+-                    cur.execute(
+-                        """
+-                        SELECT
+-                          id, document_id, chunk_index, file_path, line_start, line_end,
+-                          content, is_anchor, anchor_key, metadata,
+-                          ts_rank_cd(content_tsv, websearch_to_tsquery('english', %s)) AS bm25
+-                        FROM document_chunks
+-                        WHERE content_tsv @@ websearch_to_tsquery('english', %s)
+-                        ORDER BY bm25 DESC,
+-                                 file_path NULLS LAST,
+-                                 chunk_index NULLS LAST,
+-                                 id ASC
+-                        LIMIT %s
+-                        """,
+-                        (query, query, limit),
+-                    )
+-                    rows = cur.fetchall()
+-
+-            return {"status": "success", "search_type": "bm25", "results": list(rows)}
+-
+-        except Exception:
+-            raise
+-
+-    @retry_database
+-    def _search_dense(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
+-        q_emb = _query_embedding(self.model_name, query)
+-
+-        # Choose distance operator according to metric
+-        # pgvector operators: '<->' (L2), '<#>' (inner product), '<=>'(cosine)
+-        if self.metric == "l2":
+-            order_expr = "embedding <-> %s"
+-            sim_expr = "1.0 / (1.0 + (embedding <-> %s))"  # monotonic; avoids negatives
+-        elif self.metric == "ip":
+-            order_expr = "embedding <#> %s"  # lower is better for distance semantics
+-            sim_expr = "(- (embedding <#> %s))"  # convert to higher-is-better
+-        else:
+-            # cosine distance in [0..2]; convert to similarity in [1..-1] then clamp
+-            order_expr = "embedding <=> %s"
+-            sim_expr = "GREATEST(-1.0, LEAST(1.0, 1.0 - (embedding <=> %s)))"
+-
+-        db_manager = get_database_manager()
+-        try:
+-            with db_manager.get_connection() as conn:
+-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+-                    # Per-query tunables (best-effort, ignore if unsupported)
+-                    if self.ivfflat_probes is not None:
+-                        try:
+-                            cur.execute("SET LOCAL ivfflat.probes = %s", (int(self.ivfflat_probes),))
+-                        except Exception:
+-                            pass
+-                    if self.hnsw_ef_search is not None:
+-                        try:
+-                            cur.execute("SET LOCAL hnsw.ef_search = %s", (int(self.hnsw_ef_search),))
+-                        except Exception:
+-                            pass
+-
+-                    cur.execute(
+-                        f"""
+-                        SELECT document_id, chunk_index, content,
+-                               start_offset, end_offset,
+-                               {sim_expr} AS score_dense
+-                        FROM document_chunks
+-                        ORDER BY {order_expr}
+-                        LIMIT %s
+-                        """,
+-                        (q_emb, q_emb, limit),
+-                    )
+-                    rows = cur.fetchall()
+-
+-            # Normalize shape
+-            out: List[Dict[str, Any]] = []
+-            for r in rows:
+-                out.append(
+-                    {
+-                        "document_id": r["document_id"],
+-                        "chunk_index": r["chunk_index"],
+-                        "content": r["content"],
+-                        "start_offset": r.get("start_offset", 0) or 0,
+-                        "end_offset": (
+-                            r.get("end_offset", len(r["content"])) if r.get("content") else r.get("end_offset", 0)
+-                        ),
+-                        "score_dense": float(r["score_dense"]),
+-                        "score_sparse": 0.0,
+-                    }
+-                )
+-            return out
+-
+-        except Exception:
+-            raise
+-
+-    def _text_search(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
+-        """Sparse text search using PostgreSQL full-text search (with spans)."""
+-        db_manager = get_database_manager()
+-        ts_fn = "websearch_to_tsquery" if self.use_websearch_tsquery else "plainto_tsquery"
+-
+-        try:
+-            with db_manager.get_connection() as conn:
+-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+-                    cur.execute(
+-                        f"""
+-                        SELECT
+-                            document_id,
+-                            chunk_index,
+-                            content,
+-                            start_offset,
+-                            end_offset,
+-                            ts_rank(to_tsvector('english', content), {ts_fn}('english', %s)) AS score_sparse
+-                        FROM document_chunks
+-                        WHERE to_tsvector('english', content) @@ {ts_fn}('english', %s)
+-                        ORDER BY score_sparse DESC
+-                        LIMIT %s
+-                        """,
+-                        (query, query, limit),
+-                    )
+-                    rows = cur.fetchall()
+-
+-            out: List[Dict[str, Any]] = []
+-            for r in rows:
+-                out.append(
+-                    {
+-                        "document_id": r["document_id"],
+-                        "chunk_index": r["chunk_index"],
+-                        "content": r["content"],
+-                        "start_offset": r.get("start_offset", 0) or 0,
+-                        "end_offset": (
+-                            r.get("end_offset", len(r["content"])) if r.get("content") else r.get("end_offset", 0)
+-                        ),
+-                        "score_dense": 0.0,
+-                        "score_sparse": float(r["score_sparse"]),
+-                    }
+-                )
+-            return out
+-
+-        except Exception:
+-            raise
+-
+-    # ------------- Store -------------
+-
+-    @retry_database
+-    def _store_chunks_with_spans(self, chunks: List[str], metadata: Dict[str, Any]) -> Dict[str, Any]:
+-        """Store document chunks with embeddings and span information."""
+-        embeddings = self.model.encode(chunks, convert_to_numpy=True)
+-        doc_id = metadata.get("document_id") or uuid.uuid4().hex
+-
+-        chunk_rows: List[Tuple] = []
+-        for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
+-            if isinstance(emb, torch.Tensor):
+-                emb = emb.detach().cpu().numpy()
+-            emb = emb.astype(np.float32, copy=False)
+-
+-            # Calculate line numbers for the chunk
+-            # For now, use chunk index as line numbers (simplified approach)
+-            line_start = i * 10 + 1  # Approximate line numbers
+-            line_end = line_start + chunk.count("\n")
+-
+-            chunk_rows.append((doc_id, i, chunk, emb, line_start, line_end, json.dumps(metadata)))
+-
+-        return self._insert_with_spans(chunk_rows, metadata, doc_id, len(chunks))
+-
+-    def _insert_with_spans(
+-        self,
+-        chunk_rows: List[Tuple],
+-        metadata: Dict[str, Any],
+-        doc_id: str,
+-        chunk_count: int,
+-    ) -> Dict[str, Any]:
+-        db_manager = get_database_manager()
+-        try:
+-            with db_manager.get_connection() as conn:
+-                with conn.cursor() as cur:
+-                    # Insert document record and get the generated ID
+-                    cur.execute(
+-                        """
+-                        INSERT INTO documents
+-                               (filename, file_path, file_type, file_size,
+-                                chunk_count, status)
+-                        VALUES (%s,%s,%s,%s,%s,%s)
+-                        RETURNING id
+-                        """,
+-                        (
+-                            metadata.get("filename"),
+-                            metadata.get(
+-                                "file_path", metadata.get("filename")
+-                            ),  # Fallback to filename if file_path is missing
+-                            metadata.get("file_type"),
+-                            metadata.get("file_size", 0),
+-                            chunk_count,
+-                            "completed",
+-                        ),
+-                    )
+-                    result = cur.fetchone()
+-                    if result is None:
+-                        raise Exception("Failed to insert document - no ID returned")
+-                    document_id = result[0]
+-
+-                    # Update chunk rows with the correct document_id
+-                    updated_chunk_rows = []
+-                    for chunk_row in chunk_rows:
+-                        updated_chunk_rows.append(
+-                            (
+-                                document_id,
+-                                chunk_row[1],
+-                                chunk_row[2],
+-                                chunk_row[3],
+-                                chunk_row[4],
+-                                chunk_row[5],
+-                                chunk_row[6],
+-                            )
+-                        )
+-
+-                    # Re-insert chunks with correct document_id and new schema
+-                    updated_chunk_rows_with_schema = []
+-                    for chunk_row in updated_chunk_rows:
+-                        # Extract metadata to get anchor information
+-                        chunk_metadata = json.loads(chunk_row[6]) if chunk_row[6] else {}
+-                        is_anchor = chunk_metadata.get("is_anchor", False)
+-                        anchor_key = chunk_metadata.get("anchor_key")
+-                        file_path = chunk_metadata.get("file_path", metadata.get("file_path", metadata.get("filename")))
+-
+-                        updated_chunk_rows_with_schema.append(
+-                            (
+-                                chunk_row[0],  # document_id
+-                                chunk_row[1],  # chunk_index
+-                                file_path,  # file_path (first-class column)
+-                                chunk_row[4],  # line_start
+-                                chunk_row[5],  # line_end
+-                                chunk_row[2],  # content
+-                                chunk_row[3],  # embedding
+-                                is_anchor,  # is_anchor (first-class column)
+-                                anchor_key,  # anchor_key (first-class column)
+-                                chunk_row[6],  # metadata (JSONB)
+-                            )
+-                        )
+-
+-                    # Insert with new schema including first-class columns
+-                    execute_values(
+-                        cur,
+-                        """
+-                        INSERT INTO document_chunks
+-                             (document_id, chunk_index, file_path, line_start, line_end,
+-                              content, embedding, is_anchor, anchor_key, metadata)
+-                        VALUES %s
+-                        """,
+-                        updated_chunk_rows_with_schema,
+-                        template="(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+-                    )
+-            return {
+-                "status": "success",
+-                "document_id": document_id,
+-                "chunks_stored": chunk_count,
+-                "spans_tracked": True,
+-            }
+-        except Exception as e:
+-            LOG.error(f"Error in _insert_with_spans: {e}")
+-            raise
+-
+-    # ------------- Admin -------------
+-
+-    def _delete_document(self, document_id: str) -> Dict[str, Any]:
+-        try:
+-            db_manager = get_database_manager()
+-            with db_manager.get_connection() as conn:
+-                with conn.cursor() as cur:
+-                    cur.execute("DELETE FROM document_chunks WHERE document_id = %s", (document_id,))
+-                    cur.execute("DELETE FROM documents WHERE document_id = %s", (document_id,))
+-            return {"status": "success", "document_id": document_id, "message": "Document and all chunks deleted"}
+-        except Exception as e:
+-            return {"status": "error", "error": str(e)}
+-
+-    def _get_document_chunks(self, document_id: str) -> Dict[str, Any]:
+-        try:
+-            db_manager = get_database_manager()
+-            with db_manager.get_connection() as conn:
+-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+-                    cur.execute(
+-                        """
+-                        SELECT chunk_index, content, created_at
+-                        FROM document_chunks
+-                        WHERE document_id = %s
+-                        ORDER BY chunk_index
+-                        """,
+-                        (document_id,),
+-                    )
+-                    rows = cur.fetchall()
+-            chunks = [
+-                {
+-                    "chunk_index": r["chunk_index"],
+-                    "content": r["content"],
+-                    "created_at": r["created_at"].isoformat() if r["created_at"] else None,
+-                }
+-                for r in rows
+-            ]
+-            return {"status": "success", "document_id": document_id, "chunks": chunks, "total_chunks": len(chunks)}
+-        except Exception as e:
+-            return {"status": "error", "error": str(e)}
+-
+-    def get_stats(self) -> Dict[str, Any]:
+-        try:
+-            db_manager = get_database_manager()
+-            with db_manager.get_connection() as conn:
+-                with conn.cursor() as cur:
+-                    cur.execute("SELECT COUNT(*) FROM document_chunks")
+-                    total_chunks = cur.fetchone()[0]
+-                    cur.execute("SELECT COUNT(*) FROM documents")
+-                    total_documents = cur.fetchone()[0]
+-                    try:
+-                        cur.execute("SELECT COUNT(*) FROM conversation_memory")
+-                        total_conversations = cur.fetchone()[0]
+-                    except errors.UndefinedTable:
+-                        total_conversations = 0
+-                    cur.execute("SELECT file_type, COUNT(*) FROM documents GROUP BY file_type")
+-                    document_types = dict(cur.fetchall())
+-            return {
+-                "status": "success",
+-                "total_chunks": total_chunks,
+-                "total_documents": total_documents,
+-                "total_conversations": total_conversations,
+-                "document_types": document_types,
+-            }
+-        except Exception as e:
+-            return {"status": "error", "error": str(e)}
+-
+-    def get_statistics(self) -> Dict[str, Any]:
+-        """Alias for get_stats() to align with dashboard API"""
+-        return self.get_stats()
+-
+-
+-class VectorStorePipeline(Module):
+-    """DSPy module for complete vector store pipeline"""
+-
+-    def __init__(self, db_connection_string: str):
+-        super().__init__()
+-        self.vector_store = HybridVectorStore(db_connection_string)
+-
+-    def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
+-        return self.vector_store(operation, **kwargs)
+-
+-
++# Example usage
+ if __name__ == "__main__":
+-    # Quick smoke test (requires running DB with the expected schema)
+-    db_connection = "postgresql://ai_user:ai_password@localhost:5432/ai_agency"
+-    vector_store = HybridVectorStore(db_connection)
+-    print(vector_store("search", query="What is DSPy?", limit=3))
+-    print(vector_store.get_stats())
++    # Initialize enhanced vector store
++    db_connection = os.environ.get('POSTGRES_DSN')
++    if not db_connection:
++        print("POSTGRES_DSN environment variable not set")
++        sys.exit(1)
++    
++    vector_store = EnhancedVectorStore(db_connection)
++    
++    # Get health status
++    health = vector_store.get_health_status()
++    print(f"Health Status: {json.dumps(health, indent=2)}")
++    
++    # Get performance metrics
++    metrics = vector_store.get_performance_metrics()
++    print(f"Performance Metrics: {json.dumps(metrics, indent=2)}")
++    
++    # Get optimization recommendations
++    optimization = vector_store.optimize_performance()
++    print(f"Optimization Recommendations: {json.dumps(optimization, indent=2)}") 

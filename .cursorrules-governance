@@ -1,0 +1,124 @@
+# Governance System Rules
+
+## 🛡️ GOVERNANCE SYSTEM INTEGRATION
+
+This project uses a comprehensive governance system with automated validation and compliance checking.
+
+### **Before Any Code Changes**
+
+1. **Run governance check**: `make gov/validate`
+2. **Check current status**: `make gov/status`
+3. **Verify clean state**: `make gov/counters`
+
+### **Governance Categories to Monitor**
+
+| Category | Target | Description | Fix Command |
+|----------|--------|-------------|-------------|
+| `archive` | 3 days clean | Archive immutability | `make gov/archive-zeroize DRY_RUN=1` |
+| `shadow_fork` | 7 days clean | Shadow fork naming | `make gov/shadow-fix DRY_RUN=1` |
+| `readme` | 14 days clean | README compliance | `make gov/readme-fix SCOPE=directory` |
+| `multirep` | 5 days clean | Multi-repo consistency | `make gov/xref SCOPE=directory` |
+
+### **Violation Handling**
+
+**Archive violations:**
+```bash
+# Check violations
+make gov/validate
+# Fix violations (dry-run first)
+make gov/archive-zeroize DRY_RUN=1
+# Apply fixes
+make gov/archive-zeroize DRY_RUN=0
+```
+
+**Shadow fork violations:**
+```bash
+# Check violations
+make gov/validate
+# Fix violations (dry-run first)
+make gov/shadow-fix DRY_RUN=1
+# Apply fixes
+make gov/shadow-fix DRY_RUN=0
+```
+
+**README violations:**
+```bash
+# Check violations
+make gov/validate
+# Fix violations for specific scope
+make gov/readme-fix SCOPE=400_guides
+```
+
+**XRef violations:**
+```bash
+# Check violations
+make gov/validate
+# Fix violations for specific scope
+make gov/xref SCOPE=400_guides
+```
+
+### **Governance Commands**
+
+**Core validation:**
+```bash
+make gov/validate          # Run validator
+make gov/status           # Show current status
+make gov/counters         # Show clean-day counters
+```
+
+**Maintenance commands:**
+```bash
+make gov/ledger-sweep     # Check for expired waivers
+make gov/archive-manifest # Rebuild archive manifest
+```
+
+### **SLOs (Service Level Objectives)**
+
+- **PR path time**: ≤5 min p95
+- **Nightly duration**: ≤15 min p95
+- **False positives**: <1% per week
+- **Time-to-flip**: ≤48h after clean window completion
+
+### **Governance System Components**
+
+- **Validator**: Checks for violations across all categories
+- **Ratchet**: Prevents regression in readme/multirep violations
+- **Flip Automation**: Automatically flips categories to FAIL mode when clean
+- **Rollback Protection**: Automatic rollback for >5% false positives
+- **Schema Guard**: Prevents unauthorized schema changes
+- **Owner Accountability**: Suggested owners for violations
+
+### **Pre-commit Integration**
+
+The governance system is integrated into pre-commit hooks:
+```yaml
+# .pre-commit-config.yaml
+- repo: local
+  hooks:
+    - id: validator-lightweight
+      name: Lightweight Validator
+      entry: python3 scripts/doc_coherence_validator.py --check shadow-fork --check archive
+      language: system
+      pass_filenames: false
+      always_run: true
+      stages: [commit]
+```
+
+### **Quality Gates**
+
+All changes must pass:
+- **Governance validation**: `make gov/validate` with 0 violations
+- **Documentation coherence**: All cross-references valid
+- **Archive immutability**: No unauthorized archive changes
+- **Shadow fork naming**: Consistent naming conventions
+
+### **Emergency Procedures**
+
+**For governance system issues:**
+1. Check `dspy-rag-system/docs/CURRENT_STATUS.md` for system health
+2. Review error logs in `dspy-rag-system/src/utils/logger.py`
+3. Use retry wrapper from `dspy-rag-system/src/utils/retry_wrapper.py`
+4. Check security validation from `dspy-rag-system/src/utils/prompt_sanitizer.py`
+
+Remember: The governance system ensures quality and consistency across the entire project.
+Always run validation before making changes and fix violations promptly.

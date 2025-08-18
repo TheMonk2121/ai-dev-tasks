@@ -1,0 +1,18 @@
+# Shadow Fork Cleanup Map
+# Maps shadow fork files to their canonical destinations
+# Format: shadow_path: canonical_path
+
+# Enhanced files in dspy-rag-system
+dspy-rag-system/src/enhanced_rag_system.py: dspy-rag-system/src/rag_system.py
+dspy-rag-system/src/utils/enhanced_file_validator.py: dspy-rag-system/src/utils/file_validator.py
+dspy-rag-system/src/dspy_modules/enhanced_vector_store.py: dspy-rag-system/src/dspy_modules/vector_store.py
+dspy-rag-system/src/dspy_modules/enhanced_rag_system.py: dspy-rag-system/src/dspy_modules/rag_system.py
+
+# Enhanced files in scripts
+scripts/enhanced_backlog_tracking.py: scripts/backlog_tracking.py
+
+# Optimized files in scripts
+scripts/optimized_conflict_audit.py: scripts/conflict_audit.py
+scripts/optimized_quick_conflict_check.py: scripts/quick_conflict_check.py
+# Note: Some files may have conflicts where both original and enhanced versions exist
+# The merge script will handle these cases by creating diffs for manual review

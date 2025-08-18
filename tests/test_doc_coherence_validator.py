@@ -8,14 +8,12 @@ Tests all validation tasks and edge cases.
 
 import os
 import shutil
-import sys
 import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from scripts.doc_coherence_validator import DocCoherenceValidator
+from doc_coherence_validator import DocCoherenceValidator
 
 
 class TestDocCoherenceValidator:
@@ -69,8 +67,9 @@ This is a valid README file.
         """Test validator initialization."""
         validator = DocCoherenceValidator(dry_run=True)
         assert validator.dry_run
-        assert isinstance(validator.markdown_files, list)
         assert isinstance(validator.validation_results, dict)
+        assert isinstance(validator.errors, list)
+        assert isinstance(validator.warnings, list)
 
     def test_should_exclude(self):
         """Test file exclusion logic."""
@@ -124,7 +123,7 @@ This is a valid README file.
         assert result
         assert test_file.exists()
 
-        with open(test_file, "r") as f:
+        with open(test_file) as f:
             content = f.read()
         assert content == test_content
 
@@ -399,8 +398,7 @@ Context priority guide content.
             shutil.copy(validator_script, self.test_dir)
 
             # Import and run validator
-            sys.path.insert(0, self.test_dir)
-            from scripts.doc_coherence_validator import DocCoherenceValidator
+            from doc_coherence_validator import DocCoherenceValidator
 
             validator = DocCoherenceValidator(dry_run=True)
             result = validator.run_all_validations()
@@ -419,8 +417,7 @@ Context priority guide content.
         if validator_script.exists():
             shutil.copy(validator_script, self.test_dir)
 
-            sys.path.insert(0, self.test_dir)
-            from scripts.doc_coherence_validator import DocCoherenceValidator
+            from doc_coherence_validator import DocCoherenceValidator
 
             validator = DocCoherenceValidator(dry_run=True)
             result = validator.run_all_validations()
@@ -436,7 +433,7 @@ if __name__ == "__main__":
 # --- B-100 and B-102 Test Cases ---
 import textwrap
 
-from scripts.doc_coherence_validator import validate_backlog
+from doc_coherence_validator import validate_backlog
 
 
 def write_backlog(tmp_path: Path, content: str) -> Path:
@@ -533,3 +530,47 @@ def test_stale_xref_fail_strict(tmp_path: Path, monkeypatch):
     code, report, summary = validate_backlog(str(path))
     assert code == 2
     assert "STALE_CROSS_REFERENCE" in report
+
+
+def test_impacted_files_are_posix_relative(tmp_path, monkeypatch):
+    """Test that impacted_files paths are repo-relative POSIX format."""
+    import json
+    import subprocess
+
+    # Arrange: create a tiny repo with a README
+    d = tmp_path / "docs"
+    d.mkdir()
+    f = d / "README.md"
+    f.write_text("# Title\n")
+
+    # Force --root
+    res = subprocess.run(
+        ["python3", "scripts/doc_coherence_validator.py", "--ci", "--json", "--root", str(tmp_path)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    report = json.loads(res.stdout)
+
+    for files in report.get("impacted_files", {}).values():
+        for p in files:
+            assert not p.startswith(str(tmp_path)), "must be repo-relative"
+            assert "\\" not in p, "must be POSIX"
+
+
+def test_stdout_pure_json_warnings_to_stderr(capsys, tmp_path):
+    """Test that stdout contains pure JSON and warnings go to stderr."""
+    import json
+    import subprocess
+
+    res = subprocess.run(
+        ["python3", "scripts/doc_coherence_validator.py", "--ci", "--json", "--root", str(tmp_path)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    # stdout parses as JSON; stderr may contain WARNs
+    json.loads(res.stdout)
+    assert res.stdout.strip().startswith("{")
+    assert "WARN" not in (res.stdout or ""), "warnings must not pollute JSON stdout"

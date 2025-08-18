@@ -1,0 +1,197 @@
+name: XRef Flip to FAIL (PR I)
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_flip:
+        description: 'Force flip even if preconditions not met'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  check-preconditions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set validator environment (XRef FAIL + Changed Files Only)
+        run: |
+          echo "VALIDATOR_REQUIRE_MULTI_REP=1" >> $GITHUB_ENV
+          echo "VALIDATOR_REQUIRE_XREF=1" >> $GITHUB_ENV
+          echo "VALIDATOR_STRICT_STALE_XREF=0" >> $GITHUB_ENV
+          echo "VALIDATOR_CHECK_MODE=all" >> $GITHUB_ENV
+          echo "VALIDATOR_CI_MODE=1" >> $GITHUB_ENV
+          echo "VALIDATOR_ARCHIVE_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_SHADOW_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_README_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_MULTIREP_FAIL=1" >> $GITHUB_ENV
+          echo "VALIDATOR_CHANGED_FILES_ONLY=1" >> $GITHUB_ENV
+
+      - name: Get changed files
+        id: changed
+        uses: tj-actions/changed-files@v42
+
+      - name: Run validator with XRef FAIL (changed files only)
+        env:
+          CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report_xref_fail.json
+          echo "Validator with XRef FAIL (changed files only) completed"
+
+      - name: Run link check on changed files
+        env:
+          CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
+        run: |
+          python3 scripts/link_check.py --changed-files-from <(echo "$CHANGED_FILES" | tr ' ' '\n') --json > link_check_report.json
+          echo "Link check completed"
+
+      - name: Check preconditions
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+
+          # Load current report
+          with open('validator_report_xref_fail.json') as f:
+              report = json.load(f)
+
+          # Check XRef violations
+          xref_violations = report.get('impacted_files', {}).get('multirep', [])
+          xref_count = len(xref_violations)
+
+          # Load counters
+          def get_counters():
+              try:
+                  result = subprocess.run(["git", "show", "bot/validator-state:data/validator_counters.json"],
+                                        capture_output=True, text=True, check=False)
+                  if result.returncode == 0:
+                      return json.loads(result.stdout)
+              except Exception:
+                  pass
+              return {"multirep": 0}
+
+          counters = get_counters()
+          xref_clean_days = counters.get("multirep", 0)
+
+          # Check link check results
+          try:
+              with open('link_check_report.json') as f:
+                  link_report = json.load(f)
+              broken_links = len(link_report.get('broken_links', []))
+          except Exception:
+              broken_links = 0
+
+          print("## XRef Flip Preconditions Check")
+          print(f"- XRef violations: {xref_count}")
+          print(f"- XRef clean days: {xref_clean_days}/5")
+          print(f"- Broken internal links: {broken_links}")
+          print(f"- Force flip: {os.getenv('INPUT_FORCE_FLIP', 'false')}")
+
+          # Check preconditions
+          preconditions_met = True
+          issues = []
+
+          if xref_clean_days < 5:
+              preconditions_met = False
+              issues.append(f"XRef clean days ({xref_clean_days}) < 5")
+
+          if broken_links > 0:
+              preconditions_met = False
+              issues.append(f"Found {broken_links} broken internal links")
+
+          if preconditions_met or os.getenv('INPUT_FORCE_FLIP') == 'true':
+              print("✅ Preconditions met or force flip enabled")
+              print("::set-output name=ready::true")
+          else:
+              print("❌ Preconditions not met:")
+              for issue in issues:
+                  print(f"  - {issue}")
+              print("::set-output name=ready::false")
+              exit(1)
+          PY
+
+      - name: Generate flip PR
+        if: steps.check-preconditions.outputs.ready == 'true'
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+
+          # Load report
+          with open('validator_report_xref_fail.json') as f:
+              report = json.load(f)
+
+          # Get counters
+          def get_counters():
+              try:
+                  result = subprocess.run(["git", "show", "bot/validator-state:data/validator_counters.json"],
+                                        capture_output=True, text=True, check=False)
+                  if result.returncode == 0:
+                      return json.loads(result.stdout)
+              except Exception:
+                  pass
+              return {"multirep": 0}
+
+          counters = get_counters()
+          xref_days = counters.get('multirep', 0)
+
+          # Create simple PR template
+          pr_content = f"# XRef Flip to FAIL (PR I)\n\nXRef clean days: {xref_days}/5\n\nSet VALIDATOR_MULTIREP_FAIL=1 + VALIDATOR_CHANGED_FILES_ONLY=1"
+
+          with open(".github/pull_request_template_xref_flip.md", "w") as f:
+              f.write(pr_content)
+
+          print("✅ XRef flip PR template created: .github/pull_request_template_xref_flip.md")
+          PY
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: xref-flip-reports
+          path: |
+            validator_report_xref_fail.json
+            link_check_report.json
+
+      - name: Job Summary
+        run: |
+          echo "## XRef Flip Preconditions" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
+          import json
+          try:
+              with open('validator_report_xref_fail.json') as f:
+                  report = json.load(f)
+
+              xref_violations = report.get('impacted_files', {}).get('multirep', [])
+              xref_count = len(xref_violations)
+
+              try:
+                  with open('link_check_report.json') as f:
+                      link_report = json.load(f)
+                  broken_links = len(link_report.get('broken_links', []))
+              except Exception:
+                  broken_links = 0
+
+              print(f"- **XRef Violations**: {xref_count}")
+              print(f"- **Broken Internal Links**: {broken_links}")
+              print(f"- **Status**: {'✅ READY' if broken_links == 0 else '❌ NOT READY'}")
+
+              if broken_links == 0:
+                  print("- **Action**: Ready for XRef flip to FAIL")
+              else:
+                  print(f"- **Action**: Fix {broken_links} broken internal links first")
+
+          except Exception as e:
+              print(f"- **Error**: {e}")
+          PY

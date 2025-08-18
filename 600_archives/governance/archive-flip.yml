@@ -1,0 +1,164 @@
+name: Archive Flip to FAIL (PR G)
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_flip:
+        description: 'Force flip even if preconditions not met'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  check-preconditions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set validator environment (Archive FAIL)
+        run: |
+          echo "VALIDATOR_REQUIRE_MULTI_REP=1" >> $GITHUB_ENV
+          echo "VALIDATOR_REQUIRE_XREF=1" >> $GITHUB_ENV
+          echo "VALIDATOR_STRICT_STALE_XREF=0" >> $GITHUB_ENV
+          echo "VALIDATOR_CHECK_MODE=all" >> $GITHUB_ENV
+          echo "VALIDATOR_CI_MODE=1" >> $GITHUB_ENV
+          echo "VALIDATOR_ARCHIVE_FAIL=1" >> $GITHUB_ENV
+          echo "VALIDATOR_SHADOW_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_README_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_MULTIREP_FAIL=0" >> $GITHUB_ENV
+
+      - name: Run validator with Archive FAIL
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report_archive_fail.json
+          echo "Validator with Archive FAIL completed"
+
+      - name: Check preconditions
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+
+          # Load current report
+          with open('validator_report_archive_fail.json') as f:
+              report = json.load(f)
+
+          # Check archive violations
+          archive_violations = report.get('impacted_files', {}).get('archive', [])
+          archive_count = len(archive_violations)
+
+          # Load counters
+          def get_counters():
+              try:
+                  result = subprocess.run(["git", "show", "bot/validator-state:data/validator_counters.json"],
+                                        capture_output=True, text=True, check=False)
+                  if result.returncode == 0:
+                      return json.loads(result.stdout)
+              except Exception:
+                  pass
+              return {"archive": 0}
+
+          counters = get_counters()
+          archive_clean_days = counters.get("archive", 0)
+
+          print("## Archive Flip Preconditions Check")
+          print(f"- Archive violations: {archive_count}")
+          print(f"- Archive clean days: {archive_clean_days}/3")
+          print(f"- Force flip: {os.getenv('INPUT_FORCE_FLIP', 'false')}")
+
+          # Check preconditions
+          preconditions_met = True
+          issues = []
+
+          if archive_count > 0:
+              preconditions_met = False
+              issues.append(f"Archive has {archive_count} violations")
+
+          if archive_clean_days < 3:
+              preconditions_met = False
+              issues.append(f"Archive clean days ({archive_clean_days}) < 3")
+
+          if preconditions_met or os.getenv('INPUT_FORCE_FLIP') == 'true':
+              print("✅ Preconditions met or force flip enabled")
+              print("::set-output name=ready::true")
+          else:
+              print("❌ Preconditions not met:")
+              for issue in issues:
+                  print(f"  - {issue}")
+              print("::set-output name=ready::false")
+              exit(1)
+          PY
+
+      - name: Generate flip PR
+        if: steps.check-preconditions.outputs.ready == 'true'
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+
+          # Load report
+          with open('validator_report_archive_fail.json') as f:
+              report = json.load(f)
+
+          # Get counters
+          def get_counters():
+              try:
+                  result = subprocess.run(["git", "show", "bot/validator-state:data/validator_counters.json"],
+                                        capture_output=True, text=True, check=False)
+                  if result.returncode == 0:
+                      return json.loads(result.stdout)
+              except Exception:
+                  pass
+              return {"archive": 0}
+
+          counters = get_counters()
+          archive_days = counters.get('archive', 0)
+
+          # Create simple PR template
+          pr_content = f"# Archive Flip to FAIL (PR G)\n\nArchive clean days: {archive_days}/3\n\nSet VALIDATOR_ARCHIVE_FAIL=1"
+
+          with open(".github/pull_request_template_archive_flip.md", "w") as f:
+              f.write(pr_content)
+
+          print("✅ Archive flip PR template created: .github/pull_request_template_archive_flip.md")
+          PY
+
+      - name: Upload validator report
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive-flip-report
+          path: validator_report_archive_fail.json
+
+      - name: Job Summary
+        run: |
+          echo "## Archive Flip Preconditions" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
+          import json
+          try:
+              with open('validator_report_archive_fail.json') as f:
+                  report = json.load(f)
+
+              archive_violations = report.get('impacted_files', {}).get('archive', [])
+              archive_count = len(archive_violations)
+
+              print(f"- **Archive Violations**: {archive_count}")
+              print(f"- **Status**: {'✅ READY' if archive_count == 0 else '❌ NOT READY'}")
+
+              if archive_count == 0:
+                  print("- **Action**: Ready for Archive flip to FAIL")
+              else:
+                  print(f"- **Action**: Clean up {archive_count} archive violations first")
+
+          except Exception as e:
+              print(f"- **Error**: {e}")
+          PY

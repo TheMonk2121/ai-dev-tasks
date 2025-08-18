@@ -1,0 +1,193 @@
+# Coding Standards Enforcement
+
+## 💻 CODING STANDARDS ENFORCEMENT
+
+This project enforces strict coding standards to maintain code quality and consistency.
+
+### **Import Standards**
+
+**Required Import Order:**
+1. **Standard library imports** (os, sys, json, pathlib, etc.)
+2. **Third-party imports** (requests, psycopg2, etc.)
+3. **Local imports** (from utils import ...)
+
+**Import Patterns:**
+```python
+# Standard library imports (always first)
+import os
+import sys
+import json
+import tempfile
+from pathlib import Path
+from typing import Dict, List, Optional
+
+# Third-party imports
+import requests
+import psycopg2
+
+# Local imports
+from utils.logger import setup_logger
+```
+
+**Import Rules:**
+- **No undefined names**: All used modules must be imported
+- **No unused imports**: Remove imports that aren't used
+- **Explicit imports**: Use `import os` not just `os.environ`
+- **Check with**: `python scripts/validate_coding_standards.py`
+
+### **F-string Usage**
+
+**Good F-string Usage:**
+```python
+# ✅ Good - f-string with placeholders
+name = "World"
+print(f"Hello {name}")
+
+# ✅ Good - complex f-string
+print(f"Count: {len(items)} items")
+```
+
+**Bad F-string Usage:**
+```python
+# ❌ Bad - f-string without placeholders
+print(f"Hello World")  # Should be: print("Hello World")
+
+# ❌ Bad - unnecessary f-string
+print(f"Count: 5")  # Should be: print("Count: 5")
+```
+
+**F-string Rules:**
+- **Only use f-strings with placeholders**: `f"Hello {name}"`
+- **Use regular strings for static text**: `"Hello World"` not `f"Hello World"`
+- **Check with**: `ruff check --select F541`
+
+### **Variable Management**
+
+**Variable Rules:**
+- **Remove unused variables**: Check with `ruff check --select F841`
+- **Use descriptive names**: Clear, meaningful variable names
+- **Prefix unused with `_`**: `_unused_var` for intentionally unused variables
+- **Scope management**: Keep variables in appropriate scope
+
+**Variable Examples:**
+```python
+# ✅ Good - descriptive names, no unused variables
+def process_data(items):
+    processed_items = []
+    for item in items:
+        processed_item = transform(item)
+        processed_items.append(processed_item)
+    return processed_items
+
+# ❌ Bad - unused variable
+def process_data(items):
+    processed_items = []
+    for item in items:
+        temp = transform(item)  # Unused variable
+        processed_items.append(transform(item))
+    return processed_items
+```
+
+### **Code Formatting**
+
+**Formatting Standards:**
+- **Line length**: 100 characters (configured in pyproject.toml)
+- **Indentation**: 4 spaces (no tabs)
+- **Blank lines**: Use sparingly and consistently
+- **Auto-format**: Use `ruff format` for consistent formatting
+
+**Formatting Commands:**
+```bash
+# Auto-format code
+ruff format .
+
+# Check formatting
+ruff format --check .
+
+# Fix linting issues
+ruff check --fix .
+```
+
+### **Pre-commit Validation**
+
+**Before Committing:**
+1. **Run validation**: `python scripts/validate_coding_standards.py`
+2. **Auto-fix issues**: `ruff check --fix`
+3. **Check governance**: `make gov/validate`
+4. **Run tests**: `python -m pytest tests/ -m "tier1"`
+
+**Validation Script:**
+```bash
+# Run coding standards validation
+python scripts/validate_coding_standards.py
+
+# Output shows:
+# - Unused imports (F401)
+# - Unnecessary f-strings (F541)
+# - Unused variables (F841)
+```
+
+### **Template Usage**
+
+**For New Files:**
+```bash
+# Use the Python file template
+cp scripts/templates/python_file_template.py new_script.py
+```
+
+**Template Features:**
+- Proper import organization
+- Example of good f-string usage
+- Clean variable management
+- Consistent formatting
+
+### **Quality Gates**
+
+**All code must pass:**
+- **Import validation**: No unused imports
+- **F-string validation**: No unnecessary f-strings
+- **Variable validation**: No unused variables
+- **Formatting validation**: Consistent code style
+- **Linting validation**: No Ruff errors
+
+### **Common Issues and Fixes**
+
+**F401 (Unused imports):**
+```python
+# ❌ Bad
+import os
+import sys
+import json
+import tempfile  # Unused
+
+# ✅ Good
+import os
+import sys
+import json
+```
+
+**F541 (Unnecessary f-strings):**
+```python
+# ❌ Bad
+print(f"Hello World")
+
+# ✅ Good
+print("Hello World")
+```
+
+**F841 (Unused variables):**
+```python
+# ❌ Bad
+def process(items):
+    result = []  # Unused
+    for item in items:
+        print(item)
+
+# ✅ Good
+def process(items):
+    for item in items:
+        print(item)
+```
+
+Remember: Clean, consistent code is essential for maintainability and collaboration.
+Always run validation before committing and fix all warnings.

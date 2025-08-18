@@ -1,0 +1,225 @@
+# Development Workflow Rules
+
+## 🔄 DEVELOPMENT WORKFLOW INTEGRATION
+
+This project uses structured development workflows for consistent and efficient development.
+
+### **Task Execution Workflow**
+
+**1. Check Backlog:**
+```bash
+# Review current priorities
+cat 000_core/000_backlog.md
+
+# Use backlog CLI for management
+python scripts/backlog_cli.py --list --priority high
+```
+
+**2. Create PRD (Product Requirements Document):**
+```bash
+# Follow PRD creation workflow
+python scripts/process_tasks.py --workflow prd --task-id B-XXX
+```
+
+**3. Generate Tasks:**
+```bash
+# Generate tasks from PRD
+python scripts/process_tasks.py --workflow generate-tasks --prd-file PRD-XXX.md
+```
+
+**4. Execute Tasks:**
+```bash
+# Execute specific task
+python scripts/process_tasks.py --execute --task-id T-XXX
+
+# Execute task list
+python scripts/process_tasks.py --execute --task-list tasks.md
+```
+
+### **File Organization**
+
+**Core Workflows (`000_core/`):**
+- `000_backlog.md` - Backlog management and prioritization
+- `001_create-prd.md` - PRD creation workflow
+- `002_generate-tasks.md` - Task generation workflow
+- `003_process-task-list.md` - Task execution workflow
+- `004_development-roadmap.md` - Development roadmap
+
+**Memory Context (`100_memory/`):**
+- `100_cursor-memory-context.md` - AI state and development context
+- `100_backlog-guide.md` - Backlog management guide
+- `104_dspy-development-context.md` - DSPy technical context
+
+**Setup/Config (`200_setup/`):**
+- Environment setup and configuration
+- Database configuration
+- Naming conventions
+
+**Guides (`400_guides/`):**
+- Development guides and runbooks
+- Best practices and standards
+- System architecture documentation
+
+**Research (`500_research/`):**
+- Research and reference materials
+- Implementation studies
+- Performance benchmarks
+
+**Scripts (`scripts/`):**
+- Automation and utility scripts
+- Development tools
+- Validation and testing scripts
+
+### **Quality Gates**
+
+**All changes must pass:**
+- **Tests must pass**: `python -m pytest tests/ -m "tier1"`
+- **Governance clean**: `make gov/validate` with 0 violations
+- **Linting clean**: `ruff check` with 0 errors
+- **Documentation updated**: Relevant guides and runbooks
+
+**Test Categories:**
+```bash
+# Critical tests (must pass)
+python -m pytest tests/ -m "tier1"
+
+# High priority tests
+python -m pytest tests/ -m "tier2"
+
+# Supporting tests
+python -m pytest tests/ -m "tier3"
+
+# Test types
+python -m pytest tests/ -m "kind_unit"      # Unit tests
+python -m pytest tests/ -m "kind_integration" # Integration tests
+python -m pytest tests/ -m "kind_e2e"       # End-to-end tests
+python -m pytest tests/ -m "governance"     # Governance tests
+```
+
+### **Development Commands**
+
+**Core Development:**
+```bash
+# Install dependencies
+./install_dependencies.sh
+
+# Run tests
+python -m pytest tests/ -m "tier1"
+
+# Run governance check
+make gov/validate
+
+# Generate status badge
+python scripts/generate_status_badge.py
+```
+
+**Task Management:**
+```bash
+# Process tasks
+python scripts/process_tasks.py --help
+
+# Backlog management
+python scripts/backlog_cli.py --help
+
+# State management
+python scripts/state_manager.py --help
+```
+
+**Documentation:**
+```bash
+# Documentation validation
+python scripts/doc_coherence_validator.py --ci --json
+
+# Link checking
+python scripts/link_check.py
+
+# Documentation retrieval
+python scripts/documentation_retrieval_cli.py --help
+```
+
+### **Workflow Integration**
+
+**Pre-commit Workflow:**
+1. **Code validation**: `python scripts/validate_coding_standards.py`
+2. **Governance check**: `make gov/validate`
+3. **Tests**: `python -m pytest tests/ -m "tier1"`
+4. **Documentation**: Update relevant guides
+
+**Post-commit Workflow:**
+1. **Update memory context**: `python scripts/update_cursor_memory.py`
+2. **Generate metrics**: `python scripts/weekly_metrics_with_owners.py`
+3. **Update status**: `python scripts/generate_status_badge.py`
+
+### **Error Handling**
+
+**Development Errors:**
+```bash
+# Use error handler
+python scripts/error_handler.py --test-error network
+python scripts/error_handler.py --test-error database
+python scripts/error_handler.py --show-stats
+```
+
+**System Health:**
+```bash
+# Check system status
+cat dspy-rag-system/docs/CURRENT_STATUS.md
+
+# Check logs
+tail -f dspy-rag-system/src/utils/logger.py
+```
+
+### **Performance Monitoring**
+
+**Performance Testing:**
+```bash
+# Run performance benchmarks
+python scripts/performance_benchmark.py
+
+# Entity expansion testing
+python scripts/ab_test_entity_expansion.py
+
+# Database resilience testing
+python scripts/demo_database_resilience.py
+```
+
+**Monitoring Commands:**
+```bash
+# Start mission dashboard
+./dspy-rag-system/start_mission_dashboard.sh
+
+# Monitor context engineering
+python scripts/monitor_context_engineering.py
+
+# Production monitoring
+python scripts/demo_production_monitoring.py
+```
+
+### **Collaboration Workflow**
+
+**Consensus Framework:**
+```bash
+# Consensus integration
+python scripts/consensus_integration.py
+
+# Feedback loop system
+python scripts/feedback_loop_system.py
+
+# Adaptive routing
+python scripts/adaptive_routing.py
+```
+
+**Review Process:**
+```bash
+# Submit blue review
+python submit_blue_review.py
+
+# Submit red review
+python submit_red_review.py
+
+# Validate checkpoint
+python validate_checkpoint.py
+```
+
+Remember: Follow the structured workflow for consistent, high-quality development.
+Always use the appropriate tools and validation steps for each phase of development.

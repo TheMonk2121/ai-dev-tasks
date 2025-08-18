@@ -596,3 +596,32 @@ dspy-rag-system/docs/CURRENT_STATUS.md
 
 This guide ensures that any AI model can quickly understand the complete AI development stack from the highest level
 down to implementation details, making it perfect for memory rehydration and context sharing.
+
+<!-- xref-autofix:begin -->
+<!-- Cross-references to add: -->
+- [🚀 DSPy RAG System - Current Status](dspy-rag-system/docs/CURRENT_STATUS.md)
+<!-- xref-autofix:end -->
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for 400_context-priority-guide.md
+# Generated: 2025-08-17T21:49:49.319914
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+## Usage
+
+[Describe how to use this document or system]
+
+<!-- README_AUTOFIX_END -->
