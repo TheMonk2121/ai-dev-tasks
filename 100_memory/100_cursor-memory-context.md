@@ -273,7 +273,7 @@ without requiring the AI to read multiple files.
 
 - **Next Priorities**: Follow `000_core/000_backlog.md` ordering and scores
 
-- **Validator**: Use `scripts/doc_coherence_validator.py` (or pre-commit hook) after doc changes
+- **Validator**: Use `scripts/doc_coherence_validator.py` (or pre-commit hook) after doc changes and code quality validation
 
 ### **System Architecture**
 

@@ -344,7 +344,7 @@ Measurable success criteria and acceptance criteria
 ### **Development Quality Gates**
 - **Format**: `python3 scripts/fix_markdown_issues.sh`
 - **Tests**: `./dspy-rag-system/run_tests.sh`
-- **Documentation**: `python3 scripts/doc_coherence_validator.py`
+- **Documentation & Code Quality**: `python3 scripts/doc_coherence_validator.py`
 - **Database**: `python3 scripts/database_sync_check.py`
 - **Memory**: `python3 scripts/cursor_memory_rehydrate.py planner "validate context"`
 

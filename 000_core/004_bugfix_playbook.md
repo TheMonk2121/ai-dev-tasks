@@ -52,6 +52,7 @@ This playbook provides a structured approach to debugging that balances velocity
 - **Hot fixes** (commit prefix: `hotfix:`)
 - **Critical issues** requiring immediate attention
 - **Changes to fragile modules** (validator, vector_store, dashboard, archive)
+- **Code quality violations** (Unicode safety, error reduction governance)
 
 ### Emergency Override
 For critical outages requiring immediate fixes:
@@ -130,7 +131,7 @@ Ensure the fix is complete, safe, and properly tested.
 - **`feat:`** → Consider 001-003 governance workflow
 
 ### Based on Module
-- **`src/validator/**`** → Always use this playbook
+- **`src/validator/**`** → Always use this playbook (enhanced with code quality validation)
 - **`src/vector_store/**`** → Always use this playbook
 - **`src/dashboard/**`** → Always use this playbook
 - **`scripts/archive_*.py`** → Always use this playbook
