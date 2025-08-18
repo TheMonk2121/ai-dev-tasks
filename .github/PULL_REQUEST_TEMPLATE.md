@@ -11,6 +11,30 @@
 - [ ] Performance improvement
 - [ ] Other (please describe)
 
+## Bug-Fix Documentation (Required for bug fixes)
+<!-- Complete this section for all bug fixes (fix: and hotfix: commits) -->
+
+### Problem Snapshot
+- **Title**: Clear, concise description of the issue
+- **Context (where/when)**: Where and when the issue occurs
+- **Observed vs Expected**: What happens vs what should happen
+- **Logs / Error**: Relevant error messages, stack traces, logs
+- **Environment**: OS, dependencies, configuration
+- **Dependencies**: Direct | Upstream | Downstream
+- **Invariants**: 2–5 truths that must hold for the system to work correctly
+
+### Fix Plan
+- **Chosen Fix**: Description of the implemented solution
+- **Didn't Touch**: What was intentionally left unchanged and why
+- **Blast Radius**: Direct | Upstream | Downstream | Public contracts
+- **Confidence (0–1)**: Confidence level in the fix
+
+### Test Plan
+- **Repro Test**: Test that demonstrates the original bug - should fail before fix, pass after
+- **Guardrail Test**: Test that prevents regression - should pass before and after fix
+- **Additional Tests**: Any other test coverage added
+- **Test Files Modified**: List test files that were changed
+
 ## Testing
 - [ ] Unit tests pass
 - [ ] Integration tests pass
@@ -42,6 +66,16 @@
 - [ ] Documentation updated
 - [ ] No breaking changes introduced
 - [ ] Constitutional compliance maintained (archive immutability, no shadow-fork names, role-suffix naming)
+
+## Bug-Fix Checklist (Required for bug fixes)
+- [ ] Problem Snapshot is complete and clear
+- [ ] Fix Plan documents what was changed and what wasn't
+- [ ] Blast radius is assessed and documented
+- [ ] Confidence level is ≥ 0.8
+- [ ] Repro test demonstrates the original bug
+- [ ] Guardrail test prevents regression
+- [ ] Test files are included in the PR
+- [ ] Emergency override documented (if applicable)
 
 ## Additional Notes
 <!-- Any additional information or context -->

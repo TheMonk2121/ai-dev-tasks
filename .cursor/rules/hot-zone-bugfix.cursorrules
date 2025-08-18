@@ -1,0 +1,95 @@
+# Hot-Zone Bug-Fix Rules
+
+## Protected Modules
+These rules apply to fragile modules that require special attention during bug fixes:
+
+- `src/validator/**` - Core validation logic
+- `src/vector_store/**` - Vector database operations
+- `src/dashboard/**` - Dashboard functionality
+- `scripts/archive_*.py` - Archive management scripts
+
+## Framework Selection Based on Commit Type
+
+### For `fix:` commits
+**REQUIRED**: Use the Global Bug-Fix Playbook (004)
+- Trigger: "Run Bug-Fix Playbook" preset (⌘⌥B / Ctrl+Alt+B)
+- Complete: Problem Snapshot → Dual Review → Resolution Check
+- Include: Repro test + Guardrail test
+- Document: Blast radius and confidence level
+
+### For `hotfix:` commits
+**REQUIRED**: Use the Global Bug-Fix Playbook (004)
+- Same requirements as `fix:` commits
+- Additional: Emergency override documentation
+- Follow-up: Post-mortem review within 24 hours
+
+### For `refactor:` commits
+**RECOMMENDED**: Consider Feature Refactor Framework (005)
+- For structural changes to these modules
+- Requires consensus and validation phases
+- May need stakeholder review
+
+### For `feat:` commits
+**RECOMMENDED**: Consider 001-003 governance workflow
+- For new features in fragile modules
+- May require PRD creation and task generation
+- Consider impact on existing functionality
+
+## Enforcement Guidelines
+
+### When Editing Protected Files
+1. **Check commit message prefix** - ensure it matches the intended change type
+2. **Apply appropriate framework** - use the framework that matches your commit type
+3. **Document thoroughly** - these modules are critical to system stability
+4. **Test comprehensively** - include both repro and guardrail tests
+
+### Quality Requirements
+- **Test Coverage**: Minimum repro + guardrail tests for all changes
+- **Documentation**: Complete problem snapshot and resolution check
+- **Review**: Thorough review of blast radius and confidence level
+- **Validation**: Ensure changes don't break existing contracts
+
+### Emergency Procedures
+For critical fixes requiring immediate deployment:
+1. Document the emergency in PR description
+2. Use `--no-verify` if necessary
+3. Follow up with proper documentation within 24 hours
+4. Schedule post-mortem review
+
+## Integration with Existing Workflows
+
+### With Cursor Presets
+- Use "Run Bug-Fix Playbook" preset for bug fixes
+- Use existing governance presets for features/refactors
+- Ensure proper framework selection
+
+### With CI/CD
+- CI will validate framework compliance
+- PR templates will enforce documentation requirements
+- Automated tests will verify test coverage
+
+### With Documentation
+- Update relevant documentation for any changes
+- Consider impact on user-facing contracts
+- Document any new invariants or dependencies
+
+## Monitoring and Feedback
+
+### Success Metrics
+- Reduction in regressions in hot zones
+- Improved test coverage on bug fixes
+- Faster resolution of critical issues
+- Better documentation of changes
+
+### Continuous Improvement
+- Gather feedback on framework effectiveness
+- Adjust rules based on usage patterns
+- Update guidelines based on lessons learned
+- Monitor for new fragile modules that need protection
+
+---
+
+**Rule Version**: 1.0
+**Last Updated**: Current Date
+**Scope**: Hot-zone modules only
+**Enforcement**: Soft (guidance) with CI backstop

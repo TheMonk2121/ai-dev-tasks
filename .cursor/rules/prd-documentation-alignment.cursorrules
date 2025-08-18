@@ -1,0 +1,35 @@
+# PRD-Documentation Alignment Rule
+
+## When PRDs and Core Documentation Don't Align
+
+**CRITICAL RULE**: When implementing features from PRDs, if the PRD specifies file locations or structures that conflict with established project conventions (as documented in `400_guides/400_documentation-guide.md` and `200_setup/200_naming-conventions.md`), you MUST:
+
+1. **STOP** implementation immediately
+2. **IDENTIFY** the specific conflict (e.g., PRD says `docs/` but conventions say `000_core/`)
+3. **EXPLAIN** the conflict to the user with clear reasoning
+4. **WAIT** for user decision on which approach to follow
+5. **DOCUMENT** the decision for future reference
+
+## Examples of Conflicts to Watch For
+
+- PRD specifies `docs/004_bugfix_playbook.md` but conventions show workflows belong in `000_core/`
+- PRD suggests file naming that doesn't follow the 000-999 prefix system
+- PRD references directory structures that don't match established patterns
+- PRD calls for documentation locations that conflict with the documented hierarchy
+
+## Why This Matters
+
+- Prevents breaking established project conventions
+- Maintains consistency across the codebase
+- Avoids confusion for future developers and AI assistants
+- Ensures documentation remains discoverable and well-organized
+
+## Implementation
+
+When you encounter such conflicts:
+1. Show the user both the PRD specification and the established convention
+2. Explain the pros/cons of each approach
+3. Ask for explicit direction on which to follow
+4. Only proceed after receiving clear guidance
+
+This rule takes precedence over "following PRD exactly" when there are clear conflicts with established project standards.
