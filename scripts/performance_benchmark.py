@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.12.123.11
+#!/usr/bin/env python3.12
 """
 Performance Benchmark Script for Critical Scripts
 
@@ -28,6 +28,25 @@ except ImportError:
 
 
 @dataclass
+class EfficiencyMetrics:
+    """Efficiency metrics for test suites and scripts"""
+
+    pass_rate: float
+    failure_count: int
+    error_count: int
+    skipped_count: int
+    code_coverage_percent: float
+    line_coverage_percent: float
+    memory_per_test_mb: float
+    cpu_per_test_percent: float
+    test_count: int
+    avg_test_duration: float
+    performance_score: float
+    efficiency_score: float
+    overall_score: float
+
+
+@dataclass
 class BenchmarkResult:
     script_name: str
     execution_time: float
@@ -36,6 +55,7 @@ class BenchmarkResult:
     success: bool
     error_message: str | None = None
     timestamp: datetime | None = None
+    efficiency_metrics: EfficiencyMetrics | None = None
 
 
 class ScriptBenchmarker:
@@ -130,6 +150,22 @@ class ScriptBenchmarker:
         self.results_dir = Path(".cache/benchmarks")
         self.results_dir.mkdir(parents=True, exist_ok=True)
 
+        # Efficiency scoring thresholds and weights
+        self.efficiency_thresholds = {
+            "pass_rate": 0.95,  # 95% pass rate target
+            "execution_time": 30.0,  # 30 seconds max
+            "memory_usage": 100.0,  # 100MB max
+            "cpu_usage": 50.0,  # 50% max
+            "coverage": 0.80,  # 80% coverage target
+        }
+
+        self.weights = {
+            "performance": 0.3,
+            "quality": 0.4,
+            "coverage": 0.2,
+            "efficiency": 0.1,
+        }
+
     def get_process_metrics(self):
         """Get current process metrics, with fallback if psutil unavailable."""
         if PSUTIL_AVAILABLE:
@@ -140,6 +176,84 @@ class ScriptBenchmarker:
             }
         else:
             return {"memory_mb": 0.0, "cpu_percent": 0.0}
+
+    def calculate_performance_score(self, result: BenchmarkResult) -> float:
+        """Calculate performance score based on execution time and resource usage"""
+        time_score = max(
+            0,
+            1 - (result.execution_time / self.efficiency_thresholds["execution_time"]),
+        )
+        memory_score = max(
+            0, 1 - (result.memory_usage_mb / self.efficiency_thresholds["memory_usage"])
+        )
+        cpu_score = max(
+            0, 1 - (result.cpu_percent / self.efficiency_thresholds["cpu_usage"])
+        )
+
+        return time_score * 0.5 + memory_score * 0.3 + cpu_score * 0.2
+
+    def calculate_quality_score(
+        self, result: BenchmarkResult, all_results: list[BenchmarkResult]
+    ) -> float:
+        """Calculate quality score based on success rate and error handling"""
+        if not all_results:
+            return 1.0 if result.success else 0.0
+
+        success_rate = sum(1 for r in all_results if r.success) / len(all_results)
+        error_penalty = 0.1 if result.error_message else 0.0
+
+        return max(0, success_rate - error_penalty)
+
+    def calculate_coverage_score(self, result: BenchmarkResult) -> float:
+        """Calculate coverage score (placeholder for now)"""
+        # TODO: Integrate with coverage tools like coverage.py
+        return 0.8  # Default 80% coverage assumption
+
+    def calculate_efficiency_metrics(
+        self, result: BenchmarkResult, all_results: list[BenchmarkResult]
+    ) -> EfficiencyMetrics:
+        """Calculate comprehensive efficiency metrics"""
+        # Basic metrics
+        test_count = len(all_results) if all_results else 1
+        success_count = (
+            sum(1 for r in all_results if r.success)
+            if all_results
+            else (1 if result.success else 0)
+        )
+        pass_rate = success_count / test_count if test_count > 0 else 0.0
+
+        # Performance metrics
+        performance_score = self.calculate_performance_score(result)
+        quality_score = self.calculate_quality_score(result, all_results)
+        coverage_score = self.calculate_coverage_score(result)
+
+        # Efficiency score (resource usage per test)
+        memory_per_test = result.memory_usage_mb / test_count
+        cpu_per_test = result.cpu_percent / test_count
+        avg_duration = result.execution_time / test_count
+
+        # Overall efficiency score
+        efficiency_score = (
+            performance_score * self.weights["performance"]
+            + quality_score * self.weights["quality"]
+            + coverage_score * self.weights["coverage"]
+        )
+
+        return EfficiencyMetrics(
+            pass_rate=pass_rate,
+            failure_count=test_count - success_count,
+            error_count=1 if result.error_message else 0,
+            skipped_count=0,  # TODO: Track skipped tests
+            code_coverage_percent=coverage_score * 100,
+            line_coverage_percent=coverage_score * 100,
+            memory_per_test_mb=memory_per_test,
+            cpu_per_test_percent=cpu_per_test,
+            test_count=test_count,
+            avg_test_duration=avg_duration,
+            performance_score=performance_score,
+            efficiency_score=efficiency_score,
+            overall_score=efficiency_score,
+        )
 
     def benchmark_script(
         self, script_name: str, iterations: int = 1
@@ -199,6 +313,11 @@ class ScriptBenchmarker:
                 else:
                     print(f"    ✅ Success: {benchmark_result.execution_time:.2f}s")
 
+                # Calculate efficiency metrics
+                benchmark_result.efficiency_metrics = self.calculate_efficiency_metrics(
+                    benchmark_result, results
+                )
+
             except subprocess.TimeoutExpired:
                 benchmark_result = BenchmarkResult(
                     script_name=script_name,
@@ -226,6 +345,127 @@ class ScriptBenchmarker:
                 print(f"    ❌ Error: {e}")
 
         return results
+
+    def generate_efficiency_report(self, results: list[BenchmarkResult]) -> dict:
+        """Generate comprehensive efficiency report"""
+        if not results:
+            return {"error": "No results to analyze"}
+
+        # Aggregate metrics
+        total_tests = len(results)
+        successful_tests = sum(1 for r in results if r.success)
+        avg_execution_time = sum(r.execution_time for r in results) / total_tests
+        avg_memory_usage = sum(r.memory_usage_mb for r in results) / total_tests
+        avg_cpu_usage = sum(r.cpu_percent for r in results) / total_tests
+
+        # Efficiency scores
+        efficiency_scores = [
+            r.efficiency_metrics.overall_score for r in results if r.efficiency_metrics
+        ]
+        avg_efficiency = (
+            sum(efficiency_scores) / len(efficiency_scores)
+            if efficiency_scores
+            else 0.0
+        )
+
+        # Performance trends
+        performance_scores = [
+            r.efficiency_metrics.performance_score
+            for r in results
+            if r.efficiency_metrics
+        ]
+        avg_performance = (
+            sum(performance_scores) / len(performance_scores)
+            if performance_scores
+            else 0.0
+        )
+
+        return {
+            "summary": {
+                "total_tests": total_tests,
+                "successful_tests": successful_tests,
+                "success_rate": (
+                    successful_tests / total_tests if total_tests > 0 else 0.0
+                ),
+                "avg_execution_time": avg_execution_time,
+                "avg_memory_usage_mb": avg_memory_usage,
+                "avg_cpu_usage_percent": avg_cpu_usage,
+                "avg_efficiency_score": avg_efficiency,
+                "avg_performance_score": avg_performance,
+            },
+            "recommendations": self._generate_recommendations(results),
+            "detailed_results": [
+                {
+                    "script_name": r.script_name,
+                    "execution_time": r.execution_time,
+                    "memory_usage_mb": r.memory_usage_mb,
+                    "cpu_percent": r.cpu_percent,
+                    "success": r.success,
+                    "efficiency_score": (
+                        r.efficiency_metrics.overall_score
+                        if r.efficiency_metrics
+                        else 0.0
+                    ),
+                    "performance_score": (
+                        r.efficiency_metrics.performance_score
+                        if r.efficiency_metrics
+                        else 0.0
+                    ),
+                }
+                for r in results
+            ],
+        }
+
+    def _generate_recommendations(self, results: list[BenchmarkResult]) -> list[str]:
+        """Generate improvement recommendations based on results"""
+        recommendations = []
+
+        # Check for performance issues
+        slow_scripts = [
+            r
+            for r in results
+            if r.execution_time > self.efficiency_thresholds["execution_time"]
+        ]
+        if slow_scripts:
+            recommendations.append(
+                f"Consider optimizing {len(slow_scripts)} slow scripts (>30s execution time)"
+            )
+
+        # Check for memory issues
+        memory_hogs = [
+            r
+            for r in results
+            if r.memory_usage_mb > self.efficiency_thresholds["memory_usage"]
+        ]
+        if memory_hogs:
+            recommendations.append(
+                f"Review memory usage in {len(memory_hogs)} scripts (>100MB)"
+            )
+
+        # Check for reliability issues
+        failed_scripts = [r for r in results if not r.success]
+        if failed_scripts:
+            recommendations.append(
+                f"Investigate {len(failed_scripts)} failed scripts for reliability improvements"
+            )
+
+        # Check for efficiency opportunities
+        low_efficiency = [
+            r
+            for r in results
+            if r.efficiency_metrics and r.efficiency_metrics.overall_score < 0.7
+        ]
+        if low_efficiency:
+            recommendations.append(
+                f"Focus on improving efficiency in {len(low_efficiency)} scripts (score < 0.7)"
+            )
+
+        if not recommendations:
+            recommendations.append(
+                "All scripts are performing well within efficiency targets"
+            )
+
+        return recommendations
 
     def benchmark_all(self, iterations: int = 1) -> dict[str, list[BenchmarkResult]]:
         """Benchmark all critical scripts."""
@@ -340,6 +580,40 @@ def main():
         results = benchmarker.benchmark_all(args.iterations)
 
     benchmarker.print_summary(results)
+
+    # Generate and display efficiency report
+    print("\n" + "=" * 60)
+    print("EFFICIENCY ANALYSIS")
+    print("=" * 60)
+
+    # Flatten all results for efficiency analysis
+    all_results = []
+    for script_results in results.values():
+        all_results.extend(script_results)
+
+    efficiency_report = benchmarker.generate_efficiency_report(all_results)
+
+    # Display summary
+    summary = efficiency_report["summary"]
+    print(f"\n📈 Overall Efficiency Score: {summary['avg_efficiency_score']:.3f}")
+    print(f"🚀 Performance Score: {summary['avg_performance_score']:.3f}")
+    print(f"✅ Success Rate: {summary['success_rate']:.1%}")
+    print(f"⏱️  Avg Execution Time: {summary['avg_execution_time']:.2f}s")
+    print(f"💾 Avg Memory Usage: {summary['avg_memory_usage_mb']:.1f}MB")
+
+    # Display recommendations
+    print("\n💡 Recommendations:")
+    for rec in efficiency_report["recommendations"]:
+        print(f"   • {rec}")
+
+    # Display top performers
+    detailed_results = efficiency_report["detailed_results"]
+    top_performers = sorted(
+        detailed_results, key=lambda x: x["efficiency_score"], reverse=True
+    )[:3]
+    print("\n🏆 Top Performers:")
+    for i, result in enumerate(top_performers, 1):
+        print(f"   {i}. {result['script_name']}: {result['efficiency_score']:.3f}")
 
     if args.save:
         benchmarker.save_results(results, args.save)
