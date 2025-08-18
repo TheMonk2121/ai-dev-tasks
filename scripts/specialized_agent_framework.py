@@ -10,17 +10,16 @@ Date: 2024-08-06
 Version: 1.0.0
 """
 
+import asyncio
+import hashlib
 import json
 import logging
+import re
 import time
-import asyncio
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, Any, Union
-from uuid import uuid4
-import re
-import hashlib
+from typing import Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -762,7 +761,7 @@ async def main():
             print(f"Error: {e}")
     
     # Print agent status
-    print(f"\n--- Agent Status ---")
+    print("\n--- Agent Status ---")
     status = framework.get_agent_status()
     print(json.dumps(status, indent=2))
 

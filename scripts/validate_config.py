@@ -6,7 +6,6 @@ Run this in CI to ensure config/system.json is valid.
 
 import json
 import sys
-from pathlib import Path
 from typing import Any
 
 # JSON Schema for v0.3.1 system configuration

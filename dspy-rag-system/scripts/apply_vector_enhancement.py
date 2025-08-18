@@ -6,17 +6,14 @@ Applies the vector enhancement schema to PostgreSQL database.
 
 import os
 import sys
-import psycopg2
-import logging
-from pathlib import Path
-from typing import Optional, Any
-import hashlib
 import time
+from pathlib import Path
+
+import psycopg2
 
 # Add the src directory to the path
 sys.path.append(str(Path(__file__).parent.parent / "src"))
 
-from utils.database_resilience import get_database_manager, execute_query, execute_transaction
 from utils.logger import get_logger
 
 logger = get_logger(__name__)

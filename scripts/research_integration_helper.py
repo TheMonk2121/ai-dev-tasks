@@ -4,11 +4,8 @@ Research Integration Helper
 Assists in dispersing research findings to appropriate documentation files
 """
 
-import os
-import sys
-import json
 from typing import Any
-from pathlib import Path
+
 
 def get_research_integration_map() -> dict[str, list[str]]:
     """Map research findings to appropriate documentation files"""

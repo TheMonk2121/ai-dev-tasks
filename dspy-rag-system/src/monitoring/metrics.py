@@ -4,10 +4,10 @@ Prometheus metrics for DSPy RAG system.
 Implements monitoring and observability for production deployment.
 """
 
-import time
 import logging
-from typing import Any, Optional
+import time
 from functools import wraps
+from typing import Any
 
 logger = logging.getLogger(__name__)
 

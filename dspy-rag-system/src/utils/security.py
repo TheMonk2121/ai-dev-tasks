@@ -9,17 +9,15 @@ This module provides security features including:
 - Secure configuration management
 """
 
-import os
-import sys
-import subprocess
 import hashlib
-import secrets
-import logging
-from pathlib import Path
-from typing import Any, Optional
 import json
-import tempfile
+import logging
+import os
+import secrets
+import subprocess
+import sys
 from datetime import UTC
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -235,7 +233,7 @@ def validate_url(url: str) -> bool:
 
 def _get_timestamp() -> str:
     """Get current timestamp in ISO format"""
-    from datetime import datetime, timezone
+    from datetime import datetime
     return datetime.now(UTC).isoformat()
 
 def create_security_config() -> dict[str, Any]:

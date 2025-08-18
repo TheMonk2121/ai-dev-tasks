@@ -13,7 +13,6 @@ import sys
 from pathlib import Path
 
 
-
 class CodingStandardsValidator:
     """Validates Python files against coding standards."""
 

@@ -9,17 +9,20 @@ and PostgreSQL event ledger for the DSPy RAG system.
 import os
 import sys
 import time
-import json
 from datetime import datetime
 
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from n8n_workflows.n8n_integration import (
-    get_n8n_manager, create_event, execute_workflow, poll_events,
-    Event, TaskExecution, EventType, TaskStatus
-)
 from n8n_workflows.n8n_event_processor import N8nEventProcessor
+from n8n_workflows.n8n_integration import (
+    Event,
+    create_event,
+    execute_workflow,
+    get_n8n_manager,
+    poll_events,
+)
+
 
 def demo_event_creation():
     """Demo creating events in the event ledger"""
@@ -137,7 +140,7 @@ def demo_event_processor_service():
         
         # Get stats
         stats = processor.get_stats()
-        print(f"📊 Service stats:")
+        print("📊 Service stats:")
         print(f"  - Running: {stats['running']}")
         print(f"  - Events processed: {stats['events_processed']}")
         print(f"  - Events failed: {stats['events_failed']}")

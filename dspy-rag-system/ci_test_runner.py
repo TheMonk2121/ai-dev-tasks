@@ -12,22 +12,19 @@ This module provides CI/CD integration for automated testing with:
 - CI/CD pipeline integration
 """
 
-import os
-import sys
-import json
-import time
-import subprocess
 import argparse
-from pathlib import Path
-from typing import Optional, Any
+import json
+import os
+import subprocess
+import sys
 from datetime import datetime
-import requests
+from pathlib import Path
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from utils.logger import setup_logger
-from utils.config_manager import ConfigManager
 
 # Setup logging
 logger = setup_logger(__name__)

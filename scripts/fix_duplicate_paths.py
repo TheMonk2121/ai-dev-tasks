@@ -9,7 +9,6 @@ import re
 from pathlib import Path
 
 
-
 def find_files_with_duplicate_paths() -> list[str]:
     """Find files that contain duplicate path patterns."""
     duplicate_patterns = [

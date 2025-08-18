@@ -2,8 +2,8 @@
 
 import os
 import shutil
-import re
 from pathlib import Path
+
 
 def migrate_core_workflow():
     """Migrate core workflow files from two-digit to three-digit prefixes."""
@@ -43,7 +43,7 @@ def migrate_core_workflow():
             print(f"⚠️  File not found: {old_name}")
     
     if migrated_files:
-        print(f"\n🎉 Core workflow migration completed!")
+        print("\n🎉 Core workflow migration completed!")
         print(f"📦 Backup files available in: {backup_dir}")
         print(f"📋 Migrated {len(migrated_files)} files")
     else:

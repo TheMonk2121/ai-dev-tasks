@@ -6,9 +6,8 @@ Ensures proper analysis before suggesting file deletion or deprecation
 
 import os
 import sys
-import json
 from typing import Any
-from pathlib import Path
+
 
 def check_context_loading():
     """Step 1: Verify context loading files exist and are readable"""
@@ -193,18 +192,18 @@ def run_analysis_checklist(target_file: str):
     print(f"   - Recent content: {content_analysis['is_recent']}")
     
     # Step 5: Safety Validation
-    print(f"\n📋 Step 5: Safety Validation")
+    print("\n📋 Step 5: Safety Validation")
     print("   - Cross-references shown above")
     print("   - Legacy evidence: Legacy model references found" if content_analysis['legacy_model_references'] else "   - Legacy evidence: No legacy models found")
     print("   - Alternative: Suggest archiving rather than deletion")
     
     # Step 6: Tier-Based Decision
-    print(f"\n📋 Step 6: Tier-Based Decision")
+    print("\n📋 Step 6: Tier-Based Decision")
     tier = determine_file_tier(target_file, reference_analysis, content_analysis)
     print(f"   - Determined tier: {tier}")
     
     # Final Recommendation
-    print(f"\n🎯 FINAL RECOMMENDATION")
+    print("\n🎯 FINAL RECOMMENDATION")
     if tier == "TIER_1_CRITICAL":
         print("❌ DO NOT DELETE: Critical file - never suggest removal")
     elif tier == "TIER_2_HIGH":
@@ -214,7 +213,7 @@ def run_analysis_checklist(target_file: str):
     elif tier == "TIER_4_LOW":
         print("✅ SAFE TO REMOVE: Low-value file - safe with validation")
     
-    print(f"\n📊 Analysis Summary:")
+    print("\n📊 Analysis Summary:")
     print(f"   - File: {target_file}")
     print(f"   - Tier: {tier}")
     print(f"   - References: {reference_analysis['total_references']}")

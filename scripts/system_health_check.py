@@ -8,13 +8,11 @@ Validates database, AI models, file processing, and security components.
 Usage: python scripts/system_health_check.py [--verbose] [--fix]
 """
 
-import sys
-import os
-import subprocess
-from pathlib import Path
-from typing import Optional
 import json
+import os
+import sys
 import time
+from pathlib import Path
 
 # Add dspy-rag-system to path
 sys.path.insert(0, str(Path(__file__).parent.parent / 'dspy-rag-system'))
@@ -46,7 +44,10 @@ class SystemHealthChecker:
         self.log("Checking database health...", "INFO")
         
         try:
-            from dspy_rag_system.src.utils.database_resilience import check_connection, verify_schema
+            from dspy_rag_system.src.utils.database_resilience import (
+                check_connection,
+                verify_schema,
+            )
             
             # Check connection
             if check_connection():

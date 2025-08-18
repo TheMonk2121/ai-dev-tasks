@@ -12,8 +12,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime, timezone, UTC
-
+from datetime import UTC, datetime
 
 # Disallowed patterns that indicate shadow forks
 DISALLOWED_PATTERNS = [

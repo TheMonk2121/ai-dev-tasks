@@ -9,8 +9,7 @@ Fails if new entries are added without exception-approved label AND expiry ≤7 
 import json
 import os
 import sys
-from datetime import datetime, timezone, UTC
-
+from datetime import UTC, datetime
 
 
 def load_ledger(path: str) -> dict:

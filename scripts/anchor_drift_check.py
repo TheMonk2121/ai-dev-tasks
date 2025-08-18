@@ -12,8 +12,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime, timezone, UTC
-
+from datetime import UTC, datetime
 
 # Import slugify function from markdown_utils
 try:

@@ -6,12 +6,9 @@ Creates essential vector enhancement tables and functions step by step.
 
 import os
 import sys
-import psycopg2
-import logging
 from pathlib import Path
-from typing import Optional, Any
-import hashlib
-import time
+
+import psycopg2
 
 # Add the src directory to the path
 sys.path.append(str(Path(__file__).parent.parent / "src"))

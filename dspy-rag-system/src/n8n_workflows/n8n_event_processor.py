@@ -6,20 +6,18 @@ Background service for processing n8n workflow events and automated task executi
 """
 
 import os
-import sys
-import time
 import signal
+import sys
 import threading
-import logging
-from typing import Optional
+import time
 from datetime import datetime
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from n8n_workflows.n8n_integration import get_n8n_manager, create_event, poll_events
-from utils.logger import get_logger
+from n8n_workflows.n8n_integration import create_event, get_n8n_manager
 from utils.database_resilience import get_database_manager
+from utils.logger import get_logger
 
 logger = get_logger("n8n_event_processor")
 

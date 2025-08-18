@@ -11,7 +11,6 @@ import os
 from collections import defaultdict
 
 
-
 def load_validator_report() -> dict:
     """Load validator report."""
     report_path = "validator_report.json"

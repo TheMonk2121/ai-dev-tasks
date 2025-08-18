@@ -6,20 +6,20 @@ Automatically calculates and updates scoring metadata in the backlog file.
 This can be used as a standalone tool or integrated with n8n workflows.
 """
 
-import os
-import sys
-import re
 import json
 import logging
-from typing import Any, Optional
-from pathlib import Path
+import os
+import re
+import sys
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from utils.logger import get_logger
-from utils.opentelemetry_config import trace_operation, add_span_attribute
+from utils.opentelemetry_config import trace_operation
 
 logger = get_logger("backlog_scrubber")
 

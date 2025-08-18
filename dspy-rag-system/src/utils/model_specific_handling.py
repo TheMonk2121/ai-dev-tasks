@@ -6,12 +6,11 @@ This module provides model-specific error handling and recovery strategies
 for different AI models in the DSPy RAG system.
 """
 
+import json
 import logging
 import os
-import json
-from typing import Optional, Any
 from dataclasses import dataclass
-from datetime import datetime
+from typing import Any
 
 logger = logging.getLogger(__name__)
 

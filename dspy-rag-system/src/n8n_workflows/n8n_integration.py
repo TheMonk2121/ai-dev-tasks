@@ -6,24 +6,24 @@ Provides automated task execution and event-driven workflows using n8n
 and PostgreSQL event ledger for the DSPy RAG system.
 """
 
+import json
 import os
 import sys
-import json
 import uuid
-import requests
-import logging
-from typing import Any, Optional
 from collections.abc import Callable
-from datetime import datetime, timedelta
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
+from typing import Any
+
+import requests
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from utils.database_resilience import get_database_manager, execute_query, execute_transaction
+from utils.database_resilience import execute_query, get_database_manager
 from utils.logger import get_logger
-from utils.opentelemetry_config import trace_operation, add_span_attribute
+from utils.opentelemetry_config import trace_operation
 
 logger = get_logger("n8n_integration")
 

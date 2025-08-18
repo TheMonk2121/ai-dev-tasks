@@ -9,11 +9,7 @@ Based on research findings that critical rules get lost in large files,
 this checker ensures persistent rule enforcement across all AI operations.
 """
 
-import re
 import json
-import os
-from pathlib import Path
-from typing import Optional
 from dataclasses import dataclass
 from datetime import datetime
 

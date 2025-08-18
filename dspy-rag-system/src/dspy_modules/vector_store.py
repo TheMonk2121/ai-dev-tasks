@@ -12,7 +12,7 @@ import json
 import logging
 import uuid
 from functools import lru_cache
-from typing import Any, Optional
+from typing import Any
 
 # Third-party imports
 import numpy as np

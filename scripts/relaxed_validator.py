@@ -4,15 +4,14 @@ Relaxed Documentation Coherence Validator
 Ignores line length violations but enforces critical structural issues.
 """
 
-import os
 import sys
-import subprocess
 from pathlib import Path
 
 # Add the scripts directory to the path so we can import the main validator
 sys.path.insert(0, str(Path(__file__).parent))
 
 from doc_coherence_validator import DocCoherenceValidator
+
 
 class RelaxedDocValidator(DocCoherenceValidator):
     def __init__(self, *args, **kwargs):

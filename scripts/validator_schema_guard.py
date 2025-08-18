@@ -11,7 +11,6 @@ import os
 import sys
 
 
-
 def load_validator_report(path: str) -> dict:
     """Load validator report."""
     if not os.path.exists(path):

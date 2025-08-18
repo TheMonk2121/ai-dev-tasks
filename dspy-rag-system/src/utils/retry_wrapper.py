@@ -4,15 +4,16 @@ Retry wrapper utility for DSPy RAG system.
 Implements configurable retry logic with exponential backoff.
 """
 
-import time
 import functools
-import logging
 import json
+import logging
 import os
-from typing import Any, Optional
+import time
 from collections.abc import Callable
-from requests.exceptions import Timeout, RequestException
+from typing import Any
+
 import psycopg2
+from requests.exceptions import RequestException, Timeout
 
 # Import error pattern recognition
 try:

@@ -10,7 +10,7 @@ import json
 import logging
 import os
 from datetime import datetime
-from typing import Any, Optional, cast
+from typing import Any, cast
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature

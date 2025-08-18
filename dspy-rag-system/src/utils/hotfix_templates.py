@@ -5,12 +5,10 @@ HotFix Template Generation System
 This module provides automated HotFix template generation for common error scenarios.
 """
 
-import json
-import os
 import logging
-from typing import Optional, Any
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
 
 logger = logging.getLogger(__name__)
 

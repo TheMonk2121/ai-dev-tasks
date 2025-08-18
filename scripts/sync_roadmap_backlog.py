@@ -19,7 +19,6 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 # Configuration
 BACKLOG_PATH = Path("000_core/000_backlog.md")

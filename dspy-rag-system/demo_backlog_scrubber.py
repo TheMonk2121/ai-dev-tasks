@@ -5,15 +5,16 @@ Backlog Scrubber Demo
 Demonstrates the automated backlog scoring and metadata management functionality.
 """
 
+import json
 import os
 import sys
-import json
 from datetime import datetime
 
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from n8n_workflows.backlog_scrubber import BacklogScrubber
+
 
 def demo_backlog_scrubber():
     """Demo the backlog scrubber functionality"""

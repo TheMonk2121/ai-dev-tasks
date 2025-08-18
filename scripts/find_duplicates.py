@@ -8,13 +8,12 @@ Useful for repository cleanup and maintenance.
 Usage: python3 scripts/find_duplicates.py [--path .] [--extensions md,txt,py] [--exclude venv,node_modules]
 """
 
-import os
-import sys
 import argparse
 import hashlib
-from pathlib import Path
-from typing import Optional
+import sys
 from collections import defaultdict
+from pathlib import Path
+
 
 class DuplicateFinder:
     def __init__(self, path: str = ".", extensions: list[str] = None, exclude_patterns: list[str] = None):
@@ -102,8 +101,8 @@ class DuplicateFinder:
 
     def print_summary(self) -> None:
         """Print scanning summary."""
-        print(f"\n📊 SCANNING SUMMARY")
-        print(f"=" * 50)
+        print("\n📊 SCANNING SUMMARY")
+        print("=" * 50)
         print(f"Total files scanned: {self.total_files}")
         print(f"Total size: {self.format_size(self.total_size)}")
         print(f"Unique hashes: {len(self.hash_to_files)}")
@@ -115,8 +114,8 @@ class DuplicateFinder:
             print("\n✅ No duplicate files found!")
             return
         
-        print(f"\n🔍 DUPLICATE ANALYSIS")
-        print(f"=" * 50)
+        print("\n🔍 DUPLICATE ANALYSIS")
+        print("=" * 50)
         
         total_duplicate_size = 0
         for hash_val, files in duplicates.items():
@@ -149,8 +148,8 @@ class DuplicateFinder:
                 print(f"   💡 Suggestion: Keep {keep_file}")
                 print(f"   📦 Archive: {len(archive_files)} files")
         
-        print(f"\n💰 SPACE SAVINGS")
-        print(f"=" * 50)
+        print("\n💰 SPACE SAVINGS")
+        print("=" * 50)
         print(f"Potential space saved: {self.format_size(total_duplicate_size)}")
         print(f"Duplicate files: {sum(len(files) - 1 for files in duplicates.values())}")
 
@@ -177,7 +176,7 @@ class DuplicateFinder:
             for archive_file in archive_files:
                 if archive_file.exists():
                     legacy_path = f"docs/legacy/{archive_file.name}"
-                    script_content.append(f"mkdir -p docs/legacy")
+                    script_content.append("mkdir -p docs/legacy")
                     script_content.append(f"mv '{archive_file}' '{legacy_path}'")
             
             script_content.append("")

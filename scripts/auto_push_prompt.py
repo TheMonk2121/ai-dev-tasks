@@ -15,7 +15,6 @@ import sys
 from pathlib import Path
 
 
-
 def run_git_command(args: list[str], capture_output: bool = True) -> tuple[int, str, str]:
     """Run a git command and return exit code, stdout, stderr"""
     try:

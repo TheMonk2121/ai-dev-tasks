@@ -10,14 +10,14 @@ Version: 1.0
 Last Updated: 2024-08-07
 """
 
-import re
-import logging
-from typing import Optional, Any
 import argparse
-from pathlib import Path
+import logging
+import re
+from dataclasses import asdict, dataclass
 from datetime import datetime
-from dataclasses import dataclass, asdict
 from enum import Enum
+from pathlib import Path
+from typing import Any
 
 logger = logging.getLogger(__name__)
 

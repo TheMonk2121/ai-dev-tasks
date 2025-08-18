@@ -22,7 +22,11 @@ from flask_socketio import SocketIO, emit
 sys.path.append("src")
 
 try:
-    from mission_dashboard.mission_tracker import MissionPriority, MissionStatus, get_mission_tracker
+    from mission_dashboard.mission_tracker import (
+        MissionPriority,
+        MissionStatus,
+        get_mission_tracker,
+    )
     from monitoring.health_endpoints import create_health_endpoints
     from monitoring.production_monitor import initialize_production_monitoring
     from utils.logger import get_logger

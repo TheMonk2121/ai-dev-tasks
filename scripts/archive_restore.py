@@ -11,8 +11,7 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone, UTC
-from typing import Optional
+from datetime import UTC, datetime
 
 
 def load_manifest() -> dict:

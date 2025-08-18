@@ -12,10 +12,10 @@ import sys
 import threading
 import time
 from collections import deque
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from typing import Any, Optional
-from collections.abc import Callable
+from typing import Any
 
 import psutil
 

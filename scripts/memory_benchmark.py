@@ -7,13 +7,12 @@ Tests different memory structures across various AI model capabilities
 to optimize for retrieval accuracy, token usage, and context efficiency.
 """
 
-import json
-import time
 import statistics
-from pathlib import Path
-from typing import Any
+import time
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
+
 
 @dataclass
 class BenchmarkResult:

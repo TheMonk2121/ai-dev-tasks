@@ -8,7 +8,6 @@ import glob
 import re
 
 
-
 def detect_code_language(content: str) -> str:
     """Attempt to detect the language based on content patterns."""
     # Common patterns for different languages

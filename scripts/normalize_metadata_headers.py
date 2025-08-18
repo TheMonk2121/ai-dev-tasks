@@ -8,10 +8,9 @@ Normalize metadata headers across markdown files to the minimal schema:
 Usage:
   python3 scripts/normalize_metadata_headers.py --root .
 """
-import re
-import sys
-from pathlib import Path
 import argparse
+import re
+from pathlib import Path
 
 KEEP_CONTEXT = "<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->"
 MODULE_PATTERN = re.compile(r"<!--\s*MODULE_REFERENCE:\s*([^>]+)\s*-->")
@@ -127,7 +126,7 @@ def main():
             changed |= process_file(p)
         except Exception:
             continue
-    print(f"Header normalization complete")
+    print("Header normalization complete")
 
 if __name__ == "__main__":
     main()

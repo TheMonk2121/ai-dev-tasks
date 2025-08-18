@@ -4,8 +4,9 @@ Fix MD018 - No space after hash on atx style heading.
 Adds spaces after hash symbols in headings like #Heading → # Heading.
 """
 
-import re
 import glob
+import re
+
 
 def fix_md018_heading_spaces():
     """Fix MD018 violations by adding spaces after hash symbols in headings."""

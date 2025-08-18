@@ -4,14 +4,13 @@ Structured Logging for DSPy RAG System
 Provides consistent, structured logging across all components.
 """
 
-import logging
 import json
+import logging
 import sys
-from datetime import datetime, timezone, UTC
-from pathlib import Path
-from typing import Any, Optional
-import traceback
 import threading
+import traceback
+from datetime import UTC, datetime
+from typing import Any
 
 # Sensitive field patterns for redaction
 SENSITIVE_PATTERNS = ["password", "token", "secret", "key", "credential", "auth"]

@@ -10,7 +10,7 @@ Reads validator_report.json and emits metrics/validator_counts.json with:
 
 import json
 import sys
-from datetime import datetime, timezone, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 

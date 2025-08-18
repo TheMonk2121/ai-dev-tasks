@@ -1,7 +1,7 @@
 # src/utils/rag_compatibility_shim.py
 import os
-from typing import Any, Optional
 from collections.abc import Callable
+from typing import Any
 
 # Primary retrieval path (dashboard expectation)
 try:

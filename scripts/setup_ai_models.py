@@ -22,11 +22,9 @@ Exit codes: 0 on success, 1 if any check fails
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import os
 import sys
-import importlib.util
-
-
 
 REQUIRED_IMPORTS: list[str] = [
     # Light-weight/importable modules only; avoid heavy initializations

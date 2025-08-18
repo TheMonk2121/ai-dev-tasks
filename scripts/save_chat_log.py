@@ -22,7 +22,6 @@ import re
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 
 def read_clipboard() -> str:

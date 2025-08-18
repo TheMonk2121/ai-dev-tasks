@@ -15,7 +15,6 @@ import shutil
 import sys
 from pathlib import Path
 
-
 # Migration mapping based on 200_naming-conventions.md
 MIGRATION_MAP = {
     # High Priority (Core Files)

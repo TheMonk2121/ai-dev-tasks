@@ -6,13 +6,13 @@ Splits large guide files (1,400+ lines) into focused 200-300 line modules
 to improve AI comprehension and reduce attention dilution.
 """
 
-import os
-import re
 import json
 import logging
-from pathlib import Path
-from typing import Any, Optional
+import os
+import re
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 _LOG = logging.getLogger("giant_guide_splitter")
 

@@ -10,10 +10,10 @@ Usage:
   python3 scripts/context_index_validator.py --root .
 """
 
-import os
-import sys
 import json
+import sys
 from pathlib import Path
+
 
 def extract_context_index(content: str):
     start = content.find("<!-- CONTEXT_INDEX")

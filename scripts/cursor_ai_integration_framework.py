@@ -10,17 +10,16 @@ Date: 2024-08-06
 Version: 1.0.0
 """
 
+import asyncio
 import json
 import logging
+import os
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-import os
 from enum import Enum
-from typing import Optional, Any, Union
+from typing import Any
 from uuid import uuid4
-import asyncio
-from contextlib import asynccontextmanager
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -276,7 +275,7 @@ class CoderAgent(BaseAgent):
         """Analyze code and provide suggestions."""
         await asyncio.sleep(0.3)  # Simulate code analysis time
         
-        return f"Coder Agent: I've analyzed your code and suggest the following improvements..."
+        return "Coder Agent: I've analyzed your code and suggest the following improvements..."
 
 
 class DocumentationAgent(BaseAgent):
@@ -570,7 +569,7 @@ async def main():
             print(f"Error: {e}")
     
     # Print agent status
-    print(f"\n--- Agent Status ---")
+    print("\n--- Agent Status ---")
     status = framework.get_agent_status()
     print(json.dumps(status, indent=2))
 

@@ -8,7 +8,7 @@ import logging
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature

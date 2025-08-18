@@ -7,8 +7,7 @@ Generates weekly validator metrics summary with suggested owners for top impacte
 
 import json
 import os
-from datetime import datetime, timezone, UTC
-from typing import Optional
+from datetime import UTC, datetime
 
 
 def load_codeowners() -> dict[str, str]:

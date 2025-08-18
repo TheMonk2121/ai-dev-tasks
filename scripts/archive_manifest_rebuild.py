@@ -9,8 +9,7 @@ and records the blob SHA for immutable snapshots.
 import json
 import os
 import subprocess
-from datetime import datetime, timezone, UTC
-from typing import Optional
+from datetime import UTC, datetime
 
 
 def get_archive_files() -> list[str]:

@@ -6,7 +6,6 @@ Factory for creating vector store instances based on mode or environment.
 """
 
 import os
-from typing import Optional
 
 from .core import CoreVectorStore
 from .perf import PerfVectorStore

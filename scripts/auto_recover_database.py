@@ -8,13 +8,11 @@ Integrates with the B-002 Advanced Error Recovery & Prevention system.
 Usage: python scripts/auto_recover_database.py [--dry-run] [--force]
 """
 
-import sys
-import os
-import time
-import subprocess
-from pathlib import Path
-from typing import Optional
 import json
+import subprocess
+import sys
+import time
+from pathlib import Path
 
 # Add dspy-rag-system to path
 sys.path.insert(0, str(Path(__file__).parent.parent / 'dspy-rag-system'))
@@ -431,7 +429,7 @@ def main():
     report = manager.generate_recovery_report()
     
     # Print summary
-    print(f"\n=== Database Recovery Summary ===")
+    print("\n=== Database Recovery Summary ===")
     print(f"Final Status: {report['final_status'].upper()}")
     print(f"Successful Fixes: {len(report['successful_fixes'])}")
     print(f"Failed Fixes: {len(report['failed_fixes'])}")

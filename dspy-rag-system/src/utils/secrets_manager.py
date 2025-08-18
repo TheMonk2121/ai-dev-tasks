@@ -13,7 +13,7 @@ import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Optional, Protocol
+from typing import Any, Protocol
 
 # Try to import keyring for secure storage
 try:

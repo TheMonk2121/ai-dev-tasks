@@ -9,10 +9,10 @@ for production deployment of the DSPy RAG system.
 import os
 import sys
 import time
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any, Optional
-from collections.abc import Callable
+from typing import Any
 
 from flask import jsonify
 
