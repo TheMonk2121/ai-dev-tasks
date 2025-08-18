@@ -1263,6 +1263,7 @@ def validate_readme_governance(root: Path, strict_fail: bool) -> dict:
     - Required sections present
     - No near-duplicates
     - Not stale for touched directories
+    - No bracketed placeholders that look like link refs
     """
     results = {"fail": [], "warn": []}
 
@@ -1270,7 +1271,7 @@ def validate_readme_governance(root: Path, strict_fail: bool) -> dict:
     readme_files = []
     for p in root.rglob("README*"):
         if p.is_file():
-            # Skip third-party directories
+            # Skip third-party and archives directories
             path_str = str(p)
             if any(
                 exclude in path_str
@@ -1283,6 +1284,7 @@ def validate_readme_governance(root: Path, strict_fail: bool) -> dict:
                     "/.pytest_cache/",
                     "/.ruff_cache/",
                     "/__pycache__/",
+                    "/600_archives/",
                 ]
             ):
                 continue
@@ -1312,11 +1314,24 @@ def validate_readme_governance(root: Path, strict_fail: bool) -> dict:
             else:
                 results["warn"].append(msg)
 
-    # Check required sections for README.md files
+    # Check required sections for README.md files and placeholder patterns
+    placeholder_line = re.compile(r"^\s*\[[A-Za-z][^\]]+\]\s*$")
+    placeholder_list_item = re.compile(r"^\s*-\s*\[[A-Za-z][^\]]+\]\s*$")
     for readme_file in readme_files:
-        if readme_file.name == "README.md":
+        if readme_file.name == "README.md" or readme_file.name == "README-dev.md":
             try:
                 content = readme_file.read_text(encoding="utf-8", errors="ignore")
+
+                # Placeholder detection
+                for line in content.splitlines():
+                    if placeholder_line.match(line) or placeholder_list_item.match(
+                        line
+                    ):
+                        msg = f"README_GOVERNANCE: Bracketed placeholder detected in '{readme_file}'. Replace with plain text (no square brackets)."
+                        if strict_fail:
+                            results["fail"].append(msg)
+                        else:
+                            results["warn"].append(msg)
 
                 # Check for required sections (case-insensitive)
                 required_sections = [
@@ -1334,7 +1349,7 @@ def validate_readme_governance(root: Path, strict_fail: bool) -> dict:
                         missing_sections.append(section)
 
                 if missing_sections:
-                    msg = f"README_GOVERNANCE: README.md '{readme_file}' missing required sections: {', '.join(missing_sections)}"
+                    msg = f"README_GOVERNANCE: {readme_file} missing required sections: {', '.join(missing_sections)}"
                     if strict_fail:
                         results["fail"].append(msg)
                     else:
@@ -1349,11 +1364,13 @@ def validate_readme_governance(root: Path, strict_fail: bool) -> dict:
                 )
 
                 if word_count < 80 and not has_repo_links:
-                    msg = f"README_GOVERNANCE: README.md '{readme_file}' too short ({word_count} words). Minimum 80 words unless pointer stub."
+                    msg = f"README_GOVERNANCE: {readme_file} too short ({word_count} words). Minimum 80 words unless pointer stub."
                     results["warn"].append(msg)
 
             except Exception as e:
-                msg = f"README_GOVERNANCE: Could not validate README.md '{readme_file}': {e}"
+                msg = (
+                    f"README_GOVERNANCE: Could not validate README '{readme_file}': {e}"
+                )
                 results["warn"].append(msg)
 
     # Check for root README.md

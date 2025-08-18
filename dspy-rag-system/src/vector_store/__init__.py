@@ -9,6 +9,11 @@ Provides CoreVectorStore (hybrid search) and PerfVectorStore (performance monito
 from .core import CoreVectorStore
 from .factory import get_vector_store
 from .perf import PerfVectorStore
-from .protocols import IVectorStore
+from .protocols import VectorStoreProtocol
 
-__all__ = ["get_vector_store", "CoreVectorStore", "PerfVectorStore", "IVectorStore"]
+__all__ = [
+    "CoreVectorStore",
+    "PerfVectorStore",
+    "VectorStoreProtocol",
+    "get_vector_store",
+]

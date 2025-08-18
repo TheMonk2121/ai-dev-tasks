@@ -5,24 +5,17 @@ Vector Store Protocols
 Defines the unified interface for vector store implementations.
 """
 
-from typing import Any, Dict, List, Protocol
+from __future__ import annotations
+
+from typing import Any, Protocol
 
 
-class IVectorStore(Protocol):
-    """Unified interface for vector store implementations."""
+class VectorStoreProtocol(Protocol):
+    # Legacy + new names, both supported for compatibility
+    def get_statistics(self) -> dict[str, Any]: ...
+    def get_stats(self) -> dict[str, Any]: ...
 
-    def similarity_search(self, query_embedding: List[float], top_k: int = 5, **kwargs) -> List[Dict[str, Any]]:
-        """Search for similar vectors."""
-        ...
-
-    def add_documents(self, documents: List[Dict[str, Any]]) -> bool:
-        """Add documents to the vector store."""
-        ...
-
-    def get_health_status(self) -> Dict[str, Any]:
-        """Get health status of the vector store."""
-        ...
-
-    def get_stats(self) -> Dict[str, Any]:
-        """Get statistics about the vector store."""
-        ...
+    # Minimal surface used by our app/tests; passthrough allowed
+    def store_document(self, *args: Any, **kwargs: Any) -> Any: ...
+    def store_chunk(self, *args: Any, **kwargs: Any) -> Any: ...
+    def get_documents(self, *args: Any, **kwargs: Any) -> Any: ...

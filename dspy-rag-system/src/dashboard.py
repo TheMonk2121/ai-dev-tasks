@@ -14,22 +14,32 @@ from collections import defaultdict, deque
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Protocol, cast, runtime_checkable
+from typing import (
+    Any,
+    Callable,
+    ClassVar,
+    Optional,
+    Protocol,
+    cast,
+    runtime_checkable,
+)
 
 # Flask imports
 from flask import Flask, jsonify, render_template, request
-from flask_socketio import SocketIO, emit
 from werkzeug.exceptions import RequestEntityTooLarge
 from werkzeug.utils import secure_filename
 
 # Add src to path for imports
 sys.path.append("src")
 
-# ── Critical imports (hard dependencies: security + tier‑1 DSPy modules) ─────────
+# ── Critical imports (hard dependencies: security + tier-1 DSPy modules) ─────────
 from dspy_modules.document_processor import DocumentProcessor
 from dspy_modules.vector_store import HybridVectorStore
 from utils.logger import get_logger
 from utils.metadata_extractor import MetadataExtractor
+
+# Public contract: use compatibility shim (optional enhanced module may not be present)
+from utils.rag_compatibility_shim import create_enhanced_rag_interface
 from utils.secrets_manager import setup_secrets_interactive, validate_startup_secrets
 from utils.validator import (
     SecurityError,
@@ -43,18 +53,16 @@ from utils.validator import (
     validate_string_length,
 )
 
-# Public contract import with shim fallback
-try:
-    from dspy_modules.enhanced_rag_system import create_enhanced_rag_interface
-except ImportError:
-    from utils.rag_compatibility_shim import create_enhanced_rag_interface
-
 # Optional monitoring callables (names are always defined for the linter)
 create_health_endpoints: Optional[Callable[[Any], Any]] = None
 initialize_production_monitoring: Optional[Callable[..., Any]] = None
 try:
-    from monitoring.health_endpoints import create_health_endpoints as _create_health_endpoints
-    from monitoring.production_monitor import initialize_production_monitoring as _init_prod_monitoring
+    from monitoring.health_endpoints import (
+        create_health_endpoints as _create_health_endpoints,
+    )
+    from monitoring.production_monitor import (
+        initialize_production_monitoring as _init_prod_monitoring,
+    )
 
     create_health_endpoints = _create_health_endpoints
     initialize_production_monitoring = _init_prod_monitoring
@@ -64,11 +72,44 @@ except Exception as e:
 
 LOG = get_logger("dashboard")
 
+# Optional realtime dependency: degrade gracefully if unavailable
+try:
+    from flask_socketio import SocketIO, emit
+
+    _SOCKETIO_AVAILABLE = True
+except ImportError as e:
+    LOG.warning(f"flask_socketio not available, realtime features disabled: {e}")
+    _SOCKETIO_AVAILABLE = False
+
+    class _DummySocketIO:
+        def __init__(self, app, cors_allowed_origins: str = "*"):
+            self.app = app
+
+        def on(self, event: str):
+            def decorator(func):
+                return func
+
+            return decorator
+
+        def emit(self, *_args, **_kwargs):
+            return None
+
+        def run(
+            self, app, host: str = "0.0.0.0", port: int = 5000, debug: bool = False
+        ):
+            # Fallback to Flask's built-in server
+            app.run(host=host, port=port, debug=debug)
+
+    def emit(*_args, **_kwargs):  # type: ignore
+        return None
+
+    SocketIO = _DummySocketIO  # type: ignore
+
 
 # ── Structural typing for linter (interfaces we actually use) ───────────────────
 @runtime_checkable
 class VectorStoreProtocol(Protocol):
-    def get_statistics(self) -> Dict[str, Any]: ...
+    def get_statistics(self) -> dict[str, Any]: ...
     def store_document(
         self,
         *,
@@ -77,24 +118,29 @@ class VectorStoreProtocol(Protocol):
         file_type: str,
         file_size: int,
         chunk_count: int,
-        metadata: Dict[str, Any],
+        metadata: dict[str, Any],
     ) -> Any: ...
     def store_chunk(
-        self, *, document_id: str, chunk_index: int, content: str, embedding: Optional[List[float]]
+        self,
+        *,
+        document_id: str,
+        chunk_index: int,
+        content: str,
+        embedding: Optional[list[float]],
     ) -> Any: ...
-    def get_documents(self) -> List[Dict[str, Any]]: ...
+    def get_documents(self) -> list[dict[str, Any]]: ...
 
 
 @runtime_checkable
 class DocumentProcessorProtocol(Protocol):
-    def process_document(self, file_path: Path) -> Dict[str, Any]: ...
+    def process_document(self, file_path: Path) -> dict[str, Any]: ...
 
 
 @runtime_checkable
 class ProductionMonitorProtocol(Protocol):
     def start_monitoring(self, interval_seconds: int) -> None: ...
-    def get_health_status(self) -> Dict[str, Any]: ...
-    def get_security_events(self, hours: int) -> List[Dict[str, Any]]: ...
+    def get_health_status(self) -> dict[str, Any]: ...
+    def get_security_events(self, hours: int) -> list[dict[str, Any]]: ...
     def get_system_metrics(self, minutes: int) -> Any: ...
 
 
@@ -103,16 +149,22 @@ class DashboardConfig:
     """Dashboard configuration and settings"""
 
     # Flask settings
-    SECRET_KEY = os.getenv("DASHBOARD_SECRET_KEY", "dev-secret-key-change-in-production")
+    SECRET_KEY = os.getenv(
+        "DASHBOARD_SECRET_KEY", "dev-secret-key-change-in-production"
+    )
     MAX_CONTENT_LENGTH = 100 * 1024 * 1024  # 100MB max file size
     UPLOAD_FOLDER = "uploads"
-    ALLOWED_EXTENSIONS = {".txt", ".md", ".pdf", ".csv"}
+    ALLOWED_EXTENSIONS: ClassVar[set[str]] = {".txt", ".md", ".pdf", ".csv"}
 
     # Database settings
-    POSTGRES_DSN = os.getenv("POSTGRES_DSN", "postgresql://ai_user:ai_password@localhost:5432/ai_agency")
+    POSTGRES_DSN = os.getenv(
+        "POSTGRES_DSN", "postgresql://ai_user:ai_password@localhost:5432/ai_agency"
+    )
 
     # Cursor Native AI settings
-    CURSOR_NATIVE_AI_ENABLED = os.getenv("CURSOR_NATIVE_AI_ENABLED", "true").lower() == "true"
+    CURSOR_NATIVE_AI_ENABLED = (
+        os.getenv("CURSOR_NATIVE_AI_ENABLED", "true").lower() == "true"
+    )
     CURSOR_NATIVE_AI_MODEL = os.getenv("CURSOR_NATIVE_AI_MODEL", "cursor-native-ai")
 
     # Processing settings
@@ -143,7 +195,9 @@ health_endpoints = None
 try:
     if initialize_production_monitoring is not None:
         production_monitor = initialize_production_monitoring(
-            service_name="ai-dev-tasks", service_version="0.3.1", environment=os.getenv("ENVIRONMENT", "development")
+            service_name="ai-dev-tasks",
+            service_version="0.3.1",
+            environment=os.getenv("ENVIRONMENT", "development"),
         )
     if create_health_endpoints is not None:
         health_endpoints = create_health_endpoints(app)
@@ -162,9 +216,7 @@ def _check_rate(ip: str, limit=20, window=60):
     q.append(now)
     while q and now - q[0] > window:
         q.popleft()
-    if len(q) > limit:
-        return False
-    return True
+    return len(q) <= limit
 
 
 # Global state
@@ -172,7 +224,7 @@ class DashboardState:
     """Global dashboard state management"""
 
     def __init__(self):
-        self.processing_files: Dict[str, Dict] = {}
+        self.processing_files: dict[str, dict] = {}
         self.processing_lock = threading.Lock()
         self.rag_interface: Optional[Any] = None
         self.vector_store: Optional[VectorStoreProtocol] = None
@@ -203,7 +255,12 @@ class DashboardState:
         self.history_lock = threading.Lock()
 
     def update_processing_file(
-        self, filename: str, status: str, progress: int = 0, chunks: int = 0, error: Optional[str] = None
+        self,
+        filename: str,
+        status: str,
+        progress: int = 0,
+        chunks: int = 0,
+        error: Optional[str] = None,
     ):
         """Update processing file status"""
         with self.processing_lock:
@@ -217,7 +274,13 @@ class DashboardState:
             # Emit real-time update
             socketio.emit(
                 "file_status_update",
-                {"filename": filename, "status": status, "progress": progress, "chunks": chunks, "error": error},
+                {
+                    "filename": filename,
+                    "status": status,
+                    "progress": progress,
+                    "chunks": chunks,
+                    "error": error,
+                },
             )
 
     def remove_processing_file(self, filename: str):
@@ -226,7 +289,9 @@ class DashboardState:
             if filename in self.processing_files:
                 del self.processing_files[filename]
 
-    def add_query_to_history(self, query: str, response: str, sources: List[str], response_time: float):
+    def add_query_to_history(
+        self, query: str, response: str, sources: list[str], response_time: float
+    ):
         """Add query to history with thread safety (D-3)"""
         with self.history_lock:
             self.query_history.append(
@@ -276,39 +341,44 @@ def initialize_components():
         LOG.info("Initializing RAG system components...")
 
         # Validate secrets on startup (C-8)
-        LOG.info("🔐 Validating secrets on startup...")
+        LOG.info("Validating secrets on startup...")
         if not validate_startup_secrets():
             LOG.error("❌ Secrets validation failed")
             LOG.info("🔧 Starting interactive secrets setup...")
             if not setup_secrets_interactive():
                 LOG.error("❌ Interactive secrets setup failed")
                 return False
-            LOG.info("✅ Secrets setup completed")
+            LOG.info("Secrets setup completed")
 
         # Initialize vector store (cast for structural typing)
         state.vector_store = cast(
-            "VectorStoreProtocol", HybridVectorStore(DashboardConfig.POSTGRES_DSN)  # expected interface at call sites
+            "VectorStoreProtocol",
+            HybridVectorStore(
+                DashboardConfig.POSTGRES_DSN
+            ),  # expected interface at call sites
         )
-        LOG.info("✅ Vector store initialized")
+        LOG.info("Vector store initialized")
 
         # Initialize document processor (cast for structural typing)
-        state.document_processor = cast("DocumentProcessorProtocol", DocumentProcessor())
-        LOG.info("✅ Document processor initialized")
+        state.document_processor = cast(
+            "DocumentProcessorProtocol", DocumentProcessor()
+        )
+        LOG.info("Document processor initialized")
 
         # Initialize metadata extractor
         state.metadata_extractor = MetadataExtractor()
-        LOG.info("✅ Metadata extractor initialized")
+        LOG.info("Metadata extractor initialized")
 
         # Initialize enhanced RAG interface with Cursor Native AI
         state.rag_interface = create_enhanced_rag_interface(
             DashboardConfig.POSTGRES_DSN, None, DashboardConfig.CURSOR_NATIVE_AI_MODEL
         )
-        LOG.info("✅ Enhanced RAG interface initialized with Cursor Native AI")
+        LOG.info("Enhanced RAG interface initialized with Cursor Native AI")
 
         # Start production monitoring if available
         if production_monitor:
             production_monitor.start_monitoring(interval_seconds=30)
-            LOG.info("✅ Production monitoring started")
+            LOG.info("Production monitoring started")
 
         # Update stats
         try:
@@ -336,7 +406,9 @@ def process_file_async(file_path: Path):
         # Check file size
         file_size_mb = get_file_size_mb(file_path)
         if file_size_mb > 100:  # 100MB limit
-            state.update_processing_file(filename, "error", 0, 0, f"File too large: {file_size_mb:.1f}MB")
+            state.update_processing_file(
+                filename, "error", 0, 0, f"File too large: {file_size_mb:.1f}MB"
+            )
             return
 
         state.update_processing_file(filename, "processing", 20)
@@ -373,7 +445,9 @@ def process_file_async(file_path: Path):
                             embedding=chunk.get("embedding"),
                         )
 
-                    state.update_processing_file(filename, "completed", 100, len(chunks))
+                    state.update_processing_file(
+                        filename, "completed", 100, len(chunks)
+                    )
 
                     # Update stats
                     state.stats["total_documents"] += 1
@@ -386,12 +460,16 @@ def process_file_async(file_path: Path):
                     file_path.rename(processed_path)
 
                 else:
-                    state.update_processing_file(filename, "error", 0, 0, "Vector store not available")
+                    state.update_processing_file(
+                        filename, "error", 0, 0, "Vector store not available"
+                    )
             else:
                 error_msg = result.get("error", "Unknown processing error")
                 state.update_processing_file(filename, "error", 0, 0, error_msg)
         else:
-            state.update_processing_file(filename, "error", 0, 0, "Document processor not available")
+            state.update_processing_file(
+                filename, "error", 0, 0, "Document processor not available"
+            )
 
     except Exception as e:
         LOG.exception(f"Error processing {filename}")
@@ -487,7 +565,11 @@ def upload_file():
         )
 
         return jsonify(
-            {"success": True, "message": f"File {filename} uploaded and processing started", "filename": filename}
+            {
+                "success": True,
+                "message": f"File {filename} uploaded and processing started",
+                "filename": filename,
+            }
         )
 
     except RequestEntityTooLarge:
@@ -525,7 +607,9 @@ def query_rag():
                 return jsonify({"error": "Query is required"}), 400
 
             # Validate string length
-            validate_string_length(query, min_length=1, max_length=DashboardConfig.MAX_QUERY_LENGTH)
+            validate_string_length(
+                query, min_length=1, max_length=DashboardConfig.MAX_QUERY_LENGTH
+            )
 
             # Validate query complexity
             validate_query_complexity(query, max_tokens=1000)
@@ -550,7 +634,9 @@ def query_rag():
             sources = result.get("sources", [])
 
             # Add to history
-            state.add_query_to_history(sanitized_query, response, sources, response_time)
+            state.add_query_to_history(
+                sanitized_query, response, sources, response_time
+            )
 
             LOG.info(
                 "Query processed successfully",
@@ -679,7 +765,16 @@ def dashboard_health_check():
 
     except Exception as e:
         LOG.exception("Health check error")
-        return jsonify({"status": "unhealthy", "error": str(e), "timestamp": datetime.now().isoformat()}), 500
+        return (
+            jsonify(
+                {
+                    "status": "unhealthy",
+                    "error": str(e),
+                    "timestamp": datetime.now().isoformat(),
+                }
+            ),
+            500,
+        )
 
 
 @app.route("/api/monitoring")
@@ -688,7 +783,12 @@ def monitoring_data():
     try:
         if not production_monitor:
             return (
-                jsonify({"error": "Production monitoring not available", "timestamp": datetime.now().isoformat()}),
+                jsonify(
+                    {
+                        "error": "Production monitoring not available",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                ),
                 503,
             )
 
@@ -719,14 +819,20 @@ def get_graph_data():
     """Get chunk relationship data for visualization"""
     try:
         # Check feature flag
-        feature_flag_enabled = os.getenv("GRAPH_VISUALIZATION_ENABLED", "true").lower() == "true"
+        feature_flag_enabled = (
+            os.getenv("GRAPH_VISUALIZATION_ENABLED", "true").lower() == "true"
+        )
         if not feature_flag_enabled:
             return jsonify({"error": "Graph visualization feature is disabled"}), 403
 
         # Get query parameters with validation
         query = request.args.get("q", type=str)
-        include_knn = request.args.get("include_knn", "true", type=str).lower() == "true"
-        include_entity = request.args.get("include_entity", "true", type=str).lower() == "true"
+        include_knn = (
+            request.args.get("include_knn", "true", type=str).lower() == "true"
+        )
+        include_entity = (
+            request.args.get("include_entity", "true", type=str).lower() == "true"
+        )
         min_sim = request.args.get("min_sim", 0.5, type=float)
         max_nodes = request.args.get("max_nodes", 2000, type=int)
 
@@ -739,10 +845,20 @@ def get_graph_data():
 
         # Validate query length if provided
         if query and len(query) > DashboardConfig.MAX_QUERY_LENGTH:
-            return jsonify({"error": f"Query too long (max {DashboardConfig.MAX_QUERY_LENGTH} characters)"}), 400
+            return (
+                jsonify(
+                    {
+                        "error": f"Query too long (max {DashboardConfig.MAX_QUERY_LENGTH} characters)"
+                    }
+                ),
+                400,
+            )
 
         # Initialize GraphDataProvider if not already done
-        if not hasattr(state, "graph_data_provider") or state.graph_data_provider is None:
+        if (
+            not hasattr(state, "graph_data_provider")
+            or state.graph_data_provider is None
+        ):
             from utils.database_resilience import DatabaseResilienceManager
             from utils.graph_data_provider import GraphDataProvider
 
@@ -878,14 +994,19 @@ def not_found(e):
 def main():
     """Main function to run the dashboard"""
     LOG.info(
-        "🚀 DSPy RAG System Dashboard starting", extra={"component": "dashboard", "action": "startup", "version": "2.0"}
+        "🚀 DSPy RAG System Dashboard starting",
+        extra={"component": "dashboard", "action": "startup", "version": "2.0"},
     )
 
     # Initialize components
     if not initialize_components():
         LOG.error(
             "❌ Failed to initialize components",
-            extra={"component": "dashboard", "action": "initialization", "status": "failed"},
+            extra={
+                "component": "dashboard",
+                "action": "initialization",
+                "status": "failed",
+            },
         )
         return
 
@@ -923,10 +1044,21 @@ def main():
     except KeyboardInterrupt:
         LOG.info(
             "⏹️  Stopping dashboard",
-            extra={"component": "dashboard", "action": "shutdown", "reason": "keyboard_interrupt"},
+            extra={
+                "component": "dashboard",
+                "action": "shutdown",
+                "reason": "keyboard_interrupt",
+            },
         )
         state.executor.shutdown(wait=True)
-        LOG.info("✅ Dashboard stopped", extra={"component": "dashboard", "action": "shutdown", "status": "completed"})
+        LOG.info(
+            "✅ Dashboard stopped",
+            extra={
+                "component": "dashboard",
+                "action": "shutdown",
+                "status": "completed",
+            },
+        )
 
 
 if __name__ == "__main__":

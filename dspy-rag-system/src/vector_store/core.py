@@ -5,6 +5,8 @@ Core Vector Store Implementation
 Wraps the existing HybridVectorStore for hybrid search capabilities.
 """
 
+from __future__ import annotations
+
 from typing import Any, Dict, List
 
 import numpy as np
@@ -28,7 +30,9 @@ class CoreVectorStore:
         self._hybrid_store = HybridVectorStore(db_connection_string, **kwargs)
         self.db_connection_string = db_connection_string
 
-    def similarity_search(self, query_embedding: List[float], top_k: int = 5, **kwargs) -> List[Dict[str, Any]]:
+    def similarity_search(
+        self, query_embedding: List[float], top_k: int = 5, **kwargs
+    ) -> List[Dict[str, Any]]:
         """
         Search for similar vectors using hybrid search.
 
@@ -46,7 +50,10 @@ class CoreVectorStore:
 
         # Use the hybrid search method
         result = self._hybrid_store.forward(
-            operation="hybrid_search", query_embedding=query_embedding, limit=top_k, **kwargs
+            operation="hybrid_search",
+            query_embedding=query_embedding,
+            limit=top_k,
+            **kwargs,
         )
 
         # Extract results from the hybrid search response
@@ -69,7 +76,9 @@ class CoreVectorStore:
         """
         try:
             # Use the hybrid store's document addition method
-            result = self._hybrid_store.forward(operation="add_documents", documents=documents)
+            result = self._hybrid_store.forward(
+                operation="add_documents", documents=documents
+            )
             return result.get("success", False)
         except Exception:
             return False
@@ -99,3 +108,17 @@ class CoreVectorStore:
             "implementation": "HybridVectorStore",
             "features": ["hybrid_search", "dense_sparse_fusion", "spans"],
         }
+
+    # Dashboard-compatible alias
+    def get_statistics(self) -> Dict[str, Any]:
+        return self.get_stats()
+
+    # Minimal parity methods (delegated forwarders)
+    def store_document(self, *args: Any, **kwargs: Any) -> Any:
+        return self._hybrid_store.forward(operation="store_document", *args, **kwargs)
+
+    def store_chunk(self, *args: Any, **kwargs: Any) -> Any:
+        return self._hybrid_store.forward(operation="store_chunk", *args, **kwargs)
+
+    def get_documents(self, *args: Any, **kwargs: Any) -> Any:
+        return self._hybrid_store.forward(operation="get_documents", *args, **kwargs)
