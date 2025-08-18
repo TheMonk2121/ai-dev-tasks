@@ -304,10 +304,10 @@ Core Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+How to use this document or system
 
 <!-- README_AUTOFIX_END -->

@@ -55,14 +55,14 @@ These tutorials provide practical implementation guidance for our multi-agent sy
 
 ## Owner
 
-[Document owner/maintainer information]
+Document owner/maintainer information
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+How to use this document or system
 
 <!-- README_AUTOFIX_END -->

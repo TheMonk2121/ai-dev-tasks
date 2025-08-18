@@ -242,10 +242,10 @@ This migration is based on ChatGPT's recommendations for:
 
 ## Owner
 
-[Document owner/maintainer information]
+Document owner/maintainer information
 
 ## Usage
 
-[Describe how to use this document or system]
+How to use this document or system
 
 <!-- README_AUTOFIX_END -->

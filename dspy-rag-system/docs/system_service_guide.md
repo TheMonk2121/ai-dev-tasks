@@ -52,10 +52,10 @@ This guide explains running the RAG pipeline components as system services (loca
 
 ## Owner
 
-[Document owner/maintainer information]
+Document owner/maintainer information
 
 ## Usage
 
-[Describe how to use this document or system]
+How to use this document or system
 
 <!-- README_AUTOFIX_END -->

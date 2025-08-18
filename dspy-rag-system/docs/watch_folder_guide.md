@@ -49,6 +49,6 @@ The watch-folder service monitors `watch_folder/` and securely ingests new files
 
 ## Owner
 
-[Document owner/maintainer information]
+Document owner/maintainer information
 
 <!-- README_AUTOFIX_END -->

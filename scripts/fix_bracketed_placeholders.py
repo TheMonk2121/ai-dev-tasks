@@ -10,17 +10,33 @@ import re
 import sys
 from pathlib import Path
 
-# Common placeholder replacements
+# Common placeholder replacements - only known safe patterns
 PLACEHOLDER_REPLACEMENTS = {
     r"\[Describe the purpose and scope of this document\]": "Describe the purpose and scope of this document",
     r"\[Describe how to use this document or system\]": "How to use this document or system",
     r"\[Owner\]": "Core Team",
     r"\[Last reviewed\]": "Last reviewed date",
     r"\[Integration\]": "Integration details",
+    r"\[Document owner/maintainer information\]": "Document owner/maintainer information",
     r"\[Environment setup, deployment process, configuration management, database migrations, feature flags\]": "Environment setup, deployment process, configuration management, database migrations, feature flags",
     r"\[Technical risks, timeline risks, resource risks, and mitigation strategies\]": "Technical risks, timeline risks, resource risks, and mitigation strategies",
     r"\[Measurable success criteria and acceptance criteria\]": "Measurable success criteria and acceptance criteria",
     r"\[Logging, metrics, alerting, dashboard, troubleshooting requirements\]": "Logging, metrics, alerting, dashboard, troubleshooting requirements",
+    r"\[Project overview, success metrics, timeline, stakeholders\]": "Project overview, success metrics, timeline, stakeholders",
+    r"\[Current state, pain points, opportunity, impact\]": "Current state, pain points, opportunity, impact",
+    r"\[High-level solution, key features, technical approach, integration points\]": "High-level solution, key features, technical approach, integration points",
+    r"\[User stories, feature specifications, data requirements, API requirements\]": "User stories, feature specifications, data requirements, API requirements",
+    r"\[Performance, security, reliability, usability requirements\]": "Performance, security, reliability, usability requirements",
+    r"\[Test coverage goals, testing phases, automation requirements, test environments\]": "Test coverage goals, testing phases, automation requirements, test environments",
+    r"\[Code quality standards, performance benchmarks, security validation, user acceptance criteria\]": "Code quality standards, performance benchmarks, security validation, user acceptance criteria",
+    r"\[Development phase gates and completion criteria\]": "Development phase gates and completion criteria",
+    r"\[Detailed testing requirements for each component type\]": "Detailed testing requirements for each component type",
+    r"\[Brief description of the project and its goals\]": "Brief description of the project and its goals",
+    r"\[Tasks for infrastructure and dependencies\]": "Tasks for infrastructure and dependencies",
+    r"\[Tasks for main functionality development\]": "Tasks for main functionality development",
+    r"\[Tasks for component integration and validation\]": "Tasks for component integration and validation",
+    r"\[Tasks for optimization and hardening\]": "Tasks for optimization and hardening",
+    r"\[Tasks for final preparation and launch\]": "Tasks for final preparation and launch",
 }
 
 
@@ -39,25 +55,26 @@ def fix_bracketed_placeholders(content: str) -> tuple[str, list[str]]:
             fixed_content = re.sub(pattern, replacement, fixed_content)
             changes.append(f"Replaced '{pattern}' with '{replacement}'")
 
-    # Generic pattern for standalone bracketed text
-    def replace_generic(match):
-        placeholder = match.group(1)
-        # Convert to sentence case and remove brackets
-        replacement = placeholder.strip()
-        if replacement:
-            # Capitalize first letter, lowercase rest
-            replacement = replacement[0].upper() + replacement[1:].lower()
-            changes.append(f"Replaced '[{placeholder}]' with '{replacement}'")
-            return replacement
-        return match.group(0)
+        # Generic pattern for standalone bracketed text - DISABLED for safety
+    # Only use known patterns to avoid false positives
+    # def replace_generic(match):
+    #     placeholder = match.group(1)
+    #     # Convert to sentence case and remove brackets
+    #     replacement = placeholder.strip()
+    #     if replacement:
+    #         # Capitalize first letter, lowercase rest
+    #         replacement = replacement[0].upper() + replacement[1:].lower()
+    #         changes.append(f"Replaced '[{placeholder}]' with '{replacement}'")
+    #         return replacement
+    #     return match.group(0)
 
-    # Apply generic replacement for standalone brackets
-    fixed_content = re.sub(
-        r"^\s*\[([A-Za-z][^\]]+)\]\s*$",
-        replace_generic,
-        fixed_content,
-        flags=re.MULTILINE,
-    )
+    # Apply generic replacement for standalone brackets - DISABLED
+    # fixed_content = re.sub(
+    #     r"^\s*\[([A-Za-z][^\]]+)\]\s*$",
+    #     replace_generic,
+    #     fixed_content,
+    #     flags=re.MULTILINE,
+    # )
 
     return fixed_content, changes
 

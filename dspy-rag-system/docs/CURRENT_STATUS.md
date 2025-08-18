@@ -272,10 +272,10 @@ DEEP_REASONING=0 CLARIFIER=0 make run-local
 
 ## Owner
 
-[Document owner/maintainer information]
+Document owner/maintainer information
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 <!-- README_AUTOFIX_END -->

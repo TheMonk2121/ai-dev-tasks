@@ -433,19 +433,7 @@ AI Development Ecosystem
 <!-- AUTO:current_priorities:start -->
 ### **Current Priorities**
 
-1. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
-   - todo
-
-2. **B‑094**: MCP Memory Rehydrator Server (🔥 points)
-   - todo
-
-3. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
-   - todo
-
-4. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
-   - todo
-
-5. **B‑076**: Research-Based DSPy Assertions Implementation (🔥 points)
+1. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 

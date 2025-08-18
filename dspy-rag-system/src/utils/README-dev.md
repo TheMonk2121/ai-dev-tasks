@@ -200,10 +200,10 @@ The Go implementation is designed to be a drop-in replacement for the Python ver
 
 ## Owner
 
-[Document owner/maintainer information]
+Document owner/maintainer information
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 <!-- README_AUTOFIX_END -->
