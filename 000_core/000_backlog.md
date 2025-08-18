@@ -5,6 +5,53 @@
 <!-- MEMORY_CONTEXT: HIGH - Current priorities and development roadmap -->
 <!-- DATABASE_SYNC: REQUIRED -->
 
+## Governance Hardening — New Backlog Items (Execution-Ready)
+
+| B-171 | Enforce CODEOWNERS on critical paths | 🔒 | 3 | todo | Require approvals from owners on `000_core/`, `400_guides/`, `dspy-rag-system/src/vector_store/` | Governance + CI | CODEOWNERS + required reviews + docs updates |
+<!-- score: {bv: 4, tc: 4, rr: 3, le: 3, lessons: 2, effort: 2, deps: []} -->
+<!-- score_total: 3.5 -->
+<!-- do_next: Add CODEOWNERS with explicit owners for core docs and vector store; enable GitHub branch protection to require code owner reviews; update PR template checklist. -->
+<!-- acceptance: CODEOWNERS exists; branch protection requires at least 1 code owner review for protected paths; PR template shows CODEOWNERS checklist; sample PR on a protected path is blocked without owner review. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["400_guides/400_system-overview.md", "500_reference-cards.md"] -->
+<!-- reference_cards: ["401_consensus-log.md", "docs/100_ai-development-ecosystem.md"] -->
+
+| B-172 | Block --no-verify bypass on protected branches | 🛡️ | 3 | todo | Ensure required status checks prevent bypassed local hooks | CI Policy | Require checks + policy docs |
+<!-- score: {bv: 4, tc: 3, rr: 3, le: 3, lessons: 2, effort: 2, deps: []} -->
+<!-- score_total: 3.2 -->
+<!-- do_next: Configure branch protection to require validator/test status checks; disallow direct pushes; document policy that --no-verify is not relied on; add a CI job that fails if validator report is missing. -->
+<!-- acceptance: Protected branches require CI checks (validator/tests) and block merge on failure; direct pushes disabled; a simulated commit without validator output fails CI; docs updated under contributing guide. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["400_guides/400_contributing-guidelines.md", "400_guides/400_migration-upgrade-guide.md"] -->
+<!-- reference_cards: ["400_guides/400_security-best-practices-guide.md", "500_reference-cards.md"] -->
+
+| B-173 | Tighten exception ledger expiry discipline (≤7 days) | ⏳ | 3 | todo | Enforce max 7-day expiry and auto-alerts for near-expiry entries | Validator + CI | Ledger hygiene |
+<!-- score: {bv: 4, tc: 3, rr: 3, le: 3, lessons: 2, effort: 2, deps: []} -->
+<!-- score_total: 3.1 -->
+<!-- do_next: Update `scripts/check_ledger_additions.py` to hard-fail on >7d expiries; ensure weekly job flags near-expiry waivers; add summary to PR comments when ledger entries present. -->
+<!-- acceptance: CI blocks PRs introducing >7d ledger entries; weekly job outputs list of entries with ≤7 days remaining; validator PR comment shows count and oldest expiry; docs updated. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["401_consensus-log.md", "400_guides/400_observability-system.md"] -->
+<!-- reference_cards: ["400_guides/400_documentation-reference.md", "500_reference-cards.md"] -->
+
+| B-174 | Dependency pinning with hashes + SCA/SAST | 🔐 | 5 | todo | Pin Python deps with hashes; add weekly SCA and CodeQL | Supply Chain | Security automation |
+<!-- score: {bv: 5, tc: 4, rr: 4, le: 3, lessons: 2, effort: 3, deps: []} -->
+<!-- score_total: 3.6 -->
+<!-- do_next: Convert `requirements.txt` to hashed pins (pip-tools or pip-compile with --generate-hashes); add `pip-audit` (or Safety) weekly; enable CodeQL workflow; document remediation workflow. -->
+<!-- acceptance: requirements with hashes committed; CI fails on unpinned/new deps without hashes; weekly SCA job runs and stores artifact; CodeQL enabled with default queries; remediation docs added to security guide. -->
+<!-- est_hours: 4 -->
+<!-- lessons_applied: ["400_guides/400_security-best-practices-guide.md", "400_guides/400_script-optimization-guide.md"] -->
+<!-- reference_cards: ["400_guides/400_deployment-environment-guide.md", "500_reference-cards.md"] -->
+
+| B-175 | Vector store PR e2e smoke + perf budgets | 🚀 | 5 | todo | Gate vector store changes with smoke tests and latency budgets | Testing + CI | Perf guardrails |
+<!-- score: {bv: 5, tc: 4, rr: 4, le: 3, lessons: 2, effort: 3, deps: []} -->
+<!-- score_total: 3.7 -->
+<!-- do_next: Add selective CI job triggering on `dspy-rag-system/src/vector_store/**`; run minimal e2e smoke; enforce budgets (e.g., similarity_search p95 < 200ms, health check < 50ms) and fail on regression; publish perf summary as PR comment. -->
+<!-- acceptance: On PRs touching vector store, CI runs smoke and enforces budgets; budget breaches fail CI; perf summary artifact and PR comment posted; thresholds documented in testing strategy guide. -->
+<!-- est_hours: 4 -->
+<!-- lessons_applied: ["tests/e2e/test_vector_store_modes_e2e.py", "400_guides/400_testing-strategy-guide.md"] -->
+<!-- reference_cards: ["400_guides/400_performance-optimization-guide.md", "500_reference-cards.md"] -->
+
 <!-- ANCHOR_KEY: backlog -->
 <!-- ANCHOR_PRIORITY: 10 -->
 <!-- ROLE_PINS: ["planner"] -->
