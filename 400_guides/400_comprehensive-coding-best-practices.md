@@ -81,7 +81,7 @@ python scripts/error_handler.py --test  # Test error handling
 python scripts/state_manager.py --status  # Check state management
 
 # Documentation and validation
-python scripts/doc_coherence_validator.py --check-all  # Validate documentation
+python scripts/doc_coherence_validator.py --check-all  # Validate documentation and code quality
 python scripts/documentation_retrieval_cli.py --help  # Documentation CLI
 python scripts/documentation_indexer.py --help  # Index documentation
 
@@ -277,7 +277,7 @@ echo "OK Installation complete!"
 
 #### **Documentation & Validation** (See [`400_guides/400_documentation-guide.md`](400_documentation-guide.md))
 
-- **Documentation Validation**: `scripts/doc_coherence_validator.py` - Cross-reference checking
+- **Documentation & Code Quality Validation**: `scripts/doc_coherence_validator.py` - Cross-reference checking, code quality aggregation, Unicode safety, error reduction governance
 - **Documentation Retrieval**: `scripts/documentation_retrieval_cli.py` - CLI for context retrieval
 - **Documentation Indexing**: `scripts/documentation_indexer.py` - Automatic indexing
 - **Documentation Navigator**: `scripts/documentation_navigator.py` - File discovery and navigation
@@ -2721,6 +2721,47 @@ This document integrates with your implemented AI development ecosystem by:
 - **Development Standards Level**: Production Ready with Conflict Prevention
 - **Optimized for**: Solo Development Workflow with Systematic Conflict Prevention
 
+## **Validator Code Quality Integration**
+
+### **Enhanced Documentation & Code Quality Validation**
+
+The `doc_coherence_validator.py` now includes comprehensive code quality validation alongside documentation coherence checking:
+
+#### **New Code Quality Categories**
+
+- **`code_quality`**: Validates F401, F541, F841, I001 errors (Stage 0: informational)
+- **`unicode_safety`**: Validates RUF001-003, PLE2502 errors (Stage 0: fail on any)
+- **`error_reduction`**: Validates governance compliance (Stage 0: informational)
+
+#### **Environment Variables for Code Quality**
+
+```bash
+# Code quality validation settings
+CODE_QUALITY_FAIL=false          # Stage 0: informational only
+UNICODE_SAFETY_FAIL=true         # Stage 0: fail on any Unicode safety violations
+ERROR_REDUCTION_FAIL=false       # Stage 0: informational only
+```
+
+#### **Validator as Governance Aggregator**
+
+- **Aggregator Approach**: Calls existing Ruff tools with same config (no duplication)
+- **Unified Reporting**: Single governance report includes docs + code quality
+- **Tiering**: Tier 1/2 files get higher severity for code quality violations
+- **Ratchet**: Only new violations in changed files fail PRs (keeps legacy debt stable)
+
+#### **Usage Examples**
+
+```bash
+# Run full validation (documentation + code quality)
+python3 scripts/doc_coherence_validator.py --dry-run
+
+# Run with JSON output for detailed results
+python3 scripts/doc_coherence_validator.py --dry-run --json
+
+# Check specific categories
+python3 scripts/doc_coherence_validator.py --check archive --check code_quality
+```
+
 ## **Automated Database Synchronization**
 
 ### **Git Hooks for Database Management**
@@ -2729,7 +2770,7 @@ The repository now includes automated database synchronization through Git hooks
 
 #### **Pre-commit Hook** (`.git/hooks/pre-commit`)
 - **Purpose**: Validates markdown files before commit
-- **Action**: Runs `doc_coherence_validator.py --dry-run`
+- **Action**: Runs `doc_coherence_validator.py --dry-run` (documentation and code quality validation)
 - **Behavior**: Blocks commit if validation fails
 
 #### **Post-commit Hook** (`.git/hooks/post-commit`)

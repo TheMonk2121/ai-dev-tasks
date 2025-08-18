@@ -115,10 +115,11 @@
 
 ### Tier 2 - High (production infrastructure)
 
-- `scripts/doc_coherence_validator.py` - Documentation Quality &
-  Coherence Validation
-  - Primary validator for documentation integrity; cross-references,
-    naming conventions, markdown compliance.
+- `scripts/doc_coherence_validator.py` - Documentation & Code Quality
+  Validation
+  - Primary validator for documentation integrity and code quality;
+    cross-references, naming conventions, markdown compliance, code
+    quality aggregation, Unicode safety, and error reduction governance.
 - `scripts/task_generation_automation.py` - Automated Task Generation
   System
   - Parses PRDs and backlog items; generates consistent task templates
@@ -204,8 +205,8 @@
 - Production resilience: Keeps system healthy under failure
   (`database_resilience.py`)
 
-- Documentation integrity: Ensures documentation quality and coherence
-  (`doc_coherence_validator.py`)
+- Documentation & code quality integrity: Ensures documentation quality,
+  coherence, and code quality standards (`doc_coherence_validator.py`)
 
 - Safety & security: Prevents unsafe inputs/operations
   (`prompt_sanitizer.py`)
@@ -246,7 +247,7 @@
 3)  Validation:
 
 - Run `./dspy-rag-system/run_tests.sh` (where applicable)
-- Run `python3 scripts/doc_coherence_validator.py` for cross-references
+- Run `python3 scripts/doc_coherence_validator.py` for cross-references and code quality validation
 
 ## 🛡️ Code Quality Standards for Critical Files
 
@@ -327,8 +328,8 @@ def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
 - v1.2: Added memory rehydrator (Tier 1), rollback system and anchor
   parser (Tier 2), maintenance automation (Tier 3) - Context assembly
   and documentation safety
-- v1.1: Added `doc_coherence_validator.py` to Tier 2 (High) -
-  Documentation quality validation
+- v1.6: Enhanced `doc_coherence_validator.py` with code quality integration - Unified documentation and code quality validation
+- v1.1: Added `doc_coherence_validator.py` to Tier 2 (High) - Documentation quality validation
 - v1.0 (initial): Added Tier 1-3 with criteria and maintenance steps
 
 <!-- README_AUTOFIX_START -->
