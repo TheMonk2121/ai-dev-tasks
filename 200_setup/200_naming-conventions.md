@@ -275,7 +275,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 ## 🔐 Core Documentation Invariants
 
-- Purpose: Single normative source for core documentation requirements. Validator enforces these invariants.
+- Purpose: Single normative source for core documentation requirements. Validator enforces these invariants and code quality standards.
 
 ### Required top metadata header (HTML comments)
 
@@ -322,7 +322,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 ### Anchor policy (phased)
 
 - Only TL;DR may use an explicit HTML anchor (`{#tldr}`). All other anchors must be heading-based.
-- Rollout: validator warns first; flips to errors after link hygiene completes.
+- Rollout: validator warns first; flips to errors after link hygiene completes (documentation and code quality validation).
 
 ### Table Usage Mandate
 
