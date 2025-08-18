@@ -884,7 +884,7 @@ dependencies 3. **Services**: n8n for automation, Redis for caching 4.
 
 ### **Validator Enforcement**
 
-- **Categories**: Archive, Shadow Fork, README, Multi-Rep/XRef
+- **Categories**: Archive, Shadow Fork, README, Multi-Rep/XRef, Code Quality, Unicode Safety, Error Reduction
 - **Modes**: WARN (default) → FAIL (after clean day targets)
 - **Targets**: Archive (3 days), Shadow Fork (7 days), README (14 days),
   Multi-Rep (5 days)

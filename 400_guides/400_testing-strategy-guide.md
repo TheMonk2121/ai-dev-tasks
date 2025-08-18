@@ -44,7 +44,7 @@
 
 ``` bash
 pytest -m "not slow and not e2e" -q
-scripts/doc_coherence_validator.py --ci --json  # changed-files aware
+scripts/doc_coherence_validator.py --ci --json  # changed-files aware (documentation & code quality)
 scripts/validator_ratchet.py  # block increases intersecting changed files
 scripts/validator_metrics.py  # persist metrics
 ```
