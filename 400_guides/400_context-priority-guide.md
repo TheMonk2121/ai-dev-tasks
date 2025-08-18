@@ -37,7 +37,7 @@
 | Guide for prioritizing context and documentation access | Organizing documentation or setting up new systems | Apply |
 | priority system to current documentation |  |  |
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Core documentation system
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Core documentation system
 
 - **Priority**: 🔥 Critical - Essential for AI context rehydration
 
@@ -53,23 +53,23 @@
 
 | Topic | File | Anchor | When to read | Why |
 |----|----|----|----|----|
-| System overview | 400_guides/400_system-overview.md | — | After memory + backlog | Architecture mental model |
-| Backlog & priorities | 000_core/000_backlog.md | — | Always for work selection | Current focus and dependencies |
-| Testing | 400_guides/400_testing-strategy-guide.md | — | Before writing tests | Strategy, pyramid, quality gates |
-| Test development | dspy-rag-system/tests/README-dev.md | — | When writing DSPy tests | Import paths, variable management, F841 |
-| Deployment | 400_guides/400_deployment-environment-guide.md | — | Before shipping | Procedures, rollback, monitoring |
-| Migration | 400_guides/400_migration-upgrade-guide.md | — | Before/after breaking changes | Pre-checks, validation, |
+| System overview | 400_guides/400_system-overview.md | - | After memory + backlog | Architecture mental model |
+| Backlog & priorities | 000_core/000_backlog.md | - | Always for work selection | Current focus and dependencies |
+| Testing | 400_guides/400_testing-strategy-guide.md | - | Before writing tests | Strategy, pyramid, quality gates |
+| Test development | dspy-rag-system/tests/README-dev.md | - | When writing DSPy tests | Import paths, variable management, F841 |
+| Deployment | 400_guides/400_deployment-environment-guide.md | - | Before shipping | Procedures, rollback, monitoring |
+| Migration | 400_guides/400_migration-upgrade-guide.md | - | Before/after breaking changes | Pre-checks, validation, |
 | rollback |  |  |  |  |
-| Integration | 400_guides/400_integration-patterns-guide.md | — | Before integrating components | Patterns, data flow, |
+| Integration | 400_guides/400_integration-patterns-guide.md | - | Before integrating components | Patterns, data flow, |
 | error handling |  |  |  |  |
-| Performance | 400_guides/400_performance-optimization-guide.md | — | Before/after perf changes | Metrics, tuning, |
+| Performance | 400_guides/400_performance-optimization-guide.md | - | Before/after perf changes | Metrics, tuning, |
 | troubleshooting |  |  |  |  |
-| Security | 400_guides/400_security-best-practices-guide.md | — | Before risky changes | Threat model, validation, |
+| Security | 400_guides/400_security-best-practices-guide.md | - | Before risky changes | Threat model, validation, |
 | response |  |  |  |  |
-| Visualization | 400_guides/400_graph-visualization-guide.md | — | Using chunk relationship visualization | API reference, troubleshooting, examples |
-| Setup | 200_setup/202_setup-requirements.md | — | New env or machine | One-stop environment setup |
-| Model config | 200_setup/202_setup-requirements.md | — | Model/runtime changes | Clear, reproducible config |
-| DSPy context | 100_memory/100_memory/104_dspy-development-context.md | — | Deep implementation | Reasoning, modules, |
+| Visualization | 400_guides/400_graph-visualization-guide.md | - | Using chunk relationship visualization | API reference, troubleshooting, examples |
+| Setup | 200_setup/202_setup-requirements.md | - | New env or machine | One-stop environment setup |
+| Model config | 200_setup/202_setup-requirements.md | - | Model/runtime changes | Clear, reproducible config |
+| DSPy context | 100_memory/100_memory/104_dspy-development-context.md | - | Deep implementation | Reasoning, modules, |
 | guard-rails |  |  |  |  |
 
 ## Critical Path
@@ -248,7 +248,7 @@ When understanding file organization principles
   system makes this possible by organizing files by priority and
   purpose.
 
-### Find‑or‑build (code reuse) heuristic
+### Find-or-build (code reuse) heuristic
 
 - Before writing new code: run a quick repo search (exclude archives)
   and check 400\_/500\_ for existing modules.
@@ -258,7 +258,7 @@ When understanding file organization principles
   `400_guides/400_system-overview.md`).
 
 - Add a minimal test first and backlink the module in the relevant
-  400\_*guide; if research‑driven, add a line in the paired 500\_*file.
+  400\_*guide; if research-driven, add a line in the paired 500\_*file.
 
 ## **Documentation Placement Logic Flow** When determining where to place new documentation content, follow this
 
@@ -382,7 +382,7 @@ coherence
   Dedicated file for naming conventions
 
 - **`100_memory/100_cursor-memory-context.md`**- Quick reference for
-  instant access**Step 3: Multi-location Decision**- ✅**Multiple
+  instant access**Step 3: Multi-location Decision**- OK**Multiple
   locations needed**- Core concept that affects multiple areas
 
 - **Detailed explanation**in

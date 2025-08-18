@@ -4,7 +4,7 @@
 
 <!-- DATABASE_SYNC: REQUIRED -->
 
-# 📜 **CORE CONSTITUTION RULES**—
+# 📜 **CORE CONSTITUTION RULES**-
 
 ## 📜**CORE CONSTITUTION RULES**
 
@@ -25,7 +25,7 @@
 
 ## 🎯 **Current Status**
 
-- **Status**: ✅ **ACTIVE** - Core constitution rules maintained and
+- **Status**: OK **ACTIVE** - Core constitution rules maintained and
   enforced
 
 - **Priority**: 🔥 Critical - Essential for safety and governance
@@ -363,7 +363,7 @@
 
 ------------------------------------------------------------------------
 
-## ✅ **CONSTITUTION VALIDATION**
+## OK **CONSTITUTION VALIDATION**
 
 ### **Validation Criteria**
 

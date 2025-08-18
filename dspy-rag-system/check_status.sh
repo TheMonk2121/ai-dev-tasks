@@ -6,10 +6,10 @@ echo "================================"
 
 # Check if watch folder is running
 if pgrep -f "watch_folder.py" > /dev/null; then
-    echo "✅ Watch folder is RUNNING"
+    echo "OK Watch folder is RUNNING"
     echo "📁 Drop files into: $(pwd)/watch_folder"
 else
-    echo "❌ Watch folder is NOT running"
+    echo "X Watch folder is NOT running"
     echo "💡 To start: ./quick_start.sh"
 fi
 
@@ -18,9 +18,9 @@ echo ""
 # Check database status
 echo "🗄️  Database Status:"
 if psql -d ai_agency -c "SELECT COUNT(*) as total_chunks FROM document_chunks;" 2>/dev/null; then
-    echo "✅ Database connected"
+    echo "OK Database connected"
 else
-    echo "❌ Database not accessible"
+    echo "X Database not accessible"
 fi
 
 echo ""

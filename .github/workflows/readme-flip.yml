@@ -115,11 +115,11 @@ jobs:
               issues.append(f"README autofix found {files_with_missing} files with missing sections")
 
           if preconditions_met or os.getenv('FORCE_FLIP') == 'true':
-              print("✅ Preconditions met or force flip enabled")
+              print("OK Preconditions met or force flip enabled")
               with open('preconditions_ready.txt', 'w') as f:
                   f.write('ready=true\n')
           else:
-              print("❌ Preconditions not met:")
+              print("X Preconditions not met:")
               for issue in issues:
                   print(f"  - {issue}")
               with open('preconditions_ready.txt', 'w') as f:
@@ -160,7 +160,7 @@ jobs:
           with open(".github/pull_request_template_readme_flip.md", "w") as f:
               f.write(pr_content)
 
-          print("✅ README flip PR template created: .github/pull_request_template_readme_flip.md")
+          print("OK README flip PR template created: .github/pull_request_template_readme_flip.md")
           PY
 
       - name: Upload reports
@@ -194,7 +194,7 @@ jobs:
 
               print(f"- **README Violations**: {readme_count}")
               print(f"- **Files with Missing Sections**: {files_with_missing}")
-              print(f"- **Status**: {'✅ READY' if files_with_missing == 0 else '❌ NOT READY'}")
+              print(f"- **Status**: {'OK READY' if files_with_missing == 0 else 'X NOT READY'}")
 
               if files_with_missing == 0:
                   print("- **Action**: Ready for README flip to FAIL")

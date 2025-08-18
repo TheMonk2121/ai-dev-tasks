@@ -114,7 +114,7 @@ def _fuse_dense_sparse(
         # Reciprocal Rank Fusion (stable when distributions are weird)
         k_dense = _rrf_ranks(dense_scores)
         k_sparse = _rrf_ranks(sparse_scores)
-        # RRF: w/(60+rank) — 60 is conventional; tweak if needed
+        # RRF: w/(60+rank) - 60 is conventional; tweak if needed
         fused_scores = [
             w_dense * (1.0 / (60.0 + k_dense.get(i, 60.0))) + w_sparse * (1.0 / (60.0 + k_sparse.get(i, 60.0)))
             for i in range(len(all_keys))

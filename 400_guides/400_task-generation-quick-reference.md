@@ -16,7 +16,7 @@
 
 ## 🎯 **Current Status**
 
-- **Status**: ✅ **ACTIVE** - Task generation automation system
+- **Status**: OK **ACTIVE** - Task generation automation system
   operational
 
 - **Priority**: 🔧 Medium - Workflow automation enhancement
@@ -47,11 +47,11 @@ python3 scripts/task_generation_automation.py --prd <prd_file> --output json
 ### Generate Tasks from Backlog Item
 
 ``` bash
-# Generate from backlog item (supports en dash IDs like B‑050)
-python3 scripts/task_generation_automation.py --backlog-id B‑050 --preview
+# Generate from backlog item (supports en dash IDs like B-050)
+python3 scripts/task_generation_automation.py --backlog-id B-050 --preview
 
 # Generate complete task list from backlog
-python3 scripts/task_generation_automation.py --backlog-id B‑050 --output-file tasks.md
+python3 scripts/task_generation_automation.py --backlog-id B-050 --output-file tasks.md
 ```
 
 ### Batch Processing
@@ -136,7 +136,7 @@ python3 -m pytest ../tests/test_task_generation_automation.py -m integration -v
 - **27 tests** covering all functionality
 - **Unit tests**: Individual component testing
 - **Integration tests**: End-to-end workflow testing
-- **All tests passing** ✅
+- **All tests passing** OK
 
 ## 🔧 Configuration Options
 
@@ -189,7 +189,7 @@ python3 -m pytest ../tests/test_task_generation_automation.py -m integration -v
 ### **Common Issues**
 
 1.  **“Backlog item not found”**: Check that the backlog ID uses en dash
-    (`B‑050`) not hyphen (`B-050`)
+    (`B-050`) not hyphen (`B-050`)
 2.  **“No requirements found”**: Ensure PRD uses supported format
     (`#### FR-1:` or `#### FR-1.1:`)
 3.  **Import errors**: Ensure you’re running from the correct directory
@@ -202,8 +202,8 @@ python3 -m pytest ../tests/test_task_generation_automation.py -m integration -v
 
 ------------------------------------------------------------------------
 
-**Last Updated**: 2025-08-16 **Status**: ✅ **ACTIVE** - Fully
-integrated and tested **Test Status**: 27/27 tests passing ✅
+**Last Updated**: 2025-08-16 **Status**: OK **ACTIVE** - Fully
+integrated and tested **Test Status**: 27/27 tests passing OK
 
 <!-- README_AUTOFIX_START -->
 

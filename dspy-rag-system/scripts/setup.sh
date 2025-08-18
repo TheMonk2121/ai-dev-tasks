@@ -116,9 +116,9 @@ with open('test_doc.txt', 'w') as f:
 try:
     processor = DocumentProcessor()
     result = processor('test_doc.txt')
-    print(f'✅ Document processor test passed: {result[\"total_chunks\"]} chunks created')
+    print(f'OK Document processor test passed: {result[\"total_chunks\"]} chunks created')
 except Exception as e:
-    print(f'❌ Document processor test failed: {e}')
+    print(f'X Document processor test failed: {e}')
 finally:
     import os
     if os.path.exists('test_doc.txt'):

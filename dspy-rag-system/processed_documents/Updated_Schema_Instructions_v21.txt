@@ -7,13 +7,13 @@ This updated schema framework enhances **data lineage tracking, schema validatio
 ---
 
 ## **🔹 Key Enhancements in Version 21.0**
-✅ **Multi-Line Header Merging with Variable-Length Row Handling**  
-✅ **Pre-Fuzzy Alias Mapping to Improve Performance & Accuracy**  
-✅ **Expanded Logging (Borderline Matches & Summarized Schema Violations)**  
-✅ **Centralized & Incremental Logging for Easier Querying**  
-✅ **Optimized Referential Integrity & Type Enforcement**  
-✅ **Manual Override for File-Specific Aliases Before Global Dictionary**  
-✅ **Expanded Synthetic Test Coverage for CI/CD Pipelines**  
+OK **Multi-Line Header Merging with Variable-Length Row Handling**  
+OK **Pre-Fuzzy Alias Mapping to Improve Performance & Accuracy**  
+OK **Expanded Logging (Borderline Matches & Summarized Schema Violations)**  
+OK **Centralized & Incremental Logging for Easier Querying**  
+OK **Optimized Referential Integrity & Type Enforcement**  
+OK **Manual Override for File-Specific Aliases Before Global Dictionary**  
+OK **Expanded Synthetic Test Coverage for CI/CD Pipelines**  
 
 ---
 
@@ -33,9 +33,9 @@ This updated schema framework enhances **data lineage tracking, schema validatio
 
 ## **🔹 Multi-Line Header Merging & Variable-Length Row Handling**  
 
-✅ **Detects & fixes `NaT` headers by merging multiple rows dynamically**  
-✅ **Handles cases where row counts differ across header rows**  
-✅ **Filters out blank header components before merging**  
+OK **Detects & fixes `NaT` headers by merging multiple rows dynamically**  
+OK **Handles cases where row counts differ across header rows**  
+OK **Filters out blank header components before merging**  
 
 ```python
 def merge_multi_row_headers(df, header_rows):
@@ -58,8 +58,8 @@ def merge_multi_row_headers(df, header_rows):
 
 ## **🔹 Alias Dictionary Applied Before Fuzzy Matching**  
 
-✅ **Ensures file-specific alias overrides are applied before the global alias dictionary**  
-✅ **Reduces reliance on fuzzy matching by handling known synonyms first**  
+OK **Ensures file-specific alias overrides are applied before the global alias dictionary**  
+OK **Reduces reliance on fuzzy matching by handling known synonyms first**  
 
 ```python
 ALIAS_DICT = {
@@ -79,9 +79,9 @@ def apply_aliases(col_name, file_name=None):
 
 ## **🔹 Logging Schema Validation Issues with Summarized Results**  
 
-✅ **Logs missing and unexpected columns in a structured format**  
-✅ **Summarizes missing foreign keys instead of logging every row-level issue**  
-✅ **Supports file-specific schema violation tracking**  
+OK **Logs missing and unexpected columns in a structured format**  
+OK **Summarizes missing foreign keys instead of logging every row-level issue**  
+OK **Supports file-specific schema violation tracking**  
 
 ```python
 def log_schema_violations(file_name, missing_keys, schema_warnings):
@@ -99,8 +99,8 @@ def log_schema_violations(file_name, missing_keys, schema_warnings):
 
 ## **🔹 Referential Integrity & Data Type Enforcement Enhancements**  
 
-✅ **Prevents invalid foreign keys from entering structured datasets**  
-✅ **Logs only a count of missing foreign keys instead of row-level details**  
+OK **Prevents invalid foreign keys from entering structured datasets**  
+OK **Logs only a count of missing foreign keys instead of row-level details**  
 
 ```python
 def check_referential_integrity(fact_df, dim_df, key_column):
@@ -113,8 +113,8 @@ def check_referential_integrity(fact_df, dim_df, key_column):
 
 ## **🔹 Expanded Test Coverage with Synthetic Data for CI/CD Pipelines**  
 
-✅ **Validates against a library of known problem cases before production release**  
-✅ **Ensures every update fixes prior issues without introducing new regressions**  
+OK **Validates against a library of known problem cases before production release**  
+OK **Ensures every update fixes prior issues without introducing new regressions**  
 
 ✔ **Test Cases Covered:**  
   - **Multi-line headers with missing values**  
@@ -127,11 +127,11 @@ def check_referential_integrity(fact_df, dim_df, key_column):
 ---
 
 ## **🔹 Summary of Version 21.0 Updates**  
-✅ **Merges multi-line headers dynamically while handling blank cells and different row lengths**  
-✅ **Ensures alias dictionary is applied before fuzzy matching to improve performance**  
-✅ **Logs schema validation results in a structured format with summary reports**  
-✅ **Optimizes referential integrity checks to prevent excessive logging of missing keys**  
-✅ **Expands synthetic test coverage to validate edge cases in CI/CD pipelines**  
+OK **Merges multi-line headers dynamically while handling blank cells and different row lengths**  
+OK **Ensures alias dictionary is applied before fuzzy matching to improve performance**  
+OK **Logs schema validation results in a structured format with summary reports**  
+OK **Optimizes referential integrity checks to prevent excessive logging of missing keys**  
+OK **Expands synthetic test coverage to validate edge cases in CI/CD pipelines**  
 
 This ensures **greater resilience when dealing with real-world messy datasets.** 🚀
 

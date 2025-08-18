@@ -8,7 +8,7 @@
 <!-- ANCHOR: tldr -->
 {#tldr}
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Performance optimization maintained
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Performance optimization maintained
 
 - **Priority**: 🔥 Critical - System performance and scalability
 
@@ -263,7 +263,7 @@ def manage_memory():
 
 ### 🎯 Top 5 Critical Scripts & Optimization Priorities
 
-#### 1. `update_cursor_memory.py` — Memory Context Updater
+#### 1. `update_cursor_memory.py` - Memory Context Updater
 - Current Issues: Re-parses entire backlog file, no caching, sequential processing
 - Optimization Priority: 🔥 HIGH (run after every change)
 
@@ -304,9 +304,9 @@ class CachedBacklogParser:
 ```
 
 Performance Targets:
-- Current: ~2–3s → Target: <500ms; Memory: <50MB
+- Current: ~2-3s → Target: <500ms; Memory: <50MB
 
-#### 2. `quick_conflict_check.py` — Fast Conflict Detection
+#### 2. `quick_conflict_check.py` - Fast Conflict Detection
 - Current Issues: Sequential checks, no early exit, redundant git calls
 - Optimization Priority: 🔥 HIGH (pre-commit hook)
 
@@ -341,9 +341,9 @@ class OptimizedConflictChecker:
 ```
 
 Performance Targets:
-- Current: ~5–10s → Target: <2s; Memory: <30MB
+- Current: ~5-10s → Target: <2s; Memory: <30MB
 
-#### 3. `process_tasks.py` — Task Execution Engine
+#### 3. `process_tasks.py` - Task Execution Engine
 - Current Issues: Large file, complex state management, no batching
 - Optimization Priority: 📈 MEDIUM (core execution)
 
@@ -388,9 +388,9 @@ class OptimizedTaskManager:
 ```
 
 Performance Targets:
-- Current: ~10–30s → Target: <5s; Memory: <100MB
+- Current: ~10-30s → Target: <5s; Memory: <100MB
 
-#### 4. `doc_coherence_validator.py` — Documentation Validator
+#### 4. `doc_coherence_validator.py` - Documentation Validator
 - Current Issues: Regex compilation overhead, sequential files
 - Optimization Priority: 📈 MEDIUM (documentation quality)
 
@@ -423,9 +423,9 @@ class OptimizedDocValidator:
 ```
 
 Performance Targets:
-- Current: ~15–45s → Target: <5s; Memory: <80MB
+- Current: ~15-45s → Target: <5s; Memory: <80MB
 
-#### 5. `conflict_audit.py` — Comprehensive Conflict Audit
+#### 5. `conflict_audit.py` - Comprehensive Conflict Audit
 - Current Issues: Sequential execution, no progress reporting
 - Optimization Priority: ⭐ LOW (deep audit tool)
 
@@ -466,17 +466,17 @@ python scripts/performance_benchmark.py --save baseline.json
 python scripts/performance_benchmark.py --save optimized.json
 ```
 
-### ✅ Quick Optimization Checklist
+### OK Quick Optimization Checklist
 - Caching; Parallelization; Early Exit; Progress Reporting; Memory Management; Regex pre-compile; Batch Processing; Resource Monitoring
 
 ### 📈 Expected Gains
 | Script | Current | Target | Improvement |
 |--------|---------|--------|-------------|
-| update_cursor_memory.py | 2–3s | <500ms | 80% |
-| quick_conflict_check.py | 5–10s | <2s | 75% |
-| process_tasks.py | 10–30s | <5s | 80% |
-| doc_coherence_validator.py | 15–45s | <5s | 85% |
-| conflict_audit.py | 30–90s | <15s | 75% |
+| update_cursor_memory.py | 2-3s | <500ms | 80% |
+| quick_conflict_check.py | 5-10s | <2s | 75% |
+| process_tasks.py | 10-30s | <5s | 80% |
+| doc_coherence_validator.py | 15-45s | <5s | 85% |
+| conflict_audit.py | 30-90s | <15s | 75% |
 
 ## **Caching Strategy**```python
 
@@ -1007,7 +1007,7 @@ def debug_performance_issue():
 
 - --
 
-## ✅ Best Practices
+## OK Best Practices
 
 ### **1. Code Optimization**####**Efficient Algorithms**```python
 

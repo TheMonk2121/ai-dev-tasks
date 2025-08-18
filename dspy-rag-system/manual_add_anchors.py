@@ -25,7 +25,7 @@ def add_document_manually(file_path):
     try:
         # Check if file exists
         if not os.path.exists(file_path):
-            print(f"❌ File not found: {file_path}")
+            print(f"X File not found: {file_path}")
             return False
 
         # Read file content
@@ -133,11 +133,11 @@ def add_document_manually(file_path):
 
                 conn.commit()
 
-        print(f"✅ Successfully added: {file_path}")
+        print(f"OK Successfully added: {file_path}")
         return True
 
     except Exception as e:
-        print(f"❌ Error processing {file_path}: {e}")
+        print(f"X Error processing {file_path}: {e}")
         return False
 
 

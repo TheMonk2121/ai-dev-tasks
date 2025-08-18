@@ -38,10 +38,10 @@ This document tracks validator category transitions from WARN to FAIL mode.
 - **Multi-Rep**: 0/5 clean days (target: 5 days, after cleanup)
 
 ### Flip Automation Status
-- **Validator Flip Manager**: ✅ Operational
-- **CI Integration**: ✅ Conditional failures active
-- **PR Automation**: ✅ Ready for flip PRs
-- **Rollback Process**: ✅ Defined (>5% false positives in 48h)
+- **Validator Flip Manager**: OK Operational
+- **CI Integration**: OK Conditional failures active
+- **PR Automation**: OK Ready for flip PRs
+- **Rollback Process**: OK Defined (>5% false positives in 48h)
 
 ### Next Steps
 - Daily validator runs will increment clean-day counters
@@ -91,10 +91,10 @@ This document tracks validator category transitions from WARN to FAIL mode.
 - **Shadow**: Continue 7-day clean window (existing counters)
 
 ### Flip Automation Status
-- **Validator Flip Manager**: ✅ Operational with clean-day counters
-- **CI Integration**: ✅ Conditional failures based on active FAIL categories
-- **PR Automation**: ✅ Ready for flip PRs when clean windows complete
-- **Rollback Process**: ✅ Defined (>5% false positives in 48h)
+- **Validator Flip Manager**: OK Operational with clean-day counters
+- **CI Integration**: OK Conditional failures based on active FAIL categories
+- **PR Automation**: OK Ready for flip PRs when clean windows complete
+- **Rollback Process**: OK Defined (>5% false positives in 48h)
 
 ### Metrics Location
 - **Current Metrics**: `bot/validator-state/metrics/validator_counts.json`
@@ -113,19 +113,19 @@ This document tracks validator category transitions from WARN to FAIL mode.
 
 ### Test Coverage Achieved
 1. **Archive Enrollment & Immutability**:
-   - ✅ `test_archive_enrolled_file_not_flagged()` - Enrolled files pass validation
-   - ✅ `test_archive_modified_file_flagged_in_fail_mode()` - Modified files fail validation
+   - OK `test_archive_enrolled_file_not_flagged()` - Enrolled files pass validation
+   - OK `test_archive_modified_file_flagged_in_fail_mode()` - Modified files fail validation
 2. **Exception Ledger & Pragmas**:
-   - ✅ `test_ledger_key_synonyms_respected()` - Key synonym handling
-   - ✅ `test_pragma_and_ledger_merge_behavior()` - Pragma + ledger merging
+   - OK `test_ledger_key_synonyms_respected()` - Key synonym handling
+   - OK `test_pragma_and_ledger_merge_behavior()` - Pragma + ledger merging
 3. **Governance Tools**:
-   - ✅ `test_schema_guard_honors_pinned_version()` - Schema version validation
-   - ✅ `test_ratchet_blocks_changed_file_regressions()` - Regression prevention
-   - ✅ `test_anchor_drift_detects_removed_heading()` - Broken link detection
-   - ✅ `test_readme_hotspots_handles_invalid_or_empty_report()` - Data resilience
+   - OK `test_schema_guard_honors_pinned_version()` - Schema version validation
+   - OK `test_ratchet_blocks_changed_file_regressions()` - Regression prevention
+   - OK `test_anchor_drift_detects_removed_heading()` - Broken link detection
+   - OK `test_readme_hotspots_handles_invalid_or_empty_report()` - Data resilience
 4. **JSON Purity & Path Normalization**:
-   - ✅ `test_impacted_files_are_posix_relative()` - Path normalization
-   - ✅ `test_stdout_pure_json_warnings_to_stderr()` - JSON purity
+   - OK `test_impacted_files_are_posix_relative()` - Path normalization
+   - OK `test_stdout_pure_json_warnings_to_stderr()` - JSON purity
 
 ### Documentation Updates
 - **Testing Strategy Guide**: Updated with test tiers, patterns, and expectations
@@ -149,8 +149,8 @@ This document tracks validator category transitions from WARN to FAIL mode.
 **Impact**: Archive and Shadow violations reduced to 0, clean-day clocks ready to start
 
 ### Round 6 Results
-- **Archive violations**: 80 → 0 ✅ (content-based validation active)
-- **Shadow violations**: 4 → 0 ✅ (legitimate vector store files preserved)
+- **Archive violations**: 80 → 0 OK (content-based validation active)
+- **Shadow violations**: 4 → 0 OK (legitimate vector store files preserved)
 - **Validator Enhancement**: Archive validation now checks actual content vs. manifest blobs
 - **Legitimate File Protection**: Enhanced shadow validator excludes legitimate `enhanced_vector_store.py` files
 
@@ -180,9 +180,9 @@ This document tracks validator category transitions from WARN to FAIL mode.
 **Impact**: All validator categories now at 0 violations, all clean-day clocks ready to start
 
 ### Round 7 Results
-- **XRef violations**: 109 → 0 ✅ (Pass A: 109→103, Pass B: 103→0)
-- **README violations**: 6 → 0 ✅ (Batch 3: 6→4, Batch 4: 4→1, Batch 5: 1→0)
-- **All categories**: Archive=0, Shadow=0, XRef=0, README=0 ✅
+- **XRef violations**: 109 → 0 OK (Pass A: 109→103, Pass B: 103→0)
+- **README violations**: 6 → 0 OK (Batch 3: 6→4, Batch 4: 4→1, Batch 5: 1→0)
+- **All categories**: Archive=0, Shadow=0, XRef=0, README=0 OK
 - **Validator Enhancements**:
   - XRef validation now respects ignore segments
   - README validation enhanced with required sections check
@@ -201,7 +201,7 @@ This document tracks validator category transitions from WARN to FAIL mode.
 - **PR J (README FAIL)**: Opens automatically at 14/14 clean days
 
 ### Final Status
-- **All categories at zero**: Archive=0, Shadow=0, XRef=0, README=0 ✅
+- **All categories at zero**: Archive=0, Shadow=0, XRef=0, README=0 OK
 - **Clean-day clocks**: All ready to start incrementing
 - **Flip automation**: Ready to open PRs when thresholds are met
 - **Validator accuracy**: Enhanced with proper ignore segments and section validation
@@ -213,16 +213,16 @@ This document tracks validator category transitions from WARN to FAIL mode.
 **Impact**: Enhanced safety and accountability for flip execution
 
 ### Round 8 Results
-- **PR O — No-new-ledger Gate**: `scripts/check_ledger_additions.py` - Fails on additions without exception-approved label AND expiry ≤7d
-- **PR P — Flip PR Checklist**: Enhanced PR template with flip-specific checklist
-- **PR Q — Owners Nudges**: `scripts/weekly_metrics_with_owners.py` - Weekly summary with suggested owners
+- **PR O - No-new-ledger Gate**: `scripts/check_ledger_additions.py` - Fails on additions without exception-approved label AND expiry ≤7d
+- **PR P - Flip PR Checklist**: Enhanced PR template with flip-specific checklist
+- **PR Q - Owners Nudges**: `scripts/weekly_metrics_with_owners.py` - Weekly summary with suggested owners
 - **CI Integration**: Ledger check added to validator workflow, weekly metrics enhanced
 
 ### Flip Execution Status
-- **All hardening measures**: ✅ In place
-- **Flip automation**: ✅ Ready to execute
-- **Safety controls**: ✅ Active
-- **Accountability**: ✅ Enhanced with owner suggestions
+- **All hardening measures**: OK In place
+- **Flip automation**: OK Ready to execute
+- **Safety controls**: OK Active
+- **Accountability**: OK Enhanced with owner suggestions
 
 ### Graduation Readiness
 - **Flip execution**: Ready to proceed automatically
@@ -236,10 +236,10 @@ This document tracks validator category transitions from WARN to FAIL mode.
 **Impact**: Archive violations reduced from 11 to 0, all categories now clean
 
 ### PR W Results
-- **Archive violations**: 11 → 0 ✅ (enrolled 11 governance workflow files)
+- **Archive violations**: 11 → 0 OK (enrolled 11 governance workflow files)
 - **Validator fix**: Applied ChatGPT's surgical patch for path normalization and blob SHA comparison
 - **JSON output**: Fixed corruption by routing warnings to stderr
-- **All categories clean**: Archive=0, Shadow=0, XRef=0, README=0 ✅
+- **All categories clean**: Archive=0, Shadow=0, XRef=0, README=0 OK
 
 ### Technical Fix Applied
 - **Path normalization**: Canonical repo-relative POSIX paths for manifest lookup
@@ -262,7 +262,7 @@ This document tracks validator category transitions from WARN to FAIL mode.
 
 **Date**: 2025-08-17
 **Tag**: `gov/v1.0`
-**Status**: ✅ **GRADUATED** - Steady-state operations active
+**Status**: OK **GRADUATED** - Steady-state operations active
 
 ### Graduation Achievements
 - **All categories at zero**: Archive=0, Shadow=0, XRef=0, README=0

@@ -16,7 +16,7 @@ try:
     from dspy_modules.vector_store import HybridVectorStore
     from utils.logger import setup_logger
 except ImportError as e:
-    print(f"❌ Import error: {e}")
+    print(f"X Import error: {e}")
     print("Make sure you're running from the dspy-rag-system directory")
     sys.exit(1)
 
@@ -184,7 +184,7 @@ def main():
             "Document addition failed",
             extra={"file_path": file_path, "stage": "failed", "component": "add_document", "action": "document_failed"},
         )
-        print(f"\n❌ Failed to add document '{file_path}' to RAG system.")
+        print(f"\nX Failed to add document '{file_path}' to RAG system.")
 
 
 if __name__ == "__main__":

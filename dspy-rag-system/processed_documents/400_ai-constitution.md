@@ -257,7 +257,7 @@ documentation patterns
 
 ---
 
-## ✅ **CONSTITUTION VALIDATION**
+## OK **CONSTITUTION VALIDATION**
 
 ### **Validation Criteria**
 

@@ -96,25 +96,25 @@ def analyze_database_performance():
         print("\n💡 Performance Recommendations:")
 
         if avg_chunk_size < 400:
-            print(f"  ⚠️  Chunk size ({avg_chunk_size:.1f} chars) is below optimal (500 chars)")
+            print(f"  !️  Chunk size ({avg_chunk_size:.1f} chars) is below optimal (500 chars)")
             print("     Consider increasing chunk size for better retrieval")
         elif avg_chunk_size > 600:
-            print(f"  ⚠️  Chunk size ({avg_chunk_size:.1f} chars) is above optimal (500 chars)")
+            print(f"  !️  Chunk size ({avg_chunk_size:.1f} chars) is above optimal (500 chars)")
             print("     Consider decreasing chunk size for more granular retrieval")
         else:
-            print(f"  ✅ Chunk size ({avg_chunk_size:.1f} chars) is optimal")
+            print(f"  OK Chunk size ({avg_chunk_size:.1f} chars) is optimal")
 
         if avg_coverage < 30:
-            print(f"  ⚠️  Cross-reference coverage ({avg_coverage:.1f}%) is low")
+            print(f"  !️  Cross-reference coverage ({avg_coverage:.1f}%) is low")
             print("     Consider adding more cross-references for better navigation")
         else:
-            print(f"  ✅ Cross-reference coverage ({avg_coverage:.1f}%) is good")
+            print(f"  OK Cross-reference coverage ({avg_coverage:.1f}%) is good")
 
         if duplicates > 0:
-            print(f"  ⚠️  Found {duplicates} potential duplicate chunks")
+            print(f"  !️  Found {duplicates} potential duplicate chunks")
             print("     Consider deduplication for storage optimization")
         else:
-            print("  ✅ No duplicate chunks detected")
+            print("  OK No duplicate chunks detected")
 
         print("\n💾 Storage Analysis:")
         print(f"  Documents Table: {docs_size}")
@@ -137,7 +137,7 @@ def analyze_database_performance():
         }
 
     except Exception as e:
-        print(f"❌ Error analyzing performance: {e}")
+        print(f"X Error analyzing performance: {e}")
         return None
 
 
@@ -162,7 +162,7 @@ def optimize_chunk_sizes():
         suboptimal = execute_query(query, context="operational")
 
         if not suboptimal:
-            print("✅ All files have optimal chunk sizes")
+            print("OK All files have optimal chunk sizes")
             return True
 
         print(f"Found {len(suboptimal)} files with suboptimal chunk sizes:")
@@ -174,7 +174,7 @@ def optimize_chunk_sizes():
         return True
 
     except Exception as e:
-        print(f"❌ Error optimizing chunk sizes: {e}")
+        print(f"X Error optimizing chunk sizes: {e}")
         return False
 
 
@@ -221,7 +221,7 @@ def create_performance_report():
     with open(report_path, "w") as f:
         json.dump(report, f, indent=2)
 
-    print(f"✅ Performance report saved to {report_path}")
+    print(f"OK Performance report saved to {report_path}")
     return True
 
 
@@ -241,7 +241,7 @@ def main():
     # Generate performance report
     create_performance_report()
 
-    print("\n✅ Performance optimization analysis complete!")
+    print("\nOK Performance optimization analysis complete!")
     print("📊 Key Metrics:")
     print(f"  - Average Chunk Size: {data['avg_chunk_size']:.1f} characters")
     print(f"  - Cross-Reference Coverage: {data['avg_coverage']:.1f}%")

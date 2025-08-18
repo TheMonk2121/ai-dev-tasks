@@ -105,9 +105,9 @@ def benchmark_entity_expansion():
 
     # Success criteria check
     print("\n🎯 Success Criteria Check:")
-    print(f"  Time overhead < 200ms: {'✅' if time_diff < 0.2 else '❌'} ({time_diff*1000:.1f}ms)")
-    print(f"  Token overhead < 200: {'✅' if abs(token_diff) < 200 else '❌'} ({token_diff:.0f} tokens)")
-    print(f"  Entity detection > 0: {'✅' if sum(results['variant']['entities']) > 0 else '❌'}")
+    print(f"  Time overhead < 200ms: {'OK' if time_diff < 0.2 else 'X'} ({time_diff*1000:.1f}ms)")
+    print(f"  Token overhead < 200: {'OK' if abs(token_diff) < 200 else 'X'} ({token_diff:.0f} tokens)")
+    print(f"  Entity detection > 0: {'OK' if sum(results['variant']['entities']) > 0 else 'X'}")
 
     return results
 

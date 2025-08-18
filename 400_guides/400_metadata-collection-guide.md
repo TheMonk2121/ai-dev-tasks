@@ -28,7 +28,7 @@
 - **do next**: Scan the headings below and follow any ‘Quick Start’ or
   ‘Usage’ sections.
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Metadata collection system operational
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Metadata collection system operational
 
 - **Priority**: ⚡ High - Data collection and analysis
 

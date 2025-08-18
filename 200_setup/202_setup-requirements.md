@@ -248,7 +248,7 @@ MAX_EVENTS_PER_CYCLE=10
 ### Model selection in Cursor
 
 - In-app model picker: Settings → AI → Models, or run “Change Model” from the Command Palette.
-- If you toggle Auto off, you currently see: GPT‑5, GPT‑5 High, GPT‑5 Fast, Claude 4 Sonnet (availability can vary by account/region).
+- If you toggle Auto off, you currently see: GPT-5, GPT-5 High, GPT-5 Fast, Claude 4 Sonnet (availability can vary by account/region).
 - For the full, up-to-date catalog, see the official list: [Cursor Docs: Models](https://docs.cursor.com/models).
 
 
@@ -490,11 +490,11 @@ The system will be fully operational once all setup requirements are met!
 
 - Canonical config lives in `config/system.json`.
 
-- Keys to know: `enabled_agents`, per‑agent settings (`model_id`, `signature`, `timeout`, `retry_policy`), `memory` (postgres delta), `error_policy` (retries, backoff, timeouts), `fast_path` (enabled, max_length, exclude_tokens).
+- Keys to know: `enabled_agents`, per-agent settings (`model_id`, `signature`, `timeout`, `retry_policy`), `memory` (postgres delta), `error_policy` (retries, backoff, timeouts), `fast_path` (enabled, max_length, exclude_tokens).
 
 - Environment overrides: DB_*, POOL_*, ENABLED_AGENTS, LLM_TIMEOUT_SEC, SECURITY_MAX_FILE_MB, MODEL_IDLE_EVICT_SECS, MAX_RAM_PRESSURE.
 
-- Hot‑reload (if enabled): `curl -X POST http://localhost:5000/admin/reload-config`
+- Hot-reload (if enabled): `curl -X POST http://localhost:5000/admin/reload-config`
 
 Minimal example (trimmed):
 

@@ -25,7 +25,7 @@ def add_document_simple(file_path):
     try:
         # Check if file exists
         if not os.path.exists(file_path):
-            print(f"❌ File not found: {file_path}")
+            print(f"X File not found: {file_path}")
             return False
 
         # Read file content
@@ -151,11 +151,11 @@ def add_document_simple(file_path):
 
         conn.close()
 
-        print(f"✅ Successfully added: {file_path}")
+        print(f"OK Successfully added: {file_path}")
         return True
 
     except Exception as e:
-        print(f"❌ Error processing {file_path}: {e}")
+        print(f"X Error processing {file_path}: {e}")
         return False
 
 
@@ -174,7 +174,7 @@ def main():
                 core_files.append(file_path)
 
     if not core_files:
-        print("❌ No markdown files found in watch_folder")
+        print("X No markdown files found in watch_folder")
         return
 
     print(f"📁 Found {len(core_files)} markdown files in watch_folder")

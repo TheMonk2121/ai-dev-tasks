@@ -23,7 +23,7 @@ Backlog link: B-076, B-079
 
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with comprehensive content
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Research file with comprehensive content
 
 - **Priority**: 🔥 High - Critical for DSPy implementation
 
@@ -58,7 +58,7 @@ RAG QA/code (docs/research/tutorials/dspy-tutorials.md)
 
 ### **3. Teleprompter Optimization**
 
-- *Source**: DSPy Documentation & Papers (2023–2024)
+- *Source**: DSPy Documentation & Papers (2023-2024)
 - *Key Insight**: Auto-generate or select few-shot examples and instructions to maximize metrics.
 
 - *Implementation Impact**:

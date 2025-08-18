@@ -31,7 +31,7 @@ def main():
     report = manager.export_secrets_report(secret_configs)
 
     for secret_name, info in report["secrets"].items():
-        status = "✅" if info["valid"] else "❌"
+        status = "OK" if info["valid"] else "X"
         present = "✓" if info["present"] else "✗"
         required = "REQUIRED" if info["required"] else "OPTIONAL"
         print(f"   {status} {secret_name} ({required}) - {present}")
@@ -41,21 +41,21 @@ def main():
     # Check for missing required secrets
     missing = manager.get_missing_secrets(secret_configs)
     if missing:
-        print(f"\n⚠️ Missing required secrets: {missing}")
+        print(f"\n!️ Missing required secrets: {missing}")
         print("\n🔧 Starting interactive setup...")
 
         if setup_secrets_interactive():
-            print("\n✅ Secrets setup completed successfully!")
+            print("\nOK Secrets setup completed successfully!")
         else:
-            print("\n❌ Secrets setup failed!")
+            print("\nX Secrets setup failed!")
             return 1
     else:
-        print("\n✅ All required secrets are present!")
+        print("\nOK All required secrets are present!")
 
     # Final validation
     print("\n🔍 Final validation...")
     if validate_startup_secrets():
-        print("✅ All secrets validated successfully!")
+        print("OK All secrets validated successfully!")
 
         # Export final report
         final_report = manager.export_secrets_report(secret_configs)
@@ -66,7 +66,7 @@ def main():
 
         return 0
     else:
-        print("❌ Final validation failed!")
+        print("X Final validation failed!")
         return 1
 
 
@@ -116,7 +116,7 @@ def list_secrets():
     print("=" * 30)
 
     for config in secret_configs:
-        status = "✅" if manager.validate_secret(config.name, config) else "❌"
+        status = "OK" if manager.validate_secret(config.name, config) else "X"
         required = "REQUIRED" if config.required else "OPTIONAL"
         value = manager.get_secret(config.name)
         present = "✓" if value else "✗"
@@ -144,10 +144,10 @@ if __name__ == "__main__":
             list_secrets()
         elif command == "validate":
             if validate_startup_secrets():
-                print("✅ All secrets validated successfully!")
+                print("OK All secrets validated successfully!")
                 sys.exit(0)
             else:
-                print("❌ Secrets validation failed!")
+                print("X Secrets validation failed!")
                 sys.exit(1)
         else:
             print(f"Unknown command: {command}")

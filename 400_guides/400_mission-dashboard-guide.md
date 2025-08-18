@@ -36,7 +36,7 @@
 - **do next**: Scan the headings below and follow any ‘Quick Start’ or
   ‘Usage’ sections.
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Mission dashboard operational
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Mission dashboard operational
 
 - **Priority**: ⚡ High - Real-time monitoring and management
 
@@ -620,7 +620,7 @@ same licensing terms as the main project.
 
 - \*Last Updated\*\*: 2024-08-06
 - \*Version\*\*: 1.0.0
-- \*Status\*\*: Production Ready ✅
+- \*Status\*\*: Production Ready OK
 
 <!-- README_AUTOFIX_START -->
 

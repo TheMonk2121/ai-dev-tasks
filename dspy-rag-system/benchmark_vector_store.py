@@ -64,7 +64,7 @@ def benchmark_insertion(
 
         # Verify insertion was successful
         if result.get("status") != "success":
-            print(f"  ⚠️  Document {i+1}: Insertion failed - {result}")
+            print(f"  !️  Document {i+1}: Insertion failed - {result}")
 
         doc_time = time.time() - doc_start
         insertion_times.append(doc_time)
@@ -233,27 +233,27 @@ def main():
     # Performance assessment
     print("\n🎯 Performance Assessment:")
     if vector_results["avg_time"] < 0.1:
-        print("  ✅ Vector search: EXCELLENT (< 100ms)")
+        print("  OK Vector search: EXCELLENT (< 100ms)")
     elif vector_results["avg_time"] < 0.5:
-        print("  ✅ Vector search: GOOD (< 500ms)")
+        print("  OK Vector search: GOOD (< 500ms)")
     else:
-        print("  ⚠️  Vector search: NEEDS OPTIMIZATION (> 500ms)")
+        print("  !️  Vector search: NEEDS OPTIMIZATION (> 500ms)")
 
     if hybrid_results["avg_time"] < 0.2:
-        print("  ✅ Hybrid search: EXCELLENT (< 200ms)")
+        print("  OK Hybrid search: EXCELLENT (< 200ms)")
     elif hybrid_results["avg_time"] < 1.0:
-        print("  ✅ Hybrid search: GOOD (< 1s)")
+        print("  OK Hybrid search: GOOD (< 1s)")
     else:
-        print("  ⚠️  Hybrid search: NEEDS OPTIMIZATION (> 1s)")
+        print("  !️  Hybrid search: NEEDS OPTIMIZATION (> 1s)")
 
     if cache_results["speedup"] > 2.0:
-        print("  ✅ Cache performance: EXCELLENT (> 2x speedup)")
+        print("  OK Cache performance: EXCELLENT (> 2x speedup)")
     elif cache_results["speedup"] > 1.5:
-        print("  ✅ Cache performance: GOOD (> 1.5x speedup)")
+        print("  OK Cache performance: GOOD (> 1.5x speedup)")
     else:
-        print("  ⚠️  Cache performance: NEEDS INVESTIGATION")
+        print("  !️  Cache performance: NEEDS INVESTIGATION")
 
-    print("\n✅ Benchmark completed successfully!")
+    print("\nOK Benchmark completed successfully!")
 
 
 if __name__ == "__main__":

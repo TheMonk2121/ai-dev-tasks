@@ -60,7 +60,7 @@ def demo_health_checks():
     dependency_results = health_manager.run_dependency_checks()
     
     for name, result in dependency_results.items():
-        status_emoji = "✅" if result.status == "healthy" else "⚠️" if result.status == "degraded" else "❌"
+        status_emoji = "OK" if result.status == "healthy" else "!️" if result.status == "degraded" else "X"
         print(f"  {status_emoji} {name}: {result.status} ({result.response_time:.3f}s)")
     
     # Get overall health status
@@ -72,7 +72,7 @@ def demo_health_checks():
     
     # Get readiness status
     ready_status = health_manager.get_ready_status()
-    ready_emoji = "✅" if ready_status["ready"] else "❌"
+    ready_emoji = "OK" if ready_status["ready"] else "X"
     print(f"\n🚀 Kubernetes Ready: {ready_emoji} {ready_status['ready']}")
     
     print()
@@ -208,11 +208,11 @@ def main():
         demo_alert_callbacks()
         demo_monitoring_integration()
         
-        print("✅ All demos completed successfully!")
+        print("OK All demos completed successfully!")
         print("\n🎉 Production monitoring system is ready for deployment!")
         
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        print(f"X Demo failed: {e}")
         import traceback
         traceback.print_exc()
 

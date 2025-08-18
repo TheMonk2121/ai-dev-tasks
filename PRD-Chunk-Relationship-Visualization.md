@@ -1,6 +1,6 @@
 # Product Requirements Document: Chunk Relationship Visualization & /graph-data API (V1)
 
-> ⚠️ **Auto-Skip Note**: This PRD was generated because this is a multi-component feature introducing a new contract (points≥5 equivalent complexity).
+> !️ **Auto-Skip Note**: This PRD was generated because this is a multi-component feature introducing a new contract (points≥5 equivalent complexity).
 
 ## 1. Executive Summary
 

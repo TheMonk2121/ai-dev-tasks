@@ -342,10 +342,10 @@ def initialize_components():
         # Validate secrets on startup (C-8)
         LOG.info("Validating secrets on startup...")
         if not validate_startup_secrets():
-            LOG.error("❌ Secrets validation failed")
+            LOG.error("X Secrets validation failed")
             LOG.info("🔧 Starting interactive secrets setup...")
             if not setup_secrets_interactive():
-                LOG.error("❌ Interactive secrets setup failed")
+                LOG.error("X Interactive secrets setup failed")
                 return False
             LOG.info("Secrets setup completed")
 
@@ -1000,7 +1000,7 @@ def main():
     # Initialize components
     if not initialize_components():
         LOG.error(
-            "❌ Failed to initialize components",
+            "X Failed to initialize components",
             extra={
                 "component": "dashboard",
                 "action": "initialization",
@@ -1051,7 +1051,7 @@ def main():
         )
         state.executor.shutdown(wait=True)
         LOG.info(
-            "✅ Dashboard stopped",
+            "OK Dashboard stopped",
             extra={
                 "component": "dashboard",
                 "action": "shutdown",

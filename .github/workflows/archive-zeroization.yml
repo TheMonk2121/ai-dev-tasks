@@ -99,9 +99,9 @@ jobs:
 
           # Check if zeroization was successful
           if after_archive == 0:
-              print("- Status: ✅ SUCCESS - All archive violations resolved")
+              print("- Status: OK SUCCESS - All archive violations resolved")
           else:
-              print(f"- Status: ⚠️  PARTIAL - {after_archive} violations remain")
+              print(f"- Status: !️  PARTIAL - {after_archive} violations remain")
 
           # Save results
           results = {
@@ -149,7 +149,7 @@ jobs:
               print(f"- **Before**: {before_archive} archive violations")
               print(f"- **After**: {after_archive} archive violations")
               print(f"- **Reduction**: {reduction}%")
-              print(f"- **Status**: {'✅ SUCCESS' if after_archive == 0 else '❌ FAILED'}")
+              print(f"- **Status**: {'OK SUCCESS' if after_archive == 0 else 'X FAILED'}")
 
               if after_archive == 0:
                   print("- **Action**: Ready to merge - Archive violations zeroized")

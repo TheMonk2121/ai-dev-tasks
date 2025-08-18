@@ -96,7 +96,7 @@ jobs:
           for cat in ['references','readme','multirep','shadow_fork','archive']:
               if cat in cats:
                   info = cats[cat]
-                  flag = '✅' if info.get('fail') else '❌'
+                  flag = 'OK' if info.get('fail') else 'X'
                   print(f"| {cat} | {info.get('violations',0)} | {flag} |")
           print()
           print('### Top impacted (references)')

@@ -465,7 +465,7 @@ def create_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         html += f"""
         <div class="metric-card">
             <div class="metric-title">System Health</div>
-            <div class="metric-value">{'✅' if health_data.get('overall', False) else '❌'}</div>
+            <div class="metric-value">{'OK' if health_data.get('overall', False) else 'X'}</div>
             <div class="metric-status {status_class}">{'HEALTHY' if health_data.get('overall', False) else 'UNHEALTHY'}</div>
         </div>
         """
@@ -474,7 +474,7 @@ def create_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
     # Alerts
     if dashboard_data["alerts"]:
-        html += '<div class="alerts"><h2>⚠️ Alerts</h2>'
+        html += '<div class="alerts"><h2>!️ Alerts</h2>'
         for alert in dashboard_data["alerts"]:
             severity_class = f"alert-{alert['severity']}"
             html += f"""

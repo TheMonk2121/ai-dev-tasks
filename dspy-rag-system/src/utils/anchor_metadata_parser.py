@@ -296,10 +296,10 @@ def main():
             if report["validation_errors"]:
                 print("Validation Errors:")
                 for error in report["validation_errors"]:
-                    print(f"  ❌ {error}")
+                    print(f"  X {error}")
                 print()
             else:
-                print("✅ No validation errors found")
+                print("OK No validation errors found")
 
     else:
         # Simple extraction
@@ -323,9 +323,9 @@ def main():
                     if errors:
                         print("  Validation Errors:")
                         for error in errors:
-                            print(f"    ❌ {error}")
+                            print(f"    X {error}")
                     else:
-                        print("  ✅ Valid")
+                        print("  OK Valid")
                 print()
 
 

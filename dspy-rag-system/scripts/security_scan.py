@@ -80,7 +80,7 @@ def main():
         exit_code = 0
         
         if args.fail_on_vulnerabilities and total_vulns > 0:
-            logger.error(f"❌ Security scan failed: {total_vulns} vulnerabilities found", extra={
+            logger.error(f"X Security scan failed: {total_vulns} vulnerabilities found", extra={
                 'component': 'security_scan',
                 'action': 'scan_failed',
                 'reason': 'vulnerabilities_found',
@@ -89,7 +89,7 @@ def main():
             exit_code = 1
         
         if args.fail_on_issues and total_issues > 0:
-            logger.error(f"❌ Security scan failed: {total_issues} issues found", extra={
+            logger.error(f"X Security scan failed: {total_issues} issues found", extra={
                 'component': 'security_scan',
                 'action': 'scan_failed',
                 'reason': 'issues_found',
@@ -98,25 +98,25 @@ def main():
             exit_code = 1
         
         if exit_code == 0:
-            logger.info("✅ Security scan completed successfully", extra={
+            logger.info("OK Security scan completed successfully", extra={
                 'component': 'security_scan',
                 'action': 'scan_complete',
                 'status': 'success'
             })
-            print("✅ Security scan completed successfully")
+            print("OK Security scan completed successfully")
         else:
-            print("❌ Security scan failed")
+            print("X Security scan failed")
         
         return exit_code
         
     except Exception as e:
-        logger.error(f"❌ Security scan failed with exception: {e}", extra={
+        logger.error(f"X Security scan failed with exception: {e}", extra={
             'component': 'security_scan',
             'action': 'scan_failed',
             'reason': 'exception',
             'error': str(e)
         })
-        print(f"❌ Security scan failed: {e}")
+        print(f"X Security scan failed: {e}")
         return 1
 
 if __name__ == "__main__":

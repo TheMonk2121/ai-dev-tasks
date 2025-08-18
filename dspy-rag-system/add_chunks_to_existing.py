@@ -20,7 +20,7 @@ except ImportError:
 
 # Setup imports
 if not setup_dspy_imports():
-    print("❌ Error: Could not setup DSPy import paths")
+    print("X Error: Could not setup DSPy import paths")
     sys.exit(1)
 
 # Get common imports
@@ -29,7 +29,7 @@ try:
     extract_anchor_metadata = imports["extract_anchor_metadata"]
     extract_anchor_metadata_from_file = imports["extract_anchor_metadata_from_file"]
 except KeyError as e:
-    print(f"❌ Error: Missing required import: {e}")
+    print(f"X Error: Missing required import: {e}")
     sys.exit(1)
 
 
@@ -41,7 +41,7 @@ def add_chunks_to_existing_document(file_path):
     try:
         # Check if file exists
         if not os.path.exists(file_path):
-            print(f"❌ File not found: {file_path}")
+            print(f"X File not found: {file_path}")
             return False
 
         # Read file content
@@ -114,7 +114,7 @@ def add_chunks_to_existing_document(file_path):
             result = cur.fetchone()
 
             if not result:
-                print(f"❌ Document not found in database: {filename}")
+                print(f"X Document not found in database: {filename}")
                 return False
 
             doc_id = result[0]
@@ -149,11 +149,11 @@ def add_chunks_to_existing_document(file_path):
 
         conn.close()
 
-        print(f"✅ Successfully updated: {file_path}")
+        print(f"OK Successfully updated: {file_path}")
         return True
 
     except Exception as e:
-        print(f"❌ Error processing {file_path}: {e}")
+        print(f"X Error processing {file_path}: {e}")
         return False
 
 

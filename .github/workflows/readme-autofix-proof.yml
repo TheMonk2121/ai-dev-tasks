@@ -91,7 +91,7 @@ jobs:
           print(f"- **After**: {data['after']} files with violations")
           print(f"- **Reduction**: {data['reduction_pct']}%")
           if data['reduction_pct'] >= 70:
-              print(f"- **Status**: ✅ Target achieved (≥70% reduction)")
+              print(f"- **Status**: OK Target achieved (≥70% reduction)")
           else:
-              print(f"- **Status**: ⚠️ Below target (need ≥70% reduction)")
+              print(f"- **Status**: !️ Below target (need ≥70% reduction)")
           PY >> $GITHUB_STEP_SUMMARY

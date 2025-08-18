@@ -11,13 +11,13 @@ for venv_path in "../venv/bin/activate" "venv/bin/activate" "../../venv/bin/acti
         # shellcheck disable=SC1090
         source "$venv_path"
         VENV_ACTIVATED=true
-        echo "✅ Virtual environment activated: $venv_path"
+        echo "OK Virtual environment activated: $venv_path"
         break
     fi
 done
 
 if [ "$VENV_ACTIVATED" = false ]; then
-    echo "⚠️  Virtual environment not found. Continuing without activation..."
+    echo "!️  Virtual environment not found. Continuing without activation..."
     echo "💡 To create a virtual environment: python3 -m venv venv"
 fi
 

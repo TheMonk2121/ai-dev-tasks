@@ -36,7 +36,7 @@
   - Global optimization can improve these steps significantly
   - 25-40% improvement over expert-written prompt-chains
 
-### **DSPy Assertions – ICML 2023**-**Authors**: Stanford DSPy Team
+### **DSPy Assertions - ICML 2023**-**Authors**: Stanford DSPy Team
 
 - **Key Insight**: LM Assertions provide constraints that improve reliability from 37% to 98%
 

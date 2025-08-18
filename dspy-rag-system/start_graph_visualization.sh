@@ -17,36 +17,36 @@ echo -e "${BLUE}🔗 Starting NiceGUI Graph Visualization...${NC}"
 
 # Check if we're in the right directory
 if [ ! -f "src/nicegui_graph_view.py" ]; then
-    echo -e "${RED}❌ Error: nicegui_graph_view.py not found.${NC}"
+    echo -e "${RED}X Error: nicegui_graph_view.py not found.${NC}"
     echo "Please run this script from the dspy-rag-system directory."
     exit 1
 fi
 
 # Check if NiceGUI is installed
 if ! python3 -c "import nicegui" 2>/dev/null; then
-    echo -e "${YELLOW}⚠️  NiceGUI not found. Installing...${NC}"
+    echo -e "${YELLOW}!️  NiceGUI not found. Installing...${NC}"
     pip3 install nicegui>=1.4.0
 fi
 
 # Check if httpx is installed
 if ! python3 -c "import httpx" 2>/dev/null; then
-    echo -e "${YELLOW}⚠️  httpx not found. Installing...${NC}"
+    echo -e "${YELLOW}!️  httpx not found. Installing...${NC}"
     pip3 install httpx
 fi
 
 # Set environment variables
 export DASHBOARD_URL=${DASHBOARD_URL:-"http://localhost:5000"}
 
-echo -e "${GREEN}✅ Environment configured:${NC}"
+echo -e "${GREEN}OK Environment configured:${NC}"
 echo -e "   Dashboard URL: ${DASHBOARD_URL}"
 echo -e "   Graph Data Endpoint: ${DASHBOARD_URL}/graph-data"
 
 # Check if dashboard is running
 echo -e "${BLUE}🔍 Checking if dashboard is running...${NC}"
 if curl -s "${DASHBOARD_URL}/api/health" > /dev/null 2>&1; then
-    echo -e "${GREEN}✅ Dashboard is running${NC}"
+    echo -e "${GREEN}OK Dashboard is running${NC}"
 else
-    echo -e "${YELLOW}⚠️  Dashboard not detected at ${DASHBOARD_URL}${NC}"
+    echo -e "${YELLOW}!️  Dashboard not detected at ${DASHBOARD_URL}${NC}"
     echo -e "${YELLOW}   Make sure the Flask dashboard is running first.${NC}"
     echo -e "${YELLOW}   You can start it with: ./start_mission_dashboard.sh${NC}"
 fi

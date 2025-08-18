@@ -22,11 +22,11 @@ fi
 
 # Check if virtual environment exists
 if [ -d "venv" ]; then
-    echo "✅ Virtual environment found"
+    echo "OK Virtual environment found"
     # shellcheck disable=SC1091
     source venv/bin/activate
 else
-    echo "⚠️  No virtual environment found. Tests may fail if dependencies aren't installed."
+    echo "!️  No virtual environment found. Tests may fail if dependencies aren't installed."
     echo "💡 To create a virtual environment:"
     echo "   python3 -m venv venv"
     echo "   source venv/bin/activate"
@@ -44,9 +44,9 @@ run_tests() {
     echo "----------------------------------------"
 
     if python3 -m pytest "$test_path" "$options"; then
-        echo "✅ Tests passed!"
+        echo "OK Tests passed!"
     else
-        echo "❌ Tests failed!"
+        echo "X Tests failed!"
     fi
 }
 
@@ -60,7 +60,7 @@ if [[ "$*" == *"--tiers"* ]] || [[ "$*" == *"--kinds"* ]] || [[ "$*" == *"--mark
     exit_code=$?
 
     echo ""
-    echo "✅ Marker-based execution completed (exit code: $exit_code)"
+    echo "OK Marker-based execution completed (exit code: $exit_code)"
     exit $exit_code
 fi
 

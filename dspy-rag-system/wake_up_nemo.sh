@@ -114,9 +114,9 @@ start_services_parallel() {
     local i=0
     for pid in "${pids[@]}"; do
         if wait "$pid"; then
-            print_status "✅ ${service_names[$i]} started successfully"
+            print_status "OK ${service_names[$i]} started successfully"
         else
-            print_error "❌ ${service_names[$i]} failed to start"
+            print_error "X ${service_names[$i]} failed to start"
         fi
         i=$((i + 1))
     done
@@ -267,9 +267,9 @@ start_watch_folder() {
     # Wait a moment for service to start
     sleep 2
     if pgrep -f "watch_folder.py" > /dev/null; then
-        print_status "✅ Watch Folder Service is ready!"
+        print_status "OK Watch Folder Service is ready!"
     else
-        print_error "❌ Watch Folder Service failed to start"
+        print_error "X Watch Folder Service failed to start"
         return 1
     fi
 }
@@ -310,13 +310,13 @@ check_database_health() {
 
     # Check PostgreSQL process
     if ! pgrep -f "postgres" > /dev/null; then
-        print_error "❌ PostgreSQL is not running"
+        print_error "X PostgreSQL is not running"
         return 1
     fi
 
     # Fast connection test
     if psql -d ai_agency -c "SELECT 1;" >/dev/null 2>&1; then
-        print_status "✅ Database connected (optimized)"
+        print_status "OK Database connected (optimized)"
 
         # Get chunk count
         local chunk_count
@@ -324,7 +324,7 @@ check_database_health() {
         print_info "Total document chunks: ${chunk_count:-0}"
         return 0
     else
-        print_error "❌ Database connection failed"
+        print_error "X Database connection failed"
         return 1
     fi
 }
@@ -351,9 +351,9 @@ start_production_monitoring() {
     # Wait for monitoring to be ready
     sleep 3
     if curl -s "$MONITORING_URL/health" >/dev/null 2>&1; then
-        print_status "✅ Production Monitoring is ready!"
+        print_status "OK Production Monitoring is ready!"
     else
-        print_warning "⚠️  Production Monitoring may still be starting up..."
+        print_warning "!️  Production Monitoring may still be starting up..."
     fi
 }
 
@@ -410,46 +410,46 @@ show_status() {
 
     # Database health
     if psql -d ai_agency -c "SELECT 1;" >/dev/null 2>&1; then
-        print_status "✅ Database: Connected and healthy"
+        print_status "OK Database: Connected and healthy"
         local chunk_count
         chunk_count=$(psql -d ai_agency -t -c "SELECT COUNT(*) FROM document_chunks;" 2>/dev/null | tr -d ' ')
         print_info "   Document chunks: ${chunk_count:-0}"
     else
-        print_error "❌ Database: Not accessible"
+        print_error "X Database: Not accessible"
     fi
 
     # Watch folder service
     if pgrep -f "watch_folder.py" > /dev/null; then
-        print_status "✅ Watch Folder: Running"
+        print_status "OK Watch Folder: Running"
         print_info "   Drop files into: dspy-rag-system/watch_folder"
     else
-        print_error "❌ Watch Folder: Not running"
+        print_error "X Watch Folder: Not running"
     fi
 
     # Flask dashboard
     if check_port $FLASK_PORT; then
-        print_status "✅ Flask Dashboard: Running on port $FLASK_PORT"
+        print_status "OK Flask Dashboard: Running on port $FLASK_PORT"
         print_info "   URL: $DASHBOARD_URL"
         print_info "   Cluster: $DASHBOARD_URL/cluster"
     else
-        print_error "❌ Flask Dashboard: Not running"
+        print_error "X Flask Dashboard: Not running"
     fi
 
     # NiceGUI graph
     if check_port $NICEGUI_PORT; then
-        print_status "✅ NiceGUI Graph: Running on port $NICEGUI_PORT"
+        print_status "OK NiceGUI Graph: Running on port $NICEGUI_PORT"
         print_info "   URL: $NICEGUI_URL"
     else
-        print_error "❌ NiceGUI Graph: Not running"
+        print_error "X NiceGUI Graph: Not running"
     fi
 
     # Production monitoring
     if check_port $MONITORING_PORT; then
-        print_status "✅ Production Monitoring: Running on port $MONITORING_PORT"
+        print_status "OK Production Monitoring: Running on port $MONITORING_PORT"
         print_info "   URL: $MONITORING_URL"
         print_info "   Health: $MONITORING_URL/health"
     else
-        print_error "❌ Production Monitoring: Not running"
+        print_error "X Production Monitoring: Not running"
     fi
 
     echo
@@ -477,11 +477,11 @@ refresh_memory() {
         print_info "Running memory refresh with Python implementation..."
         cd ..
         if python3 scripts/prime_cursor_chat.py planner "current project status and core documentation" > memory_refresh_output.txt 2>&1; then
-            print_status "✅ Memory context refreshed successfully!"
+            print_status "OK Memory context refreshed successfully!"
             print_info "Memory bundle saved to: memory_refresh_output.txt"
             print_info "Copy the bundle content into your Cursor chat for context"
         else
-            print_warning "⚠️  Memory refresh completed with warnings (check memory_refresh_output.txt)"
+            print_warning "!️  Memory refresh completed with warnings (check memory_refresh_output.txt)"
         fi
         cd dspy-rag-system
     else
@@ -655,7 +655,7 @@ main() {
 
     # Check database health first
     if ! check_database_health; then
-        print_error "❌ Database health check failed"
+        print_error "X Database health check failed"
         exit 1
     fi
 

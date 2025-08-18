@@ -17,10 +17,10 @@ print_status() {
     local status=$1
     local message=$2
     case $status in
-        "success") echo -e "${GREEN}✅ $message${NC}" ;;
-        "error") echo -e "${RED}❌ $message${NC}" ;;
-        "warning") echo -e "${YELLOW}⚠️ $message${NC}" ;;
-        "info") echo -e "${BLUE}ℹ️ $message${NC}" ;;
+        "success") echo -e "${GREEN}OK $message${NC}" ;;
+        "error") echo -e "${RED}X $message${NC}" ;;
+        "warning") echo -e "${YELLOW}!️ $message${NC}" ;;
+        "info") echo -e "${BLUE}i️ $message${NC}" ;;
     esac
 }
 

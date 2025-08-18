@@ -119,7 +119,7 @@ class CITestRunner:
             return report
             
         except Exception as e:
-            logger.error(f"❌ CI test suite failed: {e}")
+            logger.error(f"X CI test suite failed: {e}")
             self._handle_ci_failure(e)
             raise
         
@@ -139,7 +139,7 @@ class CITestRunner:
         # Setup test data
         self._setup_test_data()
         
-        logger.info("✅ CI environment setup complete")
+        logger.info("OK CI environment setup complete")
     
     def _install_dependencies(self):
         """Install test dependencies"""
@@ -155,10 +155,10 @@ class CITestRunner:
                 'pytest', 'coverage', 'psutil', 'bandit', 'pytest-cov', 'pytest-mock'
             ], check=True, capture_output=True)
             
-            logger.info("✅ Dependencies installed successfully")
+            logger.info("OK Dependencies installed successfully")
             
         except subprocess.CalledProcessError as e:
-            logger.error(f"❌ Failed to install dependencies: {e}")
+            logger.error(f"X Failed to install dependencies: {e}")
             raise
     
     def _setup_database(self):
@@ -173,12 +173,12 @@ class CITestRunner:
                 if setup_script.exists():
                     subprocess.run([str(setup_script)], check=True, capture_output=True)
                 
-                logger.info("✅ Test database setup complete")
+                logger.info("OK Test database setup complete")
             else:
-                logger.info("⚠️ No database connection available, skipping database setup")
+                logger.info("!️ No database connection available, skipping database setup")
                 
         except Exception as e:
-            logger.warning(f"⚠️ Database setup failed: {e}")
+            logger.warning(f"!️ Database setup failed: {e}")
     
     def _setup_test_data(self):
         """Setup test data"""
@@ -195,10 +195,10 @@ class CITestRunner:
                     f.write("It contains various topics for testing the RAG system.\n")
                     f.write("Topics include: AI, machine learning, testing, CI/CD.\n")
             
-            logger.info("✅ Test data setup complete")
+            logger.info("OK Test data setup complete")
             
         except Exception as e:
-            logger.warning(f"⚠️ Test data setup failed: {e}")
+            logger.warning(f"!️ Test data setup failed: {e}")
     
     def _run_category_tests(self, category: str):
         """Run tests for a specific category"""
@@ -228,23 +228,23 @@ class CITestRunner:
             self.test_results[category] = test_result
             
             if test_result['success']:
-                logger.info(f"✅ {category} tests passed")
+                logger.info(f"OK {category} tests passed")
             else:
-                logger.error(f"❌ {category} tests failed")
+                logger.error(f"X {category} tests failed")
                 
                 # Retry failed tests if enabled
                 if self.config['retry_failed_tests']:
                     self._retry_failed_tests(category)
             
         except subprocess.TimeoutExpired:
-            logger.error(f"❌ {category} tests timed out")
+            logger.error(f"X {category} tests timed out")
             self.test_results[category] = {
                 'category': category,
                 'success': False,
                 'error': 'Test execution timed out'
             }
         except Exception as e:
-            logger.error(f"❌ {category} tests failed: {e}")
+            logger.error(f"X {category} tests failed: {e}")
             self.test_results[category] = {
                 'category': category,
                 'success': False,
@@ -268,17 +268,17 @@ class CITestRunner:
                 result = subprocess.run(cmd, capture_output=True, text=True, timeout=self.config['timeout_seconds'])
                 
                 if result.returncode == 0:
-                    logger.info(f"✅ {category} tests passed on retry {attempt}")
+                    logger.info(f"OK {category} tests passed on retry {attempt}")
                     self.test_results[category]['success'] = True
                     self.test_results[category]['retry_attempts'] = attempt
                     return
                 else:
-                    logger.warning(f"⚠️ {category} tests still failed on retry {attempt}")
+                    logger.warning(f"!️ {category} tests still failed on retry {attempt}")
                     
             except Exception as e:
-                logger.error(f"❌ {category} retry {attempt} failed: {e}")
+                logger.error(f"X {category} retry {attempt} failed: {e}")
         
-        logger.error(f"❌ {category} tests failed after {max_retries} retries")
+        logger.error(f"X {category} tests failed after {max_retries} retries")
     
     def _run_security_scan(self):
         """Run security scanning"""
@@ -303,13 +303,13 @@ class CITestRunner:
                 logger.info(f"🔒 Security scan complete - High: {len(high_severity)}, Medium: {len(medium_severity)}")
                 
                 if high_severity:
-                    logger.warning(f"⚠️ {len(high_severity)} high severity security issues found")
+                    logger.warning(f"!️ {len(high_severity)} high severity security issues found")
                 
             else:
-                logger.warning("⚠️ Security scan failed")
+                logger.warning("!️ Security scan failed")
                 
         except Exception as e:
-            logger.error(f"❌ Security scan error: {e}")
+            logger.error(f"X Security scan error: {e}")
     
     def _generate_ci_report(self) -> dict[str, Any]:
         """Generate CI test report"""
@@ -349,7 +349,7 @@ class CITestRunner:
                         'meets_threshold': coverage_percentage >= self.config['coverage_threshold']
                     }
             except Exception as e:
-                logger.warning(f"⚠️ Coverage analysis failed: {e}")
+                logger.warning(f"!️ Coverage analysis failed: {e}")
         
         report = {
             'ci_info': {
@@ -437,10 +437,10 @@ class CITestRunner:
             with open(artifacts_dir / 'ci_report.json', 'w') as f:
                 json.dump(report, f, indent=2, default=str)
             
-            logger.info("✅ CI artifacts uploaded successfully")
+            logger.info("OK CI artifacts uploaded successfully")
             
         except Exception as e:
-            logger.error(f"❌ Failed to upload CI artifacts: {e}")
+            logger.error(f"X Failed to upload CI artifacts: {e}")
     
     def _handle_notifications(self, report: dict[str, Any]):
         """Handle CI notifications"""
@@ -450,12 +450,12 @@ class CITestRunner:
         failed_categories = [cat for cat, result in self.test_results.items() if not result.get('success', False)]
         
         if failed_categories:
-            logger.warning(f"⚠️ CI tests failed for categories: {', '.join(failed_categories)}")
+            logger.warning(f"!️ CI tests failed for categories: {', '.join(failed_categories)}")
             
             # Send notification (placeholder for actual notification logic)
             self._send_notification(f"CI Tests Failed: {', '.join(failed_categories)}")
         else:
-            logger.info("✅ All CI tests passed")
+            logger.info("OK All CI tests passed")
     
     def _send_notification(self, message: str):
         """Send notification (placeholder)"""
@@ -465,7 +465,7 @@ class CITestRunner:
     
     def _handle_ci_failure(self, error: Exception):
         """Handle CI failure"""
-        logger.error(f"❌ CI test suite failed: {error}")
+        logger.error(f"X CI test suite failed: {error}")
         
         # Save failure report
         failure_report = {

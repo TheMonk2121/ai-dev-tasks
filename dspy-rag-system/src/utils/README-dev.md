@@ -146,11 +146,11 @@ func main() {
 
 | Feature | Python | Go |
 |---------|--------|----|
-| Primary implementation | ✅ | Alternative |
-| CLI interface | ✅ | ✅ |
-| Database integration | ✅ | ✅ |
-| Lean Hybrid approach | ✅ | ✅ |
-| Kill-switches | ✅ | ✅ |
+| Primary implementation | OK | Alternative |
+| CLI interface | OK | OK |
+| Database integration | OK | OK |
+| Lean Hybrid approach | OK | OK |
+| Kill-switches | OK | OK |
 | Performance | Good | Excellent |
 | Memory usage | Higher | Lower |
 | Deployment | Python env | Single binary |

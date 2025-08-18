@@ -83,14 +83,14 @@ jobs:
 
               # Check if reduction meets threshold
               if reduction >= 70:
-                  print(f"✅ SUCCESS: {reduction}% reduction meets ≥70% threshold")
+                  print(f"OK SUCCESS: {reduction}% reduction meets ≥70% threshold")
                   exit(0)
               else:
-                  print(f"❌ FAILURE: {reduction}% reduction below ≥70% threshold")
+                  print(f"X FAILURE: {reduction}% reduction below ≥70% threshold")
                   exit(1)
 
           except Exception as e:
-              print(f"❌ ERROR: Could not compute reduction: {e}")
+              print(f"X ERROR: Could not compute reduction: {e}")
               exit(1)
           PY
 
@@ -129,7 +129,7 @@ jobs:
               reduction = 0 if before == 0 else round((before - after) / before * 100, 1)
 
               print(f"- **README Reduction**: {reduction}% ({before} → {after})")
-              print(f"- **Status**: {'✅ PASS' if reduction >= 70 else '❌ FAIL'}")
+              print(f"- **Status**: {'OK PASS' if reduction >= 70 else 'X FAIL'}")
           except Exception as e:
               print(f"- **Error**: {e}")
           PY

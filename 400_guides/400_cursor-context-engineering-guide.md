@@ -30,7 +30,7 @@
 
 ## 🎯 **Current Status**
 
-- **Status**: ✅ **ACTIVE** - Cursor-native context engineering
+- **Status**: OK **ACTIVE** - Cursor-native context engineering
   strategies
 - **Priority**: 🔥 Critical - Core AI interaction optimization
 - **Points**: 3 - Medium complexity, high importance
@@ -217,7 +217,7 @@ Please help me:
 Use this reading order to rehydrate context efficiently:
 
 1.  `400_guides/400_project-overview.md` → Primary entry + workflow
-    (5‑min overview)
+    (5-min overview)
 2.  `100_memory/100_cursor-memory-context.md` → Current state (30s
     snapshot)
 3.  `000_core/000_backlog.md` → Priorities and dependencies
@@ -247,9 +247,9 @@ important information.
 **Example**:
 
 ``` text
-❌ Poor: [Long explanation of everything before getting to the point]
+X Poor: [Long explanation of everything before getting to the point]
 
-✅ Better:
+OK Better:
 I need to implement user authentication. [Core question]
 We're using Express.js with JWT tokens. [Essential context]
 The API needs to handle 1000+ concurrent users. [Supporting detail]

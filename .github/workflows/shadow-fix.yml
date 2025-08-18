@@ -95,9 +95,9 @@ jobs:
 
           # Check if fix was successful
           if after_shadow == 0:
-              print("- Status: ✅ SUCCESS - All shadow violations resolved")
+              print("- Status: OK SUCCESS - All shadow violations resolved")
           else:
-              print(f"- Status: ⚠️  PARTIAL - {after_shadow} violations remain")
+              print(f"- Status: !️  PARTIAL - {after_shadow} violations remain")
 
           # Save results
           results = {
@@ -146,7 +146,7 @@ jobs:
               print(f"- **Before**: {before_shadow} shadow violations")
               print(f"- **After**: {after_shadow} shadow violations")
               print(f"- **Reduction**: {reduction}%")
-              print(f"- **Status**: {'✅ SUCCESS' if after_shadow == 0 else '❌ FAILED'}")
+              print(f"- **Status**: {'OK SUCCESS' if after_shadow == 0 else 'X FAILED'}")
 
               if after_shadow == 0:
                   print("- **Action**: Ready to merge - Shadow violations fixed")

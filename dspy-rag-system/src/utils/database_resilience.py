@@ -157,7 +157,7 @@ class DatabaseResilienceManager:
             except Exception:
                 pass
 
-            # Fallback: provide a minimal dummy pool for non‑DB test contexts
+            # Fallback: provide a minimal dummy pool for non-DB test contexts
             class _DummyConn:
                 def __init__(self):
                     self._closed = False

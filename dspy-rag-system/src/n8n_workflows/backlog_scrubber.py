@@ -386,12 +386,12 @@ def main():
         result = scrubber.scrub_backlog()
         
         if result["success"]:
-            print("✅ Backlog scrub completed successfully!")
+            print("OK Backlog scrub completed successfully!")
             print(f"Items processed: {result['items_processed']}")
             print(f"Scores updated: {result['scores_updated']}")
             print(f"Errors found: {result['errors_found']}")
         else:
-            print("❌ Backlog scrub failed!")
+            print("X Backlog scrub failed!")
             print(f"Error: {result.get('error', 'Unknown error')}")
 
 if __name__ == "__main__":

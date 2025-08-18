@@ -35,7 +35,7 @@
 - Programmatic API:
   `dspy-rag-system/src/dspy_modules/documentation_retrieval.py`
 
-## ✅ Validation
+## OK Validation
 
 - Dry-run coherence check: `python scripts/doc_coherence_validator.py`
 - Apply fixes: `python scripts/doc_coherence_validator.py --no-dry-run`

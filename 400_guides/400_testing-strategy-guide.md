@@ -14,7 +14,7 @@
 
 ## 🎯 **Current Status**
 
-- **Status**: ✅ **ACTIVE** - Testing strategy maintained
+- **Status**: OK **ACTIVE** - Testing strategy maintained
 - **Priority**: 🔥 Critical - Quality assurance and testing
 - **Points**: 5 - High complexity, quality critical
 - **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
@@ -32,9 +32,9 @@
 
 ### **Legacy Approach (Avoid):**
 
-- ❌ `comprehensive_test_suite.py` for new development
-- ❌ Manual `sys.path` manipulation in test files
-- ❌ File-based test selection (`./run_tests.sh all`)
+- X `comprehensive_test_suite.py` for new development
+- X Manual `sys.path` manipulation in test files
+- X File-based test selection (`./run_tests.sh all`)
 
 ## 🎯 **Test Tiers & Execution Strategy**
 
@@ -73,41 +73,41 @@ scripts/weekly_metrics_with_owners.py
 
 ### **Validator Testing Patterns**
 
-**Archive Enrollment & Immutability:** - ✅
+**Archive Enrollment & Immutability:** - OK
 `test_archive_enrolled_file_not_flagged()` - Enrolled files pass
-validation - ✅ `test_archive_modified_file_flagged_in_fail_mode()` -
-Modified files fail validation - ✅ Git blob SHA format validation - ✅
+validation - OK `test_archive_modified_file_flagged_in_fail_mode()` -
+Modified files fail validation - OK Git blob SHA format validation - OK
 Path normalization (repo-relative POSIX)
 
-**Exception Ledger & Pragmas:** - ✅
-`test_ledger_key_synonyms_respected()` - Key synonym handling - ✅
-`test_pragma_and_ledger_merge_behavior()` - Pragma + ledger merging - ✅
-Expiry date validation - ✅ Exception precedence rules
+**Exception Ledger & Pragmas:** - OK
+`test_ledger_key_synonyms_respected()` - Key synonym handling - OK
+`test_pragma_and_ledger_merge_behavior()` - Pragma + ledger merging - OK
+Expiry date validation - OK Exception precedence rules
 
-**Governance Tools:** - ✅ `test_schema_guard_honors_pinned_version()` -
-Schema version validation - ✅
+**Governance Tools:** - OK `test_schema_guard_honors_pinned_version()` -
+Schema version validation - OK
 `test_ratchet_blocks_changed_file_regressions()` - Regression
-prevention - ✅ `test_anchor_drift_detects_removed_heading()` - Broken
-link detection - ✅
+prevention - OK `test_anchor_drift_detects_removed_heading()` - Broken
+link detection - OK
 `test_readme_hotspots_handles_invalid_or_empty_report()` - Data
 resilience
 
 ### **JSON Purity & Path Normalization Expectations**
 
-**JSON Output Purity:** - ✅ All WARN/INFO messages routed to `stderr`
-when `--json` is set - ✅ `stdout` contains only pure JSON - ✅
+**JSON Output Purity:** - OK All WARN/INFO messages routed to `stderr`
+when `--json` is set - OK `stdout` contains only pure JSON - OK
 `test_stdout_pure_json_warnings_to_stderr()` validates this
 
-**Path Normalization:** - ✅ All `impacted_files` paths are
-repo-relative POSIX format - ✅ No absolute paths in validator reports -
-✅ `test_impacted_files_are_posix_relative()` validates this
+**Path Normalization:** - OK All `impacted_files` paths are
+repo-relative POSIX format - OK No absolute paths in validator reports -
+OK `test_impacted_files_are_posix_relative()` validates this
 
 ### **Flip Counters & Drift Checks to Nightly**
 
-**Nightly Governance Tasks:** - ✅ Anchor drift detection
-(`scripts/anchor_drift_check.py`) - ✅ Ledger sweep for expired
-exceptions (`scripts/ledger_sweep.py`) - ✅ Counter updates and flip
-manager automation - ✅ Schema guard verification
+**Nightly Governance Tasks:** - OK Anchor drift detection
+(`scripts/anchor_drift_check.py`) - OK Ledger sweep for expired
+exceptions (`scripts/ledger_sweep.py`) - OK Counter updates and flip
+manager automation - OK Schema guard verification
 
 ## 🔎 TL;DR
 
@@ -167,7 +167,7 @@ include token usage information
 
 ### **Test Distribution Guidelines**\| Test Type \| Percentage \| Execution Time \| Coverage Focus \|
 
-\|———–\|————\|—————-\|—————-\| \|**Unit Tests**\| 70% \| \< 1 second \|
+\|----\|----\|------\|------\| \|**Unit Tests**\| 70% \| \< 1 second \|
 Individual functions/methods \| \|**Integration Tests**\| 20% \| 1-10
 seconds \| Component interactions \| \|**End-to-End Tests**\| 10% \|
 10-60 seconds \| Complete user workflows \|
@@ -382,7 +382,7 @@ class="uri">http://localhost:5000"</a>
 
 ------------------------------------------------------------------------
 
-## ✅ Quality Gates
+## OK Quality Gates
 
 ### **1. Code Quality Gates**\####**Static Code Analysis**\`\`\`python
 
@@ -807,9 +807,9 @@ class TestingPipeline: def **init**(self): self.test_suites = \[
 
                 self.check_quality_gates(test_suite, suite_results)
 
-                print(f"✅ {test_suite} passed")
+                print(f"OK {test_suite} passed")
             except QualityGateException as e:
-                print(f"❌ {test_suite} failed: {e}")
+                print(f"X {test_suite} failed: {e}")
                 results[test_suite] = {"error": str(e)}
 
         return results
@@ -1055,7 +1055,7 @@ class QualityMetrics: def **init**(self): self.metrics = {}
 import sys import subprocess import argparse
 
 def run_tests(test_type, options): “““Run specific test type”“” if
-test_type == “unit”: cmd = \[“pytest”, “tests/unit/”, “-v”, “–cov=src”\]
+test_type == “unit”: cmd = \[“pytest”, “tests/unit/”, “-v”, “-cov=src”\]
 elif test_type == “integration”: cmd = \[“pytest”, “tests/integration/”,
 “-v”\] elif test_type == “e2e”: cmd = \[“pytest”, “tests/e2e/”, “-v”\]
 elif test_type == “security”: cmd = \[“pytest”, “tests/security/”,
@@ -1076,8 +1076,8 @@ test type: {test_type}“) return False
 def main(): parser = argparse.ArgumentParser(description=“Test runner
 for AI development ecosystem”) parser.add_argument(“test_type”,
 choices=\[“unit”, “integration”, “e2e”, “security”, “performance”,
-“all”\]) parser.add_argument(“–parallel”, action=“store_true”, help=“Run
-tests in parallel”) parser.add_argument(“–verbose”, action=“store_true”,
+“all”\]) parser.add_argument(“-parallel”, action=“store_true”, help=“Run
+tests in parallel”) parser.add_argument(“-verbose”, action=“store_true”,
 help=“Verbose output”)
 
     args = parser.parse_args()
@@ -1092,10 +1092,10 @@ help=“Verbose output”)
                 all_passed = False
 
         if all_passed:
-            print("\n✅ All tests passed!")
+            print("\nOK All tests passed!")
             sys.exit(0)
         else:
-            print("\n❌ Some tests failed!")
+            print("\nX Some tests failed!")
             sys.exit(1)
     else:
         success = run_tests(args.test_type, args)

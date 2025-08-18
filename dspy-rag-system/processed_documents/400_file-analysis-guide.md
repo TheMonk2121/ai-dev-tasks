@@ -24,7 +24,7 @@ analysis techniques to current files |
 
 
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- File analysis procedures maintained
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- File analysis procedures maintained
 
 - **Priority**: 🔥 Critical - Prevents critical file loss
 
@@ -43,7 +43,7 @@ primary memory context
 
 - **Tier 4 (LOW)**: Safe to remove with validation - duplicates, outdated test files
 
-- *⚠️ FAILURE TO COMPLETE ANY STEP ABOVE MEANS YOU CANNOT SUGGEST FILE DELETION!**Validator note: After any structural
+- *!️ FAILURE TO COMPLETE ANY STEP ABOVE MEANS YOU CANNOT SUGGEST FILE DELETION!**Validator note: After any structural
 doc moves/folds, run `python scripts/doc_coherence_validator.py` (or
 `./scripts/pre_commit_doc_validation.sh`) to verify cross-links and naming.
 
@@ -164,19 +164,19 @@ Removal)**-**Criteria**: Duplicate files, outdated test files, unused subdirecto
 
 - *Content Freshness Indicators**:
 
-- ✅ **Current**: References Cursor Native AI, current workflows, active backlog items
+- OK **Current**: References Cursor Native AI, current workflows, active backlog items
 
-- ⚠️ **Mixed**: Some current references, some outdated
+- !️ **Mixed**: Some current references, some outdated
 
-- ❌ **Outdated**: References legacy models (legacy integrations), old workflows, deprecated features
+- X **Outdated**: References legacy models (legacy integrations), old workflows, deprecated features
 
 - *Workflow Alignment**:
 
-- ✅ **Aligned**: Matches current workflows and system architecture
+- OK **Aligned**: Matches current workflows and system architecture
 
-- ⚠️ **Partially Aligned**: Some current elements, some outdated
+- !️ **Partially Aligned**: Some current elements, some outdated
 
-- ❌ **Misaligned**: Contradicts current workflows or architecture
+- X **Misaligned**: Contradicts current workflows or architecture
 
 #### **Step 6: Usage Pattern Analysis**
 
@@ -301,12 +301,12 @@ python3 scripts/system_health_check.py
 
 ## 🔍 **Specific Analysis Methods**
 
-### Find‑or‑build (code reuse) heuristic
+### Find-or-build (code reuse) heuristic
 
 Use this checklist before writing new Python code to reduce duplication and keep code discoverable.
 
-- Search‑before‑write (1–2 min)
-  - Write a 1–2 line spec and 3–5 keywords
+- Search-before-write (1-2 min)
+  - Write a 1-2 line spec and 3-5 keywords
   - Search active repo (exclude archives):
     - `rg -n "keyword1|keyword2" scripts/ dspy-rag-system/src/ tests/ -g '!600_archives/**' -g '!docs/legacy/**'`
   - Also scan 400_/500_ for references to existing modules
@@ -324,7 +324,7 @@ Use this checklist before writing new Python code to reduce duplication and keep
   - Place it where `400_guides/400_system-overview.md` indicates (component ownership)
   - Add a minimal test first (mirrors existing test style in `tests/**`)
   - Add a brief backlink in the relevant 400_* guide (Implementation refs)
-  - If research‑backed, add a line in the paired 500_*file (Backlog link + implementation refs)
+  - If research-backed, add a line in the paired 500_*file (Backlog link + implementation refs)
 
 ### **For Each File, Check:**####**1. Cross-Reference Count**
 

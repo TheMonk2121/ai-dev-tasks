@@ -88,23 +88,23 @@ it easy for both humans and AI to understand its role and importance in the over
 
 #### Examples of when to create files
 
-- ✅**Workflow processes**(`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`)
+- OK**Workflow processes**(`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`)
 
-- ✅**System documentation**(`400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`)
+- OK**System documentation**(`400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`)
 
-- ✅**Configuration guides**(`200_setup/202_setup-requirements.md`)
+- OK**Configuration guides**(`200_setup/202_setup-requirements.md`)
 
-- ✅**Completion summaries** (`500_*` files for historical context)
+- OK**Completion summaries** (`500_*` files for historical context)
 
-- ✅ **Research findings**(`500_research/500_memory-arch-research.md`)
+- OK **Research findings**(`500_research/500_memory-arch-research.md`)
 
 #### Examples of when NOT to create files
 
-- ❌**Temporary notes**(use comments or inline documentation)
+- X**Temporary notes**(use comments or inline documentation)
 
-- ❌**One-off decisions**(document in existing relevant files)
+- X**One-off decisions**(document in existing relevant files)
 
-- ❌**Quick fixes**(document in commit messages or existing files)
+- X**Quick fixes**(document in commit messages or existing files)
 
 ### Step 2: Determine File Purpose and Priority
 
@@ -175,19 +175,19 @@ benchmarks
 
 #### Examples of good names
 
-- ✅ `100_memory/100_cursor-memory-context.md` (clear purpose)
+- OK `100_memory/100_cursor-memory-context.md` (clear purpose)
 
-- ✅ `400_guides/400_system-overview.md` (descriptive)
+- OK `400_guides/400_system-overview.md` (descriptive)
 
-- ✅ `500_research/500_memory-arch-research.md` (research focus)
+- OK `500_research/500_memory-arch-research.md` (research focus)
 
 #### Examples of bad names
 
-- ❌ `misc.md` (unclear purpose)
+- X `misc.md` (unclear purpose)
 
-- ❌ `stuff.md` (not descriptive)
+- X `stuff.md` (not descriptive)
 
-- ❌ `temp.md` (temporary feeling)
+- X `temp.md` (temporary feeling)
 
 ### Step 5: Add AI API Comments and Cross-References
 
@@ -226,7 +226,7 @@ benchmarks
 
 **Scenario**: Need to document a new workflow for automated testing
 
-- **Step 1**: ✅ **File needed** - This is a process others will follow
+- **Step 1**: OK **File needed** - This is a process others will follow
 - **Step 2**: **Purpose** = Implementation workflow, **Priority** = Medium (important for specific tasks)
 - **Step 3**: **Prefix** = 100-199 (workflow guides)
 - **Step 4**: **Name** = `101_automated-testing-workflow.md`
@@ -241,7 +241,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 ## 📝 File Naming Rules
 
-### ✅ Correct Examples
+### OK Correct Examples
 
 - `000_core/000_backlog.md` (three-digit prefix, single underscore, kebab-case)
 
@@ -251,7 +251,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 - `500_test-harness-guide.md` (testing category)
 
-### ❌ Incorrect Examples
+### X Incorrect Examples
 
 - `99_misc.md` (needs three-digit prefix)
 
@@ -279,7 +279,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 ### Required top metadata header (HTML comments)
 
-- HIGH‑priority docs must include:
+- HIGH-priority docs must include:
   - `<!-- CONTEXT_REFERENCE: <file> -->`
   - `<!-- MEMORY_CONTEXT: <LEVEL> - <description> -->`
 
@@ -287,19 +287,19 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 - See: 🤖 AI API Documentation Standards (below)
 
-### TL;DR + At‑a‑glance
+### TL;DR + At-a-glance
 
 - TL;DR section is required in core docs
   - A single explicit anchor is allowed: `{#tldr}`
   - Heading: `## 🔎 TL;DR`
 
-- Immediately after TL;DR, include a 3‑column “At‑a‑glance” table with exact headers:
+- Immediately after TL;DR, include a 3-column “At-a-glance” table with exact headers:
 
 | what this file is | read when | do next |
 |---|---|---|
-|_one‑line purpose_|_trigger moments_|_2–3 links/actions_ |
+|_one-line purpose_|_trigger moments_|_2-3 links/actions_ |
 
-### Stable Anchors (kebab‑case)
+### Stable Anchors (kebab-case)
 
 - Required anchors per doc type (must exist as section anchors):
   - `100_memory/100_cursor-memory-context.md`: `tldr`, `quick-start`, `quick-links`, `commands`
@@ -321,7 +321,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 ### Anchor policy (phased)
 
-- Only TL;DR may use an explicit HTML anchor (`{#tldr}`). All other anchors must be heading‑based.
+- Only TL;DR may use an explicit HTML anchor (`{#tldr}`). All other anchors must be heading-based.
 - Rollout: validator warns first; flips to errors after link hygiene completes.
 
 ### Table Usage Mandate
@@ -456,7 +456,7 @@ File renames and structural changes are tracked via Git issues rather than stati
    - Cross-references in backlog point to active location
 
 2. **Completion** (Move to `600_archives/prds/`)
-   - Backlog item marked as `✅ done`
+   - Backlog item marked as `OK done`
    - PRD moved to archives with completion metadata
    - Backlog cross-reference updated to archived location
 

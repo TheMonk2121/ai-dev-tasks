@@ -27,7 +27,7 @@ def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
     schema_path = Path(__file__).parent.parent / "config" / "database" / "clean_slate_schema.sql"
 
     if not schema_path.exists():
-        print(f"❌ Schema file not found: {schema_path}")
+        print(f"X Schema file not found: {schema_path}")
         return False
 
     with open(schema_path) as f:
@@ -44,7 +44,7 @@ def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
         print("=" * 80)
         print(schema_sql)
         print("=" * 80)
-        print("✅ Dry run completed - no changes made")
+        print("OK Dry run completed - no changes made")
         return True
 
     try:
@@ -62,7 +62,7 @@ def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
             with db.get_connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(backup_sql)
-            print("✅ Backup created")
+            print("OK Backup created")
 
         # Apply the schema
         print("🔧 Applying schema...")
@@ -70,7 +70,7 @@ def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
             with conn.cursor() as cur:
                 cur.execute(schema_sql)
 
-        print("✅ Clean-slate schema applied successfully!")
+        print("OK Clean-slate schema applied successfully!")
         print()
         print("📊 Next steps:")
         print("1. Re-ingest your documents: ./start_watch_folder.sh")
@@ -80,7 +80,7 @@ def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
         return True
 
     except Exception as e:
-        print(f"❌ Error applying schema: {e}")
+        print(f"X Error applying schema: {e}")
         print("\n🔧 Troubleshooting:")
         print("1. Make sure PostgreSQL is running")
         print("2. Check POSTGRES_DSN environment variable")

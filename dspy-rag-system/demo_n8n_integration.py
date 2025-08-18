@@ -55,12 +55,12 @@ def demo_event_creation():
                 event.event_data,
                 event.priority
             )
-            print(f"✅ Created event {event_id}: {event.event_type} (priority: {event.priority})")
+            print(f"OK Created event {event_id}: {event.event_type} (priority: {event.priority})")
         
         print()
         
     except Exception as e:
-        print(f"❌ Event creation failed: {e}")
+        print(f"X Event creation failed: {e}")
         print()
 
 def demo_workflow_execution():
@@ -79,7 +79,7 @@ def demo_workflow_execution():
         }
         
         execution_id = execute_workflow(workflow_id, parameters)
-        print(f"✅ Executed workflow {workflow_id} with execution ID: {execution_id}")
+        print(f"OK Executed workflow {workflow_id} with execution ID: {execution_id}")
         
         # Get workflow status
         status = manager.get_workflow_status(workflow_id)
@@ -88,7 +88,7 @@ def demo_workflow_execution():
         print()
         
     except Exception as e:
-        print(f"❌ Workflow execution failed: {e}")
+        print(f"X Workflow execution failed: {e}")
         print()
 
 def demo_event_processing():
@@ -99,7 +99,7 @@ def demo_event_processing():
     try:
         # Process pending events
         processed_count = poll_events()
-        print(f"✅ Processed {processed_count} events")
+        print(f"OK Processed {processed_count} events")
         
         # Get pending events
         manager = get_n8n_manager()
@@ -112,7 +112,7 @@ def demo_event_processing():
         print()
         
     except Exception as e:
-        print(f"❌ Event processing failed: {e}")
+        print(f"X Event processing failed: {e}")
         print()
 
 def demo_event_processor_service():
@@ -126,14 +126,14 @@ def demo_event_processor_service():
         
         # Start service
         processor.start()
-        print("✅ Event processor service started")
+        print("OK Event processor service started")
         
         # Create some demo events
         processor.trigger_backlog_scrubber()
         processor.trigger_system_health_check()
         processor.trigger_document_processing("/path/to/demo/file.txt")
         
-        print("✅ Created demo events")
+        print("OK Created demo events")
         
         # Let it process for a few seconds
         time.sleep(3)
@@ -148,12 +148,12 @@ def demo_event_processor_service():
         
         # Stop service
         processor.stop()
-        print("✅ Event processor service stopped")
+        print("OK Event processor service stopped")
         
         print()
         
     except Exception as e:
-        print(f"❌ Event processor demo failed: {e}")
+        print(f"X Event processor demo failed: {e}")
         print()
 
 def demo_database_integration():
@@ -191,7 +191,7 @@ def demo_database_integration():
         print()
         
     except Exception as e:
-        print(f"❌ Database integration demo failed: {e}")
+        print(f"X Database integration demo failed: {e}")
         print()
 
 def demo_workflow_handlers():
@@ -205,7 +205,7 @@ def demo_workflow_handlers():
         # Demo backlog scrubber
         print("🔄 Testing backlog scrubber handler...")
         result = manager._handle_backlog_scrubber({})
-        print(f"✅ Backlog scrubber result: {result}")
+        print(f"OK Backlog scrubber result: {result}")
         
         # Demo task executor
         print("🔄 Testing task executor handler...")
@@ -213,17 +213,17 @@ def demo_workflow_handlers():
             "task_type": "system_health_check",
             "parameters": {}
         })
-        print(f"✅ Task executor result: {result}")
+        print(f"OK Task executor result: {result}")
         
         # Demo system monitor
         print("🔄 Testing system monitor handler...")
         result = manager._handle_system_monitor({})
-        print(f"✅ System monitor result: {result}")
+        print(f"OK System monitor result: {result}")
         
         print()
         
     except Exception as e:
-        print(f"❌ Workflow handlers demo failed: {e}")
+        print(f"X Workflow handlers demo failed: {e}")
         print()
 
 def demo_production_benefits():
@@ -243,7 +243,7 @@ def demo_production_benefits():
     ]
     
     for benefit in benefits:
-        print(f"  ✅ {benefit}")
+        print(f"  OK {benefit}")
     
     print()
 
@@ -284,7 +284,7 @@ def main():
         demo_production_benefits()
         demo_integration_points()
         
-        print("✅ n8n workflow integration demo completed!")
+        print("OK n8n workflow integration demo completed!")
         print("\n🎉 n8n workflow integration is ready for production deployment!")
         print("\nKey Features Implemented:")
         print("  - Event-driven architecture with PostgreSQL event ledger")
@@ -296,7 +296,7 @@ def main():
         print("  - Production-ready event processing")
         
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        print(f"X Demo failed: {e}")
         import traceback
         traceback.print_exc()
 

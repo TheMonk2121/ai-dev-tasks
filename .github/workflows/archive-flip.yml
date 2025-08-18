@@ -93,12 +93,12 @@ jobs:
           output_path = os.environ.get('GITHUB_OUTPUT')
 
           if preconditions_met or os.getenv('INPUT_FORCE_FLIP', 'false') == 'true':
-              print("✅ Preconditions met or force flip enabled")
+              print("OK Preconditions met or force flip enabled")
               if output_path:
                   with open(output_path, 'a') as fh:
                       fh.write('ready=true\n')
           else:
-              print("❌ Preconditions not met:")
+              print("X Preconditions not met:")
               for issue in issues:
                   print(f"  - {issue}")
               if output_path:
@@ -137,7 +137,7 @@ jobs:
           with open(".github/pull_request_template_archive_flip.md", "w") as f:
               f.write(pr_content)
 
-          print("✅ Archive flip PR template created: .github/pull_request_template_archive_flip.md")
+          print("OK Archive flip PR template created: .github/pull_request_template_archive_flip.md")
           PY
 
       - name: Upload validator report
@@ -161,7 +161,7 @@ jobs:
               archive_count = len(archive_violations)
 
               print(f"- **Archive Violations**: {archive_count}")
-              print(f"- **Status**: {'✅ READY' if archive_count == 0 else '❌ NOT READY'}")
+              print(f"- **Status**: {'OK READY' if archive_count == 0 else 'X NOT READY'}")
 
               if archive_count == 0:
                   print("- **Action**: Ready for Archive flip to FAIL")

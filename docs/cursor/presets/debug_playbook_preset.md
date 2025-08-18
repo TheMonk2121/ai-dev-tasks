@@ -20,7 +20,7 @@ Please help me debug this issue following the Global Bug-Fix Playbook structure:
 - **Logs / Error**: [Relevant error messages, stack traces, logs]
 - **Environment**: [OS, dependencies, configuration]
 - **Dependencies**: Direct | Upstream | Downstream
-- **Invariants**: [2–5 truths that must hold for the system to work correctly]
+- **Invariants**: [2-5 truths that must hold for the system to work correctly]
 
 ### Dual Review
 #### 🔴 Red (risks / root causes / questions)
@@ -39,7 +39,7 @@ Please help me debug this issue following the Global Bug-Fix Playbook structure:
 - **Chosen Fix**: [Description of the implemented solution]
 - **Didn't Touch**: [What was intentionally left unchanged and why]
 - **Blast Radius**: Direct | Upstream | Downstream | Public contracts
-- **Confidence (0–1)**: [Confidence level in the fix]
+- **Confidence (0-1)**: [Confidence level in the fix]
 - **Test Plan**: [How to reproduce the bug and prevent regression]
 - **Rollout & Observe** (optional): [Feature flags, logging, metrics]
 

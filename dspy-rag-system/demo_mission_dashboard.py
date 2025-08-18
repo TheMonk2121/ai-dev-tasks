@@ -105,7 +105,7 @@ def simulate_mission_execution(mission_id: str, agent_type: str = None, model_us
     )
     
     if not success:
-        print(f"❌ Failed to start mission {mission_id}")
+        print(f"X Failed to start mission {mission_id}")
         return
     
     # Simulate progress updates
@@ -147,9 +147,9 @@ def simulate_mission_execution(mission_id: str, agent_type: str = None, model_us
     )
     
     if success:
-        print(f"✅ Completed mission {mission_id}")
+        print(f"OK Completed mission {mission_id}")
     else:
-        print(f"❌ Failed to complete mission {mission_id}")
+        print(f"X Failed to complete mission {mission_id}")
 
 def simulate_mission_failure(mission_id: str, error_message: str):
     """Simulate a mission failure"""
@@ -163,7 +163,7 @@ def simulate_mission_failure(mission_id: str, error_message: str):
     )
     
     if not success:
-        print(f"❌ Failed to start mission {mission_id}")
+        print(f"X Failed to start mission {mission_id}")
         return
     
     # Simulate some progress
@@ -178,9 +178,9 @@ def simulate_mission_failure(mission_id: str, error_message: str):
     )
     
     if success:
-        print(f"❌ Failed mission {mission_id}: {error_message}")
+        print(f"X Failed mission {mission_id}: {error_message}")
     else:
-        print(f"❌ Failed to mark mission {mission_id} as failed")
+        print(f"X Failed to mark mission {mission_id} as failed")
 
 def run_demo():
     """Run the complete demo"""
@@ -307,8 +307,8 @@ def show_statistics():
             status_emoji = {
                 "pending": "⏳",
                 "running": "🔄",
-                "completed": "✅",
-                "failed": "❌",
+                "completed": "OK",
+                "failed": "X",
                 "cancelled": "🚫"
             }.get(mission.status.value, "❓")
             
@@ -330,7 +330,7 @@ def main():
             return
         elif command == "create":
             create_sample_missions()
-            print("\n✅ Sample missions created successfully!")
+            print("\nOK Sample missions created successfully!")
             return
         elif command == "stats":
             show_statistics()
@@ -339,7 +339,7 @@ def main():
             run_demo()
             return
         else:
-            print(f"❌ Unknown command: {command}")
+            print(f"X Unknown command: {command}")
             show_usage()
             return
     

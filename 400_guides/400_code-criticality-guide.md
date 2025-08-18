@@ -18,9 +18,9 @@
 
 | what this file is | read when | do next |
 |----|----|----|
-| Single source of truth for prioritized, most‑critical `.py` files | You need to understand the operational code backbone fast | Update when new critical modules are added |
+| Single source of truth for prioritized, most-critical `.py` files | You need to understand the operational code backbone fast | Update when new critical modules are added |
 
-- Purpose: Single source of truth for prioritized, most‑critical `.py`
+- Purpose: Single source of truth for prioritized, most-critical `.py`
   files
 
 - Read when: You need to understand the operational code backbone fast
@@ -39,12 +39,12 @@
   `dspy-rag-system/src/utils/anchor_metadata_parser.py`
 
 - Tier 3 (Supporting): `scripts/performance_benchmark.py`,
-  `scripts/auto_push_prompt.py` — Performance monitoring & maintenance
+  `scripts/auto_push_prompt.py` - Performance monitoring & maintenance
   automation
 
 ------------------------------------------------------------------------
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Maintained and current
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Maintained and current
 
 - **Priority**: 🔥 Critical - Core system documentation
 
@@ -57,121 +57,121 @@
 
 ## 🎯 Scope
 
-## ✅ Prioritized List (by tiers)
+## OK Prioritized List (by tiers)
 
-### Tier 1 — Critical (never break without a plan)
+### Tier 1 - Critical (never break without a plan)
 
-1.  `scripts/process_tasks.py` — Task Execution Engine (orchestrator)
+1.  `scripts/process_tasks.py` - Task Execution Engine (orchestrator)
 
-- Core CLI to execute backlog items end‑to‑end; handles orchestration,
+- Core CLI to execute backlog items end-to-end; handles orchestration,
   error handling, and state transitions.
 
-2.  `scripts/state_manager.py` — Execution/State Persistence
+2.  `scripts/state_manager.py` - Execution/State Persistence
 
 - Central state tracking across task boundaries; execution history,
   retries, progress, and metadata.
 
-3.  `dspy-rag-system/src/dspy_modules/cursor_model_router.py` — AI Model
+3.  `dspy-rag-system/src/dspy_modules/cursor_model_router.py` - AI Model
     Routing & Context Engineering
 
 - Intelligent model selection for Cursor Native AI; validation,
   reasoning, and prompt/context strategies.
 
-4.  `dspy-rag-system/src/dspy_modules/vector_store.py` — Hybrid Vector
+4.  `dspy-rag-system/src/dspy_modules/vector_store.py` - Hybrid Vector
     Store (dense + sparse)
 
-- PGVector + text search; storage, retrieval, span‑level grounding; core
+- PGVector + text search; storage, retrieval, span-level grounding; core
   RAG data path.
 
-5.  `dspy-rag-system/src/dspy_modules/document_processor.py` — Document
+5.  `dspy-rag-system/src/dspy_modules/document_processor.py` - Document
     Ingestion & Chunking
 
 - Validates, extracts metadata, chunks, and prepares documents for
   indexing and retrieval.
 
-6.  `dspy-rag-system/src/utils/memory_rehydrator.py` — Context Assembly
+6.  `dspy-rag-system/src/utils/memory_rehydrator.py` - Context Assembly
     & Role-Aware Hydration (Python)
 
 - Builds role-aware context bundles from Postgres; pinned anchors +
   task-scoped retrieval; industry-grade observability integration; core
   AI agent context system.
 
-7.  `dspy-rag-system/src/utils/memory_rehydration.go` — Context Assembly
+7.  `dspy-rag-system/src/utils/memory_rehydration.go` - Context Assembly
     & Role-Aware Hydration (Go)
 
 - Go implementation of memory rehydration system; Lean Hybrid with
   Kill-Switches approach; alternative to Python version.
 
-8.  `dspy-rag-system/src/utils/structured_tracer.py` — Industry-Grade
+8.  `dspy-rag-system/src/utils/structured_tracer.py` - Industry-Grade
     Structured Tracing
 
 - Stanford/Berkeley/Anthropic-grade observability; cryptographic
   verification; multi-layer logging; core debugging infrastructure.
 
-9.  `dspy-rag-system/src/utils/self_critique.py` — Self-Critique Engine
+9.  `dspy-rag-system/src/utils/self_critique.py` - Self-Critique Engine
 
 - Anthropic-style reflection checkpoints; bundle sufficiency evaluation;
   role-specific validation; bundle integrity verification.
 
-### Tier 2 — High (production infrastructure)
+### Tier 2 - High (production infrastructure)
 
-- `scripts/doc_coherence_validator.py` — Documentation Quality &
+- `scripts/doc_coherence_validator.py` - Documentation Quality &
   Coherence Validation
   - Primary validator for documentation integrity; cross-references,
     naming conventions, markdown compliance.
-- `scripts/task_generation_automation.py` — Automated Task Generation
+- `scripts/task_generation_automation.py` - Automated Task Generation
   System
   - Parses PRDs and backlog items; generates consistent task templates
     with testing requirements and quality gates; core workflow
     automation.
-- `dspy-rag-system/src/utils/database_resilience.py` — DB Resilience &
+- `dspy-rag-system/src/utils/database_resilience.py` - DB Resilience &
   Pooling
   - Connection pooling, health monitoring, retries, and graceful
     degradation.
-- `dspy-rag-system/src/dashboard.py` — Web UI & Monitoring Integration
+- `dspy-rag-system/src/dashboard.py` - Web UI & Monitoring Integration
   - Flask dashboard, file intake, SocketIO updates, production
     monitoring & health endpoints.
-- `dspy-rag-system/src/utils/error_pattern_recognition.py` — Error
+- `dspy-rag-system/src/utils/error_pattern_recognition.py` - Error
   Recovery Patterns
   - Pattern catalog + classification supporting automated recovery and
     hotfix templates.
-- `dspy-rag-system/src/utils/prompt_sanitizer.py` — Input Security
-  Guard‑Rails
+- `dspy-rag-system/src/utils/prompt_sanitizer.py` - Input Security
+  Guard-Rails
   - Validation and sanitization for queries/content; foundational for
     safe operations.
-- `scripts/rollback_doc.sh` — Documentation Recovery & Rollback System
+- `scripts/rollback_doc.sh` - Documentation Recovery & Rollback System
   - Git snapshot system for documentation recovery; automated snapshots
     and rollback procedures.
-- `dspy-rag-system/src/utils/anchor_metadata_parser.py` — Anchor
+- `dspy-rag-system/src/utils/anchor_metadata_parser.py` - Anchor
   Metadata Extraction
   - Extracts anchor metadata from HTML comments; maps to JSONB for
     memory rehydrator; critical for context assembly.
 
-### Tier 3 — Supporting (reliability/utilities)
+### Tier 3 - Supporting (reliability/utilities)
 
-- `dspy-rag-system/src/utils/retry_wrapper.py` — Retry/Backoff Policies
+- `dspy-rag-system/src/utils/retry_wrapper.py` - Retry/Backoff Policies
 
-- `scripts/system_health_check.py` — Health checks & diagnostics
+- `scripts/system_health_check.py` - Health checks & diagnostics
 
-- `scripts/performance_benchmark.py` — Performance monitoring &
+- `scripts/performance_benchmark.py` - Performance monitoring &
   optimization
 
-- `dspy-rag-system/src/utils/config_manager.py` — Centralized config
+- `dspy-rag-system/src/utils/config_manager.py` - Centralized config
   handling
 
-- `dspy-rag-system/src/utils/logger.py` — Structured logging helpers
+- `dspy-rag-system/src/utils/logger.py` - Structured logging helpers
 
-- `scripts/auto_push_prompt.py` — Repository Maintenance Automation
+- `scripts/auto_push_prompt.py` - Repository Maintenance Automation
 
   - Interactive prompt for pushing changes after maintenance; git status
     checks and user confirmation.
 
-- `scripts/maintenance_push.sh` — Maintenance Push Wrapper
+- `scripts/maintenance_push.sh` - Maintenance Push Wrapper
 
   - Shell wrapper for auto-push prompt integration into maintenance
     workflows.
 
-- `400_guides/400_hydration-system-guide.md` — Complete Hydration System
+- `400_guides/400_hydration-system-guide.md` - Complete Hydration System
 
   - Comprehensive guide covering integration, testing, and role-specific
     strategies for memory rehydration.
@@ -236,7 +236,7 @@
 - Responsibilities split/merge across modules
 - Reliability/security features change the operational backbone
 
-2)  Also update cross‑links in:
+2)  Also update cross-links in:
 
 - `100_memory/100_cursor-memory-context.md` (Quick Links)
 - `400_guides/400_system-overview.md` (architecture references if
@@ -246,7 +246,7 @@
 3)  Validation:
 
 - Run `./dspy-rag-system/run_tests.sh` (where applicable)
-- Run `python3 scripts/doc_coherence_validator.py` for cross‑references
+- Run `python3 scripts/doc_coherence_validator.py` for cross-references
 
 ## 🛡️ Code Quality Standards for Critical Files
 
@@ -289,13 +289,13 @@ ruff check --select F841 dspy-rag-system/tests/
 ### Examples of Quality Standards:
 
 ``` python
-# ✅ Good: Tier 1/2 file with proper variable management
+# OK Good: Tier 1/2 file with proper variable management
 def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
     validated_data = validate_input(data)
     processed_result = transform_data(validated_data)
     return processed_result
 
-# ❌ Bad: Unused variable in critical file
+# X Bad: Unused variable in critical file
 def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
     validated_data = validate_input(data)
     unused_var = calculate_extra(data)  # F841 error - not allowed in Tier 1/2
@@ -305,7 +305,7 @@ def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
 
 ------------------------------------------------------------------------
 
-## 🔗 Cross‑References
+## 🔗 Cross-References
 
 - Memory quick ref → `100_memory/100_cursor-memory-context.md`
 
@@ -327,7 +327,7 @@ def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
   and documentation safety
 - v1.1: Added `doc_coherence_validator.py` to Tier 2 (High) -
   Documentation quality validation
-- v1.0 (initial): Added Tier 1–3 with criteria and maintenance steps
+- v1.0 (initial): Added Tier 1-3 with criteria and maintenance steps
 
 <!-- README_AUTOFIX_START -->
 

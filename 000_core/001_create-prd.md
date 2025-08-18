@@ -17,7 +17,7 @@ generate PRD for selected backlog item |
 
 
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- PRD creation workflow maintained
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- PRD creation workflow maintained
 
 - **Priority**: 🔥 Critical - Essential for project planning
 
@@ -223,7 +223,7 @@ comprehensive coding standards and quality gates
 
 # Product Requirements Document: [Project Name]
 
-> ⚠️**Auto-Skip Note**> This PRD was generated because either `points≥5` or `score_total<3.0`.
+> !️**Auto-Skip Note**> This PRD was generated because either `points≥5` or `score_total<3.0`.
 > Remove this banner if you manually forced PRD creation.
 
 ## 1. Executive Summary
@@ -399,7 +399,7 @@ robust and reliable implementations.
 
 - Next step: Use `000_core/002_generate-tasks.md` with this PRD (or a Backlog ID)
 
-- Input → PRD file; Output → 2–4 hour tasks with dependencies and gates
+- Input → PRD file; Output → 2-4 hour tasks with dependencies and gates
 
 <!-- README_AUTOFIX_START -->
 # Auto-generated sections for 001_create-prd.md

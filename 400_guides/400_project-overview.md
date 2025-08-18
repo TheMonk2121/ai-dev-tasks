@@ -33,7 +33,7 @@
 
 - **anchors**: `quick-start`, `mini-map`
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Project overview maintained
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Project overview maintained
 
 - **Priority**: 🔥 Critical - Essential for onboarding and orientation
 
@@ -225,7 +225,7 @@ alt="Example of starting on a task with process-task-list.md" />
 process-task-list.md</figcaption>
 </figure>
 
-### 5️⃣ AI-Optimized Execution with Strategic Checkpoints ✅
+### 5️⃣ AI-Optimized Execution with Strategic Checkpoints OK
 
 The AI system will automatically:
 
@@ -306,7 +306,7 @@ Podcast</figcaption>
 
 ### **System Documentation:**
 
-- **`400_guides/400_project-overview.md`**: This file — concise landing
+- **`400_guides/400_project-overview.md`**: This file - concise landing
   and quick start.
 - **`400_guides/400_system-overview.md`**: Canonical, detailed technical
   overview of the entire AI development ecosystem. Start here for

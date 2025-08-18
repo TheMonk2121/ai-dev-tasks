@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.12.123.11
 """
-Watch Folder 2.0 – hardened for production
+Watch Folder 2.0 - hardened for production
 Python 3.9 compatible
 """
 
@@ -76,16 +76,16 @@ class RAGFileHandler(FileSystemEventHandler):
             sys.path.append('.')
             from notification_system import NotificationSystem
             self.notification_system = NotificationSystem()
-            LOG.info("✅ Notification system initialized")
+            LOG.info("OK Notification system initialized")
         except Exception as e:
-            LOG.warning(f"⚠️  Notification system not available: {e}")
+            LOG.warning(f"!️  Notification system not available: {e}")
             self.notification_system = None
         
         LOG.info("Watching %s", self.watch)
         LOG.info("Processed files will be moved to: %s", self.processed)
         LOG.info("Supported extensions: %s", ', '.join(SAFE_EXT))
 
-    # watchdog passes subclass specific events – use common method
+    # watchdog passes subclass specific events - use common method
     def on_created(self, event: FileCreatedEvent):
         self._maybe_queue(Path(event.src_path))
 
@@ -139,7 +139,7 @@ class RAGFileHandler(FileSystemEventHandler):
                 LOG.info("Moved %s to processed folder", file_path.name)
                 
             else:
-                LOG.error("add_document failed for %s – %s",
+                LOG.error("add_document failed for %s - %s",
                           file_path.name, res.stderr.strip())
                 
         except subprocess.TimeoutExpired:
@@ -148,7 +148,7 @@ class RAGFileHandler(FileSystemEventHandler):
             LOG.exception("Unhandled error processing %s: %s", file_path.name, exc)
 
 class WatchService:
-    """Context-manager driven wrapper – handles graceful shutdown."""
+    """Context-manager driven wrapper - handles graceful shutdown."""
     def __init__(self, watch_dir="watch_folder", processed_dir="processed_documents",
                  workers: int = 4):
         self.watch = Path(watch_dir)
@@ -229,7 +229,7 @@ def main():
                 'action': 'shutdown',
                 'reason': 'keyboard_interrupt'
             })
-            LOG.info("✅ Watch folder stopped", extra={
+            LOG.info("OK Watch folder stopped", extra={
                 'component': 'watch_folder',
                 'action': 'shutdown',
                 'status': 'completed'

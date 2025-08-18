@@ -134,22 +134,22 @@ python3 scripts/validate_prd_backlog_linkage.py
 ## Validation Rules
 
 ### Required Fields
-- ✅ **Backlog Item**: Must reference valid B-XXX item
-- ✅ **Status**: Must be one of the defined status values
-- ✅ **Estimated Hours**: Must be a numeric value
-- ✅ **Dependencies**: Must include all three categories (upstream, downstream, blocking)
-- ✅ **Impact Scope**: Must include all three categories (direct, indirect, public contracts)
+- OK **Backlog Item**: Must reference valid B-XXX item
+- OK **Status**: Must be one of the defined status values
+- OK **Estimated Hours**: Must be a numeric value
+- OK **Dependencies**: Must include all three categories (upstream, downstream, blocking)
+- OK **Impact Scope**: Must include all three categories (direct, indirect, public contracts)
 
 ### Consistency Checks
-- ✅ **Backlog Reference**: PRD must reference existing backlog item
-- ✅ **PRD Reference**: Backlog item must reference PRD if it exists
-- ✅ **Status Sync**: Status must match between backlog and PRD
-- ✅ **Dependency Validity**: Referenced dependencies must exist
+- OK **Backlog Reference**: PRD must reference existing backlog item
+- OK **PRD Reference**: Backlog item must reference PRD if it exists
+- OK **Status Sync**: Status must match between backlog and PRD
+- OK **Dependency Validity**: Referenced dependencies must exist
 
 ### Quality Checks
-- ✅ **No Orphaned PRDs**: All PRDs must have backlog references
-- ✅ **No Missing PRDs**: Backlog items mentioning PRDs must have PRD files
-- ✅ **Complete Documentation**: All required fields must be populated
+- OK **No Orphaned PRDs**: All PRDs must have backlog references
+- OK **No Missing PRDs**: Backlog items mentioning PRDs must have PRD files
+- OK **Complete Documentation**: All required fields must be populated
 
 ## Examples
 
@@ -211,26 +211,26 @@ python3 scripts/validate_prd_backlog_linkage.py
 
 #### Success
 ```
-✅ All PRD-Backlog linkages are valid!
+OK All PRD-Backlog linkages are valid!
 🎉 PRD-Backlog linkage validation passed!
 ```
 
 #### Errors
 ```
-❌ Errors:
+X Errors:
    - PRD PRD-B-XXX missing backlog item reference
    - PRD PRD-B-XXX references non-existent backlog item B-XXX
 
-❌ Critical errors found. Please fix before proceeding.
+X Critical errors found. Please fix before proceeding.
 ```
 
 #### Warnings
 ```
-⚠️  Warnings:
+!️  Warnings:
    - Backlog item B-XXX has PRD but no reference in backlog metadata
    - PRD PRD-B-XXX references non-existent downstream dependency B-XXX
 
-✅ No critical errors found, but check warnings above.
+OK No critical errors found, but check warnings above.
 ```
 
 ## Integration Points

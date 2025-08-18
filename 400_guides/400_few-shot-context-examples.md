@@ -12,7 +12,7 @@
 
 {#tldr}
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Few-shot examples maintained
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Few-shot examples maintained
 
 - **Priority**: 📋 Medium - Pattern library and examples
 
@@ -94,7 +94,7 @@ Brief description
 
 Content here
 
-- –*Last Updated: 2024-08-07*`text**Expected Output:**`json {
+- -*Last Updated: 2024-08-07*`text**Expected Output:**`json {
   “structure_valid”: true, “has_purpose”: true, “has_toc”: true,
   “has_sections”: true, “has_timestamp”: true, “completeness_score”: 0.9
   }
@@ -109,7 +109,7 @@ elements**Validation:**Check for all required sections and formatting
 ### **1. Priority Scoring Analysis**
 
 - \*Context:**Analyzing backlog item priority and
-  scoring**Input:\*\*\`\`\`markdown \| B‑073 \| Few-Shot Context
+  scoring**Input:\*\*\`\`\`markdown \| B-073 \| Few-Shot Context
   Engineering Examples \| 🔥 \| 1 \| todo \| Create AI context
   engineering examples \| Few-Shot Examples + AI Pattern Recognition \|
   B-060 Documentation Coherence Validation System \|
@@ -143,8 +143,8 @@ execution order
 ### **3. Completion Status Tracking**
 
 - \*Context:**Tracking completion status and implementation
-  notes**Input:\*\*\`\`\`markdown \| C‑043 \| Deployment & Environment
-  Management Guide Implementation \| 📈 \| 2 \| ✅ done \| 2024-08-07 \|
+  notes**Input:\*\*\`\`\`markdown \| C-043 \| Deployment & Environment
+  Management Guide Implementation \| 📈 \| 2 \| OK done \| 2024-08-07 \|
   Comprehensive deployment documentation with environment strategy,
   deployment architecture, configuration management, monitoring,
   rollback procedures, security deployment, and deployment automation \|
@@ -964,7 +964,7 @@ WORKDIR /app
 
 ## Copy requirements first for better caching
 
-COPY requirements.txt . RUN pip install –no-cache-dir -r
+COPY requirements.txt . RUN pip install -no-cache-dir -r
 requirements.txt
 
 ## Copy application code
@@ -985,7 +985,7 @@ USER aiuser
 
 ## Health check
 
-HEALTHCHECK –interval=30s –timeout=10s –start-period=5s –retries=3  
+HEALTHCHECK -interval=30s -timeout=10s -start-period=5s -retries=3  
 CMD curl -f <http://localhost:5000/health> \|\| exit 1
 
 ## Expose port

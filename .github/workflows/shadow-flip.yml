@@ -93,12 +93,12 @@ jobs:
 
           github_output = os.getenv('GITHUB_OUTPUT')
           if preconditions_met or force_flip:
-              print("✅ Preconditions met or force flip enabled")
+              print("OK Preconditions met or force flip enabled")
               if github_output:
                   with open(github_output, 'a') as gh_out:
                       gh_out.write('ready=true\n')
           else:
-              print("❌ Preconditions not met:")
+              print("X Preconditions not met:")
               for issue in issues:
                   print(f"  - {issue}")
               if github_output:
@@ -137,7 +137,7 @@ jobs:
           with open(".github/pull_request_template_shadow_flip.md", "w") as f:
               f.write(pr_content)
 
-          print("✅ Shadow flip PR template created: .github/pull_request_template_shadow_flip.md")
+          print("OK Shadow flip PR template created: .github/pull_request_template_shadow_flip.md")
           PY
 
       - name: Upload validator report
@@ -161,7 +161,7 @@ jobs:
               shadow_count = len(shadow_violations)
 
               print(f"- **Shadow Violations**: {shadow_count}")
-              print(f"- **Status**: {'✅ READY' if shadow_count == 0 else '❌ NOT READY'}")
+              print(f"- **Status**: {'OK READY' if shadow_count == 0 else 'X NOT READY'}")
 
               if shadow_count == 0:
                   print("- **Action**: Ready for Shadow flip to FAIL")

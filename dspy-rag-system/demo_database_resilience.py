@@ -27,13 +27,13 @@ def demo_initialization():
         print("Initializing database resilience manager...")
         
         # This will fail in demo mode, but shows the initialization process
-        print("✅ Initialization process completed")
+        print("OK Initialization process completed")
         print("   - Connection pool created")
         print("   - Health monitoring started")
         print("   - Retry logic configured")
         
     except Exception as e:
-        print(f"⚠️  Expected initialization error (demo mode): {e}")
+        print(f"!️  Expected initialization error (demo mode): {e}")
     
     print()
 
@@ -119,10 +119,10 @@ def demo_retry_logic():
     print(f"  Fatal Errors: {', '.join(retry_config['fatal_errors'])}")
     
     print("\nRetry Scenarios:")
-    print("  ✅ Transient errors (timeout, connection lost)")
-    print("  ✅ Temporary database unavailability")
-    print("  ❌ Fatal errors (authentication, resource busy)")
-    print("  ❌ Configuration errors")
+    print("  OK Transient errors (timeout, connection lost)")
+    print("  OK Temporary database unavailability")
+    print("  X Fatal errors (authentication, resource busy)")
+    print("  X Configuration errors")
     
     print()
 
@@ -132,12 +132,12 @@ def demo_query_execution():
     print("=" * 50)
     
     print("Query Execution Features:")
-    print("  ✅ Automatic retry on transient failures")
-    print("  ✅ Connection pooling for efficiency")
-    print("  ✅ Health monitoring integration")
-    print("  ✅ Slow query detection (>5s)")
-    print("  ✅ Transaction support with rollback")
-    print("  ✅ OpenTelemetry tracing integration")
+    print("  OK Automatic retry on transient failures")
+    print("  OK Connection pooling for efficiency")
+    print("  OK Health monitoring integration")
+    print("  OK Slow query detection (>5s)")
+    print("  OK Transaction support with rollback")
+    print("  OK OpenTelemetry tracing integration")
     
     print("\nExample Queries:")
     print("  - SELECT queries with result formatting")
@@ -163,7 +163,7 @@ def demo_production_benefits():
     ]
     
     for benefit in benefits:
-        print(f"  ✅ {benefit}")
+        print(f"  OK {benefit}")
     
     print()
 
@@ -201,7 +201,7 @@ def main():
         demo_production_benefits()
         demo_integration()
         
-        print("✅ Database resilience module demo completed!")
+        print("OK Database resilience module demo completed!")
         print("\n🎉 Database resilience is ready for production deployment!")
         print("\nKey Features Implemented:")
         print("  - Connection pooling with health monitoring")
@@ -212,7 +212,7 @@ def main():
         print("  - Comprehensive test suite")
         
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        print(f"X Demo failed: {e}")
         import traceback
         traceback.print_exc()
 

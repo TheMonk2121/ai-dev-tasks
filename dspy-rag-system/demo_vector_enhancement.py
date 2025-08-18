@@ -61,12 +61,12 @@ def demo_vector_enhancement():
             # Create the recommended index
             success = vector_store.create_vector_index(index["table"], index["column"], index["type"])
             if success:
-                print("    ✅ Successfully created index")
+                print("    OK Successfully created index")
             else:
-                print("    ❌ Failed to create index")
+                print("    X Failed to create index")
 
     if optimization.get("performance_issues"):
-        print("⚠️  Performance Issues:")
+        print("!️  Performance Issues:")
         for issue in optimization["performance_issues"]:
             print(f"  - {issue['operation']}: {issue['suggestion']}")
 
@@ -111,9 +111,9 @@ def demo_vector_enhancement():
 
     success = vector_store.add_documents(sample_documents)
     if success:
-        print("✅ Successfully added sample documents")
+        print("OK Successfully added sample documents")
     else:
-        print("❌ Failed to add sample documents")
+        print("X Failed to add sample documents")
 
     # 4. Simulate Similarity Search
     print("\n🔍 4. Simulate Similarity Search")
@@ -142,10 +142,10 @@ def demo_vector_enhancement():
 
     if second_search_time < first_search_time:
         print(
-            f"✅ Cache improved performance by {((first_search_time - second_search_time) / first_search_time * 100):.1f}%"
+            f"OK Cache improved performance by {((first_search_time - second_search_time) / first_search_time * 100):.1f}%"
         )
     else:
-        print("⚠️  Cache didn't improve performance (expected for small datasets)")
+        print("!️  Cache didn't improve performance (expected for small datasets)")
 
     # 5. Performance Metrics
     print("\n📈 5. Performance Metrics")
@@ -183,7 +183,7 @@ def demo_vector_enhancement():
         for issue in optimization["performance_issues"]:
             print(f"  - {issue['operation']}: {issue['suggestion']}")
     else:
-        print("✅ No performance issues detected")
+        print("OK No performance issues detected")
 
     print("\n🎉 Vector Database Foundation Enhancement Demo Complete!")
     print("=" * 60)

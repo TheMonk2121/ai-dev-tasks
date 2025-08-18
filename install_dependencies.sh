@@ -19,7 +19,7 @@ if [ -f "venv/bin/activate" ]; then
     # shellcheck disable=SC1091
     source venv/bin/activate
 else
-    echo "❌ Error: Virtual environment activate script not found"
+    echo "X Error: Virtual environment activate script not found"
     exit 1
 fi
 
@@ -48,8 +48,8 @@ pip install -r requirements-conflict-detection.txt -c ../requirements-constraint
 cd ..
 
 # Verify installation
-echo "✅ Verifying installation..."
-python -c "import dspy, flask, psycopg2, pytest; print('✅ Core dependencies verified')"
+echo "OK Verifying installation..."
+python -c "import dspy, flask, psycopg2, pytest; print('OK Core dependencies verified')"
 
 echo ""
 echo "🎉 Installation complete!"

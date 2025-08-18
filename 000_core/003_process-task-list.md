@@ -14,11 +14,11 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Execution engine for processing task lists with state, auto‑advance, and HotFix | When running or modifying the AI
+| Execution engine for processing task lists with state, auto-advance, and HotFix | When running or modifying the AI
 task execution workflow | 1) Prepare a task list; 2) Start the Run loop; 3) Update `.ai_state.json`; 4) Use HotFix flow
 on failures |
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Task execution engine maintained
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Task execution engine maintained
 
 - **Priority**: 🔥 Critical - Essential for workflow automation
 
@@ -69,7 +69,7 @@ on failures |
 
 - Mark completed features in backlog as implemented
 - **Move completed items to "Completed Items" section** in backlog
-- Update status from "todo" to "✅ done" in backlog table
+- Update status from "todo" to "OK done" in backlog table
 - Add completion date and implementation notes
 - Add new discoveries or requirements to backlog
 - Update effort estimates based on actual implementation time

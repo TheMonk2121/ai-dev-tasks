@@ -29,13 +29,13 @@ print_status() {
     local message=$2
     case $status in
         "PASS")
-            echo -e "${GREEN}✅ PASS${NC}: $message"
+            echo -e "${GREEN}OK PASS${NC}: $message"
             ;;
         "FAIL")
-            echo -e "${RED}❌ FAIL${NC}: $message"
+            echo -e "${RED}X FAIL${NC}: $message"
             ;;
         "WARN")
-            echo -e "${YELLOW}⚠️  WARN${NC}: $message"
+            echo -e "${YELLOW}!️  WARN${NC}: $message"
             ;;
     esac
 }
@@ -215,7 +215,7 @@ main() {
     # In WARN mode, always exit successfully but show warnings
     if [ "$mode" = "WARN" ] && [ $exit_code -ne 0 ]; then
         echo ""
-        echo "⚠️  WARN mode - PR allowed but please address the issues above"
+        echo "!️  WARN mode - PR allowed but please address the issues above"
         exit 0
     fi
 

@@ -20,7 +20,7 @@
 
 Backlog link: B-080 (also B-022, B-027)
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Research file with content
 
 - **Priority**: 🔧 Medium - Research for implementation
 

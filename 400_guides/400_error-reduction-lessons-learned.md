@@ -46,7 +46,7 @@ Our systematic error reduction journey revealed that **most auto-fixes are dange
 
 **The Problem**: Using literal Unicode characters in fix scripts creates circular problems.
 
-**Example**: Script trying to fix `–` (en dash) contains `–` itself, causing RUF001 errors.
+**Example**: Script trying to fix `-` (en dash) contains `-` itself, causing RUF001 errors.
 
 **Solution**: Use Unicode escape sequences (`\u2013`) in scripts to avoid circular issues.
 
@@ -119,24 +119,24 @@ Created `scripts/smart_error_fix.py` that implements:
 
 | Error Type | Auto-Fix Safe? | Risk Level | Recommended Approach |
 |------------|----------------|------------|---------------------|
-| **RUF001** | ✅ Yes | Low | Use custom script with escape sequences |
-| **F401** | ✅ Yes | Low | Standard `--fix` |
-| **I001** | ✅ Yes | Low | Standard `--fix` |
-| **F541** | ✅ Yes | Low | Standard `--fix` |
-| **PT009** | ❌ No | High | Manual inspection required |
-| **B007** | ❌ No | High | Manual inspection required |
-| **RUF013** | ❌ No | High | Manual inspection required |
-| **F841** | ❌ No | High | Manual inspection required |
-| **RUF010** | ❌ No | Medium | Manual inspection required |
+| **RUF001** | OK Yes | Low | Use custom script with escape sequences |
+| **F401** | OK Yes | Low | Standard `--fix` |
+| **I001** | OK Yes | Low | Standard `--fix` |
+| **F541** | OK Yes | Low | Standard `--fix` |
+| **PT009** | X No | High | Manual inspection required |
+| **B007** | X No | High | Manual inspection required |
+| **RUF013** | X No | High | Manual inspection required |
+| **F841** | X No | High | Manual inspection required |
+| **RUF010** | X No | Medium | Manual inspection required |
 
 ## 🚨 Anti-Patterns to Avoid
 
 ### **1. Broad Auto-Fix Application**
 ```bash
-# ❌ DANGEROUS
+# X DANGEROUS
 ruff check --select PT009 --fix scripts/ dspy-rag-system/ tests/
 
-# ✅ SAFE
+# OK SAFE
 ruff check --select PT009 --fix tests/test_constitution_compliance.py
 ```
 
@@ -147,10 +147,10 @@ ruff check --select PT009 --fix tests/test_constitution_compliance.py
 
 ### **3. Using Literal Unicode in Scripts**
 ```python
-# ❌ DANGEROUS - Creates circular problems
-UNICODE_REPLACEMENTS = {'–': '-'}
+# X DANGEROUS - Creates circular problems
+UNICODE_REPLACEMENTS = {'-': '-'}
 
-# ✅ SAFE - Uses escape sequences
+# OK SAFE - Uses escape sequences
 UNICODE_REPLACEMENTS = {'\u2013': '-'}
 ```
 

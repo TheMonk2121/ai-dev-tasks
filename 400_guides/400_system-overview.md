@@ -20,7 +20,7 @@
 
 ## 🎯 **Current Status**
 
-- **Status**: ✅ **ACTIVE** - System overview maintained
+- **Status**: OK **ACTIVE** - System overview maintained
 
 - **Priority**: 🔥 Critical - Essential for technical understanding
 
@@ -50,7 +50,7 @@ FAIL mode.
 
 ### **Ratchet Failures**
 
-    ❌ RATCHET FAIL: readme increased (15 → 18) and overlaps changed files
+    X RATCHET FAIL: readme increased (15 → 18) and overlaps changed files
 
 **What it means**: A PR is trying to increase violations in a category
 that intersects with changed files.
@@ -59,7 +59,7 @@ that intersects with changed files.
 
 ### **Near-Expiry Warnings**
 
-    ⚠️ WARN: 000_core/000_backlog.md has xref-missing exception expiring in 3 days
+    !️ WARN: 000_core/000_backlog.md has xref-missing exception expiring in 3 days
 
 **What it means**: A waiver in the exception ledger is about to expire.
 
@@ -68,8 +68,8 @@ sections) before expiry.
 
 ### **Validator Flip Status**
 
-    ✅ Archive Flip: Ready (3/3 clean days)
-    ❌ Shadow Flip: Not ready (0/7 clean days)
+    OK Archive Flip: Ready (3/3 clean days)
+    X Shadow Flip: Not ready (0/7 clean days)
 
 **What it means**: Shows which categories are ready for FAIL mode
 activation.
@@ -354,7 +354,7 @@ Deployment** → Error recovery, human checkpoints, deployment
 - Specialized Agents (enhancements - load on demand)
 
 - Integration framework: see `cursor_ai_integration_framework.py`
-  (env‑toggled agent switching and native fallback)
+  (env-toggled agent switching and native fallback)
 
 - **Runtime Guard-Rails**: RAM pressure checks and model janitor
 
@@ -651,7 +651,7 @@ examples. Also see the component guide:
 
 #### **Categorization System**\| Category \| Keywords \| Priority \| Use Case \|
 
-\|———-\|———-\|———-\|———-\| \|**Pricing & Billing**\| pricing, cost,
+\|----\|----\|----\|----\| \|**Pricing & Billing**\| pricing, cost,
 billing \| High \| Financial documents \| \|**Legal & Contracts**\|
 contract, legal, terms \| High \| Legal compliance \| \|**Marketing &
 Campaigns**\| marketing, campaign, ad \| Medium \| Marketing materials
@@ -951,8 +951,8 @@ dependencies 3. **Services**: n8n for automation, Redis for caching 4.
 
 ### **Implementation Guides**-**`400_guides/400_file-analysis-guide.md`**: Systematic file analysis methodology
 
-- Includes the find‑or‑build (code reuse) heuristic: search before
-  writing, 70% reuse rule, tests‑first, and backlinking
+- Includes the find-or-build (code reuse) heuristic: search before
+  writing, 70% reuse rule, tests-first, and backlinking
 
 <!-- Removed legacy external model integration link to keep Cursor-native as the primary path -->
 
@@ -967,14 +967,14 @@ This system represents a comprehensive approach to AI-assisted
 development, combining structured workflows with intelligent automation
 to create a powerful development ecosystem.
 
-## Supported models (Cursor‑native)
+## Supported models (Cursor-native)
 
-- This system is documented and validated for Cursor‑native usage only.
+- This system is documented and validated for Cursor-native usage only.
 - For the current model list and selection, see the official docs:
   [Cursor Docs: Models](https://docs.cursor.com/models), or choose via
   Settings → AI → Models.
-- Third‑party model catalogs are intentionally omitted here to keep the
-  docs Cursor‑focused. Legacy/local runners (e.g., Ollama, LM Studio)
+- Third-party model catalogs are intentionally omitted here to keep the
+  docs Cursor-focused. Legacy/local runners (e.g., Ollama, LM Studio)
   are excluded from active docs and, if needed for reference, live only
   under `docs/legacy/**` or `600_archives/**`.
 

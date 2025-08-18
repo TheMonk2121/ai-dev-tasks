@@ -25,7 +25,7 @@ with sophisticated documentation, automated workflows, and intelligent task mana
 
 ## 🎯 **Start Here** New to this project? Follow this quick path
 
-1. **Read the 5‑minute overview** → [../400_guides/400_project-overview.md](../400_guides/400_project-overview.md) ← **START HERE**
+1. **Read the 5-minute overview** → [../400_guides/400_project-overview.md](../400_guides/400_project-overview.md) ← **START HERE**
 2. **Check current state** → [../100_memory/100_cursor-memory-context.md](../100_memory/100_cursor-memory-context.md)
 3. **See priorities/roadmap** → [000_backlog.md](000_backlog.md)
 4. **Understand architecture** → [../400_guides/400_system-overview.md](../400_guides/400_system-overview.md)
@@ -129,9 +129,9 @@ python3 ../scripts/process_tasks.py status
 ## 📊 **System Status**
 
 - **Current Focus**: B-011 Cursor Native AI + Specialized Agents Integration
-- **Infrastructure**: v0.3.1-rc3 Core Hardening ✅ completed
-- **Documentation**: Comprehensive cognitive scaffolding system ✅ completed
-- **Metadata System**: Advanced analytics and state management ✅ completed
+- **Infrastructure**: v0.3.1-rc3 Core Hardening OK completed
+- **Documentation**: Comprehensive cognitive scaffolding system OK completed
+- **Metadata System**: Advanced analytics and state management OK completed
 
 ## 🎯 **Getting Help**
 

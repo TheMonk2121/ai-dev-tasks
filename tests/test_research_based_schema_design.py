@@ -59,7 +59,7 @@ class TestResearchBasedSchemaDesign:
 
 ## Key Findings
 - Hybrid dense+sparse significantly improves recall/precision over pure vector search
-- Smaller, semantically coherent chunks (≈100–300 words/tokens) outperform large blocks
+- Smaller, semantically coherent chunks (≈100-300 words/tokens) outperform large blocks
 - Span-level grounding (character offsets) increases trust and enables automatic faithfulness checks
 
 ## Actionable Patterns

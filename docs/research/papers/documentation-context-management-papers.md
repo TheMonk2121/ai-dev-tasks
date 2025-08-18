@@ -153,7 +153,7 @@ Database and Retrieval mechanism
 ## 🚀**Implementation Plan**###**Phase 1: Immediate High-Priority Changes (Week 1-2)**1.**Set Up Vector Database and
 Basic Retrieval**(Priority: 🔥 High)
 2.**Create the "Critical Guidelines" Always-On Prompt**(Priority: 🔥 High)
-3.**Documentation Refactor – Part 1 (Critical Files)**(Priority: High)
+3.**Documentation Refactor - Part 1 (Critical Files)**(Priority: High)
 4.**Initial Multi-turn Process Enforcement**(Priority: High)
 
 ### **Phase 2: Medium-Term Enhancements (Week 3-4)**1.**Advanced Retrieval Tuning and Integration**2.**Finalize

@@ -220,7 +220,7 @@ class TestConstitutionComplianceChecker(unittest.TestCase):
         """Test compliance report generation."""
         # Test empty report (no violations)
         report = self.checker.generate_compliance_report()
-        self.assertIn("✅ All constitution rules are being followed", report)
+        self.assertIn("OK All constitution rules are being followed", report)
         
         # Add some violations and test report
         self.checker.violations = [
@@ -242,7 +242,7 @@ class TestConstitutionComplianceChecker(unittest.TestCase):
         
         report = self.checker.generate_compliance_report()
         self.assertIn("🚨 CRITICAL VIOLATIONS:", report)
-        self.assertIn("⚠️  WARNINGS:", report)
+        self.assertIn("!️  WARNINGS:", report)
         self.assertIn("Test violation", report)
         self.assertIn("Test warning", report)
     

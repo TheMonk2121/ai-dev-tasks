@@ -38,7 +38,7 @@ EOF
 # Load the service
 launchctl load ~/Library/LaunchAgents/com.danieljacobs.dspy-rag-watch.plist
 
-echo "✅ Watch folder service installed!"
+echo "OK Watch folder service installed!"
 echo "📁 Service will start automatically when you log in"
 echo "📄 Logs will be saved to:"
 echo "   - watch_folder.log (normal output)"

@@ -252,7 +252,7 @@ class TestBacklogParser:
         self.backlog_content = """
 # Backlog
 
-| B‑050 | Enhance 002 Task Generation with Automation | 🔥 | 5 | todo | Automate task generation process for improved efficiency | Task automation + workflow enhancement | 000_core/002_generate-tasks.md |
+| B-050 | Enhance 002 Task Generation with Automation | 🔥 | 5 | todo | Automate task generation process for improved efficiency | Task automation + workflow enhancement | 000_core/002_generate-tasks.md |
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:5, lessons:4, deps:[]}-->
 <!--score_total: 5.5-->
 <!-- do_next: Implement automated task generation enhancements -->
@@ -275,17 +275,17 @@ class TestBacklogParser:
         """Test BacklogParser initialization."""
         parser = BacklogParser(self.backlog_path)
         assert parser.backlog_path == Path(self.backlog_path)
-        assert "B‑050" in parser.content
+        assert "B-050" in parser.content
 
     @pytest.mark.unit
     @pytest.mark.tier3
     def test_parse_backlog_item(self):
         """Test parsing a specific backlog item."""
         parser = BacklogParser(self.backlog_path)
-        requirement = parser.parse_backlog_item("B‑050")
+        requirement = parser.parse_backlog_item("B-050")
 
         assert requirement is not None
-        assert requirement.id == "B‑050"
+        assert requirement.id == "B-050"
         assert requirement.title == "Enhance 002 Task Generation with Automation"
         assert requirement.priority == "Critical"  # 🔥 emoji
         assert requirement.effort_points == 5
@@ -295,7 +295,7 @@ class TestBacklogParser:
     def test_parse_nonexistent_backlog_item(self):
         """Test parsing a non-existent backlog item."""
         parser = BacklogParser(self.backlog_path)
-        requirement = parser.parse_backlog_item("B‑999")
+        requirement = parser.parse_backlog_item("B-999")
 
         assert requirement is None
 
@@ -304,7 +304,7 @@ class TestBacklogParser:
     def test_extract_metadata(self):
         """Test metadata extraction from backlog item."""
         parser = BacklogParser(self.backlog_path)
-        metadata = parser._extract_metadata("B‑050")
+        metadata = parser._extract_metadata("B-050")
 
         assert "est_hours" in metadata
         assert "acceptance" in metadata

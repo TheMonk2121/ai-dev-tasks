@@ -112,11 +112,11 @@ jobs:
               issues.append(f"Found {broken_links} broken internal links")
 
           if preconditions_met or os.getenv('INPUT_FORCE_FLIP') == 'true':
-              print("✅ Preconditions met or force flip enabled")
+              print("OK Preconditions met or force flip enabled")
               with open(os.environ['GITHUB_OUTPUT'], 'a') as gh_out:
                   gh_out.write('ready=true\n')
           else:
-              print("❌ Preconditions not met:")
+              print("X Preconditions not met:")
               for issue in issues:
                   print(f"  - {issue}")
               with open(os.environ['GITHUB_OUTPUT'], 'a') as gh_out:
@@ -154,7 +154,7 @@ jobs:
           with open(".github/pull_request_template_xref_flip.md", "w") as f:
               f.write(pr_content)
 
-          print("✅ XRef flip PR template created: .github/pull_request_template_xref_flip.md")
+          print("OK XRef flip PR template created: .github/pull_request_template_xref_flip.md")
           PY
 
       - name: Upload reports
@@ -188,7 +188,7 @@ jobs:
 
               print(f"- **XRef Violations**: {xref_count}")
               print(f"- **Broken Internal Links**: {broken_links}")
-              print(f"- **Status**: {'✅ READY' if broken_links == 0 else '❌ NOT READY'}")
+              print(f"- **Status**: {'OK READY' if broken_links == 0 else 'X NOT READY'}")
 
               if broken_links == 0:
                   print("- **Action**: Ready for XRef flip to FAIL")

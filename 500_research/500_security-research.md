@@ -15,7 +15,7 @@ Backlog link: B-066 (also B-003)
 |---|---|---|
 |  |  |  |
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Research file with content
 
 - **Priority**: 🔧 Medium - Research for implementation
 

@@ -28,12 +28,12 @@ def demo_backlog_scrubber():
         # Test reading backlog
         print("📖 Reading backlog file...")
         content = scrubber.read_backlog()
-        print(f"✅ Read {len(content)} characters")
+        print(f"OK Read {len(content)} characters")
         
         # Test parsing scores
         print("\n🔍 Parsing score metadata...")
         scores = scrubber.parse_score_metadata(content)
-        print(f"✅ Found {len(scores)} score entries")
+        print(f"OK Found {len(scores)} score entries")
         
         # Show some score examples
         print("\n📊 Score Examples:")
@@ -43,27 +43,27 @@ def demo_backlog_scrubber():
             print(f"     BV: {components['bv']}, TC: {components['tc']}, RR: {components['rr']}, LE: {components['le']}, Effort: {components['effort']}")
         
         # Test validation
-        print("\n✅ Validating scores...")
+        print("\nOK Validating scores...")
         validated_scores = scrubber.validate_scores(scores)
-        print(f"✅ Validated {len(validated_scores)} scores")
+        print(f"OK Validated {len(validated_scores)} scores")
         
         # Test dry run
         print("\n🧪 Testing dry run...")
         result = scrubber.scrub_backlog()
         
         if result["success"]:
-            print("✅ Backlog scrub completed successfully!")
+            print("OK Backlog scrub completed successfully!")
             print(f"   Items processed: {result['items_processed']}")
             print(f"   Scores updated: {result['scores_updated']}")
             print(f"   Errors found: {result['errors_found']}")
         else:
-            print("❌ Backlog scrub failed!")
+            print("X Backlog scrub failed!")
             print(f"   Error: {result.get('error', 'Unknown error')}")
         
         print()
         
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        print(f"X Demo failed: {e}")
         import traceback
         traceback.print_exc()
 
@@ -112,11 +112,11 @@ def demo_webhook_integration():
         print("📥 Webhook response:")
         print(json.dumps(webhook_response, indent=2))
         
-        print("\n✅ Webhook integration demo completed!")
+        print("\nOK Webhook integration demo completed!")
         print()
         
     except Exception as e:
-        print(f"❌ Webhook demo failed: {e}")
+        print(f"X Webhook demo failed: {e}")
         import traceback
         traceback.print_exc()
 
@@ -178,11 +178,11 @@ def demo_n8n_integration():
         print(json.dumps(n8n_workflow, indent=2))
         
         print("\n🔧 n8n Integration Features:")
-        print("  ✅ Webhook endpoint for triggering scrubs")
-        print("  ✅ Support for dry-run operations")
-        print("  ✅ Statistics and validation endpoints")
-        print("  ✅ Error handling and logging")
-        print("  ✅ Health check endpoint")
+        print("  OK Webhook endpoint for triggering scrubs")
+        print("  OK Support for dry-run operations")
+        print("  OK Statistics and validation endpoints")
+        print("  OK Error handling and logging")
+        print("  OK Health check endpoint")
         
         print("\n🚀 n8n Usage:")
         print("  1. Create webhook trigger in n8n")
@@ -190,11 +190,11 @@ def demo_n8n_integration():
         print("  3. Add function node to process response")
         print("  4. Schedule or trigger manually")
         
-        print("\n✅ n8n integration demo completed!")
+        print("\nOK n8n integration demo completed!")
         print()
         
     except Exception as e:
-        print(f"❌ n8n demo failed: {e}")
+        print(f"X n8n demo failed: {e}")
         import traceback
         traceback.print_exc()
 
@@ -215,7 +215,7 @@ def demo_production_benefits():
     ]
     
     for benefit in benefits:
-        print(f"  ✅ {benefit}")
+        print(f"  OK {benefit}")
     
     print()
 
@@ -253,7 +253,7 @@ def main():
         demo_production_benefits()
         demo_integration_points()
         
-        print("✅ Backlog scrubber demo completed!")
+        print("OK Backlog scrubber demo completed!")
         print("\n🎉 Backlog scrubber system is ready for production deployment!")
         print("\nKey Features Implemented:")
         print("  - Automated score calculation and updates")
@@ -264,7 +264,7 @@ def main():
         print("  - Health checks and status endpoints")
         
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        print(f"X Demo failed: {e}")
         import traceback
         traceback.print_exc()
 

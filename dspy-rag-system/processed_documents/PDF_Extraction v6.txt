@@ -5,10 +5,10 @@
 #### **Overview**
 We are developing a **scalable, high-accuracy pipeline** to extract **structured financial data** from **complex PDFs** containing tables, text, and scanned documents. The goal is to:
 
-✅ Extract structured tables and financial data from **PDF reports** (budgets, appraisal reports, tax documents).  
-✅ Handle **both text-based PDFs and scanned/image-based PDFs** efficiently.  
-✅ Use **AI/NLP techniques** to clean, structure, and validate the extracted data.  
-✅ Compare **different OCR and table extraction methods** to determine the best approach.  
+OK Extract structured tables and financial data from **PDF reports** (budgets, appraisal reports, tax documents).  
+OK Handle **both text-based PDFs and scanned/image-based PDFs** efficiently.  
+OK Use **AI/NLP techniques** to clean, structure, and validate the extracted data.  
+OK Compare **different OCR and table extraction methods** to determine the best approach.  
 
 ---
 
@@ -20,10 +20,10 @@ We are developing a **scalable, high-accuracy pipeline** to extract **structured
 - **Tables are not always formatted cleanly**, with multi-line headers and irregular cell spacing.  
 
 📌 **Issues Encountered**  
-🚧 **Mixed-Mode PDFs** – Some documents contain **both selectable text and scanned images**, requiring per-page classification.  
-🚧 **Multi-Line Headers & Merged Cells** – Many tables **don’t have clear column headers**, requiring **manual or AI-based reformatting**.  
-🚧 **Numbers & Currency Formatting** – Extracted financial data **may not be formatted consistently** (e.g., `$1,234M` vs. `1234000000`).  
-🚧 **Scalability & Memory Constraints** – Large PDFs require **efficient page-by-page processing to avoid memory overload**.  
+🚧 **Mixed-Mode PDFs** - Some documents contain **both selectable text and scanned images**, requiring per-page classification.  
+🚧 **Multi-Line Headers & Merged Cells** - Many tables **don’t have clear column headers**, requiring **manual or AI-based reformatting**.  
+🚧 **Numbers & Currency Formatting** - Extracted financial data **may not be formatted consistently** (e.g., `$1,234M` vs. `1234000000`).  
+🚧 **Scalability & Memory Constraints** - Large PDFs require **efficient page-by-page processing to avoid memory overload**.  
 
 📌 **Assumptions & Constraints**  
 🔹 We assume **most financial data is stored in tables**, but some values **may be embedded in text** and need **NLP parsing**.  
@@ -34,7 +34,7 @@ We are developing a **scalable, high-accuracy pipeline** to extract **structured
 
 ### **Key Refinements & Optimizations (Based on Latest Feedback)**
 
-✅ **Page-Level Classification & Mixed Extraction Methods**  
+OK **Page-Level Classification & Mixed Extraction Methods**  
    - **Classify each page independently** as text-based or scanned.  
    - **Use metadata-driven checks** to detect embedded fonts and identify mixed-mode PDFs.  
    - **Route pages accordingly:**  
@@ -42,12 +42,12 @@ We are developing a **scalable, high-accuracy pipeline** to extract **structured
      - Scanned → OCR (Tesseract, AWS Textract)  
    - **If a page contains partial text and images, OCR only the relevant sections** (e.g., tables).  
 
-✅ **Confidence-Based OCR Reprocessing**  
+OK **Confidence-Based OCR Reprocessing**  
    - **Extract confidence scores from Tesseract** (using `pytesseract.image_to_data()`).  
    - **If confidence is too low**, re-run the page with a different `--psm` setting or use AWS Textract.  
    - **Log OCR confidence levels & error metadata** for monitoring & debugging.  
 
-✅ **Advanced Table Detection & Parsing**  
+OK **Advanced Table Detection & Parsing**  
    - **Bounding Box Analysis**: Use `PyMuPDF` or AWS Textract to extract **table regions** before parsing.  
    - **Adaptive Extraction Strategy**:  
      - Try **Camelot Lattice** for structured grid tables.  
@@ -56,31 +56,31 @@ We are developing a **scalable, high-accuracy pipeline** to extract **structured
    - **Multi-Line Header Handling**: Detect when headers span multiple rows and reconstruct them.  
    - **Segment large multi-table pages** into smaller regions for better accuracy.  
 
-✅ **Financial Data Normalization & Validation**  
+OK **Financial Data Normalization & Validation**  
    - Convert financial values: `$1.2M → 1,200,000`, `1.234B → 1,234,000,000`.  
    - **Use regex and rule-based logic** to ensure tax rates, interest percentages, and revenue figures **follow expected ranges**.  
-   - **Validate extracted tables**: Ensure columns containing percentages are **0–100%**, and currency values are **non-negative** unless expected.  
+   - **Validate extracted tables**: Ensure columns containing percentages are **0-100%**, and currency values are **non-negative** unless expected.  
    - **Check subtotals vs. totals**: If table sums do not match, flag them for review.  
 
-✅ **LLM-Based Post-Processing & Error Correction**  
+OK **LLM-Based Post-Processing & Error Correction**  
    - Use GPT/NLP to **fix OCR misreads** (`I` vs. `1`, `S` vs. `5`, etc.).  
    - Implement **few-shot learning** to reconstruct table structure from messy OCR outputs.  
    - **Named Entity Recognition (NER)**: Use AI models to classify extracted values as “Revenue,” “Net Profit,” etc.  
    - **Ensure table consistency**: If row/column counts differ across the table, prompt LLMs to align them correctly.  
 
-✅ **Scalability & Performance Improvements**  
+OK **Scalability & Performance Improvements**  
    - **Cache OCR results per page** to avoid redundant processing.  
    - **Queue-based processing** (Celery, RabbitMQ) to scale OCR and table parsing independently.  
    - **Parallel extraction for large PDFs**: Extract page classifications first, then spawn parallel tasks for OCR vs. text-based extraction.  
    - **Store intermediate results** for each page (OCR’d text, bounding boxes, partial tables) to avoid reprocessing the entire document when debugging.  
 
-✅ **Human-in-the-Loop Review & AI Training**  
+OK **Human-in-the-Loop Review & AI Training**  
    - **Flag low-confidence extractions** for manual review.  
    - **Store corrections in a training dataset** to fine-tune the extraction models over time.  
    - **Use Active Learning**: Let human reviewers **improve AI performance over multiple iterations**.  
    - **Develop an interactive review UI** where users can validate and correct extracted tables.  
 
-✅ **Structured Output & Database Integration**  
+OK **Structured Output & Database Integration**  
    - Store tables as **JSON objects** with labeled metadata (e.g., `"column": "Revenue", "value": 1250000`).  
    - **Ensure outputs are BI-tool compatible** (e.g., Pandas, SQL, Power BI, Tableau).  
    - **Export extracted data to a structured schema** for integration with feasibility and market reports.  
@@ -90,7 +90,7 @@ We are developing a **scalable, high-accuracy pipeline** to extract **structured
 ### **Next Steps & Open Questions for Refinement**
 🔹 **What’s the best way to integrate bounding box detection for table regions?**  
 🔹 **Should we fine-tune an LLM on financial tables, or use a generic GPT-based parser?**  
-🔹 **What’s the best approach for multi-line headers—rules-based, ML-based, or hybrid?**  
+🔹 **What’s the best approach for multi-line headers-rules-based, ML-based, or hybrid?**  
 🔹 **How can we optimize caching for incremental processing when a document is updated?**  
 
 🚀 **What additional refinements would you suggest?**  

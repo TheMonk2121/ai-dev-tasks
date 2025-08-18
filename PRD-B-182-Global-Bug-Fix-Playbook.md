@@ -52,9 +52,9 @@
 ### High-Level Solution
 A three-layer enforcement system that brings CS-level rigor to solo debugging:
 
-1. **Layer A – Preset (soft)**: One-keystroke Chat Preset ("Run Bug-Fix Playbook") that injects structured prompt
-2. **Layer B – Hot-Zone Rules (targeted)**: Multi-framework aware Cursor rules scoped to fragile modules with commit message detection
-3. **Layer C – PR/CI Guard (hard)**: PR template sections + CI enforcement based on Conventional Commits
+1. **Layer A - Preset (soft)**: One-keystroke Chat Preset ("Run Bug-Fix Playbook") that injects structured prompt
+2. **Layer B - Hot-Zone Rules (targeted)**: Multi-framework aware Cursor rules scoped to fragile modules with commit message detection
+3. **Layer C - PR/CI Guard (hard)**: PR template sections + CI enforcement based on Conventional Commits
 
 ### Key Features
 - **Global Bug-Fix Playbook**: Structured, versioned debugging workflow
@@ -148,7 +148,7 @@ A three-layer enforcement system that brings CS-level rigor to solo debugging:
 - Logs / Error:
 - Environment:
 - Dependencies: Direct | Upstream | Downstream
-- Invariants (2–5 truths that must hold):
+- Invariants (2-5 truths that must hold):
 
 ## Dual Review
 ### 🔴 Red (risks / root causes / questions)
@@ -158,7 +158,7 @@ A three-layer enforcement system that brings CS-level rigor to solo debugging:
 - Chosen Fix:
 - Didn't Touch (and why):
 - Blast Radius: Direct | Upstream | Downstream | Public contracts
-- Confidence (0–1):
+- Confidence (0-1):
 - Test Plan: Repro → Guardrail
 - Rollout & Observe (optional): flag, log, metric
 ```

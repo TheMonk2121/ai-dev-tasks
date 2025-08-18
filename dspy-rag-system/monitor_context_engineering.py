@@ -154,7 +154,7 @@ class ContextEngineeringMonitor:
         print("=" * 80)
         print(f"⏰ Uptime: {status['uptime_hours']} hours")
         print(f"📊 Total Queries: {status['total_queries']}")
-        print(f"✅ Success Rate: {status['success_rate']:.1%}")
+        print(f"OK Success Rate: {status['success_rate']:.1%}")
         print(f"🚨 Hallucination Rate: {status['hallucination_rate']:.1%}")
         print(f"🎯 Average Confidence: {status['average_confidence']:.3f}")
         print(f"⚡ Average Latency: {status['average_latency_ms']:.1f}ms")
@@ -169,7 +169,7 @@ class ContextEngineeringMonitor:
         # Recent activity
         print("\n🔄 Recent Activity:")
         for i, query in enumerate(report["recent_queries"][-5:], 1):
-            hallucination_indicator = "🚨" if query["hallucination_detected"] else "✅"
+            hallucination_indicator = "🚨" if query["hallucination_detected"] else "OK"
             print(f"  {i}. {hallucination_indicator} {query['query']}")
             print(f"     Model: {query['selected_model']} | Confidence: {query['confidence']:.2f} | Latency: {query['latency_ms']:.1f}ms")
         
@@ -218,7 +218,7 @@ def interactive_monitoring():
             result = monitor.process_query(user_input)
             
             if result["status"] == "success":
-                print(f"✅ Selected Model: {result['selected_model']}")
+                print(f"OK Selected Model: {result['selected_model']}")
                 print(f"🎯 Confidence: {result['confidence']:.2f}")
                 print(f"🧠 Reasoning: {result['reasoning']}")
                 
@@ -233,13 +233,13 @@ def interactive_monitoring():
                     monitoring = result["monitoring"]
                     print(f"📊 Latency: {monitoring['latency_ms']:.1f}ms")
             else:
-                print(f"❌ Routing failed: {result.get('error', 'Unknown error')}")
+                print(f"X Routing failed: {result.get('error', 'Unknown error')}")
             
         except KeyboardInterrupt:
             print("\n👋 Exiting monitor...")
             break
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"X Error: {e}")
     
     # Print final report
     print("\n📊 Final Report:")
@@ -272,12 +272,12 @@ def batch_test_monitoring():
         result = monitor.process_query(query)
         
         if result["status"] == "success":
-            print(f"✅ {result['selected_model']} | Confidence: {result['confidence']:.2f}")
+            print(f"OK {result['selected_model']} | Confidence: {result['confidence']:.2f}")
             
             if "validation" in result and result["validation"]["hallucination_detected"]:
                 print("🚨 Hallucination detected!")
         else:
-            print(f"❌ Failed: {result.get('error', 'Unknown error')}")
+            print(f"X Failed: {result.get('error', 'Unknown error')}")
     
     # Print final dashboard
     print("\n📊 Final Monitoring Dashboard:")

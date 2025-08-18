@@ -31,7 +31,7 @@
 - **do next**: Scan the headings below and follow any ‘Quick Start’ or
   ‘Usage’ sections.
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- n8n backlog scrubber operational
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- n8n backlog scrubber operational
 
 - **Priority**: ⚡ High - Automated backlog management
 

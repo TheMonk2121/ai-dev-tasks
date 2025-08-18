@@ -4,7 +4,7 @@ echo "🚀 Starting Document Management Dashboard..."
 
 # Check if we're in the right directory
 if [ ! -f "dashboard.py" ]; then
-    echo "❌ Error: dashboard.py not found. Please run this script from the dashboard directory."
+    echo "X Error: dashboard.py not found. Please run this script from the dashboard directory."
     exit 1
 fi
 
@@ -19,9 +19,9 @@ try:
         user='danieljacobs'
     )
     conn.close()
-    print('✅ Database connection successful')
+    print('OK Database connection successful')
 except Exception as e:
-    print(f'❌ Database connection failed: {e}')
+    print(f'X Database connection failed: {e}')
     exit(1)
 "
 

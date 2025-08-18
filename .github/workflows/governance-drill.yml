@@ -62,12 +62,12 @@ jobs:
           echo "### Next Steps"
           echo ""
           if [ "${{ github.event.inputs.confirm }}" = "true" ]; then
-            echo "⚠️ **LIVE MODE**: Changes were made to the repository"
+            echo "!️ **LIVE MODE**: Changes were made to the repository"
             echo "- Review changes in this PR"
             echo "- Verify all systems are functioning correctly"
             echo "- Monitor for any unexpected behavior"
           else
-            echo "✅ **DRY-RUN MODE**: No changes were made"
+            echo "OK **DRY-RUN MODE**: No changes were made"
             echo "- Review test results above"
             echo "- If tests passed, consider running in LIVE mode"
             echo "- If tests failed, investigate and fix issues"

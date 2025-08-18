@@ -165,11 +165,11 @@ Phase 1: Initial Draft
 
 Phase 2: Red Review
 - Critiques, risks, alternatives, challenge questions
-- Severity score (0.0–1.0)
+- Severity score (0.0-1.0)
 
 Phase 3: Blue Review
 - Support points, enhancement suggestions, implementation guidance
-- Confidence score (0.0–1.0)
+- Confidence score (0.0-1.0)
 
 Phase 4: Consensus Feedback
 - Feedback & refinements

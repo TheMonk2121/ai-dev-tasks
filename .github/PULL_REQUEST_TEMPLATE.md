@@ -21,13 +21,13 @@
 - **Logs / Error**: Relevant error messages, stack traces, logs
 - **Environment**: OS, dependencies, configuration
 - **Dependencies**: Direct | Upstream | Downstream
-- **Invariants**: 2–5 truths that must hold for the system to work correctly
+- **Invariants**: 2-5 truths that must hold for the system to work correctly
 
 ### Fix Plan
 - **Chosen Fix**: Description of the implemented solution
 - **Didn't Touch**: What was intentionally left unchanged and why
 - **Blast Radius**: Direct | Upstream | Downstream | Public contracts
-- **Confidence (0–1)**: Confidence level in the fix
+- **Confidence (0-1)**: Confidence level in the fix
 
 ### Test Plan
 - **Repro Test**: Test that demonstrates the original bug - should fail before fix, pass after

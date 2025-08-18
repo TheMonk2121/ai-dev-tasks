@@ -527,7 +527,7 @@ def package_bundle(
     for e in evidence:
         evidence_text.append(f"[{e['path']}]")
         evidence_text.append(e["gist"])
-        evidence_text.append(f"— {e['why']}")
+        evidence_text.append(f"- {e['why']}")
         evidence_text.append("")
 
     # Combine all content
@@ -714,7 +714,7 @@ def rehydrate(
         for d in fused:
             d["score"] = d.get("sim", 0.0)
 
-    # 5) Low‑confidence anchor uplift (tiny, deterministic epsilon)
+    # 5) Low-confidence anchor uplift (tiny, deterministic epsilon)
     if sim_top < LOW_CONF_SIM and expand_query != "off":
         eps = 0.02 + 0.05 * max(0.0, min(1.0, stability))
         for d in fused:

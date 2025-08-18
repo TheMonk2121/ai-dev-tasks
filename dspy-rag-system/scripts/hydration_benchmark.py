@@ -58,9 +58,9 @@ def benchmark_bundle_creation():
 
         results[f"{role}_{task}"] = result
 
-        print(f"  ✅ Time: {creation_time:.3f}s")
-        print(f"  ✅ Sections: {result['sections']}")
-        print(f"  ✅ Tokens: {result['tokens']}/{budget} ({result['efficiency']:.1%})")
+        print(f"  OK Time: {creation_time:.3f}s")
+        print(f"  OK Sections: {result['sections']}")
+        print(f"  OK Tokens: {result['tokens']}/{budget} ({result['efficiency']:.1%})")
 
     # Calculate statistics
     times = [r["creation_time"] for r in results.values()]
@@ -143,7 +143,7 @@ def benchmark_memory_usage():
         }
 
     except ImportError:
-        print("⚠️  psutil not available, skipping memory benchmark")
+        print("!️  psutil not available, skipping memory benchmark")
         print("💡 To enable memory benchmarking, install psutil:")
         print("   pip install psutil")
         return None
@@ -231,7 +231,7 @@ def stress_test_concurrent_bundles():
         print(f"  Average sections: {avg_sections:.1f}")
 
         if errors:
-            print("\n❌ Errors encountered:")
+            print("\nX Errors encountered:")
             for error in errors[:5]:  # Show first 5 errors
                 print(f"  Task {error['task_id']}: {error['error']}")
 
@@ -248,7 +248,7 @@ def stress_test_concurrent_bundles():
         }
 
     except Exception as e:
-        print(f"❌ Stress test failed: {e}")
+        print(f"X Stress test failed: {e}")
         return None
 
 
@@ -281,14 +281,14 @@ def benchmark_token_budgets():
                 "sections": bundle.meta.get("sections", 0),
             }
 
-            print(f"  ✅ Tokens used: {tokens_used}")
-            print(f"  ✅ Efficiency: {efficiency:.1%}")
-            print(f"  ✅ Creation time: {creation_time:.3f}s")
-            print(f"  ✅ Sections: {result['sections']}")
+            print(f"  OK Tokens used: {tokens_used}")
+            print(f"  OK Efficiency: {efficiency:.1%}")
+            print(f"  OK Creation time: {creation_time:.3f}s")
+            print(f"  OK Sections: {result['sections']}")
 
         except Exception as e:
             result = {"success": False, "error": str(e), "budget": budget}
-            print(f"  ❌ Failed: {e}")
+            print(f"  X Failed: {e}")
 
         results[budget] = result
 
@@ -349,41 +349,41 @@ def generate_performance_report():
 
     if bundle_performance and bundle_performance["summary"]["avg_time"] < 5.0:
         performance_score += 25
-        assessments.append("✅ Bundle creation performance: EXCELLENT")
+        assessments.append("OK Bundle creation performance: EXCELLENT")
     elif bundle_performance and bundle_performance["summary"]["avg_time"] < 10.0:
         performance_score += 15
-        assessments.append("⚠️  Bundle creation performance: GOOD")
+        assessments.append("!️  Bundle creation performance: GOOD")
     else:
-        assessments.append("❌ Bundle creation performance: NEEDS IMPROVEMENT")
+        assessments.append("X Bundle creation performance: NEEDS IMPROVEMENT")
 
     if memory_usage and memory_usage["avg_increase_mb"] < 10.0:
         performance_score += 25
-        assessments.append("✅ Memory efficiency: EXCELLENT")
+        assessments.append("OK Memory efficiency: EXCELLENT")
     elif memory_usage and memory_usage["avg_increase_mb"] < 20.0:
         performance_score += 15
-        assessments.append("⚠️  Memory efficiency: GOOD")
+        assessments.append("!️  Memory efficiency: GOOD")
     elif memory_usage is None:
-        assessments.append("⚠️  Memory efficiency: NOT TESTED (psutil not available)")
+        assessments.append("!️  Memory efficiency: NOT TESTED (psutil not available)")
     else:
-        assessments.append("❌ Memory efficiency: NEEDS IMPROVEMENT")
+        assessments.append("X Memory efficiency: NEEDS IMPROVEMENT")
 
     if stress_results and stress_results["success_rate"] > 0.95:
         performance_score += 25
-        assessments.append("✅ Stress test performance: EXCELLENT")
+        assessments.append("OK Stress test performance: EXCELLENT")
     elif stress_results and stress_results["success_rate"] > 0.90:
         performance_score += 15
-        assessments.append("⚠️  Stress test performance: GOOD")
+        assessments.append("!️  Stress test performance: GOOD")
     else:
-        assessments.append("❌ Stress test performance: NEEDS IMPROVEMENT")
+        assessments.append("X Stress test performance: NEEDS IMPROVEMENT")
 
     if bundle_performance and bundle_performance["summary"]["avg_efficiency"] > 0.7:
         performance_score += 25
-        assessments.append("✅ Token efficiency: EXCELLENT")
+        assessments.append("OK Token efficiency: EXCELLENT")
     elif bundle_performance and bundle_performance["summary"]["avg_efficiency"] > 0.5:
         performance_score += 15
-        assessments.append("⚠️  Token efficiency: GOOD")
+        assessments.append("!️  Token efficiency: GOOD")
     else:
-        assessments.append("❌ Token efficiency: NEEDS IMPROVEMENT")
+        assessments.append("X Token efficiency: NEEDS IMPROVEMENT")
 
     summary["overall_summary"]["performance_score"] = performance_score
     summary["overall_summary"]["assessments"] = assessments
@@ -424,14 +424,14 @@ def main():
             print("\n🎉 EXCELLENT PERFORMANCE!")
             return 0
         elif performance_score >= 60:
-            print("\n✅ GOOD PERFORMANCE")
+            print("\nOK GOOD PERFORMANCE")
             return 0
         else:
-            print("\n⚠️  PERFORMANCE NEEDS IMPROVEMENT")
+            print("\n!️  PERFORMANCE NEEDS IMPROVEMENT")
             return 1
 
     except Exception as e:
-        print(f"\n❌ Benchmark failed: {e}")
+        print(f"\nX Benchmark failed: {e}")
         import traceback
 
         traceback.print_exc()

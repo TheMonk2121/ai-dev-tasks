@@ -61,7 +61,7 @@ class _RAGShim:
         # PRIMARY: Use HybridVectorStore (dashboard contract)
         primary_ok, sources = self._primary_search(q)
 
-        # FALLBACK: Enhanced store (read-only) — only if explicitly enabled AND we can embed
+        # FALLBACK: Enhanced store (read-only) - only if explicitly enabled AND we can embed
         degraded = not primary_ok
         if (not sources) and (FALLBACK_MODE == "enhanced") and self._enhanced and self._embed_fn:
             try:

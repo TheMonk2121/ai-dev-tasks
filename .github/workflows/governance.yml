@@ -119,7 +119,7 @@ jobs:
               print("| Category | Violations | Fail Mode |")
               print("|----------|------------|-----------|")
               for cat, info in r.get("categories", {}).items():
-                  fail_flag = "✅" if info.get("fail") else "❌"
+                  fail_flag = "OK" if info.get("fail") else "X"
                   print(f"| {cat} | {info.get('violations', 0)} | {fail_flag} |")
               print()
               print("### Top Impacted Files")

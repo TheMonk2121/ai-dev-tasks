@@ -18,7 +18,7 @@ except ImportError:
 
 # Setup imports
 if not setup_dspy_imports():
-    print("❌ Error: Could not setup DSPy import paths")
+    print("X Error: Could not setup DSPy import paths")
     sys.exit(1)
 
 # Get common imports
@@ -39,11 +39,11 @@ try:
         from dspy_modules.vector_store import HybridVectorStore
 
 except KeyError as e:
-    print(f"❌ Error: Missing required import: {e}")
+    print(f"X Error: Missing required import: {e}")
     print("💡 Available imports:", list(imports.keys()))
     sys.exit(1)
 except ImportError as e:
-    print(f"❌ Error: Could not import HybridVectorStore: {e}")
+    print(f"X Error: Could not import HybridVectorStore: {e}")
     print("💡 This is due to relative import issues in the vector_store module")
     sys.exit(1)
 
@@ -148,9 +148,9 @@ def main():
 
         if success:
             success_count += 1
-            print(f"✅ Successfully added: {file_path}")
+            print(f"OK Successfully added: {file_path}")
         else:
-            print(f"❌ Failed to add: {file_path}")
+            print(f"X Failed to add: {file_path}")
 
     print(f"\n🎉 Summary: {success_count}/{total_count} documents added successfully")
 

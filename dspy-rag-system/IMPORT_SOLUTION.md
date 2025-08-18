@@ -43,7 +43,7 @@ except ImportError:
 
 # Setup imports
 if not setup_dspy_imports():
-    print("❌ Error: Could not setup DSPy import paths")
+    print("X Error: Could not setup DSPy import paths")
     sys.exit(1)
 
 # Get common imports
@@ -52,7 +52,7 @@ try:
     extract_anchor_metadata = imports['extract_anchor_metadata']
     extract_anchor_metadata_from_file = imports['extract_anchor_metadata_from_file']
 except KeyError as e:
-    print(f"❌ Error: Missing required import: {e}")
+    print(f"X Error: Missing required import: {e}")
     sys.exit(1)
 ```
 
@@ -100,9 +100,9 @@ python3 setup_imports.py
 **Expected Output:**
 ```
 🧪 Testing DSPy RAG System Import Setup
-✅ Import paths setup successful
-✅ All required imports available
-✅ Common imports loaded: ['extract_anchor_metadata', 'extract_anchor_metadata_from_file', 'get_database_manager', 'setup_logger', 'get_logger']
+OK Import paths setup successful
+OK All required imports available
+OK Common imports loaded: ['extract_anchor_metadata', 'extract_anchor_metadata_from_file', 'get_database_manager', 'setup_logger', 'get_logger']
 ```
 
 ### **2. Test Script Execution:**
@@ -135,7 +135,7 @@ except ImportError:
 
 # Setup imports
 if not setup_dspy_imports():
-    print("❌ Error: Could not setup DSPy import paths")
+    print("X Error: Could not setup DSPy import paths")
     sys.exit(1)
 ```
 
@@ -147,7 +147,7 @@ try:
     # Extract the functions you need
     function_name = imports['function_name']
 except KeyError as e:
-    print(f"❌ Error: Missing required import: {e}")
+    print(f"X Error: Missing required import: {e}")
     sys.exit(1)
 ```
 
@@ -161,12 +161,12 @@ If the script has long lines, add to `pyproject.toml`:
 
 ## 🎉 **Benefits Achieved**
 
-1. **✅ Consistent Imports**: All scripts now use the same import pattern
-2. **✅ Error Handling**: Proper error messages when imports fail
-3. **✅ Linter Compatibility**: PyRight and Ruff can now resolve imports
-4. **✅ Runtime Reliability**: Scripts work consistently across different environments
-5. **✅ Maintainability**: Centralized import logic is easy to update
-6. **✅ Fallback Support**: Graceful degradation if import utility fails
+1. **OK Consistent Imports**: All scripts now use the same import pattern
+2. **OK Error Handling**: Proper error messages when imports fail
+3. **OK Linter Compatibility**: PyRight and Ruff can now resolve imports
+4. **OK Runtime Reliability**: Scripts work consistently across different environments
+5. **OK Maintainability**: Centralized import logic is easy to update
+6. **OK Fallback Support**: Graceful degradation if import utility fails
 
 ## 🚀 **Next Steps**
 

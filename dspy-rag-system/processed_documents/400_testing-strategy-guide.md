@@ -8,7 +8,7 @@
 {#tldr}
 
 ## 🎯 **Current Status**
-- **Status**: ✅ **ACTIVE** - Testing strategy maintained
+- **Status**: OK **ACTIVE** - Testing strategy maintained
 - **Priority**: 🔥 Critical - Quality assurance and testing
 - **Points**: 5 - High complexity, quality critical
 - **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_guides/400_system-overview.md
@@ -22,9 +22,9 @@
 - **Pytest with markers**: `./run_tests.sh --tiers 1 --kinds smoke`
 
 ### **Legacy Approach (Avoid):**
-- ❌ `comprehensive_test_suite.py` for new development
-- ❌ Manual `sys.path` manipulation in test files
-- ❌ File-based test selection (`./run_tests.sh all`)
+- X `comprehensive_test_suite.py` for new development
+- X Manual `sys.path` manipulation in test files
+- X File-based test selection (`./run_tests.sh all`)
 
 ## 🔎 TL;DR
 
@@ -315,7 +315,7 @@ class TestAIEcosystemE2E(unittest.TestCase):
 
 - --
 
-## ✅ Quality Gates
+## OK Quality Gates
 
 ### **1. Code Quality Gates**####**Static Code Analysis**```python
 
@@ -778,9 +778,9 @@ class TestingPipeline:
 
                 self.check_quality_gates(test_suite, suite_results)
 
-                print(f"✅ {test_suite} passed")
+                print(f"OK {test_suite} passed")
             except QualityGateException as e:
-                print(f"❌ {test_suite} failed: {e}")
+                print(f"X {test_suite} failed: {e}")
                 results[test_suite] = {"error": str(e)}
 
         return results
@@ -1069,10 +1069,10 @@ def main():
                 all_passed = False
 
         if all_passed:
-            print("\n✅ All tests passed!")
+            print("\nOK All tests passed!")
             sys.exit(0)
         else:
-            print("\n❌ Some tests failed!")
+            print("\nX Some tests failed!")
             sys.exit(1)
     else:
         success = run_tests(args.test_type, args)

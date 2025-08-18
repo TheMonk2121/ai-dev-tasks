@@ -55,13 +55,13 @@ CONTEXT_INDEX -->
 
 ## ⚡ AI Rehydration Quick Start {#quick-start}
 
-Read these files in order (1–2 min total):
+Read these files in order (1-2 min total):
 
-1. **`400_guides/400_project-overview.md`** – 5-minute overview and workflow ← **START HERE**
-2. **`100_memory/100_cursor-memory-context.md`** – current state and rules
-3. **`000_core/000_backlog.md`** – priorities and dependencies
-4. **`400_guides/400_system-overview.md`** – architecture and components
-5. **`400_guides/400_cursor-context-engineering-guide.md`** – relationships and reading order
+1. **`400_guides/400_project-overview.md`** - 5-minute overview and workflow ← **START HERE**
+2. **`100_memory/100_cursor-memory-context.md`** - current state and rules
+3. **`000_core/000_backlog.md`** - priorities and dependencies
+4. **`400_guides/400_system-overview.md`** - architecture and components
+5. **`400_guides/400_cursor-context-engineering-guide.md`** - relationships and reading order
 
 <!-- ANCHOR_KEY: quick-start -->
 <!-- ANCHOR_PRIORITY: 15 -->
@@ -149,13 +149,13 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - **No manual sys.path**: Remove per-file path manipulation
 
 ### **Legacy Approach (Avoid):**
-- ❌ Manual `sys.path.insert()` in test files
-- ❌ `comprehensive_test_suite.py` for new development
-- ❌ Direct `src.utils` imports in tests
+- X Manual `sys.path.insert()` in test files
+- X `comprehensive_test_suite.py` for new development
+- X Direct `src.utils` imports in tests
 
 ### **Test Execution:**
-- ✅ **New**: `./run_tests.sh --tiers 1 --kinds smoke` (marker-based)
-- ❌ **Legacy**: `./run_tests.sh all` (file-based)
+- OK **New**: `./run_tests.sh --tiers 1 --kinds smoke` (marker-based)
+- X **Legacy**: `./run_tests.sh all` (file-based)
 
 <!-- ANCHOR_KEY: commands -->
 <!-- ANCHOR_PRIORITY: 25 -->
@@ -323,7 +323,7 @@ AI Development Ecosystem
 - **Analysis**: `400_guides/400_file-analysis-guide.md` - **🚨 MANDATORY: File deletion/deprecation analysis methodology**
 - **Domain**: `100_memory/100_backlog-guide.md`
 
-- *⚠️ CRITICAL**: Before ANY file operations, you MUST read and follow `400_guides/400_file-analysis-guide.md` completely!
+- *!️ CRITICAL**: Before ANY file operations, you MUST read and follow `400_guides/400_file-analysis-guide.md` completely!
 
 ## 🛠️ Development Guidelines
 
@@ -338,7 +338,7 @@ AI Development Ecosystem
 
 ## 🚨 CRITICAL SAFETY REQUIREMENTS
 
-### **⚠️ MANDATORY: File Analysis Before Any File Operations**
+### **!️ MANDATORY: File Analysis Before Any File Operations**
 
 - *BEFORE suggesting ANY file deletion, deprecation, or archiving, you MUST:**1.**Read `400_guides/400_file-analysis-guide.md`**- Complete the 6-step mandatory analysis
 2.**Complete ALL steps**- No exceptions, no shortcuts
@@ -370,7 +370,7 @@ AI Development Ecosystem
 ### **🗄️ Vector Database Status**
 
 **Database**: PostgreSQL with pgvector extension
-**Status**: ✅ **FULLY SYNCHRONIZED** (2025-08-14)
+**Status**: OK **FULLY SYNCHRONIZED** (2025-08-14)
 **Coverage**: 32 documents, 1,064 chunks
 **CONTEXT_INDEX**: 20/20 files indexed with role mapping
 
@@ -408,7 +408,7 @@ AI Development Ecosystem
 
 ### **🔗 Cross-Reference System**
 
-**Status**: ✅ **FULLY OPERATIONAL** (2025-08-14)
+**Status**: OK **FULLY OPERATIONAL** (2025-08-14)
 
 #### **CONTEXT_INDEX Coverage:**
 - **Total Files**: 20 files with role-based indexing
@@ -433,7 +433,7 @@ AI Development Ecosystem
 <!-- AUTO:current_priorities:start -->
 ### **Current Priorities**
 
-1. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
+1. **B-095**: MCP Server Role Auto-Detection (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 

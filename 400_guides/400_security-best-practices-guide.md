@@ -35,7 +35,7 @@
   `data protection`, `network security`, `ai model security`,
   `incident response`, `security checklist`
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Security practices maintained
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Security practices maintained
 
 - **Priority**: 🔥 Critical - System security and threat mitigation
 
@@ -57,7 +57,7 @@
 
 ### **Risk Assessment Matrix**\| Threat \| Likelihood \| Impact \| Risk Level \| Mitigation \|
 
-\|——–\|————\|——–\|————\|————\| \| Prompt Injection \| High \| High \| 🔴
+\|---\|----\|---\|----\|----\| \| Prompt Injection \| High \| High \| 🔴
 Critical \| Input validation, prompt sanitization \| \| Data
 Exfiltration \| Medium \| High \| 🟡 High \| Access controls, encryption
 \| \| Denial of Service \| Medium \| Medium \| 🟡 High \| Rate limiting,
@@ -353,7 +353,7 @@ ALERT_CHANNELS = {
 └── 🛡️ Last Scan: 2 minutes ago
 ```
 
-### **2. Security Metrics**-**Vulnerability Scan Results**-**Access Control Status**-**Encryption Status**-**Backup Status**—
+### **2. Security Metrics**-**Vulnerability Scan Results**-**Access Control Status**-**Encryption Status**-**Backup Status**-
 
 ## 📋 Compliance & Standards
 
@@ -406,7 +406,7 @@ ALERT_CHANNELS = {
 
 ------------------------------------------------------------------------
 
-## ✅ Security Checklist
+## OK Security Checklist
 
 ### **Daily Security Tasks**- \[ \] Review security alerts and logs
 

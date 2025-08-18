@@ -65,7 +65,7 @@ def check_database_consistency():
             repo_size = get_file_size(file_path)
 
             if repo_size == 0:
-                print(f"❌ File not found: {file_path}")
+                print(f"X File not found: {file_path}")
                 continue
 
             # Check database
@@ -74,7 +74,7 @@ def check_database_consistency():
 
             if not result:
                 missing_files.append((file_path, filename, repo_size))
-                print(f"❌ Missing from database: {filename}")
+                print(f"X Missing from database: {filename}")
             else:
                 db_size, updated_at = result
                 if repo_size != db_size:
@@ -82,7 +82,7 @@ def check_database_consistency():
                     print(f"🔄 Outdated: {filename} ({db_size} → {repo_size} bytes)")
                 else:
                     current_files.append((filename, repo_size))
-                    print(f"✅ Current: {filename} ({repo_size} bytes)")
+                    print(f"OK Current: {filename} ({repo_size} bytes)")
 
         # Database statistics
         cursor.execute(
@@ -131,7 +131,7 @@ def check_database_consistency():
                 print(f"  - {filename}: {db_size} → {repo_size} bytes (updated: {updated_at})")
 
         if missing_files:
-            print("\n❌ Missing Files:")
+            print("\nX Missing Files:")
             for file_path, filename, repo_size in missing_files:
                 print(f"  - {filename}: {repo_size} bytes")
 
@@ -157,14 +157,14 @@ def check_database_consistency():
         }
 
     except Exception as e:
-        print(f"❌ Error checking database consistency: {e}")
+        print(f"X Error checking database consistency: {e}")
         return None
 
 
 def update_outdated_files(outdated_files):
     """Update outdated files in the database."""
     if not outdated_files:
-        print("✅ No outdated files to update")
+        print("OK No outdated files to update")
         return True
 
     print(f"\n🔄 Updating {len(outdated_files)} outdated files...")
@@ -187,7 +187,7 @@ def update_outdated_files(outdated_files):
                 cursor.execute("SELECT id FROM documents WHERE filename = %s", (filename,))
                 result = cursor.fetchone()
                 if result is None:
-                    print(f"❌ Document not found in database: {filename}")
+                    print(f"X Document not found in database: {filename}")
                     continue
                 document_id = result[0]
 
@@ -249,22 +249,22 @@ def update_outdated_files(outdated_files):
                     (len(chunks), document_id),
                 )
 
-                print(f"✅ Updated {filename} ({db_size} → {current_size} bytes, {len(chunks)} chunks)")
+                print(f"OK Updated {filename} ({db_size} → {current_size} bytes, {len(chunks)} chunks)")
                 success_count += 1
 
             except Exception as e:
-                print(f"❌ Error updating {filename}: {e}")
+                print(f"X Error updating {filename}: {e}")
                 continue
 
         conn.commit()
         cursor.close()
         conn.close()
 
-        print(f"✅ Successfully updated {success_count}/{len(outdated_files)} files")
+        print(f"OK Successfully updated {success_count}/{len(outdated_files)} files")
         return success_count == len(outdated_files)
 
     except Exception as e:
-        print(f"❌ Error in update process: {e}")
+        print(f"X Error in update process: {e}")
         return False
 
 
@@ -277,7 +277,7 @@ def main():
     consistency_data = check_database_consistency()
 
     if not consistency_data:
-        print("❌ Failed to check database consistency")
+        print("X Failed to check database consistency")
         return False
 
     outdated_files = consistency_data["outdated_files"]
@@ -291,17 +291,17 @@ def main():
         if update_choice == "y":
             success = update_outdated_files(outdated_files)
             if success:
-                print("✅ Database maintenance completed successfully")
+                print("OK Database maintenance completed successfully")
             else:
-                print("❌ Some updates failed")
+                print("X Some updates failed")
         else:
             print("⏭️ Skipping updates")
     else:
-        print("✅ No outdated files found")
+        print("OK No outdated files found")
 
     # Report on missing files
     if missing_files:
-        print(f"\n⚠️ Found {len(missing_files)} files missing from database:")
+        print(f"\n!️ Found {len(missing_files)} files missing from database:")
         for file_path, filename, repo_size in missing_files:
             print(f"  - {filename}: {repo_size} bytes")
         print("Use add_missing_files_to_database.py to add these files")

@@ -8,7 +8,7 @@ if ! python -c "import psutil" 2>/dev/null; then
     echo "📦 Installing psutil..."
     pip install psutil>=5.9.0
 else
-    echo "✅ psutil already installed"
+    echo "OK psutil already installed"
 fi
 
 # Install other test dependencies
@@ -18,7 +18,7 @@ pip install -r requirements.txt
 # Install additional test-specific packages
 pip install coverage pytest pytest-cov pytest-mock bandit
 
-echo "✅ Test dependencies installed successfully!"
+echo "OK Test dependencies installed successfully!"
 echo ""
 echo "To run the comprehensive test suite:"
 echo "  python tests/comprehensive_test_suite.py"

@@ -21,7 +21,7 @@
 
 Backlog link: B-045, B-077
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with comprehensive content
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Research file with comprehensive content
 
 - **Priority**: 🔥 High - Critical for RAG implementation
 
@@ -36,7 +36,7 @@ Backlog link: B-045, B-077
 - Hybrid dense+sparse significantly improves recall/precision over pure vector search (see
 docs/research/papers/rag-papers.md; docs/research/articles/rag-articles.md)
 
-- Smaller, semantically coherent chunks (≈100–300 words/tokens) outperform large blocks; overlap prevents boundary loss
+- Smaller, semantically coherent chunks (≈100-300 words/tokens) outperform large blocks; overlap prevents boundary loss
 (docs/research/articles/rag-articles.md; docs/research/tutorials/rag-tutorials.md)
 
 - Span-level grounding (character offsets) increases trust and enables automatic faithfulness checks

@@ -24,18 +24,18 @@
 **Current Focus**: Lean Hybrid Memory System + Consensus Framework Implementation
 
 #### **Completed This Sprint**
-- ✅ **B‑075**: Few-Shot Cognitive Scaffolding Integration (6 points) - 2025-08-16
-- ✅ **B‑084**: Research-Based Schema Design for Extraction (6 points) - 2025-08-16
+- OK **B-075**: Few-Shot Cognitive Scaffolding Integration (6 points) - 2025-08-16
+- OK **B-084**: Research-Based Schema Design for Extraction (6 points) - 2025-08-16
 
 #### **In Progress**
-- 🔄 **B‑075**: Few-Shot Cognitive Scaffolding Integration (6 points) - **STARTING NOW**
+- 🔄 **B-075**: Few-Shot Cognitive Scaffolding Integration (6 points) - **STARTING NOW**
 
 #### **Next Up (This Sprint)**
-- **B‑094**: MCP Memory Rehydrator Server (3 points)
-- **B‑095**: MCP Server Role Auto-Detection (2 points)
-- **B‑097**: Roadmap Milestones & Burndown Charts (3 points)
-- **B‑050**: Enhance 002 Task Generation with Automation (5 points)
-- **B‑096**: MCP Server Performance Optimization (2 points)
+- **B-094**: MCP Memory Rehydrator Server (3 points)
+- **B-095**: MCP Server Role Auto-Detection (2 points)
+- **B-097**: Roadmap Milestones & Burndown Charts (3 points)
+- **B-050**: Enhance 002 Task Generation with Automation (5 points)
+- **B-096**: MCP Server Performance Optimization (2 points)
 
 ### **Sprint Goals**
 - Complete consensus framework implementation
@@ -45,55 +45,55 @@
 
 ## 🚀 Strategic Phases
 
-### **Phase 1: Foundation & Consensus (August 2024) - ✅ ACTIVE**
+### **Phase 1: Foundation & Consensus (August 2024) - OK ACTIVE**
 **Goal**: Establish robust foundation with consensus framework
 
 #### **Core Infrastructure**
-- ✅ **B‑000**: v0.3.1-rc3 Core Hardening
-- ✅ **B‑001**: Real-time Mission Dashboard
-- ✅ **B‑002**: Advanced Error Recovery & Prevention
-- ✅ **B‑011**: Cursor Native AI + Specialized Agents
+- OK **B-000**: v0.3.1-rc3 Core Hardening
+- OK **B-001**: Real-time Mission Dashboard
+- OK **B-002**: Advanced Error Recovery & Prevention
+- OK **B-011**: Cursor Native AI + Specialized Agents
 
 #### **Consensus Framework**
--  **B‑050**: Enhance 002 Task Generation with Automation (5 points)
--  **B‑076**: Research-Based DSPy Assertions Implementation (4 points)
--  **B‑018**: Local Notification System (2 points)
+-  **B-050**: Enhance 002 Task Generation with Automation (5 points)
+-  **B-076**: Research-Based DSPy Assertions Implementation (4 points)
+-  **B-018**: Local Notification System (2 points)
 
 ### **Phase 2: Advanced RAG & Extraction (September 2024) - 🔄 NEXT**
 **Goal**: Implement advanced RAG capabilities with entity extraction
 
 #### **LangExtract Integration**
-- **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (3 points)
-- **B‑044**: n8n LangExtract Service (3 points)
-- **B‑078**: LangExtract Structured Extraction Service (3 points)
+- **B-043**: LangExtract Pilot w/ Stratified 20-doc Set (3 points)
+- **B-044**: n8n LangExtract Service (3 points)
+- **B-078**: LangExtract Structured Extraction Service (3 points)
 
 #### **RAG Enhancement**
-- **B‑076**: Research-Based DSPy Assertions Implementation (5 points)
-- **B‑050**: Entity Expansion for Memory Rehydration (4 points)
+- **B-076**: Research-Based DSPy Assertions Implementation (5 points)
+- **B-050**: Entity Expansion for Memory Rehydration (4 points)
 
 ### **Phase 3: Performance & Optimization (October 2024) - 📋 PLANNED**
 **Goal**: Optimize system performance and establish benchmarks
 
 #### **Performance Optimization**
-- **B‑052‑c**: Performance Optimization Suite (4 points)
-- **B‑093**: Validator Performance Optimizations (3 points)
-- **B‑096**: MCP Server Performance Optimization (2 points)
+- **B-052-c**: Performance Optimization Suite (4 points)
+- **B-093**: Validator Performance Optimizations (3 points)
+- **B-096**: MCP Server Performance Optimization (2 points)
 
 #### **Benchmarking & Monitoring**
-- **B‑076**: Research-Based DSPy Assertions Implementation (5 points)
-- **B‑080**: Research-Based Performance Monitoring (3 points)
+- **B-076**: Research-Based DSPy Assertions Implementation (5 points)
+- **B-080**: Research-Based Performance Monitoring (3 points)
 
 ### **Phase 4: Advanced Features (Q1 2025) - 🔮 FUTURE**
 **Goal**: Implement advanced AI capabilities and specialized agents
 
 #### **Specialized Agents**
-- **B‑034**: Deep Research Agent Integration (5 points)
-- **B‑035**: Coder Agent Specialization (5 points)
-- **B‑036**: General Query Agent Enhancement (3 points)
+- **B-034**: Deep Research Agent Integration (5 points)
+- **B-035**: Coder Agent Specialization (5 points)
+- **B-036**: General Query Agent Enhancement (3 points)
 
 #### **System Integration**
-- **B‑037**: External Model Integration (8 points)
-- **B‑038**: Advanced Model Orchestration (13 points)
+- **B-037**: External Model Integration (8 points)
+- **B-038**: Advanced Model Orchestration (13 points)
 
 ## 📊 Backlog Integration
 
@@ -104,16 +104,16 @@
 
 ### **Points Distribution**
 - **Total Active Points**: 67 points
-- **Current Sprint**: 13 points (B‑075 + B‑094 + B‑095 + B‑096)
-- **Next Sprint**: 9 points (B‑043 + B‑044 + B‑078)
+- **Current Sprint**: 13 points (B-075 + B-094 + B-095 + B-096)
+- **Next Sprint**: 9 points (B-043 + B-044 + B-078)
 
 ### **Dependency Chain**
 ```
-B‑075 (Few-Shot) → B‑043 (LangExtract Pilot) → B‑044 (n8n Service) → B‑078 (Structured Extraction)
+B-075 (Few-Shot) → B-043 (LangExtract Pilot) → B-044 (n8n Service) → B-078 (Structured Extraction)
      ↓
-B‑094 (MCP Server) → B‑095 (Role Detection) → B‑096 (Performance)
+B-094 (MCP Server) → B-095 (Role Detection) → B-096 (Performance)
      ↓
-B‑076 (DSPy Assertions) → B‑050 (Entity Expansion)
+B-076 (DSPy Assertions) → B-050 (Entity Expansion)
 ```
 
 ## 🎯 Strategic Objectives
@@ -178,13 +178,13 @@ B‑076 (DSPy Assertions) → B‑050 (Entity Expansion)
 ## 🎯 Next Actions
 
 ### **Immediate (This Week)**
-1. **Start B‑075**: Few-Shot Cognitive Scaffolding Integration
+1. **Start B-075**: Few-Shot Cognitive Scaffolding Integration
 2. **Review Dependencies**: Ensure all prerequisites are met
 3. **Update Sprint Status**: Track progress and adjust as needed
 
 ### **Short Term (Next 2 Weeks)**
-1. **Complete B‑075**: Establish few-shot cognitive scaffolding
-2. **Begin B‑043**: LangExtract pilot implementation
+1. **Complete B-075**: Establish few-shot cognitive scaffolding
+2. **Begin B-043**: LangExtract pilot implementation
 3. **Plan Next Sprint**: Prepare for advanced RAG phase
 
 ### **Medium Term (Next Month)**

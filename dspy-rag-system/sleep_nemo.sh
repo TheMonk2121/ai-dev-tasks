@@ -468,25 +468,25 @@ show_status() {
 
     # Database check
     if psql -d ai_agency -c "SELECT 1;" >/dev/null 2>&1; then
-        print_status "✅ Database: Connected"
+        print_status "OK Database: Connected"
     else
-        print_error "❌ Database: Not accessible"
+        print_error "X Database: Not accessible"
     fi
 
     # Watch folder check
     if pgrep -f "watch_folder.py" > /dev/null; then
-        print_warning "⚠️  Watch Folder: Still running"
+        print_warning "!️  Watch Folder: Still running"
     else
-        print_status "✅ Watch Folder: Stopped"
+        print_status "OK Watch Folder: Stopped"
     fi
 
     # Port checks
     for service in "${services[@]}"; do
         IFS='|' read -r port name <<< "$service"
         if check_port "$port"; then
-            print_warning "⚠️  $name: Still running on port $port"
+            print_warning "!️  $name: Still running on port $port"
         else
-            print_status "✅ $name: Stopped"
+            print_status "OK $name: Stopped"
         fi
     done
 

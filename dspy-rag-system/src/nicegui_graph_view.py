@@ -264,7 +264,7 @@ class GraphVisualizationApp:
             self.load_time.text = f"Load Time: {data['elapsed_ms']:.0f}ms"
 
             if data.get("truncated"):
-                self.truncated_status.text = "⚠️ Truncated"
+                self.truncated_status.text = "!️ Truncated"
             else:
                 self.truncated_status.text = ""
 

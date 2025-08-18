@@ -35,7 +35,7 @@
 - **do next**: Scan the headings below and follow any ‘Quick Start’ or
   ‘Usage’ sections.
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Documentation retrieval system operational
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Documentation retrieval system operational
 
 - **Priority**: ⚡ High - Essential for context provision
 
@@ -103,7 +103,7 @@ python scripts/documentation_indexer.py
 
 ## Index specific directory
 
-python scripts/documentation_indexer.py –root-path ./docs
+python scripts/documentation_indexer.py -root-path ./docs
 
 ``` text
 

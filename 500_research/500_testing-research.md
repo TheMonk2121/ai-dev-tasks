@@ -17,7 +17,7 @@ Backlog link: B-012
 checks | Apply `400_guides/400_testing-strategy-guide.md`; run `./dspy-rag-system/run_tests.sh` or
 `run_comprehensive_tests.sh` |
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Research file with content
+## 🎯 **Current Status**-**Status**: OK **ACTIVE**- Research file with content
 
 - **Priority**: 🔧 Medium - Research for implementation
 
@@ -41,7 +41,7 @@ faithfulness and citation presence) to handle nondeterminism.
 - CI should gate on RAG metrics (e.g., retrieval recall@k, citation faithfulness) and on basic security tests
 (prompt-injection refusal, PII redaction).
 
-- Flake management: constrained reruns (1–2) and tolerance bands reduce false negatives while still catching drift.
+- Flake management: constrained reruns (1-2) and tolerance bands reduce false negatives while still catching drift.
 - Align test oracles with span-grounded citations: sentence-level faithfulness against retrieved chunks improves
 precision of failures (400_guides/400_documentation-guide.md).
 

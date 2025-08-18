@@ -52,10 +52,10 @@ class NotificationSystem:
             display notification "{message}" with title "{title}" subtitle "{subtitle}"
             '''
             subprocess.run(['osascript', '-e', script], check=True)
-            logger.info(f"✅ macOS notification sent: {title}")
+            logger.info(f"OK macOS notification sent: {title}")
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to send macOS notification: {e}")
+            logger.error(f"X Failed to send macOS notification: {e}")
             return False
     
     def send_terminal_notification(self, title, message):
@@ -74,7 +74,7 @@ class NotificationSystem:
             print("=" * 50)
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to send terminal notification: {e}", extra={
+            logger.error(f"X Failed to send terminal notification: {e}", extra={
                 'component': 'notification_system',
                 'action': 'terminal_notification_error',
                 'error': str(e)
@@ -91,10 +91,10 @@ class NotificationSystem:
                 '-subtitle', subtitle,
                 '-sound', 'default'
             ], check=True)
-            logger.info(f"✅ Desktop notification sent: {title}")
+            logger.info(f"OK Desktop notification sent: {title}")
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to send desktop notification: {e}")
+            logger.error(f"X Failed to send desktop notification: {e}")
             return False
     
     def notify_file_processed(self, filename, chunks_count, file_size):
@@ -158,19 +158,19 @@ def setup_notifications():
     try:
         subprocess.run(['terminal-notifier', '-help'], 
                       capture_output=True, check=True)
-        logger.info("✅ terminal-notifier available", extra={
+        logger.info("OK terminal-notifier available", extra={
             'component': 'notification_system',
             'action': 'terminal_notifier_check',
             'status': 'available'
         })
-        print("✅ terminal-notifier available")
+        print("OK terminal-notifier available")
     except:
-        logger.warning("⚠️  terminal-notifier not installed", extra={
+        logger.warning("!️  terminal-notifier not installed", extra={
             'component': 'notification_system',
             'action': 'terminal_notifier_check',
             'status': 'not_installed'
         })
-        print("⚠️  terminal-notifier not installed")
+        print("!️  terminal-notifier not installed")
         print("   Install with: brew install terminal-notifier")
     
     # Test macOS notifications
@@ -181,19 +181,19 @@ def setup_notifications():
     )
     
     if test_success:
-        logger.info("✅ macOS notifications working", extra={
+        logger.info("OK macOS notifications working", extra={
             'component': 'notification_system',
             'action': 'macos_test',
             'status': 'success'
         })
-        print("✅ macOS notifications working")
+        print("OK macOS notifications working")
     else:
-        logger.error("❌ macOS notifications not working", extra={
+        logger.error("X macOS notifications not working", extra={
             'component': 'notification_system',
             'action': 'macos_test',
             'status': 'failed'
         })
-        print("❌ macOS notifications not working")
+        print("X macOS notifications not working")
     
     return notification_system
 

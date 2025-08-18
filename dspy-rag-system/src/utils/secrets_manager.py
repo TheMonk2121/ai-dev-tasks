@@ -312,9 +312,9 @@ class SecretsManager:
                 keyring.set_password(app_name, test_key, "test_value")
                 keyring.get_password(app_name, test_key)
                 keyring.delete_password(app_name, test_key)
-                logger.info("✅ Keyring initialized successfully")
+                logger.info("OK Keyring initialized successfully")
             except Exception as e:
-                logger.warning(f"⚠️ Keyring initialization failed: {e}")
+                logger.warning(f"!️ Keyring initialization failed: {e}")
                 self.keyring_available = False
 
     def _log_secret_operation(
@@ -470,7 +470,7 @@ class SecretsManager:
                 try:
                     self._set_in_keyring(sanitized_name, validated_value)
                     self._log_secret_operation("set_keyring", sanitized_name, True)
-                    logger.info(f"✅ Secret '{sanitized_name}' stored in keyring")
+                    logger.info(f"OK Secret '{sanitized_name}' stored in keyring")
                     return True
                 except KeyringError as e:
                     self._log_secret_operation("set_keyring", sanitized_name, False, str(e))
@@ -479,7 +479,7 @@ class SecretsManager:
             # Fallback to environment variable
             os.environ[sanitized_name] = validated_value
             self._log_secret_operation("set_env", sanitized_name, True)
-            logger.info(f"✅ Secret '{sanitized_name}' stored in environment")
+            logger.info(f"OK Secret '{sanitized_name}' stored in environment")
             return True
 
         except SecurityError as e:
@@ -534,7 +534,7 @@ class SecretsManager:
                 try:
                     self._delete_from_keyring(sanitized_name)
                     self._log_secret_operation("delete_keyring", sanitized_name, True)
-                    logger.info(f"✅ Secret '{sanitized_name}' deleted from keyring")
+                    logger.info(f"OK Secret '{sanitized_name}' deleted from keyring")
                 except KeyringError as e:
                     self._log_secret_operation("delete_keyring", sanitized_name, False, str(e))
                     logger.warning(f"Keyring deletion failed for {sanitized_name}: {e}")
@@ -542,7 +542,7 @@ class SecretsManager:
             # Remove from environment
             os.environ.pop(sanitized_name, None)
             self._log_secret_operation("delete_env", sanitized_name, True)
-            logger.info(f"✅ Secret '{sanitized_name}' deleted from environment")
+            logger.info(f"OK Secret '{sanitized_name}' deleted from environment")
             return True
 
         except SecurityError as e:
@@ -809,7 +809,7 @@ def validate_startup_secrets() -> bool:
         # Check for missing required secrets
         missing = manager.get_missing_secrets(secret_configs)
         if missing:
-            logger.error(f"❌ Missing required secrets: {missing}")
+            logger.error(f"X Missing required secrets: {missing}")
             return False
 
         # Validate all secrets
@@ -817,14 +817,14 @@ def validate_startup_secrets() -> bool:
         invalid_secrets = [name for name, valid in validation_results.items() if not valid]
 
         if invalid_secrets:
-            logger.error(f"❌ Invalid secrets: {invalid_secrets}")
+            logger.error(f"X Invalid secrets: {invalid_secrets}")
             return False
 
-        logger.info("✅ All secrets validated successfully")
+        logger.info("OK All secrets validated successfully")
         return True
 
     except Exception as e:
-        logger.error(f"❌ Secrets validation failed: {e}")
+        logger.error(f"X Secrets validation failed: {e}")
         return False
 
 
@@ -841,7 +841,7 @@ def setup_secrets_interactive() -> bool:
 
         missing = manager.get_missing_secrets(secret_configs)
         if not missing:
-            logger.info("✅ All required secrets are present")
+            logger.info("OK All required secrets are present")
             return True
 
         logger.info(f"🔧 Setting up {len(missing)} missing secrets...")
@@ -882,18 +882,18 @@ def setup_secrets_interactive() -> bool:
 
             if value:
                 if manager.set_secret(secret_name, value):
-                    print(f"   ✅ Secret '{secret_name}' set successfully")
+                    print(f"   OK Secret '{secret_name}' set successfully")
                 else:
-                    print(f"   ❌ Failed to set secret '{secret_name}'")
+                    print(f"   X Failed to set secret '{secret_name}'")
                     return False
             else:
-                print(f"   ⚠️ Skipping secret '{secret_name}'")
+                print(f"   !️ Skipping secret '{secret_name}'")
 
         # Validate again
         return validate_startup_secrets()
 
     except Exception as e:
-        logger.error(f"❌ Interactive secrets setup failed: {e}")
+        logger.error(f"X Interactive secrets setup failed: {e}")
         return False
 
 
@@ -911,30 +911,30 @@ if __name__ == "__main__":
 
     # Set secret
     if manager.set_secret(test_secret, test_value):
-        print("✅ Secret set successfully")
+        print("OK Secret set successfully")
     else:
-        print("❌ Failed to set secret")
+        print("X Failed to set secret")
         sys.exit(1)
 
     # Get secret
     retrieved = manager.get_secret(test_secret)
     if retrieved == test_value:
-        print("✅ Secret retrieved successfully")
+        print("OK Secret retrieved successfully")
     else:
-        print("❌ Failed to retrieve secret")
+        print("X Failed to retrieve secret")
         sys.exit(1)
 
     # Delete secret
     if manager.delete_secret(test_secret):
-        print("✅ Secret deleted successfully")
+        print("OK Secret deleted successfully")
     else:
-        print("❌ Failed to delete secret")
+        print("X Failed to delete secret")
         sys.exit(1)
 
     # Test validation
     if validate_startup_secrets():
-        print("✅ Startup validation passed")
+        print("OK Startup validation passed")
     else:
-        print("⚠️ Startup validation failed (expected for missing secrets)")
+        print("!️ Startup validation failed (expected for missing secrets)")
 
     print("🎉 Secrets management test completed!")

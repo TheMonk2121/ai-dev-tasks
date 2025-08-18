@@ -2,7 +2,7 @@
 
 This document tracks major architectural decisions and consensus checkpoints.
 
-## Consensus Checkpoint — Vector Store Split (Core vs Perf)
+## Consensus Checkpoint - Vector Store Split (Core vs Perf)
 
 **Date:** 2025-08-17
 **Context:** Shadow fork validator identified `vector_store.py` and `enhanced_vector_store.py` as potential duplicates.
@@ -35,7 +35,7 @@ This document tracks major architectural decisions and consensus checkpoints.
 
 **Date**: 2025-08-17
 **Proposal ID**: round1_code_strategy_20250817
-**Status**: ✅ **ACCEPTED** - Round 1 implementation complete
+**Status**: OK **ACCEPTED** - Round 1 implementation complete
 **Weight**: 5 (foundational)
 
 ### Proposal
@@ -56,11 +56,11 @@ Adopt 5-layer code strategy (Governance → Structure/Imports → Creation Workf
 5. **Documentation Updates**: System overview, reference cards, consensus log
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved
-- ✅ No shadow-fork filenames introduced
-- ✅ Dual vector stores (core/perf) preserved behind facade
-- ✅ Validator compliance maintained (WARN mode)
-- ✅ Consensus logging implemented
+- OK Archive immutability preserved
+- OK No shadow-fork filenames introduced
+- OK Dual vector stores (core/perf) preserved behind facade
+- OK Validator compliance maintained (WARN mode)
+- OK Consensus logging implemented
 
 ### Next Steps
 Ready for Round 2 implementation with focus on validator integration and workflow automation.
@@ -69,7 +69,7 @@ Ready for Round 2 implementation with focus on validator integration and workflo
 
 **Date**: 2025-08-17
 **Proposal ID**: round2_validator_enforcement_20250817
-**Status**: ✅ **ACCEPTED** - Round 2 implementation complete
+**Status**: OK **ACCEPTED** - Round 2 implementation complete
 **Weight**: 4 (trust enforcement)
 
 ### Proposal
@@ -89,11 +89,11 @@ Sequential flips; archive/shadow first; scoped README validator; CLI preflight. 
 7. **Documentation Updates**: System overview, reference cards, consensus log
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved
-- ✅ No shadow-fork filenames introduced
-- ✅ Role-suffix naming enforced
-- ✅ Validator compliance maintained (WARN vs FAIL)
-- ✅ Consensus logging implemented
+- OK Archive immutability preserved
+- OK No shadow-fork filenames introduced
+- OK Role-suffix naming enforced
+- OK Validator compliance maintained (WARN vs FAIL)
+- OK Consensus logging implemented
 
 ### Next Steps
 Ready for Round 3 implementation with focus on advanced workflow automation and monitoring.
@@ -102,7 +102,7 @@ Ready for Round 3 implementation with focus on advanced workflow automation and 
 
 **Date**: 2025-08-18
 **Proposal ID**: round3_surgical_testing_20250818
-**Status**: ✅ **COMPLETED** - All phases implemented successfully
+**Status**: OK **COMPLETED** - All phases implemented successfully
 **Weight**: 3 (quality assurance)
 
 ### Proposal
@@ -116,28 +116,28 @@ Implement comprehensive test coverage for governance system using surgical appro
 
 **Phase 1 - Core Test Implementation (COMPLETED)**
 1. **Validator & Archive Tests**:
-   - ✅ `test_impacted_files_are_posix_relative()` - Path normalization
-   - ✅ `test_stdout_pure_json_warnings_to_stderr()` - JSON purity
-   - ✅ `test_archive_enrolled_file_not_flagged()` - Archive enrollment
-   - ✅ `test_archive_modified_file_flagged_in_fail_mode()` - Archive modification detection
+   - OK `test_impacted_files_are_posix_relative()` - Path normalization
+   - OK `test_stdout_pure_json_warnings_to_stderr()` - JSON purity
+   - OK `test_archive_enrolled_file_not_flagged()` - Archive enrollment
+   - OK `test_archive_modified_file_flagged_in_fail_mode()` - Archive modification detection
 2. **XRef & Multi-Rep Tests**:
-   - ✅ `test_ledger_key_synonyms_respected()` - Exception ledger key synonyms
-   - ✅ `test_pragma_and_ledger_merge_behavior()` - Pragma and ledger merging
+   - OK `test_ledger_key_synonyms_respected()` - Exception ledger key synonyms
+   - OK `test_pragma_and_ledger_merge_behavior()` - Pragma and ledger merging
 
 **Phase 2 - Governance Tools Testing (COMPLETED)**
 1. **Schema & Ratchet Tests**:
-   - ✅ `test_schema_guard_honors_pinned_version()` - Schema version validation
-   - ✅ `test_ratchet_blocks_changed_file_regressions()` - Regression prevention
+   - OK `test_schema_guard_honors_pinned_version()` - Schema version validation
+   - OK `test_ratchet_blocks_changed_file_regressions()` - Regression prevention
 2. **Anchor Drift & Hotspots Tests**:
-   - ✅ `test_anchor_drift_detects_removed_heading()` - Broken link detection
-   - ✅ `test_readme_hotspots_handles_invalid_or_empty_report()` - Data resilience
+   - OK `test_anchor_drift_detects_removed_heading()` - Broken link detection
+   - OK `test_readme_hotspots_handles_invalid_or_empty_report()` - Data resilience
 
 **Phase 3 - Documentation & Integration (COMPLETED)**
 1. **Testing Strategy Guide**: Updated `400_guides/400_testing-strategy-guide.md` with:
-   - ✅ Test tiers (PR / Nightly / Weekly) with exact commands
-   - ✅ Validator testing patterns with specific coverage
-   - ✅ JSON purity & path normalization expectations
-   - ✅ Flip counters & drift checks to nightly
+   - OK Test tiers (PR / Nightly / Weekly) with exact commands
+   - OK Validator testing patterns with specific coverage
+   - OK JSON purity & path normalization expectations
+   - OK Flip counters & drift checks to nightly
 2. **CI Integration**: Verified workflows match documented approach
 3. **Marker Configuration**: Added governance markers to `pyproject.toml`
 
@@ -147,18 +147,18 @@ Implement comprehensive test coverage for governance system using surgical appro
 3. **Performance Validation**: Well under 5-minute PR requirement
 
 ### Technical Achievements
-- ✅ **Surgical Approach**: Extended existing test suites, no new directories
-- ✅ **Marker-Based Execution**: `pytest -m "governance"` for selective testing
-- ✅ **Performance**: 0.68s execution time (well under 5-minute limit)
-- ✅ **Coverage**: Complete governance system test coverage
-- ✅ **Integration**: CI workflows already aligned with documented approach
+- OK **Surgical Approach**: Extended existing test suites, no new directories
+- OK **Marker-Based Execution**: `pytest -m "governance"` for selective testing
+- OK **Performance**: 0.68s execution time (well under 5-minute limit)
+- OK **Coverage**: Complete governance system test coverage
+- OK **Integration**: CI workflows already aligned with documented approach
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved and tested
-- ✅ No shadow-fork filenames introduced
-- ✅ Validator compliance maintained and tested
-- ✅ Consensus logging implemented
-- ✅ Surgical approach maintained (no test directory proliferation)
+- OK Archive immutability preserved and tested
+- OK No shadow-fork filenames introduced
+- OK Validator compliance maintained and tested
+- OK Consensus logging implemented
+- OK Surgical approach maintained (no test directory proliferation)
 
 ### Next Steps
 Ready for production use. Testing strategy provides clear guidance for future development with comprehensive governance coverage.
@@ -167,7 +167,7 @@ Ready for production use. Testing strategy provides clear guidance for future de
 
 **Date**: 2025-08-17
 **Proposal ID**: round6_archive_zeroization_20250817
-**Status**: ✅ **COMPLETED** - Archive and Shadow violations zeroized
+**Status**: OK **COMPLETED** - Archive and Shadow violations zeroized
 **Weight**: 5 (foundational)
 
 ### Proposal
@@ -189,8 +189,8 @@ Execute Archive Zeroization (PR K) and Shadow Start (PR L) to get both categorie
 6. **DX Commands**: `make gov/archive-zeroize`, `make gov/shadow-fix`
 
 ### Results Achieved
-- **Archive violations**: 80 → 0 ✅
-- **Shadow violations**: 4 → 0 ✅
+- **Archive violations**: 80 → 0 OK
+- **Shadow violations**: 4 → 0 OK
 - **Validator accuracy**: Now checks actual content vs. manifest blobs
 
 ### Next Steps
@@ -200,7 +200,7 @@ Ready for Round 7 implementation with focus on XRef and README cleanup to zero.
 
 **Date**: 2025-08-17
 **Proposal ID**: round7_xref_readme_zeroization_20250817
-**Status**: ✅ **COMPLETED** - XRef and README violations zeroized
+**Status**: OK **COMPLETED** - XRef and README violations zeroized
 **Weight**: 4 (completion)
 
 ### Proposal
@@ -220,9 +220,9 @@ Execute XRef Cleanup to Zero (PR M) and README Cleanup Batches to Zero (PR N) to
 7. **Validator Fixes**: Fixed XRef and README validation to respect ignore segments
 
 ### Results Achieved
-- **XRef violations**: 109 → 0 ✅ (Pass A: 109→103, Pass B: 103→0)
-- **README violations**: 6 → 0 ✅ (Batch 3: 6→4, Batch 4: 4→1, Batch 5: 1→0)
-- **All categories**: Archive=0, Shadow=0, XRef=0, README=0 ✅
+- **XRef violations**: 109 → 0 OK (Pass A: 109→103, Pass B: 103→0)
+- **README violations**: 6 → 0 OK (Batch 3: 6→4, Batch 4: 4→1, Batch 5: 1→0)
+- **All categories**: Archive=0, Shadow=0, XRef=0, README=0 OK
 - **Clean-day clocks**: Ready to start for all categories
 
 ### Next Steps
@@ -232,7 +232,7 @@ Ready for Round 8 implementation with focus on flip execution and graduation.
 
 **Date**: 2025-08-17
 **Proposal ID**: round8_post_flip_hardening_20250817
-**Status**: ✅ **COMPLETED** - Post-flip hardening implemented
+**Status**: OK **COMPLETED** - Post-flip hardening implemented
 **Weight**: 3 (operational excellence)
 
 ### Proposal
@@ -243,9 +243,9 @@ Implement three quick PRs for post-flip hardening: no-new-ledger gate, flip PR c
 **Routing Recipe**: planner → implementer (as specified)
 
 ### Round 8 Deliverables Completed
-1. **PR O — No-new-ledger PR Gate**: `scripts/check_ledger_additions.py` - Fails on additions without exception-approved label AND expiry ≤7d
-2. **PR P — Flip PR Checklist**: Enhanced `.github/PULL_REQUEST_TEMPLATE.md` with flip-specific checklist
-3. **PR Q — Owners Nudges**: `scripts/weekly_metrics_with_owners.py` - Weekly summary with suggested owners for top impacted files
+1. **PR O - No-new-ledger PR Gate**: `scripts/check_ledger_additions.py` - Fails on additions without exception-approved label AND expiry ≤7d
+2. **PR P - Flip PR Checklist**: Enhanced `.github/PULL_REQUEST_TEMPLATE.md` with flip-specific checklist
+3. **PR Q - Owners Nudges**: `scripts/weekly_metrics_with_owners.py` - Weekly summary with suggested owners for top impacted files
 4. **CI Integration**: Added ledger check to validator workflow, enhanced weekly metrics job
 
 ### Results Achieved
@@ -258,7 +258,7 @@ Implement three quick PRs for post-flip hardening: no-new-ledger gate, flip PR c
 
 **Date**: 2025-08-17
 **Proposal ID**: round8_steady_state_graduation_20250817
-**Status**: ✅ **COMPLETED** - Governance v1.0 graduated to steady-state
+**Status**: OK **COMPLETED** - Governance v1.0 graduated to steady-state
 **Weight**: 5 (foundational completion)
 
 ### Proposal
@@ -269,11 +269,11 @@ Complete steady-state graduation with consolidated CI, schema freeze, chaos test
 **Routing Recipe**: planner → implementer (as specified)
 
 ### Round 8 Deliverables Completed
-1. **PR R — Consolidated Governance CI**: `.github/workflows/governance.yml` - Single workflow with all governance checks
-2. **PR S — Schema Freeze**: `scripts/validator_schema_guard.py` + `docs/VALIDATOR_SCHEMA_MIGRATION.md` - Schema v1.1.0 frozen for 60 days
-3. **PR T — Chaos Testing**: `scripts/validator_chaos_test.py` + `.github/workflows/governance-drill.yml` - Comprehensive testing harness
-4. **PR U — Runbook & Archival**: `400_guides/400_governance-runbook.md` + `OWNERS.md` + archived transitional workflows
-5. **PR V — Graduation Tag**: `gov/v1.0` tag + README status badge integration
+1. **PR R - Consolidated Governance CI**: `.github/workflows/governance.yml` - Single workflow with all governance checks
+2. **PR S - Schema Freeze**: `scripts/validator_schema_guard.py` + `docs/VALIDATOR_SCHEMA_MIGRATION.md` - Schema v1.1.0 frozen for 60 days
+3. **PR T - Chaos Testing**: `scripts/validator_chaos_test.py` + `.github/workflows/governance-drill.yml` - Comprehensive testing harness
+4. **PR U - Runbook & Archival**: `400_guides/400_governance-runbook.md` + `OWNERS.md` + archived transitional workflows
+5. **PR V - Graduation Tag**: `gov/v1.0` tag + README status badge integration
 
 ### Results Achieved
 - **Consolidated Operations**: Single governance workflow with minimal permissions
@@ -289,7 +289,7 @@ Complete steady-state graduation with consolidated CI, schema freeze, chaos test
 - **Waiver discipline**: zero renewals; near-expiry waivers resolved ≤7 days
 - **Time-to-flip**: ≤48h after a category reaches 0 violations and clean window completes
 
-### Governance v1.0 Status: ✅ **GRADUATED**
+### Governance v1.0 Status: OK **GRADUATED**
 - **Tag**: `gov/v1.0` created
 - **All categories**: 0 violations (Archive, Shadow, XRef, README)
 - **Flip automation**: Ready to execute automatically
@@ -299,11 +299,11 @@ Complete steady-state graduation with consolidated CI, schema freeze, chaos test
 - **Counters ready**: Archive 3-day and Shadow 7-day clocks ready to start
 
 ### Constitutional Compliance
-- ✅ Archive immutability enforced via content comparison
-- ✅ No shadow-fork filenames (renamed to role suffixes)
-- ✅ Dual vector stores (core/perf) preserved and protected
-- ✅ Validator compliance maintained with accurate detection
-- ✅ Consensus logging implemented
+- OK Archive immutability enforced via content comparison
+- OK No shadow-fork filenames (renamed to role suffixes)
+- OK Dual vector stores (core/perf) preserved and protected
+- OK Validator compliance maintained with accurate detection
+- OK Consensus logging implemented
 
 ### Next Steps
 Archive 3-day clock and Shadow 7-day clock start after tonight's green nightly. Flip manager will open PR G/H automatically at thresholds.
@@ -312,7 +312,7 @@ Archive 3-day clock and Shadow 7-day clock start after tonight's green nightly. 
 
 **Date**: 2025-08-17
 **Proposal ID**: round3_prb_xref_remediation_20250817
-**Status**: ✅ **ACCEPTED** - PR B implementation complete
+**Status**: OK **ACCEPTED** - PR B implementation complete
 **Weight**: 4 (content quality)
 
 ### Proposal
@@ -332,11 +332,11 @@ Target `000_core/` with ≥50% reduction in Multi-Rep/XRef violations via XRef s
 7. **Documentation**: Updated system overview and reference cards
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved
-- ✅ No shadow-fork filenames introduced
-- ✅ XRef rule split from Multi-Rep (distinct concerns)
-- ✅ Validator compliance maintained (WARN mode)
-- ✅ Consensus logging implemented
+- OK Archive immutability preserved
+- OK No shadow-fork filenames introduced
+- OK XRef rule split from Multi-Rep (distinct concerns)
+- OK Validator compliance maintained (WARN mode)
+- OK Consensus logging implemented
 
 ### Results
 - **100% reduction** in Multi-Rep/XRef violations for `000_core/` scope
@@ -351,7 +351,7 @@ Ready for Round 3 PR C implementation with focus on ratchet and metrics.
 
 **Date**: 2025-08-17
 **Proposal ID**: round3_prc_ratchet_metrics_20250817
-**Status**: ✅ **ACCEPTED** - PR C implementation complete
+**Status**: OK **ACCEPTED** - PR C implementation complete
 **Weight**: 4 (prevention and visibility)
 
 ### Proposal
@@ -370,11 +370,11 @@ Prevent backsliding on README and Multi-Rep/XRef counts with changed-files aware
 6. **Documentation**: Updated system overview and reference cards
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved
-- ✅ No shadow-fork filenames introduced
-- ✅ Ratchet prevents regressions on changed files
-- ✅ Validator compliance maintained (WARN mode)
-- ✅ Consensus logging implemented
+- OK Archive immutability preserved
+- OK No shadow-fork filenames introduced
+- OK Ratchet prevents regressions on changed files
+- OK Validator compliance maintained (WARN mode)
+- OK Consensus logging implemented
 
 ### Results
 - **Ratchet active** - Prevents increases in readme/multirep for changed files
@@ -389,7 +389,7 @@ Ready for Round 4 implementation with focus on controlled flips.
 
 **Date**: 2025-08-17
 **Proposal ID**: round4_prdef_controlled_flips_20250817
-**Status**: ✅ **ACCEPTED** - PR D/E/F implementation complete
+**Status**: OK **ACCEPTED** - PR D/E/F implementation complete
 **Weight**: 4 (enforcement activation)
 
 ### Proposal
@@ -406,11 +406,11 @@ Make validator category flips smooth, observable, and reversible with hygiene, d
 4. **Documentation**: Updated system overview with job summary interpretation guide
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved
-- ✅ No shadow-fork filenames introduced
-- ✅ Flip automation ready for clean-day windows
-- ✅ Validator compliance maintained (WARN mode)
-- ✅ Consensus logging implemented
+- OK Archive immutability preserved
+- OK No shadow-fork filenames introduced
+- OK Flip automation ready for clean-day windows
+- OK Validator compliance maintained (WARN mode)
+- OK Consensus logging implemented
 
 ### Results
 - **Flip hygiene** - Counters visible in every PR, trends in flip PRs
@@ -445,11 +445,11 @@ Execute controlled validator category flips (Archive → Shadow → XRef → REA
 7. **Documentation**: Enhanced system overview with job summary interpretation
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved
-- ✅ No shadow-fork filenames introduced
-- ✅ Flip workflows with preconditions and rollback
-- ✅ Validator compliance maintained (WARN → FAIL progression)
-- ✅ Consensus logging implemented
+- OK Archive immutability preserved
+- OK No shadow-fork filenames introduced
+- OK Flip workflows with preconditions and rollback
+- OK Validator compliance maintained (WARN → FAIL progression)
+- OK Consensus logging implemented
 
 ### Current Status
 - **Archive**: 80 violations, counter at 0 (not ready for flip)
@@ -464,7 +464,7 @@ Monitor clean-day counters and execute flips when preconditions are met.
 
 **Date**: 2025-08-17
 **Proposal ID**: round6_prklw_archive_zeroization_20250817
-**Status**: ✅ **COMPLETED** - All PRs implemented and working
+**Status**: OK **COMPLETED** - All PRs implemented and working
 **Weight**: 5 (enforcement activation)
 
 ### Proposal
@@ -476,54 +476,54 @@ Get Archive to 0 violations and start 3-day clock; ensure Shadow is at 0 and sta
 
 ### PR K/L/W Deliverables Completed
 1. **PR K - Archive Zeroization Rail**:
-   - ✅ `data/archive_manifest.json` - Immutable snapshots source of truth
-   - ✅ `scripts/archive_manifest_rebuild.py` - Discover first-add commits and blob SHAs
-   - ✅ `scripts/archive_restore.py` - Restore to immutable snapshots + create errata
-   - ✅ `.github/workflows/archive-zeroization.yml` - CI workflow with temp-copy proof
-   - ✅ Archive manifest rebuilt: 79 files tracked with blob SHAs
+   - OK `data/archive_manifest.json` - Immutable snapshots source of truth
+   - OK `scripts/archive_manifest_rebuild.py` - Discover first-add commits and blob SHAs
+   - OK `scripts/archive_restore.py` - Restore to immutable snapshots + create errata
+   - OK `.github/workflows/archive-zeroization.yml` - CI workflow with temp-copy proof
+   - OK Archive manifest rebuilt: 79 files tracked with blob SHAs
 
 2. **PR L - Shadow Start**:
-   - ✅ `scripts/fix_shadow_names.py` - Rename shadow fork patterns to role suffixes
-   - ✅ `.github/workflows/shadow-fix.yml` - CI workflow with temp-copy proof
-   - ✅ Shadow scan completed: 0 shadow fork files found (already clean)
+   - OK `scripts/fix_shadow_names.py` - Rename shadow fork patterns to role suffixes
+   - OK `.github/workflows/shadow-fix.yml` - CI workflow with temp-copy proof
+   - OK Shadow scan completed: 0 shadow fork files found (already clean)
 
 3. **PR W - Archive Cohort Enrollment**:
-   - ✅ Enrolled 11 governance workflow files in `data/archive_manifest.json`
-   - ✅ Applied ChatGPT's surgical fix to validator (path normalization + blob SHA comparison)
-   - ✅ Fixed JSON output corruption (warnings to stderr)
-   - ✅ Verified Archive violations: 11 → 0
-   - ✅ All categories now clean (Archive: 0, Shadow: 0, XRef: 0, README: 0)
+   - OK Enrolled 11 governance workflow files in `data/archive_manifest.json`
+   - OK Applied ChatGPT's surgical fix to validator (path normalization + blob SHA comparison)
+   - OK Fixed JSON output corruption (warnings to stderr)
+   - OK Verified Archive violations: 11 → 0
+   - OK All categories now clean (Archive: 0, Shadow: 0, XRef: 0, README: 0)
 
 4. **DX Improvements**:
-   - ✅ Enhanced `Makefile` with `gov/archive-zeroize`, `gov/archive-manifest`, `gov/shadow-fix`
-   - ✅ Archive manifest rebuild tested and working
-   - ✅ Shadow fix script tested and working
+   - OK Enhanced `Makefile` with `gov/archive-zeroize`, `gov/archive-manifest`, `gov/shadow-fix`
+   - OK Archive manifest rebuild tested and working
+   - OK Shadow fix script tested and working
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved via manifest + restore system
-- ✅ No shadow-fork filenames introduced (0 found)
-- ✅ Role-suffix naming enforced in shadow fixer
-- ✅ Validator compliance maintained (WARN mode)
-- ✅ Consensus logging implemented
+- OK Archive immutability preserved via manifest + restore system
+- OK No shadow-fork filenames introduced (0 found)
+- OK Role-suffix naming enforced in shadow fixer
+- OK Validator compliance maintained (WARN mode)
+- OK Consensus logging implemented
 
 ### Current Status
-- **Archive**: 0 violations ✅ (was 11, now clean)
-- **Shadow**: 0 violations ✅ (already clean)
-- **XRef**: 0 violations ✅ (already clean)
-- **README**: 0 violations ✅ (already clean)
+- **Archive**: 0 violations OK (was 11, now clean)
+- **Shadow**: 0 violations OK (already clean)
+- **XRef**: 0 violations OK (already clean)
+- **README**: 0 violations OK (already clean)
 - **All categories clean**: Ready for clean-day counters to start
 
 ### Next Steps
-1. ✅ Archive cohort enrollment complete (11 → 0 violations)
-2. ✅ All categories at 0 violations
+1. OK Archive cohort enrollment complete (11 → 0 violations)
+2. OK All categories at 0 violations
 3. Nightly will start clean-day counters for all categories
 4. Flip manager will open PR G/H/I/J automatically when counters reach targets
 
-## Round 3 PR B — Multi-Rep/XRef Remediation
+## Round 3 PR B - Multi-Rep/XRef Remediation
 
 **Date**: 2025-08-17
 **Proposal ID**: round3_prb_xref_remediation_20250817
-**Status**: ✅ **ACCEPTED** - PR B implementation complete
+**Status**: OK **ACCEPTED** - PR B implementation complete
 **Weight**: 5 (foundational)
 
 ### Proposal
@@ -542,11 +542,11 @@ Split XRef (real links) from Multi-Rep (pragmas) as distinct validation concerns
 6. **CI Integration**: Updated workflows with exception support
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved
-- ✅ No shadow-fork filenames introduced
-- ✅ XRef rule active; Multi-Rep stays WARN
-- ✅ Exception management prevents pragma graffiti
-- ✅ Consensus logging implemented
+- OK Archive immutability preserved
+- OK No shadow-fork filenames introduced
+- OK XRef rule active; Multi-Rep stays WARN
+- OK Exception management prevents pragma graffiti
+- OK Consensus logging implemented
 
 ### Success Metrics
 - **Target**: ≥50% reduction in Multi-Rep/XRef violations for 000_core/
@@ -556,11 +556,11 @@ Split XRef (real links) from Multi-Rep (pragmas) as distinct validation concerns
 ### Next Steps
 Ready for PR C (Ratchet & Metrics) implementation with focus on preventing backsliding and making progress visible.
 
-R## Round 3 PR C — Ratchet & Metrics
+R## Round 3 PR C - Ratchet & Metrics
 
 **Date**: 2025-08-17
 **Proposal ID**: round3_prc_ratchet_metrics_20250817
-**Status**: ✅ **ACCEPTED** - PR C implementation complete
+**Status**: OK **ACCEPTED** - PR C implementation complete
 **Weight**: 4 (operational)
 
 ### Proposal
@@ -578,11 +578,11 @@ Implement ratchet protection for readme and multirep violations, metrics visibil
 5. **State Persistence**: Metrics persisted to bot/validator-state branch
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved
-- ✅ No shadow-fork filenames introduced
-- ✅ Ratchet protection prevents backsliding
-- ✅ Metrics visibility enables confident flips
-- ✅ Consensus logging implemented
+- OK Archive immutability preserved
+- OK No shadow-fork filenames introduced
+- OK Ratchet protection prevents backsliding
+- OK Metrics visibility enables confident flips
+- OK Consensus logging implemented
 
 ### Success Metrics
 - **Ratchet**: Prevents increases in readme/multirep for changed files
@@ -593,11 +593,11 @@ Implement ratchet protection for readme and multirep violations, metrics visibil
 ### Next Steps
 Ready for clean-day window activation and controlled validator category flips.
 
-## Round 4 PR D/E/F — Controlled Flips Implementation
+## Round 4 PR D/E/F - Controlled Flips Implementation
 
 **Date**: 2025-08-17
 **Proposal ID**: round4_controlled_flips_20250817
-**Status**: ✅ **IN PROGRESS** - PR D/E/F implementation complete
+**Status**: OK **IN PROGRESS** - PR D/E/F implementation complete
 **Weight**: 4 (operational)
 
 ### Proposal
@@ -613,11 +613,11 @@ Implement flip hygiene (status visibility + flip PR context), anchor drift guard
 3. **PR F - README Cleanup Batch 2**: Workflow for 500_research/ with temp-copy proof (≥70% reduction target)
 
 ### Constitutional Compliance
-- ✅ Archive immutability preserved
-- ✅ No shadow-fork filenames introduced
-- ✅ Flip hygiene provides visibility and context
-- ✅ Anchor drift guard prevents stale links
-- ✅ README cleanup maintains idempotency
+- OK Archive immutability preserved
+- OK No shadow-fork filenames introduced
+- OK Flip hygiene provides visibility and context
+- OK Anchor drift guard prevents stale links
+- OK README cleanup maintains idempotency
 
 ### Success Metrics
 - **Flip Hygiene**: Clean-day counters visible in every PR, flip PRs show trends
@@ -627,7 +627,7 @@ Implement flip hygiene (status visibility + flip PR context), anchor drift guard
 ### Next Steps
 Ready for controlled validator category flips as clean-day windows complete.
 
-## Update — Vector Store Documentation Refresh
+## Update - Vector Store Documentation Refresh
 
 **Date**: 2025-08-18
 

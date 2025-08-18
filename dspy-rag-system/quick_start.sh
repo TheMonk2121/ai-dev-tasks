@@ -6,7 +6,7 @@ echo "======================================"
 
 # Check if watch folder is already running
 if pgrep -f "watch_folder.py" > /dev/null; then
-    echo "✅ Watch folder is already running!"
+    echo "OK Watch folder is already running!"
     echo "📁 Drop files into: $(pwd)/watch_folder"
     echo "⏹️  To stop: pkill -f watch_folder.py"
     exit 0
@@ -17,7 +17,7 @@ echo "🔧 Starting watch folder..."
 
 # Check if virtual environment exists
 if [[ ! -f "venv/bin/activate" ]]; then
-    echo "❌ Virtual environment not found at venv/bin/activate"
+    echo "X Virtual environment not found at venv/bin/activate"
     echo "💡 Please run: python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt"
     exit 1
 fi
@@ -29,7 +29,7 @@ source venv/bin/activate
 python3 watch_folder.py &
 WATCH_PID=$!
 
-echo "✅ Watch folder started! (PID: $WATCH_PID)"
+echo "OK Watch folder started! (PID: $WATCH_PID)"
 echo "📁 Drop files into: $(pwd)/watch_folder"
 echo "📄 Supported: .txt, .md, .pdf files"
 echo ""
