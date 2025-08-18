@@ -54,7 +54,7 @@ Check P0 lane and AI-executable queue; follow PRD skip rule |
 
 - [Live Backlog](#live-backlog)
 
-- [Completed Items](#completed-items)
+- [Completed Items](#completed-items-context-preservation)
 
 - [Setup Required Items](#setup-required-items)
 
@@ -371,6 +371,15 @@ Coherence Validation System |
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#status-tracking"] -->
 <!-- reference_cards: ["500_reference-cards.md#backlog-management"] -->
 
+| B‑107 | Node Version Consistency & Tooling Standardization | 🔧 | 1 | todo | Pin Node 20 LTS across dev and CI; enforce via engines and CI to prevent drift | Node.js + npm + GitHub Actions | None |
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:1, deps:[]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Add .nvmrc and .node-version (20.18.0); add engines and packageManager to config/package.json; add .npmrc with engine-strict=true; add setup-node lint CI -->
+<!-- est_hours: 1 -->
+<!-- acceptance: Node 20 LTS pinned (.nvmrc/.node-version); npm install enforces engines; CI uses actions/setup-node@v4 20.x and runs npm run lint on clean checkout; green run verified -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#repository-safety"] -->
+<!-- reference_cards: ["500_reference-cards.md#github-actions"] -->
+
 ## Backlog Working Agreements
 
 - WIP limit: at most 2 items may be marked in‑progress at any time.
@@ -415,7 +424,8 @@ This backlog is the **executable roadmap** for the AI development ecosystem. Eac
 - **System Overview**: `400_guides/400_system-overview.md`
 - **Memory Context**: `100_memory/100_cursor-memory-context.md`
 
-## ✅ Completed Items (Context Preservation)
+<!-- ANCHOR: completed-items-context-preservation -->
+## Completed Items Context Preservation
 
 ### **Core System Foundation (Completed)**
 | ID | Title | Completion Date | Key Outcomes | Lessons Applied |
@@ -982,6 +992,12 @@ Documentation review + reference updates | File naming convention migration |
 - **Documentation Alignment**: Cross-references must be maintained
 - **Strategic Alignment**: Items must align with development roadmap
 
+## Setup Required Items
+
+List any setup prerequisites or required environment steps that must be completed before executing backlog workflows. If none are required, state that explicitly.
+
+Currently, no additional setup is required beyond the instructions in `200_setup/202_setup-requirements.md`.
+
 <!-- README_AUTOFIX_START -->
 # Auto-generated sections for 000_backlog.md
 # Generated: 2025-08-17T21:51:36.730486
@@ -998,10 +1014,10 @@ Core Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document.
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system.
 
 <!-- README_AUTOFIX_END -->
