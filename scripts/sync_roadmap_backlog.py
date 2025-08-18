@@ -27,7 +27,7 @@ BACKUP_PATH = Path("000_core/004_development-roadmap.md.backup")
 
 # Regex patterns for parsing
 BACKLOG_ITEM_RE = re.compile(
-    r"^\|\s*(B‑\d{3})\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|"
+    r"^\|\s*(B-\d{3})\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|"
 )
 SCORE_RE = re.compile(r"<!--\s*score:\s*(\{.*?\})\s*-->", re.DOTALL | re.IGNORECASE)
 SCORE_TOTAL_RE = re.compile(r"<!--\s*score_total:\s*([0-9]+(?:\.[0-9]+)?)\s*-->", re.IGNORECASE)
@@ -216,7 +216,7 @@ class RoadmapBacklogSync:
         completed_items = [
             item
             for item in self.backlog_items.values()
-            if item.status in ["done", "✅ done", "complete", "completed"] and item.completion_date
+            if item.status in ["done", "OK done", "complete", "completed"] and item.completion_date
         ]
 
         # Sort by completion date (newest first)
@@ -232,7 +232,7 @@ class RoadmapBacklogSync:
             completed_lines = []
             for item in completed_items[:5]:  # Top 5 recent completions
                 points = item.points_raw if item.points_raw else "?"
-                completed_lines.append(f"- ✅ **{item.id}**: {item.title} ({points} points) - {item.completion_date}")
+                completed_lines.append(f"- OK **{item.id}**: {item.title} ({points} points) - {item.completion_date}")
 
             if not completed_lines:
                 completed_lines.append("- No items completed this sprint yet")
@@ -352,7 +352,7 @@ class RoadmapBacklogSync:
             self.read_roadmap()
 
             # Check for missing items
-            roadmap_item_ids = re.findall(r"B‑\d{3}", self.roadmap_content)
+            roadmap_item_ids = re.findall(r"B-\d{3}", self.roadmap_content)
             backlog_item_ids = list(self.backlog_items.keys())
 
             missing_in_roadmap = set(backlog_item_ids) - set(roadmap_item_ids)
@@ -365,9 +365,9 @@ class RoadmapBacklogSync:
                 print(f"WARNING: Items in roadmap but not in backlog: {missing_in_backlog}")
 
             if not missing_in_roadmap and not missing_in_backlog:
-                print("✅ Roadmap and backlog are in sync")
+                print("OK Roadmap and backlog are in sync")
             else:
-                print("❌ Roadmap and backlog are out of sync")
+                print("X Roadmap and backlog are out of sync")
                 sys.exit(1)
 
         except Exception as e:

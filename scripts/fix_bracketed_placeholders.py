@@ -87,7 +87,7 @@ def process_file(filepath: Path, dry_run: bool = False) -> list[str]:
 
         if changes and not dry_run:
             filepath.write_text(fixed_content, encoding="utf-8")
-            print(f"✅ Fixed {len(changes)} issues in {filepath}")
+            print(f"OK Fixed {len(changes)} issues in {filepath}")
             for change in changes:
                 print(f"   - {change}")
         elif changes and dry_run:
@@ -97,7 +97,7 @@ def process_file(filepath: Path, dry_run: bool = False) -> list[str]:
 
         return changes
     except Exception as e:
-        print(f"❌ Error processing {filepath}: {e}", file=sys.stderr)
+        print(f"X Error processing {filepath}: {e}", file=sys.stderr)
         return []
 
 
@@ -144,7 +144,7 @@ def main():
         )
         print("Run without --dry-run to apply fixes")
     else:
-        print(f"\n✅ Fixed {total_changes} issues in {files_processed} files")
+        print(f"\nOK Fixed {total_changes} issues in {files_processed} files")
 
 
 if __name__ == "__main__":

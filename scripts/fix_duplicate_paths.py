@@ -67,12 +67,12 @@ def fix_duplicate_paths(file_path: str) -> bool:
         # Write back if changed
         if content != original_content:
             Path(file_path).write_text(content, encoding="utf-8")
-            print(f"  ✅ Fixed duplicate paths in: {file_path}")
+            print(f"  OK Fixed duplicate paths in: {file_path}")
             return True
 
         return False
     except Exception as e:
-        print(f"  ❌ Error fixing {file_path}: {e}")
+        print(f"  X Error fixing {file_path}: {e}")
         return False
 
 
@@ -83,7 +83,7 @@ def main():
     print(f"📁 Found {len(files_to_fix)} files with duplicate paths")
 
     if not files_to_fix:
-        print("✅ No duplicate paths found!")
+        print("OK No duplicate paths found!")
         return
 
     fixed_count = 0

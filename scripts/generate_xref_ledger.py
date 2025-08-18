@@ -16,7 +16,7 @@ def load_validator_report() -> dict:
     report_path = "validator_report.json"
 
     if not os.path.exists(report_path):
-        print("❌ Validator report not found. Run validator first.")
+        print("X Validator report not found. Run validator first.")
         return {}
 
     with open(report_path) as f:
@@ -76,7 +76,7 @@ def main():
     args = parser.parse_args()
 
     if not args.dry_run and not args.write:
-        print("❌ Must specify --dry-run or --write")
+        print("X Must specify --dry-run or --write")
         return
 
     print("🔍 Loading validator report...")
@@ -89,7 +89,7 @@ def main():
     print(f"📋 Found {len(violations)} remaining XRef violations")
 
     if not violations:
-        print("✅ No XRef violations found")
+        print("OK No XRef violations found")
         return
 
     # Generate ledger entries
@@ -106,7 +106,7 @@ def main():
         with open("data/validator_exceptions.json", "w") as f:
             json.dump(ledger, f, indent=2)
 
-        print("✅ Ledger entries written to data/validator_exceptions.json")
+        print("OK Ledger entries written to data/validator_exceptions.json")
     else:
         print("📋 Dry run - no changes made")
         print("Sample entries:")

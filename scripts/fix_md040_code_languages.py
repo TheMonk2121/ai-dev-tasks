@@ -150,14 +150,14 @@ def fix_md040_code_languages():
                 new_blocks = len(re.findall(r"```\n(.*?)```", content, flags=re.DOTALL))
                 fixes = original_blocks - new_blocks
 
-                print(f"✅ Fixed: {file_path} ({fixes} code blocks)")
+                print(f"OK Fixed: {file_path} ({fixes} code blocks)")
                 files_fixed += 1
                 total_fixes += fixes
             else:
                 files_unchanged += 1
 
         except Exception as e:
-            print(f"❌ Failed: {file_path} - {str(e)}")
+            print(f"X Failed: {file_path} - {str(e)}")
             files_failed += 1
 
     print("\n📊 Summary:")
@@ -170,7 +170,7 @@ def fix_md040_code_languages():
     if files_fixed > 0:
         print(f"\n🎉 Successfully fixed {files_fixed} files!")
     else:
-        print("\nℹ️  No files needed fixing.")
+        print("\ni️  No files needed fixing.")
 
 
 if __name__ == "__main__":

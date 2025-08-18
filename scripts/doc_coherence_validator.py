@@ -33,7 +33,7 @@ try:
     FEW_SHOT_AVAILABLE = True
 except ImportError:
     FEW_SHOT_AVAILABLE = False
-    print("⚠️  Few-shot integration not available - running in standard mode")
+    print("!️  Few-shot integration not available - running in standard mode")
 
 # Pre-compile all regex patterns at module level for performance
 HEADING_INCREMENT_PATTERN = re.compile(r"^#{1,6}\s")
@@ -365,7 +365,7 @@ def warn(msg: str):
     # Check if we're in JSON mode by looking at sys.argv
     json_mode = "--json" in sys.argv
     stream = sys.stderr if json_mode else sys.stdout
-    print(f"⚠️  WARN: {msg}", file=stream)
+    print(f"!️  WARN: {msg}", file=stream)
 
 
 def _posix_rel(p: str | os.PathLike[str], root: str | os.PathLike[str]) -> str:
@@ -1291,7 +1291,7 @@ def check_item(item: BacklogItem) -> None:
             item.reasons_warn.append("MISSING_REFERENCE_CARDS_POINTER")
 
     # --- WARN: DONE items should be moved out of active table (heuristic)
-    if item.status in {"done", "✅ done", "complete", "completed"}:
+    if item.status in {"done", "OK done", "complete", "completed"}:
         item.reasons_warn.append("DONE_ITEM_IN_ACTIVE_TABLE")
 
     # --- B-100: Multi-representation requirement (raw + summary and/or refs)
@@ -1649,7 +1649,7 @@ def validate_backlog(path: str = "000_core/000_backlog.md") -> tuple[int, str, d
             else:
                 pass_count += 1
 
-            report_lines.append(f"Item {it.id} — {status}")
+            report_lines.append(f"Item {it.id} - {status}")
             if it.reasons_fail:
                 for r in it.reasons_fail:
                     report_lines.append(f"  FAIL: {r}")
@@ -1724,10 +1724,10 @@ class DocCoherenceValidator:
                 )
                 self.few_shot_patterns = self.few_shot_loader.extract_patterns(examples)
                 print(
-                    f"✅ Loaded {len(self.few_shot_patterns)} few-shot patterns for documentation coherence"
+                    f"OK Loaded {len(self.few_shot_patterns)} few-shot patterns for documentation coherence"
                 )
             except Exception as e:
-                print(f"⚠️  Failed to load few-shot patterns: {e}")
+                print(f"!️  Failed to load few-shot patterns: {e}")
                 self.enable_few_shot = False
 
         # Cache directory
@@ -2496,7 +2496,7 @@ def main():
         print("\nValidation completed")
         print(f"Files checked: {len(files)}")
         for cat, info in report["categories"].items():
-            fail_flag = "✅" if info.get("fail") else "❌"
+            fail_flag = "OK" if info.get("fail") else "X"
             print(f"{cat}: {info.get('violations', 0)} violations {fail_flag}")
 
     # Determine exit code based on FAIL mode violations

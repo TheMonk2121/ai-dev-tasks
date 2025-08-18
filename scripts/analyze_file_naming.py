@@ -39,19 +39,19 @@ def analyze_file_naming():
             needs_renaming.append((relative_path, filename))
     
     print("📊 **Analysis Results**")
-    print(f"✅ Correctly named files: {len(correctly_named)}")
-    print(f"❌ Files needing renaming: {len(needs_renaming)}")
+    print(f"OK Correctly named files: {len(correctly_named)}")
+    print(f"X Files needing renaming: {len(needs_renaming)}")
     print(f"📁 Subdirectory files: {len(subdirectory_files)}")
     print()
     
     if correctly_named:
-        print("✅ **Correctly Named Files:**")
+        print("OK **Correctly Named Files:**")
         for filename in sorted(correctly_named):
             print(f"   {filename}")
         print()
     
     if needs_renaming:
-        print("❌ **Files Needing Renaming:**")
+        print("X **Files Needing Renaming:**")
         for path, filename in needs_renaming:
             print(f"   {path} → [needs analysis]")
         print()

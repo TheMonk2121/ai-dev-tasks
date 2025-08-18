@@ -67,13 +67,13 @@ class BacklogCLI:
         preflight_result = self._run_preflight_validation()
 
         if preflight_result["has_fail_violations"]:
-            print("❌ Pre-write validation failed:")
+            print("X Pre-write validation failed:")
             for category, violations in preflight_result["fail_violations"].items():
                 print(f"  {category}: {violations} violations (FAIL mode)")
             print("\n💡 Fix violations or disable FAIL mode before creating backlog item.")
             return {"status": "error", "message": "Pre-write validation failed"}
 
-        print("✅ Pre-write validation passed")
+        print("OK Pre-write validation passed")
 
         # Create folder structure
         item_dir = self.backlog_items_dir / f"{item_id}-{slug}"
@@ -94,11 +94,11 @@ class BacklogCLI:
         print("🔍 Running post-write validation...")
         postflight_result = self._run_postflight_validation()
 
-        print(f"✅ Created backlog item: {item_id} - {title}")
+        print(f"OK Created backlog item: {item_id} - {title}")
         print(f"📁 Location: {item_dir}")
 
         if postflight_result["has_violations"]:
-            print("⚠️  Post-write validation warnings:")
+            print("!️  Post-write validation warnings:")
             for category, violations in postflight_result["violations"].items():
                 print(f"  {category}: {violations} violations")
 
@@ -137,7 +137,7 @@ class BacklogCLI:
             return {"has_fail_violations": has_fail_violations, "fail_violations": fail_violations}
 
         except Exception as e:
-            print(f"⚠️  Preflight validation error: {e}")
+            print(f"!️  Preflight validation error: {e}")
             return {"has_fail_violations": False, "fail_violations": {}}
 
     def _run_postflight_validation(self) -> dict:
@@ -174,7 +174,7 @@ class BacklogCLI:
             return {"has_violations": has_violations, "violations": violations}
 
         except Exception as e:
-            print(f"⚠️  Postflight validation error: {e}")
+            print(f"!️  Postflight validation error: {e}")
             return {"has_violations": False, "violations": {}}
 
     def _generate_backlog_id(self) -> str:
@@ -271,7 +271,7 @@ class BacklogCLI:
     def _append_to_backlog(self, item_data: dict):
         """Append item to 000_backlog.md."""
         if not self.backlog_file.exists():
-            print(f"⚠️  Backlog file not found: {self.backlog_file}")
+            print(f"!️  Backlog file not found: {self.backlog_file}")
             return
 
         # Read existing content
@@ -283,7 +283,7 @@ class BacklogCLI:
         match = re.search(table_pattern, content, re.MULTILINE | re.DOTALL)
 
         if not match:
-            print("⚠️  Could not find table in backlog file")
+            print("!️  Could not find table in backlog file")
             return
 
         header, table_content = match.groups()
@@ -345,7 +345,7 @@ def main():
     # Close item command
     close_parser = subparsers.add_parser("close-item", help="Close a backlog item")
     close_parser.add_argument("item_id", help="Backlog item ID")
-    close_parser.add_argument("--status", default="✅ done", help="Final status")
+    close_parser.add_argument("--status", default="OK done", help="Final status")
 
     args = parser.parse_args()
 
@@ -365,7 +365,7 @@ def main():
                 dependencies=args.dependencies,
                 dry_run=not args.no_dry_run,
             )
-            print(f"✅ Backlog item created: {result['id']}")
+            print(f"OK Backlog item created: {result['id']}")
 
         elif args.command == "link-prd":
             print(f"🔗 Linking PRD to {args.item_id}")
@@ -376,13 +376,13 @@ def main():
             # TODO: Implement cross-reference adding
 
         elif args.command == "close-item":
-            print(f"✅ Closing item {args.item_id}")
+            print(f"OK Closing item {args.item_id}")
             # TODO: Implement item closing
 
         return 0
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"X Error: {e}")
         return 1
 
 

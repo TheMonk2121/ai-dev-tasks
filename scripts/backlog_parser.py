@@ -79,7 +79,7 @@ class BacklogParser:
         
         self.status_map = {
             "todo": TaskStatus.PENDING,
-            "✅ done": TaskStatus.COMPLETED,
+            "OK done": TaskStatus.COMPLETED,
             "running": TaskStatus.RUNNING,
             "failed": TaskStatus.FAILED,
             "skipped": TaskStatus.SKIPPED
@@ -137,8 +137,8 @@ class BacklogParser:
     
     def _is_task_line(self, line: str) -> bool:
         """Check if a line represents a task entry."""
-        return (line.startswith('| B‑') and 
-                ('todo' in line or '✅ done' in line or 'running' in line))
+        return (line.startswith('| B-') and 
+                ('todo' in line or 'OK done' in line or 'running' in line))
     
     def _parse_task_line(self, line: str, lines: list[str], line_index: int) -> Task | None:
         """Parse a single task line from the backlog."""
@@ -226,7 +226,7 @@ class BacklogParser:
                 continue
             
             # Stop if we hit another task line
-            if comment_line.startswith('| B‑'):
+            if comment_line.startswith('| B-'):
                 break
             
             # Parse score_total
@@ -357,12 +357,12 @@ class BacklogParser:
             errors.append("Task points cannot be negative")
         
         # Check ID format
-        if not re.match(r'^B‑\d+$', task.id):
+        if not re.match(r'^B-\d+$', task.id):
             errors.append(f"Invalid task ID format: {task.id}")
         
         # Check dependencies
         for dep in task.dependencies:
-            if not re.match(r'^B‑\d+$', dep):
+            if not re.match(r'^B-\d+$', dep):
                 errors.append(f"Invalid dependency format: {dep}")
         
         return errors
@@ -450,7 +450,7 @@ class BacklogParser:
 
     def _format_task_bullet(self, task: Task) -> str:
         score = f"{task.score_total:.1f}" if task.score_total is not None else "-"
-        return f"- {task.id} — {task.title} (score {score})"
+        return f"- {task.id} - {task.title} (score {score})"
 
     def render_sections_markdown(self, tasks: list[Task]) -> dict[str, str]:
         """Render markdown for P0/P1/P2 lanes and AI-exec queue."""

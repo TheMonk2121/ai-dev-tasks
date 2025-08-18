@@ -25,7 +25,7 @@ def main():
     research_file = automation.research_file
     
     if not os.path.exists(research_file):
-        print(f"❌ Research file not found: {research_file}")
+        print(f"X Research file not found: {research_file}")
         print("Please ensure the research file exists before running dispersal.")
         return
     
@@ -35,7 +35,7 @@ def main():
         with open(research_file, encoding='utf-8') as f:
             research_content = f.read()
         
-        print(f"✅ Loaded {len(research_content)} characters of research content")
+        print(f"OK Loaded {len(research_content)} characters of research content")
         
         # Run the dispersal
         print("\n🔄 Running dispersal automation...")
@@ -43,7 +43,7 @@ def main():
         
         # Print results
         print("\n📊 DISPERSAL RESULTS:")
-        print(f"  Success: {'✅ Yes' if results['success'] else '❌ No'}")
+        print(f"  Success: {'OK Yes' if results['success'] else 'X No'}")
         print(f"  Updated 500_ files: {len(results['updated_500_files'])}")
         print(f"  Updated anchor files: {len(results['updated_anchor_files'])}")
         print(f"  Created files: {len(results['created_files'])}")
@@ -51,7 +51,7 @@ def main():
         print(f"  Errors: {len(results['errors'])}")
         
         if results['errors']:
-            print("\n❌ ERRORS:")
+            print("\nX ERRORS:")
             for error in results['errors']:
                 print(f"  - {error}")
         
@@ -59,7 +59,7 @@ def main():
         print("📝 BACKLOG SCRIPT: scripts/update_backlog_from_research.py")
         
     except Exception as e:
-        print(f"❌ Error running dispersal: {e}")
+        print(f"X Error running dispersal: {e}")
         return
 
 if __name__ == "__main__":

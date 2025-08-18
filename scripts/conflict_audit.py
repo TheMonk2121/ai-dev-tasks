@@ -231,12 +231,12 @@ def main():
         if results["issues"]:
             print("\nIssues:")
             for issue in results["issues"]:
-                print(f"  ❌ {issue}")
+                print(f"  X {issue}")
 
         if results["warnings"]:
             print("\nWarnings:")
             for warning in results["warnings"]:
-                print(f"  ⚠️ {warning}")
+                print(f"  !️ {warning}")
 
 
 if __name__ == "__main__":

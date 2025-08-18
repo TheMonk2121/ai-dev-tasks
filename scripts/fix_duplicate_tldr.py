@@ -47,11 +47,11 @@ def fix_duplicate_tldr(file_path: Path) -> bool:
 
         # Write the cleaned content
         file_path.write_text("\n".join(new_lines), encoding="utf-8")
-        print(f"✅ Fixed duplicate TL;DR sections in {file_path}")
+        print(f"OK Fixed duplicate TL;DR sections in {file_path}")
         return True
 
     except Exception as e:
-        print(f"❌ Error processing {file_path}: {e}")
+        print(f"X Error processing {file_path}: {e}")
         return False
 
 

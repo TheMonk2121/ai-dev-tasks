@@ -90,7 +90,7 @@ def main():
     ledger_path = "data/validator_exceptions.json"
 
     if not os.path.exists(ledger_path):
-        print("❌ Validator exception ledger not found")
+        print("X Validator exception ledger not found")
         sys.exit(1)
 
     # Load current ledger
@@ -100,7 +100,7 @@ def main():
     expired_entries = get_expired_entries(ledger)
 
     if not expired_entries:
-        print("✅ No expired entries found in ledger")
+        print("OK No expired entries found in ledger")
         return
 
     print(f"📋 Found {len(expired_entries)} expired entries in ledger")
@@ -122,7 +122,7 @@ def main():
                 )
 
     if problematic_extensions:
-        print("\n❌ PROBLEMATIC WAIVER EXTENSIONS DETECTED:")
+        print("\nX PROBLEMATIC WAIVER EXTENSIONS DETECTED:")
         print("The following files have expired waiver entries but no meaningful content changes:")
 
         for ext in problematic_extensions:
@@ -136,7 +136,7 @@ def main():
 
         sys.exit(1)
     else:
-        print("✅ No problematic waiver extensions detected")
+        print("OK No problematic waiver extensions detected")
         print("All expired entries either have content changes or are not being extended")
 
 

@@ -37,7 +37,7 @@ class MemoryBenchmark:
         }
         self.test_models = {
             "mistral-7b": {"context": 8192, "description": "Mistral 7B Instruct"},
-            "mixtral-8x7b": {"context": 32768, "description": "Mixtral 8×7B"},
+            "mixtral-8x7b": {"context": 32768, "description": "Mixtral 8x7B"},
             "gpt-4o": {"context": 131072, "description": "GPT-4o"}
         }
     
@@ -315,7 +315,7 @@ Generated: {report['timestamp']}
         output += "## 🎯 Recommendations\n\n"
         
         for rec in report["recommendations"]:
-            status_icon = "✅" if rec["type"] == "success" else "🤔" if rec["type"] == "consider" else "⏭️"
+            status_icon = "OK" if rec["type"] == "success" else "🤔" if rec["type"] == "consider" else "⏭️"
             output += f"{status_icon} **{rec['message']}**\n"
             output += f"   → {rec['action']}\n\n"
         

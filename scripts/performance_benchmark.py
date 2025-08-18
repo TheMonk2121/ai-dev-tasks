@@ -23,7 +23,7 @@ try:
     PSUTIL_AVAILABLE = True
 except ImportError:
     PSUTIL_AVAILABLE = False
-    print("⚠️  psutil not available. Install with: pip install psutil>=5.9.0")
+    print("!️  psutil not available. Install with: pip install psutil>=5.9.0")
     print("   Resource monitoring will be limited to basic timing.\n")
 
 
@@ -309,9 +309,9 @@ class ScriptBenchmarker:
                 results.append(benchmark_result)
 
                 if result.returncode != 0:
-                    print(f"    ❌ Failed: {result.stderr[:100]}...")
+                    print(f"    X Failed: {result.stderr[:100]}...")
                 else:
-                    print(f"    ✅ Success: {benchmark_result.execution_time:.2f}s")
+                    print(f"    OK Success: {benchmark_result.execution_time:.2f}s")
 
                 # Calculate efficiency metrics
                 benchmark_result.efficiency_metrics = self.calculate_efficiency_metrics(
@@ -342,7 +342,7 @@ class ScriptBenchmarker:
                     timestamp=datetime.now(),
                 )
                 results.append(benchmark_result)
-                print(f"    ❌ Error: {e}")
+                print(f"    X Error: {e}")
 
         return results
 
@@ -536,7 +536,7 @@ class ScriptBenchmarker:
 
                 print(f"\n📊 {script_name}:")
                 print(
-                    f"   ✅ Successful runs: {len(successful_runs)}/{len(script_results)}"
+                    f"   OK Successful runs: {len(successful_runs)}/{len(script_results)}"
                 )
                 print(
                     f"   ⏱️  Avg time: {avg_time:.2f}s (min: {min_time:.2f}s, max: {max_time:.2f}s)"
@@ -544,11 +544,11 @@ class ScriptBenchmarker:
                 print(f"   💾 Avg memory: {avg_memory:.1f}MB")
 
                 if failed_runs:
-                    print(f"   ❌ Failed runs: {len(failed_runs)}")
+                    print(f"   X Failed runs: {len(failed_runs)}")
                     for failed in failed_runs:
                         print(f"      - {failed.error_message}")
             else:
-                print(f"\n❌ {script_name}: All runs failed")
+                print(f"\nX {script_name}: All runs failed")
                 for failed in failed_runs:
                     print(f"   - {failed.error_message}")
 
@@ -597,7 +597,7 @@ def main():
     summary = efficiency_report["summary"]
     print(f"\n📈 Overall Efficiency Score: {summary['avg_efficiency_score']:.3f}")
     print(f"🚀 Performance Score: {summary['avg_performance_score']:.3f}")
-    print(f"✅ Success Rate: {summary['success_rate']:.1%}")
+    print(f"OK Success Rate: {summary['success_rate']:.1%}")
     print(f"⏱️  Avg Execution Time: {summary['avg_execution_time']:.2f}s")
     print(f"💾 Avg Memory Usage: {summary['avg_memory_usage_mb']:.1f}MB")
 

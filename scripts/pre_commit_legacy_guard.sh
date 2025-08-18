@@ -27,7 +27,7 @@ while IFS= read -r f; do
 done <<< "$FILES"
 
 if (( ${#VIOLATIONS[@]} > 0 )); then
-  printf "\n❌ Legacy model references detected in active files:\n" >&2
+  printf "\nX Legacy model references detected in active files:\n" >&2
   for f in "${VIOLATIONS[@]}"; do
     printf "  - %s\n" "$f" >&2
     grep -IinE "$BLOCK_PATTERNS" "$f" | sed 's/^/    > /' >&2

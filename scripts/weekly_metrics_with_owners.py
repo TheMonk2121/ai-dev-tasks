@@ -217,10 +217,10 @@ def main():
                     f"| {item['file']} | {item['key']} | {item['expires']} | {item['days_remaining']} | {item['reason'][:50]}... |"
                 )
         else:
-            print("✅ No near-expiry exceptions found")
+            print("OK No near-expiry exceptions found")
 
     except Exception as e:
-        print(f"⚠️  Could not load exceptions: {e}")
+        print(f"!️  Could not load exceptions: {e}")
 
     print()
 

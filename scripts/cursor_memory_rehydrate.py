@@ -50,7 +50,7 @@ def format_bundle_for_cursor(bundle_text, metadata):
         # Clean up span source markers for better readability
         if line.startswith("[SPAN SOURCE]"):
             continue
-        if line.startswith("— Doc ") and "chars" in line:
+        if line.startswith("- Doc ") and "chars" in line:
             continue
         if line.strip() == "":
             continue
@@ -122,7 +122,7 @@ def main():
     try:
         from utils.memory_rehydrator import rehydrate
     except ImportError:
-        print("❌ Error: Could not import memory_rehydrator module")
+        print("X Error: Could not import memory_rehydrator module")
         print("Make sure you're running from the project root directory")
         sys.exit(1)
 
@@ -159,10 +159,10 @@ def main():
                 bundle_text = scaffolding.inject_into_memory_rehydration(scaffold, bundle.text)
                 print(f"🎯 Applied few-shot cognitive scaffolding with {len(scaffold.few_shot_examples)} examples")
             except ImportError:
-                print("⚠️  Few-shot scaffolding module not available, continuing without it")
+                print("!️  Few-shot scaffolding module not available, continuing without it")
                 bundle_text = bundle.text
             except Exception as e:
-                print(f"⚠️  Few-shot scaffolding failed: {e}, continuing without it")
+                print(f"!️  Few-shot scaffolding failed: {e}, continuing without it")
                 bundle_text = bundle.text
         else:
             bundle_text = bundle.text
@@ -186,7 +186,7 @@ def main():
         print(f"   • Task: {args.task}")
 
     except Exception as e:
-        print(f"❌ Error building memory bundle: {e}")
+        print(f"X Error building memory bundle: {e}")
         sys.exit(1)
 
 

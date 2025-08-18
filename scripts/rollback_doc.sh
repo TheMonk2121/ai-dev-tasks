@@ -38,15 +38,15 @@ log() {
 }
 
 error() {
-    echo -e "${RED}❌ ERROR:${NC} $1" | tee -a "$LOG_FILE"
+    echo -e "${RED}X ERROR:${NC} $1" | tee -a "$LOG_FILE"
 }
 
 success() {
-    echo -e "${GREEN}✅${NC} $1" | tee -a "$LOG_FILE"
+    echo -e "${GREEN}OK${NC} $1" | tee -a "$LOG_FILE"
 }
 
 warning() {
-    echo -e "${YELLOW}⚠️${NC} $1" | tee -a "$LOG_FILE"
+    echo -e "${YELLOW}!️${NC} $1" | tee -a "$LOG_FILE"
 }
 
 # Check if we're in a git repository
@@ -200,7 +200,7 @@ rollback_snapshot() {
     echo ""
 
     # Confirm rollback
-    read -p "⚠️  This will reset documentation to the snapshot state. Continue? (y/N): " -n 1 -r
+    read -p "!️  This will reset documentation to the snapshot state. Continue? (y/N): " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         log "Rollback cancelled by user"

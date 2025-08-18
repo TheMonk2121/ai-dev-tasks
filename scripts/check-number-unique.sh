@@ -12,7 +12,7 @@ files=$(find . -name "*.md" -not -path "./backup_before_migration/*" | grep -E "
 prefixes=$(echo "$files" | grep -oE '^\./[0-9]+' | sort | uniq -d)
 
 if [ ! -z "$prefixes" ]; then
-    echo "⚠️  WARNING: Duplicate numeric prefixes found:"
+    echo "!️  WARNING: Duplicate numeric prefixes found:"
     echo "$prefixes" | while read prefix; do
         echo "   $prefix"
         # Show which files have this prefix
@@ -20,7 +20,7 @@ if [ ! -z "$prefixes" ]; then
     done
     echo ""
 else
-    echo "✅ No duplicate numeric prefixes found"
+    echo "OK No duplicate numeric prefixes found"
 fi
 
 # Check for files that should be three-digit but aren't

@@ -19,7 +19,7 @@ def load_manifest() -> dict:
     manifest_path = "data/archive_manifest.json"
 
     if not os.path.exists(manifest_path):
-        print("❌ Archive manifest not found. Run archive_manifest_rebuild.py first.")
+        print("X Archive manifest not found. Run archive_manifest_rebuild.py first.")
         sys.exit(1)
 
     with open(manifest_path) as f:
@@ -31,7 +31,7 @@ def load_validator_report() -> dict:
     report_path = "validator_report.json"
 
     if not os.path.exists(report_path):
-        print("❌ Validator report not found. Run validator first.")
+        print("X Validator report not found. Run validator first.")
         sys.exit(1)
 
     with open(report_path) as f:
@@ -172,7 +172,7 @@ def main():
     args = parser.parse_args()
 
     if not args.dry_run and not args.write:
-        print("❌ Must specify --dry-run or --write")
+        print("X Must specify --dry-run or --write")
         sys.exit(1)
 
     print("🔍 Loading archive manifest and validator report...")
@@ -186,7 +186,7 @@ def main():
     print(f"📋 Found {len(archive_violations)} archive violations")
 
     if not archive_violations:
-        print("✅ No archive violations found")
+        print("OK No archive violations found")
         return
 
     # Process each violation
@@ -201,11 +201,11 @@ def main():
             if archive_path.startswith(cwd):
                 archive_path = archive_path[len(cwd) :].lstrip("/")
             else:
-                print(f"⚠️  {archive_path} not in current directory, skipping")
+                print(f"!️  {archive_path} not in current directory, skipping")
                 continue
 
         if archive_path not in manifest["files"]:
-            print(f"⚠️  {archive_path} not in manifest, skipping")
+            print(f"!️  {archive_path} not in manifest, skipping")
             continue
 
         manifest_entry = manifest["files"][archive_path]
@@ -223,7 +223,7 @@ def main():
         # Get blob content
         blob_content = get_blob_content(blob_sha)
         if blob_content is None:
-            print(f"  ⚠️  Could not get blob content for {blob_sha}")
+            print(f"  !️  Could not get blob content for {blob_sha}")
             continue
 
         # Normalize for comparison
@@ -231,7 +231,7 @@ def main():
         blob_normalized = normalize_content(blob_content)
 
         if current_normalized == blob_normalized:
-            print("  ✅ Content matches blob (normalized)")
+            print("  OK Content matches blob (normalized)")
             continue
 
         print(f"  🔄 Content differs from blob {blob_sha[:8]}")
@@ -253,7 +253,7 @@ def main():
             # Update errata index
             update_errata_index(errata_path, archive_path)
 
-            print(f"  ✅ Restored and created errata: {errata_path}")
+            print(f"  OK Restored and created errata: {errata_path}")
         else:
             print("  📝 Would restore and create errata")
             restored_files.append(archive_path)
@@ -264,7 +264,7 @@ def main():
     print(f"  - Errata files created: {len(errata_files)}")
 
     if args.write:
-        print("  - Changes applied: ✅")
+        print("  - Changes applied: OK")
     else:
         print("  - Dry run mode: No changes made")
 

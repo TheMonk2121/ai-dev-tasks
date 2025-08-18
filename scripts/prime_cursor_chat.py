@@ -29,13 +29,13 @@ def run_memory_rehydrator(role="planner", task="current project status and core 
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(os.path.dirname(__file__)))
 
         if result.returncode != 0:
-            print(f"❌ Error running memory rehydrator: {result.stderr}")
+            print(f"X Error running memory rehydrator: {result.stderr}")
             return None
 
         return result.stdout
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"X Error: {e}")
         return None
 
 
@@ -96,7 +96,7 @@ def main():
     bundle_output = run_memory_rehydrator(role, task)
 
     if not bundle_output:
-        print("❌ Failed to get memory context")
+        print("X Failed to get memory context")
         sys.exit(1)
 
     # Format for Cursor chat

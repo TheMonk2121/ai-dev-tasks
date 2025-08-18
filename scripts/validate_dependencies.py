@@ -25,7 +25,7 @@ def check_dependency_versions():
     # Check pip list for installed packages
     success, stdout, stderr = run_command("pip list")
     if not success:
-        print(f"❌ Failed to get installed packages: {stderr}")
+        print(f"X Failed to get installed packages: {stderr}")
         return False
 
     installed_packages = {}
@@ -43,10 +43,10 @@ def check_dependency_versions():
         if dep not in installed_packages:
             missing_deps.append(dep)
         else:
-            print(f"✅ {dep}: {installed_packages[dep]}")
+            print(f"OK {dep}: {installed_packages[dep]}")
 
     if missing_deps:
-        print(f"❌ Missing dependencies: {missing_deps}")
+        print(f"X Missing dependencies: {missing_deps}")
         return False
 
     return True
@@ -71,13 +71,13 @@ def validate_imports():
     for module, description in test_imports:
         try:
             __import__(module)
-            print(f"✅ {module}: {description}")
+            print(f"OK {module}: {description}")
         except ImportError as e:
-            print(f"❌ {module}: {description} - {e}")
+            print(f"X {module}: {description} - {e}")
             failed_imports.append(module)
 
     if failed_imports:
-        print(f"\n❌ Failed imports: {failed_imports}")
+        print(f"\nX Failed imports: {failed_imports}")
         return False
 
     return True
@@ -95,16 +95,16 @@ def check_requirements_files():
 
     for req_file in requirements_files:
         if not Path(req_file).exists():
-            print(f"❌ Missing requirements file: {req_file}")
+            print(f"X Missing requirements file: {req_file}")
             continue
 
         with open(req_file) as f:
             content = f.read()
 
         if "-r ../requirements.txt" in content:
-            print(f"✅ {req_file}: References root requirements")
+            print(f"OK {req_file}: References root requirements")
         else:
-            print(f"❌ {req_file}: Does not reference root requirements")
+            print(f"X {req_file}: Does not reference root requirements")
             return False
 
     return True
@@ -135,7 +135,7 @@ def main():
         print("🎉 All dependency checks passed!")
         return 0
     else:
-        print("❌ Some dependency checks failed!")
+        print("X Some dependency checks failed!")
         return 1
 
 

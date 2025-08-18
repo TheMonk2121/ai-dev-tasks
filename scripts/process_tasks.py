@@ -421,7 +421,7 @@ class BacklogParser:
             lines = content.split("\n")
 
             for i, line in enumerate(lines):
-                if line.startswith("| B‑") and "todo" in line:
+                if line.startswith("| B-") and "todo" in line:
                     task = self._parse_task_line(line, lines, i)
                     if task:
                         tasks.append(task)
@@ -468,7 +468,7 @@ class BacklogParser:
             # Parse status
             status_map = {
                 "todo": TaskStatus.PENDING,
-                "✅ done": TaskStatus.COMPLETED,
+                "OK done": TaskStatus.COMPLETED,
                 "running": TaskStatus.RUNNING,
                 "failed": TaskStatus.FAILED,
                 "skipped": TaskStatus.SKIPPED,

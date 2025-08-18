@@ -29,7 +29,7 @@ try:
     FEW_SHOT_AVAILABLE = True
 except ImportError:
     FEW_SHOT_AVAILABLE = False
-    print("⚠️  Few-shot integration not available - running in standard mode")
+    print("!️  Few-shot integration not available - running in standard mode")
 
 # Fenced section markers for automated updates
 FENCE_PRIORITIES_START = "<!-- AUTO:current_priorities:start -->"
@@ -103,7 +103,7 @@ def extract_backlog_priorities(enable_few_shot: bool = True) -> list[dict[str, s
     """Extract current priorities from 000_core/000_backlog.md with improved parsing and few-shot enhancement"""
     backlog_file = Path("000_core/000_backlog.md")
     if not backlog_file.exists():
-        print(f"⚠️  Backlog file not found: {backlog_file}")
+        print(f"!️  Backlog file not found: {backlog_file}")
         return []
 
     priorities = []
@@ -113,9 +113,9 @@ def extract_backlog_priorities(enable_few_shot: bool = True) -> list[dict[str, s
     if enable_few_shot and FEW_SHOT_AVAILABLE:
         try:
             few_shot_loader = FewShotExampleLoader()
-            print("✅ Few-shot enhancement enabled for backlog parsing")
+            print("OK Few-shot enhancement enabled for backlog parsing")
         except Exception as e:
-            print(f"⚠️  Failed to initialize few-shot loader: {e}")
+            print(f"!️  Failed to initialize few-shot loader: {e}")
 
     try:
         with open(backlog_file, encoding="utf-8") as f:
@@ -141,7 +141,7 @@ def extract_backlog_priorities(enable_few_shot: bool = True) -> list[dict[str, s
         return priorities[:5]  # Top 5 priorities
 
     except Exception as e:
-        print(f"❌ Error parsing backlog: {e}")
+        print(f"X Error parsing backlog: {e}")
         return []
 
 
@@ -158,15 +158,15 @@ def extract_completed_items() -> list[dict[str, str]]:
             content = f.read()
 
         # Look for completed items section
-        if "## ✅ **Completed Items**" in content:
-            completed_section = content.split("## ✅ **Completed Items**")[1].split(
+        if "## OK **Completed Items**" in content:
+            completed_section = content.split("## OK **Completed Items**")[1].split(
                 "##"
             )[0]
 
             # Extract completed items
             lines = completed_section.split("\n")
             for line in lines:
-                if "| B-" in line and "✅ done" in line:
+                if "| B-" in line and "OK done" in line:
                     item = parse_backlog_item(line)
                     if item:
                         completed.append(item)
@@ -174,7 +174,7 @@ def extract_completed_items() -> list[dict[str, str]]:
         return completed[-5:]  # Last 5 completed
 
     except Exception as e:
-        print(f"❌ Error parsing completed items: {e}")
+        print(f"X Error parsing completed items: {e}")
         return []
 
 
@@ -280,7 +280,7 @@ def render_completed_block(completed: list[dict[str, str]]) -> str:
     lines.append("")
 
     for item in completed:
-        lines.append(f"- ✅ **{item['id']}**: {item['title']}")
+        lines.append(f"- OK **{item['id']}**: {item['title']}")
 
     return "\n".join(lines)
 
@@ -310,13 +310,13 @@ def update_memory_context(
     # Read current memory context
     memory_file = Path("100_memory/100_cursor-memory-context.md")
     if not memory_file.exists():
-        return False, f"❌ Memory context file not found: {memory_file}"
+        return False, f"X Memory context file not found: {memory_file}"
 
     try:
         with open(memory_file, encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
-        return False, f"❌ Error reading memory context: {e}"
+        return False, f"X Error reading memory context: {e}"
 
     # Build updated content
     updated_content = content
@@ -350,13 +350,13 @@ def update_memory_context(
     if dry_run:
         print("🔍 DRY RUN - Preview of changes:")
         print(f"📋 Priorities to update: {len(priorities)} items")
-        print(f"✅ Completed items to update: {len(completed)} items")
+        print(f"OK Completed items to update: {len(completed)} items")
         print(
             f"📊 Health data to update: {health.get('files_checked', 'n/a')} files checked"
         )
 
         if content != updated_content:
-            print("✅ Changes would be applied")
+            print("OK Changes would be applied")
             return True, "Dry run completed - changes would be applied"
         else:
             print("No changes needed")
@@ -369,13 +369,13 @@ def update_memory_context(
 
         return (
             True,
-            f"✅ Memory context updated successfully\n"
+            f"OK Memory context updated successfully\n"
             f"📋 Priorities: {len(priorities)} items\n"
-            f"✅ Completed: {len(completed)} items",
+            f"OK Completed: {len(completed)} items",
         )
 
     except Exception as e:
-        return False, f"❌ Error writing memory context: {e}"
+        return False, f"X Error writing memory context: {e}"
 
 
 def main():
@@ -405,7 +405,7 @@ def main():
             sys.exit(1)
 
     except Exception as e:
-        print(f"❌ Error updating memory context: {e}")
+        print(f"X Error updating memory context: {e}")
         sys.exit(1)
 
 

@@ -29,7 +29,7 @@ git add .
 # Commit with --no-verify to bypass pre-commit hooks
 git commit --no-verify -m "$COMMIT_MESSAGE"
 
-echo "✅ Quick commit successful!"
+echo "OK Quick commit successful!"
 echo ""
 echo "Note: This bypassed documentation validation."
 echo "For core documentation changes, use regular 'git commit' instead."

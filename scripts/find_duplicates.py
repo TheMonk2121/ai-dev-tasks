@@ -111,7 +111,7 @@ class DuplicateFinder:
     def print_duplicate_analysis(self, duplicates: dict[str, list[Path]]) -> None:
         """Print detailed duplicate analysis."""
         if not duplicates:
-            print("\n✅ No duplicate files found!")
+            print("\nOK No duplicate files found!")
             return
         
         print("\n🔍 DUPLICATE ANALYSIS")

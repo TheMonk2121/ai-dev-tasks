@@ -157,7 +157,7 @@ class TLDRAdder:
             # Get template
             template = self.get_tldr_template(file_path)
             if not template:
-                print(f"⚠️  No template found for {file_path}")
+                print(f"!️  No template found for {file_path}")
                 return False
 
             # Create TL;DR section
@@ -184,14 +184,14 @@ class TLDRAdder:
 
             if not self.dry_run:
                 file_path.write_text("\n".join(lines), encoding="utf-8")
-                print(f"✅ Added TL;DR to {file_path}")
+                print(f"OK Added TL;DR to {file_path}")
             else:
                 print(f"📝 Would add TL;DR to {file_path}")
 
             return True
 
         except Exception as e:
-            print(f"❌ Error processing {file_path}: {e}")
+            print(f"X Error processing {file_path}: {e}")
             return False
 
     def process_files(self, file_list: list[str]) -> None:
@@ -203,7 +203,7 @@ class TLDRAdder:
                 if self.add_tldr_section(file_path):
                     self.tldr_added += 1
             else:
-                print(f"⚠️  File not found: {file_path}")
+                print(f"!️  File not found: {file_path}")
 
     def run(self) -> None:
         """Main execution method."""

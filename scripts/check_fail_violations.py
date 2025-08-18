@@ -14,7 +14,7 @@ def check_fail_violations(report_path: str) -> int:
     """Check for violations in categories currently in FAIL mode."""
 
     if not Path(report_path).exists():
-        print(f"❌ Validator report not found: {report_path}")
+        print(f"X Validator report not found: {report_path}")
         return 1
 
     # Read validator report
@@ -64,18 +64,18 @@ def check_fail_violations(report_path: str) -> int:
     print("🔍 FAIL Mode Violation Check:")
     for category, violations in category_violations.items():
         status = "FAIL" if fail_flags[category] == 1 else "WARN"
-        violation_status = f"❌ {violations} violations" if violations > 0 else "✅ Clean"
+        violation_status = f"X {violations} violations" if violations > 0 else "OK Clean"
         print(f"  {category}: {violation_status} (Mode: {status})")
 
     # Exit with error if any FAIL mode categories have violations
     if failed_categories:
-        print("\n❌ FAIL Mode Violations Found:")
+        print("\nX FAIL Mode Violations Found:")
         for category, violations in failed_categories:
             print(f"  {category}: {violations} violations")
         print("\n💡 Fix violations or disable FAIL mode for these categories.")
         return 2  # Exit code 2 for FAIL mode violations
 
-    print("\n✅ All FAIL mode categories are clean!")
+    print("\nOK All FAIL mode categories are clean!")
     return 0
 
 

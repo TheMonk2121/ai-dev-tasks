@@ -45,7 +45,7 @@ def get_migration_plan() -> list[tuple[str, str]]:
         if old_path.exists():
             plan.append((str(old_path), str(new_path)))
         else:
-            print(f"⚠️  Warning: {old_name} not found, skipping")
+            print(f"!️  Warning: {old_name} not found, skipping")
 
     return plan
 
@@ -72,9 +72,9 @@ def update_file_references(old_name: str, new_name: str) -> None:
                 if old_name in content:
                     new_content = content.replace(old_name, new_name)
                     ref_path.write_text(new_content, encoding="utf-8")
-                    print(f"  ✅ Updated references in {ref_file}")
+                    print(f"  OK Updated references in {ref_file}")
             except Exception as e:
-                print(f"  ⚠️  Warning: Could not update {ref_file}: {e}")
+                print(f"  !️  Warning: Could not update {ref_file}: {e}")
 
 
 def preview_migration() -> None:
@@ -85,7 +85,7 @@ def preview_migration() -> None:
     plan = get_migration_plan()
 
     if not plan:
-        print("✅ No files need migration!")
+        print("OK No files need migration!")
         return
 
     print(f"📋 Found {len(plan)} files to migrate:")
@@ -106,7 +106,7 @@ def execute_migration() -> None:
     plan = get_migration_plan()
 
     if not plan:
-        print("✅ No files need migration!")
+        print("OK No files need migration!")
         return
 
     # Create backup
@@ -126,13 +126,13 @@ def execute_migration() -> None:
         # Rename file
         try:
             old_file.rename(new_file)
-            print(f"✅ Renamed: {old_path} → {new_path}")
+            print(f"OK Renamed: {old_path} → {new_path}")
 
             # Update references
             update_file_references(old_file.name, new_file.name)
 
         except Exception as e:
-            print(f"❌ Error renaming {old_path}: {e}")
+            print(f"X Error renaming {old_path}: {e}")
             # Restore from backup
             shutil.copy2(backup_file, old_file)
             print(f"🔄 Restored {old_path} from backup")

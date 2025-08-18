@@ -77,7 +77,7 @@ def stage_all_changes() -> bool:
     # Add all changes
     exit_code, stdout, stderr = run_git_command(["add", "."])
     if exit_code != 0:
-        print(f"❌ Error staging changes: {stderr}")
+        print(f"X Error staging changes: {stderr}")
         return False
 
     return True
@@ -89,10 +89,10 @@ def commit_changes(message: str) -> bool:
 
     exit_code, stdout, stderr = run_git_command(["commit", "-m", message])
     if exit_code != 0:
-        print(f"❌ Error committing changes: {stderr}")
+        print(f"X Error committing changes: {stderr}")
         return False
 
-    print("✅ Changes committed successfully")
+    print("OK Changes committed successfully")
     return True
 
 
@@ -103,7 +103,7 @@ def push_changes() -> bool:
     # Get current branch
     exit_code, stdout, stderr = run_git_command(["branch", "--show-current"])
     if exit_code != 0:
-        print(f"❌ Error getting current branch: {stderr}")
+        print(f"X Error getting current branch: {stderr}")
         return False
 
     current_branch = stdout.strip()
@@ -111,10 +111,10 @@ def push_changes() -> bool:
     # Push to remote
     exit_code, stdout, stderr = run_git_command(["push", "origin", current_branch])
     if exit_code != 0:
-        print(f"❌ Error pushing changes: {stderr}")
+        print(f"X Error pushing changes: {stderr}")
         return False
 
-    print(f"✅ Changes pushed to {current_branch}")
+    print(f"OK Changes pushed to {current_branch}")
     return True
 
 
@@ -161,7 +161,7 @@ def display_changes_summary() -> str:
     summary.append("")
 
     if staged:
-        summary.append("✅ Staged files:")
+        summary.append("OK Staged files:")
         for file in staged[:10]:  # Show first 10
             summary.append(f"   + {file}")
         if len(staged) > 10:
@@ -185,7 +185,7 @@ def display_changes_summary() -> str:
         summary.append("")
 
     if not staged and not unstaged and not untracked:
-        summary.append("ℹ️  No changes detected")
+        summary.append("i️  No changes detected")
 
     return "\n".join(summary)
 
@@ -205,14 +205,14 @@ def main():
     # Check if we're in a git repository
     exit_code, stdout, stderr = run_git_command(["rev-parse", "--git-dir"])
     if exit_code != 0:
-        print("❌ Not in a git repository")
+        print("X Not in a git repository")
         sys.exit(1)
 
     # Check git status
     has_changes, status_output = check_git_status()
 
     if not has_changes:
-        print("✅ No changes to commit")
+        print("OK No changes to commit")
         return
 
     # Display changes summary
@@ -236,7 +236,7 @@ def main():
     # Confirm push (unless --force)
     if not args.force:
         if not confirm_push(changes_summary):
-            print("❌ Push cancelled by user")
+            print("X Push cancelled by user")
             sys.exit(0)
 
     # Commit changes
@@ -248,7 +248,7 @@ def main():
         sys.exit(1)
 
     print("\n🎉 Auto-push completed successfully!")
-    print("✅ Changes have been committed and pushed to GitHub")
+    print("OK Changes have been committed and pushed to GitHub")
 
 
 if __name__ == "__main__":

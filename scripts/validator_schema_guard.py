@@ -14,7 +14,7 @@ import sys
 def load_validator_report(path: str) -> dict:
     """Load validator report."""
     if not os.path.exists(path):
-        print(f"❌ Validator report not found: {path}")
+        print(f"X Validator report not found: {path}")
         return {}
 
     with open(path) as f:
@@ -75,10 +75,10 @@ def main():
     print(f"📋 Expected schema version: {expected_version}")
 
     if schema_version == expected_version:
-        print("✅ Schema version matches expected version")
+        print("OK Schema version matches expected version")
         return 0
 
-    print(f"⚠️  Schema version mismatch: {schema_version} != {expected_version}")
+    print(f"!️  Schema version mismatch: {schema_version} != {expected_version}")
 
     # Check if this is an intentional schema change
     has_migration_doc = check_migration_doc()
@@ -88,10 +88,10 @@ def main():
     print(f"📋 Schema-migration label: {has_migration_label}")
 
     if has_migration_doc and has_migration_label:
-        print("✅ Schema change properly documented and labeled")
+        print("OK Schema change properly documented and labeled")
         return 0
 
-    print("❌ Schema change detected without proper documentation")
+    print("X Schema change detected without proper documentation")
     print()
     print("To change the validator schema:")
     print("1. Update docs/VALIDATOR_SCHEMA_MIGRATION.md with:")

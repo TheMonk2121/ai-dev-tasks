@@ -407,12 +407,12 @@ def main():
         if results["validation_errors"]:
             print("\nValidation Errors:")
             for error in results["validation_errors"]:
-                print(f"  ❌ {error}")
+                print(f"  X {error}")
 
         if results["warnings"]:
             print("\nWarnings:")
             for warning in results["warnings"]:
-                print(f"  ⚠️ {warning}")
+                print(f"  !️ {warning}")
 
     if args.create_scaffold and args.role and args.task:
         print(f"Creating cognitive scaffold for {args.role} role...")

@@ -47,7 +47,7 @@ class ConstitutionComplianceChecker:
             self._parse_system_integration_rules(content)
             
         except FileNotFoundError:
-            print(f"⚠️  Constitution file {self.constitution_file} not found")
+            print(f"!️  Constitution file {self.constitution_file} not found")
             self._create_default_rules()
     
     def _parse_file_safety_rules(self, content: str):
@@ -288,7 +288,7 @@ class ConstitutionComplianceChecker:
     def generate_compliance_report(self) -> str:
         """Generate a human-readable compliance report."""
         if not self.violations:
-            return "✅ All constitution rules are being followed"
+            return "OK All constitution rules are being followed"
         
         report = "🤖 AI Constitution Compliance Report\n"
         report += "=" * 50 + "\n\n"
@@ -303,7 +303,7 @@ class ConstitutionComplianceChecker:
             report += "\n"
         
         if warnings:
-            report += "⚠️  WARNINGS:\n"
+            report += "!️  WARNINGS:\n"
             for warning in warnings:
                 report += f"  • {warning['description']}: {warning['message']}\n"
             report += "\n"
@@ -327,7 +327,7 @@ class ConstitutionComplianceChecker:
             with open(log_file, 'a', encoding='utf-8') as f:
                 f.write(json.dumps(log_entry) + '\n')
         except Exception as e:
-            print(f"⚠️  Could not log violation: {e}")
+            print(f"!️  Could not log violation: {e}")
 
 
 def main():

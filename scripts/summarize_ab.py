@@ -94,12 +94,12 @@ def main() -> None:
 
     all_passed = all(success_criteria)
 
-    print(f"### Overall Result: {'✅ PASS' if all_passed else '❌ FAIL'}")
+    print(f"### Overall Result: {'OK PASS' if all_passed else 'X FAIL'}")
     print()
-    print(f"- Recall@10: {var.get('recall_at_10', 0):.3f} {'✅' if var.get('recall_at_10', 0) >= 0.8 else '❌'}")
-    print(f"- Avg Tokens: {avg_tokens:.0f} {'✅' if avg_tokens <= 1200 else '❌'}")
-    print(f"- Expansion Latency: {expansion_latency:.1f}ms {'✅' if expansion_latency <= 200 else '❌'}")
-    print(f"- Recall Improvement: {recall_improvement:.1f}% {'✅' if recall_improvement >= 10.0 else '❌'}")
+    print(f"- Recall@10: {var.get('recall_at_10', 0):.3f} {'OK' if var.get('recall_at_10', 0) >= 0.8 else 'X'}")
+    print(f"- Avg Tokens: {avg_tokens:.0f} {'OK' if avg_tokens <= 1200 else 'X'}")
+    print(f"- Expansion Latency: {expansion_latency:.1f}ms {'OK' if expansion_latency <= 200 else 'X'}")
+    print(f"- Recall Improvement: {recall_improvement:.1f}% {'OK' if recall_improvement >= 10.0 else 'X'}")
 
 
 if __name__ == "__main__":

@@ -27,10 +27,10 @@ def load_current_report(report_path: str = "validator_report.json") -> dict[str,
         with open(report_path) as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f"❌ Current validator report not found: {report_path}")
+        print(f"X Current validator report not found: {report_path}")
         sys.exit(1)
     except json.JSONDecodeError as e:
-        print(f"❌ Invalid JSON in current report: {e}")
+        print(f"X Invalid JSON in current report: {e}")
         sys.exit(1)
 
 
@@ -53,10 +53,10 @@ def load_baseline_metrics() -> dict[str, int]:
             baseline["multirep"] = prev_metrics["counts"].get("multirep", 0)
             print(f"📊 Loaded baseline: readme={baseline['readme']}, multirep={baseline['multirep']}")
         else:
-            print("⚠️  Could not load baseline from bot/validator-state, using zeros")
+            print("!️  Could not load baseline from bot/validator-state, using zeros")
 
     except Exception as e:
-        print(f"⚠️  Error loading baseline: {e}, using zeros")
+        print(f"!️  Error loading baseline: {e}, using zeros")
 
     return baseline
 
@@ -79,14 +79,14 @@ def check_ratchet_violations(current_report: dict[str, Any], baseline: dict[str,
 
         if current_count > baseline_count and intersects(category):
             print(
-                f"❌ RATCHET FAIL: {category} increased ({baseline_count} → {current_count}) and overlaps changed files"
+                f"X RATCHET FAIL: {category} increased ({baseline_count} → {current_count}) and overlaps changed files"
             )
             print(f"   Changed files: {sorted(changed_files)[:5]}{'...' if len(changed_files) > 5 else ''}")
             violations += 1
         elif current_count > baseline_count:
-            print(f"⚠️  {category} increased ({baseline_count} → {current_count}) but no changed files affected")
+            print(f"!️  {category} increased ({baseline_count} → {current_count}) but no changed files affected")
         else:
-            print(f"✅ {category}: {current_count} violations (baseline: {baseline_count})")
+            print(f"OK {category}: {current_count} violations (baseline: {baseline_count})")
 
     return 2 if violations > 0 else 0
 
@@ -120,7 +120,7 @@ def main():
     exit_code = check_ratchet_violations(current_report, baseline, changed_files)
 
     if args.warn_only and exit_code == 2:
-        print("⚠️  Ratchet violations found but continuing (warn-only mode)")
+        print("!️  Ratchet violations found but continuing (warn-only mode)")
         exit_code = 0
 
     sys.exit(exit_code)

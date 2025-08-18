@@ -16,7 +16,7 @@ def load_validator_report() -> dict:
     report_path = "validator_report.json"
 
     if not os.path.exists(report_path):
-        print("❌ Validator report not found. Run validator first.")
+        print("X Validator report not found. Run validator first.")
         return {}
 
     with open(report_path) as f:
@@ -106,7 +106,7 @@ def main():
     hotspots = analyze_hotspots(report)
 
     if not hotspots:
-        print("✅ No README violations found")
+        print("OK No README violations found")
         return
 
     # Print analysis

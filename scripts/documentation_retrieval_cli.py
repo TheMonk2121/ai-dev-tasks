@@ -187,7 +187,7 @@ class DocumentationRetrievalCLI:
     def _print_summary_results(self, results: dict[str, Any]) -> None:
         """Print a summary of results"""
         if "error" in results:
-            print(f"❌ Error: {results['error']}")
+            print(f"X Error: {results['error']}")
             return
         
         if "query" in results:
@@ -199,11 +199,11 @@ class DocumentationRetrievalCLI:
         if "confidence_score" in results:
             confidence = results["confidence_score"]
             if confidence > 0.8:
-                print(f"✅ Confidence: {confidence:.2f}")
+                print(f"OK Confidence: {confidence:.2f}")
             elif confidence > 0.5:
-                print(f"⚠️  Confidence: {confidence:.2f}")
+                print(f"!️  Confidence: {confidence:.2f}")
             else:
-                print(f"❌ Confidence: {confidence:.2f}")
+                print(f"X Confidence: {confidence:.2f}")
         
         if "context_metadata" in results:
             metadata = results["context_metadata"]

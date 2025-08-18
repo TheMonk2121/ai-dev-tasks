@@ -124,12 +124,12 @@ def main():
             ["python", "scripts/doc_coherence_validator.py"], capture_output=True, text=True, cwd=ROOT
         )
         if result.returncode == 0:
-            print("✅ Validator passed - no shadow fork violations remaining")
+            print("OK Validator passed - no shadow fork violations remaining")
         else:
-            print("⚠️  Validator found remaining issues:")
+            print("!️  Validator found remaining issues:")
             print(result.stdout)
     except Exception as e:
-        print(f"⚠️  Could not run validator: {e}")
+        print(f"!️  Could not run validator: {e}")
 
 
 if __name__ == "__main__":

@@ -65,7 +65,7 @@ echo ""
 # Determine commit strategy
 if [ $CORE_DOCS -gt 0 ]; then
     echo "🔍 Core documentation changed - using full validation..."
-    echo "⚠️  This may fail due to existing markdown issues."
+    echo "!️  This may fail due to existing markdown issues."
     echo "   Consider using: ./scripts/bypass_validation.sh '$COMMIT_MESSAGE'"
     echo ""
     read -p "Continue with full validation? (y/N): " -n 1 -r
@@ -73,7 +73,7 @@ if [ $CORE_DOCS -gt 0 ]; then
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         git commit -m "$COMMIT_MESSAGE"
     else
-        echo "❌ Commit cancelled. Use bypass_validation.sh for quick commits."
+        echo "X Commit cancelled. Use bypass_validation.sh for quick commits."
         exit 1
     fi
 elif [ $MARKDOWN_FILES -gt 0 ]; then
@@ -88,4 +88,4 @@ else
     ./scripts/quick_commit.sh "$COMMIT_MESSAGE"
 fi
 
-echo "✅ Smart commit completed!"
+echo "OK Smart commit completed!"

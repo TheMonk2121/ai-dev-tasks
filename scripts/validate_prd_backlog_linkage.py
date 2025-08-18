@@ -209,21 +209,21 @@ class PRDBacklogLinkageValidator:
         print(f"   Warnings: {len(self.warnings)}")
 
         if self.errors:
-            print("\n❌ Errors:")
+            print("\nX Errors:")
             for error in self.errors:
                 print(f"   - {error}")
 
         if self.warnings:
-            print("\n⚠️  Warnings:")
+            print("\n!️  Warnings:")
             for warning in self.warnings:
                 print(f"   - {warning}")
 
         if not self.errors and not self.warnings:
-            print("\n✅ All PRD-Backlog linkages are valid!")
+            print("\nOK All PRD-Backlog linkages are valid!")
         elif not self.errors:
-            print("\n✅ No critical errors found, but check warnings above.")
+            print("\nOK No critical errors found, but check warnings above.")
         else:
-            print("\n❌ Critical errors found. Please fix before proceeding.")
+            print("\nX Critical errors found. Please fix before proceeding.")
 
 
 def main():

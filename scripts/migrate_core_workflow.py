@@ -35,19 +35,19 @@ def migrate_core_workflow():
             # Rename file
             shutil.move(old_name, new_name)
             migrated_files.append((old_name, new_name))
-            print(f"✅ Renamed: {old_name} → {new_name}")
+            print(f"OK Renamed: {old_name} → {new_name}")
             
             # Update references in other files
             update_file_references(old_name, new_name)
         else:
-            print(f"⚠️  File not found: {old_name}")
+            print(f"!️  File not found: {old_name}")
     
     if migrated_files:
         print("\n🎉 Core workflow migration completed!")
         print(f"📦 Backup files available in: {backup_dir}")
         print(f"📋 Migrated {len(migrated_files)} files")
     else:
-        print("\nℹ️  No files to migrate")
+        print("\ni️  No files to migrate")
 
 def update_file_references(old_name, new_name):
     """Update references to the old filename in other markdown files."""
@@ -77,10 +77,10 @@ def update_file_references(old_name, new_name):
                     f.write(new_content)
                 
                 updated_files.append(file_path.name)
-                print(f"  ✅ Updated references in {file_path.name}")
+                print(f"  OK Updated references in {file_path.name}")
                 
         except Exception as e:
-            print(f"  ⚠️  Error updating {file_path.name}: {e}")
+            print(f"  !️  Error updating {file_path.name}: {e}")
     
     if updated_files:
         print(f"  📝 Updated {len(updated_files)} files")

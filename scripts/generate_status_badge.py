@@ -44,9 +44,9 @@ def generate_status_table() -> str:
     for category in categories:
         count = counts.get(category, 0)
         if count == 0:
-            status = "✅ Clean"
+            status = "OK Clean"
         elif count <= 5:
-            status = "⚠️ Low"
+            status = "!️ Low"
         elif count <= 20:
             status = "🔶 Medium"
         else:

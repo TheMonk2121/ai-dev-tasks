@@ -57,14 +57,14 @@ def fix_md004_list_style():
 
                 fixes = (original_asterisks - new_asterisks) + (original_pluses - new_pluses)
 
-                print(f"✅ Fixed: {file_path} ({fixes} list markers)")
+                print(f"OK Fixed: {file_path} ({fixes} list markers)")
                 files_fixed += 1
                 total_fixes += fixes
             else:
                 files_unchanged += 1
 
         except Exception as e:
-            print(f"❌ Failed: {file_path} - {str(e)}")
+            print(f"X Failed: {file_path} - {str(e)}")
             files_failed += 1
 
     print("\n📊 Summary:")
@@ -77,7 +77,7 @@ def fix_md004_list_style():
     if files_fixed > 0:
         print(f"\n🎉 Successfully fixed {files_fixed} files!")
     else:
-        print("\nℹ️  No files needed fixing.")
+        print("\ni️  No files needed fixing.")
 
 
 if __name__ == "__main__":

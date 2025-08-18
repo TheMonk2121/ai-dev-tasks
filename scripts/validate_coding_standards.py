@@ -124,19 +124,19 @@ def main():
 
     # Report results
     if all_errors:
-        print(f"\n❌ {len(all_errors)} errors found:")
+        print(f"\nX {len(all_errors)} errors found:")
         for error in all_errors:
             print(f"  {error}")
 
     if all_warnings:
-        print(f"\n⚠️  {len(all_warnings)} warnings found:")
+        print(f"\n!️  {len(all_warnings)} warnings found:")
         for warning in all_warnings[:10]:  # Show first 10 warnings
             print(f"  {warning}")
         if len(all_warnings) > 10:
             print(f"  ... and {len(all_warnings) - 10} more warnings")
 
     if not all_errors and not all_warnings:
-        print("✅ No coding standard violations found!")
+        print("OK No coding standard violations found!")
         sys.exit(0)
     else:
         print(f"\n📊 Summary: {len(all_errors)} errors, {len(all_warnings)} warnings")

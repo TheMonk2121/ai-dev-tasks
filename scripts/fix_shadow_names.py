@@ -164,7 +164,7 @@ def main():
     args = parser.parse_args()
 
     if not args.dry_run and not args.write:
-        print("❌ Must specify --dry-run or --write")
+        print("X Must specify --dry-run or --write")
         sys.exit(1)
 
     print("🔍 Scanning for shadow fork files...")
@@ -174,7 +174,7 @@ def main():
     print(f"📋 Found {len(shadow_files)} shadow fork files")
 
     if not shadow_files:
-        print("✅ No shadow fork files found")
+        print("OK No shadow fork files found")
         return
 
     # Plan renames
@@ -186,7 +186,7 @@ def main():
 
         # Check if new path already exists
         if os.path.exists(new_path):
-            print(f"⚠️  {file_path} -> {new_path} (target exists, skipping)")
+            print(f"!️  {file_path} -> {new_path} (target exists, skipping)")
             continue
 
         # Get module name for import updates
@@ -217,9 +217,9 @@ def main():
         for item in rename_plan:
             try:
                 os.rename(item["old_path"], item["new_path"])
-                print(f"  ✅ Renamed: {item['old_path']} -> {item['new_path']}")
+                print(f"  OK Renamed: {item['old_path']} -> {item['new_path']}")
             except Exception as e:
-                print(f"  ❌ Failed to rename {item['old_path']}: {e}")
+                print(f"  X Failed to rename {item['old_path']}: {e}")
 
         # Update imports
         print("\n🔄 Updating imports...")
@@ -228,9 +228,9 @@ def main():
         for update in import_updates:
             if update_imports_in_file(update["file"], update["old_import"], update["new_import"]):
                 updated_imports += 1
-                print(f"  ✅ Updated imports in: {update['file']}")
+                print(f"  OK Updated imports in: {update['file']}")
             else:
-                print(f"  ⚠️  Failed to update imports in: {update['file']}")
+                print(f"  !️  Failed to update imports in: {update['file']}")
 
         print("\n📊 Shadow fix complete:")
         print(f"  - Files renamed: {len(rename_plan)}")

@@ -132,7 +132,7 @@ def main():
         changed_files = get_changed_files()
 
     if ledger_path not in changed_files:
-        print("✅ No ledger changes detected")
+        print("OK No ledger changes detected")
         return 0
 
     # Load current ledger
@@ -157,10 +157,10 @@ def main():
     new_entries = check_ledger_changes(previous_ledger, current_ledger)
 
     if not new_entries:
-        print("✅ No new ledger entries detected")
+        print("OK No new ledger entries detected")
         return 0
 
-    print(f"⚠️  Found {len(new_entries)} new ledger entries")
+    print(f"!️  Found {len(new_entries)} new ledger entries")
 
     # Check if exception-approved label is present
     if args.labels is not None:
@@ -184,7 +184,7 @@ def main():
             )
 
     if invalid_entries:
-        print("❌ Invalid ledger additions detected:")
+        print("X Invalid ledger additions detected:")
         for invalid in invalid_entries:
             print(f"  - {invalid['file']}: {invalid['entry'].get('key', 'unknown')}")
             print(f"    Has approval: {invalid['has_approval']}")
@@ -196,7 +196,7 @@ def main():
         print("2. Expiry ≤7 days from now")
         return 1
 
-    print("✅ All new ledger entries are properly approved")
+    print("OK All new ledger entries are properly approved")
     return 0
 
 

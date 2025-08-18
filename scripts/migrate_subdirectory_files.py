@@ -69,19 +69,19 @@ def migrate_subdirectory_files():
             # Move file to main directory
             shutil.move(str(source_path), str(target_path))
             migrated_files.append((source_path, target_path))
-            print(f"✅ Migrated: {source_path} → {target_path}")
+            print(f"OK Migrated: {source_path} → {target_path}")
             
             # Update file content to reflect new location
             update_file_references(target_path, source_path.name, target_path.name)
         else:
-            print(f"⚠️  File not found: {source_path}")
+            print(f"!️  File not found: {source_path}")
     
     if migrated_files:
         print("\n🎉 Migration completed!")
         print(f"📦 Backup files available in: {backup_dir}")
         print(f"📋 Migrated {len(migrated_files)} files")
     else:
-        print("\nℹ️  No files to migrate")
+        print("\ni️  No files to migrate")
 
 def update_file_references(file_path, old_name, new_name):
     """Update references to the old filename in the migrated file"""
@@ -97,10 +97,10 @@ def update_file_references(file_path, old_name, new_name):
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(new_content)
             
-            print(f"  ✅ Updated references in {file_path.name}")
+            print(f"  OK Updated references in {file_path.name}")
             
     except Exception as e:
-        print(f"  ⚠️  Error updating {file_path.name}: {e}")
+        print(f"  !️  Error updating {file_path.name}: {e}")
 
 if __name__ == "__main__":
     migrate_subdirectory_files() 

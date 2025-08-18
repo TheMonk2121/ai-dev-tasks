@@ -134,7 +134,7 @@ class BrokenLinksFixer:
     def fix_file_references(self, file_path: str, broken_ref: str) -> bool:
         """Fix a broken reference in a file."""
         if not Path(file_path).exists():
-            print(f"  ⚠️  File not found: {file_path}")
+            print(f"  !️  File not found: {file_path}")
             return False
 
         # Get the mapping for this broken reference
@@ -146,7 +146,7 @@ class BrokenLinksFixer:
             if found_file:
                 new_ref = found_file
             else:
-                print(f"  ❌ No mapping found for: {broken_ref}")
+                print(f"  X No mapping found for: {broken_ref}")
                 return False
 
         # Read the file content
@@ -154,7 +154,7 @@ class BrokenLinksFixer:
             with open(file_path, encoding="utf-8") as f:
                 content = f.read()
         except Exception as e:
-            print(f"  ❌ Could not read {file_path}: {e}")
+            print(f"  X Could not read {file_path}: {e}")
             return False
 
         # Create patterns to match the broken reference
@@ -174,7 +174,7 @@ class BrokenLinksFixer:
                 else:
                     # Replace with the correct reference
                     content = re.sub(pattern, lambda m: m.group(0).replace(broken_ref, new_ref), content)
-                    print(f"  ✅ Fixed: {broken_ref} → {new_ref}")
+                    print(f"  OK Fixed: {broken_ref} → {new_ref}")
 
         # Write back if content changed
         if content != original_content:
@@ -233,7 +233,7 @@ def main():
     args = parser.parse_args()
 
     if not Path(args.json_file).exists():
-        print(f"❌ JSON file not found: {args.json_file}")
+        print(f"X JSON file not found: {args.json_file}")
         print(
             "💡 Run: python3 scripts/doc_coherence_validator.py "
             "--dry-run --workers 4 --emit-json broken_links_analysis.json"

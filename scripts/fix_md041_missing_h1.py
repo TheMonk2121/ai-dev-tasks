@@ -126,13 +126,13 @@ def fix_md041_missing_h1():
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(content)
                 
-                print(f"✅ Fixed: {file_path} (Added: # {title})")
+                print(f"OK Fixed: {file_path} (Added: # {title})")
                 files_fixed += 1
             else:
                 files_unchanged += 1
                 
         except Exception as e:
-            print(f"❌ Failed: {file_path} - {str(e)}")
+            print(f"X Failed: {file_path} - {str(e)}")
             files_failed += 1
     
     print("\n📊 Summary:")
@@ -144,7 +144,7 @@ def fix_md041_missing_h1():
     if files_fixed > 0:
         print(f"\n🎉 Successfully fixed {files_fixed} files!")
     else:
-        print("\nℹ️  No files needed fixing.")
+        print("\ni️  No files needed fixing.")
 
 if __name__ == "__main__":
     fix_md041_missing_h1()

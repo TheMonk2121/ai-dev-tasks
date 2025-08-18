@@ -74,17 +74,17 @@ def main():
     print(f"Files needing trailing newlines: {len(files_needing_fix)}")
 
     if not files_needing_fix:
-        print("✅ All files already have trailing newlines!")
+        print("OK All files already have trailing newlines!")
         return
 
     # Fix files
     fixed_count = 0
     for file_path in files_needing_fix:
         if add_trailing_newline(file_path):
-            print(f"✅ Fixed: {file_path}")
+            print(f"OK Fixed: {file_path}")
             fixed_count += 1
         else:
-            print(f"❌ Failed: {file_path}")
+            print(f"X Failed: {file_path}")
 
     print("\n📊 Summary:")
     print(f"  Files processed: {len(markdown_files)}")
@@ -95,7 +95,7 @@ def main():
     if fixed_count > 0:
         print(f"\n🎉 Successfully fixed {fixed_count} files!")
     else:
-        print("\n⚠️  No files were fixed.")
+        print("\n!️  No files were fixed.")
 
 
 if __name__ == "__main__":

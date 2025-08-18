@@ -555,7 +555,7 @@ async def main():
     report = performance_manager.get_performance_report()
     logger.info(f"Performance Report: {json.dumps(report, indent=2)}")
     
-    logger.info("✅ Performance optimization tests completed")
+    logger.info("OK Performance optimization tests completed")
 
 
 if __name__ == "__main__":

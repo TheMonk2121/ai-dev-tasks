@@ -81,7 +81,7 @@ class DatabaseRecoveryManager:
         
         # Strategy 1: Reset connection pool
         if self.reset_connection_pool():
-            self.log("Connection pool reset: ✅ SUCCESS", "INFO")
+            self.log("Connection pool reset: OK SUCCESS", "INFO")
             if self.check_connection():
                 self.log("Connection timeout fixed", "INFO")
                 self.successful_fixes.append("connection_timeout")
@@ -89,7 +89,7 @@ class DatabaseRecoveryManager:
         
         # Strategy 2: Check PostgreSQL service
         if self.check_postgresql_service():
-            self.log("PostgreSQL service check: ✅ SUCCESS", "INFO")
+            self.log("PostgreSQL service check: OK SUCCESS", "INFO")
             if self.check_connection():
                 self.log("Connection timeout fixed via service restart", "INFO")
                 self.successful_fixes.append("connection_timeout")
@@ -105,7 +105,7 @@ class DatabaseRecoveryManager:
         
         # Strategy 1: Check environment variables
         if self.check_database_credentials():
-            self.log("Database credentials check: ✅ SUCCESS", "INFO")
+            self.log("Database credentials check: OK SUCCESS", "INFO")
             if self.check_connection():
                 self.log("Authentication fixed", "INFO")
                 self.successful_fixes.append("authentication_failed")
@@ -113,7 +113,7 @@ class DatabaseRecoveryManager:
         
         # Strategy 2: Reset credentials
         if self.reset_database_credentials():
-            self.log("Database credentials reset: ✅ SUCCESS", "INFO")
+            self.log("Database credentials reset: OK SUCCESS", "INFO")
             if self.check_connection():
                 self.log("Authentication fixed via credential reset", "INFO")
                 self.successful_fixes.append("authentication_failed")
@@ -129,13 +129,13 @@ class DatabaseRecoveryManager:
         
         # Strategy 1: Verify schema
         if self.verify_schema():
-            self.log("Schema verification: ✅ SUCCESS", "INFO")
+            self.log("Schema verification: OK SUCCESS", "INFO")
             self.successful_fixes.append("schema_error")
             return True
         
         # Strategy 2: Recreate schema
         if self.recreate_schema():
-            self.log("Schema recreation: ✅ SUCCESS", "INFO")
+            self.log("Schema recreation: OK SUCCESS", "INFO")
             if self.verify_schema():
                 self.log("Schema error fixed", "INFO")
                 self.successful_fixes.append("schema_error")
@@ -151,7 +151,7 @@ class DatabaseRecoveryManager:
         
         # Strategy 1: Check file permissions
         if self.check_database_permissions():
-            self.log("Database permissions check: ✅ SUCCESS", "INFO")
+            self.log("Database permissions check: OK SUCCESS", "INFO")
             if self.check_connection():
                 self.log("Permission denied fixed", "INFO")
                 self.successful_fixes.append("permission_denied")
@@ -159,7 +159,7 @@ class DatabaseRecoveryManager:
         
         # Strategy 2: Fix permissions
         if self.fix_database_permissions():
-            self.log("Database permissions fix: ✅ SUCCESS", "INFO")
+            self.log("Database permissions fix: OK SUCCESS", "INFO")
             if self.check_connection():
                 self.log("Permission denied fixed via permission fix", "INFO")
                 self.successful_fixes.append("permission_denied")
@@ -175,7 +175,7 @@ class DatabaseRecoveryManager:
         
         # Strategy 1: Restart PostgreSQL service
         if self.restart_postgresql_service():
-            self.log("PostgreSQL service restart: ✅ SUCCESS", "INFO")
+            self.log("PostgreSQL service restart: OK SUCCESS", "INFO")
             if self.check_connection():
                 self.log("Service unavailable fixed", "INFO")
                 self.successful_fixes.append("service_unavailable")
@@ -183,7 +183,7 @@ class DatabaseRecoveryManager:
         
         # Strategy 2: Check system resources
         if self.check_system_resources():
-            self.log("System resources check: ✅ SUCCESS", "INFO")
+            self.log("System resources check: OK SUCCESS", "INFO")
             if self.check_connection():
                 self.log("Service unavailable fixed via resource check", "INFO")
                 self.successful_fixes.append("service_unavailable")

@@ -83,10 +83,10 @@ def main():
         success, message = process_file(file_path)
 
         if success:
-            print(f"✅ Fixed: {file_path}")
+            print(f"OK Fixed: {file_path}")
             fixed_count += 1
         elif "Error" in message:
-            print(f"❌ Failed: {file_path} - {message}")
+            print(f"X Failed: {file_path} - {message}")
             failed_count += 1
         # Don't print anything for files that don't need fixing
 
@@ -99,7 +99,7 @@ def main():
     if fixed_count > 0:
         print(f"\n🎉 Successfully fixed {fixed_count} files!")
     else:
-        print("\n⚠️  No files needed fixing.")
+        print("\n!️  No files needed fixing.")
 
 
 if __name__ == "__main__":

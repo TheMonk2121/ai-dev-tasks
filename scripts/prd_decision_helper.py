@@ -13,7 +13,7 @@ def parse_backlog_item(backlog_content: str, item_id: str) -> tuple[int, float] 
     lines = backlog_content.split('\n')
     
     for i, line in enumerate(lines):
-        if (item_id in line or item_id.replace('-', '‑') in line) and '|' in line:
+        if (item_id in line or item_id.replace('-', '-') in line) and '|' in line:
             # Extract points from the table row
             parts = line.split('|')
             if len(parts) >= 5:

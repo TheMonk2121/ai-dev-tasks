@@ -59,7 +59,7 @@ def get_changed_markdown_files(window_hours: int = 24) -> list[str]:
 
         return list(set(changed_files))  # Remove duplicates
     except subprocess.CalledProcessError:
-        print("⚠️  Could not determine changed files, using empty list")
+        print("!️  Could not determine changed files, using empty list")
         return []
 
 
@@ -126,7 +126,7 @@ def find_inbound_links(target_file: str, target_anchor: str) -> list[dict[str, s
                         continue
 
     except Exception as e:
-        print(f"⚠️  Error searching for inbound links: {e}")
+        print(f"!️  Error searching for inbound links: {e}")
 
     return inbound_links
 
@@ -226,7 +226,7 @@ def main():
         if args.output:
             with open(args.output, "w") as f:
                 json.dump(report, f, indent=2)
-            print(f"✅ Report saved to: {args.output}")
+            print(f"OK Report saved to: {args.output}")
         else:
             print(json.dumps(report, indent=2))
     else:
@@ -238,13 +238,13 @@ def main():
         print(f"  Broken links: {summary['broken_links']}")
 
         if report["broken"]:
-            print("\n❌ Broken Links Found:")
+            print("\nX Broken Links Found:")
             for item in report["broken"][:10]:  # Show first 10
                 print(f"  {item['from']} → {item['to']}#{item['anchor']} (removed)")
             if len(report["broken"]) > 10:
                 print(f"  ... and {len(report['broken']) - 10} more")
         else:
-            print("\n✅ No broken links detected")
+            print("\nOK No broken links detected")
 
 
 if __name__ == "__main__":

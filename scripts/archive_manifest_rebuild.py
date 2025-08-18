@@ -104,13 +104,13 @@ def main():
         # Get introduced commit
         introduced_commit = get_introduced_commit(file_path)
         if not introduced_commit:
-            print(f"    ⚠️  Could not find introduced commit for {file_path}")
+            print(f"    !️  Could not find introduced commit for {file_path}")
             continue
 
         # Get blob SHA
         blob_sha = get_blob_sha(introduced_commit, file_path)
         if not blob_sha:
-            print(f"    ⚠️  Could not find blob SHA for {file_path}")
+            print(f"    !️  Could not find blob SHA for {file_path}")
             continue
 
         # Add to manifest
@@ -124,7 +124,7 @@ def main():
 
         new_entries += 1
         enrolled_entries += 1
-        print(f"    ✅ Enrolled: {introduced_commit[:8]} -> {blob_sha[:8]}")
+        print(f"    OK Enrolled: {introduced_commit[:8]} -> {blob_sha[:8]}")
 
     # Save manifest
     save_manifest(manifest)

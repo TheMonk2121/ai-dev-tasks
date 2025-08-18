@@ -24,12 +24,12 @@ def check_context_loading():
             missing_files.append(file)
     
     if missing_files:
-        print("❌ MISSING CONTEXT FILES:")
+        print("X MISSING CONTEXT FILES:")
         for file in missing_files:
             print(f"   - {file}")
         return False
     
-    print("✅ Step 1: Context loading files available")
+    print("OK Step 1: Context loading files available")
     return True
 
 def check_file_organization():
@@ -45,12 +45,12 @@ def check_file_organization():
             missing_files.append(file)
     
     if missing_files:
-        print("❌ MISSING ORGANIZATION FILES:")
+        print("X MISSING ORGANIZATION FILES:")
         for file in missing_files:
             print(f"   - {file}")
         return False
     
-    print("✅ Step 2: File organization files available")
+    print("OK Step 2: File organization files available")
     return True
 
 def analyze_file_references(target_file: str) -> dict[str, Any]:
@@ -159,20 +159,20 @@ def run_analysis_checklist(target_file: str):
     # Step 1: Context Loading
     print("\n📋 Step 1: Context Loading")
     if not check_context_loading():
-        print("❌ FAILED: Cannot proceed without context files")
+        print("X FAILED: Cannot proceed without context files")
         return False
     
     # Step 2: File Organization
     print("\n📋 Step 2: File Organization Understanding")
     if not check_file_organization():
-        print("❌ FAILED: Cannot proceed without organization files")
+        print("X FAILED: Cannot proceed without organization files")
         return False
     
     # Step 3: Cross-Reference Analysis
     print(f"\n📋 Step 3: Cross-Reference Analysis for {target_file}")
     reference_analysis = analyze_file_references(target_file)
     if "error" in reference_analysis:
-        print(f"❌ ERROR: {reference_analysis['error']}")
+        print(f"X ERROR: {reference_analysis['error']}")
         return False
     
     print(f"   - Total references: {reference_analysis['total_references']}")
@@ -184,7 +184,7 @@ def run_analysis_checklist(target_file: str):
     print(f"\n📋 Step 4: Content Analysis for {target_file}")
     content_analysis = check_content_freshness(target_file)
     if "error" in content_analysis:
-        print(f"❌ ERROR: {content_analysis['error']}")
+        print(f"X ERROR: {content_analysis['error']}")
         return False
     
     print(f"   - Memory context: {content_analysis['memory_context_importance']}")
@@ -205,13 +205,13 @@ def run_analysis_checklist(target_file: str):
     # Final Recommendation
     print("\n🎯 FINAL RECOMMENDATION")
     if tier == "TIER_1_CRITICAL":
-        print("❌ DO NOT DELETE: Critical file - never suggest removal")
+        print("X DO NOT DELETE: Critical file - never suggest removal")
     elif tier == "TIER_2_HIGH":
-        print("⚠️  ARCHIVE ONLY: High-value file - extensive analysis required")
+        print("!️  ARCHIVE ONLY: High-value file - extensive analysis required")
     elif tier == "TIER_3_MEDIUM":
         print("📦 ARCHIVE: Medium-value file - preserve for historical context")
     elif tier == "TIER_4_LOW":
-        print("✅ SAFE TO REMOVE: Low-value file - safe with validation")
+        print("OK SAFE TO REMOVE: Low-value file - safe with validation")
     
     print("\n📊 Analysis Summary:")
     print(f"   - File: {target_file}")

@@ -385,12 +385,12 @@ class RepoMaintenance:
             try:
                 result = task_func()
                 if result:
-                    self.log(f"✅ {task_name} completed successfully")
+                    self.log(f"OK {task_name} completed successfully")
                 else:
-                    self.log(f"❌ {task_name} failed")
+                    self.log(f"X {task_name} failed")
                     all_success = False
             except Exception as e:
-                self.log(f"❌ {task_name} failed with error: {e}")
+                self.log(f"X {task_name} failed with error: {e}")
                 all_success = False
         
         # Report results
@@ -401,19 +401,19 @@ class RepoMaintenance:
         if self.changes_made:
             self.log("Changes made:")
             for change in self.changes_made:
-                self.log(f"  ✅ {change}")
+                self.log(f"  OK {change}")
         else:
             self.log("No changes needed - repository is already aligned")
         
         if self.errors:
             self.log("Errors encountered:")
             for error in self.errors:
-                self.log(f"  ❌ {error}")
+                self.log(f"  X {error}")
         
         if all_success:
-            self.log("✅ All maintenance tasks completed successfully")
+            self.log("OK All maintenance tasks completed successfully")
         else:
-            self.log("❌ Some maintenance tasks failed")
+            self.log("X Some maintenance tasks failed")
         
         return all_success
 

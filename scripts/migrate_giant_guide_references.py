@@ -279,12 +279,12 @@ class GiantGuideReferenceMigrator:
             
             if was_updated:
                 updated_files.append(file_path)
-                print(f"✅ Updated {file_path}")
+                print(f"OK Updated {file_path}")
                 for change in changes:
                     print(f"   - {change}")
             elif changes:  # Errors
                 errors.extend(changes)
-                print(f"❌ Error updating {file_path}")
+                print(f"X Error updating {file_path}")
         
         # Create migration summary
         summary = self.create_migration_summary(updated_files, errors)
@@ -293,12 +293,12 @@ class GiantGuideReferenceMigrator:
         with open("500_b073-migration-summary.md", 'w', encoding='utf-8') as f:
             f.write(summary)
         
-        print("\n✅ Migration complete!")
+        print("\nOK Migration complete!")
         print(f"📊 Updated {len(updated_files)} files")
         print("📝 Summary written to 500_b073-migration-summary.md")
         
         if errors:
-            print(f"⚠️  {len(errors)} errors encountered")
+            print(f"!️  {len(errors)} errors encountered")
             for error in errors:
                 print(f"   - {error}")
         

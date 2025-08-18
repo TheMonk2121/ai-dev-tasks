@@ -75,7 +75,7 @@ def display_memory_hierarchy():
             file_info = get_file_info(file_path)
             
             if file_path.exists():
-                status = "✅"
+                status = "OK"
                 size_kb = file_info['size'] / 1024 if file_info else 0
                 print(f"{status} {filename}")
                 print(f"   📄 Size: {size_kb:.1f} KB")
@@ -85,7 +85,7 @@ def display_memory_hierarchy():
                 else:
                     print("   🧠 Context: No memory context comment found")
             else:
-                print(f"❌ {filename} (not found)")
+                print(f"X {filename} (not found)")
             
             print()
     

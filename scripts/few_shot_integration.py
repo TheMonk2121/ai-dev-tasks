@@ -33,7 +33,7 @@ class FewShotExampleLoader:
             return self._examples_cache
 
         if not self.examples_file.exists():
-            print(f"⚠️  Few-shot examples file not found: {self.examples_file}")
+            print(f"!️  Few-shot examples file not found: {self.examples_file}")
             return {}
 
         try:
@@ -42,7 +42,7 @@ class FewShotExampleLoader:
             self._examples_cache = examples
             return examples
         except Exception as e:
-            print(f"❌ Error loading few-shot examples: {e}")
+            print(f"X Error loading few-shot examples: {e}")
             return {}
 
     def _parse_examples(self, content: str) -> dict[str, list[dict[str, Any]]]:
@@ -165,7 +165,7 @@ class FewShotExampleLoader:
         patterns = {
             "file_naming": r'filename:\s*"([^"]+)"',
             "cross_references": r"<!--\s*([A-Z_]+):\s*([^>]+?)\s*-->",
-            "backlog_items": r"\|\s*B‑\d+\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|",
+            "backlog_items": r"\|\s*B-\d+\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|",
             "memory_context": r"<!--\s*MEMORY_CONTEXT:\s*([^>]+?)\s*-->",
             "structure_elements": r"^#{1,6}\s+([^\n]+)$",
             "json_structures": r"\{[^{}]*\}",
@@ -246,7 +246,7 @@ class FewShotExampleLoader:
                     confidence += 0.3
             elif pattern_type == "backlog_items":
                 # Check for backlog item patterns
-                if re.search(r"\|\s*B‑\d+\s*\|", content):
+                if re.search(r"\|\s*B-\d+\s*\|", content):
                     confidence += 0.2
             elif pattern_type == "memory_context":
                 # Check for memory context patterns

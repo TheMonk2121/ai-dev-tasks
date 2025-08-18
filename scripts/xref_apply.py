@@ -285,7 +285,7 @@ def main():
     # Scan files
     scope_path = args.root / args.scope
     if not scope_path.exists():
-        print(f"❌ Scope path does not exist: {scope_path}")
+        print(f"X Scope path does not exist: {scope_path}")
         return 1
 
     all_suggestions = []
@@ -306,7 +306,7 @@ def main():
                 # Cap suggestions per file to prevent over-linking
                 if len(suggestions) > 10:
                     suggestions = suggestions[:10]  # Take first 10 (highest confidence)
-                    print(f"⚠️  Capped suggestions for {relative_path} to 10 (found {len(suggestions)})")
+                    print(f"!️  Capped suggestions for {relative_path} to 10 (found {len(suggestions)})")
 
                 files_with_suggestions += 1
                 all_suggestions.extend(suggestions)
@@ -360,7 +360,7 @@ def main():
             full_path = args.root / file_path
             if writer.write_suggestions(full_path, suggestions, args.apply):
                 files_modified += 1
-                print(f"  ✅ Modified: {file_path}")
+                print(f"  OK Modified: {file_path}")
 
         print(f"\n📝 Files modified: {files_modified}")
     else:

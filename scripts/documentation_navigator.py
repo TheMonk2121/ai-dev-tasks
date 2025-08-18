@@ -148,11 +148,11 @@ def display_documentation_inventory():
         
         for file_path in files:
             if check_file_exists(file_path):
-                status = "✅"
+                status = "OK"
                 size_kb = os.path.getsize(file_path) / 1024 if os.path.exists(file_path) else 0
                 print(f"{status} {file_path} ({size_kb:.1f} KB)")
             else:
-                print(f"❌ {file_path} (not found)")
+                print(f"X {file_path} (not found)")
         print()
 
 def display_context_guidance():

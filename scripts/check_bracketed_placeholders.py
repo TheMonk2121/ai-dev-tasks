@@ -110,7 +110,7 @@ def main():
                 )
 
     if issues_found:
-        print("❌ Bracketed placeholders detected in markdown files:")
+        print("X Bracketed placeholders detected in markdown files:")
         print(
             "These can break markdown rendering and should be replaced with plain text."
         )
@@ -133,7 +133,7 @@ def main():
 
         sys.exit(1)
     else:
-        print("✅ No bracketed placeholders found in markdown files")
+        print("OK No bracketed placeholders found in markdown files")
         sys.exit(0)
 
 

@@ -51,19 +51,19 @@ class SystemHealthChecker:
             
             # Check connection
             if check_connection():
-                self.log("Database connection: ✅ OK", "INFO")
+                self.log("Database connection: OK OK", "INFO")
                 
                 # Verify schema
                 if verify_schema():
-                    self.log("Database schema: ✅ OK", "INFO")
+                    self.log("Database schema: OK OK", "INFO")
                     self.components['database'] = True
                     return True
                 else:
-                    self.log("Database schema: ❌ FAILED", "ERROR")
+                    self.log("Database schema: X FAILED", "ERROR")
                     self.errors.append("Database schema verification failed")
                     return False
             else:
-                self.log("Database connection: ❌ FAILED", "ERROR")
+                self.log("Database connection: X FAILED", "ERROR")
                 self.errors.append("Database connection failed")
                 return False
                 
@@ -87,7 +87,7 @@ class SystemHealthChecker:
             available_models = handler.get_available_models()
             
             if not available_models:
-                self.log("No AI models available: ❌ FAILED", "ERROR")
+                self.log("No AI models available: X FAILED", "ERROR")
                 self.errors.append("No AI models available")
                 return False
             
@@ -95,17 +95,17 @@ class SystemHealthChecker:
             for model in available_models:
                 if handler.check_model_status(model):
                     working_models.append(model)
-                    self.log(f"Model {model}: ✅ OK", "INFO")
+                    self.log(f"Model {model}: OK OK", "INFO")
                 else:
-                    self.log(f"Model {model}: ❌ FAILED", "WARNING")
+                    self.log(f"Model {model}: X FAILED", "WARNING")
                     self.warnings.append(f"Model {model} is not responding")
             
             if working_models:
-                self.log(f"AI models health: ✅ {len(working_models)}/{len(available_models)} working", "INFO")
+                self.log(f"AI models health: OK {len(working_models)}/{len(available_models)} working", "INFO")
                 self.components['ai_models'] = True
                 return True
             else:
-                self.log("AI models health: ❌ FAILED", "ERROR")
+                self.log("AI models health: X FAILED", "ERROR")
                 self.errors.append("No working AI models found")
                 return False
                 
@@ -126,11 +126,11 @@ class SystemHealthChecker:
             from dspy_rag_system.src.utils.enhanced_file_validator import check_file_processing
             
             if check_file_processing():
-                self.log("File processing: ✅ OK", "INFO")
+                self.log("File processing: OK OK", "INFO")
                 self.components['file_processing'] = True
                 return True
             else:
-                self.log("File processing: ❌ FAILED", "ERROR")
+                self.log("File processing: X FAILED", "ERROR")
                 self.errors.append("File processing system failed")
                 return False
                 
@@ -151,11 +151,11 @@ class SystemHealthChecker:
             from dspy_rag_system.src.utils.prompt_sanitizer import check_security_status
             
             if check_security_status():
-                self.log("Security system: ✅ OK", "INFO")
+                self.log("Security system: OK OK", "INFO")
                 self.components['security'] = True
                 return True
             else:
-                self.log("Security system: ❌ FAILED", "ERROR")
+                self.log("Security system: X FAILED", "ERROR")
                 self.errors.append("Security system failed")
                 return False
                 
@@ -185,9 +185,9 @@ class SystemHealthChecker:
             for log_file in log_files:
                 log_path = log_dir / log_file
                 if log_path.exists() and os.access(log_path, os.W_OK):
-                    self.log(f"Log file {log_file}: ✅ OK", "INFO")
+                    self.log(f"Log file {log_file}: OK OK", "INFO")
                 else:
-                    self.log(f"Log file {log_file}: ❌ FAILED", "WARNING")
+                    self.log(f"Log file {log_file}: X FAILED", "WARNING")
                     self.warnings.append(f"Log file {log_file} is not accessible")
             
             self.components['monitoring'] = True
@@ -212,27 +212,27 @@ class SystemHealthChecker:
             # Check CPU usage
             cpu_percent = psutil.cpu_percent(interval=1)
             if cpu_percent < 80:
-                self.log(f"CPU usage: ✅ {cpu_percent}%", "INFO")
+                self.log(f"CPU usage: OK {cpu_percent}%", "INFO")
             else:
-                self.log(f"CPU usage: ⚠️ {cpu_percent}% (high)", "WARNING")
+                self.log(f"CPU usage: !️ {cpu_percent}% (high)", "WARNING")
                 self.warnings.append(f"High CPU usage: {cpu_percent}%")
             
             # Check memory usage
             memory = psutil.virtual_memory()
             memory_percent = memory.percent
             if memory_percent < 80:
-                self.log(f"Memory usage: ✅ {memory_percent}%", "INFO")
+                self.log(f"Memory usage: OK {memory_percent}%", "INFO")
             else:
-                self.log(f"Memory usage: ⚠️ {memory_percent}% (high)", "WARNING")
+                self.log(f"Memory usage: !️ {memory_percent}% (high)", "WARNING")
                 self.warnings.append(f"High memory usage: {memory_percent}%")
             
             # Check disk usage
             disk = psutil.disk_usage('/')
             disk_percent = disk.percent
             if disk_percent < 90:
-                self.log(f"Disk usage: ✅ {disk_percent}%", "INFO")
+                self.log(f"Disk usage: OK {disk_percent}%", "INFO")
             else:
-                self.log(f"Disk usage: ⚠️ {disk_percent}% (high)", "WARNING")
+                self.log(f"Disk usage: !️ {disk_percent}% (high)", "WARNING")
                 self.warnings.append(f"High disk usage: {disk_percent}%")
             
             return True
@@ -260,10 +260,10 @@ class SystemHealthChecker:
                 from dspy_rag_system.src.utils.database_resilience import reset_connection_pool
                 reset_connection_pool()
                 if self.check_database_health():
-                    self.log("Database auto-fix: ✅ SUCCESS", "INFO")
+                    self.log("Database auto-fix: OK SUCCESS", "INFO")
                     fixes_applied += 1
                 else:
-                    self.log("Database auto-fix: ❌ FAILED", "ERROR")
+                    self.log("Database auto-fix: X FAILED", "ERROR")
             except Exception as e:
                 self.log(f"Database auto-fix failed: {e}", "ERROR")
         
@@ -276,10 +276,10 @@ class SystemHealthChecker:
                 # Try to restart model services
                 for model in handler.get_available_models():
                     if handler.restart_model(model):
-                        self.log(f"Model {model} restart: ✅ SUCCESS", "INFO")
+                        self.log(f"Model {model} restart: OK SUCCESS", "INFO")
                         fixes_applied += 1
                     else:
-                        self.log(f"Model {model} restart: ❌ FAILED", "ERROR")
+                        self.log(f"Model {model} restart: X FAILED", "ERROR")
             except Exception as e:
                 self.log(f"AI models auto-fix failed: {e}", "ERROR")
         

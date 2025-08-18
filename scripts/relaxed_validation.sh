@@ -8,10 +8,10 @@ if [ $# -eq 0 ]; then
     echo "Usage: $0 <commit_message>"
     echo ""
     echo "This script runs relaxed validation that:"
-    echo "  ✅ Ignores line length violations (MD013)"
-    echo "  ❌ Enforces heading structure (MD001)"
-    echo "  ❌ Enforces other critical markdown rules"
-    echo "  ❌ Enforces documentation coherence"
+    echo "  OK Ignores line length violations (MD013)"
+    echo "  X Enforces heading structure (MD001)"
+    echo "  X Enforces other critical markdown rules"
+    echo "  X Enforces documentation coherence"
     echo ""
     echo "Examples:"
     echo "  $0 'fix: update documentation'"
@@ -64,9 +64,9 @@ git add .
 echo "🔍 Running markdownlint with relaxed rules..."
 MARKDOWN_OUTPUT=$(markdownlint --config "$TEMP_CONFIG" ./*.md 2>/dev/null || true)
 if [ -z "$MARKDOWN_OUTPUT" ]; then
-    echo "✅ Markdown validation passed (relaxed rules)"
+    echo "OK Markdown validation passed (relaxed rules)"
 else
-    echo "❌ Markdown validation failed (critical issues found)"
+    echo "X Markdown validation failed (critical issues found)"
     echo ""
     echo "Critical issues that need fixing:"
     echo "$MARKDOWN_OUTPUT"
@@ -85,9 +85,9 @@ rm "$TEMP_CONFIG"
 # Run relaxed documentation coherence validation (ignoring line length)
 echo "📚 Running relaxed documentation coherence validation..."
 if python3 scripts/relaxed_validator.py --dry-run 2>/dev/null; then
-    echo "✅ Relaxed documentation coherence validation passed"
+    echo "OK Relaxed documentation coherence validation passed"
 else
-    echo "❌ Relaxed documentation coherence validation failed"
+    echo "X Relaxed documentation coherence validation failed"
     echo ""
     echo "💡 Critical documentation structure issues found. These must be fixed."
     echo "   Note: Line length violations are ignored."
@@ -98,6 +98,6 @@ fi
 echo "🚀 Committing with relaxed validation..."
 git commit -m "$COMMIT_MESSAGE"
 
-echo "✅ Relaxed validation commit successful!"
+echo "OK Relaxed validation commit successful!"
 echo ""
 echo "Note: Line length violations were ignored, but structural issues were enforced."

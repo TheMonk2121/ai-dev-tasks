@@ -68,7 +68,7 @@ class EnhancedBacklogTracker:
         items = {}
 
         # Pattern to match backlog table rows (8 columns)
-        row_pattern = r"\| (B[‑-]\d+[a-z]?) \| ([^|]+) \| [^|]+ \| [^|]+ \| ([^|]+)\| [^|]+ \| [^|]+ \| [^|]+ \|"
+        row_pattern = r"\| (B[--]\d+[a-z]?) \| ([^|]+) \| [^|]+ \| [^|]+ \| ([^|]+)\| [^|]+ \| [^|]+ \| [^|]+ \|"
 
         for match in re.finditer(row_pattern, self.content):
             item_id = match.group(1)
@@ -103,32 +103,32 @@ class EnhancedBacklogTracker:
     def start_work(self, item_id: str) -> bool:
         """Mark an item as started with timestamp."""
         if item_id not in self.items:
-            print(f"❌ Error: Backlog item {item_id} not found")
+            print(f"X Error: Backlog item {item_id} not found")
             return False
 
         item = self.items[item_id]
         if item.status == "in-progress":
-            print(f"⚠️  Warning: {item_id} is already in progress")
+            print(f"!️  Warning: {item_id} is already in progress")
             return False
 
         # Update status and add started_at timestamp
         timestamp = datetime.now().isoformat()
         self._update_item_status(item_id, "in-progress", started_at=timestamp)
 
-        print(f"✅ Started work on {item_id}: {item.title}")
+        print(f"OK Started work on {item_id}: {item.title}")
         print(f"   Started at: {timestamp}")
         return True
 
     def update_status(self, item_id: str, new_status: str) -> bool:
         """Update item status with last_updated timestamp."""
         if item_id not in self.items:
-            print(f"❌ Error: Backlog item {item_id} not found")
+            print(f"X Error: Backlog item {item_id} not found")
             return False
 
         timestamp = datetime.now().isoformat()
         self._update_item_status(item_id, new_status, last_updated=timestamp)
 
-        print(f"✅ Updated {item_id} status to '{new_status}'")
+        print(f"OK Updated {item_id} status to '{new_status}'")
         print(f"   Updated at: {timestamp}")
         return True
 
@@ -198,7 +198,7 @@ class EnhancedBacklogTracker:
             summary.append(f"   Last updated: {item.last_updated}")
 
         if item.is_stale():
-            summary.append("   ⚠️  STALE - Needs attention!")
+            summary.append("   !️  STALE - Needs attention!")
 
         return "\n".join(summary)
 
@@ -223,12 +223,12 @@ def main():
     if args.check_stale:
         stale_items = tracker.check_stale_items(args.stale_days)
         if stale_items:
-            print(f"⚠️  Found {len(stale_items)} stale items (in-progress > {args.stale_days} days):")
+            print(f"!️  Found {len(stale_items)} stale items (in-progress > {args.stale_days} days):")
             for item in stale_items:
                 days = item.days_in_progress()
                 print(f"   {item.id}: {item.title} ({days} days in progress)")
         else:
-            print(f"✅ No stale items found (threshold: {args.stale_days} days)")
+            print(f"OK No stale items found (threshold: {args.stale_days} days)")
 
     elif args.start_work:
         tracker.start_work(args.start_work)
@@ -243,17 +243,17 @@ def main():
             print(f"🔄 {len(in_progress)} items currently in progress:")
             for item in in_progress:
                 days = item.days_in_progress()
-                stale_indicator = " ⚠️" if item.is_stale() else ""
+                stale_indicator = " !️" if item.is_stale() else ""
                 print(f"   {item.id}: {item.title} ({days} days){stale_indicator}")
         else:
-            print("✅ No items currently in progress")
+            print("OK No items currently in progress")
 
     elif args.item_summary:
         summary = tracker.get_item_summary(args.item_summary)
         if summary:
             print(summary)
         else:
-            print(f"❌ Item {args.item_summary} not found")
+            print(f"X Item {args.item_summary} not found")
 
     else:
         parser.print_help()

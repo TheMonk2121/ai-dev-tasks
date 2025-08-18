@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-syste
 try:
     from utils.memory_rehydrator import build_hydration_bundle
 except ImportError as e:
-    print(f"❌ Import error: {e}")
+    print(f"X Import error: {e}")
     print("Make sure you're running from the ai-dev-tasks root directory")
     sys.exit(1)
 

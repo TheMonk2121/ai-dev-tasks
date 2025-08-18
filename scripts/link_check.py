@@ -291,12 +291,12 @@ def main():
         print(f"  Anchor not found: {report['summary']['anchor_not_found']}")
 
         if broken_links:
-            print("\n❌ Broken Links:")
+            print("\nX Broken Links:")
             for link in broken_links:
                 print(f"  {link['source_file']}:{link['line']} - {link['link_text']}")
                 print(f"    Target: {link['target']} ({link['error']})")
         else:
-            print("\n✅ All internal links are valid!")
+            print("\nOK All internal links are valid!")
 
     return 0 if len(broken_links) == 0 else 1
 

@@ -20,14 +20,14 @@ echo ""
 
 # Check if port is already in use
 if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null 2>&1; then
-    echo "⚠️  Port $PORT is already in use!"
+    echo "!️  Port $PORT is already in use!"
     echo "   Either stop the existing process or use a different port:"
     echo "   ./scripts/start_mcp_server.sh 3001"
     exit 1
 fi
 
 # Start the server
-echo "✅ Starting server on port $PORT..."
+echo "OK Starting server on port $PORT..."
 echo "   Press Ctrl+C to stop the server"
 echo ""
 

@@ -93,7 +93,7 @@ class ResearchDispersalAutomation:
     ) -> bool:
         """Update a 500_ research file with extracted content"""
         if not os.path.exists(file_path):
-            print(f"❌ Target file {file_path} does not exist")
+            print(f"X Target file {file_path} does not exist")
             return False
 
         try:
@@ -105,7 +105,7 @@ class ResearchDispersalAutomation:
             match = re.search(insert_pattern, content)
 
             if not match:
-                print(f"❌ Could not find insertion point '{insert_after}' in {file_path}")
+                print(f"X Could not find insertion point '{insert_after}' in {file_path}")
                 return False
 
             # Create new section with cross-reference to full research
@@ -128,17 +128,17 @@ class ResearchDispersalAutomation:
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(updated_content)
 
-            print(f"✅ Updated {file_path} with {section_title}")
+            print(f"OK Updated {file_path} with {section_title}")
             return True
 
         except Exception as e:
-            print(f"❌ Error updating {file_path}: {e}")
+            print(f"X Error updating {file_path}: {e}")
             return False
 
     def update_anchor_file(self, file_path: str, section_content: str, section_title: str, insert_after: str) -> bool:
         """Update an anchor file with implementation-focused content"""
         if not os.path.exists(file_path):
-            print(f"❌ Target file {file_path} does not exist")
+            print(f"X Target file {file_path} does not exist")
             return False
 
         try:
@@ -150,7 +150,7 @@ class ResearchDispersalAutomation:
             match = re.search(insert_pattern, content)
 
             if not match:
-                print(f"❌ Could not find insertion point '{insert_after}' in {file_path}")
+                print(f"X Could not find insertion point '{insert_after}' in {file_path}")
                 return False
 
             # Create implementation-focused section
@@ -173,11 +173,11 @@ class ResearchDispersalAutomation:
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(updated_content)
 
-            print(f"✅ Updated {file_path} with {section_title}")
+            print(f"OK Updated {file_path} with {section_title}")
             return True
 
         except Exception as e:
-            print(f"❌ Error updating {file_path}: {e}")
+            print(f"X Error updating {file_path}: {e}")
             return False
 
     def create_backlog_items(self, research_content: str) -> list[dict[str, Any]]:
@@ -254,7 +254,7 @@ def add_backlog_items():
         content = f.read()
 
     # Find the main backlog table
-    table_pattern = r'(\\| B‑\\d+ \\| .*? \\| .*? \\| .*? \\| .*? \\| .*? \\| .*? \\|\\n)'
+    table_pattern = r'(\\| B-\\d+ \\| .*? \\| .*? \\| .*? \\| .*? \\| .*? \\| .*? \\|\\n)'
     match = re.search(table_pattern, content, re.DOTALL)
 
     if match:
@@ -274,10 +274,10 @@ def add_backlog_items():
         with open('000_backlog.md', 'w', encoding='utf-8') as f:
             f.write(updated_content)
 
-        print(f"✅ Added {{len(new_items)}} new backlog items")
+        print(f"OK Added {{len(new_items)}} new backlog items")
         return True
     else:
-        print("❌ Could not find backlog table in 000_backlog.md")
+        print("X Could not find backlog table in 000_backlog.md")
         return False
 
 if __name__ == "__main__":
@@ -341,7 +341,7 @@ if __name__ == "__main__":
             with open(script_path, "w", encoding="utf-8") as f:
                 f.write(script_content)
             results["created_files"].append(script_path)
-            print(f"✅ Created {script_path}")
+            print(f"OK Created {script_path}")
         except Exception as e:
             results["errors"].append(f"Failed to create {script_path}: {e}")
             results["success"] = False
@@ -354,7 +354,7 @@ if __name__ == "__main__":
             with open(summary_path, "w", encoding="utf-8") as f:
                 f.write(summary_content)
             results["created_files"].append(summary_path)
-            print(f"✅ Created {summary_path}")
+            print(f"OK Created {summary_path}")
         except Exception as e:
             results["errors"].append(f"Failed to create {summary_path}: {e}")
             results["success"] = False
@@ -366,7 +366,7 @@ if __name__ == "__main__":
         return f"""# 📊 Research Dispersal Summary
 
 **Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-**Status**: {'✅ Success' if results['success'] else '❌ Errors occurred'}
+**Status**: {'OK Success' if results['success'] else 'X Errors occurred'}
 
 ## 📚 **Research Storage Strategy**
 - **Complete Research**: `docs/research/papers/documentation-context-management-papers.md`
@@ -388,7 +388,7 @@ if __name__ == "__main__":
 ## 📊 **Research Sections Processed**
 {chr(10).join(f"- {section}: {len(content)} characters" for section, content in sections.items())}
 
-## ❌ **Errors**
+## X **Errors**
 {chr(10).join(f"- {error}" for error in results['errors'])}
 
 ## 🚀 **Next Steps**

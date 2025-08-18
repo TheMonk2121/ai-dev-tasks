@@ -94,10 +94,10 @@ class OptimizedQuickConflictChecker:
 
             if has_markers:
                 self.issues.append(f"Merge markers found:\n{result.stdout}")
-                self.log("❌ Merge markers detected", "ERROR")
+                self.log("X Merge markers detected", "ERROR")
                 return False
             else:
-                self.log("✅ No merge markers found", "INFO")
+                self.log("OK No merge markers found", "INFO")
                 return True
 
         except subprocess.TimeoutExpired:
@@ -128,10 +128,10 @@ class OptimizedQuickConflictChecker:
 
                 if has_backups:
                     self.issues.append(f"Backup files found: {backup_files}")
-                    self.log(f"❌ {len(backup_files)} backup files found", "ERROR")
+                    self.log(f"X {len(backup_files)} backup files found", "ERROR")
                     return False
                 else:
-                    self.log("✅ No backup files found", "INFO")
+                    self.log("OK No backup files found", "INFO")
                     return True
             else:
                 self.warnings.append("Could not list git files")
@@ -163,7 +163,7 @@ class OptimizedQuickConflictChecker:
         if len(python_configs) > 1:
             conflict_msg = f"Multiple Python package managers: {python_configs}"
             conflicts.append(conflict_msg)
-            self.log(f"❌ {conflict_msg}", "ERROR")
+            self.log(f"X {conflict_msg}", "ERROR")
 
         # Check Node.js package managers (fast file existence check)
         node_configs = []
@@ -174,7 +174,7 @@ class OptimizedQuickConflictChecker:
         if len(node_configs) > 1:
             conflict_msg = f"Multiple Node.js package managers: {node_configs}"
             conflicts.append(conflict_msg)
-            self.log(f"❌ {conflict_msg}", "ERROR")
+            self.log(f"X {conflict_msg}", "ERROR")
 
         has_conflicts = len(conflicts) > 0
         self.save_cached_result("package_conflicts", not has_conflicts)
@@ -183,7 +183,7 @@ class OptimizedQuickConflictChecker:
             self.issues.extend(conflicts)
             return False
         else:
-            self.log("✅ No package manager conflicts", "INFO")
+            self.log("OK No package manager conflicts", "INFO")
             return True
 
     def run_parallel_checks(self) -> dict[str, Any]:
@@ -266,12 +266,12 @@ def main():
         if results["issues"]:
             print("\nIssues:")
             for issue in results["issues"]:
-                print(f"  ❌ {issue}")
+                print(f"  X {issue}")
 
         if results["warnings"]:
             print("\nWarnings:")
             for warning in results["warnings"]:
-                print(f"  ⚠️ {warning}")
+                print(f"  !️ {warning}")
 
 
 if __name__ == "__main__":

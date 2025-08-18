@@ -75,7 +75,7 @@ def main():
     if args.file:
         p = Path(args.file)
         if not p.exists():
-            print(f"❌ File not found: {p}")
+            print(f"X File not found: {p}")
             return
         text = p.read_text(encoding='utf-8')
     elif args.clipboard:
@@ -89,12 +89,12 @@ def main():
             pass
 
     if not text.strip():
-        print("❌ No chat content provided. Use --file, --clipboard, or pipe via stdin.")
+        print("X No chat content provided. Use --file, --clipboard, or pipe via stdin.")
         return
 
     content = sanitize(text)
     out_path = save_markdown(content, args.title, args.tags)
-    print(f"✅ Chat saved to {out_path}")
+    print(f"OK Chat saved to {out_path}")
 
 
 if __name__ == "__main__":

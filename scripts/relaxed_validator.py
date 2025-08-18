@@ -113,10 +113,10 @@ def main():
     success = validator.run_all_validations()
     
     if success:
-        print("✅ Relaxed validation passed (line length violations ignored)")
+        print("OK Relaxed validation passed (line length violations ignored)")
         sys.exit(0)
     else:
-        print("❌ Relaxed validation failed (critical issues found)")
+        print("X Relaxed validation failed (critical issues found)")
         sys.exit(1)
 
 if __name__ == "__main__":

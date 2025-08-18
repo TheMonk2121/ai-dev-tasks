@@ -18,7 +18,7 @@ fi
 
 COMMIT_MESSAGE="$1"
 
-echo "⚠️  Temporarily bypassing validation..."
+echo "!️  Temporarily bypassing validation..."
 echo "Commit message: $COMMIT_MESSAGE"
 echo ""
 
@@ -37,10 +37,10 @@ git commit -m "$COMMIT_MESSAGE"
 
 # Restore pre-commit hook
 if [ -f ".git/hooks/pre-commit.disabled" ]; then
-    echo "✅ Re-enabling pre-commit hook..."
+    echo "OK Re-enabling pre-commit hook..."
     mv ".git/hooks/pre-commit.disabled" ".git/hooks/pre-commit"
 fi
 
-echo "✅ Commit successful with temporary validation bypass!"
+echo "OK Commit successful with temporary validation bypass!"
 echo ""
 echo "Note: Pre-commit validation is now re-enabled."

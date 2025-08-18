@@ -79,10 +79,10 @@ def fix_markdown_progress_file():
         f.write(content)
 
     if content != original_content:
-        print(f"✅ Fixed markdown issues in {file_path}")
+        print(f"OK Fixed markdown issues in {file_path}")
         return True
     else:
-        print(f"ℹ️  No changes needed for {file_path}")
+        print(f"i️  No changes needed for {file_path}")
         return False
 
 

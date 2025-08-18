@@ -18,7 +18,7 @@ cd "$PROJECT_ROOT"
 
 # Check if Python script exists
 if [ ! -f "scripts/auto_push_prompt.py" ]; then
-    echo "❌ auto_push_prompt.py not found"
+    echo "X auto_push_prompt.py not found"
     exit 1
 fi
 

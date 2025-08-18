@@ -257,7 +257,7 @@ def main():
     sync_files = find_files_with_sync_tags()
 
     if not sync_files:
-        print("✅ No files with DATABASE_SYNC tags found")
+        print("OK No files with DATABASE_SYNC tags found")
         return True
 
     print(f"📋 Found {len(sync_files)} files with DATABASE_SYNC tags:")
@@ -282,7 +282,7 @@ def main():
     print(f"  Need Update: {len(needs_update)} files")
 
     if current_files:
-        print("\n✅ Current Files:")
+        print("\nOK Current Files:")
         for file_path, status in current_files:
             print(f"  - {status['filename']} ({status['file_size']} bytes)")
 
@@ -301,15 +301,15 @@ def main():
 
             for file_path, status in needs_update:
                 if update_database_file(file_path, status):
-                    print(f"  ✅ Updated {status['filename']}")
+                    print(f"  OK Updated {status['filename']}")
                     success_count += 1
                 else:
-                    print(f"  ❌ Failed to update {status['filename']}")
+                    print(f"  X Failed to update {status['filename']}")
 
             print(f"\n📊 Update Results: {success_count}/{len(needs_update)} successful")
             return success_count == len(needs_update)
         else:
-            print("\n⚠️  Run with --auto-update to update these files")
+            print("\n!️  Run with --auto-update to update these files")
             return False
 
     return True

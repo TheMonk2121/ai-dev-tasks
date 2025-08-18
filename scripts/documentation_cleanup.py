@@ -112,7 +112,7 @@ def check_cross_references():
                     referenced_by[ref].append(filename)
 
         except Exception as e:
-            print(f"❌ Error reading {filename}: {e}")
+            print(f"X Error reading {filename}: {e}")
 
     print("📊 Cross-Reference Statistics:")
     print("  Most Referenced Files:")
@@ -158,19 +158,19 @@ def identify_redundant_content():
                     content_snippets[content_hash].append((filename, match.strip()[:100]))
 
         except Exception as e:
-            print(f"❌ Error analyzing {filename}: {e}")
+            print(f"X Error analyzing {filename}: {e}")
 
     # Find duplicate content
     duplicates = {k: v for k, v in content_snippets.items() if len(v) > 1}
 
     if duplicates:
-        print(f"⚠️  Found {len(duplicates)} potential content duplications:")
+        print(f"!️  Found {len(duplicates)} potential content duplications:")
         for content_hash, occurrences in list(duplicates.items())[:5]:  # Show first 5
             print(f"  Content appears in {len(occurrences)} files:")
             for filename, snippet in occurrences:
                 print(f"    - {filename}: {snippet}...")
     else:
-        print("✅ No obvious content duplications found")
+        print("OK No obvious content duplications found")
 
     return duplicates
 
@@ -265,7 +265,7 @@ def create_cleanup_report(categories, reference_counts, referenced_by, recommend
     with open(report_path, "w") as f:
         json.dump(report, f, indent=2)
 
-    print(f"✅ Cleanup report saved to {report_path}")
+    print(f"OK Cleanup report saved to {report_path}")
     return report
 
 
@@ -289,7 +289,7 @@ def main():
     # Create cleanup report
     report = create_cleanup_report(categories, reference_counts, referenced_by, recommendations, duplicates)
 
-    print("\n✅ Documentation cleanup analysis complete!")
+    print("\nOK Documentation cleanup analysis complete!")
     print("📊 Summary:")
     print(f"  - Total Guides: {report['summary']['total_guides']}")
     print(f"  - Core Files: {report['summary']['core_files']}")

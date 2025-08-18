@@ -21,10 +21,10 @@ def load_validator_report(report_path: str = "validator_report.json") -> dict[st
         with open(report_path) as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f"❌ Validator report not found: {report_path}")
+        print(f"X Validator report not found: {report_path}")
         sys.exit(1)
     except json.JSONDecodeError as e:
-        print(f"❌ Invalid JSON in validator report: {e}")
+        print(f"X Invalid JSON in validator report: {e}")
         sys.exit(1)
 
 
@@ -62,7 +62,7 @@ def save_metrics(metrics: dict[str, Any], output_path: str = "metrics/validator_
     with open(output_file, "w") as f:
         json.dump(metrics, f, indent=2)
 
-    print(f"✅ Metrics saved to: {output_file}")
+    print(f"OK Metrics saved to: {output_file}")
 
 
 def main():
@@ -93,7 +93,7 @@ def main():
     counts = metrics["counts"]
     print("\n📊 Validator Metrics Summary:")
     for category, count in counts.items():
-        status = "✅" if count == 0 else "❌"
+        status = "OK" if count == 0 else "X"
         print(f"  {category}: {count} violations {status}")
 
 

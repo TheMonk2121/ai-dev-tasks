@@ -10,7 +10,7 @@ echo ""
 
 # Check if markdownlint is available
 if ! command -v markdownlint &> /dev/null; then
-    echo "❌ markdownlint not found. Please install it first:"
+    echo "X markdownlint not found. Please install it first:"
     echo "   npm install -g markdownlint-cli"
     exit 1
 fi
@@ -30,7 +30,7 @@ for file in ./*.md; do
         # For now, we'll just report the issues
         LONG_LINES=$(markdownlint "$file" 2>/dev/null | grep -c "MD013" || echo "0")
         if [ "$LONG_LINES" -gt 0 ]; then
-            echo "    ⚠️  $LONG_LINES long lines found (manual fix needed)"
+            echo "    !️  $LONG_LINES long lines found (manual fix needed)"
         fi
     fi
 done
@@ -41,13 +41,13 @@ for file in ./*.md; do
     if [ -f "$file" ]; then
         HEADING_ISSUES=$(markdownlint "$file" 2>/dev/null | grep -c "MD001" || echo "0")
         if [ "$HEADING_ISSUES" -gt 0 ]; then
-            echo "    ⚠️  Heading level issues in $file (manual fix needed)"
+            echo "    !️  Heading level issues in $file (manual fix needed)"
         fi
     fi
 done
 
 echo ""
-echo "✅ Analysis complete!"
+echo "OK Analysis complete!"
 echo ""
 echo "📝 Manual fixes needed:"
 echo "  1. Line length violations (MD013) - wrap lines at 120 characters"
