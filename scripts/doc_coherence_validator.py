@@ -8,6 +8,8 @@ Target: 50% performance improvement (0.80s → <0.40s)
 Usage: python scripts/doc_coherence_validator.py [--dry-run] [--only-changed] [--workers N] [--json]
 """
 
+from __future__ import annotations
+
 import argparse
 import datetime
 import functools
@@ -23,7 +25,6 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, Union
 
 # Import few-shot integration framework
 try:
@@ -367,9 +368,7 @@ def warn(msg: str):
     print(f"⚠️  WARN: {msg}", file=stream)
 
 
-def _posix_rel(
-    p: str | os.PathLike[str], root: str | os.PathLike[str]
-) -> str:
+def _posix_rel(p: str | os.PathLike[str], root: str | os.PathLike[str]) -> str:
     """Convert path to repo-relative POSIX format for consistent reporting."""
     ps = os.fspath(p)
     rs = os.fspath(root)
@@ -2398,9 +2397,7 @@ def main():
     ledger = _load_ledger(args.exceptions)
 
     # Helper: return changed markdown files between base and head using robust parsing
-    def _git_diff_changed_md(
-        base_sha: str | None, head_sha: str | None
-    ) -> list[str]:
+    def _git_diff_changed_md(base_sha: str | None, head_sha: str | None) -> list[str]:
         if not base_sha or not head_sha:
             return []
         try:

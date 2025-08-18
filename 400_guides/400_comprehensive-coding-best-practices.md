@@ -1,65 +1,60 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
-
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_contributing-guidelines.md -->
-
 <!-- MODULE_REFERENCE: 400_guides/400_file-analysis-guide.md -->
-
 <!-- MEMORY_CONTEXT: HIGH - Comprehensive coding standards and conflict prevention -->
-
 <!-- DATABASE_SYNC: REQUIRED -->
 
 # 🛡️ Comprehensive Coding Best Practices
 
-## 🔎 TL;DR
+## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |
-|----|----|----|
-| Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices |
-| to current development work |  |  |
+|---|---|---|
+| Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices
+to current development work |
 
-## TL;DR
+
+
+## TL;DR {#tldr}
 
 | what this file is | read when | do next |
-|----|----|----|
-| Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices |
-| to current development work |  |  |
+|---|---|---|
+| Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices
+to current development work |
+
+
 
 ## 🎯 **Current Status**
 
 - **Status**: ✅ **ACTIVE** - Comprehensive standards maintained
-- **Priority**: 🔥 Critical - Essential for code quality and conflict
-  prevention
+- **Priority**: 🔥 Critical - Essential for code quality and conflict prevention
 - **Points**: 8 - High complexity, strategic importance
-- **Dependencies**: 400_guides/400_contributing-guidelines.md,
-  400_guides/400_file-analysis-guide.md
+- **Dependencies**: 400_guides/400_contributing-guidelines.md, 400_guides/400_file-analysis-guide.md
 - **Next Steps**: Regular review and integration with CI/CD pipeline
 
 ## 🚀 Quick Start
 
 ### **For Immediate Issues (10-minute triage):**
 
-1.  Run `python scripts/quick_conflict_check.py` for fast conflict
-    detection
-2.  Check merge markers: `git grep -nE '^(<<<<<<<|=======|>>>>>>>)'`
-3.  Validate dependencies: `python -m pip check` (Python) or
-    `npm ls --all` (Node.js)
+1. Run `python scripts/quick_conflict_check.py` for fast conflict detection
+2. Check merge markers: `git grep -nE '^(<<<<<<<|=======|>>>>>>>)'`
+3. Validate dependencies: `python -m pip check` (Python) or `npm ls --all` (Node.js)
 
 ### **For Systematic Problems (Deep audit):**
 
-1.  Run comprehensive health check:
-    `python scripts/system_health_check.py --deep`
-2.  Execute conflict audit: `python scripts/conflict_audit.py --full`
-3.  Review results and implement fixes
+1. Run comprehensive health check: `python scripts/system_health_check.py --deep`
+2. Execute conflict audit: `python scripts/conflict_audit.py --full`
+3. Review results and implement fixes
 
 ### **For Prevention (Long-term stability):**
 
-1.  Set up CI gates using the guardrails in this document
-2.  Implement automated conflict detection
-3.  Regular maintenance using the prevention checklist
+1. Set up CI gates using the guardrails in this document
+2. Implement automated conflict detection
+3. Regular maintenance using the prevention checklist
 
 ### **AI Development Ecosystem Quick Start:**
 
-``` bash
+```bash
 # Start the complete AI development ecosystem
 cd dspy-rag-system
 ./quick_start.sh
@@ -113,7 +108,7 @@ python scripts/memory_benchmark.py  # Memory performance testing
 Your AI development ecosystem includes these fully implemented systems:
 
 | System | Location | Status | Key Features |
-|----|----|----|----|
+|--------|----------|--------|--------------|
 | **DSPy RAG System** | `dspy-rag-system/src/dspy_modules/` | ✅ Production Ready | Document processing, vector store, AI integration |
 | **Mission Dashboard** | `dspy-rag-system/src/mission_dashboard/` | ✅ Production Ready | Real-time AI task monitoring with WebSocket |
 | **N8N Workflows** | `dspy-rag-system/src/n8n_workflows/` | ✅ Production Ready | Automated backlog management and event processing |
@@ -158,7 +153,7 @@ Your AI development ecosystem includes these fully implemented systems:
 
 ### **Required Python Packages**
 
-``` bash
+```bash
 # Core conflict detection tools
 pip install pycycle>=0.1.0          # Circular dependency detection
 pip install bandit>=1.7.0           # Security scanning
@@ -174,7 +169,7 @@ pip install ruff>=0.1.0             # Fast Python linter
 
 ## **Required Node.js Packages**
 
-``` bash
+```bash
 # Core conflict detection tools
 npm install -g madge@^6.0.0         # Circular dependency detection
 npm install -g @redocly/cli@^1.0.0  # OpenAPI schema validation
@@ -187,7 +182,7 @@ npm install -g eslint@^8.0.0        # JavaScript/TypeScript linting
 
 ## **System Requirements**
 
-``` bash
+```bash
 # Minimum versions
 Python: >= 3.11
 Node.js: >= 18.0.0
@@ -201,7 +196,7 @@ Git: >= 2.30.0
 
 ## **Installation Script**
 
-``` bash
+```bash
 #!/bin/bash
 # install_conflict_detection_tools.sh
 
@@ -234,19 +229,19 @@ echo "✅ Installation complete!"
 
 ## **Version Compatibility Matrix**
 
-| Tool                      | Python | Node.js | Git   | Notes                         |
-|---------------------------|--------|---------|-------|-------------------------------|
-| `quick_conflict_check.py` | 3.11+  | \-      | 2.30+ | Core conflict detection       |
-| `conflict_audit.py`       | 3.11+  | 18.0+   | 2.30+ | Deep audit capabilities       |
-| `pycycle`                 | 3.11+  | \-      | \-    | Circular dependency detection |
-| `madge`                   | \-     | 18.0+   | \-    | Node.js circular dependencies |
-| `bandit`                  | 3.11+  | \-      | \-    | Security scanning             |
-| `safety`                  | 3.11+  | \-      | \-    | Dependency vulnerabilities    |
+| Tool | Python | Node.js | Git | Notes |
+|------|--------|---------|-----|-------|
+| `quick_conflict_check.py` | 3.11+ | - | 2.30+ | Core conflict detection |
+| `conflict_audit.py` | 3.11+ | 18.0+ | 2.30+ | Deep audit capabilities |
+| `pycycle` | 3.11+ | - | - | Circular dependency detection |
+| `madge` | - | 18.0+ | - | Node.js circular dependencies |
+| `bandit` | 3.11+ | - | - | Security scanning |
+| `safety` | 3.11+ | - | - | Dependency vulnerabilities |
 
 ### **AI Development Ecosystem Tools**
 
 | Tool | Location | Status | Notes |
-|----|----|----|----|
+|------|----------|--------|-------|
 | **DSPy RAG System** | `dspy-rag-system/src/dspy_modules/` | ✅ Production Ready | Document processing, vector store, AI integration |
 | **Mission Dashboard** | `dspy-rag-system/src/mission_dashboard/` | ✅ Production Ready | Real-time AI task monitoring with WebSocket |
 | **N8N Workflows** | `dspy-rag-system/src/n8n_workflows/` | ✅ Production Ready | Automated backlog management and event processing |
@@ -264,7 +259,7 @@ echo "✅ Installation complete!"
 ### **Core Execution Engine Scripts**
 
 | Script | Location | Purpose | Key Features |
-|----|----|----|----|
+|--------|----------|---------|--------------|
 | **Task Execution Engine** | `scripts/process_tasks.py` | Core CLI for backlog execution | Automated task processing, state management, error handling |
 | **Error Handler** | `scripts/error_handler.py` | Comprehensive error handling | Retry logic, graceful degradation, error reporting |
 | **State Manager** | `scripts/state_manager.py` | Task execution state tracking | Progress tracking, execution history, metadata management |
@@ -273,143 +268,97 @@ echo "✅ Installation complete!"
 
 #### **Core Execution & Quality Assurance**
 
-- **Task Execution**: `scripts/process_tasks.py` - Core CLI for backlog
-  execution
-- **Error Handling**: `scripts/error_handler.py` - Comprehensive error
-  recovery
-- **State Management**: `scripts/state_manager.py` - Execution state
-  tracking
-- **Conflict Detection**: `scripts/conflict_audit.py` - Deep conflict
-  analysis
-- **Quick Conflict Check**: `scripts/quick_conflict_check.py` - Fast
-  conflict detection
-- **System Health**: `scripts/system_health_check.py` - System
-  validation
+- **Task Execution**: `scripts/process_tasks.py` - Core CLI for backlog execution
+- **Error Handling**: `scripts/error_handler.py` - Comprehensive error recovery
+- **State Management**: `scripts/state_manager.py` - Execution state tracking
+- **Conflict Detection**: `scripts/conflict_audit.py` - Deep conflict analysis
+- **Quick Conflict Check**: `scripts/quick_conflict_check.py` - Fast conflict detection
+- **System Health**: `scripts/system_health_check.py` - System validation
 
 #### **Documentation & Validation** (See [`400_guides/400_documentation-guide.md`](400_documentation-guide.md))
 
-- **Documentation Validation**: `scripts/doc_coherence_validator.py` -
-  Cross-reference checking
-- **Documentation Retrieval**:
-  `scripts/documentation_retrieval_cli.py` - CLI for context retrieval
-- **Documentation Indexing**: `scripts/documentation_indexer.py` -
-  Automatic indexing
-- **Documentation Navigator**: `scripts/documentation_navigator.py` -
-  File discovery and navigation
+- **Documentation Validation**: `scripts/doc_coherence_validator.py` - Cross-reference checking
+- **Documentation Retrieval**: `scripts/documentation_retrieval_cli.py` - CLI for context retrieval
+- **Documentation Indexing**: `scripts/documentation_indexer.py` - Automatic indexing
+- **Documentation Navigator**: `scripts/documentation_navigator.py` - File discovery and navigation
 
 #### **Memory & Context Management** (See [`100_memory/100_cursor-memory-context.md`](../100_memory/100_cursor-memory-context.md))
 
-- **Memory Updates**: `scripts/update_cursor_memory.py` - Memory context
-  updates
-- **Constitution Compliance**:
-  `scripts/constitution_compliance_checker.py` - AI constitution
-  validation
-- **Context Index**: `scripts/context_index_validator.py` - Context
-  validation
-- **Memory Benchmark**: `scripts/memory_benchmark.py` - Memory
-  performance testing
-- **Memory Hierarchy**: `scripts/show_memory_hierarchy.py` - Memory
-  structure visualization
+- **Memory Updates**: `scripts/update_cursor_memory.py` - Memory context updates
+- **Constitution Compliance**: `scripts/constitution_compliance_checker.py` - AI constitution validation
+- **Context Index**: `scripts/context_index_validator.py` - Context validation
+- **Memory Benchmark**: `scripts/memory_benchmark.py` - Memory performance testing
+- **Memory Hierarchy**: `scripts/show_memory_hierarchy.py` - Memory structure visualization
 
 #### **Repository Maintenance** (See [`400_contributing-guidelines.md`](400_contributing-guidelines.md))
 
-- **Repository Maintenance**: `scripts/repo_maintenance.py` - Automated
-  maintenance
-- **Database Recovery**: `scripts/auto_recover_database.py` - Database
-  recovery
-- **File Analysis**: `scripts/file_analysis_checklist.py` - File
-  operation analysis
-- **Backlog Parser**: `scripts/backlog_parser.py` - Backlog parsing and
-  analysis
-- **Conflict Audit**: `scripts/conflict_audit.py` - Deep conflict
-  analysis
-- **Quick Conflict Check**: `scripts/quick_conflict_check.py` - Fast
-  conflict detection
-- **Conflict Check**: `scripts/check-number-unique.sh` - Unique
-  identifier validation
+- **Repository Maintenance**: `scripts/repo_maintenance.py` - Automated maintenance
+- **Database Recovery**: `scripts/auto_recover_database.py` - Database recovery
+- **File Analysis**: `scripts/file_analysis_checklist.py` - File operation analysis
+- **Backlog Parser**: `scripts/backlog_parser.py` - Backlog parsing and analysis
+- **Conflict Audit**: `scripts/conflict_audit.py` - Deep conflict analysis
+- **Quick Conflict Check**: `scripts/quick_conflict_check.py` - Fast conflict detection
+- **Conflict Check**: `scripts/check-number-unique.sh` - Unique identifier validation
 
 #### **Markdown & Documentation Tools** (VS Code Handles Basic Formatting)
 
-- **Markdown Fixes**: `scripts/fix_markdown_blanks.py` - Comprehensive
-  markdown normalization
-- **Bare URL Fixes**: `scripts/fix_md034_bare_urls.py` - Bare URL
-  formatting (VS Code doesn’t handle)
-- **Code Language Fixes**: `scripts/fix_md040_code_languages.py` - Code
-  block language detection (VS Code doesn’t handle)
-- **HTML Anchor Fixes**: `scripts/fix_md033_html_anchors.py` - HTML
-  anchor formatting (VS Code doesn’t handle)
+- **Markdown Fixes**: `scripts/fix_markdown_blanks.py` - Comprehensive markdown normalization
+- **Bare URL Fixes**: `scripts/fix_md034_bare_urls.py` - Bare URL formatting (VS Code doesn't handle)
+- **Code Language Fixes**: `scripts/fix_md040_code_languages.py` - Code block language detection (VS Code doesn't handle)
+- **HTML Anchor Fixes**: `scripts/fix_md033_html_anchors.py` - HTML anchor formatting (VS Code doesn't handle)
 
 #### **Research & Analysis**
 
-- **Research Dispersal**: `scripts/research_dispersal_automation.py` -
-  Research automation
-- **Research Integration**: `scripts/research_integration_helper.py` -
-  Research helpers
-- **Research Execution**: `scripts/run_research_dispersal.py` - Research
-  dispersal execution
+- **Research Dispersal**: `scripts/research_dispersal_automation.py` - Research automation
+- **Research Integration**: `scripts/research_integration_helper.py` - Research helpers
+- **Research Execution**: `scripts/run_research_dispersal.py` - Research dispersal execution
 
 #### **Security & Validation**
 
-- **Security Scanning**: `dspy-rag-system/scripts/security_scan.py` -
-  Security vulnerability scanning
-- **Configuration Validation**: `scripts/validate_config.py` -
-  Configuration validation
-- **Pre-commit Validation**: `scripts/pre_commit_doc_validation.sh` -
-  Pre-commit documentation validation
+- **Security Scanning**: `dspy-rag-system/scripts/security_scan.py` - Security vulnerability scanning
+- **Configuration Validation**: `scripts/validate_config.py` - Configuration validation
+- **Pre-commit Validation**: `scripts/pre_commit_doc_validation.sh` - Pre-commit documentation validation
 
 #### **Setup & Configuration**
 
-- **AI Model Setup**: `scripts/setup_ai_models.py` - AI model
-  configuration
-- **PRD Decision Helper**: `scripts/prd_decision_helper.py` - PRD
-  creation assistance
+- **AI Model Setup**: `scripts/setup_ai_models.py` - AI model configuration
+- **PRD Decision Helper**: `scripts/prd_decision_helper.py` - PRD creation assistance
 
 #### **Note on Obsolete Scripts**
 
-The following scripts have been **removed from this index** as they are
-obsolete:
+The following scripts have been **removed from this index** as they are obsolete:
 
 **Redundant Markdown Fix Scripts (VS Code handles automatically):**
 
-- ~~`fix_md012_multiple_blanks.py`~~ - VS Code
-  `"files.trimFinalNewlines": true` handles this
-- ~~`fix_md047_trailing_newlines.py`~~ - VS Code
-  `"files.insertFinalNewline": true` handles this
+- ~~`fix_md012_multiple_blanks.py`~~ - VS Code `"files.trimFinalNewlines": true` handles this
+- ~~`fix_md047_trailing_newlines.py`~~ - VS Code `"files.insertFinalNewline": true` handles this
 
 **Problem-Specific Scripts (targets never implemented):**
 
 - ~~`split_giant_guides.py`~~ - Giant guide splitting was never executed
-- ~~`migrate_giant_guide_references.py`~~ - No split files exist to
-  migrate references for
-- ~~`migrate_memory_context.py`~~ - Modular memory context system was
-  never implemented
-- ~~`normalize_metadata_headers.py`~~ - Metadata normalization already
-  completed
+- ~~`migrate_giant_guide_references.py`~~ - No split files exist to migrate references for
+- ~~`migrate_memory_context.py`~~ - Modular memory context system was never implemented
+- ~~`normalize_metadata_headers.py`~~ - Metadata normalization already completed
 
-The remaining markdown fix scripts provide functionality that VS Code
-doesn’t handle automatically, such as intelligent content analysis and
-bulk operations.
+The remaining markdown fix scripts provide functionality that VS Code doesn't handle automatically, such as intelligent content analysis and bulk operations.
 
 ## 🔧 Core Execution Engine Implementation
 
 ### **1. Task Execution Engine (`scripts/process_tasks.py`)**
 
-The core CLI script that serves as the execution engine for all backlog
-items in the AI development ecosystem.
+The core CLI script that serves as the execution engine for all backlog items in the AI development ecosystem.
 
 #### **Key Features**
 
-- **Automated Task Processing:** Parse and execute backlog items
-  automatically
+- **Automated Task Processing:** Parse and execute backlog items automatically
 - **State Management**: Track task execution status and progress
 - **Error Handling**: Comprehensive error recovery with retry logic
-- **Dependency Resolution**: Handle task dependencies and execution
-  order
+- **Dependency Resolution**: Handle task dependencies and execution order
 - **Human Interaction**: Support for tasks requiring human input
 
 #### **Usage Examples**
 
-``` bash
+```bash
 # Execute a specific backlog item
 python scripts/process_tasks.py --backlog-id B-001
 
@@ -425,7 +374,7 @@ python scripts/process_tasks.py --priority 🔥
 
 ## **Core Implementation Patterns**
 
-``` python
+```python
 # Task execution with error handling
 @retry_with_backoff(max_retries=3, base_delay=1)
 def execute_task(task: Task) -> Dict[str, Any]:
@@ -468,16 +417,14 @@ Comprehensive error handling and recovery system for task execution.
 ### **Key Features**
 
 - **Error Classification**: Categorize errors by type and severity
-- **Retry Logic**: Configurable retry strategies with exponential
-  backoff
-- **Graceful Degradation**: Continue operation despite non-critical
-  errors
+- **Retry Logic**: Configurable retry strategies with exponential backoff
+- **Graceful Degradation**: Continue operation despite non-critical errors
 - **Error Reporting**: Structured error reporting and logging
 - **Recovery Actions**: Automatic recovery for common error scenarios
 
 #### **Error Categories**
 
-``` python
+```python
 class ErrorCategory(Enum):
     """Error categories for classification."""
     NETWORK = "network"
@@ -499,7 +446,7 @@ class ErrorSeverity(Enum):
 
 #### **Recovery Strategies**
 
-``` python
+```python
 def handle_database_error(error: Exception, context: str) -> RecoveryAction:
     """Handle database-related errors with recovery strategies."""
     if "connection" in str(error).lower():
@@ -524,8 +471,7 @@ def handle_database_error(error: Exception, context: str) -> RecoveryAction:
 
 ### **3. State Manager (`scripts/state_manager.py`)**
 
-State management system for tracking task execution progress and
-history.
+State management system for tracking task execution progress and history.
 
 #### **Key Features**
 
@@ -537,7 +483,7 @@ history.
 
 #### **State Management Patterns**
 
-``` python
+```python
 class StateManager:
     """Comprehensive state management system for task execution."""
 
@@ -585,7 +531,7 @@ class StateManager:
 
 ### **Quick Setup Commands**
 
-``` bash
+```bash
 # One-liner setup (Unix/macOS)
 curl -sSL https://raw.githubusercontent.com/your-repo/install_conflict_detection_tools.sh | bash
 
@@ -614,7 +560,7 @@ python scripts/doc_coherence_validator.py --check-all
 
 ### **Docker Environment**
 
-``` dockerfile
+```dockerfile
 # Dockerfile for conflict detection environment
 FROM python:3.11-slim
 
@@ -636,7 +582,7 @@ WORKDIR /app
 
 ## **GitHub Actions Environment**
 
-``` yaml
+```yaml
 # .github/workflows/conflict-detection.yml
 name: Conflict Detection
 
@@ -676,7 +622,7 @@ jobs:
 
 ### **Python Issues**
 
-``` bash
+```bash
 # If pycycle installation fails
 pip install --upgrade pip setuptools wheel
 pip install pycycle --no-cache-dir
@@ -690,7 +636,7 @@ pip install safety --upgrade
 
 ## **Node.js Issues**
 
-``` bash
+```bash
 # If madge fails to install
 npm cache clean --force
 npm install -g madge@^6.0.0
@@ -700,7 +646,7 @@ npm install -g typescript@^5.0.0
 npx tsc --version
 ```
 
-``` bash
+```bash
 # If git grep fails
 git --version  # Should be >= 2.30.0
 git config --global core.pager cat  # Disable pager for scripts
@@ -710,7 +656,7 @@ git config --global core.pager cat  # Disable pager for scripts
 
 ### **For Large Repositories**
 
-``` bash
+```bash
 # Use faster alternatives for large repos
 pip install ruff>=0.1.0  # Faster than flake8
 npm install -g eslint@^8.0.0  # Faster than tslint
@@ -722,7 +668,7 @@ python scripts/conflict_audit.py --workers 4
 
 ## **Caching Strategies**
 
-``` bash
+```bash
 # Cache dependency checks
 python scripts/quick_conflict_check.py --cache
 python scripts/conflict_audit.py --cache-dir .cache
@@ -738,7 +684,7 @@ python scripts/conflict_audit.py --skip-build-checks
 
 #### **1. Merge Marker Detection**
 
-``` bash
+```bash
 # Check for leftover merge markers
 git grep -nE '^(<<<<<<<|=======|>>>>>>>)'
 
@@ -748,7 +694,7 @@ git ls-files -z | xargs -0 -n1 basename | grep -E '\.orig$|\.rej$'
 
 ## **2. Package Manager Conflicts**
 
-``` bash
+```bash
 # Python: Check for mixed package managers
 find . -maxdepth 2 -name "requirements.txt" -o -name "pyproject.toml" -o -name "Pipfile" -o -name "poetry.lock"
 
@@ -758,7 +704,7 @@ find . -maxdepth 2 -name "package-lock.json" -o -name "yarn.lock" -o -name "pnpm
 
 ## **3. Dual Configuration Detection**
 
-``` bash
+```bash
 # Python: Check for multiple config files
 find . -name ".flake8" -o -name ".ruff.toml" -o -name "pyproject.toml" -o -name "setup.cfg"
 
@@ -768,14 +714,14 @@ find . -name "tsconfig*.json" -o -name ".eslintrc*" -o -name "eslint.config.*"
 
 ## **4. Module Shadowing (Python)**
 
-``` bash
+```bash
 # Check for local modules shadowing stdlib
 find . -maxdepth 3 -type f -name '*.py' | grep -E '/(email|json|jwt|requests|string|typing|dataclasses)\.py$'
 ```
 
 ## **5. Case-Sensitive Name Collisions**
 
-``` bash
+```bash
 # Check for case-sensitive collisions
 git ls-files | awk '{print tolower($0)}' | sort | uniq -d
 ```
@@ -785,8 +731,7 @@ git ls-files | awk '{print tolower($0)}' | sort | uniq -d
 ### **1. Dependency Graph Analysis**
 
 **Python:**
-
-``` bash
+```bash
 # Check for dependency conflicts
 python -m pip check
 pipdeptree --warn fail
@@ -797,8 +742,7 @@ pycycle path/to/pkg
 ```
 
 **Node.js:**
-
-``` bash
+```bash
 # Check for peer dependency issues
 npm ls --all
 
@@ -809,8 +753,7 @@ npx madge --circular src
 ## **2. Build Toolchain & Module Resolution**
 
 **TypeScript/JavaScript:**
-
-``` bash
+```bash
 # Check for path alias drift
 npx tsc --noEmit
 
@@ -819,8 +762,7 @@ npx tsc --listFiles | grep -E "(alias|path)"
 ```
 
 **Python:**
-
-``` bash
+```bash
 # Check for namespace package issues
 find . -name "__init__.py" -exec grep -l "namespace" {} \;
 ```
@@ -828,8 +770,7 @@ find . -name "__init__.py" -exec grep -l "namespace" {} \;
 ## **3. Interface/Contract Drift**
 
 **API Contracts:**
-
-``` bash
+```bash
 # OpenAPI schema validation
 npx @redocly/cli lint openapi.yaml
 
@@ -840,8 +781,7 @@ npx graphql-schema-linter schema.graphql
 ## **4. Data Model & Migrations**
 
 **Database Migrations:**
-
-``` bash
+```bash
 # Check for migration conflicts
 alembic heads
 alembic branches
@@ -853,8 +793,7 @@ npx prisma migrate status
 ## **5. Test Configuration Drift**
 
 **Test Environment Validation:**
-
-``` bash
+```bash
 # Python: Check test environment
 python -c "import sys; print(sys.version); print(sys.path)"
 
@@ -866,7 +805,7 @@ node -e "console.log(process.version); console.log(process.env.NODE_ENV)"
 
 ### **CI/CD Environment Parity**
 
-``` yaml
+```yaml
 # GitHub Actions example
 - name: Environment Parity Check
   run: |
@@ -878,7 +817,7 @@ node -e "console.log(process.version); console.log(process.env.NODE_ENV)"
 
 ## **Automated Conflict Detection**
 
-``` yaml
+```yaml
 # Pre-commit hooks
 - repo: local
   hooks:
@@ -895,7 +834,7 @@ node -e "console.log(process.version); console.log(process.env.NODE_ENV)"
 
 #### **Enhanced Style Guidelines**
 
-``` python
+```python
 # Python Code Style Standards (Enhanced)
 
 PYTHON_STANDARDS = {
@@ -974,14 +913,13 @@ class ConflictAwareConfig:
 
 ### **Unified Linter Setup**
 
-This repository uses a **single, unified linter configuration** to
-prevent conflicts and ensure consistent code quality across all tools.
+This repository uses a **single, unified linter configuration** to prevent conflicts and ensure consistent code quality across all tools.
 
 #### **Markdown Linting**
 
 **Configuration File**: `.markdownlint.jsonc`
 
-``` jsonc
+```jsonc
 {
   // https://github.com/markdownlint/markdownlint/blob/main/docs/RULES.md
   "default": true,
@@ -1012,13 +950,11 @@ prevent conflicts and ensure consistent code quality across all tools.
 
 **VS Code Integration**:
 
-- VS Code references the external config file via
-  `"markdownlint.configFile": ".markdownlint.jsonc"`
+- VS Code references the external config file via `"markdownlint.configFile": ".markdownlint.jsonc"`
 - Ensures consistent linting behavior across all tools
 
 **Usage Commands**:
-
-``` bash
+```bash
 # Run markdown linting
 markdownlint ./*.md
 
@@ -1033,7 +969,7 @@ markdownlint README.md
 
 **Configuration File**: `pyproject.toml`
 
-``` toml
+```toml
 [tool.black]
 line-length = 120
 target-version = ["py39"]
@@ -1057,14 +993,12 @@ ignore = ["E501"]  # Line too long - handled by black
 ## **Import Standards**
 
 ### **Required Import Order**
-
-1.  **Standard library imports** (os, sys, json, pathlib, etc.)
-2.  **Third-party imports** (requests, psycopg2, etc.)
-3.  **Local imports** (from utils import …)
+1. **Standard library imports** (os, sys, json, pathlib, etc.)
+2. **Third-party imports** (requests, psycopg2, etc.)
+3. **Local imports** (from utils import ...)
 
 ### **Common Import Patterns**
-
-``` python
+```python
 # Standard library imports (always first)
 import os
 import sys
@@ -1082,14 +1016,12 @@ from utils.logger import setup_logger
 ```
 
 ### **Import Validation Rules**
-
 - **No undefined names**: All used modules must be imported
-- **No unused imports**: Remove imports that aren’t used
+- **No unused imports**: Remove imports that aren't used
 - **Explicit imports**: Use `import os` not just `os.environ`
 
 ### **F-string Best Practices**
-
-``` python
+```python
 # ✅ Good - f-string with placeholders
 name = "World"
 print(f"Hello {name}")
@@ -1105,14 +1037,12 @@ print(f"Count: 5")  # Should be: print("Count: 5")
 ```
 
 ### **Variable Management**
-
-- **No unused variables**: Remove variables that aren’t used
+- **No unused variables**: Remove variables that aren't used
 - **Clear variable names**: Use descriptive names
 - **Scope management**: Keep variables in appropriate scope
 
 **Usage Commands**:
-
-``` bash
+```bash
 # Format code with Black
 black .
 
@@ -1130,19 +1060,14 @@ ruff check --select I --fix .
 
 ### **Pyright Configuration Best Practices**
 
-#### **“One Source Per Scope” Policy**
-
-- **Root scope** (repo open in Cursor): `pyrightconfig.json` handles
-  repo-wide analysis
-- **Subproject scope** (dspy-rag-system/ opened directly):
-  `dspy-rag-system/pyrightconfig.json` handles local development
+#### **"One Source Per Scope" Policy**
+- **Root scope** (repo open in Cursor): `pyrightconfig.json` handles repo-wide analysis
+- **Subproject scope** (dspy-rag-system/ opened directly): `dspy-rag-system/pyrightconfig.json` handles local development
 - **No conflicts**: Avoid `[tool.pyright]` in pyproject.toml files
-- **VS Code alignment**: `.vscode/settings.json` mirrors root
-  pyrightconfig.json
+- **VS Code alignment**: `.vscode/settings.json` mirrors root pyrightconfig.json
 
 #### **Common Import Resolution Issues**
-
-``` bash
+```bash
 # Check Pyright configuration
 pyright --version
 pyright --project dspy-rag-system/
@@ -1151,69 +1076,63 @@ pyright --project dspy-rag-system/
 pyright --verbose dspy-rag-system/src/
 ```
 
-#### **“Undefined Name” Errors (Ruff/Pyright)**
+#### **"Undefined Name" Errors (Ruff/Pyright)**
 
-**What these errors mean:** - **“Undefined name `os`”**: The code uses
-`os.environ` but `import os` is missing - **“Undefined name `sys`”**:
-The code uses `sys.path` but `import sys` is missing - **Static analysis
-tools**: Both Ruff and Pyright catch these before runtime to prevent
-`NameError` exceptions
+**What these errors mean:**
+- **"Undefined name `os`"**: The code uses `os.environ` but `import os` is missing
+- **"Undefined name `sys`"**: The code uses `sys.path` but `import sys` is missing
+- **Static analysis tools**: Both Ruff and Pyright catch these before runtime to prevent `NameError` exceptions
 
 **Common causes and solutions:**
 
-1.  **Missing imports** (most common):
+1. **Missing imports** (most common):
+   ```python
+   # ❌ Error: os is not defined
+   os.environ['VAR'] = 'value'
 
-    ``` python
-    # ❌ Error: os is not defined
-    os.environ['VAR'] = 'value'
+   # ✅ Solution: Add import
+   import os
+   os.environ['VAR'] = 'value'
+   ```
 
-    # ✅ Solution: Add import
-    import os
-    os.environ['VAR'] = 'value'
-    ```
+2. **Typo in variable name**:
+   ```python
+   # ❌ Error: variable_name is not defined
+   print(variable_name)  # typo in variable name
 
-2.  **Typo in variable name**:
+   # ✅ Solution: Fix the typo
+   print(variable_name)  # correct spelling
+   ```
 
-    ``` python
-    # ❌ Error: variable_name is not defined
-    print(variable_name)  # typo in variable name
+3. **Scope issues**:
+   ```python
+   # ❌ Error: variable not defined in current scope
+   def function():
+       print(global_var)  # global_var not in scope
 
-    # ✅ Solution: Fix the typo
-    print(variable_name)  # correct spelling
-    ```
+   # ✅ Solution: Use global or pass as parameter
+   def function():
+       global global_var
+       print(global_var)
+   ```
 
-3.  **Scope issues**:
+4. **Database query results** (common in scripts):
+   ```python
+   # ❌ Error: Object of type None is not subscriptable
+   cursor.execute("SELECT id FROM documents WHERE filename = %s", (filename,))
+   document_id = cursor.fetchone()[0]  # fetchone() can return None
 
-    ``` python
-    # ❌ Error: variable not defined in current scope
-    def function():
-        print(global_var)  # global_var not in scope
-
-    # ✅ Solution: Use global or pass as parameter
-    def function():
-        global global_var
-        print(global_var)
-    ```
-
-4.  **Database query results** (common in scripts):
-
-    ``` python
-    # ❌ Error: Object of type None is not subscriptable
-    cursor.execute("SELECT id FROM documents WHERE filename = %s", (filename,))
-    document_id = cursor.fetchone()[0]  # fetchone() can return None
-
-    # ✅ Solution: Check for None before accessing
-    cursor.execute("SELECT id FROM documents WHERE filename = %s", (filename,))
-    result = cursor.fetchone()
-    if result is None:
-        print(f"Document not found: {filename}")
-        continue
-    document_id = result[0]
-    ```
+   # ✅ Solution: Check for None before accessing
+   cursor.execute("SELECT id FROM documents WHERE filename = %s", (filename,))
+   result = cursor.fetchone()
+   if result is None:
+       print(f"Document not found: {filename}")
+       continue
+   document_id = result[0]
+   ```
 
 **Quick fix workflow:**
-
-``` bash
+```bash
 # 1. Identify the error
 ruff check tests/test_secrets_manager.py
 # Output: "Undefined name `os`" at line 333
@@ -1229,16 +1148,14 @@ ruff check tests/test_secrets_manager.py
 isort tests/test_secrets_manager.py
 ```
 
-**Best practices to avoid these errors:** 1. **Use linting tools**: Run
-Ruff/Pyright regularly to catch these early 2. **IDE integration**: Most
-IDEs (like Cursor) show these errors in real-time 3. **Import
-organization**: Use `isort` to keep imports organized and catch missing
-ones 4. **Type hints**: Use type hints to help static analyzers catch
-more issues
+**Best practices to avoid these errors:**
+1. **Use linting tools**: Run Ruff/Pyright regularly to catch these early
+2. **IDE integration**: Most IDEs (like Cursor) show these errors in real-time
+3. **Import organization**: Use `isort` to keep imports organized and catch missing ones
+4. **Type hints**: Use type hints to help static analyzers catch more issues
 
 **Systematic fixes for test files:**
-
-``` bash
+```bash
 # Find all undefined name errors in tests
 ruff check dspy-rag-system/tests/ --select F821
 
@@ -1253,22 +1170,20 @@ ruff check dspy-rag-system/tests/ --select F821
 # 3. Verify with ruff check
 ```
 
-**Common patterns in test files:** - **File operations**:
-`os.path.join()`, `os.path.exists()`, `os.unlink()` → need `import os` -
-**Environment variables**: `os.getenv()`, `os.environ` → need
-`import os` - **Process operations**: `os.getpid()` → need `import os` -
-**System operations**: `sys.exit()`, `sys.path` → need `import sys` -
-**Temporary files**: `tempfile.mkdtemp()` → need `import tempfile`
+**Common patterns in test files:**
+- **File operations**: `os.path.join()`, `os.path.exists()`, `os.unlink()` → need `import os`
+- **Environment variables**: `os.getenv()`, `os.environ` → need `import os`
+- **Process operations**: `os.getpid()` → need `import os`
+- **System operations**: `sys.exit()`, `sys.path` → need `import sys`
+- **Temporary files**: `tempfile.mkdtemp()` → need `import tempfile`
 
-**Common patterns in database scripts:** - **Database queries**:
-`cursor.fetchone()[0]` → can return `None`, need null check - **Query
-results**: `result = cursor.fetchone(); result[0]` → check
-`if result is not None` - **Aggregate queries**: `SUM()` can return
-`None` for empty tables → use `or 0` default
+**Common patterns in database scripts:**
+- **Database queries**: `cursor.fetchone()[0]` → can return `None`, need null check
+- **Query results**: `result = cursor.fetchone(); result[0]` → check `if result is not None`
+- **Aggregate queries**: `SUM()` can return `None` for empty tables → use `or 0` default
 
 #### **Configuration Files**
-
-``` json
+```json
 // pyrightconfig.json (root)
 {
   "pythonVersion": "3.9",
@@ -1279,34 +1194,23 @@ results**: `result = cursor.fetchone(); result[0]` → check
 ```
 
 ### **Test Import Management**
-
-> **📖 For detailed test import guidance, see
-> `dspy-rag-system/tests/README-dev.md`**
+> **📖 For detailed test import guidance, see `dspy-rag-system/tests/README-dev.md`**
 
 - **Centralized setup**: Use `conftest.py` for import path management
-- **Static analysis compatibility**: `tests/__init__.py` handles
-  sys.path for tools
+- **Static analysis compatibility**: `tests/__init__.py` handles sys.path for tools
 - **No manual sys.path**: Remove per-file path manipulation
-- **Dynamic imports**: Keep for legitimate use cases (database mocking,
-  model switching)
+- **Dynamic imports**: Keep for legitimate use cases (database mocking, model switching)
 
 ### **Database Operations & Static Analysis**
-
-> **📖 For database utilities, see
-> `dspy-rag-system/scripts/database_utils.py`**
+> **📖 For database utilities, see `dspy-rag-system/scripts/database_utils.py`**
 
 #### **Context-Aware Database Utilities**
-
-- **Operational scripts**: Use `context="operational"` for fast
-  development (assumes data exists)
-- **Production code**: Use `context="production"` for robust error
-  handling
-- **No more Pyright errors**: Eliminates “Object of type None is not
-  subscriptable” issues
+- **Operational scripts**: Use `context="operational"` for fast development (assumes data exists)
+- **Production code**: Use `context="production"` for robust error handling
+- **No more Pyright errors**: Eliminates "Object of type None is not subscriptable" issues
 
 #### **Usage Patterns**
-
-``` python
+```python
 # Operational scripts (fast development)
 from database_utils import get_database_stats
 stats = get_database_stats("operational")  # Assumes data exists
@@ -1321,19 +1225,15 @@ except RuntimeError as e:
 ```
 
 #### **Available Functions**
-
 - `get_database_stats(context)` - Database statistics
 - `get_chunk_size_analysis(context)` - Chunk size analysis
 - `get_cross_reference_analysis(context)` - Cross-reference analysis
 - `get_duplicate_chunk_count(context)` - Duplicate chunk count
 - `get_storage_analysis(context)` - Storage analysis
-- `execute_query(query, context)` - Execute queries with context-aware
-  handling
+- `execute_query(query, context)` - Execute queries with context-aware handling
 
 ### **Quality Standards for Critical Files**
-
-> **📖 For detailed quality standards, see
-> `400_guides/400_code-criticality-guide.md`**
+> **📖 For detailed quality standards, see `400_guides/400_code-criticality-guide.md`**
 
 - **Tier 1/2 files**: Zero F841 errors allowed
 - **Pre-commit gates**: All linter checks must pass
@@ -1342,23 +1242,25 @@ except RuntimeError as e:
 
 ## **Unused Variable Handling (F841)**
 
-### **When to Fix vs. Ignore F841 Errors**
+### **When to Fix vs. Ignore F841 Errors**
 
-**✅ Fix These Cases:** - Variable overwriting in tests (e.g.,
-`error_message = "x"; error_message = "y"`) - Unused return values from
-function calls - Dead code assignments - Unused test setup variables -
-Variables assigned but never referenced
+**✅ Fix These Cases:**
+- Variable overwriting in tests (e.g., `error_message = "x"; error_message = "y"`)
+- Unused return values from function calls
+- Dead code assignments
+- Unused test setup variables
+- Variables assigned but never referenced
 
-**⚠️ Consider Ignoring These Cases:** - Debug variables during
-development (use `_debug_var` naming) - Callback parameters that may not
-always be used - Test variables that are intentionally unused -
-Temporary variables during refactoring
+**⚠️ Consider Ignoring These Cases:**
+- Debug variables during development (use `_debug_var` naming)
+- Callback parameters that may not always be used
+- Test variables that are intentionally unused
+- Temporary variables during refactoring
 
 ### **Best Practices:**
 
 #### **1. Use Unique Variable Names**
-
-``` python
+```python
 # ❌ Bad: Variable overwriting
 def test_severity_scores():
     error_message = "Security violation"
@@ -1371,8 +1273,7 @@ def test_severity_scores():
 ```
 
 #### **2. Remove Unused Variables**
-
-``` python
+```python
 # ❌ Bad: Unused variable
 def process_data(data):
     result = transform(data)
@@ -1386,8 +1287,7 @@ def process_data(data):
 ```
 
 #### **3. Use Descriptive Names for Test Data**
-
-``` python
+```python
 # ❌ Bad: Generic names
 def test_multiple_patterns():
     error = "Database timeout"
@@ -1400,8 +1300,7 @@ def test_multiple_patterns():
 ```
 
 #### **4. Handle Intentionally Unused Variables**
-
-``` python
+```python
 # ✅ Good: Use underscore prefix
 def callback_function(event, _unused_context):
     process_event(event)
@@ -1413,19 +1312,15 @@ def test_with_unused_setup():
 ```
 
 ### **Test-Specific Guidelines:**
-
-> **📖 For comprehensive test variable management, see
-> `dspy-rag-system/tests/README-dev.md`**
+> **📖 For comprehensive test variable management, see `dspy-rag-system/tests/README-dev.md`**
 
 - **Avoid variable overwriting** in test functions
 - **Use descriptive variable names** for test data
 - **Remove unused test setup variables**
-- **Keep dynamic imports** for legitimate use cases (database mocking,
-  model switching)
+- **Keep dynamic imports** for legitimate use cases (database mocking, model switching)
 
 #### **Common Test Patterns**
-
-``` python
+```python
 # ✅ Good: Test with unique variables
 def test_error_patterns():
     # Test critical severity
@@ -1442,8 +1337,7 @@ def test_error_patterns():
 ### **Configuration Guidelines:**
 
 #### **Current Ruff Configuration**
-
-``` toml
+```toml
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 ignore = ["E501"]  # Line too long - handled by black
@@ -1451,8 +1345,7 @@ ignore = ["E501"]  # Line too long - handled by black
 ```
 
 #### **When to Use Per-File Ignores**
-
-``` toml
+```toml
 [tool.ruff.lint.per-file-ignores]
 # Only for specific, justified cases
 "legacy_file.py" = ["F841"]  # Legacy code that can't be easily fixed
@@ -1462,8 +1355,7 @@ ignore = ["E501"]  # Line too long - handled by black
 ### **Quality Gates Integration:**
 
 #### **Pre-commit Checks**
-
-``` bash
+```bash
 # Check for unused variables
 ruff check --select F841 .
 
@@ -1472,8 +1364,7 @@ ruff check --select F841 --fix .
 ```
 
 #### **CI/CD Integration**
-
-``` bash
+```bash
 # Fail on unused variables in critical files
 ruff check --select F841 dspy-rag-system/src/ scripts/
 
@@ -1484,25 +1375,23 @@ ruff check --select F841 dspy-rag-system/tests/ || echo "Review F841 warnings in
 ### **Migration Strategy:**
 
 #### **For Existing Code**
-
-1.  **Identify F841 errors**: `ruff check --select F841 .`
-2.  **Fix variable overwriting**: Use unique variable names
-3.  **Remove unused variables**: Clean up dead code
-4.  **Add noqa comments**: Only for justified cases
-5.  **Update tests**: Apply test-specific guidelines
+1. **Identify F841 errors**: `ruff check --select F841 .`
+2. **Fix variable overwriting**: Use unique variable names
+3. **Remove unused variables**: Clean up dead code
+4. **Add noqa comments**: Only for justified cases
+5. **Update tests**: Apply test-specific guidelines
 
 #### **For New Code**
-
-1.  **Follow best practices** from the start
-2.  **Use descriptive variable names**
-3.  **Avoid variable overwriting**
-4.  **Remove unused variables immediately**
+1. **Follow best practices** from the start
+2. **Use descriptive variable names**
+3. **Avoid variable overwriting**
+4. **Remove unused variables immediately**
 
 ## **SQL Linting**
 
 **Configuration File**: `.sqlfluff`
 
-``` ini
+```ini
 [sqlfluff]
 dialect = postgres
 templater = jinja
@@ -1529,8 +1418,7 @@ ignore = [
 ```
 
 **Usage Commands**:
-
-``` bash
+```bash
 # Lint SQL files
 sqlfluff lint .
 
@@ -1545,7 +1433,7 @@ sqlfluff lint path/to/file.sql
 
 **Configuration**: ESLint (referenced in installation)
 
-``` bash
+```bash
 # Install ESLint
 npm install -g eslint@^8.0.0
 
@@ -1559,7 +1447,7 @@ eslint src/ --fix
 ## **Linter Integration in Quality Gates**
 
 | Linter | Quality Gate | Command | Purpose |
-|----|----|----|----|
+|--------|-------------|---------|---------|
 | **Markdown** | Documentation Quality | `markdownlint ./*.md` | Ensure markdown standards |
 | **Python** | Code Quality | `ruff check . && black --check .` | Ensure Python standards |
 | **SQL** | Database Quality | `sqlfluff lint .` | Ensure SQL standards |
@@ -1567,16 +1455,14 @@ eslint src/ --fix
 
 ### **Linter Benefits**
 
-- ✅ **Single Source of Truth**: One config file per language for all
-  linter rules
-- ✅ **Consistent Behavior**: Same rules applied in VS Code and command
-  line
+- ✅ **Single Source of Truth**: One config file per language for all linter rules
+- ✅ **Consistent Behavior**: Same rules applied in VS Code and command line
 - ✅ **Easier Maintenance**: One config file to update for each language
 - ✅ **Better Documentation**: All rules documented in config files
 
 #### **Linter Usage in Development Workflow**
 
-``` bash
+```bash
 # Pre-commit linting check
 markdownlint ./*.md && ruff check . && sqlfluff lint .
 
@@ -1589,7 +1475,7 @@ python scripts/quick_conflict_check.py  # Includes linter config validation
 
 ## **Conflict-Aware Function Standards**
 
-``` python
+```python
 # Conflict-Aware Function Standards
 
 def process_ai_request_with_conflict_prevention(
@@ -1675,7 +1561,7 @@ def check_environment_conflicts() -> None:
 
 ### **Conflict-Aware Exception Hierarchy**
 
-``` python
+```python
 # Enhanced Error Handling Standards
 
 class AIEcosystemError(Exception):
@@ -1803,7 +1689,7 @@ def check_execution_conflicts(func: Callable, *args, **kwargs) -> None:
 
 ### **Conflict-Aware Structured Logging**
 
-``` python
+```python
 # Enhanced Logging Standards
 
 import logging
@@ -1904,30 +1790,20 @@ class ConflictAwareLogger:
 
 ### **Production-Ready AI Development Ecosystem**
 
-The coding standards above are implemented in your actual AI development
-ecosystem:
+The coding standards above are implemented in your actual AI development ecosystem:
 
 **Core Systems:**
 
-- **DSPy RAG System** (`dspy-rag-system/src/dspy_modules/`) - Document
-  processing, vector store, AI integration
-- **Mission Dashboard** (`dspy-rag-system/src/mission_dashboard/`) -
-  Real-time AI task monitoring with WebSocket
-- **N8N Workflows** (`dspy-rag-system/src/n8n_workflows/`) - Automated
-  backlog management and event processing
-- **Production Monitoring** (`dspy-rag-system/src/monitoring/`) - Health
-  checks, metrics, OpenTelemetry integration
-- **Error Recovery** (`dspy-rag-system/src/utils/`) - 15+ error
-  patterns, hotfix templates, retry logic
-- **Database Resilience** (`dspy-rag-system/src/utils/`) - Connection
-  pooling, health monitoring, graceful degradation
-- **Cursor AI Integration**
-  (`dspy-rag-system/src/cursor_integration/`) - Native AI with
-  specialized agents
+- **DSPy RAG System** (`dspy-rag-system/src/dspy_modules/`) - Document processing, vector store, AI integration
+- **Mission Dashboard** (`dspy-rag-system/src/mission_dashboard/`) - Real-time AI task monitoring with WebSocket
+- **N8N Workflows** (`dspy-rag-system/src/n8n_workflows/`) - Automated backlog management and event processing
+- **Production Monitoring** (`dspy-rag-system/src/monitoring/`) - Health checks, metrics, OpenTelemetry integration
+- **Error Recovery** (`dspy-rag-system/src/utils/`) - 15+ error patterns, hotfix templates, retry logic
+- **Database Resilience** (`dspy-rag-system/src/utils/`) - Connection pooling, health monitoring, graceful degradation
+- **Cursor AI Integration** (`dspy-rag-system/src/cursor_integration/`) - Native AI with specialized agents
 
 **Quick Start Commands**:
-
-``` bash
+```bash
 # Start the complete AI development ecosystem
 cd dspy-rag-system
 ./quick_start.sh
@@ -1947,7 +1823,7 @@ cd dspy-rag-system
 ### **Enhanced Quality Gates for Solo Development**
 
 | Gate | Purpose | Criteria | Tools | Conflict Prevention |
-|----|----|----|----|----|
+|------|---------|----------|-------|-------------------|
 | **Conflict Check** | Prevent configuration conflicts | No merge markers, no package conflicts, no dual configs | `python scripts/quick_conflict_check.py` | Automated detection |
 | **Task Execution** | Validate task execution engine | Task processing, state management, error handling | `python scripts/process_tasks.py --test` | Core execution validation |
 | **Error Handling** | Validate error recovery system | Error classification, retry logic, recovery actions | `python scripts/error_handler.py --test` | Error handling validation |
@@ -1965,7 +1841,7 @@ cd dspy-rag-system
 
 ### **Enhanced Quality Checklist**
 
-``` python
+```python
 # Enhanced Quality Checklist with Conflict Prevention
 
 ENHANCED_QUALITY_CHECKLIST = {
@@ -2076,7 +1952,7 @@ def check_conflict_prevention() -> Dict[str, Any]:
 
 ### **Quick Conflict Check Script**
 
-``` python
+```python
 #!/usr/bin/env python3
 """
 Quick Conflict Check Script
@@ -2198,7 +2074,7 @@ if __name__ == "__main__":
 
 ### **Comprehensive Conflict Audit Script**
 
-``` python
+```python
 #!/usr/bin/env python3
 """
 Comprehensive Conflict Audit Script
@@ -2343,7 +2219,7 @@ if __name__ == "__main__":
 
 ### **GitHub Actions Workflow**
 
-``` yaml
+```yaml
 name: Conflict Prevention CI
 
 on:
@@ -2402,23 +2278,19 @@ jobs:
           safety check
 
       - name: Performance Check
+
 ```
 
 ## 📚 Additional Resources
 
 ### **Specialized Development Guides**
 
-> **📖 For comprehensive guidance on specific development areas, see
-> these specialized guides:**
+> **📖 For comprehensive guidance on specific development areas, see these specialized guides:**
 
-- **Test Development**: `dspy-rag-system/tests/README-dev.md` - Import
-  management, variable handling, configuration policy
-- **Code Criticality**: `400_guides/400_code-criticality-guide.md` -
-  Quality standards, tier-based requirements, quality gates
-- **File Analysis**: `400_guides/400_file-analysis-guide.md` - Mandatory
-  6-step analysis process
-- **Testing Strategy**: `400_guides/400_testing-strategy-guide.md` -
-  Comprehensive testing approaches and frameworks
+- **Test Development**: `dspy-rag-system/tests/README-dev.md` - Import management, variable handling, configuration policy
+- **Code Criticality**: `400_guides/400_code-criticality-guide.md` - Quality standards, tier-based requirements, quality gates
+- **File Analysis**: `400_guides/400_file-analysis-guide.md` - Mandatory 6-step analysis process
+- **Testing Strategy**: `400_guides/400_testing-strategy-guide.md` - Comprehensive testing approaches and frameworks
 
 ### **Development Resources**
 
@@ -2448,8 +2320,7 @@ jobs:
 
 ### **Integration with File Analysis Guide**
 
-This comprehensive approach integrates with our existing
-`400_guides/400_file-analysis-guide.md` by:
+This comprehensive approach integrates with our existing `400_guides/400_file-analysis-guide.md` by:
 
 - Adding conflict detection to the 6-step analysis process
 - Including conflict prevention in file operations
@@ -2457,8 +2328,7 @@ This comprehensive approach integrates with our existing
 
 ### **Integration with Contributing Guidelines**
 
-This document enhances our existing
-`400_guides/400_contributing-guidelines.md` by:
+This document enhances our existing `400_guides/400_contributing-guidelines.md` by:
 
 - Adding systematic conflict prevention to code standards
 - Enhancing error handling with conflict awareness
@@ -2474,8 +2344,7 @@ This approach integrates with our development workflow by:
 
 ### **Integration with AI Development Ecosystem**
 
-This document integrates with your implemented AI development ecosystem
-by:
+This document integrates with your implemented AI development ecosystem by:
 
 - Referencing actual production-ready systems in examples
 - Using real file paths and commands from your codebase
@@ -2485,12 +2354,10 @@ by:
 
 ### **Key Metrics**
 
-- **Conflict Detection Rate**: How many conflicts are caught before they
-  cause issues
+- **Conflict Detection Rate**: How many conflicts are caught before they cause issues
 - **Conflict Resolution Time**: How quickly conflicts are resolved
 - **False Positive Rate**: How often conflict detection flags non-issues
-- **Prevention Effectiveness**: How well conflict prevention reduces
-  issues
+- **Prevention Effectiveness**: How well conflict prevention reduces issues
 
 ### **Continuous Improvement**
 
@@ -2499,63 +2366,53 @@ by:
 - Enhancement of prevention strategies
 - Integration of new tools and techniques
 
-------------------------------------------------------------------------
+---
 
 - **Last Updated**: 2024-12-19
 - **Next Review**: Monthly
-- **Development Standards Level**: Production Ready with Conflict
-  Prevention
-- **Optimized for**: Solo Development Workflow with Systematic Conflict
-  Prevention
+- **Development Standards Level**: Production Ready with Conflict Prevention
+- **Optimized for**: Solo Development Workflow with Systematic Conflict Prevention
 
 ## **Automated Database Synchronization**
 
 ### **Git Hooks for Database Management**
 
-The repository now includes automated database synchronization through
-Git hooks:
+The repository now includes automated database synchronization through Git hooks:
 
 #### **Pre-commit Hook** (`.git/hooks/pre-commit`)
-
 - **Purpose**: Validates markdown files before commit
 - **Action**: Runs `doc_coherence_validator.py --dry-run`
 - **Behavior**: Blocks commit if validation fails
 
 #### **Post-commit Hook** (`.git/hooks/post-commit`)
-
-- **Purpose**: Automatically updates database after core documentation
-  changes
-- **Trigger**: Changes to core files (`100_cursor-memory-context.md`,
-  `000_backlog.md`, `400_comprehensive-coding-best-practices.md`)
+- **Purpose**: Automatically updates database after core documentation changes
+- **Trigger**: Changes to core files (`100_cursor-memory-context.md`, `000_backlog.md`, `400_comprehensive-coding-best-practices.md`)
 - **Actions**:
-  1.  Runs `update_cursor_memory.py` to update memory context
-  2.  Runs `database_sync_check.py --auto-update` to sync files with
-      `DATABASE_SYNC: REQUIRED` tags
+  1. Runs `update_cursor_memory.py` to update memory context
+  2. Runs `database_sync_check.py --auto-update` to sync files with `DATABASE_SYNC: REQUIRED` tags
 
 #### **Pre-push Hook** (`.git/hooks/pre-push`)
-
 - **Purpose**: Ensures database is synchronized before pushing
-- **Action**: Runs `database_sync_check.py` and warns if updates are
-  needed
+- **Action**: Runs `database_sync_check.py` and warns if updates are needed
 - **Behavior**: Allows user to continue or abort push
 
 ### **DATABASE_SYNC Tags**
 
-Files that should be automatically synchronized with the database should
-include:
-
-``` markdown
+Files that should be automatically synchronized with the database should include:
+```markdown
 <!-- DATABASE_SYNC: REQUIRED -->
 ```
 
-**Current files with DATABASE_SYNC tags:** -
-`100_memory/100_cursor-memory-context.md` - `000_core/000_backlog.md` -
-`400_guides/400_comprehensive-coding-best-practices.md` -
-`dspy-rag-system/tests/README-dev.md` - `scripts/database_sync_check.py`
+**Current files with DATABASE_SYNC tags:**
+- `100_memory/100_cursor-memory-context.md`
+- `000_core/000_backlog.md`
+- `400_guides/400_comprehensive-coding-best-practices.md`
+- `dspy-rag-system/tests/README-dev.md`
+- `scripts/database_sync_check.py`
 
 ### **Manual Database Management**
 
-``` bash
+```bash
 # Check database synchronization status
 python3 scripts/database_sync_check.py
 
@@ -2570,16 +2427,14 @@ cd dspy-rag-system && python3 scripts/database_maintenance.py
 ```
 
 <!-- README_AUTOFIX_START -->
-
-## Auto-generated sections for 400_comprehensive-coding-best-practices.md
-
-## Generated: 2025-08-18T08:03:22.730511
+# Auto-generated sections for 400_comprehensive-coding-best-practices.md
+# Generated: 2025-08-17T17:47:03.906269
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-18
+2025-08-17
 
 ## Owner
 

@@ -1,15 +1,11 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-
-<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
-
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Performance optimization and monitoring -->
-
 # ⚡ Performance Optimization Guide
 
 ## ⚡ Performance Optimization Guide
 
 <!-- ANCHOR: tldr -->
-
 {#tldr}
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Performance optimization maintained
@@ -18,28 +14,24 @@
 
 - **Points**: 5 - High complexity, performance critical
 
-- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
-  400_guides/400_system-overview.md
+- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_system-overview.md
 
 - **Next Steps**: Monitor performance metrics and optimize as needed
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|-------------------|-----------|---------|
-|                   |           |         |
+|---|---|---|
+|  |  |  |
 
-- **what this file is**: Performance optimization strategies, metrics,
-  and monitoring.
+- **what this file is**: Performance optimization strategies, metrics, and monitoring.
 
 - **read when**: Planning performance work or diagnosing slowdowns.
 
-- **do next**: Review “System Architecture”, “Optimization Strategies”,
-  and “Monitoring Setup”.
+- **do next**: Review "System Architecture", "Optimization Strategies", and "Monitoring Setup".
 
-- **anchors**: `system architecture`, `optimization strategies`,
-  `monitoring setup`, `performance testing`, `scaling guidelines`,
-  `performance checklist`
+- **anchors**: `system architecture`, `optimization strategies`, `monitoring setup`, `performance testing`, `scaling
+guidelines`, `performance checklist`
 
 ### **4. Quality Metrics**-**Error Rate**: Percentage of failed requests
 
@@ -49,31 +41,34 @@
 
 - **User Satisfaction**: Response relevance and helpfulness
 
-### **Performance Baselines**\| Metric \| Baseline \| Target \| Critical \|
+### **Performance Baselines**| Metric | Baseline | Target | Critical |
 
-\|——–\|———-\|——–\|———-\| \|**AI Response Time**\| \< 5 seconds \| \< 3
-seconds \| \> 10 seconds \| \|**Database Query Time**\| \< 100ms \| \<
-50ms \| \> 500ms \| \|**Dashboard Load Time**\| \< 2 seconds \| \< 1
-second \| \> 5 seconds \| \|**CPU Usage**\| \< 70% \| \< 50% \| \> 90%
-\| \|**Memory Usage**\| \< 80% \| \< 60% \| \> 95% \| \|**Error Rate**\|
-\< 1% \| \< 0.1% \| \> 5% \|
+|--------|----------|--------|----------|
+|**AI Response Time**| < 5 seconds | < 3 seconds | > 10 seconds |
+|**Database Query Time**| < 100ms | < 50ms | > 500ms |
+|**Dashboard Load Time**| < 2 seconds | < 1 second | > 5 seconds |
+|**CPU Usage**| < 70% | < 50% | > 90% |
+|**Memory Usage**| < 80% | < 60% | > 95% |
+|**Error Rate**| < 1% | < 0.1% | > 5% |
 
-------------------------------------------------------------------------
+- --
 
 ## 🏗️ System Architecture
 
-### **Performance-Optimized Architecture**\`\`\`text
+### **Performance-Optimized Architecture**```text
 
-┌─────────────────────────────────────────────────────────────┐ │
-Performance Layers │
-├─────────────────────────────────────────────────────────────┤ │ 1.
-Load Balancing (Request Distribution) │ │ 2. Caching Layer (Redis/Memory
-Cache) │ │ 3. Application Layer (Optimized Code) │ │ 4. Database Layer
-(PostgreSQL + Indexing) │ │ 5. Storage Layer (SSD + RAID) │ │ 6. Network
-Layer (High Bandwidth) │
+┌─────────────────────────────────────────────────────────────┐
+│                Performance Layers                          │
+├─────────────────────────────────────────────────────────────┤
+│ 1. Load Balancing (Request Distribution)                  │
+│ 2. Caching Layer (Redis/Memory Cache)                    │
+│ 3. Application Layer (Optimized Code)                     │
+│ 4. Database Layer (PostgreSQL + Indexing)                │
+│ 5. Storage Layer (SSD + RAID)                            │
+│ 6. Network Layer (High Bandwidth)                        │
 └─────────────────────────────────────────────────────────────┘
 
-``` text
+```text
 
 ### **Component Performance Characteristics**####**1. AI Model Performance**```python
 
@@ -126,19 +121,19 @@ APP_PERFORMANCE_CONFIG = {
 
 ### **1. AI Model Optimization**####**Prompt Optimization**```python
 
-## Optimized prompt engineering
+# Optimized prompt engineering
 
 def optimize_prompt(prompt: str) -> str:
 
-    ## Remove unnecessary context
+    # Remove unnecessary context
 
     prompt = remove_redundant_context(prompt)
 
-    ## Use few-shot examples for better performance
+    # Use few-shot examples for better performance
 
     prompt = add_few_shot_examples(prompt)
 
-    ## Limit prompt length for faster processing
+    # Limit prompt length for faster processing
 
     if len(prompt) > 2000:
         prompt = truncate_prompt(prompt, 2000)
@@ -163,15 +158,15 @@ def get_cached_response(prompt: str) -> Optional[str]:
 
 ## **Batch Processing**```python
 
-## Batch AI requests for efficiency
+# Batch AI requests for efficiency
 
 def batch_ai_requests(requests: List[str]) -> List[str]:
 
-    ## Group similar requests
+    # Group similar requests
 
     batched_requests = group_similar_requests(requests)
 
-    ## Process in batches
+    # Process in batches
 
     responses = []
     for batch in batched_requests:
@@ -193,21 +188,21 @@ CREATE INDEX idx_vector_store_embedding ON vector_store USING ivfflat (embedding
 
 ### **Query Optimization**```python
 
-## Optimized database queries
+# Optimized database queries
 
 def optimize_query(query: str) -> str:
 
-    ## Use prepared statements
+    # Use prepared statements
 
-    ## Limit result sets
+    # Limit result sets
 
-    ## Use appropriate indexes
+    # Use appropriate indexes
 
-    ## Avoid N+1 queries
+    # Avoid N+1 queries
 
     return optimized_query
 
-## Connection pooling
+# Connection pooling
 
 def get_db_connection():
     return connection_pool.get_connection()
@@ -236,29 +231,29 @@ def archive_old_data():
 
 ## **3. Application Optimization**####**Code Optimization**```python
 
-## Performance-optimized code patterns
+# Performance-optimized code patterns
 
 def optimized_function():
 
-    ## Use async/await for I/O operations
+    # Use async/await for I/O operations
 
-    ## Implement proper error handling
+    # Implement proper error handling
 
-    ## Use efficient data structures
+    # Use efficient data structures
 
-    ## Minimize memory allocations
+    # Minimize memory allocations
 
     pass
 
-## Memory management
+# Memory management
 
 def manage_memory():
 
-    ## Use generators for large datasets
+    # Use generators for large datasets
 
-    ## Implement proper cleanup
+    # Implement proper cleanup
 
-    ## Monitor memory usage
+    # Monitor memory usage
 
     pass
 
@@ -273,7 +268,7 @@ def manage_memory():
 - Optimization Priority: 🔥 HIGH (run after every change)
 
 ```python
-## Add caching layer
+# Add caching layer
 import hashlib
 import pickle
 from pathlib import Path
@@ -308,15 +303,15 @@ class CachedBacklogParser:
         hash_file.write_text(self.get_backlog_hash(file_path))
 ```
 
-Performance Targets: - Current: ~2–3s → Target: \<500ms; Memory: \<50MB
+Performance Targets:
+- Current: ~2–3s → Target: <500ms; Memory: <50MB
 
 #### 2. `quick_conflict_check.py` — Fast Conflict Detection
-
 - Current Issues: Sequential checks, no early exit, redundant git calls
 - Optimization Priority: 🔥 HIGH (pre-commit hook)
 
-``` python
-## Parallel execution with early exit
+```python
+# Parallel execution with early exit
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import multiprocessing
 
@@ -338,22 +333,22 @@ class OptimizedConflictChecker:
                 try:
                     results[name] = future.result()
                     if not results[name] and name in ["merge_markers", "backup_files"]:
-                        ## Cancel remaining tasks on critical failure
+                        # Cancel remaining tasks on critical failure
                         break
                 except Exception:
                     results[name] = False
         return results
 ```
 
-Performance Targets: - Current: ~5–10s → Target: \<2s; Memory: \<30MB
+Performance Targets:
+- Current: ~5–10s → Target: <2s; Memory: <30MB
 
 #### 3. `process_tasks.py` — Task Execution Engine
-
 - Current Issues: Large file, complex state management, no batching
 - Optimization Priority: 📈 MEDIUM (core execution)
 
-``` python
-## Database connection pooling and batch processing
+```python
+# Database connection pooling and batch processing
 import sqlite3
 from contextlib import contextmanager
 
@@ -392,15 +387,15 @@ class OptimizedTaskManager:
                     raise
 ```
 
-Performance Targets: - Current: ~10–30s → Target: \<5s; Memory: \<100MB
+Performance Targets:
+- Current: ~10–30s → Target: <5s; Memory: <100MB
 
 #### 4. `doc_coherence_validator.py` — Documentation Validator
-
 - Current Issues: Regex compilation overhead, sequential files
 - Optimization Priority: 📈 MEDIUM (documentation quality)
 
-``` python
-## Pre-compiled regex patterns and parallel processing
+```python
+# Pre-compiled regex patterns and parallel processing
 import re
 import multiprocessing
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -427,15 +422,15 @@ class OptimizedDocValidator:
         return results
 ```
 
-Performance Targets: - Current: ~15–45s → Target: \<5s; Memory: \<80MB
+Performance Targets:
+- Current: ~15–45s → Target: <5s; Memory: <80MB
 
 #### 5. `conflict_audit.py` — Comprehensive Conflict Audit
-
 - Current Issues: Sequential execution, no progress reporting
 - Optimization Priority: ⭐ LOW (deep audit tool)
 
-``` python
-## Modular checks with progress reporting (async)
+```python
+# Modular checks with progress reporting (async)
 from tqdm import tqdm
 import asyncio
 
@@ -454,48 +449,41 @@ class OptimizedConflictAuditor:
 ```
 
 ### 🚀 Implementation Strategy
-
-- Phase 1 (quick wins): caching, parallelization, progress bars,
-  baseline benchmark
-- Phase 2 (core): pooling, pre-compiled regex, modular checks,
-  monitoring
-- Phase 3 (advanced): async where applicable, TTL caches, dependency
-  graph, resource monitoring
+- Phase 1 (quick wins): caching, parallelization, progress bars, baseline benchmark
+- Phase 2 (core): pooling, pre-compiled regex, modular checks, monitoring
+- Phase 3 (advanced): async where applicable, TTL caches, dependency graph, resource monitoring
 
 ### 📊 Monitoring & Benchmarks
-
-``` bash
-## Run performance benchmark
+```bash
+# Run performance benchmark
 python scripts/performance_benchmark.py --iterations 5
 
-## Monitor specific script
+# Monitor specific script
 python scripts/performance_benchmark.py --script update_cursor_memory --iterations 10
 
-## Save baseline and compare
+# Save baseline and compare
 python scripts/performance_benchmark.py --save baseline.json
 python scripts/performance_benchmark.py --save optimized.json
 ```
 
 ### ✅ Quick Optimization Checklist
-
-- Caching; Parallelization; Early Exit; Progress Reporting; Memory
-  Management; Regex pre-compile; Batch Processing; Resource Monitoring
+- Caching; Parallelization; Early Exit; Progress Reporting; Memory Management; Regex pre-compile; Batch Processing; Resource Monitoring
 
 ### 📈 Expected Gains
+| Script | Current | Target | Improvement |
+|--------|---------|--------|-------------|
+| update_cursor_memory.py | 2–3s | <500ms | 80% |
+| quick_conflict_check.py | 5–10s | <2s | 75% |
+| process_tasks.py | 10–30s | <5s | 80% |
+| doc_coherence_validator.py | 15–45s | <5s | 85% |
+| conflict_audit.py | 30–90s | <15s | 75% |
 
-| Script                     | Current | Target  | Improvement |
-|----------------------------|---------|---------|-------------|
-| update_cursor_memory.py    | 2–3s    | \<500ms | 80%         |
-| quick_conflict_check.py    | 5–10s   | \<2s    | 75%         |
-| process_tasks.py           | 10–30s  | \<5s    | 80%         |
-| doc_coherence_validator.py | 15–45s  | \<5s    | 85%         |
-| conflict_audit.py          | 30–90s  | \<15s   | 75%         |
+## **Caching Strategy**```python
 
-## **Caching Strategy**\`\`\`python
+# Multi-level caching
 
-## Multi-level caching
-
-CACHE_STRATEGY = { “l1”: “memory_cache”, \# Fastest, limited size
+CACHE_STRATEGY = {
+    "l1": "memory_cache",      # Fastest, limited size
 
     "l2": "redis_cache",       # Medium speed, larger size
 
@@ -526,7 +514,7 @@ def get_cached_data(key: str):
 
     return result
 
-``` text
+```text
 
 - --
 
@@ -534,7 +522,7 @@ def get_cached_data(key: str):
 
 ### **1. Real-time Monitoring**####**System Metrics**```python
 
-## System monitoring configuration
+# System monitoring configuration
 
 SYSTEM_MONITORING = {
     "cpu_threshold": 80,
@@ -589,7 +577,7 @@ def track_application_metrics():
 
 ## **AI Model Metrics**```python
 
-## AI model performance tracking
+# AI model performance tracking
 
 AI_MODEL_METRICS = {
     "cursor-native-ai": {
@@ -603,12 +591,12 @@ AI_MODEL_METRICS = {
 def track_ai_model_performance(model_name: str, response_time: float):
     AI_MODEL_METRICS[model_name]["response_times"].append(response_time)
 
-    ## Calculate performance statistics
+    # Calculate performance statistics
 
     avg_time = calculate_average(AI_MODEL_METRICS[model_name]["response_times"])
     max_time = max(AI_MODEL_METRICS[model_name]["response_times"])
 
-    ## Alert if performance degrades
+    # Alert if performance degrades
 
     if avg_time > MODEL_PERFORMANCE_CONFIG[model_name]["response_time_target"]:
         alert_slow_ai_model(model_name, avg_time)
@@ -663,7 +651,7 @@ def track_ai_model_performance(model_name: str, response_time: float):
 
 ### **3. Alerting System**####**Performance Alerts**```python
 
-## Performance alert configuration
+# Performance alert configuration
 
 PERFORMANCE_ALERTS = {
     "critical": {
@@ -682,14 +670,14 @@ PERFORMANCE_ALERTS = {
 
 def check_performance_alerts():
 
-    ## Check system metrics
+    # Check system metrics
 
     if cpu_usage > PERFORMANCE_ALERTS["critical"]["cpu_usage"]:
         send_critical_alert("High CPU Usage", cpu_usage)
     elif cpu_usage > PERFORMANCE_ALERTS["warning"]["cpu_usage"]:
         send_warning_alert("Elevated CPU Usage", cpu_usage)
 
-    ## Check application metrics
+    # Check application metrics
 
     if avg_response_time > PERFORMANCE_ALERTS["critical"]["response_time"]:
         send_critical_alert("Slow Response Time", avg_response_time)
@@ -732,7 +720,7 @@ def run_load_test():
 
 ## **Stress Testing**```python
 
-## Stress testing configuration
+# Stress testing configuration
 
 STRESS_TEST_CONFIG = {
     "max_users": 100,
@@ -744,12 +732,12 @@ STRESS_TEST_CONFIG = {
 
 def run_stress_test():
 
-    ## Gradually increase load
+    # Gradually increase load
 
     for user_count in range(10, STRESS_TEST_CONFIG["max_users"], 10):
         run_load_test_with_users(user_count)
 
-        ## Check if system breaks
+        # Check if system breaks
 
         if error_rate > STRESS_TEST_CONFIG["failure_threshold"]:
             log_stress_test_failure(user_count)
@@ -788,19 +776,19 @@ def run_performance_benchmarks():
 
 ## **3. Continuous Performance Testing**####**Automated Testing**```python
 
-## Continuous performance testing
+# Continuous performance testing
 
 def continuous_performance_testing():
 
-    ## Run tests every hour
+    # Run tests every hour
 
     schedule.every().hour.do(run_performance_tests)
 
-    ## Run load tests daily
+    # Run load tests daily
 
     schedule.every().day.at("02:00").do(run_load_tests)
 
-    ## Run stress tests weekly
+    # Run stress tests weekly
 
     schedule.every().sunday.at("03:00").do(run_stress_tests)
 
@@ -846,19 +834,19 @@ def setup_load_balancer():
 
 ## **Database Scaling**```python
 
-## Database scaling strategies
+# Database scaling strategies
 
 def scale_database():
 
-    ## Read replicas for read-heavy workloads
+    # Read replicas for read-heavy workloads
 
     setup_read_replicas()
 
-    ## Connection pooling for connection management
+    # Connection pooling for connection management
 
     setup_connection_pooling()
 
-    ## Query optimization for better performance
+    # Query optimization for better performance
 
     optimize_database_queries()
 
@@ -897,7 +885,7 @@ def optimize_resources():
 
 ## **3. Auto-scaling**####**Auto-scaling Configuration**```python
 
-## Auto-scaling setup
+# Auto-scaling setup
 
 AUTO_SCALING_CONFIG = {
     "min_instances": 2,
@@ -909,16 +897,16 @@ AUTO_SCALING_CONFIG = {
 
 def setup_auto_scaling():
 
-    ## Monitor resource usage
+    # Monitor resource usage
 
     monitor_resource_usage()
 
-    ## Scale up when needed
+    # Scale up when needed
 
     if cpu_usage > AUTO_SCALING_CONFIG["scale_up_threshold"]:
         scale_up_instances()
 
-    ## Scale down when possible
+    # Scale down when possible
 
     if cpu_usage < AUTO_SCALING_CONFIG["scale_down_threshold"]:
         scale_down_instances()
@@ -959,23 +947,23 @@ def troubleshoot_slow_response():
 
 ## **High Resource Usage**```python
 
-## Troubleshoot high resource usage
+# Troubleshoot high resource usage
 
 def troubleshoot_high_resource_usage():
 
-    ## Identify resource-intensive processes
+    # Identify resource-intensive processes
 
     identify_resource_intensive_processes()
 
-    ## Check for memory leaks
+    # Check for memory leaks
 
     check_for_memory_leaks()
 
-    ## Check for CPU-intensive operations
+    # Check for CPU-intensive operations
 
     check_cpu_intensive_operations()
 
-    ## Optimize resource usage
+    # Optimize resource usage
 
     optimize_resource_usage()
 
@@ -1023,17 +1011,17 @@ def debug_performance_issue():
 
 ### **1. Code Optimization**####**Efficient Algorithms**```python
 
-## Use efficient algorithms and data structures
+# Use efficient algorithms and data structures
 
 def optimized_algorithm():
 
-    ## Use sets for O(1) lookups
+    # Use sets for O(1) lookups
 
-    ## Use generators for memory efficiency
+    # Use generators for memory efficiency
 
-    ## Use list comprehensions for readability
+    # Use list comprehensions for readability
 
-    ## Avoid nested loops when possible
+    # Avoid nested loops when possible
 
     pass
 
@@ -1089,19 +1077,19 @@ def manage_database_connections():
 
 ## **3. Caching Strategy**####**Multi-level Caching**```python
 
-## Implement multi-level caching
+# Implement multi-level caching
 
 def implement_caching_strategy():
 
-    ## L1: Memory cache (fastest)
+    # L1: Memory cache (fastest)
 
-    ## L2: Redis cache (medium)
+    # L2: Redis cache (medium)
 
-    ## L3: Database cache (slowest)
+    # L3: Database cache (slowest)
 
-    ## Implement cache invalidation
+    # Implement cache invalidation
 
-    ## Monitor cache hit rates
+    # Monitor cache hit rates
 
     pass
 
@@ -1177,11 +1165,11 @@ def setup_comprehensive_monitoring():
 
 ### **1. Performance Monitoring Tools**####**System Monitoring**```python
 
-## System monitoring script
+# System monitoring script
 
-## !/usr/bin/env python3
+# !/usr/bin/env python3
 
-## system_monitor.py
+# system_monitor.py
 
 import psutil
 import time
@@ -1235,11 +1223,11 @@ def monitor_application():
 
 ## **2. Performance Testing Tools**####**Load Testing Script**```python
 
-## Load testing script
+# Load testing script
 
-## !/usr/bin/env python3
+# !/usr/bin/env python3
 
-## load_test.py
+# load_test.py
 
 import requests
 import threading
@@ -1259,7 +1247,7 @@ def load_test(url, num_requests, concurrent_users):
             "status_code": response.status_code
         })
 
-    ## Start concurrent requests
+    # Start concurrent requests
 
     threads = []
     for _ in range(concurrent_users):
@@ -1268,12 +1256,12 @@ def load_test(url, num_requests, concurrent_users):
             threads.append(thread)
             thread.start()
 
-    ## Wait for all threads to complete
+    # Wait for all threads to complete
 
     for thread in threads:
         thread.join()
 
-    ## Calculate statistics
+    # Calculate statistics
 
     response_times = [r["response_time"] for r in results]
     avg_response_time = statistics.mean(response_times)
@@ -1311,19 +1299,18 @@ def profile_function(func,*args, **kwargs):
 
     print(s.getvalue())
     return result
+
 ```
 
-------------------------------------------------------------------------
+- --
 
 ## 📚 Additional Resources
 
 ### **Performance Documentation**-**Python Performance**: <https://docs.python.org/3/library/profile.html>
 
-- **PostgreSQL Performance**:
-  <https://www.postgresql.org/docs/current/performance.html>
+- **PostgreSQL Performance**: <https://www.postgresql.org/docs/current/performance.html>
 
-- **AI Model Optimization**:
-  <https://huggingface.co/docs/transformers/performance>
+- **AI Model Optimization**: <https://huggingface.co/docs/transformers/performance>
 
 ### **Monitoring Tools**-**Prometheus**: <https://prometheus.io/>
 
@@ -1337,23 +1324,21 @@ def profile_function(func,*args, **kwargs):
 
 - **JMeter**: <https://jmeter.apache.org/>
 
-------------------------------------------------------------------------
+- --
 
-- Last Updated: 2024-08-07\*
-- Next Review: Monthly\*
-- Performance Level: Optimized\*
+- Last Updated: 2024-08-07*
+- Next Review: Monthly*
+- Performance Level: Optimized*
 
 <!-- README_AUTOFIX_START -->
-
-## Auto-generated sections for 400_performance-optimization-guide.md
-
-## Generated: 2025-08-18T08:03:22.762345
+# Auto-generated sections for 400_performance-optimization-guide.md
+# Generated: 2025-08-17T17:47:03.937705
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-18
+2025-08-17
 
 ## Owner
 
