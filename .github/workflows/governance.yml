@@ -36,6 +36,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --cache-dir ~/.cache/pip -r requirements.txt
+          pip install ruff==0.* black==24.* mypy==1.*
 
       - name: Get changed files
         id: changed

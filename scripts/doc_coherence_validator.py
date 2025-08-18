@@ -72,6 +72,18 @@ MD_LINK_RE = re.compile(
 # Backticked .md tokens (style-only; warn if broken)
 BACKTICK_MD_RE = re.compile(r"`([^`]+?\.md(?:#[^`]+)?)`")
 
+# Code quality validation constants
+TIER1_PATTERNS = ("src/**/critical/**/*.py", "services/**/core/**/*.py", "scripts/*.py")
+TIER2_PATTERNS = ("src/**/*.py", "dspy-rag-system/src/**/*.py")
+RUFF_ARGS = [
+    "ruff",
+    "check",
+    "--output-format",
+    "json",
+    "--exit-zero",
+    "--force-exclude",
+]
+
 
 def strip_fences(text: str) -> str:
     return FENCE_RE.sub("", text)
@@ -102,6 +114,121 @@ def _exists_case_sensitive(p: Path) -> bool:
             return False
         cur = cur / name
     return True
+
+
+def _run_command(cmd: list[str], cwd: Path) -> tuple[int, str]:
+    """Run command and return (return_code, output)."""
+    try:
+        p = subprocess.run(cmd, cwd=cwd, text=True, capture_output=True)
+        out = p.stdout if p.stdout else p.stderr
+        return (p.returncode, out)
+    except Exception as e:
+        return (1, str(e))
+
+
+def _git_changed_files(cwd: Path) -> set[str]:
+    """Get changed Python files in current branch vs main."""
+    # Only changed files in PRs; fall back to all PY on default branch
+    rc, out = _run_command(
+        [
+            "bash",
+            "-lc",
+            "git fetch origin && git diff --name-only origin/main...HEAD -- '*.py'",
+        ],
+        cwd,
+    )
+    files = {f.strip() for f in out.splitlines() if f.strip().endswith(".py")}
+    if not files:
+        rc, out = _run_command(["bash", "-lc", "git ls-files '*.py'"], cwd)
+        files = {f.strip() for f in out.splitlines()}
+    return files
+
+
+def validate_code_quality(root: Path) -> dict:
+    """Validate code quality using Ruff and apply governance rules."""
+    changed = _git_changed_files(root)
+
+    # Run Ruff with JSON output
+    rc, ruff_json = _run_command(RUFF_ARGS + list(changed or ["."]), root)
+    try:
+        ruff_violations = json.loads(ruff_json or "[]")
+    except json.JSONDecodeError:
+        ruff_violations = []
+
+    # Classify violations by category
+    def categorize_violation(v: dict) -> str:
+        code = v.get("code", "")
+        if code.startswith(("RUF001", "RUF002", "RUF003", "PLE2502")):
+            return "unicode_safety"
+        elif code in {"F401", "F541", "F841", "I001"}:
+            return "code_quality"
+        else:
+            return "other"
+
+    # Process violations with tiering
+    details = []
+    for v in ruff_violations:
+        d = {
+            "file": v.get("filename"),
+            "code": v.get("code"),
+            "message": v.get("message"),
+            "line": v.get("location", {}).get("row"),
+            "category": categorize_violation(v),
+        }
+
+        # Apply tiering: upgrade severity if in Tier1/Tier2 globs
+        path = d["file"] or ""
+        if d["category"] == "code_quality" and any(
+            Path(path).match(g) for g in TIER1_PATTERNS
+        ):
+            d["tier"] = 1
+        elif d["category"] in ("code_quality", "unicode_safety") and any(
+            Path(path).match(g) for g in TIER2_PATTERNS
+        ):
+            d["tier"] = 2
+        else:
+            d["tier"] = 3
+
+        details.append(d)
+
+    # Ratchet: only count violations in changed files (keeps legacy debt stable)
+    ratchet_violations = [d for d in details if d["file"] in changed]
+
+    # Governance checks (error reduction compliance)
+    governance_violations = []
+    lessons_file = root / "400_guides/400_comprehensive-coding-best-practices.md"
+    if not lessons_file.exists():
+        governance_violations.append(
+            "Missing lessons learned file: 400_guides/400_comprehensive-coding-best-practices.md"
+        )
+
+    # Check for error reduction decision matrix
+    if lessons_file.exists():
+        content = lessons_file.read_text(encoding="utf-8")
+        if "Auto-Fix Decision Matrix" not in content:
+            governance_violations.append(
+                "Missing auto-fix decision matrix in lessons learned"
+            )
+        if "Safe Auto-Fixes" not in content:
+            governance_violations.append("Missing safe auto-fixes documentation")
+        if "Dangerous Auto-Fixes" not in content:
+            governance_violations.append("Missing dangerous auto-fixes documentation")
+
+    return {
+        "summary": {
+            "ruff_total": len(details),
+            "ruff_changed": len(ratchet_violations),
+            "unicode_safety_changed": sum(
+                d["category"] == "unicode_safety" for d in ratchet_violations
+            ),
+            "code_quality_changed": sum(
+                d["category"] == "code_quality" for d in ratchet_violations
+            ),
+            "governance_violations": len(governance_violations),
+        },
+        "violations": ratchet_violations,
+        "governance": governance_violations,
+    }
 
 
 @functools.lru_cache(maxsize=1)
@@ -298,6 +425,15 @@ SHADOW_FAIL = env_bool("VALIDATOR_SHADOW_FAIL", default=False)
 README_FAIL = env_bool("VALIDATOR_README_FAIL", default=False)
 MULTIREP_FAIL = env_bool("VALIDATOR_MULTIREP_FAIL", default=False)
 REFERENCES_FAIL = env_bool("VALIDATOR_REFERENCES_FAIL", default=True)
+CODE_QUALITY_FAIL = env_bool(
+    "VALIDATOR_CODE_QUALITY_FAIL", default=False
+)  # Stage 0: informational only
+UNICODE_SAFETY_FAIL = env_bool(
+    "VALIDATOR_UNICODE_SAFETY_FAIL", default=True
+)  # Stage 0: fail on any Unicode safety violations
+ERROR_REDUCTION_FAIL = env_bool(
+    "VALIDATOR_ERROR_REDUCTION_FAIL", default=False
+)  # Stage 0: informational only
 
 # Canonical keys with synonyms for validator exceptions
 KEY_SYNONYMS = {
@@ -898,6 +1034,9 @@ def build_report(files, *, root=".", ledger=None):
             # Never crash validation due to tag parsing
             pass
 
+    # Code quality validation (aggregator approach)
+    code_quality_result = validate_code_quality(Path(root))
+
     # Deterministic output ordering
     report["categories"] = {
         "archive": {"violations": len(arch), "fail": ARCHIVE_FAIL},
@@ -908,6 +1047,18 @@ def build_report(files, *, root=".", ledger=None):
             "violations": references_violation_count,
             "fail": REFERENCES_FAIL,
         },
+        "code_quality": {
+            "violations": code_quality_result["summary"]["code_quality_changed"],
+            "fail": CODE_QUALITY_FAIL,
+        },
+        "unicode_safety": {
+            "violations": code_quality_result["summary"]["unicode_safety_changed"],
+            "fail": UNICODE_SAFETY_FAIL,
+        },
+        "error_reduction": {
+            "violations": code_quality_result["summary"]["governance_violations"],
+            "fail": ERROR_REDUCTION_FAIL,
+        },
     }
     # Normalize paths to repo-relative POSIX for consistent reporting
     root_abs = os.path.abspath(root)
@@ -917,6 +1068,21 @@ def build_report(files, *, root=".", ledger=None):
         "readme": sorted(_posix_rel(p, root_abs) for p in read),
         "multirep": sorted(_posix_rel(p, root_abs) for p in mult),
         "references": sorted(set(references_impacted)),
+        "code_quality": sorted(
+            set(
+                d["file"]
+                for d in code_quality_result["violations"]
+                if d["category"] == "code_quality"
+            )
+        ),
+        "unicode_safety": sorted(
+            set(
+                d["file"]
+                for d in code_quality_result["violations"]
+                if d["category"] == "unicode_safety"
+            )
+        ),
+        "error_reduction": [],  # Governance violations don't have specific files
     }
 
     # Docs impact gating: if target prefixes changed, require one of required docs to be changed (or exception)

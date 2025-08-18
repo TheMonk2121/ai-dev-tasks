@@ -5,6 +5,10 @@ exclude = ["venv", ".venv", "build", "dist", ".eggs", "**/__pycache__"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "C4", "SIM", "PT", "RUF"]
+# Unicode safety (homoglyphs + bidi controls)
+extend-select = ["RUF001", "RUF002", "RUF003", "PLE2502"]
+# Optional: police stray noqa comments
+# extend-select = ["RUF100"]
 ignore = ["E203", "E501"]
 
 [tool.ruff.format]

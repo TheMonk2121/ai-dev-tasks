@@ -8,26 +8,4 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install deps
-        run: |
-          python -m pip install --upgrade pip
-          pip install .[dev]
-
-      - name: Ruff (pyupgrade + basic)
-        run: ruff check --select UP,E,F,I --target-version py311 .
-
-      - name: Black (check)
-        run: black --check .
-
-      - name: Mypy
-        run: mypy .
+    uses: ./.github/workflows/quality.yml
