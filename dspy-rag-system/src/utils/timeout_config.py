@@ -11,7 +11,7 @@ This module provides centralized timeout configuration for:
 
 import os
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)

@@ -20,7 +20,7 @@ import psycopg2
 import redis
 import time
 import subprocess
-from typing import Dict, Any, List, Optional
+from typing import Any, Optional
 from dataclasses import dataclass, asdict
 from datetime import datetime
 import psutil

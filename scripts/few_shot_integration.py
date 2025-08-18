@@ -16,7 +16,7 @@ Usage:
 import json
 import re
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 class FewShotExampleLoader:

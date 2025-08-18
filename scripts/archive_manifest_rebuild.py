@@ -10,7 +10,7 @@ import json
 import os
 import subprocess
 from datetime import datetime, timezone, UTC
-from typing import Dict, List, Optional
+from typing import Optional
 
 
 def get_archive_files() -> list[str]:

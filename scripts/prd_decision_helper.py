@@ -6,7 +6,7 @@ Determines whether to generate a PRD for a backlog item based on points and scor
 
 import re
 import sys
-from typing import Optional, Tuple
+from typing import Optional
 
 def parse_backlog_item(backlog_content: str, item_id: str) -> tuple[int, float] | None:
     """Parse backlog item to extract points and score"""

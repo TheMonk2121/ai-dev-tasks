@@ -5,7 +5,7 @@ Compatibility wrapper exposing EnhancedRAGSystem for tests.
 Delegates to the existing enhanced RAG interface via the RAG shim.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from dspy_modules.enhanced_rag_system import create_enhanced_rag_interface
 

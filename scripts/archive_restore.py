@@ -12,7 +12,7 @@ import os
 import subprocess
 import sys
 from datetime import datetime, timezone, UTC
-from typing import Dict, Optional, Tuple
+from typing import Optional
 
 
 def load_manifest() -> dict:

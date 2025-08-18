@@ -12,7 +12,7 @@ import json
 import sys
 from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 
 def load_validator_report(report_path: str = "validator_report.json") -> dict[str, Any]:

@@ -6,7 +6,7 @@ Provides token-aware text chunking for better LLM compatibility.
 
 import tiktoken
 import re
-from typing import List, Optional, Dict, Any
+from typing import Optional, Any
 from collections.abc import Iterator
 import logging
 from functools import lru_cache

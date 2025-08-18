@@ -8,7 +8,7 @@ This module provides automated HotFix template generation for common error scena
 import json
 import os
 import logging
-from typing import Dict, List, Optional, Any
+from typing import Optional, Any
 from dataclasses import dataclass
 from datetime import datetime
 

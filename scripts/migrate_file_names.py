@@ -14,7 +14,7 @@ Usage:
 import shutil
 import sys
 from pathlib import Path
-from typing import List, Tuple
+
 
 # Migration mapping based on 200_naming-conventions.md
 MIGRATION_MAP = {

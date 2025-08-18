@@ -11,7 +11,7 @@ import json
 import re
 import logging
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
+from typing import Any, Optional
 from datetime import datetime
 
 _LOG = logging.getLogger("giant_guide_migration")

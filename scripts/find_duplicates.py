@@ -13,7 +13,7 @@ import sys
 import argparse
 import hashlib
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Optional
 from collections import defaultdict
 
 class DuplicateFinder:

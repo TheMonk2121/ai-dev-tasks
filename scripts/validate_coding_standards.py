@@ -11,7 +11,7 @@ Validates Python files against our coding standards:
 import ast
 import sys
 from pathlib import Path
-from typing import List, Tuple
+
 
 
 class CodingStandardsValidator:

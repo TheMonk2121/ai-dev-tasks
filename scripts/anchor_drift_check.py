@@ -13,7 +13,7 @@ import re
 import subprocess
 import sys
 from datetime import datetime, timezone, UTC
-from typing import Dict, List, Set
+
 
 # Import slugify function from markdown_utils
 try:

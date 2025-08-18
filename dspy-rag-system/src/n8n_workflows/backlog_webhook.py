@@ -10,7 +10,7 @@ import os
 import sys
 import json
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 from datetime import datetime
 from flask import Flask, request, jsonify
 from werkzeug.exceptions import BadRequest

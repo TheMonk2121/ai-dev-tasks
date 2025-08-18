@@ -12,7 +12,7 @@ import json
 import uuid
 import requests
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Optional
 from collections.abc import Callable
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict

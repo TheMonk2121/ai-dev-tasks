@@ -7,7 +7,7 @@ This script fixes the duplicate paths that were created by the previous broken l
 
 import re
 from pathlib import Path
-from typing import List
+
 
 
 def find_files_with_duplicate_paths() -> list[str]:

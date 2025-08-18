@@ -2,7 +2,7 @@
 
 """Enhanced RAG System Delegator"""
 
-from typing import Any, Dict
+from typing import Any
 
 from utils.rag_compatibility_shim import create_enhanced_rag_interface
 

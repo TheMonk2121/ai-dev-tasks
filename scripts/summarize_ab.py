@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import json
 import sys
-from typing import Any, Dict
+from typing import Any
 
 
 def load(path: str) -> dict[str, Any]:

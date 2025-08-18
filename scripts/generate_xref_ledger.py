@@ -9,7 +9,7 @@ to bring multirep count to 0 and start the clean-day clock.
 import json
 import os
 from datetime import datetime, timedelta, timezone, UTC
-from typing import Dict, List
+
 
 
 def load_validator_report() -> dict:

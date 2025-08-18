@@ -9,7 +9,7 @@ import functools
 import logging
 import json
 import os
-from typing import Any, Dict, Optional, List, Type
+from typing import Any, Optional
 from collections.abc import Callable
 from requests.exceptions import Timeout, RequestException
 import psycopg2

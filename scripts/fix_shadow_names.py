@@ -13,7 +13,7 @@ import os
 import re
 import sys
 from datetime import datetime, timezone, UTC
-from typing import List, Tuple
+
 
 # Disallowed patterns that indicate shadow forks
 DISALLOWED_PATTERNS = [

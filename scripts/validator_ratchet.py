@@ -10,7 +10,7 @@ import json
 import os
 import subprocess
 import sys
-from typing import Any, Dict, Set
+from typing import Any
 
 
 def get_changed_files() -> set[str]:

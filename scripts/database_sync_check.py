@@ -7,7 +7,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+
 
 # Add dspy-rag-system/scripts to path for imports
 dspy_scripts_path = Path(__file__).parent.parent / "dspy-rag-system" / "scripts"

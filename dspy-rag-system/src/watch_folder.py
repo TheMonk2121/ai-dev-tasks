@@ -14,7 +14,7 @@ import shlex
 import signal
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
-from typing import List
+
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler, FileCreatedEvent, FileMovedEvent
 

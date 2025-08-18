@@ -11,7 +11,7 @@ import sys
 import json
 import argparse
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 from pathlib import Path
 import re
 

@@ -9,7 +9,7 @@ and identify cleanup hotspots for targeted XRef remediation.
 import json
 import os
 from collections import defaultdict
-from typing import Dict, List, Tuple
+
 
 
 def load_validator_report() -> dict:

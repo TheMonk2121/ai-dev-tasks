@@ -13,7 +13,7 @@ from collections import deque
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from psycopg2.extras import RealDictCursor
 from psycopg2.pool import ThreadedConnectionPool

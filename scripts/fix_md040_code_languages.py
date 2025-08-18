@@ -6,7 +6,7 @@ Adds language specifications to code blocks that don't have them.
 
 import glob
 import re
-from typing import Dict, List
+
 
 
 def detect_code_language(content: str) -> str:

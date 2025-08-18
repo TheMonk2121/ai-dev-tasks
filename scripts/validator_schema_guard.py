@@ -9,7 +9,7 @@ Requires schema-migration label and docs/VALIDATOR_SCHEMA_MIGRATION.md update.
 import json
 import os
 import sys
-from typing import Dict
+
 
 
 def load_validator_report(path: str) -> dict:

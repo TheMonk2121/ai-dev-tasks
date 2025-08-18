@@ -7,7 +7,7 @@ Wraps the existing HybridVectorStore for hybrid search capabilities.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 from dspy_modules.vector_store import HybridVectorStore

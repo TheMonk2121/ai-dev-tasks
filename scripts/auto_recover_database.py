@@ -13,7 +13,7 @@ import os
 import time
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 import json
 
 # Add dspy-rag-system to path

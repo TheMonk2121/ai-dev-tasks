@@ -7,7 +7,7 @@ Ensures proper analysis before suggesting file deletion or deprecation
 import os
 import sys
 import json
-from typing import Dict, List, Any
+from typing import Any
 from pathlib import Path
 
 def check_context_loading():

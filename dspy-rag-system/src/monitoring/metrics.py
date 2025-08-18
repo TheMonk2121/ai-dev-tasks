@@ -6,7 +6,7 @@ Implements monitoring and observability for production deployment.
 
 import time
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 from functools import wraps
 
 logger = logging.getLogger(__name__)

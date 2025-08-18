@@ -19,7 +19,7 @@ import time
 import subprocess
 import argparse
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Optional, Any
 from datetime import datetime
 import requests
 

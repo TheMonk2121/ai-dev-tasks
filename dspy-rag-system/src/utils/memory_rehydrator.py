@@ -27,7 +27,7 @@ import os
 import re
 import time
 from dataclasses import asdict, dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 from psycopg2.extras import RealDictCursor
 

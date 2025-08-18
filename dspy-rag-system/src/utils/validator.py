@@ -7,7 +7,7 @@ Implements security hardening for user inputs and file paths.
 import re
 import os
 import logging
-from typing import List, Optional
+from typing import Optional
 from pathlib import Path
 
 logger = logging.getLogger(__name__)

@@ -8,7 +8,7 @@ This script adds TL;DR sections to markdown files that are missing them.
 import argparse
 import re
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 
 class TLDRAdder:

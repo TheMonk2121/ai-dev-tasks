@@ -7,7 +7,7 @@ Provides centralized OpenTelemetry setup for distributed tracing and monitoring.
 import os
 import logging
 import uuid
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 from contextlib import contextmanager
 
 from opentelemetry import trace

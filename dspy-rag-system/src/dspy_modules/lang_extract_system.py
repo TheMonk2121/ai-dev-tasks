@@ -7,7 +7,7 @@ Implements span-level grounding and controlled generation for precise fact extra
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature

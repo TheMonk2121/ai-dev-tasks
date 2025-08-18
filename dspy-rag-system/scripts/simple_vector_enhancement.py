@@ -9,7 +9,7 @@ import sys
 import psycopg2
 import logging
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 import hashlib
 import time
 

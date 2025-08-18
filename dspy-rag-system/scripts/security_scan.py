@@ -14,7 +14,7 @@ import sys
 import json
 import argparse
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 # Add project root to path
 project_root = Path(__file__).parent.parent

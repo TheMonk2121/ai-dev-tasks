@@ -9,7 +9,7 @@ import json
 import sys
 from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 import traceback
 import threading
 

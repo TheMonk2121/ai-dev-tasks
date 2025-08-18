@@ -10,7 +10,7 @@ advanced graph visualization capabilities.
 import json
 import logging
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import httpx
 from nicegui import ui

@@ -7,7 +7,6 @@ Tests the optimized vector store with various scenarios
 import statistics
 import time
 import uuid
-from typing import Any, Dict, List
 
 from src.dspy_modules.vector_store import HybridVectorStore
 
@@ -40,7 +39,9 @@ TEST_DOCUMENTS = [
 ]
 
 
-def benchmark_insertion(store: HybridVectorStore, documents: list[dict[str, Any]]) -> dict[str, float]:
+def benchmark_insertion(
+    store: HybridVectorStore, documents: list[dict[str, Any]]
+) -> dict[str, float]:
     """Benchmark document insertion performance"""
     print("🔧 Benchmarking document insertion...")
 
@@ -57,7 +58,9 @@ def benchmark_insertion(store: HybridVectorStore, documents: list[dict[str, Any]
         # Split content into chunks (simple split by sentences for demo)
         chunks = [doc["content"]]  # For now, treat entire content as one chunk
         metadata = {**doc["metadata"], "document_id": doc_id}
-        result = store.forward(operation="store_chunks", chunks=chunks, metadata=metadata)
+        result = store.forward(
+            operation="store_chunks", chunks=chunks, metadata=metadata
+        )
 
         # Verify insertion was successful
         if result.get("status") != "success":
@@ -79,7 +82,9 @@ def benchmark_insertion(store: HybridVectorStore, documents: list[dict[str, Any]
     }
 
 
-def benchmark_vector_search(store: HybridVectorStore, queries: list[str]) -> dict[str, float]:
+def benchmark_vector_search(
+    store: HybridVectorStore, queries: list[str]
+) -> dict[str, float]:
     """Benchmark vector search performance"""
     print("🔍 Benchmarking vector search...")
 
@@ -104,7 +109,9 @@ def benchmark_vector_search(store: HybridVectorStore, queries: list[str]) -> dic
     }
 
 
-def benchmark_hybrid_search(store: HybridVectorStore, queries: list[str]) -> dict[str, float]:
+def benchmark_hybrid_search(
+    store: HybridVectorStore, queries: list[str]
+) -> dict[str, float]:
     """Benchmark hybrid search performance"""
     print("🔄 Benchmarking hybrid search...")
 
@@ -129,27 +136,39 @@ def benchmark_hybrid_search(store: HybridVectorStore, queries: list[str]) -> dic
     }
 
 
-def benchmark_cache_performance(store: HybridVectorStore, repeated_query: str) -> dict[str, float]:
+def benchmark_cache_performance(
+    store: HybridVectorStore, repeated_query: str
+) -> dict[str, float]:
     """Benchmark query embedding cache performance"""
     print("💾 Benchmarking cache performance...")
 
     # First query (cache miss)
     start_time = time.time()
-    _ = store._vector_search(repeated_query, limit=5)  # Use underscore to indicate intentionally unused
+    _ = store._vector_search(
+        repeated_query, limit=5
+    )  # Use underscore to indicate intentionally unused
     first_query_time = time.time() - start_time
 
     # Second query (cache hit)
     start_time = time.time()
-    _ = store._vector_search(repeated_query, limit=5)  # Use underscore to indicate intentionally unused
+    _ = store._vector_search(
+        repeated_query, limit=5
+    )  # Use underscore to indicate intentionally unused
     second_query_time = time.time() - start_time
 
-    cache_speedup = first_query_time / second_query_time if second_query_time > 0 else float("inf")
+    cache_speedup = (
+        first_query_time / second_query_time if second_query_time > 0 else float("inf")
+    )
 
     print(f"  First query (cache miss): {first_query_time:.3f}s")
     print(f"  Second query (cache hit): {second_query_time:.3f}s")
     print(f"  Cache speedup: {cache_speedup:.1f}x")
 
-    return {"cache_miss_time": first_query_time, "cache_hit_time": second_query_time, "speedup": cache_speedup}
+    return {
+        "cache_miss_time": first_query_time,
+        "cache_hit_time": second_query_time,
+        "speedup": cache_speedup,
+    }
 
 
 def main():
