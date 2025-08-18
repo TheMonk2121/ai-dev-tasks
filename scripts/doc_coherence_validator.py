@@ -302,6 +302,8 @@ REFERENCES_FAIL = env_bool("VALIDATOR_REFERENCES_FAIL", default=True)
 KEY_SYNONYMS = {
     "xref-missing": {"xref-missing", "multirep-xref", "xref"},
     "multi-rep-missing": {"multi-rep-missing", "multirep", "multi-rep"},
+    # Allow suppressing docs-impact gating via pragma/ledger
+    "docs-impact": {"docs-impact", "docs_impact"},
 }
 
 # Shadow fork detection patterns (ChatGPT's validator rule)
@@ -421,6 +423,47 @@ DOCS_IMPACT_REQUIRED = (
     "dspy-rag-system/src/vector_store/README.md",
     "dspy-rag-system/README.md",
 )
+
+# Ordered, per-prefix docs-impact requirements (first is the default/primary doc)
+DOCS_IMPACT_RULES: dict[str, list[str]] = {
+    "dspy-rag-system/src/vector_store/": [
+        "dspy-rag-system/src/vector_store/README.md",  # default, component-scoped
+        "dspy-rag-system/README.md",
+        "400_guides/400_system-overview.md",
+        "500_reference-cards.md",
+        "401_consensus-log.md",
+    ],
+    "src/vector_store/": [
+        "dspy-rag-system/src/vector_store/README.md",  # best canonical doc lives here for vector store
+        "dspy-rag-system/README.md",
+        "400_guides/400_system-overview.md",
+        "500_reference-cards.md",
+        "401_consensus-log.md",
+    ],
+}
+
+# For specific prefixes, define mandatory docs (all required) and optional-any groups (at least one required)
+DOCS_IMPACT_MANDATORY: dict[str, list[str]] = {
+    "dspy-rag-system/src/vector_store/": [
+        "dspy-rag-system/src/vector_store/README.md",
+        "401_consensus-log.md",
+    ],
+    "src/vector_store/": [
+        "dspy-rag-system/src/vector_store/README.md",
+        "401_consensus-log.md",
+    ],
+}
+
+DOCS_IMPACT_OPTIONAL_ANY: dict[str, list[str]] = {
+    "dspy-rag-system/src/vector_store/": [
+        "400_guides/400_system-overview.md",
+        "500_reference-cards.md",
+    ],
+    "src/vector_store/": [
+        "400_guides/400_system-overview.md",
+        "500_reference-cards.md",
+    ],
+}
 
 # README scoping constants
 README_SCOPE_DIRS = {
@@ -814,6 +857,48 @@ def build_report(files, *, root=".", ledger=None):
             references_impacted.append(_posix_rel(path, root_abs_for_refs))
         references_alias_hits_total += alias_hits
 
+        # Validate header/footer context tags (MODULE_REFERENCE, CONTEXT_REFERENCE, MEMORY_CONTEXT, DOCUMENTATION_MASTER)
+        try:
+            for ref_type, ref_target in CROSS_REFERENCE_PATTERN.findall(text):
+                ref_type = ref_type.strip().upper()
+                ref_target = ref_target.strip()
+
+                # Handle multiple comma-separated references in a single tag
+                targets = [t.strip() for t in ref_target.split(",") if t.strip()] or [
+                    ref_target
+                ]
+
+                # File/Module references must point to existing files
+                if ref_type in {"MODULE_REFERENCE", "CONTEXT_REFERENCE"}:
+                    doc_path = Path(path)
+                    for tgt in targets:
+                        # try relative to doc and repo root
+                        p1 = (doc_path.parent / tgt).resolve()
+                        p2 = (Path(root_abs_for_refs) / tgt).resolve()
+                        if not (
+                            _exists_case_sensitive(p1) or _exists_case_sensitive(p2)
+                        ):
+                            references_violation_count += 1
+                            references_impacted.append(
+                                _posix_rel(path, root_abs_for_refs)
+                            )
+
+                # MEMORY_CONTEXT should begin with HIGH/MEDIUM/LOW
+                elif ref_type == "MEMORY_CONTEXT":
+                    level = ref_target.split("-", 1)[0].strip().upper()
+                    if level not in {"HIGH", "MEDIUM", "LOW"}:
+                        references_violation_count += 1
+                        references_impacted.append(_posix_rel(path, root_abs_for_refs))
+
+                # DOCUMENTATION_MASTER must be non-empty (advisory -> treat invalid as reference violation)
+                elif ref_type == "DOCUMENTATION_MASTER":
+                    if not ref_target or ref_target.lower() in {"todo", "tbd", ""}:
+                        references_violation_count += 1
+                        references_impacted.append(_posix_rel(path, root_abs_for_refs))
+        except Exception:
+            # Never crash validation due to tag parsing
+            pass
+
     # Deterministic output ordering
     report["categories"] = {
         "archive": {"violations": len(arch), "fail": ARCHIVE_FAIL},
@@ -834,6 +919,94 @@ def build_report(files, *, root=".", ledger=None):
         "multirep": sorted(_posix_rel(p, root_abs) for p in mult),
         "references": sorted(set(references_impacted)),
     }
+
+    # Docs impact gating: if target prefixes changed, require one of required docs to be changed (or exception)
+    if DOCS_IMPACT_ENABLED:
+        try:
+            diff_range = os.getenv("VALIDATOR_DIFF_RANGE")
+            changed_pairs = _git_changed_with_status(diff_range)
+            changed_set = set()
+            for _, p in changed_pairs:
+                rel = _posix_rel(p, root_abs)
+                changed_set.add(rel)
+
+            triggered = any(
+                any(rel.startswith(pref) for pref in DOCS_IMPACT_TARGET_PREFIXES)
+                for rel in changed_set
+            )
+
+            # Determine which required docs apply based on the most specific matching prefix
+            applicable_required: list[str] = list(DOCS_IMPACT_REQUIRED)
+            applicable_mandatory: list[str] = []
+            applicable_optional_any: list[str] = []
+            matched_prefixes = [
+                pref
+                for pref in DOCS_IMPACT_RULES
+                if any(rel.startswith(pref) for rel in changed_set)
+            ]
+            # Prefer longest (most specific) prefix
+            if matched_prefixes:
+                best = sorted(matched_prefixes, key=len, reverse=True)[0]
+                applicable_required = DOCS_IMPACT_RULES.get(
+                    best, list(DOCS_IMPACT_REQUIRED)
+                )
+                applicable_mandatory = DOCS_IMPACT_MANDATORY.get(best, [])
+                applicable_optional_any = DOCS_IMPACT_OPTIONAL_ANY.get(best, [])
+
+            # Required hit: any of the applicable_required changed
+            require_hit = any(req in changed_set for req in applicable_required)
+            # Mandatory hit: all mandatory changed
+            mandatory_ok = (
+                all(req in changed_set for req in applicable_mandatory)
+                if applicable_mandatory
+                else True
+            )
+            # Optional-any hit: if group present, at least one changed
+            optional_any_ok = (
+                any(req in changed_set for req in applicable_optional_any)
+                if applicable_optional_any
+                else True
+            )
+
+            # Allow pragma or ledger exception on any of the required files
+            allowed = False
+            for req in applicable_required:
+                full = os.path.join(root_abs, req)
+                if os.path.exists(full) and file_allows(full, "docs-impact"):
+                    allowed = True
+                    break
+                if _ledger_allows(ledger or {}, req, "docs-impact"):
+                    allowed = True
+                    break
+
+            if triggered and not (
+                (require_hit and mandatory_ok and optional_any_ok) or allowed
+            ):
+                # Register a docs_impact category and impacted files
+                report.setdefault("categories", {})["docs_impact"] = {
+                    "violations": 1,
+                    "fail": STRICT_DOCS_IMPACT,
+                }
+                # Store which changed files triggered the gate
+                impacted = [
+                    rel
+                    for rel in sorted(changed_set)
+                    if any(rel.startswith(pref) for pref in DOCS_IMPACT_TARGET_PREFIXES)
+                ]
+                report.setdefault("impacted_files", {})["docs_impact"] = impacted
+            else:
+                report.setdefault("categories", {})["docs_impact"] = {
+                    "violations": 0,
+                    "fail": STRICT_DOCS_IMPACT,
+                }
+                report.setdefault("impacted_files", {})["docs_impact"] = []
+        except Exception:
+            # Non-fatal
+            report.setdefault("categories", {})["docs_impact"] = {
+                "violations": 0,
+                "fail": STRICT_DOCS_IMPACT,
+            }
+            report.setdefault("impacted_files", {})["docs_impact"] = []
 
     # Add current counters if available, then update our counters
     try:

@@ -626,3 +626,10 @@ Implement flip hygiene (status visibility + flip PR context), anchor drift guard
 
 ### Next Steps
 Ready for controlled validator category flips as clean-day windows complete.
+
+## Update — Vector Store Documentation Refresh
+
+**Date**: 2025-08-18
+
+- Recorded minor documentation refresh for the vector store component.
+- Cross-referenced component README and system overview per docs-impact workflow.

@@ -70,3 +70,4 @@ Validator Report:
   - `401_consensus-log.md`
   - Local README (`dspy-rag-system/src/vector_store/README.md` or `dspy-rag-system/README.md`)
 - [ ] If no docs were touched, explanation is provided for why there is no documentation impact
+ - [ ] Header/footer context tags reviewed and updated (e.g., `CONTEXT_REFERENCE`, `MODULE_REFERENCE`, `MEMORY_CONTEXT`, `DOCUMENTATION_MASTER`)

@@ -1,3 +1,37 @@
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
+
+# Vector Store README
+
+> Canonical notice: This file is the primary source of truth for the vector store component. If any files under `dspy-rag-system/src/vector_store/` change, update this README and add an entry to `401_consensus-log.md`. For broader architecture changes, also update `400_guides/400_system-overview.md`; for public options/APIs, update `500_reference-cards.md`.
+
+## Purpose
+
+Document the design, configuration, and operational behavior of the vector store component (core/perf modes, index lifecycle, retrieval strategies), and serve as the single, component-scoped place to capture changes.
+
+## Usage/Integration
+
+- Import: `from vector_store import get_vector_store`
+- Select mode: `get_vector_store(mode="core"|"perf")`
+- See project overview for system wiring: [Project README](../../README.md)
+
+## Owner
+
+Documentation Team (Vector Store Maintainers)
+
+## Last Reviewed
+
+2025-08-18
+
+---
+
+## Quick Links
+
+- System architecture: [System Overview](../../../400_guides/400_system-overview.md)
+- Project overview: [Project README](../../README.md)
+- Reference options: [Reference Cards](../../../500_reference-cards.md)
+- Change log: [Consensus Log](../../../401_consensus-log.md)
+
 # Vector Store Package
 
 This package provides a unified interface for vector store implementations with two complementary tiers.
@@ -116,6 +150,6 @@ RAG Subsystem Maintainers
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document.
 
 <!-- README_AUTOFIX_END -->

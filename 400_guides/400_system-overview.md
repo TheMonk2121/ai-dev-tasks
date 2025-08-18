@@ -524,7 +524,7 @@ and `400_guides/400_deployment-environment-guide.md`.
 - `get_stats()` - Get store statistics
 - `get_health_status()` - Get health status
 
-See `500_reference-cards.md` for detailed migration guide and usage examples.
+See `500_reference-cards.md` for detailed migration guide and usage examples. Also see the component guide: `dspy-rag-system/src/vector_store/README.md`.
 
 #### **Memory Rehydrator**(`src/utils/memory_rehydrator.py`, `src/utils/memory_rehydration.go`)
 
