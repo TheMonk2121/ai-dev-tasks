@@ -21,7 +21,7 @@ repos:
     hooks:
       - id: validator-lightweight
         name: Lightweight Validator
-        entry: python3 scripts/doc_coherence_validator.py --check shadow-fork --check archive
+        entry: python3.11 scripts/doc_coherence_validator.py --check shadow-fork --check archive
         language: system
         pass_filenames: false
         always_run: true

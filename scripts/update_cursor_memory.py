@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Cursor Memory Context Auto-Update Helper (B-061)
 
@@ -12,13 +12,15 @@ Features:
 - Better error handling and validation
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 # Import few-shot integration framework
 try:
@@ -38,7 +40,9 @@ FENCE_COMPLETED_START = "<!-- AUTO:recently_completed:start -->"
 FENCE_COMPLETED_END = "<!-- AUTO:recently_completed:end -->"
 
 
-def parse_backlog_item(line: str, few_shot_loader: FewShotExampleLoader | None = None) -> dict[str, str] | None:
+def parse_backlog_item(
+    line: str, few_shot_loader: FewShotExampleLoader | None = None
+) -> dict[str, str] | None:
     """Parse a single backlog item line with improved error handling and few-shot enhancement"""
     if not line.strip() or "| B‑" not in line:
         return None
@@ -57,7 +61,13 @@ def parse_backlog_item(line: str, few_shot_loader: FewShotExampleLoader | None =
         # Clean up the problem description
         problem = re.sub(r"<!--.*?-->", "", problem).strip()
 
-        result = {"id": item_id, "title": title, "points": points, "status": status, "problem": problem}
+        result = {
+            "id": item_id,
+            "title": title,
+            "points": points,
+            "status": status,
+            "problem": problem,
+        }
 
         # Apply few-shot enhancement if available
         if few_shot_loader:
@@ -67,14 +77,18 @@ def parse_backlog_item(line: str, few_shot_loader: FewShotExampleLoader | None =
                 patterns = few_shot_loader.extract_patterns(examples)
 
                 # Apply patterns to the line
-                few_shot_results = few_shot_loader.apply_patterns_to_content(line, patterns)
+                few_shot_results = few_shot_loader.apply_patterns_to_content(
+                    line, patterns
+                )
 
                 # Add few-shot insights to the result
                 if few_shot_results.get("matched_patterns"):
                     result["few_shot_insights"] = few_shot_results["matched_patterns"]
 
                 if few_shot_results.get("validation_suggestions"):
-                    result["validation_suggestions"] = few_shot_results["validation_suggestions"]
+                    result["validation_suggestions"] = few_shot_results[
+                        "validation_suggestions"
+                    ]
 
             except Exception:
                 # Don't fail the parsing if few-shot enhancement fails
@@ -145,7 +159,9 @@ def extract_completed_items() -> list[dict[str, str]]:
 
         # Look for completed items section
         if "## ✅ **Completed Items**" in content:
-            completed_section = content.split("## ✅ **Completed Items**")[1].split("##")[0]
+            completed_section = content.split("## ✅ **Completed Items**")[1].split(
+                "##"
+            )[0]
 
             # Extract completed items
             lines = completed_section.split("\n")
@@ -162,21 +178,38 @@ def extract_completed_items() -> list[dict[str, str]]:
         return []
 
 
-def _replace_between_fences(text: str, start_marker: str, end_marker: str, replacement: str) -> str:
+def _replace_between_fences(
+    text: str, start_marker: str, end_marker: str, replacement: str
+) -> str:
     """Replace content between fenced markers"""
     if start_marker in text and end_marker in text:
-        pattern = re.compile(re.escape(start_marker) + r"[\s\S]*?" + re.escape(end_marker))
-        return pattern.sub(start_marker + "\n" + replacement.strip() + "\n" + end_marker, text)
+        pattern = re.compile(
+            re.escape(start_marker) + r"[\s\S]*?" + re.escape(end_marker)
+        )
+        return pattern.sub(
+            start_marker + "\n" + replacement.strip() + "\n" + end_marker, text
+        )
     return text
 
 
-def _add_fenced_section(text: str, start_marker: str, end_marker: str, content: str) -> str:
+def _add_fenced_section(
+    text: str, start_marker: str, end_marker: str, content: str
+) -> str:
     """Add a new fenced section if it doesn't exist"""
     if start_marker in text and end_marker in text:
         return _replace_between_fences(text, start_marker, end_marker, content)
     else:
         # Add at the end before the last section
-        return text.rstrip() + "\n\n" + start_marker + "\n" + content + "\n" + end_marker + "\n"
+        return (
+            text.rstrip()
+            + "\n\n"
+            + start_marker
+            + "\n"
+            + content
+            + "\n"
+            + end_marker
+            + "\n"
+        )
 
 
 def load_doc_health() -> dict[str, Any]:
@@ -206,7 +239,9 @@ def load_doc_health() -> dict[str, Any]:
             data = json.loads(report_path.read_text())
             health["timestamp"] = data.get("timestamp", health["timestamp"])
             warnings = data.get("warnings", [])
-            health["invariant_warnings"] = sum(1 for w in warnings if isinstance(w, dict) and "invariant_issues" in w)
+            health["invariant_warnings"] = sum(
+                1 for w in warnings if isinstance(w, dict) and "invariant_issues" in w
+            )
             if health["files_checked"] is None:
                 health["files_checked"] = data.get("files_checked")
         except Exception:
@@ -225,7 +260,9 @@ def render_priorities_block(priorities: list[dict[str, str]]) -> str:
     lines.append("")
 
     for i, priority in enumerate(priorities, 1):
-        lines.append(f"{i}. **{priority['id']}**: {priority['title']} ({priority['points']} points)")
+        lines.append(
+            f"{i}. **{priority['id']}**: {priority['title']} ({priority['points']} points)"
+        )
         if priority["problem"]:
             lines.append(f"   - {priority['problem']}")
         lines.append("")
@@ -260,7 +297,9 @@ def render_doc_health_block(health: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -> tuple[bool, str]:
+def update_memory_context(
+    dry_run: bool = False, enable_few_shot: bool = True
+) -> tuple[bool, str]:
     """Update 100_memory/100_cursor-memory-context.md with current state"""
 
     # Extract current state
@@ -290,11 +329,15 @@ def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -
 
     # Update completed items section
     completed_text = render_completed_block(completed)
-    updated_content = _add_fenced_section(updated_content, FENCE_COMPLETED_START, FENCE_COMPLETED_END, completed_text)
+    updated_content = _add_fenced_section(
+        updated_content, FENCE_COMPLETED_START, FENCE_COMPLETED_END, completed_text
+    )
 
     # Update health section
     health_text = render_doc_health_block(health)
-    updated_content = _add_fenced_section(updated_content, FENCE_HEALTH_START, FENCE_HEALTH_END, health_text)
+    updated_content = _add_fenced_section(
+        updated_content, FENCE_HEALTH_START, FENCE_HEALTH_END, health_text
+    )
 
     # Update timestamp
     updated_content = re.sub(
@@ -308,7 +351,9 @@ def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -
         print("🔍 DRY RUN - Preview of changes:")
         print(f"📋 Priorities to update: {len(priorities)} items")
         print(f"✅ Completed items to update: {len(completed)} items")
-        print(f"📊 Health data to update: {health.get('files_checked', 'n/a')} files checked")
+        print(
+            f"📊 Health data to update: {health.get('files_checked', 'n/a')} files checked"
+        )
 
         if content != updated_content:
             print("✅ Changes would be applied")
@@ -336,9 +381,13 @@ def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -
 def main():
     """Main function with command line argument support"""
     parser = argparse.ArgumentParser(description="Update Cursor Memory Context")
-    parser.add_argument("--dry-run", action="store_true", help="Preview changes without applying them")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Preview changes without applying them"
+    )
     parser.add_argument("--verbose", action="store_true", help="Show detailed output")
-    parser.add_argument("--no-few-shot", action="store_true", help="Disable few-shot enhanced parsing")
+    parser.add_argument(
+        "--no-few-shot", action="store_true", help="Disable few-shot enhanced parsing"
+    )
 
     args = parser.parse_args()
 
@@ -347,7 +396,9 @@ def main():
         print("🔍 Running in dry-run mode")
 
     try:
-        success, message = update_memory_context(dry_run=args.dry_run, enable_few_shot=not args.no_few_shot)
+        success, message = update_memory_context(
+            dry_run=args.dry_run, enable_few_shot=not args.no_few_shot
+        )
         print(message)
 
         if not success:
