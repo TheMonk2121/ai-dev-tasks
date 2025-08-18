@@ -10,8 +10,13 @@ python3 scripts/prime_cursor_chat.py planner "current project status and core do
 
 **Then copy the entire bundle output into the chat as the first message.**
 
+## 🚨 CRITICAL: Code Copying Safety
+
+**BEFORE copying any code from existing files, you MUST check `400_guides/400_code-criticality-guide.md` to understand file tiers and sanitize code to prevent Unicode character issues.**
+
 ## Core Rules
 
+- **Code Copying Safety**: Check criticality guide before copying any code
 - **Formatting**: No bracketed placeholders in Markdown; prefer backticks/quotes
 - **PRD Linkage**: Always include backlog item reference and run validator: `python3 scripts/validate_prd_backlog_linkage.py`
 - **Memory**: Use database-based rehydration before reading files directly
@@ -19,6 +24,7 @@ python3 scripts/prime_cursor_chat.py planner "current project status and core do
 ## Modular Rules
 
 See `.cursor/rules/**` for detailed rules:
+- `.cursor/rules/code-copying-safety.cursorrules` - **CRITICAL**: Code copying safety and Unicode prevention
 - `.cursor/rules/onboarding.cursorrules` - Memory rehydration and session startup
 - `.cursor/rules/formatting.cursorrules` - Markdown and documentation standards
 - `.cursor/rules/prd-linkage.cursorrules` - PRD-backlog linkage requirements

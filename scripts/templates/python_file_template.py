@@ -1,12 +1,12 @@
-#!/usr/bin/env python3.12.123.11
+#!/usr/bin/env python3.12
 """
-[Module Description]
+Module Description
 
-This module provides [brief description of functionality].
+This module provides brief description of functionality.
 
-Author: [Your Name]
+Author: Your Name
 Version: 1.0
-Last Updated: [Date]
+Last Updated: Date
 """
 
 # Standard library imports (always first)
