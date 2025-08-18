@@ -162,10 +162,19 @@ Core Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+This README is a navigation stub for core workflows.
 
 ## Usage
 
-[Describe how to use this document or system]
+Use the following canonical guides:
+- ../400_guides/400_project-overview.md
+- ../400_guides/400_system-overview.md
+- 000_backlog.md
 
-<!-- README_AUTOFIX_END -->
+## Owner
+
+Core Workflow Maintainers
+
+## Last Reviewed
+
+2025-08-17

@@ -162,3 +162,9 @@ cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "DSPy integrati
 
 Remember: This is a sophisticated AI development ecosystem. Always check the memory context first,
 then dive deeper into specific files as needed
+
+## Markdown Output Rules
+
+- Do not emit bracketed placeholders in Markdown (e.g., `[Describe the purpose ...]`, `[Owner ...]`). These can be parsed as link references and break rendering.
+- Use plain text prompts instead, e.g., `Describe the purpose and scope of this document`.
+- If emphasis is needed, prefer backticks or blockquotes, not square brackets.

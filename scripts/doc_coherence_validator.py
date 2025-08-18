@@ -407,6 +407,21 @@ README_STALE_DAYS = int(os.getenv("VALIDATOR_README_STALE_DAYS", "120"))
 README_GOVERNANCE_ENABLED = os.getenv("VALIDATOR_README_GOVERNANCE_ENABLED", "1") == "1"
 STRICT_README_GOVERNANCE = os.getenv("VALIDATOR_STRICT_README_GOVERNANCE", "0") == "1"
 
+# Docs impact gate constants
+DOCS_IMPACT_ENABLED = os.getenv("VALIDATOR_DOCS_IMPACT_ENABLED", "1") == "1"
+STRICT_DOCS_IMPACT = os.getenv("VALIDATOR_STRICT_DOCS_IMPACT", "0") == "1"
+DOCS_IMPACT_TARGET_PREFIXES = (
+    "dspy-rag-system/src/vector_store/",
+    "src/vector_store/",
+)
+DOCS_IMPACT_REQUIRED = (
+    "400_guides/400_system-overview.md",
+    "500_reference-cards.md",
+    "401_consensus-log.md",
+    "dspy-rag-system/src/vector_store/README.md",
+    "dspy-rag-system/README.md",
+)
+
 # README scoping constants
 README_SCOPE_DIRS = {
     "",

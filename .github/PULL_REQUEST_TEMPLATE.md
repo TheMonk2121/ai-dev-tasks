@@ -59,3 +59,14 @@ Validator Report:
 
 ## Related Issues
 <!-- Link to related issues or backlog items -->
+
+## 📚 README / Docs Governance
+- [ ] This PR does not add nonstandard README names (only `README.md` / `README-dev.md`)
+- [ ] If adding/updating a README, it includes: Purpose, Usage/Integration, Owner, Last reviewed
+- [ ] New README meets Creation Criteria (public surface / runbook / config contract / topical hub)
+- [ ] If touching public-surface directories (e.g., `dspy-rag-system/src/vector_store/`), updated at least one of:
+  - `400_guides/400_system-overview.md`
+  - `500_reference-cards.md`
+  - `401_consensus-log.md`
+  - Local README (`dspy-rag-system/src/vector_store/README.md` or `dspy-rag-system/README.md`)
+- [ ] If no docs were touched, explanation is provided for why there is no documentation impact

@@ -112,7 +112,7 @@ vs = get_vector_store(mode="core", db_connection_string=dsn)
 
 ## Owner
 
-[Document owner/maintainer information]
+RAG Subsystem Maintainers
 
 ## Purpose
 

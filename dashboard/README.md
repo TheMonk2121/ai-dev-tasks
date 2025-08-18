@@ -281,7 +281,7 @@ For issues or questions:
 
 ## Owner
 
-[Document owner/maintainer information]
+Dashboard Team
 
 ## Purpose
 

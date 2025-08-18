@@ -399,14 +399,24 @@ python3 test_csv_functionality.py
 
 ## Owner
 
-[Document owner/maintainer information]
+Document owner/maintainer information
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->
+
+## Vector Store Architecture (Core vs Perf)
+
+- CoreVectorStore (hybrid search baseline)
+- PerfVectorStore (performance, metrics, caching)
+- Use `from vector_store import get_vector_store` and select `mode="core"|"perf"`.
+
+## Last Reviewed
+
+2025-08-17

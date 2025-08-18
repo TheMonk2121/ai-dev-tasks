@@ -3,8 +3,9 @@
 README autofix tool - idempotent section insertion with markers.
 
 Usage:
-    python3 scripts/readme_autofix.py --dry-run  # Default: analyze only
-    python3 scripts/readme_autofix.py --write    # Actually modify files
+    python3 scripts/readme_autofix.py              # Analyze only (dry-run)
+    python3 scripts/readme_autofix.py --dry-run     # Explicit dry-run
+    python3 scripts/readme_autofix.py --write       # Actually modify files
     python3 scripts/readme_autofix.py --scope 400_guides  # Limit scope
     python3 scripts/readme_autofix.py --root /path/to/repo  # Custom root
 """
@@ -15,7 +16,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Optional
 
 from readme_consts import (
     AUTOFIX_MARKER_END,
@@ -28,7 +29,7 @@ from readme_consts import (
 )
 
 
-def discover_readme_files(root: str) -> List[str]:
+def discover_readme_files(root: str) -> list[str]:
     """Discover README files within scope."""
     readme_files = []
     root_path = Path(root)
@@ -67,7 +68,7 @@ def has_section_synonym(content: str, section_type: str) -> bool:
     return False
 
 
-def find_marker_block(content: str) -> Optional[Tuple[int, int]]:
+def find_marker_block(content: str) -> Optional[tuple[int, int]]:
     """Find existing autofix marker block, return (start, end) positions."""
     start_match = re.search(re.escape(AUTOFIX_MARKER_START), content)
     end_match = re.search(re.escape(AUTOFIX_MARKER_END), content)
@@ -81,7 +82,7 @@ def infer_owner(file_path: str) -> str:
     """Infer owner based on file path patterns."""
     # Extract the relative path from the full path
     path_parts = file_path.split(os.sep)
-    for i, part in enumerate(path_parts):
+    for part in path_parts:
         if part in OWNER_PATTERNS:
             return OWNER_PATTERNS[part]
         # Check for patterns with trailing slash
@@ -90,7 +91,7 @@ def infer_owner(file_path: str) -> str:
     return "TBD"
 
 
-def get_missing_sections(content: str) -> Set[str]:
+def get_missing_sections(content: str) -> set[str]:
     """Identify which required sections are missing."""
     missing = set()
 
@@ -109,7 +110,9 @@ def get_missing_sections(content: str) -> Set[str]:
     return missing
 
 
-def build_marker_content(missing_sections: Set[str], file_path: str, write_mode: bool) -> str:
+def build_marker_content(
+    missing_sections: set[str], file_path: str, write_mode: bool
+) -> str:
     """Build content for the autofix marker block."""
     lines = [AUTOFIX_MARKER_START]
     lines.append(f"# Auto-generated sections for {os.path.basename(file_path)}")
@@ -124,10 +127,12 @@ def build_marker_content(missing_sections: Set[str], file_path: str, write_mode:
             if section == "owner":
                 owner = infer_owner(file_path)
                 if owner != "TBD":
-                    template = template.replace("[Document owner/maintainer information]", owner)
+                    template = template.replace(
+                        "Document owner/maintainer information", owner
+                    )
             elif section == "last_reviewed" and write_mode:
                 template = template.replace(
-                    "[Date when this document was last reviewed]", datetime.date.today().isoformat()
+                    "YYYY-MM-DD", datetime.date.today().isoformat()
                 )
 
             lines.append("")
@@ -141,7 +146,7 @@ def build_marker_content(missing_sections: Set[str], file_path: str, write_mode:
     return "\n".join(lines)
 
 
-def process_readme_file(file_path: str, write_mode: bool = False) -> Dict[str, Any]:
+def process_readme_file(file_path: str, write_mode: bool = False) -> dict[str, Any]:
     """Process a single README file, return analysis results."""
     try:
         with open(file_path, encoding="utf-8", errors="strict") as f:
@@ -154,14 +159,24 @@ def process_readme_file(file_path: str, write_mode: bool = False) -> Dict[str, A
             "modified": False,
         }
     except FileNotFoundError:
-        return {"file": file_path, "error": "File not found", "missing_sections": set(), "modified": False}
+        return {
+            "file": file_path,
+            "error": "File not found",
+            "missing_sections": set(),
+            "modified": False,
+        }
 
     missing_sections = get_missing_sections(content)
     marker_block = find_marker_block(content)
 
     # If no missing sections and no marker block, file is complete
     if not missing_sections and not marker_block:
-        return {"file": file_path, "missing_sections": set(), "modified": False, "status": "complete"}
+        return {
+            "file": file_path,
+            "missing_sections": set(),
+            "modified": False,
+            "status": "complete",
+        }
 
     # If no missing sections but has marker block, file is complete (marker can be removed)
     if not missing_sections and marker_block:
@@ -172,11 +187,26 @@ def process_readme_file(file_path: str, write_mode: bool = False) -> Dict[str, A
             if new_content != content:
                 with open(file_path, "w", encoding="utf-8") as f:
                     f.write(new_content)
-                return {"file": file_path, "missing_sections": set(), "modified": True, "status": "cleaned"}
+                return {
+                    "file": file_path,
+                    "missing_sections": set(),
+                    "modified": True,
+                    "status": "cleaned",
+                }
             else:
-                return {"file": file_path, "missing_sections": set(), "modified": False, "status": "complete"}
+                return {
+                    "file": file_path,
+                    "missing_sections": set(),
+                    "modified": False,
+                    "status": "complete",
+                }
         else:
-            return {"file": file_path, "missing_sections": set(), "modified": False, "status": "complete"}
+            return {
+                "file": file_path,
+                "missing_sections": set(),
+                "modified": False,
+                "status": "complete",
+            }
 
     if write_mode:
         marker_content = build_marker_content(missing_sections, file_path, write_mode)
@@ -194,7 +224,11 @@ def process_readme_file(file_path: str, write_mode: bool = False) -> Dict[str, A
         def normalize_timestamps(text):
             import re
 
-            return re.sub(r"# Generated: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+", "# Generated: TIMESTAMP", text)
+            return re.sub(
+                r"# Generated: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+",
+                "# Generated: TIMESTAMP",
+                text,
+            )
 
         normalized_new = normalize_timestamps(new_content)
         normalized_old = normalize_timestamps(content)
@@ -202,19 +236,45 @@ def process_readme_file(file_path: str, write_mode: bool = False) -> Dict[str, A
         if normalized_new != normalized_old:
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(new_content)
-            return {"file": file_path, "missing_sections": missing_sections, "modified": True, "status": "updated"}
+            return {
+                "file": file_path,
+                "missing_sections": missing_sections,
+                "modified": True,
+                "status": "updated",
+            }
         else:
-            return {"file": file_path, "missing_sections": missing_sections, "modified": False, "status": "no_change"}
+            return {
+                "file": file_path,
+                "missing_sections": missing_sections,
+                "modified": False,
+                "status": "no_change",
+            }
     else:
-        return {"file": file_path, "missing_sections": missing_sections, "modified": False, "status": "dry_run"}
+        return {
+            "file": file_path,
+            "missing_sections": missing_sections,
+            "modified": False,
+            "status": "dry_run",
+        }
 
 
 def main():
     parser = argparse.ArgumentParser(description="README autofix tool")
-    parser.add_argument("--write", action="store_true", help="Actually modify files (default: dry-run)")
-    parser.add_argument("--root", default=".", help="Root directory to scan (default: current)")
-    parser.add_argument("--scope", help="Limit scope to specific directory (e.g., 400_guides)")
-    parser.add_argument("--owners-map", help="Custom owners mapping file (not implemented)")
+    parser.add_argument(
+        "--write", action="store_true", help="Actually modify files (default: dry-run)"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Explicit dry-run (default behavior)"
+    )
+    parser.add_argument(
+        "--root", default=".", help="Root directory to scan (default: current)"
+    )
+    parser.add_argument(
+        "--scope", help="Limit scope to specific directory (e.g., 400_guides)"
+    )
+    parser.add_argument(
+        "--owners-map", help="Custom owners mapping file (not implemented)"
+    )
 
     args = parser.parse_args()
 
@@ -255,7 +315,9 @@ def main():
     # Summary
     print("\nSummary:")
     print(f"- Files processed: {len(readme_files)}")
-    print(f"- Files with missing sections: {len([r for r in results if r.get('missing_sections')])}")
+    print(
+        f"- Files with missing sections: {len([r for r in results if r.get('missing_sections')])}"
+    )
     print(f"- Total missing sections: {total_missing}")
 
     if args.write:

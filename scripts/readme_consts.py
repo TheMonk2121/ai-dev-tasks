@@ -20,10 +20,10 @@ PRESERVED_HEADERS = {
 
 # Default section templates
 SECTION_TEMPLATES = {
-    "purpose": "## Purpose\n\n[Describe the purpose and scope of this document]",
-    "usage": "## Usage\n\n[Describe how to use this document or system]",
-    "owner": "## Owner\n\n[Document owner/maintainer information]",
-    "last_reviewed": "## Last Reviewed\n\n[Date when this document was last reviewed]",
+    "purpose": "## Purpose\n\nDescribe the purpose and scope of this document",
+    "usage": "## Usage\n\nDescribe how to use this document or system",
+    "owner": "## Owner\n\nDocument owner/maintainer information",
+    "last_reviewed": "## Last Reviewed\n\nYYYY-MM-DD",
 }
 
 # Marker patterns for autofix
@@ -31,9 +31,23 @@ AUTOFIX_MARKER_START = "<!-- README_AUTOFIX_START -->"
 AUTOFIX_MARKER_END = "<!-- README_AUTOFIX_END -->"
 
 # Scope configuration
-README_SCOPE_DIRS = ["400_guides/", "000_core/", "100_memory/", "200_setup/", "300_examples/", "500_reference-cards.md"]
+README_SCOPE_DIRS = [
+    "400_guides/",
+    "000_core/",
+    "100_memory/",
+    "200_setup/",
+    "300_examples/",
+    "500_reference-cards.md",
+]
 
-README_IGNORE_SEGMENTS = ["node_modules", "vendor", "600_archives", ".git", "__pycache__", ".pytest_cache"]
+README_IGNORE_SEGMENTS = [
+    "node_modules",
+    "vendor",
+    "600_archives",
+    ".git",
+    "__pycache__",
+    ".pytest_cache",
+]
 
 # Owner inference patterns (exact prefix matches)
 OWNER_PATTERNS = {

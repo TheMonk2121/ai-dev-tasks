@@ -63,6 +63,12 @@ jobs:
         env:
           DIFF_BASE_SHA: ${{ steps.base.outputs.base_sha }}
           VALIDATOR_REFERENCES_FAIL: '1'
+          VALIDATOR_README_GOVERNANCE_ENABLED: '1'
+          VALIDATOR_STRICT_README_GOVERNANCE: '1'
+          VALIDATOR_DOCS_IMPACT_ENABLED: '1'
+          VALIDATOR_STRICT_DOCS_IMPACT: '1'
+          VALIDATOR_ARCHIVE_IMMUTABLE_ENABLED: '1'
+          VALIDATOR_STRICT_ARCHIVE_IMMUTABLE: '0'
         run: |
           echo "Using DIFF_BASE_SHA=$DIFF_BASE_SHA"
           python3 scripts/doc_coherence_validator.py \
