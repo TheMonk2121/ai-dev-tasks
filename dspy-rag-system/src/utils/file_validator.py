@@ -30,7 +30,7 @@ class FileCorruptionError(Exception):
 class EnhancedFileValidator:
     """Enhanced file validator with corruption detection and quarantine system"""
     
-    def __init__(self, quarantine_dir: Optional[str] = None):
+    def __init__(self, quarantine_dir: str | None = None):
         """
         Initialize the enhanced file validator.
         
@@ -50,8 +50,8 @@ class EnhancedFileValidator:
     
     def validate_file_with_tracing(self, 
                                  file_path: str, 
-                                 file_size_bytes: Optional[int] = None,
-                                 correlation_id: Optional[str] = None) -> Dict[str, Any]:
+                                 file_size_bytes: int | None = None,
+                                 correlation_id: str | None = None) -> dict[str, Any]:
         """
         Validate file with comprehensive checks and OpenTelemetry tracing.
         
@@ -166,7 +166,7 @@ class EnhancedFileValidator:
                 logger.error(f"Unexpected error during file validation: {file_path} - {e}")
                 return results
     
-    def _validate_basic_file_properties(self, file_path: str, file_size_bytes: Optional[int] = None) -> Dict[str, Any]:
+    def _validate_basic_file_properties(self, file_path: str, file_size_bytes: int | None = None) -> dict[str, Any]:
         """Validate basic file properties"""
         if not os.path.exists(file_path):
             raise FileValidationError(f"File does not exist: {file_path}")
@@ -197,7 +197,7 @@ class EnhancedFileValidator:
             "file_path_valid": True
         }
     
-    def _validate_file_integrity(self, file_path: str) -> Dict[str, Any]:
+    def _validate_file_integrity(self, file_path: str) -> dict[str, Any]:
         """Validate file integrity using checksums"""
         try:
             # Calculate SHA-256 checksum
@@ -223,7 +223,7 @@ class EnhancedFileValidator:
         except Exception as e:
             raise FileCorruptionError(f"Failed to validate file integrity: {e}")
     
-    def _check_file_specific_integrity(self, file_path: str) -> List[str]:
+    def _check_file_specific_integrity(self, file_path: str) -> list[str]:
         """Check file-specific integrity based on file type"""
         issues = []
         _, ext = os.path.splitext(file_path)
@@ -268,7 +268,7 @@ class EnhancedFileValidator:
         
         return issues
     
-    def _detect_corruption(self, file_path: str) -> Dict[str, Any]:
+    def _detect_corruption(self, file_path: str) -> dict[str, Any]:
         """Detect file corruption using various methods"""
         corruption_indicators = []
         
@@ -307,7 +307,7 @@ class EnhancedFileValidator:
         except Exception as e:
             raise FileCorruptionError(f"Corruption detection failed: {e}")
     
-    def _validate_security(self, file_path: str) -> Dict[str, Any]:
+    def _validate_security(self, file_path: str) -> dict[str, Any]:
         """Validate file security"""
         security_violations = []
         
@@ -358,7 +358,7 @@ class EnhancedFileValidator:
             logger.error(f"Failed to quarantine file {file_path}: {e}")
             raise FileValidationError(f"Quarantine failed: {e}")
     
-    def get_quarantine_status(self) -> Dict[str, Any]:
+    def get_quarantine_status(self) -> dict[str, Any]:
         """Get quarantine directory status"""
         try:
             quarantine_files = []
@@ -406,11 +406,11 @@ class EnhancedFileValidator:
 file_validator = EnhancedFileValidator()
 
 def validate_file_with_tracing(file_path: str, 
-                             file_size_bytes: Optional[int] = None,
-                             correlation_id: Optional[str] = None) -> Dict[str, Any]:
+                             file_size_bytes: int | None = None,
+                             correlation_id: str | None = None) -> dict[str, Any]:
     """Validate file with comprehensive checks and OpenTelemetry tracing"""
     return file_validator.validate_file_with_tracing(file_path, file_size_bytes, correlation_id)
 
-def get_quarantine_status() -> Dict[str, Any]:
+def get_quarantine_status() -> dict[str, Any]:
     """Get quarantine directory status"""
     return file_validator.get_quarantine_status() 

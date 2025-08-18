@@ -1,31 +1,39 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- DATABASE_SYNC: REQUIRED -->
-# 📜 **CORE CONSTITUTION RULES**---
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 
-## 📜**CORE CONSTITUTION RULES**{#tldr}
+<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
+
+<!-- DATABASE_SYNC: REQUIRED -->
+
+# 📜 **CORE CONSTITUTION RULES**—
+
+## 📜**CORE CONSTITUTION RULES**
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
+|----|----|----|
 | Core constitution rules and safety guidelines for AI development | Before any file operations or high-risk changes | Follow the mandatory file analysis and safety procedures |
 
-- **what this file is**: Core constitution rules and safety guidelines for AI development ecosystem.
+- **what this file is**: Core constitution rules and safety guidelines
+  for AI development ecosystem.
 
-- **read when**: Before any file operations, high-risk changes, or when establishing safety protocols.
+- **read when**: Before any file operations, high-risk changes, or when
+  establishing safety protocols.
 
-- **do next**: Follow the mandatory file analysis procedures and safety validation steps.
+- **do next**: Follow the mandatory file analysis procedures and safety
+  validation steps.
 
 ## 🎯 **Current Status**
 
-- **Status**: ✅ **ACTIVE** - Core constitution rules maintained and enforced
+- **Status**: ✅ **ACTIVE** - Core constitution rules maintained and
+  enforced
 
 - **Priority**: 🔥 Critical - Essential for safety and governance
 
 - **Points**: 5 - High complexity, safety importance
 
-- **Dependencies**: 400_guides/400_file-analysis-guide.md, 100_memory/100_cursor-memory-context.md
+- **Dependencies**: 400_guides/400_file-analysis-guide.md,
+  100_memory/100_cursor-memory-context.md
 
 - **Next Steps**: Regular review and enforcement of constitution rules
 
@@ -34,12 +42,15 @@
 - **MANDATORY BEFORE ANY FILE OPERATIONS**
 
 - **1. File Analysis Requirement** - ALWAYS read
+
   - `400_guides/400_file-analysis-guide.md` completely (463 lines)
   - Complete 6-step mandatory analysis for any file operations
   - Show all cross-references before proceeding
-  - Get explicit user approval for any file deletion, deprecation, or major changes
+  - Get explicit user approval for any file deletion, deprecation, or
+    major changes
 
-- **2. Critical File Protection** - Never delete files with `<!-- CRITICAL_FILE: true -->` metadata
+- **2. Critical File Protection** - Never delete files with
+  `<!-- CRITICAL_FILE: true -->` metadata
 
   - Never archive files with `<!-- ARCHIVE_PROTECTED: true -->` metadata
   - Always check dependencies before file operations
@@ -48,26 +59,32 @@
 - **3. Documentation Coherence**
 
   - Maintain cross-reference integrity across all documentation
-  - Preserve file naming convention patterns (400_, 500_, etc.)
+  - Preserve file naming convention patterns (400\_, 500\_, etc.)
   - Ensure documentation coherence before any changes
-  - Validate against `400_guides/400_context-priority-guide.md` before operations
+  - Validate against
+    `400_guides/400_cursor-context-engineering-guide.md` before
+    operations
 
 ### **Article II: Context Preservation & Memory Management**
 
 - **1. Memory Context Priority**
 
-  - ALWAYS read `100_memory/100_cursor-memory-context.md` first in any new session
-  - Check `000_core/000_backlog.md` for current priorities and dependencies
+  - ALWAYS read `100_memory/100_cursor-memory-context.md` first in any
+    new session
+  - Check `000_core/000_backlog.md` for current priorities and
+    dependencies
   - Review `400_guides/400_system-overview.md` for technical context
-- Use existing workflows (`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`,
-`000_core/003_process-task-list.md`)
+
+- Use existing workflows (`000_core/001_create-prd.md`,
+  `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`)
 
 - **2. Context Hierarchy Enforcement**
-- **HIGH Priority**: `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`,
-`000_core/000_backlog.md`
 
-- **MEDIUM Priority**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`,
-`000_core/003_process-task-list.md`
+- **HIGH Priority**: `100_memory/100_cursor-memory-context.md`,
+  `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
+
+- **MEDIUM Priority**: `000_core/001_create-prd.md`,
+  `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`
 
   - **LOW Priority**: Domain-specific files and implementation details
 
@@ -80,19 +97,23 @@
 
 ### **Article III: Error Prevention & Recovery**
 
-- **1. Multi-Turn Process Enforcement** - Use mandatory checklist enforcement for high-risk operations
+- **1. Multi-Turn Process Enforcement** - Use mandatory checklist
+  enforcement for high-risk operations
 
   - Implement multi-turn prompts with validation steps
   - Require explicit confirmation for critical changes
   - Use guardrails and constraint frameworks
 
-- **2. Error Recovery Patterns** - Follow `400_guides/400_comprehensive-coding-best-practices.md` for all error handling
+- **2. Error Recovery Patterns** - Follow
+  `400_guides/400_comprehensive-coding-best-practices.md` for all error
+  handling
 
   - Use automated recovery scripts when available
   - Implement systematic workflows for common issues
   - Maintain emergency procedures for critical failures
 
-- **3. Safety Validation** - Validate all changes against safety requirements
+- **3. Safety Validation** - Validate all changes against safety
+  requirements
 
   - Use regression testing for critical operations
   - Implement rollback procedures for major changes
@@ -100,47 +121,70 @@
 
 ### **Article IV: Documentation & Knowledge Management**
 
-- **1. Documentation Architecture** - Follow modular, (Mutually Exclusive, Collectively Exhaustive)-aligned
-documentation patterns
+- **1. Documentation Architecture** - Follow modular, (Mutually
+  Exclusive, Collectively Exhaustive)-aligned documentation patterns
 
 ### **Article V: Governance & Repository Management**
 
-- **1. Repo Layout & Import Resolution Governance** - All issues related to:
-  - File organization (e.g. duplicate configs, split test dirs)
+- **1. Repo Layout & Import Resolution Governance** - All issues related
+  to:
+
+  - File organization (e.g. duplicate configs, split test dirs)
   - Import resolution conflicts
   - Environment setup for deterministic execution
   - Configuration file consolidation
   - Directory structure normalization
 
-  **Are automatically classified as P0 Governance Items**. They are non-negotiable prerequisites for feature work and block all dependent backlog items until resolved.
+  **Are automatically classified as P0 Governance Items**. They are
+  non-negotiable prerequisites for feature work and block all dependent
+  backlog items until resolved.
 
-- **2. Archive Immutability** - All files under `600_archives/` are immutable after archival:
-  - **Disallowed**: Content edits, renames, or deletions of existing archived files
-  - **Allowed**: Adding new files (fresh archives), and adding separate context notes in `600_archives/NOTES/`
-  - **Amendment Process**: Any update must be a new file (amendment note), not an edit of the archived file
-  - **Enforcement**: Validator will WARN (migration window) then FAIL (blocking) on archive modifications
+- **2. Archive Immutability** - All files under `600_archives/` are
+  immutable after archival:
+
+  - **Disallowed**: Content edits, renames, or deletions of existing
+    archived files
+  - **Allowed**: Adding new files (fresh archives), and adding separate
+    context notes in `600_archives/NOTES/`
+  - **Amendment Process**: Any update must be a new file (amendment
+    note), not an edit of the archived file
+  - **Enforcement**: Validator will WARN (migration window) then FAIL
+    (blocking) on archive modifications
 
 - **3. Priority Structure Enforcement**
-  - **P0 Lane**: Governance/trust issues (repo structure, import resolution, validator configuration, archive integrity)
-  - **🔥 Critical**: Feature work (implementation, new capabilities, performance optimization)
-  - **Dependencies**: All feature work must wait for P0 governance items to be resolved
+
+  - **P0 Lane**: Governance/trust issues (repo structure, import
+    resolution, validator configuration, archive integrity)
+  - **🔥 Critical**: Feature work (implementation, new capabilities,
+    performance optimization)
+  - **Dependencies**: All feature work must wait for P0 governance items
+    to be resolved
 
 - **4. Governance Decision Authority**
+
   - P0 items require immediate attention and cannot be deferred
-  - Feature work blocked by P0 items must be paused until governance is resolved
-  - All AI systems must respect P0 governance priority over feature development
+
+  - Feature work blocked by P0 items must be paused until governance is
+    resolved
+
+  - All AI systems must respect P0 governance priority over feature
+    development
 
   - Use self-contained chunks with explicit links
+
   - Implement tiered importance and priority cues
+
   - Maintain dynamic documentation with version control
 
-- **2. Knowledge Retrieval** - Use RAG systems for relevant context retrieval
+- **2. Knowledge Retrieval** - Use RAG systems for relevant context
+  retrieval
 
   - Implement span-level grounding for precise citations
   - Maintain hybrid search (dense + sparse) for optimal recall
   - Preserve semantic chunking boundaries
 
-- **3. Context Engineering** - Use DSPy assertions for code validation and reliability
+- **3. Context Engineering** - Use DSPy assertions for code validation
+  and reliability
 
   - Implement teleprompter optimization for continuous improvement
   - Maintain few-shot examples for AI pattern recognition
@@ -150,25 +194,29 @@ documentation patterns
 
 - **1. Workflow Chain Preservation**
 
-- Maintain `000_core/000_backlog.md → 000_core/001_create-prd.md → 000_core/002_generate-tasks.md →
-000_core/003_process-task-list.md` chain
+- Maintain
+  `000_core/000_backlog.md → 000_core/001_create-prd.md → 000_core/002_generate-tasks.md → 000_core/003_process-task-list.md`
+  chain
+
   - Preserve execution engine patterns and state management
   - Maintain automation workflows and n8n integration
   - Preserve research framework and systematic analysis
 
-- **2. Technology Stack Integrity** - Maintain Cursor Native AI + Specialized Agents foundation
+- **2. Technology Stack Integrity** - Maintain Cursor Native AI +
+  Specialized Agents foundation
 
   - Preserve DSPy framework with PostgreSQL vector store
   - Maintain n8n workflows for backlog management
   - Preserve real-time mission dashboard and monitoring
 
-- **3. Development Standards** - Follow contributing guidelines and development standards
+- **3. Development Standards** - Follow contributing guidelines and
+  development standards
 
   - Maintain code quality and testing requirements
   - Preserve security best practices and threat models
   - Maintain performance optimization and monitoring
 
----
+------------------------------------------------------------------------
 
 ## 🔧 **IMPLEMENTATION FRAMEWORK**
 
@@ -176,37 +224,39 @@ documentation patterns
 
 - **1. System Prompt Integration**
 
-```markdown
+``` markdown
    <!-- AI_CONSTITUTION_REFERENCE: 400_ai-constitution.md -->
    <!-- CONSTITUTION_RULES: File safety, Context preservation, Error prevention -->
 ```
 
-- **2. Workflow Integration** - Add constitution reference to all workflow files
+- **2. Workflow Integration** - Add constitution reference to all
+  workflow files
   - Include constitution rules in system prompts
   - Maintain constitution compliance in all operations
-
-- **3. Safety Validation** - Validate all operations against constitution rules
+- **3. Safety Validation** - Validate all operations against
+  constitution rules
   - Implement constitution compliance checking
   - Maintain constitution enforcement mechanisms
 
 ### **Constitution Enforcement**
 
-- **1. Pre-Operation Checks** - Validate against constitution rules before any operation
+- **1. Pre-Operation Checks** - Validate against constitution rules
+  before any operation
   - Check file safety requirements
   - Verify context preservation requirements
   - Confirm error prevention measures
-
-- **2. During Operation Monitoring** - Monitor for constitution rule violations
+- **2. During Operation Monitoring** - Monitor for constitution rule
+  violations
   - Implement real-time safety checks
   - Maintain context integrity throughout operations
   - Preserve critical rules and requirements
-
-- **3. Post-Operation Validation** - Verify constitution compliance after operations
+- **3. Post-Operation Validation** - Verify constitution compliance
+  after operations
   - Check for context loss or safety violations
   - Validate documentation coherence
   - Confirm system integrity
 
----
+------------------------------------------------------------------------
 
 ## 📊 **CONSTITUTION METRICS & MONITORING**
 
@@ -236,36 +286,47 @@ documentation patterns
 
 - **Rule Refinement**: Improve based on operational experience
 
-- **Integration Enhancement**: Strengthen constitution integration points
+- **Integration Enhancement**: Strengthen constitution integration
+  points
 
 - **Monitoring Enhancement**: Improve constitution compliance tracking
 
----
+------------------------------------------------------------------------
 
 ## 🚀 **CONSTITUTION DEPLOYMENT**
 
 ### **Phase 1: Immediate Implementation**
 
-- **1. System Integration**: Add constitution references to all critical files
-- **2. Workflow Integration**: Include constitution rules in all AI workflows
+- **1. System Integration**: Add constitution references to all critical
+  files
+- **2. Workflow Integration**: Include constitution rules in all AI
+  workflows
 - **3. Safety Validation**: Implement constitution compliance checking
-- **4. Documentation Update**: Update all documentation to reference constitution
+- **4. Documentation Update**: Update all documentation to reference
+  constitution
 
 ### **Phase 2: Enhanced Enforcement**
 
-- **1. Automated Compliance**: Implement automated constitution rule checking
+- **1. Automated Compliance**: Implement automated constitution rule
+  checking
 - **2. Real-time Monitoring**: Add constitution compliance monitoring
-- **3. Integration Testing**: Validate constitution integration across all systems
-- **4. Performance Optimization**: Optimize constitution enforcement performance
+- **3. Integration Testing**: Validate constitution integration across
+  all systems
+- **4. Performance Optimization**: Optimize constitution enforcement
+  performance
 
 ### **Phase 3: Advanced Features**
 
-- **1. Constitution Analytics**: Implement constitution effectiveness tracking
-- **2. Rule Optimization**: Optimize constitution rules based on usage patterns
-- **3. Integration Enhancement**: Strengthen constitution integration with all systems
-- **4. Research Integration**: Incorporate new research findings into constitution
+- **1. Constitution Analytics**: Implement constitution effectiveness
+  tracking
+- **2. Rule Optimization**: Optimize constitution rules based on usage
+  patterns
+- **3. Integration Enhancement**: Strengthen constitution integration
+  with all systems
+- **4. Research Integration**: Incorporate new research findings into
+  constitution
 
----
+------------------------------------------------------------------------
 
 ## 📚 **CONSTITUTION REFERENCES**
 
@@ -283,19 +344,24 @@ documentation patterns
 
 - `500_research-analysis-summary.md` - Research basis for constitution
 
-- `500_research/500_documentation-coherence-research.md` - Documentation patterns
+- `500_research/500_documentation-coherence-research.md` - Documentation
+  patterns
 
-- `500_research/500_maintenance-safety-research.md` - Safety research findings
+- `500_research/500_maintenance-safety-research.md` - Safety research
+  findings
 
 ### **Implementation Support**
 
-- `400_guides/400_comprehensive-coding-best-practices.md` - Error prevention and recovery
+- `400_guides/400_comprehensive-coding-best-practices.md` - Error
+  prevention and recovery
 
-- `400_guides/400_security-best-practices-guide.md` - Security requirements
+- `400_guides/400_security-best-practices-guide.md` - Security
+  requirements
 
-- `400_performance-optimization-guide_additional_resources.md` - Performance requirements
+- `400_performance-optimization-guide_additional_resources.md` -
+  Performance requirements
 
----
+------------------------------------------------------------------------
 
 ## ✅ **CONSTITUTION VALIDATION**
 
@@ -303,7 +369,8 @@ documentation patterns
 
 - [ ] **File Safety**: All file operations follow safety requirements
 
-- [ ] **Context Preservation**: No critical context loss in AI operations
+- [ ] **Context Preservation**: No critical context loss in AI
+  operations
 
 - [ ] **Error Prevention**: Systematic error prevention and recovery
 
@@ -311,19 +378,24 @@ documentation patterns
 
 - [ ] **System Integration**: Constitution integrated across all systems
 
-- [ ] **Compliance Monitoring**: Constitution compliance tracked and enforced
+- [ ] **Compliance Monitoring**: Constitution compliance tracked and
+  enforced
 
 ### **Success Metrics**
 
-- **Zero Critical Context Losses**: No loss of critical context in AI operations
+- **Zero Critical Context Losses**: No loss of critical context in AI
+  operations
 
-- **100% Safety Compliance**: All operations follow constitution safety rules
+- **100% Safety Compliance**: All operations follow constitution safety
+  rules
 
-- **Maintained System Integrity**: All systems preserve constitution requirements
+- **Maintained System Integrity**: All systems preserve constitution
+  requirements
 
-- **Enhanced AI Reliability**: Improved AI operation reliability and safety
+- **Enhanced AI Reliability**: Improved AI operation reliability and
+  safety
 
----
+------------------------------------------------------------------------
 
 - **Constitution Version**: 1.2
 - **Implementation Date**: 2024-08-07
@@ -346,16 +418,17 @@ governance_rules_added:
   - repo_layout_governance: 2025-08-16
   - archive_immutability: 2025-08-17
 - ->
+&#10;<!-- README_AUTOFIX_START -->
 
-<!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_ai-constitution.md
-# Generated: 2025-08-17T17:47:03.899246
+## Auto-generated sections for 400_ai-constitution.md
+
+## Generated: 2025-08-18T08:03:22.723232
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -363,10 +436,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

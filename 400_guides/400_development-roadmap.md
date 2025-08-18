@@ -1,10 +1,21 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
+
 <!-- MEMORY_CONTEXT: HIGH - Development timeline and strategic planning -->
+
 # 🗺️ Development Roadmap
+
+> Deprecated: The canonical roadmap is
+> `000_core/004_development-roadmap.md`. This file is retained only for
+> legacy link compatibility and now serves as a brief pointer. For
+> current milestones, sprints, and phases, read the core roadmap.
 
 ## 🗺️ Development Roadmap
 
@@ -13,14 +24,16 @@
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-|  |  |  |
+|-------------------|-----------|---------|
+|                   |           |         |
 
 - **what this file is**: Quick summary of 🗺️ Development Roadmap.
 
-- **read when**: When you need a fast orientation or before using this file in a workflow.
+- **read when**: When you need a fast orientation or before using this
+  file in a workflow.
 
-- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+- **do next**: Scan the headings below and follow any ‘Quick Start’ or
+  ‘Usage’ sections.
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Strategic planning maintained
 
@@ -28,7 +41,8 @@
 
 - **Points**: 5 - High complexity, strategic importance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 000_core/000_backlog.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
+  000_core/000_backlog.md
 
 - **Next Steps**: Update roadmap as priorities shift
 
@@ -38,8 +52,8 @@
 
 - Phase 2: Specialized agents (Research, Coder, Documentation)
 
-- Phase 3: Integration & optimization (agent coordination, context sharing)
-Sync tasks with `000_core/000_backlog.md`.
+- Phase 3: Integration & optimization (agent coordination, context
+  sharing) Sync tasks with `000_core/000_backlog.md`.
 
 - [ ] **Research Agent**: Implement deep research capabilities
 
@@ -49,31 +63,39 @@ Sync tasks with `000_core/000_backlog.md`.
 
 #### Specialized Agent Requirements (folded from archived `specialized_agent_requirements.md`)
 
-- Architecture: Cursor Native AI foundation + Research, Coder, Documentation agents with shared context
+- Architecture: Cursor Native AI foundation + Research, Coder,
+  Documentation agents with shared context
 
 - Integration: Unified command palette, context sharing across agents
 
-- Research Agent: deep technical/architecture/performance/security research; analysis/synthesis; report generation
+- Research Agent: deep technical/architecture/performance/security
+  research; analysis/synthesis; report generation
 
-- Coder Agent: code analysis, generation, refactoring, security/performance review; test generation
+- Coder Agent: code analysis, generation, refactoring,
+  security/performance review; test generation
 
-- Documentation Agent: technical writing, structure optimization, explanations; export formats
+- Documentation Agent: technical writing, structure optimization,
+  explanations; export formats
 
-- Shared Context: persistent storage, selective sharing, conflict resolution; access control and audit logging
+- Shared Context: persistent storage, selective sharing, conflict
+  resolution; access control and audit logging
 
-- Performance targets: sub‑second context access; agent responses 2–5s typical; concurrency supported
+- Performance targets: sub‑second context access; agent responses 2–5s
+  typical; concurrency supported
 
-- Roadmap tie‑in: implement agent framework, shared context, UI integration; then specialized capabilities and
-comprehensive testing
+- Roadmap tie‑in: implement agent framework, shared context, UI
+  integration; then specialized capabilities and comprehensive testing
 
-#### **Phase 4: Testing & Documentation (Week 5)**- [ ]**Integration Testing**: Comprehensive system testing
+#### **Phase 4: Testing & Documentation (Week 5)**- \[ \]**Integration Testing**: Comprehensive system testing
 
 - [ ] **Documentation**: Update all related documentation
 
 - [ ] **Deployment**: Production-ready implementation
 
-## 🎯 **Next 3 Sprints (September-October 2024)**###**Sprint 1: Advanced RAG & Extraction (September 2024)**####**B-043:
-LangExtract Pilot w/ Stratified 20-doc Set**-**Priority**: 🔥 **HIGH**- 3 points
+## 🎯 **Next 3 Sprints (September-October 2024)**\###**Sprint 1: Advanced RAG & Extraction (September 2024)**\####\*\*B-043:
+
+LangExtract Pilot w/ Stratified 20-doc Set**-**Priority**: 🔥**
+HIGH\*\*- 3 points
 
 - **Timeline**: Week 1-2
 
@@ -89,7 +111,7 @@ LangExtract Pilot w/ Stratified 20-doc Set**-**Priority**: 🔥 **HIGH**- 3 poin
 
 - **Goals**: Automated extraction service with n8n integration
 
-#### **B-045: RAG Schema Patch (Span*, Validated_flag, Raw_score)**-**Priority**: 🔥 **HIGH**- 2 points
+#### \*\*B-045: RAG Schema Patch (Span\*, Validated_flag, Raw_score)**-**Priority**: 🔥** HIGH\*\*- 2 points
 
 - **Timeline**: Week 3-4
 
@@ -97,7 +119,8 @@ LangExtract Pilot w/ Stratified 20-doc Set**-**Priority**: 🔥 **HIGH**- 3 poin
 
 - **Goals**: Enhanced RAG system with advanced schema
 
-### **Sprint 2: Performance & Benchmarking (October 2024)**####**B-046: 4-way Cost/Latency Benchmark**-**Priority**: 🔥
+### **Sprint 2: Performance & Benchmarking (October 2024)**\####**B-046: 4-way Cost/Latency Benchmark**-**Priority**: 🔥
+
 **HIGH**- 4 points
 
 - **Timeline**: Week 1-2
@@ -122,8 +145,9 @@ LangExtract Pilot w/ Stratified 20-doc Set**-**Priority**: 🔥 **HIGH**- 3 poin
 
 - **Goals**: Model confidence calibration system
 
-### **Sprint 3: Infrastructure & Automation (October 2024)**####**B-050: Enhance 002 Task Generation with
-Automation**-**Priority**: 🔧 **MEDIUM**- 2 points
+### **Sprint 3: Infrastructure & Automation (October 2024)**\####\*\*B-050: Enhance 002 Task Generation with
+
+Automation**-**Priority**: 🔧** MEDIUM\*\*- 2 points
 
 - **Timeline**: Week 1-2
 
@@ -141,14 +165,14 @@ Automation**-**Priority**: 🔧 **MEDIUM**- 2 points
 
 - **Goals**: Comprehensive repository maintenance automation
 
-## 📊 **Quarterly Goals (Q4 2024)**###**Q4 2024 Objectives**####**Q4 Goal 1: Advanced AI Model Integration**-**Target**:
+## 📊 **Quarterly Goals (Q4 2024)**\###**Q4 2024 Objectives**\####**Q4 Goal 1: Advanced AI Model Integration**-**Target**:
+
 Complete B-011 (Cursor Native AI + Specialized Agents)
 
 - **Success Metrics**:
   - 3 specialized agents operational
   - Integration testing complete
   - Documentation updated
-
 - **Timeline**: August-September 2024
 
 ### **Q4 Goal 2: Advanced RAG System**-**Target**: Complete B-043, B-044, B-045 (LangExtract + RAG Enhancement)
@@ -157,7 +181,6 @@ Complete B-011 (Cursor Native AI + Specialized Agents)
   - Entity/attribute extraction operational
   - n8n integration complete
   - Enhanced RAG schema implemented
-
 - **Timeline**: September-October 2024
 
 #### **Q4 Goal 3: Performance Optimization**-**Target**: Complete B-046, B-047 (Benchmarking + Auto-routing)
@@ -166,7 +189,6 @@ Complete B-011 (Cursor Native AI + Specialized Agents)
   - 4-way benchmark results
   - Auto-routing system operational
   - Performance improvements documented
-
 - **Timeline**: October 2024
 
 #### **Q4 Goal 4: Infrastructure Automation**-**Target**: Complete B-050, B-051, B-052 series
@@ -175,11 +197,11 @@ Complete B-011 (Cursor Native AI + Specialized Agents)
   - Automated task generation
   - PRD skeleton generator
   - Enhanced repository maintenance
-
 - **Timeline**: October-November 2024
 
-## 🚀 **Future Model Roadmap (2025)**###**Advanced Agent Specialization (Q1 2025)**####**B-034: Deep Research Agent
-Integration**-**Priority**: 🔥 **HIGH**- 5 points
+## 🚀 **Future Model Roadmap (2025)**\###**Advanced Agent Specialization (Q1 2025)**\####\*\*B-034: Deep Research Agent
+
+Integration**-**Priority**: 🔥** HIGH\*\*- 5 points
 
 - **Dependencies**: B-011 completion
 
@@ -203,7 +225,8 @@ Integration**-**Priority**: 🔥 **HIGH**- 5 points
 
 - **Timeline**: Q1 2025
 
-### **Advanced Model Orchestration (Q2 2025)**####**B-038: Advanced Model Orchestration**-**Priority**: 🔧 **MEDIUM**- 13
+### **Advanced Model Orchestration (Q2 2025)**\####**B-038: Advanced Model Orchestration**-**Priority**: 🔧 **MEDIUM**- 13
+
 points
 
 - **Dependencies**: B-034, B-035, B-036 completion
@@ -212,12 +235,14 @@ points
 
 - **Timeline**: Q2 2025
 
-### **Knowledge Graph & Vector Graph Integration (Q3 2025)**####**B-085: Vector Graph Foundation
-Research**-**Priority**: 🔧 **MEDIUM**- 5 points
+### **Knowledge Graph & Vector Graph Integration (Q3 2025)**\####\*\*B-085: Vector Graph Foundation
+
+Research**-**Priority**: 🔧** MEDIUM\*\*- 5 points
 
 - **Dependencies**: B-077 (Hybrid Search) completion
 
-- **Goals**: Research and evaluate vector graph technologies for complex relationship queries
+- **Goals**: Research and evaluate vector graph technologies for complex
+  relationship queries
 
 - **Timeline**: Q3 2025
 
@@ -225,7 +250,8 @@ Research**-**Priority**: 🔧 **MEDIUM**- 5 points
 
 - **Dependencies**: B-085 completion
 
-- **Goals**: Implement knowledge graph for entity-relationship mapping and multi-hop reasoning
+- **Goals**: Implement knowledge graph for entity-relationship mapping
+  and multi-hop reasoning
 
 - **Timeline**: Q3 2025
 
@@ -233,19 +259,22 @@ Research**-**Priority**: 🔧 **MEDIUM**- 5 points
 
 - **Dependencies**: B-086 completion
 
-- **Goals**: Combine vector similarity with graph traversal for advanced query capabilities
+- **Goals**: Combine vector similarity with graph traversal for advanced
+  query capabilities
 
 - **Timeline**: Q4 2025
 
-### **Future Migration (Q3 2025)**####**B-037: Future Model Migration (Backlog)**-**Priority**: 🔧 **MEDIUM**- 8 points
+### **Future Migration (Q3 2025)**\####**B-037: Future Model Migration (Backlog)**-**Priority**: 🔧 **MEDIUM**- 8 points
 
 - **Dependencies**: GGUF compatibility resolution
 
-- **Goals**: Evaluate future model options when compatibility and policy allow
+- **Goals**: Evaluate future model options when compatibility and policy
+  allow
 
 - **Timeline**: Q3 2025 (conditional)
 
-## 🏗️ **Infrastructure Milestones**###**Completed Infrastructure (2024)**- ✅**v0.3.1-rc3 Core Hardening**- Production
+## 🏗️ **Infrastructure Milestones**\###**Completed Infrastructure (2024)**- ✅**v0.3.1-rc3 Core Hardening**- Production
+
 ready
 
 - ✅**Real-time Mission Dashboard**- Live AI task monitoring
@@ -270,21 +299,22 @@ ready
 
 - 📋**Cloud Integration**- Deployment flexibility
 
-- 📋**Vector Graph Integration**- Knowledge graph capabilities for complex relationship queries
+- 📋**Vector Graph Integration**- Knowledge graph capabilities for
+  complex relationship queries
 
-## 📈**Success Metrics & KPIs**###**Development Velocity**-**Sprint Completion Rate**: Target 90%+ sprint completion
+## 📈**Success Metrics & KPIs**\###**Development Velocity**-**Sprint Completion Rate**: Target 90%+ sprint completion
 
 - **Points Per Sprint**: Target 8-12 points per sprint
 
 - **Documentation Coverage**: 100% of new features documented
 
-### **System Performance**-**Response Time**: <2 seconds for AI queries
+### **System Performance**-**Response Time**: \<2 seconds for AI queries
 
 - **Uptime**: 99.9% system availability
 
-- **Error Rate**: <1% error rate in production
+- **Error Rate**: \<1% error rate in production
 
-### **Quality Metrics**-**Test Coverage**: >90% code coverage
+### **Quality Metrics**-**Test Coverage**: \>90% code coverage
 
 - **Documentation Quality**: All guides comprehensive and current
 
@@ -296,20 +326,19 @@ ready
 
 - **Academic Alignment**: Regular updates from latest research
 
-## 🔄 **Dependency Management**###**Critical Dependencies**```text
+## 🔄 **Dependency Management**\###**Critical Dependencies**\`\`\`text
 
-B-011 (Cursor Native AI) → B-043, B-044, B-045 (LangExtract + RAG)
-B-043 (LangExtract Pilot) → B-044 (n8n Service)
-B-044 (n8n Service) → B-045 (RAG Schema)
-B-045 (RAG Schema) → B-046 (Benchmark)
-B-046 (Benchmark) → B-047 (Auto-router)
-B-011 (Cursor Native AI) → B-034, B-035, B-036 (Specialized Agents)
-B-034, B-035, B-036 → B-038 (Advanced Orchestration)
-B-077 (Hybrid Search) → B-085 (Vector Graph Research)
+B-011 (Cursor Native AI) → B-043, B-044, B-045 (LangExtract + RAG) B-043
+(LangExtract Pilot) → B-044 (n8n Service) B-044 (n8n Service) → B-045
+(RAG Schema) B-045 (RAG Schema) → B-046 (Benchmark) B-046 (Benchmark) →
+B-047 (Auto-router) B-011 (Cursor Native AI) → B-034, B-035, B-036
+(Specialized Agents) B-034, B-035, B-036 → B-038 (Advanced
+Orchestration) B-077 (Hybrid Search) → B-085 (Vector Graph Research)
 B-085 (Vector Graph Research) → B-086 (Knowledge Graph Implementation)
-B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
+B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph
+Search)
 
-```text
+\`\`\`text
 
 ### **Resource Allocation**-**Primary Focus**: B-011 completion (Foundation)
 
@@ -319,17 +348,20 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
 - **Infrastructure**: B-031 (Vector Database Enhancement)
 
-## 🎯 **Risk Management**###**Technical Risks**-**Model Integration Complexity**: B-011 may require more time than estimated
+## 🎯 **Risk Management**\###**Technical Risks**-**Model Integration Complexity**: B-011 may require more time than estimated
 
-- **Performance Bottlenecks**: B-046 benchmarking may reveal significant issues
+- **Performance Bottlenecks**: B-046 benchmarking may reveal significant
+  issues
 
-- **Dependency Delays**: Any delay in B-011 affects multiple downstream items
+- **Dependency Delays**: Any delay in B-011 affects multiple downstream
+  items
 
 ### **Mitigation Strategies**-**Incremental Implementation**: Break complex items into smaller phases
 
 - **Parallel Development**: Work on independent items simultaneously
 
-- **Research Integration**: Use research findings to inform implementation
+- **Research Integration**: Use research findings to inform
+  implementation
 
 - **Regular Reviews**: Weekly progress reviews and adjustment
 
@@ -339,7 +371,7 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
 - **Research Gaps**: Use existing documentation as foundation
 
-## 📋 **Progress Tracking**###**Current Progress (August 2024)**-**Completed Items**: 47 items (C-002 through C-047)
+## 📋 **Progress Tracking**\###**Current Progress (August 2024)**-**Completed Items**: 47 items (C-002 through C-047)
 
 - **Total Points Earned**: 89 points
 
@@ -359,11 +391,13 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
 - **Blocked**: B-048 (Confidence Calibration) - Requires research
 
-## 🔗 **Related Documentation**###**Core Planning Documents**-**`000_core/000_backlog.md`**- Detailed backlog with scoring and dependencies
+## 🔗 **Related Documentation**\###**Core Planning Documents**-**`000_core/000_backlog.md`**- Detailed backlog with scoring and dependencies
 
-- **`100_memory/100_cursor-memory-context.md`**- Current project state and priorities
+- **`100_memory/100_cursor-memory-context.md`**- Current project state
+  and priorities
 
-- **`400_guides/400_context-priority-guide.md`**- File organization and memory scaffolding
+- **`400_guides/400_cursor-context-engineering-guide.md`**- File
+  organization and memory scaffolding
 
 ### **Implementation Guides**-**`000_core/001_create-prd.md`**- PRD creation workflow
 
@@ -375,21 +409,28 @@ B-086 (Knowledge Graph Implementation) → B-087 (Hybrid Vector + Graph Search)
 
 - **`400_guides/400_project-overview.md`**- High-level project overview
 
-- **`100_memory/104_dspy-development-context.md`**- DSPy implementation details
+- **`100_memory/104_dspy-development-context.md`**- DSPy implementation
+  details
 
-- --**Last Updated**: 2024-08-07
-- *Related Documentation**: `000_core/000_backlog.md`, `100_memory/100_cursor-memory-context.md`, `400_guides/400_context-priority-guide.md`
-- *Status**: Active roadmap for strategic development planning
+- –**Last Updated**: 2024-08-07
+
+- \*Related Documentation\*\*: `000_core/000_backlog.md`,
+  `100_memory/100_cursor-memory-context.md`,
+  `400_guides/400_cursor-context-engineering-guide.md`
+
+- \*Status\*\*: Active roadmap for strategic development planning
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_development-roadmap.md
-# Generated: 2025-08-17T17:47:03.915857
+
+## Auto-generated sections for 400_development-roadmap.md
+
+## Generated: 2025-08-18T08:03:22.739500
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -397,10 +438,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

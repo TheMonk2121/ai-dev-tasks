@@ -17,7 +17,7 @@ from typing import Dict, List, Tuple, Optional
 from collections import defaultdict
 
 class DuplicateFinder:
-    def __init__(self, path: str = ".", extensions: List[str] = None, exclude_patterns: List[str] = None):
+    def __init__(self, path: str = ".", extensions: list[str] = None, exclude_patterns: list[str] = None):
         self.root_path = Path(path)
         self.extensions = extensions or ["md", "txt", "py"]
         self.exclude_patterns = exclude_patterns or ["venv", "node_modules", "__pycache__", ".git"]
@@ -31,7 +31,7 @@ class DuplicateFinder:
         """Check if file should be excluded from analysis."""
         return any(pattern in str(file_path) for pattern in self.exclude_patterns)
 
-    def calculate_file_hash(self, file_path: Path) -> Optional[str]:
+    def calculate_file_hash(self, file_path: Path) -> str | None:
         """Calculate SHA-256 hash of file content."""
         try:
             with open(file_path, 'rb') as f:
@@ -61,13 +61,13 @@ class DuplicateFinder:
                     if file_hash:
                         self.hash_to_files[file_hash].append(file_path)
 
-    def analyze_duplicates(self) -> Dict[str, List[Path]]:
+    def analyze_duplicates(self) -> dict[str, list[Path]]:
         """Find files with identical content."""
         duplicates = {hash_val: files for hash_val, files in self.hash_to_files.items() 
                      if len(files) > 1}
         return duplicates
 
-    def categorize_files(self, files: List[Path]) -> Dict[str, List[Path]]:
+    def categorize_files(self, files: list[Path]) -> dict[str, list[Path]]:
         """Categorize files by location (main, archives, etc.)."""
         categories = {
             'main': [],
@@ -109,7 +109,7 @@ class DuplicateFinder:
         print(f"Unique hashes: {len(self.hash_to_files)}")
         print(f"Duplicate groups: {len(self.analyze_duplicates())}")
 
-    def print_duplicate_analysis(self, duplicates: Dict[str, List[Path]]) -> None:
+    def print_duplicate_analysis(self, duplicates: dict[str, list[Path]]) -> None:
         """Print detailed duplicate analysis."""
         if not duplicates:
             print("\n✅ No duplicate files found!")
@@ -154,7 +154,7 @@ class DuplicateFinder:
         print(f"Potential space saved: {self.format_size(total_duplicate_size)}")
         print(f"Duplicate files: {sum(len(files) - 1 for files in duplicates.values())}")
 
-    def generate_cleanup_script(self, duplicates: Dict[str, List[Path]], output_file: str = "cleanup_duplicates.sh") -> None:
+    def generate_cleanup_script(self, duplicates: dict[str, list[Path]], output_file: str = "cleanup_duplicates.sh") -> None:
         """Generate a shell script to clean up duplicates."""
         if not duplicates:
             return

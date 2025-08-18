@@ -90,7 +90,7 @@ def backlog_scrubber_webhook():
             "timestamp": datetime.now().isoformat()
         }), 500
 
-def handle_scrub_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> Dict[str, Any]:
+def handle_scrub_action(scrubber: BacklogScrubber, data: dict[str, Any]) -> dict[str, Any]:
     """Handle scrub action."""
     dry_run = data.get('dry_run', False)
     
@@ -129,7 +129,7 @@ def handle_scrub_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> Dict
             "timestamp": datetime.now().isoformat()
         })
 
-def handle_stats_action(scrubber: BacklogScrubber) -> Dict[str, Any]:
+def handle_stats_action(scrubber: BacklogScrubber) -> dict[str, Any]:
     """Handle stats action."""
     stats = scrubber.get_statistics()
     
@@ -140,7 +140,7 @@ def handle_stats_action(scrubber: BacklogScrubber) -> Dict[str, Any]:
         "timestamp": datetime.now().isoformat()
     })
 
-def handle_validate_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> Dict[str, Any]:
+def handle_validate_action(scrubber: BacklogScrubber, data: dict[str, Any]) -> dict[str, Any]:
     """Handle validate action."""
     content = scrubber.read_backlog()
     scores = scrubber.parse_score_metadata(content)

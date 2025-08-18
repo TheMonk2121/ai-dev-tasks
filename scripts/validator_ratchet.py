@@ -13,7 +13,7 @@ import sys
 from typing import Any, Dict, Set
 
 
-def get_changed_files() -> Set[str]:
+def get_changed_files() -> set[str]:
     """Get list of changed files from environment."""
     changed_files_str = os.getenv("CHANGED_FILES", "")
     if not changed_files_str:
@@ -21,7 +21,7 @@ def get_changed_files() -> Set[str]:
     return set(changed_files_str.split())
 
 
-def load_current_report(report_path: str = "validator_report.json") -> Dict[str, Any]:
+def load_current_report(report_path: str = "validator_report.json") -> dict[str, Any]:
     """Load current validator report."""
     try:
         with open(report_path) as f:
@@ -34,7 +34,7 @@ def load_current_report(report_path: str = "validator_report.json") -> Dict[str,
         sys.exit(1)
 
 
-def load_baseline_metrics() -> Dict[str, int]:
+def load_baseline_metrics() -> dict[str, int]:
     """Load baseline metrics from bot/validator-state branch."""
     baseline = {"readme": 0, "multirep": 0}
 
@@ -61,7 +61,7 @@ def load_baseline_metrics() -> Dict[str, int]:
     return baseline
 
 
-def check_ratchet_violations(current_report: Dict[str, Any], baseline: Dict[str, int], changed_files: Set[str]) -> int:
+def check_ratchet_violations(current_report: dict[str, Any], baseline: dict[str, int], changed_files: set[str]) -> int:
     """Check for ratchet violations and return exit code."""
     impacted_files = current_report.get("impacted_files", {})
     categories = current_report.get("categories", {})

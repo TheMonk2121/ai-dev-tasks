@@ -12,7 +12,7 @@ from typing import Dict, List
 def detect_code_language(content: str) -> str:
     """Attempt to detect the language based on content patterns."""
     # Common patterns for different languages
-    patterns: Dict[str, List[str]] = {
+    patterns: dict[str, list[str]] = {
         "python": [
             r"import\s+\w+",
             r"def\s+\w+\s*\(",
@@ -83,7 +83,7 @@ def detect_code_language(content: str) -> str:
     }
 
     # Count matches for each language
-    language_scores: Dict[str, int] = {}
+    language_scores: dict[str, int] = {}
     for lang, lang_patterns in patterns.items():
         score = 0
         for pattern in lang_patterns:
@@ -124,7 +124,7 @@ def fix_md040_code_languages():
 
     for file_path in markdown_files:
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             original_content = content

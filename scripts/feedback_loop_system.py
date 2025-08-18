@@ -32,10 +32,10 @@ class FeedbackItem:
     severity: str  # "error", "warning", "info"
     category: str  # "code_quality", "test_failure", "performance", etc.
     message: str
-    file_path: Optional[str] = None
-    line_number: Optional[int] = None
-    context: Dict = field(default_factory=dict)
-    tags: List[str] = field(default_factory=list)
+    file_path: str | None = None
+    line_number: int | None = None
+    context: dict = field(default_factory=dict)
+    tags: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -49,9 +49,9 @@ class LessonLearned:
     frequency: int
     first_seen: datetime
     last_seen: datetime
-    patterns: List[str] = field(default_factory=list)
-    recommendations: List[str] = field(default_factory=list)
-    backlog_impact: Dict = field(default_factory=dict)
+    patterns: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
+    backlog_impact: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -62,21 +62,21 @@ class FeedbackAnalysis:
     error_count: int
     warning_count: int
     info_count: int
-    categories: Dict[str, int]
-    lessons_learned: List[LessonLearned]
-    backlog_recommendations: List[str]
+    categories: dict[str, int]
+    lessons_learned: list[LessonLearned]
+    backlog_recommendations: list[str]
 
 
 class FeedbackLoopSystem:
     """Advanced feedback loop system for consensus framework."""
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: str | None = None):
         self.config = self._load_config(config_path)
         self.feedback_db_path = Path("data/feedback_loop.jsonl")
         self.lessons_db_path = Path("data/lessons_learned.jsonl")
         self._ensure_data_dirs()
 
-    def _load_config(self, config_path: Optional[str]) -> Dict:
+    def _load_config(self, config_path: str | None) -> dict:
         """Load configuration for the feedback loop system."""
         default_config = {
             "sources": {
@@ -105,7 +105,7 @@ class FeedbackLoopSystem:
         }
 
         if config_path and Path(config_path).exists():
-            with open(config_path, "r") as f:
+            with open(config_path) as f:
                 user_config = yaml.safe_load(f)
                 # Merge user config with defaults
                 default_config.update(user_config)
@@ -117,7 +117,7 @@ class FeedbackLoopSystem:
         self.feedback_db_path.parent.mkdir(parents=True, exist_ok=True)
         self.lessons_db_path.parent.mkdir(parents=True, exist_ok=True)
 
-    def collect_linter_feedback(self) -> List[FeedbackItem]:
+    def collect_linter_feedback(self) -> list[FeedbackItem]:
         """Collect feedback from linter runs."""
         feedback_items = []
 
@@ -166,7 +166,7 @@ class FeedbackLoopSystem:
 
         return feedback_items
 
-    def collect_test_feedback(self) -> List[FeedbackItem]:
+    def collect_test_feedback(self) -> list[FeedbackItem]:
         """Collect feedback from test runs."""
         feedback_items = []
 
@@ -197,7 +197,7 @@ class FeedbackLoopSystem:
 
         return feedback_items
 
-    def collect_git_feedback(self, days: int = 30) -> List[FeedbackItem]:
+    def collect_git_feedback(self, days: int = 30) -> list[FeedbackItem]:
         """Collect feedback from git commit history."""
         feedback_items = []
 
@@ -250,7 +250,7 @@ class FeedbackLoopSystem:
 
         return feedback_items
 
-    def save_feedback(self, feedback_items: List[FeedbackItem]):
+    def save_feedback(self, feedback_items: list[FeedbackItem]):
         """Save feedback items to the database."""
         with open(self.feedback_db_path, "a") as f:
             for item in feedback_items:
@@ -270,13 +270,13 @@ class FeedbackLoopSystem:
                 )
                 f.write("\n")
 
-    def load_feedback(self, days: int = 30) -> List[FeedbackItem]:
+    def load_feedback(self, days: int = 30) -> list[FeedbackItem]:
         """Load feedback items from the database."""
         feedback_items = []
         cutoff_date = datetime.now() - timedelta(days=days)
 
         if self.feedback_db_path.exists():
-            with open(self.feedback_db_path, "r") as f:
+            with open(self.feedback_db_path) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -301,7 +301,7 @@ class FeedbackLoopSystem:
 
         return feedback_items
 
-    def analyze_feedback(self, feedback_items: List[FeedbackItem]) -> FeedbackAnalysis:
+    def analyze_feedback(self, feedback_items: list[FeedbackItem]) -> FeedbackAnalysis:
         """Analyze feedback items to extract lessons learned."""
         if not feedback_items:
             return FeedbackAnalysis(0, 0, 0, 0, {}, [], [])
@@ -333,7 +333,7 @@ class FeedbackLoopSystem:
             backlog_recommendations=backlog_recommendations,
         )
 
-    def _extract_lessons(self, feedback_items: List[FeedbackItem]) -> List[LessonLearned]:
+    def _extract_lessons(self, feedback_items: list[FeedbackItem]) -> list[LessonLearned]:
         """Extract lessons learned from feedback items."""
         lessons = []
 
@@ -386,7 +386,7 @@ class FeedbackLoopSystem:
 
         return lessons
 
-    def _generate_recommendations(self, category: str, pattern: str, items: List[FeedbackItem]) -> List[str]:
+    def _generate_recommendations(self, category: str, pattern: str, items: list[FeedbackItem]) -> list[str]:
         """Generate recommendations based on feedback patterns."""
         recommendations = []
 
@@ -417,7 +417,7 @@ class FeedbackLoopSystem:
 
         return recommendations
 
-    def _calculate_backlog_impact(self, items: List[FeedbackItem]) -> Dict:
+    def _calculate_backlog_impact(self, items: list[FeedbackItem]) -> dict:
         """Calculate potential impact on backlog prioritization."""
         impact = {"priority_boost": 0, "effort_adjustment": 0, "dependencies": []}
 
@@ -434,7 +434,7 @@ class FeedbackLoopSystem:
 
         return impact
 
-    def _generate_backlog_recommendations(self, lessons: List[LessonLearned]) -> List[str]:
+    def _generate_backlog_recommendations(self, lessons: list[LessonLearned]) -> list[str]:
         """Generate recommendations for backlog updates."""
         recommendations = []
 
@@ -458,7 +458,7 @@ class FeedbackLoopSystem:
 
         return recommendations
 
-    def save_lessons(self, lessons: List[LessonLearned]):
+    def save_lessons(self, lessons: list[LessonLearned]):
         """Save lessons learned to the database."""
         with open(self.lessons_db_path, "a") as f:
             for lesson in lessons:
@@ -488,7 +488,7 @@ class FeedbackLoopSystem:
         recent_lessons = []
         cutoff_date = datetime.now() - timedelta(days=7)  # Last week
 
-        with open(self.lessons_db_path, "r") as f:
+        with open(self.lessons_db_path) as f:
             for line in f:
                 if line.strip():
                     try:
@@ -503,7 +503,7 @@ class FeedbackLoopSystem:
         lessons_file = Path("100_memory/105_lessons-learned-context.md")
         if lessons_file.exists():
             # Read existing content
-            with open(lessons_file, "r") as f:
+            with open(lessons_file) as f:
                 content = f.read()
 
             # Add new lessons section if not present

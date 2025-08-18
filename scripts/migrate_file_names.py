@@ -34,7 +34,7 @@ MIGRATION_MAP = {
 }
 
 
-def get_migration_plan() -> List[Tuple[str, str]]:
+def get_migration_plan() -> list[tuple[str, str]]:
     """Get the migration plan with file existence checks."""
     plan = []
     root_dir = Path(".")

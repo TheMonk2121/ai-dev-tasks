@@ -103,7 +103,7 @@ class GiantGuideReferenceMigrator:
             "development workflow": "400_system-overview.md",
         }
     
-    def _build_module_mapping(self) -> Dict[str, List[str]]:
+    def _build_module_mapping(self) -> dict[str, list[str]]:
         """Build mapping of original files to their split modules"""
         mapping = {}
         
@@ -125,7 +125,7 @@ class GiantGuideReferenceMigrator:
         
         return mapping
     
-    def find_files_to_update(self) -> List[str]:
+    def find_files_to_update(self) -> list[str]:
         """Find all files that need to be updated"""
         files_to_update = []
         
@@ -152,10 +152,10 @@ class GiantGuideReferenceMigrator:
         
         return files_to_update
     
-    def update_file_references(self, file_path: str) -> Tuple[bool, List[str]]:
+    def update_file_references(self, file_path: str) -> tuple[bool, list[str]]:
         """Update references in a single file"""
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 content = f.read()
             
             original_content = content
@@ -205,7 +205,7 @@ class GiantGuideReferenceMigrator:
         except Exception as e:
             return False, [f"Error updating {file_path}: {str(e)}"]
     
-    def _find_appropriate_module(self, context_term: str, module_pattern: str) -> Optional[str]:
+    def _find_appropriate_module(self, context_term: str, module_pattern: str) -> str | None:
         """Find the most appropriate module for a context term"""
         if module_pattern.endswith('.md'):
             # Direct module reference
@@ -229,7 +229,7 @@ class GiantGuideReferenceMigrator:
         
         return None
     
-    def create_migration_summary(self, updated_files: List[str], errors: List[str]) -> str:
+    def create_migration_summary(self, updated_files: list[str], errors: list[str]) -> str:
         """Create a summary of the migration"""
         summary = "# Giant Guide Reference Migration Summary\n\n"
         summary += f"**Migration Date**: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n"
@@ -262,7 +262,7 @@ class GiantGuideReferenceMigrator:
         
         return summary
     
-    def run_migration(self) -> Dict[str, Any]:
+    def run_migration(self) -> dict[str, Any]:
         """Run the complete migration process"""
         print("🔄 Starting Giant Guide Reference Migration...")
         

@@ -33,9 +33,9 @@ class GraphNode:
 
     id: str
     label: str
-    anchor: Optional[str] = None
-    coords: Tuple[float, float] = field(default=(0.0, 0.0))
-    category: Optional[str] = None
+    anchor: str | None = None
+    coords: tuple[float, float] = field(default=(0.0, 0.0))
+    category: str | None = None
 
 
 @dataclass
@@ -52,8 +52,8 @@ class GraphEdge:
 class GraphData:
     """Complete graph data structure for V1 API contract."""
 
-    nodes: List[GraphNode]
-    edges: List[GraphEdge]
+    nodes: list[GraphNode]
+    edges: list[GraphEdge]
     elapsed_ms: float
     v: int = 1
     truncated: bool = False
@@ -93,7 +93,7 @@ class GraphDataProvider:
         self.feature_flag_enabled = feature_flag_enabled
 
         # UMAP cache
-        self._umap_cache: Dict[str, Tuple[Any, float]] = {}
+        self._umap_cache: dict[str, tuple[Any, float]] = {}
         self._cache_lock = None
         if cache_enabled:
             import threading
@@ -102,11 +102,11 @@ class GraphDataProvider:
 
     def get_graph_data(
         self,
-        query: Optional[str] = None,
+        query: str | None = None,
         include_knn: bool = True,
         include_entity: bool = True,
         min_sim: float = 0.5,
-        max_nodes: Optional[int] = None,
+        max_nodes: int | None = None,
     ) -> GraphData:
         """
         Get graph data for visualization.
@@ -177,8 +177,8 @@ class GraphDataProvider:
 
     def get_cluster_data(
         self,
-        query: Optional[str] = None,
-        max_nodes: Optional[int] = None,
+        query: str | None = None,
+        max_nodes: int | None = None,
     ) -> GraphData:
         """
         Get cluster data (nodes only) for 2D visualization.
@@ -236,9 +236,9 @@ class GraphDataProvider:
     @retry(max_retries=3, backoff_factor=2.0)
     def _get_chunks(
         self,
-        query: Optional[str],
+        query: str | None,
         limit: int,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """
         Get chunks from database with optional filtering.
 
@@ -290,7 +290,7 @@ class GraphDataProvider:
                 chunks = cursor.fetchall()
                 return [dict(chunk) for chunk in chunks]
 
-    def _get_umap_coordinates(self, chunks: List[Dict[str, Any]]) -> np.ndarray:  # type: ignore
+    def _get_umap_coordinates(self, chunks: list[dict[str, Any]]) -> np.ndarray:  # type: ignore
         """
         Compute UMAP coordinates for chunks.
 
@@ -366,9 +366,9 @@ class GraphDataProvider:
 
     def _create_nodes(
         self,
-        chunks: List[Dict[str, Any]],
+        chunks: list[dict[str, Any]],
         coords: np.ndarray,
-    ) -> List[GraphNode]:
+    ) -> list[GraphNode]:
         """
         Create graph nodes from chunks and coordinates.
 
@@ -424,9 +424,9 @@ class GraphDataProvider:
 
     def _create_knn_edges(
         self,
-        chunks: List[Dict[str, Any]],
+        chunks: list[dict[str, Any]],
         min_sim: float,
-    ) -> List[GraphEdge]:
+    ) -> list[GraphEdge]:
         """
         Create KNN edges based on content similarity.
 
@@ -466,9 +466,9 @@ class GraphDataProvider:
 
     def _create_entity_edges(
         self,
-        chunks: List[Dict[str, Any]],
+        chunks: list[dict[str, Any]],
         min_sim: float,
-    ) -> List[GraphEdge]:
+    ) -> list[GraphEdge]:
         """
         Create entity-based edges.
 
@@ -513,7 +513,7 @@ class GraphDataProvider:
                 self._umap_cache.clear()
             logger.info("UMAP cache cleared")
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """
         Get cache statistics.
 

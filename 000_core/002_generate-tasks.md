@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_testing-strategy-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
@@ -24,7 +24,7 @@ acceptance criteria | When you need to convert a PRD or backlog item into action
 
 - **Points**: 4 - Moderate complexity, high importance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 000_core/001_create-prd.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 000_core/001_create-prd.md
 
 - **Next Steps**: Enhance task templates and automation
 

@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_testing-strategy-guide.md -->
@@ -23,7 +23,7 @@ generate PRD for selected backlog item |
 
 - **Points**: 4 - Moderate complexity, high importance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 000_core/000_backlog.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 000_core/000_backlog.md
 
 - **Next Steps**: Enhance PRD templates and validation
 

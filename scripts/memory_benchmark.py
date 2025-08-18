@@ -31,7 +31,7 @@ class MemoryBenchmark:
     """Benchmark harness for testing memory context structures"""
     
     def __init__(self):
-        self.results: List[BenchmarkResult] = []
+        self.results: list[BenchmarkResult] = []
         self.test_structures = {
             "A": "Flat list + HTML comments",
             "B": "Three-tier hierarchy + YAML front-matter"
@@ -118,7 +118,7 @@ model_adaptations:
 - 400_context-priority-guide.md - Context priority guide for memory rehydration
 """
     
-    def simulate_model_response(self, content: str, model: str) -> Dict[str, Any]:
+    def simulate_model_response(self, content: str, model: str) -> dict[str, Any]:
         """Simulate model response for benchmarking"""
         
         # Simulate different model capabilities
@@ -193,7 +193,7 @@ model_adaptations:
         self.results.append(benchmark_result)
         return benchmark_result
     
-    def run_full_benchmark(self) -> Dict[str, Any]:
+    def run_full_benchmark(self) -> dict[str, Any]:
         """Run complete benchmark across all structures and models"""
         
         print("🚀 Starting Memory Context System Architecture Benchmark")
@@ -205,7 +205,7 @@ model_adaptations:
         
         return self.generate_report()
     
-    def generate_report(self) -> Dict[str, Any]:
+    def generate_report(self) -> dict[str, Any]:
         """Generate comprehensive benchmark report"""
         
         report = {
@@ -254,7 +254,7 @@ model_adaptations:
         
         return report
     
-    def _generate_recommendations(self, report: Dict[str, Any]):
+    def _generate_recommendations(self, report: dict[str, Any]):
         """Generate recommendations based on benchmark results"""
         
         recommendations = []
@@ -291,7 +291,7 @@ model_adaptations:
         
         report["recommendations"] = recommendations
     
-    def save_report(self, report: Dict[str, Any], filename: str = "500_memory-arch-benchmarks.md"):
+    def save_report(self, report: dict[str, Any], filename: str = "500_memory-arch-benchmarks.md"):
         """Save benchmark report to file"""
         
         output = f"""# Memory Context System Architecture Benchmark Results

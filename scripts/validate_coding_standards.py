@@ -21,7 +21,7 @@ class CodingStandardsValidator:
         self.errors = []
         self.warnings = []
 
-    def validate_file(self, file_path: Path) -> Tuple[List[str], List[str]]:
+    def validate_file(self, file_path: Path) -> tuple[list[str], list[str]]:
         """Validate a single Python file."""
         self.errors = []
         self.warnings = []

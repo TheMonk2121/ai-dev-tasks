@@ -73,6 +73,10 @@ class TestSlugifyHeading:
         assert slugify_heading("API Reference & Examples") == "api-reference--examples"
         assert slugify_heading("Getting Started!") == "getting-started"
 
+    def test_emoji_heading_slug(self):
+        """Emoji in headings should be ignored for slug creation, preserving words."""
+        assert slugify_heading("⚡ Quick reference") == "quick-reference"
+
     def test_case_insensitivity(self):
         """Test case insensitivity."""
         assert slugify_heading("Hello World") == slugify_heading("hello world")

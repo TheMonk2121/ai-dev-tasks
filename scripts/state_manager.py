@@ -35,12 +35,12 @@ class ExecutionRecord:
     task_id: str
     status: TaskStatus
     started_at: datetime
-    completed_at: Optional[datetime] = None
-    error_message: Optional[str] = None
+    completed_at: datetime | None = None
+    error_message: str | None = None
     retry_count: int = 0
     progress: float = 0.0
-    execution_time: Optional[float] = None
-    metadata: Optional[Dict[str, Any]] = None
+    execution_time: float | None = None
+    metadata: dict[str, Any] | None = None
 
 @dataclass
 class TaskMetadata:
@@ -52,11 +52,11 @@ class TaskMetadata:
     description: str
     tech_footprint: str
     dependencies: str
-    score_total: Optional[float] = None
+    score_total: float | None = None
     human_required: bool = False
-    human_reason: Optional[str] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    human_reason: str | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 class StateManager:
     """Comprehensive state management system for task execution."""
@@ -144,7 +144,7 @@ class StateManager:
         logger.info("Database tables and indexes created successfully")
         return conn
     
-    def start_task_execution(self, task_id: str, metadata: Optional[Dict[str, Any]] = None) -> bool:
+    def start_task_execution(self, task_id: str, metadata: dict[str, Any] | None = None) -> bool:
         """Start execution of a task."""
         try:
             cursor = self.conn.cursor()
@@ -184,8 +184,8 @@ class StateManager:
             return False
     
     def complete_task_execution(self, task_id: str, success: bool = True, 
-                              error_message: Optional[str] = None,
-                              execution_time: Optional[float] = None) -> bool:
+                              error_message: str | None = None,
+                              execution_time: float | None = None) -> bool:
         """Complete execution of a task."""
         try:
             cursor = self.conn.cursor()
@@ -251,7 +251,7 @@ class StateManager:
             return False
     
     def update_task_progress(self, task_id: str, progress: float, 
-                           message: Optional[str] = None) -> bool:
+                           message: str | None = None) -> bool:
         """Update progress of a running task."""
         try:
             cursor = self.conn.cursor()
@@ -283,7 +283,7 @@ class StateManager:
             logger.error(f"Failed to update progress for task {task_id}: {e}")
             return False
     
-    def retry_task_execution(self, task_id: str, error_message: Optional[str] = None) -> bool:
+    def retry_task_execution(self, task_id: str, error_message: str | None = None) -> bool:
         """Retry execution of a failed task."""
         try:
             cursor = self.conn.cursor()
@@ -330,7 +330,7 @@ class StateManager:
             logger.error(f"Failed to retry task execution for {task_id}: {e}")
             return False
     
-    def get_task_status(self, task_id: str) -> Optional[ExecutionRecord]:
+    def get_task_status(self, task_id: str) -> ExecutionRecord | None:
         """Get current status of a task."""
         try:
             cursor = self.conn.cursor()
@@ -361,7 +361,7 @@ class StateManager:
             logger.error(f"Failed to get task status for {task_id}: {e}")
             return None
     
-    def get_execution_history(self, task_id: str, limit: int = 50) -> List[Dict[str, Any]]:
+    def get_execution_history(self, task_id: str, limit: int = 50) -> list[dict[str, Any]]:
         """Get execution history for a task."""
         try:
             cursor = self.conn.cursor()
@@ -388,7 +388,7 @@ class StateManager:
             logger.error(f"Failed to get execution history for {task_id}: {e}")
             return []
     
-    def get_all_task_statuses(self) -> Dict[str, ExecutionRecord]:
+    def get_all_task_statuses(self) -> dict[str, ExecutionRecord]:
         """Get status of all tasks."""
         try:
             cursor = self.conn.cursor()
@@ -419,7 +419,7 @@ class StateManager:
             logger.error(f"Failed to get all task statuses: {e}")
             return {}
     
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get comprehensive execution statistics."""
         try:
             cursor = self.conn.cursor()
@@ -498,7 +498,7 @@ class StateManager:
             logger.error(f"Failed to store metadata for task {metadata.task_id}: {e}")
             return False
     
-    def get_task_metadata(self, task_id: str) -> Optional[TaskMetadata]:
+    def get_task_metadata(self, task_id: str) -> TaskMetadata | None:
         """Get task metadata."""
         try:
             cursor = self.conn.cursor()
@@ -590,18 +590,18 @@ class StateManager:
             cursor = self.conn.cursor()
             
             # Count records to be deleted
-            cursor.execute("""
+            cursor.execute(f"""
                 SELECT COUNT(*) FROM execution_history 
-                WHERE timestamp < datetime('now', '-{} days')
-            """.format(days))
+                WHERE timestamp < datetime('now', '-{days} days')
+            """)
             
             count = cursor.fetchone()[0]
             
             # Delete old records
-            cursor.execute("""
+            cursor.execute(f"""
                 DELETE FROM execution_history 
-                WHERE timestamp < datetime('now', '-{} days')
-            """.format(days))
+                WHERE timestamp < datetime('now', '-{days} days')
+            """)
             
             self.conn.commit()
             logger.info(f"Cleaned up {count} old execution history records")

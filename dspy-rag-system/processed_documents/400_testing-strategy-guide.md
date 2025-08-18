@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Testing strategy and quality assurance -->
 # 🧪 Testing Strategy Guide
 
@@ -11,7 +11,7 @@
 - **Status**: ✅ **ACTIVE** - Testing strategy maintained
 - **Priority**: 🔥 Critical - Quality assurance and testing
 - **Points**: 5 - High complexity, quality critical
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_system-overview.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_guides/400_system-overview.md
 - **Next Steps**: Update testing strategies as system evolves
 
 ## 🚨 **IMPORTANT: Testing Approach Migration**

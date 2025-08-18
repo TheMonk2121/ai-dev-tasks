@@ -10,9 +10,11 @@ Last Updated: [Date]
 """
 
 # Standard library imports (always first)
+from __future__ import annotations
+
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Third-party imports
 # import requests
@@ -29,32 +31,34 @@ class ExampleData:
 
     name: str
     value: int
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None
 
 
 class ExampleClass:
     """Example class demonstrating proper structure."""
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: dict[str, Any] | None = None):
         """Initialize the example class."""
         self.config = config or self._get_default_config()
-        self.data: List[ExampleData] = []
+        self.data: list[ExampleData] = []
 
-    def _get_default_config(self) -> Dict[str, Any]:
+    def _get_default_config(self) -> dict[str, Any]:
         """Get default configuration."""
         return {
             "setting1": "default_value",
             "setting2": 42,
         }
 
-    def process_data(self, input_data: List[str]) -> List[ExampleData]:
+    def process_data(self, input_data: list[str]) -> list[ExampleData]:
         """Process input data and return structured results."""
         results = []
 
         for item in input_data:
             # Example of proper f-string usage
             processed_item = ExampleData(
-                name=f"processed_{item}", value=len(item), metadata={"processed_at": datetime.now().isoformat()}
+                name=f"processed_{item}",
+                value=len(item),
+                metadata={"processed_at": datetime.now().isoformat()},
             )
             results.append(processed_item)
 
@@ -62,12 +66,12 @@ class ExampleClass:
 
     def validate_input(self, data: Any) -> bool:
         """Validate input data."""
-        if not isinstance(data, (str, list)):
+        if not isinstance(data, (str, list)):  # noqa: UP038
             return False
 
         # Example of proper string usage (not f-string when no placeholders)
-        if isinstance(data, str) and len(data) == 0:
-            return False
+        if isinstance(data, str):
+            return len(data) > 0
 
         return True
 

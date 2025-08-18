@@ -49,9 +49,9 @@ class ContextData:
     id: str = field(default_factory=lambda: str(uuid4()))
     type: ContextType = ContextType.FILE
     source: str = "cursor"
-    content: Dict[str, Any] = field(default_factory=dict)
-    relationships: Dict[str, Any] = field(default_factory=dict)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    content: dict[str, Any] = field(default_factory=dict)
+    relationships: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
     updated_at: float = field(default_factory=time.time)
     accessed_at: float = field(default_factory=time.time)
@@ -63,9 +63,9 @@ class AgentRequest:
     id: str = field(default_factory=lambda: str(uuid4()))
     agent_type: AgentType = AgentType.NATIVE_AI
     query: str = ""
-    context: Optional[ContextData] = None
-    user_id: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    context: ContextData | None = None
+    user_id: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
 
 
@@ -76,10 +76,10 @@ class AgentResponse:
     request_id: str = ""
     agent_type: AgentType = AgentType.NATIVE_AI
     content: str = ""
-    context_updates: Optional[ContextData] = None
+    context_updates: ContextData | None = None
     confidence: float = 0.0
     processing_time: float = 0.0
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
 
 
@@ -104,7 +104,7 @@ class BaseAgent(ABC):
         """Check if this agent can handle the given request."""
         pass
     
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get agent status information."""
         return {
             "agent_type": self.agent_type.value,
@@ -336,10 +336,10 @@ class ContextManager:
     """Manages shared context between agents."""
     
     def __init__(self):
-        self.contexts: Dict[str, ContextData] = {}
-        self.context_relationships: Dict[str, List[str]] = {}
+        self.contexts: dict[str, ContextData] = {}
+        self.context_relationships: dict[str, list[str]] = {}
     
-    async def get_context(self, context_id: str) -> Optional[ContextData]:
+    async def get_context(self, context_id: str) -> ContextData | None:
         """Get context by ID."""
         return self.contexts.get(context_id)
     
@@ -348,7 +348,7 @@ class ContextManager:
         self.contexts[context.id] = context
         return context.id
     
-    async def update_context(self, context_id: str, updates: Dict[str, Any]) -> bool:
+    async def update_context(self, context_id: str, updates: dict[str, Any]) -> bool:
         """Update existing context."""
         if context_id in self.contexts:
             context = self.contexts[context_id]
@@ -359,7 +359,7 @@ class ContextManager:
             return True
         return False
     
-    async def get_related_contexts(self, context_id: str) -> List[ContextData]:
+    async def get_related_contexts(self, context_id: str) -> list[ContextData]:
         """Get contexts related to the given context."""
         related_ids = self.context_relationships.get(context_id, [])
         return [self.contexts.get(cid) for cid in related_ids if cid in self.contexts]
@@ -369,9 +369,9 @@ class CursorAIIntegrationFramework:
     """Main integration framework for Cursor AI and specialized agents."""
     
     def __init__(self):
-        self.agents: Dict[AgentType, BaseAgent] = {}
+        self.agents: dict[AgentType, BaseAgent] = {}
         self.context_manager = ContextManager()
-        self.active_agent: Optional[AgentType] = None
+        self.active_agent: AgentType | None = None
         # Env-configurable toggles (defaults: enabled)
         self.agent_switching_enabled = _env_bool("AGENT_SWITCHING_ENABLED", True)
         self.fallback_to_native = _env_bool("FALLBACK_TO_NATIVE", True)
@@ -519,7 +519,7 @@ def _env_bool(name: str, default: bool) -> bool:
         
         return await native_agent.process_request(request)
     
-    def get_agent_status(self) -> Dict[str, Any]:
+    def get_agent_status(self) -> dict[str, Any]:
         """Get status of all agents."""
         return {
             "active_agent": self.active_agent.value if self.active_agent else None,

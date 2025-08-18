@@ -35,8 +35,8 @@ class BenchmarkResult:
     memory_usage_mb: float
     cpu_percent: float
     success: bool
-    error_message: Optional[str] = None
-    timestamp: Optional[datetime] = None
+    error_message: str | None = None
+    timestamp: datetime | None = None
 
 
 class ScriptBenchmarker:
@@ -134,7 +134,7 @@ class ScriptBenchmarker:
         else:
             return {"memory_mb": 0.0, "cpu_percent": 0.0}
 
-    def benchmark_script(self, script_name: str, iterations: int = 1) -> List[BenchmarkResult]:
+    def benchmark_script(self, script_name: str, iterations: int = 1) -> list[BenchmarkResult]:
         """Benchmark a single script multiple times."""
         if script_name not in self.critical_scripts:
             raise ValueError(f"Unknown script: {script_name}")
@@ -214,7 +214,7 @@ class ScriptBenchmarker:
 
         return results
 
-    def benchmark_all(self, iterations: int = 1) -> Dict[str, List[BenchmarkResult]]:
+    def benchmark_all(self, iterations: int = 1) -> dict[str, list[BenchmarkResult]]:
         """Benchmark all critical scripts."""
         all_results = {}
 
@@ -223,7 +223,7 @@ class ScriptBenchmarker:
 
         return all_results
 
-    def save_results(self, results: Dict[str, List[BenchmarkResult]], filename: Optional[str] = None):
+    def save_results(self, results: dict[str, list[BenchmarkResult]], filename: str | None = None):
         """Save benchmark results to JSON file."""
         if filename is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -254,7 +254,7 @@ class ScriptBenchmarker:
         print(f"Results saved to: {filepath}")
         return filepath
 
-    def print_summary(self, results: Dict[str, List[BenchmarkResult]]):
+    def print_summary(self, results: dict[str, list[BenchmarkResult]]):
         """Print a summary of benchmark results."""
         print("\n" + "=" * 60)
         print("BENCHMARK SUMMARY")

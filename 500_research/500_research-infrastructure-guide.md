@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Research infrastructure and organization patterns -->
@@ -27,7 +27,7 @@ documentation patterns.
 
 - **Points**: 4 - Research infrastructure and organization
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_few-shot-context-examples.md,
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_guides/400_few-shot-context-examples.md,
 400_guides/400_performance-optimization-guide.md
 
 - **Next Steps**: Maintain research infrastructure and cross-references
@@ -300,7 +300,7 @@ When LLMs need additional context, they can reference:
 
 ### **Research Discovery**
 - **Research Index**: `500_research/500_research/500_research-index.md`
-- **Context Priority**: `400_guides/400_context-priority-guide.md`
+- **Context Priority**: `400_guides/400_cursor-context-engineering-guide.md`
 - **Memory Context**: `100_memory/100_cursor-memory-context.md`
 
 ### **LLM Accessibility**
@@ -311,6 +311,6 @@ When LLMs need additional context, they can reference:
 ---
 
 - **Last Updated**: 2024-08-07
-- **Related Documentation**: `400_guides/400_context-priority-guide.md`,
+- **Related Documentation**: `400_guides/400_cursor-context-engineering-guide.md`,
 `500_research/500_research/500_research-index.md`
 - **Status**: Active research infrastructure for LLM-accessible knowledge management

@@ -1,12 +1,19 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MODULE_REFERENCE: dspy-rag-system/src/utils/memory_rehydrator.py -->
+
 <!-- MODULE_REFERENCE: dspy-rag-system/src/utils/memory_rehydration.go -->
+
 <!-- MODULE_REFERENCE: dspy-rag-system/src/n8n_workflows/hydration_monitor.py -->
+
 <!-- MEMORY_CONTEXT: HIGH - Complete hydration system including integration, testing, and role-specific strategies -->
+
 <!-- DATABASE_SYNC: REQUIRED -->
 
 <!-- ANCHOR_KEY: hydration-system -->
+
 <!-- ANCHOR_PRIORITY: 40 -->
+
 <!-- ROLE_PINS: ["planner", "implementer"] -->
 
 # 🔗 Hydration System Guide
@@ -14,38 +21,47 @@
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
+|----|----|----|
 | Complete guide to memory rehydration system including integration, testing, and role-specific strategies | Setting up hydration system, testing, or using role-specific context | Configure system, run tests, and use role-appropriate context assembly |
 
-- **what this file is**: Complete guide to memory rehydration system including integration, testing, and role-specific strategies.
-- **read when**: Setting up hydration system, testing, or using role-specific context.
-- **do next**: Configure system, run tests, and use role-appropriate context assembly.
-- **anchors**: `integration-architecture`, `testing-framework`, `role-specific-strategies`, `n8n-workflow-integration`, `dashboard-monitoring`, `automation-patterns`, `alert-system`, `configuration-management`, `performance-optimization`, `testing-integration`, `troubleshooting`, `quality-gates`
+- **what this file is**: Complete guide to memory rehydration system
+  including integration, testing, and role-specific strategies.
+- **read when**: Setting up hydration system, testing, or using
+  role-specific context.
+- **do next**: Configure system, run tests, and use role-appropriate
+  context assembly.
+- **anchors**: `integration-architecture`, `testing-framework`,
+  `role-specific-strategies`, `n8n-workflow-integration`,
+  `dashboard-monitoring`, `automation-patterns`, `alert-system`,
+  `configuration-management`, `performance-optimization`,
+  `testing-integration`, `troubleshooting`, `quality-gates`
 
 ## 🎯 **Current Status**
 
 - **Status**: ✅ **ACTIVE** - Comprehensive hydration system guide
 - **Priority**: 🔥 Critical - Essential for AI context management
 - **Points**: 5 - High complexity, system-critical importance
-- **Dependencies**: dspy-rag-system/src/utils/memory_rehydrator.py, dspy-rag-system/src/utils/memory_rehydration.go, dspy-rag-system/src/n8n_workflows/hydration_monitor.py
+- **Dependencies**: dspy-rag-system/src/utils/memory_rehydrator.py,
+  dspy-rag-system/src/utils/memory_rehydration.go,
+  dspy-rag-system/src/n8n_workflows/hydration_monitor.py
 - **Next Steps**: Configure system, run tests, and validate performance
 
 ## 📋 Table of Contents
 
-1. [🔧 Integration Architecture](#-integration-architecture)
-2. [🧪 Testing Framework](#-testing-framework)
-3. [🎯 Role-Specific Strategies](#-role-specific-strategies)
-4. [🚀 n8n Workflow Integration](#-n8n-workflow-integration)
-5. [📊 Dashboard & Monitoring](#-dashboard--monitoring)
-6. [🔄 Automation Patterns](#-automation-patterns)
-7. [🚨 Alert System](#-alert-system)
-8. [🔧 Configuration Management](#-configuration-management)
-9. [📈 Performance Optimization](#-performance-optimization)
+1.  [🔧 Integration Architecture](#-integration-architecture)
+2.  [🧪 Testing Framework](#-testing-framework)
+3.  [🎯 Role-Specific Strategies](#-role-specific-strategies)
+4.  [🚀 n8n Workflow Integration](#-n8n-workflow-integration)
+5.  [📊 Dashboard & Monitoring](#-dashboard--monitoring)
+6.  [🔄 Automation Patterns](#-automation-patterns)
+7.  [🚨 Alert System](#-alert-system)
+8.  [🔧 Configuration Management](#-configuration-management)
+9.  [📈 Performance Optimization](#-performance-optimization)
 10. [🧪 Testing Integration](#-testing-integration)
 11. [🔍 Troubleshooting](#-troubleshooting)
 12. [🎯 Quality Gates](#-quality-gates)
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: integration-architecture -->
 
@@ -53,7 +69,7 @@
 
 ### **System Components**
 
-```text
+``` text
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   n8n Workflow  │    │  Hydration      │    │  Performance    │
 │   Monitor       │◄──►│  Dashboard      │◄──►│  Benchmark      │
@@ -68,13 +84,13 @@
 
 ### **Data Flow**
 
-1. **Monitoring**: Continuous health checks every 30 seconds
-2. **Metrics Collection**: Performance, quality, and system health data
-3. **Alert Generation**: Automatic alerts for degradation or failures
-4. **Dashboard Updates**: Real-time visualization of system status
-5. **Integration**: n8n workflows for automation and notifications
+1.  **Monitoring**: Continuous health checks every 30 seconds
+2.  **Metrics Collection**: Performance, quality, and system health data
+3.  **Alert Generation**: Automatic alerts for degradation or failures
+4.  **Dashboard Updates**: Real-time visualization of system status
+5.  **Integration**: n8n workflows for automation and notifications
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: testing-framework -->
 
@@ -82,15 +98,15 @@
 
 ### **Test Categories**
 
-1. **Functional Tests** - Verify core functionality
-2. **Performance Tests** - Measure speed and efficiency
-3. **Quality Tests** - Validate context relevance
-4. **Integration Tests** - Test with real workflows
-5. **Stress Tests** - Test under load and edge cases
+1.  **Functional Tests** - Verify core functionality
+2.  **Performance Tests** - Measure speed and efficiency
+3.  **Quality Tests** - Validate context relevance
+4.  **Integration Tests** - Test with real workflows
+5.  **Stress Tests** - Test under load and edge cases
 
 ### **Test Environment Setup**
 
-```bash
+``` bash
 # Set up test environment
 cd dspy-rag-system
 export PYTHONPATH=.
@@ -107,7 +123,7 @@ pip install psutil
 
 #### **1. Role-Based Testing**
 
-```bash
+``` bash
 # Test planner role
 python3 -m src.utils.memory_rehydrator --role planner --task "test planning context" --limit 5
 
@@ -120,7 +136,7 @@ python3 -m src.utils.memory_rehydrator --role planner --task "test" --json
 
 #### **2. Smoke Test Suite**
 
-```bash
+``` bash
 # Run comprehensive smoke tests
 cd dspy-rag-system
 PYTHONPATH=. python3 tests/test_memory_rehydrator_smoke.py
@@ -135,7 +151,7 @@ PYTHONPATH=. python3 tests/test_memory_rehydrator_smoke.py
 
 #### **3. Anchor Metadata Validation**
 
-```python
+``` python
 from src.utils.anchor_metadata_parser import extract_anchor_metadata, validate_anchor_metadata
 
 def test_anchor_extraction():
@@ -156,7 +172,7 @@ def test_anchor_extraction():
 
 #### **1. Bundle Creation Performance**
 
-```python
+``` python
 import time
 from src.utils.memory_rehydrator import build_hydration_bundle
 
@@ -187,13 +203,13 @@ def benchmark_bundle_creation():
 
 **Performance Targets:**
 
-- **Bundle creation**: < 5s (EXCELLENT), < 10s (GOOD)
+- **Bundle creation**: \< 5s (EXCELLENT), \< 10s (GOOD)
 - **Token efficiency**: ≤ 1200 tokens for standard bundles
 - **Section count**: 3-12 sections typical
 
 #### **2. Memory Usage Benchmarks**
 
-```python
+``` python
 import psutil
 import os
 
@@ -227,7 +243,7 @@ def benchmark_memory_usage():
 
 #### **1. Content Relevance Testing**
 
-```python
+``` python
 def validate_context_relevance(bundle, expected_keywords):
     """Validate that context contains relevant content"""
     text = bundle.text.lower()
@@ -247,7 +263,7 @@ def validate_context_relevance(bundle, expected_keywords):
 
 #### **2. Role-Specific Validation**
 
-```python
+``` python
 def validate_planner_context(bundle):
     """Validate planner role context quality"""
     expected_keywords = ["backlog", "priority", "system", "overview", "planning"]
@@ -261,7 +277,7 @@ def validate_implementer_context(bundle):
 
 #### **3. Anchor Content Validation**
 
-```python
+``` python
 def validate_anchor_content(bundle):
     """Validate that pinned anchors are present"""
     text = bundle.text.lower()
@@ -281,7 +297,7 @@ def validate_anchor_content(bundle):
     }
 ```
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: role-specific-strategies -->
 
@@ -291,17 +307,15 @@ def validate_anchor_content(bundle):
 
 #### **Planner Pinned Anchors (Always Loaded - ~400 tokens)**
 
-1. **TL;DR** (priority 0) - Quick overview and current state
-   - From: `100_memory/100_cursor-memory-context.md`
-   - Purpose: Instant project understanding
-
-2. **Backlog P0 Lane** (priority 5) - Current priorities
-   - From: `000_core/000_backlog.md`
-   - Purpose: Strategic priorities and urgent items
-
-3. **System Overview** (priority 15) - Architecture context
-   - From: `400_guides/400_system-overview.md`
-   - Purpose: Technical landscape understanding
+1.  **TL;DR** (priority 0) - Quick overview and current state
+    - From: `100_memory/100_cursor-memory-context.md`
+    - Purpose: Instant project understanding
+2.  **Backlog P0 Lane** (priority 5) - Current priorities
+    - From: `000_core/000_backlog.md`
+    - Purpose: Strategic priorities and urgent items
+3.  **System Overview** (priority 15) - Architecture context
+    - From: `400_guides/400_system-overview.md`
+    - Purpose: Technical landscape understanding
 
 #### **Planner Task-Scoped Retrieval (~800 tokens)**
 
@@ -321,7 +335,7 @@ def validate_anchor_content(bundle):
 
 #### **Planner Use Cases**
 
-```python
+``` python
 # Strategic Planning Sessions
 bundle = build_hydration_bundle(
     role="planner",
@@ -348,17 +362,15 @@ bundle = build_hydration_bundle(
 
 #### **Implementer Pinned Anchors (Always Loaded - ~400 tokens)**
 
-1. **TL;DR** (priority 0) - Quick overview and current state
-   - From: `100_memory/100_cursor-memory-context.md`
-   - Purpose: Instant project understanding
-
-2. **DSPy Development Context** (priority 10) - Technical foundation
-   - From: `100_memory/104_dspy-development-context.md`
-   - Purpose: Implementation patterns and technical context
-
-3. **System Architecture** (priority 20) - Technical context
-   - From: `400_guides/400_system-overview.md`
-   - Purpose: Component relationships and integration patterns
+1.  **TL;DR** (priority 0) - Quick overview and current state
+    - From: `100_memory/100_cursor-memory-context.md`
+    - Purpose: Instant project understanding
+2.  **DSPy Development Context** (priority 10) - Technical foundation
+    - From: `100_memory/104_dspy-development-context.md`
+    - Purpose: Implementation patterns and technical context
+3.  **System Architecture** (priority 20) - Technical context
+    - From: `400_guides/400_system-overview.md`
+    - Purpose: Component relationships and integration patterns
 
 #### **Implementer Task-Scoped Retrieval (~800 tokens)**
 
@@ -379,7 +391,7 @@ bundle = build_hydration_bundle(
 
 #### **Implementer Use Cases**
 
-```python
+``` python
 # Code Implementation
 bundle = build_hydration_bundle(
     role="implementer",
@@ -408,7 +420,7 @@ bundle = build_hydration_bundle(
 - **Task-scoped content**: ~800 tokens (dynamic retrieval)
 - **Total budget**: ~1200 tokens (default)
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: n8n-workflow-integration -->
 
@@ -416,7 +428,7 @@ bundle = build_hydration_bundle(
 
 ### **1. Health Monitoring Workflow**
 
-```python
+``` python
 # dspy-rag-system/src/n8n_workflows/hydration_monitor.py
 from src.n8n_workflows.hydration_monitor import HydrationMonitor, create_n8n_webhook_payload
 
@@ -430,7 +442,7 @@ webhook_payload = create_n8n_webhook_payload(health_report)
 
 **n8n Workflow Configuration:**
 
-```json
+``` json
 {
   "name": "Hydration Health Monitor",
   "nodes": [
@@ -465,7 +477,7 @@ webhook_payload = create_n8n_webhook_payload(health_report)
 
 ### **2. Performance Monitoring Workflow**
 
-```python
+``` python
 # Performance monitoring with alerts
 def monitor_performance():
     """Monitor performance metrics and trigger alerts"""
@@ -488,7 +500,7 @@ def monitor_performance():
 
 ### **3. Quality Assurance Workflow**
 
-```python
+``` python
 # Automated quality testing
 def run_quality_tests():
     """Run automated quality tests"""
@@ -508,7 +520,7 @@ def run_quality_tests():
         return {"status": "failed", "output": result.stderr}
 ```
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: dashboard-monitoring -->
 
@@ -516,7 +528,7 @@ def run_quality_tests():
 
 ### **1. Real-Time Dashboard**
 
-```python
+``` python
 # Start dashboard monitoring
 from src.mission_dashboard.hydration_dashboard import HydrationDashboard
 
@@ -529,7 +541,8 @@ dashboard_data = dashboard.get_dashboard_data()
 
 **Dashboard Features:**
 
-- **Real-time metrics**: Bundle creation time, quality scores, memory usage
+- **Real-time metrics**: Bundle creation time, quality scores, memory
+  usage
 - **Performance trends**: Improving/degrading indicators
 - **Alert system**: Warning and critical alerts
 - **Auto-refresh**: Updates every 30 seconds
@@ -537,7 +550,7 @@ dashboard_data = dashboard.get_dashboard_data()
 
 ### **2. Dashboard API Endpoints**
 
-```python
+``` python
 # Flask API for dashboard data
 from flask import Flask, jsonify
 from src.mission_dashboard.hydration_dashboard import HydrationDashboard
@@ -563,7 +576,7 @@ def get_alerts():
     return jsonify(data["alerts"])
 ```
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: automation-patterns -->
 
@@ -571,7 +584,7 @@ def get_alerts():
 
 ### **1. Scheduled Health Checks**
 
-```bash
+``` bash
 #!/bin/bash
 # scripts/hydration_health_check.sh
 
@@ -587,14 +600,14 @@ done
 
 **Cron Configuration:**
 
-```bash
+``` bash
 # Add to crontab
 */5 * * * * /path/to/scripts/hydration_health_check.sh
 ```
 
 ### **2. Performance Benchmarking**
 
-```bash
+``` bash
 #!/bin/bash
 # scripts/hydration_benchmark.sh
 
@@ -610,7 +623,7 @@ curl -X POST http://localhost:5000/api/hydration/benchmark \
 
 ### **3. Quality Testing Automation**
 
-```python
+``` python
 # Automated quality testing pipeline
 def quality_testing_pipeline():
     """Run comprehensive quality testing"""
@@ -635,7 +648,7 @@ def quality_testing_pipeline():
     return results
 ```
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: alert-system -->
 
@@ -643,7 +656,7 @@ def quality_testing_pipeline():
 
 ### **1. Alert Configuration**
 
-```python
+``` python
 # Alert configuration
 ALERT_CONFIG = {
     "performance": {
@@ -672,7 +685,7 @@ ALERT_CONFIG = {
 
 ### **2. Alert Channels**
 
-```python
+``` python
 # Multiple alert channels
 def send_alert(alert):
     """Send alert through multiple channels"""
@@ -694,7 +707,7 @@ def send_alert(alert):
 
 ### **3. Alert Escalation**
 
-```python
+``` python
 # Alert escalation logic
 def escalate_alert(alert):
     """Escalate alerts based on severity and frequency"""
@@ -710,7 +723,7 @@ def escalate_alert(alert):
     return alert
 ```
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: configuration-management -->
 
@@ -718,7 +731,7 @@ def escalate_alert(alert):
 
 ### **1. Environment Configuration**
 
-```bash
+``` bash
 # .env file for hydration system
 HYDRATION_MONITORING_ENABLED=true
 HYDRATION_CHECK_INTERVAL=30
@@ -729,7 +742,7 @@ HYDRATION_N8N_WEBHOOK_URL=http://localhost:5678/webhook/hydration
 
 ### **2. Configuration Validation**
 
-```python
+``` python
 # Configuration validation
 def validate_config():
     """Validate hydration system configuration"""
@@ -750,7 +763,7 @@ def validate_config():
     return True
 ```
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: performance-optimization -->
 
@@ -758,7 +771,7 @@ def validate_config():
 
 ### **1. Caching Strategy**
 
-```python
+``` python
 # Bundle caching for performance
 from functools import lru_cache
 
@@ -770,7 +783,7 @@ def get_cached_bundle(role: str, task: str, token_budget: int):
 
 ### **2. Connection Pooling**
 
-```python
+``` python
 # Database connection pooling optimization
 def optimize_connection_pool():
     """Optimize database connection pool for concurrent access"""
@@ -786,7 +799,7 @@ def optimize_connection_pool():
 
 ### **3. Load Balancing**
 
-```python
+``` python
 # Load balancing for high concurrent access
 def distribute_load():
     """Distribute load across multiple instances"""
@@ -801,7 +814,7 @@ def distribute_load():
     return current_instance
 ```
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: testing-integration -->
 
@@ -809,7 +822,7 @@ def distribute_load():
 
 ### **1. Integration Test Suite**
 
-```python
+``` python
 # Integration tests for hydration system
 def test_integration_workflow():
     """Test complete integration workflow"""
@@ -838,7 +851,7 @@ def test_integration_workflow():
 
 ### **2. Performance Testing**
 
-```python
+``` python
 # Performance testing under load
 def test_performance_under_load():
     """Test system performance under concurrent load"""
@@ -887,7 +900,7 @@ def test_performance_under_load():
 
 ### **3. Workflow Integration Tests**
 
-```python
+``` python
 def test_planning_workflow():
     """Test hydration integration with planning workflow"""
     # Step 1: Initial assessment
@@ -925,7 +938,7 @@ def test_planning_workflow():
 
 ### **4. Implementation Workflow Tests**
 
-```python
+``` python
 def test_implementation_workflow():
     """Test hydration integration with implementation workflow"""
     # Step 1: Code review
@@ -961,7 +974,7 @@ def test_implementation_workflow():
     }
 ```
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: troubleshooting -->
 
@@ -971,7 +984,7 @@ def test_implementation_workflow():
 
 #### **1. Database Connection Errors**
 
-```bash
+``` bash
 # Check database connectivity
 psql $POSTGRES_DSN -c "SELECT 1;"
 
@@ -982,7 +995,7 @@ echo $PYTHONPATH
 
 #### **2. Import Errors**
 
-```bash
+``` bash
 # Fix Python path
 export PYTHONPATH=dspy-rag-system/src
 
@@ -992,7 +1005,7 @@ python3 -c "import src.utils.memory_rehydrator; print('Import successful')"
 
 #### **3. Performance Issues**
 
-```python
+``` python
 # Check database performance
 def check_database_performance():
     import psycopg2
@@ -1015,7 +1028,7 @@ def check_database_performance():
 
 #### **4. Context Quality Issues**
 
-```python
+``` python
 # Validate context quality
 def diagnose_context_quality(bundle):
     """Diagnose context quality issues"""
@@ -1041,7 +1054,7 @@ def diagnose_context_quality(bundle):
     }
 ```
 
----
+------------------------------------------------------------------------
 
 <!-- ANCHOR: quality-gates -->
 
@@ -1058,10 +1071,10 @@ def diagnose_context_quality(bundle):
 
 #### **Performance Quality Gates**
 
-- ✅ Bundle creation < 5s (EXCELLENT)
-- ✅ Memory usage < 100MB for 10 bundles
-- ✅ Stress test success rate > 95%
-- ✅ Token efficiency > 80%
+- ✅ Bundle creation \< 5s (EXCELLENT)
+- ✅ Memory usage \< 100MB for 10 bundles
+- ✅ Stress test success rate \> 95%
+- ✅ Token efficiency \> 80%
 
 #### **Integration Quality Gates**
 
@@ -1072,7 +1085,7 @@ def diagnose_context_quality(bundle):
 
 ### **Quality Validation Functions**
 
-```python
+``` python
 def validate_planner_context(bundle) -> bool:
     """Validate planner role context quality"""
     text = bundle.text.lower()
@@ -1098,33 +1111,48 @@ def validate_implementer_context(bundle) -> bool:
     return has_tldr and has_dspy and has_system and has_technical
 ```
 
----
+------------------------------------------------------------------------
 
 ## 🔗 Related Documentation
 
-- **Memory Rehydrator**: `dspy-rag-system/src/utils/memory_rehydrator.py` (Python implementation)
-- **Memory Rehydrator**: `dspy-rag-system/src/utils/memory_rehydration.go` (Go implementation)
-- **Health Monitor**: `dspy-rag-system/src/n8n_workflows/hydration_monitor.py` (n8n integration)
-- **Performance Dashboard**: `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py` (Real-time monitoring)
-- **Smoke Tests**: `dspy-rag-system/tests/test_memory_rehydrator_smoke.py` (Basic tests)
-- **Anchor Parser**: `dspy-rag-system/src/utils/anchor_metadata_parser.py` (Metadata testing)
-- **Memory Context**: `100_memory/100_cursor-memory-context.md` (Primary scaffold)
-- **DSPy Context**: `100_memory/104_dspy-development-context.md` (Technical foundation)
-- **System Overview**: `400_guides/400_system-overview.md` (Architecture context)
-- **Context Priority**: `400_guides/400_context-priority-guide.md` (Reading order)
+- **Memory Rehydrator**:
+  `dspy-rag-system/src/utils/memory_rehydrator.py` (Python
+  implementation)
+- **Memory Rehydrator**:
+  `dspy-rag-system/src/utils/memory_rehydration.go` (Go implementation)
+- **Health Monitor**:
+  `dspy-rag-system/src/n8n_workflows/hydration_monitor.py` (n8n
+  integration)
+- **Performance Dashboard**:
+  `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py`
+  (Real-time monitoring)
+- **Smoke Tests**:
+  `dspy-rag-system/tests/test_memory_rehydrator_smoke.py` (Basic tests)
+- **Anchor Parser**:
+  `dspy-rag-system/src/utils/anchor_metadata_parser.py` (Metadata
+  testing)
+- **Memory Context**: `100_memory/100_cursor-memory-context.md` (Primary
+  scaffold)
+- **DSPy Context**: `100_memory/104_dspy-development-context.md`
+  (Technical foundation)
+- **System Overview**: `400_guides/400_system-overview.md` (Architecture
+  context)
+- **Context Priority**:
+  `400_guides/400_cursor-context-engineering-guide.md` (Reading order)
 
 ## 🗒️ Change Log
 
-- v2.0: Consolidated all hydration guides into comprehensive system guide
+- v2.0: Consolidated all hydration guides into comprehensive system
+  guide
 - v1.0: Created individual hydration guides (archived)
 
----
+------------------------------------------------------------------------
 
 ## 📋 Quick Reference
 
 ### **Essential Commands**
 
-```bash
+``` bash
 # Test hydration system (Python)
 python3 -m src.utils.memory_rehydrator --role planner --task "test" --limit 5
 
@@ -1143,7 +1171,7 @@ python3 scripts/hydration_benchmark.py
 
 ### **Role-Specific Usage**
 
-```python
+``` python
 # Planner context
 bundle = build_hydration_bundle(role="planner", task="strategic planning", token_budget=1200)
 
@@ -1153,20 +1181,22 @@ bundle = build_hydration_bundle(role="implementer", task="code implementation", 
 
 ### **Performance Targets**
 
-- Bundle creation: < 5s
-- Memory usage: < 100MB for 10 bundles
-- Success rate: > 95%
-- Token efficiency: > 80%
+- Bundle creation: \< 5s
+- Memory usage: \< 100MB for 10 bundles
+- Success rate: \> 95%
+- Token efficiency: \> 80%
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_hydration-system-guide.md
-# Generated: 2025-08-17T17:47:03.925797
+
+## Auto-generated sections for 400_hydration-system-guide.md
+
+## Generated: 2025-08-18T08:03:22.750152
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -1174,10 +1204,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

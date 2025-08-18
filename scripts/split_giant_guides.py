@@ -38,10 +38,10 @@ class GiantGuideSplitter:
             "400_system-overview.md",              # 768 lines
         ]
     
-    def analyze_file_structure(self, file_path: str) -> Dict[str, Any]:
+    def analyze_file_structure(self, file_path: str) -> dict[str, Any]:
         """Analyze the structure of a file to determine splitting strategy"""
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 content = f.read()
             
             lines = content.split('\n')
@@ -81,7 +81,7 @@ class GiantGuideSplitter:
             _LOG.error(f"Error analyzing {file_path}: {e}")
             return None
     
-    def determine_splitting_strategy(self, analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def determine_splitting_strategy(self, analysis: dict[str, Any]) -> list[dict[str, Any]]:
         """Determine how to split the file based on its structure"""
         file_path = analysis['file_path']
         headers = analysis['headers']
@@ -107,7 +107,7 @@ class GiantGuideSplitter:
         # Strategy 3: Split by content chunks
         return self._split_by_content_chunks(analysis)
     
-    def _split_by_top_level_sections(self, analysis: Dict[str, Any], sections: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _split_by_top_level_sections(self, analysis: dict[str, Any], sections: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Split file by top-level sections (## headers)"""
         file_path = analysis['file_path']
         lines = analysis['lines']
@@ -158,7 +158,7 @@ class GiantGuideSplitter:
         
         return splits
     
-    def _split_by_sub_sections(self, analysis: Dict[str, Any], sections: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _split_by_sub_sections(self, analysis: dict[str, Any], sections: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Split file by subsections (### headers)"""
         file_path = analysis['file_path']
         lines = analysis['lines']
@@ -247,7 +247,7 @@ class GiantGuideSplitter:
         
         return splits
     
-    def _split_by_content_chunks(self, analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _split_by_content_chunks(self, analysis: dict[str, Any]) -> list[dict[str, Any]]:
         """Split file by content chunks when no clear section structure exists"""
         file_path = analysis['file_path']
         lines = analysis['lines']
@@ -295,7 +295,7 @@ class GiantGuideSplitter:
         sanitized = sanitized.lower().strip('_')
         return sanitized
     
-    def create_module_content(self, split_info: Dict[str, Any]) -> str:
+    def create_module_content(self, split_info: dict[str, Any]) -> str:
         """Create the content for a split module"""
         content = split_info['content']
         
@@ -328,7 +328,7 @@ class GiantGuideSplitter:
         
         return header + content
     
-    def split_file(self, file_path: str) -> Dict[str, Any]:
+    def split_file(self, file_path: str) -> dict[str, Any]:
         """Split a single file into modules"""
         _LOG.info(f"Analyzing {file_path}...")
         
@@ -370,7 +370,7 @@ class GiantGuideSplitter:
             'splitting_strategy': splitting_strategy[0]['type']
         }
     
-    def split_all_files(self) -> Dict[str, Any]:
+    def split_all_files(self) -> dict[str, Any]:
         """Split all target files"""
         _LOG.info("Starting giant guide file splitting...")
         

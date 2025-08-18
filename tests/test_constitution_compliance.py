@@ -263,7 +263,7 @@ class TestConstitutionComplianceChecker(unittest.TestCase):
         # Test that violation was logged to file
         log_file = "constitution_violations.jsonl"
         if os.path.exists(log_file):
-            with open(log_file, 'r') as f:
+            with open(log_file) as f:
                 log_entries = f.readlines()
                 self.assertGreater(len(log_entries), 0)
                 

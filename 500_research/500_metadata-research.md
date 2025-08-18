@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_metadata-collection-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_metadata-collection-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Metadata research and governance patterns -->
@@ -28,7 +28,7 @@ Backlog link: B-007, B-045
 
 - **Points**: 3 - Research and governance guidance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_metadata-collection-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_guides/400_metadata-collection-guide.md
 
 - **Next Steps**: Implement metadata governance patterns
 

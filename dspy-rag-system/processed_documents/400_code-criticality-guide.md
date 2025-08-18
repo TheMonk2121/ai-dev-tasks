@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- MEMORY_CONTEXT: HIGH - Critical code identification and prioritization -->
@@ -216,7 +216,7 @@ def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
 
 - Architecture overview → `400_guides/400_system-overview.md`
 
-- Context/navigation → `400_guides/400_context-priority-guide.md`
+- Context/navigation → `400_guides/400_cursor-context-engineering-guide.md`
 
 ## 🗒️ Change Log
 

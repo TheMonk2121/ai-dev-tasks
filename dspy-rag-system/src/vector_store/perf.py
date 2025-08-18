@@ -35,8 +35,8 @@ class PerfVectorStore:
         self.dimension = dimension
 
     def similarity_search(
-        self, query_embedding: List[float], top_k: int = 5, **kwargs
-    ) -> List[Dict[str, Any]]:
+        self, query_embedding: list[float], top_k: int = 5, **kwargs
+    ) -> list[dict[str, Any]]:
         """
         Search for similar vectors with performance monitoring.
 
@@ -52,7 +52,7 @@ class PerfVectorStore:
             query_embedding=query_embedding, top_k=top_k, **kwargs
         )
 
-    def add_documents(self, documents: List[Dict[str, Any]]) -> bool:
+    def add_documents(self, documents: list[dict[str, Any]]) -> bool:
         """
         Add documents to the vector store.
 
@@ -64,7 +64,7 @@ class PerfVectorStore:
         """
         return self._enhanced_store.add_documents(documents)
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """
         Get health status of the vector store.
 
@@ -73,7 +73,7 @@ class PerfVectorStore:
         """
         return self._enhanced_store.get_health_status()
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """
         Get statistics about the vector store.
 
@@ -97,7 +97,7 @@ class PerfVectorStore:
         }
 
     # Dashboard-compatible alias
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         return self.get_stats()
 
     # Minimal parity methods (delegation)
@@ -136,13 +136,13 @@ class PerfVectorStore:
         raise AttributeError("PerfVectorStore inner has no get/list documents method")
 
     # Expose additional enhanced features
-    def get_performance_metrics(self, hours: int = 24) -> List[Dict[str, Any]]:
+    def get_performance_metrics(self, hours: int = 24) -> list[dict[str, Any]]:
         """Get performance metrics."""
         if hasattr(self._enhanced_store, "get_performance_metrics"):
             return self._enhanced_store.get_performance_metrics(hours)
         return []
 
-    def optimize_performance(self) -> Dict[str, Any]:
+    def optimize_performance(self) -> dict[str, Any]:
         """Optimize performance."""
         if hasattr(self._enhanced_store, "optimize_performance"):
             return self._enhanced_store.optimize_performance()

@@ -38,7 +38,7 @@ class ContextEngineeringMonitor:
             "recent_queries": []
         }
     
-    def process_query(self, query: str, expected_model: str = None) -> Dict[str, Any]:
+    def process_query(self, query: str, expected_model: str = None) -> dict[str, Any]:
         """Process a query and return detailed results"""
         
         start_time = time.time()
@@ -98,7 +98,7 @@ class ContextEngineeringMonitor:
             self.monitoring_data["average_latency"] = \
                 (current_avg * (total_queries - 1) + new_latency) / total_queries
     
-    def _add_recent_query(self, query: str, result: Dict[str, Any], latency_ms: float):
+    def _add_recent_query(self, query: str, result: dict[str, Any], latency_ms: float):
         """Add query to recent queries list"""
         recent_query = {
             "timestamp": datetime.now().isoformat(),
@@ -115,7 +115,7 @@ class ContextEngineeringMonitor:
         if len(self.monitoring_data["recent_queries"]) > 10:
             self.monitoring_data["recent_queries"] = self.monitoring_data["recent_queries"][-10:]
     
-    def get_status_report(self) -> Dict[str, Any]:
+    def get_status_report(self) -> dict[str, Any]:
         """Get comprehensive status report"""
         
         uptime_seconds = time.time() - self.monitoring_data["start_time"]

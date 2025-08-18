@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- MEMORY_CONTEXT: HIGH - PRD optimization research and implementation -->
@@ -26,7 +26,7 @@
 
 - **Points**: 4 - Research and implementation completed
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_deployment-environment-guide.md,
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_guides/400_deployment-environment-guide.md,
 400_guides/400_system-overview.md
 
 - **Next Steps**: Monitor performance and gather feedback
@@ -66,7 +66,7 @@ workflow to reflect PRD optimization
 - Enhanced workflow integration descriptions
 - Added decision rule to automation system
 
-4.**`400_guides/400_context-priority-guide.md`**- Added PRD optimization guide to process understanding
+4.**`400_guides/400_cursor-context-engineering-guide.md`**- Added PRD optimization guide to process understanding
 
 - Integrated with existing file organization
 

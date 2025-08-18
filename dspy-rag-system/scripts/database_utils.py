@@ -23,7 +23,7 @@ def get_db_connection():
             conn.close()
 
 
-def safe_fetchone(cursor, context: str = "operational", error_msg: str = "Database query failed") -> Tuple[Any, ...]:
+def safe_fetchone(cursor, context: str = "operational", error_msg: str = "Database query failed") -> tuple[Any, ...]:
     """
     Safely fetch one row from cursor with context-aware error handling.
 
@@ -50,7 +50,7 @@ def safe_fetchone(cursor, context: str = "operational", error_msg: str = "Databa
 
 def safe_fetchall(
     cursor, context: str = "operational", error_msg: str = "Database query failed"
-) -> List[Tuple[Any, ...]]:
+) -> list[tuple[Any, ...]]:
     """
     Safely fetch all rows from cursor with context-aware error handling.
 
@@ -73,7 +73,7 @@ def safe_fetchall(
     return result
 
 
-def execute_query(query: str, params: Optional[Tuple] = None, context: str = "operational") -> List[Tuple[Any, ...]]:
+def execute_query(query: str, params: tuple | None = None, context: str = "operational") -> list[tuple[Any, ...]]:
     """
     Execute a query and return results with context-aware error handling.
 
@@ -91,7 +91,7 @@ def execute_query(query: str, params: Optional[Tuple] = None, context: str = "op
         return safe_fetchall(cursor, context)
 
 
-def execute_single_query(query: str, params: Optional[Tuple] = None, context: str = "operational") -> Tuple[Any, ...]:
+def execute_single_query(query: str, params: tuple | None = None, context: str = "operational") -> tuple[Any, ...]:
     """
     Execute a query and return single result with context-aware error handling.
 
@@ -109,7 +109,7 @@ def execute_single_query(query: str, params: Optional[Tuple] = None, context: st
         return safe_fetchone(cursor, context)
 
 
-def get_database_stats(context: str = "operational") -> Dict[str, Any]:
+def get_database_stats(context: str = "operational") -> dict[str, Any]:
     """
     Get database statistics with context-aware error handling.
 
@@ -138,7 +138,7 @@ def get_database_stats(context: str = "operational") -> Dict[str, Any]:
     }
 
 
-def get_chunk_size_analysis(context: str = "operational") -> List[Tuple[str, int, int, float]]:
+def get_chunk_size_analysis(context: str = "operational") -> list[tuple[str, int, int, float]]:
     """
     Get chunk size analysis for 400_ guides with context-aware error handling.
 
@@ -162,7 +162,7 @@ def get_chunk_size_analysis(context: str = "operational") -> List[Tuple[str, int
     return execute_query(query, context=context)
 
 
-def get_cross_reference_analysis(context: str = "operational") -> List[Tuple[str, int, int, float]]:
+def get_cross_reference_analysis(context: str = "operational") -> list[tuple[str, int, int, float]]:
     """
     Get cross-reference analysis with context-aware error handling.
 
@@ -208,7 +208,7 @@ def get_duplicate_chunk_count(context: str = "operational") -> int:
     return result[0]
 
 
-def get_storage_analysis(context: str = "operational") -> Tuple[str, str]:
+def get_storage_analysis(context: str = "operational") -> tuple[str, str]:
     """
     Get storage analysis with context-aware error handling.
 

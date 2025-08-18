@@ -9,11 +9,11 @@ Fails if new entries are added without exception-approved label AND expiry ≤7 
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Dict, List, Set
 
 
-def load_ledger(path: str) -> Dict:
+def load_ledger(path: str) -> dict:
     """Load validator exceptions ledger."""
     if not os.path.exists(path):
         return {"exceptions": {}}
@@ -22,7 +22,7 @@ def load_ledger(path: str) -> Dict:
         return json.load(f)
 
 
-def get_changed_files() -> Set[str]:
+def get_changed_files() -> set[str]:
     """Get list of changed files from git."""
     import subprocess
 
@@ -36,7 +36,7 @@ def get_changed_files() -> Set[str]:
         return {"data/validator_exceptions.json"}
 
 
-def check_ledger_changes(old_ledger: Dict, new_ledger: Dict) -> List[Dict]:
+def check_ledger_changes(old_ledger: dict, new_ledger: dict) -> list[dict]:
     """Check for new ledger entries."""
     old_exceptions = old_ledger.get("exceptions", {})
     new_exceptions = new_ledger.get("exceptions", {})
@@ -54,7 +54,7 @@ def check_ledger_changes(old_ledger: Dict, new_ledger: Dict) -> List[Dict]:
     return new_entries
 
 
-def check_expiry_valid(entry: Dict) -> bool:
+def check_expiry_valid(entry: dict) -> bool:
     """Check if entry has valid expiry ≤7 days."""
     expires = entry.get("expires")
     if not expires:
@@ -63,12 +63,12 @@ def check_expiry_valid(entry: Dict) -> bool:
     try:
         # Parse expiry date
         if len(expires) == 10 and expires[4] == "-" and expires[7] == "-":
-            expiry_date = datetime.fromisoformat(expires).replace(hour=23, minute=59, second=59, tzinfo=timezone.utc)
+            expiry_date = datetime.fromisoformat(expires).replace(hour=23, minute=59, second=59, tzinfo=UTC)
         else:
             expiry_date = datetime.fromisoformat(expires.replace("Z", "+00:00"))
 
         # Check if expiry is ≤7 days from now
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         days_until_expiry = (expiry_date - now).days
 
         return days_until_expiry <= 7
@@ -76,7 +76,7 @@ def check_expiry_valid(entry: Dict) -> bool:
         return False
 
 
-def load_json_safely(path: str) -> Dict:
+def load_json_safely(path: str) -> dict:
     """Load JSON file safely, return empty dict if missing."""
     try:
         with open(path) as f:
@@ -85,7 +85,7 @@ def load_json_safely(path: str) -> Dict:
         return {"exceptions": {}}
 
 
-def get_labels_from_github_event() -> Set[str]:
+def get_labels_from_github_event() -> set[str]:
     """Get labels from GitHub event."""
     label = os.getenv("GITHUB_LABELS", "")
     return {s.strip() for s in label.split(",") if s.strip()}

@@ -1,8 +1,13 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
+
 <!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
+
 <!-- MEMORY_CONTEXT: MEDIUM - Metadata collection and analysis -->
+
 # 📊 Metadata Collection Guide
 
 ## 📊 Metadata Collection Guide
@@ -12,14 +17,16 @@
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-|  |  |  |
+|-------------------|-----------|---------|
+|                   |           |         |
 
 - **what this file is**: Quick summary of 📊 Metadata Collection Guide.
 
-- **read when**: When you need a fast orientation or before using this file in a workflow.
+- **read when**: When you need a fast orientation or before using this
+  file in a workflow.
 
-- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+- **do next**: Scan the headings below and follow any ‘Quick Start’ or
+  ‘Usage’ sections.
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Metadata collection system operational
 
@@ -27,13 +34,14 @@
 
 - **Points**: 4 - Moderate complexity, ongoing maintenance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_performance-optimization-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
+  400_guides/400_performance-optimization-guide.md
 
 - **Next Steps**: Expand collection coverage and optimize analysis
 
 }
 
-```markdown
+``` markdown
 
 - *Collection Method**: `scripts/backlog_parser.py` - Robust parser with regex patterns and HTML comment extraction.
 
@@ -152,12 +160,12 @@ comprehensive performance optimization patterns and implementation examples.
 
 ```python
 
-# Classify errors automatically
+## Classify errors automatically
 
 error_category = error_handler.classify_error(error)
 severity = error_handler.determine_severity(error, context)
 
-# Apply appropriate recovery
+## Apply appropriate recovery
 
 recovery_action = error_handler._get_recovery_action(error_info)
 
@@ -183,7 +191,7 @@ recovery_action = error_handler._get_recovery_action(error_info)
 
 ```python
 
-# Validate dependencies before execution
+## Validate dependencies before execution
 
 missing_deps = engine.validate_dependencies()
 for task_id, deps in missing_deps.items():
@@ -209,7 +217,7 @@ for task_id, deps in missing_deps.items():
 
 ```python
 
-# Real-time status updates
+## Real-time status updates
 
 status = engine.get_status()
 print(f"Total tasks: {status['total_tasks']}")
@@ -236,7 +244,7 @@ print(f"Success rate: {status['success_rate']}%")
 
 ```python
 
-# Generate performance reports
+## Generate performance reports
 
 stats = state_manager.get_statistics()
 print(f"Average execution time: {stats['avg_execution_time']:.2f}s")
@@ -263,7 +271,7 @@ print(f"Total retries: {stats['total_retries']}")
 
 ```python
 
-# Analyze error trends
+## Analyze error trends
 
 error_stats = error_handler.get_error_statistics()
 print(f"Most common error category: {max(error_stats['by_category'])}")
@@ -289,7 +297,7 @@ print(f"Recovery success rate: {error_stats['recovery_success_rate']:.1f}%")
 
 ```python
 
-# Identify bottlenecks
+## Identify bottlenecks
 
 slow_tasks = [t for t in tasks if t.avg_execution_time > 300]
 high_retry_tasks = [t for t in tasks if t.retry_count > 3]
@@ -314,7 +322,7 @@ high_retry_tasks = [t for t in tasks if t.retry_count > 3]
 
 ```python
 
-# Predict task success based on historical data
+## Predict task success based on historical data
 
 def predict_success(task_id):
     history = state_manager.get_execution_history(task_id)
@@ -367,23 +375,16 @@ Performance Metrics → Analytics → Optimization
 - *Command**: `python3 scripts/process_tasks.py status`
 
 - *Output**:
-
 ```
 
-Execution Status:
-Total tasks: 56
-Pending tasks: 0
+Execution Status: Total tasks: 56 Pending tasks: 0
 
-Status breakdown:
-  completed: 28
-  pending: 0
-  failed: 0
+Status breakdown: completed: 28 pending: 0 failed: 0
 
-Recent executions:
-  B-049: completed (2024-08-07T17:00:00)
-  B-072: completed (2024-08-07T16:15:00)
+Recent executions: B-049: completed (2024-08-07T17:00:00) B-072:
+completed (2024-08-07T16:15:00)
 
-```yaml
+``` yaml
 
 ### **3. Error Analysis**
 
@@ -406,22 +407,18 @@ Recent executions:
 - *Command**: `python3 scripts/process_tasks.py validate`
 
 - *Output**:
-
 ```
 
 All dependencies are satisfied
 
-```text
+``` text
 
 or
-
 ```
 
-Missing dependencies found:
-  B-050: B-049
-  B-051: B-050
+Missing dependencies found: B-050: B-049 B-051: B-050
 
-```yaml
+``` yaml
 
 ## 🔮 **Future Metadata Enhancements**###**1. Machine Learning Integration**
 
@@ -474,12 +471,11 @@ def analyze_task_correlations():
         'dependencies_vs_retries': calculate_correlation(dependency_count, retry_count)
     }
     return correlations
-
 ```
 
 ## **3. Real-time Monitoring**
 
-- *Live Dashboards**:
+- \*Live Dashboards\*\*:
 
 - Real-time execution monitoring with live updates
 
@@ -487,7 +483,7 @@ def analyze_task_correlations():
 
 - Performance threshold monitoring and notifications
 
-- *Dashboard Features**:
+- \*Dashboard Features\*\*:
 
 - Live task execution status
 
@@ -499,23 +495,29 @@ def analyze_task_correlations():
 
 ## 📋 **Best Practices**
 
-## ⚡ Quick reference {#quick-reference}
+## ⚡ Quick reference
 
-- Key sources: `000_core/000_backlog.md` (scores, deps, status), `task_execution.db` (executions, perf, retries), error system (categories, severity, recovery)
+- Key sources: `000_core/000_backlog.md` (scores, deps, status),
+  `task_execution.db` (executions, perf, retries), error system
+  (categories, severity, recovery)
 
 - Common commands:
+
   - Performance stats: `python3 scripts/state_manager.py --stats`
   - Error stats: `python3 scripts/error_handler.py --stats`
   - Validate deps: `python3 scripts/process_tasks.py validate`
-  - Export tasks: `python3 scripts/process_tasks.py list --format json > tasks.json`
+  - Export tasks:
+    `python3 scripts/process_tasks.py list --format json > tasks.json`
 
-- Export metrics (CSV): `python3 scripts/state_manager.py --stats --export-csv metrics.csv`
+- Export metrics (CSV):
+  `python3 scripts/state_manager.py --stats --export-csv metrics.csv`
 
 ### **1. Data Quality**-**Validation**: Ensure all metadata is properly validated before storage
 
 - **Consistency**: Maintain consistent data formats across all sources
 
-- **Completeness**: Capture all relevant metadata fields for comprehensive analysis
+- **Completeness**: Capture all relevant metadata fields for
+  comprehensive analysis
 
 ### **2. Performance Optimization**-**Indexing**: Proper database indexing for fast queries
 
@@ -537,35 +539,42 @@ def analyze_task_correlations():
 
 ## 🎯 **Conclusion**
 
-The metadata collection and analytics system provides a comprehensive foundation for intelligent automation, performance optimization, and data-driven decision making in the AI development ecosystem. By leveraging this rich metadata, teams
-can:
+The metadata collection and analytics system provides a comprehensive
+foundation for intelligent automation, performance optimization, and
+data-driven decision making in the AI development ecosystem. By
+leveraging this rich metadata, teams can:
 
-- **Optimize Task Execution**: Use historical data to improve execution strategies
+- **Optimize Task Execution**: Use historical data to improve execution
+  strategies
 
 - **Predict Performance**: Anticipate issues before they occur
 
-- **Automate Decision Making**: Let data drive prioritization and resource allocation
+- **Automate Decision Making**: Let data drive prioritization and
+  resource allocation
 
-- **Continuous Improvement**: Use analytics to identify and implement improvements
+- **Continuous Improvement**: Use analytics to identify and implement
+  improvements
 
-This system transforms the development process from reactive to proactive, enabling teams to build more efficiently and
-reliably.
+This system transforms the development process from reactive to
+proactive, enabling teams to build more efficiently and reliably.
 
-- --
+------------------------------------------------------------------------
 
-- *Document Version**: 1.0
-- *Last Updated**: 2024-08-07
+- \*Document Version\*\*: 1.0
+- \*Last Updated\*\*: 2024-08-07
 - **Next Review**: Monthly Review Cycle
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_metadata-collection-guide.md
-# Generated: 2025-08-17T17:47:03.930352
+
+## Auto-generated sections for 400_metadata-collection-guide.md
+
+## Generated: 2025-08-18T08:03:22.754705
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -573,10 +582,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

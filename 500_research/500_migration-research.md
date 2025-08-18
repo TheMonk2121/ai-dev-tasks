@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Migration research and patterns -->
 # 🔄 Migration & Upgrade Research
@@ -14,7 +14,7 @@
 
 - **Points**: 2 - Research and planning effort
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_migration-upgrade-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_migration-upgrade-guide.md
 
 - **Next Steps**: Populate with migration research findings
 

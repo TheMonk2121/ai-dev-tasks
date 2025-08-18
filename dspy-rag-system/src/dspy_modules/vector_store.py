@@ -64,7 +64,7 @@ def _query_embedding(model_name: str, text: str) -> np.ndarray:
 # ---------------------------
 
 
-def _zscore(scores: List[float]) -> List[float]:
+def _zscore(scores: list[float]) -> list[float]:
     if not scores:
         return []
     mu = float(np.mean(scores))
@@ -75,20 +75,20 @@ def _zscore(scores: List[float]) -> List[float]:
     return [(s - mu) / sigma for s in scores]
 
 
-def _rrf_ranks(scores: List[float]) -> Dict[int, int]:
+def _rrf_ranks(scores: list[float]) -> dict[int, int]:
     # Higher score = better rank 1..N
     order = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
     return {idx: rank + 1 for rank, idx in enumerate(order)}
 
 
 def _fuse_dense_sparse(
-    rows_dense: List[Dict[str, Any]],
-    rows_sparse: List[Dict[str, Any]],
+    rows_dense: list[dict[str, Any]],
+    rows_sparse: list[dict[str, Any]],
     limit: int,
     method: str = "zscore",  # or "rrf"
     w_dense: float = 0.6,
     w_sparse: float = 0.4,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Merge by key=(document_id, chunk_index) with either zscore fusion or RRF.
     Ensures comparable scales across modalities.
@@ -108,7 +108,7 @@ def _fuse_dense_sparse(
     dense_scores = [d_map.get(k, {}).get("score_dense", 0.0) for k in all_keys]
     sparse_scores = [s_map.get(k, {}).get("score_sparse", 0.0) for k in all_keys]
 
-    fused_scores: List[float] = []
+    fused_scores: list[float] = []
 
     if method == "rrf":
         # Reciprocal Rank Fusion (stable when distributions are weird)
@@ -126,7 +126,7 @@ def _fuse_dense_sparse(
         fused_scores = [w_dense * zd[i] + w_sparse * zs[i] for i in range(len(all_keys))]
 
     # Construct merged rows
-    merged: List[Dict[str, Any]] = []
+    merged: list[dict[str, Any]] = []
     for i, k in enumerate(all_keys):
         d = d_map.get(k)
         s = s_map.get(k)
@@ -164,8 +164,8 @@ class HybridVectorStore(Module):
         fusion: str = "zscore",  # "zscore" or "rrf"
         w_dense: float = 0.6,
         w_sparse: float = 0.4,
-        ivfflat_probes: Optional[int] = None,  # e.g., 10, only if using IVF
-        hnsw_ef_search: Optional[int] = None,  # e.g., 80, only if using HNSW
+        ivfflat_probes: int | None = None,  # e.g., 10, only if using IVF
+        hnsw_ef_search: int | None = None,  # e.g., 80, only if using HNSW
         use_websearch_tsquery: bool = True,
     ):
         super().__init__()
@@ -181,7 +181,7 @@ class HybridVectorStore(Module):
         self.hnsw_ef_search = hnsw_ef_search
         self.use_websearch_tsquery = use_websearch_tsquery
 
-    def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
+    def forward(self, operation: str, **kwargs) -> dict[str, Any]:
         if operation == "store_chunks":
             return self._store_chunks_with_spans(**kwargs)
         elif operation == "search_vector":
@@ -199,7 +199,7 @@ class HybridVectorStore(Module):
 
     # ------------- Search -------------
 
-    def _hybrid_search(self, query: str, limit: int = 5) -> Dict[str, Any]:
+    def _hybrid_search(self, query: str, limit: int = 5) -> dict[str, Any]:
         # Dense + sparse
         rows_dense = self._vector_search(query, limit)
         rows_sparse = self._text_search(query, limit)
@@ -220,11 +220,11 @@ class HybridVectorStore(Module):
             "results": merged,
         }
 
-    def _vector_search(self, query: str, limit: int) -> List[Dict[str, Any]]:
+    def _vector_search(self, query: str, limit: int) -> list[dict[str, Any]]:
         """Dense vector search using pgvector with spans included."""
         return self._search_dense(query, limit)
 
-    def _search_vector(self, query: str, limit: int = 5) -> Dict[str, Any]:
+    def _search_vector(self, query: str, limit: int = 5) -> dict[str, Any]:
         """Raw vector search returning results with distance for canonicalization."""
         q_emb = _query_embedding(self.model_name, query)
 
@@ -262,7 +262,7 @@ class HybridVectorStore(Module):
         except Exception:
             raise
 
-    def _search_bm25(self, query: str, limit: int = 5) -> Dict[str, Any]:
+    def _search_bm25(self, query: str, limit: int = 5) -> dict[str, Any]:
         """Raw BM25 search returning results with ts_rank for canonicalization."""
         db_manager = get_database_manager()
 
@@ -293,7 +293,7 @@ class HybridVectorStore(Module):
             raise
 
     @retry_database
-    def _search_dense(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
+    def _search_dense(self, query: str, limit: int = 5) -> list[dict[str, Any]]:
         q_emb = _query_embedding(self.model_name, query)
 
         # Choose distance operator according to metric
@@ -339,7 +339,7 @@ class HybridVectorStore(Module):
                     rows = cur.fetchall()
 
             # Normalize shape
-            out: List[Dict[str, Any]] = []
+            out: list[dict[str, Any]] = []
             for r in rows:
                 out.append(
                     {
@@ -359,7 +359,7 @@ class HybridVectorStore(Module):
         except Exception:
             raise
 
-    def _text_search(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
+    def _text_search(self, query: str, limit: int = 5) -> list[dict[str, Any]]:
         """Sparse text search using PostgreSQL full-text search (with spans)."""
         db_manager = get_database_manager()
         ts_fn = "websearch_to_tsquery" if self.use_websearch_tsquery else "plainto_tsquery"
@@ -385,7 +385,7 @@ class HybridVectorStore(Module):
                     )
                     rows = cur.fetchall()
 
-            out: List[Dict[str, Any]] = []
+            out: list[dict[str, Any]] = []
             for r in rows:
                 out.append(
                     {
@@ -408,12 +408,12 @@ class HybridVectorStore(Module):
     # ------------- Store -------------
 
     @retry_database
-    def _store_chunks_with_spans(self, chunks: List[str], metadata: Dict[str, Any]) -> Dict[str, Any]:
+    def _store_chunks_with_spans(self, chunks: list[str], metadata: dict[str, Any]) -> dict[str, Any]:
         """Store document chunks with embeddings and span information."""
         embeddings = self.model.encode(chunks, convert_to_numpy=True)
         doc_id = metadata.get("document_id") or uuid.uuid4().hex
 
-        chunk_rows: List[Tuple] = []
+        chunk_rows: list[tuple] = []
         for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
             if isinstance(emb, torch.Tensor):
                 emb = emb.detach().cpu().numpy()
@@ -430,11 +430,11 @@ class HybridVectorStore(Module):
 
     def _insert_with_spans(
         self,
-        chunk_rows: List[Tuple],
-        metadata: Dict[str, Any],
+        chunk_rows: list[tuple],
+        metadata: dict[str, Any],
         doc_id: str,
         chunk_count: int,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         db_manager = get_database_manager()
         try:
             with db_manager.get_connection() as conn:
@@ -527,7 +527,7 @@ class HybridVectorStore(Module):
 
     # ------------- Admin -------------
 
-    def _delete_document(self, document_id: str) -> Dict[str, Any]:
+    def _delete_document(self, document_id: str) -> dict[str, Any]:
         try:
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -538,7 +538,7 @@ class HybridVectorStore(Module):
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
-    def _get_document_chunks(self, document_id: str) -> Dict[str, Any]:
+    def _get_document_chunks(self, document_id: str) -> dict[str, Any]:
         try:
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -565,7 +565,7 @@ class HybridVectorStore(Module):
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         try:
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -591,7 +591,7 @@ class HybridVectorStore(Module):
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Alias for get_stats() to align with dashboard API"""
         return self.get_stats()
 
@@ -603,7 +603,7 @@ class VectorStorePipeline(Module):
         super().__init__()
         self.vector_store = HybridVectorStore(db_connection_string)
 
-    def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
+    def forward(self, operation: str, **kwargs) -> dict[str, Any]:
         return self.vector_store(operation, **kwargs)
 
 

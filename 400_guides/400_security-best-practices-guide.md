@@ -1,28 +1,39 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_contributing-guidelines.md -->
+
 <!-- MEMORY_CONTEXT: HIGH - Security practices and threat mitigation -->
+
 # 🔒 Security Best Practices Guide
 
 <!-- ANCHOR: tldr -->
+
 {#tldr}
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-|  |  |  |
+|-------------------|-----------|---------|
+|                   |           |         |
 
-- **what this file is**: Security architecture, controls, and incident response for the system.
+- **what this file is**: Security architecture, controls, and incident
+  response for the system.
 
-- **read when**: Making risky changes, setting policies, or responding to security events.
+- **read when**: Making risky changes, setting policies, or responding
+  to security events.
 
-- **do next**: Review "Security Architecture", "Access Control", and "Incident Response".
+- **do next**: Review “Security Architecture”, “Access Control”, and
+  “Incident Response”.
 
-- **anchors**: `security architecture`, `access control`, `data protection`, `network security`, `ai model security`,
-`incident response`, `security checklist`
+- **anchors**: `security architecture`, `access control`,
+  `data protection`, `network security`, `ai model security`,
+  `incident response`, `security checklist`
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Security practices maintained
 
@@ -30,7 +41,8 @@
 
 - **Points**: 5 - High complexity, security critical
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_deployment-environment-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
+  400_guides/400_deployment-environment-guide.md
 
 - **Next Steps**: Update security practices as threats evolve
 
@@ -40,24 +52,26 @@
 
 - **Output Manipulation**: Forcing AI models to generate harmful content
 
-- **Privacy Violations**: AI models revealing sensitive information from training data
+- **Privacy Violations**: AI models revealing sensitive information from
+  training data
 
-### **Risk Assessment Matrix**| Threat | Likelihood | Impact | Risk Level | Mitigation |
+### **Risk Assessment Matrix**\| Threat \| Likelihood \| Impact \| Risk Level \| Mitigation \|
 
-|--------|------------|--------|------------|------------|
-| Prompt Injection | High | High | 🔴 Critical | Input validation, prompt sanitization |
-| Data Exfiltration | Medium | High | 🟡 High | Access controls, encryption |
-| Denial of Service | Medium | Medium | 🟡 High | Rate limiting, monitoring |
-| Configuration Errors | High | Medium | 🟡 High | Automated validation, testing |
-| Accidental Data Exposure | High | High | 🔴 Critical | Pre-commit hooks, scanning |
+\|——–\|————\|——–\|————\|————\| \| Prompt Injection \| High \| High \| 🔴
+Critical \| Input validation, prompt sanitization \| \| Data
+Exfiltration \| Medium \| High \| 🟡 High \| Access controls, encryption
+\| \| Denial of Service \| Medium \| Medium \| 🟡 High \| Rate limiting,
+monitoring \| \| Configuration Errors \| High \| Medium \| 🟡 High \|
+Automated validation, testing \| \| Accidental Data Exposure \| High \|
+High \| 🔴 Critical \| Pre-commit hooks, scanning \|
 
-- --
+------------------------------------------------------------------------
 
 ## 🏗️ Security Architecture
 
 ### **Defense in Depth Strategy**
 
-```text
+``` text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Security Layers                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -231,19 +245,19 @@ GRANT USAGE ON SCHEMA public TO ai_developer;
 
 ### **Response Procedures**####**1. Detection & Alerting**```python
 
-# Security monitoring setup
+## Security monitoring setup
 
 def security_alert(incident_type: str, details: dict):
 
-    # Send immediate alert
+    ## Send immediate alert
 
     send_alert(f"SECURITY ALERT: {incident_type}", details)
 
-    # Log incident
+    ## Log incident
 
     log_security_incident(incident_type, details)
 
-    # Trigger response procedures
+    ## Trigger response procedures
 
     trigger_incident_response(incident_type)
 
@@ -267,7 +281,7 @@ echo "4. Initiating backup procedures..."
 
 ## **3. Recovery Procedures**```python
 
-# Recovery automation
+## Recovery automation
 
 def initiate_recovery(incident_type: str):
     if incident_type == "data_breach":
@@ -320,7 +334,7 @@ SECURITY_MONITORING_CONFIG = {
 
 ### **3. Alert Channels**```python
 
-# Alert configuration
+## Alert configuration
 
 ALERT_CHANNELS = {
     "critical": ["email", "sms", "dashboard"],
@@ -337,14 +351,13 @@ ALERT_CHANNELS = {
 ├── 🟡 Active Alerts: 2
 ├── 📊 Threat Level: Low
 └── 🛡️ Last Scan: 2 minutes ago
-
 ```
 
-### **2. Security Metrics**-**Vulnerability Scan Results**-**Access Control Status**-**Encryption Status**-**Backup Status**---
+### **2. Security Metrics**-**Vulnerability Scan Results**-**Access Control Status**-**Encryption Status**-**Backup Status**—
 
 ## 📋 Compliance & Standards
 
-### **Security Standards**####**1. OWASP Top 10 Compliance**-**A01:2021 - Broken Access Control**: Implemented role-based access
+### **Security Standards**\####**1. OWASP Top 10 Compliance**-**A01:2021 - Broken Access Control**: Implemented role-based access
 
 - **A02:2021 - Cryptographic Failures**: TLS 1.3, AES-256 encryption
 
@@ -352,7 +365,8 @@ ALERT_CHANNELS = {
 
 - **A04:2021 - Insecure Design**: Security-first architecture
 
-- **A05:2021 - Security Misconfiguration**: Automated configuration validation
+- **A05:2021 - Security Misconfiguration**: Automated configuration
+  validation
 
 #### **2. AI Security Best Practices**-**Input Validation**: All AI inputs sanitized
 
@@ -370,7 +384,7 @@ ALERT_CHANNELS = {
 
 - **Data Classification**: Sensitive data properly classified
 
-### **Compliance Checklist**- [ ]**Access Controls**: Role-based access implemented
+### **Compliance Checklist**- \[ \]**Access Controls**: Role-based access implemented
 
 - [ ] **Encryption**: Data encrypted at rest and in transit
 
@@ -390,11 +404,11 @@ ALERT_CHANNELS = {
 
 - [ ] **Training**: Security awareness training completed
 
-- --
+------------------------------------------------------------------------
 
 ## ✅ Security Checklist
 
-### **Daily Security Tasks**- [ ] Review security alerts and logs
+### **Daily Security Tasks**- \[ \] Review security alerts and logs
 
 - [ ] Check system performance and resource usage
 
@@ -404,7 +418,7 @@ ALERT_CHANNELS = {
 
 - [ ] Review access control logs
 
-### **Weekly Security Tasks**- [ ] Run vulnerability scans
+### **Weekly Security Tasks**- \[ \] Run vulnerability scans
 
 - [ ] Review and update security configurations
 
@@ -414,7 +428,7 @@ ALERT_CHANNELS = {
 
 - [ ] Review AI model security settings
 
-### **Monthly Security Tasks**- [ ] Conduct security audit
+### **Monthly Security Tasks**- \[ \] Conduct security audit
 
 - [ ] Review and update threat model
 
@@ -424,7 +438,7 @@ ALERT_CHANNELS = {
 
 - [ ] Review compliance status
 
-### **Quarterly Security Tasks**- [ ] Conduct penetration testing
+### **Quarterly Security Tasks**- \[ \] Conduct penetration testing
 
 - [ ] Review and update security policies
 
@@ -434,39 +448,39 @@ ALERT_CHANNELS = {
 
 - [ ] Review and update risk assessments
 
-- --
+------------------------------------------------------------------------
 
 ## 🚨 Emergency Procedures
 
 ### **Immediate Response (0-15 minutes)**
 
 1.**Assess the situation**- Determine incident type and severity
-2.**Contain the threat**- Isolate affected systems
-3.**Alert stakeholders**- Notify incident response team
-4.**Document everything**- Begin incident documentation
+2.**Contain the threat**- Isolate affected systems 3.**Alert
+stakeholders**- Notify incident response team 4.**Document everything**-
+Begin incident documentation
 
 ### **Short-term Response (15 minutes - 4 hours)**
 
 1.**Investigate root cause**- Determine how the incident occurred
 2.**Implement fixes**- Apply security patches or configuration changes
-3.**Monitor systems**- Watch for additional threats
-4.**Communicate status**- Update stakeholders on progress
+3.**Monitor systems**- Watch for additional threats 4.**Communicate
+status**- Update stakeholders on progress
 
 ### **Long-term Response (4 hours - 1 week)**
 
 1.**Complete investigation**- Full technical and forensic analysis
-2.**Implement permanent fixes**- Address root causes
-3.**Update procedures**- Improve security based on lessons learned
-4.**Document lessons learned**- Update security documentation
+2.**Implement permanent fixes**- Address root causes 3.**Update
+procedures**- Improve security based on lessons learned 4.**Document
+lessons learned**- Update security documentation
 
 ### **Recovery Procedures**
 
 1.**System restoration**- Restore systems from clean backups
-2.**Security validation**- Verify systems are secure
-3.**Monitoring enhancement**- Improve monitoring based on incident
-4.**Training updates**- Update security training materials
+2.**Security validation**- Verify systems are secure 3.**Monitoring
+enhancement**- Improve monitoring based on incident 4.**Training
+updates**- Update security training materials
 
-- --
+------------------------------------------------------------------------
 
 ## 📞 Emergency Contacts
 
@@ -488,7 +502,7 @@ ALERT_CHANNELS = {
 
 - **External Security**: External number
 
-- --
+------------------------------------------------------------------------
 
 ## 📚 Additional Resources
 
@@ -496,7 +510,8 @@ ALERT_CHANNELS = {
 
 - **AI Security Guidelines**: <https://ai.gov/security/>
 
-- **NIST Cybersecurity Framework**: <https://www.nist.gov/cyberframework>
+- **NIST Cybersecurity Framework**:
+  <https://www.nist.gov/cyberframework>
 
 ### **Tools and Scripts**-**Security Scanner**: `scripts/security_scan.py`
 
@@ -510,21 +525,23 @@ ALERT_CHANNELS = {
 
 - **AI Security Training**: Specialized training for AI systems
 
-- --
+------------------------------------------------------------------------
 
-- Last Updated: 2024-08-07*
-- Next Review: Monthly*
-- Security Level: Confidential*
+- Last Updated: 2024-08-07\*
+- Next Review: Monthly\*
+- Security Level: Confidential\*
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_security-best-practices-guide.md
-# Generated: 2025-08-17T17:47:03.941630
+
+## Auto-generated sections for 400_security-best-practices-guide.md
+
+## Generated: 2025-08-18T08:03:22.765824
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -532,10 +549,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

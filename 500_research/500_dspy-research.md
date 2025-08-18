@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
@@ -29,7 +29,7 @@ Backlog link: B-076, B-079
 
 - **Points**: 5 - Research and implementation guidance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_few-shot-context-examples.md,
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_few-shot-context-examples.md,
 400_guides/400_performance-optimization-guide.md, 400_guides/400_system-overview.md
 
 - **Next Steps**: Implement DSPy patterns and optimizations

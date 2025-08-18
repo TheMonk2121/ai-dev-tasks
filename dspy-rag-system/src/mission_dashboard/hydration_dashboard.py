@@ -67,7 +67,7 @@ class HydrationDashboard:
         self.monitoring_active = False
         logger.info("Stopped hydration monitoring")
 
-    def _collect_metrics(self) -> Dict[str, Any]:
+    def _collect_metrics(self) -> dict[str, Any]:
         """Collect current system metrics"""
         timestamp = time.time()
         metrics = {
@@ -81,7 +81,7 @@ class HydrationDashboard:
 
         return metrics
 
-    def _measure_bundle_creation(self) -> Dict[str, Any]:
+    def _measure_bundle_creation(self) -> dict[str, Any]:
         """Measure bundle creation performance"""
         try:
             start_time = time.time()
@@ -120,7 +120,7 @@ class HydrationDashboard:
             logger.error(f"Bundle creation measurement failed: {e}")
             return {"error": str(e), "status": "error"}
 
-    def _measure_memory_usage(self) -> Dict[str, Any]:
+    def _measure_memory_usage(self) -> dict[str, Any]:
         """Measure memory usage"""
         try:
             import psutil  # type: ignore[import-untyped]
@@ -141,7 +141,7 @@ class HydrationDashboard:
             logger.error(f"Memory measurement failed: {e}")
             return {"error": str(e), "status": "error"}
 
-    def _measure_quality_metrics(self) -> Dict[str, Any]:
+    def _measure_quality_metrics(self) -> dict[str, Any]:
         """Measure quality metrics"""
         try:
             # Test role-specific quality
@@ -176,7 +176,7 @@ class HydrationDashboard:
             logger.error(f"Quality measurement failed: {e}")
             return {"error": str(e), "status": "error"}
 
-    def _check_system_health(self) -> Dict[str, Any]:
+    def _check_system_health(self) -> dict[str, Any]:
         """Check overall system health"""
         try:
             # Database connection
@@ -209,7 +209,7 @@ class HydrationDashboard:
             "overall": db_healthy and rehydrator_healthy,
         }
 
-    def _update_history(self, metrics: Dict[str, Any]):
+    def _update_history(self, metrics: dict[str, Any]):
         """Update metrics history"""
         self.metrics_history.append(metrics)
 
@@ -233,7 +233,7 @@ class HydrationDashboard:
                 {"timestamp": metrics["timestamp"], "value": metrics["quality_metrics"]["overall_score"]}
             )
 
-    def get_dashboard_data(self) -> Dict[str, Any]:
+    def get_dashboard_data(self) -> dict[str, Any]:
         """Get current dashboard data"""
         current_metrics = self._collect_metrics()
 
@@ -251,7 +251,7 @@ class HydrationDashboard:
             "performance_data": self.performance_data,
         }
 
-    def _calculate_trends(self) -> Dict[str, Any]:
+    def _calculate_trends(self) -> dict[str, Any]:
         """Calculate performance trends"""
         if len(self.metrics_history) < 2:
             return {"status": "insufficient_data"}
@@ -284,7 +284,7 @@ class HydrationDashboard:
 
         return {"bundle_creation": creation_trend, "quality": quality_trend, "status": "calculated"}
 
-    def _generate_alerts(self, metrics: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _generate_alerts(self, metrics: dict[str, Any]) -> list[dict[str, Any]]:
         """Generate alerts based on current metrics"""
         alerts = []
 
@@ -336,7 +336,7 @@ class HydrationDashboard:
 
         return alerts
 
-    def _get_history_summary(self) -> Dict[str, Any]:
+    def _get_history_summary(self) -> dict[str, Any]:
         """Get summary of historical data"""
         if not self.metrics_history:
             return {"status": "no_data"}
@@ -380,7 +380,7 @@ class HydrationDashboard:
         }
 
 
-def create_dashboard_html(dashboard_data: Dict[str, Any]) -> str:
+def create_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     """Create HTML dashboard"""
     html = """
     <!DOCTYPE html>

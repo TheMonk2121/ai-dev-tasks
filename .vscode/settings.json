@@ -218,6 +218,7 @@
         "pyright",
         "PYRIGHT",
         "pyrightconfig",
+        "pyupgrade",
         "rglob",
         "doraise",
         "OLLAMA",

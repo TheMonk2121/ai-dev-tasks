@@ -1,13 +1,19 @@
 <!-- ANCHOR_KEY: graph-visualization-guide -->
+
 <!-- ANCHOR_PRIORITY: 12 -->
+
 <!-- ROLE_PINS: ["planner", "implementer"] -->
 
 # 📊 Graph Visualization Guide
 
 <!-- CONTEXT_REFERENCE: 400_guides/400_system-overview.md -->
+
 <!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
+
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
+
 <!-- MEMORY_CONTEXT: HIGH - Chunk relationship visualization system -->
+
 <!-- DATABASE_SYNC: REQUIRED -->
 
 ## 🎯 **Current Status**
@@ -23,19 +29,22 @@
 - **Next Steps**: Monitor usage and gather feedback for improvements
 
 <!-- ANCHOR_KEY: tldr -->
+
 <!-- ANCHOR_PRIORITY: 0 -->
+
 <!-- ROLE_PINS: ["planner", "implementer"] -->
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
+|----|----|----|
 | Comprehensive guide for chunk relationship visualization using Flask and NiceGUI | You need to understand or use the visualization system | Jump to `#quick-start` for immediate usage; then review `#architecture` for technical details |
 
 ## 🚀 Quick Start
 
 ### **🐙 Wake Up Nemo (Recommended)**
-```bash
+
+``` bash
 # Start all visualization components with one command
 ./dspy-rag-system/wake_up_nemo.sh
 
@@ -48,7 +57,8 @@
 ### **Individual Components**
 
 #### **Flask Cluster Visualization**
-```bash
+
+``` bash
 # Start the main dashboard
 ./dspy-rag-system/start_mission_dashboard.sh
 
@@ -57,7 +67,8 @@
 ```
 
 #### **NiceGUI Network Graph**
-```bash
+
+``` bash
 # Start the graph visualization app
 ./dspy-rag-system/start_graph_visualization.sh
 
@@ -66,13 +77,15 @@
 ```
 
 ### **API Access**
-```bash
+
+``` bash
 # Get visualization data directly
 curl "http://localhost:5000/graph-data?max_nodes=1000&include_knn=true&include_entity=true"
 ```
 
 ### **🐙 Nemo Management Commands**
-```bash
+
+``` bash
 # Start everything (parallel startup - recommended)
 ./dspy-rag-system/wake_up_nemo.sh
 
@@ -104,55 +117,57 @@ python scripts/performance_benchmark.py --script sleep_nemo_fast --iterations 3
 ```
 
 <!-- ANCHOR_KEY: architecture -->
+
 <!-- ANCHOR_PRIORITY: 20 -->
+
 <!-- ROLE_PINS: ["implementer"] -->
 
 ## 🏗️ Architecture
 
 ### **System Components**
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Visualization System                     │
-├─────────────────────────────────────────────────────────────┤
-│  📊 GraphDataProvider (Core Engine)                        │
-│  ├── UMAP Coordinate Computation                           │
-│  ├── Cache Management (Corpus Snapshot Keyed)              │
-│  ├── Database Integration (PostgreSQL + pgvector)          │
-│  └── Feature Flag Protection                               │
-├─────────────────────────────────────────────────────────────┤
-│  🌐 API Layer (/graph-data V1)                             │
-│  ├── Query Parameter Validation                            │
-│  ├── Response Formatting (JSON V1 Schema)                  │
-│  ├── Error Handling & Status Codes                         │
-│  └── Performance Monitoring                                │
-├─────────────────────────────────────────────────────────────┤
-│  📈 Flask Cluster View (UMAP Scatter)                      │
-│  ├── Plotly.js Integration                                 │
-│  ├── Interactive Controls (Query, Filters, Sliders)        │
-│  ├── Real-time Updates                                     │
-│  └── Responsive Design                                     │
-├─────────────────────────────────────────────────────────────┤
-│  🕸️ NiceGUI Network Graph (Cytoscape)                      │
-│  ├── Cytoscape.js Integration                              │
-│  ├── Force-Directed Layout                                 │
-│  ├── Node/Edge Styling & Interactions                      │
-│  └── Advanced Filtering & Navigation                       │
-└─────────────────────────────────────────────────────────────┘
-```
+    ┌─────────────────────────────────────────────────────────────┐
+    │                    Visualization System                     │
+    ├─────────────────────────────────────────────────────────────┤
+    │  📊 GraphDataProvider (Core Engine)                        │
+    │  ├── UMAP Coordinate Computation                           │
+    │  ├── Cache Management (Corpus Snapshot Keyed)              │
+    │  ├── Database Integration (PostgreSQL + pgvector)          │
+    │  └── Feature Flag Protection                               │
+    ├─────────────────────────────────────────────────────────────┤
+    │  🌐 API Layer (/graph-data V1)                             │
+    │  ├── Query Parameter Validation                            │
+    │  ├── Response Formatting (JSON V1 Schema)                  │
+    │  ├── Error Handling & Status Codes                         │
+    │  └── Performance Monitoring                                │
+    ├─────────────────────────────────────────────────────────────┤
+    │  📈 Flask Cluster View (UMAP Scatter)                      │
+    │  ├── Plotly.js Integration                                 │
+    │  ├── Interactive Controls (Query, Filters, Sliders)        │
+    │  ├── Real-time Updates                                     │
+    │  └── Responsive Design                                     │
+    ├─────────────────────────────────────────────────────────────┤
+    │  🕸️ NiceGUI Network Graph (Cytoscape)                      │
+    │  ├── Cytoscape.js Integration                              │
+    │  ├── Force-Directed Layout                                 │
+    │  ├── Node/Edge Styling & Interactions                      │
+    │  └── Advanced Filtering & Navigation                       │
+    └─────────────────────────────────────────────────────────────┘
 
 ### **Data Flow**
 
-1. **User Request** → Flask/NiceGUI UI
-2. **API Call** → `/graph-data` endpoint
-3. **Data Processing** → GraphDataProvider
-4. **Database Query** → PostgreSQL + pgvector
-5. **UMAP Computation** → 2D coordinate generation
-6. **Response** → JSON V1 schema
-7. **Visualization** → Plotly/Cytoscape rendering
+1.  **User Request** → Flask/NiceGUI UI
+2.  **API Call** → `/graph-data` endpoint
+3.  **Data Processing** → GraphDataProvider
+4.  **Database Query** → PostgreSQL + pgvector
+5.  **UMAP Computation** → 2D coordinate generation
+6.  **Response** → JSON V1 schema
+7.  **Visualization** → Plotly/Cytoscape rendering
 
 <!-- ANCHOR_KEY: api-reference -->
+
 <!-- ANCHOR_PRIORITY: 15 -->
+
 <!-- ROLE_PINS: ["implementer"] -->
 
 ## 🔌 API Reference
@@ -161,15 +176,16 @@ python scripts/performance_benchmark.py --script sleep_nemo_fast --iterations 3
 
 **Purpose**: Retrieve chunk relationship data for visualization
 
-**Parameters**:
-- `q` (string, optional): Search query for filtering chunks
-- `include_knn` (boolean, default: true): Include KNN similarity edges
-- `include_entity` (boolean, default: true): Include entity relationship edges
-- `min_sim` (float, 0.0-1.0, default: 0.5): Minimum similarity threshold
-- `max_nodes` (integer, 1-10000, default: 2000): Maximum nodes to return
+**Parameters**: - `q` (string, optional): Search query for filtering
+chunks - `include_knn` (boolean, default: true): Include KNN similarity
+edges - `include_entity` (boolean, default: true): Include entity
+relationship edges - `min_sim` (float, 0.0-1.0, default: 0.5): Minimum
+similarity threshold - `max_nodes` (integer, 1-10000, default: 2000):
+Maximum nodes to return
 
 **Response Format (V1 Schema)**:
-```json
+
+``` json
 {
   "nodes": [
     {
@@ -194,14 +210,13 @@ python scripts/performance_benchmark.py --script sleep_nemo_fast --iterations 3
 }
 ```
 
-**Status Codes**:
-- `200`: Success
-- `400`: Invalid parameters
-- `403`: Feature flag disabled
-- `500`: Internal server error
+**Status Codes**: - `200`: Success - `400`: Invalid parameters - `403`:
+Feature flag disabled - `500`: Internal server error
 
 <!-- ANCHOR_KEY: flask-cluster -->
+
 <!-- ANCHOR_PRIORITY: 10 -->
+
 <!-- ROLE_PINS: ["planner", "implementer"] -->
 
 ## 📊 Flask Cluster Visualization
@@ -212,16 +227,17 @@ python scripts/performance_benchmark.py --script sleep_nemo_fast --iterations 3
 - **Interactive Controls**: Query input, max nodes, similarity slider
 - **Real-time Updates**: Auto-refresh every 30 seconds
 - **Hover Details**: File path and line span information
-- **Color Coding**: By chunk category (anchor, documentation, code, other)
+- **Color Coding**: By chunk category (anchor, documentation, code,
+  other)
 - **Edge Visualization**: KNN and entity relationships
 
 ### **Usage**
 
-1. **Start Dashboard**: `./dspy-rag-system/start_mission_dashboard.sh`
-2. **Navigate**: Go to `http://localhost:5000/cluster`
-3. **Configure**: Set query, max nodes, similarity threshold
-4. **Load Graph**: Click "Load Graph" to fetch and display data
-5. **Interact**: Hover over points, use zoom/pan controls
+1.  **Start Dashboard**: `./dspy-rag-system/start_mission_dashboard.sh`
+2.  **Navigate**: Go to `http://localhost:5000/cluster`
+3.  **Configure**: Set query, max nodes, similarity threshold
+4.  **Load Graph**: Click “Load Graph” to fetch and display data
+5.  **Interact**: Hover over points, use zoom/pan controls
 
 ### **Controls**
 
@@ -234,7 +250,9 @@ python scripts/performance_benchmark.py --script sleep_nemo_fast --iterations 3
 - **Reset View**: Reset zoom and pan
 
 <!-- ANCHOR_KEY: nicegui-graph -->
+
 <!-- ANCHOR_PRIORITY: 10 -->
+
 <!-- ROLE_PINS: ["planner", "implementer"] -->
 
 ## 🕸️ NiceGUI Network Graph
@@ -244,17 +262,19 @@ python scripts/performance_benchmark.py --script sleep_nemo_fast --iterations 3
 - **Interactive Network Graph**: Force-directed layout with Cytoscape.js
 - **Advanced Filtering**: Query-based filtering and edge type toggles
 - **Node Interactions**: Click for details, drag to reposition
-- **Edge Visualization**: Different colors for KNN vs entity relationships
+- **Edge Visualization**: Different colors for KNN vs entity
+  relationships
 - **Performance Monitoring**: Real-time statistics and loading states
 - **Responsive Design**: Adapts to different screen sizes
 
 ### **Usage**
 
-1. **Start Application**: `./dspy-rag-system/start_graph_visualization.sh`
-2. **Access Interface**: Go to `http://localhost:8080`
-3. **Configure**: Set query, max nodes, similarity, edge types
-4. **Load Data**: Click "Load Graph Data" to fetch and render
-5. **Navigate**: Use zoom, pan, and selection tools
+1.  **Start Application**:
+    `./dspy-rag-system/start_graph_visualization.sh`
+2.  **Access Interface**: Go to `http://localhost:8080`
+3.  **Configure**: Set query, max nodes, similarity, edge types
+4.  **Load Data**: Click “Load Graph Data” to fetch and render
+5.  **Navigate**: Use zoom, pan, and selection tools
 
 ### **Controls**
 
@@ -275,14 +295,16 @@ python scripts/performance_benchmark.py --script sleep_nemo_fast --iterations 3
 - **Selection**: Click and drag to select multiple nodes
 
 <!-- ANCHOR_KEY: configuration -->
+
 <!-- ANCHOR_PRIORITY: 8 -->
+
 <!-- ROLE_PINS: ["implementer"] -->
 
 ## ⚙️ Configuration
 
 ### **Environment Variables**
 
-```bash
+``` bash
 # Feature flag control
 GRAPH_VISUALIZATION_ENABLED=true
 
@@ -296,20 +318,24 @@ UMAP_CACHE_ENABLED=true
 
 ### **Performance Tuning**
 
-- **UMAP Parameters**: Adjust `n_neighbors`, `min_dist` for different datasets
+- **UMAP Parameters**: Adjust `n_neighbors`, `min_dist` for different
+  datasets
 - **Cache Settings**: Configure cache size and invalidation policies
 - **Database Optimization**: Ensure proper indexing on embeddings
 - **Memory Management**: Monitor memory usage with large datasets
 
 ### **Security Considerations**
 
-- **Feature Flags**: Use `GRAPH_VISUALIZATION_ENABLED` to disable features
+- **Feature Flags**: Use `GRAPH_VISUALIZATION_ENABLED` to disable
+  features
 - **Input Validation**: All query parameters are validated and sanitized
 - **Rate Limiting**: Consider implementing rate limits for API endpoints
 - **Access Control**: Ensure proper authentication for production use
 
 <!-- ANCHOR_KEY: troubleshooting -->
+
 <!-- ANCHOR_PRIORITY: 5 -->
+
 <!-- ROLE_PINS: ["implementer"] -->
 
 ## 🔧 Troubleshooting
@@ -317,7 +343,8 @@ UMAP_CACHE_ENABLED=true
 ### **Common Issues**
 
 #### **Flask Dashboard Not Starting**
-```bash
+
+``` bash
 # Check if port 5000 is available
 lsof -i :5000
 
@@ -326,7 +353,8 @@ pip3 install -r dspy-rag-system/requirements.txt
 ```
 
 #### **NiceGUI App Not Starting**
-```bash
+
+``` bash
 # Check NiceGUI installation
 pip3 install nicegui>=1.4.0
 
@@ -335,12 +363,14 @@ curl http://localhost:5000/api/health
 ```
 
 #### **Slow Performance**
+
 - **Reduce max_nodes**: Lower the node limit for faster rendering
 - **Enable caching**: Ensure UMAP cache is enabled
 - **Check database**: Verify PostgreSQL performance and indexing
 - **Monitor memory**: Check system memory usage
 
 #### **No Data Displayed**
+
 - **Check database**: Ensure chunks exist in the database
 - **Verify API**: Test `/graph-data` endpoint directly
 - **Check logs**: Review application logs for errors
@@ -348,7 +378,7 @@ curl http://localhost:5000/api/health
 
 ### **Debug Commands**
 
-```bash
+``` bash
 # Test API endpoint
 curl "http://localhost:5000/graph-data?max_nodes=100"
 
@@ -363,22 +393,24 @@ python3 -c "import nicegui; print('NiceGUI OK')"
 ```
 
 <!-- ANCHOR_KEY: development -->
+
 <!-- ANCHOR_PRIORITY: 8 -->
+
 <!-- ROLE_PINS: ["implementer"] -->
 
 ## 🛠️ Development
 
 ### **Adding New Features**
 
-1. **Extend GraphDataProvider**: Add new data processing methods
-2. **Update API Schema**: Modify V1 schema for new features
-3. **Enhance UIs**: Add controls and visualizations
-4. **Update Tests**: Add comprehensive test coverage
-5. **Document Changes**: Update this guide
+1.  **Extend GraphDataProvider**: Add new data processing methods
+2.  **Update API Schema**: Modify V1 schema for new features
+3.  **Enhance UIs**: Add controls and visualizations
+4.  **Update Tests**: Add comprehensive test coverage
+5.  **Document Changes**: Update this guide
 
 ### **Testing**
 
-```bash
+``` bash
 # Run all visualization tests
 python3 -m pytest dspy-rag-system/tests/test_graph_data_provider.py -v
 python3 -m pytest dspy-rag-system/tests/test_graph_data_endpoint.py -v
@@ -390,31 +422,31 @@ python3 dspy-rag-system/benchmark_vector_store.py
 
 ### **Code Structure**
 
-```
-dspy-rag-system/
-├── src/
-│   ├── utils/
-│   │   └── graph_data_provider.py    # Core visualization engine
-│   ├── dashboard.py                  # Flask dashboard with /graph-data
-│   └── nicegui_graph_view.py         # NiceGUI network graph app
-├── templates/
-│   └── cluster.html                  # Flask cluster visualization
-├── tests/
-│   ├── test_graph_data_provider.py   # Core functionality tests
-│   ├── test_graph_data_endpoint.py   # API endpoint tests
-│   └── test_nicegui_graph_view.py    # NiceGUI app tests
-└── start_graph_visualization.sh      # NiceGUI startup script
-```
+    dspy-rag-system/
+    ├── src/
+    │   ├── utils/
+    │   │   └── graph_data_provider.py    # Core visualization engine
+    │   ├── dashboard.py                  # Flask dashboard with /graph-data
+    │   └── nicegui_graph_view.py         # NiceGUI network graph app
+    ├── templates/
+    │   └── cluster.html                  # Flask cluster visualization
+    ├── tests/
+    │   ├── test_graph_data_provider.py   # Core functionality tests
+    │   ├── test_graph_data_endpoint.py   # API endpoint tests
+    │   └── test_nicegui_graph_view.py    # NiceGUI app tests
+    └── start_graph_visualization.sh      # NiceGUI startup script
 
 <!-- ANCHOR_KEY: examples -->
+
 <!-- ANCHOR_PRIORITY: 5 -->
+
 <!-- ROLE_PINS: ["planner", "implementer"] -->
 
 ## 📝 Examples
 
 ### **Basic API Usage**
 
-```python
+``` python
 import requests
 
 # Get all chunks with default settings
@@ -437,7 +469,7 @@ data = response.json()
 
 ### **Custom Visualization**
 
-```python
+``` python
 import plotly.graph_objects as go
 import requests
 
@@ -459,7 +491,7 @@ fig.show()
 
 ### **Integration with Existing Systems**
 
-```python
+``` python
 from dspy_rag_system.src.utils.graph_data_provider import GraphDataProvider
 from dspy_rag_system.src.utils.database_resilience import DatabaseResilienceManager
 
@@ -481,7 +513,9 @@ for node in graph_data.nodes:
 ```
 
 <!-- ANCHOR_KEY: best-practices -->
+
 <!-- ANCHOR_PRIORITY: 8 -->
+
 <!-- ROLE_PINS: ["planner", "implementer"] -->
 
 ## 🎯 Best Practices
@@ -490,12 +524,14 @@ for node in graph_data.nodes:
 
 - **Use Caching**: Enable UMAP cache for repeated queries
 - **Limit Node Count**: Use appropriate max_nodes for your use case
-- **Optimize Queries**: Use specific search queries to reduce data volume
+- **Optimize Queries**: Use specific search queries to reduce data
+  volume
 - **Monitor Resources**: Track memory and CPU usage
 
 ### **User Experience**
 
-- **Progressive Loading**: Start with smaller datasets and increase gradually
+- **Progressive Loading**: Start with smaller datasets and increase
+  gradually
 - **Clear Feedback**: Provide loading indicators and error messages
 - **Intuitive Controls**: Use familiar UI patterns and clear labels
 - **Responsive Design**: Ensure usability on different screen sizes
@@ -503,16 +539,20 @@ for node in graph_data.nodes:
 ### **Data Quality**
 
 - **Validate Inputs**: Ensure proper input validation and sanitization
-- **Handle Edge Cases**: Test with empty datasets and boundary conditions
-- **Monitor Accuracy**: Verify UMAP coordinates represent meaningful relationships
+- **Handle Edge Cases**: Test with empty datasets and boundary
+  conditions
+- **Monitor Accuracy**: Verify UMAP coordinates represent meaningful
+  relationships
 - **Update Regularly**: Refresh data to reflect latest document changes
 
 ### **Security**
 
-- **Feature Flags**: Use environment variables to control feature availability
+- **Feature Flags**: Use environment variables to control feature
+  availability
 - **Input Sanitization**: Validate and sanitize all user inputs
 - **Access Control**: Implement proper authentication for production use
-- **Error Handling**: Avoid exposing sensitive information in error messages
+- **Error Handling**: Avoid exposing sensitive information in error
+  messages
 
 ## 📚 Related Documentation
 
@@ -529,17 +569,20 @@ for node in graph_data.nodes:
 - **Next Review**: 2025-09-16
 - **Maintainer**: AI Development Team
 
-For questions or issues, refer to the troubleshooting section or contact the development team.
+For questions or issues, refer to the troubleshooting section or contact
+the development team.
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_graph-visualization-guide.md
-# Generated: 2025-08-17T17:47:03.923368
+
+## Auto-generated sections for 400_graph-visualization-guide.md
+
+## Generated: 2025-08-18T08:03:22.747797
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -547,10 +590,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

@@ -86,7 +86,7 @@ def update_file_references(file_path, old_name, new_name):
     """Update references to the old filename in the migrated file"""
     
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, encoding='utf-8') as f:
             content = f.read()
         
         # Update any internal references

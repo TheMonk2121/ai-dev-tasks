@@ -79,7 +79,7 @@ def fix_md041_missing_h1():
     
     for file_path in markdown_files:
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 content = f.read()
             
             original_content = content

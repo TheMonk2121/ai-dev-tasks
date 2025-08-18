@@ -10,12 +10,12 @@ Reads validator_report.json and emits metrics/validator_counts.json with:
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from typing import Any, Dict
 
 
-def load_validator_report(report_path: str = "validator_report.json") -> Dict[str, Any]:
+def load_validator_report(report_path: str = "validator_report.json") -> dict[str, Any]:
     """Load validator report from JSON file."""
     try:
         with open(report_path) as f:
@@ -28,7 +28,7 @@ def load_validator_report(report_path: str = "validator_report.json") -> Dict[st
         sys.exit(1)
 
 
-def generate_metrics(report: Dict[str, Any]) -> Dict[str, Any]:
+def generate_metrics(report: dict[str, Any]) -> dict[str, Any]:
     """Generate metrics from validator report."""
     categories = report.get("categories", {})
     impacted_files = report.get("impacted_files", {})
@@ -48,13 +48,13 @@ def generate_metrics(report: Dict[str, Any]) -> Dict[str, Any]:
 
     return {
         "schema_version": "1.0",
-        "generated_at": datetime.now(timezone.utc).isoformat() + "Z",
+        "generated_at": datetime.now(UTC).isoformat() + "Z",
         "counts": counts,
         "top_impacted": top_impacted,
     }
 
 
-def save_metrics(metrics: Dict[str, Any], output_path: str = "metrics/validator_counts.json"):
+def save_metrics(metrics: dict[str, Any], output_path: str = "metrics/validator_counts.json"):
     """Save metrics to JSON file."""
     output_file = Path(output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)

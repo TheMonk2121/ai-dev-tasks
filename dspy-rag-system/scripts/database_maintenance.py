@@ -178,7 +178,7 @@ def update_outdated_files(outdated_files):
         for file_path, filename, db_size, repo_size, updated_at in outdated_files:
             try:
                 # Read current file
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 current_size = len(content)

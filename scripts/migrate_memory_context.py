@@ -58,7 +58,7 @@ class MemoryContextMigrator:
             "task-specific guidance": "104_memory-context-guidance.md"
         }
     
-    def find_files_to_update(self) -> List[str]:
+    def find_files_to_update(self) -> list[str]:
         """Find all files that need to be updated."""
         files_to_update = []
         
@@ -72,10 +72,10 @@ class MemoryContextMigrator:
         
         return files_to_update
     
-    def update_file_references(self, file_path: str) -> Tuple[bool, List[str]]:
+    def update_file_references(self, file_path: str) -> tuple[bool, list[str]]:
         """Update references in a single file."""
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 content = f.read()
             
             original_content = content
@@ -131,7 +131,7 @@ class MemoryContextMigrator:
         # Update core file to reference modules
         core_file = self.new_core_file
         if os.path.exists(core_file):
-            with open(core_file, 'r', encoding='utf-8') as f:
+            with open(core_file, encoding='utf-8') as f:
                 content = f.read()
             
             # Add module references if not already present
@@ -157,7 +157,7 @@ class MemoryContextMigrator:
                 with open(core_file, 'w', encoding='utf-8') as f:
                     f.write(content)
     
-    def create_migration_summary(self, updated_files: List[str], errors: List[str]) -> str:
+    def create_migration_summary(self, updated_files: list[str], errors: list[str]) -> str:
         """Create a summary of the migration."""
         summary = "# Memory Context Migration Summary\n\n"
         summary += f"**Migration Date**: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n"
@@ -186,7 +186,7 @@ class MemoryContextMigrator:
         
         return summary
     
-    def run_migration(self) -> Dict:
+    def run_migration(self) -> dict:
         """Run the complete migration process."""
         print("🔄 Starting Memory Context Migration...")
         

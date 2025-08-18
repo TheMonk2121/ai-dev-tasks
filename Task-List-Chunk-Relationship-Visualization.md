@@ -244,7 +244,7 @@ Implement a shared API and dual UI system for visualizing relationships between 
 - [ ] Create `400_guides/400_graph-visualization-guide.md` comprehensive guide
 - [ ] Update `100_memory/100_cursor-memory-context.md` with new commands
 - [ ] Update `000_core/000_backlog.md` completion status
-- [ ] Update `400_guides/400_context-priority-guide.md` with new files
+- [ ] Update `400_guides/400_cursor-context-engineering-guide.md` with new files
 - [ ] Add cross-references and anchor keys
 - [ ] Include TL;DR sections and usage examples
 - [ ] Final integration testing completed

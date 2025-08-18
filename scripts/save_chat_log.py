@@ -46,7 +46,7 @@ def sanitize(text: str) -> str:
     return masked
 
 
-def save_markdown(content: str, title: Optional[str], tags: Optional[str]) -> Path:
+def save_markdown(content: str, title: str | None, tags: str | None) -> Path:
     ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     safe_title = (title or "chat").strip().replace(" ", "-")[:80]
     fname = f"{ts}_{safe_title}.md" if safe_title else f"{ts}_chat.md"

@@ -32,7 +32,7 @@ def main():
     print(f"📖 Reading research from: {research_file}")
     
     try:
-        with open(research_file, 'r', encoding='utf-8') as f:
+        with open(research_file, encoding='utf-8') as f:
             research_content = f.read()
         
         print(f"✅ Loaded {len(research_content)} characters of research content")

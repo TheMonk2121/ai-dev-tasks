@@ -368,7 +368,7 @@ def warn(msg: str):
 
 
 def _posix_rel(
-    p: Union[str, os.PathLike[str]], root: Union[str, os.PathLike[str]]
+    p: str | os.PathLike[str], root: str | os.PathLike[str]
 ) -> str:
     """Convert path to repo-relative POSIX format for consistent reporting."""
     ps = os.fspath(p)
@@ -494,7 +494,7 @@ README_IGNORE_SEGMENTS = (
 # Helper functions for exception ledger and pragma handling
 def _now_utc():
     """Get current UTC time."""
-    return datetime.datetime.now(datetime.timezone.utc)
+    return datetime.datetime.now(datetime.UTC)
 
 
 def _load_ledger(path):
@@ -521,7 +521,7 @@ def _ledger_allows(ledger, relpath, key):
                 # Robust date parsing (YYYY-MM-DD or ISO w/ Z)
                 if len(exp) == 10 and exp[4] == "-" and exp[7] == "-":
                     expiry = datetime.datetime.fromisoformat(exp).replace(
-                        hour=23, minute=59, second=59, tzinfo=datetime.timezone.utc
+                        hour=23, minute=59, second=59, tzinfo=datetime.UTC
                     )
                 else:
                     expiry = datetime.datetime.fromisoformat(exp.replace("Z", "+00:00"))
@@ -576,12 +576,12 @@ def parse_expiry(s: str) -> datetime.datetime:
     s = s.strip()
     if len(s) == 10 and s[4] == "-" and s[7] == "-":  # YYYY-MM-DD
         return datetime.datetime.fromisoformat(s).replace(
-            hour=23, minute=59, second=59, tzinfo=datetime.timezone.utc
+            hour=23, minute=59, second=59, tzinfo=datetime.UTC
         )
     if s.endswith("Z"):
         s = s.replace("Z", "+00:00")
     dt = datetime.datetime.fromisoformat(s)
-    return dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
+    return dt if dt.tzinfo else dt.replace(tzinfo=datetime.UTC)
 
 
 def file_allows(fn, key):
@@ -599,7 +599,7 @@ def file_allows(fn, key):
                 if expires:
                     try:
                         expiry_date = parse_expiry(expires)
-                        now = datetime.datetime.now(datetime.timezone.utc)
+                        now = datetime.datetime.now(datetime.UTC)
                         if now > expiry_date:
                             print(f"EXPIRED PRAGMA: {fn} - {reason}")
                             return False
@@ -1032,20 +1032,20 @@ class BacklogItem:
     desc: str
     line_idx: int
 
-    score_raw: Optional[str] = None
-    score_total: Optional[float] = None
-    score_obj: Optional[dict] = None
+    score_raw: str | None = None
+    score_total: float | None = None
+    score_obj: dict | None = None
 
-    do_next: Optional[str] = None
-    acceptance: Optional[str] = None
-    est_hours: Optional[float] = None
+    do_next: str | None = None
+    acceptance: str | None = None
+    est_hours: float | None = None
 
-    lessons_applied: Optional[str] = None
-    reference_cards: Optional[str] = None
-    prd_link: Optional[str] = None
+    lessons_applied: str | None = None
+    reference_cards: str | None = None
+    prd_link: str | None = None
 
     # derived
-    points: Optional[float] = None
+    points: float | None = None
     reasons_fail: list[str] = field(default_factory=list)
     reasons_warn: list[str] = field(default_factory=list)
 
@@ -1073,7 +1073,7 @@ def _representation_count(item: BacklogItem) -> int:
 
 
 # --- B-102: Cross-reference validation helpers ---
-def _parse_json_array_literal(s: Optional[str]) -> list[str]:
+def _parse_json_array_literal(s: str | None) -> list[str]:
     """Parse JSON array from lessons_applied or reference_cards."""
     if not s:
         return []
@@ -1135,7 +1135,7 @@ def _target_exists_in_repo(target: str) -> bool:
 # =========================
 
 
-def _safe_float(x: str) -> Optional[float]:
+def _safe_float(x: str) -> float | None:
     """Safely convert string to float, handling edge cases."""
     try:
         return float(x)
@@ -1144,7 +1144,7 @@ def _safe_float(x: str) -> Optional[float]:
         return float(m.group(0)) if m else None
 
 
-def _parse_score_map(s: str) -> Optional[dict]:
+def _parse_score_map(s: str) -> dict | None:
     """
     Convert a JS-ish map to JSON and parse.
     Requires keys: bv, tc, rr, le, lessons, effort, deps
@@ -1375,7 +1375,7 @@ def validate_shadow_forks(root: Path, strict_fail: bool) -> dict:
     return results
 
 
-def _git_changed_with_status(diff_range: Optional[str]) -> list[tuple[str, str]]:
+def _git_changed_with_status(diff_range: str | None) -> list[tuple[str, str]]:
     """
     Returns a list of (status, path) where status in {'A','M','R','D','C','T'}.
     Falls back to porcelain for local runs. Includes untracked as 'A'.
@@ -1688,17 +1688,17 @@ class DocCoherenceValidator:
         self,
         dry_run: bool = True,
         only_changed: bool = False,
-        max_workers: Optional[int] = None,
+        max_workers: int | None = None,
         cache_ttl: int = 300,
-        emit_json: Optional[str] = None,
+        emit_json: str | None = None,
         safe_fix: bool = False,
-        rules_path: Optional[str] = "config/validator_rules.json",
+        rules_path: str | None = "config/validator_rules.json",
         strict_anchors: bool = False,
         tab_width: int = 4,
         wrap_long_lines: bool = False,
         enable_few_shot: bool = True,
-        base_commit: Optional[str] = None,
-        head_commit: Optional[str] = None,
+        base_commit: str | None = None,
+        head_commit: str | None = None,
     ):
         self.dry_run = dry_run
         self.only_changed = only_changed
@@ -1779,7 +1779,7 @@ class DocCoherenceValidator:
         self.warnings = []
         self.validation_results = {}
 
-    def _load_rules(self, rules_path: Optional[str]) -> dict:
+    def _load_rules(self, rules_path: str | None) -> dict:
         """Load validation rules from JSON file."""
         if rules_path and Path(rules_path).exists():
             try:
@@ -1818,7 +1818,7 @@ class DocCoherenceValidator:
             base = f"{file_path.as_posix()}|missing"
         return hashlib.blake2s(base.encode("utf-8"), digest_size=16).hexdigest()
 
-    def load_cached_result(self, file_path: Path) -> Optional[dict]:
+    def load_cached_result(self, file_path: Path) -> dict | None:
         """Load cached validation result if available and valid."""
         cache_key = self.get_cache_key(file_path)
         cache_file = self.cache_dir / f"{cache_key}.pkl"
@@ -1983,7 +1983,7 @@ class DocCoherenceValidator:
         # Fallback: walk the tree with pruning
         return self._walk_markdown_files()
 
-    def _check_headings(self, line: str) -> Optional[int]:
+    def _check_headings(self, line: str) -> int | None:
         """Return heading level (1..6) if line is a Markdown ATX heading like '# Title', else None."""
         if not line or line[0] != "#":
             return None
@@ -2029,7 +2029,7 @@ class DocCoherenceValidator:
         fixed_trailing = 0
         fixed_headings = 0
         fixed_long_lines = 0
-        last_heading_level: Optional[int] = None
+        last_heading_level: int | None = None
         in_code_block = False
         code_block_marker = ""
 
@@ -2399,7 +2399,7 @@ def main():
 
     # Helper: return changed markdown files between base and head using robust parsing
     def _git_diff_changed_md(
-        base_sha: Optional[str], head_sha: Optional[str]
+        base_sha: str | None, head_sha: str | None
     ) -> list[str]:
         if not base_sha or not head_sha:
             return []

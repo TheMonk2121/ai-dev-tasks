@@ -46,19 +46,19 @@ class Task:
     status: TaskStatus
     description: str
     tech_footprint: str
-    dependencies: List[str]
-    score_total: Optional[float] = None
+    dependencies: list[str]
+    score_total: float | None = None
     human_required: bool = False
-    human_reason: Optional[str] = None
-    default_executor: Optional[str] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    human_reason: str | None = None
+    default_executor: str | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 @dataclass
 class ParsedBacklog:
     """Complete parsed backlog data structure."""
-    tasks: List[Task]
-    metadata: Dict[str, Any]
+    tasks: list[Task]
+    metadata: dict[str, Any]
     parse_time: datetime
     file_path: str
     total_tasks: int
@@ -87,7 +87,7 @@ class BacklogParser:
         
         logger.info("Backlog parser initialized")
     
-    def parse_backlog(self, backlog_file: str) -> List[Task]:
+    def parse_backlog(self, backlog_file: str) -> list[Task]:
         """Parse the backlog file and extract tasks."""
         try:
             file_path = Path(backlog_file)
@@ -95,7 +95,7 @@ class BacklogParser:
                 logger.error(f"Backlog file not found: {backlog_file}")
                 return []
             
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 content = f.read()
             
             tasks = []
@@ -140,7 +140,7 @@ class BacklogParser:
         return (line.startswith('| B‑') and 
                 ('todo' in line or '✅ done' in line or 'running' in line))
     
-    def _parse_task_line(self, line: str, lines: List[str], line_index: int) -> Optional[Task]:
+    def _parse_task_line(self, line: str, lines: list[str], line_index: int) -> Task | None:
         """Parse a single task line from the backlog."""
         try:
             # Parse the main line
@@ -196,7 +196,7 @@ class BacklogParser:
             logger.error(f"Failed to parse task line: {e}")
             return None
     
-    def _parse_dependencies(self, dependencies_str: str) -> List[str]:
+    def _parse_dependencies(self, dependencies_str: str) -> list[str]:
         """Parse dependencies string into list."""
         if not dependencies_str or dependencies_str == "None":
             return []
@@ -213,7 +213,7 @@ class BacklogParser:
         deps = dependencies_str.split(',')
         return [d.strip() for d in deps if d.strip()]
     
-    def _parse_metadata_comments(self, lines: List[str], line_index: int) -> Dict[str, Any]:
+    def _parse_metadata_comments(self, lines: list[str], line_index: int) -> dict[str, Any]:
         """Parse metadata from HTML comments after the task line."""
         metadata = {}
         
@@ -271,10 +271,10 @@ class BacklogParser:
         
         return metadata
     
-    def _extract_metadata(self, backlog_file: str) -> Dict[str, Any]:
+    def _extract_metadata(self, backlog_file: str) -> dict[str, Any]:
         """Extract general metadata from the backlog file."""
         try:
-            with open(backlog_file, 'r', encoding='utf-8') as f:
+            with open(backlog_file, encoding='utf-8') as f:
                 content = f.read()
             
             metadata = {}
@@ -306,7 +306,7 @@ class BacklogParser:
             logger.error(f"Failed to extract metadata: {e}")
             return {}
     
-    def _parse_ai_meta(self, ai_meta_content: str) -> Dict[str, str]:
+    def _parse_ai_meta(self, ai_meta_content: str) -> dict[str, str]:
         """Parse AI backlog meta information."""
         meta = {}
         
@@ -342,7 +342,7 @@ class BacklogParser:
         
         return meta
     
-    def validate_task(self, task: Task) -> List[str]:
+    def validate_task(self, task: Task) -> list[str]:
         """Validate a task for completeness and correctness."""
         errors = []
         
@@ -367,7 +367,7 @@ class BacklogParser:
         
         return errors
     
-    def get_task_statistics(self, tasks: List[Task]) -> Dict[str, Any]:
+    def get_task_statistics(self, tasks: list[Task]) -> dict[str, Any]:
         """Get comprehensive statistics about tasks."""
         stats = {
             'total_tasks': len(tasks),
@@ -431,7 +431,7 @@ class BacklogParser:
             return False
         return (task.default_executor or '').strip() == '003_process-task-list.md'
 
-    def generate_lanes(self, tasks: List[Task], p0_count: int = 5, p1_count: int = 7, p2_count: int = 8) -> Dict[str, List[Task]]:
+    def generate_lanes(self, tasks: list[Task], p0_count: int = 5, p1_count: int = 7, p2_count: int = 8) -> dict[str, list[Task]]:
         """Create P0/P1/P2 lanes from pending tasks by score_total."""
         pending = [t for t in tasks if self._pending(t)]
         pending.sort(key=self._score, reverse=True)
@@ -442,7 +442,7 @@ class BacklogParser:
         }
         return lanes
 
-    def generate_ai_exec_queue(self, tasks: List[Task], limit: int = 10) -> List[Task]:
+    def generate_ai_exec_queue(self, tasks: list[Task], limit: int = 10) -> list[Task]:
         """Create AI-executable queue ordered by score_total, limited."""
         queue = [t for t in tasks if self._is_ai_executable(t)]
         queue.sort(key=self._score, reverse=True)
@@ -452,7 +452,7 @@ class BacklogParser:
         score = f"{task.score_total:.1f}" if task.score_total is not None else "-"
         return f"- {task.id} — {task.title} (score {score})"
 
-    def render_sections_markdown(self, tasks: List[Task]) -> Dict[str, str]:
+    def render_sections_markdown(self, tasks: list[Task]) -> dict[str, str]:
         """Render markdown for P0/P1/P2 lanes and AI-exec queue."""
         lanes = self.generate_lanes(tasks)
         aiq = self.generate_ai_exec_queue(tasks)
@@ -506,7 +506,7 @@ class BacklogParser:
             logger.error(f"Section injection failed: {e}")
             return False
     
-    def export_tasks_json(self, tasks: List[Task], output_file: str) -> bool:
+    def export_tasks_json(self, tasks: list[Task], output_file: str) -> bool:
         """Export tasks to JSON file."""
         try:
             data = {
@@ -526,13 +526,13 @@ class BacklogParser:
             logger.error(f"Failed to export tasks to JSON: {e}")
             return False
     
-    def find_tasks_by_criteria(self, tasks: List[Task], 
-                              status: Optional[str] = None,
-                              priority: Optional[str] = None,
-                              min_points: Optional[int] = None,
-                              max_points: Optional[int] = None,
-                              human_required: Optional[bool] = None,
-                              min_score: Optional[float] = None) -> List[Task]:
+    def find_tasks_by_criteria(self, tasks: list[Task], 
+                              status: str | None = None,
+                              priority: str | None = None,
+                              min_points: int | None = None,
+                              max_points: int | None = None,
+                              human_required: bool | None = None,
+                              min_score: float | None = None) -> list[Task]:
         """Find tasks matching specific criteria."""
         filtered_tasks = tasks
         

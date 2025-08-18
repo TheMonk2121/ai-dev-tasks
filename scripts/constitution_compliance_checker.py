@@ -33,14 +33,14 @@ class ConstitutionComplianceChecker:
     
     def __init__(self, constitution_file: str = "400_ai-constitution.md"):
         self.constitution_file = constitution_file
-        self.rules: List[ConstitutionRule] = []
-        self.violations: List[Dict] = []
+        self.rules: list[ConstitutionRule] = []
+        self.violations: list[dict] = []
         self.load_constitution_rules()
     
     def load_constitution_rules(self):
         """Load and parse constitution rules from the constitution file."""
         try:
-            with open(self.constitution_file, 'r', encoding='utf-8') as f:
+            with open(self.constitution_file, encoding='utf-8') as f:
                 content = f.read()
             
             # Parse constitution rules
@@ -165,14 +165,14 @@ class ConstitutionComplianceChecker:
     
     # Validation Functions
     
-    def _validate_file_analysis_requirement(self, operation: Dict) -> Tuple[bool, str]:
+    def _validate_file_analysis_requirement(self, operation: dict) -> tuple[bool, str]:
         """Validate that file analysis requirements are met."""
         if operation.get('type') == 'file_operation':
             if not operation.get('file_analysis_completed'):
                 return False, "File analysis requirement not met"
         return True, "File analysis requirement satisfied"
     
-    def _validate_critical_file_protection(self, operation: Dict) -> Tuple[bool, str]:
+    def _validate_critical_file_protection(self, operation: dict) -> tuple[bool, str]:
         """Validate that critical files are protected."""
         if operation.get('type') == 'file_deletion':
             target_file = operation.get('target_file', '')
@@ -180,55 +180,55 @@ class ConstitutionComplianceChecker:
                 return False, f"Attempted to delete protected file: {target_file}"
         return True, "Critical file protection satisfied"
     
-    def _validate_memory_context_priority(self, operation: Dict) -> Tuple[bool, str]:
+    def _validate_memory_context_priority(self, operation: dict) -> tuple[bool, str]:
         """Validate that memory context is read first in new sessions."""
         if operation.get('type') == 'new_session':
             if not operation.get('memory_context_read'):
                 return False, "Memory context not read in new session"
         return True, "Memory context priority satisfied"
     
-    def _validate_context_hierarchy(self, operation: Dict) -> Tuple[bool, str]:
+    def _validate_context_hierarchy(self, operation: dict) -> tuple[bool, str]:
         """Validate that context hierarchy is followed."""
         # This is a complex validation that would check file reading order
         return True, "Context hierarchy satisfied"
     
-    def _validate_multi_turn_process(self, operation: Dict) -> Tuple[bool, str]:
+    def _validate_multi_turn_process(self, operation: dict) -> tuple[bool, str]:
         """Validate that multi-turn processes are used for high-risk operations."""
         if operation.get('risk_level') == 'high':
             if not operation.get('multi_turn_confirmation'):
                 return False, "Multi-turn confirmation required for high-risk operations"
         return True, "Multi-turn process satisfied"
     
-    def _validate_error_recovery_patterns(self, operation: Dict) -> Tuple[bool, str]:
+    def _validate_error_recovery_patterns(self, operation: dict) -> tuple[bool, str]:
         """Validate that error recovery patterns are followed."""
         if operation.get('type') == 'error_handling':
             if not operation.get('recovery_guide_followed'):
                 return False, "Error recovery guide not followed"
         return True, "Error recovery patterns satisfied"
     
-    def _validate_documentation_architecture(self, operation: Dict) -> Tuple[bool, str]:
+    def _validate_documentation_architecture(self, operation: dict) -> tuple[bool, str]:
         """Validate that documentation architecture is maintained."""
         # This would check documentation structure and patterns
         return True, "Documentation architecture satisfied"
     
-    def _validate_knowledge_retrieval(self, operation: Dict) -> Tuple[bool, str]:
+    def _validate_knowledge_retrieval(self, operation: dict) -> tuple[bool, str]:
         """Validate that knowledge retrieval systems are used."""
         if operation.get('type') == 'context_retrieval':
             if not operation.get('rag_system_used'):
                 return False, "RAG system not used for context retrieval"
         return True, "Knowledge retrieval satisfied"
     
-    def _validate_workflow_chain(self, operation: Dict) -> Tuple[bool, str]:
+    def _validate_workflow_chain(self, operation: dict) -> tuple[bool, str]:
         """Validate that workflow chain is preserved."""
         # This would check that the workflow chain is maintained
         return True, "Workflow chain preserved"
     
-    def _validate_technology_stack(self, operation: Dict) -> Tuple[bool, str]:
+    def _validate_technology_stack(self, operation: dict) -> tuple[bool, str]:
         """Validate that technology stack integrity is maintained."""
         # This would check that core technologies are preserved
         return True, "Technology stack integrity maintained"
     
-    def validate_operation(self, operation: Dict) -> Dict:
+    def validate_operation(self, operation: dict) -> dict:
         """Validate a single operation against all constitution rules."""
         results = {
             'operation': operation,
@@ -268,7 +268,7 @@ class ConstitutionComplianceChecker:
         
         return results
     
-    def validate_file_operation(self, file_path: str, operation_type: str) -> Dict:
+    def validate_file_operation(self, file_path: str, operation_type: str) -> dict:
         """Validate a file operation against constitution rules."""
         operation = {
             'type': 'file_operation',
@@ -316,7 +316,7 @@ class ConstitutionComplianceChecker:
         
         return report
     
-    def log_violation(self, violation: Dict):
+    def log_violation(self, violation: dict):
         """Log a constitution violation."""
         self.violations.append(violation)
         

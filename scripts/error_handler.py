@@ -21,7 +21,8 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
+from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 
@@ -60,8 +61,8 @@ class ErrorInfo:
     timestamp: datetime
     retry_count: int = 0
     max_retries: int = 3
-    recovery_action: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    recovery_action: str | None = None
+    metadata: dict[str, Any] | None = None
 
 
 @dataclass
@@ -71,7 +72,7 @@ class RecoveryAction:
     name: str
     description: str
     action_type: str
-    parameters: Dict[str, Any]
+    parameters: dict[str, Any]
     success_criteria: str
     estimated_time: float
 
@@ -79,16 +80,16 @@ class RecoveryAction:
 class ErrorHandler:
     """Comprehensive error handling and recovery system."""
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: dict[str, Any] | None = None):
         """Initialize the error handler."""
         self.config = config or self._get_default_config()
-        self.error_history: List[ErrorInfo] = []
-        self.recovery_actions: Dict[str, RecoveryAction] = self._init_recovery_actions()
-        self.retry_strategies: Dict[ErrorCategory, Dict[str, Any]] = self._init_retry_strategies()
+        self.error_history: list[ErrorInfo] = []
+        self.recovery_actions: dict[str, RecoveryAction] = self._init_recovery_actions()
+        self.retry_strategies: dict[ErrorCategory, dict[str, Any]] = self._init_retry_strategies()
 
         logger.info("Error handler initialized")
 
-    def _get_default_config(self) -> Dict[str, Any]:
+    def _get_default_config(self) -> dict[str, Any]:
         """Get default error handler configuration."""
         return {
             "max_retries": 3,
@@ -102,7 +103,7 @@ class ErrorHandler:
             "timeout": 300,
         }
 
-    def _init_recovery_actions(self) -> Dict[str, RecoveryAction]:
+    def _init_recovery_actions(self) -> dict[str, RecoveryAction]:
         """Initialize recovery actions for different error types."""
         actions = {}
 
@@ -158,7 +159,7 @@ class ErrorHandler:
 
         return actions
 
-    def _init_retry_strategies(self) -> Dict[ErrorCategory, Dict[str, Any]]:
+    def _init_retry_strategies(self) -> dict[ErrorCategory, dict[str, Any]]:
         """Initialize retry strategies for different error categories."""
         strategies = {}
 
@@ -341,7 +342,7 @@ class ErrorHandler:
         else:
             logger.info(log_message)
 
-    def _get_recovery_action(self, error_info: ErrorInfo) -> Optional[RecoveryAction]:
+    def _get_recovery_action(self, error_info: ErrorInfo) -> RecoveryAction | None:
         """Get appropriate recovery action for an error."""
         category = error_info.category
 
@@ -504,7 +505,7 @@ class ErrorHandler:
 
         return delay
 
-    def get_error_statistics(self) -> Dict[str, Any]:
+    def get_error_statistics(self) -> dict[str, Any]:
         """Get error handling statistics."""
         if not self.error_history:
             return {"total_errors": 0}
@@ -593,7 +594,7 @@ def retry_with_backoff(
     max_delay: float = 60.0,
     backoff_multiplier: float = 2.0,
     jitter: bool = True,
-    error_handler: Optional[ErrorHandler] = None,
+    error_handler: ErrorHandler | None = None,
 ) -> Callable:
     """Decorator for retrying functions with exponential backoff."""
 

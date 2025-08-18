@@ -37,7 +37,7 @@ class OpenTelemetryConfig:
                   service_name: str = "ai-dev-tasks",
                   service_version: str = "0.3.1",
                   environment: str = "development",
-                  otlp_endpoint: Optional[str] = None,
+                  otlp_endpoint: str | None = None,
                   enable_console_exporter: bool = True,
                   enable_requests_instrumentation: bool = True,
                   enable_flask_instrumentation: bool = True,
@@ -129,7 +129,7 @@ class OpenTelemetryConfig:
         self._correlation_id = correlation_id
         return correlation_id
     
-    def get_correlation_id(self) -> Optional[str]:
+    def get_correlation_id(self) -> str | None:
         """Get the current correlation ID"""
         return self._correlation_id
     
@@ -138,7 +138,7 @@ class OpenTelemetryConfig:
         self._correlation_id = correlation_id
     
     @contextmanager
-    def trace_operation(self, operation_name: str, attributes: Optional[Dict[str, Any]] = None):
+    def trace_operation(self, operation_name: str, attributes: dict[str, Any] | None = None):
         """
         Context manager for tracing operations.
         
@@ -197,7 +197,7 @@ def get_tracer() -> trace.Tracer:
     """Get the configured tracer"""
     return ot_config.get_tracer()
 
-def get_correlation_id() -> Optional[str]:
+def get_correlation_id() -> str | None:
     """Get the current correlation ID"""
     return ot_config.get_correlation_id()
 
@@ -210,7 +210,7 @@ def generate_correlation_id() -> str:
     return ot_config.generate_correlation_id()
 
 @contextmanager
-def trace_operation(operation_name: str, attributes: Optional[Dict[str, Any]] = None):
+def trace_operation(operation_name: str, attributes: dict[str, Any] | None = None):
     """Context manager for tracing operations"""
     with ot_config.trace_operation(operation_name, attributes) as span:
         yield span

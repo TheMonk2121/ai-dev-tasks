@@ -17,10 +17,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-syste
 from utils.memory_rehydrator import rehydrate
 
 
-def load_query_set(file_path: str) -> List[Dict[str, Any]]:
+def load_query_set(file_path: str) -> list[dict[str, Any]]:
     """Load queries from JSONL file."""
     queries = []
-    with open(file_path, "r") as f:
+    with open(file_path) as f:
         for line in f:
             line = line.strip()
             if line:
@@ -28,7 +28,7 @@ def load_query_set(file_path: str) -> List[Dict[str, Any]]:
     return queries
 
 
-def run_test(queries: List[Dict[str, Any]], use_entity_expansion: bool, test_name: str) -> Dict[str, Any]:
+def run_test(queries: list[dict[str, Any]], use_entity_expansion: bool, test_name: str) -> dict[str, Any]:
     """Run a test with the given queries and entity expansion setting."""
     print(f"\n🧪 Running {test_name} test...")
     print(f"   Entity expansion: {'enabled' if use_entity_expansion else 'disabled'}")

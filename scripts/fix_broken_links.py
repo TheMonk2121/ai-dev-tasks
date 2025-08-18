@@ -106,9 +106,9 @@ class BrokenLinksFixer:
             ".github/copilot-instructions.md": None,
         }
 
-    def load_broken_links(self, json_file: str) -> List[BrokenLink]:
+    def load_broken_links(self, json_file: str) -> list[BrokenLink]:
         """Load broken links from validation results."""
-        with open(json_file, "r") as f:
+        with open(json_file) as f:
             data = json.load(f)
 
         broken_links = []
@@ -122,7 +122,7 @@ class BrokenLinksFixer:
 
         return broken_links
 
-    def find_file_in_project(self, filename: str) -> Union[str, None]:
+    def find_file_in_project(self, filename: str) -> str | None:
         """Find a file in the project using git ls-files."""
         try:
             result = subprocess.run(["git", "ls-files", f"*{filename}"], capture_output=True, text=True, timeout=10)
@@ -152,7 +152,7 @@ class BrokenLinksFixer:
 
         # Read the file content
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
         except Exception as e:
             print(f"  ❌ Could not read {file_path}: {e}")

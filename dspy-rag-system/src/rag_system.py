@@ -16,8 +16,8 @@ class EnhancedRAGSystem:
     Provides ask_question() which delegates to the enhanced RAG interface's ask().
     """
 
-    def __init__(self, db_dsn: Optional[str] = None, model: Optional[str] = None) -> None:
+    def __init__(self, db_dsn: str | None = None, model: str | None = None) -> None:
         self._iface = create_enhanced_rag_interface(db_dsn, None, model)
 
-    def ask_question(self, question: str) -> Dict[str, Any]:
+    def ask_question(self, question: str) -> dict[str, Any]:
         return self._iface.ask(question)

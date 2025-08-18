@@ -56,7 +56,7 @@ class EnhancedVectorStore:
         except Exception as e:
             logger.warning(f"Failed to record performance metrics: {e}")
 
-    def _get_cache_entry(self, cache_key: str) -> Optional[Dict[str, Any]]:
+    def _get_cache_entry(self, cache_key: str) -> dict[str, Any] | None:
         """Get cached embedding data"""
         try:
             conn = psycopg2.connect(self.db_connection_string)
@@ -90,7 +90,7 @@ class EnhancedVectorStore:
         return None
 
     def _set_cache_entry(
-        self, cache_key: str, embedding_data: Dict[str, Any], expires_at: Optional[datetime] = None
+        self, cache_key: str, embedding_data: dict[str, Any], expires_at: datetime | None = None
     ) -> None:
         """Set cached embedding data"""
         try:
@@ -127,7 +127,7 @@ class EnhancedVectorStore:
             logger.warning(f"Failed to clean expired cache: {e}")
             return 0
 
-    def add_documents(self, documents: List[Dict[str, Any]]) -> bool:
+    def add_documents(self, documents: list[dict[str, Any]]) -> bool:
         """
         Add documents to the vector store with enhanced performance tracking
 
@@ -188,8 +188,8 @@ class EnhancedVectorStore:
             return False
 
     def similarity_search(
-        self, query_embedding: List[float], top_k: int = 5, use_cache: bool = True
-    ) -> List[Dict[str, Any]]:
+        self, query_embedding: list[float], top_k: int = 5, use_cache: bool = True
+    ) -> list[dict[str, Any]]:
         """
         Perform similarity search with caching and performance monitoring
 
@@ -266,7 +266,7 @@ class EnhancedVectorStore:
             logger.error(f"Failed to perform similarity search: {e}")
             return []
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """
         Get comprehensive health status of the vector store
 
@@ -291,7 +291,7 @@ class EnhancedVectorStore:
             return {"error": str(e)}
 
     def create_vector_index(
-        self, table_name: str, column_name: str, index_type: str = "hnsw", parameters: Dict[str, Any] = None
+        self, table_name: str, column_name: str, index_type: str = "hnsw", parameters: dict[str, Any] = None
     ) -> bool:
         """
         Create a vector index for improved search performance
@@ -354,7 +354,7 @@ class EnhancedVectorStore:
             logger.error(f"Failed to create vector index: {e}")
             return False
 
-    def get_performance_metrics(self, hours: int = 24) -> List[Dict[str, Any]]:
+    def get_performance_metrics(self, hours: int = 24) -> list[dict[str, Any]]:
         """
         Get performance metrics for the specified time period
 
@@ -406,7 +406,7 @@ class EnhancedVectorStore:
             logger.error(f"Failed to get performance metrics: {e}")
             return []
 
-    def optimize_performance(self) -> Dict[str, Any]:
+    def optimize_performance(self) -> dict[str, Any]:
         """
         Optimize vector store performance based on metrics
 

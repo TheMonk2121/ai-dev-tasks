@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import List, Tuple
 
 
-def run_git_command(args: List[str], capture_output: bool = True) -> Tuple[int, str, str]:
+def run_git_command(args: list[str], capture_output: bool = True) -> tuple[int, str, str]:
     """Run a git command and return exit code, stdout, stderr"""
     try:
         result = subprocess.run(["git"] + args, capture_output=capture_output, text=True, cwd=Path.cwd())
@@ -25,7 +25,7 @@ def run_git_command(args: List[str], capture_output: bool = True) -> Tuple[int, 
         return 1, "", str(e)
 
 
-def check_git_status() -> Tuple[bool, str]:
+def check_git_status() -> tuple[bool, str]:
     """Check git status and return if there are changes to commit"""
     exit_code, stdout, stderr = run_git_command(["status", "--porcelain"])
 
@@ -41,7 +41,7 @@ def check_git_status() -> Tuple[bool, str]:
     return True, stdout
 
 
-def get_staged_files() -> List[str]:
+def get_staged_files() -> list[str]:
     """Get list of staged files"""
     exit_code, stdout, stderr = run_git_command(["diff", "--cached", "--name-only"])
 
@@ -51,7 +51,7 @@ def get_staged_files() -> List[str]:
     return [line.strip() for line in stdout.split("\n") if line.strip()]
 
 
-def get_unstaged_files() -> List[str]:
+def get_unstaged_files() -> list[str]:
     """Get list of unstaged files"""
     exit_code, stdout, stderr = run_git_command(["diff", "--name-only"])
 
@@ -61,7 +61,7 @@ def get_unstaged_files() -> List[str]:
     return [line.strip() for line in stdout.split("\n") if line.strip()]
 
 
-def get_untracked_files() -> List[str]:
+def get_untracked_files() -> list[str]:
     """Get list of untracked files"""
     exit_code, stdout, stderr = run_git_command(["ls-files", "--others", "--exclude-standard"])
 

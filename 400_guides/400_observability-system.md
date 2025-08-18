@@ -1,46 +1,64 @@
 <!-- ANCHOR_KEY: observability-system -->
+
 <!-- ANCHOR_PRIORITY: 20 -->
+
 <!-- ROLE_PINS: ["implementer", "planner", "researcher"] -->
 
 # 🔍 Industry-Grade Observability System
 
 <!-- CONTEXT_REFERENCE: 400_guides/400_system-overview.md -->
+
 <!-- MODULE_REFERENCE: dspy-rag-system/src/utils/structured_tracer.py -->
+
 <!-- MODULE_REFERENCE: dspy-rag-system/src/utils/self_critique.py -->
+
 <!-- MEMORY_CONTEXT: HIGH - Core observability and debugging system -->
+
 <!-- DATABASE_SYNC: REQUIRED -->
 
-## 🔎 TL;DR {#tldr}
+## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
+|----|----|----|
 | Complete guide to industry-grade observability with structured tracing, cryptographic verification, and self-critique | Implementing debugging features or troubleshooting system issues | Test with `python3 scripts/cursor_memory_rehydrate.py planner "test query"` |
 
 <!-- ANCHOR_KEY: tldr -->
+
 <!-- ANCHOR_PRIORITY: 0 -->
+
 <!-- ROLE_PINS: ["implementer", "planner", "researcher"] -->
 
 ## 🎯 **Current Status**
 
-- **Status**: ✅ **ACTIVE** - Industry-grade observability fully operational
-- **Priority**: 🔥 Critical - Core debugging and verification functionality
-- **Implementation**: Stanford HAI + Berkeley SkyLab + Anthropic best practices
-- **Features**: Structured tracing, cryptographic verification, echo queries, self-critique
+- **Status**: ✅ **ACTIVE** - Industry-grade observability fully
+  operational
+- **Priority**: 🔥 Critical - Core debugging and verification
+  functionality
+- **Implementation**: Stanford HAI + Berkeley SkyLab + Anthropic best
+  practices
+- **Features**: Structured tracing, cryptographic verification, echo
+  queries, self-critique
 
 ## 🏗️ **System Architecture**
 
 ### **Core Philosophy**
-The observability system implements **industry-leading practices** from top AI research labs:
 
-- **Stanford DSPy**: Schema'd traces for repeatability and error attribution
-- **Berkeley HELM**: Multi-layer error attribution (retrieval, assembly, execution)
-- **Anthropic Constitutional AI**: Reflection checkpoints and self-critique
+The observability system implements **industry-leading practices** from
+top AI research labs:
+
+- **Stanford DSPy**: Schema’d traces for repeatability and error
+  attribution
+- **Berkeley HELM**: Multi-layer error attribution (retrieval, assembly,
+  execution)
+- **Anthropic Constitutional AI**: Reflection checkpoints and
+  self-critique
 - **LangChain LangSmith**: Structured observability patterns
 
 ### **Four-Layer Observability**
 
 #### **1. Structured Tracing Layer**
-```python
+
+``` python
 # Complete trace with cryptographic verification
 {
   "trace_id": "uuid",
@@ -72,7 +90,8 @@ The observability system implements **industry-leading practices** from top AI r
 ```
 
 #### **2. Echo Verification Layer**
-```markdown
+
+``` markdown
 [ECHO VERIFICATION]
 Bundle Hash: 9f8a3c1234567890abcdef...
 Pins Hash: ghi7891234567890abcdef...
@@ -86,7 +105,8 @@ Before answering, verify you see:
 ```
 
 #### **3. Self-Critique Layer**
-```markdown
+
+``` markdown
 [SELF-CRITIQUE]
 Sufficient: true
 Confidence: 0.85
@@ -99,7 +119,8 @@ Verification passed. Suggestions: Consider adding recent auth changes.
 ```
 
 #### **4. Multi-Layer Logging**
-```json
+
+``` json
 {
   "timestamp": "2024-01-15T10:30:00Z",
   "level": "INFO",
@@ -115,7 +136,7 @@ Verification passed. Suggestions: Consider adding recent auth changes.
 
 ### **Basic Usage**
 
-```python
+``` python
 from dspy_rag_system.src.utils.memory_rehydrator import rehydrate
 
 # Create bundle with full observability
@@ -132,7 +153,7 @@ print(bundle.meta)  # Full trace metadata
 
 ### **CLI Usage**
 
-```bash
+``` bash
 # Basic rehydration with observability
 python3 scripts/cursor_memory_rehydrate.py planner "test query"
 
@@ -147,7 +168,7 @@ cat dspy-rag-system/traces/latest.json
 
 ### **Environment Variables**
 
-```bash
+``` bash
 # Trace directory
 export TRACE_DIR="traces"
 
@@ -163,7 +184,7 @@ export CRITIQUE_CONFIDENCE_THRESHOLD="0.7"
 
 ### **Trace Configuration**
 
-```python
+``` python
 # Custom trace configuration
 tracer = StructuredTracer(
     trace_dir="custom_traces",
@@ -178,7 +199,8 @@ tracer = StructuredTracer(
 ### **1. Structured Tracing**
 
 #### **Trace Spans**
-```python
+
+``` python
 # Start trace
 trace_id = tracer.start_trace("Fix auth bug", "implementer")
 
@@ -197,7 +219,8 @@ trace = tracer.end_trace(bundle_text)
 ```
 
 #### **Cryptographic Verification**
-```python
+
+``` python
 # Every piece of content gets a hash
 bundle_hash = hashlib.sha256(bundle_text.encode()).hexdigest()
 pins_hash = hashlib.sha256(pins_content.encode()).hexdigest()
@@ -207,7 +230,8 @@ evidence_hashes = [hashlib.sha256(chunk.encode()).hexdigest() for chunk in evide
 ### **2. Echo Verification**
 
 #### **Bundle Integrity Check**
-```python
+
+``` python
 # Generate echo verification
 echo_verification = tracer.generate_echo_verification(bundle_text)
 
@@ -216,7 +240,8 @@ is_valid = tracer.verify_bundle_integrity(bundle_text, echo_verification)
 ```
 
 #### **Model Echo Instructions**
-```markdown
+
+``` markdown
 Before answering, verify you see:
 1. Pins content matching hash: ghi78912...
 2. First 2 evidence chunks matching hashes: abc12312..., def45612...
@@ -226,7 +251,8 @@ Before answering, verify you see:
 ### **3. Self-Critique**
 
 #### **Bundle Evaluation**
-```python
+
+``` python
 # Perform self-critique
 critique = critique_engine.critique_bundle(
     bundle_text=bundle_text,
@@ -241,7 +267,8 @@ if not critique.is_sufficient:
 ```
 
 #### **Role-Specific Validation**
-```python
+
+``` python
 # Planner validation
 if role == "planner":
     if "backlog" not in bundle_text.lower():
@@ -256,7 +283,8 @@ if role == "implementer":
 ### **4. Multi-Layer Logging**
 
 #### **Structured Logs**
-```json
+
+``` json
 {
   "timestamp": "2024-01-15T10:30:00Z",
   "level": "INFO",
@@ -269,24 +297,23 @@ if role == "implementer":
 ```
 
 #### **Human-Readable Traces**
-```
-[DSPy TRACE] uuid
-Query: Fix auth bug
-Role: implementer
-Stability: 0.7
-Evidence: 15 chunks
-Entities: AuthManager, JWTToken
-Bundle Hash: 9f8a3c...
-Duration: 58.0ms
-  retrieval: 45.2ms
-  assembly: 12.8ms
-```
+
+    [DSPy TRACE] uuid
+    Query: Fix auth bug
+    Role: implementer
+    Stability: 0.7
+    Evidence: 15 chunks
+    Entities: AuthManager, JWTToken
+    Bundle Hash: 9f8a3c...
+    Duration: 58.0ms
+      retrieval: 45.2ms
+      assembly: 12.8ms
 
 ## 🎯 **Use Cases**
 
 ### **1. Debugging Bundle Issues**
 
-```python
+``` python
 # Check trace for retrieval problems
 trace = tracer.load_trace("trace_id")
 for span in trace.spans:
@@ -297,7 +324,7 @@ for span in trace.spans:
 
 ### **2. Verifying Bundle Integrity**
 
-```python
+``` python
 # Verify bundle wasn't truncated
 echo_verification = extract_echo_verification(bundle_text)
 if not tracer.verify_bundle_integrity(bundle_text, echo_verification):
@@ -306,7 +333,7 @@ if not tracer.verify_bundle_integrity(bundle_text, echo_verification):
 
 ### **3. Quality Assurance**
 
-```python
+``` python
 # Check self-critique results
 critique = extract_self_critique(bundle_text)
 if critique.confidence_score < 0.7:
@@ -316,7 +343,7 @@ if critique.confidence_score < 0.7:
 
 ### **4. Performance Monitoring**
 
-```python
+``` python
 # Monitor bundle creation performance
 traces = tracer.load_recent_traces(hours=24)
 avg_time = sum(t.total_time_ms for t in traces) / len(traces)
@@ -328,7 +355,8 @@ print(f"Average bundle creation time: {avg_time:.1f}ms")
 ### **Common Issues**
 
 #### **1. Trace File Not Found**
-```bash
+
+``` bash
 # Check trace directory
 ls dspy-rag-system/traces/
 
@@ -337,7 +365,8 @@ export ENABLE_STRUCTURED_TRACING="true"
 ```
 
 #### **2. Echo Verification Failed**
-```python
+
+``` python
 # Check bundle content
 print(f"Bundle length: {len(bundle_text)}")
 print(f"Expected hash: {expected_hash}")
@@ -345,7 +374,8 @@ print(f"Actual hash: {actual_hash}")
 ```
 
 #### **3. Self-Critique Errors**
-```python
+
+``` python
 # Check critique configuration
 print(f"Critique enabled: {ENABLE_SELF_CRITIQUE}")
 print(f"Confidence threshold: {CRITIQUE_CONFIDENCE_THRESHOLD}")
@@ -353,7 +383,7 @@ print(f"Confidence threshold: {CRITIQUE_CONFIDENCE_THRESHOLD}")
 
 ### **Debug Mode**
 
-```python
+``` python
 # Enable debug logging
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -367,7 +397,7 @@ print(bundle.meta)  # Full debug information
 
 ### **Trace Optimization**
 
-```python
+``` python
 # Configure performance thresholds
 tracer = StructuredTracer(
     performance_threshold_ms=100,  # Alert if > 100ms
@@ -378,7 +408,7 @@ tracer = StructuredTracer(
 
 ### **Critique Optimization**
 
-```python
+``` python
 # Configure critique thresholds
 critique_engine = SelfCritiqueEngine(
     confidence_threshold=0.7,      # Minimum confidence
@@ -390,7 +420,8 @@ critique_engine = SelfCritiqueEngine(
 ## 🔗 **Integration Points**
 
 ### **With Memory Rehydrator**
-```python
+
+``` python
 # Automatic integration
 @trace_bundle_creation(query="", role="planner")
 def rehydrate(query, role="planner", **config):
@@ -399,7 +430,8 @@ def rehydrate(query, role="planner", **config):
 ```
 
 ### **With Cursor AI**
-```python
+
+``` python
 # Echo verification in bundle
 bundle_text += "[ECHO VERIFICATION]\n"
 bundle_text += f"Bundle Hash: {bundle_hash}\n"
@@ -407,35 +439,59 @@ bundle_text += "Before answering, verify you see...\n"
 ```
 
 ### **With Monitoring Dashboard**
-```python
+
+``` python
 # Send traces to dashboard
 tracer.send_to_dashboard(trace)
 dashboard.update_metrics(trace.metrics)
 ```
 
+## 🖥️ Mission Dashboard
+
+The mission dashboard is the real-time monitoring surface for AI task
+execution and metrics.
+
+- Start: `./dspy-rag-system/start_mission_dashboard.sh`
+- UI: `http://localhost:5002`
+- Health: `http://localhost:5002/api/health`
+- Metrics: `http://localhost:5002/api/metrics`
+
+What you’ll see: - Live mission list with status, progress, and
+priorities - Performance metrics (response time, throughput, error
+rate) - WebSocket-driven updates for near real-time visibility
+
+Notes: - This section is the canonical entry point for the dashboard;
+the dedicated dashboard guide has been deprecated in favor of this
+unified observability document.
+
 ## 📚 **Best Practices**
 
 ### **1. Always Use Structured Traces**
+
 - Never rely on free-text logs alone
 - Always include cryptographic hashes
 - Use consistent trace schemas
 
 ### **2. Implement Echo Verification**
+
 - Force models to verify bundle integrity
 - Include hash verification instructions
 - Check for bundle truncation
 
 ### **3. Enable Self-Critique**
+
 - Ask models to evaluate their own context
 - Use role-specific validation rules
 - Set appropriate confidence thresholds
 
 ### **4. Monitor Performance**
+
 - Track bundle creation times
 - Set performance alerts
 - Optimize slow operations
 
 ### **5. Maintain Trace History**
+
 - Keep trace files for debugging
 - Implement trace rotation
 - Archive old traces
@@ -444,44 +500,48 @@ dashboard.update_metrics(trace.metrics)
 
 ### **Planned Features**
 
-1. **Real-Time Trace Streaming**
-   - Live trace visualization
-   - Real-time performance monitoring
-   - Instant error detection
-
-2. **Advanced Analytics**
-   - Trace pattern analysis
-   - Performance trend detection
-   - Quality score calculation
-
-3. **Integration with External Tools**
-   - LangSmith integration
-   - OpenTelemetry support
-   - Grafana dashboards
-
-4. **Machine Learning Optimization**
-   - Automatic performance tuning
-   - Predictive error detection
-   - Adaptive critique thresholds
+1.  **Real-Time Trace Streaming**
+    - Live trace visualization
+    - Real-time performance monitoring
+    - Instant error detection
+2.  **Advanced Analytics**
+    - Trace pattern analysis
+    - Performance trend detection
+    - Quality score calculation
+3.  **Integration with External Tools**
+    - LangSmith integration
+    - OpenTelemetry support
+    - Grafana dashboards
+4.  **Machine Learning Optimization**
+    - Automatic performance tuning
+    - Predictive error detection
+    - Adaptive critique thresholds
 
 ## 🔗 **Related Documentation**
 
-- **System Overview**: `400_guides/400_system-overview.md` (Observability section)
-- **Memory Rehydrator**: `dspy-rag-system/src/utils/memory_rehydrator.py` (Integration)
-- **Structured Tracer**: `dspy-rag-system/src/utils/structured_tracer.py` (Core implementation)
-- **Self-Critique**: `dspy-rag-system/src/utils/self_critique.py` (Critique engine)
+- **System Overview**: `400_guides/400_system-overview.md`
+  (Observability section)
+- **Memory Rehydrator**:
+  `dspy-rag-system/src/utils/memory_rehydrator.py` (Integration)
+- **Structured Tracer**:
+  `dspy-rag-system/src/utils/structured_tracer.py` (Core implementation)
+- **Self-Critique**: `dspy-rag-system/src/utils/self_critique.py`
+  (Critique engine)
 - **Logger**: `dspy-rag-system/src/utils/logger.py` (Structured logging)
-- **Code Criticality**: `400_guides/400_code-criticality-guide.md` (Tier 1 critical files)
+- **Code Criticality**: `400_guides/400_code-criticality-guide.md` (Tier
+  1 critical files)
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_observability-system.md
-# Generated: 2025-08-17T17:47:03.935537
+
+## Auto-generated sections for 400_observability-system.md
+
+## Generated: 2025-08-18T08:03:22.759764
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -489,10 +549,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

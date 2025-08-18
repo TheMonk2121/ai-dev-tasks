@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - RAG system research and implementation patterns -->
 # 🔍 RAG System Research
@@ -27,7 +27,7 @@ Backlog link: B-045, B-077
 
 - **Points**: 5 - Research and implementation guidance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_performance-optimization-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_guides/400_performance-optimization-guide.md
 
 - **Next Steps**: Implement RAG patterns and optimizations
 

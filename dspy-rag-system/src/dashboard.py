@@ -16,13 +16,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import (
     Any,
-    Callable,
     ClassVar,
     Optional,
     Protocol,
     cast,
     runtime_checkable,
 )
+from collections.abc import Callable
 
 # Flask imports
 from flask import Flask, jsonify, render_template, request
@@ -54,8 +54,8 @@ from utils.validator import (
 )
 
 # Optional monitoring callables (names are always defined for the linter)
-create_health_endpoints: Optional[Callable[[Any], Any]] = None
-initialize_production_monitoring: Optional[Callable[..., Any]] = None
+create_health_endpoints: Callable[[Any], Any] | None = None
+initialize_production_monitoring: Callable[..., Any] | None = None
 try:
     from monitoring.health_endpoints import (
         create_health_endpoints as _create_health_endpoints,
@@ -126,7 +126,7 @@ class VectorStoreProtocol(Protocol):
         document_id: str,
         chunk_index: int,
         content: str,
-        embedding: Optional[list[float]],
+        embedding: list[float] | None,
     ) -> Any: ...
     def get_documents(self) -> list[dict[str, Any]]: ...
 
@@ -226,11 +226,11 @@ class DashboardState:
     def __init__(self):
         self.processing_files: dict[str, dict] = {}
         self.processing_lock = threading.Lock()
-        self.rag_interface: Optional[Any] = None
-        self.vector_store: Optional[VectorStoreProtocol] = None
-        self.document_processor: Optional[DocumentProcessorProtocol] = None
-        self.metadata_extractor: Optional[MetadataExtractor] = None
-        self.graph_data_provider: Optional[Any] = None
+        self.rag_interface: Any | None = None
+        self.vector_store: VectorStoreProtocol | None = None
+        self.document_processor: DocumentProcessorProtocol | None = None
+        self.metadata_extractor: MetadataExtractor | None = None
+        self.graph_data_provider: Any | None = None
 
         # Thread-safe executor with proper shutdown (D-4)
         self.executor = ThreadPoolExecutor(max_workers=DashboardConfig.MAX_WORKERS)
@@ -260,7 +260,7 @@ class DashboardState:
         status: str,
         progress: int = 0,
         chunks: int = 0,
-        error: Optional[str] = None,
+        error: str | None = None,
     ):
         """Update processing file status"""
         with self.processing_lock:

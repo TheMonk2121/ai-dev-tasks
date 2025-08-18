@@ -16,11 +16,11 @@ from typing import Any, Dict, List, Optional
 class AnchorMetadata:
     """Structured anchor metadata"""
 
-    anchor_key: Optional[str] = None
-    anchor_priority: Optional[int] = None
-    role_pins: Optional[List[str]] = None
+    anchor_key: str | None = None
+    anchor_priority: int | None = None
+    role_pins: list[str] | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSONB storage"""
         result = {}
         if self.anchor_key:
@@ -91,7 +91,7 @@ def extract_anchor_metadata(content: str) -> AnchorMetadata:
     return metadata
 
 
-def validate_anchor_metadata(metadata: AnchorMetadata) -> List[str]:
+def validate_anchor_metadata(metadata: AnchorMetadata) -> list[str]:
     """
     Validate anchor metadata for consistency and correctness.
 
@@ -141,7 +141,7 @@ def extract_anchor_metadata_from_file(file_path: str) -> AnchorMetadata:
         AnchorMetadata object with extracted fields
     """
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
         return extract_anchor_metadata(content)
     except Exception as e:
@@ -149,7 +149,7 @@ def extract_anchor_metadata_from_file(file_path: str) -> AnchorMetadata:
         return AnchorMetadata()
 
 
-def batch_extract_metadata(file_paths: List[str]) -> Dict[str, AnchorMetadata]:
+def batch_extract_metadata(file_paths: list[str]) -> dict[str, AnchorMetadata]:
     """
     Extract anchor metadata from multiple files.
 
@@ -166,7 +166,7 @@ def batch_extract_metadata(file_paths: List[str]) -> Dict[str, AnchorMetadata]:
     return results
 
 
-def generate_metadata_report(file_paths: List[str]) -> Dict[str, Any]:
+def generate_metadata_report(file_paths: list[str]) -> dict[str, Any]:
     """
     Generate a report of anchor metadata across files.
 

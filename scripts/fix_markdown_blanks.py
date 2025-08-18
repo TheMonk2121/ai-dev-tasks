@@ -96,7 +96,7 @@ def main():
         print("Usage: python3 scripts/fix_markdown_blanks.py <file.md>")
         sys.exit(1)
     path = sys.argv[1]
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, encoding='utf-8') as f:
         original = f.read()
     fixed = normalize_markdown(original)
     with open(path, 'w', encoding='utf-8') as f:

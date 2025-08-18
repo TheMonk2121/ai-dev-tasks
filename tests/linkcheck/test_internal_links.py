@@ -30,7 +30,9 @@ class TestInternalLinkValidation:
             (core_dir / "target_file.md").write_text(
                 "# Target File\n\n## Section 1\n\nContent here.\n\n## Section 2\n\nMore content."
             )
-            (core_dir / "another_file.md").write_text("# Another File\n\n## Subsection\n\nContent.")
+            (core_dir / "another_file.md").write_text(
+                "# Another File\n\n## Subsection\n\nContent."
+            )
 
             yield repo_path
 
@@ -42,7 +44,9 @@ class TestInternalLinkValidation:
     def test_valid_file_link(self, checker, temp_repo):
         """Test valid file link."""
         test_file = temp_repo / "000_core" / "test_file.md"
-        test_file.write_text("# Test File\n\nSee [Target File](target_file.md) for details.")
+        test_file.write_text(
+            "# Test File\n\nSee [Target File](target_file.md) for details."
+        )
 
         checker.build_file_index()
         broken_links = checker.check_file(test_file)
@@ -52,17 +56,71 @@ class TestInternalLinkValidation:
     def test_valid_anchor_link(self, checker, temp_repo):
         """Test valid anchor link."""
         test_file = temp_repo / "000_core" / "test_file.md"
-        test_file.write_text("# Test File\n\nSee [Section 1](target_file.md#section-1) for details.")
+        test_file.write_text(
+            "# Test File\n\nSee [Section 1](target_file.md#section-1) for details."
+        )
 
         checker.build_file_index()
         broken_links = checker.check_file(test_file)
 
         assert len(broken_links) == 0
 
+    def test_emoji_anchor_same_scope(self, checker, temp_repo):
+        """Validate link to an emoji-headed section using the expected slug within the 000_core scope."""
+        target = temp_repo / "000_core" / "emoji_target.md"
+        target.write_text("# Emoji Target\n\n## ⚡ Quick reference\n\nContent\n")
+
+        source = temp_repo / "000_core" / "emoji_source.md"
+        source.write_text(
+            "# Emoji Source\n\nSee [Quick ref](emoji_target.md#quick-reference).\n"
+        )
+
+        checker.build_file_index()
+        broken_links = checker.check_file(source)
+
+        assert len(broken_links) == 0
+
+    def test_cross_folder_parent_directory_link(self, checker, temp_repo):
+        """Test that ../ links from a subfolder resolve correctly using pathlib normalization."""
+        # Create a subfolder with a file linking up to 000_core/target_file.md
+        subdir = temp_repo / "400_guides"
+        subdir.mkdir()
+        linking_file = subdir / "linking.md"
+        linking_file.write_text(
+            "# Linking File\n\nSee [Section 1](../000_core/target_file.md#section-1) for details."
+        )
+
+        checker.build_file_index()
+        broken_links = checker.check_file(linking_file)
+
+        assert len(broken_links) == 0
+
+    def test_repo_wide_scope_cross_folder_emoji_anchor(self, temp_repo):
+        """With scope '.', validate 000_core file linking to 400_guides emoji-anchored section."""
+        # Create target in 400_guides with emoji heading
+        guides_dir = temp_repo / "400_guides"
+        guides_dir.mkdir(exist_ok=True)
+        target = guides_dir / "metadata_guide.md"
+        target.write_text("# Metadata Guide\n\n## ⚡ Quick reference\n\nContent\n")
+
+        # Create source in 000_core linking to the emoji anchor in 400_guides
+        source = temp_repo / "000_core" / "readme.md"
+        source.write_text(
+            "# Core Readme\n\nSee [Quick ref](../400_guides/metadata_guide.md#quick-reference).\n"
+        )
+
+        checker = LinkChecker(temp_repo, ".")
+        checker.build_file_index()
+        broken_links = checker.check_file(source)
+
+        assert len(broken_links) == 0
+
     def test_missing_file(self, checker, temp_repo):
         """Test missing file link."""
         test_file = temp_repo / "000_core" / "test_file.md"
-        test_file.write_text("# Test File\n\nSee [Missing File](missing_file.md) for details.")
+        test_file.write_text(
+            "# Test File\n\nSee [Missing File](missing_file.md) for details."
+        )
 
         checker.build_file_index()
         broken_links = checker.check_file(test_file)
@@ -74,7 +132,9 @@ class TestInternalLinkValidation:
     def test_missing_anchor(self, checker, temp_repo):
         """Test missing anchor link."""
         test_file = temp_repo / "000_core" / "test_file.md"
-        test_file.write_text("# Test File\n\nSee [Missing Section](target_file.md#missing-section) for details.")
+        test_file.write_text(
+            "# Test File\n\nSee [Missing Section](target_file.md#missing-section) for details."
+        )
 
         checker.build_file_index()
         broken_links = checker.check_file(test_file)
@@ -102,7 +162,9 @@ Email us at [support@example.com](mailto:support@example.com).
     def test_anchor_only_links_ignored(self, checker, temp_repo):
         """Test that anchor-only links are ignored."""
         test_file = temp_repo / "000_core" / "test_file.md"
-        test_file.write_text("# Test File\n\n## Section 1\n\nContent.\n\n[Back to top](#test-file)")
+        test_file.write_text(
+            "# Test File\n\n## Section 1\n\nContent.\n\n[Back to top](#test-file)"
+        )
 
         checker.build_file_index()
         broken_links = checker.check_file(test_file)
@@ -131,7 +193,9 @@ Check [Missing Section](target_file.md#missing-section) for more info.
     def test_changed_files_check(self, checker, temp_repo):
         """Test checking only changed files."""
         test_file = temp_repo / "000_core" / "test_file.md"
-        test_file.write_text("# Test File\n\nSee [Missing File](missing_file.md) for details.")
+        test_file.write_text(
+            "# Test File\n\nSee [Missing File](missing_file.md) for details."
+        )
 
         checker.build_file_index()
         changed_files = [str(test_file)]
@@ -144,10 +208,14 @@ Check [Missing Section](target_file.md#missing-section) for more info.
         """Test checking all files in scope."""
         # Create files with broken links
         test_file1 = temp_repo / "000_core" / "test_file1.md"
-        test_file1.write_text("# Test File 1\n\nSee [Missing File](missing_file.md) for details.")
+        test_file1.write_text(
+            "# Test File 1\n\nSee [Missing File](missing_file.md) for details."
+        )
 
         test_file2 = temp_repo / "000_core" / "test_file2.md"
-        test_file2.write_text("# Test File 2\n\nCheck [Missing Section](target_file.md#missing-section) for more info.")
+        test_file2.write_text(
+            "# Test File 2\n\nCheck [Missing Section](target_file.md#missing-section) for more info."
+        )
 
         checker.build_file_index()
         broken_links = checker.check_scope()

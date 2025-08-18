@@ -66,10 +66,10 @@ class CodeAnalysis:
     performance_score: float = 0.0
     security_score: float = 0.0
     maintainability_score: float = 0.0
-    issues: List[CodeIssue] = field(default_factory=list)
-    suggestions: List[str] = field(default_factory=list)
-    best_practices: List[str] = field(default_factory=list)
-    complexity_metrics: Dict[str, Any] = field(default_factory=dict)
+    issues: list[CodeIssue] = field(default_factory=list)
+    suggestions: list[str] = field(default_factory=list)
+    best_practices: list[str] = field(default_factory=list)
+    complexity_metrics: dict[str, Any] = field(default_factory=dict)
     timestamp: float = field(default_factory=time.time)
 
 
@@ -169,7 +169,7 @@ class CoderDatabase:
         conn.close()
         return analysis.id
     
-    def get_analysis(self, analysis_id: str) -> Optional[CodeAnalysis]:
+    def get_analysis(self, analysis_id: str) -> CodeAnalysis | None:
         """Get code analysis by ID."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -218,7 +218,7 @@ class CoderAgent:
             "best_practices_validation"
         ]
         self.database = CoderDatabase()
-        self.analysis_cache: Dict[str, CodeAnalysis] = {}
+        self.analysis_cache: dict[str, CodeAnalysis] = {}
         self.usage_count = 0
         self.error_count = 0
         self.last_used = time.time()
@@ -263,7 +263,7 @@ class CoderAgent:
             }
         }
     
-    async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process coding request."""
         start_time = time.time()
         
@@ -303,7 +303,7 @@ class CoderAgent:
             logger.error(f"Error in Coder Agent: {e}")
             raise
     
-    def can_handle(self, request: Dict[str, Any]) -> bool:
+    def can_handle(self, request: dict[str, Any]) -> bool:
         """Check if coder agent can handle the request."""
         coding_keywords = [
             "code", "refactor", "optimize", "quality", "performance",
@@ -598,7 +598,7 @@ class CoderAgent:
                 return language
         return "unknown"
     
-    def _format_analysis_response(self, analysis: CodeAnalysis) -> Dict[str, Any]:
+    def _format_analysis_response(self, analysis: CodeAnalysis) -> dict[str, Any]:
         """Format code analysis into response."""
         return {
             "agent_type": "coder",
@@ -620,7 +620,7 @@ class CoderAgent:
         content = f"{file_path}:{code_content}:{analysis_type}"
         return hashlib.md5(content.encode()).hexdigest()
     
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get agent status information."""
         return {
             "agent_type": "coder",

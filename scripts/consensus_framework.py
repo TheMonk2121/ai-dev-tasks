@@ -63,9 +63,9 @@ class ConsensusParticipant:
     id: str
     name: str
     role: RoleType
-    expertise: List[str] = field(default_factory=list)
+    expertise: list[str] = field(default_factory=list)
     trust_score: float = 1.0
-    participation_history: List[str] = field(default_factory=list)
+    participation_history: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -78,12 +78,12 @@ class StrawmanProposal:
     proposer_id: str
     created_at: datetime
     status: ConsensusStatus = ConsensusStatus.DRAFT
-    tags: List[str] = field(default_factory=list)
-    context: Dict = field(default_factory=dict)
-    references: List[str] = field(default_factory=list)
-    assumptions: List[str] = field(default_factory=list)
-    constraints: List[str] = field(default_factory=list)
-    success_criteria: List[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
+    context: dict = field(default_factory=dict)
+    references: list[str] = field(default_factory=list)
+    assumptions: list[str] = field(default_factory=list)
+    constraints: list[str] = field(default_factory=list)
+    success_criteria: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -93,10 +93,10 @@ class ConsensusRound:
     round_number: int
     proposal_id: str
     start_time: datetime
-    end_time: Optional[datetime] = None
-    participants: List[str] = field(default_factory=list)
-    feedback: List[Dict] = field(default_factory=list)
-    refinements: List[Dict] = field(default_factory=list)
+    end_time: datetime | None = None
+    participants: list[str] = field(default_factory=list)
+    feedback: list[dict] = field(default_factory=list)
+    refinements: list[dict] = field(default_factory=list)
     consensus_score: float = 0.0
     validation_level: ValidationLevel = ValidationLevel.STANDARD
 
@@ -109,10 +109,10 @@ class RedTeamReview:
     proposal_id: str
     reviewer_id: str
     review_time: datetime
-    critique_points: List[str] = field(default_factory=list)
-    risk_assessment: Dict = field(default_factory=dict)
-    challenge_questions: List[str] = field(default_factory=list)
-    alternative_approaches: List[str] = field(default_factory=list)
+    critique_points: list[str] = field(default_factory=list)
+    risk_assessment: dict = field(default_factory=dict)
+    challenge_questions: list[str] = field(default_factory=list)
+    alternative_approaches: list[str] = field(default_factory=list)
     severity_score: float = 0.0
 
 
@@ -124,10 +124,10 @@ class BlueTeamReview:
     proposal_id: str
     reviewer_id: str
     review_time: datetime
-    support_points: List[str] = field(default_factory=list)
-    enhancement_suggestions: List[str] = field(default_factory=list)
-    implementation_guidance: List[str] = field(default_factory=list)
-    success_indicators: List[str] = field(default_factory=list)
+    support_points: list[str] = field(default_factory=list)
+    enhancement_suggestions: list[str] = field(default_factory=list)
+    implementation_guidance: list[str] = field(default_factory=list)
+    success_indicators: list[str] = field(default_factory=list)
     confidence_score: float = 0.0
 
 
@@ -141,8 +141,8 @@ class ConsensusCheckpoint:
     validation_level: ValidationLevel
     timestamp: datetime
     validator_id: str
-    criteria_met: List[str] = field(default_factory=list)
-    criteria_failed: List[str] = field(default_factory=list)
+    criteria_met: list[str] = field(default_factory=list)
+    criteria_failed: list[str] = field(default_factory=list)
     overall_score: float = 0.0
     passed: bool = False
     notes: str = ""
@@ -158,16 +158,16 @@ class ConsensusResult:
     validation_score: float
     implementation_priority: str
     timeline_estimate: str
-    resource_requirements: Dict = field(default_factory=dict)
-    risk_mitigation: List[str] = field(default_factory=list)
-    success_metrics: List[str] = field(default_factory=list)
-    next_steps: List[str] = field(default_factory=list)
+    resource_requirements: dict = field(default_factory=dict)
+    risk_mitigation: list[str] = field(default_factory=list)
+    success_metrics: list[str] = field(default_factory=list)
+    next_steps: list[str] = field(default_factory=list)
 
 
 class ConsensusFramework:
     """Full consensus framework with strawman proposals and role-based validation."""
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: str | None = None):
         self.config = self._load_config(config_path)
         self.data_dir = Path("data/consensus")
         self.proposals_file = self.data_dir / "proposals.jsonl"
@@ -179,7 +179,7 @@ class ConsensusFramework:
         self._ensure_data_dirs()
         self.participants = self._load_participants()
 
-    def _load_config(self, config_path: Optional[str]) -> Dict:
+    def _load_config(self, config_path: str | None) -> dict:
         """Load configuration for the consensus framework."""
         default_config = {
             "consensus": {
@@ -213,7 +213,7 @@ class ConsensusFramework:
         }
 
         if config_path and Path(config_path).exists():
-            with open(config_path, "r") as f:
+            with open(config_path) as f:
                 user_config = yaml.safe_load(f)
                 default_config.update(user_config)
 
@@ -232,12 +232,12 @@ class ConsensusFramework:
         ]:
             file_path.touch()
 
-    def _load_participants(self) -> Dict[str, ConsensusParticipant]:
+    def _load_participants(self) -> dict[str, ConsensusParticipant]:
         """Load participants from the database."""
         participants = {}
 
         if self.participants_file.exists():
-            with open(self.participants_file, "r") as f:
+            with open(self.participants_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -260,8 +260,8 @@ class ConsensusFramework:
         title: str,
         description: str,
         proposer_id: str,
-        tags: Optional[List[str]] = None,
-        context: Optional[Dict] = None,
+        tags: list[str] | None = None,
+        context: dict | None = None,
     ) -> StrawmanProposal:
         """Create a new strawman proposal."""
         proposal = StrawmanProposal(
@@ -344,10 +344,10 @@ class ConsensusFramework:
     def submit_red_team_review(
         self,
         review_id: str,
-        critique_points: List[str],
-        risk_assessment: Dict,
-        challenge_questions: List[str],
-        alternative_approaches: List[str],
+        critique_points: list[str],
+        risk_assessment: dict,
+        challenge_questions: list[str],
+        alternative_approaches: list[str],
         severity_score: float,
     ) -> bool:
         """Submit a completed red team review."""
@@ -394,10 +394,10 @@ class ConsensusFramework:
     def submit_blue_team_review(
         self,
         review_id: str,
-        support_points: List[str],
-        enhancement_suggestions: List[str],
-        implementation_guidance: List[str],
-        success_indicators: List[str],
+        support_points: list[str],
+        enhancement_suggestions: list[str],
+        implementation_guidance: list[str],
+        success_indicators: list[str],
         confidence_score: float,
     ) -> bool:
         """Submit a completed blue team review."""
@@ -457,7 +457,7 @@ class ConsensusFramework:
         round_number: int,
         participant_id: str,
         feedback: str,
-        refinements: Optional[List[str]] = None,
+        refinements: list[str] | None = None,
     ) -> bool:
         """Add feedback to a consensus round."""
         round_obj = self._get_round(proposal_id, round_number)
@@ -552,8 +552,8 @@ class ConsensusFramework:
     def validate_checkpoint(
         self,
         checkpoint_id: str,
-        criteria_met: List[str],
-        criteria_failed: List[str],
+        criteria_met: list[str],
+        criteria_failed: list[str],
         overall_score: float,
         notes: str = "",
     ) -> bool:
@@ -640,10 +640,10 @@ class ConsensusFramework:
 
         return result
 
-    def _get_proposal(self, proposal_id: str) -> Optional[StrawmanProposal]:
+    def _get_proposal(self, proposal_id: str) -> StrawmanProposal | None:
         """Get a proposal by ID."""
         if self.proposals_file.exists():
-            with open(self.proposals_file, "r") as f:
+            with open(self.proposals_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -672,7 +672,7 @@ class ConsensusFramework:
         # This is a simplified update - in production, you'd want proper database operations
         proposals = []
         if self.proposals_file.exists():
-            with open(self.proposals_file, "r") as f:
+            with open(self.proposals_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -710,10 +710,10 @@ class ConsensusFramework:
         """Create a consensus round."""
         return self.create_consensus_round(proposal_id, round_number)
 
-    def _get_round(self, proposal_id: str, round_number: int) -> Optional[ConsensusRound]:
+    def _get_round(self, proposal_id: str, round_number: int) -> ConsensusRound | None:
         """Get a consensus round."""
         if self.rounds_file.exists():
-            with open(self.rounds_file, "r") as f:
+            with open(self.rounds_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -739,7 +739,7 @@ class ConsensusFramework:
         # Similar to _update_proposal, this would be a proper database operation
         rounds = []
         if self.rounds_file.exists():
-            with open(self.rounds_file, "r") as f:
+            with open(self.rounds_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -811,7 +811,7 @@ class ConsensusFramework:
     def _get_review(self, review_id: str, review_type: str):
         """Get a review by ID and type."""
         if self.reviews_file.exists():
-            with open(self.reviews_file, "r") as f:
+            with open(self.reviews_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -850,7 +850,7 @@ class ConsensusFramework:
         # Similar to other update methods, this would be a proper database operation
         reviews = []
         if self.reviews_file.exists():
-            with open(self.reviews_file, "r") as f:
+            with open(self.reviews_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -898,10 +898,10 @@ class ConsensusFramework:
                 json.dump(review_data, f)
                 f.write("\n")
 
-    def _get_checkpoint(self, checkpoint_id: str) -> Optional[ConsensusCheckpoint]:
+    def _get_checkpoint(self, checkpoint_id: str) -> ConsensusCheckpoint | None:
         """Get a checkpoint by ID."""
         if self.checkpoints_file.exists():
-            with open(self.checkpoints_file, "r") as f:
+            with open(self.checkpoints_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -928,7 +928,7 @@ class ConsensusFramework:
         """Update a checkpoint in the database."""
         checkpoints = []
         if self.checkpoints_file.exists():
-            with open(self.checkpoints_file, "r") as f:
+            with open(self.checkpoints_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -961,11 +961,11 @@ class ConsensusFramework:
                 json.dump(checkpoint_data, f)
                 f.write("\n")
 
-    def _get_proposal_rounds(self, proposal_id: str) -> List[ConsensusRound]:
+    def _get_proposal_rounds(self, proposal_id: str) -> list[ConsensusRound]:
         """Get all rounds for a proposal."""
         rounds = []
         if self.rounds_file.exists():
-            with open(self.rounds_file, "r") as f:
+            with open(self.rounds_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -990,11 +990,11 @@ class ConsensusFramework:
                             continue
         return rounds
 
-    def _get_proposal_checkpoints(self, proposal_id: str) -> List[ConsensusCheckpoint]:
+    def _get_proposal_checkpoints(self, proposal_id: str) -> list[ConsensusCheckpoint]:
         """Get all checkpoints for a proposal."""
         checkpoints = []
         if self.checkpoints_file.exists():
-            with open(self.checkpoints_file, "r") as f:
+            with open(self.checkpoints_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -1045,7 +1045,7 @@ class ConsensusFramework:
         else:
             return "2-3 months"
 
-    def _assess_resources(self, proposal: StrawmanProposal) -> Dict:
+    def _assess_resources(self, proposal: StrawmanProposal) -> dict:
         """Assess resource requirements."""
         # Simple resource assessment
         return {
@@ -1055,13 +1055,13 @@ class ConsensusFramework:
             "documentation_hours": len(proposal.description.split()) * 0.2,
         }
 
-    def _extract_risk_mitigation(self, proposal_id: str) -> List[str]:
+    def _extract_risk_mitigation(self, proposal_id: str) -> list[str]:
         """Extract risk mitigation strategies from reviews."""
         risk_mitigation = []
 
         # Get red team reviews
         if self.reviews_file.exists():
-            with open(self.reviews_file, "r") as f:
+            with open(self.reviews_file) as f:
                 for line in f:
                     if line.strip():
                         try:
@@ -1075,7 +1075,7 @@ class ConsensusFramework:
 
         return risk_mitigation
 
-    def _generate_success_metrics(self, proposal: StrawmanProposal) -> List[str]:
+    def _generate_success_metrics(self, proposal: StrawmanProposal) -> list[str]:
         """Generate success metrics for the proposal."""
         metrics = []
 
@@ -1096,7 +1096,7 @@ class ConsensusFramework:
 
         return metrics
 
-    def _generate_next_steps(self, proposal_id: str, final_status: ConsensusStatus) -> List[str]:
+    def _generate_next_steps(self, proposal_id: str, final_status: ConsensusStatus) -> list[str]:
         """Generate next steps based on final status."""
         if final_status == ConsensusStatus.VALIDATED:
             return [

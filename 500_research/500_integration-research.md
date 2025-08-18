@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Integration research and patterns -->
 # 🔌 Integration Research
 
@@ -19,7 +19,7 @@
 
 - **Points**: 2 - Research and planning effort
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md
 
 - **Next Steps**: Populate with integration research findings
 

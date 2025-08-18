@@ -25,7 +25,7 @@ def find_markdown_files():
 def needs_trailing_newline(file_path):
     """Check if a file needs a trailing newline."""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         # Check if file ends with newline
@@ -41,7 +41,7 @@ def needs_trailing_newline(file_path):
 def add_trailing_newline(file_path):
     """Add a trailing newline to a file."""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         # Add newline if not present

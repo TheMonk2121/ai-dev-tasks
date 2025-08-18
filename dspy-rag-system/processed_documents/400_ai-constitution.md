@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
 # 📜 **CORE CONSTITUTION RULES**---
 
@@ -37,7 +37,7 @@
   - Maintain cross-reference integrity across all documentation
   - Preserve file naming convention patterns (400_, 500_, etc.)
   - Ensure documentation coherence before any changes
-  - Validate against `400_guides/400_context-priority-guide.md` before operations
+  - Validate against `400_guides/400_cursor-context-engineering-guide.md` before operations
 
 ### **Article II: Context Preservation & Memory Management**
 

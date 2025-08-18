@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: ../400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: ../400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: ../100_memory/100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: ../400_guides/400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: ../400_guides/400_contributing-guidelines.md -->
@@ -29,7 +29,7 @@ with sophisticated documentation, automated workflows, and intelligent task mana
 2. **Check current state** → [../100_memory/100_cursor-memory-context.md](../100_memory/100_cursor-memory-context.md)
 3. **See priorities/roadmap** → [000_backlog.md](000_backlog.md)
 4. **Understand architecture** → [../400_guides/400_system-overview.md](../400_guides/400_system-overview.md)
-5. **Learn navigation rules** → [../400_guides/400_context-priority-guide.md](../400_guides/400_context-priority-guide.md)
+5. **Learn navigation rules** → [../400_guides/400_cursor-context-engineering-guide.md](../400_guides/400_cursor-context-engineering-guide.md)
 
 **Want to understand what this is?** → **[../400_guides/400_project-overview.md](../400_guides/400_project-overview.md)** - 5-minute overview of the entire system
 **Want to see the current state?** → **[../100_memory/100_cursor-memory-context.md](../100_memory/100_cursor-memory-context.md)** - Instant project state
@@ -67,14 +67,14 @@ pip install -r dspy-rag-system/requirements.txt
 - **[../400_guides/400_project-overview.md](../400_guides/400_project-overview.md)** - Main project overview
 - **[../400_guides/400_system-overview.md](../400_guides/400_system-overview.md)** - Technical architecture
 - **[000_backlog.md](000_backlog.md)** - Current priorities and roadmap
-- **[../400_guides/400_documentation-retrieval-guide.md](../400_guides/400_documentation-retrieval-guide.md)** - Documentation search/index + validator quick start
+- **[../400_guides/400_documentation-guide.md](../400_guides/400_documentation-guide.md)** - Documentation inventory, retrieval, and validator quick start
 
 ### **Development Workflow**
 - **[001_create-prd.md](001_create-prd.md)** - Create Product Requirements Documents
 - **[002_generate-tasks.md](002_generate-tasks.md)** - Generate executable tasks
 - **[003_process-task-list.md](003_process-task-list.md)** - Execute tasks with AI
 - **[004_development-roadmap.md](004_development-roadmap.md)** - Strategic roadmap and sprint planning
-- **[scripts/enhanced_backlog_tracking.py](../scripts/enhanced_backlog_tracking.py)** - Enhanced status tracking with timestamps
+- **[scripts/backlog_tracking.py](../scripts/backlog_tracking.py)** - Enhanced status tracking with timestamps
 
 ### **Setup & Configuration**
 - **[../200_setup/202_setup-requirements.md](../200_setup/202_setup-requirements.md)** - Environment setup
@@ -138,7 +138,7 @@ python3 ../scripts/process_tasks.py status
 1. **Use this README (Start Here)** for navigation guidance
 2. **Check [000_backlog.md](000_backlog.md)** for current priorities
 3. **Review [../400_guides/400_system-overview.md](../400_guides/400_system-overview.md)** for technical context
-4. **Use the quick reference in [../400_guides/400_metadata-collection-guide.md](../400_guides/400_metadata-collection-guide.md#quick-reference)** for commands
+4. **Use the quick reference in [../400_guides/400_metadata-collection-guide.md](../400_guides/400_metadata-collection-guide.md)** for commands
 
 ---
 

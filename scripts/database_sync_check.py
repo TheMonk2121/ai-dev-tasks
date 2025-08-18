@@ -23,7 +23,7 @@ except ImportError as e:
     sys.exit(1)
 
 
-def find_files_with_sync_tags() -> List[Tuple[str, str]]:
+def find_files_with_sync_tags() -> list[tuple[str, str]]:
     """
     Find all files with DATABASE_SYNC tags.
 
@@ -46,7 +46,7 @@ def find_files_with_sync_tags() -> List[Tuple[str, str]]:
             if file.endswith((".md", ".txt", ".py")):
                 file_path = os.path.join(root, file)
                 try:
-                    with open(file_path, "r", encoding="utf-8") as f:
+                    with open(file_path, encoding="utf-8") as f:
                         content = f.read()
 
                     # Check for DATABASE_SYNC tags
@@ -81,7 +81,7 @@ def find_files_with_sync_tags() -> List[Tuple[str, str]]:
     return sync_files
 
 
-def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, Dict]:
+def check_database_sync_status(sync_files: list[tuple[str, str]]) -> dict[str, dict]:
     """
     Check synchronization status of files with database.
 
@@ -140,7 +140,7 @@ def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, D
     return sync_status
 
 
-def update_database_file(file_path: str, status: Dict) -> bool:
+def update_database_file(file_path: str, status: dict) -> bool:
     """
     Update a file in the database.
 
@@ -152,7 +152,7 @@ def update_database_file(file_path: str, status: Dict) -> bool:
         True if successful, False otherwise
     """
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         # Use os.path.getsize for accurate file size in bytes

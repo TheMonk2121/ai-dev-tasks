@@ -64,7 +64,7 @@ python3 scripts/ab_test_entity_expansion.py dspy-rag-system/tests/queries/QUERY_
 
 #### 5. Documentation Updates
 - [ ] Update `400_guides/400_lean-hybrid-memory-system.md` with entity expansion details
-- [ ] Update `400_guides/400_context-priority-guide.md` with new capability
+- [ ] Update `400_guides/400_cursor-context-engineering-guide.md` with new capability
 - [ ] Update `200_setup/202_setup-requirements.md` if needed
 - [ ] Create user guide for entity expansion feature
 

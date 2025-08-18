@@ -9,11 +9,11 @@ and records the blob SHA for immutable snapshots.
 import json
 import os
 import subprocess
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Dict, List, Optional
 
 
-def get_archive_files() -> List[str]:
+def get_archive_files() -> list[str]:
     """Get all files under 600_archives/ directory."""
     archive_files = []
 
@@ -26,7 +26,7 @@ def get_archive_files() -> List[str]:
     return archive_files
 
 
-def get_introduced_commit(file_path: str) -> Optional[str]:
+def get_introduced_commit(file_path: str) -> str | None:
     """Get the first commit that introduced a file."""
     try:
         result = subprocess.run(
@@ -41,7 +41,7 @@ def get_introduced_commit(file_path: str) -> Optional[str]:
         return None
 
 
-def get_blob_sha(commit: str, file_path: str) -> Optional[str]:
+def get_blob_sha(commit: str, file_path: str) -> str | None:
     """Get the blob SHA for a file at a specific commit."""
     try:
         result = subprocess.run(["git", "ls-tree", commit, file_path], capture_output=True, text=True, check=True)
@@ -52,7 +52,7 @@ def get_blob_sha(commit: str, file_path: str) -> Optional[str]:
         return None
 
 
-def load_manifest() -> Dict:
+def load_manifest() -> dict:
     """Load existing manifest."""
     manifest_path = "data/archive_manifest.json"
 
@@ -71,9 +71,9 @@ def load_manifest() -> Dict:
     }
 
 
-def save_manifest(manifest: Dict):
+def save_manifest(manifest: dict):
     """Save manifest to file."""
-    manifest["generated_at"] = datetime.now(timezone.utc).isoformat() + "Z"
+    manifest["generated_at"] = datetime.now(UTC).isoformat() + "Z"
 
     with open("data/archive_manifest.json", "w") as f:
         json.dump(manifest, f, indent=2)
@@ -119,7 +119,7 @@ def main():
             "path": file_path,
             "introduced_commit": introduced_commit,
             "blob_sha": blob_sha,
-            "recorded_at": datetime.now(timezone.utc).isoformat() + "Z",
+            "recorded_at": datetime.now(UTC).isoformat() + "Z",
             "enrollment": True,  # Mark as auto-enrolled
         }
 

@@ -41,9 +41,9 @@ class FewShotExample:
     validation_criteria: str
     category: str
     priority: int = 1
-    tags: List[str] = field(default_factory=list)
-    source_file: Optional[str] = None
-    line_number: Optional[int] = None
+    tags: list[str] = field(default_factory=list)
+    source_file: str | None = None
+    line_number: int | None = None
 
 
 @dataclass
@@ -53,9 +53,9 @@ class CognitiveScaffold:
     role: str
     task_type: str
     base_context: str
-    few_shot_examples: List[FewShotExample] = field(default_factory=list)
-    patterns: List[str] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    few_shot_examples: list[FewShotExample] = field(default_factory=list)
+    patterns: list[str] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class FewShotCognitiveScaffolding:
@@ -74,28 +74,28 @@ class FewShotCognitiveScaffolding:
         self.patterns = self._load_patterns()
         self.scaffolds = self._load_scaffolds()
 
-    def _load_examples(self) -> List[FewShotExample]:
+    def _load_examples(self) -> list[FewShotExample]:
         """Load few-shot examples from JSONL file."""
         examples = []
         if self.examples_file.exists():
-            with open(self.examples_file, "r", encoding="utf-8") as f:
+            with open(self.examples_file, encoding="utf-8") as f:
                 for line in f:
                     if line.strip():
                         data = json.loads(line)
                         examples.append(FewShotExample(**data))
         return examples
 
-    def _load_patterns(self) -> Dict[str, Any]:
+    def _load_patterns(self) -> dict[str, Any]:
         """Load cognitive patterns from JSON file."""
         if self.patterns_file.exists():
-            with open(self.patterns_file, "r", encoding="utf-8") as f:
+            with open(self.patterns_file, encoding="utf-8") as f:
                 return json.load(f)
         return {}
 
-    def _load_scaffolds(self) -> Dict[str, CognitiveScaffold]:
+    def _load_scaffolds(self) -> dict[str, CognitiveScaffold]:
         """Load cognitive scaffolds from JSON file."""
         if self.scaffolds_file.exists():
-            with open(self.scaffolds_file, "r", encoding="utf-8") as f:
+            with open(self.scaffolds_file, encoding="utf-8") as f:
                 data = json.load(f)
                 scaffolds = {}
                 for key, scaffold_data in data.items():
@@ -111,7 +111,7 @@ class FewShotCognitiveScaffolding:
                 return scaffolds
         return {}
 
-    def extract_examples_from_docs(self) -> List[FewShotExample]:
+    def extract_examples_from_docs(self) -> list[FewShotExample]:
         """Extract few-shot examples from documentation files."""
         examples = []
 
@@ -127,7 +127,7 @@ class FewShotCognitiveScaffolding:
 
         return examples
 
-    def _parse_few_shot_guide(self, file_path: Path) -> List[FewShotExample]:
+    def _parse_few_shot_guide(self, file_path: Path) -> list[FewShotExample]:
         """Parse the few-shot examples guide for structured examples."""
         examples = []
         content = file_path.read_text(encoding="utf-8")
@@ -154,7 +154,7 @@ class FewShotCognitiveScaffolding:
 
         return examples
 
-    def _parse_doc_for_examples(self, file_path: Path) -> List[FewShotExample]:
+    def _parse_doc_for_examples(self, file_path: Path) -> list[FewShotExample]:
         """Parse documentation files for implicit examples."""
         examples = []
         content = file_path.read_text(encoding="utf-8")
@@ -225,7 +225,7 @@ class FewShotCognitiveScaffolding:
 
         return scaffold
 
-    def _select_relevant_examples(self, role: str, task_type: str) -> List[FewShotExample]:
+    def _select_relevant_examples(self, role: str, task_type: str) -> list[FewShotExample]:
         """Select relevant examples based on role and task type."""
         relevant_examples = []
 
@@ -258,7 +258,7 @@ class FewShotCognitiveScaffolding:
         # Return top examples (limit to prevent context bloat)
         return relevant_examples[:5]
 
-    def _generate_patterns(self, examples: List[FewShotExample]) -> List[str]:
+    def _generate_patterns(self, examples: list[FewShotExample]) -> list[str]:
         """Generate patterns from examples."""
         patterns = []
 
@@ -336,7 +336,7 @@ class FewShotCognitiveScaffolding:
 
         return "\n".join(lines)
 
-    def validate_patterns(self) -> Dict[str, Any]:
+    def validate_patterns(self) -> dict[str, Any]:
         """Validate that patterns are working correctly."""
         validation_results = {
             "total_examples": len(self.examples),

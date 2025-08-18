@@ -79,7 +79,7 @@ class BacklogScrubber:
             logger.error(f"Failed to read backlog file: {e}")
             raise
     
-    def parse_score_metadata(self, content: str) -> List[Dict[str, Any]]:
+    def parse_score_metadata(self, content: str) -> list[dict[str, Any]]:
         """
         Parse scoring metadata from the backlog content.
         
@@ -151,7 +151,7 @@ class BacklogScrubber:
             logger.error(f"Failed to parse score metadata: {e}")
             return []
     
-    def update_score_totals(self, content: str, scores: List[Dict[str, Any]]) -> str:
+    def update_score_totals(self, content: str, scores: list[dict[str, Any]]) -> str:
         """
         Update score totals in the backlog content.
         
@@ -250,7 +250,7 @@ class BacklogScrubber:
             logger.error(f"Failed to write backlog file: {e}")
             return False
     
-    def validate_scores(self, scores: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def validate_scores(self, scores: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """
         Validate and filter scores.
         
@@ -278,7 +278,7 @@ class BacklogScrubber:
         
         return validated
     
-    def scrub_backlog(self) -> Dict[str, Any]:
+    def scrub_backlog(self) -> dict[str, Any]:
         """
         Main method to scrub the backlog file.
         
@@ -328,7 +328,7 @@ class BacklogScrubber:
                 "stats": self.stats.copy()
             }
     
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """
         Get current statistics.
         

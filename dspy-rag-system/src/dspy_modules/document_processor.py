@@ -37,7 +37,7 @@ class DocumentProcessor(Module):
         chunk_size: int = 300,
         chunk_overlap: int = 50,
         config_path: str = "config/metadata_rules.yaml",
-        allowed_paths: Optional[List[str]] = None,
+        allowed_paths: list[str] | None = None,
     ):
         super().__init__()
         self.chunk_size = chunk_size
@@ -55,7 +55,7 @@ class DocumentProcessor(Module):
 
         self.logger.info("DocumentProcessor initialized with token-aware chunking and config-driven metadata")
 
-    def forward(self, document_path: str) -> Dict[str, Any]:
+    def forward(self, document_path: str) -> dict[str, Any]:
         """Process a document and return chunks with metadata"""
 
         start_time = time.perf_counter_ns()
@@ -169,7 +169,7 @@ class DocumentProcessor(Module):
         path = Path(file_path)
         return f"{path.parent.name}/{path.name}" if path.parent.name else path.name
 
-    def _create_structured_chunks(self, text: str, document_id: str) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+    def _create_structured_chunks(self, text: str, document_id: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
         """Create structured chunks with IDs and token offsets"""
         chunks = []
         chunk_texts = self.chunker.create_chunks(text)
@@ -259,20 +259,20 @@ class DocumentProcessor(Module):
         """Extract text from text files with encoding handling"""
         try:
             # Try UTF-8 first
-            with open(file_path, "r", encoding="utf-8") as file:
+            with open(file_path, encoding="utf-8") as file:
                 return file.read()
         except UnicodeDecodeError:
             # Fallback to other encodings
             for encoding in ["latin-1", "cp1252", "iso-8859-1"]:
                 try:
-                    with open(file_path, "r", encoding=encoding) as file:
+                    with open(file_path, encoding=encoding) as file:
                         return file.read()
                 except UnicodeDecodeError:
                     continue
 
             # Last resort: read with error replacement
             try:
-                with open(file_path, "r", encoding="utf-8", errors="replace") as file:
+                with open(file_path, encoding="utf-8", errors="replace") as file:
                     return file.read()
             except Exception as e:
                 self.logger.error(f"Error reading text file: {e}", extra={"file_path": self._mask_file_path(file_path)})
@@ -376,7 +376,7 @@ class DocumentProcessor(Module):
     def _extract_csv_text_basic(self, csv_path: str) -> str:
         """Fallback CSV extraction using basic csv module"""
         try:
-            with open(csv_path, "r", encoding="utf-8") as file:
+            with open(csv_path, encoding="utf-8") as file:
                 csv_reader = csv.reader(file)
                 rows = list(csv_reader)
 
@@ -399,12 +399,12 @@ class DocumentProcessor(Module):
 class DocumentIngestionPipeline(Module):
     """DSPy module for complete document ingestion pipeline"""
 
-    def __init__(self, config_path: str = "config/metadata_rules.yaml", allowed_paths: Optional[List[str]] = None):
+    def __init__(self, config_path: str = "config/metadata_rules.yaml", allowed_paths: list[str] | None = None):
         super().__init__()
         self.processor = DocumentProcessor(config_path=config_path, allowed_paths=allowed_paths)
         self.logger = get_logger("document_pipeline")
 
-    def forward(self, document_path: str, vector_store: Any = None) -> Dict[str, Any]:
+    def forward(self, document_path: str, vector_store: Any = None) -> dict[str, Any]:
         """Complete document ingestion pipeline"""
 
         start_time = time.perf_counter_ns()

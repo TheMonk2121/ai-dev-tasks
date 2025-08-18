@@ -1,23 +1,31 @@
 <!-- ANCHOR_KEY: lean-hybrid-system -->
+
 <!-- ANCHOR_PRIORITY: 25 -->
+
 <!-- ROLE_PINS: ["implementer", "planner"] -->
 
 # 🧠 Lean Hybrid Memory Rehydration System
 
 <!-- CONTEXT_REFERENCE: 100_memory/100_cursor-memory-context.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
+
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
+
 <!-- MEMORY_CONTEXT: HIGH - Core memory rehydration system implementation -->
+
 <!-- DATABASE_SYNC: REQUIRED -->
 
-## 🔎 TL;DR {#tldr}
+## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
+|----|----|----|
 | Complete guide to the Lean Hybrid with Kill-Switches memory rehydration system | Implementing or debugging the memory rehydration system | Test with `python3 scripts/cursor_memory_rehydrate.py` |
 
 <!-- ANCHOR_KEY: tldr -->
+
 <!-- ANCHOR_PRIORITY: 0 -->
+
 <!-- ROLE_PINS: ["implementer", "planner"] -->
 
 ## 🎯 **Current Status**
@@ -31,36 +39,45 @@
 ## 🏗️ **System Architecture**
 
 ### **Core Philosophy**
-The Lean Hybrid system prioritizes **semantic relevance** over static pins while maintaining **deterministic behavior** and **simple configuration**.
+
+The Lean Hybrid system prioritizes **semantic relevance** over static
+pins while maintaining **deterministic behavior** and **simple
+configuration**.
 
 ### **Four-Slot Model**
-1. **Pinned Invariants** (≤200 tokens, hard cap)
-   - Project style TL;DR, repo topology, naming conventions
-   - Always present, pre-compressed micro-summaries
 
-2. **Anchor Priors** (0-20% tokens, dynamic)
-   - Used for query expansion (not included in bundle)
-   - Soft inclusion only if they truly match query scope
-
-3. **Semantic Evidence** (50-80% tokens)
-   - Top chunks from HybridVectorStore (vector + BM25 fused)
-   - RRF fusion with deterministic tie-breaking
-
-4. **Recency/Diff Shots** (0-10% tokens)
-   - Recent changes, changelogs, "what moved lately"
+1.  **Pinned Invariants** (≤200 tokens, hard cap)
+    - Project style TL;DR, repo topology, naming conventions
+    - Always present, pre-compressed micro-summaries
+2.  **Anchor Priors** (0-20% tokens, dynamic)
+    - Used for query expansion (not included in bundle)
+    - Soft inclusion only if they truly match query scope
+3.  **Semantic Evidence** (50-80% tokens)
+    - Top chunks from HybridVectorStore (vector + BM25 fused)
+    - RRF fusion with deterministic tie-breaking
+4.  **Recency/Diff Shots** (0-10% tokens)
+    - Recent changes, changelogs, “what moved lately”
 
 ### **Entity Expansion Enhancement**
-The system now includes **entity-aware context expansion** that enhances semantic evidence retrieval:
 
-- **Pattern-Based Extraction**: Identifies entities like CamelCase classes, snake_case functions, file paths, URLs, and emails
-- **Adaptive Context Sizing**: Dynamically adjusts `k_related` based on entity count: `min(8, base_k + entity_count * 2)`
-- **Entity-Adjacent Retrieval**: Finds semantically related chunks for extracted entities
-- **Stability Thresholds**: Configurable similarity thresholds (default: 0.7) prevent low-quality matches
+The system now includes **entity-aware context expansion** that enhances
+semantic evidence retrieval:
+
+- **Pattern-Based Extraction**: Identifies entities like CamelCase
+  classes, snake_case functions, file paths, URLs, and emails
+- **Adaptive Context Sizing**: Dynamically adjusts `k_related` based on
+  entity count: `min(8, base_k + entity_count * 2)`
+- **Entity-Adjacent Retrieval**: Finds semantically related chunks for
+  extracted entities
+- **Stability Thresholds**: Configurable similarity thresholds (default:
+  0.7) prevent low-quality matches
 - **Zero Overhead**: No performance impact when no entities are found
-- **Rollback Support**: Immediate disable via `--no-entity-expansion` flag
+- **Rollback Support**: Immediate disable via `--no-entity-expansion`
+  flag
 
 **Example Usage:**
-```bash
+
+``` bash
 # Query with entities: "How do I implement HybridVectorStore?"
 # Extracted entities: ["HybridVectorStore", "How", "I", "implement"]
 # Adaptive k_related: min(8, 2 + 4*2) = 8
@@ -70,7 +87,8 @@ The system now includes **entity-aware context expansion** that enhances semanti
 ## 🔧 **Configuration Options**
 
 ### **Stability Slider**
-```bash
+
+``` bash
 # Control anchor influence (0.0-1.0, default 0.6)
 # Python implementation
 python3 scripts/cursor_memory_rehydrate.py --stability 0.6
@@ -80,7 +98,8 @@ cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test" --stabil
 ```
 
 ### **Kill-Switches for Debugging**
-```bash
+
+``` bash
 # Disable BM25+RRF fusion
 # Python implementation
 python3 scripts/cursor_memory_rehydrate.py --no-rrf
@@ -111,7 +130,8 @@ cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test" --use-en
 ```
 
 ### **Environment Variables**
-```bash
+
+``` bash
 export REHYDRATE_STABILITY=0.6
 export REHYDRATE_USE_RRF=1
 export REHYDRATE_DEDUPE="file+overlap"
@@ -122,7 +142,8 @@ export REHYDRATE_USE_ENTITY_EXPANSION=1
 ## 📊 **Database Schema**
 
 ### **Core Tables**
-```sql
+
+``` sql
 -- Documents table
 CREATE TABLE documents (
     id SERIAL PRIMARY KEY,
@@ -156,7 +177,8 @@ CREATE TABLE document_chunks (
 ```
 
 ### **Indexes**
-```sql
+
+``` sql
 -- FTS index for BM25 search
 CREATE INDEX idx_document_chunks_content_tsv ON document_chunks USING GIN (content_tsv);
 
@@ -171,7 +193,8 @@ CREATE INDEX idx_document_chunks_embedding_hnsw ON document_chunks USING hnsw (e
 ## 🔍 **Search Operations**
 
 ### **BM25 Search**
-```python
+
+``` python
 from src.utils.memory_rehydrator import bm25_search
 
 # Search for relevant content
@@ -181,7 +204,8 @@ for r in results:
 ```
 
 ### **Vector Search**
-```python
+
+``` python
 from src.utils.memory_rehydrator import vector_search
 
 # Search for semantically similar content
@@ -191,19 +215,21 @@ for r in results:
 ```
 
 ### **RRF Fusion**
-The system uses Reciprocal Rank Fusion to combine vector and BM25 results:
-```python
+
+The system uses Reciprocal Rank Fusion to combine vector and BM25
+results:
+
+``` python
 RRF(d) = Σᵣ∈{vec,lex} 1/(k₀ + r(d))
 ```
 
-Where:
-- `k₀ = 60` (default)
-- `vec` = vector search results
-- `lex` = BM25 search results
+Where: - `k₀ = 60` (default) - `vec` = vector search results - `lex` =
+BM25 search results
 
 ## 🎯 **Anchor System**
 
 ### **Current Anchor Keys**
+
 - `tldr` (6 chunks) - TL;DR sections
 - `quick-start` (4 chunks) - Quick start guides
 - `architecture` (2 chunks) - System architecture
@@ -216,7 +242,8 @@ Where:
 - `system-overview` (2 chunks) - System overview
 
 ### **Anchor Metadata Format**
-```yaml
+
+``` yaml
 <!-- ANCHOR_KEY: memory-context -->
 <!-- ANCHOR_PRIORITY: 0 -->
 <!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
@@ -225,7 +252,8 @@ Where:
 ## 🚀 **Usage Examples**
 
 ### **Basic Usage**
-```bash
+
+``` bash
 # Default rehydration (Python)
 python3 scripts/cursor_memory_rehydrate.py implementer "DSPy RAG system architecture"
 
@@ -246,7 +274,8 @@ cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "memory context
 ```
 
 ### **Testing Search Functions**
-```python
+
+``` python
 # Test BM25 search
 python3 -c "from src.utils.memory_rehydrator import bm25_search; print(bm25_search('memory context', 3))"
 
@@ -257,7 +286,8 @@ python3 -c "from src.utils.memory_rehydrator import vector_search; print(vector_
 ## 🔧 **Troubleshooting**
 
 ### **Database Connection Issues**
-```bash
+
+``` bash
 # Test database connection
 psql postgresql://danieljacobs@localhost:5432/ai_agency -c "SELECT COUNT(*) FROM document_chunks;"
 
@@ -266,7 +296,8 @@ python3 -c "from src.utils.database_resilience import get_database_health; print
 ```
 
 ### **Search Issues**
-```bash
+
+``` bash
 # Test individual search functions
 python3 -c "from src.utils.memory_rehydrator import bm25_search; print('BM25 test:', bm25_search('test', 1))"
 
@@ -275,7 +306,8 @@ psql postgresql://danieljacobs@localhost:5432/ai_agency -c "SELECT anchor_key, C
 ```
 
 ### **Performance Issues**
-```bash
+
+``` bash
 # Check search performance
 python3 -c "import time; from src.utils.memory_rehydrator import bm25_search; start=time.time(); bm25_search('test', 10); print(f'Time: {time.time()-start:.3f}s')"
 ```
@@ -283,22 +315,25 @@ python3 -c "import time; from src.utils.memory_rehydrator import bm25_search; st
 ## 📈 **Performance Metrics**
 
 ### **Quality Gates**
-- **BM25 Search**: < 100ms (EXCELLENT), < 200ms (GOOD)
-- **Vector Search**: < 100ms (EXCELLENT), < 200ms (GOOD)
-- **Memory Rehydration**: < 5s (EXCELLENT), < 10s (GOOD)
+
+- **BM25 Search**: \< 100ms (EXCELLENT), \< 200ms (GOOD)
+- **Vector Search**: \< 100ms (EXCELLENT), \< 200ms (GOOD)
+- **Memory Rehydration**: \< 5s (EXCELLENT), \< 10s (GOOD)
 - **Recall@10**: ≥ 0.8 for relevant queries
 - **Token Efficiency**: ≤ 1200 tokens for standard bundles
 
 ### **Current Performance**
+
 - **Database**: 1,939 chunks from 20 core documents
-- **Search Speed**: BM25 < 50ms, Vector < 100ms
+- **Search Speed**: BM25 \< 50ms, Vector \< 100ms
 - **Anchor Detection**: 10 anchor keys with proper metadata
 - **Token Budget**: ≤200 tokens for pins, rest for evidence
 
 ## 🔄 **Maintenance**
 
 ### **Adding New Documents**
-```bash
+
+``` bash
 # Copy files to watch folder
 cp new_document.md dspy-rag-system/watch_folder/
 
@@ -308,7 +343,8 @@ PYTHONPATH=src python3 simple_add_anchors.py
 ```
 
 ### **Updating Anchors**
-```bash
+
+``` bash
 # Add anchor metadata to markdown files
 <!-- ANCHOR_KEY: new-anchor -->
 <!-- ANCHOR_PRIORITY: 15 -->
@@ -316,7 +352,8 @@ PYTHONPATH=src python3 simple_add_anchors.py
 ```
 
 ### **Database Maintenance**
-```bash
+
+``` bash
 # Check database health
 python3 -c "from src.utils.database_resilience import is_database_healthy; print(is_database_healthy())"
 
@@ -334,20 +371,23 @@ psql postgresql://danieljacobs@localhost:5432/ai_agency -c "REINDEX INDEX idx_do
 
 ## 🎯 **Next Steps**
 
-1. **Add Embeddings**: Enable vector search by adding embeddings to existing documents
-2. **Performance Tuning**: Adjust constants based on usage patterns
-3. **Monitoring**: Add performance monitoring and alerting
-4. **Documentation**: Update related guides with new system details
+1.  **Add Embeddings**: Enable vector search by adding embeddings to
+    existing documents
+2.  **Performance Tuning**: Adjust constants based on usage patterns
+3.  **Monitoring**: Add performance monitoring and alerting
+4.  **Documentation**: Update related guides with new system details
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_lean-hybrid-memory-system.md
-# Generated: 2025-08-17T17:47:03.928940
+
+## Auto-generated sections for 400_lean-hybrid-memory-system.md
+
+## Generated: 2025-08-18T08:03:22.753325
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -355,10 +395,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

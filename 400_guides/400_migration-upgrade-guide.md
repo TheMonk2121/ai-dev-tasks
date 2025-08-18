@@ -1,11 +1,15 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MEMORY_CONTEXT: HIGH - Migration procedures and upgrade safety -->
+
 # 🔄 Migration & Upgrade Guide
 
 ## 🔄 Migration & Upgrade Guide
 
 <!-- ANCHOR: tldr -->
+
 {#tldr}
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Migration procedures maintained
@@ -14,34 +18,36 @@
 
 - **Points**: 5 - High complexity, safety critical
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_deployment-environment-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
+  400_guides/400_deployment-environment-guide.md
 
 - **Next Steps**: Update procedures as system evolves
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-|  |  |  |
+|-------------------|-----------|---------|
+|                   |           |         |
 
 - **Zero Data Loss**: 100% data integrity preservation
 
-- **Minimal Downtime**: < 5 minutes of downtime per upgrade
+- **Minimal Downtime**: \< 5 minutes of downtime per upgrade
 
 - **High Success Rate**: 95% successful upgrade rate
 
-- **Fast Rollback**: < 5 minutes for emergency rollbacks
+- **Fast Rollback**: \< 5 minutes for emergency rollbacks
 
 - **Comprehensive Coverage**: 100% of procedures documented
 
-- --
+------------------------------------------------------------------------
 
 ## Upgrade Philosophy
 
 ### Completed Migrations (summaries)
 
-- Native-first migration: Migrated from dual-model approach to Cursor Native AI + Specialized Agents. See archived
-details in `600_archives/legacy-project-deliverables/CURSOR_NATIVE_AI_MIGRATION_SUMMARY.md`.
+- Native-first migration: Migrated from dual-model approach to Cursor
+  Native AI + Specialized Agents. See archived details in
+  `600_archives/legacy-project-deliverables/CURSOR_NATIVE_AI_MIGRATION_SUMMARY.md`.
 
 ### **Risk Management Approach**-**Incremental Upgrades**: Small, manageable changes
 
@@ -67,13 +73,14 @@ details in `600_archives/legacy-project-deliverables/CURSOR_NATIVE_AI_MIGRATION_
 
 - **Upgrade Execution**: Monitored and controlled upgrade process
 
-- **Post-Upgrade Validation**: Functionality and performance verification
+- **Post-Upgrade Validation**: Functionality and performance
+  verification
 
 - **Rollback Readiness**: Rollback procedures tested and ready
 
 - **Documentation Update**: All changes documented and versioned
 
-- --
+------------------------------------------------------------------------
 
 ## Pre-Upgrade Procedures
 
@@ -117,11 +124,11 @@ details in `600_archives/legacy-project-deliverables/CURSOR_NATIVE_AI_MIGRATION_
 
 - **Time Requirements**: Estimate upgrade duration and plan accordingly
 
-- --
+------------------------------------------------------------------------
 
 ## Database Migration Procedures
 
-### **PostgreSQL Schema Migrations**####**Pre-Migration Checklist**- [ ] Database backup completed
+### **PostgreSQL Schema Migrations**\####**Pre-Migration Checklist**- \[ \] Database backup completed
 
 - [ ] Schema compatibility validated
 
@@ -131,16 +138,15 @@ details in `600_archives/legacy-project-deliverables/CURSOR_NATIVE_AI_MIGRATION_
 
 - [ ] Monitoring systems active
 
-#### **Migration Execution**```sql
+#### **Migration Execution**\`\`\`sql
 
-- - Example: Add new column with default value
-BEGIN;
-ALTER TABLE episodic_logs ADD COLUMN IF NOT EXISTS cache_hit BOOLEAN DEFAULT FALSE;
-ALTER TABLE episodic_logs ADD COLUMN IF NOT EXISTS similarity_score FLOAT DEFAULT 0.0;
-ALTER TABLE episodic_logs ADD COLUMN IF NOT EXISTS last_verified TIMESTAMP DEFAULT NOW();
-COMMIT;
+- - Example: Add new column with default value BEGIN; ALTER TABLE
+    episodic_logs ADD COLUMN IF NOT EXISTS cache_hit BOOLEAN DEFAULT
+    FALSE; ALTER TABLE episodic_logs ADD COLUMN IF NOT EXISTS
+    similarity_score FLOAT DEFAULT 0.0; ALTER TABLE episodic_logs ADD
+    COLUMN IF NOT EXISTS last_verified TIMESTAMP DEFAULT NOW(); COMMIT;
 
-```text
+``` text
 
 #### **Post-Migration Validation**- [ ] Schema changes applied correctly
 
@@ -156,7 +162,7 @@ COMMIT;
 
 ```python
 
-# Example: Batch data migration script
+## Example: Batch data migration script
 
 import psycopg2
 import logging
@@ -176,12 +182,12 @@ def migrate_large_dataset(batch_size: int = 1000) -> bool:
         conn = psycopg2.connect(os.getenv("DATABASE_URL"))
         cursor = conn.cursor()
 
-        # Get total count
+        ## Get total count
 
         cursor.execute("SELECT COUNT(*) FROM episodic_logs")
         total_records = cursor.fetchone()[0]
 
-        # Process in batches
+        ## Process in batches
 
         for offset in range(0, total_records, batch_size):
             cursor.execute("""
@@ -221,11 +227,11 @@ COMMIT;
 
 ### **Python Package Upgrades**####**Pre-Upgrade Validation**```bash
 
-# Check current package versions
+## Check current package versions
 
 pip freeze > requirements_current.txt
 
-# Test upgrade in virtual environment
+## Test upgrade in virtual environment
 
 python -m venv test_upgrade_env
 source test_upgrade_env/bin/activate
@@ -238,27 +244,27 @@ python -m pytest tests/
 
 ```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# upgrade_packages.sh
+## upgrade_packages.sh
 
 set -e
 
 echo "Starting package upgrade process..."
 
-# Backup current requirements
+## Backup current requirements
 
 cp requirements.txt requirements_backup_$(date +%Y%m%d_%H%M%S).txt
 
-# Create upgrade log
+## Create upgrade log
 
 echo "Package upgrade started at $(date)" > upgrade.log
 
-# Upgrade packages
+## Upgrade packages
 
 pip install -r requirements.txt --upgrade >> upgrade.log 2>&1
 
-# Run tests
+## Run tests
 
 python -m pytest tests/ >> upgrade.log 2>&1
 
@@ -328,20 +334,20 @@ spec:
 
 ## **Rollback Script**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# rollback_deployment.sh
+## rollback_deployment.sh
 
 set -e
 
 echo "Starting deployment rollback..."
 
-# Switch traffic back to blue deployment
+## Switch traffic back to blue deployment
 
 kubectl patch service ai-development-ecosystem-service \
   - p '{"spec":{"selector":{"version":"blue"}}}'
 
-# Scale down green deployment
+## Scale down green deployment
 
 kubectl scale deployment ai-development-ecosystem-green --replicas=0
 
@@ -400,9 +406,9 @@ fi
 
 ### **Node Upgrade Procedure**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# upgrade_kubernetes_node.sh
+## upgrade_kubernetes_node.sh
 
 set -e
 
@@ -410,15 +416,15 @@ NODE_NAME=$1
 
 echo "Upgrading Kubernetes node: $NODE_NAME"
 
-# Drain node
+## Drain node
 
 kubectl drain $NODE_NAME --ignore-daemonsets --delete-emptydir-data
 
-# Upgrade node components
+## Upgrade node components
 
 ssh $NODE_NAME "sudo apt-get update && sudo apt-get upgrade -y"
 
-# Uncordon node
+## Uncordon node
 
 kubectl uncordon $NODE_NAME
 
@@ -537,7 +543,7 @@ fi
 
 ### **Environment Variable Updates**####**Configuration Migration Script**```python
 
-# Example: Environment configuration migration
+## Example: Environment configuration migration
 
 import os
 import json
@@ -555,22 +561,22 @@ def migrate_environment_config(config_path: str) -> bool:
     """
     try:
 
-        # Load current configuration
+        ## Load current configuration
 
         with open(config_path, 'r') as f:
             config = json.load(f)
 
-        # Apply migration rules
+        ## Apply migration rules
 
         migrated_config = apply_migration_rules(config)
 
-        # Backup original
+        ## Backup original
 
         backup_path = f"{config_path}.backup"
         with open(backup_path, 'w') as f:
             json.dump(config, f, indent=2)
 
-        # Write migrated configuration
+        ## Write migrated configuration
 
         with open(config_path, 'w') as f:
             json.dump(migrated_config, f, indent=2)
@@ -585,7 +591,7 @@ def apply_migration_rules(config: Dict[str, Any]) -> Dict[str, Any]:
     """Apply migration rules to configuration."""
     migrated = config.copy()
 
-    # Example migration rules
+    ## Example migration rules
 
     if "database" in migrated:
         if "url" not in migrated["database"]:
@@ -728,28 +734,28 @@ def rollback_data_changes(backup_file: str) -> bool:
 
 ## **Application Rollback**####**Code Rollback Script**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# rollback_application.sh
+## rollback_application.sh
 
 set -e
 
 echo "Starting application rollback..."
 
-# Get current commit hash
+## Get current commit hash
 
 CURRENT_COMMIT=$(git rev-parse HEAD)
 
-# Rollback to previous commit
+## Rollback to previous commit
 
 git reset --hard HEAD~1
 
-# Restart application
+## Restart application
 
 docker-compose down
 docker-compose up -d
 
-# Health check
+## Health check
 
 sleep 30
 if curl -f <http://localhost:5000/health;> then
@@ -768,23 +774,23 @@ fi
 
 ```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# rollback_configuration.sh
+## rollback_configuration.sh
 
 set -e
 
 echo "Starting configuration rollback..."
 
-# Restore environment variables
+## Restore environment variables
 
 cp .env.backup .env
 
-# Restore configuration files
+## Restore configuration files
 
 cp config/backup/*config/
 
-# Restart services to apply changes
+## Restart services to apply changes
 
 docker-compose down
 docker-compose up -d
@@ -970,7 +976,7 @@ def post_upgrade_validation() -> Dict[str, Any]:
 
 ## **Performance Testing**####**Upgrade Impact Assessment**```python
 
-# Example: Performance impact assessment
+## Example: Performance impact assessment
 
 import time
 import psutil
@@ -992,19 +998,19 @@ def assess_upgrade_impact() -> Dict[str, Any]:
         "acceptable": False
     }
 
-    # Measure system resources
+    ## Measure system resources
 
     impact_results["cpu_usage"] = psutil.cpu_percent(interval=1)
     impact_results["memory_usage"] = psutil.virtual_memory().percent
     impact_results["disk_usage"] = psutil.disk_usage('/').percent
 
-    # Measure response time
+    ## Measure response time
 
     start_time = time.time()
     response = requests.get("<http://localhost:5000/health",> timeout=5)
     impact_results["response_time"] = time.time() - start_time
 
-    # Determine if impact is acceptable
+    ## Determine if impact is acceptable
 
     impact_results["acceptable"] = (
         impact_results["cpu_usage"] < 80 and
@@ -1075,7 +1081,7 @@ def track_upgrade_progress(upgrade_id: str, metrics: UpgradeMetrics) -> None:
 
 ## **Alerting Configuration**####**Upgrade Alerts**```yaml
 
-# Example: Prometheus alerting rules for upgrades
+## Example: Prometheus alerting rules for upgrades
 
 groups:
 
@@ -1123,21 +1129,21 @@ groups:
 
 ```bash
 
-# Comprehensive health check
+## Comprehensive health check
 
 python scripts/system_health_check.py
 
-# Database checks (connection, schema, pool)
+## Database checks (connection, schema, pool)
 
 python -c "from dspy_rag_system.src.utils.database_resilience import check_connection, verify_schema,
 reset_connection_pool; check_connection(); verify_schema(); reset_connection_pool()"
 
-# AI model status and fallback
+## AI model status and fallback
 
 python -c "from dspy_rag_system.src.utils.model_specific_handling import check_all_models, test_fallback_models;
 check_all_models(); test_fallback_models()"
 
-# Emergency rollback
+## Emergency rollback
 
 ./scripts/rollback.sh
 
@@ -1173,15 +1179,15 @@ docker-compose restart postgres
 
 - Port binding conflicts**Solutions:**```bash
 
-# Check application logs
+## Check application logs
 
 docker-compose logs ai-app
 
-# Check port availability
+## Check port availability
 
 netstat -tulpn | grep :5000
 
-# Restart application
+## Restart application
 
 docker-compose restart ai-app
 
@@ -1301,24 +1307,24 @@ fi
 
 #### **Recovery Procedures**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# critical_failure_recovery.sh
+## critical_failure_recovery.sh
 
 set -e
 
 echo "Critical system failure detected. Starting recovery procedures..."
 
-# Emergency stop all services
+## Emergency stop all services
 
 docker-compose down
 
-# Restore from last known good state
+## Restore from last known good state
 
 git reset --hard HEAD~1
 docker-compose up -d
 
-# Verify system recovery
+## Verify system recovery
 
 sleep 60
 if curl -f <http://localhost:5000/health;> then
@@ -1362,24 +1368,25 @@ cp -r data/ $BACKUP_DIR/
 cp -r logs/ $BACKUP_DIR/
 
 echo "Emergency backup completed: $BACKUP_DIR"
-
 ```
 
-- --**Document Version**: 1.0
-- *Last Updated**: 2024-08-07
-- *Next Review**: 2024-08-14
-- *Status**: Production Ready
-- *Review Cycle**: Monthly
+- –**Document Version**: 1.0
+- \*Last Updated\*\*: 2024-08-07
+- \*Next Review\*\*: 2024-08-14
+- \*Status\*\*: Production Ready
+- \*Review Cycle\*\*: Monthly
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_migration-upgrade-guide.md
-# Generated: 2025-08-17T17:47:03.932781
+
+## Auto-generated sections for 400_migration-upgrade-guide.md
+
+## Generated: 2025-08-18T08:03:22.757157
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -1387,10 +1394,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

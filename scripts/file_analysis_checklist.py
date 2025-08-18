@@ -54,7 +54,7 @@ def check_file_organization():
     print("✅ Step 2: File organization files available")
     return True
 
-def analyze_file_references(target_file: str) -> Dict[str, Any]:
+def analyze_file_references(target_file: str) -> dict[str, Any]:
     """Step 3: Cross-reference analysis"""
     if not os.path.exists(target_file):
         return {"error": f"Target file {target_file} does not exist"}
@@ -73,7 +73,7 @@ def analyze_file_references(target_file: str) -> Dict[str, Any]:
             if file.endswith(".md"):
                 file_path = os.path.join(root, file)
                 try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
+                    with open(file_path, encoding='utf-8') as f:
                         content = f.read()
                         if target_file in content:
                             references.append(file_path)
@@ -90,13 +90,13 @@ def analyze_file_references(target_file: str) -> Dict[str, Any]:
         "core_references_list": core_references
     }
 
-def check_content_freshness(target_file: str) -> Dict[str, Any]:
+def check_content_freshness(target_file: str) -> dict[str, Any]:
     """Step 4: Content analysis"""
     if not os.path.exists(target_file):
         return {"error": f"Target file {target_file} does not exist"}
     
     try:
-        with open(target_file, 'r', encoding='utf-8') as f:
+        with open(target_file, encoding='utf-8') as f:
             content = f.read()
         
         # Check for legacy model references
@@ -126,7 +126,7 @@ def check_content_freshness(target_file: str) -> Dict[str, Any]:
     except Exception as e:
         return {"error": f"Could not analyze content: {e}"}
 
-def determine_file_tier(target_file: str, reference_analysis: Dict, content_analysis: Dict) -> str:
+def determine_file_tier(target_file: str, reference_analysis: dict, content_analysis: dict) -> str:
     """Step 6: Tier-based decision"""
     
     # Check if it's a core file

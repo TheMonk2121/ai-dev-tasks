@@ -14,7 +14,8 @@ import time
 from collections import deque
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
+from collections.abc import Callable
 
 import psutil
 
@@ -40,8 +41,8 @@ class SecurityEvent:
     severity: str  # low, medium, high, critical
     source: str
     description: str
-    correlation_id: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    correlation_id: str | None = None
+    metadata: dict[str, Any] | None = None
 
 
 @dataclass
@@ -52,8 +53,8 @@ class HealthCheck:
     status: str  # healthy, degraded, unhealthy
     response_time: float
     last_check: datetime
-    error_message: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    error_message: str | None = None
+    metadata: dict[str, Any] | None = None
 
 
 @dataclass
@@ -64,7 +65,7 @@ class SystemMetrics:
     cpu_percent: float
     memory_percent: float
     disk_usage_percent: float
-    network_io: Dict[str, float]
+    network_io: dict[str, float]
     active_connections: int
     queue_depth: int
 
@@ -77,7 +78,7 @@ class ProductionMonitor:
         service_name: str = "ai-dev-tasks",
         service_version: str = "0.3.1",
         environment: str = "production",
-        otlp_endpoint: Optional[str] = None,
+        otlp_endpoint: str | None = None,
     ):
         """
         Initialize the production monitor.
@@ -100,13 +101,13 @@ class ProductionMonitor:
 
         # Event storage
         self.security_events: deque = deque(maxlen=1000)
-        self.health_checks: Dict[str, HealthCheck] = {}
+        self.health_checks: dict[str, HealthCheck] = {}
         self.system_metrics: deque = deque(maxlen=100)
 
         # Monitoring state
         self.monitoring_active = False
         self.monitoring_thread = None
-        self.alert_callbacks: List[Callable] = []
+        self.alert_callbacks: list[Callable] = []
 
         # Initialize OpenTelemetry
         self._initialize_telemetry()
@@ -432,8 +433,8 @@ class ProductionMonitor:
         severity: str,
         source: str,
         description: str,
-        correlation_id: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        correlation_id: str | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> None:
         """Record a security event"""
         event = SecurityEvent(
@@ -459,7 +460,7 @@ class ProductionMonitor:
             except Exception as e:
                 logger.error(f"Error in alert callback: {e}")
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """Get overall health status"""
         health_checks = {name: asdict(check) for name, check in self.health_checks.items()}
 
@@ -482,14 +483,14 @@ class ProductionMonitor:
             "degraded_count": degraded_count,
         }
 
-    def get_security_events(self, hours: int = 24) -> List[Dict[str, Any]]:
+    def get_security_events(self, hours: int = 24) -> list[dict[str, Any]]:
         """Get security events from the last N hours"""
         cutoff_time = datetime.now() - timedelta(hours=hours)
         recent_events = [event for event in self.security_events if event.timestamp > cutoff_time]
 
         return [asdict(event) for event in recent_events]
 
-    def get_system_metrics(self, minutes: int = 60) -> List[Dict[str, Any]]:
+    def get_system_metrics(self, minutes: int = 60) -> list[dict[str, Any]]:
         """Get system metrics from the last N minutes"""
         cutoff_time = datetime.now() - timedelta(minutes=minutes)
         recent_metrics = [metrics for metrics in self.system_metrics if metrics.timestamp > cutoff_time]
@@ -504,7 +505,7 @@ class ProductionMonitor:
 
 
 # Global instance
-_production_monitor: Optional[ProductionMonitor] = None
+_production_monitor: ProductionMonitor | None = None
 
 
 def get_production_monitor() -> ProductionMonitor:
@@ -519,7 +520,7 @@ def initialize_production_monitoring(
     service_name: str = "ai-dev-tasks",
     service_version: str = "0.3.1",
     environment: str = "production",
-    otlp_endpoint: Optional[str] = None,
+    otlp_endpoint: str | None = None,
 ) -> ProductionMonitor:
     """Initialize production monitoring"""
     global _production_monitor

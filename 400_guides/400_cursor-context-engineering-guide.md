@@ -1,51 +1,70 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
+
 <!-- MEMORY_CONTEXT: HIGH - Cursor-native context engineering strategies -->
 
 # Cursor Context Engineering Guide
 
 <!-- ANCHOR: tldr -->
+
 {#tldr}
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-| Guide for effective context engineering with Cursor Native AI | When optimizing AI interactions or improving prompt
-effectiveness | Apply task-type patterns and context strategies to your AI interactions |
+|----|----|----|
+| Guide for effective context engineering with Cursor Native AI | When optimizing AI interactions or improving prompt |  |
+| effectiveness | Apply task-type patterns and context strategies to your AI interactions |  |
 
-- **what this file is**: Strategies and patterns for effective context engineering with Cursor Native AI.
-- **read when**: When optimizing AI interactions, improving prompt effectiveness, or designing context strategies.
-- **do next**: Apply the task-type patterns and context strategies to your AI interactions.
+- **what this file is**: Strategies and patterns for effective context
+  engineering with Cursor Native AI.
+- **read when**: When optimizing AI interactions, improving prompt
+  effectiveness, or designing context strategies.
+- **do next**: Apply the task-type patterns and context strategies to
+  your AI interactions.
 
 ## 🎯 **Current Status**
 
-- **Status**: ✅ **ACTIVE** - Cursor-native context engineering strategies
+- **Status**: ✅ **ACTIVE** - Cursor-native context engineering
+  strategies
 - **Priority**: 🔥 Critical - Core AI interaction optimization
 - **Points**: 3 - Medium complexity, high importance
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_system-overview.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
+  400_guides/400_system-overview.md
 - **Next Steps**: Apply patterns and monitor effectiveness
 
 ## 🧠 Context Engineering Fundamentals
 
 ### **What is Context Engineering?**
 
-Context engineering is the practice of structuring information and prompts to maximize AI understanding and response
-quality. For Cursor Native AI, this means:
+Context engineering is the practice of structuring information and
+prompts to maximize AI understanding and response quality. For Cursor
+Native AI, this means:
 
-- **Task-Specific Patterns**: Using different approaches for different types of tasks
-- **Progressive Disclosure**: Revealing context in the right order and amount
-- **Clear Boundaries**: Defining what the AI should focus on and what it can assume
-- **Effective Framing**: Setting up the problem in a way that guides the AI toward good solutions
+- **Task-Specific Patterns**: Using different approaches for different
+  types of tasks
+- **Progressive Disclosure**: Revealing context in the right order and
+  amount
+- **Clear Boundaries**: Defining what the AI should focus on and what it
+  can assume
+- **Effective Framing**: Setting up the problem in a way that guides the
+  AI toward good solutions
 
 ### **Why Context Engineering Matters**
 
-- **Better Responses**: Well-engineered context leads to more accurate and useful responses
-- **Faster Iterations**: Clear context reduces back-and-forth clarification
-- **Consistent Quality**: Structured approaches produce more predictable results
-- **Efficient Use**: Makes the most of Cursor's capabilities without overwhelming it
+- **Better Responses**: Well-engineered context leads to more accurate
+  and useful responses
+- **Faster Iterations**: Clear context reduces back-and-forth
+  clarification
+- **Consistent Quality**: Structured approaches produce more predictable
+  results
+- **Efficient Use**: Makes the most of Cursor’s capabilities without
+  overwhelming it
 
 ## 🎯 Task-Type Patterns
 
@@ -54,7 +73,8 @@ quality. For Cursor Native AI, this means:
 **When to Use**: Analysis, explanation, decision-making, problem-solving
 
 **Pattern**:
-```text
+
+``` text
 Let's approach this systematically:
 
 1. First, let me understand the context: [summarize key information]
@@ -65,7 +85,8 @@ Let's approach this systematically:
 ```
 
 **Example**:
-```text
+
+``` text
 Let's approach this systematically:
 
 1. First, let me understand the context: We're building a REST API for user management
@@ -80,7 +101,8 @@ What's the most effective way to implement JWT authentication with rate limiting
 **When to Use**: Implementation, refactoring, debugging, code review
 
 **Pattern**:
-```text
+
+``` text
 I need to [specific coding task].
 
 Context:
@@ -95,7 +117,8 @@ Please provide:
 ```
 
 **Example**:
-```text
+
+``` text
 I need to implement a user authentication middleware.
 
 Context:
@@ -111,10 +134,12 @@ Please provide:
 
 ### **3. Analysis Tasks**
 
-**When to Use**: Code review, performance analysis, architecture evaluation
+**When to Use**: Code review, performance analysis, architecture
+evaluation
 
 **Pattern**:
-```text
+
+``` text
 Please analyze [what to analyze] with focus on:
 
 1. [specific aspect 1]
@@ -128,7 +153,8 @@ Provide:
 ```
 
 **Example**:
-```text
+
+``` text
 Please analyze this authentication implementation with focus on:
 
 1. Security vulnerabilities
@@ -146,7 +172,8 @@ Provide:
 **When to Use**: Architecture design, feature planning, system design
 
 **Pattern**:
-```text
+
+``` text
 I'm planning [what you're planning].
 
 Requirements:
@@ -164,7 +191,8 @@ Please help me:
 ```
 
 **Example**:
-```text
+
+``` text
 I'm planning a user management system.
 
 Requirements:
@@ -184,19 +212,41 @@ Please help me:
 
 ## 🔧 Context Engineering Strategies
 
+### 🧭 Context Priority and Reading Order
+
+Use this reading order to rehydrate context efficiently:
+
+1.  `400_guides/400_project-overview.md` → Primary entry + workflow
+    (5‑min overview)
+2.  `100_memory/100_cursor-memory-context.md` → Current state (30s
+    snapshot)
+3.  `000_core/000_backlog.md` → Priorities and dependencies
+4.  `400_guides/400_system-overview.md` → Architecture map
+5.  Topic guides → Testing, Deployment, Integration, Performance,
+    Security
+
+Notes: - Memory rehydration bundles pin invariants, then add semantic
+evidence; keep anchors stable (`tldr`, `quick-start`, etc.). - For
+placement logic (where content belongs), follow the decision flow in
+`200_setup/200_naming-conventions.md`.
+
 ### **1. Progressive Disclosure**
 
-**Principle**: Reveal context in layers, starting with the most important information.
+**Principle**: Reveal context in layers, starting with the most
+important information.
 
 **Strategy**:
 
-1. **Core Question**: Start with the main question or task
-2. **Essential Context**: Add only the context needed to understand the question
-3. **Supporting Details**: Include additional details that might be helpful
-4. **Constraints/Preferences**: Specify any limitations or preferences
+1.  **Core Question**: Start with the main question or task
+2.  **Essential Context**: Add only the context needed to understand the
+    question
+3.  **Supporting Details**: Include additional details that might be
+    helpful
+4.  **Constraints/Preferences**: Specify any limitations or preferences
 
 **Example**:
-```text
+
+``` text
 ❌ Poor: [Long explanation of everything before getting to the point]
 
 ✅ Better:
@@ -208,16 +258,19 @@ Must be compatible with our existing error handling middleware. [Constraint]
 
 ### **2. Clear Boundaries**
 
-**Principle**: Define what the AI should focus on and what it can assume.
+**Principle**: Define what the AI should focus on and what it can
+assume.
 
 **Strategy**:
 
 - **Focus Areas**: Explicitly state what you want the AI to address
-- **Assumptions**: List what the AI can assume or doesn't need to worry about
+- **Assumptions**: List what the AI can assume or doesn’t need to worry
+  about
 - **Scope**: Define the boundaries of the task
 
 **Example**:
-```text
+
+``` text
 Focus on: The authentication logic and security considerations
 Assume: Database connection and basic Express setup are already configured
 Scope: Just the middleware function, not the full application setup
@@ -225,16 +278,18 @@ Scope: Just the middleware function, not the full application setup
 
 ### **3. Effective Framing**
 
-**Principle**: Frame the problem in a way that guides the AI toward good solutions.
+**Principle**: Frame the problem in a way that guides the AI toward good
+solutions.
 
 **Strategy**:
 
-- **Problem Statement**: Clearly state what you're trying to solve
+- **Problem Statement**: Clearly state what you’re trying to solve
 - **Success Criteria**: Define what a good solution looks like
 - **Context**: Provide relevant background that influences the approach
 
 **Example**:
-```text
+
+``` text
 Problem: Users are experiencing slow login times during peak hours
 Success Criteria: Login response time under 200ms, secure authentication
 Context: We're using JWT tokens, have 1000+ concurrent users, and need to maintain security
@@ -242,10 +297,12 @@ Context: We're using JWT tokens, have 1000+ concurrent users, and need to mainta
 
 ### **4. Structured Prompts**
 
-**Principle**: Use consistent structure to make prompts easier to understand and process.
+**Principle**: Use consistent structure to make prompts easier to
+understand and process.
 
 **Strategy**:
-```text
+
+``` text
 TASK: [What you want done]
 CONTEXT: [Relevant background information]
 CONSTRAINTS: [Limitations or requirements]
@@ -258,7 +315,7 @@ EXPECTED OUTPUT: [What format/level of detail you want]
 
 Start broad, then narrow down to specifics:
 
-```text
+``` text
 1. High-level overview of the problem
 2. Specific requirements and constraints
 3. Detailed question or task
@@ -269,7 +326,7 @@ Start broad, then narrow down to specifics:
 
 Context → Question → Context:
 
-```text
+``` text
 1. Initial context to set the scene
 2. Specific question or task
 3. Additional context that might influence the answer
@@ -279,7 +336,7 @@ Context → Question → Context:
 
 Break complex tasks into clear steps:
 
-```text
+``` text
 Please help me with [task] by:
 
 1. [Step 1]
@@ -295,8 +352,9 @@ For each step, provide:
 
 ### **1. Be Specific**
 
-- **Avoid**: Vague requests like "help me with authentication"
-- **Use**: Specific requests like "implement JWT middleware with rate limiting"
+- **Avoid**: Vague requests like “help me with authentication”
+- **Use**: Specific requests like “implement JWT middleware with rate
+  limiting”
 
 ### **2. Provide Context**
 
@@ -306,7 +364,8 @@ For each step, provide:
 ### **3. Set Expectations**
 
 - **Avoid**: Unclear output expectations
-- **Use**: Specify format, level of detail, and any specific requirements
+- **Use**: Specify format, level of detail, and any specific
+  requirements
 
 ### **4. Use Progressive Disclosure**
 
@@ -316,7 +375,7 @@ For each step, provide:
 ### **5. Define Boundaries**
 
 - **Avoid**: Unclear scope
-- **Use**: Explicitly state what's in and out of scope
+- **Use**: Explicitly state what’s in and out of scope
 
 ## 🔄 Integration with Workflows
 
@@ -324,7 +383,7 @@ For each step, provide:
 
 Use reasoning patterns to structure requirements analysis:
 
-```text
+``` text
 Let's approach this systematically:
 
 1. First, let me understand the context: [feature overview]
@@ -338,7 +397,7 @@ Let's approach this systematically:
 
 Use planning patterns to break down work:
 
-```text
+``` text
 I'm planning the implementation of [feature].
 
 Requirements:
@@ -359,7 +418,7 @@ Please help me:
 
 Use coding patterns for implementation tasks:
 
-```text
+``` text
 I need to implement [specific task].
 
 Context:
@@ -376,14 +435,16 @@ Please provide:
 
 ### **Key Metrics**
 
-- **Response Quality**: Are you getting the level of detail and accuracy you need?
+- **Response Quality**: Are you getting the level of detail and accuracy
+  you need?
 - **Iteration Count**: How many back-and-forth exchanges are needed?
 - **Clarity**: Are the responses clear and actionable?
 - **Completeness**: Do responses address all aspects of your request?
 
 ### **Improvement Strategies**
 
-- **Track Patterns**: Note which patterns work best for different task types
+- **Track Patterns**: Note which patterns work best for different task
+  types
 - **Refine Context**: Adjust the amount and type of context you provide
 - **Iterate**: Use AI feedback to improve your context engineering
 - **Document**: Keep notes on what works well for future reference
@@ -393,40 +454,47 @@ Please provide:
 ### **Potential Improvements**
 
 - **Context Templates**: Pre-built templates for common task types
-- **Context Validation**: Tools to check if context is complete and clear
+- **Context Validation**: Tools to check if context is complete and
+  clear
 - **Performance Tracking**: Metrics on context engineering effectiveness
 - **Pattern Library**: Expanded collection of proven patterns
 
 ### **Integration Opportunities**
 
-- **Workflow Integration**: Built-in context engineering in workflow files
+- **Workflow Integration**: Built-in context engineering in workflow
+  files
 - **AI Feedback**: Use AI to suggest context improvements
 - **Automated Analysis**: Tools to analyze and improve context quality
 
----
+------------------------------------------------------------------------
 
 ## 📚 Related Documentation
 
-- **400_few-shot-context-examples.md**: Examples of effective context engineering
-- **400_guides/400_system-overview.md**: System architecture and components
+- **400_few-shot-context-examples.md**: Examples of effective context
+  engineering
+- **400_guides/400_system-overview.md**: System architecture and
+  components
 - **000_core/001_create-prd.md**: PRD creation workflow
 - **000_core/002_generate-tasks.md**: Task generation workflow
 - **000_core/003_process-task-list.md**: AI execution workflow
 
----
+------------------------------------------------------------------------
 
-*This guide provides practical strategies for effective context engineering with Cursor Native AI, focusing on clear
-patterns and proven approaches.*
+*This guide provides practical strategies for effective context
+engineering with Cursor Native AI, focusing on clear patterns and proven
+approaches.*
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_cursor-context-engineering-guide.md
-# Generated: 2025-08-17T17:47:03.911501
+
+## Auto-generated sections for 400_cursor-context-engineering-guide.md
+
+## Generated: 2025-08-18T08:03:22.735785
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -434,10 +502,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

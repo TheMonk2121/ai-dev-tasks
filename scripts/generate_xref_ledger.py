@@ -8,11 +8,11 @@ to bring multirep count to 0 and start the clean-day clock.
 
 import json
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from typing import Dict, List
 
 
-def load_validator_report() -> Dict:
+def load_validator_report() -> dict:
     """Load validator report."""
     report_path = "validator_report.json"
 
@@ -24,7 +24,7 @@ def load_validator_report() -> Dict:
         return json.load(f)
 
 
-def load_existing_ledger() -> Dict:
+def load_existing_ledger() -> dict:
     """Load existing validator exceptions ledger."""
     ledger_path = "data/validator_exceptions.json"
 
@@ -32,13 +32,13 @@ def load_existing_ledger() -> Dict:
         with open(ledger_path) as f:
             return json.load(f)
     else:
-        return {"schema_version": "1.0", "generated_at": datetime.now(timezone.utc).isoformat() + "Z", "exceptions": {}}
+        return {"schema_version": "1.0", "generated_at": datetime.now(UTC).isoformat() + "Z", "exceptions": {}}
 
 
-def generate_ledger_entries(violations: List[str]) -> Dict:
+def generate_ledger_entries(violations: list[str]) -> dict:
     """Generate ledger entries for XRef violations."""
     # Calculate expiry date (7 days from now)
-    expiry_date = (datetime.now(timezone.utc) + timedelta(days=7)).strftime("%Y-%m-%d")
+    expiry_date = (datetime.now(UTC) + timedelta(days=7)).strftime("%Y-%m-%d")
 
     ledger = load_existing_ledger()
 
@@ -59,7 +59,7 @@ def generate_ledger_entries(violations: List[str]) -> Dict:
                 "key": "xref-missing",
                 "expires": expiry_date,
                 "reason": "Round 7 XRef cleanup - low confidence, queued for manual link",
-                "created": datetime.now(timezone.utc).isoformat() + "Z",
+                "created": datetime.now(UTC).isoformat() + "Z",
             }
         )
 

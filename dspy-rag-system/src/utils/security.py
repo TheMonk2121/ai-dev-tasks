@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 import json
 import tempfile
+from datetime import UTC
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,7 @@ class SecurityScanner:
             "vulnerability_threshold": "medium"
         }
     
-    def check_dependencies(self) -> Dict[str, Any]:
+    def check_dependencies(self) -> dict[str, Any]:
         """Check dependencies for known vulnerabilities using safety"""
         try:
             result = subprocess.run([
@@ -66,7 +67,7 @@ class SecurityScanner:
                 "vulnerabilities": []
             }
     
-    def run_bandit_scan(self) -> Dict[str, Any]:
+    def run_bandit_scan(self) -> dict[str, Any]:
         """Run bandit security scan on the codebase"""
         try:
             result = subprocess.run([
@@ -76,7 +77,7 @@ class SecurityScanner:
             
             if result.returncode in [0, 1]:  # Bandit returns 1 for issues found
                 try:
-                    with open("bandit-report.json", "r") as f:
+                    with open("bandit-report.json") as f:
                         report = json.load(f)
                     
                     issues = report.get("results", [])
@@ -110,7 +111,7 @@ class SecurityScanner:
                 "issues": []
             }
     
-    def run_pip_audit(self) -> Dict[str, Any]:
+    def run_pip_audit(self) -> dict[str, Any]:
         """Run pip-audit for dependency vulnerability checking"""
         try:
             result = subprocess.run([
@@ -142,7 +143,7 @@ class SecurityScanner:
                 "vulnerabilities": []
             }
     
-    def _count_severities(self, issues: List[Dict]) -> Dict[str, int]:
+    def _count_severities(self, issues: list[dict]) -> dict[str, int]:
         """Count issues by severity level"""
         counts = {"LOW": 0, "MEDIUM": 0, "HIGH": 0}
         for issue in issues:
@@ -150,7 +151,7 @@ class SecurityScanner:
             counts[severity] = counts.get(severity, 0) + 1
         return counts
     
-    def generate_security_report(self) -> Dict[str, Any]:
+    def generate_security_report(self) -> dict[str, Any]:
         """Generate comprehensive security report"""
         logger.info("Generating security report")
         
@@ -235,9 +236,9 @@ def validate_url(url: str) -> bool:
 def _get_timestamp() -> str:
     """Get current timestamp in ISO format"""
     from datetime import datetime, timezone
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
-def create_security_config() -> Dict[str, Any]:
+def create_security_config() -> dict[str, Any]:
     """Create security configuration"""
     return {
         "security": {
@@ -254,7 +255,7 @@ def create_security_config() -> Dict[str, Any]:
         }
     }
 
-def validate_security_config(config: Dict[str, Any]) -> bool:
+def validate_security_config(config: dict[str, Any]) -> bool:
     """Validate security configuration"""
     required_keys = ["enabled", "scan_on_startup", "vulnerability_threshold"]
     

@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Security research and best practices -->
 # 🔒 Security Research
 
@@ -21,7 +21,7 @@ Backlog link: B-066 (also B-003)
 
 - **Points**: 3 - Research and security guidance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md
 
 - **Next Steps**: Implement security patterns and best practices
 

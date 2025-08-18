@@ -98,7 +98,7 @@ def check_requirements_files():
             print(f"❌ Missing requirements file: {req_file}")
             continue
 
-        with open(req_file, "r") as f:
+        with open(req_file) as f:
             content = f.read()
 
         if "-r ../requirements.txt" in content:

@@ -64,7 +64,7 @@ def update_file_references(old_name, new_name):
             continue  # Skip the file being renamed
             
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 content = f.read()
             
             # Check if file contains reference to old name

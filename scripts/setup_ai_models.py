@@ -28,14 +28,14 @@ import importlib.util
 from typing import List, Tuple
 
 
-REQUIRED_IMPORTS: List[str] = [
+REQUIRED_IMPORTS: list[str] = [
     # Light-weight/importable modules only; avoid heavy initializations
     "dspy",                  # core DSPy interface
     "flask",                 # dashboard
     "psycopg2",              # Postgres client
 ]
 
-OPTIONAL_IMPORTS: List[str] = [
+OPTIONAL_IMPORTS: list[str] = [
     # Optional but commonly used
     "sentence_transformers", # embeddings
     "torch",                 # model runtime (optional)
@@ -43,21 +43,21 @@ OPTIONAL_IMPORTS: List[str] = [
 ]
 
 
-def _check_python_version(min_major: int = 3, min_minor: int = 10) -> Tuple[bool, str]:
+def _check_python_version(min_major: int = 3, min_minor: int = 10) -> tuple[bool, str]:
     ver = sys.version_info
     ok = (ver.major, ver.minor) >= (min_major, min_minor)
     return ok, f"Python {ver.major}.{ver.minor} detected (require >= {min_major}.{min_minor})"
 
 
-def _check_imports(module_names: List[str]) -> Tuple[bool, List[str]]:
-    missing: List[str] = []
+def _check_imports(module_names: list[str]) -> tuple[bool, list[str]]:
+    missing: list[str] = []
     for name in module_names:
         if importlib.util.find_spec(name) is None:
             missing.append(name)
     return len(missing) == 0, missing
 
 
-def _check_db_connection(dsn: str, check_pgvector: bool = True) -> Tuple[bool, str]:
+def _check_db_connection(dsn: str, check_pgvector: bool = True) -> tuple[bool, str]:
     try:
         import psycopg2
         from psycopg2.extras import RealDictCursor

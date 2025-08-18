@@ -9,7 +9,8 @@ import functools
 import logging
 import json
 import os
-from typing import Callable, Any, Dict, Optional, List, Type
+from typing import Any, Dict, Optional, List, Type
+from collections.abc import Callable
 from requests.exceptions import Timeout, RequestException
 import psycopg2
 
@@ -52,11 +53,11 @@ class ConfigurationError(FatalError):
     """Configuration or setup error"""
     pass
 
-def load_error_policy() -> Dict[str, Any]:
+def load_error_policy() -> dict[str, Any]:
     """Load error policy from system configuration"""
     try:
         config_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config', 'system.json')
-        with open(config_path, 'r') as f:
+        with open(config_path) as f:
             config = json.load(f)
         
         error_policy = config.get("error_policy", {})
@@ -98,7 +99,7 @@ def get_llm_timeout(model_id: str = None) -> int:
     # Default timeout for other models
     return policy.get("timeout_seconds", 30)
 
-def is_fatal_error(exception: Exception, fatal_errors: List[str]) -> bool:
+def is_fatal_error(exception: Exception, fatal_errors: list[str]) -> bool:
     """Check if an exception is a fatal error that should not trigger retries"""
     exception_type = type(exception).__name__
     exception_str = str(type(exception))
@@ -123,10 +124,10 @@ def is_fatal_error(exception: Exception, fatal_errors: List[str]) -> bool:
     return any(isinstance(exception, fatal_type) for fatal_type in fatal_exception_types)
 
 def retry(
-    max_retries: Optional[int] = None,
-    backoff_factor: Optional[float] = None,
-    timeout_seconds: Optional[int] = None,
-    fatal_errors: Optional[List[str]] = None,
+    max_retries: int | None = None,
+    backoff_factor: float | None = None,
+    timeout_seconds: int | None = None,
+    fatal_errors: list[str] | None = None,
     jitter: bool = True
 ):
     """
@@ -318,7 +319,7 @@ def handle_retryable_errors(func: Callable, *args, **kwargs) -> Any:
         logger.error(f"Non-retryable error encountered: {e}")
         raise
 
-def get_retry_stats() -> Dict[str, Any]:
+def get_retry_stats() -> dict[str, Any]:
     """Get retry statistics for monitoring"""
     # This would be implemented with a metrics collector
     return {

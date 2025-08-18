@@ -65,7 +65,7 @@ def fix_bare_urls(content):
 def process_file(file_path):
     """Process a single file to fix bare URLs."""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         # Check if file needs fixing

@@ -6,7 +6,6 @@ Shared utilities for scanner, link checker, and validator.
 
 import re
 import unicodedata
-from typing import List
 
 
 def slugify_heading(heading: str) -> str:
@@ -62,7 +61,7 @@ def slugify_heading(heading: str) -> str:
     return slug
 
 
-def extract_code_fences(content: str) -> List[tuple]:
+def extract_code_fences(content: str) -> list[tuple]:
     """
     Extract code fence boundaries.
 
@@ -90,7 +89,7 @@ def extract_code_fences(content: str) -> List[tuple]:
     return fences
 
 
-def is_in_code_fence(line_num: int, fences: List[tuple]) -> bool:
+def is_in_code_fence(line_num: int, fences: list[tuple]) -> bool:
     """Check if a line number is inside a code fence."""
     for start, end, _ in fences:
         if start <= line_num <= end:
@@ -116,7 +115,7 @@ def normalize_filename(filename: str) -> str:
     return base
 
 
-def extract_backticked_refs(content: str) -> List[str]:
+def extract_backticked_refs(content: str) -> list[str]:
     """
     Extract backticked references from content.
 
@@ -129,7 +128,7 @@ def extract_backticked_refs(content: str) -> List[str]:
     return [normalize_filename(match) for match in matches]
 
 
-def extract_title_mentions(content: str) -> List[str]:
+def extract_title_mentions(content: str) -> list[str]:
     """
     Extract title mentions from content.
 
@@ -150,7 +149,7 @@ def extract_title_mentions(content: str) -> List[str]:
     return mentions
 
 
-def find_existing_links(content: str) -> List[str]:
+def find_existing_links(content: str) -> list[str]:
     """
     Find existing markdown links in content.
 
@@ -163,9 +162,11 @@ def find_existing_links(content: str) -> List[str]:
     existing = []
     for _, target in matches:
         # Handle relative links
-        if target.startswith("./") or target.startswith("../"):
-            target = target.split("/")[-1]  # Get filename part
-        elif not target.startswith("http"):
+        if (
+            target.startswith("./")
+            or target.startswith("../")
+            or not target.startswith("http")
+        ):
             target = target.split("/")[-1]  # Get filename part
 
         existing.append(normalize_filename(target))
@@ -173,7 +174,9 @@ def find_existing_links(content: str) -> List[str]:
     return existing
 
 
-def should_apply_link(source_title: str, target_title: str, confidence_threshold: float = 0.8) -> bool:
+def should_apply_link(
+    source_title: str, target_title: str, confidence_threshold: float = 0.8
+) -> bool:
     """
     Determine if a link should be applied inline vs stubbed.
 
@@ -189,13 +192,15 @@ def should_apply_link(source_title: str, target_title: str, confidence_threshold
     # Check for partial matches
     if source_norm in target_norm or target_norm in source_norm:
         # Calculate similarity
-        similarity = len(set(source_norm) & set(target_norm)) / len(set(source_norm) | set(target_norm))
+        similarity = len(set(source_norm) & set(target_norm)) / len(
+            set(source_norm) | set(target_norm)
+        )
         return similarity >= confidence_threshold
 
     return False
 
 
-def generate_xref_block(suggestions: List[dict]) -> str:
+def generate_xref_block(suggestions: list[dict]) -> str:
     """
     Generate xref-autofix block content.
 
@@ -210,10 +215,14 @@ def generate_xref_block(suggestions: List[dict]) -> str:
     for suggestion in suggestions:
         if suggestion.get("confidence", 0) >= 0.8:
             # High confidence - inline link
-            lines.append(f"- [{suggestion['target_title']}]({suggestion['target_path']})")
+            lines.append(
+                f"- [{suggestion['target_title']}]({suggestion['target_path']})"
+            )
         else:
             # Low confidence - stub
-            lines.append(f"- [ ] Add link to {suggestion['target_title']} ({suggestion['target_path']})")
+            lines.append(
+                f"- [ ] Add link to {suggestion['target_title']} ({suggestion['target_path']})"
+            )
 
     lines.append("<!-- xref-autofix:end -->")
 

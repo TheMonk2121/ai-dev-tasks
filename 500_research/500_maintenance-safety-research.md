@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Repository maintenance safety research -->
 # 🔬 Deep Research: Repository Maintenance Safety & Critical File Protection
@@ -26,7 +26,7 @@ Backlog link: B-005
 - **Status**: ✅ **ACTIVE** - Research file with comprehensive content
 - **Priority**: 🔥 High - Critical for system safety
 - **Points**: 5 - Research and safety implementation
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_performance-optimization-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_guides/400_performance-optimization-guide.md
 - **Next Steps**: Implement safety systems and monitoring
 
 ## 🎯 Research Objective

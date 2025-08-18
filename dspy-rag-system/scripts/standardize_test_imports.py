@@ -12,7 +12,7 @@ from pathlib import Path
 
 def fix_test_file(file_path):
     """Fix a single test file by removing manual path manipulation"""
-    with open(file_path, "r") as f:
+    with open(file_path) as f:
         content = f.read()
 
     original_content = content

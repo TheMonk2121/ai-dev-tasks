@@ -16,11 +16,11 @@ class SecurityError(Exception):
     """Raised when a security violation is detected"""
     pass
 
-def load_security_config() -> Dict[str, Any]:
+def load_security_config() -> dict[str, Any]:
     """Load security configuration from system.json"""
     try:
         config_path = os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'system.json')
-        with open(config_path, 'r') as f:
+        with open(config_path) as f:
             config = json.load(f)
         
         security_config = config.get("security", {})
@@ -44,7 +44,7 @@ def load_security_config() -> Dict[str, Any]:
             }
         }
 
-def sanitize_prompt(prompt: str, model_id: Optional[str] = None) -> str:
+def sanitize_prompt(prompt: str, model_id: str | None = None) -> str:
     """
     Sanitize user input to prevent injection attacks.
     
@@ -173,10 +173,10 @@ def validate_file_extension(filename: str) -> bool:
 
 def sanitize_and_validate_input(
     prompt: str, 
-    file_path: Optional[str] = None,
-    file_size_bytes: Optional[int] = None,
-    model_id: Optional[str] = None
-) -> Dict[str, Any]:
+    file_path: str | None = None,
+    file_size_bytes: int | None = None,
+    model_id: str | None = None
+) -> dict[str, Any]:
     """
     Comprehensive input sanitization and validation.
     

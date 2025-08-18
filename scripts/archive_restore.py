@@ -11,11 +11,11 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Dict, Optional, Tuple
 
 
-def load_manifest() -> Dict:
+def load_manifest() -> dict:
     """Load archive manifest."""
     manifest_path = "data/archive_manifest.json"
 
@@ -27,7 +27,7 @@ def load_manifest() -> Dict:
         return json.load(f)
 
 
-def load_validator_report() -> Dict:
+def load_validator_report() -> dict:
     """Load validator report."""
     report_path = "validator_report.json"
 
@@ -39,7 +39,7 @@ def load_validator_report() -> Dict:
         return json.load(f)
 
 
-def get_blob_content(blob_sha: str) -> Optional[str]:
+def get_blob_content(blob_sha: str) -> str | None:
     """Get content of a git blob."""
     try:
         result = subprocess.run(["git", "show", blob_sha], capture_output=True, text=True, check=True)
@@ -61,8 +61,8 @@ def normalize_content(content: str) -> str:
 
 
 def create_errata_file(
-    archive_path: str, manifest_entry: Dict, current_content: str, blob_content: str
-) -> Tuple[str, str]:
+    archive_path: str, manifest_entry: dict, current_content: str, blob_content: str
+) -> tuple[str, str]:
     """Create an errata file for changes to an archive file."""
     # Create errata directory structure
     relative_path = archive_path.replace("600_archives/", "")
@@ -95,7 +95,7 @@ def create_errata_file(
 **Recorded Commit**: {manifest_entry['introduced_commit']}
 **Recorded Date**: {manifest_entry['recorded_at']}
 **Author**: {author}
-**Created**: {datetime.now(timezone.utc).isoformat()}Z
+**Created**: {datetime.now(UTC).isoformat()}Z
 
 ## Changes Made
 
@@ -145,7 +145,7 @@ This file tracks errata for archived content.
             index_content = f.read()
 
     # Add new entry
-    timestamp = datetime.now(timezone.utc).isoformat()[:10]
+    timestamp = datetime.now(UTC).isoformat()[:10]
     new_entry = f"| {archive_path} | [{os.path.basename(errata_path)}]({errata_path}) | {timestamp} | Active |\n"
 
     # Insert after header

@@ -11,11 +11,11 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Dict, List, Set, Tuple
 
 
-def load_ledger(ledger_path: str) -> Dict:
+def load_ledger(ledger_path: str) -> dict:
     """Load the validator exception ledger."""
     try:
         with open(ledger_path) as f:
@@ -25,10 +25,10 @@ def load_ledger(ledger_path: str) -> Dict:
         return {}
 
 
-def get_expired_entries(ledger: Dict) -> List[Tuple[str, str, str]]:
+def get_expired_entries(ledger: dict) -> list[tuple[str, str, str]]:
     """Get all expired entries from the ledger."""
     expired = []
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     for file_path, entries in ledger.items():
         for entry in entries:
@@ -39,7 +39,7 @@ def get_expired_entries(ledger: Dict) -> List[Tuple[str, str, str]]:
             try:
                 # Parse expiry date
                 if len(expires) == 10 and expires[4] == "-" and expires[7] == "-":
-                    expiry = datetime.fromisoformat(expires).replace(hour=23, minute=59, second=59, tzinfo=timezone.utc)
+                    expiry = datetime.fromisoformat(expires).replace(hour=23, minute=59, second=59, tzinfo=UTC)
                 else:
                     expiry = datetime.fromisoformat(expires.replace("Z", "+00:00"))
 
@@ -51,7 +51,7 @@ def get_expired_entries(ledger: Dict) -> List[Tuple[str, str, str]]:
     return expired
 
 
-def get_changed_files() -> Set[str]:
+def get_changed_files() -> set[str]:
     """Get list of files changed in the current PR."""
     try:
         # Get changed files from git

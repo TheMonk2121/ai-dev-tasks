@@ -30,7 +30,7 @@ def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
         print(f"❌ Schema file not found: {schema_path}")
         return False
 
-    with open(schema_path, "r") as f:
+    with open(schema_path) as f:
         schema_sql = f.read()
 
     print("🧠 Applying clean-slate database schema...")

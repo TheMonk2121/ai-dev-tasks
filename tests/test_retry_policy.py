@@ -81,7 +81,7 @@ class TestRetryDecorator:
             call_times.append(time.time())
             raise ValueError("Fails")
 
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Fails"):
             failing_function()
 
         # Check that delays increase exponentially
@@ -107,7 +107,9 @@ class TestErrorPolicyLoading:
                     "fatal_errors": ["CustomError", "AnotherError"],
                 }
             }
-            mock_open.return_value.__enter__.return_value.read.return_value = json.dumps(mock_config)
+            mock_open.return_value.__enter__.return_value.read.return_value = (
+                json.dumps(mock_config)
+            )
 
             policy = load_error_policy()
 
@@ -129,7 +131,9 @@ class TestErrorPolicyLoading:
     def test_load_error_policy_with_invalid_json(self):
         """Test loading with invalid JSON"""
         with patch("builtins.open") as mock_open:
-            mock_open.return_value.__enter__.return_value.read.return_value = "invalid json"
+            mock_open.return_value.__enter__.return_value.read.return_value = (
+                "invalid json"
+            )
 
             policy = load_error_policy()
 
@@ -336,7 +340,7 @@ class TestErrorHandling:
         def fatal_func():
             raise ValueError("fatal")
 
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="fatal"):
             handle_retryable_errors(fatal_func)
 
 

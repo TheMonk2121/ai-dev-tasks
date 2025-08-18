@@ -101,7 +101,7 @@ def track_tokens(count: int):
     """Track token usage"""
     TOKEN_COUNT.inc(count)
 
-def get_metrics() -> Dict[str, Any]:
+def get_metrics() -> dict[str, Any]:
     """Get current metrics as dictionary"""
     return {
         "request_total": REQUEST_COUNT.get_value(),

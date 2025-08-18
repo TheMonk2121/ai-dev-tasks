@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
@@ -30,7 +30,7 @@ analysis techniques to current files |
 
 - **Points**: 4 - Moderate complexity, safety critical
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 100_memory/100_cursor-memory-context.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 100_memory/100_cursor-memory-context.md
 
 - **Next Steps**: Update analysis procedures as system evolves
 
@@ -55,7 +55,7 @@ This guide provides a **systematic 6-phase process** for analyzing files to dete
 should be retained.
 
 It builds on our existing documentation foundation (`200_setup/200_naming-conventions.md`,
-`400_guides/400_context-priority-guide.md`, `500_research/500_maintenance-safety-research.md`) and adds the
+`400_guides/400_cursor-context-engineering-guide.md`, `500_research/500_maintenance-safety-research.md`) and adds the
 missing**"how to analyze"**methodology.
 
 ### **Why This Guide Exists**-**Prevents critical file loss**through systematic analysis
@@ -88,8 +88,8 @@ missing**"how to analyze"**methodology.
 - *Files to Read**:
 
 1. **`200_setup/200_naming-conventions.md`**- File categorization system (000-699 prefixes)
-2.**`400_guides/400_context-priority-guide.md`**- Memory scaffolding and file priorities
-3.**`400_guides/400_context-priority-guide.md`**- How files relate to AI memory rehydration**Time Investment**: 1-2
+2.**`400_guides/400_cursor-context-engineering-guide.md`**- Memory scaffolding and file priorities
+3.**`400_guides/400_cursor-context-engineering-guide.md`**- How files relate to AI memory rehydration**Time Investment**: 1-2
 minutes
 
 - *Output**: Understanding of file importance tiers and relationships
@@ -360,7 +360,7 @@ Use this checklist before writing new Python code to reduce duplication and keep
 #### **6. Documentation Chain**
 
 - *Method**: Check if file is in the documentation hierarchy
-- *Core Files**: Referenced in `400_guides/400_context-priority-guide.md`
+- *Core Files**: Referenced in `400_guides/400_cursor-context-engineering-guide.md`
 - *Ancillary Files**: Referenced by core files
 - *Orphaned Files**: Not referenced anywhere
 
@@ -488,7 +488,7 @@ Use this checklist before writing new Python code to reduce duplication and keep
 
 - [ ] Check `000_core/000_backlog.md` for active priorities
 
-- [ ] Review `400_guides/400_context-priority-guide.md` for file importance
+- [ ] Review `400_guides/400_cursor-context-engineering-guide.md` for file importance
 
 - [ ] Understand the file's tier classification
 
@@ -536,7 +536,7 @@ Use this checklist before writing new Python code to reduce duplication and keep
 
 ## 📚**Related Documentation**###**Core Analysis Tools:**-**`200_setup/200_naming-conventions.md`**- File categorization system
 
-- **`400_guides/400_context-priority-guide.md`**- Memory scaffolding and file priorities
+- **`400_guides/400_cursor-context-engineering-guide.md`**- Memory scaffolding and file priorities
 
 - **`500_research/500_maintenance-safety-research.md`**- Safety mechanisms and critical file protection
 
@@ -555,7 +555,7 @@ Use this checklist before writing new Python code to reduce duplication and keep
 - **Migration tracking**- Historical change documentation
 
 - --**Last Updated**: 2024-08-07
-- *Related Documentation**: `400_guides/400_context-priority-guide.md`, `500_research/500_maintenance-safety-research.md`
+- *Related Documentation**: `400_guides/400_cursor-context-engineering-guide.md`, `500_research/500_maintenance-safety-research.md`
 - *Status**: Active analysis methodology for maintaining documentation integrity
 
 <!-- README_AUTOFIX_START -->

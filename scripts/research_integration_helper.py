@@ -10,7 +10,7 @@ import json
 from typing import Dict, List, Any
 from pathlib import Path
 
-def get_research_integration_map() -> Dict[str, List[str]]:
+def get_research_integration_map() -> dict[str, list[str]]:
     """Map research findings to appropriate documentation files"""
     return {
         "complete_research": {
@@ -35,7 +35,7 @@ def get_research_integration_map() -> Dict[str, List[str]]:
         ]
     }
 
-def get_research_sections() -> Dict[str, List[str]]:
+def get_research_sections() -> dict[str, list[str]]:
     """Define research sections and their target files"""
     return {
         "academic_research": [
@@ -65,7 +65,7 @@ def get_research_sections() -> Dict[str, List[str]]:
         ]
     }
 
-def create_integration_checklist() -> Dict[str, List[str]]:
+def create_integration_checklist() -> dict[str, list[str]]:
     """Create checklist for integrating research findings"""
     return {
         "phase_1_complete_research": [
@@ -101,7 +101,7 @@ def create_integration_checklist() -> Dict[str, List[str]]:
         ]
     }
 
-def get_backlog_integration_template() -> Dict[str, Any]:
+def get_backlog_integration_template() -> dict[str, Any]:
     """Template for new backlog items based on research findings"""
     return {
         "new_backlog_items": [

@@ -9,11 +9,11 @@ import json
 import os
 import sys
 import tempfile
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Dict, Tuple
 
 
-def create_synthetic_violations() -> Dict:
+def create_synthetic_violations() -> dict:
     """Create synthetic violations for testing."""
     return {
         "categories": {
@@ -29,11 +29,11 @@ def create_synthetic_violations() -> Dict:
             "multirep": ["test_multirep_violation.md"],
         },
         "schema_version": "1.1.0",
-        "generated_at": datetime.now(timezone.utc).isoformat() + "Z",
+        "generated_at": datetime.now(UTC).isoformat() + "Z",
     }
 
 
-def test_ratchet_scenario() -> Tuple[bool, str]:
+def test_ratchet_scenario() -> tuple[bool, str]:
     """Test ratchet scenario with synthetic violations."""
     print("🧪 Testing Ratchet Scenario...")
 
@@ -66,7 +66,7 @@ def test_ratchet_scenario() -> Tuple[bool, str]:
         os.unlink(report_path)
 
 
-def test_fail_mode_scenario() -> Tuple[bool, str]:
+def test_fail_mode_scenario() -> tuple[bool, str]:
     """Test FAIL mode scenario with synthetic violations."""
     print("🧪 Testing FAIL Mode Scenario...")
 
@@ -115,7 +115,7 @@ sys.exit(fail)
         os.unlink(report_path)
 
 
-def test_rollback_scenario() -> Tuple[bool, str]:
+def test_rollback_scenario() -> tuple[bool, str]:
     """Test rollback scenario with >5% false positives."""
     print("🧪 Testing Rollback Scenario...")
 
@@ -134,7 +134,7 @@ def test_rollback_scenario() -> Tuple[bool, str]:
             "multirep": [],
         },
         "schema_version": "1.1.0",
-        "generated_at": datetime.now(timezone.utc).isoformat() + "Z",
+        "generated_at": datetime.now(UTC).isoformat() + "Z",
     }
 
     with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
@@ -163,7 +163,7 @@ def test_rollback_scenario() -> Tuple[bool, str]:
         os.unlink(report_path)
 
 
-def test_schema_guard() -> Tuple[bool, str]:
+def test_schema_guard() -> tuple[bool, str]:
     """Test schema guard with invalid schema version."""
     print("🧪 Testing Schema Guard...")
 
@@ -177,7 +177,7 @@ def test_schema_guard() -> Tuple[bool, str]:
         },
         "impacted_files": {"archive": [], "shadow_fork": [], "readme": [], "multirep": []},
         "schema_version": "2.0.0",  # Wrong version
-        "generated_at": datetime.now(timezone.utc).isoformat() + "Z",
+        "generated_at": datetime.now(UTC).isoformat() + "Z",
     }
 
     with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:

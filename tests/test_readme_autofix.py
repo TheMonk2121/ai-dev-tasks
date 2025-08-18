@@ -99,7 +99,7 @@ Content here.
 # Auto-generated sections
 ## Missing sections to add:
 ## Purpose
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 <!-- README_AUTOFIX_END -->
 
 More content.
@@ -110,8 +110,14 @@ More content.
     start, end = marker_pos
 
     # Verify positions
-    assert content[start : start + len("<!-- README_AUTOFIX_START -->")] == "<!-- README_AUTOFIX_START -->"
-    assert content[end - len("<!-- README_AUTOFIX_END -->") : end] == "<!-- README_AUTOFIX_END -->"
+    assert (
+        content[start : start + len("<!-- README_AUTOFIX_START -->")]
+        == "<!-- README_AUTOFIX_START -->"
+    )
+    assert (
+        content[end - len("<!-- README_AUTOFIX_END -->") : end]
+        == "<!-- README_AUTOFIX_END -->"
+    )
 
 
 def test_infer_owner():
@@ -169,7 +175,8 @@ def test_build_marker_content():
     assert "<!-- README_AUTOFIX_START -->" in content
     assert "<!-- README_AUTOFIX_END -->" in content
     assert "Documentation Team" in content  # Owner inferred
-    assert "[Date when this document was last reviewed]" in content  # No date in dry-run
+    # In dry-run we expect the date placeholder token, not a real date
+    assert "YYYY-MM-DD" in content
 
     # Write mode
     content = build_marker_content(missing_sections, file_path, write_mode=True)
@@ -283,7 +290,7 @@ def test_process_readme_file_marker_update(temp_repo):
 # Auto-generated sections
 ## Missing sections to add:
 ## Purpose
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 <!-- README_AUTOFIX_END -->"""
 
     content += "\n\n" + initial_marker

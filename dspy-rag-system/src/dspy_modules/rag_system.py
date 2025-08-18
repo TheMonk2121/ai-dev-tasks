@@ -7,12 +7,12 @@ from typing import Any, Dict
 from utils.rag_compatibility_shim import create_enhanced_rag_interface
 
 
-def _load_fast_path_config() -> Dict[str, Any]:
+def _load_fast_path_config() -> dict[str, Any]:
     """Load fast-path configuration."""
     return {"enabled": True, "max_length": 50, "exclude_tokens": ["code", "def", "class", "import"]}
 
 
-def _should_use_fast_path(query: str, config: Dict[str, Any]) -> bool:
+def _should_use_fast_path(query: str, config: dict[str, Any]) -> bool:
     """Determine if a query should use fast-path processing."""
     if not config.get("enabled", True):
         return False

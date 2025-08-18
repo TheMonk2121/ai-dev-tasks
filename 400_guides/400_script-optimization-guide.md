@@ -1,12 +1,18 @@
 <!-- DATABASE_SYNC: REQUIRED -->
+
 # Script Optimization Guide
 
-## 🔎 TL;DR {#tldr}
+> Deprecated: Content has been folded into
+> `400_guides/400_performance-optimization-guide.md#🧰-script-optimization-playbook`.
+> Use the performance guide as the canonical source. This file remains
+> only for legacy link compatibility.
+
+## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-| Guide for optimizing script performance and efficiency | Optimizing scripts or improving performance | Apply
-optimization techniques to current scripts |
+|----|----|----|
+| Guide for optimizing script performance and efficiency | Optimizing scripts or improving performance | Apply |
+| optimization techniques to current scripts |  |  |
 
 ## 🎯 **Current Status**
 
@@ -18,19 +24,20 @@ optimization techniques to current scripts |
 
 - **Dependencies**: 400_guides/400_performance-optimization-guide.md
 
-- **Next Steps**: Apply optimizations to critical scripts and measure performance improvements
-
-
-
+- **Next Steps**: Apply optimizations to critical scripts and measure
+  performance improvements
 
 ## 🎯 **Top 5 Critical Scripts & Optimization Priorities**
 
 ### 1. **`update_cursor_memory.py`** - Memory Context Updater
-**Current Issues**: Re-parses entire backlog file, no caching, sequential processing
-**Optimization Priority**: 🔥 **HIGH** (run after every change)
+
+**Current Issues**: Re-parses entire backlog file, no caching,
+sequential processing **Optimization Priority**: 🔥 **HIGH** (run after
+every change)
 
 #### **Immediate Optimizations**:
-```python
+
+``` python
 # Add caching layer
 import hashlib
 import pickle
@@ -72,16 +79,19 @@ class CachedBacklogParser:
 ```
 
 ## **Performance Targets**:
+
 - **Current**: ~2-3 seconds
-- **Target**: <500ms (80% improvement)
-- **Memory**: <50MB
+- **Target**: \<500ms (80% improvement)
+- **Memory**: \<50MB
 
 ### 2. **`quick_conflict_check.py`** - Fast Conflict Detection
-**Current Issues**: Sequential checks, no early exit, redundant git calls
-**Optimization Priority**: 🔥 **HIGH** (pre-commit hook)
+
+**Current Issues**: Sequential checks, no early exit, redundant git
+calls **Optimization Priority**: 🔥 **HIGH** (pre-commit hook)
 
 #### **Immediate Optimizations**:
-```python
+
+``` python
 # Parallel execution with early exit
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import multiprocessing
@@ -123,16 +133,19 @@ class OptimizedConflictChecker:
 ```
 
 ## **Performance Targets**:
+
 - **Current**: ~5-10 seconds
-- **Target**: <2 seconds (75% improvement)
-- **Memory**: <30MB
+- **Target**: \<2 seconds (75% improvement)
+- **Memory**: \<30MB
 
 ### 3. **`process_tasks.py`** - Task Execution Engine
-**Current Issues**: Large file size, complex state management, no batching
-**Optimization Priority**: 📈 **MEDIUM** (core execution)
+
+**Current Issues**: Large file size, complex state management, no
+batching **Optimization Priority**: 📈 **MEDIUM** (core execution)
 
 #### **Immediate Optimizations**:
-```python
+
+``` python
 # Database connection pooling
 import sqlite3
 from contextlib import contextmanager
@@ -177,16 +190,20 @@ class OptimizedTaskManager:
 ```
 
 ## **Performance Targets**:
+
 - **Current**: ~10-30 seconds for full execution
-- **Target**: <5 seconds (80% improvement)
-- **Memory**: <100MB
+- **Target**: \<5 seconds (80% improvement)
+- **Memory**: \<100MB
 
 ### 4. **`doc_coherence_validator.py`** - Documentation Validator
-**Current Issues**: Large file size, regex compilation overhead, sequential file processing
-**Optimization Priority**: 📈 **MEDIUM** (documentation quality)
+
+**Current Issues**: Large file size, regex compilation overhead,
+sequential file processing **Optimization Priority**: 📈 **MEDIUM**
+(documentation quality)
 
 #### **Immediate Optimizations**:
-```python
+
+``` python
 # Pre-compiled regex patterns and parallel processing
 import re
 from concurrent.futures import ThreadPoolExecutor
@@ -241,16 +258,19 @@ class OptimizedDocValidator:
 ```
 
 ## **Performance Targets**:
+
 - **Current**: ~15-45 seconds for full validation
-- **Target**: <5 seconds (85% improvement)
-- **Memory**: <80MB
+- **Target**: \<5 seconds (85% improvement)
+- **Memory**: \<80MB
 
 ### 5. **`conflict_audit.py`** - Comprehensive Conflict Audit
-**Current Issues**: Sequential execution, no progress reporting, redundant checks
-**Optimization Priority**: ⭐ **LOW** (deep audit tool)
+
+**Current Issues**: Sequential execution, no progress reporting,
+redundant checks **Optimization Priority**: ⭐ **LOW** (deep audit tool)
 
 #### **Immediate Optimizations**:
-```python
+
+``` python
 # Modular checks with progress reporting
 from tqdm import tqdm
 import asyncio
@@ -302,34 +322,39 @@ class OptimizedConflictAuditor:
 ```
 
 ## **Performance Targets**:
+
 - **Current**: ~30-90 seconds for full audit
-- **Target**: <15 seconds (75% improvement)
-- **Memory**: <120MB
+- **Target**: \<15 seconds (75% improvement)
+- **Memory**: \<120MB
 
 ## 🚀 **Implementation Strategy**
 
 ### **Phase 1: Quick Wins (1-2 days)**
-1. **Add caching to `update_cursor_memory.py`**
-2. **Implement parallel processing in `quick_conflict_check.py`**
-3. **Add progress bars to long-running scripts**
-4. **Create performance benchmark baseline**
+
+1.  **Add caching to `update_cursor_memory.py`**
+2.  **Implement parallel processing in `quick_conflict_check.py`**
+3.  **Add progress bars to long-running scripts**
+4.  **Create performance benchmark baseline**
 
 ### **Phase 2: Core Optimizations (3-5 days)**
-1. **Optimize `process_tasks.py` with connection pooling**
-2. **Implement pre-compiled regex in `doc_coherence_validator.py`**
-3. **Add modular checks to `conflict_audit.py`**
-4. **Create automated performance monitoring**
+
+1.  **Optimize `process_tasks.py` with connection pooling**
+2.  **Implement pre-compiled regex in `doc_coherence_validator.py`**
+3.  **Add modular checks to `conflict_audit.py`**
+4.  **Create automated performance monitoring**
 
 ### **Phase 3: Advanced Optimizations (1 week)**
-1. **Implement async processing where applicable**
-2. **Add intelligent caching with TTL**
-3. **Create script dependency graph for optimal execution order**
-4. **Implement resource usage monitoring**
+
+1.  **Implement async processing where applicable**
+2.  **Add intelligent caching with TTL**
+3.  **Create script dependency graph for optimal execution order**
+4.  **Implement resource usage monitoring**
 
 ## 📊 **Performance Monitoring**
 
 ### **Baseline Your Current Performance**:
-```bash
+
+``` bash
 # Run performance benchmark
 python scripts/performance_benchmark.py --iterations 5
 
@@ -338,7 +363,8 @@ python scripts/performance_benchmark.py --script update_cursor_memory --iteratio
 ```
 
 ## **Track Improvements**:
-```bash
+
+``` bash
 # Save baseline results
 python scripts/performance_benchmark.py --save baseline_results.json
 
@@ -352,44 +378,51 @@ python scripts/performance_benchmark.py --save optimized_results.json
 - [ ] **Parallelization**: Use ThreadPoolExecutor for I/O-bound tasks
 - [ ] **Early Exit**: Stop processing on critical failures
 - [ ] **Progress Reporting**: Add tqdm progress bars for long operations
-- [ ] **Memory Management**: Implement proper cleanup and connection pooling
+- [ ] **Memory Management**: Implement proper cleanup and connection
+  pooling
 - [ ] **Regex Optimization**: Pre-compile patterns at module level
-- [ ] **Batch Processing**: Process items in batches instead of one-by-one
+- [ ] **Batch Processing**: Process items in batches instead of
+  one-by-one
 - [ ] **Resource Monitoring**: Track memory and CPU usage
 
 ## 📈 **Expected Performance Gains**
 
-| Script | Current Time | Target Time | Improvement |
-|--------|-------------|-------------|-------------|
-| `update_cursor_memory.py` | 2-3s | <500ms | 80% |
-| `quick_conflict_check.py` | 5-10s | <2s | 75% |
-| `process_tasks.py` | 10-30s | <5s | 80% |
-| `doc_coherence_validator.py` | 15-45s | <5s | 85% |
-| `conflict_audit.py` | 30-90s | <15s | 75% |
+| Script                       | Current Time | Target Time | Improvement |
+|------------------------------|--------------|-------------|-------------|
+| `update_cursor_memory.py`    | 2-3s         | \<500ms     | 80%         |
+| `quick_conflict_check.py`    | 5-10s        | \<2s        | 75%         |
+| `process_tasks.py`           | 10-30s       | \<5s        | 80%         |
+| `doc_coherence_validator.py` | 15-45s       | \<5s        | 85%         |
+| `conflict_audit.py`          | 30-90s       | \<15s       | 75%         |
 
-**Total Time Savings**: ~60-120 seconds per development cycle
-**Memory Reduction**: ~50-70% across all scripts
-**Developer Experience**: Significantly faster feedback loops
+**Total Time Savings**: ~60-120 seconds per development cycle **Memory
+Reduction**: ~50-70% across all scripts **Developer Experience**:
+Significantly faster feedback loops
 
 ## 🎯 **Next Steps**
 
-1. **Run baseline benchmark**: `python scripts/performance_benchmark.py`
-2. **Start with Phase 1 optimizations** (highest impact, lowest effort)
-3. **Implement caching layer** for `update_cursor_memory.py`
-4. **Add parallel processing** to `quick_conflict_check.py`
-5. **Monitor performance improvements** with regular benchmarks
+1.  **Run baseline benchmark**:
+    `python scripts/performance_benchmark.py`
+2.  **Start with Phase 1 optimizations** (highest impact, lowest effort)
+3.  **Implement caching layer** for `update_cursor_memory.py`
+4.  **Add parallel processing** to `quick_conflict_check.py`
+5.  **Monitor performance improvements** with regular benchmarks
 
-This optimization strategy will significantly improve your development workflow by reducing script execution times and providing faster feedback loops for your AI development ecosystem.
+This optimization strategy will significantly improve your development
+workflow by reducing script execution times and providing faster
+feedback loops for your AI development ecosystem.
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_script-optimization-guide.md
-# Generated: 2025-08-17T17:47:03.940157
+
+## Auto-generated sections for 400_script-optimization-guide.md
+
+## Generated: 2025-08-18T08:03:22.764493
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -397,10 +430,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

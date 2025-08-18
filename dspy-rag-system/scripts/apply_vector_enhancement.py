@@ -91,7 +91,7 @@ class VectorEnhancementMigration:
         """Apply the vector enhancement migration"""
         try:
             # Read migration SQL
-            with open(self.migration_file, 'r') as f:
+            with open(self.migration_file) as f:
                 migration_sql = f.read()
             
             # Split into individual statements

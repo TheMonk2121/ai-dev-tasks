@@ -40,7 +40,7 @@ class ModelCapabilities:
     code_generation: float  # 0-1
     speed: float  # 0-1 (higher = faster)
     cost_efficiency: float  # 0-1 (higher = cheaper)
-    best_for: List[str]
+    best_for: list[str]
 
 
 # ---------- Model Capabilities Configuration ----------
@@ -157,11 +157,11 @@ class CursorModelRouter(Module):
     def forward(
         self,
         query: str,
-        context_size: Optional[int] = None,
-        task_type: Optional[str] = None,
+        context_size: int | None = None,
+        task_type: str | None = None,
         urgency: str = "medium",
-        complexity: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        complexity: str | None = None,
+    ) -> dict[str, Any]:
         """Route to the best Cursor model using context engineering"""
 
         # Sanitize and validate input
@@ -223,7 +223,7 @@ class CursorModelRouter(Module):
         else:
             return "general"
 
-    def _analyze_complexity(self, query: str, context_size: Optional[int] = None) -> str:
+    def _analyze_complexity(self, query: str, context_size: int | None = None) -> str:
         """Analyze query complexity"""
         word_count = len(query.split())
 
@@ -276,7 +276,7 @@ class CursorModelRouterInterface:
         self.prompt_engineer = ContextEngineeredPrompt()
         self.routing_history = []
 
-    def route_query(self, query: str, **kwargs) -> Dict[str, Any]:
+    def route_query(self, query: str, **kwargs) -> dict[str, Any]:
         """Route a query to the best Cursor model with context engineering"""
 
         start_time = time.time()
@@ -326,7 +326,7 @@ class CursorModelRouterInterface:
                 "latency_ms": int((time.time() - start_time) * 1000),
             }
 
-    def get_routing_stats(self) -> Dict[str, Any]:
+    def get_routing_stats(self) -> dict[str, Any]:
         """Get routing statistics"""
         if not self.routing_history:
             return {"total_routes": 0, "model_distribution": {}}
@@ -366,8 +366,8 @@ class ModelRoutingValidator:
         }
 
     def validate_routing_decision(
-        self, routing_result: Dict[str, Any], query: str, expected_model: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, routing_result: dict[str, Any], query: str, expected_model: str | None = None
+    ) -> dict[str, Any]:
         """Validate a routing decision for accuracy and potential hallucination"""
 
         validation_result = {
@@ -520,7 +520,7 @@ class ModelRoutingValidator:
 
         return min(1.0, keyword_matches / len(keywords))
 
-    def get_validation_stats(self) -> Dict[str, Any]:
+    def get_validation_stats(self) -> dict[str, Any]:
         """Get validation statistics"""
         if not self.validation_history:
             return {"total_validations": 0, "hallucination_rate": 0.0}
@@ -554,9 +554,9 @@ class ModelRoutingMonitor:
     def log_routing_attempt(
         self,
         query: str,
-        routing_result: Dict[str, Any],
+        routing_result: dict[str, Any],
         latency_ms: float,
-        validation_result: Optional[Dict[str, Any]] = None,
+        validation_result: dict[str, Any] | None = None,
     ):
         """Log a routing attempt for monitoring"""
 
@@ -592,7 +592,7 @@ class ModelRoutingMonitor:
             self.performance_metrics["anomaly_count"] += 1
             _LOG.warning(f"Anomaly detected in routing: {entry}")
 
-    def _detect_anomaly(self, entry: Dict[str, Any]) -> bool:
+    def _detect_anomaly(self, entry: dict[str, Any]) -> bool:
         """Detect routing anomalies"""
 
         # Anomaly indicators
@@ -619,7 +619,7 @@ class ModelRoutingMonitor:
 
         return len(anomalies) > 0
 
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """Generate a performance report"""
 
         if not self.routing_history:
@@ -648,7 +648,7 @@ class ValidatedCursorModelRouterInterface(CursorModelRouterInterface):
         self.validator = ModelRoutingValidator()
         self.monitor = ModelRoutingMonitor()
 
-    def route_query(self, query: str, **kwargs) -> Dict[str, Any]:
+    def route_query(self, query: str, **kwargs) -> dict[str, Any]:
         """Route a query with validation and monitoring"""
 
         start_time = time.time()
@@ -670,15 +670,15 @@ class ValidatedCursorModelRouterInterface(CursorModelRouterInterface):
 
         return routing_result
 
-    def get_validation_stats(self) -> Dict[str, Any]:
+    def get_validation_stats(self) -> dict[str, Any]:
         """Get validation statistics"""
         return self.validator.get_validation_stats()
 
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """Get performance report"""
         return self.monitor.get_performance_report()
 
-    def get_comprehensive_report(self) -> Dict[str, Any]:
+    def get_comprehensive_report(self) -> dict[str, Any]:
         """Get comprehensive routing report"""
         return {
             "routing_stats": self.get_routing_stats(),

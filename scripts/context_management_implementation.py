@@ -49,14 +49,14 @@ class ContextData:
     id: str = field(default_factory=lambda: str(uuid4()))
     type: ContextType = ContextType.FILE
     source: str = "cursor"
-    content: Dict[str, Any] = field(default_factory=dict)
-    relationships: Dict[str, Any] = field(default_factory=dict)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    content: dict[str, Any] = field(default_factory=dict)
+    relationships: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
     updated_at: float = field(default_factory=time.time)
     accessed_at: float = field(default_factory=time.time)
-    owner_id: Optional[str] = None
-    permissions: List[str] = field(default_factory=lambda: ["read", "write"])
+    owner_id: str | None = None
+    permissions: list[str] = field(default_factory=lambda: ["read", "write"])
     visibility: ContextVisibility = ContextVisibility.PRIVATE
     size_bytes: int = 0
     access_count: int = 0
@@ -70,7 +70,7 @@ class ContextRelationship:
     target_context_id: str = ""
     relationship_type: str = "related"
     strength: float = 0.85
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
 
 
@@ -81,8 +81,8 @@ class ContextAccessLog:
     context_id: str = ""
     agent_id: str = ""
     operation: str = "read"
-    user_id: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    user_id: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
 
 
@@ -200,7 +200,7 @@ class ContextStore:
             logger.info(f"Stored context {context.id} of type {context.type.value}")
             return context.id
     
-    def get_context(self, context_id: str) -> Optional[ContextData]:
+    def get_context(self, context_id: str) -> ContextData | None:
         """Get context by ID."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
@@ -239,7 +239,7 @@ class ContextStore:
             
             return None
     
-    def update_context(self, context_id: str, updates: Dict[str, Any]) -> bool:
+    def update_context(self, context_id: str, updates: dict[str, Any]) -> bool:
         """Update existing context."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
@@ -298,8 +298,8 @@ class ContextStore:
             logger.info(f"Deleted context {context_id}")
             return True
     
-    def search_contexts(self, query: str, context_type: Optional[str] = None, 
-                       limit: int = 10) -> List[ContextData]:
+    def search_contexts(self, query: str, context_type: str | None = None, 
+                       limit: int = 10) -> list[ContextData]:
         """Search contexts by query."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
@@ -368,11 +368,11 @@ class ContextCache:
     def __init__(self, max_size: int = 1000, ttl: int = 3600):
         self.max_size = max_size
         self.ttl = ttl
-        self.cache: Dict[str, Dict[str, Any]] = {}
-        self.access_times: Dict[str, float] = {}
+        self.cache: dict[str, dict[str, Any]] = {}
+        self.access_times: dict[str, float] = {}
         self.lock = threading.RLock()
     
-    async def get(self, key: str) -> Optional[ContextData]:
+    async def get(self, key: str) -> ContextData | None:
         """Get context from cache."""
         with self.lock:
             if key in self.cache:
@@ -421,12 +421,12 @@ class ContextManager:
     def __init__(self, db_path: str = "context_store.db"):
         self.store = ContextStore(db_path)
         self.cache = ContextCache()
-        self.relationships: Dict[str, List[str]] = {}
+        self.relationships: dict[str, list[str]] = {}
         self.lock = threading.RLock()
         # Ensure database is initialized
         self.store._init_database()
     
-    async def get_context(self, context_id: str) -> Optional[ContextData]:
+    async def get_context(self, context_id: str) -> ContextData | None:
         """Get context by ID with caching."""
         # Try cache first
         cached_context = await self.cache.get(context_id)
@@ -451,7 +451,7 @@ class ContextManager:
         
         return context_id
     
-    async def update_context(self, context_id: str, updates: Dict[str, Any]) -> bool:
+    async def update_context(self, context_id: str, updates: dict[str, Any]) -> bool:
         """Update existing context."""
         success = self.store.update_context(context_id, updates)
         if success:
@@ -469,12 +469,12 @@ class ContextManager:
         
         return success
     
-    async def search_contexts(self, query: str, context_type: Optional[str] = None, 
-                            limit: int = 10) -> List[ContextData]:
+    async def search_contexts(self, query: str, context_type: str | None = None, 
+                            limit: int = 10) -> list[ContextData]:
         """Search contexts by query."""
         return self.store.search_contexts(query, context_type, limit)
     
-    async def get_related_contexts(self, context_id: str) -> List[ContextData]:
+    async def get_related_contexts(self, context_id: str) -> list[ContextData]:
         """Get contexts related to the given context."""
         with self.lock:
             related_ids = self.relationships.get(context_id, [])
@@ -533,7 +533,7 @@ class ContextManager:
             logger.info(f"Added relationship between {source_id} and {target_id}")
     
     async def log_access(self, context_id: str, agent_id: str, operation: str, 
-                        user_id: Optional[str] = None, metadata: Optional[Dict[str, Any]] = None):
+                        user_id: str | None = None, metadata: dict[str, Any] | None = None):
         """Log context access."""
         access_log = ContextAccessLog(
             context_id=context_id,
@@ -565,7 +565,7 @@ class ContextManager:
         
         logger.info(f"Logged {operation} access to {context_id} by {agent_id}")
     
-    async def get_context_stats(self) -> Dict[str, Any]:
+    async def get_context_stats(self) -> dict[str, Any]:
         """Get context management statistics."""
         conn = sqlite3.connect(self.store.db_path)
         cursor = conn.cursor()

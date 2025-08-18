@@ -40,7 +40,7 @@ TEST_DOCUMENTS = [
 ]
 
 
-def benchmark_insertion(store: HybridVectorStore, documents: List[Dict[str, Any]]) -> Dict[str, float]:
+def benchmark_insertion(store: HybridVectorStore, documents: list[dict[str, Any]]) -> dict[str, float]:
     """Benchmark document insertion performance"""
     print("🔧 Benchmarking document insertion...")
 
@@ -79,7 +79,7 @@ def benchmark_insertion(store: HybridVectorStore, documents: List[Dict[str, Any]
     }
 
 
-def benchmark_vector_search(store: HybridVectorStore, queries: List[str]) -> Dict[str, float]:
+def benchmark_vector_search(store: HybridVectorStore, queries: list[str]) -> dict[str, float]:
     """Benchmark vector search performance"""
     print("🔍 Benchmarking vector search...")
 
@@ -104,7 +104,7 @@ def benchmark_vector_search(store: HybridVectorStore, queries: List[str]) -> Dic
     }
 
 
-def benchmark_hybrid_search(store: HybridVectorStore, queries: List[str]) -> Dict[str, float]:
+def benchmark_hybrid_search(store: HybridVectorStore, queries: list[str]) -> dict[str, float]:
     """Benchmark hybrid search performance"""
     print("🔄 Benchmarking hybrid search...")
 
@@ -129,7 +129,7 @@ def benchmark_hybrid_search(store: HybridVectorStore, queries: List[str]) -> Dic
     }
 
 
-def benchmark_cache_performance(store: HybridVectorStore, repeated_query: str) -> Dict[str, float]:
+def benchmark_cache_performance(store: HybridVectorStore, repeated_query: str) -> dict[str, float]:
     """Benchmark query embedding cache performance"""
     print("💾 Benchmarking cache performance...")
 

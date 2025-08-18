@@ -1,9 +1,15 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
+
 <!-- MEMORY_CONTEXT: MEDIUM - n8n automation and backlog management -->
+
 # 🔄 n8n Backlog Scrubber Workflow Guide
 
 ## 🔄 n8n Backlog Scrubber Workflow Guide
@@ -13,14 +19,17 @@
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-|  |  |  |
+|-------------------|-----------|---------|
+|                   |           |         |
 
-- **what this file is**: Quick summary of 🔄 n8n Backlog Scrubber Workflow Guide.
+- **what this file is**: Quick summary of 🔄 n8n Backlog Scrubber
+  Workflow Guide.
 
-- **read when**: When you need a fast orientation or before using this file in a workflow.
+- **read when**: When you need a fast orientation or before using this
+  file in a workflow.
 
-- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+- **do next**: Scan the headings below and follow any ‘Quick Start’ or
+  ‘Usage’ sections.
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- n8n backlog scrubber operational
 
@@ -28,7 +37,8 @@
 
 - **Points**: 4 - Moderate complexity, ongoing maintenance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_deployment-environment-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
+  400_guides/400_deployment-environment-guide.md
 
 - **Next Steps**: Enhance automation features and add new workflows
 
@@ -52,7 +62,7 @@
 
 ### Components
 
-1. **BacklogScrubber Class**(`src/n8n_workflows/backlog_scrubber.py`)
+1.  **BacklogScrubber Class**(`src/n8n_workflows/backlog_scrubber.py`)
 
 - Core scoring logic and file management
 - Handles parsing, validation, and updates
@@ -76,12 +86,12 @@
 
 ## Scoring Formula
 
-The backlog scrubber uses the following formula to calculate priority scores:
+The backlog scrubber uses the following formula to calculate priority
+scores:
 
-```text
+``` text
 
 Score = (BV + TC + RR + LE) / Effort
-
 ```
 
 Where:
@@ -100,7 +110,7 @@ Where:
 
 ### Standalone Usage
 
-```bash
+``` bash
 
 # Run the backlog scrubber directly
 
@@ -507,7 +517,7 @@ Check logs for:
    curl -X POST <http://localhost:5001/webhook/backlog-scrubber> \
     - H "Content-Type: application/json" \
     - d '{"action": "scrub", "dry_run": true}'
-   ```
+```
 
 4.**Configure n8n**- Create webhook trigger
 
@@ -522,17 +532,20 @@ Check logs for:
 - Verify backup integrity
 - Update as needed
 
-The n8n Backlog Scrubber Workflow is now ready for production deployment!
+The n8n Backlog Scrubber Workflow is now ready for production
+deployment!
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_n8n-backlog-scrubber-guide.md
-# Generated: 2025-08-17T17:47:03.934377
+
+## Auto-generated sections for 400_n8n-backlog-scrubber-guide.md
+
+## Generated: 2025-08-18T08:03:22.758671
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 

@@ -168,7 +168,7 @@ B‑076 (DSPy Assertions) → B‑050 (Entity Expansion)
 ### **Strategic Context**
 - **System Overview**: `400_guides/400_system-overview.md` - Technical architecture
 - **Memory Context**: `100_memory/100_cursor-memory-context.md` - Current project state
-- **Development Guide**: `400_guides/400_development-roadmap.md` - Detailed technical roadmap
+- **Development Roadmap (canonical)**: `000_core/004_development-roadmap.md`
 
 ### **Research Integration**
 - **Research Index**: `500_research/500_research-index.md` - Research context

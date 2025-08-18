@@ -32,7 +32,7 @@ class NotificationSystem:
         """Load notification history from file"""
         try:
             if os.path.exists(self.notification_log):
-                with open(self.notification_log, 'r') as f:
+                with open(self.notification_log) as f:
                     self.history = json.load(f)
             else:
                 self.history = []

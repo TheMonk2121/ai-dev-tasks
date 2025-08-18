@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Monitoring research and observability patterns -->
 # 📊 Monitoring & Observability Research
 
@@ -26,7 +26,7 @@ Backlog link: B-080 (also B-022, B-027)
 
 - **Points**: 3 - Research and monitoring guidance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md
 
 - **Next Steps**: Implement monitoring patterns and observability
 

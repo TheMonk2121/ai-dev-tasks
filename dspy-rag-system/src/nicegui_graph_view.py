@@ -28,7 +28,7 @@ class GraphVisualizationApp:
     """NiceGUI application for graph visualization."""
 
     def __init__(self):
-        self.current_data: Optional[Dict[str, Any]] = None
+        self.current_data: dict[str, Any] | None = None
         self.cytoscape_container = None
         self.stats_container = None
         self.controls_container = None
@@ -280,7 +280,7 @@ class GraphVisualizationApp:
             if self.loading_indicator:
                 self.loading_indicator.classes(replace="hidden")
 
-    async def update_graph_visualization(self, data: Dict[str, Any]):
+    async def update_graph_visualization(self, data: dict[str, Any]):
         """Update the graph visualization with new data."""
         # Convert data to JSON string for JavaScript
         data_json = json.dumps(data)

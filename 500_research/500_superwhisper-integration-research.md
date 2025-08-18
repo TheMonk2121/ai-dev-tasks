@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- MODULE_REFERENCE: scripts/cursor_ai_integration_framework.py -->
 <!-- MEMORY_CONTEXT: HIGH - SuperWhisper voice integration research -->

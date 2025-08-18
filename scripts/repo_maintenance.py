@@ -81,10 +81,10 @@ class RepoMaintenance:
         """Check if file should be excluded from processing."""
         return any(pattern in str(file_path) for pattern in self.exclude_patterns)
 
-    def read_file(self, file_path: Path) -> Optional[str]:
+    def read_file(self, file_path: Path) -> str | None:
         """Read file content with error handling."""
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 return f.read()
         except Exception as e:
             self.errors.append(f"Error reading {file_path}: {e}")
@@ -173,7 +173,7 @@ class RepoMaintenance:
         
         return changes_made
 
-    def calculate_file_hash(self, file_path: Path) -> Optional[str]:
+    def calculate_file_hash(self, file_path: Path) -> str | None:
         """Calculate SHA-256 hash of file content."""
         try:
             with open(file_path, 'rb') as f:
@@ -183,7 +183,7 @@ class RepoMaintenance:
             self.errors.append(f"Error calculating hash for {file_path}: {e}")
             return None
 
-    def find_content_duplicates(self) -> Dict[str, List[Path]]:
+    def find_content_duplicates(self) -> dict[str, list[Path]]:
         """Find files with identical content using SHA-256 hashes."""
         self.log("Scanning for content-based duplicates...")
         
@@ -206,7 +206,7 @@ class RepoMaintenance:
         
         return duplicates
 
-    def analyze_duplicate_groups(self, duplicates: Dict[str, List[Path]]) -> List[Tuple[Path, List[Path]]]:
+    def analyze_duplicate_groups(self, duplicates: dict[str, list[Path]]) -> list[tuple[Path, list[Path]]]:
         """Analyze duplicate groups and determine which files to keep vs archive."""
         decisions = []
         

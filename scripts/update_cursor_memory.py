@@ -38,7 +38,7 @@ FENCE_COMPLETED_START = "<!-- AUTO:recently_completed:start -->"
 FENCE_COMPLETED_END = "<!-- AUTO:recently_completed:end -->"
 
 
-def parse_backlog_item(line: str, few_shot_loader: Optional[FewShotExampleLoader] = None) -> Optional[Dict[str, str]]:
+def parse_backlog_item(line: str, few_shot_loader: FewShotExampleLoader | None = None) -> dict[str, str] | None:
     """Parse a single backlog item line with improved error handling and few-shot enhancement"""
     if not line.strip() or "| B‑" not in line:
         return None
@@ -85,7 +85,7 @@ def parse_backlog_item(line: str, few_shot_loader: Optional[FewShotExampleLoader
         return None
 
 
-def extract_backlog_priorities(enable_few_shot: bool = True) -> List[Dict[str, str]]:
+def extract_backlog_priorities(enable_few_shot: bool = True) -> list[dict[str, str]]:
     """Extract current priorities from 000_core/000_backlog.md with improved parsing and few-shot enhancement"""
     backlog_file = Path("000_core/000_backlog.md")
     if not backlog_file.exists():
@@ -104,7 +104,7 @@ def extract_backlog_priorities(enable_few_shot: bool = True) -> List[Dict[str, s
             print(f"⚠️  Failed to initialize few-shot loader: {e}")
 
     try:
-        with open(backlog_file, "r", encoding="utf-8") as f:
+        with open(backlog_file, encoding="utf-8") as f:
             content = f.read()
 
         # Extract todo items with 🔥 priority
@@ -131,7 +131,7 @@ def extract_backlog_priorities(enable_few_shot: bool = True) -> List[Dict[str, s
         return []
 
 
-def extract_completed_items() -> List[Dict[str, str]]:
+def extract_completed_items() -> list[dict[str, str]]:
     """Extract recently completed items with improved parsing"""
     backlog_file = Path("000_core/000_backlog.md")
     if not backlog_file.exists():
@@ -140,7 +140,7 @@ def extract_completed_items() -> List[Dict[str, str]]:
     completed = []
 
     try:
-        with open(backlog_file, "r", encoding="utf-8") as f:
+        with open(backlog_file, encoding="utf-8") as f:
             content = f.read()
 
         # Look for completed items section
@@ -179,7 +179,7 @@ def _add_fenced_section(text: str, start_marker: str, end_marker: str, content: 
         return text.rstrip() + "\n\n" + start_marker + "\n" + content + "\n" + end_marker + "\n"
 
 
-def load_doc_health() -> Dict[str, Any]:
+def load_doc_health() -> dict[str, Any]:
     """Load health telemetry from docs_health.json or validation report."""
     health = {
         "files_checked": None,
@@ -215,7 +215,7 @@ def load_doc_health() -> Dict[str, Any]:
     return health
 
 
-def render_priorities_block(priorities: List[Dict[str, str]]) -> str:
+def render_priorities_block(priorities: list[dict[str, str]]) -> str:
     """Render priorities as a formatted block"""
     if not priorities:
         return "No current priorities found."
@@ -233,7 +233,7 @@ def render_priorities_block(priorities: List[Dict[str, str]]) -> str:
     return "\n".join(lines)
 
 
-def render_completed_block(completed: List[Dict[str, str]]) -> str:
+def render_completed_block(completed: list[dict[str, str]]) -> str:
     """Render completed items as a formatted block"""
     if not completed:
         return "No recently completed items."
@@ -248,7 +248,7 @@ def render_completed_block(completed: List[Dict[str, str]]) -> str:
     return "\n".join(lines)
 
 
-def render_doc_health_block(health: Dict[str, Any]) -> str:
+def render_doc_health_block(health: dict[str, Any]) -> str:
     """Render documentation health as a formatted block"""
     lines = []
     lines.append("### **Documentation Health**")
@@ -260,7 +260,7 @@ def render_doc_health_block(health: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -> Tuple[bool, str]:
+def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -> tuple[bool, str]:
     """Update 100_memory/100_cursor-memory-context.md with current state"""
 
     # Extract current state
@@ -274,7 +274,7 @@ def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -
         return False, f"❌ Memory context file not found: {memory_file}"
 
     try:
-        with open(memory_file, "r", encoding="utf-8") as f:
+        with open(memory_file, encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
         return False, f"❌ Error reading memory context: {e}"

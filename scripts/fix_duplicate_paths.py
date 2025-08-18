@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import List
 
 
-def find_files_with_duplicate_paths() -> List[str]:
+def find_files_with_duplicate_paths() -> list[str]:
     """Find files that contain duplicate path patterns."""
     duplicate_patterns = [
         r"100_memory/100_memory/",

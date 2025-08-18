@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 100_memory/103_memory-context-workflow.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
@@ -202,7 +202,7 @@ benchmarks
 #### Examples
 
 ```markdown
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Core workflow guide -->
 <!-- ESSENTIAL_FILES: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md -->
 
@@ -304,7 +304,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 - Required anchors per doc type (must exist as section anchors):
   - `100_memory/100_cursor-memory-context.md`: `tldr`, `quick-start`, `quick-links`, `commands`
   - `400_guides/400_project-overview.md`: `tldr`, `quick-start`, `mini-map`
-  - `400_guides/400_context-priority-guide.md`: `tldr`, `critical-path`, `ai-file-analysis-strategy`, `documentation-placement-logic`
+  - `400_guides/400_cursor-context-engineering-guide.md`: `tldr`, `critical-path`, `ai-file-analysis-strategy`, `documentation-placement-logic`
   - `000_core/000_backlog.md`: `tldr`, `p0-lane`, `ai-executable-queue-003`, `live-backlog`
   - `200_setup/200_naming-conventions.md`: `tldr`, `file-generation`, `formatting-standards`, `ai-api-standards`
   - `100_memory/100_backlog-guide.md`: `tldr`, `scoring`, `prd-rule`, `selection-criteria`
@@ -313,11 +313,11 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 - Quick Start → `400_guides/400_project-overview.md`
 
-- Critical Path → `400_guides/400_context-priority-guide.md`
+- Critical Path → `400_guides/400_cursor-context-engineering-guide.md`
 
 - PRD/Scoring → `100_memory/100_backlog-guide.md`
 
-- README Organization → `400_guides/400_documentation-reference.md#readme-file-organization`
+- README Organization → `400_guides/400_documentation-guide.md#readme-file-organization`
 
 ### Anchor policy (phased)
 
@@ -358,7 +358,7 @@ The HTML comments in our documentation serve as a **formal API for AI consumptio
 
 | Key | Purpose | Example | Required For |
 | :--- | :--- | :--- | :--- |
-| CONTEXT_REFERENCE | Links to the main guide for context | `<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->` | HIGH priority files |
+| CONTEXT_REFERENCE | Links to the main guide for context | `<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->` | HIGH priority files |
 | MODULE_REFERENCE | Links to a related implementation module | `<!-- MODULE_REFERENCE: 100_memory/104_dspy-development-context.md -->` | MEDIUM priority files |
 | MEMORY_CONTEXT | Specifies priority level for AI rehydration | `<!-- MEMORY_CONTEXT: HIGH - Core workflow guide -->` | All files |
 | ESSENTIAL_FILES | Lists files critical for understanding | `<!-- ESSENTIAL_FILES: 400_guides/400_project-overview.md -->` | HIGH priority files |
@@ -565,7 +565,7 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 - `400_guides/400_system-overview.md` - Technical architecture and system overview
 
-- `400_guides/400_context-priority-guide.md` - Context priority guide for memory rehydration
+- `400_guides/400_cursor-context-engineering-guide.md` - Context priority guide for memory rehydration
 
 - `100_memory/100_cursor-memory-context.md` - Memory context system guide
 
@@ -577,7 +577,7 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 - `400_guides/400_n8n-setup-guide.md` - n8n setup and configuration guide
 
-- `400_guides/400_mission-dashboard-guide.md` - Mission dashboard guide
+- `400_guides/400_observability-system.md#🖥️-mission-dashboard` - Mission dashboard (canonical)
 
 - `400_guides/400_n8n-backlog-scrubber-guide.md` - n8n backlog scrubber guide
 

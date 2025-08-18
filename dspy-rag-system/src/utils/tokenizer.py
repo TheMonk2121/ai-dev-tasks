@@ -6,7 +6,8 @@ Provides token-aware text chunking for better LLM compatibility.
 
 import tiktoken
 import re
-from typing import List, Iterator, Optional, Dict, Any
+from typing import List, Optional, Dict, Any
+from collections.abc import Iterator
 import logging
 from functools import lru_cache
 import unicodedata
@@ -117,7 +118,7 @@ class TokenAwareChunker:
         
         return target_pos
     
-    def create_chunks(self, text: str) -> List[str]:
+    def create_chunks(self, text: str) -> list[str]:
         """
         Create token-aware chunks with optimized single encoding
         
@@ -205,7 +206,7 @@ class TokenAwareChunker:
             # Fallback to simple character-based chunking
             return self._fallback_chunking(text)
     
-    def _fallback_chunking(self, text: str) -> List[str]:
+    def _fallback_chunking(self, text: str) -> list[str]:
         """Fallback chunking method when token-based chunking fails"""
         logger.warning("Using fallback character-based chunking")
         
@@ -257,7 +258,7 @@ class TokenAwareChunker:
         
         return text.strip()
     
-    def get_chunk_stats(self, text: str) -> Dict[str, Any]:
+    def get_chunk_stats(self, text: str) -> dict[str, Any]:
         """Get statistics about chunking"""
         try:
             chunks = self.create_chunks(text)

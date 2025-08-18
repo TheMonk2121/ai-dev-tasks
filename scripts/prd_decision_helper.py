@@ -8,7 +8,7 @@ import re
 import sys
 from typing import Optional, Tuple
 
-def parse_backlog_item(backlog_content: str, item_id: str) -> Optional[Tuple[int, float]]:
+def parse_backlog_item(backlog_content: str, item_id: str) -> tuple[int, float] | None:
     """Parse backlog item to extract points and score"""
     lines = backlog_content.split('\n')
     

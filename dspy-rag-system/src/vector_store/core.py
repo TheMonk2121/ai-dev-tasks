@@ -31,8 +31,8 @@ class CoreVectorStore:
         self.db_connection_string = db_connection_string
 
     def similarity_search(
-        self, query_embedding: List[float], top_k: int = 5, **kwargs
-    ) -> List[Dict[str, Any]]:
+        self, query_embedding: list[float], top_k: int = 5, **kwargs
+    ) -> list[dict[str, Any]]:
         """
         Search for similar vectors using hybrid search.
 
@@ -64,7 +64,7 @@ class CoreVectorStore:
         else:
             return []
 
-    def add_documents(self, documents: List[Dict[str, Any]]) -> bool:
+    def add_documents(self, documents: list[dict[str, Any]]) -> bool:
         """
         Add documents to the vector store.
 
@@ -83,7 +83,7 @@ class CoreVectorStore:
         except Exception:
             return False
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """
         Get health status of the vector store.
 
@@ -96,7 +96,7 @@ class CoreVectorStore:
         except Exception as e:
             return {"status": "unhealthy", "type": "core", "error": str(e)}
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """
         Get statistics about the vector store.
 
@@ -110,7 +110,7 @@ class CoreVectorStore:
         }
 
     # Dashboard-compatible alias
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         return self.get_stats()
 
     # Minimal parity methods (delegated forwarders)

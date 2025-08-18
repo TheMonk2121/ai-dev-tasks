@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_project-overview.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
@@ -32,7 +32,7 @@
 <!-- acceptance: CI blocks PRs introducing >7d ledger entries; weekly job outputs list of entries with ≤7 days remaining; validator PR comment shows count and oldest expiry; docs updated. -->
 <!-- est_hours: 2 -->
 <!-- lessons_applied: ["401_consensus-log.md", "400_guides/400_observability-system.md"] -->
-<!-- reference_cards: ["400_guides/400_documentation-reference.md", "500_reference-cards.md"] -->
+<!-- reference_cards: ["400_guides/400_documentation-guide.md", "500_reference-cards.md"] -->
 
 | B-174 | Dependency pinning with hashes + SCA/SAST | 🔐 | 5 | todo | Pin Python deps with hashes; add weekly SCA and CodeQL | Supply Chain | Security automation |
 <!-- score: {bv: 5, tc: 4, rr: 4, le: 3, lessons: 2, effort: 3, deps: []} -->
@@ -40,7 +40,7 @@
 <!-- do_next: Convert `requirements.txt` to hashed pins (pip-tools or pip-compile with --generate-hashes); add `pip-audit` (or Safety) weekly; enable CodeQL workflow; document remediation workflow. -->
 <!-- acceptance: requirements with hashes committed; CI fails on unpinned/new deps without hashes; weekly SCA job runs and stores artifact; CodeQL enabled with default queries; remediation docs added to security guide. -->
 <!-- est_hours: 4 -->
-<!-- lessons_applied: ["400_guides/400_security-best-practices-guide.md", "400_guides/400_script-optimization-guide.md"] -->
+<!-- lessons_applied: ["400_guides/400_security-best-practices-guide.md", "400_guides/400_performance-optimization-guide.md"] -->
 <!-- reference_cards: ["400_guides/400_deployment-environment-guide.md", "500_reference-cards.md"] -->
 
 | B-175 | Vector store PR e2e smoke + perf budgets | 🚀 | 5 | todo | Gate vector store changes with smoke tests and latency budgets | Testing + CI | Perf guardrails |
@@ -51,6 +51,142 @@
 <!-- est_hours: 4 -->
 <!-- lessons_applied: ["tests/e2e/test_vector_store_modes_e2e.py", "400_guides/400_testing-strategy-guide.md"] -->
 <!-- reference_cards: ["400_guides/400_performance-optimization-guide.md", "500_reference-cards.md"] -->
+
+| B-176 | 400_guides Heading Normalization (Single H1 Rule) | 📚 | 3 | todo | Demote all headings after the first `#` to `##+` across `400_guides/**`; ensure the single H1 matches the filename title; preserve TL;DR anchors | Docs Governance | Standardize headings across guides |
+<!-- score: {bv: 4, tc: 4, rr: 3, le: 3, effort: 3, deps: []} -->
+<!-- score_total: 4.7 -->
+<!-- do_next: Audit all `400_guides/*.md` for multiple H1s; apply consistent title lines matching filenames; convert internal H1s to H2/H3; add TL;DR anchors if missing. -->
+<!-- acceptance: Every guide has exactly one H1 matching filename; internal sections start at H2; TL;DR present and anchored; markdown lint passes for MD001/MD002. -->
+<!-- est_hours: 3 -->
+<!-- lessons_applied: ["400_guides/400_documentation-guide.md", "400_guides/400_system-overview.md"] -->
+<!-- reference_cards: ["400_guides/400_comprehensive-coding-best-practices.md", "500_reference-cards.md"] -->
+
+| B-177 | Consolidate Docs: Documentation Reference + Retrieval | 📚 | 3 | done | Merge `400_documentation-reference.md` and `400_documentation-retrieval-guide.md` into a single `400_documentation-guide.md` with sections: Reference, Retrieval, Validation; update cross-links | Docs Consolidation | One canonical documentation guide |
+<!-- score: {bv: 4, tc: 3, rr: 3, le: 2, effort: 2, deps: []} -->
+<!-- score_total: 6.0 -->
+<!-- do_next: Create new `400_documentation-guide.md`; port content; add redirects/notes in old files; update inbound links in `000_core/**`, `400_guides/**`, `dspy-rag-system/**`. -->
+<!-- acceptance: New guide exists with merged content; old guides contain deprecation headers linking to the new file; all internal references updated and tests/linkcheck pass. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["400_guides/400_documentation-guide.md"] -->
+<!-- reference_cards: ["400_guides/400_documentation-guide.md"] -->
+
+| B-178 | Consolidate Performance Docs (Fold Script Optimization) | ⚡ | 3 | done | Fold `400_script-optimization-guide.md` into `400_performance-optimization-guide.md` as a dedicated section; remove duplication; update links | Performance Docs | Simplify and centralize |
+<!-- score: {bv: 3, tc: 3, rr: 3, le: 2, effort: 2, deps: []} -->
+<!-- score_total: 5.5 -->
+<!-- do_next: Move script optimization sections into performance guide; add deprecation header to script optimization guide; update references across repo. -->
+<!-- acceptance: Performance guide contains consolidated content; script optimization guide marked as folded with link; linkcheck passes. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["400_guides/400_performance-optimization-guide.md", "400_guides/400_performance-optimization-guide.md"] -->
+<!-- reference_cards: ["500_reference-cards.md"] -->
+
+| B-179 | Overview Consistency (Project vs System) | 🏗️ | 3 | done | Make `400_project-overview.md` a concise landing that points to `400_system-overview.md` (or fold content as subsections); ensure single source of truth | Docs IA | Clarify entry points |
+<!-- score: {bv: 3, tc: 2, rr: 2, le: 2, effort: 2, deps: []} -->
+<!-- score_total: 4.5 -->
+<!-- do_next: Decide canonical host (keep `400_system-overview.md`); trim `400_project-overview.md` to a signpost; update inbound links. -->
+<!-- acceptance: One canonical overview; the other is a short landing with links; all references updated. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["400_guides/400_project-overview.md", "400_guides/400_system-overview.md"] -->
+<!-- reference_cards: ["400_guides/400_cursor-context-engineering-guide.md"] -->
+
+| B-180 | Roadmap De-duplication (Core vs Guide) | 🗺️ | 3 | done | De-duplicate `400_development-roadmap.md` with `000_core/004_development-roadmap.md`; keep the core file canonical and convert the guide to a brief link/summary | Docs Governance | Single source of truth |
+<!-- score: {bv: 3, tc: 3, rr: 3, le: 2, effort: 2, deps: []} -->
+<!-- score_total: 5.5 -->
+<!-- do_next: Move any unique guidance into the core roadmap; reduce the guide to a signpost; update links in `400_guides/**` and `docs/**`. -->
+<!-- acceptance: Only one canonical roadmap; secondary file is a stub pointing to canonical; linkcheck passes. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["000_core/004_development-roadmap.md", "000_core/004_development-roadmap.md"] -->
+<!-- reference_cards: ["400_guides/400_documentation-guide.md"] -->
+
+| B-181 | Observability + Mission Dashboard Unification | 🔍 | 3 | done | Integrate `400_mission-dashboard-guide.md` under `400_observability-system.md` as a section or cross-link strongly; avoid duplication | Observability Docs | Unify monitoring docs |
+<!-- score: {bv: 3, tc: 2, rr: 3, le: 2, effort: 2, deps: []} -->
+<!-- score_total: 5.0 -->
+<!-- do_next: Add a "Mission dashboard" section to observability guide; convert mission dashboard guide into a stub with link; update references (scripts, README). -->
+<!-- acceptance: Observability guide contains the authoritative dashboard docs; dashboard guide is a stub; linkcheck passes. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["400_guides/400_observability-system.md", "400_guides/400_mission-dashboard-guide.md"] -->
+<!-- reference_cards: ["400_guides/400_mission-dashboard-guide.md", "500_reference-cards.md"] -->
+
+| B-182 | Context Guide Consolidation | 🧠 | 3 | done | Consolidate `400_context-priority-guide.md` into `400_cursor-context-engineering-guide.md` as a dedicated section; update inbound links | Context System | Reduce duplication |
+<!-- score: {bv: 4, tc: 3, rr: 3, le: 3, effort: 3, deps: []} -->
+<!-- score_total: 4.3 -->
+<!-- do_next: Move priority ordering guidance into context engineering guide; add deprecation header to context priority guide; update references across repo. -->
+<!-- acceptance: Context engineering guide contains the priority section; old guide marked as folded; linkcheck passes. -->
+<!-- est_hours: 3 -->
+<!-- lessons_applied: ["400_guides/400_cursor-context-engineering-guide.md", "400_guides/400_cursor-context-engineering-guide.md"] -->
+<!-- reference_cards: ["400_guides/400_hydration-system-guide.md"] -->
+
+| B-183 | Cross-Reference Update Sweep (Post-Consolidation) | 🔗 | 3 | done | Update inbound links and references across the repo after merges/renames; add deprecation headers/redirects | Docs Maintenance | Preserve link integrity |
+<!-- score: {bv: 4, tc: 3, rr: 4, le: 2, effort: 3, deps: ["B-177", "B-178", "B-179", "B-180", "B-181", "B-182"]} -->
+<!-- score_total: 4.3 -->
+<!-- do_next: Run repo-wide linkcheck; update links; add deprecation headers to folded files; verify tests that depend on guide anchors. -->
+<!-- acceptance: No broken internal links; folded files clearly marked with pointers; validator and link tests green. -->
+<!-- est_hours: 3 -->
+<!-- lessons_applied: ["400_guides/400_documentation-guide.md", "400_guides/400_system-overview.md"] -->
+<!-- reference_cards: ["tests/linkcheck/test_internal_links.py"] -->
+
+| B-184 | Cursor-Native Model Listing Cleanup | 🧭 | 2 | done | Trim non-Cursor third‑party model catalogs in `400_system-overview.md`; keep docs Cursor‑native focused | Docs Policy | Align with Cursor‑native focus |
+<!-- score: {bv: 3, tc: 3, rr: 3, le: 2, effort: 2, deps: []} -->
+<!-- score_total: 5.5 -->
+<!-- do_next: Remove lengthy third‑party model lists; keep a brief note and link out if needed; ensure policy is reflected in contributing/docs guides. -->
+<!-- acceptance: `400_system-overview.md` focuses on Cursor‑native models; no long third‑party model catalogs remain; cross‑references updated. -->
+<!-- est_hours: 1 -->
+<!-- lessons_applied: ["400_guides/400_system-overview.md", "400_guides/400_cursor-context-engineering-guide.md"] -->
+<!-- reference_cards: ["400_guides/400_ai-constitution.md"] -->
+
+| B-185 | Repo‑wide Internal Link + Anchor Validator | 🔗 | 2 | ✅ done | Expand validator to index anchors across repo and support changed‑files mode | Docs Tooling | Multi‑scope linkcheck + changed‑files |
+<!-- score: {bv: 5, tc: 4, rr: 5, le: 3, effort: 2, deps: []} -->
+<!-- score_total: 8.5 -->
+<!-- do_next: Update `scripts/link_check.py` to accept `--scope .` and/or multiple scopes; index anchors for `000_core/` and `400_guides/`; add `--changed-files-from` flow in CI. -->
+<!-- acceptance: Validator can scan repo‑wide; CI job passes on clean run and fails when a non‑existent anchor is introduced; JSON summary artifacts produced. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["tests/linkcheck/test_internal_links.py", "400_guides/400_documentation-guide.md"] -->
+<!-- reference_cards: ["500_reference-cards.md#documentation-maintenance"] -->
+<!-- completion_date: 2025-08-18 -->
+<!-- implementation_notes: Enabled scope '.' and comma-separated scopes in scripts/link_check.py; build_file_index/check_scope now iterate multiple base paths and index anchors repo-wide. Added repo-wide cross-folder emoji anchor test. -->
+
+| B-186 | Path Normalization in Link Checker | 🧭 | 1 | ✅ done | Use `pathlib.Path` for relative path resolution in `scripts/link_check.py` | Docs Tooling | Robust relative resolution |
+<!-- score: {bv: 3, tc: 2, rr: 2, le: 2, effort: 1, deps: []} -->
+<!-- score_total: 9.0 -->
+<!-- do_next: Replace manual string math in `_resolve_relative_path` with `Path(source).parent / target`; ensure posix output; add unit coverage. -->
+<!-- acceptance: Cross‑folder links like `../400_guides/...#anchor` resolve correctly in tests; validator output unchanged except fixes for previously mis‑resolved links. -->
+<!-- est_hours: 1 -->
+<!-- lessons_applied: ["tests/linkcheck/test_internal_links.py"] -->
+<!-- reference_cards: ["500_reference-cards.md#python-pathlib"] -->
+<!-- completion_date: 2025-08-18 -->
+<!-- implementation_notes: Rewrote _resolve_relative_path using pathlib with POSIX output; resolved root path in constructor; normalized source file paths in check_file; added cross-folder ../ link test that passes. -->
+
+| B-187 | Emoji Heading Slug + Cross‑Folder Tests | ✅ | 1 | ✅ done | Add tests for emoji headings (e.g., "⚡ Quick reference") and cross‑folder anchors | Testing | Slug + link e2e tests |
+<!-- score: {bv: 3, tc: 2, rr: 2, le: 2, effort: 1, deps: []} -->
+<!-- score_total: 9.0 -->
+<!-- do_next: Add unit in `tests/xref/test_slugify.py` for slug `quick-reference`; add integration in `tests/linkcheck/test_internal_links.py` for cross‑folder link. -->
+<!-- acceptance: Tests assert slug `quick-reference`; integration test validates link across `000_core/` → `400_guides/`. -->
+<!-- est_hours: 1 -->
+<!-- lessons_applied: ["tests/xref/test_slugify.py", "tests/linkcheck/test_internal_links.py"] -->
+<!-- reference_cards: ["500_reference-cards.md#testing-patterns"] -->
+<!-- completion_date: 2025-08-18 -->
+<!-- implementation_notes: Added slug unit test for '⚡ Quick reference' -> 'quick-reference' and integration tests for emoji anchors within 000_core and cross-folder with scope '.'. All tests pass. -->
+
+| B-188 | Pre‑commit + CI Gate for Anchor Validation | 🛡️ | 2 | ✅ done | Run link checker on changed `.md` files locally and in CI | CI Policy | Prevent broken anchors at PR time |
+<!-- score: {bv: 5, tc: 4, rr: 5, le: 3, effort: 2, deps: ["B-185", "B-186", "B-187"]} -->
+<!-- score_total: 8.5 -->
+<!-- do_next: Add pre‑commit hook; CI step to diff against main and run validator with `--changed-files-from`; publish human + JSON summaries. -->
+<!-- acceptance: Hook blocks commits with broken anchors locally; CI fails PRs with broken anchors and posts summary. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["400_guides/400_contributing-guidelines.md"] -->
+<!-- reference_cards: ["500_reference-cards.md#github-actions"] -->
+<!-- completion_date: 2025-08-18 -->
+<!-- implementation_notes: Added .pre-commit-config.yaml hook invoking scripts/link_check.py with --root . --scope . --changed-files; added GitHub Actions workflow .github/workflows/linkcheck.yml to run on PRs/push, diff changed .md, run validator, and upload JSON report. -->
+
+| B-189 | Authoring Guideline Update: Anchors & Quick Refs | 📚 | 1 | ✅ done | Document anchor usage and validator workflow in `400_documentation-guide.md` | Docs Governance | Clear authoring guidance |
+<!-- score: {bv: 3, tc: 2, rr: 2, le: 2, effort: 1, deps: ["B-185"]} -->
+<!-- score_total: 9.0 -->
+<!-- do_next: Add section covering heading levels, emoji anchors, and how to run validator locally/CI; add examples. -->
+<!-- acceptance: Guide includes anchor authoring rules and quick reference; internal links updated; linkcheck passes. -->
+<!-- est_hours: 1 -->
+<!-- lessons_applied: ["400_guides/400_documentation-guide.md"] -->
+<!-- reference_cards: ["500_reference-cards.md#documentation-maintenance"] -->
+<!-- completion_date: 2025-08-18 -->
+<!-- implementation_notes: Updated 400_guides/400_documentation-guide.md with 'Authoring guidelines for anchors and headings', emoji slug behavior, cross-folder link example, and validator quick commands. -->
 
 <!-- ANCHOR_KEY: backlog -->
 <!-- ANCHOR_PRIORITY: 10 -->
@@ -85,7 +221,7 @@ Check P0 lane and AI-executable queue; follow PRD skip rule |
 
 - **Points**: 5 - High complexity, strategic importance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 100_memory/100_cursor-memory-context.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 100_memory/100_cursor-memory-context.md
 
 - **Next Steps**: Update priorities and track completion
 
@@ -114,7 +250,7 @@ These must be addressed before or alongside feature work to maintain cognitive d
 - **Critical Policies surfacing**: Add a "Critical Policies (Read First)" callout in
 `100_memory/100_cursor-memory-context.md` (Safety Ops, Exclusions, Validators/Tests, Post‑Change `python3
 scripts/update_cursor_memory.py`). Cross‑link from `400_guides/400_system-overview.md` (Safety Ops anchor) and
-`400_guides/400_context-priority-guide.md` (mini‑index).
+`400_guides/400_cursor-context-engineering-guide.md` (mini‑index).
 
 - **Cursor‑native focus cleanup**: Remove or annotate legacy model references (Mistral, Yi‑Coder) in `400_*` guides; add
 a validator check to prevent reintroduction.
@@ -180,7 +316,7 @@ and normalize spacing across long-form guides.
 - Execute flow: 000_core/001_create-prd.md → 000_core/002_generate-tasks.md → 000_core/003_process-task-list.md
 
 Quick links: `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`,
-`400_guides/400_context-priority-guide.md`
+`400_guides/400_cursor-context-engineering-guide.md`
 
 <!-- ANCHOR: current-priorities -->
 
@@ -196,7 +332,7 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- CORE_SYSTEM: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md,
 100_memory/100_cursor-memory-context.md -->
 <!-- METADATA_SYSTEM: 400_guides/400_metadata-collection-guide.md -->
-<!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
+<!-- ROADMAP_REFERENCE: 000_core/004_development-roadmap.md -->
 <!-- RESEARCH_SYSTEM: 500_research/500_research-index.md, 500_research-analysis-summary.md, 500_dspy-research.md,
 500_rag-system-research.md -->
 <!-- WORKFLOW_CHAIN: 000_core/001_create-prd.md → 000_core/002_generate-tasks.md → 000_core/003_process-task-list.md -->
@@ -467,7 +603,7 @@ This backlog is the **executable roadmap** for the AI development ecosystem. Eac
 - **Future Phase**: Performance & Benchmarking (B‑076, B‑052‑c)
 
 ### **Cross-References**
-- **Development Roadmap**: `400_guides/400_development-roadmap.md`
+- **Development Roadmap**: `000_core/004_development-roadmap.md`
 - **System Overview**: `400_guides/400_system-overview.md`
 - **Memory Context**: `100_memory/100_cursor-memory-context.md`
 
@@ -616,7 +752,7 @@ testing, and integration guide-->
 <!--implementation_notes: Implemented scripts/documentation_indexer.py for automatic documentation scanning and
 indexing, dspy-rag-system/src/dspy_modules/documentation_retrieval.py for RAG-based context provision,
 scripts/documentation_retrieval_cli.py for easy command-line access, tests/test_documentation_retrieval.py for
-comprehensive testing, and 400_guides/400_documentation-retrieval-guide.md for complete usage guide. System provides
+comprehensive testing, and 400_guides/400_documentation-guide.md for complete usage guide. System provides
 relevant
 context on-demand to solve context overload, with confidence scoring, category filtering, and multi-source synthesis.-->
 | B‑073 | Giant Guide File Splitting | 📈 | 8 | ✅ done | Split 1,400+ line guide files into focused 200-300 line modules

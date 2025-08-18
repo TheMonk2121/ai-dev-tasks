@@ -28,8 +28,8 @@ class ContextData:
     id: str = field(default_factory=lambda: str(uuid4()))
     type: ContextType = ContextType.FILE
     source: str = "cursor"
-    content: Dict[str, Any] = field(default_factory=dict)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    content: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
     updated_at: float = field(default_factory=time.time)
     accessed_at: float = field(default_factory=time.time)
@@ -91,7 +91,7 @@ class SimpleContextStore:
         print(f"Stored context {context.id} of type {context.type.value}")
         return context.id
     
-    def get_context(self, context_id: str) -> Optional[ContextData]:
+    def get_context(self, context_id: str) -> ContextData | None:
         """Get context by ID."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()

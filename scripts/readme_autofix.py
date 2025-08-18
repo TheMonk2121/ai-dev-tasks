@@ -16,7 +16,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from readme_consts import (
     AUTOFIX_MARKER_END,
@@ -68,7 +68,7 @@ def has_section_synonym(content: str, section_type: str) -> bool:
     return False
 
 
-def find_marker_block(content: str) -> Optional[tuple[int, int]]:
+def find_marker_block(content: str) -> tuple[int, int] | None:
     """Find existing autofix marker block, return (start, end) positions."""
     start_match = re.search(re.escape(AUTOFIX_MARKER_START), content)
     end_match = re.search(re.escape(AUTOFIX_MARKER_END), content)
@@ -134,6 +134,10 @@ def build_marker_content(
                 template = template.replace(
                     "YYYY-MM-DD", datetime.date.today().isoformat()
                 )
+
+            # Safety: ensure we never emit bracketed placeholders that look like link refs
+            # e.g. "[Describe the purpose ...]" → "Describe the purpose ..."
+            template = re.sub(r"^\[(.+?)\]$", r"\1", template, flags=re.MULTILINE)
 
             lines.append("")
             lines.append(template)

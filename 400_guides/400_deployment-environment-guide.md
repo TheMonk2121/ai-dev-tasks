@@ -1,29 +1,37 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MEMORY_CONTEXT: HIGH - Deployment procedures and environment management -->
+
 # 🚀 Deployment & Environment Guide
 
 ## 🚀 Deployment & Environment Guide
 
 <!-- ANCHOR: tldr -->
+
 {#tldr}
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-|  |  |  |
+|-------------------|-----------|---------|
+|                   |           |         |
 
-- **what this file is**: End-to-end deployment patterns and environment setup.
+- **what this file is**: End-to-end deployment patterns and environment
+  setup.
 
 - **read when**: Preparing environments or planning a deploy/rollback.
 
-- **do next**: Use `#⚡ Quick Start` for env setup; review `#🏗️ Deployment Architecture` and `#🚀 Deployment Procedures`.
+- **do next**: Use `#⚡ Quick Start` for env setup; review
+  `#🏗️ Deployment Architecture` and `#🚀 Deployment Procedures`.
 
-- **anchors**: `tldr`, `quick-start`, `deployment architecture`, `environment setup`, `deployment procedures`,
-`monitoring & health checks`, `rollback procedures`
+- **anchors**: `tldr`, `quick-start`, `deployment architecture`,
+  `environment setup`, `deployment procedures`,
+  `monitoring & health checks`, `rollback procedures`
 
 <!-- ANCHOR: quick-start -->
+
 {#quick-start}
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Deployment procedures maintained
@@ -32,38 +40,24 @@
 
 - **Points**: 4 - Moderate complexity, high importance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 200_setup/202_setup-requirements.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
+  200_setup/202_setup-requirements.md
 
 - **Next Steps**: Update procedures as infrastructure evolves
 
 ## ⚡ Quick Start
 
-### **Development Environment**```python
+### **Development Environment**\`\`\`python
 
-# Development environment configuration
+## Development environment configuration
 
-DEV_CONFIG = {
-    "database": {
-        "host": "localhost",
-        "port": 5432,
-        "name": "ai_dev_db",
-        "user": "dev_user",
-        "password": "dev_password"
-    },
-    "ai_models": {
-        "cursor-native-ai": "local"
-    },
-    "monitoring": {
-        "level": "debug",
-        "log_level": "DEBUG"
-    },
-    "security": {
-        "auth_required": False,
-        "rate_limiting": False
-    }
-}
+DEV_CONFIG = { “database”: { “host”: “localhost”, “port”: 5432, “name”:
+“ai_dev_db”, “user”: “dev_user”, “password”: “dev_password” },
+“ai_models”: { “cursor-native-ai”: “local” }, “monitoring”: { “level”:
+“debug”, “log_level”: “DEBUG” }, “security”: { “auth_required”: False,
+“rate_limiting”: False } }
 
-```text
+``` text
 
 ## **Staging Environment**```python
 
@@ -94,7 +88,7 @@ STAGING_CONFIG = {
 
 ## **Production Environment**```python
 
-# Production environment configuration
+## Production environment configuration
 
 PROD_CONFIG = {
     "database": {
@@ -141,13 +135,13 @@ PROD_CONFIG = {
 
 ### **Container Architecture**####**Docker Compose Configuration**```yaml
 
-# docker-compose.yml
+## docker-compose.yml
 
 version: '3.8'
 
 services:
 
-  # Application services
+  ## Application services
 
   ai-app:
     build: .
@@ -173,7 +167,7 @@ services:
       timeout: 10s
       retries: 3
 
-  # Database
+  ## Database
 
   postgres:
     image: postgres:15
@@ -193,7 +187,7 @@ services:
 
     restart: unless-stopped
 
-  # Cache
+  ## Cache
 
   redis:
     image: redis:7-alpine
@@ -207,7 +201,7 @@ services:
 
     restart: unless-stopped
 
-  # AI Model Service
+  ## AI Model Service
 
   ai-models:
     build: ./ai-models
@@ -234,7 +228,7 @@ services:
               count: 1
               capabilities: [gpu]
 
-  # Monitoring
+  ## Monitoring
 
   prometheus:
     image: prom/prometheus
@@ -359,42 +353,42 @@ spec:
 
 ### **1. Development Environment Setup**####**Local Development Setup**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# setup-dev.sh
+## setup-dev.sh
 
 echo "🚀 Setting up Development Environment"
 
-# Create virtual environment
+## Create virtual environment
 
 python -m venv venv
 source venv/bin/activate
 
-# Install dependencies
+## Install dependencies
 
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
 
-# Setup database
+## Setup database
 
 echo "Setting up PostgreSQL database..."
 createdb ai_dev_db
 
-# Run migrations
+## Run migrations
 
 python manage.py migrate
 
-# Setup environment variables
+## Setup environment variables
 
 cp .env.example .env
 echo "Please update .env with your local configuration"
 
-# Setup AI models (lightweight validation)
+## Setup AI models (lightweight validation)
 
 echo "Validating AI model environment..."
 python3 scripts/setup_ai_models.py --check-db --dsn "$POSTGRES_DSN"
 
-# Run tests
+## Run tests
 
 echo "Running tests..."
 pytest tests/
@@ -431,30 +425,30 @@ MONITORING_ENABLED=True
 
 ## **2. Staging Environment Setup**####**Staging Deployment Script**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# deploy-staging.sh
+## deploy-staging.sh
 
 echo "🚀 Deploying to Staging Environment"
 
-# Set environment
+## Set environment
 
 export ENV=staging
 
-# Build Docker image
+## Build Docker image
 
 docker build -t ai-development-ecosystem:staging .
 
-# Deploy to staging
+## Deploy to staging
 
 docker-compose -f docker-compose.staging.yml up -d
 
-# Run health checks
+## Run health checks
 
 echo "Running health checks..."
 ./scripts/health-check.sh staging
 
-# Run smoke tests
+## Run smoke tests
 
 echo "Running smoke tests..."
 pytest tests/smoke/ -v
@@ -491,47 +485,47 @@ MONITORING_ENABLED=True
 
 ## **3. Production Environment Setup**####**Production Deployment Script**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# deploy-production.sh
+## deploy-production.sh
 
 echo "🚀 Deploying to Production Environment"
 
-# Set environment
+## Set environment
 
 export ENV=production
 
-# Validate deployment
+## Validate deployment
 
 echo "Validating deployment configuration..."
 ./scripts/validate-deployment.sh
 
-# Backup current deployment
+## Backup current deployment
 
 echo "Creating backup..."
 ./scripts/backup-production.sh
 
-# Deploy new version
+## Deploy new version
 
 echo "Deploying new version..."
 kubectl apply -f k8s/
 
-# Wait for deployment
+## Wait for deployment
 
 echo "Waiting for deployment to complete..."
 kubectl rollout status deployment/ai-development-ecosystem
 
-# Run health checks
+## Run health checks
 
 echo "Running health checks..."
 ./scripts/health-check.sh production
 
-# Run smoke tests
+## Run smoke tests
 
 echo "Running smoke tests..."
 pytest tests/smoke/ -v
 
-# Update monitoring
+## Update monitoring
 
 echo "Updating monitoring..."
 ./scripts/update-monitoring.sh
@@ -573,13 +567,13 @@ MONITORING_ENABLED=True
 
 ### **1. Blue-Green Deployment**####**Blue-Green Deployment Script**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# blue-green-deploy.sh
+## blue-green-deploy.sh
 
 echo "🔄 Starting Blue-Green Deployment"
 
-# Determine current environment
+## Determine current environment
 
 CURRENT_ENV=$(kubectl get service ai-development-ecosystem-service -o jsonpath='{.spec.selector.environment}')
 
@@ -594,31 +588,31 @@ fi
 echo "Current environment: $CURRENT_ENV"
 echo "Deploying to: $NEW_ENV"
 
-# Deploy to new environment
+## Deploy to new environment
 
 kubectl apply -f k8s/deployment-$NEW_ENV.yaml
 
-# Wait for new deployment to be ready
+## Wait for new deployment to be ready
 
 kubectl rollout status deployment/ai-development-ecosystem-$NEW_ENV
 
-# Run health checks on new deployment
+## Run health checks on new deployment
 
 echo "Running health checks on new deployment..."
 ./scripts/health-check.sh $NEW_ENV
 
-# Switch traffic to new environment
+## Switch traffic to new environment
 
 echo "Switching traffic to $NEW_ENV..."
 kubectl patch service ai-development-ecosystem-service -p "{\"spec\":{\"selector\":{\"environment\":\"$NEW_ENV\"}}}"
 
-# Verify traffic is switched
+## Verify traffic is switched
 
 echo "Verifying traffic switch..."
 sleep 10
 ./scripts/verify-traffic.sh $NEW_ENV
 
-# Scale down old environment
+## Scale down old environment
 
 echo "Scaling down $OLD_ENV environment..."
 kubectl scale deployment ai-development-ecosystem-$OLD_ENV --replicas=0
@@ -676,51 +670,51 @@ spec:
 
 ## **3. Canary Deployment**####**Canary Deployment Script**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# canary-deploy.sh
+## canary-deploy.sh
 
 echo "🐦 Starting Canary Deployment"
 
-# Deploy canary with 10% traffic
+## Deploy canary with 10% traffic
 
 echo "Deploying canary with 10% traffic..."
 kubectl apply -f k8s/canary-deployment.yaml
 
-# Wait for canary to be ready
+## Wait for canary to be ready
 
 kubectl rollout status deployment/ai-development-ecosystem-canary
 
-# Run tests on canary
+## Run tests on canary
 
 echo "Running tests on canary..."
 ./scripts/test-canary.sh
 
-# Monitor canary performance
+## Monitor canary performance
 
 echo "Monitoring canary performance..."
 ./scripts/monitor-canary.sh
 
-# If canary is successful, gradually increase traffic
+## If canary is successful, gradually increase traffic
 
 if [ $? -eq 0 ]; then
     echo "Canary successful, increasing traffic..."
 
-    # Increase to 25%
+    ## Increase to 25%
 
     kubectl patch service ai-development-ecosystem-service -p '{"spec":{"selector":{"version":"canary"}}}'
     sleep 30
 
-    # Increase to 50%
+    ## Increase to 50%
 
     kubectl patch service ai-development-ecosystem-service -p '{"spec":{"selector":{"version":"canary"}}}'
     sleep 30
 
-    # Increase to 100%
+    ## Increase to 100%
 
     kubectl patch service ai-development-ecosystem-service -p '{"spec":{"selector":{"version":"canary"}}}'
 
-    # Remove old deployment
+    ## Remove old deployment
 
     kubectl delete deployment ai-development-ecosystem-stable
 
@@ -836,7 +830,7 @@ class EnvironmentManager:
 
 ## **2. Secrets Management**####**Kubernetes Secrets**```yaml
 
-# k8s/secrets.yaml
+## k8s/secrets.yaml
 
 apiVersion: v1
 kind: Secret
@@ -947,7 +941,7 @@ esac
 
 ### **1. Health Check Endpoints**####**Health Check Implementation**```python
 
-# health_checks.py
+## health_checks.py
 
 from flask import Flask, jsonify
 import psycopg2
@@ -1025,7 +1019,7 @@ def readiness_check():
 def metrics():
     """Prometheus metrics endpoint"""
 
-    # Implementation for Prometheus metrics
+    ## Implementation for Prometheus metrics
 
     pass
 
@@ -1088,18 +1082,18 @@ def metrics():
 
 ### **1. Automated Rollback**####**Rollback Script**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# rollback.sh
+## rollback.sh
 
 echo "🔄 Starting Rollback Procedure"
 
-# Get current deployment
+## Get current deployment
 
 CURRENT_DEPLOYMENT=$(kubectl get deployment ai-development-ecosystem -o
 jsonpath='{.spec.template.spec.containers[0].image}')
 
-# Get previous deployment
+## Get previous deployment
 
 PREVIOUS_DEPLOYMENT=$(kubectl rollout history deployment/ai-development-ecosystem --revision=1 -o
 jsonpath='{.spec.template.spec.containers[0].image}')
@@ -1107,20 +1101,20 @@ jsonpath='{.spec.template.spec.containers[0].image}')
 echo "Current deployment: $CURRENT_DEPLOYMENT"
 echo "Rolling back to: $PREVIOUS_DEPLOYMENT"
 
-# Rollback deployment
+## Rollback deployment
 
 kubectl rollout undo deployment/ai-development-ecosystem
 
-# Wait for rollback to complete
+## Wait for rollback to complete
 
 kubectl rollout status deployment/ai-development-ecosystem
 
-# Run health checks
+## Run health checks
 
 echo "Running health checks after rollback..."
 ./scripts/health-check.sh production
 
-# Verify rollback
+## Verify rollback
 
 if [ $? -eq 0 ]; then
     echo "✅ Rollback successful!"
@@ -1167,29 +1161,29 @@ echo "✅ Database rollback complete!"
 
 ### **1. SSL/TLS Configuration**####**SSL Certificate Management**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# setup-ssl.sh
+## setup-ssl.sh
 
 echo "🔒 Setting up SSL/TLS"
 
-# Generate self-signed certificate for development
+## Generate self-signed certificate for development
 
 if [ "$ENV" = "development" ]; then
     echo "Generating self-signed certificate for development..."
     openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
 fi
 
-# Configure SSL for production
+## Configure SSL for production
 
 if [ "$ENV" = "production" ]; then
     echo "Configuring SSL for production..."
 
-    # Install Let's Encrypt certificate
+    ## Install Let's Encrypt certificate
 
     certbot --nginx -d ai-ecosystem.example.com
 
-    # Configure automatic renewal
+    ## Configure automatic renewal
 
     echo "0 12* * */usr/bin/certbot renew --quiet" | crontab -
 fi
@@ -1231,7 +1225,7 @@ Talisman(app,
 
 ### **1. Resource Optimization**####**Resource Limits Configuration**```yaml
 
-# k8s/resource-limits.yaml
+## k8s/resource-limits.yaml
 
 apiVersion: apps/v1
 kind: Deployment
@@ -1267,13 +1261,13 @@ spec:
 
 ```python
 
-# caching_config.py
+## caching_config.py
 
 import redis
 from functools import wraps
 import json
 
-# Redis connection
+## Redis connection
 
 redis_client = redis.from_url(os.getenv("REDIS_URL"))
 
@@ -1283,21 +1277,21 @@ def cache_result(ttl=3600):
         @wraps(func)
         def wrapper(*args, **kwargs):
 
-            # Generate cache key
+            ## Generate cache key
 
             cache_key = f"{func.__name__}:{hash(str(args) + str(kwargs))}"
 
-            # Try to get from cache
+            ## Try to get from cache
 
             cached_result = redis_client.get(cache_key)
             if cached_result:
                 return json.loads(cached_result)
 
-            # Execute function
+            ## Execute function
 
             result = func(*args, **kwargs)
 
-            # Cache result
+            ## Cache result
 
             redis_client.setex(cache_key, ttl, json.dumps(result))
 
@@ -1389,35 +1383,35 @@ esac
 
 ## **2. Performance Troubleshooting**####**Performance Analysis Script**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# performance-analysis.sh
+## performance-analysis.sh
 
 echo "📊 Performance Analysis"
 
-# Check CPU usage
+## Check CPU usage
 
 echo "CPU Usage:"
 kubectl top pods -n ai-ecosystem
 
-# Check memory usage
+## Check memory usage
 
 echo "Memory Usage:"
 kubectl top pods -n ai-ecosystem --containers
 
-# Check network usage
+## Check network usage
 
 echo "Network Usage:"
 kubectl exec -n ai-ecosystem deployment/ai-development-ecosystem -- \
     netstat -i
 
-# Check disk usage
+## Check disk usage
 
 echo "Disk Usage:"
 kubectl exec -n ai-ecosystem deployment/ai-development-ecosystem -- \
     df -h
 
-# Check application metrics
+## Check application metrics
 
 echo "Application Metrics:"
 kubectl exec -n ai-ecosystem deployment/ai-development-ecosystem -- \
@@ -1560,49 +1554,49 @@ echo "✅ Deployment pipeline completed successfully!"
 
 ## **2. Environment Management**####**Environment Management Script**```bash
 
-# !/bin/bash
+## !/bin/bash
 
-# manage-environments.sh
+## manage-environments.sh
 
 echo "🌍 Environment Management"
 
-# Create environment
+## Create environment
 
 create_environment() {
     local env_name=$1
 
     echo "Creating environment: $env_name"
 
-    # Create namespace
+    ## Create namespace
 
     kubectl create namespace ai-ecosystem-$env_name
 
-    # Apply configurations
+    ## Apply configurations
 
     kubectl apply -f k8s/ -n ai-ecosystem-$env_name
 
-    # Setup monitoring
+    ## Setup monitoring
 
     kubectl apply -f monitoring/ -n ai-ecosystem-$env_name
 
     echo "✅ Environment $env_name created"
 }
 
-# Delete environment
+## Delete environment
 
 delete_environment() {
     local env_name=$1
 
     echo "Deleting environment: $env_name"
 
-    # Delete namespace (this will delete all resources)
+    ## Delete namespace (this will delete all resources)
 
     kubectl delete namespace ai-ecosystem-$env_name
 
     echo "✅ Environment $env_name deleted"
 }
 
-# Main script
+## Main script
 
 case "$1" in
     "create")
@@ -1615,10 +1609,9 @@ case "$1" in
         exit 1
         ;;
 esac
-
 ```
 
-- --
+------------------------------------------------------------------------
 
 ## 📚 Additional Resources
 
@@ -1640,21 +1633,23 @@ esac
 
 - **Infrastructure as Code**: <https://www.terraform.io/>
 
-- --
+------------------------------------------------------------------------
 
-- Last Updated: 2024-08-07*
-- Next Review: Monthly*
-- Deployment Level: Production Ready*
+- Last Updated: 2024-08-07\*
+- Next Review: Monthly\*
+- Deployment Level: Production Ready\*
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_deployment-environment-guide.md
-# Generated: 2025-08-17T17:47:03.914157
+
+## Auto-generated sections for 400_deployment-environment-guide.md
+
+## Generated: 2025-08-18T08:03:22.738358
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -1662,10 +1657,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

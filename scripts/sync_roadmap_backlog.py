@@ -56,8 +56,8 @@ class BacklogItem:
     status: str
     desc: str
     line_idx: int
-    score_total: Optional[float] = None
-    completion_date: Optional[str] = None
+    score_total: float | None = None
+    completion_date: str | None = None
 
 
 class RoadmapBacklogSync:
@@ -65,9 +65,9 @@ class RoadmapBacklogSync:
 
     def __init__(self, dry_run: bool = False):
         self.dry_run = dry_run
-        self.backlog_items: Dict[str, BacklogItem] = {}
+        self.backlog_items: dict[str, BacklogItem] = {}
         self.roadmap_content: str = ""
-        self.changes_made: List[str] = []
+        self.changes_made: list[str] = []
 
     def parse_backlog(self) -> None:
         """Parse the backlog file and extract items."""
@@ -109,7 +109,7 @@ class RoadmapBacklogSync:
             self.backlog_items[item.id] = item
             i += 1
 
-    def _find_region(self, lines: List[str], start_idx: int) -> str:
+    def _find_region(self, lines: list[str], start_idx: int) -> str:
         """Capture metadata lines until next table row or blank line break."""
         buff = []
         i = start_idx + 1

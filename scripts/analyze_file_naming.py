@@ -92,7 +92,7 @@ def analyze_file_category(file_path):
     """Analyze file content to determine appropriate category"""
     
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, encoding='utf-8') as f:
             content = f.read()
         
         # Check for memory context comments

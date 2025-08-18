@@ -186,7 +186,7 @@ class OptimizedQuickConflictChecker:
             self.log("✅ No package manager conflicts", "INFO")
             return True
 
-    def run_parallel_checks(self) -> Dict[str, Any]:
+    def run_parallel_checks(self) -> dict[str, Any]:
         """Run all checks in parallel with early exit."""
         self.log("Starting optimized quick conflict check...", "INFO")
 

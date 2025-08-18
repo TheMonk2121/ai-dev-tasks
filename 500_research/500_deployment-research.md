@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Deployment research and patterns -->
 # 🚀 Deployment Research
@@ -20,7 +20,7 @@
 
 - **Points**: 2 - Research and planning effort
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_deployment-environment-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_guides/400_deployment-environment-guide.md
 
 - **Next Steps**: Populate with deployment research findings
 

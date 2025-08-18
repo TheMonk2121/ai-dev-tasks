@@ -38,18 +38,18 @@ class ValidationResult:
     component: str
     status: bool
     message: str
-    details: Dict[str, Any]
+    details: dict[str, Any]
     timestamp: datetime
 
 @dataclass
 class UpgradeMetrics:
     """Upgrade metrics tracking."""
     start_time: datetime
-    end_time: Optional[datetime] = None
+    end_time: datetime | None = None
     status: str = "running"
     progress: float = 0.0
-    errors: List[str] = None
-    warnings: List[str] = None
+    errors: list[str] = None
+    warnings: list[str] = None
     
     def __post_init__(self):
         if self.errors is None:
@@ -62,7 +62,7 @@ class UpgradeValidator:
     
     def __init__(self):
         """Initialize the upgrade validator."""
-        self.results: List[ValidationResult] = []
+        self.results: list[ValidationResult] = []
         self.metrics = UpgradeMetrics(start_time=datetime.now())
         
     def validate_database_health(self) -> ValidationResult:
@@ -348,7 +348,7 @@ class UpgradeValidator:
                 timestamp=datetime.now()
             )
     
-    def pre_upgrade_validation(self) -> Dict[str, Any]:
+    def pre_upgrade_validation(self) -> dict[str, Any]:
         """
         Perform comprehensive pre-upgrade validation.
         
@@ -395,7 +395,7 @@ class UpgradeValidator:
         
         return report
     
-    def post_upgrade_validation(self) -> Dict[str, Any]:
+    def post_upgrade_validation(self) -> dict[str, Any]:
         """
         Perform comprehensive post-upgrade validation.
         
@@ -501,7 +501,7 @@ class UpgradeValidator:
                 timestamp=datetime.now()
             )
     
-    def rollback_validation(self) -> Dict[str, Any]:
+    def rollback_validation(self) -> dict[str, Any]:
         """
         Perform rollback validation.
         
@@ -547,7 +547,7 @@ class UpgradeValidator:
         
         return report
     
-    def save_validation_report(self, report: Dict[str, Any], filename: str) -> None:
+    def save_validation_report(self, report: dict[str, Any], filename: str) -> None:
         """
         Save validation report to file.
         
@@ -562,7 +562,7 @@ class UpgradeValidator:
         except Exception as e:
             logger.error(f"Failed to save validation report: {e}")
     
-    def send_validation_alert(self, report: Dict[str, Any]) -> None:
+    def send_validation_alert(self, report: dict[str, Any]) -> None:
         """
         Send validation alert to monitoring system.
         

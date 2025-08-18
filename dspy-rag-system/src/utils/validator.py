@@ -20,7 +20,7 @@ class ValidationError(Exception):
     """Raised when input validation fails"""
     pass
 
-def sanitize_prompt(prompt: str, model_id: Optional[str] = None) -> str:
+def sanitize_prompt(prompt: str, model_id: str | None = None) -> str:
     """
     Sanitize user prompt to prevent injection attacks using regex-based validation.
     
@@ -73,7 +73,7 @@ def _fallback_sanitize_prompt(prompt: str) -> str:
     
     return prompt
 
-def validate_file_path(file_path: str, allowed_extensions: Optional[List[str]] = None) -> bool:
+def validate_file_path(file_path: str, allowed_extensions: list[str] | None = None) -> bool:
     """
     Validate file path to prevent path traversal attacks.
     
@@ -141,7 +141,7 @@ def validate_file_size(file_path: str, max_size_mb: int = 50) -> bool:
     
     return True
 
-def validate_secrets(required_secrets: List[str]) -> None:
+def validate_secrets(required_secrets: list[str]) -> None:
     """
     Validate that all required secrets are present.
     
@@ -210,7 +210,7 @@ def validate_query_complexity(query: str, max_tokens: int = 1000) -> bool:
     
     return True
 
-def validate_url(url: str, allowed_domains: Optional[List[str]] = None) -> bool:
+def validate_url(url: str, allowed_domains: list[str] | None = None) -> bool:
     """
     Validate URL to prevent SSRF attacks.
     
@@ -254,7 +254,7 @@ def validate_url(url: str, allowed_domains: Optional[List[str]] = None) -> bool:
     
     return True
 
-def validate_json_structure(data: dict, required_fields: List[str], optional_fields: Optional[List[str]] = None) -> bool:
+def validate_json_structure(data: dict, required_fields: list[str], optional_fields: list[str] | None = None) -> bool:
     """
     Validate JSON structure to ensure required fields are present.
     
@@ -371,7 +371,7 @@ def validate_file_content(file_path: str, max_lines: int = 10000) -> bool:
         raise ValidationError(f"File does not exist: {file_path}")
     
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, encoding='utf-8') as f:
             line_count = sum(1 for _ in f)
         
         if line_count > max_lines:
@@ -384,7 +384,7 @@ def validate_file_content(file_path: str, max_lines: int = 10000) -> bool:
     except Exception as e:
         raise ValidationError(f"Error reading file: {e}")
 
-def validate_config_structure(config: dict, required_sections: List[str]) -> bool:
+def validate_config_structure(config: dict, required_sections: list[str]) -> bool:
     """
     Validate configuration structure.
     

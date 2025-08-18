@@ -145,7 +145,7 @@ def test_file_logging():
 
         # Check that file was created and contains logs
         if os.path.exists(log_file):
-            with open(log_file, "r") as f:
+            with open(log_file) as f:
                 lines = f.readlines()
                 if len(lines) > 0:
                     # Verify JSON format

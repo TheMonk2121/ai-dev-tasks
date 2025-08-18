@@ -12,7 +12,7 @@ from collections import defaultdict
 from typing import Dict, List, Tuple
 
 
-def load_validator_report() -> Dict:
+def load_validator_report() -> dict:
     """Load validator report."""
     report_path = "validator_report.json"
 
@@ -24,7 +24,7 @@ def load_validator_report() -> Dict:
         return json.load(f)
 
 
-def analyze_hotspots(report: Dict) -> Dict[str, List[str]]:
+def analyze_hotspots(report: dict) -> dict[str, list[str]]:
     """Analyze README violations by top-level directory."""
     violations = report.get("impacted_files", {}).get("readme", [])
 
@@ -46,7 +46,7 @@ def analyze_hotspots(report: Dict) -> Dict[str, List[str]]:
     return dict(hotspots)
 
 
-def print_hotspots(hotspots: Dict[str, List[str]], top_n: int = 10):
+def print_hotspots(hotspots: dict[str, list[str]], top_n: int = 10):
     """Print hotspots analysis."""
     print("## README Hotspots Analysis")
     print()
@@ -67,7 +67,7 @@ def print_hotspots(hotspots: Dict[str, List[str]], top_n: int = 10):
     return sorted_hotspots
 
 
-def generate_cleanup_plan(hotspots: Dict[str, List[str]]) -> List[Tuple[str, List[str]]]:
+def generate_cleanup_plan(hotspots: dict[str, list[str]]) -> list[tuple[str, list[str]]]:
     """Generate cleanup plan for top directories."""
     sorted_hotspots = sorted(hotspots.items(), key=lambda x: len(x[1]), reverse=True)
 

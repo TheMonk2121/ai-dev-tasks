@@ -33,7 +33,7 @@ class QueryAnalysis:
     query: str
     query_type: QueryType
     confidence: float
-    keywords: List[str]
+    keywords: list[str]
     complexity_score: float
     suggested_pipeline: str
     reasoning: str
@@ -45,7 +45,7 @@ class PipelineConfig:
 
     name: str
     description: str
-    query_types: List[QueryType]
+    query_types: list[QueryType]
     max_tokens: int
     context_window: int
     use_few_shot: bool
@@ -56,11 +56,11 @@ class PipelineConfig:
 class AdaptiveRouter:
     """Routes queries through optimized pipelines based on query type."""
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: str | None = None):
         self.pipelines = self._load_pipeline_configs()
         self.query_patterns = self._load_query_patterns()
 
-    def _load_pipeline_configs(self) -> Dict[str, PipelineConfig]:
+    def _load_pipeline_configs(self) -> dict[str, PipelineConfig]:
         """Load pipeline configurations."""
         return {
             "fast_path": PipelineConfig(
@@ -95,7 +95,7 @@ class AdaptiveRouter:
             ),
         }
 
-    def _load_query_patterns(self) -> Dict[QueryType, List[re.Pattern]]:
+    def _load_query_patterns(self) -> dict[QueryType, list[re.Pattern]]:
         """Load regex patterns for query type detection."""
         return {
             QueryType.POINTED: [
@@ -182,7 +182,7 @@ class AdaptiveRouter:
             reasoning=reasoning,
         )
 
-    def _extract_keywords(self, query: str) -> List[str]:
+    def _extract_keywords(self, query: str) -> list[str]:
         """Extract key terms from the query."""
         # Simple keyword extraction - could be enhanced with NLP
         words = re.findall(r"\b\w+\b", query.lower())
@@ -269,7 +269,7 @@ class AdaptiveRouter:
         else:
             return "comprehensive"
 
-    def _generate_reasoning(self, query_type: QueryType, scores: Dict[QueryType, float], complexity: float) -> str:
+    def _generate_reasoning(self, query_type: QueryType, scores: dict[QueryType, float], complexity: float) -> str:
         """Generate human-readable reasoning for the classification."""
         reasons = []
 
@@ -292,7 +292,7 @@ class AdaptiveRouter:
 
         return "; ".join(reasons)
 
-    def route_query(self, query: str, mode: str = "auto") -> Dict:
+    def route_query(self, query: str, mode: str = "auto") -> dict:
         """Route a query through the appropriate pipeline."""
         analysis = self.analyze_query(query)
         pipeline_config = self.pipelines[analysis.suggested_pipeline]
@@ -323,7 +323,7 @@ class AdaptiveRouter:
 
         return result
 
-    def _generate_recommendations(self, analysis: QueryAnalysis, pipeline_config: PipelineConfig) -> List[str]:
+    def _generate_recommendations(self, analysis: QueryAnalysis, pipeline_config: PipelineConfig) -> list[str]:
         """Generate recommendations for query processing."""
         recommendations = []
 

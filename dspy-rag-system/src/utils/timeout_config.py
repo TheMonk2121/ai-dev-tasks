@@ -77,7 +77,7 @@ def load_timeout_config() -> TimeoutConfig:
         import json
         config_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config', 'system.json')
         if os.path.exists(config_path):
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 system_config = json.load(f)
                 
             # Override with system.json timeouts if present

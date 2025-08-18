@@ -12,7 +12,7 @@ import sys
 from typing import Dict
 
 
-def load_validator_report(path: str) -> Dict:
+def load_validator_report(path: str) -> dict:
     """Load validator report."""
     if not os.path.exists(path):
         print(f"❌ Validator report not found: {path}")
@@ -22,7 +22,7 @@ def load_validator_report(path: str) -> Dict:
         return json.load(f)
 
 
-def check_schema_version(report: Dict) -> str:
+def check_schema_version(report: dict) -> str:
     """Check schema version in report."""
     return report.get("schema_version", "unknown")
 

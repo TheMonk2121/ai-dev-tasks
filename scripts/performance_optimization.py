@@ -22,7 +22,8 @@ import psutil
 import threading
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional, Any, Union, Callable
+from typing import Dict, List, Optional, Any, Union
+from collections.abc import Callable
 from uuid import uuid4
 import weakref
 from functools import lru_cache
@@ -70,10 +71,10 @@ class PerformanceMonitor:
     """Real-time performance monitoring system."""
     
     def __init__(self):
-        self.metrics: Dict[PerformanceMetric, PerformanceBenchmark] = {}
-        self.alerts: List[PerformanceAlert] = []
+        self.metrics: dict[PerformanceMetric, PerformanceBenchmark] = {}
+        self.alerts: list[PerformanceAlert] = []
         self.monitoring_enabled = True
-        self.alert_callbacks: List[Callable] = []
+        self.alert_callbacks: list[Callable] = []
         
         # Initialize benchmarks
         self._init_benchmarks()
@@ -159,7 +160,7 @@ class PerformanceMonitor:
             except Exception as e:
                 logger.error(f"Alert callback error: {e}")
     
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """Get comprehensive performance report."""
         return {
             "metrics": {metric.value: {
@@ -188,8 +189,8 @@ class AgentSwitchingOptimizer:
     """Optimizes agent switching performance."""
     
     def __init__(self):
-        self.agent_cache: Dict[str, Any] = {}
-        self.switch_history: List[Dict[str, Any]] = []
+        self.agent_cache: dict[str, Any] = {}
+        self.switch_history: list[dict[str, Any]] = []
         self.max_cache_size = 50
         self.preload_enabled = True
     
@@ -257,8 +258,8 @@ class ContextLoadingOptimizer:
     """Optimizes context loading performance."""
     
     def __init__(self):
-        self.context_cache: Dict[str, Any] = {}
-        self.load_history: List[Dict[str, Any]] = []
+        self.context_cache: dict[str, Any] = {}
+        self.load_history: list[dict[str, Any]] = []
         self.max_cache_size = 1000
         self.preload_strategy = "lru"
     
@@ -400,11 +401,11 @@ class ConcurrentAgentOptimizer:
     
     def __init__(self, max_concurrent_agents: int = 10):
         self.max_concurrent_agents = max_concurrent_agents
-        self.active_agents: Dict[str, Any] = {}
+        self.active_agents: dict[str, Any] = {}
         self.agent_pool = ThreadPoolExecutor(max_workers=max_concurrent_agents)
         self.agent_queue = asyncio.Queue(maxsize=max_concurrent_agents)
     
-    async def optimize_concurrent_execution(self, agent_requests: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    async def optimize_concurrent_execution(self, agent_requests: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Optimize concurrent agent execution."""
         start_time = time.time()
         
@@ -431,7 +432,7 @@ class ConcurrentAgentOptimizer:
             logger.error(f"Concurrent execution optimization failed: {e}")
             return []
     
-    async def _execute_agent_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def _execute_agent_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Execute a single agent request."""
         agent_id = request.get('agent_id', str(uuid4()))
         
@@ -458,7 +459,7 @@ class ConcurrentAgentOptimizer:
             self.active_agents[agent_id]['error'] = str(e)
             raise
     
-    async def _process_agent_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def _process_agent_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process agent request with optimization."""
         # Implementation would route to appropriate agent
         return {"status": "processed", "request": request}
@@ -515,11 +516,11 @@ class PerformanceOptimizationManager:
         """Optimize context loading performance."""
         return await self.context_loader.optimize_context_load(context_id)
     
-    async def optimize_concurrent_execution(self, agent_requests: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    async def optimize_concurrent_execution(self, agent_requests: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Optimize concurrent agent execution."""
         return await self.concurrent_optimizer.optimize_concurrent_execution(agent_requests)
     
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """Get comprehensive performance report."""
         return self.monitor.get_performance_report()
     

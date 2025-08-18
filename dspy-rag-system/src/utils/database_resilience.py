@@ -34,8 +34,8 @@ class DatabaseHealth:
     response_time: float
     active_connections: int
     max_connections: int
-    error_message: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    error_message: str | None = None
+    metadata: dict[str, Any] | None = None
 
 
 @dataclass
@@ -78,13 +78,13 @@ class DatabaseResilienceManager:
         self.health_check_interval: int = health_check_interval
 
         # Connection pool
-        self.pool: Optional[Union[ThreadedConnectionPool, Any]] = None
+        self.pool: ThreadedConnectionPool | Any | None = None
         self.pool_lock: threading.Lock = threading.Lock()
 
         # Health monitoring
         self.health_history: deque = deque(maxlen=100)
-        self.last_health_check: Optional[datetime] = None
-        self.health_check_thread: Optional[threading.Thread] = None
+        self.last_health_check: datetime | None = None
+        self.health_check_thread: threading.Thread | None = None
         self.monitoring_active: bool = False
 
         # Statistics
@@ -308,7 +308,7 @@ class DatabaseResilienceManager:
                     logger.error(f"Error returning connection to pool: {e}")
 
     @retry(max_retries=3, backoff_factor=2.0, timeout_seconds=30)
-    def execute_query(self, query: str, params: Optional[tuple] = None) -> List[Dict[str, Any]]:
+    def execute_query(self, query: str, params: tuple | None = None) -> list[dict[str, Any]]:
         """
         Execute a database query with retry logic.
 
@@ -354,7 +354,7 @@ class DatabaseResilienceManager:
                 logger.warning(f"Slow query detected ({query_time:.2f}s): {query[:100]}...")
 
     @retry(max_retries=3, backoff_factor=2.0, timeout_seconds=30)
-    def execute_transaction(self, queries: List[tuple]) -> List[Dict[str, Any]]:
+    def execute_transaction(self, queries: list[tuple]) -> list[dict[str, Any]]:
         """
         Execute multiple queries in a transaction with retry logic.
 
@@ -411,7 +411,7 @@ class DatabaseResilienceManager:
         except Exception as e:
             logger.warning(f"Failed to update connection stats: {e}")
 
-    def _record_health_check(self, status: str, response_time: float, error_message: Optional[str] = None) -> None:
+    def _record_health_check(self, status: str, response_time: float, error_message: str | None = None) -> None:
         """Record a health check result"""
         health = DatabaseHealth(
             timestamp=datetime.now(),
@@ -462,7 +462,7 @@ class DatabaseResilienceManager:
 
             time.sleep(self.health_check_interval)
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """Get database health status"""
         if not self.health_history:
             return {
@@ -483,7 +483,7 @@ class DatabaseResilienceManager:
             "health_history": [asdict(h) for h in list(self.health_history)[-10:]],  # Last 10 checks
         }
 
-    def get_connection_stats(self) -> Dict[str, Any]:
+    def get_connection_stats(self) -> dict[str, Any]:
         """Get connection pool statistics"""
         return asdict(self.connection_stats)
 
@@ -495,7 +495,7 @@ class DatabaseResilienceManager:
         latest_health = self.health_history[-1]
         return latest_health.status == "healthy"
 
-    def get_pool_info(self) -> Dict[str, Any]:
+    def get_pool_info(self) -> dict[str, Any]:
         """Get connection pool information"""
         if not self.pool:
             return {"error": "Pool not initialized"}
@@ -530,7 +530,7 @@ class DatabaseResilienceManager:
 
 
 # Global instance
-_database_manager: Optional[DatabaseResilienceManager] = None
+_database_manager: DatabaseResilienceManager | None = None
 
 
 def get_database_manager() -> DatabaseResilienceManager:
@@ -551,7 +551,7 @@ def get_database_manager() -> DatabaseResilienceManager:
     return _database_manager
 
 
-def initialize_database_resilience(connection_string: Optional[str] = None) -> DatabaseResilienceManager:
+def initialize_database_resilience(connection_string: str | None = None) -> DatabaseResilienceManager:
     """Initialize database resilience manager"""
     global _database_manager
     if connection_string is None:
@@ -575,19 +575,19 @@ def initialize_database_resilience(connection_string: Optional[str] = None) -> D
 
 
 # Convenience functions
-def execute_query(query: str, params: Optional[tuple] = None) -> List[Dict[str, Any]]:
+def execute_query(query: str, params: tuple | None = None) -> list[dict[str, Any]]:
     """Execute a database query with resilience"""
     manager = get_database_manager()
     return manager.execute_query(query, params)
 
 
-def execute_transaction(queries: List[tuple]) -> List[Dict[str, Any]]:
+def execute_transaction(queries: list[tuple]) -> list[dict[str, Any]]:
     """Execute multiple queries in a transaction with resilience"""
     manager = get_database_manager()
     return manager.execute_transaction(queries)
 
 
-def get_database_health() -> Dict[str, Any]:
+def get_database_health() -> dict[str, Any]:
     """Get database health status"""
     manager = get_database_manager()
     return manager.get_health_status()

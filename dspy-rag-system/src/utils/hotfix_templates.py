@@ -23,8 +23,8 @@ class HotFixTemplate:
     category: str
     severity: str
     template_content: str
-    variables: List[str]
-    prerequisites: List[str]
+    variables: list[str]
+    prerequisites: list[str]
     estimated_time: str
 
 class HotFixGenerator:
@@ -34,7 +34,7 @@ class HotFixGenerator:
         self.templates = self._load_templates()
         self.template_stats = {}
         
-    def _load_templates(self) -> Dict[str, HotFixTemplate]:
+    def _load_templates(self) -> dict[str, HotFixTemplate]:
         """Load HotFix templates"""
         templates = {
             "db_connection_timeout": HotFixTemplate(
@@ -169,7 +169,7 @@ Security validation failed: {violation_type}
         
         return templates
     
-    def generate_hotfix(self, error_analysis, context: Dict[str, Any] = None) -> Optional[HotFixTemplate]:
+    def generate_hotfix(self, error_analysis, context: dict[str, Any] = None) -> HotFixTemplate | None:
         """Generate a HotFix template based on error analysis"""
         if not error_analysis.matched_patterns:
             return None
@@ -219,14 +219,14 @@ Security validation failed: {violation_type}
 # Global instance
 hotfix_generator = HotFixGenerator()
 
-def generate_hotfix_template(error_analysis, context: Dict[str, Any] = None) -> Optional[HotFixTemplate]:
+def generate_hotfix_template(error_analysis, context: dict[str, Any] = None) -> HotFixTemplate | None:
     """Generate HotFix templates based on error analysis"""
     return hotfix_generator.generate_hotfix(error_analysis, context)
 
-def get_hotfix_statistics() -> Dict[str, Any]:
+def get_hotfix_statistics() -> dict[str, Any]:
     """Get HotFix template statistics"""
     return hotfix_generator.get_template_statistics()
 
-def list_hotfix_templates() -> List[HotFixTemplate]:
+def list_hotfix_templates() -> list[HotFixTemplate]:
     """List all available HotFix templates"""
     return list(hotfix_generator.templates.values()) 

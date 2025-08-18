@@ -7,7 +7,7 @@ Provides consistent, structured logging across all components.
 import logging
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from typing import Dict, Any, Optional
 import traceback
@@ -22,8 +22,8 @@ class StructuredFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """Format log record as JSON with error handling and security"""
         try:
-            log_entry: Dict[str, Any] = {
-                "timestamp": datetime.fromtimestamp(record.created, tz=timezone.utc).isoformat(),
+            log_entry: dict[str, Any] = {
+                "timestamp": datetime.fromtimestamp(record.created, tz=UTC).isoformat(),
                 "level": record.levelname,
                 "logger": record.name,
                 "message": record.getMessage(),
@@ -60,10 +60,10 @@ class StructuredFormatter(logging.Formatter):
                 return f"Log formatting failed: {str(e)}"
 
 # Thread-safe logger cache
-_logger_cache: Dict[str, logging.Logger] = {}
+_logger_cache: dict[str, logging.Logger] = {}
 _cache_lock = threading.Lock()
 
-def get_logger(name: str, level: str = "INFO", log_file: Optional[str] = None) -> logging.Logger:
+def get_logger(name: str, level: str = "INFO", log_file: str | None = None) -> logging.Logger:
     """
     Thread-safe factory for structured loggers with singleton pattern
     
@@ -110,7 +110,7 @@ def get_logger(name: str, level: str = "INFO", log_file: Optional[str] = None) -
         _logger_cache[name] = logger
         return logger
 
-def setup_logger(name: str, level: str = "INFO", log_file: Optional[str] = None) -> logging.Logger:
+def setup_logger(name: str, level: str = "INFO", log_file: str | None = None) -> logging.Logger:
     """
     Legacy function for backward compatibility
     Use get_logger() for new code

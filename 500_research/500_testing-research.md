@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_testing-strategy-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Testing research and quality assurance patterns -->
 
@@ -23,7 +23,7 @@ checks | Apply `400_guides/400_testing-strategy-guide.md`; run `./dspy-rag-syste
 
 - **Points**: 3 - Research and testing guidance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_testing-strategy-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md, 400_guides/400_testing-strategy-guide.md
 
 - **Next Steps**: Implement testing patterns and quality assurance
 
@@ -43,7 +43,7 @@ faithfulness and citation presence) to handle nondeterminism.
 
 - Flake management: constrained reruns (1–2) and tolerance bands reduce false negatives while still catching drift.
 - Align test oracles with span-grounded citations: sentence-level faithfulness against retrieved chunks improves
-precision of failures (400_guides/400_documentation-retrieval-guide.md).
+precision of failures (400_guides/400_documentation-guide.md).
 
 <!-- ANCHOR: actionable-patterns -->
 

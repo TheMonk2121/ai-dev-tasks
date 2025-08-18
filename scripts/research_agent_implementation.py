@@ -55,12 +55,12 @@ class ResearchFinding:
     id: str = field(default_factory=lambda: str(uuid4()))
     query: str = ""
     research_type: ResearchType = ResearchType.TECHNICAL
-    findings: Dict[str, Any] = field(default_factory=dict)
-    sources: List[ResearchSource] = field(default_factory=list)
+    findings: dict[str, Any] = field(default_factory=dict)
+    sources: list[ResearchSource] = field(default_factory=list)
     confidence: float = 0.0
     analysis_summary: str = ""
-    recommendations: List[str] = field(default_factory=list)
-    trade_offs: List[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
+    trade_offs: list[str] = field(default_factory=list)
     timestamp: float = field(default_factory=time.time)
 
 
@@ -142,7 +142,7 @@ class ResearchDatabase:
         conn.close()
         return finding.id
     
-    def get_finding(self, finding_id: str) -> Optional[ResearchFinding]:
+    def get_finding(self, finding_id: str) -> ResearchFinding | None:
         """Get research finding by ID."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -175,8 +175,8 @@ class ResearchDatabase:
         
         return None
     
-    def search_findings(self, query: str, research_type: Optional[str] = None, 
-                       limit: int = 10) -> List[ResearchFinding]:
+    def search_findings(self, query: str, research_type: str | None = None, 
+                       limit: int = 10) -> list[ResearchFinding]:
         """Search research findings."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -230,7 +230,7 @@ class ResearchAgent:
             "industry_research"
         ]
         self.database = ResearchDatabase()
-        self.research_cache: Dict[str, ResearchFinding] = {}
+        self.research_cache: dict[str, ResearchFinding] = {}
         self.usage_count = 0
         self.error_count = 0
         self.last_used = time.time()
@@ -256,7 +256,7 @@ class ResearchAgent:
             ]
         }
     
-    async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process research request."""
         start_time = time.time()
         
@@ -296,7 +296,7 @@ class ResearchAgent:
             logger.error(f"Error in Research Agent: {e}")
             raise
     
-    def can_handle(self, request: Dict[str, Any]) -> bool:
+    def can_handle(self, request: dict[str, Any]) -> bool:
         """Check if research agent can handle the request."""
         research_keywords = [
             "research", "analyze", "investigate", "compare", "study",
@@ -540,7 +540,7 @@ class ResearchAgent:
             trade_offs=["Option A vs Option B"]
         )
     
-    def _format_research_response(self, finding: ResearchFinding) -> Dict[str, Any]:
+    def _format_research_response(self, finding: ResearchFinding) -> dict[str, Any]:
         """Format research finding into response."""
         return {
             "agent_type": "research",
@@ -560,7 +560,7 @@ class ResearchAgent:
         content = f"{query}:{research_type}:{analysis_depth}"
         return hashlib.md5(content.encode()).hexdigest()
     
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get agent status information."""
         return {
             "agent_type": "research",

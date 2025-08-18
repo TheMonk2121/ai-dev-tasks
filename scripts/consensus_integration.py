@@ -42,7 +42,7 @@ logger = logging.getLogger(__name__)
 class ConsensusIntegration:
     """Integrates consensus framework with existing Tier 1/2 infrastructure."""
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: str | None = None):
         """Initialize the consensus integration system."""
         self.config = self._load_config(config_path)
 
@@ -56,7 +56,7 @@ class ConsensusIntegration:
 
         logger.info("Consensus integration system initialized")
 
-    def _load_config(self, config_path: Optional[str]) -> Dict:
+    def _load_config(self, config_path: str | None) -> dict:
         """Load integration configuration."""
         default_config = {
             "task_config": None,
@@ -69,7 +69,7 @@ class ConsensusIntegration:
         }
 
         if config_path and Path(config_path).exists():
-            with open(config_path, "r") as f:
+            with open(config_path) as f:
                 user_config = json.load(f)
                 default_config.update(user_config)
 
@@ -132,7 +132,7 @@ class ConsensusIntegration:
             logger.error(f"Error in consensus framework integration: {e}")
             return False
 
-    def _validate_consensus_framework(self) -> Dict:
+    def _validate_consensus_framework(self) -> dict:
         """Validate the consensus framework using existing validation tools."""
         try:
             # Use doc_coherence_validator to check consensus framework files
@@ -151,7 +151,7 @@ class ConsensusIntegration:
         except Exception as e:
             return {"passed": False, "errors": [f"Validation error: {e}"], "validation_result": {}}
 
-    def _integrate_feedback_system(self) -> Dict:
+    def _integrate_feedback_system(self) -> dict:
         """Integrate consensus framework with feedback loop system."""
         try:
             # Collect current feedback
@@ -170,7 +170,7 @@ class ConsensusIntegration:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _generate_consensus_recommendations(self, analysis: Dict) -> List[str]:
+    def _generate_consensus_recommendations(self, analysis: dict) -> list[str]:
         """Generate consensus-specific recommendations from feedback analysis."""
         recommendations = []
 
@@ -186,7 +186,7 @@ class ConsensusIntegration:
 
         return recommendations
 
-    def _test_consensus_workflow(self) -> Dict:
+    def _test_consensus_workflow(self) -> dict:
         """Test the complete consensus workflow."""
         try:
             # Create a test proposal
@@ -260,7 +260,7 @@ class ConsensusIntegration:
         except Exception as e:
             logger.error(f"Error updating backlog: {e}")
 
-    def validate_proposal(self, proposal_id: str) -> Dict:
+    def validate_proposal(self, proposal_id: str) -> dict:
         """Validate a proposal using existing validation infrastructure."""
         try:
             # Get proposal details

@@ -12,7 +12,8 @@ import logging
 import threading
 import asyncio
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Callable
+from typing import Dict, List, Optional, Any
+from collections.abc import Callable
 from dataclasses import dataclass, asdict
 from enum import Enum
 from collections import defaultdict, deque
@@ -56,17 +57,17 @@ class Mission:
     status: MissionStatus
     priority: MissionPriority
     created_at: datetime
-    started_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
-    duration: Optional[float] = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    duration: float | None = None
     progress: float = 0.0
-    error_message: Optional[str] = None
-    result: Optional[Dict[str, Any]] = None
-    metadata: Optional[Dict[str, Any]] = None
-    agent_type: Optional[str] = None
-    model_used: Optional[str] = None
-    tokens_used: Optional[int] = None
-    cost_estimate: Optional[float] = None
+    error_message: str | None = None
+    result: dict[str, Any] | None = None
+    metadata: dict[str, Any] | None = None
+    agent_type: str | None = None
+    model_used: str | None = None
+    tokens_used: int | None = None
+    cost_estimate: float | None = None
 
 @dataclass
 class MissionMetrics:
@@ -83,16 +84,16 @@ class MissionMetrics:
 class MissionTracker:
     """Real-time mission tracking and management"""
     
-    def __init__(self, max_history: int = 1000, update_callbacks: List[Callable] = None):
+    def __init__(self, max_history: int = 1000, update_callbacks: list[Callable] = None):
         self.max_history = max_history
         self.update_callbacks = update_callbacks or []
         
         # Mission storage
-        self.missions: Dict[str, Mission] = {}
+        self.missions: dict[str, Mission] = {}
         self.mission_history: deque = deque(maxlen=max_history)
         
         # Real-time state
-        self.running_missions: Dict[str, Mission] = {}
+        self.running_missions: dict[str, Mission] = {}
         self.pending_missions: deque = deque()
         
         # Metrics
@@ -263,7 +264,7 @@ class MissionTracker:
             LOG.error(f"Failed to save metrics to database: {e}")
     
     def create_mission(self, title: str, description: str, priority: MissionPriority = MissionPriority.MEDIUM,
-                      metadata: Optional[Dict[str, Any]] = None) -> str:
+                      metadata: dict[str, Any] | None = None) -> str:
         """Create a new mission"""
         mission_id = str(uuid.uuid4())
         
@@ -319,7 +320,7 @@ class MissionTracker:
         return True
     
     def update_mission_progress(self, mission_id: str, progress: float, 
-                              result: Optional[Dict[str, Any]] = None) -> bool:
+                              result: dict[str, Any] | None = None) -> bool:
         """Update mission progress"""
         with self.lock:
             if mission_id not in self.missions:
@@ -339,8 +340,8 @@ class MissionTracker:
         
         return True
     
-    def complete_mission(self, mission_id: str, result: Optional[Dict[str, Any]] = None,
-                        tokens_used: Optional[int] = None, cost_estimate: Optional[float] = None) -> bool:
+    def complete_mission(self, mission_id: str, result: dict[str, Any] | None = None,
+                        tokens_used: int | None = None, cost_estimate: float | None = None) -> bool:
         """Complete a mission successfully"""
         with self.lock:
             if mission_id not in self.missions:
@@ -426,13 +427,13 @@ class MissionTracker:
         LOG.info(f"Cancelled mission: {mission.title} (ID: {mission_id})")
         return True
     
-    def get_mission(self, mission_id: str) -> Optional[Mission]:
+    def get_mission(self, mission_id: str) -> Mission | None:
         """Get a mission by ID"""
         with self.lock:
             return self.missions.get(mission_id)
     
-    def get_all_missions(self, status: Optional[MissionStatus] = None, 
-                        limit: int = 100) -> List[Mission]:
+    def get_all_missions(self, status: MissionStatus | None = None, 
+                        limit: int = 100) -> list[Mission]:
         """Get all missions with optional filtering"""
         with self.lock:
             missions = list(self.missions.values())
@@ -445,7 +446,7 @@ class MissionTracker:
             
             return missions[:limit]
     
-    def get_running_missions(self) -> List[Mission]:
+    def get_running_missions(self) -> list[Mission]:
         """Get all currently running missions"""
         with self.lock:
             return list(self.running_missions.values())

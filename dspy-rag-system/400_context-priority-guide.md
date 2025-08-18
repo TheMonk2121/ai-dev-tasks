@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_project-overview.md -->
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
@@ -67,7 +67,7 @@ guard-rails |
 2) `100_memory/100_cursor-memory-context.md` → Primary memory scaffold (30s, 80% context)
 3) `000_core/000_backlog.md` → Current priorities and dependencies
 4) `400_guides/400_system-overview.md` → Technical architecture and components
-5) `400_guides/400_context-priority-guide.md` → File relationships and reading order
+5) `400_guides/400_cursor-context-engineering-guide.md` → File relationships and reading order
 6) Topic-specific guides based on task:
 
 - Testing → `400_guides/400_testing-strategy-guide.md`
@@ -134,7 +134,7 @@ reading strategy** designed to maximize efficiency while maintaining comprehensi
    - Essential for understanding the broader technical landscape
    - Helps with implementation decisions and system integration
 
-### **📋 Crucial Ancillary Files (Read as Needed)**1.**`400_guides/400_context-priority-guide.md`**-**IMPORTANT**- When
+### **📋 Crucial Ancillary Files (Read as Needed)**1.**`400_guides/400_cursor-context-engineering-guide.md`**-**IMPORTANT**- When
 understanding file organization and relationships
 
 - When finding related files for specific tasks
@@ -178,7 +178,7 @@ Analysis Pattern:**1.**Start with documentation**to understand system architectu
 
 **As needed during conversation:**
 
-- Reference `400_guides/400_context-priority-guide.md` when discussing file organization
+- Reference `400_guides/400_cursor-context-engineering-guide.md` when discussing file organization
 - Check specific scripts when implementation details are needed
 - Use `200_setup/200_setup/200_setup/200_naming-conventions.md` when discussing file naming
 
@@ -233,7 +233,7 @@ files (000-099, 400-499)
 
 ### **Step 2: Choose Primary Location Based on Content**
 
-- *For system-wide concepts:**-**`400_guides/400_context-priority-guide.md`**- File organization, cognitive scaffolding,
+- *For system-wide concepts:**-**`400_guides/400_cursor-context-engineering-guide.md`**- File organization, cognitive scaffolding,
 AI analysis strategies
 
 - **`400_guides/400_system-overview.md`**- Technical architecture, system relationships
@@ -247,7 +247,7 @@ conventions
 - **`000_core/001_create-prd.md`**- PRD creation workflows**For memory and
 context:**-**`100_memory/100_cursor-memory-context.md`**- Quick reference summaries
 
-- **`400_guides/400_context-priority-guide.md`**- Detailed explanations**For configuration and
+- **`400_guides/400_cursor-context-engineering-guide.md`**- Detailed explanations**For configuration and
 setup:**-**`200_setup/202_setup-requirements.md`**- Environment setup and model/runtime changes
 
 ### **Step 3: Determine if Multiple Locations Are Needed**
@@ -260,10 +260,10 @@ setup:**-**`200_setup/202_setup-requirements.md`**- Environment setup and model/
 multi-location content:**-**File naming system**→ `200_setup/200_setup/200_setup/200_naming-conventions.md` (detailed) +
 `100_memory/100_cursor-memory-context.md` (quick reference)
 
-- **AI analysis strategy**→ `400_guides/400_context-priority-guide.md` (detailed) +
+- **AI analysis strategy**→ `400_guides/400_cursor-context-engineering-guide.md` (detailed) +
 `100_memory/100_cursor-memory-context.md` (quick reference)
 
-- **Documentation strategy**→ `400_guides/400_context-priority-guide.md` (detailed) +
+- **Documentation strategy**→ `400_guides/400_cursor-context-engineering-guide.md` (detailed) +
 `100_memory/100_cursor-memory-context.md` (summary)
 
 ### **Step 4: Consider the Reading Pattern**
@@ -371,7 +371,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 
 ### **In Code Comments:**```python
 
-# CONTEXT: See 400_guides/400_context-priority-guide.md for file organization
+# CONTEXT: See 400_guides/400_cursor-context-engineering-guide.md for file organization
 
 # ESSENTIAL: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md, 000_core/000_backlog.md
 
@@ -382,7 +382,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 ```text
 
 ## **In Documentation:**```markdown
->**Context Reference**: See `400_guides/400_context-priority-guide.md` for complete file organization
+>**Context Reference**: See `400_guides/400_cursor-context-engineering-guide.md` for complete file organization
 > **Essential Files**: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
 > **Implementation Files**: `100_memory/100_memory/104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
 > **Domain Files**: `100_memory/100_backlog-guide.md`, `CURSOR_NATIVE_AI_STRATEGY.md`
@@ -395,7 +395,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 | File | Purpose | Why First? | Cross-Reference |
 |------|---------|-------------|-----------------|
 | `400_guides/400_project-overview.md` | Project overview, quick start, core flow | **Primary entry point** - establishes purpose and the canonical workflow | `100_memory/100_cursor-memory-context.md` (memory), `400_guides/400_system-overview.md` |
-| `100_memory/100_cursor-memory-context.md` | Memory scaffold and current state | Fast rehydration for AIs; routing and safety | `400_guides/400_context-priority-guide.md`, `000_core/000_backlog.md` |
+| `100_memory/100_cursor-memory-context.md` | Memory scaffold and current state | Fast rehydration for AIs; routing and safety | `400_guides/400_cursor-context-engineering-guide.md`, `000_core/000_backlog.md` |
 | `400_guides/400_system-overview.md` | Architecture, components, workflows | Provides system-of-systems context for implementation | `100_memory/100_memory/104_dspy-development-context.md` |
 | `docs/README.md` | Beginner-friendly start and navigation | Bridges newcomers into the core flow quickly | `400_guides/400_project-overview.md`, `100_memory/100_cursor-memory-context.md` |
 
@@ -555,7 +555,7 @@ while also considering how AI systems like Cursor will consume and navigate the 
 ### **AI Model Context Sharing**When sharing context with other AI models, use this structured approach:
 
 #### **Quick Context (5 files):**```text
-400_guides/400_context-priority-guide.md
+400_guides/400_cursor-context-engineering-guide.md
 400_guides/400_project-overview.md
 400_guides/400_system-overview.md
 000_core/000_backlog.md

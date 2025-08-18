@@ -1,11 +1,15 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MEMORY_CONTEXT: MEDIUM - Few-shot examples and patterns -->
+
 # 🎯 Few-Shot Context Examples
 
 ## 🎯 Few-Shot Context Examples
 
 <!-- ANCHOR: tldr -->
+
 {#tldr}
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Few-shot examples maintained
@@ -14,72 +18,68 @@
 
 - **Points**: 3 - Low complexity, reference material
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md
 
 - **Next Steps**: Add new patterns as system evolves
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-|  |  |  |
+|-------------------|-----------|---------|
+|                   |           |         |
 
-- *Expected Output:**What the AI should produce**Pattern:**The underlying pattern to recognize**Validation:**How to
-verify the output
+- \*Expected Output:**What the AI should produce**Pattern:**The
+  underlying pattern to recognize**Validation:\*\*How to verify the
+  output
 
-```text
+\`\`\`text
 
-- --
+------------------------------------------------------------------------
 
 ## 📚 Documentation Coherence Examples
 
 ### **1. File Naming Convention Validation**
 
-- *Context:**Validating file naming conventions across the project**Input:**```markdown
+- \*Context:**Validating file naming conventions across the
+  project**Input:\*\*\`\`\`markdown
 
-# Check if this file follows naming conventions
+## Check if this file follows naming conventions
 
-filename: "400_guides/400_security-best-practices-guide.md"
+filename: “400_guides/400_security-best-practices-guide.md”
 
-```text**Expected Output:**
+\`\`\`text**Expected Output:**
 
-```json
-{
-  "valid": true,
-  "pattern": "400_*_guide.md",
-  "category": "documentation",
-  "priority": "HIGH",
-  "context_reference": "400_guides/400_context-priority-guide.md",
-  "backlog_reference": "000_core/000_backlog.md"
-}
+\`\`\`json { “valid”: true, “pattern”: “400\_\*\_guide.md”, “category”:
+“documentation”, “priority”: “HIGH”, “context_reference”:
+“400_guides/400_cursor-context-engineering-guide.md”,
+“backlog_reference”: “000_core/000_backlog.md” }
 
-```text
+\`\`\`text
 
-- *Pattern:**`400_` prefix indicates high-priority documentation with context references**Validation:**Check for
-required HTML comments and cross-references
+- \*Pattern:**`400_` prefix indicates high-priority documentation with
+  context references**Validation:\*\*Check for required HTML comments
+  and cross-references
 
 ## **2. Cross-Reference Validation**
 
-- *Context:**Ensuring documentation files reference each other correctly**Input:**```markdown
-<!-- BACKLOG_REFERENCE: 000_core/000_backlog.md -->
-<!-- MEMORY_CONTEXT: HIGH - Essential security documentation -->
+- \*Context:**Ensuring documentation files reference each other
+  correctly**Input:\*\*\`\`\`markdown
+  <!-- BACKLOG_REFERENCE: 000_core/000_backlog.md -->
+  <!-- MEMORY_CONTEXT: HIGH - Essential security documentation -->
 
-```text**Expected Output:**```json
-{
-  "references_valid": true,
-  "context_file_exists": true,
-  "backlog_file_exists": true,
-  "memory_level": "HIGH",
-  "coherence_score": 0.95
-}
+`text**Expected Output:**`json { “references_valid”: true,
+“context_file_exists”: true, “backlog_file_exists”: true,
+“memory_level”: “HIGH”, “coherence_score”: 0.95 }
 
-```text**Pattern:**HTML comments with specific reference patterns**Validation:**Verify referenced files exist and are accessible
+\`\`\`text**Pattern:**HTML comments with specific reference
+patterns**Validation:**Verify referenced files exist and are accessible
 
 ### **3. Documentation Structure Validation**
 
-- *Context:**Validating documentation structure and completeness**Input:**```markdown
+- \*Context:**Validating documentation structure and
+  completeness**Input:\*\*\`\`\`markdown
 
-# Document Title
+## Document Title
 
 ## Purpose
 
@@ -87,168 +87,147 @@ Brief description
 
 ## Table of Contents
 
-1. [Section 1](#section-1)
-2. [Section 2](#section-2)
+1.  [Section 1](#section-1)
+2.  [Section 2](#section-2)
 
 ## Section 1
 
 Content here
 
-- --*Last Updated: 2024-08-07*```text**Expected Output:**```json
-{
-  "structure_valid": true,
-  "has_purpose": true,
-  "has_toc": true,
-  "has_sections": true,
-  "has_timestamp": true,
-  "completeness_score": 0.9
-}
+- –*Last Updated: 2024-08-07*`text**Expected Output:**`json {
+  “structure_valid”: true, “has_purpose”: true, “has_toc”: true,
+  “has_sections”: true, “has_timestamp”: true, “completeness_score”: 0.9
+  }
 
-```text**Pattern:**Standard documentation structure with required elements**Validation:**Check for all required sections and formatting
+\`\`\`text**Pattern:**Standard documentation structure with required
+elements**Validation:**Check for all required sections and formatting
 
-- --
+------------------------------------------------------------------------
 
 ## 📋 Backlog Analysis Examples
 
 ### **1. Priority Scoring Analysis**
 
-- *Context:**Analyzing backlog item priority and scoring**Input:**```markdown
-| B‑073 | Few-Shot Context Engineering Examples | 🔥  | 1        | todo   | Create AI context engineering examples | Few-Shot Examples + AI Pattern Recognition | B-060 Documentation Coherence Validation System |
-<!--score: {bv:5, tc:3, rr:4, le:4, effort:1, deps:["B-060"]}-->
-<!--score_total: 6.7-->
+- \*Context:**Analyzing backlog item priority and
+  scoring**Input:\*\*\`\`\`markdown \| B‑073 \| Few-Shot Context
+  Engineering Examples \| 🔥 \| 1 \| todo \| Create AI context
+  engineering examples \| Few-Shot Examples + AI Pattern Recognition \|
+  B-060 Documentation Coherence Validation System \|
+  <!--score: {bv:5, tc:3, rr:4, le:4, effort:1, deps:["B-060"]}-->
+  <!--score_total: 6.7-->
 
-```text**Expected Output:**```json
-{
-  "priority": "🔥",
-  "points": 1,
-  "status": "todo",
-  "score_total": 6.7,
-  "business_value": 5,
-  "technical_complexity": 3,
-  "risk_reduction": 4,
-  "learning_enhancement": 4,
-  "effort": 1,
-  "dependencies": ["B-060"],
-  "recommendation": "high_priority"
-}
+`text**Expected Output:**`json { “priority”: “🔥”, “points”: 1,
+“status”: “todo”, “score_total”: 6.7, “business_value”: 5,
+“technical_complexity”: 3, “risk_reduction”: 4, “learning_enhancement”:
+4, “effort”: 1, “dependencies”: \[“B-060”\], “recommendation”:
+“high_priority” }
 
-```text**Pattern:**Backlog item with scoring metadata**Validation:**Verify scoring consistency and dependency status
+\`\`\`text**Pattern:**Backlog item with scoring
+metadata**Validation:**Verify scoring consistency and dependency status
 
 ### **2. Dependency Chain Analysis**
 
-- *Context:**Analyzing dependency relationships between backlog items**Input:**```markdown
-B-073 → B-060 (completed)
-B-074 → B-073 (todo)
-B-075 → B-074 (todo)
+- \*Context:**Analyzing dependency relationships between backlog
+  items**Input:\*\*\`\`\`markdown B-073 → B-060 (completed) B-074 →
+  B-073 (todo) B-075 → B-074 (todo)
 
-```text**Expected Output:**```json
-{
-  "dependency_chain": ["B-060", "B-073", "B-074", "B-075"],
-  "blocked_items": ["B-074", "B-075"],
-  "ready_items": ["B-073"],
-  "completed_items": ["B-060"],
-  "execution_order": ["B-073", "B-074", "B-075"]
-}
+`text**Expected Output:**`json { “dependency_chain”: \[“B-060”, “B-073”,
+“B-074”, “B-075”\], “blocked_items”: \[“B-074”, “B-075”\],
+“ready_items”: \[“B-073”\], “completed_items”: \[“B-060”\],
+“execution_order”: \[“B-073”, “B-074”, “B-075”\] }
 
-```text**Pattern:**Dependency graph with status tracking**Validation:**Ensure no circular dependencies and proper execution order
+\`\`\`text**Pattern:**Dependency graph with status
+tracking**Validation:**Ensure no circular dependencies and proper
+execution order
 
 ### **3. Completion Status Tracking**
 
-- *Context:**Tracking completion status and implementation notes**Input:**```markdown
-| C‑043 | Deployment & Environment Management Guide Implementation | 📈  | 2        | ✅ done | 2024-08-07 | Comprehensive deployment documentation with environment strategy, deployment architecture, configuration management, monitoring, rollback procedures, security deployment, and deployment automation |
+- \*Context:**Tracking completion status and implementation
+  notes**Input:\*\*\`\`\`markdown \| C‑043 \| Deployment & Environment
+  Management Guide Implementation \| 📈 \| 2 \| ✅ done \| 2024-08-07 \|
+  Comprehensive deployment documentation with environment strategy,
+  deployment architecture, configuration management, monitoring,
+  rollback procedures, security deployment, and deployment automation \|
 
-```text**Expected Output:**```json
-{
-  "status": "completed",
-  "completion_date": "2024-08-07",
-  "points": 2,
-  "category": "C",
-  "implementation_notes": "Comprehensive deployment documentation...",
-  "next_review": "monthly"
-}
+`text**Expected Output:**`json { “status”: “completed”,
+“completion_date”: “2024-08-07”, “points”: 2, “category”: “C”,
+“implementation_notes”: “Comprehensive deployment documentation…”,
+“next_review”: “monthly” }
 
-```text**Pattern:**Completed item with implementation details**Validation:**Verify completion date and implementation completeness
+\`\`\`text**Pattern:**Completed item with implementation
+details**Validation:**Verify completion date and implementation
+completeness
 
-- --
+------------------------------------------------------------------------
 
 ## 🧠 Memory Context Examples
 
 ### **1. Memory Hierarchy Recognition**
 
-- *Context:**Understanding memory context hierarchy and priority levels**Input:**```markdown
-<!-- MEMORY_CONTEXT: HIGH - Essential deployment documentation for production readiness -->
-<!-- SYSTEM_REFERENCE: 400_guides/400_system-overview.md -->
+- \*Context:**Understanding memory context hierarchy and priority
+  levels**Input:\*\*\`\`\`markdown
+  <!-- MEMORY_CONTEXT: HIGH - Essential deployment documentation for production readiness -->
+  <!-- SYSTEM_REFERENCE: 400_guides/400_system-overview.md -->
 
-```text**Expected Output:**```json
-{
-  "memory_level": "HIGH",
-  "context_files": ["400_guides/400_context-priority-guide.md", "400_guides/400_system-overview.md"],
-  "priority": "essential",
-  "domain": "deployment",
-  "readiness_level": "production"
-}
+`text**Expected Output:**`json { “memory_level”: “HIGH”,
+“context_files”: \[“400_guides/400_cursor-context-engineering-guide.md”,
+“400_guides/400_system-overview.md”\], “priority”: “essential”,
+“domain”: “deployment”, “readiness_level”: “production” }
 
-```text**Pattern:**Memory context with priority and reference patterns**Validation:**Check memory level consistency and file accessibility
+\`\`\`text**Pattern:**Memory context with priority and reference
+patterns**Validation:**Check memory level consistency and file
+accessibility
 
 ### **2. Cognitive Scaffolding Recognition**
 
-- *Context:**Recognizing cognitive scaffolding patterns in documentation**Input:**```markdown
-<!-- SYSTEM_REFERENCE: 400_guides/400_system-overview.md -->
-<!-- BACKLOG_REFERENCE: 000_core/000_backlog.md -->
-<!-- MEMORY_CONTEXT: HIGH - Essential AI context engineering for coherence validation -->
-<!-- BACKLOG_ITEM: B-073 Few-Shot Context Engineering Examples -->
+- \*Context:**Recognizing cognitive scaffolding patterns in
+  documentation**Input:\*\*\`\`\`markdown
+  <!-- SYSTEM_REFERENCE: 400_guides/400_system-overview.md -->
+  <!-- BACKLOG_REFERENCE: 000_core/000_backlog.md -->
+  <!-- MEMORY_CONTEXT: HIGH - Essential AI context engineering for coherence validation -->
+  <!-- BACKLOG_ITEM: B-073 Few-Shot Context Engineering Examples -->
 
-```text**Expected Output:**```json
-{
-  "scaffolding_type": "comprehensive",
-  "reference_count": 4,
-  "memory_level": "HIGH",
-  "backlog_item": "B-073",
-  "coherence_score": 0.95,
-  "validation_required": true
-}
+`text**Expected Output:**`json { “scaffolding_type”: “comprehensive”,
+“reference_count”: 4, “memory_level”: “HIGH”, “backlog_item”: “B-073”,
+“coherence_score”: 0.95, “validation_required”: true }
 
-```text**Pattern:**Comprehensive scaffolding with multiple reference types**Validation:**Verify all references are valid and accessible
+\`\`\`text**Pattern:**Comprehensive scaffolding with multiple reference
+types**Validation:**Verify all references are valid and accessible
 
 ### **3. Context Priority Recognition**
 
-- *Context:**Understanding context priority based on file naming and metadata**Input:**```markdown
-Files: ["100_memory/100_cursor-memory-context.md", "400_guides/400_system-overview.md", "000_core/000_backlog.md"]
+- \*Context:**Understanding context priority based on file naming and
+  metadata**Input:\*\*\`\`\`markdown Files:
+  \[“100_memory/100_cursor-memory-context.md”,
+  “400_guides/400_system-overview.md”, “000_core/000_backlog.md”\]
 
-```text**Expected Output:**```json
-{
-  "reading_order": [
-    "400_guides/400_project-overview.md",
-    "100_memory/100_cursor-memory-context.md",
-    "000_core/000_backlog.md",
-    "400_guides/400_system-overview.md"
-  ],
-  "priority_levels": {
-    "400": "HIGH",
-    "100": "HIGH",
-    "000": "HIGH"
-  },
-  "context_hierarchy": "project-overview → memory → backlog → system"
-}
+`text**Expected Output:**`json { “reading_order”: \[
+“400_guides/400_project-overview.md”,
+“100_memory/100_cursor-memory-context.md”, “000_core/000_backlog.md”,
+“400_guides/400_system-overview.md” \], “priority_levels”: { “400”:
+“HIGH”, “100”: “HIGH”, “000”: “HIGH” }, “context_hierarchy”:
+“project-overview → memory → backlog → system” }
 
-```text**Pattern:**File naming convention indicating priority and reading order**Validation:**Ensure proper reading sequence and priority alignment
+\`\`\`text**Pattern:**File naming convention indicating priority and
+reading order**Validation:**Ensure proper reading sequence and priority
+alignment
 
-- --
+------------------------------------------------------------------------
 
 ## 💻 Code Generation Examples
 
 ### **1. Python Function Generation**
 
-- *Context:**Generating Python functions with proper error handling and documentation**Input:**```python
+- \*Context:**Generating Python functions with proper error handling and
+  documentation**Input:\*\*\`\`\`python
 
-# Generate a function to validate file naming conventions
+## Generate a function to validate file naming conventions
 
-# Requirements: Check 400_ prefix, validate HTML comments, verify cross-references
+## Requirements: Check 400\_ prefix, validate HTML comments, verify cross-references
 
-```text**Expected Output:**```python
-def validate_file_naming_conventions(filename: str) -> dict:
-    """
-    Validate file naming conventions and structure.
+`text**Expected Output:**`python def
+validate_file_naming_conventions(filename: str) -\> dict: ““” Validate
+file naming conventions and structure.
 
     Args:
         filename: Name of the file to validate
@@ -258,7 +237,7 @@ def validate_file_naming_conventions(filename: str) -> dict:
     """
     try:
 
-        # Check naming pattern
+        ## Check naming pattern
 
         if not filename.startswith(("100_", "400_", "000_")):
             return {
@@ -267,12 +246,12 @@ def validate_file_naming_conventions(filename: str) -> dict:
                 "recommendation": "Use 100_, 400_, or 000_ prefix"
             }
 
-        # Validate HTML comments
+        ## Validate HTML comments
 
         with open(filename, 'r') as f:
             content = f.read()
 
-        # Check for required comments
+        ## Check for required comments
 
         required_comments = [
             "CONTEXT_REFERENCE",
@@ -298,46 +277,46 @@ def validate_file_naming_conventions(filename: str) -> dict:
             "recommendation": "Check file accessibility and format"
         }
 
-```text**Pattern:**Comprehensive function with error handling, documentation, and validation**Validation:**Test with various file types and error conditions
+\`\`\`text**Pattern:**Comprehensive function with error handling,
+documentation, and validation**Validation:**Test with various file types
+and error conditions
 
 ## **2. Configuration Generation**
 
-- *Context:**Generating configuration files with proper structure and validation**Input:**```python
+- \*Context:**Generating configuration files with proper structure and
+  validation**Input:\*\*\`\`\`python
 
-# Generate a configuration for the AI development ecosystem
+## Generate a configuration for the AI development ecosystem
 
-# Requirements: Environment variables, security settings, monitoring config
+## Requirements: Environment variables, security settings, monitoring config
 
-```text**Expected Output:**```python
+`text**Expected Output:**`python
 
-# config/ai_ecosystem_config.py
+## config/ai_ecosystem_config.py
 
-import os
-from dataclasses import dataclass
-from typing import Dict, Any
+import os from dataclasses import dataclass from typing import Dict, Any
 
-@dataclass
-class AIEcosystemConfig:
-    """Configuration for AI development ecosystem"""
+@dataclass class AIEcosystemConfig: “““Configuration for AI development
+ecosystem”“”
 
-    # Environment settings
+    ## Environment settings
 
     environment: str = os.getenv("ENV", "development")
     debug: bool = os.getenv("DEBUG", "True").lower() == "true"
 
-    # Database settings
+    ## Database settings
 
     database_url: str = os.getenv("DATABASE_URL", "postgresql://localhost/ai_dev")
 
-    # AI settings (Cursor-native by default; legacy/local runners are archived)
+    ## AI settings (Cursor-native by default; legacy/local runners are archived)
 
-    # Security settings
+    ## Security settings
 
     secret_key: str = os.getenv("SECRET_KEY", "dev-secret-key")
     auth_required: bool = os.getenv("AUTH_REQUIRED", "False").lower() == "true"
     rate_limiting: bool = os.getenv("RATE_LIMITING", "False").lower() == "true"
 
-    # Monitoring settings
+    ## Monitoring settings
 
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
     monitoring_enabled: bool = os.getenv("MONITORING_ENABLED", "True").lower() == "true"
@@ -347,7 +326,7 @@ class AIEcosystemConfig:
         errors = []
         warnings = []
 
-        # Check required settings
+        ## Check required settings
 
         if not self.database_url:
             errors.append("DATABASE_URL is required")
@@ -364,34 +343,32 @@ class AIEcosystemConfig:
             "warnings": warnings
         }
 
-```text**Pattern:**Structured configuration with validation and environment awareness**Validation:**Test with different environments and settings
+\`\`\`text**Pattern:**Structured configuration with validation and
+environment awareness**Validation:**Test with different environments and
+settings
 
-- --
+------------------------------------------------------------------------
 
 ## 🔧 Error Recovery Examples
 
 ### **1. Database Connection Recovery**
 
-- *Context:**Handling database connection failures with retry logic**Input:**```python
+- \*Context:**Handling database connection failures with retry
+  logic**Input:\*\*\`\`\`python
 
-# Database connection failed with error: connection timeout
+## Database connection failed with error: connection timeout
 
-# Requirements: Implement retry logic with exponential backoff
+## Requirements: Implement retry logic with exponential backoff
 
-```text**Expected Output:**
+\`\`\`text**Expected Output:**
 
-```python
-import time
-import psycopg2
-from functools import wraps
+\`\`\`python import time import psycopg2 from functools import wraps
 from typing import Optional, Callable
 
-def retry_database_connection(max_retries: int = 3, base_delay: float = 1.0):
-    """Retry decorator for database connections with exponential backoff"""
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            last_exception = None
+def retry_database_connection(max_retries: int = 3, base_delay: float =
+1.0): “““Retry decorator for database connections with exponential
+backoff”“” def decorator(func: Callable) -\> Callable: @wraps(func) def
+wrapper(\*args, \*\*kwargs): last_exception = None
 
             for attempt in range(max_retries):
                 try:
@@ -410,32 +387,32 @@ def retry_database_connection(max_retries: int = 3, base_delay: float = 1.0):
         return wrapper
     return decorator
 
-@retry_database_connection(max_retries=3, base_delay=1.0)
-def connect_to_database(database_url: str):
-    """Connect to database with retry logic"""
-    return psycopg2.connect(database_url)
+@retry_database_connection(max_retries=3, base_delay=1.0) def
+connect_to_database(database_url: str): “““Connect to database with
+retry logic”“” return psycopg2.connect(database_url)
 
-# Usage example
+## Usage example
 
-try:
-    conn = connect_to_database("postgresql://localhost/ai_dev")
-    print("Database connection successful")
-except Exception as e:
-    print(f"Database connection failed: {e}")
+try: conn = connect_to_database(“postgresql://localhost/ai_dev”)
+print(“Database connection successful”) except Exception as e:
+print(f”Database connection failed: {e}“)
 
-```text**Pattern:**Retry decorator with exponential backoff and proper error handling**Validation:**Test with various database error conditions
+\`\`\`text**Pattern:**Retry decorator with exponential backoff and
+proper error handling**Validation:**Test with various database error
+conditions
 
 ## **2. File Validation Recovery**
 
-- *Context:**Recovering from file validation errors with fallback strategies**Input:**```python
+- \*Context:**Recovering from file validation errors with fallback
+  strategies**Input:\*\*\`\`\`python
 
-# File validation failed: missing required HTML comments
+## File validation failed: missing required HTML comments
 
-# Requirements: Implement fallback validation and recovery
+## Requirements: Implement fallback validation and recovery
 
-```text**Expected Output:**```python
-def validate_file_with_fallback(filename: str) -> dict:
-    """Validate file with fallback strategies"""
+`text**Expected Output:**`python def
+validate_file_with_fallback(filename: str) -\> dict: “““Validate file
+with fallback strategies”“”
 
     # Primary validation
 
@@ -468,11 +445,9 @@ def validate_file_with_fallback(filename: str) -> dict:
         "recommendation": "Manual intervention required"
     }
 
-def attempt_file_recovery(filename: str) -> dict:
-    """Attempt to recover file by adding missing elements"""
-    try:
-        with open(filename, 'r') as f:
-            content = f.read()
+def attempt_file_recovery(filename: str) -\> dict: “““Attempt to recover
+file by adding missing elements”“” try: with open(filename, ‘r’) as f:
+content = f.read()
 
         changes = []
 
@@ -505,29 +480,28 @@ def attempt_file_recovery(filename: str) -> dict:
             "error": str(e)
         }
 
-```text
+\`\`\`text
 
-- *Pattern:**Multi-level validation with fallback and recovery strategies**Validation:**Test with various file corruption scenarios
+- \*Pattern:**Multi-level validation with fallback and recovery
+  strategies**Validation:\*\*Test with various file corruption scenarios
 
-- --
+------------------------------------------------------------------------
 
 ## 🔗 Integration Pattern Examples
 
 ### **1. API Integration Pattern**
 
-- *Context:**Integrating external APIs with proper error handling and retry logic**Input:**```python
+- \*Context:**Integrating external APIs with proper error handling and
+  retry logic**Input:\*\*\`\`\`python
 
-# Integrate with external AI model API
+## Integrate with external AI model API
 
-# Requirements: Handle timeouts, rate limiting, and authentication
+## Requirements: Handle timeouts, rate limiting, and authentication
 
-```text**Expected Output:**```python
-import requests
-import time
-from typing import Dict, Any, Optional
+`text**Expected Output:**`python import requests import time from typing
+import Dict, Any, Optional
 
-class AIModelClient:
-    """Client for external AI model APIs"""
+class AIModelClient: “““Client for external AI model APIs”“”
 
     def __init__(self, base_url: str, api_key: str, timeout: int = 30):
         self.base_url = base_url
@@ -592,29 +566,31 @@ class AIModelClient:
             "error": "All retry attempts failed"
         }
 
-# Usage example
+## Usage example
 
-client = AIModelClient("<https://api.example.com",> "your-api-key")
-result = client.generate_response("Generate a Python function for file validation")
+client = AIModelClient(“<https://api.example.com%22,>”your-api-key”)
+result = client.generate_response(“Generate a Python function for file
+validation”)
 
-```text**Pattern:**Robust API client with retry logic, rate limiting, and error handling**Validation:**Test with various API response scenarios
+\`\`\`text**Pattern:**Robust API client with retry logic, rate limiting,
+and error handling**Validation:**Test with various API response
+scenarios
 
 ## **2. Database Integration Pattern**
 
-- *Context:**Integrating with PostgreSQL database with connection pooling and resilience**Input:**```python
+- \*Context:**Integrating with PostgreSQL database with connection
+  pooling and resilience**Input:\*\*\`\`\`python
 
-# Integrate with PostgreSQL database
+## Integrate with PostgreSQL database
 
-# Requirements: Connection pooling, transaction management, error recovery
+## Requirements: Connection pooling, transaction management, error recovery
 
-```text**Expected Output:**```python
-import psycopg2
-from psycopg2.pool import SimpleConnectionPool
-from contextlib import contextmanager
-from typing import Dict, Any, Optional
+`text**Expected Output:**`python import psycopg2 from psycopg2.pool
+import SimpleConnectionPool from contextlib import contextmanager from
+typing import Dict, Any, Optional
 
-class DatabaseManager:
-    """Database manager with connection pooling and resilience"""
+class DatabaseManager: “““Database manager with connection pooling and
+resilience”“”
 
     def __init__(self, database_url: str, min_connections: int = 1, max_connections: int = 10):
         self.database_url = database_url
@@ -685,33 +661,33 @@ class DatabaseManager:
             }
         }
 
-# Usage example
+## Usage example
 
-db_manager = DatabaseManager("postgresql://localhost/ai_dev")
-health = db_manager.health_check()
-print(f"Database healthy: {health['healthy']}")
+db_manager = DatabaseManager(“postgresql://localhost/ai_dev”) health =
+db_manager.health_check() print(f”Database healthy:
+{health\[‘healthy’\]}“)
 
-```text**Pattern:**Database manager with connection pooling, transaction management, and health checks**Validation:**Test with various database scenarios and error conditions
+\`\`\`text**Pattern:**Database manager with connection pooling,
+transaction management, and health checks**Validation:**Test with
+various database scenarios and error conditions
 
-- --
+------------------------------------------------------------------------
 
 ## 🧪 Testing Strategy Examples
 
 ### **1. Unit Test Pattern**
 
-- *Context:**Creating comprehensive unit tests for AI ecosystem components**Input:**```python
+- \*Context:**Creating comprehensive unit tests for AI ecosystem
+  components**Input:\*\*\`\`\`python
 
-# Create unit tests for file validation function
+## Create unit tests for file validation function
 
-# Requirements: Test various scenarios, edge cases, and error conditions
+## Requirements: Test various scenarios, edge cases, and error conditions
 
-```text**Expected Output:**```python
-import pytest
-from unittest.mock import patch, mock_open
-from pathlib import Path
+`text**Expected Output:**`python import pytest from unittest.mock import
+patch, mock_open from pathlib import Path
 
-class TestFileValidation:
-    """Test suite for file validation functions"""
+class TestFileValidation: “““Test suite for file validation functions”“”
 
     def test_valid_file_structure(self):
         """Test validation of properly structured file"""
@@ -789,42 +765,34 @@ class TestFileValidation:
         result = validate_file_naming_conventions(filename)
         assert result["valid"] == expected_valid
 
-# Test configuration
+## Test configuration
 
-@pytest.fixture
-def sample_files():
-    """Provide sample files for testing"""
-    return {
-        "valid": "400_test-valid.md",
-        "invalid": "invalid_name.txt",
-        "missing_comments": "400_test-missing-comments.md"
-    }
+@pytest.fixture def sample_files(): “““Provide sample files for
+testing”“” return { “valid”: “400_test-valid.md”, “invalid”:
+“invalid_name.txt”, “missing_comments”: “400_test-missing-comments.md” }
 
-@pytest.fixture
-def mock_file_system(sample_files):
-    """Mock file system for testing"""
-    with patch("pathlib.Path.exists") as mock_exists:
-        mock_exists.return_value = True
-        yield mock_exists
+@pytest.fixture def mock_file_system(sample_files): “““Mock file system
+for testing”“” with patch(“pathlib.Path.exists”) as mock_exists:
+mock_exists.return_value = True yield mock_exists
 
-```text**Pattern:**Comprehensive test suite with parametrized tests, fixtures, and edge case coverage**Validation:**Ensure all test scenarios pass and provide good coverage
+\`\`\`text**Pattern:**Comprehensive test suite with parametrized tests,
+fixtures, and edge case coverage**Validation:**Ensure all test scenarios
+pass and provide good coverage
 
 ## **2. Integration Test Pattern**
 
-- *Context:**Creating integration tests for AI ecosystem components**Input:**```python
+- \*Context:**Creating integration tests for AI ecosystem
+  components**Input:\*\*\`\`\`python
 
-# Create integration tests for database and API interactions
+## Create integration tests for database and API interactions
 
-# Requirements: Test real interactions, error scenarios, and performance
+## Requirements: Test real interactions, error scenarios, and performance
 
-```text**Expected Output:**```python
-import pytest
-import requests
-from unittest.mock import patch, Mock
-from typing import Dict, Any
+`text**Expected Output:**`python import pytest import requests from
+unittest.mock import patch, Mock from typing import Dict, Any
 
-class TestIntegrationScenarios:
-    """Integration tests for AI ecosystem components"""
+class TestIntegrationScenarios: “““Integration tests for AI ecosystem
+components”“”
 
     @pytest.fixture
     def mock_api_client(self):
@@ -900,11 +868,10 @@ class TestIntegrationScenarios:
 
         assert execution_time < 1.0  # Less than 1 second for 10 operations
 
-# Performance test configuration
+## Performance test configuration
 
-@pytest.mark.performance
-class TestPerformance:
-    """Performance tests for AI ecosystem"""
+@pytest.mark.performance class TestPerformance: “““Performance tests for
+AI ecosystem”“”
 
     def test_database_connection_pool_performance(self):
         """Test database connection pool performance"""
@@ -952,123 +919,107 @@ class TestPerformance:
 
         assert execution_time < 2.0  # Less than 2 seconds
 
-```text**Pattern:**Integration tests with performance benchmarks and error scenario coverage**Validation:**Ensure integration points work correctly and perform well
+\`\`\`text**Pattern:**Integration tests with performance benchmarks and
+error scenario coverage**Validation:**Ensure integration points work
+correctly and perform well
 
-- --
+------------------------------------------------------------------------
 
 ## 🚀 Deployment Examples
 
 ### **1. Docker Deployment Pattern**
 
-- *Context:**Creating Docker deployment configuration for AI ecosystem**Input:**```dockerfile
+- \*Context:**Creating Docker deployment configuration for AI
+  ecosystem**Input:\*\*\`\`\`dockerfile
 
-# Create Dockerfile for AI development ecosystem
+## Create Dockerfile for AI development ecosystem
 
-# Requirements: Multi-stage build, security, optimization
+## Requirements: Multi-stage build, security, optimization
 
-```text**Expected Output:**
+\`\`\`text**Expected Output:**
 
-```dockerfile
+\`\`\`dockerfile
 
-# Dockerfile for AI Development Ecosystem
+## Dockerfile for AI Development Ecosystem
 
 FROM python:3.11-slim as base
 
-# Set environment variables
+## Set environment variables
 
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PIP_NO_CACHE_DIR=1
+ENV PYTHONUNBUFFERED=1 ENV PYTHONDONTWRITEBYTECODE=1 ENV
+PIP_NO_CACHE_DIR=1
 
-# Install system dependencies
+## Install system dependencies
 
-RUN apt-get update && apt-get install -y \
-    postgresql-client \
-    curl \
-    && rm -rf /var/lib/apt/lists/*# Create non-root user
+RUN apt-get update && apt-get install -y  
+postgresql-client  
+curl  
+&& rm -rf /var/lib/apt/lists/\*# Create non-root user
 
 RUN groupadd -r aiuser && useradd -r -g aiuser aiuser
 
-# Set working directory
+## Set working directory
 
 WORKDIR /app
 
-# Copy requirements first for better caching
+## Copy requirements first for better caching
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt . RUN pip install –no-cache-dir -r
+requirements.txt
 
-# Copy application code
+## Copy application code
 
 COPY . .
 
-# Create necessary directories
+## Create necessary directories
 
 RUN mkdir -p /app/logs /app/data /app/cache
 
-# Set ownership
+## Set ownership
 
 RUN chown -R aiuser:aiuser /app
 
-# Switch to non-root user
+## Switch to non-root user
 
 USER aiuser
 
-# Health check
+## Health check
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f <http://localhost:5000/health> || exit 1
+HEALTHCHECK –interval=30s –timeout=10s –start-period=5s –retries=3  
+CMD curl -f <http://localhost:5000/health> \|\| exit 1
 
-# Expose port
+## Expose port
 
 EXPOSE 5000
 
-# Run application
+## Run application
 
-CMD ["python", "app.py"]
+CMD \[“python”, “app.py”\]
 
-```text**Pattern:**Secure, optimized Docker configuration with health checks**Validation:**Test build process and container security
+\`\`\`text**Pattern:**Secure, optimized Docker configuration with health
+checks**Validation:**Test build process and container security
 
 ## **2. Kubernetes Deployment Pattern**
 
-- *Context:**Creating Kubernetes deployment for AI ecosystem**Input:**```yaml
+- \*Context:**Creating Kubernetes deployment for AI
+  ecosystem**Input:\*\*\`\`\`yaml
 
-# Create Kubernetes deployment configuration
+## Create Kubernetes deployment configuration
 
-# Requirements: High availability, monitoring, scaling
+## Requirements: High availability, monitoring, scaling
 
-```text**Expected Output:**```yaml
+`text**Expected Output:**`yaml
 
-# k8s/deployment.yaml
+## k8s/deployment.yaml
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ai-development-ecosystem
-  namespace: ai-ecosystem
-  labels:
-    app: ai-development-ecosystem
-    version: v1.0.0
-spec:
-  replicas: 3
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-  selector:
-    matchLabels:
-      app: ai-development-ecosystem
-  template:
-    metadata:
-      labels:
-        app: ai-development-ecosystem
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "5000"
-        prometheus.io/path: "/metrics"
-    spec:
-      containers:
+apiVersion: apps/v1 kind: Deployment metadata: name:
+ai-development-ecosystem namespace: ai-ecosystem labels: app:
+ai-development-ecosystem version: v1.0.0 spec: replicas: 3 strategy:
+type: RollingUpdate rollingUpdate: maxSurge: 1 maxUnavailable: 0
+selector: matchLabels: app: ai-development-ecosystem template: metadata:
+labels: app: ai-development-ecosystem annotations: prometheus.io/scrape:
+“true” prometheus.io/port: “5000” prometheus.io/path: “/metrics” spec:
+containers:
 
       - name: ai-app
 
@@ -1145,149 +1096,78 @@ spec:
         emptyDir: {}
       securityContext:
         fsGroup: 1000
-- --
-apiVersion: v1
-kind: Service
-metadata:
-  name: ai-development-ecosystem-service
-  namespace: ai-ecosystem
-spec:
-  selector:
-    app: ai-development-ecosystem
-  ports:
 
-  - protocol: TCP
-
-    port: 80
-    targetPort: 5000
-    name: http
-  type: LoadBalancer
-- --
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: ai-development-ecosystem-hpa
-  namespace: ai-ecosystem
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: ai-development-ecosystem
-  minReplicas: 3
-  maxReplicas: 10
-  metrics:
-
-  - type: Resource
-
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-
-  - type: Resource
-
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
-
-```text**Pattern:**Production-ready Kubernetes deployment with monitoring, scaling, and security**Validation:**Test deployment, scaling, and monitoring functionality
-
-- --
+| ap ki me | iVersion: v1 nd: Service tadata: name: ai-development-ecosystem-service namespace: ai-ecosystem ec: selector: app: ai-development-ecosystem ports: |
+|----|----|
+| ap ki me | iVersion: autoscaling/v2 nd: HorizontalPodAutoscaler tadata: name: ai-development-ecosystem-hpa namespace: ai-ecosystem ec: scaleTargetRef: apiVersion: apps/v1 kind: Deployment name: ai-development-ecosystem minReplicas: 3 maxReplicas: 10 metrics: |
+|  | \- type: Resource |
+|  | resource: name: cpu target: type: Utilization averageUtilization: 70 |
+|  | \- type: Resource |
+|  | resource: name: memory target: type: Utilization averageUtilization: 80 |
+| \`\` | \`text**Pattern:**Production-ready Kubernetes deployment with monitoring, scaling, and security**Validation:**Test deployment, scaling, and monitoring functionality |
 
 ## 📋 Best Practices
 
-### **1. Context Engineering Best Practices**```python
+### **1. Context Engineering Best Practices**\`\`\`python
 
-# Best practices for few-shot context engineering
+## Best practices for few-shot context engineering
 
-CONTEXT_BEST_PRACTICES = {
-    "clarity": {
-        "principle": "Examples should be clear and unambiguous",
-        "implementation": "Use descriptive names and clear structure",
-        "validation": "Test with different AI models"
-    },
-    "consistency": {
-        "principle": "Patterns should be consistent across examples",
-        "implementation": "Use consistent naming and formatting",
-        "validation": "Check pattern adherence across examples"
-    },
-    "completeness": {
-        "principle": "Examples should cover the full scope",
-        "implementation": "Include edge cases and error scenarios",
-        "validation": "Test with various input conditions"
-    },
-    "coherence": {
-        "principle": "Examples should maintain logical flow",
-        "implementation": "Use logical progression and clear relationships",
-        "validation": "Verify logical consistency"
-    },
-    "conciseness": {
-        "principle": "Examples should be focused and relevant",
-        "implementation": "Remove unnecessary complexity",
-        "validation": "Ensure examples are not overly verbose"
-    }
-}
+CONTEXT_BEST_PRACTICES = { “clarity”: { “principle”: “Examples should be
+clear and unambiguous”, “implementation”: “Use descriptive names and
+clear structure”, “validation”: “Test with different AI models” },
+“consistency”: { “principle”: “Patterns should be consistent across
+examples”, “implementation”: “Use consistent naming and formatting”,
+“validation”: “Check pattern adherence across examples” },
+“completeness”: { “principle”: “Examples should cover the full scope”,
+“implementation”: “Include edge cases and error scenarios”,
+“validation”: “Test with various input conditions” }, “coherence”: {
+“principle”: “Examples should maintain logical flow”, “implementation”:
+“Use logical progression and clear relationships”, “validation”: “Verify
+logical consistency” }, “conciseness”: { “principle”: “Examples should
+be focused and relevant”, “implementation”: “Remove unnecessary
+complexity”, “validation”: “Ensure examples are not overly verbose” } }
 
-```text
+\`\`\`text
 
-## **2. Validation Best Practices**```python
+## **2. Validation Best Practices**\`\`\`python
 
-# Best practices for validation and testing
+## Best practices for validation and testing
 
-VALIDATION_BEST_PRACTICES = {
-    "comprehensive_testing": {
-        "unit_tests": "Test individual functions and components",
-        "integration_tests": "Test component interactions",
-        "performance_tests": "Test system performance under load",
-        "security_tests": "Test security vulnerabilities"
-    },
-    "error_handling": {
-        "graceful_degradation": "Handle errors without system failure",
-        "retry_logic": "Implement intelligent retry mechanisms",
-        "fallback_strategies": "Provide alternative solutions",
-        "error_reporting": "Log and report errors appropriately"
-    },
-    "monitoring": {
-        "health_checks": "Regular system health monitoring",
-        "performance_metrics": "Track system performance",
-        "error_tracking": "Monitor and alert on errors",
-        "usage_analytics": "Track system usage patterns"
-    }
-}
+VALIDATION_BEST_PRACTICES = { “comprehensive_testing”: { “unit_tests”:
+“Test individual functions and components”, “integration_tests”: “Test
+component interactions”, “performance_tests”: “Test system performance
+under load”, “security_tests”: “Test security vulnerabilities” },
+“error_handling”: { “graceful_degradation”: “Handle errors without
+system failure”, “retry_logic”: “Implement intelligent retry
+mechanisms”, “fallback_strategies”: “Provide alternative solutions”,
+“error_reporting”: “Log and report errors appropriately” },
+“monitoring”: { “health_checks”: “Regular system health monitoring”,
+“performance_metrics”: “Track system performance”, “error_tracking”:
+“Monitor and alert on errors”, “usage_analytics”: “Track system usage
+patterns” } }
 
-```text
+\`\`\`text
 
-## **3. Documentation Best Practices**```python
+## **3. Documentation Best Practices**\`\`\`python
 
-# Best practices for documentation and examples
+## Best practices for documentation and examples
 
-DOCUMENTATION_BEST_PRACTICES = {
-    "structure": {
-        "clear_purpose": "State the purpose clearly",
-        "logical_organization": "Organize content logically",
-        "consistent_formatting": "Use consistent formatting",
-        "comprehensive_coverage": "Cover all important aspects"
-    },
-    "examples": {
-        "practical_relevance": "Examples should be practically relevant",
-        "progressive_complexity": "Start simple, build complexity",
-        "real_world_scenarios": "Use real-world scenarios",
-        "edge_case_coverage": "Include edge cases and error scenarios"
-    },
-    "validation": {
-        "accuracy_checking": "Verify example accuracy",
-        "completeness_testing": "Test example completeness",
-        "usability_validation": "Validate example usability",
-        "consistency_verification": "Check example consistency"
-    }
-}
+DOCUMENTATION_BEST_PRACTICES = { “structure”: { “clear_purpose”: “State
+the purpose clearly”, “logical_organization”: “Organize content
+logically”, “consistent_formatting”: “Use consistent formatting”,
+“comprehensive_coverage”: “Cover all important aspects” }, “examples”: {
+“practical_relevance”: “Examples should be practically relevant”,
+“progressive_complexity”: “Start simple, build complexity”,
+“real_world_scenarios”: “Use real-world scenarios”,
+“edge_case_coverage”: “Include edge cases and error scenarios” },
+“validation”: { “accuracy_checking”: “Verify example accuracy”,
+“completeness_testing”: “Test example completeness”,
+“usability_validation”: “Validate example usability”,
+“consistency_verification”: “Check example consistency” } }
 
-```text
+\`\`\`text
 
-- --
+------------------------------------------------------------------------
 
 ## 📚 Additional Resources
 
@@ -1295,7 +1175,8 @@ DOCUMENTATION_BEST_PRACTICES = {
 
 - **Cognitive Scaffolding**: Building mental frameworks for AI systems
 
-- **Documentation Coherence**: Maintaining logical consistency in documentation
+- **Documentation Coherence**: Maintaining logical consistency in
+  documentation
 
 ### **Testing Resources**-**Unit Testing**: Testing individual components in isolation
 
@@ -1309,21 +1190,23 @@ DOCUMENTATION_BEST_PRACTICES = {
 
 - **Continuous Deployment**: Automating deployment processes
 
-- --
+------------------------------------------------------------------------
 
-- Last Updated: 2024-08-07*
-- Next Review: Monthly*
-- Context Engineering Level: Advanced*
+- Last Updated: 2024-08-07\*
+- Next Review: Monthly\*
+- Context Engineering Level: Advanced\*
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_few-shot-context-examples.md
-# Generated: 2025-08-17T17:47:03.920503
+
+## Auto-generated sections for 400_few-shot-context-examples.md
+
+## Generated: 2025-08-18T08:03:22.744372
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 

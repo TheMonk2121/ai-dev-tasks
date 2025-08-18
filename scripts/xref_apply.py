@@ -31,7 +31,7 @@ class XRefScanner:
         self.repo_index = {}
         self.exceptions = {}
 
-    def build_repo_index(self) -> Dict:
+    def build_repo_index(self) -> dict:
         """Build index of all files, titles, and anchors in scope."""
         index = {
             "files": {},
@@ -67,7 +67,7 @@ class XRefScanner:
                 return line[2:].strip()
         return ""
 
-    def _index_headings(self, content: str, file_path: str, index: Dict):
+    def _index_headings(self, content: str, file_path: str, index: dict):
         """Index headings and their anchors."""
         lines = content.split("\n")
         for line in lines:
@@ -91,7 +91,7 @@ class XRefScanner:
                         "anchor": anchor,
                     }
 
-    def scan_file(self, file_path: Path) -> List[Dict]:
+    def scan_file(self, file_path: Path) -> list[dict]:
         """Scan a single file for missing cross-references."""
         if not file_path.exists():
             return []
@@ -146,7 +146,7 @@ class XRefScanner:
 
         return suggestions
 
-    def _find_target(self, ref: str) -> Optional[Dict]:
+    def _find_target(self, ref: str) -> dict | None:
         """Find target file for a reference."""
         # Check files first
         for file_path, file_info in self.repo_index["files"].items():
@@ -189,7 +189,7 @@ class XRefScanner:
 
         return 0.0
 
-    def load_exceptions(self, exceptions_file: Optional[Path]) -> None:
+    def load_exceptions(self, exceptions_file: Path | None) -> None:
         """Load exceptions from file."""
         if not exceptions_file or not exceptions_file.exists():
             return
@@ -231,7 +231,7 @@ class XRefWriter:
     def __init__(self, scanner: XRefScanner):
         self.scanner = scanner
 
-    def write_suggestions(self, file_path: Path, suggestions: List[Dict], apply_mode: str = "stubs") -> bool:
+    def write_suggestions(self, file_path: Path, suggestions: list[dict], apply_mode: str = "stubs") -> bool:
         """Write suggestions to file."""
         if not suggestions:
             return False

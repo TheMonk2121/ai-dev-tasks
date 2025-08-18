@@ -29,25 +29,25 @@ logger = logging.getLogger(__name__)
 # Type aliases for better type safety
 SecretName = str
 SecretValue = str
-SecretCache = Dict[SecretName, SecretValue]
-ValidationCache = Dict[str, bool]
-OperationResult = Dict[str, Any]
-AuditData = Dict[str, Any]
-LogData = Dict[str, Any]
+SecretCache = dict[SecretName, SecretValue]
+ValidationCache = dict[str, bool]
+OperationResult = dict[str, Any]
+AuditData = dict[str, Any]
+LogData = dict[str, Any]
 
 
 class KeyringProtocol(Protocol):
     """Protocol for keyring operations to improve type safety"""
 
     def set_password(self, service: str, username: str, password: str) -> None: ...
-    def get_password(self, service: str, username: str) -> Optional[str]: ...
+    def get_password(self, service: str, username: str) -> str | None: ...
     def delete_password(self, service: str, username: str) -> None: ...
 
 
 class CacheProtocol(Protocol):
     """Protocol for cache operations"""
 
-    def get(self, key: str) -> Optional[str]: ...
+    def get(self, key: str) -> str | None: ...
     def set(self, key: str, value: str) -> None: ...
     def delete(self, key: str) -> None: ...
     def clear(self) -> None: ...
@@ -108,12 +108,12 @@ class SecretConfig:
 
     name: SecretName
     required: bool = True
-    default: Optional[SecretValue] = None
+    default: SecretValue | None = None
     description: str = ""
     sensitive: bool = True
-    validation_regex: Optional[str] = None
-    min_length: Optional[int] = None
-    max_length: Optional[int] = None
+    validation_regex: str | None = None
+    min_length: int | None = None
+    max_length: int | None = None
 
     def __post_init__(self) -> None:
         """Validate configuration after initialization"""
@@ -139,11 +139,11 @@ class SecurityValidator:
     LOCKOUT_DURATION = 300  # 5 minutes
 
     def __init__(self) -> None:
-        self.operation_timestamps: List[float] = []
-        self.failed_attempts: Dict[SecretName, List[float]] = {}
-        self.lockout_until: Dict[SecretName, float] = {}
+        self.operation_timestamps: list[float] = []
+        self.failed_attempts: dict[SecretName, list[float]] = {}
+        self.lockout_until: dict[SecretName, float] = {}
 
-    def _clean_timestamps(self, timestamps: List[float], window: float) -> List[float]:
+    def _clean_timestamps(self, timestamps: list[float], window: float) -> list[float]:
         """Remove timestamps outside the time window"""
         cutoff = time.time() - window
         return [ts for ts in timestamps if ts > cutoff]
@@ -224,9 +224,9 @@ class InMemoryCache:
     def __init__(self, max_size: int = 1000) -> None:
         self._cache: SecretCache = {}
         self._max_size = max_size
-        self._access_order: List[SecretName] = []
+        self._access_order: list[SecretName] = []
 
-    def get(self, key: str) -> Optional[str]:
+    def get(self, key: str) -> str | None:
         """Get value from cache with LRU behavior"""
         if key in self._cache:
             # Move to end of access order (most recently used)
@@ -297,7 +297,7 @@ def retry_keyring_operation(max_retries: int = 3, delay: float = 1.0):
 class SecretsManager:
     """Secure secrets management with environment validation and keyring integration"""
 
-    def __init__(self, app_name: str = "dspy-rag-system", cache: Optional[CacheProtocol] = None) -> None:
+    def __init__(self, app_name: str = "dspy-rag-system", cache: CacheProtocol | None = None) -> None:
         self.app_name: str = app_name
         self.keyring_available: bool = KEYRING_AVAILABLE
         self.secrets_cache: CacheProtocol = cache or InMemoryCache()
@@ -318,7 +318,7 @@ class SecretsManager:
                 self.keyring_available = False
 
     def _log_secret_operation(
-        self, operation: str, secret_name: SecretName, success: bool, error: Optional[str] = None
+        self, operation: str, secret_name: SecretName, success: bool, error: str | None = None
     ) -> None:
         """Structured logging for secret operations"""
         log_data: LogData = {
@@ -339,7 +339,7 @@ class SecretsManager:
         else:
             logger.error(f"Secret operation failed: {log_data}")
 
-    def _audit_log(self, operation: str, secret_name: SecretName, user_context: Optional[str] = None) -> None:
+    def _audit_log(self, operation: str, secret_name: SecretName, user_context: str | None = None) -> None:
         """Audit logging for sensitive operations"""
         audit_data: AuditData = {
             "timestamp": datetime.now().isoformat(),
@@ -356,8 +356,8 @@ class SecretsManager:
         audit_logger.info(f"AUDIT: {audit_data}")
 
     def get_secret(
-        self, secret_name: str, use_keyring: bool = True, user_context: Optional[str] = None
-    ) -> Optional[SecretValue]:
+        self, secret_name: str, use_keyring: bool = True, user_context: str | None = None
+    ) -> SecretValue | None:
         """
         Get a secret from environment variables or keyring.
 
@@ -421,14 +421,14 @@ class SecretsManager:
             raise
 
     @retry_keyring_operation(max_retries=3, delay=1.0)
-    def _get_from_keyring(self, secret_name: SecretName) -> Optional[SecretValue]:
+    def _get_from_keyring(self, secret_name: SecretName) -> SecretValue | None:
         """Get secret from keyring with retry logic"""
         if keyring is None:
             raise KeyringError("Keyring module not available")
         return keyring.get_password(self.app_name, secret_name)
 
     def set_secret(
-        self, secret_name: str, value: str, use_keyring: bool = True, user_context: Optional[str] = None
+        self, secret_name: str, value: str, use_keyring: bool = True, user_context: str | None = None
     ) -> bool:
         """
         Set a secret in environment variables or keyring.
@@ -494,7 +494,7 @@ class SecretsManager:
             raise KeyringError("Keyring module not available")
         keyring.set_password(self.app_name, secret_name, value)
 
-    def delete_secret(self, secret_name: str, use_keyring: bool = True, user_context: Optional[str] = None) -> bool:
+    def delete_secret(self, secret_name: str, use_keyring: bool = True, user_context: str | None = None) -> bool:
         """
         Delete a secret from keyring or environment.
 
@@ -628,7 +628,7 @@ class SecretsManager:
             logger.error(f"Security error during validation: {e}")
             raise
 
-    def validate_secrets(self, secret_configs: List[SecretConfig]) -> Dict[str, bool]:
+    def validate_secrets(self, secret_configs: list[SecretConfig]) -> dict[str, bool]:
         """
         Validate multiple secrets according to their configurations.
 
@@ -638,7 +638,7 @@ class SecretsManager:
         Returns:
             Dictionary mapping secret names to validation results
         """
-        results: Dict[str, bool] = {}
+        results: dict[str, bool] = {}
 
         for config in secret_configs:
             try:
@@ -648,7 +648,7 @@ class SecretsManager:
 
         return results
 
-    def get_missing_secrets(self, secret_configs: List[SecretConfig]) -> List[SecretName]:
+    def get_missing_secrets(self, secret_configs: list[SecretConfig]) -> list[SecretName]:
         """
         Get list of missing required secrets.
 
@@ -658,7 +658,7 @@ class SecretsManager:
         Returns:
             List of missing required secret names
         """
-        missing: List[SecretName] = []
+        missing: list[SecretName] = []
 
         for config in secret_configs:
             if config.required and not self.get_secret(config.name):
@@ -678,7 +678,7 @@ class SecretsManager:
         """
         return secrets.token_urlsafe(length)
 
-    def hash_secret(self, secret: SecretValue, salt: Optional[str] = None) -> str:
+    def hash_secret(self, secret: SecretValue, salt: str | None = None) -> str:
         """
         Hash a secret with optional salt.
 
@@ -714,7 +714,7 @@ class SecretsManager:
             return False
 
     def export_secrets_report(
-        self, secret_configs: List[SecretConfig], include_values: bool = False
+        self, secret_configs: list[SecretConfig], include_values: bool = False
     ) -> OperationResult:
         """
         Export a report of secrets status.
@@ -740,7 +740,7 @@ class SecretsManager:
             except (SecretNotFoundError, SecretValidationError, SecurityError):
                 is_valid = False
 
-            secret_info: Dict[str, Any] = {
+            secret_info: dict[str, Any] = {
                 "required": config.required,
                 "description": config.description,
                 "sensitive": config.sensitive,
@@ -756,7 +756,7 @@ class SecretsManager:
 
         return report
 
-    def create_secrets_config(self) -> List[SecretConfig]:
+    def create_secrets_config(self) -> list[SecretConfig]:
         """
         Create default secrets configuration for the DSPy RAG system.
 

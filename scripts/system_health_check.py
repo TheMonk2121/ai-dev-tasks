@@ -289,7 +289,7 @@ class SystemHealthChecker:
             self.log("No auto-fixes applied", "INFO")
             return False
 
-    def generate_health_report(self) -> Dict:
+    def generate_health_report(self) -> dict:
         """Generate comprehensive health report."""
         report = {
             'timestamp': time.strftime("%Y-%m-%d %H:%M:%S"),

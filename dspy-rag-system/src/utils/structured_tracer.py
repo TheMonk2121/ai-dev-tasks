@@ -18,7 +18,7 @@ import json
 import time
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -32,25 +32,25 @@ class TraceSpan:
     """Individual trace span with cryptographic verification"""
 
     span_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    parent_id: Optional[str] = None
+    parent_id: str | None = None
     operation: str = ""
     start_time: float = field(default_factory=time.time)
-    end_time: Optional[float] = None
-    duration_ms: Optional[float] = None
+    end_time: float | None = None
+    duration_ms: float | None = None
 
     # Input/Output with hashes
-    inputs: Dict[str, Any] = field(default_factory=dict)
-    outputs: Dict[str, Any] = field(default_factory=dict)
-    input_hashes: Dict[str, str] = field(default_factory=dict)
-    output_hashes: Dict[str, str] = field(default_factory=dict)
+    inputs: dict[str, Any] = field(default_factory=dict)
+    outputs: dict[str, Any] = field(default_factory=dict)
+    input_hashes: dict[str, str] = field(default_factory=dict)
+    output_hashes: dict[str, str] = field(default_factory=dict)
 
     # Error tracking
-    error: Optional[str] = None
-    error_type: Optional[str] = None
+    error: str | None = None
+    error_type: str | None = None
 
     # Metadata
-    tags: Dict[str, Any] = field(default_factory=dict)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    tags: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -60,16 +60,16 @@ class BundleTrace:
     trace_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     query: str = ""
     role: str = ""
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     # Structured trace data
-    pins: List[Dict[str, Any]] = field(default_factory=list)
-    evidence: List[Dict[str, Any]] = field(default_factory=list)
-    entity_expansion: List[str] = field(default_factory=list)
+    pins: list[dict[str, Any]] = field(default_factory=list)
+    evidence: list[dict[str, Any]] = field(default_factory=list)
+    entity_expansion: list[str] = field(default_factory=list)
 
     # Cryptographic verification
     bundle_hash: str = ""
-    evidence_hashes: List[str] = field(default_factory=list)
+    evidence_hashes: list[str] = field(default_factory=list)
     pins_hash: str = ""
 
     # Performance metrics
@@ -86,10 +86,10 @@ class BundleTrace:
     use_entity_expansion: bool = True
 
     # Spans for multi-layer logging
-    spans: List[TraceSpan] = field(default_factory=list)
+    spans: list[TraceSpan] = field(default_factory=list)
 
     # Echo verification
-    echo_verification: Optional[Dict[str, Any]] = None
+    echo_verification: dict[str, Any] | None = None
 
 
 class StructuredTracer:
@@ -98,8 +98,8 @@ class StructuredTracer:
     def __init__(self, trace_dir: str = "traces"):
         self.trace_dir = Path(trace_dir)
         self.trace_dir.mkdir(exist_ok=True)
-        self.current_trace: Optional[BundleTrace] = None
-        self.current_span: Optional[TraceSpan] = None
+        self.current_trace: BundleTrace | None = None
+        self.current_span: TraceSpan | None = None
 
     def start_trace(self, query: str, role: str = "planner", **config) -> str:
         """Start a new bundle trace"""
@@ -167,7 +167,7 @@ class StructuredTracer:
             (span for span in reversed(self.current_trace.spans) if span.span_id == self.current_span.parent_id), None
         )
 
-    def add_evidence(self, evidence: List[Dict[str, Any]]) -> None:
+    def add_evidence(self, evidence: list[dict[str, Any]]) -> None:
         """Add evidence with cryptographic verification"""
         if not self.current_trace:
             raise ValueError("No active trace.")
@@ -188,7 +188,7 @@ class StructuredTracer:
             },
         )
 
-    def add_pins(self, pins: List[Dict[str, Any]]) -> None:
+    def add_pins(self, pins: list[dict[str, Any]]) -> None:
         """Add pins with cryptographic verification"""
         if not self.current_trace:
             raise ValueError("No active trace.")
@@ -204,7 +204,7 @@ class StructuredTracer:
             extra={"trace_id": self.current_trace.trace_id, "pins_hash": self.current_trace.pins_hash},
         )
 
-    def add_entity_expansion(self, entities: List[str]) -> None:
+    def add_entity_expansion(self, entities: list[str]) -> None:
         """Add entity expansion results"""
         if not self.current_trace:
             raise ValueError("No active trace.")
@@ -215,7 +215,7 @@ class StructuredTracer:
             "Added entity expansion to trace", extra={"trace_id": self.current_trace.trace_id, "entities": entities}
         )
 
-    def generate_echo_verification(self, bundle_text: str) -> Dict[str, Any]:
+    def generate_echo_verification(self, bundle_text: str) -> dict[str, Any]:
         """Generate echo verification for bundle integrity"""
         if not self.current_trace:
             raise ValueError("No active trace.")
@@ -357,7 +357,7 @@ class StructuredTracer:
             if span.duration_ms:
                 print(f"  {span.operation}: {span.duration_ms:.1f}ms")
 
-    def verify_bundle_integrity(self, bundle_text: str, echo_verification: Dict[str, Any]) -> bool:
+    def verify_bundle_integrity(self, bundle_text: str, echo_verification: dict[str, Any]) -> bool:
         """Verify bundle integrity using echo verification"""
         # Verify bundle hash
         actual_bundle_hash = self._hash_content(bundle_text)

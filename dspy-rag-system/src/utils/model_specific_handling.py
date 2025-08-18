@@ -23,15 +23,15 @@ class ModelConfig:
     max_tokens_per_request: int
     timeout_seconds: int
     retry_strategy: str
-    fallback_models: List[str]
-    error_handling: Dict[str, str]
+    fallback_models: list[str]
+    error_handling: dict[str, str]
 
 @dataclass
 class ModelErrorResponse:
     """Response from model-specific error handling"""
     recovery_action: str
-    fallback_model: Optional[str]
-    adjusted_parameters: Dict[str, Any]
+    fallback_model: str | None
+    adjusted_parameters: dict[str, Any]
     confidence: float
     estimated_time: str
 
@@ -42,7 +42,7 @@ class ModelSpecificHandler:
         self.model_configs = self._load_model_configs()
         self.error_history = []
         
-    def _load_model_configs(self) -> Dict[str, ModelConfig]:
+    def _load_model_configs(self) -> dict[str, ModelConfig]:
         """Load model-specific configurations"""
         configs = {
             "mistral-7b-instruct": ModelConfig(
@@ -121,7 +121,7 @@ class ModelSpecificHandler:
         try:
             config_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config', 'model_configs.json')
             if os.path.exists(config_path):
-                with open(config_path, 'r') as f:
+                with open(config_path) as f:
                     custom_configs = json.load(f)
                     for config_data in custom_configs:
                         config = ModelConfig(**config_data)
@@ -132,7 +132,7 @@ class ModelSpecificHandler:
         return configs
     
     def handle_model_error(self, error_message: str, model_id: str, 
-                          context: Dict[str, Any] = None) -> ModelErrorResponse:
+                          context: dict[str, Any] = None) -> ModelErrorResponse:
         """
         Handle model-specific errors and provide recovery strategies
         
@@ -202,7 +202,7 @@ class ModelSpecificHandler:
             return "unknown_error"
     
     def _select_fallback_model(self, model_config: ModelConfig, error_type: str, 
-                              context: Dict[str, Any] = None) -> Optional[str]:
+                              context: dict[str, Any] = None) -> str | None:
         """Select an appropriate fallback model"""
         if error_type == "model_not_found" and model_config.fallback_models:
             # Return the first available fallback
@@ -215,7 +215,7 @@ class ModelSpecificHandler:
         return None
     
     def _adjust_parameters(self, model_config: ModelConfig, error_type: str, 
-                          context: Dict[str, Any] = None) -> Dict[str, Any]:
+                          context: dict[str, Any] = None) -> dict[str, Any]:
         """Adjust model parameters based on error type"""
         adjustments = {}
         
@@ -265,11 +265,11 @@ class ModelSpecificHandler:
         
         return time_map.get(error_type, "15-30 minutes")
     
-    def get_model_config(self, model_id: str) -> Optional[ModelConfig]:
+    def get_model_config(self, model_id: str) -> ModelConfig | None:
         """Get configuration for a specific model"""
         return self.model_configs.get(model_id)
     
-    def list_available_models(self) -> List[str]:
+    def list_available_models(self) -> list[str]:
         """List all available model configurations"""
         return list(self.model_configs.keys())
     
@@ -282,7 +282,7 @@ class ModelSpecificHandler:
 model_handler = ModelSpecificHandler()
 
 def handle_model_error(error_message: str, model_id: str, 
-                      context: Dict[str, Any] = None) -> ModelErrorResponse:
+                      context: dict[str, Any] = None) -> ModelErrorResponse:
     """
     Convenience function to handle model-specific errors
     
@@ -296,11 +296,11 @@ def handle_model_error(error_message: str, model_id: str,
     """
     return model_handler.handle_model_error(error_message, model_id, context)
 
-def get_model_config(model_id: str) -> Optional[ModelConfig]:
+def get_model_config(model_id: str) -> ModelConfig | None:
     """Get configuration for a specific model"""
     return model_handler.get_model_config(model_id)
 
-def list_available_models() -> List[str]:
+def list_available_models() -> list[str]:
     """List all available model configurations"""
     return model_handler.list_available_models()
 

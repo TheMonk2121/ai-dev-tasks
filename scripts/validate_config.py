@@ -29,7 +29,7 @@ SCHEMA = {
 def validate_json_syntax(config_path: str) -> bool:
     """Validate JSON syntax"""
     try:
-        with open(config_path, 'r') as f:
+        with open(config_path) as f:
             json.load(f)
         return True
     except json.JSONDecodeError as e:
@@ -39,7 +39,7 @@ def validate_json_syntax(config_path: str) -> bool:
         print(f"❌ Config file not found: {config_path}")
         return False
 
-def validate_schema(config: Dict[str, Any]) -> bool:
+def validate_schema(config: dict[str, Any]) -> bool:
     """Validate against our schema"""
     # Check required fields
     required_fields = ["version", "agents", "models", "memory", "error_policy", "fast_path", "security", "monitoring"]
@@ -90,7 +90,7 @@ def validate_schema(config: Dict[str, Any]) -> bool:
     
     return True
 
-def validate_agent_model_consistency(config: Dict[str, Any]) -> bool:
+def validate_agent_model_consistency(config: dict[str, Any]) -> bool:
     """Validate that all agents reference valid models"""
     models = config.get("models", {})
     agents = config.get("agents", {})
@@ -118,7 +118,7 @@ def main():
         sys.exit(1)
     
     # Load config
-    with open(config_path, 'r') as f:
+    with open(config_path) as f:
         config = json.load(f)
     
     # Validate schema

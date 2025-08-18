@@ -1,0 +1,52 @@
+name: Internal Link & Anchor Check
+
+on:
+  pull_request:
+    branches: [ main, develop, chore/**, feat/**, fix/** ]
+  push:
+    branches: [ main ]
+
+jobs:
+  linkcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          # No external deps required for scripts/link_check.py
+
+      - name: Determine changed markdown files
+        id: diff
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch origin ${{ github.base_ref }} --depth=1
+            git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '\.md$' > changed_md.txt || true
+          else
+            git diff --name-only HEAD~1...HEAD | grep '\.md$' > changed_md.txt || true
+          fi
+          echo "changed_md=$(wc -l < changed_md.txt)" >> $GITHUB_OUTPUT
+
+      - name: Run link & anchor check (changed files)
+        if: steps.diff.outputs.changed_md != '0'
+        run: |
+          python3 scripts/link_check.py --root . --scope . --changed-files-from changed_md.txt --json --output linkcheck_report.json
+
+      - name: Run repo-wide link & anchor check (fallback)
+        if: steps.diff.outputs.changed_md == '0'
+        run: |
+          python3 scripts/link_check.py --root . --scope . --json --output linkcheck_report.json
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linkcheck_report
+          path: linkcheck_report.json

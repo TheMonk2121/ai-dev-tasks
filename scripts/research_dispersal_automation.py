@@ -58,7 +58,7 @@ class ResearchDispersalAutomation:
             },
         }
 
-    def extract_research_sections(self, research_content: str) -> Dict[str, str]:
+    def extract_research_sections(self, research_content: str) -> dict[str, str]:
         """Extract different sections from research content"""
         sections = {}
 
@@ -180,7 +180,7 @@ class ResearchDispersalAutomation:
             print(f"❌ Error updating {file_path}: {e}")
             return False
 
-    def create_backlog_items(self, research_content: str) -> List[Dict[str, Any]]:
+    def create_backlog_items(self, research_content: str) -> list[dict[str, Any]]:
         """Create new backlog items based on research findings"""
         backlog_items = []
 
@@ -203,7 +203,7 @@ class ResearchDispersalAutomation:
 
         return backlog_items
 
-    def extract_key_findings(self, research_content: str) -> List[Dict[str, Any]]:
+    def extract_key_findings(self, research_content: str) -> list[dict[str, Any]]:
         """Extract key findings from research content"""
         findings = []
 
@@ -231,7 +231,7 @@ class ResearchDispersalAutomation:
 
         return findings
 
-    def create_backlog_update_script(self, backlog_items: List[Dict[str, Any]]) -> str:
+    def create_backlog_update_script(self, backlog_items: list[dict[str, Any]]) -> str:
         """Create a script to add new backlog items"""
         script_content = f"""#!/usr/bin/env python3
 \"\"\"
@@ -285,7 +285,7 @@ if __name__ == "__main__":
 """
         return script_content
 
-    def run_dispersal(self, research_content: str) -> Dict[str, Any]:
+    def run_dispersal(self, research_content: str) -> dict[str, Any]:
         """Run the complete dispersal process"""
         results = {
             "success": True,
@@ -361,7 +361,7 @@ if __name__ == "__main__":
 
         return results
 
-    def create_summary_report(self, results: Dict[str, Any], sections: Dict[str, str]) -> str:
+    def create_summary_report(self, results: dict[str, Any], sections: dict[str, str]) -> str:
         """Create a summary report of the dispersal process"""
         return f"""# 📊 Research Dispersal Summary
 

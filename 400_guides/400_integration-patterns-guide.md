@@ -1,11 +1,15 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MEMORY_CONTEXT: HIGH - Integration patterns and API design -->
+
 # 🔌 Integration Patterns Guide
 
 ## 🔌 Integration Patterns Guide
 
 <!-- ANCHOR: tldr -->
+
 {#tldr}
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Integration patterns maintained
@@ -14,32 +18,37 @@
 
 - **Points**: 5 - High complexity, essential for system operation
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_system-overview.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
+  400_guides/400_system-overview.md
 
 - **Next Steps**: Update patterns as new integrations are added
 
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-|  |  |  |
+|-------------------|-----------|---------|
+|                   |           |         |
 
-- **what this file is**: Integration patterns and API design for components and external systems.
+- **what this file is**: Integration patterns and API design for
+  components and external systems.
 
-- **read when**: Designing or modifying APIs, events, websockets, or cross-component flows.
+- **read when**: Designing or modifying APIs, events, websockets, or
+  cross-component flows.
 
-- **do next**: See "API Design Principles", "Component Integration", and "Communication Patterns".
+- **do next**: See “API Design Principles”, “Component Integration”, and
+  “Communication Patterns”.
 
-- **anchors**: `api design principles`, `component integration`, `communication patterns`, `data flow`, `error
-handling`, `security integration`
+- **anchors**: `api design principles`, `component integration`,
+  `communication patterns`, `data flow`, `error handling`,
+  `security integration`
 
-- --
+------------------------------------------------------------------------
 
 ## 🔌 API Design Principles
 
-### **1. RESTful API Design**#### Context API (summary)
+### **1. RESTful API Design**\#### Context API (summary)
 
-```http
+``` http
 
 # Create context
 
@@ -62,7 +71,7 @@ GET /api/context/{id}/relationships
 
 ## **Core Endpoints**```python
 
-# AI Model API endpoints
+## AI Model API endpoints
 
 AI_MODEL_ENDPOINTS = {
     "generate": "/api/v1/ai/generate",
@@ -71,7 +80,7 @@ AI_MODEL_ENDPOINTS = {
     "analyze": "/api/v1/ai/analyze"
 }
 
-# Database API endpoints
+## Database API endpoints
 
 DATABASE_ENDPOINTS = {
     "logs": "/api/v1/db/logs",
@@ -79,7 +88,7 @@ DATABASE_ENDPOINTS = {
     "metrics": "/api/v1/db/metrics"
 }
 
-# Workflow API endpoints
+## Workflow API endpoints
 
 WORKFLOW_ENDPOINTS = {
     "execute": "/api/v1/workflow/execute",
@@ -119,7 +128,7 @@ API_RESPONSE_FORMAT = {
 
 ## **2. GraphQL Integration**####**Schema Definition**```graphql
 
-# AI Development Ecosystem GraphQL Schema
+## AI Development Ecosystem GraphQL Schema
 
 type Query {
     aiResponse(prompt: String!, model: String): AIResponse
@@ -176,7 +185,7 @@ WEBSOCKET_EVENTS = {
 
 ### **1. AI Model Integration**####**Model Interface**```python
 
-# AI model integration interface
+## AI model integration interface
 
 class AIModelInterface:
     def __init__(self, model_name: str, config: dict):
@@ -240,7 +249,7 @@ class AIModelFactory:
 
 ## **2. Database Integration**####**Database Interface**```python
 
-# Database integration interface
+## Database integration interface
 
 class DatabaseInterface:
     def __init__(self, connection_string: str):
@@ -342,21 +351,21 @@ class N8nWorkflowInterface:
 
 ### **1. Synchronous Communication**####**Request-Response Pattern**```python
 
-# Synchronous request-response pattern
+## Synchronous request-response pattern
 
 def synchronous_ai_request(prompt: str, model: str) -> dict:
     """Synchronous AI request"""
     try:
 
-        # Initialize AI model
+        ## Initialize AI model
 
         ai_model = AIModelFactory.create_model(model)
 
-        # Generate response
+        ## Generate response
 
         response = ai_model.generate(prompt)
 
-        # Log interaction
+        ## Log interaction
 
         log_entry = {
             "timestamp": datetime.now(),
@@ -435,7 +444,7 @@ class EventDrivenAI:
 
 ## **3. Message Queue Pattern**####**Redis Message Queue**```python
 
-# Redis message queue implementation
+## Redis message queue implementation
 
 class RedisMessageQueue:
     def __init__(self, redis_url: str):
@@ -494,7 +503,7 @@ Events    Aggregate        Store Data     Visualize   Notify
 
 ### **1. API Error Handling**####**Standard Error Responses**```python
 
-# Standard error response format
+## Standard error response format
 
 ERROR_RESPONSES = {
     "validation_error": {
@@ -557,7 +566,7 @@ def retry_with_backoff(func, max_retries: int = 3, base_delay: float = 1.0):
 
 ## **3. Circuit Breaker Pattern**####**Circuit Breaker Implementation**```python
 
-# Circuit breaker pattern
+## Circuit breaker pattern
 
 class CircuitBreaker:
     def __init__(self, failure_threshold: int = 5, recovery_timeout: int = 60):
@@ -632,7 +641,7 @@ class JWTAuthentication:
 
 ## **2. Rate Limiting**####**Token Bucket Rate Limiter**```python
 
-# Token bucket rate limiter
+## Token bucket rate limiter
 
 class TokenBucketRateLimiter:
     def __init__(self, capacity: int, refill_rate: float):
@@ -705,7 +714,7 @@ class MultiLevelCache:
 
 ## **2. Connection Pooling**####**Database Connection Pool**```python
 
-# Database connection pool
+## Database connection pool
 
 class DatabaseConnectionPool:
     def __init__(self, connection_string: str, max_connections: int = 10):
@@ -777,7 +786,7 @@ class IntegrationTestFramework:
 
 ## **2. Load Testing**####**API Load Testing**```python
 
-# API load testing
+## API load testing
 
 def load_test_api(endpoint: str, num_requests: int = 100):
     """Load test API endpoint"""
@@ -817,11 +826,11 @@ def load_test_api(endpoint: str, num_requests: int = 100):
 
 ```dockerfile
 
-# Dockerfile for AI development ecosystem
+## Dockerfile for AI development ecosystem
 
 FROM python:3.11-slim
 
-# Install system dependencies
+## Install system dependencies
 
 RUN apt-get update && apt-get install -y \
     postgresql-client \
@@ -830,25 +839,25 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy requirements and install Python dependencies
+## Copy requirements and install Python dependencies
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+## Copy application code
 
 COPY . .
 
-# Expose ports
+## Expose ports
 
 EXPOSE 5000 8000
 
-# Health check
+## Health check
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f <http://localhost:5000/health> || exit 1
 
-# Start application
+## Start application
 
 CMD ["python", "app.py"]
 
@@ -976,7 +985,7 @@ spec:
 
 ### **1. API Documentation Generator**```python
 
-# API documentation generator
+## API documentation generator
 
 def generate_api_docs():
     """Generate API documentation"""
@@ -986,7 +995,7 @@ def generate_api_docs():
         "examples": []
     }
 
-    # Generate endpoint documentation
+    ## Generate endpoint documentation
 
     for endpoint in API_ENDPOINTS:
         docs["endpoints"].append({
@@ -997,7 +1006,7 @@ def generate_api_docs():
             "responses": endpoint["responses"]
         })
 
-    # Generate schema documentation
+    ## Generate schema documentation
 
     for schema in API_SCHEMAS:
         docs["schemas"].append({
@@ -1042,10 +1051,9 @@ def run_integration_tests():
             })
 
     return test_results
-
 ```
 
-- --
+------------------------------------------------------------------------
 
 ## 📚 Additional Resources
 
@@ -1067,21 +1075,23 @@ def run_integration_tests():
 
 - **JMeter**: <https://jmeter.apache.org/>
 
-- --
+------------------------------------------------------------------------
 
-- Last Updated: 2024-08-07*
-- Next Review: Monthly*
-- Integration Level: Comprehensive*
+- Last Updated: 2024-08-07\*
+- Next Review: Monthly\*
+- Integration Level: Comprehensive\*
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_integration-patterns-guide.md
-# Generated: 2025-08-17T17:47:03.927917
+
+## Auto-generated sections for 400_integration-patterns-guide.md
+
+## Generated: 2025-08-18T08:03:22.752335
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 
@@ -1089,10 +1099,10 @@ Documentation Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+Describe how to use this document or system
 
 <!-- README_AUTOFIX_END -->

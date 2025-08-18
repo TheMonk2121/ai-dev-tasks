@@ -325,7 +325,7 @@ class DatabaseRecoveryManager:
             self.log(f"System resources check failed: {e}", "ERROR")
             return False
 
-    def diagnose_issue(self) -> Optional[str]:
+    def diagnose_issue(self) -> str | None:
         """Diagnose the specific database issue."""
         try:
             from dspy_rag_system.src.utils.error_pattern_recognition import ErrorPatternRecognizer
@@ -391,7 +391,7 @@ class DatabaseRecoveryManager:
             self.log("All recovery strategies failed", "ERROR")
             return False
 
-    def generate_recovery_report(self) -> Dict:
+    def generate_recovery_report(self) -> dict:
         """Generate recovery report."""
         report = {
             'timestamp': time.strftime("%Y-%m-%d %H:%M:%S"),

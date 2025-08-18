@@ -28,12 +28,12 @@ class TaskRequirement:
     id: str
     title: str
     description: str
-    acceptance_criteria: List[str]
+    acceptance_criteria: list[str]
     priority: str
     estimated_time: str
-    dependencies: List[str]
-    effort_points: Optional[int] = None
-    complexity: Optional[str] = None
+    dependencies: list[str]
+    effort_points: int | None = None
+    complexity: str | None = None
 
 
 @dataclass
@@ -43,12 +43,12 @@ class GeneratedTask:
     name: str
     priority: str
     estimated_time: str
-    dependencies: List[str]
+    dependencies: list[str]
     description: str
-    acceptance_criteria: List[str]
-    testing_requirements: Dict[str, List[str]]
+    acceptance_criteria: list[str]
+    testing_requirements: dict[str, list[str]]
     implementation_notes: str
-    quality_gates: List[str]
+    quality_gates: list[str]
     task_type: str
     complexity: str
 
@@ -60,7 +60,7 @@ class PRDParser:
         self.prd_path = Path(prd_path)
         self.content = self.prd_path.read_text(encoding="utf-8")
 
-    def parse(self) -> List[TaskRequirement]:
+    def parse(self) -> list[TaskRequirement]:
         """Parse PRD and extract requirements."""
         requirements = []
 
@@ -108,7 +108,7 @@ class PRDParser:
 
         return requirements
 
-    def _extract_acceptance_criteria(self, requirement_title: str) -> List[str]:
+    def _extract_acceptance_criteria(self, requirement_title: str) -> list[str]:
         """Extract acceptance criteria for a requirement."""
         # Look for acceptance criteria in the PRD
         ac_pattern = r"### Acceptance Criteria\n(.*?)(?=\n###|\n##|\Z)"
@@ -166,7 +166,7 @@ class PRDParser:
         else:
             return "2-5 days"
 
-    def _extract_dependencies(self, description: str) -> List[str]:
+    def _extract_dependencies(self, description: str) -> list[str]:
         """Extract dependencies from description."""
         # Look for dependency patterns
         deps = []
@@ -202,7 +202,7 @@ class BacklogParser:
         self.backlog_path = Path(backlog_path)
         self.content = self.backlog_path.read_text(encoding="utf-8")
 
-    def parse_backlog_item(self, backlog_id: str) -> Optional[TaskRequirement]:
+    def parse_backlog_item(self, backlog_id: str) -> TaskRequirement | None:
         """Parse a specific backlog item by ID."""
         # Find the backlog item
         pattern = (
@@ -232,7 +232,7 @@ class BacklogParser:
 
         return requirement
 
-    def _extract_metadata(self, backlog_id: str) -> Dict[str, Any]:
+    def _extract_metadata(self, backlog_id: str) -> dict[str, Any]:
         """Extract metadata from backlog item comments."""
         metadata = {}
 
@@ -332,7 +332,7 @@ class TaskTemplateGenerator:
         else:
             return "general"
 
-    def _load_testing_templates(self) -> Dict[str, Dict[str, List[str]]]:
+    def _load_testing_templates(self) -> dict[str, dict[str, list[str]]]:
         """Load testing requirement templates by task type."""
         return {
             "parsing": {
@@ -466,7 +466,7 @@ class TaskTemplateGenerator:
             },
         }
 
-    def _load_quality_gate_templates(self) -> Dict[str, List[str]]:
+    def _load_quality_gate_templates(self) -> dict[str, list[str]]:
         """Load quality gate templates by task type."""
         return {
             "parsing": [
@@ -507,7 +507,7 @@ class TaskTemplateGenerator:
             ],
         }
 
-    def _generate_testing_requirements(self, requirement: TaskRequirement, task_type: str) -> Dict[str, List[str]]:
+    def _generate_testing_requirements(self, requirement: TaskRequirement, task_type: str) -> dict[str, list[str]]:
         """Generate testing requirements based on task type and complexity."""
         base_templates = self.testing_templates.get(task_type, self.testing_templates["general"])
 
@@ -542,7 +542,7 @@ class TaskTemplateGenerator:
             # Standard testing for medium complexity
             return base_templates
 
-    def _generate_quality_gates(self, requirement: TaskRequirement, task_type: str) -> List[str]:
+    def _generate_quality_gates(self, requirement: TaskRequirement, task_type: str) -> list[str]:
         """Generate quality gates based on task type and priority."""
         base_gates = self.quality_gate_templates.get(task_type, self.quality_gate_templates["general"])
 
@@ -681,7 +681,7 @@ class TaskOutputGenerator:
         """Generate JSON formatted task."""
         return json.dumps(asdict(task), indent=2)
 
-    def generate_task_list(self, tasks: List[GeneratedTask]) -> str:
+    def generate_task_list(self, tasks: list[GeneratedTask]) -> str:
         """Generate a complete task list document."""
         output = []
 

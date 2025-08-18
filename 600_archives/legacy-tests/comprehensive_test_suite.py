@@ -124,10 +124,10 @@ class TestResult:
     duration: float
     memory_usage: float
     cpu_usage: float
-    coverage_percentage: Optional[float] = None
-    error_message: Optional[str] = None
-    stack_trace: Optional[str] = None
-    timestamp: Optional[datetime] = None
+    coverage_percentage: float | None = None
+    error_message: str | None = None
+    stack_trace: str | None = None
+    timestamp: datetime | None = None
 
     def __post_init__(self):
         if self.timestamp is None:
@@ -146,7 +146,7 @@ class TestSuiteConfig:
     memory_threshold: float = 512.0  # MB
     security_scan: bool = True
     generate_report: bool = True
-    test_categories: Optional[List[str]] = None
+    test_categories: list[str] | None = None
 
     def __post_init__(self):
         if self.test_categories is None:
@@ -156,9 +156,9 @@ class TestSuiteConfig:
 class ComprehensiveTestSuite:
     """Advanced testing suite with comprehensive capabilities"""
 
-    def __init__(self, config: Optional[TestSuiteConfig] = None):
+    def __init__(self, config: TestSuiteConfig | None = None):
         self.config = config or TestSuiteConfig()
-        self.results: List[TestResult] = []
+        self.results: list[TestResult] = []
         self.coverage_data = {}
         self.performance_metrics = {}
         self.security_issues = []
@@ -177,7 +177,7 @@ class ComprehensiveTestSuite:
             "security": self._get_security_tests,
         }
 
-    def run_comprehensive_suite(self) -> Dict[str, Any]:
+    def run_comprehensive_suite(self) -> dict[str, Any]:
         """Run the complete testing suite"""
         logger.info("🚀 Starting Comprehensive Test Suite")
         self.test_start_time = datetime.now()
@@ -252,7 +252,7 @@ class ComprehensiveTestSuite:
         else:
             self._run_sequential_tests(category, test_files)
 
-    def _run_parallel_tests(self, category: str, test_files: List[str]):
+    def _run_parallel_tests(self, category: str, test_files: list[str]):
         """Run tests in parallel"""
         with ThreadPoolExecutor(max_workers=self.config.max_workers) as executor:
             futures = []
@@ -267,7 +267,7 @@ class ComprehensiveTestSuite:
                 except Exception as e:
                     logger.error(f"❌ Test execution failed: {e}")
 
-    def _run_sequential_tests(self, category: str, test_files: List[str]):
+    def _run_sequential_tests(self, category: str, test_files: list[str]):
         """Run tests sequentially"""
         for test_file in test_files:
             try:
@@ -341,7 +341,7 @@ class ComprehensiveTestSuite:
                 error_message=str(e),
             )
 
-    def _get_unit_tests(self) -> List[str]:
+    def _get_unit_tests(self) -> list[str]:
         """Get list of unit test files"""
         test_dir = Path(__file__).parent
         unit_tests = [
@@ -354,7 +354,7 @@ class ComprehensiveTestSuite:
         ]
         return [str(test_dir / test) for test in unit_tests if (test_dir / test).exists()]
 
-    def _get_integration_tests(self) -> List[str]:
+    def _get_integration_tests(self) -> list[str]:
         """Get list of integration test files"""
         test_dir = Path(__file__).parent
         integration_tests = [
@@ -367,13 +367,13 @@ class ComprehensiveTestSuite:
         ]
         return [str(test_dir / test) for test in integration_tests if (test_dir / test).exists()]
 
-    def _get_e2e_tests(self) -> List[str]:
+    def _get_e2e_tests(self) -> list[str]:
         """Get list of end-to-end test files"""
         test_dir = Path(__file__).parent
         e2e_tests = ["test_mission_dashboard.py", "test_watch_folder.py", "test_backlog_scrubber.py"]
         return [str(test_dir / test) for test in e2e_tests if (test_dir / test).exists()]
 
-    def _get_performance_tests(self) -> List[str]:
+    def _get_performance_tests(self) -> list[str]:
         """Get list of performance test files"""
         # Create performance test if it doesn't exist
         performance_test = Path(__file__).parent / "test_performance.py"
@@ -381,7 +381,7 @@ class ComprehensiveTestSuite:
             self._create_performance_test(performance_test)
         return [str(performance_test)]
 
-    def _get_security_tests(self) -> List[str]:
+    def _get_security_tests(self) -> list[str]:
         """Get list of security test files"""
         test_dir = Path(__file__).parent
         security_tests = ["test_security.py", "test_secrets_manager.py", "test_enhanced_file_validator.py"]
@@ -561,7 +561,7 @@ class TestPerformance:
         except Exception as e:
             logger.error(f"❌ Security scan error: {e}")
 
-    def _generate_comprehensive_report(self) -> Dict[str, Any]:
+    def _generate_comprehensive_report(self) -> dict[str, Any]:
         """Generate comprehensive test report"""
         total_tests = len(self.results)
         passed_tests = len([r for r in self.results if r.status == "passed"])
@@ -611,7 +611,7 @@ class TestPerformance:
 
         return report
 
-    def _generate_recommendations(self) -> List[str]:
+    def _generate_recommendations(self) -> list[str]:
         """Generate recommendations based on test results"""
         recommendations = []
 
@@ -635,7 +635,7 @@ class TestPerformance:
 
         return recommendations
 
-    def _save_report(self, report: Dict[str, Any]):
+    def _save_report(self, report: dict[str, Any]):
         """Save test report to file"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_file = f"test_report_{timestamp}.json"
@@ -690,7 +690,7 @@ def main():
         from framework.selectors import build_marker_expression, get_suggested_markers, validate_marker_expression
     except ImportError:
         # Fallback if framework not available
-        def build_marker_expression(*args, **kwargs) -> Optional[str]:
+        def build_marker_expression(*args, **kwargs) -> str | None:
             return None
 
         def validate_marker_expression(expr: str) -> bool:

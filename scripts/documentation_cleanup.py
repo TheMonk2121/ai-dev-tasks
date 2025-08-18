@@ -99,7 +99,7 @@ def check_cross_references():
     for file_path in guides_dir.glob("400_*.md"):
         filename = file_path.name
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Find all references to other guides
@@ -146,7 +146,7 @@ def identify_redundant_content():
     for file_path in guides_dir.glob("400_*.md"):
         filename = file_path.name
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Extract common patterns

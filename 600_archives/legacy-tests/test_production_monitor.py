@@ -188,7 +188,7 @@ class TestProductionMonitor(unittest.TestCase):
     def test_alert_callback_registration(self):
         """Test alert callback registration"""
         callback_called = False
-        callback_event: Optional[SecurityEvent] = None
+        callback_event: SecurityEvent | None = None
 
         def test_callback(event):
             nonlocal callback_called, callback_event

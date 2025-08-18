@@ -35,7 +35,7 @@ logger = setup_logger(__name__)
 class CITestRunner:
     """CI/CD Test Runner for automated testing"""
     
-    def __init__(self, config: Dict[str, Any] = None):
+    def __init__(self, config: dict[str, Any] = None):
         self.config = config or self._get_default_config()
         self.test_results = {}
         self.coverage_data = {}
@@ -50,7 +50,7 @@ class CITestRunner:
         
         logger.info(f"🚀 CI Test Runner initialized - CI: {self.is_ci}, Platform: {self.ci_platform}")
     
-    def _get_default_config(self) -> Dict[str, Any]:
+    def _get_default_config(self) -> dict[str, Any]:
         """Get default CI configuration"""
         return {
             'test_categories': ['unit', 'integration', 'e2e', 'performance', 'security'],
@@ -90,7 +90,7 @@ class CITestRunner:
         else:
             return 'local'
     
-    def run_ci_tests(self) -> Dict[str, Any]:
+    def run_ci_tests(self) -> dict[str, Any]:
         """Run complete CI test suite"""
         logger.info("🚀 Starting CI Test Suite")
         self.start_time = datetime.now()
@@ -295,7 +295,7 @@ class CITestRunner:
             
             if result.returncode == 0:
                 # Parse security scan results
-                with open('security_scan.json', 'r') as f:
+                with open('security_scan.json') as f:
                     security_data = json.load(f)
                 
                 self.security_issues = security_data.get('results', [])
@@ -314,7 +314,7 @@ class CITestRunner:
         except Exception as e:
             logger.error(f"❌ Security scan error: {e}")
     
-    def _generate_ci_report(self) -> Dict[str, Any]:
+    def _generate_ci_report(self) -> dict[str, Any]:
         """Generate CI test report"""
         total_tests = len(self.test_results)
         passed_tests = len([r for r in self.test_results.values() if r.get('success', False)])
@@ -390,7 +390,7 @@ class CITestRunner:
         
         return report
     
-    def _generate_ci_recommendations(self) -> List[str]:
+    def _generate_ci_recommendations(self) -> list[str]:
         """Generate CI recommendations"""
         recommendations = []
         
@@ -414,7 +414,7 @@ class CITestRunner:
         
         return recommendations
     
-    def _upload_ci_artifacts(self, report: Dict[str, Any]):
+    def _upload_ci_artifacts(self, report: dict[str, Any]):
         """Upload CI artifacts"""
         logger.info("📤 Uploading CI artifacts...")
         
@@ -445,7 +445,7 @@ class CITestRunner:
         except Exception as e:
             logger.error(f"❌ Failed to upload CI artifacts: {e}")
     
-    def _handle_notifications(self, report: Dict[str, Any]):
+    def _handle_notifications(self, report: dict[str, Any]):
         """Handle CI notifications"""
         if not self.config['notify_on_failure']:
             return
@@ -504,7 +504,7 @@ def main():
     # Load configuration
     config = {}
     if args.config and os.path.exists(args.config):
-        with open(args.config, 'r') as f:
+        with open(args.config) as f:
             config = json.load(f)
     
     # Override config with command line arguments

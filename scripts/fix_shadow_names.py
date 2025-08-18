@@ -12,7 +12,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import List, Tuple
 
 # Disallowed patterns that indicate shadow forks
@@ -47,7 +47,7 @@ PATTERN_MAPPINGS = {
 }
 
 
-def find_shadow_files() -> List[str]:
+def find_shadow_files() -> list[str]:
     """Find all files with disallowed shadow fork patterns."""
     shadow_files = []
 
@@ -67,7 +67,7 @@ def find_shadow_files() -> List[str]:
     return shadow_files
 
 
-def suggest_rename(file_path: str) -> Tuple[str, str]:
+def suggest_rename(file_path: str) -> tuple[str, str]:
     """Suggest a new name for a shadow file."""
     dir_path = os.path.dirname(file_path)
     filename = os.path.basename(file_path)
@@ -86,7 +86,7 @@ def suggest_rename(file_path: str) -> Tuple[str, str]:
     return new_path, "Add _core suffix"
 
 
-def find_imports(file_path: str) -> List[str]:
+def find_imports(file_path: str) -> list[str]:
     """Find all import statements in a Python file."""
     imports = []
 
@@ -114,7 +114,7 @@ def find_imports(file_path: str) -> List[str]:
     return imports
 
 
-def find_files_importing(module_name: str) -> List[str]:
+def find_files_importing(module_name: str) -> list[str]:
     """Find all files that import a specific module."""
     importing_files = []
 
@@ -239,7 +239,7 @@ def main():
 
         # Create migration map
         migration_map = {
-            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat() + "Z",
             "renames": rename_plan,
             "import_updates": import_updates,
         }
@@ -258,7 +258,7 @@ def main():
     # JSON output
     if args.json:
         results = {
-            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat() + "Z",
             "shadow_files_found": len(shadow_files),
             "rename_plan": rename_plan,
             "import_updates": import_updates,

@@ -21,7 +21,7 @@ class TestSuiteRouter:
         self.test_dir = self.project_root / "tests"
 
     def build_marker_expression(
-        self, tiers: Optional[List[str]] = None, kinds: Optional[List[str]] = None, custom_markers: Optional[str] = None
+        self, tiers: list[str] | None = None, kinds: list[str] | None = None, custom_markers: str | None = None
     ) -> str:
         """Build pytest marker expression from tiers and kinds."""
 

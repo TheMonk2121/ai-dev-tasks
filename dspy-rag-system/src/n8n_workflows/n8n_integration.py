@@ -12,7 +12,8 @@ import json
 import uuid
 import requests
 import logging
-from typing import Dict, Any, List, Optional, Callable
+from typing import Dict, Any, List, Optional
+from collections.abc import Callable
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
 from enum import Enum
@@ -48,17 +49,17 @@ class TaskStatus(Enum):
 class Event:
     """Event ledger entry"""
     event_type: str
-    event_data: Dict[str, Any]
+    event_data: dict[str, Any]
     priority: int = 0
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None
 
 @dataclass
 class TaskExecution:
     """Task execution record"""
     task_id: str
     task_type: str
-    parameters: Dict[str, Any]
-    workflow_id: Optional[str] = None
+    parameters: dict[str, Any]
+    workflow_id: str | None = None
     status: str = "pending"
 
 class N8nWorkflowManager:
@@ -66,7 +67,7 @@ class N8nWorkflowManager:
     
     def __init__(self, 
                  n8n_base_url: str = "http://localhost:5678",
-                 n8n_api_key: Optional[str] = None,
+                 n8n_api_key: str | None = None,
                  poll_interval: int = 30):
         """
         Initialize n8n workflow manager.
@@ -82,7 +83,7 @@ class N8nWorkflowManager:
         self.db_manager = get_database_manager()
         
         # Workflow handlers
-        self.workflow_handlers: Dict[str, Callable] = {}
+        self.workflow_handlers: dict[str, Callable] = {}
         self._register_default_handlers()
         
         # Session management
@@ -136,7 +137,7 @@ class N8nWorkflowManager:
             logger.error(f"Failed to create event: {e}")
             raise
     
-    def get_pending_events(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_pending_events(self, limit: int = 10) -> list[dict[str, Any]]:
         """
         Get pending events from the event ledger.
         
@@ -160,8 +161,8 @@ class N8nWorkflowManager:
             return []
     
     def update_event_status(self, event_id: int, status: str, 
-                          result: Optional[Dict[str, Any]] = None,
-                          error_message: Optional[str] = None) -> bool:
+                          result: dict[str, Any] | None = None,
+                          error_message: str | None = None) -> bool:
         """
         Update event status in the event ledger.
         
@@ -231,7 +232,7 @@ class N8nWorkflowManager:
             logger.error(f"Failed to create task execution: {e}")
             raise
     
-    def execute_workflow(self, workflow_id: str, parameters: Dict[str, Any] = None) -> str:
+    def execute_workflow(self, workflow_id: str, parameters: dict[str, Any] = None) -> str:
         """
         Execute an n8n workflow.
         
@@ -276,12 +277,12 @@ class N8nWorkflowManager:
             logger.error(f"Failed to execute workflow {workflow_id}: {e}")
             raise
     
-    def _handle_backlog_scrubber(self, event_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _handle_backlog_scrubber(self, event_data: dict[str, Any]) -> dict[str, Any]:
         """Handle backlog scrubber workflow"""
         try:
             # Read backlog file
             backlog_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '000_backlog.md')
-            with open(backlog_path, 'r') as f:
+            with open(backlog_path) as f:
                 content = f.read()
             
             # Parse and calculate scores
@@ -302,7 +303,7 @@ class N8nWorkflowManager:
             logger.error(f"Backlog scrubber failed: {e}")
             return {"status": "error", "message": str(e)}
     
-    def _handle_task_executor(self, event_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _handle_task_executor(self, event_data: dict[str, Any]) -> dict[str, Any]:
         """Handle task executor workflow"""
         try:
             task_type = event_data.get('task_type')
@@ -322,7 +323,7 @@ class N8nWorkflowManager:
             logger.error(f"Task executor failed: {e}")
             return {"status": "error", "message": str(e)}
     
-    def _handle_document_processor(self, event_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _handle_document_processor(self, event_data: dict[str, Any]) -> dict[str, Any]:
         """Handle document processor workflow"""
         try:
             file_path = event_data.get('file_path')
@@ -339,7 +340,7 @@ class N8nWorkflowManager:
             logger.error(f"Document processor failed: {e}")
             return {"status": "error", "message": str(e)}
     
-    def _handle_system_monitor(self, event_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _handle_system_monitor(self, event_data: dict[str, Any]) -> dict[str, Any]:
         """Handle system monitor workflow"""
         try:
             # Collect system metrics
@@ -378,17 +379,17 @@ class N8nWorkflowManager:
         except Exception:
             return f'<!--score: {score_json}-->'
     
-    def _execute_document_processing(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
+    def _execute_document_processing(self, parameters: dict[str, Any]) -> dict[str, Any]:
         """Execute document processing task"""
         # Implementation for document processing
         return {"status": "success", "message": "Document processing completed"}
     
-    def _execute_backlog_update(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
+    def _execute_backlog_update(self, parameters: dict[str, Any]) -> dict[str, Any]:
         """Execute backlog update task"""
         # Implementation for backlog updates
         return {"status": "success", "message": "Backlog updated"}
     
-    def _execute_system_health_check(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
+    def _execute_system_health_check(self, parameters: dict[str, Any]) -> dict[str, Any]:
         """Execute system health check task"""
         # Implementation for system health checks
         return {"status": "success", "message": "Health check completed"}
@@ -435,7 +436,7 @@ class N8nWorkflowManager:
             logger.error(f"Failed to poll events: {e}")
             return 0
     
-    def get_workflow_status(self, workflow_id: str) -> Dict[str, Any]:
+    def get_workflow_status(self, workflow_id: str) -> dict[str, Any]:
         """
         Get workflow execution status.
         
@@ -464,7 +465,7 @@ class N8nWorkflowManager:
             return {"status": "error", "message": str(e)}
 
 # Global instance
-_n8n_manager: Optional[N8nWorkflowManager] = None
+_n8n_manager: N8nWorkflowManager | None = None
 
 def get_n8n_manager() -> N8nWorkflowManager:
     """Get the global n8n workflow manager instance"""
@@ -475,14 +476,14 @@ def get_n8n_manager() -> N8nWorkflowManager:
         _n8n_manager = N8nWorkflowManager(n8n_base_url, n8n_api_key)
     return _n8n_manager
 
-def create_event(event_type: str, event_data: Dict[str, Any], 
-                priority: int = 0, metadata: Optional[Dict[str, Any]] = None) -> int:
+def create_event(event_type: str, event_data: dict[str, Any], 
+                priority: int = 0, metadata: dict[str, Any] | None = None) -> int:
     """Create a new event in the event ledger"""
     manager = get_n8n_manager()
     event = Event(event_type, event_data, priority, metadata)
     return manager.create_event(event)
 
-def execute_workflow(workflow_id: str, parameters: Dict[str, Any] = None) -> str:
+def execute_workflow(workflow_id: str, parameters: dict[str, Any] = None) -> str:
     """Execute an n8n workflow"""
     manager = get_n8n_manager()
     return manager.execute_workflow(workflow_id, parameters)

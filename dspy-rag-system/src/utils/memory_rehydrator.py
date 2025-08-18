@@ -114,14 +114,14 @@ class Section:
 @dataclass
 class Bundle:
     text: str
-    sections: List[Section]
-    meta: Dict[str, Any]
+    sections: list[Section]
+    meta: dict[str, Any]
 
 
 # ---------- Core pipeline functions ----------
 
 
-def rrf_fuse(vec: List[Dict[str, Any]], lex: List[Dict[str, Any]], k0: int = RRF_K0) -> List[Dict[str, Any]]:
+def rrf_fuse(vec: list[dict[str, Any]], lex: list[dict[str, Any]], k0: int = RRF_K0) -> list[dict[str, Any]]:
     """Reciprocal Rank Fusion with deterministic tie-breaking."""
 
     def rank_map(items, key):
@@ -132,7 +132,7 @@ def rrf_fuse(vec: List[Dict[str, Any]], lex: List[Dict[str, Any]], k0: int = RRF
     r_vec = rank_map(vec, "sim")
     r_lex = rank_map(lex, "bm25")
 
-    id_index: Dict[str, Dict[str, Any]] = {}
+    id_index: dict[str, dict[str, Any]] = {}
     for d in vec:
         id_index[d["id"]] = {**d, "rrf": 0.0}
     for d in lex:
@@ -151,7 +151,7 @@ def rrf_fuse(vec: List[Dict[str, Any]], lex: List[Dict[str, Any]], k0: int = RRF
     return fused
 
 
-def round_robin_by_file(items: List[Dict[str, Any]], per_file: int = PER_FILE_ROUND_ROBIN) -> List[Dict[str, Any]]:
+def round_robin_by_file(items: list[dict[str, Any]], per_file: int = PER_FILE_ROUND_ROBIN) -> list[dict[str, Any]]:
     """Cheap diversity: interleave by file, cap per-file on first pass."""
     from collections import defaultdict, deque
 
@@ -187,7 +187,7 @@ def _shingles(text: str, n: int = 5) -> set:
     return set(tuple(toks[i : i + n]) for i in range(0, max(0, len(toks) - n + 1)))
 
 
-def drop_near_duplicates(items: List[Dict[str, Any]], overlap_thresh: float = OVERLAP_THRESH) -> List[Dict[str, Any]]:
+def drop_near_duplicates(items: list[dict[str, Any]], overlap_thresh: float = OVERLAP_THRESH) -> list[dict[str, Any]]:
     """O(k^2) worst-case with small k; adequate for k<=64."""
     kept = []
     shingle_cache = {}
@@ -214,7 +214,7 @@ def drop_near_duplicates(items: List[Dict[str, Any]], overlap_thresh: float = OV
     return kept
 
 
-def overlaps_scope(d: Dict[str, Any], query: str) -> bool:
+def overlaps_scope(d: dict[str, Any], query: str) -> bool:
     """Cheap scope heuristic: file or anchor_key token appears in query."""
     q = query.lower()
     f = (d.get("file") or "").lower()
@@ -222,7 +222,7 @@ def overlaps_scope(d: Dict[str, Any], query: str) -> bool:
     return bool((f and f.split("/")[-1] in q) or (ak and ak in q))
 
 
-def augment_query(q: str, terms: List[str]) -> str:
+def augment_query(q: str, terms: list[str]) -> str:
     """Include terms once; keep lexical variety."""
     if not terms:
         return q
@@ -233,13 +233,13 @@ def augment_query(q: str, terms: List[str]) -> str:
 # ---------- Data access (pinned anchors) ----------
 
 
-def fetch_pins(role: str, *, db_dsn: str = DEFAULT_PG_DSN, cap: int = 30) -> List[Dict[str, Any]]:
+def fetch_pins(role: str, *, db_dsn: str = DEFAULT_PG_DSN, cap: int = 30) -> list[dict[str, Any]]:
     """
     Fetches stable anchors (always) + role-based pins (by file) from JSONB metadata.
     Prioritizes 'anchor_priority' ascending, then stable order.
     """
     db = get_database_manager()
-    pins: List[Dict[str, Any]] = []
+    pins: list[dict[str, Any]] = []
 
     role_files = ROLE_FILES.get(role.lower(), ())
 
@@ -283,7 +283,7 @@ def fetch_pins(role: str, *, db_dsn: str = DEFAULT_PG_DSN, cap: int = 30) -> Lis
     return pins
 
 
-def anchor_key_for(conn, document_id: str, chunk_index: int) -> Optional[str]:
+def anchor_key_for(conn, document_id: str, chunk_index: int) -> str | None:
     """
     Check whether a retrieved chunk is an anchor-ish chunk (has metadata.anchor_key).
     Kept simple since retrieval topK is small.
@@ -309,7 +309,7 @@ def anchor_key_for(conn, document_id: str, chunk_index: int) -> Optional[str]:
 # ---------- Vector store interface functions ----------
 
 
-def vector_search(query: str, k: int, db_dsn: str = DEFAULT_PG_DSN) -> List[Dict[str, Any]]:
+def vector_search(query: str, k: int, db_dsn: str = DEFAULT_PG_DSN) -> list[dict[str, Any]]:
     """
     Vector search via HybridVectorStore.
     Returns: List[{
@@ -338,7 +338,7 @@ def vector_search(query: str, k: int, db_dsn: str = DEFAULT_PG_DSN) -> List[Dict
         return []
 
 
-def bm25_search(query: str, k: int, db_dsn: str = DEFAULT_PG_DSN) -> List[Dict[str, Any]]:
+def bm25_search(query: str, k: int, db_dsn: str = DEFAULT_PG_DSN) -> list[dict[str, Any]]:
     """
     BM25 search via HybridVectorStore.
     Returns: List[{
@@ -426,7 +426,7 @@ def _normalize_to_canonical(results, search_type="vector"):
     return canon
 
 
-def mine_anchor_terms(query: str, top_n: int = 6) -> List[str]:
+def mine_anchor_terms(query: str, top_n: int = 6) -> list[str]:
     """Mine discriminative terms from anchor documents for query expansion."""
     try:
         db = get_database_manager()
@@ -477,7 +477,7 @@ def load_guardrail_pins(cap_tokens: int = PINS_CAP_TOKENS) -> str:
     return combined
 
 
-def compress_chunk(d: Dict[str, Any]) -> Dict[str, Any]:
+def compress_chunk(d: dict[str, Any]) -> dict[str, Any]:
     """Answer-aware compression: path, why, gist."""
     text = d.get("text", "")
     path = d.get("path", "")
@@ -515,9 +515,9 @@ def token_len(obj) -> int:
 
 def package_bundle(
     pins: str,
-    query_expansion_terms: List[str],
-    evidence: List[Dict[str, Any]],
-    debug: Dict[str, Any],
+    query_expansion_terms: list[str],
+    evidence: list[dict[str, Any]],
+    debug: dict[str, Any],
     query: str = "",
     role: str = "planner",
 ) -> Bundle:
@@ -591,11 +591,11 @@ def package_bundle(
 
 def semantic_evidence_with_entity_expansion(
     query: str,
-    base_chunks: List[Dict[str, Any]],
+    base_chunks: list[dict[str, Any]],
     use_entity_expansion: bool = True,
     stability_threshold: float = 0.7,
-    db_dsn: Optional[str] = None,
-) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+    db_dsn: str | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """
     Enhance semantic evidence with entity expansion.
 
@@ -798,9 +798,9 @@ def build_hydration_bundle(
     *,
     token_budget: int = 1200,
     limit: int = 8,
-    fusion_method: Optional[str] = None,
-    w_dense: Optional[float] = None,
-    w_sparse: Optional[float] = None,
+    fusion_method: str | None = None,
+    w_dense: float | None = None,
+    w_sparse: float | None = None,
     db_dsn: str = DEFAULT_PG_DSN,
 ) -> Bundle:
     """

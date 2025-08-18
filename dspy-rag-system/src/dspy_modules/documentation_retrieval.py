@@ -66,7 +66,7 @@ class DocumentationQueryProcessor(Module):
         super().__init__()
         self.query_processor = dspy.ChainOfThought(DocumentationQuerySignature)
 
-    def forward(self, user_query: str, context_type: str = "general", query_type: str = "search") -> Dict[str, Any]:
+    def forward(self, user_query: str, context_type: str = "general", query_type: str = "search") -> dict[str, Any]:
         """Process a user query for documentation retrieval"""
 
         # Process the query
@@ -90,7 +90,7 @@ class DocumentationRetriever(Module):
         self.vector_store = vector_store
         self.retrieval_processor = dspy.ChainOfThought(DocumentationRetrievalSignature)
 
-    def forward(self, processed_query: str, search_categories: List[str], limit: int = 5) -> Dict[str, Any]:
+    def forward(self, processed_query: str, search_categories: list[str], limit: int = 5) -> dict[str, Any]:
         """Retrieve relevant documentation context"""
 
         # Search in vector store
@@ -126,7 +126,7 @@ class DocumentationRetriever(Module):
             "retrieved_chunks": retrieved_chunks,
         }
 
-    def _extract_context_metadata(self, chunks: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _extract_context_metadata(self, chunks: list[dict[str, Any]]) -> dict[str, Any]:
         """Extract metadata from retrieved chunks"""
         sources = []
         categories = []
@@ -153,7 +153,7 @@ class ContextSynthesizer(Module):
         super().__init__()
         self.synthesis_processor = dspy.ChainOfThought(ContextSynthesisSignature)
 
-    def forward(self, user_query: str, retrieved_contexts: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def forward(self, user_query: str, retrieved_contexts: list[dict[str, Any]]) -> dict[str, Any]:
         """Synthesize context from multiple sources"""
 
         if not retrieved_contexts:
@@ -187,7 +187,7 @@ class DocumentationRetrievalService(Module):
         self.retriever = DocumentationRetriever(self.vector_store)
         self.synthesizer = ContextSynthesizer()
 
-    def forward(self, query: str, context_type: str = "general", max_results: int = 5) -> Dict[str, Any]:
+    def forward(self, query: str, context_type: str = "general", max_results: int = 5) -> dict[str, Any]:
         """Main entry point for documentation retrieval"""
 
         try:
@@ -195,7 +195,7 @@ class DocumentationRetrievalService(Module):
             query_result = self.query_processor.forward(query, context_type)
 
             # Step 2: Retrieve relevant documentation
-            cats = cast(List[str], query_result["search_categories"])
+            cats = cast(list[str], query_result["search_categories"])
             retrieval_result = self.retriever.forward(
                 processed_query=query_result["processed_query"],
                 search_categories=cats,
@@ -239,7 +239,7 @@ class DocumentationRetrievalService(Module):
                 "timestamp": datetime.now().isoformat(),
             }
 
-    def search_documentation(self, query: str, category: Optional[str] = None, limit: int = 5) -> Dict[str, Any]:
+    def search_documentation(self, query: str, category: str | None = None, limit: int = 5) -> dict[str, Any]:
         """Search documentation with category filtering"""
         search_params = {
             "query": query,
@@ -259,16 +259,16 @@ class DocumentationRetrievalService(Module):
             "timestamp": datetime.now().isoformat(),
         }
 
-    def get_documentation_stats(self) -> Dict[str, Any]:
+    def get_documentation_stats(self) -> dict[str, Any]:
         """Get statistics about indexed documentation"""
-        stats: Dict[str, Any] = {}
+        stats: dict[str, Any] = {}
         try:
             stats = self.vector_store.get_statistics()
         except AttributeError:
             stats = self.vector_store.get_stats()
         return {"vector_store_stats": stats, "timestamp": datetime.now().isoformat()}
 
-    def get_context_for_task(self, task_description: str, task_type: str = "development") -> Dict[str, Any]:
+    def get_context_for_task(self, task_description: str, task_type: str = "development") -> dict[str, Any]:
         """Get relevant context for a specific task"""
 
         # Map task types to context types
@@ -285,7 +285,7 @@ class DocumentationRetrievalService(Module):
 
         return self.forward(task_description, context_type)
 
-    def get_context_for_file_operation(self, file_path: str, operation: str) -> Dict[str, Any]:
+    def get_context_for_file_operation(self, file_path: str, operation: str) -> dict[str, Any]:
         """Get relevant context for file operations"""
 
         # Create a query based on the file operation
@@ -313,7 +313,7 @@ def create_documentation_retrieval_service(db_connection_string: str) -> Documen
     return DocumentationRetrievalService(db_connection_string)
 
 
-def get_relevant_context(query: str, db_connection_string: Optional[str] = None) -> Dict[str, Any]:
+def get_relevant_context(query: str, db_connection_string: str | None = None) -> dict[str, Any]:
     """Get relevant context for a query"""
 
     if db_connection_string is None:
@@ -324,8 +324,8 @@ def get_relevant_context(query: str, db_connection_string: Optional[str] = None)
 
 
 def search_documentation(
-    query: str, category: Optional[str] = None, db_connection_string: Optional[str] = None
-) -> Dict[str, Any]:
+    query: str, category: str | None = None, db_connection_string: str | None = None
+) -> dict[str, Any]:
     """Search documentation with optional category filtering"""
 
     if db_connection_string is None:
@@ -336,8 +336,8 @@ def search_documentation(
 
 
 def get_task_context(
-    task_description: str, task_type: str = "development", db_connection_string: Optional[str] = None
-) -> Dict[str, Any]:
+    task_description: str, task_type: str = "development", db_connection_string: str | None = None
+) -> dict[str, Any]:
     """Get relevant context for a specific task"""
 
     if db_connection_string is None:

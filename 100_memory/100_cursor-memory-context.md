@@ -1,5 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+<!-- MODULE_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
 <!-- DATABASE_SYNC: REQUIRED -->
@@ -11,7 +11,7 @@
     {"path": "000_core/004_development-roadmap.md", "role": "roadmap"},
     {"path": "400_guides/400_project-overview.md", "role": "project-overview"},
     {"path": "400_guides/400_system-overview.md", "role": "architecture"},
-    {"path": "400_guides/400_context-priority-guide.md", "role": "navigation"},
+    {"path": "400_guides/400_cursor-context-engineering-guide.md", "role": "navigation"},
     {"path": "400_guides/400_ai-constitution.md", "role": "ai-safety"},
     {"path": "400_guides/400_file-analysis-guide.md", "role": "file-analysis"},
     {"path": "400_guides/400_code-criticality-guide.md", "role": "code-quality"},
@@ -61,7 +61,7 @@ Read these files in order (1–2 min total):
 2. **`100_memory/100_cursor-memory-context.md`** – current state and rules
 3. **`000_core/000_backlog.md`** – priorities and dependencies
 4. **`400_guides/400_system-overview.md`** – architecture and components
-5. **`400_guides/400_context-priority-guide.md`** – relationships and reading order
+5. **`400_guides/400_cursor-context-engineering-guide.md`** – relationships and reading order
 
 <!-- ANCHOR_KEY: quick-start -->
 <!-- ANCHOR_PRIORITY: 15 -->
@@ -169,7 +169,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 - Start here → `docs/README.md`
 
-- Context priority guide → `400_guides/400_context-priority-guide.md`
+- Context priority guide → `400_guides/400_cursor-context-engineering-guide.md`
 
 - Critical Python code map → `400_guides/400_code-criticality-guide.md`
 
@@ -212,7 +212,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 ### Role → Files (at a glance)
 
 - Planner: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`,
-`400_guides/400_context-priority-guide.md`
+`400_guides/400_cursor-context-engineering-guide.md`
 
 - Implementer: `100_memory/104_dspy-development-context.md`, `dspy-rag-system/tests/README-dev.md`, relevant 400-series topic guides (testing, security,
 performance, integration, deployment)
@@ -357,7 +357,7 @@ AI Development Ecosystem
 
 ### **📚 Complete Documentation Inventory**
 
-**For complete documentation inventory, see `400_guides/400_documentation-reference.md`**
+**For complete documentation inventory, see `400_guides/400_documentation-guide.md`**
 
 **Essential Files Quick Reference:**
 
@@ -393,11 +393,11 @@ AI Development Ecosystem
 - **Verification**: Complete database integrity check passed
 - **Cross-Reference Analysis**: All guides properly linked
 
-<!-- DOCUMENTATION_REFERENCE: 400_guides/400_documentation-reference.md -->
+<!-- DOCUMENTATION_REFERENCE: 400_guides/400_documentation-guide.md -->
 
 ### **🎯 When to Read What: Context-Specific Guidance**
 
-**For detailed context-specific guidance, see `400_guides/400_documentation-reference.md`**
+**For detailed context-specific guidance, see `400_guides/400_documentation-guide.md`**
 
 **Quick Reading Order:**
 
@@ -428,7 +428,7 @@ AI Development Ecosystem
 - **Development-Oriented**: Project overview and system overview central to navigation
 - **Specialized Access**: Deployment, integration, migration guides available for specific tasks
 
-<!-- CONTEXT_GUIDANCE_REFERENCE: 400_guides/400_documentation-reference.md -->
+<!-- CONTEXT_GUIDANCE_REFERENCE: 400_guides/400_documentation-guide.md -->
 
 <!-- AUTO:current_priorities:start -->
 ### **Current Priorities**

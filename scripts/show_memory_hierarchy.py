@@ -15,7 +15,7 @@ def extract_memory_context(file_path):
     if not file_path.exists():
         return None
     
-    with open(file_path, 'r') as f:
+    with open(file_path) as f:
         content = f.read()
     
     # Look for MEMORY_CONTEXT comment

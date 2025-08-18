@@ -7,11 +7,11 @@ Generates weekly validator metrics summary with suggested owners for top impacte
 
 import json
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Dict, List, Optional
 
 
-def load_codeowners() -> Dict[str, str]:
+def load_codeowners() -> dict[str, str]:
     """Load CODEOWNERS file to map paths to owners."""
     owners = {}
 
@@ -32,7 +32,7 @@ def load_codeowners() -> Dict[str, str]:
     return owners
 
 
-def find_owner_for_file(file_path: str, owners: Dict[str, str]) -> Optional[str]:
+def find_owner_for_file(file_path: str, owners: dict[str, str]) -> str | None:
     """Find the owner for a given file path."""
     # Convert to relative path if needed
     if file_path.startswith("/"):
@@ -62,7 +62,7 @@ def find_owner_for_file(file_path: str, owners: Dict[str, str]) -> Optional[str]
     return best_owner
 
 
-def load_metrics() -> Dict:
+def load_metrics() -> dict:
     """Load current validator metrics."""
     metrics_path = "metrics/validator_counts.json"
     if os.path.exists(metrics_path):
@@ -71,7 +71,7 @@ def load_metrics() -> Dict:
     return {}
 
 
-def load_historical_metrics(days: int = 7) -> List[Dict]:
+def load_historical_metrics(days: int = 7) -> list[dict]:
     """Load historical metrics from bot/validator-state."""
     historical = []
 
@@ -134,7 +134,7 @@ def main():
     owners = load_codeowners()
 
     print("## Weekly Validator Metrics Summary")
-    print(f"**Generated**: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
+    print(f"**Generated**: {datetime.now(UTC).strftime('%Y-%m-%d %H:%M UTC')}")
     print(f"**Period**: Last {args.days} days")
     print()
 
@@ -179,7 +179,7 @@ def main():
             ledger = json.load(f)
 
         near_expiry = []
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         for file_path, entries in ledger.get("exceptions", {}).items():
             for entry in entries:
@@ -188,7 +188,7 @@ def main():
                     try:
                         if len(expires) == 10 and expires[4] == "-" and expires[7] == "-":
                             expiry_date = datetime.fromisoformat(expires).replace(
-                                hour=23, minute=59, second=59, tzinfo=timezone.utc
+                                hour=23, minute=59, second=59, tzinfo=UTC
                             )
                         else:
                             expiry_date = datetime.fromisoformat(expires.replace("Z", "+00:00"))
@@ -228,7 +228,7 @@ def main():
     # JSON output
     if args.json:
         result = {
-            "generated_at": datetime.now(timezone.utc).isoformat() + "Z",
+            "generated_at": datetime.now(UTC).isoformat() + "Z",
             "period_days": args.days,
             "current_counts": counts,
             "historical_metrics": historical_metrics,

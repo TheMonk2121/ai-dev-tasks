@@ -16,7 +16,7 @@ from typing import Dict, List, Optional
 class BacklogCLI:
     """CLI for managing backlog items with normalized structure."""
 
-    def __init__(self, project_root: Optional[Path] = None):
+    def __init__(self, project_root: Path | None = None):
         self.project_root = project_root or Path(__file__).parent.parent
         self.backlog_file = self.project_root / "000_core" / "000_backlog.md"
         self.backlog_items_dir = self.project_root / "backlog_items"
@@ -33,9 +33,9 @@ class BacklogCLI:
         description: str,
         priority: int = 5,
         points: int = 3,
-        dependencies: Optional[List[str]] = None,
+        dependencies: list[str] | None = None,
         dry_run: bool = True,
-    ) -> Dict:
+    ) -> dict:
         """Create a new backlog item with normalized structure."""
 
         # Generate unique ID
@@ -105,7 +105,7 @@ class BacklogCLI:
 
         return item_data
 
-    def _run_preflight_validation(self) -> Dict:
+    def _run_preflight_validation(self) -> dict:
         """Run pre-write validation to check for FAIL mode violations."""
         try:
             import json
@@ -141,7 +141,7 @@ class BacklogCLI:
             print(f"⚠️  Preflight validation error: {e}")
             return {"has_fail_violations": False, "fail_violations": {}}
 
-    def _run_postflight_validation(self) -> Dict:
+    def _run_postflight_validation(self) -> dict:
         """Run post-write validation to check for any new violations."""
         try:
             import subprocess
@@ -203,7 +203,7 @@ class BacklogCLI:
         slug = re.sub(r"-+", "-", slug)  # Replace multiple hyphens with single
         return slug
 
-    def _create_prd_file(self, item_dir: Path, item_data: Dict):
+    def _create_prd_file(self, item_dir: Path, item_data: dict):
         """Create PRD file."""
         prd_content = f"""# PRD: {item_data['title']}
 
@@ -232,7 +232,7 @@ class BacklogCLI:
         with open(item_dir / "prd.md", "w") as f:
             f.write(prd_content)
 
-    def _create_tasks_file(self, item_dir: Path, item_data: Dict):
+    def _create_tasks_file(self, item_dir: Path, item_data: dict):
         """Create tasks file."""
         tasks_content = f"""# Tasks: {item_data['title']}
 
@@ -254,7 +254,7 @@ class BacklogCLI:
         with open(item_dir / "tasks.md", "w") as f:
             f.write(tasks_content)
 
-    def _create_status_file(self, item_dir: Path, item_data: Dict):
+    def _create_status_file(self, item_dir: Path, item_data: dict):
         """Create status JSON file."""
         status_data = {
             "id": item_data["id"],
@@ -269,7 +269,7 @@ class BacklogCLI:
         with open(item_dir / "status.json", "w") as f:
             json.dump(status_data, f, indent=2)
 
-    def _append_to_backlog(self, item_data: Dict):
+    def _append_to_backlog(self, item_data: dict):
         """Append item to 000_backlog.md."""
         if not self.backlog_file.exists():
             print(f"⚠️  Backlog file not found: {self.backlog_file}")
@@ -299,7 +299,7 @@ class BacklogCLI:
         with open(self.backlog_file, "w") as f:
             f.write(new_content)
 
-    def _write_cross_references(self, item_data: Dict):
+    def _write_cross_references(self, item_data: dict):
         """Write cross-references to lessons and reference cards."""
         # Add to lessons learned
         lesson_entry = {

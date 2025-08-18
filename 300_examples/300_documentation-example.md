@@ -1,11 +1,11 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
 
 # Documentation Example
 
 > Example/template file. Not part of active workflows. See `200_setup/200_naming-conventions.md` (Templates & Examples)
 and
-`400_guides/400_documentation-retrieval-guide.md` (documentation pattern usage).
+`400_guides/400_documentation-guide.md` (documentation pattern usage).
 
 ```markdown
 

@@ -12,7 +12,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Dict, List, Set
 
 # Import slugify function from markdown_utils
@@ -41,7 +41,7 @@ except ImportError:
         return slug
 
 
-def get_changed_markdown_files(window_hours: int = 24) -> List[str]:
+def get_changed_markdown_files(window_hours: int = 24) -> list[str]:
     """Get list of changed markdown files in the specified time window."""
     try:
         # Get files changed in the last N hours
@@ -64,7 +64,7 @@ def get_changed_markdown_files(window_hours: int = 24) -> List[str]:
         return []
 
 
-def extract_anchors(content: str) -> Set[str]:
+def extract_anchors(content: str) -> set[str]:
     """Extract all anchor IDs from markdown content."""
     anchors = set()
 
@@ -98,7 +98,7 @@ def get_file_content_at_commit(file_path: str, commit: str = "HEAD") -> str:
         return ""
 
 
-def find_inbound_links(target_file: str, target_anchor: str) -> List[Dict[str, str]]:
+def find_inbound_links(target_file: str, target_anchor: str) -> list[dict[str, str]]:
     """Find all inbound links pointing to the target anchor."""
     inbound_links = []
 
@@ -132,11 +132,11 @@ def find_inbound_links(target_file: str, target_anchor: str) -> List[Dict[str, s
     return inbound_links
 
 
-def check_anchor_drift(changed_files: List[str], window_hours: int = 24) -> Dict:
+def check_anchor_drift(changed_files: list[str], window_hours: int = 24) -> dict:
     """Check for anchor drift in changed files."""
     report = {
         "schema_version": "1.0",
-        "generated_at": datetime.now(timezone.utc).isoformat() + "Z",
+        "generated_at": datetime.now(UTC).isoformat() + "Z",
         "window_hours": window_hours,
         "changed_files": changed_files,
         "broken": [],
@@ -204,7 +204,7 @@ def main():
         if args.json:
             report = {
                 "schema_version": "1.0",
-                "generated_at": datetime.now(timezone.utc).isoformat() + "Z",
+                "generated_at": datetime.now(UTC).isoformat() + "Z",
                 "window_hours": args.window,
                 "changed_files": [],
                 "broken": [],

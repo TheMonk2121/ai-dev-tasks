@@ -55,7 +55,7 @@ class DocumentationContent:
     content: str = ""
     format_type: FormatType = FormatType.MARKDOWN
     doc_type: DocumentType = DocumentType.API
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     quality_score: float = 0.0
     word_count: int = 0
     sections: int = 0
@@ -150,7 +150,7 @@ class DocumentationDatabase:
         conn.close()
         return content.id
     
-    def get_content(self, content_id: str) -> Optional[DocumentationContent]:
+    def get_content(self, content_id: str) -> DocumentationContent | None:
         """Get documentation content by ID."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -193,7 +193,7 @@ class DocumentationAgent:
             "format_support"
         ]
         self.database = DocumentationDatabase()
-        self.documentation_cache: Dict[str, DocumentationContent] = {}
+        self.documentation_cache: dict[str, DocumentationContent] = {}
         self.usage_count = 0
         self.error_count = 0
         self.last_used = time.time()
@@ -226,7 +226,7 @@ class DocumentationAgent:
             ]
         }
     
-    async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process documentation request."""
         start_time = time.time()
         
@@ -268,7 +268,7 @@ class DocumentationAgent:
             logger.error(f"Error in Documentation Agent: {e}")
             raise
     
-    def can_handle(self, request: Dict[str, Any]) -> bool:
+    def can_handle(self, request: dict[str, Any]) -> bool:
         """Check if documentation agent can handle the request."""
         documentation_keywords = [
             "document", "write", "explain", "describe", "comment",
@@ -866,7 +866,7 @@ const result = await instance.process(data);
         
         return score
     
-    def _format_documentation_response(self, doc_content: DocumentationContent) -> Dict[str, Any]:
+    def _format_documentation_response(self, doc_content: DocumentationContent) -> dict[str, Any]:
         """Format documentation content into response."""
         return {
             "agent_type": "documentation",
@@ -886,7 +886,7 @@ const result = await instance.process(data);
         content_str = f"{title}:{content}:{format_type}:{doc_type}"
         return hashlib.md5(content_str.encode()).hexdigest()
     
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get agent status information."""
         return {
             "agent_type": "documentation",

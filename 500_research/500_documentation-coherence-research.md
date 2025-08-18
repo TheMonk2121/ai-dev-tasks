@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 
@@ -102,7 +102,7 @@ Files use structured comment patterns to establish relationships:
 
 #### **3. Context Priority Guide**
 
-- **Primary File**: `400_guides/400_context-priority-guide.md`
+- **Primary File**: `400_guides/400_cursor-context-engineering-guide.md`
 - **Purpose**: Defines reading order and file relationships
 - **Content**: Memory scaffolding system, cross-reference patterns, priority tiers
 - **Usage**: Guides AI on which files to read and in what order
@@ -133,7 +133,7 @@ Files use structured comment patterns to establish relationships:
 ### **Phase 2: Cognitive Scaffolding Analysis**
 
 - **Memory Context System**: Deep dive into `100_memory/100_cursor-memory-context.md`
-- **Context Priority Guide**: Analyze `400_guides/400_context-priority-guide.md` structure
+- **Context Priority Guide**: Analyze `400_guides/400_cursor-context-engineering-guide.md` structure
 - **Cross-Reference Patterns**: Examine all `<!-- -->` comment patterns
 - **Update Triggers**: Identify when and why files need updates
 
@@ -271,7 +271,7 @@ def analyze_context_priority():
     """
     Analyze the context priority guide
 
-    - Examine 400_guides/400_context-priority-guide.md structure
+    - Examine 400_guides/400_cursor-context-engineering-guide.md structure
     - Analyze reading order patterns
     - Test priority-based loading
     - Map priority-to-performance relationship
@@ -354,7 +354,7 @@ def analyze_context_priority():
 ### **Key Files to Analyze**
 
 - `100_memory/100_cursor-memory-context.md` - Memory scaffold system
-- `400_guides/400_context-priority-guide.md` - Context priority system
+- `400_guides/400_cursor-context-engineering-guide.md` - Context priority system
 - `400_guides/400_system-overview.md` - Technical architecture
 - `000_core/000_backlog.md` - Priority management
 - `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md` - Workflow files

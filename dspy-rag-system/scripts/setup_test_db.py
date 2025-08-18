@@ -90,7 +90,7 @@ def apply_base_schema():
             return False
         
         # Read and apply base schema
-        with open(schema_file, 'r') as f:
+        with open(schema_file) as f:
             schema_sql = f.read()
         
         conn = psycopg2.connect(os.environ['POSTGRES_DSN'])

@@ -1,10 +1,21 @@
 <!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+
+<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_contributing-guidelines.md -->
+
 <!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
+
 <!-- MEMORY_CONTEXT: MEDIUM - Mission dashboard and monitoring system -->
+
 # 🎯 Real-time Mission Dashboard Guide
+
+> Deprecated: See
+> `400_guides/400_observability-system.md#🖥️-mission-dashboard` for the
+> canonical mission dashboard documentation. This file is retained only
+> for legacy link compatibility.
 
 ## 🎯 Real-time Mission Dashboard Guide
 
@@ -13,14 +24,17 @@
 ## 🔎 TL;DR
 
 | what this file is | read when | do next |
-|---|---|---|
-|  |  |  |
+|-------------------|-----------|---------|
+|                   |           |         |
 
-- **what this file is**: Quick summary of 🎯 Real-time Mission Dashboard Guide.
+- **what this file is**: Quick summary of 🎯 Real-time Mission Dashboard
+  Guide.
 
-- **read when**: When you need a fast orientation or before using this file in a workflow.
+- **read when**: When you need a fast orientation or before using this
+  file in a workflow.
 
-- **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
+- **do next**: Scan the headings below and follow any ‘Quick Start’ or
+  ‘Usage’ sections.
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Mission dashboard operational
 
@@ -28,15 +42,18 @@
 
 - **Points**: 4 - Moderate complexity, ongoing maintenance
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_deployment-environment-guide.md
+- **Dependencies**: 400_guides/400_cursor-context-engineering-guide.md,
+  400_guides/400_deployment-environment-guide.md
 
 - **Next Steps**: Enhance monitoring capabilities and add new features
 
 ## Overview
 
-The Real-time Mission Dashboard provides live visibility into AI task execution with comprehensive monitoring, tracking,
-and management capabilities. This system enables real-time monitoring of AI missions, progress tracking, performance
-metrics, and interactive mission management.
+The Real-time Mission Dashboard provides live visibility into AI task
+execution with comprehensive monitoring, tracking, and management
+capabilities. This system enables real-time monitoring of AI missions,
+progress tracking, performance metrics, and interactive mission
+management.
 
 ## 🚀 Features
 
@@ -44,17 +61,21 @@ metrics, and interactive mission management.
 
 - **Real-time Mission Tracking**: Monitor AI task execution in real-time
 
-- **Progress Updates**: Live progress tracking with percentage completion
+- **Progress Updates**: Live progress tracking with percentage
+  completion
 
-- **Mission Lifecycle Management**: Create, start, update, complete, and cancel missions
+- **Mission Lifecycle Management**: Create, start, update, complete, and
+  cancel missions
 
-- **Priority Management**: Support for low, medium, high, and critical priorities
+- **Priority Management**: Support for low, medium, high, and critical
+  priorities
 
 - **Agent & Model Tracking**: Track which AI agents and models are used
 
 - **Cost & Token Monitoring**: Monitor token usage and cost estimates
 
-- **Error Handling**: Comprehensive error tracking and failure management
+- **Error Handling**: Comprehensive error tracking and failure
+  management
 
 ### Dashboard Interface
 
@@ -68,7 +89,8 @@ metrics, and interactive mission management.
 
 - **Status Badges**: Color-coded status and priority indicators
 
-- **Filtering & Search**: Advanced filtering by status, priority, and text search
+- **Filtering & Search**: Advanced filtering by status, priority, and
+  text search
 
 - **Metrics Dashboard**: Real-time statistics and performance metrics
 
@@ -126,12 +148,11 @@ metrics, and interactive mission management.
 
 ### Data Flow
 
-```sql
+``` sql
 
 User Action → API Endpoint → Mission Tracker → Database
                 ↓
             WebSocket Event → Frontend Update
-
 ```
 
 ## 🛠️ Installation & Setup
@@ -146,25 +167,19 @@ User Action → API Endpoint → Mission Tracker → Database
 
 ### Quick Start
 
-1. **Clone and navigate to the project:**```bash
-   cd dspy-rag-system
-   ```text
+1.  **Clone and navigate to the project:**`bash cd dspy-rag-system`text
 
-2.**Install dependencies:**```bash
-   pip install -r requirements.txt
-   ```text
+2.**Install dependencies:**`bash    pip install -r requirements.txt`text
 
-3.**Start the dashboard:**```bash
-   ./start_mission_dashboard.sh
-   ```yaml
+3.**Start the dashboard:**`bash    ./start_mission_dashboard.sh`yaml
 
-4.**Access the dashboard:**- URL: <http://localhost:5002>
-  - Health check: <http://localhost:5002/api/health>
+4.**Access the dashboard:**- URL: <http://localhost:5002> - Health
+check: <http://localhost:5002/api/health>
 
 ### Environment Variables
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+|----|----|----|
 | `MISSION_DASHBOARD_PORT` | 5002 | Dashboard port |
 | `MISSION_DASHBOARD_HOST` | 0.0.0.0 | Dashboard host |
 | `MISSION_DASHBOARD_SECRET_KEY` | mission-dashboard-secret-key | Flask secret key |
@@ -177,7 +192,7 @@ User Action → API Endpoint → Mission Tracker → Database
 
 #### Via API
 
-```bash
+``` bash
 curl -X POST <http://localhost:5002/api/missions> \
   - H "Content-Type: application/json" \
   - d '{
@@ -380,11 +395,11 @@ CREATE TABLE mission_metrics (
 
 ```bash
 
-# Run all tests
+## Run all tests
 
 python3 -m pytest tests/test_mission_dashboard.py -v
 
-# Run specific test categories
+## Run specific test categories
 
 python3 -m pytest tests/test_mission_dashboard.py::TestMissionTracker -v
 python3 -m pytest tests/test_mission_dashboard.py::TestMissionDashboardAPI -v
@@ -395,15 +410,15 @@ python3 -m pytest tests/test_mission_dashboard.py::TestMissionDashboardAPI -v
 
 ```bash
 
-# Create sample missions
+## Create sample missions
 
 python3 demo_mission_dashboard.py create
 
-# Run full demo
+## Run full demo
 
 python3 demo_mission_dashboard.py run
 
-# Show statistics
+## Show statistics
 
 python3 demo_mission_dashboard.py stats
 
@@ -474,7 +489,7 @@ CMD ["python3", "src/mission_dashboard/mission_dashboard.py"]
 
 ```bash
 
-# Production environment variables
+## Production environment variables
 
 export MISSION_DASHBOARD_PORT=5002
 export MISSION_DASHBOARD_HOST=0.0.0.0
@@ -560,22 +575,22 @@ export ENVIRONMENT=production
   "total_tokens": 150000,
   "total_cost": 15.0
 }
-
 ```
 
 ## 🤝 Contributing
 
 ### Development Setup
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
+1.  Fork the repository
+2.  Create a feature branch
+3.  Make your changes
+4.  Add tests for new functionality
+5.  Submit a pull request
 
 ### Code Standards
 
-For comprehensive coding standards and implementation examples, see [`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md).
+For comprehensive coding standards and implementation examples, see
+[`400_comprehensive-coding-best-practices.md`](400_comprehensive-coding-best-practices.md).
 
 **Quick Reference:**
 
@@ -598,23 +613,26 @@ For comprehensive coding standards and implementation examples, see [`400_guides
 
 ## 📄 License
 
-This project is part of the AI Development Ecosystem and follows the same licensing terms as the main project.
+This project is part of the AI Development Ecosystem and follows the
+same licensing terms as the main project.
 
-- --
+------------------------------------------------------------------------
 
-- *Last Updated**: 2024-08-06
-- *Version**: 1.0.0
-- *Status**: Production Ready ✅
+- \*Last Updated\*\*: 2024-08-06
+- \*Version\*\*: 1.0.0
+- \*Status\*\*: Production Ready ✅
 
 <!-- README_AUTOFIX_START -->
-# Auto-generated sections for 400_mission-dashboard-guide.md
-# Generated: 2025-08-17T17:47:03.933749
+
+## Auto-generated sections for 400_mission-dashboard-guide.md
+
+## Generated: 2025-08-18T08:03:22.758140
 
 ## Missing sections to add:
 
 ## Last Reviewed
 
-2025-08-17
+2025-08-18
 
 ## Owner
 

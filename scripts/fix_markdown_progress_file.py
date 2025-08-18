@@ -16,7 +16,7 @@ def fix_markdown_progress_file():
         print(f"Error: {file_path} not found")
         return False
 
-    with open(file_path, "r", encoding="utf-8") as f:
+    with open(file_path, encoding="utf-8") as f:
         content = f.read()
 
     original_content = content

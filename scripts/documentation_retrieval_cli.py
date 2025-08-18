@@ -101,7 +101,7 @@ class DocumentationRetrievalCLI:
             _LOG.error(f"Stats retrieval failed: {e}")
             print(f"Error: {e}")
     
-    def _print_results(self, results: Dict[str, Any], format_output: str) -> None:
+    def _print_results(self, results: dict[str, Any], format_output: str) -> None:
         """Print results in the specified format"""
         if format_output == "json":
             print(json.dumps(results, indent=2))
@@ -112,7 +112,7 @@ class DocumentationRetrievalCLI:
         else:
             print(json.dumps(results, indent=2))
     
-    def _print_text_results(self, results: Dict[str, Any]) -> None:
+    def _print_text_results(self, results: dict[str, Any]) -> None:
         """Print results in human-readable text format"""
         if "error" in results:
             print(f"Error: {results['error']}")
@@ -163,7 +163,7 @@ class DocumentationRetrievalCLI:
                     print(chunk["content"][:200] + "..." if len(chunk["content"]) > 200 else chunk["content"])
                     print()
 
-    def _read_at_a_glance_for_file(self, file_path_str: str) -> Optional[Dict[str, str]]:
+    def _read_at_a_glance_for_file(self, file_path_str: str) -> dict[str, str] | None:
         """Read a local file and extract the At-a-glance table (what/read/do_next)."""
         try:
             p = Path(file_path_str)
@@ -184,7 +184,7 @@ class DocumentationRetrievalCLI:
         except Exception:
             return None
     
-    def _print_summary_results(self, results: Dict[str, Any]) -> None:
+    def _print_summary_results(self, results: dict[str, Any]) -> None:
         """Print a summary of results"""
         if "error" in results:
             print(f"❌ Error: {results['error']}")

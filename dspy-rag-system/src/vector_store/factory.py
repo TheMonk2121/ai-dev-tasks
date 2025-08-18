@@ -13,7 +13,7 @@ from .perf import PerfVectorStore
 from .protocols import IVectorStore
 
 
-def get_vector_store(mode: Optional[str] = None, **kwargs) -> IVectorStore:
+def get_vector_store(mode: str | None = None, **kwargs) -> IVectorStore:
     """
     Get a vector store instance based on mode or environment.
 

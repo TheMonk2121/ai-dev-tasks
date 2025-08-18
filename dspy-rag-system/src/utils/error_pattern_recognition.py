@@ -27,19 +27,19 @@ class ErrorPattern:
     description: str
     regex_pattern: str
     recovery_suggestion: str
-    model_specific: Optional[str] = None
-    context_hints: Optional[List[str]] = None
+    model_specific: str | None = None
+    context_hints: list[str] | None = None
 
 
 @dataclass
 class ErrorAnalysis:
     """Result of error pattern analysis"""
 
-    matched_patterns: List[ErrorPattern]
+    matched_patterns: list[ErrorPattern]
     severity_score: float
-    recovery_actions: List[str]
+    recovery_actions: list[str]
     confidence: float
-    model_specific_handling: Optional[str] = None
+    model_specific_handling: str | None = None
 
 
 class ErrorPatternRecognizer:
@@ -50,7 +50,7 @@ class ErrorPatternRecognizer:
         self.error_history = []
         self.pattern_stats = {}
 
-    def _load_error_patterns(self) -> List[ErrorPattern]:
+    def _load_error_patterns(self) -> list[ErrorPattern]:
         """Load error patterns from configuration"""
         patterns = [
             # Database Connection Errors
@@ -207,7 +207,7 @@ class ErrorPatternRecognizer:
         return patterns
 
     def analyze_error(
-        self, error_message: str, error_type: Optional[str] = None, context: Optional[Dict[str, Any]] = None
+        self, error_message: str, error_type: str | None = None, context: dict[str, Any] | None = None
     ) -> ErrorAnalysis:
         """
         Analyze an error message and identify patterns
@@ -265,7 +265,7 @@ class ErrorPatternRecognizer:
         severity_map = {"low": 0.25, "medium": 0.5, "high": 0.75, "critical": 1.0}
         return severity_map.get(severity.lower(), 0.5)
 
-    def _update_pattern_stats(self, matched_patterns: List[ErrorPattern]):
+    def _update_pattern_stats(self, matched_patterns: list[ErrorPattern]):
         """Update pattern usage statistics"""
         for pattern in matched_patterns:
             if pattern.pattern_id not in self.pattern_stats:
@@ -278,7 +278,7 @@ class ErrorPatternRecognizer:
             self.pattern_stats[pattern.pattern_id]["count"] += 1
             self.pattern_stats[pattern.pattern_id]["last_seen"] = datetime.now()
 
-    def get_pattern_statistics(self) -> Dict[str, Any]:
+    def get_pattern_statistics(self) -> dict[str, Any]:
         """Get error pattern statistics"""
         return {
             "total_patterns": len(self.patterns),
@@ -286,7 +286,7 @@ class ErrorPatternRecognizer:
             "most_common_patterns": sorted(self.pattern_stats.items(), key=lambda x: x[1]["count"], reverse=True)[:5],
         }
 
-    def suggest_recovery_strategy(self, analysis: ErrorAnalysis) -> List[str]:
+    def suggest_recovery_strategy(self, analysis: ErrorAnalysis) -> list[str]:
         """Suggest recovery strategies based on error analysis"""
         strategies = []
 
@@ -320,7 +320,7 @@ error_recognizer = ErrorPatternRecognizer()
 
 
 def analyze_error_pattern(
-    error_message: str, error_type: Optional[str] = None, context: Optional[Dict[str, Any]] = None
+    error_message: str, error_type: str | None = None, context: dict[str, Any] | None = None
 ) -> ErrorAnalysis:
     """
     Convenience function to analyze error patterns
@@ -336,11 +336,11 @@ def analyze_error_pattern(
     return error_recognizer.analyze_error(error_message, error_type, context)
 
 
-def get_error_statistics() -> Dict[str, Any]:
+def get_error_statistics() -> dict[str, Any]:
     """Get error pattern statistics"""
     return error_recognizer.get_pattern_statistics()
 
 
-def suggest_recovery_strategy(analysis: ErrorAnalysis) -> List[str]:
+def suggest_recovery_strategy(analysis: ErrorAnalysis) -> list[str]:
     """Suggest recovery strategies"""
     return error_recognizer.suggest_recovery_strategy(analysis)

@@ -1,11 +1,22 @@
 repos:
+  - repo: local
+    hooks:
+      - id: internal-link-anchor-check
+        name: Internal link and anchor check
+        entry: python scripts/link_check.py --root . --scope . --changed-files
+        language: python
+        language_version: python3.11
+        types: [markdown]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.0
+    rev: v0.6.3
     hooks:
       - id: ruff
-        args: [--fix]
-      - id: ruff-format
-
+        args: ["--fix", "--select", "UP,E,F,I", "--target-version", "py311"]
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+        args: ["--target-version", "py311"]
   - repo: local
     hooks:
       - id: validator-lightweight

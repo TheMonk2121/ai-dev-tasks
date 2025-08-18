@@ -9,7 +9,7 @@ import sys
 from typing import Dict, List, Any
 from pathlib import Path
 
-def get_documentation_inventory() -> Dict[str, List[str]]:
+def get_documentation_inventory() -> dict[str, list[str]]:
     """Get the complete documentation inventory organized by category"""
     return {
         "CRITICAL_FILES": [
@@ -91,7 +91,7 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
         ]
     }
 
-def get_context_guidance() -> Dict[str, List[str]]:
+def get_context_guidance() -> dict[str, list[str]]:
     """Get context-specific guidance for when to read what"""
     return {
         "NEW_SESSIONS": [
@@ -178,7 +178,7 @@ def display_context_guidance():
                 print(f"  - {file}")
         print()
 
-def find_relevant_files(task_type: str) -> List[str]:
+def find_relevant_files(task_type: str) -> list[str]:
     """Find relevant files for a specific task type"""
     guidance = get_context_guidance()
     
