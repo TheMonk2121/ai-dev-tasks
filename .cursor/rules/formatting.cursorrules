@@ -1,0 +1,15 @@
+# Formatting Rules
+
+## Markdown Output Rules
+
+- Do not emit bracketed placeholders in Markdown (e.g., `[Describe the purpose ...]`, `[Owner ...]`). These can be parsed as link references and break rendering.
+- Use plain text prompts instead, e.g., `Describe the purpose and scope of this document`.
+- If emphasis is needed, prefer backticks or blockquotes, not square brackets.
+
+## Documentation Standards
+
+- All documentation must follow markdown standards
+- Each document must have a single h1 title matching filename
+- TL;DR section required at top of core docs
+- Cross-references must be maintained between related files
+- Documentation hierarchy: 000-099 (core), 100-199 (guides), etc.

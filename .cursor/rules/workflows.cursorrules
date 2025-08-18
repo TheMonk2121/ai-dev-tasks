@@ -1,0 +1,38 @@
+# Development Workflow Rules
+
+## When Working on Features
+
+1. **Follow the development guidelines** in `100_memory/100_cursor-memory-context.md`
+2. **Use the existing file organization** from `400_guides/400_context-priority-guide.md`
+3. **Update completion summaries** when finishing major features
+4. **Run `python scripts/update_cursor_memory.py`** to keep memory context current
+5. **Code reuse**: Before writing new code, apply the find-or-build heuristic (search-before-write, 70% reuse, tests-first) in `400_file-analysis-guide.md`
+
+## When Adding New Features
+
+1. **Add to backlog** with proper scoring (see `100_memory/100_backlog-guide.md`)
+2. **Create PRD** using `000_core/001_create-prd.md` workflow
+3. **Generate tasks** using `000_core/002_generate-tasks.md` workflow
+4. **Execute** using `000_core/003_process-task-list.md` workflow
+
+## Development Workflow
+
+1. **Backlog Selection** → Choose from `000_core/000_backlog.md` (B-001, B-002, etc.)
+2. **PRD Creation** → Use `000_core/001_create-prd.md` workflow
+3. **Task Generation** → Use `000_core/002_generate-tasks.md` workflow
+4. **AI Execution** → Use `000_core/003_process-task-list.md` workflow
+5. **State Management** → `.ai_state.json` for context persistence
+
+## Key Commands
+
+- **Start Dashboard**: `./dspy-rag-system/start_mission_dashboard.sh`
+- **Run Tests**: `./dspy-rag-system/run_tests.sh`
+- **Quick Start**: `./dspy-rag-system/quick_start.sh`
+- **Update Memory**: `python scripts/update_cursor_memory.py`
+
+## When Debugging Issues
+
+1. **Check `dspy-rag-system/docs/CURRENT_STATUS.md`** for system health
+2. **Review error logs** in `dspy-rag-system/src/utils/logger.py`
+3. **Use retry wrapper** from `dspy-rag-system/src/utils/retry_wrapper.py`
+4. **Check security validation** from `dspy-rag-system/src/utils/prompt_sanitizer.py`

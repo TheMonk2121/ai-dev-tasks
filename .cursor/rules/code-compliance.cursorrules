@@ -1,0 +1,98 @@
+# Code Compliance & Writing Standards
+
+## Code Quality Standards
+
+### Python Code Standards
+- **Type hints required** in all Python files
+- **Unit tests required** for new features
+- **Maximum function length**: 50 lines
+- **Document all public functions and classes** with docstrings
+- **Use black for Python formatting**
+- **Prefer local-first solutions** over external dependencies
+- **Avoid broad `# type: ignore` comments** - use scoped and justified ignores instead
+
+### Code Writing Principles
+- **Search before writing**: Use `codebase_search` to find existing solutions
+- **70% reuse target**: Aim to reuse existing code rather than writing new
+- **Tests first**: Write tests before implementing features
+- **Concise responses**: Provide concise code fixes when requested
+- **Avoid over-complication**: Prefer simple, maintainable solutions
+
+### Error Handling
+- **Graceful degradation**: Handle errors without breaking the system
+- **Comprehensive logging**: Use structured logging for debugging
+- **Retry mechanisms**: Implement retry wrappers for external dependencies
+- **Input validation**: Validate all inputs, especially user-provided data
+
+## Tool Usage Standards
+
+### Search & Discovery
+- **Prefer `codebase_search`** over `grep_search` for semantic searches
+- **Use `file_search`** for fuzzy filename matching
+- **Leverage `list_dir`** to understand project structure
+
+### Task Management
+- **Use `todo_write`** for tracking multi-step tasks
+- **Update memory** for important project decisions
+- **Track progress** with clear acceptance criteria
+
+### Validation & Testing
+- **Run linter checks** before committing changes
+- **Validate PRD-backlog linkage**: `python3 scripts/validate_prd_backlog_linkage.py`
+- **Test critical paths** before deployment
+
+## Code Organization
+
+### File Structure
+- **Follow existing patterns** in the codebase
+- **Use descriptive filenames** that indicate purpose
+- **Group related functionality** in appropriate directories
+- **Maintain consistent imports** and dependencies
+
+### Documentation
+- **Inline comments** for complex logic
+- **README files** for new modules
+- **API documentation** for public interfaces
+- **Update guides** when adding new patterns
+
+## Security & Best Practices
+
+### Input Validation
+- **Sanitize all inputs** before processing
+- **Validate file paths** to prevent path traversal
+- **Check permissions** before file operations
+- **Use parameterized queries** for database operations
+
+### Error Messages
+- **Don't expose sensitive information** in error messages
+- **Provide actionable error messages** for users
+- **Log detailed errors** for debugging
+- **Handle edge cases** gracefully
+
+## Performance Considerations
+
+### Optimization
+- **Profile before optimizing** - measure first
+- **Use appropriate data structures** for the task
+- **Consider memory usage** for large datasets
+- **Cache expensive operations** when appropriate
+
+### Resource Management
+- **Close file handles** and database connections
+- **Use context managers** for resource cleanup
+- **Monitor memory usage** in long-running processes
+- **Implement timeouts** for external calls
+
+## Testing Standards
+
+### Test Coverage
+- **Unit tests** for all new functions
+- **Integration tests** for complex workflows
+- **Edge case testing** for error conditions
+- **Performance tests** for critical paths
+
+### Test Quality
+- **Clear test names** that describe the scenario
+- **Isolated tests** that don't depend on each other
+- **Mock external dependencies** to avoid flaky tests
+- **Test both success and failure cases**

@@ -98,6 +98,24 @@
 <!-- reference_cards: ["400_guides/400_documentation-guide.md"] -->
 
 | B-181 | Observability + Mission Dashboard Unification | 🔍 | 3 | done | Integrate `400_mission-dashboard-guide.md` under `400_observability-system.md` as a section or cross-link strongly; avoid duplication | Observability Docs | Unify monitoring docs |
+
+| B-182 | Global Bug-Fix Playbook + Enforcement Layers (Cursor + CI) | 🐛 | 5 | todo | Introduce three-layer enforcement system: Preset (soft), Multi-Framework Hot-Zone Rules (targeted), CI Guard (hard) with Conventional Commits validation | Debug Velocity | CS-level rigor without slowing velocity |
+<!-- score: {bv: 5, tc: 4, rr: 4, le: 3, lessons: 2, effort: 2, deps: []} -->
+<!-- score_total: 3.8 -->
+<!-- do_next: MVP (4h): Create Cursor preset with ⌘⌥B shortcut, multi-framework hot-zone rules with commit detection, enhanced CI guard with Conventional Commits validation. -->
+<!-- acceptance: Preset works with keyboard shortcut; hot-zone rules detect commit prefixes and suggest appropriate frameworks; CI validates framework compliance based on commit messages; regression rate drops ≥30% in hot zones. -->
+<!-- est_hours: 4 -->
+<!-- lessons_applied: ["400_guides/400_comprehensive-coding-best-practices.md", "400_guides/400_testing-strategy-guide.md"] -->
+<!-- reference_cards: ["400_guides/400_security-best-practices-guide.md", "PRD-B-182-Global-Bug-Fix-Playbook.md"] -->
+
+| B-183 | Feature Refactor Framework (Initial Draft → Consensus → Validation) | 🔄 | 5 | todo | Introduce 5-phase consensus framework for structural/systemic changes with unified PR template, enhanced CI guard with Conventional Commits validation, and integration with existing governance | Refactor Governance | Prevent architectural drift, ensure stakeholder consensus, maintain velocity |
+<!-- score: {bv: 5, tc: 4, rr: 4, le: 3, lessons: 2, effort: 3, deps: [B-182]} -->
+<!-- score_total: 3.7 -->
+<!-- do_next: Create docs/005_feature_refactor_playbook.md, Cursor preset for consensus process, unified PR template with conditional sections, enhanced CI guard with Conventional Commits validation, framework quick-reference cheat sheet. -->
+<!-- acceptance: Decision matrix guides framework selection; 100% refactor PRs have consensus phases; CI validates framework compliance based on commit messages; integration with existing governance works seamlessly. -->
+<!-- est_hours: 5 -->
+<!-- lessons_applied: ["PRD-B-182-Global-Bug-Fix-Playbook.md", "400_guides/400_comprehensive-coding-best-practices.md"] -->
+<!-- reference_cards: ["400_guides/400_testing-strategy-guide.md", "PRD-B-183-Feature-Refactor-Framework.md"] -->
 <!-- score: {bv: 3, tc: 2, rr: 3, le: 2, effort: 2, deps: []} -->
 <!-- score_total: 5.0 -->
 <!-- do_next: Add a "Mission dashboard" section to observability guide; convert mission dashboard guide into a stub with link; update references (scripts, README). -->

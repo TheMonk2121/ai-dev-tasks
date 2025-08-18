@@ -41,7 +41,27 @@ generate PRD for selected backlog item |
 
 ## Template {#template}
 
-- **Impact**: Quantified benefits and outcomes
+### **PRD Header Requirements**
+Every PRD must include:
+```markdown
+# PRD: [Title]
+
+**Backlog Item**: B-XXX
+**Status**: [Ready for Implementation | In Progress | Completed]
+**Estimated Hours**: X hours
+
+**Dependencies**:
+- **Upstream**: [Items that must be completed first]
+- **Downstream**: [Items that depend on this completion]
+- **Blocking**: [Items that block this implementation]
+
+**Impact Scope**:
+- **Direct**: [Immediate changes required]
+- **Indirect**: [Systems/components affected]
+- **Public Contracts**: [APIs, schemas, interfaces changed]
+
+## TL;DR
+```
 
 ### **3. Solution Overview**-**High-Level Solution**: Core approach and architecture
 
@@ -397,10 +417,10 @@ Core Team
 
 ## Purpose
 
-[Describe the purpose and scope of this document]
+Describe the purpose and scope of this document
 
 ## Usage
 
-[Describe how to use this document or system]
+How to use this document or system
 
 <!-- README_AUTOFIX_END -->

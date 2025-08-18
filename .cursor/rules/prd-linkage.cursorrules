@@ -1,0 +1,38 @@
+# PRD-Backlog Linkage Rules
+
+## Required PRD Header Format
+
+When creating or updating PRDs, always include the enhanced header format with complete dependency and impact information:
+
+```markdown
+# PRD: [Title]
+
+**Backlog Item**: B-XXX
+**Status**: [Ready for Implementation | In Progress | Completed]
+**Estimated Hours**: X hours
+
+**Dependencies**:
+- **Upstream**: [Items that must be completed first]
+- **Downstream**: [Items that depend on this completion]
+- **Blocking**: [Items that block this implementation]
+
+**Impact Scope**:
+- **Direct**: [Immediate changes required]
+- **Indirect**: [Systems/components affected]
+- **Public Contracts**: [APIs, schemas, interfaces changed]
+
+## TL;DR
+```
+
+## Enforcement Rules
+
+1. **Every PRD must reference its backlog item** in the header
+2. **Every backlog item with PRD must reference the PRD file** in metadata
+3. **Status must be synchronized** between backlog and PRD
+4. **Dependencies must be clearly documented** (upstream, downstream, blocking)
+5. **Impact scope must be defined** (direct, indirect, public contracts)
+6. **Run validation script** after creating/updating PRDs: `python3 scripts/validate_prd_backlog_linkage.py`
+
+## Validation
+
+Always run the PRD-backlog linkage validator to ensure compliance with these standards.

@@ -98,6 +98,13 @@ User: ✅ Approves final PRD for implementation
 3. **Generate tasks**: `000_core/002_generate-tasks.md`
 4. **Execute with AI**: Execute backlog item directly (000_core/003_process-task-list.md is the execution engine; it loads whether or not a PRD was created)
 
+### **PRD Linkage Requirements**
+- Every PRD must reference its backlog item in the header
+- Every backlog item with PRD must reference the PRD file in metadata
+- Status must be synchronized between backlog and PRD
+- Dependencies must be clearly documented (upstream, downstream, blocking)
+- Impact scope must be defined (direct, indirect, public contracts)
+
 ### Priority Levels & Logic
 
 - *🔥 Critical (Priority 1)**- Must-have for solo development

@@ -1,25 +1,35 @@
-# Product Requirements Document: B-084 Research-Based Schema Design for Extraction
+# PRD: Research-Based Schema Design for Extraction
 
-<!-- ARCHIVAL_METADATA -->
-<!-- completion_date: 2025-08-16 -->
-<!-- backlog_id: B-084 -->
-<!-- implementation_notes: Successfully implemented research-based schema design system. Created scripts/research_based_schema_design.py with research analysis, pattern generation, schema creation, validation, and quality assessment. System extracts 44 findings from 20 research files, generates 4 research-based patterns (span-level grounding, multi-stage retrieval, metadata governance, DSPy assertions), and creates validated schemas for documentation, code, and research content types. Comprehensive test suite with 14 tests validates all functionality. Research coverage: 75%, average patterns per schema: 2.2, validation accuracy: 95%. System integrates with existing research infrastructure and provides foundation for improved extraction quality. -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#schema-design", "100_memory/105_lessons-learned-context.md#research-integration"] -->
-<!-- reference_cards: ["500_reference-cards.md#research-based-design", "500_reference-cards.md#schema-validation"] -->
-<!-- key_decisions: Research coverage threshold of 0.8, pattern-based schema generation, integration with existing 500_research/ infrastructure -->
-<!-- trade_offs: Research coverage vs. implementation speed (chose 75% coverage), comprehensive patterns vs. simplicity (chose 4 core patterns), validation strictness vs. flexibility (chose 95% accuracy target) -->
-<!-- success_metrics: 44 findings extracted, 4 patterns generated, 3 content types supported, 14 tests passing, 75% research coverage achieved -->
-<!-- ARCHIVAL_METADATA -->
+**Backlog Item**: B-084
+**Status**: Ready for Implementation
+**Estimated Hours**: 8 hours
 
-> ⚠️**Auto-Skip Note**> This PRD was generated because either `points≥5` or `score_total<3.0`.
-> Remove this banner if you manually forced PRD creation.
+**Dependencies**:
+- **Upstream**: Research findings from 500_research/ directory
+- **Downstream**: Enhanced extraction services, improved data quality
+- **Blocking**: None
+
+**Impact Scope**:
+- **Direct**: Schema generation system, validation framework, quality metrics
+- **Indirect**: All extraction services, research integration, data quality improvements
+- **Public Contracts**: Schema generation APIs, validation APIs
+
+## TL;DR
+
+**What**: Create a research-based schema design system that integrates findings from the 500_research/ directory to generate adaptive, validated extraction schemas.
+
+**Why**: Current extraction system uses basic, hardcoded schemas that don't leverage research findings, resulting in inconsistent quality and poor adaptability.
+
+**How**: Research-driven schema generation with multi-format support, adaptive evolution, and validation framework.
+
+**Impact**: Improved extraction quality will enhance the entire AI development ecosystem.
+
+---
 
 ## 1. Executive Summary
 
 **Project**: Research-Based Schema Design for Extraction
-**Backlog ID**: B-084
 **Priority**: 6.0 points (High)
-**Estimated Effort**: 8 hours
 **Timeline**: 1-2 weeks
 **Stakeholders**: AI Development Team, Research Team
 

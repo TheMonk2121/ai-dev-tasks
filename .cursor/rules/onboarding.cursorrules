@@ -1,0 +1,40 @@
+# Onboarding & Memory Rehydration Rules
+
+## 🚨 START EVERY CHAT WITH THIS
+
+**At the beginning of every new chat, automatically run this command to prime the model with core documentation:**
+
+```bash
+python3 scripts/prime_cursor_chat.py planner "current project status and core documentation"
+```
+
+**Alternative manual methods:**
+```bash
+# Python implementation
+python3 scripts/cursor_memory_rehydrate.py planner "current project status and core documentation"
+
+# Go implementation (faster)
+cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project status and core documentation"
+```
+
+**Then copy the entire bundle output into the chat as the first message.**
+
+## When Starting a New Session
+
+1. **Always read `100_memory/100_cursor-memory-context.md` first** - this gives you the current project state
+2. **Check `000_core/000_backlog.md`** for current priorities and dependencies
+3. **Review `400_guides/400_system-overview.md`** if you need deeper technical context
+4. **Use existing workflows** (`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`)
+
+## Available Roles
+
+- `planner` - For strategic planning and prioritization
+- `implementer` - For code implementation and technical work
+- `researcher` - For research and analysis tasks
+
+## Key Files for Context
+
+- **Memory Context**: `100_memory/100_cursor-memory-context.md` (current state)
+- **System Overview**: `400_guides/400_system-overview.md` (technical architecture)
+- **Backlog**: `000_core/000_backlog.md` (priorities and status)
+- **Setup**: `200_setup/202_setup-requirements.md` (environment setup)

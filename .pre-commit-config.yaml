@@ -7,6 +7,13 @@ repos:
         language: python
         language_version: python3.11
         types: [markdown]
+      - id: bracketed-placeholder-check
+        name: Bracketed placeholder check
+        entry: python scripts/check_bracketed_placeholders.py
+        language: python
+        language_version: python3.11
+        types: [markdown]
+        description: "Prevents bracketed placeholders that break markdown rendering"
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.3
     hooks:
