@@ -74,7 +74,7 @@ def track_request_latency(func):
             result = func(*args, **kwargs)
             REQUEST_COUNT.inc()
             return result
-        except Exception as e:
+        except Exception:
             ERROR_COUNT.inc()
             raise
         finally:
