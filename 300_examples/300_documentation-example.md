@@ -1,11 +1,10 @@
 <!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
+<!-- MEMORY_CONTEXT: LOW - Documentation template example -->
 
 # Documentation Example
 
-> Example/template file. Not part of active workflows. See `200_setup/200_naming-conventions.md` (Templates & Examples)
-and
-`400_guides/400_documentation-guide.md` (documentation pattern usage).
+> **Template file for new documentation.** See `200_setup/200_naming-conventions.md` for complete standards and `400_guides/400_documentation-guide.md` for usage patterns.
 
 ```markdown
 
@@ -59,101 +58,50 @@ and
 
 ```
 
-## 🔄 **Memory Context Integration**###**How This Documentation Builds Scaffolding**####**For Humans:**-**Clear Purpose**: Understands what the feature does and why it's important
+## 🔄 **Memory Context Integration**
 
+> **Note**: For complete quality standards and checklists, see `200_setup/200_naming-conventions.md#quality-checklist`.
+
+### **How This Documentation Builds Scaffolding**
+
+#### **For Humans:**
+- **Clear Purpose**: Understands what the feature does and why it's important
 - **Current State**: Knows where the feature is in development
-
 - **Next Steps**: Understands what needs to be done next
-
 - **Context**: Sees how it fits into the larger system
 
-### **For AI Assistants:**-**Memory Context**: Knows this is a MEDIUM priority workflow feature
-
+#### **For AI Assistants:**
+- **Memory Context**: Knows this is a MEDIUM priority workflow feature
 - **Cross-References**: Understands relationships to other files
-
 - **Structured Data**: Can parse status, decisions, and learning notes
-
 - **Actionable Information**: Knows what to do when working on this feature
 
-### **Quality Checklist Applied**
+## 🎯 **Key Principles Demonstrated**
 
-#### **Before Committing This Documentation:**
+> **Note**: For complete documentation standards, see `200_setup/200_naming-conventions.md`.
 
-- [x] **Memory context comment** is present and accurate
-
-- [x]**Cross-references**are included and current
-
-- [x]**Content structure**follows established patterns
-
-- [x]**Language is clear**for both humans and AI
-
-- [x]**Examples are provided**where helpful
-
-- [x]**Status information**is current and accurate
-
-#### **For MEDIUM Priority Files:**
-
-- [x]**Workflow steps**are clear and actionable
-
-- [x]**Decision points**are identified
-
-- [x]**Integration details**are explained
-
-- [x]**Error handling**is covered
-
-## 🎯**Key Principles Demonstrated**###**1. Hierarchical Information**-**HIGH**: What the feature does and why it matters
-
-- **MEDIUM**: How to implement and use the feature
-
+### **1. Hierarchical Information**
+- **HIGH**: What the feature does and why it matters
+- **MEDIUM**: How to implement and use the feature  
 - **LOW**: Detailed technical implementation
 
-### **2. Cross-Reference System**- Links to related workflow files
-
+### **2. Cross-Reference System**
+- Links to related workflow files
 - References backlog items
-
 - Connects to technical context
 
-### **3. Structured Patterns**- Consistent status reporting
-
+### **3. Structured Patterns**
+- Consistent status reporting
 - Decision documentation
-
 - Learning capture
-
 - Action item tracking
 
-### **4. AI-Friendly Format**- Clear section headers
-
+### **4. AI-Friendly Format**
+- Clear section headers
 - Structured data patterns
-
 - Explicit relationships
-
 - Actionable information
 
-## 🚀**Benefits of This Approach**###**For Development Team:**-**Shared Understanding**: Everyone knows the current state
+---
 
-- **Clear Priorities**: Understand what to work on next
-
-- **Learning Capture**: Insights are preserved for future reference
-
-- **Decision Tracking**: Rationale is documented for future context
-
-### **For AI Assistants:**-**Instant Context**: Knows what the feature is and its status
-
-- **Clear Relationships**: Understands how it connects to other components
-
-- **Actionable Guidance**: Knows what steps to take
-
-- **Memory Persistence**: Information is preserved across sessions
-
-### **For Project Health:**-**Knowledge Preservation**: Important decisions and learnings are captured
-
-- **Onboarding Efficiency**: New team members can quickly understand context
-
-- **AI Collaboration**: AI assistants can work effectively with the system
-
-- **Scalable Documentation**: Pattern can be applied to new features
-
-- --
-
-- This example demonstrates how proper memory scaffolding documentation creates a shared understanding between humans and
-AI assistants, building a robust knowledge base that grows with the project.*
+*This template demonstrates the documentation patterns defined in `200_setup/200_naming-conventions.md`.*
