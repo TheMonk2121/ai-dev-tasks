@@ -19,7 +19,7 @@
   `400_guides/400_system-overview.md`.
 - **Workflows**: `000_core/001_create-prd.md`,
   `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`,
-  `100_memory/100_backlog-guide.md`.
+  `000_core/004_bugfix_playbook.md`, `100_memory/100_backlog-guide.md`.
 - **Operational guides**: Testing, Security, Performance, Deployment,
   Migration, Integration in `400_guides/`.
 - For a full inventory, see the sections in this file; the older

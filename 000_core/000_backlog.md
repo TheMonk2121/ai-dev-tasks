@@ -99,7 +99,7 @@
 
 | B-181 | Observability + Mission Dashboard Unification | 🔍 | 3 | done | Integrate `400_mission-dashboard-guide.md` under `400_observability-system.md` as a section or cross-link strongly; avoid duplication | Observability Docs | Unify monitoring docs |
 
-| B-182 | Global Bug-Fix Playbook + Enforcement Layers (Cursor + CI) | 🐛 | 5 | todo | Introduce three-layer enforcement system: Preset (soft), Multi-Framework Hot-Zone Rules (targeted), CI Guard (hard) with Conventional Commits validation | Debug Velocity | CS-level rigor without slowing velocity |
+| B-182 | Global Bug-Fix Playbook + Enforcement Layers (Cursor + CI) | 🐛 | 5 | ✅ done | Introduce three-layer enforcement system: Preset (soft), Multi-Framework Hot-Zone Rules (targeted), CI Guard (hard) with Conventional Commits validation | Debug Velocity | CS-level rigor without slowing velocity |
 <!-- score: {bv: 5, tc: 4, rr: 4, le: 3, lessons: 2, effort: 2, deps: []} -->
 <!-- score_total: 3.8 -->
 <!-- do_next: MVP (4h): Create Cursor preset with ⌘⌥B shortcut, multi-framework hot-zone rules with commit detection, enhanced CI guard with Conventional Commits validation. -->

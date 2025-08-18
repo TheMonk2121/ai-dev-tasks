@@ -164,6 +164,7 @@ B‑076 (DSPy Assertions) → B‑050 (Entity Expansion)
 - **PRD Creation**: `000_core/001_create-prd.md` - For new features
 - **Task Generation**: `000_core/002_generate-tasks.md` - For implementation planning
 - **Task Execution**: `000_core/003_process-task-list.md` - For execution tracking
+- **Bug-Fix Playbook**: `000_core/004_bugfix_playbook.md` - For debugging workflow
 
 ### **Strategic Context**
 - **System Overview**: `400_guides/400_system-overview.md` - Technical architecture

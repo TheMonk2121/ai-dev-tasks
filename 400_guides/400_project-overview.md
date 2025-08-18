@@ -290,6 +290,10 @@ Podcast</figcaption>
   process the generated task list with state management, auto-advance,
   and HotFix generation (the execution engine).
 
+- **`000_core/004_bugfix_playbook.md`**: Provides structured debugging
+  workflow with three-layer enforcement system for bug fixes and hot
+  zones.
+
 ### **Automation & Tools:**
 
 - **`100_memory/100_backlog-automation.md`**: Documents the
