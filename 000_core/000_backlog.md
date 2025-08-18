@@ -198,6 +198,28 @@
 | B-189 | Authoring Guideline Update: Anchors & Quick Refs | 📚 | 1 | ✅ done | Document anchor usage and validator workflow in `400_documentation-guide.md` | Docs Governance | Clear authoring guidance |
 <!-- score: {bv: 3, tc: 2, rr: 2, le: 2, effort: 1, deps: ["B-185"]} -->
 <!-- score_total: 9.0 -->
+
+| B-190 | Bracketed Placeholder Enforcement System | 🛡️ | 4 | ✅ done | Add pre-commit hook, detection script, and auto-fix tools to prevent bracketed placeholders in markdown that break rendering | Docs Quality | Prevent markdown rendering issues |
+<!-- score: {bv: 4, tc: 4, rr: 3, le: 3, effort: 2, deps: []} -->
+<!-- score_total: 4.0 -->
+<!-- do_next: Create pre-commit hook for bracketed placeholder detection; add detection script with smart exclusions; create auto-fix script with file-arg support; integrate into existing markdown fix workflows. -->
+<!-- acceptance: Pre-commit hook blocks commits with bracketed placeholders; detection script finds issues with smart exclusions; auto-fix script handles common patterns safely; no false positives on valid code/config patterns. -->
+<!-- est_hours: 3 -->
+<!-- lessons_applied: ["400_guides/400_documentation-guide.md", "400_guides/400_comprehensive-coding-best-practices.md"] -->
+<!-- reference_cards: ["400_guides/400_contributing-guidelines.md", "500_reference-cards.md"] -->
+<!-- completion_date: 2025-08-18 -->
+<!-- implementation_notes: Created pre-commit hook, detection script with smart exclusions, auto-fix script with file-arg support, integrated into existing workflows. Fixed 6 issues in PR files. Enforcement system active and preventing new issues. -->
+
+| B-191 | Clean Up Existing Bracketed Placeholders | 🧹 | 3 | ✅ done | Apply conservative repo-wide cleanup of existing bracketed placeholders to reduce technical debt | Docs Maintenance | Reduce technical debt |
+<!-- score: {bv: 3, tc: 3, rr: 3, le: 2, effort: 2, deps: ["B-190"]} -->
+<!-- score_total: 3.0 -->
+<!-- do_next: Run conservative auto-fix on known safe patterns only; preserve valid code/config syntax (e.g., [tool.black]); disable generic replacements to avoid false positives; verify no legitimate patterns are broken. -->
+<!-- acceptance: 100+ bracketed placeholder issues fixed across repo; no false positives on valid patterns; markdown rendering improved; enforcement system from B-190 prevents new issues. -->
+<!-- est_hours: 2 -->
+<!-- lessons_applied: ["400_guides/400_documentation-guide.md", "400_guides/400_comprehensive-coding-best-practices.md"] -->
+<!-- reference_cards: ["400_guides/400_contributing-guidelines.md", "500_reference-cards.md"] -->
+<!-- completion_date: 2025-08-18 -->
+<!-- implementation_notes: Applied conservative cleanup fixing 121 issues across 39 files. Used known safe patterns only, disabled generic replacements, preserved valid code/config syntax. No false positives on legitimate patterns like [tool.black]. -->
 <!-- do_next: Add section covering heading levels, emoji anchors, and how to run validator locally/CI; add examples. -->
 <!-- acceptance: Guide includes anchor authoring rules and quick reference; internal links updated; linkcheck passes. -->
 <!-- est_hours: 1 -->
