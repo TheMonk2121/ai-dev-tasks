@@ -1,0 +1,216 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Nightly at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Test type to run'
+        required: true
+        default: 'pr'
+        type: choice
+        options:
+        - pr
+        - nightly
+        - weekly
+
+env:
+  VALIDATOR_REQUIRE_MULTI_REP: 1
+  VALIDATOR_REQUIRE_XREF: 1
+  VALIDATOR_STRICT_STALE_XREF: 0
+  REHYDRATE_STABILITY: 0.6
+  VALIDATOR_CHECK_MODE: all
+  VALIDATOR_CI_MODE: 1
+  # Per-category FAIL mode (remain 0 in Round 1)
+  VALIDATOR_ARCHIVE_FAIL: 0
+  VALIDATOR_SHADOW_FAIL: 0
+  VALIDATOR_README_FAIL: 0
+  VALIDATOR_MULTIREP_FAIL: 0
+
+jobs:
+  # Fast PR job: tier-1 unit/integration only (target <5 min)
+  test-pr:
+    name: PR Tests (Tier 1 + Unit/Integration)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == 'pr')
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov pytest-timeout pytest-xdist hypothesis
+
+    - name: Run PR tests (tier-1 + unit/integration)
+      run: |
+        python tests/comprehensive_test_suite.py --tiers 1 --kinds unit integration --timeout 300
+      env:
+        PYTHONPATH: ${{ github.workspace }}/scripts:${{ github.workspace }}/dspy-rag-system/src
+
+    - name: Run validator (WARN mode)
+      run: |
+        python scripts/doc_coherence_validator.py --ci-mode
+      env:
+        PYTHONPATH: ${{ github.workspace }}/scripts
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: pr-test-results
+        path: |
+          .coverage
+          htmlcov/
+          test_report_*.json
+          test_summary_*.txt
+
+  # Nightly job: add tier-2 + E2E
+  test-nightly:
+    name: Nightly Tests (Tier 1-2 + E2E)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == 'nightly')
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov pytest-timeout pytest-xdist hypothesis
+
+    - name: Run nightly tests (tier-1-2 + E2E)
+      run: |
+        python tests/comprehensive_test_suite.py --tiers 1 2 --kinds unit integration e2e --timeout 600
+      env:
+        PYTHONPATH: ${{ github.workspace }}/scripts:${{ github.workspace }}/dspy-rag-system/src
+
+    - name: Run property tests
+      run: |
+        python tests/comprehensive_test_suite.py --kinds property --timeout 300
+      env:
+        PYTHONPATH: ${{ github.workspace }}/scripts:${{ github.workspace }}/dspy-rag-system/src
+
+    - name: Run validator (WARN mode)
+      run: |
+        python scripts/doc_coherence_validator.py --ci-mode
+      env:
+        PYTHONPATH: ${{ github.workspace }}/scripts
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: nightly-test-results
+        path: |
+          .coverage
+          htmlcov/
+          test_report_*.json
+          test_summary_*.txt
+
+  # Weekly job: full + coverage
+  test-weekly:
+    name: Weekly Tests (Full + Coverage)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == 'weekly')
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov pytest-timeout pytest-xdist hypothesis
+
+    - name: Run full test suite with coverage
+      run: |
+        python tests/comprehensive_test_suite.py --coverage-threshold 80.0 --generate-report --timeout 900
+      env:
+        PYTHONPATH: ${{ github.workspace }}/scripts:${{ github.workspace }}/dspy-rag-system/src
+
+    - name: Run all test kinds
+      run: |
+        python tests/comprehensive_test_suite.py --kinds unit integration e2e property prompt --timeout 600
+      env:
+        PYTHONPATH: ${{ github.workspace }}/scripts:${{ github.workspace }}/dspy-rag-system/src
+
+    - name: Run validator (WARN mode)
+      run: |
+        python scripts/doc_coherence_validator.py --ci-mode
+      env:
+        PYTHONPATH: ${{ github.workspace }}/scripts
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: weekly-test-results
+        path: |
+          .coverage
+          htmlcov/
+          test_report_*.json
+          test_summary_*.txt
+
+  # Security scan (weekly)
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == 'weekly')
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+
+    - name: Install security tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety
+
+    - name: Run bandit security scan
+      run: |
+        bandit -r scripts/ dspy-rag-system/src/ -f json -o security_scan.json || true
+
+    - name: Run safety check
+      run: |
+        safety check --json --output safety_report.json || true
+
+    - name: Upload security results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-scan-results
+        path: |
+          security_scan.json
+          safety_report.json

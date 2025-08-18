@@ -1,0 +1,97 @@
+name: README Autofix Proof
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/readme_autofix.py'
+      - 'scripts/readme_consts.py'
+      - '400_guides/**'
+      - '.github/workflows/readme-autofix-proof.yml'
+
+jobs:
+  autofix-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install pytest
+
+      - name: Baseline validator (full repo)
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report_before.json
+
+      - name: Compute baseline within scope (400_guides only)
+        run: |
+          python3 - <<'PY'
+          import json, os
+          r = json.load(open('validator_report_before.json'))
+          files = [f for f in r.get("impacted_files",{}).get("readme",[]) if f.startswith("400_guides/")]
+          print(f"READMEs with violations in scope (before): {len(files)}")
+          with open("autofix_scope_before.txt","w") as o:
+              [o.write(f+"\n") for f in files]
+          PY
+
+      - name: Simulate autofix in temp copy
+        run: |
+          mkdir -p /tmp/repo && rsync -a --exclude='.git' ./ /tmp/repo/
+          python3 scripts/readme_autofix.py --root /tmp/repo --scope 400_guides --write
+
+      - name: Re-run validator on temp copy
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json --root /tmp/repo > validator_report_after.json
+
+      - name: Compute after within scope + post summary
+        run: |
+          python3 - <<'PY'
+          import json, os
+          b = json.load(open('validator_report_before.json'))
+          a = json.load(open('validator_report_after.json'))
+          def count(scope_files):
+              return len([f for f in scope_files if f.startswith("400_guides/")])
+          before = count(b.get("impacted_files",{}).get("readme",[]))
+          after  = count(a.get("impacted_files",{}).get("readme",[]))
+          red = 0 if before==0 else round((before-after)/before*100,1)
+          print("## README Autofix Reduction (400_guides)")
+          print(f"- Before: {before}")
+          print(f"- After:  {after}")
+          print(f"- Reduction: {red}%")
+          # write a small artifact too
+          os.makedirs("artifacts", exist_ok=True)
+          json.dump({"before":before,"after":after,"reduction_pct":red}, open("artifacts/readme_reduction.json","w"))
+          PY
+
+      - name: Upload autofix artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: readme-autofix
+          path: |
+            validator_report_before.json
+            validator_report_after.json
+            artifacts/readme_reduction.json
+
+      - name: Post summary to job
+        run: |
+          echo "## README Autofix Proof Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 400_guides Scope Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          python3 - <<'PY'
+          import json
+          with open("artifacts/readme_reduction.json") as f:
+              data = json.load(f)
+          print(f"- **Before**: {data['before']} files with violations")
+          print(f"- **After**: {data['after']} files with violations")
+          print(f"- **Reduction**: {data['reduction_pct']}%")
+          if data['reduction_pct'] >= 70:
+              print(f"- **Status**: ✅ Target achieved (≥70% reduction)")
+          else:
+              print(f"- **Status**: ⚠️ Below target (need ≥70% reduction)")
+          PY >> $GITHUB_STEP_SUMMARY

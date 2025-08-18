@@ -1,0 +1,123 @@
+name: docs-validator
+
+on:
+  pull_request:
+    paths:
+      - '**/*.md'
+      - 'scripts/doc_coherence_validator.py'
+      - '.github/workflows/validator.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - '**/*.md'
+      - 'scripts/doc_coherence_validator.py'
+      - '.github/workflows/validator.yml'
+  # Optional nightly full scan
+  schedule:
+    - cron: '07 03 * * *' # 03:07 UTC daily
+
+jobs:
+  validate-changed:
+    if: ${{ github.event_name != 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: docs-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Required so diffs like HEAD~1 / merge-base exist
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Choose diff base
+        id: base
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "base_sha=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_OUTPUT"
+          else
+            if git rev-parse HEAD~1 >/dev/null 2>&1; then
+              echo "base_sha=$(git rev-parse HEAD~1)" >> "$GITHUB_OUTPUT"
+            else
+              # fallback for first commit / shallow situations
+              git fetch origin main || true
+              echo "base_sha=$(git merge-base HEAD origin/main || git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Run validator (only-changed)
+        env:
+          DIFF_BASE_SHA: ${{ steps.base.outputs.base_sha }}
+          VALIDATOR_REFERENCES_FAIL: '1'
+        run: |
+          echo "Using DIFF_BASE_SHA=$DIFF_BASE_SHA"
+          python3 scripts/doc_coherence_validator.py \
+            --ci --json --only-changed --base "$DIFF_BASE_SHA" \
+            > validator_report.json
+
+      - name: CI Summary (top findings)
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          try:
+              r = json.load(open('validator_report.json'))
+          except Exception as e:
+              print(f"Validator report not available: {e}")
+              raise SystemExit(0)
+
+          cats = r.get('categories', {})
+          impacted = r.get('impacted_files', {})
+          print('## Validator Summary')
+          print()
+          print('| Category | Violations | Fail Mode |')
+          print('|----------|------------|-----------|')
+          for cat in ['references','readme','multirep','shadow_fork','archive']:
+              if cat in cats:
+                  info = cats[cat]
+                  flag = '✅' if info.get('fail') else '❌'
+                  print(f"| {cat} | {info.get('violations',0)} | {flag} |")
+          print()
+          print('### Top impacted (references)')
+          for f in impacted.get('references', [])[:10]:
+              print(f"- {f}")
+          PY
+
+  nightly-full-scan:
+    if: ${{ github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Run validator (full scan)
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report.json

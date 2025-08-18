@@ -1,0 +1,159 @@
+name: README Cleanup Batch 2 (500_research)
+
+on:
+  pull_request:
+    paths:
+      - '500_research/**'
+      - '.github/workflows/readme-batch-2.yml'
+  workflow_dispatch:
+
+jobs:
+  readme-cleanup-batch-2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set validator environment
+        run: |
+          echo "VALIDATOR_REQUIRE_MULTI_REP=1" >> $GITHUB_ENV
+          echo "VALIDATOR_REQUIRE_XREF=1" >> $GITHUB_ENV
+          echo "VALIDATOR_STRICT_STALE_XREF=0" >> $GITHUB_ENV
+          echo "VALIDATOR_CHECK_MODE=all" >> $GITHUB_ENV
+          echo "VALIDATOR_CI_MODE=1" >> $GITHUB_ENV
+          echo "VALIDATOR_ARCHIVE_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_SHADOW_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_README_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_MULTIREP_FAIL=0" >> $GITHUB_ENV
+
+      - name: Baseline validator (repo)
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report_before.json
+          echo "Baseline validator completed"
+
+      - name: Run README autofix (dry-run)
+        run: |
+          python3 scripts/readme_autofix.py --scope 500_research --output artifacts/readme_autofix_report.json
+          echo "README autofix dry-run completed"
+
+      - name: Simulate README autofix in temp copy
+        run: |
+          mkdir -p /tmp/repo && rsync -a --exclude='.git' ./ /tmp/repo/
+          cd /tmp/repo
+          python3 scripts/readme_autofix.py --scope 500_research --write
+          echo "README autofix simulation completed"
+
+      - name: Re-run validator on temp copy
+        run: |
+          cd /tmp/repo
+          python3 scripts/doc_coherence_validator.py --ci --json > /tmp/validator_report_after.json
+          cp /tmp/validator_report_after.json ./validator_report_after.json
+          echo "Temp copy validator completed"
+
+      - name: Compute README reduction (500_research) and summarize
+        run: |
+          python3 - <<'PY'
+          import json
+          try:
+              with open('validator_report_before.json') as f:
+                  b = json.load(f)
+              with open('validator_report_after.json') as f:
+                  a = json.load(f)
+
+              def scoped_count(rep):
+                  return len([f for f in rep.get("impacted_files", {}).get("readme", []) if "500_research" in f])
+
+              before, after = scoped_count(b), scoped_count(a)
+              reduction = 0 if before == 0 else round((before - after) / before * 100, 1)
+
+              print("## README Reduction (500_research)")
+              print(f"- Before: {before}")
+              print(f"- After:  {after}")
+              print(f"- Reduction: {reduction}%")
+
+              # Check if reduction meets threshold
+              if reduction >= 70:
+                  print(f"✅ SUCCESS: {reduction}% reduction meets ≥70% threshold")
+                  exit(0)
+              else:
+                  print(f"❌ FAILURE: {reduction}% reduction below ≥70% threshold")
+                  exit(1)
+
+          except Exception as e:
+              print(f"❌ ERROR: Could not compute reduction: {e}")
+              exit(1)
+          PY
+
+      - name: Upload README autofix report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: readme-autofix-report
+          path: artifacts/readme_autofix_report.json
+
+      - name: Upload validator reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: validator-reports
+          path: |
+            validator_report_before.json
+            validator_report_after.json
+
+      - name: Job Summary
+        run: |
+          echo "## README Cleanup Batch 2 Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Add reduction summary
+          python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
+          import json
+          try:
+              with open('validator_report_before.json') as f:
+                  b = json.load(f)
+              with open('validator_report_after.json') as f:
+                  a = json.load(f)
+
+              def scoped_count(rep):
+                  return len([f for f in rep.get("impacted_files", {}).get("readme", []) if "500_research" in f])
+
+              before, after = scoped_count(b), scoped_count(a)
+              reduction = 0 if before == 0 else round((before - after) / before * 100, 1)
+
+              print(f"- **README Reduction**: {reduction}% ({before} → {after})")
+              print(f"- **Status**: {'✅ PASS' if reduction >= 70 else '❌ FAIL'}")
+          except Exception as e:
+              print(f"- **Error**: {e}")
+          PY
+
+          # Add README autofix summary
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## README Autofix Results" >> $GITHUB_STEP_SUMMARY
+          python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
+          import json
+          try:
+              with open('artifacts/readme_autofix_report.json') as f:
+                  report = json.load(f)
+
+              print(f"- **Files Processed**: {report.get('files_processed', 0)}")
+              print(f"- **Files with Missing Sections**: {report.get('files_with_missing_sections', 0)}")
+              print(f"- **Total Missing Sections**: {report.get('total_missing_sections', 0)}")
+
+              # Show top files with missing sections
+              files_missing = report.get('files_missing_sections', {})
+              if files_missing:
+                  print("")
+                  print("**Top Files with Missing Sections:**")
+                  for file_path, missing in sorted(files_missing.items(), key=lambda x: len(x[1]), reverse=True)[:5]:
+                      print(f"- `{file_path}`: {len(missing)} missing sections")
+          except Exception as e:
+              print(f"- **Error**: {e}")
+          PY

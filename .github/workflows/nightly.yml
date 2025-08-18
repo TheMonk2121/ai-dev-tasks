@@ -1,0 +1,145 @@
+name: Nightly Validator & Anchor Drift Check
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 2 AM UTC daily
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  nightly-validator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for anchor drift check
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set validator environment
+        run: |
+          echo "VALIDATOR_REQUIRE_MULTI_REP=1" >> $GITHUB_ENV
+          echo "VALIDATOR_REQUIRE_XREF=1" >> $GITHUB_ENV
+          echo "VALIDATOR_STRICT_STALE_XREF=0" >> $GITHUB_ENV
+          echo "VALIDATOR_CHECK_MODE=all" >> $GITHUB_ENV
+          echo "VALIDATOR_CI_MODE=1" >> $GITHUB_ENV
+          echo "VALIDATOR_ARCHIVE_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_SHADOW_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_README_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_MULTIREP_FAIL=0" >> $GITHUB_ENV
+
+      - name: Run validator
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report.json
+          echo "Validator completed"
+
+      - name: Generate metrics
+        run: |
+          python3 scripts/validator_metrics.py --input validator_report.json --output metrics/validator_counts.json
+          echo "Metrics generated"
+
+      - name: Anchor drift check (nightly)
+        run: |
+          python3 scripts/anchor_drift_check.py --window 24h --json > anchor_drift_report.json
+          echo "Anchor drift check completed"
+
+      - name: Summarize anchor drift
+        run: |
+          python3 - <<'PY'
+          import json
+          try:
+              r = json.load(open('anchor_drift_report.json'))
+              if r.get("broken"):
+                  print("## Anchor drift warnings")
+                  for it in r["broken"][:20]:
+                      print(f"- {it['from']} → {it['to']}#{it['anchor']} (removed)")
+              else:
+                  print("## Anchor drift: none detected")
+          except Exception as e:
+              print(f"Error reading anchor drift report: {e}")
+          PY
+
+      - name: Show clean-day counters
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          def show(path):
+              r = subprocess.run(["git","show",f"bot/validator-state:{path}"], capture_output=True, text=True)
+              return json.loads(r.stdout) if r.returncode==0 else {}
+          counters = show("data/validator_counters.json")
+          targets  = {"archive":3,"shadow_fork":7,"multirep":5,"readme":14}
+          print("## Clean-day counters")
+          print("| Category | Days | Target |")
+          print("|---|---:|---:|")
+          for k,v in counters.items():
+              print(f"| {k} | {v} | {targets.get(k,'-')} |")
+          PY
+
+      - name: Generate weekly summary with owners
+        if: github.event_name == 'schedule' && github.event.schedule == '0 9 * * 1'
+        run: |
+          python3 scripts/weekly_metrics_with_owners.py --days 7
+
+      - name: Update flip counters and open PRs when due
+        run: |
+          python3 scripts/validator_flip_manager.py validator_report.json
+
+      - name: Persist counters and metrics to state branch
+        run: |
+          git config user.name "validator-bot"
+          git config user.email "validator-bot@users.noreply.github.com"
+          git fetch origin bot/validator-state:bot/validator-state || true
+          git checkout -B bot/validator-state || git checkout bot/validator-state
+          cp -f data/validator_counters.json data/validator_counters.json
+          cp -f metrics/validator_counts.json metrics/validator_counts.json
+          git add data/validator_counters.json metrics/validator_counts.json
+          git commit -m "chore(validator): update counters and metrics" || echo "No changes"
+          git push origin bot/validator-state
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-reports
+          path: |
+            validator_report.json
+            metrics/validator_counts.json
+            anchor_drift_report.json
+
+      - name: Generate job summary
+        run: |
+          python3 - <<'PY'
+          import json
+          try:
+              r = json.load(open('validator_report.json'))
+              print("## Nightly Validator Report")
+              print()
+              print("| Category | Violations | Fail Mode |")
+              print("|----------|------------|-----------|")
+              for cat, info in r.get("categories", {}).items():
+                  fail_flag = "✅" if info.get("fail") else "❌"
+                  print(f"| {cat} | {info.get('violations', 0)} | {fail_flag} |")
+              print()
+
+              # Add anchor drift summary
+              try:
+                  drift = json.load(open('anchor_drift_report.json'))
+                  if drift.get("broken"):
+                      print("## Anchor Drift Warnings")
+                      for it in drift["broken"][:5]:
+                          print(f"- {it['from']} → {it['to']}#{it['anchor']} (removed)")
+                  else:
+                      print("## Anchor Drift: None detected")
+              except Exception:
+                  print("## Anchor Drift: Report unavailable")
+
+          except Exception as e:
+              print(f"Error generating summary: {e}")
+          PY

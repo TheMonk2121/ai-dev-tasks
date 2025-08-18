@@ -59,9 +59,9 @@ FENCE_RE = re.compile(r"```.*?```|~~~.*?~~~", re.DOTALL)
 # Real markdown links to local .md files (exclude http/mailto/etc.)
 MD_LINK_RE = re.compile(
     r"""\[([^\]]+)\]\(           # [label](
-		(?!https?://|mailto:|ftp://|#) # no absolute urls/anchors
+		(?!https?://|mailto:|ftp://|\#) # no absolute urls/anchors
 		([^)#\s]+?\.md)          # group(2) = path ending in .md (no spaces)
-		(#[^)]+)?                # optional group(3) = #fragment
+		(\#[^)]+)?                # optional group(3) = #fragment
 	\)""",
     re.VERBOSE,
 )

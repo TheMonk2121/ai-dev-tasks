@@ -1,0 +1,158 @@
+name: Shadow Fix (PR L)
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_fix:
+        description: 'Force fix even if preconditions not met'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  shadow-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Baseline validator run
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report_before.json
+          echo "Baseline validator completed"
+
+      - name: Check shadow violations
+        run: |
+          python3 - <<'PY'
+          import json
+          with open('validator_report_before.json') as f:
+              report = json.load(f)
+          shadow_violations = report.get('impacted_files', {}).get('shadow_fork', [])
+          print(f"📋 Found {len(shadow_violations)} shadow violations")
+          if len(shadow_violations) > 0:
+              print("Top 5 violations:")
+              for i, violation in enumerate(shadow_violations[:5]):
+                  print(f"  {i+1}. {violation}")
+          PY
+
+      - name: Run shadow fix scan
+        run: |
+          python3 scripts/fix_shadow_names.py --dry-run --json > shadow_fix_plan.json
+          echo "Shadow fix scan completed"
+
+      - name: Create temp copy for shadow fix
+        run: |
+          mkdir -p /tmp/repo
+          rsync -a --exclude='.git' ./ /tmp/repo/
+          echo "Temp copy created: /tmp/repo"
+
+      - name: Run shadow fix in temp copy
+        run: |
+          cd /tmp/repo
+          # Run shadow fix
+          python3 scripts/fix_shadow_names.py --write
+          echo "Shadow fix completed in temp copy"
+
+      - name: Re-run validator on temp copy
+        run: |
+          cd /tmp/repo
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report_after.json
+          cp validator_report_after.json ../
+          echo "Validator re-run completed on temp copy"
+
+      - name: Compute shadow fix results
+        run: |
+          python3 - <<'PY'
+          import json
+
+          # Load before/after reports
+          with open('validator_report_before.json') as f:
+              before = json.load(f)
+          with open('validator_report_after.json') as f:
+              after = json.load(f)
+
+          # Get shadow violations
+          before_shadow = len(before.get('impacted_files', {}).get('shadow_fork', []))
+          after_shadow = len(after.get('impacted_files', {}).get('shadow_fork', []))
+
+          # Calculate reduction
+          reduction = 0 if before_shadow == 0 else round((before_shadow - after_shadow) / before_shadow * 100, 1)
+
+          print("## Shadow Fix Results")
+          print(f"- Before: {before_shadow} violations")
+          print(f"- After:  {after_shadow} violations")
+          print(f"- Reduction: {reduction}%")
+
+          # Check if fix was successful
+          if after_shadow == 0:
+              print("- Status: ✅ SUCCESS - All shadow violations resolved")
+          else:
+              print(f"- Status: ⚠️  PARTIAL - {after_shadow} violations remain")
+
+          # Save results
+          results = {
+              "before_violations": before_shadow,
+              "after_violations": after_shadow,
+              "reduction_percent": reduction,
+              "success": after_shadow == 0,
+              "timestamp": "2025-08-17T00:00:00Z"
+          }
+
+          with open('artifacts/shadow_fix_results.json', 'w') as f:
+              json.dump(results, f, indent=2)
+
+          # Exit with error if not successful
+          if after_shadow > 0:
+              exit(1)
+          PY
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: shadow-fix-artifacts
+          path: |
+            validator_report_before.json
+            validator_report_after.json
+            shadow_fix_plan.json
+            artifacts/shadow_fix_results.json
+
+      - name: Job Summary
+        run: |
+          echo "## Shadow Fix (PR L)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
+          import json
+          try:
+              with open('validator_report_before.json') as f:
+                  before = json.load(f)
+              with open('validator_report_after.json') as f:
+                  after = json.load(f)
+
+              before_shadow = len(before.get('impacted_files', {}).get('shadow_fork', []))
+              after_shadow = len(after.get('impacted_files', {}).get('shadow_fork', []))
+              reduction = 0 if before_shadow == 0 else round((before_shadow - after_shadow) / before_shadow * 100, 1)
+
+              print(f"- **Before**: {before_shadow} shadow violations")
+              print(f"- **After**: {after_shadow} shadow violations")
+              print(f"- **Reduction**: {reduction}%")
+              print(f"- **Status**: {'✅ SUCCESS' if after_shadow == 0 else '❌ FAILED'}")
+
+              if after_shadow == 0:
+                  print("- **Action**: Ready to merge - Shadow violations fixed")
+              else:
+                  print(f"- **Action**: {after_shadow} violations remain - investigate")
+
+          except Exception as e:
+              print(f"- **Error**: {e}")
+          PY

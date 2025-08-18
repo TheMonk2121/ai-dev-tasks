@@ -1,0 +1,206 @@
+name: README Flip to FAIL (PR J)
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_flip:
+        description: 'Force flip even if preconditions not met'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  check-preconditions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set validator environment (README FAIL + Changed Files Only)
+        run: |
+          echo "VALIDATOR_REQUIRE_MULTI_REP=1" >> $GITHUB_ENV
+          echo "VALIDATOR_REQUIRE_XREF=1" >> $GITHUB_ENV
+          echo "VALIDATOR_STRICT_STALE_XREF=0" >> $GITHUB_ENV
+          echo "VALIDATOR_CHECK_MODE=all" >> $GITHUB_ENV
+          echo "VALIDATOR_CI_MODE=1" >> $GITHUB_ENV
+          echo "VALIDATOR_ARCHIVE_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_SHADOW_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_README_FAIL=1" >> $GITHUB_ENV
+          echo "VALIDATOR_MULTIREP_FAIL=0" >> $GITHUB_ENV
+          echo "VALIDATOR_CHANGED_FILES_ONLY=1" >> $GITHUB_ENV
+
+      - name: Get changed files
+        id: changed
+        uses: tj-actions/changed-files@v42
+
+      - name: Run validator with README FAIL (changed files only)
+        env:
+          CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report_readme_fail.json
+          echo "Validator with README FAIL (changed files only) completed"
+
+      - name: Run README autofix idempotency test
+        run: |
+          python3 scripts/readme_autofix.py --scope 500_research --dry-run > readme_autofix_test.json
+          echo "README autofix idempotency test completed"
+
+      - name: Check preconditions
+        id: preconditions
+        env:
+          FORCE_FLIP: ${{ inputs.force_flip }}
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, os
+
+          # Load current report
+          with open('validator_report_readme_fail.json') as f:
+              report = json.load(f)
+
+          # Check README violations
+          readme_violations = report.get('impacted_files', {}).get('readme', [])
+          readme_count = len(readme_violations)
+
+          # Load counters
+          def get_counters():
+              try:
+                  result = subprocess.run(["git", "show", "bot/validator-state:data/validator_counters.json"],
+                                        capture_output=True, text=True, check=False)
+                  if result.returncode == 0:
+                      return json.loads(result.stdout)
+              except Exception:
+                  pass
+              return {"readme": 0}
+
+          counters = get_counters()
+          readme_clean_days = counters.get("readme", 0)
+
+          # Check README autofix results
+          try:
+              with open('readme_autofix_test.json') as f:
+                  autofix_report = json.load(f)
+              files_processed = autofix_report.get('files_processed', 0)
+              files_with_missing = autofix_report.get('files_with_missing_sections', 0)
+          except Exception:
+              files_processed = 0
+              files_with_missing = 0
+
+          print("## README Flip Preconditions Check")
+          print(f"- README violations: {readme_count}")
+          print(f"- README clean days: {readme_clean_days}/14")
+          print(f"- README autofix test - files processed: {files_processed}")
+          print(f"- README autofix test - files with missing sections: {files_with_missing}")
+          print(f"- Force flip: {os.getenv('FORCE_FLIP', 'false')}")
+
+          # Check preconditions
+          preconditions_met = True
+          issues = []
+
+          if readme_clean_days < 14:
+              preconditions_met = False
+              issues.append(f"README clean days ({readme_clean_days}) < 14")
+
+          if files_with_missing > 0:
+              preconditions_met = False
+              issues.append(f"README autofix found {files_with_missing} files with missing sections")
+
+          if preconditions_met or os.getenv('FORCE_FLIP') == 'true':
+              print("✅ Preconditions met or force flip enabled")
+              with open('preconditions_ready.txt', 'w') as f:
+                  f.write('ready=true\n')
+          else:
+              print("❌ Preconditions not met:")
+              for issue in issues:
+                  print(f"  - {issue}")
+              with open('preconditions_ready.txt', 'w') as f:
+                  f.write('ready=false\n')
+          PY
+          # Expose the output and then fail the step if not ready
+          cat preconditions_ready.txt >> $GITHUB_OUTPUT
+          . ./preconditions_ready.txt
+          if [ "$ready" != "true" ]; then exit 1; fi
+
+      - name: Generate flip PR
+        if: steps.preconditions.outputs.ready == 'true'
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+
+          # Load report
+          with open('validator_report_readme_fail.json') as f:
+              report = json.load(f)
+
+          # Get counters
+          def get_counters():
+              try:
+                  result = subprocess.run(["git", "show", "bot/validator-state:data/validator_counters.json"],
+                                        capture_output=True, text=True, check=False)
+                  if result.returncode == 0:
+                      return json.loads(result.stdout)
+              except Exception:
+                  pass
+              return {"readme": 0}
+
+          counters = get_counters()
+          readme_days = counters.get('readme', 0)
+
+          # Create simple PR template
+          pr_content = f"# README Flip to FAIL (PR J)\n\nREADME clean days: {readme_days}/14\n\nSet VALIDATOR_README_FAIL=1 + VALIDATOR_CHANGED_FILES_ONLY=1"
+
+          with open(".github/pull_request_template_readme_flip.md", "w") as f:
+              f.write(pr_content)
+
+          print("✅ README flip PR template created: .github/pull_request_template_readme_flip.md")
+          PY
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: readme-flip-reports
+          path: |
+            validator_report_readme_fail.json
+            readme_autofix_test.json
+
+      - name: Job Summary
+        run: |
+          echo "## README Flip Preconditions" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
+          import json
+          try:
+              with open('validator_report_readme_fail.json') as f:
+                  report = json.load(f)
+
+              readme_violations = report.get('impacted_files', {}).get('readme', [])
+              readme_count = len(readme_violations)
+
+              try:
+                  with open('readme_autofix_test.json') as f:
+                      autofix_report = json.load(f)
+                  files_with_missing = autofix_report.get('files_with_missing_sections', 0)
+              except Exception:
+                  files_with_missing = 0
+
+              print(f"- **README Violations**: {readme_count}")
+              print(f"- **Files with Missing Sections**: {files_with_missing}")
+              print(f"- **Status**: {'✅ READY' if files_with_missing == 0 else '❌ NOT READY'}")
+
+              if files_with_missing == 0:
+                  print("- **Action**: Ready for README flip to FAIL")
+              else:
+                  print(f"- **Action**: Fix {files_with_missing} files with missing sections first")
+
+          except Exception as e:
+              print(f"- **Error**: {e}")
+          PY

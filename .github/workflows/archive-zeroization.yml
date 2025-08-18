@@ -1,0 +1,161 @@
+name: Archive Zeroization (PR K)
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_zeroize:
+        description: 'Force zeroization even if preconditions not met'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  archive-zeroization:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for git log
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Baseline validator run
+        run: |
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report_before.json
+          echo "Baseline validator completed"
+
+      - name: Check archive violations
+        run: |
+          python3 - <<'PY'
+          import json
+          with open('validator_report_before.json') as f:
+              report = json.load(f)
+          archive_violations = report.get('impacted_files', {}).get('archive', [])
+          print(f"📋 Found {len(archive_violations)} archive violations")
+          if len(archive_violations) > 0:
+              print("Top 5 violations:")
+              for i, violation in enumerate(archive_violations[:5]):
+                  print(f"  {i+1}. {violation}")
+          PY
+
+      - name: Rebuild archive manifest
+        run: |
+          python3 scripts/archive_manifest_rebuild.py
+          echo "Archive manifest rebuilt"
+
+      - name: Create temp copy for zeroization
+        run: |
+          mkdir -p /tmp/repo
+          rsync -a --exclude='.git' ./ /tmp/repo/
+          echo "Temp copy created: /tmp/repo"
+
+      - name: Run archive restore in temp copy
+        run: |
+          cd /tmp/repo
+          # Copy validator report to temp copy
+          cp ../validator_report_before.json .
+          # Run archive restore
+          python3 scripts/archive_restore.py --write
+          echo "Archive restore completed in temp copy"
+
+      - name: Re-run validator on temp copy
+        run: |
+          cd /tmp/repo
+          python3 scripts/doc_coherence_validator.py --ci --json > validator_report_after.json
+          cp validator_report_after.json ../
+          echo "Validator re-run completed on temp copy"
+
+      - name: Compute zeroization results
+        run: |
+          python3 - <<'PY'
+          import json
+
+          # Load before/after reports
+          with open('validator_report_before.json') as f:
+              before = json.load(f)
+          with open('validator_report_after.json') as f:
+              after = json.load(f)
+
+          # Get archive violations
+          before_archive = len(before.get('impacted_files', {}).get('archive', []))
+          after_archive = len(after.get('impacted_files', {}).get('archive', []))
+
+          # Calculate reduction
+          reduction = 0 if before_archive == 0 else round((before_archive - after_archive) / before_archive * 100, 1)
+
+          print("## Archive Zeroization Results")
+          print(f"- Before: {before_archive} violations")
+          print(f"- After:  {after_archive} violations")
+          print(f"- Reduction: {reduction}%")
+
+          # Check if zeroization was successful
+          if after_archive == 0:
+              print("- Status: ✅ SUCCESS - All archive violations resolved")
+          else:
+              print(f"- Status: ⚠️  PARTIAL - {after_archive} violations remain")
+
+          # Save results
+          results = {
+              "before_violations": before_archive,
+              "after_violations": after_archive,
+              "reduction_percent": reduction,
+              "success": after_archive == 0,
+              "timestamp": "2025-08-17T00:00:00Z"
+          }
+
+          with open('artifacts/archive_zeroization_results.json', 'w') as f:
+              json.dump(results, f, indent=2)
+
+          # Exit with error if not successful
+          if after_archive > 0:
+              exit(1)
+          PY
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive-zeroization-artifacts
+          path: |
+            validator_report_before.json
+            validator_report_after.json
+            artifacts/archive_zeroization_results.json
+
+      - name: Job Summary
+        run: |
+          echo "## Archive Zeroization (PR K)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
+          import json
+          try:
+              with open('validator_report_before.json') as f:
+                  before = json.load(f)
+              with open('validator_report_after.json') as f:
+                  after = json.load(f)
+
+              before_archive = len(before.get('impacted_files', {}).get('archive', []))
+              after_archive = len(after.get('impacted_files', {}).get('archive', []))
+              reduction = 0 if before_archive == 0 else round((before_archive - after_archive) / before_archive * 100, 1)
+
+              print(f"- **Before**: {before_archive} archive violations")
+              print(f"- **After**: {after_archive} archive violations")
+              print(f"- **Reduction**: {reduction}%")
+              print(f"- **Status**: {'✅ SUCCESS' if after_archive == 0 else '❌ FAILED'}")
+
+              if after_archive == 0:
+                  print("- **Action**: Ready to merge - Archive violations zeroized")
+              else:
+                  print(f"- **Action**: {after_archive} violations remain - investigate")
+
+          except Exception as e:
+              print(f"- **Error**: {e}")
+          PY

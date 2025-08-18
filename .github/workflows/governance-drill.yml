@@ -1,0 +1,74 @@
+name: Governance Drill
+
+on:
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: 'Test scenario to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - ratchet
+          - fail
+          - rollback
+          - schema
+      confirm:
+        description: 'Actually make changes (default: dry-run)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  drill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --cache-dir ~/.cache/pip -r requirements.txt
+
+      - name: Run chaos test
+        run: |
+          python3 scripts/validator_chaos_test.py --scenario ${{ github.event.inputs.scenario }} ${{ github.event.inputs.confirm && '--confirm' || '' }}
+
+      - name: Generate drill summary
+        if: always()
+        run: |
+          echo "## Governance Drill Summary"
+          echo ""
+          echo "**Scenario**: ${{ github.event.inputs.scenario }}"
+          echo "**Mode**: ${{ github.event.inputs.confirm && 'LIVE' || 'DRY-RUN' }}"
+          echo "**Timestamp**: $(date -u)"
+          echo ""
+          echo "### Drill Results"
+          echo ""
+          echo "See job output above for detailed test results."
+          echo ""
+          echo "### Next Steps"
+          echo ""
+          if [ "${{ github.event.inputs.confirm }}" = "true" ]; then
+            echo "⚠️ **LIVE MODE**: Changes were made to the repository"
+            echo "- Review changes in this PR"
+            echo "- Verify all systems are functioning correctly"
+            echo "- Monitor for any unexpected behavior"
+          else
+            echo "✅ **DRY-RUN MODE**: No changes were made"
+            echo "- Review test results above"
+            echo "- If tests passed, consider running in LIVE mode"
+            echo "- If tests failed, investigate and fix issues"
+          fi
