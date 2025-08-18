@@ -44,7 +44,7 @@ def parse_backlog_item(
     line: str, few_shot_loader: FewShotExampleLoader | None = None
 ) -> dict[str, str] | None:
     """Parse a single backlog item line with improved error handling and few-shot enhancement"""
-    if not line.strip() or "| B‑" not in line:
+    if not line.strip() or "| B-" not in line:
         return None
 
     try:
@@ -124,7 +124,7 @@ def extract_backlog_priorities(enable_few_shot: bool = True) -> list[dict[str, s
         # Extract todo items with 🔥 priority
         lines = content.split("\n")
         for line in lines:
-            if "| B‑" in line and "🔥" in line and "todo" in line:
+            if "| B-" in line and "🔥" in line and "todo" in line:
                 item = parse_backlog_item(line, few_shot_loader)
                 if item:
                     priorities.append(item)
@@ -166,7 +166,7 @@ def extract_completed_items() -> list[dict[str, str]]:
             # Extract completed items
             lines = completed_section.split("\n")
             for line in lines:
-                if "| B‑" in line and "✅ done" in line:
+                if "| B-" in line and "✅ done" in line:
                     item = parse_backlog_item(line)
                     if item:
                         completed.append(item)
@@ -359,7 +359,7 @@ def update_memory_context(
             print("✅ Changes would be applied")
             return True, "Dry run completed - changes would be applied"
         else:
-            print("ℹ️  No changes needed")
+            print("No changes needed")
             return True, "Dry run completed - no changes needed"
 
     # Write updated content
