@@ -1,3 +1,0 @@
-This is a sample test document for CI testing.
-It contains various topics for testing the RAG system.
-Topics include: AI, machine learning, testing, CI/CD.

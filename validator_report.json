@@ -1,0 +1,34 @@
+{
+  "categories": {
+    "archive": {
+      "fail": false,
+      "violations": 0
+    },
+    "multirep": {
+      "fail": false,
+      "violations": 0
+    },
+    "readme": {
+      "fail": false,
+      "violations": 0
+    },
+    "shadow_fork": {
+      "fail": false,
+      "violations": 0
+    }
+  },
+  "counters": {
+    "archive": 0,
+    "multirep": 0,
+    "readme": 0,
+    "shadow_fork": 0
+  },
+  "generated_at": "2025-08-18T03:44:52.291164Z",
+  "impacted_files": {
+    "archive": [],
+    "multirep": [],
+    "readme": [],
+    "shadow_fork": []
+  },
+  "schema_version": "1.1.0"
+}
