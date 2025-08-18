@@ -89,6 +89,7 @@ Our systematic error reduction journey revealed that **most auto-fixes are dange
 - Template files with ASCII-only characters
 - Developer education about Unicode character issues
 - Regular monitoring and automated fixes
+- **Cursor rules enforcement**: Check criticality guide before copying code
 
 ## 🛡️ Prevention Strategies
 
@@ -212,6 +213,8 @@ UNICODE_REPLACEMENTS = {'\u2013': '-'}
 3. **Developer education**: Train team on Unicode character issues
 4. **Regular monitoring**: Run Unicode fix script periodically
 5. **Automated prevention**: Block commits with Unicode characters
+6. **Cursor rules enforcement**: Check criticality guide before copying code
+7. **Template file fixes**: Sanitize common template files (Python template, PR template)
 
 ## 📚 Related Documentation
 
