@@ -42,7 +42,7 @@ AI Development Team - Core Infrastructure
 ./install_dependencies.sh
 
 # Run governance check
-python3 scripts/doc_coherence_validator.py --ci --json
+python3 scripts/doc_coherence_validator.py --ci --json  # Documentation & code quality validation
 
 # Run tests
 python3 -m pytest tests/ -m "tier_1 and unit"
@@ -66,7 +66,7 @@ python3 scripts/generate_status_badge.py
 
 This project uses a comprehensive governance system with:
 
-- **Validator**: Checks for violations across all categories
+- **Validator**: Checks for violations across all categories (documentation coherence, code quality, Unicode safety, error reduction)
 - **Ratchet**: Prevents regression in readme/multirep violations
 - **Flip Automation**: Automatically flips categories to FAIL mode when clean
 - **Rollback Protection**: Automatic rollback for >5% false positives

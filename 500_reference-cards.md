@@ -100,6 +100,9 @@ vs = get_vector_store(mode="core", db_connection_string=dsn)
 - **Shadow Fork**: Prevents `_enhanced.py` and `_optimized.py` patterns
 - **README**: Ensures README files follow governance rules
 - **Multi-Rep/XRef**: Validates cross-references and multi-representation
+- **Code Quality**: Validates Python code quality (Ruff, Black, Mypy)
+- **Unicode Safety**: Validates Unicode character safety (RUF001, RUF002, RUF003, PLE2502)
+- **Error Reduction**: Validates error reduction governance and lessons learned
 
 ### Flip Criteria
 - **Archive**: 3 consecutive clean days
@@ -113,6 +116,9 @@ export VALIDATOR_ARCHIVE_FAIL=0    # Flip to 1 when ready
 export VALIDATOR_SHADOW_FAIL=0     # Flip to 1 when ready
 export VALIDATOR_README_FAIL=0     # Flip to 1 when ready
 export VALIDATOR_MULTIREP_FAIL=0   # Flip to 1 when ready
+export VALIDATOR_CODE_QUALITY_FAIL=0  # Flip to 1 when ready
+export VALIDATOR_UNICODE_SAFETY_FAIL=0  # Flip to 1 when ready
+export VALIDATOR_ERROR_REDUCTION_FAIL=0  # Flip to 1 when ready
 ```
 
 ### Exceptions
