@@ -198,6 +198,55 @@ cause 3. Fix and re-enable 4. Run governance drill to verify
 **Action**: 1. Restore from bot/validator-state backup 2. Re-run
 governance CI 3. Verify data integrity 4. Update documentation
 
+## Error Reduction Governance
+
+### Error Reduction Lessons Learned Organization
+
+**Standard**: All error reduction lessons learned must be organized by error code in `400_guides/400_comprehensive-coding-best-practices.md`
+
+**Requirements**:
+- **Error Code Organization**: Group all information (problem, bad fix, good fix, result, tool) by specific Ruff error code
+- **Decision Matrix**: Include auto-fix safety classification (Safe vs. Dangerous)
+- **Anti-Patterns**: Document what NOT to do with specific examples
+- **Success Metrics**: Include error reduction statistics (before/after counts)
+
+**Update Procedures**:
+- New error reduction lessons must be added to the appropriate error code section
+- All lessons must include problem description, bad fix example, good fix example, and results
+- Anti-patterns must include the specific command that caused the problem
+
+**Quality Gates**:
+- Lessons must include actual error counts (before/after)
+- Anti-patterns must include the specific command that failed
+- All examples must be tested and verified
+
+### Auto-Fix Decision Matrix
+
+**Safe Auto-Fixes** (Tested and Proven):
+- **RUF001**: Unicode character replacement (31 → 0 errors)
+- **F401**: Unused imports (434 → 0 errors)
+- **I001**: Import formatting (222 → 0 errors)
+- **F541**: F-string issues (84 → 0 errors)
+
+**Dangerous Auto-Fixes** (Tested and Failed):
+- **PT009**: Unittest assertions (127 → 1328 errors)
+- **B007**: Loop variables (35 → 206 errors)
+- **RUF013**: Implicit Optional (29 → 213 errors)
+- **F841**: Unused variables (24 → 41 errors)
+- **RUF010**: F-string conversion (12 → 24 errors)
+
+### Error Reduction Tools
+
+**Required Tools**:
+- `scripts/fix_unicode_characters.py` - For RUF001 Unicode character fixes
+- `scripts/smart_error_fix.py` - For safe auto-fix application
+- `ruff check --select <ERROR_CODE> --fix` - For standard safe fixes
+
+**Validation Commands**:
+- `ruff check --select RUF001` - Verify Unicode fixes
+- `ruff check --select F401,I001,F541` - Verify import and f-string fixes
+- `python3.12 scripts/smart_error_fix.py <target_paths>` - Apply safe fixes only
+
 ## Maintenance Tasks
 
 ### Quarterly Tasks

@@ -20,6 +20,7 @@ python3 scripts/prime_cursor_chat.py planner "current project status and core do
 - **Formatting**: No bracketed placeholders in Markdown; prefer backticks/quotes
 - **PRD Linkage**: Always include backlog item reference and run validator: `python3 scripts/validate_prd_backlog_linkage.py`
 - **Memory**: Use database-based rehydration before reading files directly
+- **Error Reduction**: Follow governance rules for error reduction lessons learned organization and auto-fix decision matrix
 
 ## Modular Rules
 

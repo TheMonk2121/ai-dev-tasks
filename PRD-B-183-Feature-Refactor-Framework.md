@@ -165,11 +165,11 @@ Phase 1: Initial Draft
 
 Phase 2: Red Review
 - Critiques, risks, alternatives, challenge questions
-- Severity score (0.0-1.0)
+- Severity score (0.0–1.0)
 
 Phase 3: Blue Review
 - Support points, enhancement suggestions, implementation guidance
-- Confidence score (0.0-1.0)
+- Confidence score (0.0–1.0)
 
 Phase 4: Consensus Feedback
 - Feedback & refinements
@@ -194,13 +194,13 @@ Phase 5: Validation Checkpoint
 <!-- Bugfix sections (conditional) -->
 {{#if bugfix}}
 ## Bug Snapshot
-Bugfix sections
+[bugfix sections]
 {{/if}}
 
 <!-- Refactor sections (conditional) -->
 {{#if refactor}}
 ## Refactor Consensus Framework
-Phase 1-5 sections
+[Phase 1-5 sections]
 {{/if}}
 ```
 
@@ -507,12 +507,16 @@ Phase 1-5 sections
 
 ### Appendix A: Decision Matrix
 Complete decision matrix with examples
+
 ### Appendix B: Consensus Process Examples
 Real-world examples of consensus process
+
 ### Appendix C: Integration Points
 Detailed integration with existing governance
+
 ### Appendix D: Training Materials
 Developer training materials and examples
+
 ---
 
 **Document Version**: 1.0

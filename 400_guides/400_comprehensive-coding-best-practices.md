@@ -1561,20 +1561,97 @@ ruff check new_file.py
 
 **Key Insights & Lessons Learned**:
 
-### **🔍 Error Reduction Patterns Discovered**
+### **🔍 Error Reduction Patterns by Error Code**
 
-**Safe Auto-Fix Categories**:
-- **Import/Formatting errors** (F401, I001, F541) - Generally safe to auto-fix
-- **Unicode errors** (RUF001) - Safe with custom scripts using escape sequences
-- **Simple syntax corrections** - Low risk of breaking logic
+**Error Code Organization**: All lessons learned are organized by Ruff error code for easy scanning and reference.
 
-**Dangerous Auto-Fix Categories**:
-- **Logic-changing errors** (PT009, B007, RUF013, F841) - High risk of breaking functionality
-- **Test assertion changes** (PT009) - Can break test logic and coverage
-- **Variable/loop modifications** (B007, F841) - May remove needed variables
-- **Type annotation changes** (RUF013) - Can introduce syntax errors
+#### **✅ SAFE Auto-Fixes (Tested and Proven)**
 
-### **🎯 Critical Lessons Learned**
+**RUF001 - Unicode Characters**
+- **Problem**: Ambiguous Unicode characters like `–`, `—`, `✅`, `⚠️`, `❌`, `ℹ`
+- **Bad Fix**: Using literal Unicode in scripts creates circular problems
+- **Good Fix**: Use Unicode escape sequences (`\u2013`) in scripts
+- **Result**: 31 → 0 errors (100% reduction)
+- **Tool**: `python3.12 scripts/fix_unicode_characters.py`
+
+**F401 - Unused Imports**
+- **Problem**: Imported modules that are never used
+- **Bad Fix**: Manual removal can break conditional imports
+- **Good Fix**: Standard `ruff check --select F401 --fix`
+- **Result**: 434 → 0 errors (100% reduction)
+- **Note**: Safe for most cases, but check `try/except` blocks
+
+**I001 - Import Formatting**
+- **Problem**: Import statements not properly formatted
+- **Bad Fix**: Manual reordering can break dependencies
+- **Good Fix**: Standard `ruff check --select I001 --fix`
+- **Result**: 222 → 0 errors (100% reduction)
+- **Note**: Generally safe, follows PEP 8 standards
+
+**F541 - F-string Issues**
+- **Problem**: F-strings without placeholders or formatting issues
+- **Bad Fix**: Manual string conversion can break logic
+- **Good Fix**: Standard `ruff check --select F541 --fix`
+- **Result**: 84 → 0 errors (100% reduction)
+- **Note**: Safe for simple formatting fixes
+
+#### **❌ DANGEROUS Auto-Fixes (Tested and Failed)**
+
+**PT009 - Unittest Assertions**
+- **Problem**: Unittest-style assertions that should be pytest-style
+- **Bad Fix**: `ruff check --select PT009 --fix` (broad application)
+- **Result**: 127 → 1328 errors (945% increase)
+- **Good Fix**: Manual inspection and targeted fixes
+- **Example Bad Command**: `ruff check --select PT009 --fix scripts/ dspy-rag-system/ tests/`
+- **Example Good Command**: `ruff check --select PT009 --fix tests/test_specific_file.py`
+
+**B007 - Unused Loop Variables**
+- **Problem**: Loop variables that are assigned but never used
+- **Bad Fix**: `ruff check --select B007 --fix --unsafe-fixes` (broad application)
+- **Result**: 35 → 206 errors (489% increase)
+- **Good Fix**: Manual inspection to determine if variable is actually needed
+- **Example Bad Command**: `ruff check --select B007 --fix --unsafe-fixes .`
+- **Example Good Command**: Manual review of each instance
+
+**RUF013 - Implicit Optional**
+- **Problem**: Optional types that could be simplified
+- **Bad Fix**: `ruff check --select RUF013 --fix --unsafe-fixes` (broad application)
+- **Result**: 29 → 213 errors (634% increase)
+- **Good Fix**: Manual inspection to ensure type safety
+- **Example Bad Command**: `ruff check --select RUF013 --fix --unsafe-fixes .`
+- **Example Good Command**: Manual review of type annotations
+
+**F841 - Unused Variables**
+- **Problem**: Variables that are assigned but never used
+- **Bad Fix**: `ruff check --select F841 --fix --unsafe-fixes` (broad application)
+- **Result**: 24 → 41 errors (71% increase)
+- **Good Fix**: Manual inspection to determine if variable is needed
+- **Example Bad Command**: `ruff check --select F841 --fix --unsafe-fixes .`
+- **Example Good Command**: Manual review of each variable
+
+**RUF010 - F-string Conversion**
+- **Problem**: String concatenation that could be f-strings
+- **Bad Fix**: `ruff check --select RUF010 --fix` (broad application)
+- **Result**: 12 → 24 errors (100% increase)
+- **Good Fix**: Manual inspection to ensure readability
+- **Example Bad Command**: `ruff check --select RUF010 --fix .`
+- **Example Good Command**: Manual review of string formatting
+
+#### **🔄 Auto-Fix Decision Matrix**
+
+| Error Code | Auto-Fix Safe? | Risk Level | Recommended Approach | Success Rate |
+|------------|----------------|------------|---------------------|--------------|
+| **RUF001** | ✅ Yes | Low | Use custom script with escape sequences | 100% |
+| **F401** | ✅ Yes | Low | Standard `--fix` | 100% |
+| **I001** | ✅ Yes | Low | Standard `--fix` | 100% |
+| **F541** | ✅ Yes | Low | Standard `--fix` | 100% |
+| **PT009** | ❌ No | High | Manual inspection required | -945% |
+| **B007** | ❌ No | High | Manual inspection required | -489% |
+| **RUF013** | ❌ No | High | Manual inspection required | -634% |
+| **F841** | ❌ No | High | Manual inspection required | -71% |
+| **RUF010** | ❌ No | Medium | Manual inspection required | -100% |
+
+#### **🎯 Key Lessons Learned**
 
 **1. Auto-Fix Multiplication Effect**:
 - Most auto-fixes multiply errors instead of reducing them

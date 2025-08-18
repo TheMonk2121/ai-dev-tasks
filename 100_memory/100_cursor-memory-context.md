@@ -433,7 +433,19 @@ AI Development Ecosystem
 <!-- AUTO:current_priorities:start -->
 ### **Current Priorities**
 
-1. **B-095**: MCP Server Role Auto-Detection (🔥 points)
+1. **B-026**: Secrets Management (🔥 points)
+   - todo
+
+2. **B-027**: Health & Readiness Endpoints (🔥 points)
+   - todo
+
+3. **B-031**: Vector Database Foundation Enhancement (🔥 points)
+   - todo
+
+4. **B-032**: Memory Context System Architecture Research (🔥 points)
+   - todo
+
+5. **B-032-C1**: Implement generation cache (Postgres) & add cache columns to episodic_logs (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 

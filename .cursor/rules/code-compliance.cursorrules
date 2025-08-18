@@ -83,6 +83,32 @@
 - **Monitor memory usage** in long-running processes
 - **Implement timeouts** for external calls
 
+## Error Reduction Governance
+
+### Error Reduction Standards
+- **Follow governance rules**: All error reduction lessons must be organized by error code in `400_guides/400_comprehensive-coding-best-practices.md`
+- **Use decision matrix**: Apply only safe auto-fixes (RUF001, F401, I001, F541); avoid dangerous ones (PT009, B007, RUF013, F841, RUF010)
+- **Document anti-patterns**: Include specific commands that failed and error counts (before/after)
+- **Test fixes**: Verify all error reduction approaches before documenting
+
+### Safe Auto-Fixes (Use These)
+- **RUF001**: Use `scripts/fix_unicode_characters.py` for Unicode character replacement
+- **F401**: Use `ruff check --select F401 --fix` for unused imports
+- **I001**: Use `ruff check --select I001 --fix` for import formatting
+- **F541**: Use `ruff check --select F541 --fix` for f-string issues
+
+### Dangerous Auto-Fixes (Avoid These)
+- **PT009**: Manual inspection required - auto-fix multiplies errors (127→1328)
+- **B007**: Manual inspection required - auto-fix multiplies errors (35→206)
+- **RUF013**: Manual inspection required - auto-fix multiplies errors (29→213)
+- **F841**: Manual inspection required - auto-fix increases errors (24→41)
+- **RUF010**: Manual inspection required - auto-fix doubles errors (12→24)
+
+### Error Reduction Tools
+- **Smart fixes**: Use `python3.12 scripts/smart_error_fix.py <target_paths>` for safe auto-fixes only
+- **Validation**: Run `ruff check --select <ERROR_CODE>` to verify fixes
+- **Documentation**: Update `400_guides/400_comprehensive-coding-best-practices.md` with new lessons learned
+
 ## Testing Standards
 
 ### Test Coverage
