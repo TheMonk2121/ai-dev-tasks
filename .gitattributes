@@ -1,0 +1,3 @@
+# Archive immutability - soft protection
+# Prevents auto-merges and textual diffs from rewriting archives
+600_archives/** -merge -diff

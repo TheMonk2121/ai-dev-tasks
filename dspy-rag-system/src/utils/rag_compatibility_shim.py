@@ -10,7 +10,7 @@ except Exception:
 
 # Optional read-only fallback (requires an embed provider)
 try:
-    from dspy_modules.enhanced_vector_store import EnhancedVectorStore  # type: ignore
+    from vector_store import get_vector_store  # type: ignore
 except Exception:
     EnhancedVectorStore = None  # type: ignore
 
@@ -41,12 +41,14 @@ class _RAGShim:
                 self._hybrid = None
 
         # Optional: EnhancedVectorStore read-only, but only useful if we can embed
-        if FALLBACK_MODE == "enhanced" and EnhancedVectorStore and db_dsn:
+        if FALLBACK_MODE == "enhanced" and get_vector_store and db_dsn:
             try:
-                self._enhanced = EnhancedVectorStore(db_dsn)  # requires query_embedding at inference time
+                self._enhanced = get_vector_store(
+                    mode="perf", db_connection_string=db_dsn
+                )  # requires query_embedding at inference time
                 # If the store exposes a custom dimension, honor it
                 if hasattr(self._enhanced, "dimension"):
-                    self._enhanced_dim = int(getattr(self._enhanced, "dimension") or self._enhanced_dim)
+                    self._enhanced_dim = int(self._enhanced.dimension or self._enhanced_dim)
             except Exception:
                 self._enhanced = None
 

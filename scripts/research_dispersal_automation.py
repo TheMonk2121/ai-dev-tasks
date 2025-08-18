@@ -4,110 +4,110 @@ Research Dispersal Automation
 Automates the process of dispersing research findings to appropriate documentation files
 """
 
-import os
-import sys
-import re
 import json
-from typing import Dict, List, Any, Tuple
-from pathlib import Path
+import os
+import re
 from datetime import datetime
+from typing import Any, Dict, List
+
 
 class ResearchDispersalAutomation:
     def __init__(self):
         self.research_file = "docs/research/papers/documentation-context-management-papers.md"
-        
+
         # Map research sections to 500_ research files
         self.research_buckets = {
             "academic_research": {
                 "target_file": "500_research-analysis-summary.md",
                 "section_title": "Documentation Context Management Research Summary",
-                "insert_after": "## 📋 **Priority Implementation Recommendations**"
+                "insert_after": "## 📋 **Priority Implementation Recommendations**",
             },
             "industry_analysis": {
-                "target_file": "500_research-implementation-summary.md", 
+                "target_file": "500_research-implementation-summary.md",
                 "section_title": "Documentation Context Management Implementation",
-                "insert_after": "## 📊 **Implementation Status**"
+                "insert_after": "## 📊 **Implementation Status**",
             },
             "pattern_analysis": {
                 "target_file": "500_documentation-coherence-research.md",
                 "section_title": "Documentation Context Management Patterns",
-                "insert_after": "## 🎯 **Research Findings**"
+                "insert_after": "## 🎯 **Research Findings**",
             },
             "implementation_recommendations": {
                 "target_file": "500_maintenance-safety-research.md",
                 "section_title": "Documentation Context Management Safety",
-                "insert_after": "## 🛡️ **Safety Mechanisms**"
-            }
+                "insert_after": "## 🛡️ **Safety Mechanisms**",
+            },
         }
-        
+
         # Map to anchor files for implementation
         self.anchor_file_updates = {
             "400_file-analysis-guide.md": {
                 "section": "Research-Based Analysis Enhancements",
                 "insert_after": "## 🛡️ **Safety Mechanisms**",
-                "source_section": "pattern_analysis"
+                "source_section": "pattern_analysis",
             },
             "400_context-priority-guide.md": {
-                "section": "Research-Based Context Management", 
+                "section": "Research-Based Context Management",
                 "insert_after": "## 🧠 **Memory Scaffolding System**",
-                "source_section": "academic_research"
+                "source_section": "academic_research",
             },
             "100_cursor-memory-context.md": {
                 "section": "Research-Based Safety Enhancements",
                 "insert_after": "## 🚨 CRITICAL SAFETY REQUIREMENTS",
-                "source_section": "implementation_recommendations"
-            }
+                "source_section": "implementation_recommendations",
+            },
         }
-        
+
     def extract_research_sections(self, research_content: str) -> Dict[str, str]:
         """Extract different sections from research content"""
         sections = {}
-        
+
         # Academic Research Findings
-        academic_match = re.search(r'## 📊 \*\*Academic Research Findings\*\*(.*?)(?=## |$)', 
-                                 research_content, re.DOTALL)
+        academic_match = re.search(
+            r"## 📊 \*\*Academic Research Findings\*\*(.*?)(?=## |$)", research_content, re.DOTALL
+        )
         if academic_match:
-            sections['academic_research'] = academic_match.group(1).strip()
-            
+            sections["academic_research"] = academic_match.group(1).strip()
+
         # Industry Analysis
-        industry_match = re.search(r'## 🏢 \*\*Industry Analysis\*\*(.*?)(?=## |$)', 
-                                 research_content, re.DOTALL)
+        industry_match = re.search(r"## 🏢 \*\*Industry Analysis\*\*(.*?)(?=## |$)", research_content, re.DOTALL)
         if industry_match:
-            sections['industry_analysis'] = industry_match.group(1).strip()
-            
+            sections["industry_analysis"] = industry_match.group(1).strip()
+
         # Pattern Analysis
-        pattern_match = re.search(r'## 🎯 \*\*Pattern Analysis\*\*(.*?)(?=## |$)', 
-                                 research_content, re.DOTALL)
+        pattern_match = re.search(r"## 🎯 \*\*Pattern Analysis\*\*(.*?)(?=## |$)", research_content, re.DOTALL)
         if pattern_match:
-            sections['pattern_analysis'] = pattern_match.group(1).strip()
-            
+            sections["pattern_analysis"] = pattern_match.group(1).strip()
+
         # Implementation Recommendations
-        impl_match = re.search(r'## 🔧 \*\*Implementation Recommendations\*\*(.*?)(?=## |$)', 
-                              research_content, re.DOTALL)
+        impl_match = re.search(
+            r"## 🔧 \*\*Implementation Recommendations\*\*(.*?)(?=## |$)", research_content, re.DOTALL
+        )
         if impl_match:
-            sections['implementation_recommendations'] = impl_match.group(1).strip()
-            
+            sections["implementation_recommendations"] = impl_match.group(1).strip()
+
         return sections
-    
-    def update_500_research_file(self, file_path: str, section_content: str, 
-                                section_title: str, insert_after: str) -> bool:
+
+    def update_500_research_file(
+        self, file_path: str, section_content: str, section_title: str, insert_after: str
+    ) -> bool:
         """Update a 500_ research file with extracted content"""
         if not os.path.exists(file_path):
             print(f"❌ Target file {file_path} does not exist")
             return False
-            
+
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
-                
+
             # Find insertion point
             insert_pattern = re.escape(insert_after)
             match = re.search(insert_pattern, content)
-            
+
             if not match:
                 print(f"❌ Could not find insertion point '{insert_after}' in {file_path}")
                 return False
-                
+
             # Create new section with cross-reference to full research
             new_section = f"""
 ## {section_title}
@@ -119,41 +119,40 @@ class ResearchDispersalAutomation:
 
 > **📚 Full Research**: See `docs/research/papers/documentation-context-management-papers.md` for complete research findings and additional context.
 """
-            
+
             # Insert new section
             insert_pos = match.end()
             updated_content = content[:insert_pos] + new_section + content[insert_pos:]
-            
+
             # Write updated content
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(updated_content)
-                
+
             print(f"✅ Updated {file_path} with {section_title}")
             return True
-            
+
         except Exception as e:
             print(f"❌ Error updating {file_path}: {e}")
             return False
-    
-    def update_anchor_file(self, file_path: str, section_content: str, 
-                          section_title: str, insert_after: str) -> bool:
+
+    def update_anchor_file(self, file_path: str, section_content: str, section_title: str, insert_after: str) -> bool:
         """Update an anchor file with implementation-focused content"""
         if not os.path.exists(file_path):
             print(f"❌ Target file {file_path} does not exist")
             return False
-            
+
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
-                
+
             # Find insertion point
             insert_pattern = re.escape(insert_after)
             match = re.search(insert_pattern, content)
-            
+
             if not match:
                 print(f"❌ Could not find insertion point '{insert_after}' in {file_path}")
                 return False
-                
+
             # Create implementation-focused section
             new_section = f"""
 ## {section_title}
@@ -165,68 +164,73 @@ class ResearchDispersalAutomation:
 
 > **🔬 Research Basis**: Based on findings from `docs/research/papers/documentation-context-management-papers.md`
 """
-            
+
             # Insert new section
             insert_pos = match.end()
             updated_content = content[:insert_pos] + new_section + content[insert_pos:]
-            
+
             # Write updated content
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(updated_content)
-                
+
             print(f"✅ Updated {file_path} with {section_title}")
             return True
-            
+
         except Exception as e:
             print(f"❌ Error updating {file_path}: {e}")
             return False
-    
+
     def create_backlog_items(self, research_content: str) -> List[Dict[str, Any]]:
         """Create new backlog items based on research findings"""
         backlog_items = []
-        
+
         # Extract key findings for backlog items
         findings = self.extract_key_findings(research_content)
-        
+
         for i, finding in enumerate(findings[:3]):  # Top 3 findings
             item_id = f"B-{85 + i:03d}"
-            backlog_items.append({
-                "id": item_id,
-                "title": finding["title"],
-                "points": finding.get("points", 3),
-                "priority": finding.get("priority", "📈"),
-                "description": finding["description"],
-                "research_basis": finding["research_basis"],
-                "dependencies": finding.get("dependencies", [])
-            })
-            
+            backlog_items.append(
+                {
+                    "id": item_id,
+                    "title": finding["title"],
+                    "points": finding.get("points", 3),
+                    "priority": finding.get("priority", "📈"),
+                    "description": finding["description"],
+                    "research_basis": finding["research_basis"],
+                    "dependencies": finding.get("dependencies", []),
+                }
+            )
+
         return backlog_items
-    
+
     def extract_key_findings(self, research_content: str) -> List[Dict[str, Any]]:
         """Extract key findings from research content"""
         findings = []
-        
+
         # Look for implementation recommendations
-        impl_section = re.search(r'## 🔧 \*\*Implementation Recommendations\*\*(.*?)(?=## |$)', 
-                                research_content, re.DOTALL)
+        impl_section = re.search(
+            r"## 🔧 \*\*Implementation Recommendations\*\*(.*?)(?=## |$)", research_content, re.DOTALL
+        )
         if impl_section:
             content = impl_section.group(1)
-            
+
             # Extract subsections
-            subsections = re.findall(r'### \*\*(.*?)\*\*(.*?)(?=### |$)', content, re.DOTALL)
-            
+            subsections = re.findall(r"### \*\*(.*?)\*\*(.*?)(?=### |$)", content, re.DOTALL)
+
             for title, content in subsections:
-                findings.append({
-                    "title": f"Implement {title}",
-                    "description": content.strip()[:200] + "...",
-                    "points": 3,
-                    "priority": "📈",
-                    "research_basis": f"Research finding: {title}",
-                    "dependencies": []
-                })
-                
+                findings.append(
+                    {
+                        "title": f"Implement {title}",
+                        "description": content.strip()[:200] + "...",
+                        "points": 3,
+                        "priority": "📈",
+                        "research_basis": f"Research finding: {title}",
+                        "dependencies": [],
+                    }
+                )
+
         return findings
-    
+
     def create_backlog_update_script(self, backlog_items: List[Dict[str, Any]]) -> str:
         """Create a script to add new backlog items"""
         script_content = f"""#!/usr/bin/env python3
@@ -236,40 +240,41 @@ Adds new backlog items based on documentation context management research
 \"\"\"
 
 import re
+import json
 from datetime import datetime
 
 def add_backlog_items():
     \"\"\"Add new backlog items to 000_backlog.md\"\"\"
-    
+
     # New backlog items to add
     new_items = {json.dumps(backlog_items, indent=2)}
-    
+
     # Read current backlog
     with open('000_backlog.md', 'r', encoding='utf-8') as f:
         content = f.read()
-    
+
     # Find the main backlog table
     table_pattern = r'(\\| B‑\\d+ \\| .*? \\| .*? \\| .*? \\| .*? \\| .*? \\| .*? \\|\\n)'
     match = re.search(table_pattern, content, re.DOTALL)
-    
+
     if match:
         # Insert new items before the match
         insert_pos = match.start()
-        
+
         # Create new backlog entries
         new_entries = []
-        for item in new_items:
-            entry = f"| {item['id']} | {item['title']} | {item['priority']} | {item['points']} | todo | {item['description']} | Research-based implementation | {', '.join(item['dependencies'])} |\\n"
+        for backlog_item in new_items:
+            entry = f"| {{backlog_item['id']}} | {{backlog_item['title']}} | {{backlog_item['priority']}} | {{backlog_item['points']}} | todo | {{backlog_item['description']}} | Research-based implementation | {{', '.join(backlog_item['dependencies'])}} |\\n"
             new_entries.append(entry)
-        
+
         # Insert new entries
         updated_content = content[:insert_pos] + ''.join(new_entries) + content[insert_pos:]
-        
+
         # Write updated content
         with open('000_backlog.md', 'w', encoding='utf-8') as f:
             f.write(updated_content)
-            
-        print(f"✅ Added {len(new_items)} new backlog items")
+
+        print(f"✅ Added {{len(new_items)}} new backlog items")
         return True
     else:
         print("❌ Could not find backlog table in 000_backlog.md")
@@ -279,7 +284,7 @@ if __name__ == "__main__":
     add_backlog_items()
 """
         return script_content
-    
+
     def run_dispersal(self, research_content: str) -> Dict[str, Any]:
         """Run the complete dispersal process"""
         results = {
@@ -288,80 +293,74 @@ if __name__ == "__main__":
             "updated_anchor_files": [],
             "created_files": [],
             "backlog_items": [],
-            "errors": []
+            "errors": [],
         }
-        
+
         print("🧠 RESEARCH DISPERSAL AUTOMATION")
         print("=" * 40)
-        
+
         # Extract research sections
         sections = self.extract_research_sections(research_content)
-        
+
         # Update 500_ research files (store whole, extract to buckets)
         print("\n📚 UPDATING 500_ RESEARCH BUCKETS:")
         for section_key, config in self.research_buckets.items():
             if section_key in sections:
                 success = self.update_500_research_file(
-                    config["target_file"],
-                    sections[section_key],
-                    config["section_title"],
-                    config["insert_after"]
+                    config["target_file"], sections[section_key], config["section_title"], config["insert_after"]
                 )
                 if success:
                     results["updated_500_files"].append(config["target_file"])
                 else:
                     results["errors"].append(f"Failed to update {config['target_file']}")
                     results["success"] = False
-        
+
         # Update anchor files (implementation-focused)
         print("\n🔧 UPDATING ANCHOR FILES:")
         for file_path, config in self.anchor_file_updates.items():
             section_key = config["source_section"]
             if section_key in sections:
                 success = self.update_anchor_file(
-                    file_path,
-                    sections[section_key],
-                    config["section"],
-                    config["insert_after"]
+                    file_path, sections[section_key], config["section"], config["insert_after"]
                 )
                 if success:
                     results["updated_anchor_files"].append(file_path)
                 else:
                     results["errors"].append(f"Failed to update {file_path}")
                     results["success"] = False
-        
+
         # Create backlog items
         backlog_items = self.create_backlog_items(research_content)
         results["backlog_items"] = backlog_items
-        
+
         # Create backlog update script
         script_content = self.create_backlog_update_script(backlog_items)
         script_path = "scripts/update_backlog_from_research.py"
-        
+
         try:
-            with open(script_path, 'w', encoding='utf-8') as f:
+            with open(script_path, "w", encoding="utf-8") as f:
                 f.write(script_content)
             results["created_files"].append(script_path)
             print(f"✅ Created {script_path}")
         except Exception as e:
             results["errors"].append(f"Failed to create {script_path}: {e}")
             results["success"] = False
-        
+
         # Create summary report
         summary_path = "RESEARCH_DISPERSAL_SUMMARY.md"
         summary_content = self.create_summary_report(results, sections)
-        
+
         try:
-            with open(summary_path, 'w', encoding='utf-8') as f:
+            with open(summary_path, "w", encoding="utf-8") as f:
                 f.write(summary_content)
             results["created_files"].append(summary_path)
             print(f"✅ Created {summary_path}")
         except Exception as e:
             results["errors"].append(f"Failed to create {summary_path}: {e}")
             results["success"] = False
-        
+
         return results
-    
+
     def create_summary_report(self, results: Dict[str, Any], sections: Dict[str, str]) -> str:
         """Create a summary report of the dispersal process"""
         return f"""# 📊 Research Dispersal Summary
@@ -409,31 +408,33 @@ if __name__ == "__main__":
 *Generated by Research Dispersal Automation*
 """
 
+
 def main():
     """Main function for testing"""
     automation = ResearchDispersalAutomation()
-    
+
     print("🧠 RESEARCH DISPERSAL AUTOMATION")
     print("=" * 40)
-    
+
     print("\n📚 500_ RESEARCH BUCKETS:")
     for section, config in automation.research_buckets.items():
         print(f"  {section}: {config['target_file']}")
-    
+
     print("\n🔧 ANCHOR FILE UPDATES:")
     for file_path, config in automation.anchor_file_updates.items():
         print(f"  {file_path}: {config['section']}")
-    
+
     print("\n📋 USAGE:")
     print("  automation = ResearchDispersalAutomation()")
     print("  results = automation.run_dispersal(research_content)")
-    
+
     print("\n🎯 FEATURES:")
     print("  - Stores complete research in one place")
     print("  - Extracts sections to appropriate 500_ buckets")
     print("  - Updates anchor files with implementation focus")
     print("  - Creates new backlog items")
     print("  - Maintains cross-references")
+
 
 if __name__ == "__main__":
     main()

@@ -239,9 +239,9 @@ class OptimizedQuickConflictChecker:
         return {
             "execution_time": float(execution_time),
             "results": results,
-            "issues": self.issues,
-            "warnings": self.warnings,
-            "all_passed": len(self.issues) == 0,
+            "issues": list(self.issues),
+            "warnings": list(self.warnings),
+            "all_passed": bool(len(self.issues) == 0),
         }
 
 

@@ -254,7 +254,29 @@
         "mktime",
         "pkill",
         "prds",
-        "reqs"
+        "reqs",
+        "xdist",
+        "mgmt",
+        "xfair",
+        "xfail",
+        "repr",
+        "slugification",
+        "direnv",
+        "pypackages",
+        "mult",
+        "fspath",
+        "syns",
+        "getenv",
+        "prdef",
+        "prghij",
+        "strftime",
+        "zeroiztation",
+        "zeroized",
+        "Zeroization",
+        "zeroization",
+        "zeroize",
+        "cands",
+        "ACMR"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [
@@ -293,5 +315,13 @@
         "dspy-rag-system/src",
         "dspy-rag-system"
     ],
-    "cursorpyright.analysis.typeCheckingMode": "basic"
+    "cursorpyright.analysis.typeCheckingMode": "basic",
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "pyrightconfig.json"
+            ],
+            "url": "https://raw.githubusercontent.com/microsoft/pyright/main/packages/pyright/schema/pyrightconfig.schema.json"
+        }
+    ]
 }

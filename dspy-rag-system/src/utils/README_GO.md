@@ -2,6 +2,22 @@
 
 This directory contains the Go implementation of the memory rehydration system, providing an alternative to the Python version with the same Lean Hybrid with Kill-Switches approach.
 
+## Purpose
+
+Provide a high-performance Go implementation of the memory rehydration system for AI development context management, offering faster execution and better resource utilization compared to the Python version.
+
+## Usage
+
+Use this Go implementation when you need faster memory rehydration for large codebases or when working in Go-based development environments. The CLI provides the same interface as the Python version.
+
+## Owner
+
+AI Development Team - Core Infrastructure
+
+## Last Reviewed
+
+2025-08-17
+
 ## Files
 
 - `memory_rehydration.go` - Core implementation of the memory rehydration system
@@ -171,3 +187,23 @@ The Go implementation is designed to be a drop-in replacement for the Python ver
 - **System Overview**: `400_guides/400_system-overview.md`
 - **Lean Hybrid Guide**: `400_guides/400_lean-hybrid-memory-system.md`
 - **Integration Guide**: `dspy-rag-system/docs/MEMORY_REHYDRATOR_INTEGRATION.md`
+
+<!-- README_AUTOFIX_START -->
+# Auto-generated sections for README_GO.md
+# Generated: 2025-08-17T21:49:49.336153
+
+## Missing sections to add:
+
+## Last Reviewed
+
+2025-08-17
+
+## Owner
+
+[Document owner/maintainer information]
+
+## Purpose
+
+[Describe the purpose and scope of this document]
+
+<!-- README_AUTOFIX_END -->
