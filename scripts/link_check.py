@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Fast Internal Link Validator (PR B)
 Validates relative paths and anchors in markdown files.

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Performance Benchmark Script for Critical Scripts
 
@@ -15,7 +15,6 @@ import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
 
 # Try to import psutil, fallback to basic monitoring if not available
 try:
@@ -56,7 +55,11 @@ class ScriptBenchmarker:
                 "description": "Fast conflict detection",
             },
             "quick_conflict_check_optimized": {
-                "command": [python_cmd, "scripts/optimized_quick_conflict_check.py", "--json"],
+                "command": [
+                    python_cmd,
+                    "scripts/optimized_quick_conflict_check.py",
+                    "--json",
+                ],
                 "description": "Optimized fast conflict detection",
             },
             "process_tasks": {
@@ -84,7 +87,11 @@ class ScriptBenchmarker:
                 "description": "Comprehensive conflict audit",
             },
             "conflict_audit_optimized": {
-                "command": [python_cmd, "scripts/optimized_conflict_audit.py", "--json"],
+                "command": [
+                    python_cmd,
+                    "scripts/optimized_conflict_audit.py",
+                    "--json",
+                ],
                 "description": "Optimized comprehensive conflict audit",
             },
             # Nemo visualization system scripts
@@ -134,7 +141,9 @@ class ScriptBenchmarker:
         else:
             return {"memory_mb": 0.0, "cpu_percent": 0.0}
 
-    def benchmark_script(self, script_name: str, iterations: int = 1) -> list[BenchmarkResult]:
+    def benchmark_script(
+        self, script_name: str, iterations: int = 1
+    ) -> list[BenchmarkResult]:
         """Benchmark a single script multiple times."""
         if script_name not in self.critical_scripts:
             raise ValueError(f"Unknown script: {script_name}")
@@ -167,12 +176,16 @@ class ScriptBenchmarker:
                 # even if they find conflicts (non-zero exit code is expected)
                 is_success = result.returncode == 0
                 if script_name in ["quick_conflict_check", "conflict_audit"]:
-                    is_success = result.returncode in [0, 1]  # 0 = no conflicts, 1 = conflicts found
+                    is_success = result.returncode in [
+                        0,
+                        1,
+                    ]  # 0 = no conflicts, 1 = conflicts found
 
                 benchmark_result = BenchmarkResult(
                     script_name=script_name,
                     execution_time=end_time - start_time,
-                    memory_usage_mb=end_metrics["memory_mb"] - start_metrics["memory_mb"],
+                    memory_usage_mb=end_metrics["memory_mb"]
+                    - start_metrics["memory_mb"],
                     cpu_percent=end_metrics["cpu_percent"],
                     success=is_success,
                     error_message=result.stderr if not is_success else None,
@@ -223,7 +236,9 @@ class ScriptBenchmarker:
 
         return all_results
 
-    def save_results(self, results: dict[str, list[BenchmarkResult]], filename: str | None = None):
+    def save_results(
+        self, results: dict[str, list[BenchmarkResult]], filename: str | None = None
+    ):
         """Save benchmark results to JSON file."""
         if filename is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -244,7 +259,9 @@ class ScriptBenchmarker:
                         "cpu_percent": result.cpu_percent,
                         "success": result.success,
                         "error_message": result.error_message,
-                        "timestamp": (result.timestamp.isoformat() if result.timestamp else None),
+                        "timestamp": (
+                            result.timestamp.isoformat() if result.timestamp else None
+                        ),
                     }
                 )
 
@@ -268,14 +285,22 @@ class ScriptBenchmarker:
             failed_runs = [r for r in script_results if not r.success]
 
             if successful_runs:
-                avg_time = sum(r.execution_time for r in successful_runs) / len(successful_runs)
-                avg_memory = sum(r.memory_usage_mb for r in successful_runs) / len(successful_runs)
+                avg_time = sum(r.execution_time for r in successful_runs) / len(
+                    successful_runs
+                )
+                avg_memory = sum(r.memory_usage_mb for r in successful_runs) / len(
+                    successful_runs
+                )
                 min_time = min(r.execution_time for r in successful_runs)
                 max_time = max(r.execution_time for r in successful_runs)
 
                 print(f"\n📊 {script_name}:")
-                print(f"   ✅ Successful runs: {len(successful_runs)}/{len(script_results)}")
-                print(f"   ⏱️  Avg time: {avg_time:.2f}s (min: {min_time:.2f}s, max: {max_time:.2f}s)")
+                print(
+                    f"   ✅ Successful runs: {len(successful_runs)}/{len(script_results)}"
+                )
+                print(
+                    f"   ⏱️  Avg time: {avg_time:.2f}s (min: {min_time:.2f}s, max: {max_time:.2f}s)"
+                )
                 print(f"   💾 Avg memory: {avg_memory:.1f}MB")
 
                 if failed_runs:
@@ -289,9 +314,13 @@ class ScriptBenchmarker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Benchmark critical scripts performance")
+    parser = argparse.ArgumentParser(
+        description="Benchmark critical scripts performance"
+    )
     parser.add_argument("--script", help="Benchmark specific script only")
-    parser.add_argument("--iterations", type=int, default=3, help="Number of iterations per script")
+    parser.add_argument(
+        "--iterations", type=int, default=3, help="Number of iterations per script"
+    )
     parser.add_argument("--save", help="Save results to specific filename")
 
     args = parser.parse_args()
@@ -304,7 +333,9 @@ def main():
             print(f"Available scripts: {list(benchmarker.critical_scripts.keys())}")
             return
 
-        results = {args.script: benchmarker.benchmark_script(args.script, args.iterations)}
+        results = {
+            args.script: benchmarker.benchmark_script(args.script, args.iterations)
+        }
     else:
         results = benchmarker.benchmark_all(args.iterations)
 

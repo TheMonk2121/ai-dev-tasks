@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Documentation Cleanup Script
 Identify redundant files, improve organization, and clean up temporary files.

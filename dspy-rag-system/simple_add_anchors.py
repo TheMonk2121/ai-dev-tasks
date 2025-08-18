@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Simple Add Documents with Anchor Metadata
 Direct database connection without using the database manager.

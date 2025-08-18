@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Performance Optimization Tests - T-4.2 Implementation
 

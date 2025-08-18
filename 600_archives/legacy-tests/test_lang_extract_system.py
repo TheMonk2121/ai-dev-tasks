@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Test LangExtract System
 Validates research-based structured extraction with span-level grounding

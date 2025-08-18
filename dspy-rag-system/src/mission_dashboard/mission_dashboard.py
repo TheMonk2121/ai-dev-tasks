@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Real-time Mission Dashboard
 Flask-based web interface for monitoring AI task execution in real-time

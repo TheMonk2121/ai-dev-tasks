@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Database Maintenance Script
 Detect outdated database entries and maintain consistency with repository files.

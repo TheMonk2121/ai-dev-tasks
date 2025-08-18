@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 JSON Schema validation script for system configuration.
 Run this in CI to ensure config/system.json is valid.

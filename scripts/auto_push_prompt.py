@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Auto-Push Prompt for Repo Maintenance (B-052-e)
 

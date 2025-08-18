@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Fix MD033 - Inline HTML (anchor tags)
 Converts HTML anchor tags to markdown-style anchors.

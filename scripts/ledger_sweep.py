@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Ledger Sweep - Fail PRs that extend expired waiver entries without content changes.
 

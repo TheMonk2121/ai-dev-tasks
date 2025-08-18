@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """Submit red team review for AI collaboration protocol proposal."""
 
 from scripts.consensus_framework import ConsensusFramework

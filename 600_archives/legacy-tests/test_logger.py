@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Test script for the improved structured logger
 Verifies all critical fixes and improvements

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Entity Expansion Performance Benchmark
 Simple benchmark to compare performance with and without entity expansion

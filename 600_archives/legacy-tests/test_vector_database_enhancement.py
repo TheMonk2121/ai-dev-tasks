@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Comprehensive test suite for Vector Database Foundation Enhancement (B-031)
 Tests all aspects of the enhanced vector database capabilities.

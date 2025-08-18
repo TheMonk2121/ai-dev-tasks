@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Smoke Tests for Memory Rehydrator
 Tests both planner and implementer roles with our existing vector store infrastructure

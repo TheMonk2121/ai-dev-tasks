@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Archive Manifest Rebuild - Build/refresh manifest by discovering first-add commits.
 

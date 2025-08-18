@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.11
+#!/usr/bin/env python3.12.123.11
 """
 Cursor Memory Context Auto-Update Helper (B-061)
 

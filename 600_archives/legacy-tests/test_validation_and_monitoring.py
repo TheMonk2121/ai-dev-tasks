@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Validation and Monitoring Test Suite for Cursor Context Engineering
 Tests that the system is working correctly and not hallucinating

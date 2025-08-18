@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 CI/CD Test Runner for DSPy RAG System
 T-4.1: Advanced Testing Framework Implementation

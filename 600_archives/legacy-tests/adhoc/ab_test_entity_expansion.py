@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 A/B Testing Script for Entity Expansion
 ---------------------------------------

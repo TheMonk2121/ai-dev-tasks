@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Fix MD037 - Spaces inside emphasis markers.
 Removes spaces inside emphasis markers like ** text ** → **text**.

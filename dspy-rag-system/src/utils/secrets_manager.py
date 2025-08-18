@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Secrets management for the DSPy RAG system.
 Implements secure credential management with environment validation and keyring integration.

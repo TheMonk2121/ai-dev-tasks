@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Integration Test for Optimized Vector Store
 Tests the vector store with DSPy framework integration

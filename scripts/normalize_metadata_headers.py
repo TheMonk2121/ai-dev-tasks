@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Normalize metadata headers across markdown files to the minimal schema:
 - Keep only CONTEXT_REFERENCE and up to 3 MODULE_REFERENCE lines

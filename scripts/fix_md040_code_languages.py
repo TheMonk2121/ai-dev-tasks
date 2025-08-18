@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Fix MD040 - Fenced code blocks should have a language specified.
 Adds language specifications to code blocks that don't have them.

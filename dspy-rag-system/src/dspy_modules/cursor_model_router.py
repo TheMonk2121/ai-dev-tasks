@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Cursor Native AI Model Router with Context Engineering
 Implements intelligent model selection for Cursor's native AI models using DSPy

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Validate CONTEXT_INDEX blocks in documentation files.
 

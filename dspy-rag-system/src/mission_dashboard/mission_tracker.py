@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Mission Tracker for Real-time AI Task Execution Monitoring
 Tracks and manages AI task execution with real-time updates

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Performance Optimization Script
 Optimize vector database performance and analyze optimization opportunities.

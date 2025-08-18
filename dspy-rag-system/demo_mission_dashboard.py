@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Demo script for Real-time Mission Dashboard
 Creates sample missions and simulates their execution

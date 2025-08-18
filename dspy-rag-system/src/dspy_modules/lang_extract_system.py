@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 LangExtract System - Research-Based Structured Extraction
 Implements span-level grounding and controlled generation for precise fact extraction

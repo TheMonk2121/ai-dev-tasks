@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Enhanced Vector Store Module
 Leverages advanced PostgreSQL + PGVector capabilities with performance monitoring,

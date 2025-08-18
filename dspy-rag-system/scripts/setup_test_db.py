@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Setup Test Database for Vector Enhancement Migration
 Creates a local PostgreSQL database for testing the migration.

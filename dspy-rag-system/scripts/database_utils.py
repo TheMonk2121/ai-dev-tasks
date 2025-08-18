@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.11
+#!/usr/bin/env python3.12.123.11
 """
 Database Utilities
 Context-aware helper functions for safe database operations.

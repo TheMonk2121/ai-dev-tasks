@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Comprehensive Test Suite Entrypoint (Round 1)
 Routes tests by --tiers / --kinds markers for selective execution.

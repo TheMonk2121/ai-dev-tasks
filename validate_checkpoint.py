@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """Validate the collaboration protocol checkpoint."""
 
 from scripts.consensus_framework import ConsensusFramework

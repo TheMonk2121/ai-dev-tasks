@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Test suite for Vector Database Enhancement Migration
 Tests the migration script and validates the enhanced schema.

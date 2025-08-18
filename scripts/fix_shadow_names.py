@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Shadow Name Fixer - Fix shadow fork names by renaming to role suffix patterns.
 

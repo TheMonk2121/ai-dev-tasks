@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Fix MD012 - Multiple consecutive blank lines
 Removes multiple consecutive blank lines, keeping only single blank lines.

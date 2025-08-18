@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Unit tests for Real-time Mission Dashboard
 Tests mission tracking, dashboard functionality, and API endpoints

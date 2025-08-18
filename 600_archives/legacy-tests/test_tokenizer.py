@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Test script for the improved token-aware chunker
 Verifies all critical fixes and performance improvements

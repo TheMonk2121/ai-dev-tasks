@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Add Documents with Anchor Metadata to DSPy RAG System
 Simple script to add core documentation files with anchor metadata.

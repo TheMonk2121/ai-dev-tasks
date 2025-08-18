@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Config-Driven Metadata Extractor for DSPy RAG System
 Uses YAML configuration to extract metadata with scoring and ranking.

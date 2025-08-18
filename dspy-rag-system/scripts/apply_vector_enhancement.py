@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Vector Database Enhancement Migration Script
 Applies the vector enhancement schema to PostgreSQL database.

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Hydration Quality Tests
 Comprehensive test suite for memory rehydrator quality validation

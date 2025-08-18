@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Fix MD018 - No space after hash on atx style heading.
 Adds spaces after hash symbols in headings like #Heading → # Heading.

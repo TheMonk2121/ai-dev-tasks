@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Prompt Contract Smoke Tests (Round 1)
 Tests for consensus prompt loader structure (xfail until loader wired).

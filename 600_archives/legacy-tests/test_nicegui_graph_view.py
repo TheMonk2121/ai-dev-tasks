@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Unit tests for NiceGUI Graph Visualization Application.
 

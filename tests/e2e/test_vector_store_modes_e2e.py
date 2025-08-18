@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 E2E Test for Dual Vector Store Modes (Round 1)
 Tests both core and perf modes via facade without environment detection.

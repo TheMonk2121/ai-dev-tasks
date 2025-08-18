@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Optimized Watch Folder Test Suite
 Fast, focused tests for critical functionality

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Thin wrapper to normalize sys.path for scripts and ad-hoc runs.
 Prefer tests/conftest.py for pytest.

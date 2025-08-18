@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Simple Vector Database Enhancement Script
 Creates essential vector enhancement tables and functions step by step.

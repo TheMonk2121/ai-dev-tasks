@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Database Synchronization Checker
 Check if files with DATABASE_SYNC tags are current in the database.

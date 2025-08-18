@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Manual Add Documents with Anchor Metadata
 Simple script to manually add core documentation files with anchor metadata to the database.

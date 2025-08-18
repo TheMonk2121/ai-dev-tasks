@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Documentation Navigator
 Helps navigate the complete documentation inventory and provides context-specific guidance

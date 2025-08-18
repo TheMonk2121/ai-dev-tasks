@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Test Suite for Documentation Coherence Validation System - B-060
 

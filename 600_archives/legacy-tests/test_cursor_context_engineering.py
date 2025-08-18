@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Test script for Cursor Native AI Context Engineering
 Demonstrates intelligent model routing using DSPy

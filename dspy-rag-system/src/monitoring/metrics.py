@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Prometheus metrics for DSPy RAG system.
 Implements monitoring and observability for production deployment.

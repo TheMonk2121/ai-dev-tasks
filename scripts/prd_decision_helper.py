@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 PRD Decision Helper
 Determines whether to generate a PRD for a backlog item based on points and score.

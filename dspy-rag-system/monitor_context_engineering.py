@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Real-time Monitoring Dashboard for Cursor Context Engineering
 Provides live insights into system performance and validation status

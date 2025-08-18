@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Comprehensive test suite for VectorStore module
 Based on deep research analysis with all critical fixes

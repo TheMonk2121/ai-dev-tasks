@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12.123.11
 """
 Input validation utilities for DSPy RAG system.
 Implements security hardening for user inputs and file paths.
