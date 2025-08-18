@@ -63,6 +63,33 @@ Our systematic error reduction journey revealed that **most auto-fixes are dange
 - Variable removal
 - Type annotation changes
 
+### **5. Unicode Character Reintroduction Pattern**
+
+**The Problem**: Unicode characters keep being reintroduced after fixes.
+
+**Discovery**: After "fixing" Unicode characters, they reappear in:
+- New files created from templates
+- Files updated through copy-paste operations
+- Documentation updates with emojis and symbols
+- Code copied from external sources
+
+**Evidence**:
+- Fixed 157 files with 324 Unicode character replacements
+- Same characters keep appearing: `–`, `—`, `✅`, `⚠️`, `❌`, `ℹ`
+- No prevention mechanism exists to stop reintroduction
+
+**Root Causes**:
+1. **Copy-Paste Operations**: Developers copying code with Unicode characters
+2. **Template Usage**: Using existing files as templates that contain Unicode
+3. **Documentation Updates**: Adding content with emojis, dashes, symbols
+4. **External Sources**: Code from GitHub, Stack Overflow, etc. with Unicode
+
+**Prevention Needed**:
+- Automated Unicode character detection in pre-commit hooks
+- Template files with ASCII-only characters
+- Developer education about Unicode character issues
+- Regular monitoring and automated fixes
+
 ## 🛡️ Prevention Strategies
 
 ### **Before Auto-Fixing**
@@ -178,6 +205,13 @@ UNICODE_REPLACEMENTS = {'\u2013': '-'}
 2. **Flag dangerous errors for manual review**
 3. **Use decision matrix in automation**
 4. **Monitor for error multiplication**
+
+### **For Unicode Character Prevention**
+1. **Pre-commit Unicode detection**: Add RUF001 checks to pre-commit hooks
+2. **Template sanitization**: Ensure template files use ASCII-only characters
+3. **Developer education**: Train team on Unicode character issues
+4. **Regular monitoring**: Run Unicode fix script periodically
+5. **Automated prevention**: Block commits with Unicode characters
 
 ## 📚 Related Documentation
 
