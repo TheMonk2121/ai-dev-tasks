@@ -198,6 +198,15 @@
 | B-189 | Authoring Guideline Update: Anchors & Quick Refs | 📚 | 1 | OK done | Document anchor usage and validator workflow in `400_documentation-guide.md` | Docs Governance | Clear authoring guidance |
 <!-- score: {bv: 3, tc: 2, rr: 2, le: 2, effort: 1, deps: ["B-185"]} -->
 <!-- score_total: 9.0 -->
+
+| B-190 | Configure Bug-Fix Playbook Keyboard Shortcut | ⌨️ | 2 | todo | Configure `⌘⌥B` shortcut in Cursor to inject bug-fix playbook preset into chat sidecar | Cursor Integration | Enable one-keystroke access to structured debugging workflow |
+<!-- score: {bv: 4, tc: 3, rr: 3, le: 2, effort: 1, deps: ["B-182"]} -->
+<!-- score_total: 6.5 -->
+<!-- do_next: Check current `⌘⌥B` mapping in Cursor; configure shortcut to inject bug-fix playbook preset; test functionality in chat sidecar; update documentation if shortcut conflicts exist. -->
+<!-- acceptance: `⌘⌥B` injects bug-fix playbook template into chat sidecar; no conflicts with existing shortcuts; documentation updated with working shortcut. -->
+<!-- est_hours: 1 -->
+<!-- lessons_applied: ["000_core/004_bugfix_playbook.md", "docs/cursor/presets/debug_playbook_preset.md"] -->
+<!-- reference_cards: ["400_guides/400_cursor-context-engineering-guide.md"] -->
 <!-- do_next: Add section covering heading levels, emoji anchors, and how to run validator locally/CI; add examples. -->
 <!-- acceptance: Guide includes anchor authoring rules and quick reference; internal links updated; linkcheck passes. -->
 <!-- est_hours: 1 -->
@@ -573,6 +582,8 @@ Coherence Validation System |
 <!-- reference_cards: ["500_reference-cards.md#backlog-management"] -->
 
 | B-107 | Node Version Consistency & Tooling Standardization | 🔧 | 1 | todo | Pin Node 20 LTS across dev and CI; enforce via engines and CI to prevent drift | Node.js + npm + GitHub Actions | None |
+| B-001 | Fix the notification system | 🔧 | 3 | todo | Fix the notification system | None | None |
+| B-108 | Single Doorway Automation (3-command flow) | 🔧 | 3 | todo | Single Doorway Automation (3-command flow) | None | None |
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:1, deps:[]}-->
 <!--score_total: 7.5-->
 <!-- do_next: Add .nvmrc and .node-version (20.18.0); add engines and packageManager to config/package.json; add .npmrc with engine-strict=true; add setup-node lint CI -->
