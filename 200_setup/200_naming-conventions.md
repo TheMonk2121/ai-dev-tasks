@@ -1,4 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: 100_memory/103_memory-context-workflow.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
@@ -88,23 +88,23 @@ it easy for both humans and AI to understand its role and importance in the over
 
 #### Examples of when to create files
 
-- OK**Workflow processes**(`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`)
+- ✅**Workflow processes**(`000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`)
 
-- OK**System documentation**(`400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`)
+- ✅**System documentation**(`400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`)
 
-- OK**Configuration guides**(`200_setup/202_setup-requirements.md`)
+- ✅**Configuration guides**(`200_setup/202_setup-requirements.md`)
 
-- OK**Completion summaries** (`500_*` files for historical context)
+- ✅**Completion summaries** (`500_*` files for historical context)
 
-- OK **Research findings**(`500_research/500_memory-arch-research.md`)
+- ✅ **Research findings**(`500_research/500_memory-arch-research.md`)
 
 #### Examples of when NOT to create files
 
-- X**Temporary notes**(use comments or inline documentation)
+- ❌**Temporary notes**(use comments or inline documentation)
 
-- X**One-off decisions**(document in existing relevant files)
+- ❌**One-off decisions**(document in existing relevant files)
 
-- X**Quick fixes**(document in commit messages or existing files)
+- ❌**Quick fixes**(document in commit messages or existing files)
 
 ### Step 2: Determine File Purpose and Priority
 
@@ -162,22 +162,6 @@ benchmarks
 - Useful for learning from past work
 
 ### Step 4: Create Descriptive, Self-Documenting Names
-#### Doorway Artifacts (Active vs Archive)
-
-- Active (in `000_core/`):
-  - `PRD-{BacklogID}-{Slug}.md`
-  - `TASKS-{BacklogID}-{Slug}.md`
-  - `RUN-{BacklogID}-{Slug}.md`
-
-- Archive (in `600_archives/`):
-  - `prds/PRD-{BacklogID}-{Slug}.md`
-  - `tasks/TASKS-{BacklogID}-{Slug}.md`
-  - `runs/RUN-{BacklogID}-{Slug}_{YYYY-MM-DD}.md`
-
-- Versioning:
-  - PRD/TASKS use `-vN` only when content changes (e.g., `PRD-...-v2.md`).
-  - RUN has a single active file; archived RUNs use date suffix; same-date collisions get `-vN`.
-
 
 #### Follow these naming principles
 
@@ -191,19 +175,19 @@ benchmarks
 
 #### Examples of good names
 
-- OK `100_memory/100_cursor-memory-context.md` (clear purpose)
+- ✅ `100_memory/100_cursor-memory-context.md` (clear purpose)
 
-- OK `400_guides/400_system-overview.md` (descriptive)
+- ✅ `400_guides/400_system-overview.md` (descriptive)
 
-- OK `500_research/500_memory-arch-research.md` (research focus)
+- ✅ `500_research/500_memory-arch-research.md` (research focus)
 
 #### Examples of bad names
 
-- X `misc.md` (unclear purpose)
+- ❌ `misc.md` (unclear purpose)
 
-- X `stuff.md` (not descriptive)
+- ❌ `stuff.md` (not descriptive)
 
-- X `temp.md` (temporary feeling)
+- ❌ `temp.md` (temporary feeling)
 
 ### Step 5: Add AI API Comments and Cross-References
 
@@ -218,7 +202,7 @@ benchmarks
 #### Examples
 
 ```markdown
-<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->
+<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Core workflow guide -->
 <!-- ESSENTIAL_FILES: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md -->
 
@@ -242,7 +226,7 @@ benchmarks
 
 **Scenario**: Need to document a new workflow for automated testing
 
-- **Step 1**: OK **File needed** - This is a process others will follow
+- **Step 1**: ✅ **File needed** - This is a process others will follow
 - **Step 2**: **Purpose** = Implementation workflow, **Priority** = Medium (important for specific tasks)
 - **Step 3**: **Prefix** = 100-199 (workflow guides)
 - **Step 4**: **Name** = `101_automated-testing-workflow.md`
@@ -257,7 +241,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 ## 📝 File Naming Rules
 
-### OK Correct Examples
+### ✅ Correct Examples
 
 - `000_core/000_backlog.md` (three-digit prefix, single underscore, kebab-case)
 
@@ -267,7 +251,7 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 - `500_test-harness-guide.md` (testing category)
 
-### X Incorrect Examples
+### ❌ Incorrect Examples
 
 - `99_misc.md` (needs three-digit prefix)
 
@@ -291,11 +275,11 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 ## 🔐 Core Documentation Invariants
 
-- Purpose: Single normative source for core documentation requirements. Validator enforces these invariants and code quality standards.
+- Purpose: Single normative source for core documentation requirements. Validator enforces these invariants.
 
 ### Required top metadata header (HTML comments)
 
-- HIGH-priority docs must include:
+- HIGH‑priority docs must include:
   - `<!-- CONTEXT_REFERENCE: <file> -->`
   - `<!-- MEMORY_CONTEXT: <LEVEL> - <description> -->`
 
@@ -303,24 +287,24 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 - See: 🤖 AI API Documentation Standards (below)
 
-### TL;DR + At-a-glance
+### TL;DR + At‑a‑glance
 
 - TL;DR section is required in core docs
   - A single explicit anchor is allowed: `{#tldr}`
   - Heading: `## 🔎 TL;DR`
 
-- Immediately after TL;DR, include a 3-column “At-a-glance” table with exact headers:
+- Immediately after TL;DR, include a 3‑column “At‑a‑glance” table with exact headers:
 
 | what this file is | read when | do next |
 |---|---|---|
-|_one-line purpose_|_trigger moments_|_2-3 links/actions_ |
+|_one‑line purpose_|_trigger moments_|_2–3 links/actions_ |
 
-### Stable Anchors (kebab-case)
+### Stable Anchors (kebab‑case)
 
 - Required anchors per doc type (must exist as section anchors):
   - `100_memory/100_cursor-memory-context.md`: `tldr`, `quick-start`, `quick-links`, `commands`
   - `400_guides/400_project-overview.md`: `tldr`, `quick-start`, `mini-map`
-  - `400_guides/400_cursor-context-engineering-guide.md`: `tldr`, `critical-path`, `ai-file-analysis-strategy`, `documentation-placement-logic`
+  - `400_guides/400_context-priority-guide.md`: `tldr`, `critical-path`, `ai-file-analysis-strategy`, `documentation-placement-logic`
   - `000_core/000_backlog.md`: `tldr`, `p0-lane`, `ai-executable-queue-003`, `live-backlog`
   - `200_setup/200_naming-conventions.md`: `tldr`, `file-generation`, `formatting-standards`, `ai-api-standards`
   - `100_memory/100_backlog-guide.md`: `tldr`, `scoring`, `prd-rule`, `selection-criteria`
@@ -329,16 +313,16 @@ This process ensures that every file created serves a clear purpose, fits into t
 
 - Quick Start → `400_guides/400_project-overview.md`
 
-- Critical Path → `400_guides/400_cursor-context-engineering-guide.md`
+- Critical Path → `400_guides/400_context-priority-guide.md`
 
 - PRD/Scoring → `100_memory/100_backlog-guide.md`
 
-- README Organization → `400_guides/400_documentation-guide.md#readme-file-organization`
+- README Organization → `400_guides/400_documentation-reference.md#readme-file-organization`
 
 ### Anchor policy (phased)
 
-- Only TL;DR may use an explicit HTML anchor (`{#tldr}`). All other anchors must be heading-based.
-- Rollout: validator warns first; flips to errors after link hygiene completes (documentation and code quality validation).
+- Only TL;DR may use an explicit HTML anchor (`{#tldr}`). All other anchors must be heading‑based.
+- Rollout: validator warns first; flips to errors after link hygiene completes.
 
 ### Table Usage Mandate
 
@@ -374,7 +358,7 @@ The HTML comments in our documentation serve as a **formal API for AI consumptio
 
 | Key | Purpose | Example | Required For |
 | :--- | :--- | :--- | :--- |
-| CONTEXT_REFERENCE | Links to the main guide for context | `<!-- CONTEXT_REFERENCE: 400_guides/400_cursor-context-engineering-guide.md -->` | HIGH priority files |
+| CONTEXT_REFERENCE | Links to the main guide for context | `<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->` | HIGH priority files |
 | MODULE_REFERENCE | Links to a related implementation module | `<!-- MODULE_REFERENCE: 100_memory/104_dspy-development-context.md -->` | MEDIUM priority files |
 | MEMORY_CONTEXT | Specifies priority level for AI rehydration | `<!-- MEMORY_CONTEXT: HIGH - Core workflow guide -->` | All files |
 | ESSENTIAL_FILES | Lists files critical for understanding | `<!-- ESSENTIAL_FILES: 400_guides/400_project-overview.md -->` | HIGH priority files |
@@ -452,83 +436,6 @@ File renames and structural changes are tracked via Git issues rather than stati
 
 - **Human-Friendly**: Standard development workflow
 
-## 📋 PRD Lifecycle Management
-
-### PRD Naming Convention
-
-- **Active PRDs**: `PRD-{BacklogID}-{Descriptive-Name}.md`
-  - Example: `PRD-B-084-Research-Based-Schema-Design.md`
-  - Location: `000_core/` while project is active
-
-- **Completed PRDs**: Move to `600_archives/prds/` with metadata preservation
-  - Keep original filename for traceability
-  - Add completion metadata to preserve insights
-
-### PRD Lifecycle Stages
-
-1. **Active Development** (`000_core/`)
-   - PRD is being used for implementation
-   - Backlog item is `todo` or `in-progress`
-   - Cross-references in backlog point to active location
-
-2. **Completion** (Move to `600_archives/prds/`)
-   - Backlog item marked as `OK done`
-   - PRD moved to archives with completion metadata
-   - Backlog cross-reference updated to archived location
-
-3. **Lessons Mining** (B-098 process)
-   - Extract lessons_applied from completed PRDs
-   - Identify reference_cards for 500_reference-cards.md
-   - Update backlog hygiene based on patterns
-
-### Metadata Preservation Requirements
-
-When archiving a PRD, **preserve these critical insights**:
-
-```markdown
-<!-- ARCHIVAL_METADATA -->
-<!-- completion_date: YYYY-MM-DD -->
-<!-- backlog_id: B-XXX -->
-<!-- implementation_notes: Brief summary of what was actually implemented -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#section"] -->
-<!-- reference_cards: ["500_reference-cards.md#section"] -->
-<!-- key_decisions: List of important decisions made during implementation -->
-<!-- trade_offs: Important trade-offs and their rationale -->
-<!-- success_metrics: What worked well and what didn't -->
-<!-- ARCHIVAL_METADATA -->
-```
-
-### Lessons Learned Extraction
-
-The B-098 process should extract:
-
-- **Implementation patterns** that worked well
-- **Common pitfalls** and how to avoid them
-- **Decision rationale** for future reference
-- **Trade-off analysis** for similar decisions
-- **Success metrics** and validation approaches
-- **Integration patterns** with existing systems
-
-### Reference Card Creation
-
-From archived PRDs, create entries in `500_reference-cards.md`:
-
-- **Evidence-based patterns** from research findings
-- **Validation approaches** that proved effective
-- **Performance benchmarks** and their context
-- **Security considerations** and mitigations
-- **Integration patterns** with existing infrastructure
-
-### Backlog Hygiene Updates
-
-Use archived PRDs to:
-
-- **Identify duplicates** across different projects
-- **Merge similar requirements** into unified backlog items
-- **Update scoring factors** based on actual implementation experience
-- **Refine acceptance criteria** based on what worked
-- **Improve estimation accuracy** from actual effort data
-
 ## 🛠️ Implementation Tools
 
 ### Collision Detection
@@ -581,7 +488,7 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 - `400_guides/400_system-overview.md` - Technical architecture and system overview
 
-- `400_guides/400_cursor-context-engineering-guide.md` - Context priority guide for memory rehydration
+- `400_guides/400_context-priority-guide.md` - Context priority guide for memory rehydration
 
 - `100_memory/100_cursor-memory-context.md` - Memory context system guide
 
@@ -593,7 +500,7 @@ Use `python3 scripts/update_cursor_memory.py` to automatically update memory con
 
 - `400_guides/400_n8n-setup-guide.md` - n8n setup and configuration guide
 
-- `400_guides/400_observability-system.md#🖥️-mission-dashboard` - Mission dashboard (canonical)
+- `400_guides/400_mission-dashboard-guide.md` - Mission dashboard guide
 
 - `400_guides/400_n8n-backlog-scrubber-guide.md` - n8n backlog scrubber guide
 
