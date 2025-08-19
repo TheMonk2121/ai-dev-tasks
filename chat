@@ -1,1 +1,22 @@
-PlUp
+VPlUp
+Draft PR: feat(doorway): 3-command single doorway + wrappers (phase 0–2)
+
+Backlog: B-108 — Single Doorway Automation (3-command flow)
+
+Summary:
+- Adds scripts/doorway_utils.py (slugify, atomic_write, content_unchanged, next_versioned, detect_duplicates, canonical_paths)
+- Adds scripts/single_doorway.py (generate, continue, archive, open) preferring python3.12
+- Adds wrappers: backlog_intake.py (advisory dedupe, Live Backlog only), prd_generator.py (Always-PRD, anchors, -vN on changes), task_generator.py (wraps generator; anchors; -vN on changes), executor.py (single active RUN with anchors; auto-resume; minimal state), archive_move.py (date-suffix runs; same-date -vN)
+- Gates: ruff on touched files, linkage validator, help sanity
+
+Gates to run:
+- python3 scripts/single_doorway.py --help
+- python3 scripts/validate_prd_backlog_linkage.py
+- ruff check scripts/doorway_utils.py scripts/single_doorway.py scripts/backlog_intake.py scripts/prd_generator.py scripts/task_generator.py scripts/executor.py scripts/archive_move.py
+
+Acceptance Criteria (B-108):
+- generate backlog item: <desc> creates PRD/TASKS and completes run with concise output
+- continue B-### resumes from minimal state after Ctrl+C/failure
+- PRD/TASKS version only when content changes (-vN); RUN is single active file
+- archive B-### moves PRD/TASKS/RUN; RUN gets date suffix; same-date collision -vN
+- Dedupe advisories check Live Backlog only (exact + ≥0.85 fuzzy)

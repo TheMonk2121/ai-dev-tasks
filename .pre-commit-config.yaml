@@ -27,8 +27,8 @@ repos:
   - repo: local
     hooks:
       - id: validator-lightweight
-        name: Lightweight Validator
-        entry: python3.11 scripts/doc_coherence_validator.py --check shadow-fork --check archive
+        name: Lightweight Validator (changed files)
+        entry: python3.11 scripts/doc_coherence_validator.py --changed-only
         language: system
         pass_filenames: false
         always_run: true
