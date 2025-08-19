@@ -243,7 +243,7 @@ High-level solution, key features, technical approach, integration points
 ### **Tech Stack**
 - **AI Framework**: DSPy with PostgreSQL vector store
 - **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
-- **Backend**: Python 3.9+, FastAPI, PostgreSQL with pgvector
+- **Backend**: Python 3.11+, FastAPI, PostgreSQL with pgvector
 - **Frontend**: Mission Dashboard (real-time monitoring)
 - **Infrastructure**: Docker, n8n workflows, Redis cache
 - **Testing**: pytest, comprehensive test suites
@@ -356,7 +356,109 @@ Measurable success criteria and acceptance criteria
 - [ ] Performance benchmarks met
 - [ ] Security considerations addressed
 
-```
+
+
+## 16. AI Development Edge Cases
+
+### **Prompt Injection & Security**
+- **Malicious Prompts**: Validate and sanitize all user inputs before DSPy processing
+- **Context Pollution**: Prevent prompt injection attacks through input validation
+- **Model Manipulation**: Use DSPy assertions to enforce expected outputs
+- **Rate Limiting**: Implement API call limits and fallback strategies
+
+### **Token Limits & Context Management**
+- **Context Windows**: Manage chunking strategies for large documents
+- **Memory Overflow**: Handle context drift in long conversations
+- **Chunk Boundaries**: Ensure semantic coherence across chunk boundaries
+- **Context Compression**: Implement intelligent context summarization
+
+### **Model Reliability & Validation**
+- **Hallucinations**: Implement grounding mechanisms and fact-checking
+- **Confidence Scoring**: Use DSPy assertions to validate model outputs
+- **Fallback Strategies**: Provide alternative approaches when models fail
+- **Output Consistency**: Ensure reproducible results across model versions
+
+### **Vector Store & Database Issues**
+- **Vector Store Failures**: Fallback to keyword search or cached results
+- **Database Connection**: Handle connection pool exhaustion and timeouts
+- **Data Corruption**: Validate vector embeddings and database integrity
+- **Concurrent Access**: Handle race conditions in vector operations
+
+### **Performance & Scalability**
+- **Large Result Sets**: Implement pagination and result limiting
+- **Memory Exhaustion**: Monitor and manage memory usage in DSPy modules
+- **Network Failures**: Handle external API timeouts and retries
+- **Resource Constraints**: Graceful degradation under high load
+
+## 17. Entry Points for AI Changes (Cheat Sheet)
+
+### **AI Feature Development**
+- **New DSPy Module**: `dspy-rag-system/src/dspy_modules/` → tests → docs → memory context
+- **Enhanced RAG**: `dspy-rag-system/src/enhanced_rag_system.py` → vector store → monitoring
+- **Agent Specialization**: `dspy-rag-system/src/dspy_modules/` → role-specific logic → validation
+- **Model Integration**: `dspy-rag-system/src/utils/` → model router → fallback mechanisms
+
+### **Documentation & Context**
+- **New Guide**: `400_guides/` → cross-references → validation → database sync
+- **Memory Context**: `100_memory/` → cross-reference validation → coherence check
+- **Core Workflow**: `000_core/` → workflow logic → testing → documentation
+- **Research Integration**: `500_research/` → findings → implementation → validation
+
+### **System Integration**
+- **n8n Workflow**: `dspy-rag-system/src/n8n_workflows/` → automation → monitoring
+- **Monitoring**: `dspy-rag-system/src/monitoring/` → health endpoints → dashboard
+- **Database Changes**: Migration → model updates → resilience testing → rollback plan
+- **API Integration**: `dspy-rag-system/src/utils/` → external APIs → error handling
+
+### **Quality & Testing**
+- **Test Enhancement**: `dspy-rag-system/tests/` → coverage → performance → security
+- **Validation Logic**: `dspy-rag-system/src/utils/` → validation → error handling
+- **Performance Optimization**: Benchmarks → monitoring → optimization → validation
+- **Security Hardening**: `dspy-rag-system/src/utils/` → security → validation → testing
+
+## 18. Notes for the AI Agent
+
+### **Development Philosophy**
+- **Prefer DSPy assertions** over ad-hoc validation for reliability
+- **Update memory context files** when changing system state or architecture
+- **Preserve cross-reference integrity** across all documentation
+- **Use the retry wrapper** for all database and external API operations
+- **Follow file naming conventions** (400_, 500_, etc.) for consistency
+
+### **Code Quality Standards**
+- **After substantive edits**: Run tests, validate docs, check memory coherence
+- **Always include comprehensive tests** with 80%+ coverage for new features
+- **Use type hints and docstrings** for all Python functions and classes
+- **Implement proper error handling** with graceful degradation
+- **Add monitoring and observability** hooks for all critical operations
+
+### **Documentation Standards**
+- **Update cross-references** when adding new files or changing relationships
+- **Include TL;DR sections** for quick orientation in all guides
+- **Use structured metadata** (DATABASE_SYNC, CONTEXT_REFERENCE, etc.)
+- **Validate documentation coherence** before committing changes
+- **Sync to database** all files with DATABASE_SYNC tags
+
+### **System Integration Patterns**
+- **Respect memory context hierarchy** - don't bypass validation systems
+- **Use existing DSPy patterns** - don't invent new module structures unnecessarily
+- **Follow the retry pattern** for all external dependencies
+- **Implement proper logging** with structured data for debugging
+- **Add health checks** for all new services and integrations
+
+### **Testing & Validation**
+- **Write tests first** for new features (TDD approach)
+- **Test edge cases** including error conditions and boundary values
+- **Validate performance** with realistic data volumes
+- **Test security implications** for all user-facing features
+- **Ensure backward compatibility** when changing public APIs
+
+### **Deployment & Operations**
+- **Test in staging** before production deployment
+- **Monitor performance** after deployment for regressions
+- **Have rollback plans** for all major changes
+- **Update runbooks** when changing operational procedures
+- **Validate database migrations** in staging environment first
 
 ## **Cross-References (required for active items)**
 
@@ -389,6 +491,11 @@ Measurable success criteria and acceptance criteria
 13. **Track backlog status updates** as tasks are completed
 14. **Consider backlog scoring** for prioritization when available
 15. **Use scoring metadata** to inform effort and dependency planning
+16. **Include AI development edge cases** specific to our DSPy ecosystem
+17. **Provide concrete entry points** for AI changes with file paths and workflows
+18. **Add agent-specific guidance** for development philosophy and standards
+19. **Specify quality gates with commands** for automated validation
+20. **Consider prompt injection and security** in all AI-facing features
 
 ## Acceptance Criteria {#acceptance-criteria}
 
