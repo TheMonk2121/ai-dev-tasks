@@ -51,6 +51,19 @@ python3 -m pytest tests/ -m "tier_1 and unit"
 python3 scripts/generate_status_badge.py
 ```
 
+### Doorway Workflow (Single Command)
+
+```bash
+# Create backlog item → PRD → TASKS → execute (prefers python3.12)
+python3 scripts/single_doorway.py generate "Fix the notification system"
+
+# Resume after pause/failure (auto-resume from minimal state)
+python3 scripts/single_doorway.py continue B-###
+
+# Archive artifacts on demand
+python3 scripts/single_doorway.py archive B-###
+```
+
 ## Project Structure
 
 - **`000_core/`** - Core workflows and backlog management

@@ -162,6 +162,22 @@ benchmarks
 - Useful for learning from past work
 
 ### Step 4: Create Descriptive, Self-Documenting Names
+#### Doorway Artifacts (Active vs Archive)
+
+- Active (in `000_core/`):
+  - `PRD-{BacklogID}-{Slug}.md`
+  - `TASKS-{BacklogID}-{Slug}.md`
+  - `RUN-{BacklogID}-{Slug}.md`
+
+- Archive (in `600_archives/`):
+  - `prds/PRD-{BacklogID}-{Slug}.md`
+  - `tasks/TASKS-{BacklogID}-{Slug}.md`
+  - `runs/RUN-{BacklogID}-{Slug}_{YYYY-MM-DD}.md`
+
+- Versioning:
+  - PRD/TASKS use `-vN` only when content changes (e.g., `PRD-...-v2.md`).
+  - RUN has a single active file; archived RUNs use date suffix; same-date collisions get `-vN`.
+
 
 #### Follow these naming principles
 
