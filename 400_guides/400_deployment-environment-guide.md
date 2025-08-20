@@ -1,5 +1,6 @@
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Deployment procedures and environment management -->
+<!-- DATABASE_SYNC: REQUIRED -->
 # 🚀 Deployment & Environment Guide
 
 ## 🚀 Deployment & Environment Guide

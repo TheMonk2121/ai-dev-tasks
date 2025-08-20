@@ -3,6 +3,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- MEMORY_CONTEXT: HIGH - Cursor-native context engineering strategies -->
 
+<!-- DATABASE_SYNC: REQUIRED -->
 # Cursor Context Engineering Guide
 
 <!-- ANCHOR: tldr -->

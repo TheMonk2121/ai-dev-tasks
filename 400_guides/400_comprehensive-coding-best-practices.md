@@ -2371,7 +2371,7 @@ The repository now includes automated database synchronization through Git hooks
 
 #### **Post-commit Hook** (`.git/hooks/post-commit`)
 - **Purpose**: Automatically updates database after core documentation changes
-- **Trigger**: Changes to core files (`100_cursor-memory-context.md`, `000_backlog.md`, `400_comprehensive-coding-best-practices.md`, `400_code-criticality-guide.md`)
+- **Trigger**: Changes to core files (`100_cursor-memory-context.md`, `000_backlog.md`, `400_comprehensive-coding-best-practices.md`, `400_code-criticality-guide.md`, `400_ai-constitution.md`, `400_file-analysis-guide.md`, `400_testing-strategy-guide.md`, `400_deployment-environment-guide.md`, `400_cursor-context-engineering-guide.md`)
 - **Actions**:
   1. Runs `update_cursor_memory.py` to update memory context
   2. Runs `database_sync_check.py --auto-update` to sync files with `DATABASE_SYNC: REQUIRED` tags
@@ -2393,7 +2393,11 @@ Files that should be automatically synchronized with the database should include
 - `000_core/000_backlog.md`
 - `400_guides/400_comprehensive-coding-best-practices.md`
 - `400_guides/400_code-criticality-guide.md`
-- `dspy-rag-system/tests/README-dev.md`
+- `400_guides/400_ai-constitution.md`
+- `400_guides/400_file-analysis-guide.md`
+- `400_guides/400_testing-strategy-guide.md`
+- `400_guides/400_deployment-environment-guide.md`
+- `400_guides/400_cursor-context-engineering-guide.md`
 - `scripts/database_sync_check.py`
 
 ### **Manual Database Management**

@@ -371,7 +371,7 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 
 **Essential Files Quick Reference:**
 
-- **Critical**: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`, `400_guides/400_comprehensive-coding-best-practices.md`, `400_guides/400_code-criticality-guide.md`
+- **Critical**: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`, `400_guides/400_comprehensive-coding-best-practices.md`, `400_guides/400_code-criticality-guide.md`, `400_guides/400_ai-constitution.md`, `400_guides/400_file-analysis-guide.md`, `400_guides/400_testing-strategy-guide.md`, `400_guides/400_deployment-environment-guide.md`, `400_guides/400_cursor-context-engineering-guide.md`
 - **Workflow**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`
 - **Setup**: `200_setup/202_setup-requirements.md`
 - **Architecture**: `100_memory/104_dspy-development-context.md`

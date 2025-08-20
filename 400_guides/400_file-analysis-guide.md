@@ -4,6 +4,7 @@
 <!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - File analysis and safety procedures -->
 
+<!-- DATABASE_SYNC: REQUIRED -->
 # 🔍 File Analysis Guide
 
 ## 🔎 TL;DR {#tldr}
