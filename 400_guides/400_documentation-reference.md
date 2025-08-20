@@ -84,6 +84,7 @@ full scope | Use the category sections below to locate the documentation you nee
 ### **🔍 ANALYSIS & MAINTENANCE FILES**
 
 - **`400_guides/400_file-analysis-guide.md`** - 🚨 MANDATORY: File deletion/deprecation analysis
+- **`400_guides/400_development-patterns.md`** - Development patterns, metadata analysis, and lessons learned from archived work
 - **`200_setup/200_naming-conventions.md`** - File naming and organization system
 - **`400_guides/400_cross-reference-strengthening-plan.md`** - Cross-reference improvement plan
 - **`999_repo-maintenance.md`** - Repository maintenance procedures
