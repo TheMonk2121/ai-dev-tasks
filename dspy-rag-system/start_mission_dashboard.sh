@@ -92,7 +92,7 @@ if [ -f "$SCRIPT_DIR/requirements.txt" ]; then
     print_status "Requirements installed"
 else
     print_warning "No requirements.txt found, installing basic dependencies..."
-    pip install flask flask-socketio psutil opentelemetry-api opentelemetry-sdk >/dev/null 2>&1
+    pip install flask flask-socketio psutil opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp-proto-http >/dev/null 2>&1
     print_status "Basic dependencies installed"
 fi
 

@@ -98,6 +98,18 @@ and normalize spacing across long-form guides.
 
 - B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0)
 
+- B‑077 — Code Review Process Upgrade with Performance Reporting (score 7.5)
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:3, deps:[]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Implement comprehensive code review testing suite with performance reporting -->
+<!-- est_hours: 8 -->
+<!-- acceptance: 001_create-prd workflow optimized and performance metrics integrated -->
+<!-- lessons_applied: ["400_guides/400_comprehensive-coding-best-practices.md#performance-optimization", "400_guides/400_code-criticality-guide.md#quality-standards"] -->
+<!-- reference_cards: ["scripts/performance_optimization.py", "dspy-rag-system/src/monitoring/metrics.py"] -->
+<!-- tech_footprint: Performance Testing + Metrics Collection + Workflow Optimization -->
+<!-- problem: Need to test and optimize the 001_create-prd workflow with performance reporting to ensure it's as efficient as possible -->
+<!-- outcome: Canonical code review process with integrated performance monitoring and automated testing suite -->
+
 - B‑084 — Research-Based Schema Design for Extraction (score 6.0)
 
 - B‑050 — Enhance 002 Task Generation with Automation (score 5.5)
@@ -162,6 +174,16 @@ Items requiring external credentials, business decisions, or deployment should b
 
 | ID  | Title                                   | 🔥P | 🎯Points | Status | Problem/Outcome | Tech Footprint | Dependencies |
 |-----|-----------------------------------------|-----|----------|--------|-----------------|----------------|--------------|
+| B-001 | Test the single doorway workflow with Python 3.12 | 🔧 | 3 | todo | Test the single doorway workflow with Python 3.12 | None | None |
+| B-085 | Code Review Process Upgrade with Performance Reporting - B-077 | 🔧 | 3 | todo | Code Review Process Upgrade with Performance Reporting - B-077 | None | None |
+| B-086 | Test Enhanced PRD Generation | 🔧 | 3 | todo | Test Enhanced PRD Generation | None | None |
+| B-087 | Test Enhanced Task Generation | 🔧 | 3 | todo | Test Enhanced Task Generation | None | None |
+| B-088 | Test Improved Slug Generation | 🔧 | 3 | todo | Test Improved Slug Generation | None | None |
+| B-089 | Test Performance Workflow - Testing the optimized workflow with performance reporting | 🔧 | 3 | todo | Test Performance Workflow - Testing the optimized workflow with performance reporting | None | None |
+| B-090 | Test Performance Workflow | 🔧 | 3 | todo | Test Performance Workflow | None | None |
+| B-091 | Test 001 Workflow Performance | 🔧 | 3 | todo | Test 001 Workflow Performance | None | None |
+| B-092 | Final Performance Validation Test | 🔧 | 3 | todo | Final Performance Validation Test | None | None |
+
 | B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | todo | Add GitHub Action to run maintenance script on PRs | GitHub Actions + CI/CD | None |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:0.5, lessons:3, deps:[]}-->
 <!--score_total: 8.0-->
@@ -290,7 +312,7 @@ Coherence Validation System |
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#structured-extraction"] -->
 <!-- reference_cards: ["500_reference-cards.md#extraction-services"] -->
 
-| B‑098 | Mine Archived PRDs for Lessons and Reference Cards | 🧠 | 5 | todo | Extract systematic lessons and cross-references from archived PRDs (600_) to feed into lessons_applied, reference_cards, and backlog hygiene | PRD analysis + lessons extraction + reference card creation | 600_archives/ |
+| B‑098 | Mine Archived PRDs for Lessons and Reference Cards | 🧠 | 5 | todo | Extract systematic lessons and cross-references from archived PRDs (600_) to feed into lessons_applied, reference_cards, and backlog hygiene | PRD analysis + lessons extraction + reference card creation | 600_archives/prds/PRD-B-098-Lessons-Mining-From-Archived-PRDs.md |
 <!--score: {bv:4, tc:3, rr:3, le:5, lessons:4, effort:3, deps:[]}-->
 <!--score_total: 3.8-->
 <!-- do_next: Design script/workflow to parse archived PRDs -->

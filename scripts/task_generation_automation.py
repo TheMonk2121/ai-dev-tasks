@@ -14,6 +14,7 @@ Usage:
 import argparse
 import json
 import re
+import subprocess
 import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime
@@ -652,7 +653,7 @@ class TaskOutputGenerator:
         # Acceptance criteria
         output.append("**Acceptance Criteria:**")
         for criterion in task.acceptance_criteria:
-            output.append(f"- [ ] {criterion}")
+            output.append(f"- ⏹️ {criterion}")
         output.append("")
 
         # Testing requirements
@@ -661,7 +662,7 @@ class TaskOutputGenerator:
             if requirements:
                 output.append(f"- **{test_type.replace('_', ' ').title()}**")
                 for req in requirements:
-                    output.append(f"  - [ ] {req}")
+                    output.append(f"  - ⏹️ {req}")
                 output.append("")
 
         # Implementation notes
@@ -672,7 +673,7 @@ class TaskOutputGenerator:
         # Quality gates
         output.append("**Quality Gates:**")
         for gate in task.quality_gates:
-            output.append(f"- [ ] {gate}")
+            output.append(f"- ⏹️ {gate}")
         output.append("")
 
         return "\n".join(output)
@@ -718,18 +719,18 @@ class TaskOutputGenerator:
             output.append("")
             output.append("**Acceptance Criteria:**")
             for criterion in task.acceptance_criteria:
-                output.append(f"- [ ] {criterion}")
+                output.append(f"- ⏹️ {criterion}")
             output.append("")
             output.append("**Testing Requirements:**")
             for test_type, requirements in task.testing_requirements.items():
                 if requirements:
                     output.append(f"- **{test_type.replace('_', ' ').title()}**")
                     for req in requirements:
-                        output.append(f"  - [ ] {req}")
+                        output.append(f"  - ⏹️ {req}")
             output.append("")
             output.append("**Quality Gates:**")
             for gate in task.quality_gates:
-                output.append(f"- [ ] {gate}")
+                output.append(f"- ⏹️ {gate}")
             output.append("")
             output.append("---")
             output.append("")
@@ -753,9 +754,351 @@ class TaskOutputGenerator:
 
         return "\n".join(output)
 
+    def generate_solo_dev_task_list(self, tasks: List[GeneratedTask]) -> str:
+        """Generate a solo-developer friendly task list document."""
+        output = []
+
+        # Header
+        output.append("# Task List: Solo-Developer Optimized")
+        output.append("")
+        output.append(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        output.append(f"**Total Tasks:** {len(tasks)}")
+        output.append("")
+
+        # Overview
+        output.append("## Overview")
+        output.append(
+            "This task list is optimized for solo development with essential quality gates and testing requirements."
+        )
+        output.append("Each task focuses on practical implementation with manageable complexity.")
+        output.append("")
+
+        # Implementation phases
+        output.append("## Implementation Phases")
+        output.append("")
+
+        # Phase 1: Core Implementation
+        output.append("### Phase 1: Core Implementation")
+        output.append("")
+
+        for i, task in enumerate(tasks, 1):
+            output.append(f"#### Task {i}: {task.name}")
+            output.append("")
+            output.append(f"**Priority:** {task.priority}")
+            output.append(f"**Estimated Time:** {task.estimated_time}")
+            output.append(f"**Dependencies:** {', '.join(task.dependencies) if task.dependencies else 'None'}")
+            output.append("")
+            output.append("**Description:**")
+            output.append(task.description)
+            output.append("")
+            output.append("**Acceptance Criteria:**")
+            for criterion in task.acceptance_criteria:
+                output.append(f"- ⏹️ {criterion}")
+            output.append("")
+            output.append("**Testing Requirements:**")
+            # Simplified testing requirements for solo dev
+            if task.testing_requirements.get("unit_tests"):
+                output.append("- ⏹️ **Unit Tests** - Core functionality and error handling")
+            if task.testing_requirements.get("integration_tests"):
+                output.append("- ⏹️ **Integration Tests** - Component interactions and workflows")
+            if task.testing_requirements.get("security_tests"):
+                output.append("- ⏹️ **Security Tests** - Input validation and basic security checks")
+            output.append("")
+            output.append("**Implementation Notes:**")
+            # Simplified implementation notes
+            notes = []
+            if task.priority == "Critical":
+                notes.append("Focus on robust error handling and comprehensive testing")
+            if "performance" in task.name.lower():
+                notes.append("Include performance benchmarks and optimization considerations")
+            if "security" in task.name.lower():
+                notes.append("Pay special attention to input validation and security implications")
+            if not notes:
+                notes.append("Ensure code is well-documented and maintainable")
+            output.append("\n".join([f"- {note}" for note in notes]))
+            output.append("")
+            output.append("**Quality Gates:**")
+            # Simplified quality gates for solo dev
+            solo_gates = [
+                "Code Review - Self-review completed",
+                "Tests Passing - All tests pass with good coverage",
+                "Documentation Updated - Relevant docs updated",
+            ]
+            if task.priority == "Critical":
+                solo_gates.append("Performance Validated - Meets performance requirements")
+                solo_gates.append("Security Reviewed - Security implications considered")
+            for gate in solo_gates:
+                output.append(f"- ⏹️ {gate}")
+            output.append("")
+            output.append("---")
+            output.append("")
+
+        # Quality metrics
+        output.append("## Quality Standards")
+        output.append("")
+        output.append("- **Test Coverage:** Good coverage with focus on critical paths")
+        output.append("- **Performance:** Meets defined benchmarks")
+        output.append("- **Security:** Basic security requirements satisfied")
+        output.append("- **Documentation:** Clear and maintainable code")
+        output.append("")
+
+        # Risk mitigation
+        output.append("## Risk Mitigation")
+        output.append("")
+        output.append("- **Technical Risks:** Comprehensive testing and self-review")
+        output.append("- **Timeline Risks:** Phased approach with working increments")
+        output.append("- **Quality Risks:** Regular check-ins and documentation updates")
+        output.append("")
+
+        return "\n".join(output)
+
+    def generate_executable_task_list(self, tasks: List[GeneratedTask]) -> str:
+        """Generate executable tasks in the format expected by 003_process-task-list.md."""
+        output = []
+
+        # Header
+        output.append("# Task List: Executable Tasks")
+        output.append("")
+        output.append(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        output.append(f"**Total Tasks:** {len(tasks)}")
+        output.append("")
+
+        # Overview
+        output.append("## Overview")
+        output.append("This task list is formatted for execution with the 003_process-task-list.md workflow.")
+        output.append("Each task includes specific 'Do:' steps and 'Done when:' criteria for automated execution.")
+        output.append("")
+
+        # Tasks
+        for i, task in enumerate(tasks, 1):
+            output.append(f"### ⏳ T-{i} {task.name}")
+            output.append(f"- **Priority**: {task.priority}")
+            output.append(f"- **Time**: {task.estimated_time}")
+            output.append(f"- **Depends on**: {', '.join(task.dependencies) if task.dependencies else 'None'}")
+            output.append("")
+
+            # Do section - actionable steps
+            output.append("- **Do**:")
+            do_steps = self._generate_do_steps(task)
+            for step in do_steps:
+                output.append(f"{step}")
+            output.append("")
+
+            # Done when section - completion criteria
+            output.append("- **Done when**:")
+            done_criteria = self._generate_done_criteria(task)
+            for criterion in done_criteria:
+                output.append(f"- ⏹️ {criterion}")
+            output.append("")
+
+            # Auto-advance and pause settings
+            auto_advance = "no" if task.priority == "Critical" else "yes"
+            pause_after = "yes" if task.priority == "Critical" else "no"
+
+            output.append(f"- **Auto-Advance**: {auto_advance}")
+            output.append(f"- **🛑 Pause After**: {pause_after}")
+            output.append("")
+            output.append("---")
+            output.append("")
+
+        # Quality standards
+        output.append("## Quality Standards")
+        output.append("")
+        output.append("- **Test Coverage**: Good coverage with focus on critical paths")
+        output.append("- **Performance**: Meets defined benchmarks")
+        output.append("- **Security**: Basic security requirements satisfied")
+        output.append("- **Documentation**: Clear and maintainable code")
+        output.append("")
+
+        # Risk mitigation
+        output.append("## Risk Mitigation")
+        output.append("")
+        output.append("- **Technical Risks**: Comprehensive testing and self-review")
+        output.append("- **Timeline Risks**: Phased approach with working increments")
+        output.append("- **Quality Risks**: Regular check-ins and documentation updates")
+        output.append("")
+
+        return "\n".join(output)
+
+    def _generate_do_steps(self, task: GeneratedTask) -> List[str]:
+        """Generate actionable 'Do:' steps for a task."""
+        steps = []
+
+        # Base steps based on task type
+        if "performance" in task.name.lower():
+            steps.extend(
+                [
+                    "1. Set up performance measurement tools and benchmarks",
+                    "2. Run baseline performance tests on current workflow",
+                    "3. Identify performance bottlenecks and optimization opportunities",
+                    "4. Implement performance improvements",
+                    "5. Validate improvements with performance tests",
+                ]
+            )
+        elif "security" in task.name.lower():
+            steps.extend(
+                [
+                    "1. Review current security measures and identify gaps",
+                    "2. Implement security validation and testing",
+                    "3. Add input sanitization and validation",
+                    "4. Test security measures with vulnerability scenarios",
+                    "5. Document security improvements and procedures",
+                ]
+            )
+        elif "testing" in task.name.lower():
+            steps.extend(
+                [
+                    "1. Analyze current testing coverage and identify gaps",
+                    "2. Design comprehensive test scenarios",
+                    "3. Implement unit, integration, and system tests",
+                    "4. Set up automated test execution",
+                    "5. Validate test coverage and quality",
+                ]
+            )
+        elif "integration" in task.name.lower():
+            steps.extend(
+                [
+                    "1. Map existing system components and interfaces",
+                    "2. Design integration points and data flows",
+                    "3. Implement integration logic and error handling",
+                    "4. Test integration with real and mock components",
+                    "5. Validate end-to-end workflows",
+                ]
+            )
+        else:
+            # Generic implementation steps
+            steps.extend(
+                [
+                    "1. Analyze requirements and design implementation approach",
+                    "2. Implement core functionality with proper error handling",
+                    "3. Add comprehensive testing and validation",
+                    "4. Document implementation and usage procedures",
+                    "5. Validate all acceptance criteria are met",
+                ]
+            )
+
+        return steps
+
+    def _generate_done_criteria(self, task: GeneratedTask) -> List[str]:
+        """Generate 'Done when:' criteria for task completion validation."""
+        criteria = []
+
+        # Base criteria
+        criteria.extend(
+            [
+                "All 'Do:' steps completed successfully",
+                "Code is well-documented and maintainable",
+                "Tests pass with good coverage",
+            ]
+        )
+
+        # Task-specific criteria
+        if "performance" in task.name.lower():
+            criteria.extend(
+                [
+                    "Performance benchmarks are defined and measurable",
+                    "System meets specified performance thresholds",
+                    "Performance tests are implemented and passing",
+                ]
+            )
+        elif "security" in task.name.lower():
+            criteria.extend(
+                [
+                    "Security requirements are implemented",
+                    "Security tests are passing",
+                    "No critical security vulnerabilities detected",
+                ]
+            )
+        elif "testing" in task.name.lower():
+            criteria.extend(
+                [
+                    "Test coverage meets target requirements",
+                    "All test scenarios are implemented and passing",
+                    "Test automation is working correctly",
+                ]
+            )
+        elif "integration" in task.name.lower():
+            criteria.extend(
+                [
+                    "Integration points are working correctly",
+                    "End-to-end workflows are validated",
+                    "Error handling and recovery mechanisms tested",
+                ]
+            )
+        else:
+            # Generic criteria
+            criteria.extend(
+                [
+                    "Requirement is fully implemented",
+                    "All acceptance criteria are met",
+                    "Documentation is updated and complete",
+                ]
+            )
+
+        return criteria
+
+    def _detect_task_type(self, requirements: List[TaskRequirement]) -> str:
+        """Detect if this is a process improvement task or development task."""
+        # Keywords that indicate process improvement vs development
+        process_keywords = [
+            "process",
+            "workflow",
+            "optimization",
+            "improvement",
+            "upgrade",
+            "automation",
+            "efficiency",
+            "performance reporting",
+            "testing suite",
+            "canon",
+            "formalize",
+            "enhancement",
+            "code review process",
+        ]
+
+        dev_keywords = [
+            "implement",
+            "develop",
+            "build",
+            "create",
+            "code",
+            "feature",
+            "api",
+            "database",
+            "frontend",
+            "backend",
+            "algorithm",
+            "system",
+        ]
+
+        all_text = " ".join([f"{r.title} {r.description}" for r in requirements]).lower()
+
+        # Check for specific process improvement patterns
+        if any(keyword in all_text for keyword in ["code review process", "workflow", "process upgrade"]):
+            return "process_improvement"
+
+        process_score = sum(1 for keyword in process_keywords if keyword in all_text)
+        dev_score = sum(1 for keyword in dev_keywords if keyword in all_text)
+
+        if process_score > dev_score:
+            return "process_improvement"
+        else:
+            return "development"
+
 
 def main():
     """Main entry point for the task generation automation."""
+    # FORCE PRE-WORKFLOW ENFORCEMENT
+    print("🚀 ENFORCING PRE-WORKFLOW REQUIREMENTS...")
+    try:
+        subprocess.run(
+            [sys.executable, "scripts/pre_workflow_hook.py", "task generation automation", "implementer", "unit"],
+            check=True,
+        )
+    except subprocess.CalledProcessError:
+        print("❌ Pre-workflow enforcement failed - cannot proceed")
+        sys.exit(1)
+
     parser = argparse.ArgumentParser(description="Automate task generation from PRDs and backlog items")
     parser.add_argument("--prd", help="Path to PRD file")
     parser.add_argument("--backlog-id", help="Backlog item ID (e.g., B-050)")
@@ -784,6 +1127,39 @@ def main():
                 task = task_generator.generate_task(requirement)
                 tasks.append(task)
 
+            # Sort tasks using backlog-style prioritization logic
+            def calculate_task_priority(task):
+                """Calculate priority score using backlog-style logic."""
+                # Base priority mapping (from backlog lanes)
+                priority_scores = {
+                    "Critical": 8.0,  # P0 equivalent
+                    "High": 6.0,  # P1 equivalent
+                    "Medium": 4.0,  # P2 equivalent
+                    "Low": 2.0,  # Below P2
+                }
+
+                base_score = priority_scores.get(task.priority, 3.0)
+
+                # Adjust based on task characteristics (like backlog scoring)
+                adjustments = 0
+
+                # Boost for performance/security/critical tasks
+                if any(keyword in task.name.lower() for keyword in ["performance", "security", "critical", "safety"]):
+                    adjustments += 1.0
+
+                # Boost for testing/validation tasks
+                if any(keyword in task.name.lower() for keyword in ["test", "validate", "verify", "check"]):
+                    adjustments += 0.5
+
+                # Reduce for documentation/cleanup tasks
+                if any(keyword in task.name.lower() for keyword in ["document", "cleanup", "archive"]):
+                    adjustments -= 0.5
+
+                return base_score + adjustments
+
+            # Sort by calculated priority (highest first)
+            tasks.sort(key=calculate_task_priority, reverse=True)
+
         elif args.backlog_id:
             # Parse backlog item
             backlog_parser = BacklogParser()
@@ -804,15 +1180,67 @@ def main():
             print("Batch processing not yet implemented")
             sys.exit(1)
 
-        # Generate output
+        # Detect task type and generate appropriate output
         output_generator = TaskOutputGenerator()
+
+        # Detect if this is a process improvement task
+        if args.prd:
+            prd_parser = PRDParser(args.prd)
+            requirements = prd_parser.parse()
+        elif args.backlog_id:
+            # For backlog items, try to get the actual title from the backlog
+            try:
+                import re
+                from pathlib import Path
+
+                backlog_content = Path("000_core/000_backlog.md").read_text()
+
+                # Look for the backlog item in the table format
+                table_pattern = rf"\| {args.backlog_id} \| ([^|]+) \|"
+                table_match = re.search(table_pattern, backlog_content)
+
+                if table_match:
+                    title = table_match.group(1).strip()
+                else:
+                    # Look for the backlog item in the P0/P1/P2 format
+                    p_pattern = rf"- {args.backlog_id} — ([^\n]+)"
+                    p_match = re.search(p_pattern, backlog_content)
+                    title = p_match.group(1).strip() if p_match else f"Backlog Item {args.backlog_id}"
+
+                requirements = [
+                    TaskRequirement(
+                        id=args.backlog_id,
+                        title=title,
+                        description=title,  # Use title as description for better detection
+                        acceptance_criteria=[],
+                        priority="Medium",
+                        estimated_time="2-4 hours",
+                        dependencies=[],
+                    )
+                ]
+            except Exception:
+                # Fallback to generic description
+                requirements = [
+                    TaskRequirement(
+                        id=args.backlog_id,
+                        title=f"Backlog Item {args.backlog_id}",
+                        description="Process improvement task",
+                        acceptance_criteria=[],
+                        priority="Medium",
+                        estimated_time="2-4 hours",
+                        dependencies=[],
+                    )
+                ]
+        else:
+            requirements = []
 
         if args.output == "markdown":
             output = output_generator.generate_markdown(tasks[0])
         elif args.output == "json":
             output = output_generator.generate_json(tasks[0])
         else:  # task-list
-            output = output_generator.generate_task_list(tasks)
+            # Always use executable format for 003_process-task-list.md compatibility
+            output = output_generator.generate_executable_task_list(tasks)
 
         # Handle output
         if args.preview:

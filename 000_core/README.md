@@ -47,6 +47,24 @@ software using AI agents (Cursor Native AI + Specialized Agents). It provides:
 
 ## 🚀 **Quick Start**
 
+### **Single Doorway System (Recommended)**
+```bash
+# Generate a new backlog item and start the full workflow
+python3.12 scripts/single_doorway.py generate "I want to work on fixing a feature"
+
+# Continue an interrupted workflow
+python3.12 scripts/single_doorway.py continue B-XXX
+
+# Archive completed work
+python3.12 scripts/single_doorway.py archive B-XXX
+
+# Open files for a backlog item
+python3.12 scripts/single_doorway.py open B-XXX
+```
+
+**Note**: This system requires Python 3.12. If you're using Python 3.9, the system will automatically detect and use Python 3.12 if available via Homebrew.
+
+### **Traditional Setup**
 ```bash
 # Create and activate virtual environment
 python3 -m venv venv
@@ -69,9 +87,10 @@ pip install -r dspy-rag-system/requirements.txt
 - **[../400_guides/400_documentation-retrieval-guide.md](../400_guides/400_documentation-retrieval-guide.md)** - Documentation search/index + validator quick start
 
 ### **Development Workflow**
-- **[001_create-prd.md](001_create-prd.md)** - Create Product Requirements Documents
-- **[002_generate-tasks.md](002_generate-tasks.md)** - Generate executable tasks
-- **[003_process-task-list.md](003_process-task-list.md)** - Execute tasks with AI
+- **[Single Doorway System](../scripts/single_doorway.py)** - Automated workflow from backlog → PRD → tasks → execution → archive
+- **[001_create-prd.md](001_create-prd.md)** - Create Product Requirements Documents (manual)
+- **[002_generate-tasks.md](002_generate-tasks.md)** - Generate executable tasks (manual)
+- **[003_process-task-list.md](003_process-task-list.md)** - Execute tasks with AI (manual)
 - **[004_development-roadmap.md](004_development-roadmap.md)** - Strategic roadmap and sprint planning
 - **[scripts/enhanced_backlog_tracking.py](../scripts/enhanced_backlog_tracking.py)** - Enhanced status tracking with timestamps
 
@@ -94,6 +113,7 @@ pip install -r dspy-rag-system/requirements.txt
 - **Metadata Collection**: Comprehensive analytics and state management
 
 ### **Automation & Workflows**
+- **Single Doorway System**: Automated workflow from backlog → PRD → tasks → execution → archive
 - **n8n Integration**: Automated backlog management
 - **Mission Dashboard**: Real-time task monitoring
 - **Error Recovery**: Intelligent error handling and retry logic
@@ -108,6 +128,22 @@ pip install -r dspy-rag-system/requirements.txt
 
 ## 🔧 **Key Commands**
 
+### **Single Doorway System**
+```bash
+# Generate new backlog item and start workflow
+python3 scripts/single_doorway.py generate "description"
+
+# Continue interrupted workflow
+python3 scripts/single_doorway.py continue B-XXX
+
+# Archive completed work
+python3 scripts/single_doorway.py archive B-XXX
+
+# Open files for backlog item
+python3 scripts/single_doorway.py open B-XXX
+```
+
+### **Traditional Commands**
 ```bash
 # List all tasks
 python3 ../scripts/process_tasks.py list

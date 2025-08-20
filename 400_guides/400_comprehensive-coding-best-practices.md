@@ -75,6 +75,9 @@ python src/monitoring/production_monitor.py &
 python test_cursor_context_engineering.py
 
 # Core execution engine commands
+python3.12 scripts/single_doorway.py generate "description"  # Start automated workflow
+python3.12 scripts/single_doorway.py continue B-XXX  # Continue interrupted workflow
+python3.12 scripts/single_doorway.py archive B-XXX  # Archive completed work
 python scripts/process_tasks.py --status  # Check task status
 python scripts/process_tasks.py --execute-all  # Execute all available tasks
 python scripts/error_handler.py --test  # Test error handling
@@ -184,7 +187,7 @@ npm install -g eslint@^8.0.0        # JavaScript/TypeScript linting
 
 ```bash
 # Minimum versions
-Python: >= 3.11
+Python: >= 3.12
 Node.js: >= 18.0.0
 Git: >= 2.30.0
 
@@ -203,9 +206,9 @@ Git: >= 2.30.0
 echo "🔧 Installing Conflict Detection Tools..."
 
 # Check Python version
-python_version=$(python3 --version 2>&1 | grep -oE '[0-9]+\.[0-9]+')
-if [[ $(echo "$python_version >= 3.11" | bc -l) -eq 0 ]]; then
-    echo "❌ Python 3.11+ required, found $python_version"
+python_version=$(python3.12 --version 2>&1 | grep -oE '[0-9]+\.[0-9]+')
+if [[ $(echo "$python_version >= 3.12" | bc -l) -eq 0 ]]; then
+    echo "❌ Python 3.12+ required, found $python_version"
     exit 1
 fi
 
@@ -260,6 +263,7 @@ echo "✅ Installation complete!"
 
 | Script | Location | Purpose | Key Features |
 |--------|----------|---------|--------------|
+| **Single Doorway System** | `scripts/single_doorway.py` | Core CLI for automated workflow | Backlog → PRD → tasks → execution → archive automation |
 | **Task Execution Engine** | `scripts/process_tasks.py` | Core CLI for backlog execution | Automated task processing, state management, error handling |
 | **Error Handler** | `scripts/error_handler.py` | Comprehensive error handling | Retry logic, graceful degradation, error reporting |
 | **State Manager** | `scripts/state_manager.py` | Task execution state tracking | Progress tracking, execution history, metadata management |
@@ -268,6 +272,7 @@ echo "✅ Installation complete!"
 
 #### **Core Execution & Quality Assurance**
 
+- **Single Doorway System**: `scripts/single_doorway.py` - Automated workflow from backlog → PRD → tasks → execution → archive
 - **Task Execution**: `scripts/process_tasks.py` - Core CLI for backlog execution
 - **Error Handling**: `scripts/error_handler.py` - Comprehensive error recovery
 - **State Management**: `scripts/state_manager.py` - Execution state tracking
@@ -344,7 +349,38 @@ The remaining markdown fix scripts provide functionality that VS Code doesn't ha
 
 ## 🔧 Core Execution Engine Implementation
 
-### **1. Task Execution Engine (`scripts/process_tasks.py`)**
+### **1. Single Doorway System (`scripts/single_doorway.py`)**
+
+The core CLI script that serves as the automated workflow orchestrator for the entire development process.
+
+### **Key Features**
+
+- **Automated Workflow**: Complete automation from backlog → PRD → tasks → execution → archive
+- **Single Command Interface**: One command to start the entire development process
+- **State Management**: Track workflow execution status and progress
+- **Error Handling**: Comprehensive error recovery with retry logic
+- **Archive Management**: Automated archiving of completed work
+- **Cross-Platform Support**: Works on macOS, Linux, and Windows
+
+### **Usage Examples**
+
+```bash
+# Generate a new backlog item and start the full workflow
+python3.12 scripts/single_doorway.py generate "I want to work on fixing a feature"
+
+# Continue an interrupted workflow
+python3.12 scripts/single_doorway.py continue B-XXX
+
+# Archive completed work
+python3.12 scripts/single_doorway.py archive B-XXX
+
+# Open files for a backlog item
+python3.12 scripts/single_doorway.py open B-XXX
+```
+
+**Note**: This system requires Python 3.12. The system will automatically detect and use `python3.12` if available via Homebrew.
+
+## **2. Task Execution Engine (`scripts/process_tasks.py`)**
 
 The core CLI script that serves as the execution engine for all backlog items in the AI development ecosystem.
 
@@ -562,7 +598,7 @@ python scripts/doc_coherence_validator.py --check-all
 
 ```dockerfile
 # Dockerfile for conflict detection environment
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Install Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
@@ -594,10 +630,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.12
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Set up Node.js 18
         uses: actions/setup-node@v3
@@ -1135,7 +1171,7 @@ ruff check dspy-rag-system/tests/ --select F821
 ```json
 // pyrightconfig.json (root)
 {
-  "pythonVersion": "3.9",
+  "pythonVersion": "3.12",
   "typeCheckingMode": "basic",
   "extraPaths": ["dspy-rag-system/src"],
   "exclude": ["**/.venv/**", "**/__pycache__/**", "**/.pytest_cache/**"]
@@ -1782,7 +1818,7 @@ cd dspy-rag-system
 | **Memory Context** | Validate memory scaffolding | Memory updates, context validation, hierarchy integrity | `python scripts/update_cursor_memory.py` | Memory context validation |
 | **Repository Maintenance** | Validate repository health | Automated maintenance, file analysis, backlog parsing | `python scripts/repo_maintenance.py` | Repository health validation |
 | **Code Review** | Ensure code quality | Standards compliance, logic correctness, conflict awareness | Self-review + conflict detection | Manual + automated |
-| **Testing** | Verify functionality | Unit tests, integration tests, conflict tests | `./dspy-rag-system/run_comprehensive_tests.sh` | Test environment validation |
+| **Testing** | Verify functionality | Unit tests, integration tests, conflict tests | `python -m pytest -v` (preferred) · `./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke` (shim) | Test environment validation |
 | **Documentation** | Maintain clarity | Documentation completeness, conflict documentation | Manual review + conflict docs | Conflict resolution docs |
 | **Security** | Prevent vulnerabilities | Security validation, conflict-aware security | `python dspy-rag-system/src/monitoring/production_monitor.py` | Conflict security analysis |
 | **Performance** | Ensure efficiency | Performance checks, conflict performance impact | Mission dashboard monitoring | Conflict performance analysis |
@@ -2186,7 +2222,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Quick Conflict Check
         run: python scripts/quick_conflict_check.py
@@ -2363,14 +2399,14 @@ Files that should be automatically synchronized with the database should include
 
 ```bash
 # Check database synchronization status
-python3 scripts/database_sync_check.py
+python3.12 scripts/database_sync_check.py
 
 # Update all files with DATABASE_SYNC tags
-python3 scripts/database_sync_check.py --auto-update
+python3.12 scripts/database_sync_check.py --auto-update
 
 # Update memory context only
-python3 scripts/update_cursor_memory.py
+python3.12 scripts/update_cursor_memory.py
 
 # Check database consistency (dspy-rag-system)
-cd dspy-rag-system && python3 scripts/database_maintenance.py
+cd dspy-rag-system && python3.12 scripts/database_maintenance.py
 ```

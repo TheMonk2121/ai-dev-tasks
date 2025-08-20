@@ -381,8 +381,12 @@ python3 add_document.py path/to/file.txt
 python3 test_csv_functionality.py
 
 # Run tests
-./run_tests.sh all          # Run all tests
-./run_tests.sh unit         # Run unit tests only
-./run_tests.sh integration  # Run integration tests only
-./run_tests.sh coverage     # Run with coverage report
+python -m pytest -v                      # Full run (preferred)
+python -m pytest -v -m smoke            # Quick smoke run
+python -m pytest -v -m 'tier1 or tier2' # Critical tiers
+
+# Also supported via shim (backward compatible):
+./run_tests.sh --tiers 1 --kinds smoke
+./run_tests.sh unit
+./run_tests.sh integration
 ```

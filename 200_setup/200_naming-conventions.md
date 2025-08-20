@@ -448,6 +448,32 @@ File renames and structural changes are tracked via Git issues rather than stati
   - Keep original filename for traceability
   - Add completion metadata to preserve insights
 
+### Doorway Artifacts (Active vs Archive)
+
+The single doorway system creates standardized artifacts with deterministic naming:
+
+#### **Active Artifacts** (in `000_core/`)
+- **PRDs**: `PRD-{BacklogID}-{Slug}.md`
+  - Example: `PRD-B-108-Single-Doorway-System.md`
+- **Task Lists**: `TASKS-{BacklogID}-{Slug}.md`
+  - Example: `TASKS-B-108-Single-Doorway-System.md`
+- **Execution Logs**: `RUN-{BacklogID}-{Slug}.md`
+  - Example: `RUN-B-108-Single-Doorway-System.md`
+
+#### **Versioning for Conflicts**
+- If same-day files exist, append `-v2`, `-v3`, etc.
+- Example: `PRD-B-108-Single-Doorway-System-v2.md`
+
+#### **Archive Structure** (in `600_archives/`)
+- **PRDs**: `600_archives/prds/PRD-{BacklogID}-{Slug}.md`
+- **Task Lists**: `600_archives/tasks/TASKS-{BacklogID}-{Slug}.md`
+- **Execution Logs**: `600_archives/runs/RUN-{BacklogID}-{Slug}_{YYYY-MM-DD}.md`
+
+#### **Archive Naming Rules**
+- PRDs and Tasks: Keep original filename
+- RUN files: Add date suffix for uniqueness
+- Example: `RUN-B-108-Single-Doorway-System_2025-08-19.md`
+
 ### PRD Lifecycle Stages
 
 1. **Active Development** (`000_core/`)

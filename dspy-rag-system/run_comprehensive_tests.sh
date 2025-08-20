@@ -55,23 +55,29 @@ check_dependencies() {
     print_status "success" "Dependencies check complete"
 }
 
-# Function to run comprehensive test suite
+# SHIM: Run comprehensive suite via unified root pytest
 run_comprehensive_suite() {
     local options="$1"
 
-    print_status "info" "Running comprehensive test suite..."
+    print_status "info" "Running comprehensive test suite (shim to root pytest)..."
 
-    # Change to the correct directory
-    cd "$(dirname "$0")" || exit 1
+    # Determine repo root (parent of this script's dir)
+    local SCRIPT_DIR
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+    local REPO_ROOT
+    REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-    # Run the comprehensive test suite
-    if python3 tests/comprehensive_test_suite.py "$options"; then
-        print_status "success" "Comprehensive test suite completed successfully"
-        return 0
-    else
-        print_status "error" "Comprehensive test suite failed"
-        return 1
-    fi
+    cd "$REPO_ROOT" || exit 1
+
+    # Map simple categories to marker expressions when passed by callers
+    case "$options" in
+        *"unit"*) pytest -v -m unit; return $? ;;
+        *"integration"*) pytest -v -m integration; return $? ;;
+        *"e2e"*) pytest -v -m e2e; return $? ;;
+        *"performance"*) pytest -v -m performance; return $? ;;
+        *"security"*) pytest -v -m security; return $? ;;
+        *) pytest -v; return $? ;;
+    esac
 }
 
 # Function to run specific test categories

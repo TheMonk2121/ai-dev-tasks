@@ -539,8 +539,8 @@ class TestTaskOutputGenerator:
         assert "**Task Type:** general" in markdown_output
         assert "**Complexity:** Medium" in markdown_output
         assert "Implement a test feature" in markdown_output
-        assert "- [ ] Feature works" in markdown_output
-        assert "- [ ] Tests pass" in markdown_output
+        assert "- ⏹️ Feature works" in markdown_output
+        assert "- ⏹️ Tests pass" in markdown_output
         assert "**Testing Requirements:**" in markdown_output
         assert "**Unit Tests**" in markdown_output
         assert "**Implementation Notes:**" in markdown_output

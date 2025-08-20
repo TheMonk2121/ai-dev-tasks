@@ -43,11 +43,15 @@
 
 ### Tier 1 — Critical (never break without a plan)
 
-1. `scripts/process_tasks.py` — Task Execution Engine (orchestrator)
+1. `scripts/single_doorway.py` — Single Doorway System (orchestrator)
+
+- Core CLI for automated workflow from backlog → PRD → tasks → execution → archive; handles orchestration, error handling, and state transitions.
+
+2. `scripts/process_tasks.py` — Task Execution Engine (orchestrator)
 
 - Core CLI to execute backlog items end‑to‑end; handles orchestration, error handling, and state transitions.
 
-2. `scripts/state_manager.py` — Execution/State Persistence
+3. `scripts/state_manager.py` — Execution/State Persistence
 
 - Central state tracking across task boundaries; execution history, retries, progress, and metadata.
 
@@ -80,6 +84,9 @@
 - Anthropic-style reflection checkpoints; bundle sufficiency evaluation; role-specific validation; bundle integrity verification.
 
 ### Tier 2 — High (production infrastructure)
+
+- `scripts/single_doorway.py` — Single Doorway System (orchestrator)
+  - Core CLI for automated workflow from backlog → PRD → tasks → execution → archive; handles orchestration, error handling, and state transitions.
 
 - `scripts/doc_coherence_validator.py` — Documentation Quality & Coherence Validation
   - Primary validator for documentation integrity; cross-references, naming conventions, markdown compliance.
@@ -128,7 +135,7 @@
 
 ## 🧭 Criteria for Criticality
 
-- Orchestration impact: Breaks workflow if unavailable (`process_tasks.py`)
+- Orchestration impact: Breaks workflow if unavailable (`single_doorway.py`, `process_tasks.py`)
 
 - State integrity: Affects persistence or recovery (`state_manager.py`)
 
@@ -175,8 +182,9 @@
 
 3) Validation:
 
-- Run `./dspy-rag-system/run_tests.sh` (where applicable)
-- Run `python3 scripts/doc_coherence_validator.py` for cross‑references
+- Run tests: `python -m pytest -v -m 'tier1 or tier2'` (preferred)
+- Also supported (shim): `./dspy-rag-system/run_tests.sh --tiers 1 --kinds unit`
+- Run `python3.12 scripts/doc_coherence_validator.py` for cross‑references
 
 ## 🛡️ Code Quality Standards for Critical Files
 

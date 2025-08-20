@@ -50,46 +50,145 @@ run_tests() {
     fi
 }
 
-# Check for marker-based arguments (new interface)
+###############################################
+# SHIM: Translate marker flags to root pytest #
+###############################################
 if [[ "$*" == *"--tiers"* ]] || [[ "$*" == *"--kinds"* ]] || [[ "$*" == *"--markers"* ]] || [[ "$*" == *"--show-suggestions"* ]] || [[ "$*" == *"--strict-markers"* ]]; then
-    echo "🚀 Using marker-based test selection..."
+    echo "🚀 Using marker-based test selection (shim to root pytest)..."
     echo "----------------------------------------"
 
-    # Pass through to comprehensive test suite
-    python3 tests/comprehensive_test_suite.py "$@"
-    exit_code=$?
+    # Handle suggestions only
+    if [[ "$*" == *"--show-suggestions"* ]]; then
+        echo "Examples (root pytest):"
+        echo "  python -m pytest -v -m smoke"
+        echo "  python -m pytest -v -m unit"
+        echo "  python -m pytest -v -m 'tier1 and not e2e'"
+        echo "  python -m pytest -v -m '(tier1 or tier2) and integration'"
+        exit 0
+    fi
 
-    echo ""
-    echo "✅ Marker-based execution completed (exit code: $exit_code)"
-    exit $exit_code
+    # Parse flags into a pytest -m expression
+    TIERS_EXPR=""
+    KINDS_EXPR=""
+    CUSTOM_EXPR=""
+
+    # Simple parser for --tiers/--kinds/--markers
+    ARGS=("$@")
+    i=0
+    while [[ $i -lt ${#ARGS[@]} ]]; do
+        case "${ARGS[$i]}" in
+            --tiers)
+                i=$((i+1))
+                TIERS_LIST=()
+                while [[ $i -lt ${#ARGS[@]} ]] && [[ "${ARGS[$i]}" != --* ]]; do
+                    t="${ARGS[$i]}"
+                    # Map numeric tiers to marker names (1 -> tier1)
+                    if [[ "$t" =~ ^[0-9]+$ ]]; then
+                        TIERS_LIST+=("tier${t}")
+                    else
+                        TIERS_LIST+=("${t}")
+                    fi
+                    i=$((i+1))
+                done
+                i=$((i-1))
+                if [[ ${#TIERS_LIST[@]} -gt 0 ]]; then
+                    TIERS_EXPR="("$(IFS=' or '; echo "${TIERS_LIST[*]}")")"
+                fi
+                ;;
+            --kinds)
+                i=$((i+1))
+                KINDS_LIST=()
+                while [[ $i -lt ${#ARGS[@]} ]] && [[ "${ARGS[$i]}" != --* ]]; do
+                    KINDS_LIST+=("${ARGS[$i]}")
+                    i=$((i+1))
+                done
+                i=$((i-1))
+                if [[ ${#KINDS_LIST[@]} -gt 0 ]]; then
+                    KINDS_EXPR="("$(IFS=' or '; echo "${KINDS_LIST[*]}")")"
+                fi
+                ;;
+            --markers)
+                i=$((i+1))
+                if [[ $i -lt ${#ARGS[@]} ]]; then
+                    CUSTOM_EXPR="${ARGS[$i]}"
+                fi
+                ;;
+        esac
+        i=$((i+1))
+    done
+
+    # Combine expressions
+    EXPR_PARTS=()
+    [[ -n "$TIERS_EXPR" ]] && EXPR_PARTS+=("$TIERS_EXPR")
+    [[ -n "$KINDS_EXPR" ]] && EXPR_PARTS+=("$KINDS_EXPR")
+    [[ -n "$CUSTOM_EXPR" ]] && EXPR_PARTS+=("$CUSTOM_EXPR")
+
+    if [[ ${#EXPR_PARTS[@]} -gt 0 ]]; then
+        MARKERS_EXPR=$(IFS=' and '; echo "${EXPR_PARTS[*]}")
+    else
+        MARKERS_EXPR=""
+    fi
+
+    # Determine repo root (parent of this script's dir)
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+    REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+    echo "Root: $REPO_ROOT"
+    echo "Markers: ${MARKERS_EXPR:-<none>}"
+
+    cd "$REPO_ROOT" || exit 1
+    if [[ -n "$MARKERS_EXPR" ]]; then
+        python3 -m pytest -v -m "$MARKERS_EXPR"
+    else
+        python3 -m pytest -v
+    fi
+    exit $?
 fi
 
 # Legacy argument parsing (preserved for backward compatibility)
 case "${1:-all}" in
     "all")
-        echo "Running all tests (modern mode)..."
-        run_tests "../tests/" "-v"
+        echo "Running all tests (unified root pytest)..."
+        SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+        REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+        cd "$REPO_ROOT" || exit 1
+        python3 -m pytest -v
         ;;
     "unit")
-        echo "Running unit tests only (modern mode)..."
-        run_tests "../tests/" "-v -m unit"
+        echo "Running unit tests only (unified root pytest)..."
+        SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+        REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+        cd "$REPO_ROOT" || exit 1
+        python3 -m pytest -v -m unit
         ;;
     "integration")
-        echo "Running integration tests only (modern mode)..."
-        run_tests "../tests/" "-v -m integration"
+        echo "Running integration tests only (unified root pytest)..."
+        SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+        REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+        cd "$REPO_ROOT" || exit 1
+        python3 -m pytest -v -m integration
         ;;
     "enhanced")
-        echo "Running enhanced RAG system tests (modern mode)..."
-        run_tests "../tests/" "-v -m tier2"
+        echo "Running enhanced RAG system tests (unified root pytest)..."
+        SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+        REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+        cd "$REPO_ROOT" || exit 1
+        python3 -m pytest -v -m tier2
         ;;
     "coverage")
-        echo "Running tests with coverage (modern mode)..."
-        run_tests "../tests/" "-v --cov=src --cov-report=html"
+        echo "Running tests with coverage (unified root pytest)..."
+        SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+        REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+        cd "$REPO_ROOT" || exit 1
+        python3 -m pytest -v --cov=. --cov-report=html
         echo "📊 Coverage report generated in htmlcov/"
         ;;
     "quick")
-        echo "Running quick tests (modern mode)..."
-        run_tests "../tests/" "-v -m smoke"
+        echo "Running quick tests (unified root pytest)..."
+        SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+        REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+        cd "$REPO_ROOT" || exit 1
+        python3 -m pytest -v -m smoke
         ;;
     *)
         echo "Usage: $0 [all|unit|integration|enhanced|coverage|quick]"

@@ -23,6 +23,18 @@ select = ["E", "F", "I"]
 ignore = ["E501"]        # Line too long - handled by black
 
 [tool.pytest.ini_options]
-# Keep your existing addopts; using -q here as a safe default:
-addopts = "-q"
-testpaths = ["dspy-rag-system/tests"]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "e2e: End-to-end tests",
+    "smoke: Smoke tests",
+    "tier1: Tier 1 critical tests",
+    "tier2: Tier 2 high priority tests",
+    "tier3: Tier 3 supporting tests",
+    "slow: Slow running tests",
+    "fast: Fast running tests",
+]
+testpaths = ["tests", "dspy-rag-system/tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

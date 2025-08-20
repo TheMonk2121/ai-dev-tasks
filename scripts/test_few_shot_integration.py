@@ -58,16 +58,16 @@ def test_doc_validator_integration():
     print("\n🧪 Testing Documentation Validator Integration...")
 
     try:
-        from doc_coherence_validator import OptimizedDocCoherenceValidator
+        from doc_coherence_validator import DocCoherenceValidator
 
         # Test with few-shot enabled
-        validator = OptimizedDocCoherenceValidator(dry_run=True, only_changed=True, enable_few_shot=True)
+        validator = DocCoherenceValidator(dry_run=True, only_changed=True, enable_few_shot=True)
         # Verify the validator has the expected attributes
         assert hasattr(validator, "enable_few_shot"), "Validator should have few-shot attribute"
         print("✅ Documentation validator with few-shot integration initialized")
 
         # Test with few-shot disabled
-        validator_no_fs = OptimizedDocCoherenceValidator(dry_run=True, only_changed=True, enable_few_shot=False)
+        validator_no_fs = DocCoherenceValidator(dry_run=True, only_changed=True, enable_few_shot=False)
         # Verify the validator has the expected attributes
         assert hasattr(validator_no_fs, "enable_few_shot"), "Validator should have few-shot attribute"
         print("✅ Documentation validator without few-shot integration initialized")

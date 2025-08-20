@@ -85,7 +85,7 @@ curl http://localhost:5000/health
 make run-local
 
 # Validate configuration
-python3 scripts/validate_config.py
+python3.12 scripts/validate_config.py
 ```
 
 ## ✨ The Core Idea

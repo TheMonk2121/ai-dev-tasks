@@ -63,6 +63,22 @@ class ScriptBenchmarker:
                 "command": [python_cmd, "scripts/process_tasks.py", "status"],
                 "description": "Task execution engine",
             },
+            "backlog_intake": {
+                "command": [python_cmd, "scripts/backlog_intake.py", "Test Performance Workflow"],
+                "description": "Backlog item intake automation",
+            },
+            "prd_generator": {
+                "command": [python_cmd, "scripts/prd_generator.py", "B-089"],
+                "description": "PRD generation automation",
+            },
+            "task_generator": {
+                "command": [python_cmd, "scripts/task_generator.py", "B-089"],
+                "description": "Task generation automation",
+            },
+            "single_doorway": {
+                "command": [python_cmd, "scripts/single_doorway.py", "generate", "Test Performance Workflow"],
+                "description": "Complete workflow automation (backlog → PRD → tasks)",
+            },
             "doc_coherence_validator": {
                 "command": [
                     python_cmd,

@@ -121,8 +121,8 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - **Go**: `cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project status"`
 
 ### **Testing & Development**
-- Start tests: `./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke` (new marker-based approach)
-- Legacy tests: `./dspy-rag-system/run_tests.sh all` (legacy mode - avoid)
+- Preferred: `python -m pytest -v -m smoke` (unified root test suite)
+- Also supported (shim): `./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke`
 
 ### **System Management**
 - Start dashboard: `./dspy-rag-system/start_mission_dashboard.sh`
@@ -154,8 +154,9 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - ❌ Direct `src.utils` imports in tests
 
 ### **Test Execution:**
-- ✅ **New**: `./run_tests.sh --tiers 1 --kinds smoke` (marker-based)
-- ❌ **Legacy**: `./run_tests.sh all` (file-based)
+- ✅ Preferred: `python -m pytest -v -m 'tier1 or tier2'`
+- ✅ Quick smoke: `python -m pytest -v -m smoke`
+- ✅ Full run: `python -m pytest -v`
 
 <!-- ANCHOR_KEY: commands -->
 <!-- ANCHOR_PRIORITY: 25 -->
@@ -269,16 +270,17 @@ without requiring the AI to read multiple files.
 
 ## 📋 Current Project State
 
-### **Active Development Focus**-**Current Sprint**: Align with `000_core/000_backlog.md` (see Current Priorities)
-
+### **Active Development Focus**
+- **✅ COMPLETED**: Single Doorway System - Automated workflow from backlog → PRD → tasks → execution → archive
+- **Current Sprint**: Align with `000_core/000_backlog.md` (see Current Priorities)
 - **Next Priorities**: Follow `000_core/000_backlog.md` ordering and scores
-
-- **Validator**: Use `scripts/doc_coherence_validator.py` (or pre-commit hook) after doc changes
+- **Validator**: Use `python3.12 scripts/doc_coherence_validator.py` (or pre-commit hook) after doc changes
 
 ### **System Architecture**
 
 ```text
 AI Development Ecosystem
+├── Single Doorway System (Automated Workflow Orchestrator)
 ├── Planning Layer (PRD → Tasks → Execution)
 ├── AI Execution Layer (Cursor Native AI + Specialized Agents)
 ├── Core Systems (DSPy RAG + n8n + Dashboard)
@@ -306,6 +308,14 @@ AI Development Ecosystem
 
 **Quick Workflow Overview:**
 
+**🚀 Single Doorway System (Recommended):**
+```bash
+python3.12 scripts/single_doorway.py generate "description"  # Complete workflow
+python3.12 scripts/single_doorway.py continue B-XXX         # Resume workflow
+python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed work
+```
+
+**Traditional Manual Workflow:**
 1. **Backlog Selection** → Pick top scored item from `000_core/000_backlog.md`
 2. **PRD Creation** → Use `000_core/001_create-prd.md` (skip for items < 5 pts AND score≥3.0)
 3. **Task Generation** → Use `000_core/002_generate-tasks.md` workflow

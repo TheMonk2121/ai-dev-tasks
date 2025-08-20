@@ -320,7 +320,7 @@ def validate_backlog(path: str = "000_core/000_backlog.md") -> Tuple[int, str, d
         return ERROR, f"ERROR: {e}", {"error": "EXCEPTION", "message": str(e)}
 
 
-class OptimizedDocCoherenceValidator:
+class DocCoherenceValidator:
     def __init__(
         self,
         dry_run: bool = True,
@@ -906,7 +906,7 @@ def main():
         sys.exit(code)
 
     # Handle regular documentation validation
-    validator = OptimizedDocCoherenceValidator(
+    validator = DocCoherenceValidator(
         dry_run=args.dry_run,
         only_changed=args.only_changed,
         max_workers=args.workers,
