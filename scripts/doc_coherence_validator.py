@@ -653,7 +653,8 @@ class DocCoherenceValidator:
                     fixed_trailing += 1
 
             # Heading levels (with optional auto-fix for skipped levels)
-            level = self._check_headings(trimmed)
+            # Skip heading validation inside code blocks
+            level = self._check_headings(trimmed) if not in_code_block else None
             effective_level = level
             if level is not None and last_heading_level is not None and level > last_heading_level + 1:
                 if self.safe_fix:
@@ -702,6 +703,7 @@ class DocCoherenceValidator:
         for idx in range(1, len(heading_levels)):
             prev_level = heading_levels[idx - 1][1]
             curr_level = heading_levels[idx][1]
+            # Only flag if we skip more than one level
             if curr_level > prev_level + 1:
                 errors.append(f"Line {heading_levels[idx][0]}: Heading level skipped")
 
