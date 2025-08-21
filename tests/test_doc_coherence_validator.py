@@ -351,7 +351,7 @@ This is a valid README file.
 class TestDocCoherenceValidatorIntegration:
     """Integration tests for the validation system."""
 
-    def setUp(self):
+    def setup_method(self):
         """Set up integration test environment."""
         self.test_dir = tempfile.mkdtemp()
         self.original_cwd = os.getcwd()
@@ -360,7 +360,7 @@ class TestDocCoherenceValidatorIntegration:
         # Create a minimal project structure
         self.create_project_structure()
 
-    def tearDown(self):
+    def teardown_method(self):
         """Clean up integration test environment."""
         os.chdir(self.original_cwd)
         shutil.rmtree(self.test_dir)

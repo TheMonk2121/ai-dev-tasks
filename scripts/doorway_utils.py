@@ -9,78 +9,13 @@ from difflib import SequenceMatcher
 
 # ---------- Naming / Slugs / Paths ----------
 def slugify(title: str) -> str:
-    """Convert an arbitrary title into a short, focused Capitalized-Kebab form."""
-    # Clean the title
+    """Convert a title into Capitalized-Kebab form, preserving common words like 'The'."""
     cleaned = re.sub(r"[^A-Za-z0-9]+", "-", title).strip("-")
     words = [word.capitalize() for word in cleaned.split("-") if word]
-
-    # Filter out common words that don't add meaning
-    stop_words = {
-        "the",
-        "a",
-        "an",
-        "and",
-        "or",
-        "but",
-        "in",
-        "on",
-        "at",
-        "to",
-        "for",
-        "of",
-        "with",
-        "by",
-        "is",
-        "are",
-        "was",
-        "were",
-        "be",
-        "been",
-        "being",
-        "have",
-        "has",
-        "had",
-        "do",
-        "does",
-        "did",
-        "will",
-        "would",
-        "could",
-        "should",
-        "may",
-        "might",
-        "can",
-        "this",
-        "that",
-        "these",
-        "those",
-        "process",
-        "system",
-        "workflow",
-        "automation",
-        "implementation",
-        "enhancement",
-        "upgrade",
-    }
-
-    # Keep only meaningful words, limit to 3-4 key words
-    meaningful_words = [word for word in words if word.lower() not in stop_words]
-
-    # Take the most important words (first 3-4)
-    key_words = meaningful_words[:4]
-
-    # If we don't have enough meaningful words, add some from the original
-    if len(key_words) < 2:
-        key_words = words[:3]
-
-    # Join and ensure it's not too long
-    slug = "-".join(key_words)
-
-    # Limit total length to reasonable size
-    if len(slug) > 50:
-        # Take first 2-3 words if too long
-        slug = "-".join(key_words[:3])
-
+    slug = "-".join(words)
+    # Keep a reasonable length to avoid overly long filenames
+    if len(slug) > 80:
+        slug = "-".join(words[:6])
     return slug
 
 
