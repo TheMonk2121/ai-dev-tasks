@@ -1015,6 +1015,29 @@ markdownlint --fix ./*.md
 markdownlint README.md
 ```
 
+**Common Formatting Issues & Fixes**:
+
+**Long Lines with Mixed Formatting**:
+- **Problem**: Lines over 120 characters with mixed bold/italic formatting can cause link validation issues
+- **Example**: `4. **Use the quick reference in [../400_guides/400_metadata-collection-guide.md](../400_guides/400_metadata-collection-guide.md#quick-reference)** for commands` (160+ chars)
+- **Solution**: Remove unnecessary text at the end of long lines
+- **Fixed**: `4. **Use the quick reference in [../400_guides/400_metadata-collection-guide.md](../400_guides/400_metadata-collection-guide.md#quick-reference)**` (simplified)
+- **Why**: Link validation tools can get confused by long lines with mixed formatting, especially when they wrap in display
+
+**Long Anchor References**:
+- **Problem**: Long anchor text (like `#quick-reference`) can make lines exceed 120 characters
+- **Example**: `4. See [metadata guide](../400_guides/400_metadata-collection-guide.md#quick-reference) for quick reference` (140+ chars)
+- **Solution**: Remove or shorten anchor references
+- **Fixed**: `4. See [metadata guide](../400_guides/400_metadata-collection-guide.md) for quick reference` (no anchor)
+- **Alternative**: `4. Use [../400_guides/400_metadata-collection-guide.md](../400_guides/400_metadata-collection-guide.md#) for detailed commands` (empty anchor)
+- **Why**: Anchor text adds significant length to links and can cause line wrapping issues
+
+**Exact Line 176-177 Fix**:
+- **Problem**: `4. See [metadata guide](../400_guides/400_metadata-collection-guide.md#quick-reference) for quick reference` (line 176)
+- **Exact Fix**: `4. See [metadata guide](../400_guides/400_metadata-collection-guide.md) for quick reference` (removed `#quick-reference`)
+- **Problem**: `5. Use [../400_guides/400_metadata-collection-guide.md](../400_guides/400_metadata-collection-guide.md#quick-reference) for detailed commands` (line 177)
+- **Exact Fix**: `5. Use [../400_guides/400_metadata-collection-guide.md](../400_guides/400_metadata-collection-guide.md#) for detailed commands` (changed to empty anchor `#`)
+
 ## **Python Linting**
 
 **Configuration File**: `pyproject.toml`
@@ -2489,3 +2512,49 @@ python3 scripts/doc_coherence_validator.py --safe-fix
 - **Before Fix**: 12 heading level skip errors (mostly false positives)
 - **After Fix**: 3 remaining errors (all false positives for valid h4→h3 transitions)
 - **Improvement**: 75% reduction in false positives
+
+## **Bash Scripting Best Practices**
+
+### **Nested Quote Issues in Command Substitution**
+
+**Problem**: Nested quotes in bash command substitution can cause syntax errors and unexpected behavior.
+
+**Common Issue**: Surrounding quotes that "unquote" inner command substitution results.
+
+**Example from `dspy-rag-system/run_tests.sh`**:
+
+**❌ Before (Broken)**:
+```bash
+# Lines 99 and 111 - Nested quotes causing syntax errors
+TIERS_EXPR="("$(IFS=' or '; echo "${TIERS_LIST[*]}")")"
+KINDS_EXPR="("$(IFS=' or '; echo "${KINDS_LIST[*]}")")"
+```
+
+**✅ After (Fixed)**:
+```bash
+# Lines 99 and 111 - Proper quoting structure
+TIERS_EXPR="($(IFS=' or '; echo "${TIERS_LIST[*]}"))"
+KINDS_EXPR="($(IFS=' or '; echo "${KINDS_LIST[*]}"))"
+```
+
+**Why This Happens**:
+- `"("$(command)")"` - Outer quotes apply to command result, inner quotes get "unquoted"
+- `"($(command))"` - Entire expression properly quoted as single string
+
+**Best Practices**:
+1. **Avoid nested quotes** in command substitution
+2. **Use parentheses** to group command substitution within quotes
+3. **Test bash syntax** with `bash -n script.sh` before running
+4. **Use `set -euo pipefail`** for strict error handling
+
+**Validation Commands**:
+```bash
+# Check bash syntax without executing
+bash -n script.sh
+
+# Run with strict mode for debugging
+bash -euo pipefail script.sh
+
+# Use shellcheck for static analysis
+shellcheck script.sh
+```

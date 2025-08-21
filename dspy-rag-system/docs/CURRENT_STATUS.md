@@ -211,7 +211,7 @@ AI representations
 ## **📚 Documentation**###**Available Guides:**-**[DSPy Integration Guide](DSPY_INTEGRATION_GUIDE.md)**- Complete DSPy
 setup and usage
 
-- **[Cursor Native AI Assessment](../../cursor_native_ai_assessment.md)**- Current AI integration approach
+- **[Cursor Native AI Assessment](../../500_research/cursor_native_ai_assessment.md)**- Current AI integration approach
 
 - **[Current Status](CURRENT_STATUS.md)**- This file - system status and overview
 

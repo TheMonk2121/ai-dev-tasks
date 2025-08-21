@@ -583,11 +583,11 @@ See [400_contributing-guidelines.md](400_contributing-guidelines.md) for develop
 
 ## 📚 Documentation
 
-- [API Documentation](docs/README.md)
+- [API Documentation](../docs/README.md)
 
-- [Deployment Guide](400_guides/400_deployment-environment-guide.md)
+- [Deployment Guide](400_deployment-environment-guide.md)
 
-- [Security Guide](400_guides/400_security-best-practices-guide.md)
+- [Security Guide](400_security-best-practices-guide.md)
 
 ## 🤝 Contributing
 

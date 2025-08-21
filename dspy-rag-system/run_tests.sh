@@ -96,7 +96,7 @@ if [[ "$*" == *"--tiers"* ]] || [[ "$*" == *"--kinds"* ]] || [[ "$*" == *"--mark
                 done
                 i=$((i-1))
                 if [[ ${#TIERS_LIST[@]} -gt 0 ]]; then
-                    TIERS_EXPR="("$(IFS=' or '; echo "${TIERS_LIST[*]}")")"
+                    TIERS_EXPR="($(IFS=' or '; echo "${TIERS_LIST[*]}"))"
                 fi
                 ;;
             --kinds)
@@ -108,7 +108,7 @@ if [[ "$*" == *"--tiers"* ]] || [[ "$*" == *"--kinds"* ]] || [[ "$*" == *"--mark
                 done
                 i=$((i-1))
                 if [[ ${#KINDS_LIST[@]} -gt 0 ]]; then
-                    KINDS_EXPR="("$(IFS=' or '; echo "${KINDS_LIST[*]}")")"
+                    KINDS_EXPR="($(IFS=' or '; echo "${KINDS_LIST[*]}"))"
                 fi
                 ;;
             --markers)

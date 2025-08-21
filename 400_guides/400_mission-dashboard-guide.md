@@ -574,7 +574,7 @@ export ENVIRONMENT=production
 
 ### Code Standards
 
-For comprehensive coding standards and implementation examples, see [`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md).
+For comprehensive coding standards and implementation examples, see [400_guides/400_comprehensive-coding-best-practices.md](../400_guides/400_comprehensive-coding-best-practices.md)
 
 **Quick Reference:**
 

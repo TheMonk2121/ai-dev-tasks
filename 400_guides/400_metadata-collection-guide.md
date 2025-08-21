@@ -102,7 +102,7 @@ performance_metrics:
 
 - **Primary Data Source**: Error classification, recovery actions, and retry statistics.
 - **Error Categories**: See
-[`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for
+[400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md) for
 comprehensive error handling patterns and implementation examples.
 - **Error Severity Levels**: See comprehensive guide for severity classification and handling strategies.
 - **Collected Error Metadata**:
@@ -118,7 +118,7 @@ recovery.
 
 - **Usage**: Automatically prioritize tasks based on multiple factors.
 - **Implementation**: See
-[`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for
+[400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md) for
 comprehensive task prioritization patterns and implementation examples.
 - **Metadata Factors**:
   - **Priority Level**: 🔥 (Critical), 📈 (High), ⭐ (Medium), 🔧 (Low)
@@ -130,7 +130,7 @@ comprehensive task prioritization patterns and implementation examples.
 
 - **Usage**: Track and optimize execution performance based on historical data.
 - **Implementation**: See
-[`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for
+[400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md) for
 comprehensive performance optimization patterns and implementation examples.
 
 - *Key Metrics**:

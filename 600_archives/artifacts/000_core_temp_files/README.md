@@ -64,7 +64,7 @@ These files were archived because:
 ## Metadata & Analysis
 
 For detailed analysis of development patterns, metadata, and lessons learned from these archived files, see:
-**[Development Patterns & Archived Metadata Analysis](../400_guides/400_development-patterns.md)**
+**[Development Patterns & Archived Metadata Analysis](../../../400_guides/400_development-patterns.md)
 
 This guide contains comprehensive analysis of:
 - Development patterns and evolution

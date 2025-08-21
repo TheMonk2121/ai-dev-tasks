@@ -102,7 +102,7 @@
 ### **Authentication Methods**
 
 For comprehensive authentication patterns and security implementations, see
-[`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md)
+[400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md)
 security section.
 
 #### **1. Local Development Authentication**
@@ -163,7 +163,7 @@ GRANT USAGE ON SCHEMA public TO ai_developer;
 
 ### **Local Development Security**####**1. Firewall Configuration**
 - Network security configuration patterns
-- See [`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for comprehensive firewall and network security implementation examples
+- See [400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md) for comprehensive firewall and network security implementation examples
 
 #### **2. VPN Requirements**-**Development**: VPN required for external API access
 
@@ -185,7 +185,7 @@ GRANT USAGE ON SCHEMA public TO ai_developer;
 
 ### **Prompt Security**####**1. Input Validation**
 - Prompt validation and sanitization patterns
-- See [`400_guides/400_comprehensive-coding-best-practices.md`](400_guides/400_comprehensive-coding-best-practices.md) for comprehensive input validation implementation examples
+- See [400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md) for comprehensive input validation implementation examples
 
 #### **2. Output Filtering**
 - AI response filtering patterns
