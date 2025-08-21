@@ -13,7 +13,6 @@ TIER1_IMPORT_OK=0
 # ADDITIONAL FINDINGS (more thorough test):
 # - 65 Python files in the project (excluding tests and experiments)
 # - 1 syntax error confirmed across all files
-# - 2 import errors found:
-#   * documentation_retrieval.py: ModuleNotFoundError for 'dspy_modules.enhanced_rag_system'
+# - 1 import error found:
 #   * lang_extract_system.py: ImportError for relative import beyond top-level package
-# - Total real issues: 3 (1 syntax + 2 import errors)
+# - Total real issues: 2 (1 syntax + 1 import error)
