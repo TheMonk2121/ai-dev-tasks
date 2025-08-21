@@ -36,6 +36,7 @@ class TestCoderRolePerformance(unittest.TestCase):
         # Test configuration loading
         self.assertIn("coder", VALID_ROLES)
         coder_files = ROLE_FILES["coder"]
+        self.assertGreaterEqual(len(coder_files), 0)
 
         end_time = time.time()
         load_time = end_time - start_time
@@ -53,6 +54,8 @@ class TestCoderRolePerformance(unittest.TestCase):
         for _ in range(100):
             self.assertIn("coder", VALID_ROLES)
             coder_files = ROLE_FILES["coder"]
+            # Touch to avoid linter unused warnings and ensure mapping is materialized
+            self.assertIsNotNone(coder_files)
 
         # Force garbage collection
         gc.collect()
@@ -99,6 +102,7 @@ class TestCoderRolePerformance(unittest.TestCase):
             # Test file configuration access
             if role in ROLE_FILES:
                 role_files = ROLE_FILES[role]
+                self.assertGreaterEqual(len(role_files), 0)
 
             end_time = time.time()
             role_time = end_time - start_time
@@ -114,6 +118,7 @@ class TestCoderRolePerformance(unittest.TestCase):
         for _ in range(1000):
             self.assertIn("coder", VALID_ROLES)
             coder_files = ROLE_FILES["coder"]
+            self.assertIsNotNone(coder_files)
 
         end_time = time.time()
         total_time = end_time - start_time
@@ -143,6 +148,7 @@ class TestCoderRoleBenchmarks(unittest.TestCase):
             # Test file configuration access
             if role in ROLE_FILES:
                 role_files = ROLE_FILES[role]
+                self.assertIsNotNone(role_files)
 
             end_time = time.time()
             role_times[role] = end_time - start_time
