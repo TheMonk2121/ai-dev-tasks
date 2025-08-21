@@ -1,3 +1,4 @@
+<!-- MEMORY_CONTEXT: HIGH - Deep technical context for DSPy integration and RAG system -->
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_testing-strategy-guide.md -->
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->

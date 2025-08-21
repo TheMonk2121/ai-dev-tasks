@@ -1,3 +1,4 @@
+<!-- MEMORY_CONTEXT: HIGH - Backlog automation and workflow integration -->
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 100_memory/103_memory-context-workflow.md -->
 
