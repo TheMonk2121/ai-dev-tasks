@@ -1,3 +1,4 @@
+<!-- MEMORY_CONTEXT: MEDIUM - Script optimization and performance tuning guide -->
 # Script Optimization Guide
 
 ## 🔎 TL;DR {#tldr}

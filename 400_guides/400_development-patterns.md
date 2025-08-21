@@ -1,3 +1,4 @@
+<!-- MEMORY_CONTEXT: MEDIUM - Development patterns and archived metadata analysis -->
 # Development Patterns & Archived Metadata Analysis
 
 ## 🔎 TL;DR
