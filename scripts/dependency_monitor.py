@@ -8,6 +8,12 @@ Integrates with existing automation systems and provides change detection.
 Usage: python scripts/dependency_monitor.py [--dry-run] [--force] [--output-dir]
 """
 
+# <!-- ANCHOR_KEY: dependency-monitor -->
+# <!-- ANCHOR_PRIORITY: 18 -->
+# <!-- MEMORY_CONTEXT: HIGH - Dependency graph generation and monitoring -->
+# <!-- DATABASE_SYNC: REQUIRED -->
+# <!-- ROLE_PINS: ["coder", "implementer"] -->
+
 import argparse
 import hashlib
 import json

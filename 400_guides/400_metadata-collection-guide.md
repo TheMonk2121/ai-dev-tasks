@@ -2,6 +2,10 @@
 <!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
 <!-- MODULE_REFERENCE: docs/100_ai-development-ecosystem.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Metadata collection and analysis -->
+<!-- ANCHOR_KEY: metadata-collection -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
 # 📊 Metadata Collection Guide
 
 ## 📊 Metadata Collection Guide

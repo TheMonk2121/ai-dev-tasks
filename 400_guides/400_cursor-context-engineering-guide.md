@@ -4,6 +4,9 @@
 <!-- MEMORY_CONTEXT: HIGH - Cursor-native context engineering strategies -->
 
 <!-- DATABASE_SYNC: REQUIRED -->
+<!-- ANCHOR_KEY: cursor-context-engineering -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
 # Cursor Context Engineering Guide
 
 <!-- ANCHOR: tldr -->

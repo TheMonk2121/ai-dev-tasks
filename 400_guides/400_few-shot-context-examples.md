@@ -717,6 +717,10 @@ class TestFileValidation:
         valid_content = """
         <!-- BACKLOG_REFERENCE: 000_core/000_backlog.md -->
         <!-- MEMORY_CONTEXT: HIGH - Essential documentation -->
+<!-- ANCHOR_KEY: few-shot-context-examples -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
 
         # Document Title
 

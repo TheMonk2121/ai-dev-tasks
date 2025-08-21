@@ -1,3 +1,8 @@
+<!-- ANCHOR_KEY: core-readme -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- MEMORY_CONTEXT: HIGH - Core documentation and workflow overview -->
+<!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
 <!-- CONTEXT_REFERENCE: ../400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: ../100_memory/100_cursor-memory-context.md -->
 <!-- MODULE_REFERENCE: ../400_guides/400_deployment-environment-guide.md -->

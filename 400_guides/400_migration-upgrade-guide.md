@@ -1,5 +1,9 @@
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Migration procedures and upgrade safety -->
+<!-- ANCHOR_KEY: migration-upgrade -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
 # 🔄 Migration & Upgrade Guide
 
 ## 🔄 Migration & Upgrade Guide

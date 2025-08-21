@@ -2,6 +2,10 @@
 <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
 <!-- MEMORY_CONTEXT: HIGH - PRD for local-first phone notification utility -->
+<!-- ANCHOR_KEY: prd-example -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
 # Product Requirements Document: Local Phone Notification on Task Completion
 
 ## Product Requirements Document: Local Phone Notification on Task Completion

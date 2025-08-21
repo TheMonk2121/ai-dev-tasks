@@ -25,7 +25,7 @@ check the roadmap for next steps |
 
 <!-- ANCHOR_KEY: tldr -->
 <!-- ANCHOR_PRIORITY: 0 -->
-<!-- ROLE_PINS: ["implementer"] -->
+<!-- ROLE_PINS: ["implementer", "coder"] -->
 
 <!-- ANCHOR: quick-start -->
 {#quick-start}
@@ -51,7 +51,7 @@ task processing, and intelligent error recovery to make AI-assisted development 
 
 <!-- ANCHOR_KEY: quick-start -->
 <!-- ANCHOR_PRIORITY: 25 -->
-<!-- ROLE_PINS: ["implementer"] -->
+<!-- ROLE_PINS: ["implementer", "coder"] -->
 
 <!-- ANCHOR: system-overview -->
 
@@ -300,6 +300,341 @@ python3 scripts/cursor_memory_rehydrate.py coder "apply Python 3.12 typing best 
 - Reference existing code patterns when applicable
 - Focus on implementation details rather than architecture
 - Include error handling and testing considerations
+
+**🔧 COMPREHENSIVE CODER ROLE INSTRUCTIONS**
+
+**Core Coder Role Behavior - ALWAYS FOLLOW:**
+
+1. **Memory Rehydration Protocol**: Start every coding session with `python3 scripts/cursor_memory_rehydrate.py coder "task description"`
+2. **Example-First Approach**: Before writing new code, search existing codebase for patterns
+3. **Code Reuse Heuristic**: Apply find-or-build approach (search-before-write, 70% reuse, tests-first)
+4. **Python 3.12 Standards**: Use absolute imports, PEP 585 generics, type hints
+5. **Comprehensive Error Handling**: Include try/catch blocks, validation, conflict prevention
+6. **Test-First Development**: Create unit tests before implementation (TDD)
+7. **Use Existing Tools**: Leverage extensive toolchain already built
+8. **File Analysis Protocol**: Use 6-phase analysis process for any file operations
+9. **Security First**: Input validation, prompt sanitization, access controls
+10. **Critical File Protection**: Understand Tier 1 (critical) vs Tier 2/3 files
+11. **Exclusions Policy**: Never reference `600_archives/**` or `docs/legacy/**`
+
+**Technical Standards - REQUIRED:**
+- **Python 3.12** with absolute imports (no sys.path hacks)
+- **Type hints** for all functions using PEP 585 generics
+- **Google style docstrings** with comprehensive documentation
+- **Black formatting** with Ruff linting
+- **Comprehensive error handling** with specific exception types
+- **Unit tests** for all new functionality
+- **Pre-commit validation** using existing scripts
+- **Maximum function length**: 50 lines
+- **Code reuse target**: 70% existing code, 30% new code
+- **Documentation**: TL;DR section required for new modules
+
+**Safety Protocol - BEFORE ANY CHANGES:**
+1. Read core memory context (`100_memory/100_cursor-memory-context.md`)
+2. Check current backlog (`000_core/000_backlog.md`)
+3. Understand file organization (000-699 prefixes)
+4. Apply tier-based analysis for any file operations
+5. Run conflict detection (`python scripts/conflict_audit.py`)
+6. Validate documentation (`python scripts/doc_coherence_validator.py`)
+
+**Critical File Protection:**
+- **Tier 1 files**: NEVER suggest removal - core workflow files
+- **Tier 2 files**: Extensive analysis required - documentation guides
+- **Tier 3 files**: Archive rather than delete - legacy files
+- **Tier 4 files**: Safe to remove with validation
+
+**Quality Gates - MUST PASS:**
+- **Code Review**: Standards compliance, logic correctness
+- **Testing**: Unit tests, integration tests
+- **Documentation**: Completeness and clarity
+- **Security**: Vulnerability prevention
+- **Performance**: Efficiency validation
+
+**⚡ CODER ROLE QUICK REFERENCE**
+
+**Essential Commands:**
+```bash
+# Core development workflow
+python3.12 scripts/single_doorway.py generate "description"
+python3.12 scripts/process_tasks.py --execute-all
+python scripts/error_handler.py --test
+
+# Validation and testing
+python scripts/conflict_audit.py --full
+python scripts/doc_coherence_validator.py --check-all
+./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke
+
+# System health and status
+python scripts/system_health_check.py --deep
+./dspy-rag-system/check_status.sh
+
+# Memory and context
+python scripts/cursor_memory_rehydrate.py coder "task description"
+python scripts/update_cursor_memory.py
+
+# Quick testing commands
+python3 -m pytest -m "unit and not deprecated" -v                    # Unit tests
+python3 -m pytest -m "integration and not deprecated" -v             # Integration tests
+python3 -m pytest -m "performance and not deprecated" -v             # Performance tests
+python3 -m pytest -m "security and not deprecated" -v                # Security tests
+./dspy-rag-system/run_comprehensive_tests.sh                         # All system tests
+
+# Code quality tools
+black src/ scripts/ tests/                                           # Format code
+ruff check src/ scripts/ tests/                                      # Lint code
+pyright src/ scripts/ tests/                                         # Type check
+```
+
+**Safety Checklist - BEFORE ANY CHANGES:**
+- [ ] Read `100_memory/100_cursor-memory-context.md` (current state)
+- [ ] Check `000_core/000_backlog.md` (active priorities)
+- [ ] Understand file organization (000-699 prefixes)
+- [ ] Apply tier-based analysis for file operations
+- [ ] Run `python scripts/conflict_audit.py --full`
+- [ ] Validate with `python scripts/doc_coherence_validator.py --check-all`
+
+**Critical File Tiers:**
+- **Tier 1**: NEVER remove - core workflow files (`scripts/process_tasks.py`, etc.)
+- **Tier 2**: Extensive analysis required - documentation guides
+- **Tier 3**: Archive rather than delete - legacy files
+- **Tier 4**: Safe to remove with validation
+
+**File Priority System (Reading Order):**
+- **HIGH Priority**: `100_memory/100_cursor-memory-context.md`, `400_guides/400_system-overview.md`
+- **MEDIUM Priority**: `100_memory/104_dspy-development-context.md`, coding guides in `400_guides/`
+- **LOW Priority**: `100_memory/100_backlog-guide.md`, research files in `500_research/`
+
+**Exclusions Policy:**
+- **NEVER reference**: `600_archives/**` or `docs/legacy/**`
+- **Route legacy code**: Move to `600_archives/` when deprecated
+- **Update memory**: Run `python scripts/update_cursor_memory.py` after major changes
+
+**Example-First Approach:**
+1. Search existing codebase for similar patterns
+2. Check `400_guides/` for relevant examples
+3. Review `600_archives/` for lessons learned
+4. Reference production systems in `dspy-rag-system/src/`
+5. Use existing scripts as templates
+
+**Tool Usage Standards:**
+- **Prefer `codebase_search`** over grep for semantic searches
+- **Use `todo_write`** for tracking multi-step tasks
+- **Use `update_memory`** for important project decisions
+- **Run linter checks** before committing changes
+- **Use existing scripts** rather than creating new ones
+
+**Quality Gates Checklist:**
+- [ ] Code follows Python 3.12 standards
+- [ ] Type hints included (PEP 585)
+- [ ] Google style docstrings
+- [ ] Unit tests written and passing
+- [ ] Error handling comprehensive
+- [ ] Security validation passed
+- [ ] Documentation updated
+- [ ] Pre-commit validation passed
+- [ ] Function length ≤ 50 lines
+- [ ] Code reuse target met (70% existing, 30% new)
+- [ ] TL;DR section added for new modules
+
+**Documentation Standards:**
+- **All documentation** must follow markdown standards
+- **Each document** must have a single h1 title matching filename
+- **TL;DR section** required at top of core docs
+- **Cross-references** must be maintained between related files
+- **Documentation hierarchy**: 000-099 (core), 100-199 (guides), etc.
+
+**Git Workflow:**
+- **Commit messages** must be descriptive and reference issues
+- **PRs require** documentation updates when applicable
+- **Feature branches** named: `feature/description`
+- **Bug fix branches** named: `fix/description`
+- **Squash commits** before merging
+
+**🧪 COMPREHENSIVE TESTING GUIDE**
+
+**Test Categories and When to Run:**
+
+**Unit Tests:**
+```bash
+# Run unit tests for specific module
+python3 -m pytest tests/test_specific_module.py -v
+
+# Run all unit tests (excluding deprecated)
+python3 -m pytest -m "unit and not deprecated" -v
+
+# Run unit tests with coverage
+python3 -m pytest -m "unit and not deprecated" --cov=src --cov-report=html
+```
+
+**Integration Tests:**
+```bash
+# Run integration tests
+python3 -m pytest -m "integration and not deprecated" -v
+
+# Run specific integration test
+python3 -m pytest tests/test_integration.py::test_specific_function -v
+```
+
+**Performance Tests:**
+```bash
+# Run performance benchmarks
+python3 -m pytest -m "performance and not deprecated" -v
+
+# Run specific performance test
+python3 -m pytest tests/test_performance.py::test_response_time -v
+```
+
+**Security Tests:**
+```bash
+# Run security validation
+python3 -m pytest -m "security and not deprecated" -v
+
+# Run security scanning
+python scripts/security_scan.py --full
+```
+
+**System Tests:**
+```bash
+# Run comprehensive system tests
+./dspy-rag-system/run_comprehensive_tests.sh
+
+# Run specific test tiers
+./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke
+./dspy-rag-system/run_tests.sh --tiers 1,2 --kinds unit,integration
+```
+
+**Test Markers and Selection:**
+```bash
+# Test by complexity tiers
+python3 -m pytest -m "tier1 and not deprecated"  # Critical functionality
+python3 -m pytest -m "tier2 and not deprecated"  # Important functionality
+python3 -m pytest -m "tier3 and not deprecated"  # Supporting functionality
+
+# Test by kind
+python3 -m pytest -m "smoke and not deprecated"     # Quick validation
+python3 -m pytest -m "unit and not deprecated"      # Individual components
+python3 -m pytest -m "integration and not deprecated" # Component interaction
+python3 -m pytest -m "performance and not deprecated" # Speed and efficiency
+python3 -m pytest -m "security and not deprecated"   # Security validation
+```
+
+**🔧 TOOL USAGE GUIDE**
+
+**When to Use Which Tools:**
+
+**Code Quality Tools:**
+```bash
+# Code formatting (run before commits)
+black src/ scripts/ tests/
+ruff check src/ scripts/ tests/
+ruff format src/ scripts/ tests/
+
+# Type checking
+pyright src/ scripts/ tests/
+
+# Import sorting
+isort src/ scripts/ tests/
+```
+
+**Validation Tools:**
+```bash
+# Conflict detection (before major changes)
+python scripts/conflict_audit.py --full
+
+# Documentation validation (before commits)
+python scripts/doc_coherence_validator.py --check-all
+
+# System health check (periodic)
+python scripts/system_health_check.py --deep
+
+# Security scanning (before deployment)
+python scripts/security_scan.py --full
+```
+
+**Development Workflow Tools:**
+```bash
+# Start new development workflow
+python3.12 scripts/single_doorway.py generate "feature description"
+
+# Execute backlog items
+python3.12 scripts/process_tasks.py --execute-all
+
+# Error handling and recovery
+python scripts/error_handler.py --test
+
+# State management
+python scripts/state_manager.py --status
+```
+
+**Testing Tools:**
+```bash
+# Run specific test suites
+./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke
+./dspy-rag-system/run_tests.sh --tiers 1,2 --kinds unit,integration
+
+# Performance testing
+python scripts/performance_benchmark.py --full
+
+# Memory testing
+python scripts/memory_benchmark.py --test
+```
+
+**Monitoring and Debugging:**
+```bash
+# System status
+./dspy-rag-system/check_status.sh
+
+# Mission dashboard
+./dspy-rag-system/start_mission_dashboard.sh
+
+# Production monitoring
+python src/monitoring/production_monitor.py &
+
+# Database health
+python scripts/database_sync_check.py --auto-update
+```
+
+**Memory and Context Tools:**
+```bash
+# Memory rehydration for specific roles
+python3 scripts/cursor_memory_rehydrate.py coder "task description"
+python3 scripts/cursor_memory_rehydrate.py implementer "task description"
+python3 scripts/cursor_memory_rehydrate.py planner "task description"
+
+# Memory context updates
+python scripts/update_cursor_memory.py
+
+# Few-shot scaffolding
+python scripts/few_shot_cognitive_scaffolding.py --role coder --task "description"
+```
+
+**Pre-commit Validation:**
+```bash
+# Run all pre-commit checks
+./scripts/pre_commit_doc_validation.sh
+
+# Individual validation steps
+python scripts/conflict_audit.py --quick
+python scripts/doc_coherence_validator.py --check-all
+black --check src/ scripts/ tests/
+ruff check src/ scripts/ tests/
+pyright src/ scripts/ tests/
+```
+
+**Emergency and Recovery:**
+```bash
+# Database recovery
+python scripts/auto_recover_database.py
+
+# System rollback
+./scripts/rollback_doc.sh
+
+# Error recovery
+python scripts/error_handler.py --recover
+
+# State reset
+python scripts/state_manager.py --reset
+```
 
 **ResearchAgent Module:**
 ```python

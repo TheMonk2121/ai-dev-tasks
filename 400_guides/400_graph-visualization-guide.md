@@ -1,6 +1,6 @@
 <!-- ANCHOR_KEY: graph-visualization-guide -->
 <!-- ANCHOR_PRIORITY: 12 -->
-<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- ROLE_PINS: ["planner", "implementer", "coder"] -->
 
 # 📊 Graph Visualization Guide
 
@@ -24,7 +24,7 @@
 
 <!-- ANCHOR_KEY: tldr -->
 <!-- ANCHOR_PRIORITY: 0 -->
-<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- ROLE_PINS: ["planner", "implementer", "coder"] -->
 
 ## 🔎 TL;DR
 

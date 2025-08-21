@@ -44,6 +44,7 @@ class FewShotExample:
     tags: List[str] = field(default_factory=list)
     source_file: Optional[str] = None
     line_number: Optional[int] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -378,7 +379,9 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Few-Shot Cognitive Scaffolding Integration")
-    parser.add_argument("--role", choices=["planner", "implementer", "researcher"], help="Role for scaffold generation")
+    parser.add_argument(
+        "--role", choices=["planner", "implementer", "researcher", "coder"], help="Role for scaffold generation"
+    )
     parser.add_argument("--task", help="Task description for context")
     parser.add_argument("--extract-examples", action="store_true", help="Extract examples from documentation")
     parser.add_argument("--validate-patterns", action="store_true", help="Validate existing patterns")

@@ -5,6 +5,9 @@
 <!-- MEMORY_CONTEXT: HIGH - Project overview and quick start guide -->
 <!-- WORKFLOW_MASTER: This file is the canonical source for development workflow -->
 <!-- DATABASE_SYNC: REQUIRED -->
+<!-- ANCHOR_KEY: project-overview -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
 # 📋 Project Overview
 
 ## 📋 Project Overview

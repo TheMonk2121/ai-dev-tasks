@@ -1,8 +1,11 @@
+<!-- ANCHOR_KEY: comprehensive-coding-best-practices -->
+<!-- ANCHOR_PRIORITY: 25 -->
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_contributing-guidelines.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_file-analysis-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Comprehensive coding standards and conflict prevention -->
 <!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
 
 # 🛡️ Comprehensive Coding Best Practices
 
@@ -33,6 +36,15 @@ to current development work |
 - **Next Steps**: Regular review and integration with CI/CD pipeline
 
 ## 🚀 Quick Start
+
+### **🎯 CODER ROLE SPECIFIC GUIDANCE**
+
+**When functioning as a Coder, ALWAYS start with:**
+
+1. **Memory Rehydration**: `python3 scripts/cursor_memory_rehydrate.py coder "specific task description"`
+2. **Example-First Search**: Search existing codebase for similar patterns before writing new code
+3. **Code Reuse Check**: Aim for 70% existing code reuse, 30% new code
+4. **Test-First Development**: Write unit tests before implementation (TDD)
 
 ### **For Immediate Issues (10-minute triage):**
 
@@ -348,6 +360,64 @@ The following scripts have been **removed from this index** as they are obsolete
 The remaining markdown fix scripts provide functionality that VS Code doesn't handle automatically, such as intelligent content analysis and bulk operations.
 
 ## 🔧 Core Execution Engine Implementation
+
+### **🎯 CODER ROLE IMPLEMENTATION PATTERNS**
+
+**When implementing code as a Coder, follow these specific patterns:**
+
+#### **1. Memory Rehydration Pattern**
+```bash
+# Start every coding session with context rehydration
+python3 scripts/cursor_memory_rehydrate.py coder "implement authentication function with proper error handling"
+```
+
+#### **2. Example-First Implementation Pattern**
+```python
+# Before writing new code, search for existing patterns
+# Example: Implementing a new database function
+def implement_database_function():
+    # 1. Search existing codebase for similar patterns
+    # 2. Check 400_guides/ for relevant examples
+    # 3. Reference production systems in dspy-rag-system/src/
+    # 4. Use existing scripts as templates
+    pass
+```
+
+#### **3. Code Reuse Pattern (70/30 Rule)**
+```python
+# Target: 70% existing code, 30% new code
+def new_feature():
+    # 70% - Reuse existing patterns and utilities
+    existing_utility = get_existing_utility()
+    existing_pattern = apply_existing_pattern()
+
+    # 30% - New implementation specific to this feature
+    new_logic = implement_new_logic()
+
+    return combine_existing_and_new(existing_utility, existing_pattern, new_logic)
+```
+
+#### **4. Test-First Development Pattern**
+```python
+# Write tests before implementation (TDD)
+def test_new_feature():
+    """Test new feature before implementation."""
+    # Arrange
+    input_data = create_test_data()
+
+    # Act
+    result = new_feature(input_data)
+
+    # Assert
+    assert result.is_valid()
+    assert result.meets_requirements()
+
+# Then implement the feature
+def new_feature(input_data):
+    """Implement new feature after tests are written."""
+    # Implementation follows test requirements
+    pass
+```
 
 ### **1. Single Doorway System (`scripts/single_doorway.py`)**
 

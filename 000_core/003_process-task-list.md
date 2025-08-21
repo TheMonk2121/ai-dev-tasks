@@ -1,9 +1,12 @@
+<!-- ANCHOR_KEY: process-task-list -->
+<!-- ANCHOR_PRIORITY: 25 -->
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Task execution engine and workflow automation -->
 <!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["implementer", "coder"] -->
 
 # Process Task List
 

@@ -1,4 +1,8 @@
 <!-- MEMORY_CONTEXT: MEDIUM - Script optimization and performance tuning guide -->
+<!-- ANCHOR_KEY: script-optimization -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
 # Script Optimization Guide
 
 ## 🔎 TL;DR {#tldr}

@@ -1,6 +1,9 @@
+<!-- ANCHOR_KEY: testing-strategy-guide -->
+<!-- ANCHOR_PRIORITY: 20 -->
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MEMORY_CONTEXT: HIGH - Testing strategy and quality assurance -->
 <!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
 # 🧪 Testing Strategy Guide
 
 ## 🧪 Testing Strategy Guide
@@ -16,6 +19,16 @@
 - **Next Steps**: Update testing strategies as system evolves
 
 ## 🚨 **IMPORTANT: Testing Approach Migration**
+
+### **🎯 CODER ROLE TESTING REQUIREMENTS**
+
+**When functioning as a Coder, ALWAYS follow:**
+
+1. **Test-First Development (TDD)**: Write unit tests before implementation
+2. **Memory Rehydration**: Start testing sessions with `python3 scripts/cursor_memory_rehydrate.py coder "write tests for feature"`
+3. **Example-First Testing**: Search existing tests for similar patterns before writing new tests
+4. **Code Reuse in Tests**: Reuse existing test utilities and fixtures (70% existing, 30% new)
+5. **Function Length Validation**: Ensure functions being tested are ≤ 50 lines
 
 ### **Current Approach (Use This):**
 - **Marker-based testing**: Use `--tiers` and `--kinds` for test selection

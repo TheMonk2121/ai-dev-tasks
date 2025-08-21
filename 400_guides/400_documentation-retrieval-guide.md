@@ -3,6 +3,10 @@
 <!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
 <!-- MEMORY_CONTEXT: MEDIUM - Documentation retrieval and indexing system -->
+<!-- ANCHOR_KEY: documentation-retrieval -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
 # 📚 Documentation Retrieval Guide
 
 ## 📚 Documentation Retrieval Guide

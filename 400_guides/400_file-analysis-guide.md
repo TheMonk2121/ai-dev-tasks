@@ -59,6 +59,22 @@ It builds on our existing documentation foundation (`200_setup/200_naming-conven
 `400_guides/400_context-priority-guide.md`, `500_research/500_maintenance-safety-research.md`) and adds the
 missing**"how to analyze"**methodology.
 
+### **🎯 CODER ROLE SPECIFIC ANALYSIS**
+
+**When functioning as a Coder, use this guide for:**
+
+1. **Code File Analysis**: Before modifying or removing any code files
+2. **Dependency Analysis**: Understanding file relationships and dependencies
+3. **Refactoring Decisions**: Determining what can be safely refactored
+4. **Archival Decisions**: Moving files to `600_archives/` when deprecated
+5. **Documentation Updates**: Ensuring documentation stays current with code changes
+
+**Coder-Specific Safety Rules:**
+- **NEVER delete Tier 1 files** without extensive analysis and approval
+- **Always check dependencies** before modifying shared utilities
+- **Use memory rehydration** before starting file analysis: `python3 scripts/cursor_memory_rehydrate.py coder "analyze file dependencies"`
+- **Follow the 70/30 rule**: 70% existing patterns, 30% new analysis
+
 ### **Why This Guide Exists**-**Prevents critical file loss**through systematic analysis
 
 - **Maintains cognitive scaffolding**by preserving essential documentation
@@ -133,6 +149,9 @@ Removal)**-**Criteria**: Duplicate files, outdated test files, unused subdirecto
 <!-- CORE_SYSTEM: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md -->
 <!-- WORKFLOW_CHAIN: 000_core/001_create-prd.md → 000_core/002_generate-tasks.md -->
 <!-- MEMORY_CONTEXT: HIGH - Essential analysis methodology -->
+<!-- ANCHOR_KEY: file-analysis-guide -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
 
 ```markdown
 

@@ -1,8 +1,11 @@
+<!-- ANCHOR_KEY: backlog-guide -->
+<!-- ANCHOR_PRIORITY: 15 -->
 <!-- MEMORY_CONTEXT: HIGH - Backlog management and workflow guidelines -->
+<!-- DATABASE_SYNC: REQUIRED -->
 <!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
 <!-- MODULE_REFERENCE: 400_guides/400_testing-strategy-guide.md -->
-<!-- DATABASE_SYNC: REQUIRED -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
 
 # 100 Backlog Guide
 

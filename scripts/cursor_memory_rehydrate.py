@@ -28,12 +28,16 @@ def detect_role_from_task(task):
     planner_keywords = ["plan", "strategy", "priorit", "roadmap", "backlog", "sprint", "project"]
     implementer_keywords = ["code", "implement", "develop", "refactor", "debug", "test", "dspy", "technical"]
     researcher_keywords = ["research", "analyze", "study", "investigate", "explore", "compare"]
+    coder_keywords = ["coder", "coding", "programming", "software", "development", "code review", "implementation"]
 
     planner_score = sum(1 for keyword in planner_keywords if keyword in task_lower)
     implementer_score = sum(1 for keyword in implementer_keywords if keyword in task_lower)
     researcher_score = sum(1 for keyword in researcher_keywords if keyword in task_lower)
+    coder_score = sum(1 for keyword in coder_keywords if keyword in task_lower)
 
-    if researcher_score > max(planner_score, implementer_score):
+    if coder_score > max(planner_score, implementer_score, researcher_score):
+        return "coder"
+    elif researcher_score > max(planner_score, implementer_score):
         return "researcher"
     elif implementer_score > planner_score:
         return "implementer"
@@ -71,7 +75,7 @@ def main():
         "role",
         nargs="?",
         default="planner",
-        choices=["planner", "implementer", "researcher"],
+        choices=["planner", "implementer", "researcher", "coder"],
         help="Role for context filtering",
     )
     parser.add_argument(
