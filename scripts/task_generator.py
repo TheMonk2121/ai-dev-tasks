@@ -44,10 +44,10 @@ def generate(backlog_id: str, timeout_s: int = 12) -> str:
     import re
     from glob import glob
 
-    prds = sorted(glob(f"000_core/PRD-{backlog_id}-*.md"))
+    prds = sorted(glob(f"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-*.md"))
     if not prds:
         raise SystemExit(f"No PRD found for {backlog_id}")
-    m = re.match(rf"000_core/PRD-{backlog_id}-(.+)\.md$", prds[0])
+    m = re.match(rf"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-(.+)\.md$", prds[0])
     slug = m.group(1) if m else backlog_id
 
     paths = canonical_paths(backlog_id, slug)
@@ -58,7 +58,7 @@ def generate(backlog_id: str, timeout_s: int = 12) -> str:
         "BACKLOG_ID": backlog_id,
         "FILE_TYPE": "tasks",
         "SLUG": slug,
-        "ROADMAP_REFERENCE": "000_core/004_development-roadmap.md",
+        "ROADMAP_REFERENCE": "400_guides/400_project-overview.md",
     }
     content = render_md_with_anchors(f"TASKS {backlog_id}: {slug}", anchors, body)
 

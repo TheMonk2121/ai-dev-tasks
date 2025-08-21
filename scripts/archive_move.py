@@ -13,7 +13,7 @@ def _ensure_parent(path: str) -> None:
 
 
 def _extract_slug_from_prd_path(prd_path: str, backlog_id: str) -> str:
-    m = re.match(rf"000_core/PRD-{re.escape(backlog_id)}-(.+)\.md$", prd_path)
+    m = re.match(rf"600_archives/artifacts/000_core_temp_files/PRD-{re.escape(backlog_id)}-(.+)\.md$", prd_path)
     if not m:
         raise SystemExit(f"Cannot infer slug from {prd_path}")
     return m.group(1)
@@ -31,13 +31,11 @@ def _collision_path(path: str) -> str:
 
 
 def _find_active_paths(backlog_id: str) -> tuple[str, str, str]:
-    prd = sorted(glob(f"000_core/PRD-{backlog_id}-*.md"))
-    tasks = sorted(glob(f"000_core/TASKS-{backlog_id}-*.md"))
-    run = sorted(glob(f"000_core/RUN-{backlog_id}-*.md"))
+    prd = sorted(glob(f"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-*.md"))
+    tasks = sorted(glob(f"600_archives/artifacts/000_core_temp_files/TASKS-{backlog_id}-*.md"))
+    run = sorted(glob(f"600_archives/artifacts/000_core_temp_files/RUN-{backlog_id}-*.md"))
     if not (prd and tasks and run):
-        raise SystemExit(
-            f"Missing files for {backlog_id}: PRD/TASKS/RUN not all present"
-        )
+        raise SystemExit(f"Missing files for {backlog_id}: PRD/TASKS/RUN not all present")
     return prd[0], tasks[0], run[0]
 
 

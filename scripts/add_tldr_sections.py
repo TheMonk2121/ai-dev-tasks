@@ -214,7 +214,7 @@ class TLDRAdder:
         # Files that need TL;DR sections
         files_to_process = [
             "000_core/000_backlog.md",
-            "000_core/001_create-prd.md",
+            "400_guides/400_project-overview.md",
             "100_memory/100_cursor-memory-context.md",
             "200_setup/200_naming-conventions.md",
             "400_guides/400_broken-links-fix-summary.md",

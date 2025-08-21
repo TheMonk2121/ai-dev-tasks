@@ -70,9 +70,9 @@ def cmd_archive(backlog_id: str) -> None:
 
 def cmd_open(backlog_id: str) -> None:
     patterns = [
-        f"000_core/PRD-{backlog_id}-*.md",
-        f"000_core/TASKS-{backlog_id}-*.md",
-        f"000_core/RUN-{backlog_id}-*.md",
+        f"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-*.md",
+        f"600_archives/artifacts/000_core_temp_files/TASKS-{backlog_id}-*.md",
+        f"600_archives/artifacts/000_core_temp_files/RUN-{backlog_id}-*.md",
     ]
     files: list[str] = []
     for pat in patterns:

@@ -38,10 +38,10 @@ def _fast_slug_from_backlog(backlog_id: str) -> str | None:
 
 
 def _slug_from_existing_prd(backlog_id: str) -> str | None:
-    files = sorted(glob(f"000_core/PRD-{backlog_id}-*.md"))
+    files = sorted(glob(f"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-*.md"))
     if not files:
         return None
-    m = re.match(rf"000_core/PRD-{backlog_id}-(.+)\.md$", files[0])
+    m = re.match(rf"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-(.+)\.md$", files[0])
     return m.group(1) if m else None
 
 
@@ -98,7 +98,7 @@ def _build_prd_content(backlog_id: str, slug: str) -> str:
     metadata = _extract_backlog_metadata(backlog_id)
 
     # Load the PRD template
-    template_path = Path("000_core/001_create-prd.md")
+    template_path = Path("400_guides/400_project-overview.md")
     if template_path.exists():
         template_content = template_path.read_text(encoding="utf-8")
 

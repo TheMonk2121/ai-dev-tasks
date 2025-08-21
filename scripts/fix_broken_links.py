@@ -67,9 +67,9 @@ class BrokenLinksFixer:
             "CURRENT_STATUS.md": "dspy-rag-system/docs/CURRENT_STATUS.md",
             "N8N_SETUP_GUIDE.md": "dspy-rag-system/docs/N8N_SETUP_GUIDE.md",
             # Remove @ symbols from references
-            "@000_core/001_create-prd.md": "000_core/001_create-prd.md",
-            "@000_core/002_generate-tasks.md": "000_core/002_generate-tasks.md",
-            "@000_core/003_process-task-list.md": "000_core/003_process-task-list.md",
+            "@000_core/001_create-prd.md": "400_guides/400_project-overview.md",
+            "@000_core/002_generate-tasks.md": "400_guides/400_project-overview.md",
+            "@000_core/003_process-task-list.md": "400_guides/400_project-overview.md",
             "@MyFeature-PRD.md": "MyFeature-PRD.md",
             # Fix relative paths
             "../400_guides/400_comprehensive-coding-best-practices.md": (

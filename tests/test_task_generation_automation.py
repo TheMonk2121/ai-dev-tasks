@@ -252,7 +252,7 @@ class TestBacklogParser:
         self.backlog_content = """
 # Backlog
 
-| B‑050 | Enhance 002 Task Generation with Automation | 🔥 | 5 | todo | Automate task generation process for improved efficiency | Task automation + workflow enhancement | 000_core/002_generate-tasks.md |
+| B‑050 | Enhance 002 Task Generation with Automation | 🔥 | 5 | todo | Automate task generation process for improved efficiency | Task automation + workflow enhancement | 400_guides/400_project-overview.md |
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:5, lessons:4, deps:[]}-->
 <!--score_total: 5.5-->
 <!-- do_next: Implement automated task generation enhancements -->

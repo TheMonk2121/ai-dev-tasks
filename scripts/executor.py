@@ -41,13 +41,13 @@ def execute(backlog_id: str, telemetry: bool) -> None:
     import re
     from glob import glob
 
-    tasks = sorted(glob(f"000_core/TASKS-{backlog_id}-*.md"))
+    tasks = sorted(glob(f"600_archives/artifacts/000_core_temp_files/TASKS-{backlog_id}-*.md"))
     if not tasks:
         print(f"[ERROR] No TASKS found for {backlog_id}")
         raise SystemExit(1)
     tpath = tasks[0]
 
-    m = re.match(rf"000_core/TASKS-{backlog_id}-(.+)\.md$", tpath)
+    m = re.match(rf"600_archives/artifacts/000_core_temp_files/TASKS-{backlog_id}-(.+)\.md$", tpath)
     slug = m.group(1) if m else backlog_id
     paths = canonical_paths(backlog_id, slug)
 
@@ -69,7 +69,7 @@ def execute(backlog_id: str, telemetry: bool) -> None:
             "BACKLOG_ID": backlog_id,
             "FILE_TYPE": "run",
             "SLUG": slug,
-            "ROADMAP_REFERENCE": "000_core/004_development-roadmap.md",
+            "ROADMAP_REFERENCE": "400_guides/400_project-overview.md",
         }
         content = render_md_with_anchors(f"RUN {backlog_id}: {slug}", anchors, summary)
         run_path.write_text(content, encoding="utf-8")

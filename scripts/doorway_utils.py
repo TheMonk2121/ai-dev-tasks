@@ -87,12 +87,12 @@ def slugify(title: str) -> str:
 def canonical_paths(backlog_id: str, slug: str) -> dict[str, str]:
     """Return canonical active and archive paths for PRD/TASKS/RUN files."""
     return {
-        "prd": f"000_core/PRD-{backlog_id}-{slug}.md",
-        "tasks": f"000_core/TASKS-{backlog_id}-{slug}.md",
-        "run": f"000_core/RUN-{backlog_id}-{slug}.md",
-        "arch_prd": f"600_archives/prds/PRD-{backlog_id}-{slug}.md",
-        "arch_tasks": f"600_archives/tasks/TASKS-{backlog_id}-{slug}.md",
-        "arch_run": f"600_archives/runs/RUN-{backlog_id}-{slug}_{date.today():%Y-%m-%d}.md",
+        "prd": f"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-{slug}.md",
+        "tasks": f"600_archives/artifacts/000_core_temp_files/TASKS-{backlog_id}-{slug}.md",
+        "run": f"600_archives/artifacts/000_core_temp_files/RUN-{backlog_id}-{slug}.md",
+        "arch_prd": f"600_archives/artifacts/000_core_temp_files/PRD-{backlog_id}-{slug}.md",
+        "arch_tasks": f"600_archives/artifacts/000_core_temp_files/TASKS-{backlog_id}-{slug}.md",
+        "arch_run": f"600_archives/artifacts/000_core_temp_files/RUN-{backlog_id}-{slug}_{date.today():%Y-%m-%d}.md",
     }
 
 

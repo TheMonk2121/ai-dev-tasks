@@ -45,7 +45,7 @@ def test_render_md_with_anchors() -> None:
             "BACKLOG_ID": "B-123",
             "FILE_TYPE": "prd",
             "SLUG": "X",
-            "ROADMAP_REFERENCE": "000_core/004_development-roadmap.md",
+            "ROADMAP_REFERENCE": "400_guides/400_project-overview.md",
         },
         "Body",
     )
