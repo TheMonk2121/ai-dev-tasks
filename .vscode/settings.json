@@ -256,7 +256,9 @@
         "pkill",
         "prds",
         "reqs",
-        "norecursedirs"
+        "norecursedirs",
+        "qproc",
+        "sprock"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [
