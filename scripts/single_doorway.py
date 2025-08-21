@@ -14,6 +14,9 @@ def _select_python() -> str:
     # Prefer explicit env, then python3.12 if present, else current interpreter
     if os.environ.get("PYTHON"):
         return os.environ["PYTHON"]
+    # Prefer the current interpreter (respects venv) over a global python3.12
+    if sys.executable:
+        return sys.executable
     py312 = shutil.which("python3.12")
     if py312:
         return py312

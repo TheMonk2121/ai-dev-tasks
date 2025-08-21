@@ -196,6 +196,7 @@ Items requiring external credentials, business decisions, or deployment should b
 | B-090 | Test Performance Workflow | 🔧 | 3 | todo | Test Performance Workflow | None | None |
 | B-091 | Test 001 Workflow Performance | 🔧 | 3 | todo | Test 001 Workflow Performance | None | None |
 | B-092 | Final Performance Validation Test | 🔧 | 3 | todo | Final Performance Validation Test | None | None |
+| B-093 | Doorway: Scribe + Auto Rehydrate | 🔧 | 3 | todo | Doorway: Scribe + Auto Rehydrate | None | None |
 
 | B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | todo | Add GitHub Action to run maintenance script on PRs | GitHub Actions + CI/CD | None |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:0.5, lessons:3, deps:[]}-->
