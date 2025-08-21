@@ -347,6 +347,16 @@ Coherence Validation System |
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#status-tracking"] -->
 <!-- reference_cards: ["500_reference-cards.md#backlog-management"] -->
 
+|| B‑100 | Coder Role Implementation for Memory Rehydration System | 🔥 | 5 | todo | Implement specialized "coder" role in memory rehydration system for focused coding context and best practices | Memory rehydrator + DSPy CodeAgent integration + coding documentation | 100_memory/104_dspy-development-context.md |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:5, lessons:4, deps:[]}-->
+<!--score_total: 4.6-->
+<!-- do_next: Add coder role to ROLE_FILES in memory_rehydrator.py and configure documentation access -->
+<!-- est_hours: 8 -->
+<!-- acceptance: Coder role successfully rehydrates coding context in <5 seconds with zero impact on existing roles -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-specialization", "400_guides/400_comprehensive-coding-best-practices.md#role-based-context"] -->
+<!-- reference_cards: ["500_reference-cards.md#memory-rehydration", "500_reference-cards.md#dspy-integration"] -->
+<!-- PRD: PRD-B-035-Coder-Role-Implementation.md -->
+
 ## Backlog Working Agreements
 
 - WIP limit: at most 2 items may be marked in‑progress at any time.
@@ -922,7 +932,7 @@ Documentation review + reference updates | File naming convention migration |
 
 ### **Advanced Agent Specialization (Q1 2025)**
 - **B-034**: Deep Research Agent Integration
-- **B-035**: Coder Agent Specialization
+- **B-035**: Coder Agent Specialization ✅ PRD Complete
 - **B-036**: General Query Agent Enhancement
 
 ### **System Integration & Optimization (Q2 2025)**

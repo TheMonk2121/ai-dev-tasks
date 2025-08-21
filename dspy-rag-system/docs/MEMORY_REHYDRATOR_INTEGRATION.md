@@ -6,7 +6,23 @@ The Memory Rehydrator implements the **Lean Hybrid with Kill-Switches** approach
 
 **Available Implementations:**
 - **Python**: `src/utils/memory_rehydrator.py` (primary implementation)
-- **Go**: `src/utils/memory_rehydration.go` (alternative implementation)
+- **Go**: `src/utils/memory_rehydration_cli.go` (alternative implementation)
+
+### **Implementation Comparison**
+
+| Feature | Python | Go |
+|---------|--------|-----|
+| **Entity Expansion** | ✅ Full implementation | ❌ Not implemented |
+| **Self-Critique** | ✅ Built-in | ❌ Not implemented |
+| **Structured Tracing** | ✅ OpenTelemetry | ❌ Basic logging |
+| **DSPy Integration** | ✅ Native | ❌ Standalone |
+| **RRF Fusion** | ✅ Complete algorithm | ✅ Basic implementation |
+| **Query Expansion** | ✅ Advanced mining | ✅ Basic expansion |
+| **Performance** | ~3-5s startup | <1s startup |
+| **Memory Usage** | Higher (AI framework) | Low (minimal deps) |
+| **Database Schema** | ✅ Compatible | ⚠️ Needs `start_char` column |
+
+**Recommendation**: Use Python for production DSPy workflows, Go for fast CLI operations (after fixing schema issue).
 
 ## 🚀 Quick Start
 

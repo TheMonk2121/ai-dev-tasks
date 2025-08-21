@@ -67,9 +67,71 @@ The system now includes **entity-aware context expansion** that enhances semanti
 # Result: Enhanced context with entity-related chunks
 ```
 
-## 🔧 **Configuration Options**
+## 🔧 **Implementation Comparison: Python vs Go**
 
-### **Stability Slider**
+### **Python Implementation (`memory_rehydrator.py`)**
+**Primary implementation with full DSPy integration and advanced features.**
+
+#### **Features:**
+- ✅ **Entity Expansion**: Automatic entity detection and related chunk expansion
+- ✅ **Self-Critique**: Built-in bundle quality assessment and verification
+- ✅ **Structured Tracing**: OpenTelemetry integration for observability
+- ✅ **DSPy Integration**: Native integration with DSPy workflows
+- ✅ **Full RRF Fusion**: Complete Reciprocal Rank Fusion algorithm
+- ✅ **Query Expansion**: Advanced anchor term mining
+- ✅ **Comprehensive Deduplication**: File-level + overlap detection
+
+#### **Use Cases:**
+- Production DSPy workflows
+- Complex AI reasoning tasks
+- Full observability requirements
+- Entity-aware context expansion
+
+#### **Performance:**
+- **Startup Time**: ~3-5 seconds (includes DSPy initialization)
+- **Memory Usage**: Higher (includes AI framework overhead)
+- **Features**: Complete feature set
+
+### **Go Implementation (`memory_rehydration_cli.go`)**
+**Lightweight, performance-focused alternative for simple rehydration tasks.**
+
+#### **Features:**
+- ✅ **Fast Startup**: Minimal initialization time
+- ✅ **Low Memory**: Lightweight footprint
+- ✅ **Basic RRF Fusion**: Simplified fusion algorithm
+- ✅ **File Deduplication**: Basic deduplication support
+- ✅ **CLI Interface**: Simple command-line interface
+- ❌ **Entity Expansion**: Not implemented
+- ❌ **Self-Critique**: Not implemented
+- ❌ **Structured Tracing**: Basic logging only
+
+#### **Use Cases:**
+- Fast CLI operations
+- Simple memory rehydration
+- Lightweight deployments
+- Quick debugging and testing
+
+#### **Performance:**
+- **Startup Time**: <1 second
+- **Memory Usage**: Low (minimal dependencies)
+- **Features**: Core features only
+
+#### **Current Status:**
+- ⚠️ **Database Schema Issue**: Requires `start_char` column that doesn't exist
+- 🔧 **Needs Fix**: Database schema compatibility issue
+
+### **When to Use Which:**
+
+| Scenario | Python | Go |
+|----------|--------|-----|
+| **Production DSPy workflows** | ✅ | ❌ |
+| **Entity expansion needed** | ✅ | ❌ |
+| **Full observability** | ✅ | ❌ |
+| **Fast CLI operations** | ⚠️ | ✅ |
+| **Lightweight deployment** | ❌ | ✅ |
+| **Simple rehydration** | ⚠️ | ✅ |
+
+## 🔧 **Configuration Options**
 ```bash
 # Control anchor influence (0.0-1.0, default 0.6)
 # Python implementation

@@ -2558,3 +2558,49 @@ bash -euo pipefail script.sh
 # Use shellcheck for static analysis
 shellcheck script.sh
 ```
+
+## **Memory Rehydrator Implementation Issues**
+
+### **Go Implementation Database Schema Issue**
+
+**Problem**: The Go memory rehydrator (`memory_rehydration_cli.go`) fails with database schema error.
+
+**Error**: `pq: column "start_char" does not exist`
+
+**Root Cause**: The Go implementation expects a `start_char` column that doesn't exist in the current database schema.
+
+**Current Schema**:
+```sql
+CREATE TABLE document_chunks (
+    id SERIAL PRIMARY KEY,
+    document_id VARCHAR(255),
+    chunk_index INTEGER,
+    file_path TEXT,
+    line_start INTEGER,    -- ✅ Exists
+    line_end INTEGER,      -- ✅ Exists
+    content TEXT NOT NULL,
+    -- ... other columns
+);
+```
+
+**Go Implementation Expects**:
+```sql
+-- ❌ This column doesn't exist
+start_char INTEGER
+```
+
+**Solutions**:
+1. **Fix Go Implementation**: Update to use `line_start` instead of `start_char`
+2. **Add Missing Column**: Add `start_char` column to database schema
+3. **Use Python Version**: Use the working Python implementation for now
+
+**Recommendation**: Fix the Go implementation to match the current database schema by using `line_start` instead of `start_char`.
+
+**Testing**:
+```bash
+# Test Python implementation (working)
+python3 -m dspy-rag-system.src.utils.memory_rehydrator --role planner --task "test"
+
+# Test Go implementation (fails with schema error)
+cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test"
+```

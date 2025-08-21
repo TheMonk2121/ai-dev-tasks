@@ -121,6 +121,11 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - **Python**: `python3 scripts/cursor_memory_rehydrate.py planner "current project status"`
 - **Go**: `cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project status"`
 
+#### **Implementation Differences:**
+- **Python**: Full-featured with entity expansion, self-critique, DSPy integration (~3-5s startup)
+- **Go**: Lightweight, fast CLI operations (<1s startup, but has database schema issue)
+- **Recommendation**: Use Python for production, Go for quick testing (after fixing schema)
+
 ### **Testing & Development**
 - Preferred: `python -m pytest -v -m smoke` (unified root test suite)
 - Also supported (shim): `./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke`
