@@ -255,7 +255,8 @@
         "mktime",
         "pkill",
         "prds",
-        "reqs"
+        "reqs",
+        "norecursedirs"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [
