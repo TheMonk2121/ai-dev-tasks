@@ -845,7 +845,16 @@ class DocCoherenceValidator:
         markdown_files = self._get_markdown_files()
 
         if not markdown_files:
-            return {"execution_time": 0.0, "files_checked": 0, "errors": [], "warnings": [], "all_valid": True}
+            return {
+                "execution_time": 0.0,
+                "files_checked": 0,
+                "valid_files": 0,
+                "invalid_files": 0,
+                "errors": [],
+                "warnings": [],
+                "changes_made": [],
+                "all_valid": True,
+            }
 
         # Validate files in parallel
         validation_results = self.validate_files_parallel(markdown_files)

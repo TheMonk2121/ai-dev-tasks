@@ -86,7 +86,7 @@ class OptimizedQuickConflictChecker:
         try:
             # Use git grep for faster search
             result = subprocess.run(
-                ["git", "grep", "-nE", "^(<<<<<<<|=======|>>>>>>>)"], capture_output=True, text=True, timeout=10
+                ["git", "grep", "-nE", "^(<<<<<<< |======= |>>>>>>> )"], capture_output=True, text=True, timeout=10
             )
 
             has_markers = bool(result.stdout.strip())
@@ -186,7 +186,7 @@ class OptimizedQuickConflictChecker:
             self.log("✅ No package manager conflicts", "INFO")
             return True
 
-    def run_parallel_checks(self) -> Dict[str, bool]:
+    def run_parallel_checks(self) -> Dict[str, Any]:
         """Run all checks in parallel with early exit."""
         self.log("Starting optimized quick conflict check...", "INFO")
 

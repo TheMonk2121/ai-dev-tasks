@@ -39,7 +39,7 @@ log_success() {
 
 # Check if we're in the right directory
 check_environment() {
-    if [[ ! -f "$PROJECT_ROOT/000_backlog.md" ]]; then
+    if [[ ! -f "$PROJECT_ROOT/000_core/000_backlog.md" ]]; then
         log_error "Not in AI development ecosystem project root"
         exit 1
     fi
