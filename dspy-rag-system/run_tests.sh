@@ -20,11 +20,15 @@ if [ $# -eq 0 ]; then
     echo ""
 fi
 
-# Check if virtual environment exists
+# Check if virtual environment exists (check both local and parent directory)
 if [ -d "venv" ]; then
-    echo "✅ Virtual environment found"
+    echo "✅ Virtual environment found (local)"
     # shellcheck disable=SC1091
     source venv/bin/activate
+elif [ -d "../venv" ]; then
+    echo "✅ Virtual environment found (parent directory)"
+    # shellcheck disable=SC1091
+    source ../venv/bin/activate
 else
     echo "⚠️  No virtual environment found. Tests may fail if dependencies aren't installed."
     echo "💡 To create a virtual environment:"
@@ -124,7 +128,13 @@ if [[ "$*" == *"--tiers"* ]] || [[ "$*" == *"--kinds"* ]] || [[ "$*" == *"--mark
     [[ -n "$CUSTOM_EXPR" ]] && EXPR_PARTS+=("$CUSTOM_EXPR")
 
     if [[ ${#EXPR_PARTS[@]} -gt 0 ]]; then
-        MARKERS_EXPR=$(IFS=' and '; echo "${EXPR_PARTS[*]}")
+        # Join expressions with ' and ' but handle single expressions properly
+        if [[ ${#EXPR_PARTS[@]} -eq 1 ]]; then
+            MARKERS_EXPR="${EXPR_PARTS[0]}"
+        else
+            # Use printf to properly join with ' and ' separator
+            MARKERS_EXPR=$(printf "%s and %s" "${EXPR_PARTS[0]}" "${EXPR_PARTS[1]}")
+        fi
     else
         MARKERS_EXPR=""
     fi
@@ -138,9 +148,9 @@ if [[ "$*" == *"--tiers"* ]] || [[ "$*" == *"--kinds"* ]] || [[ "$*" == *"--mark
 
     cd "$REPO_ROOT" || exit 1
     if [[ -n "$MARKERS_EXPR" ]]; then
-        python3 -m pytest -v -m "$MARKERS_EXPR"
+        python3 -m pytest -v -m "$MARKERS_EXPR" -m "not deprecated"
     else
-        python3 -m pytest -v
+        python3 -m pytest -v -m "not deprecated"
     fi
     exit $?
 fi
@@ -152,35 +162,35 @@ case "${1:-all}" in
         SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
         REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
         cd "$REPO_ROOT" || exit 1
-        python3 -m pytest -v
+        python3 -m pytest -v -m "not deprecated"
         ;;
     "unit")
         echo "Running unit tests only (unified root pytest)..."
         SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
         REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
         cd "$REPO_ROOT" || exit 1
-        python3 -m pytest -v -m unit
+        python3 -m pytest -v -m "unit and not deprecated"
         ;;
     "integration")
         echo "Running integration tests only (unified root pytest)..."
         SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
         REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
         cd "$REPO_ROOT" || exit 1
-        python3 -m pytest -v -m integration
+        python3 -m pytest -v -m "integration and not deprecated"
         ;;
     "enhanced")
         echo "Running enhanced RAG system tests (unified root pytest)..."
         SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
         REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
         cd "$REPO_ROOT" || exit 1
-        python3 -m pytest -v -m tier2
+        python3 -m pytest -v -m "tier2 and not deprecated"
         ;;
     "coverage")
         echo "Running tests with coverage (unified root pytest)..."
         SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
         REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
         cd "$REPO_ROOT" || exit 1
-        python3 -m pytest -v --cov=. --cov-report=html
+        python3 -m pytest -v -m "not deprecated" --cov=. --cov-report=html
         echo "📊 Coverage report generated in htmlcov/"
         ;;
     "quick")
@@ -188,7 +198,7 @@ case "${1:-all}" in
         SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
         REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
         cd "$REPO_ROOT" || exit 1
-        python3 -m pytest -v -m smoke
+        python3 -m pytest -v -m "smoke and not deprecated"
         ;;
     *)
         echo "Usage: $0 [all|unit|integration|enhanced|coverage|quick]"

@@ -153,7 +153,7 @@ Please provide:
 - This is a DSPy RAG system with complex dependencies
 - The project uses pytest for testing
 - IDE is Cursor (VS Code-based)
-- Python 3.9+ environment
+- Python 3.12+ environment
 - PostgreSQL database integration
 - Multiple AI model integrations
 

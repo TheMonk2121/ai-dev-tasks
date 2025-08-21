@@ -4,6 +4,9 @@ Tests for security utilities.
 """
 
 import pytest
+
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
 import tempfile
 import json
 from unittest.mock import patch, MagicMock

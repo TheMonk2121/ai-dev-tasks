@@ -12,6 +12,9 @@ import threading
 from pathlib import Path
 from unittest import mock
 import pytest
+
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
 import subprocess
 
 # Import our Watch Folder module

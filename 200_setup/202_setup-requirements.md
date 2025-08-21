@@ -331,7 +331,7 @@ CREATE TABLE query_logs (
 
 #### **Python Environment**
 
-**⚠️ Important**: This system requires Python 3.12. The single doorway automation system is optimized for Python 3.12 and may have compatibility issues with Python 3.9.
+**⚠️ Important**: This system requires Python 3.12. The single doorway automation system is optimized for Python 3.12 and may have compatibility issues with older Python versions.
 
 ```bash
 # Verify Python 3.12 is available
@@ -342,15 +342,16 @@ python3.12 -m venv venv
 source venv/bin/activate
 
 # Install dependencies
-pip install -r requirements-dspy.txt
-pip install -r dashboard/requirements.txt
+pip install -r requirements.txt
 ```
 
 **macOS Users**: If you have Python 3.9 as default, install Python 3.12 via Homebrew:
 ```bash
 brew install python@3.12
-# The single doorway system will automatically detect and use python3.12
+# The system will automatically detect and use python3.12
 ```
+
+**Note**: All tests run in the Python 3.12 virtual environment. Archived tests in `600_archives/` are marked as deprecated and excluded from test runs.
 
 ## **System Dependencies**
 

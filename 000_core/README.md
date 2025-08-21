@@ -62,7 +62,7 @@ python3.12 scripts/single_doorway.py archive B-XXX
 python3.12 scripts/single_doorway.py open B-XXX
 ```
 
-**Note**: This system requires Python 3.12. If you're using Python 3.9, the system will automatically detect and use Python 3.12 if available via Homebrew.
+**Note**: This system requires Python 3.12. If you're using Python 3.9, the system will automatically detect and use Python 3.12 if available via Homebrew. All tests run in the Python 3.12 virtual environment.
 
 ### **Traditional Setup**
 ```bash

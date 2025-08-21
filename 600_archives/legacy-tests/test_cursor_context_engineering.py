@@ -9,6 +9,9 @@ import time
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from src.dspy_modules.cursor_model_router import CursorModel, create_cursor_model_router
 
 @pytest.mark.tier1

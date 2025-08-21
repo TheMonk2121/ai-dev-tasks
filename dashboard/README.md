@@ -24,7 +24,7 @@ processing and analysis.
 
 ### Prerequisites
 
-- Python 3.9+
+- Python 3.12+
 
 - PostgreSQL with `ai_agency` database
 

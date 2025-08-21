@@ -9,6 +9,9 @@ from unittest.mock import patch
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from utils.validator import (
     SecurityError,
     ValidationError,

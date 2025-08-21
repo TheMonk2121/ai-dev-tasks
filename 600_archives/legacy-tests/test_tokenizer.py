@@ -8,6 +8,9 @@ import time
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from utils.tokenizer import TokenAwareChunker
 
 

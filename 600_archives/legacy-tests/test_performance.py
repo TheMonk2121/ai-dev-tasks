@@ -3,6 +3,9 @@
 Performance Tests for DSPy RAG System
 """
 import pytest
+
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
 import time
 import psutil
 import threading

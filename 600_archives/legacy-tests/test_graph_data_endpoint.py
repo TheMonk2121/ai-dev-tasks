@@ -13,6 +13,9 @@ from unittest.mock import Mock, patch
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from src.dashboard import DashboardConfig, app
 
 

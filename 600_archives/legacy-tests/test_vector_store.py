@@ -13,6 +13,9 @@ import numpy as np
 import psycopg2
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from src.dspy_modules.vector_store import HybridVectorStore, _get_model
 
 # Test database configuration

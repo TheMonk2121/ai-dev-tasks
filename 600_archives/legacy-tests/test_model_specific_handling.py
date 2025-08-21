@@ -5,6 +5,9 @@ Tests for the Model-Specific Error Handling System
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from utils.model_specific_handling import (
     ModelSpecificHandler,
     handle_model_error,

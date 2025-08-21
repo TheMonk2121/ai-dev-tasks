@@ -11,6 +11,9 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from src.nicegui_graph_view import GraphVisualizationApp
 
 

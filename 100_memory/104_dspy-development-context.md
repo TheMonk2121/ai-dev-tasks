@@ -142,9 +142,9 @@ def is_fast_path(query: str) -> bool:
 
 ### DSPy Module Structure
 
-Excerpts only; see `src/dspy_modules/enhanced_rag_system.py` and related modules for full implementations.
+Excerpts only; see `src/dspy_modules/vector_store.py` and related modules for full implementations.
 
-#### 1. Enhanced RAG System (`enhanced_rag_system.py`)
+#### 1. Hybrid Vector Store (`dspy_modules/vector_store.py`)
 
 ```python
 # Core DSPy Signatures
@@ -428,7 +428,7 @@ python3 src/dashboard.py
 ## Programmatic Usage
 
 ```python
-from dspy_modules.enhanced_rag_system import create_enhanced_rag_interface
+from utils.rag_compatibility_shim import create_rag_interface
 
 # Create enhanced interface
 rag = create_enhanced_rag_interface()
@@ -671,7 +671,7 @@ class EnhancedDocumentProcessor(Module):
 
 ### Core DSPy Implementation
 
-- `src/dspy_modules/enhanced_rag_system.py` - Main enhanced RAG system
+- `src/dspy_modules/vector_store.py` - Hybrid vector store implementation
 - `src/dspy_modules/rag_system.py` - Basic RAG system
 - `src/dspy_modules/vector_store.py` - Vector storage and retrieval
 - `src/dspy_modules/document_processor.py` - Document processing

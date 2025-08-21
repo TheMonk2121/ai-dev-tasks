@@ -61,7 +61,7 @@ export PYTHONPATH=dspy-rag-system/src
 [tool.pyright]
 extraPaths = ["src", "tests", "../venv/lib/python3.*/site-packages"]
 include = ["src", "tests", "*.py"]
-exclude = ["venv", "**/__pycache__", ".pytest_cache"]  # Tests were excluded before
+exclude = ["venv", "600_archives", "**/__pycache__", ".pytest_cache"]  # Tests and archives excluded
 ```
 
 #### **Conflicting Documentation:**
@@ -98,6 +98,62 @@ exclude = ["venv", "**/__pycache__", ".pytest_cache"]  # Tests were excluded bef
 - **Root Cause**: Different import contexts
 
 ## 📊 **File Impact Analysis**
+
+### **Dependency Graph Analysis Results**
+
+**✅ Positive Findings:**
+- **No circular dependencies** detected (confirmed with `pycycle`)
+- Well-structured package organization
+- Comprehensive dependency coverage across ML/AI, web, database, and monitoring
+
+**⚠️ Areas for Improvement:**
+- **Import strategy inconsistencies** - 4 different approaches used across the codebase
+- **Limited relative import usage** - Only 4 files use relative imports
+- **Version management** - Potential for version drift
+
+### **Dependency Structure**
+```
+ai-dev-tasks/ (root orchestrator)
+├── dspy-rag-system/ (DSPy RAG implementation)
+├── dashboard/ (web interface)
+├── scripts/ (utilities)
+└── tests/ (testing)
+```
+
+### **External Dependencies (Tier 2)**
+```
+Core System:
+├── psutil (system monitoring)
+├── click (CLI)
+├── pyyaml (config)
+└── python-dotenv (env vars)
+
+ML/AI Stack:
+├── dspy==2.6.27
+├── sentence-transformers>=5.0.0
+├── torch (via sentence-transformers)
+└── transformers (via sentence-transformers)
+
+Web Framework:
+├── flask==2.3.3
+├── flask-socketio==5.3.6
+└── werkzeug>=2.3.0
+
+Database:
+├── psycopg2-binary==2.9.7
+└── pgvector==0.2.4
+
+Monitoring:
+├── opentelemetry-api>=1.20.0
+├── opentelemetry-sdk>=1.20.0
+└── opentelemetry-instrumentation-*
+
+Development Tools:
+├── pytest>=7.4.3
+├── black>=23.0.0
+├── ruff>=0.1.0
+└── pre-commit>=3.0.0
+```
 
 ### **High Impact Files (Need Immediate Fix):**
 1. `tests/test_error_pattern_recognition.py` - Current focus
@@ -201,16 +257,22 @@ dspy-rag-system/
 1. Fix `pyproject.toml` linter configuration
 2. Standardize test file import patterns
 3. Update conflicting documentation
+4. **Standardize import strategy** - Create centralized import utility
+5. **Consolidate relative imports** - Convert to absolute imports for consistency
 
 ### **Short Term (Medium Priority):**
 1. Create clear import strategy documentation
 2. Add import validation to CI/CD
 3. Test all import scenarios
+4. **Pin all dependency versions** in constraints file
+5. **Implement automated dependency audits**
 
 ### **Long Term (Low Priority):**
 1. Consider full standardization if needed
 2. Add import performance monitoring
 3. Create import debugging tools
+4. **Evaluate package structure optimization**
+5. **Implement dependency visualization**
 
 ## 🔍 **Key Questions for ChatGPT 5 Pro**
 

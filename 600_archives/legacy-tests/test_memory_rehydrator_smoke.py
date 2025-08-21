@@ -6,6 +6,9 @@ Tests both planner and implementer roles with our existing vector store infrastr
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 @pytest.mark.tier1
 @pytest.mark.smoke
 def test_planner_role():

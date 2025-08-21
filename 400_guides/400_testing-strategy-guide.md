@@ -21,11 +21,14 @@
 - **Marker-based testing**: Use `--tiers` and `--kinds` for test selection
 - **Centralized imports**: Use `conftest.py` for test import paths
 - **Pytest with markers**: `./run_tests.sh --tiers 1 --kinds smoke`
+- **Python 3.12 virtual environment**: All tests run in controlled environment
+- **Deprecated test exclusion**: Archived tests in `600_archives/` are excluded
 
 ### **Legacy Approach (Avoid):**
 - ❌ `comprehensive_test_suite.py` for new development
 - ❌ Manual `sys.path` manipulation in test files
 - ❌ File-based test selection (`./run_tests.sh all`)
+- ❌ Running archived tests (marked as deprecated)
 
 ## 🔎 TL;DR
 
@@ -40,6 +43,35 @@
 - **do next**: See "Testing Pyramid", "Test Types", "Quality Gates", and "Continuous Testing" sections.
 
 - **anchors**: `testing pyramid`, `test types`, `quality gates`, `continuous testing`, `testing checklist`
+
+## 🔧 **Test Environment Configuration**
+
+### **Python 3.12 Virtual Environment**
+- **All tests run in Python 3.12.11 virtual environment**
+- **Virtual environment detection**: Test runners automatically detect and activate `venv/`
+- **Dependencies**: All test dependencies installed for Python 3.12
+- **Isolation**: Tests are isolated from system Python packages
+
+### **Deprecated Test Management**
+- **Archived tests**: All tests in `600_archives/` are marked as deprecated
+- **Automatic exclusion**: Test runners exclude deprecated tests by default
+- **Protection layers**:
+  - Directory exclusion: `norecursedirs = ["600_archives"]`
+  - Test path restriction: `testpaths = ["tests", "dspy-rag-system/tests"]`
+  - Marker exclusion: All runners use `-m "not deprecated"`
+  - File-level deprecation: All archived tests marked with `@pytest.mark.deprecated`
+
+### **Test Runner Configuration**
+```bash
+# Run tests with virtual environment
+./dspy-rag-system/run_tests.sh --tiers 1 --kinds smoke
+
+# Explicitly exclude deprecated tests
+python3 -m pytest -m "not deprecated"
+
+# Run specific test categories
+python3 -m pytest -m "unit and not deprecated"
+```
 
 ### **2. Behavior-Driven Development (BDD)**```gherkin
 

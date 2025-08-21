@@ -12,7 +12,7 @@ You are analyzing a Python project with **critical duplicate file conflicts** ca
 - **Local-First Development**: Solo developer, full control, can make breaking changes
 
 ### **Key Technologies:**
-- **Python 3.9+** with complex dependency management
+- **Python 3.12+** with complex dependency management
 - **DSPy Framework** for AI model orchestration
 - **PostgreSQL** for vector storage
 - **Cursor IDE** with advanced AI integration

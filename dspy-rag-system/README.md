@@ -359,7 +359,7 @@ It's like having a super-smart assistant who's read all your files, can answer a
 ## **🔧 System Requirements**
 
 - macOS (tested on 24.4.0)
-- Python 3.9+
+- Python 3.12+
 - PostgreSQL with pgvector extension
 
 ## **🚀 Quick Commands**

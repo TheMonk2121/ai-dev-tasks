@@ -8,6 +8,9 @@ import sys
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from src.dspy_modules.document_processor import DocumentIngestionPipeline, DocumentProcessor
 
 

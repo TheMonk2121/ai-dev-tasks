@@ -10,6 +10,9 @@ import tempfile
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from utils.logger import get_logger, log_document_processing, log_error_with_context, log_with_context
 
 

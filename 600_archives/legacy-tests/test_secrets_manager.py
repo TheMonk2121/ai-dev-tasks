@@ -9,6 +9,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 # Dynamic import to satisfy static analyzers and work in pytest/runtime
 try:
     sm = import_module("utils.secrets_manager")

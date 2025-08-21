@@ -176,6 +176,7 @@
         "Tolower",
         "toml",
         "Toml",
+        "tpath",
         "venv",
         "Venv",
         "mccabe",

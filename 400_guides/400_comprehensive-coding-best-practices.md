@@ -836,8 +836,16 @@ npx prisma migrate status
 
 **Test Environment Validation:**
 ```bash
-# Python: Check test environment
-python -c "import sys; print(sys.version); print(sys.path)"
+# Python: Check test environment (Python 3.12 required)
+python3.12 --version
+python3.12 -c "import sys; print('Python version:', sys.version)"
+python3.12 -c "import sys; print('Virtual environment:', 'venv' in sys.executable)"
+
+# Verify virtual environment is active
+echo $VIRTUAL_ENV
+
+# Check test collection (should exclude deprecated tests)
+python3.12 -m pytest --collect-only -q | grep -i "600_archives\|deprecated" || echo "✅ No deprecated tests found"
 
 # Node.js: Check test environment
 node -e "console.log(process.version); console.log(process.env.NODE_ENV)"

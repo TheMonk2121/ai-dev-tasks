@@ -140,7 +140,7 @@ class _RAGShim:
         return out[:5]
 
 
-def create_enhanced_rag_interface(
+def create_rag_interface(
     db_dsn: Optional[str] = None, _legacy_url: Optional[str] = None, model: Optional[str] = None
 ) -> _RAGShim:
     return _RAGShim(db_dsn, _legacy_url, model)

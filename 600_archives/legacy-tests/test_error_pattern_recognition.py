@@ -5,6 +5,9 @@ Tests for the Error Pattern Recognition System
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from utils.error_pattern_recognition import (
     ErrorPatternRecognizer,
     analyze_error_pattern,

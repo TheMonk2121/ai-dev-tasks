@@ -15,6 +15,9 @@ from unittest import mock
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 # Optional dependency for memory testing
 try:
     import psutil  # type: ignore[import-untyped]

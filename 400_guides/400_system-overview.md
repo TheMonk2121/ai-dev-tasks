@@ -379,7 +379,7 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 #### **Core System Tests**-**`tests/test_rag_system.py`**(18KB) - RAG system functionality
 
-- **`tests/test_enhanced_rag_system.py`**(19KB) - Enhanced RAG with DSPy
+- **`tests/test_vector_store.py`**(19KB) - Vector store with DSPy
 
 - **`tests/test_vector_store.py`**(15KB) - Vector database operations
 
@@ -433,15 +433,36 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 ## 🔧 Component Deep Dives
 
-### **DSPy RAG System Architecture**####**Enhanced RAG System**(`src/dspy_modules/enhanced_rag_system.py`)
+### **DSPy RAG System Architecture**####**Hybrid Vector Store**(`src/dspy_modules/vector_store.py`)
 
-- **DSPy Integration**: Declarative programming for AI reasoning
-
-- **Multi-Modal Processing**: Text, metadata, and structured data
-
+- **DSPy Integration**: Declarative programming for AI reasoning with `forward()` method
+- **Hybrid Search**: Dense vector (PGVector) + sparse BM25 (PostgreSQL full-text)
+- **Span-Level Grounding**: Character offsets for precise citations and context
+- **Research-Based Merging**: Intelligent fusion of dense and sparse results
+- **Performance Optimizations**: LRU caching, connection pooling, bulk operations
+- **Multi-Modal Processing**: Text, metadata, and structured data handling
 - **Context Management**: Intelligent context selection and management
-
 - **Response Generation**: High-quality, contextually relevant responses
+
+####**Enhanced Vector Store**(`src/dspy_modules/enhanced_vector_store.py`)
+
+- **Advanced PostgreSQL + PGVector**: Enhanced capabilities with performance monitoring
+- **Caching System**: Intelligent embedding and result caching
+- **Health Checks**: Comprehensive system health monitoring
+- **Performance Metrics**: Detailed operation tracking and analytics
+- **Read-Only Fallback**: Optional fallback for degraded operations
+- **Dimension Flexibility**: Configurable embedding dimensions (default: 384)
+
+####**RAG Compatibility Shim**(`src/utils/rag_compatibility_shim.py`)
+
+- **Orchestration Layer**: Routes between Hybrid and Enhanced vector stores
+- **Primary Path**: Uses HybridVectorStore for dashboard contract
+- **Fallback Path**: Uses EnhancedVectorStore when explicitly enabled
+- **Embedding Discovery**: Automatic detection of embedding providers
+- **Graceful Degradation**: Handles failures with minimal response
+- **Fast Path Detection**: Optimizes for short, non-code queries
+
+
 
 #### **Document Processor**(`src/dspy_modules/document_processor.py`)
 

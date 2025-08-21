@@ -30,6 +30,9 @@ from dspy_modules.document_processor import DocumentProcessor
 from dspy_modules.vector_store import HybridVectorStore
 from utils.logger import get_logger
 from utils.metadata_extractor import MetadataExtractor
+
+# RAG system interface
+from utils.rag_compatibility_shim import create_rag_interface
 from utils.secrets_manager import setup_secrets_interactive, validate_startup_secrets
 from utils.validator import (
     SecurityError,
@@ -42,12 +45,6 @@ from utils.validator import (
     validate_query_complexity,
     validate_string_length,
 )
-
-# Public contract import with shim fallback
-try:
-    from dspy_modules.enhanced_rag_system import create_enhanced_rag_interface
-except ImportError:
-    from utils.rag_compatibility_shim import create_enhanced_rag_interface
 
 # Optional monitoring callables (names are always defined for the linter)
 create_health_endpoints: Optional[Callable[[Any], Any]] = None
@@ -300,7 +297,7 @@ def initialize_components():
         LOG.info("✅ Metadata extractor initialized")
 
         # Initialize enhanced RAG interface with Cursor Native AI
-        state.rag_interface = create_enhanced_rag_interface(
+        state.rag_interface = create_rag_interface(
             DashboardConfig.POSTGRES_DSN, None, DashboardConfig.CURSOR_NATIVE_AI_MODEL
         )
         LOG.info("✅ Enhanced RAG interface initialized with Cursor Native AI")

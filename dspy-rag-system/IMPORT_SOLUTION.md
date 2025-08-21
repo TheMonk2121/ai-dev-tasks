@@ -62,13 +62,13 @@ Enhanced `pyproject.toml` with proper linter settings:
 
 ```toml
 [tool.pyright]
-pythonVersion = "3.8"
+pythonVersion = "3.12"
 pythonPlatform = "Darwin"
 venvPath = ".."
 venv = "venv"
 extraPaths = ["src", "../venv/lib/python3.*/site-packages"]
 include = ["src", "*.py"]
-exclude = ["venv", "**/__pycache__", ".pytest_cache", "tests"]
+exclude = ["venv", "600_archives", "**/__pycache__", ".pytest_cache", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]

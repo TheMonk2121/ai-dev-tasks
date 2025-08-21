@@ -71,12 +71,12 @@ run_comprehensive_suite() {
 
     # Map simple categories to marker expressions when passed by callers
     case "$options" in
-        *"unit"*) pytest -v -m unit; return $? ;;
-        *"integration"*) pytest -v -m integration; return $? ;;
-        *"e2e"*) pytest -v -m e2e; return $? ;;
-        *"performance"*) pytest -v -m performance; return $? ;;
-        *"security"*) pytest -v -m security; return $? ;;
-        *) pytest -v; return $? ;;
+        *"unit"*) pytest -v -m "unit and not deprecated"; return $? ;;
+        *"integration"*) pytest -v -m "integration and not deprecated"; return $? ;;
+        *"e2e"*) pytest -v -m "e2e and not deprecated"; return $? ;;
+        *"performance"*) pytest -v -m "performance and not deprecated"; return $? ;;
+        *"security"*) pytest -v -m "security and not deprecated"; return $? ;;
+        *) pytest -v -m "not deprecated"; return $? ;;
     esac
 }
 

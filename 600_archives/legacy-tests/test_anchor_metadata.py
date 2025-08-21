@@ -7,6 +7,9 @@ Tests the HTML comment parsing and metadata extraction functionality.
 
 import pytest
 
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
+
 from utils.anchor_metadata_parser import (
     AnchorMetadata,
     extract_anchor_metadata,

@@ -30,6 +30,8 @@ if [ "${BEHIND}" -gt 0 ] && [ "${AHEAD}" -eq 0 ]; then
     # Post-pull syncs (best-effort)
     if command -v python3 >/dev/null 2>&1; then
       (python3 scripts/update_cursor_memory.py || true) >> "$LOG" 2>&1
+      # Run dependency analysis after updates
+      (python3 scripts/dependency_monitor.py || true) >> "$LOG" 2>&1
     fi
   else
     echo "$(date '+%Y-%m-%dT%H:%M:%S%z') pull failed (non-ff or error) on ${CURRENT_BRANCH}" >> "$LOG"

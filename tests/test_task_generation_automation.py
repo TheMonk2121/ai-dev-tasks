@@ -9,16 +9,12 @@ Tests PRD parsing, backlog parsing, task template generation, and output formatt
 import json
 import os
 import shutil
-import sys
 import tempfile
 from pathlib import Path
 
 import pytest
 
-# Add scripts directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
-
-from task_generation_automation import (
+from scripts.task_generation_automation import (
     BacklogParser,
     GeneratedTask,
     PRDParser,

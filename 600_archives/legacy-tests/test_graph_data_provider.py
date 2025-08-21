@@ -12,6 +12,9 @@ from unittest.mock import Mock, patch
 
 import numpy as np
 import pytest
+
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
 from psycopg2.extras import RealDictRow
 
 from src.utils.database_resilience import DatabaseResilienceManager

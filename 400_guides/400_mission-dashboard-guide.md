@@ -137,7 +137,7 @@ User Action → API Endpoint → Mission Tracker → Database
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.12+
 
 - PostgreSQL (optional, for persistent storage)
 
@@ -423,7 +423,7 @@ quick start).
 
 - **Verify dependencies**: Run `pip install -r requirements.txt`
 
-- **Check Python version**: Ensure Python 3.8+ is installed
+- **Check Python version**: Ensure Python 3.12+ is installed
 
 #### Database Connection Issues
 
@@ -456,7 +456,7 @@ quick start).
 ### Docker Deployment
 
 ```dockerfile
-FROM python:3.9-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 COPY requirements.txt .

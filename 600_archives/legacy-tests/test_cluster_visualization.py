@@ -3,9 +3,15 @@
 Unit tests for cluster visualization page.
 
 Tests the Flask route for cluster visualization page.
+
+DEPRECATED: This test file is archived and should not be run.
+Use current test infrastructure instead.
 """
 
 import pytest
+
+# Mark all tests in this file as deprecated
+pytestmark = pytest.mark.deprecated
 
 from src.dashboard import app
 
