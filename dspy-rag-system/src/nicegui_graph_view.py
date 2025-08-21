@@ -10,10 +10,18 @@ advanced graph visualization capabilities.
 import json
 import logging
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 import httpx
-from nicegui import ui
+
+# Best-effort import for type checkers and runtime; set to Any for linters
+try:  # pragma: no cover - UI import is environment-dependent
+    from nicegui import ui as _ui  # type: ignore[import-not-found]
+except Exception:  # pragma: no cover
+    _ui = None  # type: ignore[assignment]
+
+# Expose 'ui' as Any to avoid attribute-resolution lints when NiceGUI isn't installed
+ui = cast(Any, _ui)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -36,6 +44,9 @@ class GraphVisualizationApp:
 
     def create_ui(self):
         """Create the main UI components."""
+        if ui is None:  # pragma: no cover
+            logging.warning("NiceGUI not available; skipping UI creation")
+            return
         # Main container
         with ui.column().classes("w-full h-full p-4"):
             # Header
@@ -56,6 +67,8 @@ class GraphVisualizationApp:
 
     def create_controls(self):
         """Create the controls section."""
+        if ui is None:  # pragma: no cover
+            return
         with ui.card().classes("w-full mb-4"):
             ui.label("Graph Controls").classes("text-lg font-semibold mb-2")
 
@@ -91,6 +104,8 @@ class GraphVisualizationApp:
 
     def create_statistics(self):
         """Create the statistics section."""
+        if ui is None:  # pragma: no cover
+            return
         with ui.card().classes("w-full mb-4"):
             ui.label("Graph Statistics").classes("text-lg font-semibold mb-2")
 
@@ -102,147 +117,72 @@ class GraphVisualizationApp:
 
     def create_graph_visualization(self):
         """Create the graph visualization section."""
+        if ui is None:  # pragma: no cover - guard when NiceGUI unavailable
+            logging.warning("NiceGUI not available; skipping graph UI setup")
+            return
+
         with ui.card().classes("w-full flex-1"):
             ui.label("Network Graph").classes("text-lg font-semibold mb-2")
 
             # Loading indicator
             self.loading_indicator = ui.spinner(size="lg").classes("hidden")
 
-            # Add Cytoscape script to body
-            ui.add_body_html("""
+            # Add Cytoscape and helper functions
+            ui.add_body_html(
+                """
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
                 <script>
-                    window.cy = null;
-                    window.createGraph = function(data) {
-                        if (window.cy) {
-                            window.cy.destroy();
-                        }
-
-                        // Create nodes
-                        const nodes = data.nodes.map(node => ({
-                            data: {
-                                id: node.id,
-                                label: node.label,
-                                category: node.category,
-                                anchor: node.anchor || '',
-                                coords: node.coords
-                            }
-                        }));
-
-                        // Create edges
-                        const edges = data.edges.map(edge => ({
-                            data: {
-                                id: edge.source + '-' + edge.target,
-                                source: edge.source,
-                                target: edge.target,
-                                type: edge.type,
-                                weight: edge.weight
-                            }
-                        }));
-
-                        // Initialize Cytoscape
-                        window.cy = cytoscape({
-                            container: document.getElementById('cy'),
-                            elements: {
-                                nodes: nodes,
-                                edges: edges
+                  window.cy = null;
+                  window.createGraph = function(data) {
+                    if (window.cy) {
+                      window.cy.destroy();
+                    }
+                    const nodes = (data.nodes || []).map(n => ({ data: { id: n.id, label: n.label, category: n.category, anchor: n.anchor || '', coords: n.coords } }));
+                    const edges = (data.edges || []).map(e => ({ data: { id: e.source + '-' + e.target, source: e.source, target: e.target, type: e.type, weight: e.weight } }));
+                    window.cy = cytoscape({
+                      container: document.getElementById('cy'),
+                      elements: { nodes: nodes, edges: edges },
+                      style: [
+                        { selector: 'node', style: {
+                            'background-color': function(ele){
+                              const c = ele.data('category');
+                              const colors = { anchor:'#ef4444', documentation:'#10b981', code:'#6366f1', other:'#6b7280' };
+                              return colors[c] || colors['other'];
                             },
-                            style: [
-                                {
-                                    selector: 'node',
-                                    style: {
-                                        'background-color': function(ele) {
-                                            const category = ele.data('category');
-                                            const colors = {
-                                                'anchor': '#ef4444',
-                                                'documentation': '#10b981',
-                                                'code': '#6366f1',
-                                                'other': '#6b7280'
-                                            };
-                                            return colors[category] || colors['other'];
-                                        },
-                                        'label': 'data(label)',
-                                        'text-valign': 'center',
-                                        'text-halign': 'center',
-                                        'text-wrap': 'wrap',
-                                        'text-max-width': '80px',
-                                        'font-size': '8px',
-                                        'color': '#ffffff',
-                                        'text-outline-width': 1,
-                                        'text-outline-color': '#000000',
-                                        'width': 20,
-                                        'height': 20
-                                    }
-                                },
-                                {
-                                    selector: 'edge',
-                                    style: {
-                                        'width': function(ele) {
-                                            return Math.max(1, ele.data('weight') * 3);
-                                        },
-                                        'line-color': function(ele) {
-                                            return ele.data('type') === 'knn' ? '#8b5cf6' : '#f59e0b';
-                                        },
-                                        'opacity': 0.6,
-                                        'curve-style': 'bezier'
-                                    }
-                                },
-                                {
-                                    selector: 'edge[type="knn"]',
-                                    style: {
-                                        'line-color': '#8b5cf6'
-                                    }
-                                },
-                                {
-                                    selector: 'edge[type="entity"]',
-                                    style: {
-                                        'line-color': '#f59e0b'
-                                    }
-                                }
-                            ],
-                            layout: {
-                                name: 'cose',
-                                animate: 'end',
-                                animationDuration: 1000,
-                                nodeDimensionsIncludeLabels: true,
-                            });
-                        };
+                            'label': 'data(label)', 'text-valign': 'center', 'text-halign': 'center', 'text-wrap': 'wrap', 'text-max-width': '80px',
+                            'font-size': '8px', 'color': '#ffffff', 'text-outline-width': 1, 'text-outline-color': '#000000', 'width': 20, 'height': 20
+                        }},
+                        { selector: 'edge', style: {
+                            'width': function(ele){ return Math.max(1, (ele.data('weight')||0.3) * 3); },
+                            'line-color': function(ele){ return ele.data('type') === 'knn' ? '#8b5cf6' : '#f59e0b'; },
+                            'opacity': 0.6, 'curve-style': 'bezier'
+                        }},
+                        { selector: 'edge[type="knn"]', style: { 'line-color': '#8b5cf6' } },
+                        { selector: 'edge[type="entity"]', style: { 'line-color': '#f59e0b' } }
+                      ],
+                      layout: { name: 'cose', animate: 'end', animationDuration: 800, nodeDimensionsIncludeLabels: true }
+                    });
+                    window.cy.on('tap', 'node', function(evt){
+                      const d = evt.target.data();
+                      alert('Node: ' + d.label + '\nCategory: ' + d.category + '\nAnchor: ' + (d.anchor || 'None'));
+                    });
+                    window.cy.fit();
+                  };
+                  window.resetView = function(){ if (window.cy) { window.cy.fit(); } };
                 </script>
-            """)
+                """
+            )
 
             # Cytoscape container
             self.cytoscape_container = ui.html(
                 '<div id="cy" style="width: 100%; height: 600px; border: 1px solid #ccc;"></div>'
-            )
-                                padding: 50
-                            }
-                        });
-
-                        // Add event listeners
-                        window.cy.on('tap', 'node', function(evt) {
-                            const node = evt.target;
-                            const data = node.data();
-                            alert(`Node: ${data.label}\\nCategory: ${data.category}\\nAnchor: ${data.anchor || 'None'}`);
-                        });
-
-                        // Fit to view
-                        window.cy.fit();
-                    };
-
-                    window.resetView = function() {
-                        if (window.cy) {
-                            window.cy.fit();
-                        }
-                    };
-                </script>
-            """
             ).classes("w-full")
 
     async def load_graph_data(self):
         """Load graph data from the API."""
         try:
             # Show loading indicator
-            if self.loading_indicator:
+            if ui and self.loading_indicator:
                 self.loading_indicator.classes(replace="block")
 
             # Build query parameters
@@ -284,7 +224,7 @@ class GraphVisualizationApp:
 
         finally:
             # Hide loading indicator
-            if self.loading_indicator:
+            if ui and self.loading_indicator:
                 self.loading_indicator.classes(replace="hidden")
 
     async def update_graph_visualization(self, data: Dict[str, Any]):
@@ -293,15 +233,18 @@ class GraphVisualizationApp:
         data_json = json.dumps(data)
 
         # Execute JavaScript to update the graph
-        await ui.run_javascript(f"createGraph({data_json})")
+        if ui:
+            await ui.run_javascript(f"createGraph({data_json})")
 
     async def reset_view(self):
         """Reset the graph view."""
-        await ui.run_javascript("resetView()")
+        if ui:
+            await ui.run_javascript("resetView()")
 
     def open_dashboard(self):
         """Open the main dashboard in a new tab."""
-        ui.run_javascript(f"window.open('{DASHBOARD_URL}', '_blank')")
+        if ui:
+            ui.run_javascript(f"window.open('{DASHBOARD_URL}', '_blank')")
 
 
 def create_app() -> GraphVisualizationApp:

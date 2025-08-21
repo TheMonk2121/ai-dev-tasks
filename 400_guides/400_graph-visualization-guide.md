@@ -514,6 +514,14 @@ for node in graph_data.nodes:
 - **Access Control**: Implement proper authentication for production use
 - **Error Handling**: Avoid exposing sensitive information in error messages
 
+### **Implementation Patterns (NiceGUI + Cytoscape)**
+
+- **Guard optional UI imports**: Wrap `from nicegui import ui` in try/except and expose `ui` as Any; skip UI creation when NiceGUI isn't installed.
+- **Atomic JS injection**: Put Cytoscape setup and helpers in a single `ui.add_body_html` block to avoid stray fragments.
+- **JS interop**: Serialize data with `json.dumps` and use `await ui.run_javascript(...)` to update/create graphs.
+- **Async I/O**: Use `httpx.AsyncClient` and show/hide spinners only if `ui` exists.
+- **Import-time safety**: Ensure the module can be imported in headless/test environments without NiceGUI.
+
 ## 📚 Related Documentation
 
 - **System Overview**: `400_guides/400_system-overview.md`
