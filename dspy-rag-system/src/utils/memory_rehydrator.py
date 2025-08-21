@@ -50,6 +50,21 @@ except ImportError:
     # Fallback for when running from outside src directory
     HybridVectorStore = None
 
+# Optional fast-mode (reduced retrieval cost) toggled by env
+FAST_MODE = os.getenv("REHYDRATE_FAST", "0") == "1"
+
+# Singleton vector store to avoid re-instantiation overhead within a run
+_VECTOR_STORE_SINGLETON = None
+
+
+def _get_vector_store(db_dsn: str):
+    """Create or return a cached HybridVectorStore instance."""
+    global _VECTOR_STORE_SINGLETON
+    if _VECTOR_STORE_SINGLETON is None and HybridVectorStore is not None:
+        _VECTOR_STORE_SINGLETON = HybridVectorStore(db_connection_string=db_dsn)
+    return _VECTOR_STORE_SINGLETON
+
+
 # ---- Kill-switch defaults (can be overridden by CLI or env) ----
 DEFAULT_STABILITY = float(os.getenv("REHYDRATE_STABILITY", "0.6"))
 USE_RRF = os.getenv("REHYDRATE_USE_RRF", "1") != "0"
@@ -212,7 +227,10 @@ ROLE_INSTRUCTIONS = {
                 "ruff check src/ scripts/ tests/",
             ],
             "memory_rehydration": [
-                "python3 scripts/cursor_memory_rehydrate.py coder 'task description'",
+                "REHYDRATE_FAST=1 python3 scripts/cursor_memory_rehydrate.py coder 'task description'",
+                "# Full mode when needed:",
+                "python3 scripts/cursor_memory_rehydrate.py coder 'task description' --stability 0.6",
+                "# Full defaults: RRF on, entity expansion on",
                 "python scripts/update_cursor_memory.py",
             ],
             "search_and_analysis": [
@@ -220,6 +238,33 @@ ROLE_INSTRUCTIONS = {
                 "todo_write 'task description'",
                 "update_memory 'important decision'",
             ],
+        },
+        "rehydration_policy": {
+            "default": "fast",
+            "fast": {
+                "desc": "Low-latency retrieval for localized Coder tasks",
+                "flags": {
+                    "use_rrf": False,
+                    "dedupe": "file",
+                    "expand_query": "off",
+                    "use_entity_expansion": False,
+                },
+            },
+            "escalate_on": [
+                "low_similarity_or_thin_evidence",
+                "evidence_spans_many_files_or_dirs",
+                "broad_or_unrelated_test_failures_after_edit",
+                "task_keywords: architecture|migration|integration|security",
+            ],
+            "full": {
+                "desc": "High-recall retrieval for cross-cutting analysis",
+                "flags": {
+                    "use_rrf": True,
+                    "dedupe": "file+overlap",
+                    "expand_query": "auto",
+                    "use_entity_expansion": True,
+                },
+            },
         },
     },
 }
@@ -465,14 +510,9 @@ def vector_search(query: str, k: int, db_dsn: str = DEFAULT_PG_DSN) -> List[Dict
     }]
     """
     try:
-        # Function-level import to avoid circular dependency
-        import os
-        import sys
-
-        sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-        from dspy_modules.vector_store import HybridVectorStore
-
-        vs = HybridVectorStore(db_connection_string=db_dsn)
+        vs = _get_vector_store(db_dsn)
+        if vs is None:
+            return []
         results = vs("search_vector", query=query, limit=k)
         return _normalize_to_canonical(results.get("results", []), "vector")
     except Exception as e:
@@ -494,14 +534,9 @@ def bm25_search(query: str, k: int, db_dsn: str = DEFAULT_PG_DSN) -> List[Dict[s
     }]
     """
     try:
-        # Function-level import to avoid circular dependency
-        import os
-        import sys
-
-        sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-        from dspy_modules.vector_store import HybridVectorStore
-
-        vs = HybridVectorStore(db_connection_string=db_dsn)
+        vs = _get_vector_store(db_dsn)
+        if vs is None:
+            return []
         results = vs("search_bm25", query=query, limit=k)
         return _normalize_to_canonical(results.get("results", []), "bm25")
     except Exception as e:
@@ -819,7 +854,15 @@ def rehydrate(
     use_entity_expansion: bool = True,
     role: str = "planner",
     db_dsn: str = DEFAULT_PG_DSN,
+    fast: bool = False,
 ) -> Bundle:
+
+    # Apply fast-mode overrides
+    if fast or FAST_MODE:
+        use_rrf = False
+        dedupe = "file"
+        expand_query = "off"
+        use_entity_expansion = False
 
     # 0) Pins (always tiny, pre-compressed)
     pins = load_guardrail_pins(PINS_CAP_TOKENS)
@@ -828,7 +871,8 @@ def rehydrate(
     tracer.add_pins([{"content": pins, "tokens": token_len(pins)}])
 
     # 1) Initial vector probe for confidence
-    vec_probe = vector_search(query, k=K_VEC, db_dsn=db_dsn)
+    k_vec_probe = 12 if (fast or FAST_MODE) else K_VEC
+    vec_probe = vector_search(query, k=k_vec_probe, db_dsn=db_dsn)
     sim_top = max((d.get("sim", 0.0) for d in vec_probe), default=0.0)
 
     # 2) Optional auto query expansion on low confidence
@@ -840,8 +884,10 @@ def rehydrate(
         expanded_q = query
 
     # 3) Full searches with canonicalization
-    vec = vector_search(expanded_q, k=K_VEC, db_dsn=db_dsn)
-    lex = bm25_search(expanded_q, k=K_LEX, db_dsn=db_dsn) if use_rrf else []
+    k_vec = 12 if (fast or FAST_MODE) else K_VEC
+    k_lex = 0 if (fast or FAST_MODE) else K_LEX
+    vec = vector_search(expanded_q, k=k_vec, db_dsn=db_dsn)
+    lex = bm25_search(expanded_q, k=k_lex, db_dsn=db_dsn) if use_rrf and k_lex > 0 else []
 
     # Canonicalize results to consistent format
     vec_canon = _normalize_to_canonical(vec, search_type="vector")
@@ -912,8 +958,8 @@ def rehydrate(
             "dedupe": dedupe,
             "expand_query": expand_query,
             "use_entity_expansion": use_entity_expansion,
-            "k_vec": K_VEC,
-            "k_lex": K_LEX if use_rrf else 0,
+            "k_vec": k_vec,
+            "k_lex": k_lex if use_rrf else 0,
             "rrf_k0": RRF_K0,
             "overlap_thresh": OVERLAP_THRESH,
             "per_file": PER_FILE_ROUND_ROBIN,
