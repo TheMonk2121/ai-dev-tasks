@@ -393,7 +393,7 @@ class ContextManager:
     async def get_related_contexts(self, context_id: str) -> List[ContextData]:
         """Get contexts related to the given context."""
         related_ids = self.context_relationships.get(context_id, [])
-        return [self.contexts.get(cid) for cid in related_ids if cid in self.contexts]
+        return [self.contexts[cid] for cid in related_ids if cid in self.contexts]
 
 
 class CursorAIIntegrationFramework:
