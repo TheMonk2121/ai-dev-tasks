@@ -80,6 +80,12 @@ ROLE_FILES = {
     "researcher": (
         # extend later if needed (e.g., 500_research/*)
     ),
+    "coder": (
+        "400_guides/400_comprehensive-coding-best-practices.md",
+        "400_guides/400_code-criticality-guide.md",
+        "400_guides/400_testing-strategy-guide.md",
+        "100_memory/104_dspy-development-context.md",
+    ),
 }
 
 # ---------- Utility helpers ----------
@@ -846,7 +852,7 @@ def build_hydration_bundle(
 
 def _main():
     p = argparse.ArgumentParser(description="Build a role-aware hydration bundle from Postgres.")
-    p.add_argument("--role", required=True, help="planner | implementer | researcher")
+    p.add_argument("--role", required=True, help="planner | implementer | researcher | coder")
     p.add_argument("--task", required=True, help="Current task/title to focus retrieval")
     p.add_argument("--stability", type=float, default=DEFAULT_STABILITY, help="Stability knob (0.0-1.0)")
     p.add_argument("--no-rrf", action="store_true", help="Disable BM25+RRF fusion")

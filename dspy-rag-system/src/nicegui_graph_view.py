@@ -108,10 +108,8 @@ class GraphVisualizationApp:
             # Loading indicator
             self.loading_indicator = ui.spinner(size="lg").classes("hidden")
 
-            # Cytoscape container
-            self.cytoscape_container = ui.html(
-                """
-                <div id="cy" style="width: 100%; height: 600px; border: 1px solid #ccc;"></div>
+            # Add Cytoscape script to body
+            ui.add_body_html("""
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
                 <script>
                     window.cy = null;
@@ -207,6 +205,15 @@ class GraphVisualizationApp:
                                 animate: 'end',
                                 animationDuration: 1000,
                                 nodeDimensionsIncludeLabels: true,
+                            });
+                        };
+                </script>
+            """)
+
+            # Cytoscape container
+            self.cytoscape_container = ui.html(
+                '<div id="cy" style="width: 100%; height: 600px; border: 1px solid #ccc;"></div>'
+            )
                                 padding: 50
                             }
                         });

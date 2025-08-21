@@ -36,7 +36,7 @@ class AnchorMetadata:
 CANONICAL_ANCHORS = {"tldr", "quick-start", "quick-links", "commands"}
 
 # Valid roles for role pinning
-VALID_ROLES = {"planner", "implementer", "researcher"}
+VALID_ROLES = {"planner", "implementer", "researcher", "coder"}
 
 # Default priorities for canonical anchors
 DEFAULT_PRIORITIES = {"tldr": 0, "quick-start": 1, "quick-links": 2, "commands": 3}

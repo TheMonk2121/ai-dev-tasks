@@ -39,7 +39,7 @@ CONTEXT_INDEX -->
 
 <!-- ANCHOR_KEY: memory-context -->
 <!-- ANCHOR_PRIORITY: 0 -->
-<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher", "coder"] -->
 
 # Cursor Memory Context
 
@@ -52,7 +52,7 @@ CONTEXT_INDEX -->
 
 <!-- ANCHOR_KEY: tldr -->
 <!-- ANCHOR_PRIORITY: 0 -->
-<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher", "coder"] -->
 
 ## ⚡ AI Rehydration Quick Start {#quick-start}
 
@@ -66,7 +66,7 @@ Read these files in order (1–2 min total):
 
 <!-- ANCHOR_KEY: quick-start -->
 <!-- ANCHOR_PRIORITY: 15 -->
-<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher", "coder"] -->
 
 ## 🧠 Hydration Bundle Policy {#hydration-policy}
 
@@ -119,6 +119,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 ### **Memory Rehydration (Choose One)**
 - **Python**: `python3 scripts/cursor_memory_rehydrate.py planner "current project status"`
+- **Python (Coder)**: `python3 scripts/cursor_memory_rehydrate.py coder "implement authentication function"`
 - **Go**: `cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project status"`
 
 #### **Implementation Differences:**
@@ -166,7 +167,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 <!-- ANCHOR_KEY: commands -->
 <!-- ANCHOR_PRIORITY: 25 -->
-<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher", "coder"] -->
 
 ## 🔗 Quick Links {#quick-links}
 
@@ -202,7 +203,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 <!-- ANCHOR_KEY: quick-links -->
 <!-- ANCHOR_PRIORITY: 20 -->
-<!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
+<!-- ROLE_PINS: ["planner", "implementer", "researcher", "coder"] -->
 
 - Comprehensive coding standards → `400_guides/400_comprehensive-coding-best-practices.md` (includes "Undefined Name" error fixes, database query patterns, systematic test file patterns, and automated database synchronization)
 
@@ -223,6 +224,8 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 - Implementer: `100_memory/104_dspy-development-context.md`, `dspy-rag-system/tests/README-dev.md`, relevant 400-series topic guides (testing, security,
 performance, integration, deployment)
+
+- Coder: `400_guides/400_comprehensive-coding-best-practices.md`, `400_guides/400_code-criticality-guide.md`, `400_guides/400_testing-strategy-guide.md`, `100_memory/104_dspy-development-context.md`
 
 - Researcher: `500_research/500_research-index.md`, `500_research/500_dspy-research.md`,
 `500_research/500_rag-system-research.md`
@@ -449,19 +452,19 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 <!-- AUTO:current_priorities:start -->
 ### **Current Priorities**
 
-1. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
+1. ****: B‑100 (Coder Role Implementation for Memory Rehydration System points)
+   - 5
+
+2. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
    - todo
 
-2. **B‑094**: MCP Memory Rehydrator Server (🔥 points)
+3. **B‑094**: MCP Memory Rehydrator Server (🔥 points)
    - todo
 
-3. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
+4. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
    - todo
 
-4. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
-   - todo
-
-5. **B‑076**: Research-Based DSPy Assertions Implementation (🔥 points)
+5. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 

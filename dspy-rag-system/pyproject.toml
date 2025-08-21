@@ -6,16 +6,16 @@ build-backend = "setuptools.build_meta"
 name = "dspy-rag-system"
 version = "0.1.0"
 description = "DSPy RAG System"
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 
 
 [tool.black]
 line-length = 120
-target-version = ["py39"]
+target-version = ["py312"]
 
 [tool.ruff]
 line-length = 120
-target-version = "py39"
+target-version = "py312"
 exclude = ["venv", "**/__pycache__", ".pytest_cache"]
 
 [tool.ruff.lint]

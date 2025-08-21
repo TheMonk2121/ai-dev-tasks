@@ -272,6 +272,35 @@ class CodeAgent(Module):
         return {"code": code, "tests": self.extract_tests(code)}
 ```
 
+**Coder Role Integration with CodeAgent:**
+The coder role in the memory rehydration system leverages the CodeAgent module for focused coding tasks:
+
+**When to Use Coder vs Implementer Role:**
+- **Coder Role**: For specific coding tasks, implementation details, and best practices
+  - Use when: Writing functions, debugging code, applying coding standards
+  - Context: `400_guides/400_comprehensive-coding-best-practices.md`, `400_guides/400_code-criticality-guide.md`
+- **Implementer Role**: For broader system implementation and architecture
+  - Use when: System design, integration, architectural decisions
+  - Context: `100_memory/104_dspy-development-context.md`, DSPy framework details
+
+**Coder Role Usage Examples:**
+```bash
+# For specific coding tasks
+python3 scripts/cursor_memory_rehydrate.py coder "implement authentication function with proper error handling"
+
+# For debugging and code review
+python3 scripts/cursor_memory_rehydrate.py coder "fix undefined variable error in database query"
+
+# For best practices application
+python3 scripts/cursor_memory_rehydrate.py coder "apply Python 3.12 typing best practices to function"
+```
+
+**Best Practices for Coding Context:**
+- Always include specific requirements and constraints
+- Reference existing code patterns when applicable
+- Focus on implementation details rather than architecture
+- Include error handling and testing considerations
+
 **ResearchAgent Module:**
 ```python
 @dspy.assert_transform_module
