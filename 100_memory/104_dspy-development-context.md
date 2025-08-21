@@ -431,7 +431,7 @@ python3 src/dashboard.py
 from utils.rag_compatibility_shim import create_rag_interface
 
 # Create enhanced interface
-rag = create_enhanced_rag_interface()
+rag = create_rag_interface()
 
 # Ask questions with different reasoning modes
 response = rag.ask("What is DSPy?", use_cot=True, use_react=False)
