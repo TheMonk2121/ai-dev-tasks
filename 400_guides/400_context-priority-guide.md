@@ -44,6 +44,9 @@ priority system to current documentation |
 | Topic | File | Anchor | When to read | Why |
 |---|---|---|---|---|
 | System overview | 400_guides/400_system-overview.md | — | After memory + backlog | Architecture mental model |
+| Scribe system | 400_guides/400_scribe-system-guide.md | — | Using context capture or workflow automation | Context capture and summarization |
+| PR Sign-Off system | 400_guides/400_multi-role-pr-signoff-guide.md | — | PR closure and role-based approvals | Comprehensive review and cleanup |
+| PR Sign-Off system v2.0 | 400_guides/400_multi-role-pr-signoff-v2-guide.md | — | Enhanced PR workflows with strategic alignment | 5-step strategic alignment, stakeholder involvement |
 | Backlog & priorities | 000_core/000_backlog.md | — | Always for work selection | Current focus and dependencies |
 | Testing | 400_guides/400_testing-strategy-guide.md | — | Before writing tests | Strategy, pyramid, quality gates |
 | Test development | dspy-rag-system/tests/README-dev.md | — | When writing DSPy tests | Import paths, variable management, F841 |
@@ -69,6 +72,7 @@ guard-rails |
 3) `000_core/000_backlog.md` → Current priorities and dependencies
 4) `400_guides/400_system-overview.md` → Technical architecture and components
 5) `400_guides/400_context-priority-guide.md` → File relationships and reading order
+6) `400_guides/400_scribe-system-guide.md` → Context capture and workflow automation
 6) Topic-specific guides based on task:
 
 - Testing → `400_guides/400_testing-strategy-guide.md`
@@ -77,6 +81,9 @@ guard-rails |
 - Security → `400_guides/400_security-best-practices-guide.md`
 - Performance → `400_guides/400_performance-optimization-guide.md`
 - Integration → `400_guides/400_integration-patterns-guide.md`
+- Workflow automation → `400_guides/400_scribe-system-guide.md`
+- PR closure → `400_guides/400_multi-role-pr-signoff-guide.md`
+- Enhanced PR workflows → `400_guides/400_multi-role-pr-signoff-v2-guide.md`
 
 ## 🧠 Hydration Integration
 

@@ -12,6 +12,7 @@ import signal
 import subprocess
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 
 
@@ -212,6 +213,28 @@ def cmd_scribe_start(backlog_id: str | None, interval: int, fast: bool, full: bo
     if not bid:
         print("❌ Cannot determine backlog_id. Provide --backlog-id or create branch feat/B-XYZ-...")
         sys.exit(1)
+
+    # Check instance limits
+    current_instances = _count_scribe_instances()
+    max_instances = 3
+
+    if current_instances >= max_instances:
+        print(f"⚠️  Warning: {current_instances} Scribe instances running (max: {max_instances})")
+        if current_instances == max_instances:
+            print("🔄 Stopping oldest instance to make room...")
+            oldest_pid = _get_oldest_scribe_pid()
+            if oldest_pid and _stop_scribe_instance(oldest_pid):
+                print(f"✅ Stopped oldest instance (PID: {oldest_pid})")
+                current_instances -= 1
+            else:
+                print("❌ Failed to stop oldest instance")
+                sys.exit(1)
+        else:
+            print("❌ Too many instances running. Please stop some manually.")
+            sys.exit(1)
+
+    if current_instances >= 2:
+        print(f"⚠️  Warning: {current_instances} instances running (approaching limit of {max_instances})")
     _rehydrate(f"scribe start {bid}", fast=fast, full=full)
     _append_worklog(bid, ["- Session started", f"- Branch: {_current_branch()}".strip()])
     # Spawn daemon
@@ -258,6 +281,132 @@ def cmd_scribe_stop(backlog_id: str | None) -> None:
     state["scribe"] = {}
     _save_state(state)
     print("📝 Scribe stopped")
+
+
+def cmd_scribe_append(message: str, backlog_id: str | None) -> None:
+    """Append a message to the current worklog."""
+    bid = _detect_backlog_id(backlog_id) or _load_state().get("backlog_id")
+    if not bid:
+        print("❌ Cannot determine backlog_id. Provide --backlog-id or ensure scribe is running.")
+        sys.exit(1)
+
+    _append_worklog(bid, [f"- {message}"])
+    print(f"📝 Added to {bid} worklog: {message}")
+
+
+def _count_scribe_instances() -> int:
+    """Count running Scribe instances."""
+    import psutil
+
+    count = 0
+    for proc in psutil.process_iter(["pid", "cmdline"]):
+        try:
+            cmdline = proc.info["cmdline"]
+            if (
+                cmdline
+                and "single_doorway.py" in " ".join(cmdline)
+                and "scribe" in " ".join(cmdline)
+                and "_daemon" in " ".join(cmdline)
+            ):
+                count += 1
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+    return count
+
+
+def _get_oldest_scribe_pid() -> int | None:
+    """Get PID of oldest running Scribe instance."""
+    import psutil
+
+    oldest_pid = None
+    oldest_time = float("inf")
+
+    for proc in psutil.process_iter(["pid", "cmdline", "create_time"]):
+        try:
+            cmdline = proc.info["cmdline"]
+            if (
+                cmdline
+                and "single_doorway.py" in " ".join(cmdline)
+                and "scribe" in " ".join(cmdline)
+                and "_daemon" in " ".join(cmdline)
+            ):
+                if proc.info["create_time"] < oldest_time:
+                    oldest_time = proc.info["create_time"]
+                    oldest_pid = proc.info["pid"]
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    return oldest_pid
+
+
+def _stop_scribe_instance(pid: int) -> bool:
+    """Stop a specific Scribe instance by PID."""
+    import psutil
+
+    try:
+        proc = psutil.Process(pid)
+        proc.terminate()
+        proc.wait(timeout=5)  # Wait up to 5 seconds
+        return True
+    except (psutil.NoSuchProcess, psutil.TimeoutExpired):
+        try:
+            proc.kill()  # Force kill if terminate didn't work
+            return True
+        except psutil.NoSuchProcess:
+            return False
+
+
+def cmd_scribe_status(verbose: bool = False) -> None:
+    """Show status of running Scribe instances."""
+    import psutil
+
+    scribe_processes = []
+
+    # Find all scribe daemon processes (filter for our specific script)
+    for proc in psutil.process_iter(["pid", "name", "cmdline", "create_time"]):
+        try:
+            cmdline = proc.info["cmdline"]
+            if (
+                cmdline
+                and "single_doorway.py" in " ".join(cmdline)
+                and "scribe" in " ".join(cmdline)
+                and "_daemon" in " ".join(cmdline)
+            ):
+                scribe_processes.append(proc.info)
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    if not scribe_processes:
+        print("📝 No Scribe instances running")
+        return
+
+    print(f"📝 Found {len(scribe_processes)} Scribe instance(s):")
+
+    for proc in scribe_processes:
+        pid = proc["pid"]
+        cmdline = " ".join(proc["cmdline"])
+        create_time = datetime.fromtimestamp(proc["create_time"]).strftime("%Y-%m-%d %H:%M:%S")
+
+        # Extract backlog ID from command line
+        backlog_id = "unknown"
+        for arg in proc["cmdline"]:
+            if arg.startswith("--backlog-id"):
+                backlog_id = arg.split("=")[1] if "=" in arg else "B-XXX"
+                break
+
+        print(f"  PID {pid}: {backlog_id} (started {create_time})")
+
+        if verbose:
+            print(f"    Command: {cmdline}")
+            print(f"    Memory: {psutil.Process(pid).memory_info().rss / 1024 / 1024:.1f} MB")
+            print()
+
+    # Check state file
+    state = _load_state()
+    if state.get("backlog_id"):
+        print(f"📋 Current state: {state['backlog_id']}")
+        if state.get("scribe", {}).get("pid"):
+            print(f"   Active PID: {state['scribe']['pid']}")
 
 
 def cmd_scribe_daemon(backlog_id: str, interval: int, idle_timeout: int) -> None:
@@ -351,6 +500,12 @@ def main() -> None:
     s_daemon.add_argument("--backlog-id", required=True)
     s_daemon.add_argument("--interval", type=int, default=60)
     s_daemon.add_argument("--idle-timeout", type=int, default=1800)
+    s_append = ssub.add_parser("append")
+    s_append.add_argument("message", help="Message to append to worklog")
+    s_append.add_argument("--backlog-id", help="Backlog ID (auto-detected if not provided)")
+
+    s_status = ssub.add_parser("status")
+    s_status.add_argument("--verbose", "-v", action="store_true", help="Show detailed status")
 
     args = parser.parse_args()
 
@@ -381,6 +536,10 @@ def main() -> None:
             cmd_scribe_stop(args.backlog_id)
         elif args.action == "_daemon":
             cmd_scribe_daemon(args.backlog_id, args.interval, args.idle_timeout)
+        elif args.action == "append":
+            cmd_scribe_append(args.message, args.backlog_id)
+        elif args.action == "status":
+            cmd_scribe_status(args.verbose)
 
 
 if __name__ == "__main__":

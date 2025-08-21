@@ -198,6 +198,11 @@ Items requiring external credentials, business decisions, or deployment should b
 | B-092 | Final Performance Validation Test | 🔧 | 3 | todo | Final Performance Validation Test | None | None |
 | B-093 | Doorway: Scribe + Auto Rehydrate | 🔧 | 3 | todo | Doorway: Scribe + Auto Rehydrate | None | None |
 | B-094 | Doorway: Full E2E automation from backlog to archived artifacts | 🔧 | 3 | todo | Doorway: Full E2E automation from backlog to archived artifacts | None | None |
+| B-095 | Reshape 500_research folder into industry-standard citation resource | 🔧 | 3 | todo | Reshape 500_research folder into industry-standard citation resource | None | None |
+| B-096 | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | 🔧 | 3 | todo | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | None | None |
+| B-097 | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | 🔧 | 3 | todo | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | None | None |
+| B-098 | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | 🔧 | 3 | todo | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | None | None |
+<!-- PRD: 600_archives/artifacts/000_core_temp_files/PRD-B-096-Enhanced-Scribe-System-Intelligent-Content-Analysis-And-Idea-Mining.md -->
 
 | B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | todo | Add GitHub Action to run maintenance script on PRs | GitHub Actions + CI/CD | None |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:0.5, lessons:3, deps:[]}-->
