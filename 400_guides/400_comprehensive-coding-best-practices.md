@@ -90,6 +90,15 @@ python test_cursor_context_engineering.py
 python3.12 scripts/single_doorway.py generate "description"  # Start automated workflow
 python3.12 scripts/single_doorway.py continue B-XXX  # Continue interrupted workflow
 python3.12 scripts/single_doorway.py archive B-XXX  # Archive completed work
+
+# Scribe context capture and summarization
+python3.12 scripts/single_doorway.py scribe start  # Start automatic context capture
+python3.12 scripts/single_doorway.py scribe status  # Check Scribe status
+python3.12 scripts/single_doorway.py scribe append "note"  # Add manual notes
+python scripts/worklog_summarizer.py --backlog-id B-XXX  # Generate summaries
+python scripts/generate_all_summaries.py  # Generate all summaries
+
+# Task execution and management
 python scripts/process_tasks.py --status  # Check task status
 python scripts/process_tasks.py --execute-all  # Execute all available tasks
 python scripts/error_handler.py --test  # Test error handling
@@ -276,6 +285,7 @@ echo "✅ Installation complete!"
 | Script | Location | Purpose | Key Features |
 |--------|----------|---------|--------------|
 | **Single Doorway System** | `scripts/single_doorway.py` | Core CLI for automated workflow | Backlog → PRD → tasks → execution → archive automation |
+| **Scribe System** | `scripts/single_doorway.py scribe` | Context capture and summarization | Automatic session recording, worklog generation, summary creation |
 | **Task Execution Engine** | `scripts/process_tasks.py` | Core CLI for backlog execution | Automated task processing, state management, error handling |
 | **Error Handler** | `scripts/error_handler.py` | Comprehensive error handling | Retry logic, graceful degradation, error reporting |
 | **State Manager** | `scripts/state_manager.py` | Task execution state tracking | Progress tracking, execution history, metadata management |
@@ -285,6 +295,9 @@ echo "✅ Installation complete!"
 #### **Core Execution & Quality Assurance**
 
 - **Single Doorway System**: `scripts/single_doorway.py` - Automated workflow from backlog → PRD → tasks → execution → archive
+- **Scribe Context Capture**: `scripts/single_doorway.py scribe` - Automatic session recording and summarization
+- **Worklog Summarization**: `scripts/worklog_summarizer.py` - Generate insights from Scribe sessions
+- **Batch Summary Generation**: `scripts/generate_all_summaries.py` - Generate summaries for all active worklogs
 - **Task Execution**: `scripts/process_tasks.py` - Core CLI for backlog execution
 - **Error Handling**: `scripts/error_handler.py` - Comprehensive error recovery
 - **State Management**: `scripts/state_manager.py` - Execution state tracking
@@ -1891,6 +1904,7 @@ The coding standards above are implemented in your actual AI development ecosyst
 **Core Systems:**
 
 - **DSPy RAG System** (`dspy-rag-system/src/dspy_modules/`) - Document processing, vector store, AI integration
+- **Scribe System** (`scripts/single_doorway.py`) - Automatic context capture and summarization for development sessions
 - **Mission Dashboard** (`dspy-rag-system/src/mission_dashboard/`) - Real-time AI task monitoring with WebSocket
 - **N8N Workflows** (`dspy-rag-system/src/n8n_workflows/`) - Automated backlog management and event processing
 - **Production Monitoring** (`dspy-rag-system/src/monitoring/`) - Health checks, metrics, OpenTelemetry integration
@@ -2387,6 +2401,7 @@ jobs:
 - **Code Criticality**: `400_guides/400_code-criticality-guide.md` - Quality standards, tier-based requirements, quality gates
 - **File Analysis**: `400_guides/400_file-analysis-guide.md` - Mandatory 6-step analysis process
 - **Testing Strategy**: `400_guides/400_testing-strategy-guide.md` - Comprehensive testing approaches and frameworks
+- **Scribe System**: `400_guides/400_scribe-system-guide.md` - Context capture, summarization, and workflow automation
 
 ### **Development Resources**
 
@@ -2445,6 +2460,8 @@ This document integrates with your implemented AI development ecosystem by:
 - Referencing actual production-ready systems in examples
 - Using real file paths and commands from your codebase
 - Providing practical workflows that work with your existing tools
+- Integrating with Scribe system for automatic context capture and summarization
+- Supporting memory rehydration with Scribe-generated insights
 
 ## 📈 Monitoring and Improvement
 

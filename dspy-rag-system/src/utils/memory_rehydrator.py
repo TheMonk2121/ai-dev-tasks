@@ -96,6 +96,7 @@ ROLE_FILES = {
         "scripts/single_doorway.py",
         "scripts/cursor_memory_rehydrate.py",
         "artifacts/worklogs/",
+        "artifacts/summaries/",
         "400_guides/400_scribe-system-guide.md",
     ),
     "researcher": (

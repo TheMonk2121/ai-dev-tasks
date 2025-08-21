@@ -68,6 +68,21 @@ python scripts/worklog_summarizer.py --backlog-id B-093
 
 # Generate summary with custom output
 python scripts/worklog_summarizer.py --backlog-id B-093 --output custom-summary.md --format json
+
+# Generate summaries for ALL active worklogs
+python scripts/generate_all_summaries.py
+
+# Force regeneration of all summaries
+python scripts/generate_all_summaries.py --force
+
+# Generate summary for specific backlog item
+python scripts/generate_all_summaries.py --backlog-id B-100
+
+# Check memory rehydration integration
+python scripts/generate_all_summaries.py --check-integration
+
+# Generate graph integration report
+python scripts/generate_all_summaries.py --graph-report
 ```
 
 ### Instance Management
@@ -277,16 +292,59 @@ Comprehensive breakdown with metadata:
 
 ## 🔄 Integration Workflows {#integration-workflows}
 
-### Pre-Commit Integration
+### Memory Rehydration Integration
+
+Scribe summaries are automatically integrated into the memory rehydration system:
+
+```bash
+# Summaries accessible via implementer role
+python scripts/cursor_memory_rehydrate.py implementer "scribe session insights"
+
+# All summaries include comprehensive DSPy tags:
+# - CONTEXT_REFERENCE: Cross-reference linking
+# - DSPY_ROLE: Role-based context assignment
+# - DSPY_AUTHORITY: Authority designation
+# - GRAPH_NODE_TYPE: Graph visualization metadata
+# - CREATED_AT/UPDATED_AT: Timestamp tracking
+```
+
+**Integration Features:**
+- **Automatic Tagging**: All summaries include memory rehydration tags
+- **Role Assignment**: Dynamic role assignment based on content type
+- **Cross-References**: Proper linking to related documentation
+- **Timestamp Tracking**: Creation and update timestamps
+- **Graph Metadata**: Ready for visualization integration
+
+### Graph Visualization Integration
+
+Scribe summaries appear in the NiceGUI Network Graph:
+
+```bash
+# Start graph visualization
+./dspy-rag-system/start_graph_visualization.sh
+
+# View Scribe summaries in graph
+# Navigate to: http://localhost:8080
+# Filter by: scribe_summary nodes
+```
+
+**Graph Features:**
+- **Node Type**: `scribe_summary`
+- **Category**: `session_insights`
+- **Weight**: Dynamic based on content richness (ideas + decisions)
+- **Connections**: Links to backlog items and branch nodes
+- **Visualization**: Color-coded session insights nodes
+
+### Pre-commit Integration
 
 Automatic summary generation during commits:
 
 ```bash
 # Pre-commit hook automatically:
-# 1. Checks for active Scribe session
-# 2. Generates summary if session exists
-# 3. Adds summary to commit
-# 4. Shows statistics
+# 1. Detects active Scribe sessions
+# 2. Generates summaries for updated worklogs
+# 3. Adds summaries to commit
+# 4. Validates memory rehydration integration
 ```
 
 ### PR Close Integration
@@ -478,6 +536,11 @@ Intelligent caching for repeated operations:
 - **Enhanced Documentation**: Comprehensive guide with DSPy integration
 - **Error Handling**: Robust process management
 - **User Experience**: Clear warnings and feedback
+- **Memory Rehydration Integration**: Automatic tagging and role assignment
+- **Graph Visualization**: Ready for NiceGUI Network Graph display
+- **Batch Summary Generation**: `generate_all_summaries.py` script
+- **Timestamp Tracking**: Creation and update timestamps
+- **Cross-Reference Linking**: Proper documentation linking
 
 ## 🔮 Future Enhancements {#future-enhancements}
 
@@ -501,11 +564,31 @@ Intelligent caching for repeated operations:
 
 ## 📚 Related Documentation
 
-- **[System Overview](../400_guides/400_system-overview.md)**: Technical architecture
-- **[Project Overview](../400_guides/400_project-overview.md)**: High-level project structure
-- **[Context Priority Guide](../400_guides/400_context-priority-guide.md)**: Documentation hierarchy
+- **[System Overview](./400_system-overview.md)**: Technical architecture
+- **[Project Overview](./400_project-overview.md)**: High-level project structure
+- **[Context Priority Guide](./400_context-priority-guide.md)**: Documentation hierarchy
+- **[Comprehensive Coding Best Practices](./400_comprehensive-coding-best-practices.md)**: Coding standards and development workflow
 - **[Naming Conventions](../200_setup/200_naming-conventions.md)**: File organization standards
 - **[Single Doorway Workflow](../000_core/001_create-prd.md)**: Core workflow integration
+- **[Graph Visualization Guide](./400_graph-visualization-guide.md)**: Graph integration details
+- **[Memory Rehydration System](../100_memory/100_cursor-memory-context.md)**: Context retrieval system
+
+## 🔧 Related Scripts
+
+- **[single_doorway.py](../scripts/single_doorway.py)**: Main Scribe session management
+- **[worklog_summarizer.py](../scripts/worklog_summarizer.py)**: Individual summary generation
+- **[generate_all_summaries.py](../scripts/generate_all_summaries.py)**: Batch summary generation
+- **[worklog_pre_commit.py](../scripts/worklog_pre_commit.py)**: Pre-commit integration
+
+## 🛡️ Quality Assurance Integration {#quality-assurance-integration}
+
+Scribe integrates with the comprehensive coding best practices through:
+
+- **Pre-commit Hooks**: Automatic summary generation during commits
+- **Code Quality Gates**: Scribe data feeds into quality assessment
+- **Development Workflow**: Context capture supports coding standards compliance
+- **Memory Rehydration**: Scribe insights enhance AI development context
+- **Documentation Standards**: Scribe summaries follow documentation best practices
 
 ## 🔗 Quick Links {#quick-links}
 
@@ -514,3 +597,4 @@ Intelligent caching for repeated operations:
 - **[Configuration](#configuration)**: Setup and customization
 - **[Troubleshooting](#troubleshooting)**: Common issues and solutions
 - **[Advanced Features](#advanced-features)**: Power user capabilities
+- **[Quality Assurance Integration](#quality-assurance-integration)**: Integration with coding standards

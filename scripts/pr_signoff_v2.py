@@ -383,7 +383,7 @@ class PRSignOffSystemV2:
                 else:
                     result["status"] = "failed"
                     result["details"] = "No files changed in PR"
-            except:
+            except Exception:
                 result["status"] = "error"
                 result["details"] = "Could not retrieve PR files"
 
@@ -398,7 +398,7 @@ class PRSignOffSystemV2:
                 else:
                     result["status"] = "warning"
                     result["details"] = "Scribe system may have issues"
-            except:
+            except Exception:
                 result["status"] = "error"
                 result["details"] = "Could not check Scribe system health"
 
@@ -418,7 +418,7 @@ class PRSignOffSystemV2:
                     result["status"] = "failed"
                     result["details"] = "Code quality issues found"
                     result["recommendations"].append("Fix linting errors")
-            except:
+            except Exception:
                 result["status"] = "error"
                 result["details"] = "Could not run code quality checks"
 
@@ -436,7 +436,7 @@ class PRSignOffSystemV2:
                     result["status"] = "failed"
                     result["details"] = "Smoke tests failed"
                     result["recommendations"].append("Fix failing tests")
-            except:
+            except Exception:
                 result["status"] = "error"
                 result["details"] = "Could not run tests"
 

@@ -4,6 +4,12 @@ Worklog Summarizer - Extract insights from Scribe worklogs
 ---------------------------------------------------------
 Automatically summarizes worklog content into actionable insights,
 decisions, and next steps for backlog items.
+
+Enhanced with:
+- Memory rehydration tags for DSPy integration
+- Timestamp tracking for creation and updates
+- Graph visualization metadata
+- Cross-reference linking
 """
 
 import argparse
@@ -99,7 +105,7 @@ def extract_implementation_progress(worklog_content: str) -> Dict[str, Any]:
             if clean_line and len(clean_line) > 10:
                 progress["in_progress"].append(clean_line)
 
-        elif any(keyword in line.lower() for keyword in ["planned", "todo", "next:", "future:"]):
+        elif any(keyword in line.lower() for keyword in ["todo", "planned", "future"]):
             clean_line = re.sub(r"^\s*-\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*-\s*", "", line)
             clean_line = re.sub(r"^\s*-\s*", "", clean_line)
             if clean_line and len(clean_line) > 10:
@@ -110,42 +116,59 @@ def extract_implementation_progress(worklog_content: str) -> Dict[str, Any]:
 
 def extract_session_metadata(worklog_content: str) -> Dict[str, Any]:
     """Extract session metadata from worklog content."""
-    metadata = {"session_count": 0, "total_duration": "unknown", "branch": "unknown", "last_activity": "unknown"}
+    metadata = {
+        "session_count": 0,
+        "branch": "unknown",
+        "last_activity": "unknown",
+        "total_lines": len(worklog_content.split("\n")),
+        "ideas_count": 0,
+        "decisions_count": 0,
+        "files_modified_count": 0,
+    }
 
-    # Count session starts
-    session_starts = re.findall(r"Session started", worklog_content)
-    metadata["session_count"] = len(session_starts)
+    lines = worklog_content.split("\n")
 
-    # Extract branch info
-    branch_match = re.search(r"Branch:\s*(\S+)", worklog_content)
-    if branch_match:
-        metadata["branch"] = branch_match.group(1)
+    # Count sessions
+    for line in lines:
+        if "Session started" in line:
+            metadata["session_count"] += 1
 
-    # Extract last activity timestamp
-    timestamps = re.findall(r"(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})", worklog_content)
+    # Extract branch
+    for line in lines:
+        if "Branch:" in line:
+            branch_match = re.search(r"Branch:\s*(.+)", line)
+            if branch_match:
+                metadata["branch"] = branch_match.group(1).strip()
+
+    # Extract last activity
+    timestamp_pattern = r"(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})"
+    timestamps = re.findall(timestamp_pattern, worklog_content)
     if timestamps:
         metadata["last_activity"] = timestamps[-1]
+
+    # Count content types
+    metadata["ideas_count"] = len(extract_ideas(worklog_content))
+    metadata["decisions_count"] = len(extract_decisions(worklog_content))
+    metadata["files_modified_count"] = len(extract_file_changes(worklog_content))
 
     return metadata
 
 
 def generate_next_steps(ideas: List[str], decisions: List[str], progress: Dict[str, Any]) -> List[str]:
-    """Generate next steps based on ideas and progress."""
+    """Generate next steps based on ideas, decisions, and progress."""
     next_steps = []
 
-    # Look for ideas that haven't been implemented
-    implemented_keywords = ["implemented", "added", "created", "updated"]
+    # If there are ideas but no implementations, suggest implementation
+    if ideas and not progress.get("completed"):
+        next_steps.append("Implement the generated ideas")
 
-    for idea in ideas:
-        idea_lower = idea.lower()
-        if not any(keyword in idea_lower for keyword in implemented_keywords):
-            # Extract the core concept from the idea
-            if ":" in idea:
-                core_concept = idea.split(":", 1)[1].strip()
-            else:
-                core_concept = idea
+    # If there are decisions but no progress, suggest action
+    if decisions and not progress.get("completed"):
+        next_steps.append("Take action on the decisions made")
 
-            next_steps.append(f"Implement: {core_concept}")
+    # If there are in-progress items, suggest completion
+    if progress.get("in_progress"):
+        next_steps.append("Complete the in-progress implementations")
 
     # Add any planned items
     next_steps.extend(progress.get("planned", []))
@@ -153,16 +176,62 @@ def generate_next_steps(ideas: List[str], decisions: List[str], progress: Dict[s
     return next_steps[:5]  # Limit to top 5 next steps
 
 
+def generate_memory_rehydration_tags(backlog_id: str, summary_data: Dict[str, Any]) -> str:
+    """Generate memory rehydration tags for DSPy integration."""
+    metadata = summary_data.get("metadata", {})
+    ideas_count = metadata.get("ideas_count", 0)
+    decisions_count = metadata.get("decisions_count", 0)
+
+    # Determine primary role based on content
+    primary_role = "implementer"  # Default for Scribe summaries
+    if ideas_count > decisions_count:
+        primary_role = "planner"
+    elif decisions_count > ideas_count:
+        primary_role = "implementer"
+
+    tags = f"""<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
+<!-- MODULE_REFERENCE: scripts/worklog_summarizer.py -->
+<!-- MEMORY_CONTEXT: HIGH - Scribe session insights and decisions -->
+<!-- DATABASE_SYNC: REQUIRED -->
+<!-- DSPY_ROLE: {primary_role} -->
+<!-- DSPY_AUTHORITY: scribe_session_insights -->
+<!-- DSPY_FILES: artifacts/worklogs/{backlog_id}.md, artifacts/summaries/{backlog_id}-summary.md -->
+<!-- DSPY_CONTEXT: AI-generated summary of Scribe brainstorming session with actionable insights -->
+<!-- DSPY_VALIDATION: session_analysis, decision_tracking, implementation_progress -->
+<!-- DSPY_RESPONSIBILITIES: context_capture, insight_extraction, progress_tracking -->
+<!-- GRAPH_NODE_TYPE: scribe_summary -->
+<!-- GRAPH_CATEGORY: session_insights -->
+<!-- GRAPH_WEIGHT: {min(ideas_count + decisions_count, 10)} -->
+<!-- CREATED_AT: {datetime.now().isoformat()} -->
+<!-- UPDATED_AT: {datetime.now().isoformat()} -->
+<!-- SESSION_COUNT: {metadata.get('session_count', 0)} -->
+<!-- IDEAS_COUNT: {ideas_count} -->
+<!-- DECISIONS_COUNT: {decisions_count} -->
+<!-- BRANCH: {metadata.get('branch', 'unknown')} -->
+<!-- LAST_ACTIVITY: {metadata.get('last_activity', 'unknown')} -->
+"""
+    return tags
+
+
 def generate_markdown_summary(backlog_id: str, summary_data: Dict[str, Any]) -> str:
-    """Generate markdown summary from summary data."""
-    md = f"# {backlog_id} Session Summary\n\n"
-    md += f"**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    """Generate markdown summary from summary data with enhanced metadata."""
+    # Generate memory rehydration tags
+    tags = generate_memory_rehydration_tags(backlog_id, summary_data)
+
+    md = tags + "\n"
+    md += f"# {backlog_id} Session Summary\n\n"
+    md += f"**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    md += f"**Last Updated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
     # Session metadata
     metadata = summary_data.get("metadata", {})
     md += f"**Sessions**: {metadata.get('session_count', 0)}\n"
     md += f"**Branch**: {metadata.get('branch', 'unknown')}\n"
-    md += f"**Last Activity**: {metadata.get('last_activity', 'unknown')}\n\n"
+    md += f"**Last Activity**: {metadata.get('last_activity', 'unknown')}\n"
+    md += f"**Total Lines**: {metadata.get('total_lines', 0)}\n"
+    md += f"**Ideas Generated**: {metadata.get('ideas_count', 0)}\n"
+    md += f"**Decisions Made**: {metadata.get('decisions_count', 0)}\n"
+    md += f"**Files Modified**: {metadata.get('files_modified_count', 0)}\n\n"
 
     # Key ideas
     ideas = summary_data.get("ideas", [])
@@ -210,6 +279,13 @@ def generate_markdown_summary(backlog_id: str, summary_data: Dict[str, Any]) -> 
         for file_path in files:
             md += f"- `{file_path}`\n"
         md += "\n"
+
+    # Graph integration metadata
+    md += "## Graph Integration\n"
+    md += "- **Node Type**: scribe_summary\n"
+    md += "- **Category**: session_insights\n"
+    md += f"- **Weight**: {min(metadata.get('ideas_count', 0) + metadata.get('decisions_count', 0), 10)}\n"
+    md += f"- **Related Nodes**: {backlog_id}, {metadata.get('branch', 'unknown')}\n\n"
 
     return md
 
@@ -282,6 +358,8 @@ def main():
         print(f"🎯 Decisions: {len(summary['decisions'])}")
         print(f"📁 Files: {len(summary['files_modified'])}")
         print(f"📋 Next Steps: {len(summary['next_steps'])}")
+        print("🏷️  Memory rehydration tags: ✅")
+        print("📊 Graph integration metadata: ✅")
 
     return 0
 

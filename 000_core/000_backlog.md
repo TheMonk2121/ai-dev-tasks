@@ -201,7 +201,7 @@ Items requiring external credentials, business decisions, or deployment should b
 | B-095 | Reshape 500_research folder into industry-standard citation resource | 🔧 | 3 | todo | Reshape 500_research folder into industry-standard citation resource | None | None |
 | B-096 | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | 🔧 | 3 | todo | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | None | None |
 | B-097 | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | 🔧 | 3 | todo | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | None | None |
-| B-098 | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | 🔧 | 3 | todo | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | None | None |
+| B-098 | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | 🔧 | 3 | todo | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | None | 600_archives/artifacts/000_core_temp_files/PRD-B-098-Multi-Role-Pr-Sign-Off-System.md |
 <!-- PRD: 600_archives/artifacts/000_core_temp_files/PRD-B-096-Enhanced-Scribe-System-Intelligent-Content-Analysis-And-Idea-Mining.md -->
 
 | B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | todo | Add GitHub Action to run maintenance script on PRs | GitHub Actions + CI/CD | None |
@@ -332,14 +332,7 @@ Coherence Validation System |
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#structured-extraction"] -->
 <!-- reference_cards: ["500_reference-cards.md#extraction-services"] -->
 
-| B‑098 | Mine Archived PRDs for Lessons and Reference Cards | 🧠 | 5 | todo | Extract systematic lessons and cross-references from archived PRDs (600_) to feed into lessons_applied, reference_cards, and backlog hygiene | PRD analysis + lessons extraction + reference card creation | 600_archives/prds/PRD-B-098-Lessons-Mining-From-Archived-PRDs.md |
-<!--score: {bv:4, tc:3, rr:3, le:5, lessons:4, effort:3, deps:[]}-->
-<!--score_total: 3.8-->
-<!-- do_next: Design script/workflow to parse archived PRDs -->
-<!-- est_hours: 5 -->
-<!-- acceptance: At least 3 lessons and 2 reference cards extracted -->
-<!-- lessons_applied: [] -->
-<!-- reference_cards: [] -->
+
 
 | B‑099 | Enhanced Backlog Status Tracking with Timestamps | 🔧 | 1 | ✅ done| Add started_at, last_updated timestamps and stale item detection for better in-progress tracking | Timestamp tracking + stale detection + automated alerts | None |
 <!-- last_updated: 2025-08-16T08:41:45.155925 -->
