@@ -204,7 +204,7 @@ Items requiring external credentials, business decisions, or deployment should b
 | B-098 | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | 🔧 | 3 | todo | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | None | 600_archives/artifacts/000_core_temp_files/PRD-B-098-Multi-Role-Pr-Sign-Off-System.md |
 <!-- PRD: 600_archives/artifacts/000_core_temp_files/PRD-B-096-Enhanced-Scribe-System-Intelligent-Content-Analysis-And-Idea-Mining.md -->
 
-| B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | todo | Add GitHub Action to run maintenance script on PRs | GitHub Actions + CI/CD | None |
+| B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | done | Add GitHub Action to run maintenance script on PRs | GitHub Actions + CI/CD | None |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:0.5, lessons:3, deps:[]}-->
 <!--score_total: 8.0-->
 <!-- do_next: Create GitHub Action workflow for automated maintenance script execution -->
@@ -691,7 +691,7 @@ performance | Hash Caching + Performance Profiling + Threading | B-052-b Config 
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:1, deps:["B-052-b"]}-->
 <!--score_total: 4.5-->
 
-| B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | todo | Add GitHub Action to run maintenance script on PRs |
+| B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | done | Add GitHub Action to run maintenance script on PRs |
 GitHub Actions + Dry-Run + PR Gate | B-052-a Safety & Lint Tests |
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-052-a"]}-->
 <!--score_total: 8.0-->
