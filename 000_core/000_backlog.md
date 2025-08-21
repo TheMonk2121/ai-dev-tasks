@@ -54,9 +54,7 @@ Check P0 lane and AI-executable queue; follow PRD skip rule |
 
 - [Live Backlog](#live-backlog)
 
-- [Completed Items](#completed-items)
-
-- [Setup Required Items](#setup-required-items)
+- [Completed Items](#-completed-items-context-preservation)
 
 <!-- ANCHOR: governance-p0 -->
 
@@ -133,6 +131,21 @@ and normalize spacing across long-form guides.
 - B‑078 — LangExtract Structured Extraction Service (score 4.2)
 
 ## AI-Executable Queue (003)
+
+Items that can be executed directly by AI using `000_core/003_process-task-list.md` (points < 5 AND score_total ≥ 3.0):
+
+* **B-001** — Test the single doorway workflow with Python 3.12 (3 points, todo)
+* **B-085** — Code Review Process Upgrade with Performance Reporting - B-077 (3 points, todo)
+* **B-086** — Test Enhanced PRD Generation (3 points, todo)
+* **B-087** — Test Enhanced Task Generation (3 points, todo)
+* **B-088** — Test Improved Slug Generation (3 points, todo)
+* **B-089** — Test Performance Workflow (3 points, todo)
+* **B-090** — Test Performance Workflow (3 points, todo)
+* **B-091** — Test 001 Workflow Performance (3 points, todo)
+* **B-092** — Final Performance Validation Test (3 points, todo)
+* **B-048** — Confidence Calibration (Blocked) (3 points, todo)
+* **B-021** — Local Security Hardening (3 points, todo)
+* **B-025** — Database Event-Driven Status Updates (3 points, todo)
 
 ## PRD Rule & Execute Flow
 
