@@ -540,16 +540,16 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 1. ****: B‑100 (Coder Role Implementation for Memory Rehydration System points)
    - 5
 
-2. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
+2. **B‑102**: Cursor Native AI Role Coordination System (🔥 points)
    - todo
 
-3. **B‑094**: MCP Memory Rehydrator Server (🔥 points)
+3. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
    - todo
 
-4. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
+4. **B‑094**: MCP Memory Rehydrator Server (🔥 points)
    - todo
 
-5. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
+5. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 
