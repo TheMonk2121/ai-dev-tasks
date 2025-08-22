@@ -90,13 +90,22 @@ and normalize spacing across long-form guides.
 
 - B‑052‑d — CI GitHub Action (Dry-Run Gate) (score 8.0)
 
-- B‑062 — Context Priority Guide Auto-Generation (score 8.0)
+- B‑062 — Context Priority Guide Auto-Generation (score 8.0) ✅ **COMPLETED**
 
 ## P1 Lane
 
 - B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0)
 
 - B‑077 — Code Review Process Upgrade with Performance Reporting (score 7.5)
+
+- B‑999 — Session Registry Core Implementation (score 7.0) ✅ **COMPLETED**
+<!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
+
+- B‑1000 — Session Registry Testing Suite (score 6.5) ✅ **COMPLETED**
+<!--score: {bv:3, tc:4, rr:3, le:2, effort:2, deps:["B-999"]}-->
+
+- B‑1001 — Session Registry Documentation Integration (score 5.5) ✅ **COMPLETED**
+<!--score: {bv:3, tc:2, rr:3, le:2, effort:1, deps:["B-999", "B-1000"]}-->
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:3, deps:[]}-->
 <!--score_total: 7.5-->
 <!-- do_next: Implement comprehensive code review testing suite with performance reporting -->
@@ -213,14 +222,13 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#ci-cd-patterns"] -->
 <!-- reference_cards: ["500_reference-cards.md#github-actions"] -->
 
-| B‑062 | Context Priority Guide Auto-Generation | 🔧 | 0.5 | todo | Create regen_guide.py to auto-generate context
+| B‑062 | Context Priority Guide Auto-Generation | 🔧 | 0.5 | ✅ done | Create regen_guide.py to auto-generate context
 priority guide from file headers | Guide Generation + Cross-Reference Aggregation + Tier Lists | B-060 Documentation
 Coherence Validation System |
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-060"]}-->
 <!--score_total: 8.0-->
-<!-- do_next: Implement automated context priority guide generation script -->
-<!-- est_hours: 2 -->
-<!-- acceptance: Context priority guide updates automatically when core docs change -->
+<!-- completion_date: 2025-08-21 -->
+<!-- implementation_notes: Successfully implemented automated context priority guide generation. Created scripts/regen_guide.py with comprehensive anchor metadata scanning, priority-based organization, role-based grouping, and automatic guide generation. System scans 135 markdown files, extracts metadata from 13 files with anchor headers, and generates organized context priority guide with P0-P3 tiers and role-based sections. Includes CLI interface with preview/generate options and comprehensive error handling. Guide automatically updates when core documentation changes, providing current navigation for AI agents. -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#documentation-automation"] -->
 <!-- reference_cards: ["500_reference-cards.md#documentation-generation"] -->
 
@@ -356,6 +364,41 @@ Coherence Validation System |
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-specialization", "400_guides/400_comprehensive-coding-best-practices.md#role-based-context"] -->
 <!-- reference_cards: ["500_reference-cards.md#memory-rehydration", "500_reference-cards.md#dspy-integration"] -->
 <!-- PRD: PRD-B-035-Coder-Role-Implementation.md -->
+
+| B‑101 | cSpell Automation Integration for Coder Role | 🔧 | 2 | ✅ done | Integrate automated cSpell word addition into coder role for frequent task automation | cSpell automation + coder role + development tooling | 100_memory/105_cspell-automation-memory.md |
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:2, lessons:3, deps:[]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Use cspell_automation.py script with coder role for word addition requests -->
+<!-- est_hours: 3 -->
+<!-- acceptance: User can request cSpell word addition and system automatically executes with coder role context -->
+<!-- lessons_applied: ["100_memory/105_cspell-automation-memory.md#automation-patterns", "400_guides/400_comprehensive-coding-best-practices.md#automation"] -->
+<!-- reference_cards: ["500_reference-cards.md#development-tooling", "500_reference-cards.md#automation-patterns"] -->
+<!-- completion_date: 2025-01-27 -->
+<!-- PRD: 600_archives/artifacts/prds/PRD-B-101-cSpell-Automation-Integration.md -->
+<!-- TASK_LIST: 600_archives/artifacts/task_lists/Task-List-B-101-cSpell-Automation-Integration.md -->
+<!-- implementation_notes: Successfully implemented cSpell automation integration with coder role. Created scripts/cspell_automation.py with comprehensive word addition capabilities, added cSpell automation to coder role responsibilities and tool usage, created 100_memory/105_cspell-automation-memory.md for pattern documentation, and added automation rule to .cursorrules. System now automatically detects cSpell requests and executes with coder role context, maintaining alphabetical order, preventing duplicates, and validating word format. Integration provides deterministic, fast automation for frequent development tooling tasks. -->
+
+| B‑102 | Cursor Native AI Role Coordination System | 🔥 | 5 | todo | Implement role coordination system for Cursor Native AI to prevent unilateral decisions and ensure proper role consultation | Role coordination + decision protocols + cursor rules | 100_memory/100_cursor-memory-context.md |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:5, lessons:4, deps:[]}-->
+<!--score_total: 5.4-->
+<!-- do_next: Add role coordination rules to .cursorrules and test with simple scenarios -->
+<!-- est_hours: 6 -->
+<!-- acceptance: Cursor Native AI consults appropriate roles before making file organization or structural decisions -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-coordination", "400_guides/400_comprehensive-coding-best-practices.md#decision-making"] -->
+<!-- reference_cards: ["500_reference-cards.md#role-coordination", "500_reference-cards.md#cursor-rules"] -->
+<!-- PRD: 600_archives/artifacts/prds/PRD-B-102-Cursor-Native-AI-Role-Coordination-System.md -->
+<!-- TASK_LIST: 600_archives/artifacts/task_lists/Task-List-B-102-Cursor-Native-AI-Role-Coordination-System.md -->
+
+| B‑103 | Automated Role Assignment for 600_archives | 🔧 | 3 | todo | Implement automated role assignment system for 600_archives files to reduce manual maintenance and improve scalability | Metadata analysis + role assignment + memory rehydrator integration | 100_memory/100_cursor-memory-context.md |
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:3, lessons:3, deps:[]}-->
+<!--score_total: 5.0-->
+<!-- do_next: Create metadata standards and automated role assignment script -->
+<!-- est_hours: 4 -->
+<!-- acceptance: 600_archives files automatically get appropriate role access based on metadata or content analysis -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#automation", "400_guides/400_comprehensive-coding-best-practices.md#metadata"] -->
+<!-- reference_cards: ["500_reference-cards.md#automation", "500_reference-cards.md#metadata-analysis"] -->
+<!-- PRD: artifacts/prds/PRD-B-103-Automated-Role-Assignment-for-600-archives.md -->
+<!-- TASK_LIST: artifacts/task_lists/Task-List-B-103-Automated-Role-Assignment-for-600-archives.md -->
 
 ## Backlog Working Agreements
 

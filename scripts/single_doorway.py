@@ -261,6 +261,24 @@ def cmd_scribe_start(backlog_id: str | None, interval: int, fast: bool, full: bo
         }
     )
     _save_state(state)
+
+    # Register session in session registry
+    try:
+        from session_registry import SessionRegistry
+
+        registry = SessionRegistry()
+        registry.register_session(
+            backlog_id=bid,
+            pid=proc.pid,
+            worklog_path=str(_worklog_path(bid)),
+            session_type="brainstorming",  # Default, can be enhanced later
+            priority="medium",
+        )
+    except ImportError:
+        print("⚠️  Session registry not available - continuing without registration")
+    except Exception as e:
+        print(f"⚠️  Failed to register session: {e}")
+
     print(f"📝 Scribe started (PID {proc.pid}) for {bid}. Writing to {state['scribe']['worklog']}")
 
 
@@ -278,6 +296,19 @@ def cmd_scribe_stop(backlog_id: str | None) -> None:
         pass
     if bid:
         _append_worklog(bid, ["- Session stopped"])
+
+    # Update session registry
+    if bid:
+        try:
+            from session_registry import SessionRegistry
+
+            registry = SessionRegistry()
+            registry.update_session_status(bid, "completed")
+        except ImportError:
+            print("⚠️  Session registry not available - continuing without update")
+        except Exception as e:
+            print(f"⚠️  Failed to update session registry: {e}")
+
     state["scribe"] = {}
     _save_state(state)
     print("📝 Scribe stopped")
@@ -463,6 +494,99 @@ def cmd_scribe_daemon(backlog_id: str, interval: int, idle_timeout: int) -> None
         time.sleep(max(10, interval))
 
 
+# Session registry command functions
+def cmd_scribe_list(no_context: bool, status_filter: str | None) -> None:
+    """List sessions from the session registry."""
+    try:
+        from session_registry import SessionRegistry
+
+        registry = SessionRegistry()
+        registry.list_sessions(show_context=not no_context, status_filter=status_filter)
+    except ImportError:
+        print("❌ Session registry not available. Install session_registry.py")
+    except Exception as e:
+        print(f"❌ Failed to list sessions: {e}")
+
+
+def cmd_scribe_tag(backlog_id: str, tags: list[str]) -> None:
+    """Add context tags to a session."""
+    try:
+        from session_registry import SessionRegistry
+
+        registry = SessionRegistry()
+        registry.add_context_tags(backlog_id, tags)
+    except ImportError:
+        print("❌ Session registry not available. Install session_registry.py")
+    except Exception as e:
+        print(f"❌ Failed to tag session: {e}")
+
+
+def cmd_scribe_untag(backlog_id: str, tags: list[str]) -> None:
+    """Remove context tags from a session."""
+    try:
+        from session_registry import SessionRegistry
+
+        registry = SessionRegistry()
+        registry.remove_context_tags(backlog_id, tags)
+    except ImportError:
+        print("❌ Session registry not available. Install session_registry.py")
+    except Exception as e:
+        print(f"❌ Failed to untag session: {e}")
+
+
+def cmd_scribe_info(backlog_id: str) -> None:
+    """Show detailed information about a session."""
+    try:
+        from session_registry import SessionRegistry
+
+        registry = SessionRegistry()
+        session = registry.get_session_info(backlog_id)
+        if session:
+            print(f"\n📋 Session Info: {backlog_id}")
+            print("=" * 50)
+            print(f"Status: {session.status}")
+            print(f"PID: {session.pid}")
+            print(f"Started: {session.start_time}")
+            print(f"Type: {session.context.session_type}")
+            print(f"Priority: {session.context.priority}")
+            print(f"Tags: {', '.join(sorted(session.context.tags))}")
+            print(f"Worklog: {session.worklog_path}")
+            if session.last_activity:
+                print(f"Last Activity: {session.last_activity}")
+        else:
+            print(f"❌ Session {backlog_id} not found")
+    except ImportError:
+        print("❌ Session registry not available. Install session_registry.py")
+    except Exception as e:
+        print(f"❌ Failed to get session info: {e}")
+
+
+def cmd_scribe_cleanup() -> None:
+    """Clean up old completed sessions."""
+    try:
+        from session_registry import SessionRegistry
+
+        registry = SessionRegistry()
+        registry.cleanup_completed_sessions()
+    except ImportError:
+        print("❌ Session registry not available. Install session_registry.py")
+    except Exception as e:
+        print(f"❌ Failed to cleanup sessions: {e}")
+
+
+def cmd_scribe_validate() -> None:
+    """Validate that registered processes are still running."""
+    try:
+        from session_registry import SessionRegistry
+
+        registry = SessionRegistry()
+        registry.validate_processes()
+    except ImportError:
+        print("❌ Session registry not available. Install session_registry.py")
+    except Exception as e:
+        print(f"❌ Failed to validate sessions: {e}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="single_doorway")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -507,6 +631,27 @@ def main() -> None:
     s_status = ssub.add_parser("status")
     s_status.add_argument("--verbose", "-v", action="store_true", help="Show detailed status")
 
+    # Session registry commands
+    s_list = ssub.add_parser("list")
+    s_list.add_argument("--no-context", action="store_true", help="Hide context tags")
+    s_list.add_argument(
+        "--status-filter", choices=["active", "completed", "paused", "orphaned"], help="Filter by status"
+    )
+
+    s_tag = ssub.add_parser("tag")
+    s_tag.add_argument("--backlog-id", required=True, help="Backlog ID to tag")
+    s_tag.add_argument("--tags", nargs="+", required=True, help="Context tags to add")
+
+    s_untag = ssub.add_parser("untag")
+    s_untag.add_argument("--backlog-id", required=True, help="Backlog ID to untag")
+    s_untag.add_argument("--tags", nargs="+", required=True, help="Context tags to remove")
+
+    s_info = ssub.add_parser("info")
+    s_info.add_argument("--backlog-id", required=True, help="Backlog ID for detailed info")
+
+    ssub.add_parser("cleanup")
+    ssub.add_parser("validate")
+
     args = parser.parse_args()
 
     if args.cmd == "generate":
@@ -540,6 +685,18 @@ def main() -> None:
             cmd_scribe_append(args.message, args.backlog_id)
         elif args.action == "status":
             cmd_scribe_status(args.verbose)
+        elif args.action == "list":
+            cmd_scribe_list(args.no_context, args.status_filter)
+        elif args.action == "tag":
+            cmd_scribe_tag(args.backlog_id, args.tags)
+        elif args.action == "untag":
+            cmd_scribe_untag(args.backlog_id, args.tags)
+        elif args.action == "info":
+            cmd_scribe_info(args.backlog_id)
+        elif args.action == "cleanup":
+            cmd_scribe_cleanup()
+        elif args.action == "validate":
+            cmd_scribe_validate()
 
 
 if __name__ == "__main__":

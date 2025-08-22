@@ -6,14 +6,18 @@ Comprehensive tests for the research-based schema design system.
 """
 
 import shutil
-
 import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
-from scripts.research_based_schema_design import ExtractionSchema, ResearchBasedSchemaDesign, ResearchFinding, SchemaPattern
+from scripts.research_based_schema_design import (
+    ExtractionSchema,
+    ResearchBasedSchemaDesign,
+    ResearchFinding,
+    SchemaPattern,
+)
 
 
 class TestResearchBasedSchemaDesign:

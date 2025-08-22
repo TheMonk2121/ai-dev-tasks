@@ -9,8 +9,8 @@ Normalize markdown formatting for markdownlint basics:
 Usage:
   python3 scripts/fix_markdown_blanks.py 100_cursor-memory-context.md
 """
-import sys
 import re
+import sys
 
 
 def ensure_code_fence_language(lines):

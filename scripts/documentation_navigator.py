@@ -6,8 +6,8 @@ Helps navigate the complete documentation inventory and provides context-specifi
 
 import os
 import sys
-from typing import Dict, List, Any
-from pathlib import Path
+from typing import Dict, List
+
 
 def get_documentation_inventory() -> Dict[str, List[str]]:
     """Get the complete documentation inventory organized by category"""

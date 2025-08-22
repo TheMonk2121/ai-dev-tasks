@@ -6,13 +6,12 @@ Updates all cross-references from the original large guide files to the new
 focused modules created by the splitting process.
 """
 
-import os
-import json
-import re
 import logging
-from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
+import os
+import re
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 _LOG = logging.getLogger("giant_guide_migration")
 
@@ -294,9 +293,9 @@ class GiantGuideReferenceMigrator:
         with open("500_b073-migration-summary.md", 'w', encoding='utf-8') as f:
             f.write(summary)
         
-        print(f"\n✅ Migration complete!")
+        print("\n✅ Migration complete!")
         print(f"📊 Updated {len(updated_files)} files")
-        print(f"📝 Summary written to 500_b073-migration-summary.md")
+        print("📝 Summary written to 500_b073-migration-summary.md")
         
         if errors:
             print(f"⚠️  {len(errors)} errors encountered")

@@ -11,19 +11,18 @@ Version: 1.0
 Last Updated: 2024-08-07
 """
 
-import os
-import sys
 import json
 import logging
-import requests
+import os
+import sys
+from dataclasses import asdict, dataclass
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+import psutil
 import psycopg2
 import redis
-import time
-import subprocess
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass, asdict
-from datetime import datetime
-import psutil
+import requests
 
 # Configure logging
 logging.basicConfig(

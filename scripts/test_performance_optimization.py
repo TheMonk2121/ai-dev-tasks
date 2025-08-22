@@ -13,24 +13,20 @@ Date: 2024-08-07
 Version: 1.0.0
 """
 
-import pytest
-import asyncio
 import time
-import psutil
-import threading
-from unittest.mock import Mock, patch, MagicMock
-from typing import Dict, List, Any
+from unittest.mock import Mock, patch
 
+import psutil
+import pytest
 from performance_optimization import (
-    PerformanceOptimizationManager,
-    PerformanceMonitor,
     AgentSwitchingOptimizer,
+    ConcurrentAgentOptimizer,
     ContextLoadingOptimizer,
     MemoryOptimizer,
-    ConcurrentAgentOptimizer,
-    PerformanceMetric,
     PerformanceBenchmark,
-    PerformanceAlert
+    PerformanceMetric,
+    PerformanceMonitor,
+    PerformanceOptimizationManager,
 )
 
 

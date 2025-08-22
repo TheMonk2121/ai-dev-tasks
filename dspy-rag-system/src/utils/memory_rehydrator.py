@@ -90,6 +90,9 @@ ROLE_FILES = {
     "planner": (
         "400_guides/400_system-overview.md",
         "000_core/000_backlog.md",
+        "600_archives/",
+        "600_archives/artifacts/prds/PRD-B-102-Cursor-Native-AI-Role-Coordination-System.md",
+        "600_archives/artifacts/task_lists/Task-List-B-102-Cursor-Native-AI-Role-Coordination-System.md",
     ),
     "implementer": (
         "100_memory/104_dspy-development-context.md",
@@ -98,8 +101,12 @@ ROLE_FILES = {
         "artifacts/worklogs/",
         "artifacts/summaries/",
         "400_guides/400_scribe-system-guide.md",
+        "600_archives/",
+        "600_archives/artifacts/prds/PRD-B-102-Cursor-Native-AI-Role-Coordination-System.md",
+        "600_archives/artifacts/task_lists/Task-List-B-102-Cursor-Native-AI-Role-Coordination-System.md",
     ),
     "researcher": (
+        "600_archives/",
         # extend later if needed (e.g., 500_research/*)
     ),
     "coder": (
@@ -120,6 +127,7 @@ ROLE_FILES = {
         "Task-List-Chunk-Relationship-Visualization.md",
         "scripts/dependency_monitor.py",
         "dspy-rag-system/src/utils/graph_data_provider.py",
+        "600_archives/",
     ),
     "documentation": (
         "400_guides/400_context-priority-guide.md",
@@ -129,6 +137,7 @@ ROLE_FILES = {
         "400_guides/400_project-overview.md",
         "400_guides/400_system-overview.md",
         "400_guides/400_comprehensive-coding-best-practices.md",
+        "600_archives/",
     ),
 }
 
@@ -150,6 +159,7 @@ ROLE_INSTRUCTIONS = {
             "system_integration_patterns",
             "development_tool_coordination",
             "context_capture_systems",
+            "cspell_automation_and_configuration",
         ],
     },
     "researcher": {
@@ -172,6 +182,7 @@ ROLE_INSTRUCTIONS = {
             "security_first",
             "critical_file_protection",
             "exclusions_policy",
+            "cspell_automation",
         ],
         "required_standards": [
             "python_3_12_absolute_imports",
@@ -229,6 +240,11 @@ ROLE_INSTRUCTIONS = {
                 "black src/ scripts/ tests/",
                 "ruff check src/ scripts/ tests/",
                 "pyright src/ scripts/ tests/",
+            ],
+            "cspell_automation": [
+                "python3 scripts/cspell_automation.py 'word1 word2 word3'",
+                "python3 scripts/cspell_automation.py --file word_list.txt",
+                "python3 scripts/cspell_automation.py --dry-run 'word1 word2'",
             ],
             "validation": [
                 "python scripts/conflict_audit.py --full",

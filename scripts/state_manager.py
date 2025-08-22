@@ -10,14 +10,13 @@ Version: 1.0
 Last Updated: 2024-08-07
 """
 
-import sqlite3
-import logging
 import json
-from typing import Dict, Any, List, Optional, Tuple
-from datetime import datetime, timedelta
-from pathlib import Path
-from dataclasses import dataclass, asdict
+import logging
+import sqlite3
+from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

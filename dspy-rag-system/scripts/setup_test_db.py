@@ -5,10 +5,12 @@ Creates a local PostgreSQL database for testing the migration.
 """
 
 import os
-import sys
 import subprocess
-import psycopg2
+import sys
 from pathlib import Path
+
+import psycopg2
+
 
 def check_postgresql_installed():
     """Check if PostgreSQL is installed"""

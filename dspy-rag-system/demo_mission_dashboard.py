@@ -4,18 +4,17 @@ Demo script for Real-time Mission Dashboard
 Creates sample missions and simulates their execution
 """
 
-import os
-import sys
-import time
 import random
+import sys
 import threading
-from datetime import datetime, timedelta
+import time
+from datetime import datetime
 
 # Add src to path for imports
 sys.path.append('src')
 
 try:
-    from mission_dashboard.mission_tracker import get_mission_tracker, MissionPriority
+    from mission_dashboard.mission_tracker import MissionPriority, get_mission_tracker
     from utils.logger import get_logger
     LOG = get_logger("mission_dashboard_demo")
 except ImportError as e:

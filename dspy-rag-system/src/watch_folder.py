@@ -4,19 +4,17 @@ Watch Folder 2.0 – hardened for production
 Python 3.9 compatible
 """
 
+import logging
 import os
+import shutil
+import subprocess
 import sys
 import time
-import shutil
-import logging
-import subprocess
-import shlex
-import signal
-from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
-from typing import List
+from pathlib import Path
+
+from watchdog.events import FileCreatedEvent, FileMovedEvent, FileSystemEventHandler
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler, FileCreatedEvent, FileMovedEvent
 
 # Add src to path for imports
 sys.path.append('src')

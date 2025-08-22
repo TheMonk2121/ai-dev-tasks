@@ -4,12 +4,13 @@ Token-Aware Chunking for DSPy RAG System
 Provides token-aware text chunking for better LLM compatibility.
 """
 
-import tiktoken
-import re
-from typing import List, Iterator, Optional, Dict, Any
 import logging
-from functools import lru_cache
+import re
 import unicodedata
+from functools import lru_cache
+from typing import Any, Dict, Iterator, List
+
+import tiktoken
 
 logger = logging.getLogger(__name__)
 

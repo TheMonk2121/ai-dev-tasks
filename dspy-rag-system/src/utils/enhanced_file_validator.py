@@ -5,17 +5,15 @@ Provides comprehensive file validation with corruption detection, quarantine sys
 and OpenTelemetry tracing for production security and monitoring.
 """
 
-import os
 import hashlib
-import shutil
 import logging
-import tempfile
-from typing import Dict, Any, Optional, List, Tuple
-from pathlib import Path
+import os
+import shutil
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from .opentelemetry_config import trace_operation, add_span_attribute, record_exception, generate_correlation_id
-from .prompt_sanitizer import SecurityError, load_security_config
+from .opentelemetry_config import add_span_attribute, generate_correlation_id, record_exception, trace_operation
+from .prompt_sanitizer import load_security_config
 
 logger = logging.getLogger(__name__)
 

@@ -10,18 +10,17 @@ Version: 1.0
 Last Updated: 2024-08-07
 """
 
+import json
 import logging
+import os
+import sys
 import time
 import traceback
-import sys
-from typing import Dict, Any, List, Optional, Callable, Type, Union
-from datetime import datetime, timedelta
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
+from datetime import datetime
 from enum import Enum
-import json
-import subprocess
-import os
 from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

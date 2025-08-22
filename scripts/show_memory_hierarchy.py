@@ -6,9 +6,9 @@ Shows the memory context hierarchy in a human-readable format
 to help both humans and LLMs understand file priorities.
 """
 
-import os
 import re
 from pathlib import Path
+
 
 def extract_memory_context(file_path):
     """Extract memory context from file comments"""
@@ -83,7 +83,7 @@ def display_memory_hierarchy():
                 if memory_info:
                     print(f"   🧠 Context: {memory_info['description']}")
                 else:
-                    print(f"   🧠 Context: No memory context comment found")
+                    print("   🧠 Context: No memory context comment found")
             else:
                 print(f"❌ {filename} (not found)")
             

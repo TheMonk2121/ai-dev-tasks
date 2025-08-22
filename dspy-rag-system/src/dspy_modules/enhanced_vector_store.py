@@ -5,21 +5,22 @@ Leverages advanced PostgreSQL + PGVector capabilities with performance monitorin
 caching, and health checks for improved RAG system performance.
 """
 
+import hashlib
+import json
 import os
 import sys
-import psycopg2
-import json
-import hashlib
 import time
-from typing import List, Dict, Any, Optional, Tuple
-from pathlib import Path
-import numpy as np
 from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import psycopg2
 
 # Add the src directory to the path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from utils.logger import get_logger
+
 logger = get_logger(__name__)
 
 class EnhancedVectorStore:

@@ -4,13 +4,13 @@ Real-time Monitoring Dashboard for Cursor Context Engineering
 Provides live insights into system performance and validation status
 """
 
-import sys
-import os
-import time
 import json
 import logging
-from typing import Dict, Any
+import os
+import sys
+import time
 from datetime import datetime
+from typing import Any, Dict
 
 # Add the src directory to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
@@ -160,14 +160,14 @@ class ContextEngineeringMonitor:
         print(f"⚡ Average Latency: {status['average_latency_ms']:.1f}ms")
         
         # Model distribution
-        print(f"\n📈 Model Distribution:")
+        print("\n📈 Model Distribution:")
         total_routes = sum(report["model_distribution"].values())
         for model, count in report["model_distribution"].items():
             percentage = (count / total_routes * 100) if total_routes > 0 else 0
             print(f"  {model}: {count} ({percentage:.1f}%)")
         
         # Recent activity
-        print(f"\n🔄 Recent Activity:")
+        print("\n🔄 Recent Activity:")
         for i, query in enumerate(report["recent_queries"][-5:], 1):
             hallucination_indicator = "🚨" if query["hallucination_detected"] else "✅"
             print(f"  {i}. {hallucination_indicator} {query['query']}")
@@ -177,7 +177,7 @@ class ContextEngineeringMonitor:
         comp_report = report["comprehensive_report"]
         if "validation_stats" in comp_report:
             val_stats = comp_report["validation_stats"]
-            print(f"\n🔍 Validation Statistics:")
+            print("\n🔍 Validation Statistics:")
             print(f"  Total Validations: {val_stats.get('total_validations', 0)}")
             print(f"  Hallucination Rate: {val_stats.get('hallucination_rate', 0):.1%}")
             print(f"  Average Confidence: {val_stats.get('average_confidence', 0):.3f}")
@@ -224,7 +224,7 @@ def interactive_monitoring():
                 
                 if "validation" in result:
                     validation = result["validation"]
-                    print(f"🔍 Validation:")
+                    print("🔍 Validation:")
                     print(f"  Valid: {validation['is_valid']}")
                     print(f"  Hallucination: {validation['hallucination_detected']}")
                     print(f"  Confidence Score: {validation['confidence_score']:.2f}")

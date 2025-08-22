@@ -10,17 +10,17 @@ Date: 2024-08-06
 Version: 1.0.0
 """
 
-import json
-import logging
-import time
 import asyncio
 import hashlib
+import json
+import logging
 import re
-from dataclasses import dataclass, field, asdict
-from enum import Enum
-from typing import Dict, List, Optional, Any, Union
-from uuid import uuid4
 import sqlite3
+import time
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any, Dict, Optional
+from uuid import uuid4
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -947,7 +947,7 @@ async def main():
             print(f"Error: {e}")
     
     # Print agent status
-    print(f"\n--- Agent Status ---")
+    print("\n--- Agent Status ---")
     status = agent.get_status()
     print(json.dumps(status, indent=2))
 

@@ -4,13 +4,12 @@ Research Dispersal Automation
 Automates the process of dispersing research findings to appropriate documentation files
 """
 
-import os
-import sys
-import re
 import json
-from typing import Dict, List, Any, Tuple
-from pathlib import Path
+import os
+import re
 from datetime import datetime
+from typing import Any, Dict, List
+
 
 class ResearchDispersalAutomation:
     def __init__(self):

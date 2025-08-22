@@ -8,6 +8,7 @@ import os
 import shutil
 from pathlib import Path
 
+
 def migrate_subdirectory_files():
     """Migrate subdirectory files to main directory with proper naming"""
     
@@ -76,7 +77,7 @@ def migrate_subdirectory_files():
             print(f"⚠️  File not found: {source_path}")
     
     if migrated_files:
-        print(f"\n🎉 Migration completed!")
+        print("\n🎉 Migration completed!")
         print(f"📦 Backup files available in: {backup_dir}")
         print(f"📋 Migrated {len(migrated_files)} files")
     else:

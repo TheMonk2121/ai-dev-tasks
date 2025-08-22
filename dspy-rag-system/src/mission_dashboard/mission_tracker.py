@@ -4,26 +4,25 @@ Mission Tracker for Real-time AI Task Execution Monitoring
 Tracks and manages AI task execution with real-time updates
 """
 
+import json
+import logging
 import os
 import sys
-import json
-import time
-import logging
 import threading
-import asyncio
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Callable
-from dataclasses import dataclass, asdict
-from enum import Enum
-from collections import defaultdict, deque
+import time
 import uuid
+from collections import deque
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
 
 # Add src to path for imports
 sys.path.append('src')
 
 try:
-    from utils.logger import get_logger
     from utils.database_resilience import get_database_manager
+    from utils.logger import get_logger
     from utils.secrets_manager import validate_startup_secrets
     LOG = get_logger("mission_tracker")
 except ImportError as e:

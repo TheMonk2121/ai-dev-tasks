@@ -29,7 +29,6 @@ def detect_role_from_task(task):
     implementer_keywords = ["code", "implement", "develop", "refactor", "debug", "test", "dspy", "technical"]
     researcher_keywords = ["research", "analyze", "study", "investigate", "explore", "compare"]
     coder_keywords = ["coder", "coding", "programming", "software", "development", "code review", "implementation"]
-
     planner_score = sum(1 for keyword in planner_keywords if keyword in task_lower)
     implementer_score = sum(1 for keyword in implementer_keywords if keyword in task_lower)
     researcher_score = sum(1 for keyword in researcher_keywords if keyword in task_lower)

@@ -4,9 +4,10 @@ Fix MD041 - First line in a file should be a top-level heading.
 Adds H1 headings to files that don't have them.
 """
 
-import re
-import os
 import glob
+import os
+import re
+
 
 def extract_title_from_filename(file_path):
     """Extract a title from the filename."""
@@ -134,7 +135,7 @@ def fix_md041_missing_h1():
             print(f"❌ Failed: {file_path} - {str(e)}")
             files_failed += 1
     
-    print(f"\n📊 Summary:")
+    print("\n📊 Summary:")
     print(f"  Files processed: {len(markdown_files)}")
     print(f"  Files fixed: {files_fixed}")
     print(f"  Files failed: {files_failed}")
@@ -143,7 +144,7 @@ def fix_md041_missing_h1():
     if files_fixed > 0:
         print(f"\n🎉 Successfully fixed {files_fixed} files!")
     else:
-        print(f"\nℹ️  No files needed fixing.")
+        print("\nℹ️  No files needed fixing.")
 
 if __name__ == "__main__":
     fix_md041_missing_h1()

@@ -4,9 +4,9 @@
 Analyze file naming according to naming conventions
 """
 
-import os
 import re
 from pathlib import Path
+
 
 def analyze_file_naming():
     """Analyze all markdown files and identify naming issues"""
@@ -38,7 +38,7 @@ def analyze_file_naming():
         else:
             needs_renaming.append((relative_path, filename))
     
-    print(f"📊 **Analysis Results**")
+    print("📊 **Analysis Results**")
     print(f"✅ Correctly named files: {len(correctly_named)}")
     print(f"❌ Files needing renaming: {len(needs_renaming)}")
     print(f"📁 Subdirectory files: {len(subdirectory_files)}")

@@ -28,6 +28,8 @@ Scribe is an intelligent context capture and summarization system that automatic
 - **📊 Progress Tracking**: Visualizes implementation status and progress
 - **🔗 Integration**: Works with Git hooks, PR workflows, and manual commands
 - **📈 Knowledge Mining**: Discovers patterns and reusable insights
+- **🏷️ Session Registry**: Centralized tracking of active sessions with context tagging
+- **🎯 Context Discovery**: Rich context tags for session discovery and management
 
 ## 🚀 Quick Start {#quick-start}
 
@@ -58,6 +60,34 @@ python scripts/single_doorway.py scribe status --verbose
 
 # Stop Scribe manually
 python scripts/single_doorway.py scribe stop
+```
+
+### Session Registry Management
+
+```bash
+# List all sessions with context tags
+python scripts/single_doorway.py scribe list
+
+# List sessions without context tags
+python scripts/single_doorway.py scribe list --no-context
+
+# Filter sessions by status
+python scripts/single_doorway.py scribe list --status-filter active
+
+# Add context tags to a session
+python scripts/single_doorway.py scribe tag --backlog-id B-093 --tags brainstorming implementation
+
+# Remove context tags from a session
+python scripts/single_doorway.py scribe untag --backlog-id B-093 --tags brainstorming
+
+# Get detailed session information
+python scripts/single_doorway.py scribe info --backlog-id B-093
+
+# Clean up old completed sessions
+python scripts/single_doorway.py scribe cleanup
+
+# Validate that registered processes are still running
+python scripts/single_doorway.py scribe validate
 ```
 
 ### Generate Summaries
@@ -112,7 +142,13 @@ Scribe System
 ├── Session Manager (single_doorway.py)
 │   ├── Start/Stop sessions
 │   ├── State management (.ai_state.json)
-│   └── Instance management (max 3 sessions)
+│   ├── Instance management (max 3 sessions)
+│   └── Session registry integration
+├── Session Registry (session_registry.py)
+│   ├── Active session tracking
+│   ├── Context tagging system
+│   ├── Process validation
+│   └── Session discovery
 ├── Context Capture
 │   ├── File change monitoring
 │   ├── Shell command recording
@@ -138,6 +174,7 @@ artifacts/
 ├── summaries/
 │   ├── B-093-summary.md  # Generated summaries
 │   └── B-100-summary.md
+├── session_registry.json # Active session registry
 └── insights/             # Mined knowledge (future)
 .ai_state.json            # Session state
 ```
@@ -157,6 +194,89 @@ artifacts/
 | **Implementation** | Active development and coding | 60-240 min | Code changes, decisions, progress | On successful Git push or branch switch |
 | **Debug** | Problem solving and troubleshooting | 15-60 min | Issues, solutions, workarounds | When issue is resolved |
 | **Planning** | Architecture and design decisions | 30-90 min | Decisions, trade-offs, requirements | When planning is complete |
+
+## 🏷️ Session Registry {#session-registry}
+
+The Session Registry provides centralized tracking and discovery of active Scribe sessions with rich context tagging capabilities.
+
+### Registry Features
+
+- **📊 Active Session Tracking**: Real-time monitoring of all active sessions
+- **🏷️ Context Tagging**: Rich metadata for session discovery and categorization
+- **🔍 Session Discovery**: Find sessions by context tags, type, or priority
+- **⚡ Process Validation**: Automatic detection of orphaned sessions
+- **🧹 Auto-Cleanup**: Automatic cleanup of old completed sessions
+
+### Context Tagging System
+
+Sessions can be tagged with rich context metadata:
+
+```bash
+# Session context tags
+session_type: brainstorming, implementation, debug, planning
+priority: high, medium, low
+tags: ["dspy", "testing", "documentation", "performance"]
+description: "Optional session description"
+related_sessions: ["B-093", "B-100"]
+```
+
+### Registry Data Structure
+
+```json
+{
+  "last_updated": "2025-08-21T20:30:00Z",
+  "total_sessions": 3,
+  "active_sessions": 2,
+  "sessions": {
+    "B-093": {
+      "backlog_id": "B-093",
+      "pid": 12345,
+      "start_time": "2025-08-21T20:00:00Z",
+      "worklog_path": "artifacts/worklogs/B-093.md",
+      "status": "active",
+      "context": {
+        "tags": ["brainstorming", "dspy", "testing"],
+        "session_type": "brainstorming",
+        "priority": "high",
+        "description": "DSPy integration testing session"
+      },
+      "last_activity": null,
+      "idle_timeout": 1800
+    }
+  }
+}
+```
+
+### Session Discovery
+
+Find sessions by various criteria:
+
+```bash
+# Find sessions by context tags
+python scripts/session_context_integration.py context --tags dspy testing
+
+# Get active sessions summary
+python scripts/session_context_integration.py summary
+
+# Integrate with memory rehydration
+python scripts/session_context_integration.py integrate
+```
+
+### Memory Rehydration Integration
+
+Session registry data is automatically integrated into memory rehydration:
+
+```python
+# Enhanced memory context includes session data
+{
+  "session_registry": {
+    "active_sessions": [...],
+    "session_count": 2,
+    "last_updated": "2025-08-21T20:30:00Z"
+  },
+  "session_summary": "📊 Active Scribe Sessions (2)\n  • B-093 (brainstorming, high)\n  • B-100 (implementation, medium)"
+}
+```
 
 ## 🔧 Configuration {#configuration}
 
@@ -541,6 +661,10 @@ Intelligent caching for repeated operations:
 - **Batch Summary Generation**: `generate_all_summaries.py` script
 - **Timestamp Tracking**: Creation and update timestamps
 - **Cross-Reference Linking**: Proper documentation linking
+- **Session Registry**: Centralized session tracking with context tagging
+- **Context Discovery**: Rich metadata for session discovery and management
+- **Process Validation**: Automatic detection of orphaned sessions
+- **Session Management CLI**: Complete CLI for session registry operations
 
 ## 🔮 Future Enhancements {#future-enhancements}
 
@@ -576,6 +700,8 @@ Intelligent caching for repeated operations:
 ## 🔧 Related Scripts
 
 - **[single_doorway.py](../scripts/single_doorway.py)**: Main Scribe session management
+- **[session_registry.py](../scripts/session_registry.py)**: Session registry and context tagging
+- **[session_context_integration.py](../scripts/session_context_integration.py)**: Memory rehydration integration
 - **[worklog_summarizer.py](../scripts/worklog_summarizer.py)**: Individual summary generation
 - **[generate_all_summaries.py](../scripts/generate_all_summaries.py)**: Batch summary generation
 - **[worklog_pre_commit.py](../scripts/worklog_pre_commit.py)**: Pre-commit integration

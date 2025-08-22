@@ -6,17 +6,18 @@ Scans and indexes all documentation files for the enhanced RAG system,
 providing relevant context on-demand to solve context overload.
 """
 
-import os
-import json
 import hashlib
+import json
 import logging
-from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
-from datetime import datetime
+import os
 import re
 
 # Add the dspy-rag-system to the path
 import sys
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'dspy-rag-system', 'src'))
 
 try:

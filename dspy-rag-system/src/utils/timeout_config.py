@@ -9,9 +9,8 @@ This module provides centralized timeout configuration for:
 - File upload timeouts
 """
 
-import os
 import logging
-from typing import Dict, Any, Optional
+import os
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
