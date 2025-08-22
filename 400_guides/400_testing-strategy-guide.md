@@ -18,6 +18,45 @@
 - **Dependencies**: 400_guides/400_context-priority-guide.md, 400_guides/400_system-overview.md
 - **Next Steps**: Update testing strategies as system evolves
 
+## 🎭 **Multi-Role Testing Decision Framework**
+
+### **New Feature Testing Criteria (2025-08-21)**
+
+**When evaluating whether to create new tests for features:**
+
+#### **Role Consensus Requirements:**
+1. **Planner Role**: Strategic value and system integration assessment
+2. **Researcher Role**: Pattern analysis and criteria validation
+3. **Coder Role**: Technical feasibility and implementation review
+4. **Implementer Role**: Execution strategy and integration planning
+5. **Documentation Role**: Integration approach and memory context updates
+
+#### **Testing Decision Logic:**
+```python
+# Decision criteria for new test creation
+def should_create_new_tests(feature):
+    return (
+        feature.is_new_functionality() and
+        feature.has_existing_patterns() and
+        feature.functions_under_50_lines() and
+        feature.has_integration_points() and
+        feature.is_critical_path() and
+        get_role_consensus() == "AGREED"
+    )
+
+def get_role_consensus():
+    # All roles must agree before implementation
+    roles = ["planner", "researcher", "coder", "implementer", "documentation"]
+    return "AGREED" if all_roles_agree(roles) else "PENDING"
+```
+
+#### **Consensus Process:**
+1. **Partial Agreement** (2/5 roles) - Implementation approved in principle
+2. **Technical Review** - Coder validates implementation feasibility
+3. **Execution Planning** - Implementer confirms execution strategy
+4. **Documentation Integration** - Documentation plans integration updates
+5. **Full Consensus** - All roles agree before implementation
+
 ## 🚨 **IMPORTANT: Testing Approach Migration**
 
 ### **🎯 CODER ROLE TESTING REQUIREMENTS**

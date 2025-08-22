@@ -4,14 +4,11 @@ Notification System for DSPy RAG
 Sends notifications when new files are processed.
 """
 
-import os
-import sys
 import json
-import time
-from datetime import datetime
-from pathlib import Path
-import subprocess
 import logging
+import os
+import subprocess
+from datetime import datetime
 
 # Set up logging
 logging.basicConfig(

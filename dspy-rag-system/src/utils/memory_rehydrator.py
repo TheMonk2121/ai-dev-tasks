@@ -90,9 +90,23 @@ ROLE_FILES = {
     "planner": (
         "400_guides/400_system-overview.md",
         "000_core/000_backlog.md",
+        "600_archives/",
+        "600_archives/artifacts/prds/PRD-B-102-Cursor-Native-AI-Role-Coordination-System.md",
+        "600_archives/artifacts/task_lists/Task-List-B-102-Cursor-Native-AI-Role-Coordination-System.md",
     ),
-    "implementer": ("100_memory/104_dspy-development-context.md",),
+    "implementer": (
+        "100_memory/104_dspy-development-context.md",
+        "scripts/single_doorway.py",
+        "scripts/cursor_memory_rehydrate.py",
+        "artifacts/worklogs/",
+        "artifacts/summaries/",
+        "400_guides/400_scribe-system-guide.md",
+        "600_archives/",
+        "600_archives/artifacts/prds/PRD-B-102-Cursor-Native-AI-Role-Coordination-System.md",
+        "600_archives/artifacts/task_lists/Task-List-B-102-Cursor-Native-AI-Role-Coordination-System.md",
+    ),
     "researcher": (
+        "600_archives/",
         # extend later if needed (e.g., 500_research/*)
     ),
     "coder": (
@@ -113,6 +127,17 @@ ROLE_FILES = {
         "Task-List-Chunk-Relationship-Visualization.md",
         "scripts/dependency_monitor.py",
         "dspy-rag-system/src/utils/graph_data_provider.py",
+        "600_archives/",
+    ),
+    "documentation": (
+        "400_guides/400_context-priority-guide.md",
+        "400_guides/400_documentation-reference.md",
+        "200_setup/200_naming-conventions.md",
+        "400_guides/400_scribe-system-guide.md",
+        "400_guides/400_project-overview.md",
+        "400_guides/400_system-overview.md",
+        "400_guides/400_comprehensive-coding-best-practices.md",
+        "600_archives/",
     ),
 }
 
@@ -125,8 +150,17 @@ ROLE_INSTRUCTIONS = {
     },
     "implementer": {
         "focus": "system implementation and architecture",
-        "context": "DSPy framework and technical architecture",
-        "validation": ["architecture_design", "system_integration", "technical_decisions"],
+        "context": "DSPy framework, technical architecture, and workflow automation",
+        "validation": ["architecture_design", "system_integration", "technical_decisions", "workflow_automation"],
+        "responsibilities": [
+            "scribe_system_architecture",
+            "memory_rehydration_system",
+            "workflow_automation_design",
+            "system_integration_patterns",
+            "development_tool_coordination",
+            "context_capture_systems",
+            "cspell_automation_and_configuration",
+        ],
     },
     "researcher": {
         "focus": "research and analysis",
@@ -148,6 +182,7 @@ ROLE_INSTRUCTIONS = {
             "security_first",
             "critical_file_protection",
             "exclusions_policy",
+            "cspell_automation",
         ],
         "required_standards": [
             "python_3_12_absolute_imports",
@@ -205,6 +240,11 @@ ROLE_INSTRUCTIONS = {
                 "black src/ scripts/ tests/",
                 "ruff check src/ scripts/ tests/",
                 "pyright src/ scripts/ tests/",
+            ],
+            "cspell_automation": [
+                "python3 scripts/cspell_automation.py 'word1 word2 word3'",
+                "python3 scripts/cspell_automation.py --file word_list.txt",
+                "python3 scripts/cspell_automation.py --dry-run 'word1 word2'",
             ],
             "validation": [
                 "python scripts/conflict_audit.py --full",
@@ -265,6 +305,75 @@ ROLE_INSTRUCTIONS = {
                     "use_entity_expansion": True,
                 },
             },
+        },
+    },
+    "documentation": {
+        "focus": "documentation standards and content management",
+        "context": "documentation hierarchy, writing standards, and content organization",
+        "validation": [
+            "documentation_standards",
+            "content_organization",
+            "cross_reference_accuracy",
+            "ai_friendly_formatting",
+            "code_quality_standards",
+        ],
+        "responsibilities": [
+            "documentation_standards",
+            "content_organization",
+            "cross_reference_management",
+            "documentation_quality_assurance",
+            "naming_conventions",
+            "context_priority_management",
+            "documentation_code_quality",
+            "coder_role_collaboration",
+        ],
+        "collaboration_rules": [
+            "consult_coder_role_for_script_development",
+            "ensure_python_3_12_compliance",
+            "follow_ruff_linting_standards",
+            "implement_comprehensive_error_handling",
+            "write_unit_tests_for_documentation_tools",
+            "use_absolute_imports_avoid_sys_path_hacks",
+            "maintain_50_line_function_limit",
+            "target_70_percent_code_reuse",
+        ],
+        "required_standards": [
+            "markdown_standards",
+            "tldr_section_required",
+            "cross_reference_validation",
+            "file_naming_conventions",
+            "content_hierarchy_standards",
+            "ai_friendly_formatting",
+            "documentation_code_quality",
+        ],
+        "quality_gates": [
+            "documentation_coherence",
+            "link_validation",
+            "formatting_standards",
+            "content_organization",
+            "cross_reference_accuracy",
+            "code_quality_in_documentation_tools",
+        ],
+        "tool_usage": {
+            "documentation_quality": [
+                "python scripts/doc_coherence_validator.py --check-all",
+                "python scripts/fix_broken_links.py",
+                "python scripts/add_tldr_sections.py",
+            ],
+            "validation": [
+                "python scripts/analyze_markdown_issues.py",
+                "python scripts/context_index_validator.py",
+                "python scripts/normalize_metadata_headers.py",
+            ],
+            "development": [
+                "python scripts/documentation_retrieval_cli.py",
+                "python scripts/documentation_navigator.py",
+                "python scripts/documentation_indexer.py",
+            ],
+            "pre_commit": [
+                "python scripts/doc_coherence_validator.py --pre-commit",
+                "python scripts/fix_broken_links.py --check",
+            ],
         },
     },
 }

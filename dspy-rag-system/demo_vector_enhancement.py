@@ -11,7 +11,6 @@ Demonstrates the enhanced vector database capabilities including:
 
 import os
 import sys
-import json
 import time
 from pathlib import Path
 
@@ -65,9 +64,9 @@ def demo_vector_enhancement():
                 index['type']
             )
             if success:
-                print(f"    ✅ Successfully created index")
+                print("    ✅ Successfully created index")
             else:
-                print(f"    ❌ Failed to create index")
+                print("    ❌ Failed to create index")
     
     if optimization.get('performance_issues'):
         print("⚠️  Performance Issues:")

@@ -258,7 +258,9 @@
         "reqs",
         "norecursedirs",
         "qproc",
-        "sprock"
+        "sprock",
+        "ssub",
+        "untagging"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

@@ -6,12 +6,12 @@ Executes the dispersal of research findings to appropriate documentation files
 
 import os
 import sys
-from pathlib import Path
 
 # Add the scripts directory to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from research_dispersal_automation import ResearchDispersalAutomation
+
 
 def main():
     """Run the research dispersal automation"""
@@ -42,7 +42,7 @@ def main():
         results = automation.run_dispersal(research_content)
         
         # Print results
-        print(f"\n📊 DISPERSAL RESULTS:")
+        print("\n📊 DISPERSAL RESULTS:")
         print(f"  Success: {'✅ Yes' if results['success'] else '❌ No'}")
         print(f"  Updated 500_ files: {len(results['updated_500_files'])}")
         print(f"  Updated anchor files: {len(results['updated_anchor_files'])}")
@@ -51,12 +51,12 @@ def main():
         print(f"  Errors: {len(results['errors'])}")
         
         if results['errors']:
-            print(f"\n❌ ERRORS:")
+            print("\n❌ ERRORS:")
             for error in results['errors']:
                 print(f"  - {error}")
         
-        print(f"\n📋 SUMMARY REPORT: RESEARCH_DISPERSAL_SUMMARY.md")
-        print(f"📝 BACKLOG SCRIPT: scripts/update_backlog_from_research.py")
+        print("\n📋 SUMMARY REPORT: RESEARCH_DISPERSAL_SUMMARY.md")
+        print("📝 BACKLOG SCRIPT: scripts/update_backlog_from_research.py")
         
     except Exception as e:
         print(f"❌ Error running dispersal: {e}")

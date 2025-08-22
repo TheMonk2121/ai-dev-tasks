@@ -1157,3 +1157,111 @@ bundle = build_hydration_bundle(role="implementer", task="code implementation", 
 - Memory usage: < 100MB for 10 bundles
 - Success rate: > 95%
 - Token efficiency: > 80%
+
+---
+
+## 🏷️ Session Registry Integration
+
+The Session Registry provides enhanced context for memory rehydration by tracking active Scribe sessions and their rich metadata.
+
+### **Session Context Enhancement**
+
+Session registry data is automatically integrated into memory rehydration bundles:
+
+```python
+# Enhanced memory context with session data
+def build_enhanced_hydration_bundle(role, task, token_budget=1200):
+    """Build hydration bundle with session registry integration"""
+
+    # Get base bundle
+    base_bundle = build_hydration_bundle(role, task, token_budget)
+
+    # Integrate session registry data
+    from scripts.session_context_integration import SessionContextIntegrator
+    integrator = SessionContextIntegrator()
+
+    session_context = integrator.get_active_sessions_context()
+    session_summary = integrator.get_session_summary()
+
+    # Enhance bundle with session data
+    enhanced_bundle = base_bundle.copy()
+    enhanced_bundle.session_registry = session_context
+    enhanced_bundle.session_summary = session_summary
+
+    return enhanced_bundle
+```
+
+### **Session Discovery Integration**
+
+Find sessions by context tags during memory rehydration:
+
+```python
+# Find sessions by context tags
+def find_related_sessions(tags):
+    """Find sessions related to current task"""
+    from scripts.session_context_integration import SessionContextIntegrator
+
+    integrator = SessionContextIntegrator()
+    matching_sessions = integrator.get_sessions_by_context(tags)
+
+    return matching_sessions
+```
+
+### **Enhanced Context Examples**
+
+#### **Planner Role with Session Context**
+
+```python
+# Planner bundle with active session awareness
+bundle = build_enhanced_hydration_bundle(
+    role="planner",
+    task="strategic planning for Q4 development",
+    token_budget=1200
+)
+
+# Bundle now includes:
+# - Active Scribe sessions
+# - Session context tags
+# - Related session information
+# - Session summary for quick overview
+```
+
+#### **Implementer Role with Session Context**
+
+```python
+# Implementer bundle with technical session context
+bundle = build_enhanced_hydration_bundle(
+    role="implementer",
+    task="debug DSPy integration issues",
+    token_budget=1200
+)
+
+# Bundle includes:
+# - Active debugging sessions
+# - Implementation session context
+# - Related technical sessions
+# - Session priority and type information
+```
+
+### **Session Registry CLI Integration**
+
+Direct integration with memory rehydration commands:
+
+```bash
+# Get session context with memory rehydration
+python scripts/session_context_integration.py integrate
+
+# Find sessions by context tags
+python scripts/session_context_integration.py context --tags dspy testing
+
+# Get active sessions summary
+python scripts/session_context_integration.py summary
+```
+
+### **Integration Benefits**
+
+- **🎯 Enhanced Context**: Rich session metadata for better AI understanding
+- **🔍 Session Discovery**: Find related sessions by context tags
+- **📊 Active Session Awareness**: Know what sessions are currently running
+- **🏷️ Context Tagging**: Rich metadata for session categorization
+- **⚡ Real-time Updates**: Live session status and context information

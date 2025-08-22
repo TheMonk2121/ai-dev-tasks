@@ -105,6 +105,15 @@ cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "DSPy integrati
 3. **Generate tasks** using `000_core/002_generate-tasks.md` workflow
 4. **Execute** using `000_core/003_process-task-list.md` workflow
 
+### **cSpell Automation Pattern**
+
+**When user requests cSpell word addition or mentions "missing definitions":**
+- **Role**: Use `coder` role (handles development tooling and configuration)
+- **Script**: Use `python3 scripts/cspell_automation.py "word1 word2 word3"`
+- **Pattern**: This is a frequent, deterministic task that should be automated
+- **Memory**: See `100_memory/105_cspell-automation-memory.md` for full pattern
+- **Integration**: cSpell automation is part of coder role responsibilities
+
 ### **Key Files for Context**
 
 - **Memory Context**: `100_memory/100_cursor-memory-context.md` (current state)

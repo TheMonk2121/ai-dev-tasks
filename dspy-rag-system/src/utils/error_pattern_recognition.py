@@ -6,14 +6,13 @@ This module implements intelligent error pattern recognition for the DSPy RAG sy
 It analyzes error patterns, categorizes them, and provides recovery suggestions.
 """
 
-import re
 import json
 import logging
 import os
-from typing import Dict, List, Optional, Tuple, Any
+import re
 from dataclasses import dataclass
 from datetime import datetime
-import traceback
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

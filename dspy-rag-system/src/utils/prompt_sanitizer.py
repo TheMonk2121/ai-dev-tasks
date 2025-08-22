@@ -4,11 +4,10 @@ Prompt Sanitization Utility
 Provides regex-based prompt sanitization with configurable block-list and optional whitelist.
 """
 
-import re
-import os
 import json
 import logging
-from typing import List, Optional, Dict, Any
+import os
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 

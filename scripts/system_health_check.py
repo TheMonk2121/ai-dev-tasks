@@ -8,13 +8,12 @@ Validates database, AI models, file processing, and security components.
 Usage: python scripts/system_health_check.py [--verbose] [--fix]
 """
 
-import sys
-import os
-import subprocess
-from pathlib import Path
-from typing import Dict, List, Tuple, Optional
 import json
+import os
+import sys
 import time
+from pathlib import Path
+from typing import Dict
 
 # Add dspy-rag-system to path
 sys.path.insert(0, str(Path(__file__).parent.parent / 'dspy-rag-system'))

@@ -7,10 +7,10 @@ Script to migrate markdown files to VS Code compliant format.
 - Ensures proper spacing around elements
 """
 
-import os
 import re
 import sys
 from pathlib import Path
+
 
 def convert_html_anchors_to_heading_ids(content):
     """Convert HTML anchors to heading IDs."""

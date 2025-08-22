@@ -9,19 +9,18 @@ This script runs comprehensive security checks including:
 - Security report generation
 """
 
-import os
-import sys
-import json
 import argparse
+import json
+import sys
 from pathlib import Path
-from typing import Dict, Any
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.utils.security import SecurityScanner, create_security_config, validate_security_config
 from src.utils.logger import get_logger
+from src.utils.security import SecurityScanner
+
 
 def main():
     """Main security scanning function"""
@@ -72,7 +71,7 @@ def main():
         total_issues = summary.get("total_code_issues", 0)
         overall_status = summary.get("overall_status", "unknown")
         
-        print(f"\n🔒 Security Scan Summary:")
+        print("\n🔒 Security Scan Summary:")
         print(f"   Vulnerabilities: {total_vulns}")
         print(f"   Code Issues: {total_issues}")
         print(f"   Overall Status: {overall_status.upper()}")

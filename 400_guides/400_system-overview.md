@@ -80,6 +80,7 @@ and `400_guides/400_deployment-environment-guide.md`.
 ├─────────────────────────────────────────────────────────────────┤
 │  🔧 Core Systems                                            │
 │  ├── DSPy RAG System (Document Processing)                  │
+│  ├── Scribe System (Context Capture & Summarization)        │
 │  ├── N8N Workflows (Automation)                             │
 │  ├── Dashboard (Monitoring)                                  │
 │  └── Testing Framework (Quality Assurance)                  │

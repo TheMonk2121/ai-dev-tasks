@@ -8,15 +8,14 @@ Checks and fixes model references, 003 role descriptions, PRD-skip rules, and du
 Usage: python scripts/repo_maintenance.py [--dry-run] [--auto-commit]
 """
 
-import os
-import re
-import sys
-import json
 import argparse
 import hashlib
-from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+import re
 import subprocess
+import sys
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
 
 class RepoMaintenance:
     def __init__(self, dry_run: bool = True, auto_commit: bool = False, skip_git_check: bool = False):
@@ -246,7 +245,7 @@ class RepoMaintenance:
         
         changes_made = False
         for keep_file, archive_files in decisions:
-            self.log(f"Duplicate group:")
+            self.log("Duplicate group:")
             self.log(f"  Keep: {keep_file}")
             for archive_file in archive_files:
                 self.log(f"  Archive: {archive_file}")

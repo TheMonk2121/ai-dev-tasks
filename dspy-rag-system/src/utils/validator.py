@@ -4,11 +4,11 @@ Input validation utilities for DSPy RAG system.
 Implements security hardening for user inputs and file paths.
 """
 
-import re
-import os
 import logging
-from typing import List, Optional
+import os
+import re
 from pathlib import Path
+from typing import List, Optional
 
 logger = logging.getLogger(__name__)
 

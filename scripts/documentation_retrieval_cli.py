@@ -6,14 +6,14 @@ Command-line interface for the documentation retrieval system,
 providing easy access to RAG-based documentation search.
 """
 
-import os
-import sys
-import json
 import argparse
+import json
 import logging
-from typing import Dict, Any, Optional
-from pathlib import Path
+import os
 import re
+import sys
+from pathlib import Path
+from typing import Any, Dict, Optional
 
 # Add the dspy-rag-system to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'dspy-rag-system', 'src'))
@@ -22,8 +22,8 @@ try:
     from dspy_modules.documentation_retrieval import (
         create_documentation_retrieval_service,
         get_relevant_context,
+        get_task_context,
         search_documentation,
-        get_task_context
     )
 except Exception:
     create_documentation_retrieval_service = None  # type: ignore

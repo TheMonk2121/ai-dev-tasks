@@ -6,21 +6,15 @@ Demonstrates the production monitoring system with security alerts,
 health checks, and system metrics collection.
 """
 
-import os
 import sys
 import time
-import json
-from datetime import datetime
 
 # Add src to path
 sys.path.append('src')
 
-from monitoring.production_monitor import (
-    ProductionMonitor, SecurityEvent, initialize_production_monitoring
-)
-from monitoring.health_endpoints import (
-    HealthEndpointManager, initialize_health_endpoints
-)
+from monitoring.health_endpoints import HealthEndpointManager, initialize_health_endpoints
+from monitoring.production_monitor import ProductionMonitor, initialize_production_monitoring
+
 
 def demo_security_events():
     """Demonstrate security event recording"""
@@ -160,7 +154,7 @@ def demo_monitoring_integration():
     
     if system_metrics:
         latest_metrics = system_metrics[-1]
-        print(f"\nLatest System Metrics:")
+        print("\nLatest System Metrics:")
         print(f"  • CPU: {latest_metrics['cpu_percent']:.1f}%")
         print(f"  • Memory: {latest_metrics['memory_percent']:.1f}%")
         print(f"  • Disk: {latest_metrics['disk_usage_percent']:.1f}%")

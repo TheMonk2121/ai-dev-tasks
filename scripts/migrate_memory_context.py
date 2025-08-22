@@ -6,11 +6,10 @@ Updates all references from the old 100_cursor-memory-context.md to the new
 modular memory context system with focused modules.
 """
 
+import glob
 import os
 import re
-import glob
-from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
 
 
 class MemoryContextMigrator:
@@ -222,9 +221,9 @@ class MemoryContextMigrator:
         with open("500_b071-migration-summary.md", 'w', encoding='utf-8') as f:
             f.write(summary)
         
-        print(f"\n✅ Migration complete!")
+        print("\n✅ Migration complete!")
         print(f"📊 Updated {len(updated_files)} files")
-        print(f"📝 Summary written to 500_b071-migration-summary.md")
+        print("📝 Summary written to 500_b071-migration-summary.md")
         
         if errors:
             print(f"⚠️  {len(errors)} errors encountered")

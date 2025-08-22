@@ -8,20 +8,11 @@ connection pooling, health monitoring, and retry logic.
 
 import os
 import sys
-import time
 from datetime import datetime
 
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from utils.database_resilience import (
-    DatabaseResilienceManager,
-    get_database_manager,
-    execute_query,
-    execute_transaction,
-    get_database_health,
-    is_database_healthy
-)
 
 def demo_initialization():
     """Demo database resilience manager initialization"""

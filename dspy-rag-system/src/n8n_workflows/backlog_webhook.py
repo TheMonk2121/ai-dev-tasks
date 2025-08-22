@@ -6,21 +6,22 @@ Provides a webhook endpoint for n8n to trigger backlog scrubbing operations.
 This can be integrated with n8n workflows for automated backlog management.
 """
 
+import logging
 import os
 import sys
-import json
-import logging
-from typing import Dict, Any, Optional
 from datetime import datetime
-from flask import Flask, request, jsonify
+from typing import Any, Dict
+
+from flask import Flask, jsonify, request
 from werkzeug.exceptions import BadRequest
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from backlog_scrubber import BacklogScrubber
+
 from utils.logger import get_logger
-from utils.opentelemetry_config import trace_operation, add_span_attribute
+from utils.opentelemetry_config import trace_operation
 
 logger = get_logger("backlog_webhook")
 
@@ -221,7 +222,7 @@ def main():
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
     
-    print(f"Starting Backlog Scrubber Webhook Server")
+    print("Starting Backlog Scrubber Webhook Server")
     print(f"Host: {args.host}")
     print(f"Port: {args.port}")
     print(f"Webhook URL: http://{args.host}:{args.port}/webhook/backlog-scrubber")
