@@ -106,6 +106,12 @@ python scripts/update_cursor_memory.py  # Update memory context
 python scripts/show_memory_hierarchy.py  # Show memory structure
 python scripts/constitution_compliance_checker.py  # Check AI constitution
 
+# Bulk document processing
+python3 bulk_add_core_documents.py  # Process all core documents
+python3 bulk_add_core_documents.py --analyze-only  # Analyze coverage without processing
+python3 bulk_add_core_documents.py --max-workers 4  # Process with custom settings
+python3 cleanup_database_paths.py  # Clean up database path inconsistencies
+
 # Repository maintenance
 python scripts/repo_maintenance.py  # Automated maintenance
 python scripts/system_health_check.py  # System health check
@@ -281,6 +287,8 @@ echo "✅ Installation complete!"
 | **Task Execution Engine** | `scripts/process_tasks.py` | Core CLI for backlog execution | Automated task processing, state management, error handling |
 | **Error Handler** | `scripts/error_handler.py` | Comprehensive error handling | Retry logic, graceful degradation, error reporting |
 | **State Manager** | `scripts/state_manager.py` | Task execution state tracking | Progress tracking, execution history, metadata management |
+| **Bulk Document Processor** | `dspy-rag-system/bulk_add_core_documents.py` | Bulk document processing | Concurrent processing, coverage analysis, intelligent path matching |
+| **Database Path Cleanup** | `dspy-rag-system/cleanup_database_paths.py` | Database path standardization | Path format cleanup, duplicate filename resolution, consistency validation |
 
 ### **Complete Script Index**
 
@@ -293,6 +301,8 @@ echo "✅ Installation complete!"
 - **Task Execution**: `scripts/process_tasks.py` - Core CLI for backlog execution
 - **Error Handling**: `scripts/error_handler.py` - Comprehensive error recovery
 - **State Management**: `scripts/state_manager.py` - Execution state tracking
+- **Bulk Document Processing**: `dspy-rag-system/bulk_add_core_documents.py` - Process entire document collections efficiently
+- **Database Path Cleanup**: `dspy-rag-system/cleanup_database_paths.py` - Standardize database path formats
 - **Conflict Detection**: `scripts/conflict_audit.py` - Deep conflict analysis
 - **Quick Conflict Check**: `scripts/quick_conflict_check.py` - Fast conflict detection
 - **System Health**: `scripts/system_health_check.py` - System validation

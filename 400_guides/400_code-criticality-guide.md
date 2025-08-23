@@ -103,6 +103,12 @@
 - `dspy-rag-system/src/utils/error_pattern_recognition.py` — Error Recovery Patterns
   - Pattern catalog + classification supporting automated recovery and hotfix templates.
 
+- `dspy-rag-system/bulk_add_core_documents.py` — Bulk Document Processing System
+  - Concurrent processing of entire document collections; coverage analysis, intelligent path matching, and comprehensive knowledge base management.
+
+- `dspy-rag-system/cleanup_database_paths.py` — Database Path Standardization
+  - Standardizes database path formats, resolves duplicate filenames, and ensures consistency across document storage.
+
 - `dspy-rag-system/src/utils/prompt_sanitizer.py` — Input Security Guard‑Rails
   - Validation and sanitization for queries/content; foundational for safe operations.
 
@@ -153,6 +159,10 @@
 - Production resilience: Keeps system healthy under failure (`database_resilience.py`)
 
 - Documentation integrity: Ensures documentation quality and coherence (`doc_coherence_validator.py`)
+
+- Knowledge base management: Processes entire document collections efficiently (`bulk_add_core_documents.py`)
+
+- Data consistency: Standardizes database path formats and resolves inconsistencies (`cleanup_database_paths.py`)
 
 - Safety & security: Prevents unsafe inputs/operations (`prompt_sanitizer.py`)
 
@@ -244,6 +254,7 @@ def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
 
 ## 🗒️ Change Log
 
+- v1.6: Added bulk document processing system (Tier 2) - Bulk document processing and database path standardization
 - v1.5: Added hydration integration framework (Tier 3) - n8n health monitor, performance dashboard, and integration guide
 - v1.4: Added hydration testing framework (Tier 3) - Testing framework, quality validation, and performance benchmarking
 - v1.3: Added role-specific hydration guides (Tier 3) - Planner and implementer context strategies
