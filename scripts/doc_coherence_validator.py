@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: doc-coherence-validator
+# ANCHOR_PRIORITY: 25
+# ROLE_PINS: ["coder", "documentation"]
 """
 Optimized Documentation Coherence Validation System
 
@@ -69,6 +72,7 @@ OK, FAIL, ERROR = 0, 2, 1
 # Required score keys for backlog validation
 REQUIRED_SCORE_KEYS = {"bv", "tc", "rr", "le", "lessons", "effort", "deps"}
 
+
 @dataclass
 class BacklogItem:
     id: str
@@ -96,9 +100,11 @@ class BacklogItem:
     reasons_fail: List[str] = field(default_factory=list)
     reasons_warn: List[str] = field(default_factory=list)
 
+
 # =========================
 # Backlog compliance validator
 # =========================
+
 
 def _safe_float(x: str) -> Optional[float]:
     """Safely convert string to float, handling edge cases."""
@@ -107,6 +113,7 @@ def _safe_float(x: str) -> Optional[float]:
     except Exception:
         m = re.search(r"[\d.]+", x or "")
         return float(m.group(0)) if m else None
+
 
 def _parse_score_map(s: str) -> Optional[Dict]:
     """
@@ -127,6 +134,7 @@ def _parse_score_map(s: str) -> Optional[Dict]:
     except Exception:
         return None
 
+
 def _find_region(lines: List[str], start_idx: int) -> str:
     """
     Capture metadata lines until next table row or blank line break.
@@ -139,6 +147,7 @@ def _find_region(lines: List[str], start_idx: int) -> str:
         buff.append(lines[i])
         i += 1
     return "\n".join(buff)
+
 
 def parse_backlog(path: Path) -> List[BacklogItem]:
     """Parse backlog file and extract items with metadata."""
@@ -199,6 +208,7 @@ def parse_backlog(path: Path) -> List[BacklogItem]:
         i += 1
     return items
 
+
 def check_item(item: BacklogItem) -> None:
     """Apply validation rules to a backlog item."""
     # --- FAIL: score must exist and parse
@@ -251,6 +261,7 @@ def check_item(item: BacklogItem) -> None:
     # --- WARN: DONE items should be moved out of active table (heuristic)
     if item.status in {"done", "✅ done", "complete", "completed"}:
         item.reasons_warn.append("DONE_ITEM_IN_ACTIVE_TABLE")
+
 
 def validate_backlog(path: str = "000_core/000_backlog.md") -> Tuple[int, str, dict]:
     """
@@ -310,6 +321,7 @@ def validate_backlog(path: str = "000_core/000_backlog.md") -> Tuple[int, str, d
 
     except Exception as e:
         return ERROR, f"ERROR: {e}", {"error": "EXCEPTION", "message": str(e)}
+
 
 class DocCoherenceValidator:
     def __init__(
@@ -1076,6 +1088,7 @@ class DocCoherenceValidator:
             "all_valid": len(all_errors) == 0,
         }
 
+
 def main():
     parser = argparse.ArgumentParser(description="Optimized documentation coherence validator")
     parser.add_argument("--check", choices=["backlog"], help="Specific validation mode")
@@ -1154,6 +1167,7 @@ def main():
                 print(f"  ⚠️ {warning}")
             if len(results["warnings"]) > 10:
                 print(f"  ... and {len(results['warnings']) - 10} more warnings")
+
 
 if __name__ == "__main__":
     main()

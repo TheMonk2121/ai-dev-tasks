@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# DEPRECATED: This demo file has been moved to 400_guides/ for essential examples
+# Original ANCHOR_KEY: demo-assertion-framework (REMOVED)
+# Original ANCHOR_PRIORITY: 20 (REMOVED)
+# Original ROLE_PINS: ["implementer", "coder"] (REMOVED)
 """
 Assertion Framework Demonstration
 

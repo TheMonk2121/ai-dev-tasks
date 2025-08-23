@@ -43,7 +43,7 @@
 - `400_guides/400_context-priority-guide.md`
 - `400_guides/400_multi-role-pr-signoff-guide.md`
 - `400_guides/400_multi-role-pr-signoff-v2-guide.md`
-- `400_guides/400_scribe-system-guide.md`
+- `400_guides/400_scribe-v2-system-guide.md`
 - `600_archives/artifacts/000_core_temp_files/PRD-B-095-Reshape-500-Research-Folder-Into-Industry-Standard-Citation-Resource.md`
 - `600_archives/artifacts/000_core_temp_files/PRD-B-096-Enhanced-Scribe-System-Intelligent-Content-Analysis-And-Idea-Mining.md`
 - `600_archives/artifacts/000_core_temp_files/PRD-B-097-Multi-Role-Pr-Sign-Off-System-Comprehensive-Review-And-Cleanup-Workflow.md`

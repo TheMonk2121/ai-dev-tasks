@@ -1,3 +1,4 @@
+# DEPRECATED: This demo file is being archived. See 400_guides/ for essential examples.
 #!/usr/bin/env python3
 """
 DSPy v2 System Integration Demonstration
