@@ -24,13 +24,18 @@ _LOG = logging.getLogger("model_switcher")
 try:
     import os
     import sys
+    from importlib import import_module
 
-    # Add utils to path for monitoring import
-    utils_path = os.path.join(os.path.dirname(__file__), "..", "utils")
-    if utils_path not in sys.path:
-        sys.path.insert(0, utils_path)
+    def _import_from_utils(module_name):
+        """Helper function to import modules from utils directory"""
+        utils_path = os.path.join(os.path.dirname(__file__), "..", "utils")
+        if utils_path not in sys.path:
+            sys.path.insert(0, utils_path)
+        return import_module(module_name)
 
-    from context_monitoring import record_context_request
+    # Import using the helper function
+    context_monitoring = _import_from_utils("context_monitoring")
+    record_context_request = context_monitoring.record_context_request
 
     MONITORING_AVAILABLE = True
 except ImportError as e:
@@ -39,7 +44,8 @@ except ImportError as e:
 
 # Import performance optimization system
 try:
-    from context_performance import get_optimized_context
+    context_performance = _import_from_utils("context_performance")
+    get_optimized_context = context_performance.get_optimized_context
 
     PERFORMANCE_OPTIMIZATION_AVAILABLE = True
 except ImportError as e:
@@ -48,7 +54,8 @@ except ImportError as e:
 
 # Import security validation system
 try:
-    from context_security import validate_context_request
+    context_security = _import_from_utils("context_security")
+    validate_context_request = context_security.validate_context_request
 
     SECURITY_VALIDATION_AVAILABLE = True
 except ImportError as e:
@@ -60,7 +67,8 @@ MEMORY_REHYDRATOR_AVAILABLE = True
 
 # Scribe integration for real-time context
 try:
-    from ..utils.scribe_context_provider import get_scribe_context_for_role
+    scribe_context_provider = _import_from_utils("scribe_context_provider")
+    get_scribe_context_for_role = scribe_context_provider.get_scribe_context_for_role
 
     SCRIBE_AVAILABLE = True
     _LOG.info("Scribe context provider available")

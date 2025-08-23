@@ -10,7 +10,7 @@ import json
 import logging
 import time
 from collections import defaultdict, deque
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -48,17 +48,9 @@ class ContextMetrics:
     cache_evictions: int = 0
 
     # Role-specific metrics
-    role_requests: Dict[str, int] = None
-    role_errors: Dict[str, int] = None
-    role_avg_times: Dict[str, float] = None
-
-    def __post_init__(self):
-        if self.role_requests is None:
-            self.role_requests = defaultdict(int)
-        if self.role_errors is None:
-            self.role_errors = defaultdict(int)
-        if self.role_avg_times is None:
-            self.role_avg_times = defaultdict(float)
+    role_requests: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
+    role_errors: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
+    role_avg_times: Dict[str, float] = field(default_factory=lambda: defaultdict(float))
 
 
 class ContextMonitor:

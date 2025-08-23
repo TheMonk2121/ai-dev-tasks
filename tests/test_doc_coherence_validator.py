@@ -151,13 +151,14 @@ This is a valid README file.
         # Test with broken references
         with patch.object(self.validator, "markdown_files", [Path("100_test-memory-context.md")]):
             with patch.object(self.validator, "read_file") as mock_read:
-                mock_read.return_value = ""
+                # Mock content with a broken cross-reference
+                mock_read.side_effect = [
+                    "This file references <!-- SOURCE_RESEARCH: broken_file.md -->",  # Content with broken reference
+                    "",  # Empty content for the referenced file
+                ]
 
-                with patch.object(Path, "exists") as mock_exists:
-                    mock_exists.return_value = False
-
-                    result = self.validator.task_1_validate_cross_references()
-                    assert not result
+                result = self.validator.task_1_validate_cross_references()
+                assert not result
 
     def test_validate_file_naming_conventions(self):
         """Test file naming convention validation."""

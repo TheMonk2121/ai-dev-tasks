@@ -108,15 +108,16 @@ class ResearchDispersalAutomation:
                 return False
 
             # Create new section with cross-reference to full research
+            research_file = "docs/research/papers/documentation-context-management-papers.md"
             new_section = f"""
 ## {section_title}
 
-<!-- SOURCE_RESEARCH: docs/research/papers/documentation-context-management-papers.md -->
+<!-- SOURCE_RESEARCH: {research_file} -->
 <!-- EXTRACTED_SECTION: {section_title} -->
 
 {section_content}
 
-> **📚 Full Research**: See `docs/research/papers/documentation-context-management-papers.md` for complete research findings and additional context.
+> **📚 Full Research**: See `{research_file}` for complete research findings and additional context.
 """
 
             # Insert new section
@@ -153,15 +154,16 @@ class ResearchDispersalAutomation:
                 return False
 
             # Create implementation-focused section
+            research_file = "docs/research/papers/documentation-context-management-papers.md"
             new_section = f"""
 ## {section_title}
 
-<!-- RESEARCH_BASIS: docs/research/papers/documentation-context-management-papers.md -->
+<!-- RESEARCH_BASIS: {research_file} -->
 <!-- IMPLEMENTATION_FOCUS: True -->
 
 {section_content}
 
-> **🔬 Research Basis**: Based on findings from `docs/research/papers/documentation-context-management-papers.md`
+> **🔬 Research Basis**: Based on findings from `{research_file}`
 """
 
             # Insert new section
@@ -232,6 +234,9 @@ class ResearchDispersalAutomation:
 
     def create_backlog_update_script(self, backlog_items: List[Dict[str, Any]]) -> str:
         """Create a script to add new backlog items"""
+        # Convert backlog_items to a string representation for the script
+        backlog_items_str = str(backlog_items)
+
         script_content = f"""#!/usr/bin/env python3
 \"\"\"
 Backlog Update Script - Generated from Research Findings
@@ -245,7 +250,7 @@ def add_backlog_items():
     \"\"\"Add new backlog items to 000_backlog.md\"\"\"
 
     # New backlog items to add
-    new_items = backlog_items
+    new_items = {backlog_items_str}
 
     # Read current backlog
     with open('000_backlog.md', 'r', encoding='utf-8') as f:
@@ -262,7 +267,11 @@ def add_backlog_items():
         # Create new backlog entries
         new_entries = []
         for item in new_items:
-            entry = f"| {item['id']} | {item['title']} | {item['priority']} | {item['points']} | todo | {item['description']} | Research-based implementation | {', '.join(item['dependencies'])} |\\n"
+            entry = (
+                f"| {{item['id']}} | {{item['title']}} | {{item['priority']}} | {{item['points']}} | "
+                f"todo | {{item['description']}} | Research-based implementation | "
+                f"{{', '.join(item['dependencies'])}} |\\n"
+            )
             new_entries.append(entry)
 
         # Insert new entries
@@ -272,7 +281,7 @@ def add_backlog_items():
         with open('000_backlog.md', 'w', encoding='utf-8') as f:
             f.write(updated_content)
 
-        print(f"✅ Added {len(new_items)} new backlog items")
+        print(f"✅ Added {{len(new_items)}} new backlog items")
         return True
     else:
         print("❌ Could not find backlog table in 000_backlog.md")

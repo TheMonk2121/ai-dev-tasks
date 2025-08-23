@@ -141,13 +141,20 @@ class TestCoderRoleIntegration(unittest.TestCase):
         coding_keywords = ["coding", "best practices", "testing", "code", "development"]
 
         for file_path in coder_files:
-            if os.path.exists(os.path.join(os.path.dirname(__file__), "..", file_path)):
-                with open(os.path.join(os.path.dirname(__file__), "..", file_path), "r") as f:
-                    content = f.read().lower()
+            full_path = os.path.join(os.path.dirname(__file__), "..", file_path)
+            if os.path.exists(full_path):
+                # Skip directories (like 600_archives/)
+                if os.path.isdir(full_path):
+                    continue
+                    
+                # Only process actual files
+                if os.path.isfile(full_path):
+                    with open(full_path, "r") as f:
+                        content = f.read().lower()
 
-                    # At least one coding keyword should be present
-                    keyword_found = any(keyword in content for keyword in coding_keywords)
-                    self.assertTrue(keyword_found, f"File {file_path} should contain coding-related content")
+                        # At least one coding keyword should be present
+                        keyword_found = any(keyword in content for keyword in coding_keywords)
+                        self.assertTrue(keyword_found, f"File {file_path} should contain coding-related content")
 
 class TestCoderRoleCLI(unittest.TestCase):
     """Test cases for coder role CLI functionality."""
