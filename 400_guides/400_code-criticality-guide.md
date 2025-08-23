@@ -67,19 +67,23 @@
 
 - Validates, extracts metadata, chunks, and prepares documents for indexing and retrieval.
 
-6. `dspy-rag-system/src/utils/memory_rehydrator.py` — Context Assembly & Role-Aware Hydration (Python)
+6. `dspy-rag-system/src/dspy_modules/optimization_loop.py` — DSPy Optimization System (Type-Safe)
+
+- Four-part optimization loop with Protocol interfaces, Union types, type guards, and type casting; core DSPy program optimization with comprehensive type safety.
+
+7. `dspy-rag-system/src/utils/memory_rehydrator.py` — Context Assembly & Role-Aware Hydration (Python)
 
 - Builds role-aware context bundles from Postgres; pinned anchors + task-scoped retrieval; industry-grade observability integration; core AI agent context system.
 
-7. `dspy-rag-system/src/utils/memory_rehydration.go` — Context Assembly & Role-Aware Hydration (Go)
+8. `dspy-rag-system/src/utils/memory_rehydration.go` — Context Assembly & Role-Aware Hydration (Go)
 
 - Go implementation of memory rehydration system; Lean Hybrid with Kill-Switches approach; alternative to Python version.
 
-8. `dspy-rag-system/src/utils/structured_tracer.py` — Industry-Grade Structured Tracing
+9. `dspy-rag-system/src/utils/structured_tracer.py` — Industry-Grade Structured Tracing
 
 - Stanford/Berkeley/Anthropic-grade observability; cryptographic verification; multi-layer logging; core debugging infrastructure.
 
-9. `dspy-rag-system/src/utils/self_critique.py` — Self-Critique Engine
+10. `dspy-rag-system/src/utils/self_critique.py` — Self-Critique Engine
 
 - Anthropic-style reflection checkpoints; bundle sufficiency evaluation; role-specific validation; bundle integrity verification.
 
@@ -149,6 +153,8 @@
 
 - Data path: Indexing/retrieval correctness/perf (`vector_store.py`, `document_processor.py`)
 
+- DSPy optimization: Breaks AI program optimization and type safety (`optimization_loop.py`)
+
 - Context assembly: Breaks AI agent context building (`memory_rehydrator.py`)
 - Observability: Breaks debugging and verification capabilities (`structured_tracer.py`, `self_critique.py`)
 
@@ -204,12 +210,16 @@
 - **Follow unused variable best practices** (see `400_guides/400_comprehensive-coding-best-practices.md`)
 - **Use proper import patterns** (conftest.py for tests, no manual sys.path)
 - **Have clear error handling** and logging
+- **Follow DSPy type safety standards** (Protocol interfaces, Union types, type guards, type casting)
+- **Implement comprehensive error handling** (retry logic, graceful degradation, error recovery)
 
 ### Quality Gates:
 - **Pre-commit**: All linter checks pass for Tier 1/2 files
 - **CI/CD**: F841 errors treated as failures for Tier 1/2 files
 - **Code Review**: Unused variable patterns reviewed
 - **Test Coverage**: Minimum coverage thresholds enforced
+- **DSPy Type Safety**: Protocol interfaces, Union types, type guards validated
+- **Error Handling**: Comprehensive error recovery and retry logic verified
 
 ### Linting Standards:
 ```bash
@@ -240,6 +250,27 @@ def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
     unused_var = calculate_extra(data)  # F841 error - not allowed in Tier 1/2
     processed_result = transform_data(validated_data)
     return processed_result
+
+# ✅ Good: DSPy type safety with Protocol interfaces
+from typing import Protocol, Union, cast, Any
+from dspy import Module
+
+class HasForward(Protocol):
+    def forward(self, *args, **kwargs) -> Any:
+        ...
+
+def process_module(module: Union[Module, HasForward]) -> dict:
+    if hasattr(module, 'forward') and callable(getattr(module, 'forward')):
+        result = module.forward("test")
+        return {"success": True, "result": result}
+    else:
+        dspy_module = cast(Module, module)
+        return {"success": False, "error": "Incompatible module"}
+
+# ❌ Bad: No type safety in DSPy operations
+def process_module(module):  # No type hints
+    result = module.forward("test")  # No type checking
+    return {"success": True, "result": result}
 ```
 
 - --
@@ -254,6 +285,7 @@ def process_critical_data(data: Dict[str, Any]) -> Dict[str, Any]:
 
 ## 🗒️ Change Log
 
+- v1.7: Added DSPy optimization system (Tier 1) - Type-safe optimization with Protocol interfaces, Union types, type guards, and comprehensive error handling
 - v1.6: Added bulk document processing system (Tier 2) - Bulk document processing and database path standardization
 - v1.5: Added hydration integration framework (Tier 3) - n8n health monitor, performance dashboard, and integration guide
 - v1.4: Added hydration testing framework (Tier 3) - Testing framework, quality validation, and performance benchmarking
