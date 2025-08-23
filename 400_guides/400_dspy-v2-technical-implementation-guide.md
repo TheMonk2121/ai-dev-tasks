@@ -503,17 +503,17 @@ class MLOptimizer:
 
 ### Documentation
 - [DSPy Official Documentation](https://dspy-docs.vercel.app/)
-- [Adam LK Transcript Analysis](./docs/adam-lk-dspy-transcript.md)
-- [System Integration Guide](./docs/system-integration-guide.md)
+- [Adam LK Transcript Analysis](../docs/adam-lk-dspy-transcript.md)
+- [System Integration Guide](../400_guides/400_integration-patterns-guide.md)
 
 ### Code Examples
-- [Optimization Examples](./examples/)
-- [Integration Examples](./examples/integration/)
-- [Testing Examples](./examples/testing/)
+- [Optimization Examples](../300_examples/300_dspy-v2-demo-scripts/)
+- [Integration Examples](../400_guides/400_integration-patterns-guide.md)
+- [Testing Examples](../400_guides/400_testing-strategy-guide.md)
 
 ### Performance Benchmarks
-- [Performance Results](./docs/performance-benchmarks.md)
-- [Optimization Comparisons](./docs/optimization-comparisons.md)
+- [Performance Results](../400_guides/400_performance-optimization-guide.md)
+- [Optimization Comparisons](../400_guides/400_dspy-schema-reference.md)
 
 ---
 

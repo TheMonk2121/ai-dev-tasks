@@ -97,6 +97,33 @@ Cursor AI operates as a **collaborative system** where human users and AI agents
 ✅ Fetch Rules - Retrieve project-specific rules
 ```
 
+### **DSPy Integration Capabilities**
+
+#### **Current DSPy Signatures Available:**
+```
+✅ LocalTaskSignature - Local model task execution
+✅ MultiModelOrchestrationSignature - Multi-model orchestration
+✅ ModelSelectionSignature - Intelligent model selection
+✅ RoleRefinementSignature - Role optimization
+✅ DocumentationQuerySignature - Documentation query processing
+✅ DocumentationRetrievalSignature - Documentation retrieval
+✅ ContextSynthesisSignature - Context synthesis
+✅ EntityExtractionSignature - Entity extraction
+✅ RelationExtractionSignature - Relation extraction
+✅ FactExtractionSignature - Fact extraction
+✅ ModelRoutingSignature - Model routing decisions
+✅ ContextEngineeringSignature - Context engineering
+```
+
+#### **DSPy Integration Patterns:**
+```
+✅ HasForward Protocol - Universal module interface
+✅ Signature-to-Signature Workflows - Complete integration chains
+✅ Optimization Loop Integration - B-1004 DSPy v2 Optimization
+✅ Role-Based Context Assembly - Memory rehydration integration
+✅ Model Switching - Dynamic model selection and orchestration
+```
+
 ### **Tool Access Reality**
 
 #### **Available Tools (Confirmed):**
@@ -251,6 +278,35 @@ Cursor AI operates as a **collaborative system** where human users and AI agents
 #### **3. Analysis and Planning:**
 ```
 "Based on the current status, what's the next step?"
+```
+
+### **DSPy Integration Workflow**
+
+#### **1. DSPy Context Loading:**
+```bash
+@read_file 400_guides/400_dspy-schema-reference.md
+@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py coder "DSPy signature implementation"
+```
+
+#### **2. Signature Testing:**
+```bash
+@run_terminal_cmd source venv/bin/activate && python3 -c "
+from dspy_modules.model_switcher import ModelSwitcher
+switcher = ModelSwitcher()
+result = switcher.forward(
+    task='Test DSPy signature',
+    task_type='testing',
+    role='coder',
+    complexity='simple'
+)
+print(f'Result: {result.result}')
+print(f'Model used: {result.model_used}')
+"
+```
+
+#### **3. Integration Analysis:**
+```
+"Test the DSPy signature integration and analyze the results"
 ```
 
 ### **Quality Assurance Workflow**

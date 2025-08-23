@@ -38,6 +38,7 @@ quality. For Cursor Native AI, this means:
 - **Progressive Disclosure**: Revealing context in the right order and amount
 - **Clear Boundaries**: Defining what the AI should focus on and what it can assume
 - **Effective Framing**: Setting up the problem in a way that guides the AI toward good solutions
+- **DSPy Integration**: Leveraging current DSPy signatures and optimization capabilities
 
 ### **Why Context Engineering Matters**
 
@@ -45,6 +46,41 @@ quality. For Cursor Native AI, this means:
 - **Faster Iterations**: Clear context reduces back-and-forth clarification
 - **Consistent Quality**: Structured approaches produce more predictable results
 - **Efficient Use**: Makes the most of Cursor's capabilities without overwhelming it
+- **DSPy Optimization**: Enables effective use of B-1004 DSPy v2 Optimization system
+
+### **DSPy Context Engineering**
+
+#### **Current DSPy Capabilities:**
+- **Model Selection**: Intelligent model selection for different task types
+- **Role Refinement**: Optimized role definitions for solo developer workflow
+- **Documentation Retrieval**: Context-aware documentation synthesis
+- **Optimization Loop**: Create → Evaluate → Optimize → Deploy workflow
+- **HasForward Protocol**: Universal interface for all DSPy modules
+
+#### **Context Engineering with DSPy:**
+```python
+# Example: Context engineering with DSPy signatures
+from dspy_modules.model_switcher import ModelSwitcher
+from dspy_modules.role_refinement import RoleRefinementModule
+
+# Context engineering for different task types
+def engineer_context_for_task(task_type: str, complexity: str):
+    switcher = ModelSwitcher()
+    
+    # Use ModelSelectionSignature for context optimization
+    selection = switcher.select_model(
+        task="Context engineering task",
+        task_type=task_type,
+        complexity=complexity,
+        context_size=8192
+    )
+    
+    return {
+        "selected_model": selection.selected_model,
+        "reasoning": selection.reasoning,
+        "expected_performance": selection.expected_performance
+    }
+```
 
 ## 🎯 Task-Type Patterns
 
@@ -371,6 +407,65 @@ Please provide:
 - Assumptions you're making
 ```
 
+### **DSPy Integration Workflows**
+
+#### **DSPy Signature Implementation**
+
+Use DSPy patterns for signature development:
+
+```text
+I need to implement a new DSPy signature for [specific functionality].
+
+Context:
+- [existing signatures to reference]
+- [requirements/constraints]
+- [integration points]
+
+Please provide:
+- The signature definition with InputField/OutputField
+- Usage examples
+- Integration with existing modules
+- Testing approach
+```
+
+#### **DSPy Optimization Workflow**
+
+Use optimization patterns for DSPy module improvement:
+
+```text
+I need to optimize the [specific DSPy module] using B-1004 DSPy v2 Optimization.
+
+Context:
+- [current module performance]
+- [optimization objectives]
+- [test data available]
+
+Please help me:
+- Set up the optimization loop
+- Configure the assertion framework
+- Implement metrics tracking
+- Validate the optimization results
+```
+
+#### **Role Refinement Workflow**
+
+Use role refinement patterns for AI role optimization:
+
+```text
+I need to refine the [specific role] definition for solo developer workflow.
+
+Context:
+- [current role definition]
+- [performance metrics]
+- [solo developer constraints]
+
+Please help me:
+- Analyze current role performance
+- Optimize role definition
+- Implement role refinement
+- Validate improvements
+```
+
 ## 📈 Monitoring Effectiveness
 
 ### **Key Metrics**
@@ -408,6 +503,8 @@ Please provide:
 
 - **400_few-shot-context-examples.md**: Examples of effective context engineering
 - **400_guides/400_system-overview.md**: System architecture and components
+- **400_guides/400_dspy-schema-reference.md**: Complete DSPy signature reference
+- **400_guides/400_dspy-v2-technical-implementation-guide.md**: DSPy v2 optimization guide
 - **000_core/001_create-prd.md**: PRD creation workflow
 - **000_core/002_generate-tasks.md**: Task generation workflow
 - **000_core/003_process-task-list.md**: AI execution workflow

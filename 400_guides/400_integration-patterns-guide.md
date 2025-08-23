@@ -40,33 +40,29 @@ handling`, `security integration`
 
 ## 🔌 API Design Principles
 
-### **1. RESTful API Design**#### Context API (summary)
+### **1. RESTful API Design**
+
+#### **Context API (summary)**
 
 ```http
-
 # Create context
-
 POST /api/context { type, content, relationships }
 
 # Get / Update / Delete context
-
 GET|PUT|DELETE /api/context/{id}
 
 # Search
-
 GET /api/context/search?query=...&type=...
 
 # Relationships
-
 POST /api/context/{id}/relationships { target_context_id, relationship_type, strength }
 GET /api/context/{id}/relationships
+```
 
-```text
+#### **Core Endpoints**
 
-## **Core Endpoints**```python
-
+```python
 # AI Model API endpoints
-
 AI_MODEL_ENDPOINTS = {
     "generate": "/api/v1/ai/generate",
     "chat": "/api/v1/ai/chat",
@@ -75,7 +71,6 @@ AI_MODEL_ENDPOINTS = {
 }
 
 # Database API endpoints
-
 DATABASE_ENDPOINTS = {
     "logs": "/api/v1/db/logs",
     "vectors": "/api/v1/db/vectors",
@@ -83,19 +78,17 @@ DATABASE_ENDPOINTS = {
 }
 
 # Workflow API endpoints
-
 WORKFLOW_ENDPOINTS = {
     "execute": "/api/v1/workflow/execute",
     "status": "/api/v1/workflow/status",
     "history": "/api/v1/workflow/history"
 }
+```
 
-```text
+#### **API Response Format**
 
-## **API Response Format**```python
-
+```python
 # Standard API response structure
-
 API_RESPONSE_FORMAT = {
     "success": bool,
     "data": dict,
@@ -105,7 +98,6 @@ API_RESPONSE_FORMAT = {
 }
 
 # Example response
-
 {
     "success": True,
     "data": {
@@ -117,13 +109,14 @@ API_RESPONSE_FORMAT = {
     "timestamp": "2024-08-07T08:45:00Z",
     "request_id": "req_123456"
 }
+```
 
-```text
+### **2. GraphQL Integration**
 
-## **2. GraphQL Integration**####**Schema Definition**```graphql
+#### **Schema Definition**
 
+```graphql
 # AI Development Ecosystem GraphQL Schema
-
 type Query {
     aiResponse(prompt: String!, model: String): AIResponse
     workflowStatus(id: ID!): WorkflowStatus
@@ -146,8 +139,154 @@ type WorkflowStatus {
     result: String
     error: String
 }
+```
 
-```text
+### **3. DSPy Signature Integration**
+
+#### **Signature-to-Signature Workflows**
+
+```python
+# Complete DSPy signature integration workflow
+def dspy_integration_workflow(task_description: str, user_role: str):
+    """Complete DSPy signature integration workflow"""
+    
+    # Step 1: Model Selection using ModelSelectionSignature
+    from dspy_modules.model_switcher import ModelSwitcher
+    switcher = ModelSwitcher()
+    
+    selection = switcher.select_model(
+        task=task_description,
+        task_type="development",
+        complexity="moderate",
+        context_size=8192
+    )
+    
+    # Step 2: Task Orchestration using MultiModelOrchestrationSignature
+    orchestration = switcher.orchestrate_task(
+        task=task_description,
+        task_type="development",
+        role=user_role
+    )
+    
+    # Step 3: Local Task Execution using LocalTaskSignature
+    execution = switcher.forward(
+        task=task_description,
+        task_type="execution",
+        role=user_role,
+        complexity="moderate"
+    )
+    
+    return {
+        "model_selection": selection,
+        "orchestration": orchestration,
+        "execution": execution
+    }
+```
+
+#### **Role Refinement Integration**
+
+```python
+# Role refinement integration with optimization loop
+def role_refinement_integration(role_type: str, performance_metrics: dict):
+    """Integrate role refinement with optimization system"""
+    
+    from dspy_modules.role_refinement import RoleRefinementModule
+    from dspy_modules.optimization_loop import FourPartOptimizationLoop
+    
+    # Step 1: Role Refinement using RoleRefinementSignature
+    refiner = RoleRefinementModule()
+    refinement_result = refiner.forward(
+        role_type=role_type,
+        current_definition=get_current_role_definition(role_type),
+        performance_metrics=performance_metrics,
+        solo_developer_context="Local development with resource constraints"
+    )
+    
+    # Step 2: Optimization Loop Integration
+    optimization_loop = FourPartOptimizationLoop()
+    optimization_result = optimization_loop.run_cycle({
+        "module_class": RoleRefinementModule,
+        "test_data": generate_role_test_data(role_type),
+        "optimization_objectives": ["accuracy", "speed", "resource_efficiency"]
+    })
+    
+    return {
+        "refinement": refinement_result,
+        "optimization": optimization_result
+    }
+```
+
+#### **Documentation Retrieval Integration**
+
+```python
+# Documentation retrieval integration workflow
+def documentation_integration_workflow(query: str, user_role: str):
+    """Complete documentation retrieval and synthesis workflow"""
+    
+    from dspy_modules.documentation_retrieval import (
+        DocumentationQueryModule,
+        DocumentationRetrievalModule,
+        ContextSynthesisModule
+    )
+    
+    # Step 1: Query Processing using DocumentationQuerySignature
+    query_processor = DocumentationQueryModule()
+    processed_query = query_processor.forward(
+        query=query,
+        context="current development session",
+        role=user_role
+    )
+    
+    # Step 2: Documentation Retrieval using DocumentationRetrievalSignature
+    retrieval_module = DocumentationRetrievalModule()
+    retrieval_result = retrieval_module.forward(
+        query=processed_query.processed_query,
+        search_results=search_database(processed_query.processed_query),
+        relevance_scores=calculate_relevance_scores()
+    )
+    
+    # Step 3: Context Synthesis using ContextSynthesisSignature
+    synthesis_module = ContextSynthesisModule()
+    synthesis_result = synthesis_module.forward(
+        retrieved_docs=retrieval_result.relevant_docs,
+        user_context="current task context",
+        synthesis_goal="provide actionable guidance"
+    )
+    
+    return synthesis_result
+```
+
+#### **HasForward Protocol Integration**
+
+```python
+# Universal DSPy module integration using HasForward protocol
+from typing import Protocol, Dict, Any
+
+class HasForward(Protocol):
+    """Protocol for objects with forward method"""
+    def forward(self, *args, **kwargs) -> Dict[str, Any]:
+        ...
+
+def universal_dspy_integration(module: HasForward, input_data: Dict[str, Any]):
+    """Universal integration for any DSPy module"""
+    
+    # All DSPy modules implement HasForward protocol
+    result = module.forward(**input_data)
+    
+    # Standard result processing
+    if result.get("success", True):
+        return {
+            "status": "success",
+            "data": result,
+            "module_type": module.__class__.__name__
+        }
+    else:
+        return {
+            "status": "error",
+            "error": result.get("error", "Unknown error"),
+            "module_type": module.__class__.__name__
+        }
+```
 
 ## **3. WebSocket Communication**####**Real-time Updates**```python
 
@@ -177,8 +316,102 @@ WEBSOCKET_EVENTS = {
 
 ## 🔄 Component Integration
 
-### **1. AI Model Integration**####**Model Interface**```python
+### **1. DSPy Module Integration**
 
+#### **DSPy Module Interface**
+
+```python
+# DSPy module integration interface using HasForward protocol
+from typing import Protocol, Dict, Any
+
+class HasForward(Protocol):
+    """Protocol for objects with forward method"""
+    def forward(self, *args, **kwargs) -> Dict[str, Any]:
+        ...
+
+class DSPyModuleInterface:
+    def __init__(self, module: HasForward):
+        self.module = module
+        self.module_type = module.__class__.__name__
+
+    def execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute DSPy module with input data"""
+        try:
+            result = self.module.forward(**input_data)
+            return {
+                "success": True,
+                "data": result,
+                "module_type": self.module_type,
+                "execution_time": self._measure_execution_time()
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "module_type": self.module_type
+            }
+
+    def _measure_execution_time(self) -> float:
+        """Measure execution time for performance monitoring"""
+        import time
+        start_time = time.time()
+        # Execution happens in forward method
+        return time.time() - start_time
+```
+
+#### **DSPy Module Factory**
+
+```python
+# DSPy module factory for different signature types
+from dspy_modules.model_switcher import ModelSwitcher
+from dspy_modules.role_refinement import RoleRefinementModule
+from dspy_modules.documentation_retrieval import (
+    DocumentationQueryModule,
+    DocumentationRetrievalModule,
+    ContextSynthesisModule
+)
+
+class DSPyModuleFactory:
+    @staticmethod
+    def create_module(module_type: str) -> DSPyModuleInterface:
+        """Create DSPy module by type"""
+        if module_type == "model_switcher":
+            return DSPyModuleInterface(ModelSwitcher())
+        elif module_type == "role_refinement":
+            return DSPyModuleInterface(RoleRefinementModule())
+        elif module_type == "documentation_query":
+            return DSPyModuleInterface(DocumentationQueryModule())
+        elif module_type == "documentation_retrieval":
+            return DSPyModuleInterface(DocumentationRetrievalModule())
+        elif module_type == "context_synthesis":
+            return DSPyModuleInterface(ContextSynthesisModule())
+        else:
+            raise ValueError(f"Unknown DSPy module type: {module_type}")
+
+    @staticmethod
+    def create_workflow(workflow_type: str) -> Dict[str, DSPyModuleInterface]:
+        """Create complete DSPy workflow"""
+        if workflow_type == "task_execution":
+            return {
+                "model_selection": DSPyModuleFactory.create_module("model_switcher"),
+                "task_execution": DSPyModuleFactory.create_module("model_switcher"),
+                "role_refinement": DSPyModuleFactory.create_module("role_refinement")
+            }
+        elif workflow_type == "documentation_retrieval":
+            return {
+                "query_processing": DSPyModuleFactory.create_module("documentation_query"),
+                "retrieval": DSPyModuleFactory.create_module("documentation_retrieval"),
+                "synthesis": DSPyModuleFactory.create_module("context_synthesis")
+            }
+        else:
+            raise ValueError(f"Unknown workflow type: {workflow_type}")
+```
+
+### **2. AI Model Integration**
+
+#### **Model Interface**
+
+```python
 # AI model integration interface
 
 class AIModelInterface:
@@ -187,7 +420,7 @@ class AIModelInterface:
         self.config = config
         self.client = self._initialize_client()
 
-    def generate(self, prompt: str,**kwargs) -> dict:
+    def generate(self, prompt: str, **kwargs) -> dict:
         """Generate AI response"""
         try:
             response = self.client.generate(prompt, **kwargs)
@@ -220,11 +453,11 @@ class AIModelInterface:
                 "error": str(e),
                 "model": self.model_name
             }
+```
 
-```text
+#### **Model Factory**
 
-## **Model Factory**```python
-
+```python
 # AI model factory for different models
 
 class AIModelFactory:
@@ -238,8 +471,7 @@ class AIModelFactory:
             return SpecializedAgentModel()
         else:
             raise ValueError(f"Unknown model: {model_name}")
-
-```text
+```
 
 ## **2. Database Integration**####**Database Interface**```python
 
