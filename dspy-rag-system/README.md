@@ -72,8 +72,9 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## **1. Add Documents (Drag & Drop)**
+## **1. Add Documents (Multiple Options)**
 
+### **Option A: Drag & Drop (Individual Files)**
 ```bash
 # Simply drag files into:
 watch_folder/
@@ -88,6 +89,32 @@ watch_folder/
 # - Processed into chunks
 # - Added to your knowledge base
 # - Moved to processed_documents/
+```
+
+### **Option B: Bulk Processing (Core Documents)**
+```bash
+# Process all core documentation files at once:
+cd dspy-rag-system
+python3 bulk_add_core_documents.py
+
+# Analyze coverage without processing:
+python3 bulk_add_core_documents.py --analyze-only
+
+# Process with specific options:
+python3 bulk_add_core_documents.py --max-workers 4 --chunk-size 500
+
+# Features:
+# - Concurrent processing for speed
+# - Intelligent path matching
+# - Coverage analysis and reporting
+# - Error handling and retry logic
+# - Progress tracking and statistics
+```
+
+### **Option C: Individual Document Addition**
+```bash
+# Add a single document manually:
+python3 add_document.py path/to/file.txt
 ```
 
 ## **2. Ask Questions (Enhanced!)**
@@ -322,6 +349,8 @@ Sarah Johnson, 28, San Francisco, Data Scientist, 95000
 ✅ **65+ document chunks** stored and searchable
 ✅ **Multiple file types** supported (.txt, .md, .pdf, .csv)
 ✅ **Automatic processing** - just drop files in the watch folder
+✅ **Bulk processing system** - process entire document collections efficiently
+✅ **84.3% core document coverage** - comprehensive knowledge base
 ✅ **Smart search** - finds relevant information quickly
 ✅ **Local AI** - everything runs on your computer
 ✅ **Interactive interface** - ask questions naturally
@@ -348,6 +377,8 @@ It's like having a super-smart assistant who's read all your files, can answer a
 
 - [DSPy Integration Guide](./docs/DSPY_INTEGRATION_GUIDE.md) - Complete DSPy setup and usage
 
+- [Bulk Processing Guide](./README_BULK_PROCESSING.md) - Bulk document processing system
+
 - [Watch Folder Guide](./docs/watch_folder_guide.md) - Drag & drop functionality
 
 - [System Service Guide](./docs/system_service_guide.md) - Automatic background processing
@@ -371,6 +402,10 @@ python3 ask_question.py
 
 # Add documents manually
 python3 add_document.py path/to/file.txt
+
+# Bulk process core documents
+python3 bulk_add_core_documents.py
+python3 bulk_add_core_documents.py --analyze-only
 
 # Check system status
 ./check_status.sh

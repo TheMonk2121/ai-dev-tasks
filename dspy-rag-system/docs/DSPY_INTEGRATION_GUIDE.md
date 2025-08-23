@@ -173,6 +173,8 @@ Sarah Johnson, 28, San Francisco, Data Scientist, 95000
 ## **📊 What You've Accomplished**✅**65+ document chunks**stored and searchable
 ✅**Multiple file types**supported (.txt, .md, .pdf, .csv)
 ✅**Automatic processing**- just drop files in the watch folder
+✅**Bulk processing system**- process entire document collections efficiently
+✅**84.3% core document coverage**- comprehensive knowledge base
 ✅**Smart search**- finds relevant information quickly
 ✅**Local AI**- everything runs on your computer
 ✅**Interactive interface**- ask questions naturally
@@ -236,11 +238,14 @@ python3 ask_question.py
 
 ## **3. Add Documents**```bash
 
-# Drop files into watch_folder/ (automatic)
+# Option A: Drop files into watch_folder/ (automatic)
 
-# Or add manually:
-
+# Option B: Add manually:
 python3 add_document.py path/to/file.txt
+
+# Option C: Bulk process core documents:
+python3 bulk_add_core_documents.py
+python3 bulk_add_core_documents.py --analyze-only
 
 ```text
 
@@ -257,5 +262,42 @@ print(f'Total chunks: {stats.get(\"total_chunks\", 0)}')
 "
 
 ```
+
+## **🚀 Bulk Processing System**
+
+### **Overview**
+The bulk processing system allows you to efficiently process entire collections of core documentation files at once, achieving comprehensive coverage of your knowledge base.
+
+### **Key Features**
+- **Concurrent Processing**: Uses ThreadPoolExecutor for fast parallel processing
+- **Intelligent Path Matching**: Robust filename-based matching for database queries
+- **Coverage Analysis**: Detailed reporting on document coverage and gaps
+- **Error Handling**: Comprehensive error handling with retry logic
+- **Progress Tracking**: Real-time progress updates and statistics
+
+### **Usage**
+```bash
+# Process all core documents
+python3 bulk_add_core_documents.py
+
+# Analyze coverage without processing
+python3 bulk_add_core_documents.py --analyze-only
+
+# Process with custom settings
+python3 bulk_add_core_documents.py --max-workers 4 --chunk-size 500
+```
+
+### **Coverage Statistics**
+- **Total Core Documents**: 51 files
+- **Current Coverage**: 84.3% (43/51 files)
+- **Missing Documents**: 8 files
+- **Processing Speed**: ~2-3 seconds per document
+
+### **Integration with DSPy**
+The bulk processing system integrates seamlessly with the DSPy RAG pipeline:
+1. **Document Discovery**: Automatically finds all core documentation files
+2. **Processing**: Uses the same DocumentProcessor as individual files
+3. **Storage**: Stores in the same PostgreSQL vector database
+4. **Querying**: All processed documents are immediately available for DSPy queries
 
 ## **🔧 Technical Details**###**DSPy Integration Points:**1.**RAGSystem Module** (`
