@@ -7,6 +7,7 @@
 **Estimated Time**: 18 hours
 **Priority**: Critical
 **Status**: Ready for execution
+**Schema Impact**: Minimal - existing signatures work identically in DSPy 3.0
 
 **Auto-Advance**: no (Critical priority tasks require human checkpoints)
 **🛑 Pause After**: yes (Production deployment tasks)
@@ -77,15 +78,17 @@
 
 **Do**:
 1. Import and test all existing DSPy modules with DSPy 3.0
-2. Validate ModelSwitcher functionality with new version
-3. Test optimization loop components compatibility
-4. Verify metrics dashboard compatibility
-5. Test role refinement system with DSPy 3.0
-6. Validate system integration components
-7. Document all compatibility issues found
+2. **Schema compatibility validation** - Verify existing signatures work identically
+3. Validate ModelSwitcher functionality with new version
+4. Test optimization loop components compatibility
+5. Verify metrics dashboard compatibility
+6. Test role refinement system with DSPy 3.0
+7. Validate system integration components
+8. Document all compatibility issues found
 
 **Done when**:
 - [ ] All existing DSPy modules import successfully with DSPy 3.0
+- [ ] **Schema compatibility confirmed** - existing signatures work identically
 - [ ] ModelSwitcher functionality validated
 - [ ] Optimization loop components tested
 - [ ] Metrics dashboard compatibility verified

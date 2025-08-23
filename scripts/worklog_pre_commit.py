@@ -37,6 +37,7 @@ def check_active_scribe_session() -> str | None:
     except Exception:
         return None
 
+
 def main():
     """Main function for pre-commit worklog summarization."""
     print("📝 Checking for active scribe session...")
@@ -76,6 +77,7 @@ def main():
     except Exception as e:
         print(f"❌ Error in worklog summarization: {e}")
         return 1
+
 
 if __name__ == "__main__":
     exit(main())

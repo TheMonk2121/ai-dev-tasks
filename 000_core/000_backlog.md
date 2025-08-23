@@ -360,17 +360,17 @@ Coherence Validation System |
 <!-- problem: Only 27 of 52 core documentation files are in the memory rehydrator database, limiting AI context retrieval and system effectiveness -->
 <!-- outcome: Complete memory rehydrator coverage with all core documentation files properly chunked and indexed for optimal AI context retrieval -->
 
-| B‑1006 | DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization | 🔥 | 5 | todo | Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhanced optimization capabilities, and MLflow integration while maintaining existing advanced custom features | DSPy 3.0 + Migration + Native Assertions + Enhanced Optimization + MLflow Integration | B-1003 DSPy Multi-Agent System Implementation |
+| B‑1006 | DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization | 🔥 | 5 | todo | Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhanced optimization capabilities, and MLflow integration. Schema updates minimal - existing signatures and field definitions are fully compatible | DSPy 3.0 + Migration + Native Assertions + Enhanced Optimization + MLflow Integration + Minimal Schema Changes | B-1003 DSPy Multi-Agent System Implementation |
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:5, lessons:4, deps:["B-1003"]}-->
 <!--score_total: 6.0-->
 <!-- do_next: Create test environment with DSPy 3.0, validate compatibility, and plan migration strategy -->
 <!-- est_hours: 8 -->
-<!-- acceptance: System successfully migrates to DSPy 3.0 with native assertion support, enhanced optimization, and MLflow integration while preserving all existing custom features -->
+<!-- acceptance: System successfully migrates to DSPy 3.0 with native assertion support, enhanced optimization, and MLflow integration while preserving all existing custom features. No schema changes required - existing signatures work identically -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#dspy-migration", "400_guides/400_migration-upgrade-guide.md#framework-upgrades"] -->
 <!-- reference_cards: ["500_reference-cards.md#dspy-3.0", "500_reference-cards.md#migration-strategies"] -->
-<!-- tech_footprint: DSPy 3.0 + Migration + Native Assertions + Enhanced Optimization + MLflow Integration + Compatibility Testing -->
-<!-- problem: Current system uses DSPy 2.6.27 with custom assertion framework and optimization components; missing native DSPy 3.0 features like dspy.Assert, enhanced optimizers, and MLflow integration -->
-<!-- outcome: Production-ready DSPy 3.0 system with native assertion support, enhanced optimization capabilities, and MLflow integration while maintaining all existing advanced custom features -->
+<!-- tech_footprint: DSPy 3.0 + Migration + Native Assertions + Enhanced Optimization + MLflow Integration + Compatibility Testing + Schema Compatibility -->
+<!-- problem: Current system uses DSPy 2.6.27 with custom assertion framework and optimization components; missing native DSPy 3.0 features like dspy.Assert, enhanced optimizers, and MLflow integration. Schema compatibility confirmed - no changes needed -->
+<!-- outcome: Production-ready DSPy 3.0 system with native assertion support, enhanced optimization capabilities, and MLflow integration while maintaining all existing advanced custom features and schema compatibility -->
 
 | B‑076 | Research-Based DSPy Assertions Implementation | 📈 | 4 | todo | Implement DSPy assertions based on research findings | DSPy + assertions + research integration | DSPy framework |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:4, lessons:3, deps:[]}-->

@@ -26,6 +26,9 @@
     {"path": "400_guides/400_lean-hybrid-memory-system.md", "role": "memory-system"},
     {"path": "scripts/task_generation_automation.py", "role": "automation"},
     {"path": "scripts/backlog_status_tracking.py", "role": "automation"},
+    {"path": "scripts/venv_manager.py", "role": "dev-environment"},
+    {"path": "scripts/run_workflow.py", "role": "dev-environment"},
+    {"path": "scripts/README_venv_manager.md", "role": "dev-environment"},
     {"path": "400_guides/400_backlog-status-tracking-guide.md", "role": "quick-reference"},
     {"path": "400_guides/400_task-generation-quick-reference.md", "role": "quick-reference"},
     {"path": "500_research-index.md", "role": "research-index"}
@@ -59,6 +62,26 @@ Read these files in order (1–2 min total):
 3. **`000_core/000_backlog.md`** – priorities and dependencies
 4. **`400_guides/400_system-overview.md`** – architecture and components
 5. **`400_guides/400_context-priority-guide.md`** – relationships and reading order
+
+## 🔧 Development Environment Setup {#dev-env}
+
+**Virtual Environment Management**: All development requires proper venv setup.
+
+```bash
+# Check venv status
+python3 scripts/venv_manager.py --check
+
+# Run workflows with automatic venv management
+python3 scripts/run_workflow.py generate "feature"
+```
+
+**Required Dependencies**:
+- `psycopg2` - Database connectivity
+- `dspy` - Core AI framework
+- `pytest` - Testing framework
+- `ruff` - Code quality
+
+See `scripts/README_venv_manager.md` for complete documentation.
 
 <!-- ANCHOR_KEY: quick-start -->
 <!-- ANCHOR_PRIORITY: 15 -->
@@ -530,19 +553,19 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 <!-- AUTO:current_priorities:start -->
 ### **Current Priorities**
 
-1. ****: B‑100 (Coder Role Implementation for Memory Rehydration System points)
+1. **B‑1005**: Bulk Core Document Processing for Memory Rehydrator (🔥 points)
+   - todo
+
+2. **B‑1006**: DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization (🔥 points)
+   - todo
+
+3. ****: B‑100 (Coder Role Implementation for Memory Rehydration System points)
    - 5
 
-2. **B‑102**: Cursor Native AI Role Coordination System (🔥 points)
+4. **B‑102**: Cursor Native AI Role Coordination System (🔥 points)
    - todo
 
-3. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
-   - todo
-
-4. **B‑094**: MCP Memory Rehydrator Server (🔥 points)
-   - todo
-
-5. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
+5. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 

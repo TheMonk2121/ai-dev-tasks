@@ -14,6 +14,16 @@ Usage in Cursor:
 import os
 import sys
 
+# Ensure virtual environment is active
+try:
+    from venv_manager import ensure_venv_for_script
+
+    if not ensure_venv_for_script():
+        print("❌ Virtual environment not ready - cannot proceed")
+        sys.exit(1)
+except ImportError:
+    print("⚠️  venv_manager not available - continuing without venv check")
+
 # Add the dspy-rag-system src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
 

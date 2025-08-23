@@ -45,6 +45,26 @@ and `400_guides/400_deployment-environment-guide.md`.
 4) topic guide
 (testing/deploy/integration/etc.)
 
+## 🔧 Development Environment
+
+**Virtual Environment Management**: All development requires proper venv setup.
+
+```bash
+# Check venv status
+python3 scripts/venv_manager.py --check
+
+# Run workflows with automatic venv management
+python3 scripts/run_workflow.py generate "feature"
+```
+
+**Required Dependencies**:
+- `psycopg2` - Database connectivity
+- `dspy` - Core AI framework
+- `pytest` - Testing framework
+- `ruff` - Code quality
+
+See `scripts/README_venv_manager.md` for complete documentation.
+
 ## 🗺️ Map of Topics
 
 | Topic | Anchor | Why | Next |

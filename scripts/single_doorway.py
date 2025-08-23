@@ -47,9 +47,21 @@ def _run(*args: str, capture: bool = False) -> str | None:
     env = os.environ.copy()
     cwd = os.getcwd()
     env["PYTHONPATH"] = f"{cwd}:{env.get('PYTHONPATH','')}" if env.get("PYTHONPATH") else cwd
+    
+    # Try to use venv Python if available
+    try:
+        from venv_manager import get_venv_python
+        venv_python = get_venv_python()
+        if venv_python:
+            python_executable = venv_python
+        else:
+            python_executable = PY
+    except ImportError:
+        python_executable = PY
+    
     if capture:
-        return subprocess.check_output([PY, *args], text=True, env=env).strip()
-    subprocess.check_call([PY, *args], env=env)
+        return subprocess.check_output([python_executable, *args], text=True, env=env).strip()
+    subprocess.check_call([python_executable, *args], env=env)
     return None
 
 

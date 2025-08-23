@@ -43,7 +43,11 @@
 
 ### Tier 1 — Critical (never break without a plan)
 
-1. `scripts/single_doorway.py` — Single Doorway System (orchestrator)
+1. `scripts/venv_manager.py` — Virtual Environment Manager (dev-environment)
+
+- Ensures virtual environment is properly activated and working; validates required dependencies (psycopg2, dspy, pytest, ruff); critical for all DSPy development workflows.
+
+2. `scripts/single_doorway.py` — Single Doorway System (orchestrator)
 
 - Core CLI for automated workflow from backlog → PRD → tasks → execution → archive; handles orchestration, error handling, and state transitions.
 
@@ -145,6 +149,7 @@
 
 ## 🧭 Criteria for Criticality
 
+- Development environment: Breaks all DSPy workflows if unavailable (`venv_manager.py`)
 - Orchestration impact: Breaks workflow if unavailable (`single_doorway.py`, `process_tasks.py`)
 
 - State integrity: Affects persistence or recovery (`state_manager.py`)

@@ -33,10 +33,11 @@ to current development work |
 
 **When functioning as a Coder, ALWAYS start with:**
 
-1. **Memory Rehydration**: `python3 scripts/cursor_memory_rehydrate.py coder "specific task description"`
-2. **Example-First Search**: Search existing codebase for similar patterns before writing new code
-3. **Code Reuse Check**: Aim for 70% existing code reuse, 30% new code
-4. **Test-First Development**: Write unit tests before implementation (TDD)
+1. **Virtual Environment Check**: `python3 scripts/venv_manager.py --check` (ensures dependencies are available)
+2. **Memory Rehydration**: `python3 scripts/cursor_memory_rehydrate.py coder "specific task description"`
+3. **Example-First Search**: Search existing codebase for similar patterns before writing new code
+4. **Code Reuse Check**: Aim for 70% existing code reuse, 30% new code
+5. **Test-First Development**: Write unit tests before implementation (TDD)
 
 ### **For Immediate Issues (10-minute triage):**
 
@@ -286,6 +287,8 @@ echo "✅ Installation complete!"
 
 | Script | Location | Purpose | Key Features |
 |--------|----------|---------|--------------|
+| **Virtual Environment Manager** | `scripts/venv_manager.py` | Development environment management | Venv activation, dependency validation, environment checks |
+| **Workflow Runner** | `scripts/run_workflow.py` | Simple workflow wrapper | Automatic venv management, error handling, workflow execution |
 | **Single Doorway System** | `scripts/single_doorway.py` | Core CLI for automated workflow | Backlog → PRD → tasks → execution → archive automation |
 | **Scribe System** | `scripts/single_doorway.py scribe` | Context capture and summarization | Automatic session recording, worklog generation, summary creation |
 | **Task Execution Engine** | `scripts/process_tasks.py` | Core CLI for backlog execution | Automated task processing, state management, error handling |
@@ -298,6 +301,8 @@ echo "✅ Installation complete!"
 
 #### **Core Execution & Quality Assurance**
 
+- **Virtual Environment Manager**: `scripts/venv_manager.py` - Development environment management and dependency validation
+- **Workflow Runner**: `scripts/run_workflow.py` - Simple wrapper with automatic venv management
 - **Single Doorway System**: `scripts/single_doorway.py` - Automated workflow from backlog → PRD → tasks → execution → archive
 - **Scribe Context Capture**: `scripts/single_doorway.py scribe` - Automatic session recording and summarization
 - **Worklog Summarization**: `scripts/worklog_summarizer.py` - Generate insights from Scribe sessions
@@ -803,6 +808,11 @@ python scripts/quick_conflict_check.py --help
 python scripts/conflict_audit.py --help
 python scripts/process_tasks.py --help
 
+# Verify virtual environment
+python3 scripts/venv_manager.py --check
+python3 scripts/venv_manager.py --validate
+```
+
 # Core execution engine verification
 python scripts/process_tasks.py --status
 python scripts/error_handler.py --test
@@ -1095,7 +1105,41 @@ node -e "console.log(process.version); console.log(process.env.NODE_ENV)"
 
 ## 💻 Code Standards (Enhanced)
 
-### **1. DSPy-Specific Code Standards**
+### **1. Development Environment Standards**
+
+#### **Virtual Environment Management (Required First Step)**
+
+```python
+# REQUIRED: Check virtual environment before any DSPy development
+from scripts.venv_manager import ensure_venv_for_script
+
+# Ensure venv is active before importing DSPy modules
+if not ensure_venv_for_script():
+    raise RuntimeError("Virtual environment not ready")
+
+# Now safe to import DSPy modules
+from dspy_modules.optimizers import LabeledFewShotOptimizer
+```
+
+**Required Dependencies**:
+- `psycopg2` - Database connectivity for vector store
+- `dspy` - Core AI framework
+- `pytest` - Testing framework
+- `ruff` - Code quality
+
+**Usage Commands**:
+```bash
+# Check venv status
+python3 scripts/venv_manager.py --check
+
+# Activate venv if needed
+python3 scripts/venv_manager.py --activate
+
+# Run workflow with automatic venv management
+python3 scripts/run_workflow.py generate "feature"
+```
+
+### **2. DSPy-Specific Code Standards**
 
 #### **Type Safety Requirements**
 
@@ -1141,13 +1185,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 def process_bulk_operation(items: List[Any], max_workers: int = 4) -> Dict[str, Any]:
     """Process items concurrently with error handling."""
     results = {"processed": 0, "failed": 0, "errors": []}
-    
+
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_item = {
-            executor.submit(process_single_item, item): item 
+            executor.submit(process_single_item, item): item
             for item in items
         }
-        
+
         for future in as_completed(future_to_item):
             try:
                 result = future.result()
@@ -1155,7 +1199,7 @@ def process_bulk_operation(items: List[Any], max_workers: int = 4) -> Dict[str, 
             except Exception as e:
                 results["failed"] += 1
                 results["errors"].append(str(e))
-    
+
     return results
 
 # REQUIRED: Use path standardization for database operations
@@ -1177,11 +1221,11 @@ def safe_dspy_forward_call(module: Any, *args, **kwargs) -> Dict[str, Any]:
     try:
         if not is_forward_compatible(module):
             return {"success": False, "error": "Module not forward-compatible"}
-        
+
         forward_method = getattr(module, 'forward')
         result = forward_method(*args, **kwargs)
         return {"success": True, "result": result}
-        
+
     except AttributeError as e:
         return {"success": False, "error": f"Missing forward method: {e}"}
     except TypeError as e:

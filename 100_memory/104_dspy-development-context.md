@@ -96,7 +96,38 @@ High-level summary of DSPy's role in the ecosystem and current capabilities.
 
 ## 🔧 Implementation Patterns
 
-### **1. Creating a New DSPy Module**
+### **1. Virtual Environment Setup (Required First Step)**
+
+**Critical**: All DSPy development requires proper virtual environment management.
+
+```python
+# In any script that imports DSPy modules
+from scripts.venv_manager import ensure_venv_for_script
+
+# Ensure venv is active before any DSPy imports
+if not ensure_venv_for_script():
+    raise RuntimeError("Virtual environment not ready")
+
+# Now safe to import DSPy modules
+from dspy_modules.model_switcher import ModelSwitcher
+```
+
+**Required Dependencies**:
+- `psycopg2` - Database connectivity for vector store
+- `dspy` - Core AI framework  
+- `pytest` - Testing framework
+- `ruff` - Code quality
+
+**Workflow Usage**:
+```bash
+# Check venv status
+python3 scripts/venv_manager.py --check
+
+# Run DSPy workflows with automatic venv management
+python3 scripts/run_workflow.py generate "DSPy optimization feature"
+```
+
+### **2. Creating a New DSPy Module**
 
 ```python
 import dspy

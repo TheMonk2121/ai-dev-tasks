@@ -56,7 +56,38 @@ ModelSwitcher → Assertion Framework → Role Refinement → Performance Tracki
 
 ## 🔧 Implementation Patterns
 
-### 1. Module Integration Pattern
+### 1. Virtual Environment Management
+
+**Critical**: All DSPy development requires proper virtual environment setup.
+
+```python
+# Automatic venv management in scripts
+from scripts.venv_manager import ensure_venv_for_script
+
+# Ensure venv is active before importing DSPy modules
+if not ensure_venv_for_script():
+    raise RuntimeError("Virtual environment not ready")
+
+# Now safe to import DSPy modules
+from dspy_modules.optimizers import LabeledFewShotOptimizer
+```
+
+**Required Dependencies**:
+- `psycopg2` - Database connectivity for vector store
+- `dspy` - Core AI framework
+- `pytest` - Testing framework
+- `ruff` - Code quality
+
+**Usage**:
+```bash
+# Check venv status
+python3 scripts/venv_manager.py --check
+
+# Run workflow with automatic venv management
+python3 scripts/run_workflow.py generate "DSPy feature"
+```
+
+### 2. Module Integration Pattern
 
 ```python
 from dspy_modules.optimizers import LabeledFewShotOptimizer

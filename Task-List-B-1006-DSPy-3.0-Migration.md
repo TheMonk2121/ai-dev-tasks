@@ -2,7 +2,7 @@
 
 ## Overview
 
-Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhanced optimization capabilities, and MLflow integration while maintaining all existing advanced custom features. This migration will replace the custom assertion framework with native `dspy.Assert` support, integrate enhanced optimization techniques, and add MLflow experiment tracking.
+Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhanced optimization capabilities, and MLflow integration while maintaining all existing advanced custom features. This migration will replace the custom assertion framework with native `dspy.Assert` support, integrate enhanced optimization techniques, and add MLflow experiment tracking. **Schema compatibility confirmed** - existing signatures and field definitions work identically in DSPy 3.0, requiring no schema changes.
 
 ## Implementation Phases
 
@@ -93,6 +93,7 @@ Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhan
 
 **Acceptance Criteria:**
 - [ ] All existing DSPy modules import successfully with DSPy 3.0
+- [ ] **Schema compatibility confirmed** - existing signatures work identically
 - [ ] ModelSwitcher functionality validated
 - [ ] Optimization loop components tested
 - [ ] Metrics dashboard compatibility verified

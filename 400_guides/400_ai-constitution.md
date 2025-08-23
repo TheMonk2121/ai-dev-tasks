@@ -30,13 +30,12 @@
   - Get explicit user approval for any file deletion, deprecation, or major changes
 
 - **2. Critical File Protection** - Never delete files with `<!-- CRITICAL_FILE: true -->` metadata
-
   - Never archive files with `<!-- ARCHIVE_PROTECTED: true -->` metadata
   - Always check dependencies before file operations
   - Preserve file naming conventions and cross-references
+  - **Tier 1 Critical Files**: `scripts/venv_manager.py`, `scripts/single_doorway.py`, `scripts/process_tasks.py` - NEVER break without a plan
 
 - **3. Documentation Coherence**
-
   - Maintain cross-reference integrity across all documentation
   - Preserve file naming convention patterns (400_, 500_, etc.)
   - Ensure documentation coherence before any changes
@@ -59,7 +58,12 @@
 - **MEDIUM Priority**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`,
 `000_core/003_process-task-list.md`
 
-  - **LOW Priority**: Domain-specific files and implementation details
+- **LOW Priority**: Domain-specific files and implementation details
+
+- **3. Development Environment Requirements**
+- **Virtual Environment**: ALWAYS check `scripts/venv_manager.py --check` before DSPy development
+- **Memory Rehydration**: Use `scripts/cursor_memory_rehydrate.py` for context assembly
+- **Workflow Execution**: Use `scripts/run_workflow.py` for automatic venv management
 
 - **3. Context Loss Prevention**
 
@@ -124,6 +128,8 @@ documentation patterns
   - Preserve DSPy framework with PostgreSQL vector store
   - Maintain n8n workflows for backlog management
   - Preserve real-time mission dashboard and monitoring
+  - **Core Systems**: DSPy RAG System, Scribe Context Capture, Mission Dashboard, Error Recovery
+  - **Critical Scripts**: Virtual Environment Manager, Single Doorway System, Task Execution Engine
 
 - **3. Development Standards** - Follow contributing guidelines and development standards
 
@@ -235,12 +241,11 @@ documentation patterns
 ### **Core System Files**
 
 - `100_memory/100_cursor-memory-context.md` - Primary memory scaffold
-
 - `400_guides/400_system-overview.md` - Technical architecture
-
 - `000_core/000_backlog.md` - Current priorities and roadmap
-
 - `400_guides/400_file-analysis-guide.md` - File safety requirements
+- `400_guides/400_code-criticality-guide.md` - Critical file tiers and quality standards
+- `400_guides/400_comprehensive-coding-best-practices.md` - Development standards and conflict prevention
 
 ### **Research Foundation**
 
@@ -288,16 +293,20 @@ documentation patterns
 
 ---
 
-- **Constitution Version**: 1.0
+- **Constitution Version**: 1.1
 - **Implementation Date**: 2024-08-07
+- **Last Updated**: 2024-12-19
 - **Research Basis**: 500_research-analysis-summary.md
 - **Integration Status**: Active
+- **Current Systems**: DSPy RAG System, Virtual Environment Manager, Scribe Context Capture
 
 <!-- CONSTITUTION_METADATA
-version: 1.0
+version: 1.1
 implementation_date: 2024-08-07
+last_updated: 2024-12-19
 research_basis: 500_research-analysis-summary.md
 integration_status: active
 compliance_required: true
 safety_critical: true
+current_systems: ["dspy-rag-system", "venv-manager", "scribe-system", "mission-dashboard"]
 - ->
