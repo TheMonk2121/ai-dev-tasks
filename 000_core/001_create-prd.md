@@ -27,6 +27,12 @@
 - Skip PRD when: points < 5 AND score_total ≥ 3.0 (backlog metadata `<!--score_total: X.X-->`)
 - Otherwise, create a PRD with machine-verifiable acceptance criteria
 
+### Backlog Integration {#backlog-integration}
+
+- **Input**: Backlog item ID (e.g., B-1007) or PRD file
+- **Output**: PRD file following template structure
+- **Cross-reference**: `000_core/000_backlog.md` for item details and metadata
+
 ## Template {#template}
 
 ### **1. Problem Statement**

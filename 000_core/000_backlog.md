@@ -372,6 +372,18 @@ Coherence Validation System |
 <!-- problem: Current system uses DSPy 2.6.27 with custom assertion framework and optimization components; missing native DSPy 3.0 features like dspy.Assert, enhanced optimizers, and MLflow integration. Schema compatibility confirmed - no changes needed -->
 <!-- outcome: Production-ready DSPy 3.0 system with native assertion support, enhanced optimization capabilities, and MLflow integration while maintaining all existing advanced custom features and schema compatibility -->
 
+- B‑1007 — Pydantic AI Style Enhancements: Dependency Injection and Dynamic Context (score 6.5)
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1006"]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Implement Pydantic-style dependency injection framework and dynamic context system for enhanced type safety and user experience -->
+<!-- est_hours: 12 -->
+<!-- acceptance: System includes type-safe dependency injection, dynamic context management, enhanced tool framework, and improved observability with 50% fewer runtime errors and 30% faster debugging -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#type-safety", "400_guides/400_comprehensive-coding-best-practices.md#validation"] -->
+<!-- reference_cards: ["500_reference-cards.md#pydantic", "500_reference-cards.md#dependency-injection"] -->
+<!-- tech_footprint: Pydantic + Dependency Injection + Dynamic Context + Type Safety + Enhanced Tools + Observability + MLflow Integration -->
+<!-- problem: Current DSPy system lacks modern type safety patterns, dynamic context management, and enhanced tool integration that would significantly improve reliability, debugging, and user experience -->
+<!-- outcome: Enterprise-grade DSPy system with Pydantic-style validation, dynamic context injection, context-aware tools, and comprehensive observability for predictable reliability and enhanced user experience -->
+
 | B‑076 | Research-Based DSPy Assertions Implementation | 📈 | 4 | todo | Implement DSPy assertions based on research findings | DSPy + assertions + research integration | DSPy framework |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:4, lessons:3, deps:[]}-->
 <!--score_total: 4.8-->

@@ -9,6 +9,12 @@
 **Status**: Ready for execution
 **Schema Impact**: Minimal - existing signatures work identically in DSPy 3.0
 
+### Backlog Integration {#backlog-integration}
+
+- **Input**: Backlog item B-1006 from `000_core/000_backlog.md`
+- **Output**: Executable task list with state management
+- **Cross-reference**: `000_core/000_backlog.md` for item details and metadata
+
 **Auto-Advance**: no (Critical priority tasks require human checkpoints)
 **🛑 Pause After**: yes (Production deployment tasks)
 

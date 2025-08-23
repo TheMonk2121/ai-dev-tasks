@@ -46,6 +46,12 @@ python3 scripts/task_generation_automation.py --backlog-id <backlog_id> --previe
 python3 scripts/task_generation_automation.py --prd <prd_file> --output-file tasks.md
 ```
 
+### Backlog Integration {#backlog-integration}
+
+- **Input**: Backlog item ID (e.g., B-1007) or PRD file
+- **Output**: Task list with comprehensive testing requirements
+- **Cross-reference**: `000_core/000_backlog.md` for item details and metadata
+
 The automation system provides:
 - **Consistent task templates** with all required sections
 - **Intelligent testing requirements** based on task type and complexity
