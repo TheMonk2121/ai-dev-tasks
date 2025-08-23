@@ -10,6 +10,7 @@ This file follows the "One Source Per Scope" principle for configuration managem
 
 import os
 
+
 class DatabaseConfigManager:
     """Centralized database configuration management for the AI development ecosystem"""
 

@@ -16,6 +16,7 @@ sys.path.append("src")
 
 from utils.anchor_metadata_parser import extract_anchor_metadata, extract_anchor_metadata_from_file
 
+
 def add_document_simple(file_path):
     """Add a document with anchor metadata using direct database connection"""
 

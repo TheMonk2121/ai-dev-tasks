@@ -19,6 +19,7 @@ sys.path.insert(0, str(project_root))
 from scripts.automated_role_assignment import AutomatedRoleAssignment
 from scripts.role_assignment_metadata import RoleAssignment, RoleAssignmentMetadata
 
+
 class RoleAssignmentIntegration:
     """Integrates automated role assignment with the memory rehydrator."""
 

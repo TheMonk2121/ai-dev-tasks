@@ -16,6 +16,7 @@ sys.path.append("src")
 from utils.anchor_metadata_parser import extract_anchor_metadata, extract_anchor_metadata_from_file
 from utils.database_resilience import get_database_manager
 
+
 def add_document_manually(file_path):
     """Manually add a document with anchor metadata to the database"""
 

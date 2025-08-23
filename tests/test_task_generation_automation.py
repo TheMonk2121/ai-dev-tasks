@@ -23,6 +23,7 @@ from scripts.task_generation_automation import (
     TaskTemplateGenerator,
 )
 
+
 class TestTaskRequirement:
     """Test the TaskRequirement dataclass."""
 

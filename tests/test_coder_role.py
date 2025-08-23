@@ -16,6 +16,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system",
 from utils.anchor_metadata_parser import VALID_ROLES
 from utils.memory_rehydrator import ROLE_FILES
 
+
 class TestCoderRoleConfiguration(unittest.TestCase):
     """Test cases for coder role configuration."""
 

@@ -30,7 +30,7 @@ try:
     if utils_path not in sys.path:
         sys.path.insert(0, utils_path)
 
-    from context_monitoring import get_context_monitor, record_context_request
+    from context_monitoring import record_context_request
 
     MONITORING_AVAILABLE = True
 except ImportError as e:
@@ -39,7 +39,7 @@ except ImportError as e:
 
 # Import performance optimization system
 try:
-    from context_performance import get_optimized_context, get_performance_optimizer
+    from context_performance import get_optimized_context
 
     PERFORMANCE_OPTIMIZATION_AVAILABLE = True
 except ImportError as e:
@@ -48,7 +48,7 @@ except ImportError as e:
 
 # Import security validation system
 try:
-    from context_security import get_security_stats, validate_context_request
+    from context_security import validate_context_request
 
     SECURITY_VALIDATION_AVAILABLE = True
 except ImportError as e:
@@ -60,7 +60,7 @@ MEMORY_REHYDRATOR_AVAILABLE = True
 
 # Scribe integration for real-time context
 try:
-    from ..utils.scribe_context_provider import ScribeContextProvider, get_scribe_context_for_role
+    from ..utils.scribe_context_provider import get_scribe_context_for_role
 
     SCRIBE_AVAILABLE = True
     _LOG.info("Scribe context provider available")

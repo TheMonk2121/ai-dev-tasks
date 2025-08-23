@@ -19,6 +19,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'scripts'))
 
 from constitution_compliance_checker import ConstitutionComplianceChecker, ConstitutionRule
 
+
 class TestConstitutionComplianceChecker(unittest.TestCase):
     """Test cases for the ConstitutionComplianceChecker class."""
     

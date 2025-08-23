@@ -19,6 +19,7 @@ from scripts.research_based_schema_design import (
     SchemaPattern,
 )
 
+
 class TestResearchBasedSchemaDesign:
     """Test cases for the ResearchBasedSchemaDesign class."""
 

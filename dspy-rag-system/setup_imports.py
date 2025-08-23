@@ -6,6 +6,7 @@ Prefer tests/conftest.py for pytest.
 import sys
 from pathlib import Path
 
+
 def boost_sys_path():
     here = Path(__file__).resolve().parent  # dspy-rag-system/
     src = here / "src"

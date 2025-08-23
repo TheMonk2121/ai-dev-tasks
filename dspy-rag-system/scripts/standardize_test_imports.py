@@ -9,6 +9,7 @@ now handles import path configuration centrally.
 import re
 from pathlib import Path
 
+
 def fix_test_file(file_path):
     """Fix a single test file by removing manual path manipulation"""
     with open(file_path, "r") as f:

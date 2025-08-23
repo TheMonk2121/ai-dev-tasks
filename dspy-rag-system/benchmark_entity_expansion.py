@@ -13,6 +13,7 @@ sys.path.append(str(Path(__file__).parent / "src"))
 
 from src.utils.memory_rehydrator import rehydrate
 
+
 def benchmark_entity_expansion():
     """Benchmark entity expansion performance"""
     print("🚀 Entity Expansion Performance Benchmark")

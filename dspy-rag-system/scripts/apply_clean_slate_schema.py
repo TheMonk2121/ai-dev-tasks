@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from utils.database_resilience import get_database_manager
 
+
 def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
     """Apply the clean-slate schema migration."""
 

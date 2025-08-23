@@ -28,6 +28,7 @@ from utils.logger import get_logger
 from utils.metadata_extractor import ConfigDrivenMetadataExtractor
 from utils.tokenizer import TokenAwareChunker
 
+
 class DocumentProcessor(Module):
     """DSPy module for processing documents and creating chunks"""
 

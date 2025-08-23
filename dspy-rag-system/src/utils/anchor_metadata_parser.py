@@ -11,6 +11,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
+
 @dataclass
 class AnchorMetadata:
     """Structured anchor metadata"""

@@ -27,6 +27,7 @@ from src.utils.retry_wrapper import (
     retry_llm,
 )
 
+
 class TestRetryDecorator:
     """Test retry decorator functionality"""
 

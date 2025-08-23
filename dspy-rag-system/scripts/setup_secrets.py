@@ -13,6 +13,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from utils.secrets_manager import SecretsManager, setup_secrets_interactive, validate_startup_secrets
 
+
 def main():
     """Main secrets setup function"""
     print("🔐 DSPy RAG System - Secrets Management Setup")

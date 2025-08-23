@@ -25,6 +25,7 @@ from dspy_modules.documentation_retrieval import (
     search_documentation,
 )
 
+
 class TestDocumentationRetrievalService(unittest.TestCase):
     """Test cases for the DocumentationRetrievalService class."""
 

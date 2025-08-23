@@ -17,6 +17,7 @@ import pytest
 
 from scripts.doc_coherence_validator import DocCoherenceValidator
 
+
 class TestDocCoherenceValidator:
     """Test cases for DocCoherenceValidator class."""
 

@@ -13,6 +13,7 @@ from scripts.doorway_utils import (
     slugify,
 )
 
+
 def test_slugify_and_paths(tmp_path: Path) -> None:
     slug = slugify("Fix the notification system!")
     assert slug == "Fix-The-Notification-System"

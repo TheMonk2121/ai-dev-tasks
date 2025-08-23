@@ -15,6 +15,7 @@ import time
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
+
 @dataclass
 class Entity:
     """Represents an extracted entity with metadata."""

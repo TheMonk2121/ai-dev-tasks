@@ -21,6 +21,7 @@ sys.path.insert(0, str(project_root))
 from src.utils.logger import get_logger
 from src.utils.security import SecurityScanner
 
+
 def main():
     """Main security scanning function"""
     parser = argparse.ArgumentParser(description="Security scanning for DSPy RAG system")

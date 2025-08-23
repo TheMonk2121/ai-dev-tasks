@@ -20,6 +20,7 @@ from database_utils import (
     get_storage_analysis,
 )
 
+
 def analyze_database_performance():
     """Analyze database performance and optimization opportunities."""
     print("🚀 Database Performance Analysis")

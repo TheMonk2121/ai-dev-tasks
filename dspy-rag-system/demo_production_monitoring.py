@@ -15,6 +15,7 @@ sys.path.append('src')
 from monitoring.health_endpoints import HealthEndpointManager, initialize_health_endpoints
 from monitoring.production_monitor import ProductionMonitor, initialize_production_monitoring
 
+
 def demo_security_events():
     """Demonstrate security event recording"""
     print("🔐 Security Events Demo")

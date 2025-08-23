@@ -21,6 +21,7 @@ import pytest
 
 from scripts.dependency_monitor import DependencyMonitor
 
+
 class TestDependencyMonitor:
     """Test cases for DependencyMonitor class."""
 

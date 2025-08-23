@@ -15,6 +15,7 @@ sys.path.append(str(Path(__file__).parent.parent / "src"))
 
 from src.utils.memory_rehydrator import build_hydration_bundle
 
+
 def benchmark_bundle_creation():
     """Benchmark bundle creation performance across different scenarios"""
     print("📊 Benchmarking Bundle Creation Performance")

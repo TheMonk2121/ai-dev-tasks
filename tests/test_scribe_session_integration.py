@@ -19,6 +19,7 @@ import pytest
 # Import the session registry system
 from scripts.session_registry import SessionRegistry
 
+
 class TestScribeSessionIntegration:
     """Integration tests for Scribe session management."""
 

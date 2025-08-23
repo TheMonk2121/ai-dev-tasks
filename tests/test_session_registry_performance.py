@@ -21,6 +21,7 @@ import pytest
 # Import the session registry system
 from scripts.session_registry import SessionRegistry
 
+
 class TestSessionRegistryPerformance:
     """Performance tests for SessionRegistry class."""
 

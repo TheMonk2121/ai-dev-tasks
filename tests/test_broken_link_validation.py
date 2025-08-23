@@ -16,6 +16,7 @@ from typing import Dict, List, Tuple, Union
 
 import pytest
 
+
 class TestBrokenLinkValidation:
     """Test cases for broken link validation."""
 

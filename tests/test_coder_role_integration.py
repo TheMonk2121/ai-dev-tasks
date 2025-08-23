@@ -15,6 +15,7 @@ from pathlib import Path
 
 import pytest
 
+
 class TestCoderRoleIntegration:
     """Integration tests for Coder Role functionality."""
 

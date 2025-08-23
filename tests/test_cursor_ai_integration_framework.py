@@ -5,6 +5,7 @@ import importlib
 
 from cursor_ai_integration_framework import AgentType
 
+
 def run(coro):
     return asyncio.get_event_loop().run_until_complete(coro)
 
