@@ -559,13 +559,13 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 2. **B‑1006**: DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization (🔥 points)
    - todo
 
-3. ****: B‑100 (Coder Role Implementation for Memory Rehydration System points)
-   - 5
-
-4. **B‑102**: Cursor Native AI Role Coordination System (🔥 points)
+3. **B‑1008**: Enhanced Backlog System with DSPy 3.0 and Pydantic Integration (🔥 points)
    - todo
 
-5. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
+4. ****: B‑100 (Coder Role Implementation for Memory Rehydration System points)
+   - 5
+
+5. **B‑102**: Cursor Native AI Role Coordination System (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 

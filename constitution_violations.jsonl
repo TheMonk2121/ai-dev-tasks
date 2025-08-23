@@ -52,3 +52,4 @@
 {"timestamp": "2025-08-23T07:25:19.882203", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
 {"timestamp": "2025-08-23T07:35:48.250089", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
 {"timestamp": "2025-08-23T07:52:23.846989", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-08-23T07:56:38.514148", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
