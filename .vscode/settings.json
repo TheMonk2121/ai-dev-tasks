@@ -182,6 +182,8 @@
         "Getctime",
         "getpid",
         "Getpid",
+        "hasattr",
+        "Hasattr",
         "isinstance",
         "Isinstance",
         "asyncio",
