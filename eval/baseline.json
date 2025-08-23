@@ -1,0 +1,57 @@
+{
+    "baseline_capture": {
+        "timestamp": "2025-08-23T20:20:00Z",
+        "migration_target": "B-1006-A DSPy 3.0 Core Parity Migration",
+        "current_dspy_version": "2.6.27",
+        "pinned_dspy_version": "2.6.27"
+    },
+    "test_metrics": {
+        "test_pass_rate": "100%",
+        "total_tests": 220,
+        "passed_tests": 220,
+        "failed_tests": 0,
+        "test_execution_time": "75.81s",
+        "warnings": 1
+    },
+    "lint_metrics": {
+        "total_violations": 24,
+        "f841_unused_variable": 18,
+        "e722_bare_except": 3,
+        "e741_ambiguous_variable_name": 2,
+        "f821_undefined_name": 1
+    },
+    "documentation_metrics": {
+        "files_checked": 152,
+        "valid_files": 129,
+        "invalid_files": 23,
+        "total_errors": 47,
+        "total_warnings": 949,
+        "coherence_score": "84.9%"
+    },
+    "performance_baseline": {
+        "test_execution_time": 75.81,
+        "memory_usage": "not_captured",
+        "token_usage": "not_captured",
+        "latency_per_role": {
+            "planner": "not_captured",
+            "coder": "not_captured"
+        }
+    },
+    "quality_gates": {
+        "test_pass_rate": "100%",
+        "lint_violations": 24,
+        "doc_coherence": "84.9%",
+        "dspy_import": "working"
+    },
+    "rollback_criteria": {
+        "max_test_regression": "10%",
+        "max_performance_regression": "15%",
+        "max_lint_increase": "0",
+        "min_doc_coherence": "80%"
+    },
+    "notes": {
+        "current_state": "DSPy 2.6.27 installed and pinned in requirements - baseline established",
+        "migration_approach": "Conservative parity-first migration",
+        "baseline_established": true
+    }
+}
