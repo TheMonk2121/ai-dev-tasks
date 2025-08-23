@@ -348,6 +348,7 @@ This is a valid README file.
                 assert len(issues) == 1
                 assert issues[0]["issue"] == "Test issue"
 
+
 class TestDocCoherenceValidatorIntegration:
     """Integration tests for the validation system."""
 
@@ -427,6 +428,7 @@ Context priority guide content.
 
             # Should fail due to naming convention issues
             assert not result
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

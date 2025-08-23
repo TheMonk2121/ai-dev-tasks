@@ -179,7 +179,7 @@ class RoleRefinementSystem:
         _LOG.info(f"Starting role refinement for {role_type.value}")
 
         # Phase 1: Analysis
-        analysis_result = self._analyze_current_role(role_type, current_definition)
+        # analysis_result = self._analyze_current_role(role_type, current_definition)  # Unused variable removed
 
         # Phase 2: Optimization
         optimization_result = self._optimize_role_definition(role_type, current_definition, solo_developer_context)

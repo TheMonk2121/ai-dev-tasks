@@ -152,7 +152,7 @@ def demonstrate_complete_system():
     print("🔄 Test 2: Optimization Cycle Execution")
     print("-" * 50)
 
-    task_module = TaskExecutionModule()
+    # task_module = TaskExecutionModule()  # Unused variable removed
 
     optimization_inputs = {
         "module_class": TaskExecutionModule,
@@ -291,7 +291,7 @@ def demonstrate_complete_system():
 
     print("  Testing non-optimized execution...")
     start_time = time.time()
-    non_optimized_result = system_integration.execute_task(test_task, "coding", "coder", "simple")
+    # non_optimized_result = system_integration.execute_task(test_task, "coding", "coder", "simple")  # Unused variable removed
     non_optimized_time = time.time() - start_time
 
     print("  Testing optimized execution...")

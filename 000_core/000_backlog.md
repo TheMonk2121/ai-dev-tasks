@@ -253,6 +253,18 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- tech_footprint: DSPy + Local AI (Ollama/LM Studio) + Frontend + N8N + Multi-Agent + Model Routing -->
 <!-- problem: Current system relies on Cursor's context engineering (glorified prompt engineering); need true local model inference for authentic DSPy environment with real agent coordination -->
 <!-- outcome: Production-ready DSPy multi-agent system with local model inference, real agent coordination, and consensus building -->
+
+| B-1004 | DSPy v2 Optimization: Adam LK Transcript Insights Implementation | 🔧 | 6 | todo | Implement DSPy v2 optimization techniques from Adam LK transcript: "Programming not prompting" philosophy, four-part optimization loop (Create→Evaluate→Optimize→Deploy), LabeledFewShot/BootstrapFewShot/MIPRO optimizers, teleprompter integration, assertion-based validation (37%→98% reliability), and systematic improvement with measurable metrics. | DSPy + Optimization + Few-Shot Learning + Teleprompter + Assertions + Continuous Improvement + Four-Part Loop | B-1003 DSPy Multi-Agent System Implementation |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1003"]}-->
+<!--score_total: 6.0-->
+<!-- do_next: Implement DSPy v2 optimization techniques based on Adam LK transcript analysis -->
+<!-- est_hours: 8 -->
+<!-- acceptance: DSPy system includes advanced optimizers, teleprompter integration, four-part optimization loop, and systematic improvement capabilities -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#dspy-optimization", "100_memory/105_lessons-learned-context.md#few-shot-learning"] -->
+<!-- reference_cards: ["500_reference-cards.md#dspy-v2", "500_reference-cards.md#teleprompter"] -->
+<!-- tech_footprint: DSPy + Optimization + Few-Shot Learning + Teleprompter + Assertions + Continuous Improvement + Four-Part Loop -->
+<!-- problem: Current DSPy implementation lacks core optimization techniques from Adam LK transcript: "Programming not prompting" philosophy, four-part optimization loop, LabeledFewShot/BootstrapFewShot/MIPRO optimizers, teleprompter integration, assertion-based validation (37%→98% reliability), and systematic improvement with measurable metrics -->
+<!-- outcome: Production-ready DSPy v2 system with "Programming not prompting" philosophy, four-part optimization loop, advanced optimizers, systematic improvement, and measurable reliability gains (37%→98%) -->
 <!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
 <!--score_total: 6.5-->
 <!-- do_next: Create comprehensive 500-line root README.md for GitHub visibility and zero-context onboarding -->

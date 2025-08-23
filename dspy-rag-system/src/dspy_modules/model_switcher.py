@@ -22,7 +22,7 @@ _LOG = logging.getLogger("model_switcher")
 
 # Import optimizer system
 try:
-    from .optimizers import LabeledFewShotOptimizer, OptimizationResult, get_optimizer_manager, optimize_program
+    from .optimizers import OptimizationResult, get_optimizer_manager
 
     OPTIMIZER_AVAILABLE = True
     _LOG.info("DSPy optimizer system available")
