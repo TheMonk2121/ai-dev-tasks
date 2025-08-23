@@ -1,5 +1,3 @@
-
-
 <!-- ANCHOR_KEY: backlog -->
 <!-- ANCHOR_PRIORITY: 10 -->
 <!-- ROLE_PINS: ["planner"] -->
@@ -349,6 +347,30 @@ Coherence Validation System |
 <!-- acceptance: Configuration is externalized and properly ignored in version control -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#configuration-management"] -->
 <!-- reference_cards: ["500_reference-cards.md#toml-configuration"] -->
+
+| B‑1005 | Bulk Core Document Processing for Memory Rehydrator | 🔥 | 4 | todo | Implement bulk document processing system to add all 52 core documentation files to memory rehydrator database | Bulk processing + Memory rehydrator + Document ingestion + Database sync | B-1003 DSPy Multi-Agent System Implementation |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:4, lessons:4, deps:["B-1003"]}-->
+<!--score_total: 6.0-->
+<!-- do_next: Create bulk document processor script and add all core documentation files to memory rehydrator database -->
+<!-- est_hours: 6 -->
+<!-- acceptance: All 52 core documentation files are processed and available in memory rehydrator system with proper metadata and chunking -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#memory-rehydration", "400_guides/400_documentation-retrieval-guide.md#bulk-processing"] -->
+<!-- reference_cards: ["500_reference-cards.md#memory-rehydration", "500_reference-cards.md#document-processing"] -->
+<!-- tech_footprint: Document Processing + Memory Rehydrator + Database + Bulk Operations + Metadata Extraction -->
+<!-- problem: Only 27 of 52 core documentation files are in the memory rehydrator database, limiting AI context retrieval and system effectiveness -->
+<!-- outcome: Complete memory rehydrator coverage with all core documentation files properly chunked and indexed for optimal AI context retrieval -->
+
+| B‑1006 | DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization | 🔥 | 5 | todo | Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhanced optimization capabilities, and MLflow integration while maintaining existing advanced custom features | DSPy 3.0 + Migration + Native Assertions + Enhanced Optimization + MLflow Integration | B-1003 DSPy Multi-Agent System Implementation |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:5, lessons:4, deps:["B-1003"]}-->
+<!--score_total: 6.0-->
+<!-- do_next: Create test environment with DSPy 3.0, validate compatibility, and plan migration strategy -->
+<!-- est_hours: 8 -->
+<!-- acceptance: System successfully migrates to DSPy 3.0 with native assertion support, enhanced optimization, and MLflow integration while preserving all existing custom features -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#dspy-migration", "400_guides/400_migration-upgrade-guide.md#framework-upgrades"] -->
+<!-- reference_cards: ["500_reference-cards.md#dspy-3.0", "500_reference-cards.md#migration-strategies"] -->
+<!-- tech_footprint: DSPy 3.0 + Migration + Native Assertions + Enhanced Optimization + MLflow Integration + Compatibility Testing -->
+<!-- problem: Current system uses DSPy 2.6.27 with custom assertion framework and optimization components; missing native DSPy 3.0 features like dspy.Assert, enhanced optimizers, and MLflow integration -->
+<!-- outcome: Production-ready DSPy 3.0 system with native assertion support, enhanced optimization capabilities, and MLflow integration while maintaining all existing advanced custom features -->
 
 | B‑076 | Research-Based DSPy Assertions Implementation | 📈 | 4 | todo | Implement DSPy assertions based on research findings | DSPy + assertions + research integration | DSPy framework |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:4, lessons:3, deps:[]}-->

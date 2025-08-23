@@ -33,3 +33,6 @@
 {"timestamp": "2025-08-23T04:47:55.336769", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
 {"timestamp": "2025-08-23T04:50:07.710160", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
 {"timestamp": "2025-08-23T04:51:42.858705", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-08-23T05:08:11.402507", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-08-23T05:17:43.326761", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-08-23T05:33:02.555318", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
