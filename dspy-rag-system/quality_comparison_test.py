@@ -42,7 +42,7 @@ class QualityAnalyzer:
             return metrics
 
         lines = code.split("\n")
-        metrics["lines_of_code"] = len([l for l in lines if l.strip() and not l.strip().startswith("#")])
+        metrics["lines_of_code"] = len([line for line in lines if line.strip() and not line.strip().startswith("#")])
 
         # Count functions
         metrics["functions"] = len(re.findall(r"def\s+\w+", code))

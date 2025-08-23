@@ -143,7 +143,8 @@ class TestRoleRefinementSystem(unittest.TestCase):
         mock_cycle.success = True
         mock_cycle.overall_metrics = {"improvement_score": 0.85}
 
-        self.system.optimization_loop.run_cycle.return_value = mock_cycle
+        # Properly mock the run_cycle method
+        self.system.optimization_loop.run_cycle = Mock(return_value=mock_cycle)
 
         # Mock refinement module forward method
         mock_result = {
@@ -164,7 +165,7 @@ class TestRoleRefinementSystem(unittest.TestCase):
     def test_optimize_role_definition_failure(self):
         """Test failed role definition optimization"""
         # Mock optimization loop to return failure
-        self.system.optimization_loop.run_cycle.return_value = None
+        self.system.optimization_loop.run_cycle = Mock(return_value=None)
 
         result = self.system._optimize_role_definition(
             RoleType.PLANNER, self.test_planner_definition, "solo developer context"
@@ -182,7 +183,8 @@ class TestRoleRefinementSystem(unittest.TestCase):
         mock_report.reliability_score = 85.0
         mock_report.recommendations = ["Good optimization"]
 
-        self.system.assertion_framework.validate_module.return_value = mock_report
+        # Properly mock the validate_module method
+        self.system.assertion_framework.validate_module = Mock(return_value=mock_report)
 
         result = self.system._validate_refined_role(RoleType.PLANNER, "refined definition string")
 
@@ -197,7 +199,8 @@ class TestRoleRefinementSystem(unittest.TestCase):
         mock_report.reliability_score = 50.0
         mock_report.recommendations = ["Needs improvement"]
 
-        self.system.assertion_framework.validate_module.return_value = mock_report
+        # Properly mock the validate_module method
+        self.system.assertion_framework.validate_module = Mock(return_value=mock_report)
 
         result = self.system._validate_refined_role(RoleType.PLANNER, "refined definition string")
 
@@ -344,7 +347,7 @@ class TestRoleRefinementModule(unittest.TestCase):
     def test_forward_failure(self):
         """Test failed forward pass"""
         # Mock predictor to raise exception
-        self.module.predictor.side_effect = Exception("Prediction failed")
+        self.module.predictor = Mock(side_effect=Exception("Prediction failed"))
 
         result = self.module.forward(
             role_type="planner",

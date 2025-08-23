@@ -16,7 +16,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature
-
 from dspy_modules.assertions import (
     DSPyAssertionFramework,
     assert_reliability_target,
@@ -264,7 +263,7 @@ def demonstrate_validation_framework_integration():
 
     # Measure time with validation
     start_time = time.time()
-    report = framework.validate_module(optimized_module, test_inputs)
+    _ = framework.validate_module(optimized_module, test_inputs)
     validation_time = time.time() - start_time
 
     # Calculate overhead

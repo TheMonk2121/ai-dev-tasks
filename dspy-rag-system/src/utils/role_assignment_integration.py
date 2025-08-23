@@ -14,10 +14,10 @@ from typing import Dict, Tuple
 
 # Add the project root to the path for imports
 project_root = Path(__file__).parent.parent.parent.parent
-sys.path.insert(0, str(project_root))
+sys.path.insert(0, str(project_root))  # noqa: E402
 
-from scripts.automated_role_assignment import AutomatedRoleAssignment
-from scripts.role_assignment_metadata import RoleAssignment, RoleAssignmentMetadata
+from scripts.automated_role_assignment import AutomatedRoleAssignment  # noqa: E402
+from scripts.role_assignment_metadata import RoleAssignment, RoleAssignmentMetadata  # noqa: E402
 
 
 class RoleAssignmentIntegration:

@@ -17,7 +17,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature
-
 from dspy_modules.metrics_dashboard import (
     DashboardView,
     MetricType,
@@ -213,7 +212,6 @@ def demonstrate_metrics_dashboard():
     phases = detailed_data["phases"]
     for phase_name, phase_data in phases.items():
         count = phase_data["count"]
-        success_count = phase_data["success_count"]
         success_rate = phase_data["success_rate"]
         avg_duration = phase_data["avg_duration"]
 

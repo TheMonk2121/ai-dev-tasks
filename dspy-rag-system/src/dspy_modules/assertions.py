@@ -491,12 +491,12 @@ class DSPyAssertionFramework:
 
         _LOG.info("DSPy Assertion Framework initialized")
 
-    def validate_module(self, module: Module, test_inputs: Optional[List[Dict[str, Any]]] = None) -> ValidationReport:
+    def validate_module(self, module: Any, test_inputs: Optional[List[Dict[str, Any]]] = None) -> ValidationReport:
         """
         Validate a DSPy module comprehensively
 
         Args:
-            module: DSPy module to validate
+            module: DSPy module to validate (can be any type for testing invalid modules)
             test_inputs: Optional test inputs for performance validation
 
         Returns:
@@ -662,12 +662,12 @@ def get_assertion_framework() -> DSPyAssertionFramework:
     return _assertion_framework
 
 
-def validate_dspy_module(module: Module, test_inputs: Optional[List[Dict[str, Any]]] = None) -> ValidationReport:
+def validate_dspy_module(module: Any, test_inputs: Optional[List[Dict[str, Any]]] = None) -> ValidationReport:
     """
     Convenience function to validate a DSPy module
 
     Args:
-        module: DSPy module to validate
+        module: DSPy module to validate (can be any type for testing invalid modules)
         test_inputs: Optional test inputs for performance validation
 
     Returns:

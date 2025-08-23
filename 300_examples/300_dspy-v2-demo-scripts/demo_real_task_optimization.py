@@ -16,7 +16,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 import dspy
 from dspy import Example, InputField, Module, OutputField, Signature
-
 from dspy_modules.model_switcher import LocalModel, ModelSwitcher
 
 

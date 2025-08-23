@@ -19,7 +19,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature
-
 from dspy_modules.system_integration import (
     DSPySystemIntegration,
     IntegrationConfig,

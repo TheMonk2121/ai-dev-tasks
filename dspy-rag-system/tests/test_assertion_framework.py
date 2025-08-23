@@ -332,7 +332,7 @@ class TestAssertionFramework(unittest.TestCase):
 
         # Measure time with validation
         start_time = time.time()
-        report = self.framework.validate_module(module, self.test_inputs)
+        self.framework.validate_module(module, self.test_inputs)
         validation_time = time.time() - start_time
 
         # Validation should complete in reasonable time (< 5 seconds for this test)

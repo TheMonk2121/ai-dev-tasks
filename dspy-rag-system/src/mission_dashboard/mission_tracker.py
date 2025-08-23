@@ -23,7 +23,6 @@ sys.path.append('src')
 try:
     from utils.database_resilience import get_database_manager
     from utils.logger import get_logger
-    from utils.secrets_manager import validate_startup_secrets
     LOG = get_logger("mission_tracker")
 except ImportError as e:
     logging.basicConfig(level=logging.INFO)

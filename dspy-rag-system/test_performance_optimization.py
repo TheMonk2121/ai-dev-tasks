@@ -75,7 +75,7 @@ def test_connection_pool():
             tasks.append(task)
 
         # Wait for all tasks
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+        await asyncio.gather(*tasks, return_exceptions=True)
 
         # Check stats
         stats = pool.get_stats()
@@ -111,7 +111,7 @@ def test_memory_optimizer():
     print(f"   Percent: {memory_before['percent']:.1f}%")
 
     # Create some objects to trigger GC
-    large_list = [f"item{i}" * 1000 for i in range(1000)]
+    _ = [f"item{i}" * 1000 for i in range(1000)]
 
     # Perform optimization
     result = optimizer.optimize_memory()
@@ -215,17 +215,17 @@ def test_performance_comparison():
 
         # First request (cache miss)
         start_time = time.time()
-        context1 = await optimizer.get_optimized_context("coder", "test task")
+        _ = await optimizer.get_optimized_context("coder", "test task")
         time1 = time.time() - start_time
 
         # Second request (cache hit)
         start_time = time.time()
-        context2 = await optimizer.get_optimized_context("coder", "test task")
+        _ = await optimizer.get_optimized_context("coder", "test task")
         time2 = time.time() - start_time
 
         # Third request (different task, cache miss)
         start_time = time.time()
-        context3 = await optimizer.get_optimized_context("planner", "different task")
+        _ = await optimizer.get_optimized_context("planner", "different task")
         time3 = time.time() - start_time
 
         print("📊 Performance Comparison:")

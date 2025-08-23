@@ -16,7 +16,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature
-
 from dspy_modules.optimization_loop import (
     FourPartOptimizationLoop,
     OptimizationPhase,

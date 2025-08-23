@@ -7,7 +7,6 @@ Simple script to manually add core documentation files with anchor metadata to t
 import json
 import os
 import sys
-import uuid
 from pathlib import Path
 
 # Add src to path
@@ -35,9 +34,6 @@ def add_document_manually(file_path):
         # Extract anchor metadata
         anchor_metadata = extract_anchor_metadata_from_file(file_path)
         print(f"   Found anchor metadata: {anchor_metadata.to_dict()}")
-
-        # Create document ID
-        document_id = f"doc_{uuid.uuid4().hex}"
 
         # Split content into chunks (simple approach)
         chunks = []
@@ -140,6 +136,7 @@ def add_document_manually(file_path):
         print(f"❌ Error processing {file_path}: {e}")
         return False
 
+
 def main():
     """Main function"""
     print("🚀 Starting Manual Document Addition with Anchor Metadata")
@@ -165,6 +162,7 @@ def main():
     if success_count > 0:
         print("💡 You can now test the memory rehydrator with:")
         print("   python3 -m src.utils.memory_rehydrator --role planner --task 'test' --json")
+
 
 if __name__ == "__main__":
     main()

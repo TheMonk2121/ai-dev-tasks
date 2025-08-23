@@ -170,7 +170,7 @@ def handle_validate_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> D
 def health_check():
     """Health check endpoint."""
     try:
-        scrubber_instance = get_scrubber()
+        get_scrubber()  # Verify scrubber is available
         return jsonify({
             "status": "healthy",
             "service": "backlog-scrubber-webhook",

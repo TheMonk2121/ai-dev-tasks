@@ -256,6 +256,7 @@
         "ollama",
         "getcwd",
         "cand",
+        "correlationid",
         "isready",
         "vulns",
         "tcpm",
@@ -299,7 +300,8 @@
         "noembed",
         "noframe",
         "noframes",
-        "noscript"
+        "noscript",
+        "osascript"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

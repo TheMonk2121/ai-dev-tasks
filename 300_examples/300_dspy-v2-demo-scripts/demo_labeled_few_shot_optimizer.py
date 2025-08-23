@@ -14,7 +14,6 @@ import time
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 from dspy import Example
-
 from dspy_modules.optimizers import LabeledFewShotOptimizer, get_optimizer_manager, optimize_program
 
 

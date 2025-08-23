@@ -255,7 +255,7 @@ class TestValidationFrameworkIntegration(unittest.TestCase):
 
         # Measure time with validation
         start_time = time.time()
-        report = self.framework.validate_module(optimized_module, self.test_inputs)
+        self.framework.validate_module(optimized_module, self.test_inputs)
         validation_time = time.time() - start_time
 
         # Validation overhead should be reasonable (< 10% of base time)

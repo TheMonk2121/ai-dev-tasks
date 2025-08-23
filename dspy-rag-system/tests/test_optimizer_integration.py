@@ -41,7 +41,21 @@ class TaskAnalysisModule(Module):
 
 def analysis_quality_metric(example: Example, prediction) -> float:
     """Metric to evaluate analysis quality"""
-    expected = example.get("outputs", {}).get("analysis", "")
+    if example is None:
+        return 0.0
+
+    # Handle case where example might not have the expected structure
+    if not hasattr(example, "get"):
+        return 0.0
+
+    # Type guard to ensure example is not None after the hasattr check
+    if example is None:  # type: ignore[unreachable]
+        return 0.0
+
+    # At this point, example is guaranteed to be not None and have a get method
+    # Use type assertion to tell the type checker this is safe
+    example_dict = example  # type: ignore[assignment]
+    expected = example_dict.get("outputs", {}).get("analysis", "")  # type: ignore[attr-defined]
     actual = prediction.analysis if hasattr(prediction, "analysis") else str(prediction)
 
     # Simple quality metric based on length and content
