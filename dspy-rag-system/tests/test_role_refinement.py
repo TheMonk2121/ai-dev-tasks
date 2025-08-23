@@ -143,7 +143,7 @@ class TestRoleRefinementSystem(unittest.TestCase):
         mock_cycle.success = True
         mock_cycle.overall_metrics = {"improvement_score": 0.85}
 
-        self.system.optimization_loop.run_optimization_cycle.return_value = mock_cycle
+        self.system.optimization_loop.run_cycle.return_value = mock_cycle
 
         # Mock refinement module forward method
         mock_result = {
@@ -164,7 +164,7 @@ class TestRoleRefinementSystem(unittest.TestCase):
     def test_optimize_role_definition_failure(self):
         """Test failed role definition optimization"""
         # Mock optimization loop to return failure
-        self.system.optimization_loop.run_optimization_cycle.return_value = None
+        self.system.optimization_loop.run_cycle.return_value = None
 
         result = self.system._optimize_role_definition(
             RoleType.PLANNER, self.test_planner_definition, "solo developer context"
@@ -235,17 +235,33 @@ class TestRoleRefinementSystem(unittest.TestCase):
             status=RefinementStatus.COMPLETED,
         )
 
-        # Mock metrics dashboard
-        self.system.metrics_dashboard.record_metric = Mock()
+        # Mock metrics dashboard metric series
+        from dspy_modules.metrics_dashboard import MetricType
+
+        # Create mock metric series
+        mock_improvement_series = Mock()
+        mock_reliability_series = Mock()
+
+        self.system.metrics_dashboard.metric_series = {
+            MetricType.IMPROVEMENT: mock_improvement_series,
+            MetricType.RELIABILITY: mock_reliability_series,
+        }
 
         self.system._record_refinement_metrics(result)
 
-        # Verify metrics were recorded
-        self.system.metrics_dashboard.record_metric.assert_called_once()
-        call_args = self.system.metrics_dashboard.record_metric.call_args
-        self.assertEqual(call_args[0][0], "role_refinement")
-        self.assertEqual(call_args[0][1]["role_type"], "planner")
-        self.assertEqual(call_args[0][1]["improvement_score"], 0.85)
+        # Verify metrics were recorded to the series
+        mock_improvement_series.add_point.assert_called_once()
+        mock_reliability_series.add_point.assert_called_once()
+
+        # Check improvement series call
+        improvement_call = mock_improvement_series.add_point.call_args
+        self.assertEqual(improvement_call.args[0], 0.85)  # improvement_score
+        self.assertEqual(improvement_call.kwargs["metadata"]["role_type"], "planner")
+
+        # Check reliability series call
+        reliability_call = mock_reliability_series.add_point.call_args
+        self.assertEqual(reliability_call.args[0], 1.0)  # validation_passed = True
+        self.assertEqual(reliability_call.kwargs["metadata"]["role_type"], "planner")
 
     def test_get_role_performance_summary_empty(self):
         """Test performance summary when no refinements performed"""

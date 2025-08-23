@@ -20,6 +20,7 @@ from dspy import InputField, Module, OutputField, Signature
 from dspy_modules.metrics_dashboard import (
     Alert,
     DashboardView,
+    MetricPoint,
     MetricsDashboard,
     MetricSeries,
     MetricType,
@@ -120,10 +121,15 @@ class TestMetricsDashboard(unittest.TestCase):
         """Test metric series operations"""
         series = MetricSeries(metric_type=MetricType.RELIABILITY)
 
-        # Test adding data points
-        series.add_point(85.0, {"test": "data"})
-        series.add_point(90.0, {"test": "data2"})
-        series.add_point(95.0)
+        # Test adding data points with time delays to create a trend
+        base_time = time.time()
+
+        # Add points with increasing values and timestamps
+        point1 = MetricPoint(timestamp=base_time, value=85.0, metadata={"test": "data"})
+        point2 = MetricPoint(timestamp=base_time + 60, value=90.0, metadata={"test": "data2"})
+        point3 = MetricPoint(timestamp=base_time + 120, value=95.0, metadata={})
+
+        series.data_points = [point1, point2, point3]
 
         # Test latest value
         latest = series.get_latest_value()
@@ -132,12 +138,14 @@ class TestMetricsDashboard(unittest.TestCase):
         # Test average calculation
         avg = series.get_average(window_minutes=60)
         self.assertIsNotNone(avg)
-        self.assertAlmostEqual(avg, 90.0, places=1)
+        if avg is not None:
+            self.assertAlmostEqual(avg, 90.0, places=1)
 
         # Test trend calculation
         trend = series.get_trend(window_minutes=60)
         self.assertIsNotNone(trend)
-        self.assertGreater(trend, 0)  # Should be positive trend
+        if trend is not None:
+            self.assertGreater(trend, 0)  # Should be positive trend
 
         print("\nMetric Series Operations Test:")
         print(f"  Data points: {len(series.data_points)}")

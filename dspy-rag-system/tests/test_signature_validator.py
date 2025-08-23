@@ -10,7 +10,7 @@ Focuses on working functionality rather than problematic edge cases.
 import pytest
 from dspy import InputField, OutputField, Signature
 
-from src.dspy_modules.signature_validator import (
+from dspy_modules.signature_validator import (
     DSPySignatureValidator,
     ValidationResult,
     get_signature_performance,
