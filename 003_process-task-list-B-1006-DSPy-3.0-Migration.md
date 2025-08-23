@@ -250,9 +250,64 @@
 
 ---
 
-### Phase 4: MLflow Integration
+### Phase 4: Surgical AsyncIO Integration
 
-#### Task 4.1: Set Up MLflow Integration
+#### Task 4.1: Implement AsyncMemoryRehydrator in Existing memory_rehydrator.py
+**Priority**: Critical
+**Estimated Time**: 3 hours
+**Dependencies**: Task 3.3
+**Status**: [ ]
+
+**Do**:
+1. Add AsyncMemoryRehydrator class to existing memory_rehydrator.py
+2. Implement optional SQLite STM with asyncio.to_thread()
+3. Create background flusher with bounded concurrency (asyncio.Semaphore)
+4. Ensure zero new external dependencies (uses existing psycopg2/sqlite3)
+5. Validate 40-60% I/O performance improvement achieved
+6. Maintain backward compatibility with existing sync interface
+
+**Done when**:
+- [ ] AsyncMemoryRehydrator class added to existing memory_rehydrator.py
+- [ ] Optional SQLite STM implementation with asyncio.to_thread()
+- [ ] Background flusher with bounded concurrency (asyncio.Semaphore)
+- [ ] Zero new external dependencies (uses existing psycopg2/sqlite3)
+- [ ] 40-60% I/O performance improvement achieved
+- [ ] Backward compatibility maintained with existing sync interface
+
+**Auto-Advance**: no
+**🛑 Pause After**: yes
+**When Ready Prompt**: "AsyncMemoryRehydrator implementation complete. Proceed to background flusher implementation?"
+
+---
+
+#### Task 4.2: Implement Background Flusher and Bounded Concurrency
+**Priority**: High
+**Estimated Time**: 2 hours
+**Dependencies**: Task 4.1
+**Status**: [ ]
+
+**Do**:
+1. Implement background flusher with asyncio.Queue for episodic events
+2. Implement bounded concurrency with asyncio.Semaphore for LTM queries
+3. Add circuit breakers and retries for resilience
+4. Implement structured concurrency with graceful shutdown
+5. Validate performance targets maintained with bounded concurrency
+6. Ensure zero new external dependencies
+
+**Done when**:
+- [ ] Background flusher implemented with asyncio.Queue for episodic events
+- [ ] Bounded concurrency with asyncio.Semaphore for LTM queries
+- [ ] Circuit breakers and retries implemented for resilience
+- [ ] Structured concurrency with graceful shutdown
+- [ ] Performance targets maintained with bounded concurrency
+- [ ] Zero new external dependencies
+
+**Auto-Advance**: yes
+**🛑 Pause After**: no
+
+---
+
+### Phase 5: MLflow Integration
 **Priority**: High
 **Estimated Time**: 2 hours
 **Dependencies**: Task 3.2
@@ -279,10 +334,10 @@
 
 ---
 
-#### Task 4.2: Implement Experiment Tracking
+#### Task 5.2: Implement Experiment Tracking
 **Priority**: High
 **Estimated Time**: 2 hours
-**Dependencies**: Task 4.1
+**Dependencies**: Task 5.1
 **Status**: [ ]
 
 **Do**:
@@ -305,12 +360,12 @@
 
 ---
 
-### Phase 5: Production Deployment
+### Phase 6: Production Deployment
 
-#### Task 5.1: Gradual Production Rollout
+#### Task 6.1: Gradual Production Rollout
 **Priority**: Critical
 **Estimated Time**: 2 hours
-**Dependencies**: Task 4.2
+**Dependencies**: Task 5.2
 **Status**: [ ]
 
 **Do**:
@@ -334,10 +389,10 @@
 
 ---
 
-#### Task 5.2: Post-Deployment Validation
+#### Task 6.2: Post-Deployment Validation
 **Priority**: High
 **Estimated Time**: 1 hour
-**Dependencies**: Task 5.1
+**Dependencies**: Task 6.1
 **Status**: [ ]
 
 **Do**:

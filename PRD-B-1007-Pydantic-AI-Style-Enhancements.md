@@ -5,17 +5,18 @@
 
 ## 1. Problem Statement
 
-**What's broken?** The current DSPy system (post-B-1006) lacks constitution-aware type safety, role-based context models, structured error taxonomy, and typed debug logs. While the system is functional, it's missing enterprise-grade reliability features that would significantly improve debugging, error prevention, constitution compliance, and user experience.
+**What's broken?** The current DSPy system (post-B-1006) lacks constitution-aware type safety, role-based context models, structured error taxonomy, typed debug logs, and async Pydantic validation. While the system is functional, it's missing enterprise-grade reliability features that would significantly improve debugging, error prevention, constitution compliance, user experience, and I/O performance.
 
-**Why does it matter?** The current system experiences runtime errors that could be caught during development, provides limited context for debugging, lacks constitution-aware validation, and offers generic tool responses that don't adapt to user preferences or session context. This leads to 40% of errors discovered in production, 2-4 hours debugging time for issues, constitution compliance gaps, and generic user experiences.
+**Why does it matter?** The current system experiences runtime errors that could be caught during development, provides limited context for debugging, lacks constitution-aware validation, offers generic tool responses that don't adapt to user preferences or session context, and has I/O performance bottlenecks. This leads to 40% of errors discovered in production, 2-4 hours debugging time for issues, constitution compliance gaps, generic user experiences, and 60% slower I/O operations.
 
-**What's the opportunity?** By implementing constitution-aware Pydantic models, role-based context systems, structured error taxonomy, and typed debug logs, we can:
+**What's the opportunity?** By implementing constitution-aware Pydantic models, role-based context systems, structured error taxonomy, typed debug logs, and async Pydantic validation, we can:
 - Achieve 95%+ role output validation against context schema
 - Reduce runtime errors by 50% through type validation and constitution enforcement
 - Decrease debugging time by 30% with rich context information and typed logs
 - Enforce constitution invariants via type system
 - Improve user experience with personalized, context-aware responses
 - Create enterprise-grade reliability patterns that scale with the system
+- Achieve 60% I/O performance improvement through async Pydantic validation
 - Future-proof the architecture with modern development practices
 
 ## 2. Solution Overview
@@ -28,6 +29,7 @@
 3. **Error Taxonomy**: Introduce PydanticError model for ValidationError, CoherenceError, DependencyError with constitution failure mode mapping
 4. **Dynamic Prompts + Preferences**: Store user preferences in typed Pydantic class and inject into optimizer scoring
 5. **Debugging & Observability**: Typed debug logs via Pydantic with trace-level logs enriched with context schema
+6. **Async Pydantic Validation**: Implement async validation for STMContext, EpisodeRecord, EpisodeEvent with asyncio.to_thread() for 50-60% I/O performance improvement
 
 **What are the key features?**
 - Role-based context models (PlannerContext, CoderContext, ResearchContext) with Pydantic validation
@@ -40,6 +42,8 @@
 - 50% runtime error reduction through type validation
 - Constitution-aware validation integrated with existing Pydantic infrastructure
 - ConstitutionCompliance model for program output validation
+- Async Pydantic validation for STMContext, EpisodeRecord, EpisodeEvent with asyncio.to_thread()
+- 50-60% I/O performance improvement with zero new dependencies
 
 ## 3. Acceptance Criteria
 
@@ -59,6 +63,8 @@
 - Constitution invariants enforced via type system
 - Constitution-aware validation integrated with existing Pydantic infrastructure
 - ConstitutionCompliance model validates program outputs before/after runs
+- Async Pydantic validation (STMContext, EpisodeRecord, EpisodeEvent) provides 50-60% I/O performance improvement
+- Zero new external dependencies for async validation
 - Personalized AI responses based on user context and preferences
 - Comprehensive experiment tracking for all AI interactions
 - Enterprise-grade reliability patterns that scale with system growth
@@ -72,6 +78,8 @@
 - Typed debug logs must provide measurable improvement in debugging efficiency
 - Constitution-aware validation integrated with existing Pydantic infrastructure
 - ConstitutionCompliance model validates program outputs before/after runs
+- Async Pydantic validation (STMContext, EpisodeRecord, EpisodeEvent) must provide 50-60% I/O performance improvement
+- Zero new external dependencies for async validation
 - Performance impact must be minimal (<5% overhead)
 - Constitution invariants must be enforced via type system
 
@@ -85,9 +93,11 @@
 - Role-based context models (PlannerContext, CoderContext, ResearchContext)
 - Type-safe user preferences with optimizer integration
 - Typed debug logs with context schema enrichment
+- Async Pydantic validation (STMContext, EpisodeRecord, EpisodeEvent) with asyncio.to_thread()
 - MLflow for experiment tracking and observability
 - Existing PostgreSQL + PGVector infrastructure
 - Python 3.12 with modern type hints
+- Zero new external dependencies
 
 **How does it integrate?**
 - Builds on DSPy 3.0 foundation from B-1006

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Migrate from DSPy 2.6.27 to DSPy 3.0.1 with constitution-aware testing, GEPA optimizer migration, performance budgets, feature flags, and HITL safety mechanisms. This migration will replace the custom assertion framework with native `dspy.Assert` support, implement constitution-aware regression suite, migrate to GEPA optimizer with performance budgets (latency ≤ +20%, tokens ≤ +25%), add feature flags for gradual rollout, implement HITL fallback for safety, and achieve ≥15% improvement on seeded bugs with 0 dependency violations. **Schema compatibility confirmed** - existing signatures and field definitions work identically in DSPy 3.0, requiring no schema changes.
+Migrate from DSPy 2.6.27 to DSPy 3.0.1 with constitution-aware testing, GEPA optimizer migration, performance budgets, feature flags, HITL safety mechanisms, and surgical asyncio integration. This migration will replace the custom assertion framework with native `dspy.Assert` support, implement constitution-aware regression suite, migrate to GEPA optimizer with performance budgets (latency ≤ +20%, tokens ≤ +25%), add feature flags for gradual rollout, implement HITL fallback for safety, integrate surgical asyncio for 60% I/O performance improvement, and achieve ≥15% improvement on seeded bugs with 0 dependency violations. **Schema compatibility confirmed** - existing signatures and field definitions work identically in DSPy 3.0, requiring no schema changes.
 
 ## Implementation Phases
 
@@ -266,6 +266,114 @@ Migrate from DSPy 2.6.27 to DSPy 3.0.1 with constitution-aware testing, GEPA opt
 - [ ] **Documentation Updated** - GEPA optimization documentation updated
 
 ---
+
+### Phase 4: Surgical AsyncIO Integration
+
+#### Task 4.1: Implement AsyncMemoryRehydrator in Existing memory_rehydrator.py
+**Priority**: Critical
+**Estimated Time**: 3 hours
+**Dependencies**: Task 3.3
+**Status**: [ ]
+
+**Description**: Implement AsyncMemoryRehydrator class in existing memory_rehydrator.py with asyncio.to_thread() for 40-60% I/O performance improvement.
+
+**Acceptance Criteria**:
+- [ ] AsyncMemoryRehydrator class added to existing memory_rehydrator.py
+- [ ] Optional SQLite STM implementation with asyncio.to_thread()
+- [ ] Background flusher with bounded concurrency (asyncio.Semaphore)
+- [ ] Zero new external dependencies (uses existing psycopg2/sqlite3)
+- [ ] 40-60% I/O performance improvement achieved
+- [ ] Backward compatibility maintained with existing sync interface
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Test AsyncMemoryRehydrator class and async operations
+- [ ] **Integration Tests**: Test with existing memory rehydrator functionality
+- [ ] **Performance Tests**: Benchmark 40-60% I/O performance improvement
+- [ ] **Security Tests**: Validate async operations security
+- [ ] **Resilience Tests**: Test async error handling and recovery
+- [ ] **Edge Case Tests**: Test async operations with boundary conditions
+
+**Implementation Notes**: Use asyncio.to_thread() to wrap existing sync database calls, optional SQLite for STM, background flusher with asyncio.Queue, and bounded concurrency with asyncio.Semaphore.
+
+**Quality Gates**:
+- [ ] **Code Review** - All AsyncMemoryRehydrator code reviewed
+- [ ] **Tests Passing** - All async tests pass with 40-60% performance improvement
+- [ ] **Performance Validated** - 40-60% I/O performance improvement achieved
+- [ ] **Security Reviewed** - Async operations security verified
+- [ ] **Documentation Updated** - AsyncMemoryRehydrator documentation updated
+
+---
+
+#### Task 4.2: Implement Background Flusher and Bounded Concurrency
+**Priority**: High
+**Estimated Time**: 2 hours
+**Dependencies**: Task 4.1
+**Status**: [ ]
+
+**Description**: Implement background flusher for episodic events and bounded concurrency for LTM queries with semaphores.
+
+**Acceptance Criteria**:
+- [ ] Background flusher implemented with asyncio.Queue for episodic events
+- [ ] Bounded concurrency with asyncio.Semaphore for LTM queries
+- [ ] Circuit breakers and retries implemented for resilience
+- [ ] Structured concurrency with graceful shutdown
+- [ ] Performance targets maintained with bounded concurrency
+- [ ] Zero new external dependencies
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Test background flusher and bounded concurrency
+- [ ] **Integration Tests**: Test with real episodic/LTM operations
+- [ ] **Performance Tests**: Validate bounded concurrency performance
+- [ ] **Security Tests**: Test circuit breakers and error handling
+- [ ] **Resilience Tests**: Test graceful shutdown and recovery
+- [ ] **Edge Case Tests**: Test with high concurrency scenarios
+
+**Implementation Notes**: Use asyncio.Queue(maxsize=N) for episodic events, asyncio.Semaphore for LTM concurrency limits, and structured concurrency for graceful shutdown.
+
+**Quality Gates**:
+- [ ] **Code Review** - Background flusher and bounded concurrency reviewed
+- [ ] **Tests Passing** - All background flusher tests pass
+- [ ] **Performance Validated** - Bounded concurrency performance targets met
+- [ ] **Security Reviewed** - Circuit breakers and error handling verified
+- [ ] **Documentation Updated** - Background flusher documentation updated
+
+---
+
+#### Task 4.2: Implement Background Flusher and Bounded Concurrency
+**Priority**: High
+**Estimated Time**: 2 hours
+**Dependencies**: Task 4.1
+**Status**: [ ]
+
+**Description**: Implement background flusher for MTM events and bounded concurrency for LTM queries with semaphores.
+
+**Acceptance Criteria**:
+- [ ] Background flusher implemented with asyncio.Queue for MTM events
+- [ ] Bounded concurrency with asyncio.Semaphore for LTM queries
+- [ ] Circuit breakers and retries implemented for resilience
+- [ ] Structured concurrency with graceful shutdown
+- [ ] Performance targets maintained with bounded concurrency
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Test background flusher and bounded concurrency
+- [ ] **Integration Tests**: Test with real MTM/LTM operations
+- [ ] **Performance Tests**: Validate bounded concurrency performance
+- [ ] **Security Tests**: Test circuit breakers and error handling
+- [ ] **Resilience Tests**: Test graceful shutdown and recovery
+- [ ] **Edge Case Tests**: Test with high concurrency scenarios
+
+**Implementation Notes**: Use asyncio.Queue(maxsize=N) for MTM events, asyncio.Semaphore for LTM concurrency limits, and structured concurrency for graceful shutdown.
+
+**Quality Gates**:
+- [ ] **Code Review** - Background flusher and bounded concurrency reviewed
+- [ ] **Tests Passing** - All background flusher tests pass
+- [ ] **Performance Validated** - Bounded concurrency performance targets met
+- [ ] **Security Reviewed** - Circuit breakers and error handling verified
+- [ ] **Documentation Updated** - Background flusher documentation updated
+
+---
+
+### Phase 5: MLflow Integration
 
 #### Task 3.3: Implement Optimizer Budget Enforcement with Constitution Compliance
 **Priority:** Critical

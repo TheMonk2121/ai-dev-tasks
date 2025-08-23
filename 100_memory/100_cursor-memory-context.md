@@ -559,7 +559,7 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 2. **B‑1006**: DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization (🔥 points)
    - todo
 
-3. **B‑1008**: Enhanced Backlog System with DSPy 3.0 and Pydantic Integration (🔥 points)
+3. **B‑1008**: Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates (🔥 points)
    - todo
 
 4. ****: B‑100 (Coder Role Implementation for Memory Rehydration System points)

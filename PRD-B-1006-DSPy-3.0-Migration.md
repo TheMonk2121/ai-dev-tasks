@@ -5,9 +5,9 @@
 
 ## 1. Problem Statement
 
-**What's broken?** The current system uses DSPy 2.6.27 with a sophisticated custom assertion framework and optimization components. While this implementation is advanced, it's missing native DSPy 3.0 features, constitution-aware testing, GEPA optimizer migration, performance budgets, and safety mechanisms needed for production deployment.
+**What's broken?** The current system uses DSPy 2.6.27 with a sophisticated custom assertion framework and optimization components. While this implementation is advanced, it's missing native DSPy 3.0 features, constitution-aware testing, GEPA optimizer migration, performance budgets, safety mechanisms, and surgical asyncio integration for I/O operations needed for production deployment.
 
-**Why does it matter?** DSPy 3.0 introduces native assertion support (`dspy.Assert`, `@dspy.assert_transform_module`), enhanced optimization capabilities, MLflow integration, and improved fine-tuning support. Additionally, we need constitution-aware testing, GEPA optimizer migration with performance budgets, feature flags for gradual rollout, and HITL safety mechanisms for production readiness.
+**Why does it matter?** DSPy 3.0 introduces native assertion support (`dspy.Assert`, `@dspy.assert_transform_module`), enhanced optimization capabilities, MLflow integration, and improved fine-tuning support. Additionally, we need constitution-aware testing, GEPA optimizer migration with performance budgets, feature flags for gradual rollout, HITL safety mechanisms, and surgical asyncio integration for 60% I/O performance improvement for production readiness.
 
 **What's the opportunity?** By migrating to DSPy 3.0 with enhanced requirements, we can:
 - Replace custom assertion framework with native `dspy.Assert` support
@@ -15,6 +15,7 @@
 - Migrate Coder/Planner pipelines to GEPA with performance budgets (latency ≤ +20%, tokens ≤ +25%)
 - Add feature flags (OPTIMIZE_PLANNER, OPTIMIZE_CODER) for gradual rollout
 - Implement HITL fallback for safety when scores fall below thresholds
+- Implement surgical asyncio integration for 60% I/O performance improvement
 - Achieve ≥15% improvement on seeded bugs with 0 dependency violations
 - Integrate MLflow for comprehensive experiment tracking and CoT/ReAct traces
 - Future-proof the system with the latest framework capabilities
@@ -26,11 +27,13 @@
 
 **How does it work?** The migration will follow a phased approach:
 1. **Environment & Compatibility**: Pin DSPy 3.0.1 in constraints.txt, run regression tests + lint + doc-coherence validator, add baseline metrics → eval/baseline.json
-2. **Assertion Migration**: Replace custom validators with DSPy 3.0 assertions, add constitution-aware regression suite with context preservation, workflow chain, and error recovery checks, re-tier modules in 400_code-criticality-guide.md
-3. **Optimizer Refit**: Migrate Coder/Planner pipelines to GEPA with performance budgets (latency ≤ +20%, tokens ≤ +25%), add optimizer_budget.yaml caps per role
-4. **Observability**: MLflow integration for optimizer runs, capture CoT/ReAct traces and artifact diffs in eval_report.json
-5. **Rollout & Safety**: Feature flags (OPTIMIZE_PLANNER, OPTIMIZE_CODER), HITL fallback for <threshold scores
-6. **Production Deployment**: Gradual rollout with rollback capabilities
+2. **Constitution-Aware Testing Integration**: Integrate constitution-aware testing with existing test infrastructure, implement constitution compliance validation
+3. **Assertion Migration**: Replace custom validators with DSPy 3.0 assertions, add constitution-aware regression suite with context preservation, workflow chain, and error recovery checks, re-tier modules in 400_code-criticality-guide.md
+4. **Optimizer Refit**: Migrate Coder/Planner pipelines to GEPA with performance budgets (latency ≤ +20%, tokens ≤ +25%), add optimizer_budget.yaml caps per role
+5. **Surgical AsyncIO Integration**: Implement AsyncMemoryRehydrator in existing memory_rehydrator.py with asyncio.to_thread() for 40-60% I/O performance improvement, optional SQLite STM, background flusher, and bounded concurrency
+6. **Observability**: MLflow integration for optimizer runs, capture CoT/ReAct traces and artifact diffs in eval_report.json
+7. **Rollout & Safety**: Feature flags (OPTIMIZE_PLANNER, OPTIMIZE_CODER), HITL fallback for <threshold scores
+8. **Production Deployment**: Gradual rollout with rollback capabilities
 
 **What are the key features?**
 - Native assertion support replacing custom framework
@@ -40,6 +43,10 @@
 - HITL fallback for safety when scores fall below thresholds
 - Constitution-aware testing integrated with existing test infrastructure
 - Optimizer budget enforcement with constitution compliance validation
+- Surgical asyncio integration with AsyncMemoryRehydrator in existing memory_rehydrator.py
+- Optional SQLite STM (local-first) with asyncio.to_thread() for existing DB calls
+- Background flusher with bounded concurrency (semaphores) for predictable performance
+- Zero new external dependencies (uses existing psycopg2/sqlite3)
 - MLflow integration for comprehensive experiment tracking and CoT/ReAct traces
 - Performance baseline establishment and improvement tracking
 - Backward compatibility with existing custom components
@@ -64,6 +71,9 @@
 - GEPA optimization improves performance by 15-25% within budget constraints
 - Feature flags enable gradual rollout with safety controls
 - HITL fallback provides safety net for low-scoring operations
+- Surgical asyncio integration (AsyncMemoryRehydrator) provides 40-60% I/O performance improvement
+- Optional SQLite STM provides local-first memory without external dependencies
+- Background flusher with bounded concurrency maintains Tier-1 performance discipline
 - MLflow integration provides comprehensive experiment tracking and artifact diffs
 - Constitution-aware testing integrated with existing test infrastructure
 - Optimizer budget enforcement with constitution compliance validation operational
@@ -78,6 +88,9 @@
 - Feature flags must be functional for gradual rollout
 - HITL fallback must be operational for <threshold scores
 - Custom assertion framework must be fully replaced with native DSPy 3.0 assertions
+- Surgical asyncio integration (AsyncMemoryRehydrator) must provide 40-60% I/O performance improvement
+- Optional SQLite STM must function without external dependencies
+- Background flusher with bounded concurrency must maintain Tier-1 performance discipline
 - MLflow integration must be functional with CoT/ReAct traces
 - Constitution-aware testing integrated with existing test infrastructure
 - Optimizer budget enforcement with constitution compliance validation operational
@@ -94,8 +107,12 @@
 - Feature flags for gradual rollout
 - HITL fallback mechanisms
 - Native assertion framework
+- Surgical asyncio integration (asyncio.to_thread(), built-in asyncio, optional SQLite)
+- AsyncMemoryRehydrator in existing memory_rehydrator.py
+- Background flusher with bounded concurrency (asyncio.Semaphore)
 - Performance baseline metrics
 - Existing custom components (preserved)
+- Zero new external dependencies
 
 **How does it integrate?**
 - Maintains compatibility with existing ModelSwitcher, optimization loop, and metrics dashboard

@@ -10,7 +10,7 @@
 
 ## 1. Problem Statement
 
-**What's broken?** The current backlog system doesn't leverage constitution-aware scoring, cross-role dependency detection, real-time updates, automated migration with metadata preservation, and specific performance targets. The backlog scoring is static and doesn't account for constitution article weighting, cross-role dependencies (Planner → Coder → Reviewer), real-time n8n integration, and lacks automated migration with 100% metadata preservation.
+**What's broken?** The current backlog system doesn't leverage constitution-aware scoring, cross-role dependency detection, real-time updates, automated migration with metadata preservation, specific performance targets, and async real-time scoring updates. The backlog scoring is static and doesn't account for constitution article weighting, cross-role dependencies (Planner → Coder → Reviewer), real-time n8n integration, lacks automated migration with 100% metadata preservation, and has I/O performance bottlenecks for real-time updates.
 
 **Why does it matter?** Without enhanced backlog capabilities, the system misses opportunities to:
 - Weight items by constitution articles (workflow chain, context preservation)
@@ -19,6 +19,7 @@
 - Preserve 100% of constitution-linked metadata during migration
 - Validate migration outputs via ConstitutionCompliance model
 - Achieve <5% performance overhead on real-time scoring updates
+- Provide async real-time scoring updates with 60% I/O performance improvement
 - Automatically organize and place new backlog items in the correct position
 - Eliminate manual placement decisions and reduce cognitive overhead
 
@@ -30,6 +31,7 @@
 - Preserves 100% of constitution-linked metadata during migration
 - Validates migration outputs via ConstitutionCompliance model
 - Achieves <5% performance overhead on real-time scoring updates
+- Provides async real-time scoring updates with 60% I/O performance improvement
 - Automatically organizes and places new items using intelligent insertion logic
 - Maintains consistent ordering based on ID, priority, score, and dependencies
 
@@ -41,19 +43,22 @@
 1. **Constitution-Aware Scoring**: Weight items by constitution articles (workflow chain, context preservation) and add dependency bonuses
 2. **Cross-Role Dependency Detection**: Detect dependencies across roles (Planner → Coder → Reviewer) and apply risk-adjusted scoring
 3. **Real-time Updates**: Integrate with n8n scrubber for auto-scoring refresh and continuous updates
-4. **Automated Migration**: Migrate backlog items with preserved constitution-linked metadata (dependencies, complexity, risks)
-5. **Migration Validation**: Validate migration outputs via ConstitutionCompliance model with 100% metadata preservation
+4. **Async Real-time Scoring**: Implement async real-time scoring updates with bounded concurrency (asyncio.Semaphore) for <5% overhead
+5. **Automated Migration**: Migrate backlog items with preserved constitution-linked metadata (dependencies, complexity, risks)
+6. **Migration Validation**: Validate migration outputs via ConstitutionCompliance model with 100% metadata preservation
 
 **What are the key features?**
 - Constitution-aware scoring formula with dependency bonuses and risk-adjusted scoring
 - Cross-role dependency detection (Planner → Coder → Reviewer) with context complexity analysis
 - Real-time updates with n8n scrubber integration for auto-scoring refresh
+- Async real-time scoring updates with bounded concurrency (asyncio.Semaphore) for <5% overhead
 - Automated migration with constitution-linked metadata preservation (dependencies, complexity, risks)
 - Migration validation via ConstitutionCompliance model with 100% metadata preservation
 - Performance optimization with <5% overhead on real-time scoring updates
 - Constitution-aligned scoring integration with existing backlog infrastructure
 - Automated backlog organization and item placement
 - Intelligent insertion logic based on ID, priority, and dependencies
+- Zero new external dependencies for async scoring
 
 ## 3. Acceptance Criteria
 
@@ -72,6 +77,7 @@
 - Items are weighted by constitution articles (workflow chain, context preservation) with higher priority
 - Cross-role dependencies (Planner → Coder → Reviewer) are automatically detected and weighted
 - Real-time updates via n8n scrubber provide auto-scoring refresh
+- Async real-time scoring updates with bounded concurrency provide <5% overhead
 - Migration preserves 100% of constitution-linked metadata (dependencies, complexity, risks)
 - Migration outputs are validated via ConstitutionCompliance model
 - Constitution-aligned scoring integrated with existing backlog infrastructure
@@ -79,17 +85,20 @@
 - New backlog items are automatically placed in the correct position
 - Manual placement decisions are eliminated
 - Consistent ordering is maintained across all backlog items
+- Zero new external dependencies for async scoring operations
 
 **What are the quality gates?**
 - All existing backlog items maintain their current priority order
 - Constitution-aware scoring provides measurable improvements in prioritization
 - Cross-role dependency detection correctly identifies Planner → Coder → Reviewer relationships
 - Real-time updates via n8n scrubber provide auto-scoring refresh
+- Async real-time scoring updates with bounded concurrency provide <5% overhead
 - Migration preserves 100% of constitution-linked metadata
 - Migration outputs are validated via ConstitutionCompliance model
 - Constitution-aligned scoring integrated with existing backlog infrastructure
 - Performance targets are achieved with <5% overhead on real-time scoring updates
 - Automated organization correctly places new items
+- Zero new external dependencies for async scoring operations
 
 ## 4. Technical Approach
 
@@ -97,11 +106,13 @@
 - Constitution-aware scoring algorithms with dependency bonuses and risk-adjusted scoring
 - Cross-role dependency detection (Planner → Coder → Reviewer) with context complexity analysis
 - Real-time n8n integration for auto-scoring refresh
+- Async real-time scoring updates with bounded concurrency (asyncio.Semaphore)
 - Automated migration with constitution-linked metadata preservation
 - Migration validation via ConstitutionCompliance model
 - Performance optimization algorithms
 - Automated organization algorithms
 - Intelligent insertion logic
+- Zero new external dependencies (uses existing asyncio and database infrastructure)
 
 **How does it integrate?**
 - Builds on DSPy 3.0 foundation from B-1006
