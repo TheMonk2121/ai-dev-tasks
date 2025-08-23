@@ -25,8 +25,8 @@
     {"path": "400_guides/400_few-shot-context-examples.md", "role": "few-shot"},
     {"path": "400_guides/400_lean-hybrid-memory-system.md", "role": "memory-system"},
     {"path": "scripts/task_generation_automation.py", "role": "automation"},
-    {"path": "scripts/enhanced_backlog_tracking.py", "role": "automation"},
-    {"path": "400_guides/400_enhanced-backlog-tracking-guide.md", "role": "quick-reference"},
+    {"path": "scripts/backlog_status_tracking.py", "role": "automation"},
+    {"path": "400_guides/400_backlog-status-tracking-guide.md", "role": "quick-reference"},
     {"path": "400_guides/400_task-generation-quick-reference.md", "role": "quick-reference"},
     {"path": "500_research-index.md", "role": "research-index"}
   ]

@@ -14,31 +14,31 @@
 
 ### **Start Work on an Item**
 ```bash
-python3 scripts/enhanced_backlog_tracking.py --start-work B‑052‑d
+python3 scripts/backlog_status_tracking.py --start-work B‑052‑d
 ```
 
 ### **Update Item Status**
 ```bash
-python3 scripts/enhanced_backlog_tracking.py --update-status B‑052‑d in-progress
+python3 scripts/backlog_status_tracking.py --update-status B‑052‑d in-progress
 ```
 
 ### **Check for Stale Items**
 ```bash
 # Check for items in-progress > 7 days (default)
-python3 scripts/enhanced_backlog_tracking.py --check-stale
+python3 scripts/backlog_status_tracking.py --check-stale
 
 # Check for items in-progress > 3 days
-python3 scripts/enhanced_backlog_tracking.py --check-stale --stale-days 3
+python3 scripts/backlog_status_tracking.py --check-stale --stale-days 3
 ```
 
 ### **List All In-Progress Items**
 ```bash
-python3 scripts/enhanced_backlog_tracking.py --list-in-progress
+python3 scripts/backlog_status_tracking.py --list-in-progress
 ```
 
 ### **Get Item Summary**
 ```bash
-python3 scripts/enhanced_backlog_tracking.py --item-summary B‑052‑d
+python3 scripts/backlog_status_tracking.py --item-summary B‑052‑d
 ```
 
 ## 🎯 What This System Provides
@@ -65,7 +65,7 @@ Example: `2025-08-16T08:40:01.163126`
 ### **Starting Work on a New Item**
 ```bash
 # Start work on a backlog item
-python3 scripts/enhanced_backlog_tracking.py --start-work B‑052‑d
+python3 scripts/backlog_status_tracking.py --start-work B‑052‑d
 
 # Output:
 # ✅ Started work on B‑052‑d: CI GitHub Action (Dry-Run Gate)
@@ -75,10 +75,10 @@ python3 scripts/enhanced_backlog_tracking.py --start-work B‑052‑d
 ### **Updating Item Status**
 ```bash
 # Update status to in-progress
-python3 scripts/enhanced_backlog_tracking.py --update-status B‑052‑d in-progress
+python3 scripts/backlog_status_tracking.py --update-status B‑052‑d in-progress
 
 # Update status to done
-python3 scripts/enhanced_backlog_tracking.py --update-status B‑052‑d "✅ done"
+python3 scripts/backlog_status_tracking.py --update-status B‑052‑d "✅ done"
 
 # Output:
 # ✅ Updated B‑052‑d status to 'in-progress'
@@ -88,10 +88,10 @@ python3 scripts/enhanced_backlog_tracking.py --update-status B‑052‑d "✅ do
 ### **Checking for Stale Items**
 ```bash
 # Check for items in-progress > 7 days
-python3 scripts/enhanced_backlog_tracking.py --check-stale
+python3 scripts/backlog_status_tracking.py --check-stale
 
 # Check for items in-progress > 3 days
-python3 scripts/enhanced_backlog_tracking.py --check-stale --stale-days 3
+python3 scripts/backlog_status_tracking.py --check-stale --stale-days 3
 
 # Output:
 # ⚠️  Found 2 stale items (in-progress > 7 days):
@@ -101,7 +101,7 @@ python3 scripts/enhanced_backlog_tracking.py --check-stale --stale-days 3
 
 ### **Listing In-Progress Items**
 ```bash
-python3 scripts/enhanced_backlog_tracking.py --list-in-progress
+python3 scripts/backlog_status_tracking.py --list-in-progress
 
 # Output:
 # 🔄 2 items currently in progress:
@@ -111,7 +111,7 @@ python3 scripts/enhanced_backlog_tracking.py --list-in-progress
 
 ### **Getting Item Summary**
 ```bash
-python3 scripts/enhanced_backlog_tracking.py --item-summary B‑052‑d
+python3 scripts/backlog_status_tracking.py --item-summary B‑052‑d
 
 # Output:
 # 📋 B‑052‑d: CI GitHub Action (Dry-Run Gate)
@@ -127,29 +127,29 @@ python3 scripts/enhanced_backlog_tracking.py --item-summary B‑052‑d
 ### **Daily Standup**
 ```bash
 # Check what's currently in progress
-python3 scripts/enhanced_backlog_tracking.py --list-in-progress
+python3 scripts/backlog_status_tracking.py --list-in-progress
 
 # Check for stale items that need attention
-python3 scripts/enhanced_backlog_tracking.py --check-stale --stale-days 3
+python3 scripts/backlog_status_tracking.py --check-stale --stale-days 3
 ```
 
 ### **Starting New Work**
 ```bash
 # When beginning work on a new item
-python3 scripts/enhanced_backlog_tracking.py --start-work B‑052‑d
+python3 scripts/backlog_status_tracking.py --start-work B‑052‑d
 ```
 
 ### **Updating Progress**
 ```bash
 # When making progress or completing work
-python3 scripts/enhanced_backlog_tracking.py --update-status B‑052‑d in-progress
-python3 scripts/enhanced_backlog_tracking.py --update-status B‑052‑d "✅ done"
+python3 scripts/backlog_status_tracking.py --update-status B‑052‑d in-progress
+python3 scripts/backlog_status_tracking.py --update-status B‑052‑d "✅ done"
 ```
 
 ### **Weekly Review**
 ```bash
 # Check for items that have been in-progress too long
-python3 scripts/enhanced_backlog_tracking.py --check-stale --stale-days 7
+python3 scripts/backlog_status_tracking.py --check-stale --stale-days 7
 ```
 
 ## 🚨 Troubleshooting
@@ -171,7 +171,7 @@ python3 scripts/enhanced_backlog_tracking.py --check-stale --stale-days 7
 ### **Getting Help**
 ```bash
 # Show all available commands
-python3 scripts/enhanced_backlog_tracking.py --help
+python3 scripts/backlog_status_tracking.py --help
 ```
 
 ## 📊 Benefits
@@ -199,7 +199,7 @@ python3 scripts/enhanced_backlog_tracking.py --help
 ## 🔗 Related Files
 
 - **`000_core/000_backlog.md`**: Main backlog file with status tracking
-- **`scripts/enhanced_backlog_tracking.py`**: Core tracking system
+- **`scripts/backlog_status_tracking.py`**: Core tracking system
 - **`400_guides/400_task-generation-quick-reference.md`**: Task generation automation
 - **`000_core/002_generate-tasks.md`**: Task generation workflow
 
@@ -222,4 +222,4 @@ python3 scripts/enhanced_backlog_tracking.py --help
 
 **Last Updated**: 2025-08-16
 **Status**: ✅ **ACTIVE** - Fully implemented and tested
-**Implementation**: `scripts/enhanced_backlog_tracking.py`
+**Implementation**: `scripts/backlog_status_tracking.py`

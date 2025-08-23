@@ -139,7 +139,7 @@ python3 -m pytest ../tests/test_task_generation_automation.py -m integration -v
 - **`tests/test_task_generation_automation.py`**: Comprehensive test suite
 - **`400_guides/400_code-criticality-guide.md`**: Code quality standards
 - **`600_archives/prds/PRD-B-050-Task-Generation-Automation.md`**: Original PRD (archived)
-- **`scripts/enhanced_backlog_tracking.py`**: Enhanced status tracking with timestamps
+- **`scripts/backlog_status_tracking.py`**: Status tracking with timestamps
 
 ## 🚨 Troubleshooting
 

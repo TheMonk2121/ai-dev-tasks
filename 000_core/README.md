@@ -92,7 +92,7 @@ pip install -r dspy-rag-system/requirements.txt
 - **[002_generate-tasks.md](002_generate-tasks.md)** - Generate executable tasks (manual)
 - **[003_process-task-list.md](003_process-task-list.md)** - Execute tasks with AI (manual)
 - **[004_development-roadmap.md](004_development-roadmap.md)** - Strategic roadmap and sprint planning
-- **[scripts/enhanced_backlog_tracking.py](../scripts/enhanced_backlog_tracking.py)** - Enhanced status tracking with timestamps
+- **[scripts/backlog_status_tracking.py](../scripts/backlog_status_tracking.py)** - Status tracking with timestamps
 
 ### **Setup & Configuration**
 - **[../200_setup/202_setup-requirements.md](../200_setup/202_setup-requirements.md)** - Environment setup

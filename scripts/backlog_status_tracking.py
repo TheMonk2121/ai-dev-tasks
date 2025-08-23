@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Enhanced Backlog Status Tracking with Timestamps
+Backlog Status Tracking with Timestamps
 
 This script adds timestamp tracking to backlog items to help identify:
 - When work started on items
@@ -9,9 +9,9 @@ This script adds timestamp tracking to backlog items to help identify:
 - Items that need attention
 
 Usage:
-    python3 scripts/enhanced_backlog_tracking.py --check-stale
-    python3 scripts/enhanced_backlog_tracking.py --start-work B-099
-    python3 scripts/enhanced_backlog_tracking.py --update-status B-099 in-progress
+    python3 scripts/backlog_status_tracking.py --check-stale
+    python3 scripts/backlog_status_tracking.py --start-work B-099
+    python3 scripts/backlog_status_tracking.py --update-status B-099 in-progress
 """
 
 import argparse
@@ -259,7 +259,7 @@ class EnhancedBacklogTracker:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Enhanced Backlog Status Tracking")
+    parser = argparse.ArgumentParser(description="Backlog Status Tracking")
     parser.add_argument("--check-stale", action="store_true", help="Check for stale in-progress items")
     parser.add_argument("--start-work", type=str, metavar="ITEM_ID", help="Start work on a backlog item")
     parser.add_argument(
