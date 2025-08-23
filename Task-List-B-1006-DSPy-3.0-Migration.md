@@ -2,22 +2,23 @@
 
 ## Overview
 
-Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhanced optimization capabilities, and MLflow integration while maintaining all existing advanced custom features. This migration will replace the custom assertion framework with native `dspy.Assert` support, integrate enhanced optimization techniques, and add MLflow experiment tracking. **Schema compatibility confirmed** - existing signatures and field definitions work identically in DSPy 3.0, requiring no schema changes.
+Migrate from DSPy 2.6.27 to DSPy 3.0.1 with constitution-aware testing, GEPA optimizer migration, performance budgets, feature flags, and HITL safety mechanisms. This migration will replace the custom assertion framework with native `dspy.Assert` support, implement constitution-aware regression suite, migrate to GEPA optimizer with performance budgets (latency ≤ +20%, tokens ≤ +25%), add feature flags for gradual rollout, implement HITL fallback for safety, and achieve ≥15% improvement on seeded bugs with 0 dependency violations. **Schema compatibility confirmed** - existing signatures and field definitions work identically in DSPy 3.0, requiring no schema changes.
 
 ## Implementation Phases
 
-### Phase 1: Test Environment Setup
+### Phase 1: Environment & Compatibility
 
-#### Task 1.1: Create DSPy 3.0 Test Environment
+#### Task 1.1: Pin DSPy 3.0.1 and Create Test Environment
 **Priority:** Critical
 **Estimated Time:** 2 hours
 **Dependencies:** None
-**Description:** Set up isolated test environment with DSPy 3.0 for compatibility testing and validation
+**Description:** Pin DSPy 3.0.1 in constraints.txt and set up isolated test environment for compatibility testing and validation
 
 **Acceptance Criteria:**
-- [ ] Isolated Python virtual environment created with DSPy 3.0
+- [ ] DSPy 3.0.1 pinned in constraints.txt
+- [ ] Isolated Python virtual environment created with DSPy 3.0.1
 - [ ] All existing dependencies installed and compatible
-- [ ] Basic DSPy 3.0 functionality validated
+- [ ] Basic DSPy 3.0.1 functionality validated
 - [ ] Test environment documented with setup instructions
 
 **Testing Requirements:**
@@ -46,58 +47,104 @@ Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhan
 - [ ] **Security Reviewed** - Environment isolation verified
 - [ ] **Documentation Updated** - Setup instructions documented
 
-#### Task 1.2: Install and Configure DSPy 3.0
+#### Task 1.2: Run Regression Tests and Establish Baseline Metrics
 **Priority:** Critical
-**Estimated Time:** 1 hour
+**Estimated Time:** 2 hours
 **Dependencies:** Task 1.1
-**Description:** Install DSPy 3.0 and configure basic settings for testing
+**Description:** Run regression tests + lint + doc-coherence validator and establish baseline metrics in eval/baseline.json
 
 **Acceptance Criteria:**
-- [ ] DSPy 3.0 successfully installed in test environment
-- [ ] Basic configuration validated (`dspy.configure()`)
-- [ ] Native assertion features available (`dspy.Assert`, `@dspy.assert_transform_module`)
-- [ ] MLflow integration capabilities verified
+- [ ] Regression tests pass with DSPy 3.0.1
+- [ ] Lint checks pass with no new violations
+- [ ] Doc-coherence validator passes
+- [ ] Baseline metrics established in eval/baseline.json
+- [ ] Performance benchmarks documented for comparison
 
 **Testing Requirements:**
 - [ ] **Unit Tests**
-  - [ ] DSPy 3.0 import and version verification
-  - [ ] Basic configuration tests
-  - [ ] Native assertion feature availability tests
+  - [ ] Regression test suite execution
+  - [ ] Lint validation tests
+  - [ ] Doc-coherence validation tests
 - [ ] **Integration Tests**
-  - [ ] Configuration integration with existing components
+  - [ ] Baseline metrics collection and validation
+  - [ ] Performance benchmark comparison
 - [ ] **Performance Tests**
-  - [ ] Configuration performance impact measurement
+  - [ ] Baseline performance measurement
+  - [ ] Performance regression detection
 - [ ] **Security Tests**
-  - [ ] Configuration security validation
+  - [ ] Security validation in test environment
 - [ ] **Resilience Tests**
-  - [ ] Configuration error handling
+  - [ ] Test environment error handling
 - [ ] **Edge Case Tests**
-  - [ ] Invalid configuration handling
+  - [ ] Edge case handling in baseline metrics
 
-**Implementation Notes:** Test all new DSPy 3.0 features including native assertions, enhanced optimizers, and MLflow integration.
+**Implementation Notes:** Establish comprehensive baseline metrics for performance comparison and ensure all validation checks pass before proceeding with migration.
 
 **Quality Gates:**
-- [ ] **Code Review** - Configuration setup reviewed
-- [ ] **Tests Passing** - All configuration tests pass
-- [ ] **Performance Validated** - Configuration performance acceptable
-- [ ] **Security Reviewed** - Configuration security verified
-- [ ] **Documentation Updated** - Configuration documentation updated
+- [ ] **Code Review** - Baseline metrics and validation setup reviewed
+- [ ] **Tests Passing** - All regression tests, lint, and doc-coherence tests pass
+- [ ] **Performance Validated** - Baseline performance metrics established
+- [ ] **Security Reviewed** - Test environment security verified
+- [ ] **Documentation Updated** - Baseline metrics and validation documentation updated
 
-### Phase 2: Compatibility Testing
+---
 
-#### Task 2.1: Test Existing DSPy Modules Compatibility
+#### Task 1.3: Integrate Constitution-Aware Testing with Existing Test Infrastructure
+**Priority:** Critical
+**Estimated Time:** 2 hours
+**Dependencies:** Task 1.2
+**Description:** Integrate constitution-aware testing with existing test infrastructure and implement constitution compliance validation.
+
+**Acceptance Criteria:**
+- [ ] Constitution-aware testing integrated with existing test infrastructure
+- [ ] Constitution compliance validation operational
+- [ ] Existing test suites enhanced with constitution-aware checks
+- [ ] Constitution test suite green with all articles validated
+- [ ] Performance impact minimal (<5% overhead)
+
+**Testing Requirements:**
+- [ ] **Unit Tests**
+  - [ ] Constitution-aware test integration validation
+  - [ ] Constitution compliance validation tests
+  - [ ] Existing test suite enhancement validation
+- [ ] **Integration Tests**
+  - [ ] Constitution testing integration with existing infrastructure
+  - [ ] Constitution compliance validation integration
+- [ ] **Performance Tests**
+  - [ ] Constitution testing performance impact measurement
+  - [ ] Performance overhead validation (<5%)
+- [ ] **Security Tests**
+  - [ ] Constitution testing security validation
+- [ ] **Resilience Tests**
+  - [ ] Constitution testing error handling
+- [ ] **Edge Case Tests**
+  - [ ] Constitution testing edge case handling
+
+**Implementation Notes:** Integrate constitution-aware testing with existing test infrastructure rather than creating separate systems. Enhance existing test suites with constitution compliance validation.
+
+**Quality Gates:**
+- [ ] **Code Review** - Constitution testing integration reviewed
+- [ ] **Tests Passing** - All constitution tests pass with existing infrastructure
+- [ ] **Performance Validated** - Constitution testing overhead <5%
+- [ ] **Security Reviewed** - Constitution testing security verified
+- [ ] **Documentation Updated** - Constitution testing integration documented
+
+### Phase 2: Assertion Migration
+
+#### Task 2.1: Replace Custom Validators with DSPy 3.0 Assertions
 **Priority:** Critical
 **Estimated Time:** 3 hours
 **Dependencies:** Task 1.2
-**Description:** Test all existing DSPy modules and components with DSPy 3.0 to identify compatibility issues
+**Description:** Replace custom assertion framework with native DSPy 3.0 assertions and test compatibility
 
 **Acceptance Criteria:**
+- [ ] Custom assertion framework successfully replaced with native DSPy 3.0 assertions
 - [ ] All existing DSPy modules import successfully with DSPy 3.0
 - [ ] **Schema compatibility confirmed** - existing signatures work identically
-- [ ] ModelSwitcher functionality validated
-- [ ] Optimization loop components tested
+- [ ] ModelSwitcher functionality validated with native assertions
+- [ ] Optimization loop components tested with native assertions
 - [ ] Metrics dashboard compatibility verified
-- [ ] Role refinement system tested
+- [ ] Role refinement system tested with native assertions
 - [ ] System integration components validated
 
 **Testing Requirements:**
@@ -172,63 +219,106 @@ Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhan
 - [ ] **Security Reviewed** - Performance security implications assessed
 - [ ] **Documentation Updated** - Performance benchmarks documented
 
-### Phase 3: Native Feature Integration
+### Phase 3: Optimizer Refit
 
-#### Task 3.1: Replace Custom Assertion Framework
+#### Task 3.1: Migrate Coder/Planner Pipelines to GEPA
 **Priority:** Critical
 **Estimated Time:** 4 hours
 **Dependencies:** Task 2.2
-**Description:** Replace custom assertion framework with native DSPy 3.0 assertion support (`dspy.Assert`, `@dspy.assert_transform_module`)
+**Description:** Migrate Coder/Planner pipelines to GEPA optimizer with performance budgets (latency ≤ +20%, tokens ≤ +25%)
 
 **Acceptance Criteria:**
-- [ ] Custom assertion framework identified and documented
-- [ ] Native DSPy 3.0 assertions implemented
-- [ ] All existing assertion functionality preserved
-- [ ] Performance improvement achieved
-- [ ] Code complexity reduced by 30%
+- [ ] Coder pipeline successfully migrated to GEPA optimizer
+- [ ] Planner pipeline successfully migrated to GEPA optimizer
+- [ ] Performance budgets enforced (latency ≤ +20%, tokens ≤ +25%)
+- [ ] GEPA optimizer configuration optimized for each role
+- [ ] Performance improvement achieved within budget constraints
+- [ ] Optimizer_budget.yaml caps per role implemented
 
 **Testing Requirements:**
 - [ ] **Unit Tests**
-  - [ ] Native assertion functionality tests
-  - [ ] Assertion validation tests
-  - [ ] Error handling tests
+  - [ ] GEPA optimizer functionality tests
+  - [ ] Performance budget validation tests
+  - [ ] Role-specific optimization tests
 - [ ] **Integration Tests**
-  - [ ] Assertion integration with existing modules
-  - [ ] End-to-end assertion workflow tests
+  - [ ] GEPA integration with existing pipelines
+  - [ ] End-to-end optimization workflow tests
 - [ ] **Performance Tests**
-  - [ ] Assertion performance benchmarks
-  - [ ] Memory usage comparison
+  - [ ] GEPA performance benchmarks
+  - [ ] Budget constraint validation
 - [ ] **Security Tests**
-  - [ ] Assertion security validation
-  - [ ] Input sanitization tests
+  - [ ] GEPA optimizer security validation
+  - [ ] Budget enforcement security
 - [ ] **Resilience Tests**
-  - [ ] Assertion failure handling
-  - [ ] Recovery procedures
+  - [ ] GEPA failure handling
+  - [ ] Budget overflow recovery procedures
 - [ ] **Edge Case Tests**
-  - [ ] Complex assertion scenarios
-  - [ ] Boundary condition testing
+  - [ ] Complex optimization scenarios
+  - [ ] Budget boundary condition testing
 
-**Implementation Notes:** Gradually replace custom assertions while maintaining backward compatibility. Keep custom framework as fallback during transition.
+**Implementation Notes:** Migrate to GEPA optimizer with strict performance budgets, ensuring latency and token constraints are enforced while maintaining optimization effectiveness.
 
 **Quality Gates:**
-- [ ] **Code Review** - All assertion code reviewed
-- [ ] **Tests Passing** - All assertion tests pass
-- [ ] **Performance Validated** - Performance improvement achieved
-- [ ] **Security Reviewed** - Assertion security verified
-- [ ] **Documentation Updated** - Assertion documentation updated
+- [ ] **Code Review** - All GEPA optimizer code reviewed
+- [ ] **Tests Passing** - All GEPA optimization tests pass
+- [ ] **Performance Validated** - Performance budgets met and improvement achieved
+- [ ] **Security Reviewed** - GEPA optimizer security verified
+- [ ] **Documentation Updated** - GEPA optimization documentation updated
 
-#### Task 3.2: Integrate Enhanced Optimization Capabilities
-**Priority:** High
-**Estimated Time:** 3 hours
-**Dependencies:** Task 3.1
-**Description:** Integrate new DSPy 3.0 optimization capabilities with existing custom optimizers
+---
+
+#### Task 3.3: Implement Optimizer Budget Enforcement with Constitution Compliance
+**Priority:** Critical
+**Estimated Time:** 2 hours
+**Dependencies:** Task 3.2
+**Description:** Implement optimizer budget enforcement with constitution compliance validation and ensure constitution-aware budget monitoring.
 
 **Acceptance Criteria:**
-- [ ] New DSPy 3.0 optimizers identified and tested
-- [ ] Enhanced optimization capabilities integrated
-- [ ] Performance improvement of 15-25% achieved
-- [ ] Existing optimization workflows preserved
-- [ ] Optimization documentation updated
+- [ ] Optimizer budget enforcement with constitution compliance validation operational
+- [ ] Constitution-aware budget monitoring implemented
+- [ ] Budget violations trigger constitution compliance checks
+- [ ] Constitution compliance validation integrated with budget enforcement
+- [ ] Performance impact minimal (<5% overhead)
+
+**Testing Requirements:**
+- [ ] **Unit Tests**
+  - [ ] Budget enforcement with constitution compliance validation tests
+  - [ ] Constitution-aware budget monitoring tests
+  - [ ] Budget violation constitution compliance tests
+- [ ] **Integration Tests**
+  - [ ] Budget enforcement integration with constitution compliance
+  - [ ] Constitution compliance validation integration
+- [ ] **Performance Tests**
+  - [ ] Budget enforcement performance impact measurement
+  - [ ] Constitution compliance validation performance impact
+- [ ] **Security Tests**
+  - [ ] Budget enforcement security validation
+- [ ] **Resilience Tests**
+  - [ ] Budget enforcement error handling
+- [ ] **Edge Case Tests**
+  - [ ] Budget enforcement edge case handling
+
+**Implementation Notes:** Implement optimizer budget enforcement with constitution compliance validation, ensuring budget violations trigger constitution compliance checks while maintaining performance.
+
+**Quality Gates:**
+- [ ] **Code Review** - Budget enforcement with constitution compliance reviewed
+- [ ] **Tests Passing** - All budget enforcement tests pass
+- [ ] **Performance Validated** - Budget enforcement overhead <5%
+- [ ] **Security Reviewed** - Budget enforcement security verified
+- [ ] **Documentation Updated** - Budget enforcement documentation updated
+
+#### Task 3.2: Add Optimizer Budget Configuration
+**Priority:** High
+**Estimated Time:** 2 hours
+**Dependencies:** Task 3.1
+**Description:** Add optimizer_budget.yaml caps per role and configure performance monitoring
+
+**Acceptance Criteria:**
+- [ ] optimizer_budget.yaml configuration file created
+- [ ] Role-specific budget caps implemented (Coder, Planner)
+- [ ] Performance monitoring and enforcement mechanisms in place
+- [ ] Budget violation detection and alerting configured
+- [ ] Budget configuration documentation updated
 
 **Testing Requirements:**
 - [ ] **Unit Tests**
@@ -259,19 +349,19 @@ Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhan
 - [ ] **Security Reviewed** - Optimization security verified
 - [ ] **Documentation Updated** - Optimization documentation updated
 
-### Phase 4: MLflow Integration
+### Phase 4: Observability
 
-#### Task 4.1: Set Up MLflow Integration
+#### Task 4.1: Set Up MLflow Integration for Optimizer Runs
 **Priority:** High
 **Estimated Time:** 2 hours
 **Dependencies:** Task 3.2
-**Description:** Set up MLflow integration for experiment tracking and model management
+**Description:** Set up MLflow integration for optimizer runs and experiment tracking
 
 **Acceptance Criteria:**
 - [ ] MLflow server configured and running
-- [ ] DSPy 3.0 MLflow integration configured
-- [ ] Basic experiment tracking functional
-- [ ] Model versioning capabilities verified
+- [ ] DSPy 3.0 MLflow integration configured for optimizer runs
+- [ ] Optimizer experiment tracking functional
+- [ ] Performance metrics logging configured
 - [ ] MLflow documentation created
 
 **Testing Requirements:**
@@ -304,18 +394,18 @@ Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhan
 - [ ] **Security Reviewed** - MLflow security verified
 - [ ] **Documentation Updated** - MLflow documentation created
 
-#### Task 4.2: Implement Experiment Tracking
+#### Task 4.2: Capture CoT/ReAct Traces and Artifact Diffs
 **Priority:** High
 **Estimated Time:** 2 hours
 **Dependencies:** Task 4.1
-**Description:** Implement comprehensive experiment tracking for all DSPy operations
+**Description:** Capture CoT/ReAct traces and artifact diffs in eval_report.json for comprehensive observability
 
 **Acceptance Criteria:**
-- [ ] All DSPy operations tracked in MLflow
-- [ ] Experiment metadata captured and stored
-- [ ] Model performance metrics tracked
-- [ ] Experiment comparison capabilities functional
-- [ ] Experiment visualization working
+- [ ] CoT/ReAct traces captured and stored in eval_report.json
+- [ ] Artifact diffs tracked and documented
+- [ ] Trace analysis capabilities functional
+- [ ] Performance impact of tracing measured
+- [ ] Trace visualization and analysis tools working
 
 **Testing Requirements:**
 - [ ] **Unit Tests**
@@ -347,20 +437,20 @@ Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhan
 - [ ] **Security Reviewed** - Tracking security verified
 - [ ] **Documentation Updated** - Tracking documentation updated
 
-### Phase 5: Production Deployment
+### Phase 5: Rollout & Safety
 
-#### Task 5.1: Gradual Production Rollout
+#### Task 5.1: Implement Feature Flags and HITL Fallback
 **Priority:** Critical
 **Estimated Time:** 2 hours
 **Dependencies:** Task 4.2
-**Description:** Deploy DSPy 3.0 migration to production with gradual rollout and monitoring
+**Description:** Implement feature flags (OPTIMIZE_PLANNER, OPTIMIZE_CODER) and HITL fallback for <threshold scores
 
 **Acceptance Criteria:**
-- [ ] Production environment updated with DSPy 3.0
-- [ ] All existing functionality working correctly
-- [ ] Performance monitoring active
-- [ ] Rollback procedures tested and ready
-- [ ] Production deployment documented
+- [ ] Feature flags (OPTIMIZE_PLANNER, OPTIMIZE_CODER) implemented and functional
+- [ ] HITL fallback mechanism operational for <threshold scores
+- [ ] Feature flag configuration documented and tested
+- [ ] HITL fallback triggers and procedures validated
+- [ ] Safety mechanisms tested and verified
 
 **Testing Requirements:**
 - [ ] **Unit Tests**
@@ -391,16 +481,18 @@ Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhan
 - [ ] **Security Reviewed** - Production security verified
 - [ ] **Documentation Updated** - Production documentation updated
 
-#### Task 5.2: Post-Deployment Validation
+#### Task 5.2: Gradual Production Rollout
 **Priority:** High
 **Estimated Time:** 1 hour
 **Dependencies:** Task 5.1
-**Description:** Validate all functionality after production deployment and monitor system stability
+**Description:** Deploy DSPy 3.0 migration to production with gradual rollout using feature flags and monitoring
 
 **Acceptance Criteria:**
-- [ ] All system functionality validated in production
-- [ ] Performance metrics within acceptable ranges
-- [ ] Error rates within acceptable thresholds
+- [ ] Production environment updated with DSPy 3.0
+- [ ] Feature flags enable gradual rollout
+- [ ] All existing functionality working correctly
+- [ ] Performance monitoring active
+- [ ] Rollback procedures tested and ready
 - [ ] Monitoring and alerting functional
 - [ ] Post-deployment report completed
 
@@ -432,6 +524,21 @@ Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhan
 - [ ] **Performance Validated** - Production performance validated
 - [ ] **Security Reviewed** - Production security validated
 - [ ] **Documentation Updated** - Post-deployment documentation updated
+
+## Exit Criteria
+
+**How do we know the migration is successful?**
+
+- **Parity baseline → improved success ≥15% on seeded bugs** - Performance improvement target achieved
+- **0 dependency violations in Planner** - Quality gate for dependency management
+- **Constitution test suite green** - All constitution articles validated and passing
+- **Tier 1 modules stable post-migration** - Core system stability confirmed
+- **GEPA optimizer operating within performance budgets** - Latency ≤ +20%, tokens ≤ +25%
+- **Feature flags functional for gradual rollout** - OPTIMIZE_PLANNER, OPTIMIZE_CODER operational
+- **HITL fallback operational for <threshold scores** - Safety mechanism functional
+- **MLflow integration providing comprehensive tracking** - CoT/ReAct traces and artifact diffs captured
+- **All existing tests pass with DSPy 3.0** - Backward compatibility confirmed
+- **Performance monitoring and alerting functional** - Observability requirements met
 
 ## Quality Metrics
 

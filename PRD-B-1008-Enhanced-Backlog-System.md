@@ -1,4 +1,4 @@
-# Product Requirements Document: B-1008 Enhanced Backlog System with DSPy 3.0 and Pydantic Integration
+# Product Requirements Document: B-1008 Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates
 
 <!-- Backlog ID: B-1008 -->
 <!-- Status: todo -->
@@ -10,94 +10,106 @@
 
 ## 1. Problem Statement
 
-**What's broken?** The current backlog system doesn't leverage the sophisticated DSPy 3.0 native assertions or Pydantic type validation capabilities that will be available after B-1006 and B-1007 completion. The backlog scoring is static and doesn't account for dependency chains, risk factors, framework migration value, automated context complexity analysis, and lacks automated organization logic for item placement.
+**What's broken?** The current backlog system doesn't leverage constitution-aware scoring, cross-role dependency detection, real-time updates, automated migration with metadata preservation, and specific performance targets. The backlog scoring is static and doesn't account for constitution article weighting, cross-role dependencies (Planner → Coder → Reviewer), real-time n8n integration, and lacks automated migration with 100% metadata preservation.
 
 **Why does it matter?** Without enhanced backlog capabilities, the system misses opportunities to:
-- Prioritize dependency chains that unlock high-value work (like B-1006 → B-1007)
-- Account for risk-adjusted scoring when compatibility is confirmed
-- Capture framework migration strategic value
-- Automate context complexity analysis for better task sizing
-- Integrate with the memory rehydration system for context-aware prioritization
+- Weight items by constitution articles (workflow chain, context preservation)
+- Detect cross-role dependencies (Planner → Coder → Reviewer)
+- Integrate real-time updates with n8n scrubber for auto-scoring refresh
+- Preserve 100% of constitution-linked metadata during migration
+- Validate migration outputs via ConstitutionCompliance model
+- Achieve <5% performance overhead on real-time scoring updates
 - Automatically organize and place new backlog items in the correct position
 - Eliminate manual placement decisions and reduce cognitive overhead
 
-**What's the opportunity?** By leveraging DSPy 3.0 and Pydantic capabilities, we can create an intelligent backlog system that:
-- Automatically calculates dependency chain value bonuses
-- Applies risk multipliers for confirmed compatibility
-- Captures framework migration strategic importance
-- Provides automated context complexity analysis
-- Integrates with memory rehydration for context-aware scoring
+**What's the opportunity?** By leveraging constitution-aware scoring and real-time updates, we can create an intelligent backlog system that:
+- Automatically calculates dependency bonuses and risk-adjusted scoring
+- Weights items by constitution articles (workflow chain, context preservation)
+- Detects cross-role dependencies (Planner → Coder → Reviewer)
+- Integrates real-time updates with n8n scrubber for auto-scoring refresh
+- Preserves 100% of constitution-linked metadata during migration
+- Validates migration outputs via ConstitutionCompliance model
+- Achieves <5% performance overhead on real-time scoring updates
 - Automatically organizes and places new items using intelligent insertion logic
 - Maintains consistent ordering based on ID, priority, score, and dependencies
 
 ## 2. Solution Overview
 
-**What are we building?** An enhanced backlog system that leverages DSPy 3.0 native assertions and Pydantic type validation to provide intelligent scoring, automated dependency analysis, risk-adjusted prioritization, and context-aware task generation.
+**What are we building?** An enhanced backlog system that leverages constitution-aware scoring, cross-role dependency detection, real-time n8n integration, and automated migration with 100% metadata preservation to provide intelligent scoring, automated dependency analysis, risk-adjusted prioritization, and context-aware task generation.
 
 **How does it work?** The enhanced system will:
-1. **Dependency Chain Analysis**: Use DSPy 3.0 assertions to validate dependency relationships and calculate chain value bonuses
-2. **Risk-Adjusted Scoring**: Apply Pydantic validation to assess risk factors and adjust scores accordingly
-3. **Framework Migration Recognition**: Automatically identify and weight strategic framework upgrades
-4. **Context Complexity Analysis**: Use memory rehydration integration to assess context complexity
-5. **Automated Scoring Updates**: Continuously update scores based on changing dependencies and context
+1. **Constitution-Aware Scoring**: Weight items by constitution articles (workflow chain, context preservation) and add dependency bonuses
+2. **Cross-Role Dependency Detection**: Detect dependencies across roles (Planner → Coder → Reviewer) and apply risk-adjusted scoring
+3. **Real-time Updates**: Integrate with n8n scrubber for auto-scoring refresh and continuous updates
+4. **Automated Migration**: Migrate backlog items with preserved constitution-linked metadata (dependencies, complexity, risks)
+5. **Migration Validation**: Validate migration outputs via ConstitutionCompliance model with 100% metadata preservation
 
 **What are the key features?**
-- Enhanced scoring formula with dependency chain bonuses
-- Risk-adjusted scoring with Pydantic validation
-- Framework migration value recognition
-- Automated context complexity analysis
-- Memory rehydration integration
-- Real-time scoring updates
+- Constitution-aware scoring formula with dependency bonuses and risk-adjusted scoring
+- Cross-role dependency detection (Planner → Coder → Reviewer) with context complexity analysis
+- Real-time updates with n8n scrubber integration for auto-scoring refresh
+- Automated migration with constitution-linked metadata preservation (dependencies, complexity, risks)
+- Migration validation via ConstitutionCompliance model with 100% metadata preservation
+- Performance optimization with <5% overhead on real-time scoring updates
+- Constitution-aligned scoring integration with existing backlog infrastructure
 - Automated backlog organization and item placement
 - Intelligent insertion logic based on ID, priority, and dependencies
 
 ## 3. Acceptance Criteria
 
 **How do we know it's done?**
-- Enhanced scoring formula implemented with dependency chain bonuses
-- Risk-adjusted scoring system operational with Pydantic validation
-- Framework migration recognition working for strategic upgrades
-- Automated context complexity analysis integrated
-- Memory rehydration system integration complete
+- Constitution-aware scoring formula implemented with dependency bonuses and risk-adjusted scoring
+- Cross-role dependency detection operational (Planner → Coder → Reviewer) with context complexity analysis
+- Real-time updates integrated with n8n scrubber for auto-scoring refresh
+- Automated migration system operational with constitution-linked metadata preservation
+- Migration validation via ConstitutionCompliance model with 100% metadata preservation
+- Performance targets achieved with <5% overhead on real-time scoring updates
 - Automated backlog organization system operational
 - All existing backlog items updated with enhanced scoring
 - New items automatically placed in correct position
 
 **What does success look like?**
-- B-1006 gets higher priority due to low risk (confirmed compatibility) and chain value (unlocks B-1007)
-- Dependency chains are automatically identified and weighted
-- Context complexity is automatically assessed for task sizing
-- Risk factors are validated using Pydantic type checking
-- Memory rehydration integration provides context-aware prioritization
+- Items are weighted by constitution articles (workflow chain, context preservation) with higher priority
+- Cross-role dependencies (Planner → Coder → Reviewer) are automatically detected and weighted
+- Real-time updates via n8n scrubber provide auto-scoring refresh
+- Migration preserves 100% of constitution-linked metadata (dependencies, complexity, risks)
+- Migration outputs are validated via ConstitutionCompliance model
+- Constitution-aligned scoring integrated with existing backlog infrastructure
+- Performance targets are achieved with <5% overhead on real-time scoring updates
 - New backlog items are automatically placed in the correct position
 - Manual placement decisions are eliminated
 - Consistent ordering is maintained across all backlog items
 
 **What are the quality gates?**
 - All existing backlog items maintain their current priority order
-- Enhanced scoring provides measurable improvements in prioritization
-- Dependency chain analysis correctly identifies B-1006 → B-1007 relationship
-- Risk-adjusted scoring correctly identifies low-risk migrations
+- Constitution-aware scoring provides measurable improvements in prioritization
+- Cross-role dependency detection correctly identifies Planner → Coder → Reviewer relationships
+- Real-time updates via n8n scrubber provide auto-scoring refresh
+- Migration preserves 100% of constitution-linked metadata
+- Migration outputs are validated via ConstitutionCompliance model
+- Constitution-aligned scoring integrated with existing backlog infrastructure
+- Performance targets are achieved with <5% overhead on real-time scoring updates
 - Automated organization correctly places new items
-- Performance impact is minimal (<5% overhead)
 
 ## 4. Technical Approach
 
 **What technology?**
-- DSPy 3.0 native assertions for dependency validation
-- Pydantic type validation for risk assessment
-- Memory rehydration system integration
-- Enhanced scoring algorithms
-- Automated context analysis
+- Constitution-aware scoring algorithms with dependency bonuses and risk-adjusted scoring
+- Cross-role dependency detection (Planner → Coder → Reviewer) with context complexity analysis
+- Real-time n8n integration for auto-scoring refresh
+- Automated migration with constitution-linked metadata preservation
+- Migration validation via ConstitutionCompliance model
+- Performance optimization algorithms
 - Automated organization algorithms
 - Intelligent insertion logic
 
 **How does it integrate?**
 - Builds on DSPy 3.0 foundation from B-1006
 - Leverages Pydantic capabilities from B-1007
-- Integrates with existing memory rehydration system
+- Integrates with existing n8n scrubber system for real-time updates
 - Maintains backward compatibility with current backlog format
-- Extends existing scoring metadata structure
+- Extends existing scoring metadata structure with constitution-linked metadata
+- Preserves 100% of metadata during migration
 
 **What are the constraints?**
 - Must maintain backward compatibility with existing backlog items

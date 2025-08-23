@@ -360,41 +360,41 @@ Coherence Validation System |
 <!-- problem: Only 27 of 52 core documentation files are in the memory rehydrator database, limiting AI context retrieval and system effectiveness -->
 <!-- outcome: Complete memory rehydrator coverage with all core documentation files properly chunked and indexed for optimal AI context retrieval -->
 
-| B‑1006 | DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization | 🔥 | 5 | todo | Migrate from DSPy 2.6.27 to DSPy 3.0 to leverage native assertion support, enhanced optimization capabilities, and MLflow integration. Schema updates minimal - existing signatures and field definitions are fully compatible | DSPy 3.0 + Migration + Native Assertions + Enhanced Optimization + MLflow Integration + Minimal Schema Changes | B-1003 DSPy Multi-Agent System Implementation |
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:5, lessons:4, deps:["B-1003"]}-->
-<!--score_total: 6.0-->
-<!-- do_next: Create test environment with DSPy 3.0, validate compatibility, and plan migration strategy -->
-<!-- est_hours: 8 -->
-<!-- acceptance: System successfully migrates to DSPy 3.0 with native assertion support, enhanced optimization, and MLflow integration while preserving all existing custom features. No schema changes required - existing signatures work identically -->
+| B‑1006 | DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization | 🔥 | 7 | todo | Migrate from DSPy 2.6.27 to DSPy 3.0 with constitution-aware testing, GEPA optimizer migration, performance budgets, feature flags, and HITL safety mechanisms. Pin DSPy 3.0.1, establish baselines, and achieve ≥15% improvement on seeded bugs with 0 dependency violations | DSPy 3.0 + Migration + Native Assertions + GEPA Optimization + Constitution Testing + Performance Budgets + Feature Flags + HITL Safety + MLflow Integration | B-1003 DSPy Multi-Agent System Implementation |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1003"]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Pin DSPy 3.0.1 in constraints.txt, create test environment with baseline metrics, implement constitution-aware regression suite, and add optimizer budget enforcement -->
+<!-- est_hours: 14 -->
+<!-- acceptance: System migrates to DSPy 3.0 with ≥15% improvement on seeded bugs, 0 dependency violations, constitution test suite green, GEPA optimizer with performance budgets (latency ≤ +20%, tokens ≤ +25%), feature flags for gradual rollout, HITL fallback for safety, and constitution-aware testing integrated with existing test infrastructure -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#dspy-migration", "400_guides/400_migration-upgrade-guide.md#framework-upgrades"] -->
 <!-- reference_cards: ["500_reference-cards.md#dspy-3.0", "500_reference-cards.md#migration-strategies"] -->
-<!-- tech_footprint: DSPy 3.0 + Migration + Native Assertions + Enhanced Optimization + MLflow Integration + Compatibility Testing + Schema Compatibility -->
-<!-- problem: Current system uses DSPy 2.6.27 with custom assertion framework and optimization components; missing native DSPy 3.0 features like dspy.Assert, enhanced optimizers, and MLflow integration. Schema compatibility confirmed - no changes needed -->
-<!-- outcome: Production-ready DSPy 3.0 system with native assertion support, enhanced optimization capabilities, and MLflow integration while maintaining all existing advanced custom features and schema compatibility -->
+<!-- tech_footprint: DSPy 3.0 + Migration + Native Assertions + GEPA Optimization + Constitution Testing + Performance Budgets + Feature Flags + HITL Safety + MLflow Integration + Baseline Metrics + CoT/ReAct Traces -->
+<!-- problem: Current system uses DSPy 2.6.27 with custom assertion framework; missing native DSPy 3.0 features, constitution-aware testing, GEPA optimizer migration, performance budgets, and safety mechanisms for production deployment -->
+<!-- outcome: Production-ready DSPy 3.0 system with constitution-aware testing, GEPA optimization with performance budgets, feature flags for gradual rollout, HITL safety mechanisms, and ≥15% improvement on seeded bugs with 0 dependency violations -->
 
-- B‑1007 — Pydantic AI Style Enhancements: Dependency Injection and Dynamic Context (score 6.5)
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1006"]}-->
-<!--score_total: 6.5-->
-<!-- do_next: Implement Pydantic-style dependency injection framework and dynamic context system for enhanced type safety and user experience -->
-<!-- est_hours: 12 -->
-<!-- acceptance: System includes type-safe dependency injection, dynamic context management, enhanced tool framework, and improved observability with 50% fewer runtime errors and 30% faster debugging -->
+- B‑1007 — Pydantic AI Style Enhancements: Constitution-Aware Type Safety and Error Taxonomy (score 7.5)
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1006"]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Implement role-based context models (PlannerContext, CoderContext, ResearchContext), constitution schema enforcement, error taxonomy, typed debug logs, and constitution-aware validation with 95% validation and 50% error reduction -->
+<!-- est_hours: 16 -->
+<!-- acceptance: System includes constitution-aware Pydantic models, 95%+ role output validation, 50% runtime error reduction, constitution invariants enforced via type system, typed debug logs with context schema, and constitution-aware validation integrated with existing Pydantic infrastructure -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#type-safety", "400_guides/400_comprehensive-coding-best-practices.md#validation"] -->
 <!-- reference_cards: ["500_reference-cards.md#pydantic", "500_reference-cards.md#dependency-injection"] -->
-<!-- tech_footprint: Pydantic + Dependency Injection + Dynamic Context + Type Safety + Enhanced Tools + Observability + MLflow Integration -->
-<!-- problem: Current DSPy system lacks modern type safety patterns, dynamic context management, and enhanced tool integration that would significantly improve reliability, debugging, and user experience -->
-<!-- outcome: Enterprise-grade DSPy system with Pydantic-style validation, dynamic context injection, context-aware tools, and comprehensive observability for predictable reliability and enhanced user experience -->
+<!-- tech_footprint: Pydantic + Constitution Schema + Error Taxonomy + Role Context Models + Type Safety + Dynamic Prompts + Typed Debug Logs + MLflow Integration -->
+<!-- problem: Current DSPy system lacks constitution-aware type safety, role-based context models, structured error taxonomy, and typed debug logs that would significantly improve reliability, debugging, and constitution compliance -->
+<!-- outcome: Enterprise-grade DSPy system with constitution-aware Pydantic validation, role-based context models, structured error taxonomy, and comprehensive observability for predictable reliability and constitution compliance -->
 
-| B‑1008 | Enhanced Backlog System with DSPy 3.0 and Pydantic Integration | 🔥 | 7 | todo | Update backlog system to leverage DSPy 3.0 native assertions and Pydantic type validation for improved scoring, prioritization, automated context analysis, and intelligent backlog organization | Backlog Enhancement + DSPy 3.0 + Pydantic + Automated Scoring + Context Analysis + Automated Organization | B-1006 DSPy 3.0 Migration, B-1007 Pydantic AI Style Enhancements |
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:7, lessons:4, deps:["B-1006", "B-1007"]}-->
-<!--score_total: 6.2-->
-<!-- do_next: Design enhanced backlog system with automated organization logic, intelligent scoring, and context-aware prioritization using DSPy 3.0 and Pydantic -->
-<!-- est_hours: 10 -->
-<!-- acceptance: Backlog system includes automated organization, enhanced scoring with dependency chains, risk-adjusted prioritization, framework migration value, and automated context analysis using DSPy 3.0 and Pydantic -->
+| B‑1008 | Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates | 🔥 | 8 | todo | Implement constitution-aware backlog system with dependency bonuses, cross-role analysis, real-time n8n integration, automated migration with 100% metadata preservation, and constitution-aligned scoring | Backlog Enhancement + Constitution Scoring + Cross-Role Dependencies + Real-time Updates + Migration Automation + Metadata Preservation + Constitution Alignment | B-1006 DSPy 3.0 Migration, B-1007 Pydantic AI Style Enhancements |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1006", "B-1007"]}-->
+<!--score_total: 7.0-->
+<!-- do_next: Implement constitution-aware scoring formula with dependency bonuses, cross-role dependency detection, real-time n8n integration, automated migration with validation, and constitution-aligned scoring integration -->
+<!-- est_hours: 13 -->
+<!-- acceptance: Backlog system includes constitution-aware scoring, cross-role dependencies, real-time updates, automated migration with 100% metadata preservation, <5% performance overhead, and constitution-aligned scoring integrated with existing backlog infrastructure -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#backlog-enhancement", "400_guides/400_comprehensive-coding-best-practices.md#type-safety"] -->
 <!-- reference_cards: ["500_reference-cards.md#backlog-management", "500_reference-cards.md#dspy-3.0", "500_reference-cards.md#pydantic"] -->
-<!-- tech_footprint: Backlog Enhancement + DSPy 3.0 + Pydantic + Automated Scoring + Context Analysis + Memory Rehydration Integration + Automated Organization -->
-<!-- problem: Current backlog system doesn't leverage DSPy 3.0 native assertions or Pydantic type validation for enhanced scoring, dependency chain analysis, risk assessment, automated context complexity analysis, and lacks automated organization logic for item placement -->
-<!-- outcome: Enhanced backlog system with intelligent scoring, automated dependency analysis, risk-adjusted prioritization, context-aware task generation, and automated organization using DSPy 3.0 and Pydantic capabilities -->
+<!-- tech_footprint: Backlog Enhancement + Constitution Scoring + Cross-Role Dependencies + Real-time Updates + n8n Integration + Migration Automation + Metadata Preservation + Performance Optimization -->
+<!-- problem: Current backlog system lacks constitution-aware scoring, cross-role dependency detection, real-time updates, automated migration with metadata preservation, and specific performance targets -->
+<!-- outcome: Enhanced backlog system with constitution-aware scoring, cross-role dependencies, real-time n8n integration, automated migration with 100% metadata preservation, and <5% performance overhead -->
 
 | B‑076 | Research-Based DSPy Assertions Implementation | 📈 | 4 | todo | Implement DSPy assertions based on research findings | DSPy + assertions + research integration | DSPy framework |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:4, lessons:3, deps:[]}-->

@@ -5,15 +5,18 @@
 
 ## 1. Problem Statement
 
-**What's broken?** The current system uses DSPy 2.6.27 with a sophisticated custom assertion framework and optimization components. While this implementation is advanced, it's missing native DSPy 3.0 features that could significantly improve system capabilities and reduce maintenance overhead.
+**What's broken?** The current system uses DSPy 2.6.27 with a sophisticated custom assertion framework and optimization components. While this implementation is advanced, it's missing native DSPy 3.0 features, constitution-aware testing, GEPA optimizer migration, performance budgets, and safety mechanisms needed for production deployment.
 
-**Why does it matter?** DSPy 3.0 introduces native assertion support (`dspy.Assert`, `@dspy.assert_transform_module`), enhanced optimization capabilities, MLflow integration, and improved fine-tuning support. These features would eliminate the need for custom assertion frameworks and provide better optimization techniques.
+**Why does it matter?** DSPy 3.0 introduces native assertion support (`dspy.Assert`, `@dspy.assert_transform_module`), enhanced optimization capabilities, MLflow integration, and improved fine-tuning support. Additionally, we need constitution-aware testing, GEPA optimizer migration with performance budgets, feature flags for gradual rollout, and HITL safety mechanisms for production readiness.
 
-**What's the opportunity?** By migrating to DSPy 3.0, we can:
+**What's the opportunity?** By migrating to DSPy 3.0 with enhanced requirements, we can:
 - Replace custom assertion framework with native `dspy.Assert` support
-- Leverage enhanced optimization capabilities for better performance
-- Integrate MLflow for improved experiment tracking and model management
-- Access new reinforcement learning and fine-tuning features
+- Implement constitution-aware regression suite with context preservation, workflow chain, and error recovery checks
+- Migrate Coder/Planner pipelines to GEPA with performance budgets (latency ≤ +20%, tokens ≤ +25%)
+- Add feature flags (OPTIMIZE_PLANNER, OPTIMIZE_CODER) for gradual rollout
+- Implement HITL fallback for safety when scores fall below thresholds
+- Achieve ≥15% improvement on seeded bugs with 0 dependency violations
+- Integrate MLflow for comprehensive experiment tracking and CoT/ReAct traces
 - Future-proof the system with the latest framework capabilities
 - **Schema compatibility confirmed** - existing signatures and field definitions work identically in DSPy 3.0
 
@@ -22,18 +25,23 @@
 **What are we building?** A comprehensive migration from DSPy 2.6.27 to DSPy 3.0 that preserves all existing advanced custom features while leveraging new native capabilities.
 
 **How does it work?** The migration will follow a phased approach:
-1. **Test Environment Setup**: Create isolated test environment with DSPy 3.0
-2. **Compatibility Validation**: Test all existing modules and components
-3. **Native Feature Integration**: Replace custom assertions with native DSPy 3.0 assertions
-4. **Enhanced Optimization**: Integrate new optimization capabilities
-5. **MLflow Integration**: Add experiment tracking and model management
+1. **Environment & Compatibility**: Pin DSPy 3.0.1 in constraints.txt, run regression tests + lint + doc-coherence validator, add baseline metrics → eval/baseline.json
+2. **Assertion Migration**: Replace custom validators with DSPy 3.0 assertions, add constitution-aware regression suite with context preservation, workflow chain, and error recovery checks, re-tier modules in 400_code-criticality-guide.md
+3. **Optimizer Refit**: Migrate Coder/Planner pipelines to GEPA with performance budgets (latency ≤ +20%, tokens ≤ +25%), add optimizer_budget.yaml caps per role
+4. **Observability**: MLflow integration for optimizer runs, capture CoT/ReAct traces and artifact diffs in eval_report.json
+5. **Rollout & Safety**: Feature flags (OPTIMIZE_PLANNER, OPTIMIZE_CODER), HITL fallback for <threshold scores
 6. **Production Deployment**: Gradual rollout with rollback capabilities
 
 **What are the key features?**
 - Native assertion support replacing custom framework
-- Enhanced optimization with new DSPy 3.0 optimizers
-- MLflow integration for experiment tracking
-- Improved fine-tuning and reinforcement learning support
+- Constitution-aware regression suite with context preservation, workflow chain, and error recovery checks
+- GEPA optimizer migration with performance budgets (latency ≤ +20%, tokens ≤ +25%)
+- Feature flags (OPTIMIZE_PLANNER, OPTIMIZE_CODER) for gradual rollout
+- HITL fallback for safety when scores fall below thresholds
+- Constitution-aware testing integrated with existing test infrastructure
+- Optimizer budget enforcement with constitution compliance validation
+- MLflow integration for comprehensive experiment tracking and CoT/ReAct traces
+- Performance baseline establishment and improvement tracking
 - Backward compatibility with existing custom components
 
 ## 3. Acceptance Criteria
@@ -41,32 +49,52 @@
 **How do we know it's done?**
 - All existing DSPy modules work with DSPy 3.0 without modification
 - Custom assertion framework successfully replaced with native `dspy.Assert`
-- Enhanced optimization capabilities integrated and tested
-- MLflow integration provides experiment tracking
-- Performance metrics show improvement or maintain current levels
+- Constitution-aware regression suite passes all checks (context preservation, workflow chain, error recovery)
+- GEPA optimizer migration completed with performance budgets (latency ≤ +20%, tokens ≤ +25%)
+- Feature flags (OPTIMIZE_PLANNER, OPTIMIZE_CODER) implemented and functional
+- HITL fallback mechanism operational for <threshold scores
+- MLflow integration provides comprehensive experiment tracking and CoT/ReAct traces
+- Performance metrics show ≥15% improvement on seeded bugs with 0 dependency violations
 - All tests pass with DSPy 3.0
 
 **What does success look like?**
 - System successfully migrates to DSPy 3.0 with zero downtime
 - Native assertion support reduces code complexity by 30%
-- Enhanced optimization improves performance by 15-25%
-- MLflow integration provides comprehensive experiment tracking
+- Constitution test suite green with all articles validated
+- GEPA optimization improves performance by 15-25% within budget constraints
+- Feature flags enable gradual rollout with safety controls
+- HITL fallback provides safety net for low-scoring operations
+- MLflow integration provides comprehensive experiment tracking and artifact diffs
+- Constitution-aware testing integrated with existing test infrastructure
+- Optimizer budget enforcement with constitution compliance validation operational
 - All existing advanced features remain functional
+- Tier 1 modules stable post-migration
 
 **What are the quality gates?**
 - All existing tests must pass with DSPy 3.0
-- Performance benchmarks must meet or exceed current levels
-- Custom assertion framework must be fully replaced
-- MLflow integration must be functional
+- Constitution test suite must be green with all articles validated
+- Performance benchmarks must show ≥15% improvement on seeded bugs with 0 dependency violations
+- GEPA optimizer must operate within performance budgets (latency ≤ +20%, tokens ≤ +25%)
+- Feature flags must be functional for gradual rollout
+- HITL fallback must be operational for <threshold scores
+- Custom assertion framework must be fully replaced with native DSPy 3.0 assertions
+- MLflow integration must be functional with CoT/ReAct traces
+- Constitution-aware testing integrated with existing test infrastructure
+- Optimizer budget enforcement with constitution compliance validation operational
 - Rollback capability must be tested and verified
+- Tier 1 modules must be stable post-migration
 
 ## 4. Technical Approach
 
 **What technology?**
-- DSPy 3.0 (upgrade from 2.6.27)
-- MLflow for experiment tracking
-- Enhanced optimization techniques
+- DSPy 3.0.1 (pinned version upgrade from 2.6.27)
+- MLflow for experiment tracking and CoT/ReAct traces
+- GEPA optimizer with performance budgets
+- Constitution-aware testing framework
+- Feature flags for gradual rollout
+- HITL fallback mechanisms
 - Native assertion framework
+- Performance baseline metrics
 - Existing custom components (preserved)
 
 **How does it integrate?**
@@ -86,7 +114,11 @@
 
 **What could go wrong?**
 - Breaking changes in DSPy 3.0 API that affect existing modules
-- Performance regression with new optimization techniques
+- Performance regression with GEPA optimizer migration
+- Constitution-aware testing complexity and overhead
+- Feature flag implementation complexity
+- HITL fallback mechanism reliability
+- Performance budget constraints not met
 - MLflow integration complexity and overhead
 - Custom assertion framework replacement complexity
 - **Schema compatibility risk** - Minimal risk confirmed through analysis of existing signatures
@@ -94,7 +126,11 @@
 **How do we handle it?**
 - Comprehensive testing in isolated environment before production
 - Gradual migration with rollback capabilities at each phase
-- Performance benchmarking at each step
+- Performance benchmarking at each step with baseline metrics
+- Constitution-aware testing to ensure compliance
+- Feature flags for gradual rollout with safety controls
+- HITL fallback for safety when scores fall below thresholds
+- Performance budget monitoring and enforcement
 - Maintain custom assertion framework as fallback during transition
 
 **What are the unknowns?**

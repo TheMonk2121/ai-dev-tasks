@@ -2,139 +2,179 @@
 
 ## Overview
 
-Implement Pydantic-style dependency injection, dynamic context management, and enhanced tool frameworks to create an enterprise-grade DSPy system with 50% fewer runtime errors, 30% faster debugging, and personalized user experiences.
+Implement constitution-aware Pydantic models, role-based context systems, structured error taxonomy, and typed debug logs to create an enterprise-grade DSPy system with 95%+ role output validation, 50% runtime error reduction, constitution invariants enforced via type system, and comprehensive observability.
 
 ## Implementation Phases
 
-### Phase 1: Dependency Injection Framework
+### Phase 1: Context Models
 
-#### Task 1.1: Implement Pydantic Context Containers
+#### Task 1.1: Add Role-Based Context Models
 **Priority**: Critical
-**Estimated Time**: 2 hours
+**Estimated Time**: 3 hours
 **Dependencies**: B-1006 completion
 **Status**: [ ]
 
-**Description**: Create type-safe context containers using Pydantic for dependency injection throughout the DSPy system.
+**Description**: Add PlannerContext, CoderContext, ResearchContext as Pydantic classes and validate backlog → PRD → tasks flow with typed contexts.
 
 **Acceptance Criteria**:
-- [ ] Pydantic models defined for all context types (user, session, model, task)
-- [ ] Type validation catches configuration errors before runtime
+- [ ] PlannerContext Pydantic class implemented with role-specific validation
+- [ ] CoderContext Pydantic class implemented with role-specific validation
+- [ ] ResearchContext Pydantic class implemented with role-specific validation
+- [ ] Backlog → PRD → tasks flow validated with typed contexts
+- [ ] Role-based context validation catches configuration errors before runtime
 - [ ] Backward compatibility layer maintains existing API
 - [ ] Performance impact is minimal (<2% overhead)
 
 **Testing Requirements**:
-- [ ] **Unit Tests**: Test all Pydantic model validations and error cases
-- [ ] **Integration Tests**: Test context injection with existing DSPy components
-- [ ] **Performance Tests**: Benchmark validation overhead against current system
-- [ ] **Security Tests**: Validate input sanitization and type safety
-- [ ] **Resilience Tests**: Test error handling for invalid context data
-- [ ] **Edge Case Tests**: Test with maximum/minimum values and special characters
+- [ ] **Unit Tests**: Test all role-based Pydantic model validations and error cases
+- [ ] **Integration Tests**: Test role context injection with existing DSPy components
+- [ ] **Performance Tests**: Benchmark role context validation overhead against current system
+- [ ] **Security Tests**: Validate role context input sanitization and type safety
+- [ ] **Resilience Tests**: Test error handling for invalid role context data
+- [ ] **Edge Case Tests**: Test role context with maximum/minimum values and special characters
 
-**Implementation Notes**: Use Pydantic v2 for optimal performance, implement custom validators for domain-specific rules, ensure all existing ModelSwitcher calls work with new context system.
+**Implementation Notes**: Use Pydantic v2 for optimal performance, implement role-specific validators for domain-specific rules, ensure all existing ModelSwitcher calls work with new role-based context system, validate backlog → PRD → tasks flow with typed contexts.
 
 **Quality Gates**:
-- [ ] **Code Review**: All Pydantic models reviewed for type safety
-- [ ] **Tests Passing**: 95% test coverage for context containers
-- [ ] **Performance Validated**: Validation overhead <2%
-- [ ] **Security Reviewed**: Input validation prevents injection attacks
-- [ ] **Documentation Updated**: Context container usage documented
+- [ ] **Code Review**: All role-based Pydantic models reviewed for type safety
+- [ ] **Tests Passing**: 95% test coverage for role context containers
+- [ ] **Performance Validated**: Role context validation overhead <2%
+- [ ] **Security Reviewed**: Role context input validation prevents injection attacks
+- [ ] **Documentation Updated**: Role context container usage documented
 
 ---
 
-#### Task 1.2: Add Type Validation to Existing Components
+#### Task 1.2: Add Constitution Schema Enforcement
 **Priority**: Critical
-**Estimated Time**: 2 hours
+**Estimated Time**: 3 hours
 **Dependencies**: Task 1.1
 **Status**: [ ]
 
-**Description**: Integrate type validation into existing DSPy components (ModelSwitcher, optimization framework, tools).
+**Description**: Add ConstitutionCompliance Pydantic model (sections, context hierarchy) and run validator after each role's output.
 
 **Acceptance Criteria**:
-- [ ] ModelSwitcher accepts and validates typed context
-- [ ] Optimization framework uses type-safe parameters
-- [ ] All tools validate input parameters with Pydantic
-- [ ] Existing functionality preserved with enhanced type safety
+- [ ] ConstitutionCompliance Pydantic model implemented with sections and context hierarchy
+- [ ] Constitution validator runs after each role's output
+- [ ] Constitution compliance checking integrated with role-based contexts
+- [ ] Constitution schema enforcement catches compliance errors before runtime
+- [ ] Existing functionality preserved with enhanced constitution compliance
 
 **Testing Requirements**:
-- [ ] **Unit Tests**: Test type validation in each component
-- [ ] **Integration Tests**: Test component interactions with typed context
-- [ ] **Performance Tests**: Measure impact on component performance
-- [ ] **Security Tests**: Validate parameter sanitization
-- [ ] **Resilience Tests**: Test graceful handling of invalid types
-- [ ] **Edge Case Tests**: Test boundary conditions and type conversions
+- [ ] **Unit Tests**: Test constitution compliance validation in each role
+- [ ] **Integration Tests**: Test constitution validator interactions with role outputs
+- [ ] **Performance Tests**: Measure constitution validation impact on role performance
+- [ ] **Security Tests**: Validate constitution compliance parameter sanitization
+- [ ] **Resilience Tests**: Test graceful handling of constitution compliance violations
+- [ ] **Edge Case Tests**: Test constitution validation with boundary conditions and complex scenarios
 
-**Implementation Notes**: Use gradual migration approach, maintain backward compatibility, add deprecation warnings for old interfaces.
+**Implementation Notes**: Use gradual migration approach, maintain backward compatibility, add deprecation warnings for old interfaces, integrate constitution compliance with role-based context system.
 
 **Quality Gates**:
-- [ ] **Code Review**: All type integrations reviewed
-- [ ] **Tests Passing**: All existing tests pass with new validation
-- [ ] **Performance Validated**: Component performance within 5% of baseline
-- [ ] **Security Reviewed**: Type validation prevents security issues
-- [ ] **Documentation Updated**: Migration guide and examples provided
+- [ ] **Code Review**: All constitution compliance integrations reviewed
+- [ ] **Tests Passing**: All existing tests pass with new constitution validation
+- [ ] **Performance Validated**: Constitution validation performance within 5% of baseline
+- [ ] **Security Reviewed**: Constitution compliance validation prevents security issues
+- [ ] **Documentation Updated**: Constitution compliance migration guide and examples provided
 
 ---
 
-### Phase 2: Dynamic Context Management
+### Phase 2: Error Taxonomy
 
-#### Task 2.1: Implement Dynamic System Prompts
+#### Task 2.1: Introduce PydanticError Model
 **Priority**: High
 **Estimated Time**: 2 hours
 **Dependencies**: Task 1.2
 **Status**: [ ]
 
-**Description**: Create dynamic system prompts that adapt to user context and preferences.
+**Description**: Introduce PydanticError model for ValidationError, CoherenceError, DependencyError and map constitution's "failure modes" to error types.
 
 **Acceptance Criteria**:
-- [ ] Dynamic prompt decorators implemented
-- [ ] Runtime context injection functional
-- [ ] User preference system integrated
-- [ ] Measurable improvement in response quality
+- [ ] PydanticError model implemented for ValidationError, CoherenceError, DependencyError
+- [ ] Constitution's "failure modes" mapped to error types
+- [ ] Structured error taxonomy integrated with role-based contexts
+- [ ] Error classification provides measurable improvement in error handling
 
 **Testing Requirements**:
-- [ ] **Unit Tests**: Test dynamic prompt generation and context injection
-- [ ] **Integration Tests**: Test prompt adaptation with different user contexts
-- [ ] **Performance Tests**: Measure prompt generation overhead
-- [ ] **Security Tests**: Validate prompt sanitization and injection prevention
-- [ ] **Resilience Tests**: Test fallback to static prompts on errors
-- [ ] **Edge Case Tests**: Test with empty context and extreme preferences
+- [ ] **Unit Tests**: Test PydanticError model validation and error classification
+- [ ] **Integration Tests**: Test error taxonomy integration with constitution failure modes
+- [ ] **Performance Tests**: Measure error classification overhead
+- [ ] **Security Tests**: Validate error taxonomy input sanitization
+- [ ] **Resilience Tests**: Test error taxonomy fallback and recovery
+- [ ] **Edge Case Tests**: Test error taxonomy with complex failure scenarios
 
-**Implementation Notes**: Use decorator pattern for dynamic prompts, implement caching for performance, ensure prompt security.
+**Implementation Notes**: Use Pydantic for error model validation, implement constitution failure mode mapping, ensure backward compatibility.
 
 **Quality Gates**:
-- [ ] **Code Review**: Dynamic prompt system reviewed
-- [ ] **Tests Passing**: 90% test coverage for dynamic prompts
-- [ ] **Performance Validated**: Prompt generation <100ms
-- [ ] **Security Reviewed**: No prompt injection vulnerabilities
-- [ ] **Documentation Updated**: Dynamic prompt usage documented
+- [ ] **Code Review**: Error taxonomy system reviewed
+- [ ] **Tests Passing**: 90% test coverage for error taxonomy
+- [ ] **Performance Validated**: Error classification <50ms
+- [ ] **Security Reviewed**: No error taxonomy vulnerabilities
+- [ ] **Documentation Updated**: Error taxonomy usage documented
 
 ---
 
-#### Task 2.2: Create User Preference System
+#### Task 2.2: Map Constitution Failure Modes
 **Priority**: High
-**Estimated Time**: 1 hour
+**Estimated Time**: 2 hours
 **Dependencies**: Task 2.1
 **Status**: [ ]
 
-**Description**: Implement user preference system for personalized AI responses.
+**Description**: Map constitution's "failure modes" to error types and integrate with PydanticError model.
 
 **Acceptance Criteria**:
-- [ ] User preference storage and retrieval functional
+- [ ] Constitution failure modes mapped to ValidationError, CoherenceError, DependencyError
+- [ ] Failure mode mapping integrated with PydanticError model
+- [ ] Constitution-aware error classification functional
+- [ ] Error taxonomy provides measurable improvement in error handling
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Test constitution failure mode mapping and validation
+- [ ] **Integration Tests**: Test failure mode integration with error taxonomy
+- [ ] **Performance Tests**: Measure failure mode mapping performance
+- [ ] **Security Tests**: Validate failure mode data sanitization
+- [ ] **Resilience Tests**: Test failure mode fallbacks and defaults
+- [ ] **Edge Case Tests**: Test with complex constitution violation scenarios
+
+**Implementation Notes**: Use Pydantic for failure mode validation, implement constitution-aware error mapping, ensure data integrity.
+
+**Quality Gates**:
+- [ ] **Code Review**: Failure mode mapping system reviewed
+- [ ] **Tests Passing**: All failure mode functionality tested
+- [ ] **Performance Validated**: Failure mode mapping <50ms
+- [ ] **Security Reviewed**: Constitution data properly protected
+- [ ] **Documentation Updated**: Failure mode mapping documented
+
+---
+
+### Phase 3: Dynamic Prompts + Preferences
+
+#### Task 3.1: Store User Preferences in Typed Pydantic Class
+**Priority**: High
+**Estimated Time**: 2 hours
+**Dependencies**: Task 2.2
+**Status**: [ ]
+
+**Description**: Store user preferences in typed Pydantic class and implement preference management system.
+
+**Acceptance Criteria**:
+- [ ] User preferences stored in typed Pydantic class
 - [ ] Preference-based response customization working
 - [ ] Default preferences for new users
 - [ ] Preference persistence across sessions
+- [ ] Type-safe preference management system functional
 
 **Testing Requirements**:
-- [ ] **Unit Tests**: Test preference storage, retrieval, and validation
+- [ ] **Unit Tests**: Test user preference storage, retrieval, and validation
 - [ ] **Integration Tests**: Test preference integration with AI responses
 - [ ] **Performance Tests**: Measure preference lookup performance
 - [ ] **Security Tests**: Validate preference data sanitization
 - [ ] **Resilience Tests**: Test preference fallbacks and defaults
 - [ ] **Edge Case Tests**: Test with corrupted preference data
 
-**Implementation Notes**: Use PostgreSQL for preference storage, implement caching, ensure data privacy.
+**Implementation Notes**: Use Pydantic for preference validation, implement type-safe preference management, ensure data privacy.
 
 **Quality Gates**:
-- [ ] **Code Review**: Preference system reviewed
+- [ ] **Code Review**: User preference system reviewed
 - [ ] **Tests Passing**: All preference functionality tested
 - [ ] **Performance Validated**: Preference lookup <50ms
 - [ ] **Security Reviewed**: User data properly protected
@@ -142,148 +182,215 @@ Implement Pydantic-style dependency injection, dynamic context management, and e
 
 ---
 
-### Phase 3: Enhanced Tool Framework
-
-#### Task 3.1: Add Context Awareness to Tools
+#### Task 3.2: Inject Preferences into Optimizer Scoring
 **Priority**: High
 **Estimated Time**: 2 hours
-**Dependencies**: Task 2.2
-**Status**: [ ]
-
-**Description**: Enhance existing tools with context awareness and automatic experiment tracking.
-
-**Acceptance Criteria**:
-- [ ] All tools accept and use typed context
-- [ ] Automatic experiment tracking with MLflow
-- [ ] Rich debugging information captured
-- [ ] Tool responses adapt to user context
-
-**Testing Requirements**:
-- [ ] **Unit Tests**: Test context-aware tool functionality
-- [ ] **Integration Tests**: Test tool integration with MLflow tracking
-- [ ] **Performance Tests**: Measure tool execution overhead
-- [ ] **Security Tests**: Validate tool input/output sanitization
-- [ ] **Resilience Tests**: Test tool error handling and recovery
-- [ ] **Edge Case Tests**: Test tools with invalid context
-
-**Implementation Notes**: Use decorator pattern for tool enhancement, implement automatic MLflow integration, ensure backward compatibility.
-
-**Quality Gates**:
-- [ ] **Code Review**: Enhanced tools reviewed
-- [ ] **Tests Passing**: All tool functionality tested
-- [ ] **Performance Validated**: Tool overhead <10%
-- [ ] **Security Reviewed**: Tool security validated
-- [ ] **Documentation Updated**: Enhanced tool usage documented
-
----
-
-#### Task 3.2: Implement Enhanced Debugging Capabilities
-**Priority**: Medium
-**Estimated Time**: 1 hour
 **Dependencies**: Task 3.1
 **Status**: [ ]
 
-**Description**: Create comprehensive debugging capabilities with rich context information.
+**Description**: Inject user preferences into optimizer scoring (correctness + alignment) and implement preference-aware optimization.
 
 **Acceptance Criteria**:
-- [ ] Rich error messages with full context
-- [ ] Debugging information automatically captured
-- [ ] Context correlation for error analysis
-- [ ] 30% reduction in debugging time achieved
+- [ ] User preferences injected into optimizer scoring (correctness + alignment)
+- [ ] Preference-aware optimization functional
+- [ ] Optimizer scoring adapts to user preferences
+- [ ] Measurable improvement in optimization quality achieved
 
 **Testing Requirements**:
-- [ ] **Unit Tests**: Test debugging information capture
-- [ ] **Integration Tests**: Test debugging integration with error handling
-- [ ] **Performance Tests**: Measure debugging overhead
-- [ ] **Security Tests**: Validate debugging data sanitization
-- [ ] **Resilience Tests**: Test debugging under error conditions
-- [ ] **Edge Case Tests**: Test debugging with minimal context
+- [ ] **Unit Tests**: Test preference injection into optimizer scoring
+- [ ] **Integration Tests**: Test preference-aware optimization integration
+- [ ] **Performance Tests**: Measure preference injection overhead
+- [ ] **Security Tests**: Validate preference injection data sanitization
+- [ ] **Resilience Tests**: Test preference injection under error conditions
+- [ ] **Edge Case Tests**: Test preference injection with minimal preferences
 
-**Implementation Notes**: Use structured logging, implement context correlation, ensure debugging data privacy.
+**Implementation Notes**: Use Pydantic for preference validation, implement preference-aware optimization, ensure data integrity.
 
 **Quality Gates**:
-- [ ] **Code Review**: Debugging system reviewed
-- [ ] **Tests Passing**: Debugging functionality tested
-- [ ] **Performance Validated**: Debugging overhead <5%
-- [ ] **Security Reviewed**: Debugging data properly protected
-- [ ] **Documentation Updated**: Debugging usage documented
+- [ ] **Code Review**: Preference injection system reviewed
+- [ ] **Tests Passing**: Preference injection functionality tested
+- [ ] **Performance Validated**: Preference injection overhead <5%
+- [ ] **Security Reviewed**: Preference injection data properly protected
+- [ ] **Documentation Updated**: Preference injection usage documented
 
 ---
 
-### Phase 4: Integration & Testing
+### Phase 4: Debugging & Observability
 
-#### Task 4.1: Comprehensive Integration Testing
+#### Task 4.1: Implement Typed Debug Logs via Pydantic
 **Priority**: Critical
-**Estimated Time**: 1 hour
+**Estimated Time**: 2 hours
 **Dependencies**: Task 3.2
 **Status**: [ ]
 
-**Description**: Perform comprehensive integration testing of all new features with existing DSPy 3.0 system.
+**Description**: Implement typed debug logs via Pydantic and create structured logging system.
 
 **Acceptance Criteria**:
-- [ ] All existing DSPy functionality works with new features
-- [ ] Performance benchmarks within 5% of baseline
-- [ ] No regression in existing capabilities
-- [ ] All quality gates pass
+- [ ] Typed debug logs implemented via Pydantic
+- [ ] Structured logging system functional
+- [ ] Debug logs provide rich context information
+- [ ] 30% reduction in debugging time achieved
 
 **Testing Requirements**:
-- [ ] **Integration Tests**: Test all component interactions
-- [ ] **Performance Tests**: Full system performance validation
-- [ ] **Security Tests**: End-to-end security validation
-- [ ] **Resilience Tests**: System behavior under stress
-- [ ] **Edge Case Tests**: Boundary condition testing
-- [ ] **User Acceptance Tests**: Real-world usage scenarios
+- [ ] **Unit Tests**: Test typed debug log functionality and validation
+- [ ] **Integration Tests**: Test debug log integration with error handling
+- [ ] **Performance Tests**: Measure debug logging overhead
+- [ ] **Security Tests**: Validate debug log data sanitization
+- [ ] **Resilience Tests**: Test debug logging under error conditions
+- [ ] **Edge Case Tests**: Test debug logging with minimal context
 
-**Implementation Notes**: Use existing test infrastructure, implement automated integration tests, create performance benchmarks.
+**Implementation Notes**: Use Pydantic for debug log validation, implement structured logging, ensure debug data privacy.
 
 **Quality Gates**:
-- [ ] **Code Review**: Integration approach reviewed
-- [ ] **Tests Passing**: All integration tests pass
-- [ ] **Performance Validated**: System performance meets requirements
-- [ ] **Security Reviewed**: Integration security validated
-- [ ] **Documentation Updated**: Integration guide provided
+- [ ] **Code Review**: Typed debug log system reviewed
+- [ ] **Tests Passing**: Debug log functionality tested
+- [ ] **Performance Validated**: Debug logging overhead <5%
+- [ ] **Security Reviewed**: Debug log data properly protected
+- [ ] **Documentation Updated**: Debug logging usage documented
 
 ---
 
-#### Task 4.2: Performance Validation and Optimization
+#### Task 4.2: Implement Trace-Level Logs with Context Schema
 **Priority**: High
-**Estimated Time**: 1 hour
+**Estimated Time**: 2 hours
 **Dependencies**: Task 4.1
 **Status**: [ ]
 
-**Description**: Validate performance and optimize any bottlenecks in the enhanced system.
+**Description**: Implement trace-level logs enriched with context schema and create comprehensive observability system.
 
 **Acceptance Criteria**:
-- [ ] Overall system performance within 5% of baseline
-- [ ] Type validation overhead <2%
-- [ ] Dynamic context overhead <3%
-- [ ] Enhanced tool overhead <10%
+- [ ] Trace-level logs enriched with context schema implemented
+- [ ] Comprehensive observability system functional
+- [ ] Context schema provides rich debugging information
+- [ ] Measurable improvement in debugging efficiency achieved
 
 **Testing Requirements**:
-- [ ] **Performance Tests**: Comprehensive performance benchmarking
-- [ ] **Load Tests**: System behavior under realistic loads
-- [ ] **Stress Tests**: System behavior under extreme conditions
-- [ ] **Memory Tests**: Memory usage and cleanup validation
-- [ ] **CPU Tests**: CPU usage optimization validation
-- [ ] **Latency Tests**: Response time optimization
+- [ ] **Unit Tests**: Test trace-level log functionality and context schema enrichment
+- [ ] **Integration Tests**: Test trace log integration with observability system
+- [ ] **Performance Tests**: Measure trace logging overhead
+- [ ] **Security Tests**: Validate trace log data sanitization
+- [ ] **Resilience Tests**: Test trace logging under error conditions
+- [ ] **Edge Case Tests**: Test trace logging with complex context scenarios
 
-**Implementation Notes**: Use existing performance benchmarks, implement profiling, optimize bottlenecks.
+**Implementation Notes**: Use Pydantic for trace log validation, implement context schema enrichment, ensure trace data privacy.
 
 **Quality Gates**:
-- [ ] **Code Review**: Performance optimizations reviewed
-- [ ] **Tests Passing**: All performance tests pass
-- [ ] **Performance Validated**: All performance targets met
-- [ ] **Security Reviewed**: Optimizations don't compromise security
-- [ ] **Documentation Updated**: Performance characteristics documented
+- [ ] **Code Review**: Trace-level log system reviewed
+- [ ] **Tests Passing**: Trace log functionality tested
+- [ ] **Performance Validated**: Trace logging overhead <5%
+- [ ] **Security Reviewed**: Trace log data properly protected
+- [ ] **Documentation Updated**: Trace logging usage documented
+
+---
+
+### Phase 5: Exit Criteria
+
+#### Task 5.1: Validate Role Outputs Against Context Schema
+**Priority**: Critical
+**Estimated Time**: 2 hours
+**Dependencies**: Task 4.2
+**Status**: [ ]
+
+**Description**: Achieve 95%+ of role outputs validated against context schema and implement comprehensive validation system.
+
+**Acceptance Criteria**:
+- [ ] 95%+ of role outputs validated against context schema
+- [ ] Comprehensive validation system functional
+- [ ] Role output validation provides measurable improvement
+- [ ] Constitution invariants enforced via type system
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Test role output validation against context schema
+- [ ] **Integration Tests**: Test validation integration with role-based contexts
+- [ ] **Performance Tests**: Measure validation overhead
+- [ ] **Security Tests**: Validate validation data sanitization
+- [ ] **Resilience Tests**: Test validation under error conditions
+- [ ] **Edge Case Tests**: Test validation with complex role outputs
+
+**Implementation Notes**: Use Pydantic for role output validation, implement context schema enforcement, ensure validation accuracy.
+
+**Quality Gates**:
+- [ ] **Code Review**: Role output validation system reviewed
+- [ ] **Tests Passing**: Validation functionality tested
+- [ ] **Performance Validated**: Validation overhead <5%
+- [ ] **Security Reviewed**: Validation data properly protected
+- [ ] **Documentation Updated**: Validation usage documented
+
+---
+
+#### Task 5.2: Achieve Runtime Error Reduction
+**Priority**: Critical
+**Estimated Time**: 2 hours
+**Dependencies**: Task 5.1
+**Status**: [ ]
+
+**Description**: Achieve 50% runtime error reduction through type validation and constitution enforcement.
+
+**Acceptance Criteria**:
+- [ ] 50% runtime error reduction achieved
+- [ ] Type validation catches errors before runtime
+- [ ] Constitution enforcement prevents compliance violations
+- [ ] Measurable improvement in system reliability
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Test error reduction mechanisms
+- [ ] **Integration Tests**: Test error reduction integration with system
+- [ ] **Performance Tests**: Measure error reduction overhead
+- [ ] **Security Tests**: Validate error reduction data sanitization
+- [ ] **Resilience Tests**: Test error reduction under stress conditions
+- [ ] **Edge Case Tests**: Test error reduction with complex scenarios
+
+**Implementation Notes**: Use Pydantic for type validation, implement constitution enforcement, ensure error reduction accuracy.
+
+**Quality Gates**:
+- [ ] **Code Review**: Error reduction system reviewed
+- [ ] **Tests Passing**: Error reduction functionality tested
+- [ ] **Performance Validated**: Error reduction overhead <5%
+- [ ] **Security Reviewed**: Error reduction data properly protected
+- [ ] **Documentation Updated**: Error reduction usage documented
+
+---
+
+#### Task 5.3: Integrate Constitution-Aware Validation with Existing Pydantic Infrastructure
+**Priority**: Critical
+**Estimated Time**: 2 hours
+**Dependencies**: Task 5.2
+**Status**: [ ]
+
+**Description**: Integrate constitution-aware validation with existing Pydantic infrastructure and implement ConstitutionCompliance model for program output validation.
+
+**Acceptance Criteria**:
+- [ ] Constitution-aware validation integrated with existing Pydantic infrastructure
+- [ ] ConstitutionCompliance model validates program outputs before/after runs
+- [ ] Constitution-aware validation operational with existing Pydantic models
+- [ ] Program output validation via ConstitutionCompliance model functional
+- [ ] Performance impact minimal (<5% overhead)
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Test constitution-aware validation integration with existing Pydantic infrastructure
+- [ ] **Integration Tests**: Test ConstitutionCompliance model validation of program outputs
+- [ ] **Performance Tests**: Measure constitution-aware validation performance impact
+- [ ] **Security Tests**: Validate constitution-aware validation data sanitization
+- [ ] **Resilience Tests**: Test constitution-aware validation error handling
+- [ ] **Edge Case Tests**: Test constitution-aware validation with complex scenarios
+
+**Implementation Notes**: Integrate constitution-aware validation with existing Pydantic infrastructure rather than creating separate systems. Implement ConstitutionCompliance model for program output validation.
+
+**Quality Gates**:
+- [ ] **Code Review**: Constitution-aware validation integration reviewed
+- [ ] **Tests Passing**: All constitution-aware validation tests pass
+- [ ] **Performance Validated**: Constitution-aware validation overhead <5%
+- [ ] **Security Reviewed**: Constitution-aware validation security verified
+- [ ] **Documentation Updated**: Constitution-aware validation integration documented
 
 ---
 
 ## Quality Metrics
 
 - **Test Coverage Target**: 95% for new features, 100% for existing functionality
-- **Performance Benchmarks**: <5% overhead, <100ms dynamic prompt generation, <50ms preference lookup
-- **Security Requirements**: Input validation, data sanitization, privacy protection
-- **Reliability Targets**: 50% reduction in runtime errors, 30% faster debugging
+- **Performance Benchmarks**: <5% overhead, <50ms error classification, <50ms preference lookup
+- **Security Requirements**: Input validation, data sanitization, privacy protection, constitution compliance
+- **Reliability Targets**: 95%+ role output validation, 50% runtime error reduction, 30% faster debugging
 
 ## Risk Mitigation
 
@@ -293,8 +400,10 @@ Implement Pydantic-style dependency injection, dynamic context management, and e
 
 ## Success Criteria
 
-- **50% reduction in runtime errors** through type validation
-- **30% faster debugging** with rich context information
+- **95%+ role output validation** against context schema
+- **50% reduction in runtime errors** through type validation and constitution enforcement
+- **30% faster debugging** with rich context information and typed logs
+- **Constitution invariants enforced** via type system
 - **Personalized AI responses** based on user context and preferences
 - **Comprehensive experiment tracking** for all AI interactions
 - **Enterprise-grade reliability patterns** that scale with system growth

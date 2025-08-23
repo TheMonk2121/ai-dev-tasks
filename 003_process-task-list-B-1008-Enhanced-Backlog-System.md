@@ -1,4 +1,4 @@
-# Process Task List: B-1008 Enhanced Backlog System with DSPy 3.0 and Pydantic Integration
+# Process Task List: B-1008 Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates
 
 <!-- Backlog ID: B-1008 -->
 <!-- Status: todo -->
@@ -7,43 +7,43 @@
 
 ## 🎯 **Execution Overview**
 
-**Project**: B-1008 Enhanced Backlog System with DSPy 3.0 and Pydantic Integration
-**Total Tasks**: 6 tasks across 5 phases
-**Estimated Time**: 10 hours
+**Project**: B-1008 Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates
+**Total Tasks**: 8 tasks across 5 phases
+**Estimated Time**: 12 hours
 **Priority**: High
 **Status**: Ready for execution (after B-1006 and B-1007 completion)
-**Schema Impact**: Minimal - extends existing backlog scoring with enhanced capabilities
+**Schema Impact**: Minimal - extends existing backlog scoring with constitution-aware capabilities
 
 **Auto-Advance**: no (High priority tasks require human checkpoints)
 **🛑 Pause After**: yes (Integration and testing phases)
 
 ## 📋 **Task Execution List**
 
-### Phase 1: Enhanced Scoring Framework
+### Phase 1: Scoring Formula
 
-#### Task 1.1: Implement Enhanced Scoring Formula
+#### Task 1.1: Add Dependency Bonuses and Risk-Adjusted Scoring
 **Priority**: Critical
-**Estimated Time**: 2 hours
+**Estimated Time**: 3 hours
 **Dependencies**: B-1006 completion, B-1007 completion
 **Status**: [ ]
 
 **Do**:
-1. Design enhanced scoring formula with dependency chain bonuses
-2. Implement risk-adjusted scoring with Pydantic validation
-3. Create framework migration recognition system
+1. Add dependency bonuses to scoring formula
+2. Implement risk-adjusted scoring with constitution-aware validation
+3. Weight items by constitution article (workflow chain, context preservation)
 4. Ensure backward compatibility with existing scoring
-5. Add comprehensive unit tests for scoring algorithms
+5. Add comprehensive unit tests for constitution-aware scoring algorithms
 
 **Done when**:
-- [ ] Enhanced scoring formula implemented with dependency chain bonuses
-- [ ] Risk-adjusted scoring with Pydantic validation operational
-- [ ] Framework migration recognition system working
+- [ ] Dependency bonuses implemented in scoring formula
+- [ ] Risk-adjusted scoring with constitution-aware validation operational
+- [ ] Items weighted by constitution article (workflow chain, context preservation)
 - [ ] Backward compatibility maintained with existing scoring
-- [ ] All scoring tests pass with 95% coverage
+- [ ] All constitution-aware scoring tests pass with 95% coverage
 
 **Auto-Advance**: no
 **🛑 Pause After**: yes
-**When Ready Prompt**: "Enhanced scoring formula implemented. Proceed to dependency chain analysis?"
+**When Ready Prompt**: "Constitution-aware scoring formula implemented. Proceed to constitution-aligned scoring integration?"
 
 ---
 
@@ -73,7 +73,37 @@
 
 ---
 
-### Phase 2: Context Analysis Integration
+### Phase 2: Constitution-Aligned Scoring Integration
+
+#### Task 2.1: Integrate Constitution-Aligned Scoring with Existing Backlog Infrastructure
+**Priority**: Critical
+**Estimated Time**: 2 hours
+**Dependencies**: Task 1.2
+**Status**: [ ]
+
+**Do**:
+1. Integrate constitution-aligned scoring with existing backlog infrastructure
+2. Ensure constitution-aware scoring integration operational
+3. Configure constitution-aligned scoring functional with existing backlog system
+4. Validate constitution-aware scoring provides measurable improvements in prioritization
+5. Ensure performance impact minimal (<5% overhead)
+6. Document constitution-aligned scoring integration
+
+**Done when**:
+- [ ] Constitution-aligned scoring integrated with existing backlog infrastructure
+- [ ] Constitution-aware scoring integration operational
+- [ ] Constitution-aligned scoring functional with existing backlog system
+- [ ] Constitution-aware scoring provides measurable improvements in prioritization
+- [ ] Performance impact minimal (<5% overhead)
+- [ ] Constitution-aligned scoring integration documented
+
+**Auto-Advance**: no
+**🛑 Pause After**: yes
+**When Ready Prompt**: "Constitution-aligned scoring integration complete. Proceed to context analysis integration?"
+
+---
+
+### Phase 3: Context Analysis Integration
 
 #### Task 2.1: Integrate Automated Context Complexity Analysis
 **Priority**: High

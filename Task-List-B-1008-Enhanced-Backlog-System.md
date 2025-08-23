@@ -1,4 +1,4 @@
-# Task List: B-1008 Enhanced Backlog System with DSPy 3.0 and Pydantic Integration
+# Task List: B-1008 Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates
 
 <!-- Backlog ID: B-1008 -->
 <!-- Status: todo -->
@@ -7,32 +7,32 @@
 
 ## Overview
 
-Update the backlog system to leverage DSPy 3.0 native assertions and Pydantic type validation for improved scoring, prioritization, and automated context analysis. This enhancement will provide intelligent dependency chain analysis, risk-adjusted scoring, framework migration recognition, and context-aware task generation.
+Implement constitution-aware backlog system with dependency bonuses, cross-role analysis, real-time n8n integration, and automated migration with 100% metadata preservation. This enhancement will provide intelligent constitution-aware scoring, cross-role dependency detection, real-time updates, and automated migration with validation.
 
 ## Implementation Phases
 
-### Phase 1: Enhanced Scoring Framework
+### Phase 1: Scoring Formula
 
-#### Task 1.1: Implement Enhanced Scoring Formula
+#### Task 1.1: Add Dependency Bonuses and Risk-Adjusted Scoring
 **Priority**: Critical
-**Estimated Time**: 2 hours
+**Estimated Time**: 3 hours
 **Dependencies**: B-1006 completion, B-1007 completion
 **Status**: [ ]
 
-**Description**: Create enhanced scoring formula that includes dependency chain bonuses, risk-adjusted scoring, and framework migration recognition.
+**Description**: Add dependency bonuses, risk-adjusted scoring, and weight items by constitution article (workflow chain, context preservation).
 
 **Acceptance Criteria**:
-- [ ] Enhanced scoring formula implemented with dependency chain bonuses
-- [ ] Risk-adjusted scoring with Pydantic validation operational
-- [ ] Framework migration recognition system working
+- [ ] Dependency bonuses implemented in scoring formula
+- [ ] Risk-adjusted scoring with constitution-aware validation operational
+- [ ] Items weighted by constitution article (workflow chain, context preservation)
 - [ ] Backward compatibility maintained with existing scoring
 
 **Testing Requirements**:
 - [ ] **Unit Tests**
-  - [ ] Test enhanced scoring formula with various input combinations
-  - [ ] Test dependency chain bonus calculations
+  - [ ] Test constitution-aware scoring formula with various input combinations
+  - [ ] Test dependency bonus calculations
   - [ ] Test risk-adjusted scoring with different risk levels
-  - [ ] Test framework migration recognition accuracy
+  - [ ] Test constitution article weighting accuracy
 - [ ] **Integration Tests**
   - [ ] Test integration with existing backlog parsing system
   - [ ] Test scoring updates with changing dependencies
@@ -52,30 +52,30 @@ Update the backlog system to leverage DSPy 3.0 native assertions and Pydantic ty
   - [ ] Test with circular dependencies
   - [ ] Test with missing metadata
 
-**Implementation Notes**: Use DSPy 3.0 native assertions for dependency validation and Pydantic for risk factor validation. Ensure the enhanced formula maintains backward compatibility while providing improved prioritization.
+**Implementation Notes**: Use constitution-aware validation for dependency bonuses and risk-adjusted scoring. Weight items by constitution articles (workflow chain, context preservation). Ensure the enhanced formula maintains backward compatibility while providing improved prioritization.
 
 **Quality Gates**:
-- [ ] **Code Review** - Enhanced scoring algorithm reviewed
+- [ ] **Code Review** - Constitution-aware scoring algorithm reviewed
 - [ ] **Tests Passing** - All scoring tests pass with 95% coverage
 - [ ] **Performance Validated** - Scoring performance within 5% of baseline
 - [ ] **Security Reviewed** - Input validation prevents security issues
-- [ ] **Documentation Updated** - Enhanced scoring formula documented
+- [ ] **Documentation Updated** - Constitution-aware scoring formula documented
 
 ---
 
-#### Task 1.2: Add Dependency Chain Analysis
+#### Task 1.2: Tie Tier 1 Files to Higher Priority or HITL
 **Priority**: Critical
-**Estimated Time**: 1 hour
+**Estimated Time**: 2 hours
 **Dependencies**: Task 1.1
 **Status**: [ ]
 
-**Description**: Implement dependency chain analysis using DSPy 3.0 assertions to automatically identify and weight dependency relationships.
+**Description**: Tie Tier 1 files to higher priority or HITL (Human-In-The-Loop) for critical file prioritization.
 
 **Acceptance Criteria**:
-- [ ] Dependency chain analysis correctly identifies B-1006 → B-1007 relationship
-- [ ] Chain value bonuses automatically calculated
-- [ ] Dependency validation using DSPy 3.0 assertions
-- [ ] Circular dependency detection implemented
+- [ ] Tier 1 files identified and tied to higher priority
+- [ ] HITL (Human-In-The-Loop) integration for critical files
+- [ ] Critical file prioritization system operational
+- [ ] Tier 1 file detection and weighting implemented
 
 **Testing Requirements**:
 - [ ] **Unit Tests**
@@ -108,27 +108,27 @@ Update the backlog system to leverage DSPy 3.0 native assertions and Pydantic ty
 
 ---
 
-### Phase 2: Context Analysis Integration
+### Phase 2: Dependency & Complexity Analysis
 
-#### Task 2.1: Integrate Automated Context Complexity Analysis
+#### Task 2.1: Add Cross-Role Dependency Detection
 **Priority**: High
-**Estimated Time**: 1.5 hours
+**Estimated Time**: 2 hours
 **Dependencies**: Task 1.2
 **Status**: [ ]
 
-**Description**: Integrate automated context complexity analysis using memory rehydration system to assess context complexity for task sizing.
+**Description**: Add cross-role dependency detection (Planner → Coder → Reviewer) and implement role-based dependency mapping.
 
 **Acceptance Criteria**:
-- [ ] Context complexity analysis integrated with memory rehydration system
-- [ ] Automated complexity assessment for task sizing
-- [ ] Context-aware scoring adjustments
+- [ ] Cross-role dependency detection (Planner → Coder → Reviewer) implemented
+- [ ] Role-based dependency mapping operational
+- [ ] Cross-role dependency analysis functional
 - [ ] Performance impact minimal (<5% overhead)
 
 **Testing Requirements**:
 - [ ] **Unit Tests**
-  - [ ] Test context complexity calculation accuracy
-  - [ ] Test memory rehydration integration
-  - [ ] Test complexity-based scoring adjustments
+  - [ ] Test cross-role dependency detection accuracy
+  - [ ] Test role-based dependency mapping
+  - [ ] Test cross-role dependency analysis
 - [ ] **Integration Tests**
   - [ ] Test integration with existing memory rehydration system
   - [ ] Test context analysis with real backlog items
@@ -143,30 +143,30 @@ Update the backlog system to leverage DSPy 3.0 native assertions and Pydantic ty
   - [ ] Test with complex context scenarios
   - [ ] Test with missing context data
 
-**Implementation Notes**: Integrate with existing memory rehydration system to provide context-aware complexity analysis for better task sizing and prioritization.
+**Implementation Notes**: Implement cross-role dependency detection (Planner → Coder → Reviewer) with role-based dependency mapping for better task sizing and prioritization.
 
 **Quality Gates**:
-- [ ] **Code Review** - Context analysis integration reviewed
-- [ ] **Tests Passing** - All context analysis tests pass
+- [ ] **Code Review** - Cross-role dependency detection reviewed
+- [ ] **Tests Passing** - All cross-role dependency tests pass
 - [ ] **Performance Validated** - Analysis overhead <5%
-- [ ] **Security Reviewed** - Context data handling secure
-- [ ] **Documentation Updated** - Context analysis documented
+- [ ] **Security Reviewed** - Dependency data handling secure
+- [ ] **Documentation Updated** - Cross-role dependency analysis documented
 
 ---
 
-#### Task 2.2: Implement Real-time Scoring Updates
+#### Task 2.2: Add Context Complexity Analysis
 **Priority**: High
-**Estimated Time**: 1.5 hours
+**Estimated Time**: 2 hours
 **Dependencies**: Task 2.1
 **Status**: [ ]
 
-**Description**: Implement real-time scoring updates that automatically adjust scores based on changing dependencies and context.
+**Description**: Add context complexity analysis and implement automated complexity assessment for task sizing.
 
 **Acceptance Criteria**:
-- [ ] Real-time scoring updates operational
-- [ ] Automatic score adjustments for dependency changes
-- [ ] Context-aware score updates
-- [ ] Performance impact minimal
+- [ ] Context complexity analysis implemented
+- [ ] Automated complexity assessment for task sizing operational
+- [ ] Context-aware scoring adjustments functional
+- [ ] Performance impact minimal (<5% overhead)
 
 **Testing Requirements**:
 - [ ] **Unit Tests**
@@ -198,28 +198,28 @@ Update the backlog system to leverage DSPy 3.0 native assertions and Pydantic ty
 
 ---
 
-### Phase 3: Automated Organization System
+### Phase 3: Real-time Updates
 
-#### Task 3.1: Implement Automated Backlog Organization Logic
+#### Task 3.1: Integrate with n8n Scrubber for Auto-scoring Refresh
 **Priority**: High
-**Estimated Time**: 1 hour
+**Estimated Time**: 2 hours
 **Dependencies**: Task 2.2
 **Status**: [ ]
 
-**Description**: Implement automated backlog organization logic that determines the correct placement for new items based on ID, priority, score, and dependencies.
+**Description**: Integrate with n8n scrubber for auto-scoring refresh and implement real-time updates for backlog scoring.
 
 **Acceptance Criteria**:
-- [ ] Automated organization logic implemented
-- [ ] Intelligent insertion algorithms working
-- [ ] Consistent ordering based on ID, priority, and score
-- [ ] Dependency-aware placement logic
+- [ ] n8n scrubber integration for auto-scoring refresh implemented
+- [ ] Real-time updates for backlog scoring operational
+- [ ] Auto-scoring refresh system functional
+- [ ] Performance impact minimal (<5% overhead)
 
 **Testing Requirements**:
 - [ ] **Unit Tests**
-  - [ ] Test organization logic with various item types
-  - [ ] Test insertion algorithms for different scenarios
-  - [ ] Test ordering consistency
-  - [ ] Test dependency-aware placement
+  - [ ] Test n8n scrubber integration with various scenarios
+  - [ ] Test auto-scoring refresh algorithms
+  - [ ] Test real-time update consistency
+  - [ ] Test performance impact
 - [ ] **Integration Tests**
   - [ ] Test integration with existing backlog system
   - [ ] Test with real backlog data
@@ -234,14 +234,14 @@ Update the backlog system to leverage DSPy 3.0 native assertions and Pydantic ty
   - [ ] Test with complex dependency scenarios
   - [ ] Test with conflicting priorities
 
-**Implementation Notes**: Use DSPy 3.0 assertions to validate organization logic and Pydantic for type validation of placement rules.
+**Implementation Notes**: Integrate with existing n8n scrubber system to provide real-time auto-scoring refresh for backlog updates.
 
 **Quality Gates**:
-- [ ] **Code Review** - Organization logic reviewed
-- [ ] **Tests Passing** - All organization tests pass
-- [ ] **Performance Validated** - Organization performance acceptable
-- [ ] **Security Reviewed** - Organization data handling secure
-- [ ] **Documentation Updated** - Organization logic documented
+- [ ] **Code Review** - n8n scrubber integration reviewed
+- [ ] **Tests Passing** - All real-time update tests pass
+- [ ] **Performance Validated** - Real-time update performance <5% overhead
+- [ ] **Security Reviewed** - Real-time update data handling secure
+- [ ] **Documentation Updated** - Real-time updates documented
 
 ---
 
@@ -290,21 +290,21 @@ Update the backlog system to leverage DSPy 3.0 native assertions and Pydantic ty
 
 ---
 
-### Phase 4: Testing & Validation
+### Phase 4: Migration & Automation
 
-#### Task 4.1: Comprehensive System Testing
+#### Task 4.1: Migrate Backlog Items with Preserved Metadata
 **Priority**: Critical
-**Estimated Time**: 2 hours
-**Dependencies**: Task 2.2
+**Estimated Time**: 3 hours
+**Dependencies**: Task 3.1
 **Status**: [ ]
 
-**Description**: Conduct comprehensive testing of the enhanced backlog system to ensure all features work correctly and performance is acceptable.
+**Description**: Migrate backlog items with preserved constitution-linked metadata (dependencies, complexity, risks) and ensure 100% metadata preservation.
 
 **Acceptance Criteria**:
-- [ ] All enhanced scoring features tested and working
-- [ ] Performance benchmarks meet requirements
-- [ ] Backward compatibility verified
-- [ ] Integration with existing systems validated
+- [ ] Backlog items migrated with preserved constitution-linked metadata
+- [ ] 100% metadata preservation achieved
+- [ ] Dependencies, complexity, and risks preserved during migration
+- [ ] Migration system operational
 
 **Testing Requirements**:
 - [ ] **Unit Tests**
@@ -341,21 +341,21 @@ Update the backlog system to leverage DSPy 3.0 native assertions and Pydantic ty
 
 ---
 
-### Phase 5: Migration & Deployment
+### Phase 5: Exit Criteria
 
-#### Task 5.1: Migrate Existing Backlog Items
+#### Task 5.1: Validate Migration Outputs via ConstitutionCompliance Model
 **Priority**: Critical
-**Estimated Time**: 1 hour
+**Estimated Time**: 2 hours
 **Dependencies**: Task 4.1
 **Status**: [ ]
 
-**Description**: Migrate existing backlog items to use the enhanced scoring system while maintaining backward compatibility.
+**Description**: Validate migration outputs via ConstitutionCompliance model and ensure constitution-aware validation of migration results.
 
 **Acceptance Criteria**:
-- [ ] All existing backlog items migrated to enhanced scoring
-- [ ] Backward compatibility maintained
-- [ ] Enhanced scoring applied to all items
-- [ ] Migration process documented
+- [ ] Migration outputs validated via ConstitutionCompliance model
+- [ ] Constitution-aware validation of migration results operational
+- [ ] Migration validation system functional
+- [ ] Constitution compliance verified for all migrated items
 
 **Testing Requirements**:
 - [ ] **Unit Tests**
@@ -387,12 +387,46 @@ Update the backlog system to leverage DSPy 3.0 native assertions and Pydantic ty
 
 ---
 
+#### Task 5.2: Integrate Constitution-Aligned Scoring with Existing Backlog Infrastructure
+**Priority**: Critical
+**Estimated Time**: 2 hours
+**Dependencies**: Task 5.1
+**Status**: [ ]
+
+**Description**: Integrate constitution-aligned scoring with existing backlog infrastructure and ensure constitution-aware scoring integration.
+
+**Acceptance Criteria**:
+- [ ] Constitution-aligned scoring integrated with existing backlog infrastructure
+- [ ] Constitution-aware scoring integration operational
+- [ ] Constitution-aligned scoring functional with existing backlog system
+- [ ] Constitution-aware scoring provides measurable improvements in prioritization
+- [ ] Performance impact minimal (<5% overhead)
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Test constitution-aligned scoring integration with existing backlog infrastructure
+- [ ] **Integration Tests**: Test constitution-aware scoring integration with existing system
+- [ ] **Performance Tests**: Measure constitution-aligned scoring performance impact
+- [ ] **Security Tests**: Validate constitution-aligned scoring data sanitization
+- [ ] **Resilience Tests**: Test constitution-aligned scoring error handling
+- [ ] **Edge Case Tests**: Test constitution-aligned scoring with complex scenarios
+
+**Implementation Notes**: Integrate constitution-aligned scoring with existing backlog infrastructure rather than creating separate systems. Ensure constitution-aware scoring integration with existing backlog system.
+
+**Quality Gates**:
+- [ ] **Code Review**: Constitution-aligned scoring integration reviewed
+- [ ] **Tests Passing**: All constitution-aligned scoring tests pass
+- [ ] **Performance Validated**: Constitution-aligned scoring overhead <5%
+- [ ] **Security Reviewed**: Constitution-aligned scoring security verified
+- [ ] **Documentation Updated**: Constitution-aligned scoring integration documented
+
+---
+
 ## Quality Metrics
 
 - **Test Coverage Target**: 95%
-- **Performance Benchmarks**: <5% overhead compared to current system
-- **Security Requirements**: Input validation and sanitization for all scoring data
-- **Reliability Targets**: 99.9% uptime for enhanced scoring operations
+- **Performance Benchmarks**: <5% overhead on real-time scoring updates
+- **Security Requirements**: Input validation and sanitization for all scoring data, constitution compliance
+- **Reliability Targets**: 99.9% uptime for enhanced scoring operations, 100% metadata preservation
 
 ## Risk Mitigation
 

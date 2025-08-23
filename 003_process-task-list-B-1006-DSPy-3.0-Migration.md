@@ -2,9 +2,9 @@
 
 ## 🎯 **Execution Overview**
 
-**Project**: B-1006 DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization
-**Total Tasks**: 8 tasks across 5 phases
-**Estimated Time**: 18 hours
+**Project**: B-1006 DSPy 3.0 Migration: Constitution-Aware Testing, GEPA Optimization, and Safety Mechanisms
+**Total Tasks**: 10 tasks across 5 phases
+**Estimated Time**: 12 hours
 **Priority**: Critical
 **Status**: Ready for execution
 **Schema Impact**: Minimal - existing signatures work identically in DSPy 3.0
@@ -20,25 +20,27 @@
 
 ## 📋 **Task Execution List**
 
-### Phase 1: Test Environment Setup
+### Phase 1: Environment & Compatibility
 
-#### Task 1.1: Create DSPy 3.0 Test Environment
+#### Task 1.1: Pin DSPy 3.0.1 and Create Test Environment
 **Priority**: Critical
 **Estimated Time**: 2 hours
 **Dependencies**: None
 **Status**: [ ]
 
 **Do**:
-1. Create isolated Python virtual environment for DSPy 3.0 testing
-2. Install DSPy 3.0 and verify installation
-3. Test basic DSPy 3.0 functionality (import, configure, basic operations)
-4. Document setup instructions and environment configuration
-5. Validate environment isolation from production DSPy 2.6.27
+1. Pin DSPy 3.0.1 in constraints.txt
+2. Create isolated Python virtual environment for DSPy 3.0.1 testing
+3. Install DSPy 3.0.1 and verify installation
+4. Test basic DSPy 3.0.1 functionality (import, configure, basic operations)
+5. Document setup instructions and environment configuration
+6. Validate environment isolation from production DSPy 2.6.27
 
 **Done when**:
-- [ ] Isolated Python virtual environment created with DSPy 3.0
+- [ ] DSPy 3.0.1 pinned in constraints.txt
+- [ ] Isolated Python virtual environment created with DSPy 3.0.1
 - [ ] All existing dependencies installed and compatible
-- [ ] Basic DSPy 3.0 functionality validated
+- [ ] Basic DSPy 3.0.1 functionality validated
 - [ ] Test environment documented with setup instructions
 - [ ] Environment isolation verified (no conflicts with production)
 
@@ -70,11 +72,41 @@
 
 **Auto-Advance**: no
 **🛑 Pause After**: yes
-**When Ready Prompt**: "DSPy 3.0 configuration complete. Proceed to compatibility testing?"
+**When Ready Prompt**: "DSPy 3.0 configuration complete. Proceed to constitution-aware testing integration?"
 
 ---
 
-### Phase 2: Compatibility Testing
+### Phase 2: Constitution-Aware Testing Integration
+
+#### Task 2.1: Integrate Constitution-Aware Testing with Existing Test Infrastructure
+**Priority**: Critical
+**Estimated Time**: 2 hours
+**Dependencies**: Task 1.2
+**Status**: [ ]
+
+**Do**:
+1. Integrate constitution-aware testing with existing test infrastructure
+2. Implement constitution compliance validation
+3. Enhance existing test suites with constitution-aware checks
+4. Ensure constitution test suite green with all articles validated
+5. Validate performance impact minimal (<5% overhead)
+6. Document constitution testing integration
+
+**Done when**:
+- [ ] Constitution-aware testing integrated with existing test infrastructure
+- [ ] Constitution compliance validation operational
+- [ ] Existing test suites enhanced with constitution-aware checks
+- [ ] Constitution test suite green with all articles validated
+- [ ] Performance impact minimal (<5% overhead)
+- [ ] Constitution testing integration documented
+
+**Auto-Advance**: no
+**🛑 Pause After**: yes
+**When Ready Prompt**: "Constitution-aware testing integration complete. Proceed to compatibility testing?"
+
+---
+
+### Phase 3: Compatibility Testing
 
 #### Task 2.1: Test Existing DSPy Modules Compatibility
 **Priority**: Critical
@@ -187,6 +219,34 @@
 
 **Auto-Advance**: yes
 **🛑 Pause After**: no
+
+---
+
+#### Task 3.3: Implement Optimizer Budget Enforcement with Constitution Compliance
+**Priority**: Critical
+**Estimated Time**: 2 hours
+**Dependencies**: Task 3.2
+**Status**: [ ]
+
+**Do**:
+1. Implement optimizer budget enforcement with constitution compliance validation
+2. Ensure constitution-aware budget monitoring
+3. Configure budget violations to trigger constitution compliance checks
+4. Integrate constitution compliance validation with budget enforcement
+5. Validate performance impact minimal (<5% overhead)
+6. Document budget enforcement with constitution compliance
+
+**Done when**:
+- [ ] Optimizer budget enforcement with constitution compliance validation operational
+- [ ] Constitution-aware budget monitoring implemented
+- [ ] Budget violations trigger constitution compliance checks
+- [ ] Constitution compliance validation integrated with budget enforcement
+- [ ] Performance impact minimal (<5% overhead)
+- [ ] Budget enforcement with constitution compliance documented
+
+**Auto-Advance**: no
+**🛑 Pause After**: yes
+**When Ready Prompt**: "Optimizer budget enforcement with constitution compliance complete. Proceed to MLflow integration?"
 
 ---
 

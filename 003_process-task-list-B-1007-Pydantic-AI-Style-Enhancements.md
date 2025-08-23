@@ -2,9 +2,9 @@
 
 ## 🎯 **Execution Overview**
 
-**Project**: B-1007 Pydantic AI Style Enhancements: Dependency Injection and Dynamic Context
-**Total Tasks**: 8 tasks across 4 phases
-**Estimated Time**: 12 hours
+**Project**: B-1007 Pydantic AI Style Enhancements: Constitution-Aware Type Safety and Error Taxonomy
+**Total Tasks**: 10 tasks across 5 phases
+**Estimated Time**: 15 hours
 **Priority**: High
 **Status**: Ready for execution (after B-1006 completion)
 **Schema Impact**: Minimal - builds on DSPy 3.0 foundation with backward compatibility
@@ -14,61 +14,95 @@
 
 ## 📋 **Task Execution List**
 
-### Phase 1: Dependency Injection Framework
+### Phase 1: Context Models
 
-#### Task 1.1: Implement Pydantic Context Containers
+#### Task 1.1: Add Role-Based Context Models
 **Priority**: Critical
-**Estimated Time**: 2 hours
+**Estimated Time**: 3 hours
 **Dependencies**: B-1006 completion
 **Status**: [ ]
 
 **Do**:
-1. Create Pydantic models for all context types (user, session, model, task)
-2. Implement type validation with custom validators for domain-specific rules
-3. Create backward compatibility layer for existing API calls
-4. Add performance benchmarking for validation overhead
-5. Document context container usage and migration guide
+1. Add PlannerContext, CoderContext, ResearchContext as Pydantic classes
+2. Implement role-specific validation with custom validators for domain-specific rules
+3. Validate backlog → PRD → tasks flow with typed contexts
+4. Create backward compatibility layer for existing API calls
+5. Add performance benchmarking for role context validation overhead
+6. Document role context container usage and migration guide
 
 **Done when**:
-- [ ] Pydantic models defined for all context types with comprehensive validation
-- [ ] Type validation catches configuration errors before runtime
+- [ ] PlannerContext, CoderContext, ResearchContext Pydantic classes implemented with role-specific validation
+- [ ] Backlog → PRD → tasks flow validated with typed contexts
+- [ ] Role-based context validation catches configuration errors before runtime
 - [ ] Backward compatibility layer maintains existing API functionality
 - [ ] Performance impact is minimal (<2% overhead)
-- [ ] Context container usage documented with examples
+- [ ] Role context container usage documented with examples
 
 **Auto-Advance**: no
 **🛑 Pause After**: yes
-**When Ready Prompt**: "Pydantic context containers implemented. Proceed to type validation integration?"
+**When Ready Prompt**: "Role-based context models implemented. Proceed to constitution schema enforcement?"
 
 ---
 
-#### Task 1.2: Add Type Validation to Existing Components
+#### Task 1.2: Add Constitution Schema Enforcement
 **Priority**: Critical
-**Estimated Time**: 2 hours
+**Estimated Time**: 3 hours
 **Dependencies**: Task 1.1
 **Status**: [ ]
 
 **Do**:
-1. Integrate type validation into ModelSwitcher with typed context acceptance
-2. Add type validation to optimization framework parameters
-3. Implement Pydantic validation for all tool input parameters
-4. Create gradual migration approach with deprecation warnings
-5. Ensure existing functionality preserved with enhanced type safety
+1. Add ConstitutionCompliance Pydantic model (sections, context hierarchy)
+2. Run constitution validator after each role's output
+3. Integrate constitution compliance checking with role-based contexts
+4. Implement constitution schema enforcement with real-time compliance checking
+5. Create gradual migration approach with deprecation warnings
+6. Ensure existing functionality preserved with enhanced constitution compliance
 
 **Done when**:
-- [ ] ModelSwitcher accepts and validates typed context
-- [ ] Optimization framework uses type-safe parameters
-- [ ] All tools validate input parameters with Pydantic
-- [ ] Existing functionality preserved with enhanced type safety
+- [ ] ConstitutionCompliance Pydantic model implemented with sections and context hierarchy
+- [ ] Constitution validator runs after each role's output
+- [ ] Constitution compliance checking integrated with role-based contexts
+- [ ] Constitution schema enforcement catches compliance errors before runtime
+- [ ] Existing functionality preserved with enhanced constitution compliance
 - [ ] Migration guide and examples provided
 
 **Auto-Advance**: no
 **🛑 Pause After**: yes
-**When Ready Prompt**: "Type validation integration complete. Proceed to dynamic context management?"
+**When Ready Prompt**: "Constitution schema enforcement complete. Proceed to constitution-aware validation integration?"
 
 ---
 
-### Phase 2: Dynamic Context Management
+### Phase 2: Constitution-Aware Validation Integration
+
+#### Task 2.1: Integrate Constitution-Aware Validation with Existing Pydantic Infrastructure
+**Priority**: Critical
+**Estimated Time**: 2 hours
+**Dependencies**: Task 1.2
+**Status**: [ ]
+
+**Do**:
+1. Integrate constitution-aware validation with existing Pydantic infrastructure
+2. Implement ConstitutionCompliance model for program output validation
+3. Ensure constitution-aware validation operational with existing Pydantic models
+4. Configure program output validation via ConstitutionCompliance model
+5. Validate performance impact minimal (<5% overhead)
+6. Document constitution-aware validation integration
+
+**Done when**:
+- [ ] Constitution-aware validation integrated with existing Pydantic infrastructure
+- [ ] ConstitutionCompliance model validates program outputs before/after runs
+- [ ] Constitution-aware validation operational with existing Pydantic models
+- [ ] Program output validation via ConstitutionCompliance model functional
+- [ ] Performance impact minimal (<5% overhead)
+- [ ] Constitution-aware validation integration documented
+
+**Auto-Advance**: no
+**🛑 Pause After**: yes
+**When Ready Prompt**: "Constitution-aware validation integration complete. Proceed to dynamic context management?"
+
+---
+
+### Phase 3: Dynamic Context Management
 
 #### Task 2.1: Implement Dynamic System Prompts
 **Priority**: High

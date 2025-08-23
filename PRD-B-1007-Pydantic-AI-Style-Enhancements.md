@@ -5,63 +5,86 @@
 
 ## 1. Problem Statement
 
-**What's broken?** The current DSPy system (post-B-1006) lacks modern type safety patterns, dynamic context management, and enhanced tool integration. While the system is functional, it's missing enterprise-grade reliability features that would significantly improve debugging, error prevention, and user experience.
+**What's broken?** The current DSPy system (post-B-1006) lacks constitution-aware type safety, role-based context models, structured error taxonomy, and typed debug logs. While the system is functional, it's missing enterprise-grade reliability features that would significantly improve debugging, error prevention, constitution compliance, and user experience.
 
-**Why does it matter?** The current system experiences runtime errors that could be caught during development, provides limited context for debugging, and offers generic tool responses that don't adapt to user preferences or session context. This leads to 40% of errors discovered in production, 2-4 hours debugging time for issues, and generic user experiences.
+**Why does it matter?** The current system experiences runtime errors that could be caught during development, provides limited context for debugging, lacks constitution-aware validation, and offers generic tool responses that don't adapt to user preferences or session context. This leads to 40% of errors discovered in production, 2-4 hours debugging time for issues, constitution compliance gaps, and generic user experiences.
 
-**What's the opportunity?** By implementing Pydantic-style dependency injection, dynamic context management, and enhanced tool frameworks, we can:
-- Reduce runtime errors by 50% through type validation
-- Decrease debugging time by 30% with rich context information
+**What's the opportunity?** By implementing constitution-aware Pydantic models, role-based context systems, structured error taxonomy, and typed debug logs, we can:
+- Achieve 95%+ role output validation against context schema
+- Reduce runtime errors by 50% through type validation and constitution enforcement
+- Decrease debugging time by 30% with rich context information and typed logs
+- Enforce constitution invariants via type system
 - Improve user experience with personalized, context-aware responses
 - Create enterprise-grade reliability patterns that scale with the system
 - Future-proof the architecture with modern development practices
 
 ## 2. Solution Overview
 
-**What are we building?** A comprehensive enhancement to the DSPy system that adds Pydantic-style dependency injection, dynamic context management, and enhanced tool frameworks while building on the stable DSPy 3.0 foundation from B-1006.
+**What are we building?** A comprehensive enhancement to the DSPy system that adds constitution-aware Pydantic models, role-based context systems, structured error taxonomy, and typed debug logs while building on the stable DSPy 3.0 foundation from B-1006.
 
 **How does it work?** The enhancement will implement:
-1. **Dependency Injection Framework**: Type-safe context containers with Pydantic validation
-2. **Dynamic Context Management**: Runtime context injection for personalized AI responses
-3. **Enhanced Tool Framework**: Context-aware tools with automatic experiment tracking
-4. **Improved Observability**: Rich debugging context with MLflow integration
+1. **Context Models**: Add PlannerContext, CoderContext, ResearchContext as Pydantic classes with backlog → PRD → tasks flow validation
+2. **Constitution Schema Enforcement**: Add ConstitutionCompliance Pydantic model with validator after each role's output
+3. **Error Taxonomy**: Introduce PydanticError model for ValidationError, CoherenceError, DependencyError with constitution failure mode mapping
+4. **Dynamic Prompts + Preferences**: Store user preferences in typed Pydantic class and inject into optimizer scoring
+5. **Debugging & Observability**: Typed debug logs via Pydantic with trace-level logs enriched with context schema
 
 **What are the key features?**
-- Type-safe dependency injection with runtime validation
-- Dynamic system prompts that adapt to user context
-- Context-aware tools with automatic experiment tracking
-- Rich debugging information with full context capture
-- Personalized AI responses based on user preferences
-- Comprehensive error handling with graceful fallbacks
+- Role-based context models (PlannerContext, CoderContext, ResearchContext) with Pydantic validation
+- Constitution-aware schema enforcement with real-time compliance checking
+- Structured error taxonomy (ValidationError, CoherenceError, DependencyError) with constitution mapping
+- Type-safe user preferences with optimizer scoring integration
+- Typed debug logs with context schema enrichment
+- Comprehensive error handling with constitution-aware fallbacks
+- 95%+ role output validation against context schema
+- 50% runtime error reduction through type validation
+- Constitution-aware validation integrated with existing Pydantic infrastructure
+- ConstitutionCompliance model for program output validation
 
 ## 3. Acceptance Criteria
 
 **How do we know it's done?**
-- All existing DSPy functionality works with new dependency injection system
-- Type validation catches 90% of potential runtime errors during development
-- Dynamic context system provides personalized responses for different user types
-- Enhanced tools automatically track experiments and provide rich debugging info
+- All existing DSPy functionality works with new constitution-aware Pydantic system
+- 95%+ of role outputs validated against context schema
+- Constitution schema enforcement operational with real-time compliance checking
+- Structured error taxonomy implemented with constitution failure mode mapping
+- Type-safe user preferences integrated with optimizer scoring
+- Typed debug logs with context schema enrichment functional
 - System maintains backward compatibility with existing DSPy 3.0 features
 
 **What does success look like?**
-- 50% reduction in runtime errors through type validation
-- 30% faster debugging with rich context information
+- 95%+ role output validation against context schema achieved
+- 50% reduction in runtime errors through type validation and constitution enforcement
+- 30% faster debugging with rich context information and typed logs
+- Constitution invariants enforced via type system
+- Constitution-aware validation integrated with existing Pydantic infrastructure
+- ConstitutionCompliance model validates program outputs before/after runs
 - Personalized AI responses based on user context and preferences
 - Comprehensive experiment tracking for all AI interactions
 - Enterprise-grade reliability patterns that scale with system growth
 
 **What are the quality gates?**
-- All existing tests must pass with new dependency injection system
-- Type validation must catch configuration errors before runtime
-- Dynamic context must provide measurable improvement in response quality
-- Enhanced tools must integrate seamlessly with existing MLflow setup
+- All existing tests must pass with new constitution-aware Pydantic system
+- 95%+ role output validation against context schema must be achieved
+- Constitution schema enforcement must catch compliance errors before runtime
+- Structured error taxonomy must provide measurable improvement in error handling
+- Type-safe user preferences must integrate seamlessly with optimizer scoring
+- Typed debug logs must provide measurable improvement in debugging efficiency
+- Constitution-aware validation integrated with existing Pydantic infrastructure
+- ConstitutionCompliance model validates program outputs before/after runs
 - Performance impact must be minimal (<5% overhead)
+- Constitution invariants must be enforced via type system
 
 ## 4. Technical Approach
 
 **What technology?**
 - Pydantic for type validation and data modeling
 - DSPy 3.0 (from B-1006) as the foundation
+- Constitution-aware Pydantic models for compliance validation
+- Structured error taxonomy with constitution mapping
+- Role-based context models (PlannerContext, CoderContext, ResearchContext)
+- Type-safe user preferences with optimizer integration
+- Typed debug logs with context schema enrichment
 - MLflow for experiment tracking and observability
 - Existing PostgreSQL + PGVector infrastructure
 - Python 3.12 with modern type hints
