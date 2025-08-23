@@ -2,9 +2,9 @@
 
 ## 🎯 **Execution Overview**
 
-**Project**: B-1007 Pydantic AI Style Enhancements: Constitution-Aware Type Safety and Error Taxonomy
-**Total Tasks**: 10 tasks across 5 phases
-**Estimated Time**: 15 hours
+**Project**: B-1007 Pydantic AI Style Enhancements: Typed Context Models and User Preferences
+**Total Tasks**: 6 tasks across 3 phases
+**Estimated Time**: 7 hours
 **Priority**: High
 **Status**: Ready for execution (after B-1006 completion)
 **Schema Impact**: Minimal - builds on DSPy 3.0 foundation with backward compatibility
@@ -23,7 +23,7 @@
 **Status**: [ ]
 
 **Do**:
-1. Add PlannerContext, CoderContext, ResearchContext as Pydantic classes
+1. Add PlannerContext, CoderContext as Pydantic classes
 2. Implement role-specific validation with custom validators for domain-specific rules
 3. Validate backlog → PRD → tasks flow with typed contexts
 4. Create backward compatibility layer for existing API calls
@@ -31,11 +31,11 @@
 6. Document role context container usage and migration guide
 
 **Done when**:
-- [ ] PlannerContext, CoderContext, ResearchContext Pydantic classes implemented with role-specific validation
+- [ ] PlannerContext, CoderContext Pydantic classes implemented with role-specific validation
 - [ ] Backlog → PRD → tasks flow validated with typed contexts
 - [ ] Role-based context validation catches configuration errors before runtime
 - [ ] Backward compatibility layer maintains existing API functionality
-- [ ] Performance impact is minimal (<2% overhead)
+- [ ] Performance impact is minimal (<3% overhead)
 - [ ] Role context container usage documented with examples
 
 **Auto-Advance**: no
@@ -44,27 +44,27 @@
 
 ---
 
-#### Task 1.2: Add Constitution Schema Enforcement
+#### Task 1.2: Add Error Taxonomy
 **Priority**: Critical
-**Estimated Time**: 3 hours
+**Estimated Time**: 2 hours
 **Dependencies**: Task 1.1
 **Status**: [ ]
 
 **Do**:
-1. Add ConstitutionCompliance Pydantic model (sections, context hierarchy)
-2. Run constitution validator after each role's output
-3. Integrate constitution compliance checking with role-based contexts
-4. Implement constitution schema enforcement with real-time compliance checking
-5. Create gradual migration approach with deprecation warnings
-6. Ensure existing functionality preserved with enhanced constitution compliance
+1. Introduce PydanticError model for ValidationError, CoherenceError, DependencyError
+2. Map constitution's "failure modes" to error types
+3. Integrate structured error taxonomy with role-based contexts
+4. Implement error classification for measurable improvement in error handling
+5. Create explicit function calls (no decorators) for clarity and debugging
+6. Document error taxonomy usage and examples
 
 **Done when**:
-- [ ] ConstitutionCompliance Pydantic model implemented with sections and context hierarchy
-- [ ] Constitution validator runs after each role's output
-- [ ] Constitution compliance checking integrated with role-based contexts
-- [ ] Constitution schema enforcement catches compliance errors before runtime
-- [ ] Existing functionality preserved with enhanced constitution compliance
-- [ ] Migration guide and examples provided
+- [ ] PydanticError model implemented for ValidationError, CoherenceError, DependencyError
+- [ ] Constitution's "failure modes" mapped to error types
+- [ ] Structured error taxonomy integrated with role-based contexts
+- [ ] Error classification provides measurable improvement in error handling
+- [ ] Explicit function calls implemented (no decorators)
+- [ ] Error taxonomy usage documented with examples
 
 **Auto-Advance**: no
 **🛑 Pause After**: yes

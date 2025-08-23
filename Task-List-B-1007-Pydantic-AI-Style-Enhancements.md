@@ -2,7 +2,7 @@
 
 ## Overview
 
-Implement constitution-aware Pydantic models, role-based context systems, structured error taxonomy, and typed debug logs to create an enterprise-grade DSPy system with 95%+ role output validation, 50% runtime error reduction, constitution invariants enforced via type system, and comprehensive observability.
+Implement lean, solo-dev-optimized typed context models, structured error taxonomy, and user preferences to create a reliable DSPy system with 95%+ role output validation, 50% runtime error reduction, constitution invariants enforced via type system, and integration with existing memory rehydrator.
 
 ## Implementation Phases
 
@@ -14,16 +14,15 @@ Implement constitution-aware Pydantic models, role-based context systems, struct
 **Dependencies**: B-1006 completion
 **Status**: [ ]
 
-**Description**: Add PlannerContext, CoderContext, ResearchContext as Pydantic classes and validate backlog → PRD → tasks flow with typed contexts.
+**Description**: Add PlannerContext, CoderContext as Pydantic classes and validate backlog → PRD → tasks flow with typed contexts.
 
 **Acceptance Criteria**:
 - [ ] PlannerContext Pydantic class implemented with role-specific validation
 - [ ] CoderContext Pydantic class implemented with role-specific validation
-- [ ] ResearchContext Pydantic class implemented with role-specific validation
 - [ ] Backlog → PRD → tasks flow validated with typed contexts
 - [ ] Role-based context validation catches configuration errors before runtime
 - [ ] Backward compatibility layer maintains existing API
-- [ ] Performance impact is minimal (<2% overhead)
+- [ ] Performance impact is minimal (<3% overhead)
 
 **Testing Requirements**:
 - [ ] **Unit Tests**: Test all role-based Pydantic model validations and error cases
@@ -33,7 +32,7 @@ Implement constitution-aware Pydantic models, role-based context systems, struct
 - [ ] **Resilience Tests**: Test error handling for invalid role context data
 - [ ] **Edge Case Tests**: Test role context with maximum/minimum values and special characters
 
-**Implementation Notes**: Use Pydantic v2 for optimal performance, implement role-specific validators for domain-specific rules, ensure all existing ModelSwitcher calls work with new role-based context system, validate backlog → PRD → tasks flow with typed contexts.
+**Implementation Notes**: Use Pydantic v2 for optimal performance, implement role-specific validators for domain-specific rules, ensure all existing memory rehydrator calls work with new role-based context system, validate backlog → PRD → tasks flow with typed contexts. Use explicit function calls (no decorators) for clarity and debugging.
 
 **Quality Gates**:
 - [ ] **Code Review**: All role-based Pydantic models reviewed for type safety
@@ -44,20 +43,19 @@ Implement constitution-aware Pydantic models, role-based context systems, struct
 
 ---
 
-#### Task 1.2: Add Constitution Schema Enforcement
+#### Task 1.2: Add Error Taxonomy
 **Priority**: Critical
-**Estimated Time**: 3 hours
+**Estimated Time**: 2 hours
 **Dependencies**: Task 1.1
 **Status**: [ ]
 
-**Description**: Add ConstitutionCompliance Pydantic model (sections, context hierarchy) and run validator after each role's output.
+**Description**: Introduce PydanticError model for ValidationError, CoherenceError, DependencyError and map constitution's "failure modes" to error types.
 
 **Acceptance Criteria**:
-- [ ] ConstitutionCompliance Pydantic model implemented with sections and context hierarchy
-- [ ] Constitution validator runs after each role's output
-- [ ] Constitution compliance checking integrated with role-based contexts
-- [ ] Constitution schema enforcement catches compliance errors before runtime
-- [ ] Existing functionality preserved with enhanced constitution compliance
+- [ ] PydanticError model implemented for ValidationError, CoherenceError, DependencyError
+- [ ] Constitution's "failure modes" mapped to error types
+- [ ] Structured error taxonomy integrated with role-based contexts
+- [ ] Error classification provides measurable improvement in error handling
 
 **Testing Requirements**:
 - [ ] **Unit Tests**: Test constitution compliance validation in each role
@@ -78,21 +76,22 @@ Implement constitution-aware Pydantic models, role-based context systems, struct
 
 ---
 
-### Phase 2: Error Taxonomy
+### Phase 2: User Preferences & Dynamic Prompts
 
-#### Task 2.1: Introduce PydanticError Model
+#### Task 2.1: Implement User Preferences
 **Priority**: High
 **Estimated Time**: 2 hours
 **Dependencies**: Task 1.2
 **Status**: [ ]
 
-**Description**: Introduce PydanticError model for ValidationError, CoherenceError, DependencyError and map constitution's "failure modes" to error types.
+**Description**: Store user preferences in local JSON file and inject into optimizer scoring.
 
 **Acceptance Criteria**:
-- [ ] PydanticError model implemented for ValidationError, CoherenceError, DependencyError
-- [ ] Constitution's "failure modes" mapped to error types
-- [ ] Structured error taxonomy integrated with role-based contexts
-- [ ] Error classification provides measurable improvement in error handling
+- [ ] UserPreferences Pydantic model implemented
+- [ ] Local JSON file storage in config/user_preferences.json
+- [ ] User preferences integrated with optimizer scoring
+- [ ] No database dependencies (local-first approach)
+- [ ] Performance impact is minimal (<3% overhead)
 
 **Testing Requirements**:
 - [ ] **Unit Tests**: Test PydanticError model validation and error classification
