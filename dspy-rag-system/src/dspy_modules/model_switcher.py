@@ -20,6 +20,16 @@ from dspy import LM, InputField, Module, OutputField, Signature
 
 _LOG = logging.getLogger("model_switcher")
 
+# Import optimizer system
+try:
+    from .optimizers import LabeledFewShotOptimizer, OptimizationResult, get_optimizer_manager, optimize_program
+
+    OPTIMIZER_AVAILABLE = True
+    _LOG.info("DSPy optimizer system available")
+except ImportError as e:
+    OPTIMIZER_AVAILABLE = False
+    _LOG.warning(f"DSPy optimizer system not available: {e}")
+
 # Import monitoring system
 try:
     import os
@@ -75,6 +85,18 @@ try:
 except ImportError as e:
     SCRIBE_AVAILABLE = False
     _LOG.warning(f"Scribe context provider not available: {e}")
+
+# Assertion framework integration (optional)
+try:
+    from .assertions import DSPyAssertionFramework, ValidationReport, assert_reliability_target, validate_dspy_module
+
+    ASSERTION_FRAMEWORK_AVAILABLE = True
+except ImportError:
+    ASSERTION_FRAMEWORK_AVAILABLE = False
+    DSPyAssertionFramework = None
+    validate_dspy_module = None
+    assert_reliability_target = None
+    ValidationReport = None
 
 # Simple cache for context to avoid repeated subprocess calls
 _context_cache = {}
@@ -614,7 +636,7 @@ TASK_MODEL_MAPPING = {
 
 
 class ModelSwitcher:
-    """Manages model switching for DSPy multi-agent system"""
+    """Manages model switching for DSPy multi-agent system with assertion validation"""
 
     def __init__(self, ollama_base_url: str = "http://localhost:11434"):
         """
@@ -629,8 +651,26 @@ class ModelSwitcher:
         self.model_load_times: Dict[LocalModel, float] = {}
         self.switch_count = 0
 
+        # Initialize optimizer system
+        self.optimizer_enabled = OPTIMIZER_AVAILABLE
+        self.optimizer_manager = None
+        self.active_optimizer = None
+        self.optimization_config = {}
+
+        if self.optimizer_enabled:
+            self.optimizer_manager = get_optimizer_manager()
+            self.active_optimizer = "labeled_few_shot"
+            _LOG.info("Optimizer system initialized")
+
         # Initialize DSPy configuration
         self._configure_dspy()
+
+        # Initialize assertion framework
+        self.assertion_framework = DSPyAssertionFramework()
+        self.validation_enabled = True
+        self.validation_history = []
+
+        _LOG.info("ModelSwitcher initialized with assertion framework")
 
     def _configure_dspy(self):
         """Configure DSPy with Ollama integration"""
@@ -851,12 +891,250 @@ Please provide a comprehensive review considering the project's quality standard
 
     def get_stats(self) -> Dict[str, Any]:
         """Get model switching statistics."""
-        return {
+        stats = {
             "current_model": self.current_model.value if self.current_model else None,
             "switch_count": self.switch_count,
             "model_load_times": {model.value: time for model, time in self.model_load_times.items()},
             "available_models": [model.value for model in LocalModel],
         }
+
+        # Add optimizer statistics if available
+        if self.optimizer_enabled and self.optimizer_manager:
+            optimizer = self.optimizer_manager.get_optimizer("labeled_few_shot")
+            if optimizer:
+                optimizer_stats = optimizer.get_optimization_stats()
+                stats["optimizer"] = {
+                    "enabled": True,
+                    "active_optimizer": self.active_optimizer,
+                    "optimization_stats": optimizer_stats,
+                }
+            else:
+                stats["optimizer"] = {"enabled": False, "active_optimizer": None, "optimization_stats": None}
+        else:
+            stats["optimizer"] = {"enabled": False, "active_optimizer": None, "optimization_stats": None}
+
+        return stats
+
+    def enable_optimizer(self, optimizer_name: str = "labeled_few_shot") -> bool:
+        """
+        Enable optimizer for the model switcher.
+
+        Args:
+            optimizer_name: Name of the optimizer to enable
+
+        Returns:
+            True if optimizer enabled successfully, False otherwise
+        """
+        if not self.optimizer_enabled:
+            _LOG.warning("Optimizer system not available")
+            return False
+
+        if self.optimizer_manager and self.optimizer_manager.set_active_optimizer(optimizer_name):
+            self.active_optimizer = optimizer_name
+            _LOG.info(f"Optimizer enabled: {optimizer_name}")
+            return True
+        else:
+            _LOG.error(f"Failed to enable optimizer: {optimizer_name}")
+            return False
+
+    def disable_optimizer(self) -> bool:
+        """
+        Disable optimizer for the model switcher.
+
+        Returns:
+            True if optimizer disabled successfully, False otherwise
+        """
+        if not self.optimizer_enabled:
+            return True
+
+        self.active_optimizer = None
+        _LOG.info("Optimizer disabled")
+        return True
+
+    def optimize_program(
+        self, program: Module, train_data: List, metric_func, optimizer_name: Optional[str] = None
+    ) -> Optional[OptimizationResult]:
+        """
+        Optimize a program using the active optimizer.
+
+        Args:
+            program: DSPy program to optimize
+            train_data: Training data for optimization
+            metric_func: Metric function for evaluation
+            optimizer_name: Optimizer to use (uses active if None)
+
+        Returns:
+            OptimizationResult if successful, None otherwise
+        """
+        if not self.optimizer_enabled or not self.optimizer_manager:
+            _LOG.warning("Optimizer system not available")
+            return None
+
+        optimizer_name = optimizer_name or self.active_optimizer
+        if not optimizer_name:
+            _LOG.warning("No optimizer specified and no active optimizer")
+            return None
+
+        try:
+            result = self.optimizer_manager.optimize_program(program, train_data, metric_func, optimizer_name)
+            _LOG.info(f"Program optimization completed: {result.success}")
+            return result
+        except Exception as e:
+            _LOG.error(f"Program optimization failed: {e}")
+            return None
+
+    def get_optimizer_stats(self) -> Dict[str, Any]:
+        """
+        Get optimizer statistics.
+
+        Returns:
+            Dictionary with optimizer statistics
+        """
+        if not self.optimizer_enabled or not self.optimizer_manager:
+            return {"enabled": False}
+
+        if not self.active_optimizer:
+            return {"enabled": False, "active_optimizer": None}
+
+        optimizer = self.optimizer_manager.get_optimizer(self.active_optimizer)
+        if optimizer:
+            return {
+                "enabled": True,
+                "active_optimizer": self.active_optimizer,
+                "stats": optimizer.get_optimization_stats(),
+            }
+        else:
+            return {"enabled": False, "active_optimizer": None}
+
+    def validate_current_module(self, test_inputs: Optional[List[Dict[str, Any]]] = None) -> Optional[ValidationReport]:
+        """
+        Validate the current active module using the assertion framework
+
+        Args:
+            test_inputs: Optional test inputs for performance validation
+
+        Returns:
+            ValidationReport with comprehensive validation results, or None if validation fails
+        """
+        if not self.validation_enabled:
+            _LOG.warning("Validation is disabled")
+            return None
+
+        try:
+            # Get the current active module
+            current_module = self._get_current_module()
+            if not current_module:
+                _LOG.warning("No active module to validate")
+                return None
+
+            # Run validation
+            report = self.assertion_framework.validate_module(current_module, test_inputs)
+
+            # Store validation history
+            self.validation_history.append(
+                {
+                    "timestamp": time.time(),
+                    "module_name": report.module_name,
+                    "reliability_score": report.reliability_score,
+                    "critical_failures": report.critical_failures,
+                    "total_assertions": report.total_assertions,
+                    "passed_assertions": report.passed_assertions,
+                }
+            )
+
+            _LOG.info(f"Module validation completed: {report.reliability_score:.1f}% reliability")
+            return report
+
+        except Exception as e:
+            _LOG.error(f"Module validation failed: {e}")
+            return None
+
+    def get_validation_stats(self) -> Dict[str, Any]:
+        """Get validation statistics"""
+        if not self.validation_history:
+            return {
+                "total_validations": 0,
+                "average_reliability": 0.0,
+                "reliability_trend": "no_data",
+                "validation_enabled": self.validation_enabled,
+            }
+
+        reliability_scores = [v["reliability_score"] for v in self.validation_history]
+        avg_reliability = sum(reliability_scores) / len(reliability_scores)
+
+        # Calculate trend
+        if len(reliability_scores) >= 2:
+            recent_avg = sum(reliability_scores[-3:]) / min(3, len(reliability_scores))
+            if recent_avg > avg_reliability + 5:
+                trend = "improving"
+            elif recent_avg < avg_reliability - 5:
+                trend = "declining"
+            else:
+                trend = "stable"
+        else:
+            trend = "insufficient_data"
+
+        return {
+            "total_validations": len(self.validation_history),
+            "average_reliability": avg_reliability,
+            "reliability_trend": trend,
+            "validation_enabled": self.validation_enabled,
+            "recent_scores": reliability_scores[-5:] if reliability_scores else [],
+        }
+
+    def enable_validation(self) -> bool:
+        """Enable assertion validation"""
+        self.validation_enabled = True
+        _LOG.info("Assertion validation enabled")
+        return True
+
+    def disable_validation(self) -> bool:
+        """Disable assertion validation"""
+        self.validation_enabled = False
+        _LOG.info("Assertion validation disabled")
+        return False
+
+    def validate_reliability_improvement(self, target_improvement: float = 61.0) -> bool:
+        """
+        Validate if reliability has improved by the target amount
+
+        Args:
+            target_improvement: Target improvement percentage (default: 61% for 37%→98%)
+
+        Returns:
+            True if improvement meets target
+        """
+        if len(self.validation_history) < 2:
+            return False
+
+        # Get first and last reliability scores
+        first_score = self.validation_history[0]["reliability_score"]
+        last_score = self.validation_history[-1]["reliability_score"]
+        improvement = last_score - first_score
+
+        return improvement >= target_improvement
+
+    def _get_current_module(self) -> Optional[Module]:
+        """Get the current active module for validation"""
+        # This is a placeholder - in a real implementation, you would
+        # return the actual current module being used
+        return None
+
+    def get_comprehensive_stats(self) -> Dict[str, Any]:
+        """Get comprehensive statistics including validation data"""
+        # Get base stats
+        base_stats = {
+            "current_model": self.current_model.value if self.current_model else None,
+            "switch_count": self.switch_count,
+            "available_models": [model.value for model in LocalModel],
+            "optimizer": self.get_optimizer_stats(),
+        }
+
+        # Add validation statistics
+        validation_stats = self.get_validation_stats()
+        base_stats["validation"] = validation_stats
+
+        return base_stats
 
 
 # ---------- Enhanced DSPy Modules ----------
@@ -924,12 +1202,23 @@ Please provide a detailed response following the project's coding standards and 
             # Use DSPy signature for structured output
             signature_result = self.predict(task=task, task_type=task_type, role=role, complexity=complexity)
 
+            # Add optimizer information if available
+            optimizer_info = {}
+            if self.model_switcher.optimizer_enabled:
+                optimizer_stats = self.model_switcher.get_optimizer_stats()
+                optimizer_info = {
+                    "optimizer_enabled": optimizer_stats.get("enabled", False),
+                    "active_optimizer": optimizer_stats.get("active_optimizer"),
+                    "optimization_stats": optimizer_stats.get("stats"),
+                }
+
             return {
                 "result": result_text,
                 "confidence": signature_result.confidence,
                 "model_used": model.value,
                 "reasoning": signature_result.reasoning,
                 "model_selection": model_selection,
+                "optimizer_info": optimizer_info,
             }
         else:
             raise RuntimeError("No model available for task")
