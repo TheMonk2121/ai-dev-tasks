@@ -90,7 +90,7 @@ class MemoryContextMigrator:
                 if old_ref in content and old_ref != self.old_file:
                     # Add module reference comments
                     if new_ref in self.modules:
-                        module_comment = f"<!-- MODULE_REFERENCE: {new_ref} -->"
+                        module_comment = ""
                         if module_comment not in content:
                             # Find a good place to add the module reference
                             if "<!--" in content:
@@ -137,7 +137,7 @@ class MemoryContextMigrator:
             module_refs = []
             for module in self.modules:
                 if os.path.exists(module):
-                    module_refs.append(f"<!-- MODULE_REFERENCE: {module} -->")
+                    module_refs.append("")
             
             if module_refs:
                 module_section = "\n".join(module_refs)
@@ -236,7 +236,6 @@ class MemoryContextMigrator:
             'summary': summary
         }
 
-
 def main():
     """Main function to run the migration."""
     migrator = MemoryContextMigrator()
@@ -248,7 +247,6 @@ def main():
     print(f"Files Updated: {len(result['updated_files'])}")
     print(f"Errors: {len(result['errors'])}")
     print("="*50)
-
 
 if __name__ == "__main__":
     main()

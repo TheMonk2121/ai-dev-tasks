@@ -11,7 +11,6 @@ import re
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-
 @dataclass
 class AnchorMetadata:
     """Structured anchor metadata"""
@@ -31,7 +30,6 @@ class AnchorMetadata:
             result["role_pins"] = self.role_pins
         return result
 
-
 # Canonical anchor keys that are always loaded first
 CANONICAL_ANCHORS = {"tldr", "quick-start", "quick-links", "commands"}
 
@@ -40,7 +38,6 @@ VALID_ROLES = {"planner", "implementer", "researcher", "coder"}
 
 # Default priorities for canonical anchors
 DEFAULT_PRIORITIES = {"tldr": 0, "quick-start": 1, "quick-links": 2, "commands": 3}
-
 
 def extract_anchor_metadata(content: str) -> AnchorMetadata:
     """
@@ -90,7 +87,6 @@ def extract_anchor_metadata(content: str) -> AnchorMetadata:
 
     return metadata
 
-
 def validate_anchor_metadata(metadata: AnchorMetadata) -> List[str]:
     """
     Validate anchor metadata for consistency and correctness.
@@ -129,7 +125,6 @@ def validate_anchor_metadata(metadata: AnchorMetadata) -> List[str]:
 
     return errors
 
-
 def extract_anchor_metadata_from_file(file_path: str) -> AnchorMetadata:
     """
     Extract anchor metadata from a Markdown file.
@@ -148,7 +143,6 @@ def extract_anchor_metadata_from_file(file_path: str) -> AnchorMetadata:
         print(f"Error reading file {file_path}: {e}")
         return AnchorMetadata()
 
-
 def batch_extract_metadata(file_paths: List[str]) -> Dict[str, AnchorMetadata]:
     """
     Extract anchor metadata from multiple files.
@@ -164,7 +158,6 @@ def batch_extract_metadata(file_paths: List[str]) -> Dict[str, AnchorMetadata]:
         metadata = extract_anchor_metadata_from_file(file_path)
         results[file_path] = metadata
     return results
-
 
 def generate_metadata_report(file_paths: List[str]) -> Dict[str, Any]:
     """
@@ -227,7 +220,6 @@ def generate_metadata_report(file_paths: List[str]) -> Dict[str, Any]:
         }
 
     return report
-
 
 # CLI interface for testing and validation
 def main():
@@ -327,7 +319,6 @@ def main():
                     else:
                         print("  ✅ Valid")
                 print()
-
 
 if __name__ == "__main__":
     main()

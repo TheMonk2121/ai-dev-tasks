@@ -69,7 +69,6 @@ def mark_test_file_deprecated(file_path: Path) -> bool:
         print(f"  ❌ Error marking {file_path.name}: {e}")
         return False
 
-
 def main():
     """Mark all archived test files as deprecated."""
 
@@ -103,7 +102,6 @@ def main():
     print("- pytest configuration excludes 600_archives directory")
     print("- Test runners will not execute deprecated tests")
     print("- Use 'pytest -m \"not deprecated\"' to explicitly exclude deprecated tests")
-
 
 if __name__ == "__main__":
     main()

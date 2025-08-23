@@ -17,7 +17,6 @@ import pytest
 
 from scripts.doc_coherence_validator import DocCoherenceValidator
 
-
 class TestDocCoherenceValidator:
     """Test cases for DocCoherenceValidator class."""
 
@@ -39,7 +38,7 @@ class TestDocCoherenceValidator:
         """Create test markdown files for validation."""
         test_files = {
             "100_test-memory-context.md": """# Test Memory Context
-<!-- CONTEXT_REFERENCE: 400_test-system-overview.md -->
+
 <!-- BACKLOG_REFERENCE: 000_test-backlog.md -->
 Current Sprint: B-001
 """,
@@ -141,7 +140,7 @@ This is a valid README file.
         ):
             with patch.object(self.validator, "read_file") as mock_read:
                 mock_read.side_effect = [
-                    "<!-- CONTEXT_REFERENCE: 400_test-system-overview.md -->",
+                    "",
                     "System overview content",
                 ]
 
@@ -151,7 +150,7 @@ This is a valid README file.
         # Test with broken references
         with patch.object(self.validator, "markdown_files", [Path("100_test-memory-context.md")]):
             with patch.object(self.validator, "read_file") as mock_read:
-                mock_read.return_value = "<!-- CONTEXT_REFERENCE: non_existent.md -->"
+                mock_read.return_value = ""
 
                 with patch.object(Path, "exists") as mock_exists:
                     mock_exists.return_value = False
@@ -347,7 +346,6 @@ This is a valid README file.
                 assert len(issues) == 1
                 assert issues[0]["issue"] == "Test issue"
 
-
 class TestDocCoherenceValidatorIntegration:
     """Integration tests for the validation system."""
 
@@ -373,7 +371,7 @@ class TestDocCoherenceValidatorIntegration:
 | B-001 | Test Item | 🔥 | 2 | todo | Test description | Tech | None |
 """,
             "100_cursor-memory-context.md": """# Test Memory Context
-<!-- CONTEXT_REFERENCE: 400_system-overview.md -->
+
 Current Sprint: B-001
 """,
             "400_system-overview.md": """# Test System Overview
@@ -427,7 +425,6 @@ Context priority guide content.
 
             # Should fail due to naming convention issues
             assert not result
-
 
 if __name__ == "__main__":
     pytest.main([__file__])

@@ -1,6 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: scripts/single_doorway.py -->
-<!-- MEMORY_CONTEXT: HIGH - Core workflow automation system -->
+
+
 <!-- ESSENTIAL_FILES: 400_guides/400_system-overview.md, 400_guides/400_project-overview.md -->
 <!-- DSPY_ROLE: documentation -->
 <!-- DSPY_AUTHORITY: documentation_standards -->
@@ -17,7 +16,7 @@
 |---|---|---|
 | Comprehensive guide to the Scribe automatic context capture and summarization system | Setting up Scribe, troubleshooting sessions, or implementing new features | Start Scribe with `single_doorway.py scribe start`, review worklogs in `artifacts/worklogs/` |
 
-## 📋 Overview
+## 📋 Overview {#overview}
 
 Scribe is an intelligent context capture and summarization system that automatically records development sessions, extracts insights, and generates actionable summaries. It preserves valuable context during brainstorming, debugging, and implementation sessions.
 
@@ -686,7 +685,7 @@ Intelligent caching for repeated operations:
 - **Custom Workflows**: Configurable automation rules
 - **Mobile Support**: Mobile app for session management
 
-## 📚 Related Documentation
+## 📚 Related Documentation {#related-documentation}
 
 - **[System Overview](./400_system-overview.md)**: Technical architecture
 - **[Project Overview](./400_project-overview.md)**: High-level project structure
@@ -697,7 +696,7 @@ Intelligent caching for repeated operations:
 - **[Graph Visualization Guide](./400_graph-visualization-guide.md)**: Graph integration details
 - **[Memory Rehydration System](../100_memory/100_cursor-memory-context.md)**: Context retrieval system
 
-## 🔧 Related Scripts
+## 🔧 Related Scripts {#related-scripts}
 
 - **[single_doorway.py](../scripts/single_doorway.py)**: Main Scribe session management
 - **[session_registry.py](../scripts/session_registry.py)**: Session registry and context tagging
@@ -715,12 +714,3 @@ Scribe integrates with the comprehensive coding best practices through:
 - **Development Workflow**: Context capture supports coding standards compliance
 - **Memory Rehydration**: Scribe insights enhance AI development context
 - **Documentation Standards**: Scribe summaries follow documentation best practices
-
-## 🔗 Quick Links {#quick-links}
-
-- **[Quick Start](#quick-start)**: Get started with Scribe
-- **[System Architecture](#system-architecture)**: Technical overview
-- **[Configuration](#configuration)**: Setup and customization
-- **[Troubleshooting](#troubleshooting)**: Common issues and solutions
-- **[Advanced Features](#advanced-features)**: Power user capabilities
-- **[Quality Assurance Integration](#quality-assurance-integration)**: Integration with coding standards

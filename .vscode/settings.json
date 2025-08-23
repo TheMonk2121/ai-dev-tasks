@@ -260,7 +260,15 @@
         "qproc",
         "sprock",
         "ssub",
-        "untagging"
+        "untagging",
+        "bgsound",
+        "isindex",
+        "nextid",
+        "nobr",
+        "noembed",
+        "noframe",
+        "noframes",
+        "noscript"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

@@ -22,7 +22,6 @@ _LOG = logging.getLogger("documentation_retrieval")
 
 # ---------- DSPy Signatures ----------
 
-
 class DocumentationQuerySignature(Signature):
     """Signature for documentation query processing"""
 
@@ -32,7 +31,6 @@ class DocumentationQuerySignature(Signature):
     processed_query = OutputField(desc="Processed query optimized for documentation retrieval")
     search_categories = OutputField(desc="Relevant documentation categories to search")
     expected_context = OutputField(desc="Expected context format and structure")
-
 
 class DocumentationRetrievalSignature(Signature):
     """Signature for documentation retrieval and context provision"""
@@ -45,7 +43,6 @@ class DocumentationRetrievalSignature(Signature):
     confidence_score = OutputField(desc="Confidence in the relevance of retrieved context")
     context_metadata = OutputField(desc="Metadata about the provided context")
 
-
 class ContextSynthesisSignature(Signature):
     """Signature for synthesizing context from multiple sources"""
 
@@ -55,9 +52,7 @@ class ContextSynthesisSignature(Signature):
     context_priority = OutputField(desc="Priority ranking of context sources")
     context_coverage = OutputField(desc="Coverage assessment of the provided context")
 
-
 # ---------- DSPy Modules ----------
-
 
 class DocumentationQueryProcessor(Module):
     """Processes user queries for documentation retrieval"""
@@ -85,7 +80,6 @@ class DocumentationQueryProcessor(Module):
             "context_type": context_type,
             "query_type": query_type,
         }
-
 
 class DocumentationRetriever(Module):
     """Retrieves relevant documentation context"""
@@ -153,7 +147,6 @@ class DocumentationRetriever(Module):
             "chunk_count": len(chunks),
         }
 
-
 class ContextSynthesizer(Module):
     """Synthesizes context from multiple sources"""
 
@@ -184,7 +177,6 @@ class ContextSynthesizer(Module):
             "context_priority": result.context_priority,
             "context_coverage": result.context_coverage,
         }
-
 
 class DocumentationRetrievalService(Module):
     """Main service for documentation retrieval and context provision"""
@@ -317,14 +309,11 @@ class DocumentationRetrievalService(Module):
 
         return self.forward(query, context_type)
 
-
 # ---------- Utility Functions ----------
-
 
 def create_documentation_retrieval_service(db_connection_string: str) -> DocumentationRetrievalService:
     """Create a documentation retrieval service instance"""
     return DocumentationRetrievalService(db_connection_string)
-
 
 def get_relevant_context(query: str, db_connection_string: Optional[str] = None) -> Dict[str, Any]:
     """Get relevant context for a query"""
@@ -334,7 +323,6 @@ def get_relevant_context(query: str, db_connection_string: Optional[str] = None)
 
     service = create_documentation_retrieval_service(db_connection_string)
     return service.forward(query, "general")
-
 
 def search_documentation(
     query: str, category: Optional[str] = None, db_connection_string: Optional[str] = None
@@ -346,7 +334,6 @@ def search_documentation(
 
     service = create_documentation_retrieval_service(db_connection_string)
     return service.search_documentation(query, category)
-
 
 def get_task_context(
     task_description: str, task_type: str = "development", db_connection_string: Optional[str] = None

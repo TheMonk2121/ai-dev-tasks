@@ -113,7 +113,6 @@ class SessionContextIntegrator:
 
         return enhanced_context
 
-
 def integrate_with_memory_rehydrator():
     """Integration function for memory rehydrator."""
     integrator = SessionContextIntegrator()
@@ -128,7 +127,6 @@ def integrate_with_memory_rehydrator():
         "session_summary": session_summary,
         "integration_timestamp": datetime.now(timezone.utc).isoformat(),
     }
-
 
 def main():
     """CLI interface for session context integration."""
@@ -159,7 +157,6 @@ def main():
     elif args.command == "integrate":
         integration_data = integrate_with_memory_rehydrator()
         print(json.dumps(integration_data, indent=2))
-
 
 if __name__ == "__main__":
     main()

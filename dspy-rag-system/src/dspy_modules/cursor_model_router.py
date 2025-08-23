@@ -19,7 +19,6 @@ _LOG = logging.getLogger("cursor_model_router")
 
 # ---------- Cursor Native AI Models ----------
 
-
 class CursorModel(Enum):
     """Available Cursor native AI models"""
 
@@ -28,7 +27,6 @@ class CursorModel(Enum):
     MIXTRAL_8X7B = "mixtral-8x7b"
     MISTRAL_7B_INSTRUCT = "mistral-7b-instruct"
     AUTO = "auto"
-
 
 @dataclass
 class ModelCapabilities:
@@ -41,7 +39,6 @@ class ModelCapabilities:
     speed: float  # 0-1 (higher = faster)
     cost_efficiency: float  # 0-1 (higher = cheaper)
     best_for: List[str]
-
 
 # ---------- Model Capabilities Configuration ----------
 
@@ -86,7 +83,6 @@ CURSOR_MODEL_CAPABILITIES = {
 
 # ---------- DSPy Signatures for Model Routing ----------
 
-
 class ModelRoutingSignature(Signature):
     """Signature for intelligent model routing based on context engineering"""
 
@@ -100,7 +96,6 @@ class ModelRoutingSignature(Signature):
     confidence = OutputField(desc="Confidence in selection (0-1)")
     context_engineering = OutputField(desc="Context engineering strategy for the model")
 
-
 class ContextEngineeringSignature(Signature):
     """Signature for generating context engineering strategies"""
 
@@ -111,7 +106,6 @@ class ContextEngineeringSignature(Signature):
     engineered_context = OutputField(desc="Context engineering strategy")
     prompt_pattern = OutputField(desc="Recommended prompt pattern")
     model_instructions = OutputField(desc="Specific instructions for the model")
-
 
 # ---------- Context Engineering Patterns ----------
 
@@ -143,7 +137,6 @@ CONTEXT_ENGINEERING_PATTERNS = {
 }
 
 # ---------- DSPy Modules ----------
-
 
 # @dspy.assert_transform_module  # Not available in DSPy 2.6.27
 class CursorModelRouter(Module):
@@ -241,7 +234,6 @@ class CursorModelRouter(Module):
         # Rough estimation: 1 token ≈ 4 characters
         return len(query) // 4
 
-
 class ContextEngineeredPrompt(Module):
     """Generates context-engineered prompts for specific models"""
 
@@ -264,9 +256,7 @@ class ContextEngineeredPrompt(Module):
 
         return engineered_prompt
 
-
 # ---------- Main Router Interface ----------
-
 
 class CursorModelRouterInterface:
     """Main interface for Cursor model routing with context engineering"""
@@ -342,17 +332,13 @@ class CursorModelRouterInterface:
             "average_confidence": sum(r["confidence"] for r in self.routing_history) / len(self.routing_history),
         }
 
-
 # ---------- Factory Function ----------
-
 
 def create_cursor_model_router() -> CursorModelRouterInterface:
     """Create a Cursor model router interface"""
     return CursorModelRouterInterface()
 
-
 # ---------- Validation & Monitoring Utilities ----------
-
 
 class ModelRoutingValidator:
     """Validates model routing decisions and detects hallucination"""
@@ -536,7 +522,6 @@ class ModelRoutingValidator:
             "recent_validations": self.validation_history[-10:],  # Last 10
         }
 
-
 class ModelRoutingMonitor:
     """Monitors model routing performance and detects anomalies"""
 
@@ -636,9 +621,7 @@ class ModelRoutingMonitor:
             "recent_activity": self.routing_history[-10:],  # Last 10 entries
         }
 
-
 # ---------- Enhanced Router Interface with Validation ----------
-
 
 class ValidatedCursorModelRouterInterface(CursorModelRouterInterface):
     """Enhanced router interface with validation and monitoring"""
@@ -686,9 +669,7 @@ class ValidatedCursorModelRouterInterface(CursorModelRouterInterface):
             "performance_report": self.get_performance_report(),
         }
 
-
 # ---------- Updated Factory Function ----------
-
 
 def create_validated_cursor_model_router() -> ValidatedCursorModelRouterInterface:
     """Create a validated Cursor model router interface"""

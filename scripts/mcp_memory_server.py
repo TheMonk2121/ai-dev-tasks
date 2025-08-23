@@ -26,7 +26,6 @@ except ImportError as e:
     print("Make sure you're running from the ai-dev-tasks root directory")
     sys.exit(1)
 
-
 class MCPMemoryHandler(BaseHTTPRequestHandler):
     """HTTP handler for MCP-compatible memory rehydration endpoints"""
 
@@ -142,7 +141,6 @@ class MCPMemoryHandler(BaseHTTPRequestHandler):
         """Custom logging to avoid cluttering output"""
         pass
 
-
 def start_server(port=3000):
     """Start the MCP memory server"""
     server_address = ("", port)
@@ -159,7 +157,6 @@ def start_server(port=3000):
         httpd.serve_forever()
     except KeyboardInterrupt:
         print("\n🛑 Server stopped")
-
 
 if __name__ == "__main__":
     import argparse

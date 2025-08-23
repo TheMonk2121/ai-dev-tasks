@@ -16,7 +16,6 @@ sys.path.append("src")
 from utils.anchor_metadata_parser import extract_anchor_metadata, extract_anchor_metadata_from_file
 from utils.database_resilience import get_database_manager
 
-
 def add_document_manually(file_path):
     """Manually add a document with anchor metadata to the database"""
 
@@ -140,7 +139,6 @@ def add_document_manually(file_path):
         print(f"❌ Error processing {file_path}: {e}")
         return False
 
-
 def main():
     """Main function"""
     print("🚀 Starting Manual Document Addition with Anchor Metadata")
@@ -166,7 +164,6 @@ def main():
     if success_count > 0:
         print("💡 You can now test the memory rehydrator with:")
         print("   python3 -m src.utils.memory_rehydrator --role planner --task 'test' --json")
-
 
 if __name__ == "__main__":
     main()

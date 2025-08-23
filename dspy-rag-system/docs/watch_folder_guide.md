@@ -7,8 +7,6 @@
 | Guide for setting up and using folder monitoring | Setting up file monitoring or configuring watch services |
 Configure watch folders or monitor current setup |
 
-
-
 ## TL;DR
 
 - Drop files into `dspy-rag-system/watch_folder/` to auto-ingest.

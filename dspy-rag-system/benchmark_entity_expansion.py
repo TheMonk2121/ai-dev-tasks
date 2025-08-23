@@ -13,7 +13,6 @@ sys.path.append(str(Path(__file__).parent / "src"))
 
 from src.utils.memory_rehydrator import rehydrate
 
-
 def benchmark_entity_expansion():
     """Benchmark entity expansion performance"""
     print("🚀 Entity Expansion Performance Benchmark")
@@ -110,7 +109,6 @@ def benchmark_entity_expansion():
     print(f"  Entity detection > 0: {'✅' if sum(results['variant']['entities']) > 0 else '❌'}")
 
     return results
-
 
 if __name__ == "__main__":
     benchmark_entity_expansion()

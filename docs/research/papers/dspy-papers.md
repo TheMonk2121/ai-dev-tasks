@@ -1,6 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_integration-patterns-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
+
 
 # DSPy Research Papers
 

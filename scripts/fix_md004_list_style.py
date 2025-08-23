@@ -79,6 +79,5 @@ def fix_md004_list_style():
     else:
         print("\nℹ️  No files needed fixing.")
 
-
 if __name__ == "__main__":
     fix_md004_list_style()

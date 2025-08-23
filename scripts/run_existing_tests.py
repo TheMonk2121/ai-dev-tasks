@@ -78,7 +78,6 @@ def run_existing_test_suite(test_type: str = "smoke") -> bool:
         print(f"❌ {test_type.upper()} test execution error: {e}")
         return False
 
-
 def run_multiple_test_types(test_types: List[str]) -> Dict[str, bool]:
     """Run multiple test types and return results."""
     results = {}
@@ -89,7 +88,6 @@ def run_multiple_test_types(test_types: List[str]) -> Dict[str, bool]:
         results[test_type] = success
 
     return results
-
 
 def run_comprehensive_test_suite() -> bool:
     """Run a comprehensive test suite using existing tests."""
@@ -134,7 +132,6 @@ def run_comprehensive_test_suite() -> bool:
         print("⚠️  Some tests failed - review required")
         return False
 
-
 def main():
     """Main function for existing test execution."""
     if len(sys.argv) < 2:
@@ -154,7 +151,6 @@ def main():
         success = run_existing_test_suite(test_type)
 
     sys.exit(0 if success else 1)
-
 
 if __name__ == "__main__":
     main()

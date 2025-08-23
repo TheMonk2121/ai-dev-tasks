@@ -15,7 +15,6 @@ import time
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-
 @dataclass
 class Entity:
     """Represents an extracted entity with metadata."""
@@ -26,7 +25,6 @@ class Entity:
     start_pos: int
     end_pos: int
 
-
 @dataclass
 class ExpansionResult:
     """Result of entity expansion operation."""
@@ -36,7 +34,6 @@ class ExpansionResult:
     expansion_latency_ms: float
     k_related: int
     stability_threshold: float
-
 
 def extract_entities_from_query(query: str) -> List[Entity]:
     """
@@ -123,7 +120,6 @@ def extract_entities_from_query(query: str) -> List[Entity]:
 
     return entities
 
-
 def _deduplicate_entities(entities: List[Entity]) -> List[Entity]:
     """
     Remove overlapping entities, keeping the highest confidence ones.
@@ -154,7 +150,6 @@ def _deduplicate_entities(entities: List[Entity]) -> List[Entity]:
 
     return deduplicated
 
-
 def calculate_adaptive_k_related(base_k: int, entity_count: int) -> int:
     """
     Calculate adaptive k_related based on entity count.
@@ -170,7 +165,6 @@ def calculate_adaptive_k_related(base_k: int, entity_count: int) -> int:
     # This provides more context for entity-rich queries while maintaining limits
     adaptive_k = min(8, base_k + entity_count * 2)
     return max(1, adaptive_k)  # Ensure minimum of 1
-
 
 def fetch_entity_adjacent_chunks(
     entities: List[Entity], k_per_entity: int = 2, stability_threshold: float = 0.7, db_dsn: Optional[str] = None
@@ -232,7 +226,6 @@ def fetch_entity_adjacent_chunks(
 
     return related_chunks
 
-
 def populate_related_entities(
     base_chunks: List[Dict[str, Any]],
     entities: List[Entity],
@@ -288,7 +281,6 @@ def populate_related_entities(
 
     return combined_chunks
 
-
 def extract_entities_from_chunks(chunks: List[Dict[str, Any]]) -> List[Entity]:
     """
     Extract entities from chunk text for analysis.
@@ -309,7 +301,6 @@ def extract_entities_from_chunks(chunks: List[Dict[str, Any]]) -> List[Entity]:
 
     # Deduplicate across all chunks
     return _deduplicate_entities(all_entities)
-
 
 def validate_entity_expansion(
     base_chunks: List[Dict[str, Any]], expanded_chunks: List[Dict[str, Any]], entities: List[Entity]

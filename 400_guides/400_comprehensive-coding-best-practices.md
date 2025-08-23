@@ -1,10 +1,6 @@
 <!-- ANCHOR_KEY: comprehensive-coding-best-practices -->
 <!-- ANCHOR_PRIORITY: 25 -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_contributing-guidelines.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_file-analysis-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Comprehensive coding standards and conflict prevention -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ROLE_PINS: ["coder", "implementer"] -->
 
 # 🛡️ Comprehensive Coding Best Practices
@@ -16,16 +12,12 @@
 | Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices
 to current development work |
 
-
-
 ## TL;DR {#tldr}
 
 | what this file is | read when | do next |
 |---|---|---|
 | Complete guide to coding standards and best practices | Writing new code or reviewing existing code | Apply practices
 to current development work |
-
-
 
 ## 🎯 **Current Status**
 
@@ -2381,7 +2373,6 @@ jobs:
 
       - name: Run Quality Gates
 
-
       - name: Security Scan
         run: |
           bandit -r src/
@@ -2513,7 +2504,7 @@ The repository now includes automated database synchronization through Git hooks
 
 Files that should be automatically synchronized with the database should include:
 ```markdown
-<!-- DATABASE_SYNC: REQUIRED -->
+
 ```
 
 **Current files with DATABASE_SYNC tags:**

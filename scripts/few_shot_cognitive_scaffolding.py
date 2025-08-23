@@ -29,7 +29,6 @@ from typing import Any, Dict, List, Optional
 # Add the dspy-rag-system src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
 
-
 @dataclass
 class FewShotExample:
     """Represents a few-shot example with metadata."""
@@ -46,7 +45,6 @@ class FewShotExample:
     line_number: Optional[int] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-
 @dataclass
 class CognitiveScaffold:
     """Represents a cognitive scaffold with few-shot examples."""
@@ -57,7 +55,6 @@ class CognitiveScaffold:
     few_shot_examples: List[FewShotExample] = field(default_factory=list)
     patterns: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
-
 
 class FewShotCognitiveScaffolding:
     """Handles few-shot cognitive scaffolding for AI agents."""
@@ -373,7 +370,6 @@ class FewShotCognitiveScaffolding:
 
         return validation_results
 
-
 def main():
     """Main entry point for few-shot cognitive scaffolding."""
     import argparse
@@ -451,7 +447,6 @@ def main():
         print(
             "  python3 scripts/few_shot_cognitive_scaffolding.py --create-scaffold --role implementer --task 'code review'"
         )
-
 
 if __name__ == "__main__":
     main()

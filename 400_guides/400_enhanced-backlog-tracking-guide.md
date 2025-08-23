@@ -1,9 +1,5 @@
 # Enhanced Backlog Tracking Guide
 
-<!-- CONTEXT_REFERENCE: 000_core/000_backlog.md -->
-<!-- MODULE_REFERENCE: scripts/enhanced_backlog_tracking.py -->
-<!-- MEMORY_CONTEXT: HIGH - Enhanced backlog tracking system guide -->
-<!-- DATABASE_SYNC: REQUIRED -->
 <!-- ANCHOR_KEY: enhanced-backlog-tracking -->
 <!-- ANCHOR_PRIORITY: 15 -->
 <!-- ROLE_PINS: ["planner", "implementer"] -->

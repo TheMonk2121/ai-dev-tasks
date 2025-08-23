@@ -209,7 +209,6 @@ class OptimizedConflictAuditor:
             "all_passed": len(self.issues) == 0,
         }
 
-
 def main():
     parser = argparse.ArgumentParser(description="Optimized conflict audit")
     parser.add_argument("--full", action="store_true", help="Run full audit")
@@ -237,7 +236,6 @@ def main():
             print("\nWarnings:")
             for warning in results["warnings"]:
                 print(f"  ⚠️ {warning}")
-
 
 if __name__ == "__main__":
     main()

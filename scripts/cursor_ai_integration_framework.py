@@ -25,7 +25,6 @@ from uuid import uuid4
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 try:
     # Stable definition across reloads
     from cursor_ai_agent_types import AgentType  # type: ignore
@@ -39,7 +38,6 @@ except Exception:
         CODER = "coder"
         DOCUMENTATION = "documentation"
 
-
 class ContextType(Enum):
     """Enumeration of context types."""
 
@@ -47,7 +45,6 @@ class ContextType(Enum):
     FILE = "file"
     USER = "user"
     AGENT = "agent"
-
 
 @dataclass
 class ContextData:
@@ -63,7 +60,6 @@ class ContextData:
     updated_at: float = field(default_factory=time.time)
     accessed_at: float = field(default_factory=time.time)
 
-
 @dataclass
 class AgentRequest:
     """Data structure for agent requests."""
@@ -75,7 +71,6 @@ class AgentRequest:
     user_id: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
-
 
 @dataclass
 class AgentResponse:
@@ -90,7 +85,6 @@ class AgentResponse:
     processing_time: float = 0.0
     metadata: Dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
-
 
 class BaseAgent(ABC):
     """Abstract base class for all agents."""
@@ -123,7 +117,6 @@ class BaseAgent(ABC):
             "usage_count": self.usage_count,
             "error_count": self.error_count,
         }
-
 
 class CursorNativeAIAgent(BaseAgent):
     """Agent for Cursor's native AI capabilities."""
@@ -180,7 +173,6 @@ class CursorNativeAIAgent(BaseAgent):
             return f"Native AI: Let me explain: {request.query}"
         else:
             return f"Native AI: I can help with: {request.query}"
-
 
 class ResearchAgent(BaseAgent):
     """Agent for deep research and analysis capabilities."""
@@ -241,7 +233,6 @@ class ResearchAgent(BaseAgent):
 
         return f"Research Agent: I've analyzed {request.query} and found the following insights..."
 
-
 class CoderAgent(BaseAgent):
     """Agent for coding best practices and code quality improvements."""
 
@@ -300,7 +291,6 @@ class CoderAgent(BaseAgent):
         await asyncio.sleep(0.3)  # Simulate code analysis time
 
         return "Coder Agent: I've analyzed your code and suggest the following improvements..."
-
 
 class DocumentationAgent(BaseAgent):
     """Agent for documentation assistance and writing help."""
@@ -362,7 +352,6 @@ class DocumentationAgent(BaseAgent):
 
         return f"Documentation Agent: I've created comprehensive documentation for {request.query}..."
 
-
 class ContextManager:
     """Manages shared context between agents."""
 
@@ -394,7 +383,6 @@ class ContextManager:
         """Get contexts related to the given context."""
         related_ids = self.context_relationships.get(context_id, [])
         return [self.contexts[cid] for cid in related_ids if cid in self.contexts]
-
 
 class CursorAIIntegrationFramework:
     """Main integration framework for Cursor AI and specialized agents."""
@@ -561,14 +549,12 @@ class CursorAIIntegrationFramework:
         self.fallback_to_native = enabled
         logger.info(f"Fallback to native AI {'enabled' if enabled else 'disabled'}")
 
-
 def _env_bool(name: str, default: bool) -> bool:
     """Read boolean from environment with sensible defaults."""
     val = os.getenv(name)
     if val is None:
         return default
     return str(val).strip().lower() in {"1", "true", "yes", "on"}
-
 
 # Example usage and testing
 async def main():
@@ -601,7 +587,6 @@ async def main():
     print("\n--- Agent Status ---")
     status = framework.get_agent_status()
     print(json.dumps(status, indent=2))
-
 
 if __name__ == "__main__":
     asyncio.run(main())

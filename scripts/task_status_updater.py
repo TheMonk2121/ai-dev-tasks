@@ -134,7 +134,6 @@ class TaskStatusUpdater:
         else:
             print("\n🎉 **All Tasks Complete!**")
 
-
 def update_and_display_task_status(task_file: str, completed_task_id: str = None) -> None:
     """
     Update task status and display the current state.
@@ -156,7 +155,6 @@ def update_and_display_task_status(task_file: str, completed_task_id: str = None
     # Display current task list
     updater.display_task_list()
 
-
 def main():
     """Main function for testing."""
     import sys
@@ -169,7 +167,6 @@ def main():
     completed_task_id = sys.argv[2] if len(sys.argv) > 2 else None
 
     update_and_display_task_status(task_file, completed_task_id)
-
 
 if __name__ == "__main__":
     main()

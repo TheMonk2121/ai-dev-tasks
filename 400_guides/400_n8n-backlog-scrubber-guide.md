@@ -1,11 +1,8 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - n8n automation and backlog management -->
+
+
 <!-- ANCHOR_KEY: n8n-backlog-scrubber -->
 <!-- ANCHOR_PRIORITY: 15 -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ROLE_PINS: ["coder", "implementer"] -->
 # 🔄 n8n Backlog Scrubber Workflow Guide
 

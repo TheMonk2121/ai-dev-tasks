@@ -19,7 +19,6 @@ sys.path.insert(0, str(project_root))
 from scripts.automated_role_assignment import AutomatedRoleAssignment
 from scripts.role_assignment_metadata import RoleAssignment, RoleAssignmentMetadata
 
-
 class RoleAssignmentIntegration:
     """Integrates automated role assignment with the memory rehydrator."""
 
@@ -276,7 +275,6 @@ class RoleAssignmentIntegration:
             print(f"❌ Error rolling back changes: {e}")
             return False
 
-
 def main():
     """Main entry point for role assignment integration."""
     import argparse
@@ -300,7 +298,6 @@ def main():
     # Integrate assignments
     success = integration.integrate_automated_assignments(args.archives_dir, args.dry_run)
     sys.exit(0 if success else 1)
-
 
 if __name__ == "__main__":
     main()

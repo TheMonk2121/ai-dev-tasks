@@ -1,7 +1,6 @@
 <!-- ANCHOR_KEY: chunk-relationship-visualization -->
 <!-- ANCHOR_PRIORITY: 20 -->
-<!-- MEMORY_CONTEXT: HIGH - Document graph visualization and API implementation -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ROLE_PINS: ["coder", "implementer"] -->
 # Task List: Chunk Relationship Visualization & /graph-data API (V1)
 

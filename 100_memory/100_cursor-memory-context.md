@@ -1,9 +1,5 @@
-<!-- MEMORY_CONTEXT: HIGH - Primary memory scaffold for AI rehydration and context management -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
-<!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
+
 <!-- CONTEXT_INDEX
 {
   "files": [
@@ -365,6 +361,7 @@ without requiring the AI to read multiple files.
 ## 📋 Current Project State
 
 ### **Active Development Focus**
+- **✅ COMPLETED**: B-1003 DSPy Multi-Agent System - True local model inference with Cursor AI integration
 - **✅ COMPLETED**: Single Doorway System - Automated workflow from backlog → PRD → tasks → execution → archive
 - **Current Sprint**: Align with `000_core/000_backlog.md` (see Current Priorities)
 - **Next Priorities**: Follow `000_core/000_backlog.md` ordering and scores
@@ -376,24 +373,20 @@ without requiring the AI to read multiple files.
 AI Development Ecosystem
 ├── Single Doorway System (Automated Workflow Orchestrator)
 ├── Planning Layer (PRD → Tasks → Execution)
-├── AI Execution Layer (Cursor Native AI + Specialized Agents)
-├── Core Systems (DSPy RAG + n8n + Dashboard)
+├── AI Execution Layer (Cursor Native AI + Local DSPy Models)
+├── Core Systems (DSPy Multi-Agent + n8n + Dashboard)
 ├── Extraction Layer (LangExtract → Entity/Attribute Extraction)
 └── Infrastructure (PostgreSQL + Monitoring)
 ```
 
 ### **Key Technologies**
 
-- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements). Cursor models only; legacy local model instructions are archived under `600_archives/**`.
-
-- **Framework**: DSPy with PostgreSQL vector store
-
+- **AI Models**: Cursor Native AI (orchestration) + Local DSPy Models (Llama 3.1 8B, Mistral 7B, Phi-3.5 3.8B) via Ollama
+- **Framework**: DSPy Multi-Agent System with PostgreSQL vector store
+- **Model Switching**: Sequential loading for hardware constraints (M4 Mac, 128GB RAM)
 - **Automation**: n8n workflows for backlog management
-
 - **Monitoring**: Real-time mission dashboard
-
 - **Security**: Comprehensive input validation and prompt sanitization
-
 - **Extraction**: LangExtract (Gemini Flash) for entity/attribute extraction
 
 ## 🔄 Development Workflow

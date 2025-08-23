@@ -18,7 +18,6 @@ from .logger import get_logger
 
 logger = get_logger("self_critique")
 
-
 @dataclass
 class CritiqueResult:
     """Result of self-critique evaluation"""
@@ -29,7 +28,6 @@ class CritiqueResult:
     suggestions: List[str]
     critique_text: str
     verification_passed: bool
-
 
 class SelfCritiqueEngine:
     """Self-critique engine for bundle validation"""
@@ -206,10 +204,8 @@ Focus on:
 
         return bundle_text + critique_section
 
-
 # Global critique engine
 critique_engine = SelfCritiqueEngine()
-
 
 def add_self_critique(bundle_text: str, task: str, role: str = "planner") -> str:
     """Add self-critique to bundle"""

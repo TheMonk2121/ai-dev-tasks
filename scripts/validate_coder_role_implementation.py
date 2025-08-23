@@ -473,7 +473,6 @@ Overall Status: {self.results['overall_status']}
 
         return report
 
-
 def main():
     """Main entry point for the validation script."""
     project_root = Path(__file__).parent.parent
@@ -488,7 +487,6 @@ def main():
         sys.exit(0)
     else:
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

@@ -37,7 +37,6 @@ def find_existing_tools(keyword: str) -> List[str]:
 
     return existing_tools
 
-
 def get_tool_mapping() -> Dict[str, List[str]]:
     """Get mapping of common tasks to existing tools."""
 
@@ -81,7 +80,6 @@ def get_tool_mapping() -> Dict[str, List[str]]:
         ],
     }
 
-
 def suggest_existing_tools(task_description: str) -> Dict[str, List[str]]:
     """Suggest existing tools based on task description."""
 
@@ -107,7 +105,6 @@ def suggest_existing_tools(task_description: str) -> Dict[str, List[str]]:
         suggestions["specific"] = specific_tools
 
     return suggestions
-
 
 def force_tool_usage(task_description: str, dry_run: bool = False) -> bool:
     """Force usage of existing tools for the given task."""
@@ -138,7 +135,6 @@ def force_tool_usage(task_description: str, dry_run: bool = False) -> bool:
 
     return True
 
-
 def check_tool_duplication(new_tool_name: str) -> List[str]:
     """Check if a new tool would duplicate existing functionality."""
 
@@ -158,7 +154,6 @@ def check_tool_duplication(new_tool_name: str) -> List[str]:
                     similar_tools.append(tool)
 
     return similar_tools
-
 
 def prevent_tool_creation(new_tool_name: str, task_description: str) -> bool:
     """Prevent creation of new tools when existing ones are available."""
@@ -187,7 +182,6 @@ def prevent_tool_creation(new_tool_name: str, task_description: str) -> bool:
     print("✅ No duplicates or existing tools found - tool creation allowed")
     return True
 
-
 def main():
     """Main function for tool usage enforcement."""
     if len(sys.argv) < 2:
@@ -213,7 +207,6 @@ def main():
         task_description = sys.argv[1]
         success = force_tool_usage(task_description)
         sys.exit(0 if success else 1)
-
 
 if __name__ == "__main__":
     main()

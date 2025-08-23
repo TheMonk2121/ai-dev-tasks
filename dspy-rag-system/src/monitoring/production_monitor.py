@@ -30,7 +30,6 @@ from utils.security import SecurityScanner
 
 logger = get_logger("production_monitor")
 
-
 @dataclass
 class SecurityEvent:
     """Security event data structure"""
@@ -43,7 +42,6 @@ class SecurityEvent:
     correlation_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
-
 @dataclass
 class HealthCheck:
     """Health check result"""
@@ -54,7 +52,6 @@ class HealthCheck:
     last_check: datetime
     error_message: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
-
 
 @dataclass
 class SystemMetrics:
@@ -67,7 +64,6 @@ class SystemMetrics:
     network_io: Dict[str, float]
     active_connections: int
     queue_depth: int
-
 
 class ProductionMonitor:
     """Production monitoring system with security alerts and health checks"""
@@ -502,10 +498,8 @@ class ProductionMonitor:
         self.ot_config.shutdown()
         logger.info("Production monitor shutdown complete")
 
-
 # Global instance
 _production_monitor: Optional[ProductionMonitor] = None
-
 
 def get_production_monitor() -> ProductionMonitor:
     """Get the global production monitor instance"""
@@ -513,7 +507,6 @@ def get_production_monitor() -> ProductionMonitor:
     if _production_monitor is None:
         _production_monitor = ProductionMonitor()
     return _production_monitor
-
 
 def initialize_production_monitoring(
     service_name: str = "ai-dev-tasks",

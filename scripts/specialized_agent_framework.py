@@ -25,7 +25,6 @@ from typing import Any, Dict, List, Optional
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class AgentCapability(Enum):
     """Enumeration of agent capabilities."""
     # Research Agent Capabilities
@@ -49,7 +48,6 @@ class AgentCapability(Enum):
     CONTENT_OPTIMIZATION = "content_optimization"
     FORMAT_SUPPORT = "format_support"
 
-
 @dataclass
 class ResearchData:
     """Data structure for research findings."""
@@ -59,7 +57,6 @@ class ResearchData:
     confidence: float
     analysis_type: str
     timestamp: float = field(default_factory=time.time)
-
 
 @dataclass
 class CodeAnalysis:
@@ -73,7 +70,6 @@ class CodeAnalysis:
     best_practices: List[str]
     timestamp: float = field(default_factory=time.time)
 
-
 @dataclass
 class DocumentationContent:
     """Data structure for documentation content."""
@@ -83,7 +79,6 @@ class DocumentationContent:
     metadata: Dict[str, Any]
     quality_score: float
     timestamp: float = field(default_factory=time.time)
-
 
 class BaseSpecializedAgent(ABC):
     """Abstract base class for specialized agents."""
@@ -131,7 +126,6 @@ class BaseSpecializedAgent(ABC):
         # Keep only last 100 entries
         if len(self.processing_history) > 100:
             self.processing_history = self.processing_history[-100:]
-
 
 class ResearchAgent(BaseSpecializedAgent):
     """Specialized agent for deep research and analysis capabilities."""
@@ -261,7 +255,6 @@ class ResearchAgent(BaseSpecializedAgent):
         """Generate cache key for research data."""
         content = f"{query}:{analysis_type}"
         return hashlib.md5(content.encode()).hexdigest()
-
 
 class CoderAgent(BaseSpecializedAgent):
     """Specialized agent for coding best practices and code quality improvements."""
@@ -398,7 +391,6 @@ class CoderAgent(BaseSpecializedAgent):
         """Generate cache key for code analysis."""
         content = f"{file_path}:{code_content}"
         return hashlib.md5(content.encode()).hexdigest()
-
 
 class DocumentationAgent(BaseSpecializedAgent):
     """Specialized agent for documentation assistance and writing help."""
@@ -625,7 +617,6 @@ See the examples directory for complete working examples.
         content_str = f"{title}:{content}:{format_type}"
         return hashlib.md5(content_str.encode()).hexdigest()
 
-
 class SpecializedAgentFramework:
     """Main framework for managing specialized agents."""
     
@@ -721,7 +712,6 @@ class SpecializedAgentFramework:
         self.agent_switching_enabled = enabled
         logger.info(f"Agent switching {'enabled' if enabled else 'disabled'}")
 
-
 # Example usage and testing
 async def main():
     """Example usage of the Specialized Agent Framework."""
@@ -764,7 +754,6 @@ async def main():
     print("\n--- Agent Status ---")
     status = framework.get_agent_status()
     print(json.dumps(status, indent=2))
-
 
 if __name__ == "__main__":
     asyncio.run(main()) 

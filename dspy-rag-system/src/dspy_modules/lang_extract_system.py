@@ -18,7 +18,6 @@ _LOG = logging.getLogger("lang_extract_system")
 
 # ---------- LangExtract Schemas ----------
 
-
 @dataclass
 class ExtractionSchema:
     """Research-based extraction schema for structured data extraction"""
@@ -29,7 +28,6 @@ class ExtractionSchema:
     span_tracking: bool = True
     confidence_threshold: float = 0.8
 
-
 class ExtractionType(Enum):
     """Types of structured extraction supported"""
 
@@ -39,9 +37,7 @@ class ExtractionType(Enum):
     EVENTS = "events"
     ATTRIBUTES = "attributes"
 
-
 # ---------- DSPy Signatures for LangExtract ----------
-
 
 class EntityExtractionSignature(Signature):
     """Signature for entity extraction with span-level grounding"""
@@ -52,7 +48,6 @@ class EntityExtractionSignature(Signature):
     confidence = OutputField(desc="Confidence level (0-1)")
     spans = OutputField(desc="Character spans for each entity")
 
-
 class RelationExtractionSignature(Signature):
     """Signature for relation extraction with span-level grounding"""
 
@@ -61,7 +56,6 @@ class RelationExtractionSignature(Signature):
     relations = OutputField(desc="List of extracted relations with spans")
     confidence = OutputField(desc="Confidence level (0-1)")
     spans = OutputField(desc="Character spans for each relation")
-
 
 class FactExtractionSignature(Signature):
     """Signature for fact extraction with span-level grounding"""
@@ -72,9 +66,7 @@ class FactExtractionSignature(Signature):
     confidence = OutputField(desc="Confidence level (0-1)")
     spans = OutputField(desc="Character spans for each fact")
 
-
 # ---------- LangExtract Modules ----------
-
 
 # @dspy.assert_transform_module  # Not available in DSPy 2.6.27
 class EntityExtractor(Module):
@@ -134,7 +126,6 @@ class EntityExtractor(Module):
 
         return True
 
-
 # @dspy.assert_transform_module  # Not available in DSPy 2.6.27
 class RelationExtractor(Module):
     """Research-based relation extraction with span-level grounding"""
@@ -192,7 +183,6 @@ class RelationExtractor(Module):
                 return False
 
         return True
-
 
 # @dspy.assert_transform_module  # Not available in DSPy 2.6.27
 class FactExtractor(Module):
@@ -256,9 +246,7 @@ class FactExtractor(Module):
 
         return True
 
-
 # ---------- LangExtract System ----------
-
 
 class LangExtractSystem(Module):
     """Research-based LangExtract system for structured extraction"""
@@ -399,9 +387,7 @@ class LangExtractSystem(Module):
 
         return schemas
 
-
 # ---------- LangExtract Interface ----------
-
 
 class LangExtractInterface:
     """High-level interface for LangExtract operations"""
@@ -425,14 +411,11 @@ class LangExtractInterface:
         """Get available extraction schemas"""
         return self.system.schemas
 
-
 def create_lang_extract_interface() -> LangExtractInterface:
     """Create a LangExtract interface instance"""
     return LangExtractInterface()
 
-
 # ---------- Research-Based Performance Metrics ----------
-
 
 def evaluate_extraction_quality(extractions: List[Dict], ground_truth: List[Dict]) -> Dict[str, float]:
     """Evaluate extraction quality using research-based metrics"""

@@ -31,4 +31,3 @@ We can use the Time of Day `tod` function to display this time:
     
 And there we have it, we should leave home at 11:50am.
 
-

@@ -10,8 +10,8 @@ Usage: python scripts/dependency_monitor.py [--dry-run] [--force] [--output-dir]
 
 # <!-- ANCHOR_KEY: dependency-monitor -->
 # <!-- ANCHOR_PRIORITY: 18 -->
-# <!-- MEMORY_CONTEXT: HIGH - Dependency graph generation and monitoring -->
-# <!-- DATABASE_SYNC: REQUIRED -->
+# 
+# 
 # <!-- ROLE_PINS: ["coder", "implementer"] -->
 
 import argparse
@@ -299,7 +299,6 @@ class DependencyMonitor:
         summary.append("=" * 60)
         return "\n".join(summary)
 
-
 def main():
     parser = argparse.ArgumentParser(description="Dependency Graph Monitor")
     parser.add_argument("--dry-run", action="store_true", help="Preview changes without saving")
@@ -324,7 +323,6 @@ def main():
     except Exception as e:
         monitor.log(f"Analysis failed: {e}", "ERROR")
         sys.exit(2)
-
 
 if __name__ == "__main__":
     main()

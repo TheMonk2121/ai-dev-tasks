@@ -7,8 +7,6 @@
 | Guide for managing and configuring system services | Setting up services or troubleshooting system issues | Configure
 services or resolve current issues |
 
-
-
 ## TL;DR
 
 - Run background processing as a long-lived service.

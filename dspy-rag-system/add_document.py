@@ -20,7 +20,6 @@ except ImportError as e:
     print("Make sure you're running from the dspy-rag-system directory")
     sys.exit(1)
 
-
 def add_document_to_rag(file_path):
     """Add a document to the RAG system"""
 
@@ -106,7 +105,6 @@ def add_document_to_rag(file_path):
         logger.error("Error processing document", extra={"document_id": document_id, "stage": "error", "error": str(e)})
         return False
 
-
 def query_knowledge_base(query, limit=3):
     """Query the knowledge base"""
 
@@ -135,7 +133,6 @@ def query_knowledge_base(query, limit=3):
     except Exception as e:
         logger.error("Error querying knowledge base", extra={"query": query, "stage": "query_error", "error": str(e)})
         return []
-
 
 def main():
     """Main function"""
@@ -185,7 +182,6 @@ def main():
             extra={"file_path": file_path, "stage": "failed", "component": "add_document", "action": "document_failed"},
         )
         print(f"\n❌ Failed to add document '{file_path}' to RAG system.")
-
 
 if __name__ == "__main__":
     main()

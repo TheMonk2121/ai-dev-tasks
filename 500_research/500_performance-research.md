@@ -1,6 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Performance research and optimization patterns -->
+
+
 # ⚡ Performance Research
 
 ## ⚡ Performance Research

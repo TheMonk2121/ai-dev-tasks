@@ -34,9 +34,6 @@ def test_few_shot_framework():
         test_content = """
         # Test Document
 
-        <!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
-        <!-- MEMORY_CONTEXT: HIGH - Essential documentation -->
-
         | B‑074 | Few-Shot Integration | 🔥 | 0.5 | todo | Test integration |
         """
 
@@ -51,7 +48,6 @@ def test_few_shot_framework():
     except Exception as e:
         print(f"❌ Few-shot framework test failed: {e}")
         return False
-
 
 def test_doc_validator_integration():
     """Test few-shot integration in documentation validator."""
@@ -78,7 +74,6 @@ def test_doc_validator_integration():
         print(f"❌ Documentation validator integration test failed: {e}")
         return False
 
-
 def test_memory_update_integration():
     """Test few-shot integration in memory update script."""
     print("\n🧪 Testing Memory Update Integration...")
@@ -99,7 +94,6 @@ def test_memory_update_integration():
     except Exception as e:
         print(f"❌ Memory update integration test failed: {e}")
         return False
-
 
 def main():
     """Run all few-shot integration tests."""
@@ -125,7 +119,6 @@ def main():
     else:
         print("❌ Some tests failed")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

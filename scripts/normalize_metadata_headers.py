@@ -12,7 +12,7 @@ import argparse
 import re
 from pathlib import Path
 
-KEEP_CONTEXT = "<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->"
+KEEP_CONTEXT = ""
 MODULE_PATTERN = re.compile(r"<!--\s*MODULE_REFERENCE:\s*([^>]+)\s*-->")
 CONTEXT_PATTERN = re.compile(r"<!--\s*CONTEXT_REFERENCE:\s*([^>]+)\s*-->")
 HTML_COMMENT_PATTERN = re.compile(r"<!--\s*([^:>]+):[^>]*-->")
@@ -84,7 +84,7 @@ def rewrite_header(lines: list) -> list:
     # Build new header block
     new_header = [KEEP_CONTEXT + "\n"]
     for v in normalized_modules:
-        new_header.append(f"<!-- MODULE_REFERENCE: {v} -->\n")
+        new_header.append("\n")
 
     # Drop all other metadata comments in header
     body_start = header_end
@@ -130,5 +130,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

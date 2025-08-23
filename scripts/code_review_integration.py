@@ -27,7 +27,6 @@ from uuid import uuid4
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 @dataclass
 class IntegrationConfig:
     """Configuration for code review integration."""
@@ -40,7 +39,6 @@ class IntegrationConfig:
     auto_trigger_reviews: bool = False
     review_threshold_files: int = 10
     review_threshold_lines: int = 1000
-
 
 @dataclass
 class IntegrationEvent:
@@ -61,7 +59,6 @@ class IntegrationEvent:
             self.data = {}
         if self.metadata is None:
             self.metadata = {}
-
 
 class CodeReviewIntegration:
     """Main integration class for code review process."""
@@ -336,7 +333,6 @@ class CodeReviewIntegration:
             "auto_trigger": self.config.auto_trigger_reviews,
         }
 
-
 def main():
     """Main function for testing integration."""
     import argparse
@@ -387,7 +383,6 @@ def main():
         print("ℹ️ Use --review-id to run a review workflow")
 
     return 0
-
 
 if __name__ == "__main__":
     exit(main())

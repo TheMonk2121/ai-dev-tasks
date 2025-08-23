@@ -1,6 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Deployment procedures and environment management -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
+
 <!-- ANCHOR_KEY: deployment-environment -->
 <!-- ANCHOR_PRIORITY: 15 -->
 <!-- ROLE_PINS: ["coder", "implementer"] -->

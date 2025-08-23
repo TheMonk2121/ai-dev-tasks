@@ -407,7 +407,6 @@ class GiantGuideSplitter:
         
         return summary
 
-
 def main():
     """Main function for giant guide splitting"""
     import argparse
@@ -435,7 +434,6 @@ def main():
         # Split all target files
         summary = splitter.split_all_files()
         print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

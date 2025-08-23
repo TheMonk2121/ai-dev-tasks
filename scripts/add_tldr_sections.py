@@ -241,7 +241,6 @@ class TLDRAdder:
         if self.dry_run:
             print("\n💡 Run with --apply to actually add the TL;DR sections")
 
-
 def main():
     parser = argparse.ArgumentParser(description="Add TL;DR sections to markdown files")
     parser.add_argument("--apply", action="store_true", help="Actually apply the changes (default is dry-run)")
@@ -249,7 +248,6 @@ def main():
 
     adder = TLDRAdder(dry_run=not args.apply)
     adder.run()
-
 
 if __name__ == "__main__":
     main()

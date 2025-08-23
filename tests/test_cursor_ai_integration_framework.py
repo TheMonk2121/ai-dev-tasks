@@ -5,10 +5,8 @@ import importlib
 
 from cursor_ai_integration_framework import AgentType
 
-
 def run(coro):
     return asyncio.get_event_loop().run_until_complete(coro)
-
 
 def test_env_toggles_disable_specialized_agents(monkeypatch):
     monkeypatch.setenv("ENABLE_RESEARCH_AGENT", "false")
@@ -21,7 +19,6 @@ def test_env_toggles_disable_specialized_agents(monkeypatch):
     # Only native should be present
     assert set(framework.agents.keys()) == {AgentType.NATIVE_AI}
 
-
 def test_default_active_agent_respects_env(monkeypatch):
     monkeypatch.setenv("ENABLE_RESEARCH_AGENT", "true")
     monkeypatch.setenv("DEFAULT_ACTIVE_AGENT", AgentType.RESEARCH.value)
@@ -29,7 +26,6 @@ def test_default_active_agent_respects_env(monkeypatch):
     importlib.reload(mod)
     framework = mod.CursorAIIntegrationFramework()
     assert framework.active_agent == AgentType.RESEARCH
-
 
 def test_agent_selection_and_fallback(monkeypatch):
     # Ensure switching and fallback enabled
@@ -50,5 +46,4 @@ def test_agent_selection_and_fallback(monkeypatch):
     req2 = mod.AgentRequest(query="general explanation")
     resp2 = run(framework.process_request(req2))
     assert resp2.agent_type in {AgentType.NATIVE_AI, framework.active_agent}
-
 

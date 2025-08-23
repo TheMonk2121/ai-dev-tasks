@@ -1,9 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_project-overview.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Current priorities and development roadmap -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 
 <!-- ANCHOR_KEY: backlog -->
 <!-- ANCHOR_PRIORITY: 10 -->
@@ -98,8 +93,29 @@ and normalize spacing across long-form guides.
 
 - B‑077 — Code Review Process Upgrade with Performance Reporting (score 7.5)
 
+- B‑1002 — Create Comprehensive Root README for External Discovery (score 6.5)
+<!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Create comprehensive 500-line root README.md for GitHub visibility and zero-context onboarding -->
+<!-- est_hours: 4 -->
+<!-- acceptance: Root README provides complete project overview without requiring internal file links -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#documentation-external"] -->
+<!-- reference_cards: ["500_reference-cards.md#github-readme"] -->
+<!-- tech_footprint: Documentation + External Visibility + Onboarding -->
+<!-- problem: Project lacks external-facing README for GitHub discovery and zero-context onboarding -->
+<!-- outcome: Professional 500-line README that showcases the AI development ecosystem without requiring internal documentation -->
+
 - B‑999 — Session Registry Core Implementation (score 7.0) ✅ **COMPLETED**
 <!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
+<!--score_total: 7.0-->
+<!-- do_next: Implement comprehensive code review testing suite with performance reporting -->
+<!-- est_hours: 8 -->
+<!-- acceptance: 001_create-prd workflow optimized and performance metrics integrated -->
+<!-- lessons_applied: ["400_guides/400_comprehensive-coding-best-practices.md#performance-optimization", "400_guides/400_code-criticality-guide.md#quality-standards"] -->
+<!-- reference_cards: ["scripts/performance_optimization.py", "dspy-rag-system/src/monitoring/metrics.py"] -->
+<!-- tech_footprint: Performance Testing + Metrics Collection + Workflow Optimization -->
+<!-- problem: Need to test and optimize the 001_create-prd workflow with performance reporting to ensure it's as efficient as possible -->
+<!-- outcome: Canonical code review process with integrated performance monitoring and automated testing suite -->
 
 - B‑1000 — Session Registry Testing Suite (score 6.5) ✅ **COMPLETED**
 <!--score: {bv:3, tc:4, rr:3, le:2, effort:2, deps:["B-999"]}-->
@@ -124,6 +140,18 @@ and normalize spacing across long-form guides.
 - B‑052‑f — Enhanced Repository Maintenance Safety System (score 5.1)
 
 - B‑052‑b — Config Externalization to TOML + Ignore (score 5.0)
+
+- B‑1004 — Simplify Overengineered Quality Gates (score 7.5)
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:3, deps:[]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Strip down pre-commit hooks to essentials, remove dead database sync check, simplify conflict detection -->
+<!-- est_hours: 6 -->
+<!-- acceptance: Quality gates are fast (<5s), simple, reliable, and focused on actual problems -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#overengineering-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#quality-gates"] -->
+<!-- tech_footprint: Pre-commit + Ruff + Pyright + Security + Testing -->
+<!-- problem: Current quality gates are overengineered with complex caching, dead code, and solving non-existent problems -->
+<!-- outcome: Boring, reliable quality gates that actually improve code quality without complexity -->
 
 ## P2 Lane
 
@@ -185,7 +213,7 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- WORKFLOW_CHAIN: 000_core/001_create-prd.md → 000_core/002_generate-tasks.md → 000_core/003_process-task-list.md -->
 <!-- EXECUTION_ENGINE: scripts/process_tasks.py -->
 <!-- AUTOMATION_FILES: 100_backlog-automation.md, 100_memory/100_backlog-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Current priorities and development roadmap for AI context -->
+
 <!-- PRD_DECISION_RULE: points<5 AND score_total>=3.0 -->
 <!-- PRD_THRESHOLD_POINTS: 5 -->
 <!-- PRD_SKIP_IF_SCORE_GE: 3.0 -->
@@ -205,13 +233,36 @@ Items requiring external credentials, business decisions, or deployment should b
 | B-090 | Test Performance Workflow | 🔧 | 3 | todo | Test Performance Workflow | None | None |
 | B-091 | Test 001 Workflow Performance | 🔧 | 3 | todo | Test 001 Workflow Performance | None | None |
 | B-092 | Final Performance Validation Test | 🔧 | 3 | todo | Final Performance Validation Test | None | None |
-| B-093 | Doorway: Scribe + Auto Rehydrate | 🔧 | 3 | todo | Doorway: Scribe + Auto Rehydrate | None | None |
+| B-093 | Doorway: Scribe + Auto Rehydrate | 🔧 | 3 | in-progress| Doorway: Scribe + Auto Rehydrate | None | None |
+<!-- started_at: 2025-08-22T22:07:51.815634 -->
 | B-094 | Doorway: Full E2E automation from backlog to archived artifacts | 🔧 | 3 | todo | Doorway: Full E2E automation from backlog to archived artifacts | None | None |
 | B-095 | Reshape 500_research folder into industry-standard citation resource | 🔧 | 3 | todo | Reshape 500_research folder into industry-standard citation resource | None | None |
 | B-096 | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | 🔧 | 3 | todo | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | None | None |
 | B-097 | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | 🔧 | 3 | todo | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | None | None |
 | B-098 | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | 🔧 | 3 | todo | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | None | 600_archives/artifacts/000_core_temp_files/PRD-B-098-Multi-Role-Pr-Sign-Off-System.md |
 <!-- PRD: 600_archives/artifacts/000_core_temp_files/PRD-B-096-Enhanced-Scribe-System-Intelligent-Content-Analysis-And-Idea-Mining.md -->
+
+| B-1002 | Create Comprehensive Root README for External Discovery | 🔧 | 2 | todo | Create comprehensive 500-line root README.md for GitHub visibility and zero-context onboarding | Documentation + External Visibility + Onboarding | None |
+| B-1003 | DSPy Multi-Agent System Implementation | 🔧 | 8 | ✅ done | Implement true DSPy multi-agent system with local AI models (Ollama/LM Studio), frontend interface, and N8N integration. Replace Cursor context engineering with actual local model inference for true DSPy environment. | DSPy + Multi-Agent + Local AI (Ollama/LM Studio) + Frontend + Model Routing | None |
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:8, deps:[]}-->
+<!--score_total: 8.0-->
+<!-- completion_date: 2025-08-22 -->
+<!-- implementation_notes: Successfully implemented true DSPy multi-agent system with local model inference. Created comprehensive model switching system with sequential model loading for hardware constraints (M4 Mac, 128GB RAM). Implemented ModelSwitcher class with task-based and role-based model selection, supporting Llama 3.1 8B, Mistral 7B, and Phi-3.5 3.8B. Enhanced with full DSPy signatures (LocalTaskSignature, MultiModelOrchestrationSignature, ModelSelectionSignature) and structured I/O. Created IntelligentModelSelector, LocalTaskExecutor, and MultiModelOrchestrator modules for true DSPy programming. Built Cursor AI integration bridge (cursor_integration.py) enabling Cursor to orchestrate local models via clean function interfaces. Achieved true multi-model orchestration with plan→execute→review workflow. System successfully tested with local model inference, replacing Cursor context engineering with actual AI model inference. Hardware-optimized for sequential loading within memory constraints. -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#multi-agent-architecture", "100_memory/105_lessons-learned-context.md#local-model-integration"] -->
+<!-- reference_cards: ["500_reference-cards.md#dspy-multi-agent", "500_reference-cards.md#ollama-integration"] -->
+<!-- tech_footprint: DSPy + Local AI (Ollama/LM Studio) + Frontend + N8N + Multi-Agent + Model Routing -->
+<!-- problem: Current system relies on Cursor's context engineering (glorified prompt engineering); need true local model inference for authentic DSPy environment with real agent coordination -->
+<!-- outcome: Production-ready DSPy multi-agent system with local model inference, real agent coordination, and consensus building -->
+<!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Create comprehensive 500-line root README.md for GitHub visibility and zero-context onboarding -->
+<!-- est_hours: 4 -->
+<!-- acceptance: Root README provides complete project overview without requiring internal file links -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#documentation-external"] -->
+<!-- reference_cards: ["500_reference-cards.md#github-readme"] -->
+<!-- tech_footprint: Documentation + External Visibility + Onboarding -->
+<!-- problem: Project lacks external-facing README for GitHub discovery and zero-context onboarding -->
+<!-- outcome: Professional 500-line README that showcases the AI development ecosystem without requiring internal documentation -->
 
 | B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | done | Add GitHub Action to run maintenance script on PRs | GitHub Actions + CI/CD | None |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:0.5, lessons:3, deps:[]}-->
@@ -339,8 +390,6 @@ Coherence Validation System |
 <!-- acceptance: Structured extraction service provides reliable data extraction -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#structured-extraction"] -->
 <!-- reference_cards: ["500_reference-cards.md#extraction-services"] -->
-
-
 
 | B‑099 | Enhanced Backlog Status Tracking with Timestamps | 🔧 | 1 | ✅ done| Add started_at, last_updated timestamps and stale item detection for better in-progress tracking | Timestamp tracking + stale detection + automated alerts | None |
 <!-- last_updated: 2025-08-16T08:41:45.155925 -->

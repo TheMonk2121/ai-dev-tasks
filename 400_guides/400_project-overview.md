@@ -1,10 +1,7 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Project overview and quick start guide -->
+
+
 <!-- WORKFLOW_MASTER: This file is the canonical source for development workflow -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ANCHOR_KEY: project-overview -->
 <!-- ANCHOR_PRIORITY: 10 -->
 <!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->

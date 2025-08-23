@@ -25,7 +25,6 @@ from uuid import uuid4
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class ContextType(Enum):
     """Enumeration of context types."""
     PROJECT = "project"
@@ -33,13 +32,11 @@ class ContextType(Enum):
     USER = "user"
     AGENT = "agent"
 
-
 class ContextVisibility(Enum):
     """Enumeration of context visibility levels."""
     PRIVATE = "private"
     SHARED = "shared"
     PUBLIC = "public"
-
 
 @dataclass
 class ContextData:
@@ -59,7 +56,6 @@ class ContextData:
     size_bytes: int = 0
     access_count: int = 0
 
-
 @dataclass
 class ContextRelationship:
     """Data structure for context relationships."""
@@ -71,7 +67,6 @@ class ContextRelationship:
     metadata: Dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
 
-
 @dataclass
 class ContextAccessLog:
     """Data structure for context access logs."""
@@ -82,7 +77,6 @@ class ContextAccessLog:
     user_id: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
-
 
 class ContextStore:
     """Database-backed context storage system."""
@@ -359,7 +353,6 @@ class ContextStore:
             conn.commit()
             conn.close()
 
-
 class ContextCache:
     """In-memory cache for frequently accessed context data."""
     
@@ -411,7 +404,6 @@ class ContextCache:
         with self.lock:
             self.cache.clear()
             self.access_times.clear()
-
 
 class ContextManager:
     """Main context management system."""
@@ -596,7 +588,6 @@ class ContextManager:
             "cache_stats": cache_stats
         }
 
-
 # Example usage and testing
 async def main():
     """Example usage of the Context Management System."""
@@ -661,7 +652,6 @@ async def main():
     print(f"Context stats: {stats}")
     
     print("--- Context Management Test Complete ---")
-
 
 if __name__ == "__main__":
     asyncio.run(main()) 

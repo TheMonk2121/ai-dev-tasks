@@ -1,11 +1,6 @@
 <!-- ANCHOR_KEY: generate-tasks -->
 <!-- ANCHOR_PRIORITY: 25 -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_testing-strategy-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Task generation workflow and planning -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ROLE_PINS: ["planner", "implementer"] -->
 
 # Generate Tasks

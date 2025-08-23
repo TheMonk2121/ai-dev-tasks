@@ -215,7 +215,6 @@ class DocumentationRetrievalCLI:
         if "results" in results:
             print(f"📄 Retrieved: {len(results['results'])} chunks")
 
-
 def main():
     """Main CLI function"""
     parser = argparse.ArgumentParser(
@@ -317,7 +316,6 @@ Examples:
     except Exception as e:
         _LOG.error(f"CLI error: {e}")
         print(f"Error: {e}")
-
 
 if __name__ == "__main__":
     main()

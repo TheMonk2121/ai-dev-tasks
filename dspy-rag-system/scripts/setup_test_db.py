@@ -11,7 +11,6 @@ from pathlib import Path
 
 import psycopg2
 
-
 def check_postgresql_installed():
     """Check if PostgreSQL is installed"""
     try:

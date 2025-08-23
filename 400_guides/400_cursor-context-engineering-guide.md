@@ -1,9 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
-<!-- MEMORY_CONTEXT: HIGH - Cursor-native context engineering strategies -->
 
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ANCHOR_KEY: cursor-context-engineering -->
 <!-- ANCHOR_PRIORITY: 15 -->
 <!-- ROLE_PINS: ["coder", "implementer"] -->

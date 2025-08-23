@@ -39,7 +39,6 @@ TEST_DOCUMENTS = [
     },
 ]
 
-
 def benchmark_insertion(store: HybridVectorStore, documents: List[Dict[str, Any]]) -> Dict[str, float]:
     """Benchmark document insertion performance"""
     print("🔧 Benchmarking document insertion...")
@@ -78,7 +77,6 @@ def benchmark_insertion(store: HybridVectorStore, documents: List[Dict[str, Any]
         "documents_inserted": len(documents),
     }
 
-
 def benchmark_vector_search(store: HybridVectorStore, queries: List[str]) -> Dict[str, float]:
     """Benchmark vector search performance"""
     print("🔍 Benchmarking vector search...")
@@ -102,7 +100,6 @@ def benchmark_vector_search(store: HybridVectorStore, queries: List[str]) -> Dic
         "max_time": max(search_times),
         "queries_executed": len(queries),
     }
-
 
 def benchmark_hybrid_search(store: HybridVectorStore, queries: List[str]) -> Dict[str, float]:
     """Benchmark hybrid search performance"""
@@ -128,7 +125,6 @@ def benchmark_hybrid_search(store: HybridVectorStore, queries: List[str]) -> Dic
         "queries_executed": len(queries),
     }
 
-
 def benchmark_cache_performance(store: HybridVectorStore, repeated_query: str) -> Dict[str, float]:
     """Benchmark query embedding cache performance"""
     print("💾 Benchmarking cache performance...")
@@ -150,7 +146,6 @@ def benchmark_cache_performance(store: HybridVectorStore, repeated_query: str) -
     print(f"  Cache speedup: {cache_speedup:.1f}x")
 
     return {"cache_miss_time": first_query_time, "cache_hit_time": second_query_time, "speedup": cache_speedup}
-
 
 def main():
     """Run comprehensive benchmark"""
@@ -235,7 +230,6 @@ def main():
         print("  ⚠️  Cache performance: NEEDS INVESTIGATION")
 
     print("\n✅ Benchmark completed successfully!")
-
 
 if __name__ == "__main__":
     main()

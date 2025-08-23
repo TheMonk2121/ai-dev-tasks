@@ -176,7 +176,7 @@ class GiantGuideReferenceMigrator:
                     appropriate_module = self._find_appropriate_module(context_term, module_pattern)
                     if appropriate_module:
                         # Add module reference comment
-                        module_comment = f"<!-- MODULE_REFERENCE: {appropriate_module} -->"
+                        module_comment = ""
                         if module_comment not in content:
                             # Find a good place to add the module reference
                             if "<!--" in content:
@@ -309,7 +309,6 @@ class GiantGuideReferenceMigrator:
             'file_module_mapping': self.file_module_mapping
         }
 
-
 def main():
     """Main function to run the migration."""
     migrator = GiantGuideReferenceMigrator()
@@ -321,7 +320,6 @@ def main():
     print(f"Files Updated: {len(result['updated_files'])}")
     print(f"Errors: {len(result['errors'])}")
     print("="*50)
-
 
 if __name__ == "__main__":
     main()

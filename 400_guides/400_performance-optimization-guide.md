@@ -1,8 +1,8 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Performance optimization and monitoring -->
+
+
 <!-- ANCHOR_KEY: performance-optimization -->
 <!-- ANCHOR_PRIORITY: 15 -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ROLE_PINS: ["coder", "implementer"] -->
 # ⚡ Performance Optimization Guide
 

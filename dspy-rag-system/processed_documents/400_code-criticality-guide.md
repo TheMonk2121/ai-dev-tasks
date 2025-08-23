@@ -1,7 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
-<!-- MEMORY_CONTEXT: HIGH - Critical code identification and prioritization -->
+
+
 # 🗺️ Critical Python Code Map
 
 {#tldr}

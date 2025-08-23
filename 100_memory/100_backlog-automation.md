@@ -1,9 +1,6 @@
 <!-- ANCHOR_KEY: backlog-automation -->
 <!-- ANCHOR_PRIORITY: 15 -->
-<!-- MEMORY_CONTEXT: HIGH - Backlog automation and workflow integration -->
-<!-- DATABASE_SYNC: REQUIRED -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/103_memory-context-workflow.md -->
+
 <!-- ROLE_PINS: ["planner", "implementer"] -->
 
 # Backlog Automation

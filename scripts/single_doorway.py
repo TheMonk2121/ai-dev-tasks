@@ -15,6 +15,17 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+# Optional imports (may not be available in all environments)
+try:
+    import psutil
+except ImportError:
+    psutil = None
+
+try:
+    from session_registry import SessionRegistry
+except ImportError:
+    SessionRegistry = None
+
 
 def _select_python() -> str:
     # Prefer explicit env, then python3.12 if present, else current interpreter
@@ -263,21 +274,20 @@ def cmd_scribe_start(backlog_id: str | None, interval: int, fast: bool, full: bo
     _save_state(state)
 
     # Register session in session registry
-    try:
-        from session_registry import SessionRegistry
-
-        registry = SessionRegistry()
-        registry.register_session(
-            backlog_id=bid,
-            pid=proc.pid,
-            worklog_path=str(_worklog_path(bid)),
-            session_type="brainstorming",  # Default, can be enhanced later
-            priority="medium",
-        )
-    except ImportError:
+    if SessionRegistry is None:
         print("⚠️  Session registry not available - continuing without registration")
-    except Exception as e:
-        print(f"⚠️  Failed to register session: {e}")
+    else:
+        try:
+            registry = SessionRegistry()
+            registry.register_session(
+                backlog_id=bid,
+                pid=proc.pid,
+                worklog_path=str(_worklog_path(bid)),
+                session_type="brainstorming",  # Default, can be enhanced later
+                priority="medium",
+            )
+        except Exception as e:
+            print(f"⚠️  Failed to register session: {e}")
 
     print(f"📝 Scribe started (PID {proc.pid}) for {bid}. Writing to {state['scribe']['worklog']}")
 
@@ -298,14 +308,10 @@ def cmd_scribe_stop(backlog_id: str | None) -> None:
         _append_worklog(bid, ["- Session stopped"])
 
     # Update session registry
-    if bid:
+    if bid and SessionRegistry is not None:
         try:
-            from session_registry import SessionRegistry
-
             registry = SessionRegistry()
             registry.update_session_status(bid, "completed")
-        except ImportError:
-            print("⚠️  Session registry not available - continuing without update")
         except Exception as e:
             print(f"⚠️  Failed to update session registry: {e}")
 
@@ -327,7 +333,9 @@ def cmd_scribe_append(message: str, backlog_id: str | None) -> None:
 
 def _count_scribe_instances() -> int:
     """Count running Scribe instances."""
-    import psutil
+    if psutil is None:
+        print("⚠️  psutil not available - cannot count instances")
+        return 0
 
     count = 0
     for proc in psutil.process_iter(["pid", "cmdline"]):
@@ -347,7 +355,9 @@ def _count_scribe_instances() -> int:
 
 def _get_oldest_scribe_pid() -> int | None:
     """Get PID of oldest running Scribe instance."""
-    import psutil
+    if psutil is None:
+        print("⚠️  psutil not available - cannot get oldest PID")
+        return None
 
     oldest_pid = None
     oldest_time = float("inf")
@@ -372,7 +382,9 @@ def _get_oldest_scribe_pid() -> int | None:
 
 def _stop_scribe_instance(pid: int) -> bool:
     """Stop a specific Scribe instance by PID."""
-    import psutil
+    if psutil is None:
+        print("⚠️  psutil not available - cannot stop instance")
+        return False
 
     try:
         proc = psutil.Process(pid)
@@ -389,7 +401,9 @@ def _stop_scribe_instance(pid: int) -> bool:
 
 def cmd_scribe_status(verbose: bool = False) -> None:
     """Show status of running Scribe instances."""
-    import psutil
+    if psutil is None:
+        print("❌ psutil not available - cannot show status")
+        return
 
     scribe_processes = []
 
@@ -497,48 +511,50 @@ def cmd_scribe_daemon(backlog_id: str, interval: int, idle_timeout: int) -> None
 # Session registry command functions
 def cmd_scribe_list(no_context: bool, status_filter: str | None) -> None:
     """List sessions from the session registry."""
-    try:
-        from session_registry import SessionRegistry
+    if SessionRegistry is None:
+        print("❌ Session registry not available. Install session_registry.py")
+        return
 
+    try:
         registry = SessionRegistry()
         registry.list_sessions(show_context=not no_context, status_filter=status_filter)
-    except ImportError:
-        print("❌ Session registry not available. Install session_registry.py")
     except Exception as e:
         print(f"❌ Failed to list sessions: {e}")
 
 
 def cmd_scribe_tag(backlog_id: str, tags: list[str]) -> None:
     """Add context tags to a session."""
-    try:
-        from session_registry import SessionRegistry
+    if SessionRegistry is None:
+        print("❌ Session registry not available. Install session_registry.py")
+        return
 
+    try:
         registry = SessionRegistry()
         registry.add_context_tags(backlog_id, tags)
-    except ImportError:
-        print("❌ Session registry not available. Install session_registry.py")
     except Exception as e:
         print(f"❌ Failed to tag session: {e}")
 
 
 def cmd_scribe_untag(backlog_id: str, tags: list[str]) -> None:
     """Remove context tags from a session."""
-    try:
-        from session_registry import SessionRegistry
+    if SessionRegistry is None:
+        print("❌ Session registry not available. Install session_registry.py")
+        return
 
+    try:
         registry = SessionRegistry()
         registry.remove_context_tags(backlog_id, tags)
-    except ImportError:
-        print("❌ Session registry not available. Install session_registry.py")
     except Exception as e:
         print(f"❌ Failed to untag session: {e}")
 
 
 def cmd_scribe_info(backlog_id: str) -> None:
     """Show detailed information about a session."""
-    try:
-        from session_registry import SessionRegistry
+    if SessionRegistry is None:
+        print("❌ Session registry not available. Install session_registry.py")
+        return
 
+    try:
         registry = SessionRegistry()
         session = registry.get_session_info(backlog_id)
         if session:
@@ -555,34 +571,32 @@ def cmd_scribe_info(backlog_id: str) -> None:
                 print(f"Last Activity: {session.last_activity}")
         else:
             print(f"❌ Session {backlog_id} not found")
-    except ImportError:
-        print("❌ Session registry not available. Install session_registry.py")
     except Exception as e:
         print(f"❌ Failed to get session info: {e}")
 
 
 def cmd_scribe_cleanup() -> None:
     """Clean up old completed sessions."""
-    try:
-        from session_registry import SessionRegistry
+    if SessionRegistry is None:
+        print("❌ Session registry not available. Install session_registry.py")
+        return
 
+    try:
         registry = SessionRegistry()
         registry.cleanup_completed_sessions()
-    except ImportError:
-        print("❌ Session registry not available. Install session_registry.py")
     except Exception as e:
         print(f"❌ Failed to cleanup sessions: {e}")
 
 
 def cmd_scribe_validate() -> None:
     """Validate that registered processes are still running."""
-    try:
-        from session_registry import SessionRegistry
+    if SessionRegistry is None:
+        print("❌ Session registry not available. Install session_registry.py")
+        return
 
+    try:
         registry = SessionRegistry()
         registry.validate_processes()
-    except ImportError:
-        print("❌ Session registry not available. Install session_registry.py")
     except Exception as e:
         print(f"❌ Failed to validate sessions: {e}")
 

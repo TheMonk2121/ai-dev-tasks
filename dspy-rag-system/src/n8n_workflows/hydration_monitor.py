@@ -19,7 +19,6 @@ from src.utils.memory_rehydrator import build_hydration_bundle
 
 logger = get_logger(__name__)
 
-
 class HydrationMonitor:
     """Monitors hydration system health and performance"""
 
@@ -220,7 +219,6 @@ class HydrationMonitor:
 
         return recommendations
 
-
 def create_n8n_webhook_payload(health_report: Dict[str, Any]) -> Dict[str, Any]:
     """Create n8n webhook payload format"""
     return {
@@ -235,7 +233,6 @@ def create_n8n_webhook_payload(health_report: Dict[str, Any]) -> Dict[str, Any]:
         "details": health_report,
         "action_required": health_report["status"] == "unhealthy",
     }
-
 
 def main():
     """Main monitoring function for n8n integration"""
@@ -258,7 +255,6 @@ def main():
         logger.warning(f"Alerts: {health_report['alerts']}")
 
     return 0 if health_report["status"] == "healthy" else 1
-
 
 if __name__ == "__main__":
     exit(main())

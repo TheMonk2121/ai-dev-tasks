@@ -19,7 +19,7 @@ def extract_memory_context(file_path):
         content = f.read()
     
     # Look for MEMORY_CONTEXT comment
-    match = re.search(r'<!-- MEMORY_CONTEXT: (\w+) - (.+?) -->', content)
+    match = re.search(r'', content)
     if match:
         return {
             'level': match.group(1),

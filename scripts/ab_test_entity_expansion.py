@@ -27,7 +27,6 @@ def load_query_set(file_path: str) -> List[Dict[str, Any]]:
                 queries.append(json.loads(line))
     return queries
 
-
 def run_test(queries: List[Dict[str, Any]], use_entity_expansion: bool, test_name: str) -> Dict[str, Any]:
     """Run a test with the given queries and entity expansion setting."""
     print(f"\n🧪 Running {test_name} test...")
@@ -100,7 +99,6 @@ def run_test(queries: List[Dict[str, Any]], use_entity_expansion: bool, test_nam
         results["expansion_query_ratio"] = results["queries_with_expansion"] / results["query_count"]
 
     return results
-
 
 def main():
     """Run A/B testing for entity expansion."""
@@ -190,7 +188,6 @@ def main():
 
     print(f"\n💾 Results saved to: {output_file}")
     print("🔧 Use: python3 scripts/summarize_ab.py baseline.json variant.json")
-
 
 if __name__ == "__main__":
     main()

@@ -16,7 +16,6 @@ except Exception:
 
 FALLBACK_MODE = os.getenv("RAG_SHIM_FALLBACK", "none").lower()  # "none" | "enhanced"
 
-
 class _RAGShim:
     def __init__(self, db_dsn: Optional[str], _legacy_url: Optional[str], model: Optional[str]):
         self.db_dsn = db_dsn
@@ -138,7 +137,6 @@ class _RAGShim:
                 else:
                     out.append(str(r))
         return out[:5]
-
 
 def create_rag_interface(
     db_dsn: Optional[str] = None, _legacy_url: Optional[str] = None, model: Optional[str] = None

@@ -22,7 +22,6 @@ class BrokenLink:
     line_number: int = 0
     context: str = ""
 
-
 class BrokenLinksFixer:
     def __init__(self, dry_run: bool = True):
         self.dry_run = dry_run
@@ -223,7 +222,6 @@ class BrokenLinksFixer:
             if len(self.fixes_made) > 10:
                 print(f"  ... and {len(self.fixes_made) - 10} more")
 
-
 def main():
     parser = argparse.ArgumentParser(description="Fix broken file references in documentation")
     parser.add_argument(
@@ -248,7 +246,6 @@ def main():
         print("\n💡 To apply fixes, run: python3 scripts/fix_broken_links.py --apply")
 
     return 0
-
 
 if __name__ == "__main__":
     exit(main())

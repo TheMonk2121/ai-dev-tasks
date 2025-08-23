@@ -21,7 +21,6 @@ class ContextType(Enum):
     USER = "user"
     AGENT = "agent"
 
-
 @dataclass
 class ContextData:
     """Data structure for context information."""
@@ -33,7 +32,6 @@ class ContextData:
     created_at: float = field(default_factory=time.time)
     updated_at: float = field(default_factory=time.time)
     accessed_at: float = field(default_factory=time.time)
-
 
 class SimpleContextStore:
     """Simplified database-backed context storage system."""
@@ -119,7 +117,6 @@ class SimpleContextStore:
         
         return None
 
-
 def main():
     """Test the simplified context management system."""
     print("--- Testing Simplified Context Management ---")
@@ -152,7 +149,6 @@ def main():
         print("Failed to retrieve project context")
     
     print("--- Context Management Test Complete ---")
-
 
 if __name__ == "__main__":
     main() 

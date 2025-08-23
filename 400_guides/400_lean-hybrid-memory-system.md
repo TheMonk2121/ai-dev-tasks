@@ -4,12 +4,6 @@
 
 # 🧠 Lean Hybrid Memory Rehydration System
 
-<!-- CONTEXT_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
-<!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
-<!-- MEMORY_CONTEXT: HIGH - Core memory rehydration system implementation -->
-<!-- DATABASE_SYNC: REQUIRED -->
-
 ## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |

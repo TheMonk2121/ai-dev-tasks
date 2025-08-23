@@ -19,7 +19,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from utils.database_resilience import get_database_manager
 
-
 def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
     """Apply the clean-slate schema migration."""
 
@@ -87,7 +86,6 @@ def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
         print("3. Ensure you have write permissions to the database")
         return False
 
-
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Apply clean-slate database schema")
@@ -99,7 +97,6 @@ def main():
     success = apply_clean_slate_schema(dry_run=args.dry_run, backup=args.backup)
 
     sys.exit(0 if success else 1)
-
 
 if __name__ == "__main__":
     main()

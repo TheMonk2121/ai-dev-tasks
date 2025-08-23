@@ -1,5 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
+
+
 # 📜 **CORE CONSTITUTION RULES**---
 
 ## 📜**CORE CONSTITUTION RULES**{#tldr}

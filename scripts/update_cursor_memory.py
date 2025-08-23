@@ -37,7 +37,6 @@ FENCE_HEALTH_END = "<!-- AUTO:doc_health:end -->"
 FENCE_COMPLETED_START = "<!-- AUTO:recently_completed:start -->"
 FENCE_COMPLETED_END = "<!-- AUTO:recently_completed:end -->"
 
-
 def parse_backlog_item(line: str, few_shot_loader: Optional[FewShotExampleLoader] = None) -> Optional[Dict[str, str]]:
     """Parse a single backlog item line with improved error handling and few-shot enhancement"""
     if not line.strip() or "| B‑" not in line:
@@ -84,7 +83,6 @@ def parse_backlog_item(line: str, few_shot_loader: Optional[FewShotExampleLoader
     except Exception:
         return None
 
-
 def extract_backlog_priorities(enable_few_shot: bool = True) -> List[Dict[str, str]]:
     """Extract current priorities from 000_core/000_backlog.md with improved parsing and few-shot enhancement"""
     backlog_file = Path("000_core/000_backlog.md")
@@ -130,7 +128,6 @@ def extract_backlog_priorities(enable_few_shot: bool = True) -> List[Dict[str, s
         print(f"❌ Error parsing backlog: {e}")
         return []
 
-
 def extract_completed_items() -> List[Dict[str, str]]:
     """Extract recently completed items with improved parsing"""
     backlog_file = Path("000_core/000_backlog.md")
@@ -161,14 +158,12 @@ def extract_completed_items() -> List[Dict[str, str]]:
         print(f"❌ Error parsing completed items: {e}")
         return []
 
-
 def _replace_between_fences(text: str, start_marker: str, end_marker: str, replacement: str) -> str:
     """Replace content between fenced markers"""
     if start_marker in text and end_marker in text:
         pattern = re.compile(re.escape(start_marker) + r"[\s\S]*?" + re.escape(end_marker))
         return pattern.sub(start_marker + "\n" + replacement.strip() + "\n" + end_marker, text)
     return text
-
 
 def _add_fenced_section(text: str, start_marker: str, end_marker: str, content: str) -> str:
     """Add a new fenced section if it doesn't exist"""
@@ -177,7 +172,6 @@ def _add_fenced_section(text: str, start_marker: str, end_marker: str, content: 
     else:
         # Add at the end before the last section
         return text.rstrip() + "\n\n" + start_marker + "\n" + content + "\n" + end_marker + "\n"
-
 
 def load_doc_health() -> Dict[str, Any]:
     """Load health telemetry from docs_health.json or validation report."""
@@ -214,7 +208,6 @@ def load_doc_health() -> Dict[str, Any]:
 
     return health
 
-
 def render_priorities_block(priorities: List[Dict[str, str]]) -> str:
     """Render priorities as a formatted block"""
     if not priorities:
@@ -232,7 +225,6 @@ def render_priorities_block(priorities: List[Dict[str, str]]) -> str:
 
     return "\n".join(lines)
 
-
 def render_completed_block(completed: List[Dict[str, str]]) -> str:
     """Render completed items as a formatted block"""
     if not completed:
@@ -247,7 +239,6 @@ def render_completed_block(completed: List[Dict[str, str]]) -> str:
 
     return "\n".join(lines)
 
-
 def render_doc_health_block(health: Dict[str, Any]) -> str:
     """Render documentation health as a formatted block"""
     lines = []
@@ -258,7 +249,6 @@ def render_doc_health_block(health: Dict[str, Any]) -> str:
     lines.append(f"- Invariant warnings: {health.get('invariant_warnings', 0)}")
     lines.append(f"- Last run: {health.get('timestamp')}")
     return "\n".join(lines)
-
 
 def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -> Tuple[bool, str]:
     """Update 100_memory/100_cursor-memory-context.md with current state"""
@@ -332,7 +322,6 @@ def update_memory_context(dry_run: bool = False, enable_few_shot: bool = True) -
     except Exception as e:
         return False, f"❌ Error writing memory context: {e}"
 
-
 def main():
     """Main function with command line argument support"""
     parser = argparse.ArgumentParser(description="Update Cursor Memory Context")
@@ -356,7 +345,6 @@ def main():
     except Exception as e:
         print(f"❌ Error updating memory context: {e}")
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

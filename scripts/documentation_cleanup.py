@@ -84,7 +84,6 @@ def analyze_guide_files():
 
     return categories, guide_files
 
-
 def check_cross_references():
     """Check cross-reference patterns between guides."""
     print("\n🔗 Cross-Reference Analysis")
@@ -126,7 +125,6 @@ def check_cross_references():
         print(f"    {filename}: {count} references")
 
     return reference_counts, referenced_by
-
 
 def identify_redundant_content():
     """Identify potentially redundant content between guides."""
@@ -173,7 +171,6 @@ def identify_redundant_content():
         print("✅ No obvious content duplications found")
 
     return duplicates
-
 
 def suggest_cleanup_actions(categories, reference_counts, referenced_by):
     """Suggest cleanup actions based on analysis."""
@@ -234,7 +231,6 @@ def suggest_cleanup_actions(categories, reference_counts, referenced_by):
 
     return recommendations
 
-
 def create_cleanup_report(categories, reference_counts, referenced_by, recommendations, duplicates):
     """Create a comprehensive cleanup report."""
     print("\n📋 Cleanup Report Generation")
@@ -268,7 +264,6 @@ def create_cleanup_report(categories, reference_counts, referenced_by, recommend
     print(f"✅ Cleanup report saved to {report_path}")
     return report
 
-
 def main():
     """Main documentation cleanup function."""
     print("🧹 Documentation Cleanup Analysis")
@@ -299,7 +294,6 @@ def main():
     print(f"  - Recommendations: {len(recommendations)}")
 
     return True
-
 
 if __name__ == "__main__":
     success = main()

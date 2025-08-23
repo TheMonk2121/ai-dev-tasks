@@ -58,6 +58,5 @@ def test_content_analysis():
         except Exception as e:
             print(f"  ❌ Error analyzing file: {e}")
 
-
 if __name__ == "__main__":
     test_content_analysis()

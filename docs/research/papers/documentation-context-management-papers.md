@@ -1,6 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-# Documentation Context Management Papers
 
+# Documentation Context Management Papers
 
 - **Retrieval-Augmented Generation (RAG)**: Search knowledge base for relevant chunks
 

@@ -35,14 +35,12 @@ OperationResult = Dict[str, Any]
 AuditData = Dict[str, Any]
 LogData = Dict[str, Any]
 
-
 class KeyringProtocol(Protocol):
     """Protocol for keyring operations to improve type safety"""
 
     def set_password(self, service: str, username: str, password: str) -> None: ...
     def get_password(self, service: str, username: str) -> Optional[str]: ...
     def delete_password(self, service: str, username: str) -> None: ...
-
 
 class CacheProtocol(Protocol):
     """Protocol for cache operations"""
@@ -52,55 +50,46 @@ class CacheProtocol(Protocol):
     def delete(self, key: str) -> None: ...
     def clear(self) -> None: ...
 
-
 class ValidatorProtocol(Protocol):
     """Protocol for validation operations"""
 
     def validate(self, value: str, config: "SecretConfig") -> bool: ...
     def sanitize(self, value: str) -> str: ...
 
-
 class SecretsError(Exception):
     """Base exception for secrets management errors"""
 
     pass
-
 
 class SecretsValidationError(SecretsError):
     """Raised when secrets validation fails"""
 
     pass
 
-
 class KeyringError(SecretsError):
     """Raised when keyring operations fail"""
 
     pass
-
 
 class SecretNotFoundError(SecretsError):
     """Raised when a required secret is not found"""
 
     pass
 
-
 class SecretValidationError(SecretsError):
     """Raised when a secret fails validation"""
 
     pass
-
 
 class SecurityError(SecretsError):
     """Raised when security validation fails"""
 
     pass
 
-
 class CacheError(SecretsError):
     """Raised when cache operations fail"""
 
     pass
-
 
 @dataclass
 class SecretConfig:
@@ -128,7 +117,6 @@ class SecretConfig:
 
         if self.min_length is not None and self.max_length is not None and self.min_length > self.max_length:
             raise ValueError("min_length cannot be greater than max_length")
-
 
 class SecurityValidator:
     """Security validation utilities for secrets management"""
@@ -217,7 +205,6 @@ class SecurityValidator:
 
         return value
 
-
 class InMemoryCache:
     """In-memory cache implementation with protocol compliance"""
 
@@ -266,7 +253,6 @@ class InMemoryCache:
         self._cache.clear()
         self._access_order.clear()
 
-
 def retry_keyring_operation(max_retries: int = 3, delay: float = 1.0):
     """Decorator to retry keyring operations with exponential backoff"""
 
@@ -292,7 +278,6 @@ def retry_keyring_operation(max_retries: int = 3, delay: float = 1.0):
         return wrapper
 
     return decorator
-
 
 class SecretsManager:
     """Secure secrets management with environment validation and keyring integration"""
@@ -794,7 +779,6 @@ class SecretsManager:
             ),
         ]
 
-
 def validate_startup_secrets() -> bool:
     """
     Validate all required secrets on system startup.
@@ -826,7 +810,6 @@ def validate_startup_secrets() -> bool:
     except Exception as e:
         logger.error(f"❌ Secrets validation failed: {e}")
         return False
-
 
 def setup_secrets_interactive() -> bool:
     """
@@ -895,7 +878,6 @@ def setup_secrets_interactive() -> bool:
     except Exception as e:
         logger.error(f"❌ Interactive secrets setup failed: {e}")
         return False
-
 
 if __name__ == "__main__":
     # Test secrets management

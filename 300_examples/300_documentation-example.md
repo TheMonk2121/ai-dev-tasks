@@ -1,5 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
+
 
 # Documentation Example
 

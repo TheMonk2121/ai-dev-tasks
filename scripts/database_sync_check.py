@@ -22,7 +22,6 @@ except ImportError as e:
     print("Make sure dspy-rag-system is properly set up and database_utils.py exists")
     sys.exit(1)
 
-
 def find_files_with_sync_tags() -> List[Tuple[str, str]]:
     """
     Find all files with DATABASE_SYNC tags.
@@ -79,7 +78,6 @@ def find_files_with_sync_tags() -> List[Tuple[str, str]]:
     # Convert to list format
     sync_files = list(filename_to_path.values())
     return sync_files
-
 
 def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, Dict]:
     """
@@ -138,7 +136,6 @@ def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, D
             }
 
     return sync_status
-
 
 def update_database_file(file_path: str, status: Dict) -> bool:
     """
@@ -248,7 +245,6 @@ def update_database_file(file_path: str, status: Dict) -> bool:
         print(f"Error updating {file_path}: {e}")
         return False
 
-
 def main():
     """Main function for database synchronization check."""
     print("🔍 Database Synchronization Check")
@@ -314,7 +310,6 @@ def main():
             return False
 
     return True
-
 
 if __name__ == "__main__":
     success = main()

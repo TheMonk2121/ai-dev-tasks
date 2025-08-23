@@ -108,7 +108,6 @@ class TestPerformanceMonitor:
         assert "benchmarks_failed" in summary
         assert "total_alerts" in summary
 
-
 class TestAgentSwitchingOptimizer:
     """Test agent switching optimization."""
     
@@ -161,7 +160,6 @@ class TestAgentSwitchingOptimizer:
         # Check that warm_up was called
         agent.warm_up.assert_called_once()
 
-
 class TestContextLoadingOptimizer:
     """Test context loading optimization."""
     
@@ -211,7 +209,6 @@ class TestContextLoadingOptimizer:
         assert self.optimizer.load_history[0]["cache_hit"] is False
         assert self.optimizer.load_history[1]["cache_hit"] is True
 
-
 class TestMemoryOptimizer:
     """Test memory optimization."""
     
@@ -252,7 +249,6 @@ class TestMemoryOptimizer:
         assert self.optimizer.memory_threshold == 100 * 1024 * 1024  # 100MB
         assert self.optimizer.gc_threshold == 0.8  # 80%
         assert self.optimizer.optimization_enabled is True
-
 
 class TestConcurrentAgentOptimizer:
     """Test concurrent agent optimization."""
@@ -306,7 +302,6 @@ class TestConcurrentAgentOptimizer:
         assert "test_agent" in self.optimizer.active_agents
         agent_info = self.optimizer.active_agents["test_agent"]
         assert agent_info["status"] == "completed"
-
 
 class TestPerformanceOptimizationManager:
     """Test main performance optimization manager."""
@@ -365,7 +360,6 @@ class TestPerformanceOptimizationManager:
         self.manager.add_alert_callback(callback)
         
         assert callback in self.manager.monitor.alert_callbacks
-
 
 class TestPerformanceBenchmarks:
     """Test performance benchmarks against T-4.2 requirements."""
@@ -436,7 +430,6 @@ class TestPerformanceBenchmarks:
             assert "current" in metrics[metric]
             assert "target" in metrics[metric]
             assert "status" in metrics[metric]
-
 
 class TestPerformanceIntegration:
     """Integration tests for performance optimization."""
@@ -511,7 +504,6 @@ class TestPerformanceIntegration:
         alert = alerts_received[-1]
         assert alert.metric == PerformanceMetric.MEMORY_USAGE
         assert alert.threshold == 100.0
-
 
 if __name__ == "__main__":
     # Run performance tests

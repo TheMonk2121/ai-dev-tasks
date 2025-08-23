@@ -23,7 +23,6 @@ from scripts.task_generation_automation import (
     TaskTemplateGenerator,
 )
 
-
 class TestTaskRequirement:
     """Test the TaskRequirement dataclass."""
 
@@ -54,7 +53,6 @@ class TestTaskRequirement:
         assert requirement.effort_points == 5
         assert requirement.complexity == "Medium"
 
-
 class TestGeneratedTask:
     """Test the GeneratedTask dataclass."""
 
@@ -80,7 +78,6 @@ class TestGeneratedTask:
         assert task.priority == "High"
         assert task.task_type == "general"
         assert task.complexity == "Medium"
-
 
 class TestPRDParser:
     """Test the PRDParser class."""
@@ -237,7 +234,6 @@ class TestPRDParser:
         complex = parser._assess_complexity(complex_desc)
         assert complex == "Simple"  # Word count is less than 80, so it's Simple
 
-
 class TestBacklogParser:
     """Test the BacklogParser class."""
 
@@ -318,7 +314,6 @@ class TestBacklogParser:
         assert parser._emoji_to_priority("⭐") == "Medium"
         assert parser._emoji_to_priority("🔧") == "Low"
         assert parser._emoji_to_priority("❓") == "Medium"  # Default
-
 
 class TestTaskTemplateGenerator:
     """Test the TaskTemplateGenerator class."""
@@ -500,7 +495,6 @@ class TestTaskTemplateGenerator:
         if len(notes) > 0:
             assert notes.startswith("- ")
 
-
 class TestTaskOutputGenerator:
     """Test the TaskOutputGenerator class."""
 
@@ -571,7 +565,6 @@ class TestTaskOutputGenerator:
         assert "#### Task 1: Implement Test Feature" in task_list
         assert "## Quality Metrics" in task_list
         assert "## Risk Mitigation" in task_list
-
 
 class TestIntegration:
     """Integration tests for the complete task generation workflow."""
@@ -697,7 +690,6 @@ class TestIntegration:
         assert len(simple_testing["unit_tests"]) < len(complex_testing["unit_tests"])
         assert len(simple_testing["performance_tests"]) == 0
         assert len(complex_testing["performance_tests"]) > 0
-
 
 if __name__ == "__main__":
     pytest.main([__file__])

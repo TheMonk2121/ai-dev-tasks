@@ -1,6 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_testing-strategy-guide.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Testing research and quality assurance patterns -->
+
 
 # 🧪 Testing Research
 

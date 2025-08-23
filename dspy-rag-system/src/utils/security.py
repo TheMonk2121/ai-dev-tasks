@@ -20,7 +20,6 @@ from typing import Any, Dict, List
 
 logger = logging.getLogger(__name__)
 
-
 class SecurityScanner:
     """Security scanner for dependency and code analysis"""
 
@@ -147,7 +146,6 @@ class SecurityScanner:
 
         return report
 
-
 def generate_secure_hash(data: str, salt: str = None) -> str:
     """Generate a secure hash of data with optional salt"""
     if salt is None:
@@ -155,7 +153,6 @@ def generate_secure_hash(data: str, salt: str = None) -> str:
 
     hash_obj = hashlib.pbkdf2_hmac("sha256", data.encode(), salt.encode(), 100000)
     return f"{salt}:{hash_obj.hex()}"
-
 
 def verify_secure_hash(data: str, hash_string: str) -> bool:
     """Verify a secure hash"""
@@ -166,11 +163,9 @@ def verify_secure_hash(data: str, hash_string: str) -> bool:
     except Exception:
         return False
 
-
 def generate_secure_token(length: int = 32) -> str:
     """Generate a secure random token"""
     return secrets.token_urlsafe(length)
-
 
 def validate_file_hash(file_path: str, expected_hash: str) -> bool:
     """Validate file integrity using SHA-256 hash"""
@@ -182,7 +177,6 @@ def validate_file_hash(file_path: str, expected_hash: str) -> bool:
         logger.error(f"File hash validation failed: {e}")
         return False
 
-
 def sanitize_filename(filename: str) -> str:
     """Sanitize filename for security"""
     import re
@@ -193,7 +187,6 @@ def sanitize_filename(filename: str) -> str:
     if len(sanitized) > 255:
         sanitized = sanitized[:255]
     return sanitized
-
 
 def validate_url(url: str) -> bool:
     """Validate URL for security"""
@@ -217,13 +210,11 @@ def validate_url(url: str) -> bool:
 
         return datetime.now(timezone.utc).isoformat()
 
-
 def _get_timestamp() -> str:
     """Get current timestamp in ISO format"""
     from datetime import datetime, timezone
 
     return datetime.now(timezone.utc).isoformat()
-
 
 def create_security_config() -> Dict[str, Any]:
     """Create security configuration"""
@@ -241,7 +232,6 @@ def create_security_config() -> Dict[str, Any]:
             "token_length": 32,
         }
     }
-
 
 def validate_security_config(config: Dict[str, Any]) -> bool:
     """Validate security configuration"""

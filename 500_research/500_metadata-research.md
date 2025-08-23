@@ -1,7 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_metadata-collection-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_metadata-collection-guide.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Metadata research and governance patterns -->
+
+
 # 📊 Metadata & Governance Research
 
 ## 📊 Metadata & Governance Research

@@ -31,7 +31,6 @@ logger = logging.getLogger(__name__)
 DASHBOARD_URL = os.getenv("DASHBOARD_URL", "http://localhost:5000")
 GRAPH_DATA_ENDPOINT = f"{DASHBOARD_URL}/graph-data"
 
-
 class GraphVisualizationApp:
     """NiceGUI application for graph visualization."""
 
@@ -246,13 +245,11 @@ class GraphVisualizationApp:
         if ui:
             ui.run_javascript(f"window.open('{DASHBOARD_URL}', '_blank')")
 
-
 def create_app() -> GraphVisualizationApp:
     """Create and configure the NiceGUI application."""
     app_instance = GraphVisualizationApp()
     app_instance.create_ui()
     return app_instance
-
 
 # Main application entry point
 if __name__ == "__main__":

@@ -234,8 +234,6 @@ stop_nicegui_graph() {
     fi
 }
 
-
-
 # Function to stop watch folder service
 stop_watch_folder() {
     print_status "Stopping Watch Folder Service (optimized)..."

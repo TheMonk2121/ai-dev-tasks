@@ -1,7 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 100_memory/103_memory-context-workflow.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
+
+
 <!-- markdownlint-disable MD041 -->
 
 # Naming Conventions
@@ -13,16 +11,12 @@
 | File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to
 new files and update existing ones |
 
-
-
 ## TL;DR {#tldr}
 
 | what this file is | read when | do next |
 |---|---|---|
 | File and directory naming standards for the project | Creating new files or organizing content | Apply conventions to
 new files and update existing ones |
-
-
 
 ## Category Table (Accepted Exceptions & Deferrals)
 
@@ -202,8 +196,7 @@ benchmarks
 #### Examples
 
 ```markdown
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Core workflow guide -->
+
 <!-- ESSENTIAL_FILES: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md -->
 
 ```
@@ -358,9 +351,9 @@ The HTML comments in our documentation serve as a **formal API for AI consumptio
 
 | Key | Purpose | Example | Required For |
 | :--- | :--- | :--- | :--- |
-| CONTEXT_REFERENCE | Links to the main guide for context | `<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->` | HIGH priority files |
-| MODULE_REFERENCE | Links to a related implementation module | `<!-- MODULE_REFERENCE: 100_memory/104_dspy-development-context.md -->` | MEDIUM priority files |
-| MEMORY_CONTEXT | Specifies priority level for AI rehydration | `<!-- MEMORY_CONTEXT: HIGH - Core workflow guide -->` | All files |
+| CONTEXT_REFERENCE | Links to the main guide for context | `` | HIGH priority files |
+| MODULE_REFERENCE | Links to a related implementation module | `` | MEDIUM priority files |
+| MEMORY_CONTEXT | Specifies priority level for AI rehydration | `` | All files |
 | ESSENTIAL_FILES | Lists files critical for understanding | `<!-- ESSENTIAL_FILES: 400_guides/400_project-overview.md -->` | HIGH priority files |
 
 ### Usage Patterns
@@ -389,7 +382,7 @@ The HTML comments in our documentation serve as a **formal API for AI consumptio
 
 Each file should include:
 
-1. **Memory Context Comment**: `<!-- MEMORY_CONTEXT: [HIGH|MEDIUM|LOW] - [description] -->`
+1. **Memory Context Comment**: ``
 2. **Clear Purpose**: What this file is for and when to read it
 3. **Related Files**: Links to other relevant documentation
 4. **Structured Status**: Use consistent status reporting format

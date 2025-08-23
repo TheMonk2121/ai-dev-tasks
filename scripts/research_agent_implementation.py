@@ -25,7 +25,6 @@ from uuid import uuid4
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class ResearchType(Enum):
     """Enumeration of research types."""
     TECHNICAL = "technical"
@@ -36,7 +35,6 @@ class ResearchType(Enum):
     COMPARISON = "comparison"
     TRENDS = "trends"
 
-
 @dataclass
 class ResearchSource:
     """Data structure for research sources."""
@@ -46,7 +44,6 @@ class ResearchSource:
     source_type: str  # "documentation", "blog", "paper", "forum"
     credibility_score: float
     timestamp: float = field(default_factory=time.time)
-
 
 @dataclass
 class ResearchFinding:
@@ -61,7 +58,6 @@ class ResearchFinding:
     recommendations: List[str] = field(default_factory=list)
     trade_offs: List[str] = field(default_factory=list)
     timestamp: float = field(default_factory=time.time)
-
 
 class ResearchDatabase:
     """Database for storing research data and cache."""
@@ -214,7 +210,6 @@ class ResearchDatabase:
             findings.append(finding)
         
         return findings
-
 
 class ResearchAgent:
     """Specialized agent for deep research and analysis capabilities."""
@@ -571,7 +566,6 @@ class ResearchAgent:
             "cache_size": len(self.research_cache)
         }
 
-
 # Example usage and testing
 async def main():
     """Example usage of the Research Agent."""
@@ -616,7 +610,6 @@ async def main():
     print("\n--- Agent Status ---")
     status = agent.get_status()
     print(json.dumps(status, indent=2))
-
 
 if __name__ == "__main__":
     asyncio.run(main()) 

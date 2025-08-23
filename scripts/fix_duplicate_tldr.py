@@ -54,7 +54,6 @@ def fix_duplicate_tldr(file_path: Path) -> bool:
         print(f"❌ Error processing {file_path}: {e}")
         return False
 
-
 def main():
     """Main execution."""
     files_to_fix = [
@@ -84,7 +83,6 @@ def main():
                 fixed_count += 1
 
     print(f"\n📊 Fixed {fixed_count} files with duplicate TL;DR sections")
-
 
 if __name__ == "__main__":
     main()

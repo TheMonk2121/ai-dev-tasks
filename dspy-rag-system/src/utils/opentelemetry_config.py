@@ -21,7 +21,6 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExport
 
 logger = logging.getLogger(__name__)
 
-
 class OpenTelemetryConfig:
     """Centralized OpenTelemetry configuration manager"""
 
@@ -184,35 +183,28 @@ class OpenTelemetryConfig:
             self._initialized = False
             logger.info("OpenTelemetry shutdown complete")
 
-
 # Global OpenTelemetry configuration instance
 ot_config = OpenTelemetryConfig()
-
 
 def initialize_opentelemetry(**kwargs) -> None:
     """Initialize OpenTelemetry with the given configuration"""
     ot_config.initialize(**kwargs)
 
-
 def get_tracer() -> trace.Tracer:
     """Get the configured tracer"""
     return ot_config.get_tracer()
-
 
 def get_correlation_id() -> Optional[str]:
     """Get the current correlation ID"""
     return ot_config.get_correlation_id()
 
-
 def set_correlation_id(correlation_id: str) -> None:
     """Set the correlation ID for the current context"""
     ot_config.set_correlation_id(correlation_id)
 
-
 def generate_correlation_id() -> str:
     """Generate a unique correlation ID"""
     return ot_config.generate_correlation_id()
-
 
 @contextmanager
 def trace_operation(operation_name: str, attributes: Optional[Dict[str, Any]] = None):
@@ -220,16 +212,13 @@ def trace_operation(operation_name: str, attributes: Optional[Dict[str, Any]] = 
     with ot_config.trace_operation(operation_name, attributes) as span:
         yield span
 
-
 def add_span_attribute(key: str, value: Any) -> None:
     """Add an attribute to the current span"""
     ot_config.add_span_attribute(key, value)
 
-
 def record_exception(exception: Exception) -> None:
     """Record an exception in the current span"""
     ot_config.record_exception(exception)
-
 
 def shutdown_opentelemetry() -> None:
     """Shutdown OpenTelemetry"""

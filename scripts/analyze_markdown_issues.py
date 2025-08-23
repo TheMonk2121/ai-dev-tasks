@@ -74,7 +74,6 @@ def run_markdownlint():
         print(f"Error running markdownlint: {e}")
         return []
 
-
 def analyze_issues(issues):
     """Analyze and categorize issues."""
     issue_counts = defaultdict(int)
@@ -98,7 +97,6 @@ def analyze_issues(issues):
         )
 
     return issue_counts, file_issues, rule_descriptions
-
 
 def print_summary(issue_counts, rule_descriptions):
     """Print prioritized summary of issues."""
@@ -127,7 +125,6 @@ def print_summary(issue_counts, rule_descriptions):
 
     return sorted_issues
 
-
 def print_file_breakdown(file_issues, top_rules):
     """Print breakdown by file for top issues."""
     print("FILE BREAKDOWN FOR TOP ISSUES:")
@@ -154,7 +151,6 @@ def print_file_breakdown(file_issues, top_rules):
 
         if len(sorted_files) > 10:
             print(f"  ... and {len(sorted_files) - 10} more files")
-
 
 def print_fix_recommendations(top_rules, rule_descriptions):
     """Print fix recommendations for top issues."""
@@ -185,7 +181,6 @@ def print_fix_recommendations(top_rules, rule_descriptions):
         print(f"  Recommendation: {rec}")
         print(f"  Instances: {count}")
 
-
 def main():
     """Main analysis function."""
     print("Analyzing markdown linting issues...")
@@ -209,7 +204,6 @@ def main():
     print("3. Create a systematic plan to address each rule type")
     print("4. Update pre-commit hooks to prevent new issues")
     print("=" * 80)
-
 
 if __name__ == "__main__":
     main()

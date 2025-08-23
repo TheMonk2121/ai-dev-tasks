@@ -15,7 +15,6 @@ from pathlib import Path
 
 import pytest
 
-
 class TestCoderRoleIntegration:
     """Integration tests for Coder Role functionality."""
 
@@ -270,7 +269,6 @@ class TestCoderRoleIntegration:
 
         for step in safety_steps:
             assert step in content, f"Missing safety step: {step}"
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

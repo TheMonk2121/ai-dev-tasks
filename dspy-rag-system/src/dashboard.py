@@ -61,7 +61,6 @@ except Exception as e:
 
 LOG = get_logger("dashboard")
 
-
 # ── Structural typing for linter (interfaces we actually use) ───────────────────
 @runtime_checkable
 class VectorStoreProtocol(Protocol):
@@ -81,11 +80,9 @@ class VectorStoreProtocol(Protocol):
     ) -> Any: ...
     def get_documents(self) -> List[Dict[str, Any]]: ...
 
-
 @runtime_checkable
 class DocumentProcessorProtocol(Protocol):
     def process_document(self, file_path: Path) -> Dict[str, Any]: ...
-
 
 @runtime_checkable
 class ProductionMonitorProtocol(Protocol):
@@ -93,7 +90,6 @@ class ProductionMonitorProtocol(Protocol):
     def get_health_status(self) -> Dict[str, Any]: ...
     def get_security_events(self, hours: int) -> List[Dict[str, Any]]: ...
     def get_system_metrics(self, minutes: int) -> Any: ...
-
 
 # Configuration
 class DashboardConfig:
@@ -126,7 +122,6 @@ class DashboardConfig:
     MAX_QUERY_LENGTH = int(os.getenv("MAX_QUERY_LENGTH", "1000"))
     MAX_RESULTS = int(os.getenv("MAX_RESULTS", "10"))
 
-
 # Initialize Flask app
 app = Flask(__name__)
 app.config.from_object(DashboardConfig)
@@ -151,7 +146,6 @@ except Exception as e:
 # Rate limiting (D-2)
 _RATE = defaultdict(lambda: deque())  # No maxlen - we control it manually
 
-
 def _check_rate(ip: str, limit=20, window=60):
     """Token bucket rate limiter"""
     now = time.monotonic()
@@ -162,7 +156,6 @@ def _check_rate(ip: str, limit=20, window=60):
     if len(q) > limit:
         return False
     return True
-
 
 # Global state
 class DashboardState:
@@ -238,16 +231,13 @@ class DashboardState:
             self.stats["total_queries"] += 1
             self.stats["last_query_time"] = datetime.now().isoformat()
 
-
 # Initialize global state
 state = DashboardState()
-
 
 # Helper functions
 def allowed_file(filename: str) -> bool:
     """Check if file extension is allowed"""
     return Path(filename).suffix.lower() in DashboardConfig.ALLOWED_EXTENSIONS
-
 
 def get_file_size_mb(file_path: Path) -> float:
     """Get file size in MB"""
@@ -255,7 +245,6 @@ def get_file_size_mb(file_path: Path) -> float:
         return file_path.stat().st_size / (1024 * 1024)
     except OSError:
         return 0.0
-
 
 def format_file_size(size_bytes: int) -> str:
     """Format file size in human readable format"""
@@ -265,7 +254,6 @@ def format_file_size(size_bytes: int) -> str:
             return f"{size:.1f} {unit}"
         size /= 1024.0
     return f"{size:.1f} TB"
-
 
 def initialize_components():
     """Initialize RAG system components with secrets validation (C-8)"""
@@ -321,7 +309,6 @@ def initialize_components():
     except Exception as e:
         LOG.error(f"Failed to initialize components: {e}")
         return False
-
 
 def process_file_async(file_path: Path):
     """Process file asynchronously"""
@@ -402,19 +389,16 @@ def process_file_async(file_path: Path):
 
         threading.Thread(target=remove_after_delay, daemon=True).start()
 
-
 # Flask routes
 @app.route("/")
 def index():
     """Main dashboard page"""
     return render_template("dashboard.html", config=DashboardConfig)
 
-
 @app.route("/cluster")
 def cluster_visualization():
     """Cluster visualization page for chunk relationships"""
     return render_template("cluster.html", config=DashboardConfig)
-
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
@@ -492,7 +476,6 @@ def upload_file():
     except Exception as e:
         LOG.exception("Upload error")
         return jsonify({"error": str(e)}), 500
-
 
 @app.route("/query", methods=["POST"])
 def query_rag():
@@ -581,7 +564,6 @@ def query_rag():
         LOG.exception("Query error")
         return jsonify({"error": str(e)}), 500
 
-
 @app.route("/api/stats")
 def get_stats():
     """Get system statistics"""
@@ -614,7 +596,6 @@ def get_stats():
         LOG.exception("Stats error")
         return jsonify({"error": str(e)}), 500
 
-
 @app.route("/api/processing")
 def get_processing_status():
     """Get file processing status"""
@@ -624,7 +605,6 @@ def get_processing_status():
     except Exception as e:
         LOG.exception("Processing status error")
         return jsonify({"error": str(e)}), 500
-
 
 @app.route("/api/query_history")
 def get_query_history():
@@ -636,7 +616,6 @@ def get_query_history():
     except Exception as e:
         LOG.exception("Query history error")
         return jsonify({"error": str(e)}), 500
-
 
 @app.route("/api/documents")
 def get_documents():
@@ -651,7 +630,6 @@ def get_documents():
     except Exception as e:
         LOG.exception("Documents error")
         return jsonify({"error": str(e)}), 500
-
 
 @app.route("/api/health")
 def dashboard_health_check():
@@ -677,7 +655,6 @@ def dashboard_health_check():
     except Exception as e:
         LOG.exception("Health check error")
         return jsonify({"status": "unhealthy", "error": str(e), "timestamp": datetime.now().isoformat()}), 500
-
 
 @app.route("/api/monitoring")
 def monitoring_data():
@@ -709,7 +686,6 @@ def monitoring_data():
     except Exception as e:
         LOG.error(f"Monitoring data error: {e}")
         return jsonify({"error": str(e), "timestamp": datetime.now().isoformat()}), 503
-
 
 @app.route("/graph-data")
 def get_graph_data():
@@ -799,7 +775,6 @@ def get_graph_data():
         LOG.exception("Graph data error")
         return jsonify({"error": "Internal server error"}), 500
 
-
 # SocketIO events
 @socketio.on("connect")
 def handle_connect():
@@ -807,12 +782,10 @@ def handle_connect():
     LOG.info("Client connected")
     emit("connected", {"message": "Connected to dashboard"})
 
-
 @socketio.on("disconnect")
 def handle_disconnect():
     """Handle client disconnection"""
     LOG.info("Client disconnected")
-
 
 @socketio.on("request_stats")
 def handle_stats_request():
@@ -845,19 +818,16 @@ def handle_stats_request():
         LOG.exception("Stats request error")
         emit("error", {"message": str(e)})
 
-
 # Error handlers
 @app.errorhandler(413)
 def too_large(e):
     """Handle file too large error"""
     return jsonify({"error": "File too large"}), 413
 
-
 @app.errorhandler(429)
 def rate_limit_exceeded(e):
     """Handle rate limit exceeded error"""
     return jsonify({"error": "Rate limit exceeded"}), 429
-
 
 @app.errorhandler(500)
 def internal_error(e):
@@ -865,12 +835,10 @@ def internal_error(e):
     LOG.exception("Internal server error")
     return jsonify({"error": "Internal server error"}), 500
 
-
 @app.errorhandler(404)
 def not_found(e):
     """Handle not found error"""
     return jsonify({"error": "Not found"}), 404
-
 
 def main():
     """Main function to run the dashboard"""
@@ -924,7 +892,6 @@ def main():
         )
         state.executor.shutdown(wait=True)
         LOG.info("✅ Dashboard stopped", extra={"component": "dashboard", "action": "shutdown", "status": "completed"})
-
 
 if __name__ == "__main__":
     main()

@@ -26,7 +26,6 @@ from .retry_wrapper import retry
 
 logger = get_logger("graph_data_provider")
 
-
 @dataclass
 class GraphNode:
     """Represents a node in the graph visualization."""
@@ -37,7 +36,6 @@ class GraphNode:
     coords: Tuple[float, float] = field(default=(0.0, 0.0))
     category: Optional[str] = None
 
-
 @dataclass
 class GraphEdge:
     """Represents an edge in the graph visualization."""
@@ -46,7 +44,6 @@ class GraphEdge:
     target: str
     type: str  # "knn" or "entity"
     weight: float
-
 
 @dataclass
 class GraphData:
@@ -57,7 +54,6 @@ class GraphData:
     elapsed_ms: float
     v: int = 1
     truncated: bool = False
-
 
 class GraphDataProvider:
     """

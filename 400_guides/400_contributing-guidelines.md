@@ -1,9 +1,6 @@
 <!-- ANCHOR_KEY: contributing-guidelines -->
 <!-- ANCHOR_PRIORITY: 15 -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/103_memory-context-workflow.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Development standards and quality guidelines -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ROLE_PINS: ["coder", "implementer"] -->
 # 📋 Contributing Guidelines
 
@@ -768,7 +765,6 @@ assert result["valid"] is True
     ### **1. Performance Requirements**
 
     #### **Performance Benchmarks**
-
 
 # Performance Standards
 

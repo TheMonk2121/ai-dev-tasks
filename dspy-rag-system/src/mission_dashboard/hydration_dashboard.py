@@ -23,7 +23,6 @@ from src.utils.memory_rehydrator import build_hydration_bundle
 
 logger = get_logger(__name__)
 
-
 class HydrationDashboard:
     """Real-time hydration system performance dashboard"""
 
@@ -379,7 +378,6 @@ class HydrationDashboard:
             },
         }
 
-
 def create_dashboard_html(dashboard_data: Dict[str, Any]) -> str:
     """Create HTML dashboard"""
     html = """
@@ -511,7 +509,6 @@ def create_dashboard_html(dashboard_data: Dict[str, Any]) -> str:
 
     return html
 
-
 def main():
     """Main dashboard function"""
     logger.info("Starting hydration performance dashboard")
@@ -538,7 +535,6 @@ def main():
     print(json.dumps(dashboard_data, indent=2))
 
     return 0
-
 
 if __name__ == "__main__":
     exit(main())

@@ -4,13 +4,6 @@
 
 # 🏗️ System Overview
 
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - System architecture and technical overview -->
-<!-- DATABASE_SYNC: REQUIRED -->
-
 ## 🎯 **Current Status**
 
 - **Status**: ✅ **ACTIVE** - System overview maintained
@@ -79,6 +72,7 @@ and `400_guides/400_deployment-environment-guide.md`.
 
 ├─────────────────────────────────────────────────────────────────┤
 │  🔧 Core Systems                                            │
+│  ├── DSPy Multi-Agent System (Local Model Inference)        │
 │  ├── DSPy RAG System (Document Processing)                  │
 │  ├── Scribe System (Context Capture & Summarization)        │
 │  ├── N8N Workflows (Automation)                             │
@@ -254,6 +248,13 @@ and `400_guides/400_deployment-environment-guide.md`.
 - This overview defers to that guide to avoid duplication; agents consume those rules when planning and prioritizing.
 
 ### 2. AI Execution Layer
+
+#### **B-1003 DSPy Multi-Agent System** ✅ **COMPLETED**
+- **Local Model Integration**: Cursor Native AI (orchestration) + Local DSPy Models (Llama 3.1 8B, Mistral 7B, Phi-3.5 3.8B)
+- **Model Switching**: Sequential loading for hardware constraints (M4 Mac, 128GB RAM)
+- **DSPy Framework**: Full signatures, modules, and structured programming
+- **Cursor Integration**: Clean bridge for Cursor AI to orchestrate local models
+- **Multi-Model Orchestration**: Plan → Execute → Review workflow
 
 #### **v0.3.1 Ultra-Minimal Router Architecture**-**Core Agents**: IntentRouter, RetrievalAgent, CodeAgent
 
@@ -462,8 +463,6 @@ and `400_guides/400_deployment-environment-guide.md`.
 - **Embedding Discovery**: Automatic detection of embedding providers
 - **Graceful Degradation**: Handles failures with minimal response
 - **Fast Path Detection**: Optimizes for short, non-code queries
-
-
 
 #### **Document Processor**(`src/dspy_modules/document_processor.py`)
 

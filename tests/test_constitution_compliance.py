@@ -19,7 +19,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'scripts'))
 
 from constitution_compliance_checker import ConstitutionComplianceChecker, ConstitutionRule
 
-
 class TestConstitutionComplianceChecker(unittest.TestCase):
     """Test cases for the ConstitutionComplianceChecker class."""
     
@@ -327,7 +326,6 @@ class TestConstitutionComplianceChecker(unittest.TestCase):
         violation = result['violations'][0]
         self.assertIn("Validation error", violation['message'])
 
-
 class TestConstitutionIntegration(unittest.TestCase):
     """Test integration of constitution compliance with real operations."""
     
@@ -390,7 +388,6 @@ class TestConstitutionIntegration(unittest.TestCase):
         
         self.assertGreater(len(critical_violations), 0)
         self.assertGreaterEqual(len(warnings), 0)
-
 
 if __name__ == '__main__':
     unittest.main()

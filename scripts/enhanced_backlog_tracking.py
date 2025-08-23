@@ -16,6 +16,8 @@ Usage:
 
 import argparse
 import re
+import subprocess
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -102,7 +104,7 @@ class EnhancedBacklogTracker:
         return match.group(1) if match else None
 
     def start_work(self, item_id: str) -> bool:
-        """Mark an item as started with timestamp."""
+        """Mark an item as started with timestamp and automatically start Scribe."""
         if item_id not in self.items:
             print(f"❌ Error: Backlog item {item_id} not found")
             return False
@@ -118,10 +120,36 @@ class EnhancedBacklogTracker:
 
         print(f"✅ Started work on {item_id}: {item.title}")
         print(f"   Started at: {timestamp}")
+
+        # Automatically start Scribe for this backlog item
+        print("📝 Starting Scribe session for automatic context capture...")
+        try:
+            # Use the single_doorway.py script to start Scribe
+            result = subprocess.run(
+                [sys.executable, "scripts/single_doorway.py", "scribe", "start", "--backlog-id", item_id],
+                capture_output=True,
+                text=True,
+                cwd=Path(__file__).parent.parent,
+            )
+
+            if result.returncode == 0:
+                print("✅ Scribe started successfully")
+                print("   Session will automatically record your work")
+                print("   Use 'python scripts/single_doorway.py scribe status' to check status")
+            else:
+                print(f"⚠️  Scribe start failed: {result.stderr}")
+                print("   You can manually start Scribe with:")
+                print(f"   python scripts/single_doorway.py scribe start --backlog-id {item_id}")
+
+        except Exception as e:
+            print(f"⚠️  Could not start Scribe automatically: {e}")
+            print("   You can manually start Scribe with:")
+            print(f"   python scripts/single_doorway.py scribe start --backlog-id {item_id}")
+
         return True
 
     def update_status(self, item_id: str, new_status: str) -> bool:
-        """Update item status with last_updated timestamp."""
+        """Update item status with last_updated timestamp and stop Scribe if completing."""
         if item_id not in self.items:
             print(f"❌ Error: Backlog item {item_id} not found")
             return False
@@ -131,6 +159,32 @@ class EnhancedBacklogTracker:
 
         print(f"✅ Updated {item_id} status to '{new_status}'")
         print(f"   Updated at: {timestamp}")
+
+        # Automatically stop Scribe if we're completing the item
+        if new_status in ["✅ done", "completed", "done"]:
+            print("📝 Stopping Scribe session...")
+            try:
+                # Use the single_doorway.py script to stop Scribe
+                result = subprocess.run(
+                    [sys.executable, "scripts/single_doorway.py", "scribe", "stop", "--backlog-id", item_id],
+                    capture_output=True,
+                    text=True,
+                    cwd=Path(__file__).parent.parent,
+                )
+
+                if result.returncode == 0:
+                    print("✅ Scribe stopped successfully")
+                    print("   Session summary will be generated automatically")
+                else:
+                    print(f"⚠️  Scribe stop failed: {result.stderr}")
+                    print("   You can manually stop Scribe with:")
+                    print(f"   python scripts/single_doorway.py scribe stop --backlog-id {item_id}")
+
+            except Exception as e:
+                print(f"⚠️  Could not stop Scribe automatically: {e}")
+                print("   You can manually stop Scribe with:")
+                print(f"   python scripts/single_doorway.py scribe stop --backlog-id {item_id}")
+
         return True
 
     def _update_item_status(

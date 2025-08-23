@@ -1,11 +1,9 @@
-<!-- MEMORY_CONTEXT: HIGH - Complete documentation inventory and reference guide -->
+
 <!-- ANCHOR_KEY: documentation-reference -->
 <!-- ANCHOR_PRIORITY: 10 -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
+
 <!-- DOCUMENTATION_MASTER: This file is the complete documentation inventory and reference -->
 
 # 📚 Documentation Reference

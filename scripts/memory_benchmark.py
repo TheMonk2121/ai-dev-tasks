@@ -58,8 +58,6 @@ class MemoryBenchmark:
         return """
 # AI Development Ecosystem
 
-<!-- MEMORY_CONTEXT: HIGH - Project overview and workflow guide for AI context -->
-
 ## Core Workflow
 - 000_backlog.md - Product backlog and current priorities
 - 001_create-prd.md - PRD creation workflow  
@@ -76,7 +74,6 @@ class MemoryBenchmark:
 - 400_system-overview.md - Technical architecture and system overview
 - 400_context-priority-guide.md - Context priority guide for memory rehydration
 
-<!-- CONTEXT_REFERENCE: 400_context-priority-guide.md -->
 <!-- SYSTEM_FILES: 400_system-overview.md -->
 """
     

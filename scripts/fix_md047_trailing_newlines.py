@@ -21,7 +21,6 @@ def find_markdown_files():
 
     return markdown_files
 
-
 def needs_trailing_newline(file_path):
     """Check if a file needs a trailing newline."""
     try:
@@ -36,7 +35,6 @@ def needs_trailing_newline(file_path):
         print(f"Error reading {file_path}: {e}")
 
     return False
-
 
 def add_trailing_newline(file_path):
     """Add a trailing newline to a file."""
@@ -54,7 +52,6 @@ def add_trailing_newline(file_path):
         print(f"Error writing {file_path}: {e}")
 
     return False
-
 
 def main():
     """Main function to fix trailing newlines."""
@@ -96,7 +93,6 @@ def main():
         print(f"\n🎉 Successfully fixed {fixed_count} files!")
     else:
         print("\n⚠️  No files were fixed.")
-
 
 if __name__ == "__main__":
     main()

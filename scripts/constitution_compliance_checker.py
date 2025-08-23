@@ -24,7 +24,6 @@ class ConstitutionRule:
     validation_function: callable
     critical: bool = False
 
-
 class ConstitutionComplianceChecker:
     """Validates AI operations against the AI Constitution rules."""
     
@@ -330,7 +329,6 @@ class ConstitutionComplianceChecker:
         except Exception as e:
             print(f"⚠️  Could not log violation: {e}")
 
-
 def main():
     """Main function for testing the constitution compliance checker."""
     checker = ConstitutionComplianceChecker()
@@ -349,7 +347,6 @@ def main():
     # Generate compliance report
     report = checker.generate_compliance_report()
     print("\n" + report)
-
 
 if __name__ == "__main__":
     main()

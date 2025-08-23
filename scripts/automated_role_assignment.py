@@ -276,7 +276,6 @@ class AutomatedRoleAssignment:
 
         return report_content
 
-
 def main():
     """Main entry point for the automated role assignment script."""
     parser = argparse.ArgumentParser(description="Automated role assignment for 600_archives files")
@@ -303,7 +302,6 @@ def main():
     # Exit with error code if there were errors
     if stats["errors"] > 0:
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

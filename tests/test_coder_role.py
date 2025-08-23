@@ -16,7 +16,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system",
 from utils.anchor_metadata_parser import VALID_ROLES
 from utils.memory_rehydrator import ROLE_FILES
 
-
 class TestCoderRoleConfiguration(unittest.TestCase):
     """Test cases for coder role configuration."""
 
@@ -57,7 +56,6 @@ class TestCoderRoleConfiguration(unittest.TestCase):
             # Check if file exists in the project
             full_path = os.path.join(os.path.dirname(__file__), "..", file_path)
             self.assertTrue(os.path.exists(full_path), f"File {file_path} should exist")
-
 
 class TestCoderRoleFunctionality(unittest.TestCase):
     """Test cases for coder role functionality."""
@@ -117,7 +115,6 @@ class TestCoderRoleFunctionality(unittest.TestCase):
 
             self.assertIn(role, ROLE_FILES, f"Role {role} should still have files configured")
 
-
 class TestCoderRoleIntegration(unittest.TestCase):
     """Test cases for coder role integration with other components."""
 
@@ -151,7 +148,6 @@ class TestCoderRoleIntegration(unittest.TestCase):
                     keyword_found = any(keyword in content for keyword in coding_keywords)
                     self.assertTrue(keyword_found, f"File {file_path} should contain coding-related content")
 
-
 class TestCoderRoleCLI(unittest.TestCase):
     """Test cases for coder role CLI functionality."""
 
@@ -179,7 +175,6 @@ class TestCoderRoleCLI(unittest.TestCase):
 
         # This is a basic validation - in practice, you'd parse the actual help output
         self.assertIn("coder", expected_help_text)
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -9,7 +9,6 @@ now handles import path configuration centrally.
 import re
 from pathlib import Path
 
-
 def fix_test_file(file_path):
     """Fix a single test file by removing manual path manipulation"""
     with open(file_path, "r") as f:
@@ -39,7 +38,6 @@ def fix_test_file(file_path):
         print(f"No changes needed: {file_path}")
         return False
 
-
 def main():
     """Main function to process all test files"""
     tests_dir = Path(__file__).parent.parent / "tests"
@@ -61,7 +59,6 @@ def main():
 
     print(f"\nSummary: Fixed {fixed_count} out of {total_count} test files")
     print("All test files now use centralized import configuration from conftest.py")
-
 
 if __name__ == "__main__":
     main()

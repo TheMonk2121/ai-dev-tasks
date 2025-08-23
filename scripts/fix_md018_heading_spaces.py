@@ -75,6 +75,5 @@ def fix_md018_heading_spaces():
     else:
         print("\nℹ️  No files needed fixing.")
 
-
 if __name__ == "__main__":
     fix_md018_heading_spaces()

@@ -1,5 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Few-shot examples and patterns -->
+
+
 # 🎯 Few-Shot Context Examples
 
 ## 🎯 Few-Shot Context Examples
@@ -61,7 +61,6 @@ required HTML comments and cross-references
 
 - *Context:**Ensuring documentation files reference each other correctly**Input:**```markdown
 <!-- BACKLOG_REFERENCE: 000_core/000_backlog.md -->
-<!-- MEMORY_CONTEXT: HIGH - Essential security documentation -->
 
 ```text**Expected Output:**```json
 {
@@ -175,7 +174,7 @@ B-075 → B-074 (todo)
 ### **1. Memory Hierarchy Recognition**
 
 - *Context:**Understanding memory context hierarchy and priority levels**Input:**```markdown
-<!-- MEMORY_CONTEXT: HIGH - Essential deployment documentation for production readiness -->
+
 <!-- SYSTEM_REFERENCE: 400_guides/400_system-overview.md -->
 
 ```text**Expected Output:**```json
@@ -194,7 +193,7 @@ B-075 → B-074 (todo)
 - *Context:**Recognizing cognitive scaffolding patterns in documentation**Input:**```markdown
 <!-- SYSTEM_REFERENCE: 400_guides/400_system-overview.md -->
 <!-- BACKLOG_REFERENCE: 000_core/000_backlog.md -->
-<!-- MEMORY_CONTEXT: HIGH - Essential AI context engineering for coherence validation -->
+
 <!-- BACKLOG_ITEM: B-073 Few-Shot Context Engineering Examples -->
 
 ```text**Expected Output:**```json
@@ -485,7 +484,7 @@ def attempt_file_recovery(filename: str) -> dict:
             changes.append("Added BACKLOG_REFERENCE comment")
 
         if "MEMORY_CONTEXT" not in content:
-            content = f"<!-- MEMORY_CONTEXT: MEDIUM - Documentation file -->\n{content}"
+            content = f"\n{content}"
             changes.append("Added MEMORY_CONTEXT comment")
 
         # Write recovered content
@@ -716,10 +715,10 @@ class TestFileValidation:
         """Test validation of properly structured file"""
         valid_content = """
         <!-- BACKLOG_REFERENCE: 000_core/000_backlog.md -->
-        <!-- MEMORY_CONTEXT: HIGH - Essential documentation -->
+        
 <!-- ANCHOR_KEY: few-shot-context-examples -->
 <!-- ANCHOR_PRIORITY: 15 -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ROLE_PINS: ["planner", "implementer", "researcher"] -->
 
         # Document Title

@@ -19,7 +19,6 @@ from scripts.research_based_schema_design import (
     SchemaPattern,
 )
 
-
 class TestResearchBasedSchemaDesign:
     """Test cases for the ResearchBasedSchemaDesign class."""
 
@@ -289,7 +288,6 @@ class TestResearchBasedSchemaDesign:
         assert metrics["validation_rule_count"] == len(schema.validation_rules)
         assert isinstance(metrics["performance_targets"], dict)
 
-
 class TestDataClasses:
     """Test cases for data classes."""
 
@@ -345,7 +343,6 @@ class TestDataClasses:
         assert schema.content_type == "test"
         assert schema.research_coverage == 0.8
         assert schema.version == "1.0"
-
 
 if __name__ == "__main__":
     pytest.main([__file__])

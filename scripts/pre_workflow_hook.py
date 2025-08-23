@@ -35,7 +35,6 @@ def force_memory_hydration(context: str, role: str = "planner") -> bool:
         print(f"❌ Memory hydration error: {e}")
         return False
 
-
 def _changed_paths() -> list[str]:
     """Return a list of changed files (staged or unstaged)."""
     try:
@@ -45,7 +44,6 @@ def _changed_paths() -> list[str]:
         return sorted(set([p for p in staged + unstaged if p]))
     except Exception:
         return []
-
 
 def run_quality_gates() -> bool:
     """Run quality gates to ensure compliance."""
@@ -95,7 +93,6 @@ def run_quality_gates() -> bool:
     print("✅ All quality gates passed")
     return True
 
-
 def check_existing_tools(keyword: str) -> bool:
     """Check if existing tools exist for the given keyword."""
     print(f"🔍 CHECKING EXISTING TOOLS FOR: {keyword}")
@@ -116,7 +113,6 @@ def check_existing_tools(keyword: str) -> bool:
     else:
         print(f"⚠️  No existing tools found for '{keyword}'")
         return False
-
 
 def force_existing_test_usage(test_type: str) -> bool:
     """Force usage of existing tests instead of creating new ones."""
@@ -144,7 +140,6 @@ def force_existing_test_usage(test_type: str) -> bool:
     except Exception as e:
         print(f"❌ Test execution error: {e}")
         return False
-
 
 def main():
     """Main function for pre-workflow enforcement."""
@@ -179,7 +174,6 @@ def main():
         sys.exit(1)
 
     print("✅ Pre-workflow enforcement complete - proceed with workflow")
-
 
 if __name__ == "__main__":
     main()

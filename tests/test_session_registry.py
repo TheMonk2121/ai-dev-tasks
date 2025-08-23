@@ -20,7 +20,6 @@ import pytest
 # Import the session registry system
 from scripts.session_registry import SessionRegistry
 
-
 class TestSessionRegistry:
     """Test suite for SessionRegistry class."""
 
@@ -290,7 +289,6 @@ class TestSessionRegistry:
         assert session.context.priority == sample_session_data["priority"]
         assert set(sample_session_data["tags"]).issubset(session.context.tags)
 
-
 class TestSessionContextIntegrator:
     """Test suite for session context integration with memory rehydration."""
 
@@ -417,7 +415,6 @@ class TestSessionContextIntegrator:
             assert "session_registry" in integration_data
             assert "session_summary" in integration_data
             assert "integration_timestamp" in integration_data
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

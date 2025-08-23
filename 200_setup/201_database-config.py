@@ -10,7 +10,6 @@ This file follows the "One Source Per Scope" principle for configuration managem
 
 import os
 
-
 class DatabaseConfigManager:
     """Centralized database configuration management for the AI development ecosystem"""
 
@@ -55,25 +54,20 @@ class DatabaseConfigManager:
 
         return True
 
-
 # Global configuration instance
 _database_config_manager = DatabaseConfigManager()
-
 
 def get_database_config() -> DatabaseConfigManager:
     """Get the global database configuration manager"""
     return _database_config_manager
 
-
 def get_database_url() -> str:
     """Get the standardized database connection string"""
     return _database_config_manager.database_url
 
-
 def get_postgres_dsn() -> str:
     """Get the PostgreSQL DSN for compatibility"""
     return _database_config_manager.postgres_dsn
-
 
 def validate_database_config() -> bool:
     """Validate all database configuration settings"""

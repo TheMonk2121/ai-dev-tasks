@@ -26,7 +26,6 @@ from uuid import uuid4
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class CodeQualityLevel(Enum):
     """Enumeration of code quality levels."""
     EXCELLENT = "excellent"
@@ -35,14 +34,12 @@ class CodeQualityLevel(Enum):
     POOR = "poor"
     CRITICAL = "critical"
 
-
 class AnalysisType(Enum):
     """Enumeration of analysis types."""
     QUALITY = "quality"
     PERFORMANCE = "performance"
     SECURITY = "security"
     COMPREHENSIVE = "comprehensive"
-
 
 @dataclass
 class CodeIssue:
@@ -53,7 +50,6 @@ class CodeIssue:
     description: str
     suggestion: str
     category: str  # "quality", "performance", "security"
-
 
 @dataclass
 class CodeAnalysis:
@@ -71,7 +67,6 @@ class CodeAnalysis:
     complexity_metrics: Dict[str, Any] = field(default_factory=dict)
     timestamp: float = field(default_factory=time.time)
 
-
 @dataclass
 class RefactoringSuggestion:
     """Data structure for refactoring suggestions."""
@@ -82,7 +77,6 @@ class RefactoringSuggestion:
     impact: str = "low"  # "low", "medium", "high"
     effort: str = "low"  # "low", "medium", "high"
     category: str = "quality"
-
 
 class CoderDatabase:
     """Database for storing code analysis data and cache."""
@@ -202,7 +196,6 @@ class CoderDatabase:
             )
         
         return None
-
 
 class CoderAgent:
     """Specialized agent for coding best practices and code quality improvements."""
@@ -631,7 +624,6 @@ class CoderAgent:
             "cache_size": len(self.analysis_cache)
         }
 
-
 # Example usage and testing
 async def main():
     """Example usage of the Coder Agent."""
@@ -711,7 +703,6 @@ def unsafe_exec(code):
     print("\n--- Agent Status ---")
     status = agent.get_status()
     print(json.dumps(status, indent=2))
-
 
 if __name__ == "__main__":
     asyncio.run(main()) 

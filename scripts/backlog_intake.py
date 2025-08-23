@@ -9,7 +9,6 @@ from scripts.doorway_utils import detect_duplicates
 
 BACKLOG_FILE = Path("000_core/000_backlog.md")
 
-
 def _load_all_backlog_ids() -> list[tuple[str, str, str]]:
     """Return list of (id, title, status) for ALL backlog items across all sections.
 
@@ -44,7 +43,6 @@ def _load_all_backlog_ids() -> list[tuple[str, str, str]]:
                 all_items.append((bid, title, status))
 
     return all_items
-
 
 def _load_live_backlog() -> list[tuple[str, str, str]]:
     """Return list of (id, title, status) for Live Backlog (todo/running).
@@ -102,7 +100,6 @@ def _load_live_backlog() -> list[tuple[str, str, str]]:
     except Exception:
         return []
 
-
 def _next_backlog_id(existing_ids: list[str]) -> str:
     """Generate the next available backlog ID, checking against ALL existing IDs."""
     max_n = 0
@@ -112,7 +109,6 @@ def _next_backlog_id(existing_ids: list[str]) -> str:
         if m:
             max_n = max(max_n, int(m.group(1)))
     return f"B-{max_n + 1:03d}"
-
 
 def _insert_row(backlog_id: str, title: str) -> None:
     """Insert a minimal row into the Live Backlog table (appended at end of section)."""
@@ -168,7 +164,6 @@ def _insert_row(backlog_id: str, title: str) -> None:
     lines.insert(insert_at, new_row)
     BACKLOG_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-
 def intake(description: str, no_roadmap_advisory: bool = False) -> str:
     # Enhanced: Load ALL backlog items to check for duplicates and ID conflicts
     all_items = _load_all_backlog_ids()
@@ -206,14 +201,12 @@ def intake(description: str, no_roadmap_advisory: bool = False) -> str:
     print(new_id)
     return new_id
 
-
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("description")
     ap.add_argument("--no-roadmap-advisory", action="store_true")
     args = ap.parse_args()
     intake(args.description, args.no_roadmap_advisory)
-
 
 if __name__ == "__main__":
     main()

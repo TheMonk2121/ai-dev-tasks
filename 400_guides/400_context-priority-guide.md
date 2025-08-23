@@ -1,9 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_project-overview.md -->
-<!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - File organization and cognitive scaffolding system -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 
 <!-- ANCHOR_KEY: context-priority -->
 <!-- ANCHOR_PRIORITY: 30 -->
@@ -27,7 +22,6 @@
 
 ## 📋 Priority-Based Organization
 
-
 ### P0 (Critical)
 
 | File | Anchor | Priority | Roles | Context Reference |
@@ -38,7 +32,6 @@
 | 600_archives/documentation-duplicates/100_cursor-memory-context.md | tldr | 0 | planner, implementer, researcher | — |
 | 600_archives/documentation-duplicates/104_dspy-development-context.md | tldr | 0 | implementer | — |
 
-
 ### P1 (High)
 
 | File | Anchor | Priority | Roles | Context Reference |
@@ -46,7 +39,6 @@
 | 000_core/000_backlog.md | backlog | 10 | planner | — |
 | 100_memory/105_cspell-automation-memory.md | tldr | 10 | coder | — |
 | 600_archives/documentation-duplicates/000_backlog.md | backlog | 10 | planner | — |
-
 
 ### P2 (Medium)
 
@@ -58,9 +50,7 @@
 | 400_guides/400_observability-system.md | tldr | 20 | implementer, planner, researcher | — |
 | 400_guides/400_lean-hybrid-memory-system.md | tldr | 25 | implementer, planner | — |
 
-
 ## 🎭 Role-Based Organization
-
 
 ### Coder Role
 
@@ -70,7 +60,6 @@
 | 400_guides/400_graph-visualization-guide.md | tldr | 12 | — |
 | 100_memory/100_cursor-memory-context.md | tldr | 0 | — |
 | 100_memory/104_dspy-development-context.md | tldr | 0 | — |
-
 
 ### Implementer Role
 
@@ -85,7 +74,6 @@
 | 100_memory/104_dspy-development-context.md | tldr | 0 | — |
 | 600_archives/documentation-duplicates/100_cursor-memory-context.md | tldr | 0 | — |
 | 600_archives/documentation-duplicates/104_dspy-development-context.md | tldr | 0 | — |
-
 
 ### Planner Role
 
@@ -102,7 +90,6 @@
 | 500_research/500_superwhisper-integration-research.md | tldr | 0 | — |
 | 600_archives/documentation-duplicates/100_cursor-memory-context.md | tldr | 0 | — |
 
-
 ### Researcher Role
 
 | File | Anchor | Priority | Context Reference |
@@ -111,7 +98,6 @@
 | 100_memory/100_cursor-memory-context.md | tldr | 0 | — |
 | 500_research/500_superwhisper-integration-research.md | tldr | 0 | — |
 | 600_archives/documentation-duplicates/100_cursor-memory-context.md | tldr | 0 | — |
-
 
 ## 🚀 Critical Path
 
@@ -156,7 +142,7 @@ To be included in this guide, files must have:
 - `<!-- ROLE_PINS: ["role1", "role2"] -->` - Role access patterns
 
 Optional metadata:
-- `<!-- CONTEXT_REFERENCE: file.md -->` - Related documentation
-- `<!-- MODULE_REFERENCE: file.md -->` - Module dependencies
-- `<!-- MEMORY_CONTEXT: description -->` - Memory context level
-- `<!-- DATABASE_SYNC: status -->` - Database synchronization status
+- `` - Related documentation
+- `` - Module dependencies
+- `` - Memory context level
+- `` - Database synchronization status

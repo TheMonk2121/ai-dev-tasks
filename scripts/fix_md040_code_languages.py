@@ -97,7 +97,6 @@ def detect_code_language(content: str) -> str:
         return max(language_scores.keys(), key=lambda k: language_scores[k])
     return "text"
 
-
 def fix_md040_code_languages():
     """Fix MD040 violations by adding language specifications to code blocks."""
     print("🔧 Fixing MD040 - Fenced Code Block Languages")
@@ -172,7 +171,6 @@ def fix_md040_code_languages():
         print(f"\n🎉 Successfully fixed {files_fixed} files!")
     else:
         print("\nℹ️  No files needed fixing.")
-
 
 if __name__ == "__main__":
     fix_md040_code_languages()

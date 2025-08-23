@@ -26,7 +26,6 @@ from .logger import get_logger
 
 logger = get_logger("structured_tracer")
 
-
 @dataclass
 class TraceSpan:
     """Individual trace span with cryptographic verification"""
@@ -51,7 +50,6 @@ class TraceSpan:
     # Metadata
     tags: Dict[str, Any] = field(default_factory=dict)
     metadata: Dict[str, Any] = field(default_factory=dict)
-
 
 @dataclass
 class BundleTrace:
@@ -90,7 +88,6 @@ class BundleTrace:
 
     # Echo verification
     echo_verification: Optional[Dict[str, Any]] = None
-
 
 class StructuredTracer:
     """Industry-grade structured tracer for memory rehydration"""
@@ -371,10 +368,8 @@ class StructuredTracer:
 
         return True
 
-
 # Global tracer instance
 tracer = StructuredTracer()
-
 
 def trace_bundle_creation(query: str, role: str = "planner", **config):
     """Decorator for tracing bundle creation"""

@@ -15,7 +15,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from n8n_workflows.backlog_scrubber import BacklogScrubber
 
-
 def demo_backlog_scrubber():
     """Demo the backlog scrubber functionality"""
     print("🎯 Backlog Scrubber Demo")

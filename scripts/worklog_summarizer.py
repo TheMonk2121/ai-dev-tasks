@@ -28,7 +28,6 @@ def read_worklog(backlog_id: str) -> str:
 
     return worklog_path.read_text(encoding="utf-8")
 
-
 def extract_ideas(worklog_content: str) -> List[str]:
     """Extract ideas from worklog content."""
     ideas = []
@@ -45,7 +44,6 @@ def extract_ideas(worklog_content: str) -> List[str]:
                 ideas.append(clean_line)
 
     return ideas
-
 
 def extract_decisions(worklog_content: str) -> List[str]:
     """Extract decisions from worklog content."""
@@ -64,7 +62,6 @@ def extract_decisions(worklog_content: str) -> List[str]:
 
     return decisions
 
-
 def extract_file_changes(worklog_content: str) -> List[str]:
     """Extract file changes from worklog content."""
     files = set()
@@ -82,7 +79,6 @@ def extract_file_changes(worklog_content: str) -> List[str]:
                 j += 1
 
     return sorted(list(files))
-
 
 def extract_implementation_progress(worklog_content: str) -> Dict[str, Any]:
     """Extract implementation progress from worklog content."""
@@ -112,7 +108,6 @@ def extract_implementation_progress(worklog_content: str) -> Dict[str, Any]:
                 progress["planned"].append(clean_line)
 
     return progress
-
 
 def extract_session_metadata(worklog_content: str) -> Dict[str, Any]:
     """Extract session metadata from worklog content."""
@@ -153,7 +148,6 @@ def extract_session_metadata(worklog_content: str) -> Dict[str, Any]:
 
     return metadata
 
-
 def generate_next_steps(ideas: List[str], decisions: List[str], progress: Dict[str, Any]) -> List[str]:
     """Generate next steps based on ideas, decisions, and progress."""
     next_steps = []
@@ -175,7 +169,6 @@ def generate_next_steps(ideas: List[str], decisions: List[str], progress: Dict[s
 
     return next_steps[:5]  # Limit to top 5 next steps
 
-
 def generate_memory_rehydration_tags(backlog_id: str, summary_data: Dict[str, Any]) -> str:
     """Generate memory rehydration tags for DSPy integration."""
     metadata = summary_data.get("metadata", {})
@@ -189,10 +182,8 @@ def generate_memory_rehydration_tags(backlog_id: str, summary_data: Dict[str, An
     elif decisions_count > ideas_count:
         primary_role = "implementer"
 
-    tags = f"""<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: scripts/worklog_summarizer.py -->
-<!-- MEMORY_CONTEXT: HIGH - Scribe session insights and decisions -->
-<!-- DATABASE_SYNC: REQUIRED -->
+    tags = f"""
+
 <!-- DSPY_ROLE: {primary_role} -->
 <!-- DSPY_AUTHORITY: scribe_session_insights -->
 <!-- DSPY_FILES: artifacts/worklogs/{backlog_id}.md, artifacts/summaries/{backlog_id}-summary.md -->
@@ -211,7 +202,6 @@ def generate_memory_rehydration_tags(backlog_id: str, summary_data: Dict[str, An
 <!-- LAST_ACTIVITY: {metadata.get('last_activity', 'unknown')} -->
 """
     return tags
-
 
 def generate_markdown_summary(backlog_id: str, summary_data: Dict[str, Any]) -> str:
     """Generate markdown summary from summary data with enhanced metadata."""
@@ -289,7 +279,6 @@ def generate_markdown_summary(backlog_id: str, summary_data: Dict[str, Any]) -> 
 
     return md
 
-
 def summarize_worklog(backlog_id: str) -> Dict[str, Any]:
     """Main function to summarize a worklog."""
     try:
@@ -317,7 +306,6 @@ def summarize_worklog(backlog_id: str) -> Dict[str, Any]:
     except Exception as e:
         print(f"❌ Error summarizing worklog: {e}")
         return {"error": str(e)}
-
 
 def main():
     parser = argparse.ArgumentParser(description="Summarize Scribe worklog content")
@@ -362,7 +350,6 @@ def main():
         print("📊 Graph integration metadata: ✅")
 
     return 0
-
 
 if __name__ == "__main__":
     exit(main())

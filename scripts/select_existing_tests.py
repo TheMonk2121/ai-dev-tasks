@@ -107,7 +107,6 @@ def analyze_context(context: str) -> Dict[str, float]:
 
     return scores
 
-
 def select_tests_for_context(context: str, min_score: float = 0.5) -> List[str]:
     """Select appropriate existing tests based on context."""
 
@@ -125,7 +124,6 @@ def select_tests_for_context(context: str, min_score: float = 0.5) -> List[str]:
 
     return selected_tests
 
-
 def get_test_command(test_type: str) -> List[str]:
     """Get the command for a specific test type."""
 
@@ -142,7 +140,6 @@ def get_test_command(test_type: str) -> List[str]:
     }
 
     return test_mapping.get(test_type, [])
-
 
 def run_selected_tests(context: str, dry_run: bool = False) -> Dict[str, bool]:
     """Run tests selected for the given context."""
@@ -194,7 +191,6 @@ def run_selected_tests(context: str, dry_run: bool = False) -> Dict[str, bool]:
 
     return results
 
-
 def suggest_test_improvements(context: str) -> List[str]:
     """Suggest improvements based on context analysis."""
 
@@ -218,7 +214,6 @@ def suggest_test_improvements(context: str) -> List[str]:
         suggestions.append("Consider running comprehensive test suite for thorough validation")
 
     return suggestions
-
 
 def main():
     """Main function for intelligent test selection."""
@@ -270,7 +265,6 @@ def main():
     else:
         print("⚠️  Some tests failed - review required")
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

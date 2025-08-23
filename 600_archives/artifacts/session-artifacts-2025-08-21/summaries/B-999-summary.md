@@ -1,3 +1,10 @@
+<!-- DEPRECATED: true -->
+<!-- DEPRECATION_DATE: 2025-08-21 -->
+<!-- DEPRECATION_REASON: Session artifacts moved to archive after B-062 completion -->
+<!-- HYDRATION_STATUS: REQUIRED -->
+<!-- ARCHIVE_CATEGORY: session-artifacts -->
+<!-- CONTEXT_PRESERVATION: HIGH -->
+
 # B-999 Session Registry Core Implementation - Completion Summary
 
 ## 🎯 **Implementation Overview**

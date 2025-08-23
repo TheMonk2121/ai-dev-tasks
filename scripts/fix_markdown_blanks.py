@@ -33,7 +33,6 @@ def ensure_code_fence_language(lines):
         out.append(line)
     return out
 
-
 def normalize_markdown(content: str) -> str:
     lines = content.splitlines(True)
 
@@ -90,7 +89,6 @@ def normalize_markdown(content: str) -> str:
         text += "\n"
     return text
 
-
 def main():
     if len(sys.argv) != 2:
         print("Usage: python3 scripts/fix_markdown_blanks.py <file.md>")
@@ -103,8 +101,6 @@ def main():
         f.write(fixed)
     print(f"Formatted {path}")
 
-
 if __name__ == "__main__":
     main()
-
 

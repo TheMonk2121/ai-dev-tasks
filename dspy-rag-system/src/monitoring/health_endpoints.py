@@ -24,7 +24,6 @@ from utils.opentelemetry_config import add_span_attribute, trace_operation
 
 logger = get_logger("health_endpoints")
 
-
 @dataclass
 class DependencyStatus:
     """Dependency health status"""
@@ -36,7 +35,6 @@ class DependencyStatus:
     endpoint: str
     error_message: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
-
 
 class HealthEndpointManager:
     """Manages health check endpoints for production deployment"""
@@ -240,10 +238,8 @@ class HealthEndpointManager:
 
         return ready_status
 
-
 # Global instance
 _health_manager: Optional[HealthEndpointManager] = None
-
 
 def get_health_manager() -> HealthEndpointManager:
     """Get the global health endpoint manager instance"""
@@ -252,13 +248,11 @@ def get_health_manager() -> HealthEndpointManager:
         _health_manager = HealthEndpointManager()
     return _health_manager
 
-
 def initialize_health_endpoints(production_monitor: Optional[ProductionMonitor] = None) -> HealthEndpointManager:
     """Initialize health endpoints"""
     global _health_manager
     _health_manager = HealthEndpointManager(production_monitor)
     return _health_manager
-
 
 # Flask integration functions
 def create_health_endpoints(app):

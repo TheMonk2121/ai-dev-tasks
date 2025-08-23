@@ -278,7 +278,6 @@ class FewShotExampleLoader:
 
         return suggestions
 
-
 def get_few_shot_loader() -> FewShotExampleLoader:
     """Get a configured few-shot example loader."""
     return FewShotExampleLoader()

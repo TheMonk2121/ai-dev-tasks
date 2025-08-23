@@ -107,9 +107,9 @@ def check_content_freshness(target_file: str) -> Dict[str, Any]:
         
         # Check for memory context importance
         memory_context = "LOW"
-        if "<!-- MEMORY_CONTEXT: HIGH -->" in content:
+        if "" in content:
             memory_context = "HIGH"
-        elif "<!-- MEMORY_CONTEXT: MEDIUM -->" in content:
+        elif "" in content:
             memory_context = "MEDIUM"
         
         # Check for recent timestamps

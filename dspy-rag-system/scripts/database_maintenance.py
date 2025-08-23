@@ -11,14 +11,12 @@ import psycopg2
 
 DB_DSN = "postgresql://danieljacobs@localhost:5432/ai_agency"
 
-
 def get_file_size(file_path):
     """Get the size of a file in bytes."""
     try:
         return os.path.getsize(file_path)
     except OSError:
         return 0
-
 
 def check_database_consistency():
     """Check database consistency with repository files."""
@@ -160,7 +158,6 @@ def check_database_consistency():
         print(f"❌ Error checking database consistency: {e}")
         return None
 
-
 def update_outdated_files(outdated_files):
     """Update outdated files in the database."""
     if not outdated_files:
@@ -267,7 +264,6 @@ def update_outdated_files(outdated_files):
         print(f"❌ Error in update process: {e}")
         return False
 
-
 def main():
     """Main database maintenance function."""
     print("🗄️ Database Maintenance Script")
@@ -314,7 +310,6 @@ def main():
     print(f"  Missing: {len(missing_files)}")
 
     return True
-
 
 if __name__ == "__main__":
     success = main()

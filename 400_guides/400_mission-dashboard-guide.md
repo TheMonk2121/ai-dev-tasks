@@ -1,11 +1,8 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_contributing-guidelines.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
-<!-- MEMORY_CONTEXT: MEDIUM - Mission dashboard and monitoring system -->
+
+
 <!-- ANCHOR_KEY: mission-dashboard -->
 <!-- ANCHOR_PRIORITY: 15 -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ROLE_PINS: ["coder", "implementer"] -->
 # 🎯 Real-time Mission Dashboard Guide
 

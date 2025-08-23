@@ -17,7 +17,6 @@ def run_command(cmd, cwd=None):
     except Exception as e:
         return False, "", str(e)
 
-
 def check_dependency_versions():
     """Check for version conflicts across requirements files"""
     print("🔍 Checking dependency versions...")
@@ -51,7 +50,6 @@ def check_dependency_versions():
 
     return True
 
-
 def validate_imports():
     """Validate that key modules can be imported"""
     print("\n🔍 Validating imports...")
@@ -82,7 +80,6 @@ def validate_imports():
 
     return True
 
-
 def check_requirements_files():
     """Check that requirements files reference root correctly"""
     print("\n🔍 Checking requirements files...")
@@ -108,7 +105,6 @@ def check_requirements_files():
             return False
 
     return True
-
 
 def main():
     """Main validation function"""
@@ -137,7 +133,6 @@ def main():
     else:
         print("❌ Some dependency checks failed!")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

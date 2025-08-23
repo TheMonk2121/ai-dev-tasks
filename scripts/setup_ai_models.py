@@ -41,12 +41,10 @@ OPTIONAL_IMPORTS: List[str] = [
     "transformers",          # tokenizer/LLM utils (optional)
 ]
 
-
 def _check_python_version(min_major: int = 3, min_minor: int = 10) -> Tuple[bool, str]:
     ver = sys.version_info
     ok = (ver.major, ver.minor) >= (min_major, min_minor)
     return ok, f"Python {ver.major}.{ver.minor} detected (require >= {min_major}.{min_minor})"
-
 
 def _check_imports(module_names: List[str]) -> Tuple[bool, List[str]]:
     missing: List[str] = []
@@ -54,7 +52,6 @@ def _check_imports(module_names: List[str]) -> Tuple[bool, List[str]]:
         if importlib.util.find_spec(name) is None:
             missing.append(name)
     return len(missing) == 0, missing
-
 
 def _check_db_connection(dsn: str, check_pgvector: bool = True) -> Tuple[bool, str]:
     try:
@@ -75,7 +72,6 @@ def _check_db_connection(dsn: str, check_pgvector: bool = True) -> Tuple[bool, s
         return True, "Database connectivity OK"
     except Exception as e:
         return False, f"Database check failed: {e}"
-
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Setup validator for Cursor-native AI models")
@@ -125,8 +121,6 @@ def main() -> int:
         print("✖ Environment checks failed; see messages above")
         return 1
 
-
 if __name__ == "__main__":
     raise SystemExit(main())
-
 

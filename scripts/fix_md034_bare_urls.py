@@ -22,7 +22,6 @@ def find_markdown_files():
 
     return markdown_files
 
-
 def has_bare_urls(content):
     """Check if content has bare URLs."""
     # Simple pattern to find http/https URLs
@@ -42,7 +41,6 @@ def has_bare_urls(content):
 
     return len(bare_urls) > 0
 
-
 def fix_bare_urls(content):
     """Wrap bare URLs in angle brackets."""
     # Simple pattern to find http/https URLs
@@ -60,7 +58,6 @@ def fix_bare_urls(content):
 
     fixed_content = re.sub(pattern, replace_url, content)
     return fixed_content
-
 
 def process_file(file_path):
     """Process a single file to fix bare URLs."""
@@ -87,7 +84,6 @@ def process_file(file_path):
 
     except Exception as e:
         return False, f"Error: {e}"
-
 
 def main():
     """Main function to fix bare URLs."""
@@ -126,7 +122,6 @@ def main():
         print("   Wrapped bare URLs in angle brackets")
     else:
         print("\n⚠️  No files needed fixing.")
-
 
 if __name__ == "__main__":
     main()

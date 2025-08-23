@@ -4,11 +4,6 @@
 
 # cSpell Automation Memory
 
-<!-- CONTEXT_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_comprehensive-coding-best-practices.md -->
-<!-- MEMORY_CONTEXT: HIGH - Frequent task automation pattern -->
-<!-- DATABASE_SYNC: REQUIRED -->
-
 ## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |

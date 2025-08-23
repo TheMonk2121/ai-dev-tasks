@@ -26,7 +26,6 @@ class SessionContext:
     description: Optional[str] = None
     related_sessions: Optional[List[str]] = None
 
-
 @dataclass
 class SessionInfo:
     """Represents a Scribe session with full metadata."""
@@ -39,7 +38,6 @@ class SessionInfo:
     context: SessionContext
     last_activity: Optional[str] = None
     idle_timeout: int = 1800  # 30 minutes default
-
 
 class SessionRegistry:
     """Manages Scribe session registry with context tagging."""
@@ -236,7 +234,6 @@ class SessionRegistry:
             if session.last_activity:
                 print(f"   Last Activity: {session.last_activity}")
 
-
 def main():
     """CLI interface for session registry management."""
     parser = argparse.ArgumentParser(description="Scribe Session Registry Manager")
@@ -323,7 +320,6 @@ def main():
                 print(f"Last Activity: {session.last_activity}")
         else:
             print(f"❌ Session {args.backlog_id} not found")
-
 
 if __name__ == "__main__":
     main()

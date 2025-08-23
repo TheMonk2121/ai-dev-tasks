@@ -48,20 +48,17 @@ logger = logging.getLogger(__name__)
 # Regex safety guard (M-2)
 _BAD_RE = re.compile(r"\.[\*\+]\]?\(")  # crude but fast heuristic
 
-
 def _compile_safe(pattern: str) -> re.Pattern:
     """Compile regex pattern with safety check"""
     if _BAD_RE.search(pattern):
         raise ValueError(f"Unsafe regex: {pattern}")
     return re.compile(pattern, re.IGNORECASE)
 
-
 # LRU cache for date parsing (M-3)
 @lru_cache(maxsize=1024)
 def _cached_parse(date_str: str):
     """Cached date parsing for performance"""
     return date_parser.parse(date_str, fuzzy=True)
-
 
 class ConfigDrivenMetadataExtractor:
     """Config-driven metadata extraction with scoring and ranking"""
@@ -385,7 +382,6 @@ class ConfigDrivenMetadataExtractor:
     def list_categories(self) -> List[Dict[str, Any]]:
         """List all available categories"""
         return self.config.get("categories", [])
-
 
 # Alias for backward compatibility
 MetadataExtractor = ConfigDrivenMetadataExtractor

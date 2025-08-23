@@ -1,6 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: scripts/pr_signoff.py -->
-<!-- MEMORY_CONTEXT: HIGH - Core workflow automation system -->
+
+
 <!-- ESSENTIAL_FILES: 400_guides/400_system-overview.md, 400_guides/400_project-overview.md -->
 <!-- DSPY_ROLE: documentation -->
 <!-- DSPY_AUTHORITY: documentation_standards -->

@@ -1,7 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Research infrastructure and organization patterns -->
+
+
 # 📚 Research Infrastructure Guide
 
 ## 🔎 TL;DR
@@ -119,7 +117,6 @@ docs/research/
 # Topic External Sources
 
 <!-- RESEARCH_CATEGORY: papers|articles|tutorials|case-studies|benchmarks -->
-<!-- MEMORY_CONTEXT: LOW - External sources for topic -->
 
 ## 📚 Academic Papers
 
@@ -157,7 +154,7 @@ docs/research/
 
 #### **Add Research Sources to Memory Context**
 ```markdown
-<!-- MEMORY_CONTEXT: MEDIUM - Research sources for topic -->
+
 <!-- RESEARCH_SOURCES: 500_topic-research.md, docs/research/papers/topic-papers.md -->
 <!-- EXTERNAL_SOURCES: docs/research/articles/topic-articles.md -->
 <!-- TUTORIAL_SOURCES: docs/research/tutorials/topic-tutorials.md -->
@@ -189,7 +186,6 @@ Create `500_research/500_research/500_research-index.md` to serve as a research 
 # 📚 Research Index: LLM-Accessible Knowledge Hub
 
 <!-- RESEARCH_SYSTEM: 500_research-infrastructure-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Research discovery hub for LLM context -->
 
 ## 🎯 Research Categories
 

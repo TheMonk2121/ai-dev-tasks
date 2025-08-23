@@ -20,7 +20,6 @@ from database_utils import (
     get_storage_analysis,
 )
 
-
 def analyze_database_performance():
     """Analyze database performance and optimization opportunities."""
     print("🚀 Database Performance Analysis")
@@ -140,7 +139,6 @@ def analyze_database_performance():
         print(f"❌ Error analyzing performance: {e}")
         return None
 
-
 def optimize_chunk_sizes():
     """Optimize chunk sizes for better performance."""
     print("\n🔧 Chunk Size Optimization")
@@ -176,7 +174,6 @@ def optimize_chunk_sizes():
     except Exception as e:
         print(f"❌ Error optimizing chunk sizes: {e}")
         return False
-
 
 def create_performance_report():
     """Create a comprehensive performance report."""
@@ -224,7 +221,6 @@ def create_performance_report():
     print(f"✅ Performance report saved to {report_path}")
     return True
 
-
 def main():
     """Main performance optimization function."""
     print("🚀 Vector Database Performance Optimization")
@@ -248,7 +244,6 @@ def main():
     print(f"  - Storage: {data['sizes'][1]} for chunks")
 
     return True
-
 
 if __name__ == "__main__":
     from datetime import datetime

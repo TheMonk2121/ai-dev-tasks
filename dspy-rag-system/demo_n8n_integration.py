@@ -17,7 +17,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 from n8n_workflows.n8n_event_processor import N8nEventProcessor
 from n8n_workflows.n8n_integration import Event, create_event, execute_workflow, get_n8n_manager, poll_events
 
-
 def demo_event_creation():
     """Demo creating events in the event ledger"""
     print("🎯 Event Creation Demo")

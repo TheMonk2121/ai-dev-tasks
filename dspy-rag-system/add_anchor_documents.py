@@ -47,7 +47,6 @@ except ImportError as e:
     print("💡 This is due to relative import issues in the vector_store module")
     sys.exit(1)
 
-
 def add_document_with_anchors(file_path):
     """Add a document with anchor metadata to the RAG system"""
 
@@ -123,7 +122,6 @@ def add_document_with_anchors(file_path):
         logger.error("Error processing document", extra={"error": str(e)})
         return False
 
-
 def main():
     """Main function"""
     logger = setup_logger("main")
@@ -157,7 +155,6 @@ def main():
     if success_count > 0:
         print("💡 You can now test the memory rehydrator with:")
         print("   python3 -m src.utils.memory_rehydrator --role planner --task 'test' --json")
-
 
 if __name__ == "__main__":
     main()

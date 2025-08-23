@@ -4,12 +4,6 @@
 
 # 🔍 Industry-Grade Observability System
 
-<!-- CONTEXT_REFERENCE: 400_guides/400_system-overview.md -->
-<!-- MODULE_REFERENCE: dspy-rag-system/src/utils/structured_tracer.py -->
-<!-- MODULE_REFERENCE: dspy-rag-system/src/utils/self_critique.py -->
-<!-- MEMORY_CONTEXT: HIGH - Core observability and debugging system -->
-<!-- DATABASE_SYNC: REQUIRED -->
-
 ## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |

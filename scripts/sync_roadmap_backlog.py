@@ -33,7 +33,6 @@ SCORE_TOTAL_RE = re.compile(r"<!--\s*score_total:\s*([0-9]+(?:\.[0-9]+)?)\s*-->"
 STATUS_RE = re.compile(r"<!--\s*status:\s*(.*?)\s*-->", re.IGNORECASE)
 COMPLETION_DATE_RE = re.compile(r"<!--\s*completion_date:\s*(\d{4}-\d{2}-\d{2})\s*-->", re.IGNORECASE)
 
-
 @dataclass
 class BacklogItem:
     """Represents a backlog item with its metadata."""
@@ -47,7 +46,6 @@ class BacklogItem:
     line_idx: int
     score_total: Optional[float] = None
     completion_date: Optional[str] = None
-
 
 class RoadmapBacklogSync:
     """Handles synchronization between roadmap and backlog."""
@@ -364,7 +362,6 @@ class RoadmapBacklogSync:
             print(f"Error during validation: {e}")
             sys.exit(1)
 
-
 def main():
     parser = argparse.ArgumentParser(description="Synchronize roadmap with backlog")
     parser.add_argument("--dry-run", action="store_true", help="Show what would be changed without making changes")
@@ -380,7 +377,6 @@ def main():
         sync.validate()
     else:
         sync.sync()
-
 
 if __name__ == "__main__":
     main()

@@ -1,8 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_performance-optimization-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
-<!-- MEMORY_CONTEXT: HIGH - DSPy research and implementation patterns -->
+
+
 # 🔬 DSPy Research
 
 Backlog link: B-076, B-079

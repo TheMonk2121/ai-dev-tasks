@@ -24,7 +24,6 @@ from uuid import uuid4
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class MessageType(Enum):
     """Enumeration of message types."""
 
@@ -34,7 +33,6 @@ class MessageType(Enum):
     ERROR = "error"
     HEARTBEAT = "heartbeat"
 
-
 class AgentRole(Enum):
     """Enumeration of agent roles."""
 
@@ -43,7 +41,6 @@ class AgentRole(Enum):
     CODER = "coder"
     DOCUMENTATION = "documentation"
     NATIVE_AI = "native_ai"
-
 
 @dataclass
 class AgentMessage:
@@ -58,7 +55,6 @@ class AgentMessage:
     timestamp: float = field(default_factory=time.time)
     priority: int = 1  # 1=low, 2=medium, 3=high, 4=critical
 
-
 @dataclass
 class AgentSession:
     """Data structure for agent communication sessions."""
@@ -70,7 +66,6 @@ class AgentSession:
     created_at: float = field(default_factory=time.time)
     updated_at: float = field(default_factory=time.time)
     status: str = "active"  # "active", "paused", "completed"
-
 
 class CommunicationDatabase:
     """Database for storing communication data and session history."""
@@ -180,7 +175,6 @@ class CommunicationDatabase:
         conn.commit()
         conn.close()
         return message.id
-
 
 class AgentCommunicationManager:
     """Manages communication between agents."""
@@ -343,7 +337,6 @@ class AgentCommunicationManager:
             }
         return status
 
-
 class AgentCoordinator:
     """Coordinates communication between agents and manages workflows."""
 
@@ -474,7 +467,6 @@ class AgentCoordinator:
             workflow_id: await self.get_workflow_status(workflow_id) for workflow_id in self.active_workflows.keys()
         }
 
-
 # Example usage and testing
 async def main():
     """Example usage of the Agent Communication System."""
@@ -552,7 +544,6 @@ async def main():
     print(f"Workflow status: {json.dumps(workflow_status, indent=2)}")
 
     print("--- Agent Communication Test Complete ---")
-
 
 if __name__ == "__main__":
     asyncio.run(main())

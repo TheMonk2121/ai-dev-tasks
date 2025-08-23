@@ -28,7 +28,6 @@ from utils.logger import get_logger
 from utils.metadata_extractor import ConfigDrivenMetadataExtractor
 from utils.tokenizer import TokenAwareChunker
 
-
 class DocumentProcessor(Module):
     """DSPy module for processing documents and creating chunks"""
 
@@ -395,7 +394,6 @@ class DocumentProcessor(Module):
             self.logger.error(f"Error reading CSV file: {e}", extra={"file_path": self._mask_file_path(csv_path)})
             raise Exception(f"Error reading CSV file: {e}")
 
-
 class DocumentIngestionPipeline(Module):
     """DSPy module for complete document ingestion pipeline"""
 
@@ -467,7 +465,6 @@ class DocumentIngestionPipeline(Module):
                 },
             )
             raise
-
 
 # Example usage and testing
 if __name__ == "__main__":

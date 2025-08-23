@@ -1,9 +1,6 @@
-<!-- MEMORY_CONTEXT: HIGH - Complete setup requirements and configuration reference -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_system-overview.md -->
+
+
 <!-- CONFIGURATION_MASTER: This file is the single source of truth for all configuration -->
-<!-- DATABASE_SYNC: REQUIRED -->
 
 # Setup Requirements
 
@@ -251,7 +248,6 @@ MAX_EVENTS_PER_CYCLE=10
 - In-app model picker: Settings → AI → Models, or run “Change Model” from the Command Palette.
 - If you toggle Auto off, you currently see: GPT‑5, GPT‑5 High, GPT‑5 Fast, Claude 4 Sonnet (availability can vary by account/region).
 - For the full, up-to-date catalog, see the official list: [Cursor Docs: Models](https://docs.cursor.com/models).
-
 
 ## **S-005: Specialized Agents Setup**
 

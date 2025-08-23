@@ -30,7 +30,6 @@ def load_settings_json() -> dict:
     with open(settings_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-
 def save_settings_json(settings: dict) -> None:
     """Save the updated VS Code settings.json file"""
     settings_path = Path(".vscode/settings.json")
@@ -38,12 +37,10 @@ def save_settings_json(settings: dict) -> None:
     with open(settings_path, "w", encoding="utf-8") as f:
         json.dump(settings, f, indent=4, ensure_ascii=False)
 
-
 def get_current_words(settings: dict) -> Set[str]:
     """Extract current cSpell words from settings"""
     words = settings.get("cSpell", {}).get("words", [])
     return set(word.lower() for word in words)
-
 
 def add_words_to_settings(settings: dict, new_words: List[str]) -> List[str]:
     """Add new words to settings, maintaining alphabetical order"""
@@ -73,7 +70,6 @@ def add_words_to_settings(settings: dict, new_words: List[str]) -> List[str]:
 
     return added_words
 
-
 def validate_word(word: str) -> bool:
     """Validate that a word is suitable for cSpell"""
     # Basic validation: alphanumeric and common symbols only
@@ -86,14 +82,12 @@ def validate_word(word: str) -> bool:
 
     return True
 
-
 def parse_words_from_text(text: str) -> List[str]:
     """Parse words from text input"""
     # Split on whitespace and common delimiters
     words = re.split(r"[\s,;]+", text.strip())
     # Filter out empty strings and validate
     return [word for word in words if word and validate_word(word)]
-
 
 def main():
     """Main function for cSpell automation"""
@@ -166,7 +160,6 @@ def main():
     except Exception as e:
         print(f"❌ Error: {e}")
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

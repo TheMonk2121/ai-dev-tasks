@@ -19,7 +19,6 @@ import pytest
 # Import the session registry system
 from scripts.session_registry import SessionRegistry
 
-
 class TestScribeSessionIntegration:
     """Integration tests for Scribe session management."""
 
@@ -315,7 +314,6 @@ class TestScribeSessionIntegration:
         session.start_time = "2025-08-14T00:00:00Z"  # Old timestamp
         registry.cleanup_completed_sessions()
         assert "B-1000" not in registry.sessions
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

@@ -1,9 +1,5 @@
 # Task Generation Automation Quick Reference
 
-<!-- CONTEXT_REFERENCE: 000_core/002_generate-tasks.md -->
-<!-- MODULE_REFERENCE: scripts/task_generation_automation.py -->
-<!-- MEMORY_CONTEXT: HIGH - Task generation automation reference -->
-<!-- DATABASE_SYNC: REQUIRED -->
 <!-- ANCHOR_KEY: task-generation-quick-ref -->
 <!-- ANCHOR_PRIORITY: 15 -->
 <!-- ROLE_PINS: ["planner", "implementer"] -->

@@ -4,12 +4,6 @@
 
 # 📊 Graph Visualization Guide
 
-<!-- CONTEXT_REFERENCE: 400_guides/400_system-overview.md -->
-<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
-<!-- MEMORY_CONTEXT: HIGH - Chunk relationship visualization system -->
-<!-- DATABASE_SYNC: REQUIRED -->
-
 ## 🎯 **Current Status**
 
 - **Status**: ✅ **ACTIVE** - Graph visualization system implemented

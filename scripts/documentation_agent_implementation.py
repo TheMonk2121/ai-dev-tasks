@@ -26,7 +26,6 @@ from uuid import uuid4
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class DocumentType(Enum):
     """Enumeration of document types."""
     API = "api"
@@ -37,7 +36,6 @@ class DocumentType(Enum):
     CHANGELOG = "changelog"
     CONTRIBUTING = "contributing"
 
-
 class FormatType(Enum):
     """Enumeration of format types."""
     MARKDOWN = "markdown"
@@ -45,7 +43,6 @@ class FormatType(Enum):
     RST = "rst"
     ASCIIDOC = "asciidoc"
     JSON = "json"
-
 
 @dataclass
 class DocumentationContent:
@@ -61,7 +58,6 @@ class DocumentationContent:
     sections: int = 0
     timestamp: float = field(default_factory=time.time)
 
-
 @dataclass
 class WritingSuggestion:
     """Data structure for writing suggestions."""
@@ -70,7 +66,6 @@ class WritingSuggestion:
     description: str
     suggestion: str
     severity: str  # "low", "medium", "high"
-
 
 class DocumentationDatabase:
     """Database for storing documentation data and cache."""
@@ -178,7 +173,6 @@ class DocumentationDatabase:
             )
         
         return None
-
 
 class DocumentationAgent:
     """Specialized agent for documentation assistance and writing help."""
@@ -898,7 +892,6 @@ const result = await instance.process(data);
             "cache_size": len(self.documentation_cache)
         }
 
-
 # Example usage and testing
 async def main():
     """Example usage of the Documentation Agent."""
@@ -950,7 +943,6 @@ async def main():
     print("\n--- Agent Status ---")
     status = agent.get_status()
     print(json.dumps(status, indent=2))
-
 
 if __name__ == "__main__":
     asyncio.run(main()) 

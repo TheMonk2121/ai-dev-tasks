@@ -1,7 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: scripts/worklog_summarizer.py -->
-<!-- MEMORY_CONTEXT: HIGH - Scribe session insights and decisions -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
+
 <!-- DSPY_ROLE: planner -->
 <!-- DSPY_AUTHORITY: scribe_session_insights -->
 <!-- DSPY_FILES: artifacts/worklogs/B-100.md, artifacts/summaries/B-100-summary.md -->

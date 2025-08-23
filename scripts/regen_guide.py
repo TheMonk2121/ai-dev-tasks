@@ -32,7 +32,6 @@ class AnchorMetadata:
     memory_context: Optional[str] = None
     database_sync: Optional[str] = None
 
-
 class AnchorHeaderScanner:
     """Scans markdown files for anchor metadata headers."""
 
@@ -136,7 +135,6 @@ class AnchorHeaderScanner:
         print(f"Found anchor metadata in {len(metadata_list)} files")
         return metadata_list
 
-
 class GuideGenerator:
     """Generates the context priority guide from anchor metadata."""
 
@@ -193,12 +191,7 @@ class GuideGenerator:
         """Generate the complete context priority guide content."""
 
         # Header
-        content = f"""<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_project-overview.md -->
-<!-- MODULE_REFERENCE: 000_core/000_backlog.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - File organization and cognitive scaffolding system -->
-<!-- DATABASE_SYNC: REQUIRED -->
+        content = f"""
 
 <!-- ANCHOR_KEY: context-priority -->
 <!-- ANCHOR_PRIORITY: 30 -->
@@ -315,10 +308,10 @@ To be included in this guide, files must have:
 - `<!-- ROLE_PINS: ["role1", "role2"] -->` - Role access patterns
 
 Optional metadata:
-- `<!-- CONTEXT_REFERENCE: file.md -->` - Related documentation
-- `<!-- MODULE_REFERENCE: file.md -->` - Module dependencies
-- `<!-- MEMORY_CONTEXT: description -->` - Memory context level
-- `<!-- DATABASE_SYNC: status -->` - Database synchronization status
+- `` - Related documentation
+- `` - Module dependencies
+- `` - Memory context level
+- `` - Database synchronization status
 """
 
         return content
@@ -344,7 +337,6 @@ Optional metadata:
         except Exception as e:
             print(f"❌ Error generating guide: {e}")
             return False
-
 
 def main():
     """Main entry point."""
@@ -403,7 +395,6 @@ def main():
         else:
             print("\n❌ Context Priority Guide generation failed.")
             return 1
-
 
 if __name__ == "__main__":
     main()

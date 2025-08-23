@@ -23,7 +23,6 @@ def test_metadata_extraction():
     test_content = """<!-- ANCHOR_KEY: test-anchor -->
 <!-- ANCHOR_PRIORITY: 15 -->
 <!-- ROLE_PINS: ["planner", "implementer"] -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_test.md -->
 
 # Test File
 """
@@ -60,7 +59,6 @@ def test_metadata_extraction():
     finally:
         temp_path.unlink()
 
-
 def test_priority_grouping():
     """Test priority-based grouping functionality."""
     print("🧪 Testing priority grouping...")
@@ -94,7 +92,6 @@ def test_priority_grouping():
     except Exception as e:
         print(f"❌ Priority grouping test failed: {e}")
         return False
-
 
 def test_role_grouping():
     """Test role-based grouping functionality."""
@@ -132,7 +129,6 @@ def test_role_grouping():
         print(f"❌ Role grouping test failed: {e}")
         return False
 
-
 def test_guide_generation():
     """Test guide content generation."""
     print("🧪 Testing guide generation...")
@@ -169,7 +165,6 @@ def test_guide_generation():
         print(f"❌ Guide generation test failed: {e}")
         return False
 
-
 def main():
     """Run all validation tests."""
     print("🚀 Starting B-062 Context Priority Guide Auto-Generation validation...")
@@ -193,7 +188,6 @@ def main():
     else:
         print("❌ Some tests failed. Please check the implementation.")
         return 1
-
 
 if __name__ == "__main__":
     exit(main())

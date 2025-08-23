@@ -31,7 +31,6 @@ def read_clipboard() -> str:
     except Exception:
         return ""
 
-
 def sanitize(text: str) -> str:
     """Minimal scrubbing of obvious secrets; non-destructive otherwise."""
     # Mask common key/value patterns
@@ -44,7 +43,6 @@ def sanitize(text: str) -> str:
     for pat in patterns:
         masked = re.sub(pat, lambda m: f"{m.group(1) if m.lastindex and m.lastindex>=1 else ''}=[REDACTED]", masked)
     return masked
-
 
 def save_markdown(content: str, title: Optional[str], tags: Optional[str]) -> Path:
     ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -62,7 +60,6 @@ def save_markdown(content: str, title: Optional[str], tags: Optional[str]) -> Pa
     body = "\n".join(header_lines) + content.strip() + "\n"
     out_path.write_text(body, encoding='utf-8')
     return out_path
-
 
 def main():
     parser = argparse.ArgumentParser(description="Manually save a chat transcript to docs/chat_logs/")
@@ -97,8 +94,6 @@ def main():
     out_path = save_markdown(content, args.title, args.tags)
     print(f"✅ Chat saved to {out_path}")
 
-
 if __name__ == "__main__":
     main()
-
 

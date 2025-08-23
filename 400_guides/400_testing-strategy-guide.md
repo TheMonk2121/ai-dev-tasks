@@ -1,8 +1,6 @@
 <!-- ANCHOR_KEY: testing-strategy-guide -->
 <!-- ANCHOR_PRIORITY: 20 -->
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - Testing strategy and quality assurance -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 <!-- ROLE_PINS: ["coder", "implementer"] -->
 # 🧪 Testing Strategy Guide
 

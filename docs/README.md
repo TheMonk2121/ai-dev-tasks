@@ -1,7 +1,5 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_deployment-environment-guide.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_contributing-guidelines.md -->
+
+
 # **New to the Project?**###**New to the Project?**{#tldr}
 
 ## 🔎 TL;DR

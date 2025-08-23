@@ -453,7 +453,6 @@ class DocumentationIndexer:
             "vector_store_stats": (self.vector_store.get_stats() if self.vector_store else {}),
         }
 
-
 def main():
     """Main function for documentation indexing"""
     import argparse
@@ -489,7 +488,6 @@ def main():
         # Perform indexing
         summary = indexer.index_documentation(args.root_path)
         print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

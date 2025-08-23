@@ -1,9 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: dspy-rag-system/src/utils/memory_rehydrator.py -->
-<!-- MODULE_REFERENCE: dspy-rag-system/src/utils/memory_rehydration.go -->
-<!-- MODULE_REFERENCE: dspy-rag-system/src/n8n_workflows/hydration_monitor.py -->
-<!-- MEMORY_CONTEXT: HIGH - Complete hydration system including integration, testing, and role-specific strategies -->
-<!-- DATABASE_SYNC: REQUIRED -->
+
 
 <!-- ANCHOR_KEY: hydration-system -->
 <!-- ANCHOR_PRIORITY: 40 -->

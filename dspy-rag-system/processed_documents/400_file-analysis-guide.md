@@ -1,8 +1,4 @@
-<!-- CONTEXT_REFERENCE: 400_guides/400_context-priority-guide.md -->
-<!-- MODULE_REFERENCE: 100_memory/100_cursor-memory-context.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_few-shot-context-examples.md -->
-<!-- MODULE_REFERENCE: 400_guides/400_migration-upgrade-guide.md -->
-<!-- MEMORY_CONTEXT: HIGH - File analysis and safety procedures -->
+
 
 # 🔍 File Analysis Guide
 
@@ -13,16 +9,12 @@
 | Guide for analyzing and understanding file structures | Analyzing codebase or understanding file relationships | Apply
 analysis techniques to current files |
 
-
-
 ## TL;DR {#tldr}
 
 | what this file is | read when | do next |
 |---|---|---|
 | Guide for analyzing and understanding file structures | Analyzing codebase or understanding file relationships | Apply
 analysis techniques to current files |
-
-
 
 ## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- File analysis procedures maintained
 
@@ -131,7 +123,6 @@ Removal)**-**Criteria**: Duplicate files, outdated test files, unused subdirecto
 ```markdown
 <!-- CORE_SYSTEM: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md -->
 <!-- WORKFLOW_CHAIN: 000_core/001_create-prd.md → 000_core/002_generate-tasks.md -->
-<!-- MEMORY_CONTEXT: HIGH - Essential analysis methodology -->
 
 ```markdown
 
@@ -353,9 +344,9 @@ Use this checklist before writing new Python code to reduce duplication and keep
 #### **5. Memory Context**
 
 - *Method**: Check if file is used for AI memory rehydration
-- *High Priority**: Files with `<!-- MEMORY_CONTEXT: HIGH -->`
-- *Medium Priority**: Files with `<!-- MEMORY_CONTEXT: MEDIUM -->`
-- *Low Priority**: Files with `<!-- MEMORY_CONTEXT: LOW -->`
+- *High Priority**: Files with ``
+- *Medium Priority**: Files with ``
+- *Low Priority**: Files with ``
 
 #### **6. Documentation Chain**
 

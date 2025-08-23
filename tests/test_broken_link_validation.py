@@ -16,7 +16,6 @@ from typing import Dict, List, Tuple, Union
 
 import pytest
 
-
 class TestBrokenLinkValidation:
     """Test cases for broken link validation."""
 
@@ -235,7 +234,6 @@ class TestBrokenLinkValidation:
         assert any("mixed_links.md" in path for path in all_errors.keys())
         assert any("subfolder_test.md" in path for path in all_errors.keys())
 
-
 class TestRealProjectBrokenLinks:
     """Test broken links in the actual project (if run from project root)."""
 
@@ -267,7 +265,6 @@ class TestRealProjectBrokenLinks:
 
         # If this fails, it means we have broken links in the project
         assert len(project_errors) == 0, f"Found broken links in project: {project_errors}"
-
 
 if __name__ == "__main__":
     # Allow running this test directly
