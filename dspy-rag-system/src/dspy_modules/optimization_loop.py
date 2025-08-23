@@ -10,14 +10,27 @@ import logging
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Protocol, Union, cast
 
-from dspy import Module
+from dspy import Example, Module
 
 from .assertions import DSPyAssertionFramework
 from .optimizers import LabeledFewShotOptimizer
 
 _LOG = logging.getLogger("dspy_optimization_loop")
+
+
+class HasForward(Protocol):
+    """Protocol for modules that have a forward method"""
+
+    def forward(self, *args, **kwargs) -> Any:
+        """Forward method that all DSPy modules should implement"""
+        ...
+
+
+def is_forward_compatible(module: Any) -> bool:
+    """Type guard to check if module has forward method"""
+    return hasattr(module, "forward") and callable(getattr(module, "forward"))
 
 
 class OptimizationPhase(Enum):
@@ -168,13 +181,15 @@ class CreatePhase:
                 error_message=str(e),
             )
 
-    def _get_baseline_metrics(self, module: Module) -> Dict[str, Any]:
+    def _get_baseline_metrics(self, module: Union[Module, HasForward]) -> Dict[str, Any]:
         """Get baseline metrics for the module"""
         try:
             # Use assertion framework to get baseline metrics
             framework = DSPyAssertionFramework()
             test_inputs = [{"input_field": "test input"}]
-            report = framework.validate_module(module, test_inputs)
+            # Cast to Module for compatibility with validation framework
+            module_instance = cast(Module, module)
+            report = framework.validate_module(module_instance, test_inputs)
 
             return {
                 "reliability": report.reliability_score,
@@ -262,14 +277,16 @@ class EvaluatePhase:
                 error_message=str(e),
             )
 
-    def _evaluate_module(self, module: Module, test_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _evaluate_module(self, module: Union[Module, HasForward], test_data: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Comprehensive module evaluation"""
         results = {}
 
         # Use assertion framework for reliability evaluation
         try:
             framework = DSPyAssertionFramework()
-            report = framework.validate_module(module, test_data)
+            # Cast to Module for compatibility with validation framework
+            module_instance = cast(Module, module)
+            report = framework.validate_module(module_instance, test_data)
             results["reliability"] = report.reliability_score
             results["assertion_details"] = {
                 "total": report.total_assertions,
@@ -298,7 +315,7 @@ class EvaluatePhase:
 
         return results
 
-    def _evaluate_performance(self, module: Module, test_data: List[Dict[str, Any]]) -> float:
+    def _evaluate_performance(self, module: Union[Module, HasForward], test_data: List[Dict[str, Any]]) -> float:
         """Evaluate module performance"""
         if not test_data:
             return 0.0
@@ -307,10 +324,17 @@ class EvaluatePhase:
 
         for test_input in test_data[:5]:  # Limit to 5 tests for performance
             try:
+                # Validate module has forward method before calling
+                if not is_forward_compatible(module):
+                    raise ValueError("Module does not have required forward() method")
+
                 start_time = time.time()
-                module.forward(**test_input)
+                # Type guard ensures forward method exists
+                forward_method = getattr(module, "forward")
+                forward_method(**test_input)
                 execution_times.append(time.time() - start_time)
-            except Exception:
+            except Exception as e:
+                _LOG.warning(f"Performance test failed: {e}")
                 continue
 
         if not execution_times:
@@ -322,7 +346,7 @@ class EvaluatePhase:
 
         return performance_score
 
-    def _evaluate_quality(self, module: Module) -> float:
+    def _evaluate_quality(self, module: Union[Module, HasForward]) -> float:
         """Evaluate module quality"""
         try:
             # Simple quality metrics based on module attributes
@@ -333,16 +357,20 @@ class EvaluatePhase:
                 quality_score += 0.2
 
             # Check for type hints in forward method
-            if hasattr(module, "forward"):
+            if is_forward_compatible(module):
                 import inspect
 
-                sig = inspect.signature(module.forward)
-                if sig.return_annotation != inspect.Signature.empty:
-                    quality_score += 0.2
+                try:
+                    forward_method = getattr(module, "forward")
+                    sig = inspect.signature(forward_method)
+                    if sig.return_annotation != inspect.Signature.empty:
+                        quality_score += 0.2
 
-                for param in sig.parameters.values():
-                    if param.annotation != inspect.Signature.empty:
-                        quality_score += 0.1
+                    for param in sig.parameters.values():
+                        if param.annotation != inspect.Signature.empty:
+                            quality_score += 0.1
+                except Exception as e:
+                    _LOG.warning(f"Could not inspect forward method signature: {e}")
 
             # Check for error handling
             source_code = inspect.getsource(module.__class__)
@@ -475,7 +503,7 @@ class OptimizePhase:
             )
 
     def _apply_optimizations(
-        self, module: Module, improvement_areas: List[str], test_data: List[Dict[str, Any]]
+        self, module: Union[Module, HasForward], improvement_areas: List[str], test_data: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """Apply optimizations based on improvement areas"""
         results = []
@@ -500,18 +528,55 @@ class OptimizePhase:
 
         return results
 
-    def _optimize_reliability(self, module: Module, test_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _optimize_reliability(
+        self, module: Union[Module, HasForward], test_data: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """Optimize module reliability using assertion framework"""
         try:
+            # Validate module has forward method (satisfies HasForward protocol)
+            if not hasattr(module, "forward"):
+                raise ValueError("Module does not have required forward() method")
+
+            # Validate test_data format and convert to DSPy Examples if needed
+            if not isinstance(test_data, list):
+                raise TypeError("Expected 'test_data' to be a List")
+
+            # Convert Dict test data to DSPy Examples for optimizer compatibility
+            examples = []
+            for item in test_data:
+                if isinstance(item, dict):
+                    # Convert dict to Example format expected by DSPy optimizer
+                    try:
+                        example = Example(**item)
+                        examples.append(example)
+                    except Exception as e:
+                        _LOG.warning(f"Could not convert test data item to Example: {e}")
+                        continue
+                elif isinstance(item, Example):
+                    examples.append(item)
+                else:
+                    _LOG.warning(f"Skipping invalid test data item: {type(item)}")
+                    continue
+
+            if not examples:
+                _LOG.warning("No valid examples available for optimization")
+                return {"success": False, "error": "No valid examples for optimization"}
+
             # Use LabeledFewShotOptimizer for reliability improvement
-            optimizer = LabeledFewShotOptimizer(k=8, metric_threshold=0.1)
+            optimizer = LabeledFewShotOptimizer(k=min(8, len(examples)), metric_threshold=0.1)
 
             # Create simple metric for optimization
             def reliability_metric(example, prediction):
                 return 0.8  # Placeholder metric
 
-            # Run optimization
-            result = optimizer.optimize_program(module, test_data, reliability_metric)
+            # Run optimization with properly typed parameters
+            # Note: module satisfies HasForward protocol after validation above
+            if not is_forward_compatible(module):
+                raise ValueError("Module validation failed before optimization")
+
+            # Type assertion for optimizer compatibility
+            forward_compatible_module = cast(HasForward, module)
+            result = optimizer.optimize_program(forward_compatible_module, examples, reliability_metric)
 
             return {
                 "success": result.success if result else False,
@@ -523,24 +588,28 @@ class OptimizePhase:
             _LOG.warning(f"Reliability optimization failed: {e}")
             return {"success": False, "error": str(e)}
 
-    def _optimize_performance(self, module: Module) -> Dict[str, Any]:
+    def _optimize_performance(self, module: Union[Module, HasForward]) -> Dict[str, Any]:
         """Optimize module performance"""
         # Placeholder for performance optimization
         return {"success": True, "improvement": 0.1, "method": "caching_optimization"}  # 10% improvement
 
-    def _optimize_quality(self, module: Module) -> Dict[str, Any]:
+    def _optimize_quality(self, module: Union[Module, HasForward]) -> Dict[str, Any]:
         """Optimize module quality"""
         # Placeholder for quality optimization
         return {"success": True, "improvement": 0.15, "method": "code_quality_enhancement"}  # 15% improvement
 
-    def _measure_improvements(self, module: Module, test_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _measure_improvements(
+        self, module: Union[Module, HasForward], test_data: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """Measure improvements after optimization"""
         improvements = {}
 
         # Measure reliability improvement
         try:
             framework = DSPyAssertionFramework()
-            report = framework.validate_module(module, test_data)
+            # Cast to Module for compatibility with validation framework
+            module_instance = cast(Module, module)
+            report = framework.validate_module(module_instance, test_data)
             improvements["reliability_improvement"] = report.reliability_score
         except Exception:
             improvements["reliability_improvement"] = 0.0
@@ -567,7 +636,7 @@ class OptimizePhase:
 
         return improvements
 
-    def _evaluate_performance(self, module: Module, test_data: List[Dict[str, Any]]) -> float:
+    def _evaluate_performance(self, module: Union[Module, HasForward], test_data: List[Dict[str, Any]]) -> float:
         """Evaluate module performance (same as EvaluatePhase)"""
         if not test_data:
             return 0.0
@@ -576,10 +645,17 @@ class OptimizePhase:
 
         for test_input in test_data[:5]:
             try:
+                # Validate module has forward method before calling
+                if not is_forward_compatible(module):
+                    raise ValueError("Module does not have required forward() method")
+
                 start_time = time.time()
-                module.forward(**test_input)
+                # Type guard ensures forward method exists
+                forward_method = getattr(module, "forward")
+                forward_method(**test_input)
                 execution_times.append(time.time() - start_time)
-            except Exception:
+            except Exception as e:
+                _LOG.warning(f"Performance evaluation failed: {e}")
                 continue
 
         if not execution_times:
@@ -590,7 +666,7 @@ class OptimizePhase:
 
         return performance_score
 
-    def _evaluate_quality(self, module: Module) -> float:
+    def _evaluate_quality(self, module: Union[Module, HasForward]) -> float:
         """Evaluate module quality (same as EvaluatePhase)"""
         try:
             quality_score = 0.0
@@ -598,16 +674,20 @@ class OptimizePhase:
             if module.__doc__:
                 quality_score += 0.2
 
-            if hasattr(module, "forward"):
+            if is_forward_compatible(module):
                 import inspect
 
-                sig = inspect.signature(module.forward)
-                if sig.return_annotation != inspect.Signature.empty:
-                    quality_score += 0.2
+                try:
+                    forward_method = getattr(module, "forward")
+                    sig = inspect.signature(forward_method)
+                    if sig.return_annotation != inspect.Signature.empty:
+                        quality_score += 0.2
 
-                for param in sig.parameters.values():
-                    if param.annotation != inspect.Signature.empty:
-                        quality_score += 0.1
+                    for param in sig.parameters.values():
+                        if param.annotation != inspect.Signature.empty:
+                            quality_score += 0.1
+                except Exception as e:
+                    _LOG.warning(f"Could not inspect forward method signature: {e}")
 
             source_code = inspect.getsource(module.__class__)
             if "try:" in source_code and "except" in source_code:
@@ -695,7 +775,7 @@ class DeployPhase:
                 error_message=str(e),
             )
 
-    def _deploy_module(self, module: Module, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _deploy_module(self, module: Union[Module, HasForward], config: Dict[str, Any]) -> Dict[str, Any]:
         """Deploy the optimized module"""
         try:
             # Simulate deployment process
@@ -718,7 +798,7 @@ class DeployPhase:
         except Exception as e:
             return {"success": False, "error": str(e), "deployment_time": 0.0}
 
-    def _setup_monitoring(self, module: Module) -> Dict[str, Any]:
+    def _setup_monitoring(self, module: Union[Module, HasForward]) -> Dict[str, Any]:
         """Set up monitoring for the deployed module"""
         try:
             # Simulate monitoring setup
@@ -734,7 +814,7 @@ class DeployPhase:
         except Exception as e:
             return {"active": False, "error": str(e)}
 
-    def _validate_deployment(self, module: Module) -> Dict[str, Any]:
+    def _validate_deployment(self, module: Union[Module, HasForward]) -> Dict[str, Any]:
         """Validate the deployment"""
         try:
             # Basic validation checks

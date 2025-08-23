@@ -300,49 +300,5 @@ def get_validation_summary() -> Dict[str, Any]:
     return _signature_validator.get_validation_summary()
 
 
-# Decorator for automatic validation
-def validate_signature(func):
-    """Decorator to automatically validate signature I/O"""
-
-    def wrapper(*args, **kwargs):
-        # Extract signature instance (usually first argument)
-        if args and isinstance(args[0], Signature):
-            signature = args[0]
-
-            # Extract inputs from kwargs
-            inputs = kwargs.copy()
-
-            # Execute the function
-            start_time = time.time()
-            try:
-                result = func(*args, **kwargs)
-                end_time = time.time()
-
-                # Validate outputs
-                if isinstance(result, dict):
-                    validation_result = _signature_validator.validate_signature(signature, inputs, result)
-
-                    # Log validation results
-                    if not validation_result.is_valid:
-                        _LOG.error(
-                            f"Signature validation failed for {signature.__class__.__name__}: {validation_result.errors}"
-                        )
-                    elif validation_result.warnings:
-                        _LOG.warning(
-                            f"Signature validation warnings for {signature.__class__.__name__}: {validation_result.warnings}"
-                        )
-
-                    return result
-                else:
-                    _LOG.warning(
-                        f"Signature {signature.__class__.__name__} returned non-dict result, skipping validation"
-                    )
-                    return result
-
-            except Exception as e:
-                _LOG.error(f"Signature execution failed for {signature.__class__.__name__}: {e}")
-                raise
-        else:
-            return func(*args, **kwargs)
-
-    return wrapper
+# Note: Decorator approach removed due to complexity with DSPy signature instantiation
+# Use validate_signature_io() function instead for manual validation

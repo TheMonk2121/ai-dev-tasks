@@ -266,7 +266,7 @@ class MemoryOptimizer:
 class LoadBalancer:
     """Load balancer for multiple memory rehydrator instances"""
 
-    def __init__(self, instances: List[str] = None):
+    def __init__(self, instances: Optional[List[str]] = None):
         """
         Initialize load balancer.
 

@@ -237,7 +237,8 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- started_at: 2025-08-22T22:07:51.815634 -->
 | B-094 | Doorway: Full E2E automation from backlog to archived artifacts | 🔧 | 3 | todo | Doorway: Full E2E automation from backlog to archived artifacts | None | None |
 | B-095 | Reshape 500_research folder into industry-standard citation resource | 🔧 | 3 | todo | Reshape 500_research folder into industry-standard citation resource | None | None |
-| B-096 | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | 🔧 | 3 | todo | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | None | None |
+| B-096 | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | 🔧 | 3 | in-progress| Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | None | None |
+<!-- started_at: 2025-08-23T04:16:51.993824 -->
 | B-097 | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | 🔧 | 3 | todo | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | None | None |
 | B-098 | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | 🔧 | 3 | todo | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | None | 600_archives/artifacts/000_core_temp_files/PRD-B-098-Multi-Role-Pr-Sign-Off-System.md |
 <!-- PRD: 600_archives/artifacts/000_core_temp_files/PRD-B-096-Enhanced-Scribe-System-Intelligent-Content-Analysis-And-Idea-Mining.md -->

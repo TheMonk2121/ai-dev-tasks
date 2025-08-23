@@ -233,8 +233,17 @@ def get_context_for_role(role: str, task: str) -> str:
                 context = ""
                 if "MEMORY REHYDRATION BUNDLE" in output:
                     # Extract the bundle content
-                    start_marker = "================================================================================\n🧠 MEMORY REHYDRATION BUNDLE\n================================================================================\nCopy the content below into your Cursor conversation:\n================================================================================\n"
-                    end_marker = "\n================================================================================\n📊 Bundle Statistics:"
+                    start_marker = (
+                        "================================================================================\n"
+                        "🧠 MEMORY REHYDRATION BUNDLE\n"
+                        "================================================================================\n"
+                        "Copy the content below into your Cursor conversation:\n"
+                        "================================================================================\n"
+                    )
+                    end_marker = (
+                        "\n================================================================================\n"
+                        "📊 Bundle Statistics:"
+                    )
 
                     start_idx = output.find(start_marker)
                     if start_idx != -1:
@@ -668,11 +677,16 @@ class ModelSwitcher:
         self._configure_dspy()
 
         # Initialize assertion framework
-        self.assertion_framework = DSPyAssertionFramework()
-        self.validation_enabled = True
-        self.validation_history = []
+        if ASSERTION_FRAMEWORK_AVAILABLE and DSPyAssertionFramework is not None:
+            self.assertion_framework = DSPyAssertionFramework()
+            self.validation_enabled = True
+            _LOG.info("ModelSwitcher initialized with assertion framework")
+        else:
+            self.assertion_framework = None
+            self.validation_enabled = False
+            _LOG.info("ModelSwitcher initialized without assertion framework")
 
-        _LOG.info("ModelSwitcher initialized with assertion framework")
+        self.validation_history = []
 
     def _configure_dspy(self):
         """Configure DSPy with Ollama integration"""
@@ -1008,7 +1022,7 @@ Please provide a comprehensive review considering the project's quality standard
         else:
             return {"enabled": False, "active_optimizer": None}
 
-    def validate_current_module(self, test_inputs: Optional[List[Dict[str, Any]]] = None) -> Optional[ValidationReport]:
+    def validate_current_module(self, test_inputs: Optional[List[Dict[str, Any]]] = None) -> Optional[Any]:
         """
         Validate the current active module using the assertion framework
 
@@ -1018,8 +1032,8 @@ Please provide a comprehensive review considering the project's quality standard
         Returns:
             ValidationReport with comprehensive validation results, or None if validation fails
         """
-        if not self.validation_enabled:
-            _LOG.warning("Validation is disabled")
+        if not self.validation_enabled or self.assertion_framework is None:
+            _LOG.warning("Validation is disabled or assertion framework not available")
             return None
 
         try:

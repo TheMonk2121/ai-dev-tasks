@@ -720,17 +720,22 @@ validation_result = validator.validate_signature(LocalTaskSignature(), inputs, o
 print(f"Validation passed: {validation_result.is_valid}")
 ```
 
-#### **Decorator Usage**
+#### **Manual Validation Usage**
 
 ```python
-@validate_signature
 def my_dspy_function(signature_instance, inputs):
-    """Function that uses DSPy signatures with automatic validation"""
+    """Function that uses DSPy signatures with manual validation"""
     # Your DSPy logic here
     outputs = signature_instance.forward(**inputs)
+
+    # Manual validation
+    validation_result = validate_signature_io(signature_instance, inputs, outputs.__dict__)
+    if not validation_result.is_valid:
+        print(f"Validation warnings: {validation_result.warnings}")
+
     return outputs
 
-# Usage with automatic validation
+# Usage with manual validation
 result = my_dspy_function(
     LocalTaskSignature(),
     {"task": "Code review", "task_type": "analysis", "role": "reviewer", "complexity": "moderate"}
@@ -915,7 +920,7 @@ def production_signature_call(signature_class, inputs, fallback_handler=None):
 - Log validation metrics for monitoring
 
 #### **4. Integration Patterns**
-- Use decorators for automatic validation
+- Use manual validation with `validate_signature_io()`
 - Integrate with existing error handling
 - Combine with performance monitoring
 

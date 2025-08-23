@@ -394,10 +394,6 @@ class SecurityValidator:
             self.security_monitor.log_event(event)
             return False, rate_error, event
 
-        # Sanitize inputs
-        sanitized_role = self.input_validator.sanitize_input(role)
-        sanitized_task = self.input_validator.sanitize_input(task)
-
         # Log successful validation
         event.reason = "Request validated successfully"
         self.security_monitor.log_event(event)

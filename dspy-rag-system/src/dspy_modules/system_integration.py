@@ -15,7 +15,15 @@ from typing import Any, Dict, List, Optional
 
 from dspy import Module
 
-from .assertions import DSPyAssertionFramework, ValidationReport
+# Import assertion framework with fallback
+try:
+    from .assertions import DSPyAssertionFramework, ValidationReport
+
+    ASSERTION_FRAMEWORK_AVAILABLE = True
+except ImportError:
+    ASSERTION_FRAMEWORK_AVAILABLE = False
+    DSPyAssertionFramework = None
+    ValidationReport = None
 from .metrics_dashboard import MetricsDashboard, get_metrics_dashboard, record_optimization_metrics
 from .model_switcher import LocalModel, LocalTaskExecutor, ModelSwitcher
 from .optimization_loop import FourPartOptimizationLoop, OptimizationCycle, get_optimization_loop
@@ -102,7 +110,7 @@ class DSPySystemIntegration:
         self.config = config or IntegrationConfig()
         self.model_switcher: Optional[ModelSwitcher] = None
         self.optimizer_manager = None
-        self.assertion_framework: Optional[DSPyAssertionFramework] = None
+        self.assertion_framework: Optional[Any] = None
         self.optimization_loop: Optional[FourPartOptimizationLoop] = None
         self.metrics_dashboard: Optional[MetricsDashboard] = None
         self.task_executor: Optional[LocalTaskExecutor] = None
@@ -139,10 +147,14 @@ class DSPySystemIntegration:
                 _LOG.info("Optimizer Manager initialized")
 
             # Initialize Assertion Framework
-            if self.config.enable_assertions:
+            if self.config.enable_assertions and ASSERTION_FRAMEWORK_AVAILABLE and DSPyAssertionFramework is not None:
                 self.assertion_framework = DSPyAssertionFramework()
                 self.status.components["assertion_framework"] = True
                 _LOG.info("Assertion Framework initialized")
+            elif self.config.enable_assertions:
+                self.assertion_framework = None
+                self.status.components["assertion_framework"] = False
+                _LOG.warning("Assertion Framework not available")
 
             # Initialize Optimization Loop
             if self.config.enable_optimization_loop:
@@ -288,7 +300,7 @@ class DSPySystemIntegration:
 
         return None
 
-    def _validate_task(self, task: str, task_type: str, role: str) -> Optional[ValidationReport]:
+    def _validate_task(self, task: str, task_type: str, role: str) -> Optional[Any]:
         """Validate the task execution"""
         if not self.assertion_framework:
             return None
@@ -325,12 +337,14 @@ class DSPySystemIntegration:
             execution_time = time.time() - start_time
 
             # Record basic metrics
-            self.metrics_dashboard.metric_series["duration"].add_point(
+            from .metrics_dashboard import MetricType
+
+            self.metrics_dashboard.metric_series[MetricType.DURATION].add_point(
                 execution_time, metadata={"task_type": task_type, "role": role}
             )
 
             # Record success rate (assuming success for now)
-            self.metrics_dashboard.metric_series["success_rate"].add_point(
+            self.metrics_dashboard.metric_series[MetricType.SUCCESS_RATE].add_point(
                 1.0, metadata={"task_type": task_type, "role": role}
             )
 
@@ -398,9 +412,7 @@ class DSPySystemIntegration:
         except Exception as e:
             return {"error": f"Failed to get dashboard data: {e}"}
 
-    def validate_module(
-        self, module: Module, test_inputs: Optional[List[Dict[str, Any]]] = None
-    ) -> Optional[ValidationReport]:
+    def validate_module(self, module: Module, test_inputs: Optional[List[Dict[str, Any]]] = None) -> Optional[Any]:
         """Validate a DSPy module using the assertion framework"""
         if not self.assertion_framework:
             return None

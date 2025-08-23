@@ -368,7 +368,7 @@ class PerformanceValidator:
                 try:
                     # Test the module's forward method
                     if hasattr(module, "forward"):
-                        module.forward(**test_input)
+                        module.forward(**test_input)  # type: ignore[attr-defined]
                     execution_times.append(time.time() - test_start)
                 except Exception:
                     # Skip failed executions for timing
