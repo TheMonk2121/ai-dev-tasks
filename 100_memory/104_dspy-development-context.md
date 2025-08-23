@@ -430,6 +430,67 @@ if cached_result:
 ### **Demonstration Scripts**
 - `300_examples/300_dspy-v2-demo-scripts/demo_*.py` - System demonstrations
 
+## 👨‍💻 COMPREHENSIVE CODER ROLE INSTRUCTIONS
+
+### Core Coder Role Behavior - ALWAYS FOLLOW
+
+- **Memory Rehydration First**: Always run memory rehydration before starting any coding task
+- **Example-First Development**: Find existing examples before writing new code
+- **70/30 Rule**: 70% reuse, 30% new code - prioritize existing solutions
+- **Test-First Approach**: Write tests before implementing features
+- **Safety Protocol**: Check dependencies and file organization before making changes
+
+### Technical Standards - REQUIRED
+
+- **Python 3.12**: Use latest Python version with absolute imports
+- **Type Hints**: Comprehensive typing with PEP 585 generics
+- **Code Quality**: Ruff for linting, Pyright for type checking
+- **Documentation**: Update relevant guides when adding features
+- **Git Workflow**: Proper commit messages and pre-commit validation
+
+### Safety Protocol - BEFORE ANY CHANGES
+
+1. **Read Core Memory Context**: Understand current project state
+2. **Check Current Backlog**: Verify task priorities and dependencies
+3. **Understand File Organization**: Follow tier-based analysis
+4. **Run Conflict Detection**: Identify potential issues
+5. **Validate Documentation**: Ensure guides are up to date
+
+### Quality Gates - MUST PASS
+
+- **Code Review**: All code must be reviewed for quality and standards
+- **Testing**: Comprehensive test coverage with passing tests
+- **Documentation**: Updated guides and clear commit messages
+- **Security**: Input validation and access controls
+- **Performance**: Optimized for M4 Mac constraints
+
+### CODER ROLE QUICK REFERENCE
+
+- **Memory Rehydration**: `python3 scripts/cursor_memory_rehydrate.py coder "task description"`
+- **Test Execution**: `python -m pytest tests/ -v`
+- **Code Quality**: `ruff check .` and `pyright`
+- **Documentation**: Update relevant 400_guides files
+- **Git Operations**: Use proper commit messages and pre-commit hooks
+
+### COMPREHENSIVE TESTING GUIDE
+
+- **Unit Tests**: Test individual functions and modules
+- **Integration Tests**: Test module interactions and workflows
+- **Performance Tests**: Validate system performance under load
+- **Security Tests**: Verify input validation and access controls
+- **System Tests**: End-to-end workflow validation
+
+### TOOL USAGE GUIDE
+
+- **Code Quality Tools**: Ruff, Pyright, pre-commit hooks
+- **Validation Tools**: Broken link validation, dependency monitoring
+- **Development Tools**: Memory rehydration, task generation automation
+- **Testing Tools**: pytest, coverage analysis, performance benchmarking
+- **Monitoring Tools**: Real-time dashboard, metrics collection
+- **Pre-commit Tools**: Automated validation and quality checks
+- **Memory Rehydration**: Context retrieval and role-specific guidance
+- **Search and Analysis**: File analysis, content validation, research tools
+
 ---
 
 **Status**: ✅ **DSPy System OPERATIONAL**
