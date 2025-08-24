@@ -1,0 +1,90 @@
+# Code Copying Safety Rules
+
+## 🚨 CRITICAL: Code Copying Safety Protocol
+
+**BEFORE copying any code from existing files, you MUST:**
+
+1. **Check the criticality guide**: Read `400_guides/400_code-criticality-guide.md` to understand:
+
+   - Which files are Tier 1 (Critical) - never break without a plan
+   - Which files are Tier 2 (High) - production infrastructure
+   - Which files are Tier 3 (Supporting) - reliability/utilities
+
+2. **Understand the source file's tier** before copying from it:
+
+   - **Tier 1 files**: Only copy if absolutely necessary and you understand the criticality
+   - **Tier 2 files**: Copy with caution, ensure you maintain quality standards
+   - **Tier 3 files**: Generally safe to copy, but still check for issues
+
+3. **Sanitize any copied code** to prevent Unicode character issues:
+
+   - Replace Unicode characters with ASCII equivalents
+   - Check for RUF001 errors (ambiguous Unicode characters)
+   - Ensure proper shebang lines (no `python3.12.123.11`)
+
+## 🛡️ Code Copying Checklist
+
+**Before copying ANY code, verify:**
+
+- [ ] **Source file tier identified** from criticality guide
+- [ ] **Unicode characters checked** for RUF001 issues
+- [ ] **Shebang lines corrected** (use `python3.12`, not `python3.12.123.11`)
+- [ ] **Import statements cleaned** (no deprecated typing imports)
+- [ ] **Variable usage verified** (no F841 unused variable errors)
+- [ ] **Code quality standards met** for the target tier
+
+## 🚫 Anti-Patterns to Avoid
+
+**NEVER copy code that contains:**
+- Unicode characters (`–`, `—`, `✅`, `⚠️`, `❌`, `ℹ`)
+- Incorrect shebang lines (`#!/usr/bin/env python3.12.123.11`)
+- Deprecated typing imports (`from typing import Dict, List`)
+- Unused variables (F841 errors)
+- Bracketed placeholders in markdown (`[Describe something...]`)
+
+## ✅ Safe Copying Protocol
+
+**When copying code:**
+
+1. **Read the criticality guide first**: `400_guides/400_code-criticality-guide.md`
+2. **Identify the source file's tier** and criticality level
+3. **Check for known issues** (Unicode, shebangs, imports, variables)
+4. **Sanitize the code** before using it as a template
+5. **Verify quality standards** for the target file's tier
+6. **Test the copied code** to ensure it works correctly
+
+## 🔍 Template File Safety
+
+**Common template files to check:**
+- `scripts/templates/python_file_template.py` - Python file template
+- `.github/PULL_REQUEST_TEMPLATE.md` - PR template
+- Any file in `.cursor/rules/` - Cursor rule files
+- Documentation files in `400_guides/` - Guide templates
+
+**Before using any template:**
+- Run Unicode character check: `python3.12 scripts/fix_unicode_characters.py <file>`
+- Verify shebang lines are correct
+- Check for deprecated imports
+- Ensure no unused variables
+
+## 🎯 Priority Enforcement
+
+**This rule takes precedence over:**
+- "Follow existing patterns" - unless the pattern is verified safe
+- "Copy from similar files" - unless the source is verified clean
+- "Use templates" - unless templates are sanitized first
+
+**Exception**: Only bypass this rule if explicitly instructed by the user with clear justification.
+
+## 📋 Quick Reference
+
+**Critical files to be extra careful with:**
+- Tier 1: `scripts/process_tasks.py`, `scripts/state_manager.py`, `dspy-rag-system/src/dspy_modules/*`
+- Tier 2: `scripts/doc_coherence_validator.py`, `scripts/rollback_doc.sh`
+- Templates: `scripts/templates/python_file_template.py`, `.github/PULL_REQUEST_TEMPLATE.md`
+
+**Common issues to fix:**
+- Unicode: `–` → `-`, `✅` → `OK`, `⚠️` → `!`
+- Shebangs: `python3.12.123.11` → `python3.12`
+- Imports: `from typing import Dict` → use `dict` directly
+- Variables: Remove unused variables or mark with `# noqa: F841`

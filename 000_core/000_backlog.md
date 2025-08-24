@@ -242,6 +242,18 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- PRD: 600_archives/artifacts/000_core_temp_files/PRD-B-096-Enhanced-Scribe-System-Intelligent-Content-Analysis-And-Idea-Mining.md -->
 
 | B-1002 | Create Comprehensive Root README for External Discovery | 🔧 | 2 | todo | Create comprehensive 500-line root README.md for GitHub visibility and zero-context onboarding | Documentation + External Visibility + Onboarding | None |
+
+| B-190 | Bracketed Placeholder Enforcement System | 🛡️ | 4 | ✅ done | Add pre-commit hook, detection script, and auto-fix tools to prevent bracketed placeholders in markdown that break rendering | Docs Quality | None |
+<!--score: {bv:4, tc:4, rr:3, le:3, effort:2, deps:[]}-->
+<!--score_total: 4.0-->
+<!-- completion_date: 2025-08-18 -->
+<!-- implementation_notes: Created pre-commit hook, detection script with smart exclusions, auto-fix script with file-arg support, integrated into existing workflows. Fixed 6 issues in PR files. Enforcement system active and preventing new issues. -->
+
+| B-191 | Clean Up Existing Bracketed Placeholders | 🧹 | 3 | ✅ done | Apply conservative repo-wide cleanup of existing bracketed placeholders to reduce technical debt | Docs Maintenance | B-190 |
+<!--score: {bv:3, tc:3, rr:3, le:2, effort:2, deps:["B-190"]}-->
+<!--score_total: 3.0-->
+<!-- completion_date: 2025-08-18 -->
+<!-- implementation_notes: Applied conservative cleanup fixing 121 issues across 39 files. Used known safe patterns only, disabled generic replacements, preserved valid code/config syntax. No false positives on legitimate patterns like [tool.black]. -->
 | B-1003 | DSPy Multi-Agent System Implementation | 🔧 | 8 | ✅ done | Implement true DSPy multi-agent system with local AI models (Ollama/LM Studio), frontend interface, and N8N integration. Replace Cursor context engineering with actual local model inference for true DSPy environment. | DSPy + Multi-Agent + Local AI (Ollama/LM Studio) + Frontend + Model Routing | None |
 <!--score: {bv:5, tc:4, rr:5, le:3, effort:8, deps:[]}-->
 <!--score_total: 8.0-->
