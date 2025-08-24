@@ -268,8 +268,32 @@ echo "✅ Installation complete!"
 | **DSPy RAG System** | `dspy-rag-system/src/dspy_modules/` | ✅ Production Ready | Document processing, vector store, AI integration |
 | **DSPy Optimization System** | `dspy-rag-system/src/dspy_modules/optimization_loop.py` | ✅ Production Ready | Type-safe optimization with Protocol support, four-part optimization loop |
 | **DSPy Type Safety** | `dspy-rag-system/src/dspy_modules/` | ✅ Production Ready | Comprehensive type hints, Protocol interfaces, Union types, type guards |
+| **CursorModelRouter** | `dspy-rag-system/src/dspy_modules/cursor_model_router.py` | ✅ Production Ready | Intelligent model selection for Cursor Native AI with validation and reasoning |
+| **LangExtract System** | `dspy-rag-system/src/dspy_modules/lang_extract_system.py` | ✅ Production Ready | Research-based structured extraction with span-level grounding and controlled generation |
+| **VectorStore** | `dspy-rag-system/src/dspy_modules/vector_store.py` | ✅ Production Ready | Hybrid vector store with PGVector + text search, span-level grounding |
+| **DocumentProcessor** | `dspy-rag-system/src/dspy_modules/document_processor.py` | ✅ Production Ready | Document ingestion and chunking with metadata extraction |
+| **MemoryRehydrator (Python)** | `dspy-rag-system/src/utils/memory_rehydrator.py` | ✅ Production Ready | Role-aware context assembly with pinned anchors and task-scoped retrieval |
+| **MemoryRehydrator (Go)** | `dspy-rag-system/src/utils/memory_rehydration.go` | ✅ Production Ready | Go implementation with Lean Hybrid and Kill-Switches approach |
+| **StructuredTracer** | `dspy-rag-system/src/utils/structured_tracer.py` | ✅ Production Ready | Industry-grade structured tracing with cryptographic verification |
+| **SelfCritique** | `dspy-rag-system/src/utils/self_critique.py` | ✅ Production Ready | Anthropic-style reflection checkpoints with bundle sufficiency evaluation |
 | **Bulk Document Processing** | `dspy-rag-system/bulk_add_core_documents.py` | ✅ Production Ready | Concurrent processing, 84.3% coverage, intelligent path matching |
 | **Database Path Cleanup** | `dspy-rag-system/cleanup_database_paths.py` | ✅ Production Ready | Path standardization, duplicate resolution, consistency validation |
+| **Single Doorway System** | `scripts/single_doorway.py` | ✅ Production Ready | Core CLI for automated workflow from backlog → PRD → tasks → execution → archive |
+| **Task Generation Automation** | `scripts/task_generation_automation.py` | ✅ Production Ready | Parses PRDs and backlog items, generates consistent task templates |
+| **Database Resilience** | `dspy-rag-system/src/utils/database_resilience.py` | ✅ Production Ready | Connection pooling, health monitoring, retries, and graceful degradation |
+| **Dashboard** | `dspy-rag-system/src/dashboard.py` | ✅ Production Ready | Flask dashboard, file intake, SocketIO updates, production monitoring |
+| **Error Pattern Recognition** | `dspy-rag-system/src/utils/error_pattern_recognition.py` | ✅ Production Ready | Pattern catalog + classification supporting automated recovery |
+| **Prompt Sanitizer** | `dspy-rag-system/src/utils/prompt_sanitizer.py` | ✅ Production Ready | Validation and sanitization for queries/content, foundational for safe operations |
+| **Rollback Doc System** | `scripts/rollback_doc.sh` | ✅ Production Ready | Git snapshot system for documentation recovery, automated snapshots |
+| **Anchor Metadata Parser** | `dspy-rag-system/src/utils/anchor_metadata_parser.py` | ✅ Production Ready | Extracts anchor metadata from HTML comments, maps to JSONB for memory rehydrator |
+| **Retry Wrapper** | `dspy-rag-system/src/utils/retry_wrapper.py` | ✅ Production Ready | Retry/backoff policies with exponential backoff and circuit breaker patterns |
+| **Performance Benchmark** | `scripts/performance_benchmark.py` | ✅ Production Ready | Performance monitoring and optimization with comprehensive metrics |
+| **Logger** | `dspy-rag-system/src/utils/logger.py` | ✅ Production Ready | Structured logging helpers with context and correlation IDs |
+| **Auto Push Prompt** | `scripts/auto_push_prompt.py` | ✅ Production Ready | Interactive prompt for pushing changes after maintenance with git status checks |
+| **Maintenance Push** | `scripts/maintenance_push.sh` | ✅ Production Ready | Shell wrapper for auto-push prompt integration into maintenance workflows |
+| **Hydration Benchmark** | `dspy-rag-system/scripts/hydration_benchmark.py` | ✅ Production Ready | Comprehensive hydration performance benchmarking and analysis |
+| **Hydration Monitor** | `dspy-rag-system/src/n8n_workflows/hydration_monitor.py` | ✅ Production Ready | n8n health monitor for hydration system with real-time alerts |
+| **Hydration Dashboard** | `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py` | ✅ Production Ready | Performance dashboard for hydration metrics and system health |
 | **Mission Dashboard** | `dspy-rag-system/src/mission_dashboard/` | ✅ Production Ready | Real-time AI task monitoring with WebSocket |
 | **N8N Workflows** | `dspy-rag-system/src/n8n_workflows/` | ✅ Production Ready | Automated backlog management and event processing |
 | **Production Monitoring** | `dspy-rag-system/src/monitoring/` | ✅ Production Ready | Health checks, metrics, OpenTelemetry integration |
@@ -294,8 +318,29 @@ echo "✅ Installation complete!"
 | **Task Execution Engine** | `scripts/process_tasks.py` | Core CLI for backlog execution | Automated task processing, state management, error handling |
 | **Error Handler** | `scripts/error_handler.py` | Comprehensive error handling | Retry logic, graceful degradation, error reporting |
 | **State Manager** | `scripts/state_manager.py` | Task execution state tracking | Progress tracking, execution history, metadata management |
+| **CursorModelRouter** | `dspy-rag-system/src/dspy_modules/cursor_model_router.py` | AI model routing and context engineering | Intelligent model selection, validation, reasoning strategies |
+| **VectorStore** | `dspy-rag-system/src/dspy_modules/vector_store.py` | Hybrid vector store management | PGVector + text search, span-level grounding, metadata filtering |
+| **DocumentProcessor** | `dspy-rag-system/src/dspy_modules/document_processor.py` | Document ingestion and processing | Validation, metadata extraction, chunking with span tracking |
+| **MemoryRehydrator** | `dspy-rag-system/src/utils/memory_rehydrator.py` | Context assembly and role-aware hydration | Pinned anchors, task-scoped retrieval, role-specific context |
+| **StructuredTracer** | `dspy-rag-system/src/utils/structured_tracer.py` | Industry-grade structured tracing | Cryptographic verification, multi-layer logging, debugging infrastructure |
+| **SelfCritique** | `dspy-rag-system/src/utils/self_critique.py` | Self-critique engine | Reflection checkpoints, bundle evaluation, role-specific validation |
 | **Bulk Document Processor** | `dspy-rag-system/bulk_add_core_documents.py` | Bulk document processing | Concurrent processing, coverage analysis, intelligent path matching |
 | **Database Path Cleanup** | `dspy-rag-system/cleanup_database_paths.py` | Database path standardization | Path format cleanup, duplicate filename resolution, consistency validation |
+| **Task Generation Automation** | `scripts/task_generation_automation.py` | Automated task generation | Parses PRDs and backlog items, generates consistent task templates |
+| **Database Resilience** | `dspy-rag-system/src/utils/database_resilience.py` | Database resilience and pooling | Connection pooling, health monitoring, retries, and graceful degradation |
+| **Dashboard** | `dspy-rag-system/src/dashboard.py` | Web UI and monitoring | Flask dashboard, file intake, SocketIO updates, production monitoring |
+| **Error Pattern Recognition** | `dspy-rag-system/src/utils/error_pattern_recognition.py` | Error recovery patterns | Pattern catalog + classification supporting automated recovery |
+| **Prompt Sanitizer** | `dspy-rag-system/src/utils/prompt_sanitizer.py` | Input security guardrails | Validation and sanitization for queries/content, foundational for safe operations |
+| **Rollback Doc System** | `scripts/rollback_doc.sh` | Documentation recovery | Git snapshot system for documentation recovery, automated snapshots |
+| **Anchor Metadata Parser** | `dspy-rag-system/src/utils/anchor_metadata_parser.py` | Anchor metadata extraction | Extracts anchor metadata from HTML comments, maps to JSONB for memory rehydrator |
+| **Retry Wrapper** | `dspy-rag-system/src/utils/retry_wrapper.py` | Retry/backoff policies | Retry/backoff policies with exponential backoff and circuit breaker patterns |
+| **Performance Benchmark** | `scripts/performance_benchmark.py` | Performance monitoring | Performance monitoring and optimization with comprehensive metrics |
+| **Logger** | `dspy-rag-system/src/utils/logger.py` | Structured logging | Structured logging helpers with context and correlation IDs |
+| **Auto Push Prompt** | `scripts/auto_push_prompt.py` | Repository maintenance | Interactive prompt for pushing changes after maintenance with git status checks |
+| **Maintenance Push** | `scripts/maintenance_push.sh` | Maintenance automation | Shell wrapper for auto-push prompt integration into maintenance workflows |
+| **Hydration Benchmark** | `dspy-rag-system/scripts/hydration_benchmark.py` | Hydration performance | Comprehensive hydration performance benchmarking and analysis |
+| **Hydration Monitor** | `dspy-rag-system/src/n8n_workflows/hydration_monitor.py` | n8n health monitor | n8n health monitor for hydration system with real-time alerts |
+| **Hydration Dashboard** | `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py` | Performance dashboard | Performance dashboard for hydration metrics and system health |
 
 ### **Complete Script Index**
 
@@ -310,8 +355,40 @@ echo "✅ Installation complete!"
 - **Task Execution**: `scripts/process_tasks.py` - Core CLI for backlog execution
 - **Error Handling**: `scripts/error_handler.py` - Comprehensive error recovery
 - **State Management**: `scripts/state_manager.py` - Execution state tracking
+- **Core DSPy Modules**: `dspy-rag-system/src/dspy_modules/` - Critical DSPy system components
+  - **CursorModelRouter**: `cursor_model_router.py` - AI model routing and context engineering
+  - **VectorStore**: `vector_store.py` - Hybrid vector store with PGVector + text search
+  - **DocumentProcessor**: `document_processor.py` - Document ingestion and chunking
+  - **OptimizationLoop**: `optimization_loop.py` - Four-part optimization with type safety
+- **Context & Observability**: `dspy-rag-system/src/utils/` - Role-aware context and observability
+  - **MemoryRehydrator**: `memory_rehydrator.py` - Role-aware context assembly
+  - **MemoryRehydrator (Go)**: `memory_rehydration.go` - Go implementation with Lean Hybrid
+  - **StructuredTracer**: `structured_tracer.py` - Industry-grade structured tracing
+  - **SelfCritique**: `self_critique.py` - Self-critique engine with reflection
 - **Bulk Document Processing**: `dspy-rag-system/bulk_add_core_documents.py` - Process entire document collections efficiently
 - **Database Path Cleanup**: `dspy-rag-system/cleanup_database_paths.py` - Standardize database path formats
+- **Task Generation Automation**: `scripts/task_generation_automation.py` - Parses PRDs and backlog items, generates consistent task templates
+- **Database Resilience**: `dspy-rag-system/src/utils/database_resilience.py` - Connection pooling, health monitoring, retries, and graceful degradation
+- **Dashboard**: `dspy-rag-system/src/dashboard.py` - Flask dashboard, file intake, SocketIO updates, production monitoring
+- **Error Pattern Recognition**: `dspy-rag-system/src/utils/error_pattern_recognition.py` - Pattern catalog + classification supporting automated recovery
+- **Prompt Sanitizer**: `dspy-rag-system/src/utils/prompt_sanitizer.py` - Validation and sanitization for queries/content, foundational for safe operations
+- **Rollback Doc System**: `scripts/rollback_doc.sh` - Git snapshot system for documentation recovery, automated snapshots
+- **Anchor Metadata Parser**: `dspy-rag-system/src/utils/anchor_metadata_parser.py` - Extracts anchor metadata from HTML comments, maps to JSONB for memory rehydrator
+- **Retry Wrapper**: `dspy-rag-system/src/utils/retry_wrapper.py` - Retry/backoff policies with exponential backoff and circuit breaker patterns
+- **Performance Benchmark**: `scripts/performance_benchmark.py` - Performance monitoring and optimization with comprehensive metrics
+- **Logger**: `dspy-rag-system/src/utils/logger.py` - Structured logging helpers with context and correlation IDs
+- **Auto Push Prompt**: `scripts/auto_push_prompt.py` - Interactive prompt for pushing changes after maintenance with git status checks
+- **Maintenance Push**: `scripts/maintenance_push.sh` - Shell wrapper for auto-push prompt integration into maintenance workflows
+- **Hydration Benchmark**: `dspy-rag-system/scripts/hydration_benchmark.py` - Comprehensive hydration performance benchmarking and analysis
+- **Hydration Monitor**: `dspy-rag-system/src/n8n_workflows/hydration_monitor.py` - n8n health monitor for hydration system with real-time alerts
+- **Hydration Dashboard**: `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py` - Performance dashboard for hydration metrics and system health
+
+#### **Essential Demo Files (Learning Resources)**
+
+- **Complete DSPy v2 System**: `400_guides/demo_complete_dspy_v2_system.py` - Comprehensive demonstration of DSPy v2 optimization system with all components working together
+- **Assertion Framework**: `400_guides/demo_assertion_framework.py` - DSPy assertion-based validation framework demonstration with confidence scoring and error recovery
+- **Optimization Loop**: `400_guides/demo_four_part_optimization_loop.py` - Four-part optimization loop demonstration with type safety and comprehensive metrics tracking
+- **Few-Shot Optimizer**: `400_guides/demo_labeled_few_shot_optimizer.py` - LabeledFewShot optimizer demonstration with example extraction and pattern recognition
 - **Conflict Detection**: `scripts/conflict_audit.py` - Deep conflict analysis
 - **Quick Conflict Check**: `scripts/quick_conflict_check.py` - Fast conflict detection
 - **System Health**: `scripts/system_health_check.py` - System validation
@@ -413,6 +490,25 @@ The remaining markdown fix scripts provide functionality that VS Code doesn't ha
 - ✅ **Error Recovery**: Graceful degradation and retry mechanisms
 - ✅ **Resource Management**: Efficient resource allocation and cleanup
 
+**LangExtract System:**
+- ✅ **Research-Based Extraction**: Entity/relation/fact extraction with span-level grounding
+- ✅ **DSPy 3.0 Integration**: Native assertions with retry logic and validation
+- ✅ **Type Safety**: Comprehensive type hints and validation patterns
+- ✅ **Error Handling**: Enhanced retry mechanisms with exponential backoff
+- ✅ **Validation Framework**: Multi-layer validation with confidence scoring
+
+**Core DSPy Modules (Tier 1):**
+- ✅ **CursorModelRouter**: Intelligent model selection for Cursor Native AI with validation and reasoning
+- ✅ **VectorStore**: Hybrid vector store with PGVector + text search, span-level grounding
+- ✅ **DocumentProcessor**: Document ingestion and chunking with metadata extraction
+- ✅ **OptimizationLoop**: Four-part optimization loop with Protocol interfaces and type safety
+
+**Context & Observability (Tier 1):**
+- ✅ **MemoryRehydrator (Python)**: Role-aware context assembly with pinned anchors and task-scoped retrieval
+- ✅ **MemoryRehydrator (Go)**: Go implementation with Lean Hybrid and Kill-Switches approach
+- ✅ **StructuredTracer**: Industry-grade structured tracing with cryptographic verification
+- ✅ **SelfCritique**: Anthropic-style reflection checkpoints with bundle sufficiency evaluation
+
 ### **🎯 DSPy Type Safety Patterns**
 
 ```python
@@ -510,6 +606,299 @@ def standardize_path(file_path: str) -> str:
 ```
 
 ## 🔧 Core Execution Engine Implementation
+
+### **🎯 LangExtract System Implementation Patterns**
+
+```python
+# LangExtract System with DSPy 3.0 Assertions
+from dspy_modules.lang_extract_system import create_lang_extract_interface
+from typing import Dict, List, Any
+
+def extract_entities_with_validation(text: str, entity_types: List[str]) -> Dict[str, Any]:
+    """Extract entities with comprehensive validation using LangExtract."""
+    interface = create_lang_extract_interface()
+
+    # Extract with built-in validation
+    result = interface.extract(text, "entities")
+
+    # Additional validation patterns
+    if not result.get("entities"):
+        raise ValueError("No entities extracted from text")
+
+    # Validate entity types
+    extracted_types = {entity.get("type") for entity in result["entities"]}
+    if not all(entity_type in extracted_types for entity_type in entity_types):
+        print(f"Warning: Not all requested entity types found. Expected: {entity_types}, Found: {extracted_types}")
+
+    return result
+
+# LangExtract with Error Recovery
+def safe_extract_with_retry(text: str, extraction_type: str, max_retries: int = 3) -> Dict[str, Any]:
+    """Extract structured data with retry logic and error recovery."""
+    for attempt in range(max_retries):
+        try:
+            interface = create_lang_extract_interface()
+            result = interface.extract(text, extraction_type)
+
+            # Validate result quality
+            if result.get("confidence", 0) < 0.5:
+                raise ValueError(f"Low confidence extraction: {result.get('confidence')}")
+
+            return result
+
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise e
+            print(f"Extraction attempt {attempt + 1} failed: {e}, retrying...")
+            time.sleep(2 ** attempt)  # Exponential backoff
+
+    raise RuntimeError("All extraction attempts failed")
+
+# LangExtract Integration with Optimization
+def optimized_extraction(text: str, extraction_type: str) -> Dict[str, Any]:
+    """Extract with optimization loop integration."""
+    from dspy_modules.optimization_loop import FourPartOptimizationLoop
+
+    # Run optimization cycle
+    optimization_loop = FourPartOptimizationLoop()
+    cycle = optimization_loop.run_cycle({
+        "module_class": "LangExtractSystem",
+        "test_data": [{"text": text, "type": extraction_type}],
+        "optimization_objectives": ["accuracy", "speed", "coverage"]
+    })
+
+    # Perform extraction with optimized parameters
+    interface = create_lang_extract_interface()
+    return interface.extract(text, extraction_type)
+```
+
+### **🎯 Core DSPy Modules Implementation Patterns**
+
+```python
+# CursorModelRouter Integration Pattern
+from dspy_modules.cursor_model_router import CursorModelRouter
+from typing import Dict, Any
+
+def route_model_with_context(query: str, context: Dict[str, Any]) -> Dict[str, Any]:
+    """Route to appropriate model with context-aware selection."""
+    router = CursorModelRouter()
+
+    # Configure router with context
+    router.set_context(context)
+
+    # Route to best model for task
+    model_config = router.select_model(query)
+
+    # Execute with selected model
+    result = router.execute(query, model_config)
+
+    return {
+        "model_used": model_config.model_name,
+        "confidence": model_config.confidence,
+        "result": result,
+        "reasoning": model_config.reasoning
+    }
+
+# VectorStore Integration Pattern
+from dspy_modules.vector_store import VectorStore
+from typing import List, Dict, Any
+
+def hybrid_search_with_metadata(query: str, metadata_filters: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Perform hybrid search with metadata filtering."""
+    vector_store = VectorStore()
+
+    # Perform dense semantic search
+    dense_results = vector_store.semantic_search(
+        query=query,
+        top_k=20,
+        metadata_filters=metadata_filters
+    )
+
+    # Perform sparse keyword search
+    sparse_results = vector_store.keyword_search(
+        query=query,
+        top_k=20,
+        metadata_filters=metadata_filters
+    )
+
+    # Combine using Reciprocal Rank Fusion
+    combined_results = vector_store.rrf_fusion(
+        dense_results=dense_results,
+        sparse_results=sparse_results,
+        top_k=10
+    )
+
+    return combined_results
+
+# DocumentProcessor Integration Pattern
+from dspy_modules.document_processor import DocumentProcessor
+from typing import List, Dict, Any
+
+def process_documents_with_validation(documents: List[str]) -> List[Dict[str, Any]]:
+    """Process documents with comprehensive validation."""
+    processor = DocumentProcessor()
+    results = []
+
+    for doc_path in documents:
+        try:
+            # Validate document format
+            if not processor.validate_document(doc_path):
+                print(f"Warning: Invalid document format: {doc_path}")
+                continue
+
+            # Extract metadata
+            metadata = processor.extract_metadata(doc_path)
+
+            # Chunk document with span tracking
+            chunks = processor.chunk_document(
+                doc_path,
+                chunk_size=1000,
+                overlap=200,
+                preserve_spans=True
+            )
+
+            # Prepare for indexing
+            processed_doc = {
+                "path": doc_path,
+                "metadata": metadata,
+                "chunks": chunks,
+                "total_chunks": len(chunks),
+                "processing_status": "completed"
+            }
+
+            results.append(processed_doc)
+
+        except Exception as e:
+            results.append({
+                "path": doc_path,
+                "processing_status": "failed",
+                "error": str(e)
+            })
+
+    return results
+
+# OptimizationLoop Integration Pattern
+from dspy_modules.optimization_loop import FourPartOptimizationLoop
+from typing import Dict, Any, List
+
+def optimize_module_with_metrics(module: Any, test_data: List[Dict], objectives: List[str]) -> Dict[str, Any]:
+    """Optimize module with comprehensive metrics tracking."""
+    optimization_loop = FourPartOptimizationLoop()
+
+    # Configure optimization objectives
+    optimization_config = {
+        "module_class": module.__class__,
+        "test_data": test_data,
+        "optimization_objectives": objectives,
+        "max_iterations": 10,
+        "improvement_threshold": 0.05
+    }
+
+    # Run optimization cycle
+    cycle_result = optimization_loop.run_cycle(optimization_config)
+
+    # Extract metrics
+    metrics = {
+        "baseline_score": cycle_result.baseline_score,
+        "optimized_score": cycle_result.optimized_score,
+        "improvement": cycle_result.improvement_score,
+        "iterations": cycle_result.iterations,
+        "converged": cycle_result.converged,
+        "optimization_time": cycle_result.optimization_time
+    }
+
+    return {
+        "optimization_success": cycle_result.converged,
+        "metrics": metrics,
+        "optimized_module": cycle_result.optimized_module
+    }
+```
+
+### **🎯 Context & Observability Implementation Patterns**
+
+```python
+# MemoryRehydrator Integration Pattern
+from dspy_modules.utils.memory_rehydrator import MemoryRehydrator
+from typing import Dict, Any
+
+def rehydrate_context_for_role(role: str, task: str, max_context_size: int = 5000) -> Dict[str, Any]:
+    """Rehydrate context for specific role and task."""
+    rehydrator = MemoryRehydrator()
+
+    # Configure rehydration parameters
+    config = {
+        "role": role,
+        "task": task,
+        "max_context_size": max_context_size,
+        "include_pinned_anchors": True,
+        "include_task_scope": True,
+        "include_recent_context": True
+    }
+
+    # Rehydrate context
+    context = rehydrator.rehydrate_context(config)
+
+    return {
+        "context_size": len(context.get("content", "")),
+        "anchors_included": len(context.get("pinned_anchors", [])),
+        "recent_context": context.get("recent_context", []),
+        "context_bundle": context
+    }
+
+# StructuredTracer Integration Pattern
+from dspy_modules.utils.structured_tracer import StructuredTracer
+from typing import Dict, Any
+import contextlib
+
+@contextlib.contextmanager
+def trace_operation(operation_name: str, metadata: Dict[str, Any] = None):
+    """Context manager for structured tracing."""
+    tracer = StructuredTracer()
+
+    # Start trace
+    trace_id = tracer.start_trace(operation_name, metadata or {})
+
+    try:
+        yield trace_id
+    except Exception as e:
+        # Record error in trace
+        tracer.record_error(trace_id, str(e))
+        raise
+    finally:
+        # End trace
+        tracer.end_trace(trace_id)
+
+# SelfCritique Integration Pattern
+from dspy_modules.utils.self_critique import SelfCritique
+from typing import Dict, Any
+
+def critique_result_with_context(result: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+    """Critique result using self-critique engine."""
+    critique_engine = SelfCritique()
+
+    # Configure critique parameters
+    critique_config = {
+        "evaluation_criteria": ["accuracy", "completeness", "relevance"],
+        "context_awareness": True,
+        "role_specific": True,
+        "confidence_threshold": 0.7
+    }
+
+    # Perform critique
+    critique_result = critique_engine.evaluate(
+        result=result,
+        context=context,
+        config=critique_config
+    )
+
+    return {
+        "critique_score": critique_result.score,
+        "needs_improvement": critique_result.needs_improvement,
+        "improvement_suggestions": critique_result.suggestions,
+        "confidence": critique_result.confidence,
+        "critique_details": critique_result.details
+    }
+```
 
 ### **🎯 CODER ROLE IMPLEMENTATION PATTERNS**
 
@@ -2674,7 +3063,7 @@ jobs:
 - **Code Criticality**: `400_guides/400_code-criticality-guide.md` - Quality standards, tier-based requirements, quality gates
 - **File Analysis**: `400_guides/400_file-analysis-guide.md` - Mandatory 6-step analysis process
 - **Testing Strategy**: `400_guides/400_testing-strategy-guide.md` - Comprehensive testing approaches and frameworks
-- **Scribe System**: `400_guides/400_scribe-system-guide.md` - Context capture, summarization, and workflow automation
+- **Scribe System**: `400_guides/400_scribe-v2-system-guide.md` - Context capture, summarization, and workflow automation
 
 ### **Development Resources**
 

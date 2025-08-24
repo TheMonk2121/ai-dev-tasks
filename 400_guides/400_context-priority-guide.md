@@ -49,6 +49,11 @@
 | 600_archives/documentation-duplicates/400_system-overview.md | tldr | 15 | planner, implementer | — |
 | 400_guides/400_observability-system.md | tldr | 20 | implementer, planner, researcher | — |
 | 400_guides/400_lean-hybrid-memory-system.md | tldr | 25 | implementer, planner | — |
+| 400_guides/400_scribe-v2-system-guide.md | tldr | 30 | implementer, planner, coder | — |
+| 400_guides/demo_complete_dspy_v2_system.py | tldr | 35 | implementer, coder | — |
+| 400_guides/demo_assertion_framework.py | tldr | 35 | implementer, coder | — |
+| 400_guides/demo_four_part_optimization_loop.py | tldr | 35 | implementer, coder | — |
+| 400_guides/demo_labeled_few_shot_optimizer.py | tldr | 35 | implementer, coder | — |
 
 ## 🎭 Role-Based Organization
 
@@ -58,6 +63,11 @@
 |------|--------|----------|-------------------|
 | 100_memory/105_cspell-automation-memory.md | tldr | 10 | — |
 | 400_guides/400_graph-visualization-guide.md | tldr | 12 | — |
+| 400_guides/400_scribe-v2-system-guide.md | tldr | 30 | — |
+| 400_guides/demo_complete_dspy_v2_system.py | tldr | 35 | — |
+| 400_guides/demo_assertion_framework.py | tldr | 35 | — |
+| 400_guides/demo_four_part_optimization_loop.py | tldr | 35 | — |
+| 400_guides/demo_labeled_few_shot_optimizer.py | tldr | 35 | — |
 | 100_memory/100_cursor-memory-context.md | tldr | 0 | — |
 | 100_memory/104_dspy-development-context.md | tldr | 0 | — |
 
@@ -70,6 +80,11 @@
 | 600_archives/documentation-duplicates/400_system-overview.md | tldr | 15 | — |
 | 400_guides/400_observability-system.md | tldr | 20 | — |
 | 400_guides/400_lean-hybrid-memory-system.md | tldr | 25 | — |
+| 400_guides/400_scribe-v2-system-guide.md | tldr | 30 | — |
+| 400_guides/demo_complete_dspy_v2_system.py | tldr | 35 | — |
+| 400_guides/demo_assertion_framework.py | tldr | 35 | — |
+| 400_guides/demo_four_part_optimization_loop.py | tldr | 35 | — |
+| 400_guides/demo_labeled_few_shot_optimizer.py | tldr | 35 | — |
 | 100_memory/100_cursor-memory-context.md | tldr | 0 | — |
 | 100_memory/104_dspy-development-context.md | tldr | 0 | — |
 | 600_archives/documentation-duplicates/100_cursor-memory-context.md | tldr | 0 | — |
@@ -86,6 +101,7 @@
 | 600_archives/documentation-duplicates/400_system-overview.md | tldr | 15 | — |
 | 400_guides/400_observability-system.md | tldr | 20 | — |
 | 400_guides/400_lean-hybrid-memory-system.md | tldr | 25 | — |
+| 400_guides/400_scribe-v2-system-guide.md | tldr | 30 | — |
 | 100_memory/100_cursor-memory-context.md | tldr | 0 | — |
 | 500_research/500_superwhisper-integration-research.md | tldr | 0 | — |
 | 600_archives/documentation-duplicates/100_cursor-memory-context.md | tldr | 0 | — |
@@ -116,7 +132,7 @@
 | Memory context | 100_memory/100_cursor-memory-context.md | memory-context | Starting new session |
 | DSPy context | 100_memory/104_dspy-development-context.md | dspy-context | Deep implementation |
 | Testing strategy | 400_guides/400_testing-strategy-guide.md | testing-strategy | Before writing tests |
-| Scribe system | 400_guides/400_scribe-system-guide.md | scribe-system | Using context capture |
+| Scribe system | 400_guides/400_scribe-v2-system-guide.md | scribe-system | Using context capture |
 
 ## 🔄 Auto-Generation
 

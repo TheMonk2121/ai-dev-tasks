@@ -114,7 +114,7 @@ from dspy_modules.model_switcher import ModelSwitcher
 
 **Required Dependencies**:
 - `psycopg2` - Database connectivity for vector store
-- `dspy` - Core AI framework  
+- `dspy` - Core AI framework
 - `pytest` - Testing framework
 - `ruff` - Code quality
 
@@ -459,7 +459,10 @@ if cached_result:
 - `dspy-rag-system/tests/test_*.py` - Comprehensive test coverage
 
 ### **Demonstration Scripts**
-- `300_examples/300_dspy-v2-demo-scripts/demo_*.py` - System demonstrations
+- `400_guides/demo_complete_dspy_v2_system.py` - Complete DSPy v2 system demonstration
+- `400_guides/demo_assertion_framework.py` - Assertion framework patterns
+- `400_guides/demo_four_part_optimization_loop.py` - Optimization loop workflow
+- `400_guides/demo_labeled_few_shot_optimizer.py` - Few-shot optimization examples
 
 ## 👨‍💻 COMPREHENSIVE CODER ROLE INSTRUCTIONS
 

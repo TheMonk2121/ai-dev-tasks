@@ -95,6 +95,11 @@ See `scripts/README_venv_manager.md` for complete documentation.
 │  ├── DSPy Multi-Agent System (Local Model Inference)        │
 │  ├── DSPy RAG System (Document Processing)                  │
 │  ├── Scribe System (Context Capture & Summarization)        │
+│  │   ├── Session Recording & Context Capture                │
+│  │   ├── Insight Extraction & Summarization                 │
+│  │   ├── Progress Tracking & Milestone Management           │
+│  │   ├── Knowledge Mining & Pattern Recognition             │
+│  │   └── Session Registry & Context Tagging                 │
 │  ├── N8N Workflows (Automation)                             │
 │  ├── Dashboard (Monitoring)                                  │
 │  └── Testing Framework (Quality Assurance)                  │
@@ -268,6 +273,27 @@ See `scripts/README_venv_manager.md` for complete documentation.
 - This overview defers to that guide to avoid duplication; agents consume those rules when planning and prioritizing.
 
 ### 2. AI Execution Layer
+
+#### **Scribe System (Context Capture & Summarization)** ✅ **ACTIVE**
+- **Purpose**: Automatic development session recording, insight extraction, and knowledge mining
+- **Status**: Core system component with ongoing enhancements (B-1009, B-1010)
+- **Components**:
+  - **Session Recording**: Automatic capture of development sessions, diffs, and decisions
+  - **Insight Extraction**: AI-powered analysis and summarization of development work
+  - **Progress Tracking**: Real-time monitoring of development progress and milestones
+  - **Knowledge Mining**: Extraction of patterns, lessons learned, and best practices
+  - **Session Registry**: Centralized tracking with rich context tagging capabilities
+- **Integration**: Deep integration with memory rehydration, DSPy systems, Git hooks
+- **CLI Interface**: `python scripts/single_doorway.py scribe [list|tag|info|cleanup|validate]`
+- **Current Enhancements**:
+  - **B-1009**: AsyncIO Scribe Enhancement (Event-driven context capture)
+  - **B-1010**: NiceGUI Scribe Dashboard (Advanced UI with AI integration)
+
+- **Essential Demo Files**:
+  - **Complete DSPy v2 System**: `400_guides/demo_complete_dspy_v2_system.py` - Comprehensive system demonstration
+  - **Assertion Framework**: `400_guides/demo_assertion_framework.py` - Validation patterns and error recovery
+  - **Optimization Loop**: `400_guides/demo_four_part_optimization_loop.py` - Type-safe optimization workflow
+  - **Few-Shot Optimizer**: `400_guides/demo_labeled_few_shot_optimizer.py` - Example extraction and pattern recognition
 
 #### **B-1003 DSPy Multi-Agent System** ✅ **COMPLETED**
 - **Local Model Integration**: Cursor Native AI (orchestration) + Local DSPy Models (Llama 3.1 8B, Mistral 7B, Phi-3.5 3.8B)

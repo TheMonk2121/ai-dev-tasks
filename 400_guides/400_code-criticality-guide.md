@@ -126,6 +126,12 @@
 - `dspy-rag-system/src/utils/anchor_metadata_parser.py` — Anchor Metadata Extraction
   - Extracts anchor metadata from HTML comments; maps to JSONB for memory rehydrator; critical for context assembly.
 
+- `dspy-rag-system/src/dspy_modules/lang_extract_system.py` — LangExtract Structured Extraction
+  - Research-based entity/relation/fact extraction with span-level grounding; DSPy 3.0 assertion integration; core extraction pipeline for structured data processing.
+
+- `scripts/single_doorway.py` — Scribe System (Context Capture & Summarization)
+  - Automatic development session recording, insight extraction, and knowledge mining; session registry with context tagging; deep integration with memory rehydration and DSPy systems; core context capture infrastructure.
+
 ### Tier 3 — Supporting (reliability/utilities)
 
 - `dspy-rag-system/src/utils/retry_wrapper.py` — Retry/Backoff Policies
@@ -147,6 +153,18 @@
 - `400_guides/400_hydration-system-guide.md` — Complete Hydration System
   - Comprehensive guide covering integration, testing, and role-specific strategies for memory rehydration.
 
+- `400_guides/demo_complete_dspy_v2_system.py` — Complete DSPy v2 System Demonstration
+  - Comprehensive demonstration of DSPy v2 optimization system with all components working together.
+
+- `400_guides/demo_assertion_framework.py` — Assertion Framework Patterns
+  - DSPy assertion-based validation framework demonstration with confidence scoring and error recovery.
+
+- `400_guides/demo_four_part_optimization_loop.py` — Optimization Loop Workflow
+  - Four-part optimization loop demonstration with type safety and comprehensive metrics tracking.
+
+- `400_guides/demo_labeled_few_shot_optimizer.py` — Few-Shot Optimization Examples
+  - LabeledFewShot optimizer demonstration with example extraction and pattern recognition.
+
 ## 🧭 Criteria for Criticality
 
 - Development environment: Breaks all DSPy workflows if unavailable (`venv_manager.py`)
@@ -157,6 +175,7 @@
 - AI routing/quality: Determines model choice and context (`cursor_model_router.py`)
 
 - Data path: Indexing/retrieval correctness/perf (`vector_store.py`, `document_processor.py`)
+- Structured extraction: Entity/relation/fact extraction quality and validation (`lang_extract_system.py`)
 
 - DSPy optimization: Breaks AI program optimization and type safety (`optimization_loop.py`)
 
@@ -173,6 +192,8 @@
 
 - Knowledge base management: Processes entire document collections efficiently (`bulk_add_core_documents.py`)
 
+- Context capture: Breaks development session recording and knowledge mining (`scripts/single_doorway.py` scribe functionality)
+
 - Data consistency: Standardizes database path formats and resolves inconsistencies (`cleanup_database_paths.py`)
 
 - Safety & security: Prevents unsafe inputs/operations (`prompt_sanitizer.py`)
@@ -184,6 +205,8 @@
 - Testing & validation: Ensures system quality and performance (`400_guides/400_hydration-system-guide.md`, `dspy-rag-system/tests/test_hydration_quality.py`, `dspy-rag-system/scripts/hydration_benchmark.py`)
 
 - Integration & automation: Provides monitoring and workflow automation (`dspy-rag-system/src/n8n_workflows/hydration_monitor.py`, `dspy-rag-system/src/mission_dashboard/hydration_dashboard.py`, `400_guides/400_hydration-system-guide.md`)
+
+- Learning & examples: Provides essential demonstrations and learning resources (`400_guides/demo_*.py`)
 
 - --
 
@@ -290,6 +313,8 @@ def process_module(module):  # No type hints
 
 ## 🗒️ Change Log
 
+- v1.9: Added essential demo files (Tier 3) - Complete DSPy v2 system demonstration, assertion framework patterns, optimization loop workflow, and few-shot optimization examples
+- v1.8: Added Scribe system (Tier 2) - Context capture and summarization system with session registry, insight extraction, and knowledge mining capabilities
 - v1.7: Added DSPy optimization system (Tier 1) - Type-safe optimization with Protocol interfaces, Union types, type guards, and comprehensive error handling
 - v1.6: Added bulk document processing system (Tier 2) - Bulk document processing and database path standardization
 - v1.5: Added hydration integration framework (Tier 3) - n8n health monitor, performance dashboard, and integration guide
