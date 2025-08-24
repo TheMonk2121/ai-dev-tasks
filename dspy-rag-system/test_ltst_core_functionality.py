@@ -107,11 +107,7 @@ def test_session_manager_dataclasses():
         print("✓ SessionState creation successful")
 
         # Test SessionState
-        state = SessionState(
-            session_id="test_session",
-            status="active",
-            last_activity=datetime.now()
-        )
+        state = SessionState(session_id="test_session", status="active", last_activity=datetime.now())
         assert state.session_id == "test_session"
         assert state.status == "active"
         print("✓ SessionState creation successful")
@@ -159,17 +155,17 @@ def test_performance_optimizer_dataclasses():
     try:
         from utils.ltst_performance_optimizer import PerformanceBenchmark
 
-        # Test PerformanceMetric
-        metric = PerformanceMetric(
-            metric_name="test_metric",
-            metric_value=1.5,
-            metric_unit="seconds",
-            timestamp=datetime.now(),
+        # Test PerformanceBenchmark
+        benchmark = PerformanceBenchmark(
+            benchmark_name="test_benchmark",
+            benchmark_type="retrieval",
+            duration_ms=1500.0,
+            success_rate=0.95,
             metadata={"test": "data"},
         )
-        assert metric.metric_name == "test_metric"
-        assert metric.metric_value == 1.5
-        print("✓ PerformanceMetric creation successful")
+        assert benchmark.benchmark_name == "test_benchmark"
+        assert benchmark.duration_ms == 1500.0
+        print("✓ PerformanceBenchmark creation successful")
 
         # Test PerformanceBenchmark
         benchmark = PerformanceBenchmark(

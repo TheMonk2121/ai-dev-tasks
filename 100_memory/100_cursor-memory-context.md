@@ -595,19 +595,19 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 <!-- AUTO:current_priorities:start -->
 ### **Current Priorities**
 
-1. **B‑1005**: Bulk Core Document Processing for Memory Rehydrator (🔥 points)
+1. **B‑1012**: LTST Memory System: ChatGPT-like conversation memory (🔥 points)
    - todo
 
-2. **B‑1006-A**: DSPy 3.0 Core Parity Migration (🔥 points)
+2. **B‑1008**: Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates (🔥 points)
    - todo
 
-3. **B‑1006-B**: DSPy 3.0 Minimal Assertion Swap (🔥 points)
+3. **B‑1009**: AsyncIO Scribe Enhancement: Event-Driven Context Capture and Real-time Processing (🔥 points)
    - todo
 
-4. **B‑1008**: Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates (🔥 points)
+4. **B‑1010**: NiceGUI Scribe Dashboard: Advanced UI with AI Integration and Real-time Monitoring (🔥 points)
    - todo
 
-5. **B‑1009**: AsyncIO Scribe Enhancement: Event-Driven Context Capture and Real-time Processing (🔥 points)
+5. **B‑1013**: Advanced RAG Optimization with Late Chunking and HIRAG Integration (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 
