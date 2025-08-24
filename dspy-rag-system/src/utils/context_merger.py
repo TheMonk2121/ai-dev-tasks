@@ -1,19 +1,20 @@
 """
 Context Merger for LTST Memory System
 
-This module provides intelligent context merging capabilities for combining
-conversation context, user preferences, and historical data for optimal AI responses.
+This module provides intelligent context merging capabilities for the LTST Memory System,
+including relevance-based context selection, semantic similarity matching, and performance optimization.
 """
 
 import hashlib
-import json
+import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
 from psycopg2.extras import RealDictCursor
 
-from .conversation_storage import ConversationContext, ConversationMessage, ConversationStorage
+from .conversation_storage import ConversationContext
+from .database_resilience import DatabaseResilienceManager
 from .logger import setup_logger
 
 logger = setup_logger(__name__)
@@ -21,433 +22,492 @@ logger = setup_logger(__name__)
 
 @dataclass
 class MergedContext:
-    """Represents merged context for AI processing."""
+    """Represents merged context with metadata."""
 
     session_id: str
-    conversation_history: List[ConversationMessage]
-    user_preferences: Dict[str, Any]
-    project_context: Dict[str, Any]
-    relevant_contexts: List[ConversationContext]
+    context_type: str
     merged_content: str
-    relevance_scores: Dict[str, float]
-    context_hash: str
-    created_at: datetime
+    source_contexts: List[ConversationContext]
+    relevance_score: float
+    semantic_similarity: float
+    merge_timestamp: datetime
     metadata: Dict[str, Any]
 
     def __post_init__(self):
         """Initialize computed fields."""
-        if self.created_at is None:
-            self.created_at = datetime.now()
+        if self.merge_timestamp is None:
+            self.merge_timestamp = datetime.now()
         if self.metadata is None:
             self.metadata = {}
+
+    @property
+    def context_hash(self) -> str:
+        """Generate hash for merged context."""
+        content = f"{self.session_id}:{self.context_type}:{self.merged_content}"
+        return hashlib.sha256(content.encode()).hexdigest()
 
 
 @dataclass
-class ContextMergeRequest:
-    """Request for context merging."""
+class ContextMergeResult:
+    """Result of context merging operation."""
 
-    session_id: str
-    user_id: str
-    current_message: str
-    context_types: Optional[List[str]] = None  # ['conversation', 'preference', 'project', 'user_info']
-    max_context_length: int = 10000
-    relevance_threshold: float = 0.7
-    include_history: bool = True
-    history_limit: int = 20
-    metadata: Optional[Dict[str, Any]] = None
-
-    def __post_init__(self):
-        """Initialize computed fields."""
-        if self.context_types is None:
-            self.context_types = ["conversation", "preference", "project", "user_info"]
-        if self.metadata is None:
-            self.metadata = {}
+    merged_contexts: List[MergedContext]
+    total_contexts_processed: int
+    contexts_merged: int
+    contexts_preserved: int
+    merge_time_ms: float
+    relevance_threshold: float
+    similarity_threshold: float
 
 
 class ContextMerger:
     """Handles intelligent context merging for the LTST Memory System."""
 
-    def __init__(self, conversation_storage: Optional[ConversationStorage] = None):
+    def __init__(self, db_manager: Optional[DatabaseResilienceManager] = None):
         """Initialize context merger."""
-        self.conversation_storage = conversation_storage or ConversationStorage()
-        self.cache = {}
+        if db_manager is None:
+            import os
+
+            connection_string = os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
+            self.db_manager = DatabaseResilienceManager(connection_string)
+        else:
+            self.db_manager = db_manager
+
+        # Cache for performance optimization
+        self.context_cache = {}
         self.cache_ttl = timedelta(minutes=30)
+        self.cache_timestamps = {}
 
-    def merge_context(self, request: ContextMergeRequest) -> Optional[MergedContext]:
-        """Merge context for a given request."""
+        # Configuration
+        self.default_relevance_threshold = 0.7
+        self.default_similarity_threshold = 0.8
+        self.max_contexts_per_merge = 10
+        self.max_merge_content_length = 5000
+
+    def _get_cached_contexts(self, session_id: str, context_type: str) -> Optional[List[ConversationContext]]:
+        """Get contexts from cache if available and fresh."""
+        cache_key = f"{session_id}:{context_type}"
+
+        if cache_key in self.context_cache:
+            timestamp = self.cache_timestamps.get(cache_key)
+            if timestamp and datetime.now() - timestamp < self.cache_ttl:
+                return self.context_cache[cache_key]
+
+        return None
+
+    def _cache_contexts(self, session_id: str, context_type: str, contexts: List[ConversationContext]):
+        """Cache contexts for future use."""
+        cache_key = f"{session_id}:{context_type}"
+        self.context_cache[cache_key] = contexts
+        self.cache_timestamps[cache_key] = datetime.now()
+
+    def _calculate_semantic_similarity(self, context1: ConversationContext, context2: ConversationContext) -> float:
+        """Calculate semantic similarity between two contexts."""
         try:
-            # Check cache first
-            cache_key = self._generate_cache_key(request)
-            if cache_key in self.cache:
-                cached_result = self.cache[cache_key]
-                if datetime.now() - cached_result.created_at < self.cache_ttl:
-                    logger.info(f"Using cached context for session {request.session_id}")
-                    return cached_result
+            # Simple text-based similarity for now
+            # In production, this would use embeddings and vector similarity
+            text1 = context1.context_value.lower()
+            text2 = context2.context_value.lower()
 
-            # Gather conversation history
-            conversation_history = []
-            if request.include_history:
-                conversation_history = self.conversation_storage.get_messages(
-                    request.session_id, limit=request.history_limit
-                )
+            # Tokenize and calculate Jaccard similarity
+            tokens1 = set(text1.split())
+            tokens2 = set(text2.split())
 
-            # Gather user preferences
-            user_preferences = self._get_user_preferences(request.user_id)
+            if not tokens1 or not tokens2:
+                return 0.0
 
-            # Gather project context
-            project_context = self._get_project_context(request.session_id)
+            intersection = len(tokens1.intersection(tokens2))
+            union = len(tokens1.union(tokens2))
 
-            # Gather relevant contexts
-            relevant_contexts = self._get_relevant_contexts(request)
-
-            # Merge content
-            merged_content = self._merge_content(
-                conversation_history, user_preferences, project_context, relevant_contexts, request.current_message
-            )
-
-            # Calculate relevance scores
-            relevance_scores = self._calculate_relevance_scores(
-                conversation_history, user_preferences, project_context, relevant_contexts, request.current_message
-            )
-
-            # Create merged context
-            merged_context = MergedContext(
-                session_id=request.session_id,
-                conversation_history=conversation_history,
-                user_preferences=user_preferences,
-                project_context=project_context,
-                relevant_contexts=relevant_contexts,
-                merged_content=merged_content,
-                relevance_scores=relevance_scores,
-                context_hash=self._generate_context_hash(request, merged_content),
-                created_at=datetime.now(),
-                metadata=request.metadata or {},
-            )
-
-            # Cache result
-            self.cache[cache_key] = merged_context
-
-            logger.info(f"Context merged for session {request.session_id}")
-            return merged_context
+            return intersection / union if union > 0 else 0.0
 
         except Exception as e:
-            logger.error(f"Failed to merge context for session {request.session_id}: {e}")
-            return None
+            logger.warning(f"Error calculating semantic similarity: {e}")
+            return 0.0
 
-    def _generate_cache_key(self, request: ContextMergeRequest) -> str:
-        """Generate cache key for the request."""
-        cache_data = {
-            "session_id": request.session_id,
-            "user_id": request.user_id,
-            "current_message_hash": hashlib.sha256(request.current_message.encode()).hexdigest(),
-            "context_types": sorted(request.context_types or []),
-            "max_context_length": request.max_context_length,
-            "relevance_threshold": request.relevance_threshold,
-            "include_history": request.include_history,
-            "history_limit": request.history_limit,
-        }
-        return hashlib.sha256(json.dumps(cache_data, sort_keys=True).encode()).hexdigest()
+    def _merge_context_content(self, contexts: List[ConversationContext]) -> str:
+        """Merge context content intelligently."""
+        if not contexts:
+            return ""
 
-    def _get_user_preferences(self, user_id: str) -> Dict[str, Any]:
-        """Get user preferences for context merging."""
+        if len(contexts) == 1:
+            return contexts[0].context_value
+
+        # Sort by relevance score
+        sorted_contexts = sorted(contexts, key=lambda x: x.relevance_score, reverse=True)
+
+        # Start with the most relevant context
+        merged_content = sorted_contexts[0].context_value
+
+        # Add additional context with deduplication
+        for context in sorted_contexts[1:]:
+            if len(merged_content) + len(context.context_value) > self.max_merge_content_length:
+                break
+
+            # Check for overlap
+            if context.context_value not in merged_content:
+                merged_content += f"\n\n{context.context_value}"
+
+        return merged_content.strip()
+
+    def _select_relevant_contexts(
+        self, contexts: List[ConversationContext], relevance_threshold: float
+    ) -> List[ConversationContext]:
+        """Select contexts based on relevance threshold."""
+        relevant_contexts = [context for context in contexts if context.relevance_score >= relevance_threshold]
+
+        # Sort by relevance score
+        relevant_contexts.sort(key=lambda x: x.relevance_score, reverse=True)
+
+        # Limit to max contexts per merge
+        return relevant_contexts[: self.max_contexts_per_merge]
+
+    def _group_similar_contexts(
+        self, contexts: List[ConversationContext], similarity_threshold: float
+    ) -> List[List[ConversationContext]]:
+        """Group contexts by semantic similarity."""
+        if not contexts:
+            return []
+
+        groups = []
+        used_indices = set()
+
+        for i, context in enumerate(contexts):
+            if i in used_indices:
+                continue
+
+            # Start a new group
+            group = [context]
+            used_indices.add(i)
+
+            # Find similar contexts
+            for j, other_context in enumerate(contexts[i + 1 :], i + 1):
+                if j in used_indices:
+                    continue
+
+                similarity = self._calculate_semantic_similarity(context, other_context)
+                if similarity >= similarity_threshold:
+                    group.append(other_context)
+                    used_indices.add(j)
+
+            groups.append(group)
+
+        return groups
+
+    def merge_contexts(
+        self,
+        session_id: str,
+        context_type: Optional[str] = None,
+        relevance_threshold: Optional[float] = None,
+        similarity_threshold: Optional[float] = None,
+    ) -> ContextMergeResult:
+        """
+        Merge contexts for a session based on relevance and similarity.
+
+        Args:
+            session_id: Session identifier
+            context_type: Type of context to merge (optional)
+            relevance_threshold: Minimum relevance score (default: 0.7)
+            similarity_threshold: Minimum similarity for grouping (default: 0.8)
+
+        Returns:
+            ContextMergeResult with merged contexts and statistics
+        """
+        start_time = time.time()
+
+        relevance_threshold = relevance_threshold or self.default_relevance_threshold
+        similarity_threshold = similarity_threshold or self.default_similarity_threshold
+
         try:
-            with self.conversation_storage.db_manager.get_connection() as conn:
+            # Get contexts from cache or database
+            cached_contexts = self._get_cached_contexts(session_id, context_type)
+
+            if cached_contexts is not None:
+                contexts = cached_contexts
+                logger.debug(f"Using cached contexts for {session_id}:{context_type}")
+            else:
+                # Fetch contexts from database
+                with self.db_manager.get_connection() as conn:
+                    with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                        if context_type:
+                            cursor.execute(
+                                """
+                                SELECT * FROM conversation_context
+                                WHERE session_id = %s AND context_type = %s
+                                AND (expires_at IS NULL OR expires_at > NOW())
+                                ORDER BY relevance_score DESC
+                            """,
+                                (session_id, context_type),
+                            )
+                        else:
+                            cursor.execute(
+                                """
+                                SELECT * FROM conversation_context
+                                WHERE session_id = %s
+                                AND (expires_at IS NULL OR expires_at > NOW())
+                                ORDER BY relevance_score DESC
+                            """,
+                                (session_id,),
+                            )
+
+                        contexts = []
+                        for row in cursor.fetchall():
+                            context = ConversationContext(
+                                session_id=row["session_id"],
+                                context_type=row["context_type"],
+                                context_key=row["context_key"],
+                                context_value=row["context_value"],
+                                relevance_score=row["relevance_score"],
+                                metadata=row["metadata"],
+                                expires_at=row["expires_at"],
+                            )
+                            contexts.append(context)
+
+                # Cache the contexts
+                self._cache_contexts(session_id, context_type or "all", contexts)
+
+            if not contexts:
+                return ContextMergeResult(
+                    merged_contexts=[],
+                    total_contexts_processed=0,
+                    contexts_merged=0,
+                    contexts_preserved=0,
+                    merge_time_ms=(time.time() - start_time) * 1000,
+                    relevance_threshold=relevance_threshold,
+                    similarity_threshold=similarity_threshold,
+                )
+
+            # Select relevant contexts
+            relevant_contexts = self._select_relevant_contexts(contexts, relevance_threshold)
+
+            # Group similar contexts
+            context_groups = self._group_similar_contexts(relevant_contexts, similarity_threshold)
+
+            # Merge each group
+            merged_contexts = []
+            contexts_merged = 0
+            contexts_preserved = 0
+
+            for group in context_groups:
+                if len(group) == 1:
+                    # Single context, preserve as-is
+                    context = group[0]
+                    merged_context = MergedContext(
+                        session_id=context.session_id,
+                        context_type=context.context_type,
+                        merged_content=context.context_value,
+                        source_contexts=[context],
+                        relevance_score=context.relevance_score,
+                        semantic_similarity=1.0,
+                        merge_timestamp=datetime.now(),
+                        metadata=context.metadata,
+                    )
+                    merged_contexts.append(merged_context)
+                    contexts_preserved += 1
+                else:
+                    # Multiple contexts, merge them
+                    merged_content = self._merge_context_content(group)
+                    avg_relevance = sum(c.relevance_score for c in group) / len(group)
+
+                    # Calculate average similarity within group
+                    similarities = []
+                    for i, context1 in enumerate(group):
+                        for context2 in group[i + 1 :]:
+                            similarity = self._calculate_semantic_similarity(context1, context2)
+                            similarities.append(similarity)
+
+                    avg_similarity = sum(similarities) / len(similarities) if similarities else 0.0
+
+                    merged_context = MergedContext(
+                        session_id=session_id,
+                        context_type=group[0].context_type,
+                        merged_content=merged_content,
+                        source_contexts=group,
+                        relevance_score=avg_relevance,
+                        semantic_similarity=avg_similarity,
+                        merge_timestamp=datetime.now(),
+                        metadata={"merged_from": len(group), "source_contexts": [c.context_key for c in group]},
+                    )
+                    merged_contexts.append(merged_context)
+                    contexts_merged += len(group)
+
+            merge_time_ms = (time.time() - start_time) * 1000
+
+            logger.info(
+                f"Context merging completed for session {session_id}: "
+                f"{len(merged_contexts)} merged contexts, "
+                f"{contexts_merged} contexts merged, "
+                f"{contexts_preserved} contexts preserved, "
+                f"{merge_time_ms:.2f}ms"
+            )
+
+            return ContextMergeResult(
+                merged_contexts=merged_contexts,
+                total_contexts_processed=len(contexts),
+                contexts_merged=contexts_merged,
+                contexts_preserved=contexts_preserved,
+                merge_time_ms=merge_time_ms,
+                relevance_threshold=relevance_threshold,
+                similarity_threshold=similarity_threshold,
+            )
+
+        except Exception as e:
+            logger.error(f"Context merging failed for session {session_id}: {e}")
+            raise
+
+    def merge_conversation_context(self, session_id: str, max_context_length: Optional[int] = None) -> Optional[str]:
+        """
+        Merge conversation context into a single string for AI consumption.
+
+        Args:
+            session_id: Session identifier
+            max_context_length: Maximum length of merged context
+
+        Returns:
+            Merged conversation context string
+        """
+        try:
+            # Get conversation messages
+            with self.db_manager.get_connection() as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                     cursor.execute(
                         """
-                        SELECT preference_key, preference_value, preference_type, confidence_score
-                        FROM user_preferences
-                        WHERE user_id = %s
-                        ORDER BY confidence_score DESC, last_used DESC
+                        SELECT role, content, timestamp
+                        FROM conversation_messages
+                        WHERE session_id = %s
+                        ORDER BY message_index
+                        LIMIT 50
                     """,
-                        (user_id,),
+                        (session_id,),
                     )
 
-                    preferences = {}
+                    messages = []
                     for row in cursor.fetchall():
-                        pref_type = row["preference_type"]
-                        if pref_type not in preferences:
-                            preferences[pref_type] = {}
+                        messages.append({"role": row["role"], "content": row["content"], "timestamp": row["timestamp"]})
 
-                        preferences[pref_type][row["preference_key"]] = {
-                            "value": row["preference_value"],
-                            "confidence": row["confidence_score"],
-                        }
+            if not messages:
+                return None
 
-                    return preferences
+            # Build conversation context
+            conversation_parts = []
+            for msg in messages:
+                role_prefix = "User" if msg["role"] == "human" else "Assistant"
+                conversation_parts.append(f"{role_prefix}: {msg['content']}")
 
-        except Exception as e:
-            logger.error(f"Failed to get user preferences for {user_id}: {e}")
-            return {}
+            merged_context = "\n\n".join(conversation_parts)
 
-    def _get_project_context(self, session_id: str) -> Dict[str, Any]:
-        """Get project context for the session."""
-        try:
-            contexts = self.conversation_storage.get_context(session_id, "project")
+            # Truncate if needed
+            if max_context_length and len(merged_context) > max_context_length:
+                merged_context = merged_context[:max_context_length] + "..."
 
-            project_context = {}
-            for context in contexts:
-                project_context[context.context_key] = {
-                    "value": context.context_value,
-                    "relevance": context.relevance_score,
-                    "metadata": context.metadata,
-                }
-
-            return project_context
+            return merged_context
 
         except Exception as e:
-            logger.error(f"Failed to get project context for session {session_id}: {e}")
-            return {}
+            logger.error(f"Conversation context merging failed for session {session_id}: {e}")
+            return None
 
-    def _get_relevant_contexts(self, request: ContextMergeRequest) -> List[ConversationContext]:
-        """Get relevant contexts based on the request."""
+    def get_context_summary(self, session_id: str, context_types: Optional[List[str]] = None) -> Dict[str, Any]:
+        """
+        Get a summary of contexts for a session.
+
+        Args:
+            session_id: Session identifier
+            context_types: List of context types to include
+
+        Returns:
+            Context summary dictionary
+        """
         try:
-            relevant_contexts = []
+            with self.db_manager.get_connection() as conn:
+                with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                    if context_types:
+                        placeholders = ",".join(["%s"] * len(context_types))
+                        cursor.execute(
+                            f"""
+                            SELECT context_type, COUNT(*) as count,
+                                   AVG(relevance_score) as avg_relevance
+                            FROM conversation_context
+                            WHERE session_id = %s AND context_type IN ({placeholders})
+                            AND (expires_at IS NULL OR expires_at > NOW())
+                            GROUP BY context_type
+                        """,
+                            (session_id, *context_types),
+                        )
+                    else:
+                        cursor.execute(
+                            """
+                            SELECT context_type, COUNT(*) as count,
+                                   AVG(relevance_score) as avg_relevance
+                            FROM conversation_context
+                            WHERE session_id = %s
+                            AND (expires_at IS NULL OR expires_at > NOW())
+                            GROUP BY context_type
+                        """,
+                            (session_id,),
+                        )
 
-            for context_type in request.context_types or []:
-                contexts = self.conversation_storage.get_context(request.session_id, context_type)
+                    summary = {
+                        "session_id": session_id,
+                        "total_contexts": 0,
+                        "context_types": {},
+                        "last_updated": datetime.now().isoformat(),
+                    }
 
-                # Filter by relevance threshold
-                filtered_contexts = [ctx for ctx in contexts if ctx.relevance_score >= request.relevance_threshold]
+                    for row in cursor.fetchall():
+                        context_type = row["context_type"]
+                        count = row["count"]
+                        avg_relevance = float(row["avg_relevance"]) if row["avg_relevance"] else 0.0
 
-                # Sort by relevance and add to results
-                filtered_contexts.sort(key=lambda x: x.relevance_score, reverse=True)
-                relevant_contexts.extend(filtered_contexts)
+                        summary["context_types"][context_type] = {"count": count, "avg_relevance": avg_relevance}
+                        summary["total_contexts"] += count
 
-            return relevant_contexts
+                    return summary
 
         except Exception as e:
-            logger.error(f"Failed to get relevant contexts for session {request.session_id}: {e}")
-            return []
-
-    def _merge_content(
-        self,
-        conversation_history: List[ConversationMessage],
-        user_preferences: Dict[str, Any],
-        project_context: Dict[str, Any],
-        relevant_contexts: List[ConversationContext],
-        current_message: str,
-    ) -> str:
-        """Merge all context into a single content string."""
-        try:
-            merged_parts = []
-
-            # Add conversation history
-            if conversation_history:
-                history_text = "Conversation History:\n"
-                for msg in conversation_history[-10:]:  # Last 10 messages
-                    role_label = "User" if msg.role == "human" else "Assistant"
-                    history_text += f"{role_label}: {msg.content}\n"
-                merged_parts.append(history_text)
-
-            # Add user preferences
-            if user_preferences:
-                prefs_text = "User Preferences:\n"
-                for pref_type, prefs in user_preferences.items():
-                    if prefs:
-                        prefs_text += f"{pref_type.title()}:\n"
-                        for key, data in prefs.items():
-                            if data["confidence"] >= 0.7:  # Only high-confidence preferences
-                                prefs_text += f"  {key}: {data['value']}\n"
-                merged_parts.append(prefs_text)
-
-            # Add project context
-            if project_context:
-                project_text = "Project Context:\n"
-                for key, data in project_context.items():
-                    if data["relevance"] >= 0.7:  # Only high-relevance context
-                        project_text += f"  {key}: {data['value']}\n"
-                merged_parts.append(project_text)
-
-            # Add relevant contexts
-            if relevant_contexts:
-                context_text = "Relevant Context:\n"
-                for ctx in relevant_contexts[:5]:  # Top 5 contexts
-                    context_text += f"  {ctx.context_type}: {ctx.context_value}\n"
-                merged_parts.append(context_text)
-
-            # Add current message
-            merged_parts.append(f"Current Message: {current_message}")
-
-            # Join all parts
-            merged_content = "\n\n".join(merged_parts)
-
-            # Truncate if too long
-            if len(merged_content) > 10000:
-                merged_content = merged_content[:10000] + "\n\n[Content truncated due to length]"
-
-            return merged_content
-
-        except Exception as e:
-            logger.error(f"Failed to merge content: {e}")
-            return f"Current Message: {current_message}"
-
-    def _calculate_relevance_scores(
-        self,
-        conversation_history: List[ConversationMessage],
-        user_preferences: Dict[str, Any],
-        project_context: Dict[str, Any],
-        relevant_contexts: List[ConversationContext],
-        current_message: str,
-    ) -> Dict[str, float]:
-        """Calculate relevance scores for different context types."""
-        try:
-            scores = {}
-
-            # Conversation history relevance
-            if conversation_history:
-                recent_messages = conversation_history[-5:]  # Last 5 messages
-                avg_relevance = sum(msg.relevance_score for msg in recent_messages) / len(recent_messages)
-                scores["conversation_history"] = min(avg_relevance, 1.0)
-            else:
-                scores["conversation_history"] = 0.0
-
-            # User preferences relevance
-            if user_preferences:
-                total_confidence = 0
-                count = 0
-                for pref_type, prefs in user_preferences.items():
-                    for key, data in prefs.items():
-                        total_confidence += data["confidence"]
-                        count += 1
-                scores["user_preferences"] = total_confidence / count if count > 0 else 0.0
-            else:
-                scores["user_preferences"] = 0.0
-
-            # Project context relevance
-            if project_context:
-                total_relevance = sum(data["relevance"] for data in project_context.values())
-                scores["project_context"] = total_relevance / len(project_context)
-            else:
-                scores["project_context"] = 0.0
-
-            # Relevant contexts relevance
-            if relevant_contexts:
-                total_relevance = sum(ctx.relevance_score for ctx in relevant_contexts)
-                scores["relevant_contexts"] = total_relevance / len(relevant_contexts)
-            else:
-                scores["relevant_contexts"] = 0.0
-
-            # Overall relevance
-            scores["overall"] = sum(scores.values()) / len(scores)
-
-            return scores
-
-        except Exception as e:
-            logger.error(f"Failed to calculate relevance scores: {e}")
-            return {"overall": 0.0}
-
-    def _generate_context_hash(self, request: ContextMergeRequest, merged_content: str) -> str:
-        """Generate hash for the merged context."""
-        context_data = {
-            "session_id": request.session_id,
-            "user_id": request.user_id,
-            "current_message": request.current_message,
-            "context_types": request.context_types,
-            "merged_content_hash": hashlib.sha256(merged_content.encode()).hexdigest(),
-        }
-        return hashlib.sha256(json.dumps(context_data, sort_keys=True).encode()).hexdigest()
-
-    def update_user_preference(
-        self,
-        user_id: str,
-        preference_key: str,
-        preference_value: str,
-        preference_type: str = "general",
-        confidence_score: float = 0.8,
-    ) -> bool:
-        """Update user preference and invalidate cache."""
-        try:
-            with self.conversation_storage.db_manager.get_connection() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        INSERT INTO user_preferences
-                        (user_id, preference_key, preference_value, preference_type, confidence_score)
-                        VALUES (%s, %s, %s, %s, %s)
-                        ON CONFLICT (user_id, preference_key) DO UPDATE SET
-                            preference_value = EXCLUDED.preference_value,
-                            confidence_score = EXCLUDED.confidence_score,
-                            last_used = NOW(),
-                            usage_count = user_preferences.usage_count + 1
-                    """,
-                        (user_id, preference_key, preference_value, preference_type, confidence_score),
-                    )
-                    conn.commit()
-
-            # Invalidate cache for this user
-            self._invalidate_user_cache(user_id)
-
-            logger.info(f"User preference updated: {user_id}:{preference_key}")
-            return True
-
-        except Exception as e:
-            logger.error(f"Failed to update user preference: {e}")
-            return False
-
-    def _invalidate_user_cache(self, user_id: str) -> None:
-        """Invalidate cache entries for a specific user."""
-        keys_to_remove = []
-        for key in self.cache.keys():
-            # This is a simplified cache invalidation
-            # In a production system, you'd want more sophisticated cache management
-            if user_id in key:
-                keys_to_remove.append(key)
-
-        for key in keys_to_remove:
-            del self.cache[key]
-
-    def get_context_statistics(self, session_id: str) -> Dict[str, Any]:
-        """Get statistics about context usage."""
-        try:
-            stats = {
+            logger.error(f"Context summary failed for session {session_id}: {e}")
+            return {
                 "session_id": session_id,
-                "conversation_messages": 0,
-                "user_preferences": 0,
-                "project_contexts": 0,
-                "relevant_contexts": 0,
-                "cache_hits": 0,
-                "cache_misses": 0,
+                "error": str(e),
+                "total_contexts": 0,
+                "context_types": {},
+                "last_updated": datetime.now().isoformat(),
             }
 
-            # Get message count
-            messages = self.conversation_storage.get_messages(session_id)
-            stats["conversation_messages"] = len(messages)
-
-            # Get context counts
-            contexts = self.conversation_storage.get_context(session_id)
-            for context in contexts:
-                if context.context_type == "project":
-                    stats["project_contexts"] += 1
-                else:
-                    stats["relevant_contexts"] += 1
-
-            # Get user preferences count (simplified)
-            session = self.conversation_storage.get_session(session_id)
-            if session:
-                user_prefs = self._get_user_preferences(session.user_id)
-                stats["user_preferences"] = sum(len(prefs) for prefs in user_prefs.values())
-
-            return stats
-
-        except Exception as e:
-            logger.error(f"Failed to get context statistics for session {session_id}: {e}")
-            return {"session_id": session_id, "error": str(e)}
-
-    def cleanup_cache(self) -> None:
+    def cleanup_expired_cache(self) -> int:
         """Clean up expired cache entries."""
         try:
             current_time = datetime.now()
-            keys_to_remove = []
+            expired_keys = []
 
-            for key, cached_result in self.cache.items():
-                if current_time - cached_result.created_at > self.cache_ttl:
-                    keys_to_remove.append(key)
+            for cache_key, timestamp in self.cache_timestamps.items():
+                if current_time - timestamp > self.cache_ttl:
+                    expired_keys.append(cache_key)
 
-            for key in keys_to_remove:
-                del self.cache[key]
+            for key in expired_keys:
+                del self.context_cache[key]
+                del self.cache_timestamps[key]
 
-            logger.info(f"Cleaned up {len(keys_to_remove)} expired cache entries")
+            if expired_keys:
+                logger.info(f"Cleaned up {len(expired_keys)} expired cache entries")
+
+            return len(expired_keys)
 
         except Exception as e:
-            logger.error(f"Failed to cleanup cache: {e}")
+            logger.error(f"Cache cleanup failed: {e}")
+            return 0
+
+    def get_merge_statistics(self) -> Dict[str, Any]:
+        """Get statistics about context merging operations."""
+        try:
+            return {
+                "cache_size": len(self.context_cache),
+                "cache_entries": list(self.context_cache.keys()),
+                "cache_ttl_seconds": self.cache_ttl.total_seconds(),
+                "default_relevance_threshold": self.default_relevance_threshold,
+                "default_similarity_threshold": self.default_similarity_threshold,
+                "max_contexts_per_merge": self.max_contexts_per_merge,
+                "max_merge_content_length": self.max_merge_content_length,
+            }
+        except Exception as e:
+            logger.error(f"Failed to get merge statistics: {e}")
+            return {"error": str(e)}

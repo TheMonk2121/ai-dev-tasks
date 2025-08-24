@@ -70,6 +70,9 @@ source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Verify pgvector support (required for semantic search)
+python3 scripts/check_pgvector_version.py
 ```
 
 ## **1. Add Documents (Multiple Options)**

@@ -241,13 +241,6 @@ Items requiring external credentials, business decisions, or deployment should b
 | B-098 | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | 🔧 | 3 | ✅ done | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | None | 600_archives/artifacts/000_core_temp_files/PRD-B-098-Multi-Role-Pr-Sign-Off-System.md |
 <!-- PRD: 600_archives/artifacts/000_core_temp_files/PRD-B-096-Enhanced-Scribe-System-Intelligent-Content-Analysis-And-Idea-Mining.md -->
 
-
-| B-075 | Few-Shot Cognitive Scaffolding Integration | ⭐ | 6 | ✅ done | Integrate few-shot examples into cognitive scaffolding for AI agents | Few-shot patterns + AI context engineering | B-074 Few-Shot Integration with Documentation Tools |
-
-<!--score: {bv:4, tc:3, rr:4, le:3, effort:6, lessons:4, deps:["B-074"]}-->
-<!--score_total: 6.0-->
-<!-- completion_date: 2025-08-16 -->
-<!-- implementation_notes: Successfully implemented few-shot cognitive scaffolding integration. Created scripts/few_shot_cognitive_scaffolding.py with example extraction, role-based filtering, and memory rehydration integration. Extracted 356 examples from documentation, implemented pattern recognition, and integrated with cursor_memory_rehydrate.py. System now provides context-aware few-shot examples for AI agents, improving response quality and consistency. -->
 | B-1002 | Create Comprehensive Root README for External Discovery | 🔧 | 2 | todo | Create comprehensive 500-line root README.md for GitHub visibility and zero-context onboarding | Documentation + External Visibility + Onboarding | None |
 
 | B-190 | Bracketed Placeholder Enforcement System | 🛡️ | 4 | ✅ done | Add pre-commit hook, detection script, and auto-fix tools to prevent bracketed placeholders in markdown that break rendering | Docs Quality | None |
@@ -323,36 +316,6 @@ Coherence Validation System |
 <!-- reference_cards: ["500_reference-cards.md#documentation-generation"] -->
 
 | B-1014 | MCP File Processing Integration for LTST Memory System | 🔥 | 6 | todo | Integrate industry-standard MCP tools (LangGraph, CrewAI, AutoGen) with LTST Memory System for drag-and-drop JSON/code file processing, enabling seamless file analysis, context extraction, and intelligent document handling within the AI development ecosystem | MCP Integration + File Processing + LTST Memory + LangGraph + CrewAI + AutoGen + Drag-and-Drop + JSON Processing + Code Analysis | B-1012 LTST Memory System |
-
-| B-094 | MCP Memory Rehydrator Server | 🔥 | 3 | todo | Implement MCP server for memory rehydration with role-based context retrieval | MCP Server + Memory Rehydration + Role Context | B-1012 LTST Memory System |
-
-<!--score: {bv:5, tc:3, rr:4, le:3, effort:3, lessons:3, deps:["B-1012"]}-->
-<!--score_total: 7.5-->
-<!-- do_next: Implement MCP server for memory rehydration with role-based context retrieval -->
-<!-- est_hours: 3 -->
-<!-- acceptance: MCP server provides role-based memory rehydration with <500ms response time -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#mcp-integration"] -->
-<!-- reference_cards: ["500_reference-cards.md#memory-rehydration"] -->
-
-| B-095 | MCP Server Role Auto-Detection | 🔥 | 2 | todo | Enhance MCP server to automatically detect role based on conversation context | Context analysis + role detection + dynamic tool selection | B-094 MCP Memory Rehydrator Server |
-
-<!--score: {bv:5, tc:3, rr:4, le:3, effort:2, lessons:3, deps:["B-094"]}-->
-<!--score_total: 7.5-->
-<!-- do_next: Add conversation context analysis to automatically select appropriate role -->
-<!-- est_hours: 2 -->
-<!-- acceptance: MCP server automatically detects planner/implementer/researcher role from conversation -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-detection-patterns"] -->
-<!-- reference_cards: ["500_reference-cards.md#context-analysis"] -->
-
-| B-097 | Roadmap Milestones & Burndown Charts | 📊 | 3 | todo | Add milestone tracking and burndown charts to roadmap for progress visibility | Milestone definition + progress tracking + chart generation | 000_core/004_development-roadmap.md |
-
-<!--score: {bv:4, tc:3, rr:4, le:3, effort:3, lessons:3, deps:["000_core/004_development-roadmap.md"]}-->
-<!--score_total: 6.0-->
-<!-- do_next: Implement milestone tracking and burndown chart generation for roadmap -->
-<!-- est_hours: 3 -->
-<!-- acceptance: Roadmap shows milestone progress and burndown charts for sprint visibility -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#progress-tracking"] -->
-<!-- reference_cards: ["500_reference-cards.md#milestone-tracking"] -->
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1012"]}-->
 <!--score_total: 6.0-->
 <!-- do_next: Research and implement MCP file processing integration with LTST Memory System for drag-and-drop capabilities -->
@@ -542,18 +505,6 @@ Coherence Validation System |
 <!-- tech_footprint: Late Chunking + HIRAG + DSPy + AsyncIO + Performance Optimization + Context Preservation + Hierarchical Reasoning + Memory Rehydrator + Entity Expansion -->
 <!-- problem: Current RAG system lacks late chunking for context preservation and HIRAG-style hierarchical reasoning, limiting retrieval accuracy and generation quality compared to state-of-the-art research -->
 <!-- outcome: Production-ready advanced RAG system with late chunking context preservation, HIRAG hierarchical reasoning, and 15%+ improvement in retrieval accuracy and generation quality -->
-
-| B‑1015 | LTST Memory System Database Optimization: Governance-Aligned Schema Improvements | 🔥 | 5 | todo | Implement governance-aligned LTST memory system improvements including HNSW semantic search enhancement, DSPy tables promotion to schema.sql, user/session hygiene with nullable user_id, and manual cleanup function for local-first retention policy | Database Schema + LTST Memory + Governance Alignment + Performance Optimization | B-1012 LTST Memory System |
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:5, lessons:4, deps:["B-1012"]}-->
-<!--score_total: 6.0-->
-<!-- do_next: Implement HNSW semantic search enhancement, promote DSPy tables to schema.sql, add user_id column, and create manual cleanup function -->
-<!-- est_hours: 8 -->
-<!-- acceptance: HNSW index replaces IVFFlat for better semantic recall, DSPy tables moved from code to schema.sql for reproducibility, user_id column added for future multi-tenant support, manual cleanup function implemented (no automated jobs), all changes align with local-first, simple governance principles -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#database-optimization", "400_guides/400_comprehensive-coding-best-practices.md#schema-design"] -->
-<!-- reference_cards: ["500_reference-cards.md#ltst-memory", "500_reference-cards.md#database-schema"] -->
-<!-- tech_footprint: Database Schema + LTST Memory + Governance Alignment + Performance Optimization + HNSW Indexing + DSPy Integration + User Session Management + Manual Cleanup -->
-<!-- problem: Current LTST memory system lacks semantic search capabilities, DSPy tables are created in code rather than schema.sql, missing user/session hygiene for future multi-tenant support, and lacks governance-aligned retention policy -->
-<!-- outcome: Production-ready LTST memory system with HNSW semantic search, reproducible DSPy schema, user/session hygiene, and governance-aligned manual cleanup function -->
 
 | B‑076 | Research-Based DSPy Assertions Implementation | 📈 | 4 | todo | Implement DSPy assertions based on research findings | DSPy + assertions + research integration | DSPy framework |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:4, lessons:3, deps:[]}-->

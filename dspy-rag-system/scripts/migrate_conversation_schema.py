@@ -3,450 +3,417 @@
 LTST Memory System Database Migration Script
 
 This script safely migrates the database to include the LTST Memory System schema
-with rollback capability and comprehensive validation.
+with rollback capability, data validation, and audit logging.
 """
 
-import json
+import argparse
 import os
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Optional
 
-# Add the project root to the path
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
+# Add the src directory to the path
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-# Import after path setup
-from src.utils.database_resilience import DatabaseResilienceManager as DatabaseManager  # noqa: E402
-from src.utils.logger import setup_logger  # noqa: E402
+from utils.database_resilience import DatabaseResilienceManager
+from utils.logger import setup_logger
 
-# Setup logging
 logger = setup_logger(__name__)
 
 
-class LTSTMemoryMigration:
-    """Handles LTST Memory System database migration with safety features."""
+class LTSTMigrationManager:
+    """Manages LTST Memory System database migration."""
 
-    def __init__(self, db_config: Optional[Dict[str, Any]] = None):
-        """Initialize migration with database configuration."""
-        self.db_config = db_config or {}
-        # Get connection string from environment or config
-        connection_string = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-        self.db_manager = DatabaseManager(connection_string)
+    def __init__(self, db_url: Optional[str] = None):
+        """Initialize migration manager."""
+        self.db_url = db_url or os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
+        self.db_manager = DatabaseResilienceManager(self.db_url)
         self.migration_log = []
-        self.backup_created = False
-        self.migration_started = False
+        self.backup_tables = []
+        self.rollback_commands = []
 
-        # Migration metadata
-        self.migration_id = f"ltst_memory_migration_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        self.schema_file = project_root / "config" / "database" / "ltst_memory_schema.sql"
-        self.backup_file = project_root / "config" / "database" / f"backup_{self.migration_id}.sql"
-
-    def validate_prerequisites(self) -> bool:
-        """Validate that all prerequisites are met for migration."""
-        logger.info("Validating migration prerequisites...")
-
-        try:
-            # Check if schema file exists
-            if not self.schema_file.exists():
-                logger.error(f"Schema file not found: {self.schema_file}")
-                return False
-
-            # Check database connection
-            with self.db_manager.get_connection() as conn:
-                with conn.cursor() as cursor:
-                    # Check if pgvector extension is available
-                    cursor.execute("SELECT 1 FROM pg_extension WHERE extname = 'vector'")
-                    if not cursor.fetchone():
-                        logger.error("pgvector extension is not installed")
-                        return False
-
-                    # Check if we're in a transaction
-                    cursor.execute("SELECT txid_current()")
-                    tx_id = cursor.fetchone()[0]
-                    logger.info(f"Current transaction ID: {tx_id}")
-
-            logger.info("Prerequisites validation passed")
-            return True
-
-        except Exception as e:
-            logger.error(f"Prerequisites validation failed: {e}")
-            return False
+    def log_migration(self, message: str, level: str = "INFO"):
+        """Log migration step."""
+        timestamp = datetime.now().isoformat()
+        log_entry = {"timestamp": timestamp, "level": level, "message": message}
+        self.migration_log.append(log_entry)
+        logger.info(f"[{timestamp}] {message}")
 
     def create_backup(self) -> bool:
-        """Create a backup of the current database state."""
-        logger.info("Creating database backup...")
-
+        """Create backup of existing data."""
         try:
-            with self.db_manager.get_connection():
-                # Create backup using pg_dump
-                backup_command = f"""
-                pg_dump -h {self.db_config.get('host', 'localhost')} \
-                        -U {self.db_config.get('user', 'postgres')} \
-                        -d {self.db_config.get('database', 'dspy_rag')} \
-                        --schema-only --no-owner --no-privileges \
-                        -f {self.backup_file}
-                """
+            self.log_migration("Creating backup of existing data...")
 
-                # Set password environment variable if provided
-                if "password" in self.db_config:
-                    os.environ["PGPASSWORD"] = self.db_config["password"]
-
-                result = os.system(backup_command)
-
-                if result == 0:
-                    self.backup_created = True
-                    logger.info(f"Backup created successfully: {self.backup_file}")
-                    self.migration_log.append(
-                        {
-                            "timestamp": datetime.now().isoformat(),
-                            "action": "backup_created",
-                            "file": str(self.backup_file),
-                        }
-                    )
-                    return True
-                else:
-                    logger.error("Backup creation failed")
-                    return False
-
-        except Exception as e:
-            logger.error(f"Backup creation failed: {e}")
-            return False
-
-    def validate_schema_sql(self) -> bool:
-        """Validate the schema SQL file for syntax and safety."""
-        logger.info("Validating schema SQL file...")
-
-        try:
-            with open(self.schema_file, "r") as f:
-                schema_sql = f.read()
-
-            # Basic validation checks
-            validation_checks = [
-                ("CREATE TABLE IF NOT EXISTS", "Uses IF NOT EXISTS for safety"),
-                ("CREATE INDEX IF NOT EXISTS", "Uses IF NOT EXISTS for indexes"),
-                ("CREATE OR REPLACE FUNCTION", "Uses OR REPLACE for functions"),
-                ("CREATE OR REPLACE VIEW", "Uses OR REPLACE for views"),
-                ("--", "Contains comments for documentation"),
-                ("conversation_sessions", "Contains conversation_sessions table"),
-                ("conversation_messages", "Contains conversation_messages table"),
-                ("user_preferences", "Contains user_preferences table"),
-            ]
-
-            for check, description in validation_checks:
-                if check not in schema_sql:
-                    logger.error(f"Schema validation failed: {description}")
-                    return False
-
-            # Check for potentially dangerous operations
-            dangerous_patterns = ["DROP TABLE", "TRUNCATE", "DELETE FROM", "ALTER TABLE DROP"]
-
-            for pattern in dangerous_patterns:
-                if pattern in schema_sql.upper():
-                    logger.warning(f"Potentially dangerous pattern found: {pattern}")
-
-            logger.info("Schema SQL validation passed")
-            return True
-
-        except Exception as e:
-            logger.error(f"Schema validation failed: {e}")
-            return False
-
-    def execute_migration(self, dry_run: bool = False) -> bool:
-        """Execute the database migration."""
-        logger.info(f"Executing migration (dry_run={dry_run})...")
-
-        try:
+            # Get list of existing tables
             with self.db_manager.get_connection() as conn:
                 with conn.cursor() as cursor:
-                    # Start transaction
-                    if not dry_run:
-                        cursor.execute("BEGIN")
-                        self.migration_started = True
+                    cursor.execute(
+                        """
+                        SELECT table_name
+                        FROM information_schema.tables
+                        WHERE table_schema = 'public'
+                        AND table_name LIKE 'conversation_%'
+                    """
+                    )
+                    existing_tables = [row[0] for row in cursor.fetchall()]
 
-                    # Read and execute schema
-                    with open(self.schema_file, "r") as f:
-                        schema_sql = f.read()
+                    if not existing_tables:
+                        self.log_migration("No existing conversation tables found, skipping backup")
+                        return True
 
+                    # Create backup tables
+                    for table in existing_tables:
+                        backup_table = f"{table}_backup_{int(time.time())}"
+                        cursor.execute(f"CREATE TABLE {backup_table} AS SELECT * FROM {table}")
+                        self.backup_tables.append(backup_table)
+                        self.rollback_commands.append(f"DROP TABLE IF EXISTS {backup_table}")
+                        self.log_migration(f"Created backup table: {backup_table}")
+
+                    conn.commit()
+                    self.log_migration(f"Backup completed: {len(self.backup_tables)} tables backed up")
+                    return True
+
+        except Exception as e:
+            self.log_migration(f"Backup failed: {e}", "ERROR")
+            return False
+
+    def validate_prerequisites(self) -> bool:
+        """Validate migration prerequisites."""
+        try:
+            self.log_migration("Validating migration prerequisites...")
+
+            with self.db_manager.get_connection() as conn:
+                with conn.cursor() as cursor:
+                    # Check PostgreSQL version
+                    cursor.execute("SELECT version()")
+                    version = cursor.fetchone()[0]
+                    if "PostgreSQL" not in version:
+                        self.log_migration("Not a PostgreSQL database", "ERROR")
+                        return False
+
+                    # Check pgvector extension
+                    cursor.execute(
+                        """
+                        SELECT EXISTS (
+                            SELECT FROM pg_extension
+                            WHERE extname = 'vector'
+                        )
+                    """
+                    )
+                    pgvector_exists = cursor.fetchone()[0]
+                    if not pgvector_exists:
+                        self.log_migration("pgvector extension not found", "ERROR")
+                        return False
+
+                    # Check database permissions
+                    cursor.execute("SELECT current_user")
+                    current_user = cursor.fetchone()[0]
+                    self.log_migration(f"Connected as user: {current_user}")
+
+                    # Test CREATE TABLE permission
+                    test_table = f"test_migration_{int(time.time())}"
+                    cursor.execute(f"CREATE TABLE {test_table} (id INTEGER)")
+                    cursor.execute(f"DROP TABLE {test_table}")
+
+                    self.log_migration("Prerequisites validation passed")
+                    return True
+
+        except Exception as e:
+            self.log_migration(f"Prerequisites validation failed: {e}", "ERROR")
+            return False
+
+    def run_migration(self, dry_run: bool = False) -> bool:
+        """Run the migration."""
+        try:
+            self.log_migration(f"Starting LTST migration (dry_run: {dry_run})...")
+
+            # Read migration SQL
+            migration_file = Path(__file__).parent.parent / "config" / "database" / "ltst_schema_migration.sql"
+            if not migration_file.exists():
+                self.log_migration(f"Migration file not found: {migration_file}", "ERROR")
+                return False
+
+            with open(migration_file, "r") as f:
+                migration_sql = f.read()
+
+            if dry_run:
+                self.log_migration("DRY RUN: Would execute migration SQL")
+                self.log_migration(f"SQL Preview:\n{migration_sql[:500]}...")
+                return True
+
+            # Execute migration
+            with self.db_manager.get_connection() as conn:
+                with conn.cursor() as cursor:
                     # Split SQL into individual statements
-                    statements = [stmt.strip() for stmt in schema_sql.split(";") if stmt.strip()]
+                    statements = [stmt.strip() for stmt in migration_sql.split(";") if stmt.strip()]
 
-                    for i, statement in enumerate(statements):
-                        if not statement or statement.startswith("--"):
+                    for i, statement in enumerate(statements, 1):
+                        if statement.startswith("--") or not statement:
                             continue
 
                         try:
-                            logger.debug(f"Executing statement {i+1}/{len(statements)}")
+                            self.log_migration(f"Executing statement {i}/{len(statements)}")
                             cursor.execute(statement)
-
-                            if not dry_run:
-                                self.migration_log.append(
-                                    {
-                                        "timestamp": datetime.now().isoformat(),
-                                        "action": "statement_executed",
-                                        "statement_index": i,
-                                        "statement_preview": (
-                                            statement[:100] + "..." if len(statement) > 100 else statement
-                                        ),
-                                    }
-                                )
-
+                            self.log_migration(f"Statement {i} executed successfully")
                         except Exception as e:
-                            logger.error(f"Statement {i+1} failed: {e}")
-                            logger.error(f"Statement: {statement}")
-                            if not dry_run:
-                                cursor.execute("ROLLBACK")
+                            self.log_migration(f"Statement {i} failed: {e}", "ERROR")
+                            self.log_migration(f"Failed SQL: {statement[:200]}...", "ERROR")
                             return False
 
-                    # Commit transaction
-                    if not dry_run:
-                        cursor.execute("COMMIT")
-                        logger.info("Migration executed successfully")
-                    else:
-                        logger.info("Dry run completed successfully")
-
+                    conn.commit()
+                    self.log_migration("Migration completed successfully")
                     return True
 
         except Exception as e:
-            logger.error(f"Migration execution failed: {e}")
-            if self.migration_started:
-                try:
-                    with self.db_manager.get_connection() as conn:
-                        with conn.cursor() as cursor:
-                            cursor.execute("ROLLBACK")
-                except Exception:
-                    pass
+            self.log_migration(f"Migration failed: {e}", "ERROR")
             return False
 
     def validate_migration(self) -> bool:
-        """Validate that the migration was successful."""
-        logger.info("Validating migration results...")
-
+        """Validate the migration was successful."""
         try:
+            self.log_migration("Validating migration results...")
+
+            expected_tables = [
+                "conversation_sessions",
+                "conversation_messages",
+                "conversation_context",
+                "user_preferences",
+                "session_relationships",
+                "session_summary",
+            ]
+
             with self.db_manager.get_connection() as conn:
                 with conn.cursor() as cursor:
-                    # Check that all tables were created
-                    expected_tables = [
-                        "conversation_sessions",
-                        "conversation_messages",
-                        "conversation_context",
-                        "user_preferences",
-                        "memory_retrieval_cache",
-                        "session_relationships",
-                        "memory_performance_metrics",
-                    ]
-
-                    for table_name in expected_tables:
+                    for table in expected_tables:
                         cursor.execute(
                             """
-                            SELECT table_name
-                            FROM information_schema.tables
-                            WHERE table_name = %s
+                            SELECT EXISTS (
+                                SELECT FROM information_schema.tables
+                                WHERE table_name = %s
+                            )
                         """,
-                            (table_name,),
+                            (table,),
                         )
-                        if not cursor.fetchone():
-                            logger.error(f"Table {table_name} was not created")
+                        exists = cursor.fetchone()[0]
+                        if not exists:
+                            self.log_migration(f"Table {table} not found after migration", "ERROR")
                             return False
+                        self.log_migration(f"Table {table} validated")
 
-                    # Check that all indexes were created
+                    # Check indexes
                     expected_indexes = [
                         "idx_conversation_sessions_user_id",
                         "idx_conversation_messages_session_id",
-                        "idx_user_preferences_user_id",
+                        "idx_conversation_messages_embedding",
                     ]
 
-                    for index_name in expected_indexes:
+                    for index in expected_indexes:
                         cursor.execute(
                             """
-                            SELECT indexname
-                            FROM pg_indexes
-                            WHERE indexname = %s
+                            SELECT EXISTS (
+                                SELECT FROM pg_indexes
+                                WHERE indexname = %s
+                            )
                         """,
-                            (index_name,),
+                            (index,),
                         )
-                        if not cursor.fetchone():
-                            logger.error(f"Index {index_name} was not created")
+                        exists = cursor.fetchone()[0]
+                        if not exists:
+                            self.log_migration(f"Index {index} not found after migration", "ERROR")
                             return False
+                        self.log_migration(f"Index {index} validated")
 
-                    # Check that default system preferences were inserted
-                    cursor.execute(
-                        """
-                        SELECT COUNT(*)
-                        FROM user_preferences
-                        WHERE user_id = 'system'
-                    """
-                    )
-                    system_pref_count = cursor.fetchone()[0]
-                    if system_pref_count < 4:  # Should have at least 4 default preferences
-                        logger.error(f"Expected at least 4 system preferences, found {system_pref_count}")
-                        return False
+                    # Check functions
+                    expected_functions = ["update_session_activity", "clean_expired_context", "update_session_summary"]
 
-                    # Check that views were created
-                    expected_views = ["session_summary", "user_preference_summary"]
-                    for view_name in expected_views:
+                    for func in expected_functions:
                         cursor.execute(
                             """
-                            SELECT table_name
-                            FROM information_schema.views
-                            WHERE table_name = %s
+                            SELECT EXISTS (
+                                SELECT FROM pg_proc p
+                                JOIN pg_namespace n ON p.pronamespace = n.oid
+                                WHERE n.nspname = 'public'
+                                AND p.proname = %s
+                            )
                         """,
-                            (view_name,),
+                            (func,),
                         )
-                        if not cursor.fetchone():
-                            logger.error(f"View {view_name} was not created")
+                        exists = cursor.fetchone()[0]
+                        if not exists:
+                            self.log_migration(f"Function {func} not found after migration", "ERROR")
                             return False
+                        self.log_migration(f"Function {func} validated")
 
-                    logger.info("Migration validation passed")
+                    self.log_migration("Migration validation completed successfully")
                     return True
 
         except Exception as e:
-            logger.error(f"Migration validation failed: {e}")
+            self.log_migration(f"Migration validation failed: {e}", "ERROR")
             return False
 
-    def rollback_migration(self) -> bool:
-        """Rollback the migration if needed."""
-        logger.info("Rolling back migration...")
-
+    def rollback(self) -> bool:
+        """Rollback the migration."""
         try:
-            if not self.backup_created:
-                logger.error("No backup available for rollback")
-                return False
+            self.log_migration("Starting rollback...")
 
-            # Restore from backup
-            restore_command = f"""
-            psql -h {self.db_config.get('host', 'localhost')} \
-                 -U {self.db_config.get('user', 'postgres')} \
-                 -d {self.db_config.get('database', 'dspy_rag')} \
-                 -f {self.backup_file}
-            """
+            with self.db_manager.get_connection() as conn:
+                with conn.cursor() as cursor:
+                    # Drop new tables
+                    tables_to_drop = [
+                        "session_summary",
+                        "session_relationships",
+                        "user_preferences",
+                        "conversation_context",
+                        "conversation_messages",
+                        "conversation_sessions",
+                    ]
 
-            if "password" in self.db_config:
-                os.environ["PGPASSWORD"] = self.db_config["password"]
+                    for table in tables_to_drop:
+                        try:
+                            cursor.execute(f"DROP TABLE IF EXISTS {table} CASCADE")
+                            self.log_migration(f"Dropped table: {table}")
+                        except Exception as e:
+                            self.log_migration(f"Failed to drop table {table}: {e}", "WARNING")
 
-            result = os.system(restore_command)
+                    # Drop functions
+                    functions_to_drop = [
+                        "update_session_activity",
+                        "clean_expired_context",
+                        "update_session_summary",
+                        "trigger_update_session_activity",
+                        "trigger_update_session_summary",
+                    ]
 
-            if result == 0:
-                logger.info("Migration rollback completed successfully")
-                self.migration_log.append(
-                    {
-                        "timestamp": datetime.now().isoformat(),
-                        "action": "rollback_completed",
-                        "backup_file": str(self.backup_file),
-                    }
-                )
-                return True
-            else:
-                logger.error("Migration rollback failed")
-                return False
+                    for func in functions_to_drop:
+                        try:
+                            cursor.execute(f"DROP FUNCTION IF EXISTS {func} CASCADE")
+                            self.log_migration(f"Dropped function: {func}")
+                        except Exception as e:
+                            self.log_migration(f"Failed to drop function {func}: {e}", "WARNING")
+
+                    # Restore backup tables if they exist
+                    for backup_table in self.backup_tables:
+                        original_table = backup_table.replace(f"_backup_{int(time.time())}", "")
+                        try:
+                            cursor.execute(f"DROP TABLE IF EXISTS {original_table}")
+                            cursor.execute(f"ALTER TABLE {backup_table} RENAME TO {original_table}")
+                            self.log_migration(f"Restored table: {original_table}")
+                        except Exception as e:
+                            self.log_migration(f"Failed to restore table {original_table}: {e}", "WARNING")
+
+                    conn.commit()
+                    self.log_migration("Rollback completed")
+                    return True
 
         except Exception as e:
-            logger.error(f"Migration rollback failed: {e}")
+            self.log_migration(f"Rollback failed: {e}", "ERROR")
             return False
 
-    def generate_migration_report(self) -> Dict[str, Any]:
-        """Generate a comprehensive migration report."""
-        report = {
-            "migration_id": self.migration_id,
-            "timestamp": datetime.now().isoformat(),
-            "backup_created": self.backup_created,
-            "migration_started": self.migration_started,
-            "backup_file": str(self.backup_file) if self.backup_created else None,
-            "schema_file": str(self.schema_file),
-            "migration_log": self.migration_log,
-            "status": "completed" if self.migration_started else "failed",
-        }
+    def save_migration_log(self, filename: str = None) -> str:
+        """Save migration log to file."""
+        if filename is None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"ltst_migration_log_{timestamp}.json"
 
-        # Save report to file
-        report_file = project_root / "config" / "database" / f"migration_report_{self.migration_id}.json"
-        with open(report_file, "w") as f:
-            json.dump(report, f, indent=2)
+        log_file = Path(filename)
 
-        logger.info(f"Migration report saved to: {report_file}")
-        return report
+        import json
 
-    def run_migration(self, dry_run: bool = False, skip_backup: bool = False) -> bool:
-        """Run the complete migration process."""
-        logger.info(f"Starting LTST Memory System migration (dry_run={dry_run})")
+        with open(log_file, "w") as f:
+            json.dump(self.migration_log, f, indent=2)
 
+        self.log_migration(f"Migration log saved to: {log_file}")
+        return str(log_file)
+
+    def cleanup_backup_tables(self) -> bool:
+        """Clean up backup tables."""
         try:
-            # Step 1: Validate prerequisites
-            if not self.validate_prerequisites():
-                return False
+            self.log_migration("Cleaning up backup tables...")
 
-            # Step 2: Validate schema SQL
-            if not self.validate_schema_sql():
-                return False
+            with self.db_manager.get_connection() as conn:
+                with conn.cursor() as cursor:
+                    for backup_table in self.backup_tables:
+                        try:
+                            cursor.execute(f"DROP TABLE IF EXISTS {backup_table}")
+                            self.log_migration(f"Dropped backup table: {backup_table}")
+                        except Exception as e:
+                            self.log_migration(f"Failed to drop backup table {backup_table}: {e}", "WARNING")
 
-            # Step 3: Create backup (unless skipped)
-            if not skip_backup and not dry_run:
-                if not self.create_backup():
-                    logger.warning("Backup creation failed, but continuing with migration")
-
-            # Step 4: Execute migration
-            if not self.execute_migration(dry_run):
-                return False
-
-            # Step 5: Validate migration (only for real migrations)
-            if not dry_run:
-                if not self.validate_migration():
-                    logger.error("Migration validation failed, attempting rollback...")
-                    self.rollback_migration()
-                    return False
-
-            # Step 6: Generate report
-            _ = self.generate_migration_report()
-
-            if dry_run:
-                logger.info("Dry run completed successfully")
-            else:
-                logger.info("Migration completed successfully")
-                logger.info(f"Migration ID: {self.migration_id}")
-                logger.info(f"Backup file: {self.backup_file if self.backup_created else 'None'}")
-
-            return True
+                    conn.commit()
+                    self.log_migration("Backup cleanup completed")
+                    return True
 
         except Exception as e:
-            logger.error(f"Migration process failed: {e}")
-            if self.migration_started and not dry_run:
-                self.rollback_migration()
+            self.log_migration(f"Backup cleanup failed: {e}", "ERROR")
             return False
 
 
 def main():
-    """Main entry point for the migration script."""
-    import argparse
-
+    """Main migration function."""
     parser = argparse.ArgumentParser(description="LTST Memory System Database Migration")
-    parser.add_argument("--dry-run", action="store_true", help="Perform a dry run without making changes")
-    parser.add_argument("--skip-backup", action="store_true", help="Skip backup creation")
-    parser.add_argument("--rollback", action="store_true", help="Rollback the last migration")
-    parser.add_argument("--validate-only", action="store_true", help="Only validate prerequisites and schema")
-    parser.add_argument("--config", type=str, help="Database configuration file")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would be done without executing")
+    parser.add_argument("--rollback", action="store_true", help="Rollback the migration")
+    parser.add_argument("--validate-only", action="store_true", help="Only validate prerequisites")
+    parser.add_argument("--cleanup", action="store_true", help="Clean up backup tables")
+    parser.add_argument("--log-file", help="Save migration log to specified file")
+    parser.add_argument("--db-url", help="Database connection URL")
 
     args = parser.parse_args()
 
-    # Load database configuration
-    db_config = {}
-    if args.config:
-        with open(args.config, "r") as f:
-            db_config = json.load(f)
+    # Initialize migration manager
+    migration_manager = LTSTMigrationManager(args.db_url)
 
-    # Create migration instance
-    migration = LTSTMemoryMigration(db_config)
+    try:
+        if args.rollback:
+            success = migration_manager.rollback()
+        elif args.validate_only:
+            success = migration_manager.validate_prerequisites()
+        elif args.cleanup:
+            success = migration_manager.cleanup_backup_tables()
+        else:
+            # Full migration process
+            if not migration_manager.validate_prerequisites():
+                sys.exit(1)
 
-    if args.rollback:
-        success = migration.rollback_migration()
-        sys.exit(0 if success else 1)
+            if not args.dry_run:
+                if not migration_manager.create_backup():
+                    sys.exit(1)
 
-    elif args.validate_only:
-        success = migration.validate_prerequisites() and migration.validate_schema_sql()
-        sys.exit(0 if success else 1)
+            if not migration_manager.run_migration(dry_run=args.dry_run):
+                sys.exit(1)
 
-    else:
-        success = migration.run_migration(dry_run=args.dry_run, skip_backup=args.skip_backup)
-        sys.exit(0 if success else 1)
+            if not args.dry_run:
+                if not migration_manager.validate_migration():
+                    migration_manager.log_migration("Migration validation failed, rolling back...", "ERROR")
+                    migration_manager.rollback()
+                    sys.exit(1)
+
+                # Clean up backup tables on success
+                migration_manager.cleanup_backup_tables()
+
+            success = True
+
+        # Save migration log
+        log_file = migration_manager.save_migration_log(args.log_file)
+
+        if success:
+            migration_manager.log_migration("Migration process completed successfully")
+            print(f"✅ Migration completed successfully. Log saved to: {log_file}")
+        else:
+            migration_manager.log_migration("Migration process failed")
+            print(f"❌ Migration failed. Check log: {log_file}")
+            sys.exit(1)
+
+    except KeyboardInterrupt:
+        migration_manager.log_migration("Migration interrupted by user", "WARNING")
+        print("⚠️ Migration interrupted by user")
+        sys.exit(1)
+    except Exception as e:
+        migration_manager.log_migration(f"Unexpected error: {e}", "ERROR")
+        print(f"❌ Unexpected error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
