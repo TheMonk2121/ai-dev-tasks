@@ -160,7 +160,7 @@ B-1013 (Advanced RAG) → B-1014 (MCP Integration)
 2. **Update Sprint Status**: Reflect current progress and next priorities
 3. **Adjust Phases**: Move items between phases as needed
 4. **Update Dependencies**: Maintain accurate dependency chains
-5. **Cross-Reference**: Ensure alignment with `000_core/000_backlog.md`
+5. **Cross-Reference**: Ensure alignment with `000_core/000_core/000_backlog.md`
 
 ### **Quality Gates**
 - **Backlog Alignment**: All roadmap items must exist in backlog
@@ -171,14 +171,14 @@ B-1013 (Advanced RAG) → B-1014 (MCP Integration)
 ## 📚 Cross-References
 
 ### **Core Workflow Integration**
-- **Backlog**: `000_core/000_backlog.md` - Source of truth for priorities
+- **Backlog**: `000_core/000_core/000_backlog.md` - Source of truth for priorities
 - **PRD Creation**: `000_core/001_create-prd.md` - For new features
 - **Task Generation**: `000_core/002_generate-tasks.md` - For implementation planning
 - **Task Execution**: `000_core/003_process-task-list.md` - For execution tracking
 
 ### **Strategic Context**
 - **System Overview**: `400_guides/400_system-overview.md` - Technical architecture
-- **Memory Context**: `100_memory/100_cursor-memory-context.md` - Current project state
+- **Memory Context**: `100_memory/100_memory/100_cursor-memory-context.md` - Current project state
 - **Development Guide**: `400_guides/400_development-roadmap.md` - Detailed technical roadmap
 
 ### **Research Integration**
@@ -206,4 +206,167 @@ B-1013 (Advanced RAG) → B-1014 (MCP Integration)
 
 **Last Updated**: 2025-08-24 08:53
 **Next Review**: Weekly sprint planning
-**Backlog Sync**: Auto-updates with `000_core/000_backlog.md` changes
+**Backlog Sync**: Auto-updates with `000_core/000_core/000_backlog.md` changes
+
+#### **Q4 Goal 2: Advanced RAG System**
+- **Target**: Complete B-043, B-044, B-045 (LangExtract + RAG Enhancement)
+- **Success Metrics**:
+  - Entity/attribute extraction operational
+  - n8n integration complete
+  - Enhanced RAG schema implemented
+- **Timeline**: September-October 2024
+
+#### **Q4 Goal 3: Performance Optimization**
+- **Target**: Complete B-046, B-047 (Benchmarking + Auto-routing)
+- **Success Metrics**:
+  - 4-way benchmark results
+  - Auto-routing system operational
+  - Performance improvements documented
+- **Timeline**: October 2024
+
+#### **Q4 Goal 4: Infrastructure Automation**
+- **Target**: Complete B-050, B-051, B-052 series
+- **Success Metrics**:
+  - Automated task generation
+  - PRD skeleton generator
+  - Enhanced repository maintenance
+- **Timeline**: October-November 2024
+
+## 🚀 **Future Model Roadmap (2025)**
+
+### **Advanced Agent Specialization (Q1 2025)**
+
+#### **B-034: Deep Research Agent Integration**
+- **Priority**: 🔥 **HIGH** - 5 points
+- **Dependencies**: B-011 completion
+- **Goals**: Specialized research agent for complex analysis
+- **Timeline**: Q1 2025
+
+#### **B-035: Coder Agent Specialization**
+- **Priority**: 🔥 **HIGH** - 5 points
+- **Dependencies**: B-011 completion
+- **Goals**: Specialized coding agent for best practices
+- **Timeline**: Q1 2025
+
+#### **B-036: General Query Agent Enhancement**
+- **Priority**: 🔥 **HIGH** - 3 points
+- **Dependencies**: B-011 completion
+- **Goals**: General assistance agent for documentation
+- **Timeline**: Q1 2025
+
+### **Advanced Model Orchestration (Q2 2025)**
+
+#### **B-038: Advanced Model Orchestration**
+- **Priority**: 🔧 **MEDIUM** - 13 points
+- **Dependencies**: B-034, B-035, B-036 completion
+- **Goals**: Multi-model coordination system
+- **Timeline**: Q2 2025
+
+### **Future Migration (Q3 2025)**
+
+#### **B-037: Yi-Coder Migration (Future)**
+- **Priority**: 🔧 **MEDIUM** - 8 points
+- **Dependencies**: GGUF compatibility resolution
+- **Goals**: Migrate to Yi-Coder when compatibility resolved
+- **Timeline**: Q3 2025 (conditional)
+
+## 🏗️ **Infrastructure Milestones**
+
+### **Completed Infrastructure (2024)**
+- ✅ **v0.3.1-rc3 Core Hardening** - Production ready
+- ✅ **Real-time Mission Dashboard** - Live AI task monitoring
+- ✅ **Production Security & Monitoring** - Comprehensive security
+- ✅ **n8n Backlog Scrubber** - Automated prioritization
+- ✅ **Database Connection Pooling** - Enhanced resilience
+- ✅ **Comprehensive Documentation** - All guides completed
+
+### **Upcoming Infrastructure (Q4 2024)**
+- 🔄 **B-031: Vector Database Foundation Enhancement** - 3 points
+- 🔄 **B-032: Memory Context System Architecture Research** - 8 points
+- 🔄 **B-032-C1: Generation Cache Implementation** - 3 points
+
+### **Future Infrastructure (2025)**
+- 📋 **Advanced Monitoring Systems** - Performance optimization
+- 📋 **Distributed Architecture** - Scalability improvements
+- 📋 **Cloud Integration** - Deployment flexibility
+- 📋 **Cloud Integration** - Deployment flexibility
+
+## 📈 **Success Metrics & KPIs**
+
+### **Development Velocity**
+- **Sprint Completion Rate**: Target 90%+ sprint completion
+- **Points Per Sprint**: Target 8-12 points per sprint
+- **Documentation Coverage**: 100% of new features documented
+
+### **System Performance**
+- **Response Time**: <2 seconds for AI queries
+- **Uptime**: 99.9% system availability
+- **Error Rate**: <1% error rate in production
+
+### **Quality Metrics**
+- **Test Coverage**: >90% code coverage
+- **Documentation Quality**: All guides comprehensive and current
+- **Security Score**: Zero critical security vulnerabilities
+
+### **Research Integration**
+- **Research Utilization**: 80%+ of research findings implemented
+- **Innovation Rate**: 2-3 new research integrations per quarter
+- **Academic Alignment**: Regular updates from latest research
+
+## 🔄 **Dependency Management**
+
+### **Critical Dependencies**
+```
+B-011 (Cursor Native AI) → B-043, B-044, B-045 (LangExtract + RAG)
+B-043 (LangExtract Pilot) → B-044 (n8n Service)
+B-044 (n8n Service) → B-045 (RAG Schema)
+B-045 (RAG Schema) → B-046 (Benchmark)
+B-046 (Benchmark) → B-047 (Auto-router)
+B-011 (Cursor Native AI) → B-034, B-035, B-036 (Specialized Agents)
+B-034, B-035, B-036 → B-038 (Advanced Orchestration)
+```
+
+### **Resource Allocation**
+- **Primary Focus**: B-011 completion (Foundation)
+- **Secondary Focus**: B-043 through B-047 (RAG Enhancement)
+- **Research Focus**: B-032 (Memory Context Research)
+- **Infrastructure**: B-031 (Vector Database Enhancement)
+
+## 🎯 **Risk Management**
+
+### **Technical Risks**
+- **Model Integration Complexity**: B-011 may require more time than estimated
+- **Performance Bottlenecks**: B-046 benchmarking may reveal significant issues
+- **Dependency Delays**: Any delay in B-011 affects multiple downstream items
+
+### **Mitigation Strategies**
+- **Incremental Implementation**: Break complex items into smaller phases
+- **Parallel Development**: Work on independent items simultaneously
+- **Research Integration**: Use research findings to inform implementation
+- **Regular Reviews**: Weekly progress reviews and adjustment
+
+### **Contingency Plans**
+- **B-011 Delay**: Focus on B-031 and B-032 (independent items)
+- **Performance Issues**: Prioritize B-046 benchmarking early
+- **Research Gaps**: Use existing documentation as foundation
+
+## 📋 **Progress Tracking**
+
+### **Current Progress (August 2024)**
+- **Completed Items**: 47 items (C-002 through C-047)
+- **Total Points Earned**: 89 points
+- **Current Sprint**: B-011 (5 points) - In Progress
+- **Next Sprint**: B-043, B-044, B-045 (8 points total)
+
+### **Quarterly Progress**
+- **Q3 2024**: 47 items completed, 89 points earned
+- **Q4 2024 Target**: 15-20 items, 25-30 points
+- **2025 Target**: Advanced agent specialization and orchestration
+
+### **Success Indicators**
+- **On Track**: B-011 completion by end of August
+- **At Risk**: B-032 (Memory Context Research) - 8 points, complex
+- **Blocked**: B-048 (Confidence Calibration) - Requires research
+
+## 🔗 **Related Documentation**
+

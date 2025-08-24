@@ -16,11 +16,13 @@ sys.path.insert(0, str(dspy_scripts_path))
 # Import database utilities with error handling
 try:
     from database_utils import execute_single_query, get_db_connection  # type: ignore
+
     DATABASE_AVAILABLE = True
 except ImportError as e:
     print(f"⚠️  Database not available: {e}")
     print("💡 Database sync check will be skipped")
     DATABASE_AVAILABLE = False
+
 
 def find_files_with_sync_tags() -> List[Tuple[str, str]]:
     """
@@ -79,6 +81,7 @@ def find_files_with_sync_tags() -> List[Tuple[str, str]]:
     sync_files = list(filename_to_path.values())
     return sync_files
 
+
 def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, Dict]:
     """
     Check synchronization status of files with database.
@@ -92,7 +95,7 @@ def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, D
     if not DATABASE_AVAILABLE:
         print("⚠️  Database not available - skipping sync status check")
         return {}
-    
+
     sync_status = {}
 
     for file_path, sync_type in sync_files:
@@ -103,7 +106,7 @@ def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, D
             # Check if file exists in database
             query = "SELECT file_size, updated_at FROM documents WHERE filename = %s"
             result = execute_single_query(query, (filename,))
-            
+
             if result:
                 db_size, db_updated = result
                 needs_update = file_size != db_size
@@ -113,7 +116,7 @@ def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, D
                     "current_size": file_size,
                     "db_size": db_size,
                     "needs_update": needs_update,
-                    "db_updated": db_updated
+                    "db_updated": db_updated,
                 }
             else:
                 sync_status[file_path] = {
@@ -122,7 +125,7 @@ def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, D
                     "current_size": file_size,
                     "db_size": None,
                     "needs_update": True,
-                    "db_updated": None
+                    "db_updated": None,
                 }
         except Exception as e:
             print(f"⚠️  Error checking {filename}: {e}")
@@ -133,10 +136,11 @@ def check_database_sync_status(sync_files: List[Tuple[str, str]]) -> Dict[str, D
                 "db_size": None,
                 "needs_update": False,  # Assume OK to avoid blocking
                 "db_updated": None,
-                "error": str(e)
+                "error": str(e),
             }
 
     return sync_status
+
 
 def update_database_sync(sync_files: List[Tuple[str, str]]) -> bool:
     """
@@ -151,34 +155,35 @@ def update_database_sync(sync_files: List[Tuple[str, str]]) -> bool:
     if not DATABASE_AVAILABLE:
         print("⚠️  Database not available - skipping database update")
         return True
-    
+
     try:
         for file_path, sync_type in sync_files:
             filename = os.path.basename(file_path)
             file_size = os.path.getsize(file_path)
-            
+
             # Upsert file information
             query = """
                 INSERT INTO documents (filename, file_size, sync_type, updated_at)
                 VALUES (%s, %s, %s, NOW())
-                ON CONFLICT (filename) 
-                DO UPDATE SET 
+                ON CONFLICT (filename)
+                DO UPDATE SET
                     file_size = EXCLUDED.file_size,
                     sync_type = EXCLUDED.sync_type,
                     updated_at = NOW()
             """
             execute_single_query(query, (filename, file_size, sync_type))
-            
+
         print(f"✅ Updated {len(sync_files)} files in database")
         return True
     except Exception as e:
         print(f"❌ Database update failed: {e}")
         return False
 
+
 def main():
     """Main function for database synchronization check."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Database synchronization checker")
     parser.add_argument("--auto-update", action="store_true", help="Automatically update database")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
@@ -190,7 +195,7 @@ def main():
     # Find files with sync tags
     sync_files = find_files_with_sync_tags()
     print(f"📋 Found {len(sync_files)} files with DATABASE_SYNC tags:")
-    
+
     for file_path, sync_type in sync_files:
         print(f"  - {file_path} ({sync_type})")
 
@@ -200,26 +205,26 @@ def main():
 
     # Check sync status
     sync_status = check_database_sync_status(sync_files)
-    
+
     if not sync_status:
         print("⚠️  Could not check sync status - database not available")
         return True
 
     # Report status
     needs_update = [f for f, status in sync_status.items() if status.get("needs_update", False)]
-    
-    print(f"\n📊 Synchronization Status:")
+
+    print("\n📊 Synchronization Status:")
     print(f"  Current: {len(sync_files)} files")
     print(f"  Need Update: {len(needs_update)} files")
 
     if needs_update:
-        print(f"\n❌ Files needing update:")
+        print("\n❌ Files needing update:")
         for file_path in needs_update:
             status = sync_status[file_path]
             print(f"  - {status['filename']} ({status['current_size']} bytes)")
-        
+
         if args.auto_update:
-            print(f"\n🔄 Auto-updating database...")
+            print("\n🔄 Auto-updating database...")
             if update_database_sync(sync_files):
                 print("✅ Database update completed")
                 return True
@@ -227,11 +232,12 @@ def main():
                 print("❌ Database update failed")
                 return False
         else:
-            print(f"\n💡 Run with --auto-update to fix synchronization issues")
+            print("\n💡 Run with --auto-update to fix synchronization issues")
             return False
     else:
-        print(f"\n✅ All files are synchronized")
+        print("\n✅ All files are synchronized")
         return True
+
 
 if __name__ == "__main__":
     success = main()
