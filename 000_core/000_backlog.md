@@ -238,7 +238,7 @@ Items requiring external credentials, business decisions, or deployment should b
 | B-096 | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | 🔧 | 3 | in-progress| Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | None | None |
 <!-- started_at: 2025-08-23T04:16:51.993824 -->
 | B-097 | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | 🔧 | 3 | todo | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | None | None |
-| B-098 | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | 🔧 | 3 | todo | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | None | 600_archives/artifacts/000_core_temp_files/PRD-B-098-Multi-Role-Pr-Sign-Off-System.md |
+| B-098 | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | 🔧 | 3 | ✅ done | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | None | 600_archives/artifacts/000_core_temp_files/PRD-B-098-Multi-Role-Pr-Sign-Off-System.md |
 <!-- PRD: 600_archives/artifacts/000_core_temp_files/PRD-B-096-Enhanced-Scribe-System-Intelligent-Content-Analysis-And-Idea-Mining.md -->
 
 | B-1002 | Create Comprehensive Root README for External Discovery | 🔧 | 2 | todo | Create comprehensive 500-line root README.md for GitHub visibility and zero-context onboarding | Documentation + External Visibility + Onboarding | None |
@@ -360,7 +360,9 @@ Coherence Validation System |
 <!-- problem: Only 27 of 52 core documentation files are in the memory rehydrator database, limiting AI context retrieval and system effectiveness -->
 <!-- outcome: Complete memory rehydrator coverage with all core documentation files properly chunked and indexed for optimal AI context retrieval -->
 
-| B‑1006 | DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization | 🔥 | 7 | todo | Migrate from DSPy 2.6.27 to DSPy 3.0 with constitution-aware testing, GEPA optimizer migration, performance budgets, feature flags, HITL safety mechanisms, and surgical asyncio integration (AsyncMemoryRehydrator with asyncio.to_thread). Pin DSPy 3.0.1, establish baselines, and achieve ≥15% improvement on seeded bugs with 0 dependency violations | DSPy 3.0 + Migration + Native Assertions + GEPA Optimization + Constitution Testing + Performance Budgets + Feature Flags + HITL Safety + MLflow Integration + Surgical AsyncIO + AsyncMemoryRehydrator | B-1003 DSPy Multi-Agent System Implementation |
+| B‑1006-A | DSPy 3.0 Core Parity Migration | 🔥 | 3 | todo | Pin dspy==3.0.x, run smoke tests/linters/doc-coherence. Achieve parity with current system before enhancements. Rollback if >10% regressions. | DSPy 3.0 + Migration + Baseline Metrics + Rollback Safety | B-1003 DSPy Multi-Agent System Implementation |
+| B‑1006-B | DSPy 3.0 Minimal Assertion Swap | 🔥 | 2 | todo | Replace two call-sites of custom assertions with dspy.Assert. No regressions, both assertions demonstrated. Rollback to custom assertions if flakiness emerges. | DSPy 3.0 + Native Assertions + Minimal Scope + Rollback Safety | B-1006-A DSPy 3.0 Core Parity Migration |
+| B‑1011 | Constitution Smoke Harness | 🔧 | 2 | todo | Add three concrete checks: workflow chain preserved, doc coherence validator, Tier-1 lint. Non-blocking warnings if checks fail under stable 3.0. | Constitution Testing + Smoke Checks + Non-blocking Validation | B-1006-A DSPy 3.0 Core Parity Migration |
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1003"]}-->
 <!--score_total: 7.5-->
 <!-- do_next: Pin DSPy 3.0.1 in constraints.txt, create test environment with baseline metrics, implement constitution-aware regression suite, add optimizer budget enforcement, and integrate surgical asyncio (AsyncMemoryRehydrator) for 40-60% I/O performance improvement -->
@@ -373,7 +375,7 @@ Coherence Validation System |
 <!-- outcome: Production-ready DSPy 3.0 system with constitution-aware testing, GEPA optimization with performance budgets, feature flags for gradual rollout, HITL safety mechanisms, surgical asyncio integration for I/O operations, and ≥15% improvement on seeded bugs with 0 dependency violations -->
 
 - B‑1007 — Pydantic AI Style Enhancements: Constitution-Aware Type Safety and Error Taxonomy (score 7.5)
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1006"]}-->
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1006-A"]}-->
 <!--score_total: 7.5-->
 <!-- do_next: Implement role-based context models (PlannerContext, CoderContext, ResearchContext), constitution schema enforcement, error taxonomy, typed debug logs, constitution-aware validation with 95% validation and 50% error reduction, and async Pydantic validation (STMContext, EpisodeRecord, EpisodeEvent) for 50-60% I/O performance improvement -->
 <!-- est_hours: 20 -->
@@ -384,8 +386,8 @@ Coherence Validation System |
 <!-- problem: Current DSPy system lacks constitution-aware type safety, role-based context models, structured error taxonomy, typed debug logs, and async Pydantic validation that would significantly improve reliability, debugging, constitution compliance, and I/O performance -->
 <!-- outcome: Enterprise-grade DSPy system with constitution-aware Pydantic validation, role-based context models, structured error taxonomy, comprehensive observability, and async validation for predictable reliability, constitution compliance, and 60% I/O performance improvement -->
 
-| B‑1008 | Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates | 🔥 | 8 | todo | Implement constitution-aware backlog system with dependency bonuses, cross-role analysis, real-time n8n integration, automated migration with 100% metadata preservation, constitution-aligned scoring, and async real-time scoring updates (bounded concurrency with semaphores) | Backlog Enhancement + Constitution Scoring + Cross-Role Dependencies + Real-time Updates + Migration Automation + Metadata Preservation + Constitution Alignment + Async Scoring + Bounded Concurrency | B-1006 DSPy 3.0 Migration, B-1007 Pydantic AI Style Enhancements |
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1006", "B-1007"]}-->
+| B‑1008 | Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates | 🔥 | 8 | todo | Implement constitution-aware backlog system with dependency bonuses, cross-role analysis, real-time n8n integration, automated migration with 100% metadata preservation, constitution-aligned scoring, and async real-time scoring updates (bounded concurrency with semaphores) | Backlog Enhancement + Constitution Scoring + Cross-Role Dependencies + Real-time Updates + Migration Automation + Metadata Preservation + Constitution Alignment + Async Scoring + Bounded Concurrency | B-1006-A DSPy 3.0 Core Parity Migration, B-1007 Pydantic AI Style Enhancements |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1006-A", "B-1007"]}-->
 <!--score_total: 7.0-->
 <!-- do_next: Implement constitution-aware scoring formula with dependency bonuses, cross-role dependency detection, real-time n8n integration, automated migration with validation, constitution-aligned scoring integration, and async real-time scoring updates with bounded concurrency for <5% overhead -->
 <!-- est_hours: 17 -->
@@ -395,6 +397,30 @@ Coherence Validation System |
 <!-- tech_footprint: Backlog Enhancement + Constitution Scoring + Cross-Role Dependencies + Real-time Updates + n8n Integration + Migration Automation + Metadata Preservation + Performance Optimization + Async Scoring -->
 <!-- problem: Current backlog system lacks constitution-aware scoring, cross-role dependency detection, real-time updates, automated migration with metadata preservation, specific performance targets, and async real-time scoring updates -->
 <!-- outcome: Enhanced backlog system with constitution-aware scoring, cross-role dependencies, real-time n8n integration, automated migration with 100% metadata preservation, <5% performance overhead, and async real-time scoring updates with 60% I/O performance improvement -->
+
+| B‑1009 | AsyncIO Scribe Enhancement: Event-Driven Context Capture and Real-time Processing | 🔥 | 6 | todo | Implement surgical asyncio integration for Scribe system with event-driven file monitoring, parallel context fetching, async session registry operations, and real-time notifications for 70-80% performance improvement and enhanced multi-session management | Scribe Enhancement + AsyncIO + Event-Driven Architecture + Parallel Processing + Real-time Notifications + Multi-Session Management + Performance Optimization | B-1006-A DSPy 3.0 Core Parity Migration, B-1007 Pydantic AI Style Enhancements |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1006-A", "B-1007"]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Implement AsyncScribeDaemon with event-driven file monitoring, AsyncScribeContextProvider with parallel data fetching, AsyncSessionRegistry with non-blocking operations, and real-time notification system for 70-80% performance improvement -->
+<!-- est_hours: 12 -->
+<!-- acceptance: Scribe system includes event-driven file monitoring (<1s response), parallel context fetching (50-80% faster), async session registry operations (80% faster), real-time notifications, enhanced multi-session management, and zero new external dependencies -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#performance-optimization", "400_guides/400_comprehensive-coding-best-practices.md#async-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#scribe-system", "500_reference-cards.md#asyncio-integration"] -->
+<!-- tech_footprint: Scribe Enhancement + AsyncIO + Event-Driven Architecture + Parallel Processing + Real-time Notifications + Multi-Session Management + Performance Optimization + Background Processing -->
+<!-- problem: Current Scribe system uses synchronous polling (10-60s intervals), sequential context fetching (2-5s each), blocking session registry operations, and lacks real-time capabilities for multi-session scenarios -->
+<!-- outcome: Production-ready AsyncIO Scribe system with event-driven monitoring, parallel processing, real-time notifications, enhanced multi-session management, and 70-80% performance improvement -->
+
+| B‑1010 | NiceGUI Scribe Dashboard: Advanced UI with AI Integration and Real-time Monitoring | 🔥 | 8 | todo | Implement comprehensive NiceGUI dashboard for Scribe system with AI-powered insights, real-time monitoring, graph visualization, workflow automation, and constitution compliance for next-level development session management | NiceGUI + AI Integration + Real-time Dashboard + Graph Visualization + Workflow Automation + Constitution Compliance + Performance Monitoring | B-1009 AsyncIO Scribe Enhancement, B-1003 DSPy Multi-Agent System |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1009", "B-1003"]}-->
+<!--score_total: 7.0-->
+<!-- do_next: Implement NiceGUI dashboard with AI-powered insights, real-time monitoring, graph visualization, workflow automation, and constitution compliance for next-level development session management -->
+<!-- est_hours: 16 -->
+<!-- acceptance: NiceGUI dashboard includes AI-powered insights, real-time monitoring, graph visualization, workflow automation, constitution compliance, and seamless integration with existing AI development ecosystem tools -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#ui-ux-design", "400_guides/400_comprehensive-coding-best-practices.md#gui-integration"] -->
+<!-- reference_cards: ["500_reference-cards.md#nicegui", "500_reference-cards.md#scribe-system"] -->
+<!-- tech_footprint: NiceGUI + AI Integration + Real-time Dashboard + Graph Visualization + Workflow Automation + Constitution Compliance + Performance Monitoring + DSPy Integration + Memory Rehydrator + n8n Workflows -->
+<!-- problem: Current Scribe system lacks modern UI/UX, AI-powered insights, visual analytics, workflow automation, and integration with existing AI development ecosystem tools -->
+<!-- outcome: Next-level NiceGUI Scribe dashboard with AI integration, real-time monitoring, visual analytics, workflow automation, and seamless ecosystem integration -->
 
 | B‑076 | Research-Based DSPy Assertions Implementation | 📈 | 4 | todo | Implement DSPy assertions based on research findings | DSPy + assertions + research integration | DSPy framework |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:4, lessons:3, deps:[]}-->

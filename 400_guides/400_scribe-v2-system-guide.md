@@ -8,7 +8,10 @@
 <!-- DSPY_VALIDATION: documentation_standards, content_organization, cross_reference_accuracy -->
 <!-- DSPY_RESPONSIBILITIES: documentation_standards, content_organization, cross_reference_management -->
 
-# Scribe System Guide
+<!-- ANCHOR_KEY: scribe-system -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["implementer", "coder"] -->
+# Scribe v2 System Guide
 
 ## 🔎 TL;DR {#tldr}
 
