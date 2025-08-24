@@ -79,3 +79,4 @@
 {"timestamp": "2025-08-24T14:04:58.374007", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
 {"timestamp": "2025-08-24T14:23:36.713763", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
 {"timestamp": "2025-08-24T14:27:18.919524", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
+{"timestamp": "2025-08-24T14:29:37.445046", "violation": {"rule_id": "test_rule", "article": "I", "description": "Test violation", "message": "Test message", "critical": true}}
