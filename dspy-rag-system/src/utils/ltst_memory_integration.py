@@ -26,10 +26,10 @@ class LTSTMemoryBundle:
     conversation_history: List[Dict[str, Any]]
     user_preferences: Dict[str, Any]
     session_context: Optional[Dict[str, Any]] = None
-    context_relevance_scores: Dict[str, float] = None
+    context_relevance_scores: Optional[Dict[str, float]] = None
     conversation_continuity_score: float = 0.0
     user_preference_confidence: float = 0.0
-    metadata: Dict[str, Any] = None
+    metadata: Optional[Dict[str, Any]] = None
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -66,7 +66,7 @@ class LTSTMemoryIntegration:
         self.context_merger = context_merger or ContextMerger(self.conversation_storage)
         self.session_manager = session_manager or SessionManager(self.conversation_storage, self.context_merger)
         # Database manager is handled by individual components
-        self.db_manager = None
+        self.db_manager = self.conversation_storage.db_manager
 
     def rehydrate_with_conversation_context(
         self,
@@ -85,6 +85,8 @@ class LTSTMemoryIntegration:
             # Get or create session
             if not session_id:
                 session_id = self._get_or_create_session(user_id, query)
+                if not session_id:
+                    logger.warning("Failed to create session, proceeding without session context")
 
             # Get original memory bundle
             original_bundle = rehydrate(query, **rehydrate_kwargs)
@@ -151,7 +153,7 @@ class LTSTMemoryIntegration:
                 metadata={"error": str(e)},
             )
 
-    def _get_or_create_session(self, user_id: str, query: str) -> str:
+    def _get_or_create_session(self, user_id: str, query: str) -> Optional[str]:
         """Get existing session or create new one."""
         try:
             # Try to find recent active session
@@ -198,6 +200,10 @@ class LTSTMemoryIntegration:
     def _get_user_preferences(self, user_id: str) -> Dict[str, Any]:
         """Get user preferences for context."""
         try:
+            if not self.db_manager:
+                logger.warning("Database manager not available")
+                return {}
+
             with self.db_manager.get_connection() as conn:
                 with conn.cursor() as cursor:
                     cursor.execute(
@@ -231,9 +237,14 @@ class LTSTMemoryIntegration:
         """Get session context using context merger."""
         try:
             # Create merge request
+            session = self.session_manager.get_session(session_id)
+            if not session or not hasattr(session, "user_id"):
+                logger.warning(f"Session {session_id} not found or missing user_id")
+                return None
+
             request = ContextMergeRequest(
                 session_id=session_id,
-                user_id=self.session_manager.get_session(session_id).user_id,
+                user_id=session.user_id,
                 current_message=query,
                 context_types=["conversation", "preference", "project", "user_info"],
                 max_context_length=2000,
@@ -380,7 +391,7 @@ class LTSTMemoryIntegration:
             # Get user preferences
             session = self.session_manager.get_session(session_id)
             user_preferences = {}
-            if session:
+            if session and hasattr(session, "user_id"):
                 user_preferences = self._get_user_preferences(session.user_id)
 
             summary = {
@@ -437,6 +448,10 @@ class LTSTMemoryIntegration:
     def cleanup_old_conversations(self, days_old: int = 30) -> int:
         """Clean up old conversation data."""
         try:
+            if not self.db_manager:
+                logger.warning("Database manager not available for cleanup")
+                return 0
+
             cleaned_count = 0
             cutoff_date = datetime.now() - timedelta(days=days_old)
 
@@ -482,10 +497,14 @@ class LTSTMemoryIntegration:
 
             # Test database connection
             try:
-                with self.db_manager.get_connection() as conn:
-                    with conn.cursor() as cursor:
-                        cursor.execute("SELECT 1")
-                health_metrics["database_health"]["connection_available"] = True
+                if not self.db_manager:
+                    health_metrics["database_health"]["connection_available"] = False
+                    health_metrics["database_health"]["error"] = "Database manager not available"
+                else:
+                    with self.db_manager.get_connection() as conn:
+                        with conn.cursor() as cursor:
+                            cursor.execute("SELECT 1")
+                    health_metrics["database_health"]["connection_available"] = True
             except Exception as e:
                 health_metrics["database_health"]["connection_available"] = False
                 health_metrics["database_health"]["error"] = str(e)

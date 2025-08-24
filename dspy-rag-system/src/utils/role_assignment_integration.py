@@ -23,7 +23,7 @@ from scripts.role_assignment_metadata import RoleAssignment, RoleAssignmentMetad
 class RoleAssignmentIntegration:
     """Integrates automated role assignment with the memory rehydrator."""
 
-    def __init__(self, project_root: Path = None):
+    def __init__(self, project_root: Path | None = None):
         self.project_root = project_root or Path(__file__).parent.parent.parent.parent
         self.metadata_system = RoleAssignmentMetadata()
         self.role_assigner = AutomatedRoleAssignment()

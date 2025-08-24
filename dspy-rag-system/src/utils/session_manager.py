@@ -120,13 +120,17 @@ class SessionManager:
             # Load from database
             session = self.conversation_storage.get_session(session_id)
             if session:
+                # Get message count from database
+                messages = self.conversation_storage.get_messages(session_id)
+                message_count = len(messages)
+
                 # Create session state
                 session_state = SessionState(
                     session_id=session_id,
                     user_id=session.user_id,
                     status=session.status,
                     last_activity=session.last_activity,
-                    message_count=session.session_length,
+                    message_count=message_count,
                     metadata=session.metadata,
                 )
 
@@ -341,6 +345,10 @@ class SessionManager:
             # Convert to dictionary format
             session_data = []
             for session in sessions:
+                # Get message count for this session
+                messages = self.conversation_storage.get_messages(session.session_id)
+                message_count = len(messages)
+
                 session_data.append(
                     {
                         "session_id": session.session_id,
@@ -349,7 +357,7 @@ class SessionManager:
                         "status": session.status,
                         "created_at": session.created_at,
                         "last_activity": session.last_activity,
-                        "message_count": session.session_length,
+                        "message_count": message_count,
                         "relevance_score": session.relevance_score,
                         "metadata": session.metadata,
                     }
@@ -377,7 +385,11 @@ class SessionManager:
                 expired_sessions = [
                     session_id
                     for session_id, session_state in self.active_sessions.items()
-                    if session_state.user_id == user_id and current_time - session_state.last_activity > timeout_delta
+                    if (
+                        session_state.user_id == user_id
+                        and session_state.last_activity is not None
+                        and current_time - session_state.last_activity > timeout_delta
+                    )
                 ]
 
                 # Archive expired sessions
@@ -514,8 +526,9 @@ class SessionManager:
             # Calculate session ages
             session_ages = []
             for session_state in self.active_sessions.values():
-                age_minutes = (current_time - session_state.last_activity).total_seconds() / 60
-                session_ages.append(age_minutes)
+                if session_state.last_activity is not None:
+                    age_minutes = (current_time - session_state.last_activity).total_seconds() / 60
+                    session_ages.append(age_minutes)
 
             avg_session_age = sum(session_ages) / len(session_ages) if session_ages else 0
 

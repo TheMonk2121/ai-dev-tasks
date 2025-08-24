@@ -942,7 +942,7 @@ class MLOptimizer:
 - [System Integration Guide](../400_guides/400_integration-patterns-guide.md)
 
 ### Code Examples
-- [Optimization Examples](../300_examples/300_dspy-v2-demo-scripts/)
+- [Optimization Examples](../300_examples/300_dspy-v2-demo-scripts/demo_complete_dspy_v2_system.py)
 - [Integration Examples](../400_guides/400_integration-patterns-guide.md)
 - [Testing Examples](../400_guides/400_testing-strategy-guide.md)
 

@@ -273,12 +273,12 @@ def demonstrate_complete_system():
     system_status = system_integration.get_system_status()
 
     print(f"  System Health: {system_status.health.value}")
-    print(f"  Components Active: {len(system_status.active_components)}")
-    print(f"  Total Metrics: {system_status.total_metrics}")
-    print(f"  Active Alerts: {len(system_status.active_alerts)}")
+    print(f"  Components Active: {len([c for c in system_status.components.values() if c])}")
+    print(f"  Total Metrics: {len(system_status.metrics)}")
+    print(f"  Active Alerts: {len(system_status.alerts)}")
 
     print("\n  Component Status:")
-    for component, status in system_status.component_status.items():
+    for component, status in system_status.components.items():
         status_icon = "✅" if status else "❌"
         print(f"    {component}: {status_icon}")
 
@@ -321,10 +321,10 @@ def demonstrate_complete_system():
     system_summary = system_integration.get_system_status()
 
     print("  System Integration Statistics:")
-    print(f"    Total components: {len(system_summary.component_status)}")
-    print(f"    Active components: {len(system_summary.active_components)}")
+    print(f"    Total components: {len(system_summary.components)}")
+    print(f"    Active components: {len([c for c in system_summary.components.values() if c])}")
     print(f"    System health: {system_summary.health.value}")
-    print(f"    Total metrics: {system_summary.total_metrics}")
+    print(f"    Total metrics: {len(system_summary.metrics)}")
 
     print("\n  Role Refinement Statistics:")
     if "message" not in role_summary:
@@ -336,9 +336,10 @@ def demonstrate_complete_system():
         print(f"    {role_summary['message']}")
 
     print("\n  Optimization Performance:")
-    print(f"    Optimization cycles: {len(optimization_loop.get_cycle_history())}")
-    print("    Success rate: 100%")  # Based on our tests
-    print(f"    Average cycle time: {cycle_time:.3f}s")
+    stats = optimization_loop.get_statistics()
+    print(f"    Optimization cycles: {stats['total_cycles']}")
+    print(f"    Success rate: {stats['success_rate']:.1%}")
+    print(f"    Average cycle time: {stats['average_duration']:.3f}s")
 
     print()
     print("=" * 80)

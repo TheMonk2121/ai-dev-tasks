@@ -81,6 +81,7 @@ def test_context_merger_dataclasses():
             relevance_scores={"overall": 0.8},
             context_hash="test_hash",
             created_at=datetime.now(),
+            metadata={},
         )
         assert merged.session_id == "test_session"
         assert merged.merged_content == "Test merged content"
@@ -106,8 +107,10 @@ def test_session_manager_dataclasses():
         assert state.status == "active"
         print("✓ SessionState creation successful")
 
-        # Test SessionState
-        state = SessionState(session_id="test_session", status="active", last_activity=datetime.now())
+        # Test SessionState with optional parameters
+        state = SessionState(
+            session_id="test_session", user_id="test_user", status="active", last_activity=datetime.now()
+        )
         assert state.session_id == "test_session"
         assert state.status == "active"
         print("✓ SessionState creation successful")
@@ -126,9 +129,25 @@ def test_ltst_integration_dataclasses():
     try:
         from utils.ltst_memory_integration import LTSTMemoryBundle
 
+        # Create a minimal Bundle for testing
+        from utils.memory_rehydrator import Bundle, Section
+
+        test_section = Section(
+            kind="span",
+            title="test_section",
+            content="test content",
+            citation="test.md",
+            document_id="test_doc",
+            chunk_index=0,
+            start_offset=0,
+            end_offset=100,
+        )
+
+        bundle_data = Bundle(text="test content", sections=[test_section], meta={"test": "metadata"})
+
         # Test LTSTMemoryBundle
-        bundle = LTSTMemoryBundle(
-            original_bundle={"test": "data"},
+        ltst_bundle = LTSTMemoryBundle(
+            original_bundle=bundle_data,
             conversation_history=[],
             user_preferences={},
             session_context=None,
@@ -137,8 +156,8 @@ def test_ltst_integration_dataclasses():
             user_preference_confidence=0.7,
             metadata={"test": "metadata"},
         )
-        assert bundle.original_bundle == {"test": "data"}
-        assert bundle.conversation_continuity_score == 0.8
+        assert ltst_bundle.original_bundle == bundle_data
+        assert ltst_bundle.conversation_continuity_score == 0.8
         print("✓ LTSTMemoryBundle creation successful")
 
     except Exception as e:
@@ -153,31 +172,39 @@ def test_performance_optimizer_dataclasses():
     print("Testing performance optimizer dataclasses...")
 
     try:
-        from utils.ltst_performance_optimizer import PerformanceBenchmark
+        from utils.ltst_performance_optimizer import PerformanceBenchmark, PerformanceMetrics
 
-        # Test PerformanceBenchmark
-        benchmark = PerformanceBenchmark(
-            benchmark_name="test_benchmark",
-            benchmark_type="retrieval",
-            duration_ms=1500.0,
-            success_rate=0.95,
+        # Test PerformanceMetrics
+        metric = PerformanceMetrics(
+            operation_type="retrieval",
+            execution_time_ms=1500.0,
+            result_count=10,
+            cache_hit=False,
+            database_queries=2,
+            memory_usage_mb=5.5,
+            error_count=0,
             metadata={"test": "data"},
         )
-        assert benchmark.benchmark_name == "test_benchmark"
-        assert benchmark.duration_ms == 1500.0
-        print("✓ PerformanceBenchmark creation successful")
+        assert metric.operation_type == "retrieval"
+        assert metric.execution_time_ms == 1500.0
+        print("✓ PerformanceMetrics creation successful")
 
         # Test PerformanceBenchmark
         benchmark = PerformanceBenchmark(
             benchmark_name="test_benchmark",
-            benchmark_type="latency",
-            start_time=datetime.now(),
-            end_time=datetime.now(),
-            metrics=[metric],
-            summary={"avg": 1.5},
+            total_operations=100,
+            total_time_ms=1500.0,
+            average_time_ms=15.0,
+            min_time_ms=5.0,
+            max_time_ms=50.0,
+            success_rate=0.95,
+            cache_hit_rate=0.8,
+            database_query_count=50,
+            memory_usage_mb=10.5,
+            details={"test": "data"},
         )
         assert benchmark.benchmark_name == "test_benchmark"
-        assert len(benchmark.metrics) == 1
+        assert benchmark.total_operations == 100
         print("✓ PerformanceBenchmark creation successful")
 
     except Exception as e:

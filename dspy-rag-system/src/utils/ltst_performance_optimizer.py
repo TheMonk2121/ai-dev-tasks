@@ -6,12 +6,13 @@ for the LTST Memory System, including database query optimization, caching
 strategies, and performance monitoring.
 """
 
+import os
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from .context_merger import ContextMerger
+from .context_merger import ContextMerger, ContextMergeRequest
 from .conversation_storage import ConversationStorage
 from .database_resilience import DatabaseResilienceManager as DatabaseManager
 from .logger import setup_logger
@@ -32,8 +33,8 @@ class PerformanceMetrics:
     database_queries: int = 0
     memory_usage_mb: float = 0.0
     error_count: int = 0
-    timestamp: datetime = None
-    metadata: Dict[str, Any] = None
+    timestamp: Optional[datetime] = None
+    metadata: Optional[Dict[str, Any]] = None
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -57,8 +58,8 @@ class PerformanceBenchmark:
     cache_hit_rate: float
     database_query_count: int
     memory_usage_mb: float
-    timestamp: datetime = None
-    details: Dict[str, Any] = None
+    timestamp: Optional[datetime] = None
+    details: Optional[Dict[str, Any]] = None
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -84,7 +85,9 @@ class LTSTPerformanceOptimizer:
         self.ltst_integration = LTSTMemoryIntegration(
             self.conversation_storage, self.context_merger, self.session_manager
         )
-        self.db_manager = DatabaseManager()
+        # Get connection string from environment or use default
+        connection_string = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
+        self.db_manager = DatabaseManager(connection_string)
 
         # Performance tracking
         self.performance_metrics: List[PerformanceMetrics] = []
@@ -432,7 +435,7 @@ class LTSTPerformanceOptimizer:
                     execution_times.append(operation_time)
 
                     # Track cache hits (simplified)
-                    if bundle.metadata.get("cache_hit", False):
+                    if bundle.metadata and bundle.metadata.get("cache_hit", False):
                         cache_hits += 1
 
                     success_count += 1
@@ -574,9 +577,7 @@ class LTSTPerformanceOptimizer:
                     operation_start = time.time()
 
                     # Perform context merging
-                    request = self.context_merger.ContextMergeRequest(
-                        session_id=session_id, user_id=user_id, current_message=message
-                    )
+                    request = ContextMergeRequest(session_id=session_id, user_id=user_id, current_message=message)
 
                     _ = self.context_merger.merge_context(request)
 

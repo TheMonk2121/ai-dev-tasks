@@ -49,12 +49,12 @@ class ContextMergeRequest:
     session_id: str
     user_id: str
     current_message: str
-    context_types: List[str] = None  # ['conversation', 'preference', 'project', 'user_info']
+    context_types: Optional[List[str]] = None  # ['conversation', 'preference', 'project', 'user_info']
     max_context_length: int = 10000
     relevance_threshold: float = 0.7
     include_history: bool = True
     history_limit: int = 20
-    metadata: Dict[str, Any] = None
+    metadata: Optional[Dict[str, Any]] = None
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -120,7 +120,8 @@ class ContextMerger:
                 merged_content=merged_content,
                 relevance_scores=relevance_scores,
                 context_hash=self._generate_context_hash(request, merged_content),
-                metadata=request.metadata,
+                created_at=datetime.now(),
+                metadata=request.metadata or {},
             )
 
             # Cache result
@@ -139,7 +140,7 @@ class ContextMerger:
             "session_id": request.session_id,
             "user_id": request.user_id,
             "current_message_hash": hashlib.sha256(request.current_message.encode()).hexdigest(),
-            "context_types": sorted(request.context_types),
+            "context_types": sorted(request.context_types or []),
             "max_context_length": request.max_context_length,
             "relevance_threshold": request.relevance_threshold,
             "include_history": request.include_history,
@@ -203,7 +204,7 @@ class ContextMerger:
         try:
             relevant_contexts = []
 
-            for context_type in request.context_types:
+            for context_type in request.context_types or []:
                 contexts = self.conversation_storage.get_context(request.session_id, context_type)
 
                 # Filter by relevance threshold
