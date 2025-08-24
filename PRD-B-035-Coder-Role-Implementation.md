@@ -1,4 +1,14 @@
-# Product Requirements Document: Coder Role Implementation for Memory Rehydration System
+<!-- ANCHOR_KEY: prd-b-035-coder-role-implementation -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- Backlog ID: B-035 -->
+<!-- Status: completed -->
+<!-- Priority: High -->
+<!-- Dependencies: None -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
+
+# Product Requirements Document: B-035 - Coder Role Implementation
 
 > ⚠️**Auto-Skip Note**> This PRD was generated because either `points≥5` or `score_total<3.0`.
 > Remove this banner if you manually forced PRD creation.

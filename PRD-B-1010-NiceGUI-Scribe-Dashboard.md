@@ -1,4 +1,14 @@
-# Product Requirements Document: B-1010 NiceGUI Scribe Dashboard
+<!-- ANCHOR_KEY: prd-b-1010-nicegui-scribe-dashboard -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- Backlog ID: B-1010 -->
+<!-- Status: todo -->
+<!-- Priority: High -->
+<!-- Dependencies: B-1009, B-1003 -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
+
+# Product Requirements Document: B-1010 - NiceGUI Scribe Dashboard
 
 > ⚠️**Auto-Skip Note**: This PRD was generated because `points≥5` (8 points) and `score_total≥3.0` (7.0).
 > Remove this banner if you manually forced PRD creation.
