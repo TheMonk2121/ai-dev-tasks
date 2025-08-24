@@ -14,6 +14,7 @@ from .context_merger import ContextMerger, ContextMergeResult
 from .conversation_storage import ConversationContext, ConversationMessage, ConversationSession, ConversationStorage
 from .database_resilience import DatabaseResilienceManager
 from .logger import setup_logger
+from .ltst_database_integration import DatabaseMergeResult, DatabaseRehydrationResult, LTSTDatabaseIntegration
 from .memory_rehydrator import MemoryRehydrator, RehydrationRequest, RehydrationResult
 
 logger = setup_logger(__name__)
@@ -71,6 +72,7 @@ class LTSTMemorySystem:
         self.conversation_storage = ConversationStorage(self.db_manager)
         self.context_merger = ContextMerger(self.db_manager)
         self.memory_rehydrator = MemoryRehydrator(self.db_manager)
+        self.database_integration = LTSTDatabaseIntegration(self.db_manager)
 
         # Performance monitoring
         self.operation_history: List[MemoryOperation] = []
@@ -315,6 +317,61 @@ class LTSTMemorySystem:
             logger.error(f"Error merging contexts: {e}")
             raise
 
+    def merge_contexts_database(
+        self,
+        session_id: str,
+        merge_strategy: str = "relevance",
+        max_merged_length: int = 5000,
+        relevance_threshold: float = 0.7,
+        similarity_threshold: float = 0.8,
+    ) -> DatabaseMergeResult:
+        """
+        Merge contexts using PostgreSQL database functions.
+
+        Args:
+            session_id: Session identifier
+            merge_strategy: Merging strategy ('relevance' or 'similarity')
+            max_merged_length: Maximum length of merged content
+            relevance_threshold: Minimum relevance score
+            similarity_threshold: Minimum similarity threshold
+
+        Returns:
+            DatabaseMergeResult with merged content and metadata
+        """
+        start_time = time.time()
+
+        try:
+            result = self.database_integration.merge_contexts_database(
+                session_id, merge_strategy, max_merged_length, relevance_threshold, similarity_threshold
+            )
+
+            duration_ms = (time.time() - start_time) * 1000
+
+            self._record_operation(
+                "merge_database",
+                session_id,
+                "system",
+                duration_ms,
+                True,
+                metadata={
+                    "source_context_count": result.source_context_count,
+                    "avg_relevance": result.avg_relevance,
+                    "merge_quality_score": result.merge_quality_score,
+                    "context_types": result.context_types,
+                },
+            )
+
+            logger.info(
+                f"Database context merging completed for session {session_id}: {result.source_context_count} contexts"
+            )
+            return result
+
+        except Exception as e:
+            duration_ms = (time.time() - start_time) * 1000
+            self._record_operation("merge_database", session_id, "system", duration_ms, False, str(e))
+            logger.error(f"Error in database context merging: {e}")
+            raise
+
     def rehydrate_memory(
         self,
         session_id: str,
@@ -378,6 +435,60 @@ class LTSTMemorySystem:
             duration_ms = (time.time() - start_time) * 1000
             self._record_operation("rehydrate", session_id, user_id, duration_ms, False, str(e))
             logger.error(f"Error rehydrating memory: {e}")
+            raise
+
+    def rehydrate_memory_database(
+        self,
+        session_id: str,
+        user_id: str,
+        max_context_length: int = 10000,
+        include_history: bool = True,
+        history_limit: int = 20,
+    ) -> DatabaseRehydrationResult:
+        """
+        Rehydrate memory using PostgreSQL database functions.
+
+        Args:
+            session_id: Session identifier
+            user_id: User identifier
+            max_context_length: Maximum context length
+            include_history: Whether to include conversation history
+            history_limit: Maximum number of history messages
+
+        Returns:
+            DatabaseRehydrationResult with rehydrated content
+        """
+        start_time = time.time()
+
+        try:
+            result = self.database_integration.rehydrate_memory_database(
+                session_id, user_id, max_context_length, include_history, history_limit
+            )
+
+            duration_ms = (time.time() - start_time) * 1000
+
+            self._record_operation(
+                "rehydrate_database",
+                session_id,
+                user_id,
+                duration_ms,
+                True,
+                metadata={
+                    "context_length": len(result.rehydrated_context),
+                    "history_length": len(result.conversation_history),
+                    "context_count": result.context_count,
+                    "continuity_score": result.continuity_score,
+                    "rehydration_quality_score": result.rehydration_quality_score,
+                },
+            )
+
+            logger.info(f"Database memory rehydration completed for session {session_id}: {duration_ms:.2f}ms")
+            return result
+
+        except Exception as e:
+            duration_ms = (time.time() - start_time) * 1000
+            self._record_operation("rehydrate_database", session_id, user_id, duration_ms, False, str(e))
+            logger.error(f"Error in database memory rehydration: {e}")
             raise
 
     def search_conversations(
