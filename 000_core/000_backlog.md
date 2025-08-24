@@ -323,6 +323,36 @@ Coherence Validation System |
 <!-- reference_cards: ["500_reference-cards.md#documentation-generation"] -->
 
 | B-1014 | MCP File Processing Integration for LTST Memory System | 🔥 | 6 | todo | Integrate industry-standard MCP tools (LangGraph, CrewAI, AutoGen) with LTST Memory System for drag-and-drop JSON/code file processing, enabling seamless file analysis, context extraction, and intelligent document handling within the AI development ecosystem | MCP Integration + File Processing + LTST Memory + LangGraph + CrewAI + AutoGen + Drag-and-Drop + JSON Processing + Code Analysis | B-1012 LTST Memory System |
+
+| B-094 | MCP Memory Rehydrator Server | 🔥 | 3 | todo | Implement MCP server for memory rehydration with role-based context retrieval | MCP Server + Memory Rehydration + Role Context | B-1012 LTST Memory System |
+
+<!--score: {bv:5, tc:3, rr:4, le:3, effort:3, lessons:3, deps:["B-1012"]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Implement MCP server for memory rehydration with role-based context retrieval -->
+<!-- est_hours: 3 -->
+<!-- acceptance: MCP server provides role-based memory rehydration with <500ms response time -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#mcp-integration"] -->
+<!-- reference_cards: ["500_reference-cards.md#memory-rehydration"] -->
+
+| B-095 | MCP Server Role Auto-Detection | 🔥 | 2 | todo | Enhance MCP server to automatically detect role based on conversation context | Context analysis + role detection + dynamic tool selection | B-094 MCP Memory Rehydrator Server |
+
+<!--score: {bv:5, tc:3, rr:4, le:3, effort:2, lessons:3, deps:["B-094"]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Add conversation context analysis to automatically select appropriate role -->
+<!-- est_hours: 2 -->
+<!-- acceptance: MCP server automatically detects planner/implementer/researcher role from conversation -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-detection-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#context-analysis"] -->
+
+| B-097 | Roadmap Milestones & Burndown Charts | 📊 | 3 | todo | Add milestone tracking and burndown charts to roadmap for progress visibility | Milestone definition + progress tracking + chart generation | 000_core/004_development-roadmap.md |
+
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:3, lessons:3, deps:["000_core/004_development-roadmap.md"]}-->
+<!--score_total: 6.0-->
+<!-- do_next: Implement milestone tracking and burndown chart generation for roadmap -->
+<!-- est_hours: 3 -->
+<!-- acceptance: Roadmap shows milestone progress and burndown charts for sprint visibility -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#progress-tracking"] -->
+<!-- reference_cards: ["500_reference-cards.md#milestone-tracking"] -->
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1012"]}-->
 <!--score_total: 6.0-->
 <!-- do_next: Research and implement MCP file processing integration with LTST Memory System for drag-and-drop capabilities -->

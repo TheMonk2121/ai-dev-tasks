@@ -18,13 +18,15 @@
 
 ## 🎯 Current Sprint Status
 
-### **Active Sprint: DSPy 3.0 Migration & Advanced Features (August 2024)**
+### **Active Sprint: Unified Memory System & DSPy 3.0 Integration (August 2024)**
 
-**Current Focus**: DSPy 3.0 Migration + Advanced RAG + MCP Integration
+**Current Focus**: Cohesive Memory System + DSPy 3.0 Migration + Advanced RAG + Consensus Framework
 
 #### **Completed This Sprint**
 - ✅ **B-1003**: DSPy Multi-Agent System Implementation (8 points) - 2025-08-22
 - ✅ **B-1004**: DSPy v2 Optimization (6 points) - 2025-01-23
+- ✅ **B-075**: Few-Shot Cognitive Scaffolding Integration (6 points) - 2025-08-16
+- ✅ **B-084**: Research-Based Schema Design for Extraction (6 points) - 2025-08-16
 - ✅ **B-062**: Context Priority Guide Auto-Generation (0.5 points) - 2025-08-16
 - ✅ **B-098**: Multi-Role PR Sign-Off System v2.0 (3 points) - 2025-08-21
 
@@ -33,20 +35,22 @@
 - 🔄 **B-096**: Enhanced Scribe System (3 points) - **ACTIVE**
 
 #### **Next Up (This Sprint)**
-- **B-1006-A**: DSPy 3.0 Core Parity Migration (2 points) - **READY**
-- **B-1007**: Pydantic AI Style Enhancements (2 points) - **DEPENDS ON B-1006-A**
-- **B-1013**: Advanced RAG Optimization (7 points) - **NEW PRIORITY**
+- **B-1006-A**: DSPy 3.0 Core Parity Migration (3 points) - ✅ **COMPLETED**
+- **B-1006-B**: DSPy 3.0 Minimal Assertion Swap (2 points) - ✅ **COMPLETED**
+- **B-1007**: Pydantic AI Style Enhancements (2 points) - **READY**
+- **B-1013**: Advanced RAG Optimization with Late Chunking and HIRAG (7 points) - **READY**
+- **B-094**: MCP Memory Rehydrator Server (3 points) - **READY**
 
 ### **Sprint Goals**
-- Complete DSPy 3.0 migration foundation
+- Complete unified memory system foundation
+- Establish DSPy 3.0 migration with consensus framework
 - Implement advanced RAG optimization
-- Establish Pydantic AI style enhancements
 - Maintain system stability and performance
 
 ## 🚀 Strategic Phases
 
 ### **Phase 1: Foundation & Core Systems (August 2024) - ✅ COMPLETED**
-**Goal**: Establish robust foundation with multi-agent system and optimization
+**Goal**: Establish robust foundation with multi-agent system and memory excellence
 
 #### **Core Infrastructure** ✅
 - ✅ **B-000**: v0.3.1-rc3 Core Hardening
@@ -59,12 +63,21 @@
 - ✅ **B-1004**: DSPy v2 Optimization with Adam LK insights
 - ✅ **B-062**: Context Priority Guide Auto-Generation
 
-### **Phase 2: DSPy 3.0 Migration & Enhancement (August-September 2024) - 🔄 ACTIVE**
-**Goal**: Migrate to DSPy 3.0 and implement advanced features
+#### **Memory System Foundation** ✅
+- ✅ **B-075**: Few-Shot Cognitive Scaffolding Integration
+- ✅ **B-084**: Research-Based Schema Design for Extraction
+
+### **Phase 2: Unified Memory System & DSPy 3.0 Integration (August-September 2024) - 🔄 ACTIVE**
+**Goal**: Merge memory excellence with DSPy 3.0 and establish consensus framework
 
 #### **DSPy 3.0 Foundation** ✅
 - **B-1006-A**: DSPy 3.0 Core Parity Migration (3 points) - ✅ **COMPLETED**
 - **B-1006-B**: DSPy 3.0 Minimal Assertion Swap (2 points) - ✅ **COMPLETED**
+
+#### **Unified Memory System**
+- **B-1012**: LTST Memory System (6 points) - **READY** - ChatGPT-like conversation memory
+- **B-094**: MCP Memory Rehydrator Server (3 points) - **READY** - Memory system integration
+- **B-095**: MCP Server Role Auto-Detection (2 points) - **DEPENDS ON B-094**
 
 #### **AI Style Enhancements**
 - **B-1007**: Pydantic AI Style Enhancements (2 points) - **READY**
@@ -83,8 +96,9 @@
 #### **MCP Integration**
 - **B-1014**: MCP File Processing Integration (6 points) - **DEPENDS ON B-1012**
 
-#### **Memory System**
-- **B-1012**: LTST Memory System (6 points) - **READY**
+#### **Consensus Framework**
+- **B-097**: Roadmap Milestones & Burndown Charts (3 points) - **READY**
+- **B-076**: Research-Based DSPy Assertions Implementation (5 points) - **READY**
 
 ### **Phase 4: Performance & Optimization (October 2024) - 🔮 FUTURE**
 **Goal**: Optimize system performance and establish benchmarks
@@ -95,7 +109,6 @@
 - **B-096**: MCP Server Performance Optimization (2 points)
 
 #### **Benchmarking & Monitoring**
-- **B-076**: Research-Based DSPy Assertions Implementation (5 points)
 - **B-080**: Research-Based Performance Monitoring (3 points)
 
 ### **Phase 5: Advanced AI Coordination (Q1 2025) - 🔮 FUTURE**
@@ -109,14 +122,14 @@
 ## 📊 Backlog Integration
 
 ### **Priority Distribution**
-- **P0 (Critical)**: 3 items - DSPy 3.0 migration and core enhancements
-- **P1 (High)**: 8 items - Advanced features and integration
+- **P0 (Critical)**: 5 items - Unified memory system and DSPy 3.0 integration
+- **P1 (High)**: 10 items - Advanced features and integration
 - **P2 (Medium)**: 5 items - Performance and optimization
 
 ### **Points Distribution**
-- **Total Active Points**: 89 points
-- **Current Sprint**: 16 points (B-093 + B-096 + B-1006-A + B-1007 + B-1013)
-- **Next Sprint**: 22 points (B-1006-B + B-1008 + B-1009 + B-1010)
+- **Total Active Points**: 95 points
+- **Current Sprint**: 19 points (B-093 + B-096 + B-1007 + B-1013 + B-094)
+- **Next Sprint**: 24 points (B-1008 + B-1009 + B-1010 + B-095 + B-097)
 
 ### **Dependency Chain**
 ```
@@ -125,18 +138,22 @@ B-1006-A (DSPy 3.0) ✅ → B-1006-B (Assertions) ✅ → B-1007 (Pydantic) → 
 B-1007 (Pydantic) → B-1009 (AsyncIO) → B-1010 (NiceGUI)
      ↓
 B-1013 (Advanced RAG) → B-1014 (MCP Integration)
+     ↓
+B-094 (MCP Memory) → B-095 (Role Detection) → B-096 (Performance)
+     ↓
+B-1012 (LTST Memory) → B-1014 (MCP File Processing)
 ```
 
 ## 🎯 Strategic Objectives
 
 ### **Q3 2024 Objectives**
-1. **DSPy 3.0 Migration**: Complete core parity and enhanced assertions
-2. **Advanced RAG**: Implement late chunking and HIRAG integration
-3. **AI Style Enhancement**: Establish Pydantic-based validation and type safety
-4. **System Integration**: Complete AsyncIO and NiceGUI enhancements
+1. **Unified Memory System**: Complete LTST memory + MCP integration
+2. **DSPy 3.0 Migration**: Complete core parity and enhanced assertions
+3. **Advanced RAG**: Implement late chunking and HIRAG integration
+4. **Consensus Framework**: Establish roadmap milestones and validation
 
 ### **Q4 2024 Objectives**
-1. **MCP Integration**: Complete file processing and LTST memory system
+1. **MCP Integration**: Complete file processing and role auto-detection
 2. **Performance**: Optimize system performance and establish benchmarks
 3. **Advanced Features**: Implement advanced AI coordination capabilities
 4. **Production Readiness**: Full deployment and monitoring
@@ -152,221 +169,25 @@ B-1013 (Advanced RAG) → B-1014 (MCP Integration)
 ### **Auto-Update Triggers**
 - **Backlog Changes**: When items are completed or priorities change
 - **Sprint Completion**: When current sprint goals are achieved
-- **Phase Transitions**: When moving between strategic phases
-- **Strategic Shifts**: When project direction or priorities change
+- **Memory System Updates**: When memory rehydration or context changes
+- **Consensus Framework**: When validation or agreement patterns change
 
-### **Update Process**
-1. **Monitor Backlog**: Track completion of items and priority changes
-2. **Update Sprint Status**: Reflect current progress and next priorities
-3. **Adjust Phases**: Move items between phases as needed
-4. **Update Dependencies**: Maintain accurate dependency chains
-5. **Cross-Reference**: Ensure alignment with `000_core/000_core/000_backlog.md`
+## 🧠 Unified Memory System Architecture
 
-### **Quality Gates**
-- **Backlog Alignment**: All roadmap items must exist in backlog
-- **Priority Consistency**: Roadmap priorities must match backlog priorities
-- **Dependency Accuracy**: Dependencies must be correctly reflected
-- **Completion Tracking**: Completed items must be moved to appropriate sections
+### **Memory Components**
+- **LTST Memory**: ChatGPT-like conversation persistence and context merging
+- **Few-Shot Scaffolding**: Role-based cognitive patterns and examples
+- **MCP Integration**: Memory rehydrator server with role auto-detection
+- **Schema Design**: Research-based extraction and validation patterns
 
-## 📚 Cross-References
+### **Role Empowerment**
+- **Multi-Agent Coordination**: Local AI models with intelligent routing
+- **Pydantic Validation**: Type safety and constitution-aware validation
+- **Advanced RAG**: Late chunking and HIRAG for superior context retrieval
+- **Consensus Framework**: Agreement-driven development and validation
 
-### **Core Workflow Integration**
-- **Backlog**: `000_core/000_core/000_backlog.md` - Source of truth for priorities
-- **PRD Creation**: `000_core/001_create-prd.md` - For new features
-- **Task Generation**: `000_core/002_generate-tasks.md` - For implementation planning
-- **Task Execution**: `000_core/003_process-task-list.md` - For execution tracking
-
-### **Strategic Context**
-- **System Overview**: `400_guides/400_system-overview.md` - Technical architecture
-- **Memory Context**: `100_memory/100_memory/100_cursor-memory-context.md` - Current project state
-- **Development Guide**: `400_guides/400_development-roadmap.md` - Detailed technical roadmap
-
-### **Research Integration**
-- **Research Index**: `500_research/500_research-index.md` - Research context
-- **DSPy Context**: `100_memory/104_dspy-development-context.md` - Technical implementation
-
-## 🎯 Next Actions
-
-### **Immediate (This Week)**
-1. **Complete B-093**: Scribe + Auto Rehydrate
-2. **Start B-1007**: Pydantic AI Style Enhancements
-3. **Begin B-1013**: Advanced RAG Optimization
-
-### **Short Term (Next 2 Weeks)**
-1. **Complete B-1007**: Pydantic AI Style Enhancements
-2. **Begin B-1008**: Enhanced Backlog System
-3. **Start B-1009**: AsyncIO Scribe Enhancement
-
-### **Medium Term (Next Month)**
-1. **Complete Phase 2**: Finish DSPy 3.0 migration and enhancements
-2. **Begin Phase 3**: Start advanced features and integration
-3. **Performance Review**: Assess system performance and optimization needs
-
----
-
-**Last Updated**: 2025-08-24 08:53
-**Next Review**: Weekly sprint planning
-**Backlog Sync**: Auto-updates with `000_core/000_core/000_backlog.md` changes
-
-#### **Q4 Goal 2: Advanced RAG System**
-- **Target**: Complete B-043, B-044, B-045 (LangExtract + RAG Enhancement)
-- **Success Metrics**:
-  - Entity/attribute extraction operational
-  - n8n integration complete
-  - Enhanced RAG schema implemented
-- **Timeline**: September-October 2024
-
-#### **Q4 Goal 3: Performance Optimization**
-- **Target**: Complete B-046, B-047 (Benchmarking + Auto-routing)
-- **Success Metrics**:
-  - 4-way benchmark results
-  - Auto-routing system operational
-  - Performance improvements documented
-- **Timeline**: October 2024
-
-#### **Q4 Goal 4: Infrastructure Automation**
-- **Target**: Complete B-050, B-051, B-052 series
-- **Success Metrics**:
-  - Automated task generation
-  - PRD skeleton generator
-  - Enhanced repository maintenance
-- **Timeline**: October-November 2024
-
-## 🚀 **Future Model Roadmap (2025)**
-
-### **Advanced Agent Specialization (Q1 2025)**
-
-#### **B-034: Deep Research Agent Integration**
-- **Priority**: 🔥 **HIGH** - 5 points
-- **Dependencies**: B-011 completion
-- **Goals**: Specialized research agent for complex analysis
-- **Timeline**: Q1 2025
-
-#### **B-035: Coder Agent Specialization**
-- **Priority**: 🔥 **HIGH** - 5 points
-- **Dependencies**: B-011 completion
-- **Goals**: Specialized coding agent for best practices
-- **Timeline**: Q1 2025
-
-#### **B-036: General Query Agent Enhancement**
-- **Priority**: 🔥 **HIGH** - 3 points
-- **Dependencies**: B-011 completion
-- **Goals**: General assistance agent for documentation
-- **Timeline**: Q1 2025
-
-### **Advanced Model Orchestration (Q2 2025)**
-
-#### **B-038: Advanced Model Orchestration**
-- **Priority**: 🔧 **MEDIUM** - 13 points
-- **Dependencies**: B-034, B-035, B-036 completion
-- **Goals**: Multi-model coordination system
-- **Timeline**: Q2 2025
-
-### **Future Migration (Q3 2025)**
-
-#### **B-037: Yi-Coder Migration (Future)**
-- **Priority**: 🔧 **MEDIUM** - 8 points
-- **Dependencies**: GGUF compatibility resolution
-- **Goals**: Migrate to Yi-Coder when compatibility resolved
-- **Timeline**: Q3 2025 (conditional)
-
-## 🏗️ **Infrastructure Milestones**
-
-### **Completed Infrastructure (2024)**
-- ✅ **v0.3.1-rc3 Core Hardening** - Production ready
-- ✅ **Real-time Mission Dashboard** - Live AI task monitoring
-- ✅ **Production Security & Monitoring** - Comprehensive security
-- ✅ **n8n Backlog Scrubber** - Automated prioritization
-- ✅ **Database Connection Pooling** - Enhanced resilience
-- ✅ **Comprehensive Documentation** - All guides completed
-
-### **Upcoming Infrastructure (Q4 2024)**
-- 🔄 **B-031: Vector Database Foundation Enhancement** - 3 points
-- 🔄 **B-032: Memory Context System Architecture Research** - 8 points
-- 🔄 **B-032-C1: Generation Cache Implementation** - 3 points
-
-### **Future Infrastructure (2025)**
-- 📋 **Advanced Monitoring Systems** - Performance optimization
-- 📋 **Distributed Architecture** - Scalability improvements
-- 📋 **Cloud Integration** - Deployment flexibility
-- 📋 **Cloud Integration** - Deployment flexibility
-
-## 📈 **Success Metrics & KPIs**
-
-### **Development Velocity**
-- **Sprint Completion Rate**: Target 90%+ sprint completion
-- **Points Per Sprint**: Target 8-12 points per sprint
-- **Documentation Coverage**: 100% of new features documented
-
-### **System Performance**
-- **Response Time**: <2 seconds for AI queries
-- **Uptime**: 99.9% system availability
-- **Error Rate**: <1% error rate in production
-
-### **Quality Metrics**
-- **Test Coverage**: >90% code coverage
-- **Documentation Quality**: All guides comprehensive and current
-- **Security Score**: Zero critical security vulnerabilities
-
-### **Research Integration**
-- **Research Utilization**: 80%+ of research findings implemented
-- **Innovation Rate**: 2-3 new research integrations per quarter
-- **Academic Alignment**: Regular updates from latest research
-
-## 🔄 **Dependency Management**
-
-### **Critical Dependencies**
-```
-B-011 (Cursor Native AI) → B-043, B-044, B-045 (LangExtract + RAG)
-B-043 (LangExtract Pilot) → B-044 (n8n Service)
-B-044 (n8n Service) → B-045 (RAG Schema)
-B-045 (RAG Schema) → B-046 (Benchmark)
-B-046 (Benchmark) → B-047 (Auto-router)
-B-011 (Cursor Native AI) → B-034, B-035, B-036 (Specialized Agents)
-B-034, B-035, B-036 → B-038 (Advanced Orchestration)
-```
-
-### **Resource Allocation**
-- **Primary Focus**: B-011 completion (Foundation)
-- **Secondary Focus**: B-043 through B-047 (RAG Enhancement)
-- **Research Focus**: B-032 (Memory Context Research)
-- **Infrastructure**: B-031 (Vector Database Enhancement)
-
-## 🎯 **Risk Management**
-
-### **Technical Risks**
-- **Model Integration Complexity**: B-011 may require more time than estimated
-- **Performance Bottlenecks**: B-046 benchmarking may reveal significant issues
-- **Dependency Delays**: Any delay in B-011 affects multiple downstream items
-
-### **Mitigation Strategies**
-- **Incremental Implementation**: Break complex items into smaller phases
-- **Parallel Development**: Work on independent items simultaneously
-- **Research Integration**: Use research findings to inform implementation
-- **Regular Reviews**: Weekly progress reviews and adjustment
-
-### **Contingency Plans**
-- **B-011 Delay**: Focus on B-031 and B-032 (independent items)
-- **Performance Issues**: Prioritize B-046 benchmarking early
-- **Research Gaps**: Use existing documentation as foundation
-
-## 📋 **Progress Tracking**
-
-### **Current Progress (August 2024)**
-- **Completed Items**: 47 items (C-002 through C-047)
-- **Total Points Earned**: 89 points
-- **Current Sprint**: B-011 (5 points) - In Progress
-- **Next Sprint**: B-043, B-044, B-045 (8 points total)
-
-### **Quarterly Progress**
-- **Q3 2024**: 47 items completed, 89 points earned
-- **Q4 2024 Target**: 15-20 items, 25-30 points
-- **2025 Target**: Advanced agent specialization and orchestration
-
-### **Success Indicators**
-- **On Track**: B-011 completion by end of August
-- **At Risk**: B-032 (Memory Context Research) - 8 points, complex
-- **Blocked**: B-048 (Confidence Calibration) - Requires research
-
-## 🔗 **Related Documentation**
-
+### **System Integration**
+- **AsyncIO Enhancement**: Event-driven architecture with real-time processing
+- **NiceGUI Dashboard**: Advanced UI with AI integration and monitoring
+- **MCP File Processing**: Drag-and-drop JSON/code file analysis
+- **Performance Optimization**: Caching, connection pooling, and async processing
