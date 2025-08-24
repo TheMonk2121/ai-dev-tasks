@@ -64,7 +64,7 @@
 - RESTful API for n8n integration
 - Health checks and monitoring
 
-3.**Demo Script**(`demo_backlog_scrubber.py`)
+3.**Demo Script**(`600_archives/demo-scripts/demo_backlog_scrubber.py`) - ARCHIVED
 
 - Comprehensive demonstration of features
 - Testing and validation utilities
@@ -140,7 +140,7 @@ python3 src/n8n_workflows/backlog_webhook.py --host 0.0.0.0 --port 5001 --debug
 
 # Run comprehensive demo
 
-python3 demo_backlog_scrubber.py
+python3 600_archives/demo-scripts/demo_backlog_scrubber.py  # ARCHIVED
 
 ```markdown
 

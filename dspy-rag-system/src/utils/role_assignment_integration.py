@@ -57,7 +57,7 @@ class RoleAssignmentIntegration:
                 "scripts/cursor_memory_rehydrate.py",
                 "artifacts/worklogs/",
                 "artifacts/summaries/",
-                "400_guides/400_scribe-system-guide.md",
+                "400_guides/400_scribe-v2-system-guide.md",
                 "600_archives/",
                 "600_archives/artifacts/prds/PRD-B-102-Cursor-Native-AI-Role-Coordination-System.md",
                 "600_archives/artifacts/task_lists/Task-List-B-102-Cursor-Native-AI-Role-Coordination-System.md",
@@ -87,7 +87,7 @@ class RoleAssignmentIntegration:
                 "400_guides/400_context-priority-guide.md",
                 "400_guides/400_documentation-reference.md",
                 "200_setup/200_naming-conventions.md",
-                "400_guides/400_scribe-system-guide.md",
+                "400_guides/400_scribe-v2-system-guide.md",
                 "400_guides/400_project-overview.md",
                 "400_guides/400_system-overview.md",
                 "400_guides/400_comprehensive-coding-best-practices.md",
@@ -276,6 +276,7 @@ class RoleAssignmentIntegration:
             print(f"❌ Error rolling back changes: {e}")
             return False
 
+
 def main():
     """Main entry point for role assignment integration."""
     import argparse
@@ -299,6 +300,7 @@ def main():
     # Integrate assignments
     success = integration.integrate_automated_assignments(args.archives_dir, args.dry_run)
     sys.exit(0 if success else 1)
+
 
 if __name__ == "__main__":
     main()

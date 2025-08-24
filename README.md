@@ -874,7 +874,7 @@ Environment setup and configuration:
 AI system documentation:
 
 - **[DSPy RAG System](dspy-rag-system/README.md)**: Intelligent document processing
-- **[Scribe System](400_guides/400_scribe-system-guide.md)**: Context capture and summarization
+- **[Scribe System](400_guides/400_scribe-v2-system-guide.md)**: Context capture and summarization
 - **[Memory Context](100_memory/100_cursor-memory-context.md)**: AI context management
 - **[Agent Coordination](400_guides/400_multi-role-pr-signoff-guide.md)**: Multi-role consensus
 - **[Workflow Automation](400_guides/400_n8n-backlog-scrubber-guide.md)**: N8N integration

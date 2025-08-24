@@ -1,5 +1,9 @@
 
 
+<!-- ANCHOR_KEY: setup-requirements -->
+<!-- ANCHOR_PRIORITY: 20 -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
+
 <!-- CONFIGURATION_MASTER: This file is the single source of truth for all configuration -->
 
 # Setup Requirements
@@ -446,7 +450,7 @@ python3 -c "from src.utils.database_resilience import get_database_manager; prin
 
 # Test event processing
 
-python3 demo_n8n_integration.py
+python3 600_archives/demo-scripts/demo_n8n_integration.py  # ARCHIVED
 
 ```
 

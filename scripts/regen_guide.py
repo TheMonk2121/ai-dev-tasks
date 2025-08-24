@@ -32,6 +32,7 @@ class AnchorMetadata:
     memory_context: Optional[str] = None
     database_sync: Optional[str] = None
 
+
 class AnchorHeaderScanner:
     """Scans markdown files for anchor metadata headers."""
 
@@ -134,6 +135,7 @@ class AnchorHeaderScanner:
 
         print(f"Found anchor metadata in {len(metadata_list)} files")
         return metadata_list
+
 
 class GuideGenerator:
     """Generates the context priority guide from anchor metadata."""
@@ -275,7 +277,7 @@ class GuideGenerator:
                 "testing-strategy",
                 "Before writing tests",
             ),
-            ("Scribe system", "400_guides/400_scribe-system-guide.md", "scribe-system", "Using context capture"),
+            ("Scribe system", "400_guides/400_scribe-v2-system-guide.md", "scribe-system", "Using context capture"),
         ]
 
         for topic, file_path, anchor, when in key_files:
@@ -338,6 +340,7 @@ Optional metadata:
             print(f"❌ Error generating guide: {e}")
             return False
 
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Generate Context Priority Guide from file headers")
@@ -395,6 +398,7 @@ def main():
         else:
             print("\n❌ Context Priority Guide generation failed.")
             return 1
+
 
 if __name__ == "__main__":
     main()

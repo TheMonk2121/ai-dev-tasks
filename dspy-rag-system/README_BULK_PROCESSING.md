@@ -74,7 +74,7 @@ python3 bulk_add_core_documents.py --dry-run
 2. `400_guides/400_cursor-ai-integration-guide.md` (Priority: 6.0)
 3. `400_guides/400_dspy-v2-technical-implementation-guide.md` (Priority: 6.0)
 4. `400_guides/400_multi-role-pr-signoff-v2-guide.md` (Priority: 6.0)
-5. `400_guides/400_scribe-system-guide.md` (Priority: 6.0)
+5. `400_guides/400_scribe-v2-system-guide.md` (Priority: 6.0)
 6. `400_guides/400_dspy-schema-reference.md` (Priority: 6.0)
 7. `400_guides/400_multi-role-pr-signoff-guide.md` (Priority: 6.0)
 8. `400_guides/400_backlog-status-tracking-guide.md` (Priority: 6.0)

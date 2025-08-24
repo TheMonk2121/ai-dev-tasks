@@ -397,15 +397,15 @@ python3 -m pytest tests/test_mission_dashboard.py::TestMissionDashboardAPI -v
 
 # Create sample missions
 
-python3 demo_mission_dashboard.py create
+python3 600_archives/demo-scripts/demo_mission_dashboard.py create  # ARCHIVED
 
 # Run full demo
 
-python3 demo_mission_dashboard.py run
+python3 600_archives/demo-scripts/demo_mission_dashboard.py run  # ARCHIVED
 
 # Show statistics
 
-python3 demo_mission_dashboard.py stats
+python3 600_archives/demo-scripts/demo_mission_dashboard.py stats  # ARCHIVED
 
 ```bash
 
