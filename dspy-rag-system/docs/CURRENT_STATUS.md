@@ -254,5 +254,5 @@ DEEP_REASONING=0 CLARIFIER=0 make run-local
 
 - --
 
-- Last Updated: 2024-08-07 05:30*
+- Last Updated: 2025-08-24 05:30*
 - Next Review: When system architecture changes*

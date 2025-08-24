@@ -92,7 +92,7 @@ Brief description
 
 Content here
 
-- --*Last Updated: 2024-08-07*```text**Expected Output:**```json
+- --*Last Updated: 2025-08-24*```text**Expected Output:**```json
 {
   "structure_valid": true,
   "has_purpose": true,
@@ -735,7 +735,7 @@ class TestFileValidation:
 
         Content here
 
-        - --*Last Updated: 2024-08-07*"""
+        - --*Last Updated: 2025-08-24*"""
 
         with patch("builtins.open", mock_open(read_data=valid_content)):
             result = validate_file_structure("400_test-document.md")
@@ -1313,6 +1313,6 @@ DOCUMENTATION_BEST_PRACTICES = {
 
 - --
 
-- Last Updated: 2024-08-07*
+- Last Updated: 2025-08-24*
 - Next Review: Monthly*
 - Context Engineering Level: Advanced*

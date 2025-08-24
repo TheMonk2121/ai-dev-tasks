@@ -473,7 +473,7 @@ python scripts/documentation_retrieval_cli.py stats --format json
 
 - --
 
-- Last Updated: 2024-08-07*
+- Last Updated: 2025-08-24*
 - Next Review: When system features change*
 
 ## 🔄 Research integration workflow

@@ -197,7 +197,7 @@ Maintain the **workflow chain**: `000_core/000_backlog.md` → `000_core/001_cre
 
 - --
 
-- Last Updated: 2024-08-07 21:00*
+- Last Updated: 2025-08-24 21:00*
 - Next Review: When workflow changes*
 
 <!-- WORKFLOW_MODULE_METADATA
