@@ -1,5 +1,9 @@
 
 
+<!-- ANCHOR_KEY: research-infrastructure-guide -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
+
 # 📚 Research Infrastructure Guide
 
 ## 🔎 TL;DR

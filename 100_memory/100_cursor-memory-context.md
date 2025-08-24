@@ -118,6 +118,48 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **In
 - **Echo Verification**: Bundle integrity verification for models
 - **Self-Critique**: Anthropic-style reflection checkpoints
 
+## 🎙️ Scribe System (Context Capture & Summarization) {#scribe-system}
+
+**Purpose**: Automatic development session recording, insight extraction, and knowledge mining
+**Status**: ✅ **ACTIVE** - Core system component with ongoing enhancements
+**Priority**: P2 (Medium) - Essential for development tracking and knowledge preservation
+
+### **Core Capabilities**
+- **📝 Session Recording**: Automatic capture of development sessions, diffs, and decisions
+- **🧠 Insight Extraction**: AI-powered analysis and summarization of development work
+- **📊 Progress Tracking**: Real-time monitoring of development progress and milestones
+- **🔍 Knowledge Mining**: Extraction of patterns, lessons learned, and best practices
+- **🏷️ Context Tagging**: Rich metadata for session discovery and categorization
+
+### **Key Commands**
+```bash
+# List all sessions with context tags
+python scripts/single_doorway.py scribe list
+
+# Add context tags to a session
+python scripts/single_doorway.py scribe tag --backlog-id B-XXX --tags brainstorming implementation
+
+# Get detailed session information
+python scripts/single_doorway.py scribe info --backlog-id B-XXX
+
+# Clean up old completed sessions
+python scripts/single_doorway.py scribe cleanup
+
+# Validate that registered processes are still running
+python scripts/single_doorway.py scribe validate
+```
+
+### **Integration Points**
+- **Memory Rehydration**: Deep integration with cursor memory rehydration system
+- **DSPy Systems**: Context capture for AI model training and optimization
+- **Git Hooks**: Automatic session recording on commits and PRs
+- **Backlog Management**: Session tracking linked to backlog items
+- **Documentation**: Automatic generation of development summaries
+
+### **Current Enhancements**
+- **B-1009**: AsyncIO Scribe Enhancement (Event-driven context capture)
+- **B-1010**: NiceGUI Scribe Dashboard (Advanced UI with AI integration)
+
 ## 🏷️ Session Registry System {#session-registry}
 
 The Session Registry provides centralized tracking and discovery of active Scribe sessions with rich context tagging capabilities.
@@ -297,7 +339,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 - Graph visualization guide → `400_guides/400_graph-visualization-guide.md`
 
-- Scribe system guide → `400_guides/400_scribe-system-guide.md`
+- Scribe system guide → `400_guides/400_scribe-v2-system-guide.md`
 
 - Session registry → `scripts/session_registry.py`
 
@@ -556,16 +598,16 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 1. **B‑1005**: Bulk Core Document Processing for Memory Rehydrator (🔥 points)
    - todo
 
-2. **B‑1006**: DSPy 3.0 Migration: Native Assertion Support and Enhanced Optimization (🔥 points)
+2. **B‑1006-A**: DSPy 3.0 Core Parity Migration (🔥 points)
    - todo
 
-3. **B‑1008**: Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates (🔥 points)
+3. **B‑1006-B**: DSPy 3.0 Minimal Assertion Swap (🔥 points)
    - todo
 
-4. ****: B‑100 (Coder Role Implementation for Memory Rehydration System points)
-   - 5
+4. **B‑1008**: Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates (🔥 points)
+   - todo
 
-5. **B‑102**: Cursor Native AI Role Coordination System (🔥 points)
+5. **B‑1009**: AsyncIO Scribe Enhancement: Event-Driven Context Capture and Real-time Processing (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 

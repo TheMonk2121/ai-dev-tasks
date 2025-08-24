@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: metadata-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # 📊 Metadata & Governance Research
 

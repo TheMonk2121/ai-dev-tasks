@@ -1,5 +1,9 @@
 
 
+<!-- ANCHOR_KEY: documentation-example -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
+
 # Documentation Example
 
 > Example/template file. Not part of active workflows. See `200_setup/200_naming-conventions.md` (Templates & Examples)

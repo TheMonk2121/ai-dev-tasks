@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: integration-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # 🔌 Integration Research
 

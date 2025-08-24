@@ -7,7 +7,9 @@
 <!-- DSPY_CONTEXT: Enhanced multi-role PR sign-off system v2.0 with 5-step strategic alignment -->
 <!-- DSPY_VALIDATION: documentation_standards, content_organization, cross_reference_accuracy -->
 <!-- DSPY_RESPONSIBILITIES: documentation_standards, content_organization, cross_reference_management -->
-
+<!-- ANCHOR_KEY: multi-role-pr-signoff-v2 -->
+<!-- ANCHOR_PRIORITY: 30 -->
+<!-- ROLE_PINS: ["implementer", "coder", "planner"] -->
 # Multi-Role PR Sign-Off System v2.0 Guide
 
 ## 🔎 TL;DR
@@ -475,7 +477,7 @@ python scripts/lessons_analyzer.py --pattern-extraction
 
 - **[System Overview](../400_guides/400_system-overview.md)**: Technical architecture
 - **[Project Overview](../400_guides/400_project-overview.md)**: Project context and workflow
-- **[Scribe System Guide](../400_guides/400_scribe-system-guide.md)**: Context capture system
+- **[Scribe System Guide](../400_guides/400_scribe-v2-system-guide.md)**: Context capture system
 - **[Context Priority Guide](../400_guides/400_context-priority-guide.md)**: Documentation hierarchy
 - **[Naming Conventions](../200_setup/200_naming-conventions.md)**: File organization standards
 

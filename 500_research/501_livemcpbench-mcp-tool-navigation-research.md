@@ -1,3 +1,7 @@
+<!-- ANCHOR_KEY: livemcpbench-research -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
+
 # LiveMCPBench: Can Agents Navigate an Ocean of MCP Tools?
 
 <!-- MEMORY_CONTEXT: LOW - Research findings on MCP tool navigation and agent capabilities -->
@@ -39,7 +43,7 @@ This research paper presents LiveMCPBench, a comprehensive benchmark for evaluat
 - Le Sun¹
 
 **Affiliations:**
-¹ Chinese Information Processing Laboratory, Institute of Software, Chinese Academy of Sciences  
+¹ Chinese Information Processing Laboratory, Institute of Software, Chinese Academy of Sciences
 ² University of Chinese Academy of Sciences
 
 **Contact:** {moguozhao2024,zhongwenliang2024,chenjiawei2024,xuanang2020,luyaojie,hongyu,xianpei,sunle}@iscas.ac.cn, benhe@ucas.ac.cn

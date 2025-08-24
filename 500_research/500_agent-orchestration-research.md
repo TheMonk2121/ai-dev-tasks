@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: agent-orchestration-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # 🤖 Agent Orchestration Research
 

@@ -22,6 +22,7 @@ sed -i '' 's/dspy==3.0.2/dspy==2.6.27/g' requirements.txt
 
 # Reinstall requirements
 echo "🔧 Reinstalling requirements..."
+# shellcheck disable=SC1091
 source venv/bin/activate
 pip install -r requirements.txt
 

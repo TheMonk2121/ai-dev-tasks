@@ -1,5 +1,9 @@
 
 
+<!-- ANCHOR_KEY: rag-system-research -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
+
 # 🔍 RAG System Research
 
 ## 🔍 RAG System Research

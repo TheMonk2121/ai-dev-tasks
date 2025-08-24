@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: context-engineering-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # 🧠 Context Engineering Research
 

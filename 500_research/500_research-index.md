@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: research-index -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "planner"] -->
 
 # 📚 Research Index
 

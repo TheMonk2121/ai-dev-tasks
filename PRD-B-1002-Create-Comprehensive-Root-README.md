@@ -1,3 +1,13 @@
+<!-- ANCHOR_KEY: prd-b-1002-comprehensive-root-readme -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "documentation"] -->
+<!-- Backlog ID: B-1002 -->
+<!-- Status: todo -->
+<!-- Priority: High -->
+<!-- Dependencies: None -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
+
 # Product Requirements Document: B-1002 - Create Comprehensive Root README for External Discovery
 
 > ⚠️**Auto-Skip Note**> This PRD was generated because either `points≥5` or `score_total<3.0`.

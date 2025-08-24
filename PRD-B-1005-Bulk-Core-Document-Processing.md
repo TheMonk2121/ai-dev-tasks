@@ -1,6 +1,14 @@
-# Product Requirements Document: B-1005 Bulk Core Document Processing for Memory Rehydrator
+<!-- ANCHOR_KEY: prd-b-1005-bulk-core-document-processing -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- Backlog ID: B-1005 -->
+<!-- Status: todo -->
+<!-- Priority: High -->
+<!-- Dependencies: B-1003 -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
 
-**Backlog ID**: B-1005
+# Product Requirements Document: B-1005 - Bulk Core Document Processing
 
 > ⚠️ **Auto-Skip Note**: This PRD was generated because `points≥5` (4 points) and `score_total≥3.0` (6.0).
 > Remove this banner if you manually forced PRD creation.

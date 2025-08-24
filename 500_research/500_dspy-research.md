@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: dspy-research -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # 🔬 DSPy Research
 

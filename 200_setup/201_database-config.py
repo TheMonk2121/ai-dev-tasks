@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: database-config
+# ANCHOR_PRIORITY: 35
+# ROLE_PINS: ["implementer", "coder"]
 """
 Database Configuration Manager
 ==============================
@@ -55,20 +58,25 @@ class DatabaseConfigManager:
 
         return True
 
+
 # Global configuration instance
 _database_config_manager = DatabaseConfigManager()
+
 
 def get_database_config() -> DatabaseConfigManager:
     """Get the global database configuration manager"""
     return _database_config_manager
 
+
 def get_database_url() -> str:
     """Get the standardized database connection string"""
     return _database_config_manager.database_url
 
+
 def get_postgres_dsn() -> str:
     """Get the PostgreSQL DSN for compatibility"""
     return _database_config_manager.postgres_dsn
+
 
 def validate_database_config() -> bool:
     """Validate all database configuration settings"""

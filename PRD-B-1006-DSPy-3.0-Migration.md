@@ -1,4 +1,14 @@
-# Product Requirements Document: B-1006 DSPy 3.0 Migration
+<!-- ANCHOR_KEY: prd-b-1006-dspy-3-0-migration -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- Backlog ID: B-1006 -->
+<!-- Status: todo -->
+<!-- Priority: High -->
+<!-- Dependencies: B-1003 -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
+
+# Product Requirements Document: B-1006 - DSPy 3.0 Migration
 
 > ⚠️**Auto-Skip Note**: This PRD was generated because either `points≥5` or `score_total<3.0`.
 > Remove this banner if you manually forced PRD creation.

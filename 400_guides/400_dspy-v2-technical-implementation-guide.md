@@ -1,3 +1,6 @@
+<!-- ANCHOR_KEY: dspy-v2-technical-implementation -->
+<!-- ANCHOR_PRIORITY: 40 -->
+<!-- ROLE_PINS: ["implementer", "coder", "planner"] -->
 # DSPy v2 Technical Implementation Guide
 
 **Version**: 1.0
@@ -40,6 +43,43 @@ DSPy v2 Optimization System
 │   ├── DSPySystemIntegration
 │   ├── IntegrationConfig
 │   └── SystemStatus
+├── LangExtract System
+│   ├── EntityExtractor
+│   ├── RelationExtractor
+│   ├── FactExtractor
+│   ├── LangExtractSystem
+│   └── LangExtractInterface
+├── Core DSPy Modules (Tier 1)
+│   ├── CursorModelRouter
+│   ├── VectorStore
+│   ├── DocumentProcessor
+│   └── OptimizationLoop
+├── Context & Observability (Tier 1)
+│   ├── MemoryRehydrator (Python)
+│   ├── MemoryRehydrator (Go)
+│   ├── StructuredTracer
+│   └── SelfCritique
+├── Production Infrastructure (Tier 2)
+│   ├── SingleDoorwaySystem
+│   ├── DocCoherenceValidator
+│   ├── TaskGenerationAutomation
+│   ├── DatabaseResilience
+│   ├── Dashboard
+│   ├── ErrorPatternRecognition
+│   ├── BulkDocumentProcessor
+│   ├── DatabasePathCleanup
+│   ├── PromptSanitizer
+│   ├── RollbackDocSystem
+│   └── AnchorMetadataParser
+├── Supporting Infrastructure (Tier 3)
+│   ├── RetryWrapper
+│   ├── PerformanceBenchmark
+│   ├── Logger
+│   ├── AutoPushPrompt
+│   ├── MaintenancePush
+│   ├── HydrationBenchmark
+│   ├── HydrationMonitor
+│   └── HydrationDashboard
 └── Role Refinement
     ├── RoleRefinementSystem
     ├── RoleDefinition
@@ -168,6 +208,285 @@ class IntegrationConfig:
     enable_metrics: bool = True
     auto_optimize: bool = True
     auto_validate: bool = True
+```
+
+### 5. Core DSPy Modules Integration Pattern
+
+```python
+from dspy_modules.cursor_model_router import CursorModelRouter
+from dspy_modules.vector_store import VectorStore
+from dspy_modules.document_processor import DocumentProcessor
+from dspy_modules.optimization_loop import FourPartOptimizationLoop
+
+class DSPySystemIntegration:
+    def __init__(self):
+        self.model_router = CursorModelRouter()
+        self.vector_store = VectorStore()
+        self.document_processor = DocumentProcessor()
+        self.optimization_loop = FourPartOptimizationLoop()
+
+    def process_document_with_optimization(self, document_path: str):
+        # Process document
+        processed_doc = self.document_processor.process(document_path)
+
+        # Store in vector database
+        self.vector_store.add_document(processed_doc)
+
+        # Optimize processing pipeline
+        optimization_result = self.optimization_loop.run_cycle({
+            "module_class": self.document_processor.__class__,
+            "test_data": [processed_doc],
+            "optimization_objectives": ["accuracy", "speed"]
+        })
+
+        return optimization_result
+```
+
+### 6. Context & Observability Pattern
+
+```python
+from dspy_modules.utils.memory_rehydrator import MemoryRehydrator
+from dspy_modules.utils.structured_tracer import StructuredTracer
+from dspy_modules.utils.self_critique import SelfCritique
+
+class ContextAwareSystem:
+    def __init__(self):
+        self.memory_rehydrator = MemoryRehydrator()
+        self.structured_tracer = StructuredTracer()
+        self.self_critique = SelfCritique()
+
+    def execute_with_context(self, task: str, role: str = "planner"):
+        # Rehydrate context for role
+        context = self.memory_rehydrator.rehydrate_context(role, task)
+
+        # Start structured tracing
+        with self.structured_tracer.trace("task_execution"):
+            # Execute task with context
+            result = self.execute_task(task, context)
+
+            # Self-critique the result
+            critique = self.self_critique.evaluate(result, context)
+
+            if critique.needs_improvement:
+                result = self.improve_result(result, critique)
+
+        return result
+```
+
+### 7. Vector Store Integration Pattern
+
+```python
+from dspy_modules.vector_store import VectorStore
+from typing import List, Dict, Any
+
+class VectorStoreManager:
+    def __init__(self):
+        self.vector_store = VectorStore()
+
+    def hybrid_search(self, query: str, top_k: int = 10) -> List[Dict[str, Any]]:
+        """Perform hybrid dense + sparse search"""
+        # Dense vector search
+        dense_results = self.vector_store.semantic_search(query, top_k)
+
+        # Sparse keyword search
+        sparse_results = self.vector_store.keyword_search(query, top_k)
+
+        # Combine results using Reciprocal Rank Fusion
+        combined_results = self.vector_store.rrf_fusion(dense_results, sparse_results)
+
+        return combined_results[:top_k]
+
+    def add_document_with_metadata(self, content: str, metadata: Dict[str, Any]):
+        """Add document with comprehensive metadata"""
+        # Process document
+        processed_doc = self.document_processor.process_content(content)
+
+        # Add to vector store with metadata
+        self.vector_store.add_document(
+            content=processed_doc.content,
+            metadata={
+                **metadata,
+                "chunk_index": processed_doc.chunk_index,
+                "span_start": processed_doc.span_start,
+                "span_end": processed_doc.span_end
+            }
+        )
+```
+
+### 8. Document Processing Pipeline Pattern
+
+```python
+from dspy_modules.document_processor import DocumentProcessor
+from typing import List, Dict, Any
+
+class DocumentPipeline:
+    def __init__(self):
+        self.processor = DocumentProcessor()
+
+    def process_document_collection(self, documents: List[str]) -> List[Dict[str, Any]]:
+        """Process multiple documents with validation"""
+        processed_docs = []
+
+        for doc_path in documents:
+            try:
+                # Validate document
+                if not self.processor.validate_document(doc_path):
+                    continue
+
+                # Extract metadata
+                metadata = self.processor.extract_metadata(doc_path)
+
+                # Chunk document
+                chunks = self.processor.chunk_document(doc_path)
+
+                # Prepare for indexing
+                processed_doc = {
+                    "path": doc_path,
+                    "metadata": metadata,
+                    "chunks": chunks,
+                    "processing_status": "completed"
+                }
+
+                processed_docs.append(processed_doc)
+
+            except Exception as e:
+                processed_docs.append({
+                    "path": doc_path,
+                    "processing_status": "failed",
+                    "error": str(e)
+                })
+
+        return processed_docs
+```
+
+### 9. Production Infrastructure Integration Pattern
+
+```python
+from scripts.single_doorway import SingleDoorwaySystem
+from scripts.doc_coherence_validator import DocCoherenceValidator
+from scripts.task_generation_automation import TaskGenerationAutomation
+from dspy_rag_system.src.utils.database_resilience import DatabaseResilience
+from dspy_rag_system.src.dashboard import Dashboard
+from dspy_rag_system.src.utils.error_pattern_recognition import ErrorPatternRecognition
+from dspy_rag_system.bulk_add_core_documents import BulkDocumentProcessor
+from dspy_rag_system.cleanup_database_paths import DatabasePathCleanup
+from dspy_rag_system.src.utils.prompt_sanitizer import PromptSanitizer
+from scripts.rollback_doc import RollbackDocSystem
+from dspy_rag_system.src.utils.anchor_metadata_parser import AnchorMetadataParser
+
+class ProductionInfrastructureManager:
+    def __init__(self):
+        self.single_doorway = SingleDoorwaySystem()
+        self.doc_validator = DocCoherenceValidator()
+        self.task_generator = TaskGenerationAutomation()
+        self.db_resilience = DatabaseResilience()
+        self.dashboard = Dashboard()
+        self.error_patterns = ErrorPatternRecognition()
+        self.bulk_processor = BulkDocumentProcessor()
+        self.path_cleanup = DatabasePathCleanup()
+        self.prompt_sanitizer = PromptSanitizer()
+        self.rollback_system = RollbackDocSystem()
+        self.anchor_parser = AnchorMetadataParser()
+
+    def run_complete_workflow(self, task_description: str):
+        """Run complete production workflow with all infrastructure components"""
+        # 1. Validate documentation coherence
+        doc_status = self.doc_validator.validate_all()
+
+        # 2. Generate tasks from description
+        tasks = self.task_generator.generate_tasks(task_description)
+
+        # 3. Process with single doorway system
+        workflow_result = self.single_doorway.run_workflow(tasks)
+
+        # 4. Monitor via dashboard
+        self.dashboard.update_status(workflow_result)
+
+        return workflow_result
+
+    def handle_error_with_patterns(self, error: Exception):
+        """Handle errors using pattern recognition and recovery"""
+        pattern = self.error_patterns.classify_error(error)
+        recovery_action = self.error_patterns.get_recovery_action(pattern)
+
+        if recovery_action.requires_rollback:
+            self.rollback_system.create_snapshot()
+
+        return recovery_action.execute()
+```
+
+### 10. Supporting Infrastructure Integration Pattern
+
+```python
+from dspy_rag_system.src.utils.retry_wrapper import RetryWrapper
+from scripts.performance_benchmark import PerformanceBenchmark
+from dspy_rag_system.src.utils.logger import Logger
+from scripts.auto_push_prompt import AutoPushPrompt
+from scripts.maintenance_push import MaintenancePush
+from dspy_rag_system.scripts.hydration_benchmark import HydrationBenchmark
+from dspy_rag_system.src.n8n_workflows.hydration_monitor import HydrationMonitor
+from dspy_rag_system.src.mission_dashboard.hydration_dashboard import HydrationDashboard
+
+class SupportingInfrastructureManager:
+    def __init__(self):
+        self.retry_wrapper = RetryWrapper()
+        self.performance_benchmark = PerformanceBenchmark()
+        self.logger = Logger()
+        self.auto_push_prompt = AutoPushPrompt()
+        self.maintenance_push = MaintenancePush()
+        self.hydration_benchmark = HydrationBenchmark()
+        self.hydration_monitor = HydrationMonitor()
+        self.hydration_dashboard = HydrationDashboard()
+
+    def run_with_resilience(self, operation_func, *args, **kwargs):
+        """Run operation with retry wrapper and logging"""
+        self.logger.info("Starting operation", operation=operation_func.__name__)
+
+        try:
+            result = self.retry_wrapper.execute_with_retry(
+                operation_func, *args, **kwargs
+            )
+            self.logger.info("Operation completed successfully")
+            return result
+        except Exception as e:
+            self.logger.error("Operation failed", error=str(e))
+            raise
+
+    def benchmark_performance(self, operation_name: str, operation_func, *args, **kwargs):
+        """Benchmark operation performance"""
+        benchmark_result = self.performance_benchmark.run_benchmark(
+            operation_name, operation_func, *args, **kwargs
+        )
+
+        # Update hydration dashboard with performance metrics
+        self.hydration_dashboard.update_performance_metrics(benchmark_result)
+
+        return benchmark_result
+
+    def run_hydration_benchmark(self):
+        """Run comprehensive hydration performance benchmark"""
+        benchmark_result = self.hydration_benchmark.run_comprehensive_benchmark()
+
+        # Monitor hydration health
+        health_status = self.hydration_monitor.check_hydration_health()
+
+        # Update dashboard
+        self.hydration_dashboard.update_benchmark_results(benchmark_result, health_status)
+
+        return benchmark_result, health_status
+
+    def maintenance_workflow(self, changes_description: str):
+        """Run maintenance workflow with auto-push integration"""
+        # Run maintenance operations
+        maintenance_result = self.maintenance_push.run_maintenance()
+
+        # Prompt for push if needed
+        if maintenance_result.requires_push:
+            push_confirmed = self.auto_push_prompt.prompt_for_push(changes_description)
+            if push_confirmed:
+                self.maintenance_push.execute_push()
+
+        return maintenance_result
 ```
 
 ## 🧪 Testing Patterns
@@ -486,6 +805,91 @@ def optimize_with_memory_management(program, test_data):
 - Implement caching where appropriate
 - Use async processing for I/O operations
 - Monitor memory usage
+
+## 🏗️ LangExtract System Implementation
+
+### LangExtract Architecture
+
+The LangExtract system provides research-based structured extraction with span-level grounding and DSPy 3.0 assertion integration.
+
+#### Core Components
+- **EntityExtractor**: Research-based entity extraction with span-level grounding
+- **RelationExtractor**: Relation extraction with validation and retry logic
+- **FactExtractor**: Fact extraction with schema validation
+- **LangExtractSystem**: Main orchestration module
+- **LangExtractInterface**: High-level interface for extraction operations
+
+#### Implementation Pattern
+
+```python
+from dspy_modules.lang_extract_system import create_lang_extract_interface
+
+def extract_structured_data(text: str, extraction_type: str):
+    """Extract structured data using LangExtract system"""
+    interface = create_lang_extract_interface()
+    return interface.extract(text, extraction_type)
+
+# Usage example
+result = extract_structured_data(
+    text="Apple Inc. was founded by Steve Jobs in 1976.",
+    extraction_type="entities"
+)
+```
+
+#### DSPy 3.0 Assertion Integration
+
+```python
+@dspy.assert_transform_module
+class EntityExtractor(Module):
+    """Research-based entity extraction with enhanced validation"""
+
+    def forward(self, text: str, entity_types: List[str]) -> Dict[str, Any]:
+        result = self.predict(text=text, entity_types=entity_types)
+
+        # Research-based assertions with enhanced retry logic
+        dspy.Assert(
+            self.validate_entities(result.entities),
+            "Entities must be valid",
+            max_retries=3,
+            backoff_factor=2.0
+        )
+        dspy.Assert(
+            self.validate_spans(result.spans, text),
+            "Spans must be valid",
+            max_retries=3,
+            backoff_factor=2.0
+        )
+        dspy.Suggest(
+            lambda x: 0 <= x.confidence <= 1,
+            "Confidence must be between 0 and 1",
+            log_failures=True
+        )(result)
+
+        return result
+```
+
+#### Integration with Optimization System
+
+```python
+from dspy_modules.optimization_loop import FourPartOptimizationLoop
+from dspy_modules.lang_extract_system import LangExtractSystem
+
+class OptimizedLangExtract:
+    def __init__(self):
+        self.extractor = LangExtractSystem()
+        self.optimization_loop = FourPartOptimizationLoop()
+
+    def optimize_and_extract(self, text: str, extraction_type: str):
+        # Run optimization cycle for extraction
+        cycle = self.optimization_loop.run_cycle({
+            "module_class": self.extractor.__class__,
+            "test_data": self._create_test_data(text),
+            "optimization_objectives": ["accuracy", "speed", "coverage"]
+        })
+
+        # Perform extraction with optimized parameters
+        return self.extractor.extract(text, extraction_type)
+```
 
 ## 🚀 Future Extensions
 

@@ -1,4 +1,14 @@
-# Product Requirements Document: B-1007 Pydantic AI Style Enhancements
+<!-- ANCHOR_KEY: prd-b-1007-pydantic-ai-style-enhancements -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- Backlog ID: B-1007 -->
+<!-- Status: todo -->
+<!-- Priority: High -->
+<!-- Dependencies: B-1006-A -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
+
+# Product Requirements Document: B-1007 - Pydantic AI Style Enhancements
 
 > ⚠️**Auto-Skip Note**: This PRD was generated because either `points≥5` or `score_total<3.0`.
 > Remove this banner if you manually forced PRD creation.

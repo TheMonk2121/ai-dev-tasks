@@ -36,7 +36,7 @@
 
 ## 📚 **Documentation Updates**
 
-### **Scribe System Guide (`400_guides/400_scribe-system-guide.md`)**
+### **Scribe System Guide (`400_guides/400_scribe-v2-system-guide.md`)**
 - **New Section**: Session Registry with comprehensive feature documentation
 - **CLI Commands**: Complete session management command documentation
 - **Context Tagging**: Rich metadata system documentation
@@ -117,7 +117,7 @@
 ## 🔗 **Documentation Integration Summary**
 
 ### **Updated Files:**
-1. **`400_guides/400_scribe-system-guide.md`** - Session registry section and CLI integration
+1. **`400_guides/400_scribe-v2-system-guide.md`** - Session registry section and CLI integration
 2. **`400_guides/400_hydration-system-guide.md`** - Session registry integration section
 3. **`100_memory/100_cursor-memory-context.md`** - Session registry system section
 4. **`000_core/000_backlog.md`** - Marked B-1001 as completed

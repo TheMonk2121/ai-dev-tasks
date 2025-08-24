@@ -48,9 +48,11 @@ python3 scripts/task_generation_automation.py --prd <prd_file> --output-file tas
 
 ### Backlog Integration {#backlog-integration}
 
-- **Input**: Backlog item ID (e.g., B-1007) or PRD file
+- **Input**: Backlog item ID (e.g., B-1007, B-1009) or PRD file
 - **Output**: Task list with comprehensive testing requirements
 - **Cross-reference**: `000_core/000_backlog.md` for item details and metadata
+- **B-1009**: AsyncIO Scribe Enhancement - Task generation completed
+- **B-1010**: NiceGUI Scribe Dashboard - Task generation completed
 
 The automation system provides:
 - **Consistent task templates** with all required sections

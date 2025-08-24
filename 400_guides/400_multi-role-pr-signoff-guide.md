@@ -7,7 +7,9 @@
 <!-- DSPY_CONTEXT: Multi-role PR sign-off system documentation for comprehensive review and cleanup -->
 <!-- DSPY_VALIDATION: documentation_standards, content_organization, cross_reference_accuracy -->
 <!-- DSPY_RESPONSIBILITIES: documentation_standards, content_organization, cross_reference_management -->
-
+<!-- ANCHOR_KEY: multi-role-pr-signoff -->
+<!-- ANCHOR_PRIORITY: 30 -->
+<!-- ROLE_PINS: ["implementer", "coder", "planner"] -->
 # Multi-Role PR Sign-Off System Guide
 
 ## 🔎 TL;DR {#tldr}
@@ -379,7 +381,7 @@ done
 
 - **[System Overview](../400_guides/400_system-overview.md)**: Technical architecture
 - **[Project Overview](../400_guides/400_project-overview.md)**: High-level project structure
-- **[Scribe System Guide](../400_guides/400_scribe-system-guide.md)**: Context capture system
+- **[Scribe System Guide](../400_guides/400_scribe-v2-system-guide.md)**: Context capture system
 - **[Context Priority Guide](../400_guides/400_context-priority-guide.md)**: Documentation hierarchy
 - **[Single Doorway Workflow](../000_core/001_create-prd.md)**: Core workflow integration
 

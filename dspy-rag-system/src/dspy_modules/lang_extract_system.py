@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: lang-extract-system
+# ANCHOR_PRIORITY: 25
+# ROLE_PINS: ["implementer", "coder"]
 """
 LangExtract System - Research-Based Structured Extraction
 Implements span-level grounding and controlled generation for precise fact extraction
@@ -18,6 +21,7 @@ _LOG = logging.getLogger("lang_extract_system")
 
 # ---------- LangExtract Schemas ----------
 
+
 @dataclass
 class ExtractionSchema:
     """Research-based extraction schema for structured data extraction"""
@@ -28,6 +32,7 @@ class ExtractionSchema:
     span_tracking: bool = True
     confidence_threshold: float = 0.8
 
+
 class ExtractionType(Enum):
     """Types of structured extraction supported"""
 
@@ -37,7 +42,9 @@ class ExtractionType(Enum):
     EVENTS = "events"
     ATTRIBUTES = "attributes"
 
+
 # ---------- DSPy Signatures for LangExtract ----------
+
 
 class EntityExtractionSignature(Signature):
     """Signature for entity extraction with span-level grounding"""
@@ -48,6 +55,7 @@ class EntityExtractionSignature(Signature):
     confidence = OutputField(desc="Confidence level (0-1)")
     spans = OutputField(desc="Character spans for each entity")
 
+
 class RelationExtractionSignature(Signature):
     """Signature for relation extraction with span-level grounding"""
 
@@ -56,6 +64,7 @@ class RelationExtractionSignature(Signature):
     relations = OutputField(desc="List of extracted relations with spans")
     confidence = OutputField(desc="Confidence level (0-1)")
     spans = OutputField(desc="Character spans for each relation")
+
 
 class FactExtractionSignature(Signature):
     """Signature for fact extraction with span-level grounding"""
@@ -66,9 +75,10 @@ class FactExtractionSignature(Signature):
     confidence = OutputField(desc="Confidence level (0-1)")
     spans = OutputField(desc="Character spans for each fact")
 
+
 # ---------- LangExtract Modules ----------
 
-# @dspy.assert_transform_module  # Not available in DSPy 2.6.27
+
 class EntityExtractor(Module):
     """Research-based entity extraction with span-level grounding"""
 
@@ -84,14 +94,33 @@ class EntityExtractor(Module):
 
         result = self.predict(text=text, entity_types=entity_types)
 
-        # Research-based assertions for validation
-        # dspy.Assert(self.validate_entities(result.entities), "Entities must be valid")  # Not available in DSPy 2.6.27
-        # dspy.Assert(self.validate_spans(result.spans, text), "Spans must be valid")  # Not available in DSPy 2.6.27
-        # dspy.Assert(0 <= result.confidence <= 1, "Confidence must be between 0 and 1")  # Not available in DSPy 2.6.27
+        # Validate results using standard validation methods
+        if not self.validate_entities(result.entities):
+            _LOG.warning("Invalid entities detected, returning empty result")
+            return {
+                "entities": [],
+                "confidence": 0.0,
+                "spans": [],
+                "extraction_type": "entities",
+            }
+
+        if not self.validate_spans(result.spans, text):
+            _LOG.warning("Invalid spans detected, returning empty result")
+            return {
+                "entities": [],
+                "confidence": 0.0,
+                "spans": [],
+                "extraction_type": "entities",
+            }
+
+        # Validate confidence
+        confidence = result.confidence
+        if not isinstance(confidence, (int, float)) or confidence < 0 or confidence > 1:
+            confidence = 0.5  # Default confidence if invalid
 
         return {
             "entities": result.entities,
-            "confidence": result.confidence,
+            "confidence": confidence,
             "spans": result.spans,
             "extraction_type": "entities",
         }
@@ -126,7 +155,7 @@ class EntityExtractor(Module):
 
         return True
 
-# @dspy.assert_transform_module  # Not available in DSPy 2.6.27
+
 class RelationExtractor(Module):
     """Research-based relation extraction with span-level grounding"""
 
@@ -142,14 +171,33 @@ class RelationExtractor(Module):
 
         result = self.predict(text=text, relation_types=relation_types)
 
-        # Research-based assertions for validation
-        # dspy.Assert(self.validate_relations(result.relations), "Relations must be valid")  # Not available in DSPy 2.6.27
-        # dspy.Assert(self.validate_spans(result.spans, text), "Spans must be valid")  # Not available in DSPy 2.6.27
-        # dspy.Assert(0 <= result.confidence <= 1, "Confidence must be between 0 and 1")  # Not available in DSPy 2.6.27
+        # Validate results using standard validation methods
+        if not self.validate_relations(result.relations):
+            _LOG.warning("Invalid relations detected, returning empty result")
+            return {
+                "relations": [],
+                "confidence": 0.0,
+                "spans": [],
+                "extraction_type": "relations",
+            }
+
+        if not self.validate_spans(result.spans, text):
+            _LOG.warning("Invalid spans detected, returning empty result")
+            return {
+                "relations": [],
+                "confidence": 0.0,
+                "spans": [],
+                "extraction_type": "relations",
+            }
+
+        # Validate confidence
+        confidence = result.confidence
+        if not isinstance(confidence, (int, float)) or confidence < 0 or confidence > 1:
+            confidence = 0.5  # Default confidence if invalid
 
         return {
             "relations": result.relations,
-            "confidence": result.confidence,
+            "confidence": confidence,
             "spans": result.spans,
             "extraction_type": "relations",
         }
@@ -184,7 +232,7 @@ class RelationExtractor(Module):
 
         return True
 
-# @dspy.assert_transform_module  # Not available in DSPy 2.6.27
+
 class FactExtractor(Module):
     """Research-based fact extraction with span-level grounding"""
 
@@ -200,14 +248,35 @@ class FactExtractor(Module):
 
         result = self.predict(text=text, fact_schema=fact_schema)
 
-        # Research-based assertions for validation
-        # dspy.Assert(self.validate_facts(result.facts, fact_schema), "Facts must match schema")  # Not available in DSPy 2.6.27
-        # dspy.Assert(self.validate_spans(result.spans, text), "Spans must be valid")  # Not available in DSPy 2.6.27
-        # dspy.Assert(0 <= result.confidence <= 1, "Confidence must be between 0 and 1")  # Not available in DSPy 2.6.27
+        # Validate results using standard validation methods
+        if not self.validate_facts(result.facts, fact_schema):
+            _LOG.warning("Invalid facts detected, returning empty result")
+            return {
+                "facts": [],
+                "confidence": 0.0,
+                "spans": [],
+                "extraction_type": "facts",
+                "schema": fact_schema.name,
+            }
+
+        if not self.validate_spans(result.spans, text):
+            _LOG.warning("Invalid spans detected, returning empty result")
+            return {
+                "facts": [],
+                "confidence": 0.0,
+                "spans": [],
+                "extraction_type": "facts",
+                "schema": fact_schema.name,
+            }
+
+        # Validate confidence
+        confidence = result.confidence
+        if not isinstance(confidence, (int, float)) or confidence < 0 or confidence > 1:
+            confidence = 0.5  # Default confidence if invalid
 
         return {
             "facts": result.facts,
-            "confidence": result.confidence,
+            "confidence": confidence,
             "spans": result.spans,
             "extraction_type": "facts",
             "schema": fact_schema.name,
@@ -246,7 +315,9 @@ class FactExtractor(Module):
 
         return True
 
+
 # ---------- LangExtract System ----------
+
 
 class LangExtractSystem(Module):
     """Research-based LangExtract system for structured extraction"""
@@ -387,7 +458,9 @@ class LangExtractSystem(Module):
 
         return schemas
 
+
 # ---------- LangExtract Interface ----------
+
 
 class LangExtractInterface:
     """High-level interface for LangExtract operations"""
@@ -411,11 +484,14 @@ class LangExtractInterface:
         """Get available extraction schemas"""
         return self.system.schemas
 
+
 def create_lang_extract_interface() -> LangExtractInterface:
     """Create a LangExtract interface instance"""
     return LangExtractInterface()
 
+
 # ---------- Research-Based Performance Metrics ----------
+
 
 def evaluate_extraction_quality(extractions: List[Dict], ground_truth: List[Dict]) -> Dict[str, float]:
     """Evaluate extraction quality using research-based metrics"""

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: venv-manager
+# ANCHOR_PRIORITY: 30
+# ROLE_PINS: ["coder", "implementer", "planner", "researcher"]
 """
 Virtual Environment Manager
 ---------------------------

@@ -21,6 +21,8 @@
 
 - Use for high-risk or 5+ point items, or when score_total < 3.0
 - Optional for smaller items where acceptance criteria are obvious
+- **B-1009**: AsyncIO Scribe Enhancement (6 points, score_total: 6.5) - PRD required
+- **B-1010**: NiceGUI Scribe Dashboard (8 points, score_total: 7.0) - PRD required
 
 ### PRD Skip Rule (canonical) {#prd-skip-rule}
 

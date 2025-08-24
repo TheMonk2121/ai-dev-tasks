@@ -1,4 +1,7 @@
 #!/bin/bash
+# <!-- ANCHOR_KEY: rollback-doc -->
+# <!-- ANCHOR_PRIORITY: 25 -->
+# <!-- ROLE_PINS: ["coder", "implementer"] -->
 # Documentation Recovery & Rollback System (B-063)
 #
 # Git snapshot system and rollback script for documentation recovery.

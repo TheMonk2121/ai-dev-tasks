@@ -1,5 +1,9 @@
 
 
+<!-- ANCHOR_KEY: maintenance-safety-research -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["researcher", "coder"] -->
+
 # 🔬 Deep Research: Repository Maintenance Safety & Critical File Protection
 
 ## 🔎 TL;DR

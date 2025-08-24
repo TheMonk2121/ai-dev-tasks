@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: task-generation-automation
+# ANCHOR_PRIORITY: 25
+# ROLE_PINS: ["coder", "implementer"]
 """
 Task Generation Automation System
 
@@ -36,6 +39,7 @@ class TaskRequirement:
     effort_points: Optional[int] = None
     complexity: Optional[str] = None
 
+
 @dataclass
 class GeneratedTask:
     """Represents a generated task with all required components."""
@@ -51,6 +55,7 @@ class GeneratedTask:
     quality_gates: List[str]
     task_type: str
     complexity: str
+
 
 class PRDParser:
     """Parses PRD files to extract requirements and technical details."""
@@ -193,6 +198,7 @@ class PRDParser:
         else:
             return "Complex"
 
+
 class BacklogParser:
     """Parses backlog items to extract requirements."""
 
@@ -269,6 +275,7 @@ class BacklogParser:
             return "Medium"
         else:
             return "Complex"
+
 
 class TaskTemplateGenerator:
     """Generates task templates with testing requirements and quality gates."""
@@ -620,6 +627,7 @@ class TaskTemplateGenerator:
             )
 
         return "\n".join([f"- {note}" for note in notes])
+
 
 class TaskOutputGenerator:
     """Generates formatted task output in various formats."""
@@ -1080,6 +1088,7 @@ class TaskOutputGenerator:
         else:
             return "development"
 
+
 def main():
     """Main entry point for the task generation automation."""
     # FORCE PRE-WORKFLOW ENFORCEMENT
@@ -1251,6 +1260,7 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

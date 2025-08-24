@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: bulk-add-core-documents
+# ANCHOR_PRIORITY: 25
+# ROLE_PINS: ["implementer", "coder"]
 """
 Bulk Core Document Processor
 ---------------------------

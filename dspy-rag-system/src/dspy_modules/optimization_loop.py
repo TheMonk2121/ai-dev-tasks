@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: optimization-loop
+# ANCHOR_PRIORITY: 30
+# ROLE_PINS: ["implementer", "coder"]
 """
 Four-Part Optimization Loop Implementation
 

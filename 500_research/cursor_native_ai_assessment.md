@@ -1,5 +1,9 @@
 
 
+<!-- ANCHOR_KEY: cursor-native-ai-assessment -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
+
 # Cursor Native AI Capability Assessment
 
 {#tldr}

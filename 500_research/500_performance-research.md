@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: performance-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # ⚡ Performance Research
 

@@ -25,14 +25,14 @@ This process task list provides executable implementation steps for the research
 
 ## Execution Overview
 
-**Project:** B-1006-B DSPy 3.0 Research-Enhanced Assertions  
-**Total Tasks:** 12 (4 phases × 3 tasks each)  
-**Estimated Time:** 45 hours  
-**Dependencies:** B-1006-A completion  
+**Project:** B-1006-B DSPy 3.0 Research-Enhanced Assertions
+**Total Tasks:** 12 (4 phases × 3 tasks each)
+**Estimated Time:** 45 hours
+**Dependencies:** B-1006-A completion
 **Research Integration:** LiveMCPBench, DSPy 3.0 research, video analysis
 
-**Auto-Advance:** yes  
-**🛑 Pause After:** no  
+**Auto-Advance:** yes
+**🛑 Pause After:** no
 **When Ready Prompt:** "B-1006-B complete - proceed to B-1011 or parallel work?"
 
 ## Implementation Status
@@ -62,15 +62,15 @@ This process task list provides executable implementation steps for the research
 ## Phase 1: Core Assertion Migration with Research Integration
 
 ### T-1.1 Implement Enhanced Native Assertions
-**Priority:** Critical  
-**Time:** 4 hours  
-**Depends on:** B-1006-A completion  
+**Priority:** Critical
+**Time:** 4 hours
+**Depends on:** B-1006-A completion
 **Auto-Advance:** yes
 
 **Do:**
 1. **Research Integration**: Review DSPy 3.0 research findings on retry mechanisms and exponential backoff
 2. **Identify Call-Sites**: Locate two existing custom assertion call-sites for migration
-3. **Implement Enhanced Assertions**: 
+3. **Implement Enhanced Assertions**:
    ```python
    # Enhanced assertion with retry logic
    dspy.Assert(
@@ -79,7 +79,7 @@ This process task list provides executable implementation steps for the research
        max_retries=3,
        backoff_factor=2.0
    )
-   
+
    # Suggest assertion for non-critical validation
    dspy.Suggest(
        "response follows style guidelines",
@@ -105,9 +105,9 @@ This process task list provides executable implementation steps for the research
 - **T-1.1-HF3**: If tests fail, implement rollback mechanism and revert to custom assertions
 
 ### T-1.2 Implement Research-Informed Error Handling
-**Priority:** High  
-**Time:** 3 hours  
-**Depends on:** T-1.1  
+**Priority:** High
+**Time:** 3 hours
+**Depends on:** T-1.1
 **Auto-Advance:** yes
 
 **Do:**
@@ -132,9 +132,9 @@ This process task list provides executable implementation steps for the research
 - **T-1.2-HF3**: If recovery mechanisms fail, implement fallback error handling
 
 ### T-1.3 Validate Core Migration with Research Metrics
-**Priority:** High  
-**Time:** 2 hours  
-**Depends on:** T-1.2  
+**Priority:** High
+**Time:** 2 hours
+**Depends on:** T-1.2
 **Auto-Advance:** yes
 
 **Do:**
@@ -163,9 +163,9 @@ This process task list provides executable implementation steps for the research
 ## Phase 2: Seven-Point Error Analysis Framework
 
 ### T-2.1 Implement LiveMCPBench Error Categorization
-**Priority:** High  
-**Time:** 6 hours  
-**Depends on:** Phase 1 completion  
+**Priority:** High
+**Time:** 6 hours
+**Depends on:** Phase 1 completion
 **Auto-Advance:** yes
 
 **Do:**
@@ -197,9 +197,9 @@ This process task list provides executable implementation steps for the research
 - **T-2.1-HF3**: If dashboard integration issues, optimize data flow and visualization
 
 ### T-2.2 Implement Error Analysis Dashboard
-**Priority:** Medium  
-**Time:** 4 hours  
-**Depends on:** T-2.1  
+**Priority:** Medium
+**Time:** 4 hours
+**Depends on:** T-2.1
 **Auto-Advance:** yes
 
 **Do:**
@@ -224,9 +224,9 @@ This process task list provides executable implementation steps for the research
 - **T-2.2-HF3**: If recommendations ineffective, improve recommendation logic
 
 ### T-2.3 Validate Error Analysis Framework
-**Priority:** High  
-**Time:** 3 hours  
-**Depends on:** T-2.2  
+**Priority:** High
+**Time:** 3 hours
+**Depends on:** T-2.2
 **Auto-Advance:** yes
 
 **Do:**
@@ -255,9 +255,9 @@ This process task list provides executable implementation steps for the research
 ## Phase 3: Model-Specific Optimization
 
 ### T-3.1 Implement Model Capability Profiling
-**Priority:** High  
-**Time:** 5 hours  
-**Depends on:** Phase 2 completion  
+**Priority:** High
+**Time:** 5 hours
+**Depends on:** Phase 2 completion
 **Auto-Advance:** yes
 
 **Do:**
@@ -285,9 +285,9 @@ This process task list provides executable implementation steps for the research
 - **T-3.1-HF3**: If recommendations poor, improve recommendation logic
 
 ### T-3.2 Implement Model-Specific Assertion Strategies
-**Priority:** High  
-**Time:** 6 hours  
-**Depends on:** T-3.1  
+**Priority:** High
+**Time:** 6 hours
+**Depends on:** T-3.1
 **Auto-Advance:** yes
 
 **Do:**
@@ -312,9 +312,9 @@ This process task list provides executable implementation steps for the research
 - **T-3.2-HF3**: If selection logic issues, improve decision-making algorithms
 
 ### T-3.3 Validate Model Optimization
-**Priority:** High  
-**Time:** 3 hours  
-**Depends on:** T-3.2  
+**Priority:** High
+**Time:** 3 hours
+**Depends on:** T-3.2
 **Auto-Advance:** yes
 
 **Do:**
@@ -343,9 +343,9 @@ This process task list provides executable implementation steps for the research
 ## Phase 4: LLM-as-a-Judge Evaluation System
 
 ### T-4.1 Implement LLM-as-a-Judge Evaluation
-**Priority:** High  
-**Time:** 6 hours  
-**Depends on:** Phase 3 completion  
+**Priority:** High
+**Time:** 6 hours
+**Depends on:** Phase 3 completion
 **Auto-Advance:** yes
 
 **Do:**
@@ -370,9 +370,9 @@ This process task list provides executable implementation steps for the research
 - **T-4.1-HF3**: If dashboard issues, optimize data processing and visualization
 
 ### T-4.2 Implement Automated Assessment Capabilities
-**Priority:** Medium  
-**Time:** 4 hours  
-**Depends on:** T-4.1  
+**Priority:** Medium
+**Time:** 4 hours
+**Depends on:** T-4.1
 **Auto-Advance:** yes
 
 **Do:**
@@ -397,9 +397,9 @@ This process task list provides executable implementation steps for the research
 - **T-4.2-HF3**: If recommendations poor, refine recommendation logic
 
 ### T-4.3 Validate Evaluation System
-**Priority:** High  
-**Time:** 3 hours  
-**Depends on:** T-4.2  
+**Priority:** High
+**Time:** 3 hours
+**Depends on:** T-4.2
 **Auto-Advance:** yes
 
 **Do:**

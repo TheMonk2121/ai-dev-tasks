@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: database-resilience
+# ANCHOR_PRIORITY: 25
+# ROLE_PINS: ["implementer", "coder"]
 """
 Database Resilience Module
 
@@ -24,6 +27,7 @@ from .retry_wrapper import retry
 
 logger = get_logger("database_resilience")
 
+
 @dataclass
 class DatabaseHealth:
     """Database health status"""
@@ -36,6 +40,7 @@ class DatabaseHealth:
     error_message: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
+
 @dataclass
 class ConnectionStats:
     """Connection pool statistics"""
@@ -46,6 +51,7 @@ class ConnectionStats:
     max_connections: int
     connection_timeout: float
     last_health_check: datetime
+
 
 class DatabaseResilienceManager:
     """Manages database resilience with connection pooling and health monitoring"""
@@ -525,8 +531,10 @@ class DatabaseResilienceManager:
 
         logger.info("Database resilience manager shutdown complete")
 
+
 # Global instance
 _database_manager: Optional[DatabaseResilienceManager] = None
+
 
 def get_database_manager() -> DatabaseResilienceManager:
     """Get the global database resilience manager instance"""
@@ -544,6 +552,7 @@ def get_database_manager() -> DatabaseResilienceManager:
         connection_string = database_config.get_database_url()
         _database_manager = DatabaseResilienceManager(connection_string)
     return _database_manager
+
 
 def initialize_database_resilience(connection_string: Optional[str] = None) -> DatabaseResilienceManager:
     """Initialize database resilience manager"""
@@ -567,26 +576,31 @@ def initialize_database_resilience(connection_string: Optional[str] = None) -> D
     _database_manager = DatabaseResilienceManager(connection_string)
     return _database_manager
 
+
 # Convenience functions
 def execute_query(query: str, params: Optional[tuple] = None) -> List[Dict[str, Any]]:
     """Execute a database query with resilience"""
     manager = get_database_manager()
     return manager.execute_query(query, params)
 
+
 def execute_transaction(queries: List[tuple]) -> List[Dict[str, Any]]:
     """Execute multiple queries in a transaction with resilience"""
     manager = get_database_manager()
     return manager.execute_transaction(queries)
+
 
 def get_database_health() -> Dict[str, Any]:
     """Get database health status"""
     manager = get_database_manager()
     return manager.get_health_status()
 
+
 def is_database_healthy() -> bool:
     """Check if database is healthy"""
     manager = get_database_manager()
     return manager.is_healthy()
+
 
 # Ensure parent package exposes this submodule for test patching in environments
 # where a synthetic 'utils' package is created without automatic attribute binding

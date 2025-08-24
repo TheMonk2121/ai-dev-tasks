@@ -1,4 +1,14 @@
-# Product Requirements Document: B-1006-B DSPy 3.0 Research-Enhanced Assertions
+<!-- ANCHOR_KEY: prd-b-1006-b-dspy-3-0-research-enhanced-assertions -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- Backlog ID: B-1006-B -->
+<!-- Status: todo -->
+<!-- Priority: High -->
+<!-- Dependencies: B-1006-A -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
+
+# Product Requirements Document: B-1006-B - DSPy 3.0 Research Enhanced Assertions
 
 <!-- MEMORY_CONTEXT: HIGH - Enhanced assertion framework with research integration -->
 <!-- CONTEXT_REFERENCE: 500_research/501_livemcpbench-mcp-tool-navigation-research.md, 500_research/502_livemcp101-video-transcript-analysis.md, 500_research/503_dspy-30-migration-research-comprehensive-guide.md -->

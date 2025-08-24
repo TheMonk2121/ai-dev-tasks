@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: few-shot-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # 🎯 Few-Shot Research
 

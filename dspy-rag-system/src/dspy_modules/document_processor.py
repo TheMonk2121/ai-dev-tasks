@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: document-processor
+# ANCHOR_PRIORITY: 30
+# ROLE_PINS: ["implementer", "coder"]
 """
 DocumentProcessor DSPy Module
 Handles document ingestion, text extraction, and chunking for the RAG system.
@@ -395,6 +398,7 @@ class DocumentProcessor(Module):
             self.logger.error(f"Error reading CSV file: {e}", extra={"file_path": self._mask_file_path(csv_path)})
             raise Exception(f"Error reading CSV file: {e}")
 
+
 class DocumentIngestionPipeline(Module):
     """DSPy module for complete document ingestion pipeline"""
 
@@ -466,6 +470,7 @@ class DocumentIngestionPipeline(Module):
                 },
             )
             raise
+
 
 # Example usage and testing
 if __name__ == "__main__":

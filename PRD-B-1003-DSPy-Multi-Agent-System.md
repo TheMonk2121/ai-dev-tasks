@@ -1,3 +1,13 @@
+<!-- ANCHOR_KEY: prd-b-1003-dspy-multi-agent-system -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- Backlog ID: B-1003 -->
+<!-- Status: completed -->
+<!-- Priority: High -->
+<!-- Dependencies: None -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
+
 # Product Requirements Document: DSPy Multi-Agent System
 
 > ⚠️**Auto-Skip Note**> This PRD was generated because either `points≥5` or `score_total<3.0`.

@@ -1,3 +1,7 @@
+<!-- ANCHOR_KEY: livemcp101-video-transcript-analysis -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
+
 # LiveMCP101 Video Transcript Analysis
 
 <!-- MEMORY_CONTEXT: LOW - Video transcript analysis of LiveMCPBench research paper discussion -->

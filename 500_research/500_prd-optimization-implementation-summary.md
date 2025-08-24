@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: prd-optimization-implementation-summary -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # 📝 PRD Optimization Research
 

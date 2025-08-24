@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: testing-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "coder"] -->
 
 # 🧪 Testing Research
 

@@ -1,5 +1,9 @@
 
 
+<!-- ANCHOR_KEY: documentation-coherence-research -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["researcher", "coder"] -->
+
 # Documentation Coherence Research
 
 <!-- ANCHOR: tldr -->

@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: monitoring-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # 📊 Monitoring & Observability Research
 

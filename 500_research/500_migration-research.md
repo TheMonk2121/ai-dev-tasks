@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: migration-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # 🔄 Migration & Upgrade Research
 

@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: deployment-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
 
 # 🚀 Deployment Research
 

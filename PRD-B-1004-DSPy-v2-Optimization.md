@@ -1,4 +1,14 @@
-# Product Requirements Document: B-1004 DSPy v2 Optimization
+<!-- ANCHOR_KEY: prd-b-1004-dspy-v2-optimization -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- Backlog ID: B-1004 -->
+<!-- Status: todo -->
+<!-- Priority: High -->
+<!-- Dependencies: B-1003 -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
+
+# Product Requirements Document: B-1004 - DSPy v2 Optimization
 
 > ⚠️ **Auto-Skip Note**: This PRD was generated because `points≥5` (6 points) and `score_total≥3.0` (6.0).
 > Remove this banner if you manually forced PRD creation.

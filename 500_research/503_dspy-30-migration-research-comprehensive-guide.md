@@ -1,3 +1,7 @@
+<!-- ANCHOR_KEY: dspy-30-migration-research -->
+<!-- ANCHOR_PRIORITY: 20 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
+
 # DSPy 3.0 Migration Research: Comprehensive Implementation Guide
 
 <!-- MEMORY_CONTEXT: HIGH - Core research for DSPy 3.0 migration and system enhancements -->
@@ -103,7 +107,7 @@ class ResearcherContext(BaseModel):
     topic: str
     depth: int
     sources_required: int = 3
-    
+
 class ResearcherAgent:
     def forward(self, context: ResearcherContext) -> ResearchOutput:
         # Context is validated automatically
@@ -140,7 +144,7 @@ from watchdog.observers.asyncio import AsyncioEventHandler
 class FileEventHandler(AsyncioEventHandler):
     async def on_created(self, event):
         await schedule_processing(event.src_path)
-    
+
     async def on_modified(self, event):
         await schedule_reprocessing(event.src_path)
 ```
@@ -181,12 +185,12 @@ class BackgroundProcessor:
     def __init__(self):
         self.queue = asyncio.Queue()
         self.workers = []
-    
+
     async def start_workers(self, num_workers: int = 3):
         for _ in range(num_workers):
             worker = asyncio.create_task(self.worker_loop())
             self.workers.append(worker)
-    
+
     async def worker_loop(self):
         while True:
             task = await self.queue.get()
@@ -233,15 +237,15 @@ import networkx as nx
 class TaskDAG:
     def __init__(self):
         self.graph = nx.DiGraph()
-    
+
     def add_task(self, task_id: str, dependencies: List[str] = None):
         self.graph.add_node(task_id)
         if dependencies:
             for dep in dependencies:
                 self.graph.add_edge(dep, task_id)
-    
+
     def get_ready_tasks(self) -> List[str]:
-        return [node for node in self.graph.nodes() 
+        return [node for node in self.graph.nodes()
                 if self.graph.in_degree(node) == 0]
 ```
 
@@ -258,7 +262,7 @@ Anthropic's Constitutional AI principles applied to task management:
 ```python
 CONSTITUTION = [
     "Always double-check calculations",
-    "Prefer answers with up-to-date sources", 
+    "Prefer answers with up-to-date sources",
     "Avoid redundant tool usage",
     "Ensure all claims are cited"
 ]
@@ -283,18 +287,18 @@ class HybridRetriever:
     def __init__(self):
         self.vector_store = VectorStore()
         self.keyword_index = BM25Index()
-    
+
     async def retrieve(self, query: str, k: int = 10):
         # Parallel retrieval
         dense_results, sparse_results = await asyncio.gather(
             self.vector_store.search(query, k),
             self.keyword_index.search(query, k)
         )
-        
+
         # Reciprocal Rank Fusion
         fused_results = self.rrf_fusion(dense_results, sparse_results)
         return fused_results[:k]
-    
+
     def rrf_fusion(self, dense_results, sparse_results, k: int = 60):
         # RRF scoring: 1/(k + rank)
         scores = {}
@@ -302,7 +306,7 @@ class HybridRetriever:
             scores[doc.id] = scores.get(doc.id, 0) + 1/(k + rank)
         for rank, doc in enumerate(sparse_results):
             scores[doc.id] = scores.get(doc.id, 0) + 1/(k + rank)
-        
+
         return sorted(scores.items(), key=lambda x: x[1], reverse=True)
 ```
 

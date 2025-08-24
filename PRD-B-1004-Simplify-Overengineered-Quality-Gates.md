@@ -1,4 +1,14 @@
-# Product Requirements Document: Simplify Overengineered Quality Gates
+<!-- ANCHOR_KEY: prd-b-1004-simplify-quality-gates -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
+<!-- Backlog ID: B-1004 -->
+<!-- Status: todo -->
+<!-- Priority: High -->
+<!-- Dependencies: B-1003 -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
+
+# Product Requirements Document: B-1004 - Simplify Overengineered Quality Gates
 
 > ⚠️**Auto-Skip Note**> This PRD was generated because either `points≥5` or `score_total<3.0`.
 > Remove this banner if you manually forced PRD creation.

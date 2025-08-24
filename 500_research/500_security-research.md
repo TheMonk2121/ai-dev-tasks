@@ -1,4 +1,7 @@
 
+<!-- ANCHOR_KEY: security-research -->
+<!-- ANCHOR_PRIORITY: 10 -->
+<!-- ROLE_PINS: ["researcher", "coder"] -->
 
 # 🔒 Security Research
 

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: process-tasks
+# ANCHOR_PRIORITY: 30
+# ROLE_PINS: ["implementer", "coder"]
 """
 Task Execution Engine - Core CLI Script
 
@@ -66,8 +69,10 @@ except ImportError:
         """Simple input sanitization fallback."""
         return text.strip()
 
+
 # Configure logging
 logger = setup_logger(__name__)
+
 
 class TaskStatus(Enum):
     """Task execution status enumeration."""
@@ -78,6 +83,7 @@ class TaskStatus(Enum):
     FAILED = "failed"
     SKIPPED = "skipped"
 
+
 class TaskPriority(Enum):
     """Task priority enumeration."""
 
@@ -85,6 +91,7 @@ class TaskPriority(Enum):
     HIGH = "📈"
     MEDIUM = "⭐"
     LOW = "🔧"
+
 
 @dataclass
 class Task:
@@ -104,6 +111,7 @@ class Task:
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
+
 @dataclass
 class ExecutionState:
     """Execution state data structure."""
@@ -115,6 +123,7 @@ class ExecutionState:
     error_message: Optional[str] = None
     retry_count: int = 0
     progress: float = 0.0
+
 
 class TaskExecutionEngine:
     """Main task execution engine."""
@@ -401,6 +410,7 @@ class TaskExecutionEngine:
         except Exception as e:
             logger.error(f"Failed to update task status: {e}")
 
+
 class BacklogParser:
     """Parser for backlog file."""
 
@@ -509,6 +519,7 @@ class BacklogParser:
             logger.error(f"Failed to parse task line: {e}")
             return None
 
+
 class TaskExecutor:
     """Task execution engine."""
 
@@ -610,6 +621,7 @@ class TaskExecutor:
         # For now, we'll simulate successful script creation
         return True
 
+
 class ErrorHandler:
     """Error handling and recovery."""
 
@@ -624,6 +636,7 @@ class ErrorHandler:
         # Implement error recovery logic here
         # For now, we'll just log the error
         return False
+
 
 def main():
     """Main CLI entry point."""
@@ -748,6 +761,7 @@ Examples:
         logger.error(f"CLI error: {e}")
         print(f"Error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

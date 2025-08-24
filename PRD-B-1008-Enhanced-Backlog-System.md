@@ -1,9 +1,14 @@
-# Product Requirements Document: B-1008 Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates
-
+<!-- ANCHOR_KEY: prd-b-1008-enhanced-backlog-system -->
+<!-- ANCHOR_PRIORITY: 35 -->
+<!-- ROLE_PINS: ["planner", "implementer"] -->
 <!-- Backlog ID: B-1008 -->
 <!-- Status: todo -->
 <!-- Priority: High -->
-<!-- Dependencies: B-1006, B-1007 -->
+<!-- Dependencies: B-1006-A, B-1007 -->
+<!-- Version: 1.0 -->
+<!-- Date: 2025-01-23 -->
+
+# Product Requirements Document: B-1008 Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates
 
 > ⚠️**Auto-Skip Note**: This PRD was generated because either `points≥5` or `score_total<3.0`.
 > Remove this banner if you manually forced PRD creation.

@@ -1,5 +1,9 @@
 
 
+<!-- ANCHOR_KEY: naming-conventions -->
+<!-- ANCHOR_PRIORITY: 15 -->
+<!-- ROLE_PINS: ["coder", "implementer"] -->
+
 <!-- markdownlint-disable MD041 -->
 
 # Naming Conventions

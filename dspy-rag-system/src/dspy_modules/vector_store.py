@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# ANCHOR_KEY: vector-store
+# ANCHOR_PRIORITY: 30
+# ROLE_PINS: ["implementer", "coder"]
 """
 VectorStore DSPy Module (optimized)
 - Unifies DB access via database_resilience manager
@@ -38,10 +41,12 @@ LOG = logging.getLogger(__name__)
 # Model & embedding helpers
 # ---------------------------
 
+
 @lru_cache(maxsize=1)
 def _get_model(name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
     """Singleton model loader to prevent repeated loads"""
     return SentenceTransformer(name)
+
 
 @lru_cache(maxsize=1024)
 def _cached_query_embedding_bytes(model_name: str, text: str) -> bytes:
@@ -52,12 +57,15 @@ def _cached_query_embedding_bytes(model_name: str, text: str) -> bytes:
     emb = emb.astype(np.float32, copy=False)
     return emb.tobytes()
 
+
 def _query_embedding(model_name: str, text: str) -> np.ndarray:
     return np.frombuffer(_cached_query_embedding_bytes(model_name, text), dtype=np.float32)
+
 
 # ---------------------------
 # Score normalization & fusion
 # ---------------------------
+
 
 def _zscore(scores: List[float]) -> List[float]:
     if not scores:
@@ -69,10 +77,12 @@ def _zscore(scores: List[float]) -> List[float]:
         return [0.0 for _ in scores]
     return [(s - mu) / sigma for s in scores]
 
+
 def _rrf_ranks(scores: List[float]) -> Dict[int, int]:
     # Higher score = better rank 1..N
     order = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
     return {idx: rank + 1 for rank, idx in enumerate(order)}
+
 
 def _fuse_dense_sparse(
     rows_dense: List[Dict[str, Any]],
@@ -140,9 +150,11 @@ def _fuse_dense_sparse(
     merged.sort(key=lambda r: r["hybrid_score"], reverse=True)
     return merged[: max(1, int(limit))]
 
+
 # ---------------------------
 # Main module
 # ---------------------------
+
 
 class HybridVectorStore(Module):
     """DSPy module for hybrid vector storage and retrieval (dense + sparse)"""
@@ -586,6 +598,7 @@ class HybridVectorStore(Module):
         """Alias for get_stats() to align with dashboard API"""
         return self.get_stats()
 
+
 class VectorStorePipeline(Module):
     """DSPy module for complete vector store pipeline"""
 
@@ -595,6 +608,7 @@ class VectorStorePipeline(Module):
 
     def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
         return self.vector_store(operation, **kwargs)
+
 
 if __name__ == "__main__":
     # Quick smoke test (requires running DB with the expected schema)
