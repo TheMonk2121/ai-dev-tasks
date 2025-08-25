@@ -39,30 +39,6 @@ The key file is `100_cursor-memory-context.md` which provides instant context ab
 - Role-specific context (planner, implementer, researcher, coder)
 - System status and recent changes
 
-### **🚨 PRIORITY: Use Database-Based Memory Rehydration**
-
-**BEFORE reading any files directly, try to use the database-based memory rehydration system:**
-
-1. **Run the memory rehydrator**: Choose Python or Go implementation
-2. **Copy the bundle output** into your conversation for context
-3. **Only fall back to file reading** if the database is unavailable
-
-**Available roles:**
-- `planner` - For strategic planning and prioritization
-- `implementer` - For code implementation and technical work
-- `researcher` - For research and analysis tasks
-
-**Example usage:**
-```bash
-# Python implementation
-python3 scripts/cursor_memory_rehydrate.py planner "current project priorities"
-python3 scripts/cursor_memory_rehydrate.py implementer "DSPy integration task"
-
-# Go implementation (faster)
-cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project priorities"
-cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "DSPy integration task"
-```
-
 ### **When Starting a New Session**
 
 1. **Always read `100_memory/100_cursor-memory-context.md` first** - this gives you the current project state
