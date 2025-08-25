@@ -70,15 +70,6 @@
 - Following development best practices
 **Key sections**: Setup, planning, implementation, testing, quality, deployment
 
-### **400_testing-debugging.md**
-**Purpose**: Testing strategy and debugging techniques
-**When to use**:
-- Writing tests for new features
-- Debugging issues
-- Analyzing problems
-- Validating code quality
-**Key sections**: Testing strategy, debugging techniques, analysis tools
-
 ### **400_deployment-operations.md**
 **Purpose**: Deployment procedures and operational practices
 **When to use**:
@@ -87,15 +78,6 @@
 - Managing operational issues
 - Maintaining production systems
 **Key sections**: Deployment procedures, monitoring, maintenance
-
-### **400_planning-strategy.md**
-**Purpose**: Architecture planning and strategic decisions
-**When to use**:
-- Planning new features
-- Making architectural decisions
-- Strategic planning
-- System design
-**Key sections**: Architecture planning, strategic decisions, system design
 
 ### **400_integration-security.md**
 **Purpose**: Integration patterns and security practices
