@@ -15,7 +15,7 @@ sys.path.insert(0, str(dspy_scripts_path))
 
 # Import database utilities with error handling
 try:
-    from database_utils import execute_single_query, execute_query, get_db_connection  # type: ignore
+    from database_utils import execute_single_query  # type: ignore
 
     DATABASE_AVAILABLE = True
 except ImportError as e:
@@ -164,7 +164,7 @@ def update_database_sync(sync_files: List[Tuple[str, str]]) -> bool:
             filename = os.path.basename(file_path)
             file_size = os.path.getsize(file_path)
             print(f"  - {filename} ({file_size} bytes, {sync_type})")
-        
+
         print("✅ Database sync simulation completed")
         return True
     except Exception as e:
