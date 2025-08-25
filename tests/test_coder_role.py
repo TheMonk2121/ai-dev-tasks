@@ -39,7 +39,7 @@ class TestCoderRoleConfiguration(unittest.TestCase):
 
         # Check that coding documentation files are included
         expected_files = [
-            "400_guides/400_comprehensive-coding-best-practices.md",
+            "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md",
             "400_guides/400_code-criticality-guide.md",
             "400_guides/400_testing-strategy-guide.md",
             "100_memory/104_dspy-development-context.md",
@@ -74,7 +74,7 @@ class TestCoderRoleFunctionality(unittest.TestCase):
 
         # Verify that coding documentation files are included
         expected_files = [
-            "400_guides/400_comprehensive-coding-best-practices.md",
+            "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md",
             "400_guides/400_code-criticality-guide.md",
             "400_guides/400_testing-strategy-guide.md",
             "100_memory/104_dspy-development-context.md",
@@ -132,7 +132,7 @@ class TestCoderRoleIntegration(unittest.TestCase):
         self.assertIn("100_memory/104_dspy-development-context.md", coder_files)
 
         # Check that coding best practices are included
-        self.assertIn("400_guides/400_comprehensive-coding-best-practices.md", coder_files)
+        self.assertIn("600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md", coder_files)
 
     def test_coder_role_content_quality(self):
         """Test that coder role provides high-quality coding content."""

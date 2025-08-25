@@ -73,7 +73,7 @@
   - Require explicit confirmation for critical changes
   - Use guardrails and constraint frameworks
 
-- **2. Error Recovery Patterns** - Follow `400_guides/400_comprehensive-coding-best-practices.md` for all error handling
+- **2. Error Recovery Patterns** - Follow `600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md` for all error handling
 
   - Use automated recovery scripts when available
   - Implement systematic workflows for common issues
@@ -249,7 +249,7 @@ documentation patterns
 
 ### **Implementation Support**
 
-- `400_guides/400_comprehensive-coding-best-practices.md` - Error prevention and recovery
+- `600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md` - Error prevention and recovery
 
 - `400_guides/400_security-best-practices-guide.md` - Security requirements
 

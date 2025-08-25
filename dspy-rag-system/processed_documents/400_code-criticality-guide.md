@@ -165,7 +165,7 @@
 ### Tier 1 & 2 Files Must:
 - **Pass all linter checks** (no F841, E501, etc.)
 - **Have comprehensive test coverage** (80%+ for Tier 1, 70%+ for Tier 2)
-- **Follow unused variable best practices** (see `400_guides/400_comprehensive-coding-best-practices.md`)
+- **Follow unused variable best practices** (see `600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md`)
 - **Use proper import patterns** (conftest.py for tests, no manual sys.path)
 - **Have clear error handling** and logging
 

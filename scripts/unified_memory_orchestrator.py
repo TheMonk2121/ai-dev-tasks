@@ -20,7 +20,12 @@ sys.path.insert(0, str(project_root))
 
 # Import LTST memory rehydrator with error handling
 try:
-    from dspy_rag_system.src.utils.memory_rehydrator import MemoryRehydrator
+    # Add dspy-rag-system to path for imports
+    dspy_rag_path = project_root / "dspy-rag-system"
+    if str(dspy_rag_path) not in sys.path:
+        sys.path.insert(0, str(dspy_rag_path))
+
+    from src.utils.memory_rehydrator import MemoryRehydrator, RehydrationRequest
 
     LTST_AVAILABLE = True
 except ImportError:
@@ -62,7 +67,37 @@ class UnifiedMemoryOrchestrator:
         try:
             # Import and use LTST memory rehydrator
             rehydrator = MemoryRehydrator()
-            bundle = rehydrator.rehydrate(query=query, role=role)
+
+            # Create rehydration request
+            request = RehydrationRequest(
+                session_id=f"orchestrator_{int(time.time())}",
+                user_id="orchestrator_user",
+                current_message=query,
+                context_types=["conversation", "preference", "project", "user_info"],
+                max_context_length=10000,
+                include_conversation_history=True,
+                history_limit=20,
+                relevance_threshold=0.7,
+                similarity_threshold=0.8,
+                metadata={"role": role, "source": "unified_orchestrator"},
+            )
+
+            result = rehydrator.rehydrate_memory(request)
+
+            # Convert result to bundle format
+            bundle = {
+                "rehydrated_context": result.rehydrated_context,
+                "conversation_history": [msg.__dict__ for msg in result.conversation_history],
+                "user_preferences": result.user_preferences,
+                "project_context": result.project_context,
+                "relevant_contexts": [ctx.__dict__ for ctx in result.relevant_contexts],
+                "session_continuity_score": result.session_continuity_score,
+                "context_relevance_scores": result.context_relevance_scores,
+                "rehydration_time_ms": result.rehydration_time_ms,
+                "cache_hit": result.cache_hit,
+                "metadata": result.metadata,
+            }
+
             return {"source": "LTST Memory System", "status": "success", "bundle": bundle, "timestamp": time.time()}
         except Exception as e:
             return {"source": "LTST Memory System", "status": "error", "error": str(e), "timestamp": time.time()}

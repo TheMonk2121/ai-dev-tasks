@@ -21,7 +21,7 @@
 3. Add coder role configuration:
    ```python
    "coder": (
-       "400_guides/400_comprehensive-coding-best-practices.md",
+       "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md",
        "400_guides/400_code-criticality-guide.md",
        "400_guides/400_testing-strategy-guide.md",
        "100_memory/104_dspy-development-context.md",

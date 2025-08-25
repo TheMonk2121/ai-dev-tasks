@@ -29,7 +29,7 @@ def check_database_consistency():
         ("../000_core/000_backlog.md", "000_backlog.md"),
         ("../400_guides/400_ai-constitution.md", "400_ai-constitution.md"),
         ("../400_guides/400_code-criticality-guide.md", "400_code-criticality-guide.md"),
-        ("../400_guides/400_comprehensive-coding-best-practices.md", "400_comprehensive-coding-best-practices.md"),
+        ("../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md", "400_comprehensive-coding-best-practices.md"),
         ("../400_guides/400_context-priority-guide.md", "400_context-priority-guide.md"),
         ("../400_guides/400_file-analysis-guide.md", "400_file-analysis-guide.md"),
         ("../400_guides/400_project-overview.md", "400_project-overview.md"),

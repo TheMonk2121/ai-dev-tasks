@@ -71,8 +71,8 @@ class BrokenLinksFixer:
             "@000_core/003_process-task-list.md": "400_guides/400_project-overview.md",
             "@MyFeature-PRD.md": "MyFeature-PRD.md",
             # Fix relative paths
-            "../400_guides/400_comprehensive-coding-best-practices.md": (
-                "400_guides/400_comprehensive-coding-best-practices.md"
+                "../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md": (
+        "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md"
             ),
             # Remove command references
             "markdownlint ./*.md": None,  # This is a command, not a file

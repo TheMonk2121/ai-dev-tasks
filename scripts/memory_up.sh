@@ -27,14 +27,14 @@ if [ ! -f "venv/bin/python" ]; then
     echo -e "${YELLOW}⚠️  Virtual environment not found${NC}"
     echo "💡 Creating virtual environment..."
     python3 -m venv venv
+    # shellcheck disable=SC1091
     source venv/bin/activate
     pip install -r requirements.txt
 else
     echo -e "${GREEN}✅ Virtual environment found${NC}"
+    # shellcheck disable=SC1091
+    source venv/bin/activate
 fi
-
-# Activate virtual environment
-source venv/bin/activate
 
 # Default values
 QUERY="current project status and core documentation"
@@ -139,7 +139,7 @@ case $ROLE in
         ;;
     "implementer")
         MEMORY_CONTEXT+="## 🔧 **Implementer Context**\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_comprehensive-coding-best-practices.md" 100)\n\n"
+        MEMORY_CONTEXT+="$(get_file_summary "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md" 100)\n\n"
         ;;
     "researcher")
         MEMORY_CONTEXT+="## 🔬 **Researcher Context**\n\n"

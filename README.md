@@ -141,10 +141,10 @@ python scripts/single_doorway.py
 ## 📚 Documentation
 
 ### **Core Guides**
-- [Project Overview](400_guides/400_project-overview.md) - High-level system architecture
-- [System Overview](400_guides/400_system-overview.md) - Technical implementation details
-- [Coding Best Practices](400_guides/400_comprehensive-coding-best-practices.md) - Development standards
-- [Testing Strategy](400_guides/400_testing-strategy-guide.md) - Quality assurance approach
+- [System Overview](400_guides/400_system-overview.md) - High-level system architecture and technical implementation
+- [Development Workflow](400_guides/400_development-workflow.md) - Complete development workflow and quality assurance
+- [Coding Best Practices](600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md) - Development standards
+- [Getting Started](400_guides/400_getting-started.md) - Quick start guide and project overview
 
 ### **Development Workflows**
 - [Backlog Management](000_core/000_backlog.md) - Current priorities and roadmap
@@ -155,7 +155,7 @@ python scripts/single_doorway.py
 ### **Technical Documentation**
 - [DSPy Integration](400_guides/400_dspy-v2-technical-implementation-guide.md) - Framework integration
 - [Cursor AI Integration](400_guides/400_cursor-ai-integration-guide.md) - IDE integration
-- [Deployment Guide](400_guides/400_deployment-environment-guide.md) - Production deployment
+- [Deployment Operations](400_guides/400_deployment-operations.md) - Production deployment and operations
 
 ## 🎯 Recent Achievements
 

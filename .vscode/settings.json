@@ -379,7 +379,10 @@
         "tgname",
         "tgrelid",
         "reprioritization",
-        "Reprioritization"
+        "Reprioritization",
+        "cooc",
+        "nltk",
+        "lemmatization"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

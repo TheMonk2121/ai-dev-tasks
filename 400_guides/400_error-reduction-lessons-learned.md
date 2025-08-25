@@ -196,9 +196,9 @@ Our systematic error reduction journey revealed that **most auto-fixes are dange
 - **Ruff Documentation**: https://docs.astral.sh/ruff/
 - **Python Type Hints**: https://docs.python.org/3/library/typing.html
 - **Unicode Character Database**: https://unicode.org/ucd/
-- **Code Quality Best Practices**: `400_guides/400_comprehensive-coding-best-practices.md`
+- **Code Quality Best Practices**: `600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md`
 
 ---
 
-**Last Updated**: 2025-08-24
+**Last Updated**: 2025-08-25
 **Status**: Active - Lessons learned integrated into development workflow

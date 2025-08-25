@@ -224,5 +224,5 @@ Many archived files contain structured metadata in HTML comments:
 - **Archive Location**: `600_archives/artifacts/000_core_temp_files/`
 - **Archive Index**: `600_archives/artifacts/000_core_temp_files/README.md`
 - **Development Workflow**: `400_guides/400_project-overview.md`
-- **Coding Standards**: `400_guides/400_comprehensive-coding-best-practices.md`
+- **Coding Standards**: `600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md`
 - **System Architecture**: `400_guides/400_system-overview.md`

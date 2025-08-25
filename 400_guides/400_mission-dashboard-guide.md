@@ -575,7 +575,7 @@ export ENVIRONMENT=production
 
 ### Code Standards
 
-For comprehensive coding standards and implementation examples, see [400_guides/400_comprehensive-coding-best-practices.md](../400_guides/400_comprehensive-coding-best-practices.md)
+For comprehensive coding standards and implementation examples, see [600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md](../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md)
 
 **Quick Reference:**
 
@@ -602,6 +602,6 @@ This project is part of the AI Development Ecosystem and follows the same licens
 
 - --
 
-- *Last Updated**: 2024-08-06
+- *Last Updated**: 2025-08-25
 - *Version**: 1.0.0
 - *Status**: Production Ready ✅

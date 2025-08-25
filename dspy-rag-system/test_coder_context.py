@@ -91,7 +91,7 @@ def test_memory_rehydrator_context():
 
         print("\n📊 Expected Context Files for Coder Role:")
         coder_files = [
-            "400_guides/400_comprehensive-coding-best-practices.md",
+            "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md",
             "400_guides/400_code-criticality-guide.md",
             "400_guides/400_testing-strategy-guide.md",
             "400_guides/400_contributing-guidelines.md",

@@ -1,6 +1,6 @@
 
 
-<!-- ESSENTIAL_FILES: 400_guides/400_system-overview.md, 400_guides/400_project-overview.md -->
+<!-- ESSENTIAL_FILES: 400_guides/400_system-overview.md, 400_guides/400_getting-started.md -->
 <!-- DSPY_ROLE: documentation -->
 <!-- DSPY_AUTHORITY: documentation_standards -->
 <!-- DSPY_FILES: scripts/single_doorway.py, scripts/worklog_summarizer.py, scripts/worklog_pre_commit.py -->
@@ -691,9 +691,9 @@ Intelligent caching for repeated operations:
 ## 📚 Related Documentation {#related-documentation}
 
 - **[System Overview](./400_system-overview.md)**: Technical architecture
-- **[Project Overview](./400_project-overview.md)**: High-level project structure
+- **[Project Overview](./400_getting-started.md)**: High-level project structure
 - **[Context Priority Guide](./400_context-priority-guide.md)**: Documentation hierarchy
-- **[Comprehensive Coding Best Practices](./400_comprehensive-coding-best-practices.md)**: Coding standards and development workflow
+- **[Comprehensive Coding Best Practices](../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md)**: Coding standards and development workflow
 - **[Naming Conventions](../200_setup/200_naming-conventions.md)**: File organization standards
 - **[Single Doorway Workflow](../000_core/001_create-prd.md)**: Core workflow integration
 - **[Graph Visualization Guide](./400_graph-visualization-guide.md)**: Graph integration details

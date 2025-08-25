@@ -218,7 +218,7 @@ class TLDRAdder:
             "100_memory/100_cursor-memory-context.md",
             "200_setup/200_naming-conventions.md",
             "400_guides/400_broken-links-fix-summary.md",
-            "400_guides/400_comprehensive-coding-best-practices.md",
+            "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md",
             "400_guides/400_context-priority-guide.md",
             "400_guides/400_file-analysis-guide.md",
             "400_guides/400_markdown-cleanup-progress.md",

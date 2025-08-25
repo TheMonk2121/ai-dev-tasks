@@ -64,7 +64,7 @@ class RoleAssignmentIntegration:
             ),
             "researcher": ("600_archives/",),
             "coder": (
-                "400_guides/400_comprehensive-coding-best-practices.md",
+                "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md",
                 "400_guides/400_code-criticality-guide.md",
                 "400_guides/400_testing-strategy-guide.md",
                 "400_guides/400_contributing-guidelines.md",
@@ -90,7 +90,7 @@ class RoleAssignmentIntegration:
                 "400_guides/400_scribe-v2-system-guide.md",
                 "400_guides/400_project-overview.md",
                 "400_guides/400_system-overview.md",
-                "400_guides/400_comprehensive-coding-best-practices.md",
+                "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md",
                 "600_archives/",
             ),
         }
