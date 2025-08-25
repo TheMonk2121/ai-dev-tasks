@@ -30,13 +30,13 @@ jobs:
           pip install -r dspy-rag-system/requirements.txt || true
           pip install -r dashboard/requirements.txt || true
           pip install -r config/requirements-conflict-detection.txt || true
-          pip install ruff pyright pytest
+          pip install "ruff~=0.5" "pyright~=1.1" "pytest~=8.3"
 
       - name: Ruff
-        run: ruff check .
+        run: ruff check . --exclude "600_archives|docs/legacy"
 
       - name: Pyright
         run: pyright
 
       - name: Pytest
-        run: pytest -q --import-mode=importlib
+        run: pytest -q --import-mode=importlib --ignore=600_archives --ignore=docs/legacy --ignore=600_archives/legacy-tests
