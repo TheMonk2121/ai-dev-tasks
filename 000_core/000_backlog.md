@@ -187,6 +187,90 @@ and normalize spacing across long-form guides.
 <!-- problem: Current backlog is text-heavy and hard to visualize progress -->
 <!-- outcome: Better progress tracking, easier friend onboarding, visual workflow management -->
 
+- B‑1019 — Enhanced Document Ingestion Tools Integration (score 6.5)
+<!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Evaluate and integrate LlamaIndex for document processing, Firecrawl for web scraping (if needed), and OneFileLLM for convenience -->
+<!-- est_hours: 6 -->
+<!-- acceptance: LlamaIndex integrated for better document processing, optional Firecrawl for web content, OneFileLLM for document aggregation -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#tool-selection"] -->
+<!-- reference_cards: ["500_reference-cards.md#rag-system"] -->
+<!-- tech_footprint: Document Processing + Web Scraping + Data Ingestion + DSPy Integration -->
+<!-- problem: Current document processing could be enhanced with industry-standard tools while maintaining local-first approach -->
+<!-- outcome: Improved document processing capabilities without over-engineering the existing DSPy RAG system -->
+
+- B‑1020 — Complete HNSW Vector Index Migration (score 7.0) ✅ **COMPLETED**
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:2, deps:[]}-->
+<!--score_total: 7.0-->
+<!-- completion_date: 2025-01-25 -->
+<!-- implementation_notes: Successfully completed HNSW vector index migration. All vector indexes now use HNSW with optimal parameters (m=16, ef_construction=64). Removed redundant IVFFlat index on conversation_memory table. Verified pgvector 0.8.0 support and tested vector similarity search functionality. Migration completed with no data loss and full application compatibility maintained. -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#performance-optimization", "100_memory/105_lessons-learned-context.md#database-optimization"] -->
+<!-- reference_cards: ["500_reference-cards.md#vector-indexing", "500_reference-cards.md#database-optimization"] -->
+<!-- tech_footprint: PostgreSQL + pgvector + HNSW + Performance Optimization + Database Migration -->
+<!-- problem: Database had mixed IVFFlat and HNSW indexes, with redundant IVFFlat index on conversation_memory that needed removal for optimal performance -->
+<!-- outcome: Consistent HNSW indexing across all vector columns with optimal parameters for better recall/latency trade-off -->
+
+- B‑1020 — Comprehensive PyTorch Integration Exploration for DSPy RAG System (score 8.5)
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:4, deps:[]}-->
+<!--score_total: 8.5-->
+<!-- do_next: Research and prototype PyTorch integration patterns for DSPy RAG system, starting with enhanced embeddings and custom predictors -->
+<!-- est_hours: 12 -->
+<!-- acceptance: PyTorch integration roadmap created, initial prototypes built for embeddings and custom DSPy predictors, performance benchmarks established -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#tool-selection", "100_memory/105_lessons-learned-context.md#development-workflow"] -->
+<!-- reference_cards: ["500_reference-cards.md#rag-system", "500_reference-cards.md#neural-networks"] -->
+<!-- tech_footprint: PyTorch + Neural Networks + DSPy Integration + RAG Enhancement + Performance Optimization -->
+<!-- problem: PyTorch is installed but underutilized; need to explore comprehensive integration opportunities with existing DSPy RAG stack -->
+<!-- outcome: Enhanced RAG system with neural network capabilities, custom DSPy predictors, and improved document processing -->
+
+- B‑1021 — Advanced GUI Framework Evaluation and Implementation for AI Development Ecosystem (score 7.5)
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:3, deps:[]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Evaluate Streamlit, Gradio, Dash+Plotly, and enhanced NiceGUI options; create comparison matrix and prototype best-fit solution -->
+<!-- est_hours: 10 -->
+<!-- acceptance: GUI framework comparison completed, prototype built with selected framework, migration strategy documented, enhanced visualization capabilities demonstrated -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#tool-selection", "100_memory/105_lessons-learned-context.md#user-experience"] -->
+<!-- reference_cards: ["500_reference-cards.md#gui-frameworks", "500_reference-cards.md#visualization"] -->
+<!-- tech_footprint: Streamlit/Gradio/Dash + Visualization + DSPy Integration + PyTorch Visualization + User Experience -->
+<!-- problem: Current NiceGUI setup may be limiting for advanced AI/ML visualizations, neural network exploration, and interactive RAG system management -->
+<!-- outcome: Enhanced GUI capabilities for AI development tasks, better neural network visualization, improved user experience for DSPy RAG system management -->
+
+- B‑1022 — Strategic Tech Stack Modernization: FastAPI, ChromaDB, Redis, MLflow, Prometheus (score 9.0)
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:5, deps:[]}-->
+<!--score_total: 9.0-->
+<!-- do_next: Implement FastAPI migration first (immediate gains), then ChromaDB for RAG optimization, Redis for caching, with MLflow and Prometheus as future enhancements -->
+<!-- est_hours: 20 -->
+<!-- acceptance: FastAPI migration completed with performance benchmarks, ChromaDB integrated for better vector search, Redis caching implemented, MLflow and Prometheus setup documented for future deployment -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#performance-optimization", "100_memory/105_lessons-learned-context.md#tool-selection"] -->
+<!-- reference_cards: ["500_reference-cards.md#api-frameworks", "500_reference-cards.md#vector-databases", "500_reference-cards.md#caching", "500_reference-cards.md#mlops"] -->
+<!-- tech_footprint: FastAPI + ChromaDB + Redis + MLflow + Prometheus + Performance Optimization + Production Readiness -->
+<!-- problem: Current Flask/PostgreSQL stack may be limiting performance, scalability, and production readiness for advanced AI development tasks -->
+<!-- outcome: Production-ready AI development ecosystem with optimized performance, better RAG capabilities, intelligent caching, and comprehensive monitoring -->
+
+- B‑1023 — Comprehensive MCP Integration for Enhanced DSPy RAG System with Multi-Source Ingestion (score 8.5) ✅ **COMPLETED**
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:4, deps:["B-1019"]}-->
+<!--score_total: 8.5-->
+<!-- completion_date: 2025-08-25 -->
+<!-- do_next: ✅ COMPLETED - All MCP servers operational, enhanced DocumentProcessor with MCP integration, standardized ingestion across 9+ file types/sources, seamless DSPy agent integration, comprehensive ingestion pipeline documented -->
+<!-- est_hours: 16 -->
+<!-- acceptance: ✅ COMPLETED - Core MCP servers operational, enhanced DocumentProcessor with MCP integration, standardized ingestion across 9+ file types/sources, seamless DSPy agent integration, comprehensive ingestion pipeline documented -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#tool-selection", "100_memory/105_lessons-learned-context.md#integration-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#mcp-protocol", "500_reference-cards.md#rag-system", "500_reference-cards.md#document-processing"] -->
+<!-- tech_footprint: MCP Protocol + DSPy Integration + Multi-Source Ingestion + Document Processing + Standardized Tooling + Local-First Architecture -->
+<!-- problem: ✅ SOLVED - Current document ingestion is limited to basic file types; need standardized, extensible ingestion system that works seamlessly with DSPy agents and supports comprehensive file format coverage -->
+<!-- outcome: ✅ ACHIEVED - Production-ready MCP-based ingestion system supporting 9+ source types, enhanced DSPy RAG capabilities, standardized tool contracts, and future-proof extensibility -->
+
+- B‑1024 — AI Assistant Computer Control System with VM Sandbox and Multi-Mode Security (score 9.5)
+<!--score: {bv:5, tc:5, rr:5, le:4, effort:5, deps:["B-1023"]}-->
+<!--score_total: 9.5-->
+<!-- do_next: Implement Phase 1 (host screen capture + RAG integration) first, then Phase 2 (VM setup + browser automation), followed by Phase 3 (login automation + troubleshooting integration) -->
+<!-- est_hours: 24 -->
+<!-- acceptance: Complete AI assistant computer control system operational with host screen capture, VM sandbox automation, secure login capabilities, N8n workflow testing, troubleshooting assistance, and seamless DSPy integration -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#security-patterns", "100_memory/105_lessons-learned-context.md#integration-patterns", "100_memory/105_lessons-learned-context.md#automation-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#vm-sandbox", "500_reference-cards.md#computer-control", "500_reference-cards.md#security", "500_reference-cards.md#automation"] -->
+<!-- tech_footprint: VM Sandbox + Computer Control + Security + DSPy Integration + Visual Context + Automation + Login Management + Troubleshooting -->
+<!-- problem: Need comprehensive computer control capabilities for AI assistant to help with screenshots, troubleshooting, web app testing, N8n workflows, and service logins while maintaining security and isolation -->
+<!-- outcome: Production-ready AI assistant with safe computer control, visual context capture, automated troubleshooting, and secure service integration capabilities -->
+
 ## P2 Lane
 
 - B‑076 — Research-Based DSPy Assertions Implementation (score 4.8)

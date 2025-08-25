@@ -4,6 +4,15 @@
 repos:
   - repo: local
     hooks:
+      # Placeholder hook to maintain valid YAML structure
+      - id: placeholder
+        name: Placeholder Hook
+        entry: echo "Pre-commit hooks temporarily disabled"
+        language: system
+        pass_filenames: false
+        description: "Placeholder hook to maintain valid YAML structure"
+        always_run: false
+
       # Temporarily disabled hooks for normal development
       # - id: conflict-check
       #   name: Conflict Check

@@ -43,7 +43,8 @@ check_broken_links() {
             # Check for links to non-existent files (simplified)
             while IFS= read -r link; do
                 # Extract filename from markdown link
-                local link_file=$(echo "$link" | sed -n 's/.*](\([^)]*\)).*/\1/p')
+                local link_file
+                link_file=$(echo "$link" | sed -n 's/.*](\([^)]*\)).*/\1/p')
                 # Skip external links and anchors
                 if [[ "$link_file" =~ ^https?:// ]] || [[ "$link_file" =~ ^# ]]; then
                     continue

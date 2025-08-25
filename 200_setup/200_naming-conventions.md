@@ -72,6 +72,31 @@ it easy for both humans and AI to understand its role and importance in the over
 
 ## 🔄 File Generation {#file-generation}
 
+### ⭐ CANON RULE: All Guides Go in Root with 400_ Prefix
+
+**This is absolute canon and non-negotiable:**
+
+- **ALL guides** must use `400_` prefix
+- **ALL guides** must be in the **root directory**
+- **NO guides** in subdirectories (docs/, processed_documents/, etc.)
+- **NO exceptions** - this is enforced by the naming system
+
+**Examples of correct guide placement:**
+- ✅ `400_system-overview.md` (root)
+- ✅ `400_project-overview.md` (root)
+- ✅ `400_mcp-integration-api-reference.md` (root)
+- ✅ `400_dspy-mcp-integration-guide.md` (root)
+
+**Examples of incorrect guide placement:**
+- ❌ `docs/400_guide.md` (subdirectory)
+- ❌ `processed_documents/400_guide.md` (subdirectory)
+- ❌ `400_guides/400_guide.md` (subdirectory)
+
+**Enforcement:**
+- All guides discovered in subdirectories must be moved to root
+- All guides must follow kebab-case naming: `400_descriptive-name.md`
+- This rule applies to both new and existing guides
+
 ### Step 1: Determine if a File is Needed
 
 #### Ask these questions
@@ -132,31 +157,33 @@ it easy for both humans and AI to understand its role and importance in the over
 
 - **Rarely relevant**→ Lower priority (specialized guides)
 
-### Step 3: Choose the Right Prefix Range**000-099: Core Planning & Context**- Backlog, project overview, system
-overview
+### Step 3: Choose the Right Prefix Range
 
+**000-099: Core Planning & Context**
+- Backlog, project overview, system overview
 - Files that give immediate understanding of the project
+- Essential for anyone working on the project
 
-- Essential for anyone working on the project**100-199: Memory & Guides**- Memory context, backlog guide, automation
-patterns
-
+**100-199: Memory & Guides**
+- Memory context, backlog guide, automation patterns
 - Files that help with ongoing work and decision-making
+- Important for regular development activities
 
-- Important for regular development activities**200-299: Configuration & Setup**- Naming conventions, model config,
-setup requirements
-
+**200-299: Configuration & Setup**
+- Naming conventions, model config, setup requirements
 - Files that help with environment and tool setup
+- Important when setting up or configuring
 
-- Important when setting up or configuring**400-499: Architecture & Overview**- System overview, project overview,
-context priority guide
-
+**400-499: Architecture & Overview** ⭐ **CANON RULE**
+- System overview, project overview, context priority guide
+- **ALL guides go in root directory with 400_ prefix**
 - Files that explain the big picture and relationships
+- Essential for understanding the system architecture
+- **NO guides in subdirectories - this is canon**
 
-- Essential for understanding the system architecture**500+: Research & Meta**- Completion summaries, research notes,
-benchmarks
-
+**500+: Research & Meta**
+- Completion summaries, research notes, benchmarks
 - Files that provide historical context and analysis
-
 - Useful for learning from past work
 
 ### Step 4: Create Descriptive, Self-Documenting Names

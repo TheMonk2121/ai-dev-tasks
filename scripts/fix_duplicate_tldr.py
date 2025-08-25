@@ -72,8 +72,8 @@ def main():
         "400_guides/400_script-optimization-guide.md",
         "400_guides/400_script-optimization-results.md",
         "dspy-rag-system/docs/VERSION_HISTORY.md",
-        "dspy-rag-system/docs/system_service_guide.md",
-        "dspy-rag-system/docs/watch_folder_guide.md",
+        "dspy-rag-system/400_system-service-guide.md",
+        "dspy-rag-system/400_watch-folder-guide.md",
     ]
 
     fixed_count = 0

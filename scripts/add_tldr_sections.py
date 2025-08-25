@@ -227,8 +227,8 @@ class TLDRAdder:
             "400_guides/400_script-optimization-guide.md",
             "400_guides/400_script-optimization-results.md",
             "dspy-rag-system/docs/VERSION_HISTORY.md",
-            "dspy-rag-system/docs/system_service_guide.md",
-            "dspy-rag-system/docs/watch_folder_guide.md",
+            "dspy-rag-system/400_system-service-guide.md",
+            "dspy-rag-system/400_watch-folder-guide.md",
         ]
 
         self.process_files(files_to_process)
@@ -241,6 +241,7 @@ class TLDRAdder:
         if self.dry_run:
             print("\n💡 Run with --apply to actually add the TL;DR sections")
 
+
 def main():
     parser = argparse.ArgumentParser(description="Add TL;DR sections to markdown files")
     parser.add_argument("--apply", action="store_true", help="Actually apply the changes (default is dry-run)")
@@ -248,6 +249,7 @@ def main():
 
     adder = TLDRAdder(dry_run=not args.apply)
     adder.run()
+
 
 if __name__ == "__main__":
     main()

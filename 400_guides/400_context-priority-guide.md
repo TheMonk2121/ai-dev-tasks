@@ -251,7 +251,7 @@ When sharing context with other AI models, use this structured approach:
 2. 400_system-overview.md - Technical architecture
 3. 000_core/000_backlog.md - Current priorities and status
 4. dspy-rag-system/400_project-overview.md - Core system status
-5. docs/400_project-overview.md - Three-lens documentation guide
+5. 400_project-overview.md - Three-lens documentation guide
 ```
 
 #### **Level 2: Implementation Context (10 files)**

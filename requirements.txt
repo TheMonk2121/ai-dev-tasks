@@ -36,6 +36,10 @@ sentence-transformers>=5.0.0
 huggingface-hub>=0.30.0
 tiktoken>=0.7.0
 
+# Neural network and deep learning
+torch>=2.8.0            # PyTorch for neural networks and tensor operations
+torchvision>=0.23.0     # Computer vision utilities for PyTorch
+
 # Database dependencies
 psycopg2-binary==2.9.7
 pgvector==0.2.4
