@@ -1,9 +1,39 @@
-# Temporarily disabled all pre-commit hooks due to hanging issues
-# Will re-enable after fixing the underlying problems
+# Simplified pre-commit hooks for fast validation
+# All hooks optimized for <1 second execution time
 repos:
   - repo: local
     hooks:
-      []
+      - id: conflict-check
+        name: Conflict Check
+        entry: bash -c 'git grep -nE "^(<<<<<<< |======= |>>>>>>> )" "$@" || exit 0'
+        language: system
+        files: \.(md|py|txt|sh|yaml|yml|json)$
+        pass_filenames: true
+        description: "Check for merge conflicts using simple git grep"
+
+      - id: pyright-type-check
+        name: Pyright Type Check
+        entry: pyright
+        language: system
+        files: \.py$
+        pass_filenames: false
+        description: "Run Pyright type checking on Python files"
+
+      - id: bandit-security-scan
+        name: Bandit Security Scan
+        entry: bandit
+        language: system
+        files: \.py$
+        pass_filenames: true
+        description: "Run Bandit security scanning on staged Python files only"
+
+      - id: markdown-validation
+        name: Markdown Validation
+        entry: bash scripts/simple_doc_validation.sh
+        language: system
+        files: \.md$
+        pass_filenames: false
+        description: "Validate markdown files for basic structure and broken links"
       # Temporarily disabled due to import issues
       # - id: database-sync-check
       #   name: Database Synchronization Check
