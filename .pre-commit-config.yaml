@@ -47,3 +47,12 @@ repos:
       #   files: \.py$
       #   pass_filenames: false
       #   description: "Run Pyright type checking on Python files"
+
+      # Temporarily disabled due to hanging issues
+      # - id: bandit-security-scan
+      #   name: Bandit Security Scan
+      #   entry: bandit
+      #   language: system
+      #   files: \.py$
+      #   pass_filenames: true
+      #   description: "Run Bandit security scanning on staged Python files only"
