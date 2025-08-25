@@ -56,12 +56,16 @@ def find_files_with_sync_tags() -> List[Tuple[str, str]]:
                     if "DATABASE_SYNC:" in content:
                         # More specific regex to avoid matching comments/docstrings
                         # Look for DATABASE_SYNC: at start of line or after whitespace, not in comments
-                        lines = content.split('\n')
+                        lines = content.split("\n")
                         has_tag = False
                         for line in lines:
                             # Skip comment lines and docstrings
                             stripped_line = line.strip()
-                            if stripped_line.startswith('#') or stripped_line.startswith('"""') or stripped_line.startswith("'''"):
+                            if (
+                                stripped_line.startswith("#")
+                                or stripped_line.startswith('"""')
+                                or stripped_line.startswith("'''")
+                            ):
                                 continue
                             # Look for DATABASE_SYNC: in non-comment lines
                             if "DATABASE_SYNC:" in stripped_line:
@@ -70,7 +74,7 @@ def find_files_with_sync_tags() -> List[Tuple[str, str]]:
                                     has_tag = True
                                     sync_type = match.group(1)
                                     break
-                        
+
                         if not has_tag:
                             continue  # Skip this file if no actual tag found
 

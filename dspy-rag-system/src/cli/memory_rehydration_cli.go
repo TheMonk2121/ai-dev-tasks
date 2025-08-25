@@ -502,9 +502,9 @@ func mineAnchorTerms(query string, topN int, dbDSN string) ([]string, error) {
 	// Mine anchor terms for query expansion
 	// This would extract relevant anchor keys from the database
 	// Placeholder implementation - use parameters to satisfy linter
-	_ = query   // TODO: implement query-based anchor mining
-	_ = topN    // TODO: implement topN limit
-	_ = dbDSN   // TODO: implement database connection
+	_ = query // TODO: implement query-based anchor mining
+	_ = topN  // TODO: implement topN limit
+	_ = dbDSN // TODO: implement database connection
 	return []string{"memory", "context", "system"}, nil
 }
 

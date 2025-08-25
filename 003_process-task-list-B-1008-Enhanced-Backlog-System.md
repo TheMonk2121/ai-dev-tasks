@@ -14,6 +14,11 @@ Implement an enhanced backlog system that combines industry best practices (MoSC
 
 ## 🚀 **Solo Developer Quick Start**
 
+### ✅ **Core Files Updated**
+- **001_create-prd.md**: ✅ Enhanced with Section 0, MoSCoW prioritization, solo optimizations
+- **002_generate-tasks.md**: ✅ Enhanced with embedded tasks, MoSCoW support, solo workflow CLI
+- **003_process-task-list.md**: ✅ Enhanced with auto-advance, context preservation, smart pausing
+
 ### One Command Workflow
 ```bash
 # Start everything (backlog intake → PRD → tasks → execution)

@@ -10,18 +10,23 @@ The key file is `100_cursor-memory-context.md` which provides instant context ab
 **At the beginning of every new chat, automatically run this command to prime the model with core documentation:**
 
 ```bash
-python3 scripts/prime_cursor_chat.py planner "current project status and core documentation"
+./scripts/memory_up.sh
 ```
 
-**This script automatically formats the output for easy copying into Cursor chat.**
+**This script automatically fires up all memory systems and formats the output for easy copying into Cursor chat.**
 
-**Alternative manual methods:**
+**Alternative methods (if needed):**
 ```bash
-# Python implementation
-python3 scripts/cursor_memory_rehydrate.py planner "current project status and core documentation"
+# With custom query and role
+./scripts/memory_up.sh -q "current project status and core documentation" -r planner
 
-# Go implementation (faster)
-cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project status and core documentation"
+# For specific roles
+./scripts/memory_up.sh -r coder "DSPy integration task"
+./scripts/memory_up.sh -r implementer "database optimization"
+./scripts/memory_up.sh -r researcher "performance analysis"
+
+# JSON output for programmatic access
+./scripts/memory_up.sh -f json
 ```
 **Then copy the entire bundle output into the chat as the first message.**
 
@@ -31,6 +36,8 @@ cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current projec
 - Available workflows and commands
 - Development guidelines and best practices
 - Backlog items and dependencies
+- Role-specific context (planner, implementer, researcher, coder)
+- System status and recent changes
 
 ### **🚨 PRIORITY: Use Database-Based Memory Rehydration**
 
@@ -102,72 +109,4 @@ cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "DSPy integrati
 
 1. **Add to backlog** with proper scoring (see `100_memory/100_backlog-guide.md`)
 2. **Create PRD** using `000_core/001_create-prd.md` workflow
-3. **Generate tasks** using `000_core/002_generate-tasks.md` workflow
-4. **Execute** using `000_core/003_process-task-list.md` workflow
-
-### **cSpell Automation Pattern**
-
-**When user requests cSpell word addition or mentions "missing definitions":**
-- **Role**: Use `coder` role (handles development tooling and configuration)
-- **Script**: Use `python3 scripts/cspell_automation.py "word1 word2 word3"`
-- **Pattern**: This is a frequent, deterministic task that should be automated
-- **Memory**: See `100_memory/105_cspell-automation-memory.md` for full pattern
-- **Integration**: cSpell automation is part of coder role responsibilities
-
-### **Key Files for Context**
-
-- **Memory Context**: `100_memory/100_cursor-memory-context.md` (current state)
-- **System Overview**: `400_guides/400_system-overview.md` (technical architecture)
-- **Backlog**: `000_core/000_backlog.md` (priorities and status)
-- **Setup**: `200_setup/202_setup-requirements.md` (environment setup)
-
-### **Current Development Focus**
-
-- **B-002**: Advanced Error Recovery & Prevention (5 points) ✅ completed
-- **B-011**: Cursor Native AI + Specialized Agents Integration (5 points)
-- **Infrastructure**: v0.3.1-rc3 Core Hardening ✅ completed
-
-### **System Architecture**
-
-- **AI Models**: Cursor Native AI (foundation), Specialized Agents (enhancements)
-- **Framework**: DSPy with PostgreSQL vector store
-- **Automation**: n8n workflows for backlog management
-- **Monitoring**: Real-time mission dashboard
-- **Security**: Comprehensive input validation and prompt sanitization
-
-### **Development Workflow**
-
-1. **Backlog Selection** → Choose from `000_core/000_backlog.md` (B-001, B-002, etc.)
-2. **PRD Creation** → Use `000_core/001_create-prd.md` workflow
-3. **Task Generation** → Use `000_core/002_generate-tasks.md` workflow
-4. **AI Execution** → Use `000_core/003_process-task-list.md` workflow
-5. **State Management** → `.ai_state.json` for context persistence
-
-### **When Debugging Issues**
-
-1. **Check `dspy-rag-system/docs/CURRENT_STATUS.md`** for system health
-2. **Review error logs** in `dspy-rag-system/src/utils/logger.py`
-3. **Use retry wrapper** from `dspy-rag-system/src/utils/retry_wrapper.py`
-4. **Check security validation** from `dspy-rag-system/src/utils/prompt_sanitizer.py`
-
-### **Key Commands**
-
-- **Start Dashboard**: `./dspy-rag-system/start_mission_dashboard.sh`
-- **Run Tests**: `./dspy-rag-system/run_tests.sh`
-- **Quick Start**: `./dspy-rag-system/quick_start.sh`
-- **Update Memory**: `python scripts/update_cursor_memory.py`
-
-### **File Organization**
-
-- **Essential**: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
-- **Implementation**: `100_memory/104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
-- **Domain**: `100_memory/100_backlog-guide.md`
-
-### **Memory State Updates**
-
-- **When to update**: After completing backlog items, changing focus, adding features
-- **How to update**: Run `python scripts/update_cursor_memory.py`
-- **What gets updated**: Priorities, completed items, system status, timestamps
-
-Remember: This is a sophisticated AI development ecosystem. Always check the memory context first,
-then dive deeper into specific files as needed
+3. **Generate tasks** using `000_core/002_generate-tasks.md`

@@ -1,292 +1,273 @@
 <!-- ANCHOR_KEY: process-task-list -->
 <!-- ANCHOR_PRIORITY: 25 -->
-
-<!-- ROLE_PINS: ["implementer", "coder"] -->
+<!-- ROLE_PINS: ["implementer", "planner"] -->
 
 # Process Task List
 
-<!-- ANCHOR: tldr -->
-{#tldr}
-
-## 🔎 TL;DR
+## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |
 |---|---|---|
-| Execution engine for processing task lists with state, auto‑advance, and HotFix | When running or modifying the AI
-task execution workflow | 1) Prepare a task list; 2) Start the Run loop; 3) Update `.ai_state.json`; 4) Use HotFix flow
-on failures |
+| Enhanced task execution workflow with solo developer optimizations, auto-advance, and context preservation | Ready to execute tasks from PRD | Run solo workflow CLI to start automated execution with smart pausing |
 
-## 🎯 **Current Status**-**Status**: ✅ **ACTIVE**- Task execution engine maintained
-
-- **Priority**: 🔥 Critical - Essential for workflow automation
-
+## 🎯 **Current Status**
+- **Status**: ✅ **ACTIVE** - Enhanced execution workflow with solo optimizations
+- **Priority**: 🔥 Critical - Essential for project execution
 - **Points**: 4 - Moderate complexity, high importance
+- **Dependencies**: 000_core/001_create-prd.md, 000_core/002_generate-tasks.md
+- **Next Steps**: Solo workflow CLI with auto-advance and context preservation
 
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 000_core/000_backlog.md
+## When to use {#when-to-use}
 
-- **Next Steps**: Enhance error handling and state management
+- Use when you have a PRD with embedded tasks (Section 8: Task Breakdown)
+- Use for automated execution with smart pausing and context preservation
+- Use for solo developer workflows with one-command operations
+- **B-1008**: Enhanced Backlog System - Ready for execution
+- **B-1009**: AsyncIO Scribe Enhancement - Ready for execution
 
-<!-- ANCHOR: run -->
-{#run}
+### Execution Skip Rule {#execution-skip-rule}
 
-## Run loop
+- Skip automated execution when: tasks require extensive user input or external dependencies
+- Otherwise, use solo workflow CLI for automated execution with smart pausing
 
-1. **Select Next Task** - Find task with status `[ ]` where all dependencies are `[x]`
+### Backlog Integration {#backlog-integration}
 
-- Skip tasks marked `[!]` (blocked)
-- Prioritize tasks based on backlog impact estimates when possible
-- Check backlog dependencies before starting tasks
-- **Consider backlog scores** for task selection when available
-- **Prioritize high-scoring items** when multiple tasks are ready
+- **Input**: PRD file with embedded tasks (Section 8: Task Breakdown)
+- **Output**: Execution configuration and state management
+- **Cross-reference**: `000_core/000_backlog.md` for item details and metadata
 
-<!-- ANCHOR: pause-points -->
-{#pause-points}
+## Enhanced Workflow {#workflow}
 
-1. **Execute Task** - Follow steps in "Do:" section
+### 🚀 **Solo Developer Quick Start (Recommended)**
 
-- Use Cursor Native AI for reasoning and planning
-- Use Specialized Agents for code implementation
+For streamlined, automated execution with solo developer optimizations:
 
-1. **Validate Completion** - Run all "Done when:" criteria
+```bash
+# Start everything (backlog intake → PRD → tasks → execution)
+python3 scripts/solo_workflow.py start "Enhanced backlog system with industry standards"
 
-- If any fail → mark task `[!]` and create HotFix task
-- If all pass → mark task `[x]`
+# Continue where you left off
+python3 scripts/solo_workflow.py continue
 
-<!-- ANCHOR: state -->
-{#state}
-
-1. **Update State** - Write/update `.ai_state.json` with current state
-
-- Update progress tracking
-
-1. **Check for Pause** - If `🛑 Pause After: yes` AND `Auto-Advance: no` → wait for human input
-
-- Otherwise continue to next task
-
-1. **Update Backlog** (the execution engine)
-
-- Mark completed features in backlog as implemented
-- **Move completed items to "Completed Items" section** in backlog
-- Update status from "todo" to "✅ done" in backlog table
-- Add completion date and implementation notes
-- Add new discoveries or requirements to backlog
-- Update effort estimates based on actual implementation time
-- Execute AI-BACKLOG-META commands for automated updates
-- **Update scoring metadata** if effort estimates change significantly
-- **Re-calculate scores** if business value or priorities shift
-- **Update timestamp**: Change *Last Updated: YYYY-MM-DD HH:MM* to current time
-- **Add history**: Move current *Last Updated* to *Previously Updated* line
-
-- --
-
-## 2. Task Status Tracking
-
-| Status | Meaning |
-|--------|---------|
-| `[ ]` | Not started |
-| `[x]` | Completed successfully |
-| `[!]` | Blocked/needs fix |
-
-- --
-
-## 3. Auto-Advance Configuration
-
-### Task Template Addition
-
-```markdown**Auto-Advance**: yes | no
-
-```json
-
-### Default Rules
-
-- **Auto-Advance: yes** for Medium and Low priority tasks
-
-- **Auto-Advance: no** for Critical tasks, deployment changes, database migrations
-
-- **Auto-Advance: no** when `🛑 Pause After: yes`
-
-- --
-
-<!-- ANCHOR: hotfix -->
-{#hotfix}
-
-## 4. State Management
-
-### .ai_state.json Structure
-
-```json
-{
-  "last_commit": "abc123",
-  "file_list": ["src/main.py", "tests/test_main.py"],
-  "test_results": {"passed": 15, "failed": 0},
-  "current_task": "T-5",
-  "completed_tasks": ["T-1", "T-2", "T-3", "T-4"]
-}
-
-```yaml
-
-### State Operations
-
-- **Load**: Read state at start of execution
-
-- **Save**: Update after each task completion
-
-- **Ignore**: Add to .gitignore (never commit)
-
-- --
-
-## 5. HotFix Task Generation
-
-### When to Create HotFix
-
-- Any "Done when:" criteria fails
-
-- Uncaught exception during execution
-
-- Test suite failure
-
-### HotFix Task Template
-
-```markdown
-
-### T-HotFix-`<n>` Fix `<short description>`
-
-- *Priority**: Critical
-- *Time**: 1-2 hours
-- *Depends on**: `[failed_task_id]`
-
-- *Do**:
-
-1. Reproduce the error
-2. Fix the issue
-3. Add regression test
-4. Re-run failing validation
-
-- *Done when**:
-
-- Original task's "Done when" criteria pass
-
-- New regression test passes
-
-- *Auto-Advance**: no
-- *🛑 Pause After**: yes
-- *When Ready Prompt**: "HotFix complete - retry original task?"
-
+# Ship when done
+python3 scripts/solo_workflow.py ship
 ```
 
-- --
+### Context Preservation
+- **LTST Memory**: Maintains context across sessions
+- **Auto-Advance**: Tasks auto-advance unless you pause
+- **Smart Pausing**: Pause only for critical decisions or external dependencies
 
-## 6. Error Handling
+### 🤖 **Automated Execution Engine**
 
-### Safety Rules
+For consistent, high-quality task execution:
 
-- **Database Changes**: Always pause for human review
+```bash
+# Execute tasks from PRD with auto-advance
+python3 scripts/solo_workflow.py execute --prd <prd_file> --auto-advance
 
-- **Deployment Scripts**: Always pause for human review
+# Execute with smart pausing
+python3 scripts/solo_workflow.py execute --prd <prd_file> --smart-pause
 
-- **Consecutive Failures**: Stop execution after 2 consecutive failures
+# Execute with context preservation
+python3 scripts/solo_workflow.py execute --prd <prd_file> --context-preserve
+```
 
-- **Uncaught Exceptions**: Generate HotFix task and pause
+### 📝 **Manual Process (Fallback)**
 
-### Recovery Process
+- Parse PRD Section 8: Task Breakdown for task list
+- Execute tasks manually with state tracking
+- Update progress in `.ai_state.json`
 
-1. Generate HotFix task with error details
-2. Execute HotFix task
-3. Retry original task
-4. Continue normal execution
+## Enhanced Execution Configuration {#configuration}
 
-- --
+### Execution Configuration Structure
 
-<!-- ANCHOR: completion-checks -->
-{#completion-checks}
+```markdown
+# Process Task List: [Project Name]
 
-## 7. Progress Tracking
+## Execution Configuration
+- **Auto-Advance**: yes/no
+- **Pause Points**: [Critical decisions, deployments, user input]
+- **Context Preservation**: LTST memory integration
+- **Smart Pausing**: Automatic detection of blocking conditions
 
-### Simple Progress
+## State Management
+- **State File**: `.ai_state.json` (auto-generated, gitignored)
+- **Progress Tracking**: Task completion status
+- **Session Continuity**: LTST memory for context preservation
 
-- Count completed tasks: `[x]` vs total tasks
+## Error Handling
+- **HotFix Generation**: Automatic error recovery
+- **Retry Logic**: Smart retry with exponential backoff
+- **User Intervention**: When to pause for manual fixes
 
-- Update progress in task list header
+## Execution Commands
+```bash
+# Start execution
+python3 scripts/solo_workflow.py start "description"
 
-- Track blocked tasks: `[!]`
+# Continue execution
+python3 scripts/solo_workflow.py continue
 
-### Completion Validation
+# Complete and archive
+python3 scripts/solo_workflow.py ship
+```
 
-- All tasks marked `[x]` or `[!]`
+## Task Execution
+[Reference tasks from PRD Section 8 - no duplication]
+```
 
-- No tasks with status `[ ]`
+## Enhanced Task Execution Engine {#execution-engine}
 
-- All "Done when" criteria validated
+### Auto-Advance Configuration
 
-- --
+#### **Auto-Advance Rules:**
+- **🚀 One-command tasks**: Automatically advance to next task
+- **🔄 Auto-advance tasks**: Continue without user input
+- **⏸️ Smart pause tasks**: Pause for user input or external dependencies
 
-## 8. Human Checkpoints
+#### **Smart Pausing Logic:**
+- **Critical decisions**: Pause for architectural or design decisions
+- **External dependencies**: Pause for API keys, credentials, or external services
+- **User validation**: Pause for user acceptance or testing
+- **Error conditions**: Pause for manual error resolution
 
-### When to Pause
+### Context Preservation
 
-- Critical priority tasks
+#### **LTST Memory Integration:**
+- **Session state**: Maintain task progress across sessions
+- **Context bundle**: Preserve project context and decisions
+- **Knowledge mining**: Extract insights from completed work
+- **Scribe integration**: Automated worklog generation
 
-- Database migrations
+#### **State Management:**
+```json
+{
+  "project": "B-1008: Enhanced Backlog System",
+  "current_phase": "Phase 1: Core Structured Data",
+  "current_task": "Task 1.1: Enhanced JSON Schema",
+  "completed_tasks": ["Task 1.1", "Task 1.2"],
+  "pending_tasks": ["Task 1.3", "Task 1.4"],
+  "blockers": [],
+  "context": {
+    "tech_stack": ["Python 3.12", "PostgreSQL", "NiceGUI"],
+    "dependencies": ["B-1006-A", "B-1007"],
+    "decisions": ["Use JSON Schema for validation", "MoSCoW prioritization"]
+  }
+}
+```
 
-- Deployment changes
+### Error Handling and Recovery
 
-- HotFix completions
+#### **HotFix Task Generation:**
+- **Automatic detection**: Identify failed tasks and root causes
+- **Recovery tasks**: Generate tasks to fix issues
+- **Retry logic**: Smart retry with exponential backoff
+- **User intervention**: Pause for manual fixes when needed
 
-- User explicitly requests pause
+#### **Error Recovery Workflow:**
+1. **Detect failure**: Identify task failure and root cause
+2. **Generate HotFix**: Create recovery task with clear steps
+3. **Execute recovery**: Run recovery task with retry logic
+4. **Validate fix**: Confirm issue is resolved
+5. **Continue execution**: Resume normal task flow
 
-### Checkpoint Process
+## Enhanced Quality Gates {#quality-gates}
 
-1. Display "When Ready Prompt"
-2. Wait for user input
-3. Continue execution on user approval
-4. Handle user feedback if provided
+### Implementation Status Tracking
 
-- --
+```markdown
+## Implementation Status
 
-## 9. File Maintenance
+### Overall Progress
+- **Total Tasks:** [X] completed out of [Y] total
+- **Current Phase:** [Planning/Implementation/Testing/Deployment]
+- **Estimated Completion:** [Date or percentage]
+- **Blockers:** [List any current blockers]
 
-### Required Files
+### Quality Gates
+- [ ] **Code Review Completed** - All code has been reviewed
+- [ ] **Tests Passing** - All unit and integration tests pass
+- [ ] **Documentation Updated** - All relevant docs updated
+- [ ] **Performance Validated** - Performance meets requirements
+- [ ] **Security Reviewed** - Security implications considered
+- [ ] **User Acceptance** - Feature validated with users
+- [ ] **Resilience Tested** - Error handling and recovery validated
+- [ ] **Edge Cases Covered** - Boundary conditions tested
+```
 
-- Task list markdown file
+### **Quality Gate Checklist for Each Task:**
+- [ ] **Code Review** - All code has been reviewed
+- [ ] **Tests Passing** - All tests pass with required coverage
+- [ ] **Performance Validated** - Meets performance requirements
+- [ ] **Security Reviewed** - Security implications considered
+- [ ] **Documentation Updated** - Relevant docs updated
+- [ ] **Integration Tested** - Component interactions validated
+- [ ] **Error Handling** - Error scenarios covered
+- [ ] **Edge Cases** - Boundary conditions tested
 
-- `.ai_state.json` (auto-generated, gitignored)
+## Enhanced Output Format {#output-format}
 
-- Source code files
+Generate execution configuration with the following structure:
 
-- Test files
+```markdown
+# Process Task List: [Project Name]
 
-### Git Operations
+## Execution Configuration
+- **Auto-Advance**: [yes/no]
+- **Pause Points**: [List of critical decision points]
+- **Context Preservation**: [LTST memory integration details]
+- **Smart Pausing**: [Automatic detection rules]
 
-- Commit after each completed task
+## State Management
+- **State File**: `.ai_state.json` (auto-generated)
+- **Progress Tracking**: [Task completion status]
+- **Session Continuity**: [LTST memory for context preservation]
 
-- Use conventional commit messages
+## Error Handling
+- **HotFix Generation**: [Automatic error recovery]
+- **Retry Logic**: [Smart retry with exponential backoff]
+- **User Intervention**: [When to pause for manual fixes]
 
-- Never commit `.ai_state.json`
+## Execution Commands
+```bash
+# Start execution
+python3 scripts/solo_workflow.py start "description"
 
-- --
+# Continue execution
+python3 scripts/solo_workflow.py continue
 
-This approach ensures:
+# Complete and archive
+python3 scripts/solo_workflow.py ship
+```
 
-- **Efficient AI execution** with state caching
+## Task Execution
+[Reference tasks from PRD Section 8 - no duplication]
+```
 
-- **Automatic error recovery** with HotFix tasks
+## **Enhanced Special Instructions**
 
-- **Minimal human intervention** with smart pausing
+### Implementation Focus (Enhanced):
+1. **Use solo workflow CLI** - One-command operations for common tasks
+2. **Enable auto-advance** - Tasks auto-advance unless explicitly paused
+3. **Preserve context** - Use LTST memory for session continuity
+4. **Implement smart pausing** - Pause only for critical decisions
+5. **Generate HotFix tasks** - Automatic error recovery and retry
+6. **Track progress** - Maintain state in `.ai_state.json`
+7. **Validate quality gates** - Ensure all requirements are met
+8. **Handle errors gracefully** - Provide clear error messages and recovery steps
+9. **Integrate with LTST memory** - Preserve context across sessions
+10. **Use Scribe integration** - Automated worklog generation
+11. **Support one-command workflows** - Minimize context switching
+12. **Implement retry logic** - Smart retry with exponential backoff
+13. **Provide user intervention points** - Clear pause and resume functionality
+14. **Track task dependencies** - Ensure proper execution order
+15. **Validate acceptance criteria** - Confirm tasks meet requirements
+16. **Generate execution reports** - Provide progress and status updates
+17. **Support archive operations** - Complete and archive finished work
+18. **Integrate with mission dashboard** - Real-time status updates
+19. **Provide rollback capabilities** - Ability to revert changes if needed
+20. **Ensure backward compatibility** - Work with existing workflow systems
 
-- **Clear progress tracking** for oversight
-
-- **Safe execution** with appropriate checkpoints
-
-## 🔄 Execution Flow
-
-1. **Parse Backlog**: Extract tasks and dependencies
-2. **Validate State**: Check `.ai_state.jsonl` for current context
-3. **Execute Tasks**: Run tasks in priority order
-4. **Update State**: Record progress in `.ai_state.jsonl`
-5. **Sync Roadmap**: Update `000_core/004_development-roadmap.md` with progress
-6. **Generate Report**: Create completion summary
-
-## Recent Executions
-
-- **B-1009**: AsyncIO Scribe Enhancement - Process task list created with 7 tasks across 5 phases
-- **B-1010**: NiceGUI Scribe Dashboard - Process task list created with 6 tasks across 6 phases
+This enhanced approach ensures streamlined task execution with solo developer optimizations, automated error recovery, context preservation, and smart pausing for critical decisions.
