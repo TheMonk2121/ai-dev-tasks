@@ -81,7 +81,7 @@ and normalize spacing across long-form guides.
 
 ## P0 Lane
 
-- B‑052‑d — CI GitHub Action (Dry-Run Gate) (score 8.0)
+- B‑052‑d — CI GitHub Action (Dry-Run Gate) (score 8.0) ✅ **COMPLETED**
   - Note: Implemented `.github/workflows/dry-run.yml` (non‑blocking ruff/pyright/pytest on PRs)
 
 - B‑062 — Context Priority Guide Auto-Generation (score 8.0) ✅ **COMPLETED**
@@ -305,7 +305,7 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- problem: Project lacks external-facing README for GitHub discovery and zero-context onboarding -->
 <!-- outcome: Professional 500-line README that showcases the AI development ecosystem without requiring internal documentation -->
 
-| B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | done | Add GitHub Action to run maintenance script on PRs | GitHub Actions + CI/CD | None |
+| B‑052‑d | CI GitHub Action (Dry-Run Gate) | 🔧 | 0.5 | ✅ done | Add GitHub Action to run maintenance script on PRs | GitHub Actions + CI/CD | None |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:0.5, lessons:3, deps:[]}-->
 <!--score_total: 8.0-->
 <!-- do_next: Create GitHub Action workflow for automated maintenance script execution -->

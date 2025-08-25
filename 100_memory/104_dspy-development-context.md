@@ -100,6 +100,8 @@ High-level summary of DSPy's role in the ecosystem and current capabilities.
 
 **Critical**: All DSPy development requires proper virtual environment management.
 
+**CI Integration**: Non-blocking GitHub Actions workflow (`.github/workflows/dry-run.yml`) runs `ruff`, `pyright`, and `pytest` on PRs for early signal without merge friction.
+
 ```python
 # In any script that imports DSPy modules
 from scripts.venv_manager import ensure_venv_for_script
