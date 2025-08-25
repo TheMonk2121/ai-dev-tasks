@@ -292,7 +292,10 @@ class GitHubMCPServer(MCPServer):
                     issues_data = await self._make_api_request(
                         f"/repos/{repo_info['owner']}/{repo_info['repo']}/issues?state=all&per_page={self.github_config.max_items_per_type}"
                     )
-                    issues_content = await self._format_issues(issues_data)
+                    if isinstance(issues_data, list):
+                        issues_content = await self._format_issues(issues_data)
+                    else:
+                        issues_content = "Error: Invalid issues data format"
                 except MCPError:
                     pass
 
@@ -303,7 +306,10 @@ class GitHubMCPServer(MCPServer):
                     prs_data = await self._make_api_request(
                         f"/repos/{repo_info['owner']}/{repo_info['repo']}/pulls?state=all&per_page={self.github_config.max_items_per_type}"
                     )
-                    prs_content = await self._format_pull_requests(prs_data)
+                    if isinstance(prs_data, list):
+                        prs_content = await self._format_pull_requests(prs_data)
+                    else:
+                        prs_content = "Error: Invalid pull requests data format"
                 except MCPError:
                     pass
 

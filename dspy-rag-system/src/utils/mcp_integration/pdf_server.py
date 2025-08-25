@@ -5,13 +5,18 @@ Provides MCP server for PDF document processing, supporting text extraction,
 metadata parsing, and content formatting with OCR capabilities.
 """
 
-import io
 import re
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
 from .base_server import DocumentMetadata, MCPConfig, MCPError, MCPProtocolUtils, MCPServer, ProcessedDocument
+
+# Import PyMuPDF (fitz) with fallback
+try:
+    import fitz  # PyMuPDF - better than PyPDF2
+except ImportError:
+    fitz = None  # type: ignore
 
 
 class PDFServerConfig(BaseModel):
@@ -192,47 +197,49 @@ class PDFMCPServer(MCPServer):
     async def _extract_document_info(self, pdf_content: bytes) -> PDFDocumentInfo:
         """Extract document information from PDF."""
         try:
-            import PyPDF2
+            if fitz is None:
+                raise MCPError("PyMuPDF (fitz) is required for PDF processing", error_code="MISSING_DEPENDENCY")
 
-            pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_content))
+            # Open PDF from bytes
+            doc = fitz.open(stream=pdf_content, filetype="pdf")  # type: ignore[attr-defined]
 
             # Check if PDF is encrypted
-            if pdf_reader.is_encrypted:
-                return PDFDocumentInfo(page_count=len(pdf_reader.pages), is_encrypted=True)
+            if doc.needs_pass:  # type: ignore[attr-defined]
+                doc.close()
+                return PDFDocumentInfo(page_count=len(doc), is_encrypted=True)
 
             # Extract metadata
-            info = pdf_reader.metadata or {}
+            metadata = doc.metadata  # type: ignore[attr-defined]
 
             doc_info = PDFDocumentInfo(
-                title=info.get("/Title"),
-                author=info.get("/Author"),
-                subject=info.get("/Subject"),
-                creator=info.get("/Creator"),
-                producer=info.get("/Producer"),
-                creation_date=info.get("/CreationDate"),
-                modification_date=info.get("/ModDate"),
-                page_count=len(pdf_reader.pages),
+                title=metadata.get("title"),
+                author=metadata.get("author"),
+                subject=metadata.get("subject"),
+                creator=metadata.get("creator"),
+                producer=metadata.get("producer"),
+                creation_date=metadata.get("creationDate"),
+                modification_date=metadata.get("modDate"),
+                page_count=len(doc),
                 is_encrypted=False,
             )
 
             # Detect if PDF is scanned (image-based)
-            doc_info.is_scanned = await self._detect_scanned_pdf(pdf_reader)
+            doc_info.is_scanned = await self._detect_scanned_pdf(doc)
 
+            doc.close()
             return doc_info
 
-        except ImportError:
-            raise MCPError("PyPDF2 is required for PDF processing", error_code="MISSING_DEPENDENCY")
         except Exception as e:
             self.logger.warning(f"Document info extraction failed: {e}")
             return PDFDocumentInfo(page_count=0)
 
-    async def _detect_scanned_pdf(self, pdf_reader) -> bool:
+    async def _detect_scanned_pdf(self, doc) -> bool:
         """Detect if PDF is scanned (image-based)."""
         try:
             # Simple heuristic: check if first page has very little text
-            if len(pdf_reader.pages) > 0:
-                first_page = pdf_reader.pages[0]
-                text = first_page.extract_text()
+            if len(doc) > 0:
+                first_page = doc[0]  # type: ignore[attr-defined]
+                text = first_page.get_text()
 
                 # If text is very short or empty, likely scanned
                 if len(text.strip()) < 50:
@@ -246,23 +253,26 @@ class PDFMCPServer(MCPServer):
     async def _extract_text_content(self, pdf_content: bytes, **kwargs) -> str:
         """Extract text content from PDF."""
         try:
-            import PyPDF2
+            if fitz is None:
+                raise MCPError("PyMuPDF (fitz) is required for PDF processing", error_code="MISSING_DEPENDENCY")
 
-            pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_content))
+            # Open PDF from bytes
+            doc = fitz.open(stream=pdf_content, filetype="pdf")  # type: ignore[attr-defined]
 
-            if pdf_reader.is_encrypted:
+            if doc.needs_pass:  # type: ignore[attr-defined]
+                doc.close()
                 raise MCPError("PDF is encrypted and cannot be processed", error_code="ENCRYPTED_PDF")
 
             # Limit pages if configured
-            max_pages = min(self.pdf_config.max_pages, len(pdf_reader.pages))
+            max_pages = min(self.pdf_config.max_pages, len(doc))
 
             extracted_text = []
             total_word_count = 0
 
             for page_num in range(max_pages):
                 try:
-                    page = pdf_reader.pages[page_num]
-                    page_text = page.extract_text()
+                    page = doc[page_num]  # type: ignore[attr-defined]
+                    page_text = page.get_text()
 
                     if page_text:
                         # Clean up text
@@ -274,10 +284,9 @@ class PDFMCPServer(MCPServer):
                     self.logger.warning(f"Failed to extract text from page {page_num + 1}: {e}")
                     continue
 
+            doc.close()
             return "\n\n".join(extracted_text)
 
-        except ImportError:
-            raise MCPError("PyPDF2 is required for PDF processing", error_code="MISSING_DEPENDENCY")
         except Exception as e:
             raise MCPError(f"Text extraction failed: {e}", error_code="EXTRACTION_ERROR")
 
@@ -379,17 +388,20 @@ class PDFMCPServer(MCPServer):
     async def get_page_info(self, source: str, page_num: int) -> Optional[PDFPageInfo]:
         """Get information about a specific page."""
         try:
+            if fitz is None:
+                raise MCPError("PyMuPDF (fitz) is required for PDF processing", error_code="MISSING_DEPENDENCY")
+
             pdf_content = await self._read_pdf_content(source)
-            import PyPDF2
+            doc = fitz.open(stream=pdf_content, filetype="pdf")  # type: ignore[attr-defined]
 
-            pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_content))
-
-            if page_num < 1 or page_num > len(pdf_reader.pages):
+            if page_num < 1 or page_num > len(doc):
+                doc.close()
                 return None
 
-            page = pdf_reader.pages[page_num - 1]
-            page_text = page.extract_text()
+            page = doc[page_num - 1]  # type: ignore[attr-defined]
+            page_text = page.get_text()
 
+            doc.close()
             return PDFPageInfo(
                 page_number=page_num,
                 text_content=page_text,

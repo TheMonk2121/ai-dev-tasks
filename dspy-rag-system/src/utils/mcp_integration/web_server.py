@@ -317,11 +317,11 @@ class WebMCPServer(MCPServer):
             title_match = re.search(r"<title[^>]*>(.*?)</title>", html_content, re.IGNORECASE | re.DOTALL)
             title = title_match.group(1).strip() if title_match else None
 
-            # Extract meta description
-            desc_match = re.search(
-                r'<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"\']*)["\']', html_content, re.IGNORECASE
-            )
-            description = desc_match.group(1) if desc_match else None
+            # Extract meta description (not used in current metadata structure)
+            # desc_match = re.search(
+            #     r'<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"\']*)["\']', html_content, re.IGNORECASE
+            # )
+            # description = desc_match.group(1) if desc_match else None
 
             # Extract meta author
             author_match = re.search(
@@ -421,9 +421,9 @@ class WebMCPServer(MCPServer):
 
             items.append(
                 RSSFeedItem(
-                    title=item_title.text if item_title is not None else "",
-                    description=item_desc.text if item_desc is not None else "",
-                    link=item_link.text if item_link is not None else "",
+                    title=str(item_title.text) if item_title is not None and item_title.text is not None else "",
+                    description=str(item_desc.text) if item_desc is not None and item_desc.text is not None else "",
+                    link=str(item_link.text) if item_link is not None and item_link.text is not None else "",
                     pub_date=item_pub_date.text if item_pub_date is not None else None,
                     author=item_author.text if item_author is not None else None,
                     category=item_category.text if item_category is not None else None,
@@ -431,9 +431,9 @@ class WebMCPServer(MCPServer):
             )
 
         return RSSFeed(
-            title=title.text if title is not None else "RSS Feed",
-            description=description.text if description is not None else "",
-            link=link.text if link is not None else "",
+            title=str(title.text) if title is not None and title.text is not None else "RSS Feed",
+            description=str(description.text) if description is not None and description.text is not None else "",
+            link=str(link.text) if link is not None and link.text is not None else "",
             language=language.text if language is not None else None,
             items=items,
         )
@@ -454,22 +454,30 @@ class WebMCPServer(MCPServer):
 
             items.append(
                 RSSFeedItem(
-                    title=entry_title.text if entry_title is not None else "",
-                    description=entry_summary.text if entry_summary is not None else "",
-                    link=entry_link.get("href") if entry_link is not None else "",
+                    title=str(entry_title.text) if entry_title is not None and entry_title.text is not None else "",
+                    description=(
+                        str(entry_summary.text) if entry_summary is not None and entry_summary.text is not None else ""
+                    ),
+                    link=(
+                        str(entry_link.get("href"))
+                        if entry_link is not None and entry_link.get("href") is not None
+                        else ""
+                    ),
                     pub_date=entry_published.text if entry_published is not None else None,
                     author=(
-                        entry_author.find("{http://www.w3.org/2005/Atom}name").text
+                        name_elem.text
                         if entry_author is not None
+                        and (name_elem := entry_author.find("{http://www.w3.org/2005/Atom}name")) is not None
+                        and name_elem.text is not None
                         else None
                     ),
                 )
             )
 
         return RSSFeed(
-            title=title.text if title is not None else "Atom Feed",
-            description=subtitle.text if subtitle is not None else "",
-            link=link.get("href") if link is not None else "",
+            title=str(title.text) if title is not None and title.text is not None else "Atom Feed",
+            description=str(subtitle.text) if subtitle is not None and subtitle.text is not None else "",
+            link=str(link.get("href")) if link is not None and link.get("href") is not None else "",
             items=items,
         )
 
