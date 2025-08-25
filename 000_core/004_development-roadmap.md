@@ -29,6 +29,7 @@
 - ✅ **B-084**: Research-Based Schema Design for Extraction (6 points) - 2025-08-16
 - ✅ **B-062**: Context Priority Guide Auto-Generation (0.5 points) - 2025-08-16
 - ✅ **B-098**: Multi-Role PR Sign-Off System v2.0 (3 points) - 2025-08-21
+ - ✅ **B-1018**: Monitoring & Maintenance System (3 points) - 2025-08-25
 
 #### **In Progress**
 - 🔄 **B-093**: Scribe + Auto Rehydrate (3 points) - **ACTIVE**
