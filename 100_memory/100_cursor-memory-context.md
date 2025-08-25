@@ -353,6 +353,8 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 - Test development guide → `dspy-rag-system/tests/README-dev.md`
 
+- CI dry‑run workflow → `.github/workflows/dry-run.yml`
+
 - Deployment guide → `400_guides/400_deployment-operations.md`
 
 - Migration & upgrades → `400_guides/400_migration-upgrade-guide.md`

@@ -82,6 +82,7 @@ and normalize spacing across long-form guides.
 ## P0 Lane
 
 - B‑052‑d — CI GitHub Action (Dry-Run Gate) (score 8.0)
+  - Note: Implemented `.github/workflows/dry-run.yml` (non‑blocking ruff/pyright/pytest on PRs)
 
 - B‑062 — Context Priority Guide Auto-Generation (score 8.0) ✅ **COMPLETED**
 

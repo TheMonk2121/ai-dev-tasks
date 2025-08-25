@@ -47,6 +47,10 @@ Enable automatic memory rehydration when a Scribe session starts. This is featur
 5. **Quality**: Code review and quality gates
 6. **Deployment**: Safe deployment practices
 
+### CI Dry‑Run Signal on Pull Requests
+
+Non‑blocking CI runs `ruff`, `pyright`, and `pytest` on `pull_request` to surface issues early without merge friction. See `.github/workflows/dry-run.yml`.
+
 ### **For Immediate Development Tasks:**
 
 ```bash
