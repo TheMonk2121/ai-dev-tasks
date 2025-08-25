@@ -31,7 +31,8 @@
     {"path": "scripts/README_venv_manager.md", "role": "dev-environment"},
     {"path": "400_guides/400_backlog-status-tracking-guide.md", "role": "quick-reference"},
     {"path": "400_guides/400_task-generation-quick-reference.md", "role": "quick-reference"},
-    {"path": "500_research-index.md", "role": "research-index"}
+    {"path": "500_research-index.md", "role": "research-index"},
+    {"path": "400_guides/400_documentation-tiering-guide.md", "role": "documentation-rules"}
   ]
 }
 CONTEXT_INDEX -->
@@ -96,6 +97,33 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **In
 - **Tiny pins**: Only 200 tokens for guardrails (style, conventions, repo map)
 - **Kill-switches**: Simple CLI flags to disable features when needed
 - **Observability**: Stanford/Berkeley/Anthropic-grade structured tracing and verification
+
+## 📚 Documentation Tiering System {#doc-tiering}
+
+### **MANDATORY: Documentation Creation Rules**
+
+**TRIGGER PHRASES**: When user or ai mentions "create documentation", "new guide", "write guide", "add documentation", or similar, ALWAYS activate these rules first.
+
+**BEFORE creating any new documentation, ALWAYS:**
+
+1. **Check Existing Documentation**: Search for existing guides in `400_guides/` before creating new files
+2. **Reference Tier System**: Use `400_guides/400_context-priority-guide.md` for proper categorization
+3. **Follow Naming Conventions**: Use `200_setup/200_naming-conventions.md` for file placement
+4. **Protect Core Files**: NEVER delete or suggest deletion of Tier 1 files (Priority 0-10)
+
+### **Documentation Tier Categories**
+- **Tier 1 (Critical - Priority 0-10)**: Core memory context, system overview, backlog
+- **Tier 2 (High - Priority 15-20)**: Important guides, code quality, security
+- **Tier 3 (Medium - Priority 25-30)**: Implementation guides, deployment, testing
+- **Tier 4 (Lower - Priority 35-40)**: PRDs, research, examples
+
+### **Documentation Creation Checklist**
+- [ ] Search existing `400_guides/` for similar content
+- [ ] Check `400_guides/400_context-priority-guide.md` for proper categorization
+- [ ] Verify placement using `200_setup/200_naming-conventions.md`
+- [ ] Ensure no Tier 1 files are affected
+- [ ] Add appropriate `ANCHOR_PRIORITY` and `ROLE_PINS`
+- [ ] Update cross-references in related files
 
 ### **Four-Slot Model**
 1. **Pinned Invariants** (≤200 tokens, hard cap)

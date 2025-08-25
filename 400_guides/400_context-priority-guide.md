@@ -304,6 +304,17 @@ Use these reference patterns in other documents:
 
 ## 📋 Priority-Based Organization
 
+## 🚨 **MANDATORY: Documentation Creation Rules**
+
+**BEFORE creating any new documentation, ALWAYS:**
+
+1. **Search Existing Documentation**: Check `400_guides/` for similar content
+2. **Reference Tier System**: Use this guide for proper categorization
+3. **Follow Naming Conventions**: Use `200_setup/200_naming-conventions.md`
+4. **Protect Core Files**: NEVER delete Tier 1 files (Priority 0-10)
+
+**See `400_guides/400_documentation-tiering-guide.md` for complete rules.**
+
 ### P0 (Critical)
 
 | File | Anchor | Priority | Roles | Context Reference |

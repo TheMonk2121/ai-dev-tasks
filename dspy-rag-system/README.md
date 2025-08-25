@@ -16,19 +16,32 @@ install deps, drop files into watch_folder, run dashboards |
 - **do next**: Scan the headings below and follow any 'Quick Start' or 'Usage' sections.
 
 A fully functional Retrieval Augmented Generation (RAG) system built with DSPy, PostgreSQL, and automatic file
-processing. **Now with complete DSPy → RAG → AI integration, CSV support, and production-ready critical fixes!**This
+processing. **Now with complete DSPy → RAG → AI integration, CSV support, LTST Memory System integration, and production-ready critical fixes!**This
 system implements the v0.3.1 Ultra-Minimal Router architecture with progressive complexity and runtime guard-rails.
 
-## **✅ Status: PRODUCTION-READY WITH ENHANCED DSPy INTEGRATION & PRODUCTION MONITORING**Your DSPy RAG system is
-now**production-ready**with comprehensive security hardening, performance optimizations,
-robust error handling, and production monitoring! Drop files (including CSV) into the watch folder and ask questions
-using the full DSPy → RAG → AI pipeline.**B-000: v0.3.1-rc3 Core Hardening**- ✅**COMPLETED**- Comprehensive database
-resilience with connection pooling,
-health monitoring, retry logic, and production-ready error handling.**B-003: Production Security & Monitoring**-
-✅**COMPLETED**- Comprehensive production monitoring system with security
-alerts, health checks, OpenTelemetry integration, and Kubernetes-ready endpoints.**B-001: Real-time Mission Dashboard**-
-✅**COMPLETED**- Comprehensive real-time mission dashboard with live AI task
+## **✅ Status: PRODUCTION-READY WITH ENHANCED DSPy INTEGRATION, LTST MEMORY SYSTEM & PRODUCTION MONITORING**
+
+Your DSPy RAG system is now **production-ready** with comprehensive security hardening, performance optimizations,
+robust error handling, production monitoring, and advanced LTST Memory System integration! Drop files (including CSV) into the watch folder and ask questions
+using the full DSPy → RAG → AI pipeline.
+
+**B-000: v0.3.1-rc3 Core Hardening** - ✅ **COMPLETED**
+- Comprehensive database resilience with connection pooling,
+health monitoring, retry logic, and production-ready error handling.
+
+**B-003: Production Security & Monitoring** - ✅ **COMPLETED**
+- Comprehensive production monitoring system with security
+alerts, health checks, OpenTelemetry integration, and Kubernetes-ready endpoints.
+
+**B-001: Real-time Mission Dashboard** - ✅ **COMPLETED**
+- Comprehensive real-time mission dashboard with live AI task
 execution monitoring, mission tracking, progress updates, metrics collection, WebSocket integration, and modern UI.
+
+**B-1015: LTST Memory System Database Optimization** - ✅ **COMPLETED**
+- Advanced database integration layer with PostgreSQL functions for context merging and memory rehydration
+- Real-time session continuity detection and quality scoring
+- Dual API support with backward compatibility
+- Comprehensive performance monitoring and statistics
 
 ### **🏗️ v0.3.1 Ultra-Minimal Router Architecture**
 
@@ -251,7 +264,16 @@ python scripts/performance_benchmark.py --script sleep_nemo_fast --iterations 3
   5.**DSPy synthesizes**the answer with Chain-of-Thought or ReAct reasoning
   6. The AI foundation generates an answer based on your documents
 
-### **5. Vector Database (PostgreSQL) - Your AI's Filing Cabinet**-**What it is**: A special database that stores your documents in a way that makes them easy to search
+### **5. LTST Memory System - Your AI's Conversation Memory**-**What LTST means**: "Long-Term Short-Term" memory system for conversation persistence
+
+- **How it works**:
+  1. **Context Storage**: Stores conversation messages and context with relevance scoring
+  2. **Intelligent Merging**: Uses PostgreSQL functions to merge relevant contexts intelligently
+  3. **Memory Rehydration**: Automatically restores conversation state with continuity detection
+  4. **Session Management**: Tracks session continuity and provides quality scoring
+  5. **Performance Monitoring**: Built-in statistics and health monitoring for optimization
+
+### **6. Vector Database (PostgreSQL) - Your AI's Filing Cabinet**-**What it is**: A special database that stores your documents in a way that makes them easy to search
 
 - **How it works**:
   - Breaks your documents into small pieces (chunks)
@@ -358,6 +380,7 @@ Sarah Johnson, 28, San Francisco, Data Scientist, 95000
 ✅ **Local AI** - everything runs on your computer
 ✅ **Interactive interface** - ask questions naturally
 ✅ **DSPy integration** - programmable AI workflows
+✅ **LTST Memory System** - advanced conversation memory with database integration
 ✅ **Better than ChatGPT** - actually uses your documents!
 
 ## **🎉 The Bottom Line**
@@ -385,6 +408,12 @@ It's like having a super-smart assistant who's read all your files, can answer a
 - [Watch Folder Guide](./docs/watch_folder_guide.md) - Drag & drop functionality
 
 - [System Service Guide](./docs/system_service_guide.md) - Automatic background processing
+
+- [LTST Memory System Integration Guide](./docs/400_ltst-memory-system-integration-guide.md) - Advanced conversation memory system
+
+- [LTST Memory System Deployment Guide](./docs/400_ltst-memory-system-deployment-guide.md) - Production deployment and setup
+
+- [LTST Memory System Performance Guide](./docs/400_ltst-memory-system-performance-guide.md) - Performance benchmarks and optimization
 
 - [Version History](./docs/VERSION_HISTORY.md) - Complete development timeline
 
