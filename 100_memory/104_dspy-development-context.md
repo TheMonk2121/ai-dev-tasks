@@ -102,6 +102,12 @@ High-level summary of DSPy's role in the ecosystem and current capabilities.
 
 **CI Integration**: Non-blocking GitHub Actions workflow (`.github/workflows/dry-run.yml`) runs `ruff`, `pyright`, and `pytest` on PRs for early signal without merge friction.
 
+**Quality Gates**: Simplified pre-commit hooks with fast execution:
+- Conflict detection: `git grep -nE "^(<<<<<<< |======= |>>>>>>> )"` (0.059s)
+- Type checking: `pyright` on Python files (0.102s)
+- Security scanning: `bandit` on staged files only (0.102s)
+- Documentation validation: Simple bash script for broken links and structure (0.030s)
+
 ```python
 # In any script that imports DSPy modules
 from scripts.venv_manager import ensure_venv_for_script
@@ -119,6 +125,8 @@ from dspy_modules.model_switcher import ModelSwitcher
 - `dspy` - Core AI framework
 - `pytest` - Testing framework
 - `ruff` - Code quality
+- `pyright` - Type checking
+- `bandit` - Security scanning
 
 **Workflow Usage**:
 ```bash
@@ -499,12 +507,19 @@ if cached_result:
 - **Documentation**: Updated guides and clear commit messages
 - **Security**: Input validation and access controls
 - **Performance**: Optimized for M4 Mac constraints
+- **Pre-commit Validation**: Fast quality gates (<1s total execution time)
+  - Conflict detection: Simple git grep for merge markers
+  - Type checking: Pyright on Python files
+  - Security scanning: Bandit on staged files only
+  - Documentation validation: Basic structure and broken link checks
 
 ### CODER ROLE QUICK REFERENCE
 
 - **Memory Rehydration**: `./scripts/memory_up.sh -r coder "task description"`
 - **Test Execution**: `python -m pytest tests/ -v`
 - **Code Quality**: `ruff check .` and `pyright`
+- **Security**: `bandit` for vulnerability scanning
+- **Documentation**: `bash scripts/simple_doc_validation.sh` for basic validation
 - **Documentation**: Update relevant 400_guides files
 - **Git Operations**: Use proper commit messages and pre-commit hooks
 
@@ -523,7 +538,7 @@ if cached_result:
 - **Development Tools**: Memory rehydration, task generation automation
 - **Testing Tools**: pytest, coverage analysis, performance benchmarking
 - **Monitoring Tools**: Real-time dashboard, metrics collection
-- **Pre-commit Tools**: Automated validation and quality checks
+- **Pre-commit Tools**: Automated validation and quality checks (simplified for speed)
 - **Memory Rehydration**: Context retrieval and role-specific guidance
 - **Search and Analysis**: File analysis, content validation, research tools
 
