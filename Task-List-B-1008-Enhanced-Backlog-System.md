@@ -1,57 +1,89 @@
-# Task List: B-1008 Hybrid JSON Backlog System
+# Task List: B-1008 Enhanced Backlog System (Industry-Standard + Solo-Optimized)
 
-**Project**: B-1008 Hybrid JSON Backlog System
+**Project**: B-1008 Enhanced Backlog System
 **Status**: todo
-**Priority**: 🔥 High
+**Priority**: 🔥 High (MoSCoW: Must)
 **Dependencies**: B-1006-A (completed), B-1007 (next priority)
-**Estimated Hours**: 12
+**Estimated Hours**: 16
 **Score**: 6.5
+**Solo Optimization**: 🚀 One-command workflows, visual interface, auto-advance
 
 ## Project Overview
 
-Implement a hybrid JSON-based backlog system that uses structured data as the source of truth while maintaining human readability and simple tooling. The system includes validation hooks, simple CLI tools, automated PRD closure with Scribe packs, and knowledge mining capabilities.
+Implement an enhanced backlog system that combines industry best practices (MoSCoW prioritization, visual Kanban, dynamic reprioritization) with solo developer optimizations (one-command workflows, context preservation, auto-advance). The system includes structured JSON data, visual NiceGUI dashboard, AI-driven prioritization, and comprehensive knowledge mining.
 
-## Phase 1: JSON Schema and Basic Tools (Weeks 1-2)
+## Phase 1: Core Structured Data (Week 1)
 
-### Task 1.1: Define JSON Schema for Backlog Items
-**Description**: Create a comprehensive JSON schema for backlog items that captures all necessary data while maintaining simplicity.
+### Task 1.1: Enhanced JSON Schema with MoSCoW Prioritization
+**Priority**: Critical
+**Estimated Time**: 4 hours
+**Dependencies**: None
+**Description**: Create comprehensive JSON schema for backlog items with MoSCoW prioritization fields and industry-standard metadata.
 
 **Acceptance Criteria**:
-- [ ] JSON schema defined for backlog items with all required fields
-- [ ] Schema includes validation rules for data integrity
-- [ ] Schema supports all current backlog item types and metadata
-- [ ] Schema is documented and versioned
+- [ ] JSON schema defined with MoSCoW prioritization fields (must, should, could, won't)
+- [ ] Schema includes all current backlog item types and metadata
+- [ ] Schema supports dynamic scoring and priority adjustments
+- [ ] Schema is documented and versioned with examples
+- [ ] Backward compatibility with existing data maintained
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Schema validation for all field types and constraints
+- [ ] **Integration Tests**: Migration from existing markdown format
+- [ ] **Performance Tests**: Schema validation performance (<100ms per item)
+- [ ] **Regression Tests**: Existing workflow compatibility
 
 **Implementation Notes**:
 - Use JSON Schema standard for validation
-- Include fields: id, title, status, score, deps, tags, created_at, updated_at
+- Include fields: id, title, status, moscow_priority, score, deps, tags, created_at, updated_at
 - Support metadata fields for extensibility
 - Ensure backward compatibility with existing data
 
-### Task 1.2: Create Simple CLI Tools
-**Description**: Implement basic CLI tools for common backlog operations (add, update, query, list).
+### Task 1.2: Solo Workflow CLI Implementation
+**Priority**: Critical
+**Estimated Time**: 6 hours
+**Dependencies**: Task 1.1
+**Description**: Implement one-command workflow CLI for solo developer optimization with auto-advance and context preservation.
 
 **Acceptance Criteria**:
-- [ ] CLI tool for adding new backlog items
-- [ ] CLI tool for updating existing items
-- [ ] CLI tool for querying and listing items
-- [ ] CLI tool for generating markdown from JSON
+- [ ] `python3 scripts/solo_workflow.py start "description"` - One command to start everything
+- [ ] `python3 scripts/solo_workflow.py continue` - Continue where you left off
+- [ ] `python3 scripts/solo_workflow.py ship` - Complete and archive
+- [ ] Auto-advance through tasks unless explicitly paused
+- [ ] Context preservation across sessions using LTST memory
 - [ ] All tools have proper error handling and validation
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Individual CLI commands and functions
+- [ ] **Integration Tests**: End-to-end workflow testing
+- [ ] **User Acceptance Tests**: Solo developer workflow validation
+- [ ] **Performance Tests**: Command response time (<2 seconds)
 
 **Implementation Notes**:
 - Use argparse for CLI interface
 - Integrate with JSON schema validation
 - Provide helpful error messages and usage examples
 - Support both interactive and non-interactive modes
+- Integrate with LTST memory for context preservation
 
-### Task 1.3: Implement Basic Validation Hooks
-**Description**: Add validation hooks to ensure data integrity and consistency.
+### Task 1.3: Enhanced Validation Hooks
+**Priority**: High
+**Estimated Time**: 3 hours
+**Dependencies**: Task 1.1
+**Description**: Add comprehensive validation hooks with MoSCoW rules and performance optimization.
 
 **Acceptance Criteria**:
-- [ ] Pre-commit hook validates JSON schema
-- [ ] Runtime validation prevents invalid data
+- [ ] Pre-commit hook validates JSON schema with MoSCoW rules
+- [ ] Runtime validation prevents invalid data with clear error messages
+- [ ] Validation performance is acceptable (<1 second for 100 items)
 - [ ] Validation errors are clear and actionable
-- [ ] Validation performance is acceptable (<1 second)
+- [ ] Bypass options available for emergency situations
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Validation logic and error handling
+- [ ] **Integration Tests**: Git hook integration
+- [ ] **Performance Tests**: Validation speed with large datasets
+- [ ] **Regression Tests**: Existing workflow compatibility
 
 **Implementation Notes**:
 - Use jsonschema library for validation
@@ -59,174 +91,418 @@ Implement a hybrid JSON-based backlog system that uses structured data as the so
 - Provide bypass options for emergency situations
 - Log validation errors for debugging
 
-### Task 1.4: Generate Markdown from JSON
-**Description**: Create system to generate human-readable markdown from JSON data.
+### Task 1.4: Markdown Generation with MoSCoW Indicators
+**Priority**: High
+**Estimated Time**: 3 hours
+**Dependencies**: Task 1.1
+**Description**: Create system to generate human-readable markdown from JSON data with MoSCoW priority indicators.
 
 **Acceptance Criteria**:
-- [ ] Generated markdown matches current format
-- [ ] All backlog sections are properly generated
-- [ ] Markdown is marked as read-only
-- [ ] Generation is fast (<1 second)
+- [ ] Generated markdown displays MoSCoW priorities clearly (🔥 Must, 🎯 Should, ⚡ Could, ⏸️ Won't)
+- [ ] All backlog sections are properly generated with priority indicators
+- [ ] Markdown is marked as auto-generated with clear banner
+- [ ] Generation is fast (<1 second for 100 items)
+- [ ] All metadata is properly displayed
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Markdown generation logic
+- [ ] **Integration Tests**: End-to-end JSON to markdown workflow
+- [ ] **Performance Tests**: Generation speed with large datasets
+- [ ] **Regression Tests**: Existing markdown format compatibility
 
 **Implementation Notes**:
 - Use simple string templating (no Jinja2 dependency)
 - Maintain current markdown structure and formatting
-- Add clear "auto-generated" banner
+- Add clear "auto-generated" banner with MoSCoW indicators
 - Ensure all metadata is properly displayed
 
-## Phase 2: Closure and Scribe Integration (Weeks 3-4)
+## Phase 2: Visual Interface (Week 2)
 
-### Task 2.1: Implement Automated PRD Closure Process
-**Description**: Create automated process for closing completed PRDs with proper validation and archiving.
-
-**Acceptance Criteria**:
-- [ ] Closure process validates all tasks are complete
-- [ ] Closure process validates tests pass
-- [ ] Closure process requires clean Git working directory
-- [ ] Closure process updates JSON and regenerates markdown
-
-**Implementation Notes**:
-- Integrate with existing task completion tracking
-- Add test validation (JSON report presence/validation)
-- Force Git commit before closure
-- Update item status to "done" in JSON
-
-### Task 2.2: Create Scribe Pack Generation System
-**Description**: Implement system to generate Scribe packs for knowledge mining from completed items.
+### Task 2.1: NiceGUI Kanban Dashboard Implementation
+**Priority**: Critical
+**Estimated Time**: 8 hours
+**Dependencies**: Phase 1 completion
+**Description**: Implement visual Kanban dashboard using NiceGUI with real-time updates and drag-and-drop functionality.
 
 **Acceptance Criteria**:
-- [ ] Scribe packs include all relevant artifacts
-- [ ] Packs are properly structured and documented
-- [ ] Packs include lessons learned template
-- [ ] Packs are placed in correct location
+- [ ] Kanban board displays backlog items in MoSCoW priority columns
+- [ ] Drag-and-drop functionality for reprioritization
+- [ ] Real-time updates when JSON data changes
+- [ ] Visual indicators for item status and priority
+- [ ] Performance remains responsive with 100+ items
+- [ ] Integration with existing mission dashboard
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Dashboard components and data binding
+- [ ] **Integration Tests**: Real-time updates and drag-and-drop
+- [ ] **Performance Tests**: Dashboard responsiveness with large datasets
+- [ ] **User Acceptance Tests**: Solo developer interface validation
 
 **Implementation Notes**:
-- Create structured pack format with manifest
-- Include PRD, tasks, test reports, and lessons learned
-- Generate summary metadata for analysis
-- Place packs in `/scribe_inbox/` directory
+- Use existing NiceGUI infrastructure
+- Implement caching for performance optimization
+- Add visual indicators for MoSCoW priorities
+- Integrate with existing mission dashboard
 
-### Task 2.3: Add Archive Discipline for Completed Items
-**Description**: Implement systematic archiving of completed items with proper organization.
+### Task 2.2: Performance Optimization and Caching
+**Priority**: High
+**Estimated Time**: 4 hours
+**Dependencies**: Task 2.1
+**Description**: Optimize dashboard performance with caching and pagination for large datasets.
 
 **Acceptance Criteria**:
-- [ ] Completed items are moved to archive location
-- [ ] Archive maintains proper organization
-- [ ] Archived items are marked as deprecated
-- [ ] Archive is searchable and accessible
+- [ ] Dashboard loads in <2 seconds with 100+ items
+- [ ] Caching reduces API calls and improves responsiveness
+- [ ] Pagination handles large datasets gracefully
+- [ ] Memory usage remains reasonable (<100MB for 1000 items)
+- [ ] Real-time updates don't impact performance
+
+**Testing Requirements**:
+- [ ] **Performance Tests**: Load time and memory usage benchmarks
+- [ ] **Stress Tests**: Dashboard behavior with 1000+ items
+- [ ] **Integration Tests**: Caching and pagination functionality
+- [ ] **Regression Tests**: Existing functionality remains intact
 
 **Implementation Notes**:
-- Move completed PRDs to `/600_archives/` directory
-- Add "DEPRECATED" banner to archived files
-- Maintain cross-references and links
-- Ensure archive is Git-tracked
+- Implement intelligent caching strategy
+- Add pagination for large datasets
+- Monitor memory usage and optimize
+- Maintain real-time update capabilities
 
-### Task 2.4: Integrate with Existing Scribe System
-**Description**: Ensure new Scribe packs integrate properly with existing knowledge mining system.
+## Phase 3: Solo Optimization (Week 3)
+
+### Task 3.1: Auto-Advance and Context Preservation
+**Priority**: Critical
+**Estimated Time**: 6 hours
+**Dependencies**: Phase 2 completion
+**Description**: Implement auto-advance features and context preservation using LTST memory system.
 
 **Acceptance Criteria**:
-- [ ] Scribe packs are compatible with existing system
-- [ ] Knowledge mining works with new pack format
-- [ ] Integration maintains existing functionality
-- [ ] No breaking changes to existing Scribe system
+- [ ] Tasks auto-advance unless explicitly paused
+- [ ] Context is preserved across sessions using LTST memory
+- [ ] Smart pausing for critical decisions or external dependencies
+- [ ] Session state is maintained and restored automatically
+- [ ] Integration with existing LTST memory system
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Auto-advance logic and context preservation
+- [ ] **Integration Tests**: LTST memory system integration
+- [ ] **User Acceptance Tests**: Solo developer workflow validation
+- [ ] **Regression Tests**: Existing workflow compatibility
 
 **Implementation Notes**:
-- Review existing Scribe system requirements
-- Ensure pack format compatibility
-- Test integration with existing tools
-- Update documentation as needed
+- Integrate with existing LTST memory system
+- Implement smart pausing logic
+- Maintain session state across restarts
+- Provide manual override options
 
-## Phase 3: Knowledge Mining and Optimization (Weeks 5-6)
-
-### Task 3.1: Implement Knowledge Mining from Scribe Packs
-**Description**: Create system to extract and analyze knowledge from completed Scribe packs.
+### Task 3.2: User Acceptance Testing and Refinement
+**Priority**: High
+**Estimated Time**: 4 hours
+**Dependencies**: Task 3.1
+**Description**: Conduct comprehensive user acceptance testing and refine the solo developer workflow.
 
 **Acceptance Criteria**:
-- [ ] System can analyze completed items for patterns
-- [ ] System extracts lessons learned and insights
-- [ ] System provides actionable recommendations
-- [ ] System integrates with existing knowledge base
+- [ ] Solo developer can complete full workflow without context switching
+- [ ] One-command operations handle 90% of common tasks
+- [ ] Visual interface provides immediate status overview
+- [ ] Auto-advance improves productivity by 50%
+- [ ] User feedback is positive and actionable
+
+**Testing Requirements**:
+- [ ] **User Acceptance Tests**: Complete workflow validation
+- [ ] **Productivity Tests**: Time savings measurement
+- [ ] **Usability Tests**: Interface intuitiveness
+- [ ] **Feedback Integration**: User suggestions implemented
 
 **Implementation Notes**:
-- Analyze Scribe packs for common patterns
-- Extract lessons learned and best practices
-- Generate insights for future planning
-- Integrate with existing documentation system
+- Conduct real-world workflow testing
+- Measure productivity improvements
+- Gather user feedback and implement refinements
+- Document best practices and tips
 
-### Task 3.2: Add Analytics and Insights Capabilities
-**Description**: Implement analytics and insights capabilities for backlog data.
+## Phase 4: AI Enhancement (Week 4)
+
+### Task 4.1: Dynamic Reprioritization Algorithm
+**Priority**: High
+**Estimated Time**: 8 hours
+**Dependencies**: Phase 3 completion
+**Description**: Implement AI-driven dynamic reprioritization using LTST memory and completion patterns.
 
 **Acceptance Criteria**:
-- [ ] System provides backlog analytics and metrics
-- [ ] System identifies trends and patterns
-- [ ] System generates insights for improvement
-- [ ] Analytics are accessible via CLI or reports
+- [ ] AI analyzes completion patterns and suggests priority adjustments
+- [ ] Dynamic reprioritization improves productivity metrics
+- [ ] Algorithm considers dependencies, effort estimates, and business value
+- [ ] Manual override options available for all suggestions
+- [ ] Integration with existing AI development ecosystem
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Reprioritization algorithm logic
+- [ ] **Integration Tests**: AI system integration
+- [ ] **Performance Tests**: Algorithm speed and accuracy
+- [ ] **User Acceptance Tests**: Priority suggestion quality
 
 **Implementation Notes**:
-- Track completion rates and cycle times
-- Identify bottlenecks and dependencies
-- Generate trend analysis and predictions
-- Provide actionable insights for planning
+- Use existing AI capabilities from DSPy system
+- Analyze completion patterns and success rates
+- Consider dependencies and business value
+- Provide manual override options
 
-### Task 3.3: Optimize Performance and Usability
-**Description**: Optimize system performance and improve usability based on testing and feedback.
+### Task 4.2: Enhanced Scribe Integration and Knowledge Mining
+**Priority**: High
+**Estimated Time**: 6 hours
+**Dependencies**: Task 4.1
+**Description**: Enhance Scribe integration for comprehensive knowledge mining and insights extraction.
 
 **Acceptance Criteria**:
-- [ ] System responds to queries in <1 second
-- [ ] CLI tools are intuitive and easy to use
-- [ ] Error messages are clear and helpful
-- [ ] Documentation is comprehensive and accurate
+- [ ] Scribe packs capture comprehensive knowledge from completed items
+- [ ] Automated insights extraction provides actionable recommendations
+- [ ] Knowledge mining improves future planning accuracy
+- [ ] Integration with existing Scribe system is seamless
+- [ ] Archive system organizes items with insights extraction
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Knowledge mining algorithms
+- [ ] **Integration Tests**: Scribe system integration
+- [ ] **Quality Tests**: Insights accuracy and usefulness
+- [ ] **Performance Tests**: Mining speed and resource usage
 
 **Implementation Notes**:
-- Profile and optimize performance bottlenecks
-- Improve CLI interface and user experience
-- Enhance error handling and messaging
-- Update documentation and examples
+- Enhance existing Scribe pack generation
+- Implement insights extraction algorithms
+- Integrate with archive system
+- Provide actionable recommendations
 
-### Task 3.4: Complete Documentation and Testing
-**Description**: Complete comprehensive documentation and testing for the new system.
+### Task 4.3: Comprehensive Testing and Documentation
+**Priority**: High
+**Estimated Time**: 4 hours
+**Dependencies**: Task 4.2
+**Description**: Complete comprehensive testing and documentation for the enhanced backlog system.
 
 **Acceptance Criteria**:
-- [ ] All components are documented
-- [ ] Test coverage is >90%
-- [ ] Integration tests pass
-- [ ] User guide is complete and accurate
+- [ ] 90% code coverage for all new components
+- [ ] 100% coverage for critical paths (backlog operations, validation)
+- [ ] Performance benchmarks documented and met
+- [ ] User acceptance criteria validated
+- [ ] Complete documentation updated
+
+**Testing Requirements**:
+- [ ] **Coverage Tests**: Code coverage validation
+- [ ] **Performance Tests**: Benchmark validation
+- [ ] **Integration Tests**: End-to-end system testing
+- [ ] **Documentation Tests**: Guide accuracy and completeness
 
 **Implementation Notes**:
-- Write comprehensive documentation
-- Create unit and integration tests
-- Test all CLI tools and workflows
-- Create user guide with examples
+- Run comprehensive test suite
+- Validate performance benchmarks
+- Update all documentation
+- Create user guides and tutorials
 
-## Success Criteria
+## Phase 5: Core Workflow Integration (Week 5)
 
-- **Data Integrity**: 100% of backlog data passes validation
-- **Tool Usability**: CLI tools handle 90% of common operations
-- **Knowledge Capture**: 100% of completed items generate Scribe packs
-- **Human Readability**: Generated markdown maintains readability standards
-- **Performance**: System responds to queries in <1 second
+### Task 5.1: Update 001_create-prd.md with Enhanced Content
+**Priority**: Critical
+**Estimated Time**: 6 hours
+**Dependencies**: Phase 4 completion
+**Description**: Update the existing 001_create-prd.md with enhanced content including industry standards and solo developer optimizations.
 
-## Dependencies
+**Acceptance Criteria**:
+- [ ] 001_create-prd.md updated with Section 0 (Project Context & Implementation Guide)
+- [ ] MoSCoW prioritization is included in PRD decision logic
+- [ ] Solo developer optimizations are documented
+- [ ] Backward compatibility with existing workflow maintained
+- [ ] All special instructions updated with implementation focus
+- [ ] Original file name and structure preserved
 
-- **B-1006-A**: DSPy 3.0 Core Parity Migration (completed)
-- **B-1007**: Pydantic AI Style Enhancements (next priority)
-- **Existing Scribe System**: For knowledge mining integration
-- **Git Infrastructure**: For version control and hooks
+**Testing Requirements**:
+- [ ] **Unit Tests**: PRD generation with enhanced template
+- [ ] **Integration Tests**: End-to-end workflow with enhanced template
+- [ ] **User Acceptance Tests**: Solo developer workflow validation
+- [ ] **Regression Tests**: Existing PRD generation compatibility
 
-## Risks and Mitigation
+**Implementation Notes**:
+- Update existing 001_create-prd.md with enhanced content
+- Add Section 0 for project context and implementation guidance
+- Integrate MoSCoW prioritization into decision logic
+- Maintain original file name and structure
+- Update PRD generator scripts to use enhanced template
+- Ensure Section 0 captures project-specific context
+- Maintain compatibility with existing automation
 
-**Risk**: JSON complexity could make simple edits harder
-**Mitigation**: Provide simple CLI tools and maintain markdown generation
+### Task 5.2: Update 002_generate-tasks.md with Enhanced Content
+**Priority**: Critical
+**Estimated Time**: 6 hours
+**Dependencies**: Task 5.1
+**Description**: Update the existing 002_generate-tasks.md with enhanced content to support MoSCoW prioritization and solo developer optimizations.
 
-**Risk**: Validation hooks could slow down development workflow
-**Mitigation**: Optimize validation performance and provide bypass options
+**Acceptance Criteria**:
+- [ ] 002_generate-tasks.md updated with MoSCoW prioritization support
+- [ ] Solo workflow CLI integration is documented
+- [ ] Enhanced testing requirements include industry standards
+- [ ] Quality gates reflect new system capabilities
+- [ ] Task templates include implementation guidance
+- [ ] Automation supports new backlog system integration
+- [ ] Original file name and structure preserved
 
-**Risk**: Scribe pack generation could fail silently
-**Mitigation**: Add comprehensive error handling and monitoring
+**Testing Requirements**:
+- [ ] **Unit Tests**: Task generation with MoSCoW fields
+- [ ] **Integration Tests**: End-to-end task generation workflow
+- [ ] **User Acceptance Tests**: Solo developer task generation
+- [ ] **Regression Tests**: Existing task generation compatibility
 
-## Future Enhancements
+**Implementation Notes**:
+- Update existing 002_generate-tasks.md with enhanced content
+- Add MoSCoW prioritization support to task generation
+- Enhance task templates with implementation guidance
+- Integrate with solo workflow CLI
+- Update quality gates for new system capabilities
+- Maintain original file name and structure
+- Maintain backward compatibility
 
-- **Advanced Analytics**: Deeper insights from backlog data
-- **Integration APIs**: Programmatic access for external tools
-- **Machine Learning**: Predictive analytics for backlog planning
-- **Collaboration Features**: Multi-user support if needed
+### Task 5.3: Update 003_process-task-list.md with Enhanced Content
+**Priority**: Critical
+**Estimated Time**: 6 hours
+**Dependencies**: Task 5.2
+**Description**: Update the existing 003_process-task-list.md with enhanced content including solo developer optimizations and auto-advance capabilities.
+
+**Acceptance Criteria**:
+- [ ] 003_process-task-list.md updated with auto-advance configuration
+- [ ] Context preservation using LTST memory is documented
+- [ ] Solo workflow CLI integration is complete
+- [ ] Smart pausing logic is implemented
+- [ ] State management supports enhanced backlog system
+- [ ] Quality gates reflect new system capabilities
+- [ ] Original file name and structure preserved
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: Auto-advance and context preservation logic
+- [ ] **Integration Tests**: End-to-end task execution workflow
+- [ ] **User Acceptance Tests**: Solo developer execution experience
+- [ ] **Regression Tests**: Existing task execution compatibility
+
+**Implementation Notes**:
+- Update existing 003_process-task-list.md with enhanced content
+- Add auto-advance configuration to execution engine
+- Integrate context preservation using LTST memory
+- Implement smart pausing for critical decisions
+- Update state management for enhanced system
+- Maintain original file name and structure
+- Maintain backward compatibility with existing workflows
+
+### Task 5.4: Update Automation Scripts for Enhanced Workflow
+**Priority**: High
+**Estimated Time**: 4 hours
+**Dependencies**: Task 5.3
+**Description**: Update all automation scripts to work with the enhanced backlog system and new workflow capabilities.
+
+**Acceptance Criteria**:
+- [ ] backlog_intake.py supports MoSCoW prioritization
+- [ ] prd_generator.py uses hybrid template
+- [ ] task_generator.py supports enhanced templates
+- [ ] executor.py integrates with solo workflow CLI
+- [ ] All scripts maintain backward compatibility
+- [ ] Error handling supports new system features
+
+**Testing Requirements**:
+- [ ] **Unit Tests**: All automation scripts with new features
+- [ ] **Integration Tests**: End-to-end automation workflow
+- [ ] **Performance Tests**: Script performance with enhanced features
+- [ ] **Regression Tests**: Existing automation compatibility
+
+**Implementation Notes**:
+- Update backlog_intake.py for MoSCoW support
+- Enhance prd_generator.py with hybrid template
+- Update task_generator.py for enhanced templates
+- Integrate executor.py with solo workflow CLI
+- Maintain backward compatibility throughout
+
+### Task 5.5: Comprehensive Workflow Integration Testing
+**Priority**: High
+**Estimated Time**: 4 hours
+**Dependencies**: Task 5.4
+**Description**: Test the complete enhanced workflow from backlog intake to task execution with all new features.
+
+**Acceptance Criteria**:
+- [ ] Complete workflow works end-to-end with new features
+- [ ] Solo developer can use one-command workflow successfully
+- [ ] MoSCoW prioritization works throughout the workflow
+- [ ] Context preservation maintains state across sessions
+- [ ] Auto-advance works correctly with smart pausing
+- [ ] All quality gates pass with new system
+
+**Testing Requirements**:
+- [ ] **End-to-End Tests**: Complete workflow validation
+- [ ] **User Acceptance Tests**: Solo developer experience
+- [ ] **Performance Tests**: Workflow performance with new features
+- [ ] **Integration Tests**: All system components working together
+
+**Implementation Notes**:
+- Test complete workflow from start to finish
+- Validate solo developer experience
+- Ensure all new features work together
+- Document any issues and create fixes
+- Update user guides with new workflow
+
+## Quality Gates
+
+### Critical Path Quality Gates
+- [ ] All JSON data passes schema validation with MoSCoW rules
+- [ ] Visual dashboard updates in real-time without performance issues
+- [ ] Solo workflow CLI handles all operations without errors
+- [ ] Dynamic reprioritization improves productivity metrics
+- [ ] Scribe packs capture comprehensive knowledge from completed work
+- [ ] Core 001-003 workflow files are updated and integrated
+- [ ] End-to-end workflow functions seamlessly
+
+### Performance Quality Gates
+- [ ] Dashboard loads in <2 seconds with 100+ items
+- [ ] CLI commands respond in <2 seconds
+- [ ] JSON validation completes in <1 second for 100 items
+- [ ] Memory usage remains <100MB for 1000 items
+- [ ] Real-time updates don't impact performance
+- [ ] Complete workflow executes within performance benchmarks
+
+### User Experience Quality Gates
+- [ ] Solo developer can complete workflow without context switching
+- [ ] One-command operations handle 90% of common tasks
+- [ ] Visual interface provides immediate status overview
+- [ ] Auto-advance improves productivity by 50%
+- [ ] User feedback is positive and actionable
+- [ ] Core workflow files provide clear guidance and automation
+
+## Success Metrics
+
+- **Productivity Improvement**: 50% reduction in context switching time
+- **Workflow Efficiency**: 90% of common tasks handled by one-command operations
+- **Data Quality**: 100% of backlog data passes validation
+- **Knowledge Capture**: 100% of completed items generate comprehensive Scribe packs
+- **User Satisfaction**: Positive feedback from solo developer workflow testing
+- **Performance**: All benchmarks met for speed and responsiveness
+- **Integration Success**: Complete 001-003 workflow functions seamlessly
+- **End-to-End Efficiency**: Full workflow from intake to completion optimized
+
+## Dependencies and Risks
+
+### Dependencies
+- **B-1006-A (DSPy Multi-Agent System)**: Provides AI capabilities for dynamic reprioritization
+- **B-1007 (Pydantic AI Style Enhancements)**: Provides validation framework
+- **Existing NiceGUI Infrastructure**: Provides visual interface foundation
+- **LTST Memory System**: Provides context preservation capabilities
+- **Scribe System**: Provides knowledge mining foundation
+- **Core 001-003 Workflow Files**: Must be updated to integrate with new system
+
+### Risks and Mitigation
+- **Complexity Creep**: Phased implementation with regular reviews
+- **Performance Issues**: Continuous monitoring and optimization
+- **Integration Challenges**: Comprehensive testing and backward compatibility
+- **Learning Curve**: Progressive enhancement with fallback options
+- **Workflow Disruption**: Maintain backward compatibility throughout transition
+
+## Timeline Summary
+
+- **Week 1**: Core structured data implementation (16 hours)
+- **Week 2**: Visual interface development (12 hours)
+- **Week 3**: Solo optimization features (10 hours)
+- **Week 4**: AI enhancement and comprehensive testing (18 hours)
+- **Week 5**: Core workflow integration (26 hours)
+- **Total**: 5 weeks, 82 hours, 8 points, high priority

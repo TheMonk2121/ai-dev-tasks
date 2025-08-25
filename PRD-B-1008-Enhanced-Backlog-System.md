@@ -5,148 +5,236 @@
 <!-- Status: todo -->
 <!-- Priority: High -->
 <!-- Dependencies: B-1006-A, B-1007 -->
-<!-- Version: 2.0 -->
+<!-- Version: 3.0 -->
 <!-- Date: 2025-01-23 -->
 
-# Product Requirements Document: B-1008 - Hybrid JSON Backlog System
+# Product Requirements Document: B-1008 - Enhanced Backlog System (Industry-Standard + Solo-Optimized)
 
-> ⚠️ **Auto-Skip Note**: This PRD was generated because `points≥5` (6 points) and `score_total≥3.0` (6.5).
+> ⚠️ **Auto-Skip Note**: This PRD was generated because `points≥5` (8 points) and `score_total≥3.0` (6.5).
 > Remove this banner if you manually forced PRD creation.
+
+## 0. Project Context & Implementation Guide
+
+### Current Tech Stack
+- **Backend**: Python 3.12, FastAPI, PostgreSQL, SQLite
+- **AI/ML**: Cursor Native AI, DSPy Multi-Agent System, LTST Memory System
+- **Infrastructure**: Docker, Redis, n8n workflows
+- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
+- **Monitoring**: NiceGUI dashboard, Scribe context capture, Mission dashboard
+
+### Repository Layout
+```
+ai-dev-tasks/
+├── 000_core/              # Core workflow files (001-003)
+├── 100_memory/            # Memory and context systems
+├── 200_setup/             # Setup and configuration
+├── 400_guides/            # Documentation and guides
+├── 500_research/          # Research and analysis
+├── 600_archives/          # Completed work and artifacts
+├── dspy-rag-system/       # AI development ecosystem
+├── scripts/               # Development and automation scripts
+└── tests/                 # Test files
+```
+
+### Development Patterns
+- **Add backlog item**: `scripts/backlog_intake.py` → update `000_core/000_backlog.md`
+- **Generate PRD**: `scripts/prd_generator.py` → create `PRD-B-XXX.md`
+- **Generate tasks**: `scripts/task_generator.py` → create `Task-List-B-XXX.md`
+- **Execute workflow**: `scripts/single_doorway.py` → automated 001-003 flow
+- **Update memory**: `scripts/update_cursor_memory.py` → maintain context
+
+### Local Development
+```bash
+# Setup
+poetry install
+poetry run pre-commit install
+
+# Quality gates
+poetry run pytest              # Run tests
+poetry run black .             # Format code
+poetry run ruff check .        # Lint code
+poetry run mypy .              # Type check
+
+# Backlog operations
+python3 scripts/backlog_cli.py add "description"  # Add item
+python3 scripts/backlog_cli.py update B-XXX       # Update item
+python3 scripts/backlog_cli.py close B-XXX        # Close item
+```
+
+### Common Tasks Cheat Sheet
+- **Add new feature**: Backlog intake → PRD → Tasks → Execute → Archive
+- **Fix bug**: Identify → Backlog item → Quick PRD → Execute → Close
+- **Refactor system**: Analysis → Backlog item → Comprehensive PRD → Phased execution
+- **Update documentation**: Direct edit → Update memory → Validate coherence
 
 ## 1. Problem Statement
 
-**What's broken?** The current backlog system uses markdown (`000_backlog.md`) as the source of truth, which creates several critical issues: lack of structured data capabilities, inconsistent completion tracking, no systematic knowledge mining from completed items, and difficulty in programmatic access for automation and analysis.
+**What's broken?** The current backlog system uses markdown (`000_backlog.md`) as the source of truth, which creates several critical issues: lack of structured data capabilities, inconsistent completion tracking, no systematic knowledge mining from completed items, and difficulty in programmatic access for automation and analysis. Additionally, the system lacks industry-standard prioritization methods (MoSCoW), visual interfaces for solo developers, and dynamic reprioritization capabilities.
 
-**Why does it matter?** The backlog is the central planning and execution hub for the AI development ecosystem. Without structured data, we can't build proper automation, track dependencies effectively, or mine knowledge from completed work. This limits our ability to improve processes and make data-driven decisions.
+**Why does it matter?** The backlog is the central planning and execution hub for the AI development ecosystem. Without structured data, we can't build proper automation, track dependencies effectively, or mine knowledge from completed work. As a solo developer, I need streamlined workflows, visual interfaces, and intelligent prioritization to maximize productivity and maintain focus on high-impact work.
 
-**What's the opportunity?** Implementing a hybrid JSON-based backlog system will provide structured data capabilities while maintaining human readability and version control. This enables automated PRD closure with Scribe packs, systematic knowledge mining, and better integration with the existing AI development ecosystem.
+**What's the opportunity?** Implementing an enhanced backlog system that combines industry best practices (MoSCoW prioritization, visual Kanban, dynamic reprioritization) with solo developer optimizations (one-command workflows, context preservation, auto-advance) will provide structured data capabilities while dramatically improving the development experience.
 
 ## 2. Solution Overview
 
-**What are we building?** A hybrid JSON-based backlog system that uses structured data as the source of truth while maintaining human readability and simple tooling. The system includes validation hooks, simple CLI tools, automated PRD closure with Scribe packs, and knowledge mining capabilities.
+**What are we building?** An enhanced backlog system that combines structured JSON data with industry-standard prioritization methods and solo developer optimizations. The system includes MoSCoW prioritization, visual Kanban interface, dynamic reprioritization, one-command workflows, and comprehensive knowledge mining.
 
 **How does it work?** The system will:
-1. **JSON as Source of Truth**: Use `backlog.json` for structured data storage
-2. **Validation Hooks**: Ensure data integrity and consistency
-3. **Simple CLI Tools**: Provide easy-to-use tools for common operations
-4. **Automated Closure**: Generate Scribe packs for knowledge mining
-5. **Markdown Generation**: Create human-readable `000_backlog.md` from JSON
+1. **Hybrid JSON + Markdown**: Use `backlog.json` for structured data, generate `000_backlog.md` for readability
+2. **MoSCoW Prioritization**: Implement Must/Should/Could/Won't categorization with visual indicators
+3. **Visual Kanban Interface**: NiceGUI-based dashboard with drag-and-drop prioritization
+4. **Dynamic Reprioritization**: AI-driven priority adjustments based on completion patterns and context
+5. **Solo-Optimized Workflows**: One-command operations with auto-advance and context preservation
+6. **Knowledge Mining**: Automated Scribe pack generation and insights extraction
 
 **Key Components**:
-- **backlog.json**: Single source of truth with structured schema
-- **Validation Hooks**: Pre-commit and runtime validation
-- **Simple CLI Tools**: Add, update, close, and query backlog items
-- **Scribe Pack System**: Automated knowledge extraction from completed items
-- **Archive Discipline**: Systematic organization of completed work
+- **backlog.json**: Single source of truth with MoSCoW prioritization
+- **Visual Dashboard**: NiceGUI Kanban board with real-time updates
+- **Solo Workflow CLI**: One-command operations for common tasks
+- **Dynamic Prioritization**: AI-driven priority adjustments
+- **Scribe Integration**: Automated knowledge mining and pack generation
+- **Archive System**: Systematic organization with insights extraction
 
 **What are the key features?**
-1. **Structured Data**: JSON schema with proper validation
-2. **Simple Tools**: Easy-to-use CLI for common operations
-3. **Validation Hooks**: Ensure data integrity and consistency
-4. **Scribe Packs**: Automated knowledge mining from completed items
-5. **Archive Discipline**: Systematic organization of completed work
-6. **Version Control**: Full Git integration with validation
-7. **Human Readable**: Generated markdown for easy reading
+1. **Structured Data**: JSON schema with MoSCoW prioritization
+2. **Visual Interface**: Kanban board with drag-and-drop
+3. **Solo Optimization**: One-command workflows with auto-advance
+4. **Dynamic Intelligence**: AI-driven reprioritization
+5. **Knowledge Mining**: Automated insights from completed work
+6. **Industry Standards**: MoSCoW, Kanban, CI/CD integration
+7. **Context Preservation**: LTST memory integration
 
 ## 3. Acceptance Criteria
 
 **How do we know it's done?**
-- [ ] `backlog.json` serves as the single source of truth for all backlog data
-- [ ] Validation hooks prevent invalid data from being committed
-- [ ] Simple CLI tools work for add, update, close, and query operations
+- [ ] `backlog.json` serves as single source of truth with MoSCoW prioritization
+- [ ] Visual Kanban dashboard displays backlog items with drag-and-drop
+- [ ] Solo workflow CLI provides one-command operations for common tasks
+- [ ] Dynamic reprioritization adjusts priorities based on AI analysis
 - [ ] Scribe packs are automatically generated for completed items
-- [ ] `000_backlog.md` is generated from JSON and marked as read-only
-- [ ] Archive system organizes completed items systematically
-- [ ] Knowledge mining provides insights for future planning
+- [ ] `000_backlog.md` is generated from JSON with MoSCoW indicators
+- [ ] Archive system organizes completed items with insights extraction
+- [ ] Context preservation maintains state across sessions
 
 **What does success look like?**
-- Backlog system provides structured data capabilities without complexity
-- Simple tools enable efficient backlog management
-- Automated closure process captures knowledge systematically
-- Human readability is maintained through generated markdown
-- Version control integration ensures data integrity
+- Solo developer can manage backlog with minimal context switching
+- Visual interface provides immediate status and priority overview
+- One-command workflows handle common operations automatically
+- AI-driven prioritization keeps focus on high-impact work
+- Knowledge mining provides actionable insights for future planning
+- Industry-standard practices ensure maintainability and scalability
 
 **What are the quality gates?**
-- All JSON data must pass schema validation
-- CLI tools must handle all common operations without errors
-- Scribe packs must be generated for all completed items
-- Generated markdown must be human-readable and accurate
-- Archive system must organize items without data loss
+- All JSON data must pass schema validation with MoSCoW rules
+- Visual dashboard must update in real-time without performance issues
+- Solo workflow CLI must handle all operations without errors
+- Dynamic reprioritization must improve productivity metrics
+- Scribe packs must capture comprehensive knowledge from completed work
+- Generated markdown must display MoSCoW priorities clearly
 
 ## 4. Technical Approach
 
-**What technology?** Build on existing infrastructure:
-- **JSON Schema**: Define structured data format with validation
-- **Python Scripts**: Simple CLI tools for common operations
-- **Git Hooks**: Pre-commit validation and post-commit actions
-- **Scribe Integration**: Leverage existing Scribe system for knowledge mining
-- **Markdown Generation**: Simple templating for human-readable output
+**What technology?** Build on existing infrastructure with enhancements:
+- **JSON Schema**: Enhanced schema with MoSCoW prioritization fields
+- **NiceGUI**: Visual Kanban dashboard with real-time updates
+- **Python Scripts**: Solo workflow CLI with one-command operations
+- **AI Integration**: Dynamic reprioritization using LTST memory and completion patterns
+- **Git Hooks**: Enhanced validation with MoSCoW rules
+- **Scribe Integration**: Automated knowledge mining and pack generation
 
 **How does it integrate?**
 - **Existing Workflow**: Maintain compatibility with current 001-003 workflow
-- **Scribe System**: Integrate with existing knowledge mining capabilities
-- **Version Control**: Full Git integration with validation hooks
-- **Documentation**: Update guides to reflect new system
+- **LTST Memory**: Integrate with existing context preservation system
+- **Scribe System**: Enhanced integration for comprehensive knowledge mining
+- **Mission Dashboard**: Extend existing monitoring capabilities
+- **Documentation**: Update all guides to reflect new system
 
 **What are the constraints?**
 - Must maintain human readability and version control
 - Must integrate with existing AI development ecosystem
-- Must be simple enough for solo developer workflow
+- Must be optimized for solo developer workflow
+- Must follow industry best practices for maintainability
 - Must not add significant complexity or dependencies
 
-## 5. Implementation Phases
+## 5. Risks and Mitigation
 
-### Phase 1: JSON Schema and Basic Tools (Weeks 1-2)
-- Define JSON schema for backlog items
-- Create simple CLI tools for add/update/query
-- Implement basic validation hooks
-- Generate markdown from JSON
+**What could go wrong?**
+- **Complexity Creep**: Adding too many features could make the system unwieldy
+- **Performance Issues**: Visual dashboard could become slow with large backlogs
+- **Integration Challenges**: New system might break existing workflows
+- **Learning Curve**: Solo developer might struggle with new interface
 
-### Phase 2: Closure and Scribe Integration (Weeks 3-4)
-- Implement automated PRD closure process
-- Create Scribe pack generation system
-- Add archive discipline for completed items
-- Integrate with existing Scribe system
+**How do we handle it?**
+- **Phased Implementation**: Start with core features, add enhancements incrementally
+- **Performance Monitoring**: Implement caching and pagination for large datasets
+- **Backward Compatibility**: Maintain existing workflow compatibility throughout
+- **Progressive Enhancement**: Provide fallback to text-based interface
 
-### Phase 3: Knowledge Mining and Optimization (Weeks 5-6)
-- Implement knowledge mining from Scribe packs
-- Add analytics and insights capabilities
-- Optimize performance and usability
-- Complete documentation and testing
+**What are the unknowns?**
+- Optimal MoSCoW scoring algorithm for dynamic reprioritization
+- Performance characteristics of visual dashboard with large datasets
+- Integration complexity with existing Scribe and LTST systems
 
-## 6. Success Metrics
+## 6. Testing Strategy
 
-- **Data Integrity**: 100% of backlog data passes validation
-- **Tool Usability**: CLI tools handle 90% of common operations
-- **Knowledge Capture**: 100% of completed items generate Scribe packs
-- **Human Readability**: Generated markdown maintains readability standards
-- **Performance**: System responds to queries in <1 second
+**What needs testing?**
+- **JSON Schema Validation**: All backlog operations must pass validation
+- **Visual Dashboard**: Real-time updates, drag-and-drop, performance
+- **Solo Workflow CLI**: All one-command operations and error handling
+- **Dynamic Reprioritization**: AI-driven priority adjustments and accuracy
+- **Integration Points**: Scribe, LTST memory, mission dashboard integration
+- **Performance**: Dashboard responsiveness with large datasets
 
-## 7. Risks and Mitigation
+**How do we test it?**
+- **Unit Tests**: Individual components and functions
+- **Integration Tests**: End-to-end workflow testing
+- **Performance Tests**: Dashboard responsiveness and scalability
+- **User Acceptance Tests**: Solo developer workflow validation
+- **Regression Tests**: Existing workflow compatibility
 
-**Risk**: JSON complexity could make simple edits harder
-**Mitigation**: Provide simple CLI tools and maintain markdown generation
+**What's the coverage target?**
+- 90% code coverage for all new components
+- 100% coverage for critical paths (backlog operations, validation)
+- Performance benchmarks for dashboard responsiveness
+- User acceptance criteria for solo developer workflow
 
-**Risk**: Validation hooks could slow down development workflow
-**Mitigation**: Optimize validation performance and provide bypass options
+## 7. Implementation Plan
 
-**Risk**: Scribe pack generation could fail silently
-**Mitigation**: Add comprehensive error handling and monitoring
+**What are the phases?**
 
-## 8. Dependencies
+### Phase 1: Core Structured Data (Week 1)
+- Enhanced JSON schema with MoSCoW prioritization
+- Basic validation hooks and CLI tools
+- Markdown generation with MoSCoW indicators
+- Backward compatibility with existing workflow
 
-- **B-1006-A**: DSPy 3.0 Core Parity Migration (completed)
-- **B-1007**: Pydantic AI Style Enhancements (next priority)
-- **Existing Scribe System**: For knowledge mining integration
-- **Git Infrastructure**: For version control and hooks
+### Phase 2: Visual Interface (Week 2)
+- NiceGUI Kanban dashboard implementation
+- Real-time updates and drag-and-drop functionality
+- Performance optimization and caching
+- Integration with existing mission dashboard
 
-## 9. Future Enhancements
+### Phase 3: Solo Optimization (Week 3)
+- One-command workflow CLI implementation
+- Auto-advance and context preservation features
+- Integration with LTST memory system
+- User acceptance testing and refinement
 
-- **Advanced Analytics**: Deeper insights from backlog data
-- **Integration APIs**: Programmatic access for external tools
-- **Machine Learning**: Predictive analytics for backlog planning
-- **Collaboration Features**: Multi-user support if needed
+### Phase 4: AI Enhancement (Week 4)
+- Dynamic reprioritization algorithm implementation
+- Scribe integration for knowledge mining
+- Archive system with insights extraction
+- Comprehensive testing and documentation
 
----
+**What are the dependencies?**
+- B-1006-A (DSPy Multi-Agent System) - Provides AI capabilities
+- B-1007 (Pydantic AI Style Enhancements) - Provides validation framework
+- Existing NiceGUI infrastructure - Provides visual interface foundation
+- LTST Memory System - Provides context preservation capabilities
 
-*This PRD reflects our decision to use a hybrid JSON approach instead of a complex database system, focusing on simplicity, maintainability, and integration with existing tools.*
+**What's the timeline?**
+- **Week 1**: Core structured data implementation
+- **Week 2**: Visual interface development
+- **Week 3**: Solo optimization features
+- **Week 4**: AI enhancement and comprehensive testing
+- **Total**: 4 weeks, 8 points, high priority
