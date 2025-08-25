@@ -515,6 +515,95 @@ Coherence Validation System |
 <!-- tech_footprint: Backlog Enhancement + Constitution Scoring + Cross-Role Dependencies + Real-time Updates + n8n Integration + Migration Automation + Metadata Preservation + Performance Optimization + Async Scoring -->
 <!-- problem: Current backlog system lacks constitution-aware scoring, cross-role dependency detection, real-time updates, automated migration with metadata preservation, specific performance targets, and async real-time scoring updates -->
 <!-- outcome: Enhanced backlog system with constitution-aware scoring, cross-role dependencies, real-time n8n integration, automated migration with 100% metadata preservation, <5% performance overhead, and async real-time scoring updates with 60% I/O performance improvement -->
+<!-- implementation_plan:
+1. JSON SCHEMA DEFINITION (schemas/backlog_schema.json):
+   - Define comprehensive JSON schema with MoSCoW prioritization fields
+   - Required fields: id, title, status, moscow_priority, score, deps, tags, created_at, updated_at
+   - MoSCoW fields: must, should, could, won't with visual indicators (🔥, 🎯, ⚡, ⏸️)
+   - Metadata fields: lessons_applied, reference_cards, tech_footprint, problem, outcome
+   - Validation rules: score_total calculation, dependency validation, status transitions
+   - Backward compatibility: support existing markdown metadata patterns
+
+2. SOLO WORKFLOW CLI (scripts/solo_workflow.py):
+   - One-command operations: start, continue, ship, pause, status
+   - Auto-advance through tasks unless explicitly paused
+   - Context preservation using LTST memory system
+   - Integration with existing 001-003 workflow chain
+   - Error handling: validation errors, dependency conflicts, context loss
+   - Performance: <2 second response time for all operations
+
+3. VALIDATION HOOKS (scripts/backlog_validator.py):
+   - Pre-commit hook for JSON schema validation with MoSCoW rules
+   - Runtime validation preventing invalid data with clear error messages
+   - Performance optimization: <1 second for 100 items validation
+   - Bypass options for emergency situations with audit logging
+   - Integration with existing doc_coherence_validator.py patterns
+   - Validation error logging for debugging and improvement
+
+4. MARKDOWN GENERATION (scripts/backlog_markdown_generator.py):
+   - Generate 000_backlog.md from backlog.json with MoSCoW indicators
+   - Preserve all existing metadata and HTML comment patterns
+   - Auto-generated banner with clear indicators and last update timestamp
+   - Performance: <1 second generation for 100 items
+   - Maintain backward compatibility with existing workflow tools
+   - Support for custom templates and formatting options
+
+5. SCRIBE PACK SYSTEM (scripts/scribe_backlog_packs.py):
+   - Automated Scribe pack generation for completed items
+   - Knowledge mining: extract lessons learned, patterns, insights
+   - Pack structure: metadata, implementation notes, artifacts, lessons
+   - Integration with existing Scribe system (B-1009)
+   - Archive organization: systematic filing with cross-references
+   - Performance: <5 seconds for pack generation
+
+6. VISUAL DASHBOARD (scripts/backlog_dashboard.py):
+   - NiceGUI-based Kanban board with drag-and-drop prioritization
+   - Real-time updates from backlog.json changes
+   - MoSCoW priority visualization with color coding
+   - Solo developer optimizations: one-click operations, context preservation
+   - Integration with existing mission dashboard (B-1010)
+   - Performance: <500ms response time for UI updates
+
+7. MIGRATION SYSTEM (scripts/backlog_migration.py):
+   - Convert existing 000_backlog.md to backlog.json
+   - Preserve 100% metadata including HTML comments and scores
+   - Validation of migrated data with rollback capability
+   - Incremental migration with progress tracking
+   - Integration with existing sync_roadmap_backlog.py
+   - Performance: <30 seconds for full migration
+
+8. TESTING FRAMEWORK (tests/test_backlog_system.py):
+   - Unit tests: schema validation, CLI operations, migration logic
+   - Integration tests: end-to-end workflow from JSON to markdown
+   - Performance tests: validation speed, generation time, UI responsiveness
+   - User acceptance tests: solo developer workflow validation
+   - Regression tests: existing workflow compatibility
+   - Coverage target: 90% for new components, 100% for critical paths
+
+TECHNICAL CONSTRAINTS:
+- Zero breaking changes to existing workflow (001-003 chain)
+- Maintain backward compatibility with current markdown format
+- Use existing infrastructure: NiceGUI, Scribe, LTST memory
+- Local-first approach with no external dependencies
+- Governance-friendly: version-controlled JSON, human-readable markdown
+- Performance targets: <2s CLI operations, <1s validation, <500ms UI updates
+
+PERFORMANCE TARGETS:
+- JSON schema validation: <100ms per item
+- CLI operations: <2 seconds response time
+- Markdown generation: <1 second for 100 items
+- UI dashboard updates: <500ms response time
+- Migration process: <30 seconds for full backlog
+- Scribe pack generation: <5 seconds per pack
+
+QUALITY GATES:
+- All JSON data must pass schema validation with MoSCoW rules
+- Generated markdown must display MoSCoW priorities clearly
+- CLI must handle all operations without errors
+- Dashboard must update in real-time without performance issues
+- Migration must preserve 100% of existing metadata
+- Scribe packs must capture comprehensive knowledge from completed work
+-->
 
 | B‑1009 | AsyncIO Scribe Enhancement: Event-Driven Context Capture and Real-time Processing | 🔥 | 6 | todo | Implement surgical asyncio integration for Scribe system with event-driven file monitoring, parallel context fetching, async session registry operations, and real-time notifications for 70-80% performance improvement and enhanced multi-session management | Scribe Enhancement + AsyncIO + Event-Driven Architecture + Parallel Processing + Real-time Notifications + Multi-Session Management + Performance Optimization | B-1006-A DSPy 3.0 Core Parity Migration, B-1007 Pydantic AI Style Enhancements |
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1006-A", "B-1007"]}-->
@@ -573,6 +662,191 @@ Coherence Validation System |
 <!-- tech_footprint: Database Schema + LTST Memory + Governance Alignment + Performance Optimization + HNSW Indexing + DSPy Integration + User Session Management + Manual Cleanup -->
 <!-- problem: Current LTST memory system lacks semantic search capabilities, DSPy tables are created in code rather than schema.sql, missing user/session hygiene for future multi-tenant support, and lacks governance-aligned retention policy -->
 <!-- outcome: Production-ready LTST memory system with HNSW semantic search, reproducible DSPy schema, user/session hygiene, and governance-aligned manual cleanup function -->
+
+| B‑1017 | Schema Visualization Integration: Database Schema Graphs in NiceGUI Dashboard | 🔥 | 4 | todo | Extend existing NiceGUI dashboard with schema visualization tab, integrate with GraphDataProvider for unified API contract, add Scribe job for on-demand Mermaid ERD generation, and provide role-based visualization context for enhanced development workflow | Schema Visualization + NiceGUI Integration + GraphDataProvider Extension + Mermaid ERD + Scribe Integration + Role-Based Context | B-1010 NiceGUI Scribe Dashboard, B-1015 LTST Memory System Database Optimization |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:4, lessons:4, deps:["B-1010", "B-1015"]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Extend GraphDataProvider with get_schema_graph_data() method, add schema tab to NiceGUI dashboard with toggle between RAG/Schema graphs, implement Scribe job for Mermaid ERD generation, and integrate with role-based context system -->
+<!-- est_hours: 6 -->
+<!-- acceptance: NiceGUI dashboard includes schema visualization tab with toggle between RAG and Schema graphs, GraphDataProvider supports schema metadata via same V1 contract, Scribe generates Mermaid ERD artifacts on-demand, and role-based context includes schema visualization paths -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#visualization-patterns", "400_guides/400_development-workflow.md#gui-integration"] -->
+<!-- reference_cards: ["500_reference-cards.md#nicegui", "500_reference-cards.md#graph-data-provider", "500_reference-cards.md#mermaid"] -->
+<!-- tech_footprint: Schema Visualization + NiceGUI + GraphDataProvider + Mermaid ERD + Scribe Integration + Role-Based Context + Database Introspection + V1 API Contract -->
+<!-- problem: Current NiceGUI dashboard lacks database schema visualization capabilities, requiring external tools for schema understanding, and missing integration with existing GraphDataProvider patterns and role-based context system -->
+<!-- outcome: Integrated schema visualization within existing NiceGUI dashboard using unified GraphDataProvider API, on-demand Mermaid ERD generation via Scribe, and role-based context integration for enhanced development workflow -->
+<!-- implementation_plan:
+1. GRAPHDATAPROVIDER EXTENSION (dspy-rag-system/src/utils/graph_data_provider.py):
+   - Add get_schema_graph_data(max_nodes=None) method returning V1 contract: {"nodes": [...], "edges": [...], "elapsed_ms": int, "v": 1, "truncated": bool}
+   - Add _fetch_schema_metadata() method using DatabaseResilienceManager for PostgreSQL introspection
+   - SQL queries: information_schema.tables for table names, information_schema.table_constraints + key_column_usage + constraint_column_usage for foreign keys
+   - Error handling: graceful degradation with empty results on database errors
+   - Return format: nodes=[{"id": table, "label": table, "category": "table"}], edges=[{"source": src, "target": tgt, "type": "fk", "weight": 1.0}]
+
+2. FLASK ENDPOINT EXTENSION (dspy-rag-system/src/dashboard.py):
+   - Extend /graph-data endpoint with graph=schema parameter
+   - Add SCHEMA_VIZ_ENABLED environment flag (default: true)
+   - Route logic: if graph_mode == "schema": return gdp.get_schema_graph_data(max_nodes)
+   - Maintain existing chunk/entity behavior for backward compatibility
+   - Error handling: return 403 if schema visualization disabled
+
+3. NICEGUI DASHBOARD INTEGRATION (dspy-rag-system/src/nicegui_graph_view.py):
+   - Add toggle: ui.toggle(['RAG Graph', 'Schema Graph'], value='RAG Graph')
+   - Add max_nodes input: ui.input(label='Max nodes', value='1000').props('type=number dense')
+   - Add load button: ui.button('Load', on_click=lambda: ui.run_async(load_graph()))
+   - Cytoscape integration: same renderer as existing network graphs
+   - Styling: node[type = "table"] gets round-rectangle shape, edge[type = "fk"] gets solid line
+   - Data flow: graph = 'chunks' if mode.value == 'RAG Graph' else 'schema'
+
+4. SCRIBE JOB FOR MERMAID ERD (scripts/scribe_generate_schema_erd.py):
+   - CLI script for on-demand Mermaid ERD generation
+   - Uses GraphDataProvider.get_schema_graph_data() for data
+   - Output: artifacts/diagrams/schema.mmd
+   - Mermaid format: erDiagram with tables and ||--o{ relationships
+   - Integration: hook into Scribe queue (B-1009) as on-demand task
+
+5. ROLE-BASED CONTEXT INTEGRATION:
+   - Extend get_visualization_context(role) function
+   - Coder role: {"schema_er_mermaid_path": "artifacts/diagrams/schema.mmd", "deps_graph": "artifacts/deps/dspy-rag-deps.svg"}
+   - Planner role: {"architecture_mermaid": "docs/diagrams/agent-flow.mmd", "schema_er_mermaid_path": "artifacts/diagrams/schema.mmd"}
+   - Researcher role: {"callgraph_png": "artifacts/callgraphs/prd_generator.png"}
+
+6. FEATURE FLAG & ENVIRONMENT:
+   - Add SCHEMA_VIZ_ENABLED=true to .env.example
+   - Mirror existing viz flags pattern (GRAPH_VISUALIZATION_ENABLED, MAX_NODES)
+   - Default: enabled, can be disabled for production if needed
+
+7. TESTING (dspy-rag-system/tests/test_graph_schema_endpoint.py):
+   - Test schema graph endpoint: /graph-data?graph=schema&max_nodes=5
+   - Validate V1 contract compliance: data["v"] == 1, "nodes" in data, "edges" in data
+   - Basic shape checks: nodes have "id", edges have {"source","target"}
+   - Follow existing visualization test patterns
+
+8. DOCUMENTATION (docs/diagrams/SCHEMA_VIZ.md):
+   - Quick start: Toggle in NiceGUI Graph → RAG / Schema
+   - API: /graph-data?graph=schema (V1: nodes, edges, elapsed_ms, v, truncated)
+   - Refresh: UI Load button or run python3 scripts/scribe_generate_schema_erd.py
+   - Follow existing "guide + quick start + API V1" doc style
+
+TECHNICAL CONSTRAINTS:
+- Zero new external dependencies (uses existing DatabaseResilienceManager)
+- Maintains V1 API contract for front-end compatibility
+- Graceful degradation on database errors
+- Local-first approach with on-demand generation
+- Governance-friendly: Mermaid text in version control, diffs human-readable
+- Extensible: easy to add graph="entities", graph="anchors" later
+
+PERFORMANCE TARGETS:
+- Schema metadata fetch: <500ms for typical database
+- Cytoscape rendering: same performance as existing RAG graphs
+- Mermaid generation: <1s for typical schema size
+- Memory usage: bounded by max_nodes parameter
+-->
+
+| B‑1018 | Text Analysis & Knowledge Discovery System: InfraNodus-Style Cognitive Scaffolding | 🔥 | 8 | todo | Implement text analysis and knowledge discovery system using existing graph infrastructure, add co-occurrence analysis, gap detection, bridge generation, and market study features to enhance cognitive scaffolding and research capabilities | Text Analysis + Co-occurrence Graphs + Gap Detection + Bridge Generation + Market Study + Cognitive Scaffolding Integration + GraphDataProvider Extension + DSPy Integration | B-1017 Schema Visualization Integration, B-1015 LTST Memory System Database Optimization |
+<!--score: {bv:5, tc:5, rr:5, le:4, effort:8, lessons:4, deps:["B-1017", "B-1015"]}-->
+<!--score_total: 7.0-->
+<!-- do_next: Implement text-to-co-occurrence graph adapter, add gap detection and bridge generation capabilities, integrate with existing GraphDataProvider and NiceGUI visualization, and create market study features for supply/demand analysis -->
+<!-- est_hours: 16 -->
+<!-- acceptance: System analyzes text documents to generate co-occurrence graphs, detects structural gaps between concept clusters, generates AI-powered bridge questions/ideas, provides market study capabilities for supply/demand analysis, and integrates seamlessly with existing cognitive scaffolding and visualization infrastructure -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#text-analysis", "400_guides/400_cognitive-scaffolding-guide.md", "400_guides/400_development-workflow.md#nlp-integration"] -->
+<!-- reference_cards: ["500_reference-cards.md#graph-data-provider", "500_reference-cards.md#nicegui", "500_reference-cards.md#dspy-framework"] -->
+<!-- tech_footprint: Text Analysis + Co-occurrence Graphs + Gap Detection + Bridge Generation + Market Study + Cognitive Scaffolding + GraphDataProvider + DSPy Integration + NLP + Network Analysis + AI-Powered Insights -->
+<!-- problem: Current system lacks text analysis and knowledge discovery capabilities, missing ability to analyze documents for concept relationships, detect structural gaps, generate bridge insights, and perform market study analysis for research enhancement -->
+<!-- outcome: Comprehensive text analysis and knowledge discovery system that enhances cognitive scaffolding through co-occurrence analysis, gap detection, bridge generation, and market study features, integrated with existing visualization and AI infrastructure -->
+<!-- implementation_plan:
+1. TEXT-TO-CO-OCCURRENCE GRAPH ADAPTER (dspy-rag-system/src/utils/text_cooc_adapter.py):
+   - build_graph(text: str, window=4, min_freq=2) -> GraphData method
+   - Tokenization: nltk.word_tokenize with stopword removal and optional lemmatization
+   - Co-occurrence analysis: sliding window (3-5 words) with edge weight calculation
+   - Node metadata: {"frequency": int, "centrality": float, "community": int}
+   - Edge metadata: {"weight": float, "co_occurrence_count": int}
+   - Return format: same V1 contract as existing GraphDataProvider (nodes, edges, elapsed_ms, v, truncated)
+
+2. GRAPH METRICS COMPUTATION (dspy-rag-system/src/utils/graph_metrics.py):
+   - betweenness_centrality(nodes, edges) -> {node_id: {"bc": float}}
+   - community_labels(nodes, edges) -> {node_id: {"community": int}} using Louvain algorithm
+   - influence_ranking(nodes, edges) -> sorted list of high-influence nodes
+   - Integration with existing UMAP layout for 2D coordinates
+   - Performance: <2s for 10k word documents
+
+3. GAP DETECTION SYSTEM (dspy-rag-system/src/utils/gap_detector.py):
+   - find_structural_gaps(nodes, edges, communities) -> gap_candidates list
+   - Gap scoring: (few edges between clusters, high centrality near boundary)
+   - Return format: [(cluster_a, cluster_b, score, exemplar_terms, suggested_bridge)]
+   - Integration with entity-aware memory rehydration for context
+   - Top N gaps exposed via /graph-gaps?source=text_cooc endpoint
+
+4. BRIDGE GENERATION WITH DSPy (dspy-rag-system/src/dspy_modules/bridge_generator.py):
+   - BridgeQuestionGenerator: DSPy module for gap-to-question conversion
+   - BridgeIdeaGenerator: DSPy module for gap-to-idea conversion
+   - Integration with existing Reasoning Task pattern
+   - Entity-aware prompts using LTST memory context
+   - Output: structured questions/ideas saved to notes system
+
+5. GRAPHDATAPROVIDER EXTENSION (dspy-rag-system/src/utils/graph_data_provider.py):
+   - Add get_text_cooc_graph_data(text_id: str, max_nodes: int = None) method
+   - Add get_market_study_graph_data(term: str, study_type: "demand"|"supply") method
+   - Maintain V1 API contract compatibility
+   - Cache text analysis results in artifacts/text_analysis/
+   - Error handling: graceful degradation for text processing failures
+
+6. NICEGUI VISUALIZATION ENHANCEMENTS (dspy-rag-system/src/nicegui_graph_view.py):
+   - Add "Text Analysis" tab alongside existing RAG/Schema tabs
+   - Multi-select node hiding: ui.checkbox_group for node selection + "Hide Selected" button
+   - "Show Latent Topics" button: auto-hide top N frequency nodes and recompute metrics
+   - Gap highlighting: visual indicators for detected structural gaps
+   - Bridge suggestions: side panel showing AI-generated bridge questions/ideas
+   - Cytoscape integration: node[category="stop"] gets different styling for easy hiding
+
+7. MARKET STUDY FEATURES (dspy-rag-system/src/utils/market_study.py):
+   - related_queries(focus_term: str, locale: str = "en-US") -> query_list
+   - search_results(focus_term: str, locale: str = "en-US", k: int = 40) -> result_list
+   - Configurable API keys for local-first approach
+   - Cache results in artifacts/market_study/ with TTL
+   - Supply vs. Demand comparison: highlight terms present in demand but missing in supply
+
+8. COGNITIVE SCAFFOLDING INTEGRATION:
+   - Extend get_research_context(role) function with text analysis capabilities
+   - Coder role: {"text_analysis_enabled": true, "gap_detection": true, "bridge_generation": true}
+   - Researcher role: {"market_study": true, "supply_demand_analysis": true}
+   - Planner role: {"concept_mapping": true, "structural_analysis": true}
+   - Integration with existing notes → questions → tasks ladder
+
+9. SCRIBE INTEGRATION (scripts/scribe_text_analysis.py):
+   - CLI script for batch text analysis of documents
+   - Input: documents/, notes/, transcripts/ directories
+   - Output: artifacts/text_analysis/{document_id}_graph.json
+   - Integration with Scribe queue (B-1009) for on-demand processing
+   - Mermaid generation for concept maps and gap visualizations
+
+10. TESTING FRAMEWORK (dspy-rag-system/tests/test_text_analysis.py):
+    - Test text-to-graph conversion with sample documents
+    - Validate gap detection accuracy with known test cases
+    - Test bridge generation quality using DSPy evaluation
+    - Performance benchmarks: <5s for 5k word documents
+    - Integration tests with existing GraphDataProvider
+
+TECHNICAL CONSTRAINTS:
+- Zero new external dependencies (reuse existing nltk, networkx, umap-learn)
+- Maintains V1 API contract for front-end compatibility
+- Local-first approach with configurable API keys for market study
+- Governance-friendly: analysis results in version control, human-readable diffs
+- Extensible: easy to add new text sources, analysis methods, visualization types
+
+PERFORMANCE TARGETS:
+- Text-to-graph conversion: <3s for 10k word documents
+- Gap detection: <1s for typical concept graphs
+- Bridge generation: <5s per gap using DSPy
+- Market study: <10s for supply/demand analysis
+- Memory usage: bounded by max_nodes parameter, streaming for large documents
+
+INTEGRATION POINTS:
+- GraphDataProvider: extends existing /graph-data endpoint with source=text_cooc
+- NiceGUI: adds Text Analysis tab with hide/reveal and gap highlighting
+- DSPy: integrates with Reasoning Task pattern and entity-aware rehydration
+- Scribe: on-demand text analysis and market study generation
+- Cognitive Scaffolding: enhances research workflow with gap detection and bridge generation
+-->
 
 | B‑076 | Research-Based DSPy Assertions Implementation | 📈 | 4 | todo | Implement DSPy assertions based on research findings | DSPy + assertions + research integration | DSPy framework |
 <!--score: {bv:3, tc:2, rr:3, le:3, effort:4, lessons:3, deps:[]}-->
