@@ -24,6 +24,7 @@ from utils.opentelemetry_config import add_span_attribute, trace_operation
 
 logger = get_logger("health_endpoints")
 
+
 @dataclass
 class DependencyStatus:
     """Dependency health status"""
@@ -35,6 +36,7 @@ class DependencyStatus:
     endpoint: str
     error_message: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
+
 
 class HealthEndpointManager:
     """Manages health check endpoints for production deployment"""
@@ -56,8 +58,11 @@ class HealthEndpointManager:
     def _register_default_dependencies(self) -> None:
         """Register default dependency health checks"""
         # Cursor models do not require a local inference service; remove legacy local model dependency
+        # Use project-local DSN (no password required on local Postgres.app)
         self.register_dependency(
-            "database", "postgresql://ai_user:ai_password@localhost:5432/ai_agency", self._check_database_dependency
+            "database",
+            "postgresql://danieljacobs@localhost:5432/dspy_rag",
+            self._check_database_dependency,
         )
         self.register_dependency("file_system", "/tmp", self._check_filesystem_dependency)
 
@@ -75,16 +80,37 @@ class HealthEndpointManager:
     # Removed legacy local model dependency check
 
     def _check_database_dependency(self) -> DependencyStatus:
-        """Check database dependency"""
+        """Check database dependency by opening a short-lived connection."""
         try:
-            # TODO: Implement actual database connectivity check
-            # For now, return healthy status
+            import time as _time
+
+            try:
+                import psycopg2  # type: ignore
+            except Exception as import_error:  # pragma: no cover
+                return DependencyStatus(
+                    name="database",
+                    status="unhealthy",
+                    response_time=0.0,
+                    last_check=datetime.now(),
+                    endpoint="postgresql://danieljacobs@localhost:5432/dspy_rag",
+                    error_message=f"psycopg2 import failed: {import_error}",
+                )
+
+            start_time = _time.time()
+            with psycopg2.connect(
+                "postgresql://danieljacobs@localhost:5432/dspy_rag",
+                connect_timeout=3,
+            ) as _conn:
+                with _conn.cursor() as _cur:
+                    _cur.execute("SELECT 1")
+                    _ = _cur.fetchone()
+            response_time = _time.time() - start_time
             return DependencyStatus(
                 name="database",
                 status="healthy",
-                response_time=0.0,
+                response_time=response_time,
                 last_check=datetime.now(),
-                endpoint="postgresql://ai_user:ai_password@localhost:5432/ai_agency",
+                endpoint="postgresql://danieljacobs@localhost:5432/dspy_rag",
             )
         except Exception as e:
             return DependencyStatus(
@@ -92,7 +118,7 @@ class HealthEndpointManager:
                 status="unhealthy",
                 response_time=0.0,
                 last_check=datetime.now(),
-                endpoint="postgresql://ai_user:ai_password@localhost:5432/ai_agency",
+                endpoint="postgresql://danieljacobs@localhost:5432/dspy_rag",
                 error_message=str(e),
             )
 
@@ -238,8 +264,10 @@ class HealthEndpointManager:
 
         return ready_status
 
+
 # Global instance
 _health_manager: Optional[HealthEndpointManager] = None
+
 
 def get_health_manager() -> HealthEndpointManager:
     """Get the global health endpoint manager instance"""
@@ -248,11 +276,13 @@ def get_health_manager() -> HealthEndpointManager:
         _health_manager = HealthEndpointManager()
     return _health_manager
 
+
 def initialize_health_endpoints(production_monitor: Optional[ProductionMonitor] = None) -> HealthEndpointManager:
     """Initialize health endpoints"""
     global _health_manager
     _health_manager = HealthEndpointManager(production_monitor)
     return _health_manager
+
 
 # Flask integration functions
 def create_health_endpoints(app):
