@@ -4,6 +4,7 @@ Tests for Error Taxonomy Models
 Validates structured error taxonomy for B-1007
 """
 
+
 import pytest
 
 from src.dspy_modules.error_taxonomy import (
@@ -28,7 +29,11 @@ class TestPydanticError:
     def test_base_error_creation(self):
         """Test basic error creation"""
         error = PydanticError(
-            error_type=ErrorType.VALIDATION_ERROR, severity=ErrorSeverity.MEDIUM, message="Test error message"
+            error_type=ErrorType.VALIDATION_ERROR,
+            severity=ErrorSeverity.MEDIUM,
+            message="Test error message",
+            stack_trace=None,
+            error_code=None,
         )
 
         assert error.error_type == ErrorType.VALIDATION_ERROR
@@ -43,12 +48,20 @@ class TestPydanticError:
             error_type=ErrorType.VALIDATION_ERROR,
             severity=ErrorSeverity.MEDIUM,
             message="Valid error message with sufficient detail",
+            stack_trace=None,
+            error_code=None,
         )
         assert len(error.message) >= 5
 
         # Invalid message (too short)
         with pytest.raises(ValueError, match="Error message must be at least 5 characters"):
-            PydanticError(error_type=ErrorType.VALIDATION_ERROR, severity=ErrorSeverity.MEDIUM, message="Hi")
+            PydanticError(
+                error_type=ErrorType.VALIDATION_ERROR,
+                severity=ErrorSeverity.MEDIUM,
+                message="Hi",
+                stack_trace=None,
+                error_code=None,
+            )
 
     def test_error_code_validation(self):
         """Test error code validation"""
@@ -58,6 +71,7 @@ class TestPydanticError:
             severity=ErrorSeverity.MEDIUM,
             message="Test error message",
             error_code="VAL001",
+            stack_trace=None,
         )
         assert error.error_code == "VAL001"
 
@@ -68,6 +82,7 @@ class TestPydanticError:
                 severity=ErrorSeverity.MEDIUM,
                 message="Test error message",
                 error_code="AB",
+                stack_trace=None,
             )
 
 
@@ -83,6 +98,8 @@ class TestValidationError:
             expected_value="string",
             actual_value="123",
             validation_rule="type_check",
+            stack_trace=None,
+            error_code=None,
         )
 
         assert error.error_type == ErrorType.VALIDATION_ERROR
@@ -95,13 +112,29 @@ class TestValidationError:
         """Test field name validation"""
         # Valid field name
         error = ValidationError(
-            severity=ErrorSeverity.MEDIUM, message="Test validation error", field_name="valid_field_name"
+            severity=ErrorSeverity.MEDIUM,
+            message="Test validation error",
+            field_name="valid_field_name",
+            expected_value=None,
+            actual_value=None,
+            validation_rule=None,
+            stack_trace=None,
+            error_code=None,
         )
         assert error.field_name == "valid_field_name"
 
         # Invalid field name (empty)
         with pytest.raises(ValueError, match="Field name cannot be empty"):
-            ValidationError(severity=ErrorSeverity.MEDIUM, message="Test validation error", field_name="")
+            ValidationError(
+                severity=ErrorSeverity.MEDIUM,
+                message="Test validation error",
+                field_name="",
+                expected_value=None,
+                actual_value=None,
+                validation_rule=None,
+                stack_trace=None,
+                error_code=None,
+            )
 
 
 class TestCoherenceError:
@@ -115,6 +148,8 @@ class TestCoherenceError:
             conflicting_elements=["element1", "element2"],
             coherence_rule="mutual_exclusion",
             suggested_resolution="Remove one of the conflicting elements",
+            stack_trace=None,
+            error_code=None,
         )
 
         assert error.error_type == ErrorType.COHERENCE_ERROR
@@ -128,6 +163,10 @@ class TestCoherenceError:
             severity=ErrorSeverity.HIGH,
             message="Test coherence error",
             conflicting_elements=["  element1  ", "", "element2", "  "],
+            coherence_rule=None,
+            suggested_resolution=None,
+            stack_trace=None,
+            error_code=None,
         )
 
         # Should filter out empty elements and strip whitespace
@@ -146,6 +185,8 @@ class TestDependencyError:
             incompatible_dependencies=["module3"],
             dependency_type="python_module",
             resolution_steps=["Install module1", "Update module3"],
+            stack_trace=None,
+            error_code=None,
         )
 
         assert error.error_type == ErrorType.DEPENDENCY_ERROR
@@ -167,6 +208,8 @@ class TestRuntimeError:
             resource="postgresql_connection",
             retry_count=2,
             max_retries=5,
+            stack_trace=None,
+            error_code=None,
         )
 
         assert error.error_type == ErrorType.RUNTIME_ERROR
@@ -178,22 +221,54 @@ class TestRuntimeError:
     def test_retry_count_validation(self):
         """Test retry count validation"""
         # Valid retry count
-        error = RuntimeError(severity=ErrorSeverity.MEDIUM, message="Test runtime error", retry_count=0)
+        error = RuntimeError(
+            severity=ErrorSeverity.MEDIUM,
+            message="Test runtime error",
+            retry_count=0,
+            operation=None,
+            resource=None,
+            stack_trace=None,
+            error_code=None,
+        )
         assert error.retry_count == 0
 
         # Invalid retry count (negative)
         with pytest.raises(ValueError, match="Retry count cannot be negative"):
-            RuntimeError(severity=ErrorSeverity.MEDIUM, message="Test runtime error", retry_count=-1)
+            RuntimeError(
+                severity=ErrorSeverity.MEDIUM,
+                message="Test runtime error",
+                retry_count=-1,
+                operation=None,
+                resource=None,
+                stack_trace=None,
+                error_code=None,
+            )
 
     def test_max_retries_validation(self):
         """Test max retries validation"""
         # Valid max retries
-        error = RuntimeError(severity=ErrorSeverity.MEDIUM, message="Test runtime error", max_retries=3)
+        error = RuntimeError(
+            severity=ErrorSeverity.MEDIUM,
+            message="Test runtime error",
+            max_retries=3,
+            operation=None,
+            resource=None,
+            stack_trace=None,
+            error_code=None,
+        )
         assert error.max_retries == 3
 
         # Invalid max retries (zero)
         with pytest.raises(ValueError, match="Max retries must be positive"):
-            RuntimeError(severity=ErrorSeverity.MEDIUM, message="Test runtime error", max_retries=0)
+            RuntimeError(
+                severity=ErrorSeverity.MEDIUM,
+                message="Test runtime error",
+                max_retries=0,
+                operation=None,
+                resource=None,
+                stack_trace=None,
+                error_code=None,
+            )
 
 
 class TestConfigurationError:
@@ -208,6 +283,8 @@ class TestConfigurationError:
             config_section="database",
             missing_config=["host", "port"],
             invalid_config=["timeout"],
+            stack_trace=None,
+            error_code=None,
         )
 
         assert error.error_type == ErrorType.CONFIGURATION_ERROR
@@ -229,6 +306,8 @@ class TestSecurityError:
             affected_resource="user_database",
             threat_level="high",
             mitigation_steps=["Block IP", "Review logs", "Update firewall"],
+            stack_trace=None,
+            error_code=None,
         )
 
         assert error.error_type == ErrorType.SECURITY_ERROR
@@ -378,10 +457,10 @@ class TestConstitutionErrorMapper:
     def test_get_error_classification_stats(self):
         """Test error classification statistics"""
         errors = [
-            ValidationError(severity=ErrorSeverity.MEDIUM, message="Error 1"),
-            ValidationError(severity=ErrorSeverity.HIGH, message="Error 2"),
-            CoherenceError(severity=ErrorSeverity.HIGH, message="Error 3"),
-            RuntimeError(severity=ErrorSeverity.LOW, message="Error 4"),
+            ErrorFactory.create_validation_error(severity=ErrorSeverity.MEDIUM, message="Error 1"),
+            ErrorFactory.create_validation_error(severity=ErrorSeverity.HIGH, message="Error 2"),
+            ErrorFactory.create_coherence_error(severity=ErrorSeverity.HIGH, message="Error 3"),
+            ErrorFactory.create_runtime_error(severity=ErrorSeverity.LOW, message="Error 4"),
         ]
 
         stats = ConstitutionErrorMapper.get_error_classification_stats(errors)
@@ -397,10 +476,10 @@ class TestErrorClassifier:
     def test_classify_error_by_severity(self):
         """Test error classification by severity"""
         errors = [
-            ValidationError(severity=ErrorSeverity.LOW, message="Error 1"),
-            ValidationError(severity=ErrorSeverity.MEDIUM, message="Error 2"),
-            CoherenceError(severity=ErrorSeverity.HIGH, message="Error 3"),
-            RuntimeError(severity=ErrorSeverity.CRITICAL, message="Error 4"),
+            ErrorFactory.create_validation_error(severity=ErrorSeverity.LOW, message="Error 1"),
+            ErrorFactory.create_validation_error(severity=ErrorSeverity.MEDIUM, message="Error 2"),
+            ErrorFactory.create_coherence_error(severity=ErrorSeverity.HIGH, message="Error 3"),
+            ErrorFactory.create_runtime_error(severity=ErrorSeverity.CRITICAL, message="Error 4"),
         ]
 
         classification = ErrorClassifier.classify_error_by_severity(errors)
@@ -413,10 +492,10 @@ class TestErrorClassifier:
     def test_classify_error_by_type(self):
         """Test error classification by type"""
         errors = [
-            ValidationError(severity=ErrorSeverity.MEDIUM, message="Error 1"),
-            ValidationError(severity=ErrorSeverity.HIGH, message="Error 2"),
-            CoherenceError(severity=ErrorSeverity.HIGH, message="Error 3"),
-            RuntimeError(severity=ErrorSeverity.LOW, message="Error 4"),
+            ErrorFactory.create_validation_error(severity=ErrorSeverity.MEDIUM, message="Error 1"),
+            ErrorFactory.create_validation_error(severity=ErrorSeverity.HIGH, message="Error 2"),
+            ErrorFactory.create_coherence_error(severity=ErrorSeverity.HIGH, message="Error 3"),
+            ErrorFactory.create_runtime_error(severity=ErrorSeverity.LOW, message="Error 4"),
         ]
 
         classification = ErrorClassifier.classify_error_by_type(errors)
@@ -428,10 +507,10 @@ class TestErrorClassifier:
     def test_get_error_handling_metrics(self):
         """Test error handling metrics calculation"""
         errors = [
-            ValidationError(severity=ErrorSeverity.LOW, message="Error 1"),
-            ValidationError(severity=ErrorSeverity.MEDIUM, message="Error 2"),
-            CoherenceError(severity=ErrorSeverity.HIGH, message="Error 3"),
-            RuntimeError(severity=ErrorSeverity.CRITICAL, message="Error 4"),
+            ErrorFactory.create_validation_error(severity=ErrorSeverity.LOW, message="Error 1"),
+            ErrorFactory.create_validation_error(severity=ErrorSeverity.MEDIUM, message="Error 2"),
+            ErrorFactory.create_coherence_error(severity=ErrorSeverity.HIGH, message="Error 3"),
+            ErrorFactory.create_runtime_error(severity=ErrorSeverity.CRITICAL, message="Error 4"),
         ]
 
         metrics = ErrorClassifier.get_error_handling_metrics(errors)

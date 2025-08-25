@@ -11,6 +11,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+from typing import Any, Dict, Optional
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -24,7 +25,7 @@ logger = setup_logger(__name__)
 class PgvectorVersionChecker:
     """Check pgvector version and HNSW support."""
 
-    def __init__(self, db_url: str = None):
+    def __init__(self, db_url: Optional[str] = None):
         """Initialize the checker."""
         self.db_url = db_url or os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
         self.db_manager = DatabaseResilienceManager(self.db_url)
@@ -37,7 +38,7 @@ class PgvectorVersionChecker:
         self.test_m = 16
         self.test_ef_construction = 64
 
-    def check_pgvector_version(self) -> dict:
+    def check_pgvector_version(self) -> Dict[str, Any]:
         """Check pgvector version and return detailed information."""
         try:
             import psycopg2
@@ -139,7 +140,7 @@ class PgvectorVersionChecker:
             return True
         return False
 
-    def test_hnsw_index_creation(self) -> dict:
+    def test_hnsw_index_creation(self) -> Dict[str, Any]:
         """Test HNSW index creation capability."""
         try:
             import psycopg2
@@ -215,7 +216,7 @@ class PgvectorVersionChecker:
             logger.error(f"Error testing HNSW index creation: {e}")
             return {"success": False, "index_created": False, "error": str(e), "fallback_available": False}
 
-    def test_ivfflat_fallback(self) -> dict:
+    def test_ivfflat_fallback(self) -> Dict[str, Any]:
         """Test IVFFlat index creation as fallback."""
         try:
             import psycopg2
@@ -286,7 +287,7 @@ class PgvectorVersionChecker:
             logger.error(f"Error testing IVFFlat index creation: {e}")
             return {"success": False, "index_created": False, "error": str(e)}
 
-    def generate_report(self) -> dict:
+    def generate_report(self) -> Dict[str, Any]:
         """Generate comprehensive compatibility report."""
         logger.info("Checking pgvector version compatibility...")
 
@@ -294,7 +295,7 @@ class PgvectorVersionChecker:
         version_info = self.check_pgvector_version()
 
         # Test HNSW support
-        hnsw_test = None
+        hnsw_test: Optional[Dict[str, Any]] = None
         if version_info.get("supports_hnsw", False):
             logger.info("Testing HNSW index creation...")
             hnsw_test = self.test_hnsw_index_creation()
@@ -314,7 +315,9 @@ class PgvectorVersionChecker:
             "timestamp": str(Path(__file__).stat().st_mtime),
         }
 
-    def _generate_recommendations(self, version_info: dict, hnsw_test: dict, ivfflat_test: dict) -> list:
+    def _generate_recommendations(
+        self, version_info: Dict[str, Any], hnsw_test: Optional[Dict[str, Any]], ivfflat_test: Dict[str, Any]
+    ) -> list:
         """Generate recommendations based on test results."""
         recommendations = []
 
@@ -382,7 +385,7 @@ class PgvectorVersionChecker:
 
         return recommendations
 
-    def print_report(self, report: dict):
+    def print_report(self, report: Dict[str, Any]):
         """Print formatted compatibility report."""
         print("\n" + "=" * 60)
         print("pgvector Version Compatibility Report")

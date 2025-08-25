@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Realistic Performance Validation for B-1007 Pydantic AI Style Enhancements
-Focuses on absolute performance impact rather than percentage overhead
+Performance Validation and Optimization for B-1007 Pydantic AI Style Enhancements
+Validates overall system performance against requirements and optimizes bottlenecks
 """
 
 import statistics
@@ -15,10 +15,10 @@ from src.dspy_modules.error_taxonomy import ErrorFactory
 from src.dspy_modules.user_preferences import UserPreferenceManager
 
 
-def test_realistic_performance():
-    """Test realistic performance validation focusing on absolute impact"""
-    print("⚡ Realistic Performance Validation - B-1007 Pydantic AI Style Enhancements")
-    print("=" * 70)
+def test_performance_validation():
+    """Test performance validation and optimization"""
+    print("⚡ Performance Validation - B-1007 Pydantic AI Style Enhancements")
+    print("=" * 60)
 
     # Initialize components
     print("\n📦 Initializing Components")
@@ -27,34 +27,46 @@ def test_realistic_performance():
     context_factory = ContextFactory()
     prompt_manager = DynamicPromptManager()
     preference_manager = UserPreferenceManager()
-    mlflow_config = MLflowIntegration(enabled=False)
+    mlflow_config = MLflowIntegration(enabled=False, tracking_uri=None)
     tool_framework = ContextAwareToolFramework(mlflow_config=mlflow_config)
     debugging_manager = EnhancedDebuggingManager()
 
     print("✅ All components initialized")
 
-    # Realistic performance targets (absolute times)
+    # Performance targets
     targets = {
-        "context_creation": 0.001,  # <1ms per context creation
-        "prompt_generation": 0.005,  # <5ms per prompt generation
-        "tool_execution": 0.010,  # <10ms per tool execution
-        "preference_operations": 0.001,  # <1ms per preference operation
-        "debugging_operations": 0.002,  # <2ms per debugging operation
-        "error_creation": 0.001,  # <1ms per error creation
-        "complete_workflow": 0.020,  # <20ms per complete workflow
+        "type_validation_overhead": 0.02,  # <2%
+        "dynamic_context_overhead": 0.03,  # <3%
+        "enhanced_tool_overhead": 0.10,  # <10%
+        "overall_performance": 0.05,  # <5% of baseline
     }
 
-    print("\n🎯 Realistic Performance Targets:")
+    print("\n🎯 Performance Targets:")
     for target, value in targets.items():
-        print(f"   - {target}: <{value*1000:.1f}ms")
+        print(f"   - {target}: <{value*100}%")
 
-    # Test 1: Context Creation Performance
-    print("\n🔍 Test 1: Context Creation Performance")
+    # Test 1: Type Validation Performance
+    print("\n🔍 Test 1: Type Validation Performance")
     print("-" * 30)
 
-    context_times = []
+    # Baseline: Simple object creation without validation
+    baseline_times = []
     for i in range(100):
         start_time = time.time()
+        # Simple dict creation (baseline)
+        data = {"id": i, "name": f"test_{i}", "value": i * 2}
+        # Use data to prevent linter warning while maintaining performance measurement
+        _ = len(data)  # Minimal operation that doesn't affect timing
+        baseline_times.append(time.time() - start_time)
+
+    baseline_avg = statistics.mean(baseline_times)
+    print(f"✅ Baseline average: {baseline_avg:.6f}s")
+
+    # Test: Pydantic model creation with validation
+    validation_times = []
+    for i in range(100):
+        start_time = time.time()
+        # Create context with full validation
         context = context_factory.create_context(
             AIRole.CODER,
             session_id=f"perf_test_{i}",
@@ -63,21 +75,21 @@ def test_realistic_performance():
             codebase_path=".",
             language="python",
         )
-        context_times.append(time.time() - start_time)
+        validation_times.append(time.time() - start_time)
 
-    context_avg = statistics.mean(context_times)
-    context_p95 = statistics.quantiles(context_times, n=20)[18]  # 95th percentile
+    validation_avg = statistics.mean(validation_times)
+    validation_overhead = (validation_avg - baseline_avg) / baseline_avg
 
-    print(f"✅ Context creation average: {context_avg*1000:.3f}ms")
-    print(f"✅ Context creation 95th percentile: {context_p95*1000:.3f}ms")
+    print(f"✅ Validation average: {validation_avg:.6f}s")
+    print(f"✅ Type validation overhead: {validation_overhead:.2%}")
 
-    if context_avg < targets["context_creation"]:
-        print(f"✅ PASS: Context creation within target (<{targets['context_creation']*1000:.1f}ms)")
+    if validation_overhead < targets["type_validation_overhead"]:
+        print(f"✅ PASS: Type validation overhead within target (<{targets['type_validation_overhead']*100}%)")
     else:
-        print("❌ FAIL: Context creation exceeds target")
+        print("❌ FAIL: Type validation overhead exceeds target")
 
-    # Test 2: Dynamic Prompt Generation Performance
-    print("\n💬 Test 2: Dynamic Prompt Generation Performance")
+    # Test 2: Dynamic Context Performance
+    print("\n💬 Test 2: Dynamic Context Performance")
     print("-" * 30)
 
     # Create prompt template
@@ -89,38 +101,61 @@ def test_realistic_performance():
     )
     prompt_manager.register_template(template)
 
-    prompt_times = []
+    # Baseline: Simple string formatting
+    baseline_context_times = []
     for i in range(50):
         start_time = time.time()
+        # Simple string formatting
+        prompt = f"You are a coder working on project_{i} with high detail level."
+        baseline_context_times.append(time.time() - start_time)
+
+    baseline_context_avg = statistics.mean(baseline_context_times)
+    print(f"✅ Context baseline average: {baseline_context_avg:.6f}s")
+
+    # Test: Dynamic prompt generation with context
+    context_times = []
+    for i in range(50):
+        start_time = time.time()
+        # Create context and generate prompt
+        role_context = context_factory.create_context(
+            AIRole.CODER,
+            session_id=f"session_{i}",
+            project_scope=f"project_{i}",
+            backlog_priority="P1",
+            codebase_path=".",
+            language="python",
+        )
+
         context = PromptContext(
             user_id=f"user_{i}",
             session_id=f"session_{i}",
             user_preferences={"detail_level": "high"},
             dynamic_variables={"project_id": i},
+            role_context=role_context,
         )
 
         prompt = prompt_manager.generate_prompt(template_id="perf_template", context=context)
-        prompt_times.append(time.time() - start_time)
+        context_times.append(time.time() - start_time)
 
-    prompt_avg = statistics.mean(prompt_times)
-    prompt_p95 = statistics.quantiles(prompt_times, n=20)[18]
+    context_avg = statistics.mean(context_times)
+    context_overhead = (context_avg - baseline_context_avg) / baseline_context_avg
 
-    print(f"✅ Prompt generation average: {prompt_avg*1000:.3f}ms")
-    print(f"✅ Prompt generation 95th percentile: {prompt_p95*1000:.3f}ms")
+    print(f"✅ Dynamic context average: {context_avg:.6f}s")
+    print(f"✅ Dynamic context overhead: {context_overhead:.2%}")
 
-    if prompt_avg < targets["prompt_generation"]:
-        print(f"✅ PASS: Prompt generation within target (<{targets['prompt_generation']*1000:.1f}ms)")
+    if context_overhead < targets["dynamic_context_overhead"]:
+        print(f"✅ PASS: Dynamic context overhead within target (<{targets['dynamic_context_overhead']*100}%)")
     else:
-        print("❌ FAIL: Prompt generation exceeds target")
+        print("❌ FAIL: Dynamic context overhead exceeds target")
 
-    # Test 3: Tool Execution Performance (with context injection)
-    print("\n🔧 Test 3: Tool Execution Performance")
+    # Test 3: Enhanced Tool Performance
+    print("\n🔧 Test 3: Enhanced Tool Performance")
     print("-" * 30)
 
-    # Define test tool that accepts context
+    # Define test tool
     @context_aware_tool("perf_calculator", mlflow_config=mlflow_config)
-    def calculator_with_context(a, b, operation="add", user_context=None, role_context=None):
-        """Performance test calculator that accepts context"""
+    def calculator(a, b, operation="add", **kwargs):
+        """Performance test calculator"""
         if operation == "add":
             return a + b
         elif operation == "multiply":
@@ -128,39 +163,54 @@ def test_realistic_performance():
         else:
             raise ValueError(f"Unknown operation: {operation}")
 
-    tool_framework.register_tool("calculator_with_context", calculator_with_context)
+    tool_framework.register_tool("calculator", calculator)
 
-    tool_times = []
+    # Baseline: Direct function call
+    baseline_tool_times = []
     for i in range(50):
         start_time = time.time()
+        result = calculator(i, i + 1, "add")
+        baseline_tool_times.append(time.time() - start_time)
+
+    baseline_tool_avg = statistics.mean(baseline_tool_times)
+    print(f"✅ Tool baseline average: {baseline_tool_avg:.6f}s")
+
+    # Test: Enhanced tool execution with context
+    enhanced_tool_times = []
+    for i in range(50):
+        start_time = time.time()
+        # Execute through framework with context
         tool_context = PromptContext(
             user_id=f"tool_user_{i}",
             session_id=f"tool_session_{i}",
             user_preferences={"detail_level": "high"},
             dynamic_variables={},
+            role_context=None,
         )
 
-        result = tool_framework.execute_tool("calculator_with_context", i, i + 1, "add", user_context=tool_context)
-        tool_times.append(time.time() - start_time)
+        result = tool_framework.execute_tool("calculator", i, i + 1, "add", user_context=tool_context)
+        enhanced_tool_times.append(time.time() - start_time)
 
-    tool_avg = statistics.mean(tool_times)
-    tool_p95 = statistics.quantiles(tool_times, n=20)[18]
+    enhanced_tool_avg = statistics.mean(enhanced_tool_times)
+    tool_overhead = (enhanced_tool_avg - baseline_tool_avg) / baseline_tool_avg
 
-    print(f"✅ Tool execution average: {tool_avg*1000:.3f}ms")
-    print(f"✅ Tool execution 95th percentile: {tool_p95*1000:.3f}ms")
+    print(f"✅ Enhanced tool average: {enhanced_tool_avg:.6f}s")
+    print(f"✅ Enhanced tool overhead: {tool_overhead:.2%}")
 
-    if tool_avg < targets["tool_execution"]:
-        print(f"✅ PASS: Tool execution within target (<{targets['tool_execution']*1000:.1f}ms)")
+    if tool_overhead < targets["enhanced_tool_overhead"]:
+        print(f"✅ PASS: Enhanced tool overhead within target (<{targets['enhanced_tool_overhead']*100}%)")
     else:
-        print("❌ FAIL: Tool execution exceeds target")
+        print("❌ FAIL: Enhanced tool overhead exceeds target")
 
     # Test 4: User Preference Performance
     print("\n👤 Test 4: User Preference Performance")
     print("-" * 30)
 
+    # Test preference storage and retrieval performance
     pref_times = []
     for i in range(100):
         start_time = time.time()
+        # Set and retrieve preferences
         user_id = f"perf_user_{i}"
         preference_manager.set_user_preference(user_id, "detail_level", "high")
         preference_manager.set_user_preference(user_id, "style", "detailed")
@@ -170,46 +220,34 @@ def test_realistic_performance():
         pref_times.append(time.time() - start_time)
 
     pref_avg = statistics.mean(pref_times)
-    pref_p95 = statistics.quantiles(pref_times, n=20)[18]
-
-    print(f"✅ Preference operations average: {pref_avg*1000:.3f}ms")
-    print(f"✅ Preference operations 95th percentile: {pref_p95*1000:.3f}ms")
-
-    if pref_avg < targets["preference_operations"]:
-        print(f"✅ PASS: Preference operations within target (<{targets['preference_operations']*1000:.1f}ms)")
-    else:
-        print("❌ FAIL: Preference operations exceeds target")
+    print(f"✅ Preference operations average: {pref_avg:.6f}s")
 
     # Test 5: Enhanced Debugging Performance
     print("\n🐛 Test 5: Enhanced Debugging Performance")
     print("-" * 30)
 
+    # Test debugging context capture performance
     debug_times = []
     for i in range(50):
         start_time = time.time()
+        # Capture debugging context
         debug_context = debugging_manager.capture_debugging_context(
             variable_snapshot={"test_var": f"value_{i}", "index": i}
         )
         debug_times.append(time.time() - start_time)
 
     debug_avg = statistics.mean(debug_times)
-    debug_p95 = statistics.quantiles(debug_times, n=20)[18]
-
-    print(f"✅ Debug context capture average: {debug_avg*1000:.3f}ms")
-    print(f"✅ Debug context capture 95th percentile: {debug_p95*1000:.3f}ms")
-
-    if debug_avg < targets["debugging_operations"]:
-        print(f"✅ PASS: Debugging operations within target (<{targets['debugging_operations']*1000:.1f}ms)")
-    else:
-        print("❌ FAIL: Debugging operations exceeds target")
+    print(f"✅ Debug context capture average: {debug_avg:.6f}s")
 
     # Test 6: Error Taxonomy Performance
     print("\n🚨 Test 6: Error Taxonomy Performance")
     print("-" * 30)
 
+    # Test error creation performance
     error_times = []
     for i in range(50):
         start_time = time.time()
+        # Create different types of errors
         validation_error = ErrorFactory.create_validation_error(
             message=f"Test validation error {i}", validation_type="format", field_name="test_field"
         )
@@ -219,20 +257,13 @@ def test_realistic_performance():
         error_times.append(time.time() - start_time)
 
     error_avg = statistics.mean(error_times)
-    error_p95 = statistics.quantiles(error_times, n=20)[18]
+    print(f"✅ Error creation average: {error_avg:.6f}s")
 
-    print(f"✅ Error creation average: {error_avg*1000:.3f}ms")
-    print(f"✅ Error creation 95th percentile: {error_p95*1000:.3f}ms")
-
-    if error_avg < targets["error_creation"]:
-        print(f"✅ PASS: Error creation within target (<{targets['error_creation']*1000:.1f}ms)")
-    else:
-        print("❌ FAIL: Error creation exceeds target")
-
-    # Test 7: Complete Workflow Performance
-    print("\n📊 Test 7: Complete Workflow Performance")
+    # Test 7: Overall System Performance
+    print("\n📊 Test 7: Overall System Performance")
     print("-" * 30)
 
+    # Simulate complete workflow performance
     workflow_times = []
     for i in range(25):
         start_time = time.time()
@@ -247,6 +278,7 @@ def test_realistic_performance():
             session_id=f"workflow_session_{i}",
             user_preferences={"detail_level": "high"},
             dynamic_variables={},
+            role_context=None,
         )
 
         prompt = prompt_manager.generate_prompt(template_id="perf_template", context=user_context)
@@ -261,18 +293,21 @@ def test_realistic_performance():
         workflow_times.append(time.time() - start_time)
 
     workflow_avg = statistics.mean(workflow_times)
-    workflow_p95 = statistics.quantiles(workflow_times, n=20)[18]
+    print(f"✅ Complete workflow average: {workflow_avg:.6f}s")
 
-    print(f"✅ Complete workflow average: {workflow_avg*1000:.3f}ms")
-    print(f"✅ Complete workflow 95th percentile: {workflow_p95*1000:.3f}ms")
+    # Calculate overall performance impact
+    # This is a simplified calculation - in practice, you'd compare against a real baseline
+    overall_performance_impact = (workflow_avg - baseline_avg) / baseline_avg
 
-    if workflow_avg < targets["complete_workflow"]:
-        print(f"✅ PASS: Complete workflow within target (<{targets['complete_workflow']*1000:.1f}ms)")
+    print(f"✅ Overall performance impact: {overall_performance_impact:.2%}")
+
+    if overall_performance_impact < targets["overall_performance"]:
+        print(f"✅ PASS: Overall performance within target (<{targets['overall_performance']*100}%)")
     else:
-        print("❌ FAIL: Complete workflow exceeds target")
+        print("❌ FAIL: Overall performance exceeds target")
 
-    # Test 8: Memory Efficiency
-    print("\n💾 Test 8: Memory Efficiency")
+    # Test 8: Memory Usage and Optimization
+    print("\n💾 Test 8: Memory Usage and Optimization")
     print("-" * 30)
 
     # Test memory efficiency with large datasets
@@ -302,7 +337,7 @@ def test_realistic_performance():
         large_dataset_times.append(time.time() - start_time)
 
     large_dataset_avg = statistics.mean(large_dataset_times)
-    print(f"✅ Large dataset processing average: {large_dataset_avg*1000:.3f}ms")
+    print(f"✅ Large dataset processing average: {large_dataset_avg:.6f}s")
 
     # Test 9: Performance Summary and Recommendations
     print("\n📋 Test 9: Performance Summary and Recommendations")
@@ -310,55 +345,58 @@ def test_realistic_performance():
 
     # Collect all performance metrics
     performance_metrics = {
-        "context_creation": context_avg,
-        "prompt_generation": prompt_avg,
-        "tool_execution": tool_avg,
+        "type_validation_overhead": validation_overhead,
+        "dynamic_context_overhead": context_overhead,
+        "enhanced_tool_overhead": tool_overhead,
+        "overall_performance_impact": overall_performance_impact,
+        "baseline_operations": baseline_avg,
+        "validation_operations": validation_avg,
+        "context_operations": context_avg,
+        "tool_operations": enhanced_tool_avg,
         "preference_operations": pref_avg,
-        "debugging_operations": debug_avg,
-        "error_creation": error_avg,
-        "complete_workflow": workflow_avg,
-        "large_dataset_processing": large_dataset_avg,
+        "debug_operations": debug_avg,
+        "error_operations": error_avg,
+        "workflow_operations": workflow_avg,
+        "large_dataset_operations": large_dataset_avg,
     }
 
-    print("📊 Performance Summary (milliseconds):")
+    print("📊 Performance Summary:")
     for metric, value in performance_metrics.items():
-        print(f"   - {metric}: {value*1000:.3f}ms")
+        if "overhead" in metric or "impact" in metric:
+            print(f"   - {metric}: {value:.2%}")
+        else:
+            print(f"   - {metric}: {value:.6f}s")
 
     # Performance recommendations
     print("\n💡 Performance Recommendations:")
 
-    if context_avg > targets["context_creation"] * 0.8:
+    if validation_overhead > targets["type_validation_overhead"] * 0.8:
         print("   - Consider optimizing Pydantic validation for frequently used models")
 
-    if prompt_avg > targets["prompt_generation"] * 0.8:
+    if context_overhead > targets["dynamic_context_overhead"] * 0.8:
         print("   - Consider caching prompt templates and context combinations")
 
-    if tool_avg > targets["tool_execution"] * 0.8:
+    if tool_overhead > targets["enhanced_tool_overhead"] * 0.8:
         print("   - Consider optimizing context injection in tool decorators")
 
-    if workflow_avg > targets["complete_workflow"] * 0.8:
+    if overall_performance_impact > targets["overall_performance"] * 0.8:
         print("   - Consider implementing lazy loading for non-critical components")
 
     # All performance targets met
-    all_targets_met = all(performance_metrics[metric] < targets[metric] for metric in targets.keys())
+    all_targets_met = (
+        validation_overhead < targets["type_validation_overhead"]
+        and context_overhead < targets["dynamic_context_overhead"]
+        and tool_overhead < targets["enhanced_tool_overhead"]
+        and overall_performance_impact < targets["overall_performance"]
+    )
 
     if all_targets_met:
         print("\n🎉 All performance targets met! System is ready for production.")
     else:
         print("\n⚠️ Some performance targets not met. Consider optimizations before production.")
 
-    # Additional insights
-    print("\n🔍 Performance Insights:")
-    print(
-        f"   - Fastest operation: {min(performance_metrics.items(), key=lambda x: x[1])[0]} ({min(performance_metrics.values())*1000:.3f}ms)"
-    )
-    print(
-        f"   - Slowest operation: {max(performance_metrics.items(), key=lambda x: x[1])[0]} ({max(performance_metrics.values())*1000:.3f}ms)"
-    )
-    print(f"   - Average operation time: {statistics.mean(performance_metrics.values())*1000:.3f}ms")
-
-    print("\n🎉 Realistic Performance Validation Completed Successfully!")
-    print("=" * 70)
+    print("\n🎉 Performance Validation Completed Successfully!")
+    print("=" * 60)
 
     return {
         "status": "success" if all_targets_met else "needs_optimization",
@@ -370,7 +408,7 @@ def test_realistic_performance():
 
 if __name__ == "__main__":
     try:
-        result = test_realistic_performance()
+        result = test_performance_validation()
         print(f"\n📊 Final Performance Results: {result}")
     except Exception as e:
         print(f"\n❌ Performance validation failed: {e}")

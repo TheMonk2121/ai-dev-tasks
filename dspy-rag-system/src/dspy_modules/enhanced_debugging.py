@@ -352,7 +352,6 @@ class EnhancedDebuggingManager:
 
     def _determine_error_severity(self, error: Exception) -> ErrorSeverity:
         """Determine error severity based on error type and message"""
-        error_type = type(error).__name__
         error_message = str(error).lower()
 
         # Critical errors

@@ -167,12 +167,18 @@ class TestLTSTEndToEnd(unittest.TestCase):
             )
             merge_time = time.time() - start_time
 
+            # Verify merge operation completed successfully
+            self.assertIsNotNone(merge_result, "Merge operation should return a result")
+
             # Test rehydration performance
             start_time = time.time()
             rehydration_result = self.ltst_system.rehydrate_memory_database(
                 f"{self.test_session_id}_perf_{size}", self.test_user_id
             )
             rehydration_time = time.time() - start_time
+
+            # Verify rehydration operation completed successfully
+            self.assertIsNotNone(rehydration_result, "Rehydration operation should return a result")
 
             print(f"  Store: {store_time:.3f}s ({size/store_time:.1f} msg/s)")
             print(f"  Merge: {merge_time:.3f}s")

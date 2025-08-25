@@ -1,219 +1,152 @@
-<!-- ANCHOR_KEY: prd-b-1008-enhanced-backlog-system -->
+<!-- ANCHOR_KEY: prd-b-1008-hybrid-json-backlog-system -->
 <!-- ANCHOR_PRIORITY: 35 -->
 <!-- ROLE_PINS: ["planner", "implementer"] -->
 <!-- Backlog ID: B-1008 -->
 <!-- Status: todo -->
 <!-- Priority: High -->
 <!-- Dependencies: B-1006-A, B-1007 -->
-<!-- Version: 1.0 -->
+<!-- Version: 2.0 -->
 <!-- Date: 2025-01-23 -->
 
-# Product Requirements Document: B-1008 Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates
+# Product Requirements Document: B-1008 - Hybrid JSON Backlog System
 
-> ⚠️**Auto-Skip Note**: This PRD was generated because either `points≥5` or `score_total<3.0`.
+> ⚠️ **Auto-Skip Note**: This PRD was generated because `points≥5` (6 points) and `score_total≥3.0` (6.5).
 > Remove this banner if you manually forced PRD creation.
 
 ## 1. Problem Statement
 
-**What's broken?** The current backlog system doesn't leverage constitution-aware scoring, cross-role dependency detection, real-time updates, automated migration with metadata preservation, specific performance targets, and async real-time scoring updates. The backlog scoring is static and doesn't account for constitution article weighting, cross-role dependencies (Planner → Coder → Reviewer), real-time n8n integration, lacks automated migration with 100% metadata preservation, and has I/O performance bottlenecks for real-time updates.
+**What's broken?** The current backlog system uses markdown (`000_backlog.md`) as the source of truth, which creates several critical issues: lack of structured data capabilities, inconsistent completion tracking, no systematic knowledge mining from completed items, and difficulty in programmatic access for automation and analysis.
 
-**Why does it matter?** Without enhanced backlog capabilities, the system misses opportunities to:
-- Weight items by constitution articles (workflow chain, context preservation)
-- Detect cross-role dependencies (Planner → Coder → Reviewer)
-- Integrate real-time updates with n8n scrubber for auto-scoring refresh
-- Preserve 100% of constitution-linked metadata during migration
-- Validate migration outputs via ConstitutionCompliance model
-- Achieve <5% performance overhead on real-time scoring updates
-- Provide async real-time scoring updates with 60% I/O performance improvement
-- Automatically organize and place new backlog items in the correct position
-- Eliminate manual placement decisions and reduce cognitive overhead
+**Why does it matter?** The backlog is the central planning and execution hub for the AI development ecosystem. Without structured data, we can't build proper automation, track dependencies effectively, or mine knowledge from completed work. This limits our ability to improve processes and make data-driven decisions.
 
-**What's the opportunity?** By leveraging constitution-aware scoring and real-time updates, we can create an intelligent backlog system that:
-- Automatically calculates dependency bonuses and risk-adjusted scoring
-- Weights items by constitution articles (workflow chain, context preservation)
-- Detects cross-role dependencies (Planner → Coder → Reviewer)
-- Integrates real-time updates with n8n scrubber for auto-scoring refresh
-- Preserves 100% of constitution-linked metadata during migration
-- Validates migration outputs via ConstitutionCompliance model
-- Achieves <5% performance overhead on real-time scoring updates
-- Provides async real-time scoring updates with 60% I/O performance improvement
-- Automatically organizes and places new items using intelligent insertion logic
-- Maintains consistent ordering based on ID, priority, score, and dependencies
+**What's the opportunity?** Implementing a hybrid JSON-based backlog system will provide structured data capabilities while maintaining human readability and version control. This enables automated PRD closure with Scribe packs, systematic knowledge mining, and better integration with the existing AI development ecosystem.
 
 ## 2. Solution Overview
 
-**What are we building?** An enhanced backlog system that leverages constitution-aware scoring, cross-role dependency detection, real-time n8n integration, and automated migration with 100% metadata preservation to provide intelligent scoring, automated dependency analysis, risk-adjusted prioritization, and context-aware task generation.
+**What are we building?** A hybrid JSON-based backlog system that uses structured data as the source of truth while maintaining human readability and simple tooling. The system includes validation hooks, simple CLI tools, automated PRD closure with Scribe packs, and knowledge mining capabilities.
 
-**How does it work?** The enhanced system will:
-1. **Constitution-Aware Scoring**: Weight items by constitution articles (workflow chain, context preservation) and add dependency bonuses
-2. **Cross-Role Dependency Detection**: Detect dependencies across roles (Planner → Coder → Reviewer) and apply risk-adjusted scoring
-3. **Real-time Updates**: Integrate with n8n scrubber for auto-scoring refresh and continuous updates
-4. **Async Real-time Scoring**: Implement async real-time scoring updates with bounded concurrency (asyncio.Semaphore) for <5% overhead
-5. **Automated Migration**: Migrate backlog items with preserved constitution-linked metadata (dependencies, complexity, risks)
-6. **Migration Validation**: Validate migration outputs via ConstitutionCompliance model with 100% metadata preservation
+**How does it work?** The system will:
+1. **JSON as Source of Truth**: Use `backlog.json` for structured data storage
+2. **Validation Hooks**: Ensure data integrity and consistency
+3. **Simple CLI Tools**: Provide easy-to-use tools for common operations
+4. **Automated Closure**: Generate Scribe packs for knowledge mining
+5. **Markdown Generation**: Create human-readable `000_backlog.md` from JSON
+
+**Key Components**:
+- **backlog.json**: Single source of truth with structured schema
+- **Validation Hooks**: Pre-commit and runtime validation
+- **Simple CLI Tools**: Add, update, close, and query backlog items
+- **Scribe Pack System**: Automated knowledge extraction from completed items
+- **Archive Discipline**: Systematic organization of completed work
 
 **What are the key features?**
-- Constitution-aware scoring formula with dependency bonuses and risk-adjusted scoring
-- Cross-role dependency detection (Planner → Coder → Reviewer) with context complexity analysis
-- Real-time updates with n8n scrubber integration for auto-scoring refresh
-- Async real-time scoring updates with bounded concurrency (asyncio.Semaphore) for <5% overhead
-- Automated migration with constitution-linked metadata preservation (dependencies, complexity, risks)
-- Migration validation via ConstitutionCompliance model with 100% metadata preservation
-- Performance optimization with <5% overhead on real-time scoring updates
-- Constitution-aligned scoring integration with existing backlog infrastructure
-- Automated backlog organization and item placement
-- Intelligent insertion logic based on ID, priority, and dependencies
-- Zero new external dependencies for async scoring
+1. **Structured Data**: JSON schema with proper validation
+2. **Simple Tools**: Easy-to-use CLI for common operations
+3. **Validation Hooks**: Ensure data integrity and consistency
+4. **Scribe Packs**: Automated knowledge mining from completed items
+5. **Archive Discipline**: Systematic organization of completed work
+6. **Version Control**: Full Git integration with validation
+7. **Human Readable**: Generated markdown for easy reading
 
 ## 3. Acceptance Criteria
 
 **How do we know it's done?**
-- Constitution-aware scoring formula implemented with dependency bonuses and risk-adjusted scoring
-- Cross-role dependency detection operational (Planner → Coder → Reviewer) with context complexity analysis
-- Real-time updates integrated with n8n scrubber for auto-scoring refresh
-- Automated migration system operational with constitution-linked metadata preservation
-- Migration validation via ConstitutionCompliance model with 100% metadata preservation
-- Performance targets achieved with <5% overhead on real-time scoring updates
-- Automated backlog organization system operational
-- All existing backlog items updated with enhanced scoring
-- New items automatically placed in correct position
+- [ ] `backlog.json` serves as the single source of truth for all backlog data
+- [ ] Validation hooks prevent invalid data from being committed
+- [ ] Simple CLI tools work for add, update, close, and query operations
+- [ ] Scribe packs are automatically generated for completed items
+- [ ] `000_backlog.md` is generated from JSON and marked as read-only
+- [ ] Archive system organizes completed items systematically
+- [ ] Knowledge mining provides insights for future planning
 
 **What does success look like?**
-- Items are weighted by constitution articles (workflow chain, context preservation) with higher priority
-- Cross-role dependencies (Planner → Coder → Reviewer) are automatically detected and weighted
-- Real-time updates via n8n scrubber provide auto-scoring refresh
-- Async real-time scoring updates with bounded concurrency provide <5% overhead
-- Migration preserves 100% of constitution-linked metadata (dependencies, complexity, risks)
-- Migration outputs are validated via ConstitutionCompliance model
-- Constitution-aligned scoring integrated with existing backlog infrastructure
-- Performance targets are achieved with <5% overhead on real-time scoring updates
-- New backlog items are automatically placed in the correct position
-- Manual placement decisions are eliminated
-- Consistent ordering is maintained across all backlog items
-- Zero new external dependencies for async scoring operations
+- Backlog system provides structured data capabilities without complexity
+- Simple tools enable efficient backlog management
+- Automated closure process captures knowledge systematically
+- Human readability is maintained through generated markdown
+- Version control integration ensures data integrity
 
 **What are the quality gates?**
-- All existing backlog items maintain their current priority order
-- Constitution-aware scoring provides measurable improvements in prioritization
-- Cross-role dependency detection correctly identifies Planner → Coder → Reviewer relationships
-- Real-time updates via n8n scrubber provide auto-scoring refresh
-- Async real-time scoring updates with bounded concurrency provide <5% overhead
-- Migration preserves 100% of constitution-linked metadata
-- Migration outputs are validated via ConstitutionCompliance model
-- Constitution-aligned scoring integrated with existing backlog infrastructure
-- Performance targets are achieved with <5% overhead on real-time scoring updates
-- Automated organization correctly places new items
-- Zero new external dependencies for async scoring operations
+- All JSON data must pass schema validation
+- CLI tools must handle all common operations without errors
+- Scribe packs must be generated for all completed items
+- Generated markdown must be human-readable and accurate
+- Archive system must organize items without data loss
 
 ## 4. Technical Approach
 
-**What technology?**
-- Constitution-aware scoring algorithms with dependency bonuses and risk-adjusted scoring
-- Cross-role dependency detection (Planner → Coder → Reviewer) with context complexity analysis
-- Real-time n8n integration for auto-scoring refresh
-- Async real-time scoring updates with bounded concurrency (asyncio.Semaphore)
-- Automated migration with constitution-linked metadata preservation
-- Migration validation via ConstitutionCompliance model
-- Performance optimization algorithms
-- Automated organization algorithms
-- Intelligent insertion logic
-- Zero new external dependencies (uses existing asyncio and database infrastructure)
+**What technology?** Build on existing infrastructure:
+- **JSON Schema**: Define structured data format with validation
+- **Python Scripts**: Simple CLI tools for common operations
+- **Git Hooks**: Pre-commit validation and post-commit actions
+- **Scribe Integration**: Leverage existing Scribe system for knowledge mining
+- **Markdown Generation**: Simple templating for human-readable output
 
 **How does it integrate?**
-- Builds on DSPy 3.0 foundation from B-1006
-- Leverages Pydantic capabilities from B-1007
-- Integrates with existing n8n scrubber system for real-time updates
-- Maintains backward compatibility with current backlog format
-- Extends existing scoring metadata structure with constitution-linked metadata
-- Preserves 100% of metadata during migration
+- **Existing Workflow**: Maintain compatibility with current 001-003 workflow
+- **Scribe System**: Integrate with existing knowledge mining capabilities
+- **Version Control**: Full Git integration with validation hooks
+- **Documentation**: Update guides to reflect new system
 
 **What are the constraints?**
-- Must maintain backward compatibility with existing backlog items
-- Performance impact must be minimal (<5% overhead)
-- Must work within existing hardware constraints (M4 Mac, 128GB RAM)
-- Must integrate with existing PostgreSQL + PGVector infrastructure
-- Must preserve all existing custom features and workflows
+- Must maintain human readability and version control
+- Must integrate with existing AI development ecosystem
+- Must be simple enough for solo developer workflow
+- Must not add significant complexity or dependencies
 
-## 5. Risks and Mitigation
+## 5. Implementation Phases
 
-**What could go wrong?**
-- Enhanced scoring could break existing prioritization logic
-- Performance overhead could impact backlog processing speed
-- Integration complexity could introduce bugs
-- Memory rehydration integration could add latency
-- Backward compatibility issues with existing items
+### Phase 1: JSON Schema and Basic Tools (Weeks 1-2)
+- Define JSON schema for backlog items
+- Create simple CLI tools for add/update/query
+- Implement basic validation hooks
+- Generate markdown from JSON
 
-**How do we handle it?**
-- Comprehensive testing of enhanced scoring algorithms
-- Performance benchmarking at each phase
-- Gradual rollout with feature flags
-- Extensive backward compatibility testing
-- Fallback mechanisms for all new features
+### Phase 2: Closure and Scribe Integration (Weeks 3-4)
+- Implement automated PRD closure process
+- Create Scribe pack generation system
+- Add archive discipline for completed items
+- Integrate with existing Scribe system
 
-**What are the unknowns?**
-- Exact performance impact of enhanced scoring algorithms
-- Complexity of memory rehydration integration
-- User adoption of new prioritization logic
-- Integration complexity with existing systems
+### Phase 3: Knowledge Mining and Optimization (Weeks 5-6)
+- Implement knowledge mining from Scribe packs
+- Add analytics and insights capabilities
+- Optimize performance and usability
+- Complete documentation and testing
 
-## 6. Testing Strategy
+## 6. Success Metrics
 
-**What needs testing?**
-- Enhanced scoring algorithm accuracy
-- Dependency chain analysis functionality
-- Risk-adjusted scoring validation
-- Context complexity analysis accuracy
-- Memory rehydration integration
-- Backward compatibility with existing items
+- **Data Integrity**: 100% of backlog data passes validation
+- **Tool Usability**: CLI tools handle 90% of common operations
+- **Knowledge Capture**: 100% of completed items generate Scribe packs
+- **Human Readability**: Generated markdown maintains readability standards
+- **Performance**: System responds to queries in <1 second
 
-**How do we test it?**
-- Comprehensive unit tests for all new components
-- Integration tests with existing backlog system
-- Performance benchmarks against current system
-- User acceptance testing for new prioritization
-- Stress testing with realistic workloads
+## 7. Risks and Mitigation
 
-**What's the coverage target?**
-- 95% test coverage for enhanced scoring algorithms
-- 90% test coverage for dependency chain analysis
-- 100% backward compatibility with existing items
-- Performance benchmarks within 5% of current levels
+**Risk**: JSON complexity could make simple edits harder
+**Mitigation**: Provide simple CLI tools and maintain markdown generation
 
-## 7. Implementation Plan
+**Risk**: Validation hooks could slow down development workflow
+**Mitigation**: Optimize validation performance and provide bypass options
 
-**What are the phases?**
-1. **Phase 1: Enhanced Scoring Framework** (3 hours)
-   - Implement enhanced scoring formula with dependency chain bonuses
-   - Add risk-adjusted scoring with Pydantic validation
-   - Create framework migration recognition system
+**Risk**: Scribe pack generation could fail silently
+**Mitigation**: Add comprehensive error handling and monitoring
 
-2. **Phase 2: Context Analysis Integration** (2 hours)
-   - Integrate automated context complexity analysis
-   - Add memory rehydration system integration
-   - Implement real-time scoring updates
+## 8. Dependencies
 
-3. **Phase 3: Automated Organization System** (2 hours)
-   - Implement automated backlog organization logic
-   - Create intelligent insertion algorithms
-   - Add automated item placement system
+- **B-1006-A**: DSPy 3.0 Core Parity Migration (completed)
+- **B-1007**: Pydantic AI Style Enhancements (next priority)
+- **Existing Scribe System**: For knowledge mining integration
+- **Git Infrastructure**: For version control and hooks
 
-4. **Phase 4: Testing & Validation** (2 hours)
-   - Comprehensive testing of enhanced system
-   - Performance validation
-   - User acceptance testing
+## 9. Future Enhancements
 
-5. **Phase 5: Migration & Deployment** (1 hour)
-   - Migrate existing backlog items to enhanced scoring
-   - Deploy enhanced system
-   - Monitor performance and accuracy
+- **Advanced Analytics**: Deeper insights from backlog data
+- **Integration APIs**: Programmatic access for external tools
+- **Machine Learning**: Predictive analytics for backlog planning
+- **Collaboration Features**: Multi-user support if needed
 
-**What are the dependencies?**
-- B-1006 DSPy 3.0 Migration (must be completed first)
-- B-1007 Pydantic AI Style Enhancements (must be completed first)
-- Existing memory rehydration system must be operational
+---
 
-**What's the timeline?**
-- Total estimated time: 10 hours
-- Phase 1-3: 7 hours (core implementation)
-- Phase 4-5: 3 hours (testing and deployment)
-- Buffer time: 2 hours for unexpected issues
+*This PRD reflects our decision to use a hybrid JSON approach instead of a complex database system, focusing on simplicity, maintainability, and integration with existing tools.*

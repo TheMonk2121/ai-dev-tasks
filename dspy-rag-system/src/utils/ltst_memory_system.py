@@ -560,7 +560,7 @@ class LTSTMemorySystem:
             logger.error(f"Error getting session summary: {e}")
             return None
 
-    def cleanup_expired_data(self) -> Dict[str, int]:
+    def cleanup_expired_data(self) -> Dict[str, Any]:
         """
         Clean up expired data across all components.
 
@@ -659,7 +659,7 @@ class LTSTMemorySystem:
                 error_rate=1.0,
                 average_response_time_ms=0.0,
                 last_health_check=datetime.now(),
-                component_status={"error": str(e)},
+                component_status={"error": False},
             )
 
     def _record_operation(

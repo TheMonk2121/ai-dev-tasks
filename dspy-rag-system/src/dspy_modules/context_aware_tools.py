@@ -107,7 +107,7 @@ class ContextAwareToolDecorator:
     ):
         """Initialize context-aware tool decorator"""
         self.tool_name = tool_name
-        self.mlflow_config = mlflow_config or MLflowIntegration()
+        self.mlflow_config = mlflow_config or MLflowIntegration(tracking_uri=None)
         self.preference_manager = preference_manager
         self.enable_debugging = enable_debugging
         self._mlflow_client = None
@@ -158,6 +158,7 @@ class ContextAwareToolDecorator:
                     success=True,
                     result=adapted_result,
                     execution_time=execution_time,
+                    error_message=None,
                     context_adaptations=self._get_context_adaptations(context),
                     mlflow_run_id=mlflow_run_id,
                     debugging_info=self._capture_debugging_info(exec_context, result, execution_time),
@@ -249,7 +250,12 @@ class ContextAwareToolDecorator:
     def _start_mlflow_run(self, exec_context: ToolExecutionContext) -> Optional[str]:
         """Start MLflow run for tracking"""
         try:
-            import mlflow
+            # Try to import mlflow, but handle gracefully if not available
+            try:
+                import mlflow  # type: ignore[import-untyped]
+            except ImportError:
+                _LOG.warning("MLflow not available - skipping tracking")
+                return None
 
             # Set tracking URI if provided
             if self.mlflow_config.tracking_uri:
@@ -267,9 +273,6 @@ class ContextAwareToolDecorator:
 
                 return run.info.run_id
 
-        except ImportError:
-            _LOG.warning("MLflow not available - skipping tracking")
-            return None
         except Exception as e:
             _LOG.error(f"Failed to start MLflow run: {e}")
             return None
@@ -400,7 +403,12 @@ class ContextAwareToolDecorator:
     def _log_to_mlflow(self, tool_result: ToolExecutionResult, exec_context: ToolExecutionContext) -> None:
         """Log results to MLflow"""
         try:
-            import mlflow
+            # Try to import mlflow, but handle gracefully if not available
+            try:
+                import mlflow  # type: ignore[import-untyped]
+            except ImportError:
+                _LOG.warning("MLflow not available - skipping logging")
+                return
 
             # Log metrics
             if self.mlflow_config.log_metrics:
@@ -451,7 +459,7 @@ class ContextAwareToolFramework:
         preference_manager: Optional[UserPreferenceManager] = None,
     ):
         """Initialize tool framework"""
-        self.mlflow_config = mlflow_config or MLflowIntegration()
+        self.mlflow_config = mlflow_config or MLflowIntegration(tracking_uri=None)
         self.preference_manager = preference_manager
         self.tools: Dict[str, Callable] = {}
         self.execution_history: List[ToolExecutionResult] = []

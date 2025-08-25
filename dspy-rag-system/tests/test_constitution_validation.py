@@ -61,7 +61,9 @@ class TestProgramOutput:
 
     def test_program_output_creation(self):
         """Test program output creation"""
-        output = ProgramOutput(output_content="This is a test output", output_type="text")
+        output = ProgramOutput(
+            output_content="This is a test output", output_type="text", context=None, constitution_compliance=None
+        )
 
         assert output.output_content == "This is a test output"
         assert output.output_type == "text"
@@ -72,28 +74,34 @@ class TestProgramOutput:
     def test_output_content_validation(self):
         """Test output content validation"""
         # Valid content
-        output = ProgramOutput(output_content="Valid output content", output_type="text")
+        output = ProgramOutput(
+            output_content="Valid output content", output_type="text", context=None, constitution_compliance=None
+        )
         assert output.output_content == "Valid output content"
 
         # Invalid content (empty)
         with pytest.raises(ValueError, match="Output content cannot be empty"):
-            ProgramOutput(output_content="", output_type="text")
+            ProgramOutput(output_content="", output_type="text", context=None, constitution_compliance=None)
 
         # Invalid content (whitespace only)
         with pytest.raises(ValueError, match="Output content cannot be empty"):
-            ProgramOutput(output_content="   ", output_type="text")
+            ProgramOutput(output_content="   ", output_type="text", context=None, constitution_compliance=None)
 
     def test_output_type_validation(self):
         """Test output type validation"""
         valid_types = ["text", "code", "data", "json", "xml", "markdown", "html"]
 
         for output_type in valid_types:
-            output = ProgramOutput(output_content="Test content", output_type=output_type)
+            output = ProgramOutput(
+                output_content="Test content", output_type=output_type, context=None, constitution_compliance=None
+            )
             assert output.output_type == output_type
 
         # Invalid type
         with pytest.raises(ValueError, match="Output type must be one of"):
-            ProgramOutput(output_content="Test content", output_type="invalid_type")
+            ProgramOutput(
+                output_content="Test content", output_type="invalid_type", context=None, constitution_compliance=None
+            )
 
 
 class TestConstitutionRule:
@@ -269,7 +277,10 @@ class TestConstitutionValidator:
         validator = ConstitutionValidator(ruleset)
 
         output = ProgramOutput(
-            output_content="This is a sufficiently long output content that should pass validation", output_type="text"
+            output_content="This is a sufficiently long output content that should pass validation",
+            output_type="text",
+            context=None,
+            constitution_compliance=None,
         )
 
         compliance = validator.validate_output(output)
@@ -297,7 +308,7 @@ class TestConstitutionValidator:
 
         validator = ConstitutionValidator(ruleset)
 
-        output = ProgramOutput(output_content="Short", output_type="text")
+        output = ProgramOutput(output_content="Short", output_type="text", context=None, constitution_compliance=None)
 
         compliance = validator.validate_output(output)
 
@@ -325,10 +336,15 @@ class TestConstitutionValidator:
         validator = ConstitutionValidator(ruleset)
 
         # Test with coder context and non-code output
-        coder_context = CoderContext(session_id="test-session", codebase_path="/tmp", language="python")
+        coder_context = CoderContext(
+            session_id="test-session", codebase_path="/tmp", language="python", user_id=None, framework=None
+        )
 
         output = ProgramOutput(
-            output_content="This is a text output without code", output_type="text", context=coder_context
+            output_content="This is a text output without code",
+            output_type="text",
+            context=coder_context,
+            constitution_compliance=None,
         )
 
         compliance = validator.validate_output(output)
@@ -360,7 +376,12 @@ class TestConstitutionValidator:
 
         validator = ConstitutionValidator(ruleset)
 
-        output = ProgramOutput(output_content="Here is my password: secret123", output_type="text")
+        output = ProgramOutput(
+            output_content="Here is my password: secret123",
+            output_type="text",
+            context=None,
+            constitution_compliance=None,
+        )
 
         compliance = validator.validate_output(output)
 
@@ -385,7 +406,12 @@ class TestConstitutionValidator:
 
         validator = ConstitutionValidator(ruleset)
 
-        output = ProgramOutput(output_content="This is not proper Python code", output_type="code")
+        output = ProgramOutput(
+            output_content="This is not proper Python code",
+            output_type="code",
+            context=None,
+            constitution_compliance=None,
+        )
 
         compliance = validator.validate_output(output)
 
@@ -436,7 +462,12 @@ class TestConstitutionAwareValidator:
         validator = ConstitutionValidator(ruleset)
         aware_validator = ConstitutionAwareValidator(validator)
 
-        output = ProgramOutput(output_content="This is a sufficiently long output content", output_type="text")
+        output = ProgramOutput(
+            output_content="This is a sufficiently long output content",
+            output_type="text",
+            context=None,
+            constitution_compliance=None,
+        )
 
         validated_output = aware_validator.validate_program_output(output)
 
@@ -463,7 +494,7 @@ class TestConstitutionAwareValidator:
         validator = ConstitutionValidator(ruleset)
         aware_validator = ConstitutionAwareValidator(validator)
 
-        output = ProgramOutput(output_content="Short", output_type="text")
+        output = ProgramOutput(output_content="Short", output_type="text", context=None, constitution_compliance=None)
 
         validated_output = aware_validator.validate_program_output(output)
 

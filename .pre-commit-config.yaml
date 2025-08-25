@@ -3,6 +3,7 @@
 repos:
   - repo: local
     hooks:
+      []
       # Temporarily disabled due to import issues
       # - id: database-sync-check
       #   name: Database Synchronization Check

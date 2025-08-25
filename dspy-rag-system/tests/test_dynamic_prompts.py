@@ -78,6 +78,7 @@ class TestPromptContext:
             session_id="test_session",
             user_preferences={"language": "python", "style": "concise"},
             dynamic_variables={"task": "coding"},
+            role_context=None,
         )
 
         assert context.user_id == "test_user"
@@ -89,22 +90,23 @@ class TestPromptContext:
     def test_session_id_validation(self):
         """Test session ID validation"""
         # Valid session ID
-        context = PromptContext(session_id="valid_session_id")
+        context = PromptContext(session_id="valid_session_id", user_id=None, role_context=None)
         assert context.session_id == "valid_session_id"
 
         # Invalid session ID (too short)
         with pytest.raises(ValueError, match="Session ID must be at least 3 characters"):
-            PromptContext(session_id="ab")
+            PromptContext(session_id="ab", user_id=None, role_context=None)
 
     def test_prompt_context_with_role_context(self):
         """Test prompt context with role context"""
         role_context = PlannerContext(
-            session_id="role_session", project_scope="Test project scope", backlog_priority="P1"
+            session_id="role_session", project_scope="Test project scope", backlog_priority="P1", user_id=None
         )
 
-        context = PromptContext(session_id="test_session", role_context=role_context)
+        context = PromptContext(session_id="test_session", role_context=role_context, user_id=None)
 
         assert context.role_context == role_context
+        assert context.role_context is not None
         assert context.role_context.role == AIRole.PLANNER
 
 
@@ -169,7 +171,7 @@ class TestDynamicPromptDecorator:
             return f"Function called with prompt: {prompt}"
 
         # Test with context
-        context = PromptContext(user_id="test_user", session_id="test_session")
+        context = PromptContext(user_id="test_user", session_id="test_session", role_context=None)
 
         result = test_function(context)
         assert "Function called with prompt:" in result
@@ -181,7 +183,7 @@ class TestDynamicPromptDecorator:
         template = PromptTemplate(template_id="test", template_name="Test", base_prompt="Hello {user_id}.")
 
         decorator = DynamicPromptDecorator(template, cache_ttl=300)
-        context = PromptContext(user_id="test_user", session_id="test_session")
+        context = PromptContext(user_id="test_user", session_id="test_session", role_context=None)
 
         # First call - should cache
         prompt1 = decorator._generate_prompt(context)
@@ -205,7 +207,7 @@ class TestDynamicPromptDecorator:
         )
 
         decorator = DynamicPromptDecorator(template)
-        context = PromptContext(user_id="test_user", session_id="test_session")
+        context = PromptContext(user_id="test_user", session_id="test_session", role_context=None)
 
         prompt = decorator._generate_prompt(context)
 
@@ -226,6 +228,7 @@ class TestDynamicPromptDecorator:
             user_id="test_user",
             session_id="test_session",
             user_preferences={"language": "python", "style": "concise", "detail_level": "high"},
+            role_context=None,
         )
 
         prompt = decorator._generate_prompt(context)
@@ -241,7 +244,9 @@ class TestDynamicPromptDecorator:
         )
 
         decorator = DynamicPromptDecorator(template)
-        role_context = PlannerContext(session_id="test_session", project_scope="Test project", backlog_priority="P1")
+        role_context = PlannerContext(
+            session_id="test_session", project_scope="Test project", backlog_priority="P1", user_id=None
+        )
 
         context = PromptContext(user_id="test_user", session_id="test_session", role_context=role_context)
 
@@ -258,7 +263,10 @@ class TestDynamicPromptDecorator:
 
         decorator = DynamicPromptDecorator(template)
         context = PromptContext(
-            user_id="test_user", session_id="test_session", dynamic_variables={"task": "coding", "priority": "high"}
+            user_id="test_user",
+            session_id="test_session",
+            dynamic_variables={"task": "coding", "priority": "high"},
+            role_context=None,
         )
 
         prompt = decorator._generate_prompt(context)
@@ -366,7 +374,7 @@ class TestDynamicPromptManager:
         )
 
         manager.register_template(template)
-        context = PromptContext(user_id="test_user", session_id="test_session")
+        context = PromptContext(user_id="test_user", session_id="test_session", role_context=None)
 
         prompt = manager.generate_prompt("test", context)
 
@@ -376,7 +384,7 @@ class TestDynamicPromptManager:
     def test_generate_prompt_template_not_found(self):
         """Test prompt generation with non-existent template"""
         manager = DynamicPromptManager()
-        context = PromptContext(user_id="test_user", session_id="test_session")
+        context = PromptContext(user_id="test_user", session_id="test_session", role_context=None)
 
         with pytest.raises(ValueError, match="Template not found"):
             manager.generate_prompt("nonexistent", context)
@@ -389,7 +397,7 @@ class TestDynamicPromptManager:
         )
 
         manager.register_template(template)
-        context = PromptContext(user_id="test_user", session_id="test_session")
+        context = PromptContext(user_id="test_user", session_id="test_session", role_context=None)
 
         prompt = manager.generate_prompt("test", context)
 
@@ -403,7 +411,7 @@ class TestDynamicPromptManager:
         template = PromptTemplate(template_id="test", template_name="Test", base_prompt="Hello {user_id}.")
 
         manager.register_template(template)
-        context = PromptContext(user_id="test_user", session_id="test_session")
+        context = PromptContext(user_id="test_user", session_id="test_session", role_context=None)
 
         # Generate some prompts to update metrics
         manager.generate_prompt("test", context)

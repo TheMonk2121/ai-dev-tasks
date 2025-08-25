@@ -331,22 +331,22 @@ class LTSTDatabaseIntegration:
         try:
             # Test context merging
             test_session = f"test_integration_{int(time.time())}"
-            merge_result = self.merge_contexts_database(test_session, relevance_threshold=0.1)
+            _merge_result = self.merge_contexts_database(test_session, relevance_threshold=0.1)
             test_results["context_merging"] = True
 
             # Test memory rehydration
-            rehydration_result = self.rehydrate_memory_database(test_session, "test_user")
+            _rehydration_result = self.rehydrate_memory_database(test_session, "test_user")
             test_results["memory_rehydration"] = True
 
             # Test session continuity
-            continuity_result = self.get_session_continuity(test_session)
+            _continuity_result = self.get_session_continuity(test_session)
             test_results["session_continuity"] = True
 
             # Test statistics
-            context_stats = self.get_context_statistics()
+            _context_stats = self.get_context_statistics()
             test_results["context_statistics"] = True
 
-            rehydration_stats = self.get_rehydration_statistics()
+            _rehydration_stats = self.get_rehydration_statistics()
             test_results["rehydration_statistics"] = True
 
             logger.info("All database function tests passed")

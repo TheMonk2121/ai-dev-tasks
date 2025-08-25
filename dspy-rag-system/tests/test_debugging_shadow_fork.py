@@ -27,7 +27,9 @@ class TestDebuggingContext:
 
     def test_debugging_context_creation(self):
         """Test creating a debugging context"""
-        context = DebuggingContext(context_id="test_context_123", user_context=None, role_context=None)
+        context = DebuggingContext(
+            context_id="test_context_123", user_context=None, role_context=None, correlation_id=None
+        )
 
         assert context.context_id == "test_context_123"
         assert context.user_context is None
@@ -39,38 +41,52 @@ class TestDebuggingContext:
     def test_debugging_context_with_user_context(self):
         """Test debugging context with user context"""
         user_context = PromptContext(
-            user_id="test_user", session_id="test_session", user_preferences={}, dynamic_variables={}
+            user_id="test_user", session_id="test_session", user_preferences={}, dynamic_variables={}, role_context=None
         )
 
-        context = DebuggingContext(context_id="test_context_456", user_context=user_context)
+        context = DebuggingContext(
+            context_id="test_context_456", user_context=user_context, role_context=None, correlation_id=None
+        )
 
         assert context.user_context == user_context
+        assert context.user_context is not None
         assert context.user_context.user_id == "test_user"
 
     def test_debugging_context_with_role_context(self):
         """Test debugging context with role context"""
-        role_context = PlannerContext(session_id="test_session", project_scope="test_project", backlog_priority="P1")
+        role_context = PlannerContext(
+            session_id="test_session", project_scope="test_project", backlog_priority="P1", user_id=None
+        )
 
-        context = DebuggingContext(context_id="test_context_789", role_context=role_context)
+        context = DebuggingContext(
+            context_id="test_context_789", role_context=role_context, user_context=None, correlation_id=None
+        )
 
         assert context.role_context == role_context
+        assert context.role_context is not None
         assert context.role_context.role == AIRole.PLANNER
 
     def test_debugging_context_validation(self):
         """Test debugging context validation"""
         # Test valid context ID
-        context = DebuggingContext(context_id="valid_id")
+        context = DebuggingContext(context_id="valid_id", user_context=None, role_context=None, correlation_id=None)
         assert context.context_id == "valid_id"
 
         # Test invalid context ID
         with pytest.raises(ValueError, match="Context ID must be at least 3 characters"):
-            DebuggingContext(context_id="ab")
+            DebuggingContext(context_id="ab", user_context=None, role_context=None, correlation_id=None)
 
     def test_debugging_context_with_variables(self):
         """Test debugging context with variable snapshot"""
         variables = {"test_var": "test_value", "number_var": 42, "list_var": [1, 2, 3]}
 
-        context = DebuggingContext(context_id="test_context", variable_snapshot=variables)
+        context = DebuggingContext(
+            context_id="test_context",
+            variable_snapshot=variables,
+            user_context=None,
+            role_context=None,
+            correlation_id=None,
+        )
 
         assert context.variable_snapshot == variables
 
@@ -87,6 +103,7 @@ class TestRichErrorMessage:
             technical_details="Technical details here",
             user_friendly_message="User-friendly message",
             severity=ErrorSeverity.MEDIUM,
+            debugging_context=None,
         )
 
         assert error_msg.error_id == "test_error_123"
@@ -105,6 +122,7 @@ class TestRichErrorMessage:
             technical_details="Details",
             user_friendly_message="User message",
             severity=ErrorSeverity.LOW,
+            debugging_context=None,
         )
         assert error_msg.error_id == "valid_error_id"
 
@@ -117,6 +135,7 @@ class TestRichErrorMessage:
                 technical_details="Details",
                 user_friendly_message="User message",
                 severity=ErrorSeverity.LOW,
+                debugging_context=None,
             )
 
         # Test invalid error message
@@ -128,6 +147,7 @@ class TestRichErrorMessage:
                 technical_details="Details",
                 user_friendly_message="User message",
                 severity=ErrorSeverity.LOW,
+                debugging_context=None,
             )
 
     def test_rich_error_message_with_suggestions(self):
@@ -140,6 +160,7 @@ class TestRichErrorMessage:
             user_friendly_message="Please check your input",
             severity=ErrorSeverity.MEDIUM,
             suggested_actions=["Check format", "Verify data"],
+            debugging_context=None,
         )
 
         assert len(error_msg.suggested_actions) == 2
@@ -151,8 +172,13 @@ class TestContextCorrelation:
 
     def test_context_correlation_creation(self):
         """Test creating a context correlation"""
-        primary_context = DebuggingContext(context_id="primary")
-        related_contexts = [DebuggingContext(context_id="related1"), DebuggingContext(context_id="related2")]
+        primary_context = DebuggingContext(
+            context_id="primary", user_context=None, role_context=None, correlation_id=None
+        )
+        related_contexts = [
+            DebuggingContext(context_id="related1", user_context=None, role_context=None, correlation_id=None),
+            DebuggingContext(context_id="related2", user_context=None, role_context=None, correlation_id=None),
+        ]
 
         correlation = ContextCorrelation(
             correlation_id="test_correlation",
@@ -169,7 +195,9 @@ class TestContextCorrelation:
 
     def test_context_correlation_validation(self):
         """Test context correlation validation"""
-        primary_context = DebuggingContext(context_id="primary")
+        primary_context = DebuggingContext(
+            context_id="primary", user_context=None, role_context=None, correlation_id=None
+        )
 
         # Test valid correlation ID
         correlation = ContextCorrelation(
@@ -192,7 +220,7 @@ class TestStructuredLogEntry:
     def test_structured_log_entry_creation(self):
         """Test creating a structured log entry"""
         log_entry = StructuredLogEntry(
-            log_id="test_log_123", level="INFO", message="Test log message", source="test_source"
+            log_id="test_log_123", level="INFO", message="Test log message", source="test_source", correlation_id=None
         )
 
         assert log_entry.log_id == "test_log_123"
@@ -204,23 +232,32 @@ class TestStructuredLogEntry:
     def test_structured_log_entry_validation(self):
         """Test structured log entry validation"""
         # Test valid log ID
-        log_entry = StructuredLogEntry(log_id="valid_log_id", level="DEBUG", message="Test message", source="test")
+        log_entry = StructuredLogEntry(
+            log_id="valid_log_id", level="DEBUG", message="Test message", source="test", correlation_id=None
+        )
         assert log_entry.log_id == "valid_log_id"
 
         # Test invalid log ID
         with pytest.raises(ValueError, match="Log ID must be at least 3 characters"):
-            StructuredLogEntry(log_id="ab", level="INFO", message="Test message", source="test")
+            StructuredLogEntry(log_id="ab", level="INFO", message="Test message", source="test", correlation_id=None)
 
         # Test invalid level
         with pytest.raises(ValueError, match="Log level must be one of"):
-            StructuredLogEntry(log_id="valid_id", level="INVALID", message="Test message", source="test")
+            StructuredLogEntry(
+                log_id="valid_id", level="INVALID", message="Test message", source="test", correlation_id=None
+            )
 
     def test_structured_log_entry_with_context(self):
         """Test structured log entry with context data"""
         context_data = {"key1": "value1", "key2": 42}
 
         log_entry = StructuredLogEntry(
-            log_id="test_log", level="WARNING", message="Warning message", source="test", context_data=context_data
+            log_id="test_log",
+            level="WARNING",
+            message="Warning message",
+            source="test",
+            context_data=context_data,
+            correlation_id=None,
         )
 
         assert log_entry.context_data == context_data
@@ -297,8 +334,8 @@ class TestEnhancedDebuggingManager:
 
         # Create multiple contexts
         context1 = manager.capture_debugging_context()
-        context2 = manager.capture_debugging_context()
-        context3 = manager.capture_debugging_context()
+        manager.capture_debugging_context()  # Create additional context for correlation
+        manager.capture_debugging_context()  # Create additional context for correlation
 
         # Correlate contexts
         correlation = manager.correlate_contexts(context1)

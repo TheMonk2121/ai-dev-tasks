@@ -22,6 +22,7 @@ def test_context_validation_performance():
         session_id="performance-test-session",
         project_scope="This is a test project scope for performance validation",
         backlog_priority="P1",
+        user_id=None,
     )
 
     # Benchmark validation overhead
@@ -47,11 +48,12 @@ def test_context_factory_performance():
     iterations = 1000
 
     for _ in range(iterations):
-        context = ContextFactory.create_context(
+        _ = ContextFactory.create_context(
             AIRole.PLANNER,
             session_id=f"factory-test-{_}",
             project_scope="Test project scope for factory performance",
             backlog_priority="P1",
+            user_id=None,
         )
 
     end_time = time.time()

@@ -311,7 +311,7 @@ class LTSTMigrationManager:
             self.log_migration(f"Rollback failed: {e}", "ERROR")
             return False
 
-    def save_migration_log(self, filename: str = None) -> str:
+    def save_migration_log(self, filename: Optional[str] = None) -> str:
         """Save migration log to file."""
         if filename is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

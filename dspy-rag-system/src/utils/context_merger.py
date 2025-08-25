@@ -84,9 +84,9 @@ class ContextMerger:
         self.max_contexts_per_merge = 10
         self.max_merge_content_length = 5000
 
-    def _get_cached_contexts(self, session_id: str, context_type: str) -> Optional[List[ConversationContext]]:
+    def _get_cached_contexts(self, session_id: str, context_type: Optional[str]) -> Optional[List[ConversationContext]]:
         """Get contexts from cache if available and fresh."""
-        cache_key = f"{session_id}:{context_type}"
+        cache_key = f"{session_id}:{context_type or 'all'}"
 
         if cache_key in self.context_cache:
             timestamp = self.cache_timestamps.get(cache_key)
@@ -95,9 +95,9 @@ class ContextMerger:
 
         return None
 
-    def _cache_contexts(self, session_id: str, context_type: str, contexts: List[ConversationContext]):
+    def _cache_contexts(self, session_id: str, context_type: Optional[str], contexts: List[ConversationContext]):
         """Cache contexts for future use."""
-        cache_key = f"{session_id}:{context_type}"
+        cache_key = f"{session_id}:{context_type or 'all'}"
         self.context_cache[cache_key] = contexts
         self.cache_timestamps[cache_key] = datetime.now()
 
@@ -300,7 +300,7 @@ class ContextMerger:
                         relevance_score=context.relevance_score,
                         semantic_similarity=1.0,
                         merge_timestamp=datetime.now(),
-                        metadata=context.metadata,
+                        metadata=context.metadata or {},
                     )
                     merged_contexts.append(merged_context)
                     contexts_preserved += 1

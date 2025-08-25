@@ -153,7 +153,7 @@ class TestContextMerger(unittest.TestCase):
     def test_merge_contexts_empty(self):
         """Test merging empty context list."""
         with patch.object(self.context_merger, "_get_cached_contexts", return_value=None):
-            with patch.object(self.context_merger.mock_db_manager, "get_connection") as mock_conn:
+            with patch.object(self.context_merger.db_manager, "get_connection") as mock_conn:
                 mock_conn.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value.fetchall.return_value = (
                     []
                 )
@@ -186,7 +186,7 @@ class TestContextMerger(unittest.TestCase):
         }
 
         with patch.object(self.context_merger, "_get_cached_contexts", return_value=None):
-            with patch.object(self.context_merger.mock_db_manager, "get_connection") as mock_conn:
+            with patch.object(self.context_merger.db_manager, "get_connection") as mock_conn:
                 mock_cursor = Mock()
                 mock_cursor.fetchall.return_value = [mock_row]
                 mock_conn.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value = mock_cursor
@@ -205,7 +205,7 @@ class TestContextMerger(unittest.TestCase):
             {"role": "human", "content": "How are you?", "timestamp": datetime.now()},
         ]
 
-        with patch.object(self.context_merger.mock_db_manager, "get_connection") as mock_conn:
+        with patch.object(self.context_merger.db_manager, "get_connection") as mock_conn:
             mock_cursor = Mock()
             mock_cursor.fetchall.return_value = mock_messages
             mock_conn.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value = mock_cursor
@@ -213,9 +213,10 @@ class TestContextMerger(unittest.TestCase):
             result = self.context_merger.merge_conversation_context("test_session")
 
             self.assertIsNotNone(result)
-            self.assertIn("User: Hello", result)
-            self.assertIn("Assistant: Hi there!", result)
-            self.assertIn("User: How are you?", result)
+            if result is not None:  # Type guard for linter
+                self.assertIn("User: Hello", result)
+                self.assertIn("Assistant: Hi there!", result)
+                self.assertIn("User: How are you?", result)
 
     def test_get_context_summary(self):
         """Test context summary generation."""
@@ -224,7 +225,7 @@ class TestContextMerger(unittest.TestCase):
             {"context_type": "preference", "count": 3, "avg_relevance": 0.9},
         ]
 
-        with patch.object(self.context_merger.mock_db_manager, "get_connection") as mock_conn:
+        with patch.object(self.context_merger.db_manager, "get_connection") as mock_conn:
             mock_cursor = Mock()
             mock_cursor.fetchall.return_value = mock_summary_data
             mock_conn.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value = mock_cursor
@@ -281,8 +282,9 @@ class TestContextMerger(unittest.TestCase):
         cached = self.context_merger._get_cached_contexts("test_session", "test")
 
         self.assertIsNotNone(cached)
-        self.assertEqual(len(cached), 1)
-        self.assertEqual(cached[0].context_value, "cached content")
+        if cached is not None:  # Type guard for linter
+            self.assertEqual(len(cached), 1)
+            self.assertEqual(cached[0].context_value, "cached content")
 
     def test_cache_expiration(self):
         """Test cache expiration."""

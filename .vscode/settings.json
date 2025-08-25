@@ -370,7 +370,14 @@
         "Xuanang",
         "Yaojie",
         "Zhong",
-        "zhongwenliang"
+        "zhongwenliang",
+        "Anonymization",
+        "customizer",
+        "Customizer",
+        "goroutines",
+        "nspname",
+        "tgname",
+        "tgrelid"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

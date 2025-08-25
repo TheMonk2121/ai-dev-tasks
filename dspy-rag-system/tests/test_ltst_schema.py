@@ -425,7 +425,7 @@ class TestLTSTSchema(unittest.TestCase):
     def tearDown(self):
         """Clean up test environment."""
         if hasattr(self, "db_manager"):
-            self.db_manager.close()
+            self.db_manager.shutdown()
 
 
 if __name__ == "__main__":

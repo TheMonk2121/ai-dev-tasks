@@ -495,7 +495,17 @@ Coherence Validation System |
 <!-- problem: Current DSPy system lacks constitution-aware type safety, role-based context models, structured error taxonomy, typed debug logs, and async Pydantic validation that would significantly improve reliability, debugging, constitution compliance, and I/O performance -->
 <!-- outcome: Enterprise-grade DSPy system with constitution-aware Pydantic validation, role-based context models, structured error taxonomy, comprehensive observability, and async validation for predictable reliability, constitution compliance, and 60% I/O performance improvement -->
 
-| B‑1008 | Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates | 🔥 | 8 | todo | Implement constitution-aware backlog system with dependency bonuses, cross-role analysis, real-time n8n integration, automated migration with 100% metadata preservation, constitution-aligned scoring, and async real-time scoring updates (bounded concurrency with semaphores) | Backlog Enhancement + Constitution Scoring + Cross-Role Dependencies + Real-time Updates + Migration Automation + Metadata Preservation + Constitution Alignment + Async Scoring + Bounded Concurrency | B-1006-A DSPy 3.0 Core Parity Migration, B-1007 Pydantic AI Style Enhancements |
+| B‑1008 | Hybrid JSON Backlog System: Structured Data with Simple Tools | 🔥 | 6 | todo | Implement hybrid JSON-based backlog system with structured data, validation hooks, simple CLI tools, automated PRD closure with Scribe packs, and knowledge mining capabilities. Replace markdown source of truth with JSON while maintaining human readability and version control. | Backlog Enhancement + JSON Schema + Validation + Simple Tools + Scribe Packs + Knowledge Mining + Archive Discipline | B-1006-A DSPy 3.0 Core Parity Migration, B-1007 Pydantic AI Style Enhancements |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1006-A", "B-1007"]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Create JSON schema for backlog items, implement simple CLI tools, add validation hooks, and create Scribe pack system for knowledge mining -->
+<!-- est_hours: 12 -->
+<!-- acceptance: Backlog system uses JSON as source of truth, includes validation hooks, simple CLI tools, automated PRD closure with Scribe packs, and maintains human readability -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#backlog-enhancement", "400_guides/400_comprehensive-coding-best-practices.md#data-structures"] -->
+<!-- reference_cards: ["500_reference-cards.md#backlog-management", "500_reference-cards.md#json-schema"] -->
+<!-- tech_footprint: Backlog Enhancement + JSON Schema + Validation + Simple Tools + Scribe Packs + Knowledge Mining + Archive Discipline + Version Control -->
+<!-- problem: Current backlog system uses markdown as source of truth, lacks structured data capabilities, has inconsistent completion tracking, and no systematic knowledge mining from completed items -->
+<!-- outcome: Hybrid JSON-based backlog system with structured data, validation, simple tools, automated closure with Scribe packs, and systematic knowledge mining for continuous improvement -->
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1006-A", "B-1007"]}-->
 <!--score_total: 7.0-->
 <!-- do_next: Implement constitution-aware scoring formula with dependency bonuses, cross-role dependency detection, real-time n8n integration, automated migration with validation, constitution-aligned scoring integration, and async real-time scoring updates with bounded concurrency for <5% overhead -->
@@ -544,6 +554,16 @@ Coherence Validation System |
 <!-- outcome: Production-ready advanced RAG system with late chunking context preservation, HIRAG hierarchical reasoning, and 15%+ improvement in retrieval accuracy and generation quality -->
 
 | B‑1015 | LTST Memory System Database Optimization: Governance-Aligned Schema Improvements | 🔥 | 5 | ✅ **COMPLETED** | Implement governance-aligned LTST memory system improvements including HNSW semantic search enhancement, DSPy tables promotion to schema.sql, user/session hygiene with nullable user_id, and manual cleanup function for local-first retention policy | Database Schema + LTST Memory + Governance Alignment + Performance Optimization | B-1012 LTST Memory System |
+| B‑1016 | LTST Memory System: Intelligent Model Selection & Routing | 🔥 | 6 | todo | Implement intelligent model selection system for LTST Memory with database-backed model registry, enhanced CursorModelRouter integration, and context-aware routing based on role, task type, and LTST memory context | Model Registry + CursorModelRouter + LTST Integration + Context-Aware Routing | B-1015 LTST Memory System Database Optimization |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1015"]}-->
+<!--score_total: 6.0-->
+<!-- do_next: Implement database-backed model registry with role-based selection, enhance CursorModelRouter with LTST integration, and add context-aware routing based on memory context -->
+<!-- est_hours: 8 -->
+<!-- acceptance: System automatically selects appropriate model based on role, task type, and LTST memory context without manual specification -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#model-selection", "400_guides/400_comprehensive-coding-best-practices.md#simplicity-over-complexity"] -->
+<!-- reference_cards: ["500_reference-cards.md#model-registry-architecture", "500_reference-cards.md#cursor-model-router"] -->
+<!-- problem: Current LTST Memory System requires manual model specification for each request, lacking intelligent routing based on role, task type, and memory context, leading to suboptimal model selection and reduced efficiency -->
+<!-- outcome: Production-ready intelligent model selection system that automatically routes to appropriate models based on role, task type, and LTST memory context, improving efficiency and model utilization while maintaining local-first architecture -->
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:5, lessons:4, deps:["B-1012"]}-->
 <!--score_total: 6.0-->
 <!-- do_next: Implement HNSW semantic search enhancement, promote DSPy tables to schema.sql, add user_id column, and create manual cleanup function -->

@@ -40,10 +40,11 @@ def test_enhanced_debugging_integration():
         session_id="session_456",
         user_preferences={"detail_level": "high", "style": "detailed"},
         dynamic_variables={"current_task": "debugging_test"},
+        role_context=None,
     )
 
     role_context = PlannerContext(
-        session_id="session_456", project_scope="Enhanced Debugging System", backlog_priority="P1"
+        session_id="session_456", project_scope="Enhanced Debugging System", backlog_priority="P1", user_id=None
     )
 
     # Capture debugging context with sensitive data
@@ -62,8 +63,10 @@ def test_enhanced_debugging_integration():
     )
 
     print(f"✅ Context captured: {debugging_context.context_id}")
-    print(f"   - User ID: {debugging_context.user_context.user_id}")
-    print(f"   - Role: {debugging_context.role_context.role.value}")
+    if debugging_context.user_context is not None:
+        print(f"   - User ID: {debugging_context.user_context.user_id}")
+    if debugging_context.role_context is not None:
+        print(f"   - Role: {debugging_context.role_context.role.value}")
     print(f"   - Variables: {len(debugging_context.variable_snapshot)} items")
 
     # Verify privacy protection
@@ -264,6 +267,7 @@ def test_enhanced_debugging_integration():
         session_id="session_789",
         user_preferences=preference_manager.get_user_preferences("test_user_123"),
         dynamic_variables={},
+        role_context=None,
     )
 
     error_with_prefs = debugging_manager.create_rich_error_message(

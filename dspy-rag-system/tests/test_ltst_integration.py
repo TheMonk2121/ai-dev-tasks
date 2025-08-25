@@ -178,6 +178,7 @@ class TestLTSTIntegration(unittest.TestCase):
             duration_ms = (time.time() - start_time) * 1000
 
             self.assertLess(duration_ms, 2000)  # Should complete within 2 seconds
+            self.assertEqual(history, [])  # Verify empty result as expected
 
         # Test memory rehydration performance
         with patch.object(self.ltst_system.memory_rehydrator, "rehydrate_memory") as mock_rehydrate:
@@ -199,9 +200,12 @@ class TestLTSTIntegration(unittest.TestCase):
             mock_rehydrate.return_value = mock_result
 
             start_time = time.time()
-            result = self.ltst_system.rehydrate_memory(session_id, user_id)
+            rehydration_result = self.ltst_system.rehydrate_memory(session_id, user_id)
             duration_ms = (time.time() - start_time) * 1000
 
+            # Verify the result is valid
+            self.assertEqual(rehydration_result.session_id, session_id)
+            self.assertEqual(rehydration_result.user_id, user_id)
             self.assertLess(duration_ms, 5000)  # Should complete within 5 seconds
 
     def test_error_scenarios_and_recovery(self):
@@ -351,8 +355,6 @@ class TestLTSTIntegration(unittest.TestCase):
 
         # Test operation history trimming
         # Add many operations using the proper method to trigger trimming
-        original_history_size = len(self.ltst_system.operation_history)
-
         for i in range(1100):  # More than max_operation_history
             self.ltst_system._record_operation(
                 operation_type="test", session_id=f"session_{i}", user_id=f"user_{i}", duration_ms=10.0, success=True
@@ -425,6 +427,8 @@ class TestLTSTIntegration(unittest.TestCase):
             summary = self.ltst_system.get_session_summary(session_id)
 
             self.assertIsNotNone(summary)
+            # Type assertion to help linter understand summary is not None
+            assert summary is not None
             self.assertEqual(summary["session_id"], session_id)
             self.assertEqual(summary["message_count"], 10)
             self.assertEqual(summary["human_message_count"], 5)

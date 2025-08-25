@@ -22,6 +22,12 @@ class TestMemoryRehydrator(unittest.TestCase):
     def setUp(self):
         """Set up test environment."""
         self.mock_db_manager = Mock()
+        # Make the mock db_manager support context manager protocol
+        self.mock_db_manager.get_connection.return_value.__enter__ = Mock(
+            return_value=self.mock_db_manager.get_connection.return_value
+        )
+        self.mock_db_manager.get_connection.return_value.__exit__ = Mock(return_value=None)
+
         self.memory_rehydrator = MemoryRehydrator(self.mock_db_manager)
 
     def test_init_defaults(self):
@@ -108,7 +114,7 @@ class TestMemoryRehydrator(unittest.TestCase):
 
     def test_detect_session_continuity_no_sessions(self):
         """Test session continuity detection with no recent sessions."""
-        with patch.object(self.memory_rehydrator.mock_db_manager, "get_connection") as mock_conn:
+        with patch.object(self.memory_rehydrator.db_manager, "get_connection") as mock_conn:
             mock_cursor = Mock()
             mock_cursor.fetchall.return_value = []
             mock_conn.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value = mock_cursor
@@ -126,7 +132,7 @@ class TestMemoryRehydrator(unittest.TestCase):
             "context_summary": "Test context",
         }
 
-        with patch.object(self.memory_rehydrator.mock_db_manager, "get_connection") as mock_conn:
+        with patch.object(self.memory_rehydrator.db_manager, "get_connection") as mock_conn:
             mock_cursor = Mock()
             mock_cursor.fetchall.return_value = [mock_session]
             mock_conn.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value = mock_cursor
@@ -137,20 +143,9 @@ class TestMemoryRehydrator(unittest.TestCase):
 
     def test_get_conversation_history(self):
         """Test conversation history retrieval."""
+        # Note: The method orders by message_index DESC, so we need to provide data in reverse order
+        # The method will reverse it back to chronological order
         mock_messages = [
-            {
-                "session_id": "test_session",
-                "role": "human",
-                "content": "Hello",
-                "message_type": "message",
-                "message_index": 1,
-                "parent_message_id": None,
-                "metadata": {},
-                "embedding": None,
-                "relevance_score": 0.8,
-                "is_context_message": False,
-                "timestamp": datetime.now(),
-            },
             {
                 "session_id": "test_session",
                 "role": "ai",
@@ -164,9 +159,22 @@ class TestMemoryRehydrator(unittest.TestCase):
                 "is_context_message": False,
                 "timestamp": datetime.now(),
             },
+            {
+                "session_id": "test_session",
+                "role": "human",
+                "content": "Hello",
+                "message_type": "message",
+                "message_index": 1,
+                "parent_message_id": None,
+                "metadata": {},
+                "embedding": None,
+                "relevance_score": 0.8,
+                "is_context_message": False,
+                "timestamp": datetime.now(),
+            },
         ]
 
-        with patch.object(self.memory_rehydrator.mock_db_manager, "get_connection") as mock_conn:
+        with patch.object(self.memory_rehydrator.db_manager, "get_connection") as mock_conn:
             mock_cursor = Mock()
             mock_cursor.fetchall.return_value = mock_messages
             mock_conn.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value = mock_cursor
@@ -186,7 +194,7 @@ class TestMemoryRehydrator(unittest.TestCase):
             {"preference_key": "theme", "preference_value": "dark", "metadata": {"confidence": 0.8}},
         ]
 
-        with patch.object(self.memory_rehydrator.mock_db_manager, "get_connection") as mock_conn:
+        with patch.object(self.memory_rehydrator.db_manager, "get_connection") as mock_conn:
             mock_cursor = Mock()
             mock_cursor.fetchall.return_value = mock_preferences
             mock_conn.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value = mock_cursor
@@ -302,6 +310,14 @@ class TestMemoryRehydrator(unittest.TestCase):
         """Test full memory rehydration process."""
         request = RehydrationRequest(session_id="test_session", user_id="test_user", current_message="Hello world")
 
+        # Mock the context merger to avoid database calls
+        mock_merge_result = Mock()
+        mock_merge_result.merged_contexts = []
+        mock_merge_result.total_contexts_processed = 0
+        mock_merge_result.contexts_merged = 0
+        mock_merge_result.contexts_preserved = 0
+        mock_merge_result.merge_time_ms = 10.0
+
         # Mock all the internal methods
         with (
             patch.object(self.memory_rehydrator, "_get_cached_rehydration", return_value=None),
@@ -313,6 +329,7 @@ class TestMemoryRehydrator(unittest.TestCase):
             patch.object(self.memory_rehydrator, "_calculate_context_relevance_scores", return_value={"overall": 0.7}),
             patch.object(self.memory_rehydrator, "_merge_rehydrated_context", return_value="Merged context"),
             patch.object(self.memory_rehydrator, "_cache_rehydration"),
+            patch.object(self.memory_rehydrator.context_merger, "merge_contexts", return_value=mock_merge_result),
         ):
 
             result = self.memory_rehydrator.rehydrate_memory(request)
@@ -364,6 +381,14 @@ class TestMemoryRehydrator(unittest.TestCase):
         """Test that rehydration meets performance benchmarks."""
         request = RehydrationRequest(session_id="test_session", user_id="test_user")
 
+        # Mock the context merger to avoid database calls
+        mock_merge_result = Mock()
+        mock_merge_result.merged_contexts = []
+        mock_merge_result.total_contexts_processed = 0
+        mock_merge_result.contexts_merged = 0
+        mock_merge_result.contexts_preserved = 0
+        mock_merge_result.merge_time_ms = 10.0
+
         # Mock all methods to return minimal data
         with (
             patch.object(self.memory_rehydrator, "_get_cached_rehydration", return_value=None),
@@ -375,6 +400,7 @@ class TestMemoryRehydrator(unittest.TestCase):
             patch.object(self.memory_rehydrator, "_calculate_context_relevance_scores", return_value={"overall": 0.7}),
             patch.object(self.memory_rehydrator, "_merge_rehydrated_context", return_value="Test context"),
             patch.object(self.memory_rehydrator, "_cache_rehydration"),
+            patch.object(self.memory_rehydrator.context_merger, "merge_contexts", return_value=mock_merge_result),
         ):
 
             start_time = datetime.now()

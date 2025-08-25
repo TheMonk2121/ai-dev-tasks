@@ -53,6 +53,7 @@ class TestUserPreference:
             preference_value="value",
             preference_type="string",
             category="test",
+            description=None,
         )
         assert preference.preference_id == "valid_id"
 
@@ -65,6 +66,7 @@ class TestUserPreference:
                 preference_value="value",
                 preference_type="string",
                 category="test",
+                description=None,
             )
 
     def test_user_id_validation(self):
@@ -77,6 +79,7 @@ class TestUserPreference:
             preference_value="value",
             preference_type="string",
             category="test",
+            description=None,
         )
         assert preference.user_id == "valid_user"
 
@@ -89,6 +92,7 @@ class TestUserPreference:
                 preference_value="value",
                 preference_type="string",
                 category="test",
+                description=None,
             )
 
     def test_preference_key_validation(self):
@@ -101,6 +105,7 @@ class TestUserPreference:
             preference_value="value",
             preference_type="string",
             category="test",
+            description=None,
         )
         assert preference.preference_key == "valid_key"
 
@@ -113,6 +118,7 @@ class TestUserPreference:
                 preference_value="value",
                 preference_type="string",
                 category="test",
+                description=None,
             )
 
 
