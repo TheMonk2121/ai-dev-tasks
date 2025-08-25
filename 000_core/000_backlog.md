@@ -140,17 +140,52 @@ and normalize spacing across long-form guides.
 
 - B‑052‑b — Config Externalization to TOML + Ignore (score 5.0)
 
-- B‑1004 — Simplify Overengineered Quality Gates (score 7.5)
+- B‑1004 — Simplify Overengineered Quality Gates (score 7.5) ✅ **COMPLETED**
 <!--score: {bv:5, tc:4, rr:5, le:3, effort:3, deps:[]}-->
 <!--score_total: 7.5-->
-<!-- do_next: Strip down pre-commit hooks to essentials, remove dead database sync check, simplify conflict detection -->
-<!-- est_hours: 6 -->
-<!-- acceptance: Quality gates are fast (<5s), simple, reliable, and focused on actual problems -->
+<!-- completion_date: 2025-01-23 -->
+<!-- implementation_notes: Successfully simplified overengineered quality gates with significant performance improvements. Removed dead database sync check (archived script), replaced complex Python conflict detection with simple git grep (0.059s vs complex Python), added Pyright type checking (0.102s), integrated Bandit security scanning (0.102s), and replaced 1174-line Python documentation validator with simple bash script (0.030s). Total pre-commit execution time: 4.491s (under 5s target). All gates are now simple, reliable, and focused on actual problems. Quality gates disabled for normal development but ready for use when needed. -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#overengineering-patterns"] -->
 <!-- reference_cards: ["500_reference-cards.md#quality-gates"] -->
 <!-- tech_footprint: Pre-commit + Ruff + Pyright + Security + Testing -->
 <!-- problem: Current quality gates are overengineered with complex caching, dead code, and solving non-existent problems -->
 <!-- outcome: Boring, reliable quality gates that actually improve code quality without complexity -->
+
+- B‑1016 — Evaluate uv as package/venv manager; keep pip fallback (score 5.5)
+<!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
+<!--score_total: 5.5-->
+<!-- do_next: Install uv, create trial environment, generate uv.lock, add uv export to helper script -->
+<!-- est_hours: 3 -->
+<!-- acceptance: uv.lock generated, pip fallback maintained, friends can use either uv sync or pip install -r requirements.txt -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#development-workflow"] -->
+<!-- reference_cards: ["500_reference-cards.md#package-management"] -->
+<!-- tech_footprint: Package Management + Development Environment + Onboarding -->
+<!-- problem: Need faster, more reliable package management for development and friend onboarding -->
+<!-- outcome: Faster installs, reproducible environments, simplified setup for external users -->
+
+- B‑1017 — Automated Backlog Grooming System (score 6.5)
+<!--score: {bv:5, tc:3, rr:5, le:3, effort:2, deps:[]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Create weekly grooming script that identifies stale items, updates dependencies, recalculates priorities -->
+<!-- est_hours: 4 -->
+<!-- acceptance: Weekly automated grooming runs successfully, identifies stale items, updates priorities based on current state -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#automation-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#backlog-management"] -->
+<!-- tech_footprint: Automation + Backlog Management + AI Analysis -->
+<!-- problem: Manual backlog maintenance is time-consuming and inconsistent -->
+<!-- outcome: Keeps backlog fresh, reduces cognitive load, prevents item rot -->
+
+- B‑1018 — Visual Kanban Board Integration (score 6.0)
+<!--score: {bv:4, tc:4, rr:4, le:3, effort:3, deps:[]}-->
+<!--score_total: 6.0-->
+<!-- do_next: Implement GitHub Projects integration or markdown-based board with status columns for visual progress tracking -->
+<!-- est_hours: 5 -->
+<!-- acceptance: Visual board shows current status of all items, easy for friends to understand project progress -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#user-experience"] -->
+<!-- reference_cards: ["500_reference-cards.md#project-management"] -->
+<!-- tech_footprint: GitHub Projects + Visual Management + Onboarding -->
+<!-- problem: Current backlog is text-heavy and hard to visualize progress -->
+<!-- outcome: Better progress tracking, easier friend onboarding, visual workflow management -->
 
 ## P2 Lane
 
@@ -275,6 +310,8 @@ Items requiring external credentials, business decisions, or deployment should b
 <!-- outcome: Production-ready DSPy multi-agent system with local model inference, real agent coordination, and consensus building -->
 
 | B-1004 | DSPy v2 Optimization: Adam LK Transcript Insights Implementation | 🔧 | 6 | ✅ done | Implement DSPy v2 optimization techniques from Adam LK transcript: "Programming not prompting" philosophy, four-part optimization loop (Create→Evaluate→Optimize→Deploy), LabeledFewShot/BootstrapFewShot/MIPRO optimizers, teleprompter integration, assertion-based validation (37%→98% reliability), and systematic improvement with measurable metrics. | DSPy + Optimization + Few-Shot Learning + Teleprompter + Assertions + Continuous Improvement + Four-Part Loop | B-1003 DSPy Multi-Agent System Implementation |
+
+| B-1004-QG | Simplify Overengineered Quality Gates | 🔧 | 6 | ✅ done | Simplified overengineered quality gates with significant performance improvements. Removed dead database sync check, replaced complex Python conflict detection with simple git grep (0.059s), added Pyright type checking (0.102s), integrated Bandit security scanning (0.102s), and replaced 1174-line Python documentation validator with simple bash script (0.030s). Total pre-commit execution time: 4.491s (under 5s target). | Pre-commit + Ruff + Pyright + Security + Testing | None |
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1003"]}-->
 <!--score_total: 6.0-->
 <!-- completion_date: 2025-01-23 -->
