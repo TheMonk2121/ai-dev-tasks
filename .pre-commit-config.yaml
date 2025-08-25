@@ -25,10 +25,10 @@ repos:
       # Temporarily disabled due to hanging issues
       # - id: conflict-check
       #   name: Conflict Check
-      #   entry: python3 scripts/quick_conflict_check.py
+      #   entry: git grep -nE "^(<<<<<<< |======= |>>>>>>> )"
       #   language: system
       #   pass_filenames: false
-      #   description: "Check for merge conflicts and other issues"
+      #   description: "Check for merge conflicts using simple git grep"
 
       # Temporarily disabled due to hanging issues
       # - id: timestamp-update

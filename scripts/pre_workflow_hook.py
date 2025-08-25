@@ -68,7 +68,7 @@ def run_quality_gates() -> bool:
     code_cmd = [py, "-m", "ruff", "check", *changed]
 
     gates = [
-        ("Conflict Check", [py, "scripts/quick_conflict_check.py"]),
+        ("Conflict Check", ["git", "grep", "-nE", "^(<<<<<<< |======= |>>>>>>> )"]),
         ("Documentation Validation", doc_cmd),
         ("Code Quality", code_cmd),
     ]

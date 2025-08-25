@@ -37,7 +37,7 @@ jobs:
           python scripts/doc_coherence_validator.py --dry-run || echo "⚠️ Documentation validation completed with warnings"
 
           # Run quick conflict check
-          python scripts/quick_conflict_check.py || echo "⚠️ Quick conflict check completed with warnings"
+          git grep -nE "^(<<<<<<< |======= |>>>>>>> )" || echo "⚠️ Quick conflict check completed with warnings"
 
           # Run system health check (skip if DSPy not available)
           python scripts/system_health_check.py 2>/dev/null || echo "⚠️ System health check skipped (DSPy not available in CI)"
