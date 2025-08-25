@@ -461,6 +461,34 @@ python3 scripts/single_doorway.py scribe append "implementation note"
 python scripts/worklog_summarizer.py --backlog-id B-XXX
 ```
 
+## Monitoring & Maintenance
+
+- Run system monitor:
+
+```bash
+python3 scripts/system_monitor.py
+```
+
+- Health gate for CI (fails non-healthy):
+
+```bash
+python3 scripts/health_gate.py
+```
+
+- Run maintenance (db analyze + memory validation):
+
+```bash
+python3 scripts/maintenance.py
+```
+
+- Optional: install daily 3am maintenance via launchd (macOS):
+
+```bash
+python3 scripts/create_launchd_maintenance.py
+```
+
+See also `dspy-rag-system/src/monitoring/health_endpoints.py` for app endpoints and `scripts/monitoring_dashboard.py` for a simple dashboard.
+
 ---
 
 **This guide provides a complete development workflow from initial setup through deployment. Follow the stages sequentially for your specific development task.**
