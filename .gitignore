@@ -107,3 +107,4 @@ __pycache__/
 out/
 test/*.js
 test/*.js.map
+artifacts/session_memory/

@@ -1031,6 +1031,7 @@ This backlog is the **executable roadmap** for the AI development ecosystem. Eac
 | B‑060 | Documentation Coherence Validation | 2024-08-07 | Lightweight doc-linter with Cursor AI | Validation prevents documentation drift |
 | B‑1015 | LTST Memory System Database Optimization | 2024-12-19 | HNSW semantic search, DSPy schema, user hygiene | Database optimization essential for AI memory systems |
 | B‑1003 | DSPy Multi-Agent System Implementation | 2024-12-19 | True local model inference with Cursor AI integration | Multi-agent systems enable complex AI workflows |
+| B‑1018 | Monitoring & Maintenance System | 2025-08-25 | Health endpoints, system monitor, maintenance, dashboard, CI health gate, launchd scheduler | Observability + simple automation improve reliability |
 
 ### **Key Lessons Learned**
 1. **Security First**: All AI systems need comprehensive security validation
@@ -1453,6 +1454,35 @@ documentation | Schema Design + Validation Rules + Span Tracking | B-078 LangExt
 <!--score: {bv:4, tc:3, rr:3, le:3, effort:1, deps:["B-078"]}-->
 <!--score_total: 6.0-->
 <!--research: 500_research-analysis-summary.md - Schema design critical for structured extraction-->
+
+| B‑1016 | RL-Enhanced DSPy Model Selection | 🔥 | 7 | todo | Implement reinforcement learning to optimize model selection, hyperparameter tuning, and performance-based evolution in the existing DSPy multi-agent system | RL Agent + Policy Network + Environment Design + Performance Monitoring + PyTorch MPS | B-1006-A DSPy 3.0 Core Parity Migration |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:7, lessons:4, deps:["B-1006-A"]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Implement RL-enhanced model selection with PyTorch 2.8.0 and MPS support -->
+<!-- est_hours: 28 -->
+<!-- acceptance: 20% improvement in model selection accuracy, 15% reduction in response time, successful learning curves -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#ai-optimization-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#reinforcement-learning", "500_reference-cards.md#pytorch-mps"] -->
+<!-- tech_footprint: PyTorch 2.8.0 + MPS + RL + DSPy + Performance Monitoring -->
+<!-- problem: Current DSPy model selection uses static rules, limiting performance optimization and learning -->
+<!-- outcome: Self-improving model selection system that learns optimal strategies through trial and error -->
+<!-- PRD: PRD-B-1016-RL-Enhanced-DSPy-Model-Selection.md -->
+<!-- implementation_context:
+Current Tech Stack: Python 3.12, PyTorch 2.8.0 (MPS enabled), DSPy Multi-Agent System
+Repository Layout: dspy-rag-system/src/dspy_modules/model_switcher.py (enhance existing)
+Development Patterns: Add RL module → Environment → Agent → Tests → Integration
+Local Development: poetry install, pytest, black, ruff, mypy
+Quality Gates: All existing DSPy tests pass, RL agent training converges, performance monitoring provides insights
+Technical Approach: PyTorch RL with custom environment, policy network, reward function, performance tracking
+Integration Points: Enhance existing model switcher, add RL-specific metrics, integrate with monitoring dashboard
+Risks: RL training instability, performance degradation, integration complexity, resource constraints, overfitting
+Testing Strategy: Unit tests (90% coverage), integration tests, performance tests, stress tests, learning tests
+Implementation Plan: Phase 1 (Foundation) → Phase 2 (Integration) → Phase 3 (Optimization) → Phase 4 (Deployment)
+Timeline: 4 weeks total, 1 week per phase
+Success Criteria: >80% model selection accuracy, >15% response quality improvement, >10% response time reduction
+Monitoring: RL agent performance visualization, learning curve plots, model selection distribution, real-time alerts
+Code Examples: ModelSelectionAgent (nn.Module), ModelSelectionEnvironment, calculate_reward function, RLEnhancedModelSwitcher
+-->
 
 - --
 
