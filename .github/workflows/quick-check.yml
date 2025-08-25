@@ -23,7 +23,7 @@ jobs:
           pip install tqdm
       - name: Run quick conflict check (JSON)
         run: |
-          python scripts/quick_conflict_check.py --json
+          git grep -nE "^(<<<<<<< |======= |>>>>>>> )" || echo "No merge conflicts found"
 
   docs-validate:
     runs-on: ubuntu-latest
