@@ -30,7 +30,7 @@ class MCPDocumentModule(Module):
 
     def forward(self, document_source: str, **kwargs) -> Dict[str, Any]:
         """Conform to MCPDocumentSignature: returns chunks as list[str] + metadata."""
-        result = self.processor(document_source, **kwargs)
+        result: Dict[str, Any] = self.processor.forward(document_source, **kwargs)
         # Adapt chunks to list[str]
         chunk_texts: List[str] = [c["text"] for c in result.get("chunks", [])]
         return {

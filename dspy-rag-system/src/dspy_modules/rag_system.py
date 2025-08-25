@@ -4,20 +4,20 @@ DSPy RAG System
 Complete RAG system using DSPy with Mistral integration.
 """
 
-import os
-import sys
-import json
-import uuid
 import functools
 import logging
+import os
+import sys
 import time
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict
+
 import dspy
-from dspy import Module, Signature, InputField, OutputField
 import requests
+import tiktoken  # token aware truncation
+from dspy import InputField, Module, OutputField, Signature
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-import tiktoken  # token aware truncation
+
 from .vector_store import VectorStore
 
 _LOG = logging.getLogger("rag_system")

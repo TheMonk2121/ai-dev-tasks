@@ -467,7 +467,7 @@ class MCPDocumentIngestionPipeline(Module):
             )
 
             # Process document using MCP processor
-            result = self.processor(document_source, **kwargs)
+            result: Dict[str, Any] = self.processor.forward(document_source, **kwargs)
 
             # Store in vector database (if provided)
             if vector_store and hasattr(vector_store, "store_chunks"):
@@ -563,7 +563,7 @@ if __name__ == "__main__":
     for source in test_sources:
         try:
             print(f"\nTesting source: {source}")
-            result = processor(source)
+            result: Dict[str, Any] = processor.forward(source)
             print(f"✅ Success: {result['total_chunks']} chunks created")
             print(f"Server type: {result.get('server_type', 'unknown')}")
         except Exception as e:

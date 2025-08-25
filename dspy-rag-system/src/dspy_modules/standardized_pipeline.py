@@ -234,7 +234,7 @@ class StandardizedIngestionPipeline(Module):
             pipeline_result.progress.processed_documents += 1
 
             # Process document
-            result = self.processor(document_source, **kwargs)
+            result: Dict[str, Any] = self.processor.forward(document_source, **kwargs)
 
             # Store in vector database if provided
             if vector_store and hasattr(vector_store, "store_chunks"):

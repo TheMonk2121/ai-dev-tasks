@@ -4,27 +4,30 @@ Enhanced DSPy RAG System
 Implements pre-RAG query rewriting and post-RAG answer synthesis
 """
 
-import os
-import sys
 import json
-import uuid
-import functools
 import logging
+import os
 import time
-from typing import List, Dict, Any, Optional, Tuple
+from typing import Any, Dict, List, Tuple
+
 import dspy
-from dspy import Module, Signature, InputField, OutputField, ChainOfThought, ReAct
 import requests
+import tiktoken
+from dspy import InputField, Module, OutputField, Signature
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-import tiktoken
-from .vector_store import VectorStore
-from ..utils.retry_wrapper import retry_llm, TimeoutError
+
+from ..utils.retry_wrapper import retry_llm
+
 # Import input validation utilities
 from ..utils.validator import (
-    sanitize_prompt, validate_string_length, validate_query_complexity,
-    SecurityError, ValidationError
+    SecurityError,
+    ValidationError,
+    sanitize_prompt,
+    validate_query_complexity,
+    validate_string_length,
 )
+from .vector_store import VectorStore
 
 _LOG = logging.getLogger("enhanced_rag_system")
 
