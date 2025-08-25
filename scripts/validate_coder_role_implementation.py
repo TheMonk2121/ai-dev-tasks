@@ -41,7 +41,7 @@ class CoderRoleValidator:
         results = {"status": "PENDING", "checks": {}, "errors": []}
 
         # Check script existence
-        script_path = self.project_root / "scripts" / "cursor_memory_rehydrate.py"
+        script_path = self.project_root / "scripts" / "memory_up.sh"
         if script_path.exists():
             results["checks"]["script_exists"] = True
         else:
@@ -447,7 +447,7 @@ Overall Status: {self.results['overall_status']}
 📁 Validation Details
 - Project Root: {self.project_root}
 - Integration Test File: tests/test_coder_role_integration.py
-- Memory Rehydrator: scripts/cursor_memory_rehydrate.py
+- Memory Rehydrator: scripts/memory_up.sh
 - DSPy Rehydrator: dspy-rag-system/src/utils/memory_rehydrator.py
 
 ================================================================================

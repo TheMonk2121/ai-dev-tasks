@@ -8,7 +8,7 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Complete guide to industry-grade observability with structured tracing, cryptographic verification, and self-critique | Implementing debugging features or troubleshooting system issues | Test with `python3 scripts/cursor_memory_rehydrate.py planner "test query"` |
+| Complete guide to industry-grade observability with structured tracing, cryptographic verification, and self-critique | Implementing debugging features or troubleshooting system issues | Test with `./scripts/memory_up.sh -r planner "test query"` |
 
 <!-- ANCHOR_KEY: tldr -->
 <!-- ANCHOR_PRIORITY: 0 -->
@@ -128,7 +128,7 @@ print(bundle.meta)  # Full trace metadata
 
 ```bash
 # Basic rehydration with observability
-python3 scripts/cursor_memory_rehydrate.py planner "test query"
+./scripts/memory_up.sh -r planner "test query"
 
 # Check trace files
 ls dspy-rag-system/traces/

@@ -58,10 +58,10 @@ python3 scripts/apply_clean_slate_schema.py
 ### 4. **Test the System**
 ```bash
 # Test rehydrator
-python3 scripts/cursor_memory_rehydrate.py planner "test query"
+./scripts/memory_up.sh -r planner "test query"
 
 # Verify deterministic results
-python3 scripts/cursor_memory_rehydrate.py planner "same query"  # Should return identical results
+./scripts/memory_up.sh -r planner "same query"  # Should return identical results
 ```
 
 ## Schema Changes
@@ -202,22 +202,22 @@ After migration, verify:
 1. **Deterministic Results**
    ```bash
    # Run same query multiple times
-   python3 scripts/cursor_memory_rehydrate.py planner "test"
-   python3 scripts/cursor_memory_rehydrate.py planner "test"
-   # Results should be identical
+./scripts/memory_up.sh -r planner "test"
+./scripts/memory_up.sh -r planner "test"
+# Results should be identical
    ```
 
 2. **Performance**
    ```bash
    # Check query performance
-   python3 scripts/cursor_memory_rehydrate.py planner "complex query" --debug
+./scripts/memory_up.sh -r planner "complex query"
    ```
 
 3. **Kill-Switches**
    ```bash
    # Test different modes
-   python3 scripts/cursor_memory_rehydrate.py planner "test" --no-rrf
-   python3 scripts/cursor_memory_rehydrate.py planner "test" --dedupe file
+./scripts/memory_up.sh -r planner "test"
+./scripts/memory_up.sh -r planner "test"
    ```
 
 ## Credits

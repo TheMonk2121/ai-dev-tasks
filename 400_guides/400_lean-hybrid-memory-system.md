@@ -8,7 +8,7 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Complete guide to the Lean Hybrid with Kill-Switches memory rehydration system | Implementing or debugging the memory rehydration system | Test with `python3 scripts/cursor_memory_rehydrate.py` |
+| Complete guide to the Lean Hybrid with Kill-Switches memory rehydration system | Implementing or debugging the memory rehydration system | Test with `./scripts/memory_up.sh` |
 
 <!-- ANCHOR_KEY: tldr -->
 <!-- ANCHOR_PRIORITY: 0 -->
@@ -129,7 +129,7 @@ The system now includes **entity-aware context expansion** that enhances semanti
 ```bash
 # Control anchor influence (0.0-1.0, default 0.6)
 # Python implementation
-python3 scripts/cursor_memory_rehydrate.py --stability 0.6
+./scripts/memory_up.sh -q "current project status" -r planner
 
 # Go implementation
 cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test" --stability 0.6
@@ -139,28 +139,28 @@ cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test" --stabil
 ```bash
 # Disable BM25+RRF fusion
 # Python implementation
-python3 scripts/cursor_memory_rehydrate.py --no-rrf
+./scripts/memory_up.sh -q "memory context" -r researcher
 
 # Go implementation
 cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test" --use-rrf=false
 
 # Simple file-level deduplication only
 # Python implementation
-python3 scripts/cursor_memory_rehydrate.py --dedupe file
+./scripts/memory_up.sh -q "memory context" -r researcher
 
 # Go implementation
 cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test" --dedupe=file
 
 # Disable automatic query expansion
 # Python implementation
-python3 scripts/cursor_memory_rehydrate.py --expand-query off
+./scripts/memory_up.sh -q "memory context" -r researcher
 
 # Go implementation
 cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test" --expand-query=off
 
 # Disable entity expansion
 # Python implementation
-python3 scripts/cursor_memory_rehydrate.py --no-entity-expansion
+./scripts/memory_up.sh -q "memory context" -r researcher
 
 # Go implementation
 cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "test" --use-entity-expansion=false
@@ -283,19 +283,19 @@ Where:
 ### **Basic Usage**
 ```bash
 # Default rehydration (Python)
-python3 scripts/cursor_memory_rehydrate.py implementer "DSPy RAG system architecture"
+./scripts/memory_up.sh -r implementer "DSPy RAG system architecture"
 
 # Default rehydration (Go)
 cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "DSPy RAG system architecture"
 
 # With custom stability (Python)
-python3 scripts/cursor_memory_rehydrate.py planner "backlog priorities" --stability 0.8
+./scripts/memory_up.sh -r planner "backlog priorities"
 
 # With custom stability (Go)
 cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "backlog priorities" --stability 0.8
 
 # Minimal mode for debugging (Python)
-python3 scripts/cursor_memory_rehydrate.py researcher "memory context" --no-rrf --dedupe file
+./scripts/memory_up.sh -r researcher "memory context"
 
 # Minimal mode for debugging (Go)
 cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "memory context" --use-rrf=false --dedupe=file

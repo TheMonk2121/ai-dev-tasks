@@ -160,10 +160,10 @@ python3 src/utils/memory_rehydrator.py --role planner --task "How to use HybridV
 ### A/B Testing
 ```bash
 # Run baseline test
-python3 scripts/cursor_memory_rehydrate.py --query-file tests/queries/QUERY_SET_1.jsonl --no-entity-expansion
+./scripts/memory_up.sh -r researcher "test entity expansion"
 
 # Run variant test
-python3 scripts/cursor_memory_rehydrate.py --query-file tests/queries/QUERY_SET_1.jsonl
+./scripts/memory_up.sh -r researcher "test entity expansion"
 
 # Generate comparison
 python3 scripts/summarize_ab.py baseline.metrics.json variant.metrics.json

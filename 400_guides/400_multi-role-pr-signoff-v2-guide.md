@@ -338,7 +338,7 @@ Strategic alignment data is preserved for future reference:
 
 ```bash
 # Rehydrate with strategic alignment context
-python scripts/cursor_memory_rehydrate.py stakeholder "PR-123 strategic alignment decisions"
+./scripts/memory_up.sh -r planner "PR-123 strategic alignment decisions"
 ```
 
 ### **With Backlog Management**
@@ -494,5 +494,5 @@ python scripts/lessons_analyzer.py --pattern-extraction
 ---
 
 **Version**: 2.0
-**Last Updated**: 2025-01-19
+**Last Updated**: 2025-08-25
 **Next Review**: When strategic alignment process changes

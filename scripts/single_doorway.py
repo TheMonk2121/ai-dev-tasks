@@ -152,7 +152,7 @@ def _git_changed_files() -> list[str]:
 def _rehydrate(description: str, fast: bool, full: bool) -> None:
     # Prefer fast profile unless full explicitly requested
     args: list[str] = [
-        "scripts/cursor_memory_rehydrate.py",
+        "scripts/memory_up.sh",
         "coder",
         description,
     ]

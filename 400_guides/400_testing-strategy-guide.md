@@ -62,7 +62,7 @@ def get_role_consensus():
 **When functioning as a Coder, ALWAYS follow:**
 
 1. **Test-First Development (TDD)**: Write unit tests before implementation
-2. **Memory Rehydration**: Start testing sessions with `python3 scripts/cursor_memory_rehydrate.py coder "write tests for feature"`
+2. **Memory Rehydration**: Start testing sessions with `./scripts/memory_up.sh -r coder "write tests for feature"`
 3. **Example-First Testing**: Search existing tests for similar patterns before writing new tests
 4. **Code Reuse in Tests**: Reuse existing test utilities and fixtures (70% existing, 30% new)
 5. **Function Length Validation**: Ensure functions being tested are ≤ 50 lines
@@ -1225,6 +1225,6 @@ if __name__ == "__main__":
 
 - --
 
-- Last Updated: 2025-08-24*
+- Last Updated: 2025-08-25*
 - Next Review: Monthly*
 - Testing Level: Comprehensive*

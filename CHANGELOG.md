@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Enhanced `dspy-rag-system/src/utils/memory_rehydrator.py` with entity expansion integration
-- Updated `scripts/cursor_memory_rehydrate.py` with `--no-entity-expansion` flag
+- Updated `scripts/memory_up.sh` with unified memory rehydration system
 - Extended episodic logging with expansion metrics (entities_found, chunks_added, expansion_latency_ms)
 - Updated system documentation to reflect entity expansion capabilities
 
@@ -82,7 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Files Modified
 - `dspy-rag-system/src/utils/memory_rehydrator.py`
-- `scripts/cursor_memory_rehydrate.py`
+- `scripts/memory_up.sh`
 - `000_core/000_backlog.md`
 - `400_guides/400_system-overview.md`
 - `400_guides/400_lean-hybrid-memory-system.md`

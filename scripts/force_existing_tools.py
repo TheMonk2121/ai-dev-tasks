@@ -68,7 +68,7 @@ def get_tool_mapping() -> Dict[str, List[str]]:
             "scripts/conflict_audit.py",
         ],
         "memory": [
-            "scripts/cursor_memory_rehydrate.py",
+            "scripts/memory_up.sh",
             "scripts/update_cursor_memory.py",
             "dspy-rag-system/src/utils/memory_rehydrator.py",
         ],

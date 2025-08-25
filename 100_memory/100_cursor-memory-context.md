@@ -273,10 +273,10 @@ python scripts/session_context_integration.py summary
 ### **Configuration Options**
 ```bash
 # Stability slider (0.0-1.0, default 0.6)
-python3 scripts/cursor_memory_rehydrate.py --stability 0.6
+./scripts/memory_up.sh -q "current project status" -r planner
 
 # Kill-switches for debugging
-python3 scripts/cursor_memory_rehydrate.py --no-rrf --dedupe file --expand-query off
+./scripts/memory_up.sh -q "memory context" -r researcher
 
 # Environment variables
 export REHYDRATE_STABILITY=0.6
@@ -288,8 +288,8 @@ export REHYDRATE_EXPAND_QUERY="auto"
 ## 🛠️ Commands {#commands}
 
 ### **Memory Rehydration (Choose One)**
-- **Python**: `python3 scripts/cursor_memory_rehydrate.py planner "current project status"`
-- **Python (Coder)**: `python3 scripts/cursor_memory_rehydrate.py coder "implement authentication function"`
+- **Planner**: `./scripts/memory_up.sh -r planner "current project status"`
+- **Coder**: `./scripts/memory_up.sh -r coder "implement authentication function"`
 - **Go**: `cd dspy-rag-system/src/utils && ./memory_rehydration_cli --query "current project status"`
 
 #### **Implementation Differences:**
@@ -651,3 +651,32 @@ No recently completed items.
 - Invariant warnings: 0
 - Last run: Fri Aug  8 23:58:13 CDT 2025
 <!-- AUTO:doc_health:end -->
+
+## Memory Rehydration Commands
+
+### Quick Memory Rehydration
+```bash
+# Standard memory rehydration
+./scripts/memory_up.sh
+
+# With custom stability (lower = more diverse results)
+./scripts/memory_up.sh -q "current project status" -r planner
+
+# Minimal mode for debugging
+./scripts/memory_up.sh -q "memory context" -r researcher
+```
+
+### Role-Specific Memory Rehydration
+```bash
+# Planner role - strategic context
+./scripts/memory_up.sh -r planner "current project status"
+
+# Coder role - implementation context
+./scripts/memory_up.sh -r coder "implement authentication function"
+
+# Researcher role - analysis context
+./scripts/memory_up.sh -r researcher "performance analysis"
+
+# Implementer role - system context
+./scripts/memory_up.sh -r implementer "database optimization"
+```

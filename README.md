@@ -132,7 +132,7 @@ export POSTGRES_DSN="postgresql://username@localhost:5432/ai_agency"
 ./dspy-rag-system/start_mission_dashboard.sh
 
 # Run memory rehydration
-python scripts/cursor_memory_rehydrate.py planner "current project status"
+./scripts/memory_up.sh -r planner "current project status"
 
 # Execute a backlog item
 python scripts/single_doorway.py

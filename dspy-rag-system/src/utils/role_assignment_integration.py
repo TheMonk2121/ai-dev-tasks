@@ -54,7 +54,7 @@ class RoleAssignmentIntegration:
             "implementer": (
                 "100_memory/104_dspy-development-context.md",
                 "scripts/single_doorway.py",
-                "scripts/cursor_memory_rehydrate.py",
+                "scripts/memory_up.sh",
                 "artifacts/worklogs/",
                 "artifacts/summaries/",
                 "400_guides/400_scribe-v2-system-guide.md",

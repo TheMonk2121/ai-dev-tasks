@@ -74,7 +74,7 @@ def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
         print()
         print("📊 Next steps:")
         print("1. Re-ingest your documents: ./start_watch_folder.sh")
-        print("2. Test the rehydrator: python3 scripts/cursor_memory_rehydrate.py planner 'test'")
+        print("2. Test the rehydrator: ./scripts/memory_up.sh -r planner 'test'")
         print("3. Verify deterministic results across multiple runs")
 
         return True

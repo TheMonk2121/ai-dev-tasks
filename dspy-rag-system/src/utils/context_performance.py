@@ -273,7 +273,7 @@ class LoadBalancer:
         Args:
             instances: List of memory rehydrator instance URLs/commands
         """
-        self.instances = instances or ["scripts/cursor_memory_rehydrate.py"]
+        self.instances = instances or ["scripts/memory_up.sh"]
         self.instance_weights = {instance: 1.0 for instance in self.instances}
         self.instance_stats = {instance: {"requests": 0, "errors": 0, "avg_time": 0.0} for instance in self.instances}
         self.current_index = 0

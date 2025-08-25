@@ -103,7 +103,7 @@ python3 bulk_add_core_documents.py --max-workers 4 --batch-size 5
 ### Test Memory Rehydrator
 ```bash
 cd /Users/danieljacobs/Code/ai-dev-tasks
-python3 scripts/cursor_memory_rehydrate.py planner "test memory rehydrator with core documents"
+./scripts/memory_up.sh -r planner "test memory rehydrator with core documents"
 ```
 
 ## Error Handling
@@ -168,4 +168,4 @@ AI Context Bundles
 - `bulk_add_core_documents.py` - Main processing script
 - `src/dspy_modules/document_processor.py` - Document processing pipeline
 - `src/utils/database_resilience.py` - Database connection management
-- `scripts/cursor_memory_rehydrate.py` - Memory rehydrator integration
+- `scripts/memory_up.sh` - Memory rehydrator integration

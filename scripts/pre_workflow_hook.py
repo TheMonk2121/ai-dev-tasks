@@ -17,7 +17,7 @@ def force_memory_hydration(context: str, role: str = "planner") -> bool:
 
     try:
         result = subprocess.run(
-            [sys.executable, "scripts/cursor_memory_rehydrate.py", role, context],
+            [sys.executable, "scripts/memory_up.sh", "-r", role, context],
             capture_output=True,
             text=True,
             cwd=Path.cwd(),
@@ -63,7 +63,7 @@ def run_quality_gates() -> bool:
         changed = [
             "scripts/pre_workflow_hook.py",
             "scripts/single_doorway.py",
-            "scripts/cursor_memory_rehydrate.py",
+            "scripts/memory_up.sh",
         ]
     code_cmd = [py, "-m", "ruff", "check", *changed]
 

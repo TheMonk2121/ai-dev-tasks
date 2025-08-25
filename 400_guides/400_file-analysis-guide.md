@@ -63,7 +63,7 @@ missing**"how to analyze"**methodology.
 **Coder-Specific Safety Rules:**
 - **NEVER delete Tier 1 files** without extensive analysis and approval
 - **Always check dependencies** before modifying shared utilities
-- **Use memory rehydration** before starting file analysis: `python3 scripts/cursor_memory_rehydrate.py coder "analyze file dependencies"`
+- **Use memory rehydration** before starting file analysis: `./scripts/memory_up.sh -r coder "analyze file dependencies"`
 - **Follow the 70/30 rule**: 70% existing patterns, 30% new analysis
 
 ### **Why This Guide Exists**-**Prevents critical file loss**through systematic analysis
@@ -565,6 +565,6 @@ Use this checklist before writing new Python code to reduce duplication and keep
 
 - **Migration tracking**- Historical change documentation
 
-- --**Last Updated**: 2024-08-07
+- --**Last Updated**: 2025-08-25
 - *Related Documentation**: `400_guides/400_context-priority-guide.md`, `500_research/500_maintenance-safety-research.md`
 - *Status**: Active analysis methodology for maintaining documentation integrity

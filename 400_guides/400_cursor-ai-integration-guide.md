@@ -158,7 +158,7 @@ Cursor AI operates as a **collaborative system** where human users and AI agents
 
 #### **Script Control:**
 ```bash
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py planner "context"
+@run_terminal_cmd ./scripts/memory_up.sh -r planner "context"
 @run_terminal_cmd python3 scripts/single_doorway.py scribe status
 @run_terminal_cmd python3 scripts/pr_signoff_v2.py 123 --status
 ```
@@ -210,16 +210,16 @@ Cursor AI operates as a **collaborative system** where human users and AI agents
 
 #### **Role-Specific Context Loading:**
 ```bash
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py planner "project status"
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py coder "implementation context"
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py researcher "research context"
+@run_terminal_cmd ./scripts/memory_up.sh -r planner "project status"
+@run_terminal_cmd ./scripts/memory_up.sh -r coder "implementation context"
+@run_terminal_cmd ./scripts/memory_up.sh -r researcher "research context"
 ```
 
 #### **Context Chain Loading:**
 ```bash
 @read_file 100_memory/100_cursor-memory-context.md
 #current-status
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py planner "context"
+@run_terminal_cmd ./scripts/memory_up.sh -r planner "context"
 ```
 
 ### **Context Optimization**
@@ -245,7 +245,7 @@ Cursor AI operates as a **collaborative system** where human users and AI agents
 #### **1. Context Loading:**
 ```bash
 @read_file 100_memory/100_cursor-memory-context.md
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py planner "context"
+@run_terminal_cmd ./scripts/memory_up.sh -r planner "context"
 ```
 
 #### **2. Status Check:**
@@ -453,7 +453,7 @@ print(f'Model used: {result.model_used}')
 @read_file 100_memory/100_cursor-memory-context.md
 
 # Load role-specific context
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py planner "context"
+@run_terminal_cmd ./scripts/memory_up.sh -r planner "context"
 
 # Load current status
 #current-status
@@ -465,10 +465,10 @@ print(f'Model used: {result.model_used}')
 #### **Context Switching:**
 ```bash
 # Switch to coder role
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py coder "implementation"
+@run_terminal_cmd ./scripts/memory_up.sh -r coder "implementation"
 
 # Switch to researcher role
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py researcher "analysis"
+@run_terminal_cmd ./scripts/memory_up.sh -r researcher "analysis"
 ```
 
 ### **Tool Orchestration Patterns**
@@ -541,10 +541,10 @@ print(f'Model used: {result.model_used}')
 #### **Role-Specific Loading:**
 ```bash
 # Planner context
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py planner "strategic planning"
+@run_terminal_cmd ./scripts/memory_up.sh -r planner "strategic planning"
 
 # Coder context
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py coder "implementation"
+@run_terminal_cmd ./scripts/memory_up.sh -r coder "implementation"
 
 # Researcher context
 @run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py researcher "analysis"
@@ -651,13 +651,13 @@ Pattern: Monitor MCP server performance → Optimize configuration
 ```bash
 # Always start with context loading (250-750 lines optimal)
 @read_file 100_memory/100_cursor-memory-context.md
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py planner "context"
+@run_terminal_cmd ./scripts/memory_up.sh -r planner "context"
 ```
 
 #### **2. Use Role-Specific Context:**
 ```bash
 # Load context appropriate for the task
-@run_terminal_cmd python3 scripts/cursor_memory_rehydrate.py coder "implementation"
+@run_terminal_cmd ./scripts/memory_up.sh -r coder "implementation"
 ```
 
 #### **3. Provide Specific Information:**
@@ -858,7 +858,7 @@ Me: Analysis, insights, problem-solving, strategic thinking
 
 ### **Script References**
 
-- `scripts/cursor_memory_rehydrate.py` - Memory rehydration
+- `scripts/memory_up.sh` - Unified memory rehydration
 - `scripts/single_doorway.py` - Single doorway workflow
 - `scripts/pr_signoff_v2.py` - PR sign-off system
 - `scripts/session_registry.py` - Session registry management

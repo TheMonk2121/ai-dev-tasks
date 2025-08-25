@@ -34,7 +34,7 @@ to current development work |
 **When functioning as a Coder, ALWAYS start with:**
 
 1. **Virtual Environment Check**: `python3 scripts/venv_manager.py --check` (ensures dependencies are available)
-2. **Memory Rehydration**: `python3 scripts/cursor_memory_rehydrate.py coder "specific task description"`
+2. **Memory Rehydration**: `./scripts/memory_up.sh -r coder "specific task description"`
 3. **Example-First Search**: Search existing codebase for similar patterns before writing new code
 4. **Code Reuse Check**: Aim for 70% existing code reuse, 30% new code
 5. **Test-First Development**: Write unit tests before implementation (TDD)
@@ -907,7 +907,7 @@ def critique_result_with_context(result: Dict[str, Any], context: Dict[str, Any]
 #### **1. Memory Rehydration Pattern**
 ```bash
 # Start every coding session with context rehydration
-python3 scripts/cursor_memory_rehydrate.py coder "implement authentication function with proper error handling"
+./scripts/memory_up.sh -r coder "implement authentication function with proper error handling"
 ```
 
 #### **2. Example-First Implementation Pattern**
@@ -3143,7 +3143,7 @@ This document integrates with your implemented AI development ecosystem by:
 
 ---
 
-- **Last Updated**: 2024-12-19
+- **Last Updated**: 2025-08-25
 - **Next Review**: Monthly
 - **Development Standards Level**: Production Ready with Conflict Prevention
 - **Optimized for**: Solo Development Workflow with Systematic Conflict Prevention

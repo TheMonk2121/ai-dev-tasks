@@ -500,7 +500,7 @@ if cached_result:
 
 ### CODER ROLE QUICK REFERENCE
 
-- **Memory Rehydration**: `python3 scripts/cursor_memory_rehydrate.py coder "task description"`
+- **Memory Rehydration**: `./scripts/memory_up.sh -r coder "task description"`
 - **Test Execution**: `python -m pytest tests/ -v`
 - **Code Quality**: `ruff check .` and `pyright`
 - **Documentation**: Update relevant 400_guides files

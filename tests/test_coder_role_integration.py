@@ -27,7 +27,7 @@ class TestCoderRoleIntegration:
     @pytest.fixture
     def memory_rehydrator_path(self, project_root: Path) -> Path:
         """Get the memory rehydrator script path."""
-        return project_root / "scripts" / "cursor_memory_rehydrate.py"
+        return project_root / "scripts" / "memory_up.sh"
 
     @pytest.fixture
     def dspy_memory_rehydrator_path(self, project_root: Path) -> Path:

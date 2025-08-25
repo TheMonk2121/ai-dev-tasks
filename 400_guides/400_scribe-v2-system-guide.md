@@ -420,7 +420,7 @@ Scribe summaries are automatically integrated into the memory rehydration system
 
 ```bash
 # Summaries accessible via implementer role
-python scripts/cursor_memory_rehydrate.py implementer "scribe session insights"
+./scripts/memory_up.sh -r implementer "scribe session insights"
 
 # All summaries include comprehensive DSPy tags:
 # - CONTEXT_REFERENCE: Cross-reference linking

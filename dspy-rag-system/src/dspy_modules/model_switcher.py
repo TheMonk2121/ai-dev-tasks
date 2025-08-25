@@ -206,7 +206,7 @@ def get_context_for_role(role: str, task: str) -> str:
             start_time = time.time()
 
             # Run memory rehydrator via subprocess with optimizations
-            cmd = [sys.executable, "scripts/cursor_memory_rehydrate.py", role, task, "--stability", "0.4"]
+            cmd = [sys.executable, "scripts/memory_up.sh", "-r", role, task]
 
             # Change to project root directory
             current_dir = os.getcwd()

@@ -247,7 +247,7 @@ Items requiring external credentials, business decisions, or deployment should b
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:6, lessons:4, deps:["B-074"]}-->
 <!--score_total: 6.0-->
 <!-- completion_date: 2025-08-16 -->
-<!-- implementation_notes: Successfully implemented few-shot cognitive scaffolding integration. Created scripts/few_shot_cognitive_scaffolding.py with example extraction, role-based filtering, and memory rehydration integration. Extracted 356 examples from documentation, implemented pattern recognition, and integrated with cursor_memory_rehydrate.py. System now provides context-aware few-shot examples for AI agents, improving response quality and consistency. -->
+<!-- implementation_notes: Successfully implemented few-shot cognitive scaffolding integration. Created scripts/few_shot_cognitive_scaffolding.py with example extraction, role-based filtering, and memory rehydration integration. Extracted 356 examples from documentation, implemented pattern recognition, and integrated with memory_up.sh. System now provides context-aware few-shot examples for AI agents, improving response quality and consistency. -->
 | B-1002 | Create Comprehensive Root README for External Discovery | 🔧 | 2 | todo | Create comprehensive 500-line root README.md for GitHub visibility and zero-context onboarding | Documentation + External Visibility + Onboarding | None |
 
 | B-190 | Bracketed Placeholder Enforcement System | 🛡️ | 4 | ✅ done | Add pre-commit hook, detection script, and auto-fix tools to prevent bracketed placeholders in markdown that break rendering | Docs Quality | None |
@@ -374,7 +374,7 @@ Coherence Validation System |
 <!-- reference_cards: ["500_reference-cards.md#cognitive-scaffolding"] -->
 <!-- PRD: 001_create-prd.md#B-075 -->
 <!-- completion_date: 2025-08-16 -->
-<!-- implementation_notes: Successfully implemented few-shot cognitive scaffolding integration. Created scripts/few_shot_cognitive_scaffolding.py with example extraction, role-based filtering, and memory rehydration integration. Extracted 356 examples from documentation, implemented pattern recognition, and integrated with cursor_memory_rehydrate.py. System now provides context-aware few-shot examples for AI agents, improving response quality and consistency. -->
+<!-- implementation_notes: Successfully implemented few-shot cognitive scaffolding integration. Created scripts/few_shot_cognitive_scaffolding.py with example extraction, role-based filtering, and memory rehydration integration. Extracted 356 examples from documentation, implemented pattern recognition, and integrated with memory_up.sh. System now provides context-aware few-shot examples for AI agents, improving response quality and consistency. -->
 
 | B‑084 | Research-Based Schema Design for Extraction | 📈 | 6 | ✅ done | Design extraction schemas based on research findings | Schema design + research integration | Research framework |
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:6, lessons:4, deps:[]}-->
@@ -798,8 +798,8 @@ maps | Python threading + cached scans | scripts/doc_coherence_validator.py |
 <!-- est_hours: 4 -->
 <!-- acceptance: 2x speedup measured on only-changed runs on a representative commit -->
 
-| B‑094 | MCP Memory Rehydrator Server | 🔥 | 3 | todo | Create minimal MCP server to automate database-based memory rehydration in Cursor | MCP Server + HTTP transport + Cursor integration | scripts/cursor_memory_rehydrate.py |
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:3, lessons:4, deps:["scripts/cursor_memory_rehydrate.py"]}-->
+| B‑094 | MCP Memory Rehydrator Server | 🔥 | 3 | todo | Create minimal MCP server to automate database-based memory rehydration in Cursor | MCP Server + HTTP transport + Cursor integration | scripts/memory_up.sh |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:3, lessons:4, deps:["scripts/memory_up.sh"]}-->
 <!--score_total: 9.5-->
 <!-- do_next: Create basic MCP server that wraps existing memory rehydrator and exposes it as a tool -->
 <!-- est_hours: 3 -->

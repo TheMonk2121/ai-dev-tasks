@@ -62,7 +62,7 @@
 
 - **3. Development Environment Requirements**
 - **Virtual Environment**: ALWAYS check `scripts/venv_manager.py --check` before DSPy development
-- **Memory Rehydration**: Use `scripts/cursor_memory_rehydrate.py` for context assembly
+- **Memory Rehydration**: Use `scripts/memory_up.sh` for context assembly
 - **Workflow Execution**: Use `scripts/run_workflow.py` for automatic venv management
 
 - **3. Context Loss Prevention**
@@ -295,7 +295,7 @@ documentation patterns
 
 - **Constitution Version**: 1.1
 - **Implementation Date**: 2024-08-07
-- **Last Updated**: 2024-12-19
+- **Last Updated**: 2025-08-25
 - **Research Basis**: 500_research-analysis-summary.md
 - **Integration Status**: Active
 - **Current Systems**: DSPy RAG System, Virtual Environment Manager, Scribe Context Capture
