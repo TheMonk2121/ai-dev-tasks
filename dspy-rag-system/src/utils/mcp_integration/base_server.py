@@ -6,6 +6,7 @@ Provides the foundational classes and utilities for MCP server implementations.
 
 import asyncio
 import logging
+import re
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
@@ -242,7 +243,6 @@ class MCPProtocolUtils:
     @staticmethod
     def sanitize_filename(filename: str) -> str:
         """Sanitize filename for safe file operations."""
-        import re
 
         # Remove or replace unsafe characters
         sanitized = re.sub(r'[<>:"/\\|?*]', "_", filename)
@@ -254,20 +254,34 @@ class MCPProtocolUtils:
     @staticmethod
     def detect_encoding(content: bytes) -> str:
         """Detect encoding of content."""
+        # Try common encodings first
+        common_encodings = ["utf-8", "utf-8-sig", "latin-1", "cp1252", "iso-8859-1"]
+
+        for encoding in common_encodings:
+            try:
+                content.decode(encoding)
+                return encoding
+            except UnicodeDecodeError:
+                continue
+
+        # If chardet is available, use it as a fallback
         try:
-            import chardet
+            import chardet  # type: ignore[import-untyped]
 
             result = chardet.detect(content)
             return result["encoding"] or "utf-8"
         except ImportError:
             # Fallback to utf-8 if chardet is not available
             return "utf-8"
+        except Exception:
+            # Handle any other chardet errors gracefully
+            return "utf-8"
 
     @staticmethod
     def extract_text_from_html(html_content: str) -> str:
         """Extract text content from HTML."""
         try:
-            from bs4 import BeautifulSoup
+            from bs4 import BeautifulSoup  # type: ignore[import-untyped]
 
             soup = BeautifulSoup(html_content, "html.parser")
             # Remove script and style elements
@@ -276,7 +290,12 @@ class MCPProtocolUtils:
             return soup.get_text()
         except ImportError:
             # Fallback to simple regex if BeautifulSoup is not available
-            import re
+
+            logger = logging.getLogger(__name__)
+            logger.warning(
+                "BeautifulSoup not available, falling back to regex-based HTML parsing. "
+                "Install beautifulsoup4 for better HTML processing."
+            )
 
             # Remove script and style tags first
             text = re.sub(r"<script[^>]*>.*?</script>", "", html_content, flags=re.DOTALL | re.IGNORECASE)
@@ -286,6 +305,12 @@ class MCPProtocolUtils:
             # Remove extra whitespace
             text = re.sub(r"\s+", " ", text).strip()
             return text
+        except Exception as e:
+            # Handle any other errors gracefully
+
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error extracting text from HTML: {e}")
+            return html_content  # Return original content if all else fails
 
     @staticmethod
     def calculate_word_count(text: str) -> int:
