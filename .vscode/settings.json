@@ -377,7 +377,9 @@
         "goroutines",
         "nspname",
         "tgname",
-        "tgrelid"
+        "tgrelid",
+        "reprioritization",
+        "Reprioritization"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [
