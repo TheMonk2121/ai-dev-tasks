@@ -6,7 +6,7 @@
     {"path": "100_memory/100_cursor-memory-context.md", "role": "entry"},
     {"path": "000_core/000_backlog.md", "role": "priorities"},
     {"path": "000_core/004_development-roadmap.md", "role": "roadmap"},
-    {"path": "400_guides/400_project-overview.md", "role": "project-overview"},
+    {"path": "400_guides/400_getting-started.md", "role": "getting-started"},
     {"path": "400_guides/400_system-overview.md", "role": "architecture"},
     {"path": "400_guides/400_context-priority-guide.md", "role": "navigation"},
     {"path": "400_guides/400_ai-constitution.md", "role": "ai-safety"},
@@ -15,13 +15,11 @@
     {"path": "100_memory/104_dspy-development-context.md", "role": "dspy-context"},
     {"path": "dspy-rag-system/tests/README-dev.md", "role": "test-development"},
     {"path": "200_setup/202_setup-requirements.md", "role": "setup"},
-    {"path": "400_guides/400_comprehensive-coding-best-practices.md", "role": "coding-standards"},
-    {"path": "400_guides/400_deployment-environment-guide.md", "role": "deployment"},
-    {"path": "400_guides/400_integration-patterns-guide.md", "role": "integration"},
+    {"path": "400_guides/400_development-workflow.md", "role": "development-workflow"},
+    {"path": "400_guides/400_deployment-operations.md", "role": "deployment-operations"},
+    {"path": "400_guides/400_integration-security.md", "role": "integration-security"},
     {"path": "400_guides/400_migration-upgrade-guide.md", "role": "migration"},
     {"path": "400_guides/400_performance-optimization-guide.md", "role": "performance"},
-    {"path": "400_guides/400_testing-strategy-guide.md", "role": "testing"},
-    {"path": "400_guides/400_security-best-practices-guide.md", "role": "security"},
     {"path": "400_guides/400_few-shot-context-examples.md", "role": "few-shot"},
     {"path": "400_guides/400_lean-hybrid-memory-system.md", "role": "memory-system"},
     {"path": "scripts/task_generation_automation.py", "role": "automation"},
@@ -393,7 +391,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 ### Role → Files (at a glance)
 
-- Planner: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`,
+- Planner: `400_guides/400_getting-started.md`, `400_guides/400_system-overview.md`,
 `400_guides/400_context-priority-guide.md`
 
 - Implementer: `100_memory/104_dspy-development-context.md`, `dspy-rag-system/tests/README-dev.md`, relevant 400-series topic guides (testing, security,
@@ -484,7 +482,7 @@ AI Development Ecosystem
 
 ## 🔄 Development Workflow
 
-**For complete workflow details, see `400_guides/400_project-overview.md`**
+**For complete workflow details, see `400_guides/400_getting-started.md`**
 
 **Quick Workflow Overview:**
 
@@ -502,11 +500,11 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 4. **AI Execution** → Use `000_core/003_process-task-list.md` (the execution engine)
 5. **State Management** → `.ai_state.json` for context persistence
 
-<!-- WORKFLOW_REFERENCE: 400_guides/400_project-overview.md -->
+<!-- WORKFLOW_REFERENCE: 400_guides/400_getting-started.md -->
 
 ### **File Organization**
 
-- **Essential**: `400_guides/400_project-overview.md`, `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
+- **Essential**: `400_guides/400_getting-started.md`, `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
 
 - **Implementation**: `100_memory/104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
 
@@ -551,7 +549,7 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 
 **Essential Files Quick Reference:**
 
-- **Critical**: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_project-overview.md`, `400_guides/400_comprehensive-coding-best-practices.md`, `400_guides/400_code-criticality-guide.md`, `400_guides/400_ai-constitution.md`, `400_guides/400_file-analysis-guide.md`, `400_guides/400_testing-strategy-guide.md`, `400_guides/400_deployment-environment-guide.md`, `400_guides/400_cursor-context-engineering-guide.md`
+- **Critical**: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_getting-started.md`, `400_guides/400_development-workflow.md`, `400_guides/400_ai-constitution.md`, `400_guides/400_file-analysis-guide.md`, `400_guides/400_testing-strategy-guide.md`, `400_guides/400_deployment-environment-guide.md`, `400_guides/400_cursor-context-engineering-guide.md`
 - **Workflow**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`
 - **Setup**: `200_setup/202_setup-requirements.md`
 - **Architecture**: `100_memory/104_dspy-development-context.md`
@@ -591,8 +589,8 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 
 **Quick Reading Order:**
 
-1. **New Sessions**: `400_guides/400_project-overview.md` → `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_guides/400_system-overview.md`
-2. **Development**: `400_guides/400_project-overview.md` → workflow files → implementation guides
+1. **New Sessions**: `400_guides/400_getting-started.md` → `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_guides/400_system-overview.md`
+2. **Development**: `400_guides/400_getting-started.md` → workflow files → implementation guides
 3. **Research**: `500_research/500_research-index.md` → `500_research/500_dspy-research.md`, `500_research/500_rag-system-research.md`
 4. **File Management**: `400_guides/400_file-analysis-guide.md` (MANDATORY) → `200_setup/200_naming-conventions.md`
 
