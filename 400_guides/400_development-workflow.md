@@ -1,3 +1,21 @@
+# 400_development-workflow
+## Auto Memory Rehydration (B-093)
+
+Enable automatic memory rehydration when a Scribe session starts. This is feature-flagged and debounced per backlog ID.
+
+- Environment:
+  - `AUTO_REHYDRATE=1` to enable (default is disabled)
+  - `REHYDRATE_MINUTES=10` debounce window in minutes
+- Entry points:
+  - Programmatic: `scripts.rehydration_integration.rehydrate_with_debounce(backlog_id, role, query)`
+  - CLI: `python scripts/memory_rehydrate.py --role planner --query "current project status and core documentation"`
+- Behavior:
+  - Triggered on session registration in `scripts/session_registry.py`
+  - Non-fatal on failure; emits metrics and logs
+- Metrics:
+  - `rehydrate_attempts_total`
+  - `rehydrate_duration_seconds_{sum,count}`
+
 <!-- ANCHOR_KEY: development-workflow -->
 <!-- ANCHOR_PRIORITY: 25 -->
 <!-- ROLE_PINS: ["coder", "implementer", "researcher"] -->

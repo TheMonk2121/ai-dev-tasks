@@ -26,6 +26,7 @@ class SessionContext:
     description: Optional[str] = None
     related_sessions: Optional[List[str]] = None
 
+
 @dataclass
 class SessionInfo:
     """Represents a Scribe session with full metadata."""
@@ -38,6 +39,7 @@ class SessionInfo:
     context: SessionContext
     last_activity: Optional[str] = None
     idle_timeout: int = 1800  # 30 minutes default
+
 
 class SessionRegistry:
     """Manages Scribe session registry with context tagging."""
@@ -122,6 +124,24 @@ class SessionRegistry:
         self.sessions[backlog_id] = session_info
         self.save_registry()
         print(f"✅ Registered session {backlog_id} (PID: {pid})")
+
+        # Auto rehydrate (feature-flagged, debounced)
+        try:
+            # Lazy-load without requiring 'scripts' as a package
+            import importlib.util
+            from pathlib import Path as _Path
+
+            _mod_path = _Path(__file__).parent / "rehydration_integration.py"
+            spec = importlib.util.spec_from_file_location("rehydration_integration", str(_mod_path))
+            if spec and spec.loader:
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)  # type: ignore[attr-defined]
+                if hasattr(mod, "rehydrate_with_debounce"):
+                    mod.rehydrate_with_debounce(backlog_id=backlog_id)
+            else:
+                print("⚠️ Auto rehydrate skipped: unable to load integration module")
+        except Exception as e:  # noqa: BLE001 - do not fail session registration
+            print(f"⚠️ Auto rehydrate skipped: {e}")
 
     def update_session_status(self, backlog_id: str, status: str) -> None:
         """Update session status."""
@@ -234,6 +254,7 @@ class SessionRegistry:
             if session.last_activity:
                 print(f"   Last Activity: {session.last_activity}")
 
+
 def main():
     """CLI interface for session registry management."""
     parser = argparse.ArgumentParser(description="Scribe Session Registry Manager")
@@ -320,6 +341,7 @@ def main():
                 print(f"Last Activity: {session.last_activity}")
         else:
             print(f"❌ Session {args.backlog_id} not found")
+
 
 if __name__ == "__main__":
     main()

@@ -231,8 +231,9 @@ Items requiring external credentials, business decisions, or deployment should b
 | B-090 | Test Performance Workflow | 🔧 | 3 | todo | Test Performance Workflow | None | None |
 | B-091 | Test 001 Workflow Performance | 🔧 | 3 | todo | Test 001 Workflow Performance | None | None |
 | B-092 | Final Performance Validation Test | 🔧 | 3 | todo | Final Performance Validation Test | None | None |
-| B-093 | Doorway: Scribe + Auto Rehydrate | 🔧 | 3 | in-progress| Doorway: Scribe + Auto Rehydrate | None | None |
+| B-093 | Doorway: Scribe + Auto Rehydrate | 🔧 | 3 | ✅ done | Doorway: Scribe + Auto Rehydrate | None | None |
 <!-- started_at: 2025-08-22T22:07:51.815634 -->
+<!-- completion_date: 2025-08-25 -->
 | B-094 | Doorway: Full E2E automation from backlog to archived artifacts | 🔧 | 3 | todo | Doorway: Full E2E automation from backlog to archived artifacts | None | None |
 | B-095 | Reshape 500_research folder into industry-standard citation resource | 🔧 | 3 | todo | Reshape 500_research folder into industry-standard citation resource | None | None |
 | B-096 | Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | 🔧 | 3 | in-progress| Enhanced Scribe System: Intelligent Content Analysis and Idea Mining | None | None |

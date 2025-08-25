@@ -11,6 +11,7 @@ from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 
+
 # Mock Prometheus client for now - will be replaced with actual prometheus_client
 class MockCounter:
     def __init__(self, name: str, description: str = ""):
@@ -23,6 +24,7 @@ class MockCounter:
 
     def get_value(self) -> float:
         return self._value
+
 
 class MockHistogram:
     def __init__(self, name: str, description: str = ""):
@@ -38,6 +40,7 @@ class MockHistogram:
 
     def get_count(self) -> int:
         return len(self._observations)
+
 
 class MockGauge:
     def __init__(self, name: str, description: str = ""):
@@ -57,6 +60,7 @@ class MockGauge:
     def get_value(self) -> float:
         return self._value
 
+
 # Metrics definitions
 REQUEST_COUNT = MockCounter("request_total", "Total number of requests")
 REQUEST_LATENCY = MockHistogram("request_latency_seconds", "Request latency in seconds")
@@ -64,6 +68,11 @@ MEMORY_USAGE = MockGauge("memory_usage_bytes", "Current memory usage in bytes")
 MODEL_LOAD_COUNT = MockCounter("model_load_total", "Total number of model loads")
 ERROR_COUNT = MockCounter("error_total", "Total number of errors")
 TOKEN_COUNT = MockCounter("token_total", "Total number of tokens processed")
+
+# Rehydration metrics (B-093)
+REHYDRATE_ATTEMPTS = MockCounter("rehydrate_attempts_total", "Total auto rehydration attempts")
+REHYDRATE_DURATION = MockHistogram("rehydrate_duration_seconds", "Auto rehydration duration in seconds")
+
 
 def track_request_latency(func):
     """Decorator to track request latency"""
@@ -84,6 +93,7 @@ def track_request_latency(func):
 
     return wrapper
 
+
 def track_memory_usage():
     """Track current memory usage"""
     try:
@@ -94,14 +104,17 @@ def track_memory_usage():
     except ImportError:
         logger.warning("psutil not available, memory tracking disabled")
 
+
 def track_model_load(model_name: str):
     """Track model loading events"""
     MODEL_LOAD_COUNT.inc()
     logger.info(f"Model loaded: {model_name}")
 
+
 def track_tokens(count: int):
     """Track token usage"""
     TOKEN_COUNT.inc(count)
+
 
 def get_metrics() -> Dict[str, Any]:
     """Get current metrics as dictionary"""
@@ -113,7 +126,11 @@ def get_metrics() -> Dict[str, Any]:
         "model_load_total": MODEL_LOAD_COUNT.get_value(),
         "error_total": ERROR_COUNT.get_value(),
         "token_total": TOKEN_COUNT.get_value(),
+        "rehydrate_attempts_total": REHYDRATE_ATTEMPTS.get_value(),
+        "rehydrate_duration_seconds_sum": REHYDRATE_DURATION.get_sum(),
+        "rehydrate_duration_seconds_count": REHYDRATE_DURATION.get_count(),
     }
+
 
 def format_prometheus_metrics() -> str:
     """Format metrics in Prometheus text format"""
@@ -126,6 +143,7 @@ def format_prometheus_metrics() -> str:
         lines.append(f"{name} {value}")
 
     return "\n".join(lines)
+
 
 class MetricsExporter:
     """Metrics exporter for the DSPy RAG system"""
@@ -151,8 +169,10 @@ class MetricsExporter:
         """Get metrics in Prometheus format"""
         return format_prometheus_metrics()
 
+
 # Global metrics exporter instance
 metrics_exporter = MetricsExporter()
+
 
 def init_metrics(port: int = 9100, enabled: bool = True):
     """Initialize metrics system"""
