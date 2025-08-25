@@ -37,7 +37,7 @@ python3 scripts/venv_manager.py --check
 ./scripts/memory_up.sh -q "your specific task description"
 
 # 3. Start development workflow
-python3 scripts/run_workflow.py generate "feature description"
+python3 scripts/single_doorway.py generate "feature description"
 ```
 
 ### **For New Users**
@@ -243,10 +243,10 @@ cat 000_core/000_backlog.md | head -50
 
 ```bash
 # Start with a simple task
-python3 scripts/run_workflow.py generate "simple feature description"
+python3 scripts/single_doorway.py generate "simple feature description"
 
 # Or continue existing work
-python3 scripts/run_workflow.py continue B-XXX
+python3 scripts/single_doorway.py continue B-XXX
 ```
 
 ## 📚 **Learning Path**

@@ -370,18 +370,18 @@ def validate_input(data: dict, schema: dict) -> tuple[bool, str]:
     for field, rules in schema.items():
         if rules.get("required", False) and field not in data:
             return False, f"Required field '{field}' is missing"
-        
+
         if field in data:
             value = data[field]
             if rules.get("type") == "string" and not isinstance(value, str):
                 return False, f"Field '{field}' must be a string"
-            
+
             if "max_length" in rules and len(value) > rules["max_length"]:
                 return False, f"Field '{field}' exceeds maximum length"
-            
+
             if "pattern" in rules and not re.match(rules["pattern"], value):
                 return False, f"Field '{field}' does not match required pattern"
-    
+
     return True, "Validation passed"
 ```
 
@@ -391,7 +391,7 @@ def validate_input(data: dict, schema: dict) -> tuple[bool, str]:
 def safe_database_query(user_id: str, query_type: str):
     # Use parameterized queries
     query = """
-        SELECT * FROM users 
+        SELECT * FROM users
         WHERE user_id = %s AND query_type = %s
     """
     cursor.execute(query, (user_id, query_type))
@@ -435,38 +435,38 @@ def encrypt_data(data: str, key: bytes) -> bytes:
     from cryptography.hazmat.primitives import hashes
     from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
     import os
-    
+
     # Generate IV
     iv = os.urandom(ENCRYPTION_CONFIG["iv_length"])
-    
+
     # Create cipher
     cipher = Cipher(
         algorithms.AES(key),
         modes.GCM(iv),
     )
     encryptor = cipher.encryptor()
-    
+
     # Encrypt data
     ciphertext = encryptor.update(data.encode()) + encryptor.finalize()
-    
+
     # Return IV + ciphertext + tag
     return iv + ciphertext + encryptor.tag
 
 def decrypt_data(encrypted_data: bytes, key: bytes) -> str:
     from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-    
+
     # Extract IV, ciphertext, and tag
     iv = encrypted_data[:ENCRYPTION_CONFIG["iv_length"]]
     tag = encrypted_data[-ENCRYPTION_CONFIG["tag_length"]:]
     ciphertext = encrypted_data[ENCRYPTION_CONFIG["iv_length"]:-ENCRYPTION_CONFIG["tag_length"]]
-    
+
     # Create cipher
     cipher = Cipher(
         algorithms.AES(key),
         modes.GCM(iv, tag),
     )
     decryptor = cipher.decryptor()
-    
+
     # Decrypt data
     plaintext = decryptor.update(ciphertext) + decryptor.finalize()
     return plaintext.decode()
@@ -492,20 +492,20 @@ SECURE_CONFIG = {
 def load_secure_config():
     import os
     from cryptography.fernet import Fernet
-    
+
     # Load encryption key
     key = os.getenv("ENCRYPTION_KEY")
     if not key:
         raise ValueError("ENCRYPTION_KEY environment variable not set")
-    
+
     fernet = Fernet(key)
-    
+
     # Load encrypted configuration
     encrypted_config = os.getenv("ENCRYPTED_CONFIG")
     if encrypted_config:
         decrypted_config = fernet.decrypt(encrypted_config.encode())
         return json.loads(decrypted_config)
-    
+
     return {}
 ```
 
@@ -548,25 +548,25 @@ RATE_LIMIT_CONFIG = {
 def rate_limit_middleware(request, user_id: str, endpoint: str):
     import time
     from collections import defaultdict
-    
+
     # Get rate limit config for endpoint
     config = RATE_LIMIT_CONFIG.get(endpoint, RATE_LIMIT_CONFIG["default"])
-    
+
     # Check rate limits
     current_time = time.time()
     user_requests = get_user_requests(user_id, endpoint)
-    
+
     # Filter requests within time windows
     minute_requests = [req for req in user_requests if current_time - req < 60]
     hour_requests = [req for req in user_requests if current_time - req < 3600]
-    
+
     # Check limits
     if len(minute_requests) >= config["requests_per_minute"]:
         return False, "Rate limit exceeded: too many requests per minute"
-    
+
     if len(hour_requests) >= config["requests_per_hour"]:
         return False, "Rate limit exceeded: too many requests per hour"
-    
+
     # Add current request
     add_user_request(user_id, endpoint, current_time)
     return True, "Rate limit check passed"
@@ -590,18 +590,18 @@ def ddos_protection_middleware(request, client_ip: str):
     # Check whitelist
     if client_ip in DDOS_PROTECTION["ip_whitelist"]:
         return True, "IP whitelisted"
-    
+
     # Check blacklist
     if client_ip in DDOS_PROTECTION["ip_blacklist"]:
         return False, "IP blacklisted"
-    
+
     # Check request rate
     request_count = get_request_count(client_ip)
     if request_count > DDOS_PROTECTION["request_threshold"]["requests_per_second"]:
         # Add to blacklist temporarily
         add_to_blacklist(client_ip, DDOS_PROTECTION["block_duration"])
         return False, "DDoS protection: too many requests"
-    
+
     return True, "DDoS protection check passed"
 ```
 

@@ -73,7 +73,7 @@ Read these files in order (1–2 min total):
 python3 scripts/venv_manager.py --check
 
 # Run workflows with automatic venv management
-python3 scripts/run_workflow.py generate "feature"
+python3 scripts/single_doorway.py generate "feature"
 ```
 
 **Required Dependencies**:

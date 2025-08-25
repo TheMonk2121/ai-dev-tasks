@@ -26,9 +26,9 @@
 |------|-------|-------------|
 | **Starting a new project** | `400_getting-started.md` | Entry point and project overview |
 | **Implementing a feature** | `400_development-workflow.md` | Complete development workflow |
-| **Debugging an issue** | `400_testing-debugging.md` | Testing, debugging, and analysis |
+| **Debugging an issue** | `400_development-workflow.md` | Testing, debugging, and analysis |
 | **Deploying changes** | `400_deployment-operations.md` | Deployment, monitoring, maintenance |
-| **Planning architecture** | `400_planning-strategy.md` | Architecture, planning, strategy |
+| **Planning architecture** | `400_getting-started.md` | Architecture, planning, strategy |
 | **Integrating components** | `400_integration-security.md` | Integration patterns and security |
 | **Optimizing performance** | `400_performance-optimization.md` | Performance tuning and optimization |
 | **Quick reference** | `400_quick-reference.md` | Commands, shortcuts, tips |
@@ -39,7 +39,7 @@
 |-------|-------|---------|
 | **Discovery** | `400_getting-started.md` | Understand the project and get oriented |
 | **Development** | `400_development-workflow.md` | Implement features with best practices |
-| **Validation** | `400_testing-debugging.md` | Test, debug, and validate your work |
+| **Validation** | `400_development-workflow.md` | Test, debug, and validate your work |
 | **Deployment** | `400_deployment-operations.md` | Deploy and monitor in production |
 | **Maintenance** | `400_performance-optimization.md` | Optimize and maintain performance |
 
@@ -112,7 +112,7 @@
 1. `400_getting-started.md` - Start here
 2. `400_guide-index.md` - Understand available guides
 3. `400_development-workflow.md` - Learn development process
-4. `400_testing-debugging.md` - Understand testing and debugging
+4. `400_development-workflow.md` - Understand testing and debugging
 5. `400_deployment-operations.md` - Learn deployment process
 
 ### **Cross-References**
@@ -121,7 +121,7 @@ Each guide includes cross-references to related guides:
 ## 📚 Related Guides
 - **Getting Started**: `400_getting-started.md`
 - **Development Workflow**: `400_development-workflow.md`
-- **Testing & Debugging**: `400_testing-debugging.md`
+- **Testing & Debugging**: `400_development-workflow.md`
 ```
 
 ## 🎯 **Task-Specific Navigation**
@@ -135,13 +135,13 @@ Each guide includes cross-references to related guides:
 → Read `400_development-workflow.md`
 
 #### **Debug a problem**
-→ Read `400_testing-debugging.md`
+→ Read `400_development-workflow.md`
 
 #### **Deploy my changes**
 → Read `400_deployment-operations.md`
 
 #### **Plan system architecture**
-→ Read `400_planning-strategy.md`
+→ Read `400_getting-started.md`
 
 #### **Integrate with external systems**
 → Read `400_integration-security.md`
@@ -162,7 +162,7 @@ Each guide includes cross-references to related guides:
 
 # Get context for debugging
 ./scripts/memory_up.sh -q "debug database connection issue"
-# → Should direct you to 400_testing-debugging.md
+# → Should direct you to 400_development-workflow.md
 ```
 
 ### **For Human Developers**

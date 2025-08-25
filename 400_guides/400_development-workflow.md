@@ -39,7 +39,7 @@ python3 scripts/venv_manager.py --check
 ./scripts/memory_up.sh -q "implement feature description"
 
 # 3. Start development workflow
-python3 scripts/run_workflow.py generate "feature"
+python3 scripts/single_doorway.py generate "feature"
 ```
 
 ### **For Debugging Issues:**
@@ -170,7 +170,7 @@ def process_user(user: UserData) -> Dict[str, str]:
 #### **Development Commands**
 ```bash
 # Start development session
-python3 scripts/run_workflow.py generate "feature description"
+python3 scripts/single_doorway.py generate "feature description"
 
 # Check code quality
 ruff check .
@@ -233,8 +233,7 @@ pytest tests/test_database_integration.py -v
 ./run_tests.sh --tiers 1 --kinds smoke
 
 # Test complete workflow
-python3 scripts/run_workflow.py test "complete feature workflow"
-```
+python3 scripts/single_doorway.py test "complete feature workflow"
 
 #### **Testing Commands**
 ```bash
