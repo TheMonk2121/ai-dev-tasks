@@ -38,3 +38,12 @@ repos:
       #   files: \.md$
       #   pass_filenames: false
       #   description: "Automatically update Last Updated timestamps in documentation files"
+
+      # Temporarily disabled due to hanging issues
+      # - id: pyright-type-check
+      #   name: Pyright Type Check
+      #   entry: pyright
+      #   language: system
+      #   files: \.py$
+      #   pass_filenames: false
+      #   description: "Run Pyright type checking on Python files"
