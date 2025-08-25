@@ -16,11 +16,11 @@ repos:
       # Temporarily disabled due to hanging issues
       # - id: markdown-validation
       #   name: Markdown Validation
-      #   entry: python3 scripts/pre_commit_doc_validation.sh
+      #   entry: bash scripts/simple_doc_validation.sh
       #   language: system
       #   files: \.md$
       #   pass_filenames: false
-      #   description: "Validate markdown files for consistency"
+      #   description: "Validate markdown files for basic structure and broken links"
 
       # Temporarily disabled due to hanging issues
       # - id: conflict-check
