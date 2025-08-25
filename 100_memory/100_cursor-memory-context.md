@@ -58,11 +58,11 @@ CONTEXT_INDEX -->
 
 Read these files in order (1–2 min total):
 
-1. **`400_guides/400_project-overview.md`** – 5-minute overview and workflow ← **START HERE**
-2. **`100_memory/100_cursor-memory-context.md`** – current state and rules
-3. **`000_core/000_backlog.md`** – priorities and dependencies
-4. **`400_guides/400_system-overview.md`** – architecture and components
-5. **`400_guides/400_context-priority-guide.md`** – relationships and reading order
+1. **`400_guides/400_getting-started.md`** – Entry point and project overview ← **START HERE**
+2. **`400_guides/400_guide-index.md`** – Navigation hub for all guides
+3. **`100_memory/100_cursor-memory-context.md`** – current state and rules
+4. **`000_core/000_backlog.md`** – priorities and dependencies
+5. **`400_guides/400_development-workflow.md`** – Complete development workflow
 
 ## 🔧 Development Environment Setup {#dev-env}
 
@@ -626,7 +626,7 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 1. **B‑1012**: LTST Memory System: ChatGPT-like conversation memory (🔥 points)
    - todo
 
-2. **B‑1008**: Enhanced Backlog System: Constitution-Aware Scoring and Real-time Updates (🔥 points)
+2. **B‑1008**: Hybrid JSON Backlog System: Structured Data with Simple Tools (🔥 points)
    - todo
 
 3. **B‑1009**: AsyncIO Scribe Enhancement: Event-Driven Context Capture and Real-time Processing (🔥 points)
