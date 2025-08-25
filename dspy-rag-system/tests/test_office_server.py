@@ -404,6 +404,28 @@ class TestOfficeMCPServer:
         assert "text_extraction" in info["features"]
         assert "metadata_extraction" in info["features"]
         assert "corrupted_file_handling" in info["features"]
+        # Check that dependency availability is included in server info
+        assert "dependencies_available" in info
+        assert isinstance(info["dependencies_available"], dict)
+        assert "python-docx" in info["dependencies_available"]
+        assert "openpyxl" in info["dependencies_available"]
+        assert "python-pptx" in info["dependencies_available"]
+
+    def test_dependency_checking(self, server):
+        """Test that dependency checking works correctly."""
+        # The dependency check should run during initialization
+        # and not raise any exceptions
+        assert hasattr(server, "_check_dependencies")
+
+        # Test that the method exists and can be called
+        server._check_dependencies()
+
+        # Verify that the dependency flags are set
+        from utils.mcp_integration.office_server import DOCX_AVAILABLE, OPENPYXL_AVAILABLE, PPTX_AVAILABLE
+
+        assert isinstance(DOCX_AVAILABLE, bool)
+        assert isinstance(OPENPYXL_AVAILABLE, bool)
+        assert isinstance(PPTX_AVAILABLE, bool)
 
     @pytest.mark.asyncio
     async def test_cleanup(self, server):

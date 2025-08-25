@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+from typing import cast
 from unittest.mock import Mock, patch
 
 import pytest
@@ -279,7 +280,7 @@ class TestStandardizedIngestionPipeline:
         }
 
         with patch.object(pipeline.processor, "forward", return_value=mock_result):
-            result = pipeline("test_document.txt", pipeline_id="test_pipeline")
+            pipeline("test_document.txt", pipeline_id="test_pipeline")
 
         # Pipeline should be in history, not active
         status = pipeline.get_pipeline_status("test_pipeline")
@@ -399,7 +400,7 @@ class TestStandardizedIngestionPipeline:
         }
 
         with patch.object(pipeline.processor, "forward", return_value=mock_result):
-            result = pipeline("test_document.txt")
+            result = cast(PipelineResult, pipeline("test_document.txt"))
 
         assert result.status == PipelineStatus.COMPLETED
         # Progress tracking should still work, but estimated completion won't be updated

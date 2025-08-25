@@ -21,7 +21,7 @@ from utils.mcp_integration.office_server import MCPConfig, OfficeMCPServer
 def create_mock_word_document():
     """Create a mock Word document for testing."""
     try:
-        from docx import Document
+        from docx import Document  # type: ignore
 
         doc = Document()
         doc.add_paragraph("This is a test Word document.")
@@ -59,15 +59,16 @@ def create_mock_excel_document():
 
         wb = Workbook()
         ws = wb.active
-        ws.title = "Test Sheet"
+        if ws is not None:
+            ws.title = "Test Sheet"
 
-        # Add data
-        ws["A1"] = "Name"
-        ws["B1"] = "Age"
-        ws["A2"] = "John Doe"
-        ws["B2"] = 30
-        ws["A3"] = "Jane Smith"
-        ws["B3"] = 25
+            # Add data
+            ws["A1"] = "Name"
+            ws["B1"] = "Age"
+            ws["A2"] = "John Doe"
+            ws["B2"] = 30
+            ws["A3"] = "Jane Smith"
+            ws["B3"] = 25
 
         # Set metadata
         wb.properties.title = "Test Excel Spreadsheet"
@@ -89,7 +90,7 @@ def create_mock_excel_document():
 def create_mock_powerpoint_document():
     """Create a mock PowerPoint document for testing."""
     try:
-        from pptx import Presentation
+        from pptx import Presentation  # type: ignore
 
         prs = Presentation()
 
@@ -98,10 +99,12 @@ def create_mock_powerpoint_document():
         slide = prs.slides.add_slide(slide_layout)
 
         title = slide.shapes.title
-        title.text = "Test Slide"
+        if title is not None and hasattr(title, "text"):
+            setattr(title, "text", "Test Slide")
 
         content = slide.placeholders[1]
-        content.text = "This is a test PowerPoint presentation.\nIt contains sample content for testing."
+        if hasattr(content, "text"):
+            setattr(content, "text", "This is a test PowerPoint presentation.\nIt contains sample content for testing.")
 
         # Set metadata
         prs.core_properties.title = "Test PowerPoint Presentation"

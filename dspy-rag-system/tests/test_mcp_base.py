@@ -35,7 +35,7 @@ class TestMCPConfig:
     def test_invalid_config(self):
         """Test creating invalid MCP configuration."""
         with pytest.raises(ValidationError):
-            MCPConfig()  # Missing required server_name
+            MCPConfig()  # type: ignore[call-arg] # Missing required server_name
 
     def test_custom_config(self):
         """Test creating custom MCP configuration."""

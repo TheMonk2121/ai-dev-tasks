@@ -47,33 +47,36 @@ async def test_pdf_server():
 
     print("\n4. Testing PDF Creation and Processing:")
     try:
-        # Create a simple test PDF
-        import PyPDF2
+        # Create a simple test PDF using PyMuPDF
+        try:
+            import fitz  # PyMuPDF
+        except ImportError:
+            print("   ⚠️  PyMuPDF not available, skipping PDF creation test")
+            return
 
         # Create a simple PDF for testing
         with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp_file:
-            # Create a minimal PDF with some text
-            writer = PyPDF2.PdfWriter()
+            # Create a minimal PDF with some text using PyMuPDF
+            doc = fitz.open()  # type: ignore[attr-defined]
 
             # Create a page with text
-            page = PyPDF2.PageObject.create_blank_page(width=612, height=792)
-            page.merge_page(PyPDF2.PageObject.create_blank_page(width=612, height=792))
+            page = doc.new_page(width=612, height=792)  # type: ignore[attr-defined]
+            page.insert_text((50, 50), "Test PDF Document Content")  # type: ignore[attr-defined]
 
             # Add metadata
-            writer.add_page(page)
-            writer.add_metadata(
-                {
-                    "/Title": "Test PDF Document",
-                    "/Author": "Test Author",
-                    "/Subject": "Test Subject",
-                    "/Creator": "Test Creator",
-                    "/Producer": "Test Producer",
+            doc.set_metadata(
+                {  # type: ignore[attr-defined]
+                    "title": "Test PDF Document",
+                    "author": "Test Author",
+                    "subject": "Test Subject",
+                    "creator": "Test Creator",
+                    "producer": "Test Producer",
                 }
             )
 
             # Write to file
-            with open(temp_file.name, "wb") as output_file:
-                writer.write(output_file)
+            doc.save(temp_file.name)  # type: ignore[attr-defined]
+            doc.close()  # type: ignore[attr-defined]
 
             try:
                 print(f"   ✅ Created test PDF: {temp_file.name}")

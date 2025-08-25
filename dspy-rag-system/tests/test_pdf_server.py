@@ -224,11 +224,21 @@ class TestPDFMCPServer:
             "/ModDate": "20240102",
         }
 
-        with patch("PyPDF2.PdfReader") as mock_pdf_reader:
-            mock_pdf_reader.return_value = mock_reader
-
-            # Mock text extraction for scanned detection
-            mock_reader.pages[0].extract_text.return_value = "This is a test document with enough text content."
+        with patch("fitz.open") as mock_fitz_open:
+            mock_doc = MagicMock()
+            mock_doc.needs_pass = False
+            mock_doc.__len__.return_value = 2
+            mock_doc.metadata = {
+                "title": "Test Document",
+                "author": "Test Author",
+                "subject": "Test Subject",
+                "creator": "Test Creator",
+                "producer": "Test Producer",
+                "creationDate": "20240101",
+                "modDate": "20240102",
+            }
+            mock_doc[0].get_text.return_value = "This is a test document with enough text content."
+            mock_fitz_open.return_value = mock_doc
 
             pdf_content = b"fake pdf content"
             doc_info = await server._extract_document_info(pdf_content)
@@ -249,8 +259,11 @@ class TestPDFMCPServer:
         mock_reader.is_encrypted = True
         mock_reader.pages = [MagicMock()]
 
-        with patch("PyPDF2.PdfReader") as mock_pdf_reader:
-            mock_pdf_reader.return_value = mock_reader
+        with patch("fitz.open") as mock_fitz_open:
+            mock_doc = MagicMock()
+            mock_doc.needs_pass = True
+            mock_doc.__len__.return_value = 1
+            mock_fitz_open.return_value = mock_doc
 
             pdf_content = b"fake pdf content"
             doc_info = await server._extract_document_info(pdf_content)
@@ -267,10 +280,12 @@ class TestPDFMCPServer:
         mock_reader.metadata = {}
 
         # Mock very little text (indicating scanned document)
-        mock_reader.pages[0].extract_text.return_value = "a b c"
-
-        with patch("PyPDF2.PdfReader") as mock_pdf_reader:
-            mock_pdf_reader.return_value = mock_reader
+        with patch("fitz.open") as mock_fitz_open:
+            mock_doc = MagicMock()
+            mock_doc.needs_pass = False
+            mock_doc.__len__.return_value = 1
+            mock_doc[0].get_text.return_value = "a b c"
+            mock_fitz_open.return_value = mock_doc
 
             pdf_content = b"fake pdf content"
             doc_info = await server._extract_document_info(pdf_content)
@@ -285,11 +300,13 @@ class TestPDFMCPServer:
         mock_reader.pages = [MagicMock(), MagicMock()]
 
         # Mock text extraction
-        mock_reader.pages[0].extract_text.return_value = "Page 1 content"
-        mock_reader.pages[1].extract_text.return_value = "Page 2 content"
-
-        with patch("PyPDF2.PdfReader") as mock_pdf_reader:
-            mock_pdf_reader.return_value = mock_reader
+        with patch("fitz.open") as mock_fitz_open:
+            mock_doc = MagicMock()
+            mock_doc.needs_pass = False
+            mock_doc.__len__.return_value = 2
+            mock_doc[0].get_text.return_value = "Page 1 content"
+            mock_doc[1].get_text.return_value = "Page 2 content"
+            mock_fitz_open.return_value = mock_doc
 
             pdf_content = b"fake pdf content"
             text_content = await server._extract_text_content(pdf_content)
@@ -305,8 +322,10 @@ class TestPDFMCPServer:
         mock_reader = MagicMock()
         mock_reader.is_encrypted = True
 
-        with patch("PyPDF2.PdfReader") as mock_pdf_reader:
-            mock_pdf_reader.return_value = mock_reader
+        with patch("fitz.open") as mock_fitz_open:
+            mock_doc = MagicMock()
+            mock_doc.needs_pass = True
+            mock_fitz_open.return_value = mock_doc
 
             pdf_content = b"fake pdf content"
 
@@ -424,10 +443,13 @@ class TestPDFMCPServer:
         mock_reader.pages = [MagicMock()]
         mock_reader.pages[0].extract_text.return_value = "Page 1 content"
 
-        with patch.object(server, "_read_pdf_content") as mock_read, patch("PyPDF2.PdfReader") as mock_pdf_reader:
+        with patch.object(server, "_read_pdf_content") as mock_read, patch("fitz.open") as mock_fitz_open:
 
             mock_read.return_value = b"fake pdf content"
-            mock_pdf_reader.return_value = mock_reader
+            mock_doc = MagicMock()
+            mock_doc.__len__.return_value = 1
+            mock_doc[0].get_text.return_value = "Page 1 content"
+            mock_fitz_open.return_value = mock_doc
 
             page_info = await server.get_page_info("/path/to/test.pdf", 1)
 
@@ -442,10 +464,12 @@ class TestPDFMCPServer:
         mock_reader = MagicMock()
         mock_reader.pages = [MagicMock()]  # Only 1 page
 
-        with patch.object(server, "_read_pdf_content") as mock_read, patch("PyPDF2.PdfReader") as mock_pdf_reader:
+        with patch.object(server, "_read_pdf_content") as mock_read, patch("fitz.open") as mock_fitz_open:
 
             mock_read.return_value = b"fake pdf content"
-            mock_pdf_reader.return_value = mock_reader
+            mock_doc = MagicMock()
+            mock_doc.__len__.return_value = 1  # Only 1 page
+            mock_fitz_open.return_value = mock_doc
 
             page_info = await server.get_page_info("/path/to/test.pdf", 2)
 
@@ -489,8 +513,8 @@ class TestPDFMCPServer:
 
     @pytest.mark.asyncio
     async def test_missing_dependency(self, server):
-        """Test handling missing PyPDF2 dependency."""
-        with patch("PyPDF2.PdfReader", side_effect=ImportError("No module named 'PyPDF2'")):
+        """Test handling missing PyMuPDF dependency."""
+        with patch("fitz.open", side_effect=ImportError("No module named 'fitz'")):
             with pytest.raises(MCPError) as exc_info:
                 await server._extract_document_info(b"fake content")
 
