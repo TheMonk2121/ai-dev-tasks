@@ -29,8 +29,8 @@ or are integrating components | Jump to `#architecture` and `#core-components`; 
 
 - **read when**: You need the technical mental model or are integrating components.
 
-- **do next**: Jump to `#architecture` and `#core-components`; then review `400_guides/400_testing-strategy-guide.md`
-and `400_guides/400_deployment-environment-guide.md`.
+- **do next**: Jump to `#architecture` and `#core-components`; then review `400_guides/400_development-workflow.md`
+and `400_guides/400_deployment-operations.md`.
 
 - **anchors**: `architecture`, `context-management`, `core-components`, `workflow`, `security`, `performance`,
 `integration`, `deployment`, `testing`
@@ -130,9 +130,9 @@ See `scripts/README_venv_manager.md` for complete documentation.
   - id (uuid), type (project|file|user|agent), source, content{text,metadata}, relationships{parent,children,related}, timestamps
 
 - Where to implement
-  - API patterns: see `400_guides/400_integration-patterns-guide.md` (Context API)
+  - API patterns: see `400_guides/400_integration-security.md` (Context API)
   - Caching/TTL/invalidation: see `400_guides/400_performance-optimization-guide.md`
-  - Test fixtures and isolation: see `400_guides/400_testing-strategy-guide.md`
+  - Test fixtures and isolation: see `400_guides/400_development-workflow.md`
 
 - --
 

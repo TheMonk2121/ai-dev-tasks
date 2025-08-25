@@ -109,7 +109,7 @@ and normalize spacing across long-form guides.
 <!-- do_next: Implement comprehensive code review testing suite with performance reporting -->
 <!-- est_hours: 8 -->
 <!-- acceptance: 001_create-prd workflow optimized and performance metrics integrated -->
-<!-- lessons_applied: ["400_guides/400_comprehensive-coding-best-practices.md#performance-optimization", "400_guides/400_code-criticality-guide.md#quality-standards"] -->
+<!-- lessons_applied: ["400_guides/400_development-workflow.md#performance-optimization", "400_guides/400_development-workflow.md#quality-standards"] -->
 <!-- reference_cards: ["scripts/performance_optimization.py", "dspy-rag-system/src/monitoring/metrics.py"] -->
 <!-- tech_footprint: Performance Testing + Metrics Collection + Workflow Optimization -->
 <!-- problem: Need to test and optimize the 001_create-prd workflow with performance reporting to ensure it's as efficient as possible -->
@@ -125,7 +125,7 @@ and normalize spacing across long-form guides.
 <!-- do_next: Implement comprehensive code review testing suite with performance reporting -->
 <!-- est_hours: 8 -->
 <!-- acceptance: 001_create-prd workflow optimized and performance metrics integrated -->
-<!-- lessons_applied: ["400_guides/400_comprehensive-coding-best-practices.md#performance-optimization", "400_guides/400_code-criticality-guide.md#quality-standards"] -->
+<!-- lessons_applied: ["400_guides/400_development-workflow.md#performance-optimization", "400_guides/400_development-workflow.md#quality-standards"] -->
 <!-- reference_cards: ["scripts/performance_optimization.py", "dspy-rag-system/src/monitoring/metrics.py"] -->
 <!-- tech_footprint: Performance Testing + Metrics Collection + Workflow Optimization -->
 <!-- problem: Need to test and optimize the 001_create-prd workflow with performance reporting to ensure it's as efficient as possible -->
@@ -202,7 +202,7 @@ engine.
 Items requiring external credentials, business decisions, or deployment should be marked with `<!-- human_required: true
 - ->`.
 
-<!-- CORE_SYSTEM: 400_guides/400_project-overview.md, 400_guides/400_system-overview.md,
+<!-- CORE_SYSTEM: 400_guides/400_getting-started.md, 400_guides/400_system-overview.md,
 100_memory/100_cursor-memory-context.md -->
 <!-- METADATA_SYSTEM: 400_guides/400_metadata-collection-guide.md -->
 <!-- ROADMAP_REFERENCE: 400_development-roadmap.md -->
@@ -488,7 +488,7 @@ Coherence Validation System |
 <!--score_total: 7.5-->
 <!-- completion_date: 2025-01-23 -->
 <!-- implementation_notes: Successfully completed B-1007 Pydantic AI Style Enhancements Phases 1 & 2. Implemented role-based context models (PlannerContext, CoderContext, ResearcherContext, ImplementerContext) with Pydantic validation, structured error taxonomy with constitution mapping, constitution-aware validation with existing Pydantic infrastructure, and comprehensive integration testing. Performance requirements met: context validation overhead 0.06% (target <3%), validation time <10ms. All integration tests pass with 100% success rate. System includes constitution-aware Pydantic models, role output validation, error taxonomy, typed debug logs, and constitution-aware validation integrated with existing Pydantic infrastructure. -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#type-safety", "400_guides/400_comprehensive-coding-best-practices.md#validation"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#type-safety", "400_guides/400_development-workflow.md#validation"] -->
 <!-- reference_cards: ["500_reference-cards.md#pydantic", "500_reference-cards.md#dependency-injection"] -->
 <!-- tech_footprint: Pydantic + Constitution Schema + Error Taxonomy + Role Context Models + Type Safety + Dynamic Prompts + Typed Debug Logs + MLflow Integration + Async Validation -->
 <!-- problem: Current DSPy system lacked constitution-aware type safety, role-based context models, structured error taxonomy, typed debug logs, and async Pydantic validation that would significantly improve reliability, debugging, constitution compliance, and I/O performance -->
@@ -500,7 +500,7 @@ Coherence Validation System |
 <!-- do_next: Create JSON schema for backlog items, implement simple CLI tools, add validation hooks, and create Scribe pack system for knowledge mining -->
 <!-- est_hours: 12 -->
 <!-- acceptance: Backlog system uses JSON as source of truth, includes validation hooks, simple CLI tools, automated PRD closure with Scribe packs, and maintains human readability -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#backlog-enhancement", "400_guides/400_comprehensive-coding-best-practices.md#data-structures"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#backlog-enhancement", "400_guides/400_development-workflow.md#data-structures"] -->
 <!-- reference_cards: ["500_reference-cards.md#backlog-management", "500_reference-cards.md#json-schema"] -->
 <!-- tech_footprint: Backlog Enhancement + JSON Schema + Validation + Simple Tools + Scribe Packs + Knowledge Mining + Archive Discipline + Version Control -->
 <!-- problem: Current backlog system uses markdown as source of truth, lacks structured data capabilities, has inconsistent completion tracking, and no systematic knowledge mining from completed items -->
@@ -510,7 +510,7 @@ Coherence Validation System |
 <!-- do_next: Implement constitution-aware scoring formula with dependency bonuses, cross-role dependency detection, real-time n8n integration, automated migration with validation, constitution-aligned scoring integration, and async real-time scoring updates with bounded concurrency for <5% overhead -->
 <!-- est_hours: 17 -->
 <!-- acceptance: Backlog system includes constitution-aware scoring, cross-role dependencies, real-time updates, automated migration with 100% metadata preservation, <5% performance overhead, constitution-aligned scoring integrated with existing backlog infrastructure, and async real-time scoring updates with bounded concurrency for <5% overhead with zero new dependencies -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#backlog-enhancement", "400_guides/400_comprehensive-coding-best-practices.md#type-safety"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#backlog-enhancement", "400_guides/400_development-workflow.md#type-safety"] -->
 <!-- reference_cards: ["500_reference-cards.md#backlog-management", "500_reference-cards.md#dspy-3.0", "500_reference-cards.md#pydantic"] -->
 <!-- tech_footprint: Backlog Enhancement + Constitution Scoring + Cross-Role Dependencies + Real-time Updates + n8n Integration + Migration Automation + Metadata Preservation + Performance Optimization + Async Scoring -->
 <!-- problem: Current backlog system lacks constitution-aware scoring, cross-role dependency detection, real-time updates, automated migration with metadata preservation, specific performance targets, and async real-time scoring updates -->
@@ -522,7 +522,7 @@ Coherence Validation System |
 <!-- do_next: Implement AsyncScribeDaemon with event-driven file monitoring, AsyncScribeContextProvider with parallel data fetching, AsyncSessionRegistry with non-blocking operations, and real-time notification system for 70-80% performance improvement -->
 <!-- est_hours: 12 -->
 <!-- acceptance: Scribe system includes event-driven file monitoring (<1s response), parallel context fetching (50-80% faster), async session registry operations (80% faster), real-time notifications, enhanced multi-session management, and zero new external dependencies -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#performance-optimization", "400_guides/400_comprehensive-coding-best-practices.md#async-patterns"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#performance-optimization", "400_guides/400_development-workflow.md#async-patterns"] -->
 <!-- reference_cards: ["500_reference-cards.md#scribe-system", "500_reference-cards.md#asyncio-integration"] -->
 <!-- tech_footprint: Scribe Enhancement + AsyncIO + Event-Driven Architecture + Parallel Processing + Real-time Notifications + Multi-Session Management + Performance Optimization + Background Processing -->
 <!-- problem: Current Scribe system uses synchronous polling (10-60s intervals), sequential context fetching (2-5s each), blocking session registry operations, and lacks real-time capabilities for multi-session scenarios -->
@@ -534,7 +534,7 @@ Coherence Validation System |
 <!-- do_next: Implement NiceGUI dashboard with AI-powered insights, real-time monitoring, graph visualization, workflow automation, and constitution compliance for next-level development session management -->
 <!-- est_hours: 16 -->
 <!-- acceptance: NiceGUI dashboard includes AI-powered insights, real-time monitoring, graph visualization, workflow automation, constitution compliance, and seamless integration with existing AI development ecosystem tools -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#ui-ux-design", "400_guides/400_comprehensive-coding-best-practices.md#gui-integration"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#ui-ux-design", "400_guides/400_development-workflow.md#gui-integration"] -->
 <!-- reference_cards: ["500_reference-cards.md#nicegui", "500_reference-cards.md#scribe-system"] -->
 <!-- tech_footprint: NiceGUI + AI Integration + Real-time Dashboard + Graph Visualization + Workflow Automation + Constitution Compliance + Performance Monitoring + DSPy Integration + Memory Rehydrator + n8n Workflows -->
 <!-- problem: Current Scribe system lacks modern UI/UX, AI-powered insights, visual analytics, workflow automation, and integration with existing AI development ecosystem tools -->
@@ -546,7 +546,7 @@ Coherence Validation System |
 <!-- do_next: Implement late chunking with full document embedding first, then apply semantic chunking, and integrate HIRAG-style hierarchical thought processes for enhanced reasoning capabilities -->
 <!-- est_hours: 14 -->
 <!-- acceptance: System implements late chunking preserving full document context, HIRAG-style multi-level reasoning, 15%+ improvement in retrieval accuracy, and seamless integration with existing DSPy optimization pipeline -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#rag-optimization", "400_guides/400_comprehensive-coding-best-practices.md#performance-optimization"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#rag-optimization", "400_guides/400_development-workflow.md#performance-optimization"] -->
 <!-- reference_cards: ["500_reference-cards.md#late-chunking", "500_reference-cards.md#hierarchical-reasoning"] -->
 <!-- tech_footprint: Late Chunking + HIRAG + DSPy + AsyncIO + Performance Optimization + Context Preservation + Hierarchical Reasoning + Memory Rehydrator + Entity Expansion -->
 <!-- problem: Current RAG system lacks late chunking for context preservation and HIRAG-style hierarchical reasoning, limiting retrieval accuracy and generation quality compared to state-of-the-art research -->
@@ -559,7 +559,7 @@ Coherence Validation System |
 <!-- do_next: Implement database-backed model registry with role-based selection, enhance CursorModelRouter with LTST integration, and add context-aware routing based on memory context -->
 <!-- est_hours: 8 -->
 <!-- acceptance: System automatically selects appropriate model based on role, task type, and LTST memory context without manual specification -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#model-selection", "400_guides/400_comprehensive-coding-best-practices.md#simplicity-over-complexity"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#model-selection", "400_guides/400_development-workflow.md#simplicity-over-complexity"] -->
 <!-- reference_cards: ["500_reference-cards.md#model-registry-architecture", "500_reference-cards.md#cursor-model-router"] -->
 <!-- problem: Current LTST Memory System requires manual model specification for each request, lacking intelligent routing based on role, task type, and memory context, leading to suboptimal model selection and reduced efficiency -->
 <!-- outcome: Production-ready intelligent model selection system that automatically routes to appropriate models based on role, task type, and LTST memory context, improving efficiency and model utilization while maintaining local-first architecture -->
@@ -568,7 +568,7 @@ Coherence Validation System |
 <!-- do_next: Implement HNSW semantic search enhancement, promote DSPy tables to schema.sql, add user_id column, and create manual cleanup function -->
 <!-- est_hours: 8 -->
 <!-- acceptance: HNSW index replaces IVFFlat for better semantic recall, DSPy tables moved from code to schema.sql for reproducibility, user_id column added for future multi-tenant support, manual cleanup function implemented (no automated jobs), all changes align with local-first, simple governance principles -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#database-optimization", "400_guides/400_comprehensive-coding-best-practices.md#schema-design"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#database-optimization", "400_guides/400_development-workflow.md#schema-design"] -->
 <!-- reference_cards: ["500_reference-cards.md#ltst-memory", "500_reference-cards.md#database-schema"] -->
 <!-- tech_footprint: Database Schema + LTST Memory + Governance Alignment + Performance Optimization + HNSW Indexing + DSPy Integration + User Session Management + Manual Cleanup -->
 <!-- problem: Current LTST memory system lacks semantic search capabilities, DSPy tables are created in code rather than schema.sql, missing user/session hygiene for future multi-tenant support, and lacks governance-aligned retention policy -->
@@ -647,7 +647,7 @@ Coherence Validation System |
 <!-- do_next: Add coder role to ROLE_FILES in memory_rehydrator.py and configure documentation access -->
 <!-- est_hours: 8 -->
 <!-- acceptance: Coder role successfully rehydrates coding context in <5 seconds with zero impact on existing roles -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-specialization", "400_guides/400_comprehensive-coding-best-practices.md#role-based-context"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-specialization", "400_guides/400_development-workflow.md#role-based-context"] -->
 <!-- reference_cards: ["500_reference-cards.md#memory-rehydration", "500_reference-cards.md#dspy-integration"] -->
 <!-- PRD: PRD-B-035-Coder-Role-Implementation.md -->
 
@@ -657,7 +657,7 @@ Coherence Validation System |
 <!-- do_next: Use cspell_automation.py script with coder role for word addition requests -->
 <!-- est_hours: 3 -->
 <!-- acceptance: User can request cSpell word addition and system automatically executes with coder role context -->
-<!-- lessons_applied: ["100_memory/105_cspell-automation-memory.md#automation-patterns", "400_guides/400_comprehensive-coding-best-practices.md#automation"] -->
+<!-- lessons_applied: ["100_memory/105_cspell-automation-memory.md#automation-patterns", "400_guides/400_development-workflow.md#automation"] -->
 <!-- reference_cards: ["500_reference-cards.md#development-tooling", "500_reference-cards.md#automation-patterns"] -->
 <!-- completion_date: 2025-01-27 -->
 <!-- PRD: 600_archives/artifacts/prds/PRD-B-101-cSpell-Automation-Integration.md -->
@@ -670,7 +670,7 @@ Coherence Validation System |
 <!-- do_next: Add role coordination rules to .cursorrules and test with simple scenarios -->
 <!-- est_hours: 6 -->
 <!-- acceptance: Cursor Native AI consults appropriate roles before making file organization or structural decisions -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-coordination", "400_guides/400_comprehensive-coding-best-practices.md#decision-making"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-coordination", "400_guides/400_development-workflow.md#decision-making"] -->
 <!-- reference_cards: ["500_reference-cards.md#role-coordination", "500_reference-cards.md#cursor-rules"] -->
 <!-- PRD: 600_archives/artifacts/prds/PRD-B-102-Cursor-Native-AI-Role-Coordination-System.md -->
 <!-- TASK_LIST: 600_archives/artifacts/task_lists/Task-List-B-102-Cursor-Native-AI-Role-Coordination-System.md -->
@@ -681,7 +681,7 @@ Coherence Validation System |
 <!-- do_next: Create metadata standards and automated role assignment script -->
 <!-- est_hours: 4 -->
 <!-- acceptance: 600_archives files automatically get appropriate role access based on metadata or content analysis -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#automation", "400_guides/400_comprehensive-coding-best-practices.md#metadata"] -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#automation", "400_guides/400_development-workflow.md#metadata"] -->
 <!-- reference_cards: ["500_reference-cards.md#automation", "500_reference-cards.md#metadata-analysis"] -->
 <!-- PRD: artifacts/prds/PRD-B-103-Automated-Role-Assignment-for-600-archives.md -->
 <!-- TASK_LIST: artifacts/task_lists/Task-List-B-103-Automated-Role-Assignment-for-600-archives.md -->

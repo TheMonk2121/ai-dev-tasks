@@ -11,7 +11,7 @@
     {"path": "400_guides/400_context-priority-guide.md", "role": "navigation"},
     {"path": "400_guides/400_ai-constitution.md", "role": "ai-safety"},
     {"path": "400_guides/400_file-analysis-guide.md", "role": "file-analysis"},
-    {"path": "400_guides/400_code-criticality-guide.md", "role": "code-quality"},
+
     {"path": "100_memory/104_dspy-development-context.md", "role": "dspy-context"},
     {"path": "dspy-rag-system/tests/README-dev.md", "role": "test-development"},
     {"path": "200_setup/202_setup-requirements.md", "role": "setup"},
@@ -347,21 +347,21 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 - Context priority guide → `400_guides/400_context-priority-guide.md`
 
-- Critical Python code map → `400_guides/400_code-criticality-guide.md`
+- Critical Python code map → `400_guides/400_development-workflow.md`
 
-- Testing strategy → `400_guides/400_testing-strategy-guide.md`
+- Testing strategy → `400_guides/400_development-workflow.md`
 
 - Test development guide → `dspy-rag-system/tests/README-dev.md`
 
-- Deployment guide → `400_guides/400_deployment-environment-guide.md`
+- Deployment guide → `400_guides/400_deployment-operations.md`
 
 - Migration & upgrades → `400_guides/400_migration-upgrade-guide.md`
 
-- Integration patterns → `400_guides/400_integration-patterns-guide.md`
+- Integration patterns → `400_guides/400_integration-security.md`
 
 - Performance optimization → `400_guides/400_performance-optimization-guide.md`
 
-- Security best practices → `400_guides/400_security-best-practices-guide.md`
+- Security best practices → `400_guides/400_integration-security.md`
 
 - Graph visualization guide → `400_guides/400_graph-visualization-guide.md`
 
@@ -377,7 +377,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 <!-- ANCHOR_PRIORITY: 20 -->
 <!-- ROLE_PINS: ["planner", "implementer", "researcher", "coder"] -->
 
-- Comprehensive coding standards → `400_guides/400_comprehensive-coding-best-practices.md` (includes "Undefined Name" error fixes, database query patterns, systematic test file patterns, and automated database synchronization)
+- Comprehensive coding standards → `400_guides/400_development-workflow.md` (includes "Undefined Name" error fixes, database query patterns, systematic test file patterns, and automated database synchronization)
 
 ### Stable Anchors
 
@@ -397,12 +397,12 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - Implementer: `100_memory/104_dspy-development-context.md`, `dspy-rag-system/tests/README-dev.md`, relevant 400-series topic guides (testing, security,
 performance, integration, deployment)
 
-- Coder: `400_guides/400_comprehensive-coding-best-practices.md`, `400_guides/400_code-criticality-guide.md`, `400_guides/400_testing-strategy-guide.md`, `100_memory/104_dspy-development-context.md`
+- Coder: `400_guides/400_development-workflow.md`, `100_memory/104_dspy-development-context.md`
 
 - Researcher: `500_research/500_research-index.md`, `500_research/500_dspy-research.md`,
 `500_research/500_rag-system-research.md`
 
-- Ops/Setup: `200_setup/202_setup-requirements.md`, `400_guides/400_deployment-environment-guide.md`,
+- Ops/Setup: `200_setup/202_setup-requirements.md`, `400_guides/400_deployment-operations.md`,
 `400_guides/400_migration-upgrade-guide.md`
 
 ## 🛡️ Always-On Critical Rules
@@ -549,11 +549,11 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 
 **Essential Files Quick Reference:**
 
-- **Critical**: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_getting-started.md`, `400_guides/400_development-workflow.md`, `400_guides/400_ai-constitution.md`, `400_guides/400_file-analysis-guide.md`, `400_guides/400_testing-strategy-guide.md`, `400_guides/400_deployment-environment-guide.md`, `400_guides/400_cursor-context-engineering-guide.md`
+- **Critical**: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_getting-started.md`, `400_guides/400_development-workflow.md`, `400_guides/400_ai-constitution.md`, `400_guides/400_file-analysis-guide.md`, `400_guides/400_deployment-operations.md`, `400_guides/400_cursor-context-engineering-guide.md`
 - **Workflow**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`
 - **Setup**: `200_setup/202_setup-requirements.md`
 - **Architecture**: `100_memory/104_dspy-development-context.md`
-- **Coding Standards**: `400_guides/400_comprehensive-coding-best-practices.md` (NEW - conflict prevention system)
+- **Coding Standards**: `400_guides/400_development-workflow.md` (NEW - conflict prevention system)
 
 ### **🗄️ Vector Database Status**
 
@@ -606,8 +606,8 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 
 #### **Cross-Reference Quality:**
 - **High Coverage**: 400_context-priority-guide.md (72% cross-references)
-- **Medium Coverage**: 400_ai-constitution.md, 400_code-criticality-guide.md (38-48%)
-- **Low Coverage**: 400_deployment-environment-guide.md, 400_performance-optimization-guide.md (3-4%)
+- **Medium Coverage**: 400_ai-constitution.md, 400_development-workflow.md (38-48%)
+- **Low Coverage**: 400_deployment-operations.md, 400_performance-optimization-guide.md (3-4%)
 - **Average Coverage**: 35% across all 400_guides files
 
 #### **Navigation Patterns:**
