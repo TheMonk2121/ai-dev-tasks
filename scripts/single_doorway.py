@@ -47,10 +47,11 @@ def _run(*args: str, capture: bool = False) -> str | None:
     env = os.environ.copy()
     cwd = os.getcwd()
     env["PYTHONPATH"] = f"{cwd}:{env.get('PYTHONPATH','')}" if env.get("PYTHONPATH") else cwd
-    
+
     # Try to use venv Python if available
     try:
         from venv_manager import get_venv_python
+
         venv_python = get_venv_python()
         if venv_python:
             python_executable = venv_python
@@ -58,7 +59,7 @@ def _run(*args: str, capture: bool = False) -> str | None:
             python_executable = PY
     except ImportError:
         python_executable = PY
-    
+
     if capture:
         return subprocess.check_output([python_executable, *args], text=True, env=env).strip()
     subprocess.check_call([python_executable, *args], env=env)
@@ -123,7 +124,26 @@ def _git_changed_files() -> list[str]:
         for line in out.splitlines():
             parts = line.strip().split()
             if parts:
-                files.append(parts[-1])
+                file_path = parts[-1]
+                # Monitor additional file types for Scribe
+                if any(
+                    pattern in file_path
+                    for pattern in [
+                        "000_backlog.md",
+                        "PRD-",
+                        "Task-List-",
+                        "artifacts/worklogs/",
+                        "artifacts/summaries/",
+                        ".ai_state.json",
+                    ]
+                ):
+                    files.append(file_path)
+                # Also include all Python files (for code changes)
+                elif file_path.endswith(".py"):
+                    files.append(file_path)
+                # Include all markdown files (for documentation changes)
+                elif file_path.endswith(".md"):
+                    files.append(file_path)
         return sorted(set(files))
     except Exception:
         return []
