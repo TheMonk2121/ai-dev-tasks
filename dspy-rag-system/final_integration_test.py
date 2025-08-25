@@ -116,7 +116,7 @@ class IntegrationTestSuite:
             for filepath in file_paths:
                 try:
                     Path(filepath).unlink()
-                except:
+                except OSError:
                     pass
 
     async def test_error_handling(self):
@@ -128,7 +128,7 @@ class IntegrationTestSuite:
 
         # Test non-existent file - should raise MCPError
         try:
-            result = await server.process_document("/tmp/nonexistent_file.txt")
+            await server.process_document("/tmp/nonexistent_file.txt")
             # Should not reach here
             self.log_test("Non-existent File Handling", False, "Expected exception but got result")
         except Exception as e:
@@ -138,7 +138,7 @@ class IntegrationTestSuite:
 
         # Test invalid source - should raise MCPError
         try:
-            result = await server.process_document("")
+            await server.process_document("")
             # Should not reach here
             self.log_test("Empty Source Handling", False, "Expected exception but got result")
         except Exception as e:
@@ -181,7 +181,7 @@ class IntegrationTestSuite:
             for filepath in test_files:
                 try:
                     Path(filepath).unlink()
-                except:
+                except OSError:
                     pass
 
     async def test_cache_functionality(self):
@@ -212,7 +212,7 @@ class IntegrationTestSuite:
         finally:
             try:
                 Path(filepath).unlink()
-            except:
+            except OSError:
                 pass
 
     async def test_server_info_and_cleanup(self):

@@ -87,7 +87,7 @@ class PerformanceBenchmark:
         for name, server_class in servers:
             try:
                 config = MCPConfig(server_name=f"{name.lower()}_server")
-                server = server_class(config)
+                server_class(config)  # Test initialization without storing the instance
                 success_count += 1
                 print(f"  ✅ {name} server initialized successfully")
             except Exception as e:
@@ -167,7 +167,7 @@ class PerformanceBenchmark:
             for filepath in temp_files:
                 try:
                     Path(filepath).unlink()
-                except:
+                except OSError:
                     pass
 
     async def benchmark_concurrent_processing(self) -> BenchmarkResult:
@@ -222,7 +222,7 @@ class PerformanceBenchmark:
             for filepath in test_docs:
                 try:
                     Path(filepath).unlink()
-                except:
+                except OSError:
                     pass
 
     async def benchmark_cache_performance(self) -> BenchmarkResult:
@@ -273,7 +273,7 @@ class PerformanceBenchmark:
             # Clean up temporary file
             try:
                 Path(filepath).unlink()
-            except:
+            except OSError:
                 pass
 
     async def benchmark_memory_efficiency(self) -> BenchmarkResult:
@@ -328,7 +328,7 @@ class PerformanceBenchmark:
             # Clean up temporary file
             try:
                 Path(filepath).unlink()
-            except:
+            except OSError:
                 pass
 
     def print_results(self):
