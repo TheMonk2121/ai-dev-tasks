@@ -41,7 +41,7 @@ check_commit_scope() {
     local config_files
     local test_files
     local total_files
-    
+
     if [[ -n "$staged_files" ]]; then
         python_files=$(echo "$staged_files" | grep -E "\.py$" | wc -l)
         doc_files=$(echo "$staged_files" | grep -E "\.md$" | wc -l)
@@ -152,7 +152,7 @@ validate_commit_message_scope() {
     local doc_files
     local test_files
     local config_files
-    
+
     if [[ -n "$staged_files" ]]; then
         python_files=$(echo "$staged_files" | grep -E "\.py$" | wc -l)
         doc_files=$(echo "$staged_files" | grep -E "\.md$" | wc -l)

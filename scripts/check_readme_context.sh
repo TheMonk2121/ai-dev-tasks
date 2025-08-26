@@ -63,15 +63,19 @@ check_readme_context_section() {
     fi
 
     # Check if section was updated recently (within last 7 days)
-    local section_start=$(grep -n "## 📝 Commit Context & Implementation Details" "$readme_file" | cut -d: -f1)
+    local section_start
+    section_start=$(grep -n "## 📝 Commit Context & Implementation Details" "$readme_file" | cut -d: -f1)
     if [[ -z "$section_start" ]]; then
         return 1
     fi
 
     # Get the last modification time of README
-    local readme_mtime=$(stat -f "%m" "$readme_file" 2>/dev/null || stat -c "%Y" "$readme_file" 2>/dev/null)
-    local current_time=$(date +%s)
-    local days_since_update=$(( (current_time - readme_mtime) / 86400 ))
+    local readme_mtime
+    local current_time
+    local days_since_update
+    readme_mtime=$(stat -f "%m" "$readme_file" 2>/dev/null || stat -c "%Y" "$readme_file" 2>/dev/null)
+    current_time=$(date +%s)
+    days_since_update=$(( (current_time - readme_mtime) / 86400 ))
 
     if [[ $days_since_update -gt 7 ]]; then
         log_suggestion "README context section hasn't been updated in $days_since_update days"
@@ -113,7 +117,8 @@ validate_readme_context_pattern() {
     log_info "Checking README context pattern..."
 
     # Read commit message
-    local commit_msg=""
+    local commit_msg
+    commit_msg=""
     while IFS= read -r line; do
         if [[ -z "$commit_msg" ]]; then
             commit_msg="$line"
@@ -121,7 +126,8 @@ validate_readme_context_pattern() {
     done < "$commit_msg_file"
 
     # Get staged files
-    local staged_files=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || echo "")
+    local staged_files
+    staged_files=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || echo "")
 
     # Check if this is a significant change
     if ! is_significant_change "$staged_files"; then
@@ -134,7 +140,8 @@ validate_readme_context_pattern() {
         log_suggestion "Consider adding backlog reference (e.g., B-077) to commit message"
         log_suggestion "This helps with traceability and README context updates"
     else
-        local backlog_id=$(extract_backlog_id "$commit_msg")
+        local backlog_id
+        backlog_id=$(extract_backlog_id "$commit_msg")
         log_success "Backlog reference found: $backlog_id"
     fi
 
