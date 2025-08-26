@@ -50,7 +50,7 @@ repos:
         entry: bash scripts/check_branch_name.sh
         language: system
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
         description: "Ensure branch name matches policy: main or type/B-####-short-slug"
 
       - id: no-branches-without-permission
@@ -58,7 +58,7 @@ repos:
         entry: bash scripts/check_branch_permission.sh
         language: system
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
         description: "Prevent commits on non-main branches without explicit permission"
 
       - id: ensure-venv-active
@@ -71,7 +71,7 @@ repos:
           ]
         language: system
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
         description: "Prevent commits outside the repository virtual environment"
 
   - repo: https://github.com/commitizen-tools/commitizen
