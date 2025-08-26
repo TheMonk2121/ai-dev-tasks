@@ -95,6 +95,14 @@ repos:
         stages: [commit-msg]
         description: "Enforce GitHub commit message line length limits (50 chars subject, 72 chars body)"
 
+      - id: readme-context-pattern
+        name: README Context Pattern Check
+        entry: bash scripts/check_readme_context.sh
+        language: system
+        pass_filenames: true
+        stages: [commit-msg]
+        description: "Ensure significant changes have corresponding README context updates"
+
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.30.0
     hooks:

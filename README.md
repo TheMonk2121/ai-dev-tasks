@@ -163,6 +163,44 @@ README: Detailed implementation notes, technical decisions, challenges, performa
 - ✅ **Discoverability**: External users can understand implementation details
 - ✅ **Maintainability**: Living document that evolves with the project
 
+### **README Context Template**
+
+When adding new implementation context, use this template:
+
+```markdown
+#### **B-XXX: Feature Name** (YYYY-MM-DD)
+**Commit**: `type(B-XXX): Concise commit message`
+
+**Rich Context:**
+- **Feature Overview**: Brief description of what was implemented
+- **Technical Decisions**: 
+  - Key architectural decisions and reasoning
+  - Technology choices and alternatives considered
+  - Integration patterns used
+- **Implementation Challenges**: 
+  - Problems encountered and how they were solved
+  - Linter errors, type issues, or other technical hurdles
+  - Performance optimizations made
+- **Performance Impact**: 
+  - Execution times, memory usage, scalability metrics
+  - Before/after comparisons if applicable
+- **Integration Points**: 
+  - How this change affects other systems
+  - Dependencies added or modified
+  - Configuration changes required
+- **Testing & Validation**: 
+  - What was tested and how
+  - Quality gates passed/failed
+  - Manual testing performed
+```
+
+**Guidelines:**
+- **Keep it concise**: Focus on the most important details
+- **Include metrics**: Performance numbers, timing, resource usage
+- **Document decisions**: Why certain choices were made
+- **Note challenges**: Problems solved and lessons learned
+- **Update regularly**: Keep context current with implementation
+
 <details>
 <summary>📊 Detailed Performance Benchmarks</summary>
 
