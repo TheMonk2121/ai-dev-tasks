@@ -87,6 +87,15 @@ repos:
         stages: [commit]
         description: "Prevent commits outside the repository virtual environment"
 
+      - id: commit-message-line-length
+        name: Commit Message Line Length Check
+        entry: bash scripts/hook_timer.sh
+        args: ["bash", "scripts/check_commit_message_length.sh"]
+        language: system
+        pass_filenames: false
+        stages: [commit-msg]
+        description: "Enforce GitHub commit message line length limits (50 chars subject, 72 chars body)"
+
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.30.0
     hooks:
