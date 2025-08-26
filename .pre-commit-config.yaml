@@ -60,6 +60,15 @@ repos:
         stages: [commit]
         description: "Prevent commits on non-main branches without explicit permission"
 
+      - id: ensure-venv-active
+        name: Ensure venv is active
+        entry: bash
+        args: ["-c", "if [ -z \"$VIRTUAL_ENV\" ] || [[ \"$VIRTUAL_ENV\" != */venv ]]; then echo 'Virtual environment not active. Run: source venv/bin/activate'; exit 1; fi"]
+        language: system
+        pass_filenames: false
+        stages: [commit]
+        description: "Prevent commits outside the repository virtual environment"
+
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.30.0
     hooks:
