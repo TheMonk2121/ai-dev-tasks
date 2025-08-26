@@ -1,0 +1,11 @@
+exclude_dirs:
+  - venv
+  - .venv
+  - .cache
+  - node_modules
+  - dspy-rag-system/venv
+  - dspy-rag-system/.venv
+  - processed_documents
+  - dspy-rag-system/processed_documents
+# You can skip specific tests by ID here if needed in the future
+# skips: ["B101", "B303"]

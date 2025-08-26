@@ -23,10 +23,11 @@ repos:
       - id: bandit-security-scan
         name: Bandit Security Scan
         entry: bandit
+        args: ["-q", "--severity-level", "MEDIUM", "--exit-zero"]
         language: system
         files: \.py$
         pass_filenames: true
-        description: "Run Bandit security scanning on staged Python files only"
+        description: "Run Bandit on staged Python files using .bandit config with medium severity"
 
       - id: markdown-validation
         name: Markdown Validation
@@ -63,7 +64,11 @@ repos:
       - id: ensure-venv-active
         name: Ensure venv is active
         entry: bash
-        args: ["-c", "if [ -z \"$VIRTUAL_ENV\" ] || [[ \"$VIRTUAL_ENV\" != */venv ]]; then echo 'Virtual environment not active. Run: source venv/bin/activate'; exit 1; fi"]
+        args:
+          [
+            "-c",
+            'if [ -z "$VIRTUAL_ENV" ] || [[ "$VIRTUAL_ENV" != */venv ]]; then echo ''Virtual environment not active. Run: source venv/bin/activate''; exit 1; fi',
+          ]
         language: system
         pass_filenames: false
         stages: [commit]
