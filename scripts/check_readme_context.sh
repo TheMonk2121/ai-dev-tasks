@@ -89,18 +89,35 @@ check_readme_context_section() {
 is_significant_change() {
     local staged_files="$1"
 
-    # Significant file patterns
-    local significant_patterns=(
-        "\.py$"           # Python files
-        "\.md$"           # Documentation
-        "\.yml$|\.yaml$"  # Configuration
-        "\.json$"         # Data files
-        "\.sql$"          # Database
-        "requirements"    # Dependencies
-        "pyproject"       # Project config
+    # High-priority patterns that definitely need README context
+    local high_priority_patterns=(
+        "scripts/.*\.py$"     # New scripts
+        "100_memory/.*\.md$"  # Memory system changes
+        "000_core/.*\.md$"    # Core workflow changes
+        "400_guides/.*\.md$"  # Guide changes
+        "dspy-rag-system/.*\.py$"  # DSPy system changes
+        "\.sql$"              # Database schema changes
+        "requirements"        # Dependency changes
+        "pyproject"           # Project config changes
     )
 
-    for pattern in "${significant_patterns[@]}"; do
+    # Medium-priority patterns that should have README context
+    local medium_priority_patterns=(
+        "\.py$"               # Python files
+        "\.md$"               # Documentation
+        "\.yml$|\.yaml$"      # Configuration
+        "\.json$"             # Data files
+    )
+
+    # Check high-priority patterns first
+    for pattern in "${high_priority_patterns[@]}"; do
+        if echo "$staged_files" | grep -qE "$pattern"; then
+            return 0
+        fi
+    done
+
+    # Check medium-priority patterns
+    for pattern in "${medium_priority_patterns[@]}"; do
         if echo "$staged_files" | grep -qE "$pattern"; then
             return 0
         fi
@@ -155,6 +172,25 @@ validate_readme_context_pattern() {
         failed=1
     else
         log_success "README context section is present and recent"
+    fi
+
+    # Check if README needs updating for this specific change
+    if has_backlog_reference "$commit_msg"; then
+        local backlog_id
+        backlog_id=$(extract_backlog_id "$commit_msg")
+        
+        # Check if this backlog item is already documented in README
+        if ! grep -q "$backlog_id" README.md 2>/dev/null; then
+            log_suggestion "📝 Backlog item $backlog_id not found in README context section"
+            log_suggestion "   Add implementation details to preserve rich context:"
+            log_suggestion "   - Technical decisions and reasoning"
+            log_suggestion "   - Implementation challenges and solutions" 
+            log_suggestion "   - Performance impact and metrics"
+            log_suggestion "   - Integration points and dependencies"
+            failed=1
+        else
+            log_success "Backlog item $backlog_id already documented in README"
+        fi
     fi
 
     # Provide guidance for README updates

@@ -100,7 +100,7 @@ repos:
         entry: bash scripts/check_readme_context.sh
         language: system
         pass_filenames: true
-        stages: [commit-msg]
+        stages: [commit-msg, commit]
         description: "Ensure significant changes have corresponding README context updates"
 
       - id: commit-staging-pattern
