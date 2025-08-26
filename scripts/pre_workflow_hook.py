@@ -17,7 +17,7 @@ def force_memory_hydration(context: str, role: str = "planner") -> bool:
 
     try:
         result = subprocess.run(
-            [sys.executable, "scripts/memory_up.sh", "-r", role, context],
+            [sys.executable, "scripts/memory_rehydrate.py", "--role", role, "--query", context],
             capture_output=True,
             text=True,
             cwd=Path.cwd(),

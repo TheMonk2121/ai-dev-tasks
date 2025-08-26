@@ -24,7 +24,7 @@ def run_memory_rehydrator(role="planner", task="current project status and core 
 
     try:
         # Run the memory rehydrator
-        cmd = [sys.executable, "scripts/memory_up.sh", "-r", role, task]
+        cmd = [sys.executable, "scripts/memory_rehydrate.py", "--role", role, "--query", task]
 
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(os.path.dirname(__file__)))
 
@@ -37,6 +37,7 @@ def run_memory_rehydrator(role="planner", task="current project status and core 
     except Exception as e:
         print(f"❌ Error: {e}")
         return None
+
 
 def format_for_cursor_chat(bundle_output):
     """Format the bundle output for easy copying into Cursor chat"""
@@ -68,6 +69,7 @@ def format_for_cursor_chat(bundle_output):
 *This bundle provides current project context, system architecture, available workflows, and development guidelines.*"""
 
     return formatted
+
 
 def main():
     """Main function to prime Cursor chat with memory context"""
@@ -113,6 +115,7 @@ def main():
     print("2. Paste it as the first message in your new Cursor chat")
     print("3. The AI will now have full project context!")
     print("=" * 80)
+
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# parent_backlog: `UNKNOWN`  # set via git introducing commit or PR once known
 """
 Model Switcher for DSPy Multi-Agent System
 
@@ -206,7 +207,7 @@ def get_context_for_role(role: str, task: str) -> str:
             start_time = time.time()
 
             # Run memory rehydrator via subprocess with optimizations
-            cmd = [sys.executable, "scripts/memory_up.sh", "-r", role, task]
+            cmd = [sys.executable, "scripts/memory_rehydrate.py", "--role", role, "--query", task]
 
             # Change to project root directory
             current_dir = os.getcwd()

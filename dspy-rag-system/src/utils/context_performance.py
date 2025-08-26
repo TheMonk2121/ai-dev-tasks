@@ -273,7 +273,7 @@ class LoadBalancer:
         Args:
             instances: List of memory rehydrator instance URLs/commands
         """
-        self.instances = instances or ["scripts/memory_up.sh"]
+        self.instances = instances or ["scripts/memory_rehydrate.py"]
         self.instance_weights = {instance: 1.0 for instance in self.instances}
         self.instance_stats = {instance: {"requests": 0, "errors": 0, "avg_time": 0.0} for instance in self.instances}
         self.current_index = 0
@@ -370,7 +370,7 @@ class PerformanceOptimizer:
         try:
             import sys
 
-            cmd = [sys.executable, instance, role, task, "--stability", "0.4"]
+            cmd = [sys.executable, instance, "--role", role, "--query", task]
             current_dir = os.getcwd()
             project_root = os.path.join(current_dir, "..")
             env = os.environ.copy()

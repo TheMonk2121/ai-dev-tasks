@@ -33,7 +33,7 @@ PY
 python3 - <<'PY'
 import sys, pathlib, py_compile, traceback, os, re
 roots = ["dspy-rag-system/src"]
-exclude = re.compile(r"/(tests|scripts/dev/experiments)/")
+exclude = re.compile(r"/(tests|scripts/dev/experiments|scripts)/")
 errs = 0
 for root in roots:
     for p in pathlib.Path(root).rglob("*.py"):

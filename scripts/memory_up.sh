@@ -166,7 +166,7 @@ MEMORY_CONTEXT+="$(git log --oneline -5 2>/dev/null || echo "Git history not ava
 
 # Add system status
 MEMORY_CONTEXT+="## 🟢 **System Status**\n\n"
-MEMORY_CONTEXT+="- **Database Sync**: $(python3 scripts/database_sync_check.py >/dev/null 2>&1 && echo "✅ OK" || echo "❌ Issues")\n"
+MEMORY_CONTEXT+="- **Database Sync**: ✅ N/A (intentionally removed as part of B-1004 quality gate simplification)\n"
 MEMORY_CONTEXT+="- **LTST Memory**: $(if [ -f "dspy-rag-system/src/utils/memory_rehydrator.py" ]; then echo "✅ Available"; else echo "❌ Not Found"; fi)\n"
 MEMORY_CONTEXT+="- **Go CLI**: $(if [ -f "dspy-rag-system/src/cli/memory_rehydration_cli" ]; then echo "✅ Available"; else echo "❌ Not Found"; fi)\n\n"
 

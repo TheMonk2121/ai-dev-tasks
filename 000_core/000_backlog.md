@@ -260,6 +260,234 @@ and normalize spacing across long-form guides.
 <!-- outcome: ✅ ACHIEVED - Production-ready MCP-based ingestion system supporting 9+ source types, enhanced DSPy RAG capabilities, standardized tool contracts, and future-proof extensibility -->
 
 - B‑1024 — AI Assistant Computer Control System with VM Sandbox and Multi-Mode Security (score 9.5)
+  - Cross‑reference: B‑1027 will provide voice UI for View‑Only (screen guidance) and VM Privileged (approved actions) modes; transcripts feed B‑1026 lessons.
+- B‑1025 — Lean Hybrid Memory System (Hybrid Union + Reranker + Facts + Rolling Summary) (score 9.0)
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:5, deps:["B-1012"]}-->
+<!--score_total: 9.0-->
+<!-- do_next: Phase 0 + Phase 1 — add feature flags, eval set, instrumentation; create messages + facts tables with FTS index and embedding_version; keep pgvector exact; no pruner -->
+<!-- est_hours: 18 -->
+<!-- acceptance:
+Storage: only messages + facts created and indexed; no episodic/pruner.
+Quality: +15–25% Recall@10 or +10% MRR@10 vs LTST on 100‑query eval.
+Performance: ≤ +300 ms p50 added latency; < 2 s end‑to‑end context build.
+Flags: FEATURE_HYBRID, FEATURE_RERANK, FEATURE_ROLLING_SUMMARY, FEATURE_FACTS on; FEATURE_BM25, FEATURE_HNSW, PRUNER off by default.
+Observability: per‑query logs include candidate counts, winner source (dense/sparse), reranker deltas, p50/p90 latency.
+Naming: call lexical scorer "Postgres FTS (tsvector + ts_rank)" plan BM25 via extension behind a flag.
+-->
+<!-- lessons_applied: [
+  "400_guides/400_context-priority-guide.md#scoped-context",
+  "400_guides/400_comprehensive-coding-best-practices.md#minimal-incremental",
+  "100_memory/100_cursor-memory-context.md#ltst-integration"
+] -->
+<!-- reference_cards: [
+  "Anthropic Contextual Retrieval",
+  "Stanford DSPy (arXiv:2310.03714)",
+  "ColBERT (arXiv:2004.12832)",
+  "PostgreSQL FTS docs",
+  "pgvector repo"
+] -->
+<!-- tech_footprint: PostgreSQL + pgvector (exact) + Postgres FTS + ONNX INT8 reranker + DSPy integration + Feature Flags + A/B Harness -->
+<!-- problem: Current LTST uses simple relevance+recency; needs hybrid retrieval quality gains without overbuilding schema/pruner. Terminology must be precise (FTS ≠ BM25). -->
+<!-- outcome: Minimal, measurable memory pipeline: dense∪sparse union → local reranker → recency tiebreak; light facts; optional rolling summary; flags + rollback; A/B accepted with clear lift/budgets. -->
+
+  - Plan (phased, minimal):
+    - Phase 0 (Baseline & Flags):
+      - Add feature flags: FEATURE_HYBRID, FEATURE_RERANK, FEATURE_ROLLING_SUMMARY, FEATURE_FACTS, FEATURE_BM25, FEATURE_HNSW.
+      - Create eval set (100 real queries + golds) at `dspy-rag-system/tests/data/eval_queries.jsonl`.
+      - Instrument `src/utils/memory_rehydrator.py` to log candidate counts, winner source, reranker deltas, p50/p90 latency to `logs/memory_eval.ndjson`.
+      - Add `embedding_version`; no re‑embed yet.
+    - Phase 1 (Schema):
+      - Create `messages(id, thread_id, kind{turn|summary|chunk}, text, embedding, embedding_version, importance, created_at, last_accessed_at, access_count, fts generated column)` with GIN on `fts`. Keep pgvector exact (no ANN yet).
+      - Create `facts(id, subject, predicate, object, confidence, source, is_active, version, last_seen_at, updated_at)` with unique (subject,predicate,version) and active lookup index.
+    - Phase 2 (Hybrid Union):
+      - `HybridRetriever` returns union of dense (pgvector exact) and sparse (FTS via `websearch_to_tsquery`) with de‑dup; optional RRF if reranker off.
+    - Phase 3 (Reranker + Recency Tiebreak):
+      - Local cross‑encoder (`BAAI/bge-reranker-base` ONNX INT8). Batch ~40 pairs → top 8–12. Apply recency only for near‑ties.
+    - Phase 4 (Rolling Summary):
+      - Update every 4–6 turns or idle ≥10s; cap 200–300 tokens; pin at prompt edge.
+    - Phase 5 (Facts API):
+      - `upsert_fact(subject, predicate, object, source)`: refresh on semantic‑same; version & supersede on contradiction; confirm for sensitive predicates.
+      - Tiny CLI in `scripts/facts_cli.py`.
+    - Phase 6 (A/B & Accept):
+      - Harness compares LTST vs Hybrid+Rerank on Recall/MRR/NDCG@k and latency p50/p90; accept if lift meets gate and latency within budget.
+
+  - Stop/Go Gates:
+    - G1: Hybrid union returns in time; candidate diversity sane.
+    - G2: Reranker lifts Recall/MRR; p50 within +300ms budget.
+    - G3: Summary <300 tokens, reduces redundant turns.
+    - G4: Facts stable (no ping‑pong contradictions).
+    - G5: A/B acceptance → consider optional BM25/HNSW/pruner (behind flags).
+
+  - Rollback:
+    - Flip flags off to revert to LTST; keep new tables inert when flags are off.
+
+- B‑1026 — Closed‑Loop Lessons & Backlog Integration (Proxy Scratchpad → Decisions/Lessons → Backlog) (score 9.0)
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:5, deps:["B-1025"]}-->
+<!--score_total: 9.0-->
+<!-- do_next: Establish proxy logging + minimal lessons/decisions schema; wire feature flags; pilot capture on local models; unify evaluation with B‑1025 harness; keep BM25/HNSW/pruner out of scope -->
+<!-- est_hours: 20 -->
+<!-- acceptance:
+Capture: ≥95% of local model requests/responses logged via proxy with secrets masked; structured scratchpad fields present on ≥80% local runs.
+Knowledge: ≥20 lessons and ≥10 decisions recorded with links to PRDs/runs/steps; ≥5 backlog candidates auto‑suggested from lessons; 0 impact on B‑1025 latency gates when features disabled.
+Integration: For a given PRD, system lists linked decisions/lessons; for a backlog item, shows supporting lessons; flags provide single‑flip rollback.
+-->
+<!-- lessons_applied: [
+  "100_memory/100_cursor-memory-context.md#ltst-integration",
+  "400_guides/400_context-priority-guide.md#scoped-context",
+  "400_comprehensive-coding-best-practices.md#minimal-incremental"
+] -->
+<!-- reference_cards: [
+  "OpenAI Memory blog",
+  "Anthropic Contextual Retrieval",
+  "ADR best practices (AWS prescriptive)",
+  "pgvector repo",
+  "Cursor Rules docs"
+] -->
+<!-- tech_footprint: FastAPI proxy (OpenAI‑compatible) + request/response logging + structured scratchpad + Postgres tables (runs, steps, artifacts, lessons, decisions) + link edges to PRDs/backlog + feature flags + unified observability -->
+<!-- problem: Rich reasoning/interaction context with agents/PRDs is lost; lessons are logged but not retained or linked to prioritization; need a closed loop that captures, structures, and feeds insights back into backlog and DSPy. -->
+<!-- outcome: Closed‑loop system that captures scratchpad, decisions, and lessons; links them to PRDs and backlog items; surfaces auto‑suggested backlog candidates; adopts same flags/metrics/rollback pattern as B‑1025 without affecting retrieval latency. -->
+
+  - Expanded exploration (first, avoid overfitting): Key decisions to test behind flags
+    - Scratchpad capture approach: Cursor‑internal only vs proxy‑level vs both; choose proxy as source‑of‑truth.
+    - Schema granularity: minimal lessons/decisions now vs full knowledge graph; start minimal with link edges.
+    - Emission pattern: enforce `<scratchpad>` via Cursor Rules for local models vs optional; begin enforced for local only.
+    - Storage: direct to Postgres vs observability vendor (Langfuse/Phoenix) + mirror; start direct, leave vendor optional.
+    - Triage policy: when do lessons become backlog candidates (immediate/applied/pending); pilot a lightweight triage.
+    - Privacy/PII masking: middleware redaction scope; adopt conservative masks for keys/tokens/headers.
+
+  - Refined plan of action (consensus)
+    - Use an OpenAI‑compatible proxy (FastAPI) in front of local models to log full JSON (masked).
+    - Require structured scratchpad for local models via `.cursor/rules` (hypotheses/plan/risks/next_action).
+    - Persist runs/steps/artifacts; add minimal `lessons` and `decisions` tables with link edges to PRDs/backlog.
+    - Auto‑suggest backlog candidates from lessons; tag as `lesson‑derived` for review.
+    - Keep acceptance tied to B‑1025 harness; do not change retrieval latency budgets.
+
+  - Feature flags
+    - FEATURE_PROXY_LOGS (default: off)
+    - FEATURE_SCRATCHPAD (default: off; local models only)
+    - FEATURE_LESSONS (default: off)
+
+  - Phases
+    - Phase 0: Flags & Contracts
+      - Add env flags above; document JSON contract for proxy logging; add secret masking list.
+    - Phase 1: Proxy & Logging
+      - FastAPI middleware: forward to local model; log `{run_id, step_idx, role, messages, tool_calls, timings, scratchpad}` with masks.
+      - Point Cursor "Custom API" to proxy (ngrok if needed) for local sessions only.
+    - Phase 2: Minimal Schema
+      - Tables: `runs`, `steps`, `artifacts` (light), `lessons(id, source_type, source_id, title, body, impact_weight, status, linked_prd, linked_run, linked_module, created_at)`, `decisions(id, context, options, decision, rationale, supersedes_id, created_at)`.
+      - Optional telemetry: `tool_call_telemetry(id, run_id, tool_name, args_hash, success, elapsed_ms, created_at)` to evaluate tool effectiveness.
+      - Citations: store with lessons (e.g., `lessons_citations(lesson_id, source_url, title, org)`), minimal join table.
+      - Link edges: `lesson→backlog_item`, `lesson→decision`, `lesson→module_change`.
+    - Phase 3: Cursor Rules & Emission
+      - Add `.cursor/rules` requiring `<scratchpad>` for local agents; structured fields persisted to `steps.thought` and redacted summary.
+      - Researcher: allow @Web usage for vetted retrieval; log sources into lesson citations.
+      - Keywords/Brainstorming: maintain a small lexicon to tag runs with `brainstorming=true` when triggers appear; include tags in steps.
+    - Phase 4: Backlog Integration
+      - Seeds importer: ingest YouTube transcripts and external notes into lessons/seeds, linking back to PRDs and storing citations.
+      - Triage pipeline: immediate/applied/pending; auto‑suggest backlog candidates tagged `lesson‑derived` or `seed`.
+      - Views/queries: list decisions/lessons per PRD; show supporting lessons for a backlog item.
+    - Phase 5: Evaluation & Acceptance
+      - Verify capture coverage, linkage integrity, zero regression on B‑1025 latency; demo end‑to‑end flow from PRD → run → lesson → backlog.
+
+  - Acceptance tests (machine‑verifiable where possible)
+    - Coverage: proxy logs ≥95% local requests; scratchpad present on ≥80%.
+    - Knowledge: ≥20 lessons, ≥10 decisions captured with valid foreign keys; ≥5 backlog candidates suggested.
+    - Latency: when FEATURE_PROXY_LOGS=off, no measurable change vs B‑1025; when on, overhead ≤+50ms p50 for local runs.
+    - Queries: given PRD X, returns ≥3 linked lessons; given backlog item Y, returns supporting lessons set.
+
+  - Risks & Mitigations
+    - Data bloat: add daily rotation and size caps; summarize long scratchpads.
+    - PII leakage: strict masking policy and tests; opt‑out flag.
+    - Scope creep: keep schema minimal; vendor observability optional; defer analytics to a later item.
+
+  - Rollback
+    - Flip FEATURE_* flags off to disable capture and emissions; tables remain inert; retrieval pipeline (B‑1025) unaffected.
+
+- B‑1027 — Role Voice I/O: Push‑to‑Talk, Wake‑Word, STT + TTS with Multi‑Agent Roundtable (score 8.8)
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:4, deps:["B-1024","B-1025","B-1026"]}-->
+<!--score_total: 8.8-->
+<!-- do_next: Ship minimal voice loop (PTT + faster‑whisper + Piper) with per‑role voices; capture transcripts to lessons; add moderator hybrid (addressable + roundtable) behind flag -->
+<!-- est_hours: 16 -->
+<!-- acceptance:
+Live loop: push‑to‑talk and wake‑word both work; barge‑in interrupts TTS reliably.
+STT: faster‑whisper streaming or utterance mode; latency per 5‑8s utterance ≤ 800ms post‑endpoint on M‑series.
+TTS: Piper default (Coqui optional) with per‑role voices; p50 synthesis+playback < 500ms for 200‑400 chars.
+Roundtable: hybrid moderator routes @addressed agents or selects top‑N by relevance; collects ≤2 responses within 2.2s.
+Traceability: transcripts stored and linked to runs/steps (B‑1026); each reply tagged with agent role and voice used.
+Flags: FEATURE_STT, FEATURE_TTS, FEATURE_VOICE_ROLES default off; one‑flip rollback; no impact when off.
+Security: VM‑safe mode available (no host control required); approval gate documented for any guarded host actions. -->
+<!-- lessons_applied: [
+  "400_guides/400_comprehensive-coding-best-practices.md#minimal-incremental",
+  "400_guides/400_context-priority-guide.md#scoped-context",
+  "100_memory/100_cursor-memory-context.md#ltst-integration"
+] -->
+<!-- reference_cards: [
+  "open‑source STT: faster‑whisper",
+  "open‑source TTS: Piper, Coqui TTS",
+  "open‑source wake word: openWakeWord",
+  "asyncio structured concurrency best practices",
+  "Apple Silicon performance tips (CTranslate2 Metal/MPS)"
+] -->
+<!-- tech_footprint: Voice I/O + STT + TTS + Wake‑Word + VAD + asyncio + Roundtable Moderator + Per‑Role Voices + Lessons Integration + Feature Flags -->
+<!-- problem: Verbal collaboration with DSPy roles is not supported; rich discussions are text‑only and easily lost, slowing troubleshooting and planning. -->
+<!-- outcome: Voice interface that lets you speak to one or many roles, hear distinct agent voices, interrupt smoothly, and archive transcripts into the lessons/decisions loop to inform backlog prioritization. -->
+
+  - Feature flags
+    - FEATURE_STT (default: off)
+    - FEATURE_TTS (default: off)
+    - FEATURE_VOICE_ROLES (default: off)
+    - FEATURE_VOICE_ROUNDTABLE (default: off)
+
+  - Architecture (minimal, local‑first)
+    - STT: faster‑whisper (CTranslate2) with 16kHz mono, WebRTC VAD endpointing; wake‑word via openWakeWord
+    - TTS: Piper default (ONNX voices), optional Coqui TTS; per‑role voice mapping via `voices.yaml`
+    - Barge‑in: VAD/PTT activity triggers immediate TTS cancel
+    - Moderator: asyncio hybrid mode = addressable (@coder) OR roundtable (top‑N by relevance) with 2.2s deadline
+    - Safety: Mode A (VM‑only control) as default; no host clicks required; transcripts logged into B‑1026 tables
+
+  - Plan (phased, lean)
+    - Phase 0: Flags & Config
+      - Add env flags; create `voiceio.yaml` (PTT key/mode, wake‑word threshold, STT/TTS engine, per‑role voices)
+      - Add `voices.yaml` mapping role→voice (Piper .onnx or Coqui speaker)
+    - Phase 1: Minimal Loop (PTT + STT + TTS)
+      - Implement push‑to‑talk capture (pynput); WebRTC VAD with endpointing; faster‑whisper transcription
+      - Piper TTS playback with barge‑in; Coqui optional
+      - Performance target: p50 STT turnaround ≤ 800ms; TTS ≤ 500ms for short replies
+    - Phase 2: Wake‑Word + Barge‑in Polishing
+      - openWakeWord integration; smoothing + double‑hit; configurable threshold; ensure barge‑in instant cancel
+    - Phase 3: Hybrid Moderator (Addressable + Roundtable)
+      - asyncio roundtable: gather agent replies concurrently; deadline‑driven; max_speakers=2; synthesis optional
+      - Addressable routing when text begins with @role; otherwise roundtable selection by relevance gate
+    - Phase 4: Lessons/Decisions Integration (B‑1026)
+      - Store transcripts to `runs/steps` with role tags; attach lessons/decisions derived from voice sessions
+      - Link sessions to PRDs/backlog items; ensure provenance and citations recorded
+    - Phase 5: VM‑Safe Profile
+      - Document Mode A (VM‑only) defaults; Mode B (host mirror) optional; Mode C (guarded host control) documented with HITL approvals
+
+  - Performance targets
+    - STT endpoint→text: ≤ 800ms p50, ≤ 1500ms p90
+    - TTS 200–400 chars: ≤ 500ms p50, ≤ 900ms p90
+    - Moderator collect: ≤ 2200ms deadline; ≤ 2 speakers returned; cancel stragglers
+    - CPU/memory steady within local M‑series budget; no GPU hard requirement
+
+  - Security & privacy
+    - Default VM‑only; host actions disabled
+    - Redact secrets from spoken text before logging (basic mask list shared with B‑1026)
+    - Opt‑out flag to disable recording; rotation + size caps
+
+  - Observability
+    - Log per‑utterance: stt_ms, tts_ms, barge_in_count, selected_agents, replies_ms, wake_word score
+    - Store transcripts with run_id/step_idx; link to lessons (B‑1026)
+    - Cross‑links: reference B‑1024 (Dual‑Mode Troubleshooting) for View‑Only vs VM Privileged modes; reference B‑1025 (context accuracy) and B‑1026 (closed‑loop capture)
+
+  - Rollback
+    - Flip FEATURE_STT/FEATURE_TTS/FEATURE_VOICE_ROLES/FEATURE_VOICE_ROUNDTABLE off; voice code inert; text workflows unchanged
+
+  - Risks & mitigations
+    - False wake‑word triggers → increase threshold, require double‑hit, prefer PTT mode by default
+    - Latency spikes → use smaller STT models (base.en/small.en), int8 compute; pre‑render short TTS
+    - Audio device issues → document macOS permissions and VM audio routing
+
 <!--score: {bv:5, tc:5, rr:5, le:4, effort:5, deps:["B-1023"]}-->
 <!--score_total: 9.5-->
 <!-- do_next: Implement Phase 1 (host screen capture + RAG integration) first, then Phase 2 (VM setup + browser automation), followed by Phase 3 (login automation + troubleshooting integration) -->
@@ -585,16 +813,22 @@ Coherence Validation System |
 <!-- outcome: Native DSPy 3.0 assertion support with zero regressions and rollback safety -->
 
 | B‑1011 | Constitution Smoke Harness | 🔧 | 2 | ✅ done | Add three concrete checks: workflow chain preserved, doc coherence validator, Tier-1 lint. Non-blocking warnings if checks fail under stable 3.0. | Constitution Testing + Smoke Checks + Non-blocking Validation | B-1006-A DSPy 3.0 Core Parity Migration |
-| B‑1012 | LTST Memory System: ChatGPT-like conversation memory | 🔥 | 5 | todo | Implement ChatGPT-like Long-Term Short-Term memory system with conversation persistence, session tracking, context merging, and automatic memory rehydration for seamless AI conversation continuity | Memory System + Conversation Context + Database Schema + Session Management | B-1006-A DSPy 3.0 Core Parity Migration |
-<!--score: {bv:4, tc:3, rr:4, le:3, effort:2, lessons:3, deps:["B-1006-A"]}-->
-<!--score_total: 5.0-->
-<!-- completion_date: 2025-01-23 -->
-<!-- implementation_notes: Successfully implemented constitution smoke harness with three concrete checks: workflow chain preservation, doc coherence validation, and Tier-1 linting. All checks pass under stable DSPy 3.0.1 environment with non-blocking warnings for any failures. System provides constitution-aware validation without blocking normal operations. -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#constitution-testing", "400_guides/400_migration-upgrade-guide.md#validation"] -->
-<!-- reference_cards: ["500_reference-cards.md#constitution-testing", "500_reference-cards.md#smoke-checks"] -->
-<!-- tech_footprint: Constitution Testing + Smoke Checks + Non-blocking Validation -->
-<!-- problem: Need constitution-aware validation checks for DSPy 3.0 system stability -->
-<!-- outcome: Constitution smoke harness with non-blocking validation and workflow preservation -->
+| B‑1012 | LTST Memory System: Foundation for Hybrid Retrieval & Closed-Loop Lessons | 🔥 | 5 | todo | Provide lightweight LTST foundation: persistence/session tracking/context merge, instrumentation, feature flags, and eval harness, with clean hooks for HybridRetriever, Reranker, Rolling Summary, and Facts integration (for B‑1025/1026). No new heavy schema, no HNSW/BM25/pruner here. | LTST Core + Session/Persistence + Context Merge + Flags + Instrumentation + Eval Harness | B-1006-A DSPy 3.0 Core Parity Migration |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:3, lessons:4, deps:["B-1006-A"]}-->
+<!--score_total: 7.0-->
+<!-- do_next: Add flags (FEATURE_HYBRID, FEATURE_RERANK, FEATURE_ROLLING_SUMMARY, FEATURE_FACTS); seed 100‑query eval set; add lightweight logs (dense/sparse winner, reranker deltas, p50/p90) in memory_rehydrator.py; expose hook points for HybridRetriever, Reranker, Rolling Summary; add embedding_version; keep pgvector exact and lexical as Postgres FTS (no BM25). -->
+<!-- est_hours: 6 -->
+<!-- acceptance:
+Interfaces: memory_rehydrator exposes pluggable hooks for HybridRetriever, Reranker, Rolling Summary, Facts.
+Flags: FEATURE_HYBRID/FEATURE_RERANK/FEATURE_ROLLING_SUMMARY/FEATURE_FACTS present (default off).
+Eval: tests/data/eval_queries.jsonl created with 100 queries+golds; harness scaffold runs both LTST baseline and placeholder hybrid path (disabled by default).
+Instrumentation: logs include candidate counts (placeholders where applicable), winner source fields reserved, p50/p90 timers.
+Indexing: pgvector exact only; no HNSW; lexical named "Postgres FTS (tsvector + ts_rank)".
+No new heavy tables; zero regression on current LTST behavior when flags off.
+-->
+<!-- lessons_applied: ["400_guides/400_context-priority-guide.md#scoped-context", "400_guides/400_comprehensive-coding-best-practices.md#minimal-incremental", "100_memory/100_cursor-memory-context.md#ltst-integration"] -->
+<!-- reference_cards: ["PostgreSQL FTS docs", "pgvector repo", "Anthropic Contextual Retrieval", "Stanford DSPy (arXiv:2310.03714)"] -->
+<!-- tech_footprint: LTST Core + Flags + Eval Seed + Instrumentation; exact pgvector + Postgres FTS naming; hook interfaces for B‑1025/1026 alignment -->
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1003"]}-->
 <!--score_total: 7.5-->
 <!-- do_next: Pin DSPy 3.0.1 in constraints.txt, create test environment with baseline metrics, implement constitution-aware regression suite, add optimizer budget enforcement, and integrate surgical asyncio (AsyncMemoryRehydrator) for 40-60% I/O performance improvement -->
@@ -702,6 +936,18 @@ Coherence Validation System |
    - User acceptance tests: solo developer workflow validation
    - Regression tests: existing workflow compatibility
    - Coverage target: 90% for new components, 100% for critical paths
+
+9. COMMIT AND BRANCH POLICY:
+   - Branch naming: feature/B-<id>-<slug> (e.g., feature/B-1025-lean-hybrid-memory)
+   - Commit message (conventional): type(scope): short summary B-<id>
+   - Example: feat(backlog): add HybridRetriever + reranker scaffolding B-1025
+   - Grouping rule: one logical change per commit mapped to a single backlog ID; do not mix IDs in the same commit
+   - PR title: B-<id>: concise title; PR body links to backlog item and PRD path; include acceptance gates and flags touched
+   - Traceability: maintain links both ways (backlog ↔ PR ↔ PRD); record final acceptance in backlog implementation_notes
+   - Rollback: each PR must specify flags toggled and a one-line revert plan
+   - Enforcement: CI check that commit subject ends with "B-<id>" and PR body includes backlog/PRD links
+   - Document header: new/updated .md artifacts must include an HTML comment under the H1 with parent backlog, e.g., <!-- parent_backlog: B-1025 -->
+   - PR template: include fields for Backlog ID (B-####) and Artifacts added/updated (paths)
 
 TECHNICAL CONSTRAINTS:
 - Zero breaking changes to existing workflow (001-003 chain)
@@ -1724,3 +1970,451 @@ Documentation review + reference updates | File naming convention migration |
 - **Validator Compliance**: All items must pass `doc_coherence_validator.py`
 - **Documentation Alignment**: Cross-references must be maintained
 - **Strategic Alignment**: Items must align with development roadmap
+
+# AI Development Tasks Backlog
+
+## Current Priority Items
+
+### B-1024: Implement 5-Layer Memory System with Hybrid Rankers and Pruner
+**Priority:** P0 (Critical)
+**Status:** Ready for Implementation
+**Estimated Effort:** 18 days
+**Dependencies:** None
+
+**Context:**
+Based on ChatGPT consultation and local DSPy model validation, we need to implement a sophisticated 5-layer memory system to enhance our AI development ecosystem. This builds upon our existing LTST (Long-Term Short-Term) memory system with advanced ranking, pruning, and entity management capabilities.
+
+**Current System Analysis:**
+- **LTST Memory System**: Currently uses `priority_score = (relevance_score * 0.7) + (recency_score * 0.3)`
+- **Database**: PostgreSQL with pgvector for embeddings
+- **Existing Tables**: `conversation_memory`, `context_chunks`, `entity_facts`
+- **Current Ranking**: Simple relevance + recency weighting
+
+**Proposed 5-Layer Architecture:**
+1. **Turn Buffer** (FIFO) - Short-term memory
+2. **Rolling Summary** - Compact, continually updated conversation summary
+3. **Entity/Fact Store** - Structured key-value records for authoritative facts
+4. **Episodic Memory** - Sparse log of important events
+5. **Semantic Index** - Chunks with embeddings for long-term recall
+
+**New Components to Implement:**
+- **Hybrid Rankers**: Combine cosine similarity, BM25 (lexical search), and recency weighting
+- **Pruner**: Intelligent eviction with audit logs and usage tracking
+- **UPSERT Helpers**: Entity facts with versioning and contradiction handling
+- **build_context()**: Orchestrate fetching from 5 layers with diversity and token caps
+
+**Implementation Plan:**
+
+#### Phase 1: Database Schema Implementation (2 days)
+**Tasks:**
+- [ ] Create `conv_chunks` table with HNSW index and tsvector for BM25
+- [ ] Create `rolling_summaries` table for session-level summaries
+- [ ] Create `entity_facts` table with versioning and status tracking
+- [ ] Create `episodes` table for episodic memory
+- [ ] Add indexes for performance optimization
+- [ ] Create `conv_prune_log` table for audit trails
+
+**DDL to Execute:**
+```sql
+-- Conversational chunks (separate from knowledge RAG)
+CREATE TABLE IF NOT EXISTS conv_chunks (
+    id BIGSERIAL PRIMARY KEY,
+    session_id VARCHAR(255) NOT NULL,
+    chunk_text TEXT NOT NULL,
+    embedding vector(384) NOT NULL,
+    entities TEXT[] DEFAULT ARRAY[]::TEXT[],
+    salience_score REAL DEFAULT 0.0,
+    source_turn_id BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP,
+    is_pinned BOOLEAN DEFAULT FALSE,
+    chunk_tsv tsvector GENERATED ALWAYS AS (to_tsvector('english', chunk_text)) STORED
+);
+
+-- HNSW index for vector search
+CREATE INDEX IF NOT EXISTS conv_chunks_embedding_idx ON conv_chunks USING hnsw (embedding vector_cosine_ops);
+-- GIN index for lexical search
+CREATE INDEX IF NOT EXISTS conv_chunks_tsv_idx ON conv_chunks USING GIN (chunk_tsv);
+-- Useful filters
+CREATE INDEX IF NOT EXISTS conv_chunks_session_idx ON conv_chunks (session_id, created_at);
+
+-- Rolling summaries (one per session)
+CREATE TABLE IF NOT EXISTS rolling_summaries (
+    session_id VARCHAR(255) PRIMARY KEY,
+    goals TEXT[] DEFAULT ARRAY[]::TEXT[],
+    decisions TEXT[] DEFAULT ARRAY[]::TEXT[],
+    open_questions TEXT[] DEFAULT ARRAY[]::TEXT[],
+    next_actions TEXT[] DEFAULT ARRAY[]::TEXT[],
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    turn_count INTEGER DEFAULT 0
+);
+
+-- Entity / Fact store with versioning
+CREATE TABLE IF NOT EXISTS entity_facts (
+    id BIGSERIAL PRIMARY KEY,
+    entity VARCHAR(255) NOT NULL,
+    fact_key VARCHAR(255) NOT NULL,
+    fact_value TEXT NOT NULL,
+    confidence REAL DEFAULT 1.0,
+    status VARCHAR(20) DEFAULT 'active',
+    version INTEGER DEFAULT 1,
+    source_turn_id BIGINT,
+    last_seen_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(entity, fact_key, version)
+);
+
+-- Fast lookups for active facts
+CREATE INDEX IF NOT EXISTS entity_facts_active_idx ON entity_facts (entity, fact_key) WHERE status = 'active';
+
+-- Episodic memory (decisions / milestones)
+CREATE TABLE IF NOT EXISTS episodes (
+    id BIGSERIAL PRIMARY KEY,
+    session_id VARCHAR(255) NOT NULL,
+    episode_type VARCHAR(50) NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    entities TEXT[] DEFAULT ARRAY[]::TEXT[],
+    salience_score REAL DEFAULT 0.0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP
+);
+
+-- Audit log for prunes
+CREATE TABLE IF NOT EXISTS conv_prune_log (
+    id BIGSERIAL PRIMARY KEY,
+    pruned_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    chunk_id BIGINT NOT NULL,
+    session_id VARCHAR(255) NOT NULL,
+    reason TEXT NOT NULL,
+    salience_score REAL,
+    created_at TIMESTAMP,
+    last_accessed TIMESTAMP,
+    access_count BIGINT
+);
+```
+
+#### Phase 2: Hybrid Ranking Functions (4 days)
+**Tasks:**
+- [ ] Implement `hybrid_rank_conv_chunks()` function with cosine + BM25 + recency
+- [ ] Implement `hybrid_prefetch_conv_chunks()` for diversity filtering
+- [ ] Add usage tracking with `conv_chunk_touch()` function
+- [ ] Test ranking performance and accuracy
+
+**SQL Functions to Implement:**
+```sql
+CREATE OR REPLACE FUNCTION hybrid_rank_conv_chunks(
+    query_text TEXT,
+    query_embedding vector(384),
+    session_id_param VARCHAR(255),
+    max_results INTEGER DEFAULT 20,
+    min_salience REAL DEFAULT 0.0,
+    required_entities TEXT[] DEFAULT NULL
+) RETURNS TABLE (
+    chunk_id BIGINT,
+    chunk_text TEXT,
+    cosine_score REAL,
+    bm25_score REAL,
+    recency_score REAL,
+    final_score REAL,
+    created_at TIMESTAMP,
+    entities TEXT[],
+    is_pinned BOOLEAN,
+    salience_score REAL
+) LANGUAGE plpgsql AS $$
+BEGIN
+    RETURN QUERY
+    WITH base AS (
+        SELECT
+            cc.id AS chunk_id,
+            cc.chunk_text AS chunk_text,
+            (1 - (cc.embedding <=> query_embedding))::REAL AS cosine_score,
+            ts_rank(cc.chunk_tsv, plainto_tsquery('english', query_text))::REAL AS bm25_score,
+            exp(-EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - cc.created_at)) / (14 * 86400.0))::REAL AS recency_score,
+            cc.created_at AS created_at,
+            cc.entities AS entities,
+            cc.is_pinned AS is_pinned,
+            cc.salience_score AS salience_score
+        FROM conv_chunks cc
+        WHERE cc.session_id = session_id_param
+            AND (cc.expires_at IS NULL OR cc.expires_at > CURRENT_TIMESTAMP OR cc.is_pinned)
+            AND cc.salience_score >= min_salience
+            AND (required_entities IS NULL OR cc.entities && required_entities)
+    ),
+    scored AS (
+        SELECT
+            chunk_id,
+            chunk_text,
+            cosine_score,
+            bm25_score,
+            recency_score,
+            (0.55 * cosine_score) + (0.25 * bm25_score) + (0.20 * recency_score) AS final_score,
+            created_at,
+            entities,
+            is_pinned,
+            salience_score
+        FROM base
+    )
+    SELECT
+        chunk_id,
+        chunk_text,
+        cosine_score,
+        bm25_score,
+        recency_score,
+        final_score,
+        created_at,
+        entities,
+        is_pinned,
+        salience_score
+    FROM scored
+    ORDER BY final_score DESC, created_at DESC
+    LIMIT max_results;
+END;
+$$;
+```
+
+#### Phase 3: Pruner Implementation (4 days)
+**Tasks:**
+- [ ] Implement `prune_conv_chunks()` function for intelligent eviction
+- [ ] Add `conv_chunk_touch()` for usage tracking
+- [ ] Create pruner scheduling and monitoring
+- [ ] Test pruner effectiveness and performance
+
+**Pruner Functions:**
+```sql
+-- Usage tracking
+CREATE OR REPLACE FUNCTION conv_chunk_touch(p_chunk_id BIGINT) RETURNS VOID
+LANGUAGE plpgsql AS $$
+BEGIN
+    UPDATE conv_chunks
+    SET access_count = COALESCE(access_count,0) + 1,
+        last_accessed = CURRENT_TIMESTAMP
+    WHERE id = p_chunk_id;
+END;
+$$;
+
+-- Intelligent pruner
+CREATE OR REPLACE FUNCTION prune_conv_chunks(
+    p_max_age_days INTEGER DEFAULT 30,
+    p_min_access BIGINT DEFAULT 1,
+    p_min_salience REAL DEFAULT 0.25,
+    p_limit INTEGER DEFAULT 1000
+) RETURNS INTEGER
+LANGUAGE plpgsql AS $$
+DECLARE
+    v_count INTEGER := 0;
+BEGIN
+    -- Hard-expire first
+    WITH doomed AS (
+        SELECT
+            id, session_id, salience_score, created_at, last_accessed, access_count,
+            'expired'::TEXT AS reason
+        FROM conv_chunks
+        WHERE is_pinned = FALSE
+            AND expires_at IS NOT NULL
+            AND expires_at <= CURRENT_TIMESTAMP
+        LIMIT p_limit
+    )
+    INSERT INTO conv_prune_log (chunk_id, session_id, reason, salience_score, created_at, last_accessed, access_count)
+    SELECT id, session_id, reason, salience_score, created_at, last_accessed, access_count
+    FROM doomed;
+
+    DELETE FROM conv_chunks
+    WHERE is_pinned = FALSE
+        AND expires_at IS NOT NULL
+        AND expires_at <= CURRENT_TIMESTAMP
+    LIMIT p_limit;
+
+    GET DIAGNOSTICS v_count = ROW_COUNT;
+
+    -- Age-based pruning
+    WITH doomed AS (
+        SELECT
+            id, session_id, salience_score, created_at, last_accessed, access_count,
+            'age_based'::TEXT AS reason
+        FROM conv_chunks
+        WHERE is_pinned = FALSE
+            AND created_at < CURRENT_TIMESTAMP - INTERVAL '1 day' * p_max_age_days
+            AND COALESCE(access_count, 0) < p_min_access
+            AND salience_score < p_min_salience
+        LIMIT p_limit - v_count
+    )
+    INSERT INTO conv_prune_log (chunk_id, session_id, reason, salience_score, created_at, last_accessed, access_count)
+    SELECT id, session_id, reason, salience_score, created_at, last_accessed, access_count
+    FROM doomed;
+
+    DELETE FROM conv_chunks
+    WHERE is_pinned = FALSE
+        AND created_at < CURRENT_TIMESTAMP - INTERVAL '1 day' * p_max_age_days
+        AND COALESCE(access_count, 0) < p_min_access
+        AND salience_score < p_min_salience
+    LIMIT p_limit - v_count;
+
+    GET DIAGNOSTICS v_count = v_count + ROW_COUNT;
+
+    RETURN v_count;
+END;
+$$;
+```
+
+#### Phase 4: UPSERT Helpers for Entity Facts (2 days)
+**Tasks:**
+- [ ] Implement `upsert_entity_fact()` function with versioning
+- [ ] Add contradiction detection and resolution
+- [ ] Create entity fact management utilities
+- [ ] Test versioning and conflict resolution
+
+**UPSERT Function:**
+```sql
+CREATE OR REPLACE FUNCTION upsert_entity_fact(
+    p_entity VARCHAR(255),
+    p_fact_key VARCHAR(255),
+    p_fact_value TEXT,
+    p_confidence REAL DEFAULT 1.0,
+    p_source_turn_id BIGINT DEFAULT NULL
+) RETURNS BIGINT
+LANGUAGE plpgsql AS $$
+DECLARE
+    v_current_version INTEGER;
+    v_new_id BIGINT;
+    v_current_value TEXT;
+BEGIN
+    -- Get current active fact
+    SELECT version, fact_value INTO v_current_version, v_current_value
+    FROM entity_facts
+    WHERE entity = p_entity
+        AND fact_key = p_fact_key
+        AND status = 'active'
+    ORDER BY version DESC
+    LIMIT 1;
+
+    -- If fact exists and value is different, supersede it
+    IF FOUND AND v_current_value != p_fact_value THEN
+        -- Mark current as superseded
+        UPDATE entity_facts
+        SET status = 'superseded'
+        WHERE entity = p_entity
+            AND fact_key = p_fact_key
+            AND status = 'active';
+
+        -- Insert new version
+        INSERT INTO entity_facts (entity, fact_key, fact_value, confidence, version, source_turn_id)
+        VALUES (p_entity, p_fact_key, p_fact_value, p_confidence, v_current_version + 1, p_source_turn_id)
+        RETURNING id INTO v_new_id;
+    ELSIF NOT FOUND THEN
+        -- Insert new fact
+        INSERT INTO entity_facts (entity, fact_key, fact_value, confidence, version, source_turn_id)
+        VALUES (p_entity, p_fact_key, p_fact_value, p_confidence, 1, p_source_turn_id)
+        RETURNING id INTO v_new_id;
+    ELSE
+        -- Same value, just update last_seen_at
+        UPDATE entity_facts
+        SET last_seen_at = CURRENT_TIMESTAMP
+        WHERE entity = p_entity
+            AND fact_key = p_fact_key
+            AND status = 'active';
+
+        SELECT id INTO v_new_id
+        FROM entity_facts
+        WHERE entity = p_entity
+            AND fact_key = p_fact_key
+            AND status = 'active';
+    END IF;
+
+    RETURN v_new_id;
+END;
+$$;
+```
+
+#### Phase 5: Python Integration Layer (4 days)
+**Tasks:**
+- [ ] Create `build_context()` function to orchestrate 5-layer fetching
+- [ ] Implement diversity filtering and token capping
+- [ ] Integrate with existing LTST merge functionality
+- [ ] Add observability and monitoring
+
+**Python Implementation:**
+```python
+async def build_context(
+    query: str,
+    session_id: str,
+    max_tokens: int = 4000,
+    diversity_threshold: float = 0.92
+) -> str:
+    """
+    Build context from 5-layer memory system with diversity and token limits.
+    """
+    # 1. Get hybrid-ranked conversational chunks
+    conv_chunks = await get_hybrid_ranked_chunks(
+        query, session_id, max_results=50, min_salience=0.15
+    )
+
+    # 2. Apply diversity filtering
+    diverse_chunks = apply_diversity_filter(conv_chunks, diversity_threshold)
+
+    # 3. Get rolling summary
+    rolling_summary = await get_rolling_summary(session_id)
+
+    # 4. Get relevant entity facts
+    entity_facts = await get_relevant_entity_facts(query, session_id)
+
+    # 5. Get episodic memory
+    episodes = await get_relevant_episodes(query, session_id)
+
+    # 6. Combine and token-limit
+    context_parts = [
+        ("Rolling Summary", rolling_summary),
+        ("Entity Facts", format_entity_facts(entity_facts)),
+        ("Episodes", format_episodes(episodes)),
+        ("Conversation", format_chunks(diverse_chunks))
+    ]
+
+    return token_limit_context(context_parts, max_tokens)
+```
+
+#### Phase 6: Integration and Testing (6 days)
+**Tasks:**
+- [ ] Integrate with existing `memory_rehydrator.py`
+- [ ] Update `model_switcher.py` to use new context building
+- [ ] Add comprehensive testing suite
+- [ ] Performance benchmarking and optimization
+- [ ] Documentation and monitoring setup
+
+**Integration Points:**
+- Update `dspy-rag-system/src/utils/memory_rehydrator.py`
+- Modify `dspy-rag-system/src/dspy_modules/model_switcher.py`
+- Add tests in `dspy-rag-system/tests/`
+- Update monitoring in `dspy-rag-system/src/monitoring/`
+
+**Success Criteria:**
+- [ ] All 5 layers functioning with hybrid ranking
+- [ ] Pruner working with audit logs
+- [ ] UPSERT helpers managing entity facts
+- [ ] Performance within acceptable limits (< 2s context retrieval)
+- [ ] Integration with existing LTST system seamless
+- [ ] Comprehensive test coverage (> 90%)
+
+**Risk Mitigation:**
+- **Performance**: Monitor query times and optimize indexes
+- **Data Consistency**: Use transactions and proper error handling
+- **Integration**: Gradual rollout with feature flags
+- **Backup**: Database backups before schema changes
+
+**Deliverables:**
+1. Complete 5-layer memory system database schema
+2. Hybrid ranking functions with BM25 + cosine + recency
+3. Intelligent pruner with audit trails
+4. UPSERT helpers for entity fact management
+5. Python integration layer with `build_context()`
+6. Comprehensive test suite and documentation
+7. Performance monitoring and alerting
+
+**Next Steps:**
+1. Review and approve this backlog item
+2. Set up development environment
+3. Begin Phase 1: Database Schema Implementation
+4. Create feature branch: `feature/B-1024-5-layer-memory-system`
+
+---
+
+// ... existing code ...

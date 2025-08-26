@@ -24,6 +24,7 @@ sys.path.append("src")
 
 try:
     from dspy_modules.document_processor import DocumentIngestionPipeline
+    from dspy_modules.vector_store import HybridVectorStore
     from utils.logger import setup_logger
 except ImportError as e:
     print(f"❌ Import error: {e}")
@@ -238,6 +239,10 @@ def process_documents_bulk(documents: List[DocumentInfo], max_workers: int = 4, 
         # Initialize processing pipeline with parent directory access
         pipeline = DocumentIngestionPipeline(allowed_paths=[".."])
 
+        # Get database connection string and initialize vector store
+        db_manager = get_database_manager()
+        vector_store = HybridVectorStore(db_connection_string=db_manager.connection_string)
+
         # Process in batches
         for i in range(0, len(documents), batch_size):
             batch = documents[i : i + batch_size]
@@ -245,7 +250,9 @@ def process_documents_bulk(documents: List[DocumentInfo], max_workers: int = 4, 
 
             # Process batch concurrently
             with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-                future_to_doc = {executor.submit(process_single_document, doc, pipeline): doc for doc in batch}
+                future_to_doc = {
+                    executor.submit(process_single_document, doc, pipeline, vector_store): doc for doc in batch
+                }
 
                 for future in concurrent.futures.as_completed(future_to_doc):
                     doc = future_to_doc[future]
@@ -271,11 +278,13 @@ def process_documents_bulk(documents: List[DocumentInfo], max_workers: int = 4, 
     return results
 
 
-def process_single_document(doc: DocumentInfo, pipeline: DocumentIngestionPipeline) -> Dict[str, Any]:
+def process_single_document(
+    doc: DocumentInfo, pipeline: DocumentIngestionPipeline, vector_store: HybridVectorStore
+) -> Dict[str, Any]:
     """Process a single document"""
     try:
-        # Process through pipeline
-        result = pipeline.forward(document_path=doc.file_path)
+        # Process through pipeline with vector store
+        result = pipeline.forward(document_path=doc.file_path, vector_store=vector_store)
 
         return {"success": True, "result": result}
 
