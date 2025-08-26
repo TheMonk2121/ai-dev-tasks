@@ -623,7 +623,7 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 <!-- AUTO:current_priorities:start -->
 ### **Current Priorities**
 
-1. **B‑1012**: LTST Memory System: ChatGPT-like conversation memory (🔥 points)
+1. **B‑1012**: LTST Memory System: Foundation for Hybrid Retrieval & Closed-Loop Lessons (🔥 points)
    - todo
 
 2. **B‑1008**: Hybrid JSON Backlog System: Structured Data with Simple Tools (🔥 points)
