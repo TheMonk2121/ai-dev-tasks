@@ -95,14 +95,12 @@ repos:
         stages: [commit-msg]
         description: "Enforce GitHub commit message line length limits (50 chars subject, 72 chars body)"
 
-
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.30.0
     hooks:
       - id: commitizen
         stages: [commit-msg]
         additional_dependencies: []
-        
 
       # Temporarily disabled due to import issues
       # - id: database-sync-check
