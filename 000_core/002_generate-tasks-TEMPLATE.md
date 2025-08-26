@@ -16,8 +16,8 @@
 ## 🎯 **Current Status**
 - **Status**: ✅ **ACTIVE** - Enhanced task generation workflow
 - **Priority**: 🔥 Critical - Essential for project execution
-- **Points**: 6 - Enhanced complexity, high importance
-- **Dependencies**: 400_guides/400_context-priority-guide.md, 000_core/001_create-prd.md
+- **Points**: 4 - Moderate complexity, high importance
+- **Dependencies**: 000_core/001_create-prd-hybrid.md
 - **Next Steps**: Use enhanced templates with MoSCoW prioritization
 
 <!-- ANCHOR: workflow -->
@@ -47,6 +47,7 @@ python3 scripts/task_generation_automation.py --prd <prd_file> --output-file tas
 - **Cross-reference**: `000_core/000_backlog.md` for item details and metadata
 - **MoSCoW Support**: Must/Should/Could/Won't prioritization throughout
 - **Solo Optimization**: Auto-advance, context preservation, one-command workflows
+- **PRD Integration**: Parse Section 0 (Project Context & Implementation Guide) for task context
 
 The enhanced automation system provides:
 - **MoSCoW Prioritization** with visual indicators (🔥 Must, 🎯 Should, ⚡ Could, ⏸️ Won't)
@@ -59,8 +60,9 @@ The enhanced automation system provides:
 
 ### 📝 **Enhanced Manual Process (Fallback)**
 
-- Parse PRD Section 0 for implementation context
-- Apply MoSCoW prioritization to task ordering
+- Parse PRD Section 0 (Project Context & Implementation Guide) for implementation context
+- Extract tech stack, repository layout, development patterns, and local setup from PRD
+- Apply MoSCoW prioritization to task ordering based on PRD priorities
 - Include solo optimization features in task templates
 - Enforce enhanced quality gates and acceptance criteria per task
 
@@ -70,6 +72,7 @@ The enhanced automation system provides:
 - Use backlog metadata (scores, deps, MoSCoW priority) to size/schedule tasks
 - Apply solo optimization features based on backlog item complexity
 - Log that PRD was skipped; proceed with enhanced task format and gates
+- Note: PRD-less path lacks Section 0 context; use default project patterns and tech stack
 
 <!-- ANCHOR: template -->
 {#template}
@@ -101,7 +104,7 @@ Each task must include MoSCoW prioritization and solo optimization features:
 - [ ] **Resilience Tests** - [Error handling and failure scenarios]
 - [ ] **Edge Case Tests** - [Boundary conditions and unusual inputs]
 
-**Implementation Notes**: [Technical details, considerations, or warnings from PRD Section 0]
+**Implementation Notes**: [Technical details, considerations, or warnings from PRD Section 0 (Project Context & Implementation Guide)]
 
 **Quality Gates**:
 - [ ] **Code Review** - All code has been reviewed
@@ -278,6 +281,25 @@ def test_component_functionality():
 - [ ] **MoSCoW Alignment** - Task priority matches project goals
 - [ ] **Solo Optimization** - Auto-advance and context features tested
 
+## **PRD Structure to Task Mapping**
+
+### **PRD Section Mapping to Tasks:**
+- **Section 0 (Project Context & Implementation Guide)** → Task implementation context and technical guidance
+- **Section 1 (Problem Statement)** → Core problem-solving tasks and requirements gathering
+- **Section 2 (Solution Overview)** → High-level implementation tasks and architecture
+- **Section 3 (Acceptance Criteria)** → Testing tasks and validation requirements
+- **Section 4 (Technical Approach)** → Technical implementation tasks and integration
+- **Section 5 (Risks and Mitigation)** → Risk mitigation tasks and safety measures
+- **Section 6 (Testing Strategy)** → Comprehensive testing tasks and quality assurance
+- **Section 7 (Implementation Plan)** → Phase-based task organization and scheduling
+
+### **Enhanced PRD Integration:**
+- **Parse Section 0**: Extract tech stack, repository layout, development patterns, local setup
+- **Use Section 0 Context**: Apply to task templates and implementation guidance
+- **MoSCoW Alignment**: Map PRD priorities to task prioritization
+- **Acceptance Criteria**: Convert PRD acceptance criteria to task acceptance criteria
+- **Technical Approach**: Translate technical decisions into specific implementation tasks
+
 ## **Enhanced Output Format**
 
 Generate a comprehensive task list with the following structure:
@@ -358,7 +380,9 @@ python3 scripts/solo_workflow.py ship
 16. **Consider backlog scoring** for task prioritization when available
 17. **Use scoring metadata** to inform task sizing and dependencies
 18. **Parse scoring comments** (`<!--score: {bv:X, tc:X, rr:X, le:X, effort:X}-->`) for context
-19. **Extract implementation guidance** from PRD Section 0 when available
+19. **Extract implementation guidance** from PRD Section 0 (Project Context & Implementation Guide) when available
 20. **Apply solo developer optimizations** based on task complexity and dependencies
+21. **Map PRD structure** to task breakdown: Problem Statement → Core tasks, Solution Overview → Implementation tasks, Technical Approach → Technical tasks
+22. **Use PRD acceptance criteria** to define task acceptance criteria and quality gates
 
 This enhanced approach ensures that every task includes MoSCoW prioritization, solo developer optimizations, thorough testing requirements, and quality gates, leading to more robust, prioritized, and solo-developer-friendly implementations.

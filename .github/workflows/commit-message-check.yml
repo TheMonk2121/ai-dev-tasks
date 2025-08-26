@@ -2,19 +2,36 @@ name: Commit Message Check
 
 on:
   pull_request:
-    types: [opened, synchronize, edited, reopened]
+    types: [opened, synchronize, reopened, edited]
+    branches: [main]
 
 jobs:
-  conventional-commits:
+  validate-commit-messages:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          python-version: '3.12'
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
       - name: Install Commitizen
         run: pip install commitizen
-      - name: Check commit messages in PR range
+
+      - name: Validate Commit Messages / PR Title
         run: |
-          git fetch --depth=2 origin ${{ github.base_ref }}
-          cz check --rev-range origin/${{ github.base_ref }}..
+          BASE_REF="${{ github.event.pull_request.base.sha }}"
+          HEAD_REF="${{ github.event.pull_request.head.sha }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+
+          if [ -n "${{ github.event.pull_request.merge_commit_sha }}" ]; then
+            echo "Squash merge detected; validating PR title..."
+            cz check --message "$PR_TITLE"
+          else
+            echo "Validating commits in range $BASE_REF..$HEAD_REF"
+            cz check --rev-range "$BASE_REF..$HEAD_REF"
+          fi

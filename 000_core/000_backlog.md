@@ -88,9 +88,18 @@ and normalize spacing across long-form guides.
 
 ## P1 Lane
 
-- B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0)
+- B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0) *(consider replacing with B-1025)*
 
-- B‑077 — Code Review Process Upgrade with Performance Reporting (score 7.5)
+- B‑077 — Code Review Process Upgrade with Performance Reporting (score 7.5) ✅ **COMPLETED**
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:4, deps:[]}-->
+<!--score_total: 7.5-->
+<!-- completion_date: 2025-01-27 -->
+<!-- implementation_notes: Successfully completed comprehensive performance monitoring and quality assurance system for workflow execution. Implemented Phase 1: Performance Metrics Infrastructure (schema design, collection module, database storage), Phase 2: Integration with 001_create-prd Workflow (template integration, PRD generator, dashboard), and Phase 3: Quality Gates and Validation (quality gate evaluation, enforcement actions, recommendations). System includes 7 quality gate types with configurable thresholds, automatic enforcement with intelligent recommendations, seamless integration with performance collector and workflow analysis, and comprehensive testing with 100% pass rate. All components working harmoniously together with real-time performance monitoring, quality gate validation, and enhanced PRD generation workflow. -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#performance-optimization", "400_guides/400_development-workflow.md#quality-standards"] -->
+<!-- reference_cards: ["500_reference-cards.md#performance-monitoring", "500_reference-cards.md#quality-gates"] -->
+<!-- tech_footprint: Performance Monitoring + Quality Gates + Database Storage + Real-time Dashboard + Workflow Integration + DSPy Integration -->
+<!-- problem: Need comprehensive performance monitoring and quality assurance system for workflow execution with automated quality gates and real-time visualization -->
+<!-- outcome: Production-ready performance monitoring and quality assurance system with automated quality gates, real-time dashboard, database storage, and seamless workflow integration -->
 
 - B‑1002 — Create Comprehensive Root README for External Discovery (score 6.5)
 <!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
@@ -151,17 +160,63 @@ and normalize spacing across long-form guides.
 <!-- problem: Current quality gates are overengineered with complex caching, dead code, and solving non-existent problems -->
 <!-- outcome: Boring, reliable quality gates that actually improve code quality without complexity -->
 
-- B‑1016 — Evaluate uv as package/venv manager; keep pip fallback (score 5.5)
-<!--score: {bv:4, tc:3, rr:4, le:2, effort:2, deps:[]}-->
-<!--score_total: 5.5-->
-<!-- do_next: Install uv, create trial environment, generate uv.lock, add uv export to helper script -->
-<!-- est_hours: 3 -->
-<!-- acceptance: uv.lock generated, pip fallback maintained, friends can use either uv sync or pip install -r requirements.txt -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#development-workflow"] -->
-<!-- reference_cards: ["500_reference-cards.md#package-management"] -->
-<!-- tech_footprint: Package Management + Development Environment + Onboarding -->
-<!-- problem: Need faster, more reliable package management for development and friend onboarding -->
-<!-- outcome: Faster installs, reproducible environments, simplified setup for external users -->
+- B‑1016 — UV Package Management Modernization: Fast Python Dependency Management with Lock File and Virtual Environment Automation (score 7.0)
+<!--score: {bv:5, tc:3, rr:5, le:3, effort:4, deps:[]}-->
+<!--score_total: 7.0-->
+<!-- do_next: Phase 1: Install UV and create uv.lock, Phase 2: Integrate with existing workflow, Phase 3: Add virtual environment automation, Phase 4: Update documentation with pip fallback -->
+<!-- est_hours: 6 -->
+<!-- acceptance: UV successfully manages all project dependencies with lock file, automatic virtual environment creation, 10-100x faster installs, and seamless integration with existing development workflow. Maintains backward compatibility with pip for external contributors. -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#development-workflow", "400_guides/400_development-workflow.md#tool-selection", "100_memory/105_lessons-learned-context.md#performance-optimization"] -->
+<!-- reference_cards: ["500_reference-cards.md#package-management", "500_reference-cards.md#dependency-management", "500_reference-cards.md#performance-optimization"] -->
+<!-- tech_footprint: UV + uv.lock + Virtual Environment Automation + Dependency Resolution + Lock File + Development Workflow + Performance Optimization -->
+<!-- problem: Current pip + requirements.txt approach lacks dependency resolution, lock file for reproducible builds, automatic virtual environment management, and is slow, leading to potential dependency conflicts and setup complexity -->
+<!-- outcome: Modern Python dependency management with UV providing 10-100x faster dependency resolution, reproducible builds via lock file, automatic virtual environment management, and faster package installation while maintaining backward compatibility -->
+<!-- implementation_plan:
+PHASE 1 — UV Setup & Lock File Generation (1.5 hours)
+1) Install UV: curl -LsSf https://astral.sh/uv/install.sh | sh
+2) Generate uv.lock from existing requirements.txt: uv lock
+3) Test UV installation and basic commands
+4) Verify lock file generation and dependency resolution
+
+PHASE 2 — Workflow Integration (2 hours)
+1) Update development scripts to use UV commands
+2) Add UV commands to project documentation
+3) Test UV sync and uv pip install workflows
+4) Integrate with existing pre-commit hooks and CI/CD
+
+PHASE 3 — Virtual Environment Automation (1.5 hours)
+1) Configure UV to create virtual environments in project directory
+2) Test automatic virtual environment creation
+3) Update development workflow to use UV venv management
+4) Test virtual environment automation
+
+PHASE 4 — Backward Compatibility & Documentation (1 hour)
+1) Create pip fallback instructions for external contributors
+2) Update setup documentation with UV commands
+3) Add UV to development workflow guides
+4) Test both UV and pip workflows
+
+TECHNICAL CONSTRAINTS:
+- Zero breaking changes to existing development workflow
+- Maintain backward compatibility with pip for external contributors
+- Local-first approach with project-local virtual environments
+- Integration with existing pre-commit hooks and CI/CD
+- Rust-based performance optimization
+
+PERFORMANCE TARGETS:
+- UV install: <10s for full dependency installation (vs 30-60s with pip)
+- Dependency resolution: <2s for typical updates (vs 5-15s with pip)
+- Virtual environment creation: <3s for new environments (vs 10-20s with pip)
+- Lock file generation: <5s for dependency updates (vs 15-30s with pip)
+
+QUALITY GATES:
+- All existing tests pass with UV-managed dependencies
+- uv.lock file provides reproducible builds
+- Virtual environments work correctly in project directory
+- External contributors can still use pip if needed
+- Development workflow documentation updated
+- 10x+ performance improvement over pip for dependency operations
+-->
 
 - B‑1017 — Automated Backlog Grooming System (score 6.5)
 <!--score: {bv:5, tc:3, rr:5, le:3, effort:2, deps:[]}-->
@@ -198,6 +253,8 @@ and normalize spacing across long-form guides.
 <!-- tech_footprint: Document Processing + Web Scraping + Data Ingestion + DSPy Integration -->
 <!-- problem: Current document processing could be enhanced with industry-standard tools while maintaining local-first approach -->
 <!-- outcome: Improved document processing capabilities without over-engineering the existing DSPy RAG system -->
+
+
 
 - B‑1020 — Complete HNSW Vector Index Migration (score 7.0) ✅ **COMPLETED**
 <!--score: {bv:5, tc:4, rr:5, le:3, effort:2, deps:[]}-->
@@ -499,6 +556,31 @@ Security: VM‑safe mode available (no host control required); approval gate doc
 <!-- problem: Need comprehensive computer control capabilities for AI assistant to help with screenshots, troubleshooting, web app testing, N8n workflows, and service logins while maintaining security and isolation -->
 <!-- outcome: Production-ready AI assistant with safe computer control, visual context capture, automated troubleshooting, and secure service integration capabilities -->
 
+- B‑1028 — Voice-Enhanced Development Workflow with ML Training Pipeline (score 8.0)
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:4, deps:["B-077", "B-1010"]}-->
+<!--score_total: 8.0-->
+<!-- do_next: Phase 1: Implement voice router as DSPy module + basic STT/TTS services, Phase 2: Screen context integration, Phase 3: ML training pipeline -->
+<!-- est_hours: 16 -->
+<!-- acceptance: Complete voice→ML flow with local STT/TTS, screen context capture, FLAML training, MLflow tracking, and NiceGUI dashboard integration -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#local-first", "100_memory/105_lessons-learned-context.md#incremental-development"] -->
+<!-- reference_cards: ["500_reference-cards.md#voice-control", "500_reference-cards.md#ml-pipeline"] -->
+<!-- tech_footprint: Voice Control + STT/TTS + Screen Capture + ML Training + DSPy Integration + NiceGUI Dashboard -->
+<!-- problem: Need voice-controlled development workflow with ML training capabilities for hands-free AI development -->
+<!-- outcome: Complete voice→ML development system with local-first approach, screen context awareness, and integrated ML training pipeline -->
+
+- B‑1029 — WordPress Site Crawler MCP Server: Enumeration-First Site Mapping with Graph Visualization (score 7.5)
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:5, deps:["B-077", "B-1010", "B-1008"]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Phase 1 (Must): Implement sitemap enumeration MCP server with robots.txt support, Phase 2 (Should): Add WP REST enumeration and basic visualization, Phase 3 (Could): Add Playwright escalation for JS-heavy sites -->
+<!-- est_hours: 20 -->
+<!-- acceptance: Complete WordPress-aware crawler with enumerate→verify→targeted crawl flow, MCP server integration, graph export (JSON/CSV), static visualization (Graphviz), and friend testing capability. Respects robots.txt, uses honest UA, implements rate limiting, and provides provenance-rich graph with separated discovery method from relationship meaning. -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#local-first", "100_memory/105_lessons-learned-context.md#incremental-development", "400_guides/400_development-workflow.md#scope-management"] -->
+<!-- reference_cards: ["500_reference-cards.md#mcp-integration", "500_reference-cards.md#web-crawling", "500_reference-cards.md#wordpress"] -->
+<!-- tech_footprint: MCP Server + WordPress Integration + Web Crawling + httpx + selectolax + Playwright + Graphviz + DSPy Integration + Rate Limiting + Robots.txt -->
+<!-- problem: Need WordPress-aware site crawler for ingestion enhancement and friend testing, with enumerate-first approach for coverage and speed, surgical JS escalation, and provenance-rich graph output for RAG integration -->
+<!-- outcome: Production-ready WordPress crawler MCP server with local-first approach, ethical crawling practices, comprehensive site mapping, and seamless integration with existing DSPy RAG system for enhanced document ingestion capabilities -->
+<!-- migration_note: This item will be migrated to B-1008's MoSCoW phasing system once B-1008 is complete. Current phases: Phase 1 (Must): sitemap enumeration, Phase 2 (Should): WP REST + visualization, Phase 3 (Could): Playwright escalation, Phase 4 (Won't): admin areas + forms -->
+
 ## P2 Lane
 
 - B‑076 — Research-Based DSPy Assertions Implementation (score 4.8)
@@ -590,6 +672,96 @@ Items requiring external credentials, business decisions, or deployment should b
 | B-097 | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | 🔧 | 3 | todo | Multi-Role PR Sign-Off System: Comprehensive review and cleanup workflow | None | None |
 | B-098 | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | 🔧 | 3 | ✅ done | Multi-Role PR Sign-Off System v2.0: Enhanced with 5-step strategic alignment, stakeholder involvement, milestone tracking, and lessons learned generation | None | 600_archives/artifacts/000_core_temp_files/PRD-B-098-Multi-Role-Pr-Sign-Off-System.md |
 <!-- PRD: 600_archives/artifacts/000_core_temp_files/PRD-B-096-Enhanced-Scribe-System-Intelligent-Content-Analysis-And-Idea-Mining.md -->
+
+| B-1028 | Interactive Preference Learning + Online Calibration Loop (Per-User Feedback) | 🔥 | 4 | todo | Add an always-on learning loop that surfaces assumptions each turn, collects quick user corrections, computes a distance/reward signal, and updates a per-user profile to calibrate future responses. | DSPy + Bandit (epsilon‑greedy) + Embeddings + LTST Memory + JSONL Logging | B-1012 LTST Memory System |
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:4, deps:["B-1012"]}-->
+<!--score_total: 7.0-->
+<!-- do_next: Scaffold learning_loop module (facade + assumptions + feedback + bandit + profile + logger) and wire to memory directories; enable behind a feature flag. -->
+<!-- est_hours: 6 -->
+<!-- acceptance: Per-user loop active behind flag; assumptions JSON shown each turn; corrections ingested; distances computed; profile updated; next turn policy adapts; JSONL logs written; zero regressions when flag off. -->
+<!-- lessons_applied: ["400_guides/400_development-workflow.md#simplicity-over-complexity", "100_memory/100_cursor-memory-context.md#ltst-integration"] -->
+<!-- reference_cards: ["500_reference-cards.md#reinforcement-learning", "500_reference-cards.md#dspy-framework", "500_reference-cards.md#observability-best-practices"] -->
+<!-- tech_footprint: Assumptions extractor + distance metrics + epsilon‑greedy bandit + per-user profile + JSONL logger + feature flags + tests -->
+<!-- problem: Static Q&A ignores user-specific preferences; assumptions are implicit and unverified; no feedback loop to reduce future error. -->
+<!-- outcome: Interactive, per-user calibration that reduces correction distance over time and selects better prompting policies automatically. -->
+
+<!-- implementation_plan:
+PHASE 0 — Flags & Contracts (0.5h)
+1) Add FEATURE_PREFERENCE_LOOP env flag (default: off). Document JSON contracts for assumptions, corrections, distances.
+
+PHASE 1 — Module Scaffold (1.5h)
+2) Create dspy-rag-system/src/learning_loop/ with: assumptions.py, feedback.py, bandit.py, profile.py, logger.py, facade.py.
+3) Facade API:
+   class LearningLoop(user_id: str)
+   - propose(user_text: str, context: dict) -> {answer, assumptions, confidences, evidence, questions, policy_id}
+   - calibrate(corrections: dict) -> {distances, reward, next_policy_id}
+
+PHASE 2 — Storage & Schemas (0.5h)
+4) Persist state using existing dirs:
+   - 100_memory/user_profiles/{user_id}.json  (knobs: verbosity, clarify_first; lexicon: term→embedding_id; bandit_state)
+   - artifacts/session_memory/turns.jsonl     (one row/turn: prompt, assumptions, corrections, distances, reward, policy, evidence, ts)
+
+PHASE 3 — Assumptions & Feedback (1.0h)
+5) Assumptions extractor: emit JSON with slots: intent, constraints, priorities, glossary, uncertainties + confidences; evidence as file paths/IDs.
+6) Feedback: accept corrections JSON {confirm, correct, missing, priority_order}; compute distances:
+   - semantic: cosine between intent_texts; slot deltas (Jaccard); calibration (Brier/ECE if confidence provided).
+   - reward = 1 − normalized_distance.
+
+PHASE 4 — Policy Selector (0.5h)
+7) Epsilon‑greedy bandit over 3‑5 prompting micro‑policies (e.g., clarify_first, structured_summary, examples_minimal). Context features: last distances, uncertainty count.
+
+PHASE 5 — Profile Update (0.5h)
+8) Update knobs (raise/lower clarify_first), update lexicon centroid embeddings, update bandit stats. Write JSONL turn log.
+
+PHASE 6 — Integration & UI Hooks (1.0h)
+9) Wire into reply path: load profile → select policy → draft answer → emit assumptions + 1‑2 targeted questions (lowest confidence). After user correction, call calibrate(), update profile, choose next policy.
+10) Add collapsible “Assumptions Summary” block and a compact correction form schema.
+
+PHASE 7 — Tests & Metrics (1.0h)
+11) Add tests: profile load/save, distance math, bandit update/selection, facade end‑to‑end dry‑run.
+12) Metrics: track moving average distance, win‑rate per policy, time‑to‑clarity; ensure zero regression when FEATURE_PREFERENCE_LOOP=off.
+
+ROLLBACK
+13) Flip FEATURE_PREFERENCE_LOOP=off → loop inert; normal behavior restored; logs/profile untouched.
+-->
+
+| B-1029 | Coaching Mode: View-Only Screen Watcher + Voice PTT (Cursor Live Tutoring) | 🔥 | 3 | todo | Provide real-time coaching while you work: observe screen (view-only), listen via push-to-talk, give step-by-step guidance, and suggest exact commands; optional VM demo mode later. | Screen OCR + Window Context + On-screen Hints + Voice PTT + Micro-lessons + LTST Integration | B-1024 AI Assistant Computer Control System, B-1027 Role Voice I/O |
+<!--score: {bv:5, tc:3, rr:5, le:3, effort:3, deps:["B-1024","B-1027"]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Ship thin Coaching Mode: view-only watcher + PTT + on-screen hints + micro-lessons logging; keep VM demos as follow-up. -->
+<!-- est_hours: 6 -->
+<!-- acceptance: In view-only mode, system detects active pane (editor/terminal), surfaces targeted hints within 500ms, supports push-to-talk coaching with barge-in, logs micro-lessons, masks secrets, and is fully disabled when flag off. -->
+<!-- lessons_applied: ["400_guides/400_development-workflow.md#simplicity-over-complexity", "100_memory/100_cursor-memory-context.md#ltst-integration"] -->
+<!-- reference_cards: ["500_reference-cards.md#scribe-system", "500_reference-cards.md#nicegui", "500_reference-cards.md#observability-best-practices"] -->
+<!-- tech_footprint: View-only watcher (window title + region OCR) + hint overlay + PTT + micro-lessons logger + feature flags + tests -->
+<!-- problem: Debugging/learning loops are slow without live guidance; need real-time hints and commands while working in Cursor. -->
+<!-- outcome: Faster troubleshooting and skill growth via live, privacy-safe tutoring; optional VM demo path for hands-on examples. -->
+
+<!-- implementation_plan:
+PHASE 0 — Flags & Privacy (0.5h)
+1) Add FEATURE_COACHING_MODE (default: off). Redaction list for secrets; local-only storage.
+
+PHASE 1 — View-Only Watcher (1.5h)
+2) Detect active window + pane type; periodic region OCR for error lines and prompts; redact.
+3) Classify context (editor/terminal/browser) → propose next-step hints.
+
+PHASE 2 — Voice PTT (1.0h)
+4) Integrate push-to-talk from B-1027; low-latency coaching; barge-in cancels TTS.
+
+PHASE 3 — On-Screen Hints (1.0h)
+5) Overlay small hint near cursor: “Try: …” and key Cursor shortcuts (Cmd-P, Cmd-Shift-P, multi-cursor).
+
+PHASE 4 — Micro-Lessons Logging (1.0h)
+6) Log what helped/blocked; store to lessons (B-1026) + per-user profile; feed preference loop (B-1028).
+
+PHASE 5 — Safety & Tests (1.0h)
+7) Unit tests for redaction, latency budget, and flag rollback; manual demo script.
+
+ROLLBACK
+8) Flip FEATURE_COACHING_MODE=off → watcher/voice/hints disabled; no capture performed.
+-->
+
+
 
 
 | B-075 | Few-Shot Cognitive Scaffolding Integration | ⭐ | 6 | ✅ done | Integrate few-shot examples into cognitive scaffolding for AI agents | Few-shot patterns + AI context engineering | B-074 Few-Shot Integration with Documentation Tools |
@@ -873,6 +1045,7 @@ No new heavy tables; zero regression on current LTST behavior when flags off.
 <!-- tech_footprint: Backlog Enhancement + Constitution Scoring + Cross-Role Dependencies + Real-time Updates + n8n Integration + Migration Automation + Metadata Preservation + Performance Optimization + Async Scoring -->
 <!-- problem: Current backlog system lacks constitution-aware scoring, cross-role dependency detection, real-time updates, automated migration with metadata preservation, specific performance targets, and async real-time scoring updates -->
 <!-- outcome: Enhanced backlog system with constitution-aware scoring, cross-role dependencies, real-time n8n integration, automated migration with 100% metadata preservation, <5% performance overhead, and async real-time scoring updates with 60% I/O performance improvement -->
+<!-- template_files: 000_core/001_create-prd-TEMPLATE.md, 000_core/002_generate-tasks-TEMPLATE.md, 000_core/003_process-task-list-TEMPLATE.md -->
 <!-- implementation_plan:
 1. JSON SCHEMA DEFINITION (schemas/backlog_schema.json):
    - Define comprehensive JSON schema with MoSCoW prioritization fields
@@ -938,7 +1111,16 @@ No new heavy tables; zero regression on current LTST behavior when flags off.
    - Regression tests: existing workflow compatibility
    - Coverage target: 90% for new components, 100% for critical paths
 
-9. COMMIT AND BRANCH POLICY:
+9. DOCUMENTATION UPDATE (400_guides/ and 000_core/):
+   - Update all workflow documentation to reflect new template file names
+   - Update 400_guides/400_development-workflow.md with new 001-003 template references
+   - Update 100_memory/100_cursor-memory-context.md with new workflow structure
+   - Update any references to old template names in existing documentation
+   - Ensure cross-references between documentation files are maintained
+   - Update README files and setup guides with new template structure
+   - Validate all documentation links and references work correctly
+
+10. COMMIT AND BRANCH POLICY:
    - Branch naming: feature/B-<id>-<slug> (e.g., feature/B-1025-lean-hybrid-memory)
    - Commit message (conventional): type(scope): short summary B-<id>
    - Example: feat(backlog): add HybridRetriever + reranker scaffolding B-1025
@@ -987,7 +1169,7 @@ QUALITY GATES:
 <!-- problem: Current Scribe system uses synchronous polling (10-60s intervals), sequential context fetching (2-5s each), blocking session registry operations, and lacks real-time capabilities for multi-session scenarios -->
 <!-- outcome: Production-ready AsyncIO Scribe system with event-driven monitoring, parallel processing, real-time notifications, enhanced multi-session management, and 70-80% performance improvement -->
 
-| B‑1010 | NiceGUI Scribe Dashboard: Advanced UI with AI Integration and Real-time Monitoring | 🔥 | 8 | todo | Implement comprehensive NiceGUI dashboard for Scribe system with AI-powered insights, real-time monitoring, graph visualization, workflow automation, and constitution compliance for next-level development session management | NiceGUI + AI Integration + Real-time Dashboard + Graph Visualization + Workflow Automation + Constitution Compliance + Performance Monitoring | B-1009 AsyncIO Scribe Enhancement, B-1003 DSPy Multi-Agent System |
+| B‑1010 | NiceGUI Scribe Dashboard: Advanced UI with AI Integration and Real-time Monitoring | 🔥 | 8 | todo | Implement comprehensive NiceGUI dashboard for Scribe system with AI-powered insights, real-time monitoring, graph visualization, workflow automation, and constitution compliance for next-level development session management | NiceGUI + AI Integration + Real-time Dashboard + Graph Visualization + Workflow Automation + Constitution Compliance + Performance Monitoring | B-1009 AsyncIO Scribe Enhancement, B-1003 DSPy Multi-Agent System *(blocks B-1025, B-1029)* |
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1009", "B-1003"]}-->
 <!--score_total: 7.0-->
 <!-- do_next: Implement NiceGUI dashboard with AI-powered insights, real-time monitoring, graph visualization, workflow automation, and constitution compliance for next-level development session management -->

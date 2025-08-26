@@ -251,6 +251,17 @@ ai-dev-tasks/
 - **Memory Rehydration**: Context restoration and continuity
 
 ### **⚡ DSPy 3.0 Framework**
+### **🎧 Coaching Mode (Coming Soon)**
+- **View‑Only Screen Watcher + Voice PTT**: Real‑time, privacy‑safe tutoring while you work in Cursor.
+- **On‑Screen Hints**: Subtle overlays with exact commands and Cursor shortcuts.
+- **VM Demo Mode (Optional)**: Safe, narrated demonstrations inside a sandbox before you try on host.
+- Tracks micro‑lessons to improve guidance over time (ties into memory system).
+
+### **🎯 Interactive Preference Learning (Coming Soon)**
+- **Per‑User Calibration Loop**: Surface assumptions each turn, capture quick corrections, compute a distance score.
+- **Adaptive Responses**: Update a user profile and select prompting policies via a lightweight bandit.
+- **Storage**: Profiles in `100_memory/user_profiles/`, turn logs in `artifacts/session_memory/`.
+
 - **Optimized Pipelines**: Performance-tuned AI workflows
 - **Enhanced Assertions**: Quality validation and error prevention
 - **Production Deployment**: Scalable and maintainable systems
