@@ -695,7 +695,7 @@ class ModelSwitcher:
             # Test connection to Ollama
             import requests
 
-            response = requests.get(f"{self.ollama_base_url}/api/tags")
+            response = requests.get(f"{self.ollama_base_url}/api/tags", timeout=10)
             if response.status_code == 200:
                 _LOG.info("Ollama connection successful")
                 # Initialize with default model
@@ -1170,10 +1170,10 @@ class IntelligentModelSelector(Module):
         """Select the best model for a task with reasoning"""
         result = self.predict(task=task, task_type=task_type, complexity=complexity, context_size=context_size)
         return {
-            "selected_model": result.selected_model,
-            "reasoning": result.reasoning,
-            "confidence": result.confidence,
-            "expected_performance": result.expected_performance,
+            "selected_model": getattr(result, "selected_model", "unknown"),
+            "reasoning": getattr(result, "reasoning", ""),
+            "confidence": getattr(result, "confidence", 0.0),
+            "expected_performance": getattr(result, "expected_performance", ""),
         }
 
 
@@ -1231,9 +1231,9 @@ Please provide a detailed response following the project's coding standards and 
 
             return {
                 "result": result_text,
-                "confidence": signature_result.confidence,
+                "confidence": getattr(signature_result, "confidence", 0.0),
                 "model_used": model.value,
-                "reasoning": signature_result.reasoning,
+                "reasoning": getattr(signature_result, "reasoning", ""),
                 "model_selection": model_selection,
                 "optimizer_info": optimizer_info,
             }
@@ -1262,8 +1262,8 @@ class MultiModelOrchestrator(Module):
             "plan": orchestration_results.get("plan", ""),
             "execution": orchestration_results.get("execution", ""),
             "review": orchestration_results.get("review", ""),
-            "final_result": signature_result.final_result,
-            "orchestration_notes": signature_result.orchestration_notes,
+            "final_result": getattr(signature_result, "final_result", ""),
+            "orchestration_notes": getattr(signature_result, "orchestration_notes", ""),
         }
 
 

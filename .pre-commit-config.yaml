@@ -1,50 +1,48 @@
 # Simplified pre-commit hooks for fast validation
 # All hooks optimized for <1 second execution time
-# Temporarily disabled for normal development
+# Re-enabled for development with optimized performance
 repos:
   - repo: local
     hooks:
-      # Placeholder hook to maintain valid YAML structure
-      - id: placeholder
-        name: Placeholder Hook
-        entry: echo "Pre-commit hooks temporarily disabled"
+      - id: conflict-check
+        name: Conflict Check
+        entry: bash -c 'git grep -nE "^(<<<<<<< |======= |>>>>>>> )" "$@" || exit 0'
         language: system
+        files: \.(md|py|txt|sh|yaml|yml|json)$
+        pass_filenames: true
+        description: "Check for merge conflicts using simple git grep"
+
+      - id: pyright-type-check
+        name: Pyright Type Check
+        entry: pyright
+        language: system
+        files: \.py$
         pass_filenames: false
-        description: "Placeholder hook to maintain valid YAML structure"
-        always_run: false
+        description: "Run Pyright type checking on Python files"
 
-      # Temporarily disabled hooks for normal development
-      # - id: conflict-check
-      #   name: Conflict Check
-      #   entry: bash -c 'git grep -nE "^(<<<<<<< |======= |>>>>>>> )" "$@" || exit 0'
-      #   language: system
-      #   files: \.(md|py|txt|sh|yaml|yml|json)$
-      #   pass_filenames: true
-      #   description: "Check for merge conflicts using simple git grep"
+      - id: bandit-security-scan
+        name: Bandit Security Scan
+        entry: bandit
+        language: system
+        files: \.py$
+        pass_filenames: true
+        description: "Run Bandit security scanning on staged Python files only"
 
-      # - id: pyright-type-check
-      #   name: Pyright Type Check
-      #   entry: pyright
-      #   language: system
-      #   files: \.py$
-      #   pass_filenames: false
-      #   description: "Run Pyright type checking on Python files"
+      - id: markdown-validation
+        name: Markdown Validation
+        entry: bash scripts/simple_doc_validation.sh
+        language: system
+        files: \.md$
+        pass_filenames: false
+        description: "Validate markdown files for basic structure and broken links"
 
-      # - id: bandit-security-scan
-      #   name: Bandit Security Scan
-      #   entry: bandit
-      #   language: system
-      #   files: \.py$
-      #   pass_filenames: true
-      #   description: "Run Bandit security scanning on staged Python files only"
-
-      # - id: markdown-validation
-      #   name: Markdown Validation
-      #   entry: bash scripts/simple_doc_validation.sh
-      #   language: system
-      #   files: \.md$
-      #   pass_filenames: false
-      #   description: "Validate markdown files for basic structure and broken links"
+      - id: timestamp-update
+        name: Auto Update Documentation Timestamps
+        entry: python3 scripts/auto_update_timestamps.py
+        language: system
+        files: \.md$
+        pass_filenames: false
+        description: "Automatically update Last Updated timestamps in documentation files"
       # Temporarily disabled due to import issues
       # - id: database-sync-check
       #   name: Database Synchronization Check

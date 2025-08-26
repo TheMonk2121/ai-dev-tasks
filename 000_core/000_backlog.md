@@ -570,6 +570,7 @@ Items requiring external credentials, business decisions, or deployment should b
 
 | ID  | Title                                   | 🔥P | 🎯Points | Status | Problem/Outcome | Tech Footprint | Dependencies |
 |-----|-----------------------------------------|-----|----------|--------|-----------------|----------------|--------------|
+| B-000 | Housekeeping & Docs (standing item) | 🔧 | 1 | todo | Track meta changes (README, badges, CI text, minor repo settings) without creating new docs; preserve traceability while avoiding governance sprawl. **Enhanced**: Include detailed commit summaries with issues faced and problems solved for institutional memory and future context. | Docs + CI + Repo hygiene | None |
 | B-001 | Test the single doorway workflow with Python 3.12 | 🔧 | 3 | todo | Test the single doorway workflow with Python 3.12 | None | None |
 | B-085 | Code Review Process Upgrade with Performance Reporting - B-077 | 🔧 | 3 | todo | Code Review Process Upgrade with Performance Reporting - B-077 | None | None |
 | B-086 | Test Enhanced PRD Generation | 🔧 | 3 | todo | Test Enhanced PRD Generation | None | None |
@@ -851,7 +852,7 @@ No new heavy tables; zero regression on current LTST behavior when flags off.
 <!-- problem: Current DSPy system lacked constitution-aware type safety, role-based context models, structured error taxonomy, typed debug logs, and async Pydantic validation that would significantly improve reliability, debugging, constitution compliance, and I/O performance -->
 <!-- outcome: Enterprise-grade DSPy system with constitution-aware Pydantic validation, role-based context models, structured error taxonomy, comprehensive observability, and async validation for predictable reliability, constitution compliance, and 60% I/O performance improvement -->
 
-| B‑1008 | Hybrid JSON Backlog System: Structured Data with Simple Tools | 🔥 | 6 | todo | Implement hybrid JSON-based backlog system with structured data, validation hooks, simple CLI tools, automated PRD closure with Scribe packs, and knowledge mining capabilities. Replace markdown source of truth with JSON while maintaining human readability and version control. | Backlog Enhancement + JSON Schema + Validation + Simple Tools + Scribe Packs + Knowledge Mining + Archive Discipline | B-1006-A DSPy 3.0 Core Parity Migration, B-1007 Pydantic AI Style Enhancements |
+| B‑1008 | Hybrid JSON Backlog System: Structured Data with Simple Tools | 🔥 | 6 | todo | Implement hybrid JSON-based backlog system with structured data, validation hooks, simple CLI tools, automated PRD closure with Scribe packs, and knowledge mining capabilities. Replace markdown source of truth with JSON while maintaining human readability and version control. | Backlog Enhancement + JSON Schema + Validation + Simple Tools + Scribe Packs + Knowledge Mining + Archive Discipline | B-000 Housekeeping & Docs, B-1006-A DSPy 3.0 Core Parity Migration, B-1007 Pydantic AI Style Enhancements |
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1006-A", "B-1007"]}-->
 <!--score_total: 6.5-->
 <!-- do_next: Create JSON schema for backlog items, implement simple CLI tools, add validation hooks, and create Scribe pack system for knowledge mining -->

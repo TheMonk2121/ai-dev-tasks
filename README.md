@@ -5,18 +5,19 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)](https://www.postgresql.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **Advanced AI Development Ecosystem** with ChatGPT-like memory, multi-agent orchestration, and production-ready RAG system.
+> **Advanced AI Development Ecosystem** with hybrid memory retrieval, multi-agent orchestration, closed-loop lessons→backlog, and optional voice I/O.
 
 ## 🚀 TL;DR
 
 This is a **sophisticated AI development ecosystem** that provides:
 
 - **🤖 Multi-Agent AI System** with specialized roles (Planner, Implementer, Researcher, Coder)
-- **🧠 LTST Memory System** - ChatGPT-like conversation memory with persistent history
-- **🔍 Advanced RAG System** with PostgreSQL + PGVector for intelligent context retrieval
-- **⚡ DSPy 3.0 Migration** - Latest AI framework with full parity and optimizations
-- **🔄 Automated Workflows** - Single doorway system for backlog management and task execution
-- **📊 Production Monitoring** - Real-time dashboards and performance optimization
+- **🧠 LTST Memory Foundation (B‑1012)** – flags + hook points + eval harness
+- **🔍 Hybrid Retrieval (B‑1025)** – dense ∪ Postgres FTS union + local reranker, rolling summary, light facts
+- **🔁 Closed‑Loop Lessons (B‑1026)** – proxy scratchpad capture → lessons/decisions → backlog integration
+- **🔊 Voice I/O (B‑1027)** – push‑to‑talk + wake‑word, faster‑whisper STT, Piper/Coqui TTS, per‑role voices
+- **⚡ DSPy 3.0** – latest framework with modular pipelines and assertions
+- **🧭 Workflow** – single doorway scripts, traceable commits, feature‑flagged rollouts
 
 ## 🏗️ Architecture Overview
 
@@ -58,18 +59,27 @@ This is a **sophisticated AI development ecosystem** that provides:
 - **Researcher**: Research analysis, documentation, and knowledge synthesis
 - **Coder**: Development tooling, configuration, and automation tasks
 
-### **🧠 LTST Memory System**
-- **ChatGPT-like Conversation Memory** with persistent history across sessions
-- **User Preference Learning** and adaptive behavior
-- **Session Management** with pause/resume/archive capabilities
-- **Intelligent Context Merging** for optimal AI responses
-- **Performance Optimization** with caching and benchmarking
+### **🧠 LTST Memory System (B‑1012)**
+- **Lightweight foundation**: feature flags, hook sites, eval seed, instrumentation
+- **Exact pgvector + Postgres FTS** by default (BM25 only via extension later)
+- **No pruner/episodic** yet (kept lean and measurable)
 
-### **🔍 Advanced RAG System**
-- **PostgreSQL + PGVector** for high-performance vector search
-- **Semantic Context Retrieval** with relevance scoring
-- **Memory Rehydration** for instant context access
-- **Production-Ready Infrastructure** with monitoring and health checks
+### **🔍 Hybrid Retrieval (B‑1025)**
+- **Dense ∪ Sparse union**: pgvector exact + Postgres FTS (tsvector + ts_rank)
+- **Local reranker**: cross‑encoder (ONNX INT8), recency as tiebreak
+- **Rolling summary** (200–300 tokens) pinned at prompt edge
+- **Light facts** with versioning + contradiction handling
+- **A/B harness**: Recall/MRR/latency; feature‑flagged rollback
+### **🔁 Closed‑Loop Lessons (B‑1026)**
+- **Proxy logging** (OpenAI‑compatible) with secret masking
+- **Structured scratchpad** (Cursor Rules) → runs/steps/lessons/decisions
+- **Backlog integration**: lessons link to PRDs/items; auto‑suggest backlog candidates
+
+### **🔊 Voice I/O (B‑1027)**
+- **Push‑to‑talk + wake‑word** (openWakeWord), WebRTC VAD endpointing
+- **STT**: faster‑whisper (CTranslate2); **TTS**: Piper default (Coqui optional)
+- **Per‑role voices** and barge‑in; **hybrid moderator** (addressable + roundtable)
+- **Dual‑mode troubleshooting (B‑1024)**: View‑Only guidance and VM Privileged (approved actions)
 
 ### **⚡ DSPy 3.0 Integration**
 - **Latest Framework Migration** from DSPy 2.6.27 to 3.0.1
@@ -131,10 +141,10 @@ export POSTGRES_DSN="postgresql://username@localhost:5432/ai_agency"
 # Start the mission dashboard
 ./dspy-rag-system/start_mission_dashboard.sh
 
-# Run memory rehydration
-./scripts/memory_up.sh -r planner "current project status"
+# Run memory rehydration (Python wrapper around memory bundle)
+python scripts/memory_rehydrate.py --role planner --query "current project status"
 
-# Execute a backlog item
+# Execute a backlog item (single‑doorway)
 python scripts/single_doorway.py
 ```
 
@@ -147,7 +157,7 @@ python scripts/single_doorway.py
 - [Getting Started](400_guides/400_getting-started.md) - Quick start guide and project overview
 
 ### **Development Workflows**
-- [Backlog Management](000_core/000_backlog.md) - Current priorities and roadmap
+- [Backlog Management](000_core/000_backlog.md) - Current priorities and roadmap (traceability policy in B‑1008)
 - [PRD Creation](000_core/001_create-prd.md) - Product requirements workflow
 - [Task Generation](000_core/002_generate-tasks.md) - Task breakdown workflow
 - [Task Execution](000_core/003_process-task-list.md) - Implementation workflow
@@ -157,23 +167,23 @@ python scripts/single_doorway.py
 - [Cursor AI Integration](400_guides/400_cursor-ai-integration-guide.md) - IDE integration
 - [Deployment Operations](400_guides/400_deployment-operations.md) - Production deployment and operations
 
-## 🎯 Recent Achievements
+## 🎯 Status Snapshot
 
-### **✅ Completed (Latest)**
-- **B-1012: LTST Memory System** - ChatGPT-like conversation memory with persistent history
-- **DSPy 3.0 Migration** - Successfully migrated from 2.6.27 to 3.0.1 with full parity
-- **Multi-Agent System** - Specialized AI agents with role-based coordination
-- **Advanced RAG System** - Production-ready with PostgreSQL + PGVector
+### ✅ Landed recently
+- **DSPy 3.0 baseline** and multi‑agent orchestration
+- **Traceability (B‑1008)**: commit/branch policy, doc headers, helper
 
-### **🔄 In Progress**
-- **B-1013: Advanced RAG Optimization** - Enhanced retrieval and context management
-- **Performance Monitoring** - Real-time dashboards and optimization
+### 🚧 In progress / next
+- **B‑1012** LTST foundation (flags/hooks/eval/logs)
+- **B‑1025** Hybrid retrieval + reranker + summary + facts
+- **B‑1026** Closed‑loop lessons/decisions linked to backlog
+- **B‑1027** Voice I/O and dual‑mode troubleshooting UI
 
 ## 🏗️ System Architecture
 
 ### **Database Layer**
 - **PostgreSQL 15+** with PGVector extension for vector operations
-- **LTST Memory Tables** for conversation history and user preferences
+- **Messages + Facts** (minimal) with embedding_version and FTS (B‑1025)
 - **Session Management** with automatic cleanup and archiving
 
 ### **AI Framework Layer**
@@ -189,6 +199,14 @@ python scripts/single_doorway.py
 ### **Integration Layer**
 - **Cursor AI Integration** for seamless IDE experience
 - **Automated Workflows** with n8n orchestration
+- **Proxy logs + Scratchpad** (B‑1026) and **Voice I/O** (B‑1027)
+
+## 🧩 Feature Flags & Rollback
+- FEATURE_HYBRID, FEATURE_RERANK, FEATURE_ROLLING_SUMMARY, FEATURE_FACTS
+- FEATURE_PROXY_LOGS, FEATURE_SCRATCHPAD, FEATURE_LESSONS
+- FEATURE_STT, FEATURE_TTS, FEATURE_VOICE_ROLES, FEATURE_VOICE_ROUNDTABLE
+
+Flags default off; rollout is one‑flip; turning flags off reverts to LTST baseline.
 - **Real-time Dashboards** for system monitoring
 
 ## 🔧 Development
@@ -197,7 +215,7 @@ python scripts/single_doorway.py
 - **Ruff** for linting and formatting
 - **Pyright** for type checking
 - **Pytest** for comprehensive testing
-- **Pre-commit hooks** for quality gates
+- **Pre-commit hooks** for quality gates and traceability checks (B‑1008)
 
 ### **Testing Strategy**
 - **Unit Tests** for all core components
@@ -213,6 +231,13 @@ python scripts/single_doorway.py
 ## 🤝 Contributing
 
 This is a **solo development project** focused on local-first AI development workflows. The system is designed for personal productivity and research purposes.
+
+## 🔗 PRDs (Selected)
+- B‑1012: `artifacts/prds/PRD-B-1012-LTST-Foundation.md`
+- B‑1025: `artifacts/prds/PRD-B-1025-Lean-Hybrid-Memory.md`
+- B‑1026: `artifacts/prds/PRD-B-1026-Closed-Loop-Lessons.md`
+- B‑1024 (dual‑mode reference): `artifacts/prds/PRD-B-1024-5-Layer-Memory-System.md` (legacy discussion baseline)
+
 
 ## 📄 License
 
