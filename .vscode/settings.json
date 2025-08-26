@@ -201,6 +201,7 @@
         "Isinstance",
         "asyncio",
         "Asyncio",
+        "asyncpg",
         "isort",
         "Isort",
         "Negotiables",

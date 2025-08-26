@@ -43,11 +43,18 @@ check_commit_scope() {
     local total_files
 
     if [[ -n "$staged_files" ]]; then
-        python_files=$(echo "$staged_files" | grep -E "\.py$" | wc -l)
-        doc_files=$(echo "$staged_files" | grep -E "\.md$" | wc -l)
-        config_files=$(echo "$staged_files" | grep -E "\.(yml|yaml|json|toml)$" | wc -l)
-        test_files=$(echo "$staged_files" | grep -E "test_.*\.py$" | wc -l)
+        python_files=$(echo "$staged_files" | grep -c "\.py$" 2>/dev/null || echo "0")
+        doc_files=$(echo "$staged_files" | grep -c "\.md$" 2>/dev/null || echo "0")
+        config_files=$(echo "$staged_files" | grep -c "\.(yml|yaml|json|toml)$" 2>/dev/null || echo "0")
+        test_files=$(echo "$staged_files" | grep -c "test_.*\.py$" 2>/dev/null || echo "0")
         total_files=$(echo "$staged_files" | wc -l)
+        
+        # Convert to integers
+        python_files=$((python_files))
+        doc_files=$((doc_files))
+        config_files=$((config_files))
+        test_files=$((test_files))
+        total_files=$((total_files))
     else
         python_files=0
         doc_files=0
@@ -154,10 +161,16 @@ validate_commit_message_scope() {
     local config_files
 
     if [[ -n "$staged_files" ]]; then
-        python_files=$(echo "$staged_files" | grep -E "\.py$" | wc -l)
-        doc_files=$(echo "$staged_files" | grep -E "\.md$" | wc -l)
-        test_files=$(echo "$staged_files" | grep -E "test_.*\.py$" | wc -l)
-        config_files=$(echo "$staged_files" | grep -E "\.(yml|yaml|json|toml)$" | wc -l)
+        python_files=$(echo "$staged_files" | grep -c "\.py$" 2>/dev/null || echo "0")
+        doc_files=$(echo "$staged_files" | grep -c "\.md$" 2>/dev/null || echo "0")
+        test_files=$(echo "$staged_files" | grep -c "test_.*\.py$" 2>/dev/null || echo "0")
+        config_files=$(echo "$staged_files" | grep -c "\.(yml|yaml|json|toml)$" 2>/dev/null || echo "0")
+        
+        # Convert to integers
+        python_files=$((python_files))
+        doc_files=$((doc_files))
+        test_files=$((test_files))
+        config_files=$((config_files))
     else
         python_files=0
         doc_files=0
