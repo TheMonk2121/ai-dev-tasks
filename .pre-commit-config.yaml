@@ -103,6 +103,14 @@ repos:
         stages: [commit-msg]
         description: "Ensure significant changes have corresponding README context updates"
 
+      - id: commit-staging-pattern
+        name: Commit Staging Pattern Check
+        entry: bash scripts/check_commit_staging.sh
+        language: system
+        pass_filenames: true
+        stages: [commit-msg]
+        description: "Validate commit staging patterns and scope consistency"
+
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.30.0
     hooks:

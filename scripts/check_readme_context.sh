@@ -49,42 +49,42 @@ extract_backlog_id() {
 # Check if README context section exists and is recent
 check_readme_context_section() {
     local readme_file="README.md"
-    
+
     if [[ ! -f "$readme_file" ]]; then
         log_error "README.md not found"
         return 1
     fi
-    
+
     # Check if Commit Context section exists
     if ! grep -q "## 📝 Commit Context & Implementation Details" "$readme_file"; then
         log_error "README missing 'Commit Context & Implementation Details' section"
         log_suggestion "Add this section to preserve implementation context"
         return 1
     fi
-    
+
     # Check if section was updated recently (within last 7 days)
     local section_start=$(grep -n "## 📝 Commit Context & Implementation Details" "$readme_file" | cut -d: -f1)
     if [[ -z "$section_start" ]]; then
         return 1
     fi
-    
+
     # Get the last modification time of README
     local readme_mtime=$(stat -f "%m" "$readme_file" 2>/dev/null || stat -c "%Y" "$readme_file" 2>/dev/null)
     local current_time=$(date +%s)
     local days_since_update=$(( (current_time - readme_mtime) / 86400 ))
-    
+
     if [[ $days_since_update -gt 7 ]]; then
         log_suggestion "README context section hasn't been updated in $days_since_update days"
         log_suggestion "Consider updating with recent implementation details"
     fi
-    
+
     return 0
 }
 
 # Check if this is a significant change that needs README context
 is_significant_change() {
     local staged_files="$1"
-    
+
     # Significant file patterns
     local significant_patterns=(
         "\.py$"           # Python files
@@ -95,13 +95,13 @@ is_significant_change() {
         "requirements"    # Dependencies
         "pyproject"       # Project config
     )
-    
+
     for pattern in "${significant_patterns[@]}"; do
         if echo "$staged_files" | grep -qE "$pattern"; then
             return 0
         fi
     done
-    
+
     return 1
 }
 
@@ -109,9 +109,9 @@ is_significant_change() {
 validate_readme_context_pattern() {
     local commit_msg_file="$1"
     local failed=0
-    
+
     log_info "Checking README context pattern..."
-    
+
     # Read commit message
     local commit_msg=""
     while IFS= read -r line; do
@@ -119,16 +119,16 @@ validate_readme_context_pattern() {
             commit_msg="$line"
         fi
     done < "$commit_msg_file"
-    
+
     # Get staged files
     local staged_files=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || echo "")
-    
+
     # Check if this is a significant change
     if ! is_significant_change "$staged_files"; then
         log_success "Minor change detected - README context not required"
         return 0
     fi
-    
+
     # Check for backlog reference
     if ! has_backlog_reference "$commit_msg"; then
         log_suggestion "Consider adding backlog reference (e.g., B-077) to commit message"
@@ -137,7 +137,7 @@ validate_readme_context_pattern() {
         local backlog_id=$(extract_backlog_id "$commit_msg")
         log_success "Backlog reference found: $backlog_id"
     fi
-    
+
     # Check README context section
     if ! check_readme_context_section; then
         log_suggestion "Update README 'Commit Context & Implementation Details' section with:"
@@ -149,29 +149,29 @@ validate_readme_context_pattern() {
     else
         log_success "README context section is present and recent"
     fi
-    
+
     # Provide guidance for README updates
     if [[ $failed -eq 0 ]]; then
         log_suggestion "💡 Remember to update README context section with implementation details"
         log_suggestion "   This preserves rich context while keeping commits GitHub-compliant"
     fi
-    
+
     return $failed
 }
 
 # Main execution
 main() {
     local commit_msg_file="$1"
-    
+
     if [[ -z "$commit_msg_file" ]]; then
         log_error "No commit message file provided"
         exit 1
     fi
-    
+
     if ! validate_readme_context_pattern "$commit_msg_file"; then
         exit 1
     fi
-    
+
     exit 0
 }
 
