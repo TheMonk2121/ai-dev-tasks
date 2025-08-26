@@ -30,7 +30,8 @@
     {"path": "400_guides/400_backlog-status-tracking-guide.md", "role": "quick-reference"},
     {"path": "400_guides/400_task-generation-quick-reference.md", "role": "quick-reference"},
     {"path": "500_research-index.md", "role": "research-index"},
-    {"path": "400_guides/400_documentation-tiering-guide.md", "role": "documentation-rules"}
+    {"path": "400_guides/400_documentation-tiering-guide.md", "role": "documentation-rules"},
+    {"path": "100_memory/100_agent-troubleshooting-patterns.md", "role": "debugging-patterns"}
   ]
 }
 CONTEXT_INDEX -->
