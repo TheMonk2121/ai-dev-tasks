@@ -46,11 +46,19 @@ repos:
 
       - id: branch-name-check
         name: Branch name policy
-        entry: bash -c 'git rev-parse --abbrev-ref HEAD | grep -E "^(feature|fix|chore|docs|ci|test)/B-[0-9]+-" >/dev/null'
+        entry: bash scripts/check_branch_name.sh
         language: system
         pass_filenames: false
         stages: [commit]
-        description: "Ensure branch name matches policy: type/B-####-short-slug"
+        description: "Ensure branch name matches policy: main or type/B-####-short-slug"
+
+      - id: no-branches-without-permission
+        name: No branches without explicit permission
+        entry: bash scripts/check_branch_permission.sh
+        language: system
+        pass_filenames: false
+        stages: [commit]
+        description: "Prevent commits on non-main branches without explicit permission"
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.30.0
