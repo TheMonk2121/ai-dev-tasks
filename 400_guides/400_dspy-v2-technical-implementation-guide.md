@@ -1,22 +1,22 @@
-<!-- ANCHOR_KEY: dspy-v2-technical-implementation -->
+<!-- ANCHOR_KEY: dspy-3.0-technical-implementation -->
 <!-- ANCHOR_PRIORITY: 40 -->
 <!-- ROLE_PINS: ["implementer", "coder", "planner"] -->
-# DSPy v2 Technical Implementation Guide
+# DSPy 3.0 Technical Implementation Guide
 
 **Version**: 1.0
 **Date**: 2025-01-23
-**Project**: B-1004 DSPy v2 Optimization
+**Project**: B-1004 DSPy 3.0 Optimization
 
 ## 📖 Overview
 
-This guide provides technical implementation details for the DSPy v2 optimization system, including architecture patterns, integration guidelines, and best practices for extending the system.
+This guide provides technical implementation details for the DSPy 3.0 optimization system, including architecture patterns, integration guidelines, and best practices for extending the system.
 
 ## 🏗️ System Architecture
 
 ### Core Components
 
 ```
-DSPy v2 Optimization System
+DSPy 3.0 Optimization System
 ├── ModelSwitcher (Enhanced)
 │   ├── Optimizer Integration
 │   ├── Model Selection
@@ -680,7 +680,7 @@ def audit_optimization(program: HasForward, user: str, result: OptimizationResul
 ```python
 import logging
 
-# Configure logging for DSPy v2 components
+# Configure logging for DSPy 3.0 components
 logging.basicConfig(level=logging.INFO)
 logging.getLogger("dspy_optimizers").setLevel(logging.DEBUG)
 logging.getLogger("dspy_assertions").setLevel(logging.DEBUG)
@@ -953,6 +953,6 @@ class MLOptimizer:
 ---
 
 **Version**: 1.0
-**Last Updated**: 2025-01-23
-**Maintainer**: DSPy v2 Development Team
+**Last Updated**: 2025-08-26
+**Maintainer**: DSPy 3.0 Development Team
 **Status**: Active Development

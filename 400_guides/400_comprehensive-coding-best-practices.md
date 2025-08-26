@@ -3181,7 +3181,7 @@ Files that should be automatically synchronized with the database should include
 **Current files with DATABASE_SYNC tags:**
 - `100_memory/100_cursor-memory-context.md`
 - `000_core/000_backlog.md`
-- `600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md`
+- `400_guides/400_comprehensive-coding-best-practices.md`
 - `400_guides/400_code-criticality-guide.md`
 - `400_guides/400_ai-constitution.md`
 - `400_guides/400_file-analysis-guide.md`
@@ -3251,7 +3251,7 @@ cd dspy-rag-system && python3.12 scripts/database_maintenance.py
 python3 scripts/doc_coherence_validator.py --dry-run --only-changed
 
 # Run validation on specific file
-python3 scripts/doc_coherence_validator.py --path 600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md
+python3 scripts/doc_coherence_validator.py --path 400_guides/400_comprehensive-coding-best-practices.md
 
 # Apply safe fixes (use with caution)
 python3 scripts/doc_coherence_validator.py --safe-fix

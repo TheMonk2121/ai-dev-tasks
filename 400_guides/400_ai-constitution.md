@@ -80,7 +80,7 @@
   - Require explicit confirmation for critical changes
   - Use guardrails and constraint frameworks
 
-- **2. Error Recovery Patterns** - Follow `600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md` for all error handling
+- **2. Error Recovery Patterns** - Follow `400_comprehensive-coding-best-practices.md` for all error handling
 
   - Use automated recovery scripts when available
   - Implement systematic workflows for common issues
@@ -245,7 +245,7 @@ documentation patterns
 - `000_core/000_backlog.md` - Current priorities and roadmap
 - `400_guides/400_file-analysis-guide.md` - File safety requirements
 - `400_guides/400_code-criticality-guide.md` - Critical file tiers and quality standards
-- `600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md` - Development standards and conflict prevention
+- `400_comprehensive-coding-best-practices.md` - Development standards and conflict prevention
 
 ### **Research Foundation**
 
@@ -257,7 +257,7 @@ documentation patterns
 
 ### **Implementation Support**
 
-- `600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md` - Error prevention and recovery
+- `400_comprehensive-coding-best-practices.md` - Error prevention and recovery
 
 - `400_guides/400_security-best-practices-guide.md` - Security requirements
 
@@ -295,7 +295,7 @@ documentation patterns
 
 - **Constitution Version**: 1.1
 - **Implementation Date**: 2024-08-07
-- **Last Updated**: 2025-08-25
+- **Last Updated**: 2025-08-26
 - **Research Basis**: 500_research-analysis-summary.md
 - **Integration Status**: Active
 - **Current Systems**: DSPy RAG System, Virtual Environment Manager, Scribe Context Capture

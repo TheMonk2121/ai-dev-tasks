@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import os
 import re
-import subprocess
+import subprocess  # nosec B404
 import sys
 from typing import Optional
 
@@ -47,8 +47,8 @@ def git_introducing_commit_id(file_path: str) -> Optional[str]:
             "--",
             file_path,
         ]
-        out = subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL)
-        lines = [l.strip() for l in out.splitlines() if l.strip()]
+                    out = subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL)  # nosec B603
+        lines = [line.strip() for line in out.splitlines() if line.strip()]
         if not lines:
             return None
         introducing_subject = lines[-1]

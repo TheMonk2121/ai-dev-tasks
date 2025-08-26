@@ -419,17 +419,21 @@ class DocumentIngestionPipeline(Module):
             )
 
             # Process document
-            result = self.processor(document_path)
+            result: Any = self.processor(document_path)
 
             # Store in vector database (if provided)
-            if vector_store and hasattr(vector_store, "store_chunks"):
+            if vector_store and hasattr(vector_store, "forward"):
                 try:
-                    vector_store.store_chunks(result["chunks"], result["metadata"])
+                    # Extract chunk texts for storage
+                    chunks = result.get("chunks", [])
+                    chunk_texts = [chunk.get("text", "") for chunk in chunks if isinstance(chunk, dict)]
+                    metadata = result.get("metadata", {})
+                    vector_store.forward("store_chunks", chunks=chunk_texts, metadata=metadata)
                     self.logger.info(
                         "Chunks stored in vector database",
                         extra={
                             "document_id": result.get("document_id", "unknown"),
-                            "chunks_stored": result["total_chunks"],
+                            "chunks_stored": result.get("total_chunks", 0),
                         },
                     )
                 except Exception as e:
@@ -446,7 +450,7 @@ class DocumentIngestionPipeline(Module):
                 extra={
                     "document_id": result.get("document_id", "unknown"),
                     "stage": "pipeline_complete",
-                    "chunks_created": result["total_chunks"],
+                    "chunks_created": result.get("total_chunks", 0),
                     "elapsed_ms": processing_time,
                 },
             )
@@ -454,8 +458,8 @@ class DocumentIngestionPipeline(Module):
             return {
                 "status": "success",
                 "document_path": document_path,
-                "chunks_created": result["total_chunks"],
-                "metadata": result["metadata"],
+                "chunks_created": result.get("total_chunks", 0),
+                "metadata": result.get("metadata", {}),
                 "processing_time_ms": processing_time,
                 "document_id": result.get("document_id", "unknown"),
             }
@@ -483,10 +487,12 @@ if __name__ == "__main__":
         f.write("This is a test document. " * 100)  # Create a test document
 
     try:
-        result = processor(test_file)
-        print(f"Processed document: {result['total_chunks']} chunks created")
-        print(f"First chunk: {result['chunks'][0]['text'][:100]}...")
-        print(f"Enhanced metadata: {json.dumps(result['metadata'], indent=2)}")
+        result: Any = processor(test_file)
+        print(f"Processed document: {result.get('total_chunks', 0)} chunks created")
+        chunks = result.get("chunks", [])
+        if chunks and isinstance(chunks[0], dict):
+            print(f"First chunk: {chunks[0].get('text', '')[:100]}...")
+        print(f"Enhanced metadata: {json.dumps(result.get('metadata', {}), indent=2)}")
     finally:
         # Clean up test file
         if os.path.exists(test_file):

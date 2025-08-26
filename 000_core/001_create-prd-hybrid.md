@@ -137,25 +137,25 @@ poetry run mypy .              # Type check
 - **Add configuration**: Config file → Environment variables → Validation
 
 ## 1. Problem Statement
-[What's broken, why it matters, what's the opportunity]
+`[What's broken, why it matters, what's the opportunity]`
 
 ## 2. Solution Overview
-[What we're building, how it works, key features]
+`[What we're building, how it works, key features]`
 
 ## 3. Acceptance Criteria
-[How we know it's done, success criteria, quality gates]
+`[How we know it's done, success criteria, quality gates]`
 
 ## 4. Technical Approach
-[Technology stack, integration points, constraints]
+`[Technology stack, integration points, constraints]`
 
 ## 5. Risks and Mitigation
-[What could go wrong, mitigation strategies, unknowns]
+`[What could go wrong, mitigation strategies, unknowns]`
 
 ## 6. Testing Strategy
-[What needs testing, testing approach, coverage targets]
+`[What needs testing, testing approach, coverage targets]`
 
 ## 7. Implementation Plan
-[Phases, dependencies, timeline]
+`[Phases, dependencies, timeline]`
 ```
 
 ## **Special Instructions**

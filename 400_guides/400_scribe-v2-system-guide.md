@@ -693,7 +693,7 @@ Intelligent caching for repeated operations:
 - **[System Overview](./400_system-overview.md)**: Technical architecture
 - **[Project Overview](./400_getting-started.md)**: High-level project structure
 - **[Context Priority Guide](./400_context-priority-guide.md)**: Documentation hierarchy
-- **[Comprehensive Coding Best Practices](../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md)**: Coding standards and development workflow
+- **[Comprehensive Coding Best Practices](400_comprehensive-coding-best-practices.md)**: Coding standards and development workflow
 - **[Naming Conventions](../200_setup/200_naming-conventions.md)**: File organization standards
 - **[Single Doorway Workflow](../000_core/001_create-prd.md)**: Core workflow integration
 - **[Graph Visualization Guide](./400_graph-visualization-guide.md)**: Graph integration details
