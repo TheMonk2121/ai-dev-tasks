@@ -92,7 +92,7 @@ repos:
         entry: bash scripts/hook_timer.sh
         args: ["bash", "scripts/check_commit_message_length.sh"]
         language: system
-        pass_filenames: false
+        pass_filenames: true
         stages: [commit-msg]
         description: "Enforce GitHub commit message line length limits (50 chars subject, 72 chars body)"
 

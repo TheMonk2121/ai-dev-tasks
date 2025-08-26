@@ -89,6 +89,7 @@ check_commit_message_length() {
 
 # Main execution
 main() {
+    # Pre-commit passes the commit message file as the first argument
     local commit_msg_file="$1"
     
     if [[ -z "$commit_msg_file" ]]; then
