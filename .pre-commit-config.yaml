@@ -6,7 +6,13 @@ repos:
     hooks:
       - id: conflict-check
         name: Conflict Check
-        entry: bash -c 'git grep -nE "^(<<<<<<< |======= |>>>>>>> )" "$@" || exit 0'
+        entry: bash scripts/hook_timer.sh
+        args:
+          [
+            "bash",
+            "-c",
+            "git grep -nE '^(<<<<<<< |======= |>>>>>>> )' '$@' || exit 0",
+          ]
         language: system
         files: \.(md|py|txt|sh|yaml|yml|json)$
         pass_filenames: true
@@ -14,7 +20,8 @@ repos:
 
       - id: pyright-type-check
         name: Pyright Type Check
-        entry: pyright
+        entry: bash scripts/hook_timer.sh
+        args: ["pyright"]
         language: system
         files: \.py$
         pass_filenames: false
@@ -22,8 +29,8 @@ repos:
 
       - id: bandit-security-scan
         name: Bandit Security Scan
-        entry: bandit
-        args: ["-q", "--severity-level", "MEDIUM", "--exit-zero"]
+        entry: bash scripts/hook_timer.sh
+        args: ["bandit", "-q", "--severity-level", "MEDIUM", "--exit-zero"]
         language: system
         files: \.py$
         pass_filenames: true
@@ -31,7 +38,8 @@ repos:
 
       - id: markdown-validation
         name: Markdown Validation
-        entry: bash scripts/simple_doc_validation.sh
+        entry: bash scripts/hook_timer.sh
+        args: ["bash", "scripts/simple_doc_validation.sh"]
         language: system
         files: \.md$
         pass_filenames: false
@@ -39,7 +47,8 @@ repos:
 
       - id: timestamp-update
         name: Auto Update Documentation Timestamps
-        entry: python3 scripts/auto_update_timestamps.py
+        entry: bash scripts/hook_timer.sh
+        args: ["python3", "scripts/auto_update_timestamps.py"]
         language: system
         files: \.md$
         pass_filenames: false
@@ -47,31 +56,34 @@ repos:
 
       - id: branch-name-check
         name: Branch name policy
-        entry: bash scripts/check_branch_name.sh
+        entry: bash scripts/hook_timer.sh
+        args: ["bash", "scripts/check_branch_name.sh"]
         language: system
         pass_filenames: false
-        stages: [pre-commit]
+        stages: [commit]
         description: "Ensure branch name matches policy: main or type/B-####-short-slug"
 
       - id: no-branches-without-permission
         name: No branches without explicit permission
-        entry: bash scripts/check_branch_permission.sh
+        entry: bash scripts/hook_timer.sh
+        args: ["bash", "scripts/check_branch_permission.sh"]
         language: system
         pass_filenames: false
-        stages: [pre-commit]
+        stages: [commit]
         description: "Prevent commits on non-main branches without explicit permission"
 
       - id: ensure-venv-active
         name: Ensure venv is active
-        entry: bash
+        entry: bash scripts/hook_timer.sh
         args:
           [
+            "bash",
             "-c",
-            'if [ -z "$VIRTUAL_ENV" ] || [[ "$VIRTUAL_ENV" != */venv ]]; then echo ''Virtual environment not active. Run: source venv/bin/activate''; exit 1; fi',
+            'if [ -z "$VIRTUAL_ENV" ] || [[ "$VIRTUAL_ENV" != */venv ]]; then echo "Virtual environment not active. Run: source venv/bin/activate"; exit 1; fi',
           ]
         language: system
         pass_filenames: false
-        stages: [pre-commit]
+        stages: [commit]
         description: "Prevent commits outside the repository virtual environment"
 
   - repo: https://github.com/commitizen-tools/commitizen
