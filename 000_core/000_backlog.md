@@ -88,6 +88,18 @@ and normalize spacing across long-form guides.
 
 ## P1 Lane
 
+- B‑1033 — Fix MCP Memory Server: Port Conflict Resolution and Function Restoration (score 8.5)
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:4, deps:[]}-->
+<!--score_total: 8.5-->
+<!-- do_next: Fix port conflict, restore missing build_hydration_bundle function, update Python version, and resolve LaunchAgent loop -->
+<!-- est_hours: 8 -->
+<!-- acceptance: MCP memory server starts successfully, build_hydration_bundle function exists and works, Python 3.12 compatibility, LaunchAgent stops restarting broken server -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#mcp-integration", "400_guides/400_development-workflow.md#troubleshooting"] -->
+<!-- reference_cards: ["500_reference-cards.md#mcp-server", "500_reference-cards.md#memory-rehydration"] -->
+<!-- tech_footprint: MCP Server + Memory Rehydration + Port Management + Python 3.12 + LaunchAgent + Function Restoration -->
+<!-- problem: MCP memory server has port conflict (OSError: [Errno 48] Address already in use), missing build_hydration_bundle function, using Python 3.9 instead of 3.12, and LaunchAgent keeps restarting broken server -->
+<!-- outcome: Production-ready MCP memory server with proper port management, complete function set, Python 3.12 compatibility, and stable LaunchAgent configuration -->
+
 - B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0) *(consider replacing with B-1025)*
 
 - B‑077 — Code Review Process Upgrade with Performance Reporting (score 7.5) ✅ **COMPLETED**
@@ -592,6 +604,29 @@ Security: VM‑safe mode available (no host control required); approval gate doc
 <!-- problem: Need systematic approach to measure and improve debugging effectiveness, pattern recognition, and memory system performance for AI agents -->
 <!-- outcome: Production-ready debugging effectiveness analysis framework with automated tracking, pattern analysis, memory system optimization, and continuous improvement feedback loops -->
 
+- B‑1031 — Automated README Context Management System: Smart Documentation with Bloat Prevention (score 8.5) ✅ **COMPLETED**
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:5, deps:[]}-->
+<!--score_total: 8.5-->
+<!-- completion_date: 2025-08-26 -->
+<!-- implementation_notes: Successfully implemented comprehensive automated README context management system. Created scripts/readme_context_manager.py with tiered documentation strategy, smart consolidation, and bloat prevention. Enhanced pre-commit hooks with readme-context-pattern and readme-context-manager validation. Built scripts/check_readme_context.sh with intelligent analysis and suggestions. Created scripts/weekly_readme_maintenance.sh for automated consolidation and archiving. Enhanced post-commit hook with automatic README update suggestions. System includes impact/complexity scoring, automated consolidation, 90-day archiving, size limits (15 entries, 2000 words), and comprehensive validation. Provides balanced compliance without overfitting through smart automation and flexible enforcement. -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#automation-patterns", "400_guides/400_development-workflow.md#documentation-management"] -->
+<!-- reference_cards: ["500_reference-cards.md#readme-management", "500_reference-cards.md#automation-patterns"] -->
+<!-- tech_footprint: README Context Management + Pre-commit Hooks + Post-commit Automation + Smart Consolidation + Bloat Prevention + Impact Scoring + Automated Archiving + Validation System -->
+<!-- problem: README context documentation was manual, inconsistent, and prone to bloat without systematic management or automation -->
+<!-- outcome: Production-ready automated README context management system with smart documentation, bloat prevention, tiered strategy, and comprehensive automation through hooks and maintenance scripts -->
+
+- B‑1032 — Documentation t-t3 Authority Structure Implementation: Tiered Documentation Governance with Automated Lifecycle Management (score 9.0)
+<!--score: {bv:5, tc:5, rr:5, le:4, effort:5, deps:[]}-->
+<!--score_total: 9.0-->
+<!-- do_next: Phase 1: Implement simple validation system with usage analysis, Phase 2: Create t-t3 structure with flexible size ranges, Phase 3: Implement incremental migration with hybrid approach, Phase 4: Deploy balanced metrics with usage-based sizing -->
+<!-- est_hours: 20 -->
+<!-- acceptance: Complete t-t3 documentation structure with Tier 1 (authoritative, 500-1500 lines), Tier 2 (supporting, 1000-2000 lines), Tier 3 (reference, flexible sizing), automated lifecycle management, usage-based consolidation, and comprehensive governance system. System includes simple validation, flexible size ranges, incremental migration, balanced metrics, and zero breaking changes to existing workflow. -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#documentation-patterns", "400_guides/400_development-workflow.md#governance", "100_memory/105_lessons-learned-context.md#automation-patterns"] -->
+<!-- reference_cards: ["500_reference-cards.md#documentation-governance", "500_reference-cards.md#tiered-structure", "500_reference-cards.md#lifecycle-management"] -->
+<!-- tech_footprint: Documentation Governance + Tiered Structure + Lifecycle Management + Usage Analysis + Automated Consolidation + Validation System + Migration Framework + Metrics Dashboard -->
+<!-- problem: Current 400_guides documentation system is bloated, confusing, lacks authority structure, has inconsistent naming, and no systematic lifecycle management, making it difficult to trust content, find authoritative sources, and maintain quality -->
+<!-- outcome: Production-ready t-t3 documentation governance system with clear authority structure, automated lifecycle management, usage-based consolidation, comprehensive validation, and systematic quality improvement -->
+
 ## P2 Lane
 
 - B‑076 — Research-Based DSPy Assertions Implementation (score 4.8)
@@ -726,7 +761,7 @@ PHASE 5 — Profile Update (0.5h)
 
 PHASE 6 — Integration & UI Hooks (1.0h)
 9) Wire into reply path: load profile → select policy → draft answer → emit assumptions + 1‑2 targeted questions (lowest confidence). After user correction, call calibrate(), update profile, choose next policy.
-10) Add collapsible “Assumptions Summary” block and a compact correction form schema.
+10) Add collapsible "Assumptions Summary" block and a compact correction form schema.
 
 PHASE 7 — Tests & Metrics (1.0h)
 11) Add tests: profile load/save, distance math, bandit update/selection, facade end‑to‑end dry‑run.
@@ -760,7 +795,7 @@ PHASE 2 — Voice PTT (1.0h)
 4) Integrate push-to-talk from B-1027; low-latency coaching; barge-in cancels TTS.
 
 PHASE 3 — On-Screen Hints (1.0h)
-5) Overlay small hint near cursor: “Try: …” and key Cursor shortcuts (Cmd-P, Cmd-Shift-P, multi-cursor).
+5) Overlay small hint near cursor: "Try: …" and key Cursor shortcuts (Cmd-P, Cmd-Shift-P, multi-cursor).
 
 PHASE 4 — Micro-Lessons Logging (1.0h)
 6) Log what helped/blocked; store to lessons (B-1026) + per-user profile; feed preference loop (B-1028).

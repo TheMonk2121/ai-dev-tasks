@@ -409,7 +409,10 @@
         "RERANK",
         "reranker",
         "Reranker",
-        "voiceio"
+        "voiceio",
+        "erformance",
+        "ocumentation",
+        "ooks"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

@@ -2,10 +2,9 @@
 set -euo pipefail
 
 # README Context Pattern Validation Hook
-# - Ensures significant changes have corresponding README context updates
-# - Checks for backlog item references in commit messages
-# - Validates README context section is updated for major changes
-# - Fast execution (<1 second)
+# - Enforces README context documentation for significant changes
+# - Integrates with README context manager for smart analysis
+# - Provides actionable suggestions for compliance
 
 # Colors for output
 RED='\033[0;31m'
@@ -14,12 +13,12 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-log_info() {
-    echo -e "${YELLOW}[INFO]${NC} $1"
-}
-
 log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
+}
+
+log_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
 log_success() {
@@ -30,62 +29,22 @@ log_suggestion() {
     echo -e "${BLUE}[SUGGESTION]${NC} $1"
 }
 
-# Check if commit message references a backlog item
-has_backlog_reference() {
-    local commit_msg="$1"
-    # Check for B-#### pattern in commit message
-    if echo "$commit_msg" | grep -qE "B-[0-9]+"; then
-        return 0
+# Get commit message from file or stdin
+get_commit_message() {
+    if [[ $# -eq 1 ]]; then
+        cat "$1"
+    else
+        cat
     fi
-    return 1
 }
 
 # Extract backlog ID from commit message
 extract_backlog_id() {
     local commit_msg="$1"
-    echo "$commit_msg" | grep -oE "B-[0-9]+" | head -1
+    echo "$commit_msg" | grep -oE "B-[0-9]+" | head -1 || true
 }
 
-# Check if README context section exists and is recent
-check_readme_context_section() {
-    local readme_file="README.md"
-
-    if [[ ! -f "$readme_file" ]]; then
-        log_error "README.md not found"
-        return 1
-    fi
-
-    # Check if Commit Context section exists
-    if ! grep -q "## 📝 Commit Context & Implementation Details" "$readme_file"; then
-        log_error "README missing 'Commit Context & Implementation Details' section"
-        log_suggestion "Add this section to preserve implementation context"
-        return 1
-    fi
-
-    # Check if section was updated recently (within last 7 days)
-    local section_start
-    section_start=$(grep -n "## 📝 Commit Context & Implementation Details" "$readme_file" | cut -d: -f1)
-    if [[ -z "$section_start" ]]; then
-        return 1
-    fi
-
-    # Get the last modification time of README
-    local readme_mtime
-    local current_time
-    local days_since_update
-    readme_mtime=$(stat -f "%m" "$readme_file" 2>/dev/null || stat -c "%Y" "$readme_file" 2>/dev/null)
-    current_time=$(date +%s)
-    days_since_update=$(( (current_time - readme_mtime) / 86400 ))
-
-    if [[ $days_since_update -gt 7 ]]; then
-        log_suggestion "README context section hasn't been updated in $days_since_update days"
-        log_suggestion "Consider updating with recent implementation details"
-    fi
-
-    return 0
-}
-
-# Check if this is a significant change that needs README context
+# Check if change is significant based on file patterns
 is_significant_change() {
     local staged_files="$1"
 
@@ -126,65 +85,62 @@ is_significant_change() {
     return 1
 }
 
-# Main validation function
+# Check if commit message has backlog reference
+has_backlog_reference() {
+    local commit_msg="$1"
+    echo "$commit_msg" | grep -qE "B-[0-9]+"
+}
+
+# Validate README context pattern
 validate_readme_context_pattern() {
-    local commit_msg_file="$1"
+    local commit_msg="$1"
+    local staged_files="$2"
     local failed=0
-
-    log_info "Checking README context pattern..."
-
-    # Read commit message
-    local commit_msg
-    commit_msg=""
-    while IFS= read -r line; do
-        if [[ -z "$commit_msg" ]]; then
-            commit_msg="$line"
-        fi
-    done < "$commit_msg_file"
-
-    # Get staged files
-    local staged_files
-    staged_files=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || echo "")
 
     # Check if this is a significant change
     if ! is_significant_change "$staged_files"; then
-        log_success "Minor change detected - README context not required"
+        log_success "Change not significant - no README context required"
         return 0
     fi
 
-    # Check for backlog reference
-    if ! has_backlog_reference "$commit_msg"; then
-        log_suggestion "Consider adding backlog reference (e.g., B-077) to commit message"
-        log_suggestion "This helps with traceability and README context updates"
-    else
-        local backlog_id
-        backlog_id=$(extract_backlog_id "$commit_msg")
-        log_success "Backlog reference found: $backlog_id"
-    fi
+    log_suggestion "Significant change detected - checking README context..."
 
-    # Check README context section
-    if ! check_readme_context_section; then
-        log_suggestion "Update README 'Commit Context & Implementation Details' section with:"
-        log_suggestion "  - Technical decisions and reasoning"
-        log_suggestion "  - Implementation challenges and solutions"
-        log_suggestion "  - Performance impact and metrics"
-        log_suggestion "  - Integration points and dependencies"
+    # Check if README context section exists and is recent
+    if ! grep -q "## 📝 Commit Context & Implementation Details" README.md 2>/dev/null; then
+        log_warning "README context section not found"
+        log_suggestion "Add README context section to preserve implementation details"
         failed=1
     else
-        log_success "README context section is present and recent"
+        # Check if section was updated recently (within last 7 days)
+        local last_update
+        last_update=$(grep -A 5 "## 📝 Commit Context & Implementation Details" README.md | grep -E "[0-9]{4}-[0-9]{2}-[0-9]{2}" | tail -1 | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" || echo "")
+
+        if [[ -n "$last_update" ]]; then
+            local last_update_date
+            last_update_date=$(date -d "$last_update" +%s 2>/dev/null || echo "0")
+            local seven_days_ago
+            seven_days_ago=$(date -d "7 days ago" +%s 2>/dev/null || echo "0")
+
+            if [[ $last_update_date -lt $seven_days_ago ]]; then
+                log_warning "README context section not updated recently (last: $last_update)"
+                log_suggestion "Consider updating README context for recent changes"
+            else
+                log_success "README context section updated recently"
+            fi
+        fi
     fi
 
     # Check if README needs updating for this specific change
     if has_backlog_reference "$commit_msg"; then
         local backlog_id
         backlog_id=$(extract_backlog_id "$commit_msg")
-        
+
         # Check if this backlog item is already documented in README
         if ! grep -q "$backlog_id" README.md 2>/dev/null; then
             log_suggestion "📝 Backlog item $backlog_id not found in README context section"
             log_suggestion "   Add implementation details to preserve rich context:"
             log_suggestion "   - Technical decisions and reasoning"
-            log_suggestion "   - Implementation challenges and solutions" 
+            log_suggestion "   - Implementation challenges and solutions"
             log_suggestion "   - Performance impact and metrics"
             log_suggestion "   - Integration points and dependencies"
             failed=1
@@ -193,29 +149,61 @@ validate_readme_context_pattern() {
         fi
     fi
 
-    # Provide guidance for README updates
-    if [[ $failed -eq 0 ]]; then
-        log_suggestion "💡 Remember to update README context section with implementation details"
-        log_suggestion "   This preserves rich context while keeping commits GitHub-compliant"
+    # Run README context manager analysis if available
+    if command -v python3 >/dev/null 2>&1 && [[ -f "scripts/readme_context_manager.py" ]]; then
+        log_suggestion "Running README context analysis..."
+
+        # Get quick analysis for this specific change
+        local analysis_output
+        analysis_output=$(python3 scripts/readme_context_manager.py --analyze 7 2>/dev/null || true)
+
+        if [[ -n "$analysis_output" ]]; then
+            echo "$analysis_output" | while IFS= read -r line; do
+                if [[ "$line" == *"Need documentation"* ]]; then
+                    log_suggestion "$line"
+                fi
+            done
+        fi
     fi
 
     return $failed
 }
 
-# Main execution
+# Main validation function
 main() {
-    local commit_msg_file="$1"
+    local commit_msg
+    local staged_files
+    local failed=0
 
-    if [[ -z "$commit_msg_file" ]]; then
-        log_error "No commit message file provided"
-        exit 1
+    # Get commit message
+    commit_msg=$(get_commit_message "$@")
+
+    # Get staged files
+    staged_files=$(git diff --cached --name-only 2>/dev/null || echo "")
+
+    if [[ -z "$staged_files" ]]; then
+        log_success "No staged files - skipping README context validation"
+        return 0
     fi
 
-    if ! validate_readme_context_pattern "$commit_msg_file"; then
-        exit 1
+    # Validate README context pattern
+    if ! validate_readme_context_pattern "$commit_msg" "$staged_files"; then
+        failed=1
     fi
 
-    exit 0
+    # Provide helpful suggestions
+    if [[ $failed -eq 1 ]]; then
+        echo
+        log_suggestion "💡 To fix README context issues:"
+        log_suggestion "   1. Run: ./scripts/suggest_readme_update.sh 7"
+        log_suggestion "   2. Run: python3 scripts/readme_context_manager.py --report"
+        log_suggestion "   3. Add implementation details to README.md context section"
+        log_suggestion "   4. Use --no-verify for emergency commits (document within 24h)"
+        echo
+    fi
+
+    return $failed
 }
 
+# Run main function with all arguments
 main "$@"

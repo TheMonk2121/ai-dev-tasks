@@ -31,7 +31,9 @@
     {"path": "400_guides/400_task-generation-quick-reference.md", "role": "quick-reference"},
     {"path": "500_research-index.md", "role": "research-index"},
     {"path": "400_guides/400_documentation-tiering-guide.md", "role": "documentation-rules"},
-    {"path": "100_memory/100_agent-troubleshooting-patterns.md", "role": "debugging-patterns"}
+    {"path": "100_memory/100_agent-troubleshooting-patterns.md", "role": "debugging-patterns"},
+    {"path": "100_memory/100_communication-patterns-guide.md", "role": "communication-patterns"},
+    {"path": "100_memory/100_database-troubleshooting-patterns.md", "role": "database-troubleshooting"}
   ]
 }
 CONTEXT_INDEX -->

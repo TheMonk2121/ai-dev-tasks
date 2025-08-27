@@ -103,6 +103,15 @@ repos:
         stages: [commit-msg, commit]
         description: "Ensure significant changes have corresponding README context updates"
 
+      - id: readme-context-manager
+        name: README Context Manager Analysis
+        entry: bash scripts/hook_timer.sh
+        args: ["python3", "scripts/readme_context_manager.py", "--analyze"]
+        language: system
+        pass_filenames: false
+        stages: [commit]
+        description: "Analyze README context needs and provide smart suggestions"
+
       - id: commit-staging-pattern
         name: Commit Staging Pattern Check
         entry: bash scripts/check_commit_staging.sh
