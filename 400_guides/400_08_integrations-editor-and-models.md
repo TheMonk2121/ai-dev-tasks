@@ -1284,6 +1284,83 @@ def run_integration_tests():
 
 ```
 
+## 🔗 MCP (Model Context Protocol) Integration
+
+### **MCP Server Types and Integration**
+
+**Purpose**: Complete MCP integration system for document processing and memory rehydration.
+
+**Available MCP Servers**:
+- **File System Server**: Local file processing (`file_system_server.py`)
+- **Web Server**: Web content processing (`web_server.py`)
+- **PDF Server**: PDF document processing (`pdf_server.py`)
+- **GitHub Server**: GitHub repository processing (`github_server.py`)
+- **Office Server**: Office document processing (`office_server.py`)
+- **Database Server**: Database content processing (`database_server.py`)
+
+**MCP Memory Server**:
+- **HTTP Server**: `scripts/mcp_memory_server.py`
+- **Startup Script**: `scripts/start_mcp_server.sh`
+- **Auto-start**: `scripts/setup_mcp_autostart.sh`
+- **LaunchAgent**: `~/Library/LaunchAgents/com.ai.mcp-memory-server.plist`
+
+**Integration Patterns**:
+```python
+# MCP Document Processing
+from dspy_modules.mcp_document_processor import MCPDocumentProcessor
+from utils.mcp_integration import MCPConfig
+
+# Configure MCP server
+config = MCPConfig(
+    server_name="document_processor",
+    timeout=30,
+    max_file_size=100 * 1024 * 1024
+)
+
+# Initialize processor
+processor = MCPDocumentProcessor(
+    mcp_timeout=30,
+    max_file_size=100 * 1024 * 1024
+)
+
+# Process document
+result = processor.process_document(
+    document_source="https://example.com/document.pdf",
+    processing_config={"extract_text": True, "extract_metadata": True}
+)
+```
+
+**MCP Memory Rehydration**:
+```python
+# Memory rehydration via MCP
+from utils.memory_rehydrator import build_hydration_bundle
+
+# Build hydration bundle
+bundle = build_hydration_bundle(
+    role="planner",
+    task="project planning",
+    limit=5,
+    token_budget=1000
+)
+
+# HTTP endpoint
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "rehydrate_memory", "arguments": {"role": "planner", "task": "planning", "limit": 5, "token_budget": 1000}}'
+```
+
+**Health Monitoring**:
+- **Health Check**: `GET /health`
+- **Metrics**: `GET /metrics`
+- **Status Dashboard**: `GET /status`
+- **MCP Info**: `GET /mcp`
+
+**Configuration**:
+- **Port**: 3000 (with fallback to 3000-3010)
+- **Python**: 3.12 with virtual environment
+- **Caching**: 5-minute TTL with LRU eviction
+- **Auto-restart**: LaunchAgent with throttling
+
 - --
 
 ## 📚 Additional Resources

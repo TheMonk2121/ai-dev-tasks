@@ -43,6 +43,7 @@ Define automation patterns and pipelines (n8n workflows, Scribe capture, backgro
 - n8n Workflows: backlog scrubbing, notifications, event-driven tasks
 - Scribe System: automated context capture and reporting
 - Background Workers: scheduled maintenance and processing
+- MCP Server Automation: automatic startup, monitoring, and health checks
 
 ## 🏗️ Reference Architecture
 
@@ -51,6 +52,7 @@ Define automation patterns and pipelines (n8n workflows, Scribe capture, backgro
 - Scribe capture pipeline (session registry, summaries, reporting)
 - Webhook/API services (Flask/FastAPI) for orchestration
 - Observability hooks into 11 (metrics, health, alerts)
+- MCP server automation (LaunchAgent, health monitoring, auto-restart)
 
 ### Data Flow
 1. Event (commit, PR, backlog change) triggers n8n
@@ -67,6 +69,44 @@ Define automation patterns and pipelines (n8n workflows, Scribe capture, backgro
 - Scoring formula `(BV + TC + RR + LE) / Effort`
 - Endpoints: `/webhook/backlog-scrubber`, `/health`, `/stats`
 - See `400_n8n-backlog-scrubber-guide.md` for API details and troubleshooting
+
+### MCP Server Automation
+**Automatic startup, monitoring, and health management for MCP services.**
+
+**Scripts**:
+- **`scripts/start_mcp_server.sh`**: Start MCP memory server with port conflict resolution
+- **`scripts/setup_mcp_autostart.sh`**: Configure LaunchAgent for automatic startup
+- **`scripts/mcp_memory_server.py`**: Main MCP server with monitoring and caching
+
+**LaunchAgent Configuration**:
+- **File**: `~/Library/LaunchAgents/com.ai.mcp-memory-server.plist`
+- **Auto-start**: Server starts automatically on login
+- **Auto-restart**: Automatic restart on failure with throttling
+- **Python 3.12**: Ensures correct Python version usage
+
+**Health Monitoring**:
+- **Endpoints**: `/health`, `/metrics`, `/status`
+- **Auto-restart**: LaunchAgent restarts server on failure
+- **Port Management**: Automatic fallback to available ports (3000-3010)
+- **Performance**: Cache hit rate monitoring and response time tracking
+
+**Usage**:
+```bash
+# Start server manually
+./scripts/start_mcp_server.sh
+
+# Setup auto-start
+./scripts/setup_mcp_autostart.sh
+
+# Check health
+curl http://localhost:3000/health
+
+# View metrics
+curl http://localhost:3000/metrics
+
+# Status dashboard
+open http://localhost:3000/status
+```
 
 ## 🧪 Validation
 

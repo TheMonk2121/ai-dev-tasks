@@ -82,6 +82,111 @@ This guide covers comprehensive DSPy framework integration and usage including:
 
 ### **DSPy-MCP Integration System**
 
+#### **MCP Memory Server Integration**
+**Production-ready MCP server for memory rehydration with DSPy integration.**
+
+**Purpose**: Database-based memory rehydration for Cursor AI with automatic caching, monitoring, and performance optimization.
+
+**Key Features**:
+- **MCP Protocol Compliance**: Standard MCP endpoints for tool integration
+- **Role-Aware Context**: Role-specific memory rehydration (planner, implementer, researcher)
+- **Response Caching**: 5-minute TTL with LRU eviction (170x performance improvement)
+- **Real-time Monitoring**: Health checks, metrics, and status dashboard
+- **Automatic Recovery**: LaunchAgent integration with Python 3.12 compatibility
+
+**Available Tools**:
+- **`rehydrate_memory`**: Get role-aware context from PostgreSQL database
+  - **Parameters**:
+    - `role` (string): AI role for context selection (planner, implementer, researcher)
+    - `task` (string): Specific task or query for context (required)
+    - `limit` (integer): Maximum number of sections to return (default: 8)
+    - `token_budget` (integer): Token budget for context (default: 1200)
+
+**Role Access**:
+- **Planner**: Full access to planning and strategy context
+- **Implementer**: Access to implementation and technical context
+- **Researcher**: Access to research and analysis context
+- **Coder**: Access to code-specific context (via implementer role)
+- **Reviewer**: Access to review and quality context (via planner role)
+
+**Performance Metrics**:
+- **Cache Hit Rate**: 71.43% (excellent efficiency)
+- **Average Response Time**: 24.41ms (65% improvement)
+- **Cache Performance**: 170x faster for cached requests
+
+**Usage Examples**:
+```bash
+# Start the server
+./scripts/start_mcp_server.sh
+
+# Memory rehydration for planner role
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "rehydrate_memory", "arguments": {"role": "planner", "task": "project planning", "limit": 5, "token_budget": 1000}}'
+
+# View metrics and status
+curl http://localhost:3000/metrics
+open http://localhost:3000/status
+```
+
+**Full Documentation**: See `400_06_memory-and-context-systems.md#mcp-memory-server-integration`
+
+#### **MCP Integration Architecture**
+**Complete MCP integration system with multiple server types and DSPy modules.**
+
+**Core Components**:
+- **MCP Memory Server**: HTTP server for memory rehydration (`scripts/mcp_memory_server.py`)
+- **MCP Document Processor**: DSPy module for document processing (`dspy_modules/mcp_document_processor.py`)
+- **MCP Integration Layer**: Base server and specialized servers (`utils/mcp_integration/`)
+
+**Available MCP Servers**:
+- **File System Server**: Local file processing (`file_system_server.py`)
+- **Web Server**: Web content processing (`web_server.py`)
+- **PDF Server**: PDF document processing (`pdf_server.py`)
+- **GitHub Server**: GitHub repository processing (`github_server.py`)
+- **Office Server**: Office document processing (`office_server.py`)
+- **Database Server**: Database content processing (`database_server.py`)
+
+**DSPy Integration**:
+- **MCPDocumentProcessor**: Unified document processing with MCP integration
+- **MCPDocumentIngestionPipeline**: Complete ingestion pipeline
+- **MCPDocumentSignature**: DSPy signatures for MCP processing
+
+**Configuration**:
+```python
+from utils.mcp_integration import MCPConfig
+from dspy_modules.mcp_document_processor import MCPDocumentProcessor
+
+# Configure MCP server
+config = MCPConfig(
+    server_name="document_processor",
+    timeout=30,
+    max_file_size=100 * 1024 * 1024  # 100MB
+)
+
+# Initialize processor
+processor = MCPDocumentProcessor(
+    mcp_timeout=30,
+    max_file_size=100 * 1024 * 1024
+)
+```
+
+**Usage Examples**:
+```python
+# Process document with MCP
+result = processor.process_document(
+    document_source="https://example.com/document.pdf",
+    processing_config={"extract_text": True, "extract_metadata": True}
+)
+
+# Complete ingestion pipeline
+pipeline = MCPDocumentIngestionPipeline()
+result = pipeline.ingest_document(
+    document_source="file:///path/to/document.docx",
+    vector_store=vector_store
+)
+```
+
 #### **DSPy-MCP Integration Guide**
 
 **Purpose**: Advanced RAG applications with Model Context Protocol integration for enhanced document processing and analysis.

@@ -105,6 +105,7 @@ For how to build and ship changes end‑to‑end, see `400_04_development-workfl
 - Coding & Testing: `400_05_coding-and-prompting-standards.md`
 - Memory & Context: `400_06_memory-and-context-systems.md`
 - AI Frameworks (DSPy/MCP): `400_07_ai-frameworks-dspy.md`
+- MCP Memory Server: `400_06_memory-and-context-systems.md#mcp-memory-server-integration`
 - Integrations: `400_08_integrations-editor-and-models.md`
 - Automation & Pipelines: `400_09_automation-and-pipelines.md`
 - Security & Access: `400_10_security-compliance-and-access.md`

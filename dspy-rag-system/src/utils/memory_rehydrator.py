@@ -591,3 +591,78 @@ class MemoryRehydrator:
         except Exception as e:
             logger.error(f"Rehydration cache cleanup failed: {e}")
             return 0
+
+
+@dataclass
+class HydrationBundle:
+    """Bundle containing rehydrated memory content and metadata."""
+
+    text: str
+    meta: Dict[str, Any]
+
+
+def build_hydration_bundle(
+    role: str = "general", task: str = "general context", limit: int = 8, token_budget: int = 1200
+) -> HydrationBundle:
+    """
+    Build a hydration bundle for the MCP server.
+
+    Args:
+        role: The AI role requesting the bundle
+        task: The specific task or context needed
+        limit: Maximum number of context items to include
+        token_budget: Approximate token budget for the bundle
+
+    Returns:
+        HydrationBundle: Contains text content and metadata
+    """
+    try:
+        # Create a rehydrator instance
+        rehydrator = MemoryRehydrator()
+
+        # Create a rehydration request with correct parameters
+        request = RehydrationRequest(
+            session_id=f"mcp_{int(time.time())}",
+            user_id=f"mcp_{role}",
+            current_message=task,
+            max_context_length=token_budget,
+            history_limit=limit,
+            metadata={"role": role, "task": task, "token_budget": token_budget, "source": "mcp_server"},
+        )
+
+        # Get rehydrated memory
+        result = rehydrator.rehydrate_memory(request)
+
+        # Build the bundle text from rehydrated context
+        bundle_text = result.rehydrated_context if result.rehydrated_context else ""
+
+        # If no context found, provide a default message
+        if not bundle_text.strip():
+            bundle_text = f"# Memory Rehydration for {role}\n\nNo specific context found for task: {task}\n\nThis is a general memory bundle for the {role} role."
+
+        # Build metadata
+        metadata = {
+            "role": role,
+            "task": task,
+            "session_id": request.session_id,
+            "user_id": request.user_id,
+            "total_tokens": len(bundle_text.split()),  # Rough token count
+            "cache_hit": getattr(result, "cache_hit", False),
+            "generated_at": datetime.now().isoformat(),
+            "context_length": len(bundle_text),
+        }
+
+        return HydrationBundle(text=bundle_text, meta=metadata)
+
+    except Exception as e:
+        logger.error(f"Failed to build hydration bundle: {e}")
+        # Return a fallback bundle
+        fallback_text = f"# Memory Rehydration for {role}\n\nNo specific context found for task: {task}\n\nThis is a general memory bundle for the {role} role."
+        fallback_meta = {
+            "role": role,
+            "task": task,
+            "error": str(e),
+            "generated_at": datetime.now().isoformat(),
+            "fallback": True,
+        }
+        return HydrationBundle(text=fallback_text, meta=fallback_meta)

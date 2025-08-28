@@ -20,6 +20,7 @@ This guide covers comprehensive coding standards and AI prompting best practices
 - **Testing and quality assurance**
 - **Error reduction lessons learned**
 - **Performance optimization techniques**
+- **MCP module development and integration patterns**
 
 ## 📋 When to Use This Guide
 
@@ -1128,12 +1129,91 @@ def smart_error_fix(error_code: str, file_path: str) -> bool:
         return False
 ```
 
+## 🔧 MCP Module Development Standards
+
+### **MCP Server Development Patterns**
+
+**Purpose**: Standards for developing MCP (Model Context Protocol) servers and modules.
+
+**Core Requirements**:
+- **Inherit from Base Server**: All MCP servers must inherit from `MCPServer` base class
+- **Configuration Management**: Use `MCPConfig` dataclass for server configuration
+- **Error Handling**: Implement proper `MCPError` handling and logging
+- **Documentation**: Comprehensive docstrings and type hints
+
+**Server Implementation Pattern**:
+```python
+from utils.mcp_integration import MCPServer, MCPConfig, MCPError, DocumentMetadata, ProcessedDocument
+
+class CustomMCPServer(MCPServer):
+    """Custom MCP server for specific document processing."""
+
+    def __init__(self, config: MCPConfig):
+        super().__init__(config)
+        self.logger = get_logger("custom_mcp_server")
+
+    def can_handle_source(self, document_source: str) -> bool:
+        """Check if this server can handle the document source."""
+        return document_source.startswith("custom://")
+
+    def process_document(self, document_source: str, processing_config: dict) -> ProcessedDocument:
+        """Process document with custom logic."""
+        try:
+            # Custom processing logic
+            content = self._extract_content(document_source)
+            metadata = self._extract_metadata(document_source)
+
+            return ProcessedDocument(
+                content=content,
+                metadata=metadata,
+                source=document_source,
+                processing_config=processing_config
+            )
+        except Exception as e:
+            raise MCPError(f"Failed to process document: {e}")
+```
+
+**DSPy Integration Pattern**:
+```python
+from dspy_modules.mcp_document_processor import MCPDocumentProcessor
+
+class CustomDocumentProcessor(MCPDocumentProcessor):
+    """Custom document processor with MCP integration."""
+
+    def __init__(self, custom_config: dict = None):
+        super().__init__(
+            mcp_timeout=30,
+            max_file_size=100 * 1024 * 1024
+        )
+        self.custom_config = custom_config or {}
+
+    def process_document(self, document_source: str, processing_config: dict) -> dict:
+        """Process document with custom configuration."""
+        # Merge custom config with processing config
+        merged_config = {**processing_config, **self.custom_config}
+        return super().process_document(document_source, merged_config)
+```
+
+**Configuration Standards**:
+- **Timeout**: Default 30 seconds, configurable per server
+- **File Size**: Default 100MB limit, configurable per server
+- **Error Handling**: Graceful degradation with detailed error messages
+- **Logging**: Structured logging with appropriate log levels
+
+**Testing Requirements**:
+- **Unit Tests**: Test individual server methods
+- **Integration Tests**: Test server integration with DSPy
+- **Error Tests**: Test error handling and edge cases
+- **Performance Tests**: Test with large files and high load
+
 ## 🔗 Related Guides
 
 - **Getting Started**: `400_00_getting-started-and-index.md`
 - **Development Workflow**: `400_04_development-workflow-and-standards.md`
 - **Memory Systems**: `400_06_memory-and-context-systems.md`
 - **System Overview**: `400_03_system-overview-and-architecture.md`
+- **AI Frameworks**: `400_07_ai-frameworks-dspy.md` (MCP integration)
+- **Integrations**: `400_08_integrations-editor-and-models.md` (MCP servers)
 
 ## 📚 References
 

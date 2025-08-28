@@ -26,6 +26,7 @@ This guide covers deployment procedures, operations management, and observabilit
 - **Observability systems and dashboards**
 - **Performance monitoring and optimization**
 - **Migration and upgrade procedures**
+- **MCP Memory Server monitoring and health checks**
 
 ## 📋 When to Use This Guide
 
@@ -106,6 +107,7 @@ This guide covers deployment procedures, operations management, and observabilit
 - **Alerting Systems**: Incident detection and notification
 - **Observability Dashboards**: Real-time system visibility
 - **Resource Management**: Capacity planning and optimization
+- **MCP Memory Server**: Health checks, metrics, and status dashboard
 
 ## 🚀 DEPLOYMENT ENVIRONMENT GUIDE
 
@@ -660,6 +662,57 @@ class PerformanceTester:
 - [ ] **Resource utilization monitored** and optimized
 - [ ] **Load testing completed** and performance validated
 - [ ] **Performance bottlenecks identified** and resolved
+
+## 🔍 MCP MEMORY SERVER MONITORING
+
+### **Health Monitoring and Metrics**
+
+#### **MCP Memory Server Status Dashboard**
+**Real-time monitoring and health checks for the MCP Memory Server.**
+
+**Endpoints**:
+- **`/health`**: Health check with error rates and cache hit rates
+- **`/metrics`**: Detailed JSON metrics with cache statistics
+- **`/status`**: Beautiful HTML dashboard with real-time data
+
+**Key Metrics**:
+- **Cache Hit Rate**: Target >50% (currently 71.43%)
+- **Average Response Time**: Target <50ms (currently 24.41ms)
+- **Error Rate**: Target <5% (currently 0%)
+- **Uptime**: Continuous monitoring with LaunchAgent
+- **Role Usage**: Track usage by AI role (planner, implementer, researcher)
+
+**Monitoring Commands**:
+```bash
+# Health check
+curl http://localhost:3000/health
+
+# Detailed metrics
+curl http://localhost:3000/metrics | jq '.cache_hit_rate_percent, .avg_response_time_ms, .error_rate_percent'
+
+# Status dashboard
+open http://localhost:3000/status
+
+# Performance testing
+for i in {1..10}; do
+  curl -s -X POST http://localhost:3000/mcp/tools/call \
+    -H "Content-Type: application/json" \
+    -d '{"name": "rehydrate_memory", "arguments": {"role": "planner", "task": "test", "limit": 3, "token_budget": 800}}' \
+    -w "Request $i: %{time_total}s\n" -o /dev/null
+done
+```
+
+**Alerting Thresholds**:
+- **Error Rate >10%**: Server status changes to "degraded"
+- **Response Time >100ms**: Performance alert
+- **Cache Hit Rate <30%**: Cache efficiency alert
+- **Server Unreachable**: LaunchAgent restart trigger
+
+**Troubleshooting**:
+- **Port Conflicts**: Automatic fallback to available ports (3000-3010)
+- **Python Version**: Ensures Python 3.12 compatibility
+- **LaunchAgent Issues**: Manual restart capability with proper error handling
+- **Cache Failures**: Graceful degradation to direct database queries
 
 ## 📚 Examples
 

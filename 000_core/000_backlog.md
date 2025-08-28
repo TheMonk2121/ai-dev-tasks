@@ -90,7 +90,67 @@ and normalize spacing across long-form guides.
 
 ## P1 Lane
 
-- B‑1033 — Fix MCP Memory Server: Port Conflict Resolution and Function Restoration (score 8.5)
+- B‑1034 — Mathematical Framework Foundation: Learning Scaffolding and Basic Category Theory (score 8.0)
+<!--score: {bv:5, tc:4, rr:5, le:3, effort:3, deps:[]}-->
+<!--score_total: 8.0-->
+<!-- do_next: Implement Phase 1: Learning foundation with NetworkX, Hypothesis, and basic category theory concepts -->
+<!-- est_hours: 12 -->
+<!-- acceptance: Learning scaffolding framework established, basic category theory implemented, interactive examples working, user demonstrates growth in understanding -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#system-architecture", "400_guides/400_development-workflow.md#incremental-implementation"] -->
+<!-- reference_cards: ["500_reference-cards.md#category-theory", "docs/research/chatgpt-pro/2025-01-28-mathematical-framework-research-complete.md"] -->
+<!-- tech_footprint: NetworkX + Hypothesis + Basic Category Theory + Learning Scaffolding + Interactive Examples + NiceGUI Integration -->
+<!-- problem: User wants to grow through challenging mathematical implementation, but needs structured learning path with progressive complexity -->
+<!-- outcome: Foundation for mathematical framework with learning scaffolding that enables user growth through implementation -->
+
+**Description**: Implement Phase 1 of mathematical framework focusing on learning scaffolding and basic category theory concepts. Based on ChatGPT Pro research and DSPy agent consensus, this establishes the foundation with NetworkX, Hypothesis, interactive examples, and progressive complexity to help the user grow through implementation.
+
+**Key Benefits**:
+- **Learning Scaffolding**: Progressive complexity, interactive examples, and just-in-time documentation
+- **Basic Category Theory**: Simple objects and morphisms with visual examples
+- **Interactive Examples**: NiceGUI-based visualizations for mathematical concepts
+- **Property-Based Testing**: Hypothesis integration for mathematical validation
+- **User Growth**: Structured learning path through challenging implementation
+
+**Implementation Phases**:
+1. **Phase 1 - Learning Foundation**: Add NetworkX and Hypothesis dependencies, create math package structure
+2. **Phase 2 - Basic Category Theory**: Implement simple objects and morphisms with visual examples
+3. **Phase 3 - Interactive Examples**: Create NiceGUI-based mathematical visualizations
+4. **Phase 4 - Property-Based Testing**: Integrate Hypothesis for mathematical validation
+
+**Success Metrics**:
+- Learning scaffolding framework established and working
+- Basic category theory concepts implemented with visual examples
+- Interactive examples working with existing NiceGUI system
+- User demonstrates growth in understanding through implementation
+- Property-based testing with Hypothesis providing mathematical validation
+
+- B‑1038 — Mathematical Framework Advanced: Coalgebras and State Machines (score 7.5)
+<!--score: {bv:4, tc:4, rr:4, le:3, effort:4, deps:["B-1034"]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Implement Phase 2: Coalgebraic state machines for DSPy agents after B-1034 foundation is complete -->
+<!-- est_hours: 16 -->
+<!-- acceptance: Coalgebraic state machines implemented for DSPy agents, formal state transitions, debugging tools, and mathematical validation -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#system-architecture", "400_guides/400_development-workflow.md#incremental-implementation"] -->
+<!-- reference_cards: ["500_reference-cards.md#coalgebras", "docs/research/chatgpt-pro/2025-01-28-mathematical-framework-research-complete.md"] -->
+<!-- tech_footprint: Coalgebras + State Machines + DSPy Integration + Formal Validation + Debugging Tools -->
+<!-- problem: DSPy agents need formal state machine validation to prevent invalid behaviors and ensure safety -->
+<!-- outcome: Production-ready coalgebraic state machines for DSPy agents with formal validation and debugging tools -->
+
+- B‑1039 — Mathematical Framework Integration: Governance and Quality Gates (score 7.0)
+<!--score: {bv:4, tc:3, rr:4, le:3, effort:3, deps:["B-1034", "B-1038"]}-->
+<!--score_total: 7.0-->
+<!-- do_next: Integrate mathematical framework with existing governance and quality gates after B-1034 and B-1038 are complete -->
+<!-- est_hours: 12 -->
+<!-- acceptance: Mathematical validation integrated with governance rules, automated quality gates using mathematical invariants, and comprehensive testing -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#governance", "400_guides/400_development-workflow.md#quality-standards"] -->
+<!-- reference_cards: ["500_reference-cards.md#governance", "docs/research/chatgpt-pro/2025-01-28-mathematical-framework-research-complete.md"] -->
+<!-- tech_footprint: Governance Integration + Quality Gates + Mathematical Validation + Automated Testing -->
+<!-- problem: Existing governance rules need mathematical validation to ensure correctness and provide formal guarantees -->
+<!-- outcome: Governance-by-mathematics system with automated quality gates and formal correctness guarantees -->
+
+
+
+- B‑1033 — Fix MCP Memory Server: Port Conflict Resolution and Function Restoration (score 8.5) ✅ **COMPLETED**
 <!--score: {bv:5, tc:4, rr:5, le:3, effort:4, deps:[]}-->
 <!--score_total: 8.5-->
 <!-- do_next: Fix port conflict, restore missing build_hydration_bundle function, update Python version, and resolve LaunchAgent loop -->
@@ -101,6 +161,48 @@ and normalize spacing across long-form guides.
 <!-- tech_footprint: MCP Server + Memory Rehydration + Port Management + Python 3.12 + LaunchAgent + Function Restoration -->
 <!-- problem: MCP memory server has port conflict (OSError: [errno 48] Address already in use), missing build_hydration_bundle function, using Python 3.9 instead of 3.12, and LaunchAgent keeps restarting broken server -->
 <!-- outcome: Production-ready MCP memory server with proper port management, complete function set, Python 3.12 compatibility, and stable LaunchAgent configuration -->
+
+- B‑1037 — Remote Communication with Local Dev Agents: Mobile Access to Laptop-Based AI Development Ecosystem (score 7.5)
+<!--score: {bv:4, tc:4, rr:4, le:3, effort:3, deps:[]}-->
+<!--score_total: 7.5-->
+<!-- do_next: Implement API gateway approach with Tailscale + FastAPI for secure remote access to local dev agents -->
+<!-- est_hours: 10 -->
+<!-- acceptance: Phone can securely communicate with laptop agents via API endpoints, Tailscale VPN established, iOS Shortcuts or Telegram bot integration working -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#remote-access", "400_guides/400_development-workflow.md#api-design"] -->
+<!-- reference_cards: ["500_reference-cards.md#tailscale", "500_reference-cards.md#fastapi", "500_reference-cards.md#remote-access"] -->
+<!-- tech_footprint: Tailscale VPN + FastAPI + API Gateway + Authentication + Mobile Integration + Local-First Architecture -->
+<!-- problem: Need to communicate with local dev agents on laptop from phone remotely without complex setup or security risks -->
+<!-- outcome: Secure, simple remote access system allowing phone to interact with laptop-based AI development ecosystem -->
+
+**Description**: Implement remote communication system to enable phone access to local dev agents running on laptop. Based on analysis of remote access patterns, this will provide secure API gateway approach using Tailscale VPN + FastAPI to expose local agents as REST endpoints, with optional mobile-first interface via iOS Shortcuts or Telegram bot integration.
+
+**Key Benefits**:
+- **Remote Productivity**: Access dev agents from anywhere without complex SSH setup
+- **Secure Communication**: Tailscale VPN provides encrypted, authenticated access
+- **API-First Design**: Clean REST endpoints for specific agent interactions
+- **Mobile Integration**: iOS Shortcuts or Telegram bot for natural mobile interface
+- **Local-First Architecture**: Maintains existing laptop-based workflow while adding remote access
+
+**Implementation Phases**:
+1. **Phase 1 - VPN Foundation**: Set up Tailscale on laptop and phone, establish secure network
+2. **Phase 2 - API Gateway**: Wrap existing agents in FastAPI endpoints with authentication
+3. **Phase 3 - Mobile Interface**: Implement iOS Shortcuts or Telegram bot for mobile access
+4. **Phase 4 - Integration**: Connect to existing DSPy agents and memory rehydration system
+
+**Technical Approach**:
+- Use Tailscale for secure VPN connection between devices
+- Implement FastAPI gateway to expose local agents as REST endpoints
+- Add API key authentication for security
+- Create iOS Shortcuts or Telegram bot for mobile interface
+- Integrate with existing DSPy agents and memory rehydration system
+- Maintain local-first architecture with remote access as enhancement
+
+**Success Metrics**:
+- Secure remote access to laptop agents from phone
+- API endpoints for specific agent interactions (memory, retrieval, code generation)
+- Mobile interface working via iOS Shortcuts or Telegram
+- Integration with existing DSPy and memory systems
+- Minimal setup complexity for end user
 
 - B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0) *(consider replacing with B-1025)*
 
@@ -2735,7 +2837,7 @@ async def build_context(
 <!-- problem: 400_guides directory is bloated with 52 files despite B-1032 governance system; need surgical consolidation to 10 cohesive guides -->
 <!-- outcome: Lean, maintainable documentation system with 10 canonical guides, automated validation, and governance-by-code enforcement -->
 
-- B‑1034 — Documentation Governance Codification: CI-First Enforcement (score 8.5)
+- B‑1035 — Documentation Governance Codification: CI-First Enforcement (score 8.5) *(CONFLICT: Originally B-1034, moved to B-1035)*
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:3, deps:["B-1033"]}-->
 <!--score_total: 8.5-->
 <!-- do_next: Transform consolidated 10-guide canon into code-enforced governance system with CI jobs, pre-commit hooks, and automation -->
