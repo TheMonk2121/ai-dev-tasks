@@ -8,6 +8,10 @@ version = "0.1.0"
 description = "DSPy RAG System"
 requires-python = ">=3.12"
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "tests*"]
+
 
 [tool.black]
 line-length = 120

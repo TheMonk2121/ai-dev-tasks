@@ -54,7 +54,6 @@
     "git.enabled": true,
     "git.autorefresh": true,
     "git.autofetchPeriod": 180,
-    "git.confirmSync": false,
     "git.enableCommitSigning": false,
     "git.showPushSuccessNotification": false,
     "git.showActionButton.commit": true,
