@@ -173,7 +173,6 @@ class DocumentationValidator:
 
         # Basic metrics
         line_count = len(lines)
-        word_count = len(content.split())
 
         # File metadata
         stat = file_path.stat()
@@ -475,7 +474,7 @@ class DocumentationValidator:
                     json.dumps(asdict(validation_summary), cls=CustomJSONEncoder),
                 ),
             )
-            run_id = cursor.lastrowid
+            run_id = cursor.lastrowid  # cspell:ignore lastrowid
 
             # Store individual guide validations
             for result in validation_results:

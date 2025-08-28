@@ -368,6 +368,9 @@ export REHYDRATE_EXPAND_QUERY="auto"
 - Performance optimization → `400_guides/400_11_deployments-ops-and-observability.md`
 
 - Security best practices → `400_guides/400_10_security-compliance-and-access.md`
+- AI frameworks (DSPy) → `400_guides/400_07_ai-frameworks-dspy.md`
+- Integrations, editor, models → `400_guides/400_08_integrations-editor-and-models.md`
+- Automation and pipelines → `400_guides/400_09_automation-and-pipelines.md`
 
 - Graph visualization guide → `400_guides/400_graph-visualization-guide.md`
 

@@ -147,7 +147,8 @@ check_section_size() {
 generate_report() {
     log_info "Generating weekly maintenance report..."
 
-    local report_file="artifacts/weekly_readme_maintenance_$(date +%Y%m%d).md"
+    local report_file
+    report_file="artifacts/weekly_readme_maintenance_$(date +%Y%m%d).md"
     mkdir -p "$(dirname "$report_file")"
 
     cat > "$report_file" << EOF

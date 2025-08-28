@@ -312,9 +312,6 @@ class AIConsolidationSystem:
 
     def _determine_consolidation_type(self, content1: str, content2: str) -> str:
         """Determine the type of consolidation needed."""
-        content_lower1 = content1.lower()
-        content_lower2 = content2.lower()
-
         # Check for duplicate content
         if self._is_duplicate_content(content1, content2):
             return "duplicate_content"

@@ -331,7 +331,7 @@ class HybridVectorStore(Module):
                     cur.execute(
                         f"""
                         SELECT document_id, chunk_index, content,
-                               start_offset, end_offset,
+                               line_start, line_end,
                                {sim_expr} AS score_dense
                         FROM document_chunks
                         ORDER BY {order_expr}
@@ -349,9 +349,9 @@ class HybridVectorStore(Module):
                         "document_id": r["document_id"],
                         "chunk_index": r["chunk_index"],
                         "content": r["content"],
-                        "start_offset": r.get("start_offset", 0) or 0,
+                        "start_offset": r.get("line_start", 0) or 0,
                         "end_offset": (
-                            r.get("end_offset", len(r["content"])) if r.get("content") else r.get("end_offset", 0)
+                            r.get("line_end", len(r["content"])) if r.get("content") else r.get("line_end", 0)
                         ),
                         "score_dense": float(r["score_dense"]),
                         "score_sparse": 0.0,
@@ -376,8 +376,8 @@ class HybridVectorStore(Module):
                             document_id,
                             chunk_index,
                             content,
-                            start_offset,
-                            end_offset,
+                            line_start,
+                            line_end,
                             ts_rank(to_tsvector('english', content), {ts_fn}('english', %s)) AS score_sparse
                         FROM document_chunks
                         WHERE to_tsvector('english', content) @@ {ts_fn}('english', %s)
@@ -395,9 +395,9 @@ class HybridVectorStore(Module):
                         "document_id": r["document_id"],
                         "chunk_index": r["chunk_index"],
                         "content": r["content"],
-                        "start_offset": r.get("start_offset", 0) or 0,
+                        "start_offset": r.get("line_start", 0) or 0,
                         "end_offset": (
-                            r.get("end_offset", len(r["content"])) if r.get("content") else r.get("end_offset", 0)
+                            r.get("line_end", len(r["content"])) if r.get("content") else r.get("line_end", 0)
                         ),
                         "score_dense": 0.0,
                         "score_sparse": float(r["score_sparse"]),
@@ -607,7 +607,12 @@ class VectorStorePipeline(Module):
         self.vector_store = HybridVectorStore(db_connection_string)
 
     def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
-        return self.vector_store(operation, **kwargs)
+        result = self.vector_store(operation, **kwargs)
+        if isinstance(result, dict):
+            return result
+        else:
+            # Fallback for unexpected return types
+            return {"status": "error", "error": f"Unexpected result type: {type(result)}"}
 
 
 if __name__ == "__main__":

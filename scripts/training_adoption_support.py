@@ -1131,7 +1131,7 @@ def main():
             print(f"❌ Error tracking adoption: {e}")
 
     elif args.generate_report:
-        report = training_system.generate_training_report(args.generate_report)
+        training_system.generate_training_report(args.generate_report)
         print(f"✅ Training report generated for user {args.generate_report}")
 
     elif args.start_portal:

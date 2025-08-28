@@ -2,6 +2,8 @@
 <!-- ANCHOR_PRIORITY: 10 -->
 <!-- ROLE_PINS: ["planner"] -->
 
+<!-- cspell:words errno -->
+
 # 📋 Backlog
 
 ## 🔎 TL;DR {#tldr}
@@ -97,7 +99,7 @@ and normalize spacing across long-form guides.
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#mcp-integration", "400_guides/400_development-workflow.md#troubleshooting"] -->
 <!-- reference_cards: ["500_reference-cards.md#mcp-server", "500_reference-cards.md#memory-rehydration"] -->
 <!-- tech_footprint: MCP Server + Memory Rehydration + Port Management + Python 3.12 + LaunchAgent + Function Restoration -->
-<!-- problem: MCP memory server has port conflict (OSError: [Errno 48] Address already in use), missing build_hydration_bundle function, using Python 3.9 instead of 3.12, and LaunchAgent keeps restarting broken server -->
+<!-- problem: MCP memory server has port conflict (OSError: [errno 48] Address already in use), missing build_hydration_bundle function, using Python 3.9 instead of 3.12, and LaunchAgent keeps restarting broken server -->
 <!-- outcome: Production-ready MCP memory server with proper port management, complete function set, Python 3.12 compatibility, and stable LaunchAgent configuration -->
 
 - B‑075 — Few-Shot Cognitive Scaffolding Integration (score 6.0) *(consider replacing with B-1025)*

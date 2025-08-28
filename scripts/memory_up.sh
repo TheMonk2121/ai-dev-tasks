@@ -135,11 +135,14 @@ MEMORY_CONTEXT+="$(get_file_summary "000_core/000_backlog.md" 150)\n\n"
 case $ROLE in
     "planner")
         MEMORY_CONTEXT+="## 🎯 **Planner Context**\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_project-overview.md" 100)\n\n"
+        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_00_getting-started-and-index.md" 60)\n\n"
+        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_03_system-overview-and-architecture.md" 40)\n\n"
         ;;
     "implementer")
         MEMORY_CONTEXT+="## 🔧 **Implementer Context**\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md" 100)\n\n"
+        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_04_development-workflow-and-standards.md" 50)\n\n"
+        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_05_coding-and-prompting-standards.md" 50)\n\n"
+        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_09_automation-and-pipelines.md" 40)\n\n"
         ;;
     "researcher")
         MEMORY_CONTEXT+="## 🔬 **Researcher Context**\n\n"
@@ -147,7 +150,9 @@ case $ROLE in
         ;;
     "coder")
         MEMORY_CONTEXT+="## 💻 **Coder Context**\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "100_memory/104_dspy-development-context.md" 100)\n\n"
+        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_07_ai-frameworks-dspy.md" 50)\n\n"
+        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_08_integrations-editor-and-models.md" 50)\n\n"
+        MEMORY_CONTEXT+="$(get_file_summary "100_memory/104_dspy-development-context.md" 40)\n\n"
         ;;
 esac
 

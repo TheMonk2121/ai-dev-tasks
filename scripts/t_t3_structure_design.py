@@ -680,7 +680,7 @@ class T3StructureDesign:
             with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
             return hashlib.md5(content.encode()).hexdigest()
-        except:
+        except Exception:
             return ""
 
     def create_authority_mapping(self, file_path: str) -> AuthorityMapping:

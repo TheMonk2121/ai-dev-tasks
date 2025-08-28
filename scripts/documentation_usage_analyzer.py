@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# cspell:ignore lastrowid
 """
 Documentation Usage Analysis System for B-1032
 
@@ -7,6 +8,7 @@ Part of the t-t3 Authority Structure Implementation.
 """
 
 import argparse
+import importlib.util
 import json
 import re
 import sqlite3
@@ -39,12 +41,8 @@ try:
 except ImportError:
     PANDAS_AVAILABLE = False
 
-try:
-    from dspy_rag_system.src.utils.database_manager import DatabaseManager
-
-    DSPY_AVAILABLE = True
-except ImportError:
-    DSPY_AVAILABLE = False
+# Detect optional DSPy package availability without importing unresolved modules
+DSPY_AVAILABLE = importlib.util.find_spec("dspy_rag_system") is not None
 
 
 @dataclass
@@ -837,7 +835,6 @@ class DocumentationUsageAnalyzer:
 
     def _generate_json_report(self) -> str:
         """Generate JSON format usage report."""
-        report_file = self.output_dir / "usage_report.json"
 
         # Query latest analysis results
         with sqlite3.connect(self.db_path) as conn:
