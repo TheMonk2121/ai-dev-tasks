@@ -39,12 +39,17 @@ try:
     scripts_dir = os.path.dirname(os.path.abspath(__file__))
     if scripts_dir not in sys.path:
         sys.path.insert(0, scripts_dir)
+    from mcp_encryption import encryption_manager, security_analytics, session_manager
     from mcp_security_config import security_config
 
     print("✅ Security framework loaded successfully")
+    print("✅ Encryption and session management loaded successfully")
 except ImportError as e:
     print(f"Warning: Security configuration not found: {e}. Running without security features.")
     security_config = None
+    encryption_manager = None
+    session_manager = None
+    security_analytics = None
 
 
 class ResponseCache:
@@ -634,6 +639,14 @@ LIMIT 5;
             self.send_status_dashboard()
         elif self.path == "/security":
             self.send_security_dashboard()
+        elif self.path == "/session/create":
+            self.handle_create_session()
+        elif self.path == "/session/validate":
+            self.handle_validate_session()
+        elif self.path == "/session/destroy":
+            self.handle_destroy_session()
+        elif self.path == "/analytics":
+            self.send_analytics_dashboard()
         else:
             self.send_error(404, "Not Found")
 
@@ -641,6 +654,8 @@ LIMIT 5;
         """Handle POST requests for memory rehydration and tool calls"""
         if self.path == "/mcp/tools/call":
             self.handle_tool_call()
+        elif self.path == "/session/create":
+            self.handle_create_session()
         else:
             self.send_error(404, "Not Found")
 
@@ -1387,6 +1402,9 @@ LIMIT 5;
             <p><strong>Metrics:</strong> <code>/metrics</code></p>
             <p><strong>MCP Info:</strong> <code>/mcp</code></p>
             <p><strong>Memory Rehydration:</strong> <code>POST /mcp/tools/call</code></p>
+            <p><strong>Security Dashboard:</strong> <code>/security</code></p>
+            <p><strong>Analytics Dashboard:</strong> <code>/analytics</code></p>
+            <p><strong>Session Management:</strong> <code>POST /session/create</code></p>
         </div>
     </div>
 </body>
@@ -1705,6 +1723,203 @@ LIMIT 5;
         """Custom logging to avoid cluttering output"""
         pass
 
+    def handle_create_session(self):
+        """Handle session creation requests"""
+        if not session_manager:
+            self.send_error(503, "Session management not available")
+            return
+
+        try:
+            content_length = int(self.headers.get("Content-Length", 0))
+            post_data = self.rfile.read(content_length)
+            request_data = json.loads(post_data.decode("utf-8"))
+
+            user_id = request_data.get("user_id")
+            role = request_data.get("role")
+            api_key = request_data.get("api_key")
+
+            if not all([user_id, role, api_key]):
+                self.send_error(400, "Missing required fields: user_id, role, api_key")
+                return
+
+            # Validate API key first
+            if security_config:
+                credential = security_config.validate_api_key(api_key)
+                if not credential or credential.role != role:
+                    self.send_error(401, "Invalid API key or role mismatch")
+                    return
+
+            # Create session
+            session_id = session_manager.create_session(user_id, role, api_key)
+
+            response = {
+                "session_id": session_id,
+                "user_id": user_id,
+                "role": role,
+                "created_at": time.time(),
+                "expires_in": session_manager.session_timeout,
+            }
+
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(response).encode())
+
+        except Exception as e:
+            self.send_error(500, f"Session creation failed: {str(e)}")
+
+    def handle_validate_session(self):
+        """Handle session validation requests"""
+        if not session_manager:
+            self.send_error(503, "Session management not available")
+            return
+
+        try:
+            session_id = self.headers.get("X-Session-ID")
+            if not session_id:
+                self.send_error(400, "Missing X-Session-ID header")
+                return
+
+            session_data = session_manager.validate_session(session_id)
+            if not session_data:
+                self.send_error(401, "Invalid or expired session")
+                return
+
+            response = {
+                "valid": True,
+                "user_id": session_data["user_id"],
+                "role": session_data["role"],
+                "last_activity": session_data["last_activity"],
+                "permissions": session_data["permissions"],
+            }
+
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(response).encode())
+
+        except Exception as e:
+            self.send_error(500, f"Session validation failed: {str(e)}")
+
+    def handle_destroy_session(self):
+        """Handle session destruction requests"""
+        if not session_manager:
+            self.send_error(503, "Session management not available")
+            return
+
+        try:
+            session_id = self.headers.get("X-Session-ID")
+            if not session_id:
+                self.send_error(400, "Missing X-Session-ID header")
+                return
+
+            session_manager.destroy_session(session_id)
+
+            response = {"message": "Session destroyed successfully"}
+
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(response).encode())
+
+        except Exception as e:
+            self.send_error(500, f"Session destruction failed: {str(e)}")
+
+    def send_analytics_dashboard(self):
+        """Send analytics dashboard HTML"""
+        if not security_analytics:
+            self.send_error(503, "Analytics not available")
+            return
+
+        analytics = security_analytics.get_security_analytics()
+        session_stats = session_manager.get_session_stats() if session_manager else {}
+
+        html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MCP Server Analytics Dashboard</title>
+    <style>
+        body {{ font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }}
+        .container {{ max-width: 1200px; margin: 0 auto; }}
+        .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }}
+        .metric-card {{ background: white; padding: 20px; margin: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
+        .metric-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }}
+        .metric-value {{ font-size: 2em; font-weight: bold; color: #667eea; }}
+        .metric-label {{ color: #666; margin-bottom: 10px; }}
+        .status-good {{ color: #28a745; }}
+        .status-warning {{ color: #ffc107; }}
+        .status-danger {{ color: #dc3545; }}
+        .refresh-btn {{ background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }}
+        .refresh-btn:hover {{ background: #5a6fd8; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 MCP Server Analytics Dashboard</h1>
+            <p>Advanced security analytics and session monitoring</p>
+        </div>
+
+        <button class="refresh-btn" onclick="location.reload()">🔄 Refresh</button>
+
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Security Events</div>
+                <div class="metric-value">{analytics.get('total_events', 0)}</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Recent Events (1h)</div>
+                <div class="metric-value">{analytics.get('recent_events_1h', 0)}</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Anomalies Detected</div>
+                <div class="metric-value {'status-danger' if analytics.get('anomalies_detected', 0) > 0 else 'status-good'}">{analytics.get('anomalies_detected', 0)}</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Active Sessions</div>
+                <div class="metric-value">{session_stats.get('active_sessions', 0)}</div>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>🔍 Event Distribution</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                {''.join([f'<div><strong>{event_type}:</strong> {count}</div>' for event_type, count in analytics.get('event_counts', {}).items()])}
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>⚠️ Severity Distribution</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                {''.join([f'<div><strong>{severity}:</strong> {count}</div>' for severity, count in analytics.get('severity_distribution', {}).items()])}
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>📊 Quick Actions</h3>
+            <p><a href="/security" target="_blank">🔒 Security Dashboard</a></p>
+            <p><a href="/metrics" target="_blank">📈 Detailed Metrics</a></p>
+            <p><a href="/health" target="_blank">🏥 Health Check</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh every 30 seconds
+        setTimeout(() => location.reload(), 30000);
+    </script>
+</body>
+</html>
+        """
+
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html")
+        self.end_headers()
+        self.wfile.write(html.encode())
+
 
 def start_server(port=3000):
     """Start the MCP memory server"""
@@ -1716,8 +1931,12 @@ def start_server(port=3000):
     print(f"🏥 Health check: http://localhost:{port}/health")
     print(f"📊 Metrics: http://localhost:{port}/metrics")
     print(f"📈 Status dashboard: http://localhost:{port}/status")
+    print(f"🔒 Security dashboard: http://localhost:{port}/security")
+    print(f"📊 Analytics dashboard: http://localhost:{port}/analytics")
     print(f"🔄 Memory rehydration: POST http://localhost:{port}/mcp/tools/call")
+    print(f"🔐 Session management: POST http://localhost:{port}/session/create")
     print("💾 Response caching enabled (TTL: 5 minutes)")
+    print("🔐 Encryption and session management enabled")
     print("\n💡 Configure Cursor to connect to this server for automatic memory rehydration!")
     print("   Press Ctrl+C to stop the server")
 

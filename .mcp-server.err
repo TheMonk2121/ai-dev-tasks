@@ -39,3 +39,9 @@ OpenTelemetry not initialized, skipping trace
 INFO:mcp_security_config:No existing API keys found, starting fresh
 /Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 90156 Terminated: 15          $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
 INFO:mcp_security_config:Loaded 5 API keys
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 92642 Terminated: 15          $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73:  1266 Terminated: 15          $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73:  3008 Terminated: 15          $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
