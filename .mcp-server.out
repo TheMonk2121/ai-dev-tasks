@@ -462,3 +462,25 @@
 ✅ Starting server on port 3000...
    Press Ctrl+C to stop the server
 
+🚀 Starting MCP Memory Rehydrator Server...
+🐍 Python: Python 3.12.11
+📡 Default Port: 3000
+🔄 Fallback Range: 3000-3010
+
+✅ Default port 3000 is available
+🔗 URL: http://localhost:3000/mcp
+
+✅ Starting server on port 3000...
+   Press Ctrl+C to stop the server
+
+🚀 Starting MCP Memory Rehydrator Server...
+🐍 Python: Python 3.12.11
+📡 Default Port: 3000
+🔄 Fallback Range: 3000-3010
+
+✅ Default port 3000 is available
+🔗 URL: http://localhost:3000/mcp
+
+✅ Starting server on port 3000...
+   Press Ctrl+C to stop the server
+

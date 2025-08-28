@@ -30,6 +30,22 @@ except ImportError as e:
     print("Make sure you're running from the ai-dev-tasks root directory")
     sys.exit(1)
 
+# Import security configuration
+try:
+    import os
+    import sys
+
+    # Add scripts directory to path for security imports
+    scripts_dir = os.path.dirname(os.path.abspath(__file__))
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+    from mcp_security_config import security_config
+
+    print("✅ Security framework loaded successfully")
+except ImportError as e:
+    print(f"Warning: Security configuration not found: {e}. Running without security features.")
+    security_config = None
+
 
 class ResponseCache:
     """Simple in-memory cache for hydration bundles"""
@@ -507,6 +523,105 @@ LIMIT 5;
 
         return context
 
+    def send_security_dashboard(self):
+        """Send security dashboard HTML"""
+        if not security_config:
+            self.send_error(503, "Security features not available")
+            return
+
+        security_metrics = security_config.get_security_metrics()
+
+        html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MCP Server Security Dashboard</title>
+    <style>
+        body {{ font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }}
+        .container {{ max-width: 1200px; margin: 0 auto; }}
+        .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }}
+        .metric-card {{ background: white; padding: 20px; margin: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
+        .metric-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }}
+        .metric-value {{ font-size: 2em; font-weight: bold; color: #667eea; }}
+        .metric-label {{ color: #666; margin-bottom: 10px; }}
+        .status-good {{ color: #28a745; }}
+        .status-warning {{ color: #ffc107; }}
+        .status-danger {{ color: #dc3545; }}
+        .refresh-btn {{ background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }}
+        .refresh-btn:hover {{ background: #5a6fd8; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 MCP Server Security Dashboard</h1>
+            <p>Real-time security monitoring and access control</p>
+        </div>
+
+        <button class="refresh-btn" onclick="location.reload()">🔄 Refresh</button>
+
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="metric-label">Active API Keys</div>
+                <div class="metric-value">{security_metrics['active_api_keys']}</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Recent Accesses (1h)</div>
+                <div class="metric-value">{security_metrics['recent_accesses_1h']}</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Recent Failures (1h)</div>
+                <div class="metric-value {'status-danger' if security_metrics['recent_failures_1h'] > 0 else 'status-good'}">{security_metrics['recent_failures_1h']}</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Failure Rate (1h)</div>
+                <div class="metric-value {'status-danger' if security_metrics['failure_rate_1h'] > 5 else 'status-warning' if security_metrics['failure_rate_1h'] > 1 else 'status-good'}">{security_metrics['failure_rate_1h']:.1f}%</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Rate Limit Violations</div>
+                <div class="metric-value {'status-danger' if security_metrics['rate_limit_violations'] > 0 else 'status-good'}">{security_metrics['rate_limit_violations']}</div>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>🔑 API Keys by Role</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                {''.join([f'<div><strong>{role}:</strong> {count}</div>' for role, count in security_metrics['active_keys_by_role'].items()])}
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>⚙️ Security Settings</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">
+                {''.join([f'<div><strong>{key}:</strong> {value}</div>' for key, value in security_metrics['security_settings'].items()])}
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>📊 Quick Actions</h3>
+            <p><a href="/metrics" target="_blank">📈 View Detailed Metrics</a></p>
+            <p><a href="/health" target="_blank">🏥 Health Check</a></p>
+            <p><a href="/status" target="_blank">📊 Status Dashboard</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh every 30 seconds
+        setTimeout(() => location.reload(), 30000);
+    </script>
+</body>
+</html>
+        """
+
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html")
+        self.end_headers()
+        self.wfile.write(html.encode())
+
     def do_GET(self):
         """Handle GET requests for MCP server info"""
         if self.path == "/mcp":
@@ -517,6 +632,8 @@ LIMIT 5;
             self.send_metrics()
         elif self.path == "/status":
             self.send_status_dashboard()
+        elif self.path == "/security":
+            self.send_security_dashboard()
         else:
             self.send_error(404, "Not Found")
 
@@ -528,7 +645,9 @@ LIMIT 5;
             self.send_error(404, "Not Found")
 
     def handle_tool_call(self):
-        """Route tool calls to appropriate handlers"""
+        """Route tool calls to appropriate handlers with security checks"""
+        start_time = time.time()
+
         try:
             content_length = int(self.headers.get("Content-Length", 0))
             post_data = self.rfile.read(content_length)
@@ -536,6 +655,29 @@ LIMIT 5;
 
             tool_name = request_data.get("name")
             arguments = request_data.get("arguments", {})
+            role = arguments.get("role", "unknown")
+
+            # Extract API key from headers or arguments
+            api_key = self.headers.get("X-API-Key") or arguments.get("api_key")
+
+            # Security checks (if security is enabled)
+            if security_config:
+                # Check tool permissions
+                if not security_config.check_tool_permission(tool_name, role, api_key):
+                    error_msg = f"Access denied for tool {tool_name} with role {role}"
+                    security_config.log_access(tool_name, role, api_key, success=False, error_msg=error_msg)
+                    self.send_error(403, error_msg)
+                    return
+
+                # Check rate limiting
+                if not security_config.check_rate_limit(tool_name, api_key):
+                    error_msg = f"Rate limit exceeded for tool {tool_name}"
+                    security_config.log_access(tool_name, role, api_key, success=False, error_msg=error_msg)
+                    self.send_error(429, error_msg)
+                    return
+
+                # Log access attempt
+                security_config.log_access(tool_name, role, api_key, success=True)
 
             # Route to appropriate handler based on tool name
             if tool_name == "rehydrate_memory":
@@ -553,10 +695,30 @@ LIMIT 5;
             elif tool_name == "get_database_context":
                 self.handle_database_context(arguments)
             else:
-                self.send_error(400, f"Unknown tool: {tool_name}")
+                error_msg = f"Unknown tool: {tool_name}"
+                if security_config:
+                    security_config.log_access(tool_name, role, api_key, success=False, error_msg=error_msg)
+                self.send_error(400, error_msg)
+                return
+
+            # Record successful request
+            response_time = time.time() - start_time
+            server_metrics.record_request(role=role, response_time=response_time)
 
         except Exception as e:
-            server_metrics.record_request(error=True, error_msg=str(e))
+            response_time = time.time() - start_time
+            server_metrics.record_request(error=True, error_msg=str(e), response_time=response_time)
+
+            # Log security event if security is enabled
+            if security_config:
+                security_config.log_access(
+                    tool_name=request_data.get("name", "unknown") if "request_data" in locals() else "unknown",
+                    role=arguments.get("role", "unknown") if "arguments" in locals() else "unknown",
+                    api_key=api_key if "api_key" in locals() else None,
+                    success=False,
+                    error_msg=str(e),
+                )
+
             self.send_error(500, f"Tool call failed: {str(e)}")
 
     def handle_cursor_context(self, arguments):
@@ -1111,6 +1273,19 @@ LIMIT 5;
             "cache_hit_rate": metrics["cache_hit_rate_percent"],
         }
 
+        # Add security metrics if available
+        if security_config:
+            security_metrics = security_config.get_security_metrics()
+            health["security"] = {
+                "enabled": True,
+                "active_api_keys": security_metrics["active_api_keys"],
+                "recent_failures_1h": security_metrics["recent_failures_1h"],
+                "failure_rate_1h": security_metrics["failure_rate_1h"],
+                "rate_limit_violations": security_metrics["rate_limit_violations"],
+            }
+        else:
+            health["security"] = {"enabled": False}
+
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()
@@ -1121,6 +1296,11 @@ LIMIT 5;
         metrics = server_metrics.get_metrics()
         cache_stats = response_cache.get_stats()
         metrics["cache_stats"] = cache_stats
+
+        # Add security metrics if available
+        if security_config:
+            security_metrics = security_config.get_security_metrics()
+            metrics["security_metrics"] = security_metrics
 
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
