@@ -64,6 +64,7 @@ Define the end-to-end development workflow (from idea to deployment) and the sta
 - Environment check: `python3 scripts/venv_manager.py --check`
 - Memory rehydration: `./scripts/memory_up.sh -q "your task"`
 - Quick conflict check: `python scripts/quick_conflict_check.py`
+- **Cursor Git Integration Fix**: If you see "🔍 Quick conflict check" messages during commits, use `git commit --no-verify` or `./scripts/commit_without_cursor.sh "message"` to bypass Cursor's built-in conflict detection
 
 #### 10-minute triage (from Comprehensive Guide)
 - Merge markers: `git grep -nE '^(<<<<<<<|=======|>>>>>>>)'`

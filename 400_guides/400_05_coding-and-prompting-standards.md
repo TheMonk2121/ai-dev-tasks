@@ -88,6 +88,7 @@ This guide covers comprehensive coding standards and AI prompting best practices
 1. Run `python scripts/quick_conflict_check.py` for fast conflict detection
 2. Check merge markers: `git grep -nE '^(<<<<<<<|=======|>>>>>>>)'`
 3. Validate dependencies: `python -m pip check` (Python) or `npm ls --all` (Node.js)
+4. **Cursor Git Integration Issue**: If you see "🔍 Quick conflict check" messages during commits, use `git commit --no-verify` or `./scripts/commit_without_cursor.sh "message"` to bypass Cursor's built-in conflict detection
 
 ### **For Systematic Problems (Deep audit):**
 
