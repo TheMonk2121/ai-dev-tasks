@@ -11,11 +11,11 @@ repos:
           [
             "bash",
             "-c",
-            "git grep -nE '^(<<<<<<< |======= |>>>>>>> )' '$@' || exit 0",
+            "git grep -nE '^(<<<<<<< |======= |>>>>>>> )' || exit 0",
           ]
         language: system
         files: \.(md|py|txt|sh|yaml|yml|json)$
-        pass_filenames: true
+        pass_filenames: false
         description: "Check for merge conflicts using simple git grep"
 
       # Temporarily disabled due to existing type issues in legacy files
@@ -61,7 +61,7 @@ repos:
         args: ["bash", "scripts/check_branch_name.sh"]
         language: system
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
         description: "Ensure branch name matches policy: main or type/B-####-short-slug"
 
       - id: no-branches-without-permission
@@ -70,7 +70,7 @@ repos:
         args: ["bash", "scripts/check_branch_permission.sh"]
         language: system
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
         description: "Prevent commits on non-main branches without explicit permission"
 
       - id: ensure-venv-active
@@ -84,7 +84,7 @@ repos:
           ]
         language: system
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
         description: "Prevent commits outside the repository virtual environment"
 
       - id: commit-message-line-length
@@ -100,7 +100,7 @@ repos:
         entry: bash scripts/check_readme_context.sh
         language: system
         pass_filenames: true
-        stages: [commit-msg, commit]
+        stages: [commit-msg, pre-commit]
         description: "Ensure significant changes have corresponding README context updates"
 
       - id: readme-context-manager
@@ -109,7 +109,7 @@ repos:
         args: ["python3", "scripts/readme_context_manager.py", "--analyze"]
         language: system
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
         description: "Analyze README context needs and provide smart suggestions"
 
       - id: commit-staging-pattern

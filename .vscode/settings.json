@@ -50,6 +50,24 @@
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.autofetch": true,
+    // Fix Cursor Git integration conflict check issue
+    "git.enabled": true,
+    "git.autorefresh": true,
+    "git.autofetchPeriod": 180,
+    "git.confirmSync": false,
+    "git.enableCommitSigning": false,
+    "git.showPushSuccessNotification": false,
+    "git.showActionButton.commit": true,
+    "git.showActionButton.publish": true,
+    "git.showActionButton.sync": true,
+    // Disable Cursor's built-in conflict detection to avoid interference with pre-commit hooks
+    "git.conflicts.enabled": false,
+    "git.conflicts.autoResolve": false,
+    "git.conflicts.showNotification": false,
+    // Pre-commit integration settings
+    "git.preCommitHook.enabled": true,
+    "git.preCommitHook.autoRun": true,
+    "git.preCommitHook.allowBypass": true,
     // GitLens settings retained; Git Graph removed from recommendations
     // File Management
     "files.associations": {
