@@ -125,7 +125,7 @@ MEMORY_CONTEXT+="$(get_file_summary "100_memory/100_cursor-memory-context.md" 10
 
 # Add system overview
 MEMORY_CONTEXT+="## 🏗️ **System Architecture**\n\n"
-MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_system-overview.md" 100)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_03_system-overview-and-architecture.md" 100)\n\n"
 
 # Add current backlog
 MEMORY_CONTEXT+="## 📋 **Current Priorities**\n\n"

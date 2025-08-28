@@ -27,13 +27,13 @@ def check_database_consistency():
     core_files = [
         ("../100_memory/100_cursor-memory-context.md", "100_cursor-memory-context.md"),
         ("../000_core/000_backlog.md", "000_backlog.md"),
-        ("../400_guides/400_ai-constitution.md", "400_ai-constitution.md"),
+        ("../400_guides/400_02_governance-and-ai-constitution.md", "400_ai-constitution.md"),
         ("../400_guides/400_code-criticality-guide.md", "400_code-criticality-guide.md"),
         ("../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md", "400_comprehensive-coding-best-practices.md"),
-        ("../400_guides/400_context-priority-guide.md", "400_context-priority-guide.md"),
-        ("../400_guides/400_file-analysis-guide.md", "400_file-analysis-guide.md"),
+        ("../400_guides/400_06_memory-and-context-systems.md", "400_context-priority-guide.md"),
+        ("../400_guides/400_01_documentation-playbook.md", "400_file-analysis-guide.md"),
         ("../400_guides/400_project-overview.md", "400_project-overview.md"),
-        ("../400_guides/400_system-overview.md", "400_system-overview.md"),
+        ("../400_guides/400_03_system-overview-and-architecture.md", "400_system-overview.md"),
         ("../400_guides/400_testing-strategy-guide.md", "400_testing-strategy-guide.md"),
         ("tests/README-dev.md", "README-dev.md"),
     ]
@@ -42,10 +42,10 @@ def check_database_consistency():
     context_index_files = [
         ("../400_guides/400_deployment-environment-guide.md", "400_deployment-environment-guide.md"),
         ("../400_guides/400_integration-patterns-guide.md", "400_integration-patterns-guide.md"),
-        ("../400_guides/400_migration-upgrade-guide.md", "400_migration-upgrade-guide.md"),
-        ("../400_guides/400_performance-optimization-guide.md", "400_performance-optimization-guide.md"),
+        ("../400_guides/400_11_deployments-ops-and-observability.md", "400_migration-upgrade-guide.md"),
+        ("../400_guides/400_11_deployments-ops-and-observability.md", "400_performance-optimization-guide.md"),
         ("../400_guides/400_security-best-practices-guide.md", "400_security-best-practices-guide.md"),
-        ("../400_guides/400_few-shot-context-examples.md", "400_few-shot-context-examples.md"),
+        ("../400_guides/400_05_coding-and-prompting-standards.md", "400_few-shot-context-examples.md"),
         ("../500_research/500_research-index.md", "500_research-index.md"),
     ]
 

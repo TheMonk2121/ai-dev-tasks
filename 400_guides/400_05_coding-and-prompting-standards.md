@@ -1,3 +1,7 @@
+\n+## 🧪 Testing & Safety Gates (Constitution)
+\n+- Enforce tests and rollback plans on risky changes; prefer DSPy assertions for guardrails.
+- Use the testing strategy section here for gates; surface violations in CI.
+- For destructive edits, require pre‑flight file analysis and explicit approval.
 # Coding and Prompting Standards
 
 ## 🔎 TL;DR
@@ -68,6 +72,16 @@ This guide covers comprehensive coding standards and AI prompting best practices
 3. **Example-First Search**: Search existing codebase for similar patterns before writing new code
 4. **Code Reuse Check**: Aim for 70% existing code reuse, 30% new code
 5. **Test-First Development**: Write unit tests before implementation (TDD)
+
+### Mini Coding Checklist (from Comprehensive Guide)
+- Type hints on all functions; clear naming; import order stdlib → third_party → local; no stdlib shadowing
+- DSPy assertions for risky code paths; define rollback plans for high‑risk changes
+- Treat Tier 1/2 files as zero‑tolerance for F841; enforce in CI
+
+### Auto‑fix Policy (Lessons Learned)
+- Safe to auto‑fix in bulk: `RUF001` (Unicode replacement via escapes), `F401` (unused imports), `I001` (import reordering), `F541` (f‑string syntax).
+- Dangerous to bulk auto‑fix: `PT009` (unittest asserts), `B007` (unused loop vars), `SIM117` (nested with), `RUF013` (implicit Optional), `SIM102` (nested if), `F841` (unused vars with dependencies).
+- Apply safe fixes first; for dangerous categories, require manual review and targeted changes on small subsets before widening scope.
 
 ### **For Immediate Issues (10-minute triage):**
 

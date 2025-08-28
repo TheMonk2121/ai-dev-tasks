@@ -1,3 +1,15 @@
+\n+## 📋 Backlog Tracking Quick Start
+\n+Run these most‑used commands:
+
+```bash
+python3 scripts/backlog_status_tracking.py --start-work B‑123
+python3 scripts/backlog_status_tracking.py --update-status B‑123 in-progress
+python3 scripts/backlog_status_tracking.py --check-stale --stale-days 7
+```
+\n+## ⚖️ Constitution Callout
+\n+- **Read first**: `400_01_documentation-playbook.md`, `400_03_system-overview-and-architecture.md`, `400_04_development-workflow-and-standards.md`, `400_05_coding-and-prompting-standards.md`, `400_06_memory-and-context-systems.md`, `400_07_ai-frameworks-dspy.md`, `400_08_integrations-editor-and-models.md`, `400_09_automation-and-pipelines.md`, `400_10_security-compliance-and-access.md`, `400_11_deployments-ops-and-observability.md`, `400_12_product-management-and-roadmap.md`.
+- **Hydrate context**: run `./scripts/memory_up.sh` before work; then scan `100_memory/100_cursor-memory-context.md` and `000_core/000_backlog.md`.
+- **Safety**: run file analysis before destructive changes; preserve cross‑references; follow workflow chain `000_backlog.md → 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md`.
 # Getting Started and Index
 
 ## 🔎 TL;DR
@@ -14,6 +26,12 @@ This is the master index and entry point for all 400_guides documentation. It pr
 - **First Time Here?**: Onboarding for new contributors
 - **What's New**: Recent changes and updates
 - **Guide Index**: Complete list of all 13 consolidated guides
+
+## 🚀 Coding Quick Start (from Comprehensive Guide)
+
+- Check venv: `python3 scripts/venv_manager.py --check`
+- Rehydrate: `./scripts/memory_up.sh`
+- Example-first search; target 70/30 reuse vs new code
 
 ## 🚀 Quick-Find
 
@@ -70,6 +88,12 @@ An **AI-powered development ecosystem** that transforms ideas into working softw
 | **Workflow Engine** | Automated task processing | `scripts/` |
 | **Memory System** | Context management | `100_memory/` |
 | **Documentation** | Guides and references | `400_guides/` |
+
+### Auto-Generate Context Map
+- Rebuild the context-priority map from headers:
+```bash
+python3 scripts/regen_guide.py --generate
+```
 
 ### Key Workflows
 

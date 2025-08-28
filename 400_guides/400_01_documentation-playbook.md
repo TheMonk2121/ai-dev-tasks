@@ -1,3 +1,7 @@
+\n+## ⚖️ Constitution Callout
+\n+- **Documentation coherence**: keep cross‑references intact; use a single index (`400_00_getting-started-and-index.md`); remove legacy links.
+- **Safety gate**: do not delete/archive without a dependency scan and explicit approval.
+- **Governance**: use the condensed constitution in `400_02_governance-and-ai-constitution.md` as the single source.
 # Documentation Playbook
 
 ## 🔎 TL;DR
@@ -58,6 +62,7 @@ Define how we write, organize, cross-reference, validate, and ship documentation
 - Optional front-matter may be used by tooling; avoid heavy YAML blocks
 
 ### Comment Metadata for AI Systems
+- `<!-- ANCHOR_KEY: unique-key -->`, `<!-- ANCHOR_PRIORITY: number -->`, `<!-- ROLE_PINS: ["role1", "role2"] -->` required at top of each guide
 - `<!-- CONTEXT_REFERENCE: path -->` in key files consumed by memory rehydrator
 - `<!-- MODULE_REFERENCE: path -->` to link code modules to guides
 - Keep metadata comments short and machine-friendly
@@ -93,6 +98,18 @@ pytest tests/test_broken_link_validation.py::TestRealProjectBrokenLinks::test_no
 - [ ] Links point to consolidated guides (not archives)
 - [ ] No duplication; link to canonical home instead
 - [ ] Link validation passes locally and in CI
+
+## 🧱 Documentation Tiering (Summary)
+
+- Tier 1 (Priority 0–10) — NEVER delete; archive instead. Core memory/context and core workflow files.
+- Tier 2 (Priority 15–20) — Important guides; require extensive analysis before changes.
+- Tier 3 (Priority 25–30) — Implementation/specialized topics; normal review.
+- Tier 4 (Priority 35–40) — PRDs, research, examples.
+
+Creation checklist (condensed):
+- Pre‑create: search `400_guides/` for existing content; confirm tier/placement per `200_naming-conventions.md`.
+- Create: add `ANCHOR_PRIORITY`, `ROLE_PINS`, TL;DR table, and cross‑refs; follow naming conventions.
+- Post‑create: update related cross‑refs; run `python scripts/doc_coherence_validator.py`; update memory context if core.
 
 ## 📋 Policies
 

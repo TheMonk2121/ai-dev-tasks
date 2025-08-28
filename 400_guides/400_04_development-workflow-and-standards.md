@@ -1,3 +1,13 @@
+\n+## 🧭 Backlog Hygiene
+\n+- Start work when you begin a task, update status at meaningful changes, mark "✅ done" at completion.
+- Use en dash in IDs (e.g., `B‑052‑d`), and keep `000_core/000_backlog.md` in sync.
+\n+### Weekly Stale Item Review
+- Run `python3 scripts/backlog_status_tracking.py --check-stale --stale-days 7`.
+- Triage stale items and add remediation tasks to the backlog.
+\n+## ✅ Constitution Checklist (Workflow)
+\n+- Preserve chain: `000_backlog.md → 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md`.
+- Pre‑flight: run file analysis before edits; seek explicit approval for destructive ops.
+- Post‑flight: validate tests, rollback plan, and cross‑ref coherence.
 # Development Workflow and Standards
 
 ## 🔎 TL;DR
@@ -54,6 +64,12 @@ Define the end-to-end development workflow (from idea to deployment) and the sta
 - Environment check: `python3 scripts/venv_manager.py --check`
 - Memory rehydration: `./scripts/memory_up.sh -q "your task"`
 - Quick conflict check: `python scripts/quick_conflict_check.py`
+
+#### 10-minute triage (from Comprehensive Guide)
+- Merge markers: `git grep -nE '^(<<<<<<<|=======|>>>>>>>)'`
+- Python deps: `python -m pip check`
+- Node deps: `npm ls --all`
+- Deep audit pointers: `python scripts/conflict_audit.py --full`, `python scripts/system_health_check.py --deep`
 
 ### Stage 2: Planning
 - Assess code criticality (Tier 1–3) and affected modules

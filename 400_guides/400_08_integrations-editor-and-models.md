@@ -1,3 +1,7 @@
+\n+## 🧰 Editor/Model Guardrails (Constitution)
+\n+- Inject constitution hooks into prompts/system messages; prefer Cursor‑native guidance.
+- Avoid legacy model references; align integrations with the 00–12 core guides.
+- Validate integration changes with testing gates and cross‑ref checks.
 
 
 <!-- ANCHOR_KEY: integration-patterns -->
@@ -149,25 +153,25 @@ type WorkflowStatus {
 # Complete DSPy signature integration workflow
 def dspy_integration_workflow(task_description: str, user_role: str):
     """Complete DSPy signature integration workflow"""
-    
+
     # Step 1: Model Selection using ModelSelectionSignature
     from dspy_modules.model_switcher import ModelSwitcher
     switcher = ModelSwitcher()
-    
+
     selection = switcher.select_model(
         task=task_description,
         task_type="development",
         complexity="moderate",
         context_size=8192
     )
-    
+
     # Step 2: Task Orchestration using MultiModelOrchestrationSignature
     orchestration = switcher.orchestrate_task(
         task=task_description,
         task_type="development",
         role=user_role
     )
-    
+
     # Step 3: Local Task Execution using LocalTaskSignature
     execution = switcher.forward(
         task=task_description,
@@ -175,7 +179,7 @@ def dspy_integration_workflow(task_description: str, user_role: str):
         role=user_role,
         complexity="moderate"
     )
-    
+
     return {
         "model_selection": selection,
         "orchestration": orchestration,
@@ -189,10 +193,10 @@ def dspy_integration_workflow(task_description: str, user_role: str):
 # Role refinement integration with optimization loop
 def role_refinement_integration(role_type: str, performance_metrics: dict):
     """Integrate role refinement with optimization system"""
-    
+
     from dspy_modules.role_refinement import RoleRefinementModule
     from dspy_modules.optimization_loop import FourPartOptimizationLoop
-    
+
     # Step 1: Role Refinement using RoleRefinementSignature
     refiner = RoleRefinementModule()
     refinement_result = refiner.forward(
@@ -201,7 +205,7 @@ def role_refinement_integration(role_type: str, performance_metrics: dict):
         performance_metrics=performance_metrics,
         solo_developer_context="Local development with resource constraints"
     )
-    
+
     # Step 2: Optimization Loop Integration
     optimization_loop = FourPartOptimizationLoop()
     optimization_result = optimization_loop.run_cycle({
@@ -209,7 +213,7 @@ def role_refinement_integration(role_type: str, performance_metrics: dict):
         "test_data": generate_role_test_data(role_type),
         "optimization_objectives": ["accuracy", "speed", "resource_efficiency"]
     })
-    
+
     return {
         "refinement": refinement_result,
         "optimization": optimization_result
@@ -222,13 +226,13 @@ def role_refinement_integration(role_type: str, performance_metrics: dict):
 # Documentation retrieval integration workflow
 def documentation_integration_workflow(query: str, user_role: str):
     """Complete documentation retrieval and synthesis workflow"""
-    
+
     from dspy_modules.documentation_retrieval import (
         DocumentationQueryModule,
         DocumentationRetrievalModule,
         ContextSynthesisModule
     )
-    
+
     # Step 1: Query Processing using DocumentationQuerySignature
     query_processor = DocumentationQueryModule()
     processed_query = query_processor.forward(
@@ -236,7 +240,7 @@ def documentation_integration_workflow(query: str, user_role: str):
         context="current development session",
         role=user_role
     )
-    
+
     # Step 2: Documentation Retrieval using DocumentationRetrievalSignature
     retrieval_module = DocumentationRetrievalModule()
     retrieval_result = retrieval_module.forward(
@@ -244,7 +248,7 @@ def documentation_integration_workflow(query: str, user_role: str):
         search_results=search_database(processed_query.processed_query),
         relevance_scores=calculate_relevance_scores()
     )
-    
+
     # Step 3: Context Synthesis using ContextSynthesisSignature
     synthesis_module = ContextSynthesisModule()
     synthesis_result = synthesis_module.forward(
@@ -252,7 +256,7 @@ def documentation_integration_workflow(query: str, user_role: str):
         user_context="current task context",
         synthesis_goal="provide actionable guidance"
     )
-    
+
     return synthesis_result
 ```
 
@@ -269,10 +273,10 @@ class HasForward(Protocol):
 
 def universal_dspy_integration(module: HasForward, input_data: Dict[str, Any]):
     """Universal integration for any DSPy module"""
-    
+
     # All DSPy modules implement HasForward protocol
     result = module.forward(**input_data)
-    
+
     # Standard result processing
     if result.get("success", True):
         return {
@@ -1304,6 +1308,6 @@ def run_integration_tests():
 
 - --
 
-- Last Updated: 2025-08-24*
+- Last Updated: 2025-08-28*
 - Next Review: Monthly*
 - Integration Level: Comprehensive*

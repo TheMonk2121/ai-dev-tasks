@@ -1,3 +1,7 @@
+\n+## 🛡️ Constitution Security Hooks
+\n+- Tie threat modeling and minimum scan requirements to constitution gates.
+- Enforce scans on high‑risk changes; document exceptions with approvals.
+- Surface security compliance status in deployments/ops metrics.
 <!-- ANCHOR_KEY: security-best-practices -->
 <!-- ANCHOR_PRIORITY: 20 -->
 
@@ -12,6 +16,11 @@
 | what this file is | read when | do next |
 |---|---|---|
 |  |  |  |
+
+### CI Security Scans (from Comprehensive Guide)
+- Bandit: `bandit -r src/`
+- Safety: `safety check`
+- Enforce scans on high‑risk changes; document exceptions and approvals
 
 - **what this file is**: Security architecture, controls, and incident response for the system.
 
@@ -510,6 +519,6 @@ ALERT_CHANNELS = {
 
 - --
 
-- Last Updated: 2025-08-24*
+- Last Updated: 2025-08-28*
 - Next Review: Monthly*
 - Security Level: Confidential*

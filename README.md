@@ -466,11 +466,11 @@ ai-dev-tasks/
 
 ## Documentation
 
-- [System Overview](400_guides/400_system-overview.md)
-- [Getting Started](400_guides/400_getting-started.md)
-- [Development Workflow](400_guides/400_development-workflow.md)
-- [Context Priority Guide](400_guides/400_context-priority-guide.md)
-- [Comprehensive Coding Best Practices](400_guides/400_comprehensive-coding-best-practices.md)
+- [System Overview](400_guides/400_03_system-overview-and-architecture.md)
+- [Getting Started](400_guides/400_00_getting-started-and-index.md)
+- [Development Workflow](400_guides/400_04_development-workflow-and-standards.md)
+- [Context Priority Guide](400_guides/400_06_memory-and-context-systems.md)
+- [Comprehensive Coding Best Practices](400_guides/400_05_coding-and-prompting-standards.md)
 
 ## Contributing
 

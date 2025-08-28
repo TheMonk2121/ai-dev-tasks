@@ -1,3 +1,12 @@
+\n+## ⚖️ Constitution (Condensed)
+\n+- File safety first: analyze before edits; protect critical files; preserve cross‑refs.
+- Context hierarchy: hydrate via `./scripts/memory_up.sh`; read `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_03_system-overview-and-architecture.md`.
+- Workflow chain: `000_backlog.md → 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md`.
+- Error prevention: enforce testing, rollback plans, and DSPy assertions.
+- Documentation: tiered guides, explicit links, single index.
+- Integration: constitution hooks in prompts, CI checks, and runtime validators.
+- Security: threat model linkage and minimum scans on risky changes.
+- Monitoring: track context loss, safety violations, and doc integrity in ops.
 # Governance and AI Constitution
 
 ## 🔎 TL;DR

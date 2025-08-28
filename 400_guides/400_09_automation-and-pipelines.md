@@ -1,3 +1,10 @@
+\n+## 🔄 Backlog Automation Hooks
+\n+- Pre‑commit: validate backlog ID format and allowed status values.
+- CI: run `python3 scripts/backlog_status_tracking.py --check-stale` and publish results to logs/artifacts.
+\n+## 🤖 Automated Constitution Checks
+\n+- Add CI validators for markdown links, headings, and safety gates.
+- Fail fast on constitution violations; report actionable remediation.
+- Consider pre‑commit hooks to protect cross‑ref integrity.
 # Automation and Pipelines
 
 ## 🔎 TL;DR
@@ -5,6 +12,21 @@
 | what this file is | read when | do next |
 |---|---|---|
 | Canonical automation and pipelines guide (n8n, Scribe, background workers) | Setting up or modifying automations | Use patterns here; cross-link to 11 for observability |
+
+### CI Gates (from Comprehensive Guide)
+- Lint: `ruff check . && black --check .`
+- Docs: `markdownlint ./*.md` (MD034 bare URLs, MD040 code lang)
+- SQL: `sqlfluff lint .`
+- Conflicts: `python scripts/quick_conflict_check.py` and `python scripts/conflict_audit.py --full`
+
+### DSPy Signature Validation in CI
+- Validate DSPy signatures during CI to catch schema/IO drift:
+  - `python -m dspy_modules.signature_validator_cli --validate-all` (or project script equivalent)
+  - Publish validation summary (pass/fail counts, avg validation time) as CI artifacts
+
+### Lint/Error Reduction Policy in CI
+- Prioritize safe categories for automated fixes (RUF001, F401, I001, F541). Report diffs.
+- Block bulk auto-fixes for dangerous categories (PT009, B007, SIM117, RUF013, SIM102, F841); require manual review job output.
 
 ## 🎯 Purpose
 

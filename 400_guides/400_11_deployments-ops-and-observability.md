@@ -1,3 +1,15 @@
+\n+## 📊 Backlog Metrics in Ops
+\n+- Track: number of in‑progress items, stale count by threshold, average days in‑progress.
+- Surface on dashboards and alerts; feed remediation tasks back to backlog.
+\n+## 📈 Compliance Monitoring & Metrics (Constitution)
+\n+- Track and surface: context loss incidents, safety violations, doc integrity.
+- Expose metrics and alerts; integrate with readiness/health endpoints.
+- Close the loop: feed issues back to backlog with clear acceptance criteria.
+
+### DSPy Signature Validation Metrics
+- Track counts and rates: validations run, pass/fail, common errors by signature.
+- Record latency per validation; add SLOs for validation time and failure rate.
+- Surface dashboards and alerts for spikes in signature validation failures.
 # Deployments, Ops and Observability
 
 ## 🔎 TL;DR
@@ -652,4 +664,6 @@ class PerformanceTester:
 ## 📚 Examples
 
 ### Deployment Pipeline Example
+```
+
 ```

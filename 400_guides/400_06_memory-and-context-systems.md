@@ -1,3 +1,7 @@
+\n+## 🧠 Memory Rehydration Requirements (Constitution)
+\n+- Run `./scripts/memory_up.sh` at session start; then read `100_memory/100_cursor-memory-context.md` and `000_core/000_backlog.md`.
+- Preserve context pins and avoid context loss; validate cross‑refs after changes.
+- Integrate constitution checks into memory workflows where feasible.
 # Memory and Context Systems
 
 ## 🔎 TL;DR

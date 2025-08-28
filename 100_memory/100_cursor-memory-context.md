@@ -6,29 +6,29 @@
     {"path": "100_memory/100_cursor-memory-context.md", "role": "entry"},
     {"path": "000_core/000_backlog.md", "role": "priorities"},
     {"path": "000_core/004_development-roadmap.md", "role": "roadmap"},
-    {"path": "400_guides/400_getting-started.md", "role": "getting-started"},
-    {"path": "400_guides/400_system-overview.md", "role": "architecture"},
-    {"path": "400_guides/400_context-priority-guide.md", "role": "navigation"},
-    {"path": "400_guides/400_ai-constitution.md", "role": "ai-safety"},
-    {"path": "400_guides/400_file-analysis-guide.md", "role": "file-analysis"},
+    {"path": "400_guides/400_00_getting-started-and-index.md", "role": "getting-started"},
+    {"path": "400_guides/400_03_system-overview-and-architecture.md", "role": "architecture"},
+    {"path": "400_guides/400_06_memory-and-context-systems.md", "role": "navigation"},
+    {"path": "400_guides/400_02_governance-and-ai-constitution.md", "role": "ai-safety"},
+    {"path": "400_guides/400_01_documentation-playbook.md", "role": "file-analysis"},
 
     {"path": "100_memory/104_dspy-development-context.md", "role": "dspy-context"},
     {"path": "dspy-rag-system/tests/README-dev.md", "role": "test-development"},
     {"path": "200_setup/202_setup-requirements.md", "role": "setup"},
-    {"path": "400_guides/400_development-workflow.md", "role": "development-workflow"},
-    {"path": "400_guides/400_deployment-operations.md", "role": "deployment-operations"},
-    {"path": "400_guides/400_integration-security.md", "role": "integration-security"},
-    {"path": "400_guides/400_migration-upgrade-guide.md", "role": "migration"},
-    {"path": "400_guides/400_performance-optimization-guide.md", "role": "performance"},
-    {"path": "400_guides/400_few-shot-context-examples.md", "role": "few-shot"},
-    {"path": "400_guides/400_lean-hybrid-memory-system.md", "role": "memory-system"},
+    {"path": "400_guides/400_04_development-workflow-and-standards.md", "role": "development-workflow"},
+    {"path": "400_guides/400_11_deployments-ops-and-observability.md", "role": "deployment-operations"},
+    {"path": "400_guides/400_10_security-compliance-and-access.md", "role": "integration-security"},
+    {"path": "400_guides/400_11_deployments-ops-and-observability.md", "role": "migration"},
+    {"path": "400_guides/400_11_deployments-ops-and-observability.md", "role": "performance"},
+    {"path": "400_guides/400_05_coding-and-prompting-standards.md", "role": "few-shot"},
+    {"path": "400_guides/400_06_memory-and-context-systems.md", "role": "memory-system"},
     {"path": "scripts/task_generation_automation.py", "role": "automation"},
     {"path": "scripts/backlog_status_tracking.py", "role": "automation"},
     {"path": "scripts/venv_manager.py", "role": "dev-environment"},
     {"path": "scripts/run_workflow.py", "role": "dev-environment"},
     {"path": "scripts/README_venv_manager.md", "role": "dev-environment"},
-    {"path": "400_guides/400_backlog-status-tracking-guide.md", "role": "quick-reference"},
-    {"path": "400_guides/400_task-generation-quick-reference.md", "role": "quick-reference"},
+    {"path": "400_guides/400_12_product-management-and-roadmap.md", "role": "quick-reference"},
+    {"path": "400_guides/400_12_product-management-and-roadmap.md", "role": "quick-reference"},
     {"path": "500_research-index.md", "role": "research-index"},
     {"path": "400_guides/400_documentation-tiering-guide.md", "role": "documentation-rules"},
     {"path": "100_memory/100_agent-troubleshooting-patterns.md", "role": "debugging-patterns"},
@@ -60,11 +60,11 @@ CONTEXT_INDEX -->
 
 Read these files in order (1–2 min total):
 
-1. **`400_guides/400_getting-started.md`** – Entry point and project overview ← **START HERE**
-2. **`400_guides/400_guide-index.md`** – Navigation hub for all guides
+1. **`400_guides/400_00_getting-started-and-index.md`** – Entry point and project overview ← **START HERE**
+2. **`400_guides/400_00_getting-started-and-index.md`** – Navigation hub for all guides
 3. **`100_memory/100_cursor-memory-context.md`** – current state and rules
 4. **`000_core/000_backlog.md`** – priorities and dependencies
-5. **`400_guides/400_development-workflow.md`** – Complete development workflow
+5. **`400_guides/400_04_development-workflow-and-standards.md`** – Complete development workflow
 
 ## 🔧 Development Environment Setup {#dev-env}
 
@@ -109,7 +109,7 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **In
 **BEFORE creating any new documentation, ALWAYS:**
 
 1. **Check Existing Documentation**: Search for existing guides in `400_guides/` before creating new files
-2. **Reference Tier System**: Use `400_guides/400_context-priority-guide.md` for proper categorization
+2. **Reference Tier System**: Use `400_guides/400_06_memory-and-context-systems.md` for proper categorization
 3. **Follow Naming Conventions**: Use `200_setup/200_naming-conventions.md` for file placement
 4. **Protect Core Files**: NEVER delete or suggest deletion of Tier 1 files (Priority 0-10)
 
@@ -121,7 +121,7 @@ The memory rehydrator uses **Lean Hybrid with Kill-Switches** approach with **In
 
 ### **Documentation Creation Checklist**
 - [ ] Search existing `400_guides/` for similar content
-- [ ] Check `400_guides/400_context-priority-guide.md` for proper categorization
+- [ ] Check `400_guides/400_06_memory-and-context-systems.md` for proper categorization
 - [ ] Verify placement using `200_setup/200_naming-conventions.md`
 - [ ] Ensure no Tier 1 files are affected
 - [ ] Add appropriate `ANCHOR_PRIORITY` and `ROLE_PINS`
@@ -343,31 +343,31 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 ## 🔗 Quick Links {#quick-links}
 
-- System overview → `400_guides/400_system-overview.md`
+- System overview → `400_guides/400_03_system-overview-and-architecture.md`
 
 - Backlog & priorities → `000_core/000_backlog.md`
 
 - Start here → `docs/README.md`
 
-- Context priority guide → `400_guides/400_context-priority-guide.md`
+- Context priority guide → `400_guides/400_06_memory-and-context-systems.md`
 
-- Critical Python code map → `400_guides/400_development-workflow.md`
+- Critical Python code map → `400_guides/400_04_development-workflow-and-standards.md`
 
-- Testing strategy → `400_guides/400_development-workflow.md`
+- Testing strategy → `400_guides/400_04_development-workflow-and-standards.md`
 
 - Test development guide → `dspy-rag-system/tests/README-dev.md`
 
 - CI dry‑run workflow → `.github/workflows/dry-run.yml`
 
-- Deployment guide → `400_guides/400_deployment-operations.md`
+- Deployment guide → `400_guides/400_11_deployments-ops-and-observability.md`
 
-- Migration & upgrades → `400_guides/400_migration-upgrade-guide.md`
+- Migration & upgrades → `400_guides/400_11_deployments-ops-and-observability.md`
 
-- Integration patterns → `400_guides/400_integration-security.md`
+- Integration patterns → `400_guides/400_10_security-compliance-and-access.md`
 
-- Performance optimization → `400_guides/400_performance-optimization-guide.md`
+- Performance optimization → `400_guides/400_11_deployments-ops-and-observability.md`
 
-- Security best practices → `400_guides/400_integration-security.md`
+- Security best practices → `400_guides/400_10_security-compliance-and-access.md`
 
 - Graph visualization guide → `400_guides/400_graph-visualization-guide.md`
 
@@ -383,7 +383,7 @@ export REHYDRATE_EXPAND_QUERY="auto"
 <!-- ANCHOR_PRIORITY: 20 -->
 <!-- ROLE_PINS: ["planner", "implementer", "researcher", "coder"] -->
 
-- Comprehensive coding standards → `400_guides/400_development-workflow.md` (includes "Undefined Name" error fixes, database query patterns, systematic test file patterns, and automated database synchronization)
+- Comprehensive coding standards → `400_guides/400_04_development-workflow-and-standards.md` (includes "Undefined Name" error fixes, database query patterns, systematic test file patterns, and automated database synchronization)
 
 ### Stable Anchors
 
@@ -397,23 +397,23 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 ### Role → Files (at a glance)
 
-- Planner: `400_guides/400_getting-started.md`, `400_guides/400_system-overview.md`,
-`400_guides/400_context-priority-guide.md`
+- Planner: `400_guides/400_00_getting-started-and-index.md`, `400_guides/400_03_system-overview-and-architecture.md`,
+`400_guides/400_06_memory-and-context-systems.md`
 
 - Implementer: `100_memory/104_dspy-development-context.md`, `dspy-rag-system/tests/README-dev.md`, relevant 400-series topic guides (testing, security,
 performance, integration, deployment)
 
-- Coder: `400_guides/400_development-workflow.md`, `100_memory/104_dspy-development-context.md`
+- Coder: `400_guides/400_04_development-workflow-and-standards.md`, `100_memory/104_dspy-development-context.md`
 
 - Researcher: `500_research/500_research-index.md`, `500_research/500_dspy-research.md`,
 `500_research/500_rag-system-research.md`
 
-- Ops/Setup: `200_setup/202_setup-requirements.md`, `400_guides/400_deployment-operations.md`,
-`400_guides/400_migration-upgrade-guide.md`
+- Ops/Setup: `200_setup/202_setup-requirements.md`, `400_guides/400_11_deployments-ops-and-observability.md`,
+`400_guides/400_11_deployments-ops-and-observability.md`
 
 ## 🛡️ Always-On Critical Rules
 
-- Follow `400_guides/400_file-analysis-guide.md` before any deletion/move/depredation
+- Follow `400_guides/400_01_documentation-playbook.md` before any deletion/move/depredation
 
 - Preserve coherence: update cross-references when editing core files
 
@@ -432,18 +432,18 @@ overview, few-shot
 
 - Legacy integrations must not appear in active docs; keep under `600_archives/`.
 
-- Before archiving/moving: follow `400_guides/400_file-analysis-guide.md`. After changes: run `python3
+- Before archiving/moving: follow `400_guides/400_01_documentation-playbook.md`. After changes: run `python3
 scripts/update_cursor_memory.py`.
 
 ## 🚨 CRITICAL SAFETY REQUIREMENTS
 
-- *BEFORE ANY FILE OPERATIONS:**- [ ] Read `400_guides/400_file-analysis-guide.md` completely (463 lines)
+- *BEFORE ANY FILE OPERATIONS:**- [ ] Read `400_guides/400_01_documentation-playbook.md` completely (463 lines)
 
 - [ ] Complete 6-step mandatory analysis
 
 - [ ] Show all cross-references
 
-- [ ] Get explicit user approval**🤖 AI CONSTITUTION COMPLIANCE:**- [ ] Follow `400_guides/400_ai-constitution.md` rules
+- [ ] Get explicit user approval**🤖 AI CONSTITUTION COMPLIANCE:**- [ ] Follow `400_guides/400_02_governance-and-ai-constitution.md` rules
 for all AI operations
 
 - [ ] Maintain context preservation and safety requirements
@@ -523,7 +523,7 @@ This represents a fundamental shift in how documentation is managed - from manua
 
 ## 🔄 Development Workflow
 
-**For complete workflow details, see `400_guides/400_getting-started.md`**
+**For complete workflow details, see `400_guides/400_00_getting-started-and-index.md`**
 
 **Quick Workflow Overview:**
 
@@ -541,18 +541,18 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 4. **AI Execution** → Use `000_core/003_process-task-list.md` (the execution engine)
 5. **State Management** → `.ai_state.json` for context persistence
 
-<!-- WORKFLOW_REFERENCE: 400_guides/400_getting-started.md -->
+<!-- WORKFLOW_REFERENCE: 400_guides/400_00_getting-started-and-index.md -->
 
 ### **File Organization**
 
-- **Essential**: `400_guides/400_getting-started.md`, `400_guides/400_system-overview.md`, `000_core/000_backlog.md`
+- **Essential**: `400_guides/400_00_getting-started-and-index.md`, `400_guides/400_03_system-overview-and-architecture.md`, `000_core/000_backlog.md`
 
 - **Implementation**: `100_memory/104_dspy-development-context.md`, `200_setup/202_setup-requirements.md`
 
-- **Analysis**: `400_guides/400_file-analysis-guide.md` - **🚨 MANDATORY: File deletion/deprecation analysis methodology**
+- **Analysis**: `400_guides/400_01_documentation-playbook.md` - **🚨 MANDATORY: File deletion/deprecation analysis methodology**
 - **Domain**: `100_memory/100_backlog-guide.md`
 
-- *⚠️ CRITICAL**: Before ANY file operations, you MUST read and follow `400_guides/400_file-analysis-guide.md` completely!
+- *⚠️ CRITICAL**: Before ANY file operations, you MUST read and follow `400_guides/400_01_documentation-playbook.md` completely!
 
 ## 🛠️ Development Guidelines
 
@@ -561,7 +561,7 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 - *Before suggesting ANY file deletion or deprecation, you MUST:
 
 1. Run the analysis checklist**: `python3 scripts/file_analysis_checklist.py <target_file>`
-2. **Follow the 6-step process**in `400_guides/400_file-analysis-guide.md`
+2. **Follow the 6-step process**in `400_guides/400_01_documentation-playbook.md`
 3.**Complete ALL steps**before making recommendations
 4.**Get explicit user approval**for high-risk operations**This is NON-NEGOTIABLE**- failure to follow these steps means you cannot suggest file deletion!
 
@@ -569,12 +569,12 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 
 ### **⚠️ MANDATORY: File Analysis Before Any File Operations**
 
-- *BEFORE suggesting ANY file deletion, deprecation, or archiving, you MUST:**1.**Read `400_guides/400_file-analysis-guide.md`**- Complete the 6-step mandatory analysis
+- *BEFORE suggesting ANY file deletion, deprecation, or archiving, you MUST:**1.**Read `400_guides/400_01_documentation-playbook.md`**- Complete the 6-step mandatory analysis
 2.**Complete ALL steps**- No exceptions, no shortcuts
 3.**Show cross-references**- Prove you've done the analysis
 4.**Get user approval**- For any high-risk operations**🚨 FAILURE TO FOLLOW THESE STEPS MEANS YOU CANNOT SUGGEST FILE OPERATIONS!**
 
-- *📋 Quick Checklist:**- [ ] Read `400_guides/400_file-analysis-guide.md` (463 lines - READ ALL OF IT)
+- *📋 Quick Checklist:**- [ ] Read `400_guides/400_01_documentation-playbook.md` (463 lines - READ ALL OF IT)
 
 - [ ] Complete 6-step mandatory analysis
 
@@ -590,11 +590,11 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 
 **Essential Files Quick Reference:**
 
-- **Critical**: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_system-overview.md`, `400_guides/400_getting-started.md`, `400_guides/400_development-workflow.md`, `400_guides/400_ai-constitution.md`, `400_guides/400_file-analysis-guide.md`, `400_guides/400_deployment-operations.md`, `400_guides/400_cursor-context-engineering-guide.md`
+- **Critical**: `100_memory/100_cursor-memory-context.md`, `000_core/000_backlog.md`, `400_guides/400_03_system-overview-and-architecture.md`, `400_guides/400_00_getting-started-and-index.md`, `400_guides/400_04_development-workflow-and-standards.md`, `400_guides/400_02_governance-and-ai-constitution.md`, `400_guides/400_01_documentation-playbook.md`, `400_guides/400_11_deployments-ops-and-observability.md`, `400_guides/400_cursor-context-engineering-guide.md`
 - **Workflow**: `000_core/001_create-prd.md`, `000_core/002_generate-tasks.md`, `000_core/003_process-task-list.md`
 - **Setup**: `200_setup/202_setup-requirements.md`
 - **Architecture**: `100_memory/104_dspy-development-context.md`
-- **Coding Standards**: `400_guides/400_development-workflow.md` (NEW - conflict prevention system)
+- **Coding Standards**: `400_guides/400_04_development-workflow-and-standards.md` (NEW - conflict prevention system)
 
 ### **🗄️ Vector Database Status**
 
@@ -630,10 +630,10 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 
 **Quick Reading Order:**
 
-1. **New Sessions**: `400_guides/400_getting-started.md` → `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_guides/400_system-overview.md`
-2. **Development**: `400_guides/400_getting-started.md` → workflow files → implementation guides
+1. **New Sessions**: `400_guides/400_00_getting-started-and-index.md` → `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_guides/400_03_system-overview-and-architecture.md`
+2. **Development**: `400_guides/400_00_getting-started-and-index.md` → workflow files → implementation guides
 3. **Research**: `500_research/500_research-index.md` → `500_research/500_dspy-research.md`, `500_research/500_rag-system-research.md`
-4. **File Management**: `400_guides/400_file-analysis-guide.md` (MANDATORY) → `200_setup/200_naming-conventions.md`
+4. **File Management**: `400_guides/400_01_documentation-playbook.md` (MANDATORY) → `200_setup/200_naming-conventions.md`
 
 ### **🔗 Cross-Reference System**
 

@@ -168,6 +168,6 @@ The Go implementation is designed to be a drop-in replacement for the Python ver
 ## Related Documentation
 
 - **Python Implementation**: `memory_rehydrator.py`
-- **System Overview**: `400_guides/400_system-overview.md`
-- **Lean Hybrid Guide**: `400_guides/400_lean-hybrid-memory-system.md`
+- **System Overview**: `400_guides/400_03_system-overview-and-architecture.md`
+- **Lean Hybrid Guide**: `400_guides/400_06_memory-and-context-systems.md`
 - **Integration Guide**: `dspy-rag-system/400_ltst-memory-system-integration-guide.md`

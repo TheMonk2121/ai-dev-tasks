@@ -1,3 +1,10 @@
+\n+## 🧭 PM Governance Practice: Stale Items
+\n+- Treat stale‑item remediation as a recurring backlog task with acceptance criteria.
+- Review `started_at` / `last_updated` timestamps during PM reviews.
+\n+## 🗺️ Governance in the Roadmap (Constitution)
+\n+- Treat constitution updates as backlog items with explicit acceptance criteria.
+- Include governance gates in PRDs where risk is high; verify in execution.
+- Align roadmap milestones with monitoring signals from deployments/ops.
 
 
 <!-- WORKFLOW_MASTER: This file is the canonical source for development workflow -->

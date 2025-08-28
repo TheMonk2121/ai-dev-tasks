@@ -2,6 +2,8 @@
 
 # 📜 **CORE CONSTITUTION RULES**---
 
+> DEPRECATED: Non‑redundant content has been integrated into the core set — see `400_guides/400_02_governance-and-ai-constitution.md` (canonical constitution/governance), plus `400_04_development-workflow-and-standards.md` (workflow enforcement), `400_05_coding-and-prompting-standards.md` (safety/testing rules), and `400_09_automation-and-pipelines.md` (CI enforcement). Use `400_00_getting-started-and-index.md` for navigation. This file is retained for provenance only.
+
 ## 📜**CORE CONSTITUTION RULES**{#tldr}
 
 ## 🔎 TL;DR

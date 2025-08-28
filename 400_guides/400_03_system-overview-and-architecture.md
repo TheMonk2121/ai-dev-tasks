@@ -1,3 +1,8 @@
+\n+## 🛡️ Safety Ops Anchors (Constitution)
+\n+- File safety module: pre‑edit analysis and protected file tiers.
+- Context rehydration entrypoints: `scripts/memory_up.sh`, memory scaffold, backlog.
+- Enforcement hooks: testing gates, DSPy assertions, CI validators.
+- Cross‑ref integrity: architecture owns the canonical links between 00–12 guides.
 # System Overview and Architecture
 
 ## 🔎 TL;DR

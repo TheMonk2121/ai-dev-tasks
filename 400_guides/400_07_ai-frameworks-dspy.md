@@ -1,3 +1,21 @@
+## 🧩 Constitution Integration Points (DSPy)
+
+- Use DSPy assertions to enforce safety and correctness at runtime.
+- Apply teleprompter optimization and few‑shot scaffolding as governance aids.
+- Surface constitution violations via metrics/logs for observability.
+
+### Runtime Signature Validation (from Schema Reference)
+- Use `DSPySignatureValidator` to validate inputs/outputs for key signatures (e.g., `LocalTaskSignature`).
+- Prefer `validate_inputs` before execution and `validate_outputs` after; record metrics for ops.
+- For production wrappers, call validation and capture timing and pass/fail counts.
+
+### DSPy Type‑Safety Patterns (from Comprehensive Guide)
+- Protocols for forward‑compatible modules; Union types; type guards; safe casting with `cast`
+- Prefer assertions/validators to guard critical logic paths
+\n+## 🧩 Constitution Integration Points (DSPy)
+\n+- Use DSPy assertions to enforce safety and correctness at runtime.
+- Apply teleprompter optimization and few‑shot scaffolding as governance aids.
+- Surface constitution violations via metrics/logs for observability.
 # AI Frameworks: DSPy
 
 ## 🔎 TL;DR
