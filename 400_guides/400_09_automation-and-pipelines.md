@@ -74,4 +74,3 @@ Define automation patterns and pipelines (n8n workflows, Scribe capture, backgro
 
 ## 📋 Changelog
 - 2025-08-28: Reconstructed and expanded automation & pipelines guide from n8n and observability sources.
-

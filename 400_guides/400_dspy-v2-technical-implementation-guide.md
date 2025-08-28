@@ -939,12 +939,12 @@ class MLOptimizer:
 ### Documentation
 - [DSPy Official Documentation](https://dspy-docs.vercel.app/)
 - [Adam LK Transcript Analysis](../docs/adam-lk-dspy-transcript.md)
-- [System Integration Guide](../400_guides/400_integration-patterns-guide.md)
+- [System Integration Guide](../400_guides/400_08_integrations-editor-and-models.md)
 
 ### Code Examples
 - [Optimization Examples](../300_examples/300_dspy-v2-demo-scripts/demo_complete_dspy_v2_system.py)
-- [Integration Examples](../400_guides/400_integration-patterns-guide.md)
-- [Testing Examples](../400_guides/400_testing-strategy-guide.md)
+- [Integration Examples](../400_guides/400_08_integrations-editor-and-models.md)
+- [Testing Examples](../400_guides/400_05_coding-and-prompting-standards.md#testing-strategy-and-quality-gates)
 
 ### Performance Benchmarks
 - [Performance Results](../400_guides/400_performance-optimization-guide.md)

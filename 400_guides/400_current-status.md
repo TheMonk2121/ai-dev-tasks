@@ -69,8 +69,8 @@ Your DSPy RAG system is now complete with full DSPy → RAG → Cursor Native AI
 ## **📚 Documentation**
 
 ### **Available Guides:**
-- **[DSPy Integration Guide](DSPY_INTEGRATION_GUIDE.md)** - Complete DSPy setup and usage
-- **[Cursor Native AI Integration Guide](201_model-configuration.md)** - Cursor IDE setup and integration
+- **[DSPy Integration Guide](../dspy-rag-system/docs/DSPY_INTEGRATION_GUIDE.md)** - Complete DSPy setup and usage
+- **[Integrations: Editor and Models](400_08_integrations-editor-and-models.md)** - Editor/model integrations and configuration
 - **[Current Status](400_current-status.md)** - This file - system status and overview
 
 ## **🔧 Your Tech Stack: How It All Works Together**
@@ -88,7 +88,7 @@ Your DSPy RAG system is now complete with full DSPy → RAG → Cursor Native AI
 
 ### **3. DSPy - Your AI's Programming Framework**
 - **What DSPy is**: A framework that helps you program AI models more systematically
-- **What it does for you**: 
+- **What it does for you**:
   - **Structures your AI interactions** - Instead of just chatting, it creates organized workflows
   - **Improves prompt engineering** - Makes your AI prompts more effective and reliable
   - **Enables memory and learning** - Your AI can remember past interactions and learn from them
@@ -96,7 +96,7 @@ Your DSPy RAG system is now complete with full DSPy → RAG → Cursor Native AI
 
 ### **4. RAG System - Your AI's Memory**
 - **What RAG means**: "Retrieval Augmented Generation" (fancy way of saying "find relevant info, then generate an answer")
-- **How it works**: 
+- **How it works**:
   1. You ask a question
   2. The system searches through your documents to find relevant information
   3. It gives that information to Cursor Native AI
@@ -104,7 +104,7 @@ Your DSPy RAG system is now complete with full DSPy → RAG → Cursor Native AI
 
 ### **5. Vector Database (PostgreSQL) - Your AI's Filing Cabinet**
 - **What it is**: A special database that stores your documents in a way that makes them easy to search
-- **How it works**: 
+- **How it works**:
   - Breaks your documents into small pieces (chunks)
   - Converts each piece into numbers (vectors) that represent meaning
   - When you ask a question, it finds the most similar pieces
@@ -121,7 +121,7 @@ ChatGPT: "I don't have access to your documents. I can only help with general kn
 ### **Your DSPy RAG System:**
 ```
 You: "What's in my documents?"
-DSPy RAG: 
+DSPy RAG:
 1. Searches your actual documents
 2. Finds relevant information
 3. Uses Cursor Native AI to generate an answer
@@ -210,14 +210,14 @@ Sarah Johnson, 28, San Francisco, Data Scientist, 95000
 
 ## **📊 What You've Accomplished**
 
-✅ **65+ document chunks** stored and searchable  
-✅ **Multiple file types** supported (.txt, .md, .pdf, .csv)  
-✅ **Automatic processing** - just drop files in the watch folder  
-✅ **Smart search** - finds relevant information quickly  
-✅ **Local AI** - everything runs on your computer  
-✅ **Interactive interface** - ask questions naturally  
-✅ **DSPy integration** - programmable AI workflows  
-✅ **Better than ChatGPT** - actually uses your documents!  
+✅ **65+ document chunks** stored and searchable
+✅ **Multiple file types** supported (.txt, .md, .pdf, .csv)
+✅ **Automatic processing** - just drop files in the watch folder
+✅ **Smart search** - finds relevant information quickly
+✅ **Local AI** - everything runs on your computer
+✅ **Interactive interface** - ask questions naturally
+✅ **DSPy integration** - programmable AI workflows
+✅ **Better than ChatGPT** - actually uses your documents!
 
 ## **🎉 The Bottom Line**
 
@@ -323,4 +323,4 @@ source venv/bin/activate && python3 watch_folder.py
 - ✅ **CSV file support** (NEW!)
 - ⚠️ **Notifications skipped** (but system works without them)
 
-**You now have a complete DSPy → RAG → Cursor Native AI pipeline with CSV support! Just drag files (including CSV) into watch_folder and ask questions with ask_question.py!** 🚀 
+**You now have a complete DSPy → RAG → Cursor Native AI pipeline with CSV support! Just drag files (including CSV) into watch_folder and ask questions with ask_question.py!** 🚀

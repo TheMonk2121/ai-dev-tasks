@@ -586,7 +586,7 @@ See [400_contributing-guidelines.md](400_contributing-guidelines.md) for develop
 
 - [API Documentation](../docs/README.md)
 
-- [Deployment Guide](400_deployment-environment-guide.md)
+- [Deployment Guide](400_11_deployments-ops-and-observability.md)
 
 - [Security Guide](400_security-best-practices-guide.md)
 
@@ -1051,7 +1051,7 @@ def check_code_standards() -> bool:
 
 def check_testing() -> bool:
     """Check if testing requirements are met."""
-    # See [400_testing-strategy-guide.md](400_testing-strategy-guide.md) for implementation
+    # See [400_05_coding-and-prompting-standards.md#testing-strategy-and-quality-gates](400_05_coding-and-prompting-standards.md#testing-strategy-and-quality-gates) for implementation
     return True
 
 def check_documentation() -> bool:
@@ -1071,7 +1071,7 @@ def check_performance() -> bool:
 
 def check_deployment() -> bool:
     """Check if deployment requirements are met."""
-    # See [400_deployment-environment-guide.md](400_deployment-environment-guide.md) for implementation
+    # See [400_11_deployments-ops-and-observability.md](400_11_deployments-ops-and-observability.md) for implementation
     return True
 
 ```text
@@ -1102,16 +1102,16 @@ SELF_REVIEW_QUESTIONS = [
 ### **Development Resources**
 
 - **Comprehensive Coding Standards**: [400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md) - Complete coding standards with conflict prevention
-- **Testing Strategy**: [400_testing-strategy-guide.md](400_testing-strategy-guide.md) - Testing approaches and quality gates
+- **Testing Strategy**: [400_05_coding-and-prompting-standards.md#testing-strategy-and-quality-gates](400_05_coding-and-prompting-standards.md#testing-strategy-and-quality-gates) - Testing approaches and quality gates
 - **Security Guidelines**: [400_security-best-practices-guide.md](400_security-best-practices-guide.md) - Security best practices and threat model
 - **Performance Optimization**: [400_performance-optimization-guide.md](400_performance-optimization-guide.md) - Performance monitoring and optimization
 
 ### **Quality Assurance Resources**
 
 - **Code Review Guidelines**: See [400_comprehensive-coding-best-practices.md](400_comprehensive-coding-best-practices.md) for effective code review practices
-- **Testing Strategies**: See [400_testing-strategy-guide.md](400_testing-strategy-guide.md) for comprehensive testing approaches
+- **Testing Strategies**: See [400_05_coding-and-prompting-standards.md#testing-strategy-and-quality-gates](400_05_coding-and-prompting-standards.md#testing-strategy-and-quality-gates) for comprehensive testing approaches
 - **Documentation Standards**: See [400_documentation-reference.md](400_documentation-reference.md) for clear and maintainable documentation
-- **Deployment Best Practices**: See [400_deployment-environment-guide.md](400_deployment-environment-guide.md) for safe and reliable deployment procedures
+- **Deployment Best Practices**: See [400_11_deployments-ops-and-observability.md](400_11_deployments-ops-and-observability.md) for safe and reliable deployment procedures
 
 ### **Solo Development Resources**-**Git Workflow**: Simple version control practices
 

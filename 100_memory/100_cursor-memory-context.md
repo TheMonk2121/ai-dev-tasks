@@ -662,19 +662,19 @@ python3.12 scripts/single_doorway.py archive B-XXX          # Archive completed 
 <!-- AUTO:current_priorities:start -->
 ### **Current Priorities**
 
-1. **B‑1012**: LTST Memory System: Foundation for Hybrid Retrieval & Closed-Loop Lessons (🔥 points)
+1. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
    - todo
 
-2. **B‑1008**: Hybrid JSON Backlog System: Structured Data with Simple Tools (🔥 points)
+2. **B‑094**: MCP Memory Rehydrator Server (🔥 points)
    - todo
 
-3. **B‑1009**: AsyncIO Scribe Enhancement: Event-Driven Context Capture and Real-time Processing (🔥 points)
+3. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
    - todo
 
-4. **B‑1010**: NiceGUI Scribe Dashboard: Advanced UI with AI Integration and Real-time Monitoring (🔥 points)
+4. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
    - todo
 
-5. **B‑1013**: Advanced RAG Optimization with Late Chunking and HIRAG Integration (🔥 points)
+5. **B‑076**: Research-Based DSPy Assertions Implementation (🔥 points)
    - todo
 <!-- AUTO:current_priorities:end -->
 
