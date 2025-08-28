@@ -27,7 +27,7 @@ with sophisticated documentation, automated workflows, and intelligent task mana
 1. **Read the 5‑minute overview** → [../400_guides/400_project-overview.md](../400_guides/400_project-overview.md) ← **START HERE**
 2. **Check current state** → [../100_memory/100_cursor-memory-context.md](../100_memory/100_cursor-memory-context.md)
 3. **See priorities/roadmap** → [000_backlog.md](000_backlog.md)
-4. **Understand architecture** → [../400_guides/400_system-overview.md](../400_guides/400_system-overview.md)
+4. **Understand architecture** → [../400_guides/400_03_system-overview-and-architecture.md](../400_guides/400_03_system-overview-and-architecture.md)
 5. **Learn navigation rules** → [../400_guides/400_context-priority-guide.md](../400_guides/400_context-priority-guide.md)
 
 **Want to understand what this is?** → **[../400_guides/400_project-overview.md](../400_guides/400_project-overview.md)** - 5-minute overview of the entire system
@@ -96,13 +96,13 @@ pip install -r dspy-rag-system/requirements.txt
 
 ### **Setup & Configuration**
 - **[../200_setup/202_setup-requirements.md](../200_setup/202_setup-requirements.md)** - Environment setup
-- **[../400_guides/400_deployment-environment-guide.md](../400_guides/400_deployment-environment-guide.md)** - Production deployment
+- **[../400_guides/400_11_deployments-ops-and-observability.md](../400_guides/400_11_deployments-ops-and-observability.md)** - Deployments & Ops
 
 ### **Quality & Standards**
 - **[../400_guides/400_contributing-guidelines.md](../400_guides/400_contributing-guidelines.md)** - Development standards
-- **[../400_guides/400_testing-strategy-guide.md](../400_guides/400_testing-strategy-guide.md)** - Testing approach
-- **[../400_guides/400_security-best-practices-guide.md](../400_guides/400_security-best-practices-guide.md)** - Security guidelines
-- **[../400_guides/400_performance-optimization-guide.md](../400_guides/400_performance-optimization-guide.md)** - Performance guidelines
+- **[../400_guides/400_05_coding-and-prompting-standards.md](../400_guides/400_05_coding-and-prompting-standards.md)** - Coding & testing
+- **[../400_guides/400_10_security-compliance-and-access.md](../400_guides/400_10_security-compliance-and-access.md)** - Security guidelines
+- **[../400_guides/400_11_deployments-ops-and-observability.md](../400_guides/400_11_deployments-ops-and-observability.md)** - Performance & observability
 
 ## 🤖 **AI System Components**
 
