@@ -20,11 +20,11 @@ These documentation files have been archived because they were superseded by mor
 
 ## Current Documentation
 
-For up-to-date LTST Memory System documentation, refer to:
+For up-to-date LTST Memory System documentation, refer to the active consolidated guides in `400_guides/`.
 
-- **[LTST Memory System Integration Guide](../400_ltst-memory-system-integration-guide.md)** - Complete API reference and usage
-- **[LTST Memory System Deployment Guide](../400_ltst-memory-system-deployment-guide.md)** - Production setup and configuration
-- **[LTST Memory System Performance Guide](../400_ltst-memory-system-performance-guide.md)** - Performance benchmarks and optimization
+- LTST Memory System Integration Guide – see consolidated memory/context and deployments guides
+- LTST Memory System Deployment Guide – see consolidated deployments/ops guide
+- LTST Memory System Performance Guide – see consolidated performance sections in deployments/ops
 
 ## Migration Notes
 
