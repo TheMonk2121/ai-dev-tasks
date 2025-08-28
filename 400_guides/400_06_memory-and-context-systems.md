@@ -341,6 +341,61 @@ The system now includes **entity-aware context expansion** that enhances semanti
     - `limit` (integer): Maximum number of sections to return (default: 8)
     - `token_budget` (integer): Token budget for context (default: 1200)
 
+- **`get_cursor_context`**: Enhanced coder context with Cursor's codebase knowledge
+  - **Parameters**:
+    - `role` (string): Must be "coder" for Cursor context
+    - `task` (string): Specific coding task or query (required)
+    - `file_context` (string): Current file or code context
+    - `language` (string): Programming language (python, javascript, typescript)
+    - `framework` (string): Framework being used (dspy, fastapi, node, express)
+    - `include_cursor_knowledge` (boolean): Include Cursor's built-in knowledge (default: true)
+
+- **`get_planner_context`**: Enhanced planning context with Cursor's architecture knowledge
+  - **Parameters**:
+    - `role` (string): Must be "planner" for enhanced context
+    - `task` (string): Specific planning task or query (required)
+    - `project_scope` (string): Current project scope and objectives
+    - `include_architecture` (boolean): Include system architecture analysis (default: true)
+    - `include_tech_stack` (boolean): Include technology stack analysis (default: true)
+    - `include_performance` (boolean): Include performance insights (default: true)
+
+- **`get_researcher_context`**: Enhanced research context with Cursor's technology insights
+  - **Parameters**:
+    - `role` (string): Must be "researcher" for enhanced context
+    - `task` (string): Specific research task or query (required)
+    - `research_topic` (string): Current research topic
+    - `methodology` (string): Research methodology being used
+    - `include_tech_context` (boolean): Include technology context for research (default: true)
+    - `include_patterns` (boolean): Include code pattern analysis (default: true)
+
+- **`get_implementer_context`**: Enhanced implementation context with Cursor's integration knowledge
+  - **Parameters**:
+    - `role` (string): Must be "implementer" for enhanced context
+    - `task` (string): Specific implementation task or query (required)
+    - `implementation_plan` (string): Implementation plan and approach
+    - `target_environment` (string): Target deployment environment
+    - `include_integration` (boolean): Include integration patterns (default: true)
+    - `include_testing` (boolean): Include testing framework context (default: true)
+    - `include_deployment` (boolean): Include deployment patterns (default: true)
+
+- **`get_github_context`**: GitHub repository information and context (read-only)
+  - **Parameters**:
+    - `role` (string): AI role for context selection (coder, planner, researcher, implementer)
+    - `task` (string): Specific task or query for context (required)
+    - `repository` (string): GitHub repository (owner/repo format) (required)
+    - `context_type` (string): Type of GitHub context to retrieve (files, issues, pulls, readme, structure) (default: structure)
+    - `include_readme` (boolean): Include README content in context (default: true)
+    - `include_structure` (boolean): Include repository file structure (default: true)
+
+- **`get_database_context`**: Database schema and context information (read-only)
+  - **Parameters**:
+    - `role` (string): AI role for context selection (coder, planner, researcher, implementer)
+    - `task` (string): Specific task or query for context (required)
+    - `database_type` (string): Type of database to analyze (postgresql, sqlite, mysql) (default: postgresql)
+    - `context_type` (string): Type of database context to retrieve (schema, tables, relationships, indexes) (default: schema)
+    - `include_sample_data` (boolean): Include sample data (limited rows) (default: false)
+    - `include_statistics` (boolean): Include table statistics and metadata (default: true)
+
 **Endpoints**:
 - **`/mcp`**: MCP server information and tool schema
 - **`/health`**: Health check with error rates and cache hit rates
@@ -349,10 +404,10 @@ The system now includes **entity-aware context expansion** that enhances semanti
 - **`POST /mcp/tools/call`**: Memory rehydration tool execution
 
 **Role Access**:
-- **Planner**: Full access to planning and strategy context
-- **Implementer**: Access to implementation and technical context
-- **Researcher**: Access to research and analysis context
-- **Coder**: Access to code-specific context (via implementer role)
+- **Planner**: Enhanced planning context with architecture knowledge, tech stack analysis, performance insights, GitHub repository analysis, and database schema insights
+- **Implementer**: Enhanced implementation context with integration patterns, testing frameworks, deployment knowledge, GitHub repository analysis, and database schema insights
+- **Researcher**: Enhanced research context with technology insights, pattern analysis, methodology support, GitHub repository analysis, and database schema insights
+- **Coder**: Enhanced coding context with language/framework knowledge, IDE integration, best practices, GitHub repository analysis, and database schema insights
 - **Reviewer**: Access to review and quality context (via planner role)
 
 **Performance Metrics**:
@@ -375,16 +430,508 @@ The system now includes **entity-aware context expansion** that enhances semanti
 # Health check
 curl http://localhost:3000/health
 
-# Memory rehydration for planner role
+# Basic memory rehydration for planner role
 curl -X POST http://localhost:3000/mcp/tools/call \
   -H "Content-Type: application/json" \
   -d '{"name": "rehydrate_memory", "arguments": {"role": "planner", "task": "project planning", "limit": 5, "token_budget": 1000}}'
+
+# Enhanced planner context with Cursor knowledge
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_planner_context", "arguments": {"role": "planner", "task": "system architecture planning", "project_scope": "AI development ecosystem enhancement", "include_architecture": true, "include_tech_stack": true, "include_performance": true}}'
+
+# Enhanced researcher context with technology insights
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_researcher_context", "arguments": {"role": "researcher", "task": "AI framework research", "research_topic": "DSPy optimization techniques", "methodology": "literature_review", "include_tech_context": true, "include_patterns": true}}'
+
+# GitHub repository analysis (read-only)
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_github_context", "arguments": {"role": "coder", "task": "Analyze repository structure", "repository": "owner/ai-dev-tasks", "context_type": "structure", "include_readme": true, "include_structure": true}}'
+
+# Database schema analysis (read-only)
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_database_context", "arguments": {"role": "coder", "task": "Analyze database schema", "database_type": "postgresql", "context_type": "schema", "include_statistics": true, "include_sample_data": false}}'
+
+# Enhanced implementer context with integration knowledge
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_implementer_context", "arguments": {"role": "implementer", "task": "MCP server integration", "implementation_plan": "Integrate new MCP tools with existing system", "target_environment": "development", "include_integration": true, "include_testing": true, "include_deployment": true}}'
+
+# Enhanced coder context with Cursor knowledge
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_cursor_context", "arguments": {"role": "coder", "task": "DSPy module development", "language": "python", "framework": "dspy", "file_context": "dspy-rag-system/src/dspy_modules/context_models.py", "include_cursor_knowledge": true}}'
 
 # View metrics
 curl http://localhost:3000/metrics
 
 # Status dashboard
 open http://localhost:3000/status
+```
+
+### **Enhanced Role-Specific Context Integration**
+
+#### **Cursor Knowledge Integration for DSPy Roles**
+
+**Purpose**: Enhanced context integration that provides each DSPy role with Cursor's codebase knowledge and role-specific insights.
+
+**Key Benefits**:
+- **Role-Aware Context**: Each role gets context tailored to their specific responsibilities
+- **Cursor Knowledge**: Access to Cursor's built-in codebase knowledge and patterns
+- **Language/Framework Specific**: Context specific to the programming language and framework being used
+- **IDE Integration**: Context that understands the development environment and tools
+
+**Role-Specific Enhancements**:
+
+**🎯 Planner Role**:
+- **Architecture Knowledge**: Understanding system structure and patterns
+- **Technology Stack Analysis**: Current frameworks, libraries, and dependencies
+- **Performance Insights**: Bottlenecks and optimization opportunities
+- **Strategic Planning**: Better informed decisions based on codebase reality
+
+**🔬 Researcher Role**:
+- **Technology Context**: Current tech stack for relevant research
+- **Code Pattern Analysis**: Understanding existing implementation patterns
+- **Performance Research**: Analyzing current system characteristics
+- **Integration Research**: Understanding component interactions
+
+**🔧 Implementer Role**:
+- **Integration Patterns**: How to integrate with existing code
+- **Environment Context**: Current deployment and development environments
+- **Testing Frameworks**: Understanding existing testing approaches
+- **Deployment Knowledge**: Current deployment patterns and infrastructure
+
+**💻 Coder Role**:
+- **Language-Specific Knowledge**: Python, JavaScript, TypeScript patterns
+- **Framework Best Practices**: DSPy, FastAPI, Node.js patterns
+- **IDE Integration**: Cursor-specific settings and capabilities
+- **File Context**: Current file and import analysis
+
+**Context Structure**:
+```
+# Enhanced [Role] Context with Cursor Knowledge
+
+## 🎯 Task Context
+- Specific task and role information
+
+## 📁 Role-Specific Context
+- Project scope, research topic, implementation plan, or file context
+
+## 🧠 Cursor Codebase Knowledge
+- Language and framework-specific knowledge
+- Architecture and integration patterns
+- Performance and testing insights
+
+## 📚 Project Documentation Context
+- Your project's specific documentation
+
+## 💡 Role-Specific Guidelines
+- Tailored best practices and approaches
+- Development environment setup
+- Quality standards and requirements
+```
+
+## 🤖 AGENT MEMORY ACCESS AND USAGE PATTERNS
+
+### **Agent Memory Discovery Process**
+
+**Purpose**: Complete documentation of how agents discover, access, and use memory resources in the system.
+
+**Key Components**:
+- **Memory Discovery**: How agents find available memory resources
+- **Role-Based Access**: How agents access role-specific memory
+- **Context Enhancement**: How agents enhance memory with additional context
+- **Memory Integration**: How agents integrate memory into their workflow
+- **Error Handling**: How agents handle memory access failures
+
+### **Memory Access Workflow**
+
+#### **Step 1: Memory Resource Discovery**
+```python
+def discover_memory_resources() -> dict:
+    """Discover available memory resources"""
+
+    memory_resources = {
+        "vector_database": {
+            "type": "PostgreSQL + PGVector",
+            "location": "localhost:5432",
+            "tables": ["document_chunks", "conversation_memory", "user_preferences"],
+            "status": "operational"
+        },
+        "mcp_memory_server": {
+            "type": "HTTP Server",
+            "location": "http://localhost:3000",
+            "tools": ["rehydrate_memory", "get_cursor_context", "get_planner_context",
+                     "get_researcher_context", "get_implementer_context"],
+            "status": "operational"
+        },
+        "context_models": {
+            "type": "Pydantic Models",
+            "location": "dspy-rag-system/src/dspy_modules/context_models.py",
+            "models": ["PlannerContext", "CoderContext", "ResearcherContext", "ImplementerContext"],
+            "status": "operational"
+        }
+    }
+
+    return memory_resources
+
+# Example usage
+resources = discover_memory_resources()
+print(f"Found {len(resources)} memory resource types")
+```
+
+#### **Step 2: Role-Based Memory Access**
+```python
+def access_role_specific_memory(role: str, task: str) -> dict:
+    """Access role-specific memory resources"""
+
+    # Role-specific memory access patterns
+    role_memory_patterns = {
+        "coder": {
+            "primary_source": "get_cursor_context",
+            "secondary_source": "rehydrate_memory",
+            "context_focus": ["language_patterns", "framework_knowledge", "file_context"],
+            "memory_priority": ["current_file", "imports_context", "ide_settings"]
+        },
+        "planner": {
+            "primary_source": "get_planner_context",
+            "secondary_source": "rehydrate_memory",
+            "context_focus": ["architecture_knowledge", "tech_stack_analysis", "performance_insights"],
+            "memory_priority": ["project_scope", "strategic_goals", "constraints"]
+        },
+        "researcher": {
+            "primary_source": "get_researcher_context",
+            "secondary_source": "rehydrate_memory",
+            "context_focus": ["technology_context", "pattern_analysis", "methodology_support"],
+            "memory_priority": ["research_topic", "sources", "hypotheses"]
+        },
+        "implementer": {
+            "primary_source": "get_implementer_context",
+            "secondary_source": "rehydrate_memory",
+            "context_focus": ["integration_patterns", "testing_frameworks", "deployment_knowledge"],
+            "memory_priority": ["implementation_plan", "target_environment", "integration_points"]
+        }
+    }
+
+    pattern = role_memory_patterns.get(role, role_memory_patterns["coder"])
+
+    return {
+        "role": role,
+        "task": task,
+        "access_pattern": pattern,
+        "memory_sources": [pattern["primary_source"], pattern["secondary_source"]],
+        "context_focus": pattern["context_focus"],
+        "memory_priority": pattern["memory_priority"]
+    }
+
+# Example usage
+memory_access = access_role_specific_memory("coder", "Implement a new feature")
+print(f"Memory access pattern: {memory_access['access_pattern']['primary_source']}")
+```
+
+#### **Step 3: Context Enhancement Process**
+```python
+def enhance_memory_with_context(base_memory: str, role: str, task: str) -> str:
+    """Enhance memory with additional context"""
+
+    # Context enhancement layers
+    enhancement_layers = {
+        "coder": [
+            "language_specific_patterns",
+            "framework_best_practices",
+            "ide_integration_context",
+            "file_context_analysis"
+        ],
+        "planner": [
+            "architecture_knowledge",
+            "tech_stack_analysis",
+            "performance_insights",
+            "strategic_context"
+        ],
+        "researcher": [
+            "technology_context",
+            "pattern_analysis",
+            "methodology_support",
+            "research_context"
+        ],
+        "implementer": [
+            "integration_patterns",
+            "testing_frameworks",
+            "deployment_knowledge",
+            "implementation_context"
+        ]
+    }
+
+    layers = enhancement_layers.get(role, enhancement_layers["coder"])
+
+    enhanced_memory = f"""# Enhanced Memory for {role.title()} Role
+
+## 🎯 Task Context
+{task}
+
+## 📚 Base Memory
+{base_memory}
+
+## 🧠 Enhanced Context Layers
+"""
+
+    for layer in layers:
+        enhanced_memory += f"""
+### {layer.replace('_', ' ').title()}
+- Enhanced context for {layer}
+- Role-specific insights and patterns
+- Best practices and guidelines
+"""
+
+    return enhanced_memory
+
+# Example usage
+base_memory = "Basic project context and documentation"
+enhanced_memory = enhance_memory_with_context(base_memory, "coder", "Implement a new feature")
+```
+
+#### **Step 4: Memory Integration Workflow**
+```python
+def integrate_memory_into_workflow(role: str, task: str, enhanced_memory: str) -> dict:
+    """Integrate memory into agent workflow"""
+
+    # Memory integration patterns
+    integration_patterns = {
+        "coder": {
+            "prompt_enhancement": "Include language patterns and framework best practices",
+            "context_usage": "Use file context and IDE integration knowledge",
+            "memory_application": "Apply coding standards and testing patterns"
+        },
+        "planner": {
+            "prompt_enhancement": "Include architecture knowledge and strategic insights",
+            "context_usage": "Use tech stack analysis and performance insights",
+            "memory_application": "Apply planning methodologies and decision frameworks"
+        },
+        "researcher": {
+            "prompt_enhancement": "Include technology context and research methodologies",
+            "context_usage": "Use pattern analysis and methodology support",
+            "memory_application": "Apply research frameworks and analysis techniques"
+        },
+        "implementer": {
+            "prompt_enhancement": "Include integration patterns and deployment knowledge",
+            "context_usage": "Use testing frameworks and implementation strategies",
+            "memory_application": "Apply implementation best practices and deployment patterns"
+        }
+    }
+
+    pattern = integration_patterns.get(role, integration_patterns["coder"])
+
+    # Build enhanced prompt with memory integration
+    enhanced_prompt = f"""You are a {role} AI assistant with enhanced memory context.
+
+{enhanced_memory}
+
+{pattern['prompt_enhancement']}
+
+TASK: {task}
+
+{pattern['context_usage']}
+{pattern['memory_application']}"""
+
+    return {
+        "role": role,
+        "task": task,
+        "enhanced_prompt": enhanced_prompt,
+        "memory_integration_pattern": pattern,
+        "context_length": len(enhanced_memory),
+        "integration_success": True
+    }
+
+# Example usage
+integration_result = integrate_memory_into_workflow("coder", "Implement a new feature", enhanced_memory)
+```
+
+### **Memory Usage Patterns by Role**
+
+#### **Coder Role Memory Pattern**:
+```python
+coder_memory_pattern = {
+    "primary_focus": "Language and framework-specific knowledge",
+    "memory_sources": [
+        "get_cursor_context (primary)",
+        "rehydrate_memory (fallback)"
+    ],
+    "context_enhancements": [
+        "Language patterns (Python, JavaScript, TypeScript)",
+        "Framework best practices (DSPy, FastAPI, Node.js)",
+        "IDE integration (Cursor settings, file context)",
+        "Code quality standards (PEP 8, testing patterns)"
+    ],
+    "memory_priorities": [
+        "Current file context",
+        "Import dependencies",
+        "Framework conventions",
+        "IDE settings"
+    ]
+}
+```
+
+#### **Planner Role Memory Pattern**:
+```python
+planner_memory_pattern = {
+    "primary_focus": "Architecture and strategic knowledge",
+    "memory_sources": [
+        "get_planner_context (primary)",
+        "rehydrate_memory (fallback)"
+    ],
+    "context_enhancements": [
+        "Architecture knowledge (system structure, patterns)",
+        "Technology stack analysis (frameworks, libraries)",
+        "Performance insights (bottlenecks, optimization)",
+        "Strategic planning (roadmaps, decision frameworks)"
+    ],
+    "memory_priorities": [
+        "Project scope and objectives",
+        "Strategic goals and constraints",
+        "Architecture patterns",
+        "Technology stack"
+    ]
+}
+```
+
+#### **Researcher Role Memory Pattern**:
+```python
+researcher_memory_pattern = {
+    "primary_focus": "Technology and research knowledge",
+    "memory_sources": [
+        "get_researcher_context (primary)",
+        "rehydrate_memory (fallback)"
+    ],
+    "context_enhancements": [
+        "Technology context (current tech stack)",
+        "Pattern analysis (implementation patterns)",
+        "Methodology support (research approaches)",
+        "Research context (findings, insights)"
+    ],
+    "memory_priorities": [
+        "Research topic and objectives",
+        "Methodology and approach",
+        "Technology insights",
+        "Pattern analysis"
+    ]
+}
+```
+
+#### **Implementer Role Memory Pattern**:
+```python
+implementer_memory_pattern = {
+    "primary_focus": "Integration and deployment knowledge",
+    "memory_sources": [
+        "get_implementer_context (primary)",
+        "rehydrate_memory (fallback)"
+    ],
+    "context_enhancements": [
+        "Integration patterns (API integration, data flow)",
+        "Testing frameworks (unit tests, integration tests)",
+        "Deployment knowledge (environments, CI/CD)",
+        "Implementation strategies (best practices, patterns)"
+    ],
+    "memory_priorities": [
+        "Implementation plan",
+        "Target environment",
+        "Integration points",
+        "Deployment strategy"
+    ]
+}
+```
+
+### **Memory Error Handling and Fallbacks**
+
+#### **Memory Access Failures**:
+```python
+def handle_memory_access_failure(role: str, task: str, error: str) -> str:
+    """Handle memory access failures with fallback context"""
+
+    # Role-specific fallback contexts
+    fallback_contexts = {
+        "coder": """# Coder Fallback Memory Context
+You are a Python developer working on an AI development ecosystem.
+Focus on clean, maintainable code with proper testing and documentation.
+Use PEP 8 standards and follow project conventions.""",
+
+        "planner": """# Planner Fallback Memory Context
+You are a strategic planner for an AI development ecosystem.
+Focus on architecture, scalability, and long-term planning.
+Consider system design and technology stack decisions.""",
+
+        "researcher": """# Researcher Fallback Memory Context
+You are a researcher for an AI development ecosystem.
+Focus on evidence-based analysis and systematic evaluation.
+Use research methodologies and document findings.""",
+
+        "implementer": """# Implementer Fallback Memory Context
+You are a system implementer for an AI development ecosystem.
+Focus on robust implementation, integration, and deployment.
+Follow implementation best practices and testing strategies."""
+    }
+
+    fallback_context = fallback_contexts.get(role, fallback_contexts["coder"])
+
+    return f"""# Memory Access Failure - Fallback Context
+
+## ⚠️ Memory Access Error
+{error}
+
+## 🎯 Task
+{task}
+
+## 📚 Fallback Context
+{fallback_context}
+
+## 💡 Instructions
+Use the fallback context to complete the task. Focus on your role as a {role} and apply appropriate best practices."""
+```
+
+#### **Memory Enhancement Failures**:
+```python
+def handle_memory_enhancement_failure(base_memory: str, role: str, task: str) -> str:
+    """Handle memory enhancement failures"""
+
+    return f"""# Memory Enhancement Failure - Using Base Memory
+
+## ⚠️ Memory Enhancement Failed
+Using base memory without enhancement due to enhancement failure.
+
+## 🎯 Task
+{task}
+
+## 📚 Base Memory
+{base_memory}
+
+## 💡 Instructions
+Use the base memory to complete the task. Focus on your role as a {role} and apply appropriate best practices."""
+```
+
+### **Memory Performance Monitoring**
+
+#### **Memory Access Metrics**:
+```python
+def monitor_memory_performance(role: str, task: str, memory_access: dict) -> dict:
+    """Monitor memory access performance"""
+
+    metrics = {
+        "role": role,
+        "task": task,
+        "memory_sources_accessed": len(memory_access.get("memory_sources", [])),
+        "context_enhancement_layers": len(memory_access.get("context_focus", [])),
+        "memory_priority_items": len(memory_access.get("memory_priority", [])),
+        "access_pattern": memory_access.get("access_pattern", {}).get("primary_source", "unknown"),
+        "timestamp": datetime.now().isoformat(),
+        "performance_status": "success"
+    }
+
+    return metrics
+
+# Example usage
+performance_metrics = monitor_memory_performance("coder", "Implement a new feature", memory_access)
 ```
 
 ### **Implementation Comparison: Python vs Go**

@@ -102,11 +102,66 @@ This guide covers comprehensive DSPy framework integration and usage including:
     - `limit` (integer): Maximum number of sections to return (default: 8)
     - `token_budget` (integer): Token budget for context (default: 1200)
 
+- **`get_cursor_context`**: Enhanced coder context with Cursor's codebase knowledge
+  - **Parameters**:
+    - `role` (string): Must be "coder" for Cursor context
+    - `task` (string): Specific coding task or query (required)
+    - `file_context` (string): Current file or code context
+    - `language` (string): Programming language (python, javascript, typescript)
+    - `framework` (string): Framework being used (dspy, fastapi, node, express)
+    - `include_cursor_knowledge` (boolean): Include Cursor's built-in knowledge (default: true)
+
+- **`get_planner_context`**: Enhanced planning context with Cursor's architecture knowledge
+  - **Parameters**:
+    - `role` (string): Must be "planner" for enhanced context
+    - `task` (string): Specific planning task or query (required)
+    - `project_scope` (string): Current project scope and objectives
+    - `include_architecture` (boolean): Include system architecture analysis (default: true)
+    - `include_tech_stack` (boolean): Include technology stack analysis (default: true)
+    - `include_performance` (boolean): Include performance insights (default: true)
+
+- **`get_researcher_context`**: Enhanced research context with Cursor's technology insights
+  - **Parameters**:
+    - `role` (string): Must be "researcher" for enhanced context
+    - `task` (string): Specific research task or query (required)
+    - `research_topic` (string): Current research topic
+    - `methodology` (string): Research methodology being used
+    - `include_tech_context` (boolean): Include technology context for research (default: true)
+    - `include_patterns` (boolean): Include code pattern analysis (default: true)
+
+- **`get_implementer_context`**: Enhanced implementation context with Cursor's integration knowledge
+  - **Parameters**:
+    - `role` (string): Must be "implementer" for enhanced context
+    - `task` (string): Specific implementation task or query (required)
+    - `implementation_plan` (string): Implementation plan and approach
+    - `target_environment` (string): Target deployment environment
+    - `include_integration` (boolean): Include integration patterns (default: true)
+    - `include_testing` (boolean): Include testing framework context (default: true)
+    - `include_deployment` (boolean): Include deployment patterns (default: true)
+
+- **`get_github_context`**: GitHub repository information and context (read-only)
+  - **Parameters**:
+    - `role` (string): AI role for context selection (coder, planner, researcher, implementer)
+    - `task` (string): Specific task or query for context (required)
+    - `repository` (string): GitHub repository (owner/repo format) (required)
+    - `context_type` (string): Type of GitHub context to retrieve (files, issues, pulls, readme, structure) (default: structure)
+    - `include_readme` (boolean): Include README content in context (default: true)
+    - `include_structure` (boolean): Include repository file structure (default: true)
+
+- **`get_database_context`**: Database schema and context information (read-only)
+  - **Parameters**:
+    - `role` (string): AI role for context selection (coder, planner, researcher, implementer)
+    - `task` (string): Specific task or query for context (required)
+    - `database_type` (string): Type of database to analyze (postgresql, sqlite, mysql) (default: postgresql)
+    - `context_type` (string): Type of database context to retrieve (schema, tables, relationships, indexes) (default: schema)
+    - `include_sample_data` (boolean): Include sample data (limited rows) (default: false)
+    - `include_statistics` (boolean): Include table statistics and metadata (default: true)
+
 **Role Access**:
-- **Planner**: Full access to planning and strategy context
-- **Implementer**: Access to implementation and technical context
-- **Researcher**: Access to research and analysis context
-- **Coder**: Access to code-specific context (via implementer role)
+- **Planner**: Enhanced planning context with architecture knowledge, tech stack analysis, performance insights, GitHub repository analysis, and database schema insights
+- **Implementer**: Enhanced implementation context with integration patterns, testing frameworks, deployment knowledge, GitHub repository analysis, and database schema insights
+- **Researcher**: Enhanced research context with technology insights, pattern analysis, methodology support, GitHub repository analysis, and database schema insights
+- **Coder**: Enhanced coding context with language/framework knowledge, IDE integration, best practices, GitHub repository analysis, and database schema insights
 - **Reviewer**: Access to review and quality context (via planner role)
 
 **Performance Metrics**:
@@ -119,17 +174,481 @@ This guide covers comprehensive DSPy framework integration and usage including:
 # Start the server
 ./scripts/start_mcp_server.sh
 
-# Memory rehydration for planner role
+# Basic memory rehydration for planner role
 curl -X POST http://localhost:3000/mcp/tools/call \
   -H "Content-Type: application/json" \
   -d '{"name": "rehydrate_memory", "arguments": {"role": "planner", "task": "project planning", "limit": 5, "token_budget": 1000}}'
+
+# Enhanced planner context with Cursor knowledge
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_planner_context", "arguments": {"role": "planner", "task": "system architecture planning", "project_scope": "AI development ecosystem enhancement", "include_architecture": true, "include_tech_stack": true, "include_performance": true}}'
+
+# Enhanced researcher context with technology insights
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_researcher_context", "arguments": {"role": "researcher", "task": "AI framework research", "research_topic": "DSPy optimization techniques", "methodology": "literature_review", "include_tech_context": true, "include_patterns": true}}'
+
+# Enhanced implementer context with integration knowledge
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_implementer_context", "arguments": {"role": "implementer", "task": "MCP server integration", "implementation_plan": "Integrate new MCP tools with existing system", "target_environment": "development", "include_integration": true, "include_testing": true, "include_deployment": true}}'
+
+# Enhanced coder context with Cursor knowledge
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_cursor_context", "arguments": {"role": "coder", "task": "DSPy module development", "language": "python", "framework": "dspy", "file_context": "dspy-rag-system/src/dspy_modules/context_models.py", "include_cursor_knowledge": true}}'
+
+# GitHub repository analysis (read-only)
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_github_context", "arguments": {"role": "coder", "task": "Analyze repository structure", "repository": "owner/ai-dev-tasks", "context_type": "structure", "include_readme": true, "include_structure": true}}'
+
+# Database schema analysis (read-only)
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_database_context", "arguments": {"role": "coder", "task": "Analyze database schema", "database_type": "postgresql", "context_type": "schema", "include_statistics": true, "include_sample_data": false}}'
 
 # View metrics and status
 curl http://localhost:3000/metrics
 open http://localhost:3000/status
 ```
 
+**Enhanced Role-Specific Benefits**:
+
+**🎯 Planner Role Benefits**:
+- **Architecture Knowledge**: Understanding system structure and patterns for better planning
+- **Technology Stack Analysis**: Current frameworks, libraries, and dependencies for informed decisions
+- **Performance Insights**: Bottlenecks and optimization opportunities for strategic planning
+- **Strategic Planning**: Better informed decisions based on codebase reality
+
+**🔬 Researcher Role Benefits**:
+- **Technology Context**: Current tech stack for relevant research and analysis
+- **Code Pattern Analysis**: Understanding existing implementation patterns for research insights
+- **Performance Research**: Analyzing current system characteristics for optimization research
+- **Integration Research**: Understanding component interactions for system research
+
+**🔧 Implementer Role Benefits**:
+- **Integration Patterns**: How to integrate with existing code and systems
+- **Environment Context**: Current deployment and development environments for implementation
+- **Testing Frameworks**: Understanding existing testing approaches for quality implementation
+- **Deployment Knowledge**: Current deployment patterns and infrastructure for reliable implementation
+
+**💻 Coder Role Benefits**:
+- **Language-Specific Knowledge**: Python, JavaScript, TypeScript patterns and best practices
+- **Framework Best Practices**: DSPy, FastAPI, Node.js patterns and conventions
+- **IDE Integration**: Cursor-specific settings and capabilities for enhanced development
+- **File Context**: Current file and import analysis for contextual coding
+
 **Full Documentation**: See `400_06_memory-and-context-systems.md#mcp-memory-server-integration`
+
+## 🤖 AGENT TOOL DISCOVERY AND DECISION-MAKING
+
+### **Agent Discovery Workflow**
+
+**Purpose**: Complete workflow for how DSPy agents discover, select, and use tools and memory resources.
+
+**Key Components**:
+- **Tool Discovery**: How agents find available MCP tools
+- **Role Identification**: How agents identify their role and capabilities
+- **Task Analysis**: How agents analyze tasks to select appropriate tools
+- **Context Creation**: How agents create and enhance context
+- **Memory Rehydration**: How agents access and use memory resources
+- **Tool Execution**: How agents execute tasks with enhanced context
+
+### **Step-by-Step Agent Workflow**
+
+#### **Step 1: Tool Discovery**
+```python
+# Agent queries MCP server for available tools
+import requests
+
+def discover_available_tools(mcp_server_url: str = "http://localhost:3000") -> dict:
+    """Discover available MCP tools"""
+    response = requests.get(f"{mcp_server_url}/mcp")
+    mcp_info = response.json()
+
+    return {
+        "server_name": mcp_info["name"],
+        "version": mcp_info["version"],
+        "description": mcp_info["description"],
+        "available_tools": mcp_info["tools"]
+    }
+
+# Example usage
+available_tools = discover_available_tools()
+print(f"Found {len(available_tools['available_tools'])} tools")
+```
+
+#### **Step 2: Role Identification**
+```python
+from dspy_rag_system.src.dspy_modules.context_models import AIRole, ContextFactory
+
+def identify_agent_role(task: str, context: dict) -> AIRole:
+    """Identify the appropriate role for the given task"""
+
+    # Role-specific keywords
+    role_keywords = {
+        AIRole.PLANNER: ["plan", "strategy", "architecture", "design", "roadmap"],
+        AIRole.CODER: ["code", "implement", "develop", "program", "debug"],
+        AIRole.RESEARCHER: ["research", "analyze", "investigate", "study", "explore"],
+        AIRole.IMPLEMENTER: ["implement", "integrate", "deploy", "configure", "setup"]
+    }
+
+    # Analyze task for role indicators
+    task_lower = task.lower()
+    role_scores = {}
+
+    for role, keywords in role_keywords.items():
+        score = sum(1 for keyword in keywords if keyword in task_lower)
+        role_scores[role] = score
+
+    # Return role with highest score, default to CODER
+    best_role = max(role_scores.items(), key=lambda x: x[1])[0]
+    return best_role if role_scores[best_role] > 0 else AIRole.CODER
+
+# Example usage
+role = identify_agent_role("Implement a new feature with proper testing", {})
+print(f"Identified role: {role.value}")
+```
+
+#### **Step 3: Task Analysis**
+```python
+def analyze_task_for_tool_selection(task: str, role: AIRole) -> dict:
+    """Analyze task to determine which tool to use"""
+
+    # Role-specific tool mapping
+    role_tools = {
+        AIRole.CODER: {
+            "coding": "get_cursor_context",
+            "development": "get_cursor_context",
+            "implementation": "get_cursor_context",
+            "debug": "get_cursor_context",
+            "test": "get_cursor_context"
+        },
+        AIRole.PLANNER: {
+            "plan": "get_planner_context",
+            "planning": "get_planner_context",
+            "architecture": "get_planner_context",
+            "strategy": "get_planner_context",
+            "design": "get_planner_context"
+        },
+        AIRole.RESEARCHER: {
+            "research": "get_researcher_context",
+            "analyze": "get_researcher_context",
+            "investigate": "get_researcher_context",
+            "study": "get_researcher_context",
+            "explore": "get_researcher_context"
+        },
+        AIRole.IMPLEMENTER: {
+            "implement": "get_implementer_context",
+            "integrate": "get_implementer_context",
+            "deploy": "get_implementer_context",
+            "configure": "get_implementer_context",
+            "setup": "get_implementer_context"
+        }
+    }
+
+    # Get available tools for the role
+    available_tools = role_tools.get(role, {})
+    task_lower = task.lower()
+
+    # Find the most appropriate tool
+    for keyword, tool in available_tools.items():
+        if keyword in task_lower:
+            return {
+                "primary_tool": tool,
+                "fallback_tool": "rehydrate_memory",
+                "reasoning": f"Task contains '{keyword}', using {tool}"
+            }
+
+    # Fallback to basic memory rehydration
+    return {
+        "primary_tool": "rehydrate_memory",
+        "fallback_tool": None,
+        "reasoning": "No specific tool found, using basic memory rehydration"
+    }
+
+# Example usage
+tool_analysis = analyze_task_for_tool_selection("Implement a new feature", AIRole.CODER)
+print(f"Selected tool: {tool_analysis['primary_tool']}")
+```
+
+#### **Step 4: Context Creation**
+```python
+def create_enhanced_context(role: AIRole, task: str, **kwargs) -> dict:
+    """Create enhanced context for the agent"""
+
+    # Create base context using ContextFactory
+    context = ContextFactory.create_context(role, **kwargs)
+
+    # Add role-specific enhancements
+    if role == AIRole.CODER:
+        context.cursor_knowledge_enabled = True
+        context.current_file = kwargs.get("current_file")
+        context.imports_context = kwargs.get("imports_context", [])
+    elif role == AIRole.PLANNER:
+        context.project_scope = kwargs.get("project_scope", "")
+        context.strategic_goals = kwargs.get("strategic_goals", [])
+    elif role == AIRole.RESEARCHER:
+        context.research_topic = kwargs.get("research_topic", "")
+        context.methodology = kwargs.get("methodology", "literature_review")
+    elif role == AIRole.IMPLEMENTER:
+        context.implementation_plan = kwargs.get("implementation_plan", "")
+        context.target_environment = kwargs.get("target_environment", "development")
+
+    return context
+
+# Example usage
+context = create_enhanced_context(
+    role=AIRole.CODER,
+    task="Implement a new feature",
+    codebase_path="/path/to/codebase",
+    language="python",
+    framework="dspy",
+    current_file="src/new_feature.py"
+)
+```
+
+#### **Step 5: Memory Rehydration**
+```python
+import requests
+from typing import Dict, Any
+
+def rehydrate_memory_with_context(role: str, task: str, context: dict) -> str:
+    """Rehydrate memory with enhanced context"""
+
+    # Determine the appropriate tool based on role and task
+    tool_analysis = analyze_task_for_tool_selection(task, context.role)
+    tool_name = tool_analysis["primary_tool"]
+
+    # Prepare tool arguments based on role
+    if tool_name == "get_cursor_context":
+        arguments = {
+            "role": "coder",
+            "task": task,
+            "language": getattr(context, "language", "python"),
+            "framework": getattr(context, "framework", ""),
+            "file_context": getattr(context, "current_file", ""),
+            "include_cursor_knowledge": getattr(context, "cursor_knowledge_enabled", True)
+        }
+    elif tool_name == "get_planner_context":
+        arguments = {
+            "role": "planner",
+            "task": task,
+            "project_scope": getattr(context, "project_scope", ""),
+            "include_architecture": True,
+            "include_tech_stack": True,
+            "include_performance": True
+        }
+    elif tool_name == "get_researcher_context":
+        arguments = {
+            "role": "researcher",
+            "task": task,
+            "research_topic": getattr(context, "research_topic", ""),
+            "methodology": getattr(context, "methodology", "literature_review"),
+            "include_tech_context": True,
+            "include_patterns": True
+        }
+    elif tool_name == "get_implementer_context":
+        arguments = {
+            "role": "implementer",
+            "task": task,
+            "implementation_plan": getattr(context, "implementation_plan", ""),
+            "target_environment": getattr(context, "target_environment", "development"),
+            "include_integration": True,
+            "include_testing": True,
+            "include_deployment": True
+        }
+    else:
+        # Fallback to basic memory rehydration
+        arguments = {
+            "role": role,
+            "task": task,
+            "limit": 8,
+            "token_budget": 1200
+        }
+
+    # Call the MCP server
+    response = requests.post(
+        "http://localhost:3000/mcp/tools/call",
+        json={
+            "name": tool_name,
+            "arguments": arguments
+        }
+    )
+
+    if response.status_code == 200:
+        result = response.json()
+        return result["content"][0]["text"]
+    else:
+        raise Exception(f"Failed to rehydrate memory: {response.text}")
+
+# Example usage
+enhanced_context = rehydrate_memory_with_context("coder", "Implement a new feature", context)
+```
+
+#### **Step 6: Tool Execution**
+```python
+def execute_task_with_enhanced_context(task: str, role: AIRole, enhanced_context: str) -> dict:
+    """Execute task with enhanced context"""
+
+    # Build enhanced prompt
+    enhanced_prompt = f"""You are a {role.value} AI assistant with access to enhanced context.
+
+{enhanced_context}
+
+TASK: {task}
+
+Please provide a detailed response following the project's coding standards and best practices.
+Consider your role as a {role.value} and use the context provided to deliver the best possible solution."""
+
+    # Execute with appropriate model (using ModelSwitcher)
+    from dspy_rag_system.src.dspy_modules.model_switcher import ModelSwitcher
+
+    switcher = ModelSwitcher()
+    result = switcher.forward(
+        task=task,
+        task_type=role.value,
+        role=role.value,
+        complexity="moderate"
+    )
+
+    return {
+        "result": result.get("result", ""),
+        "confidence": result.get("confidence", 0.0),
+        "model_used": result.get("model_used", ""),
+        "reasoning": result.get("reasoning", ""),
+        "enhanced_context_used": True
+    }
+
+# Example usage
+execution_result = execute_task_with_enhanced_context(
+    "Implement a new feature",
+    AIRole.CODER,
+    enhanced_context
+)
+```
+
+### **Complete Agent Workflow Example**
+
+```python
+def complete_agent_workflow(task: str, **kwargs) -> dict:
+    """Complete agent workflow from task to execution"""
+
+    # Step 1: Discover available tools
+    available_tools = discover_available_tools()
+
+    # Step 2: Identify role
+    role = identify_agent_role(task, kwargs)
+
+    # Step 3: Analyze task
+    tool_analysis = analyze_task_for_tool_selection(task, role)
+
+    # Step 4: Create context
+    context = create_enhanced_context(role, task, **kwargs)
+
+    # Step 5: Rehydrate memory
+    enhanced_context = rehydrate_memory_with_context(role.value, task, context)
+
+    # Step 6: Execute task
+    result = execute_task_with_enhanced_context(task, role, enhanced_context)
+
+    return {
+        "task": task,
+        "role": role.value,
+        "selected_tool": tool_analysis["primary_tool"],
+        "tool_reasoning": tool_analysis["reasoning"],
+        "available_tools": len(available_tools["available_tools"]),
+        "enhanced_context_length": len(enhanced_context),
+        "execution_result": result
+    }
+
+# Example usage
+workflow_result = complete_agent_workflow(
+    "Implement a new DSPy module for enhanced context management",
+    codebase_path="/path/to/codebase",
+    language="python",
+    framework="dspy",
+    current_file="src/enhanced_context.py"
+)
+```
+
+### **Agent Decision-Making Logic**
+
+#### **Task-to-Tool Mapping Matrix**:
+| Task Type | Coder | Planner | Researcher | Implementer |
+|-----------|-------|---------|------------|-------------|
+| **Coding** | `get_cursor_context` | `get_planner_context` | `get_researcher_context` | `get_implementer_context` |
+| **Planning** | `get_cursor_context` | `get_planner_context` | `get_researcher_context` | `get_implementer_context` |
+| **Research** | `get_cursor_context` | `get_planner_context` | `get_researcher_context` | `get_implementer_context` |
+| **Implementation** | `get_cursor_context` | `get_planner_context` | `get_researcher_context` | `get_implementer_context` |
+| **Fallback** | `rehydrate_memory` | `rehydrate_memory` | `rehydrate_memory` | `rehydrate_memory` |
+
+#### **Context Enhancement Priority**:
+1. **Role-Specific Context**: Tailored to agent's role and responsibilities
+2. **Cursor Knowledge**: Language and framework-specific patterns
+3. **Project Documentation**: Current project context and guidelines
+4. **File Context**: Current file and import analysis
+5. **IDE Integration**: Development environment settings
+
+### **Error Handling and Fallbacks**
+
+#### **Tool Discovery Failures**:
+```python
+def handle_tool_discovery_failure(task: str, role: AIRole) -> str:
+    """Handle tool discovery failures with fallback context"""
+
+    # Use basic memory rehydration as fallback
+    fallback_context = f"""# Fallback Context for {role.value}
+
+## 🎯 Task
+{task}
+
+## ⚠️ Tool Discovery Failed
+Using fallback memory rehydration due to tool discovery failure.
+
+## 📚 Basic Project Context
+- Project: AI Development Ecosystem
+- Framework: DSPy with PostgreSQL + PGVector
+- Language: Python 3.12
+- Environment: Local-first development
+
+## 💡 Role Guidelines
+- Follow project coding standards
+- Use appropriate error handling
+- Document implementation decisions
+- Test thoroughly before deployment"""
+
+    return fallback_context
+```
+
+#### **Memory Rehydration Failures**:
+```python
+def handle_memory_rehydration_failure(task: str, role: AIRole) -> str:
+    """Handle memory rehydration failures"""
+
+    # Use role-specific fallback context
+    fallback_contexts = {
+        AIRole.CODER: """# Coder Fallback Context
+You are a Python developer working on an AI development ecosystem.
+Focus on clean, maintainable code with proper testing and documentation.""",
+
+        AIRole.PLANNER: """# Planner Fallback Context
+You are a strategic planner for an AI development ecosystem.
+Focus on architecture, scalability, and long-term planning.""",
+
+        AIRole.RESEARCHER: """# Researcher Fallback Context
+You are a researcher for an AI development ecosystem.
+Focus on evidence-based analysis and systematic evaluation.""",
+
+        AIRole.IMPLEMENTER: """# Implementer Fallback Context
+You are a system implementer for an AI development ecosystem.
+Focus on robust implementation, integration, and deployment."""
+    }
+
+    return fallback_contexts.get(role, fallback_contexts[AIRole.CODER])
+```
 
 #### **MCP Integration Architecture**
 **Complete MCP integration system with multiple server types and DSPy modules.**

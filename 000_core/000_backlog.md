@@ -163,6 +163,65 @@ and normalize spacing across long-form guides.
 <!-- outcome: Production-ready MCP memory server with proper port management, complete function set, Python 3.12 compatibility, and stable LaunchAgent configuration -->
 
 - B‑1037 — Remote Communication with Local Dev Agents: Mobile Access to Laptop-Based AI Development Ecosystem (score 7.5)
+
+- B‑1040 — MCP Server Orchestration: Multi-Server Tool Integration and Routing (score 6.5)
+<!--score: {bv:4, tc:4, rr:4, le:3, effort:5, deps:["B-1033"]}-->
+<!--score_total: 6.5-->
+<!-- do_next: Research and design MCP server orchestration architecture for future implementation -->
+<!-- est_hours: 16 -->
+<!-- acceptance: Comprehensive research and design document for MCP server orchestration, including architecture patterns, security considerations, and implementation roadmap -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#system-architecture", "400_guides/400_development-workflow.md#incremental-implementation"] -->
+<!-- reference_cards: ["400_guides/400_08_integrations-editor-and-models.md#mcp-integration", "400_guides/400_07_ai-frameworks-dspy.md#agent-tool-discovery"] -->
+<!-- future_consideration: This is a long-term exploration item for when the system is ready for advanced MCP orchestration -->
+<!-- risk_level: HIGH - Complex distributed system with security implications -->
+<!-- phased_approach: Research → Design → Prototype → Implementation -->
+<!-- security_considerations: File system access, web crawling, database access, GitHub integration -->
+<!-- resource_requirements: Multiple servers, port management, service discovery, load balancing -->
+<!-- alternative_approach: Start with safe tools (GitHub read-only, database read-only) before full orchestration -->
+
+**Description**: Research and design comprehensive MCP server orchestration system to enable agents to access multiple specialized MCP servers (document processing, GitHub integration, database access, web crawling) through a unified gateway. This is a long-term exploration item for when the system is ready for advanced distributed MCP tool integration.
+
+**Key Benefits**:
+- **Unified Tool Access**: Single gateway for all MCP tools across multiple servers
+- **Enhanced Agent Capabilities**: Access to document processing, GitHub, database, and web tools
+- **Scalable Architecture**: Distributed system supporting multiple specialized servers
+- **Security Control**: Centralized security and access control for all MCP tools
+- **Future-Proof Design**: Architecture ready for advanced MCP tool ecosystem
+
+**Research Areas**:
+1. **Architecture Patterns**: Service discovery, load balancing, routing strategies
+2. **Security Considerations**: File system access, web crawling, database access, GitHub integration
+3. **Performance Optimization**: Caching, connection pooling, request batching
+4. **Error Handling**: Graceful degradation, fallback mechanisms, monitoring
+5. **Implementation Roadmap**: Phased approach from safe tools to full orchestration
+
+**Technical Challenges**:
+- **Distributed System Complexity**: Multiple servers to manage and coordinate
+- **Security Implications**: Broader access surface requiring careful controls
+- **Resource Management**: Higher CPU/memory requirements for multiple servers
+- **Service Discovery**: Dynamic routing to appropriate MCP servers
+- **Error Propagation**: Complex error handling across multiple services
+
+**Phased Implementation Approach**:
+1. **Phase 1 - Research**: Comprehensive analysis of MCP orchestration patterns
+2. **Phase 2 - Design**: Architecture design with security and performance considerations
+3. **Phase 3 - Safe Tools**: Implement GitHub read-only and database read-only access
+4. **Phase 4 - Prototype**: Limited prototype with controlled document processing
+5. **Phase 5 - Full Orchestration**: Complete multi-server orchestration system
+
+**Success Metrics**:
+- Comprehensive research document with architecture patterns
+- Security analysis and risk mitigation strategies
+- Implementation roadmap with clear phases and milestones
+- Performance benchmarks and resource requirements
+- Integration plan with existing MCP Memory Server
+
+**Risk Mitigation**:
+- Start with safe, read-only tools before full access
+- Implement comprehensive security controls and access limits
+- Use phased approach to manage complexity and risk
+- Maintain fallback to current MCP Memory Server
+- Extensive testing and monitoring throughout implementation
 <!--score: {bv:4, tc:4, rr:4, le:3, effort:3, deps:[]}-->
 <!--score_total: 7.5-->
 <!-- do_next: Implement API gateway approach with Tailscale + FastAPI for secure remote access to local dev agents -->

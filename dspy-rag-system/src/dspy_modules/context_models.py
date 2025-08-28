@@ -103,6 +103,13 @@ class CoderContext(BaseContext):
     testing_requirements: Dict[str, Any] = Field(default_factory=dict, description="Testing requirements")
     performance_constraints: Dict[str, Any] = Field(default_factory=dict, description="Performance constraints")
 
+    # Cursor-specific fields for enhanced context
+    cursor_knowledge_enabled: bool = Field(default=True, description="Enable Cursor's codebase knowledge")
+    current_file: Optional[str] = Field(None, description="Currently active file in Cursor")
+    imports_context: List[str] = Field(default_factory=list, description="Current file imports and dependencies")
+    cursor_model: Optional[str] = Field(None, description="Cursor AI model being used")
+    ide_context: Dict[str, Any] = Field(default_factory=dict, description="IDE-specific context and settings")
+
     @field_validator("codebase_path")
     @classmethod
     def validate_codebase_path(cls, v: str) -> str:
@@ -135,6 +142,19 @@ class CoderContext(BaseContext):
             else:
                 _LOG.warning(f"File context path does not exist: {file_path}")
         return valid_files
+
+    def get_cursor_context(self) -> Dict[str, Any]:
+        """Get Cursor-specific context for enhanced coding assistance"""
+        return {
+            "role": self.role.value,
+            "language": self.language,
+            "framework": self.framework,
+            "current_file": self.current_file,
+            "imports_context": self.imports_context,
+            "cursor_model": self.cursor_model,
+            "ide_context": self.ide_context,
+            "cursor_knowledge_enabled": self.cursor_knowledge_enabled,
+        }
 
 
 class ResearcherContext(BaseContext):

@@ -1133,13 +1133,15 @@ def smart_error_fix(error_code: str, file_path: str) -> bool:
 
 ### **MCP Server Development Patterns**
 
-**Purpose**: Standards for developing MCP (Model Context Protocol) servers and modules.
+**Purpose**: Standards for developing MCP (Model Context Protocol) servers and modules with enhanced role-specific context integration.
 
 **Core Requirements**:
 - **Inherit from Base Server**: All MCP servers must inherit from `MCPServer` base class
 - **Configuration Management**: Use `MCPConfig` dataclass for server configuration
 - **Error Handling**: Implement proper `MCPError` handling and logging
 - **Documentation**: Comprehensive docstrings and type hints
+- **Role-Specific Context**: Implement role-aware context for enhanced AI interactions
+- **Cursor Integration**: Include Cursor knowledge integration where appropriate
 
 **Server Implementation Pattern**:
 ```python
@@ -1205,6 +1207,457 @@ class CustomDocumentProcessor(MCPDocumentProcessor):
 - **Integration Tests**: Test server integration with DSPy
 - **Error Tests**: Test error handling and edge cases
 - **Performance Tests**: Test with large files and high load
+- **Role-Specific Tests**: Test role-aware context for each DSPy role
+- **Cursor Integration Tests**: Test Cursor knowledge integration
+
+#### **Role-Specific Context Patterns**
+
+**Purpose**: Standards for implementing role-specific context integration with Cursor knowledge.
+
+**Role Context Implementation Pattern**:
+```python
+class RoleSpecificMCPServer(MCPServer):
+    """MCP server with role-specific context integration."""
+
+    def __init__(self, config: MCPConfig):
+        super().__init__(config)
+        self.cursor_knowledge = CursorKnowledgeProvider()
+
+    def get_role_context(self, role: str, task: str, **kwargs) -> dict:
+        """Get role-specific context with Cursor knowledge."""
+        base_context = self._get_base_context(role, task)
+        cursor_context = self._get_cursor_context(role, task, **kwargs)
+
+        return {
+            "base_context": base_context,
+            "cursor_context": cursor_context,
+            "role_specific_guidelines": self._get_role_guidelines(role),
+            "enhanced_insights": self._get_enhanced_insights(role, task)
+        }
+
+    def _get_cursor_context(self, role: str, task: str, **kwargs) -> dict:
+        """Get Cursor-specific knowledge for the role."""
+        if role == "coder":
+            return self._get_coder_cursor_context(task, **kwargs)
+        elif role == "planner":
+            return self._get_planner_cursor_context(task, **kwargs)
+        elif role == "researcher":
+            return self._get_researcher_cursor_context(task, **kwargs)
+        elif role == "implementer":
+            return self._get_implementer_cursor_context(task, **kwargs)
+        else:
+            return self._get_generic_cursor_context(task, **kwargs)
+```
+
+**Role-Specific Context Standards**:
+- **Coder Context**: Language patterns, framework best practices, IDE integration
+- **Planner Context**: Architecture knowledge, tech stack analysis, performance insights
+- **Researcher Context**: Technology context, pattern analysis, methodology support
+- **Implementer Context**: Integration patterns, testing frameworks, deployment knowledge
+
+**Cursor Integration Standards**:
+- **Language Knowledge**: Include language-specific patterns and best practices
+- **Framework Knowledge**: Include framework-specific conventions and patterns
+- **IDE Integration**: Include IDE-specific settings and capabilities
+- **File Context**: Include current file and import analysis where relevant
+
+## 🤖 AGENT TOOL INTEGRATION STANDARDS
+
+### **Agent Tool Discovery Standards**
+
+**Purpose**: Standards for implementing agent tool discovery and integration patterns.
+
+**Core Requirements**:
+- **MCP Protocol Compliance**: All tools must expose MCP-compatible interfaces
+- **Tool Documentation**: Comprehensive tool descriptions and parameter documentation
+- **Role-Specific Tools**: Tools should be designed for specific agent roles
+- **Fallback Mechanisms**: Always provide fallback tools for reliability
+- **Discovery Automation**: Tools should be automatically discoverable by agents
+
+**Tool Discovery Implementation Pattern**:
+```python
+class AgentToolDiscovery:
+    """Agent tool discovery and integration framework"""
+
+    def __init__(self, mcp_server_url: str = "http://localhost:3000"):
+        self.mcp_server_url = mcp_server_url
+        self.available_tools = {}
+        self.role_tool_mappings = {}
+
+    def discover_tools(self) -> dict:
+        """Discover available MCP tools"""
+        try:
+            response = requests.get(f"{self.mcp_server_url}/mcp")
+            mcp_info = response.json()
+
+            self.available_tools = {
+                tool["name"]: tool for tool in mcp_info["tools"]
+            }
+
+            return {
+                "server_name": mcp_info["name"],
+                "version": mcp_info["version"],
+                "available_tools": len(self.available_tools),
+                "tools": list(self.available_tools.keys())
+            }
+        except Exception as e:
+            raise Exception(f"Tool discovery failed: {e}")
+
+    def map_tools_to_roles(self) -> dict:
+        """Map available tools to agent roles"""
+        role_mappings = {
+            "coder": ["get_cursor_context", "rehydrate_memory"],
+            "planner": ["get_planner_context", "rehydrate_memory"],
+            "researcher": ["get_researcher_context", "rehydrate_memory"],
+            "implementer": ["get_implementer_context", "rehydrate_memory"]
+        }
+
+        self.role_tool_mappings = {}
+        for role, tool_names in role_mappings.items():
+            available_tools = [
+                tool_name for tool_name in tool_names
+                if tool_name in self.available_tools
+            ]
+            self.role_tool_mappings[role] = available_tools
+
+        return self.role_tool_mappings
+
+# Example usage
+discovery = AgentToolDiscovery()
+tools_info = discovery.discover_tools()
+role_mappings = discovery.map_tools_to_roles()
+```
+
+### **Agent Decision-Making Standards**
+
+**Purpose**: Standards for implementing agent decision-making and tool selection logic.
+
+**Core Requirements**:
+- **Task Analysis**: Agents must analyze tasks before tool selection
+- **Role Awareness**: Agents must be aware of their role and capabilities
+- **Context Enhancement**: Agents must enhance context before tool execution
+- **Error Handling**: Agents must handle tool failures gracefully
+- **Performance Monitoring**: Agents must monitor tool usage and performance
+
+**Agent Decision-Making Implementation Pattern**:
+```python
+class AgentDecisionMaker:
+    """Agent decision-making and tool selection framework"""
+
+    def __init__(self, role: str, available_tools: dict):
+        self.role = role
+        self.available_tools = available_tools
+        self.decision_history = []
+
+    def analyze_task(self, task: str) -> dict:
+        """Analyze task to determine appropriate tools and approach"""
+
+        # Task analysis patterns
+        analysis_patterns = {
+            "coder": {
+                "keywords": ["code", "implement", "develop", "debug", "test"],
+                "primary_tool": "get_cursor_context",
+                "context_focus": ["language_patterns", "framework_knowledge"]
+            },
+            "planner": {
+                "keywords": ["plan", "strategy", "architecture", "design"],
+                "primary_tool": "get_planner_context",
+                "context_focus": ["architecture_knowledge", "tech_stack_analysis"]
+            },
+            "researcher": {
+                "keywords": ["research", "analyze", "investigate", "study"],
+                "primary_tool": "get_researcher_context",
+                "context_focus": ["technology_context", "pattern_analysis"]
+            },
+            "implementer": {
+                "keywords": ["implement", "integrate", "deploy", "configure"],
+                "primary_tool": "get_implementer_context",
+                "context_focus": ["integration_patterns", "deployment_knowledge"]
+            }
+        }
+
+        pattern = analysis_patterns.get(self.role, analysis_patterns["coder"])
+        task_lower = task.lower()
+
+        # Analyze task for pattern keywords
+        keyword_matches = [
+            keyword for keyword in pattern["keywords"]
+            if keyword in task_lower
+        ]
+
+        # Determine tool selection
+        if keyword_matches and pattern["primary_tool"] in self.available_tools:
+            selected_tool = pattern["primary_tool"]
+            reasoning = f"Task contains keywords: {keyword_matches}"
+        else:
+            selected_tool = "rehydrate_memory"
+            reasoning = "No specific keywords found, using fallback tool"
+
+        decision = {
+            "task": task,
+            "role": self.role,
+            "selected_tool": selected_tool,
+            "context_focus": pattern["context_focus"],
+            "keyword_matches": keyword_matches,
+            "reasoning": reasoning,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        self.decision_history.append(decision)
+        return decision
+
+    def get_decision_history(self) -> list:
+        """Get decision history for analysis"""
+        return self.decision_history
+
+# Example usage
+decision_maker = AgentDecisionMaker("coder", {"get_cursor_context": {}, "rehydrate_memory": {}})
+decision = decision_maker.analyze_task("Implement a new feature with proper testing")
+```
+
+### **Agent Context Enhancement Standards**
+
+**Purpose**: Standards for implementing agent context enhancement and integration patterns.
+
+**Core Requirements**:
+- **Multi-Layer Context**: Implement layered context enhancement
+- **Role-Specific Enhancement**: Enhance context based on agent role
+- **Cursor Integration**: Integrate Cursor knowledge where appropriate
+- **Performance Optimization**: Optimize context enhancement for speed
+- **Quality Validation**: Validate enhanced context quality
+
+**Context Enhancement Implementation Pattern**:
+```python
+class AgentContextEnhancer:
+    """Agent context enhancement and integration framework"""
+
+    def __init__(self, role: str):
+        self.role = role
+        self.enhancement_layers = self._get_enhancement_layers()
+
+    def _get_enhancement_layers(self) -> list:
+        """Get enhancement layers for the role"""
+        layer_mappings = {
+            "coder": [
+                "language_specific_patterns",
+                "framework_best_practices",
+                "ide_integration_context",
+                "file_context_analysis"
+            ],
+            "planner": [
+                "architecture_knowledge",
+                "tech_stack_analysis",
+                "performance_insights",
+                "strategic_context"
+            ],
+            "researcher": [
+                "technology_context",
+                "pattern_analysis",
+                "methodology_support",
+                "research_context"
+            ],
+            "implementer": [
+                "integration_patterns",
+                "testing_frameworks",
+                "deployment_knowledge",
+                "implementation_context"
+            ]
+        }
+
+        return layer_mappings.get(self.role, layer_mappings["coder"])
+
+    def enhance_context(self, base_context: str, task: str, **kwargs) -> str:
+        """Enhance context with role-specific layers"""
+
+        enhanced_context = f"""# Enhanced Context for {self.role.title()} Role
+
+## 🎯 Task Context
+{task}
+
+## 📚 Base Context
+{base_context}
+
+## 🧠 Enhanced Context Layers
+"""
+
+        for layer in self.enhancement_layers:
+            layer_content = self._get_layer_content(layer, **kwargs)
+            enhanced_context += f"""
+### {layer.replace('_', ' ').title()}
+{layer_content}
+"""
+
+        return enhanced_context
+
+    def _get_layer_content(self, layer: str, **kwargs) -> str:
+        """Get content for a specific enhancement layer"""
+
+        layer_content = {
+            "language_specific_patterns": """
+- Python: PEP 8, type hints, async/await patterns
+- JavaScript: ES6+, modules, async/await
+- TypeScript: Type system, interfaces, generics
+- Best practices for each language""",
+
+            "framework_best_practices": """
+- DSPy: Signatures, modules, optimizers
+- FastAPI: Pydantic, dependencies, async support
+- Node.js: Express, middleware, error handling
+- Framework-specific conventions and patterns""",
+
+            "ide_integration_context": """
+- Cursor AI settings and capabilities
+- File context and import analysis
+- Development environment configuration
+- IDE-specific best practices""",
+
+            "architecture_knowledge": """
+- System architecture patterns
+- Microservices vs monolith decisions
+- Scalability and performance considerations
+- Technology stack integration patterns""",
+
+            "tech_stack_analysis": """
+- Current technology stack overview
+- Framework and library dependencies
+- Integration points and APIs
+- Technology stack optimization opportunities""",
+
+            "performance_insights": """
+- Current performance bottlenecks
+- Optimization strategies and techniques
+- Monitoring and profiling approaches
+- Performance best practices""",
+
+            "integration_patterns": """
+- API integration patterns
+- Data flow and synchronization
+- Error handling and retry logic
+- Integration testing strategies""",
+
+            "testing_frameworks": """
+- Unit testing frameworks and patterns
+- Integration testing approaches
+- Test-driven development practices
+- Testing best practices and conventions""",
+
+            "deployment_knowledge": """
+- Deployment environments and strategies
+- CI/CD pipeline configuration
+- Environment-specific configurations
+- Deployment best practices and rollback strategies"""
+        }
+
+        return layer_content.get(layer, f"- Enhanced context for {layer}\n- Role-specific insights and patterns\n- Best practices and guidelines")
+
+# Example usage
+enhancer = AgentContextEnhancer("coder")
+enhanced_context = enhancer.enhance_context(
+    "Basic project context",
+    "Implement a new feature",
+    language="python",
+    framework="dspy"
+)
+```
+
+### **Agent Error Handling Standards**
+
+**Purpose**: Standards for implementing agent error handling and fallback mechanisms.
+
+**Core Requirements**:
+- **Graceful Degradation**: Handle failures without complete system failure
+- **Fallback Mechanisms**: Provide alternative approaches when primary methods fail
+- **Error Logging**: Comprehensive error logging and monitoring
+- **Recovery Strategies**: Implement recovery strategies for different failure types
+- **User Communication**: Clear communication about errors and fallbacks
+
+**Error Handling Implementation Pattern**:
+```python
+class AgentErrorHandler:
+    """Agent error handling and fallback framework"""
+
+    def __init__(self, role: str):
+        self.role = role
+        self.error_history = []
+
+    def handle_tool_discovery_failure(self, task: str, error: str) -> str:
+        """Handle tool discovery failures"""
+
+        fallback_context = f"""# Tool Discovery Failure - Fallback Context
+
+## ⚠️ Tool Discovery Error
+{error}
+
+## 🎯 Task
+{task}
+
+## 📚 Fallback Context
+Using basic memory rehydration due to tool discovery failure.
+
+## 💡 Instructions
+- Focus on your role as a {self.role}
+- Use basic project context and guidelines
+- Apply appropriate best practices for your role
+- Document any limitations or assumptions made"""
+
+        self.error_history.append({
+            "error_type": "tool_discovery_failure",
+            "task": task,
+            "error": error,
+            "fallback_used": True,
+            "timestamp": datetime.now().isoformat()
+        })
+
+        return fallback_context
+
+    def handle_memory_rehydration_failure(self, task: str, error: str) -> str:
+        """Handle memory rehydration failures"""
+
+        role_fallbacks = {
+            "coder": """# Coder Fallback Context
+You are a Python developer working on an AI development ecosystem.
+Focus on clean, maintainable code with proper testing and documentation.
+Use PEP 8 standards and follow project conventions.""",
+
+            "planner": """# Planner Fallback Context
+You are a strategic planner for an AI development ecosystem.
+Focus on architecture, scalability, and long-term planning.
+Consider system design and technology stack decisions.""",
+
+            "researcher": """# Researcher Fallback Context
+You are a researcher for an AI development ecosystem.
+Focus on evidence-based analysis and systematic evaluation.
+Use research methodologies and document findings.""",
+
+            "implementer": """# Implementer Fallback Context
+You are a system implementer for an AI development ecosystem.
+Focus on robust implementation, integration, and deployment.
+Follow implementation best practices and testing strategies."""
+        }
+
+        fallback_context = role_fallbacks.get(self.role, role_fallbacks["coder"])
+
+        self.error_history.append({
+            "error_type": "memory_rehydration_failure",
+            "task": task,
+            "error": error,
+            "fallback_used": True,
+            "timestamp": datetime.now().isoformat()
+        })
+
+        return fallback_context
+
+    def get_error_history(self) -> list:
+        """Get error history for analysis"""
+        return self.error_history
+
+# Example usage
+error_handler = AgentErrorHandler("coder")
+fallback_context = error_handler.handle_tool_discovery_failure(
+    "Implement a new feature",
+    "MCP server connection failed"
+)
+```
 
 ## 🔗 Related Guides
 
