@@ -89,6 +89,35 @@ A comprehensive AI development ecosystem with:
 
 ## 📝 Commit Context & Implementation Details
 
+
+### What's New — RAG Evaluation Suite (B-1041)
+
+**Purpose**: Standardize retrieval evaluation and regression checks across the DSPy RAG stack (wrappers, adapters, vector store, model switcher), with simple runners and KPI reporting.
+
+TL;DR
+- Run a quick eval: `python3 dspy-rag-system/eval_gold.py`
+- Check KPIs: `python3 dspy-rag-system/scripts/check_retrieval_kpis.py`
+- See components: `dspy-rag-system/src/dspy_modules/` (rag_pipeline, hybrid_wrapper, hit_adapter, wrapper_*)
+
+Quickstart
+```bash
+python3 dspy-rag-system/eval_gold.py
+python3 dspy-rag-system/eval_hit_at3.py
+python3 dspy-rag-system/eval_ns_ab.py
+python3 dspy-rag-system/scripts/check_retrieval_kpis.py
+```
+
+Key Changes
+- RAG components: `rag_pipeline.py`, `hybrid_wrapper.py`, `hit_adapter.py`, `wrapper_fusion_nudge.py`, `wrapper_ns_helpers.py`, `wrapper_ns_promote.py`
+- Core interfaces: `vector_store.py`, `model_switcher.py` (wrappers/adapters aligned)
+- Tests: added under `dspy-rag-system/` for adapters, retrievers, coder-only path, DB, and phase 3 flows
+
+Docs
+- Getting started index: 400_00_getting-started-and-index.md
+- DSPy guide: 400_07_ai-frameworks-dspy.md (RAG eval suite details)
+- Coding standards: 400_05_coding-and-prompting-standards.md (interface notes)
+
+
 This section captures rich context and implementation details that don't fit in GitHub's commit message constraints (50/72 character limits). It serves as a living document of technical decisions, implementation notes, and detailed explanations.
 
 ### **Recent Implementation Context**
