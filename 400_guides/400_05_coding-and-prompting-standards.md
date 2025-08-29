@@ -1686,3 +1686,12 @@ fallback_context = error_handler.handle_tool_discovery_failure(
   - `400_error-reduction-lessons-learned.md`
   - `400_few-shot-context-examples.md`
   - `400_performance-optimization-guide.md`
+
+
+## Model/RAG Interfaces Updated (B-1041)
+- `vector_store.py`: retrieval API expanded for hybrid flows; ensure adapters use new methods.
+- `model_switcher.py`: selection/forward paths clarified; wrappers aligned.
+- Expectations:
+  - Add tests when touching wrappers/adapters; see new `test_*` files under `dspy-rag-system/`.
+  - Run a smoke: `python3 dspy-rag-system/eval_gold.py` before push.
+  - Track KPIs: `python3 dspy-rag-system/scripts/check_retrieval_kpis.py`.

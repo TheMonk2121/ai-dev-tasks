@@ -713,3 +713,21 @@ python3 scripts/task_generation_debug.py
 # Getting Help
 python3 scripts/task_generation_help.py
 ```
+
+### What's New (B-1041)
+- RAG evaluation suite and components added.
+- Quick links:
+  - Eval runners: , , , 
+  - KPI checker: 
+  - RAG components: , , , , , 
+  - Core updates: , 
+
+
+
+### What's New (B-1041)
+- RAG evaluation suite and components added.
+- Quick links:
+  - Eval runners: `dspy-rag-system/eval_gold.py`, `dspy-rag-system/eval_hit_at3.py`, `dspy-rag-system/eval_ns_ab.py`, `dspy-rag-system/simple_evaluation.py`
+  - KPI checker: `dspy-rag-system/scripts/check_retrieval_kpis.py`
+  - RAG components: `dspy-rag-system/src/dspy_modules/rag_pipeline.py`, `dspy-rag-system/src/dspy_modules/hybrid_wrapper.py`, `dspy-rag-system/src/dspy_modules/hit_adapter.py`, `dspy-rag-system/src/dspy_modules/wrapper_fusion_nudge.py`, `dspy-rag-system/src/dspy_modules/wrapper_ns_helpers.py`, `dspy-rag-system/src/dspy_modules/wrapper_ns_promote.py`
+  - Core updates: `dspy-rag-system/src/dspy_modules/vector_store.py`, `dspy-rag-system/src/dspy_modules/model_switcher.py`

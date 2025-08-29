@@ -1634,3 +1634,14 @@ print(f"Planning: {planning_result.result}")
   - `400_dspy-integration-guide.md`
   - `400_dspy-schema-reference.md`
   - `400_dspy-v2-technical-implementation-guide.md`
+
+
+## RAG Evaluation Suite (B-1041)
+- Evaluation scripts: `eval_gold.py`, `eval_hit_at3.py`, `eval_ns_ab.py`, `simple_evaluation.py`, `final_evaluation_summary.py`, `improved_evaluation.py`, `phase2_evaluation.py`
+- Components: `rag_pipeline.py`, `hybrid_wrapper.py`, `hit_adapter.py`, `wrapper_fusion_nudge.py`, `wrapper_ns_helpers.py`, `wrapper_ns_promote.py`
+- Quick start:
+  - `python3 dspy-rag-system/eval_gold.py`
+  - `python3 dspy-rag-system/eval_hit_at3.py`
+  - `python3 dspy-rag-system/eval_ns_ab.py`
+- KPIs: use `python3 dspy-rag-system/scripts/check_retrieval_kpis.py`
+- Notes: integrates with `vector_store.py` and `model_switcher.py` updated interfaces.
