@@ -846,65 +846,151 @@ class ModelSwitcher:
 
     def orchestrate_task(self, task: str, task_type: str, role: str) -> Dict[str, Any]:
         """
-        Orchestrate a task across multiple models using intelligent model selection.
+        Orchestrate a task using the specified role with intelligent model selection.
 
         Args:
             task: The task to perform
             task_type: Type of task
-            role: AI role
+            role: AI role (planner, implementer, researcher, coder, reviewer)
 
         Returns:
-            Dictionary with task results from different models
+            Dictionary with task results from the specified role
         """
         results = {}
 
         # Get context for the role and task
         context = get_context_for_role(role, task)
 
-        # Step 1: Planning (Intelligent model selection)
-        planning_model = self.select_model_for_task(task, "planning", "planner")
-        if self.switch_model(planning_model) and self.current_lm:
-            plan_prompt = f"""You are a planner AI assistant with access to project context.
+        # Select appropriate model for the role and task
+        model = self.select_model_for_task(task, task_type, role)
 
-{context}
+        if self.switch_model(model) and self.current_lm:
+            # Create role-specific prompt
+            role_prompt = self._create_role_specific_prompt(role, task, context, task_type)
 
-As a planner, create a detailed plan for this task: {task}
+            # Get response from the model
+            response = self.current_lm(role_prompt)
+            response_text = response[0] if isinstance(response, list) else str(response)
 
-Please consider the project's architecture, standards, and best practices in your planning."""
-            response = self.current_lm(plan_prompt)
-            results["plan"] = response[0] if isinstance(response, list) else str(response)
+            # Store result based on role
+            if role == "planner":
+                results["plan"] = response_text
+            elif role == "implementer":
+                results["execution"] = response_text
+            elif role == "researcher":
+                results["analysis"] = response_text
+            elif role == "coder":
+                results["implementation"] = response_text
+            elif role == "reviewer":
+                results["review"] = response_text
+            else:
+                # Default to "response" for unknown roles
+                results["response"] = response_text
 
-        # Step 2: Execution (Intelligent model selection)
-        execution_model = self.select_model_for_task(task, "rapid_prototyping", "implementer")
-        if self.switch_model(execution_model) and self.current_lm:
-            execute_prompt = f"""You are an implementer AI assistant with access to project context.
-
-{context}
-
-Based on this plan: {results.get('plan', '')}
-
-Execute this task: {task}
-
-Please follow the project's coding standards and best practices."""
-            response = self.current_lm(execute_prompt)
-            results["execution"] = response[0] if isinstance(response, list) else str(response)
-
-        # Step 3: Review (Intelligent model selection)
-        review_model = self.select_model_for_task(task, "documentation_analysis", "reviewer")
-        if self.switch_model(review_model) and self.current_lm:
-            review_prompt = f"""You are a reviewer AI assistant with access to project context.
-
-{context}
-
-Review this execution: {results.get('execution', '')}
-
-Original task: {task}
-
-Please provide a comprehensive review considering the project's quality standards and best practices."""
-            response = self.current_lm(review_prompt)
-            results["review"] = response[0] if isinstance(response, list) else str(response)
+        else:
+            # Fallback if model switching fails
+            results["error"] = f"Failed to switch to appropriate model for role {role}"
 
         return results
+
+    def _create_role_specific_prompt(self, role: str, task: str, context: str, task_type: str) -> str:
+        """
+        Create a role-specific prompt for the given task.
+
+        Args:
+            role: AI role (planner, implementer, researcher, coder, reviewer)
+            task: Task description
+            context: Project context
+            task_type: Type of task
+
+        Returns:
+            Role-specific prompt
+        """
+        role_prompts = {
+            "planner": f"""You are a strategic planner AI assistant with access to project context.
+
+{context}
+
+As a planner, analyze this task and create a detailed strategic plan: {task}
+
+Focus on:
+• Strategic planning and task prioritization
+• System architecture and design decisions
+• Project roadmap and milestone planning
+• Risk assessment and mitigation strategies
+• Resource allocation and optimization
+
+Please consider the project's architecture, standards, and best practices in your planning.""",
+            "implementer": f"""You are a system implementer AI assistant with access to project context.
+
+{context}
+
+As an implementer, execute this task: {task}
+
+Focus on:
+• DSPy framework integration and optimization
+• Multi-agent system architecture
+• Database and vector store management
+• Workflow automation and scripting
+• Performance monitoring and optimization
+
+Please follow the project's coding standards and best practices.""",
+            "researcher": f"""You are a researcher AI assistant with access to project context.
+
+{context}
+
+As a researcher, analyze this task: {task}
+
+Focus on:
+• AI model capabilities and limitations
+• Performance benchmarking and analysis
+• Integration patterns and best practices
+• Emerging technologies and frameworks
+• Security and privacy considerations
+
+Provide evidence-based analysis and recommendations.""",
+            "coder": f"""You are a Python developer AI assistant with access to project context.
+
+{context}
+
+As a coder, implement this task: {task}
+
+Focus on:
+• Following PEP 8 coding standards
+• Using type hints (Python 3.12+ with PEP 585 built-in generics)
+• Adding comprehensive docstrings (Google style)
+• Implementing proper error handling with try/except blocks
+• Using absolute imports and avoiding sys.path manipulation
+• Writing tests first (TDD approach)
+
+Please follow the project's existing patterns and conventions.""",
+            "reviewer": f"""You are a code reviewer AI assistant with access to project context.
+
+{context}
+
+As a reviewer, review this task: {task}
+
+Focus on:
+• Code quality and maintainability
+• Security vulnerabilities and best practices
+• Performance implications and optimizations
+• Architecture and design patterns
+• Testing coverage and quality
+
+Please provide a comprehensive review considering the project's quality standards and best practices.""",
+        }
+
+        # Get role-specific prompt or use default
+        return role_prompts.get(
+            role,
+            f"""You are a {role} AI assistant with access to project context.
+
+{context}
+
+Please respond to this task: {task}
+
+Provide a detailed response based on your role's expertise and the project's standards.""",
+        )
 
     def get_stats(self) -> Dict[str, Any]:
         """Get model switching statistics."""
@@ -1353,31 +1439,24 @@ def cursor_execute_task(task: str, task_type: str = "moderate_coding", role: str
 
 def cursor_orchestrate_task(task: str, task_type: str = "moderate_coding", role: str = "coder") -> Dict[str, Any]:
     """
-    Cursor AI integration function - orchestrate task across multiple models
+    Cursor AI integration function - orchestrate task using the specified role
 
     Args:
         task: Task to orchestrate
         task_type: Type of task
-        role: AI role
+        role: AI role (planner, implementer, researcher, coder, reviewer)
 
     Returns:
-        Dictionary with orchestration results
+        Dictionary with role-specific results
     """
     switcher = ModelSwitcher()
-    orchestrator = MultiModelOrchestrator(switcher)
 
     try:
-        result = orchestrator(task, task_type, role)
-        # Type cast to ensure result is treated as Dict[str, Any]
-        result_dict = result if isinstance(result, dict) else {}
-        return {
-            "success": True,
-            "plan": result_dict.get("plan", ""),
-            "execution": result_dict.get("execution", ""),
-            "review": result_dict.get("review", ""),
-            "final_result": result_dict.get("final_result", ""),
-            "orchestration_notes": result_dict.get("orchestration_notes", ""),
-        }
+        # Use the fixed orchestrate_task method directly
+        result = switcher.orchestrate_task(task, task_type, role)
+
+        # Return the result with success flag
+        return {"success": True, **result}  # Include all result keys (plan, execution, analysis, etc.)
     except Exception as e:
         return {"success": False, "error": str(e), "fallback": "Using Cursor AI fallback"}
 
