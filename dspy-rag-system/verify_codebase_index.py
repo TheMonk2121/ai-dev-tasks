@@ -12,6 +12,25 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 from dspy_modules.model_switcher import ModelSwitcher
 
 
+def _ask_model(switcher: ModelSwitcher, question: str, role: str = "researcher") -> str:
+    """Safely query the model using the switcher's public API with fallbacks."""
+    try:
+        result = switcher.answer_with_rag(question, role)
+        # Prefer a direct answer field; fall back to any role-specific key
+        return (
+            result.get("answer")
+            or result.get("analysis")
+            or result.get("plan")
+            or result.get("execution")
+            or result.get("implementation")
+            or result.get("review")
+            or str(result)
+        )
+    except Exception as e:
+        # Final fallback: return the error string to avoid calling possibly unset models
+        return f"Error: {e}"
+
+
 def test_codebase_index_access():
     """Test if the codebase index is accessible to the models."""
 
@@ -60,9 +79,8 @@ def test_codebase_index_access():
         print("-" * 60)
 
         try:
-            # Get response from model
-            response = switcher.current_lm(query["question"])
-            response_text = response[0] if isinstance(response, list) else str(response)
+            # Get response via safe helper (handles no-model case)
+            response_text = _ask_model(switcher, query["question"], role="researcher")
 
             print(f"🤖 Response: {response_text[:300]}...")
 
@@ -147,8 +165,7 @@ def test_index_file_access():
         print("-" * 50)
 
         try:
-            response = switcher.current_lm(test["question"])
-            response_text = response[0] if isinstance(response, list) else str(response)
+            response_text = _ask_model(switcher, test["question"], role="researcher")
 
             print(f"Response: {response_text[:200]}...")
 
@@ -185,8 +202,7 @@ def test_role_mapping():
             switcher.switch_model(switcher.get_model_for_role(role))
 
             question = f"What files are available for the {role} role according to the CONTEXT_INDEX?"
-            response = switcher.current_lm(question)
-            response_text = response[0] if isinstance(response, list) else str(response)
+            response_text = _ask_model(switcher, question, role=role)
 
             print(f"Question: {question}")
             print(f"Response: {response_text[:200]}...")

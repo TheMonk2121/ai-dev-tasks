@@ -14,6 +14,7 @@ import sys
 import time
 from dataclasses import dataclass
 from enum import Enum
+from importlib import import_module
 from typing import Any, Dict, List, Optional
 
 import dspy
@@ -32,7 +33,6 @@ except ImportError as e:
     _LOG.warning(f"DSPy optimizer system not available: {e}")
 
 # Import monitoring system
-from importlib import import_module
 
 
 def _import_from_utils(module_name):
@@ -184,7 +184,7 @@ def get_context_for_role(role: str, task: str) -> str:
 
     # Retry logic for memory rehydrator
     max_retries = 2
-    request_start_time = time.time()
+    # Removed unused variable 'request_start_time'
 
     for attempt in range(max_retries + 1):
         try:

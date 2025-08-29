@@ -13,8 +13,6 @@ load_dotenv()
 # Add the src directory to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
-from dspy_modules.document_processor import DocumentIngestionPipeline
-
 
 def reprocess_dspy_guide():
     """Re-process the DSPy guide to ensure it has chunks."""
@@ -22,6 +20,8 @@ def reprocess_dspy_guide():
     print("=== RE-PROCESSING DSPY GUIDE ===")
 
     # Initialize the pipeline
+    from dspy_modules.document_processor import DocumentIngestionPipeline
+
     pipeline = DocumentIngestionPipeline()
 
     # Process the DSPy guide specifically
