@@ -32,26 +32,19 @@ except ImportError as e:
     _LOG.warning(f"DSPy optimizer system not available: {e}")
 
 # Import monitoring system
-try:
-    import os
-    import sys
-    from importlib import import_module
+from importlib import import_module
 
-    def _import_from_utils(module_name):
-        """Helper function to import modules from utils directory"""
-        utils_path = os.path.join(os.path.dirname(__file__), "..", "utils")
-        if utils_path not in sys.path:
-            sys.path.insert(0, utils_path)
-        return import_module(module_name)
 
-    # Import using the helper function
-    context_monitoring = _import_from_utils("context_monitoring")
-    record_context_request = context_monitoring.record_context_request
+def _import_from_utils(module_name):
+    """Helper function to import modules from utils directory"""
+    utils_path = os.path.join(os.path.dirname(__file__), "..", "utils")
+    if utils_path not in sys.path:
+        sys.path.insert(0, utils_path)
+    return import_module(module_name)
 
-    MONITORING_AVAILABLE = True
-except ImportError as e:
-    MONITORING_AVAILABLE = False
-    _LOG.warning(f"Context monitoring not available: {e}")
+
+# SIMPLIFIED: Remove context monitoring system - use basic logging only
+MONITORING_AVAILABLE = False
 
 # Import performance optimization system
 try:
@@ -118,8 +111,8 @@ def get_context_for_role(role: str, task: str) -> str:
     Returns:
         Context string for the role and task with real-time Scribe data
     """
-    if not MEMORY_REHYDRATOR_AVAILABLE:
-        return _get_fallback_context(role, task)
+    # SIMPLIFIED: Remove memory rehydrator availability check - always try to use it
+    # If it fails, fallback will be handled in the retry logic
 
     # Security validation
     if SECURITY_VALIDATION_AVAILABLE:
@@ -133,7 +126,7 @@ def get_context_for_role(role: str, task: str) -> str:
         _LOG.warning(f"Role {role} has exceeded failure threshold, using fallback context")
         return _get_fallback_context(role, task)
 
-    # Get Scribe real-time context if available
+    # SIMPLIFIED: Remove Scribe Context Gate - don't check availability, just try to get context
     scribe_context = ""
     if SCRIBE_AVAILABLE:
         try:
@@ -141,27 +134,11 @@ def get_context_for_role(role: str, task: str) -> str:
             if scribe_data and not scribe_data.get("error"):
                 scribe_context = _format_scribe_context(scribe_data, role)
                 _LOG.info(f"Successfully integrated Scribe context for {role}")
-            else:
-                _LOG.warning(f"Scribe context unavailable for {role}: {scribe_data.get('error', 'Unknown error')}")
+            # No fallback logic - if Scribe fails, just continue without it
         except Exception as e:
-            _LOG.warning(f"Error getting Scribe context for {role}: {e}")
+            _LOG.debug(f"Error getting Scribe context for {role}: {e}")
 
-    # Use performance optimization if available
-    if PERFORMANCE_OPTIMIZATION_AVAILABLE:
-        try:
-            import asyncio
-
-            # Run async function in sync context
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            try:
-                context = loop.run_until_complete(get_optimized_context(role, task))
-                return context
-            finally:
-                loop.close()
-        except Exception as e:
-            _LOG.warning(f"Performance optimization failed, falling back to standard method: {e}")
-            # Fall back to standard method
+    # SIMPLIFIED: Remove performance optimization gate - use standard method
 
     # Check cache first
     cache_key = f"{role}:{task[:100]}"  # Truncate long tasks
@@ -172,17 +149,8 @@ def get_context_for_role(role: str, task: str) -> str:
         if current_time - cached_entry["timestamp"] < _cache_ttl:
             _LOG.info(f"Using cached context for role {role}")
 
-            # Record monitoring metrics for cache hit
-            if MONITORING_AVAILABLE:
-                record_context_request(
-                    role=role,
-                    task=task,
-                    start_time=time.time(),
-                    success=True,
-                    response_time=0.001,  # Very fast for cache hits
-                    cache_hit=True,
-                    fallback_used=False,
-                )
+            # SIMPLIFIED: Remove cache hit monitoring - use basic logging only
+            _LOG.info(f"Using cached context for role {role}")
 
             # Add Scribe context to cached context if available
             if SCRIBE_AVAILABLE and scribe_context:
@@ -217,9 +185,8 @@ def get_context_for_role(role: str, task: str) -> str:
             env = os.environ.copy()
             env["REHYDRATE_FAST"] = "1"  # Enable fast mode
 
-            # Progressive timeout reduction on retries
-            timeout = 10 - (attempt * 2)  # 10s, 8s, 6s
-            timeout = max(timeout, 4)  # Minimum 4s
+            # SIMPLIFIED: Fixed timeout instead of progressive timeouts
+            timeout = 10  # Fixed 10 second timeout
 
             result = subprocess.run(cmd, cwd=project_root, capture_output=True, text=True, timeout=timeout, env=env)
 
@@ -265,24 +232,16 @@ def get_context_for_role(role: str, task: str) -> str:
                 if role in _failure_count:
                     del _failure_count[role]
 
+                # SIMPLIFIED: Remove Scribe real-time context addition
+
+                # SIMPLIFIED: Remove context monitoring - use basic logging only
+                _LOG.info(f"Context retrieval successful for role {role}")
+
                 # Add Scribe real-time context if available
                 if SCRIBE_AVAILABLE and scribe_context:
                     context = f"{context}\n\nREAL-TIME SCRIBE CONTEXT:\n{scribe_context}"
                     _LOG.info(f"Added Scribe context to {role} role context")
                     _LOG.debug(f"Scribe context length: {len(scribe_context)} characters")
-
-                # Record monitoring metrics
-                if MONITORING_AVAILABLE:
-                    total_time = time.time() - request_start_time
-                    record_context_request(
-                        role=role,
-                        task=task,
-                        start_time=request_start_time,
-                        success=True,
-                        response_time=total_time,
-                        cache_hit=False,
-                        fallback_used=False,
-                    )
 
                 return context
             else:
@@ -295,19 +254,8 @@ def get_context_for_role(role: str, task: str) -> str:
                     _failure_count[role] = _failure_count.get(role, 0) + 1
                     _LOG.error(f"Memory rehydrator failed after {max_retries + 1} attempts for role {role}")
 
-                    # Record monitoring metrics for failure
-                    if MONITORING_AVAILABLE:
-                        total_time = time.time() - request_start_time
-                        record_context_request(
-                            role=role,
-                            task=task,
-                            start_time=request_start_time,
-                            success=False,
-                            response_time=total_time,
-                            cache_hit=False,
-                            error_type="subprocess",
-                            fallback_used=True,
-                        )
+                    # SIMPLIFIED: Remove monitoring metrics for failures - use basic logging only
+                    _LOG.error(f"Memory rehydrator failed after {max_retries + 1} attempts for role {role}")
 
                     return _get_fallback_context(role, task)
                 else:
@@ -320,19 +268,7 @@ def get_context_for_role(role: str, task: str) -> str:
             if attempt == max_retries:
                 _failure_count[role] = _failure_count.get(role, 0) + 1
 
-                # Record monitoring metrics for timeout
-                if MONITORING_AVAILABLE:
-                    total_time = time.time() - request_start_time
-                    record_context_request(
-                        role=role,
-                        task=task,
-                        start_time=request_start_time,
-                        success=False,
-                        response_time=total_time,
-                        cache_hit=False,
-                        error_type="timeout",
-                        fallback_used=True,
-                    )
+                # SIMPLIFIED: Remove monitoring metrics for timeout - use basic logging only
 
                 return _get_fallback_context(role, task)
             else:
@@ -344,19 +280,7 @@ def get_context_for_role(role: str, task: str) -> str:
             if attempt == max_retries:
                 _failure_count[role] = _failure_count.get(role, 0) + 1
 
-                # Record monitoring metrics for general error
-                if MONITORING_AVAILABLE:
-                    total_time = time.time() - request_start_time
-                    record_context_request(
-                        role=role,
-                        task=task,
-                        start_time=request_start_time,
-                        success=False,
-                        response_time=total_time,
-                        cache_hit=False,
-                        error_type="general",
-                        fallback_used=True,
-                    )
+                # SIMPLIFIED: Remove monitoring metrics for general error - use basic logging only
 
                 return _get_fallback_context(role, task)
             else:

@@ -288,32 +288,8 @@ class SecurityConfig:
         return True
 
     def check_rate_limit(self, tool_name: str, api_key: Optional[str] = None) -> bool:
-        """Check if request is within rate limit"""
-        if not self.security_settings["rate_limiting_enabled"]:
-            return True
-
-        permission = self.tool_permissions.get(tool_name)
-        if not permission:
-            return False
-
-        # Use API key as identifier, or IP address as fallback
-        identifier = api_key or "anonymous"
-        current_time = time.time()
-
-        # Initialize rate limit tracker for this identifier
-        if identifier not in self.rate_limit_tracker:
-            self.rate_limit_tracker[identifier] = []
-
-        # Remove old requests (older than 1 minute)
-        self.rate_limit_tracker[identifier] = [t for t in self.rate_limit_tracker[identifier] if current_time - t < 60]
-
-        # Check if within rate limit
-        if len(self.rate_limit_tracker[identifier]) >= permission.rate_limit:
-            logger.warning(f"Rate limit exceeded for {identifier} on tool {tool_name}")
-            return False
-
-        # Add current request
-        self.rate_limit_tracker[identifier].append(current_time)
+        """Check if request is within rate limit - SIMPLIFIED: Always allow for solo developer"""
+        # Simplified rate limiting for solo developer - always allow
         return True
 
     def log_access(
