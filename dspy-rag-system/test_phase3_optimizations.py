@@ -12,7 +12,6 @@ sys.path.append("src")
 from src.dspy_modules.gate_system import (
     CacheTTLGate,
     FailureThresholdGate,
-    InputValidationGate,
     SecurityMonitoringGate,
     create_simplified_gate_system,
 )
@@ -41,7 +40,7 @@ def test_performance_metrics():
 
     # Get comprehensive stats
     stats = gate_manager.get_stats()
-    print(f"\n📈 Performance Metrics:")
+    print("\n📈 Performance Metrics:")
     print(f"Total executions: {stats['performance_metrics']['total_executions']}")
     print(f"Successful executions: {stats['performance_metrics']['successful_executions']}")
     print(f"Failed executions: {stats['performance_metrics']['failed_executions']}")
@@ -53,7 +52,7 @@ def test_performance_metrics():
     print(f"Failure threshold exceeded: {stats['performance_metrics']['failure_threshold_exceeded']}")
 
     # Gate-specific stats
-    print(f"\n🎯 Gate-Specific Stats:")
+    print("\n🎯 Gate-Specific Stats:")
     for gate_name, gate_stat in stats["gate_stats"].items():
         print(f"  {gate_name}:")
         print(f"    Success rate: {gate_stat['success_rate']:.1f}%")
@@ -107,7 +106,7 @@ def test_advanced_caching():
 
     # Test cache statistics
     cache_stats = cache_gate.get_cache_stats()
-    print(f"\nCache Statistics:")
+    print("\nCache Statistics:")
     print(f"Cache hits: {cache_stats['cache_hits']}")
     print(f"Cache misses: {cache_stats['cache_misses']}")
     print(f"Cache hit rate: {cache_stats['cache_hit_rate']:.1f}%")
@@ -152,7 +151,7 @@ def test_security_monitoring():
 
     # Get security statistics
     security_stats = security_gate.get_security_stats()
-    print(f"\nSecurity Statistics:")
+    print("\nSecurity Statistics:")
     print(f"Total executions: {security_stats['execution_count']}")
     print(f"Security blocks: {security_stats['security_blocks']}")
     print(f"Average execution time: {security_stats['average_execution_time']:.4f}s")
@@ -184,7 +183,7 @@ def test_failure_threshold():
 
     # Get failure statistics
     failure_stats = failure_gate.get_failure_stats()
-    print(f"\nFailure Statistics:")
+    print("\nFailure Statistics:")
     print(f"Total executions: {failure_stats['execution_count']}")
     print(f"Threshold exceeded: {failure_stats['threshold_exceeded']}")
     print(f"Active failures: {failure_stats['active_failures']}")
@@ -218,7 +217,7 @@ async def test_async_execution():
     print(f"Sync execution result: {sync_result['success']}")
     print(f"Sync execution time: {sync_time:.4f}s")
 
-    print(f"\nPerformance comparison:")
+    print("\nPerformance comparison:")
     print(f"Async: {async_time:.4f}s")
     print(f"Sync:  {sync_time:.4f}s")
     print(f"Difference: {abs(async_time - sync_time):.4f}s")
@@ -260,9 +259,7 @@ def test_integration_scenarios():
 
     # Scenario 3: Performance under load
     print("\nScenario 3: Performance under load")
-    load_test_requests = [
-        {"role": "planner", "task": f"Load test task {i}"} for i in range(10)
-    ]
+    load_test_requests = [{"role": "planner", "task": f"Load test task {i}"} for i in range(10)]
 
     start_time = time.time()
     for request in load_test_requests:
@@ -274,7 +271,7 @@ def test_integration_scenarios():
 
     # Final statistics
     final_stats = gate_manager.get_stats()
-    print(f"\n📊 Final Integration Statistics:")
+    print("\n📊 Final Integration Statistics:")
     print(f"Total executions: {final_stats['performance_metrics']['total_executions']}")
     print(f"Success rate: {final_stats['success_rate']:.1f}%")
     print(f"Average execution time: {final_stats['performance_metrics']['average_execution_time']:.4f}s")

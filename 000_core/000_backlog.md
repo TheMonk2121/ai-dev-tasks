@@ -10,6 +10,7 @@
 
 | what this file is | read when | do next |
 |---|---|---|
+| B-1041 | RAG evaluation suite + wrapper integration + infra refinements | 🔥 | 5 | todo | Add full evaluation suite, wrapper integrations, vector_store/model_switcher refactors, and scripts for KPI measurement and rehydration. | DSPy + RAG + Evaluation + Wrappers + Scripts | B-1012 LTST Memory System |
 | Prioritized backlog with AI scoring and execution flow | When selecting next work item or checking project status |
 Check P0 lane and AI-executable queue; follow PRD skip rule |
 

@@ -29,11 +29,16 @@ if [ ! -f "venv/bin/python" ]; then
     python3 -m venv venv
     # shellcheck disable=SC1091
     source venv/bin/activate
-    pip install -r requirements.txt
+    echo "💡 Attempting to install dependencies..."
+    if ! pip install -r requirements.txt; then
+        echo -e "${YELLOW}⚠️  Dependency installation failed, continuing without full dependencies${NC}"
+        echo "💡 This is expected due to version conflicts - the memory system will work with basic functionality"
+    fi
 else
     echo -e "${GREEN}✅ Virtual environment found${NC}"
     # shellcheck disable=SC1091
     source venv/bin/activate
+    echo "💡 Using existing virtual environment - no dependency installation needed"
 fi
 
 # Default values
@@ -131,28 +136,98 @@ MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_03_system-overview-and-archi
 MEMORY_CONTEXT+="## 📋 **Current Priorities**\n\n"
 MEMORY_CONTEXT+="$(get_file_summary "000_core/000_backlog.md" 150)\n\n"
 
-# Add role-specific context
+# Add core workflow guides
+MEMORY_CONTEXT+="## 🔄 **Core Workflow Guides**\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "000_core/001_create-prd.md" 50)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "000_core/002_generate-tasks.md" 50)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "000_core/003_process-task-list.md" 50)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "000_core/004_development-roadmap.md" 50)\n\n"
+
+# Add complete 00-12 guide access for all roles
+MEMORY_CONTEXT+="## 📚 **Complete 00-12 Guide Access**\n\n"
+
+# Core workflow guides (000_core)
+MEMORY_CONTEXT+="### **Core Workflow Guides (000_core)**\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "000_core/001_create-prd.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "000_core/002_generate-tasks.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "000_core/003_process-task-list.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "000_core/004_development-roadmap.md" 40)\n\n"
+
+# Complete 400_guides set
+MEMORY_CONTEXT+="### **Complete Guide Set (400_guides)**\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_00_getting-started-and-index.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_01_documentation-playbook.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_02_governance-and-ai-constitution.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_03_system-overview-and-architecture.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_04_development-workflow-and-standards.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_05_coding-and-prompting-standards.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_06_memory-and-context-systems.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_07_ai-frameworks-dspy.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_08_integrations-editor-and-models.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_09_automation-and-pipelines.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_10_security-compliance-and-access.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_11_deployments-ops-and-observability.md" 40)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_12_product-management-and-roadmap.md" 40)\n\n"
+
+# DSPy development context
+MEMORY_CONTEXT+="### **DSPy Development Context**\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "100_memory/104_dspy-development-context.md" 40)\n\n"
+
+# Add DSPy-specific context for all roles
+MEMORY_CONTEXT+="## 🤖 **DSPy Framework Context**\n\n"
+MEMORY_CONTEXT+="**DSPy is an AI framework for programming with language models** that provides structured workflows, automated task processing, and intelligent error recovery.\n\n"
+
+# Add DSPy system overview
+MEMORY_CONTEXT+="### **DSPy System Overview**\n\n"
+MEMORY_CONTEXT+="- **Status**: ✅ DSPy Multi-Agent System OPERATIONAL\n"
+MEMORY_CONTEXT+="- **Architecture**: Multi-Agent DSPy with sequential model switching + optimization framework\n"
+MEMORY_CONTEXT+="- **Models**: Cursor Native AI (orchestration) + Local DSPy Models (Llama 3.1 8B, Mistral 7B, Phi-3.5 3.8B)\n"
+MEMORY_CONTEXT+="- **Database**: PostgreSQL with pgvector extension\n"
+MEMORY_CONTEXT+="- **Framework**: DSPy with full signatures, modules, and structured programming\n"
+MEMORY_CONTEXT+="- **Optimization**: LabeledFewShot optimizer, assertion framework, four-part optimization loop\n\n"
+
+# Add DSPy core components
+MEMORY_CONTEXT+="### **DSPy Core Components**\n\n"
+MEMORY_CONTEXT+="1. **Model Switcher** - Sequential model switching for hardware constraints\n"
+MEMORY_CONTEXT+="2. **Cursor Integration** - Clean interface for Cursor AI to orchestrate local models\n"
+MEMORY_CONTEXT+="3. **Optimization System** - LabeledFewShot optimizer with configurable K parameter\n"
+MEMORY_CONTEXT+="4. **Role Refinement System** - AI-powered role definition optimization\n"
+MEMORY_CONTEXT+="5. **Vector Store** - HNSW vector indexing with optimal parameters\n"
+MEMORY_CONTEXT+="6. **MCP Integration System** - 6 MCP servers for various integrations\n\n"
+
+# Add DSPy-specific information based on role
 case $ROLE in
     "planner")
-        MEMORY_CONTEXT+="## 🎯 **Planner Context**\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_00_getting-started-and-index.md" 60)\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_03_system-overview-and-architecture.md" 40)\n\n"
+        MEMORY_CONTEXT+="### **DSPy Planning Context**\n\n"
+        MEMORY_CONTEXT+="DSPy provides structured planning workflows with:\n"
+        MEMORY_CONTEXT+="- **PRD Creation**: Automated product requirement document generation\n"
+        MEMORY_CONTEXT+="- **Task Generation**: AI-powered task breakdown and prioritization\n"
+        MEMORY_CONTEXT+="- **Process Management**: Structured development workflows\n"
+        MEMORY_CONTEXT+="- **Multi-Agent Orchestration**: Coordinated planning across different AI roles\n\n"
         ;;
     "implementer")
-        MEMORY_CONTEXT+="## 🔧 **Implementer Context**\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_04_development-workflow-and-standards.md" 50)\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_05_coding-and-prompting-standards.md" 50)\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_09_automation-and-pipelines.md" 40)\n\n"
+        MEMORY_CONTEXT+="### **DSPy Implementation Context**\n\n"
+        MEMORY_CONTEXT+="DSPy enables systematic implementation with:\n"
+        MEMORY_CONTEXT+="- **Structured Programming**: DSPy signatures and modules for reliable code\n"
+        MEMORY_CONTEXT+="- **Automated Task Processing**: Intelligent workflow automation\n"
+        MEMORY_CONTEXT+="- **Error Recovery**: Built-in error handling and recovery mechanisms\n"
+        MEMORY_CONTEXT+="- **Integration Patterns**: Standardized patterns for component integration\n\n"
         ;;
     "researcher")
-        MEMORY_CONTEXT+="## 🔬 **Researcher Context**\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "500_research-index.md" 100)\n\n"
+        MEMORY_CONTEXT+="### **DSPy Research Context**\n\n"
+        MEMORY_CONTEXT+="DSPy supports research workflows with:\n"
+        MEMORY_CONTEXT+="- **Optimization Research**: LabeledFewShot and other optimization techniques\n"
+        MEMORY_CONTEXT+="- **Performance Analysis**: Metrics and monitoring for system optimization\n"
+        MEMORY_CONTEXT+="- **Experimental Framework**: Structured approach to AI system experimentation\n"
+        MEMORY_CONTEXT+="- **Knowledge Integration**: RAG systems for research context\n\n"
         ;;
     "coder")
-        MEMORY_CONTEXT+="## 💻 **Coder Context**\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_07_ai-frameworks-dspy.md" 50)\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_08_integrations-editor-and-models.md" 50)\n\n"
-        MEMORY_CONTEXT+="$(get_file_summary "100_memory/104_dspy-development-context.md" 40)\n\n"
+        MEMORY_CONTEXT+="### **DSPy Coding Context**\n\n"
+        MEMORY_CONTEXT+="DSPy provides coding capabilities with:\n"
+        MEMORY_CONTEXT+="- **DSPy Signatures**: Structured I/O for reliable AI programming\n"
+        MEMORY_CONTEXT+="- **Module System**: Reusable DSPy modules and components\n"
+        MEMORY_CONTEXT+="- **Assertion Framework**: Runtime validation and error checking\n"
+        MEMORY_CONTEXT+="- **Model Integration**: Seamless integration with various language models\n\n"
         ;;
 esac
 

@@ -28,8 +28,15 @@ def rehydrate_memory(
 
     Returns True on success (exit code 0), False otherwise.
     """
+    # Get the correct path to the script
+    import os
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
+    memory_up_script = os.path.join(project_root, "scripts", "memory_up.sh")
+
     cmd = [
-        "./scripts/memory_up.sh",
+        memory_up_script,
         "-q",
         query,
         "-r",

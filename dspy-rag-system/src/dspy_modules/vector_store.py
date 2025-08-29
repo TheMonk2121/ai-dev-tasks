@@ -13,9 +13,16 @@ VectorStore DSPy Module (optimized)
 # Standard library imports
 import json
 import logging
+import os
+import re
 import uuid
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
+
+try:
+    from .hybrid_wrapper import run_hybrid_search
+except Exception:
+    run_hybrid_search = None  # wrapper optional
 
 # Third-party imports
 import numpy as np
@@ -28,6 +35,7 @@ from sentence_transformers import SentenceTransformer
 # Local imports
 try:
     from utils.database_resilience import get_database_manager
+    from utils.db_pool import get_conn as get_stable_conn
     from utils.retry_wrapper import retry_database
 except ImportError:
     # Fallback for when running from outside src directory
@@ -60,6 +68,26 @@ def _cached_query_embedding_bytes(model_name: str, text: str) -> bytes:
 
 def _query_embedding(model_name: str, text: str) -> np.ndarray:
     return np.frombuffer(_cached_query_embedding_bytes(model_name, text), dtype=np.float32)
+
+
+# ---------------------------
+# Intent extraction (namespace/filename)
+# ---------------------------
+
+
+def _extract_intent_namespace_and_filename(query: str) -> Tuple[str, str, str]:
+    """Extract optional namespace token and filename hints from a natural-language query.
+
+    Returns (ns_token, file_exact, file_partial). Empty strings if not present.
+    """
+    ns_match = re.search(r"\b(000_core|100_memory|200_setup|400_guides)\b", query, re.IGNORECASE)
+    ns_token = ns_match.group(1) if ns_match else ""
+
+    file_match = re.search(r"([A-Za-z0-9_\-]+\.md)", query)
+    file_exact = file_match.group(1) if file_match else ""
+    file_partial = os.path.splitext(file_exact)[0] if file_exact else ""
+
+    return ns_token, file_exact, file_partial
 
 
 # ---------------------------
@@ -183,6 +211,12 @@ class HybridVectorStore(Module):
         self.ivfflat_probes = ivfflat_probes
         self.hnsw_ef_search = hnsw_ef_search
         self.use_websearch_tsquery = use_websearch_tsquery
+        # Wrapper configuration (feature flag + ns reserved slots)
+        self.use_wrapper: bool = os.getenv("HYBRID_USE_WRAPPER", "1") == "1"
+        try:
+            self.ns_reserved: int = int(os.getenv("NS_RESERVED", "2"))
+        except Exception:
+            self.ns_reserved = 2
 
     def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
         if operation == "store_chunks":
@@ -203,25 +237,195 @@ class HybridVectorStore(Module):
     # ------------- Search -------------
 
     def _hybrid_search(self, query: str, limit: int = 5) -> Dict[str, Any]:
-        # Dense + sparse
-        rows_dense = self._vector_search(query, limit)
-        rows_sparse = self._text_search(query, limit)
-        merged = _fuse_dense_sparse(
-            rows_dense, rows_sparse, limit, method=self.fusion, w_dense=self.w_dense, w_sparse=self.w_sparse
-        )
+        """Hybrid search with guaranteed SQL aliasing and consistent column names."""
+        q_emb = _query_embedding(self.model_name, query)
+        ns_token, file_exact, file_partial = _extract_intent_namespace_and_filename(query)
 
-        # Add simple citation from spans
-        for r in merged:
-            r["citation"] = f"Doc {r['document_id']}, chars {r['start_offset']}-{r['end_offset']}"
+        # Fast path: optionally delegate to wrapper (safer parameter building + ns slots)
+        if self.use_wrapper and run_hybrid_search is not None:
+            try:
+                LOG.debug(
+                    "wrapper hybrid: ns=%r file_exact=%r file_partial=%r ns_reserved=%s",
+                    ns_token,
+                    file_exact,
+                    file_partial,
+                    self.ns_reserved,
+                )
+                debug_flag = os.getenv("HYBRID_DEBUG_NS", "0") == "1"
+                try:
+                    pool_ns_env = int(os.getenv("POOL_NS", "0"))
+                except Exception:
+                    pool_ns_env = 0
+                result = run_hybrid_search(
+                    query=query,
+                    q_emb=q_emb,
+                    limit=limit,
+                    ns_token=(ns_token or None),
+                    filename_exact=(file_exact or None),
+                    filename_partial=(file_partial or None),
+                    ns_reserved=self.ns_reserved,
+                    pool_ns=(pool_ns_env if pool_ns_env > 0 else 80),
+                    debug=debug_flag,
+                )
+                rows = result.get("results", [])
+                return {"status": "success", "search_type": "hybrid", "results": list(rows)}
+            except Exception as e:
+                LOG.error("Wrapper hybrid failed, falling back to inline: %s", e)
 
-        return {
-            "status": "success",
-            "search_type": "hybrid",
-            "dense_count": len(rows_dense),
-            "sparse_count": len(rows_sparse),
-            "merged_count": len(merged),
-            "results": merged,
-        }
+        try:
+            # Use stable pool and explicit vector casts to avoid adapter issues
+            LOG.debug("intent ns=%r file_exact=%r file_partial=%r", ns_token, file_exact, file_partial)
+            with get_stable_conn() as conn:
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    # Per-query tunables (best-effort, ignore if unsupported)
+                    if self.hnsw_ef_search is not None:
+                        try:
+                            cur.execute("SET LOCAL hnsw.ef_search = %s", (int(self.hnsw_ef_search),))
+                        except Exception:
+                            pass
+
+                    sql = """
+                        WITH vec AS (
+                          SELECT
+                            d.id         AS document_id,
+                            d.filename   AS filename,
+                            dc.file_path AS file_path,
+                            dc.content   AS content,
+                            dc.embedding <=> %s::vector AS dist,
+                            'vec'        AS src
+                          FROM document_chunks dc
+                          JOIN documents d ON dc.document_id = d.id
+                          WHERE dc.embedding IS NOT NULL
+                          ORDER BY dc.embedding <=> %s::vector
+                          LIMIT 100
+                        ),
+                        vec_rank AS (
+                          SELECT v.*, ROW_NUMBER() OVER (ORDER BY dist ASC) AS rnk_vec
+                          FROM vec v
+                        ),
+                        bm AS (
+                          SELECT
+                            d.id         AS document_id,
+                            d.filename   AS filename,
+                            dc.file_path AS file_path,
+                            dc.content   AS content,
+                            ts_rank_cd(dc.content_tsv, websearch_to_tsquery('english', %s)) AS bm25,
+                            'bm25'       AS src
+                          FROM document_chunks dc
+                          JOIN documents d ON dc.document_id = d.id
+                          WHERE dc.content_tsv @@ websearch_to_tsquery('english', %s)
+                          ORDER BY bm25 DESC
+                          LIMIT 100
+                        ),
+                        bm_rank AS (
+                          SELECT b.*, ROW_NUMBER() OVER (ORDER BY bm25 DESC) AS rnk_bm
+                          FROM bm b
+                        ),
+                        unioned AS (
+                          SELECT document_id, filename, file_path, content, rnk_vec AS rnk, 'vec'  AS src FROM vec_rank
+                          UNION ALL
+                          SELECT document_id, filename, file_path, content, rnk_bm  AS rnk, 'bm25' AS src FROM bm_rank
+                        ),
+                        rrf AS (
+                          SELECT
+                            document_id, filename, file_path, content,
+                            SUM(1.0 / (60 + rnk)) AS rrf_score
+                          FROM unioned
+                          GROUP BY document_id, filename, file_path, content
+                        ),
+                        ranked AS (
+                          SELECT
+                            r.*,
+                            ROW_NUMBER() OVER (PARTITION BY r.document_id ORDER BY r.rrf_score DESC) AS dup_idx
+                          FROM rrf r
+                        ),
+                        fused AS (
+                          SELECT
+                            document_id,
+                            filename,
+                            file_path,
+                            content,
+                            (rrf_score * (1.0 - 0.15 * GREATEST(dup_idx - 1, 0))) AS fused_score,
+                            NULL::text AS src
+                          FROM ranked
+                        )
+                        , boosted AS (
+                          SELECT
+                            r.document_id,
+                            r.filename,
+                            r.file_path,
+                            r.content,
+                            (
+                              r.fused_score
+                              + CASE WHEN %s <> '' AND r.file_path ILIKE '%%' || %s || '/%%' THEN 0.30 ELSE 0 END
+                              + CASE
+                                  WHEN %s <> '' AND LOWER(r.filename) = LOWER(%s) THEN 0.35
+                                  WHEN %s <> '' AND r.filename ILIKE '%%' || %s || '%%' THEN 0.15
+                                  ELSE 0
+                                END
+                            ) AS score,
+                            r.src
+                          FROM fused r
+                        ),
+                        u_ns AS (
+                          SELECT b.*, CASE WHEN %s <> '' AND b.file_path ILIKE '%%' || %s || '/%%' THEN 1 ELSE 0 END AS ns_flag
+                          FROM boosted b
+                        ),
+                        ns_subset AS (
+                          SELECT * FROM u_ns WHERE ns_flag = 1 ORDER BY score DESC LIMIT 2
+                        ),
+                        ns_count AS (SELECT COUNT(*) AS c FROM ns_subset),
+                        rest AS (
+                          SELECT * FROM u_ns
+                          WHERE document_id NOT IN (SELECT document_id FROM ns_subset)
+                          ORDER BY score DESC
+                          LIMIT GREATEST(%s - (SELECT c FROM ns_count), 0)
+                        )
+                        SELECT document_id, filename, file_path, content, score, src FROM (
+                          SELECT * FROM ns_subset
+                          UNION ALL
+                          SELECT * FROM rest
+                        ) final
+                        ORDER BY score DESC
+                        """
+                    params = (
+                        q_emb.tolist(),  # vec dist
+                        q_emb.tolist(),  # vec order
+                        query,  # bm tsquery
+                        query,  # bm where
+                        # boosts (6)
+                        ns_token,
+                        ns_token,
+                        file_exact,
+                        file_exact,
+                        file_partial,
+                        file_partial,
+                        # ns gating (2)
+                        ns_token,
+                        ns_token,
+                        # rest limit (1)
+                        limit,
+                    )
+                    # Pre-execute guard on raw SQL
+                    expected = len(re.findall(r"(?<!%)%s", sql))
+                    actual = len(params)
+                    assert expected == actual, f"Placeholders={expected}, args={actual}"
+                    cur.execute(sql, params)
+                    rows = cur.fetchall()
+
+            return {
+                "status": "success",
+                "search_type": "hybrid",
+                "results": list(rows),
+            }
+
+        except Exception as e:
+            LOG.error(f"Hybrid search failed: {e}")
+            return {
+                "status": "error",
+                "error": str(e),
+                "results": [],
+            }
 
     def _vector_search(self, query: str, limit: int) -> List[Dict[str, Any]]:
         """Dense vector search using pgvector with spans included."""
