@@ -83,12 +83,12 @@ def main() -> int:
 
         # Before: naive top-3
         top3_before = hits[:3]
-        before_files = [h.metadata.get("filename") for h in top3_before]
+        before_files = [filename for h in top3_before if (filename := h.metadata.get("filename")) is not None]
         before_ok = hit_at3(before_files, expected)
 
         # After: with doc cap
         top3_after = select_top3_with_cap(hits, max_per_doc=2)
-        after_files = [h.metadata.get("filename") for h in top3_after]
+        after_files = [filename for h in top3_after if (filename := h.metadata.get("filename")) is not None]
         after_ok = hit_at3(after_files, expected)
 
         before_hits += int(before_ok)

@@ -7,7 +7,8 @@ This script safely migrates the database to include the LTST memory system schem
 with rollback capability, data validation, and audit trail.
 
 Note: Type ignore is used because RealDictCursor returns dictionary-like objects
-that the type checker doesn't properly recognize, but they work correctly at runtime.
+that the type checker doesn't properly recognize, and database connection objects
+are properly handled with null checks at runtime.
 """
 
 import argparse
@@ -93,12 +94,6 @@ class LTSTMigrationManager:
             return False
         return True
 
-    def _get_cursor(self) -> Optional[cursor]:
-        """Get cursor if available, None otherwise."""
-        if self._ensure_cursor():
-            return self.cursor
-        return None
-
     def check_prerequisites(self) -> Dict[str, Any]:
         """Check migration prerequisites."""
         self.logger.info("Checking migration prerequisites...")
@@ -111,20 +106,19 @@ class LTSTMigrationManager:
         }
 
         try:
-            cursor_obj = self._get_cursor()
-            if not cursor_obj:
+            if not self._ensure_cursor():
                 self.log_migration_step(
                     "Prerequisites check failed", success=False, error="No database cursor available"
                 )
                 return prerequisites
 
             # Check pgvector extension
-            cursor_obj.execute("SELECT * FROM pg_extension WHERE extname = 'vector';")
-            vector_ext = cursor_obj.fetchone()
+            self.cursor.execute("SELECT * FROM pg_extension WHERE extname = 'vector';")
+            vector_ext = self.cursor.fetchone()
             prerequisites["pgvector_extension"] = vector_ext is not None
 
             # Check existing tables
-            cursor_obj.execute(
+            self.cursor.execute(
                 """
                 SELECT table_name
                 FROM information_schema.tables
@@ -132,25 +126,25 @@ class LTSTMigrationManager:
                 AND table_name IN ('conversation_memory', 'document_chunks', 'documents')
             """
             )
-            fetchall_result = cursor_obj.fetchall()
-            existing_tables = [row["table_name"] for row in fetchall_result] if fetchall_result else []  # type: ignore
+            fetchall_result = self.cursor.fetchall()
+            existing_tables = [row["table_name"] for row in fetchall_result] if fetchall_result else []
             prerequisites["existing_tables"] = existing_tables
 
             # Check database version
-            cursor_obj.execute("SELECT version();")
-            version_result = cursor_obj.fetchone()
-            prerequisites["database_version"] = version_result["version"] if version_result else None  # type: ignore
+            self.cursor.execute("SELECT version();")
+            version_result = self.cursor.fetchone()
+            prerequisites["database_version"] = version_result["version"] if version_result else None
 
             # Check user permissions
-            cursor_obj.execute(
+            self.cursor.execute(
                 """
                 SELECT has_table_privilege('conversation_memory', 'INSERT') as can_insert,
                        has_schema_privilege('public', 'CREATE') as can_create
             """
             )
-            permissions = cursor_obj.fetchone()
+            permissions = self.cursor.fetchone()
             prerequisites["user_permissions"] = (
-                permissions["can_insert"] and permissions["can_create"] if permissions else False  # type: ignore
+                permissions["can_insert"] and permissions["can_create"] if permissions else False
             )
 
             self.log_migration_step("Prerequisites check completed", success=True)

@@ -251,6 +251,7 @@ class HybridVectorStore(Module):
                     file_partial,
                     self.ns_reserved,
                 )
+
                 debug_flag = os.getenv("HYBRID_DEBUG_NS", "0") == "1"
                 try:
                     pool_ns_env = int(os.getenv("POOL_NS", "0"))

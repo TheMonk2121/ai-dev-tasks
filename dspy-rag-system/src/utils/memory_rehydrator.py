@@ -7,19 +7,17 @@ including session continuity detection, intelligent context prioritization, and 
 
 import hashlib
 import json
+import logging
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from psycopg2.extras import RealDictCursor
-
 from .context_merger import ContextMerger, MergedContext
-from .conversation_storage import ConversationContext, ConversationMessage
-from .database_resilience import DatabaseResilienceManager
-from .logger import setup_logger
+from .conversation_storage import ConversationContext, ConversationMessage, ConversationStorage
+from .session_manager import SessionManager
 
-logger = setup_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -72,17 +70,15 @@ class RehydrationResult:
 class MemoryRehydrator:
     """Handles automatic memory rehydration for the LTST Memory System."""
 
-    def __init__(self, db_manager: Optional[DatabaseResilienceManager] = None):
+    def __init__(self, conversation_storage: Optional[ConversationStorage] = None):
         """Initialize memory rehydrator."""
-        if db_manager is None:
-            import os
-
-            connection_string = os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
-            self.db_manager = DatabaseResilienceManager(connection_string)
+        if conversation_storage is None:
+            self.conversation_storage = ConversationStorage()
         else:
-            self.db_manager = db_manager
+            self.conversation_storage = conversation_storage
 
-        self.context_merger = ContextMerger(db_manager)
+        self.context_merger = ContextMerger(self.conversation_storage)
+        self.session_manager = SessionManager(self.conversation_storage)
 
         # Cache for performance optimization
         self.rehydration_cache = {}
@@ -131,45 +127,39 @@ class MemoryRehydrator:
     def _detect_session_continuity(self, session_id: str, user_id: str) -> float:
         """Detect session continuity based on recent activity."""
         try:
-            with self.db_manager.get_connection() as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-                    # Get recent sessions for the user
-                    cursor.execute(
-                        """
-                        SELECT session_id, last_activity, session_name, context_summary
-                        FROM conversation_sessions
-                        WHERE user_id = %s
-                        AND last_activity > %s
-                        ORDER BY last_activity DESC
-                        LIMIT 5
-                    """,
-                        (user_id, datetime.now() - self.session_continuity_window),
-                    )
+            # Get recent sessions for the user using SessionManager
+            recent_sessions = self.session_manager.get_user_sessions(user_id, limit=5, active_only=False)
 
-                    recent_sessions = cursor.fetchall()
+            if not recent_sessions:
+                return 0.0
 
-                    if not recent_sessions:
-                        return 0.0
+            # Check if current session is in recent sessions
+            current_session_found = any(s.session_id == session_id for s in recent_sessions)
 
-                    # Check if current session is in recent sessions
-                    current_session_found = any(s["session_id"] == session_id for s in recent_sessions)
+            if current_session_found:
+                # High continuity for current session
+                return 0.9
 
-                    if current_session_found:
-                        # High continuity for current session
-                        return 0.9
+            # Check for similar session names or context
+            current_session = self._get_session_info(session_id)
+            if not current_session:
+                return 0.0
 
-                    # Check for similar session names or context
-                    current_session = self._get_session_info(session_id)
-                    if not current_session:
-                        return 0.0
+            # Calculate similarity with recent sessions
+            max_similarity = 0.0
+            for recent_session in recent_sessions:
+                similarity = self._calculate_session_similarity(
+                    current_session,
+                    {
+                        "session_id": recent_session.session_id,
+                        "session_name": recent_session.session_id,  # Using session_id as name for now
+                        "context_summary": "",
+                        "metadata": {},
+                    },
+                )
+                max_similarity = max(max_similarity, similarity)
 
-                    # Calculate similarity with recent sessions
-                    max_similarity = 0.0
-                    for recent_session in recent_sessions:
-                        similarity = self._calculate_session_similarity(current_session, recent_session)
-                        max_similarity = max(max_similarity, similarity)
-
-                    return max_similarity
+            return max_similarity
 
         except Exception as e:
             logger.error(f"Session continuity detection failed: {e}")
@@ -178,19 +168,17 @@ class MemoryRehydrator:
     def _get_session_info(self, session_id: str) -> Optional[Dict[str, Any]]:
         """Get session information."""
         try:
-            with self.db_manager.get_connection() as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-                    cursor.execute(
-                        """
-                        SELECT session_id, session_name, context_summary, metadata
-                        FROM conversation_sessions
-                        WHERE session_id = %s
-                    """,
-                        (session_id,),
-                    )
+            # Get session summary using ConversationStorage
+            session_summary = self.conversation_storage.get_session_summary(session_id)
+            if not session_summary:
+                return None
 
-                    row = cursor.fetchone()
-                    return dict(row) if row else None
+            return {
+                "session_id": session_id,
+                "session_name": session_summary.get("session_name", session_id),
+                "context_summary": session_summary.get("context_summary", ""),
+                "metadata": session_summary.get("metadata", {}),
+            }
 
         except Exception as e:
             logger.error(f"Failed to get session info: {e}")
@@ -236,37 +224,24 @@ class MemoryRehydrator:
     def _get_conversation_history(self, session_id: str, limit: int) -> List[ConversationMessage]:
         """Get conversation history for a session."""
         try:
-            with self.db_manager.get_connection() as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-                    cursor.execute(
-                        """
-                        SELECT * FROM conversation_messages
-                        WHERE session_id = %s
-                        ORDER BY message_index DESC
-                        LIMIT %s
-                    """,
-                        (session_id, limit),
-                    )
+            # Get messages using ConversationStorage
+            message_dicts = self.conversation_storage.retrieve_session_messages(session_id, limit=limit)
 
-                    messages = []
-                    for row in cursor.fetchall():
-                        message = ConversationMessage(
-                            session_id=row["session_id"],
-                            role=row["role"],
-                            content=row["content"],
-                            message_type=row["message_type"],
-                            message_index=row["message_index"],
-                            parent_message_id=row["parent_message_id"],
-                            metadata=row["metadata"],
-                            embedding=row["embedding"],
-                            relevance_score=row["relevance_score"],
-                            is_context_message=row["is_context_message"],
-                            timestamp=row["timestamp"],
-                        )
-                        messages.append(message)
+            messages = []
+            for msg_dict in message_dicts:
+                message = ConversationMessage(
+                    session_id=msg_dict["session_id"],
+                    role=msg_dict["role"],
+                    content=msg_dict["content"],
+                    message_type=msg_dict["message_type"],
+                    metadata=msg_dict.get("metadata", {}),
+                    parent_message_id=msg_dict.get("parent_message_id"),
+                    is_context_message=msg_dict.get("is_context_message", False),
+                    relevance_score=msg_dict.get("relevance_score", 0.5),
+                )
+                messages.append(message)
 
-                    # Reverse to get chronological order
-                    return list(reversed(messages))
+            return messages
 
         except Exception as e:
             logger.error(f"Failed to get conversation history: {e}")
@@ -275,26 +250,21 @@ class MemoryRehydrator:
     def _get_user_preferences(self, user_id: str) -> Dict[str, Any]:
         """Get user preferences for context rehydration."""
         try:
-            with self.db_manager.get_connection() as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-                    cursor.execute(
-                        """
-                        SELECT preference_key, preference_value, metadata
-                        FROM user_preferences
-                        WHERE user_id = %s
-                        ORDER BY updated_at DESC
-                    """,
-                        (user_id,),
-                    )
+            # Get user preferences using ConversationStorage
+            preference_dicts = self.conversation_storage.retrieve_user_preferences(user_id, limit=50)
 
-                    preferences = {}
-                    for row in cursor.fetchall():
-                        preferences[row["preference_key"]] = {
-                            "value": row["preference_value"],
-                            "metadata": row["metadata"],
-                        }
+            preferences = {}
+            for pref_dict in preference_dicts:
+                preferences[pref_dict["preference_key"]] = {
+                    "value": pref_dict["preference_value"],
+                    "metadata": {
+                        "confidence_score": pref_dict["confidence_score"],
+                        "source": pref_dict["source"],
+                        "usage_count": pref_dict.get("usage_count", 0),
+                    },
+                }
 
-                    return preferences
+            return preferences
 
         except Exception as e:
             logger.error(f"Failed to get user preferences: {e}")
@@ -487,6 +457,9 @@ class MemoryRehydrator:
             # Get project context
             project_context = self._get_project_context(request.session_id)
 
+            # Get session insights for enhanced context
+            session_insights = self.get_session_insights_for_rehydration(request.session_id, request.user_id)
+
             # Get relevant contexts
             relevant_contexts = self._get_relevant_contexts(request)
 
@@ -532,7 +505,7 @@ class MemoryRehydrator:
                 context_relevance_scores=context_relevance_scores,
                 rehydration_time_ms=rehydration_time_ms,
                 cache_hit=False,
-                metadata=request.metadata or {},
+                metadata={**(request.metadata or {}), "session_insights": session_insights, "ltst_integration": True},
             )
 
             # Cache the result
@@ -543,7 +516,8 @@ class MemoryRehydrator:
                 f"{rehydration_time_ms:.2f}ms, "
                 f"{len(conversation_history)} messages, "
                 f"{len(relevant_contexts)} contexts, "
-                f"continuity: {session_continuity_score:.2f}"
+                f"continuity: {session_continuity_score:.2f}, "
+                f"insights: {len(session_insights.get('conversation_analysis', {}).get('topics', []))} topics"
             )
 
             return result
@@ -568,6 +542,68 @@ class MemoryRehydrator:
         except Exception as e:
             logger.error(f"Failed to get rehydration statistics: {e}")
             return {"error": str(e)}
+
+    def get_session_insights_for_rehydration(self, session_id: str, user_id: str) -> Dict[str, Any]:
+        """Get session insights to enhance rehydration context."""
+        try:
+            # Get session insights using SessionManager
+            insights = self.session_manager.get_session_insights(session_id)
+
+            if "error" in insights:
+                return {}
+
+            # Enhance insights with additional context
+            enhanced_insights = {
+                "session_metrics": {
+                    "message_count": insights.get("message_count", 0),
+                    "context_count": insights.get("context_count", 0),
+                    "preference_count": insights.get("preference_count", 0),
+                    "user_engagement": insights.get("user_engagement", 0.0),
+                    "session_duration": insights.get("session_duration", "0:00:00"),
+                },
+                "conversation_analysis": {
+                    "topics": insights.get("conversation_topics", []),
+                    "learning_opportunities": insights.get("learning_opportunities", []),
+                    "learned_preferences": insights.get("learned_preferences", 0),
+                },
+                "user_patterns": {
+                    "engagement_level": (
+                        "high"
+                        if insights.get("user_engagement", 0.0) > 0.7
+                        else "medium" if insights.get("user_engagement", 0.0) > 0.4 else "low"
+                    ),
+                    "preferred_topics": insights.get("conversation_topics", [])[:3],
+                    "communication_style": self._infer_communication_style(insights),
+                },
+            }
+
+            return enhanced_insights
+
+        except Exception as e:
+            logger.error(f"Failed to get session insights for rehydration: {e}")
+            return {}
+
+    def _infer_communication_style(self, insights: Dict[str, Any]) -> str:
+        """Infer user communication style from session insights."""
+        try:
+            engagement = insights.get("user_engagement", 0.0)
+            topics = insights.get("conversation_topics", [])
+            opportunities = insights.get("learning_opportunities", [])
+
+            if engagement > 0.8 and "technical" in topics:
+                return "technical_detailed"
+            elif engagement > 0.6 and len(topics) > 2:
+                return "exploratory"
+            elif "tutorial_requested" in opportunities:
+                return "learning_focused"
+            elif engagement < 0.4:
+                return "concise"
+            else:
+                return "balanced"
+
+        except Exception as e:
+            logger.error(f"Failed to infer communication style: {e}")
+            return "balanced"
 
     def cleanup_expired_cache(self) -> int:
         """Clean up expired cache entries."""

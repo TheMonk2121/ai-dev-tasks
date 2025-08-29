@@ -10,6 +10,7 @@
 
 | what this file is | read when | do next |
 |---|---|---|
+
 | B-1042 | Scribe: useful, contextual worklog entries | 🔧 | 3 | todo | Capture contextual worklog entries with action, reason, commit link, brief diff/metrics; throttle duplicates; support templates. | Scribe + Hooks + Jinja2 Templates (local) | B-096 Enhanced Scribe System |
 | B-1041 | RAG evaluation suite + wrapper integration + infra refinements | 🔥 | 5 | todo | Add full evaluation suite, wrapper integrations, vector_store/model_switcher refactors, and scripts for KPI measurement and rehydration. | DSPy + RAG + Evaluation + Wrappers + Scripts | B-1012 LTST Memory System |
 | Prioritized backlog with AI scoring and execution flow | When selecting next work item or checking project status |
@@ -1268,18 +1269,19 @@ Coherence Validation System |
 <!-- outcome: Native DSPy 3.0 assertion support with zero regressions and rollback safety -->
 
 | B-1011 | Constitution Smoke Harness | 🔧 | 2 | ✅ done | Add three concrete checks: workflow chain preserved, doc coherence validator, Tier-1 lint. Non-blocking warnings if checks fail under stable 3.0. | Constitution Testing + Smoke Checks + Non-blocking Validation | B-1006-A DSPy 3.0 Core Parity Migration |
-| B-1012 | LTST Memory System: Foundation for Hybrid Retrieval & Closed-Loop Lessons | 🔥 | 5 | todo | Provide lightweight LTST foundation: persistence/session tracking/context merge, instrumentation, feature flags, and eval harness, with clean hooks for HybridRetriever, Reranker, Rolling Summary, and Facts integration (for B-1025/1026). No new heavy schema, no HNSW/BM25/pruner here. | LTST Core + Session/Persistence + Context Merge + Flags + Instrumentation + Eval Harness | B-1006-A DSPy 3.0 Core Parity Migration |
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:3, lessons:4, deps:["B-1006-A"]}-->
-<!--score_total: 7.0-->
-<!-- do_next: Add flags (FEATURE_HYBRID, FEATURE_RERANK, FEATURE_ROLLING_SUMMARY, FEATURE_FACTS); seed 100‑query eval set; add lightweight logs (dense/sparse winner, reranker deltas, p50/p90) in memory_rehydrator.py; expose hook points for HybridRetriever, Reranker, Rolling Summary; add embedding_version; keep pgvector exact and lexical as Postgres FTS (no BM25). -->
-<!-- est_hours: 6 -->
+| B-1012 | LTST Memory System: Foundation for Hybrid Retrieval & Decision Intelligence | 🔥 | 6 | todo | Provide lightweight LTST foundation: persistence/session tracking/context merge, decision intelligence (decision_head, decision_status, superseded_by, entities), simple status-based scoring, supersedence logic, and eval harness with Failure@20 ≤ 0.20 target. Extend existing conversation_context schema with minimal additions. MVP-first approach with optional complexity (co-sign, entity-overlap) only if needed. | LTST Core + Decision Intelligence + Session/Persistence + Context Merge + Supersedence + Eval Harness | B-1006-A DSPy 3.0 Core Parity Migration |
+<!--score: {bv:5, tc:4, rr:5, le:4, effort:4, lessons:4, deps:["B-1006-A"]}-->
+<!--score_total: 7.2-->
+<!-- do_next: Extend conversation_context schema with decision_head, decision_status, superseded_by, entities (JSONB), files (JSONB); implement decision intelligence in ConversationStorage, ContextMerger, MemoryRehydrator; add supersedence logic; create 15-20 decision retrieval test cases; implement Failure@20 evaluation with ≤0.20 target; add latency breakdown (p50/p95/p99). MVP-first approach with optional complexity only if needed. -->
+<!-- est_hours: 8 -->
 <!-- acceptance:
-Interfaces: memory_rehydrator exposes pluggable hooks for HybridRetriever, Reranker, Rolling Summary, Facts.
-Flags: FEATURE_HYBRID/FEATURE_RERANK/FEATURE_ROLLING_SUMMARY/FEATURE_FACTS present (default off).
-Eval: tests/data/eval_queries.jsonl created with 100 queries+golds; harness scaffold runs both LTST baseline and placeholder hybrid path (disabled by default).
-Instrumentation: logs include candidate counts (placeholders where applicable), winner source fields reserved, p50/p90 timers.
-Indexing: pgvector exact only; no HNSW; lexical named "Postgres FTS (tsvector + ts_rank)".
-No new heavy tables; zero regression on current LTST behavior when flags off.
+Schema: conversation_context extended with decision_head, decision_status, superseded_by, entities (JSONB), files (JSONB).
+Decision Intelligence: ConversationStorage, ContextMerger, MemoryRehydrator support decision operations with supersedence logic.
+Scoring: Simple status-based scoring (open +0.2, superseded -0.3) with optional complexity only if needed.
+Evaluation: 15-20 decision retrieval test cases with Failure@20 ≤ 0.20 target, latency breakdown (p50/p95/p99).
+Performance: Maintain existing 2.59ms rehydration performance, p95 < 10ms warm, < 150ms cold.
+Supersedence: Contradiction leakage ≤ 1%, stale decisions properly penalized.
+MVP-first: Optional complexity (co-sign, entity-overlap) only if Failure@20 > 0.20.
 -->
 <!-- lessons_applied: ["400_guides/400_context-priority-guide.md#scoped-context", "400_guides/400_comprehensive-coding-best-practices.md#minimal-incremental", "100_memory/100_cursor-memory-context.md#ltst-integration"] -->
 <!-- reference_cards: ["PostgreSQL FTS docs", "pgvector repo", "Anthropic Contextual Retrieval", "Stanford DSPy (arXiv:2310.03714)"] -->
@@ -2248,7 +2250,7 @@ Examples |
 <!--score_total: 8.0-->
 <!--progress: Simple integration using existing cursor.chat() patterns-->
 
-| B‑075 | Few-Shot Cognitive Scaffolding Integration | 🔧 | 0.5 | todo | Add few-shot examples to context priority guide
+| B‑075 | Few-Shot Cognitive Scaffolding Integration | 🔧 | 0.5 | ✅ done | Add few-shot examples to context priority guide
 and memory context | Cross-Reference Integration + AI Discovery + Scaffolding Enhancement | B-074 Few-Shot Integration
 with Documentation Tools |
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:0.5, deps:["B-074"]}-->
