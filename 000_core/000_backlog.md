@@ -1922,15 +1922,6 @@ maps | Python threading + cached scans | scripts/doc_coherence_validator.py |
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#role-detection-patterns"] -->
 <!-- reference_cards: ["500_reference-cards.md#context-analysis"] -->
 
-| B‑096 | MCP Server Performance Optimization | 📈 | 2 | todo | Optimize MCP server for low latency and high throughput | Connection pooling + caching + async processing | B-094 MCP Memory Rehydrator Server |
-<!--score: {bv:4, tc:3, rr:3, le:3, effort:2, lessons:3, deps:["B-094"]}-->
-<!--score_total: 5.5-->
-<!-- do_next: Implement connection pooling and response caching for faster context retrieval -->
-<!-- est_hours: 2 -->
-<!-- acceptance: MCP server responds in <500ms for context requests -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#performance-optimization"] -->
-<!-- reference_cards: ["500_reference-cards.md#connection-pooling"] -->
-
 | B‑097 | Roadmap Milestones & Burndown Charts | 📊 | 3 | todo | Add milestone tracking and burndown charts to roadmap for progress visibility | Milestone definition + progress tracking + chart generation | 000_core/004_development-roadmap.md |
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:3, lessons:3, deps:["000_core/004_development-roadmap.md"]}-->
 <!--score_total: 6.0-->
@@ -2907,3 +2898,84 @@ async def build_context(
 <!-- tech_footprint: CI/CD + Pre-commit + Validation + Budgets + Archive Automation -->
 <!-- problem: Governance still relies on documentation and manual processes; need to move to CI-first enforcement with automated gates -->
 <!-- outcome: Governance-by-code system where CI enforces rules, docs explain intent, and automation prevents bloat and drift -->
+
+- B‑1041 — System Simplification: Over-Engineered Components Refactor (score 9.5)
+<!--score: {bv:5, tc:5, rr:5, le:5, effort:5, deps:[]}-->
+<!--score_total: 9.5-->
+<!-- do_next: Start with backlog system simplification - reduce complexity while maintaining functionality -->
+<!-- est_hours: 40 -->
+<!-- acceptance: Systems simplified to essential functionality, reduced maintenance burden, improved usability, and preserved core value -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#overengineering-patterns", "400_guides/400_development-workflow.md#simplicity-over-complexity"] -->
+<!-- reference_cards: ["500_reference-cards.md#system-architecture", "500_reference-cards.md#refactoring-strategies"] -->
+<!-- tech_footprint: System Refactoring + Complexity Reduction + Maintenance Optimization + Usability Improvement -->
+<!-- problem: Entire development ecosystem has been over-engineered, creating unnecessary complexity and maintenance burden that outweighs benefits -->
+<!-- outcome: Simplified, maintainable systems that solve actual problems without unnecessary complexity, focusing on core functionality and user value -->
+<!-- implementation_plan:
+PHASE 1 — Backlog System Simplification (8 hours)
+1) Simplify backlog scoring system - remove complex AI scoring, keep basic priority lanes
+2) Reduce metadata fields - keep essential (est_hours, dependencies, status) only
+3) Streamline workflow - maintain core 001-003 chain, remove unnecessary automation
+4) Simplify documentation - reduce from 52 files to 10-15 essential guides
+5) Test simplified system with real backlog items
+
+PHASE 2 — Quality Gates Simplification (6 hours)
+1) Replace complex 1174-line Python validator with simple bash script (already done)
+2) Simplify pre-commit hooks - keep essential checks only
+3) Remove over-engineered validation systems
+4) Focus on core quality: linting, basic tests, security checks
+5) Document simplified quality gates
+
+PHASE 3 — MCP Server Simplification (8 hours)
+1) Replace distributed orchestration with simple routing
+2) Simplify server architecture - single server with basic tools
+3) Remove complex health checks and load balancing
+4) Focus on core functionality: memory rehydration, basic tool access
+5) Test simplified MCP integration
+
+PHASE 4 — DSPy System Simplification (10 hours)
+1) Simplify multi-agent complexity - focus on core agents
+2) Remove over-engineered optimization systems
+3) Streamline model selection - basic routing only
+4) Simplify memory systems - keep essential functionality
+5) Test simplified DSPy workflows
+
+PHASE 6 — Memory Systems Simplification (8 hours)
+1) Simplify LTST memory system - remove complex hybrid retrieval
+2) Streamline memory rehydration - basic context retrieval only
+3) Simplify MCP memory server - single server with essential tools
+4) Remove over-engineered memory orchestration
+5) Focus on core functionality: basic context, simple retrieval, essential tools
+6) Test simplified memory workflows
+
+PHASE 5 — Documentation Consolidation (8 hours) ✅ **COMPLETED**
+1) ✅ Consolidate 400_guides from 52 files to 13 essential guides (400_00 through 400_12)
+2) ✅ Remove redundant documentation
+3) ✅ Simplify cross-references and navigation
+4) ✅ Focus on core workflows and essential information
+5) ✅ Update all references and links
+
+SUCCESS CRITERIA:
+- Backlog system: 50% reduction in complexity, maintained functionality
+- Quality gates: <5s execution time, essential checks only
+- MCP server: Single server, basic tools, simple routing
+- DSPy system: Core agents only, simplified workflows
+- Memory systems: Simplified LTST, basic rehydration, essential tools only
+- Documentation: ✅ 13 essential guides (400_00-400_12), clear navigation
+- Overall: Reduced maintenance burden, improved usability, preserved value
+
+RISK MITIGATION:
+- Gradual rollout with feature flags
+- Maintain backward compatibility where possible
+- Extensive testing before each phase
+- Rollback plan for each component
+- User feedback and validation
+
+DELIVERABLES:
+1) Simplified backlog system with reduced complexity
+2) Streamlined quality gates and CI/CD
+3) Simplified MCP server architecture
+4) Core DSPy system with essential functionality
+5) Consolidated documentation system
+6) Comprehensive testing and validation
+7) User guides for simplified systems
+-->

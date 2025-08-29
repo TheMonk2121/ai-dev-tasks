@@ -12,6 +12,7 @@ Comprehensive security validation for the context integration system:
 
 import json
 import logging
+import os
 import re
 import time
 from collections import defaultdict, deque
@@ -47,11 +48,13 @@ class InputValidator:
 
         # Allowed characters for roles and tasks
         self.role_pattern = re.compile(r"^[a-zA-Z_]+$")
-        self.task_pattern = re.compile(r"^[a-zA-Z0-9\s\-_.,!?()]+$")
+        # Very permissive task pattern - allow any reasonable text content
+        # Only block null bytes and control characters (except newlines and tabs)
+        self.task_pattern = re.compile(r"^[^\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+$")
 
-        # Maximum lengths
-        self.max_role_length = 50
-        self.max_task_length = 1000
+        # Maximum lengths - configurable via environment variables
+        self.max_role_length = int(os.getenv("MAX_ROLE_LENGTH", "50"))
+        self.max_task_length = int(os.getenv("MAX_TASK_LENGTH", "10000"))
 
         # Dangerous patterns (simplified to avoid regex issues)
         self.dangerous_patterns = [

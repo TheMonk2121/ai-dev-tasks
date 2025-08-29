@@ -20,9 +20,11 @@ from dspy import Example, Module
 
 
 class HasForward(Protocol):
-    """Protocol for objects with a forward method"""
+    """Protocol for objects with a forward method and callable interface"""
 
     def forward(self, *args, **kwargs) -> Any: ...
+
+    def __call__(self, *args, **kwargs) -> Any: ...
 
 
 _LOG = logging.getLogger("dspy_optimizers")

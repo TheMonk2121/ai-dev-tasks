@@ -19,6 +19,7 @@ import time
 from collections import defaultdict, deque
 from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from typing import Optional
 
 # Add the dspy-rag-system src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
@@ -109,7 +110,64 @@ class ServerMetrics:
         self.role_usage = defaultdict(int)
         self.lock = threading.Lock()
 
-    def record_request(self, role=None, response_time=None, error=False, error_msg=None, cache_hit=False):
+        # Persistent error logging
+        self.error_log_file = "logs/memory-rehydration.err"
+        self._ensure_log_directory()
+        self._log_startup()
+
+    def _ensure_log_directory(self):
+        """Ensure logs directory exists"""
+        try:
+            os.makedirs("logs", exist_ok=True)
+        except Exception as e:
+            print(f"Warning: Could not create logs directory: {e}")
+
+    def _log_startup(self):
+        """Log server startup"""
+        try:
+            with open(self.error_log_file, "a", encoding="utf-8") as f:
+                f.write(f"[{datetime.now().isoformat()}] 🚀 Memory rehydration server started\n")
+        except Exception as e:
+            print(f"Warning: Could not write to error log file: {e}")
+
+    def _write_error_to_file(self, error_msg: str, context: Optional[dict] = None):
+        """Write error to persistent log file"""
+        try:
+            timestamp = datetime.now().isoformat()
+            context_str = f" | Context: {json.dumps(context)}" if context else ""
+            log_entry = f"[{timestamp}] ❌ {error_msg}{context_str}\n"
+
+            with open(self.error_log_file, "a", encoding="utf-8") as f:
+                f.write(log_entry)
+        except Exception as e:
+            print(f"Warning: Could not write error to log file: {e}")
+
+    def _get_error_log_size(self) -> int:
+        """Get the size of the error log file in bytes"""
+        try:
+            if os.path.exists(self.error_log_file):
+                return os.path.getsize(self.error_log_file)
+            return 0
+        except Exception:
+            return 0
+
+    def _rotate_error_log_if_needed(self, max_size_mb: int = 10):
+        """Rotate error log if it exceeds max size"""
+        try:
+            if os.path.exists(self.error_log_file):
+                size_mb = os.path.getsize(self.error_log_file) / (1024 * 1024)
+                if size_mb > max_size_mb:
+                    # Create backup with timestamp
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    backup_file = f"{self.error_log_file}.{timestamp}"
+                    os.rename(self.error_log_file, backup_file)
+                    # Create new empty log file
+                    with open(self.error_log_file, "w", encoding="utf-8") as f:
+                        f.write(f"[{datetime.now().isoformat()}] 🔄 Error log rotated (previous: {backup_file})\n")
+        except Exception as e:
+            print(f"Warning: Could not rotate error log: {e}")
+
+    def record_request(self, role=None, response_time=None, error=False, error_msg=None, cache_hit=False, context=None):
         """Record a request and its metrics"""
         with self.lock:
             self.request_count += 1
@@ -118,7 +176,12 @@ class ServerMetrics:
             if error:
                 self.error_count += 1
                 if error_msg:
+                    # Check for log rotation before writing
+                    self._rotate_error_log_if_needed()
+                    # Add to in-memory error log
                     self.error_log.append({"timestamp": datetime.now().isoformat(), "error": error_msg})
+                    # Write to persistent error log
+                    self._write_error_to_file(error_msg, context)
             if role:
                 self.role_usage[role] += 1
             if cache_hit:
@@ -144,6 +207,8 @@ class ServerMetrics:
                 "recent_errors": list(self.error_log)[-10:],  # Last 10 errors
                 "role_usage": dict(self.role_usage),
                 "python_version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
+                "error_log_file": self.error_log_file,
+                "error_log_size": self._get_error_log_size(),
             }
 
 
@@ -647,6 +712,8 @@ LIMIT 5;
             self.handle_destroy_session()
         elif self.path == "/analytics":
             self.send_analytics_dashboard()
+        elif self.path == "/errors":
+            self.send_error_logs()
         else:
             self.send_error(404, "Not Found")
 
@@ -722,7 +789,15 @@ LIMIT 5;
 
         except Exception as e:
             response_time = time.time() - start_time
-            server_metrics.record_request(error=True, error_msg=str(e), response_time=response_time)
+            error_context = {
+                "tool_name": request_data.get("name", "unknown") if "request_data" in locals() else "unknown",
+                "role": arguments.get("role", "unknown") if "arguments" in locals() else "unknown",
+                "endpoint": "/mcp/tools/call",
+                "response_time": response_time,
+            }
+            server_metrics.record_request(
+                error=True, error_msg=str(e), response_time=response_time, context=error_context
+            )
 
             # Log security event if security is enabled
             if security_config:
@@ -755,6 +830,15 @@ LIMIT 5;
             self.wfile.write(json.dumps(enhanced_context).encode())
 
         except Exception as e:
+            error_context = {
+                "endpoint": "/mcp/cursor/context",
+                "task": arguments.get("task", "unknown"),
+                "language": arguments.get("language", "unknown"),
+                "framework": arguments.get("framework", "unknown"),
+            }
+            server_metrics.record_request(
+                error=True, error_msg=f"Cursor context failed: {str(e)}", context=error_context
+            )
             self.send_error(500, f"Cursor context failed: {str(e)}")
 
     def handle_planner_context(self, arguments):
@@ -805,6 +889,14 @@ LIMIT 5;
             self.wfile.write(json.dumps(response).encode())
 
         except Exception as e:
+            error_context = {
+                "endpoint": "/mcp/planner/context",
+                "task": arguments.get("task", "unknown"),
+                "project_scope": arguments.get("project_scope", "unknown"),
+            }
+            server_metrics.record_request(
+                error=True, error_msg=f"Planner context failed: {str(e)}", context=error_context
+            )
             self.send_error(500, f"Planner context failed: {str(e)}")
 
     def handle_researcher_context(self, arguments):
@@ -950,9 +1042,8 @@ LIMIT 5;
                     "role": role,
                     "task": task,
                     "repository": repository,
-                    "context_type": context_type,
-                    "generated_at": datetime.now().isoformat(),
                     "context_type": "github_context",
+                    "generated_at": datetime.now().isoformat(),
                 },
             }
 
@@ -1005,9 +1096,8 @@ LIMIT 5;
                     "role": role,
                     "task": task,
                     "database_type": database_type,
-                    "context_type": context_type,
-                    "generated_at": datetime.now().isoformat(),
                     "context_type": "database_context",
+                    "generated_at": datetime.now().isoformat(),
                 },
             }
 
@@ -1436,12 +1526,6 @@ LIMIT 5;
 
             if tool_name == "rehydrate_memory":
                 # Handle regular memory rehydration
-                if tool_name != "rehydrate_memory":
-                    error = True
-                    error_msg = "Unknown tool"
-                    self.send_error(400, "Unknown tool")
-                    return
-
                 # Get parameters with defaults
                 role = arguments.get("role", "planner")
                 task = arguments.get("task", "general context")
@@ -1920,6 +2004,41 @@ LIMIT 5;
         self.end_headers()
         self.wfile.write(html.encode())
 
+    def send_error_logs(self):
+        """Send error log information"""
+        try:
+            metrics = server_metrics.get_metrics()
+
+            # Read recent error log entries
+            recent_errors = []
+            if os.path.exists(server_metrics.error_log_file):
+                try:
+                    with open(server_metrics.error_log_file, "r", encoding="utf-8") as f:
+                        lines = f.readlines()
+                        # Get last 50 lines
+                        recent_errors = lines[-50:] if len(lines) > 50 else lines
+                except Exception as e:
+                    recent_errors = [f"Error reading log file: {e}\n"]
+            else:
+                recent_errors = ["No error log file found\n"]
+
+            response = {
+                "error_log_file": server_metrics.error_log_file,
+                "error_log_size_bytes": metrics.get("error_log_size", 0),
+                "total_errors": metrics.get("total_errors", 0),
+                "error_rate_percent": metrics.get("error_rate_percent", 0),
+                "recent_errors": recent_errors,
+                "recent_in_memory_errors": metrics.get("recent_errors", []),
+            }
+
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(response, indent=2).encode())
+
+        except Exception as e:
+            self.send_error(500, f"Failed to get error logs: {str(e)}")
+
 
 def start_server(port=3000):
     """Start the MCP memory server"""
@@ -1933,10 +2052,12 @@ def start_server(port=3000):
     print(f"📈 Status dashboard: http://localhost:{port}/status")
     print(f"🔒 Security dashboard: http://localhost:{port}/security")
     print(f"📊 Analytics dashboard: http://localhost:{port}/analytics")
+    print(f"❌ Error logs: http://localhost:{port}/errors")
     print(f"🔄 Memory rehydration: POST http://localhost:{port}/mcp/tools/call")
     print(f"🔐 Session management: POST http://localhost:{port}/session/create")
     print("💾 Response caching enabled (TTL: 5 minutes)")
     print("🔐 Encryption and session management enabled")
+    print("📝 Persistent error logging enabled (logs/memory-rehydration.err)")
     print("\n💡 Configure Cursor to connect to this server for automatic memory rehydration!")
     print("   Press Ctrl+C to stop the server")
 

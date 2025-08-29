@@ -1193,7 +1193,7 @@ class LocalTaskExecutor(Module):
 
         # Get model selection reasoning
         selector = IntelligentModelSelector()
-        model_selection = selector.forward(task, task_type, complexity)
+        model_selection = selector(task, task_type, complexity)
 
         # Get appropriate model for task
         model = self.model_switcher.get_model_for_task(task_type, complexity)
@@ -1337,13 +1337,15 @@ def cursor_execute_task(task: str, task_type: str = "moderate_coding", role: str
     executor = LocalTaskExecutor(switcher)
 
     try:
-        result = executor.forward(task, task_type, role)
+        result = executor(task, task_type, role)
+        # Type cast to ensure result is treated as Dict[str, Any]
+        result_dict = result if isinstance(result, dict) else {}
         return {
             "success": True,
-            "result": result["result"],
-            "model_used": result["model_used"],
-            "confidence": result["confidence"],
-            "reasoning": result["reasoning"],
+            "result": result_dict.get("result", ""),
+            "model_used": result_dict.get("model_used", ""),
+            "confidence": result_dict.get("confidence", 0.0),
+            "reasoning": result_dict.get("reasoning", ""),
         }
     except Exception as e:
         return {"success": False, "error": str(e), "fallback": "Using Cursor AI fallback"}
@@ -1365,14 +1367,16 @@ def cursor_orchestrate_task(task: str, task_type: str = "moderate_coding", role:
     orchestrator = MultiModelOrchestrator(switcher)
 
     try:
-        result = orchestrator.forward(task, task_type, role)
+        result = orchestrator(task, task_type, role)
+        # Type cast to ensure result is treated as Dict[str, Any]
+        result_dict = result if isinstance(result, dict) else {}
         return {
             "success": True,
-            "plan": result["plan"],
-            "execution": result["execution"],
-            "review": result["review"],
-            "final_result": result["final_result"],
-            "orchestration_notes": result["orchestration_notes"],
+            "plan": result_dict.get("plan", ""),
+            "execution": result_dict.get("execution", ""),
+            "review": result_dict.get("review", ""),
+            "final_result": result_dict.get("final_result", ""),
+            "orchestration_notes": result_dict.get("orchestration_notes", ""),
         }
     except Exception as e:
         return {"success": False, "error": str(e), "fallback": "Using Cursor AI fallback"}

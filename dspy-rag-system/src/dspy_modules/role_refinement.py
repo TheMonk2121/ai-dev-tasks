@@ -130,10 +130,15 @@ class RoleRefinementModule(Module):
                 solo_developer_context=solo_developer_context,
             )
 
+            # Handle the result object safely with proper type checking
+            refined_definition = getattr(result, "refined_definition", "")
+            improvement_justification = getattr(result, "improvement_justification", "")
+            performance_predictions = getattr(result, "performance_predictions", "")
+
             return {
-                "refined_definition": result.refined_definition,
-                "improvement_justification": result.improvement_justification,
-                "performance_predictions": result.performance_predictions,
+                "refined_definition": refined_definition,
+                "improvement_justification": improvement_justification,
+                "performance_predictions": performance_predictions,
                 "success": True,
             }
 
@@ -312,14 +317,25 @@ class RoleRefinementSystem:
 
             # Test with role refinement
             test_input = optimization_inputs["test_data"][0]
-            result = optimized_module.forward(**test_input)
+            result = optimized_module(**test_input)
+
+            # Handle the result safely with proper type checking
+            if isinstance(result, dict):
+                refined_definition = result.get("refined_definition", "")
+                improvement_justification = result.get("improvement_justification", "")
+                success = result.get("success", False)
+            else:
+                # Fallback for non-dict results
+                refined_definition = ""
+                improvement_justification = ""
+                success = False
 
             return {
-                "refined_definition": result.get("refined_definition", ""),
+                "refined_definition": refined_definition,
                 "improvement_score": cycle.overall_metrics.get("improvement_score", 0.0),
-                "changes_made": self._extract_changes(result.get("improvement_justification", "")),
+                "changes_made": self._extract_changes(improvement_justification),
                 "performance_improvements": cycle.overall_metrics,
-                "success": result.get("success", False),
+                "success": success,
             }
         else:
             return {

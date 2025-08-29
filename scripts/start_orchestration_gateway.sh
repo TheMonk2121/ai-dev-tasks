@@ -29,9 +29,9 @@ find_available_port() {
     local start_port=$1
     local end_port=$2
 
-    for port in $(seq $start_port $end_port); do
-        if ! lsof -Pi :$port -sTCP:LISTEN -t >/dev/null 2>&1; then
-            echo $port
+    for port in $(seq "$start_port" "$end_port"); do
+        if ! lsof -Pi :"$port" -sTCP:LISTEN -t >/dev/null 2>&1; then
+            echo "$port"
             return 0
         fi
     done
@@ -39,12 +39,11 @@ find_available_port() {
 }
 
 # Check if default port is available
-if lsof -Pi :$DEFAULT_PORT -sTCP:LISTEN -t >/dev/null 2>&1; then
+if lsof -Pi :"$DEFAULT_PORT" -sTCP:LISTEN -t >/dev/null 2>&1; then
     echo "⚠️  Default port $DEFAULT_PORT is already in use!"
     echo "🔄 Searching for available port in range $FALLBACK_START-$FALLBACK_END..."
 
-    PORT=$(find_available_port $FALLBACK_START $FALLBACK_END)
-    if [ $? -eq 0 ]; then
+    if PORT=$(find_available_port "$FALLBACK_START" "$FALLBACK_END"); then
         echo "✅ Found available port: $PORT"
     else
         echo "❌ No available ports found in range $FALLBACK_START-$FALLBACK_END"
@@ -60,6 +59,7 @@ echo "✅ Starting gateway on port $PORT..."
 
 # Activate virtual environment if it exists
 if [ -f "$PROJECT_ROOT/venv/bin/activate" ]; then
+    # shellcheck disable=SC1091
     source "$PROJECT_ROOT/venv/bin/activate"
     echo "🐍 Virtual environment activated"
 fi

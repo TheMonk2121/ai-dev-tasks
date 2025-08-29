@@ -94,6 +94,11 @@ venv/
 
 # Log files
 *.log
+*.err
+
+# Log directories (but allow specific error logs)
+logs/
+!logs/*.err
 
 # Python cache
 __pycache__/

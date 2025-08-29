@@ -3,6 +3,7 @@
 Query Coder agent about orchestration gateway async health check debugging
 """
 
+import asyncio
 import sys
 from pathlib import Path
 
@@ -11,26 +12,20 @@ project_root = Path(__file__).parent.parent
 dspy_path = project_root / "dspy-rag-system" / "src"
 sys.path.insert(0, str(dspy_path))
 
-from dspy_modules.context_models import CoderContext
-from dspy_modules.role_refinement import RoleFactory
+# Import after path manipulation
+try:
+    from specialized_agent_framework import CoderAgent
+except ImportError as e:
+    print(f"❌ Import error: {e}")
+    print("Make sure the dspy-rag-system is properly set up.")
+    sys.exit(1)
 
 
 def main():
     """Query the Coder agent about orchestration debugging"""
 
-    # Create Coder context
-    context = CoderContext(
-        codebase_path=str(project_root),
-        language="python",
-        framework="asyncio",
-        current_file="scripts/mcp_orchestration_gateway.py",
-        cursor_knowledge_enabled=True,
-        cursor_model="claude-3.5-sonnet",
-        ide_context={"project_type": "ai_development", "debugging_focus": "async_health_checks"},
-    )
-
     # Create Coder agent
-    coder_agent = RoleFactory.create_agent("CODER", context)
+    coder_agent = CoderAgent()
 
     # Define the debugging problem
     problem_description = """
@@ -70,7 +65,16 @@ def main():
     print("=" * 80)
 
     try:
-        response = coder_agent.query(problem_description)
+        # Create request format for CoderAgent
+        request = {
+            "query": problem_description,
+            "file_path": "scripts/mcp_orchestration_gateway.py",
+            "code_content": "",  # We'll let the agent analyze the file
+            "analysis_type": "comprehensive",
+        }
+
+        # Use asyncio to run the async method
+        response = asyncio.run(coder_agent.process_request(request))
         print("📝 Coder Agent Response:")
         print(response)
 

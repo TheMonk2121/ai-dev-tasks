@@ -379,7 +379,7 @@ class SecurityConfig:
                                 recent_accesses += 1
                                 if not entry["success"]:
                                     recent_failures += 1
-                        except:
+                        except (json.JSONDecodeError, KeyError, ValueError):
                             continue
             except Exception as e:
                 logger.error(f"Failed to read access log: {e}")

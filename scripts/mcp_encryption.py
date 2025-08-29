@@ -55,6 +55,9 @@ class EncryptionManager:
     def _save_master_key(self):
         """Save master key to file"""
         try:
+            if self.master_key is None:
+                raise ValueError("Master key is not initialized")
+
             key_data = {
                 "master_key": base64.urlsafe_b64encode(self.master_key).decode(),
                 "created_at": time.time(),
