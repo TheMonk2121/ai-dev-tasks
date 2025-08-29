@@ -46,6 +46,14 @@ def _import_from_utils(module_name):
 # SIMPLIFIED: Remove context monitoring system - use basic logging only
 MONITORING_AVAILABLE = False
 
+# Import the new modular gate system
+try:
+    from .gate_system import create_simplified_gate_system
+    GATE_SYSTEM_AVAILABLE = True
+except ImportError as e:
+    GATE_SYSTEM_AVAILABLE = False
+    _LOG.warning(f"Modular gate system not available: {e}")
+
 # Import performance optimization system
 try:
     context_performance = _import_from_utils("context_performance")
@@ -781,6 +789,25 @@ class ModelSwitcher:
             Dictionary with task results from the specified role
         """
         results = {}
+
+        # Phase 2: Use modular gate system for request validation
+        if GATE_SYSTEM_AVAILABLE:
+            try:
+                gate_manager = create_simplified_gate_system()
+                request = {"role": role, "task": task}
+                
+                gate_result = gate_manager.execute_gates(request)
+                if not gate_result["success"]:
+                    _LOG.warning(f"Gate system rejected request: {gate_result['message']}")
+                    return {
+                        "error": f"Request rejected by gate system: {gate_result['message']}",
+                        "failed_gate": gate_result.get("failed_gate", "unknown")
+                    }
+                
+                _LOG.info(f"Gate system approved request in {gate_result['execution_time']:.3f}s")
+                
+            except Exception as e:
+                _LOG.warning(f"Gate system error, proceeding without gates: {e}")
 
         # Get context for the role and task
         context = get_context_for_role(role, task)
