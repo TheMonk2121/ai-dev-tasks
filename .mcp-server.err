@@ -640,3 +640,5 @@ INFO:decision_extractor:Stored 2 decisions in database
 INFO:utils.supersedence_retrieval:Supersedence tables created successfully
 /Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 83263 Killed: 9               $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
 INFO:mcp_security_config:Loaded 5 API keys
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 94624 Killed: 9               $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
