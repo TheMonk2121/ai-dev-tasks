@@ -17,6 +17,9 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
+# Import faithfulness evaluator
+from faithfulness_evaluator import FaithfulnessEvaluator
+
 
 class EvaluationCategory(Enum):
     MEMORY_HIERARCHY = "memory_hierarchy"
@@ -45,16 +48,18 @@ class BaselineEvaluator:
         self.version = version
         self.memory_orchestrator_path = "scripts/unified_memory_orchestrator.py"
         self.baseline_criteria = self.load_baseline_criteria(version)
+        self.faithfulness_evaluator = FaithfulnessEvaluator()
 
     def load_baseline_criteria(self, version: str) -> Dict[str, Any]:
         """Load fixed baseline criteria for consistent evaluation."""
         return {
             "version": version,
             "scoring": {
-                "sources": {"max_points": 40, "threshold": 0.8},
-                "content": {"max_points": 40, "threshold": 0.7},
-                "workflow": {"max_points": 20, "threshold": 0.6},
-                "commands": {"max_points": 20, "threshold": 0.6},
+                "sources": {"max_points": 30, "threshold": 0.8},
+                "content": {"max_points": 30, "threshold": 0.7},
+                "workflow": {"max_points": 15, "threshold": 0.6},
+                "commands": {"max_points": 15, "threshold": 0.6},
+                "faithfulness": {"max_points": 20, "threshold": 0.7},  # New RAGAS-style metric
             },
             "pass_threshold": 65,
             "bonus_points": False,  # Fixed, no bonus points
@@ -196,6 +201,46 @@ class BaselineEvaluator:
             return {"success": False, "output": "", "error": "Query timed out after 60 seconds"}
         except Exception as e:
             return {"success": False, "output": "", "error": str(e)}
+    
+    def _extract_retrieved_context(self, response: Dict[str, Any]) -> str:
+        """Extract retrieved context from memory system response for faithfulness evaluation."""
+        try:
+            # Parse the response to get retrieved context
+            response_data = json.loads(response["output"])
+            
+            # Try to extract context from different possible fields
+            context_sources = []
+            
+            # Check for LTST memory content
+            if "ltst_memory" in response_data:
+                context_sources.append(response_data["ltst_memory"])
+            
+            # Check for Cursor memory content
+            if "cursor_memory" in response_data:
+                context_sources.append(response_data["cursor_memory"])
+            
+            # Check for Go CLI memory content
+            if "go_cli_memory" in response_data:
+                context_sources.append(response_data["go_cli_memory"])
+            
+            # Check for Prime memory content
+            if "prime_memory" in response_data:
+                context_sources.append(response_data["prime_memory"])
+            
+            # Check for formatted output (fallback)
+            if "formatted_output" in response_data:
+                context_sources.append(response_data["formatted_output"])
+            
+            # Combine all context sources
+            if context_sources:
+                return " ".join(context_sources)
+            else:
+                # Fallback to raw output
+                return response["output"]
+                
+        except Exception as e:
+            # If parsing fails, use raw output as context
+            return response["output"]
 
     def evaluate_response(self, case: BaselineEvaluationCase, response: Dict[str, Any]) -> Dict[str, Any]:
         """Evaluate a response using fixed baseline criteria."""
@@ -249,23 +294,46 @@ class BaselineEvaluator:
             score += min(workflow_score, 20)
             details.append(f"Workflow coverage: {workflow_score}/20")
 
-        # Check for expected commands (20 points max)
+                # Check for expected commands (15 points max)
         if case.expected_commands:
             command_score = 0
             for command in case.expected_commands:
                 if command.lower() in response_text.lower():
-                    command_score += 10
+                    command_score += 7.5
                 else:
                     errors.append(f"Missing expected command: {command}")
-            score += min(command_score, 20)
-            details.append(f"Command coverage: {command_score}/20")
-
+            score += min(command_score, 15)
+            details.append(f"Command coverage: {command_score}/15")
+        
+        # Check faithfulness (20 points max) - RAGAS-style evaluation
+        faithfulness_score = 0
+        try:
+            # Get retrieved context from memory system response
+            retrieved_context = self._extract_retrieved_context(response)
+            
+            # Evaluate faithfulness
+            faithfulness_result = self.faithfulness_evaluator.evaluate_faithfulness(response_text, retrieved_context)
+            faithfulness_score = faithfulness_result.faithfulness_score * 20  # Convert to points
+            
+            details.append(f"Faithfulness: {faithfulness_result.faithfulness_score:.2f}/1.00 ({faithfulness_score:.1f}/20)")
+            details.append(f"Claims: {faithfulness_result.verified_claims}/{faithfulness_result.total_claims} verified")
+            
+            if faithfulness_result.hallucinated_claims > 0:
+                errors.append(f"Hallucinated claims detected: {faithfulness_result.hallucinated_claims}")
+                
+        except Exception as e:
+            errors.append(f"Faithfulness evaluation failed: {str(e)}")
+            details.append(f"Faithfulness: ERROR (0/20)")
+        
+        score += faithfulness_score
+        
         return {
             "score": score,
             "passed": score >= self.baseline_criteria["pass_threshold"],
             "errors": errors,
             "details": details,
             "response_length": len(response_text),
+            "faithfulness_result": faithfulness_result if 'faithfulness_result' in locals() else None,
         }
 
     def run_baseline_evaluation(self) -> Dict[str, Any]:
