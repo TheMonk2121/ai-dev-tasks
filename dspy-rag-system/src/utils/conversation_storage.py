@@ -874,7 +874,7 @@ class ConversationStorage:
 
                 try:
                     existing_entities = json.loads(existing_entities)
-                except:
+                except (json.JSONDecodeError, TypeError):
                     existing_entities = []
 
             if not existing_entities or not new_entities:
@@ -1463,7 +1463,7 @@ class ConversationStorage:
                         import json
 
                         entities = json.loads(entities)
-                    except:
+                    except (json.JSONDecodeError, TypeError):
                         entities = []
 
                 if isinstance(entities, list):
@@ -1478,7 +1478,7 @@ class ConversationStorage:
                         import json
 
                         files = json.loads(files)
-                    except:
+                    except (json.JSONDecodeError, TypeError):
                         files = []
 
                 if isinstance(files, list):
@@ -1537,7 +1537,7 @@ class ConversationStorage:
 
                         try:
                             created_at = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
-                        except:
+                        except (ValueError, TypeError):
                             continue
 
                     date_str = created_at.strftime("%Y-%m-%d")
@@ -1594,7 +1594,7 @@ class ConversationStorage:
                         import json
 
                         entities = json.loads(entities)
-                    except:
+                    except (json.JSONDecodeError, TypeError):
                         entities = []
 
                 if isinstance(entities, list) and len(entities) > 1:
@@ -1662,13 +1662,13 @@ class ConversationStorage:
 
                         try:
                             created_at = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
-                        except:
+                        except (ValueError, TypeError):
                             continue
 
                     if isinstance(updated_at, str):
                         try:
                             updated_at = datetime.fromisoformat(updated_at.replace("Z", "+00:00"))
-                        except:
+                        except (ValueError, TypeError):
                             continue
 
                     lifespan = (updated_at - created_at).days
@@ -1712,7 +1712,7 @@ class ConversationStorage:
                         import json
 
                         entities = json.loads(entities)
-                    except:
+                    except (json.JSONDecodeError, TypeError):
                         entities = []
 
                 if isinstance(entities, list):

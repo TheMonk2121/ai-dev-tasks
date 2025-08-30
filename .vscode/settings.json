@@ -456,7 +456,11 @@
         "alnum",
         "unioned",
         "vecs",
-        "ooks"
+        "ooks",
+        "creds",
+        "IBAN",
+        "sess",
+        "slos"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

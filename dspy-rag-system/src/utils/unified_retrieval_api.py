@@ -166,19 +166,23 @@ class UnifiedRetrievalAPI:
                 with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                     # Get total decisions
                     cursor.execute("SELECT COUNT(*) as total FROM decisions")
-                    total = cursor.fetchone()["total"]
+                    total_result = cursor.fetchone()
+                    total = total_result["total"] if total_result else 0
 
                     # Get active decisions (not superseded)
                     cursor.execute("SELECT COUNT(*) as active FROM decisions WHERE superseded = FALSE")
-                    active = cursor.fetchone()["active"]
+                    active_result = cursor.fetchone()
+                    active = active_result["active"] if active_result else 0
 
                     # Get superseded decisions
                     cursor.execute("SELECT COUNT(*) as superseded FROM decisions WHERE superseded = TRUE")
-                    superseded = cursor.fetchone()["superseded"]
+                    superseded_result = cursor.fetchone()
+                    superseded = superseded_result["superseded"] if superseded_result else 0
 
                     # Get average confidence
                     cursor.execute("SELECT AVG(confidence) as avg_confidence FROM decisions WHERE superseded = FALSE")
-                    avg_confidence = cursor.fetchone()["avg_confidence"]
+                    avg_confidence_result = cursor.fetchone()
+                    avg_confidence = avg_confidence_result["avg_confidence"] if avg_confidence_result else None
 
                     return {
                         "total_decisions": total,

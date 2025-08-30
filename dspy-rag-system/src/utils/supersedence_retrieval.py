@@ -367,11 +367,13 @@ class SupersedenceRetrieval:
                 with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                     # Get total decisions
                     cursor.execute("SELECT COUNT(*) as total FROM decisions")
-                    total = cursor.fetchone()["total"]
+                    total_result = cursor.fetchone()
+                    total = total_result["total"] if total_result else 0
 
                     # Get superseded decisions
                     cursor.execute("SELECT COUNT(*) as superseded FROM decisions WHERE superseded = TRUE")
-                    superseded = cursor.fetchone()["superseded"]
+                    superseded_result = cursor.fetchone()
+                    superseded = superseded_result["superseded"] if superseded_result else 0
 
                     # Get supersedence rate
                     supersedence_rate = (superseded / total * 100) if total > 0 else 0
@@ -384,7 +386,10 @@ class SupersedenceRetrieval:
                         WHERE supersedence_timestamp > NOW() - INTERVAL '24 hours'
                         """
                     )
-                    recent_supersedence = cursor.fetchone()["recent_supersedence"]
+                    recent_supersedence_result = cursor.fetchone()
+                    recent_supersedence = (
+                        recent_supersedence_result["recent_supersedence"] if recent_supersedence_result else 0
+                    )
 
                     return {
                         "total_decisions": total,

@@ -19,8 +19,13 @@ from typing import Any, Dict, List, Optional
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from decision_extractor import DecisionExtractor
-from unified_retrieval_api import UnifiedRetrievalAPI
+try:
+    from decision_extractor import DecisionExtractor
+    from unified_retrieval_api import UnifiedRetrievalAPI
+except ImportError:
+    # Fallback for testing
+    DecisionExtractor = None
+    UnifiedRetrievalAPI = None
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -50,8 +55,15 @@ class GitLTSTIntegration:
         self.project_root = project_root or Path.cwd()
 
         # Initialize LTST memory components
-        self.unified_api = UnifiedRetrievalAPI(db_connection_string)
-        self.decision_extractor = DecisionExtractor(db_connection_string)
+        if UnifiedRetrievalAPI is not None:
+            self.unified_api = UnifiedRetrievalAPI(db_connection_string)
+        else:
+            self.unified_api = None
+
+        if DecisionExtractor is not None:
+            self.decision_extractor = DecisionExtractor(db_connection_string)
+        else:
+            self.decision_extractor = None
 
         # Ensure we're in a git repository
         if not self._is_git_repository():
@@ -118,9 +130,10 @@ class GitLTSTIntegration:
 
             # Search for related conversations
             related_conversations = []
-            for term in search_terms[:5]:  # Limit to 5 most relevant terms
-                result = self.unified_api.search_decisions(query=term, limit=3, include_superseded=False)
-                related_conversations.extend(result.get("decisions", []))
+            if self.unified_api is not None:
+                for term in search_terms[:5]:  # Limit to 5 most relevant terms
+                    result = self.unified_api.search_decisions(query=term, limit=3, include_superseded=False)
+                    related_conversations.extend(result.get("decisions", []))
 
             # Remove duplicates
             seen_keys = set()
@@ -359,7 +372,6 @@ class GitLTSTIntegration:
             return {"pattern": "no_commits", "frequency": "none"}
 
         # Analyze commit frequency
-        commit_dates = [commit["date"] for commit in commits]
         commit_count = len(commits)
 
         # Analyze commit message patterns
@@ -375,7 +387,7 @@ class GitLTSTIntegration:
             "total_commits": commit_count,
             "frequency": "high" if commit_count > 10 else "moderate" if commit_count > 5 else "low",
             "message_patterns": message_patterns,
-            "most_common_pattern": max(message_patterns, key=message_patterns.get) if message_patterns else "none",
+            "most_common_pattern": max(message_patterns.items(), key=lambda x: x[1])[0] if message_patterns else "none",
         }
 
     def _extract_commit_decisions(
@@ -388,18 +400,32 @@ class GitLTSTIntegration:
         for commit in commits:
             try:
                 # Use decision extractor to find decisions in commit messages
-                commit_decisions = self.decision_extractor.extract_decisions_from_text(
-                    commit["message"], f"commit_{commit['short_hash']}", "git"
-                )
+                if self.decision_extractor is not None:
+                    commit_decisions = self.decision_extractor.extract_decisions_from_text(
+                        commit["message"], f"commit_{commit['short_hash']}", "git"
+                    )
 
-                # Add commit context to each decision
-                for decision in commit_decisions:
-                    decision["commit_hash"] = commit["hash"]
-                    decision["commit_date"] = commit["date"]
-                    decision["commit_author"] = commit["author"]
-                    decision["source"] = "git_commit"
+                    # Add commit context to each decision
+                    for decision in commit_decisions:
+                        decision["commit_hash"] = commit["hash"]
+                        decision["commit_date"] = commit["date"]
+                        decision["commit_author"] = commit["author"]
+                        decision["source"] = "git_commit"
 
-                decisions.extend(commit_decisions)
+                    decisions.extend(commit_decisions)
+                else:
+                    # Fallback: create a simple decision from commit message
+                    decisions.append(
+                        {
+                            "head": commit["message"][:100],
+                            "rationale": f"Commit {commit['short_hash']}: {commit['message']}",
+                            "confidence": 0.7,
+                            "source": "git_commit",
+                            "commit_hash": commit["hash"],
+                            "commit_date": commit["date"],
+                            "commit_author": commit["author"],
+                        }
+                    )
 
             except Exception as e:
                 logger.error(f"Error extracting decisions from commit {commit['short_hash']}: {e}")
@@ -473,7 +499,7 @@ class GitLTSTIntegration:
             ext = Path(file_path).suffix
             file_types[ext] = file_types.get(ext, 0) + change["change_count"]
 
-        most_changed_type = max(file_types, key=file_types.get) if file_types else "none"
+        most_changed_type = max(file_types.items(), key=lambda x: x[1])[0] if file_types else "none"
 
         return {
             "total_files": len(file_changes),

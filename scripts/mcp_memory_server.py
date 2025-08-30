@@ -1134,13 +1134,13 @@ LIMIT 5;
                 return
 
                 # Store conversation turn in LTST memory system
-            conversation_data = {
-                "session_id": session_id,
-                "role": role,
-                "text": text,
-                "timestamp": timestamp,
-                "captured_at": datetime.now().isoformat(),
-            }
+            # conversation_data = {
+            #     "session_id": session_id,
+            #     "role": role,
+            #     "text": text,
+            #     "timestamp": timestamp,
+            #     "captured_at": datetime.now().isoformat(),
+            # }
 
             # Extract decisions from conversation turn
             decisions = []

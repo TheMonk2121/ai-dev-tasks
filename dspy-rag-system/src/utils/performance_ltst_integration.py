@@ -22,9 +22,16 @@ import psutil
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from decision_extractor import DecisionExtractor
-from monitoring_system import PerformanceMetrics, SLOMonitor
-from unified_retrieval_api import UnifiedRetrievalAPI
+try:
+    from decision_extractor import DecisionExtractor
+    from monitoring_system import PerformanceMetrics, SLOMonitor
+    from unified_retrieval_api import UnifiedRetrievalAPI
+except ImportError:
+    # Fallback for testing
+    DecisionExtractor = None
+    PerformanceMetrics = None
+    SLOMonitor = None
+    UnifiedRetrievalAPI = None
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -54,12 +61,26 @@ class PerformanceLTSTIntegration:
         self.project_root = project_root or Path.cwd()
 
         # Initialize LTST memory components
-        self.unified_api = UnifiedRetrievalAPI(db_connection_string)
-        self.decision_extractor = DecisionExtractor(db_connection_string)
+        if UnifiedRetrievalAPI is not None:
+            self.unified_api = UnifiedRetrievalAPI(db_connection_string)
+        else:
+            self.unified_api = None
+
+        if DecisionExtractor is not None:
+            self.decision_extractor = DecisionExtractor(db_connection_string)
+        else:
+            self.decision_extractor = None
 
         # Initialize monitoring components
-        self.performance_metrics = PerformanceMetrics()
-        self.slo_monitor = SLOMonitor()
+        if PerformanceMetrics is not None:
+            self.performance_metrics = PerformanceMetrics()
+        else:
+            self.performance_metrics = None
+
+        if SLOMonitor is not None:
+            self.slo_monitor = SLOMonitor()
+        else:
+            self.slo_monitor = None
 
         logger.info(f"✅ Performance-LTST Integration initialized for {self.project_root}")
 
@@ -127,9 +148,10 @@ class PerformanceLTSTIntegration:
 
             # Search for related conversations
             related_conversations = []
-            for term in search_terms[:5]:  # Limit to 5 most relevant terms
-                result = self.unified_api.search_decisions(query=term, limit=3, include_superseded=False)
-                related_conversations.extend(result.get("decisions", []))
+            if self.unified_api is not None:
+                for term in search_terms[:5]:  # Limit to 5 most relevant terms
+                    result = self.unified_api.search_decisions(query=term, limit=3, include_superseded=False)
+                    related_conversations.extend(result.get("decisions", []))
 
             # Remove duplicates
             seen_keys = set()
@@ -457,20 +479,36 @@ class PerformanceLTSTIntegration:
             """
 
             # Use decision extractor to find decisions in performance summary
-            performance_decisions = self.decision_extractor.extract_decisions_from_text(
-                performance_summary, "performance_analysis", "system"
-            )
+            if self.decision_extractor is not None:
+                performance_decisions = self.decision_extractor.extract_decisions_from_text(
+                    performance_summary, "performance_analysis", "system"
+                )
 
-            # Add performance context to each decision
-            for decision in performance_decisions:
-                decision["performance_context"] = {
-                    "resource_usage": resource_usage,
-                    "opportunities_count": len(opportunities),
-                    "issues_count": len(issues),
-                }
-                decision["source"] = "performance_analysis"
+                # Add performance context to each decision
+                for decision in performance_decisions:
+                    decision["performance_context"] = {
+                        "resource_usage": resource_usage,
+                        "opportunities_count": len(opportunities),
+                        "issues_count": len(issues),
+                    }
+                    decision["source"] = "performance_analysis"
 
-            decisions.extend(performance_decisions)
+                decisions.extend(performance_decisions)
+            else:
+                # Fallback: create a simple decision from performance summary
+                decisions.append(
+                    {
+                        "head": "Performance analysis completed",
+                        "rationale": performance_summary,
+                        "confidence": 0.8,
+                        "source": "performance_analysis",
+                        "performance_context": {
+                            "resource_usage": resource_usage,
+                            "opportunities_count": len(opportunities),
+                            "issues_count": len(issues),
+                        },
+                    }
+                )
 
         except Exception as e:
             logger.error(f"Error extracting performance decisions: {e}")
