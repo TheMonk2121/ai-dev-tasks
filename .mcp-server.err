@@ -289,3 +289,354 @@ WARNING:mcp_security_config:Unknown tool: non_existent_tool
 WARNING:mcp_security_config:Unknown tool: non_existent_tool
 WARNING:mcp_security_config:Unknown tool: non_existent_tool
 WARNING:mcp_security_config:Unknown tool: non_existent_tool
+INFO:mcp_security_config:Loaded 5 API keys
+WARNING:mcp_security_config:Unknown tool: search_decisions
+WARNING:mcp_security_config:Unknown tool: search_decisions
+WARNING:mcp_security_config:Unknown tool: search_decisions
+WARNING:mcp_security_config:Unknown tool: capture_turn
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 38254 Terminated: 15          $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
+WARNING:mcp_security_config:Role user not allowed for tool capture_turn
+WARNING:mcp_security_config:Role user not allowed for tool capture_turn
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 40538 Terminated: 15          $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve messages: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve preferences: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to get session summary: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Retrieved 0 decision contexts for session mcp_1756524930
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Memory rehydration completed for session mcp_1756524930: 1.68ms, 0 merged contexts, 0 conversation messages
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 42049 Killed: 9               $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve messages: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve preferences: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to get session summary: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Retrieved 0 decision contexts for session mcp_1756525193
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Memory rehydration completed for session mcp_1756525193: 2.00ms, 0 merged contexts, 0 conversation messages
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve messages: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve preferences: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to get session summary: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Retrieved 0 decision contexts for session mcp_1756525193
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Memory rehydration completed for session mcp_1756525193: 1.94ms, 0 merged contexts, 0 conversation messages
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve messages: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve preferences: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to get session summary: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Retrieved 0 decision contexts for session mcp_1756525194
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Memory rehydration completed for session mcp_1756525194: 0.79ms, 0 merged contexts, 0 conversation messages
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve messages: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve preferences: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to get session summary: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Retrieved 0 decision contexts for session mcp_1756525249
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Memory rehydration completed for session mcp_1756525249: 1.55ms, 0 merged contexts, 0 conversation messages
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve messages: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve preferences: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to get session summary: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Retrieved 0 decision contexts for session mcp_1756525275
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Memory rehydration completed for session mcp_1756525275: 2.03ms, 0 merged contexts, 0 conversation messages
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve messages: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve preferences: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to get session summary: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Retrieved 0 decision contexts for session mcp_1756525340
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Memory rehydration completed for session mcp_1756525340: 1.60ms, 0 merged contexts, 0 conversation messages
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 44320 Terminated: 15          $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve messages: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve preferences: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to get session summary: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Retrieved 0 decision contexts for session mcp_1756525388
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Memory rehydration completed for session mcp_1756525388: 2.32ms, 0 merged contexts, 0 conversation messages
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 48793 Killed: 9               $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 51215 Killed: 9               $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
+ERROR:utils.decision_extractor:Error creating decisions table: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error storing decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.supersedence_retrieval:Error creating supersedence tables: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.decision_extractor:Error creating decisions table: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error storing decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.supersedence_retrieval:Error creating supersedence tables: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.decision_extractor:Error creating decisions table: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error storing decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.supersedence_retrieval:Error creating supersedence tables: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.decision_extractor:Error creating decisions table: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error storing decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.supersedence_retrieval:Error creating supersedence tables: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.decision_extractor:Error creating decisions table: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve messages: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve preferences: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to get session summary: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to retrieve context: 'NoneType' object has no attribute 'execute'
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Retrieved 0 decision contexts for session mcp_1756526758
+WARNING:utils.conversation_storage:Failed to log performance metric: 'NoneType' object has no attribute 'execute'
+ERROR:utils.conversation_storage:Failed to search decisions: 'NoneType' object has no attribute 'execute'
+INFO:utils.memory_rehydrator:Memory rehydration completed for session mcp_1756526758: 1.25ms, 0 merged contexts, 0 conversation messages
+ERROR:utils.decision_extractor:Error creating decisions table: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error storing decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.supersedence_retrieval:Error creating supersedence tables: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.decision_extractor:Error creating decisions table: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error storing decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.supersedence_retrieval:Error creating supersedence tables: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.decision_extractor:Error creating decisions table: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error storing decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.supersedence_retrieval:Error creating supersedence tables: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.decision_extractor:Error creating decisions table: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error storing decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:utils.supersedence_retrieval:Error creating supersedence tables: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:supersedence_retrieval:Error detecting conflicts: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+ERROR:decision_extractor:Error searching decisions: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "ltst_memory" does not exist
+
+WARNING:mcp_security_config:Unknown tool: test
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 54398 Killed: 9               $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 77366 Terminated: 15          $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys
+INFO:utils.decision_extractor:Decisions table created successfully
+INFO:decision_extractor:Stored 2 decisions in database
+INFO:utils.supersedence_retrieval:Supersedence tables created successfully
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73: 83263 Killed: 9               $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
+INFO:mcp_security_config:Loaded 5 API keys

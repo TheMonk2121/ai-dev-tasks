@@ -161,6 +161,33 @@ class SecurityConfig:
                 requires_auth=True,
                 audit_logging=True,
             ),
+            "capture_turn": ToolPermission(
+                tool_name="capture_turn",
+                category=ToolCategory.MEMORY,
+                security_level=SecurityLevel.LOW,
+                allowed_roles={"planner", "implementer", "researcher", "coder", "reviewer"},
+                rate_limit=60,  # 60 requests per minute
+                requires_auth=False,  # Basic tool, no auth required
+                audit_logging=True,
+            ),
+            "search_decisions": ToolPermission(
+                tool_name="search_decisions",
+                category=ToolCategory.MEMORY,
+                security_level=SecurityLevel.LOW,
+                allowed_roles={"planner", "implementer", "researcher", "coder", "reviewer"},
+                rate_limit=60,  # 60 requests per minute
+                requires_auth=False,  # Basic tool, no auth required
+                audit_logging=True,
+            ),
+            "rehydrate_context": ToolPermission(
+                tool_name="rehydrate_context",
+                category=ToolCategory.MEMORY,
+                security_level=SecurityLevel.LOW,
+                allowed_roles={"planner", "implementer", "researcher", "coder", "reviewer"},
+                rate_limit=60,  # 60 requests per minute
+                requires_auth=False,  # Basic tool, no auth required
+                audit_logging=True,
+            ),
         }
 
     def _load_api_keys(self):

@@ -2984,3 +2984,142 @@ DELIVERABLES:
 6) Comprehensive testing and validation
 7) User guides for simplified systems
 -->
+
+- B‑1043 — Memory System Integration & Automation: Bridge Infrastructure-Usage Gap (score 9.8)
+<!--score: {bv:5, tc:5, rr:5, le:5, effort:8, deps:["B-1012"]}-->
+<!--score_total: 9.8-->
+<!-- do_next: Create unified ecosystem integration pipeline to capture all development data sources and feed them into LTST memory system -->
+<!-- est_hours: 64 -->
+<!-- acceptance: DSPy agents automatically access LTST memory system, all development data sources integrated (conversations, Scribe sessions, git commits, performance logs, n8n workflows, quality gates, test results, user behavior), real-time decision extraction works, session continuity maintained, cross-source correlation enabled, predictive intelligence active -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#infrastructure-usage-gaps", "400_guides/400_development-workflow.md#automation-first"] -->
+<!-- reference_cards: ["500_reference-cards.md#memory-system-architecture", "500_reference-cards.md#integration-patterns"] -->
+<!-- tech_footprint: Memory Integration + Automation + Real-time Processing + Session Management + Decision Intelligence + Data Pipeline + Cross-Source Correlation + Predictive Intelligence + Ecosystem Integration -->
+<!-- problem: Sophisticated LTST memory system exists but DSPy agents only use static markdown files; conversations not captured, decisions not extracted, session continuity broken, multiple data sources (Scribe, git, performance, n8n, quality gates, tests, user behavior) not integrated -->
+<!-- outcome: Unified ecosystem memory system where DSPy agents automatically access LTST memory, all development data is captured and processed, and comprehensive context intelligence works with predictive capabilities -->
+<!-- implementation_plan:
+PHASE 1 — Cursor Chat Integration (8 hours)
+1) Create Cursor chat hook to automatically capture conversations
+2) Implement real-time message processing pipeline
+3) Integrate with conversation storage system
+4) Add session tracking and continuity
+5) Test conversation capture and storage
+
+PHASE 2 — DSPy Agent Memory Integration (8 hours)
+1) Modify DSPy agents to use LTST memory system instead of static files
+2) Implement memory rehydration in agent forward() methods
+3) Add context merging and relevance scoring
+4) Integrate decision intelligence with agent workflows
+5) Test agent memory access and decision extraction
+
+PHASE 3 — Real-time Decision Extraction (6 hours)
+1) Implement automatic decision extraction from conversations
+2) Add decision intelligence processing pipeline
+3) Integrate with decision evaluator system
+4) Add decision storage and retrieval
+5) Test decision extraction and intelligence
+
+PHASE 4 — Scribe System Integration (6 hours)
+1) Integrate Scribe session data with LTST memory system
+2) Capture development sessions, diffs, and decisions
+3) Link Scribe worklogs to conversation context
+4) Extract insights from development patterns
+5) Test Scribe integration and data flow
+
+PHASE 5 — Git Operations Integration (4 hours)
+1) Capture git commits, diffs, and branch changes
+2) Correlate code changes with conversations
+3) Track code evolution patterns and decisions
+4) Link commit messages to development context
+5) Test git integration and correlation
+
+PHASE 6 — Performance Data Integration (4 hours)
+1) Integrate performance metrics with LTST memory
+2) Correlate system behavior with conversations
+3) Track optimization opportunities and decisions
+4) Link performance issues to development context
+5) Test performance integration and correlation
+
+PHASE 7 — Unified Data Pipeline (6 hours)
+1) Create single ingestion point for all data sources
+2) Implement cross-source correlation and enrichment
+3) Build comprehensive context intelligence
+4) Add temporal alignment and pattern recognition
+5) Test unified pipeline and data fusion
+
+PHASE 8 — n8n Workflow Integration (4 hours)
+1) Integrate n8n workflow execution data with LTST memory
+2) Capture workflow outcomes and decision points
+3) Correlate automation results with development context
+4) Track workflow effectiveness and optimization opportunities
+5) Test n8n integration and data flow
+
+PHASE 9 — Quality & Testing Integration (4 hours)
+1) Integrate test results, coverage, and quality gate outcomes
+2) Capture error logs and exception patterns
+3) Link failures to development decisions and context
+4) Track quality trends and improvement opportunities
+5) Test quality integration and correlation
+
+PHASE 10 — User Experience Integration (4 hours)
+1) Capture user interaction patterns and behavior analytics
+2) Track feature adoption and usage patterns
+3) Correlate UX feedback with development decisions
+4) Monitor user satisfaction and pain points
+5) Test UX integration and insights extraction
+
+PHASE 11 — Predictive Intelligence Layer (6 hours)
+1) Implement pattern recognition for recurring issues
+2) Add trend analysis for capacity planning and optimization
+3) Build anomaly detection for early warning systems
+4) Create predictive models for development outcomes
+5) Test predictive intelligence and accuracy
+
+PHASE 12 — Session Continuity & User Learning (6 hours)
+1) Implement session continuity across conversations
+2) Add user preference learning and storage
+3) Integrate context merging for multi-session conversations
+4) Add user behavior analysis and adaptation
+5) Test session continuity and user learning
+
+SUCCESS CRITERIA:
+- Conversations automatically captured and processed
+- DSPy agents use LTST memory instead of static files
+- Real-time decision extraction working
+- Scribe sessions integrated with conversation context
+- Git operations correlated with development decisions
+- Performance data linked to optimization opportunities
+- n8n workflows integrated with development context
+- Quality gates and test results correlated with decisions
+- User behavior patterns captured and analyzed
+- Predictive intelligence active and accurate
+- Cross-source correlation and pattern recognition working
+- Session continuity maintained across conversations
+- User preferences learned and applied
+- Performance metrics show improvement
+- RAGAS evaluation shows better recall and precision
+
+RISK MITIGATION:
+- Gradual rollout with feature flags
+- Maintain backward compatibility with static files
+- Extensive testing before each phase
+- Rollback plan for each component
+- Performance monitoring and alerting
+- Data privacy and security controls
+- Over-engineering prevention through focused scope
+
+DELIVERABLES:
+1) Cursor chat integration hook
+2) DSPy agent memory integration
+3) Real-time decision extraction system
+4) Scribe system integration
+5) Git operations integration
+6) Performance data integration
+7) n8n workflow integration
+8) Quality & testing integration
+9) User experience integration
+10) Predictive intelligence layer
+11) Unified data pipeline
+12) Session continuity and user learning
+13) Comprehensive testing and validation
+14) User guides for unified ecosystem memory system
+-->

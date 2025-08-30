@@ -22,6 +22,15 @@ from dspy import LM, InputField, Module, OutputField, Signature
 
 _LOG = logging.getLogger("model_switcher")
 
+# Import requests for MCP server communication
+try:
+    import requests
+
+    REQUESTS_AVAILABLE = True
+except ImportError:
+    REQUESTS_AVAILABLE = False
+    _LOG.warning("requests library not available - MCP server communication disabled")
+
 # Import optimizer system
 try:
     from .optimizers import OptimizationResult, get_optimizer_manager
@@ -120,7 +129,7 @@ _max_failures = 3  # Max failures before disabling context for role
 
 def get_context_for_role(role: str, task: str) -> str:
     """
-    Get context for a specific role and task using memory rehydrator via subprocess.
+    Get context for a specific role and task using LTST memory system via MCP server.
     Enhanced with Scribe real-time context integration.
 
     Args:
@@ -130,9 +139,6 @@ def get_context_for_role(role: str, task: str) -> str:
     Returns:
         Context string for the role and task with real-time Scribe data
     """
-    # SIMPLIFIED: Remove memory rehydrator availability check - always try to use it
-    # If it fails, fallback will be handled in the retry logic
-
     # Security validation
     if SECURITY_VALIDATION_AVAILABLE:
         is_valid, message = validate_context_request(role, task, "default")
@@ -145,7 +151,7 @@ def get_context_for_role(role: str, task: str) -> str:
         _LOG.warning(f"Role {role} has exceeded failure threshold, using fallback context")
         return _get_fallback_context(role, task)
 
-    # SIMPLIFIED: Remove Scribe Context Gate - don't check availability, just try to get context
+    # Get Scribe real-time context if available
     scribe_context = ""
     if SCRIBE_AVAILABLE:
         try:
@@ -153,11 +159,8 @@ def get_context_for_role(role: str, task: str) -> str:
             if scribe_data and not scribe_data.get("error"):
                 scribe_context = _format_scribe_context(scribe_data, role)
                 _LOG.info(f"Successfully integrated Scribe context for {role}")
-            # No fallback logic - if Scribe fails, just continue without it
         except Exception as e:
             _LOG.debug(f"Error getting Scribe context for {role}: {e}")
-
-    # SIMPLIFIED: Remove performance optimization gate - use standard method
 
     # Check cache first
     cache_key = f"{role}:{task[:100]}"  # Truncate long tasks
@@ -166,9 +169,6 @@ def get_context_for_role(role: str, task: str) -> str:
     if cache_key in _context_cache:
         cached_entry = _context_cache[cache_key]
         if current_time - cached_entry["timestamp"] < _cache_ttl:
-            _LOG.info(f"Using cached context for role {role}")
-
-            # SIMPLIFIED: Remove cache hit monitoring - use basic logging only
             _LOG.info(f"Using cached context for role {role}")
 
             # Add Scribe context to cached context if available
@@ -182,59 +182,49 @@ def get_context_for_role(role: str, task: str) -> str:
             # Remove expired entry
             del _context_cache[cache_key]
 
-    # Retry logic for memory rehydrator
+    # Retry logic for LTST memory system via MCP server
     max_retries = 2
-    # Removed unused variable 'request_start_time'
+
+    # Check if requests is available for MCP server communication
+    if not REQUESTS_AVAILABLE:
+        _LOG.warning("requests library not available, using fallback context")
+        return _get_fallback_context(role, task)
 
     for attempt in range(max_retries + 1):
         try:
-            import subprocess
 
             # Track timing for optimization
             start_time = time.time()
 
-            # Run memory rehydrator via subprocess with optimizations
-            cmd = [sys.executable, "scripts/memory_rehydrate.py", "--role", role, "--query", task]
+            # Call MCP server for context rehydration
+            session_id = f"dspy_{role}_{int(time.time())}"
+            mcp_payload = {
+                "name": "rehydrate_context",
+                "arguments": {"session_id": session_id, "role": role, "task": task, "limit": 5},
+            }
 
-            # Change to project root directory
-            current_dir = os.getcwd()
-            project_root = os.path.join(current_dir, "..")
-
-            # Optimize subprocess call with reduced timeout and fast mode
-            env = os.environ.copy()
-            env["REHYDRATE_FAST"] = "1"  # Enable fast mode
-
-            # SIMPLIFIED: Fixed timeout instead of progressive timeouts
-            timeout = 10  # Fixed 10 second timeout
-
-            result = subprocess.run(cmd, cwd=project_root, capture_output=True, text=True, timeout=timeout, env=env)
+            # Call MCP server
+            response = requests.post(
+                "http://localhost:3000/mcp/tools/call",
+                json=mcp_payload,
+                headers={"Content-Type": "application/json"},
+                timeout=10,  # 10 second timeout
+            )
 
             context_time = time.time() - start_time
-            _LOG.info(f"Context retrieval took {context_time:.2f}s for role {role} (attempt {attempt + 1})")
+            _LOG.info(f"LTST context retrieval took {context_time:.2f}s for role {role} (attempt {attempt + 1})")
 
-            if result.returncode == 0:
-                # Parse the output to extract context
-                output = result.stdout
+            if response.status_code == 200:
+                # Parse the response to extract context
+                result = response.json()
 
-                # Look for the bundle content in the output
+                # Extract context from the response
                 context = ""
-                if "UNIFIED MEMORY CONTEXT BUNDLE" in output:
-                    # Extract the bundle content - look for the actual bundle start
-                    start_marker = "# 🧠 **UNIFIED MEMORY CONTEXT BUNDLE**"
-                    end_marker = "---\n*Generated by Unified Memory System Launcher"
+                if "content" in result and result["content"]:
+                    # Get the text content from the first content item
+                    context = result["content"][0].get("text", "")
 
-                    start_idx = output.find(start_marker)
-                    if start_idx != -1:
-                        end_idx = output.find(end_marker, start_idx)
-                        if end_idx != -1:
-                            bundle_content = output[start_idx:end_idx].strip()
-                            context = f"PROJECT CONTEXT:\n{bundle_content}"
-                        else:
-                            # If end marker not found, take everything from start to end
-                            bundle_content = output[start_idx:].strip()
-                            context = f"PROJECT CONTEXT:\n{bundle_content}"
-
-                # Fallback context if bundle not found
+                # Fallback context if no content found
                 if not context:
                     context = _get_fallback_context(role, task)
 
@@ -245,10 +235,7 @@ def get_context_for_role(role: str, task: str) -> str:
                 if role in _failure_count:
                     del _failure_count[role]
 
-                # SIMPLIFIED: Remove Scribe real-time context addition
-
-                # SIMPLIFIED: Remove context monitoring - use basic logging only
-                _LOG.info(f"Context retrieval successful for role {role}")
+                _LOG.info(f"LTST context retrieval successful for role {role}")
 
                 # Add Scribe real-time context if available
                 if SCRIBE_AVAILABLE and scribe_context:
@@ -259,16 +246,13 @@ def get_context_for_role(role: str, task: str) -> str:
                 return context
             else:
                 # Log specific error details
-                error_msg = result.stderr.strip() if result.stderr else "Unknown error"
-                _LOG.warning(f"Memory rehydrator failed on attempt {attempt + 1}: {error_msg}")
+                error_msg = f"HTTP {response.status_code}: {response.text}"
+                _LOG.warning(f"LTST memory system failed on attempt {attempt + 1}: {error_msg}")
 
                 # If this is the last attempt, increment failure count
                 if attempt == max_retries:
                     _failure_count[role] = _failure_count.get(role, 0) + 1
-                    _LOG.error(f"Memory rehydrator failed after {max_retries + 1} attempts for role {role}")
-
-                    # SIMPLIFIED: Remove monitoring metrics for failures - use basic logging only
-                    _LOG.error(f"Memory rehydrator failed after {max_retries + 1} attempts for role {role}")
+                    _LOG.error(f"LTST memory system failed after {max_retries + 1} attempts for role {role}")
 
                     return _get_fallback_context(role, task)
                 else:
@@ -276,25 +260,19 @@ def get_context_for_role(role: str, task: str) -> str:
                     time.sleep(0.5 * (attempt + 1))  # Progressive backoff
                     continue
 
-        except subprocess.TimeoutExpired:
-            _LOG.warning(f"Memory rehydrator timeout on attempt {attempt + 1} for role {role}")
+        except requests.exceptions.Timeout:
+            _LOG.warning(f"LTST memory system timeout on attempt {attempt + 1} for role {role}")
             if attempt == max_retries:
                 _failure_count[role] = _failure_count.get(role, 0) + 1
-
-                # SIMPLIFIED: Remove monitoring metrics for timeout - use basic logging only
-
                 return _get_fallback_context(role, task)
             else:
                 time.sleep(0.5 * (attempt + 1))
                 continue
 
         except Exception as e:
-            _LOG.error(f"Memory rehydrator error on attempt {attempt + 1} for role {role}: {e}")
+            _LOG.error(f"LTST memory system error on attempt {attempt + 1} for role {role}: {e}")
             if attempt == max_retries:
                 _failure_count[role] = _failure_count.get(role, 0) + 1
-
-                # SIMPLIFIED: Remove monitoring metrics for general error - use basic logging only
-
                 return _get_fallback_context(role, task)
             else:
                 time.sleep(0.5 * (attempt + 1))
