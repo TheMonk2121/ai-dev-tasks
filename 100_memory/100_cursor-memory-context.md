@@ -33,6 +33,11 @@
     {"path": "400_guides/400_documentation-tiering-guide.md", "role": "documentation-rules"},
     {"path": "100_memory/100_agent-troubleshooting-patterns.md", "role": "debugging-patterns"},
     {"path": "100_memory/100_communication-patterns-guide.md", "role": "communication-patterns"},
+    {"path": "100_memory/100_dspy-role-communication-guide.md", "role": "dspy-communication"},
+    {"path": "100_memory/100_technical-artifacts-integration-guide.md", "role": "technical-integration"},
+    {"path": "100_memory/100_role-system-alignment-guide.md", "role": "role-alignment"},
+    {"path": "100_memory/100_implementation-patterns-library.md", "role": "implementation-patterns"},
+    {"path": "100_memory/100_evidence-based-optimization-guide.md", "role": "evidence-optimization"},
     {"path": "100_memory/100_database-troubleshooting-patterns.md", "role": "database-troubleshooting"},
     {"path": "artifacts/execution/Execution-B-1032-Documentation-t-t3-Authority-Structure-Implementation.md", "role": "b-1032-completion"}
   ]
@@ -50,7 +55,27 @@ CONTEXT_INDEX -->
 | what this file is | read when | do next |
 |---|---|---|
 | Primary memory scaffold for AI rehydration and context management | Starting new session or need current project state
-| Check backlog and system overview for next priorities |
+| Check backlog and system overview for next priorities; access DSPy roles via Unified Memory Orchestrator |
+
+## 🚨 Critical Policies (Read First) {#critical-policies}
+
+**⚠️ SAFETY OPS**: Before any file operations, read these critical policies:
+
+1. **File Safety**: Run file analysis before destructive changes; protect critical files; preserve cross-references
+2. **Context Hierarchy**: Hydrate via `./scripts/memory_up.sh`; read `100_memory/100_cursor-memory-context.md` → `000_core/000_backlog.md` → `400_guides/400_system-overview.md`
+3. **Workflow Chain**: Follow `000_backlog.md` → `001_create-prd.md` → `002_generate-tasks.md` → `003_process-task-list.md`
+4. **Error Prevention**: Enforce testing, rollback plans, and DSPy assertions
+5. **Documentation**: Use tiered guides, explicit links, single index
+6. **Integration**: Constitution hooks in prompts, CI checks, and runtime validators
+7. **Security**: Threat model linkage and minimum scans on risky changes
+8. **Monitoring**: Track context loss, safety violations, and doc integrity in ops
+9. **DSPy Role Communication**: Always access DSPy roles through Unified Memory Orchestrator; use role-specific context for targeted insights
+10. **Technical Artifacts Integration**: Ensure technical components, scripts, and implementation patterns are integrated into memory context for accurate technical guidance
+
+**🔗 Cross-References**:
+- See `400_guides/400_02_governance-and-ai-constitution.md` for complete constitution
+- See `400_guides/400_03_system-overview-and-architecture.md#safety-ops-anchors` for architecture safety anchors
+- See `400_guides/400_07_ai-frameworks-dspy.md#dspy-signature-validation-patterns` for DSPy validation patterns
 
 <!-- ANCHOR_KEY: tldr -->
 <!-- ANCHOR_PRIORITY: 0 -->
@@ -65,6 +90,43 @@ Read these files in order (1–2 min total):
 3. **`100_memory/100_cursor-memory-context.md`** – current state and rules
 4. **`000_core/000_backlog.md`** – priorities and dependencies
 5. **`400_guides/400_04_development-workflow-and-standards.md`** – Complete development workflow
+
+## 🧠 DSPy Role Communication & Memory Access {#dspy-communication}
+
+**🚨 CRITICAL**: DSPy role communication is essential for effective AI collaboration. Always access roles through the Unified Memory Orchestrator.
+
+### **Quick Role Access Commands**
+```bash
+# Set non-SSL connection for Go CLI compatibility
+export POSTGRES_DSN="mock://test"
+
+# Access specific DSPy roles for context and insights
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "query"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
+
+# Full memory context with all systems
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+```
+
+### **DSPy Role Capabilities**
+- **Planner**: Strategic analysis, PRD creation, roadmap planning, high-level architecture
+- **Implementer**: Technical implementation, workflow design, system integration, execution planning
+- **Researcher**: Research methodology, analysis frameworks, evidence-based decision making
+- **Coder**: Code implementation, debugging, optimization, technical patterns
+
+### **Memory System Integration**
+- **Unified Memory Orchestrator**: Centralized access to all memory systems
+- **Role-Based Context**: Tailored information based on DSPy role perspective
+- **Mock Mode Support**: `POSTGRES_DSN="mock://test"` for testing without database
+- **JSON Output**: `--format json` for programmatic access and structured data
+
+### **When to Use Each Role**
+- **Strategic Decisions**: Use Planner role for high-level analysis and planning
+- **Technical Implementation**: Use Implementer role for workflow and system design
+- **Research & Analysis**: Use Researcher role for methodology and evidence gathering
+- **Code & Debugging**: Use Coder role for implementation and technical details
 
 ## 🔧 Development Environment Setup {#dev-env}
 

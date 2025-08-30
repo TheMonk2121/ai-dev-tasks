@@ -42,6 +42,15 @@ Provide a complete architecture map, core components, interfaces, and flows acro
 - Testing & Quality: strategy and quality gates
 - Deployment & Ops: environments, runtime, observability
 
+## 🛡️ Safety Ops Anchors (Constitution)
+
+**Critical Policies**: See `100_memory/100_cursor-memory-context.md#critical-policies` for essential safety guidelines.
+
+- **File Safety**: Pre-edit analysis and protected file tiers
+- **Context Rehydration**: Entrypoints via `scripts/memory_up.sh`, memory scaffold, backlog
+- **Enforcement Hooks**: Testing gates, DSPy assertions, CI validators
+- **Cross-Reference Integrity**: Architecture owns canonical links between 00-12 guides
+
 ## Architecture (high‑level)
 
 Refer to `400_system-overview.md` for the full detailed architecture and component deep dives. Key excerpted structure:

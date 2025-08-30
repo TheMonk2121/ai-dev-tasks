@@ -12,6 +12,169 @@
 ### DSPy Type‑Safety Patterns (from Comprehensive Guide)
 - Protocols for forward‑compatible modules; Union types; type guards; safe casting with `cast`
 - Prefer assertions/validators to guard critical logic paths
+
+## 🔍 DSPy Signature Validation Patterns
+
+### **Core Validation Strategy**
+
+**Purpose**: Ensure DSPy signature compliance and runtime safety through systematic validation.
+
+**Key Principles**:
+- **Pre-execution validation**: Validate inputs before DSPy module execution
+- **Post-execution validation**: Validate outputs after completion
+- **Metrics collection**: Track validation timing and success rates
+- **Graceful degradation**: Handle validation failures without system crashes
+
+### **Implementation Patterns**
+
+#### **1. Basic Signature Validation**
+```python
+from dspy import DSPySignatureValidator
+from typing import Dict, Any
+
+def validate_dspy_signature(signature_name: str, inputs: Dict[str, Any], outputs: Dict[str, Any] = None) -> bool:
+    """Validate DSPy signature inputs and optionally outputs."""
+    validator = DSPySignatureValidator()
+
+    # Pre-execution validation
+    if not validator.validate_inputs(signature_name, inputs):
+        logger.error(f"Input validation failed for {signature_name}")
+        return False
+
+    # Post-execution validation (if outputs provided)
+    if outputs and not validator.validate_outputs(signature_name, outputs):
+        logger.error(f"Output validation failed for {signature_name}")
+        return False
+
+    return True
+```
+
+#### **2. Production Wrapper Pattern**
+```python
+import time
+from functools import wraps
+from typing import Callable, Dict, Any
+
+def dspy_validation_wrapper(signature_name: str):
+    """Decorator for DSPy signature validation with metrics."""
+    def decorator(func: Callable) -> Callable:
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            start_time = time.time()
+
+            # Validate inputs
+            inputs = {"args": args, "kwargs": kwargs}
+            if not validate_dspy_signature(signature_name, inputs):
+                raise ValueError(f"Input validation failed for {signature_name}")
+
+            # Execute function
+            try:
+                result = func(*args, **kwargs)
+                execution_time = time.time() - start_time
+
+                # Validate outputs
+                outputs = {"result": result}
+                if not validate_dspy_signature(signature_name, outputs):
+                    raise ValueError(f"Output validation failed for {signature_name}")
+
+                # Record metrics
+                record_validation_metrics(signature_name, "success", execution_time)
+                return result
+
+            except Exception as e:
+                execution_time = time.time() - start_time
+                record_validation_metrics(signature_name, "failure", execution_time, str(e))
+                raise
+
+        return wrapper
+    return decorator
+```
+
+#### **3. Type-Safe DSPy Patterns**
+```python
+from typing import Union, Protocol, cast
+from dspy import Signature
+
+# Forward-compatible protocol
+class DSPyModuleProtocol(Protocol):
+    def forward(self, **kwargs) -> Dict[str, Any]: ...
+
+# Union types for flexible input handling
+InputType = Union[str, Dict[str, Any], List[str]]
+
+# Type guards for safe casting
+def is_valid_signature(obj: Any) -> bool:
+    return hasattr(obj, 'forward') and callable(obj.forward)
+
+# Safe casting with validation
+def safe_cast_to_signature(obj: Any) -> Signature:
+    if not is_valid_signature(obj):
+        raise TypeError("Object is not a valid DSPy signature")
+    return cast(Signature, obj)
+```
+
+### **Validation Metrics and Monitoring**
+
+#### **Metrics Collection**
+```python
+def record_validation_metrics(signature_name: str, status: str, duration: float, error: str = None):
+    """Record DSPy signature validation metrics."""
+    metrics = {
+        "signature": signature_name,
+        "status": status,
+        "duration_ms": duration * 1000,
+        "timestamp": time.time(),
+        "error": error
+    }
+
+    # Send to monitoring system
+    monitoring_client.record_metric("dspy_validation", metrics)
+```
+
+#### **SLOs and Alerts**
+- **Validation Success Rate**: > 99.5%
+- **Validation Latency**: < 50ms average
+- **Failure Alert Threshold**: > 1% failure rate in 5-minute window
+
+### **Integration with CI/CD**
+
+#### **Pre-commit Validation**
+```bash
+# Validate all DSPy signatures before commit
+python -m dspy_modules.signature_validator_cli --validate-all
+```
+
+#### **CI Pipeline Integration**
+```yaml
+# .github/workflows/dspy-validation.yml
+- name: Validate DSPy Signatures
+  run: |
+    python -m dspy_modules.signature_validator_cli --validate-all
+    python -m dspy_modules.signature_validator_cli --generate-report
+```
+
+### **Error Handling and Recovery**
+
+#### **Graceful Degradation**
+```python
+def safe_dspy_execution(signature: Signature, inputs: Dict[str, Any], fallback_strategy: str = "skip"):
+    """Execute DSPy signature with graceful error handling."""
+    try:
+        # Attempt validation
+        if not validate_dspy_signature(signature.name, inputs):
+            if fallback_strategy == "skip":
+                logger.warning(f"Skipping {signature.name} due to validation failure")
+                return None
+            elif fallback_strategy == "retry":
+                return retry_with_relaxed_validation(signature, inputs)
+
+        # Execute signature
+        return signature.forward(**inputs)
+
+    except Exception as e:
+        logger.error(f"DSPy execution failed for {signature.name}: {e}")
+        return handle_execution_failure(signature, inputs, e)
+```
 \n+## 🧩 Constitution Integration Points (DSPy)
 \n+- Use DSPy assertions to enforce safety and correctness at runtime.
 - Apply teleprompter optimization and few‑shot scaffolding as governance aids.
@@ -978,10 +1141,10 @@ config = MCPConfig(server_name="test_server", max_file_size=50 * 1024 * 1024)
 - **What you're doing**: Using it to write and manage your AI system
 - **Why it's cool**: You can ask it to help you write code, just like you're doing right now!
 
-#### **2. Mistral-7B - Your AI Brain**
-- **What it is**: A large language model (think of it as a very smart AI that can understand and generate text)
+#### **2. Local AI Models - Your AI Brain**
+- **What it is**: Large language models (think of them as very smart AI that can understand and generate text)
 - **How you're running it**: Through Ollama (a tool that lets you run AI models on your own computer)
-- **Model**: Mistral 7B Instruct
+- **Models**: Various local models (Llama, Phi, etc.) for different tasks
 - **What it does**: Takes your questions and generates intelligent answers
 
 #### **3. DSPy - Your AI's Programming Framework**
@@ -997,8 +1160,8 @@ config = MCPConfig(server_name="test_server", max_file_size=50 * 1024 * 1024)
 - **How it works**:
   1. You ask a question
   2. The system searches through your documents to find relevant information
-  3. It gives that information to Mistral-7B
-  4. Mistral-7B generates an answer based on your documents
+  3. It gives that information to your local AI models
+  4. The models generate an answer based on your documents
 
 #### **5. Vector Database (PostgreSQL) - Your AI's Filing Cabinet**
 - **What it is**: A special database that stores your documents in a way that makes them easy to search
@@ -1022,13 +1185,13 @@ You: "What's in my documents?"
 DSPy RAG:
 1. Searches your actual documents
 2. Finds relevant information
-3. Uses Mistral-7B to generate an answer
+3. Uses local AI models to generate an answer
 4. Gives you: "Based on your documents, here's what I found..."
 ```
 
 ### **The DSPy Pipeline:**
 ```
-Your Question → DSPy RAGSystem → Vector Search → Mistral-7B → Answer
+Your Question → DSPy RAGSystem → Vector Search → Local AI Models → Answer
 ```
 
 ### **Step-by-Step Process:**
@@ -1038,14 +1201,14 @@ Your Question → DSPy RAGSystem → Vector Search → Mistral-7B → Answer
 2. **DSPy RAGSystem** takes over:
    - **Searches your documents** using vector similarity
    - **Finds relevant chunks** from your CSV data
-   - **Prepares context** for Mistral-7B
+   - **Prepares context** for local AI models
 
-3. **Mistral-7B** receives:
+3. **Local AI Models** receive:
    - Your original question
    - Relevant document chunks
    - DSPy's structured prompt
 
-4. **Mistral-7B generates** an answer based on your actual data
+4. **Local AI Models generate** an answer based on your actual data
 
 5. **You get** a thoughtful, informed response
 
@@ -1314,9 +1477,9 @@ from dspy.teleprompt import BootstrapFewShot
 def configure_dspy_models():
     """Configure DSPy with multiple model options."""
 
-    # Configure primary model (Mistral-7B via Ollama)
+    # Configure primary model (Local AI via Ollama)
     dspy.configure(
-        lm=dspy.Ollama(model="mistral:7b-instruct"),
+        lm=dspy.Ollama(model="llama3.2:3b"),  # Updated to current local model
         rm=dspy.ColBERTv2(endpoint="http://localhost:8893/colbertv2"
     )
 
@@ -1510,7 +1673,7 @@ class DSPyAssertionIntegration:
 ### RAG System
 - **Vector Database**: PostgreSQL with pgvector for document storage
 - **Search Engine**: BM25 and vector similarity search
-- **Model Integration**: Mistral-7B via Ollama for generation
+- **Model Integration**: Local AI models via Ollama for generation
 - **Context Management**: Memory systems for context preservation
 
 ## 📚 Examples

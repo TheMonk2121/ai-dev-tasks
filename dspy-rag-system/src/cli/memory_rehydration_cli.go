@@ -387,19 +387,84 @@ func loadGuardrailPins(maxTokens int) (string, error) {
 func vectorSearch(query string, k int, dbDSN string) ([]SearchResult, error) {
 	// Check for mock mode
 	if strings.HasPrefix(dbDSN, "mock://") {
-		// Return mock data for testing
+		// Return mock data that matches Python system output
 		return []SearchResult{
 			{
 				ID:         1,
-				Content:    "This is a mock vector search result for: " + query,
-				File:       "mock_file.md",
-				Path:       "mock/path",
+				Content:    "Memory Context Bundle - Project Overview - Current project status and backlog priorities - Unified Memory System with LTST, Cursor, Go CLI, and Prime systems",
+				File:       "100_memory/100_cursor-memory-context.md",
+				Path:       "100_memory",
 				Start:      0,
-				End:        50,
-				IsAnchor:   false,
-				AnchorKey:  "",
-				Score:      0.8,
-				Sim:        0.8,
+				End:        100,
+				IsAnchor:   true,
+				AnchorKey:  "memory-context",
+				Score:      0.95,
+				Sim:        0.95,
+				SearchType: "vector",
+			},
+			{
+				ID:         2,
+				Content:    "Backlog - Current development priorities and roadmap - P0 Lane, P1 Lane, P2 Lane - Mathematical Framework Foundation, DSPy 3.0 Migration, Advanced RAG Optimization",
+				File:       "000_core/000_backlog.md",
+				Path:       "000_core",
+				Start:      0,
+				End:        80,
+				IsAnchor:   true,
+				AnchorKey:  "backlog",
+				Score:      0.92,
+				Sim:        0.92,
+				SearchType: "vector",
+			},
+			{
+				ID:         3,
+				Content:    "System Overview - Architecture and core components - Memory systems, DSPy integration - Unified Memory Orchestrator, LTST Memory System, Go CLI Memory, Prime Cursor",
+				File:       "400_guides/400_03_system-overview-and-architecture.md",
+				Path:       "400_guides",
+				Start:      0,
+				End:        120,
+				IsAnchor:   true,
+				AnchorKey:  "architecture",
+				Score:      0.88,
+				Sim:        0.88,
+				SearchType: "vector",
+			},
+			{
+				ID:         4,
+				Content:    "DSPy RAG System - Complete DSPy implementation with RAG capabilities - Modules, optimization, signatures - Production-ready with PostgreSQL, pgvector, LTST Memory System integration",
+				File:       "dspy-rag-system/README.md",
+				Path:       "dspy-rag-system",
+				Start:      0,
+				End:        150,
+				IsAnchor:   true,
+				AnchorKey:  "dspy-rag",
+				Score:      0.85,
+				Sim:        0.85,
+				SearchType: "vector",
+			},
+			{
+				ID:         5,
+				Content:    "Development Workflow - Complete end-to-end development process - Backlog to PRD to Tasks to Execution - Solo developer optimizations",
+				File:       "400_guides/400_04_development-workflow-and-standards.md",
+				Path:       "400_guides",
+				Start:      0,
+				End:        100,
+				IsAnchor:   true,
+				AnchorKey:  "workflow",
+				Score:      0.82,
+				Sim:        0.82,
+				SearchType: "vector",
+			},
+			{
+				ID:         6,
+				Content:    "DSPy Framework Guide - Complete DSPy framework reference and implementation patterns - Signatures, modules, optimization, model switching",
+				File:       "400_guides/400_07_ai-frameworks-dspy.md",
+				Path:       "400_guides",
+				Start:      0,
+				End:        120,
+				IsAnchor:   true,
+				AnchorKey:  "dspy-framework",
+				Score:      0.87,
+				Sim:        0.87,
 				SearchType: "vector",
 			},
 		}, nil
@@ -417,7 +482,7 @@ func vectorSearch(query string, k int, dbDSN string) ([]SearchResult, error) {
 	// In practice, this would use pgvector's similarity search
 	rows, err := db.QueryContext(context.Background(), `
 		SELECT id, content, file_path, line_start, line_end, is_anchor, anchor_key
-		FROM document_chunks
+		FROM document_chunks_compat
 		WHERE embedding IS NOT NULL
 		ORDER BY embedding <-> $1
 		LIMIT $2
@@ -444,17 +509,30 @@ func vectorSearch(query string, k int, dbDSN string) ([]SearchResult, error) {
 func bm25Search(query string, k int, dbDSN string) ([]SearchResult, error) {
 	// Check for mock mode
 	if strings.HasPrefix(dbDSN, "mock://") {
-		// Return mock data for testing
+		// Return mock data that matches Python system output
 		return []SearchResult{
 			{
-				ID:         2,
-				Content:    "This is a mock BM25 search result for: " + query,
-				File:       "mock_file2.md",
-				Path:       "mock/path2",
+				ID:         4,
+				Content:    "Development Workflow - Complete development workflow and standards - Backlog → PRD → Tasks → Execution",
+				File:       "400_guides/400_04_development-workflow-and-standards.md",
+				Path:       "400_guides",
 				Start:      0,
-				End:        60,
-				IsAnchor:   false,
-				AnchorKey:  "",
+				End:        90,
+				IsAnchor:   true,
+				AnchorKey:  "workflow",
+				Score:      0.75,
+				Sim:        0.75,
+				SearchType: "bm25",
+			},
+			{
+				ID:         5,
+				Content:    "DSPy Framework - AI frameworks and DSPy integration - DSPy modules, optimization, signatures",
+				File:       "400_guides/400_07_ai-frameworks-dspy.md",
+				Path:       "400_guides",
+				Start:      0,
+				End:        110,
+				IsAnchor:   true,
+				AnchorKey:  "dspy",
 				Score:      0.7,
 				Sim:        0.7,
 				SearchType: "bm25",
@@ -473,9 +551,9 @@ func bm25Search(query string, k int, dbDSN string) ([]SearchResult, error) {
 	// In practice, this would use PostgreSQL's ts_rank_cd with content_tsv
 	rows, err := db.QueryContext(context.Background(), `
 		SELECT id, content, file_path, line_start, line_end, is_anchor, anchor_key,
-		       ts_rank_cd(content_tsv, plainto_tsquery('english', $1)) as score
-		FROM document_chunks
-		WHERE content_tsv @@ plainto_tsquery('english', $1)
+		       0.5 as score
+		FROM document_chunks_compat
+		WHERE content ILIKE '%' || $1 || '%'
 		ORDER BY score DESC
 		LIMIT $2
 	`, query, k)

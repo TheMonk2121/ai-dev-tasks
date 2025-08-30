@@ -74,6 +74,217 @@ This guide covers comprehensive coding standards and AI prompting best practices
 4. **Code Reuse Check**: Aim for 70% existing code reuse, 30% new code
 5. **Test-First Development**: Write unit tests before implementation (TDD)
 
+## 🔬 RESEARCH & ANALYSIS INTEGRATION PATTERNS
+
+### **Research-First Development Approach**
+
+**Purpose**: Integrate research and analysis into the development workflow to ensure evidence-based decisions and systematic problem-solving.
+
+**Key Principles**:
+- **Research before implementation**: Understand the problem domain before coding
+- **Evidence-based decisions**: Use data and analysis to guide technical choices
+- **Systematic evaluation**: Apply structured evaluation frameworks
+- **Iterative refinement**: Continuously improve based on research findings
+
+### **Implementation Patterns**
+
+#### **1. Research-Driven Development Workflow**
+```python
+from typing import Dict, Any, List
+from dataclasses import dataclass
+import json
+
+@dataclass
+class ResearchContext:
+    """Research context for development decisions."""
+    problem_domain: str
+    current_solutions: List[str]
+    evaluation_criteria: List[str]
+    success_metrics: Dict[str, Any]
+    constraints: List[str]
+
+def research_driven_development(problem: str, context: ResearchContext) -> Dict[str, Any]:
+    """Execute research-driven development workflow."""
+
+    # Phase 1: Research and Analysis
+    research_findings = conduct_research(problem, context)
+    analysis_results = analyze_findings(research_findings)
+
+    # Phase 2: Solution Design
+    solution_options = design_solutions(analysis_results)
+    evaluation_results = evaluate_solutions(solution_options, context.evaluation_criteria)
+
+    # Phase 3: Implementation Planning
+    implementation_plan = create_implementation_plan(evaluation_results)
+    risk_assessment = assess_implementation_risks(implementation_plan)
+
+    return {
+        "research_findings": research_findings,
+        "analysis_results": analysis_results,
+        "solution_options": solution_options,
+        "evaluation_results": evaluation_results,
+        "implementation_plan": implementation_plan,
+        "risk_assessment": risk_assessment
+    }
+```
+
+#### **2. Systematic Evaluation Framework**
+```python
+class EvaluationFramework:
+    """Systematic evaluation framework for technical decisions."""
+
+    def __init__(self, criteria: List[str], weights: Dict[str, float]):
+        self.criteria = criteria
+        self.weights = weights
+        self.evaluation_history = []
+
+    def evaluate_solution(self, solution: Dict[str, Any]) -> Dict[str, Any]:
+        """Evaluate a solution against defined criteria."""
+        scores = {}
+        total_score = 0.0
+
+        for criterion in self.criteria:
+            score = self._evaluate_criterion(solution, criterion)
+            scores[criterion] = score
+            total_score += score * self.weights.get(criterion, 1.0)
+
+        evaluation_result = {
+            "solution": solution,
+            "scores": scores,
+            "total_score": total_score,
+            "timestamp": time.time(),
+            "recommendation": self._generate_recommendation(total_score)
+        }
+
+        self.evaluation_history.append(evaluation_result)
+        return evaluation_result
+
+    def _evaluate_criterion(self, solution: Dict[str, Any], criterion: str) -> float:
+        """Evaluate a specific criterion for a solution."""
+        # Implementation specific to each criterion
+        evaluators = {
+            "performance": self._evaluate_performance,
+            "security": self._evaluate_security,
+            "maintainability": self._evaluate_maintainability,
+            "scalability": self._evaluate_scalability,
+            "cost": self._evaluate_cost
+        }
+
+        evaluator = evaluators.get(criterion, self._evaluate_generic)
+        return evaluator(solution)
+
+    def _generate_recommendation(self, total_score: float) -> str:
+        """Generate recommendation based on total score."""
+        if total_score >= 8.0:
+            return "STRONG_RECOMMEND"
+        elif total_score >= 6.0:
+            return "RECOMMEND"
+        elif total_score >= 4.0:
+            return "CONSIDER"
+        else:
+            return "NOT_RECOMMEND"
+```
+
+#### **3. Evidence-Based Decision Making**
+```python
+class EvidenceBasedDecision:
+    """Evidence-based decision making framework."""
+
+    def __init__(self):
+        self.evidence_sources = []
+        self.decision_log = []
+
+    def collect_evidence(self, sources: List[str]) -> Dict[str, Any]:
+        """Collect evidence from multiple sources."""
+        evidence = {}
+
+        for source in sources:
+            try:
+                source_evidence = self._collect_from_source(source)
+                evidence[source] = source_evidence
+                self.evidence_sources.append({
+                    "source": source,
+                    "evidence": source_evidence,
+                    "timestamp": time.time()
+                })
+            except Exception as e:
+                logger.warning(f"Failed to collect evidence from {source}: {e}")
+
+        return evidence
+
+    def analyze_evidence(self, evidence: Dict[str, Any]) -> Dict[str, Any]:
+        """Analyze collected evidence for patterns and insights."""
+        analysis = {
+            "patterns": self._identify_patterns(evidence),
+            "insights": self._extract_insights(evidence),
+            "confidence": self._calculate_confidence(evidence),
+            "recommendations": self._generate_recommendations(evidence)
+        }
+
+        return analysis
+
+    def make_decision(self, analysis: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+        """Make evidence-based decision."""
+        decision = {
+            "analysis": analysis,
+            "context": context,
+            "decision": self._evaluate_options(analysis, context),
+            "rationale": self._generate_rationale(analysis, context),
+            "timestamp": time.time()
+        }
+
+        self.decision_log.append(decision)
+        return decision
+```
+
+### **Integration with Development Workflow**
+
+#### **Research Integration Points**
+```python
+def integrate_research_into_workflow(backlog_item: Dict[str, Any]) -> Dict[str, Any]:
+    """Integrate research into the development workflow."""
+
+    # Check if research is needed
+    if backlog_item.get("requires_research", False):
+        research_context = create_research_context(backlog_item)
+        research_results = research_driven_development(
+            backlog_item["description"],
+            research_context
+        )
+
+        # Update backlog item with research findings
+        backlog_item["research_findings"] = research_results
+        backlog_item["implementation_plan"] = research_results["implementation_plan"]
+
+        return backlog_item
+
+    return backlog_item
+```
+
+#### **Evaluation Metrics Integration**
+```python
+def track_research_impact(implementation_results: Dict[str, Any],
+                         research_predictions: Dict[str, Any]) -> Dict[str, Any]:
+    """Track the impact of research on implementation outcomes."""
+
+    impact_analysis = {
+        "predicted_vs_actual": compare_predictions_to_actual(
+            research_predictions,
+            implementation_results
+        ),
+        "research_accuracy": calculate_research_accuracy(
+            research_predictions,
+            implementation_results
+        ),
+        "lessons_learned": extract_lessons_learned(
+            research_predictions,
+            implementation_results
+        )
+    }
+
+    return impact_analysis
+```
+
 ### Mini Coding Checklist (from Comprehensive Guide)
 - Type hints on all functions; clear naming; import order stdlib → third_party → local; no stdlib shadowing
 - DSPy assertions for risky code paths; define rollback plans for high‑risk changes
@@ -863,7 +1074,7 @@ Brief description
 Content here
 
 ---
-*Last Updated: 2025-08-28*
+*Last Updated: 2025-08-30*
 ```
 
 **Expected Output**:

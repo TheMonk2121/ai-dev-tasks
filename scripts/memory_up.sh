@@ -172,6 +172,21 @@ MEMORY_CONTEXT+="$(get_file_summary "400_guides/400_12_product-management-and-ro
 # DSPy development context
 MEMORY_CONTEXT+="### **DSPy Development Context**\n\n"
 MEMORY_CONTEXT+="$(get_file_summary "100_memory/104_dspy-development-context.md" 40)\n\n"
+MEMORY_CONTEXT+="### **DSPy Role Communication**\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "100_memory/100_dspy-role-communication-guide.md" 60)\n\n"
+MEMORY_CONTEXT+="### **Technical Artifacts Integration**\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "100_memory/100_technical-artifacts-integration-guide.md" 60)\n\n"
+MEMORY_CONTEXT+="### **Role System Alignment**\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "100_memory/100_role-system-alignment-guide.md" 60)\n\n"
+MEMORY_CONTEXT+="### **Implementation Patterns Library**\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "100_memory/100_implementation-patterns-library.md" 60)\n\n"
+MEMORY_CONTEXT+="### **Evidence-Based Optimization**\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "100_memory/100_evidence-based-optimization-guide.md" 60)\n\n"
+
+# Add actual DSPy system files
+MEMORY_CONTEXT+="### **DSPy System Files**\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "dspy-rag-system/README.md" 60)\n\n"
+MEMORY_CONTEXT+="$(get_file_summary "dspy-rag-system/src/utils/README_GO.md" 40)\n\n"
 
 # Add DSPy-specific context for all roles
 MEMORY_CONTEXT+="## 🤖 **DSPy Framework Context**\n\n"
@@ -181,10 +196,11 @@ MEMORY_CONTEXT+="**DSPy is an AI framework for programming with language models*
 MEMORY_CONTEXT+="### **DSPy System Overview**\n\n"
 MEMORY_CONTEXT+="- **Status**: ✅ DSPy Multi-Agent System OPERATIONAL\n"
 MEMORY_CONTEXT+="- **Architecture**: Multi-Agent DSPy with sequential model switching + optimization framework\n"
-MEMORY_CONTEXT+="- **Models**: Cursor Native AI (orchestration) + Local DSPy Models (Llama 3.1 8B, Mistral 7B, Phi-3.5 3.8B)\n"
+MEMORY_CONTEXT+="- **Models**: Cursor Native AI (orchestration) + Local DSPy Models (Llama 3.2 3B, Phi-3.5 3.8B)\n"
 MEMORY_CONTEXT+="- **Database**: PostgreSQL with pgvector extension\n"
 MEMORY_CONTEXT+="- **Framework**: DSPy with full signatures, modules, and structured programming\n"
-MEMORY_CONTEXT+="- **Optimization**: LabeledFewShot optimizer, assertion framework, four-part optimization loop\n\n"
+MEMORY_CONTEXT+="- **Optimization**: LabeledFewShot optimizer, assertion framework, four-part optimization loop\n"
+MEMORY_CONTEXT+="- **Validation**: DSPy signature validation patterns with metrics and monitoring\n\n"
 
 # Add DSPy core components
 MEMORY_CONTEXT+="### **DSPy Core Components**\n\n"
