@@ -94,6 +94,36 @@ This guide covers deployment procedures, operations management, and observabilit
 - [ ] Operational documentation and runbooks created
 - [ ] 24/7 support and escalation procedures defined
 
+## 🗄️ Database Management Best Practices
+
+### **PostgreSQL Auto-Startup Patterns**
+
+**Purpose**: Automated database management for memory systems and development workflows.
+
+**Key Features**:
+- **Health Checking**: Uses `pg_isready` to verify database connectivity
+- **Auto-Startup**: Automatically starts PostgreSQL via `brew services start postgresql@14`
+- **Progress Monitoring**: Real-time progress indicators during startup
+- **Timeout Handling**: Graceful timeout if database startup takes too long
+- **Status Reporting**: Enhanced status reporting for database operations
+
+**Database Startup Process**:
+1. **Health Check**: `pg_isready -h localhost -p 5432`
+2. **Auto-Startup**: `brew services start postgresql@14`
+3. **Progress Monitoring**: Wait loops with progress indicators
+4. **Timeout Handling**: 30-second timeout with graceful degradation
+5. **Status Reporting**: Final database status in orchestrator output
+
+**Integration with Memory Systems**:
+- **LTST Memory System**: Requires PostgreSQL with pgvector extension
+- **Unified Orchestrator**: Automatically manages database for all memory systems
+- **Development Workflow**: Seamless database management during development
+
+**Troubleshooting**:
+- **Connection Issues**: Check PostgreSQL service status with `brew services list`
+- **Extension Problems**: Verify pgvector extension with `psql -c "SELECT * FROM pg_extension WHERE extname = 'vector';"`
+- **Permission Issues**: Ensure proper user permissions for database access
+
 ## 🔗 Interfaces
 
 ### Deployment Systems

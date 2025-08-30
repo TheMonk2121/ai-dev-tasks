@@ -65,6 +65,43 @@ This guide covers comprehensive memory systems and context management including:
 
 ## 🧠 MEMORY SCAFFOLDING SYSTEM
 
+### **Unified Memory Orchestrator**
+
+**Purpose**: Single command access to all memory systems with automatic environment setup and database management.
+
+**Key Features**:
+- **One-Command Access**: `python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "query"`
+- **Automatic Database Startup**: Starts PostgreSQL via `brew services start postgresql@14` if not running
+- **Virtual Environment Auto-Activation**: Automatically activates venv and sets up dependencies
+- **Health Monitoring**: Progress indicators and timeout handling for database startup
+- **Graceful Degradation**: Continues with other systems if database startup is slow
+- **Enhanced Status Reporting**: Real-time status for database and venv
+
+**Memory System Components**:
+- **LTST Memory System**: Database-backed conversation memory with session tracking
+- **Cursor Memory**: Static documentation bundling via `memory_up.sh`
+- **Go CLI Memory**: Fast startup (<1s) with lean hybrid approach and RRF fusion
+- **Prime Cursor**: Enhanced Cursor integration with chat capabilities
+
+**Usage Examples**:
+```bash
+# Refresh all memory layers
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status"
+
+# Specific system access
+python3 scripts/unified_memory_orchestrator.py --systems ltst --role coder "DSPy integration task"
+
+# JSON output for programmatic access
+python3 scripts/unified_memory_orchestrator.py --systems cursor prime --role researcher "performance analysis" --format json
+```
+
+**Database Auto-Startup Process**:
+1. **Health Check**: Uses `pg_isready` to check database status
+2. **Auto-Startup**: Runs `brew services start postgresql@14` if database is down
+3. **Progress Monitoring**: Shows waiting progress (1/10 through 10/10)
+4. **Timeout Handling**: Graceful timeout if database startup takes too long
+5. **Status Reporting**: Reports final database status in output
+
 ### **LTST Memory System (Long-Term Short-Term)**
 
 #### **LTST Memory System Deployment Guide**

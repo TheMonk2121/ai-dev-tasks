@@ -58,6 +58,31 @@ python3 scripts/solo_workflow.py ship
 - **Auto-Advance**: Tasks auto-advance unless you pause
 - **Smart Pausing**: Pause only for critical decisions or external dependencies
 
+### 🧠 **Memory System Commands**
+
+**Unified Memory Orchestrator**: Single command access to all memory systems
+```bash
+# Refresh all memory layers
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status"
+
+# Specific system access
+python3 scripts/unified_memory_orchestrator.py --systems ltst --role coder "DSPy integration task"
+
+# JSON output for programmatic access
+python3 scripts/unified_memory_orchestrator.py --systems cursor prime --role researcher "performance analysis" --format json
+```
+
+**Database Auto-Startup**: Automatically starts PostgreSQL if not running
+- **Health Check**: Uses `pg_isready` to verify database connectivity
+- **Auto-Startup**: Runs `brew services start postgresql@14` if database is down
+- **Progress Monitoring**: Real-time progress indicators during startup
+- **Graceful Degradation**: Continues with other systems if database startup is slow
+
+**Virtual Environment Auto-Activation**: Automatically activates venv and sets up dependencies
+- **Environment Check**: Verifies venv is active and dependencies are available
+- **Auto-Activation**: Activates venv if not already active
+- **Dependency Setup**: Ensures all required packages are installed
+
 ### 🤖 **Automated Execution Engine**
 
 For consistent, high-quality task execution:

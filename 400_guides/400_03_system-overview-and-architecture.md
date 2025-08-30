@@ -65,10 +65,22 @@ See: `400_system-overview.md` (Architecture, Core Components, Testing Framework,
 
 ## Context Management (summary)
 
-- Context Store: Postgres tables; vector store via PGVector
-- Context Cache: in‑memory/Redis; TTL and invalidation policies
-- Entity Expansion: pattern‑based extraction; adjacent retrieval
-- RRF Fusion: combine vector + BM25; stability slider and kill‑switches
+- **Unified Memory Orchestrator**: Single command access to all memory systems
+  - Automatic database startup via `brew services start postgresql@14`
+  - Automatic virtual environment activation and dependency setup
+  - Health monitoring with progress indicators and timeout handling
+  - Graceful degradation when database startup is slow
+- **Memory System Components**:
+  - **LTST Memory System**: Database-backed conversation memory with session tracking
+  - **Cursor Memory**: Static documentation bundling via `memory_up.sh`
+  - **Go CLI Memory**: Fast startup (<1s) with lean hybrid approach
+  - **Prime Cursor**: Enhanced Cursor integration with chat capabilities
+- **Context Store**: Postgres tables; vector store via PGVector
+- **Context Cache**: in‑memory/Redis; TTL and invalidation policies
+- **Entity Expansion**: pattern‑based extraction; adjacent retrieval
+- **RRF Fusion**: combine vector + BM25; stability slider and kill‑switches
+
+**Command**: `python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "query"`
 
 See: `400_06_memory-and-context-systems.md` and `dspy-rag-system/src/utils/memory_rehydrator.py`.
 

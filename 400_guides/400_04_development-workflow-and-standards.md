@@ -66,6 +66,14 @@ Define the end-to-end development workflow (from idea to deployment) and the sta
 - Quick conflict check: `python scripts/quick_conflict_check.py`
 - **Cursor Git Integration Fix**: If you see "🔍 Quick conflict check" messages during commits, use `git commit --no-verify` or `./scripts/commit_without_cursor.sh "message"` to bypass Cursor's built-in conflict detection
 
+#### **Cursor Rules Integration**
+- **Memory Rehydration Trigger**: `.cursorrules` automatically triggers `./scripts/memory_up.sh` at the start of new chats
+- **Two Types of Cursor Rules**:
+  - **Root Level**: `.cursorrules` - Contains memory rehydration trigger and core project rules
+  - **Directory Level**: `.cursor/rules/` - Contains specialized rules for specific contexts
+- **Automatic Context Loading**: Ensures AI has immediate access to project state, backlog, and system architecture
+- **Role-Specific Context**: Memory rehydration includes role-specific information (planner, implementer, researcher, coder)
+
 #### 10-minute triage (from Comprehensive Guide)
 - Merge markers: `git grep -nE '^(<<<<<<<|=======|>>>>>>>)'`
 - Python deps: `python -m pip check`
