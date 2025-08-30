@@ -20,6 +20,9 @@ from typing import Any, Dict, List, Optional
 # Import faithfulness evaluator
 from faithfulness_evaluator import FaithfulnessEvaluator
 
+# Import ground truth evaluator
+from ground_truth_evaluator import GroundTruthEvaluator, GroundTruthItem
+
 
 class EvaluationCategory(Enum):
     MEMORY_HIERARCHY = "memory_hierarchy"
@@ -49,6 +52,8 @@ class BaselineEvaluator:
         self.memory_orchestrator_path = "scripts/unified_memory_orchestrator.py"
         self.baseline_criteria = self.load_baseline_criteria(version)
         self.faithfulness_evaluator = FaithfulnessEvaluator()
+        self.ground_truth_evaluator = GroundTruthEvaluator()
+        self.ground_truth_dataset = self.load_ground_truth_dataset()
 
     def load_baseline_criteria(self, version: str) -> Dict[str, Any]:
         """Load fixed baseline criteria for consistent evaluation."""
@@ -201,46 +206,68 @@ class BaselineEvaluator:
             return {"success": False, "output": "", "error": "Query timed out after 60 seconds"}
         except Exception as e:
             return {"success": False, "output": "", "error": str(e)}
-    
+
     def _extract_retrieved_context(self, response: Dict[str, Any]) -> str:
         """Extract retrieved context from memory system response for faithfulness evaluation."""
         try:
             # Parse the response to get retrieved context
             response_data = json.loads(response["output"])
-            
+
             # Try to extract context from different possible fields
             context_sources = []
-            
+
             # Check for LTST memory content
             if "ltst_memory" in response_data:
                 context_sources.append(response_data["ltst_memory"])
-            
+
             # Check for Cursor memory content
             if "cursor_memory" in response_data:
                 context_sources.append(response_data["cursor_memory"])
-            
+
             # Check for Go CLI memory content
             if "go_cli_memory" in response_data:
                 context_sources.append(response_data["go_cli_memory"])
-            
+
             # Check for Prime memory content
             if "prime_memory" in response_data:
                 context_sources.append(response_data["prime_memory"])
-            
+
             # Check for formatted output (fallback)
             if "formatted_output" in response_data:
                 context_sources.append(response_data["formatted_output"])
-            
+
             # Combine all context sources
             if context_sources:
                 return " ".join(context_sources)
             else:
                 # Fallback to raw output
                 return response["output"]
-                
-        except Exception as e:
+
+        except Exception:
             # If parsing fails, use raw output as context
             return response["output"]
+
+    def load_ground_truth_dataset(self) -> Dict[str, Any]:
+        """Load ground truth dataset for evaluation."""
+        try:
+            with open("config/baseline_evaluations/ground_truth_dataset.json", "r") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Warning: Could not load ground truth dataset: {e}")
+            return {"ground_truth_items": []}
+
+    def get_ground_truth_item(self, case_name: str) -> Optional[GroundTruthItem]:
+        """Get ground truth item for a specific test case."""
+        for item in self.ground_truth_dataset.get("ground_truth_items", []):
+            if item["name"] == case_name:
+                return GroundTruthItem(
+                    query=item["query"],
+                    expected_answer=item["expected_answer"],
+                    key_facts=item["key_facts"],
+                    critical_information=item["critical_information"],
+                    context_requirements=item["context_requirements"],
+                )
+        return None
 
     def evaluate_response(self, case: BaselineEvaluationCase, response: Dict[str, Any]) -> Dict[str, Any]:
         """Evaluate a response using fixed baseline criteria."""
@@ -261,18 +288,18 @@ class BaselineEvaluator:
 
         # Fixed baseline evaluation logic - no changes over time
 
-        # Check for expected sources (40 points max)
+        # Check for expected sources (30 points max)
         if case.expected_sources:
             source_score = 0
             for source in case.expected_sources:
                 if source.lower() in response_text.lower():
-                    source_score += 20
+                    source_score += 15
                 else:
                     errors.append(f"Missing expected source: {source}")
-            score += min(source_score, 40)
-            details.append(f"Source coverage: {source_score}/40")
+            score += min(source_score, 30)
+            details.append(f"Source coverage: {source_score}/30")
 
-        # Check for expected content (40 points max)
+        # Check for expected content (30 points max)
         if case.expected_content:
             content_score = 0
             for content in case.expected_content:
@@ -280,21 +307,21 @@ class BaselineEvaluator:
                     content_score += 10
                 else:
                     errors.append(f"Missing expected content: {content}")
-            score += min(content_score, 40)
-            details.append(f"Content coverage: {content_score}/40")
+            score += min(content_score, 30)
+            details.append(f"Content coverage: {content_score}/30")
 
-        # Check for expected workflow (20 points max)
+        # Check for expected workflow (15 points max)
         if case.expected_workflow:
             workflow_score = 0
             for workflow in case.expected_workflow:
                 if workflow.lower() in response_text.lower():
-                    workflow_score += 20
+                    workflow_score += 15
                 else:
                     errors.append(f"Missing expected workflow: {workflow}")
-            score += min(workflow_score, 20)
-            details.append(f"Workflow coverage: {workflow_score}/20")
+            score += min(workflow_score, 15)
+            details.append(f"Workflow coverage: {workflow_score}/15")
 
-                # Check for expected commands (15 points max)
+            # Check for expected commands (15 points max)
         if case.expected_commands:
             command_score = 0
             for command in case.expected_commands:
@@ -304,36 +331,76 @@ class BaselineEvaluator:
                     errors.append(f"Missing expected command: {command}")
             score += min(command_score, 15)
             details.append(f"Command coverage: {command_score}/15")
-        
+
         # Check faithfulness (20 points max) - RAGAS-style evaluation
         faithfulness_score = 0
         try:
             # Get retrieved context from memory system response
             retrieved_context = self._extract_retrieved_context(response)
-            
+
             # Evaluate faithfulness
             faithfulness_result = self.faithfulness_evaluator.evaluate_faithfulness(response_text, retrieved_context)
             faithfulness_score = faithfulness_result.faithfulness_score * 20  # Convert to points
-            
-            details.append(f"Faithfulness: {faithfulness_result.faithfulness_score:.2f}/1.00 ({faithfulness_score:.1f}/20)")
+
+            details.append(
+                f"Faithfulness: {faithfulness_result.faithfulness_score:.2f}/1.00 ({faithfulness_score:.1f}/20)"
+            )
             details.append(f"Claims: {faithfulness_result.verified_claims}/{faithfulness_result.total_claims} verified")
-            
+
             if faithfulness_result.hallucinated_claims > 0:
                 errors.append(f"Hallucinated claims detected: {faithfulness_result.hallucinated_claims}")
-                
+
         except Exception as e:
             errors.append(f"Faithfulness evaluation failed: {str(e)}")
-            details.append(f"Faithfulness: ERROR (0/20)")
-        
+            details.append("Faithfulness: ERROR (0/20)")
+
         score += faithfulness_score
-        
+
+        # Check ground truth evaluation (20 points max) - RAGAS-style context recall and completeness
+        ground_truth_score = 0
+        try:
+            # Get ground truth item for this test case
+            ground_truth_item = self.get_ground_truth_item(case.name)
+
+            if ground_truth_item:
+                # Get retrieved context
+                retrieved_context = self._extract_retrieved_context(response)
+
+                # Evaluate ground truth
+                ground_truth_result = self.ground_truth_evaluator.evaluate_ground_truth(
+                    ground_truth_item, retrieved_context, response_text
+                )
+
+                # Convert to points (overall score * 20)
+                ground_truth_score = ground_truth_result.overall_score * 20
+
+                details.append(
+                    f"Ground Truth: {ground_truth_result.overall_score:.2f}/1.00 ({ground_truth_score:.1f}/20)"
+                )
+                details.append(
+                    f"Context Recall: {ground_truth_result.context_recall_score:.2f}, Completeness: {ground_truth_result.answer_completeness_score:.2f}"
+                )
+
+                if ground_truth_result.overall_score < 0.7:
+                    errors.append(f"Poor ground truth alignment: {ground_truth_result.overall_assessment}")
+
+            else:
+                details.append("Ground Truth: No ground truth data available (0/20)")
+
+        except Exception as e:
+            errors.append(f"Ground truth evaluation failed: {str(e)}")
+            details.append("Ground Truth: ERROR (0/20)")
+
+        score += ground_truth_score
+
         return {
             "score": score,
             "passed": score >= self.baseline_criteria["pass_threshold"],
             "errors": errors,
             "details": details,
             "response_length": len(response_text),
-            "faithfulness_result": faithfulness_result if 'faithfulness_result' in locals() else None,
+            "faithfulness_result": faithfulness_result if "faithfulness_result" in locals() else None,
+            "ground_truth_result": ground_truth_result if "ground_truth_result" in locals() else None,
         }
 
     def run_baseline_evaluation(self) -> Dict[str, Any]:
