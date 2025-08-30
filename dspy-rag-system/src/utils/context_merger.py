@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class MergedContext:
-    """Represents merged context with metadata."""
+    """Represents merged context with metadata and decision intelligence support."""
 
     session_id: str
     context_type: str
@@ -30,12 +30,57 @@ class MergedContext:
     merge_timestamp: datetime
     metadata: Dict[str, Any]
 
+    # Decision intelligence fields for compatibility
+    decision_head: Optional[str] = None  # Normalized decision summary
+    decision_status: str = "open"  # 'open', 'closed', 'superseded'
+    superseded_by: Optional[str] = None  # ID of superseding decision
+    entities: Optional[List[str]] = None  # JSONB array of entity names
+    files: Optional[List[str]] = None  # JSONB array of file paths
+    context_key: Optional[str] = None  # For compatibility with ConversationContext
+    context_value: Optional[str] = None  # For compatibility with ConversationContext
+
     def __post_init__(self):
         """Initialize computed fields."""
         if self.merge_timestamp is None:
             self.merge_timestamp = datetime.now()
         if self.metadata is None:
             self.metadata = {}
+        if self.entities is None:
+            self.entities = []
+        if self.files is None:
+            self.files = []
+        if self.context_value is None:
+            self.context_value = self.merged_content
+
+        # Extract decision fields from source contexts if available
+        self._extract_decision_fields_from_sources()
+
+    def _extract_decision_fields_from_sources(self):
+        """Extract decision fields from source contexts for compatibility."""
+        if not self.source_contexts:
+            return
+
+        # Find the first source context with decision fields
+        for source in self.source_contexts:
+            if hasattr(source, "decision_head") and source.decision_head:
+                self.decision_head = source.decision_head
+                break
+
+        # Aggregate entities from all sources
+        all_entities = []
+        for source in self.source_contexts:
+            if hasattr(source, "entities") and source.entities:
+                all_entities.extend(source.entities)
+        if all_entities:
+            self.entities = list(set(all_entities))  # Remove duplicates
+
+        # Aggregate files from all sources
+        all_files = []
+        for source in self.source_contexts:
+            if hasattr(source, "files") and source.files:
+                all_files.extend(source.files)
+        if all_files:
+            self.files = list(set(all_files))  # Remove duplicates
 
     @property
     def context_hash(self) -> str:
@@ -120,6 +165,56 @@ class ContextMerger:
             logger.warning(f"Error calculating semantic similarity: {e}")
             return 0.0
 
+    def _calculate_decision_aware_score(self, context: ConversationContext) -> float:
+        """Calculate decision-aware relevance score."""
+        base_score = context.relevance_score
+
+        # Decision status scoring
+        if hasattr(context, "decision_status") and context.decision_status:
+            if context.decision_status == "open":
+                base_score += 0.2  # Boost open decisions
+            elif context.decision_status == "superseded":
+                base_score -= 0.3  # Penalize superseded decisions
+            elif context.decision_status == "closed":
+                base_score += 0.1  # Slight boost for closed decisions
+
+        # Entity overlap bonus (if we have entity information)
+        if hasattr(context, "entities") and context.entities:
+            # This will be enhanced in Task 5 when we integrate with MemoryRehydrator
+            pass
+
+        return min(1.0, max(0.0, base_score))  # Clamp between 0 and 1
+
+    def _calculate_entity_overlap_score(
+        self, context: ConversationContext, query_entities: Optional[List[str]] = None
+    ) -> float:
+        """Calculate entity overlap score for decision contexts."""
+        if not hasattr(context, "entities") or not context.entities:
+            return 0.0
+
+        if not query_entities:
+            return 0.0
+
+        try:
+            # Handle both string and list entities
+            context_entities = context.entities if isinstance(context.entities, list) else []
+            if isinstance(context.entities, str):
+                import json
+
+                context_entities = json.loads(context.entities)
+
+            # Calculate overlap
+            overlap_count = sum(
+                1 for entity in query_entities if entity.lower() in [e.lower() for e in context_entities]
+            )
+            overlap_score = overlap_count / len(query_entities) if query_entities else 0.0
+
+            return min(0.15, overlap_score * 0.15)  # Cap at 0.15 bonus
+
+        except Exception as e:
+            self.logger.warning(f"Failed to calculate entity overlap: {e}")
+            return 0.0
+
     def _merge_context_content(self, contexts: List[ConversationContext]) -> str:
         """Merge context content intelligently."""
         if not contexts:
@@ -146,12 +241,48 @@ class ContextMerger:
         return merged_content.strip()
 
     def _select_relevant_contexts(
-        self, contexts: List[ConversationContext], relevance_threshold: float
+        self,
+        contexts: List[ConversationContext],
+        relevance_threshold: float,
+        query_entities: Optional[List[str]] = None,
     ) -> List[ConversationContext]:
-        """Select contexts based on relevance threshold."""
-        relevant_contexts = [context for context in contexts if context.relevance_score >= relevance_threshold]
+        """Select contexts based on decision-aware relevance threshold."""
+        # Calculate decision-aware scores for all contexts
+        scored_contexts = []
+        for context in contexts:
+            decision_score = self._calculate_decision_aware_score(context)
+            entity_bonus = self._calculate_entity_overlap_score(context, query_entities)
+            final_score = decision_score + entity_bonus
 
-        # Sort by relevance score
+            # Create a temporary context with updated score for sorting
+            temp_context = ConversationContext(
+                session_id=context.session_id,
+                context_type=context.context_type,
+                context_key=context.context_key,
+                context_value=context.context_value,
+                relevance_score=final_score,
+                metadata=context.metadata,
+                expires_at=context.expires_at,
+            )
+
+            # Copy decision intelligence attributes if they exist
+            if hasattr(context, "decision_head"):
+                temp_context.decision_head = getattr(context, "decision_head", None)
+            if hasattr(context, "decision_status"):
+                temp_context.decision_status = getattr(context, "decision_status", "open")
+            if hasattr(context, "superseded_by"):
+                temp_context.superseded_by = getattr(context, "superseded_by", None)
+            if hasattr(context, "entities"):
+                temp_context.entities = getattr(context, "entities", [])
+            if hasattr(context, "files"):
+                temp_context.files = getattr(context, "files", [])
+
+            scored_contexts.append(temp_context)
+
+        # Filter by relevance threshold
+        relevant_contexts = [context for context in scored_contexts if context.relevance_score >= relevance_threshold]
+
+        # Sort by decision-aware relevance score
         relevant_contexts.sort(key=lambda x: x.relevance_score, reverse=True)
 
         # Limit to max contexts per merge
@@ -270,7 +401,7 @@ class ContextMerger:
                 )
 
             # Select relevant contexts
-            relevant_contexts = self._select_relevant_contexts(contexts, relevance_threshold)  # type: ignore
+            relevant_contexts = self._select_relevant_contexts(contexts, relevance_threshold, query_entities=None)  # type: ignore
 
             # Group similar contexts
             context_groups = self._group_similar_contexts(relevant_contexts, similarity_threshold)  # type: ignore
@@ -513,7 +644,9 @@ class ContextMerger:
             )
 
         # Select relevant contexts
-        relevant_contexts = self._select_relevant_contexts(contexts, self.default_relevance_threshold)
+        relevant_contexts = self._select_relevant_contexts(
+            contexts, self.default_relevance_threshold, query_entities=None
+        )
 
         # Group similar contexts
         context_groups = self._group_similar_contexts(relevant_contexts, self.default_similarity_threshold)
@@ -577,6 +710,167 @@ class ContextMerger:
             relevance_threshold=self.default_relevance_threshold,
             similarity_threshold=self.default_similarity_threshold,
         )
+
+    def merge_decision_contexts(
+        self,
+        session_id: str,
+        query_entities: Optional[List[str]] = None,
+        relevance_threshold: Optional[float] = None,
+        similarity_threshold: Optional[float] = None,
+    ) -> ContextMergeResult:
+        """
+        Merge decision contexts with decision intelligence scoring.
+
+        Args:
+            session_id: Session identifier
+            query_entities: Entities to consider for overlap scoring
+            relevance_threshold: Minimum relevance score
+            similarity_threshold: Minimum similarity for grouping
+
+        Returns:
+            ContextMergeResult with decision-aware merged contexts
+        """
+        start_time = time.time()
+
+        relevance_threshold = relevance_threshold or self.default_relevance_threshold
+        similarity_threshold = similarity_threshold or self.default_similarity_threshold
+
+        try:
+            # Get decision contexts using query-conditioned retrieval
+            # For now, use a simple query to get relevant decisions
+            query = " ".join(query_entities) if query_entities else "decision"
+            decision_contexts = self.conversation_storage.search_decisions(query, session_id=session_id, limit=100)
+
+            if not decision_contexts:
+                return ContextMergeResult(
+                    merged_contexts=[],
+                    total_contexts_processed=0,
+                    contexts_merged=0,
+                    contexts_preserved=0,
+                    merge_time_ms=(time.time() - start_time) * 1000,
+                    relevance_threshold=relevance_threshold,
+                    similarity_threshold=similarity_threshold,
+                )
+
+            # Convert to ConversationContext objects
+            contexts = []
+            for context_dict in decision_contexts:
+                context = ConversationContext(
+                    session_id=context_dict["session_id"],
+                    context_type=context_dict["context_type"],
+                    context_key=context_dict["context_key"],
+                    context_value=context_dict["context_value"],
+                    relevance_score=context_dict["relevance_score"],
+                    metadata=context_dict.get("metadata", {}),
+                    expires_at=context_dict.get("expires_at"),
+                    decision_head=context_dict.get("decision_head"),
+                    decision_status=context_dict.get("decision_status", "open"),
+                    superseded_by=context_dict.get("superseded_by"),
+                    entities=context_dict.get("entities", []),
+                    files=context_dict.get("files", []),
+                )
+                contexts.append(context)
+
+            # Select relevant contexts with decision-aware scoring
+            relevant_contexts = self._select_relevant_contexts(contexts, relevance_threshold, query_entities)
+
+            # Group similar contexts
+            context_groups = self._group_similar_contexts(relevant_contexts, similarity_threshold)
+
+            # Merge each group
+            merged_contexts = []
+            contexts_merged = 0
+            contexts_preserved = 0
+
+            for group in context_groups:
+                if len(group) == 1:
+                    # Single context, preserve as-is
+                    context = group[0]
+                    merged_context = MergedContext(
+                        session_id=context.session_id,
+                        context_type=context.context_type,
+                        context_key=getattr(context, "context_key", None),
+                        merged_content=context.context_value,
+                        source_contexts=[context],
+                        relevance_score=context.relevance_score,
+                        semantic_similarity=1.0,
+                        merge_timestamp=datetime.now(),
+                        metadata={
+                            **(context.metadata or {}),
+                            "decision_head": getattr(context, "decision_head", None),
+                            "decision_status": getattr(context, "decision_status", "open"),
+                            "entities": getattr(context, "entities", []),
+                            "files": getattr(context, "files", []),
+                        },
+                        decision_head=getattr(context, "decision_head", None),
+                        decision_status=getattr(context, "decision_status", "open"),
+                        superseded_by=getattr(context, "superseded_by", None),
+                        entities=getattr(context, "entities", []),
+                        files=getattr(context, "files", []),
+                    )
+                    merged_contexts.append(merged_context)
+                    contexts_preserved += 1
+                else:
+                    # Multiple contexts, merge them
+                    merged_content = self._merge_context_content(group)
+                    avg_relevance = sum(c.relevance_score for c in group) / len(group)
+
+                    # Calculate average similarity within group
+                    similarities = []
+                    for i, context1 in enumerate(group):
+                        for context2 in group[i + 1 :]:
+                            similarity = self._calculate_semantic_similarity(context1, context2)
+                            similarities.append(similarity)
+
+                    avg_similarity = sum(similarities) / len(similarities) if similarities else 0.0
+
+                    merged_context = MergedContext(
+                        session_id=session_id,
+                        context_type=group[0].context_type,
+                        context_key=group[0].context_key,
+                        merged_content=merged_content,
+                        source_contexts=group,
+                        relevance_score=avg_relevance,
+                        semantic_similarity=avg_similarity,
+                        merge_timestamp=datetime.now(),
+                        metadata={
+                            "merged_from": len(group),
+                            "source_contexts": [c.context_key for c in group],
+                            "decision_heads": [getattr(c, "decision_head", None) for c in group],
+                            "decision_statuses": [getattr(c, "decision_status", "open") for c in group],
+                        },
+                        decision_head=group[0].decision_head if hasattr(group[0], "decision_head") else None,
+                        decision_status=getattr(group[0], "decision_status", "open"),
+                        superseded_by=getattr(group[0], "superseded_by", None),
+                        entities=getattr(group[0], "entities", []),
+                        files=getattr(group[0], "files", []),
+                    )
+                    merged_contexts.append(merged_context)
+                    contexts_merged += len(group)
+
+            merge_time_ms = (time.time() - start_time) * 1000
+
+            logger.info(
+                f"Decision context merging completed for session {session_id}: "
+                f"{len(merged_contexts)} merged contexts, "
+                f"{contexts_merged} contexts merged, "
+                f"{contexts_preserved} contexts preserved, "
+                f"{merge_time_ms:.2f}ms"
+            )
+
+            return ContextMergeResult(
+                merged_contexts=merged_contexts,
+                total_contexts_processed=len(contexts),
+                contexts_merged=contexts_merged,
+                contexts_preserved=contexts_preserved,
+                merge_time_ms=merge_time_ms,
+                relevance_threshold=relevance_threshold,
+                similarity_threshold=similarity_threshold,
+            )
+
+        except Exception as e:
+            logger.error(f"Decision context merging failed for session {session_id}: {e}")
+            raise
 
     def get_context_summary(self, session_id: str, context_types: Optional[List[str]] = None) -> Dict[str, Any]:
         """

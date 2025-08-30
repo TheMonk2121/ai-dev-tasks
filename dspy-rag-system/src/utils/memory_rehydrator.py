@@ -310,11 +310,170 @@ class MemoryRehydrator:
                         if source_context not in relevant_contexts:
                             relevant_contexts.append(source_context)
 
+            # Add decision intelligence contexts
+            decision_contexts = self._get_decision_contexts(request)
+            relevant_contexts.extend(decision_contexts)
+
             return relevant_contexts
 
         except Exception as e:
             logger.error(f"Failed to get relevant contexts: {e}")
             return []
+
+    def _get_decision_contexts(self, request: RehydrationRequest) -> List[ConversationContext]:
+        """Get decision contexts with decision intelligence scoring."""
+        try:
+            # Extract entities from current message for entity overlap scoring
+            query_entities = (
+                self._extract_entities_from_message(request.current_message) if request.current_message else None
+            )
+
+            # Get decision contexts using the specialized merger
+            merge_result = self.context_merger.merge_decision_contexts(
+                request.session_id,
+                query_entities=query_entities,
+                relevance_threshold=request.relevance_threshold,
+                similarity_threshold=request.similarity_threshold,
+            )
+
+            # Convert merged decision contexts back to conversation contexts
+            decision_contexts = []
+            for merged_context in merge_result.merged_contexts:
+                for source_context in merged_context.source_contexts:
+                    # Create enhanced context with decision intelligence
+                    enhanced_context = ConversationContext(
+                        session_id=source_context.session_id,
+                        context_type=source_context.context_type,
+                        context_key=source_context.context_key,
+                        context_value=source_context.context_value,
+                        relevance_score=merged_context.relevance_score,  # Use merged score
+                        metadata={
+                            **(source_context.metadata or {}),
+                            "decision_head": getattr(source_context, "decision_head", None),
+                            "decision_status": getattr(source_context, "decision_status", "open"),
+                            "entities": getattr(source_context, "entities", []),
+                            "files": getattr(source_context, "files", []),
+                            "merged_score": merged_context.relevance_score,
+                            "semantic_similarity": merged_context.semantic_similarity,
+                        },
+                    )
+                    decision_contexts.append(enhanced_context)
+
+            logger.info(f"Retrieved {len(decision_contexts)} decision contexts for session {request.session_id}")
+            return decision_contexts
+
+        except Exception as e:
+            logger.error(f"Failed to get decision contexts: {e}")
+            return []
+
+    def _extract_entities_from_message(self, message: str) -> List[str]:
+        """Extract potential entities from a message for decision context scoring."""
+        try:
+            if not message:
+                return []
+
+            # Simple entity extraction - look for common patterns
+            entities = []
+
+            # Extract project names (e.g., "project:alpha", "rag_system")
+            import re
+
+            project_patterns = [r"project:(\w+)", r"(\w+)_system", r"(\w+)_project", r"(\w+)_pipeline"]
+
+            for pattern in project_patterns:
+                matches = re.findall(pattern, message.lower())
+                entities.extend(matches)
+
+            # Extract technology names
+            tech_keywords = [
+                "python",
+                "postgresql",
+                "pgvector",
+                "dspy",
+                "rag",
+                "ltst",
+                "vector",
+                "embedding",
+                "memory",
+                "context",
+                "decision",
+            ]
+
+            for keyword in tech_keywords:
+                if keyword.lower() in message.lower():
+                    entities.append(keyword)
+
+            # Remove duplicates and return
+            return list(set(entities))
+
+        except Exception as e:
+            logger.warning(f"Failed to extract entities from message: {e}")
+            return []
+
+    def _get_decision_insights(self, session_id: str) -> Dict[str, Any]:
+        """Get insights about decisions for a session."""
+        try:
+            # Get decision contexts
+            decision_contexts = self.conversation_storage.retrieve_context(session_id, "decision", limit=100)
+
+            if not decision_contexts:
+                return {
+                    "total_decisions": 0,
+                    "open_decisions": 0,
+                    "closed_decisions": 0,
+                    "superseded_decisions": 0,
+                    "top_entities": [],
+                    "recent_decisions": [],
+                }
+
+            # Analyze decision statuses
+            status_counts = {"open": 0, "closed": 0, "superseded": 0}
+            all_entities = []
+            recent_decisions = []
+
+            for ctx in decision_contexts:
+                status = ctx.get("decision_status", "open")
+                status_counts[status] = status_counts.get(status, 0) + 1
+
+                # Collect entities
+                entities = ctx.get("entities", [])
+                if isinstance(entities, str):
+                    try:
+                        import json
+
+                        entities = json.loads(entities)
+                    except:
+                        entities = []
+                all_entities.extend(entities)
+
+                # Collect recent decisions
+                if len(recent_decisions) < 5:
+                    recent_decisions.append(
+                        {
+                            "head": ctx.get("decision_head", "Unknown"),
+                            "status": status,
+                            "content": ctx.get("context_value", "")[:100] + "...",
+                        }
+                    )
+
+            # Get top entities
+            from collections import Counter
+
+            entity_counts = Counter(all_entities)
+            top_entities = [entity for entity, count in entity_counts.most_common(10)]
+
+            return {
+                "total_decisions": len(decision_contexts),
+                "open_decisions": status_counts["open"],
+                "closed_decisions": status_counts["closed"],
+                "superseded_decisions": status_counts["superseded"],
+                "top_entities": top_entities,
+                "recent_decisions": recent_decisions,
+            }
+
+        except Exception as e:
+            logger.error(f"Failed to get decision insights: {e}")
+            return {"total_decisions": 0, "error": str(e)}
 
     def _calculate_context_relevance_scores(
         self,
@@ -385,6 +544,31 @@ class MemoryRehydrator:
                     role_label = "User" if msg.role == "human" else "Assistant"
                     history_text += f"{role_label}: {msg.content}\n"
                 merged_parts.append(history_text)
+
+            # Add decision contexts first (highest priority)
+            decision_contexts = [ctx for ctx in relevant_contexts if ctx.context_type == "decision"]
+            if decision_contexts:
+                # Sort by relevance score (highest first)
+                decision_contexts.sort(key=lambda x: x.relevance_score, reverse=True)
+
+                decisions_text = "Key Decisions:\n"
+                for ctx in decision_contexts[:5]:  # Top 5 decisions
+                    status = ctx.metadata.get("decision_status", "open") if ctx.metadata else "open"
+                    status_emoji = "🟢" if status == "open" else "🔴" if status == "superseded" else "🟡"
+                    decisions_text += f"{status_emoji} {ctx.context_value}\n"
+
+                    # Add decision metadata if available
+                    if ctx.metadata:
+                        if ctx.metadata.get("decision_head"):
+                            decisions_text += f"   Summary: {ctx.metadata['decision_head']}\n"
+                        if ctx.metadata.get("entities"):
+                            decisions_text += f"   Entities: {', '.join(ctx.metadata['entities'])}\n"
+                        if ctx.metadata.get("files"):
+                            decisions_text += f"   Files: {', '.join(ctx.metadata['files'])}\n"
+
+                    decisions_text += "\n"
+
+                merged_parts.append(decisions_text)
 
             # Add user preferences
             if user_preferences:
@@ -460,6 +644,9 @@ class MemoryRehydrator:
             # Get session insights for enhanced context
             session_insights = self.get_session_insights_for_rehydration(request.session_id, request.user_id)
 
+            # Get decision insights for enhanced context
+            decision_insights = self._get_decision_insights(request.session_id)
+
             # Get relevant contexts
             relevant_contexts = self._get_relevant_contexts(request)
 
@@ -473,6 +660,17 @@ class MemoryRehydrator:
                     similarity_threshold=request.similarity_threshold,
                 )
                 merged_contexts.extend(merge_result.merged_contexts)
+
+            # Add decision contexts with decision intelligence
+            decision_merge_result = self.context_merger.merge_decision_contexts(
+                request.session_id,
+                query_entities=(
+                    self._extract_entities_from_message(request.current_message) if request.current_message else None
+                ),
+                relevance_threshold=request.relevance_threshold,
+                similarity_threshold=request.similarity_threshold,
+            )
+            merged_contexts.extend(decision_merge_result.merged_contexts)
 
             # Calculate relevance scores
             context_relevance_scores = self._calculate_context_relevance_scores(
@@ -505,7 +703,11 @@ class MemoryRehydrator:
                 context_relevance_scores=context_relevance_scores,
                 rehydration_time_ms=rehydration_time_ms,
                 cache_hit=False,
-                metadata={**(request.metadata or {}), "session_insights": session_insights, "ltst_integration": True},
+                metadata={
+                    **(request.metadata or {}),
+                    "session_insights": session_insights,
+                    "decision_insights": decision_insights,
+                },
             )
 
             # Cache the result
@@ -514,10 +716,8 @@ class MemoryRehydrator:
             logger.info(
                 f"Memory rehydration completed for session {request.session_id}: "
                 f"{rehydration_time_ms:.2f}ms, "
-                f"{len(conversation_history)} messages, "
-                f"{len(relevant_contexts)} contexts, "
-                f"continuity: {session_continuity_score:.2f}, "
-                f"insights: {len(session_insights.get('conversation_analysis', {}).get('topics', []))} topics"
+                f"{len(merged_contexts)} merged contexts, "
+                f"{len(conversation_history)} conversation messages"
             )
 
             return result
@@ -525,6 +725,204 @@ class MemoryRehydrator:
         except Exception as e:
             logger.error(f"Memory rehydration failed for session {request.session_id}: {e}")
             raise
+
+    def rehydrate_memory_simple(
+        self,
+        query: str,
+        limit: int = 5,
+        user_id: Optional[str] = None,
+        session_id: Optional[str] = None,
+        context_types: Optional[List[str]] = None,
+        include_history: bool = True,
+        include_preferences: bool = True,
+        include_project_context: bool = True,
+        include_decision_insights: bool = True,
+        min_relevance_score: float = 0.5,
+    ) -> RehydrationResult:
+        """
+        Simplified rehydrate_memory method for backward compatibility.
+
+        Args:
+            query: Query string for context retrieval
+            limit: Maximum number of contexts to retrieve
+            user_id: User identifier
+            session_id: Session identifier
+            context_types: Types of context to include
+            include_history: Whether to include conversation history
+            include_preferences: Whether to include user preferences
+            include_project_context: Whether to include project context
+            include_decision_insights: Whether to include decision insights
+            min_relevance_score: Minimum relevance score for contexts
+
+        Returns:
+            RehydrationResult with rehydrated context
+        """
+        if not session_id:
+            raise ValueError("session_id is required")
+        if not user_id:
+            user_id = "default_user"
+
+        # Create RehydrationRequest
+        request = RehydrationRequest(
+            session_id=session_id,
+            user_id=user_id,
+            current_message=query,
+            context_types=context_types or ["conversation", "preference", "project", "decision"],
+            max_context_length=10000,
+            include_conversation_history=include_history,
+            history_limit=limit,
+            relevance_threshold=min_relevance_score,
+            similarity_threshold=0.8,
+        )
+
+        return self.rehydrate_memory(request)
+
+    def rehydrate_decision_memory(
+        self,
+        session_id: str,
+        user_id: str,
+        current_message: Optional[str] = None,
+        max_decisions: int = 10,
+        include_metadata: bool = True,
+    ) -> RehydrationResult:
+        """
+        Specialized rehydration focused on decision intelligence.
+
+        Args:
+            session_id: Session identifier
+            user_id: User identifier
+            current_message: Current message for entity extraction
+            max_decisions: Maximum number of decisions to include
+            include_metadata: Whether to include decision metadata
+
+        Returns:
+            RehydrationResult with decision-focused context
+        """
+        start_time = time.time()
+
+        try:
+            # Create specialized request
+            request = RehydrationRequest(
+                session_id=session_id,
+                user_id=user_id,
+                current_message=current_message,
+                context_types=["decision"],  # Focus only on decisions
+                max_context_length=8000,  # Smaller context for decisions
+                include_conversation_history=False,  # Focus on decisions, not chat history
+                relevance_threshold=0.6,  # Lower threshold to get more decisions
+                similarity_threshold=0.7,
+            )
+
+            # Get decision contexts with entity overlap scoring
+            query_entities = self._extract_entities_from_message(current_message) if current_message else None
+            decision_merge_result = self.context_merger.merge_decision_contexts(
+                session_id,
+                query_entities=query_entities,
+                relevance_threshold=request.relevance_threshold,
+                similarity_threshold=request.similarity_threshold,
+            )
+
+            # Get decision insights
+            decision_insights = self._get_decision_insights(session_id)
+
+            # Build decision-focused context
+            decision_context = self._build_decision_context(
+                decision_merge_result.merged_contexts, decision_insights, max_decisions, include_metadata
+            )
+
+            rehydration_time_ms = (time.time() - start_time) * 1000
+
+            # Create specialized result
+            result = RehydrationResult(
+                session_id=session_id,
+                user_id=user_id,
+                rehydrated_context=decision_context,
+                conversation_history=[],  # No conversation history for decision focus
+                user_preferences={},  # No user preferences for decision focus
+                project_context={},  # No project context for decision focus
+                relevant_contexts=[],  # Will be populated from merged contexts
+                merged_contexts=decision_merge_result.merged_contexts,
+                session_continuity_score=1.0,  # High continuity for decisions
+                context_relevance_scores={"decisions": 0.9},  # High relevance for decisions
+                rehydration_time_ms=rehydration_time_ms,
+                cache_hit=False,
+                metadata={
+                    "decision_focus": True,
+                    "decision_insights": decision_insights,
+                    "total_decisions": decision_insights.get("total_decisions", 0),
+                    "query_entities": query_entities or [],
+                },
+            )
+
+            logger.info(
+                f"Decision memory rehydration completed for session {session_id}: "
+                f"{rehydration_time_ms:.2f}ms, "
+                f"{len(decision_merge_result.merged_contexts)} decision contexts, "
+                f"{decision_insights.get('total_decisions', 0)} total decisions"
+            )
+
+            return result
+
+        except Exception as e:
+            logger.error(f"Decision memory rehydration failed for session {session_id}: {e}")
+            raise
+
+    def _build_decision_context(
+        self,
+        merged_decisions: List[MergedContext],
+        decision_insights: Dict[str, Any],
+        max_decisions: int,
+        include_metadata: bool,
+    ) -> str:
+        """Build a focused decision context string."""
+        try:
+            if not merged_decisions:
+                return "No decision contexts available for this session."
+
+            # Sort by relevance score
+            sorted_decisions = sorted(merged_decisions, key=lambda x: x.relevance_score, reverse=True)
+
+            # Build context
+            context_parts = []
+
+            # Add summary
+            total_decisions = decision_insights.get("total_decisions", 0)
+            open_decisions = decision_insights.get("open_decisions", 0)
+            context_parts.append(f"Decision Summary: {total_decisions} total decisions, {open_decisions} open")
+
+            # Add top decisions
+            context_parts.append("\nKey Decisions:")
+            for i, decision in enumerate(sorted_decisions[:max_decisions]):
+                status = "open"
+                if decision.metadata:
+                    status = (
+                        decision.metadata.get("decision_statuses", ["open"])[0]
+                        if isinstance(decision.metadata.get("decision_statuses"), list)
+                        else "open"
+                    )
+
+                status_emoji = "🟢" if status == "open" else "🔴" if status == "superseded" else "🟡"
+                context_parts.append(f"{i+1}. {status_emoji} {decision.merged_content}")
+
+                if include_metadata and decision.metadata:
+                    if decision.metadata.get("decision_heads"):
+                        heads = decision.metadata["decision_heads"]
+                        if heads and heads[0]:
+                            context_parts.append(f"   Summary: {heads[0]}")
+
+                    if decision.metadata.get("source_contexts"):
+                        context_parts.append(f"   Sources: {', '.join(decision.metadata['source_contexts'][:3])}")
+
+            # Add entity insights
+            top_entities = decision_insights.get("top_entities", [])
+            if top_entities:
+                context_parts.append(f"\nTop Entities: {', '.join(top_entities[:5])}")
+
+            return "\n".join(context_parts)
+
+        except Exception as e:
+            logger.error(f"Failed to build decision context: {e}")
+            return "Error building decision context"
 
     def get_rehydration_statistics(self) -> Dict[str, Any]:
         """Get statistics about rehydration operations."""
