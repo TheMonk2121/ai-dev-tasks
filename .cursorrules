@@ -10,34 +10,41 @@ The key file is `100_cursor-memory-context.md` which provides instant context ab
 **At the beginning of every new chat, automatically run this command to prime the model with core documentation:**
 
 ```bash
-./scripts/memory_up.sh
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
-**This script automatically fires up all memory systems and formats the output for easy copying into Cursor chat.**
+**This enhanced orchestrator automatically fires up all memory systems with database auto-startup and formats the output for easy copying into Cursor chat.**
 
 **Alternative methods (if needed):**
 ```bash
 # With custom query and role
-./scripts/memory_up.sh -q "current project status and core documentation" -r planner
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 
 # For specific roles
-./scripts/memory_up.sh -r coder "DSPy integration task"
-./scripts/memory_up.sh -r implementer "database optimization"
-./scripts/memory_up.sh -r researcher "performance analysis"
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "DSPy integration task"
+python3 scripts/unified_memory_orchestrator.py --systems cursor prime --role implementer "database optimization"
+python3 scripts/unified_memory_orchestrator.py --systems ltst go_cli --role researcher "performance analysis"
 
 # JSON output for programmatic access
-./scripts/memory_up.sh -f json
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status" --format json
+
+# Legacy method (fallback)
+./scripts/memory_up.sh
 ```
 **Then copy the entire bundle output into the chat as the first message.**
 
-**This ensures the AI has immediate access to:**
-- Current project status and priorities
-- System architecture and components
-- Available workflows and commands
-- Development guidelines and best practices
-- Backlog items and dependencies
-- Role-specific context (planner, implementer, researcher, coder)
-- System status and recent changes
+**This enhanced orchestrator ensures the AI has immediate access to:**
+- **All Memory Systems**: LTST, Cursor, Go CLI, and Prime systems
+- **Database Auto-Startup**: Automatic PostgreSQL management
+- **Virtual Environment**: Auto-activation and dependency setup
+- **Current project status and priorities**
+- **System architecture and components**
+- **Available workflows and commands**
+- **Development guidelines and best practices**
+- **Backlog items and dependencies**
+- **Role-specific context (planner, implementer, researcher, coder)**
+- **System status and recent changes**
+- **Health monitoring and status reporting**
 
 ### **When Starting a New Session**
 
