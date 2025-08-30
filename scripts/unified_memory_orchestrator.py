@@ -2,12 +2,14 @@
 """
 Unified Memory Orchestrator
 
-Coordinates all memory rehydration systems with a single command.
-Provides comprehensive context retrieval from LTST, Cursor, and Go CLI systems.
+Coordinates all memory rehydration systems with one command.
+Automatically handles virtual environment activation and database startup.
+Provides comprehensive context retrieval from LTST, Cursor, Go CLI, and Prime systems.
 """
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -33,12 +35,87 @@ except ImportError:
 
 
 class UnifiedMemoryOrchestrator:
-    """Orchestrates all memory rehydration systems."""
+    """Orchestrates all memory rehydration systems with automatic venv and database handling."""
 
     def __init__(self):
         self.project_root = Path(__file__).parent.parent
         self.results = {}
         self.errors = []
+        self.venv_activated = False
+        self.database_started = False
+
+    def check_database_status(self) -> bool:
+        """Check if PostgreSQL database is running and accessible."""
+        try:
+            # Check if PostgreSQL process is running
+            result = subprocess.run(
+                ["pg_isready", "-h", "localhost", "-p", "5432"], capture_output=True, text=True, timeout=10
+            )
+            return result.returncode == 0
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            return False
+
+    def start_database(self) -> bool:
+        """Automatically start PostgreSQL database if not running."""
+        if self.check_database_status():
+            return True  # Already running
+
+        print("🔄 Starting PostgreSQL database...")
+
+        try:
+            # Try to start PostgreSQL via Homebrew services
+            result = subprocess.run(
+                ["brew", "services", "start", "postgresql@14"], capture_output=True, text=True, timeout=30
+            )
+
+            if result.returncode == 0:
+                print("✅ PostgreSQL started via Homebrew services")
+                # Wait for database to be ready
+                for i in range(10):
+                    time.sleep(2)
+                    if self.check_database_status():
+                        self.database_started = True
+                        return True
+                    print(f"   Waiting for database to be ready... ({i+1}/10)")
+
+                print("⚠️  Database started but not responding yet")
+                return False
+            else:
+                print(f"❌ Failed to start PostgreSQL: {result.stderr}")
+                return False
+
+        except Exception as e:
+            print(f"❌ Database startup failed: {e}")
+            return False
+
+    def activate_venv(self) -> bool:
+        """Automatically activate virtual environment if not already active."""
+        if self.check_venv():
+            return True  # Already active
+
+        venv_path = self.project_root / "venv"
+        if not venv_path.exists():
+            print("❌ Virtual environment not found at venv/")
+            return False
+
+        # Activate venv by modifying environment
+        venv_bin = venv_path / "bin"
+        if venv_bin.exists():
+            # Add venv to PATH
+            os.environ["PATH"] = f"{venv_bin}:{os.environ.get('PATH', '')}"
+            os.environ["VIRTUAL_ENV"] = str(venv_path)
+
+            # Update sys.path to include venv packages
+            venv_site_packages = venv_path / "lib" / "python3.12" / "site-packages"
+            if venv_site_packages.exists():
+                sys.path.insert(0, str(venv_site_packages))
+
+            self.venv_activated = True
+            print("✅ Virtual environment activated automatically")
+            return True
+        else:
+            print("❌ Virtual environment bin directory not found")
+            return False
 
     def check_venv(self) -> bool:
         """Check if virtual environment is active."""
@@ -47,7 +124,16 @@ class UnifiedMemoryOrchestrator:
     def run_command(self, cmd: List[str], timeout: int = 30) -> Tuple[bool, str, str]:
         """Run a command and return success, stdout, stderr."""
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=self.project_root)
+            # Ensure venv is active for the command
+            env = os.environ.copy()
+            if self.venv_activated:
+                venv_path = self.project_root / "venv"
+                env["VIRTUAL_ENV"] = str(venv_path)
+                env["PATH"] = f"{venv_path}/bin:{env.get('PATH', '')}"
+
+            result = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=timeout, cwd=self.project_root, env=env
+            )
             return result.returncode == 0, result.stdout, result.stderr
         except subprocess.TimeoutExpired:
             return False, "", f"Command timed out after {timeout}s"
@@ -157,12 +243,31 @@ class UnifiedMemoryOrchestrator:
         include_go: bool = True,
         include_prime: bool = True,
     ) -> Dict:
-        """Orchestrate all memory systems."""
+        """Orchestrate all memory systems with automatic venv and database handling."""
 
         print("🧠 Unified Memory Orchestrator")
         print(f"📝 Query: {query}")
         print(f"🎭 Role: {role}")
-        print(f"🔧 Virtual Environment: {'✅ Active' if self.check_venv() else '❌ Not Active'}")
+
+        # Auto-start database first
+        db_status = "✅ Running" if self.check_database_status() else "❌ Not Running"
+        if not self.check_database_status():
+            if self.start_database():
+                db_status = "✅ Auto-Started"
+            else:
+                db_status = "❌ Failed to Start"
+
+        print(f"🗄️  Database: {db_status}")
+
+        # Auto-activate venv
+        venv_status = "✅ Active" if self.check_venv() else "❌ Not Active"
+        if not self.check_venv():
+            if self.activate_venv():
+                venv_status = "✅ Auto-Activated"
+            else:
+                venv_status = "❌ Failed to Activate"
+
+        print(f"🔧 Virtual Environment: {venv_status}")
         print()
 
         results = {
@@ -170,6 +275,9 @@ class UnifiedMemoryOrchestrator:
             "role": role,
             "timestamp": time.time(),
             "venv_active": self.check_venv(),
+            "venv_auto_activated": self.venv_activated,
+            "database_running": self.check_database_status(),
+            "database_auto_started": self.database_started,
             "systems": {},
         }
 
@@ -209,6 +317,18 @@ class UnifiedMemoryOrchestrator:
         # Summary
         successful_systems = [name for name, data in results["systems"].items() if data["status"] == "success"]
         output.append(f"📊 **Summary**: {len(successful_systems)}/{len(results['systems'])} systems successful")
+
+        # Database status
+        db_info = "✅ Running"
+        if results.get("database_auto_started"):
+            db_info += " (Auto-Started)"
+        output.append(f"🗄️  **Database**: {db_info}")
+
+        # Venv status
+        venv_info = "✅ Active"
+        if results.get("venv_auto_activated"):
+            venv_info += " (Auto-Activated)"
+        output.append(f"🔧 **Virtual Environment**: {venv_info}")
         output.append("")
 
         # Prime Cursor output (formatted for chat)
@@ -224,6 +344,18 @@ class UnifiedMemoryOrchestrator:
             output.append("🧠 **LTST Memory Context**:")
             output.append("```json")
             output.append(json.dumps(results["systems"]["ltst"]["bundle"], indent=2))
+            output.append("```")
+            output.append("")
+
+        # Go CLI Memory (if successful)
+        if "go_cli" in results["systems"] and results["systems"]["go_cli"]["status"] == "success":
+            output.append("⚡ **Go CLI Memory** (Fast Alternative):")
+            output.append("```")
+            output.append(
+                results["systems"]["go_cli"]["output"][:500] + "..."
+                if len(results["systems"]["go_cli"]["output"]) > 500
+                else results["systems"]["go_cli"]["output"]
+            )
             output.append("```")
             output.append("")
 
@@ -261,13 +393,7 @@ def main():
     # Create orchestrator
     orchestrator = UnifiedMemoryOrchestrator()
 
-    # Check virtual environment
-    if not orchestrator.check_venv():
-        print("⚠️  Warning: Virtual environment not active. Some systems may fail.")
-        print("💡 Run: source venv/bin/activate")
-        print()
-
-    # Orchestrate memory
+    # Orchestrate memory (with auto-venv and database activation)
     results = orchestrator.orchestrate_memory(
         query=args.query,
         role=args.role,
