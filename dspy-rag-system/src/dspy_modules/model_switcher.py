@@ -15,12 +15,16 @@ import time
 from dataclasses import dataclass
 from enum import Enum
 from importlib import import_module
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 import dspy
 from dspy import LM, InputField, Module, OutputField, Signature
 
 _LOG = logging.getLogger("model_switcher")
+
+# Type annotations for better Pyright support
+if TYPE_CHECKING:
+    from ..utils import context_performance, context_security
 
 # Import requests for MCP server communication
 try:
