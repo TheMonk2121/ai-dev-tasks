@@ -1658,6 +1658,105 @@ python scripts/hydration_health.py --status
 - **Development Workflow**: `400_guides/400_04_development-workflow-and-standards.md`
 - **DSPy Framework**: `400_guides/400_07_ai-frameworks-dspy.md`
 
+## 🗄️ Database Schema Reference
+
+### **PostgreSQL Tables and Relationships**
+
+The memory system uses a comprehensive PostgreSQL schema with the following core tables:
+
+#### **conversation_sessions**
+Primary table for tracking conversation sessions with AI agents.
+- **session_id** (VARCHAR, PK): Unique session identifier
+- **user_id** (VARCHAR): User identifier
+- **session_type** (VARCHAR): Type of session (e.g., "planner", "coder", "researcher")
+- **created_at** (TIMESTAMP): Session creation timestamp
+- **updated_at** (TIMESTAMP): Last update timestamp
+- **metadata** (JSONB): Additional session metadata
+
+#### **conversation_context**
+Stores context data for each session with relevance scoring.
+- **id** (INTEGER, PK): Auto-incrementing primary key
+- **session_id** (VARCHAR, FK): References conversation_sessions.session_id
+- **context_type** (VARCHAR): Type of context (e.g., "memory", "code", "documentation")
+- **context_key** (VARCHAR): Context identifier key
+- **context_value** (TEXT): Actual context content
+- **relevance_score** (DOUBLE PRECISION): Relevance score for retrieval
+- **context_hash** (VARCHAR): Hash for deduplication
+- **metadata** (JSONB): Additional context metadata
+- **expires_at** (TIMESTAMP): Context expiration timestamp
+- **created_at** (TIMESTAMP): Creation timestamp
+
+#### **documents**
+Stores document metadata for the RAG system.
+- **id** (INTEGER, PK): Auto-incrementing primary key
+- **file_path** (VARCHAR, UNIQUE): File path with unique constraint
+- **file_name** (VARCHAR): Document filename
+- **content_type** (VARCHAR): Type of content (e.g., "markdown", "python")
+- **content_sha** (VARCHAR): Content hash for change detection
+- **metadata** (JSONB): Document metadata
+- **created_at** (TIMESTAMP): Creation timestamp
+- **updated_at** (TIMESTAMP): Last update timestamp
+
+#### **document_chunks**
+Stores document chunks for vector search with embeddings.
+- **id** (INTEGER, PK): Auto-incrementing primary key
+- **document_id** (INTEGER, FK): References documents.id
+- **chunk_index** (INTEGER): Chunk position in document
+- **content** (TEXT): Chunk content
+- **content_tsv** (TSVECTOR): Full-text search vector
+- **embedding** (VECTOR): Vector embedding for similarity search
+- **metadata** (JSONB): Chunk metadata
+- **created_at** (TIMESTAMP): Creation timestamp
+
+### **Indexes and Constraints**
+
+#### **Primary Keys**
+- `conversation_sessions.session_id` (VARCHAR)
+- `conversation_context.id` (INTEGER)
+- `documents.id` (INTEGER)
+- `document_chunks.id` (INTEGER)
+
+#### **Foreign Keys**
+- `conversation_context.session_id` → `conversation_sessions.session_id`
+- `document_chunks.document_id` → `documents.id`
+
+#### **Unique Constraints**
+- `conversation_context.session_id_context_type_context_key_key` (Composite unique)
+- `documents.file_path_unique` (File path uniqueness)
+- `document_chunks_unique` (Document ID + chunk index uniqueness)
+
+#### **Performance Indexes**
+- `conversation_context_session_id_idx` (Session ID lookup)
+- `conversation_context_context_type_idx` (Context type filtering)
+- `conversation_context_relevance_score_idx` (Relevance score sorting)
+- `document_chunks_document_id_idx` (Document ID lookup)
+- `document_chunks_embedding_idx` (Vector similarity search)
+
+### **Data Types and Validation Rules**
+
+#### **String Validation**
+- **session_id**: Pattern `^[a-zA-Z0-9_-]+$` (alphanumeric, underscore, hyphen)
+- **context_key**: Pattern `^[a-zA-Z0-9_.-]+$` (alphanumeric, dot, underscore, hyphen)
+- **file_path**: Must be unique across all documents
+
+#### **Numeric Constraints**
+- **relevance_score**: Range 0.0 to 1.0 (double precision)
+- **chunk_index**: Non-negative integer
+- **embedding**: Vector type for pgvector similarity search
+
+#### **JSONB Schema Validation**
+- **metadata**: Flexible JSON structure for extensible metadata
+- **context_value**: Text content with no length limit
+- **content**: Text content for document chunks
+
+### **Vector Search Configuration**
+
+The system uses pgvector for similarity search with the following configuration:
+- **Vector Dimension**: 384 (all-MiniLM-L6-v2 embeddings)
+- **Distance Metric**: Cosine similarity
+- **Index Type**: HNSW (Hierarchical Navigable Small World)
+- **Search Parameters**: k=10 for top-k retrieval
+
 ## 📚 References
 
 - **Migration Map**: `migration_map.csv`
@@ -1665,6 +1764,7 @@ python scripts/hydration_health.py --status
 - **Original Memory**: Various memory-related files (now stubs)
 - **Memory Context System**: `100_memory/100_cursor-memory-context.md`
 - **Lean Hybrid System**: Implementation details and configuration
+- **Schema Files**: `dspy-rag-system/config/database/schemas/`
 
 ## 📋 Changelog
 

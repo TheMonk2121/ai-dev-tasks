@@ -836,12 +836,234 @@ if not validation_result["is_safe"]:
 - **For Implementers**: Focus on performance monitoring and governance frameworks
 - **For Coders**: Focus on signature validation and error handling patterns
 
+## 🔌 **API Reference**
+
+### **Pydantic Models (14 Models)**
+
+The DSPy system uses 14 core Pydantic models for type safety and validation:
+
+#### **BaseContext**
+Base context model for all DSPy context types.
+```python
+class BaseContext(BaseModel):
+    session_id: str = Field(..., pattern="^[a-zA-Z0-9_-]+$")
+    user_id: str = Field(..., pattern="^[a-zA-Z0-9_-]+$")
+    vector_enhancement_timestamp: Optional[datetime] = None
+```
+
+#### **ResearcherContext**
+Context model for researcher role with analysis capabilities.
+```python
+class ResearcherContext(BaseContext):
+    research_topic: str = Field(..., min_length=1, max_length=500)
+    methodology: Literal["literature_review", "experimental", "case_study", "survey", "analysis"]
+    sources: List[str] = Field(default_factory=list)
+    hypotheses: List[str] = Field(default_factory=list)
+    constraints: Dict[str, Any] = Field(default_factory=dict)
+```
+
+#### **PlannerContext**
+Context model for planner role with strategic planning capabilities.
+```python
+class PlannerContext(BaseContext):
+    project_scope: str = Field(..., min_length=1, max_length=1000)
+    backlog_priority: Literal["P0", "P1", "P2", "P3"]
+    strategic_goals: List[str] = Field(default_factory=list)
+    timeline: Optional[Dict[str, Any]] = None
+    resource_requirements: Optional[Dict[str, Any]] = None
+```
+
+#### **ImplementerContext**
+Context model for implementer role with execution capabilities.
+```python
+class ImplementerContext(BaseContext):
+    implementation_plan: str = Field(..., min_length=1, max_length=1000)
+    target_environment: str = Field(..., min_length=1, max_length=100)
+    rollback_strategy: str = Field(..., min_length=1, max_length=200)
+    dependencies: List[str] = Field(default_factory=list)
+    risk_assessment: Optional[Dict[str, Any]] = None
+```
+
+#### **CoderContext**
+Context model for coder role with development capabilities.
+```python
+class CoderContext(BaseContext):
+    codebase_path: str = Field(..., min_length=1, max_length=500)
+    language: str = Field(..., min_length=1, max_length=50)
+    framework: str = Field(..., min_length=1, max_length=100)
+    current_file: str = Field(..., min_length=1, max_length=500)
+    file_context: List[str] = Field(default_factory=list)
+    cursor_model: str = Field(..., min_length=1, max_length=100)
+```
+
+### **DSPy Module Interfaces**
+
+#### **RAGPipeline**
+Main RAG pipeline for document retrieval and generation.
+```python
+class RAGPipeline:
+    def __init__(self, model_name: str, embedding_model: str = "all-MiniLM-L6-v2"):
+        self.model_name = model_name
+        self.embedding_model = embedding_model
+        self.vector_store = HybridVectorStore()
+        self.retriever = Retriever()
+        self.generator = Generator()
+    
+    def answer(self, query: str, context: Optional[List[str]] = None) -> Dict[str, Any]:
+        """Generate answer with RAG pipeline."""
+        # Implementation details...
+        pass
+```
+
+#### **ModelSwitcher**
+Manages switching between different AI models.
+```python
+class ModelSwitcher:
+    def __init__(self, default_model: str = "llama3.1:8b"):
+        self.current_model = default_model
+        self.available_models = ["llama3.1:8b", "claude-3.5-sonnet", "gpt-4"]
+        self.rag_pipeline = None
+    
+    def switch_model(self, model_name: str) -> bool:
+        """Switch to specified model."""
+        # Implementation details...
+        pass
+    
+    def get_rag_pipeline(self) -> RAGPipeline:
+        """Get current RAG pipeline."""
+        # Implementation details...
+        pass
+```
+
+#### **ContextFactory**
+Factory for creating context objects with validation.
+```python
+class ContextFactory:
+    @staticmethod
+    def create_researcher_context(
+        session_id: str,
+        research_topic: str,
+        methodology: str,
+        **kwargs
+    ) -> ResearcherContext:
+        """Create validated researcher context."""
+        # Implementation details...
+        pass
+    
+    @staticmethod
+    def create_planner_context(
+        session_id: str,
+        project_scope: str,
+        backlog_priority: str,
+        **kwargs
+    ) -> PlannerContext:
+        """Create validated planner context."""
+        # Implementation details...
+        pass
+```
+
+### **Parameters and Return Types**
+
+#### **RAGPipeline.answer()**
+```python
+def answer(
+    self, 
+    query: str, 
+    context: Optional[List[str]] = None,
+    max_tokens: int = 1000,
+    temperature: float = 0.7
+) -> Dict[str, Any]:
+    """
+    Generate answer using RAG pipeline.
+    
+    Args:
+        query: User query string
+        context: Optional context list for retrieval
+        max_tokens: Maximum tokens for generation
+        temperature: Generation temperature (0.0-1.0)
+    
+    Returns:
+        Dict containing:
+        - answer: Generated answer string
+        - context: Retrieved context list
+        - metadata: Additional metadata
+        - performance: Performance metrics
+    """
+```
+
+#### **ModelSwitcher.switch_model()**
+```python
+def switch_model(
+    self, 
+    model_name: str,
+    force_reload: bool = False
+) -> bool:
+    """
+    Switch to specified AI model.
+    
+    Args:
+        model_name: Name of model to switch to
+        force_reload: Force model reload even if same model
+    
+    Returns:
+        True if switch successful, False otherwise
+    """
+```
+
+### **Usage Examples**
+
+#### **Basic RAG Pipeline Usage**
+```python
+# Initialize RAG pipeline
+rag_pipeline = RAGPipeline("llama3.1:8b")
+
+# Generate answer
+result = rag_pipeline.answer(
+    query="What is the memory system architecture?",
+    max_tokens=500,
+    temperature=0.7
+)
+
+print(f"Answer: {result['answer']}")
+print(f"Context used: {len(result['context'])} documents")
+```
+
+#### **Context Creation and Usage**
+```python
+# Create researcher context
+researcher_context = ContextFactory.create_researcher_context(
+    session_id="research_001",
+    research_topic="Memory system optimization",
+    methodology="analysis",
+    sources=["400_guides/400_01_memory-system-architecture.md"]
+)
+
+# Use context with RAG pipeline
+result = rag_pipeline.answer(
+    query="Analyze memory system performance",
+    context=researcher_context.sources
+)
+```
+
+#### **Model Switching**
+```python
+# Initialize model switcher
+switcher = ModelSwitcher()
+
+# Switch to different model
+success = switcher.switch_model("claude-3.5-sonnet")
+if success:
+    rag_pipeline = switcher.get_rag_pipeline()
+    result = rag_pipeline.answer("Complex analysis query")
+```
+
 ## 📚 **References**
 
 - **DSPy Documentation**: `dspy-rag-system/`
 - **AI Frameworks**: `400_guides/400_07_ai-frameworks-dspy.md`
 - **Memory Context**: `100_memory/100_cursor-memory-context.md`
 - **Performance Monitoring**: `scripts/ai_performance_monitor.py`
+- **Schema Files**: `dspy-rag-system/config/database/schemas/`
 
 ## 📋 **Changelog**
 
