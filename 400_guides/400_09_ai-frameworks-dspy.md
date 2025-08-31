@@ -10,6 +10,57 @@
 |---|---|---|
 | Complete AI framework integration and DSPy implementation guide with user journey and technical reference | Working with AI frameworks, implementing DSPy modules, or integrating AI capabilities | Read 10 (Integrations & Models) then 11 (Performance & Optimization) |
 
+## ⚡ **5-Minute Quick Start**
+
+### **Get Up and Running in 5 Minutes**
+
+**Step 1: Initialize the AI Framework**
+```bash
+# Navigate to the DSPy system
+cd dspy-rag-system
+
+# Activate the virtual environment
+source venv/bin/activate
+
+# Test basic AI integration
+python3 run_researcher_analysis.py
+```
+
+**Step 2: Create Your First AI Context**
+```python
+# Create a researcher context for analysis
+from dspy_rag_system import ContextFactory
+
+context = ContextFactory.create_researcher_context(
+    session_id="quick_start_001",
+    research_topic="Project analysis",
+    methodology="analysis"
+)
+```
+
+**Step 3: Execute Your First AI Query**
+```python
+# Use the RAG pipeline for AI-powered analysis
+from dspy_rag_system import ModelSwitcher
+
+switcher = ModelSwitcher()
+switcher.switch_model("llama3.1:8b")
+rag_pipeline = switcher.get_rag_pipeline()
+
+result = rag_pipeline.answer("What is the current project status?")
+print(result["answer"])
+```
+
+**Expected Outcome**: AI framework responds with context-aware analysis
+
+**What You'll See**:
+- ✅ AI framework initialized successfully
+- ✅ Context created and validated
+- ✅ AI responds with relevant project information
+- ✅ System handles model switching automatically
+
+**Next Steps**: Read the User Journey section below for detailed workflows, or jump to `400_10_integrations-models.md` for model management.
+
 ## 🗺️ **Choose Your Path**
 
 ### **What Are You Trying to Do?**

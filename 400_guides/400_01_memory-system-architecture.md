@@ -10,6 +10,40 @@
 |---|---|---|
 | Complete memory system guide with user journey and technical reference | Need to understand how the memory system works, implementing memory features, or troubleshooting memory issues | Read 02 (Memory Rehydration) then use the memory system |
 
+## ⚡ **5-Minute Quick Start**
+
+### **Get Up and Running in 5 Minutes**
+
+**Step 1: Initialize the Memory System**
+```bash
+# Start the memory system
+./scripts/memory_up.sh
+
+# Verify it's working
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "test memory system"
+```
+
+**Step 2: Start Your First Session**
+```bash
+# Begin a conversation with context awareness
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "help me understand this project"
+```
+
+**Step 3: Verify Context is Working**
+- Ask the AI about your previous work
+- Check that it remembers your preferences
+- Confirm it understands your project context
+
+**Expected Outcome**: AI remembers your work context and preferences across sessions
+
+**What You'll See**:
+- ✅ Memory system initialized successfully
+- ✅ Context loaded from previous sessions
+- ✅ AI responds with project-aware suggestions
+- ✅ No need to re-explain your work
+
+**Next Steps**: Read the User Journey section below for detailed workflows, or jump to `400_02_memory-rehydration-context-management.md` for advanced usage.
+
 ## 🗺️ **Choose Your Path**
 
 ### **What Are You Trying to Do?**

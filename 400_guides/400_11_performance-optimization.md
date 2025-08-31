@@ -10,6 +10,47 @@
 |---|---|---|
 | Complete performance optimization and monitoring guide with user journey and technical reference | Optimizing system performance, monitoring metrics, or improving efficiency | Read 12 (Advanced Configurations) then apply optimization techniques |
 
+## ⚡ **5-Minute Quick Start**
+
+### **Get Up and Running in 5 Minutes**
+
+**Step 1: Check Current System Performance**
+```bash
+# Run a quick performance check
+python3 scripts/performance_monitor.py --quick-check
+
+# Check system health
+python3 scripts/performance_monitor.py --health-check
+```
+
+**Step 2: Identify Performance Issues**
+```bash
+# Get current performance metrics
+python3 scripts/performance_monitor.py --metrics
+
+# Look for bottlenecks
+python3 scripts/performance_monitor.py --bottlenecks
+```
+
+**Step 3: Apply Basic Optimizations**
+```bash
+# Optimize database connections
+python3 scripts/db_optimizer.py --quick-optimize
+
+# Check AI model performance
+python3 scripts/ai_performance_monitor.py --status
+```
+
+**Expected Outcome**: System performance improved and monitoring active
+
+**What You'll See**:
+- ✅ Performance metrics displayed
+- ✅ Bottlenecks identified
+- ✅ Basic optimizations applied
+- ✅ Monitoring system active
+
+**Next Steps**: Read the User Journey section below for detailed troubleshooting, or jump to the Technical Reference for advanced optimization.
+
 ## 🗺️ **Choose Your Path**
 
 ### **What Are You Trying to Do?**
