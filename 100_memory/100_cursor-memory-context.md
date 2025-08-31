@@ -1,4 +1,15 @@
 
+---
+MEMORY_CONTEXT: HIGH
+ANCHOR_KEY: memory-context
+ANCHOR_PRIORITY: 0
+ROLE_PINS: ["planner", "implementer", "researcher", "coder"]
+CONTENT_TYPE: guide
+COMPLEXITY: intermediate
+LAST_UPDATED: 2024-12-31
+NEXT_REVIEW: 2025-01-31
+RELATED_FILES: ["400_01_memory-system-architecture.md", "400_02_memory-rehydration-context-management.md"]
+---
 
 <!-- CONTEXT_INDEX
 {
