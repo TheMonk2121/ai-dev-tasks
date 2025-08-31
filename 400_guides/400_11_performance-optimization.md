@@ -84,6 +84,38 @@ Are you troubleshooting performance?
             └─ No → 400_03 (System Overview)
 ```
 
+### **I'm a... (Choose Your Role)**
+
+**I'm a System Administrator** → Start with Quick Start above, then read Technical Reference for monitoring setup
+
+**I'm a Developer** → Focus on User Journey scenarios, then `400_01_memory-system-architecture.md` for memory optimization
+
+**I'm a DevOps Engineer** → Check Technical Reference section, then `400_04_development-workflow-and-standards.md` for deployment
+
+**I'm a Data Scientist** → Read User Journey section, then `400_09_ai-frameworks-dspy.md` for AI optimization
+
+**I'm a Project Manager** → Read User Journey section, then `400_03_system-overview-and-architecture.md` for system overview
+
+**I'm in Emergency Mode** → Jump to Emergency section below for immediate fixes
+
+### **Common Tasks Quick Links**
+
+- **🚀 Quick Performance Check** → Quick Start section above
+- **🔧 Fix Performance Issues** → User Journey scenarios below
+- **📊 Set Up Monitoring** → Technical Reference section
+- **🧠 Optimize Memory** → `400_01_memory-system-architecture.md`
+- **🤖 Optimize AI** → `400_09_ai-frameworks-dspy.md`
+
+### **Emergency Section**
+
+**System Down?** → Run Quick Start commands above immediately
+
+**Memory Issues?** → Jump to `400_01_memory-system-architecture.md` Quick Start
+
+**AI Performance Problems?** → Jump to `400_09_ai-frameworks-dspy.md` Quick Start
+
+**Database Slow?** → Check Technical Reference section for database optimization
+
 ### **Related Guides with Context**
 
 - **`400_01_memory-system-architecture.md`** - How memory system works (for memory optimization)

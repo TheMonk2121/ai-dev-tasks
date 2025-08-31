@@ -77,6 +77,36 @@ Are you new to the project?
             └─ No → 400_03 (System Overview)
 ```
 
+### **I'm a... (Choose Your Role)**
+
+**I'm a New Developer** → Start with Quick Start above, then read `400_02_memory-rehydration-context-management.md` for daily usage
+
+**I'm a System Administrator** → Focus on Technical Reference section, then `400_11_performance-optimization.md` for monitoring
+
+**I'm a Project Manager** → Read User Journey section, then `400_06_backlog-management-priorities.md` for project planning
+
+**I'm a DevOps Engineer** → Check Technical Reference section, then `400_04_development-workflow-and-standards.md` for deployment
+
+**I'm a Researcher** → Read User Journey section, then `400_09_ai-frameworks-dspy.md` for AI integration
+
+**I'm Troubleshooting** → Jump to User Journey scenarios, then `400_11_performance-optimization.md` for fixes
+
+### **Common Tasks Quick Links**
+
+- **🚀 Get Started Fast** → Quick Start section above
+- **🔧 Fix Memory Issues** → User Journey scenarios below
+- **📊 Monitor Performance** → Technical Reference section
+- **🤖 Integrate with AI** → `400_09_ai-frameworks-dspy.md`
+- **📋 Plan Projects** → `400_06_backlog-management-priorities.md`
+
+### **Emergency Section**
+
+**System Not Working?** → Check User Journey scenarios below for immediate solutions
+
+**Lost Context?** → Run `./scripts/memory_up.sh` and try the Quick Start commands above
+
+**Performance Issues?** → Jump to `400_11_performance-optimization.md` Quick Start
+
 ### **Related Guides with Context**
 
 - **`400_02_memory-rehydration-context-management.md`** - How to actually use the memory system day-to-day

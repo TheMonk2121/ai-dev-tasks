@@ -94,6 +94,36 @@ Are you implementing AI features?
             └─ No → 400_04 (Development Workflow)
 ```
 
+### **I'm a... (Choose Your Role)**
+
+**I'm a Developer** → Start with Quick Start above, then read `400_10_integrations-models.md` for model management
+
+**I'm a Data Scientist** → Focus on Technical Reference section, then `400_11_performance-optimization.md` for optimization
+
+**I'm a System Architect** → Read User Journey section, then `400_03_system-overview-and-architecture.md` for big picture
+
+**I'm a DevOps Engineer** → Check Technical Reference section, then `400_04_development-workflow-and-standards.md` for deployment
+
+**I'm a Researcher** → Read User Journey section, then `400_01_memory-system-architecture.md` for memory integration
+
+**I'm Troubleshooting** → Jump to User Journey scenarios, then `400_11_performance-optimization.md` for fixes
+
+### **Common Tasks Quick Links**
+
+- **🚀 Get Started Fast** → Quick Start section above
+- **🔧 Fix AI Issues** → User Journey scenarios below
+- **📊 Optimize Performance** → Technical Reference section
+- **🧠 Integrate with Memory** → `400_01_memory-system-architecture.md`
+- **🤖 Manage Models** → `400_10_integrations-models.md`
+
+### **Emergency Section**
+
+**AI Not Responding?** → Check User Journey scenarios below for immediate solutions
+
+**Model Switching Issues?** → Try the Quick Start commands above with different models
+
+**Performance Problems?** → Jump to `400_11_performance-optimization.md` Quick Start
+
 ### **Related Guides with Context**
 
 - **`400_10_integrations-models.md`** - How to manage and integrate different AI models
