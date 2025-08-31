@@ -472,7 +472,7 @@ python3 scripts/state_manager.py export --format json --backlog-id B-XXX
 python3 scripts/backlog_analyzer.py --priority high
 
 # Performance monitoring
-python3 scripts/performance_monitor.py --duration 24h
+python3 scripts/eval/eval_retrieval.py --dataset_config configs/eval/retrieval_quality.yaml
 
 # Error recovery
 python3 scripts/error_recovery.py --pattern network
@@ -780,9 +780,10 @@ ls -la metrics/baseline_evaluations/ragchecker_official_*.json
 - **Test Cases**: 5 comprehensive ground truth test cases
 - **Status**: CLI requires AWS Bedrock credentials, using fallback evaluation
 - **Memory Integration**: Real responses from unified memory orchestrator (87K+ characters)
-- **Latest Evaluation**: 2025-08-30 15:21 - Phase 4 (Documentation Integration) completed
+- **Latest Evaluation**: 2025-08-30 15:21 - Production RAG Quality Standards Framework implemented
 
 #### **Related Documentation**
+- `400_guides/400_08_results-management-and-evaluations.md#production-rag-quality-standards-framework` - Production RAG quality standards framework
 - `400_guides/400_07_ai-frameworks-dspy.md#ragchecker-evaluation-system` - RAGChecker evaluation framework
 - `400_guides/400_07_ai-frameworks-dspy.md` - Detailed RAGChecker implementation
 - `metrics/baseline_evaluations/EVALUATION_STATUS.md` - Current evaluation status

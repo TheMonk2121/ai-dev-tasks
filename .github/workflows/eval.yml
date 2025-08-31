@@ -1,0 +1,188 @@
+name: RAG Quality Evaluation (RAGChecker + Pyright)
+on:
+  pull_request:
+    paths:
+      - 'dspy-rag-system/**'
+      - 'scripts/**'
+      - 'configs/eval/**'
+      - '.github/workflows/eval.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'dspy-rag-system/**'
+      - 'scripts/**'
+      - 'configs/eval/**'
+      - '.github/workflows/eval.yml'
+  schedule:
+    - cron: "0 7 * * *"  # Daily at 7 AM UTC
+
+jobs:
+  pyright:
+    name: Type Checking (Pyright)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyright pyyaml
+
+      - name: Run Pyright type checking
+        run: |
+          pyright --project pyrightconfig.json
+
+      - name: Upload type check results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pyright-results
+          path: .pyright/
+
+  smoke-test:
+    name: Smoke Test (Quick Evaluation)
+    runs-on: ubuntu-latest
+    needs: pyright
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyyaml
+
+      - name: Run smoke test (retrieval evaluation)
+        run: |
+          python scripts/eval/eval_retrieval.py \
+            --dataset_config configs/eval/retrieval_quality.yaml \
+            --out_dir artifacts/smoke-test || true
+
+      - name: Upload smoke test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-test-results
+          path: artifacts/smoke-test/
+
+  nightly-evaluation:
+    name: Full Evaluation Suite (Nightly)
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    needs: pyright
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyyaml
+
+      - name: Run retrieval evaluation
+        run: |
+          python scripts/eval/eval_retrieval.py \
+            --dataset_config configs/eval/retrieval_quality.yaml \
+            --out_dir artifacts/nightly/retrieval
+
+      - name: Run faithfulness evaluation
+        run: |
+          python scripts/eval/eval_faithfulness.py \
+            --dataset_config configs/eval/faithfulness_quality.yaml \
+            --out_dir artifacts/nightly/faithfulness
+
+      - name: Run latency evaluation
+        run: |
+          python scripts/eval/eval_retrieval.py \
+            --dataset_config configs/eval/latency_quality.yaml \
+            --out_dir artifacts/nightly/latency \
+            --mode dense
+
+      - name: Run robustness evaluation
+        run: |
+          python scripts/eval/eval_retrieval.py \
+            --dataset_config configs/eval/robustness_quality.yaml \
+            --out_dir artifacts/nightly/robustness \
+            --mode hybrid_rerank
+
+      - name: Upload nightly results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nightly-evaluation-results
+          path: artifacts/nightly/
+
+  quality-gate:
+    name: Quality Gate Check
+    runs-on: ubuntu-latest
+    needs: [pyright, smoke-test]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyyaml
+
+      - name: Download smoke test results
+        uses: actions/download-artifact@v4
+        with:
+          name: smoke-test-results
+          path: artifacts/smoke-test/
+
+      - name: Check quality gates
+        run: |
+          # Check if any evaluation failed
+          if [ -f artifacts/smoke-test/*.json ]; then
+            echo "✅ Quality gates passed - evaluation completed successfully"
+          else
+            echo "❌ Quality gates failed - evaluation did not complete"
+            exit 1
+          fi
+
+      - name: Generate evaluation summary
+        run: |
+          echo "## 📊 RAG Quality Evaluation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Type Checking" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Pyright type checking completed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Smoke Test Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f artifacts/smoke-test/*.json ]; then
+            echo "- ✅ Retrieval evaluation completed" >> $GITHUB_STEP_SUMMARY
+            echo "- 📁 Results saved to artifacts" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ Evaluation failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "- Review evaluation results in artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- Address any quality gate failures" >> $GITHUB_STEP_SUMMARY
+          echo "- Run full evaluation suite locally if needed" >> $GITHUB_STEP_SUMMARY

@@ -706,7 +706,7 @@ The system now includes **entity-aware context expansion** that enhances semanti
 
 ### **MCP Memory Server Integration**
 
-#### **MCP Memory Server (`scripts/mcp_memory_server.py`)**
+#### **MCP Memory Server (Legacy - Replaced by Production Framework)**
 **Production-ready HTTP server providing MCP-compatible memory rehydration endpoints.**
 
 **Purpose**: Database-based memory rehydration for Cursor AI with automatic caching, monitoring, and performance optimization.
@@ -947,7 +947,7 @@ def discover_memory_resources() -> dict:
             "tables": ["document_chunks", "conversation_memory", "user_preferences"],
             "status": "operational"
         },
-        "mcp_memory_server": {
+        "mcp_memory_server": {  # LEGACY - Replaced by Production Framework
             "type": "HTTP Server",
             "location": "http://localhost:3000",
             "tools": ["rehydrate_memory", "get_cursor_context", "get_planner_context",

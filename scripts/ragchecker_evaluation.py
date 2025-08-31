@@ -16,8 +16,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict
 
-from ragchecker.container import RetrievedDoc
-from ragchecker.evaluator import RAGChecker, RAGResult, RAGResults
+# Import RAGChecker components with type ignore for missing stubs
+from ragchecker.container import RetrievedDoc  # type: ignore
+from ragchecker.evaluator import RAGChecker, RAGResult, RAGResults  # type: ignore
 
 from scripts.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
 
@@ -84,20 +85,20 @@ class RAGCheckerEvaluator:
             generated_response = response_data.get("formatted_output", "")
 
             # Extract retrieved context
-            context_sources = []
+            context_sources: list[str] = []
             if "ltst_memory" in response_data:
-                context_sources.append(response_data["ltst_memory"])
+                context_sources.append(str(response_data["ltst_memory"]))
             if "cursor_memory" in response_data:
-                context_sources.append(response_data["cursor_memory"])
+                context_sources.append(str(response_data["cursor_memory"]))
             if "go_cli_memory" in response_data:
-                context_sources.append(response_data["go_cli_memory"])
+                context_sources.append(str(response_data["go_cli_memory"]))
             if "prime_memory" in response_data:
-                context_sources.append(response_data["prime_memory"])
+                context_sources.append(str(response_data["prime_memory"]))
 
             retrieved_context = " ".join(context_sources) if context_sources else ""
 
             # Create RetrievedDoc objects
-            retrieved_docs = []
+            retrieved_docs: list[RetrievedDoc] = []
             if retrieved_context:
                 retrieved_docs.append(RetrievedDoc(doc_id="memory_context", text=retrieved_context))
 
@@ -133,10 +134,10 @@ class RAGCheckerEvaluator:
             # Run RAGChecker evaluation with limited metrics
             # Note: Many RAGChecker metrics require LLM access and ground truth
             # We'll focus on metrics that can work with our data
-            results = self.ragchecker.evaluate(rag_results, metrics="faithfulness")
+            results = self.ragchecker.evaluate(rag_results, metrics="faithfulness")  # type: ignore
 
             # Extract scores
-            ragchecker_scores = {}
+            ragchecker_scores: Dict[str, float] = {}
             for metric_name, score in results.items():
                 try:
                     if isinstance(score, (int, float)):
@@ -155,7 +156,7 @@ class RAGCheckerEvaluator:
 
     def _calculate_basic_metrics(self, rag_result: RAGResult) -> Dict[str, float]:
         """Calculate basic metrics that don't require LLM or ground truth."""
-        metrics = {}
+        metrics: Dict[str, float] = {}
 
         # Response length (normalized)
         response_length = len(rag_result.response)
@@ -274,11 +275,11 @@ class RAGCheckerEvaluator:
 
         # Run custom evaluation using fallback method
         try:
-            fallback_data = [
+            fallback_data: list[dict[str, Any]] = [
                 {"query": case.query, "response": response, "gt_answer": case.gt_answer, "retrieved_context": []}
             ]
             custom_result = self.official_evaluator.create_fallback_evaluation(fallback_data)
-            custom_score = custom_result["overall_metrics"]["f1_score"]
+            custom_score = float(custom_result["overall_metrics"]["f1_score"])
         except Exception as e:
             print(f"Custom evaluation failed: {e}")
             custom_score = 0.0
@@ -313,9 +314,9 @@ class RAGCheckerEvaluator:
         # Get baseline test cases
         baseline_cases = self.official_evaluator.create_official_test_cases()
 
-        results = []
-        custom_total = 0
-        ragchecker_total = 0
+        results: list[RAGCheckerResult] = []
+        custom_total = 0.0
+        ragchecker_total = 0.0
 
         for i, case in enumerate(baseline_cases, 1):
             print(f"\n🔍 Test {i}/{len(baseline_cases)}: {case.query_id}")
@@ -335,8 +336,8 @@ class RAGCheckerEvaluator:
             print(f"   Recommendation: {result.recommendation}")
 
         # Calculate averages
-        custom_avg = custom_total / len(baseline_cases)
-        ragchecker_avg = ragchecker_total / len(baseline_cases)
+        custom_avg = custom_total / len(baseline_cases) if baseline_cases else 0.0
+        ragchecker_avg = ragchecker_total / len(baseline_cases) if baseline_cases else 0.0
 
         # Overall comparison
         overall_comparison = self.compare_evaluations(custom_avg, ragchecker_avg)
@@ -352,26 +353,27 @@ class RAGCheckerEvaluator:
 
         # Detailed RAGChecker metrics
         print("\n🔍 RAGChecker Metrics Breakdown:")
-        all_ragchecker_scores = {}
+        all_ragchecker_scores: dict[str, list[float]] = {}
         for result in results:
             for metric, score in result.ragchecker_scores.items():
                 if metric not in all_ragchecker_scores:
                     all_ragchecker_scores[metric] = []
-                all_ragchecker_scores[metric].append(score)
+                all_ragchecker_scores[metric].append(float(score))
 
         for metric, scores in all_ragchecker_scores.items():
-            avg_score = sum(scores) / len(scores) * 100
+            avg_score = sum(scores) / len(scores) * 100 if scores else 0.0
             print(f"   {metric}: {avg_score:.1f}/100")
 
         # Save results
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        results_data = {
+        results_data: dict[str, Any] = {
             "timestamp": timestamp,
             "custom_average": custom_avg,
             "ragchecker_average": ragchecker_avg,
             "overall_comparison": overall_comparison,
             "ragchecker_metrics_breakdown": {
-                metric: sum(scores) / len(scores) * 100 for metric, scores in all_ragchecker_scores.items()
+                metric: sum(scores) / len(scores) * 100 if scores else 0.0
+                for metric, scores in all_ragchecker_scores.items()
             },
             "detailed_results": [
                 {

@@ -379,7 +379,7 @@ class EnhancedScribeIntegration:
 **Scripts**:
 - **`scripts/start_mcp_server.sh`**: Start MCP memory server with port conflict resolution
 - **`scripts/setup_mcp_autostart.sh`**: Configure LaunchAgent for automatic startup
-- **`scripts/mcp_memory_server.py`**: Main MCP server with monitoring and caching
+- **`scripts/mcp_memory_server.py`**: Legacy MCP server (Replaced by Production Framework)
 
 **LaunchAgent Configuration**:
 - **File**: `~/Library/LaunchAgents/com.ai.mcp-memory-server.plist`

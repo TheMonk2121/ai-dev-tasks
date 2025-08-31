@@ -1711,7 +1711,7 @@ def run_integration_tests():
 - **Database Server**: Database content processing (`database_server.py`)
 
 **MCP Memory Server**:
-- **HTTP Server**: `scripts/mcp_memory_server.py`
+- **HTTP Server**: Legacy MCP Memory Server (Replaced by Production Framework)
 - **Startup Script**: `scripts/start_mcp_server.sh`
 - **Auto-start**: `scripts/setup_mcp_autostart.sh`
 - **LaunchAgent**: `~/Library/LaunchAgents/com.ai.mcp-memory-server.plist`
@@ -1797,6 +1797,6 @@ curl -X POST http://localhost:3000/mcp/tools/call \
 
 - --
 
-- Last Updated: 2025-08-30*
+- Last Updated: 2025-08-31*
 - Next Review: Monthly*
 - Integration Level: Comprehensive*

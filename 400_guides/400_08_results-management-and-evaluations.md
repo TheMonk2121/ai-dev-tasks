@@ -72,17 +72,122 @@ metrics/
 - **Cost Reports**: AWS Bedrock usage tracking and cost analysis
 - **Status Files**: Current evaluation status and summary information
 
+## 🎯 Production RAG Quality Standards Framework
+
+### **Overview**
+
+This project uses a **production-grade RAG evaluation framework** that enforces industry-standard quality metrics through type-safe, config-driven evaluation with automated quality gates.
+
+### **Production Quality Standards**
+
+**Retrieval Quality:**
+- **Recall@20** (can the gold doc appear in the top 20?): ≥ 0.65–0.75
+- **Precision@k** (are retrieved chunks actually relevant?): ≥ 0.20–0.35
+- **Reranker lift** (MAP/MRR vs no-rerank): +10–20%
+
+**Answer Quality:**
+- **Faithfulness** (citation-groundedness): ≥ 0.60–0.75
+- **Unsupported claim rate**: ≤ 10–15%
+- **Context utilization rate** (proportion of included chunks the answer actually cites): ≥ 60%
+
+**Latency & Ops** (local single box):
+- **P50 end-to-end**: ≤ 1.5–2.0s
+- **P95 end-to-end**: ≤ 3–4s
+- **Index build**: reproducible scripts + health checks, no silent failures
+- **Alertable health** (query errors, OOMs, empty hits): visible in dashboard
+
+**Robustness:**
+- **Query rewrite/decomposition** improves recall on multi-hop by ≥ 10%
+- **Graceful degradation** when reranker/model unavailable (return sparse-only + warning)
+
+### **Evaluation Framework Components**
+
+**1. Type-Safe Contracts** (`dspy-rag-system/src/eval/contracts.py`)
+- Strongly typed interfaces with no magical dicts
+- Protocol-based design for extensibility
+- Compile-time safety with Pyright
+
+**2. RAGChecker Adapter** (`dspy-rag-system/src/eval/ragchecker_adapter.py`)
+- Maps existing RAGChecker outputs to typed `RunMetrics`
+- Quality gate enforcement with clear failure reporting
+- Integration with existing evaluation infrastructure
+
+**3. Config-Driven Evaluation** (`configs/eval/*.yaml`)
+- YAML configurations for different evaluation tasks
+- Reproducible evaluation setups
+- Manifested slices for local development
+
+**4. Production Runners** (`scripts/eval/*.py`)
+- `eval_retrieval.py`: Retrieval quality evaluation
+- `eval_faithfulness.py`: Faithfulness evaluation
+- Quality gates with exit codes (2 = failure)
+- Structured JSON artifacts
+
+**5. CI Integration** (`.github/workflows/eval.yml`)
+- Pyright type checking on every PR
+- Smoke tests for quick feedback
+- Nightly full evaluation suite
+- Quality gate enforcement
+
+### **Usage Examples**
+
+**Local Development:**
+```bash
+# Run retrieval evaluation
+python3 scripts/eval/eval_retrieval.py \
+  --dataset_config configs/eval/retrieval_quality.yaml \
+  --out_dir artifacts/local/retrieval
+
+# Run faithfulness evaluation
+python3 scripts/eval/eval_faithfulness.py \
+  --dataset_config configs/eval/faithfulness_quality.yaml \
+  --out_dir artifacts/local/faithfulness
+```
+
+**CI/CD Integration:**
+- **PR Checks**: Type checking + smoke tests
+- **Nightly**: Full evaluation suite
+- **Quality Gates**: Exit code 2 on failure
+
+### **Quality Standards Enforcement**
+
+**Production Targets (Enforced by CI):**
+- **Retrieval**: R@20 ≥ 0.65, Precision@K ≥ 0.20, P50 ≤ 2s, P95 ≤ 4s
+- **Faithfulness**: Faithfulness ≥ 0.60, Unsupported ≤ 15%, Context utilization ≥ 60%
+- **Robustness**: Query rewrite improvement ≥ 10%, Graceful degradation
+
+**Benefits:**
+- ✅ **Type Safety**: Pyright catches errors at development time
+- ✅ **No Magical Dicts**: Everything strongly typed
+- ✅ **Quality Gates**: CI enforces standards automatically
+- ✅ **Reproducible**: Config-driven evaluation
+- ✅ **Extensible**: Easy to add new metrics or evaluators
+- ✅ **Production Ready**: Industry-standard patterns
+
 ## 🔄 Adding New Evaluations
 
 ### **Standard Evaluation Workflow**
 
-#### **Step 1: Run Official RAGChecker Evaluation**
+#### **Step 1: Run Production RAG Quality Evaluation**
 ```bash
-# Basic evaluation
+# Run retrieval quality evaluation
+python3 scripts/eval/eval_retrieval.py \
+  --dataset_config configs/eval/retrieval_quality.yaml \
+  --out_dir artifacts/evaluations
+
+# Run faithfulness evaluation
+python3 scripts/eval/eval_faithfulness.py \
+  --dataset_config configs/eval/faithfulness_quality.yaml \
+  --out_dir artifacts/evaluations
+```
+
+#### **Step 2: Run Legacy RAGChecker Evaluation (Fallback Only)**
+```bash
+# Basic evaluation (legacy fallback)
 python3 scripts/ragchecker_official_evaluation.py
 
-# With specific options
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --fast-mode
+# Core RAGChecker evaluation (legacy fallback)
+python3 scripts/ragchecker_evaluation.py
 ```
 
 #### **Step 2: Verify New Files Created**

@@ -817,7 +817,7 @@ Focus on robust implementation, integration, and deployment."""
 **Complete MCP integration system with multiple server types and DSPy modules.**
 
 **Core Components**:
-- **MCP Memory Server**: HTTP server for memory rehydration (`scripts/mcp_memory_server.py`)
+- **MCP Memory Server**: HTTP server for memory rehydration (Legacy - Replaced by Production Framework)
 - **MCP Document Processor**: DSPy module for document processing (`dspy_modules/mcp_document_processor.py`)
 - **MCP Integration Layer**: Base server and specialized servers (`utils/mcp_integration/`)
 

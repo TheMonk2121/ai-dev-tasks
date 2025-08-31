@@ -9,7 +9,7 @@ and consistency with existing Pydantic infrastructure (B-1007).
 import re
 from typing import Any, Dict, List
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
 
 class RAGCheckerInput(BaseModel):
@@ -30,7 +30,7 @@ class RAGCheckerInput(BaseModel):
     def validate_context_items(cls, v: List[str]) -> List[str]:
         """Validate that context items are non-empty strings."""
         for i, context in enumerate(v):
-            if not isinstance(context, str) or not context.strip():
+            if not context.strip():
                 raise ValueError(f"Context item {i} must be a non-empty string")
         return v
 
@@ -64,7 +64,7 @@ class RAGCheckerMetrics(BaseModel):
 
     @field_validator("f1_score")
     @classmethod
-    def validate_f1_score(cls, v: float, info) -> float:
+    def validate_f1_score(cls, v: float, info: ValidationInfo) -> float:
         """Validate F1 score consistency with precision and recall."""
         precision = info.data.get("precision", 0.0)
         recall = info.data.get("recall", 0.0)
@@ -106,13 +106,13 @@ class RAGCheckerResult(BaseModel):
     def validate_scores(cls, v: Dict[str, float]) -> Dict[str, float]:
         """Validate that all scores are in valid range."""
         for metric, score in v.items():
-            if not isinstance(score, (int, float)) or score < 0.0 or score > 1.0:
+            if score < 0.0 or score > 1.0:
                 raise ValueError(f"Score for metric '{metric}' must be between 0.0 and 1.0, got {score}")
         return v
 
     @field_validator("ragchecker_overall")
     @classmethod
-    def validate_overall_score(cls, v: float, info) -> float:
+    def validate_overall_score(cls, v: float, info: ValidationInfo) -> float:
         """Validate overall score consistency with individual scores."""
         scores = info.data.get("ragchecker_scores", {})
         if scores:

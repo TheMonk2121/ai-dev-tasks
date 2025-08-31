@@ -359,6 +359,12 @@ and normalize spacing across long-form guides.
 - **Context Utilization**: > 0.7 (target)
 - **Response Length**: > 500 characters (target)
 
+**🎯 Production RAG Quality Standards** (Targets to Strive For):
+- **Retrieval Quality**: Recall@20 ≥ 0.65-0.75, Precision@k ≥ 0.20-0.35, Reranker lift +10-20%
+- **Answer Quality**: Faithfulness ≥ 0.60-0.75, Unsupported claims ≤ 10-15%, Context utilization ≥ 60%
+- **Latency & Ops**: P50 ≤ 1.5-2.0s, P95 ≤ 3-4s, reproducible index build, alertable health
+- **Robustness**: Query rewrite improves multi-hop recall ≥ 10%, graceful degradation
+
 **First Official Evaluation Results** (2025-08-30 14:54):
 - **Overall Metrics**: Precision: 0.007, Recall: 0.675, F1 Score: 0.015
 - **Test Cases**: 5 comprehensive ground truth test cases
@@ -955,7 +961,7 @@ Transform the bloated `400_guides` documentation into an intelligent, tiered aut
 - `scripts/consolidation_quality_assurance.py` - Consolidation quality assurance system
 - `scripts/incremental_migration_framework.py` - Incremental migration framework
 - `scripts/workflow_integration_manager.py` - Workflow integration manager
-- `scripts/migration_performance_optimizer.py` - Migration performance optimizer
+- `scripts/migration_performance_optimizer.py` - Migration performance optimizer (DELETED - Replaced by Production Framework)
 - `scripts/deployment_strategy_manager.py` - Deployment strategy and rollout plan
 - `scripts/monitoring_feedback_system.py` - Monitoring and feedback loop implementation
 - `scripts/automated_reporting_dashboard.py` - Automated reporting and dashboards

@@ -189,24 +189,18 @@
 
 ## 📋 Test Scripts Available
 
-### **Comprehensive Evaluations**
+### **Production Evaluation Framework**
 
-1. **`scripts/b1048_comprehensive_evaluation.py`** - Complete before/after analysis
-2. **`scripts/b1048_ragchecker_evaluation.py`** - RAG performance testing
-3. **`scripts/test_phase3_integration.py`** - Advanced features testing
+1. **`scripts/eval/eval_retrieval.py`** - Production retrieval quality evaluation
+2. **`scripts/eval/eval_faithfulness.py`** - Production faithfulness evaluation
+3. **`configs/eval/*.yaml`** - Evaluation configuration files
 
-### **Individual Role Testing**
+### **Legacy Fallback Scripts**
 
-1. **`scripts/enhanced_coder_role.py`** - Coder role capabilities
-2. **`scripts/enhanced_planner_role.py`** - Planner role capabilities
-3. **`scripts/enhanced_researcher_role.py`** - Researcher role capabilities
-4. **`scripts/enhanced_implementer_role.py`** - Implementer role capabilities
+1. **`scripts/ragchecker_official_evaluation.py`** - Legacy RAGChecker evaluation
+2. **`scripts/ragchecker_evaluation.py`** - Core RAGChecker evaluation
 
-### **Integration Testing**
-
-1. **`scripts/test_phase1_integration.py`** - Core integration testing
-2. **`scripts/test_phase2_integration.py`** - Role enhancement testing
-3. **`scripts/test_phase3_integration.py`** - Advanced features testing
+### **Note**: All obsolete test scripts have been removed and replaced with the production-grade evaluation framework.
 
 ---
 

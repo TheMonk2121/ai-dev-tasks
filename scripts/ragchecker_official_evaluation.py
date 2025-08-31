@@ -27,23 +27,29 @@ except ImportError:
     print("⚠️ requests module not available - local LLM evaluation will not work")
     requests = None
 
+# Initialize availability flags
+_embeddings_available = False
+_bedrock_available = False
+
 try:
     from sentence_transformers import SentenceTransformer
 
-    EMBEDDINGS_AVAILABLE = True
+    _embeddings_available = True
 except ImportError:
     print("⚠️ sentence-transformers not available - semantic features disabled")
     SentenceTransformer = None
-    EMBEDDINGS_AVAILABLE = False
 
 try:
     from scripts.bedrock_client import BedrockClient
 
-    BEDROCK_AVAILABLE = True
+    _bedrock_available = True
 except ImportError:
     print("⚠️ bedrock_client not available - AWS Bedrock evaluation disabled")
     BedrockClient = None
-    BEDROCK_AVAILABLE = False
+
+# Use properties to avoid constant redefinition
+EMBEDDINGS_AVAILABLE = _embeddings_available
+BEDROCK_AVAILABLE = _bedrock_available
 
 
 @dataclass
@@ -219,12 +225,21 @@ Focused Answer:""".strip()
             context_embeddings = self.embedding_model.encode(context_list)
 
             # Calculate similarities
-            from sklearn.metrics.pairwise import cosine_similarity
+            # Simple cosine similarity implementation (no sklearn dependency)
+            similarities = []
+            for context_emb in context_embeddings:
+                # Simple dot product similarity (normalized)
+                dot_product = sum(a * b for a, b in zip(query_embedding[0], context_emb))
+                norm_query = sum(a * a for a in query_embedding[0]) ** 0.5
+                norm_context = sum(a * a for a in context_emb) ** 0.5
+                if norm_query > 0 and norm_context > 0:
+                    similarity = dot_product / (norm_query * norm_context)
+                else:
+                    similarity = 0.0
+                similarities.append(similarity)
 
-            similarities = cosine_similarity(query_embedding, context_embeddings)[0]
-
-            # Sort context by similarity (highest first)
-            ranked_indices = similarities.argsort()[::-1]
+            # Sort context by similarity (highest first) - Python only
+            ranked_indices = sorted(range(len(similarities)), key=lambda i: similarities[i], reverse=True)
             ranked_context = [context_list[i] for i in ranked_indices]
 
             print(f"🎯 Ranked {len(context_list)} context chunks by semantic similarity")
@@ -249,9 +264,14 @@ Focused Answer:""".strip()
             query_embedding = self.embedding_model.encode([query])
             response_embedding = self.embedding_model.encode([response])
 
-            from sklearn.metrics.pairwise import cosine_similarity
-
-            similarity = cosine_similarity(query_embedding, response_embedding)[0][0]
+            # Simple cosine similarity implementation (no sklearn dependency)
+            dot_product = sum(a * b for a, b in zip(query_embedding[0], response_embedding[0]))
+            norm_query = sum(a * a for a in query_embedding[0]) ** 0.5
+            norm_response = sum(a * a for a in response_embedding[0]) ** 0.5
+            if norm_query > 0 and norm_response > 0:
+                similarity = dot_product / (norm_query * norm_response)
+            else:
+                similarity = 0.0
 
             return float(similarity)
 

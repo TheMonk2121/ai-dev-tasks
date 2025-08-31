@@ -45,7 +45,7 @@ scripts/bedrock_connection_test.py              # Bedrock connection testing
 scripts/bedrock_setup_guide.py                  # AWS Bedrock setup guide
 
 # MCP Integration
-scripts/mcp_memory_server.py                    # MCP memory server implementation
+scripts/mcp_memory_server.py                    # LEGACY - MCP memory server implementation (Replaced by Production Framework)
 scripts/mcp_orchestrator.py                     # MCP orchestration system
 scripts/mcp_security_config.py                  # MCP security configuration
 scripts/mcp_advanced_orchestration.py           # Advanced MCP orchestration

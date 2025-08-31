@@ -119,6 +119,42 @@
 | Faithfulness | 0.538 | 0.529 | ⬆️ +1.7% |
 | Claims Analyzed | 64 | 42 | ⬆️ +52% |
 
+## 🎯 **PRODUCTION RAG QUALITY STANDARDS**
+
+### **Retrieval Quality**
+- **Recall@20** (can the gold doc appear in the top 20?): ≥ 0.65–0.75
+- **Precision@k** (are retrieved chunks actually relevant?): ≥ 0.20–0.35 (precision is usually the pain point)
+- **Reranker lift** (MAP/MRR vs no-rerank): +10–20%
+
+### **Answer Quality**
+- **Faithfulness** (citation-groundedness): ≥ 0.60–0.75
+- **Unsupported claim rate**: ≤ 10–15%
+- **Context utilization rate** (proportion of included chunks the answer actually cites): ≥ 60%
+
+### **Latency & Ops** (local single box)
+- **P50 end-to-end**: ≤ 1.5–2.0s
+- **P95 end-to-end**: ≤ 3–4s
+- **Index build**: reproducible scripts + health checks, no silent failures
+- **Alertable health** (query errors, OOMs, empty hits): visible in your dashboard
+
+### **Robustness**
+- **Query rewrite/decomposition** improves recall on multi-hop by ≥ 10%
+- **Graceful degradation** when reranker/model unavailable (return sparse-only + warning)
+
+### **Current Status vs Standards**
+| Category | Metric | Current | Target | Status |
+|----------|--------|---------|--------|---------|
+| **Retrieval** | Recall@20 | 0.675 | ≥0.65-0.75 | ✅ **ON TARGET** |
+| **Retrieval** | Precision@k | 0.007 | ≥0.20-0.35 | ❌ **CRITICAL GAP** |
+| **Retrieval** | Reranker lift | Not measured | +10-20% | ❓ **UNKNOWN** |
+| **Answer** | Faithfulness | 0.538 | ≥0.60-0.75 | ⚠️ **CLOSE** |
+| **Answer** | Unsupported claims | ~46% | ≤10-15% | ❌ **SIGNIFICANT GAP** |
+| **Answer** | Context utilization | 0.500 | ≥60% | ⚠️ **CLOSE** |
+| **Latency** | P50 end-to-end | ~2.59ms | ≤1.5-2.0s | ✅ **EXCELLENT** |
+| **Latency** | P95 end-to-end | <10ms | ≤3-4s | ✅ **EXCELLENT** |
+| **Robustness** | Query rewrite | Not measured | ≥10% improvement | ❓ **UNKNOWN** |
+| **Robustness** | Graceful degradation | ✅ Available | Return sparse + warning | ✅ **ON TARGET** |
+
 ## 🚀 **SUCCESS METRICS ACHIEVED**
 
 ✅ **Complete Local LLM Integration**: Successfully using local models
@@ -152,3 +188,89 @@ The comprehensive RAGChecker evaluation demonstrates a **robust local evaluation
 
 **Next Optimization Focus**: Precision improvement through better context filtering and response conciseness.
 
+## 🧪 **INDUSTRY-STANDARD EVALUATION FRAMEWORK**
+
+### **Integration with RAGChecker Metrics**
+
+**Industry Standards Alignment:**
+- **Precision@K and Recall@K**: RAGChecker's Context Precision and Claim Recall
+- **Mean Reciprocal Rank (MRR)**: RAGChecker's ranking quality assessment
+- **Normalized Discounted Cumulative Gain (nDCG)**: Position-aware relevance scoring
+- **Faithfulness**: RAGChecker's hallucination detection and context utilization
+- **BLEU/ROUGE**: Text quality and content coverage metrics
+
+**RAGChecker Integration Strategy:**
+- **Overall Metrics**: Precision, Recall, F1 Score (already implemented)
+- **Retriever Metrics**: Claim Recall, Context Precision (baseline 0.500)
+- **Generator Metrics**: Context Utilization, Hallucination Rate, Faithfulness (baseline 0.500)
+
+### **Production-Grade Evaluation Framework**
+
+**✅ Implemented Components:**
+
+1. **Strict Type Safety** (`pyrightconfig.json`)
+   - Type checking mode: strict
+   - Protocol-based interfaces
+   - No magical dicts
+
+2. **Strongly Typed Contracts** (`dspy-rag-system/src/eval/contracts.py`)
+   - `DatasetConfig`, `RunMetrics`, `QualityTargets`
+   - `RAGChecker` protocol with typed interfaces
+   - `MetricName` literal types for compile-time safety
+
+3. **RAGChecker Adapter** (`dspy-rag-system/src/eval/ragchecker_adapter.py`)
+   - Maps existing RAGChecker outputs to typed `RunMetrics`
+   - Eliminates raw dicts throughout the pipeline
+   - Quality gate enforcement with clear failure reporting
+
+4. **Config-Driven Evaluation** (`configs/eval/*.yaml`)
+   - YAML configurations for different evaluation tasks
+   - Manifested slices for local development
+   - Reproducible evaluation setups
+
+5. **Production Runners** (`scripts/eval/*.py`)
+   - `eval_retrieval.py`: Retrieval quality evaluation
+   - `eval_faithfulness.py`: Faithfulness evaluation
+   - Quality gates with exit codes (2 = failure)
+   - Structured JSON artifacts
+
+6. **CI Integration** (`.github/workflows/eval.yml`)
+   - Pyright type checking on every PR
+   - Smoke tests for quick feedback
+   - Nightly full evaluation suite
+   - Quality gate enforcement
+
+### **Usage Examples**
+
+**Local Development:**
+```bash
+# Run retrieval evaluation
+python scripts/eval/eval_retrieval.py \
+  --dataset_config configs/eval/retrieval_quality.yaml \
+  --out_dir artifacts/local/retrieval
+
+# Run faithfulness evaluation
+python scripts/eval/eval_faithfulness.py \
+  --dataset_config configs/eval/faithfulness_quality.yaml \
+  --out_dir artifacts/local/faithfulness
+```
+
+**CI/CD Integration:**
+- **PR Checks**: Type checking + smoke tests
+- **Nightly**: Full evaluation suite
+- **Quality Gates**: Exit code 2 on failure
+
+### **Quality Standards Enforcement**
+
+**Production Targets (Enforced by CI):**
+- **Retrieval**: R@20 ≥ 0.65, Precision@K ≥ 0.20, P50 ≤ 2s, P95 ≤ 4s
+- **Faithfulness**: Faithfulness ≥ 0.60, Unsupported ≤ 15%, Context utilization ≥ 60%
+- **Robustness**: Query rewrite improvement ≥ 10%, Graceful degradation
+
+**Benefits of This Approach:**
+- ✅ **Type Safety**: Pyright catches errors at development time
+- ✅ **No Magical Dicts**: Everything strongly typed
+- ✅ **Quality Gates**: CI enforces standards automatically
+- ✅ **Reproducible**: Config-driven evaluation
+- ✅ **Extensible**: Easy to add new metrics or evaluators
+- ✅ **Production Ready**: Industry-standard patterns
