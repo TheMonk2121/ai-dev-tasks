@@ -10,6 +10,47 @@
 |---|---|---|
 | Complete performance optimization and monitoring guide with user journey and technical reference | Optimizing system performance, monitoring metrics, or improving efficiency | Read 12 (Advanced Configurations) then apply optimization techniques |
 
+## 🗺️ **Choose Your Path**
+
+### **What Are You Trying to Do?**
+
+**I'm troubleshooting performance issues**
+→ Start here, then check the User Journey scenarios below for specific solutions
+
+**I need to optimize memory system performance**
+→ Read `400_01_memory-system-architecture.md` first, then this guide's Technical Reference
+
+**I need to optimize AI model performance**
+→ Read `400_09_ai-frameworks-dspy.md` first, then this guide's Technical Reference
+
+**I want to understand the overall system architecture**
+→ Read `400_03_system-overview-and-architecture.md` first, then this guide
+
+**I'm setting up monitoring and alerting**
+→ Read this guide's Technical Reference section for implementation details
+
+### **Quick Decision Tree**
+
+```
+Are you troubleshooting performance?
+├─ Yes → Start here, check User Journey scenarios
+└─ No → Are you optimizing memory?
+    ├─ Yes → 400_01 (Memory System) first, then Technical Reference here
+    └─ No → Are you optimizing AI?
+        ├─ Yes → 400_09 (AI Frameworks) first, then Technical Reference here
+        └─ No → Are you setting up monitoring?
+            ├─ Yes → Technical Reference here
+            └─ No → 400_03 (System Overview)
+```
+
+### **Related Guides with Context**
+
+- **`400_01_memory-system-architecture.md`** - How memory system works (for memory optimization)
+- **`400_09_ai-frameworks-dspy.md`** - How AI frameworks work (for AI optimization)
+- **`400_03_system-overview-and-architecture.md`** - Big picture system architecture
+- **`400_12_advanced-configurations.md`** - Advanced configuration and tuning
+- **`400_04_development-workflow-and-standards.md`** - Development setup and standards
+
 ## 🚀 **User Journey & Success Outcomes**
 
 ### **What Success Looks Like**
@@ -1193,7 +1234,7 @@ db_handler.set_retry_policy(
 model_switcher = ModelSwitcher()
 model_switcher.set_fallback_chain([
     "gpt-4",
-    "claude-3.5-sonnet", 
+    "claude-3.5-sonnet",
     "llama3.1:8b"
 ])
 ```

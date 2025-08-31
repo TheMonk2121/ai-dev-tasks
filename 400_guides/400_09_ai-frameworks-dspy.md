@@ -10,6 +10,47 @@
 |---|---|---|
 | Complete AI framework integration and DSPy implementation guide with user journey and technical reference | Working with AI frameworks, implementing DSPy modules, or integrating AI capabilities | Read 10 (Integrations & Models) then 11 (Performance & Optimization) |
 
+## 🗺️ **Choose Your Path**
+
+### **What Are You Trying to Do?**
+
+**I'm implementing AI features in my code**
+→ Start here, then read `400_10_integrations-models.md` for model management
+
+**I need to understand how AI integrates with memory**
+→ Read `400_01_memory-system-architecture.md` first, then this guide's Technical Reference
+
+**I'm troubleshooting AI performance issues**
+→ Check the User Journey scenarios below, then `400_11_performance-optimization.md` for optimization
+
+**I want to understand the overall system architecture**
+→ Read `400_03_system-overview-and-architecture.md` first, then this guide
+
+**I'm setting up the development environment**
+→ Read `400_04_development-workflow-and-standards.md` first, then return here
+
+### **Quick Decision Tree**
+
+```
+Are you implementing AI features?
+├─ Yes → Start here, then 400_10 (Integrations & Models)
+└─ No → Are you integrating with memory?
+    ├─ Yes → 400_01 (Memory System) first, then Technical Reference here
+    └─ No → Are you troubleshooting?
+        ├─ Yes → User Journey scenarios here, then 400_11 (Performance)
+        └─ No → Are you understanding architecture?
+            ├─ Yes → 400_03 (System Overview) first
+            └─ No → 400_04 (Development Workflow)
+```
+
+### **Related Guides with Context**
+
+- **`400_10_integrations-models.md`** - How to manage and integrate different AI models
+- **`400_01_memory-system-architecture.md`** - How memory system works with AI (read first)
+- **`400_11_performance-optimization.md`** - How to optimize AI performance and troubleshooting
+- **`400_03_system-overview-and-architecture.md`** - Big picture system architecture
+- **`400_04_development-workflow-and-standards.md`** - Development setup and standards
+
 ## 🚀 **User Journey & Success Outcomes**
 
 ### **What Success Looks Like**

@@ -10,6 +10,47 @@
 |---|---|---|
 | Complete memory system guide with user journey and technical reference | Need to understand how the memory system works, implementing memory features, or troubleshooting memory issues | Read 02 (Memory Rehydration) then use the memory system |
 
+## 🗺️ **Choose Your Path**
+
+### **What Are You Trying to Do?**
+
+**I'm new to the project and want to understand the system**
+→ Start here, then read `400_02_memory-rehydration-context-management.md` for practical usage
+
+**I need to implement memory features in my code**
+→ Read this guide's Technical Reference section, then `400_09_ai-frameworks-dspy.md` for AI integration
+
+**I'm troubleshooting memory issues**
+→ Check the User Journey scenarios below, then `400_11_performance-optimization.md` for optimization
+
+**I want to understand the overall system architecture**
+→ Read this guide, then `400_03_system-overview-and-architecture.md` for the big picture
+
+**I'm setting up the development environment**
+→ Read `400_04_development-workflow-and-standards.md` first, then return here
+
+### **Quick Decision Tree**
+
+```
+Are you new to the project?
+├─ Yes → Start here, then 400_02 (Memory Rehydration)
+└─ No → Are you implementing features?
+    ├─ Yes → Technical Reference here, then 400_09 (AI Frameworks)
+    └─ No → Are you troubleshooting?
+        ├─ Yes → User Journey scenarios here, then 400_11 (Performance)
+        └─ No → Are you planning work?
+            ├─ Yes → 400_06 (Backlog Management)
+            └─ No → 400_03 (System Overview)
+```
+
+### **Related Guides with Context**
+
+- **`400_02_memory-rehydration-context-management.md`** - How to actually use the memory system day-to-day
+- **`400_09_ai-frameworks-dspy.md`** - How AI frameworks integrate with memory (for developers)
+- **`400_11_performance-optimization.md`** - How to optimize memory system performance
+- **`400_03_system-overview-and-architecture.md`** - Big picture system architecture
+- **`400_04_development-workflow-and-standards.md`** - Development setup and standards
+
 ## 🚀 **User Journey & Success Outcomes**
 
 ### **What Success Looks Like**
