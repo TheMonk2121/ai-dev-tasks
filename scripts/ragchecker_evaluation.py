@@ -16,9 +16,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict
 
-from baseline_ragus_evaluation import BaselineEvaluator
 from ragchecker.container import RetrievedDoc
 from ragchecker.evaluator import RAGChecker, RAGResult, RAGResults
+
+from scripts.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
 
 
 @dataclass
@@ -38,7 +39,7 @@ class RAGCheckerEvaluator:
     """RAGChecker evaluator that provides industry-standard RAG evaluation."""
 
     def __init__(self):
-        self.baseline_evaluator = BaselineEvaluator()
+        self.official_evaluator = OfficialRAGCheckerEvaluator()
 
         # Initialize RAGChecker with default settings
         # Note: RAGChecker requires LLM access for claim extraction and checking
@@ -248,11 +249,11 @@ class RAGCheckerEvaluator:
                 recommendation="Query failed",
             )
 
-        # Find the case by name
-        baseline_cases = self.baseline_evaluator.create_baseline_evaluation_cases()
+        # Find the case by query_id
+        baseline_cases = self.official_evaluator.create_official_test_cases()
         case = None
         for c in baseline_cases:
-            if c.name == case_name:
+            if c.query_id == case_name:
                 case = c
                 break
 
@@ -271,10 +272,13 @@ class RAGCheckerEvaluator:
                 recommendation="Case not found",
             )
 
-        # Run custom evaluation
+        # Run custom evaluation using fallback method
         try:
-            custom_result = self.baseline_evaluator.evaluate_response(case, response)
-            custom_score = custom_result["score"]
+            fallback_data = [
+                {"query": case.query, "response": response, "gt_answer": case.gt_answer, "retrieved_context": []}
+            ]
+            custom_result = self.official_evaluator.create_fallback_evaluation(fallback_data)
+            custom_score = custom_result["overall_metrics"]["f1_score"]
         except Exception as e:
             print(f"Custom evaluation failed: {e}")
             custom_score = 0.0
@@ -307,18 +311,18 @@ class RAGCheckerEvaluator:
         print("=" * 60)
 
         # Get baseline test cases
-        baseline_cases = self.baseline_evaluator.create_baseline_evaluation_cases()
+        baseline_cases = self.official_evaluator.create_official_test_cases()
 
         results = []
         custom_total = 0
         ragchecker_total = 0
 
         for i, case in enumerate(baseline_cases, 1):
-            print(f"\n🔍 Test {i}/{len(baseline_cases)}: {case.name}")
+            print(f"\n🔍 Test {i}/{len(baseline_cases)}: {case.query_id}")
             print(f"   Query: {case.query}")
 
             # Run RAGChecker evaluation
-            result = self.evaluate_test_case(case.name, case.query, case.role)
+            result = self.evaluate_test_case(case.query_id, case.query, "default")
 
             results.append(result)
             custom_total += result.custom_score
@@ -383,7 +387,7 @@ class RAGCheckerEvaluator:
             ],
         }
 
-        output_file = f"metrics/baseline_ragus_evaluations/ragchecker_evaluation_{timestamp}.json"
+        output_file = f"metrics/baseline_evaluations/ragchecker_evaluation_{timestamp}.json"
         with open(output_file, "w") as f:
             json.dump(results_data, f, indent=2)
 
