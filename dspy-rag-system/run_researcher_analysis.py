@@ -36,6 +36,8 @@ def run_researcher_analysis():
             "output": "cohesive structure recommendations",
             "scope": "user journey optimization",
         },
+        user_id="researcher",
+        vector_enhancement_timestamp=None,
     )
 
     print(f"🎭 Role: {researcher_context.role}")
@@ -81,14 +83,18 @@ def run_researcher_analysis():
         print("=" * 50)
 
         # Handle different result formats
-        if isinstance(result, dict):
+        if result is None:
+            answer = "No result"
+            context = []
+        elif isinstance(result, dict):
             answer = result.get("answer", str(result))
             context = result.get("context", [])
         else:
+            # At this point, result is not None, so we can safely access attributes
             answer = getattr(result, "answer", str(result))
             context = getattr(result, "context", [])
 
-        print(answer)
+        print(str(answer) if answer is not None else "No answer generated")
 
         if context:
             print(f"\n📚 SOURCES CONSULTED: {len(context)} documents")
@@ -99,7 +105,7 @@ def run_researcher_analysis():
             "success": True,
             "findings": answer,
             "sources": context,
-            "role": researcher_context.role.value,
+            "role": getattr(researcher_context.role, "value", "researcher"),
         }
 
     except Exception as e:
