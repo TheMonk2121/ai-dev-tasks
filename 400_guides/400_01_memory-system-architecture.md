@@ -8,7 +8,65 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Detailed architecture and components of the memory system | Need to understand how the memory system works, implementing memory features, or troubleshooting memory issues | Read 02 (Memory Rehydration) then use the memory system |
+| Complete memory system guide with user journey and technical reference | Need to understand how the memory system works, implementing memory features, or troubleshooting memory issues | Read 02 (Memory Rehydration) then use the memory system |
+
+## 🚀 **User Journey & Success Outcomes**
+
+### **What Success Looks Like**
+When the memory system is working optimally, you should experience:
+- **Seamless Context Continuity**: AI remembers your previous conversations and work context
+- **Faster Onboarding**: New AI agents quickly understand your project and preferences
+- **Reduced Repetition**: No need to re-explain concepts or preferences
+- **Intelligent Suggestions**: AI proactively suggests relevant information based on your history
+- **Reliable Performance**: System responds quickly and consistently across sessions
+
+### **User-Centered Onboarding Path**
+
+#### **For New Users (First Time Setup)**
+1. **Quick Start**: Run `./scripts/memory_up.sh` to initialize the system
+2. **Basic Usage**: Start a conversation - the system automatically begins learning your preferences
+3. **Context Building**: Continue working - the system builds context over time
+4. **Verification**: Check that the AI remembers your previous work and preferences
+
+#### **For Returning Users (Daily Workflow)**
+1. **Session Start**: Run memory rehydration to restore your context
+2. **Context Verification**: Confirm the AI has your current project context
+3. **Productive Work**: Continue development with full context awareness
+4. **Context Updates**: The system automatically updates and preserves your work
+
+#### **For Power Users (Advanced Features)**
+1. **Custom Context**: Create specialized context for different project types
+2. **Context Optimization**: Fine-tune what gets remembered and prioritized
+3. **Performance Monitoring**: Monitor system performance and optimize as needed
+4. **Integration**: Connect with other tools and workflows
+
+### **Common User Scenarios & Solutions**
+
+#### **Scenario: "The AI forgot what we were working on"**
+**Solution**: Run memory rehydration to restore context
+```bash
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "current project status"
+```
+
+#### **Scenario: "I want the AI to remember my coding preferences"**
+**Solution**: The system automatically learns preferences, but you can also explicitly set them in your context
+
+#### **Scenario: "The system is slow to respond"**
+**Solution**: Check system health and optimize performance using the monitoring tools
+
+### **Strategic Value: Why This System Exists**
+
+The memory system solves critical problems that every developer faces:
+- **Context Loss**: Traditional AI systems forget everything between sessions
+- **Repetitive Explanations**: Having to re-explain your project and preferences repeatedly
+- **Inconsistent Behavior**: AI responses that don't align with your established patterns
+- **Time Waste**: Spending time rebuilding context instead of productive work
+
+**Success Metrics**:
+- 90% reduction in context rebuilding time
+- 95% consistency in AI behavior across sessions
+- 80% faster onboarding for new project contexts
+- 100% reliable context preservation across system restarts
 
 ## 🎯 Purpose
 
@@ -1658,14 +1716,21 @@ python scripts/hydration_health.py --status
 - **Development Workflow**: `400_guides/400_04_development-workflow-and-standards.md`
 - **DSPy Framework**: `400_guides/400_07_ai-frameworks-dspy.md`
 
-## 🗄️ Database Schema Reference
 
-> **💡 For Non-Engineering Readers**: This section provides technical details for developers implementing the memory system. If you're focused on using the system rather than building it, you can skip to the "User Journey" section below.
 
-### **Why This Matters**
-The database schema ensures your conversations and context are reliably stored, quickly retrieved, and properly organized. This is what enables the seamless experience of picking up conversations where you left off and having the AI remember your preferences and work history.
+## 🔧 **Technical Reference**
 
-### **PostgreSQL Tables and Relationships**
+> **💡 For Developers**: This section provides detailed technical implementation information for building and extending the memory system.
+
+### **What This Section Contains**
+- Database schema and relationships
+- System architecture details
+- Performance optimization techniques
+- Integration patterns and APIs
+
+### **Database Schema Reference**
+
+#### **PostgreSQL Tables and Relationships**
 
 The memory system uses a comprehensive PostgreSQL schema with the following core tables:
 
@@ -1761,64 +1826,6 @@ The system uses pgvector for similarity search with the following configuration:
 - **Distance Metric**: Cosine similarity
 - **Index Type**: HNSW (Hierarchical Navigable Small World)
 - **Search Parameters**: k=10 for top-k retrieval
-
-## 🚀 **User Journey & Success Outcomes**
-
-### **What Success Looks Like**
-When the memory system is working optimally, you should experience:
-- **Seamless Context Continuity**: AI remembers your previous conversations and work context
-- **Faster Onboarding**: New AI agents quickly understand your project and preferences
-- **Reduced Repetition**: No need to re-explain concepts or preferences
-- **Intelligent Suggestions**: AI proactively suggests relevant information based on your history
-- **Reliable Performance**: System responds quickly and consistently across sessions
-
-### **User-Centered Onboarding Path**
-
-#### **For New Users (First Time Setup)**
-1. **Quick Start**: Run `./scripts/memory_up.sh` to initialize the system
-2. **Basic Usage**: Start a conversation - the system automatically begins learning your preferences
-3. **Context Building**: Continue working - the system builds context over time
-4. **Verification**: Check that the AI remembers your previous work and preferences
-
-#### **For Returning Users (Daily Workflow)**
-1. **Session Start**: Run memory rehydration to restore your context
-2. **Context Verification**: Confirm the AI has your current project context
-3. **Productive Work**: Continue development with full context awareness
-4. **Context Updates**: The system automatically updates and preserves your work
-
-#### **For Power Users (Advanced Features)**
-1. **Custom Context**: Create specialized context for different project types
-2. **Context Optimization**: Fine-tune what gets remembered and prioritized
-3. **Performance Monitoring**: Monitor system performance and optimize as needed
-4. **Integration**: Connect with other tools and workflows
-
-### **Common User Scenarios & Solutions**
-
-#### **Scenario: "The AI forgot what we were working on"**
-**Solution**: Run memory rehydration to restore context
-```bash
-python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "current project status"
-```
-
-#### **Scenario: "I want the AI to remember my coding preferences"**
-**Solution**: The system automatically learns preferences, but you can also explicitly set them in your context
-
-#### **Scenario: "The system is slow to respond"**
-**Solution**: Check system health and optimize performance using the monitoring tools
-
-### **Strategic Value: Why This System Exists**
-
-The memory system solves critical problems that every developer faces:
-- **Context Loss**: Traditional AI systems forget everything between sessions
-- **Repetitive Explanations**: Having to re-explain your project and preferences repeatedly
-- **Inconsistent Behavior**: AI responses that don't align with your established patterns
-- **Time Waste**: Spending time rebuilding context instead of productive work
-
-**Success Metrics**:
-- 90% reduction in context rebuilding time
-- 95% consistency in AI behavior across sessions
-- 80% faster onboarding for new project contexts
-- 100% reliable context preservation across system restarts
 
 ## 📚 References
 
