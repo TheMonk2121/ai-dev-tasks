@@ -946,6 +946,112 @@ for level_name, level_stats in stats.items():
     print(f"{level_name}: Hit rate = {level_stats['hit_rate']:.2%}")
 ```
 
+### **Database Performance Optimization Example**
+```python
+# Initialize database performance monitor
+db_monitor = DatabasePerformanceMonitor()
+
+# Monitor query performance
+query_metrics = db_monitor.monitor_query(
+    query="SELECT * FROM users WHERE status = %s",
+    params=["active"],
+    execution_time=0.15
+)
+
+# Analyze slow queries
+slow_queries = db_monitor.get_slow_queries(threshold=1.0)  # 1 second
+for query in slow_queries:
+    print(f"Slow query: {query['query']}")
+    print(f"Average time: {query['avg_time']:.3f}s")
+    print(f"Execution count: {query['count']}")
+
+# Get optimization recommendations
+recommendations = db_monitor.get_optimization_recommendations()
+for rec in recommendations:
+    print(f"Recommendation: {rec['description']}")
+    print(f"Impact: {rec['impact']}")
+    print(f"Effort: {rec['effort']}")
+```
+
+### **AI Model Performance Optimization Example**
+```python
+# Initialize AI performance optimizer
+ai_optimizer = AIPerformanceOptimizer()
+
+# Monitor model performance
+model_metrics = ai_optimizer.monitor_model(
+    model_name="gpt-4",
+    inference_time=0.5,
+    token_count=100,
+    accuracy=0.95
+)
+
+# Optimize model parameters
+optimized_params = ai_optimizer.optimize_parameters(
+    model_name="gpt-4",
+    target_metric="latency",
+    constraints={"accuracy": 0.9}
+)
+
+print(f"Optimized parameters: {optimized_params}")
+
+# Get performance comparison
+comparison = ai_optimizer.compare_models(
+    models=["gpt-4", "gpt-3.5-turbo", "claude-3"],
+    metrics=["latency", "accuracy", "cost"]
+)
+
+for model, metrics in comparison.items():
+    print(f"\n{model}:")
+    for metric, value in metrics.items():
+        print(f"  {metric}: {value}")
+```
+
+### **Memory Optimization Example**
+```python
+# Initialize memory optimizer
+memory_optimizer = MemoryOptimizer()
+
+# Monitor memory usage
+memory_usage = memory_optimizer.monitor_memory()
+print(f"Current memory usage: {memory_usage['current']:.2f} MB")
+print(f"Peak memory usage: {memory_usage['peak']:.2f} MB")
+
+# Optimize memory usage
+optimization_result = memory_optimizer.optimize_memory()
+print(f"Memory saved: {optimization_result['saved_memory']:.2f} MB")
+print(f"Optimization time: {optimization_result['optimization_time']:.3f}s")
+
+# Get memory recommendations
+recommendations = memory_optimizer.get_recommendations()
+for rec in recommendations:
+    print(f"Recommendation: {rec['description']}")
+    print(f"Potential savings: {rec['potential_savings']:.2f} MB")
+```
+
+### **Network Performance Optimization Example**
+```python
+# Initialize network optimizer
+network_optimizer = NetworkOptimizer()
+
+# Monitor network performance
+network_metrics = network_optimizer.monitor_network()
+print(f"Bandwidth usage: {network_metrics['bandwidth']:.2f} Mbps")
+print(f"Latency: {network_metrics['latency']:.2f} ms")
+print(f"Packet loss: {network_metrics['packet_loss']:.2%}")
+
+# Optimize network requests
+optimization_result = network_optimizer.optimize_requests(
+    requests=[
+        {"url": "https://api.example.com/data1", "priority": "high"},
+        {"url": "https://api.example.com/data2", "priority": "low"}
+    ]
+)
+
+print(f"Optimized request order: {optimization_result['request_order']}")
+print(f"Estimated time savings: {optimization_result['time_savings']:.2f}s")
+```
+
 ## 🔗 **Related Guides**
 
 - **Memory System Overview**: `400_guides/400_00_memory-system-overview.md`

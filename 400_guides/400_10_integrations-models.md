@@ -855,10 +855,24 @@ model_registry.update_model_performance("gpt-4-v1", {"accuracy": 0.96})
 
 ## 🔗 **Related Guides**
 
-- **Memory System Overview**: `400_guides/400_00_memory-system-overview.md`
-- **AI Frameworks & DSPy**: `400_guides/400_09_ai-frameworks-dspy.md`
-- **Performance & Optimization**: `400_guides/400_11_performance-optimization.md`
-- **Advanced Configurations**: `400_guides/400_12_advanced-configurations.md`
+### **🔗 Prerequisites (Read First)**
+- **Memory System Overview**: `400_guides/400_00_memory-system-overview.md` - Understand the foundation
+- **AI Frameworks & DSPy**: `400_guides/400_09_ai-frameworks-dspy.md` - AI framework integration
+- **System Overview**: `400_guides/400_03_system-overview-and-architecture.md` - Overall system design
+
+### **🔗 Core Dependencies**
+- **Development Workflows**: `400_guides/400_04_development-workflow-and-standards.md` - Development standards
+- **Codebase Organization**: `400_guides/400_05_codebase-organization-patterns.md` - Code organization
+- **Task Management**: `400_guides/400_08_task-management-workflows.md` - Execution workflows
+
+### **🔗 Next Steps (Read After)**
+- **Performance & Optimization**: `400_guides/400_11_performance-optimization.md` - System optimization
+- **Advanced Configurations**: `400_guides/400_12_advanced-configurations.md` - Advanced setup
+
+### **🔗 Role-Specific Navigation**
+- **For Implementers**: Focus on API design patterns and external integrations
+- **For Coders**: Focus on model management and integration testing
+- **For Researchers**: Focus on integration patterns and security frameworks
 
 ## 📚 **References**
 

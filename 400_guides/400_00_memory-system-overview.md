@@ -113,6 +113,45 @@ The memory system tracks:
 3. **Run memory rehydration** to get current context
 4. **Continue with Phase 2** (Codebase) or Phase 3 (Backlog) based on your needs
 
+## 📚 **Core Terminology Glossary**
+
+### **Memory System Terms**
+- **Memory Rehydration**: Process of restoring project context and state across development sessions
+- **LTST Memory System**: Long-term storage and retrieval system for project knowledge
+- **Cursor Memory Context**: IDE-specific context management for Cursor AI
+- **Context Bundle**: Collection of project state, decisions, and knowledge for session continuity
+- **Anchor Keys**: Unique identifiers for documentation sections and concepts
+- **Role Pins**: Metadata indicating which AI roles are most relevant to specific content
+
+### **DSPy & AI Framework Terms**
+- **DSPy**: Declarative Self-improving Python framework for programming with language models
+- **RAG Pipeline**: Retrieval-Augmented Generation pipeline for context-aware AI responses
+- **Teleprompter Optimization**: DSPy optimization technique for improving AI model performance
+- **Few-Shot Scaffolding**: Technique for providing AI models with examples to improve responses
+- **Governance Aids**: Tools and frameworks for ensuring AI system safety and compliance
+- **Signature Validation**: DSPy mechanism for ensuring type safety and runtime correctness
+
+### **Development Workflow Terms**
+- **Backlog Item**: Individual task or feature with priority scoring and dependencies
+- **Sprint Planning**: Time-boxed development planning with capacity and goal setting
+- **Quality Gates**: Automated checks and validations for code quality and system health
+- **Context Preservation**: Maintaining project state and knowledge across development phases
+- **Auto-Advance Workflow**: Automated progression through development stages
+
+### **System Architecture Terms**
+- **Vector-Based System Mapping**: Using embeddings to map relationships between system components
+- **Hybrid Memory System**: Combination of different memory storage and retrieval mechanisms
+- **Entity Expansion**: Process of enriching context with related entities and relationships
+- **Multi-Hop Dependency Reasoning**: Analyzing dependencies across multiple system layers
+- **Decision Intelligence**: AI-powered analysis of past decisions and their outcomes
+
+### **Performance & Optimization Terms**
+- **Multi-Level Caching**: Hierarchical caching strategy for different types of data
+- **APM Monitoring**: Application Performance Monitoring for system health tracking
+- **Resource Optimization**: CPU, memory, and network optimization strategies
+- **Database Performance Tuning**: Optimization of database queries and schema design
+- **AI Model Performance**: Monitoring and optimization of AI model inference and training
+
 ## 🔄 **Cross-References**
 
 - **01**: Memory System Architecture & Components

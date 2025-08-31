@@ -816,10 +816,25 @@ if not validation_result["is_safe"]:
 
 ## 🔗 **Related Guides**
 
-- **Memory System Overview**: `400_guides/400_00_memory-system-overview.md`
-- **Backlog Management**: `400_guides/400_06_backlog-management-priorities.md`
-- **Integrations & Models**: `400_guides/400_10_integrations-models.md`
-- **Performance & Optimization**: `400_guides/400_11_performance-optimization.md`
+### **🔗 Prerequisites (Read First)**
+- **Memory System Overview**: `400_guides/400_00_memory-system-overview.md` - Understand the foundation
+- **Memory System Architecture**: `400_guides/400_01_memory-system-architecture.md` - Core memory concepts
+- **System Overview**: `400_guides/400_03_system-overview-and-architecture.md` - Overall system design
+
+### **🔗 Core Dependencies**
+- **Backlog Management**: `400_guides/400_06_backlog-management-priorities.md` - Task prioritization
+- **Project Planning**: `400_guides/400_07_project-planning-roadmap.md` - Strategic planning
+- **Task Management**: `400_guides/400_08_task-management-workflows.md` - Execution workflows
+
+### **🔗 Next Steps (Read After)**
+- **Integrations & Models**: `400_guides/400_10_integrations-models.md` - External integrations
+- **Performance & Optimization**: `400_guides/400_11_performance-optimization.md` - System optimization
+- **Advanced Configurations**: `400_guides/400_12_advanced-configurations.md` - Advanced setup
+
+### **🔗 Role-Specific Navigation**
+- **For Researchers**: Focus on DSPy framework integration and AI safety validation
+- **For Implementers**: Focus on performance monitoring and governance frameworks
+- **For Coders**: Focus on signature validation and error handling patterns
 
 ## 📚 **References**
 
