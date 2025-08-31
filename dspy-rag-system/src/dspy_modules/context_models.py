@@ -36,6 +36,16 @@ class BaseContext(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.now, description="Context creation timestamp")
     user_id: Optional[str] = Field(None, description="User identifier if available")
 
+    # Vector-based system mapping integration fields
+    vector_enhancement_enabled: bool = Field(default=True, description="Enable vector-based context enhancement")
+    vector_components: List[Dict[str, Any]] = Field(
+        default_factory=list, description="Vector-based component recommendations"
+    )
+    vector_insights: Dict[str, Any] = Field(default_factory=dict, description="Role-specific vector insights")
+    vector_enhancement_timestamp: Optional[datetime] = Field(
+        None, description="When vector enhancement was last applied"
+    )
+
     @field_validator("session_id")
     @classmethod
     def validate_session_id(cls, v: str) -> str:
@@ -52,6 +62,23 @@ class BaseContext(BaseModel):
             raise ValueError("Timestamp cannot be in the future")
         return v
 
+    def update_vector_insights(self, components: List[Dict[str, Any]], insights: Dict[str, Any]) -> None:
+        """Update vector-based insights and components."""
+        self.vector_components = components
+        self.vector_insights = insights
+        self.vector_enhancement_timestamp = datetime.now()
+
+    def get_vector_enhancement_status(self) -> Dict[str, Any]:
+        """Get current vector enhancement status."""
+        return {
+            "enabled": self.vector_enhancement_enabled,
+            "components_count": len(self.vector_components),
+            "insights_count": len(self.vector_insights),
+            "last_enhanced": (
+                self.vector_enhancement_timestamp.isoformat() if self.vector_enhancement_timestamp else None
+            ),
+        }
+
 
 # ---------- Role-Specific Context Models ----------
 
@@ -65,6 +92,18 @@ class PlannerContext(BaseContext):
     strategic_goals: List[str] = Field(default_factory=list, description="Strategic goals for this session")
     constraints: Dict[str, Any] = Field(default_factory=dict, description="Project constraints and limitations")
     dependencies: List[str] = Field(default_factory=list, description="Dependencies and blockers")
+
+    # Vector-based planning insights
+    architecture_insights: List[Dict[str, Any]] = Field(
+        default_factory=list, description="Vector-based architecture insights"
+    )
+    impact_analysis: List[Dict[str, Any]] = Field(default_factory=list, description="Vector-based impact analysis")
+    complexity_assessment: List[Dict[str, Any]] = Field(
+        default_factory=list, description="Vector-based complexity assessment"
+    )
+    strategic_recommendations: List[Dict[str, Any]] = Field(
+        default_factory=list, description="Vector-based strategic recommendations"
+    )
 
     @field_validator("project_scope")
     @classmethod
@@ -156,6 +195,21 @@ class CoderContext(BaseContext):
             "cursor_knowledge_enabled": self.cursor_knowledge_enabled,
         }
 
+    def get_vector_enhanced_context(self) -> Dict[str, Any]:
+        """Get vector-enhanced context for intelligent coding assistance"""
+        return {
+            "role": self.role.value,
+            "language": self.language,
+            "framework": self.framework,
+            "vector_components": self.vector_components,
+            "vector_insights": self.vector_insights,
+            "vector_enhancement_timestamp": self.vector_enhancement_timestamp,
+            "code_quality_insights": self.vector_insights.get("code_quality_insights", []),
+            "dependency_analysis": self.vector_insights.get("dependency_analysis", []),
+            "testing_suggestions": self.vector_insights.get("testing_suggestions", []),
+            "performance_tips": self.vector_insights.get("performance_tips", []),
+        }
+
 
 class ResearcherContext(BaseContext):
     """Context model for Researcher role with analysis validation"""
@@ -166,6 +220,16 @@ class ResearcherContext(BaseContext):
     methodology: str = Field(..., description="Research methodology being used")
     hypotheses: List[str] = Field(default_factory=list, description="Research hypotheses")
     constraints: Dict[str, Any] = Field(default_factory=dict, description="Research constraints")
+
+    # Vector-based research insights
+    pattern_analysis: List[Dict[str, Any]] = Field(default_factory=list, description="Vector-based pattern analysis")
+    technology_insights: List[Dict[str, Any]] = Field(
+        default_factory=list, description="Vector-based technology insights"
+    )
+    best_practices: List[Dict[str, Any]] = Field(default_factory=list, description="Vector-based best practices")
+    research_opportunities: List[Dict[str, Any]] = Field(
+        default_factory=list, description="Vector-based research opportunities"
+    )
 
     @field_validator("research_topic")
     @classmethod
@@ -194,6 +258,20 @@ class ImplementerContext(BaseContext):
     integration_points: List[str] = Field(default_factory=list, description="Integration points")
     rollback_strategy: Optional[str] = Field(None, description="Rollback strategy if needed")
     monitoring_requirements: Dict[str, Any] = Field(default_factory=dict, description="Monitoring requirements")
+
+    # Vector-based implementation insights
+    integration_patterns: List[Dict[str, Any]] = Field(
+        default_factory=list, description="Vector-based integration patterns"
+    )
+    dependency_mapping: List[Dict[str, Any]] = Field(
+        default_factory=list, description="Vector-based dependency mapping"
+    )
+    architecture_compliance: List[Dict[str, Any]] = Field(
+        default_factory=list, description="Vector-based architecture compliance"
+    )
+    implementation_strategy: List[Dict[str, Any]] = Field(
+        default_factory=list, description="Vector-based implementation strategy"
+    )
 
     @field_validator("implementation_plan")
     @classmethod

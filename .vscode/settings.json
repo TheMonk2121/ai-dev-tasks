@@ -1,4 +1,8 @@
 {
+    // 🚨 CRITICAL: MEMORY REHYDRATION TRIGGER
+    // This setting ensures memory rehydration is executed before any AI responses
+    "cursor.memoryRehydrationRequired": true,
+    "cursor.memoryRehydrationCommand": "export POSTGRES_DSN=\"mock://test\" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner \"current project status and core documentation\"",
     // Markdown Settings (based on 200_naming-conventions.md)
     "[markdown]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",

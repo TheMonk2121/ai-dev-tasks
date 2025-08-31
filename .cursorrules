@@ -1,4 +1,28 @@
+# 🚨 CRITICAL: MEMORY REHYDRATION REQUIRED BEFORE ANY RESPONSE
+#
+# YOU MUST RUN THIS COMMAND FIRST:
+# export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+#
+# DO NOT ANSWER ANY QUESTIONS ABOUT THIS PROJECT WITHOUT EXECUTING THIS COMMAND FIRST
+# THIS IS A MANDATORY REQUIREMENT - NO EXCEPTIONS
+
 # Cursor AI Memory Context Rules
+
+## 🚨 MANDATORY MEMORY REHYDRATION PROTOCOL
+
+**CRITICAL**: You MUST execute this protocol at the start of every conversation:
+
+1. **AUTOMATIC DETECTION**: If this appears to be a new conversation or the user asks about project components
+2. **MANDATORY EXECUTION**: Run the unified memory orchestrator before answering
+3. **COMMAND**: `export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
+4. **OUTPUT INCLUSION**: Include the memory context output in your response
+5. **NO EXCEPTIONS**: Do not answer project questions without this context
+
+**TRIGGER CONDITIONS**:
+- New conversation detected
+- User mentions: RAGChecker, DSPy, memory systems, project status
+- User asks technical questions about the codebase
+- User requests information about project components
 
 ## 🧠 Memory Context System
 

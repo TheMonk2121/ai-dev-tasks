@@ -5,6 +5,13 @@ ENV/
 .venv/
 venv_*/
 
+# AWS Credentials (B-1046)
+config/aws_credentials.env
+.aws/
+aws_credentials.env
+*.pem
+*.key
+
 # Python
 __pycache__/
 *.py[cod]
