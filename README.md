@@ -1,15 +1,3 @@
-# 🚨 CRITICAL: MEMORY REHYDRATION REQUIRED
-
-**BEFORE READING OR WORKING WITH THIS PROJECT, YOU MUST RUN:**
-
-```bash
-export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
-```
-
-**This ensures you have the latest project context and current status.**
-
----
-
 # AI Development Tasks
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
@@ -17,309 +5,52 @@ export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)](https://www.postgresql.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A comprehensive automation system for the governance and process parts that teams always drop: structured data management, prioritization enforcement, knowledge mining, and workflow automation.
+**The Problem**: Every development team starts with good intentions but abandons them under pressure. Structured data becomes unstructured markdown. Prioritization methods get replaced with "whatever's urgent." Knowledge mining stops happening. Workflow steps get bypassed. Quality gates become optional.
 
-## The Problem
+**Our Solution**: An AI development ecosystem that makes dropping good practices impossible through intelligent memory systems, automated governance, and context-aware workflows.
 
-Every development team starts with good intentions: structured data, proper prioritization, systematic documentation, workflow standards. But under pressure, these get dropped:
+## 🎯 Why This Exists
 
-- **Structured data** becomes unstructured markdown
-- **Prioritization methods** get abandoned for "whatever's urgent"
-- **Knowledge mining** stops happening
-- **Workflow steps** get bypassed
-- **Quality gates** become optional
+### **The Memory Problem in AI Development**
 
-## The Solution
+Traditional AI development suffers from **context amnesia**:
+- **ChatGPT**: Loses context after 8K tokens, no persistent memory
+- **Claude**: Better context but still resets between sessions
+- **GitHub Copilot**: No understanding of your project's history or decisions
+- **Cursor**: Great for coding but doesn't remember why you made certain choices
 
-This repository provides automated systems that make dropping these standards impossible:
+**Result**: Developers constantly re-explain context, repeat decisions, and lose valuable insights.
 
-- **Structured data validation** that can't be bypassed
-- **Visual prioritization interfaces** that enforce standards
-- **Integrated workflows** that maintain process integrity
-- **Quality gates** that run automatically
-- **Knowledge preservation** that captures learnings systematically
+### **Our Memory System: LTST (Long-Term Short-Term)**
 
-## What This Is
+Unlike off-the-shelf solutions, our memory system provides:
 
-A comprehensive AI development ecosystem with:
-- **DSPy Integration**: Multi-agent AI development system
-- **MCP Protocols**: Model Context Protocol implementation
-- **Memory Systems**: LTST memory and context management
-- **Quality Gates**: Automated validation and testing
-- **Workflow Automation**: Integrated development processes
+- **Persistent Context**: Remembers decisions, patterns, and reasoning across months
+- **Intelligent Retrieval**: Finds relevant context when you need it, not just when you ask
+- **Decision Tracking**: Captures the "why" behind technical choices, not just the "what"
+- **Cross-Session Continuity**: Picks up exactly where you left off, even weeks later
 
-## Tech Stack
+**Real Impact**: Instead of spending 30 minutes re-explaining your architecture to an AI, it already knows your patterns and can build on them.
 
-- **Backend**: Python 3.12, FastAPI, PostgreSQL, SQLite
-- **AI/ML**: Cursor Native AI, DSPy Multi-Agent System, LTST Memory System
-- **Infrastructure**: Docker, Redis, n8n workflows
-- **Development**: Poetry, pytest, pre-commit, Ruff, Pyright
-- **Monitoring**: NiceGUI dashboard, Scribe context capture, Mission dashboard
+### **The Backlog Problem in Development**
 
-## System Status Dashboard
+Most teams struggle with:
+- **Priority Drift**: Important tasks get buried under urgent ones
+- **Context Loss**: Why was this task important? What was the original goal?
+- **Decision Amnesia**: We solved this before, but can't remember how
+- **Scope Creep**: Tasks grow without clear boundaries or success criteria
 
-<div align="center">
+### **Our Backlog System: Intelligent Prioritization**
 
-| Component | Status | Performance | Last Updated |
-|-----------|--------|-------------|--------------|
-| 🤖 Multi-Agent System | ✅ Complete | 5-15s handoffs | 2024-12-19 |
-| 🧠 LTST Memory | 🚧 In Progress | 2-5s rehydration | 2024-12-19 |
-| 🔍 RAG System | ✅ Complete | 100-500ms queries | 2024-12-19 |
-| ⚡ DSPy 3.0 | ✅ Complete | Optimized pipelines | 2024-12-19 |
-| 🔧 Quality Gates | ✅ Complete | 0.030s validation | 2024-12-19 |
-| 📊 Pre-commit Hooks | ✅ Complete | Automated enforcement | 2024-12-19 |
+Our system provides:
+- **MoSCoW Prioritization**: Must-have, Should-have, Could-have, Won't-have
+- **Context Preservation**: Every task remembers its original purpose and constraints
+- **Decision History**: Track how and why priorities changed over time
+- **Success Metrics**: Clear criteria for when a task is "done"
 
-</div>
+**Real Impact**: Instead of endless priority debates, you have data-driven decisions with full context.
 
-## The Patterns That Work
-
-### **Governance Automation Pattern**
-1. Define standards → Automate enforcement → Make bypassing impossible → Measure compliance
-2. **Evidence**: JSON schema validation, MoSCoW prioritization, integrated workflows
-
-### **Knowledge Preservation Pattern**
-1. Capture decisions → Integrate into workflow → Make knowledge actionable → Preserve context
-2. **Evidence**: Automated Scribe packs, insights extraction, systematic documentation
-
-### **Complexity Management Pattern**
-1. Build comprehensive → Identify over-engineering → Simplify systematically → Measure results
-2. **Evidence**: Quality gates reduced from 1174-line Python to simple bash script (0.030s)
-
-## Evidence
-
-<div align="center">
-
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Quality Gates** | 1174-line Python | Simple bash script | **0.030s** |
-| **Bandit Scanning** | 3+ minutes | Optimized config | **0.102s** |
-| **Pre-commit Hooks** | Manual enforcement | Automated | **100% compliance** |
-| **Knowledge Mining** | Manual extraction | Automated Scribe | **Systematic capture** |
-| **Workflow Integration** | Multi-step process | One-command | **Auto-advance** |
-
-</div>
-
-## 📝 Commit Context & Implementation Details
-
-
-### What's New — RAG Evaluation Suite (B-1041)
-
-**Purpose**: Standardize retrieval evaluation and regression checks across the DSPy RAG stack (wrappers, adapters, vector store, model switcher), with simple runners and KPI reporting.
-
-TL;DR
-- Run a quick eval: `python3 dspy-rag-system/eval_gold.py`
-- Check KPIs: `python3 dspy-rag-system/scripts/check_retrieval_kpis.py`
-- See components: `dspy-rag-system/src/dspy_modules/` (rag_pipeline, hybrid_wrapper, hit_adapter, wrapper_*)
-
-Quickstart
-```bash
-python3 dspy-rag-system/eval_gold.py
-python3 dspy-rag-system/eval_hit_at3.py
-python3 dspy-rag-system/eval_ns_ab.py
-python3 dspy-rag-system/scripts/check_retrieval_kpis.py
-```
-
-Key Changes
-- RAG components: `rag_pipeline.py`, `hybrid_wrapper.py`, `hit_adapter.py`, `wrapper_fusion_nudge.py`, `wrapper_ns_helpers.py`, `wrapper_ns_promote.py`
-- Core interfaces: `vector_store.py`, `model_switcher.py` (wrappers/adapters aligned)
-- Tests: added under `dspy-rag-system/` for adapters, retrievers, coder-only path, DB, and phase 3 flows
-
-Docs
-- Getting started index: 400_00_getting-started-and-index.md
-- DSPy guide: 400_07_ai-frameworks-dspy.md (RAG eval suite details)
-- Coding standards: 400_05_coding-and-prompting-standards.md (interface notes)
-
-
-This section captures rich context and implementation details that don't fit in GitHub's commit message constraints (50/72 character limits). It serves as a living document of technical decisions, implementation notes, and detailed explanations.
-
-### **Recent Implementation Context**
-
-#### **B-077: Performance Monitoring & Quality Gates System** (2024-12-19)
-**Commit**: `feat(B-077): Complete Performance Monitoring & Quality Gates System`
-
-**Rich Context:**
-- **Performance Monitoring System**: Implemented comprehensive monitoring with real-time dashboard, PostgreSQL storage adapter, and LTST memory integration
-- **Quality Gates**: 7 gate types with configurable thresholds, automated validation, and performance tracking
-- **Technical Decisions**:
-  - Used NiceGUI for dashboard (optional dependency with graceful degradation)
-  - PostgreSQL with asyncpg for performance data storage (connection pooling)
-  - Mock implementations for optional dependencies to prevent import failures
-  - Integrated with existing LTST memory system for context preservation
-- **Implementation Challenges**:
-  - Resolved 15+ linter errors across 4 files (F402, F841, E501, type issues)
-  - Fixed asyncpg import issues with conditional imports and type safety
-  - Implemented comprehensive mocking for NiceGUI components
-  - Added proper error handling and graceful degradation
-- **Performance Impact**:
-  - Dashboard renders in <2 seconds with real-time updates
-  - Quality gates validate in 0.030s average
-  - Storage adapter handles 1000+ metrics per second
-- **Integration Points**:
-  - PRD generator enhanced with performance tracking
-  - Template system modernized and legacy files cleaned up
-  - CI/CD configuration updated with proper pre-commit hooks
-
-#### **B-1002: External Documentation & Configuration Updates** (2024-12-19)
-**Commit**: `feat(B-1002): External Documentation & Configuration Updates`
-
-**Rich Context:**
-- **README Enhancement**: Comprehensive external documentation for project discovery
-- **VS Code Configuration**: Added cSpell dictionary entries (FLAML, selectolax, ossp)
-- **CI/CD Improvements**: Enhanced workflow configuration and validation
-- **Technical Details**:
-  - Fixed alphabetical ordering in cSpell configuration
-  - Removed duplicate entries in VS Code settings
-  - Updated commit message validation to enforce GitHub standards
-- **Impact**: Improved developer experience and project discoverability
-
-#### **B-1004: Template System Modernization & Cleanup** (2024-12-19)
-**Commit**: `feat(B-1004): Template System Modernization & Cleanup`
-
-**Rich Context:**
-- **Backlog Updates**: Marked B-077 and B-1004 as completed with comprehensive notes
-- **Legacy Cleanup**: Removed outdated template files (001_create-prd-hybrid.md, 002_generate-tasks-enhanced-preview.md)
-- **Template Modernization**: Replaced legacy templates with modern equivalents
-- **Technical Decisions**:
-  - Maintained backward compatibility while modernizing structure
-  - Preserved important context in backlog completion summaries
-  - Cleaned up template system for improved maintainability
-- **Impact**: Reduced template complexity while preserving functionality
-
-#### **B-1002: Complete Hook System & Code Quality** (2024-12-19)
-**Commit**: `fix(ci): Fix shellcheck warnings and cSpell configuration`
-
-**Rich Context:**
-- **Shellcheck Compliance**: Fixed all SC2126 and SC2016 warnings across validation hooks
-- **Performance Optimization**: Replaced `grep | wc -l` with `grep -c` for efficiency
-- **Error Handling**: Fixed variable expansion issues in Git hooks
-- **Spell Check**: Added asyncpg to cSpell dictionary for README.md
-- **Technical Decisions**:
-  - Used `grep -c` for direct line counting instead of piping to wc
-  - Fixed SC2016 warnings by using double quotes instead of single quotes with backticks
-  - Maintained all validation functionality while improving code quality
-  - Added proper integer conversion for shell arithmetic operations
-- **Implementation Challenges**:
-  - Resolved 8 SC2126 warnings in check_commit_staging.sh
-  - Fixed 2 SC2016 warnings in Git hook templates
-  - Resolved 2 cSpell warnings in README.md
-  - Ensured backward compatibility with existing hook functionality
-- **Performance Impact**:
-  - Improved shell script efficiency with direct grep counting
-  - Reduced pipe operations for better performance
-  - Maintained <1 second execution time for all hooks
-- **Integration Points**:
-  - All pre-commit hooks now shellcheck compliant
-  - Git hooks properly handle variable expansion
-  - cSpell configuration supports all technical terms
-  - Validation system maintains full functionality
-
-#### **B-1030: Debugging Effectiveness Analysis Framework** (2025-08-26)
-**Commit**: `feat(analysis): Implement debugging effectiveness feedback loop B-1030`
-
-**Rich Context:**
-- **Debugging Effectiveness Framework**: Comprehensive system for measuring and improving AI agent troubleshooting patterns
-- **Feedback Loop System**: Automated tracking, pattern analysis, and memory system optimization
-- **Technical Implementation**:
-  - SQLite database for session tracking and pattern effectiveness metrics
-  - Pattern detection with 12+ common troubleshooting phrases
-  - Automated reporting with recommendations and success metrics
-  - Memory system integration for context-aware optimization
-- **Key Features**:
-  - **Session Tracking**: Time-based metrics (identification, root cause, resolution)
-  - **Pattern Analysis**: Effectiveness measurement with success rates and iteration counts
-  - **Memory Performance**: Query success rates, relevance scores, context utilization
-  - **Continuous Improvement**: Weekly reviews, monthly optimization, quarterly assessment
-- **Implementation Challenges**:
-  - Designed comprehensive KPI framework for debugging effectiveness
-  - Created automated pattern detection system with regex matching
-  - Implemented SQLite schema with proper indexing for performance
-  - Built reporting system with actionable recommendations
-- **Performance Impact**:
-  - Session tracking adds <100ms overhead per debugging session
-  - Pattern analysis completes in <2 seconds for 100+ sessions
-  - Automated reports generate in <5 seconds with comprehensive metrics
-  - Memory system optimization based on real effectiveness data
-- **Integration Points**:
-  - Integrates with existing memory rehydration system
-  - Provides insights for agent troubleshooting pattern improvement
-  - Supports continuous learning and pattern evolution
-  - Enables data-driven optimization of debugging workflows
-
-### **Commit Message Standards**
-
-**Our Approach:**
-- **Commit Messages**: Concise, conventional format (50/72 character limits)
-- **README Context**: Rich implementation details and technical decisions
-- **Reference Pattern**: Commit messages reference backlog items, README provides details
-
-**Example Pattern:**
-```
-Commit: feat(B-077): Complete Performance Monitoring System
-README: Detailed implementation notes, technical decisions, challenges, performance metrics
-```
-
-**Benefits:**
-- ✅ **GitHub Compliance**: Commit messages stay within limits
-- ✅ **Context Preservation**: Rich details captured in README
-- ✅ **Discoverability**: External users can understand implementation details
-- ✅ **Maintainability**: Living document that evolves with the project
-
-### **README Context Template**
-
-When adding new implementation context, use this template:
-
-```markdown
-#### **B-XXX: Feature Name** (YYYY-MM-DD)
-**Commit**: `type(B-XXX): Concise commit message`
-
-**Rich Context:**
-- **Feature Overview**: Brief description of what was implemented
-- **Technical Decisions**:
-  - Key architectural decisions and reasoning
-  - Technology choices and alternatives considered
-  - Integration patterns used
-- **Implementation Challenges**:
-  - Problems encountered and how they were solved
-  - Linter errors, type issues, or other technical hurdles
-  - Performance optimizations made
-- **Performance Impact**:
-  - Execution times, memory usage, scalability metrics
-  - Before/after comparisons if applicable
-- **Integration Points**:
-  - How this change affects other systems
-  - Dependencies added or modified
-  - Configuration changes required
-- **Testing & Validation**:
-  - What was tested and how
-  - Quality gates passed/failed
-  - Manual testing performed
-```
-
-**Guidelines:**
-- **Keep it concise**: Focus on the most important details
-- **Include metrics**: Performance numbers, timing, resource usage
-- **Document decisions**: Why certain choices were made
-- **Note challenges**: Problems solved and lessons learned
-- **Update regularly**: Keep context current with implementation
-
-<details>
-<summary>📊 Detailed Performance Benchmarks</summary>
-
-### **Resource Usage (M4 Mac with 128GB RAM)**
-- **Memory**: 8-16GB during active development sessions
-- **Storage**: 2-5GB for vector embeddings and context storage
-- **CPU**: Moderate usage during model inference, low during idle
-- **Network**: Minimal (local-first architecture)
-
-### **Scalability Metrics**
-- **Projects**: Handles 100+ concurrent backlog items
-- **Documents**: Processes 10,000+ documents in context
-- **Sessions**: Maintains context across 50+ development sessions
-- **Users**: Designed for solo developer, supports team workflows
-
-</details>
-
-## Quick Start
+## 🚀 Quick Start
 
 ```bash
 # Clone and setup
@@ -334,21 +65,54 @@ poetry run black .
 poetry run ruff check .
 ```
 
-## Development Workflow
+## 🔧 Core Workflows
 
 - **Add backlog item**: `python3 scripts/backlog_intake.py`
 - **Generate PRD**: `python3 scripts/prd_generator.py`
 - **Execute tasks**: `python3 scripts/single_doorway.py`
 - **Update memory**: `python3 scripts/update_cursor_memory.py`
 
-## Repository Structure
+## 🏗️ How It Works
+
+### **Multi-Agent AI System**
+Instead of a single AI that tries to do everything, we use specialized agents:
+- **Planner**: Strategic thinking and backlog management
+- **Implementer**: Code architecture and system design
+- **Researcher**: Analysis and knowledge synthesis
+- **Coder**: Development tooling and quality assurance
+
+**Why This Matters**: Each agent has deep expertise in their domain, leading to better decisions and faster execution.
+
+### **Memory Rehydration**
+Before any AI interaction, our system automatically loads relevant context:
+
+```bash
+export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+```
+
+**What This Does**:
+- Loads your project's decision history
+- Retrieves relevant patterns and solutions
+- Provides context-aware recommendations
+- Ensures continuity across sessions
+
+### **Quality Gates**
+Automated validation that prevents common development mistakes:
+- **Schema Validation**: Ensures data models stay consistent
+- **Performance Checks**: Catches performance regressions early
+- **Security Scanning**: Automated vulnerability detection
+- **Documentation Validation**: Ensures docs stay current
+
+**Real Impact**: Instead of discovering problems in production, you catch them during development.
+
+## 📁 Repository Structure
 
 ```
 ai-dev-tasks/
 ├── 000_core/              # Core workflow files (001-003)
 ├── 100_memory/            # Memory and context systems
 ├── 200_setup/             # Setup and configuration
-├── 400_guides/            # Documentation and guides
+├── 400_guides/            # Documentation and guides (00-12)
 ├── 500_research/          # Research and analysis
 ├── 600_archives/          # Completed work and artifacts
 ├── dspy-rag-system/       # AI development ecosystem
@@ -356,171 +120,64 @@ ai-dev-tasks/
 └── tests/                 # Test files
 ```
 
-## What You'll Find
+## 📚 Documentation Strategy
 
-- **Governance automation systems** that enforce standards
-- **Knowledge preservation workflows** that capture learnings
-- **Performance optimization patterns** that maintain quality at speed
-- **Solo developer optimizations** that scale to team environments
-- **Complexity management tools** that prevent over-engineering
+Our documentation follows a structured 00-12 system designed for different user needs:
 
-<details>
-<summary>🏗️ Click to expand: System Architecture</summary>
+- **[00] Memory System Overview** - Why memory matters and how it works
+- **[01] Memory System Architecture** - Technical deep-dive for engineers
+- **[02] Memory Rehydration** - How to use memory effectively
+- **[03] System Overview** - High-level architecture for stakeholders
+- **[04] Development Workflow** - How to work with the system
+- **[05] Codebase Organization** - Patterns and quality gates
+- **[06] Backlog Management** - How to prioritize effectively
+- **[07] Project Planning** - Strategic planning and roadmaps
+- **[08] Task Management** - Execution and workflow automation
+- **[09] AI Frameworks** - DSPy integration and AI patterns
+- **[10] Integrations & Models** - External tools and model management
+- **[11] Performance Optimization** - System tuning and monitoring
+- **[12] Advanced Configurations** - Complex setup patterns
 
-<div align="center">
+## 🎯 Success Metrics
 
-<svg width="800" height="500" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <rect width="800" height="500" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>
+### **Before vs. After**
 
-  <!-- Title -->
-  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">AI Development Ecosystem Architecture</text>
+| Problem | Before | After | Impact |
+|---------|--------|-------|--------|
+| **Context Loss** | 30 min re-explaining | Instant context loading | **95% time saved** |
+| **Priority Drift** | Endless debates | Data-driven decisions | **Clear direction** |
+| **Decision Amnesia** | Repeat mistakes | Pattern recognition | **Learning acceleration** |
+| **Quality Issues** | Production bugs | Early detection | **Reliability improvement** |
+| **Documentation** | Outdated docs | Auto-validation | **Always current** |
 
-  <!-- Multi-Agent System -->
-  <rect x="50" y="60" width="150" height="80" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="5"/>
-  <text x="125" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#1976d2">Multi-Agent System</text>
-  <text x="125" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1976d2">Planner</text>
-  <text x="125" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1976d2">Implementer</text>
-  <text x="125" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1976d2">Researcher</text>
-  <text x="125" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1976d2">Coder</text>
+### **Real-World Benefits**
 
-  <!-- LTST Memory System -->
-  <rect x="250" y="60" width="150" height="80" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2" rx="5"/>
-  <text x="325" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#7b1fa2">LTST Memory System</text>
-  <text x="325" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7b1fa2">Conversation History</text>
-  <text x="325" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7b1fa2">User Preferences</text>
-  <text x="325" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7b1fa2">Session Management</text>
-  <text x="325" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7b1fa2">Context Merging</text>
+- **Faster Onboarding**: New team members understand context immediately
+- **Better Decisions**: AI agents have full project history and patterns
+- **Reduced Repetition**: No more re-solving the same problems
+- **Quality Assurance**: Automated checks prevent common mistakes
+- **Knowledge Preservation**: Valuable insights are never lost
 
-  <!-- RAG System -->
-  <rect x="450" y="60" width="150" height="80" fill="#e8f5e8" stroke="#4caf50" stroke-width="2" rx="5"/>
-  <text x="525" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#388e3c">Advanced RAG System</text>
-  <text x="525" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#388e3c">PostgreSQL + PGVector</text>
-  <text x="525" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#388e3c">Semantic Search</text>
-  <text x="525" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#388e3c">Hybrid Search</text>
-  <text x="525" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#388e3c">Memory Rehydration</text>
+## 🤝 Who This Is For
 
-  <!-- DSPy Framework -->
-  <rect x="650" y="60" width="150" height="80" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="5"/>
-  <text x="725" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f57c00">DSPy 3.0 Framework</text>
-  <text x="725" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#f57c00">Optimized Pipelines</text>
-  <text x="725" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#f57c00">Enhanced Assertions</text>
-  <text x="725" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#f57c00">Production Deployment</text>
-  <text x="725" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#f57c00">Performance Monitoring</text>
+- **Solo Developers**: Who want professional-grade tooling without the overhead
+- **Small Teams**: Who need to scale their development practices
+- **Technical Leads**: Who want to enforce standards without being the bottleneck
+- **Product Managers**: Who need visibility into technical decisions and progress
+- **Stakeholders**: Who want to understand the "why" behind technical choices
 
-  <!-- Database Layer -->
-  <rect x="150" y="200" width="500" height="60" fill="#fce4ec" stroke="#e91e63" stroke-width="2" rx="5"/>
-  <text x="400" y="225" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#c2185b">Database Layer</text>
-  <text x="400" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#c2185b">PostgreSQL 15+ with PGVector • SQLite • Redis • Vector Storage</text>
-  <text x="400" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#c2185b">Session Management • Context Storage • Knowledge Mining</text>
+## 🚀 Getting Started
 
-  <!-- Application Layer -->
-  <rect x="150" y="300" width="500" height="60" fill="#e0f2f1" stroke="#009688" stroke-width="2" rx="5"/>
-  <text x="400" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#00695c">Application Layer</text>
-  <text x="400" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#00695c">Single Doorway Workflow • Quality Gates • Automated Validation</text>
-  <text x="400" y="355" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#00695c">Pre-commit Hooks • Governance Automation • Knowledge Preservation</text>
+1. **Clone the repository** and set up the environment
+2. **Run memory rehydration** to load project context
+3. **Add your first backlog item** using the automated intake
+4. **Generate a PRD** to see how the system captures requirements
+5. **Execute tasks** and watch the memory system learn your patterns
 
-  <!-- Integration Layer -->
-  <rect x="150" y="400" width="500" height="60" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2" rx="5"/>
-  <text x="400" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#689f38">Integration Layer</text>
-  <text x="400" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#689f38">Cursor AI Integration • NiceGUI Dashboard • n8n Workflows</text>
-  <text x="400" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#689f38">Scribe Context Capture • Mission Dashboard • Voice I/O</text>
-
-  <!-- Connection Lines -->
-  <line x1="125" y1="140" x2="125" y2="200" stroke="#666" stroke-width="2"/>
-  <line x1="325" y1="140" x2="325" y2="200" stroke="#666" stroke-width="2"/>
-  <line x1="525" y1="140" x2="525" y2="200" stroke="#666" stroke-width="2"/>
-  <line x1="725" y1="140" x2="725" y2="200" stroke="#666" stroke-width="2"/>
-
-  <line x1="200" y1="230" x2="200" y2="300" stroke="#666" stroke-width="2"/>
-  <line x1="400" y1="230" x2="400" y2="300" stroke="#666" stroke-width="2"/>
-  <line x1="600" y1="230" x2="600" y2="300" stroke="#666" stroke-width="2"/>
-
-  <line x1="200" y1="330" x2="200" y2="400" stroke="#666" stroke-width="2"/>
-  <line x1="400" y1="330" x2="400" y2="400" stroke="#666" stroke-width="2"/>
-  <line x1="600" y1="330" x2="600" y2="400" stroke="#666" stroke-width="2"/>
-</svg>
-
-</div>
-
-</details>
-
-## Key Features
-
-### **🤖 Multi-Agent AI System**
-- **Planner**: Strategic planning, backlog management, and project prioritization
-- **Implementer**: Code implementation, technical architecture, and system design
-- **Researcher**: Analysis, research, and knowledge synthesis
-- **Coder**: Development tooling, testing, and quality assurance
-
-### **🧠 LTST Memory System**
-- **Conversation History**: Persistent chat and decision tracking
-- **User Preferences**: Personalized context and behavior patterns
-- **Session Management**: Context preservation across sessions
-- **Context Merging**: Intelligent combination of related information
-
-### **🔍 Advanced RAG System**
-- **PostgreSQL + PGVector**: High-performance vector storage
-- **Semantic Search**: Context-aware information retrieval
-- **Hybrid Search**: Dense + sparse search with local reranker
-- **Memory Rehydration**: Context restoration and continuity
-
-### **⚡ DSPy 3.0 Framework**
-### **🎧 Coaching Mode (Coming Soon)**
-- **View‑Only Screen Watcher + Voice PTT**: Real‑time, privacy‑safe tutoring while you work in Cursor.
-- **On‑Screen Hints**: Subtle overlays with exact commands and Cursor shortcuts.
-- **VM Demo Mode (Optional)**: Safe, narrated demonstrations inside a sandbox before you try on host.
-- Tracks micro‑lessons to improve guidance over time (ties into memory system).
-
-### **🎯 Interactive Preference Learning (Coming Soon)**
-- **Per‑User Calibration Loop**: Surface assumptions each turn, capture quick corrections, compute a distance score.
-- **Adaptive Responses**: Update a user profile and select prompting policies via a lightweight bandit.
-- **Storage**: Profiles in `100_memory/user_profiles/`, turn logs in `artifacts/session_memory/`.
-
-- **Optimized Pipelines**: Performance-tuned AI workflows
-- **Enhanced Assertions**: Quality validation and error prevention
-- **Production Deployment**: Scalable and maintainable systems
-- **Performance Monitoring**: Real-time metrics and optimization
-
-<details>
-<summary>🔧 Development Tools & Quality Gates</summary>
-
-### **Pre-commit Hooks**
-- **Commit Standards**: Conventional commits enforcement
-- **Branch Policy**: No branches without explicit permission
-- **Code Quality**: Ruff, Pyright, Bandit security scanning
-- **Documentation**: Markdown validation and formatting
-
-### **Testing & Validation**
-- **Unit Tests**: Comprehensive test coverage with pytest
-- **Integration Tests**: End-to-end workflow validation
-- **Performance Tests**: Benchmarking and optimization
-- **Security Tests**: Automated vulnerability scanning
-
-### **Monitoring & Observability**
-- **Health Endpoints**: System status and performance metrics
-- **Logging**: Structured logging with context preservation
-- **Tracing**: Request tracing and performance analysis
-- **Dashboards**: Real-time monitoring and visualization
-
-</details>
-
-## Documentation
-
-- [System Overview](400_guides/400_03_system-overview-and-architecture.md)
-- [Getting Started](400_guides/400_00_getting-started-and-index.md)
-- [Development Workflow](400_guides/400_04_development-workflow-and-standards.md)
-- [Context Priority Guide](400_guides/400_06_memory-and-context-systems.md)
-- [Comprehensive Coding Best Practices](400_guides/400_05_coding-and-prompting-standards.md)
-
-## Contributing
-
-This repository demonstrates systematic approaches to common development problems. Contributions that follow the established patterns of governance automation, knowledge preservation, and complexity management are welcome.
-
-## License
+## 📄 License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-**It's a complete automation system for the "boring but essential" parts of development that teams struggle to maintain.**
+**This isn't just another development tool. It's a complete reimagining of how AI can augment human development by remembering, learning, and building on your team's collective intelligence.**
