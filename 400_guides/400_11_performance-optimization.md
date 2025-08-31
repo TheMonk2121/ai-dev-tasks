@@ -227,7 +227,11 @@ This guide covers comprehensive performance optimization and monitoring includin
 
 ## 📊 **Performance Monitoring Framework**
 
+> **💡 What This Section Does**: This explains how to monitor and track system performance. If you just want to fix performance issues, you can skip to the "User Journey" section above.
+
 ### **Comprehensive Metrics Collection**
+
+**Skip This If**: You're troubleshooting rather than building monitoring - the Quick Start section above has the commands you need.
 
 #### **System Performance Metrics**
 ```python
@@ -248,6 +252,18 @@ class SystemMetrics:
     network_io: Dict[str, float]
     process_count: int
     load_average: List[float]
+
+### **Just the Essentials**
+
+**What This Does**: The performance monitor tracks system health by collecting metrics about CPU, memory, disk, and network usage.
+
+**Key Metrics**:
+1. **CPU Usage** - How much processing power is being used
+2. **Memory Usage** - How much RAM is being consumed
+3. **Disk Usage** - How much storage space is available
+4. **Network Activity** - How much data is being transferred
+
+**When to Use**: When you need to understand why your system is slow or when building monitoring tools.
 
 class PerformanceMonitor:
     """Comprehensive performance monitoring system."""

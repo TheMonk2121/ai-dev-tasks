@@ -238,13 +238,29 @@ This guide covers comprehensive AI framework integration and DSPy implementation
 
 ## 🤖 **DSPy Framework Integration**
 
+> **💡 What This Section Does**: This explains how to build AI modules using DSPy. If you just want to use AI features, you can skip to the "User Journey" section above.
+
 ### **Core DSPy Architecture**
+
+**Skip This If**: You're using AI features rather than building them - the Quick Start section above has everything you need.
 
 #### **DSPy Module Structure**
 ```python
 from dspy import Module, Signature, InputField, OutputField
 from typing import Dict, Any, List
 import logging
+
+### **Just the Essentials**
+
+**What This Does**: DSPy modules provide a standardized way to build AI features with built-in validation and error handling.
+
+**Key Components**:
+1. **Input Validation** - Ensures data is correct before processing
+2. **AI Operation** - The actual AI processing logic
+3. **Output Validation** - Ensures results are valid
+4. **Error Handling** - Graceful failure with logging and metrics
+
+**When to Use**: When building custom AI features that need to be reliable and maintainable.
 
 class AIFrameworkModule(Module):
     """Base class for AI framework integration modules."""

@@ -198,9 +198,13 @@ This guide covers comprehensive memory systems and context management including:
 
 ## 🧠 MEMORY SCAFFOLDING SYSTEM
 
+> **💡 What This Section Does**: This explains how the memory system works under the hood. If you just want to use the system, you can skip to the "User Journey" section above.
+
 ### **Unified Memory Orchestrator**
 
 **Purpose**: Single command access to all memory systems with automatic environment setup and database management.
+
+**Skip This If**: You just want to use the memory system - the Quick Start section above has everything you need.
 
 **Key Features**:
 - **One-Command Access**: `python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "query"`
@@ -234,9 +238,13 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor prime --role res
 
 ## 🔬 ADVANCED RESEARCH & ANALYSIS METHODOLOGIES
 
+> **💡 What This Section Does**: This covers advanced research methods for deep technical analysis. If you're focused on using the system rather than building research tools, you can skip this section.
+
 ### **Systematic Research Framework**
 
 **Purpose**: Implement comprehensive research methodologies for technical decision-making, problem-solving, and system optimization.
+
+**Skip This If**: You're using the system rather than building research capabilities - the User Journey section above covers practical usage.
 
 **Key Principles**:
 - **Evidence-based research**: Systematic data collection and analysis
@@ -273,6 +281,18 @@ class ResearchDesign:
     validation_criteria: List[str]
     timeline: Dict[str, Any]
     resource_requirements: Dict[str, Any]
+
+### **Just the Essentials**
+
+**What This Does**: The research framework helps you make better technical decisions by systematically collecting and analyzing data.
+
+**Key Steps**:
+1. **Plan** your research question and methodology
+2. **Collect** relevant data from multiple sources
+3. **Analyze** the data using appropriate tools
+4. **Validate** your findings before making decisions
+
+**When to Use**: When you need to make important technical decisions or solve complex problems.
 
 class SystematicResearchFramework:
     """Systematic research framework for technical decision-making."""
