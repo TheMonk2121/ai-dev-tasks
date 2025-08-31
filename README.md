@@ -1,123 +1,68 @@
-# AI Development Tasks
+# 🚀 AI Development Tasks – A Local-First AI Dev Ecosystem
 
-[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
-[![DSPy 3.0](https://img.shields.io/badge/DSPy-3.0.1-green.svg)](https://github.com/stanfordnlp/dspy)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)](https://www.postgresql.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-**The Problem**: Every development team starts with good intentions but abandons them under pressure. Structured data becomes unstructured markdown. Prioritization methods get replaced with "whatever's urgent." Knowledge mining stops happening. Workflow steps get bypassed. Quality gates become optional.
-
-**Our Solution**: An AI development ecosystem that makes dropping good practices impossible through intelligent memory systems, automated governance, and context-aware workflows.
+Build faster, with memory and structure.
+An end-to-end framework that turns messy AI workflows into clear, repeatable development pipelines.
 
 ## 🎯 Why This Exists
 
-### **The Memory Problem in AI Development**
+Building AI features today is chaotic:
 
-Traditional AI development suffers from **context amnesia**:
-- **ChatGPT**: Loses context after 8K tokens, no persistent memory
-- **Claude**: Better context but still resets between sessions
-- **GitHub Copilot**: No understanding of your project's history or decisions
-- **Cursor**: Great for coding but doesn't remember why you made certain choices
+- **Context gets lost** between sessions
+- **Agents behave inconsistently** across tools
+- **Workflows sprawl** across half a dozen tools
+- **Quality and testing** lag behind speed
+- **Decisions and patterns** are forgotten over time
 
-**Result**: Developers constantly re-explain context, repeat decisions, and lose valuable insights.
+This repo is my answer: a production-ready, local-first AI development ecosystem that brings order to AI-powered development.
 
-### **Our Memory System: LTST (Long-Term Short-Term)**
+## 🧩 What It Gives You
 
-Unlike off-the-shelf solutions, our memory system provides:
+🤖 **Multi-Agent Roles** – Planner, Implementer, Researcher, and Coder that collaborate with shared memory
 
-- **Persistent Context**: Remembers decisions, patterns, and reasoning across months
-- **Intelligent Retrieval**: Finds relevant context when you need it, not just when you ask
-- **Decision Tracking**: Captures the "why" behind technical choices, not just the "what"
-- **Cross-Session Continuity**: Picks up exactly where you left off, even weeks later
+🧠 **LTST Memory System** – Persistent context that remembers decisions, patterns, and reasoning across months
 
-**Real Impact**: Instead of spending 30 minutes re-explaining your architecture to an AI, it already knows your patterns and can build on them.
+🔍 **Advanced RAG** – PostgreSQL + PGVector for semantic context retrieval and instant rehydration
 
-### **The Backlog Problem in Development**
+⚡ **DSPy 3.0** – Structured pipelines, enhanced assertions, and production-ready orchestration
 
-Most teams struggle with:
-- **Priority Drift**: Important tasks get buried under urgent ones
-- **Context Loss**: Why was this task important? What was the original goal?
-- **Decision Amnesia**: We solved this before, but can't remember how
-- **Scope Creep**: Tasks grow without clear boundaries or success criteria
+🔄 **Single Doorway Workflow** – From backlog → PRD → tasks → execution → archive, all automated
 
-### **Our Backlog System: Intelligent Prioritization**
+📊 **Quality Gates** – Automated validation that prevents common development mistakes
 
-Our system provides:
-- **MoSCoW Prioritization**: Must-have, Should-have, Could-have, Won't-have
-- **Context Preservation**: Every task remembers its original purpose and constraints
-- **Decision History**: Track how and why priorities changed over time
-- **Success Metrics**: Clear criteria for when a task is "done"
+## 🏗️ How It's Built
 
-**Real Impact**: Instead of endless priority debates, you have data-driven decisions with full context.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    AI Development Ecosystem                  │
+├─────────────────────────────────────────────────────────────┤
+│  🤖 Multi-Agent System  | Planner | Implementer | Researcher │
+│  🧠 LTST Memory         | Persistent history + rehydration   │
+│  🔍 RAG                | PostgreSQL + PGVector              │
+│  ⚡ DSPy 3.0 Framework  | Structured pipelines + assertions  │
+└─────────────────────────────────────────────────────────────┘
+```
 
-## 🚀 Quick Start
+## 🚀 Quick Demo
 
 ```bash
-# Clone and setup
+# 1. Clone & setup
 git clone https://github.com/TheMonk2121/ai-dev-tasks.git
 cd ai-dev-tasks
 poetry install
 poetry run pre-commit install
 
-# Run quality gates
-poetry run pytest
-poetry run black .
-poetry run ruff check .
-```
-
-## 🔧 Core Workflows
-
-- **Add backlog item**: `python3 scripts/backlog_intake.py`
-- **Generate PRD**: `python3 scripts/prd_generator.py`
-- **Execute tasks**: `python3 scripts/single_doorway.py`
-- **Update memory**: `python3 scripts/update_cursor_memory.py`
-
-## 🏗️ How It Works
-
-### **Multi-Agent AI System**
-Instead of a single AI that tries to do everything, we use specialized agents:
-- **Planner**: Strategic thinking and backlog management
-- **Implementer**: Code architecture and system design
-- **Researcher**: Analysis and knowledge synthesis
-- **Coder**: Development tooling and quality assurance
-
-**Why This Matters**: Each agent has deep expertise in their domain, leading to better decisions and faster execution.
-
-### **Memory Rehydration**
-Before any AI interaction, our system automatically loads relevant context:
-
-```bash
+# 2. Load project context (memory rehydration)
 export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
-```
 
-**What This Does**:
-- Loads your project's decision history
-- Retrieves relevant patterns and solutions
-- Provides context-aware recommendations
-- Ensures continuity across sessions
+# 3. Generate your first feature
+python3 scripts/single_doorway.py generate "Add user authentication system"
 
-### **Quality Gates**
-Automated validation that prevents common development mistakes:
-- **Schema Validation**: Ensures data models stay consistent
-- **Performance Checks**: Catches performance regressions early
-- **Security Scanning**: Automated vulnerability detection
-- **Documentation Validation**: Ensures docs stay current
-
-**Real Impact**: Instead of discovering problems in production, you catch them during development.
-
-## 📁 Repository Structure
-
-```
-ai-dev-tasks/
-├── 000_core/              # Core workflow files (001-003)
-├── 100_memory/            # Memory and context systems
-├── 200_setup/             # Setup and configuration
-├── 400_guides/            # Documentation and guides (00-12)
-├── 500_research/          # Research and analysis
-├── 600_archives/          # Completed work and artifacts
-├── dspy-rag-system/       # AI development ecosystem
-├── scripts/               # Development and automation scripts
-└── tests/                 # Test files
+# 4. Watch it work
+# ✅ Creates a PRD with requirements
+# ✅ Breaks into tasks
+# ✅ Executes with AI + quality gates
+# ✅ Tracks progress on the dashboard
+# ✅ Archives with context + lessons learned
 ```
 
 ## 📚 Documentation Strategy
@@ -140,8 +85,6 @@ Our documentation follows a structured 00-12 system designed for different user 
 
 ## 🎯 Success Metrics
 
-### **Before vs. After**
-
 | Problem | Before | After | Impact |
 |---------|--------|-------|--------|
 | **Context Loss** | 30 min re-explaining | Instant context loading | **95% time saved** |
@@ -150,13 +93,14 @@ Our documentation follows a structured 00-12 system designed for different user 
 | **Quality Issues** | Production bugs | Early detection | **Reliability improvement** |
 | **Documentation** | Outdated docs | Auto-validation | **Always current** |
 
-### **Real-World Benefits**
+## 🔒 Production-Ready
 
-- **Faster Onboarding**: New team members understand context immediately
-- **Better Decisions**: AI agents have full project history and patterns
-- **Reduced Repetition**: No more re-solving the same problems
-- **Quality Assurance**: Automated checks prevent common mistakes
-- **Knowledge Preservation**: Valuable insights are never lost
+- **Input validation** + prompt sanitization
+- **Health checks** + performance benchmarks
+- **Automated HotFix generation** + recovery
+- **Local-first design** with PostgreSQL + PGVector
+- **Quality gates** that run in 0.030s average
+- **Pre-commit hooks** with 100% compliance
 
 ## 🤝 Who This Is For
 
@@ -166,14 +110,6 @@ Our documentation follows a structured 00-12 system designed for different user 
 - **Product Managers**: Who need visibility into technical decisions and progress
 - **Stakeholders**: Who want to understand the "why" behind technical choices
 
-## 🚀 Getting Started
-
-1. **Clone the repository** and set up the environment
-2. **Run memory rehydration** to load project context
-3. **Add your first backlog item** using the automated intake
-4. **Generate a PRD** to see how the system captures requirements
-5. **Execute tasks** and watch the memory system learn your patterns
-
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) for details.
@@ -181,3 +117,9 @@ MIT License - see [LICENSE](LICENSE) for details.
 ---
 
 **This isn't just another development tool. It's a complete reimagining of how AI can augment human development by remembering, learning, and building on your team's collective intelligence.**
+
+## 🙏 Credits
+
+- Stanford NLP for DSPy
+- PostgreSQL + PGVector for the memory backbone
+- Cursor AI for IDE integration
