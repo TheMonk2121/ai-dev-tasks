@@ -94,6 +94,20 @@ Define the end-to-end development workflow (from idea to deployment) and the sta
 - Unit, integration, and system tests as appropriate
 - Coverage targets and quality gates per 05 testing strategy
 - Run: `pytest tests/ -q` (see markers/tiers in repo)
+- **RAGChecker Evaluation**: Run official RAGChecker evaluation for RAG system changes
+  ```bash
+  # Run Official RAGChecker evaluation
+  python3 scripts/ragchecker_official_evaluation.py
+
+  # Pre-commit RAGChecker validation
+  python3 scripts/pre_commit_ragchecker.py
+
+  # Check evaluation status
+  cat metrics/baseline_evaluations/EVALUATION_STATUS.md
+
+  # CI/CD automated evaluation (GitHub Actions)
+  # Triggered automatically on RAGChecker-related changes
+  ```
 
 ### Stage 5: Quality
 - Code review checklist (function length, typing, errors, docs)
@@ -141,6 +155,8 @@ pytest tests/ -q
 - [ ] Links valid across docs (no references to removed files)
 - [ ] Security considerations reviewed (10)
 - [ ] Deployment plan confirmed (11)
+- [ ] **RAGChecker evaluation run** for RAG system changes (if applicable)
+- [ ] **CI/CD pipeline validation** for RAGChecker changes (automated)
 
 ## 🔗 Interfaces
 

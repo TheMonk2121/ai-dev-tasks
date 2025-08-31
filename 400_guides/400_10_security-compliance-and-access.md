@@ -660,7 +660,7 @@ ALERT_CHANNELS = {
 
 - **A04:2021 - Insecure Design**: Security-first architecture
 
-- **A05:2021 - Security Misconfiguration**: Automated configuration validation
+- **A05:2021 - Security Misconfiguration**: Automated configuration validation including RAGChecker for RAG system validation
 
 #### **2. AI Security Best Practices**-**Input Validation**: All AI inputs sanitized
 

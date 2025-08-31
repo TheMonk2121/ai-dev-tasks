@@ -565,7 +565,7 @@ class EnhancedMonitoringIntegration:
 **Purpose**: Comprehensive migration and upgrade procedures with risk management, automation, quality gates, and emergency procedures.
 
 **Risk Management**:
-- **Risk Assessment**: Comprehensive risk assessment and mitigation
+- **Risk Assessment**: Comprehensive risk assessment and mitigation including RAGChecker for RAG system performance monitoring
 - **Automation**: Automated migration procedures with validation
 - **Quality Gates**: Automated quality gates and validation checks
 - **Emergency Procedures**: Emergency rollback and recovery procedures

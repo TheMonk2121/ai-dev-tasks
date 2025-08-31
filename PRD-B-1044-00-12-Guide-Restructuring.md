@@ -26,7 +26,7 @@
 ### **Local Development**
 - **Memory Hydration**: `./scripts/memory_up.sh` for context rehydration
 - **Validation**: `markdownlint`, `python scripts/quick_conflict_check.py`
-- **Testing**: `python scripts/ragus_evaluation.py` for memory system validation
+- **Testing**: `python scripts/ragchecker_evaluation.py` for memory system validation
 - **Quality Gates**: Pre-commit hooks and CI validation
 
 ### **Common Tasks**
@@ -156,7 +156,7 @@ The current 00-12 guide structure has evolved organically and now presents sever
 
 **Step 4: Validation and Testing**
 - Test navigation flows for all user types
-- Validate AI comprehension through RAGUS evaluation
+- Validate AI comprehension through RAGChecker evaluation
 - Verify constitution integration and policy visibility
 - Confirm cross-reference integrity and maintenance patterns
 
@@ -167,11 +167,11 @@ The current 00-12 guide structure has evolved organically and now presents sever
 1. **Navigation Efficiency**
    - **Target**: 50% reduction in time to find specific information
    - **Measurement**: User testing with common information retrieval tasks
-   - **Validation**: RAGUS evaluation score improvement (target: 90+)
+   - **Validation**: RAGChecker evaluation score improvement (target: 90+)
 
 2. **AI Comprehension**
    - **Target**: 25% improvement in AI context retrieval accuracy
-   - **Measurement**: RAGUS evaluation framework with role-specific queries
+   - **Measurement**: RAGChecker evaluation framework with role-specific queries
    - **Validation**: Memory system performance metrics and user feedback
 
 3. **Maintenance Efficiency**
@@ -298,7 +298,7 @@ The current 00-12 guide structure has evolved organically and now presents sever
 **Week 7: Reference Layer and Testing**
 - [ ] Create 400_12_reference-and-quick-access.md
 - [ ] Implement comprehensive testing across all user types
-- [ ] Validate AI comprehension through RAGUS evaluation
+- [ ] Validate AI comprehension through RAGChecker evaluation
 - [ ] Test navigation flows and progressive disclosure
 
 **Week 8: Final Validation and Deployment**
@@ -317,14 +317,14 @@ The current 00-12 guide structure has evolved organically and now presents sever
 
 ### **Technical Resources**
 - **Development Environment**: Existing infrastructure with enhanced validation
-- **Testing Framework**: RAGUS evaluation system and automated validation
+- **Testing Framework**: RAGChecker evaluation system and automated validation
 - **Monitoring Tools**: Performance monitoring and rollback capabilities
 - **Documentation Tools**: Enhanced markdown validation and link checking
 
 ### **Timeline and Dependencies**
 - **Total Duration**: 8 weeks
 - **Critical Path**: Content audit → Structure design → Implementation → Validation
-- **Dependencies**: Memory system stability, RAGUS evaluation framework
+- **Dependencies**: Memory system stability, RAGChecker evaluation framework
 - **Milestones**: Week 2 (design complete), Week 4 (core implementation), Week 6 (technical complete), Week 8 (deployment)
 
 ## **8. Acceptance Criteria**
@@ -338,7 +338,7 @@ The current 00-12 guide structure has evolved organically and now presents sever
    - [ ] Cross-references are accurate and maintainable
 
 2. **AI Comprehension**
-   - [ ] RAGUS evaluation score improves to 90+ (from current 85.0)
+   - [ ] RAGChecker evaluation score improves to 90+ (from current 85.0)
    - [ ] Memory system retrieves relevant context for all DSPy roles
    - [ ] AI agents can navigate structure without guidance
    - [ ] Context retrieval accuracy improves by 25%
@@ -390,7 +390,7 @@ The current 00-12 guide structure has evolved organically and now presents sever
    - [ ] Memory system integration updated
 
 3. **Performance Validation**
-   - [ ] RAGUS evaluation score 90+
+   - [ ] RAGChecker evaluation score 90+
    - [ ] Memory system performance maintained
    - [ ] Navigation efficiency improved
    - [ ] Scalability requirements met
@@ -412,7 +412,7 @@ The current 00-12 guide structure has evolved organically and now presents sever
    - Role-based navigation success rates
 
 2. **AI Comprehension**
-   - RAGUS evaluation scores by role
+   - RAGChecker evaluation scores by role
    - Memory system retrieval accuracy
    - Context comprehension quality
    - AI agent navigation success
@@ -431,7 +431,7 @@ The current 00-12 guide structure has evolved organically and now presents sever
 
 ### **Monitoring Tools**
 
-1. **RAGUS Evaluation Framework**
+1. **RAGChecker Evaluation Framework**
    - Automated evaluation of AI comprehension
    - Role-specific performance metrics
    - Trend analysis and improvement tracking
@@ -458,7 +458,7 @@ The current 00-12 guide structure has evolved organically and now presents sever
 ### **Success Criteria**
 
 **Primary Success Criteria:**
-- RAGUS evaluation score improves to 90+ (from current 85.0)
+- RAGChecker evaluation score improves to 90+ (from current 85.0)
 - Navigation efficiency improves by 50%
 - Maintenance overhead reduces by 40%
 - Constitution compliance reaches 100%
@@ -494,7 +494,7 @@ The current 00-12 guide structure has evolved organically and now presents sever
 ### **Continuous Improvement**
 
 1. **Regular Assessment**
-   - Quarterly RAGUS evaluation reviews
+   - Quarterly RAGChecker evaluation reviews
    - Monthly user satisfaction surveys
    - Weekly performance monitoring
    - Daily automated validation

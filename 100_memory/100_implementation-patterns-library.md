@@ -372,12 +372,12 @@ def memory_optimization_pattern(memory_system: Dict[str, Any]) -> Dict[str, Any]
     }
 ```
 
-#### **RAGUS Optimization Pattern**
+#### **RAGChecker Optimization Pattern**
 ```python
-def ragus_optimization_pattern(current_score: float, target_score: float) -> Dict[str, Any]:
-    """Standard pattern for RAGUS score optimization."""
+def ragchecker_optimization_pattern(current_score: float, target_score: float) -> Dict[str, Any]:
+    """Standard pattern for RAGChecker score optimization."""
     # Analyze current performance
-    current_analysis = analyze_ragus_performance(current_score)
+    current_analysis = analyze_ragchecker_performance(current_score)
 
     # Identify improvement areas
     improvement_areas = identify_improvement_areas(current_analysis, target_score)
@@ -389,10 +389,10 @@ def ragus_optimization_pattern(current_score: float, target_score: float) -> Dic
     implemented_improvements = implement_improvements(improvement_strategies)
 
     # Measure new score
-    new_score = measure_ragus_score(implemented_improvements)
+    new_score = measure_ragchecker_score(implemented_improvements)
 
     return {
-        "optimization": "ragus_score",
+        "optimization": "ragchecker_score",
         "current_score": current_score,
         "target_score": target_score,
         "current_analysis": current_analysis,
@@ -401,6 +401,88 @@ def ragus_optimization_pattern(current_score: float, target_score: float) -> Dic
         "implemented_improvements": implemented_improvements,
         "new_score": new_score,
         "improvement": new_score - current_score
+    }
+```
+
+#### **AWS Bedrock Integration Pattern (B-1046)**
+```python
+def bedrock_integration_pattern(evaluation_type: str, use_bedrock: bool = True) -> Dict[str, Any]:
+    """Standard pattern for AWS Bedrock integration with RAGChecker."""
+    # Initialize Bedrock client
+    bedrock_client = BedrockClient() if use_bedrock else None
+
+    # Configure evaluation parameters
+    evaluation_config = {
+        "use_bedrock": use_bedrock,
+        "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+        "max_tokens": 4000,
+        "temperature": 0.1
+    }
+
+    # Run evaluation with cost monitoring
+    if use_bedrock:
+        cost_monitor = BedrockCostMonitor()
+        evaluation_config["cost_monitor"] = cost_monitor
+
+    # Execute evaluation
+    results = run_ragchecker_evaluation(evaluation_config)
+
+    # Track costs and performance
+    if use_bedrock:
+        cost_summary = cost_monitor.get_usage_summary("today")
+        performance_metrics = {
+            "evaluation_time": results.get("evaluation_time"),
+            "cost": cost_summary.total_cost,
+            "tokens_used": cost_summary.input_tokens + cost_summary.output_tokens
+        }
+    else:
+        performance_metrics = {
+            "evaluation_time": results.get("evaluation_time"),
+            "cost": 0.0,
+            "tokens_used": 0
+        }
+
+    return {
+        "integration": "aws_bedrock",
+        "evaluation_type": evaluation_type,
+        "use_bedrock": use_bedrock,
+        "results": results,
+        "performance_metrics": performance_metrics,
+        "cost_summary": cost_summary if use_bedrock else None
+    }
+```
+
+#### **Results Management Pattern**
+```python
+def results_management_pattern(evaluation_results: Dict[str, Any], archive_old: bool = True) -> Dict[str, Any]:
+    """Standard pattern for results management and archival."""
+    # Generate timestamp for file naming
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    # Save evaluation results
+    results_file = f"metrics/baseline_evaluations/ragchecker_official_evaluation_{timestamp}.json"
+    save_evaluation_results(evaluation_results, results_file)
+
+    # Update status file
+    update_evaluation_status(results_file, evaluation_results)
+
+    # Archive old files if requested
+    if archive_old:
+        archive_old_evaluations(days=30)
+
+    # Generate analysis report
+    analysis_report = generate_analysis_report(evaluation_results)
+
+    # Compare with baseline
+    baseline_comparison = compare_with_baseline(evaluation_results)
+
+    return {
+        "management": "results_management",
+        "results_file": results_file,
+        "timestamp": timestamp,
+        "analysis_report": analysis_report,
+        "baseline_comparison": baseline_comparison,
+        "archived_files": archive_old_evaluations(days=30) if archive_old else []
     }
 ```
 
@@ -446,7 +528,9 @@ def apply_implementation_pattern(pattern_name: str, context: Dict[str, Any]) -> 
 - ✅ **Role-Specific Patterns**: Planner, implementer, researcher, coder patterns
 - ✅ **Workflow Patterns**: Development workflow, task generation
 - ✅ **Quality Assurance Patterns**: Testing, validation patterns
-- ✅ **Performance Optimization Patterns**: Memory optimization, RAGUS optimization
+- ✅ **Performance Optimization Patterns**: Memory optimization, RAGChecker optimization
+- ✅ **AWS Bedrock Integration Patterns**: B-1046 integration, cost monitoring, batch processing
+- ✅ **Results Management Patterns**: File organization, archival, analysis, trend tracking
 
 ### **Usage Metrics**
 - **Pattern Coverage**: 100% of common development tasks
@@ -471,7 +555,7 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "de
 python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "check implementation pattern coverage"
 
 # Validate pattern effectiveness
-python3 scripts/ragus_evaluation.py --pattern-validation
+python3 scripts/ragchecker_evaluation.py --pattern-validation
 ```
 
 ## 📈 **Success Metrics & Monitoring**
@@ -490,7 +574,7 @@ python3 scripts/ragus_evaluation.py --pattern-validation
 python3 scripts/monitoring_dashboard.py --pattern-usage
 
 # Track pattern effectiveness
-python3 scripts/ragus_evaluation.py --pattern-effectiveness
+python3 scripts/ragchecker_evaluation.py --pattern-effectiveness
 
 # Monitor pattern performance
 python3 scripts/system_health_check.py --pattern-performance

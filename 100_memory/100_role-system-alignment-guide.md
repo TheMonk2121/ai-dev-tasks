@@ -271,7 +271,7 @@ python3 scripts/performance_optimization.py --role-specific
 python3 scripts/monitoring_dashboard.py --role-system
 
 # Track role-specific performance
-python3 scripts/ragus_evaluation.py --role-specific
+python3 scripts/ragchecker_evaluation.py --role-specific
 
 # Monitor role switching performance
 python3 scripts/system_health_check.py --role-alignment

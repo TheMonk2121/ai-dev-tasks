@@ -7,7 +7,7 @@ python3 scripts/backlog_status_tracking.py --update-status B‑123 in-progress
 python3 scripts/backlog_status_tracking.py --check-stale --stale-days 7
 ```
 \n+## ⚖️ Constitution Callout
-\n+- **Read first**: `400_01_documentation-playbook.md`, `400_03_system-overview-and-architecture.md`, `400_04_development-workflow-and-standards.md`, `400_05_coding-and-prompting-standards.md`, `400_06_memory-and-context-systems.md`, `400_07_ai-frameworks-dspy.md`, `400_08_integrations-editor-and-models.md`, `400_09_automation-and-pipelines.md`, `400_10_security-compliance-and-access.md`, `400_11_deployments-ops-and-observability.md`, `400_12_product-management-and-roadmap.md`.
+\n+- **Read first**: `400_01_documentation-playbook.md`, `400_03_system-overview-and-architecture.md`, `400_04_development-workflow-and-standards.md`, `400_05_coding-and-prompting-standards.md`, `400_06_memory-and-context-systems.md`, `400_07_ai-frameworks-dspy.md`, `400_08_results-management-and-evaluations.md`, `400_09_integrations-editor-and-models.md`, `400_10_automation-and-pipelines.md`, `400_11_security-compliance-and-access.md`, `400_12_deployments-ops-and-observability.md`, `400_13_product-management-and-roadmap.md`.
 - **Hydrate context**: run `./scripts/memory_up.sh` before work; then scan `100_memory/100_cursor-memory-context.md` and `000_core/000_backlog.md`.
 - **Safety**: run file analysis before destructive changes; preserve cross‑references; follow workflow chain `000_backlog.md → 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md`.
 # Getting Started and Index
@@ -41,8 +41,9 @@ This is the master index and entry point for all 400_guides documentation. It pr
 - **Coding Standards**: `400_05_coding-and-prompting-standards.md`
 - **Memory Systems**: `400_06_memory-and-context-systems.md`
 - **DSPy Framework**: `400_07_ai-frameworks-dspy.md`
-- **Security**: `400_10_security-compliance-and-access.md`
-- **Deployment**: `400_11_deployments-ops-and-observability.md`
+- **Results Management**: `400_08_results-management-and-evaluations.md`
+- **Security**: `400_11_security-compliance-and-access.md`
+- **Deployment**: `400_12_deployments-ops-and-observability.md`
 
 ### Cross-Cutting Portals
 
@@ -365,13 +366,14 @@ python3 scripts/system_health_check.py
 
 ### Framework and Integration Guides (07-09)
 - **07**: AI Frameworks: DSPy - `400_07_ai-frameworks-dspy.md`
-- **08**: Integrations: Editor and Models - `400_08_integrations-editor-and-models.md`
-- **09**: Automation and Pipelines - `400_09_automation-and-pipelines.md`
+- **08**: Results Management and Evaluations - `400_08_results-management-and-evaluations.md`
+- **09**: Integrations: Editor and Models - `400_09_integrations-editor-and-models.md`
+- **10**: Automation and Pipelines - `400_10_automation-and-pipelines.md`
 
-### Operations and Management Guides (10-12)
-- **10**: Security, Compliance and Access - `400_10_security-compliance-and-access.md`
-- **11**: Deployments, Ops and Observability - `400_11_deployments-ops-and-observability.md`
-- **12**: Product Management and Roadmap - `400_12_product-management-and-roadmap.md`
+### Operations and Management Guides (11-13)
+- **11**: Security, Compliance and Access - `400_11_security-compliance-and-access.md`
+- **12**: Deployments, Ops and Observability - `400_12_deployments-ops-and-observability.md`
+- **13**: Product Management and Roadmap - `400_13_product-management-and-roadmap.md`
 
 ## 🎯 Task-Specific Navigation
 
@@ -382,9 +384,10 @@ python3 scripts/system_health_check.py
 | **Starting a new project** | `400_00_getting-started-and-index.md` | Entry point and project overview |
 | **Implementing a feature** | `400_04_development-workflow-and-standards.md` | Complete development workflow |
 | **Debugging an issue** | `400_05_coding-and-prompting-standards.md` | Testing, debugging, and analysis |
-| **Deploying changes** | `400_11_deployments-ops-and-observability.md` | Deployment, monitoring, maintenance |
+| **Deploying changes** | `400_12_deployments-ops-and-observability.md` | Deployment, monitoring, maintenance |
 | **Planning architecture** | `400_03_system-overview-and-architecture.md` | Architecture, planning, strategy |
-| **Integrating components** | `400_10_security-compliance-and-access.md` | Integration patterns and security |
+| **Managing evaluation results** | `400_08_results-management-and-evaluations.md` | Results analysis, storage, and planning |
+| **Integrating components** | `400_11_security-compliance-and-access.md` | Integration patterns and security |
 | **Optimizing performance** | See Performance Portal above | Performance tuning and optimization |
 | **Quick reference** | See Quick-Find above | Commands, shortcuts, tips |
 
@@ -395,7 +398,7 @@ python3 scripts/system_health_check.py
 | **Discovery** | `400_00_getting-started-and-index.md` | Understand the project and get oriented |
 | **Development** | `400_04_development-workflow-and-standards.md` | Implement features with best practices |
 | **Validation** | `400_05_coding-and-prompting-standards.md` | Test, debug, and validate your work |
-| **Deployment** | `400_11_deployments-ops-and-observability.md` | Deploy and monitor in production |
+| **Deployment** | `400_12_deployments-ops-and-observability.md` | Deploy and monitor in production |
 | **Maintenance** | See Performance Portal above | Optimize and maintain performance |
 
 ### By Role (Optional - for context filtering)
@@ -404,7 +407,7 @@ python3 scripts/system_health_check.py
 |------|----------------|------------------|
 | **Planner** | `400_00_getting-started-and-index.md`, `400_03_system-overview-and-architecture.md` | `400_02_governance-and-ai-constitution.md` |
 | **Coder** | `400_04_development-workflow-and-standards.md`, `400_05_coding-and-prompting-standards.md` | `400_06_memory-and-context-systems.md` |
-| **Implementer** | `400_11_deployments-ops-and-observability.md`, `400_10_security-compliance-and-access.md` | `400_09_automation-and-pipelines.md` |
+| **Implementer** | `400_12_deployments-ops-and-observability.md`, `400_11_security-compliance-and-access.md` | `400_10_automation-and-pipelines.md` |
 | **Researcher** | `400_05_coding-and-prompting-standards.md`, See Performance Portal above | `400_03_system-overview-and-architecture.md` |
 
 ## 📝 What's New
@@ -715,19 +718,72 @@ python3 scripts/task_generation_help.py
 ```
 
 ### What's New (B-1041)
-- RAG evaluation suite and components added.
+- RAGChecker evaluation suite and components added.
 - Quick links:
-  - Eval runners: , , , 
-  - KPI checker: 
-  - RAG components: , , , , , 
-  - Core updates: , 
+  - Eval runners: , , ,
+  - KPI checker:
+  - RAG components: , , , , ,
+  - Core updates: ,
 
 
 
 ### What's New (B-1041)
-- RAG evaluation suite and components added.
+- RAGChecker evaluation suite and components added.
 - Quick links:
   - Eval runners: `dspy-rag-system/eval_gold.py`, `dspy-rag-system/eval_hit_at3.py`, `dspy-rag-system/eval_ns_ab.py`, `dspy-rag-system/simple_evaluation.py`
   - KPI checker: `dspy-rag-system/scripts/check_retrieval_kpis.py`
   - RAG components: `dspy-rag-system/src/dspy_modules/rag_pipeline.py`, `dspy-rag-system/src/dspy_modules/hybrid_wrapper.py`, `dspy-rag-system/src/dspy_modules/hit_adapter.py`, `dspy-rag-system/src/dspy_modules/wrapper_fusion_nudge.py`, `dspy-rag-system/src/dspy_modules/wrapper_ns_helpers.py`, `dspy-rag-system/src/dspy_modules/wrapper_ns_promote.py`
   - Core updates: `dspy-rag-system/src/dspy_modules/vector_store.py`, `dspy-rag-system/src/dspy_modules/model_switcher.py`
+
+### RAGChecker Evaluation System - Quick Start Guide
+
+#### **Overview**
+RAGChecker is our **official, industry-standard RAG evaluation framework** with peer-reviewed metrics and strong correlation to human judgments.
+
+#### **Quick Start Commands**
+```bash
+# Run Official RAGChecker evaluation (RECOMMENDED)
+python3 scripts/ragchecker_official_evaluation.py
+
+# Verify installation
+python3 -c "import ragchecker; print('✅ RAGChecker installed successfully!')"
+
+# Check evaluation status
+cat metrics/baseline_evaluations/EVALUATION_STATUS.md
+
+# View latest results
+ls -la metrics/baseline_evaluations/ragchecker_official_*.json
+```
+
+#### **What RAGChecker Provides**
+- **Peer-reviewed framework**: https://arxiv.org/abs/2408.08067
+- **Industry-tested metrics**: Strong correlation to human judgments
+- **Fine-grained diagnostics**: Precision, Recall, F1 Score, Context Utilization
+- **Official methodology**: Following RAGChecker's official implementation
+- **Memory system integration**: Tests with Unified Memory Orchestrator
+
+#### **Key Features**
+- **Official input format**: query_id, query, gt_answer, response, retrieved_context
+- **CLI integration**: Uses official `ragchecker.cli` with proper Python 3.12 path
+- **Ground truth testing**: 5 comprehensive test cases with detailed expected answers
+- **Fallback evaluation**: Simplified metrics when CLI unavailable
+- **Real-time testing**: Uses actual memory system responses
+
+#### **Installation Status**
+- ✅ **RAGChecker 0.1.9**: Fully installed and operational
+- ✅ **spaCy model**: en_core_web_sm downloaded and functional
+- ✅ **Python 3.12 compatibility**: All dependency conflicts resolved
+- ✅ **CLI verification**: Official CLI help displays correctly
+
+#### **Current Results**
+- **Overall Metrics**: Precision: 0.007, Recall: 0.675, F1 Score: 0.014
+- **Test Cases**: 5 comprehensive ground truth test cases
+- **Status**: CLI requires AWS Bedrock credentials, using fallback evaluation
+- **Memory Integration**: Real responses from unified memory orchestrator (87K+ characters)
+- **Latest Evaluation**: 2025-08-30 15:21 - Phase 4 (Documentation Integration) completed
+
+#### **Related Documentation**
+- `400_guides/400_07_ai-frameworks-dspy.md#ragchecker-evaluation-system` - RAGChecker evaluation framework
+- `400_guides/400_07_ai-frameworks-dspy.md` - Detailed RAGChecker implementation
+- `metrics/baseline_evaluations/EVALUATION_STATUS.md` - Current evaluation status
+- `scripts/ragchecker_official_evaluation.py` - Official evaluation script

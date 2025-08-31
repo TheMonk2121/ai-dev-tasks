@@ -31,8 +31,18 @@
 # Core memory orchestration
 scripts/unified_memory_orchestrator.py          # Primary memory system orchestrator
 scripts/memory_up.sh                            # Static documentation bundling
-scripts/ragus_evaluation.py                     # RAGUS evaluation framework
+scripts/ragchecker_evaluation.py                # RAGChecker evaluation framework
 scripts/memory_rehydrate.py                     # Memory rehydration utilities
+
+# AWS Bedrock Integration (B-1046)
+scripts/bedrock_client.py                       # AWS Bedrock client implementation
+scripts/bedrock_cost_monitor.py                 # Cost monitoring and budget management
+scripts/bedrock_batch_processor.py              # Batch processing for evaluations
+scripts/ragchecker_official_evaluation.py       # Official RAGChecker with Bedrock support
+scripts/ragchecker_with_monitoring.py           # RAGChecker with cost monitoring
+scripts/ragchecker_batch_evaluation.py          # Batch evaluation with Bedrock
+scripts/bedrock_connection_test.py              # Bedrock connection testing
+scripts/bedrock_setup_guide.py                  # AWS Bedrock setup guide
 
 # MCP Integration
 scripts/mcp_memory_server.py                    # MCP memory server implementation
@@ -176,7 +186,7 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role implement
 ## 📊 **Technical Artifacts Status Tracking**
 
 ### **Integration Status**
-- ✅ **Core Scripts**: Unified memory orchestrator, memory up, RAGUS evaluation
+- ✅ **Core Scripts**: Unified memory orchestrator, memory up, RAGChecker evaluation
 - ✅ **DSPy System**: Dashboard, watch folder, CLI components, Go implementation
 - ✅ **Monitoring**: System health checks, performance monitoring, dashboards
 - ✅ **Configuration**: Project config, environment management, validation
@@ -187,7 +197,7 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role implement
 - **Memory Access Speed**: Target 40% improvement
 - **Context Accuracy**: Target 50% improvement
 - **Technical Integration**: Target 100% coverage
-- **RAGUS Score**: Target 90+ with technical integration
+- **RAGChecker Score**: Target 90+ with technical integration
 
 ## 🛠️ **Implementation Patterns**
 
@@ -263,7 +273,7 @@ python3 scripts/performance_optimization.py
 python3 scripts/monitoring_dashboard.py
 
 # Track memory system performance
-python3 scripts/ragus_evaluation.py
+python3 scripts/ragchecker_evaluation.py
 
 # Monitor system health
 python3 scripts/system_health_check.py

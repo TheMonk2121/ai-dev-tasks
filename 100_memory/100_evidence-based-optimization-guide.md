@@ -15,7 +15,7 @@
 - **Status**: ✅ **ACTIVE** - Evidence-based optimization guide maintained
 - **Priority**: 🔥 Critical - Essential for continuous improvement and performance optimization
 - **Points**: 5 - High importance for system evolution and optimization
-- **Dependencies**: `100_memory/100_implementation-patterns-library.md`, `scripts/ragus_evaluation.py`, memory systems
+- **Dependencies**: `100_memory/100_implementation-patterns-library.md`, `scripts/ragchecker_evaluation.py`, memory systems
 - **Next Steps**: Ensure all research methodologies are properly integrated into memory context
 
 ## 🚨 **CRITICAL: Evidence-Based Optimization is Essential**
@@ -327,13 +327,13 @@ def memory_performance_optimization_pattern(memory_system: Dict[str, Any]) -> Di
     }
 ```
 
-#### **RAGUS Score Optimization**
+#### **RAGChecker Score Optimization**
 ```python
-def ragus_optimization_pattern(current_score: float, target_score: float) -> Dict[str, Any]:
-    """Evidence-based pattern for RAGUS score optimization."""
+def ragchecker_optimization_pattern(current_score: float, target_score: float) -> Dict[str, Any]:
+    """Evidence-based pattern for RAGChecker score optimization."""
 
     # Phase 1: Current Performance Analysis
-    current_analysis = analyze_current_ragus_performance(current_score)
+    current_analysis = analyze_current_ragchecker_performance(current_score)
 
     # Phase 2: Research-Based Improvement Strategies
     improvement_research = conduct_improvement_research(current_analysis, target_score)
@@ -351,7 +351,7 @@ def ragus_optimization_pattern(current_score: float, target_score: float) -> Dic
     validated_results = validate_and_iterate(improvement_results, target_score)
 
     return {
-        "optimization_type": "ragus_score",
+        "optimization_type": "ragchecker_score",
         "current_score": current_score,
         "target_score": target_score,
         "current_analysis": current_analysis,
@@ -363,6 +363,44 @@ def ragus_optimization_pattern(current_score: float, target_score: float) -> Dic
         "evidence_based": True,
         "confidence_level": calculate_confidence_level(validated_results),
         "iteration_plan": generate_iteration_plan(validated_results, target_score)
+    }
+```
+
+#### **AWS Bedrock Integration Optimization (B-1046)**
+```python
+def bedrock_integration_optimization_pattern(evaluation_performance: Dict[str, Any]) -> Dict[str, Any]:
+    """Evidence-based pattern for AWS Bedrock integration optimization."""
+
+    # Phase 1: Current Bedrock Performance Analysis
+    current_bedrock_analysis = analyze_bedrock_performance(evaluation_performance)
+
+    # Phase 2: Cost-Performance Optimization Research
+    cost_performance_research = conduct_cost_performance_research(current_bedrock_analysis)
+
+    # Phase 3: Evidence-Based Optimization Strategies
+    optimization_strategies = develop_bedrock_optimization_strategies(cost_performance_research)
+
+    # Phase 4: Systematic Implementation
+    implemented_optimizations = implement_bedrock_optimizations(optimization_strategies)
+
+    # Phase 5: Comprehensive Measurement
+    optimization_results = measure_bedrock_optimization_impact(implemented_optimizations)
+
+    # Phase 6: Validation and Iteration
+    validated_optimizations = validate_bedrock_optimizations(optimization_results)
+
+    return {
+        "optimization_type": "aws_bedrock_integration",
+        "current_performance": evaluation_performance,
+        "current_analysis": current_bedrock_analysis,
+        "cost_performance_research": cost_performance_research,
+        "optimization_strategies": optimization_strategies,
+        "implemented_optimizations": implemented_optimizations,
+        "optimization_results": optimization_results,
+        "validated_optimizations": validated_optimizations,
+        "evidence_based": True,
+        "confidence_level": calculate_confidence_level(validated_optimizations),
+        "cost_benefit_analysis": analyze_cost_benefit(optimization_results)
     }
 ```
 
@@ -567,7 +605,7 @@ def integrate_research_with_memory(research_findings: Dict[str, Any],
 python3 scripts/monitoring_dashboard.py --research-quality
 
 # Track optimization effectiveness
-python3 scripts/ragus_evaluation.py --optimization-effectiveness
+python3 scripts/ragchecker_evaluation.py --optimization-effectiveness
 
 # Monitor continuous improvement
 python3 scripts/system_health_check.py --continuous-improvement
@@ -577,7 +615,7 @@ python3 scripts/system_health_check.py --continuous-improvement
 
 - See `100_memory/100_cursor-memory-context.md` for core memory context
 - See `100_memory/100_implementation-patterns-library.md` for implementation patterns
-- See `scripts/ragus_evaluation.py` for performance evaluation
+- See `scripts/ragchecker_evaluation.py` for performance evaluation
 - See `400_guides/400_06_memory-and-context-systems.md` for memory system guide
 - See `400_guides/400_05_coding-and-prompting-standards.md` for research integration
 

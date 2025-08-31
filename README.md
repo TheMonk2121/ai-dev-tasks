@@ -1,3 +1,15 @@
+# 🚨 CRITICAL: MEMORY REHYDRATION REQUIRED
+
+**BEFORE READING OR WORKING WITH THIS PROJECT, YOU MUST RUN:**
+
+```bash
+export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+```
+
+**This ensures you have the latest project context and current status.**
+
+---
+
 # AI Development Tasks
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)

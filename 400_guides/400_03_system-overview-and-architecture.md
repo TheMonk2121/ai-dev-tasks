@@ -98,6 +98,7 @@ See: `400_06_memory-and-context-systems.md` and `dspy-rag-system/src/utils/memor
 - Router: IntentRouter → RetrievalAgent → CodeAgent (fast‑path bypass for trivial asks)
 - Timeouts and backoff; model janitor; score‑aware prioritization
 - State file: `.ai_state.json` for continuity
+- **RAGChecker Evaluation**: Industry-standard RAG evaluation framework for quality assessment
 
 See: `400_07_ai-frameworks-dspy.md` and `400_05_coding-and-prompting-standards.md`.
 
@@ -105,6 +106,7 @@ See: `400_07_ai-frameworks-dspy.md` and `400_05_coding-and-prompting-standards.m
 
 - Structured tracing, cryptographic verification, echo verification, self‑critique
 - Health endpoints; metrics; dashboards; alerts
+- **RAGChecker Metrics**: Precision, Recall, F1 Score, Context Utilization for RAG system quality
 
 See: `400_11_deployments-ops-and-observability.md` and `400_observability-system.md`.
 
@@ -126,6 +128,7 @@ For how to build and ship changes end‑to‑end, see `400_04_development-workfl
 - Coding & Testing: `400_05_coding-and-prompting-standards.md`
 - Memory & Context: `400_06_memory-and-context-systems.md`
 - AI Frameworks (DSPy/MCP): `400_07_ai-frameworks-dspy.md`
+- RAGChecker Evaluation: `400_07_ai-frameworks-dspy.md#ragchecker-evaluation-system`
 - MCP Memory Server: `400_06_memory-and-context-systems.md#mcp-memory-server-integration`
 - Integrations: `400_08_integrations-editor-and-models.md`
 - Automation & Pipelines: `400_09_automation-and-pipelines.md`

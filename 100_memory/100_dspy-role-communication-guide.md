@@ -149,7 +149,7 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role researche
 **Example Queries**:
 ```bash
 python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "implement the memory system integration for the new guide structure"
-python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "optimize the RAGUS evaluation framework for better performance"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "optimize the RAGChecker evaluation framework for better performance"
 ```
 
 ## 🔧 **Memory System Integration**

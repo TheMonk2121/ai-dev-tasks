@@ -145,8 +145,44 @@ python3 scripts/single_doorway.py generate "feature"
 - `dspy` - Core AI framework
 - `pytest` - Testing framework
 - `ruff` - Code quality
+- `boto3` - AWS Bedrock integration (B-1046)
 
 See `scripts/README_venv_manager.md` for complete documentation.
+
+## 🚀 B-1046 AWS Bedrock Integration & Results Management {#bedrock-integration}
+
+### **AWS Bedrock Integration (B-1046)**
+- **Status**: ✅ **COMPLETED** - Production-ready AWS Bedrock integration
+- **Purpose**: 5x faster RAGChecker evaluations with production-grade reliability
+- **Key Features**: Hybrid architecture (Bedrock + Local LLM fallback), cost monitoring, batch processing
+- **Performance**: 15-25 min → 3-5 min evaluation time
+- **Cost**: ~$0.01/eval (standard), ~$0.008/eval (batch)
+
+### **Results Management & Future Evaluations**
+- **Guide**: `400_guides/400_08_results-management-and-evaluations.md` (newly created)
+- **Purpose**: Comprehensive results management, analysis, and future evaluation planning
+- **Features**: File organization, archival procedures, quality assurance, trend analysis
+- **Integration**: Full integration with RAGChecker framework and AWS Bedrock
+
+### **Key Scripts & Tools**
+```bash
+# AWS Bedrock evaluation
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock
+
+# Results management
+python3 scripts/ragchecker_with_monitoring.py
+python3 scripts/bedrock_cost_monitor.py --period today
+
+# Results analysis
+python3 scripts/evaluation_analysis.py --period 7d --metric f1_score
+python3 scripts/baseline_comparison.py --baseline 20250830_141742 --current latest
+```
+
+### **Results Storage & Organization**
+- **Active Results**: `metrics/baseline_evaluations/` (last 30 days)
+- **Archives**: `metrics/archives/evaluations/` (older files)
+- **Cost Reports**: `metrics/cost_reports/` (AWS Bedrock usage)
+- **Status Files**: `EVALUATION_STATUS.md` (current status)
 
 <!-- ANCHOR_KEY: quick-start -->
 <!-- ANCHOR_PRIORITY: 15 -->
@@ -421,18 +457,19 @@ export REHYDRATE_EXPAND_QUERY="auto"
 
 - CI dry‑run workflow → `.github/workflows/dry-run.yml`
 
-- Deployment guide → `400_guides/400_11_deployments-ops-and-observability.md`
+- Deployment guide → `400_guides/400_12_deployments-ops-and-observability.md`
 
-- Migration & upgrades → `400_guides/400_11_deployments-ops-and-observability.md`
+- Migration & upgrades → `400_guides/400_12_deployments-ops-and-observability.md`
 
-- Integration patterns → `400_guides/400_10_security-compliance-and-access.md`
+- Integration patterns → `400_guides/400_11_security-compliance-and-access.md`
 
-- Performance optimization → `400_guides/400_11_deployments-ops-and-observability.md`
+- Performance optimization → `400_guides/400_12_deployments-ops-and-observability.md`
 
-- Security best practices → `400_guides/400_10_security-compliance-and-access.md`
+- Security best practices → `400_guides/400_11_security-compliance-and-access.md`
 - AI frameworks (DSPy) → `400_guides/400_07_ai-frameworks-dspy.md`
-- Integrations, editor, models → `400_guides/400_08_integrations-editor-and-models.md`
-- Automation and pipelines → `400_guides/400_09_automation-and-pipelines.md`
+- Results management & evaluations → `400_guides/400_08_results-management-and-evaluations.md`
+- Integrations, editor, models → `400_guides/400_09_integrations-editor-and-models.md`
+- Automation and pipelines → `400_guides/400_10_automation-and-pipelines.md`
 
 - Graph visualization guide → `400_guides/400_graph-visualization-guide.md`
 
@@ -473,8 +510,8 @@ performance, integration, deployment)
 - Researcher: `500_research/500_research-index.md`, `500_research/500_dspy-research.md`,
 `500_research/500_rag-system-research.md`
 
-- Ops/Setup: `200_setup/202_setup-requirements.md`, `400_guides/400_11_deployments-ops-and-observability.md`,
-`400_guides/400_11_deployments-ops-and-observability.md`
+- Ops/Setup: `200_setup/202_setup-requirements.md`, `400_guides/400_12_deployments-ops-and-observability.md`,
+`400_guides/400_12_deployments-ops-and-observability.md`
 
 ## 🛡️ Always-On Critical Rules
 

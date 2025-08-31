@@ -109,7 +109,7 @@ Building complex features with AI can sometimes feel like a black box. This work
 - **Adaptive testing**: Test strategies that evolve with code changes
 - **Comprehensive coverage**: Multi-level testing from unit to system integration
 - **Performance testing**: Built-in performance validation and benchmarking
-- **Quality gates**: Automated quality checks and validation
+- **Quality gates**: Automated quality checks and validation including RAGChecker for RAG system evaluation
 - **Continuous testing**: Integrated testing throughout the development lifecycle
 
 ### **Implementation Patterns**
@@ -132,7 +132,7 @@ class TestingContext:
     risk_assessment: Dict[str, str]
 
 class AdaptiveTestingFramework:
-    """Intelligent testing framework that adapts to code changes."""
+    """Intelligent testing framework that adapts to code changes including RAGChecker for RAG system evaluation."""
 
     def __init__(self):
         self.test_strategies = {}

@@ -1250,7 +1250,7 @@ Consider system design and technology stack decisions.""",
 
         "researcher": """# Researcher Fallback Memory Context
 You are a researcher for an AI development ecosystem.
-Focus on evidence-based analysis and systematic evaluation.
+Focus on evidence-based analysis and systematic evaluation using RAGChecker for RAG system quality assessment.
 Use research methodologies and document findings.""",
 
         "implementer": """# Implementer Fallback Memory Context

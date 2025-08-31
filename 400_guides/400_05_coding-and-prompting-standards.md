@@ -83,7 +83,7 @@ This guide covers comprehensive coding standards and AI prompting best practices
 **Key Principles**:
 - **Research before implementation**: Understand the problem domain before coding
 - **Evidence-based decisions**: Use data and analysis to guide technical choices
-- **Systematic evaluation**: Apply structured evaluation frameworks
+- **Systematic evaluation**: Apply structured evaluation frameworks including RAGChecker for RAG system assessment
 - **Iterative refinement**: Continuously improve based on research findings
 
 ### **Implementation Patterns**
@@ -128,10 +128,10 @@ def research_driven_development(problem: str, context: ResearchContext) -> Dict[
     }
 ```
 
-#### **2. Systematic Evaluation Framework**
+#### **2. Systematic Evaluation Framework (Including RAGChecker)**
 ```python
 class EvaluationFramework:
-    """Systematic evaluation framework for technical decisions."""
+    """Systematic evaluation framework for technical decisions including RAGChecker for RAG system assessment."""
 
     def __init__(self, criteria: List[str], weights: Dict[str, float]):
         self.criteria = criteria
@@ -466,6 +466,32 @@ class TestAIEcosystemE2E(unittest.TestCase):
 - **Output Filtering**: Content filtering and sanitization
 - **Access Control**: Model access control and authentication
 
+#### **RAG System Testing with RAGChecker**
+- **Official RAGChecker Evaluation**: Industry-standard RAG evaluation framework
+- **Evaluation Script**: `python3 scripts/ragchecker_official_evaluation.py`
+- **Metrics**: Precision, Recall, F1 Score, Context Utilization, Response Length
+- **Quality Gates**:
+  - Precision > 0.5, Recall > 0.6, F1 Score > 0.5
+  - Context Utilization > 0.7, Response Length > 500 characters
+- **Test Cases**: 5 comprehensive ground truth test cases
+- **Integration**: Real responses from Unified Memory Orchestrator
+- **Status**: ✅ **FULLY OPERATIONAL** - RAGChecker 0.1.9 + spaCy model installed
+
+#### **RAGChecker Testing Commands**
+```bash
+# Run Official RAGChecker evaluation
+python3 scripts/ragchecker_official_evaluation.py
+
+# Verify installation
+python3 -c "import ragchecker; print('✅ RAGChecker installed successfully!')"
+
+# Check evaluation status
+cat metrics/baseline_evaluations/EVALUATION_STATUS.md
+
+# View latest results
+ls -la metrics/baseline_evaluations/ragchecker_official_*.json
+```
+
 ### **Continuous Testing**
 
 #### **CI/CD Integration**
@@ -518,6 +544,7 @@ test:
 - [ ] Workflow execution tested
 - [ ] Error handling verified
 - [ ] Security integration tested
+- [ ] **RAGChecker evaluation run** for RAG system changes (if applicable)
 
 #### **Deployment Testing Checklist**
 - [ ] End-to-end tests pass
