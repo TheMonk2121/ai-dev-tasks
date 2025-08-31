@@ -98,6 +98,39 @@ and normalize spacing across long-form guides.
 
 ## P1 Lane
 
+- B‑1054 — Schema Inspection & Drift Detection: Repo-Native Schema Management (score 7.5) ✅ **COMPLETED**
+<!--score: {bv:4, tc:4, rr:4, le:3, effort:3, deps:[]}-->
+<!--score_total: 7.5-->
+<!-- do_next: ✅ COMPLETED - Schema inspection system implemented and tested -->
+<!-- est_hours: 8 -->
+<!-- acceptance: ✅ Schema inspection system working, drift detection functional, baseline management automated -->
+<!-- lessons_applied: ["100_memory/100_cursor-memory-context.md#critical-policies", "400_guides/400_development-workflow.md#quality-standards"] -->
+<!-- reference_cards: ["scripts/validate_config.py", "scripts/system_health_check.py", "scripts/update_schema_baseline.sh"] -->
+<!-- tech_footprint: Schema Inspection + Drift Detection + Pydantic Integration + Database Schema + Baseline Management -->
+<!-- problem: ✅ RESOLVED - Need automated schema tracking to catch breaking changes before they affect RAGChecker evaluations -->
+<!-- outcome: ✅ ACHIEVED - Repo-native schema inspection system with drift detection and baseline management -->
+
+**Description**: Implement lean schema inspection system that fits existing repo patterns - no new directory sprawl, no GraphViz, Pyright-clean, and piggybacks on existing infrastructure. Extends `validate_config.py` and `system_health_check.py` with schema dumping and drift detection capabilities.
+
+**Key Benefits**:
+- **Repo-Native Integration**: Extends existing scripts without new infrastructure
+- **Version-Controlled Artifacts**: Schema JSONs stored in `dspy-rag-system/config/database/schemas/`
+- **Drift Detection**: Automated comparison between current and baseline schemas
+- **Pydantic Integration**: Leverages existing Pydantic models for schema validation
+- **CI Integration**: Fits into existing GitHub Actions workflows
+
+**Implementation Phases**:
+1. **Phase 1 - Schema Dumping**: ✅ **COMPLETED** - Add Pydantic and database schema dumping to `validate_config.py`
+2. **Phase 2 - Drift Detection**: ✅ **COMPLETED** - Add drift check to `system_health_check.py`
+3. **Phase 3 - Baseline Management**: ✅ **COMPLETED** - Create `update_schema_baseline.sh` script
+4. **Phase 4 - Testing**: ✅ **COMPLETED** - Verify schema generation and drift detection work correctly
+
+**Success Metrics**:
+- Schema snapshots generated successfully for all Pydantic models and database tables
+- Drift detection catches intentional and unintentional schema changes
+- Baseline management script works correctly
+- Integration with existing CI workflows
+
 - B‑1044 — Memory System Core Features Strengthening: Technical Integration & Role Alignment (score 8.5) ✅ **COMPLETED**
 <!--score: {bv:5, tc:4, rr:5, le:3, effort:4, deps:[]}-->
 <!--score_total: 8.5-->
