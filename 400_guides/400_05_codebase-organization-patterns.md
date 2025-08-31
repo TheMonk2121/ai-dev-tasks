@@ -464,6 +464,37 @@ class TestAIEcosystemE2E(unittest.TestCase):
 #### **Performance Quality Gates**
 - **Performance Test Gates**: Response time < 100ms, throughput > 1000 req/s
 
+#### **Schema Validation Quality Gates**
+- **Schema Drift Detection**: Automated schema drift detection for database and Pydantic models
+- **Baseline Management**: Version-controlled schema baselines with automated updates
+- **Pre-commit Schema Checks**: Schema validation before commits to prevent breaking changes
+
+**Schema Inspection System**:
+```bash
+# Generate schema snapshots
+python3 scripts/validate_config.py --dump-schemas
+
+# Check for schema drift
+python3 scripts/system_health_check.py --schema-drift
+
+# Update baseline after intentional changes
+./scripts/update_schema_baseline.sh
+```
+
+**Schema Coverage**:
+- **Pydantic Models**: RAGChecker, DSPy context models, constitution models, error models
+- **Database Schema**: Tables, columns, indexes, relationships in PostgreSQL
+- **Artifacts**: Stored in `dspy-rag-system/config/database/schemas/`
+
+**Integration with CI/CD**:
+```yaml
+- name: Generate schema snapshots
+  run: python3 scripts/validate_config.py --dump-schemas
+
+- name: Schema drift check
+  run: python3 scripts/system_health_check.py --schema-drift
+```
+
 ### **AI Model Testing**
 
 #### **Functionality Testing**
@@ -1116,7 +1147,7 @@ Brief description
 Content here
 
 ---
-*Last Updated: 2025-08-30*
+*Last Updated: 2025-08-31*
 ```
 
 **Expected Output**:
@@ -1195,6 +1226,26 @@ Generate a Python function for data validation
 - Error handling
 - Logging statements
 - Example usage
+```
+
+#### **4. Schema Validation Integration**
+**Pattern**: Use schema inspection system for data model validation
+
+**Example**:
+```markdown
+## Task
+Update Pydantic models for new feature
+
+## Schema Validation Steps
+1. Generate current schema baseline: `python3 scripts/validate_config.py --dump-schemas`
+2. Make model changes
+3. Check for schema drift: `python3 scripts/system_health_check.py --schema-drift`
+4. Update baseline if intentional: `./scripts/update_schema_baseline.sh`
+
+## Expected Output
+- Updated Pydantic models
+- Schema artifacts in `dspy-rag-system/config/database/schemas/`
+- No unintended schema drift detected
 ```
 
 ## 🔧 How-To
