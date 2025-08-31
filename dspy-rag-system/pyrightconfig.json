@@ -1,7 +1,7 @@
 {
+    "pythonVersion": "3.12",
     "typeCheckingMode": "basic",
-    "venvPath": "./",
-    "venv": "venv",
+    "pythonPath": "../venv/bin/python",
     "reportMissingTypeStubs": "none",
     "reportUnknownMemberType": "none",
     "reportUnknownVariableType": "none",
@@ -11,18 +11,11 @@
     "reportMissingImports": "none",
     "reportAssignmentType": "none",
     "reportPossiblyUnboundVariable": "none",
+    "include": [
+        "src",
+        "tests"
+    ],
     "extraPaths": [
-        "./dspy-rag-system/src",
-        "./dspy-rag-system"
-    ],
-    "ignore": [
-        "**/600_archives/**",
-        "**/scripts/eval/**"
-    ],
-    "exclude": [
-        "**/node_modules/**",
-        "**/__pycache__/**",
-        ".pytest_cache/**",
-        "**/venv/**"
+        "src"
     ]
 }

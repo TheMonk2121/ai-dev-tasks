@@ -44,10 +44,25 @@ norecursedirs = ["600_archives", "venv", "docs/legacy", "__pycache__"]
 
 [tool.pyright]
 include = ["scripts", "tests", "dspy-rag-system"]
-exclude = ["venv", "600_archives", "docs/legacy", "**/__pycache__"]
+exclude = [
+    "venv",
+    "600_archives",
+    "docs/legacy",
+    "**/__pycache__",
+    "scripts/eval",
+]
 pythonVersion = "3.12"
 pythonPlatform = "Darwin"
 extraPaths = ["scripts"]
+reportMissingTypeStubs = "none"
+reportUnknownMemberType = "none"
+reportUnknownVariableType = "none"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportOptionalMemberAccess = "none"
+reportMissingImports = "none"
+reportAssignmentType = "none"
+reportPossiblyUnboundVariable = "none"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
