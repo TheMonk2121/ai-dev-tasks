@@ -8,13 +8,85 @@
 
 | what this file is | read when | do next |
 |---|---|---|
-| Complete AI framework integration and DSPy implementation guide | Working with AI frameworks, implementing DSPy modules, or integrating AI capabilities | Read 10 (Integrations & Models) then 11 (Performance & Optimization) |
+| Complete AI framework integration and DSPy implementation guide with user journey and technical reference | Working with AI frameworks, implementing DSPy modules, or integrating AI capabilities | Read 10 (Integrations & Models) then 11 (Performance & Optimization) |
 
-- **what this file is**: Comprehensive AI framework integration and DSPy implementation guide.
+## 🚀 **User Journey & Success Outcomes**
 
-- **read when**: When working with AI frameworks, implementing DSPy modules, or integrating AI capabilities.
+### **What Success Looks Like**
+When AI frameworks are working optimally, you should experience:
+- **Reliable AI Responses**: Consistent, high-quality AI interactions that understand your context
+- **Seamless Integration**: AI capabilities that work naturally with your development workflow
+- **Intelligent Assistance**: AI that proactively suggests solutions and improvements
+- **Safe Interactions**: AI responses that comply with your project's standards and constraints
+- **Fast Performance**: Quick response times and efficient resource usage
 
-- **do next**: Read 10 (Integrations & Models) then 11 (Performance & Optimization).
+### **User-Centered Onboarding Path**
+
+#### **For New Users (First AI Integration)**
+1. **Quick Start**: Use the basic RAG pipeline for simple queries
+2. **Context Setup**: Configure AI to understand your project and preferences
+3. **Basic Interactions**: Start with simple AI-assisted tasks
+4. **Verification**: Confirm AI responses are helpful and accurate
+
+#### **For Regular Users (Daily AI Workflow)**
+1. **Session Initialization**: Start with context-aware AI interactions
+2. **Task Execution**: Use AI for coding, analysis, and problem-solving
+3. **Quality Assurance**: Verify AI outputs meet your standards
+4. **Continuous Learning**: The system improves based on your feedback
+
+#### **For Power Users (Advanced AI Features)**
+1. **Custom Models**: Configure specialized AI models for different tasks
+2. **Advanced Context**: Create sophisticated context management strategies
+3. **Performance Optimization**: Fine-tune AI performance for your specific needs
+4. **Integration Development**: Build custom AI integrations for your workflow
+
+### **Common User Scenarios & Solutions**
+
+#### **Scenario: "The AI doesn't understand my project context"**
+**Solution**: Ensure proper context initialization and use the memory system
+```python
+# Create context-aware AI interaction
+researcher_context = ContextFactory.create_researcher_context(
+    session_id="project_001",
+    research_topic="Current project analysis",
+    methodology="analysis",
+    sources=["your_project_files"]
+)
+```
+
+#### **Scenario: "AI responses are inconsistent"**
+**Solution**: Use consistent context and model configurations
+```python
+# Use consistent model and context
+switcher = ModelSwitcher()
+switcher.switch_model("llama3.1:8b")  # Use consistent model
+rag_pipeline = switcher.get_rag_pipeline()
+```
+
+#### **Scenario: "AI is too slow for my workflow"**
+**Solution**: Optimize performance with caching and model selection
+```python
+# Optimize for speed
+result = rag_pipeline.answer(
+    query="Quick analysis",
+    max_tokens=500,  # Limit response length
+    temperature=0.3  # More focused responses
+)
+```
+
+### **Strategic Value: Why This System Exists**
+
+The AI framework system solves critical problems that developers face:
+- **Inconsistent AI Behavior**: Traditional AI systems give unpredictable responses
+- **Context Ignorance**: AI that doesn't understand your project or preferences
+- **Safety Concerns**: AI responses that don't comply with project standards
+- **Performance Issues**: Slow or unreliable AI interactions that disrupt workflow
+
+**Success Metrics**:
+- 95% consistency in AI response quality
+- 90% reduction in context explanation time
+- 80% faster problem-solving with AI assistance
+- 100% compliance with project safety standards
 
 ## 🎯 **Current Status**
 - **Priority**: 🔥 **HIGH** - Essential for AI framework integration
@@ -836,309 +908,153 @@ if not validation_result["is_safe"]:
 - **For Implementers**: Focus on performance monitoring and governance frameworks
 - **For Coders**: Focus on signature validation and error handling patterns
 
-## 🔌 **API Reference**
 
-> **💡 For Non-Engineering Readers**: This section provides technical details for developers building AI integrations. If you're focused on using AI capabilities rather than building them, you can skip to the "User Journey" section below.
 
-### **Why This Matters**
-The API reference ensures that AI interactions are reliable, consistent, and safe. This is what enables you to have predictable, high-quality AI responses that understand your context and work seamlessly with your development workflow.
+## 🔧 **Technical Reference**
 
-### **Pydantic Models (14 Models)**
+> **💡 For Developers**: This section provides detailed technical implementation information for building and extending AI framework integrations.
 
-The DSPy system uses 14 core Pydantic models for type safety and validation:
+### **What This Section Contains**
+- DSPy framework architecture and implementation
+- AI model selection and management
+- Pydantic validation and type safety
+- Performance optimization techniques
+- Integration patterns and APIs
 
-#### **BaseContext**
-Base context model for all DSPy context types.
+### **API Reference**
+
+#### **Pydantic Models (14 Models)**
+
+The system uses comprehensive Pydantic validation for all AI interactions:
+
+##### **BaseContext**
+Foundation class for all context models with common fields:
+- **session_id** (str): Unique session identifier
+- **user_id** (str): User identifier
+- **role** (AIRole): AI role enumeration
+- **created_at** (datetime): Creation timestamp
+- **metadata** (Dict[str, Any]): Flexible metadata storage
+
+##### **ResearcherContext**
+Specialized context for research and analysis tasks:
+- **research_topic** (str): Research topic or question
+- **methodology** (Literal["literature_review", "experimental", "case_study", "survey", "analysis"]): Research methodology
+- **sources** (List[str]): Data sources and references
+- **analysis_depth** (Literal["quick", "standard", "deep"]): Analysis depth level
+
+##### **PlannerContext**
+Context for planning and strategic tasks:
+- **planning_scope** (str): Scope of planning activity
+- **backlog_priority** (Literal["P0", "P1", "P2", "P3"]): Priority level
+- **timeline** (Optional[str]): Planning timeline
+- **stakeholders** (List[str]): Stakeholder list
+
+##### **ImplementerContext**
+Context for implementation and execution tasks:
+- **implementation_plan** (str): Implementation strategy
+- **target_environment** (str): Target deployment environment
+- **dependencies** (List[str]): Required dependencies
+- **rollback_strategy** (Optional[str]): Rollback plan
+
+##### **CoderContext**
+Context for coding and development tasks:
+- **code_language** (str): Programming language
+- **code_style** (str): Coding style preferences
+- **testing_approach** (str): Testing strategy
+- **cursor_model** (Optional[str]): Cursor AI model preference
+
+#### **DSPy Module Interfaces**
+
+##### **RAGPipeline**
+Main interface for RAG operations:
+- **answer(query: str, **kwargs) -> Dict[str, Any]**: Execute RAG query
+- **search(query: str, top_k: int = 10) -> List[Dict]**: Vector search
+- **update_context(context: BaseContext) -> None**: Update context
+
+##### **ModelSwitcher**
+Manages AI model selection and switching:
+- **switch_model(model_name: str) -> None**: Switch to specified model
+- **get_current_model() -> str**: Get current model name
+- **get_rag_pipeline() -> RAGPipeline**: Get configured pipeline
+
+##### **ContextFactory**
+Factory for creating context objects:
+- **create_researcher_context(**kwargs) -> ResearcherContext**: Create researcher context
+- **create_planner_context(**kwargs) -> PlannerContext**: Create planner context
+- **create_implementer_context(**kwargs) -> ImplementerContext**: Create implementer context
+- **create_coder_context(**kwargs) -> CoderContext**: Create coder context
+
+#### **Parameters and Return Types**
+
+##### **RAGPipeline.answer()**
+**Parameters**:
+- **query** (str): Search query
+- **max_tokens** (int, optional): Maximum response length
+- **temperature** (float, optional): Response creativity (0.0-1.0)
+- **top_k** (int, optional): Number of results to retrieve
+
+**Returns**: Dict[str, Any] with response data and metadata
+
+##### **ModelSwitcher.switch_model()**
+**Parameters**:
+- **model_name** (str): Model identifier (e.g., "llama3.1:8b", "gpt-4")
+
+**Returns**: None (updates internal state)
+
+##### **ContextFactory.create_*_context()**
+**Parameters**: Varies by context type (see Pydantic models above)
+
+**Returns**: Appropriate context object with validation
+
+#### **Usage Examples**
+
+##### **Basic RAG Query**
 ```python
-class BaseContext(BaseModel):
-    session_id: str = Field(..., pattern="^[a-zA-Z0-9_-]+$")
-    user_id: str = Field(..., pattern="^[a-zA-Z0-9_-]+$")
-    vector_enhancement_timestamp: Optional[datetime] = None
-```
+from dspy_rag_system import ModelSwitcher, RAGPipeline
 
-#### **ResearcherContext**
-Context model for researcher role with analysis capabilities.
-```python
-class ResearcherContext(BaseContext):
-    research_topic: str = Field(..., min_length=1, max_length=500)
-    methodology: Literal["literature_review", "experimental", "case_study", "survey", "analysis"]
-    sources: List[str] = Field(default_factory=list)
-    hypotheses: List[str] = Field(default_factory=list)
-    constraints: Dict[str, Any] = Field(default_factory=dict)
-```
-
-#### **PlannerContext**
-Context model for planner role with strategic planning capabilities.
-```python
-class PlannerContext(BaseContext):
-    project_scope: str = Field(..., min_length=1, max_length=1000)
-    backlog_priority: Literal["P0", "P1", "P2", "P3"]
-    strategic_goals: List[str] = Field(default_factory=list)
-    timeline: Optional[Dict[str, Any]] = None
-    resource_requirements: Optional[Dict[str, Any]] = None
-```
-
-#### **ImplementerContext**
-Context model for implementer role with execution capabilities.
-```python
-class ImplementerContext(BaseContext):
-    implementation_plan: str = Field(..., min_length=1, max_length=1000)
-    target_environment: str = Field(..., min_length=1, max_length=100)
-    rollback_strategy: str = Field(..., min_length=1, max_length=200)
-    dependencies: List[str] = Field(default_factory=list)
-    risk_assessment: Optional[Dict[str, Any]] = None
-```
-
-#### **CoderContext**
-Context model for coder role with development capabilities.
-```python
-class CoderContext(BaseContext):
-    codebase_path: str = Field(..., min_length=1, max_length=500)
-    language: str = Field(..., min_length=1, max_length=50)
-    framework: str = Field(..., min_length=1, max_length=100)
-    current_file: str = Field(..., min_length=1, max_length=500)
-    file_context: List[str] = Field(default_factory=list)
-    cursor_model: str = Field(..., min_length=1, max_length=100)
-```
-
-### **DSPy Module Interfaces**
-
-#### **RAGPipeline**
-Main RAG pipeline for document retrieval and generation.
-```python
-class RAGPipeline:
-    def __init__(self, model_name: str, embedding_model: str = "all-MiniLM-L6-v2"):
-        self.model_name = model_name
-        self.embedding_model = embedding_model
-        self.vector_store = HybridVectorStore()
-        self.retriever = Retriever()
-        self.generator = Generator()
-
-    def answer(self, query: str, context: Optional[List[str]] = None) -> Dict[str, Any]:
-        """Generate answer with RAG pipeline."""
-        # Implementation details...
-        pass
-```
-
-#### **ModelSwitcher**
-Manages switching between different AI models.
-```python
-class ModelSwitcher:
-    def __init__(self, default_model: str = "llama3.1:8b"):
-        self.current_model = default_model
-        self.available_models = ["llama3.1:8b", "claude-3.5-sonnet", "gpt-4"]
-        self.rag_pipeline = None
-
-    def switch_model(self, model_name: str) -> bool:
-        """Switch to specified model."""
-        # Implementation details...
-        pass
-
-    def get_rag_pipeline(self) -> RAGPipeline:
-        """Get current RAG pipeline."""
-        # Implementation details...
-        pass
-```
-
-#### **ContextFactory**
-Factory for creating context objects with validation.
-```python
-class ContextFactory:
-    @staticmethod
-    def create_researcher_context(
-        session_id: str,
-        research_topic: str,
-        methodology: str,
-        **kwargs
-    ) -> ResearcherContext:
-        """Create validated researcher context."""
-        # Implementation details...
-        pass
-
-    @staticmethod
-    def create_planner_context(
-        session_id: str,
-        project_scope: str,
-        backlog_priority: str,
-        **kwargs
-    ) -> PlannerContext:
-        """Create validated planner context."""
-        # Implementation details...
-        pass
-```
-
-### **Parameters and Return Types**
-
-#### **RAGPipeline.answer()**
-```python
-def answer(
-    self,
-    query: str,
-    context: Optional[List[str]] = None,
-    max_tokens: int = 1000,
-    temperature: float = 0.7
-) -> Dict[str, Any]:
-    """
-    Generate answer using RAG pipeline.
-
-    Args:
-        query: User query string
-        context: Optional context list for retrieval
-        max_tokens: Maximum tokens for generation
-        temperature: Generation temperature (0.0-1.0)
-
-    Returns:
-        Dict containing:
-        - answer: Generated answer string
-        - context: Retrieved context list
-        - metadata: Additional metadata
-        - performance: Performance metrics
-    """
-```
-
-#### **ModelSwitcher.switch_model()**
-```python
-def switch_model(
-    self,
-    model_name: str,
-    force_reload: bool = False
-) -> bool:
-    """
-    Switch to specified AI model.
-
-    Args:
-        model_name: Name of model to switch to
-        force_reload: Force model reload even if same model
-
-    Returns:
-        True if switch successful, False otherwise
-    """
-```
-
-### **Usage Examples**
-
-#### **Basic RAG Pipeline Usage**
-```python
-# Initialize RAG pipeline
-rag_pipeline = RAGPipeline("llama3.1:8b")
-
-# Generate answer
-result = rag_pipeline.answer(
-    query="What is the memory system architecture?",
-    max_tokens=500,
-    temperature=0.7
-)
-
-print(f"Answer: {result['answer']}")
-print(f"Context used: {len(result['context'])} documents")
-```
-
-#### **Context Creation and Usage**
-```python
-# Create researcher context
-researcher_context = ContextFactory.create_researcher_context(
-    session_id="research_001",
-    research_topic="Memory system optimization",
-    methodology="analysis",
-    sources=["400_guides/400_01_memory-system-architecture.md"]
-)
-
-# Use context with RAG pipeline
-result = rag_pipeline.answer(
-    query="Analyze memory system performance",
-    context=researcher_context.sources
-)
-```
-
-#### **Model Switching**
-```python
-# Initialize model switcher
+# Initialize and configure
 switcher = ModelSwitcher()
+switcher.switch_model("llama3.1:8b")
+rag_pipeline = switcher.get_rag_pipeline()
 
-# Switch to different model
-success = switcher.switch_model("claude-3.5-sonnet")
-if success:
+# Execute query
+result = rag_pipeline.answer("What is the current project status?")
+print(result["answer"])
+```
+
+##### **Context-Aware Research**
+```python
+from dspy_rag_system import ContextFactory, ResearcherContext
+
+# Create research context
+context = ContextFactory.create_researcher_context(
+    session_id="research_001",
+    research_topic="Performance optimization analysis",
+    methodology="analysis",
+    analysis_depth="deep"
+)
+
+# Use context in RAG pipeline
+rag_pipeline.update_context(context)
+result = rag_pipeline.answer("Analyze system performance bottlenecks")
+```
+
+##### **Model Switching with Validation**
+```python
+from dspy_rag_system import ModelSwitcher
+
+# Switch models with error handling
+switcher = ModelSwitcher()
+try:
+    switcher.switch_model("gpt-4")
+    rag_pipeline = switcher.get_rag_pipeline()
+    result = rag_pipeline.answer("Complex analysis query")
+except Exception as e:
+    # Fallback to default model
+    switcher.switch_model("llama3.1:8b")
     rag_pipeline = switcher.get_rag_pipeline()
     result = rag_pipeline.answer("Complex analysis query")
 ```
-
-## 🚀 **User Journey & Success Outcomes**
-
-### **What Success Looks Like**
-When AI frameworks are working optimally, you should experience:
-- **Reliable AI Responses**: Consistent, high-quality AI interactions that understand your context
-- **Seamless Integration**: AI capabilities that work naturally with your development workflow
-- **Intelligent Assistance**: AI that proactively suggests solutions and improvements
-- **Safe Interactions**: AI responses that comply with your project's standards and constraints
-- **Fast Performance**: Quick response times and efficient resource usage
-
-### **User-Centered Onboarding Path**
-
-#### **For New Users (First AI Integration)**
-1. **Quick Start**: Use the basic RAG pipeline for simple queries
-2. **Context Setup**: Configure AI to understand your project and preferences
-3. **Basic Interactions**: Start with simple AI-assisted tasks
-4. **Verification**: Confirm AI responses are helpful and accurate
-
-#### **For Regular Users (Daily AI Workflow)**
-1. **Session Initialization**: Start with context-aware AI interactions
-2. **Task Execution**: Use AI for coding, analysis, and problem-solving
-3. **Quality Assurance**: Verify AI outputs meet your standards
-4. **Continuous Learning**: The system improves based on your feedback
-
-#### **For Power Users (Advanced AI Features)**
-1. **Custom Models**: Configure specialized AI models for different tasks
-2. **Advanced Context**: Create sophisticated context management strategies
-3. **Performance Optimization**: Fine-tune AI performance for your specific needs
-4. **Integration Development**: Build custom AI integrations for your workflow
-
-### **Common User Scenarios & Solutions**
-
-#### **Scenario: "The AI doesn't understand my project context"**
-**Solution**: Ensure proper context initialization and use the memory system
-```python
-# Create context-aware AI interaction
-researcher_context = ContextFactory.create_researcher_context(
-    session_id="project_001",
-    research_topic="Current project analysis",
-    methodology="analysis",
-    sources=["your_project_files"]
-)
-```
-
-#### **Scenario: "AI responses are inconsistent"**
-**Solution**: Use consistent context and model configurations
-```python
-# Use consistent model and context
-switcher = ModelSwitcher()
-switcher.switch_model("llama3.1:8b")  # Use consistent model
-rag_pipeline = switcher.get_rag_pipeline()
-```
-
-#### **Scenario: "AI is too slow for my workflow"**
-**Solution**: Optimize performance with caching and model selection
-```python
-# Optimize for speed
-result = rag_pipeline.answer(
-    query="Quick analysis",
-    max_tokens=500,  # Limit response length
-    temperature=0.3  # More focused responses
-)
-```
-
-### **Strategic Value: Why This System Exists**
-
-The AI framework system solves critical problems that developers face:
-- **Inconsistent AI Behavior**: Traditional AI systems give unpredictable responses
-- **Context Ignorance**: AI that doesn't understand your project or preferences
-- **Safety Concerns**: AI responses that don't comply with project standards
-- **Performance Issues**: Slow or unreliable AI interactions that disrupt workflow
-
-**Success Metrics**:
-- 95% consistency in AI response quality
-- 90% reduction in context explanation time
-- 80% faster problem-solving with AI assistance
-- 100% compliance with project safety standards
 
 ## 📚 **References**
 
