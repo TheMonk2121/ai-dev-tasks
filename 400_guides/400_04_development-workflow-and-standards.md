@@ -1,22 +1,27 @@
-\n+## 🧭 Backlog Hygiene
-\n+- Start work when you begin a task, update status at meaningful changes, mark "✅ done" at completion.
-- Use en dash in IDs (e.g., `B‑052‑d`), and keep `000_core/000_backlog.md` in sync.
-\n+### Weekly Stale Item Review
-- Run `python3 scripts/backlog_status_tracking.py --check-stale --stale-days 7`.
-- Triage stale items and add remediation tasks to the backlog.
-\n+## ✅ Constitution Checklist (Workflow)
-\n+- Preserve chain: `000_backlog.md → 001_create-prd.md → 002_generate-tasks.md → 003_process-task-list.md`.
-- Pre‑flight: run file analysis before edits; seek explicit approval for destructive ops.
-- Post‑flight: validate tests, rollback plan, and cross‑ref coherence.
-# Development Workflow and Standards
+# 🔄 Development Workflows & Standards
 
-## 🔎 TL;DR
+<!-- ANCHOR_KEY: development-workflow-standards -->
+<!-- ANCHOR_PRIORITY: 5 -->
+<!-- ROLE_PINS: ["implementer", "coder"] -->
+
+## 🔍 TL;DR
 
 | what this file is | read when | do next |
 |---|---|---|
-| Canonical development workflow and standards | Implementing features, planning changes, or reviewing process | Follow the workflow below; see 05 for code standards and 11 for deployment |
+| Complete development workflow and coding standards for implementing features | Starting a new feature, implementing changes, or reviewing development process | Read 05 (Codebase Organization) then apply the workflow to your development |
 
-## 🎯 Purpose
+- **what this file is**: End-to-end development workflow and coding standards for implementing features.
+
+- **read when**: When starting a new feature, implementing changes, or reviewing development process.
+
+- **do next**: Read 05 (Codebase Organization & Patterns) then apply the workflow to your development.
+
+## 🎯 **Current Status**
+- **Priority**: 🔥 **HIGH** - Essential for development workflow
+- **Phase**: 2 of 4 (Codebase Development)
+- **Dependencies**: 03 (System Overview & Architecture)
+
+## 🎯 **Purpose**
 
 Define the end-to-end development workflow (from idea to deployment) and the standards we enforce to keep quality high and changes safe.
 
@@ -161,11 +166,11 @@ pytest tests/ -q
 ## 🔗 Interfaces
 
 - Backlog: `000_core/000_backlog.md`
-- Docs Index: `400_00_getting-started-and-index.md`
-- Architecture: `400_03_system-overview-and-architecture.md`
-- Coding & Testing: `400_05_coding-and-prompting-standards.md`
-- Security: `400_10_security-compliance-and-access.md`
-- Deployments/Ops: `400_11_deployments-ops-and-observability.md`
+- Memory System Overview: `400_guides/400_00_memory-system-overview.md`
+- System Architecture: `400_guides/400_03_system-overview-and-architecture.md`
+- Codebase Organization: `400_guides/400_05_codebase-organization-patterns.md`
+- Security: `400_guides/400_10_security-compliance-and-access.md`
+- Deployments/Ops: `400_guides/400_11_deployments-ops-and-observability.md`
 
 ## 📚 References
 

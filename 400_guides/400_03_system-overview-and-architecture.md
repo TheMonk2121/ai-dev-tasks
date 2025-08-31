@@ -1,17 +1,27 @@
-\n+## 🛡️ Safety Ops Anchors (Constitution)
-\n+- File safety module: pre‑edit analysis and protected file tiers.
-- Context rehydration entrypoints: `scripts/memory_up.sh`, memory scaffold, backlog.
-- Enforcement hooks: testing gates, DSPy assertions, CI validators.
-- Cross‑ref integrity: architecture owns the canonical links between 00–12 guides.
-# System Overview and Architecture
+# 🏗️ System Overview & Architecture
 
-## 🔎 TL;DR
+<!-- ANCHOR_KEY: system-overview-architecture -->
+<!-- ANCHOR_PRIORITY: 4 -->
+<!-- ROLE_PINS: ["researcher", "implementer"] -->
+
+## 🔍 TL;DR
 
 | what this file is | read when | do next |
 |---|---|---|
-| Canonical system and architecture overview | You need a complete technical map of the system | Start at 00; deep‑dive via sections below; see 11 for runtime & 05 for coding/testing |
+| Canonical system and architecture overview for understanding the codebase | Need to understand the technical architecture, system components, or how everything fits together | Read 04 (Development Workflows) then 05 (Coding Standards) |
 
-## 🎯 Purpose
+- **what this file is**: Complete technical map of the system architecture and core components.
+
+- **read when**: When you need to understand the technical architecture, system components, or how everything fits together.
+
+- **do next**: Read 04 (Development Workflows & Standards) then 05 (Codebase Organization & Patterns).
+
+## 🎯 **Current Status**
+- **Priority**: 🔥 **HIGH** - Essential for understanding codebase architecture
+- **Phase**: 2 of 4 (Codebase Development)
+- **Dependencies**: 00-02 (Memory System Foundation)
+
+## 🎯 **Purpose**
 
 Provide a complete architecture map, core components, interfaces, and flows across planning, development, automation, deployment, observability, and security. This file is the canonical architectural source; details live in linked guides to avoid duplication.
 
@@ -123,18 +133,19 @@ For how to build and ship changes end‑to‑end, see `400_04_development-workfl
 
 ## 📦 Canonical References
 
-- Getting Started: `400_00_getting-started-and-index.md`
-- Development Workflow: `400_04_development-workflow-and-standards.md`
-- Coding & Testing: `400_05_coding-and-prompting-standards.md`
-- Memory & Context: `400_06_memory-and-context-systems.md`
-- AI Frameworks (DSPy/MCP): `400_07_ai-frameworks-dspy.md`
-- RAGChecker Evaluation: `400_07_ai-frameworks-dspy.md#ragchecker-evaluation-system`
-- MCP Memory Server: `400_06_memory-and-context-systems.md#mcp-memory-server-integration`
-- Integrations: `400_08_integrations-editor-and-models.md`
-- Automation & Pipelines: `400_09_automation-and-pipelines.md`
-- Security & Access: `400_10_security-compliance-and-access.md`
-- Deployments/Ops: `400_11_deployments-ops-and-observability.md`
-- Product & Roadmap: `400_12_product-management-and-roadmap.md`
+- Memory System Overview: `400_guides/400_00_memory-system-overview.md`
+- Memory System Architecture: `400_guides/400_01_memory-system-architecture.md`
+- Memory Rehydration: `400_guides/400_02_memory-rehydration-context-management.md`
+- Development Workflow: `400_guides/400_04_development-workflow-and-standards.md`
+- Codebase Organization: `400_guides/400_05_codebase-organization-patterns.md`
+- AI Frameworks (DSPy/MCP): `400_guides/400_07_ai-frameworks-dspy.md`
+- RAGChecker Evaluation: `400_guides/400_07_ai-frameworks-dspy.md#ragchecker-evaluation-system`
+- MCP Memory Server: `400_guides/400_01_memory-system-architecture.md#mcp-memory-server-integration`
+- Integrations: `400_guides/400_08_integrations-editor-and-models.md`
+- Automation & Pipelines: `400_guides/400_09_automation-and-pipelines.md`
+- Security & Access: `400_guides/400_10_security-compliance-and-access.md`
+- Deployments/Ops: `400_guides/400_11_deployments-ops-and-observability.md`
+- Product & Roadmap: `400_guides/400_12_product-management-and-roadmap.md`
 
 ## 🧩 Design Principles
 
