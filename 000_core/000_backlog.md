@@ -6,15 +6,33 @@
 
 # 📋 Backlog
 
+## 🚀 **Core Methodology**
+- **[005_rag-tuning-protocol.md](005_rag-tuning-protocol.md)** - Industry-grade RAG performance optimization methodology
+
+### **B-1059: Retrieval Tuning Protocol & Evaluation Framework (Industry Recipe)** 🔥 **CRITICAL**
+- **Priority**: 🔥 **HIGHEST** - Essential for production-ready RAG system performance
+- **Points**: 8 - High complexity, strategic importance, system-wide impact
+- **Status**: 🔴 **CRITICAL - IMMEDIATE ACTION REQUIRED**
+- **Description**: Implement industry-grade RAG retrieval tuning protocol with systematic precision/recall optimization, intent-aware routing, hybrid retrieval, and performance gates to transform system from struggling (F1: 0.112) to production-ready performance
+- **Scope**: Complete implementation of RAG tuning protocol including hybrid retrieval (BM25 + Vector), intent-aware optimization, evidence-first answers, performance gates, and systematic evaluation framework
+- **Dependencies**: B-1054 Generation Cache Implementation (for context), 005_rag-tuning-protocol.md (methodology)
+- **Target Metrics**: Recall 0.099 → 0.35-0.55, Precision maintain ≥0.12, F1 0.112 → 0.22-0.30
+- **Implementation Phases**:
+  - **Phase 1**: Hybrid Retrieval & Coverage (4 hours) - Restore recall funnel
+  - **Phase 2**: Intent-Aware Routing & Evidence (3 hours) - Improve faithfulness
+  - **Phase 3**: Performance Gates & Tuning (4 hours) - Systematic optimization
+- **Success Criteria**: All 15 RAGChecker cases above 10% F1, Case 11 (config) above 20% F1, systematic performance improvement without regression
+
 ## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |
 |---|---|---|
 
-| B-1046 | AWS Bedrock Integration for RAGChecker Performance Optimization | ⚡ | 4 | ✅ done | Integrate AWS Bedrock Claude 3.5 Sonnet for 5x faster RAGChecker evaluations with production-grade reliability | AWS Bedrock + Claude 3.5 Sonnet + RAGChecker + Cost Monitoring | B-1045 RAGChecker System |
+| B-1046 | AWS Bedrock Integration for RAGChecker Performance Optimization | ⚡ | 4 | ✅ **COMPLETED** | Integrate AWS Bedrock Claude 3.5 Sonnet for 5x faster RAGChecker evaluations with production-grade reliability | AWS Bedrock + Claude 3.5 Sonnet + RAGChecker + Cost Monitoring | B-1045 RAGChecker System |
 | B-1047 | Vector-Based System Mapping & Dependency Visualization | 🔧 | 3 | todo | Create intelligent system map using vector store to visualize dependencies, core paths, and component relationships for better development decisions | Vector Store + Dependency Analysis + Graph Visualization + Memory Integration | B-1046 AWS Bedrock Integration |
 | B-1048 | DSPy Role Integration with Vector-Based System Mapping | 🔥 | 5 | ✅ done | Integrate DSPy roles with vector-based system mapping to create unified intelligent system with role-specific context enhancement and intelligent task routing | DSPy + Vector System + Role Enhancement + Context Integration + Task Routing | B-1047 Vector-Based System Mapping |
-| B-1049 | Pydantic Integration with RAGChecker Evaluation System | 🔧 | 4 | ✅ done | Integrate Pydantic models with RAGChecker evaluation system for enhanced data validation, type safety, and consistency with existing Pydantic infrastructure | Pydantic + RAGChecker + Data Validation + Type Safety + Constitution-Aware Validation | B-1045 RAGChecker System |
+| B-1049 | Pydantic Integration with RAGChecker Evaluation System | 🔧 | 4 | ✅ COMPLETE| Integrate Pydantic models with RAGChecker evaluation system for enhanced data validation, type safety, and consistency with existing Pydantic infrastructure | Pydantic + RAGChecker + Data Validation + Type Safety + Constitution-Aware Validation + Performance Optimization + Monitoring | B-1045 RAGChecker System |
+<!-- last_updated: 2025-09-01T01:52:26.979480 -->
 | B-1045 | RAGChecker Evaluation System: Official Industry-Standard RAG Assessment | 🔥 | 5 | ✅ done | Implement and operationalize official RAGChecker evaluation system with peer-reviewed metrics, comprehensive test cases, and quality gates. | RAGChecker + spaCy + Python 3.12 + Memory Integration + Quality Gates | B-1041 RAG evaluation suite |
 | B-1042 | Scribe: useful, contextual worklog entries | 🔧 | 3 | todo | Capture contextual worklog entries with action, reason, commit link, brief diff/metrics; throttle duplicates; support templates. | Scribe + Hooks + Jinja2 Templates (local) | B-096 Enhanced Scribe System |
 | B-1041 | RAG evaluation suite + wrapper integration + infra refinements | 🔥 | 5 | todo | Add full evaluation suite, wrapper integrations, vector_store/model_switcher refactors, and scripts for KPI measurement and rehydration. | DSPy + RAG + Evaluation + Wrappers + Scripts | B-1012 LTST Memory System |
@@ -163,6 +181,20 @@ and normalize spacing across long-form guides.
 - Memory Retrieval Speed: Reduce memory access time by 40%
 - Context Accuracy: Improve context relevance by 50%
 - Role Integration: 100% alignment between Cursor roles and memory system
+
+- **B-1058: End-to-End System Audit & Industry Standards Compliance** (score 9.5) 🔥 **CRITICAL**
+  - **Priority**: 🔥 **HIGHEST** - Essential for system reliability and industry compliance
+  - **Points**: 9 - Maximum complexity, strategic importance, system-wide impact
+  - **Status**: 🔴 **CRITICAL - IMMEDIATE ACTION REQUIRED**
+  - **Description**: Conduct comprehensive end-to-end audit of entire memory system, pipelines, and infrastructure to ensure industry standards compliance and identify all database connection, configuration, and architectural issues
+  - **Scope**: Complete system audit including memory system, pipelines, database connections, configuration management, testing infrastructure, monitoring, and documentation
+  - **Dependencies**: B-1054 Generation Cache Implementation (for context)
+  - **Success Criteria**: All systems meet industry standards, no critical database connection issues, comprehensive testing coverage, production-ready configuration
+  - **Risk Level**: 🔴 **CRITICAL** - System-wide failures identified in current state
+  - **Estimated Effort**: 3-5 days (comprehensive audit and fixes)
+  - **Business Value**: System reliability, industry compliance, production readiness
+  - **Technical Debt**: Addresses massive configuration inconsistencies and architectural gaps
+  - **Next Steps**: Immediate audit execution, systematic issue resolution, industry standards validation
 
 - B‑1034 — Mathematical Framework Foundation: Learning Scaffolding and Basic Category Theory (score 8.0)
 <!--score: {bv:5, tc:4, rr:5, le:3, effort:3, deps:[]}-->

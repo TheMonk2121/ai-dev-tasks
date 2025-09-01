@@ -109,6 +109,7 @@ See: `400_06_memory-and-context-systems.md` and `dspy-rag-system/src/utils/memor
 - Timeouts and backoff; model janitor; score‑aware prioritization
 - State file: `.ai_state.json` for continuity
 - **RAGChecker Evaluation**: Industry-standard RAG evaluation framework for quality assessment
+- **RAGChecker + Pydantic Integration**: Enhanced data validation, type safety, and performance optimization
 
 See: `400_07_ai-frameworks-dspy.md` and `400_05_coding-and-prompting-standards.md`.
 
@@ -117,6 +118,7 @@ See: `400_07_ai-frameworks-dspy.md` and `400_05_coding-and-prompting-standards.m
 - Structured tracing, cryptographic verification, echo verification, self‑critique
 - Health endpoints; metrics; dashboards; alerts
 - **RAGChecker Metrics**: Precision, Recall, F1 Score, Context Utilization for RAG system quality
+- **Performance Monitoring**: Real-time performance tracking, alerting, and optimization for validation workflows
 
 See: `400_11_deployments-ops-and-observability.md` and `400_observability-system.md`.
 
