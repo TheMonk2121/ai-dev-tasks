@@ -168,6 +168,7 @@ See `scripts/README_venv_manager.md` for complete documentation.
 - **Key Features**: Hybrid architecture (Bedrock + Local LLM fallback), cost monitoring, batch processing
 - **Performance**: 15-25 min → 3-5 min evaluation time
 - **Cost**: ~$0.01/eval (standard), ~$0.008/eval (batch)
+- **Verification**: ✅ Tested and working with Claude 3.5 Sonnet 20240620-v1:0
 
 ### **Results Management & Future Evaluations**
 - **Guide**: `400_guides/400_08_results-management-and-evaluations.md` (newly created)

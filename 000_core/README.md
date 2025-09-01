@@ -45,6 +45,36 @@ software using AI agents (Cursor Native AI + Specialized Agents). It provides:
 - **Metadata Collection**: Sophisticated analytics and data-driven decision making
 - **Quality Assurance**: Testing, security, and performance frameworks
 
+## 🚨 **CRITICAL OPERATIONAL PRINCIPLE: RED LINE BASELINE**
+
+### **🏁 ONCE ACHIEVED: NEVER GO BELOW**
+
+**Status**: 🔴 **ABSOLUTE PERFORMANCE FLOOR** - Never Violate
+**Rule**: **NO NEW FEATURES** until metrics are restored above baseline
+**Purpose**: Prevents over-engineering and tech debt accumulation
+
+#### **🎯 Core Principle**
+> **"We don't innovate until we firm things up"**
+
+Once your system achieves production-ready baseline metrics, **these become your absolute performance floor**. You are **FORBIDDEN** from building new features or making changes that would degrade performance below these thresholds.
+
+#### **🚫 BUILD FREEZE TRIGGERS**
+When **ANY** baseline metric falls below target:
+- **Recall@20** < 0.65 → **BUILD FREEZE**
+- **Precision@k** < 0.20 → **BUILD FREEZE**
+- **Faithfulness** < 0.60 → **BUILD FREEZE**
+- **P50 E2E** > 2.0s → **BUILD FREEZE**
+- **P95 E2E** > 4.0s → **BUILD FREEZE**
+
+#### **✅ BUILD RESUME CONDITIONS**
+**ALL** baseline metrics must be restored above targets before:
+- New feature development resumes
+- Major system changes proceed
+- Performance-impacting updates deploy
+- Production deployments continue
+
+**This rule prevents over-engineering and ensures sustainable, quality-first development.**
+
 ## 🚀 **Quick Start**
 
 ### **Single Doorway System (Recommended)**
@@ -92,6 +122,7 @@ pip install -r dspy-rag-system/requirements.txt
 - **[002_generate-tasks.md](002_generate-tasks.md)** - Generate executable tasks (manual)
 - **[003_process-task-list.md](003_process-task-list.md)** - Execute tasks with AI (manual)
 - **[004_development-roadmap.md](004_development-roadmap.md)** - Strategic roadmap and sprint planning
+- **[005_rag-tuning-protocol.md](005_rag-tuning-protocol.md)** - Industry-grade RAG performance optimization methodology
 - **[scripts/backlog_status_tracking.py](../scripts/backlog_status_tracking.py)** - Status tracking with timestamps
 
 ### **Setup & Configuration**

@@ -16,6 +16,38 @@
 
 - **do next**: Check current sprint status, review next priorities, and align with backlog items.
 
+## 🚨 **CRITICAL OPERATIONAL PRINCIPLE: RED LINE BASELINE**
+
+### **🏁 ONCE ACHIEVED: NEVER GO BELOW**
+
+**Status**: 🔴 **ABSOLUTE PERFORMANCE FLOOR** - Never Violate
+**Rule**: **NO NEW FEATURES** until metrics are restored above baseline
+**Purpose**: Prevents over-engineering and tech debt accumulation
+
+#### **🎯 Core Principle**
+> **"We don't innovate until we firm things up"**
+
+Once your system achieves production-ready baseline metrics, **these become your absolute performance floor**. You are **FORBIDDEN** from building new features or making changes that would degrade performance below these thresholds.
+
+#### **🚫 BUILD FREEZE TRIGGERS**
+When **ANY** baseline metric falls below target:
+- **Recall@20** < 0.65 → **BUILD FREEZE**
+- **Precision@k** < 0.20 → **BUILD FREEZE**
+- **Faithfulness** < 0.60 → **BUILD FREEZE**
+- **P50 E2E** > 2.0s → **BUILD FREEZE**
+- **P95 E2E** > 4.0s → **BUILD FREEZE**
+
+#### **✅ BUILD RESUME CONDITIONS**
+**ALL** baseline metrics must be restored above targets before:
+- New feature development resumes
+- Major system changes proceed
+- Performance-impacting updates deploy
+- Production deployments continue
+
+**This rule prevents over-engineering and ensures sustainable, quality-first development.**
+
+---
+
 ## 🎯 Current Sprint Status
 
 ### **Active Sprint: Unified Memory System & DSPy 3.0 Integration (August 2024)**
@@ -23,24 +55,17 @@
 **Current Focus**: Cohesive Memory System + DSPy 3.0 Migration + Advanced RAG + Consensus Framework
 
 #### **Completed This Sprint**
-- ✅ **B-1003**: DSPy Multi-Agent System Implementation (8 points) - 2025-08-22
-- ✅ **B-1004**: DSPy v2 Optimization (6 points) - 2025-01-23
-- ✅ **B-075**: Few-Shot Cognitive Scaffolding Integration (6 points) - 2025-08-16
-- ✅ **B-084**: Research-Based Schema Design for Extraction (6 points) - 2025-08-16
-- ✅ **B-062**: Context Priority Guide Auto-Generation (0.5 points) - 2025-08-16
-- ✅ **B-098**: Multi-Role PR Sign-Off System v2.0 (3 points) - 2025-08-21
-- ✅ **B-1018**: Monitoring & Maintenance System (3 points) - 2025-08-25
-- ✅ **B-093**: Scribe + Auto Rehydrate (3 points) - 2025-08-25
+- No items completed this sprint yet
 
 #### **In Progress**
 - 🔄 **B-096**: Enhanced Scribe System (3 points) - **ACTIVE**
 
 #### **Next Up (This Sprint)**
-- **B-1006-A**: DSPy 3.0 Core Parity Migration (3 points) - ✅ **COMPLETED**
-- **B-1006-B**: DSPy 3.0 Minimal Assertion Swap (2 points) - ✅ **COMPLETED**
-- **B-1007**: Pydantic AI Style Enhancements (2 points) - ✅ **COMPLETED**
-- **B-1013**: Advanced RAG Optimization with Late Chunking and HIRAG (7 points) - **READY**
-- **B-094**: MCP Memory Rehydrator Server (3 points) - **READY**
+- **B‑094**: MCP Memory Rehydrator Server (3 points)
+- **B‑095**: MCP Server Role Auto-Detection (2 points)
+- **B‑097**: Roadmap Milestones & Burndown Charts (3 points)
+- **B‑022**: Performance Monitoring (2 points)
+- **B‑019**: Code Quality Improvements (5 points)
 
 ### **Sprint Goals**
 - Complete unified memory system foundation
@@ -108,6 +133,7 @@
 - **B-052-c**: Performance Optimization Suite (4 points)
 - **B-093**: Validator Performance Optimizations (3 points)
 - **B-096**: MCP Server Performance Optimization (2 points)
+- **[RAG Tuning Protocol](005_rag-tuning-protocol.md)**: Industry-grade methodology for systematic precision/recall optimization
 
 #### **Benchmarking & Monitoring**
 - **B-080**: Research-Based Performance Monitoring (3 points)
@@ -123,9 +149,9 @@
 ## 📊 Backlog Integration
 
 ### **Priority Distribution**
-- **P0 (Critical)**: 5 items - Unified memory system and DSPy 3.0 integration
-- **P1 (High)**: 10 items - Advanced features and integration
-- **P2 (Medium)**: 5 items - Performance and optimization
+- **P0 (Critical)**: 4 items - Core system stability and consensus framework
+- **P1 (High)**: 1 items - Advanced RAG and extraction capabilities
+- **P2 (Medium)**: 0 items - Performance and optimization
 
 ### **Points Distribution**
 - **Total Active Points**: 95 points

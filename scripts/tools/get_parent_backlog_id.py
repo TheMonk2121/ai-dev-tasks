@@ -47,7 +47,7 @@ def git_introducing_commit_id(file_path: str) -> Optional[str]:
             "--",
             file_path,
         ]
-                    out = subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL)  # nosec B603
+        out = subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL)  # nosec B603
         lines = [line.strip() for line in out.splitlines() if line.strip()]
         if not lines:
             return None
