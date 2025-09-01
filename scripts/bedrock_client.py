@@ -60,7 +60,7 @@ class BedrockClient:
     def __init__(
         self,
         region_name: str = "us-east-1",
-        model_id: str = "anthropic.claude-3-5-sonnet-20241022-v2:0",
+        model_id: str = "anthropic.claude-3-5-sonnet-20240620-v1:0",
         max_retries: int = 3,
         timeout: int = 30,
         usage_log_file: Optional[str] = None,
@@ -158,17 +158,18 @@ class BedrockClient:
         Raises:
             Exception: If all retry attempts fail
         """
-        # Prepare request body
-        messages = []
+        # Prepare request body for Bedrock Claude 3.5 Sonnet
         if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
-        messages.append({"role": "user", "content": prompt})
+            # Combine system prompt with user prompt for Bedrock format
+            full_prompt = f"{system_prompt}\n\n{prompt}"
+        else:
+            full_prompt = prompt
 
         body = {
             "anthropic_version": "bedrock-2023-05-31",
             "max_tokens": max_tokens,
             "temperature": temperature,
-            "messages": messages,
+            "messages": [{"role": "user", "content": full_prompt}],
         }
 
         # Retry logic with exponential backoff

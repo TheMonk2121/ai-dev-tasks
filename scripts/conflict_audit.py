@@ -21,15 +21,18 @@ from tqdm import tqdm
 
 
 class OptimizedConflictAuditor:
-    def __init__(self, full_audit: bool = False, verbose: bool = False):
+    def __init__(self, full_audit: bool = False, verbose: bool = False, quiet: bool = False):
         self.full_audit = full_audit
         self.verbose = verbose
+        self.quiet = quiet
         self.issues = []
         self.warnings = []
         self.max_workers = min(8, multiprocessing.cpu_count() + 2)
 
     def log(self, message: str, level: str = "INFO"):
-        """Log messages with consistent formatting."""
+        """Log messages with consistent formatting. Suppress when quiet (JSON mode)."""
+        if self.quiet:
+            return
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{timestamp}] [{level}] {message}")
 
@@ -180,12 +183,14 @@ class OptimizedConflictAuditor:
         ]
 
         # Run with progress bar
-        with tqdm(total=len(audit_modules), desc="Running conflict audit") as pbar:
+        # Disable tqdm output when in quiet (JSON) mode
+        with tqdm(total=len(audit_modules), desc="Running conflict audit", disable=self.quiet) as pbar:
             for module_name, check_func in audit_modules:
                 try:
                     results[module_name] = check_func()
                     pbar.update(1)
-                    pbar.set_postfix({"current": module_name})
+                    if not self.quiet:
+                        pbar.set_postfix({"current": module_name})
 
                     # Early exit on critical failures
                     if module_name == "dependencies" and results[module_name].get("status") == "conflicts":
@@ -209,6 +214,7 @@ class OptimizedConflictAuditor:
             "all_passed": len(self.issues) == 0,
         }
 
+
 def main():
     parser = argparse.ArgumentParser(description="Optimized conflict audit")
     parser.add_argument("--full", action="store_true", help="Run full audit")
@@ -217,7 +223,7 @@ def main():
 
     args = parser.parse_args()
 
-    auditor = OptimizedConflictAuditor(full_audit=args.full, verbose=args.verbose)
+    auditor = OptimizedConflictAuditor(full_audit=args.full, verbose=args.verbose, quiet=args.json)
     results = auditor.run_optimized_audit()
 
     if args.json:
@@ -236,6 +242,7 @@ def main():
             print("\nWarnings:")
             for warning in results["warnings"]:
                 print(f"  ⚠️ {warning}")
+
 
 if __name__ == "__main__":
     main()

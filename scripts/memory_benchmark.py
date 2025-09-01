@@ -274,9 +274,9 @@ class MemoryBenchmark:
             "test_count": len(results),
         }
 
-    def generate_model_specific_report(self, model: str = None) -> Dict[str, Any]:
+    def generate_model_specific_report(self, model: Optional[str] = None) -> Dict[str, Any]:
         """Generate detailed report for specific model(s)"""
-        if model:
+        if model is not None:
             models_to_report = [model] if model in self.model_metrics else []
         else:
             models_to_report = list(self.model_metrics.keys())
