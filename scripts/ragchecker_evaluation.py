@@ -12,28 +12,65 @@ Reference: https://arxiv.org/abs/2408.08067
 
 import json
 import subprocess
-from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional, Tuple
+
+from pydantic import BaseModel, Field, field_validator
 
 # Import RAGChecker components with type ignore for missing stubs
 from ragchecker.container import RetrievedDoc  # type: ignore
 from ragchecker.evaluator import RAGChecker, RAGResult, RAGResults  # type: ignore
 
+from scripts.ragchecker_constitution_validator import create_ragchecker_validator
+from scripts.ragchecker_debug_manager import create_ragchecker_debug_manager
+from scripts.ragchecker_error_recovery import RAGCheckerErrorRecovery, with_error_recovery
 from scripts.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
+from scripts.ragchecker_performance_monitor import create_performance_monitor
+from scripts.ragchecker_performance_optimizer import create_validation_optimizer, optimize_validation
 
 
-@dataclass
-class RAGCheckerResult:
-    """Result of RAGChecker evaluation."""
+class RAGCheckerResult(BaseModel):
+    """Result of RAGChecker evaluation with Pydantic validation."""
 
-    test_case_name: str
-    query: str
-    custom_score: float
-    ragchecker_scores: Dict[str, float]
-    ragchecker_overall: float
-    comparison: Dict[str, Any]
-    recommendation: str
+    test_case_name: str = Field(..., min_length=1, description="Name of the test case")
+    query: str = Field(..., min_length=1, description="The query that was evaluated")
+    custom_score: float = Field(..., ge=0.0, le=1.0, description="Custom evaluation score (0-1)")
+    ragchecker_scores: Dict[str, float] = Field(..., description="Dictionary of RAGChecker metric scores")
+    ragchecker_overall: float = Field(..., ge=0.0, le=1.0, description="Overall RAGChecker score (0-1)")
+    comparison: Dict[str, Any] = Field(..., description="Comparison data between custom and RAGChecker scores")
+    recommendation: str = Field(..., min_length=1, description="Recommendation based on evaluation results")
+
+    @field_validator("test_case_name")
+    @classmethod
+    def validate_test_case_name(cls, v):
+        if not v.strip():
+            raise ValueError("test_case_name cannot be empty")
+        return v.strip()
+
+    @field_validator("query")
+    @classmethod
+    def validate_query(cls, v):
+        if not v.strip():
+            raise ValueError("query cannot be empty")
+        return v.strip()
+
+    @field_validator("recommendation")
+    @classmethod
+    def validate_recommendation(cls, v):
+        if not v.strip():
+            raise ValueError("recommendation cannot be empty")
+        return v.strip()
+
+    @field_validator("ragchecker_scores")
+    @classmethod
+    def validate_ragchecker_scores(cls, v):
+        if not v:
+            raise ValueError("ragchecker_scores cannot be empty")
+        # Validate all scores are in 0-1 range
+        for score_name, score_value in v.items():
+            if not isinstance(score_value, (int, float)) or score_value < 0.0 or score_value > 1.0:
+                raise ValueError(f"Score {score_name} must be between 0.0 and 1.0, got {score_value}")
+        return v
 
 
 class RAGCheckerEvaluator:
@@ -41,6 +78,23 @@ class RAGCheckerEvaluator:
 
     def __init__(self):
         self.official_evaluator = OfficialRAGCheckerEvaluator()
+
+        # Initialize constitution-aware validator
+        self.constitution_validator = create_ragchecker_validator()
+
+        # Initialize enhanced debugging manager
+        self.debug_manager = create_ragchecker_debug_manager()
+
+        # Initialize error recovery manager
+        self.error_recovery = RAGCheckerErrorRecovery()
+
+        # Initialize performance optimizer
+        self.validation_optimizer = create_validation_optimizer(enable_caching=True, enable_batching=True)
+
+        # Initialize performance monitor
+        self.performance_monitor = create_performance_monitor(
+            enable_alerting=True, enable_logging=True, enable_metrics_export=True
+        )
 
         # Initialize RAGChecker with default settings
         # Note: RAGChecker requires LLM access for claim extraction and checking
@@ -179,6 +233,324 @@ class RAGCheckerEvaluator:
             metrics["query_response_overlap"] = 0.0
 
         return metrics
+
+    @optimize_validation("constitution_validation")
+    @with_error_recovery("constitution_validation")
+    def validate_with_constitution(self, evaluation_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate RAGChecker evaluation data with constitution awareness."""
+        import time
+
+        # Create debug context for validation
+        evaluation_id = f"eval_{int(time.time())}"
+        debug_context = self.debug_manager.capture_ragchecker_context(
+            evaluation_id=evaluation_id, evaluation_type="constitution_validation", validation_stage="start"
+        )
+
+        validation_results = {
+            "input_validation": None,
+            "metrics_validation": None,
+            "result_validation": None,
+            "overall_compliance": True,
+            "total_violations": 0,
+            "total_warnings": 0,
+        }
+
+        try:
+            # Update debug context
+            debug_context.validation_stage = "input_validation"
+
+            # Validate input data if present
+            if "input" in evaluation_data:
+                start_time = time.time()
+                input_validation = self.constitution_validator.validate_ragchecker_input(evaluation_data["input"])
+                validation_time = time.time() - start_time
+
+                validation_results["input_validation"] = input_validation
+                if not input_validation["valid"]:
+                    validation_results["overall_compliance"] = False
+                    validation_results["total_violations"] += len(input_validation["errors"])
+                validation_results["total_warnings"] += len(input_validation.get("warnings", []))
+
+                # Log input validation with debug manager
+                self.debug_manager.log_constitution_validation(
+                    context=debug_context,
+                    validation_result=input_validation,
+                    compliance_score=self._extract_compliance_score(input_validation),
+                )
+
+                # Log performance metrics
+                self.debug_manager.log_performance_metrics(
+                    context=debug_context, metrics={"input_validation_time": validation_time}
+                )
+
+                # Record operation in performance monitor
+                self.performance_monitor.record_operation(
+                    operation_name="input_validation",
+                    execution_time=validation_time,
+                    success=True,
+                    metadata={
+                        "evaluation_id": evaluation_id,
+                        "validation_type": "input_validation",
+                        "compliance_score": self._extract_compliance_score(input_validation),
+                    },
+                )
+
+            # Update debug context
+            debug_context.validation_stage = "metrics_validation"
+
+            # Validate metrics data if present
+            if "metrics" in evaluation_data:
+                start_time = time.time()
+                metrics_validation = self.constitution_validator.validate_ragchecker_metrics(evaluation_data["metrics"])
+                validation_time = time.time() - start_time
+
+                validation_results["metrics_validation"] = metrics_validation
+                if not metrics_validation["valid"]:
+                    validation_results["overall_compliance"] = False
+                    validation_results["total_violations"] += len(metrics_validation["errors"])
+                validation_results["total_warnings"] += len(metrics_validation.get("warnings", []))
+
+                # Log metrics validation with debug manager
+                self.debug_manager.log_constitution_validation(
+                    context=debug_context,
+                    validation_result=metrics_validation,
+                    compliance_score=self._extract_compliance_score(metrics_validation),
+                )
+
+                # Log performance metrics
+                self.debug_manager.log_performance_metrics(
+                    context=debug_context, metrics={"metrics_validation_time": validation_time}
+                )
+
+                # Record operation in performance monitor
+                self.performance_monitor.record_operation(
+                    operation_name="metrics_validation",
+                    execution_time=validation_time,
+                    success=True,
+                    metadata={
+                        "evaluation_id": evaluation_id,
+                        "validation_type": "metrics_validation",
+                        "compliance_score": self._extract_compliance_score(metrics_validation),
+                    },
+                )
+
+            # Update debug context
+            debug_context.validation_stage = "result_validation"
+
+            # Validate result data if present
+            if "result" in evaluation_data:
+                start_time = time.time()
+                result_validation = self.constitution_validator.validate_ragchecker_result(evaluation_data["result"])
+                validation_time = time.time() - start_time
+
+                validation_results["result_validation"] = result_validation
+                if not result_validation["valid"]:
+                    validation_results["overall_compliance"] = False
+                    validation_results["total_violations"] += len(result_validation["errors"])
+                validation_results["total_warnings"] += len(result_validation.get("warnings", []))
+
+                # Log result validation with debug manager
+                self.debug_manager.log_constitution_validation(
+                    context=debug_context,
+                    validation_result=result_validation,
+                    compliance_score=self._extract_compliance_score(result_validation),
+                )
+
+                # Log performance metrics
+                self.debug_manager.log_performance_metrics(
+                    context=debug_context, metrics={"result_validation_time": validation_time}
+                )
+
+                # Record operation in performance monitor
+                self.performance_monitor.record_operation(
+                    operation_name="result_validation",
+                    execution_time=validation_time,
+                    success=True,
+                    metadata={
+                        "evaluation_id": evaluation_id,
+                        "validation_type": "result_validation",
+                        "compliance_score": self._extract_compliance_score(result_validation),
+                    },
+                )
+
+            # Update debug context
+            debug_context.validation_stage = "compliance_summary"
+
+            # Add constitution compliance summary
+            validation_results["constitution_summary"] = {
+                "is_compliant": validation_results["overall_compliance"],
+                "compliance_score": 1.0 if validation_results["overall_compliance"] else 0.3,
+                "total_violations": validation_results["total_violations"],
+                "total_warnings": validation_results["total_warnings"],
+                "recommendations": self._extract_recommendations(validation_results),
+            }
+
+            # Log final compliance summary
+            self.debug_manager.log_constitution_validation(
+                context=debug_context,
+                validation_result=validation_results["constitution_summary"],
+                compliance_score=validation_results["constitution_summary"]["compliance_score"],
+            )
+
+            # Update performance monitor with cache hit rate from optimizer
+            optimizer_summary = self.validation_optimizer.get_performance_summary()
+            if "cache_hit_rate" in optimizer_summary:
+                self.performance_monitor.update_metrics({"cache_hit_rate": optimizer_summary["cache_hit_rate"]})
+
+        except Exception as e:
+            validation_results["overall_compliance"] = False
+            validation_results["error"] = f"Constitution validation failed: {str(e)}"
+
+            # Calculate total execution time
+            total_execution_time = time.time() - start_time
+
+            # Log error with debug manager
+            self.debug_manager.log_validation_error(
+                context=debug_context,
+                error=e,
+                error_type="constitution_validation_failure",
+                error_details={"error_message": str(e)},
+            )
+
+            # Record error in performance monitor
+            self.performance_monitor.record_operation(
+                operation_name="constitution_validation",
+                execution_time=total_execution_time,
+                success=False,
+                error_type="constitution_validation_failure",
+                metadata={
+                    "evaluation_id": evaluation_id,
+                    "error_message": str(e),
+                    "validation_stage": debug_context.validation_stage,
+                },
+            )
+
+            print(f"Constitution validation error: {e}")
+
+        return validation_results
+
+    def validate_with_constitution_and_taxonomy(self, evaluation_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate RAGChecker evaluation data with constitution awareness and error taxonomy."""
+        # First, perform constitution validation
+        validation_results = self.validate_with_constitution(evaluation_data)
+
+        # Then, enhance with error taxonomy
+        enhanced_results = self.constitution_validator.enhance_validation_with_taxonomy(validation_results)
+
+        return enhanced_results
+
+    def _extract_compliance_score(self, validation_result: Dict[str, Any]) -> float:
+        """Extract compliance score from validation result safely."""
+        try:
+            if validation_result.get("compliance"):
+                compliance = validation_result["compliance"]
+                if hasattr(compliance, "compliance_score"):
+                    return compliance.compliance_score
+                elif isinstance(compliance, dict):
+                    return compliance.get("compliance_score", 0.0)
+            return 0.0
+        except Exception:
+            return 0.0
+
+    def _extract_recommendations(self, validation_results: Dict[str, Any]) -> List[str]:
+        """Extract recommendations from validation results."""
+        recommendations = []
+
+        for validation_type in ["input_validation", "metrics_validation", "result_validation"]:
+            if validation_results[validation_type]:
+                validation = validation_results[validation_type]
+                for error in validation.get("errors", []):
+                    if "recommendation" in error:
+                        recommendations.append(error["recommendation"])
+
+        return list(set(recommendations))  # Remove duplicates
+
+    def get_debugging_summary(self) -> Dict[str, Any]:
+        """Get debugging summary for RAGChecker evaluation workflows"""
+        return self.debug_manager.get_debugging_summary()
+
+    def get_debug_context(self, evaluation_id: str) -> Optional[Any]:
+        """Get debug context for a specific evaluation"""
+        # This would need to be implemented based on how we store contexts
+        # For now, return the debug manager summary
+        return self.debug_manager.get_debugging_summary()
+
+    def get_error_recovery_statistics(self) -> Dict[str, Any]:
+        """Get error recovery statistics and performance metrics"""
+        return self.error_recovery.get_recovery_statistics()
+
+    def recover_from_validation_error(
+        self, error: Exception, error_type: str, context: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Recover from a validation error using the error recovery system"""
+        return self.error_recovery.recover_from_error(error=error, error_type=error_type, context=context)
+
+    def get_performance_summary(self) -> Dict[str, Any]:
+        """Get performance optimization summary"""
+        return self.validation_optimizer.get_performance_summary()
+
+    def update_optimization_config(self, **config_updates) -> None:
+        """Update performance optimization configuration"""
+        self.validation_optimizer.update_optimization_config(**config_updates)
+
+    def clear_performance_history(self) -> None:
+        """Clear performance history"""
+        self.validation_optimizer.clear_performance_history()
+
+    def batch_validate_with_constitution(
+        self, evaluation_data_batch: List[Dict[str, Any]]
+    ) -> Tuple[List[Dict[str, Any]], Any]:
+        """Batch validate multiple evaluation data items with constitution awareness"""
+        return self.validation_optimizer.batch_validate(
+            self.constitution_validator.validate_ragchecker_input, evaluation_data_batch, "constitution_validation"
+        )
+
+    # Performance Monitoring Methods
+    def get_performance_monitoring_summary(self) -> Dict[str, Any]:
+        """Get comprehensive performance monitoring summary."""
+        return self.performance_monitor.get_performance_summary()
+
+    def get_performance_history(
+        self, start_time: Optional[datetime] = None, end_time: Optional[datetime] = None, max_points: int = 100
+    ) -> List[Dict[str, Any]]:
+        """Get performance history within a time range."""
+        return self.performance_monitor.get_performance_history(start_time, end_time, max_points)
+
+    def export_performance_metrics(self, filepath: str, format_type: str = "json") -> bool:
+        """Export performance metrics to file."""
+        return self.performance_monitor.export_metrics_to_file(filepath, format_type)
+
+    def update_performance_thresholds(self, **threshold_updates) -> None:
+        """Update performance monitoring thresholds."""
+        self.performance_monitor.update_thresholds(**threshold_updates)
+
+    def add_performance_alert_callback(self, callback) -> None:
+        """Add a callback function for performance alerts."""
+        self.performance_monitor.add_alert_callback(callback)
+
+    def acknowledge_performance_alert(self, alert_id: str) -> bool:
+        """Acknowledge a performance alert."""
+        return self.performance_monitor.acknowledge_alert(alert_id)
+
+    def resolve_performance_alert(self, alert_id: str) -> None:
+        """Resolve a performance alert."""
+        self.performance_monitor.resolve_alert(alert_id)
+
+    def set_performance_snapshot_interval(self, interval: float) -> None:
+        """Set performance snapshot interval in seconds."""
+        self.performance_monitor.set_snapshot_interval(interval)
+
+    def enable_performance_monitoring(self, enabled: bool = True) -> None:
+        """Enable or disable performance monitoring."""
+        self.performance_monitor.enable_monitoring(enabled)
+
+    def clear_performance_monitoring_history(self) -> None:
+        """Clear performance monitoring history."""
+        self.performance_monitor.clear_history()
+
+    def stop_performance_monitoring(self) -> None:
+        """Stop performance monitoring."""
+        self.performance_monitor.stop_monitoring()
 
     def calculate_ragchecker_overall(self, ragchecker_scores: Dict[str, float]) -> float:
         """Calculate overall RAGChecker score (weighted average)."""

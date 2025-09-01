@@ -17,7 +17,6 @@ import json
 import os
 import subprocess
 import time
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -40,7 +39,12 @@ except ImportError:
     SentenceTransformer = None
 
 try:
-    from scripts.bedrock_client import BedrockClient
+    # Try relative import first (when running from scripts directory)
+    try:
+        from bedrock_client import BedrockClient
+    except ImportError:
+        # Try absolute import (when running from root directory)
+        from scripts.bedrock_client import BedrockClient
 
     _bedrock_available = True
 except ImportError:
@@ -52,36 +56,84 @@ EMBEDDINGS_AVAILABLE = _embeddings_available
 BEDROCK_AVAILABLE = _bedrock_available
 
 
-@dataclass
-class RAGCheckerInput:
-    """RAGChecker input data structure following official format."""
-
-    query_id: str
-    query: str
-    gt_answer: str
-    response: str
-    retrieved_context: List[str]  # List of context strings, not dicts
+from pydantic import BaseModel, Field, field_validator
 
 
-@dataclass
-class RAGCheckerMetrics:
-    """RAGChecker metrics following official specification."""
+class RAGCheckerInput(BaseModel):
+    """RAGChecker input data structure following official format with Pydantic validation."""
+
+    query_id: str = Field(..., description="Unique identifier for the query")
+    query: str = Field(..., min_length=1, description="The input query text")
+    gt_answer: str = Field(..., description="Ground truth answer for evaluation")
+    response: str = Field(..., description="Generated response to evaluate")
+    retrieved_context: List[str] = Field(..., description="List of context strings retrieved for the query")
+
+    @field_validator("query_id")
+    @classmethod
+    def validate_query_id(cls, v):
+        if not v.strip():
+            raise ValueError("query_id cannot be empty")
+        return v.strip()
+
+    @field_validator("query")
+    @classmethod
+    def validate_query(cls, v):
+        if not v.strip():
+            raise ValueError("query cannot be empty")
+        return v.strip()
+
+    @field_validator("gt_answer")
+    @classmethod
+    def validate_gt_answer(cls, v):
+        if not v.strip():
+            raise ValueError("gt_answer cannot be empty")
+        return v.strip()
+
+    @field_validator("response")
+    @classmethod
+    def validate_response(cls, v):
+        if not v.strip():
+            raise ValueError("response cannot be empty")
+        return v.strip()
+
+    @field_validator("retrieved_context")
+    @classmethod
+    def validate_retrieved_context(cls, v):
+        if not v:
+            raise ValueError("retrieved_context cannot be empty")
+        # Filter out empty context strings
+        filtered_context = [ctx.strip() for ctx in v if ctx.strip()]
+        if not filtered_context:
+            raise ValueError("retrieved_context must contain at least one non-empty context string")
+        return filtered_context
+
+
+class RAGCheckerMetrics(BaseModel):
+    """RAGChecker metrics following official specification with Pydantic validation."""
 
     # Overall Metrics
-    precision: float
-    recall: float
-    f1_score: float
+    precision: float = Field(..., ge=0.0, le=1.0, description="Overall precision score (0-1)")
+    recall: float = Field(..., ge=0.0, le=1.0, description="Overall recall score (0-1)")
+    f1_score: float = Field(..., ge=0.0, le=1.0, description="Overall F1 score (0-1)")
 
     # Retriever Metrics
-    claim_recall: float
-    context_precision: float
+    claim_recall: float = Field(..., ge=0.0, le=1.0, description="Claim recall score (0-1)")
+    context_precision: float = Field(..., ge=0.0, le=1.0, description="Context precision score (0-1)")
 
     # Generator Metrics
-    context_utilization: float
-    noise_sensitivity: float
-    hallucination: float
-    self_knowledge: float
-    faithfulness: float
+    context_utilization: float = Field(..., ge=0.0, le=1.0, description="Context utilization score (0-1)")
+    noise_sensitivity: float = Field(..., ge=0.0, le=1.0, description="Noise sensitivity score (0-1)")
+    hallucination: float = Field(..., ge=0.0, le=1.0, description="Hallucination score (0-1)")
+    self_knowledge: float = Field(..., ge=0.0, le=1.0, description="Self knowledge score (0-1)")
+    faithfulness: float = Field(..., ge=0.0, le=1.0, description="Faithfulness score (0-1)")
+
+    @field_validator("*")
+    @classmethod
+    def validate_score_ranges(cls, v):
+        """Validate all score fields are within 0-1 range."""
+        if isinstance(v, float) and (v < 0.0 or v > 1.0):
+            raise ValueError(f"Score must be between 0.0 and 1.0, got {v}")
+        return v
 
 
 class LocalLLMIntegration:
