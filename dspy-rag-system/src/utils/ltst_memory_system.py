@@ -66,7 +66,7 @@ class LTSTMemorySystem:
         if db_manager is None:
             import os
 
-            connection_string = os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
+            connection_string = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
             self.db_manager = DatabaseResilienceManager(connection_string)
         else:
             self.db_manager = db_manager

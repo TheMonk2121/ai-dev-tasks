@@ -19,10 +19,10 @@ project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from decision_extractor import DecisionExtractor
-from unified_retrieval_api import UnifiedRetrievalAPI
-from scribe_ltst_integration import ScribeLTSTIntegration
 from git_ltst_integration import GitLTSTIntegration
 from performance_ltst_integration import PerformanceLTSTIntegration
+from scribe_ltst_integration import ScribeLTSTIntegration
+from unified_retrieval_api import UnifiedRetrievalAPI
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

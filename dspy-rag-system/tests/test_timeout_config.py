@@ -3,17 +3,20 @@
 Tests for global timeout configuration.
 """
 
-import pytest
+import json
 import os
 import tempfile
-import json
 from unittest.mock import patch
+
+import pytest
+
 from src.utils.timeout_config import (
-    TimeoutConfig, 
-    load_timeout_config, 
+    TimeoutConfig,
+    format_timeout_duration,
+    load_timeout_config,
     validate_timeout_config,
-    format_timeout_duration
 )
+
 
 class TestTimeoutConfig:
     """Test timeout configuration loading and validation"""

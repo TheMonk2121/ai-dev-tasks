@@ -133,7 +133,7 @@ if [ ! -f ".env" ]; then
 # DSPy RAG System Configuration
 
 # Database Configuration
-DATABASE_URL=postgresql://ai_user:ai_password@localhost:5432/ai_agency
+DATABASE_URL=postgresql://danieljacobs@localhost:5432/ai_agency
 
 # Cursor Model Configuration
 CURSOR_NATIVE_AI_ENABLED=true
@@ -217,7 +217,7 @@ cat > docs/setup.md << 'EOF'
    sys.path.append('src')
    from dspy_modules.vector_store import VectorStore
 
-    vector_store = VectorStore('postgresql://ai_user:ai_password@localhost:5432/ai_agency')
+    vector_store = VectorStore('postgresql://danieljacobs@localhost:5432/ai_agency')
    result = vector_store('search', query='Your question here?')
    print(f'Found {result[\"total_results\"]} relevant chunks')
    "

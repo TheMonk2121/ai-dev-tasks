@@ -103,7 +103,9 @@ class ConversationStorage:
 
     def __init__(self, database_url: str = None):
         """Initialize conversation storage."""
-        self.database_url = database_url or os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
+        self.database_url = database_url or os.getenv(
+            "DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency"
+        )
         self.connection = None
         self.cursor = None
         self.logger = logging.getLogger(__name__)

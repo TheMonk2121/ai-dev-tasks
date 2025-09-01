@@ -66,6 +66,7 @@ except ImportError as e:
     MissionPriority = _MissionPriorityStub  # type: ignore[assignment]
     MissionStatus = _MissionStatusStub  # type: ignore[assignment]
 
+
 # Configuration
 class MissionDashboardConfig:
     """Mission Dashboard configuration and settings"""
@@ -80,12 +81,13 @@ class MissionDashboardConfig:
     AUTO_REFRESH = os.getenv("MISSION_DASHBOARD_AUTO_REFRESH", "true").lower() == "true"
 
     # Database settings
-    POSTGRES_DSN = os.getenv("POSTGRES_DSN", "postgresql://ai_user:ai_password@localhost:5432/ai_agency")
+    POSTGRES_DSN = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
 
     # UI settings
     THEME = os.getenv("MISSION_DASHBOARD_THEME", "dark")
     SHOW_DETAILS = os.getenv("MISSION_DASHBOARD_SHOW_DETAILS", "true").lower() == "true"
     ENABLE_FILTERS = os.getenv("MISSION_DASHBOARD_ENABLE_FILTERS", "true").lower() == "true"
+
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -113,6 +115,7 @@ try:
     LOG.info("Production monitoring initialized")
 except Exception as e:
     LOG.warning(f"Production monitoring not available: {e}")
+
 
 # Dashboard state
 class DashboardState:
@@ -190,10 +193,12 @@ class DashboardState:
             "total_cost": metrics.total_cost,
         }
 
+
 # Initialize dashboard state
 dashboard_state = DashboardState()
 
 # Rate limiting
+
 
 class RateLimiter:
     """Simple rate limiter for API endpoints"""
@@ -214,7 +219,9 @@ class RateLimiter:
         self.requests[ip].append(now)
         return True
 
+
 rate_limiter = RateLimiter()
+
 
 def check_rate_limit():
     """Check rate limit for current request"""
@@ -223,11 +230,13 @@ def check_rate_limit():
         return jsonify({"error": "Rate limit exceeded"}), 429
     return None
 
+
 # Routes
 @app.route("/")
 def index():
     """Main dashboard page"""
     return render_template("mission_dashboard.html")
+
 
 @app.route("/api/missions")
 def get_missions():
@@ -268,6 +277,7 @@ def get_missions():
         LOG.error(f"Error getting missions: {e}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/api/missions/<mission_id>")
 def get_mission(mission_id):
     """Get specific mission by ID"""
@@ -290,6 +300,7 @@ def get_mission(mission_id):
     except Exception as e:
         LOG.error(f"Error getting mission {mission_id}: {e}")
         return jsonify({"error": str(e)}), 500
+
 
 @app.route("/api/missions", methods=["POST"])
 def create_mission():
@@ -341,6 +352,7 @@ def create_mission():
         LOG.error(f"Error creating mission: {e}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/api/missions/<mission_id>/start", methods=["POST"])
 def start_mission(mission_id):
     """Start a mission"""
@@ -368,6 +380,7 @@ def start_mission(mission_id):
     except Exception as e:
         LOG.error(f"Error starting mission {mission_id}: {e}")
         return jsonify({"error": str(e)}), 500
+
 
 @app.route("/api/missions/<mission_id>/progress", methods=["POST"])
 def update_mission_progress(mission_id):
@@ -400,6 +413,7 @@ def update_mission_progress(mission_id):
         LOG.error(f"Error updating mission progress {mission_id}: {e}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/api/missions/<mission_id>/complete", methods=["POST"])
 def complete_mission(mission_id):
     """Complete a mission"""
@@ -431,6 +445,7 @@ def complete_mission(mission_id):
         LOG.error(f"Error completing mission {mission_id}: {e}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/api/missions/<mission_id>/fail", methods=["POST"])
 def fail_mission(mission_id):
     """Fail a mission"""
@@ -461,6 +476,7 @@ def fail_mission(mission_id):
         LOG.error(f"Error failing mission {mission_id}: {e}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/api/missions/<mission_id>/cancel", methods=["POST"])
 def cancel_mission(mission_id):
     """Cancel a mission"""
@@ -485,6 +501,7 @@ def cancel_mission(mission_id):
         LOG.error(f"Error cancelling mission {mission_id}: {e}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/api/metrics")
 def get_metrics():
     """Get mission metrics"""
@@ -505,6 +522,7 @@ def get_metrics():
     except Exception as e:
         LOG.error(f"Error getting metrics: {e}")
         return jsonify({"error": str(e)}), 500
+
 
 @app.route("/api/running")
 def get_running_missions():
@@ -530,6 +548,7 @@ def get_running_missions():
         LOG.error(f"Error getting running missions: {e}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/api/health")
 def dashboard_health():
     """Health check endpoint"""
@@ -547,6 +566,7 @@ def dashboard_health():
     except Exception as e:
         LOG.error(f"Health check error: {e}")
         return jsonify({"status": "unhealthy", "error": str(e), "timestamp": datetime.now().isoformat()}), 500
+
 
 # SocketIO events
 @socketio.on("connect")
@@ -573,6 +593,7 @@ def handle_connect():
     except Exception as e:
         LOG.error(f"Error handling client connection: {e}")
 
+
 @socketio.on("disconnect")
 def handle_disconnect():
     """Handle client disconnection"""
@@ -582,6 +603,7 @@ def handle_disconnect():
 
     except Exception as e:
         LOG.error(f"Error handling client disconnection: {e}")
+
 
 @socketio.on("request_update")
 def handle_update_request():
@@ -603,16 +625,19 @@ def handle_update_request():
     except Exception as e:
         LOG.error(f"Error handling update request: {e}")
 
+
 # Error handlers
 @app.errorhandler(413)
 def too_large(e):
     """Handle file too large error"""
     return jsonify({"error": "Request too large"}), 413
 
+
 @app.errorhandler(429)
 def rate_limit_exceeded(e):
     """Handle rate limit exceeded error"""
     return jsonify({"error": "Rate limit exceeded"}), 429
+
 
 @app.errorhandler(500)
 def internal_error(e):
@@ -620,10 +645,12 @@ def internal_error(e):
     LOG.error(f"Internal server error: {e}")
     return jsonify({"error": "Internal server error"}), 500
 
+
 @app.errorhandler(404)
 def not_found(e):
     """Handle not found error"""
     return jsonify({"error": "Not found"}), 404
+
 
 def main():
     """Main application entry point"""
@@ -646,6 +673,7 @@ def main():
     except Exception as e:
         LOG.error(f"Error starting Mission Dashboard: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

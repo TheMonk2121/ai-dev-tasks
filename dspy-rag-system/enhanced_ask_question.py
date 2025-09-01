@@ -4,9 +4,9 @@ Enhanced DSPy RAG System - Interactive Question Interface
 Demonstrates pre-RAG query rewriting and post-RAG answer synthesis
 """
 
+import json
 import os
 import sys
-import json
 import time
 from pathlib import Path
 
@@ -15,9 +15,9 @@ sys.path.append('src')
 
 try:
     from dspy_modules.enhanced_rag_system import (
-        create_enhanced_rag_interface, 
         analyze_query_complexity,
-        create_domain_context
+        create_domain_context,
+        create_enhanced_rag_interface,
     )
     from utils.logger import setup_logger
     LOG = setup_logger("enhanced_rag_interface")

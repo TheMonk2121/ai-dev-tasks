@@ -822,7 +822,7 @@ class VectorStorePipeline(Module):
 
 if __name__ == "__main__":
     # Quick smoke test (requires running DB with the expected schema)
-    db_connection = "postgresql://ai_user:ai_password@localhost:5432/ai_agency"
+    db_connection = "postgresql://danieljacobs@localhost:5432/ai_agency"
     vector_store = HybridVectorStore(db_connection)
     print(vector_store("search", query="What is DSPy?", limit=3))
     print(vector_store.get_stats())

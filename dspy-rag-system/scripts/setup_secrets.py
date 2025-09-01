@@ -65,13 +65,14 @@ def main():
         print("❌ Final validation failed!")
         return 1
 
+
 def generate_secrets_template():
     """Generate a template .env file"""
     template = """# DSPy RAG System Environment Variables
 # Copy this file to .env and fill in your values
 
 # Database Configuration
-POSTGRES_DSN=postgresql://ai_user:ai_password@localhost:5432/ai_agency
+POSTGRES_DSN=postgresql://danieljacobs@localhost:5432/ai_agency
 DB_PASSWORD=ai_password
 
 # Dashboard Configuration
@@ -101,6 +102,7 @@ MAX_RESULTS=10
     print(f"📄 Environment template saved to: {template_file}")
     print("💡 Copy this file to .env and fill in your values")
 
+
 def list_secrets():
     """List all configured secrets"""
     manager = SecretsManager()
@@ -126,6 +128,7 @@ def list_secrets():
             print(f"   Validation: {config.validation_regex}")
 
         print()
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

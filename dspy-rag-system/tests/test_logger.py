@@ -4,16 +4,17 @@ Test script for the improved structured logger
 Verifies all critical fixes and improvements
 """
 
-import sys
-import os
-import tempfile
 import json
+import os
+import sys
+import tempfile
 from pathlib import Path
 
 # Add src to path
 sys.path.append('src')
 
-from utils.logger import get_logger, log_with_context, log_document_processing, log_error_with_context
+from utils.logger import get_logger, log_document_processing, log_error_with_context, log_with_context
+
 
 def test_basic_logging():
     """Test basic logging functionality"""

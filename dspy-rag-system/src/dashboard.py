@@ -109,7 +109,7 @@ class DashboardConfig:
     ALLOWED_EXTENSIONS = {".txt", ".md", ".pdf", ".csv"}
 
     # Database settings
-    POSTGRES_DSN = os.getenv("POSTGRES_DSN", "postgresql://ai_user:ai_password@localhost:5432/ai_agency")
+    POSTGRES_DSN = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
 
     # Cursor Native AI settings
     CURSOR_NATIVE_AI_ENABLED = os.getenv("CURSOR_NATIVE_AI_ENABLED", "true").lower() == "true"

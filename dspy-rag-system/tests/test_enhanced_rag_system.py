@@ -4,29 +4,30 @@ Comprehensive Test Suite for Enhanced DSPy RAG System
 Tests pre-RAG query rewriting and post-RAG answer synthesis
 """
 
+import json
 import os
 import sys
-import json
-import time
-import pytest
 import tempfile
+import time
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import MagicMock, Mock, patch
+
+import pytest
 
 # Add src to path for imports
 sys.path.append('src')
 
 try:
     from dspy_modules.enhanced_rag_system import (
-        EnhancedRAGSystem,
-        QueryRewriter,
-        QueryDecomposer,
         AnswerSynthesizer,
         ChainOfThoughtReasoner,
+        EnhancedRAGSystem,
+        QueryDecomposer,
+        QueryRewriter,
         ReActReasoner,
         analyze_query_complexity,
         create_domain_context,
-        create_enhanced_rag_interface
+        create_enhanced_rag_interface,
     )
 except ImportError as e:
     pytest.skip(f"Enhanced RAG system not available: {e}")

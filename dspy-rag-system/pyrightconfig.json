@@ -1,21 +1,14 @@
 {
-    "pythonVersion": "3.12",
-    "typeCheckingMode": "basic",
-    "pythonPath": "../venv/bin/python",
-    "reportMissingTypeStubs": "none",
-    "reportUnknownMemberType": "none",
-    "reportUnknownVariableType": "none",
-    "reportUnknownArgumentType": "none",
-    "reportUnknownLambdaType": "none",
-    "reportOptionalMemberAccess": "none",
-    "reportMissingImports": "none",
-    "reportAssignmentType": "none",
-    "reportPossiblyUnboundVariable": "none",
     "include": [
-        "src",
-        "tests"
+        "src"
     ],
     "extraPaths": [
-        "src"
-    ]
+        "src",
+        "src/dspy_modules",
+        "src/utils"
+    ],
+    "pythonVersion": "3.12",
+    "typeCheckingMode": "basic",
+    "reportMissingImports": "warning",
+    "reportMissingTypeStubs": "none"
 }
