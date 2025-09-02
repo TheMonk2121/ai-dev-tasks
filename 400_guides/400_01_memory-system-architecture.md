@@ -27,6 +27,9 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role plan
 ```bash
 # Begin a conversation with context awareness
 python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "help me understand this project"
+
+# Enhanced session with multiple memory systems
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 ```
 
 **Step 3: Verify Context is Working**
@@ -852,6 +855,36 @@ When Cursor AI restarts or needs to rehydrate context, it follows a **structured
 
 #### **Core Philosophy**
 The Lean Hybrid system prioritizes **semantic relevance** over static pins while maintaining **deterministic behavior** and **simple configuration**.
+
+#### **🚀 Enhanced Unified Memory Orchestrator (2025 Update)**
+
+**Status**: ✅ **ACTIVE** - Multi-system integration with role-based enhancement
+
+The Unified Memory Orchestrator now supports multiple memory systems with intelligent role-based context selection:
+
+**Available Memory Systems:**
+- **LTST**: Long-term semantic memory with vector search capabilities
+- **Cursor**: IDE-integrated memory for development context
+- **Go CLI**: Command-line interface memory for system operations
+- **Prime**: High-performance memory system for complex analysis
+
+**Enhanced Features:**
+- **Multi-System Coordination**: Seamless integration across all memory systems
+- **Role-Based Context**: Specialized memory retrieval for different AI roles
+- **Automatic Database Management**: Auto-startup and dependency handling
+- **Performance Optimization**: Sub-2s context loading with intelligent caching
+
+**Usage Examples:**
+```bash
+# Basic memory orchestration
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "current project status"
+
+# Enhanced multi-system analysis
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role researcher "comprehensive system analysis"
+
+# Role-specific context enhancement
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role coder "development assistance with full context"
+```
 
 #### **Four-Slot Model**
 1. **Pinned Invariants** (≤200 tokens, hard cap)

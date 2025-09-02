@@ -1194,6 +1194,79 @@ except Exception as e:
     result = rag_pipeline.answer("Complex analysis query")
 ```
 
+## 🚀 **DSPy Role Integration with Vector-Based System Mapping**
+
+**Status**: ✅ **ACTIVE** - Enhanced role capabilities with semantic intelligence
+
+The DSPy role system now integrates with Vector-Based System Mapping to provide intelligent, context-aware assistance for each specialized role.
+
+### **Enhanced Role Capabilities**
+
+**Available Roles with Vector Enhancement:**
+- **Planner**: Strategic analysis with component dependency mapping
+- **Implementer**: Code implementation with semantic pattern recognition
+- **Researcher**: Deep analysis with knowledge graph integration
+- **Coder**: Development assistance with intelligent recommendations
+- **Reviewer**: Code review with vector-based quality assessment
+
+**Role-Specific Context Enhancement:**
+```bash
+# Planner: Strategic project analysis
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role planner "analyze project architecture and dependencies"
+
+# Implementer: Implementation with smart recommendations
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --role implementer "implement feature with component analysis"
+
+# Researcher: Deep semantic analysis
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role researcher "research patterns in codebase with vector analysis"
+
+# Coder: Development with intelligent assistance
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --role coder "code solution with semantic understanding"
+```
+
+### **Multi-Role Collaboration Patterns**
+
+**Sequential Role Execution:**
+```bash
+# Research → Plan → Implement → Review workflow
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role researcher "analyze requirements for new feature"
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role planner "create implementation plan based on research"
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli --role implementer "implement planned solution"
+```
+
+**Parallel Role Consultation:**
+```bash
+# Get multiple perspectives on complex decisions
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role researcher "evaluate technical approaches for RAG optimization"
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor --role implementer "assess implementation complexity for same approaches"
+```
+
+### **Vector-Enhanced Context Loading**
+
+**Smart Context Selection:**
+- **Component Analysis**: Automatic identification of relevant code components
+- **Dependency Mapping**: Understanding of system relationships
+- **Pattern Recognition**: Detection of similar implementations
+- **Quality Assessment**: Vector-based code quality analysis
+
+**Performance Optimizations:**
+- **<2s Context Loading**: Optimized vector retrieval for real-time responses
+- **Intelligent Caching**: Context reuse across related queries
+- **Selective Enhancement**: Role-specific vector analysis to reduce overhead
+
+### **Communication Patterns**
+
+**Role-to-Role Communication:**
+```bash
+# Implementer consulting with Researcher
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --role implementer "get researcher insights on memory system optimization"
+
+# Planner coordinating with multiple roles
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "coordinate implementation strategy across all roles"
+```
+
+**Reference**: See `100_memory/100_dspy-role-communication-guide.md` for detailed communication patterns and examples.
+
 ## 📚 **References**
 
 - **DSPy Documentation**: `dspy-rag-system/`

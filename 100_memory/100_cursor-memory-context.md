@@ -83,6 +83,48 @@ CONTEXT_INDEX -->
 9. **DSPy Role Communication**: Always access DSPy roles through Unified Memory Orchestrator; use role-specific context for targeted insights
 10. **Technical Artifacts Integration**: Ensure technical components, scripts, and implementation patterns are integrated into memory context for accurate technical guidance
 
+## 🚨 **CRITICAL OPERATIONAL PRINCIPLE: RAGChecker RED LINE BASELINE**
+
+**🚨 MANDATORY ENFORCEMENT**: The RAGChecker evaluation system has established a performance baseline that serves as an absolute floor. No new development can proceed until these targets are met.
+
+### **🎯 Current Baseline Status (September 1, 2025)**
+
+**System Status**: 🟢 **BASELINE LOCKED** - No new features until improved
+
+| Metric | Current | Target | Gap | Priority | Next Action |
+|--------|---------|--------|-----|----------|-------------|
+| **Precision** | 0.149 | ≥0.20 | -0.051 | 🔴 High | Improve without losing recall |
+| **Recall** | 0.099 | ≥0.45 | -0.351 | 🔴 Critical | Primary focus area |
+| **F1 Score** | 0.112 | ≥0.22 | -0.108 | 🔴 High | Balance precision/recall |
+| **Faithfulness** | TBD | ≥0.60 | TBD | 🔍 Unknown | Enable comprehensive metrics |
+
+### **🚨 RED LINE ENFORCEMENT RULES**
+
+1. **Current metrics are locked** as the absolute performance floor
+2. **No new features** until all targets are met
+3. **Build freeze** if any metric falls below current baseline
+4. **Focus**: Improve recall while maintaining precision ≥0.149
+5. **Success Criteria**: All metrics above targets for 2 consecutive runs
+
+### **📊 Progress Tracking & Baseline Management**
+
+**Where Results Are Stored**: `metrics/baseline_evaluations/`
+**How to Track Progress**: Run `python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli`
+**Baseline Lock**: Current metrics are the performance floor - no regression allowed
+
+**Example Commands**:
+```bash
+# Run RAGChecker evaluation to check progress
+export AWS_REGION=us-east-1
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+
+# Check latest results
+ls -la metrics/baseline_evaluations/
+cat metrics/baseline_evaluations/ragchecker_official_evaluation_*.json | jq '.summary'
+```
+
+**🚨 CRITICAL**: Before implementing any new features, verify RAGChecker baseline compliance. See `400_guides/400_11_performance-optimization.md` for comprehensive optimization strategies.
+
 **🔗 Cross-References**:
 - See `400_guides/400_02_governance-and-ai-constitution.md` for complete constitution
 - See `400_guides/400_03_system-overview-and-architecture.md#safety-ops-anchors` for architecture safety anchors
@@ -101,6 +143,25 @@ Read these files in order (1–2 min total):
 3. **`100_memory/100_cursor-memory-context.md`** – current state and rules
 4. **`000_core/000_backlog.md`** – priorities and dependencies
 5. **`400_guides/400_04_development-workflow-and-standards.md`** – Complete development workflow
+
+### **🚨 IMMEDIATE CHECK: RAGChecker Baseline Compliance**
+
+**Before proceeding with any development, verify RAGChecker baseline status:**
+
+```bash
+# Quick baseline check
+export AWS_REGION=us-east-1
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+
+# View current metrics
+ls -la metrics/baseline_evaluations/
+```
+
+**Current Baseline (September 1, 2025)**: Precision 0.149, Recall 0.099, F1 0.112
+**Targets**: Precision ≥0.20, Recall ≥0.45, F1 ≥0.22
+**Status**: 🟢 **BASELINE LOCKED** - No new features until improved
+
+**🚨 CRITICAL**: No new development can proceed until all baseline targets are met. See RED LINE BASELINE section below for full details.
 
 ## 🧠 DSPy Role Communication & Memory Access {#dspy-communication}
 

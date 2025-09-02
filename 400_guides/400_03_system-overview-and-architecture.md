@@ -99,6 +99,52 @@ See: `400_system-overview.md` (Architecture, Core Components, Testing Framework,
 - **Entity Expansion**: pattern‑based extraction; adjacent retrieval
 - **RRF Fusion**: combine vector + BM25; stability slider and kill‑switches
 
+## Retrieval System Architecture (B-1059)
+
+The retrieval system implements a comprehensive tuning protocol with production-grade reliability:
+
+### Core Components
+
+- **Fusion Engine** (`src/retrieval/fusion.py`): Weighted RRF combining BM25 and vector search
+- **Pre-filter System** (`src/retrieval/prefilter.py`): Recall-friendly filtering with diversity preservation
+- **Reranking Engine** (`src/retrieval/reranker.py`): Heuristic-based reranking with configurable weights
+- **Context Packer** (`src/retrieval/packer.py`): MMR-based context selection with token limits
+- **Intent Router** (`src/retrieval/intent_router.py`): Query-aware parameter adjustment
+- **Quality Gates** (`src/retrieval/quality_gates.py`): Configurable evaluation thresholds
+
+### System Flow
+
+```
+Query Input → Intent Detection → Fusion → Pre-filter → Rerank → Pack → Generate
+     ↓              ↓           ↓         ↓         ↓       ↓       ↓
+Intent Router → Fusion Config → Filter → Reranker → Packer → LLM
+     ↓              ↓           ↓         ↓         ↓       ↓
+Policy Config → Weights → Thresholds → Alpha → MMR → Response
+```
+
+### Configuration Management
+
+- **Single Source of Truth**: `config/retrieval.yaml` for all parameters
+- **Intent-Based Routing**: Dynamic parameter adjustment based on query type
+- **Quality Gates**: Soft (warnings) and hard (failures) evaluation thresholds
+- **Performance Targets**: Recall@20: 0.35, F1: 0.22, Faithfulness: 0.60
+
+### Testing & Validation
+
+- **Comprehensive Test Suite**: Edge cases, robustness, failure modes
+- **Health Monitoring**: Real-time component status and performance metrics
+- **CI/CD Integration**: Quality gates in GitHub Actions with soft enforcement
+- **Performance Tuning**: Hyperparameter optimization via `scripts/tune_retrieval.py`
+
+### Operational Features
+
+- **Edge Case Handling**: Empty queries, unicode, special characters, very long queries
+- **Robustness Checks**: High volume, memory pressure, concurrent queries
+- **Health Monitoring**: Latency tracking, success rate, error rate, component health
+- **Failure Recovery**: Graceful degradation and fallback strategies
+
+See: `config/retrieval.yaml` for configuration, `scripts/test_retrieval_system.py` for testing, and individual component files in `src/retrieval/` for implementation details.
+
 **Command**: `python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "query"`
 
 See: `400_06_memory-and-context-systems.md` and `dspy-rag-system/src/utils/memory_rehydrator.py`.
