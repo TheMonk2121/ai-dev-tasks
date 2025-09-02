@@ -172,10 +172,22 @@ Solidify a reusable tuning framework ("industry recipe") that:
 - **Bedrock credentials/config completed and validated**
 - **CI uses official Bedrock path** for RAGChecker; fallback path disabled for gates (allowed only in local dev runs)
 
+### **6.1.1 Evaluation Hygiene & Reproducibility (New)**
+- **Cache-off gate for evals**: hard-fail if generation cache is accessed during evaluation
+- **Fixed dataset + seed**: pin dataset path/split and random seed; store dataset content hash
+- **Run artifact isolation**: write all outputs to `metrics/baseline_evaluations/B-1059/<timestamp>/`
+- **Config snapshot**: persist retrieval/rerank/packing config and environment (commit, env vars) with a content hash
+- **Standard evaluator**: use RAGChecker v2 (Pydantic models + constitution checks) for all runs
+- **Alerts/thresholds**: wire `PerformanceMonitor` thresholds and export JSON summaries for CI
+
 ### **6.2 Metrics**
 - **Global**: Precision, Recall, F1, Faithfulness
 - **Intent**: P@5 (lookup), NDCG@10 (how-to), R@50 (multi-hop)
 - **Report per case and by domain** (config/dev/test/security, DSPy impl, error handling, advanced features)
+
+### **6.2.1 Trend Guardrails (New)**
+- Fail on statistically significant regressions vs previous green baseline
+- Track Δ per-intent metrics; require non-negative movement unless explicitly ratcheting another target
 
 ### **6.3 Gates & Ratcheting**
 - **Two-green rule**: increase thresholds only after two consecutive green runs
@@ -190,6 +202,14 @@ Solidify a reusable tuning framework ("industry recipe") that:
 - **Add hard negatives** for each weak domain: same-file wrong sections; sibling files with near synonyms
 - **Ensure per-intent queries exist** and are labeled
 
+### **6.5 Variant Grid & Significance (New)**
+- Variants: {BM25-only, Vector-only, Hybrid} × k ∈ {5,10,20} × reranker {on,off} × query-rewrite {on,off}
+- Use paired testing on per-query deltas; require minimum effect size to accept changes
+
+### **6.6 Cost & Latency Accounting (New)**
+- Record p50/p95 latency and per-query cost; surface red-lines in CI summaries
+- Auto-stop long sweeps early if confidence reached or budget exceeded
+
 ---
 
 ## 📦 **Deliverables & Artifacts**
@@ -198,6 +218,7 @@ Solidify a reusable tuning framework ("industry recipe") that:
 - **config/retrieval.yaml** (new): defaults for top-k, RRF weights, pre-filter, rerank α, packing caps, MMR λ, intent routing
 - **config/eval_gates.yaml** (new): current gates + ratchet schedule
 - **scripts/run_eval_bedrock.sh** (updated): official eval, result export
+- **scripts/run_eval.py** (new): one-command Python runner (Bedrock-only eval mode, cache-off, artifact export)
 - **scripts/tuning_sweeps.py** (new): coordinate ascent sweeps with summary CSV/JSON
 - **src/retrieval/fusion.py** (new or updated): weighted-RRF
 - **src/retrieval/rerank.py** (updated): top-50 rerank; α weighting; tie-breakers
@@ -225,6 +246,10 @@ Solidify a reusable tuning framework ("industry recipe") that:
 ### **7.4 Observability**
 - **metrics/last_eval_summary.json** and csv/ exports
 - **NiceGUI (or equivalent) panel section** for per-intent trend lines
+
+### **7.5 Observability & Debugging (New)**
+- Enable `RAGCheckerDebugManager`, `RAGCheckerErrorRecovery`, and `PerformanceMonitor` during eval runs
+- Fail-closed for CI: recovery cannot convert failing runs to passing status
 
 ---
 

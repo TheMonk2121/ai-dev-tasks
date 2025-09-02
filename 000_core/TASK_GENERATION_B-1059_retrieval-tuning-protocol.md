@@ -21,6 +21,14 @@ Implement industry-grade RAG retrieval tuning protocol with systematic precision
 - **Performance Gates**: Two-green rule with systematic ratcheting
 - **Bedrock Integration**: Canonical evaluation framework
 
+### **Evaluation Hygiene & Reproducibility (New)**
+- **Cache-off evals**: Hard-fail if generation cache is accessed during evaluation
+- **Fixed dataset + seed**: Pin dataset path/split and random seed; store dataset content hash
+- **Run artifact isolation**: Write outputs to `metrics/baseline_evaluations/B-1059/<timestamp>/`
+- **Config snapshot**: Persist retrieval/rerank/packing config and env (commit, env vars) with a content hash
+- **Standard evaluator**: Use RAGChecker v2 (Pydantic + constitution checks) for all runs
+- **Alerts/thresholds**: Use PerformanceMonitor thresholds; export JSON summaries for CI
+
 ### **Target Metrics**
 - **Recall**: 0.099 → 0.35-0.55 (+25-45 pts)
 - **F1**: 0.112 → 0.22-0.30 (+10-18 pts)
@@ -226,22 +234,21 @@ bash scripts/run_eval_bedrock.sh && python3 scripts/tuning_sweeps.py --summary
 
 ## 📋 **Phase-by-Phase Task Breakdown**
 
-### **Phase 1: Bedrock Canonicalization (P0)**
+### **Phase 1: Bedrock Canonicalization (P0) — Verification**
 
-#### **A1 — Finalize Bedrock credentials & config**
-- **Priority**: Critical • MoSCoW: 🔥 Must • Estimated Time: 1–2h • Dependencies: —
+#### **A1 — Verify Bedrock canonicalization (already integrated)**
+- **Priority**: Critical • MoSCoW: 🔥 Must • Estimated Time: 0.5–1h • Dependencies: —
 - **Solo Optimization**: Auto-advance: no, Context preservation: yes
-- **Description**: Validate AWS credentials, region, and config/bedrock_config.yaml.
+- **Description**: Confirm Bedrock is canonical for evals and functioning without fallback; secrets/configs validated.
 - **Acceptance Criteria**:
-  - [ ] Official Bedrock path runs locally without fallback
+  - [ ] Official Bedrock path runs locally without fallback (verification)
   - [ ] Region/model IDs validated; secrets not committed
-  - [ ] Failure modes logged with actionable messages
+  - [ ] Structured errors present for common failures
 - **Testing Requirements**:
-  - [ ] Unit: config loader validation
-  - [ ] Integration: end-to-end eval run using Bedrock
+  - [ ] Integration: end-to-end eval run using Bedrock-only path
   - [ ] Resilience: network/auth failure simulation
 - **Implementation Notes**: Store local secrets in .env/AWS profile; never in repo.
-- **Quality Gates**: Code review, Tests passing, Docs updated (docs/bedrock_setup.md), Security reviewed (secrets handling), Performance validated
+- **Quality Gates**: Code review, Tests passing, Docs updated (docs/bedrock_setup.md), Security reviewed (secrets handling)
 - **Solo Workflow Integration**: Auto-Advance: no • Context: yes • One-Command: yes • Smart Pause: yes
 
 #### **A2 — CI: make Bedrock the default evaluator; disable fallback for gates**
@@ -260,7 +267,7 @@ bash scripts/run_eval_bedrock.sh && python3 scripts/tuning_sweeps.py --summary
 
 #### **A3 — Eval run script & troubleshooting capture**
 - **Priority**: High • MoSCoW: 🎯 Should • Estimated Time: 1–2h • Dependencies: A1
-- **Description**: scripts/run_eval_bedrock.sh to wrap the official run and capture logs/exit codes.
+- **Description**: scripts/run_eval_bedrock.sh (and/or scripts/run_eval.py) to wrap the official run and capture logs/exit codes; enforce cache-off eval mode and artifact export.
 - **Acceptance Criteria**:
   - [ ] Single command runs full eval
   - [ ] On failure, emits friendly tips and last 200 lines

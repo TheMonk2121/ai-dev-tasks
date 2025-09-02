@@ -25,25 +25,25 @@
 
 ## 📊 **Phase-by-Phase Implementation Plan**
 
-### **Phase 1: Bedrock Canonicalization (P0) - Critical Path**
+### **Phase 1: Bedrock Canonicalization (P0) - Critical Path (Verification)**
 **Estimated Time**: 4-7 hours
 **Dependencies**: None
 **Success Gate**: Bedrock evaluation running without fallback
 
-#### **Task A1: Finalize Bedrock credentials & config**
+#### **Task A1: Verify Bedrock canonicalization (already integrated)**
 - **Status**: 🔴 Not Started
 - **Priority**: Critical
-- **Estimated Time**: 1-2h
+- **Estimated Time**: 0.5-1h
 - **Dependencies**: None
 - **Acceptance Criteria**:
-  - [ ] Official Bedrock path runs locally without fallback
+  - [ ] Official Bedrock path runs locally without fallback (verification)
   - [ ] Region/model IDs validated; secrets not committed
-  - [ ] Failure modes logged with actionable messages
+  - [ ] Structured errors logged with actionable messages
 - **Implementation Steps**:
   1. Validate AWS credentials and region configuration
-  2. Create/update config/bedrock_config.yaml
-  3. Test Bedrock API connectivity
-  4. Implement proper error handling and logging
+  2. Confirm config/bedrock_config.yaml is present and correct
+  3. Run an eval via official Bedrock-only path
+  4. Verify structured error handling and logging
 - **Quality Gates**: Code review, Tests passing, Security reviewed
 - **Solo Workflow**: Auto-Advance: no, Context preservation: yes
 
@@ -73,10 +73,11 @@
   - [ ] Single command runs full eval
   - [ ] On failure, emits friendly tips and last 200 lines
 - **Implementation Steps**:
-  1. Create scripts/run_eval_bedrock.sh wrapper
-  2. Implement log capture and rotation
-  3. Add user-friendly error messages and troubleshooting tips
-  4. Test error handling scenarios
+  1. Create scripts/run_eval_bedrock.sh (and/or scripts/run_eval.py) wrapper
+  2. Enforce cache-off eval mode; write artifacts to metrics/baseline_evaluations/B-1059/<timestamp>/
+  3. Implement log capture and rotation; attach last 200 lines on failure
+  4. Add user-friendly error messages and troubleshooting tips
+  5. Test error handling scenarios
 - **Quality Gates**: Integration tests, User experience validation
 - **Solo Workflow**: Auto-Advance: yes, Context preservation: yes
 
