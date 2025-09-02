@@ -1,0 +1,146 @@
+# Retrieval Configuration for RAG System
+# Defines candidate generation defaults and fusion parameters
+
+# Candidate Generation Limits
+candidates:
+  # Number of documents to retrieve from each method before fusion
+  bm25_limit: 100 # Lexical retrieval candidates
+  vector_limit: 100 # Semantic retrieval candidates
+
+  # Post-fusion limits
+  final_limit: 50 # Maximum documents after RRF fusion
+  min_candidates: 10 # Minimum candidates required for valid retrieval
+
+# Weighted RRF Fusion Parameters
+fusion:
+  # RRF smoothing constant (higher values reduce impact of lower ranks)
+  k: 60
+
+  # Fusion weights (must sum to 1.0, will be normalized if not)
+  lambda_lex: 0.6 # Weight for lexical (BM25) results
+  lambda_sem: 0.4 # Weight for semantic (vector) results
+
+  # Alternative weight profiles for different use cases
+  profiles:
+    balanced: # Equal weighting
+      lambda_lex: 0.5
+      lambda_sem: 0.5
+
+    lexical_heavy: # Favor exact term matches
+      lambda_lex: 0.8
+      lambda_sem: 0.2
+
+    semantic_heavy: # Favor conceptual similarity
+      lambda_lex: 0.3
+      lambda_sem: 0.7
+
+# Pre-filtering (applied before fusion)
+prefilter:
+  # Minimum score thresholds (documents below threshold are excluded)
+  min_bm25_score: 0.1 # Minimum BM25 relevance score
+  min_vector_score: 0.7 # Minimum cosine similarity (recall-friendly)
+
+  # Document length filters
+  min_doc_length: 50 # Minimum characters in document
+  max_doc_length: 8000 # Maximum characters (for context window management)
+
+  # Diversity settings
+  enable_diversity: true # Remove near-duplicate documents
+  diversity_threshold: 0.9 # Cosine similarity threshold for deduplication
+
+# Performance and Caching
+performance:
+  # Enable result caching
+  enable_cache: true
+  cache_ttl_seconds: 3600 # 1 hour cache TTL
+
+  # Parallel processing
+  max_workers: 4 # Concurrent retrieval threads
+  timeout_seconds: 30 # Per-query timeout
+
+  # Memory management
+  max_cache_size: 1000 # Maximum cached queries
+
+# Reranking (lightweight heuristic)
+rerank:
+  enabled: true
+  alpha: 0.7 # Weight of rerank vs fused score
+  final_top_n: 8 # Final selection count after rerank
+  method: heuristic # Heuristic reranker (no heavy deps)
+
+# Packing (context assembly)
+packing:
+  mmr_lambda: 0.7 # MMR diversity vs relevance balance (0=diverse, 1=relevant)
+  context_cap_tokens: 2000 # Maximum context size in characters
+  max_snippets: 3 # Maximum snippets per document
+  evidence_first: true # Prioritize evidence over metadata
+
+# Intent routing & policies
+intent_routing:
+  enabled: true
+  # Simple rule-based intents with thresholds
+  policies:
+    - name: config_query
+      when_any:
+        - contains:
+            [".yml", ".yaml", "pyproject.toml", "Makefile", ".github/workflows"]
+        - regex: "(?i)config|configuration|settings"
+      action:
+        rerank_alpha: 0.5 # more weight to fused
+        fusion_profile: lexical_heavy
+        final_top_n: 10
+
+    - name: conceptual_query
+      when_any:
+        - regex: "(?i)explain|why|how does|architecture|design"
+      action:
+        rerank_alpha: 0.8 # more weight to reranker
+        fusion_profile: semantic_heavy
+        final_top_n: 8
+
+    - name: technical_code
+      when_any:
+        - regex: "(?i)(def |class |import |SELECT |INSERT |`|::|->)"
+      action:
+        rerank_alpha: 0.75
+        fusion_profile: balanced
+        final_top_n: 8
+
+# Tuning & Quality Gates
+tuning:
+  # Performance targets (aligned with B-1059 success criteria)
+  targets:
+    recall_at_20: 0.35 # Minimum recall target (currently 0.099)
+    precision_at_k: 0.12 # Maintain precision (no regression)
+    f1_score: 0.22 # Minimum F1 target (currently 0.112)
+    faithfulness: 0.60 # Global faithfulness minimum
+
+  # Evaluation thresholds for quality gates
+  quality_gates:
+    # Soft gates (warn but don't fail)
+    soft:
+      recall_at_20: 0.25 # Warning threshold
+      f1_score: 0.15 # Warning threshold
+      faithfulness: 0.50 # Warning threshold
+
+    # Hard gates (fail pipeline if below)
+    hard:
+      recall_at_20: 0.20 # Absolute minimum
+      f1_score: 0.10 # Absolute minimum
+      faithfulness: 0.40 # Absolute minimum
+
+  # Hyperparameter search spaces
+  search_spaces:
+    fusion:
+      lambda_lex: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+      lambda_sem: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7]
+      k: [30, 45, 60, 75, 90]
+
+    rerank:
+      alpha: [0.5, 0.6, 0.7, 0.8, 0.9]
+      final_top_n: [6, 8, 10, 12, 15]
+
+    prefilter:
+      min_bm25_score: [0.05, 0.1, 0.15, 0.2]
+      min_vector_score: [0.6, 0.65, 0.7, 0.75, 0.8]
+      diversity_threshold: [0.85, 0.9, 0.95]

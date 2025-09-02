@@ -1,9 +1,10 @@
 # 🚀 Comprehensive RAGChecker Evaluation Report
 
 **Generated**: August 30, 2025 at 16:29:01
-**Evaluation Type**: Local LLM Comprehensive Assessment
-**Test Cases**: 5 comprehensive scenarios
-**Total Claims Analyzed**: 64 factual claims
+**Last Updated**: September 1, 2025 at 17:07:17
+**Evaluation Type**: Local LLM Comprehensive Assessment + AWS Bedrock Integration
+**Test Cases**: 15 comprehensive scenarios (5 local + 10 new Bedrock)
+**Total Claims Analyzed**: 64+ factual claims
 
 ## 📊 **OVERALL PERFORMANCE SUMMARY**
 

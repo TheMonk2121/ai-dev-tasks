@@ -20,11 +20,16 @@ from typing import Any, Callable, Dict, List, Optional
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))
 
 try:
-    from pydantic import BaseModel, Field
+    from pydantic import BaseModel as PydBaseModel
+    from pydantic import Field as PydField
 except ImportError as e:
     print(f"⚠️  Warning: Could not import Pydantic: {e}")
-    BaseModel = None
-    Field = None
+
+    class PydBaseModel:  # minimal shim to satisfy type system
+        pass
+
+    def PydField(*args, **kwargs):
+        return None
 
 
 @dataclass
@@ -58,15 +63,15 @@ class PerformanceSnapshot:
     active_operations: int = 0
 
 
-class PerformanceThresholds(BaseModel):
+class PerformanceThresholds(PydBaseModel):
     """Configurable performance thresholds for monitoring"""
 
-    max_execution_time: float = Field(default=1.0, description="Maximum execution time in seconds")
-    min_throughput: float = Field(default=100.0, description="Minimum throughput in ops/sec")
-    max_error_rate: float = Field(default=5.0, description="Maximum error rate percentage")
-    max_memory_usage: float = Field(default=500.0, description="Maximum memory usage in MB")
-    min_cache_hit_rate: float = Field(default=80.0, description="Minimum cache hit rate percentage")
-    max_response_time: float = Field(default=2.0, description="Maximum response time in seconds")
+    max_execution_time: float = PydField(default=1.0, description="Maximum execution time in seconds")
+    min_throughput: float = PydField(default=100.0, description="Minimum throughput in ops/sec")
+    max_error_rate: float = PydField(default=5.0, description="Maximum error rate percentage")
+    max_memory_usage: float = PydField(default=500.0, description="Maximum memory usage in MB")
+    min_cache_hit_rate: float = PydField(default=80.0, description="Minimum cache hit rate percentage")
+    max_response_time: float = PydField(default=2.0, description="Maximum response time in seconds")
 
 
 class PerformanceMonitor:
@@ -552,7 +557,6 @@ def monitor_performance(operation_name: str = "unknown"):
                 monitor = create_performance_monitor()
 
             start_time = time.time()
-            success = True
             error_type = None
             metadata = {}
 
@@ -570,7 +574,6 @@ def monitor_performance(operation_name: str = "unknown"):
 
             except Exception as e:
                 # Record failure
-                success = False
                 error_type = type(e).__name__
                 metadata["error_message"] = str(e)
 

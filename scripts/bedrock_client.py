@@ -13,6 +13,7 @@ from datetime import datetime
 from typing import Any, Dict, Optional, Tuple
 
 import boto3
+from botocore.config import Config
 from botocore.exceptions import ClientError, NoCredentialsError
 
 # Configure logging
@@ -62,7 +63,7 @@ class BedrockClient:
         region_name: str = "us-east-1",
         model_id: str = "anthropic.claude-3-5-sonnet-20240620-v1:0",
         max_retries: int = 3,
-        timeout: int = 30,
+        timeout: int = 300,  # 5 minutes for RAGChecker evaluation
         usage_log_file: Optional[str] = None,
     ):
         """
@@ -95,7 +96,13 @@ class BedrockClient:
         """Lazy initialization of Bedrock Runtime client."""
         if self._bedrock_runtime is None:
             try:
-                self._bedrock_runtime = boto3.client("bedrock-runtime", region_name=self.region_name)
+                self._bedrock_runtime = boto3.client(
+                    "bedrock-runtime",
+                    region_name=self.region_name,
+                    config=Config(
+                        read_timeout=self.timeout, connect_timeout=60, retries={"max_attempts": self.max_retries}
+                    ),
+                )
                 logger.info("Bedrock Runtime client initialized")
             except Exception as e:
                 logger.error(f"Failed to initialize Bedrock Runtime client: {e}")
@@ -107,7 +114,13 @@ class BedrockClient:
         """Lazy initialization of Bedrock client."""
         if self._bedrock is None:
             try:
-                self._bedrock = boto3.client("bedrock", region_name=self.region_name)
+                self._bedrock = boto3.client(
+                    "bedrock",
+                    region_name=self.region_name,
+                    config=Config(
+                        read_timeout=self.timeout, connect_timeout=60, retries={"max_attempts": self.max_retries}
+                    ),
+                )
                 logger.info("Bedrock client initialized")
             except Exception as e:
                 logger.error(f"Failed to initialize Bedrock client: {e}")
@@ -265,6 +278,56 @@ class BedrockClient:
         return self.invoke_model(
             prompt=json_prompt, max_tokens=max_tokens, temperature=temperature, system_prompt=json_system_prompt
         )
+
+    def invoke_model_with_retries(
+        self,
+        prompt: str,
+        max_tokens: int = 300,
+        temperature: float = 0.1,
+        json_mode: bool = False,
+    ) -> Tuple[str, BedrockUsage]:
+        """
+        Invoke model with additional outer retry layer and JSON mode support.
+
+        This method provides an extra layer of retries on top of the client's
+        built-in retry logic, with decorrelated jitter backoff.
+
+        Args:
+            prompt: User prompt text
+            max_tokens: Maximum tokens to generate
+            temperature: Sampling temperature
+            json_mode: Whether to use JSON-structured prompting
+
+        Returns:
+            Tuple of (response_text, usage_info)
+
+        Raises:
+            Exception: If all retry attempts fail
+        """
+        import random
+
+        outer_retries = int(os.getenv("BEDROCK_OUTER_RETRIES", "6"))
+        base = float(os.getenv("BEDROCK_RETRY_BASE", "1.6"))
+        max_sleep = float(os.getenv("BEDROCK_RETRY_MAX_SLEEP", "14"))
+
+        last_err = None
+        for attempt in range(1, outer_retries + 1):
+            try:
+                if json_mode:
+                    return self.invoke_with_json_prompt(prompt=prompt, max_tokens=max_tokens, temperature=temperature)
+                else:
+                    return self.invoke_model(prompt=prompt, max_tokens=max_tokens, temperature=temperature)
+            except Exception as e:
+                last_err = e
+                if attempt == outer_retries:
+                    break
+                # Decorrelated jitter backoff
+                sleep = min(max_sleep, (base**attempt) * (0.8 + 0.4 * random.random()))
+                logger.warning(f"Outer retry {attempt}/{outer_retries} failed, waiting {sleep:.2f}s: {e}")
+                time.sleep(sleep)
+
+        logger.error(f"All outer retry attempts failed: {last_err}")
+        raise last_err
 
     def _extract_usage(self, response_body: Dict[str, Any]) -> BedrockUsage:
         """Extract usage information from response."""
