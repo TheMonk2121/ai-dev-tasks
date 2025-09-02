@@ -9,6 +9,15 @@ import dspy
 
 from .citation_utils import select_citations
 from .hit_adapter import _rescale, adapt_rows, pack_hits
+
+# Local retrieval utilities (heuristic rerank + packer)
+try:
+    # Import via project src path if available
+    from retrieval.packer import pack_candidates  # type: ignore
+    from retrieval.reranker import heuristic_rerank  # type: ignore
+except Exception:  # pragma: no cover
+    heuristic_rerank = None  # type: ignore
+    pack_candidates = None  # type: ignore
 from .vector_store import HybridVectorStore
 
 
@@ -30,6 +39,8 @@ class RAGModule(dspy.Module):
         self.reranker = reranker
         self.k = k
         self.generate = dspy.Predict(QAWithContext)
+        # Intent router is loaded lazily to avoid hard dependency on project src
+        self._intent_router = None
 
     def forward(self, question: str) -> Dict[str, Any]:
         """Forward pass with retrieval, optional reranking, and context-aware generation."""
@@ -54,20 +65,64 @@ class RAGModule(dspy.Module):
         # 3) Optional rescale to balance vector vs BM25 scores
         hits = _rescale(hits)
 
-        # 4) Optional rerank and smart selection
-        if self.reranker and hits:
-            # TODO: Implement reranker integration
-            hits = hits[: self.k]
+        # 4) Intent routing to set policy knobs
+        alpha = 0.7
+        final_top_n = self.k
+        try:
+            if self._intent_router is None:
+                import pathlib
+
+                import yaml  # type: ignore
+                from retrieval.intent_router import IntentRouter  # type: ignore
+
+                cfg = yaml.safe_load(pathlib.Path("config/retrieval.yaml").read_text())
+                self._intent_router = IntentRouter(cfg.get("intent_routing", {}))
+            decision = self._intent_router.route(question) if self._intent_router else None
+            if decision:
+                alpha = float(getattr(decision, "rerank_alpha", alpha))
+                final_top_n = int(getattr(decision, "final_top_n", final_top_n))
+        except Exception:
+            # Routing is optional; fall back to defaults
+            pass
+
+        # 5) Optional rerank and smart selection
+        if self.reranker and hits and heuristic_rerank is not None:
+            # Prepare minimal documents map for reranker
+            documents = {}
+            for h in hits:
+                doc_id = str(h.metadata.get("document_id"))
+                documents[doc_id] = h.text
+
+            # Build candidate tuples from adapted hits (doc_id, fused_score)
+            candidates = []
+            for h in hits:
+                candidates.append((str(h.metadata.get("document_id")), float(getattr(h, "score", 0.0))))
+
+            # Heuristic rerank with routing-controlled alpha and cap
+            reranked = heuristic_rerank(question, candidates, documents, alpha=alpha, top_m=final_top_n)
+
+            # Map back to hits order by reranked doc_ids
+            by_id = {str(h.metadata.get("document_id")): h for h in hits}
+            hits = [by_id[doc_id] for doc_id, _ in reranked if doc_id in by_id]
         else:
             # Smart selection: prioritize expected citations
-            hits = self._smart_select_hits(hits, question)
+            hits = self._smart_select_hits(hits, question)[:final_top_n]
 
         # 5) Guardrails: require at least 1 valid hit with text
         if not hits:
             return {"answer": "Not in context.", "citations": [], "context_used": False, "retrieval_count": 0}
 
-        # 6) Pack context using guaranteed packer
-        context = pack_hits(hits)
+        # 6) Pack context
+        if pack_candidates is not None:
+            # Pack with tighter budget suitable for generation
+            documents = {str(h.metadata.get("document_id")): h.text for h in hits}
+            candidates = [(str(h.metadata.get("document_id")), float(getattr(h, "score", 0.0))) for h in hits]
+            context = pack_candidates(candidates, documents, max_chars=1600, max_per_document=2)
+            if not context:
+                context = pack_hits(hits)
+        else:
+            # Fallback to existing packer
+            context = pack_hits(hits)
 
         # Check if context is too small
         if len(context.split()) < 50:  # Less than 50 words
