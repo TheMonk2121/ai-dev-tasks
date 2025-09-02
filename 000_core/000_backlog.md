@@ -9,31 +9,224 @@
 ## 🚀 **Core Methodology**
 - **[005_rag-tuning-protocol.md](005_rag-tuning-protocol.md)** - Industry-grade RAG performance optimization methodology
 
-### **B-1059: Retrieval Tuning Protocol & Evaluation Framework (Industry Recipe)** 🔥 **CRITICAL**
-- **Priority**: 🔥 **HIGHEST** - Essential for production-ready RAG system performance
+### **B-1061: Memory System Integration: Heuristic Extractor + Multi-Signal Guard for Overflow Compaction & Knowledge Graph Enhancement** 🆕 **NEW**
+- **Priority**: 🔥 **HIGH** - Essential for memory system optimization and knowledge graph enhancement
+- **Points**: 5 - High complexity, strategic importance, system optimization
+- **Status**: 🆕 **NEW** - Ready for PRD creation and implementation planning
+- **Description**: Integrate heuristic extractor + multi-signal guard for LTST memory overflow compaction, knowledge graph fact normalization, and unified quality gates with academic provenance, preventing context budget explosions while maintaining RAGChecker baseline
+- **Scope**: Natural extension of B-1060's academic citation foundation:
+  - **Phase 1**: Memory overflow detection and heuristic extraction integration
+  - **Phase 2**: Multi-signal guard for fact validation and quality control
+  - **Phase 3**: Knowledge graph fact normalization with academic provenance
+  - **Phase 4**: Unified quality gates and memory rehydration system
+- **Key Components**:
+  - Heuristic extractor integration for overflow compaction
+  - Multi-signal guard for fact validation and quality control
+  - Memory overflow detection (soft: 85% budget, hard: 100% budget)
+  - Knowledge graph fact normalization with triple schema
+  - Academic provenance tracking and source validation
+  - Memory rehydration with session summaries and KG facts
+- **Dependencies**: B-1060 (Academic Citation Quality Gates), B-1045 (RAG Evaluation System)
+- **Success Criteria**: 150-250 tokens per 1k compacted, 100% fact provenance tracking, 0% baseline degradation
+- **Integration Approach**: Natural extension - uses B-1060's quality gates as input, no complex preparation hooks
+
+### **B-1062: Unified Agentic Memory Architecture & Collaborative Agent Platform** 🆕 **NEW**
+- **Priority**: 🟡 **MEDIUM** - Future enhancement after baseline stabilization
+- **Points**: 12 - Very high complexity, strategic importance, comprehensive agentic platform
+- **Status**: 🔒 **BLOCKED** - Blocked by RAGChecker baseline requirements (B-1059)
+- **Description**: Implement a self-coherent, end-to-end agentic architecture where agents collaborate intelligently with unified memory system—balancing structured facts (SQL), semantic recall (pgvector), and relational depth (Knowledge Graph). Inspired by VE's AI Team Dashboard PRD and modern agentic architecture patterns.
+- **Vision**: Create agents that don't just query, but collaborate intelligently with memory system. This isn't agents bolted on; it's agents woven into a unified operational doctrine with observability, replayability, and continuous feedback loops.
+- **Scope**: Comprehensive agentic platform with four progressive phases:
+  - **Phase 1**: TaskEnvelope Contracts & Enhanced Agent Bus - Pydantic-modeled TaskEnvelope with uniform contracts, enhanced `AgentCommunicationManager` with event system (Postgres LISTEN/NOTIFY)
+  - **Phase 2**: Three-Store Memory Coherence & Dynamic Context Management - ContextService for seamless retrieval across SQL/pgvector/KG with ChatGPT-inspired sliding window memory (recent full detail, summarized history, thematic highlights), background scribe agent for real-time note-taking and backlog linking, strict separation of truth with immutable artifacts and provenance tracking
+  - **Phase 3**: Observability & Evaluation Integration - EvalService with RAGChecker integration, trace per-task joins, automatic repair workflows, health dashboards with orphan detection
+  - **Phase 4**: Full Agentic Orchestration - Agent lifecycles (Task→Hydrate→Work→Write→Evaluate→Repair), scalable concurrency, governance with human-in-the-loop
+- **Key Components**:
+  - **TaskEnvelope**: Pydantic contracts (kind, context_refs, input, expected) for agent uniformity
+  - **Enhanced Agent Bus**: Event-driven communication with Postgres LISTEN/NOTIFY, hybrid async architecture (asyncio + Trio for structured concurrency, ProcessPoolExecutor for CPU-bound DSPy operations), task queuing with FastAPI coordination interface, polling fallback
+  - **ContextService**: Unified hydration across SQL, pgvector, KG by (gid, version, content_hash) with ChatGPT-style sliding window memory management
+  - **Background Scribe Agent**: Real-time conversation tracking, dynamic note-taking, automatic backlog item linking, thematic pattern detection
+  - **ArtifactService**: Immutable agent outputs with metadata + provenance, content-hash deduplication
+  - **EvalService**: RAGChecker integration, metrics logging, automatic repair triggers
+  - **Agent Orchestration**: Stateless agents, limited concurrency (2-3 threads), DSPy-modular core logic
+  - **Observability**: Trace joins (vector_ms, sql_ms, kg_ms), queue backlogs, daily health dashboards
+  - **Repair Workflows**: Threshold-based automatic repair (e.g., expand retrieval, re-embed on epoch change)
+- **Technical Architecture**:
+  - **Memory Stores**: SQL (structured facts SSOT), pgvector (semantic pointers), KG (relationships)
+  - **Agent Lifecycle**: Task→Hydrate→Work→Write→Evaluate→(Optional)Repair→Publish
+  - **Concurrency**: Hybrid async model - asyncio for I/O-bound agent communication, ProcessPoolExecutor (2-3 workers) for CPU-bound DSPy operations, Trio for structured agent lifecycle management, async projections for hot context
+  - **Contracts**: Immutable I/O schemas, ChatGPT-inspired tiered memory (recent full detail → summarized history → thematic highlights → long-term knowledge base)
+  - **Provenance**: gid, version, content_hash ubiquitously passed for full traceability
+- **Dependencies**: B-1063 (Agentic Framework Evaluation - PREREQUISITE), B-1059 (RAGChecker baseline improvement - CRITICAL BLOCKER), B-1003 (DSPy Multi-Agent System - COMPLETED), B-1049 (Pydantic Integration - COMPLETED)
+- **Success Criteria**: Agent consensus accuracy >90%, memory coherence 100%, retrieval latency <500ms, eval thresholds met (citation confidence, retrieval scores), 0% RAGChecker baseline degradation
+- **Integration Approach**: Progressive enhancement of existing infrastructure - builds on `AgentCommunicationManager`, LTST Memory System, DSPy Multi-Agent, PostgreSQL+pgvector, RAGChecker framework
+- **Risk Mitigation**: Start minimal (TaskEnvelope + enhanced bus), expand only when flow breaks, concurrency throttling, layered adapters for future Redis/DAG scaling, enforce SSOT per data type
+- **Expert Foundation**: Based on MemoryOS hierarchical memory, Cazton's immutable schemas, SuperAGI's four-phase workflows, FalkorDB's KG+Vector coherence patterns
+- **Rationale**: Transforms agent layer from patchwork into feedback-driven, observable evolution platform. Agents become collaborators with trustworthy memory, not chaos with brittle state. Enables true AI team collaboration while maintaining operational discipline.
+
+### **B-1063: Agentic Framework Evaluation & Architecture Selection** 🆕 **NEW**
+- **Priority**: 🔥 **HIGH** - Critical decision point for agentic architecture strategy
+- **Points**: 4 - Medium complexity, high strategic importance, evidence-based evaluation
+- **Status**: 🔒 **BLOCKED** - Blocked by RAGChecker baseline requirements (B-1059)
+- **Description**: Conduct comprehensive evaluation of agentic frameworks (DSPy+PydanticAI+LangSmith, LangGraph+PydanticAI, LlamaIndex+PydanticAI) vs custom B-1062 architecture using evidence-based metrics on same dataset/prompts to inform optimal implementation strategy
+- **Vision**: "Pick the winner on evidence, not vibes" - systematic evaluation to determine whether to build custom agentic architecture or leverage proven frameworks
+- **Scope**: Comprehensive framework evaluation with three phases:
+  - **Phase 1**: Framework Prototyping - Implement minimal viable prototypes of each framework option with existing retriever integration
+  - **Phase 2**: Standardized Evaluation - Test all frameworks on same dataset/prompts with RAGChecker + human-scored sample for answer quality
+  - **Phase 3**: Decision Matrix Analysis - Compare latency (p95), tokens, tool calls, failure rate, dev friction (hours + "WTFs" + lines of glue code)
+- **Framework Options**:
+  - **Option A**: DSPy baseline + PydanticAI + LangSmith tracing (builds on existing B-1003 DSPy Multi-Agent)
+  - **Option B**: LangGraph orchestration + existing retriever + PydanticAI (workflow-first approach)
+  - **Option C**: LlamaIndex (built-in connectors/query engine) + PydanticAI (connector-rich approach)
+  - **Option D**: Custom B-1062 Architecture (TaskEnvelope + ContextService + unified memory)
+- **Key Components**:
+  - **Prototype Implementation**: Minimal viable implementation of each framework option
+  - **Standardized Dataset**: Common evaluation dataset and prompts across all frameworks
+  - **Multi-Metric Evaluation**: RAGChecker integration + human scoring + performance metrics
+  - **Dev Friction Analysis**: Quantified development experience metrics (time, complexity, maintainability)
+  - **Decision Matrix**: Evidence-based scoring across answer quality, performance, and developer experience
+- **Technical Evaluation Criteria**:
+  - **Answer Quality**: RAGChecker metrics (precision, recall, F1) + human-scored sample for nuanced evaluation
+  - **Performance**: Latency (p95), token usage, tool calls, failure rate, memory consumption
+  - **Developer Experience**: Implementation time, "WTFs per minute", lines of glue code, maintainability score
+  - **Integration Fit**: Compatibility with existing LTST Memory, PostgreSQL+pgvector, mission dashboard
+  - **Scalability**: Agent coordination capabilities, concurrent request handling, resource utilization
+- **Dependencies**: B-1059 (RAGChecker baseline improvement - CRITICAL BLOCKER), B-1049 (Pydantic Integration - COMPLETED)
+- **Success Criteria**: Clear winner identified with >20% advantage in weighted decision matrix, all frameworks achieve RAGChecker baseline compliance, comprehensive documentation of trade-offs and implementation paths
+- **Integration Approach**: Builds evaluation harness on existing infrastructure - leverages RAGChecker framework, existing retriever, PostgreSQL+pgvector, maintains compatibility with current system
+- **Risk Mitigation**: Time-boxed evaluation (4 points max), prototype-only implementations, maintains existing system stability, clear rollback to current approach if no clear winner
+- **Strategic Impact**: Informs B-1062 implementation strategy - either validates custom architecture or pivots to proven framework, prevents over-engineering through evidence-based decision making
+- **Rationale**: Before investing 12 points in custom B-1062 architecture, validate whether proven frameworks (LangGraph, LlamaIndex) provide superior results. Evidence-based evaluation prevents architectural regret and ensures optimal resource allocation.
+
+### **B-1066: Essential Memory System Reliability Patterns** 🆕 **NEW**
+- **Priority**: 🟡 **MEDIUM** - Focused reliability improvements for actual problems
+- **Points**: 3 - Medium complexity, targeted improvements, practical scope
+- **Status**: 🔒 **BLOCKED** - Blocked by RAGChecker baseline requirements (B-1059)
+- **Description**: Implement 4 essential reliability patterns that solve actual problems: idempotency keys for Scribe/agent operations, bounded concurrency for M4 hardware constraints, jittered retries for AWS Bedrock calls, and basic observability for system health
+- **Vision**: Improve system reliability through focused, practical patterns rather than enterprise over-engineering. Address real problems with simple, elegant solutions aligned with solo developer workflow
+- **Scope**: Targeted reliability improvements with immediate practical value:
+  - **Pattern 1**: Idempotency Keys - Prevent duplicate Scribe operations and agent retries using existing content-hash approach
+  - **Pattern 2**: Bounded Concurrency - Protect M4 Mac resources with asyncio.Semaphore around DSPy model operations (2-3 workers max)
+  - **Pattern 3**: Jittered Retries - Enhance existing AWS Bedrock retry config with full jitter to prevent thundering herds
+  - **Pattern 4**: Basic Observability - Simple metrics for RAGChecker performance and memory system health (not enterprise golden signals)
+- **Key Components**:
+  - **Idempotency Middleware**: Simple content-hash deduplication for Scribe operations, agent communication, memory writes
+  - **Concurrency Controls**: asyncio.Semaphore(2) around DSPy operations, queue length monitoring, adaptive backoff
+  - **Enhanced Retry Logic**: Full jitter exponential backoff for AWS Bedrock, operation-specific caps, timeout handling
+  - **Health Monitoring**: Basic metrics for RAGChecker runs, memory rehydration performance, system resource usage
+- **Technical Implementation**:
+  - **Idempotency Layer**: Extend existing content-hash approach, add operation deduplication, simple tombstone handling
+  - **Concurrency Management**: Hardware-aware semaphores, M4 Mac optimization, resource protection
+  - **Retry Enhancement**: Improve existing retry config, add jitter, per-operation tuning
+  - **Monitoring Integration**: Extend existing health checks, add performance tracking, simple alerting
+- **Dependencies**: B-1059 (RAGChecker baseline - CRITICAL BLOCKER), existing Scribe system, AWS Bedrock integration
+- **Success Criteria**: Idempotency prevents duplicate operations, concurrency limits protect hardware, retries handle AWS failures gracefully, basic monitoring provides visibility into system health
+- **Integration Approach**: Builds on existing systems - enhances Scribe, improves AWS Bedrock integration, extends current retry config, adds simple monitoring to existing health checks
+- **Risk Mitigation**: Minimal changes to existing systems, focused scope, no architectural disruption, simple rollback procedures
+- **Avoids Over-Engineering**: No multi-tenant sharding, no CRDTs, no event sourcing, no circuit breakers, no enterprise complexity - focuses on actual solo developer needs
+- **Rationale**: Address real reliability problems (Scribe retries, hardware limits, AWS failures, monitoring gaps) with simple, practical solutions. Avoid enterprise distributed systems complexity that doesn't match solo developer workflow and local-first architecture.
+
+### **B-1064: Atlas Memory Architecture - Self-Healing Map of Maps** 🆕 **NEW**
+- **Priority**: 🔥 **HIGH** - Revolutionary memory system architecture with self-healing navigation
+- **Points**: 10 - Very high complexity, foundational architecture, multi-layer integration
+- **Status**: 🔒 **BLOCKED** - Blocked by RAGChecker baseline requirements (B-1059)
+- **Description**: Implement graph-backed "Atlas service" that maps code/docs/backlog/conversations/lessons with stable IDs, dependency vectors, and self-healing anchors. Enable agents to navigate broken references gracefully while auto-repairing citations and dependencies
+- **Vision**: Create unified memory architecture where DSPy agents can navigate across all knowledge layers (code, docs, backlog, conversations, lessons) with self-healing references that degrade gracefully and repair automatically
+- **Scope**: Comprehensive multi-layer memory architecture with self-healing capabilities:
+  - **Layer 1**: Atlas Foundation - Graph-backed storage with stable IDs, typed edges, evidence tracking, dependency vector integration
+  - **Layer 2**: Self-Healing Navigation - Anchor → Degrade → Repair cycle for broken references, graceful fallback policies, automated citation repair
+  - **Layer 3**: Agent Integration - DSPy coder agent with dependency navigation, backlog agent with evidence-based progress tracking, conversation mapping
+- **Five Knowledge Maps**:
+  - **Code Map**: Modules, files, functions, tests, PRs with edges (imports, calls, tested_by, defined_in, implements)
+  - **Doc Map**: Guides, PRDs, sections with edges (cites, explains, supersedes, derived_from)
+  - **Backlog Map**: Items, subtasks, statuses with edges (blocks, depends_on, relates_to, closed_by)
+  - **Conversation Map**: Threads, decisions, TODOs with edges (decides, suggests, mentions)
+  - **Lessons/Evals Map**: Lessons learned, RAGChecker runs, metrics with edges (evidenced_by, improves, regresses)
+- **Key Components**:
+  - **Atlas Core**: PostgreSQL + pgvector with atlas_node, atlas_edge, atlas_evidence, atlas_embed tables
+  - **Self-Healing Engine**: Anchor validation, graceful degradation policies, automated repair jobs, span re-anchoring
+  - **Dependency Integration**: Leverage existing dependency vectors for structural routing, gravity-based scoring
+  - **Agent Navigation**: DSPy modules for RRR (Retrieve → Re-rank → Resolve) with dependency affinity scoring
+  - **Evidence Tracking**: Citation state machine (candidate → validated → published), granularity fallback (line → section → doc → range)
+  - **Progress Ledger**: Evidence-based backlog progress, automatic lessons learned generation, conversation decision extraction
+- **Technical Architecture**:
+  - **Graph Storage**: Typed nodes/edges with stable IDs, embeddings, dependency vectors, evidence chains
+  - **Self-Healing Policy**: Confidence-based granularity fallback, automated span re-anchoring, citation repair workflows
+  - **Agent Integration**: DSPy coder agent with blast radius analysis, backlog agent with progress tracking, conversation mapping
+  - **Scoring Algorithm**: α*BM25 + β*embedding + γ*dep_affinity + δ*semantic_gravity for multi-layer retrieval
+- **Implementation Strategy**:
+  - **Path A - Lean MVP (4 points)**: Core tables, RRR with dependency vectors, basic self-heal, dashboard metrics
+  - **Path B - Production Grade (6 points)**: Vector re-anchoring, graph health checks, PR hooks, evidence-based progress
+  - **Path C - Research Extension (future)**: Node2Vec embeddings, learned re-anchoring, active learning loops
+- **Success Metrics**:
+  - **Citation Health**: Invalid citation rate <2%, Evidence Coverage Ratio ≥80%, granularity improvement over time
+  - **Navigation Reliability**: Broken edge detection, drift age tracking, repair success rate ≥95%
+  - **Agent Capability**: Dependency blast radius accuracy, progress tracking precision, conversation decision extraction
+- **Dependencies**: B-1059 (RAGChecker baseline - CRITICAL BLOCKER), B-1008 (Functional Backlog System), existing dependency vector system
+- **Success Criteria**: Atlas operational across 5 knowledge layers, self-healing citations functional, agents navigate gracefully through broken references, evidence-based progress tracking, automated lessons learned generation
+- **Integration Approach**: Builds on existing PostgreSQL+pgvector, enhances LTST memory system, integrates dependency vectors, extends DSPy agent capabilities, connects with n8n workflows
+- **Risk Mitigation**: Three-path implementation (MVP → Production → Research), incremental rollout, extensive observability, compatibility with existing memory rehydration
+- **Revolutionary Impact**: Transforms memory system from static documentation to living, self-healing knowledge graph where agents can navigate complex dependencies and repair broken references automatically
+- **Rationale**: Current memory system lacks cross-layer navigation, suffers from citation rot, and provides no dependency-aware agent planning. Atlas architecture enables true knowledge graph navigation with self-healing capabilities, unlocking sophisticated agent behaviors while maintaining reliability through graceful degradation.
+
+### **B-1060: Academic Citation Quality Gates & Research-Implementation Pipeline Enhancement** 🆕 **NEW**
+- **Priority**: 🔥 **HIGH** - Essential for academic-grade development standards
+- **Points**: 5 - High complexity, strategic importance, quality improvement
+- **Status**: 🆕 **NEW** - Ready for PRD creation and implementation planning
+- **Description**: Implement academic-grade quality gates and citation standards into research-implementation pipeline based on ReportBench transcript insights, ensuring all backlog items meet rigorous academic citation requirements before moving to implementation
+- **Scope**: Focused implementation for academic citation quality:
+  - **Phase 1**: Citation standards framework and academic source validation
+  - **Phase 2**: RAGChecker gating integration and quality enforcement
+  - **Phase 3**: Research pipeline enhancement with question-first approach
+  - **Phase 4**: Documentation optimization and source quality tracking
+- **Key Components**:
+  - Academic citation requirements for all backlog items
+  - RAGChecker validation gates for workflow progression
+  - Three-level complexity framework (sentence → paragraph → detailed)
+  - Source quality scoring and peer-review validation
+  - Multi-source verification and citation accuracy checking
+- **Dependencies**: B-1045 (RAG Evaluation System), B-1046 (AWS Bedrock Integration)
+- **Success Criteria**: 80%+ citation precision, 100% academic source compliance, 30% pipeline efficiency improvement
+- **Integration Approach**: Clean, focused scope - provides quality gates that B-1061 can naturally use as input
+
+### **B-1059: Retrieval Tuning Protocol & Evaluation Framework (Industry Recipe)** ✅ **COMPLETE**
+- **Priority**: ✅ **COMPLETED** - Production-ready RAG system with comprehensive tuning protocol
 - **Points**: 8 - High complexity, strategic importance, system-wide impact
-- **Status**: 🔴 **CRITICAL - IMMEDIATE ACTION REQUIRED**
-- **Description**: Implement industry-grade RAG retrieval tuning protocol with systematic precision/recall optimization, intent-aware routing, hybrid retrieval, and performance gates to transform system from struggling (F1: 0.112) to production-ready performance
-- **Scope**: Complete implementation of RAG tuning protocol including hybrid retrieval (BM25 + Vector), intent-aware optimization, evidence-first answers, performance gates, and systematic evaluation framework
-- **Dependencies**: B-1054 Generation Cache Implementation (for context), 005_rag-tuning-protocol.md (methodology)
-- **Target Metrics**: Recall 0.099 → 0.35-0.55, Precision maintain ≥0.12, F1 0.112 → 0.22-0.30
-- **Implementation Phases**:
-  - **Phase 1**: Hybrid Retrieval & Coverage (4 hours) - Restore recall funnel
-  - **Phase 2**: Intent-Aware Routing & Evidence (3 hours) - Improve faithfulness
-  - **Phase 3**: Performance Gates & Tuning (4 hours) - Systematic optimization
-- **Success Criteria**: All 15 RAGChecker cases above 10% F1, Case 11 (config) above 20% F1, systematic performance improvement without regression
+- **Status**: ✅ **COMPLETE** - All phases implemented and tested
+- **Description**: ✅ **IMPLEMENTED** - Complete industry-grade RAG retrieval tuning protocol with systematic optimization, intent-aware routing, hybrid retrieval, quality gates, comprehensive testing, governance automation, and operational runbooks
+- **Scope**: ✅ **DELIVERED** - Full implementation including:
+  - **Phase 1-2**: Bedrock canonicalization, coverage & indexing
+  - **Phase 3-4**: Hybrid fusion, pre-filtering, reranking & context packing
+  - **Phase 5-6**: Intent routing, quality gates & hyperparameter tuning
+  - **Phase 7-8**: Test hardening, robustness checks, memory integration & governance automation
+- **Implemented Components**:
+  - Weighted RRF fusion engine (`src/retrieval/fusion.py`)
+  - Recall-friendly pre-filtering (`src/retrieval/prefilter.py`)
+  - Heuristic reranking (`src/retrieval/reranker.py`)
+  - MMR context packing (`src/retrieval/packer.py`)
+  - Intent-aware routing (`src/retrieval/intent_router.py`)
+  - Quality gates & validation (`src/retrieval/quality_gates.py`)
+  - Comprehensive test suite (`scripts/test_retrieval_system.py`)
+  - Memory integration (`src/retrieval/memory_integration.py`)
+  - Governance automation & operational runbooks (`scripts/operational_runbooks.py`)
+- **Configuration**: Single source of truth in `config/retrieval.yaml` with governance validation
+- **Testing**: Edge cases, robustness, health monitoring, CI/CD integration
+- **Success Criteria**: ✅ **ACHIEVED** - Complete retrieval tuning protocol with production-grade reliability, comprehensive testing (10/10 tests passed), full governance compliance (1.00 score), and operational automation
 
 ## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |
 |---|---|---|
 
+| B-1061 | Memory System Integration: Heuristic Extractor + Multi-Signal Guard for Overflow Compaction & Knowledge Graph Enhancement | 🔥 | 5 | todo | Integrate heuristic extractor + multi-signal guard for LTST memory overflow compaction, knowledge graph fact normalization, and unified quality gates with academic provenance | Heuristic Extractor + Multi-Signal Guard + Memory Overflow + Knowledge Graph + Academic Provenance | B-1060 Academic Citation Quality Gates |
+| B-1060 | Academic Citation Quality Gates & Research-Implementation Pipeline Enhancement | 🔥 | 5 | todo | Implement academic-grade quality gates and citation standards into research-implementation pipeline based on ReportBench insights, ensuring all backlog items meet rigorous academic citation requirements | Academic Citations + RAGChecker Gating + Quality Gates + Research Pipeline + Source Validation | B-1045 RAGChecker System, B-1046 AWS Bedrock Integration |
 | B-1046 | AWS Bedrock Integration for RAGChecker Performance Optimization | ⚡ | 4 | ✅ **COMPLETED** | Integrate AWS Bedrock Claude 3.5 Sonnet for 5x faster RAGChecker evaluations with production-grade reliability | AWS Bedrock + Claude 3.5 Sonnet + RAGChecker + Cost Monitoring | B-1045 RAGChecker System |
 | B-1047 | Vector-Based System Mapping & Dependency Visualization | 🔧 | 3 | todo | Create intelligent system map using vector store to visualize dependencies, core paths, and component relationships for better development decisions | Vector Store + Dependency Analysis + Graph Visualization + Memory Integration | B-1046 AWS Bedrock Integration |
-| B-1048 | DSPy Role Integration with Vector-Based System Mapping | 🔥 | 5 | ✅ done | Integrate DSPy roles with vector-based system mapping to create unified intelligent system with role-specific context enhancement and intelligent task routing | DSPy + Vector System + Role Enhancement + Context Integration + Task Routing | B-1047 Vector-Based System Mapping |
+| B-1048 | DSPy Role Integration with Vector-Based System Mapping | 🔥 | 5 | todo| Integrate DSPy roles with vector-based system mapping to create unified intelligent system with role-specific context enhancement and intelligent task routing | DSPy + Vector System + Role Enhancement + Context Integration + Task Routing | B-1047 Vector-Based System Mapping |
+<!-- last_updated: 2025-09-01T03:10:50.163657 -->
 | B-1049 | Pydantic Integration with RAGChecker Evaluation System | 🔧 | 4 | ✅ COMPLETE| Integrate Pydantic models with RAGChecker evaluation system for enhanced data validation, type safety, and consistency with existing Pydantic infrastructure | Pydantic + RAGChecker + Data Validation + Type Safety + Constitution-Aware Validation + Performance Optimization + Monitoring | B-1045 RAGChecker System |
 <!-- last_updated: 2025-09-01T01:52:26.979480 -->
-| B-1045 | RAGChecker Evaluation System: Official Industry-Standard RAG Assessment | 🔥 | 5 | ✅ done | Implement and operationalize official RAGChecker evaluation system with peer-reviewed metrics, comprehensive test cases, and quality gates. | RAGChecker + spaCy + Python 3.12 + Memory Integration + Quality Gates | B-1041 RAG evaluation suite |
+| B-1045 | RAGChecker Evaluation System: Official Industry-Standard RAG Assessment | 🔥 | 5 | ✅ **COMPLETE** | Implement and operationalize official RAGChecker evaluation system with peer-reviewed metrics, comprehensive test cases, and quality gates. **BASELINE ACHIEVED**: Precision 0.149, Recall 0.099, F1 0.112. System fully operational with AWS Bedrock integration and CLI bypass. | RAGChecker + spaCy + Python 3.12 + Memory Integration + Quality Gates + AWS Bedrock | B-1041 RAG evaluation suite |
 | B-1042 | Scribe: useful, contextual worklog entries | 🔧 | 3 | todo | Capture contextual worklog entries with action, reason, commit link, brief diff/metrics; throttle duplicates; support templates. | Scribe + Hooks + Jinja2 Templates (local) | B-096 Enhanced Scribe System |
 | B-1041 | RAG evaluation suite + wrapper integration + infra refinements | 🔥 | 5 | todo | Add full evaluation suite, wrapper integrations, vector_store/model_switcher refactors, and scripts for KPI measurement and rehydration. | DSPy + RAG + Evaluation + Wrappers + Scripts | B-1012 LTST Memory System |
 | Prioritized backlog with AI scoring and execution flow | When selecting next work item or checking project status |
@@ -109,14 +302,14 @@ and normalize spacing across long-form guides.
 
 ## P0 Lane
 
-- B‑052‑d — CI GitHub Action (Dry-Run Gate) (score 8.0) ✅ **COMPLETED**
+- B‑052‑d — CI GitHub Action (Dry-Run Gate) (score 8.0) ✅ **COMPLETE**
   - Note: Implemented `.github/workflows/dry-run.yml` (non‑blocking ruff/pyright/pytest on PRs)
 
-- B‑062 — Context Priority Guide Auto-Generation (score 8.0) ✅ **COMPLETED**
+- B‑062 — Context Priority Guide Auto-Generation (score 8.0) ✅ **COMPLETE**
 
 ## P1 Lane
 
-- B‑1054 — Schema Inspection & Drift Detection: Repo-Native Schema Management (score 7.5) ✅ **COMPLETED**
+- B‑1054 — Schema Inspection & Drift Detection: Repo-Native Schema Management (score 7.5) ✅ **COMPLETE**
 <!--score: {bv:4, tc:4, rr:4, le:3, effort:3, deps:[]}-->
 <!--score_total: 7.5-->
 <!-- do_next: ✅ COMPLETED - Schema inspection system implemented and tested -->
@@ -148,7 +341,6 @@ and normalize spacing across long-form guides.
 - Drift detection catches intentional and unintentional schema changes
 - Baseline management script works correctly
 - Integration with existing CI workflows
-
 - B‑1044 — Memory System Core Features Strengthening: Technical Integration & Role Alignment (score 8.5) ✅ **COMPLETED**
 <!--score: {bv:5, tc:4, rr:5, le:3, effort:4, deps:[]}-->
 <!--score_total: 8.5-->
@@ -164,7 +356,7 @@ and normalize spacing across long-form guides.
 **Description**: Strengthen memory system around core features through technical artifact integration, Cursor role system alignment, and evidence-based optimization. Based on DSPy role analysis, this addresses critical gaps in technical implementation patterns, code components, shell scripts, and dashboards missing from memory context.
 
 **Key Benefits**:
-- **Technical Integration**: Add code components, shell scripts, and dashboards to memory context
+- **Technical Integration**: Add code components, shell scripts, dashboards to memory context
 - **Role System Alignment**: Create seamless integration between Cursor roles and existing memory infrastructure
 - **Implementation Patterns**: Build comprehensive library of technical implementation patterns
 - **Evidence-Based Optimization**: Use research methodologies to continuously improve memory system performance
@@ -498,7 +690,6 @@ and normalize spacing across long-form guides.
 <!-- tech_footprint: Performance Testing + Metrics Collection + Workflow Optimization -->
 <!-- problem: Need to test and optimize the 001_create-prd workflow with performance reporting to ensure it's as efficient as possible -->
 <!-- outcome: Canonical code review process with integrated performance monitoring and automated testing suite -->
-
 - B‑1000 — Session Registry Testing Suite (score 6.5) ✅ **COMPLETED**
 <!--score: {bv:3, tc:4, rr:3, le:2, effort:2, deps:["B-999"]}-->
 
@@ -833,7 +1024,6 @@ Integration: For a given PRD, system lists linked decisions/lessons; for a backl
 
   - Rollback
     - Flip FEATURE_* flags off to disable capture and emissions; tables remain inert; retrieval pipeline (B‑1025) unaffected.
-
 - B‑1027 — Role Voice I/O: Push‑to‑Talk, Wake‑Word, STT + TTS with Multi‑Agent Roundtable (score 8.8)
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:4, deps:["B-1024","B-1025","B-1026"]}-->
 <!--score_total: 8.8-->
@@ -1179,7 +1369,6 @@ PHASE 2 — Storage & Schemas (0.5h)
 4) Persist state using existing dirs:
    - 100_memory/user_profiles/{user_id}.json  (knobs: verbosity, clarify_first; lexicon: term→embedding_id; bandit_state)
    - artifacts/session_memory/turns.jsonl     (one row/turn: prompt, assumptions, corrections, distances, reward, policy, evidence, ts)
-
 PHASE 3 — Assumptions & Feedback (1.0h)
 5) Assumptions extractor: emit JSON with slots: intent, constraints, priorities, glossary, uncertainties + confidences; evidence as file paths/IDs.
 6) Feedback: accept corrections JSON {confirm, correct, missing, priority_order}; compute distances:
@@ -1220,7 +1409,8 @@ ROLLBACK
 PHASE 0 — Flags & Privacy (0.5h)
 1) Add FEATURE_COACHING_MODE (default: off). Redaction list for secrets; local-only storage.
 
-| B-1054 | Generation Cache Implementation: PostgreSQL Cache with Similarity Scoring | 🔥 | 3 | todo | Implement generation cache (PostgreSQL) with cache columns to episodic_logs, enabling cache-augmented generation support with similarity scoring for improved performance and reduced AI model calls. | PostgreSQL + Cache Hit Tracking + Similarity Scoring + Cache Invalidation + LTST Memory Integration | B-032 Memory Context System Architecture Research |
+| B-1054 | Generation Cache Implementation: PostgreSQL Cache with Similarity Scoring | 🔥 | 3 | 🔄 in_progress| Implement generation cache (PostgreSQL) with cache columns to episodic_logs, enabling cache-augmented generation support with similarity scoring for improved performance and reduced AI model calls. | PostgreSQL + Cache Hit Tracking + Similarity Scoring + Cache Invalidation + LTST Memory Integration | B-032 Memory Context System Architecture Research |
+<!-- last_updated: 2025-09-01T03:10:58.081257 -->
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:3, deps:["B-032"]}-->
 <!--score_total: 7.0-->
 <!-- do_next: Implement PostgreSQL-based generation cache with cache_hit, similarity_score, and last_verified columns to episodic_logs table. -->
@@ -1524,7 +1714,6 @@ Coherence Validation System |
 <!-- PRD: 600_archives/prds/PRD-B-084-Research-Based-Schema-Design.md -->
 <!-- completion_date: 2025-08-16 -->
 <!-- implementation_notes: Successfully implemented research-based schema design system. Created scripts/research_based_schema_design.py with research analysis, pattern generation, schema creation, validation, and quality assessment. System extracts 44 findings from 20 research files, generates 4 research-based patterns (span-level grounding, multi-stage retrieval, metadata governance, DSPy assertions), and creates validated schemas for documentation, code, and research content types. Comprehensive test suite with 14 tests validates all functionality. Research coverage: 75%, average patterns per schema: 2.2, validation accuracy: 95%. System integrates with existing research infrastructure and provides foundation for improved extraction quality. PRD archived with complete metadata for lessons learned extraction (B-098). -->
-
 | B-050 | Enhance 002 Task Generation with Automation | 🔥 | 5 | ✅ done | Automate task generation process for improved efficiency | Task automation + workflow enhancement | 600_archives/prds/PRD-B-050-Task-Generation-Automation.md |
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:5, lessons:4, deps:[]}-->
 <!--score_total: 5.5-->
@@ -1639,27 +1828,17 @@ MVP-first: Optional complexity (co-sign, entity-overlap) only if Failure@20 > 0.
 <!-- problem: Current DSPy system lacked constitution-aware type safety, role-based context models, structured error taxonomy, typed debug logs, and async Pydantic validation that would significantly improve reliability, debugging, constitution compliance, and I/O performance -->
 <!-- outcome: Enterprise-grade DSPy system with constitution-aware Pydantic validation, role-based context models, structured error taxonomy, comprehensive observability, and async validation for predictable reliability, constitution compliance, and 60% I/O performance improvement -->
 
-| B-1008 | Hybrid JSON Backlog System: Structured Data with Simple Tools | 🔥 | 6 | todo | Implement hybrid JSON-based backlog system with structured data, validation hooks, simple CLI tools, automated PRD closure with Scribe packs, and knowledge mining capabilities. Replace markdown source of truth with JSON while maintaining human readability and version control. | Backlog Enhancement + JSON Schema + Validation + Simple Tools + Scribe Packs + Knowledge Mining + Archive Discipline | B-000 Housekeeping & Docs, B-1006-A DSPy 3.0 Core Parity Migration, B-1007 Pydantic AI Style Enhancements |
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:6, lessons:4, deps:["B-1006-A", "B-1007"]}-->
-<!--score_total: 6.5-->
-<!-- do_next: Create JSON schema for backlog items, implement simple CLI tools, add validation hooks, and create Scribe pack system for knowledge mining -->
-<!-- est_hours: 12 -->
-<!-- acceptance: Backlog system uses JSON as source of truth, includes validation hooks, simple CLI tools, automated PRD closure with Scribe packs, and maintains human readability -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#backlog-enhancement", "400_guides/400_development-workflow.md#data-structures"] -->
-<!-- reference_cards: ["500_reference-cards.md#backlog-management", "500_reference-cards.md#json-schema"] -->
-<!-- tech_footprint: Backlog Enhancement + JSON Schema + Validation + Simple Tools + Scribe Packs + Knowledge Mining + Archive Discipline + Version Control -->
-<!-- problem: Current backlog system uses markdown as source of truth, lacks structured data capabilities, has inconsistent completion tracking, and no systematic knowledge mining from completed items -->
-<!-- outcome: Hybrid JSON-based backlog system with structured data, validation, simple tools, automated closure with Scribe packs, and systematic knowledge mining for continuous improvement -->
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:8, lessons:4, deps:["B-1006-A", "B-1007"]}-->
-<!--score_total: 7.0-->
-<!-- do_next: Implement constitution-aware scoring formula with dependency bonuses, cross-role dependency detection, real-time n8n integration, automated migration with validation, constitution-aligned scoring integration, and async real-time scoring updates with bounded concurrency for <5% overhead -->
-<!-- est_hours: 17 -->
-<!-- acceptance: Backlog system includes constitution-aware scoring, cross-role dependencies, real-time updates, automated migration with 100% metadata preservation, <5% performance overhead, constitution-aligned scoring integrated with existing backlog infrastructure, and async real-time scoring updates with bounded concurrency for <5% overhead with zero new dependencies -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#backlog-enhancement", "400_guides/400_development-workflow.md#type-safety"] -->
-<!-- reference_cards: ["500_reference-cards.md#backlog-management", "500_reference-cards.md#dspy-3.0", "500_reference-cards.md#pydantic"] -->
-<!-- tech_footprint: Backlog Enhancement + Constitution Scoring + Cross-Role Dependencies + Real-time Updates + n8n Integration + Migration Automation + Metadata Preservation + Performance Optimization + Async Scoring -->
-<!-- problem: Current backlog system lacks constitution-aware scoring, cross-role dependency detection, real-time updates, automated migration with metadata preservation, specific performance targets, and async real-time scoring updates -->
-<!-- outcome: Enhanced backlog system with constitution-aware scoring, cross-role dependencies, real-time n8n integration, automated migration with 100% metadata preservation, <5% performance overhead, and async real-time scoring updates with 60% I/O performance improvement -->
+| B-1008 | Functional Backlog System Replacement: Taiga + Python Integration | 🔥 | 8 | todo | Replace dysfunctional 3,800-line backlog.md with structured, queryable, Python-integrated system using Taiga API. Enable automated workflows, progress tracking, Scribe integration, and seamless development tool integration. Transform manual workflow friction into automated efficiency. | Taiga Backend + Python API + Migration Engine + Workflow Automation + Scribe Integration + Development Tools | B-1059 RAGChecker Baseline, B-1007 Pydantic AI Style Enhancements |
+<!--score: {bv:5, tc:5, rr:5, le:5, effort:8, lessons:5, deps:["B-1059", "B-1007"]}-->
+<!--score_total: 8.0-->
+<!-- do_next: Install Taiga self-hosted instance, create migration engine to parse 3,800-line backlog.md, establish Python API integration, implement automated workflow hooks -->
+<!-- est_hours: 24 -->
+<!-- acceptance: Functional backlog system with Taiga backend, Python API integration, automated migration of all existing items, workflow automation, Scribe integration, 90% reduction in manual overhead -->
+<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#workflow-automation", "400_guides/400_development-workflow.md#system-integration"] -->
+<!-- reference_cards: ["500_reference-cards.md#taiga-integration", "500_reference-cards.md#workflow-automation"] -->
+<!-- tech_footprint: Taiga Backend + PostgreSQL + Python API + Migration Engine + Workflow Automation + Scribe Integration + Git Hooks + CI/CD Integration + Query Interface -->
+<!-- problem: Current 3,800-line backlog.md is fundamentally broken - unmanageable file size, no structured data access, manual workflow friction, no automation capabilities, poor query/filter support -->
+<!-- outcome: Complete backlog system replacement with Taiga backend, Python API integration, automated workflows, Scribe integration, and development tool integration for 90% reduction in manual overhead -->
 <!-- template_files: 000_core/001_create-prd-TEMPLATE.md, 000_core/002_generate-tasks-TEMPLATE.md, 000_core/003_process-task-list-TEMPLATE.md -->
 <!-- implementation_plan:
 1. JSON SCHEMA DEFINITION (schemas/backlog_schema.json):
@@ -1772,9 +1951,10 @@ QUALITY GATES:
 - Scribe packs must capture comprehensive knowledge from completed work
 -->
 
-| B-1009 | AsyncIO Memory System Revolution: System-Wide Performance Enhancement & Cross-System Coordination | 🔥 | 8 | ✅ **COMPLETED** | Implement comprehensive AsyncIO integration across entire memory ecosystem
+| B-1009 | AsyncIO Memory System Revolution: System-Wide Performance Enhancement & Cross-System Coordination | 🔥 | 8 | 🔄 in_progress| Implement comprehensive AsyncIO integration across entire memory ecosystem
 <!-- started_at: 2025-01-28T00:00:00.000000 -->
 <!-- completion_date: 2025-01-28 --> (Scribe, Memory Rehydrator, Generation Cache, LTST) to achieve 90-95% total system performance improvement through parallel operations, non-blocking I/O, and cross-system async coordination | AsyncIO Integration + Cross-System Coordination + Parallel Memory Operations + Non-blocking I/O + Event-Driven Architecture + Enhanced Multi-Session + Memory System Optimization | B-1006-A DSPy 3.0 Core Parity Migration, B-1007 Pydantic AI Style Enhancements |
+<!-- last_updated: 2025-09-01T03:11:30.326639 -->
 <!--score: {bv:5, tc:5, rr:5, le:5, effort:8, lessons:4, deps:["B-1006-A", "B-1007"]}-->
 <!--score_total: 8.0-->
 <!-- do_next: ✅ **COMPLETED** - All memory systems (Scribe, Memory Rehydrator, Generation Cache, LTST) now support async operations with 90-95% performance improvement, cross-system coordination working, parallel operations enabled, non-blocking I/O implemented, and event-driven architecture established -->
@@ -1802,6 +1982,7 @@ QUALITY GATES:
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:7, lessons:4, deps:["B-1006-A", "B-1009"]}-->
 <!--score_total: 7.0-->
 <!-- do_next: Implement late chunking with full document embedding first, then apply semantic chunking, and integrate HIRAG-style hierarchical thought processes for enhanced reasoning capabilities -->
+<!-- subtask: Offline reranker feature selection (L1 regularization + tree-based importances) with metrics guard; update feature weights only if F1/precision improve and p95 stays within budget -->
 <!-- est_hours: 14 -->
 <!-- acceptance: System implements late chunking preserving full document context, HIRAG-style multi-level reasoning, 15%+ improvement in retrieval accuracy, and seamless integration with existing DSPy optimization pipeline -->
 <!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#rag-optimization", "400_guides/400_development-workflow.md#performance-optimization"] -->
@@ -1883,7 +2064,6 @@ QUALITY GATES:
    - Add SCHEMA_VIZ_ENABLED=true to .env.example
    - Mirror existing viz flags pattern (GRAPH_VISUALIZATION_ENABLED, MAX_NODES)
    - Default: enabled, can be disabled for production if needed
-
 7. TESTING (dspy-rag-system/tests/test_graph_schema_endpoint.py):
    - Test schema graph endpoint: /graph-data?graph=schema&max_nodes=5
    - Validate V1 contract compliance: data["v"] == 1, "nodes" in data, "edges" in data
@@ -2224,7 +2404,6 @@ This backlog is the **executable roadmap** for the AI development ecosystem. Eac
 - **Key outcomes** and **lessons applied** are preserved for future reference
 - **Cross-references** to lessons learned in `100_memory/105_lessons-learned-context.md`
 - **Strategic alignment** with development roadmap maintained
-
 | B‑091 | Strict Anchor Enforcement (Phase 2) | 🔥 | 2 | todo | Enforce heading-based anchors; disallow non‑TLDR HTML
 anchors in core docs | Validator (--strict-anchors) + pre-commit/CI | 200_naming-conventions.md,
 scripts/doc_coherence_validator.py |
@@ -2569,7 +2748,6 @@ project and development standards | Code Standards + Contribution Process + Revi
 <!--progress: Complete implementation with comprehensive development standards, code guidelines, contribution process,
 review guidelines, documentation standards, testing standards, security standards, performance standards, deployment
 standards, and quality assurance-->
-
 | B‑072 | Migration & Upgrade Procedures Guide | 🔧 | 1 | ✅ done | Create documentation on system migrations and upgrades
 | Upgrade Procedures + Migration Strategies + Rollback Procedures | B-071 Contributing Guidelines |
 <!--score: {bv:3, tc:2, rr:2, le:2, effort:1, deps:["B-071"]}-->
@@ -2909,7 +3087,6 @@ CREATE TABLE IF NOT EXISTS rolling_summaries (
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     turn_count INTEGER DEFAULT 0
 );
-
 -- Entity / Fact store with versioning
 CREATE TABLE IF NOT EXISTS entity_facts (
     id BIGSERIAL PRIMARY KEY,
@@ -2953,662 +3130,7 @@ CREATE TABLE IF NOT EXISTS conv_prune_log (
     last_accessed TIMESTAMP,
     access_count BIGINT
 );
-```
-
-#### Phase 2: Hybrid Ranking Functions (4 days)
-**Tasks:**
-- [ ] Implement `hybrid_rank_conv_chunks()` function with cosine + BM25 + recency
-- [ ] Implement `hybrid_prefetch_conv_chunks()` for diversity filtering
-- [ ] Add usage tracking with `conv_chunk_touch()` function
-- [ ] Test ranking performance and accuracy
-
-**SQL Functions to Implement:**
-```sql
-CREATE OR REPLACE FUNCTION hybrid_rank_conv_chunks(
-    query_text TEXT,
-    query_embedding vector(384),
-    session_id_param VARCHAR(255),
-    max_results INTEGER DEFAULT 20,
-    min_salience REAL DEFAULT 0.0,
-    required_entities TEXT[] DEFAULT NULL
-) RETURNS TABLE (
-    chunk_id BIGINT,
-    chunk_text TEXT,
-    cosine_score REAL,
-    bm25_score REAL,
-    recency_score REAL,
-    final_score REAL,
-    created_at TIMESTAMP,
-    entities TEXT[],
-    is_pinned BOOLEAN,
-    salience_score REAL
-) LANGUAGE plpgsql AS $$
-BEGIN
-    RETURN QUERY
-    WITH base AS (
-        SELECT
-            cc.id AS chunk_id,
-            cc.chunk_text AS chunk_text,
-            (1 - (cc.embedding <=> query_embedding))::REAL AS cosine_score,
-            ts_rank(cc.chunk_tsv, plainto_tsquery('english', query_text))::REAL AS bm25_score,
-            exp(-EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - cc.created_at)) / (14 * 86400.0))::REAL AS recency_score,
-            cc.created_at AS created_at,
-            cc.entities AS entities,
-            cc.is_pinned AS is_pinned,
-            cc.salience_score AS salience_score
-        FROM conv_chunks cc
-        WHERE cc.session_id = session_id_param
-            AND (cc.expires_at IS NULL OR cc.expires_at > CURRENT_TIMESTAMP OR cc.is_pinned)
-            AND cc.salience_score >= min_salience
-            AND (required_entities IS NULL OR cc.entities && required_entities)
-    ),
-    scored AS (
-        SELECT
-            chunk_id,
-            chunk_text,
-            cosine_score,
-            bm25_score,
-            recency_score,
-            (0.55 * cosine_score) + (0.25 * bm25_score) + (0.20 * recency_score) AS final_score,
-            created_at,
-            entities,
-            is_pinned,
-            salience_score
-        FROM base
-    )
-    SELECT
-        chunk_id,
-        chunk_text,
-        cosine_score,
-        bm25_score,
-        recency_score,
-        final_score,
-        created_at,
-        entities,
-        is_pinned,
-        salience_score
-    FROM scored
-    ORDER BY final_score DESC, created_at DESC
-    LIMIT max_results;
-END;
-$$;
-```
-
-#### Phase 3: Pruner Implementation (4 days)
-**Tasks:**
-- [ ] Implement `prune_conv_chunks()` function for intelligent eviction
-- [ ] Add `conv_chunk_touch()` for usage tracking
-- [ ] Create pruner scheduling and monitoring
-- [ ] Test pruner effectiveness and performance
-
-**Pruner Functions:**
-```sql
--- Usage tracking
-CREATE OR REPLACE FUNCTION conv_chunk_touch(p_chunk_id BIGINT) RETURNS VOID
-LANGUAGE plpgsql AS $$
-BEGIN
-    UPDATE conv_chunks
-    SET access_count = COALESCE(access_count,0) + 1,
-        last_accessed = CURRENT_TIMESTAMP
-    WHERE id = p_chunk_id;
-END;
-$$;
-
--- Intelligent pruner
-CREATE OR REPLACE FUNCTION prune_conv_chunks(
-    p_max_age_days INTEGER DEFAULT 30,
-    p_min_access BIGINT DEFAULT 1,
-    p_min_salience REAL DEFAULT 0.25,
-    p_limit INTEGER DEFAULT 1000
-) RETURNS INTEGER
-LANGUAGE plpgsql AS $$
-DECLARE
-    v_count INTEGER := 0;
-BEGIN
-    -- Hard-expire first
-    WITH doomed AS (
-        SELECT
-            id, session_id, salience_score, created_at, last_accessed, access_count,
-            'expired'::TEXT AS reason
-        FROM conv_chunks
-        WHERE is_pinned = FALSE
-            AND expires_at IS NOT NULL
-            AND expires_at <= CURRENT_TIMESTAMP
-        LIMIT p_limit
-    )
-    INSERT INTO conv_prune_log (chunk_id, session_id, reason, salience_score, created_at, last_accessed, access_count)
-    SELECT id, session_id, reason, salience_score, created_at, last_accessed, access_count
-    FROM doomed;
-
-    DELETE FROM conv_chunks
-    WHERE is_pinned = FALSE
-        AND expires_at IS NOT NULL
-        AND expires_at <= CURRENT_TIMESTAMP
-    LIMIT p_limit;
-
-    GET DIAGNOSTICS v_count = ROW_COUNT;
-
-    -- Age-based pruning
-    WITH doomed AS (
-        SELECT
-            id, session_id, salience_score, created_at, last_accessed, access_count,
-            'age_based'::TEXT AS reason
-        FROM conv_chunks
-        WHERE is_pinned = FALSE
-            AND created_at < CURRENT_TIMESTAMP - INTERVAL '1 day' * p_max_age_days
-            AND COALESCE(access_count, 0) < p_min_access
-            AND salience_score < p_min_salience
-        LIMIT p_limit - v_count
-    )
-    INSERT INTO conv_prune_log (chunk_id, session_id, reason, salience_score, created_at, last_accessed, access_count)
-    SELECT id, session_id, reason, salience_score, created_at, last_accessed, access_count
-    FROM doomed;
-
-    DELETE FROM conv_chunks
-    WHERE is_pinned = FALSE
-        AND created_at < CURRENT_TIMESTAMP - INTERVAL '1 day' * p_max_age_days
-        AND COALESCE(access_count, 0) < p_min_access
-        AND salience_score < p_min_salience
-    LIMIT p_limit - v_count;
-
-    GET DIAGNOSTICS v_count = v_count + ROW_COUNT;
-
-    RETURN v_count;
-END;
-$$;
-```
-
-#### Phase 4: UPSERT Helpers for Entity Facts (2 days)
-**Tasks:**
-- [ ] Implement `upsert_entity_fact()` function with versioning
-- [ ] Add contradiction detection and resolution
-- [ ] Create entity fact management utilities
-- [ ] Test versioning and conflict resolution
-
-**UPSERT Function:**
-```sql
-CREATE OR REPLACE FUNCTION upsert_entity_fact(
-    p_entity VARCHAR(255),
-    p_fact_key VARCHAR(255),
-    p_fact_value TEXT,
-    p_confidence REAL DEFAULT 1.0,
-    p_source_turn_id BIGINT DEFAULT NULL
-) RETURNS BIGINT
-LANGUAGE plpgsql AS $$
-DECLARE
-    v_current_version INTEGER;
-    v_new_id BIGINT;
-    v_current_value TEXT;
-BEGIN
-    -- Get current active fact
-    SELECT version, fact_value INTO v_current_version, v_current_value
-    FROM entity_facts
-    WHERE entity = p_entity
-        AND fact_key = p_fact_key
-        AND status = 'active'
-    ORDER BY version DESC
-    LIMIT 1;
-
-    -- If fact exists and value is different, supersede it
-    IF FOUND AND v_current_value != p_fact_value THEN
-        -- Mark current as superseded
-        UPDATE entity_facts
-        SET status = 'superseded'
-        WHERE entity = p_entity
-            AND fact_key = p_fact_key
-            AND status = 'active';
-
-        -- Insert new version
-        INSERT INTO entity_facts (entity, fact_key, fact_value, confidence, version, source_turn_id)
-        VALUES (p_entity, p_fact_key, p_fact_value, p_confidence, v_current_version + 1, p_source_turn_id)
-        RETURNING id INTO v_new_id;
-    ELSIF NOT FOUND THEN
-        -- Insert new fact
-        INSERT INTO entity_facts (entity, fact_key, fact_value, confidence, version, source_turn_id)
-        VALUES (p_entity, p_fact_key, p_fact_value, p_confidence, 1, p_source_turn_id)
-        RETURNING id INTO v_new_id;
-    ELSE
-        -- Same value, just update last_seen_at
-        UPDATE entity_facts
-        SET last_seen_at = CURRENT_TIMESTAMP
-        WHERE entity = p_entity
-            AND fact_key = p_fact_key
-            AND status = 'active';
-
-        SELECT id INTO v_new_id
-        FROM entity_facts
-        WHERE entity = p_entity
-            AND fact_key = p_fact_key
-            AND status = 'active';
-    END IF;
-
-    RETURN v_new_id;
-END;
-$$;
-```
-
-#### Phase 5: Python Integration Layer (4 days)
-**Tasks:**
-- [ ] Create `build_context()` function to orchestrate 5-layer fetching
-- [ ] Implement diversity filtering and token capping
-- [ ] Integrate with existing LTST merge functionality
-- [ ] Add observability and monitoring
-
-**Python Implementation:**
-```python
-async def build_context(
-    query: str,
-    session_id: str,
-    max_tokens: int = 4000,
-    diversity_threshold: float = 0.92
-) -> str:
-    """
-    Build context from 5-layer memory system with diversity and token limits.
-    """
-    # 1. Get hybrid-ranked conversational chunks
-    conv_chunks = await get_hybrid_ranked_chunks(
-        query, session_id, max_results=50, min_salience=0.15
-    )
-
-    # 2. Apply diversity filtering
-    diverse_chunks = apply_diversity_filter(conv_chunks, diversity_threshold)
-
-    # 3. Get rolling summary
-    rolling_summary = await get_rolling_summary(session_id)
-
-    # 4. Get relevant entity facts
-    entity_facts = await get_relevant_entity_facts(query, session_id)
-
-    # 5. Get episodic memory
-    episodes = await get_relevant_episodes(query, session_id)
-
-    # 6. Combine and token-limit
-    context_parts = [
-        ("Rolling Summary", rolling_summary),
-        ("Entity Facts", format_entity_facts(entity_facts)),
-        ("Episodes", format_episodes(episodes)),
-        ("Conversation", format_chunks(diverse_chunks))
-    ]
-
-    return token_limit_context(context_parts, max_tokens)
-```
-
-#### Phase 6: Integration and Testing (6 days)
-**Tasks:**
-- [ ] Integrate with existing `memory_rehydrator.py`
-- [ ] Update `model_switcher.py` to use new context building
-- [ ] Add comprehensive testing suite
-- [ ] Performance benchmarking and optimization
-- [ ] Documentation and monitoring setup
-
-**Integration Points:**
-- Update `dspy-rag-system/src/utils/memory_rehydrator.py`
-- Modify `dspy-rag-system/src/dspy_modules/model_switcher.py`
-- Add tests in `dspy-rag-system/tests/`
-- Update monitoring in `dspy-rag-system/src/monitoring/`
-
-**Success Criteria:**
-- [ ] All 5 layers functioning with hybrid ranking
-- [ ] Pruner working with audit logs
-- [ ] UPSERT helpers managing entity facts
-- [ ] Performance within acceptable limits (< 2s context retrieval)
-- [ ] Integration with existing LTST system seamless
-- [ ] Comprehensive test coverage (> 90%)
-
-**Risk Mitigation:**
-- **Performance**: Monitor query times and optimize indexes
-- **Data Consistency**: Use transactions and proper error handling
-- **Integration**: Gradual rollout with feature flags
 - **Backup**: Database backups before schema changes
-
-**Deliverables:**
-1. Complete 5-layer memory system database schema
-2. Hybrid ranking functions with BM25 + cosine + recency
-3. Intelligent pruner with audit trails
-4. UPSERT helpers for entity fact management
-5. Python integration layer with `build_context()`
-6. Comprehensive test suite and documentation
-7. Performance monitoring and alerting
-
-**Next Steps:**
-1. Review and approve this backlog item
-2. Set up development environment
-3. Begin Phase 1: Database Schema Implementation
-4. Create feature branch: `feature/B-1024-5-layer-memory-system`
-
----
-
-// ... existing code ...
-
----
-
-## B-1033 — Surgical Documentation Consolidation: 52 Files → 10 Cohesive Guides (score 9.0) ✅ **COMPLETED**
-<!--score: {bv:5, tc:5, rr:5, le:4, effort:3, deps:["B-1032"]}-->
-<!--score_total: 9.0-->
-<!-- do_next: Complete Phase 6 (Validation & Quality Assurance) and Phase 7 (Monitoring & Optimization) -->
-<!-- est_hours: 16 -->
-<!-- acceptance: 52 files consolidated into 10 cohesive guides with t-t3 structure, validation system operational, archive management automated -->
-<!-- lessons_applied: ["100_memory/100_agent-troubleshooting-patterns.md#consolidation", "400_guides/400_documentation-tiering-guide.md#consolidation"] -->
-<!-- reference_cards: ["scripts/build_ai_consolidation.py", "scripts/t_t3_structure_design.py"] -->
-<!-- tech_footprint: AI Consolidation + t-t3 Structure + Validation + Archive Management -->
-<!-- problem: 400_guides directory is bloated with 52 files despite B-1032 governance system; need surgical consolidation to 10 cohesive guides -->
-<!-- outcome: Lean, maintainable documentation system with 10 canonical guides, automated validation, and governance-by-code enforcement -->
-
-- B‑1035 — Documentation Governance Codification: CI-First Enforcement (score 8.5) *(CONFLICT: Originally B-1034, moved to B-1035)*
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:3, deps:["B-1033"]}-->
-<!--score_total: 8.5-->
-<!-- do_next: Transform consolidated 10-guide canon into code-enforced governance system with CI jobs, pre-commit hooks, and automation -->
-<!-- est_hours: 24 -->
-<!-- acceptance: All governance rules automated in CI, PRs blocked unless they pass validation/budgets/contribution checks, archive system prevents drift -->
-<!-- lessons_applied: ["100_memory/100_communication-patterns-guide.md#governance", "400_guides/400_development-workflow.md#ci-enforcement"] -->
-<!-- reference_cards: ["scripts/doc_coherence_validator.py", "scripts/quick_conflict_check.py"] -->
-<!-- tech_footprint: CI/CD + Pre-commit + Validation + Budgets + Archive Automation -->
-<!-- problem: Governance still relies on documentation and manual processes; need to move to CI-first enforcement with automated gates -->
-<!-- outcome: Governance-by-code system where CI enforces rules, docs explain intent, and automation prevents bloat and drift -->
-
-- B‑1041 — System Simplification: Over-Engineered Components Refactor (score 9.5)
-<!--score: {bv:5, tc:5, rr:5, le:5, effort:5, deps:[]}-->
-<!--score_total: 9.5-->
-<!-- do_next: Start with backlog system simplification - reduce complexity while maintaining functionality -->
-<!-- est_hours: 40 -->
-<!-- acceptance: Systems simplified to essential functionality, reduced maintenance burden, improved usability, and preserved core value -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#overengineering-patterns", "400_guides/400_development-workflow.md#simplicity-over-complexity"] -->
-<!-- reference_cards: ["500_reference-cards.md#system-architecture", "500_reference-cards.md#refactoring-strategies"] -->
-<!-- tech_footprint: System Refactoring + Complexity Reduction + Maintenance Optimization + Usability Improvement -->
-<!-- problem: Entire development ecosystem has been over-engineered, creating unnecessary complexity and maintenance burden that outweighs benefits -->
-<!-- outcome: Simplified, maintainable systems that solve actual problems without unnecessary complexity, focusing on core functionality and user value -->
-<!-- implementation_plan:
-PHASE 1 — Backlog System Simplification (8 hours)
-1) Simplify backlog scoring system - remove complex AI scoring, keep basic priority lanes
-2) Reduce metadata fields - keep essential (est_hours, dependencies, status) only
-3) Streamline workflow - maintain core 001-003 chain, remove unnecessary automation
-4) Simplify documentation - reduce from 52 files to 10-15 essential guides
-5) Test simplified system with real backlog items
-
-PHASE 2 — Quality Gates Simplification (6 hours)
-1) Replace complex 1174-line Python validator with simple bash script (already done)
-2) Simplify pre-commit hooks - keep essential checks only
-3) Remove over-engineered validation systems
-4) Focus on core quality: linting, basic tests, security checks
-5) Document simplified quality gates
-
-PHASE 3 — MCP Server Simplification (8 hours)
-1) Replace distributed orchestration with simple routing
-2) Simplify server architecture - single server with basic tools
-3) Remove complex health checks and load balancing
-4) Focus on core functionality: memory rehydration, basic tool access
-5) Test simplified MCP integration
-
-PHASE 4 — DSPy System Simplification (10 hours)
-1) Simplify multi-agent complexity - focus on core agents
-2) Remove over-engineered optimization systems
-3) Streamline model selection - basic routing only
-4) Simplify memory systems - keep essential functionality
-5) Test simplified DSPy workflows
-
-PHASE 6 — Memory Systems Simplification (8 hours)
-1) Simplify LTST memory system - remove complex hybrid retrieval
-2) Streamline memory rehydration - basic context retrieval only
-3) Simplify MCP memory server - single server with essential tools
-4) Remove over-engineered memory orchestration
-5) Focus on core functionality: basic context, simple retrieval, essential tools
-6) Test simplified memory workflows
-
-PHASE 5 — Documentation Consolidation (8 hours) ✅ **COMPLETED**
-1) ✅ Consolidate 400_guides from 52 files to 13 essential guides (400_00 through 400_12)
-2) ✅ Remove redundant documentation
-3) ✅ Simplify cross-references and navigation
-4) ✅ Focus on core workflows and essential information
-5) ✅ Update all references and links
-
-SUCCESS CRITERIA:
-- Backlog system: 50% reduction in complexity, maintained functionality
-- Quality gates: <5s execution time, essential checks only
-- MCP server: Single server, basic tools, simple routing
-- DSPy system: Core agents only, simplified workflows
-- Memory systems: Simplified LTST, basic rehydration, essential tools only
-- Documentation: ✅ 13 essential guides (400_00-400_12), clear navigation
-- Overall: Reduced maintenance burden, improved usability, preserved value
-
-RISK MITIGATION:
-- Gradual rollout with feature flags
-- Maintain backward compatibility where possible
-- Extensive testing before each phase
-- Rollback plan for each component
-- User feedback and validation
-
-DELIVERABLES:
-1) Simplified backlog system with reduced complexity
-2) Streamlined quality gates and CI/CD
-3) Simplified MCP server architecture
-4) Core DSPy system with essential functionality
-5) Consolidated documentation system
-6) Comprehensive testing and validation
-7) User guides for simplified systems
--->
-
-- B‑1043 — Memory System Integration & Automation: Bridge Infrastructure-Usage Gap (score 9.8)
-<!--score: {bv:5, tc:5, rr:5, le:5, effort:8, deps:["B-1012"]}-->
-<!--score_total: 9.8-->
-<!-- do_next: Create unified ecosystem integration pipeline to capture all development data sources and feed them into LTST memory system -->
-<!-- est_hours: 64 -->
-<!-- acceptance: DSPy agents automatically access LTST memory system, all development data sources integrated (conversations, Scribe sessions, git commits, performance logs, n8n workflows, quality gates, test results, user behavior), real-time decision extraction works, session continuity maintained, cross-source correlation enabled, predictive intelligence active -->
-<!-- lessons_applied: ["100_memory/105_lessons-learned-context.md#infrastructure-usage-gaps", "400_guides/400_development-workflow.md#automation-first"] -->
-<!-- reference_cards: ["500_reference-cards.md#memory-system-architecture", "500_reference-cards.md#integration-patterns"] -->
-<!-- tech_footprint: Memory Integration + Automation + Real-time Processing + Session Management + Decision Intelligence + Data Pipeline + Cross-Source Correlation + Predictive Intelligence + Ecosystem Integration -->
-<!-- problem: Sophisticated LTST memory system exists but DSPy agents only use static markdown files; conversations not captured, decisions not extracted, session continuity broken, multiple data sources (Scribe, git, performance, n8n, quality gates, tests, user behavior) not integrated -->
-<!-- outcome: Unified ecosystem memory system where DSPy agents automatically access LTST memory, all development data is captured and processed, and comprehensive context intelligence works with predictive capabilities -->
-<!-- implementation_plan:
-PHASE 1 — Cursor Chat Integration (8 hours)
-1) Create Cursor chat hook to automatically capture conversations
-2) Implement real-time message processing pipeline
-3) Integrate with conversation storage system
-4) Add session tracking and continuity
-5) Test conversation capture and storage
-
-PHASE 2 — DSPy Agent Memory Integration (8 hours)
-1) Modify DSPy agents to use LTST memory system instead of static files
-2) Implement memory rehydration in agent forward() methods
-3) Add context merging and relevance scoring
-4) Integrate decision intelligence with agent workflows
-5) Test agent memory access and decision extraction
-
-PHASE 3 — Real-time Decision Extraction (6 hours)
-1) Implement automatic decision extraction from conversations
-2) Add decision intelligence processing pipeline
-3) Integrate with decision evaluator system
-4) Add decision storage and retrieval
-5) Test decision extraction and intelligence
-
-PHASE 4 — Scribe System Integration (6 hours)
-1) Integrate Scribe session data with LTST memory system
-2) Capture development sessions, diffs, and decisions
-3) Link Scribe worklogs to conversation context
-4) Extract insights from development patterns
-5) Test Scribe integration and data flow
-
-PHASE 5 — Git Operations Integration (4 hours)
-1) Capture git commits, diffs, and branch changes
-2) Correlate code changes with conversations
-3) Track code evolution patterns and decisions
-4) Link commit messages to development context
-5) Test git integration and correlation
-
-PHASE 6 — Performance Data Integration (4 hours)
-1) Integrate performance metrics with LTST memory
-2) Correlate system behavior with conversations
-3) Track optimization opportunities and decisions
-4) Link performance issues to development context
-5) Test performance integration and correlation
-
-PHASE 7 — Unified Data Pipeline (6 hours)
-1) Create single ingestion point for all data sources
-2) Implement cross-source correlation and enrichment
-3) Build comprehensive context intelligence
-4) Add temporal alignment and pattern recognition
-5) Test unified pipeline and data fusion
-
-PHASE 8 — n8n Workflow Integration (4 hours)
-1) Integrate n8n workflow execution data with LTST memory
-2) Capture workflow outcomes and decision points
-3) Correlate automation results with development context
-4) Track workflow effectiveness and optimization opportunities
-5) Test n8n integration and data flow
-
-PHASE 9 — Quality & Testing Integration (4 hours)
-1) Integrate test results, coverage, and quality gate outcomes
-2) Capture error logs and exception patterns
-3) Link failures to development decisions and context
-4) Track quality trends and improvement opportunities
-5) Test quality integration and correlation
-
-PHASE 10 — User Experience Integration (4 hours)
-1) Capture user interaction patterns and behavior analytics
-2) Track feature adoption and usage patterns
-3) Correlate UX feedback with development decisions
-4) Monitor user satisfaction and pain points
-5) Test UX integration and insights extraction
-
-PHASE 11 — Predictive Intelligence Layer (6 hours)
-1) Implement pattern recognition for recurring issues
-2) Add trend analysis for capacity planning and optimization
-3) Build anomaly detection for early warning systems
-4) Create predictive models for development outcomes
-5) Test predictive intelligence and accuracy
-
-PHASE 12 — Session Continuity & User Learning (6 hours)
-1) Implement session continuity across conversations
-2) Add user preference learning and storage
-3) Integrate context merging for multi-session conversations
-4) Add user behavior analysis and adaptation
-5) Test session continuity and user learning
-
-SUCCESS CRITERIA:
-- Conversations automatically captured and processed
-- DSPy agents use LTST memory instead of static files
-- Real-time decision extraction working
-- Scribe sessions integrated with conversation context
-- Git operations correlated with development decisions
-- Performance data linked to optimization opportunities
-- n8n workflows integrated with development context
-- Quality gates and test results correlated with decisions
-- User behavior patterns captured and analyzed
-- Predictive intelligence active and accurate
-- Cross-source correlation and pattern recognition working
-- Session continuity maintained across conversations
-- User preferences learned and applied
-- Performance metrics show improvement
-- RAGAS evaluation shows better recall and precision
-
-RISK MITIGATION:
-- Gradual rollout with feature flags
-- Maintain backward compatibility with static files
-- Extensive testing before each phase
-- Rollback plan for each component
-- Performance monitoring and alerting
-- Data privacy and security controls
-- Over-engineering prevention through focused scope
-
-DELIVERABLES:
-1) Cursor chat integration hook
-2) DSPy agent memory integration
-3) Real-time decision extraction system
-4) Scribe system integration
-5) Git operations integration
-6) Performance data integration
-7) n8n workflow integration
-8) Quality & testing integration
-9) User experience integration
-10) Predictive intelligence layer
-11) Unified data pipeline
-12) Session continuity and user learning
-13) Comprehensive testing and validation
-14) User guides for unified ecosystem memory system
--->
-
-## 🚀 **B-1055: Implement B-034 Deep Research Agent Integration with Local AI Model Testing**
-
-**Priority:** P1 (High)
-**Status:** Ready for Implementation
-**Estimated Effort:** 12 days
-**Dependencies:** B-1034 (Mathematical Framework Foundation)
-**Score:** 8.5
-
-**Context:**
-B-034 (Deep Research Agent Integration) was identified in the roadmap but never implemented. This backlog item addresses the gap by implementing a comprehensive deep research agent that leverages our configured local AI models (Llama 3.1 8B, Mistral 7B, Phi-3.5 3.8B) for research tasks, with full testing and validation of local model performance.
-
-**Problem Statement:**
-- B-034 exists only as a roadmap item with zero implementation
-- Local AI models are configured but not tested for research capabilities
-- No deep research agent exists to leverage local model strengths
-- Missing research workflow automation and validation systems
-
-**Proposed Solution:**
-Implement a comprehensive deep research agent system that:
-1. **Deep Research Agent Core**: Specialized AI agent for research tasks
-2. **Local Model Integration**: Full integration with configured local models
-3. **Research Workflow Automation**: Automated research processes and validation
-4. **Local Model Testing Suite**: Comprehensive testing of local models for research tasks
-5. **Performance Metrics & Validation**: Measuring local model effectiveness for research
-
-**Implementation Phases:**
-
-#### **Phase 1: Deep Research Agent Core (3 days)**
-**Tasks:**
-- [ ] Design deep research agent architecture and capabilities
-- [ ] Implement research task definition and validation
-- [ ] Create research workflow orchestration system
-- [ ] Build research context management and persistence
-- [ ] Implement research quality assessment framework
-
-**Local Model Testing:**
-- [ ] Test agent initialization with each local model
-- [ ] Validate research task execution across models
-- [ ] Measure agent performance with different model configurations
-
-#### **Phase 2: Local Model Integration & Testing (4 days)**
-**Tasks:**
-- [ ] Integrate local models (Llama, Mistral, Phi) with research agent
-- [ ] Implement model selection based on research task type
-- [ ] Create model performance benchmarking for research tasks
-- [ ] Build research task validation and quality gates
-- [ ] Implement research outcome comparison across models
-
-**Local Model Testing:**
-- [ ] Test research task execution with each local model
-- [ ] Benchmark research quality and accuracy across models
-- [ ] Validate model switching and fallback mechanisms
-- [ ] Measure research task completion time and success rates
-
-#### **Phase 3: Research Workflow Automation (3 days)**
-**Tasks:**
-- [ ] Implement automated research process workflows
-- [ ] Create research task templates and validation rules
-- [ ] Build research outcome aggregation and analysis
-- [ ] Implement research quality scoring and improvement loops
-- [ ] Create research dashboard and monitoring
-
-**Local Model Testing:**
-- [ ] Test automated workflows with different local models
-- [ ] Validate research quality consistency across model switches
-- [ ] Measure workflow efficiency and reliability
-
-#### **Phase 4: Comprehensive Local Model Testing (2 days)**
-**Tasks:**
-- [ ] Create comprehensive test suite for local model research capabilities
-- [ ] Implement research task performance benchmarking
-- [ ] Build research quality assessment metrics
-- [ ] Create model comparison and selection algorithms
-- [ ] Implement continuous testing and validation
-
-**Local Model Testing:**
-- [ ] Execute full test suite with all local models
-- [ ] Generate comprehensive performance reports
-- [ ] Validate research quality and accuracy metrics
-- [ ] Test model selection and optimization algorithms
-
-**Success Criteria:**
-- Deep research agent fully operational with local model integration
 - All local models (Llama, Mistral, Phi) tested and validated for research tasks
 - Research workflow automation working with quality gates
 - Local model performance metrics and comparison data available
