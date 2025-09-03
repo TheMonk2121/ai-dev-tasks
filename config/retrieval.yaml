@@ -232,3 +232,33 @@ resilience:
     bm25_only_on_timeout: true # Fall back to BM25-only on vector/rerank timeout
     max_retries: 1 # Retry failed components once
     circuit_breaker: true # Open circuit on repeated failures
+
+# Phase 2: Multi-Hop & Answer Planning
+multihop:
+  enabled: true
+  
+  # Data-driven gating thresholds
+  max_hops: 2 # Hard limit on hop count
+  token_budget: 512 # Maximum additional tokens for follow-up queries
+  coverage_threshold: 0.7 # τ₁ for sub-claims support (fraction with ≥1 high-score window)
+  concentration_threshold: 0.6 # Low dispersion threshold (evidence not scattered)
+  novelty_threshold: 0.8 # Cosine similarity threshold for near-duplicate sub-queries
+  min_evidence_score: 0.3 # Minimum reranker score for evidence support
+  
+  # Mid-generation callbacks
+  midgen_callbacks:
+    enabled: true
+    uncertainty_threshold: 0.4 # Trigger callback when confidence < threshold
+    max_followup_queries: 2 # Limit follow-up queries per callback
+    
+  # Query complexity assessment
+  complexity:
+    word_count_threshold: 15 # Words needed to consider multi-hop
+    multihop_indicators: ["and", "or", "but", "compare", "versus", "why", "how"]
+    complexity_score_threshold: 2 # Minimum indicators to trigger multi-hop
+    
+  # Performance limits
+  performance:
+    max_subqueries_per_hop: 3 # Limit sub-questions per hop
+    retrieval_timeout_ms: 2000 # Timeout per sub-question retrieval
+    synthesis_timeout_ms: 1000 # Timeout for answer synthesis
