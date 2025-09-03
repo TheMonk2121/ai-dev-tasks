@@ -18,18 +18,12 @@ import json
 import os
 import random
 import subprocess
-
-# Add src to path for resolver import
-import sys
 import threading
 import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, TypedDict, Union
 
 from pydantic import BaseModel, Field, TypeAdapter, field_validator
-
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-from common.db_dsn import resolve_dsn
 
 
 # Type definitions for evaluation items
@@ -1390,9 +1384,6 @@ class OfficialRAGCheckerEvaluator:
         self.metrics_dir.mkdir(parents=True, exist_ok=True)
         self.local_llm = None
         self.use_bedrock = False  # Initialize use_bedrock attribute
-        # Timing fields populated per run
-        self._run_start_ts: float | None = None
-        self._run_end_ts: float | None = None
 
     def _lcs_len(self, a_tokens, b_tokens):
         """Calculate Longest Common Subsequence length for ROUGE-L."""
@@ -1760,15 +1751,7 @@ Return format: ["claim 1", "claim 2", ...]"""
         """Get response from memory system using unified memory orchestrator."""
         try:
             env = os.environ.copy()
-            # Use DSN resolver instead of hardcoded mock
-            try:
-                resolved_dsn = resolve_dsn(strict=False, emit_warning=False)
-                if resolved_dsn:
-                    env["POSTGRES_DSN"] = resolved_dsn
-                else:
-                    env["POSTGRES_DSN"] = "mock://test"  # fallback
-            except Exception:
-                env["POSTGRES_DSN"] = "mock://test"  # fallback
+            env["POSTGRES_DSN"] = "mock://test"
 
             # Force comprehensive response mode for better recall
             comprehensive_query = f"""COMPREHENSIVE RESPONSE REQUIRED: {query}
@@ -2093,8 +2076,6 @@ Do not summarize or be concise - provide thorough, detailed information."""
     ) -> Dict[str, Any]:
         """Run evaluation using local LLM or Bedrock integration."""
         print("🏠 Running Local LLM Evaluation with comprehensive metrics")
-        # Run start time
-        self._run_start_ts = time.time()
 
         # Initialize LLM integration
         try:
@@ -2127,7 +2108,6 @@ Do not summarize or be concise - provide thorough, detailed information."""
                 print(f"⚠️ Skipping non-dict case: {type(case)}")
                 continue
             print(f"\n📝 Evaluating case {i+1}/{len(input_data)}: {case.get('query_id', f'case_{i+1}')}")
-            _case_start = time.time()
 
             try:
                 # Generate response using memory system
@@ -2181,17 +2161,9 @@ Do not summarize or be concise - provide thorough, detailed information."""
                 # Optional: semantic ranking (only if embeddings loaded)
                 if getattr(self.local_llm, "embedding_model", None):
                     try:
-                        import torch  # type: ignore
-                        from sentence_transformers import util as st_util  # type: ignore
-
-                        query_emb = self.local_llm.embedding_model.encode(case["query"], convert_to_tensor=True)
-                        ctx_embs = self.local_llm.embedding_model.encode(ctx_strings, convert_to_tensor=True)
-                        cos_scores = st_util.cos_sim(query_emb, ctx_embs)[0]
-                        topk = min(3, len(ctx_strings))
-                        top_results = torch.topk(cos_scores, k=topk)
-                        print("🎯 Ranked", top_results.indices.shape[0], "context chunks by semantic similarity")
-                    except Exception:
-                        pass
+                        ctx_strings = self.local_llm.rank_context_by_query_similarity(case["query"], ctx_strings)
+                    except Exception as e:
+                        print(f"⚠️ Context ranking failed (skipping): {e}")
 
                 # Persist normalized context if you want it in outputs
                 case["retrieved_context"] = ctx_strings
@@ -2215,7 +2187,6 @@ Do not summarize or be concise - provide thorough, detailed information."""
                     "recall": recall,
                     "f1_score": f1_score,
                     "comprehensive_metrics": metrics,
-                    "timing_sec": round(time.time() - _case_start, 3),
                 }
 
                 case_results.append(case_result)
@@ -2225,7 +2196,6 @@ Do not summarize or be concise - provide thorough, detailed information."""
 
                 print(
                     f"✅ Case {case.get('query_id', f'case_{i+1}')}: P={precision:.3f}, R={recall:.3f}, F1={f1_score:.3f}"
-                    f" (t={case_result['timing_sec']:.3f}s)"
                 )
 
             except Exception as e:
@@ -2241,7 +2211,6 @@ Do not summarize or be concise - provide thorough, detailed information."""
                         "recall": 0.0,
                         "f1_score": 0.0,
                         "error": str(e),
-                        "timing_sec": round(time.time() - _case_start, 3),
                     }
                 )
 
@@ -2278,7 +2247,6 @@ Do not summarize or be concise - provide thorough, detailed information."""
     async def _evaluate_case_async(self, case: dict, i: int) -> dict:
         """Evaluate a single test case asynchronously with Bedrock gate."""
         try:
-            _case_start = time.time()
             # Generate response using memory system
             raw_response = self.get_memory_system_response(case["query"])
 
@@ -2367,12 +2335,10 @@ Do not summarize or be concise - provide thorough, detailed information."""
                 "recall": recall,
                 "f1_score": f1_score,
                 "comprehensive_metrics": metrics,
-                "timing_sec": round(time.time() - _case_start, 3),
             }
 
             print(
                 f"✅ Case {case.get('query_id', f'case_{i+1}')}: P={precision:.3f}, R={recall:.3f}, F1={f1_score:.3f}"
-                f" (t={case_result['timing_sec']:.3f}s)"
             )
 
             return case_result
@@ -2389,7 +2355,6 @@ Do not summarize or be concise - provide thorough, detailed information."""
                 "recall": 0.0,
                 "f1_score": 0.0,
                 "error": str(e),
-                "timing_sec": round(time.time() - _case_start, 3),
             }
 
         async def _eval_all_async(self, cases: list[dict]):
@@ -2644,19 +2609,6 @@ Evaluate and return ONLY the JSON object:"""
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         results_file = self.metrics_dir / f"ragchecker_official_evaluation_{timestamp}.json"
 
-        # Attach run timing
-        self._run_end_ts = time.time()
-        run_duration = None
-        if self._run_start_ts is not None and self._run_end_ts is not None:
-            run_duration = round(self._run_end_ts - self._run_start_ts, 3)
-            results["run_timing_sec"] = run_duration
-            # Per-case average timing
-            if results.get("case_results"):
-                avg_case_t = sum(c.get("timing_sec", 0.0) for c in results["case_results"]) / max(
-                    1, len(results["case_results"])
-                )
-                results["avg_case_timing_sec"] = round(avg_case_t, 3)
-
         with open(results_file, "w") as f:
             json.dump(results, f, indent=2)
 
@@ -2712,22 +2664,21 @@ Evaluate and return ONLY the JSON object:"""
             if "total_claims" in metrics:
                 print(f"   Total Claims: {metrics.get('total_claims', 0)}")
 
-        # Timing summary
-        if results.get("run_timing_sec") is not None:
-            print("\n⏱️ Timing:")
-            print(f"   Run Duration: {results.get('run_timing_sec'):.3f}s")
-            if results.get("avg_case_timing_sec") is not None:
-                print(f"   Avg Per-Case: {results.get('avg_case_timing_sec'):.3f}s")
+            # Print comprehensive RAGChecker metrics if available
+            if "context_precision" in metrics:
+                print("\n🎯 Comprehensive RAGChecker Metrics:")
+                print(f"   Context Precision: {metrics.get('context_precision', 0):.3f}")
+                print(f"   Context Utilization: {metrics.get('context_utilization', 0):.3f}")
+                print(f"   Noise Sensitivity: {metrics.get('noise_sensitivity', 0):.3f}")
+                print(f"   Hallucination Score: {metrics.get('hallucination', 0):.3f}")
+                print(f"   Self Knowledge: {metrics.get('self_knowledge', 0):.3f}")
+                print(f"   Claim Recall: {metrics.get('claim_recall', 0):.3f}")
 
-        # Print comprehensive RAGChecker metrics if available
         if "case_results" in results:
             print("\n🔍 Case-by-Case Results:")
             for case in results["case_results"]:
                 case_id = case.get("case_id", case.get("query_id", "unknown"))
-                extra = f", t={case.get('timing_sec', 0.0):.3f}s" if case.get("timing_sec") is not None else ""
-                print(
-                    f"   {case_id}: F1={case['f1_score']:.3f}, P={case['precision']:.3f}, R={case['recall']:.3f}{extra}"
-                )
+                print(f"   {case_id}: F1={case['f1_score']:.3f}, P={case['precision']:.3f}, R={case['recall']:.3f}")
 
         if results.get("note"):
             print(f"\n📝 Note: {results['note']}")

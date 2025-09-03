@@ -1,0 +1,23 @@
+
+
+### **B-0001: Context Handoff Seed** ðŸ†• **NEW**
+- **Priority**: ðŸ”¥ **HIGH** - Handoff reliability and context capture
+- **Points**: 2 - Minimal infra, high leverage
+- **Status**: í ¼í¶• **NEW** - Seeded on 2025-09-03
+- **Description**: Test cross-chat pickup seed
+- **Essential Context**:
+  - **Problem**: Manual handoffs cause context hunting and duplicate IDs
+  - **Solution**: Standard capture + auto-ID + pickup bundle
+  - **Scope**: Minimal scripts/conventions; no changes to active items
+- **Context Bundle (seed)**:
+  {
+    "backlog_id": "B-0001",
+    "title": "Context Handoff Seed",
+    "problem": "Handoffs are unreliable; context is hard to pick up",
+    "solution": "Capture script + handoff bundle extraction",
+    "status": "new"
+  }
+- **Next Steps**:
+  - Extract pickup bundle via scripts/handoff_context.py B-0001
+  - Validate cross-chat pickup works
+- **Exit Criteria**: Any chat can pick up with what/where/next in <10s

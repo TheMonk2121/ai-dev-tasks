@@ -1,6 +1,7 @@
 # Minimal OpenAI-compatible → Bedrock InvokeModel shim
 import json
 import os
+import threading
 import time
 from typing import List, Optional
 
@@ -8,6 +9,25 @@ import boto3
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
+
+
+class RateLimiter:
+    def __init__(self, rps: float):
+        self.min_interval = 1.0 / max(rps, 1e-6)
+        self._next_ok = 0.0
+        self._lock = threading.Lock()
+
+    def wait(self):
+        with self._lock:
+            now = time.monotonic()
+            wait = self._next_ok - now
+            if wait > 0:
+                time.sleep(wait)
+            self._next_ok = max(self._next_ok, now) + self.min_interval
+
+
+# Initialize rate limiter with conservative defaults
+rate_limiter = RateLimiter(float(os.getenv("BEDROCK_MAX_RPS", "0.22")))
 
 MODEL_ID = os.getenv("BEDROCK_MODEL_ID", "anthropic.claude-3-5-sonnet-20240620-v1:0")
 REGION = os.getenv("AWS_REGION", "us-east-1")
@@ -45,6 +65,10 @@ def chat(req: ChatRequest):
     }
 
     t0 = time.time()
+
+    # Apply rate limiting before Bedrock call
+    rate_limiter.wait()
+
     out = brt.invoke_model(
         modelId=MODEL_ID,
         body=json.dumps(body),

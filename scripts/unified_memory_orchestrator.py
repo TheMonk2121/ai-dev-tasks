@@ -20,6 +20,15 @@ from typing import Dict, List, Tuple
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
+# Import and apply litellm compatibility shim before any DSPy imports
+try:
+    from scripts.litellm_compatibility_shim import patch_litellm_imports
+
+    patch_litellm_imports()
+    print("✅ Applied litellm compatibility shim for DSPy 3.0.1")
+except ImportError:
+    print("⚠️  Could not load litellm compatibility shim")
+
 # Import LTST memory rehydrator with error handling
 try:
     # Add dspy-rag-system to path for imports
@@ -190,7 +199,7 @@ class UnifiedMemoryOrchestrator:
 
     def get_cursor_memory(self, query: str, role: str = "planner") -> Dict:
         """Get memory from Cursor memory rehydrator."""
-        cmd = [sys.executable, "scripts/memory_rehydrate.py", "--role", role, "--query", query]
+        cmd = [sys.executable, "scripts/cursor_memory_rehydrate.py", "--role", role, "--query", query]
         success, stdout, stderr = self.run_command(cmd)
 
         return {

@@ -98,6 +98,155 @@ The memory system tracks:
 - `400_06_memory-and-context-systems.md` - Detailed memory system documentation
 - `100_memory/` - Memory system components and patterns
 
+## 🧠 **Memory & Context Systems**
+
+### **🚨 CRITICAL: Memory & Context Systems are Essential**
+
+**Why This Matters**: Memory and context systems provide the foundation for AI agents to understand project state, maintain continuity across sessions, and make informed decisions. Without proper memory integration, AI agents cannot provide accurate guidance or understand the current development context.
+
+### **Memory System Architecture**
+
+#### **Core Memory Components**
+```python
+class MemorySystemArchitecture:
+    """Core memory system architecture components."""
+
+    def __init__(self):
+        self.memory_layers = {
+            "ltst": "Long-Term Short-Term memory system",
+            "cursor": "Cursor IDE memory context",
+            "go_cli": "Go CLI memory rehydration",
+            "prime": "Prime Cursor integration"
+        }
+        self.context_stores = {}
+        self.memory_orchestrator = None
+
+    def initialize_memory_system(self):
+        """Initialize the complete memory system."""
+
+        # Initialize LTST memory system
+        self.context_stores["ltst"] = LTSTMemorySystem()
+
+        # Initialize Cursor memory context
+        self.context_stores["cursor"] = CursorMemoryContext()
+
+        # Initialize Go CLI memory
+        self.context_stores["go_cli"] = GoCLIMemory()
+
+        # Initialize Prime Cursor
+        self.context_stores["prime"] = PrimeCursorMemory()
+
+        # Initialize unified orchestrator
+        self.memory_orchestrator = UnifiedMemoryOrchestrator(self.context_stores)
+
+    def get_memory_context(self, query: str, role: str = "planner") -> dict:
+        """Get memory context for a specific query and role."""
+
+        return self.memory_orchestrator.get_context(query, role)
+```
+
+#### **Memory System Integration Points**
+- **Memory Rehydration**: Automatic context restoration across sessions
+- **Context Building**: Role-aware context construction for different AI roles
+- **Memory Persistence**: Long-term storage of project decisions and context
+- **Cross-Session Continuity**: Seamless workflow across development sessions
+
+### **Context Management Patterns**
+
+#### **Context Flow Pipeline**
+```python
+class ContextFlowPipeline:
+    """Manages context flow through the memory system."""
+
+    def __init__(self):
+        self.context_stages = [
+            "memory_rehydration",
+            "context_building",
+            "role_awareness",
+            "context_validation",
+            "context_delivery"
+        ]
+
+    async def process_context_flow(self, query: str, role: str) -> dict:
+        """Process context through the complete flow pipeline."""
+
+        context_data = {}
+
+        for stage in self.context_stages:
+            if stage == "memory_rehydration":
+                context_data[stage] = await self._rehydrate_memory(query)
+            elif stage == "context_building":
+                context_data[stage] = await self._build_context(query, context_data)
+            elif stage == "role_awareness":
+                context_data[stage] = await self._apply_role_awareness(role, context_data)
+            elif stage == "context_validation":
+                context_data[stage] = await self._validate_context(context_data)
+            elif stage == "context_delivery":
+                context_data[stage] = await self._deliver_context(context_data)
+
+        return context_data
+```
+
+#### **Context Priority System**
+- **High Priority (0-10)**: Core memory context, system overview, backlog
+- **Medium Priority (15-20)**: Important guides, code quality, security
+- **Low Priority (25-30)**: Implementation guides, deployment, testing
+
+### **Memory System Commands**
+
+#### **Core Memory Operations**
+```bash
+# Memory rehydration (restore project context)
+./scripts/memory_up.sh
+
+# DSPy memory orchestrator (advanced context)
+export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "current project status"
+
+# Check memory system status
+python3 scripts/memory_system_status.py
+
+# Memory context validation
+python3 scripts/validate_memory_context.py --full-check
+```
+
+#### **Role-Specific Memory Access**
+```bash
+# Strategic planning context
+./scripts/memory_up.sh -r planner "strategic analysis context"
+
+# Technical implementation context
+./scripts/memory_up.sh -r implementer "technical implementation context"
+
+# Research methodology context
+./scripts/memory_up.sh -r researcher "research methodology context"
+
+# Code implementation context
+./scripts/memory_up.sh -r coder "code implementation context"
+```
+
+### **Memory System Health Monitoring**
+
+#### **Health Check Commands**
+```bash
+# Check memory system health
+python3 scripts/memory_health_check.py
+
+# Validate memory context integrity
+python3 scripts/validate_memory_integrity.py
+
+# Monitor memory system performance
+python3 scripts/monitor_memory_performance.py
+
+# Memory system diagnostics
+python3 scripts/memory_diagnostics.py --full
+```
+
+#### **Memory Quality Gates**
+- **Context Integrity**: All memory context must be valid and accessible
+- **Performance**: Memory operations must complete within acceptable time limits
+- **Coverage**: Memory system must cover all critical project information
+- **Freshness**: Memory context must be updated within acceptable timeframes
+
 ### **Project Management:**
 - `000_core/000_backlog.md` - Current priorities and tasks
 - `000_core/004_development-roadmap.md` - Project direction and planning
@@ -162,6 +311,165 @@ The memory system tracks:
 - **06**: Backlog Management & Priorities
 - **100_cursor-memory-context.md**: Current project state
 - **400_06_memory-and-context-systems.md**: Detailed memory system docs
+
+## 🔄 **Memory Operations & Workflows**
+
+### **🚨 CRITICAL: Memory Operations & Workflows are Essential**
+
+**Why This Matters**: Memory operations and workflows provide the systematic processes for managing memory system operations, ensuring data consistency, and maintaining system performance. Without proper operations management, memory systems become unreliable, inefficient, and difficult to maintain.
+
+### **Memory Operations Framework**
+
+#### **Memory Lifecycle Management**
+```python
+class MemoryLifecycleManager:
+    """Manages the complete memory lifecycle from creation to archival."""
+
+    def __init__(self):
+        self.lifecycle_stages = {
+            "creation": "Memory item creation and initialization",
+            "active": "Active memory usage and access",
+            "maintenance": "Memory maintenance and optimization",
+            "archival": "Memory archival and cleanup"
+        }
+        self.lifecycle_policies = {}
+
+    def manage_memory_lifecycle(self, memory_item: dict) -> dict:
+        """Manage the complete lifecycle of a memory item."""
+
+        # Validate memory item
+        if not self._validate_memory_item(memory_item):
+            raise ValueError("Invalid memory item")
+
+        # Create memory item
+        creation_result = self._create_memory_item(memory_item)
+
+        # Activate memory item
+        activation_result = self._activate_memory_item(creation_result)
+
+        # Monitor memory item
+        monitoring_result = self._monitor_memory_item(activation_result)
+
+        return {
+            "lifecycle_managed": True,
+            "creation_result": creation_result,
+            "activation_result": activation_result,
+            "monitoring_result": monitoring_result
+        }
+
+    def _validate_memory_item(self, memory_item: dict) -> bool:
+        """Validate memory item specification."""
+
+        required_fields = ["content", "metadata", "type", "priority"]
+
+        for field in required_fields:
+            if field not in memory_item:
+                return False
+
+        return True
+
+    def _create_memory_item(self, memory_item: dict) -> dict:
+        """Create a new memory item."""
+
+        # Implementation for memory item creation
+        return {
+            "id": self._generate_memory_id(),
+            "content": memory_item["content"],
+            "metadata": memory_item["metadata"],
+            "type": memory_item["type"],
+            "priority": memory_item["priority"],
+            "created_at": time.time(),
+            "status": "created"
+        }
+```
+
+#### **Memory Workflow Orchestration**
+```python
+class MemoryWorkflowOrchestrator:
+    """Orchestrates memory system workflows and operations."""
+
+    def __init__(self):
+        self.workflow_types = {
+            "memory_retrieval": "Memory retrieval and search workflows",
+            "memory_storage": "Memory storage and organization workflows",
+            "memory_optimization": "Memory optimization and cleanup workflows",
+            "memory_synchronization": "Memory synchronization and consistency workflows"
+        }
+        self.active_workflows = {}
+
+    def orchestrate_workflow(self, workflow_type: str, workflow_config: dict) -> dict:
+        """Orchestrate a specific memory workflow."""
+
+        if workflow_type not in self.workflow_types:
+            raise ValueError(f"Unknown workflow type: {workflow_type}")
+
+        # Validate workflow configuration
+        if not self._validate_workflow_config(workflow_config):
+            raise ValueError("Invalid workflow configuration")
+
+        # Create workflow instance
+        workflow_instance = self._create_workflow_instance(workflow_type, workflow_config)
+
+        # Execute workflow
+        execution_result = self._execute_workflow(workflow_instance)
+
+        # Monitor workflow progress
+        monitoring_result = self._monitor_workflow(workflow_instance)
+
+        return {
+            "workflow_orchestrated": True,
+            "workflow_type": workflow_type,
+            "workflow_instance": workflow_instance,
+            "execution_result": execution_result,
+            "monitoring_result": monitoring_result
+        }
+```
+
+### **Memory Operations Commands**
+
+#### **Lifecycle Management Commands**
+```bash
+# Manage memory lifecycle
+python3 scripts/manage_memory_lifecycle.py --memory-item memory_item.yaml
+
+# Monitor memory status
+python3 scripts/monitor_memory_status.py --memory-id MEM-001 --real-time
+
+# Optimize memory usage
+python3 scripts/optimize_memory.py --strategy performance --output optimization_report.md
+
+# Archive old memory
+python3 scripts/archive_memory.py --age-days 30 --output archival_report.md
+```
+
+#### **Workflow Orchestration Commands**
+```bash
+# Orchestrate memory workflow
+python3 scripts/orchestrate_workflow.py --type memory_retrieval --config workflow_config.yaml
+
+# Monitor workflow progress
+python3 scripts/monitor_workflow.py --workflow-id WF-001 --real-time
+
+# Validate workflow execution
+python3 scripts/validate_workflow.py --workflow-id WF-001 --full-check
+
+# Generate workflow report
+python3 scripts/generate_workflow_report.py --workflow-id WF-001 --output workflow_report.md
+```
+
+### **Memory Operations Quality Gates**
+
+#### **Lifecycle Management Standards**
+- **Creation Quality**: All memory items must be properly created and validated
+- **Activation Reliability**: Memory activation must be reliable and consistent
+- **Monitoring Coverage**: Comprehensive monitoring must be in place for all memory items
+- **Maintenance Efficiency**: Memory maintenance must be efficient and non-disruptive
+
+#### **Workflow Requirements**
+- **Workflow Validation**: All workflows must be validated before execution
+- **Execution Monitoring**: Workflow execution must be monitored and controlled
+- **Error Handling**: Proper error handling and recovery mechanisms must be in place
+- **Performance Optimization**: Workflows must be optimized for performance and efficiency
 
 ---
 

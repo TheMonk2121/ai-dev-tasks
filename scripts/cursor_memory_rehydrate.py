@@ -14,6 +14,15 @@ Usage in Cursor:
 import os
 import sys
 
+# Apply litellm compatibility shim before any DSPy imports
+try:
+    from litellm_compatibility_shim import patch_litellm_imports
+
+    patch_litellm_imports()
+    print("✅ Applied litellm compatibility shim for DSPy 3.0.1")
+except ImportError:
+    print("⚠️  Could not load litellm compatibility shim")
+
 # Ensure virtual environment is active
 try:
     from venv_manager import ensure_venv_for_script
@@ -148,11 +157,16 @@ def main():
 
     # Import memory rehydrator functions
     try:
-        from utils.memory_rehydrator import rehydrate
+        from dspy_rag_system.src.utils.memory_rehydrator import rehydrate
     except ImportError:
-        print("❌ Error: Could not import memory_rehydrator module")
-        print("Make sure you're running from the project root directory")
-        sys.exit(1)
+        try:
+            # Fallback to direct path
+            sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
+            from utils.memory_rehydrator import rehydrate
+        except ImportError:
+            print("❌ Error: Could not import memory_rehydrator module")
+            print("Make sure you're running from the project root directory")
+            sys.exit(1)
 
     # Auto-detect role if not specified
     if args.role == "planner" and args.task != "general project context and current state":

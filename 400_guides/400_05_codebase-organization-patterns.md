@@ -1158,7 +1158,7 @@ Brief description
 Content here
 
 ---
-*Last Updated: 2025-09-01*
+*Last Updated: 2025-09-03*
 ```
 
 **Expected Output**:
@@ -1980,8 +1980,261 @@ fallback_context = error_handler.handle_tool_discovery_failure(
 - **System Architecture**: `400_guides/400_03_system-overview-and-architecture.md`
 - **Development Workflow**: `400_guides/400_04_development-workflow-and-standards.md`
 - **Memory Systems**: `400_guides/400_01_memory-system-architecture.md`
-- **AI Frameworks**: `400_guides/400_07_ai-frameworks-dspy.md` (MCP integration)
-- **Integrations**: `400_guides/400_08_integrations-editor-and-models.md` (MCP servers)
+?
+- **AI Frameworks**: `400_guides/400_09_ai-frameworks-dspy.md` (MCP integration)
+- **Integrations**: `400_guides/400_10_integrations-models.md` (MCP servers)
+
+## 🔧 **Technical Artifacts Integration**
+
+### **🚨 CRITICAL: Technical Artifacts Integration is Essential**
+
+**Why This Matters**: Technical artifacts (code components, shell scripts, dashboards, implementation patterns) are the foundation of the system's functionality. Without proper integration into memory context, AI agents cannot provide accurate technical guidance or understand the current system state.
+
+### **Core Technical Artifacts**
+
+#### **1. Critical Scripts & Automation**
+
+**Memory System Scripts**:
+```bash
+# Core memory orchestration
+scripts/unified_memory_orchestrator.py          # Primary memory system orchestrator
+scripts/memory_up.sh                            # Static documentation bundling
+scripts/ragchecker_evaluation.py                # RAGChecker evaluation framework
+scripts/memory_rehydrate.py                     # Memory rehydration utilities
+
+# AWS Bedrock Integration (B-1046)
+scripts/bedrock_client.py                       # AWS Bedrock client implementation
+scripts/bedrock_cost_monitor.py                 # Cost monitoring and budget management
+scripts/bedrock_batch_processor.py              # Batch processing for evaluations
+scripts/ragchecker_official_evaluation.py       # Official RAGChecker with Bedrock support
+scripts/ragchecker_with_monitoring.py           # RAGChecker with cost monitoring
+scripts/ragchecker_batch_evaluation.py          # Batch evaluation with Bedrock
+scripts/bedrock_connection_test.py              # Bedrock connection testing
+scripts/bedrock_setup_guide.py                  # AWS Bedrock setup guide
+
+# MCP Integration
+scripts/mcp_memory_server.py                    # LEGACY - MCP memory server implementation (Replaced by Production Framework)
+scripts/mcp_orchestrator.py                     # MCP orchestration system
+scripts/mcp_security_config.py                  # MCP security configuration
+scripts/mcp_advanced_orchestration.py           # Advanced MCP orchestration
+
+# Development Environment
+scripts/venv_manager.py                         # Virtual environment management
+scripts/system_monitor.py                       # System monitoring and health checks
+scripts/update_cursor_memory.py                 # Cursor memory updates
+scripts/validate_config.py                      # Configuration validation
+```
+
+**Development Workflow Scripts**:
+```bash
+# Task Management
+scripts/task_generation_automation.py           # Automated task generation
+scripts/task_generator.py                       # Task generation utilities
+scripts/task_status_updater.py                  # Task status management
+
+# Quality Assurance
+scripts/validate_dependencies.py                # Dependency validation
+scripts/validate_regen_guide.py                 # Guide regeneration validation
+scripts/performance_optimization.py             # Performance optimization utilities
+
+# Documentation Management
+scripts/add_tldr_sections.py                    # TL;DR section management
+scripts/fix_duplicate_tldr.py                   # Duplicate TL;DR cleanup
+scripts/documentation_usage_analyzer.py         # Documentation usage analysis
+```
+
+#### **2. DSPy RAG System Components**
+
+**Core System Files**:
+```bash
+# Main System
+dspy-rag-system/src/dashboard.py                # Main dashboard interface
+dspy-rag-system/src/watch_folder.py             # File watching and processing
+dspy-rag-system/README.md                       # System documentation
+
+# CLI Components
+dspy-rag-system/src/cli/                        # Command-line interface components
+dspy-rag-system/src/utils/                      # Utility functions and helpers
+
+# DSPy Modules
+dspy-rag-system/src/dspy_modules/               # DSPy framework modules
+dspy-rag-system/src/workflows/                  # Workflow implementations
+dspy-rag-system/src/monitoring/                 # Monitoring and observability
+```
+
+**Go Implementation**:
+```bash
+# Go Memory Rehydration
+dspy-rag-system/src/utils/memory_rehydration.go     # Core Go implementation
+```
+
+### **Technical Artifacts Integration Patterns**
+
+#### **Memory Context Integration**
+```python
+class TechnicalArtifactsIntegrator:
+    """Integrates technical artifacts into memory context."""
+
+    def __init__(self):
+        self.artifact_registry = {}
+        self.integration_patterns = {}
+        self.memory_hooks = {}
+
+    def register_artifact(self, artifact_id: str, artifact_info: dict) -> bool:
+        """Register a technical artifact for memory integration."""
+
+        # Validate artifact information
+        if not self._validate_artifact_info(artifact_info):
+            return False
+
+        # Register artifact
+        self.artifact_registry[artifact_id] = artifact_info
+
+        # Create memory hooks
+        self._create_memory_hooks(artifact_id, artifact_info)
+
+        return True
+
+    def _validate_artifact_info(self, artifact_info: dict) -> bool:
+        """Validate technical artifact information."""
+
+        required_fields = ["name", "type", "path", "purpose", "dependencies"]
+
+        for field in required_fields:
+            if field not in artifact_info:
+                return False
+
+        return True
+
+    def _create_memory_hooks(self, artifact_id: str, artifact_info: dict):
+        """Create memory system hooks for the artifact."""
+
+        # Create context hooks
+        context_hook = {
+            "type": "context_integration",
+            "artifact_id": artifact_id,
+            "integration_points": ["memory_rehydration", "context_building"],
+            "priority": artifact_info.get("priority", "medium")
+        }
+
+        self.memory_hooks[f"{artifact_id}_context"] = context_hook
+
+        # Create usage hooks
+        usage_hook = {
+            "type": "usage_tracking",
+            "artifact_id": artifact_id,
+            "tracking_points": ["execution", "performance", "errors"],
+            "metrics": ["usage_count", "success_rate", "performance_metrics"]
+        }
+
+        self.memory_hooks[f"{artifact_id}_usage"] = usage_hook
+```
+
+#### **Artifact Discovery & Integration**
+```python
+class ArtifactDiscoveryEngine:
+    """Discovers and integrates technical artifacts automatically."""
+
+    def __init__(self):
+        self.discovery_patterns = [
+            "scripts/*.py",
+            "dspy-rag-system/src/**/*.py",
+            "400_guides/*.md",
+            "100_memory/*.md"
+        ]
+        self.integration_rules = {}
+
+    async def discover_artifacts(self) -> List[dict]:
+        """Discover technical artifacts in the codebase."""
+
+        discovered_artifacts = []
+
+        for pattern in self.discovery_patterns:
+            artifacts = await self._discover_by_pattern(pattern)
+            discovered_artifacts.extend(artifacts)
+
+        return discovered_artifacts
+
+    async def _discover_by_pattern(self, pattern: str) -> List[dict]:
+        """Discover artifacts matching a specific pattern."""
+
+        # Implementation for pattern-based discovery
+        artifacts = []
+
+        # Example discovery logic
+        if pattern == "scripts/*.py":
+            artifacts = await self._discover_script_artifacts()
+        elif pattern == "dspy-rag-system/src/**/*.py":
+            artifacts = await self._discover_dspy_artifacts()
+        elif pattern == "400_guides/*.md":
+            artifacts = await self._discover_guide_artifacts()
+        elif pattern == "100_memory/*.md":
+            artifacts = await self._discover_memory_artifacts()
+
+        return artifacts
+
+    async def _discover_script_artifacts(self) -> List[dict]:
+        """Discover script artifacts in the scripts directory."""
+
+        script_artifacts = []
+
+        # Example script artifacts
+        script_artifacts.append({
+            "id": "unified_memory_orchestrator",
+            "name": "Unified Memory Orchestrator",
+            "type": "script",
+            "path": "scripts/unified_memory_orchestrator.py",
+            "purpose": "Primary memory system orchestrator",
+            "dependencies": ["memory_systems", "dspy_framework"],
+            "priority": "critical",
+            "integration_points": ["memory_rehydration", "context_management"]
+        })
+
+        return script_artifacts
+```
+
+### **Technical Artifacts Management Commands**
+
+#### **Artifact Discovery & Integration**
+```bash
+# Discover technical artifacts
+python3 scripts/discover_artifacts.py --pattern "scripts/*.py" --output artifacts_discovered.json
+
+# Integrate artifacts into memory context
+python3 scripts/integrate_artifacts.py --artifacts artifacts_discovered.json
+
+# Validate artifact integration
+python3 scripts/validate_artifact_integration.py --full-check
+
+# Generate artifact documentation
+python3 scripts/generate_artifact_docs.py --output technical_artifacts_guide.md
+```
+
+#### **Artifact Health Monitoring**
+```bash
+# Check artifact health
+python3 scripts/check_artifact_health.py --all
+
+# Monitor artifact usage
+python3 scripts/monitor_artifact_usage.py --timeframe 7d
+
+# Validate artifact dependencies
+python3 scripts/validate_artifact_dependencies.py --strict
+```
+
+### **Integration Quality Gates**
+
+#### **Artifact Integration Standards**
+- **Discovery Coverage**: 100% of technical artifacts must be discovered
+- **Memory Integration**: All artifacts must have memory system hooks
+- **Documentation Quality**: All artifacts must have clear purpose and usage documentation
+- **Dependency Validation**: All artifact dependencies must be validated
+
+#### **Integration Validation Requirements**
+- **Context Integration**: Artifacts must integrate with memory context system
+- **Usage Tracking**: Artifacts must support usage monitoring and metrics
+- **Error Handling**: Artifacts must have proper error handling and recovery
+- **Performance Monitoring**: Artifacts must support performance tracking
 
 ## 📚 References
 
@@ -1990,6 +2243,220 @@ fallback_context = error_handler.handle_tool_discovery_failure(
 - **Original Standards**: Various coding and prompting files (now stubs)
 - **Performance Baselines**: System performance benchmarks and targets
 - **Error Reduction Tools**: Smart error fix scripts and decision matrices
+
+### **🧪 Testing & Methodology Documentation**
+
+**Testing Infrastructure Guide**: `300_experiments/300_testing-infrastructure-guide.md`
+- **Purpose**: Complete guide to testing environment and tools
+- **Coverage**: Environment setup, testing workflows, debugging, CI/CD integration
+
+**Testing Methodology Log**: `300_experiments/300_testing-methodology-log.md`
+- **Purpose**: Central hub for all testing strategies and methodologies
+- **Coverage**: Testing approaches, methodology evolution, key insights, performance tracking
+
+**Code Organization Testing**: `300_experiments/300_integration-testing-results.md`
+- **Purpose**: Testing for system integration and cross-component functionality
+- **Coverage**: End-to-end workflows, error handling, performance integration
+
+**Comprehensive Testing Coverage**: `300_experiments/300_complete-testing-coverage.md`
+- **Purpose**: Complete overview of all testing and methodology coverage
+- **Coverage**: Navigation guide, usage instructions, best practices
+
+## 🏗️ **Architecture & Design Patterns**
+
+### **🚨 CRITICAL: Architecture & Design Patterns are Essential**
+
+**Why This Matters**: Architecture and design patterns provide the foundation for building scalable, maintainable, and efficient systems. Without proper architectural patterns, code becomes difficult to understand, maintain, and extend.
+
+### **Architectural Patterns**
+
+#### **Layered Architecture**
+```python
+class LayeredArchitecture:
+    """Implements layered architecture pattern for system organization."""
+
+    def __init__(self):
+        self.layers = {
+            "presentation": "User interface and interaction layer",
+            "business": "Business logic and domain services layer",
+            "data": "Data access and persistence layer",
+            "infrastructure": "Infrastructure and cross-cutting concerns layer"
+        }
+        self.layer_dependencies = {}
+
+    def organize_layers(self, system_components: dict) -> dict:
+        """Organize system components into appropriate layers."""
+
+        organized_layers = {}
+
+        for layer_name, layer_description in self.layers.items():
+            layer_components = self._identify_layer_components(
+                system_components, layer_name
+            )
+            organized_layers[layer_name] = {
+                "description": layer_description,
+                "components": layer_components,
+                "dependencies": self._identify_layer_dependencies(layer_name)
+            }
+
+        return organized_layers
+
+    def _identify_layer_components(self, system_components: dict, layer_name: str) -> list:
+        """Identify components that belong to a specific layer."""
+
+        # Implementation for component identification
+        return [
+            component for component, metadata in system_components.items()
+            if metadata.get("layer") == layer_name
+        ]
+
+    def _identify_layer_dependencies(self, layer_name: str) -> list:
+        """Identify dependencies for a specific layer."""
+
+        # Implementation for dependency identification
+        if layer_name == "presentation":
+            return ["business"]
+        elif layer_name == "business":
+            return ["data"]
+        elif layer_name == "data":
+            return ["infrastructure"]
+        else:
+            return []
+```
+
+#### **Microservices Architecture**
+```python
+class MicroservicesArchitecture:
+    """Implements microservices architecture pattern."""
+
+    def __init__(self):
+        self.service_patterns = {
+            "api_gateway": "Centralized API gateway for service communication",
+            "service_discovery": "Service discovery and registration",
+            "load_balancing": "Load balancing and routing",
+            "circuit_breaker": "Circuit breaker for fault tolerance"
+        }
+        self.services = {}
+
+    def design_service(self, service_name: str, service_spec: dict) -> dict:
+        """Design a microservice according to specifications."""
+
+        # Validate service specification
+        if not self._validate_service_spec(service_spec):
+            raise ValueError("Invalid service specification")
+
+        # Design service architecture
+        service_design = self._create_service_design(service_name, service_spec)
+
+        # Define service boundaries
+        service_boundaries = self._define_service_boundaries(service_design)
+
+        # Design service interfaces
+        service_interfaces = self._design_service_interfaces(service_design)
+
+        return {
+            "service_name": service_name,
+            "design": service_design,
+            "boundaries": service_boundaries,
+            "interfaces": service_interfaces
+        }
+
+    def _validate_service_spec(self, service_spec: dict) -> bool:
+        """Validate service specification completeness."""
+
+        required_fields = ["responsibilities", "dependencies", "interfaces"]
+
+        for field in required_fields:
+            if field not in service_spec:
+                return False
+
+        return True
+```
+
+### **Design Patterns**
+
+#### **Creational Patterns**
+```python
+class CreationalPatterns:
+    """Implements common creational design patterns."""
+
+    def __init__(self):
+        self.patterns = {
+            "factory": "Factory pattern for object creation",
+            "singleton": "Singleton pattern for single instance",
+            "builder": "Builder pattern for complex object construction",
+            "prototype": "Prototype pattern for object cloning"
+        }
+
+    def apply_factory_pattern(self, product_type: str, product_config: dict) -> object:
+        """Apply factory pattern for product creation."""
+
+        # Create factory
+        factory = self._create_factory(product_type)
+
+        # Configure factory
+        factory.configure(product_config)
+
+        # Create product
+        product = factory.create_product()
+
+        return product
+
+    def apply_singleton_pattern(self, class_name: str) -> object:
+        """Apply singleton pattern for single instance."""
+
+        # Implementation for singleton pattern
+        if not hasattr(self, f"_{class_name}_instance"):
+            setattr(self, f"_{class_name}_instance", self._create_instance(class_name))
+
+        return getattr(self, f"_{class_name}_instance")
+```
+
+### **Architecture Commands**
+
+#### **Architecture Design Commands**
+```bash
+# Design layered architecture
+python3 scripts/design_layered_architecture.py --components system_components.yaml --output architecture_design.md
+
+# Design microservice
+python3 scripts/design_microservice.py --service-name "user-service" --spec service_spec.yaml
+
+# Validate architecture
+python3 scripts/validate_architecture.py --architecture-file architecture.yaml --full-check
+
+# Generate architecture documentation
+python3 scripts/generate_architecture_docs.py --output architecture_documentation.md
+```
+
+#### **Pattern Application Commands**
+```bash
+# Apply design pattern
+python3 scripts/apply_design_pattern.py --pattern factory --class-name "ProductFactory"
+
+# Validate pattern implementation
+python3 scripts/validate_pattern.py --pattern singleton --class-name "DatabaseConnection"
+
+# Generate pattern documentation
+python3 scripts/generate_pattern_docs.py --pattern all --output pattern_documentation.md
+
+# Analyze pattern usage
+python3 scripts/analyze_pattern_usage.py --codebase-path src/ --output pattern_analysis.md
+```
+
+### **Architecture Quality Gates**
+
+#### **Architecture Standards**
+- **Layer Separation**: Clear separation between architectural layers
+- **Dependency Management**: Proper dependency direction and management
+- **Service Boundaries**: Clear and well-defined service boundaries
+- **Interface Design**: Clean and consistent interface design
+
+#### **Pattern Requirements**
+- **Pattern Appropriateness**: Patterns must be appropriate for the use case
+- **Implementation Quality**: Pattern implementation must be correct and efficient
+- **Documentation**: All patterns must be properly documented
+- **Testing**: Pattern implementations must be thoroughly tested
 
 ## 📋 Changelog
 
