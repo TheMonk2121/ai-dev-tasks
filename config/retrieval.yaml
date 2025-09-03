@@ -262,3 +262,35 @@ multihop:
     max_subqueries_per_hop: 3 # Limit sub-questions per hop
     retrieval_timeout_ms: 2000 # Timeout per sub-question retrieval
     synthesis_timeout_ms: 1000 # Timeout for answer synthesis
+
+# Phase 1.5: Freshness & Intent-Aware Policies
+freshness:
+  enabled: true
+  
+  # Time decay parameters
+  enable_time_decay: true
+  decay_half_life_days: 30.0 # 30 days for 50% decay
+  max_decay_factor: 0.3 # Minimum score multiplier
+  
+  # Recency prior parameters
+  enable_recency_prior: true
+  recency_boost_factor: 1.2 # 20% boost for recent docs
+  recency_threshold_days: 7 # Docs within 7 days get boost
+  
+  # Freshness detection
+  freshness_threshold: 0.6 # Confidence threshold for newsy queries
+
+intent_routing:
+  enabled: true
+  
+  # Intent detection thresholds
+  structured_confidence_threshold: 0.7
+  hybrid_confidence_threshold: 0.5
+  
+  # Feature flags
+  enable_structured_routing: true
+  enable_hybrid_routing: true
+  
+  # Route preferences
+  prefer_sql_for: ["count", "exists", "lookup", "aggregate", "metric"]
+  prefer_kg_for: ["relationship", "connection", "path", "graph", "entity"]
