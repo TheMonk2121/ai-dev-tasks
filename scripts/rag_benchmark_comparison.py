@@ -6,7 +6,7 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -250,7 +250,7 @@ def print_comparison_summary(report: Dict):
             print(f"         Improvement: {imp['percentage_improvement']:+.1f}%")
 
 
-def save_comparison_report(report: Dict, filepath: str = None) -> str:
+def save_comparison_report(report: Dict, filepath: Optional[str] = None) -> str:
     """Save the comparison report to a file."""
     if filepath is None:
         timestamp = int(time.time())

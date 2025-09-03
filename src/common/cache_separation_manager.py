@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Cache separation manager for workload isolation in B-1070."""
 
+import json
 import logging
 import os
 import shutil
+import time
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -80,7 +82,7 @@ class CacheSeparationManager:
         logger.info(f"Cache role set to: {role}")
         return True
 
-    def get_cache_dir(self, role: str = None, subdir: str = None) -> Path:
+    def get_cache_dir(self, role: Optional[str] = None, subdir: Optional[str] = None) -> Path:
         """Get the cache directory for a specific role and optional subdirectory."""
         if role is None:
             role = self.current_role
@@ -101,7 +103,7 @@ class CacheSeparationManager:
 
         return cache_dir
 
-    def get_cache_info(self, role: str = None) -> Dict:
+    def get_cache_info(self, role: Optional[str] = None) -> Dict:
         """Get information about a cache directory."""
         if role is None:
             role = self.current_role
@@ -143,7 +145,7 @@ class CacheSeparationManager:
 
         return total_size
 
-    def cleanup_cache(self, role: str = None, force: bool = False) -> bool:
+    def cleanup_cache(self, role: Optional[str] = None, force: bool = False) -> bool:
         """Clean up cache for a specific role."""
         if role is None:
             role = self.current_role
@@ -197,7 +199,9 @@ class CacheSeparationManager:
         except Exception as e:
             logger.warning(f"Error cleaning up subdirectory {subdir_path}: {e}")
 
-    def get_cache_path(self, role: str = None, subdir: str = None, filename: str = None) -> Path:
+    def get_cache_path(
+        self, role: Optional[str] = None, subdir: Optional[str] = None, filename: Optional[str] = None
+    ) -> Path:
         """Get a specific cache file path."""
         cache_dir = self.get_cache_dir(role, subdir)
 
@@ -205,7 +209,7 @@ class CacheSeparationManager:
             return cache_dir / filename
         return cache_dir
 
-    def list_cache_files(self, role: str = None, subdir: str = None) -> List[Path]:
+    def list_cache_files(self, role: Optional[str] = None, subdir: Optional[str] = None) -> List[Path]:
         """List all files in a cache directory."""
         cache_dir = self.get_cache_dir(role, subdir)
 
@@ -244,7 +248,7 @@ class CacheSeparationManager:
 
         return summary
 
-    def save_cache_report(self, filepath: str = None) -> str:
+    def save_cache_report(self, filepath: Optional[str] = None) -> str:
         """Save a cache status report to a file."""
         if filepath is None:
             timestamp = int(time.time())

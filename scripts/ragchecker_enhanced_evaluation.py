@@ -9,7 +9,7 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 # Add src to path for enhanced components
 sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))
@@ -47,7 +47,7 @@ class EnhancedRAGCheckerEvaluator:
         logger.info("Enhanced RAGChecker evaluator initialized")
 
     def evaluate_query(
-        self, query: str, query_type: str = None, enable_enhanced_features: bool = True
+        self, query: str, query_type: Optional[str] = None, enable_enhanced_features: bool = True
     ) -> Dict[str, Any]:
         """
         Evaluate a single query with enhanced features
@@ -200,7 +200,7 @@ class EnhancedRAGCheckerEvaluator:
             "generator_stats": self.generator.get_generator_stats(),
         }
 
-    def save_evaluation_results(self, results: Dict[str, Any], filepath: str = None) -> str:
+    def save_evaluation_results(self, results: Dict[str, Any], filepath: Optional[str] = None) -> str:
         """
         Save evaluation results to file
         """

@@ -26,7 +26,11 @@ def main():
 
         # Basic facts
         cur.execute("SHOW server_version;")
-        print("server_version:", cur.fetchone()[0])
+        result = cur.fetchone()
+        if result:
+            print("server_version:", result[0])
+        else:
+            print("server_version: unknown")
 
         # Check required extensions
         cur.execute(
@@ -42,7 +46,11 @@ def main():
 
         # pgvector version check (0.8.0+ required for iterative_scan)
         cur.execute("SELECT extversion FROM pg_extension WHERE extname='vector';")
-        ver = (cur.fetchone() or ["0"])[0]
+        result = cur.fetchone()
+        if result:
+            ver = result[0]
+        else:
+            ver = "0"
         print("pgvector:", ver)
         if tuple(map(int, ver.split(".")[:2])) < (0, 8):
             print("ERROR: pgvector < 0.8.0; iterative_scan not available", file=sys.stderr)
@@ -50,10 +58,18 @@ def main():
 
         # Optional capability checks (don't fail)
         cur.execute("SHOW default_toast_compression;")
-        print("default_toast_compression:", cur.fetchone()[0])
+        result = cur.fetchone()
+        if result:
+            print("default_toast_compression:", result[0])
+        else:
+            print("default_toast_compression: unknown")
 
         cur.execute("SHOW wal_compression;")
-        print("wal_compression:", cur.fetchone()[0])
+        result = cur.fetchone()
+        if result:
+            print("wal_compression:", result[0])
+        else:
+            print("wal_compression: unknown")
 
         # Key settings of interest
         for key in (
@@ -65,7 +81,11 @@ def main():
             "track_io_timing",
         ):
             cur.execute(f"SHOW {key};")
-            print(f"{key}:", cur.fetchone()[0])
+            result = cur.fetchone()
+            if result:
+                print(f"{key}:", result[0])
+            else:
+                print(f"{key}: unknown")
 
         cur.close()
         conn.close()

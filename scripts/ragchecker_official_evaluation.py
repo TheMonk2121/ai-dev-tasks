@@ -17,15 +17,18 @@ import asyncio
 import json
 import os
 import random
+import re
 import subprocess
-
-# Add src to path for resolver import
 import sys
 import threading
 import time
+from collections import defaultdict
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Dict, List, Optional, TypedDict, Union
 
+import numpy as np
+from jsonschema import ValidationError, validate
 from pydantic import BaseModel, Field, TypeAdapter, field_validator
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -398,10 +401,6 @@ Focused Answer:""".strip()
 
     def call_json(self, prompt: str, *, schema: dict | None = None, max_tokens: int = 900) -> dict | list:
         """Ask Bedrock (preferred) or Ollama in JSON mode, validate + auto-repair."""
-        import json
-        import re
-
-        from jsonschema import ValidationError, validate
 
         def _parse_first_json(text: str):
             m = re.search(r"\{.*\}|\[.*\]", text, re.S)
@@ -482,8 +481,6 @@ Context:
             if self.use_bedrock and self.bedrock_client:
                 try:
                     # Add delay between Bedrock calls to respect rate limits
-                    import time
-
                     time.sleep(2)  # 2 second delay between calls
 
                     response, usage = self.bedrock_client.invoke_with_json_prompt(
@@ -501,8 +498,6 @@ Context:
             facts = []
             if isinstance(obj, str):
                 # Parse JSON from string response
-                import json
-
                 try:
                     parsed = json.loads(obj)
                     if isinstance(parsed, list):
@@ -717,7 +712,6 @@ Now write the final answer (plain text, not JSON):
 
         def reciprocal_rank_fusion(result_sets, k=60):
             """Combine multiple ranked result sets using Reciprocal Rank Fusion."""
-            from collections import defaultdict
 
             scores = defaultdict(float)
             for results in result_sets:
@@ -747,8 +741,15 @@ Now write the final answer (plain text, not JSON):
                     score = lambda_param * relevance - (1 - lambda_param) * diversity
                     if score > max_score:
                         best, max_score = i, score
-                selected.append(best)
-                pool.remove(best)
+
+                # Safety check: ensure best is not None before using it
+                if best is not None:
+                    selected.append(best)
+                    pool.remove(best)
+                else:
+                    # If no valid candidate found, break to avoid infinite loop
+                    break
+
             return [candidates[i] for i in selected]
 
         def normalize_scores(scores):
@@ -776,7 +777,6 @@ Now write the final answer (plain text, not JSON):
 
         def pick_evidence(candidates, min_sent=2, keep_percentile=65, max_sent=7, min_fact_cov=0.30):
             """Smart evidence selection with dynamic target-K and normalized signals."""
-            from collections import defaultdict
 
             # Calculate blended scores with normalization
             jaccard_scores = []
@@ -988,8 +988,6 @@ Now write the final answer (plain text, not JSON):
             print(f"⚠️ JSON scorer failed: {e}")
 
         # soft fallback: try to extract a 0..1 decimal
-        import re
-
         m = re.search(r"(?<!\d)(?:0?\.\d+|1(?:\.0+)?)", instruction)
         if m:
             try:
@@ -1304,8 +1302,6 @@ Score range: 0.0 (misses all relevant claims) to 1.0 (includes all relevant clai
 
     def _extract_score_robust(self, llm_response: str) -> float:
         """Robust JSON-first score extraction with safe fallbacks."""
-        import json
-        import re
 
         def _clamp01(x: float) -> float:
             return 0.0 if x < 0.0 else (1.0 if x > 1.0 else x)
@@ -1438,9 +1434,8 @@ Return a JSON array of strings with exactly {k} reformulations:
 ["reformulation 1", "reformulation 2", ...]"""
 
         try:
-            response = self.local_llm.bedrock_client.invoke_model_with_retries(
-                "anthropic.claude-3-5-sonnet-20240620-v1:0",
-                {"messages": [{"role": "user", "content": expansion_prompt}]},
+            response, _ = self.local_llm.bedrock_client.invoke_model_with_retries(
+                prompt=expansion_prompt,
                 max_tokens=500,
             )
 
@@ -1476,8 +1471,6 @@ Return format: ["claim 1", "claim 2", ...]"""
                 temperature=0.0,
                 json_mode=True,
             )
-
-            import json
 
             claims = json.loads(claims_response)
             if not isinstance(claims, list):
@@ -2788,8 +2781,6 @@ def main():
 
 
 # Evidence filtering functions for precision/faithfulness protection
-import re
-from difflib import SequenceMatcher
 
 
 def _ctx_to_list_str(ctx_any) -> list[str]:
@@ -2837,10 +2828,6 @@ def sentence_supported(sentence: str, contexts: list[str], j_min: float = 0.18, 
 
 def evidence_filter(answer: str, contexts: list[str], j_min: float = 0.18, coverage_min: float = 0.45) -> str:
     """Enhanced multi-signal evidence filter with dynamic-K selection and blended scoring."""
-    import re
-    from collections import defaultdict
-
-    import numpy as np
 
     def _tokens(s: str) -> list[str]:
         return re.findall(r"[a-z0-9]+", s.lower())

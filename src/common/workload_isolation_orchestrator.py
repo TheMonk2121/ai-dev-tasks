@@ -6,7 +6,7 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -25,7 +25,7 @@ class WorkloadIsolationOrchestrator:
         self.guc_manager = RoleGUCManager(dsn)
         self.cache_manager = CacheSeparationManager()
         self.current_role = "default"
-        self.isolation_status: Dict[str, bool] = {}
+        self.isolation_status: Dict[str, Dict[str, Any]] = {}
 
         logger.info("WorkloadIsolationOrchestrator initialized")
 
@@ -125,13 +125,18 @@ class WorkloadIsolationOrchestrator:
             cur.close()
             conn.close()
 
+            # Ensure result exists and has expected value
+            if result is None:
+                logger.error("Query returned no result")
+                return False
+
             return result[0] == 1
 
         except Exception as e:
             logger.error(f"Database connectivity verification failed: {e}")
             return False
 
-    def get_isolation_status(self, role: str = None) -> Dict:
+    def get_isolation_status(self, role: Optional[str] = None) -> Dict[str, Any]:
         """Get the isolation status for a specific role or current role."""
         if role is None:
             role = self.current_role
@@ -185,7 +190,7 @@ class WorkloadIsolationOrchestrator:
             logger.error(f"Error resetting isolation: {e}")
             return False
 
-    def create_isolation_report(self, filepath: str = None) -> str:
+    def create_isolation_report(self, filepath: Optional[str] = None) -> str:
         """Create a comprehensive isolation report."""
         if filepath is None:
             timestamp = int(time.time())

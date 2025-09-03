@@ -7,7 +7,7 @@ Implements the coach's strategy: extractive-first, citations, abstention
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -42,7 +42,7 @@ class EnhancedAnswerGenerator:
         )
 
     def generate_enhanced_answer(
-        self, query: str, retrieved_chunks: List[Dict[str, Any]], query_type: str = None
+        self, query: str, retrieved_chunks: List[Dict[str, Any]], query_type: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Generate enhanced answer with discipline
@@ -111,7 +111,7 @@ class EnhancedAnswerGenerator:
             "metadata": {"query_type": "abstention", "chunks_used": 0, "citations_count": 0, "abstention": True},
         }
 
-    def _generate_structured_answer(self, query: str, chunks: List[Dict], query_type: str) -> str:
+    def _generate_structured_answer(self, query: str, chunks: List[Dict], query_type: Optional[str]) -> str:
         """Generate structured answer with proper formatting"""
 
         # Start with direct answer

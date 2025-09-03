@@ -86,7 +86,7 @@ class SmartCodeAwareChunker:
             # Fallback to base chunker
             return self._fallback_to_base_chunker(text)
 
-    def _chunk_code_file(self, text: str, file_path: str) -> List[Dict[str, Any]]:
+    def _chunk_code_file(self, text: str, file_path: Optional[str]) -> List[Dict[str, Any]]:
         """Chunk code files preserving function/class boundaries"""
         chunks = []
 
@@ -97,7 +97,7 @@ class SmartCodeAwareChunker:
         logical_units = self._group_code_boundaries(boundaries)
 
         for unit in logical_units:
-            unit_chunks = self._chunk_logical_unit(unit, text)
+            unit_chunks = self._chunk_code_logical_unit(unit, text)
             chunks.extend(unit_chunks)
 
         return chunks
@@ -173,8 +173,8 @@ class SmartCodeAwareChunker:
 
         return units
 
-    def _chunk_logical_unit(self, unit: Dict[str, Any], text: str) -> List[Dict[str, Any]]:
-        """Chunk a logical unit (e.g., function) while preserving structure"""
+    def _chunk_code_logical_unit(self, unit: Dict[str, Any], text: str) -> List[Dict[str, Any]]:
+        """Chunk a logical code unit (e.g., function) while preserving structure"""
         unit_text = text[unit["start_pos"] : unit["end_pos"]]
 
         # If unit is small enough, keep it as one chunk
@@ -215,77 +215,126 @@ class SmartCodeAwareChunker:
 
         return chunks
 
-    def _chunk_markdown_file(self, text: str, file_path: str) -> List[Dict[str, Any]]:
+    def _chunk_markdown_file(self, text: str, file_path: Optional[str]) -> List[Dict[str, Any]]:
         """Chunk markdown files preserving heading structure"""
         chunks = []
 
-        # Split by headings first
-        sections = self._split_by_headings(text)
+        # Find all heading boundaries
+        boundaries = self._find_markdown_boundaries(text)
 
-        for i, section in enumerate(sections):
-            if self.base_chunker.count_tokens(section["content"]) <= self.max_tokens:
-                # Keep section intact
-                chunks.append(
-                    {
-                        "id": f"md_section_{i}",
-                        "text": section["content"],
-                        "chunk_type": "markdown_section",
-                        "heading": section["heading"],
-                        "metadata": {"is_complete_section": True, "stitching_key": f"md_{section['heading']}"},
-                    }
-                )
-            else:
-                # Chunk the section
-                section_chunks = self.base_chunker.create_chunks(section["content"])
-                for j, chunk_text in enumerate(section_chunks):
-                    chunks.append(
-                        {
-                            "id": f"md_section_{i}_chunk_{j}",
-                            "text": chunk_text,
-                            "chunk_type": "markdown_section",
-                            "heading": section["heading"],
-                            "metadata": {
-                                "is_complete_section": False,
-                                "chunk_index": j,
-                                "total_chunks": len(section_chunks),
-                                "stitching_key": f"md_{section['heading']}",
-                            },
-                        }
-                    )
+        # Group boundaries into logical units
+        logical_units = self._group_markdown_boundaries(boundaries, text)
+
+        for unit in logical_units:
+            unit_chunks = self._chunk_markdown_logical_unit(unit, text)
+            chunks.extend(unit_chunks)
 
         return chunks
 
-    def _split_by_headings(self, text: str) -> List[Dict[str, Any]]:
-        """Split markdown text by headings"""
-        sections = []
-        lines = text.split("\n")
-        current_section = {"heading": "Introduction", "content": []}
+    def _find_markdown_boundaries(self, text: str) -> List[ChunkBoundary]:
+        """Find all markdown heading boundaries in the text"""
+        boundaries = []
+        for match in self.patterns["markdown_heading"].finditer(text):
+            boundaries.append(
+                ChunkBoundary(
+                    start_pos=match.start(),
+                    end_pos=match.end(),
+                    chunk_type="markdown_heading",
+                    content=match.group(),
+                    metadata={"heading_level": len(match.group().split("#")[0])},
+                )
+            )
+        return boundaries
 
-        for line in lines:
-            if line.startswith("#"):
-                # Save previous section
-                if current_section["content"]:
-                    sections.append(
+    def _group_markdown_boundaries(self, boundaries: List[ChunkBoundary], text: str) -> List[Dict[str, Any]]:
+        """Group markdown boundaries into logical units (heading + content)"""
+        units = []
+        current_unit = {"heading": "Introduction", "content": [], "boundaries": [], "start_pos": 0}
+
+        for boundary in boundaries:
+            if boundary.chunk_type == "markdown_heading":
+                # Save previous unit
+                if current_unit["content"]:
+                    units.append(
                         {
-                            "heading": current_section["heading"],
-                            "content": "\n".join(current_section["content"]).strip(),
+                            "type": "markdown_unit",
+                            "start_pos": current_unit["start_pos"],
+                            "end_pos": boundary.start_pos,
+                            "heading": current_unit["heading"],
+                            "content": "\n".join(current_unit["content"]).strip(),
+                            "boundaries": current_unit["boundaries"],
                         }
                     )
 
-                # Start new section
-                current_section = {"heading": line.strip("#").strip(), "content": []}
+                # Start new unit
+                current_unit = {
+                    "heading": boundary.metadata["heading_level"],
+                    "content": [],
+                    "boundaries": [boundary],
+                    "start_pos": boundary.start_pos,
+                }
             else:
-                current_section["content"].append(line)
+                current_unit["content"].append(boundary.content)
+                current_unit["boundaries"].append(boundary)
 
-        # Add final section
-        if current_section["content"]:
-            sections.append(
-                {"heading": current_section["heading"], "content": "\n".join(current_section["content"]).strip()}
+        # Add final unit
+        if current_unit["content"]:
+            units.append(
+                {
+                    "type": "markdown_unit",
+                    "start_pos": current_unit["start_pos"],
+                    "end_pos": len(text),  # Now text is properly defined
+                    "heading": current_unit["heading"],
+                    "content": "\n".join(current_unit["content"]).strip(),
+                    "boundaries": current_unit["boundaries"],
+                }
             )
 
-        return sections
+        return units
 
-    def _chunk_generic_text(self, text: str, file_path: str) -> List[Dict[str, Any]]:
+    def _chunk_markdown_logical_unit(self, unit: Dict[str, Any], text: str) -> List[Dict[str, Any]]:
+        """Chunk a logical markdown unit (e.g., heading + content) while preserving structure"""
+        unit_text = text[unit["start_pos"] : unit["end_pos"]]
+
+        # If unit is small enough, keep it as one chunk
+        if self.base_chunker.count_tokens(unit_text) <= self.max_tokens:
+            return [
+                {
+                    "id": f"markdown_{unit['heading']}_0",
+                    "text": unit_text,
+                    "chunk_type": "markdown_section",
+                    "heading": unit["heading"],
+                    "start_pos": unit["start_pos"],
+                    "end_pos": unit["end_pos"],
+                    "metadata": {"is_complete_section": True, "stitching_key": f"md_{unit['heading']}"},
+                }
+            ]
+
+        # If unit is too large, chunk it with overlap
+        chunks = []
+        unit_chunks = self.base_chunker.create_chunks(unit_text)
+
+        for i, chunk_text in enumerate(unit_chunks):
+            chunks.append(
+                {
+                    "id": f"markdown_{unit['heading']}_{i}",
+                    "text": chunk_text,
+                    "chunk_type": "markdown_section",
+                    "heading": unit["heading"],
+                    "start_pos": unit["start_pos"] + (i * len(chunk_text)),
+                    "end_pos": unit["start_pos"] + ((i + 1) * len(chunk_text)),
+                    "metadata": {
+                        "is_complete_section": False,
+                        "chunk_index": i,
+                        "total_chunks": len(unit_chunks),
+                        "stitching_key": f"md_{unit['heading']}",
+                    },
+                }
+            )
+
+        return chunks
+
+    def _chunk_generic_text(self, text: str, file_path: Optional[str]) -> List[Dict[str, Any]]:
         """Chunk generic text files"""
         chunks = []
         base_chunks = self.base_chunker.create_chunks(text)
@@ -302,7 +351,9 @@ class SmartCodeAwareChunker:
 
         return chunks
 
-    def stitch_adjacent_chunks(self, chunks: List[Dict[str, Any]], query_type: str = None) -> List[Dict[str, Any]]:
+    def stitch_adjacent_chunks(
+        self, chunks: List[Dict[str, Any]], query_type: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         """
         Stitch adjacent chunks when re-ranking
         Implements the coach's stitching strategy

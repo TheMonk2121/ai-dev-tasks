@@ -326,6 +326,10 @@ class BedrockClient:
                 logger.warning(f"Outer retry {attempt}/{outer_retries} failed, waiting {sleep:.2f}s: {e}")
                 time.sleep(sleep)
 
+        # Ensure we have a valid exception to raise
+        if last_err is None:
+            last_err = Exception("All outer retry attempts failed - no specific error captured")
+
         logger.error(f"All outer retry attempts failed: {last_err}")
         raise last_err
 

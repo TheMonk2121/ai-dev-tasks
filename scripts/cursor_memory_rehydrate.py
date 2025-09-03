@@ -11,6 +11,7 @@ Usage in Cursor:
 3. Use the context for informed responses
 """
 
+import argparse
 import os
 import sys
 
@@ -101,8 +102,6 @@ def main():
     """Build and display a memory rehydration bundle for Cursor AI"""
 
     # Parse command line arguments
-    import argparse
-
     parser = argparse.ArgumentParser(description="Cursor Memory Rehydration with Kill-Switches")
     parser.add_argument(
         "role",

@@ -132,6 +132,42 @@ Our documentation follows a structured 00-12 system designed for different user 
 
 **Implementation Location**: `src/telemetry/`, `src/retrieval/`, `src/evaluation/` + enhanced `HybridRetriever`
 
+## 🚀 Recent Implementation: Phase 3 Domain Tuning
+
+**Just Shipped**: Complete Phase 3 domain tuning pipeline for breaking through RAG performance plateaus using data-driven fine-tuning and hard negative mining.
+
+### ✅ Phase 3: Domain Tuning & Model Fine-Tuning
+- **Data Pipeline**: Automatically mines positive examples from accepted answers and hard negatives from high-scoring non-cited contexts
+- **Multi-Model Training**: Simultaneous fine-tuning of dual-encoder, cross-encoder, and query rewrite models
+- **Balanced Training**: Maintains 1:3+ positive-to-negative ratio for robust model development
+- **Hard Negative Mining**: Identifies challenging examples that improve model discrimination
+
+### 🎯 Training Components
+- **Dual-Encoder**: Contrastive learning for improved retrieval quality (BGE-small-en-v1.5)
+- **Cross-Encoder**: Pairwise margin ranking for enhanced reranking (BGE-reranker-v2-m3)
+- **Query Rewrite**: T5-small for acronym expansion and entity normalization
+- **Configuration Management**: Default, aggressive, and conservative tuning profiles
+
+### 🔧 Production Features
+- **Frozen Slice Evaluation**: Consistent benchmarking on Phase 0 evaluation slices
+- **Baseline Comparison**: Detailed improvement/regression analysis vs Phase 0/1 metrics
+- **Comprehensive Reporting**: Training reports with actionable deployment recommendations
+- **Feature Flags**: Gradual rollout with A/B testing and performance monitoring
+
+### 📊 Expected Performance Improvements
+- **F1 Score**: +2-4 points through domain adaptation
+- **Recall**: Enhanced retrieval quality via fine-tuned dual-encoder
+- **Reranking**: Improved cross-encoder performance on domain-specific queries
+- **Query Understanding**: Better acronym expansion and entity recognition
+
+**Implementation Location**: `src/training/`, `src/rag/` + comprehensive demo in `scripts/phase3_demo.py`
+
+### 🎯 Next Phase: Phase 4 Uncertainty & Calibration
+- **Confidence Calibration**: Temperature scaling and proper abstain thresholds
+- **Selective Answering**: Evidence quality-based abstention mechanisms
+- **Feedback Loops**: User feedback integration for continuous improvement
+- **Production Confidence**: Safe deployment with uncertainty quantification
+
 ## 🤝 Who This Is For
 
 - **Solo Developers**: Who want professional-grade tooling without the overhead
@@ -147,6 +183,30 @@ MIT License - see [LICENSE](LICENSE) for details.
 ---
 
 **This isn't just another development tool. It's a complete reimagining of how AI can augment human development by remembering, learning, and building on your team's collective intelligence.**
+
+## 📋 README Context
+
+### Recent Implementations
+- **Phase 0/1 RAG Enhancement**: Complete evaluation, telemetry, and retrieval optimization pipeline
+- **Phase 3 Domain Tuning**: Data-driven fine-tuning with hard negative mining for performance improvement
+
+### Current Focus
+- **RAG Performance Optimization**: Targeting RAGChecker baseline improvements (Precision ≥0.149, Recall ≥0.45, F1 ≥0.22)
+- **Production Deployment**: Feature flags, monitoring, and gradual rollout for Phase 3 components
+- **Phase 4 Preparation**: Uncertainty calibration and feedback loops for production confidence
+
+### Key Backlog Items
+- **B-1009**: AsyncIO Scribe Enhancement (Impact 10/10, Complexity 10/10)
+- **B-1048**: DSPy Role Integration with Vector-Based System Mapping (Impact 10/10, Complexity 10/10)
+- **B-1049**: Pydantic Integration with RAGChecker Evaluation System (Impact 10/10, Complexity 10/10)
+- **B-1043**: Memory System Integration Automation (Impact 10/10, Complexity 10/10)
+- **B-1030**: High-priority implementation item (Impact 10/10, Complexity 10/10)
+
+### System Status
+- **Memory Systems**: LTST, Cursor, Go CLI, Prime all operational
+- **RAG Pipeline**: Phase 0-3 complete, Phase 4 ready for implementation
+- **Quality Gates**: Automated validation with 0.030s average execution time
+- **Documentation**: Structured 00-12 system with auto-validation
 
 ## 🙏 Credits
 

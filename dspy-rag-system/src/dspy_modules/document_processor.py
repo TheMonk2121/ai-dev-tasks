@@ -181,15 +181,15 @@ class DocumentProcessor(Module):
         chunk_data = self.chunker.create_smart_chunks(text, document_id)
         chunk_texts = [chunk["text"] for chunk in chunk_data]
 
-        # Get token statistics efficiently
-        chunk_stats = self.chunker.get_chunk_stats(text)
+        # Get token statistics efficiently from base chunker
+        chunk_stats = self.chunker.base_chunker.get_chunk_stats(text)
 
         for idx, chunk_text in enumerate(chunk_texts):
             chunk_id = f"{document_id}_chunk_{idx}"
 
             # Calculate approximate token offsets (this is an estimate)
             start_token = idx * self.chunk_size
-            end_token = start_token + len(self.chunker.encoder.encode(chunk_text))
+            end_token = start_token + len(self.chunker.base_chunker.encoder.encode(chunk_text))
 
             # Extract anchor metadata from chunk content
             anchor_metadata = extract_anchor_metadata(chunk_text)

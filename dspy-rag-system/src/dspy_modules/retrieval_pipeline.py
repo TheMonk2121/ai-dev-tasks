@@ -7,7 +7,7 @@ Implements the coach's strategy for pushing F1 over 20%
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -61,7 +61,7 @@ class EnhancedRetrievalPipeline:
         )
 
     def retrieve_with_context(
-        self, query: str, query_type: str = None, enable_stitching: bool = True
+        self, query: str, query_type: Optional[str] = None, enable_stitching: bool = True
     ) -> List[Dict[str, Any]]:
         """
         Enhanced retrieval with context-aware processing
@@ -106,16 +106,19 @@ class EnhancedRetrievalPipeline:
         else:
             return "general"
 
-    def _stitch_related_chunks(self, results: List[Dict], query_type: str) -> List[Dict]:
+    def _stitch_related_chunks(self, results: List[Any], query_type: str) -> List[Dict[str, Any]]:
         """Stitch related chunks for better context"""
+        # Convert to list of dicts if needed
+        dict_results = [dict(r) if hasattr(r, "__dict__") else r for r in results]
+
         if query_type == "implementation":
             # For implementation queries, prefer complete code units
-            return self.chunker.stitch_adjacent_chunks(results, query_type)
+            return self.chunker.stitch_adjacent_chunks(dict_results, query_type)
         else:
             # For other queries, use standard stitching
-            return self.chunker.stitch_adjacent_chunks(results)
+            return self.chunker.stitch_adjacent_chunks(dict_results)
 
-    def _enhance_with_metadata(self, results: List[Dict], query: str, query_type: str) -> List[Dict]:
+    def _enhance_with_metadata(self, results: List[Any], query: str, query_type: str) -> List[Dict[str, Any]]:
         """Enhance results with metadata for answer generation"""
         enhanced = []
 
@@ -132,7 +135,7 @@ class EnhancedRetrievalPipeline:
 
         return enhanced
 
-    def _calculate_completeness(self, result: Dict, query_type: str) -> float:
+    def _calculate_completeness(self, result: Any, query_type: str) -> float:
         """Calculate completeness score for the chunk"""
         base_score = 0.5
 

@@ -5,6 +5,7 @@ import logging
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -155,7 +156,7 @@ class RoleGUCManager:
         """Get the currently applied GUC settings."""
         return self.applied_settings.copy()
 
-    def get_role_config(self, role: str = None) -> Dict[str, str]:
+    def get_role_config(self, role: Optional[str] = None) -> Dict[str, str]:
         """Get the GUC configuration for a specific role."""
         if role is None:
             role = self.current_role
@@ -185,7 +186,7 @@ class RoleGUCManager:
 
         return "\n".join(config_lines)
 
-    def save_config(self, filepath: str = None) -> str:
+    def save_config(self, filepath: Optional[str] = None) -> str:
         """Save the current role configuration to a file."""
         if filepath is None:
             timestamp = int(time.time())
