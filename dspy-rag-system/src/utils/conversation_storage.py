@@ -603,11 +603,13 @@ class ConversationStorage:
         try:
             # Clean expired context
             self.cursor.execute("SELECT clean_expired_context();")
-            context_cleaned = self.cursor.fetchone()[0] if self.cursor.fetchone() else 0
+            _row = self.cursor.fetchone()
+            context_cleaned = _row[0] if _row else 0
 
             # Clean expired cache
             self.cursor.execute("SELECT clean_expired_cache();")
-            cache_cleaned = self.cursor.fetchone()[0] if self.cursor.fetchone() else 0
+            _row2 = self.cursor.fetchone()
+            cache_cleaned = _row2[0] if _row2 else 0
 
             self.connection.commit()
 

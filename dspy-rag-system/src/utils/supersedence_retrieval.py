@@ -13,6 +13,12 @@ from typing import Any, Dict, List, Optional
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
+# Prefer pooled connections with per-role GUCs
+try:
+    from .db_pool import get_conn
+except Exception:  # pragma: no cover
+    get_conn = None  # type: ignore
+
 logger = logging.getLogger(__name__)
 
 
@@ -34,7 +40,13 @@ class SupersedenceRetrieval:
             List of conflicting decisions
         """
         try:
-            with psycopg2.connect(self.db_connection_string) as conn:
+            # Use pooled connection if available
+            if get_conn is not None:
+                ctx = get_conn(role="retrieval")
+            else:
+                ctx = psycopg2.connect(self.db_connection_string)
+
+            with ctx as conn:  # type: ignore
                 with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                     # Extract key terms from the new decision
                     key_terms = self._extract_key_terms(new_decision["head"])
@@ -192,7 +204,13 @@ class SupersedenceRetrieval:
             True if successful, False otherwise
         """
         try:
-            with psycopg2.connect(self.db_connection_string) as conn:
+            # Use pooled connection if available
+            if get_conn is not None:
+                ctx = get_conn(role="writer")
+            else:
+                ctx = psycopg2.connect(self.db_connection_string)
+
+            with ctx as conn:  # type: ignore
                 with conn.cursor() as cursor:
                     cursor.execute(
                         """
@@ -240,7 +258,13 @@ class SupersedenceRetrieval:
             List of decisions ranked by relevance and supersedence status
         """
         try:
-            with psycopg2.connect(self.db_connection_string) as conn:
+            # Use pooled connection if available
+            if get_conn is not None:
+                ctx = get_conn(role="retrieval")
+            else:
+                ctx = psycopg2.connect(self.db_connection_string)
+
+            with ctx as conn:  # type: ignore
                 with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                     # Build the query with supersedence filtering
                     base_query = """
@@ -363,7 +387,13 @@ class SupersedenceRetrieval:
     def get_supersedence_stats(self) -> Dict[str, Any]:
         """Get statistics about supersedence"""
         try:
-            with psycopg2.connect(self.db_connection_string) as conn:
+            # Use pooled connection if available
+            if get_conn is not None:
+                ctx = get_conn(role="retrieval")
+            else:
+                ctx = psycopg2.connect(self.db_connection_string)
+
+            with ctx as conn:  # type: ignore
                 with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                     # Get total decisions
                     cursor.execute("SELECT COUNT(*) as total FROM decisions")
@@ -407,7 +437,13 @@ class SupersedenceRetrieval:
 def create_supersedence_tables(db_connection_string: str) -> bool:
     """Create supersedence-related tables if they don't exist"""
     try:
-        with psycopg2.connect(db_connection_string) as conn:
+        # Use pooled connection if available
+        if get_conn is not None:
+            ctx = get_conn(role="writer")
+        else:
+            ctx = psycopg2.connect(db_connection_string)
+
+        with ctx as conn:  # type: ignore
             with conn.cursor() as cursor:
                 # Create supersedence log table
                 cursor.execute(
@@ -457,6 +493,42 @@ def create_supersedence_tables(db_connection_string: str) -> bool:
                         END IF;
                     END $$;
                 """
+                )
+
+                # Add foreign-key constraints to ensure referential integrity (idempotent)
+                cursor.execute(
+                    """
+                    DO $$
+                    BEGIN
+                        IF NOT EXISTS (
+                            SELECT 1
+                            FROM information_schema.table_constraints tc
+                            WHERE tc.table_name = 'decision_supersedence_log'
+                              AND tc.constraint_type = 'FOREIGN KEY'
+                              AND tc.constraint_name = 'fk_supersedence_log_superseded'
+                        ) THEN
+                            ALTER TABLE decision_supersedence_log
+                            ADD CONSTRAINT fk_supersedence_log_superseded
+                            FOREIGN KEY (superseded_decision_key)
+                            REFERENCES decisions(decision_key)
+                            ON DELETE CASCADE;
+                        END IF;
+
+                        IF NOT EXISTS (
+                            SELECT 1
+                            FROM information_schema.table_constraints tc
+                            WHERE tc.table_name = 'decision_supersedence_log'
+                              AND tc.constraint_type = 'FOREIGN KEY'
+                              AND tc.constraint_name = 'fk_supersedence_log_superseding'
+                        ) THEN
+                            ALTER TABLE decision_supersedence_log
+                            ADD CONSTRAINT fk_supersedence_log_superseding
+                            FOREIGN KEY (superseding_decision_key)
+                            REFERENCES decisions(decision_key)
+                            ON DELETE CASCADE;
+                        END IF;
+                    END $$;
+                    """
                 )
 
                 conn.commit()

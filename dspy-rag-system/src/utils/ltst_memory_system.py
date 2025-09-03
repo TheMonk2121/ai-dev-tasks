@@ -5,9 +5,12 @@ This module provides the main integration class for the LTST Memory System,
 combining conversation storage, context merging, and memory rehydration capabilities.
 """
 
+import os
+import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from .context_merger import ContextMerger, ContextMergeResult
@@ -19,6 +22,19 @@ from .ltst_database_integration import DatabaseMergeResult, DatabaseRehydrationR
 from .memory_rehydrator import MemoryRehydrator, RehydrationRequest, RehydrationResult
 from .privacy_manager import PrivacyConfig, PrivacyManager
 from .session_continuity import SessionContinuityManager
+
+# Add src to path for DSN resolver import
+try:
+    # Try relative import first (when running from dspy-rag-system directory)
+    from ...src.common.db_dsn import resolve_dsn
+except ImportError:
+    try:
+        # Try absolute import (when running from project root)
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "src"))
+        from common.db_dsn import resolve_dsn
+    except ImportError:
+        # Fallback to direct environment variable access
+        resolve_dsn = None
 
 logger = setup_logger(__name__)
 
@@ -64,9 +80,27 @@ class LTSTMemorySystem:
     def __init__(self, db_manager: Optional[DatabaseResilienceManager] = None):
         """Initialize the LTST Memory System."""
         if db_manager is None:
-            import os
+            # Use DSN resolver for unified database connection management
+            if resolve_dsn:
+                try:
+                    connection_string = resolve_dsn(strict=False, emit_warning=False)
+                    if not connection_string:
+                        # Fallback to direct environment variable access
+                        connection_string = os.getenv(
+                            "DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency"
+                        )
+                        logger.warning("DSN resolver failed, falling back to direct DATABASE_URL access")
+                    else:
+                        logger.info(f"Using DSN resolver: {connection_string[:50]}...")
+                except Exception as e:
+                    # Fallback to direct environment variable access
+                    connection_string = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
+                    logger.warning(f"DSN resolver error: {e}, falling back to direct DATABASE_URL access")
+            else:
+                # DSN resolver not available, use direct environment variable access
+                connection_string = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
+                logger.warning("DSN resolver not available, using direct DATABASE_URL access")
 
-            connection_string = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
             self.db_manager = DatabaseResilienceManager(connection_string)
         else:
             self.db_manager = db_manager

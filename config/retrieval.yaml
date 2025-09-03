@@ -61,12 +61,36 @@ performance:
   # Memory management
   max_cache_size: 1000 # Maximum cached queries
 
-# Reranking (lightweight heuristic)
+# Reranking (cross-encoder + fallback)
 rerank:
   enabled: true
   alpha: 0.7 # Weight of rerank vs fused score
   final_top_n: 8 # Final selection count after rerank
-  method: heuristic # Heuristic reranker (no heavy deps)
+  method: cross_encoder # cross_encoder | heuristic
+
+  # Cross-encoder settings
+  cross_encoder:
+    model_name: "BAAI/bge-reranker-base" # BGE reranker baseline
+    onnx_path: "models/reranker.onnx" # ONNX-INT8 export path
+    micro_batch_size: 32 # Micro-batch pairs for efficiency
+    timeout_ms: 400 # Per-request budget
+    max_timeout_ms: 600 # Hard timeout before fallback
+    fallback_to_heuristic: true # Fallback on timeout/error
+    workers: 3 # Max concurrent reranker workers
+
+  # Windowing (before rerank)
+  windowing:
+    enabled: true
+    window_size_tokens: 150 # 120-180 token windows
+    overlap_pct: 33 # 30-40% overlap
+    preserve_doc_boundaries: true # Don't cross document boundaries
+
+  # Near-duplicate suppression
+  dedup:
+    enabled: true
+    method: cosine # cosine | minhash
+    threshold: 0.9 # Similarity threshold for dedup
+    before_rerank: true # Apply deduplication before reranking
 
 # Packing (context assembly)
 packing:
@@ -144,3 +168,67 @@ tuning:
       min_bm25_score: [0.05, 0.1, 0.15, 0.2]
       min_vector_score: [0.6, 0.65, 0.7, 0.75, 0.8]
       diversity_threshold: [0.85, 0.9, 0.95]
+
+# Phase 0: Evaluation, Telemetry & Canary
+evaluation:
+  # Golden evaluation slices
+  golden_sets:
+    base_path: "configs/eval/golden/"
+    slices:
+      - name: "novice_vs_expert"
+        path: "novice_expert_queries.jsonl"
+      - name: "single_vs_multi_hop"
+        path: "hop_complexity_queries.jsonl"
+      - name: "structured_vs_unstructured"
+        path: "data_type_queries.jsonl"
+      - name: "freshness_sensitive_vs_evergreen"
+        path: "temporal_queries.jsonl"
+
+  # Metrics to compute
+  metrics:
+    enabled: ["ndcg_10", "coverage", "exact_match", "span_support", "f1", "ece"]
+    temperature_scaling: true # Calibrate confidence via temp scaling
+    confidence_threshold: 0.6 # Abstain threshold after calibration
+
+# Telemetry & Observability
+telemetry:
+  enabled: true
+  per_request_logging: true # Log full query → answer pipeline
+  log_path: "metrics/logs/requests.jsonl"
+  log_fields:
+    [
+      "query",
+      "candidates",
+      "fusion_ranks",
+      "rerank_scores",
+      "selected_spans",
+      "answer",
+      "confidence",
+      "user_action",
+    ]
+
+  # Per-stage timing
+  stage_timing: true
+  stages: ["bm25", "vector", "fusion", "prefilter", "rerank", "generate"]
+  timing_percentiles: [50, 95] # p50 and p95 for TTFT
+
+# Canary & A/B Testing
+canary:
+  enabled: false # Feature flag for canary deployment
+  sample_pct: 10 # Percentage of traffic to canary
+  tag_requests: true # Tag requests for before/after analysis
+  store_ranks: true # Store before/after ranks for hard-negative mining
+  comparison_metrics: ["ndcg_10", "latency_p95", "user_satisfaction"]
+
+# Advanced concurrency & resilience
+resilience:
+  # Singleflight deduplication
+  singleflight:
+    enabled: true
+    ttl_seconds: 30 # Cache identical queries for 30s
+
+  # Graceful degradation
+  fallback:
+    bm25_only_on_timeout: true # Fall back to BM25-only on vector/rerank timeout
+    max_retries: 1 # Retry failed components once
+    circuit_breaker: true # Open circuit on repeated failures

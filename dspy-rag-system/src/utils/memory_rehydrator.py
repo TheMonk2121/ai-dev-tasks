@@ -1100,3 +1100,56 @@ def build_hydration_bundle(
             "fallback": True,
         }
         return HydrationBundle(text=fallback_text, meta=fallback_meta)
+
+
+def rehydrate(query: str, role: str = "planner", **config: Any) -> HydrationBundle:
+    """
+    Compatibility wrapper that builds a hydration bundle.
+
+    Args:
+        query: Task/query description
+        role: Role requesting context (planner/implementer/researcher/coder/reviewer)
+        **config: Optional knobs; recognized keys are mapped into metadata
+                 - limit: int (maps to build_hydration_bundle limit)
+                 - token_budget or max_context_length: int (maps to token_budget)
+                 - stability, use_rrf, dedupe, expand_query, use_entity_expansion: recorded in meta only
+
+    Returns:
+        HydrationBundle with text and metadata.
+    """
+    try:
+        limit = int(config.get("limit", 8))
+        token_budget = int(config.get("token_budget", config.get("max_context_length", 1200)))
+
+        bundle = build_hydration_bundle(role=role, task=query, limit=limit, token_budget=token_budget)
+
+        # Attach passthrough config to metadata for transparency
+        passthrough_keys = [
+            "stability",
+            "use_rrf",
+            "dedupe",
+            "expand_query",
+            "use_entity_expansion",
+        ]
+        extra_meta = {k: config[k] for k in passthrough_keys if k in config}
+        bundle.meta.update({
+            "query": query,
+            "requested_role": role,
+            "limit": limit,
+            "token_budget": token_budget,
+            **extra_meta,
+        })
+        return bundle
+    except Exception as e:
+        # Fall back to a minimal bundle
+        logger.error(f"rehydrate wrapper failed: {e}")
+        return HydrationBundle(
+            text=f"# Memory Rehydration for {role}\n\nNo specific context found for task: {query}",
+            meta={
+                "role": role,
+                "task": query,
+                "error": str(e),
+                "fallback": True,
+                "generated_at": datetime.now().isoformat(),
+            },
+        )

@@ -518,6 +518,39 @@ CREATE TRIGGER trigger_create_performance_alerts
 -- GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO your_app_user;
 
 -- Create a scheduled job to update trends daily (requires pg_cron extension)
+-- Helper to create future partitions (idempotent); schedule daily if needed
+CREATE OR REPLACE FUNCTION ensure_future_performance_partitions(p_days_ahead INTEGER DEFAULT 7)
+RETURNS VOID AS $$
+DECLARE
+    partition_date DATE;
+    partition_name TEXT;
+    start_date DATE;
+    end_date DATE;
+BEGIN
+    FOR i IN 1..GREATEST(p_days_ahead, 0) LOOP
+        partition_date := CURRENT_DATE + i;
+        partition_name := 'performance_metrics_' || to_char(partition_date, 'YYYY_MM_DD');
+        start_date := partition_date;
+        end_date := partition_date + INTERVAL '1 day';
+
+        EXECUTE format('
+            CREATE TABLE IF NOT EXISTS %I PARTITION OF performance_metrics
+            FOR VALUES FROM (%L) TO (%L)
+        ', partition_name, start_date, end_date);
+
+        EXECUTE format('
+            CREATE INDEX IF NOT EXISTS idx_%I_workflow_id ON %I (workflow_id)
+        ', partition_name, partition_name);
+        EXECUTE format('
+            CREATE INDEX IF NOT EXISTS idx_%I_collection_point ON %I (collection_point)
+        ', partition_name, partition_name);
+        EXECUTE format('
+            CREATE INDEX IF NOT EXISTS idx_%I_timestamp ON %I (timestamp)
+        ', partition_name, partition_name);
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
 -- SELECT cron.schedule('update-performance-trends', '0 1 * * *', 'SELECT update_performance_trends();');
 
 -- Create a scheduled job to cleanup old data weekly (requires pg_cron extension)

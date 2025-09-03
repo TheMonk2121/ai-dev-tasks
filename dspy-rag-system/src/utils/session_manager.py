@@ -187,7 +187,10 @@ class SessionManager:
                 return False
 
             # Update activity
-            session_state.last_activity = datetime.now()
+            now = datetime.now()
+            # accumulate duration since previous activity if available
+            prev_last = session_state.last_activity
+            session_state.last_activity = now
             session_state.is_active = True
 
             # Update counters based on activity type
@@ -198,8 +201,9 @@ class SessionManager:
             elif activity_type == "preference":
                 session_state.preference_count += 1
 
-            # Update session duration
-            session_state.session_duration = datetime.now() - session_state.last_activity
+            # Update session duration (accumulate time delta since previous activity)
+            if isinstance(prev_last, datetime):
+                session_state.session_duration += (now - prev_last)
 
             # Update cache
             self.active_sessions[session_id] = session_state

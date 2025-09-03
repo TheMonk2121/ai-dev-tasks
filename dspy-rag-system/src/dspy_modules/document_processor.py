@@ -29,7 +29,7 @@ sys.path.append("src")
 from utils.anchor_metadata_parser import extract_anchor_metadata
 from utils.logger import get_logger
 from utils.metadata_extractor import ConfigDrivenMetadataExtractor
-from utils.tokenizer import TokenAwareChunker
+from utils.smart_chunker import create_smart_chunker
 
 
 class DocumentProcessor(Module):
@@ -50,8 +50,10 @@ class DocumentProcessor(Module):
         # Initialize structured logging (use singleton factory)
         self.logger = get_logger("document_processor")
 
-        # Initialize token-aware chunker
-        self.chunker = TokenAwareChunker(max_tokens=chunk_size, overlap_tokens=chunk_overlap)
+        # Initialize smart code-aware chunker
+        self.chunker = create_smart_chunker(
+            max_tokens=chunk_size, overlap_tokens=chunk_overlap, preserve_code_units=True, enable_stitching=True
+        )
 
         # Initialize config-driven metadata extractor
         self.metadata_extractor = ConfigDrivenMetadataExtractor(config_path)
@@ -175,7 +177,9 @@ class DocumentProcessor(Module):
     def _create_structured_chunks(self, text: str, document_id: str) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
         """Create structured chunks with IDs and token offsets"""
         chunks = []
-        chunk_texts = self.chunker.create_chunks(text)
+        # Use smart chunking with file path for context
+        chunk_data = self.chunker.create_smart_chunks(text, document_id)
+        chunk_texts = [chunk["text"] for chunk in chunk_data]
 
         # Get token statistics efficiently
         chunk_stats = self.chunker.get_chunk_stats(text)

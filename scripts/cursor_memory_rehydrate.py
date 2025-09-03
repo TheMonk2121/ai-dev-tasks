@@ -155,7 +155,7 @@ def main():
 
     args = parser.parse_args()
 
-    # Import memory rehydrator functions
+    # Import memory rehydrator compatibility wrapper
     try:
         from dspy_rag_system.src.utils.memory_rehydrator import rehydrate
     except ImportError:
@@ -181,14 +181,15 @@ def main():
     print(f"⚙️  Configuration: stability={args.stability}, dedupe={args.dedupe}, expand-query={args.expand_query}")
 
     try:
+        # Build bundle via compatibility wrapper (records flags in metadata)
         bundle = rehydrate(
             query=args.task,
+            role=args.role,
             stability=args.stability,
             use_rrf=not args.no_rrf,
             dedupe=args.dedupe,
             expand_query=args.expand_query,
             use_entity_expansion=not args.no_entity_expansion,
-            role=args.role,
         )
 
         # Apply few-shot cognitive scaffolding if enabled

@@ -15,6 +15,12 @@ from typing import Any, Dict, List, Optional
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
+# Prefer pooled connections with per-role GUCs
+try:
+    from .db_pool import get_conn
+except Exception:  # pragma: no cover
+    get_conn = None  # type: ignore
+
 logger = logging.getLogger(__name__)
 
 # Decision patterns and keywords
@@ -241,7 +247,13 @@ class DecisionExtractor:
             return True
 
         try:
-            with psycopg2.connect(self.db_connection_string) as conn:
+            # Use pooled connection if available
+            if get_conn is not None:
+                ctx = get_conn(role="writer")
+            else:
+                ctx = psycopg2.connect(self.db_connection_string)
+
+            with ctx as conn:  # type: ignore
                 with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                     for decision in decisions:
                         # Check if decision already exists
@@ -327,7 +339,13 @@ class DecisionExtractor:
             List of matching decisions
         """
         try:
-            with psycopg2.connect(self.db_connection_string) as conn:
+            # Use pooled connection if available
+            if get_conn is not None:
+                ctx = get_conn(role="retrieval")
+            else:
+                ctx = psycopg2.connect(self.db_connection_string)
+
+            with ctx as conn:  # type: ignore
                 with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                     if session_id:
                         cursor.execute(
@@ -411,8 +429,17 @@ class DecisionExtractor:
 def create_decisions_table(db_connection_string: str) -> bool:
     """Create the decisions table if it doesn't exist"""
     try:
-        with psycopg2.connect(db_connection_string) as conn:
+        # Use pooled connection if available
+        if get_conn is not None:
+            ctx = get_conn(role="writer")
+        else:
+            ctx = psycopg2.connect(db_connection_string)
+
+        with ctx as conn:  # type: ignore
             with conn.cursor() as cursor:
+                # Useful extensions for text search acceleration (idempotent)
+                cursor.execute("CREATE EXTENSION IF NOT EXISTS \"pg_trgm\";")
+
                 cursor.execute(
                     """
                     CREATE TABLE IF NOT EXISTS decisions (
@@ -460,6 +487,67 @@ def create_decisions_table(db_connection_string: str) -> bool:
                     CREATE INDEX IF NOT EXISTS idx_decisions_confidence
                     ON decisions(confidence DESC)
                 """
+                )
+
+                # Partial indexes to speed active lookups
+                cursor.execute(
+                    """
+                    CREATE INDEX IF NOT EXISTS idx_decisions_active
+                    ON decisions(decision_key)
+                    WHERE superseded = FALSE
+                    """
+                )
+
+                cursor.execute(
+                    """
+                    CREATE INDEX IF NOT EXISTS idx_decisions_session_active
+                    ON decisions(session_id)
+                    WHERE superseded = FALSE
+                    """
+                )
+
+                # Trigram indexes to accelerate ILIKE searches on head/rationale
+                cursor.execute(
+                    """
+                    CREATE INDEX IF NOT EXISTS idx_decisions_head_trgm
+                    ON decisions USING GIN (head gin_trgm_ops)
+                    """
+                )
+
+                cursor.execute(
+                    """
+                    CREATE INDEX IF NOT EXISTS idx_decisions_rationale_trgm
+                    ON decisions USING GIN (rationale gin_trgm_ops)
+                    """
+                )
+
+                # Updated_at maintenance trigger (idempotent)
+                cursor.execute(
+                    """
+                    CREATE OR REPLACE FUNCTION decisions_set_updated_at()
+                    RETURNS TRIGGER AS $$
+                    BEGIN
+                        NEW.updated_at := NOW();
+                        RETURN NEW;
+                    END;
+                    $$ LANGUAGE plpgsql;
+                    """
+                )
+
+                cursor.execute(
+                    """
+                    DO $$
+                    BEGIN
+                        IF NOT EXISTS (
+                            SELECT 1 FROM pg_trigger WHERE tgname = 'trg_decisions_set_updated_at'
+                        ) THEN
+                            CREATE TRIGGER trg_decisions_set_updated_at
+                            BEFORE UPDATE ON decisions
+                            FOR EACH ROW
+                            EXECUTE FUNCTION decisions_set_updated_at();
+                        END IF;
+                    END $$;
+                    """
                 )
 
                 conn.commit()
