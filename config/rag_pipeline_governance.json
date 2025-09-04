@@ -1,0 +1,93 @@
+{
+    "governance_config": {
+        "validation_thresholds": {
+            "min_chunk_size": 100,
+            "max_chunk_size": 2000,
+            "min_top_k": 1,
+            "max_top_k": 50,
+            "min_temperature": 0.0,
+            "max_temperature": 2.0,
+            "min_overlap": 0,
+            "max_overlap": 200
+        },
+        "known_good_patterns": {
+            "ragchecker_standard": {
+                "description": "Standard RAGChecker evaluation pipeline",
+                "performance_profile": "balanced",
+                "use_cases": [
+                    "general_evaluation",
+                    "baseline_testing"
+                ]
+            },
+            "ragchecker_enhanced": {
+                "description": "Enhanced RAGChecker evaluation pipeline",
+                "performance_profile": "high_performance",
+                "use_cases": [
+                    "production_evaluation",
+                    "optimization_testing"
+                ]
+            }
+        },
+        "augmentation_settings": {
+            "syntactic_variations": {
+                "parameter_variation_range": 0.1,
+                "stage_swap_probability": 0.3,
+                "metadata_modification_probability": 0.2
+            },
+            "semantic_variations": {
+                "node_deletion_probability": 0.15,
+                "edge_deletion_probability": 0.1,
+                "non_critical_node_types": [
+                    "parameter",
+                    "config"
+                ]
+            }
+        },
+        "performance_monitoring": {
+            "enable_metrics_tracking": true,
+            "evaluation_interval": 100,
+            "performance_thresholds": {
+                "min_precision": 0.15,
+                "min_recall": 0.10,
+                "min_f1_score": 0.12,
+                "min_context_utilization": 0.5
+            }
+        }
+    },
+    "integration_settings": {
+        "ragchecker_integration": {
+            "enable_validation": true,
+            "enable_optimization": true,
+            "enable_augmentation": true,
+            "validation_timeout": 30,
+            "optimization_timeout": 60
+        },
+        "memory_system_integration": {
+            "enable_pattern_storage": true,
+            "enable_performance_tracking": true,
+            "storage_backend": "postgresql"
+        }
+    },
+    "evaluation_config": {
+        "test_queries": [
+            "What is the current project status?",
+            "How do I create a PRD?",
+            "What are the DSPy integration patterns?",
+            "How does the memory system work?",
+            "What are the development workflows?"
+        ],
+        "evaluation_metrics": [
+            "precision",
+            "recall",
+            "f1_score",
+            "context_utilization",
+            "response_quality"
+        ],
+        "performance_targets": {
+            "precision": 0.20,
+            "recall": 0.45,
+            "f1_score": 0.22,
+            "context_utilization": 0.60
+        }
+    }
+}
