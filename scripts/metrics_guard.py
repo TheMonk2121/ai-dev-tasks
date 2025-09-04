@@ -45,8 +45,14 @@ def check_baseline_compliance(results_file: str) -> bool:
     print(f"📈 Total Cases: {results.get('total_cases', 'unknown')}")
     print()
 
-    # Define baseline requirements
-    baseline_requirements = {"precision": 0.20, "recall": 0.45, "f1_score": 0.22, "faithfulness": 0.60}
+    # Define baseline requirements based on judge mode
+    judge_mode = results.get("judge_mode", "sonnet")
+    if judge_mode == "haiku":
+        # Interim Haiku floors (more conservative judge)
+        baseline_requirements = {"precision": 0.135, "recall": 0.16, "f1_score": 0.145, "faithfulness": 0.60}
+    else:
+        # Legacy Sonnet floors
+        baseline_requirements = {"precision": 0.20, "recall": 0.45, "f1_score": 0.22, "faithfulness": 0.60}
 
     # Check each metric
     all_passed = True

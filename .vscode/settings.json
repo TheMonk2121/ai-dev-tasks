@@ -499,7 +499,18 @@
         "creds",
         "IBAN",
         "sess",
-        "slos"
+        "slos",
+        "AKIA",
+        "botocore",
+        "getenv",
+        "selfk",
+        "sents",
+        "SGPTDW",
+        "throttl",
+        "tightenings",
+        "TOBG",
+        "unsuffixed",
+        "virtualenv"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [

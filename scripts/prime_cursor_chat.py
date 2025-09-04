@@ -24,7 +24,7 @@ def run_memory_rehydrator(role="planner", task="current project status and core 
 
     try:
         # Run the memory rehydrator
-        cmd = [sys.executable, "scripts/memory_rehydrate.py", "--role", role, "--query", task]
+        cmd = [sys.executable, "scripts/cursor_memory_rehydrate.py", role, task]
 
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(os.path.dirname(__file__)))
 
