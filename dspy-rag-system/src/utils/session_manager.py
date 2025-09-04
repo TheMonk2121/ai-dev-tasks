@@ -310,21 +310,18 @@ class SessionManager:
             return []
 
     def get_user_sessions(self, user_id: str, limit: int = 20, active_only: bool = False) -> List[SessionSummary]:
-        """Get sessions for a user."""
+        """Get sessions for a user with DB fallback when cache is cold."""
         try:
-            # Get session summaries from storage
-            # Note: This would need to be implemented in ConversationStorage
-            # For now, we'll return basic session information
+            sessions: List[SessionSummary] = []
 
-            sessions = []
-
-            # Get recent sessions from active sessions cache
+            # 1) From in-memory cache
             for session_id, session_state in self.active_sessions.items():
-                if session_state.user_id == user_id:
-                    if active_only and not session_state.is_active:
-                        continue
-
-                    summary = SessionSummary(
+                if session_state.user_id != user_id:
+                    continue
+                if active_only and not session_state.is_active:
+                    continue
+                sessions.append(
+                    SessionSummary(
                         session_id=session_id,
                         user_id=user_id,
                         total_messages=session_state.message_count,
@@ -336,11 +333,39 @@ class SessionManager:
                         created_at=session_state.last_activity - session_state.session_duration,
                         last_updated=session_state.last_activity,
                     )
-                    sessions.append(summary)
+                )
 
-            # Sort by last activity
+            # 2) If nothing in cache, fetch from DB
+            if not sessions:
+                rows = self.conversation_storage.get_user_sessions(user_id, limit=limit, active_only=active_only)
+                for row in rows:
+                    last_activity = row.get("last_activity")
+                    if isinstance(last_activity, str):
+                        from datetime import datetime as _dt
+                        try:
+                            last_activity_dt = _dt.fromisoformat(last_activity)
+                        except Exception:
+                            last_activity_dt = _dt.now()
+                    else:
+                        last_activity_dt = last_activity or datetime.now()
+
+                    duration_seconds = row.get("session_length", 0) or 0
+                    sessions.append(
+                        SessionSummary(
+                            session_id=row.get("session_id", ""),
+                            user_id=row.get("user_id", user_id),
+                            total_messages=row.get("session_length", 0) or 0,
+                            total_contexts=0,
+                            total_preferences=0,
+                            session_duration=timedelta(seconds=duration_seconds),
+                            learning_insights=[],
+                            preference_updates=[],
+                            created_at=row.get("created_at", last_activity_dt),
+                            last_updated=last_activity_dt,
+                        )
+                    )
+
             sessions.sort(key=lambda x: x.last_updated, reverse=True)
-
             return sessions[:limit]
 
         except Exception as e:

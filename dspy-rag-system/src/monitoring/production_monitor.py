@@ -30,6 +30,7 @@ from utils.security import SecurityScanner
 
 logger = get_logger("production_monitor")
 
+
 @dataclass
 class SecurityEvent:
     """Security event data structure"""
@@ -42,6 +43,7 @@ class SecurityEvent:
     correlation_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
+
 @dataclass
 class HealthCheck:
     """Health check result"""
@@ -52,6 +54,7 @@ class HealthCheck:
     last_check: datetime
     error_message: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
+
 
 @dataclass
 class SystemMetrics:
@@ -64,6 +67,7 @@ class SystemMetrics:
     network_io: Dict[str, float]
     active_connections: int
     queue_depth: int
+
 
 class ProductionMonitor:
     """Production monitoring system with security alerts and health checks"""
@@ -217,7 +221,7 @@ class ProductionMonitor:
                 disk_usage_percent=disk.percent,
                 network_io=network_io,
                 active_connections=active_connections,
-                queue_depth=0,  # TODO: Implement queue monitoring
+                queue_depth=self._get_queue_depth(),  # Implemented queue monitoring
             )
 
             self.system_metrics.append(metrics)
@@ -378,6 +382,36 @@ class ProductionMonitor:
         except Exception as e:
             logger.error(f"Error in security monitoring cycle: {e}")
 
+    def _get_queue_depth(self) -> int:
+        """Get current queue depth for various system components"""
+        try:
+            total_queue_depth = 0
+
+            # Check memory rehydration queue (if available)
+            # This would integrate with your existing queue systems
+            memory_queue = getattr(self, "memory_queue", None)
+            if memory_queue:
+                total_queue_depth += len(memory_queue)
+
+            # Check DSPy operation queue (if available)
+            dspy_queue = getattr(self, "dspy_queue", None)
+            if dspy_queue:
+                total_queue_depth += len(dspy_queue)
+
+            # Check background task queue (if available)
+            background_queue = getattr(self, "background_queue", None)
+            if background_queue:
+                total_queue_depth += len(background_queue)
+
+            # Add OpenTelemetry attribute for queue depth
+            add_span_attribute("system.queue_depth", total_queue_depth)
+
+            return total_queue_depth
+
+        except Exception as e:
+            logger.warning(f"Error getting queue depth: {e}")
+            return 0
+
     def _check_alerts(self) -> None:
         """Check for conditions that require alerts"""
         try:
@@ -498,8 +532,10 @@ class ProductionMonitor:
         self.ot_config.shutdown()
         logger.info("Production monitor shutdown complete")
 
+
 # Global instance
 _production_monitor: Optional[ProductionMonitor] = None
+
 
 def get_production_monitor() -> ProductionMonitor:
     """Get the global production monitor instance"""
@@ -507,6 +543,7 @@ def get_production_monitor() -> ProductionMonitor:
     if _production_monitor is None:
         _production_monitor = ProductionMonitor()
     return _production_monitor
+
 
 def initialize_production_monitoring(
     service_name: str = "ai-dev-tasks",

@@ -19,8 +19,13 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Optional psycopg2 import to allow importing this module without DB deps
+try:  # pragma: no cover - guarded import
+    import psycopg2  # type: ignore
+    from psycopg2.extras import RealDictCursor  # type: ignore
+except Exception:  # pragma: no cover
+    psycopg2 = None  # type: ignore
+    RealDictCursor = None  # type: ignore
 
 
 @dataclass
@@ -118,11 +123,45 @@ class ConversationStorage:
             "cache_misses": 0,
         }
 
+    def get_user_sessions(self, user_id: str, limit: int = 20, active_only: bool = False) -> List[Dict[str, Any]]:
+        """Return recent sessions for a user from the database.
+
+        Uses the conversation_sessions table and orders by last_activity desc.
+        """
+        try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
+
+            query = [
+                "SELECT session_id, user_id, session_name, session_type, status,",
+                "       created_at, last_activity, session_length, relevance_score, metadata",
+                "FROM conversation_sessions",
+                "WHERE user_id = %s",
+            ]
+            params: List[Any] = [user_id]
+            if active_only:
+                query.append("AND status = 'active'")
+            query.append("ORDER BY last_activity DESC LIMIT %s")
+            params.append(limit)
+
+            self.cursor.execute("\n".join(query), params)
+            rows = [dict(row) for row in self.cursor.fetchall()]
+            return rows
+        except Exception as e:
+            self.logger.error(f"Failed to get user sessions for {user_id}: {e}")
+            return []
+
     def connect(self) -> bool:
         """Establish database connection."""
         try:
-            self.connection = psycopg2.connect(self.database_url)
-            self.cursor = self.connection.cursor(cursor_factory=RealDictCursor)
+            if psycopg2 is None:
+                raise RuntimeError("psycopg2 is not installed; database features are unavailable in this environment")
+            self.connection = psycopg2.connect(self.database_url)  # type: ignore
+            if RealDictCursor is not None:
+                self.cursor = self.connection.cursor(cursor_factory=RealDictCursor)
+            else:  # Fallback
+                self.cursor = self.connection.cursor()
             return True
         except Exception as e:
             self.logger.error(f"Database connection failed: {e}")
@@ -132,8 +171,10 @@ class ConversationStorage:
         """Close database connection."""
         if self.cursor:
             self.cursor.close()
+            self.cursor = None
         if self.connection:
             self.connection.close()
+            self.connection = None
 
     def _generate_content_hash(self, content: str) -> str:
         """Generate hash for content to detect duplicates."""
@@ -171,6 +212,9 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             self.cursor.execute(
                 """
                 INSERT INTO conversation_sessions
@@ -214,6 +258,9 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             # Get next message index for the session
             self.cursor.execute(
                 """
@@ -238,10 +285,9 @@ class ConversationStorage:
             self.cursor.execute(
                 """
                 INSERT INTO conversation_messages
-                (session_id, message_type, role, content, content_hash, timestamp,
+                (session_id, message_type, role, content, content_hash, context_hash, timestamp,
                  message_index, metadata, embedding, is_context_message, parent_message_id)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING message_id
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)                RETURNING id
             """,
                 (
                     message.session_id,
@@ -249,6 +295,7 @@ class ConversationStorage:
                     message.role,
                     message.content,
                     content_hash,
+                    content_hash,  # Use content_hash for context_hash for messages
                     datetime.now(),
                     message_index,
                     json.dumps(message.metadata),
@@ -264,7 +311,7 @@ class ConversationStorage:
             execution_time = (datetime.now() - start_time).total_seconds() * 1000
             self._log_performance_metric("message_storage", int(execution_time), 1)
 
-            self.logger.info(f"Message stored: {result['message_id']} in session {message.session_id}")
+            self.logger.info(f"Message stored: {result['id']} in session {message.session_id}")
             return True
 
         except Exception as e:
@@ -279,9 +326,12 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             self.cursor.execute(
                 """
-                SELECT message_id, session_id, message_type, role, content,
+                SELECT id, session_id, message_type, role, content,
                        content_hash, timestamp, message_index, metadata,
                        is_context_message, parent_message_id, created_at
                 FROM conversation_messages
@@ -305,6 +355,28 @@ class ConversationStorage:
             self.logger.error(f"Failed to retrieve messages: {e}")
             return []
 
+    def get_messages(self, session_id: str, limit: int = 50, offset: int = 0) -> List[ConversationMessage]:
+        """Adapter that returns ConversationMessage objects for a session."""
+        rows = self.retrieve_session_messages(session_id, limit=limit, offset=offset)
+        out: List[ConversationMessage] = []
+        for r in rows:
+            try:
+                out.append(
+                    ConversationMessage(
+                        session_id=r.get("session_id", session_id),
+                        role=r.get("role", "human"),
+                        content=r.get("content", ""),
+                        message_type=r.get("message_type", "message"),
+                        metadata=r.get("metadata", {}),
+                        parent_message_id=r.get("parent_message_id"),
+                        is_context_message=r.get("is_context_message", False),
+                        relevance_score=r.get("relevance_score", 0.5),
+                    )
+                )
+            except Exception:
+                continue
+        return out
+
     def search_messages_semantic(
         self,
         query_embedding: List[float],
@@ -316,13 +388,16 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             vector_query = f"[{','.join(map(str, query_embedding))}]"
 
             if session_id:
                 # Search within specific session
                 self.cursor.execute(
                     """
-                    SELECT message_id, session_id, role, content,
+                    SELECT id, session_id, role, content,
                            metadata, relevance_score,
                            1 - (embedding <=> %s) as similarity_score
                     FROM conversation_messages
@@ -338,7 +413,7 @@ class ConversationStorage:
                 # Search across all sessions
                 self.cursor.execute(
                     """
-                    SELECT message_id, session_id, role, content,
+                    SELECT id, session_id, role, content,
                            metadata, relevance_score,
                            1 - (embedding <=> %s) as similarity_score
                     FROM conversation_messages
@@ -361,6 +436,44 @@ class ConversationStorage:
             execution_time = (datetime.now() - start_time).total_seconds() * 1000
             self._log_performance_metric("semantic_search", int(execution_time), error_message=str(e))
             self.logger.error(f"Failed to search messages semantically: {e}")
+            return []
+
+    def search_messages(
+        self,
+        query: str,
+        session_id: Optional[str] = None,
+        limit: int = 10,
+        similarity_threshold: float = 0.7,
+    ) -> List[Tuple[Dict[str, Any], float]]:
+        """Lightweight text search adapter that does not require embeddings.
+
+        Returns list of (message_dict, similarity_score) tuples.
+        """
+        try:
+            q = (query or "").strip().lower()
+            if not q or not session_id:
+                return []
+            window = max(limit * 5, 50)
+            candidates = self.retrieve_session_messages(session_id, limit=window)
+            results: List[Tuple[Dict[str, Any], float]] = []
+            q_tokens = set(q.split())
+            for msg in candidates:
+                text = str(msg.get("content", "")).lower()
+                if not text:
+                    continue
+                if q in text:
+                    if q_tokens:
+                        sim = len(q_tokens & set(text.split())) / max(1, len(q_tokens))
+                        sim = max(sim, 0.8)
+                    else:
+                        sim = 0.8
+                    if sim >= similarity_threshold:
+                        results.append((msg, min(sim, 1.0)))
+                if len(results) >= limit:
+                    break
+            return results
+        except Exception as e:
+            self.logger.error(f"Failed to search messages: {e}")
             return []
 
     def store_context(
@@ -400,7 +513,7 @@ class ConversationStorage:
                     entities = EXCLUDED.entities,
                     files = EXCLUDED.files,
                     updated_at = CURRENT_TIMESTAMP
-                RETURNING context_id
+                RETURNING id
             """,
                 (
                     session_id,
@@ -439,10 +552,13 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             if context_type:
                 self.cursor.execute(
                     """
-                    SELECT context_id, session_id, context_type, context_key, context_value,
+                    SELECT id, session_id, context_type, context_key, context_value,
                            relevance_score, metadata, created_at, expires_at,
                            decision_head, decision_status, superseded_by, entities, files
                     FROM conversation_context
@@ -456,7 +572,7 @@ class ConversationStorage:
             else:
                 self.cursor.execute(
                     """
-                    SELECT context_id, session_id, context_type, context_key, context_value,
+                    SELECT id, session_id, context_type, context_key, context_value,
                            relevance_score, metadata, created_at, expires_at,
                            decision_head, decision_status, superseded_by, entities, files
                     FROM conversation_context
@@ -486,6 +602,9 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             self.cursor.execute(
                 """
                 INSERT INTO user_preferences
@@ -500,7 +619,7 @@ class ConversationStorage:
                     usage_count = user_preferences.usage_count + 1,
                     last_used = CURRENT_TIMESTAMP,
                     updated_at = CURRENT_TIMESTAMP
-                RETURNING preference_id
+                RETURNING id
             """,
                 (
                     preference.user_id,
@@ -533,10 +652,13 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             if preference_type:
                 self.cursor.execute(
                     """
-                    SELECT preference_id, preference_key, preference_value, preference_type,
+                    SELECT id, preference_key, preference_value, preference_type,
                            confidence_score, source, usage_count, last_used, created_at
                     FROM user_preferences
                     WHERE user_id = %s AND preference_type = %s
@@ -548,7 +670,7 @@ class ConversationStorage:
             else:
                 self.cursor.execute(
                     """
-                    SELECT preference_id, preference_key, preference_value, preference_type,
+                    SELECT id, preference_key, preference_value, preference_type,
                            confidence_score, source, usage_count, last_used, created_at
                     FROM user_preferences
                     WHERE user_id = %s
@@ -576,6 +698,9 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             self.cursor.execute(
                 """
                 SELECT * FROM session_summary WHERE session_id = %s
@@ -601,6 +726,9 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             # Clean expired context
             self.cursor.execute("SELECT clean_expired_context();")
             _row = self.cursor.fetchone()
@@ -629,6 +757,9 @@ class ConversationStorage:
     def get_performance_metrics(self, hours: int = 24) -> Dict[str, Any]:
         """Get performance metrics for the specified time period."""
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             self.cursor.execute(
                 """
                 SELECT
@@ -768,7 +899,7 @@ class ConversationStorage:
                     files = EXCLUDED.files,
                     metadata = EXCLUDED.metadata,
                     updated_at = CURRENT_TIMESTAMP
-                RETURNING context_id
+                RETURNING id
             """,
                 (
                     session_id,
@@ -817,7 +948,7 @@ class ConversationStorage:
             # Get existing open decisions for this session
             self.cursor.execute(
                 """
-                SELECT decision_head, entities, context_id
+                SELECT decision_head, entities, id
                 FROM conversation_context
                 WHERE session_id = %s
                 AND context_type = 'decision'
@@ -833,7 +964,7 @@ class ConversationStorage:
             for decision in existing_decisions:
                 existing_head = decision.get("decision_head")
                 existing_entities = decision.get("entities")
-                existing_id = decision.get("context_id")
+                existing_id = decision.get("id")
 
                 self.logger.debug(f"Checking existing decision: {existing_head}, entities: {existing_entities}")
 
@@ -847,7 +978,7 @@ class ConversationStorage:
                         SET decision_status = 'superseded',
                             superseded_by = %s,
                             updated_at = CURRENT_TIMESTAMP
-                        WHERE context_id = %s
+                        WHERE id = %s
                     """,
                         (new_decision_head, existing_id),
                     )
@@ -1058,12 +1189,15 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             self.cursor.execute(
                 """
                 UPDATE conversation_context
                 SET decision_status = %s, updated_at = CURRENT_TIMESTAMP
                 WHERE session_id = %s AND context_type = 'decision' AND decision_head = %s
-                RETURNING context_id
+                RETURNING id
             """,
                 (new_status, session_id, decision_head),
             )
@@ -1094,10 +1228,13 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             # First, verify the superseding decision exists
             self.cursor.execute(
                 """
-                SELECT context_id FROM conversation_context
+                SELECT id FROM conversation_context
                 WHERE session_id = %s AND context_type = 'decision' AND decision_head = %s
             """,
                 (session_id, superseded_by),
@@ -1113,7 +1250,7 @@ class ConversationStorage:
                 UPDATE conversation_context
                 SET decision_status = 'superseded', superseded_by = %s, updated_at = CURRENT_TIMESTAMP
                 WHERE session_id = %s AND context_type = 'decision' AND decision_head = %s
-                RETURNING context_id
+                RETURNING id
             """,
                 (superseded_by, session_id, decision_head),
             )
@@ -1144,13 +1281,16 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             # Canonicalize the query
             canonical_query = self._canonicalize_query(query)
 
             # Step 1: BM25 K1 on decision_head + context_value
             bm25_query = """
                 SELECT
-                    context_id,
+                    id,
                     context_key as decision_key,
                     decision_head,
                     context_value,
@@ -1178,40 +1318,52 @@ class ConversationStorage:
             bm25_query += " ORDER BY bm25_score DESC LIMIT %s"
             bm25_params.append(limit // 2)  # K1 = limit/2
 
-            # Step 2: Vector K2 on head_embedding (placeholder for now since we don't have embeddings)
-            # For now, we'll use a simple text similarity approach
-            vector_query = """
-                SELECT
-                    context_id,
-                    decision_head,
-                    context_value,
-                    decision_status,
-                    entities,
-                    files,
-                    relevance_score,
-                    created_at,
-                    similarity(decision_head, %s) as vector_score
-                FROM conversation_context
-                WHERE context_type = 'decision'
-                AND decision_head ILIKE %s
-            """
-            vector_params = [query, f"%{query}%"]
+            # Step 2 (optional): Trigram similarity path, gated by env flag
+            import os as _os
 
-            if session_id:
-                vector_query += " AND session_id = %s"
-                vector_params.append(session_id)
+            trigram_enabled = _os.getenv("DECISION_TRIGRAM_ENABLED", "true").lower() in ("1", "true", "yes")
+            vector_query = None
+            vector_params: List[Any] = []
+            if trigram_enabled:
+                vector_query = """
+                    SELECT
+                        id,
+                        decision_head,
+                        context_value,
+                        decision_status,
+                        entities,
+                        files,
+                        relevance_score,
+                        created_at,
+                        similarity(decision_head, %s) as vector_score
+                    FROM conversation_context
+                    WHERE context_type = 'decision'
+                    AND decision_head ILIKE %s
+                """
+                vector_params = [query, f"%{query}%"]
 
-            vector_query += " AND similarity(decision_head, %s) >= 0.6"
-            vector_params.append(query)
-            vector_query += " ORDER BY vector_score DESC LIMIT %s"
-            vector_params.append(limit // 2)  # K2 = limit/2
+                if session_id:
+                    vector_query += " AND session_id = %s"
+                    vector_params.append(session_id)
+
+                vector_query += " AND similarity(decision_head, %s) >= 0.6"
+                vector_params.append(query)
+                vector_query += " ORDER BY vector_score DESC LIMIT %s"
+                vector_params.append(limit // 2)  # K2 = limit/2
 
             # Execute both queries and combine results
             self.cursor.execute(bm25_query, bm25_params)
             bm25_decisions = [dict(row) for row in self.cursor.fetchall()]
 
-            self.cursor.execute(vector_query, vector_params)
-            vector_decisions = [dict(row) for row in self.cursor.fetchall()]
+            if vector_query is not None:
+                try:
+                    self.cursor.execute(vector_query, vector_params)
+                    vector_decisions = [dict(row) for row in self.cursor.fetchall()]
+                except Exception:
+                    # If pg_trgm is not available, fall back silently to BM25-only
+                    vector_decisions = []
+            else:
+                vector_decisions = []
 
             # Combine and deduplicate results
             all_decisions = bm25_decisions + vector_decisions
@@ -1219,8 +1371,8 @@ class ConversationStorage:
             decisions = []
 
             for decision in all_decisions:
-                if decision["context_id"] not in seen_ids:
-                    seen_ids.add(decision["context_id"])
+                if decision["id"] not in seen_ids:
+                    seen_ids.add(decision["id"])
                     decisions.append(decision)
 
             # Sort by combined score and limit
@@ -1243,6 +1395,9 @@ class ConversationStorage:
         start_time = datetime.now()
 
         try:
+            if self.cursor is None:
+                if not self.connect():
+                    raise RuntimeError("No database connection available")
             # Find the decision and trace its supersedence chain
             chain = []
             current_decision = decision_head
@@ -1323,7 +1478,7 @@ class ConversationStorage:
                 AND cc1.context_type = 'decision'
                 AND cc1.decision_status = 'superseded'
                 AND cc1.superseded_by IS NOT NULL
-                AND cc2.context_id IS NULL
+                AND cc2.id IS NULL
             """,
                 (session_id,),
             )

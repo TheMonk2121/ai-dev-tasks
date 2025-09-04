@@ -199,7 +199,7 @@ class UnifiedMemoryOrchestrator:
 
     def get_cursor_memory(self, query: str, role: str = "planner") -> Dict:
         """Get memory from Cursor memory rehydrator."""
-        cmd = [sys.executable, "scripts/cursor_memory_rehydrate.py", "--role", role, "--query", query]
+        cmd = [sys.executable, "scripts/cursor_memory_rehydrate.py", role, query]
         success, stdout, stderr = self.run_command(cmd)
 
         return {

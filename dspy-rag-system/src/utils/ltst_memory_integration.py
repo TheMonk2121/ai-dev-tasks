@@ -9,10 +9,10 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from .context_merger import ContextMerger, ContextMergeRequest
-from .conversation_storage import ConversationStorage
+from .context_merger import ContextMerger
+from .conversation_storage import ConversationStorage, ConversationMessage
 from .logger import setup_logger
-from .memory_rehydrator import Bundle, rehydrate
+from .memory_rehydrator import HydrationBundle, rehydrate
 from .session_manager import SessionManager
 
 logger = setup_logger(__name__)
@@ -22,7 +22,7 @@ logger = setup_logger(__name__)
 class LTSTMemoryBundle:
     """Extended memory bundle with LTST conversation context."""
 
-    original_bundle: Bundle
+    original_bundle: HydrationBundle
     conversation_history: List[Dict[str, Any]]
     user_preferences: Dict[str, Any]
     session_context: Optional[Dict[str, Any]] = None
@@ -64,9 +64,7 @@ class LTSTMemoryIntegration:
         """Initialize LTST memory integration."""
         self.conversation_storage = conversation_storage or ConversationStorage()
         self.context_merger = context_merger or ContextMerger(self.conversation_storage)
-        self.session_manager = session_manager or SessionManager(self.conversation_storage, self.context_merger)
-        # Database manager is handled by individual components
-        self.db_manager = self.conversation_storage.db_manager
+        self.session_manager = session_manager or SessionManager(self.conversation_storage)
 
     def rehydrate_with_conversation_context(
         self,
@@ -136,9 +134,20 @@ class LTSTMemoryIntegration:
                 },
             )
 
-            # Store the query as a message if session exists
+            # Store the query as a message if session exists (best-effort)
             if session_id:
-                self.session_manager.add_message(session_id, "human", query, metadata={"source": "memory_rehydration"})
+                try:
+                    msg = ConversationMessage(
+                        session_id=session_id,
+                        role="human",
+                        content=query,
+                        message_type="message",
+                        metadata={"source": "memory_rehydration"},
+                    )
+                    # Lazy connect happens inside storage
+                    self.conversation_storage.store_message(msg)
+                except Exception:
+                    logger.debug("Could not persist query message (non-fatal)")
 
             logger.info(f"LTST memory bundle created for session {session_id}")
             return ltst_bundle
@@ -157,9 +166,9 @@ class LTSTMemoryIntegration:
         """Get existing session or create new one."""
         try:
             # Try to find recent active session
-            sessions = self.session_manager.get_user_sessions(user_id, status="active", limit=1)
+            sessions = self.session_manager.get_user_sessions(user_id, limit=1, active_only=True)
             if sessions:
-                return sessions[0]["session_id"]
+                return sessions[0].session_id
 
             # Create new session
             session_name = f"Memory Rehydration Session - {datetime.now().strftime('%Y-%m-%d %H:%M')}"
@@ -200,34 +209,17 @@ class LTSTMemoryIntegration:
     def _get_user_preferences(self, user_id: str) -> Dict[str, Any]:
         """Get user preferences for context."""
         try:
-            if not self.db_manager:
-                logger.warning("Database manager not available")
-                return {}
-
-            with self.db_manager.get_connection() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        SELECT preference_key, preference_value, preference_type, confidence_score
-                        FROM user_preferences
-                        WHERE user_id = %s AND confidence_score >= 0.7
-                        ORDER BY confidence_score DESC, last_used DESC
-                    """,
-                        (user_id,),
-                    )
-
-                    preferences = {}
-                    for row in cursor.fetchall():
-                        pref_type = row["preference_type"]
-                        if pref_type not in preferences:
-                            preferences[pref_type] = {}
-
-                        preferences[pref_type][row["preference_key"]] = {
-                            "value": row["preference_value"],
-                            "confidence": row["confidence_score"],
-                        }
-
-                    return preferences
+            rows = self.conversation_storage.retrieve_user_preferences(user_id, limit=100)
+            preferences: Dict[str, Dict[str, Any]] = {}
+            for row in rows:
+                pref_type = row.get("preference_type", "general")
+                if pref_type not in preferences:
+                    preferences[pref_type] = {}
+                preferences[pref_type][row.get("preference_key", "")] = {
+                    "value": row.get("preference_value", ""),
+                    "confidence": row.get("confidence_score", 0.0),
+                }
+            return preferences
 
         except Exception as e:
             logger.error(f"Failed to get user preferences for {user_id}: {e}")
@@ -236,37 +228,9 @@ class LTSTMemoryIntegration:
     def _get_session_context(self, session_id: str, query: str) -> Optional[Dict[str, Any]]:
         """Get session context using context merger."""
         try:
-            # Create merge request
-            session = self.session_manager.get_session(session_id)
-            if not session or not hasattr(session, "user_id"):
-                logger.warning(f"Session {session_id} not found or missing user_id")
-                return None
-
-            request = ContextMergeRequest(
-                session_id=session_id,
-                user_id=session.user_id,
-                current_message=query,
-                context_types=["conversation", "preference", "project", "user_info"],
-                max_context_length=2000,
-                relevance_threshold=0.6,
-                include_history=True,
-                history_limit=5,
-            )
-
-            # Merge context
-            merged_context = self.context_merger.merge_context(request)
-            if merged_context:
-                return {
-                    "merged_content": merged_context.merged_content,
-                    "relevance_scores": merged_context.relevance_scores,
-                    "context_hash": merged_context.context_hash,
-                    "conversation_history_count": len(merged_context.conversation_history),
-                    "user_preferences_count": sum(len(prefs) for prefs in merged_context.user_preferences.values()),
-                    "project_context_count": len(merged_context.project_context),
-                    "relevant_contexts_count": len(merged_context.relevant_contexts),
-                }
-
-            return None
+            # Use context summary from ContextMerger for a robust, DB-light path
+            summary = self.context_merger.get_context_summary(session_id)
+            return summary
 
         except Exception as e:
             logger.error(f"Failed to get session context for session {session_id}: {e}")

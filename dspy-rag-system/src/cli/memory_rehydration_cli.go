@@ -578,12 +578,110 @@ func bm25Search(query string, k int, dbDSN string) ([]SearchResult, error) {
 
 func mineAnchorTerms(query string, topN int, dbDSN string) ([]string, error) {
 	// Mine anchor terms for query expansion
-	// This would extract relevant anchor keys from the database
-	// Placeholder implementation - use parameters to satisfy linter
-	_ = query // TODO: implement query-based anchor mining
-	_ = topN  // TODO: implement topN limit
-	_ = dbDSN // TODO: implement database connection
-	return []string{"memory", "context", "system"}, nil
+	// Extract relevant anchor keys from the database based on query similarity
+
+	// Check for mock mode
+	if strings.HasPrefix(dbDSN, "mock://") {
+		// Return mock anchor terms for testing
+		return []string{"memory", "context", "system", "dspy", "rag", "ltst"}, nil
+	}
+
+	// Connect to database
+	db, err := sql.Open("postgres", dbDSN)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
+	}
+	defer db.Close()
+
+	// Query for anchor terms based on query similarity
+	// Use both content similarity and anchor key relevance
+	rows, err := db.QueryContext(context.Background(), `
+		SELECT DISTINCT anchor_key, COUNT(*) as frequency
+		FROM document_chunks
+		WHERE is_anchor = true
+		AND (
+			content ILIKE $1
+			OR anchor_key ILIKE $1
+			OR content ILIKE $2
+			OR anchor_key ILIKE $2
+		)
+		GROUP BY anchor_key
+		ORDER BY frequency DESC, anchor_key
+		LIMIT $3
+	`, "%"+query+"%", "%"+strings.ToLower(query)+"%", topN)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to query anchor terms: %w", err)
+	}
+	defer rows.Close()
+
+	var anchorTerms []string
+	for rows.Next() {
+		var anchorKey string
+		var frequency int
+		if err := rows.Scan(&anchorKey, &frequency); err != nil {
+			continue // Skip malformed rows
+		}
+		if anchorKey != "" {
+			anchorTerms = append(anchorTerms, anchorKey)
+		}
+	}
+
+	// If no database results, fall back to query-based extraction
+	if len(anchorTerms) == 0 {
+		anchorTerms = extractQueryBasedTerms(query, topN)
+	}
+
+	return anchorTerms, nil
+}
+
+// extractQueryBasedTerms extracts anchor terms from the query itself
+func extractQueryBasedTerms(query string, maxTerms int) []string {
+	// Simple term extraction: split on spaces and filter meaningful terms
+	words := strings.Fields(strings.ToLower(query))
+	var terms []string
+
+	for _, word := range words {
+		// Filter out common stop words and short terms
+		if len(word) > 3 && !isStopWord(word) {
+			terms = append(terms, word)
+			if len(terms) >= maxTerms {
+				break
+			}
+		}
+	}
+
+	// Add some default system terms if we don't have enough
+	defaultTerms := []string{"memory", "context", "system"}
+	for _, term := range defaultTerms {
+		if len(terms) < maxTerms && !contains(terms, term) {
+			terms = append(terms, term)
+		}
+	}
+
+	return terms
+}
+
+// isStopWord checks if a word is a common stop word
+func isStopWord(word string) bool {
+	stopWords := map[string]bool{
+		"the": true, "and": true, "or": true, "but": true, "in": true, "on": true,
+		"at": true, "to": true, "for": true, "of": true, "with": true, "by": true,
+		"is": true, "are": true, "was": true, "were": true, "be": true, "been": true,
+		"have": true, "has": true, "had": true, "do": true, "does": true, "did": true,
+		"will": true, "would": true, "could": true, "should": true, "may": true, "might": true,
+	}
+	return stopWords[word]
+}
+
+// contains checks if a slice contains a string
+func contains(slice []string, item string) bool {
+	for _, s := range slice {
+		if s == item {
+			return true
+		}
+	}
+	return false
 }
 
 func augmentQuery(query string, anchorTerms []string) string {
@@ -673,13 +771,43 @@ func overlapsScope(result SearchResult, query string) bool {
 }
 
 func roundRobinByFile(results []SearchResult, perFile int) []SearchResult {
-	// File round-robin deduplication
+	// File round-robin deduplication with per-file limits
 	fileGroups := make(map[string][]SearchResult)
 	for _, result := range results {
 		fileGroups[result.File] = append(fileGroups[result.File], result)
 	}
 
 	var ranked []SearchResult
+
+	// If perFile limit is specified, implement quality-based per-file limiting
+	if perFile > 0 {
+		// Process each file group with quality-based selection
+		for _, group := range fileGroups {
+			if len(group) <= perFile {
+				// File has fewer results than limit, keep all
+				ranked = append(ranked, group...)
+			} else {
+				// File exceeds limit, select best results by score
+				sort.Slice(group, func(i, j int) bool {
+					return group[i].Score > group[j].Score
+				})
+
+				// Take top results up to the limit
+				for i := 0; i < perFile && i < len(group); i++ {
+					ranked = append(ranked, group[i])
+				}
+			}
+		}
+
+		// Re-sort by score to maintain overall ranking
+		sort.Slice(ranked, func(i, j int) bool {
+			return ranked[i].Score > ranked[j].Score
+		})
+
+		return ranked
+	}
+
+	// Original round-robin behavior when no per-file limit
 	for len(ranked) < len(results) {
 		for file, group := range fileGroups {
 			if len(group) > 0 {
@@ -700,8 +828,6 @@ func roundRobinByFile(results []SearchResult, perFile int) []SearchResult {
 		}
 	}
 
-	// TODO: implement perFile limit - currently using simple round-robin
-	_ = perFile
 	return ranked
 }
 
