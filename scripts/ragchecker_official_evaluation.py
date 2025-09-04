@@ -84,12 +84,49 @@ except ImportError:
     SentenceTransformer = None
 
 try:
-    # Try relative import first (when running from scripts directory)
-    try:
-        from bedrock_client import BedrockClient
-    except ImportError:
-        # Try absolute import (when running from root directory)
-        from scripts.bedrock_client import BedrockClient
+    # Optional override to disable queue-based client
+    use_queue = os.getenv("USE_BEDROCK_QUEUE", "1") != "0"
+
+    if use_queue:
+        # Try queue client first (with intelligent batching)
+        try:
+            # Try relative import first (when running from scripts directory)
+            from enhanced_bedrock_queue_client import SyncBedrockQueueClient as BedrockClient
+
+            print("✅ Using Enhanced Bedrock Queue Client with intelligent batching")
+        except ImportError:
+            try:
+                # Try absolute import (when running from root directory)
+                from scripts.enhanced_bedrock_queue_client import SyncBedrockQueueClient as BedrockClient
+
+                print("✅ Using Enhanced Bedrock Queue Client with intelligent batching")
+            except ImportError as e:
+                print(f"⚠️ Queue client import failed: {e}")
+                use_queue = False
+
+    if not use_queue:
+        # Prefer enhanced client with load balancing and adaptive rate limiting
+        try:
+            from enhanced_bedrock_client import SyncBedrockClientWrapper as BedrockClient
+
+            print("⚠️ Using Enhanced Bedrock Client with multi-key load balancing")
+        except ImportError:
+            try:
+                from scripts.enhanced_bedrock_client import SyncBedrockClientWrapper as BedrockClient
+
+                print("⚠️ Using Enhanced Bedrock Client with multi-key load balancing")
+            except ImportError as e2:
+                print(f"⚠️ Enhanced Bedrock client import failed: {e2}")
+                # Fallback to regular client
+                try:
+                    from bedrock_client import BedrockClient
+
+                    print("⚠️ Using standard Bedrock client (no load balancing)")
+                except ImportError:
+                    # Try absolute import (when running from root directory)
+                    from scripts.bedrock_client import BedrockClient
+
+                    print("⚠️ Using standard Bedrock client (no load balancing)")
 
     _bedrock_available = True
 except ImportError:
@@ -234,13 +271,15 @@ class LocalLLMIntegration:
     ):
         self.use_bedrock = use_bedrock
         self.bedrock_client = None
+        # Track Bedrock model id early (used in logs below)
+        self.bedrock_model_id = os.getenv("BEDROCK_MODEL_ID", "anthropic.claude-3-haiku-20240307-v1:0")
 
         if use_bedrock:
             if not BEDROCK_AVAILABLE:
                 raise ImportError("bedrock_client module is required for Bedrock integration")
             try:
                 self.bedrock_client = BedrockClient()  # type: ignore
-                print("✅ AWS Bedrock Claude 3.5 Sonnet integration enabled")
+                print(f"✅ AWS Bedrock integration enabled ({self.bedrock_model_id})")
             except Exception as e:
                 print(f"⚠️ Failed to initialize Bedrock client: {e}")
                 print("🔄 Falling back to local LLM")
@@ -249,12 +288,14 @@ class LocalLLMIntegration:
         # Always set session for fallback cases
         self.api_base = api_base.rstrip("/")
         self.model_name = model_name
+        # JSON token budget (used for extraction + scoring prompts)
+        self.json_max_tokens = int(os.getenv("RAGCHECKER_JSON_MAX_TOKENS", "900"))
         if requests is not None:
             self.session = requests.Session()
             if not self.use_bedrock:
                 print(f"✅ Local LLM integration enabled ({model_name})")
             else:
-                print("✅ AWS Bedrock Claude 3.5 Sonnet integration enabled")
+                print(f"✅ AWS Bedrock integration enabled ({self.bedrock_model_id})")
         else:
             self.session = None
             if not self.use_bedrock:
@@ -484,7 +525,7 @@ Context:
                     time.sleep(2)  # 2 second delay between calls
 
                     response, usage = self.bedrock_client.invoke_with_json_prompt(
-                        prompt=extract_prompt, max_tokens=900, temperature=0.1
+                        prompt=extract_prompt, max_tokens=self.json_max_tokens, temperature=0.1
                     )
                     print(f"💰 Bedrock JSON extraction: {usage.input_tokens}→{usage.output_tokens} tokens")
                     obj = response
@@ -492,7 +533,7 @@ Context:
                     print(f"⚠️ Bedrock JSON failed, falling back to simplified extraction: {e}")
                     obj = self._extract_facts_simplified(query, context)
             else:
-                obj = self.call_json(extract_prompt, schema=fact_schema, max_tokens=900)
+                obj = self.call_json(extract_prompt, schema=fact_schema, max_tokens=self.json_max_tokens)
 
             # Parse and validate facts
             facts = []
@@ -1386,6 +1427,8 @@ class OfficialRAGCheckerEvaluator:
         self.metrics_dir.mkdir(parents=True, exist_ok=True)
         self.local_llm = None
         self.use_bedrock = False  # Initialize use_bedrock attribute
+        # Track Bedrock model id for accurate logging/config
+        self.bedrock_model_id = os.getenv("BEDROCK_MODEL_ID", "anthropic.claude-3-haiku-20240307-v1:0")
         # Timing fields populated per run
         self._run_start_ts: float | None = None
         self._run_end_ts: float | None = None
@@ -1434,7 +1477,7 @@ Return a JSON array of strings with exactly {k} reformulations:
 ["reformulation 1", "reformulation 2", ...]"""
 
         try:
-            response, _ = self.local_llm.bedrock_client.invoke_model_with_retries(
+            response, _ = self.local_llm.bedrock_client.invoke_model(
                 prompt=expansion_prompt,
                 max_tokens=500,
             )
@@ -1465,11 +1508,10 @@ Response: {response}
 Return format: ["claim 1", "claim 2", ...]"""
 
         try:
-            claims_response, _ = self.local_llm.bedrock_client.invoke_model_with_retries(
+            claims_response, _ = self.local_llm.bedrock_client.invoke_model(
                 prompt=claim_prompt,
                 max_tokens=300,
                 temperature=0.0,
-                json_mode=True,
             )
 
             claims = json.loads(claims_response)
@@ -1878,13 +1920,15 @@ Do not summarize or be concise - provide thorough, detailed information."""
         return rag_results_obj
 
     def save_official_input_data(self, input_data: Dict[str, Any]) -> str:
-        """Save input data in official RAGChecker RAGResults format."""
+        """Save input data in official RAGChecker RAGResults format (atomic write)."""
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         input_file = self.metrics_dir / f"ragchecker_official_input_{timestamp}.json"
+        tmp_file = self.metrics_dir / f".tmp_{timestamp}_{os.getpid()}_input.json"
 
-        with open(input_file, "w") as f:
+        with open(tmp_file, "w") as f:
             json.dump(input_data, f, indent=2)
 
+        os.replace(tmp_file, input_file)
         print(f"💾 Official input data saved to: {input_file}")
         return str(input_file)
 
@@ -1928,11 +1972,11 @@ Do not summarize or be concise - provide thorough, detailed information."""
                 # Use Bedrock models WITHOUT api_base flags (LiteLLM handles Bedrock automatically)
                 cmd.extend(
                     [
-                        "--extractor_name=bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0",
-                        "--checker_name=bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0",
+                        f"--extractor_name=bedrock/{self.bedrock_model_id}",
+                        f"--checker_name=bedrock/{self.bedrock_model_id}",
                     ]
                 )
-                print("☁️ Using AWS Bedrock Claude 3.5 Sonnet (no api_base needed)")
+                print(f"☁️ Using AWS Bedrock ({self.bedrock_model_id}) (no api_base needed)")
 
             # Ensure AWS region is set for LiteLLM Bedrock integration
             if "AWS_REGION" not in os.environ:
@@ -2255,12 +2299,16 @@ Do not summarize or be concise - provide thorough, detailed information."""
         ]
         comp_avgs = {k: _avg([c.get("comprehensive_metrics", {}).get(k) for c in case_results]) for k in comp_keys}
 
+        # Aggregate faithfulness across cases (present in comprehensive_metrics per case)
+        avg_faithfulness = _avg([c.get("comprehensive_metrics", {}).get("faithfulness") for c in case_results])
+
         return {
             "evaluation_type": "local_llm_comprehensive",
             "overall_metrics": {
                 "precision": avg_precision,
                 "recall": avg_recall,
                 "f1_score": avg_f1,
+                "faithfulness": avg_faithfulness,
             },
             "comprehensive_metrics": comp_avgs,
             "case_results": case_results,
@@ -2438,20 +2486,30 @@ Evaluate and return ONLY the JSON object:"""
                 raise ValueError(f"Unexpected response type: {type(metrics_obj)}")
 
             # Calculate faithfulness from hallucination rate
-            faithfulness = 1.0 - metrics.get("hallucination_rate", 0.5)
+            hallucination_raw = metrics.get("hallucination_rate", 0.5)
+            faithfulness = 1.0 - float(hallucination_raw)
+
+            # One-line sanity print for debugging
+            print(
+                f"[faith] cp={metrics.get('context_precision')} util={metrics.get('context_utilization')} "
+                f"noise={metrics.get('noise_sensitivity')} hall_raw={hallucination_raw} "
+                f"selfk={metrics.get('self_knowledge')} claim_rec={metrics.get('claim_recall')} "
+                f"faith={faithfulness:.3f}"
+            )
 
             return {
                 "context_precision": metrics.get("context_precision", 0.5),
                 "context_utilization": metrics.get("context_utilization", 0.5),
                 "noise_sensitivity": metrics.get("noise_sensitivity", 0.5),
                 "faithfulness": faithfulness,
-                "hallucination_rate": metrics.get("hallucination_rate", 0.5),
+                "hallucination_rate": hallucination_raw,
                 "self_knowledge": metrics.get("self_knowledge", 0.5),
                 "claim_recall": metrics.get("claim_recall", 0.5),
             }
         except Exception as e:
             print(f"⚠️ Failed to parse fused metrics: {e}")
-            # Return default metrics
+            print(f"⚠️ Raw response: {metrics_obj}")
+            # Return default metrics with fallback reason
             return {
                 "context_precision": 0.5,
                 "context_utilization": 0.5,
@@ -2529,8 +2587,11 @@ Evaluate and return ONLY the JSON object:"""
         print("📋 Following official RAGChecker methodology")
         print("🎯 Using official metrics and procedures")
 
+        # Initialize results early to avoid UnboundLocalError on early exits
+        results: Dict[str, Any] = {}
+
         if use_bedrock:
-            print("☁️ AWS Bedrock Mode: Claude 3.5 Sonnet")
+            print(f"☁️ AWS Bedrock Mode: {self.bedrock_model_id}")
         elif use_local_llm:
             print(f"🏠 Local LLM Mode: {local_api_base}")
         else:
@@ -2542,10 +2603,18 @@ Evaluate and return ONLY the JSON object:"""
         # Step 2: Save input data
         input_file = self.save_official_input_data(input_data)
 
-        # Step 3: Try to run official RAGChecker CLI
+        # Step 3: Try to run official RAGChecker CLI (or bypass to in-process evaluation)
         output_file = self.run_official_ragchecker_cli(input_file, use_local_llm, local_api_base)
 
-        if output_file and os.path.exists(output_file):
+        # If bypass flag is set, prefer fully in-process evaluation to avoid empty CLI artifacts
+        if os.getenv("RAGCHECKER_BYPASS_CLI", "0") == "1":
+            print("⛔ CLI bypass enabled — running in-process official evaluation instead")
+            results = self.run_local_llm_evaluation(
+                (input_data["results"] if isinstance(input_data, dict) and "results" in input_data else input_data),
+                local_api_base or "http://localhost:11434",
+                use_bedrock,
+            )
+        elif output_file and os.path.exists(output_file):
             # Step 4: Load official results
             try:
                 with open(output_file, "r") as f:
@@ -2580,58 +2649,20 @@ Evaluate and return ONLY the JSON object:"""
                         if isinstance(input_data, dict) and "results" in input_data
                         else input_data
                     )
-        else:
-            # Step 4: Run in-process evaluation first (local or Bedrock), then fallback
-            if use_local_llm and local_api_base:
-                try:
-                    # Check for fast mode to avoid hanging on 130+ LLM calls
-                    if os.getenv("RAGCHECKER_FAST_MODE", "0") == "1":
-                        print("⚡ Fast mode enabled - using simplified evaluation")
-                        results = self.create_fallback_evaluation(
-                            input_data["results"]
-                            if isinstance(input_data, dict) and "results" in input_data
-                            else input_data
-                        )
-                    else:
-                        results = self.run_local_llm_evaluation(
-                            (
-                                input_data["results"]
-                                if isinstance(input_data, dict) and "results" in input_data
-                                else input_data
-                            ),
-                            local_api_base,
-                            use_bedrock=False,  # local path (Ollama)
-                        )
-                except Exception as e:
-                    print(f"⚠️ Local LLM evaluation failed: {e}")
-                    results = self.create_fallback_evaluation(
-                        input_data["results"]
-                        if isinstance(input_data, dict) and "results" in input_data
-                        else input_data
-                    )
-            elif use_bedrock:
-                # Bedrock-only path: evaluate using BedrockClient directly (no LiteLLM).
-                try:
-                    results = self.run_local_llm_evaluation(
-                        (
-                            input_data["results"]
-                            if isinstance(input_data, dict) and "results" in input_data
-                            else input_data
-                        ),
-                        local_api_base="http://localhost:11434",  # unused when use_bedrock=True
-                        use_bedrock=True,
-                    )
-                except Exception as e:
-                    print(f"⚠️ Bedrock evaluation failed: {e}")
-                    results = self.create_fallback_evaluation(
-                        input_data["results"]
-                        if isinstance(input_data, dict) and "results" in input_data
-                        else input_data
-                    )
-            else:
-                results = self.create_fallback_evaluation(
-                    input_data["results"] if isinstance(input_data, dict) and "results" in input_data else input_data
-                )
+
+        # Config banner for stability triage
+        print(
+            "\n🧰 Active Bedrock caps: "
+            f"ASYNC_MAX_CONCURRENCY={os.getenv('ASYNC_MAX_CONCURRENCY','')}, "
+            f"BEDROCK_MAX_CONCURRENCY={os.getenv('BEDROCK_MAX_CONCURRENCY','')}, "
+            f"BEDROCK_MAX_RPS={os.getenv('BEDROCK_MAX_RPS','')}, "
+            f"RETRY_MAX={os.getenv('BEDROCK_RETRY_MAX','')}"
+        )
+        print(
+            f"🧪 Eval JSON: PROMPTS={os.getenv('RAGCHECKER_JSON_PROMPTS','')}, "
+            f"MAX_TOKENS={os.getenv('RAGCHECKER_JSON_MAX_TOKENS','')}, "
+            f"COVERAGE_REWRITE={os.getenv('RAGCHECKER_COVERAGE_REWRITE','')}"
+        )
 
         # Step 5: Save results
         timestamp = time.strftime("%Y%m%d_%H%M%S")
@@ -2650,8 +2681,16 @@ Evaluate and return ONLY the JSON object:"""
                 )
                 results["avg_case_timing_sec"] = round(avg_case_t, 3)
 
+        # Always persist a safe JSON payload even if results is not set due to an early error
+        try:
+            _results_obj = results  # may be undefined if exception occurred earlier
+        except NameError:
+            _results_obj = {}
+        if not isinstance(_results_obj, dict):
+            _results_obj = {}
+        _results_obj.setdefault("overall_metrics", {})
         with open(results_file, "w") as f:
-            json.dump(results, f, indent=2)
+            json.dump(_results_obj, f, indent=2)
 
         print(f"\n💾 Official evaluation results saved to: {results_file}")
 
