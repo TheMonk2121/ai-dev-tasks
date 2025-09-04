@@ -607,6 +607,109 @@ pytest tests/ -q
 - Security: `400_guides/400_10_security-compliance-and-access.md`
 - Deployments/Ops: `400_guides/400_11_deployments-ops-and-observability.md`
 
+## 🚀 **Memory System Rollout and Deployment**
+
+### **🚨 CRITICAL: Memory System Rollout Guide**
+
+**Purpose**: Step-by-step guide to roll out and validate the LTST memory system across environments.
+
+#### **Step 1: Prepare Environment**
+
+- Ensure Python deps: psycopg2-binary, pytest
+- Configure DATABASE_URL
+- Recommended Postgres extensions:
+  - vector (required for pgvector)
+  - pg_trgm (optional for trigram decision search)
+
+#### **Step 2: Apply Schema**
+
+Apply the LTST schema objects (tables, views, functions):
+
+```bash
+psql "$DATABASE_URL" -f dspy-rag-system/config/database/ltst_memory_schema.sql
+```
+
+#### **Step 3: Healthcheck**
+
+Verify connectivity, extensions, and required objects:
+
+```bash
+python scripts/memory_healthcheck.py
+```
+
+Resolve issues before proceeding.
+
+#### **Step 4: Verification**
+
+Run the end-to-end smoke test:
+
+```bash
+python scripts/run_memory_verification.py
+```
+
+Expected output includes context length, history count, and continuity score.
+
+#### **Step 5: Feature Flags**
+
+If `pg_trgm` is unavailable or you want to disable trigram search temporarily:
+
+```bash
+export DECISION_TRIGRAM_ENABLED=false
+```
+
+Decision search falls back to BM25-only.
+
+#### **Step 6: Extended Tests**
+
+```bash
+# Session Continuity
+pytest -q dspy-rag-system/tests/test_session_continuity.py
+
+# LTST Comprehensive
+pytest -q dspy-rag-system/tests/test_ltst_comprehensive.py
+
+# Decision Retrieval
+pytest -q dspy-rag-system/test_decision_retrieval.py
+```
+
+#### **Step 7: Observability**
+
+The system records performance metrics to `memory_performance_metrics`. If this generates excessive logs/errors in early phases, gate insertion behind a feature flag or reduce verbosity.
+
+#### **Step 8: Rollback**
+
+Reapply known-good schema (if needed) and disable flags to revert to conservative paths.
+
+#### **Memory System Deployment Checklist**
+
+##### **Pre-Deployment**
+- [ ] Database connection and permissions verified
+- [ ] Required PostgreSQL extensions available
+- [ ] Python dependencies installed
+- [ ] Configuration environment variables set
+- [ ] Backup of current system state created
+
+##### **Deployment**
+- [ ] LTST schema applied successfully
+- [ ] Memory healthcheck passes
+- [ ] Verification script completes successfully
+- [ ] Feature flags configured appropriately
+- [ ] Extended test suite passes
+
+##### **Post-Deployment**
+- [ ] System performance monitoring active
+- [ ] Memory metrics being collected
+- [ ] Error rates within acceptable thresholds
+- [ ] User acceptance testing completed
+- [ ] Rollback plan validated
+
+##### **Validation**
+- [ ] Memory context preservation working
+- [ ] Cross-session continuity functioning
+- [ ] Decision tracking operational
+- [ ] Performance metrics within targets
+- [ ] All integration tests passing
+
 ## 📚 References
 
 - Documentation Playbook: `400_01_documentation-playbook.md`
@@ -992,6 +1095,597 @@ python3 scripts/generate_quality_recommendations.py --gate-results gate_results.
 - **Performance**: System must meet performance requirements
 - **Security**: All security requirements must be satisfied
 - **Maintainability**: Code must be maintainable and readable
+
+## 🏗️ **Testing Infrastructure Guide**
+
+### **🚨 CRITICAL: Testing Infrastructure Architecture**
+
+**Purpose**: Complete guide to testing environment setup, tools, dependencies, and configuration for reproducible testing.
+
+#### **Core Components**
+- **Testing Environment**: Python 3.12 virtual environment with all dependencies
+- **Database**: PostgreSQL with pgvector extension for vector operations
+- **Evaluation Framework**: RAGChecker with AWS Bedrock integration
+- **Memory Systems**: LTST memory system with database backend
+- **Integration Tools**: MCP server, Cursor integration, and testing utilities
+
+#### **Infrastructure Layers**
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Testing Applications                     │
+├─────────────────────────────────────────────────────────────┤
+│                    Testing Framework                       │
+├─────────────────────────────────────────────────────────────┤
+│                    Core Dependencies                       │
+├─────────────────────────────────────────────────────────────┤
+│                    System Infrastructure                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### **🚀 Environment Setup**
+
+#### **System Requirements**
+- **Operating System**: macOS 12.0+, Windows 10+, or Linux Ubuntu 20.04+
+- **Python**: Python 3.12 (required)
+- **Memory**: Minimum 8GB RAM, recommended 16GB+
+- **Storage**: Minimum 10GB free space
+- **Network**: Internet access for package installation and AWS services
+
+#### **Required Software**
+- **Python 3.12**: [Download from python.org](https://python.org)
+- **PostgreSQL 14+**: [Download from postgresql.org](https://postgresql.org)
+- **Git**: [Download from git-scm.com](https://git-scm.com)
+- **VS Code/Cursor**: [Download from cursor.sh](https://cursor.sh)
+
+#### **Step-by-Step Setup**
+
+**1. Clone Repository**
+```bash
+git clone https://github.com/yourusername/ai-dev-tasks.git
+cd ai-dev-tasks
+```
+
+**2. Create Virtual Environment**
+```bash
+# Create virtual environment
+python3.12 -m venv venv
+
+# Activate virtual environment
+# On macOS/Linux:
+source venv/bin/activate
+# On Windows:
+venv\Scripts\activate
+```
+
+**3. Install Dependencies**
+```bash
+# Upgrade pip
+pip install --upgrade pip
+
+# Install project dependencies
+pip install -r requirements.txt
+
+# Install development dependencies
+pip install -r requirements-dev.txt
+```
+
+**4. Database Setup**
+```bash
+# Install PostgreSQL (if not already installed)
+# macOS with Homebrew:
+brew install postgresql
+brew services start postgresql
+
+# Create database
+createdb ai_agency
+
+# Install pgvector extension
+psql -d ai_agency -c "CREATE EXTENSION IF NOT EXISTS vector;"
+```
+
+**5. Environment Configuration**
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit environment variables
+# Set your database connection, AWS credentials, etc.
+```
+
+### **🛠️ Testing Tools & Dependencies**
+
+#### **Core Testing Framework**
+
+**Python Testing Stack**
+- **pytest**: Primary testing framework
+- **pytest-asyncio**: Async testing support
+- **pytest-cov**: Coverage reporting
+- **pytest-mock**: Mocking and patching
+
+**Code Quality Tools**
+- **Ruff**: Fast Python linter and formatter
+- **Pyright**: Static type checking
+- **Bandit**: Security linting
+- **Pre-commit**: Git hooks for code quality
+
+**Performance Testing**
+- **pytest-benchmark**: Performance benchmarking
+- **memory-profiler**: Memory usage profiling
+- **cProfile**: Python profiling
+
+#### **AI Development Tools**
+
+**DSPy Framework**
+- **dspy-ai**: Core DSPy framework
+- **dspy-ai[all]**: Full DSPy with all dependencies
+- **dspy-ai[bedrock]**: AWS Bedrock integration
+
+**Vector Operations**
+- **pgvector**: PostgreSQL vector extension
+- **numpy**: Numerical computing
+- **scikit-learn**: Machine learning utilities
+
+**Evaluation & Monitoring**
+- **ragchecker**: RAG evaluation framework
+- **boto3**: AWS SDK for Python
+- **psycopg2**: PostgreSQL adapter
+
+### **🔧 Configuration Management**
+
+#### **Required Environment Variables**
+```bash
+# Database Configuration
+POSTGRES_DSN=postgresql://username:password@localhost:5432/ai_agency
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=ai_agency
+POSTGRES_USER=username
+POSTGRES_PASSWORD=password
+
+# AWS Configuration
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+
+# Testing Configuration
+TESTING_MODE=true
+TEST_DATABASE_URL=postgresql://username:password@localhost:5432/ai_agency_test
+LOG_LEVEL=DEBUG
+```
+
+#### **Configuration Files**
+
+**pyproject.toml**
+```toml
+[tool.pytest.ini_options]
+testpaths = ["tests", "src"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "--import-mode=importlib --strict-markers"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "performance: marks tests as performance tests",
+    "memory: marks tests as memory system tests",
+    "retrieval: marks tests as retrieval system tests"
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+select = ["E", "F", "I", "N", "W", "B", "A", "C4", "UP", "PL", "RUF"]
+ignore = ["E501", "B008", "C901"]
+extend-select = ["RUF001", "RUF002", "RUF003", "PLE2502"]
+```
+
+### **🧪 Testing Workflows**
+
+#### **Test Execution Commands**
+
+**Basic Testing**
+```bash
+# Run all tests
+pytest
+
+# Run tests with coverage
+pytest --cov=src --cov-report=html
+
+# Run tests with verbose output
+pytest -v
+
+# Run tests and stop on first failure
+pytest -x
+```
+
+**Specific Test Categories**
+```bash
+# Run only unit tests
+pytest -m "not integration and not performance"
+
+# Run only integration tests
+pytest -m integration
+
+# Run only performance tests
+pytest -m performance
+
+# Run only memory system tests
+pytest -m memory
+
+# Run only retrieval system tests
+pytest -m retrieval
+```
+
+**Performance Testing**
+```bash
+# Run performance benchmarks
+pytest --benchmark-only
+
+# Run performance tests with profiling
+pytest -m performance --profile
+
+# Run memory profiling
+pytest -m performance --memray
+```
+
+#### **Test Organization**
+
+**Test Directory Structure**
+```
+tests/
+├── unit/                    # Unit tests
+│   ├── test_memory/        # Memory system unit tests
+│   ├── test_retrieval/     # Retrieval system unit tests
+│   └── test_integration/   # Integration unit tests
+├── integration/             # Integration tests
+│   ├── test_end_to_end/    # End-to-end workflow tests
+│   ├── test_cross_system/  # Cross-system integration tests
+│   └── test_performance/   # Performance integration tests
+├── performance/             # Performance tests
+│   ├── test_benchmarks/    # Performance benchmarks
+│   ├── test_load/          # Load testing
+│   └── test_stress/        # Stress testing
+└── fixtures/                # Test fixtures and data
+    ├── test_data/          # Test datasets
+    ├── mock_services/      # Mock external services
+    └── test_configs/       # Test configurations
+```
+
+### **🔍 Debugging & Troubleshooting**
+
+#### **Common Issues & Solutions**
+
+**Database Connection Issues**
+```bash
+# Check PostgreSQL status
+brew services list | grep postgresql
+
+# Restart PostgreSQL
+brew services restart postgresql
+
+# Check database connectivity
+psql -h localhost -U username -d ai_agency -c "SELECT 1;"
+
+# Reset database
+dropdb ai_agency && createdb ai_agency
+```
+
+**Python Environment Issues**
+```bash
+# Check Python version
+python --version
+
+# Verify virtual environment
+which python
+
+# Reinstall dependencies
+pip uninstall -r requirements.txt -y
+pip install -r requirements.txt
+
+# Check for conflicts
+pip check
+```
+
+**Testing Framework Issues**
+```bash
+# Clear pytest cache
+pytest --cache-clear
+
+# Run with debug output
+pytest -v --tb=long
+
+# Check test discovery
+pytest --collect-only
+
+# Run single test file
+pytest tests/unit/test_memory.py -v
+```
+
+#### **Debugging Tools**
+
+**Python Debugging**
+```python
+# Add debug breakpoints
+import pdb; pdb.set_trace()
+
+# Use ipdb for better debugging
+import ipdb; ipdb.set_trace()
+
+# Add logging
+import logging
+logging.basicConfig(level=logging.DEBUG)
+```
+
+**Performance Debugging**
+```bash
+# Profile specific functions
+python -m cProfile -o profile.stats script.py
+
+# Analyze profile results
+python -c "import pstats; pstats.Stats('profile.stats').sort_stats('cumulative').print_stats(20)"
+
+# Memory profiling
+python -m memory_profiler script.py
+```
+
+### **📈 Monitoring & Reporting**
+
+#### **Test Execution Monitoring**
+
+**Real-time Monitoring**
+```bash
+# Run tests with live output
+pytest -v --tb=short
+
+# Monitor test progress
+pytest --durations=10
+
+# Track test execution time
+pytest --durations=0
+```
+
+**Test Results Reporting**
+```bash
+# Generate HTML coverage report
+pytest --cov=src --cov-report=html
+
+# Generate XML coverage report
+pytest --cov=src --cov-report=xml
+
+# Generate performance report
+pytest --benchmark-only --benchmark-json=benchmark_results.json
+```
+
+#### **Performance Metrics**
+- **Test Execution Time**: Total time for test suite execution
+- **Memory Usage**: Peak memory consumption during testing
+- **CPU Utilization**: CPU usage during test execution
+- **Database Performance**: Query execution times and throughput
+
+### **🔄 Continuous Integration**
+
+#### **GitHub Actions Configuration**
+```yaml
+name: Testing Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.12]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+
+    - name: Run tests
+      run: |
+        pytest --cov=src --cov-report=xml
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+```
+
+#### **Pre-commit Hooks**
+```yaml
+repos:
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
+        language_version: python3.12
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.0.270
+    hooks:
+      - id: ruff
+        args: [--fix]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.3.0
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-all]
+```
+
+### **🚀 Advanced Testing Features**
+
+#### **Parallel Test Execution**
+```bash
+# Run tests in parallel
+pytest -n auto
+
+# Specify number of processes
+pytest -n 4
+
+# Use specific worker type
+pytest -n 4 --dist=worksteal
+```
+
+#### **Custom Test Markers**
+```python
+import pytest
+
+@pytest.mark.slow
+def test_slow_operation():
+    # This test will be marked as slow
+    pass
+
+@pytest.mark.integration
+def test_integration_feature():
+    # This test will be marked as integration
+    pass
+
+@pytest.mark.performance
+def test_performance_metric():
+    # This test will be marked as performance
+    pass
+```
+
+## 🗣️ **Communication Patterns Guide**
+
+### **🚨 CRITICAL: Communication Patterns are Essential**
+
+**Purpose**: Codified communication patterns and formatting preferences for effective AI-user interaction.
+
+**Status**: ✅ **ACTIVE** - Communication patterns guide maintained
+
+#### **Successful Communication Patterns**
+
+##### **1. Strategic Discussion Format**
+**Pattern**: Problem → Analysis → Strategy → Questions
+- **Problem**: Concrete metrics and clear pain points
+- **Analysis**: Systematic breakdown of current state
+- **Strategy**: Phased approach with clear benefits
+- **Questions**: Invite collaboration rather than assumptions
+
+**Example**:
+```
+🚨 **The Problem is Real**: 51 files, 28,707 lines of documentation bloat
+💡 **Proposed Strategy**: Apply README context management principles
+🎯 **Expected Benefits**: Reduced cognitive load, improved quality
+❓ **Questions for You**: What's your tolerance for automated changes?
+```
+
+##### **2. Structured Response Elements**
+**Pattern**: Use consistent formatting that resonates
+- **Clear sections** with emoji headers (🎯, 💡, 🚀, ❓)
+- **Concrete metrics** (file counts, line counts, performance numbers)
+- **Actionable timeframes** (Week 1, Week 2, Phase 1, Phase 2)
+- **Balanced approach** (not over-engineering, but thorough)
+
+##### **3. User Preference Alignment**
+**Pattern**: Match user's communication style
+- **Strategic questions** rather than jumping to implementation
+- **Systematic approaches** with clear phases
+- **Incremental, testable changes** over big-bang solutions
+- **Focus on "why" before "how"**
+
+##### **4. Memory System Integration**
+**Pattern**: Leverage memory context for personalization
+- **Solo developer** in local-first environment
+- **Simpler, streamlined approaches** preferred
+- **Avoid overfitting or over-complication**
+- **Plain, straightforward language**
+
+#### **Formatting Guidelines**
+
+##### **Strategic Discussions**
+```
+## 🧠 **Strategic Analysis: [Topic]**
+
+### **Current State Assessment**
+- **Concrete metrics** and clear pain points
+- **Systematic breakdown** of current state
+
+### **Proposed Strategy**
+- **Phased approach** with clear timeframes
+- **Expected benefits** with specific outcomes
+
+### **Key Design Decisions**
+- **Options presented** rather than assumptions
+- **Questions for collaboration** and input
+
+### **Expected Benefits**
+- **Concrete improvements** with metrics
+- **Clear value proposition**
+```
+
+##### **Problem-Solution Format**
+```
+## 🚨 **The Problem is Real**
+- **Specific metrics** (files, lines, performance)
+- **Clear pain points** and impact
+
+## 💡 **The Opportunity**
+- **Leverage existing successes** (like README context system)
+- **Apply proven patterns** to new domains
+
+## 🎯 **Proposed Solution**
+- **Systematic approach** with phases
+- **Clear benefits** and outcomes
+```
+
+##### **Questions for Collaboration**
+```
+## ❓ **Questions for You**
+
+1. **What's your tolerance for [specific aspect]?**
+2. **What's the most painful aspect of [current situation]?**
+3. **What do you actually use regularly?** vs what just sits there?
+4. **How [specific] should [approach] be?**
+5. **What's the ideal end state?** (metrics, structure, size)
+```
+
+#### **Application Guidelines**
+
+##### **When to Apply**
+- **Starting new strategic discussions**
+- **Presenting complex solutions**
+- **Seeking user input** on design decisions
+- **Explaining technical concepts** to non-technical stakeholders
+
+##### **How to Apply**
+1. **Start with problem definition** (concrete metrics)
+2. **Present systematic analysis** (current state)
+3. **Propose structured solution** (phased approach)
+4. **Ask collaborative questions** (invite input)
+5. **Highlight expected benefits** (clear value)
+
+##### **What to Avoid**
+- **Jumping straight to implementation** without strategy
+- **Making assumptions** about user preferences
+- **Over-engineering** solutions
+- **Using complex language** when simple works
+
+#### **Success Metrics**
+
+##### **Communication Effectiveness**
+- **User engagement** with strategic questions
+- **Clarity of understanding** (user asks follow-up questions)
+- **Decision-making speed** (faster consensus)
+- **Implementation success** (solutions that work)
+
+##### **Pattern Recognition**
+- **Consistent formatting** that resonates
+- **Repeated successful** communication elements
+- **User feedback** on communication style
+- **Memory system** integration effectiveness
 
 ## 🔗 Related
 

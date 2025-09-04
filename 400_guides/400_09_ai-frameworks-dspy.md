@@ -1701,7 +1701,266 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor prime --rol
 python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "coordinate implementation strategy across all roles"
 ```
 
-**Reference**: See `100_memory/100_dspy-role-communication-guide.md` for detailed communication patterns and examples.
+## 🎭 **DSPy Role Communication & Memory Access Guide**
+
+### **🚨 CRITICAL: DSPy Role Communication is Essential**
+
+**Purpose**: Essential guide for accessing and communicating with DSPy roles through the Unified Memory Orchestrator.
+
+**Status**: ✅ **ACTIVE** - DSPy role communication guide maintained
+
+#### **Quick Access Commands**
+
+##### **Essential Setup**
+```bash
+# Set non-SSL connection for Go CLI compatibility (required for all role access)
+export POSTGRES_DSN="mock://test"
+```
+
+##### **Role-Specific Access**
+```bash
+# Strategic planning and high-level analysis
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "your query here"
+
+# Technical implementation and workflow design
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "your query here"
+
+# Research methodology and evidence-based analysis
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "your query here"
+
+# Code implementation and technical patterns
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "your query here"
+```
+
+##### **Full Memory Context Access**
+```bash
+# Complete memory context with all systems
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+
+# JSON output for programmatic access
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query" --format json
+```
+
+#### **DSPy Role Capabilities & Use Cases**
+
+##### **Planner Role** 🎯
+**Primary Focus**: Strategic analysis, planning, and high-level decision making
+
+**Capabilities**:
+- Strategic analysis and planning
+- PRD creation and requirements gathering
+- Roadmap planning and prioritization
+- High-level architecture decisions
+- Business value assessment
+- Risk analysis and mitigation
+
+**Example Queries**:
+```bash
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "create a comprehensive PRD for restructuring the 00-12 guides"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "analyze the strategic impact of implementing advanced RAG optimization"
+```
+
+##### **Implementer Role** ⚙️
+**Primary Focus**: Technical implementation, workflow design, and system integration
+
+**Capabilities**:
+- Technical implementation planning
+- Workflow design and optimization
+- System integration strategies
+- Execution planning and coordination
+- Technical architecture decisions
+- Implementation patterns and best practices
+
+**Example Queries**:
+```bash
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "design an implementation plan for the 00-12 guide restructuring"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "create a workflow for automated memory system validation"
+```
+
+##### **Researcher Role** 🔬
+**Primary Focus**: Research methodology, analysis frameworks, and evidence-based decision making
+
+**Capabilities**:
+- Research methodology design
+- Analysis framework development
+- Evidence-based decision making
+- Data analysis and interpretation
+- Systematic evaluation approaches
+- Knowledge synthesis and integration
+
+**Example Queries**:
+```bash
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "analyze the effectiveness of our current memory system architecture"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "evaluate different approaches to improving AI comprehension"
+```
+
+##### **Coder Role** 💻
+**Primary Focus**: Code implementation, debugging, optimization, and technical patterns
+
+**Capabilities**:
+- Code implementation and development
+- Debugging and troubleshooting
+- Performance optimization
+- Technical pattern implementation
+- Code quality and best practices
+- Technical problem solving
+
+**Example Queries**:
+```bash
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "implement the memory system integration for the new guide structure"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "optimize the RAGChecker evaluation framework for better performance"
+```
+
+#### **Memory System Integration**
+
+##### **Unified Memory Orchestrator**
+The orchestrator provides centralized access to all memory systems:
+- **LTST Memory System**: Database-backed conversation memory
+- **Cursor Memory**: Static documentation bundling
+- **Go CLI Memory**: Fast startup with lean hybrid approach
+- **Prime Cursor**: Enhanced Cursor integration
+
+##### **Role-Based Context Retrieval**
+Each role receives tailored context based on their perspective:
+- **Planner**: Strategic context, business value, roadmap information
+- **Implementer**: Technical context, workflow patterns, implementation details
+- **Researcher**: Analysis context, methodology, evidence-based insights
+- **Coder**: Technical context, code patterns, implementation details
+
+##### **Mock Mode Support**
+For testing and development without database dependencies:
+```bash
+export POSTGRES_DSN="mock://test"
+```
+This enables mock data mode for all memory systems.
+
+## 🔗 **Cursor Role System Alignment Guide**
+
+### **🚨 CRITICAL: Role System Alignment is Essential**
+
+**Purpose**: Essential guide for aligning Cursor's role system with existing memory infrastructure.
+
+#### **Role System Architecture**
+
+##### **Multi-File Role System (New)**
+```bash
+# Cursor's new multi-file role system
+.cursorrules                           # Main role configuration
+.vscode/settings.json                  # VS Code role settings
+role-specific configuration files      # Individual role configurations
+```
+
+##### **Single-File Role System (Legacy)**
+```bash
+# Cursor's legacy single-file role system
+.cursorrules                           # All role configurations in one file
+```
+
+#### **Alignment Patterns**
+
+##### **1. Memory System Integration**
+
+**Unified Memory Orchestrator Integration**
+```bash
+# Role-specific memory access
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "query"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
+```
+
+**Memory Context Alignment**
+```bash
+# Role-specific memory context
+export POSTGRES_DSN="mock://test"
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status"
+```
+
+##### **2. Role-Specific Context Patterns**
+
+**Planner Role Context**
+```bash
+# Strategic planning context
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "development priorities and roadmap"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "PRD creation and task generation"
+```
+
+**Implementer Role Context**
+```bash
+# Implementation context
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "development workflow and technical integration"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role implementer "system architecture and component integration"
+```
+
+**Researcher Role Context**
+```bash
+# Research context
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "research methodology and evidence-based analysis"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "memory system optimization and performance analysis"
+```
+
+**Coder Role Context**
+```bash
+# Technical implementation context
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "technical implementation patterns and code components"
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "DSPy RAG system architecture and implementation"
+```
+
+##### **3. Configuration Alignment**
+
+**Cursor Rules Integration**
+```bash
+# .cursorrules configuration for role alignment
+export POSTGRES_DSN="mock://test"
+python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+```
+
+**VS Code Settings Integration**
+```json
+{
+  "cursor.role": "planner",
+  "cursor.memorySystem": "unified",
+  "cursor.contextRetrieval": "automatic"
+}
+```
+
+#### **Performance Optimization**
+
+##### **Role-Specific Performance Tuning**
+```python
+def optimize_for_role(role: str) -> Dict[str, Any]:
+    """Optimize memory system performance for specific role."""
+    optimizations = {
+        "planner": {"context_depth": "strategic", "response_style": "high_level"},
+        "implementer": {"context_depth": "technical", "response_style": "detailed"},
+        "researcher": {"context_depth": "analytical", "response_style": "evidence_based"},
+        "coder": {"context_depth": "implementation", "response_style": "code_focused"}
+    }
+    return optimizations.get(role, optimizations["planner"])
+```
+
+#### **Troubleshooting Role Alignment**
+
+##### **Common Issues**
+1. **Role Context Missing**: Run role-specific memory context retrieval
+2. **Role Switching Issues**: Verify role system configuration
+3. **Memory Integration Issues**: Check Unified Memory Orchestrator
+4. **Performance Issues**: Run role-specific performance optimization
+
+##### **Debugging Commands**
+```bash
+# Debug role system alignment
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "debug role system alignment"
+
+# Check role-specific context
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "check technical context integration"
+
+# Validate role configuration
+python3 scripts/validate_config.py --role-system
+
+# Monitor role performance
+python3 scripts/performance_optimization.py --role-specific
+```
 
 ## 📚 **References**
 

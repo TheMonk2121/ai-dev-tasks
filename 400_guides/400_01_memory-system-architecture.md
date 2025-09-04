@@ -1985,6 +1985,79 @@ The system uses pgvector for similarity search with the following configuration:
 - **Index Type**: HNSW (Hierarchical Navigable Small World)
 - **Search Parameters**: k=10 for top-k retrieval
 
+## 🚀 **Memory System Flags and Healthcheck**
+
+### **🚨 CRITICAL: Memory System Feature Flags**
+
+**Purpose**: Document the feature flags and healthcheck procedures used by the LTST memory stack.
+
+#### **Environment Flags**
+
+**DECISION_TRIGRAM_ENABLED**: Enables trigram similarity in decision search.
+- **Type**: bool ("true"/"false", "1"/"0")
+- **Default**: true
+- **When false or when `pg_trgm` extension is unavailable**: The system falls back to BM25-only search.
+
+```bash
+# Enable trigram search (default)
+export DECISION_TRIGRAM_ENABLED=true
+
+# Disable trigram search (fallback to BM25-only)
+export DECISION_TRIGRAM_ENABLED=false
+```
+
+#### **Memory System Healthcheck**
+
+**Purpose**: Run a lightweight diagnostic of DB connectivity, extensions, and required objects.
+
+**Command**:
+```bash
+python scripts/memory_healthcheck.py
+```
+
+**Checks performed**:
+- Database connectivity
+- Extensions: `vector` (required for pgvector), `pg_trgm` (optional for trigram)
+- Objects: `session_summary` view and `clean_expired_*` functions
+
+**Exit codes**:
+- 0: OK
+- non-zero: Failure or warnings present (see output)
+
+#### **Memory System Verification Script**
+
+**Purpose**: End-to-end smoke test for seeding a session and rehydrating.
+
+**Command**:
+```bash
+DATABASE_URL=... python scripts/run_memory_verification.py
+```
+
+**What it does**:
+- Runs the healthcheck
+- Seeds a small session (messages + a decision)
+- Runs rehydration against the session and prints a summary
+
+#### **Memory System Monitoring Commands**
+
+```bash
+# Run memory system healthcheck
+python3 scripts/memory_healthcheck.py
+
+# Run memory verification with full output
+DATABASE_URL="postgresql://user:pass@localhost:5432/db" python3 scripts/run_memory_verification.py
+
+# Check memory system status with unified orchestrator
+python3 scripts/unified_memory_orchestrator.py --systems ltst --role planner "memory system status"
+
+# Monitor memory performance metrics
+python3 -c "
+from dspy_rag_system.src.utils.ltst_memory_integration import LTSTMemoryIntegration
+ltst = LTSTMemoryIntegration()
+print(ltst.get_performance_metrics())
+"
+```
+
 ## 📚 References
 
 - **Migration Map**: `migration_map.csv`
