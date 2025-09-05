@@ -1,75 +1,281 @@
 #!/usr/bin/env python3
 """
-Memory System Healthcheck
+Memory Systems Healthcheck
 
-Performs sanity checks for the LTST memory system:
-- Database connectivity
-- Required extensions (vector, optional pg_trgm)
-- Required objects (session_summary view, clean_expired_* functions)
+Runs targeted checks across memory subsystems and prints a concise summary
+with remediation recommendations. Supports JSON or text output.
 """
 
+from __future__ import annotations
+
+import json
 import os
+import subprocess
 import sys
-from typing import Tuple
+import time
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+project_root = Path(__file__).parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+# Ensure dspy-rag-system is importable
+dspy_root = project_root / "dspy-rag-system"
+if str(dspy_root) not in sys.path:
+    sys.path.insert(0, str(dspy_root))
 
 
-def main() -> int:
+def _run(cmd: list[str], timeout: int = 20, env: Optional[Dict[str, str]] = None) -> tuple[bool, str, str]:
     try:
-        try:
-            import psycopg2  # type: ignore
-        except Exception:
-            print("[FAIL] psycopg2 not installed — install psycopg2-binary to use DB features")
-            return 1
-
-        dsn = os.getenv("DATABASE_URL", "postgresql://danieljacobs@localhost:5432/ai_agency")
-        conn = psycopg2.connect(dsn)  # type: ignore
-        cur = conn.cursor()
-
-        # 1) Connectivity
-        cur.execute("SELECT 1")
-        row = cur.fetchone()
-        if not row or row[0] != 1:
-            print("[FAIL] Database connectivity check failed")
-            return 2
-        print("[OK] Database connectivity")
-
-        # 2) Extensions
-        cur.execute("SELECT extname FROM pg_extension")
-        exts = {r[0] for r in cur.fetchall()}
-        if "vector" in exts:
-            print("[OK] vector extension present")
-        else:
-            print("[WARN] vector extension missing — pgvector features will be disabled")
-
-        if "pg_trgm" in exts:
-            print("[OK] pg_trgm extension present (trigram search enabled)")
-        else:
-            print("[INFO] pg_trgm missing — decision trigram search will be skipped (set DECISION_TRIGRAM_ENABLED=false)")
-
-        # 3) Required objects
-        checks: Tuple[Tuple[str, str], ...] = (
-            ("session_summary view", "SELECT 1 FROM session_summary LIMIT 1"),
-            ("clean_expired_cache() function", "SELECT 1 FROM pg_proc WHERE proname='clean_expired_cache'"),
-            ("clean_expired_context() function", "SELECT 1 FROM pg_proc WHERE proname='clean_expired_context'"),
-        )
-        for label, sql in checks:
-            try:
-                cur.execute(sql)
-                _ = cur.fetchone()
-                print(f"[OK] {label}")
-            except Exception as e:
-                print(f"[WARN] {label} not found: {e}")
-
-        cur.close()
-        conn.close()
-        print("[DONE] Memory healthcheck complete")
-        return 0
-
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=str(project_root), env=env)
+        return res.returncode == 0, res.stdout.strip(), res.stderr.strip()
+    except subprocess.TimeoutExpired:
+        return False, "", f"Command timed out after {timeout}s"
     except Exception as e:
-        print(f"[FAIL] Healthcheck error: {e}")
-        return 99
+        return False, "", str(e)
+
+
+def check_database() -> Dict[str, Any]:
+    dsn = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_DSN") or ""
+    offline = os.getenv("MEMORY_HEALTHCHECK_OFFLINE", "0") == "1" or dsn.startswith("mock://")
+    if offline:
+        return {
+            "component": "database",
+            "status": "healthy",
+            "detail": "offline/mock mode",
+            "dsn": dsn or "(env not set)",
+        }
+    ok, out, err = _run(["pg_isready", "-h", "localhost", "-p", "5432"], timeout=8)
+    status = "healthy" if ok else "unavailable"
+    return {
+        "component": "database",
+        "status": status,
+        "detail": out or err,
+        "dsn": dsn or "(env not set)",
+    }
+
+
+def check_ltst() -> Dict[str, Any]:
+    start = time.time()
+    try:
+        from src.utils.ltst_memory_system import LTSTMemorySystem
+
+        ltst = LTSTMemorySystem()
+        health = ltst.get_system_health()
+        stats = ltst.get_system_statistics()
+        return {
+            "component": "ltst",
+            "status": "healthy" if health.database_connected else "degraded",
+            "database_connected": health.database_connected,
+            "cache_size": health.cache_size,
+            "active_sessions": health.active_sessions,
+            "error_rate": health.error_rate,
+            "avg_response_ms": health.average_response_time_ms,
+            "ops": stats.get("total_operations", 0),
+            "duration_ms": int((time.time() - start) * 1000),
+        }
+    except Exception as e:
+        return {"component": "ltst", "status": "error", "error": str(e)}
+
+
+def check_episodic() -> Dict[str, Any]:
+    start = time.time()
+    try:
+        from src.utils.episodic_reflection_store import EpisodicReflectionStore
+
+        store = EpisodicReflectionStore()
+        stats = store.get_stats()  # may fallback to zeros in offline/mock
+        offline = os.getenv("MEMORY_HEALTHCHECK_OFFLINE", "0") == "1"
+        status = "healthy" if (stats or offline) else "degraded"
+        return {
+            "component": "episodic",
+            "status": status,
+            "stats": stats,
+            "duration_ms": int((time.time() - start) * 1000),
+        }
+    except Exception as e:
+        if os.getenv("MEMORY_HEALTHCHECK_OFFLINE", "0") == "1":
+            return {
+                "component": "episodic",
+                "status": "healthy",
+                "stats": {
+                    "total_reflections": 0,
+                    "unique_agents": 0,
+                    "unique_task_types": 0,
+                    "avg_what_worked_items": 0.0,
+                    "avg_what_to_avoid_items": 0.0,
+                },
+                "duration_ms": int((time.time() - start) * 1000),
+            }
+        return {"component": "episodic", "status": "error", "error": str(e)}
+
+
+def check_cursor(role: str = "planner") -> Dict[str, Any]:
+    ok, out, err = _run([sys.executable, "scripts/cursor_memory_rehydrate.py", role, "healthcheck ping"], timeout=20)
+    return {
+        "component": "cursor_rehydrator",
+        "status": "healthy" if ok or os.getenv("MEMORY_HEALTHCHECK_OFFLINE", "0") == "1" else "error",
+        "output": out if ok else (err or "offline/mock mode"),
+    }
+
+
+def check_go_cli() -> Dict[str, Any]:
+    bin_path = dspy_root / "src" / "cli" / "memory_rehydration_cli"
+    if not bin_path.exists():
+        return {"component": "go_cli", "status": "missing_binary", "path": str(bin_path)}
+    # Use mock DSN for Go CLI to avoid schema issues
+    env = os.environ.copy()
+    env["POSTGRES_DSN"] = "mock://test"
+    ok, out, err = _run([str(bin_path), "--query", "healthcheck"], timeout=10, env=env)
+    return {"component": "go_cli", "status": "healthy" if ok else "error", "output": out if ok else err}
+
+
+def check_prime(role: str = "planner") -> Dict[str, Any]:
+    ok, out, err = _run([sys.executable, "scripts/prime_cursor_chat.py", role, "healthcheck"], timeout=20)
+    return {"component": "prime_cursor", "status": "healthy" if ok else "error", "output": out if ok else err}
+
+
+@dataclass
+class Recommendation:
+    component: str
+    action: str
+    rationale: str
+
+
+def make_recommendations(results: Dict[str, Any]) -> list[Recommendation]:
+    recs: list[Recommendation] = []
+
+    db = results.get("database", {})
+    if db.get("status") != "healthy":
+        recs.append(
+            Recommendation(
+                "database",
+                "Start PostgreSQL and verify DSN",
+                "pg_isready failed or DSN env variables not set",
+            )
+        )
+
+    ltst = results.get("ltst", {})
+    if ltst.get("status") in {"degraded", "error"}:
+        recs.append(
+            Recommendation(
+                "ltst",
+                "Check DB connectivity, add indexes, and review error_rate",
+                "LTST reported degraded/error; database_connected or error_rate suggests issues",
+            )
+        )
+
+    episodic = results.get("episodic", {})
+    if episodic.get("status") != "healthy":
+        recs.append(
+            Recommendation(
+                "episodic",
+                "Ensure table exists and pgvector extension enabled",
+                "Stats missing; create table and verify vector/GIN indexes",
+            )
+        )
+
+    cursor_r = results.get("cursor_rehydrator", {})
+    if cursor_r.get("status") != "healthy":
+        recs.append(
+            Recommendation(
+                "cursor_rehydrator",
+                "Activate venv and install dependencies",
+                "Script invocation failed; likely environment or missing deps",
+            )
+        )
+
+    go_cli = results.get("go_cli", {})
+    if go_cli.get("status") == "missing_binary":
+        recs.append(
+            Recommendation(
+                "go_cli",
+                "Build Go CLI binary",
+                f"Run: (cd {dspy_root / 'src' / 'cli'} && go build -o memory_rehydration_cli ./memory_rehydration_cli.go)",
+            )
+        )
+    elif go_cli.get("status") == "error":
+        recs.append(Recommendation("go_cli", "Verify DSN/env and run --query test", "CLI returned an error"))
+
+    prime = results.get("prime_cursor", {})
+    if prime.get("status") != "healthy":
+        recs.append(
+            Recommendation(
+                "prime_cursor",
+                "Validate provider keys and add a --dry-run path",
+                "Script invocation failed; likely missing credentials or deps",
+            )
+        )
+
+    return recs
+
+
+def format_text(results: Dict[str, Any], recs: list[Recommendation]) -> str:
+    lines: list[str] = []
+    lines.append("🧠 Memory Systems Healthcheck")
+    ok_count = sum(1 for k, v in results.items() if isinstance(v, dict) and v.get("status") == "healthy")
+    total = sum(1 for k in results.keys() if k not in {"timestamp"})
+    lines.append(f"📊 Summary: {ok_count}/{total} healthy")
+    lines.append("")
+
+    for name in ["database", "ltst", "episodic", "cursor_rehydrator", "go_cli", "prime_cursor"]:
+        if name in results:
+            r = results[name]
+            status = r.get("status")
+            lines.append(f"- {name}: {status}")
+            if "error" in r and r["error"]:
+                lines.append(f"  error: {r['error']}")
+            if name == "ltst" and status != "error":
+                lines.append(
+                    f"  db={r.get('database_connected')} ops={r.get('ops')} err_rate={r.get('error_rate'):.2f} avg_ms={r.get('avg_response_ms'):.1f}"
+                )
+            if name == "episodic" and isinstance(r.get("stats"), dict):
+                st = r.get("stats", {})
+                lines.append(f"  reflections={st.get('total_reflections', 0)} agents={st.get('unique_agents', 0)}")
+    lines.append("")
+
+    if recs:
+        lines.append("💡 Recommendations:")
+        for rec in recs:
+            lines.append(f"- {rec.component}: {rec.action} — {rec.rationale}")
+
+    return "\n".join(lines)
+
+
+def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Memory Systems Healthcheck")
+    parser.add_argument("--format", choices=["text", "json"], default="text")
+    args = parser.parse_args()
+
+    results: Dict[str, Any] = {"timestamp": time.time()}
+
+    # Ordered checks
+    results["database"] = check_database()
+    results["ltst"] = check_ltst()
+    results["episodic"] = check_episodic()
+    results["cursor_rehydrator"] = check_cursor()
+    results["go_cli"] = check_go_cli()
+    results["prime_cursor"] = check_prime()
+
+    recs = make_recommendations(results)
+
+    if args.format == "json":
+        out = {
+            "summary": {
+                "healthy": sum(1 for k, v in results.items() if isinstance(v, dict) and v.get("status") == "healthy"),
+                "total": len([k for k in results.keys() if k not in {"timestamp"}]),
+            },
+            "results": results,
+            "recommendations": [rec.__dict__ for rec in recs],
+        }
+        print(json.dumps(out, indent=2, default=str))
+    else:
+        print(format_text(results, recs))
 
 
 if __name__ == "__main__":
-    sys.exit(main())
-
+    main()

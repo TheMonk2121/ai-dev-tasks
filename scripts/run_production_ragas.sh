@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Production RAGAS Evaluation - Tight, No-Drama Rollout
 # Converts three moves into production wins with precision ≥ 0.20

@@ -58,10 +58,10 @@ class IntelligentBedrockQueue:
         self.base_backoff = float(os.getenv("BEDROCK_BASE_BACKOFF", "1.5"))
         self.max_backoff = float(os.getenv("BEDROCK_MAX_BACKOFF", "12.0"))
 
-        # Smart timing parameters
-        self.base_delay = float(os.getenv("BEDROCK_QUEUE_BASE_DELAY", "0.5"))  # Base delay between requests
-        self.batch_size = int(os.getenv("BEDROCK_QUEUE_BATCH_SIZE", "3"))  # Process up to N requests in a batch
-        self.batch_window = float(os.getenv("BEDROCK_QUEUE_BATCH_WINDOW", "2.0"))  # Time window for batching
+        # Smart timing parameters (conservative defaults)
+        self.base_delay = float(os.getenv("BEDROCK_QUEUE_BASE_DELAY", "1.5"))  # Base delay between requests
+        self.batch_size = int(os.getenv("BEDROCK_QUEUE_BATCH_SIZE", "1"))  # Process up to N requests in a batch
+        self.batch_window = float(os.getenv("BEDROCK_QUEUE_BATCH_WINDOW", "1.5"))  # Time window for batching
 
         # Rate limit tracking
         self.last_request_time = 0
@@ -75,6 +75,11 @@ class IntelligentBedrockQueue:
         self.total_requests = 0
 
         logger.info(f"IntelligentBedrockQueue initialized with {len(api_keys)} keys")
+        try:
+            model_id = os.getenv("BEDROCK_MODEL_ID", "anthropic.claude-3-5-sonnet-20240620-v1:0")
+            logger.info(f"Bedrock model configured: {model_id}")
+        except Exception:
+            pass
 
     def start_processing(self):
         """Start the background processing thread"""

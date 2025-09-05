@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # RAGChecker with Multi-Key Enhanced Bedrock Client
 # Optimized for maximum throughput and minimal rate limiting

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Precision Fallback Push - Apply fallback configurations to reach RAGAS targets
 # Based on the evaluation results showing we need precision improvements

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Precision-Climb v2 Evaluation Script
 # Implements the precision-focused optimization plan to achieve P≥0.20 while maintaining R≥0.60

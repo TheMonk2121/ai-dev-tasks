@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Precision Recovery Step 3: Add Adaptive TOPK Based on Facet Agreement
 # Adds adaptive TOPK only when facets agree
 

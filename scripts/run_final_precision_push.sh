@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Final Precision Push Evaluation
 # Aggressive precision improvements to achieve P ≥ 0.135 target
 

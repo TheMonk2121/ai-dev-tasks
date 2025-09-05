@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 Official RAGChecker Evaluation Script with Local LLM Support
 
@@ -11,6 +13,13 @@ This script implements RAGChecker evaluation following the official methodology:
 
 Based on official RAGChecker documentation and best practices.
 Includes custom LLM integration for local models via Ollama.
+
+SOP: See `000_core/000_evaluation-system-entry-point.md`.
+Quick run (stable):
+    source throttle_free_eval.sh && \
+    python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
+
+If you were told to "run the evals", use the quick run above.
 """
 
 import asyncio
@@ -139,6 +148,114 @@ BEDROCK_AVAILABLE = _bedrock_available
 
 # Silence tokenizers parallelism warning (cosmetic)
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+
+
+# --- Env alias shim (prevents silent misconfig) ---
+def _env_alias(src: str, dst: str) -> None:
+    try:
+        if os.getenv(src) and not os.getenv(dst):
+            os.environ[dst] = os.environ[src]
+    except Exception:
+        pass
+
+
+# Common alias mappings used by engineers
+_env_alias("BEDROCK_MAX_CONCURRENCY", "BEDROCK_MAX_IN_FLIGHT")
+_env_alias("BEDROCK_RETRY_BASE", "BEDROCK_BASE_BACKOFF")
+_env_alias("BEDROCK_RETRY_MAX", "BEDROCK_MAX_RETRIES")
+_env_alias("BEDROCK_RETRY_MAX_SLEEP", "BEDROCK_MAX_BACKOFF")
+_env_alias("BEDROCK_MODEL", "BEDROCK_MODEL_ID")
+
+
+# --- Optional env locking via file (ensures stable settings) ---
+def _load_env_file(path: str, lock: bool = False) -> int:
+    """Load KEY=VALUE pairs from a file.
+
+    - Lines starting with '#' are ignored
+    - Empty lines are ignored
+    - If lock=True, override existing env; else only set if missing
+    Returns number of keys applied
+    """
+    applied = 0
+    try:
+        with open(path, "r") as f:
+            for raw in f:
+                line = raw.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" not in line:
+                    continue
+                k, v = line.split("=", 1)
+                k = k.strip()
+                v = v.strip()
+                if k and (lock or os.getenv(k) is None):
+                    os.environ[k] = v
+                    applied += 1
+    except Exception:
+        return 0
+    return applied
+
+
+_lock_flag = os.getenv("RAGCHECKER_LOCK_ENV", "0") == "1"
+_env_file = os.getenv("RAGCHECKER_ENV_FILE")
+if _env_file:
+    _applied = _load_env_file(_env_file, lock=_lock_flag)
+    try:
+        print(f"🔒 Loaded env from {_env_file} (applied { _applied } keys, lock={_lock_flag})")
+    except Exception:
+        pass
+
+
+def _maybe_rerank_contexts(contexts_raw: List[Union[str, Dict[str, Any]]]) -> List[Union[str, Dict[str, Any]]]:
+    """Optionally re-rank retrieved_context using simple anchor-aware scoring.
+
+    Supports env knobs for parity with production pipelines:
+    - RAGCHECKER_BM25_BOOST_ANCHORS: >1.0 boosts entries flagged as anchors
+    - RAGCHECKER_FACET_DOWNWEIGHT_NO_ANCHOR: <1.0 downweights non-anchors when anchors exist
+
+    If inputs are plain strings (common in official eval), this is a no-op.
+    """
+    if not contexts_raw:
+        return contexts_raw
+
+    has_meta = any(isinstance(c, dict) for c in contexts_raw)
+    if not has_meta:
+        return contexts_raw
+
+    try:
+        anchor_boost = float(os.getenv("RAGCHECKER_BM25_BOOST_ANCHORS", "1.0"))
+        facet_downweight = float(os.getenv("RAGCHECKER_FACET_DOWNWEIGHT_NO_ANCHOR", "1.0"))
+    except Exception:
+        anchor_boost = 1.0
+        facet_downweight = 1.0
+
+    scored: List[tuple[float, Union[str, Dict[str, Any]]]] = []
+    any_anchor = False
+    for c in contexts_raw:
+        if isinstance(c, dict):
+            is_anchor = bool(c.get("is_anchor") or c.get("anchor") or c.get("has_anchor"))
+            any_anchor = any_anchor or is_anchor
+            base = 1.0
+            score = base * (anchor_boost if is_anchor else 1.0)
+            scored.append((score, c))
+        else:
+            scored.append((1.0, c))
+
+    if any_anchor and facet_downweight != 1.0:
+        scored = [
+            (
+                (
+                    s
+                    if (isinstance(x, dict) and (x.get("is_anchor") or x.get("anchor") or x.get("has_anchor")))
+                    else s * facet_downweight
+                ),
+                x,
+            )
+            for (s, x) in scored
+        ]
+
+    scored.sort(key=lambda t: t[0], reverse=True)
+    return [x for (_, x) in scored]
 
 
 class RateLimiter:
@@ -305,16 +422,16 @@ class LocalLLMIntegration:
         self.embedding_model = None
 
         # Bedrock rate limiting and retry configuration
-        self._bedrock_rl = RateLimiter(float(os.getenv("BEDROCK_MAX_RPS", "0.3"))) if use_bedrock else None
-        self._bedrock_max_retries = int(os.getenv("BEDROCK_MAX_RETRIES", "6"))
-        self._bedrock_retry_base = float(os.getenv("BEDROCK_RETRY_BASE", "1.6"))
-        self._bedrock_retry_max_sleep = float(os.getenv("BEDROCK_RETRY_MAX_SLEEP", "12"))
+        self._bedrock_rl = RateLimiter(float(os.getenv("BEDROCK_MAX_RPS", "0.15"))) if use_bedrock else None
+        self._bedrock_max_retries = int(os.getenv("BEDROCK_MAX_RETRIES", "8"))
+        self._bedrock_retry_base = float(os.getenv("BEDROCK_RETRY_BASE", "1.8"))
+        self._bedrock_retry_max_sleep = float(os.getenv("BEDROCK_RETRY_MAX_SLEEP", "20"))
         self._bedrock_cooldown_until = 0.0  # NEW: cool-down timestamp
 
         # async bedrock gate
         self._bedrock_gate = None
         if use_bedrock:
-            max_rps = float(os.getenv("BEDROCK_MAX_RPS", "0.25"))
+            max_rps = float(os.getenv("BEDROCK_MAX_RPS", "0.15"))
             max_in_flight = int(os.getenv("BEDROCK_MAX_IN_FLIGHT", "1"))
             self._bedrock_gate = AsyncBedrockGate(max_in_flight=max_in_flight, max_rps=max_rps)
         if EMBEDDINGS_AVAILABLE and os.getenv("RAGCHECKER_SEMANTIC_FEATURES", "1") == "1":
@@ -440,7 +557,7 @@ Focused Answer:""".strip()
             return " ".join(words[:max_words])
         return text
 
-    def call_json(self, prompt: str, *, schema: dict | None = None, max_tokens: int = 900) -> dict | list:
+    def call_json(self, prompt: str, *, schema: Optional[dict] = None, max_tokens: int = 900) -> Union[dict, list]:
         """Ask Bedrock (preferred) or Ollama in JSON mode, validate + auto-repair."""
 
         def _parse_first_json(text: str):
@@ -452,7 +569,24 @@ Focused Answer:""".strip()
         attempts = []
 
         # Prefer Bedrock JSON, else local JSON
-        out = self._call_bedrock_llm(prompt, max_tokens) if self.use_bedrock else ""
+        out = ""
+        if self.use_bedrock:
+            # Use async gate when safe (no running event loop). This enforces global RPS/concurrency caps.
+            use_async_gate = bool(self._bedrock_gate)
+            in_loop = False
+            try:
+                asyncio.get_running_loop()
+                in_loop = True
+            except RuntimeError:
+                in_loop = False
+
+            if use_async_gate and not in_loop:
+                try:
+                    out = asyncio.run(self.bedrock_invoke_async(prompt, max_tokens))
+                except Exception:
+                    out = ""
+            if not out:
+                out = self._call_bedrock_llm(prompt, max_tokens)
         if not out:
             out = self._call_ollama_json(prompt, max_tokens)
         attempts.append(out or "")
@@ -668,7 +802,9 @@ Now write the final answer (plain text, not JSON):
         print(f"📝 Heuristic fact extraction: {len(facts)} facts from {len(context)} contexts")
         return facts
 
-    def _evidence_filter_multi(self, answer: str, contexts: list[str], fact_sentences: list[str] | None = None) -> str:
+    def _evidence_filter_multi(
+        self, answer: str, contexts: List[str], fact_sentences: Optional[List[str]] = None
+    ) -> str:
         """Multi-signal evidence guard with floors to protect recall while maintaining precision."""
         import re
         from difflib import SequenceMatcher
@@ -1430,8 +1566,8 @@ class OfficialRAGCheckerEvaluator:
         # Track Bedrock model id for accurate logging/config
         self.bedrock_model_id = os.getenv("BEDROCK_MODEL_ID", "anthropic.claude-3-haiku-20240307-v1:0")
         # Timing fields populated per run
-        self._run_start_ts: float | None = None
-        self._run_end_ts: float | None = None
+        self._run_start_ts: Optional[float] = None
+        self._run_end_ts: Optional[float] = None
 
     def _lcs_len(self, a_tokens, b_tokens):
         """Calculate Longest Common Subsequence length for ROUGE-L."""
@@ -1988,8 +2124,15 @@ Do not summarize or be concise - provide thorough, detailed information."""
             print("=" * 60)
 
             # Use Popen for real-time streaming output with increased timeout
+            # Pass environment variables to preserve throttling settings
             process = subprocess.Popen(
-                cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1, universal_newlines=True
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                bufsize=1,
+                universal_newlines=True,
+                env=os.environ,
             )
 
             # Note: CLI execution timeout is handled by LiteLLM_TIMEOUT env var
@@ -2348,7 +2491,13 @@ Do not summarize or be concise - provide thorough, detailed information."""
             if os.getenv("RAGCHECKER_EVIDENCE_GUARD", "1") == "1":
                 j = float(os.getenv("RAGCHECKER_EVIDENCE_JACCARD", "0.18"))
                 cov = float(os.getenv("RAGCHECKER_EVIDENCE_COVERAGE", "0.45"))
-                ctx_list = [c["text"] if isinstance(c, dict) else str(c) for c in case.get("retrieved_context", [])]
+                # Optional anchor-aware rerank before converting to strings
+                ctx_with_meta = case.get("retrieved_context", [])
+                try:
+                    ctx_with_meta = _maybe_rerank_contexts(ctx_with_meta)
+                except Exception:
+                    pass
+                ctx_list = [c["text"] if isinstance(c, dict) else str(c) for c in ctx_with_meta]
                 if ctx_list:
                     raw_response = evidence_filter(raw_response, ctx_list, j_min=j, coverage_min=cov)
                     print(f"📝 Evidence filtering: {len(raw_response.split())} words after precision guard")
@@ -2360,7 +2509,13 @@ Do not summarize or be concise - provide thorough, detailed information."""
             case["response"] = raw_response
 
             # Always coerce to strings first
-            ctx_strings = self._to_context_strings(case.get("retrieved_context", []))
+            # Optional anchor-aware rerank before converting to strings
+            ctx_with_meta = case.get("retrieved_context", [])
+            try:
+                ctx_with_meta = _maybe_rerank_contexts(ctx_with_meta)
+            except Exception:
+                pass
+            ctx_strings = self._to_context_strings(ctx_with_meta)
 
             # Optional: semantic ranking (only if embeddings loaded)
             if getattr(self.local_llm, "embedding_model", None):
@@ -2654,9 +2809,11 @@ Evaluate and return ONLY the JSON object:"""
         print(
             "\n🧰 Active Bedrock caps: "
             f"ASYNC_MAX_CONCURRENCY={os.getenv('ASYNC_MAX_CONCURRENCY','')}, "
-            f"BEDROCK_MAX_CONCURRENCY={os.getenv('BEDROCK_MAX_CONCURRENCY','')}, "
+            f"BEDROCK_MAX_IN_FLIGHT={os.getenv('BEDROCK_MAX_IN_FLIGHT', os.getenv('BEDROCK_MAX_CONCURRENCY',''))}, "
             f"BEDROCK_MAX_RPS={os.getenv('BEDROCK_MAX_RPS','')}, "
-            f"RETRY_MAX={os.getenv('BEDROCK_RETRY_MAX','')}"
+            f"BASE_BACKOFF={os.getenv('BEDROCK_BASE_BACKOFF', os.getenv('BEDROCK_RETRY_BASE',''))}, "
+            f"MAX_BACKOFF={os.getenv('BEDROCK_MAX_BACKOFF', os.getenv('BEDROCK_RETRY_MAX_SLEEP',''))}, "
+            f"MODEL_ID={os.getenv('BEDROCK_MODEL_ID','')}"
         )
         print(
             f"🧪 Eval JSON: PROMPTS={os.getenv('RAGCHECKER_JSON_PROMPTS','')}, "
@@ -2773,6 +2930,7 @@ def main():
     parser.add_argument("--use-local-llm", action="store_true", help="Use local LLM (Ollama) for evaluation")
     parser.add_argument("--use-bedrock", action="store_true", help="Use AWS Bedrock Claude 3.5 Sonnet for evaluation")
     parser.add_argument("--bypass-cli", action="store_true", help="Bypass ragchecker.cli and evaluate in-process")
+    parser.add_argument("--stable", action="store_true", help="Use stable locked configuration for regression tracking")
     parser.add_argument(
         "--local-api-base",
         default="http://localhost:11434",
@@ -2780,6 +2938,27 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Load stable configuration if requested
+    if args.stable:
+        stable_env_file = os.getenv("RAGCHECKER_ENV_FILE", "configs/stable_bedrock.env")
+        if os.path.exists(stable_env_file):
+            print(f"🔒 Loading stable configuration: {stable_env_file}")
+            # Load environment variables from stable config
+            with open(stable_env_file, "r") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        key, value = line.split("=", 1)
+                        if key.startswith("export "):
+                            key = key[7:]  # Remove 'export '
+                        os.environ[key] = value
+            os.environ["RAGCHECKER_LOCK_ENV"] = "1"
+            print("🔒 Environment locked for regression tracking")
+        else:
+            print(f"❌ Stable config not found: {stable_env_file}")
+            print("💡 Run: cp configs/stable_bedrock.env.template configs/stable_bedrock.env")
+            return 1
 
     # Validate backend selection
     if args.use_local_llm and args.use_bedrock:
@@ -3070,4 +3249,9 @@ def evidence_filter(answer: str, contexts: list[str], j_min: float = 0.18, cover
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        result = main()
+    finally:
+        # Always print results directory hint for discoverability
+        print("\n📦 Results directory: metrics/baseline_evaluations/")
+        print("🧭 Eval SOP: 000_core/000_evaluation-system-entry-point.md")

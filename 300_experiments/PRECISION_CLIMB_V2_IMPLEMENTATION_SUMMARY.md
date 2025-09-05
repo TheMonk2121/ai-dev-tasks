@@ -89,7 +89,7 @@ Successfully implemented the precision-focused optimization plan to achieve RAGA
 ### **Single Layer Evaluation**
 ```bash
 # Activate virtual environment
-source venv/bin/activate
+source .venv/bin/activate
 
 # Run Layer 1 (risk-aware gates)
 python3 scripts/ragchecker_precision_climb_v2_evaluation.py --layer layer1

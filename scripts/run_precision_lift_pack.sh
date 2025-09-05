@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Precision Lift Pack Evaluation
 # Surgical precision improvements with minimal recall loss
 

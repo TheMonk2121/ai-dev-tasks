@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # RAGAS-Competitive Evaluation Runner
 # Implements LIMIT features to achieve RAGAS-competitive performance

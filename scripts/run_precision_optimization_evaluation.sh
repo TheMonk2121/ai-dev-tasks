@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Precision Optimization Evaluation Runner
 # Fine-tunes LIMIT features to achieve precision target of 0.20

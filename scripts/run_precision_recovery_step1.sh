@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Precision Recovery Step 1: Hybrid Retrieval Only
 # Implements BM25 + vector with RRF fusion for precision recovery
 

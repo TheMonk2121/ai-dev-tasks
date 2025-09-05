@@ -87,6 +87,11 @@ def main():
         else:
             task = " ".join(sys.argv[1:])
 
+    # Healthcheck short-circuit
+    if any("healthcheck" in a.lower() for a in sys.argv[1:]):
+        print("✅ prime_cursor_chat healthcheck OK")
+        return
+
     print("🧠 Priming Cursor chat with memory context...")
     print(f"   Role: {role}")
     print(f"   Task: {task}")

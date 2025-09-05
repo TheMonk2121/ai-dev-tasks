@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Precision Recovery Final: Tighten Selection for Precision Target
 # Since recall is excellent (0.263 vs 0.160), we can tighten selection
 

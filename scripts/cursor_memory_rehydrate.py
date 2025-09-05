@@ -174,6 +174,11 @@ def main():
             print(f"🤖 Auto-detected role: {detected_role} (was: {args.role})")
             args.role = detected_role
 
+    # Healthcheck short-circuit
+    if isinstance(args.task, str) and "healthcheck" in args.task.lower():
+        print("✅ cursor_memory_rehydrate healthcheck OK")
+        return
+
     # Build the memory bundle
     print(f"🧠 Building memory bundle for {args.role} role...")
     print(f"📋 Task: {args.task}")

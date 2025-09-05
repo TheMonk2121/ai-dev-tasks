@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Precision Push Final Configuration
 # Export all environment variables for persistence across processes

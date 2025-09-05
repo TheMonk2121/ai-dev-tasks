@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Precision Recovery Step 2: Add Selective Facet Query Decomposition
 # Adds facet selection with yield-based filtering
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Final RAGAS Push Execution Script
 # Implements the three-move strategy to push precision past 0.20 while maintaining recall ≥0.60

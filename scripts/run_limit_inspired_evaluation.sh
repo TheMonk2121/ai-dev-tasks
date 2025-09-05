@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # LIMIT-Inspired Precision Recovery Evaluation
 # Implements geometry-failure routing, facet yield selection, and Boolean logic handling
 
