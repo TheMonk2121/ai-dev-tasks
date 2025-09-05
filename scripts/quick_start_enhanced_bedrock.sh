@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Quick Start Script for Enhanced Bedrock Client
 # This script helps you get the enhanced Bedrock client running quickly

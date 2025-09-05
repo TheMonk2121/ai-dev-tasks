@@ -93,7 +93,7 @@ git clone <repository-url>
 cd ai-dev-tasks
 
 # Activate virtual environment
-source venv/bin/activate
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt

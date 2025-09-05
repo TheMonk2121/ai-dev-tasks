@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Maintenance Push Wrapper (B-052-e Integration)
 #
 # Simple wrapper script to integrate auto-push prompt into maintenance workflows.

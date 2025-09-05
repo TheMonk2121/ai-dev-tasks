@@ -338,12 +338,15 @@ CREATE TABLE query_logs (
 # Verify Python 3.12 is available
 python3.12 --version
 
-# Create virtual environment with Python 3.12
-python3.12 -m venv venv
-source venv/bin/activate
+# Install UV package manager (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Install dependencies
-pip install -r requirements.txt
+# Create virtual environment with Python 3.12 using UV
+uv venv --python 3.12
+source .venv/bin/activate
+
+# Install dependencies using UV (100-600x faster than pip)
+uv sync --extra dev
 ```
 
 **macOS Users**: If you have Python 3.9 as default, install Python 3.12 via Homebrew:
@@ -364,9 +367,38 @@ sudo apt-get install -y python3-pip python3-venv postgresql postgresql-contrib g
 # macOS
 brew install git curl python3 postgresql
 
-# Python packages
-pip install flask psycopg2-binary dspy-ai transformers torch  # cSpell:ignore psycopg2-binary
+# Python packages (managed via UV)
+# All dependencies are now managed through pyproject.toml and UV
+# Run: uv sync --extra dev
 ```
+
+## **UV Package Manager Setup**
+
+**Status**: ✅ **MIGRATED** - Project uses UV for 100-600x faster package management
+
+### **Quick Setup**:
+```bash
+# Install UV
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Setup development environment
+uv venv --python 3.12
+uv sync --extra dev
+
+# Use shell aliases for common tasks
+source uv_aliases.sh
+uvd  # Quick dev setup
+uvt  # Run tests
+uvs  # System health check
+```
+
+### **Key UV Features**:
+- **Performance**: 100-600x faster than pip
+- **Automation**: Team onboarding, performance monitoring
+- **Shell Aliases**: `uvd`, `uvt`, `uvl`, `uvf`, `uvs`, `uvp`
+- **CI/CD Integration**: All workflows updated
+
+See `UV_MIGRATION_COMPLETE.md` for complete documentation.
 
 ## **S-008: Development Setup**
 

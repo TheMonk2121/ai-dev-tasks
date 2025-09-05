@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # File Protection Script - Prevents corruption and monitors for issues
 # Usage: ./scripts/protect_files.sh [--monitor] [--backup] [--restore]

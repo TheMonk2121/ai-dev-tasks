@@ -292,7 +292,7 @@ Cursor AI operates as a **collaborative system** where human users and AI agents
 
 #### **2. Signature Testing:**
 ```bash
-@run_terminal_cmd source venv/bin/activate && python3 -c "
+@run_terminal_cmd source .venv/bin/activate && python3 -c "
 from dspy_modules.model_switcher import ModelSwitcher
 switcher = ModelSwitcher()
 result = switcher.forward(

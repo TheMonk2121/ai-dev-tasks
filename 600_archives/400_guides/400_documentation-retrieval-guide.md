@@ -383,7 +383,7 @@ python scripts/documentation_retrieval_cli.py search "query" --db-url "postgresq
 
 indexer = DocumentationIndexer(db_connection_string)
 indexer.doc_patterns = ["*.md", "*.txt", "*.rst", "*.py"]
-indexer.exclude_patterns = ["node_modules/**", "venv/**", ".git/**"]
+indexer.exclude_patterns = ["node_modules/**", ".venv/**", ".git/**"]
 
 ```text
 

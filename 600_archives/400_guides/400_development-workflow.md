@@ -361,7 +361,7 @@ mypy==1.8.0            # Type checking (backup)
 python3 -m venv venv
 
 # Activate environment
-source venv/bin/activate  # Linux/Mac
+source .venv/bin/activate  # Linux/Mac
 # or
 venv\Scripts\activate     # Windows
 
@@ -379,7 +379,7 @@ pre-commit install
 ```json
 // .vscode/settings.json
 {
-    "python.defaultInterpreterPath": "./venv/bin/python",
+    "python.defaultInterpreterPath": "./.venv/bin/python",
     "python.linting.enabled": true,
     "python.linting.ruffEnabled": true,
     "python.formatting.provider": "ruff",
@@ -399,7 +399,7 @@ python3 scripts/venv_manager.py --check
 
 # Recreate venv if needed
 rm -rf venv && python3 -m venv venv
-source venv/bin/activate
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 

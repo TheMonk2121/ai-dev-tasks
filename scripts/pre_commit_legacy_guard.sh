@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Legacy model reference guard (active)
 # Blocks commits that introduce references to legacy local model tools in active paths
 set -euo pipefail

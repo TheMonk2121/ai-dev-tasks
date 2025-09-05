@@ -76,7 +76,7 @@ dspy-rag-system/
 - **Testing Strategy**: Comprehensive test coverage with local model validation
 
 ### **Local Development**
-- **Virtual Environment**: `source venv/bin/activate`
+- **Virtual Environment**: `source .venv/bin/activate`
 - **Dependencies**: Extend `requirements.txt` with research-specific packages
 - **Database**: Use existing PostgreSQL setup with new research tables
 - **Testing**: `pytest dspy-rag-system/tests/` with local model validation

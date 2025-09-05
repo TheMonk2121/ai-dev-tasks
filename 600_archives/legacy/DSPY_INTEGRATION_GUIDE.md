@@ -151,7 +151,7 @@ Sarah Johnson, 28, San Francisco, Data Scientist, 95000
 
 ## **🚀 Usage Guide**###**1. Start the System**```bash
 # Activate virtual environment
-source venv/bin/activate
+source .venv/bin/activate
 
 # Start interactive question interface
 python3 ask_question.py
@@ -243,7 +243,7 @@ dspy.configure(lm=MistralLLM(MISTRAL_URL, MISTRAL_MODEL))
 
 3.**DSPy Module Import Error**```bash
    # Ensure virtual environment is activated
-   source venv/bin/activate
+   source .venv/bin/activate
    
    # Check DSPy installation
    python3 -c "import dspy; print(dspy.__version__)"

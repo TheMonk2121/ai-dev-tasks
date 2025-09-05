@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Auto-generated duplicate cleanup script
 
 # Duplicate group: d213b303...

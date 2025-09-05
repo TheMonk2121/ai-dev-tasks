@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Check if branch name matches policy: main or type/B-####-short-slug
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check for duplicate numeric prefixes in HIGH priority files
 # HIGH ranges: 000-099 (core workflow), 400-499 (documentation), 500-599 (testing)

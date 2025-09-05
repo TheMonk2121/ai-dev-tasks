@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Phase-2 Rollback Configuration - Restore Stable Floor
 # Goal: Snap metrics back to Phase-2 baseline (P≈0.16+, R≈0.16+, F1≈0.159+)

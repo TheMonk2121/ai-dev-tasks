@@ -125,7 +125,7 @@ python --version
 python -m venv venv
 
 # Activate on macOS/Linux
-source venv/bin/activate
+source .venv/bin/activate
 
 # Activate on Windows
 venv\Scripts\activate

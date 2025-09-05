@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Update Schema Baseline Script
 # Use this when you make intentional schema changes and want to update the baseline
 

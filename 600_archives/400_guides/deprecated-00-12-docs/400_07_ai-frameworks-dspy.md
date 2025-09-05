@@ -983,7 +983,7 @@ result = pipeline.ingest_document(
 ### Installation Problems
 
 - Python version: use Python 3.8+ (`python --version`)
-- Virtual environment: `python -m venv venv && source venv/bin/activate && pip install -r requirements.txt`
+- Virtual environment: `python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt`
 - Permissions: prefer `pip install --user package_name` over `sudo pip install`
 
 ### Configuration Issues

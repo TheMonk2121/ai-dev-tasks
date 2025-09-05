@@ -122,13 +122,13 @@ python --version
 **Solution**: Activate your virtual environment:
 ```bash
 # Create virtual environment
-python -m venv venv
+python -m venv .venv
 
 # Activate on macOS/Linux
-source venv/bin/activate
+source .venv/bin/activate
 
 # Activate on Windows
-venv\Scripts\activate
+.venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt

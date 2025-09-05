@@ -46,7 +46,7 @@ ai-dev-tasks/
 ```bash
 # Setup
 python3 scripts/venv_manager.py --check
-source venv/bin/activate
+source .venv/bin/activate
 
 # Run tests
 pytest tests/

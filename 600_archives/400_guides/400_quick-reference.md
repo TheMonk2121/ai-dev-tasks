@@ -28,7 +28,7 @@
 python3 scripts/venv_manager.py --check
 
 # Activate virtual environment
-source venv/bin/activate
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -149,7 +149,7 @@ python scripts/worklog_summarizer.py --backlog-id B-XXX
 ```bash
 # Recreate virtual environment
 rm -rf venv && python3 -m venv venv
-source venv/bin/activate
+source .venv/bin/activate
 pip install -r requirements.txt
 
 # Check Python path

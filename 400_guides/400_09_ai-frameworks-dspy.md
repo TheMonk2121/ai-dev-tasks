@@ -1,4 +1,5 @@
 # 🤖 AI Frameworks & DSPy
+> Agents: start at `000_core/000_agent-entry-point.md` for end-to-end flow.
 
 <!-- ANCHOR_KEY: ai-frameworks-dspy -->
 <!-- ANCHOR_PRIORITY: 10 -->
@@ -20,7 +21,7 @@
 cd dspy-rag-system
 
 # Activate the virtual environment
-source venv/bin/activate
+source .venv/bin/activate
 
 # Test basic AI integration
 python3 run_researcher_analysis.py

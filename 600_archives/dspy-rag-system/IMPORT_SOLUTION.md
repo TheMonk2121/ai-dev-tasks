@@ -68,7 +68,7 @@ pythonVersion = "3.12"
 pythonPlatform = "Darwin"
 venvPath = ".."
 venv = "venv"
-extraPaths = ["src", "../venv/lib/python3.*/site-packages"]
+extraPaths = ["src", "../.venv/lib/python3.*/site-packages"]
 include = ["src", "*.py"]
 exclude = ["venv", "600_archives", "**/__pycache__", ".pytest_cache", "tests"]
 

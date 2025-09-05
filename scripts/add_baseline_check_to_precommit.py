@@ -13,7 +13,7 @@ import yaml
 
 def add_baseline_check_to_precommit():
     """Add baseline check to pre-commit configuration."""
-    config_file = Path(".pre-commit-config.yaml")
+    config_file = Path(".pre-commit-config.yml")
 
     if not config_file.exists():
         print("❌ .pre-commit-config.yaml not found")

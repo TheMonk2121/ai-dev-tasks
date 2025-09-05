@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Check if current branch is main, exit with error if not
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Phase 1 RAGChecker Enhancement Flags
 export RAGCHECKER_CONCISE=1          # Enable concise response generation

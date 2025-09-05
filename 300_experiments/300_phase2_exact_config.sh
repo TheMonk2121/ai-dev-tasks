@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Phase-2 Exact Configuration - Complete Rollback Audit
 # Goal: Find the stray knob preventing us from hitting the floor

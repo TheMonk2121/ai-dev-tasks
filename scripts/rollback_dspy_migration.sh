@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # DSPy Migration Rollback Script
 # Usage: ./scripts/rollback_dspy_migration.sh

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Setup MCP Memory Server Auto-Start
 # ===================================
 # Loads the LaunchAgent to automatically start the MCP server on login

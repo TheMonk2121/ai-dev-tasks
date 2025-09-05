@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Quick Scribe Update - Simple alias for triggering Scribe updates
 
 # Default to recent changes if no message provided

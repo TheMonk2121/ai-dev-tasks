@@ -27,7 +27,7 @@ spec.loader.exec_module(rag_governance_module)
 RAGPipelineGovernance = rag_governance_module.RAGPipelineGovernance
 PipelineStage = rag_governance_module.PipelineStage
 
-# Import existing RAGChecker components
+# Import after path modification
 from ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
 
 logger = logging.getLogger(__name__)

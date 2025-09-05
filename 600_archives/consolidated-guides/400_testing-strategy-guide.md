@@ -98,7 +98,7 @@ def get_role_consensus():
 
 ### **Python 3.12 Virtual Environment**
 - **All tests run in Python 3.12.11 virtual environment**
-- **Virtual environment detection**: Test runners automatically detect and activate `venv/`
+- **Virtual environment detection**: Test runners automatically detect and activate `.venv/`
 - **Dependencies**: All test dependencies installed for Python 3.12
 - **Isolation**: Tests are isolated from system Python packages
 

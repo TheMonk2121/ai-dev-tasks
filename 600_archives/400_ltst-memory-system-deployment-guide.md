@@ -93,7 +93,7 @@ python3.12 --version
 
 # Create virtual environment
 python3.12 -m venv venv
-source venv/bin/activate
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt

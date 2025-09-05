@@ -3607,7 +3607,7 @@ python3 -m pytest tests/integration/test_error_handling.py -v
 ```bash
 # Create virtual environment
 python3.12 -m venv venv
-source venv/bin/activate
+source .venv/bin/activate
 
 # Install testing dependencies
 pip install -r requirements.txt
@@ -3859,7 +3859,7 @@ git clone <repository-url>
 cd ai-dev-tasks
 
 # Activate virtual environment
-source venv/bin/activate
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt

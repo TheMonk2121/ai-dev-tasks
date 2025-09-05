@@ -19,7 +19,7 @@ Stop wrestling with monolithic AI requests and start guiding your AI collaborato
 ```bash
 # Create and activate virtual environment
 python3 -m venv venv
-source venv/bin/activate
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r dspy-rag-system/requirements.txt
@@ -34,7 +34,7 @@ DEEP_REASONING=0 CLARIFIER=0 make run-local
 **Virtual Environment Setup:**
 The project uses a virtual environment to prevent dependency conflicts. Always activate it before running:
 ```bash
-source venv/bin/activate  # On macOS/Linux
+source .venv/bin/activate  # On macOS/Linux
 # or
 venv\Scripts\activate     # On Windows
 ```

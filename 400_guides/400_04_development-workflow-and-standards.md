@@ -1152,7 +1152,7 @@ python3.12 -m venv venv
 
 # Activate virtual environment
 # On macOS/Linux:
-source venv/bin/activate
+source .venv/bin/activate
 # On Windows:
 venv\Scripts\activate
 ```

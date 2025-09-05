@@ -47,7 +47,7 @@ python3 scripts/single_doorway.py generate "feature description"
 ```bash
 # Complete setup
 python3 -m venv venv
-source venv/bin/activate
+source .venv/bin/activate
 pip install -r requirements.txt
 
 # Verify installation
@@ -197,7 +197,7 @@ pre-commit==3.6.0      # Git hooks
 python3 -m venv venv
 
 # Activate environment
-source venv/bin/activate  # Linux/Mac
+source .venv/bin/activate  # Linux/Mac
 # or
 venv\Scripts\activate     # Windows
 
@@ -310,7 +310,7 @@ python3 scripts/venv_manager.py --check
 
 # Recreate venv if needed
 rm -rf venv && python3 -m venv venv
-source venv/bin/activate
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 

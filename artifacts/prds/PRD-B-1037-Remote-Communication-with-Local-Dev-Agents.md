@@ -40,7 +40,7 @@ ai-dev-tasks/
 ```bash
 # Setup virtual environment
 python3 scripts/venv_manager.py --check
-source venv/bin/activate
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r dspy-rag-system/requirements.txt

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Temporary PRD Test Rollback Script
 # Created: $(date)

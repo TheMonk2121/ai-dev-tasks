@@ -302,7 +302,7 @@ You → ask_question.py → DSPy RAGSystem → VectorStore → PostgreSQL → Cu
 python3 test_notification_simple.py
 
 # Manual watch folder with notifications
-source venv/bin/activate && python3 watch_folder.py
+source .venv/bin/activate && python3 watch_folder.py
 ```
 
 ### **Potential Enhancements**

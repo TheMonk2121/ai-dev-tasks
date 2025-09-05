@@ -367,7 +367,7 @@ echo "🚀 Setting up Development Environment"
 # Create virtual environment
 
 python -m venv venv
-source venv/bin/activate
+source .venv/bin/activate
 
 # Install dependencies
 

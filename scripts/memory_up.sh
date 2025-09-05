@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Unified Memory System Launcher
 # Fires up all memory rehydration systems with one command

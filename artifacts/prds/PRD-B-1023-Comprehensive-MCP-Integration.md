@@ -38,8 +38,8 @@ dspy-rag-system/
 ```bash
 # Setup
 cd dspy-rag-system
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 pip install -r requirements.txt
 
 # Run locally
