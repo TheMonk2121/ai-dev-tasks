@@ -15,6 +15,13 @@ Building AI features today is chaotic:
 
 This repo is my answer: a production-ready, local-first AI development ecosystem that brings order to AI-powered development.
 
+## 🧭 Start Here (Agents)
+
+- Zero‑context onboarding: `START_HERE_FOR_AGENTS.md`
+- Run the evals (SOP): `000_core/000_evaluation-system-entry-point.md`
+- Evaluations entry point: `000_core/000_evaluation-system-entry-point.md`
+- Memory quick start: `400_guides/400_01_memory-system-architecture.md`
+
 ## 🧩 What It Gives You
 
 🤖 **Multi-Agent Roles** – Planner, Implementer, Researcher, and Coder that collaborate with shared memory
@@ -48,14 +55,27 @@ This repo is my answer: a production-ready, local-first AI development ecosystem
 # 1. Clone & setup
 git clone https://github.com/TheMonk2121/ai-dev-tasks.git
 cd ai-dev-tasks
-poetry install
-poetry run pre-commit install
+
+# 2. Run evaluations (PRIMARY)
+source throttle_free_eval.sh
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
+# 📋 See: 000_core/000_evaluation-system-entry-point.md
+
+# Install UV (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.local/bin/env
+
+# Create environment and install dependencies
+uv venv --python 3.12
+uv sync --extra dev
+source .venv/bin/activate
+pre-commit install
 
 # 2. Load project context (memory rehydration)
-export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+export POSTGRES_DSN="mock://test" && uv run python scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
 
 # 3. Generate your first feature
-python3 scripts/single_doorway.py generate "Add user authentication system"
+uv run python scripts/single_doorway.py generate "Add user authentication system"
 
 # 4. Watch it work
 # ✅ Creates a PRD with requirements
@@ -204,6 +224,165 @@ Our documentation follows a structured 00-12 system designed for different user 
 - **Structured Routing**: Intent-based routing to specialized SQL/KG handlers
 - **Multi-Modal Support**: Extension to support multiple data modalities
 - **Advanced Reasoning**: Graph-based reasoning for complex queries
+
+## ⚡ UV Package Management
+
+This project uses [UV](https://docs.astral.sh/uv/) for fast, reliable dependency management. UV is a Rust-based Python package manager that's significantly faster than pip.
+
+### Key UV Commands
+
+```bash
+# Install dependencies from pyproject.toml
+uv sync
+
+# Install with development dependencies
+uv sync --extra dev
+
+# Run commands in the environment (no activation needed)
+uv run python scripts/system_health_check.py
+uv run pytest
+uv run pre-commit run --all-files
+
+# Update lock file
+uv lock
+
+# Add new dependencies
+uv add package-name
+uv add --dev package-name  # Development dependency
+```
+
+### Migration Benefits
+
+- **Speed**: 10-100x faster dependency resolution and installation
+- **Reliability**: Deterministic builds with `uv.lock`
+- **Simplicity**: One tool replaces pip + virtualenv + pip-tools
+- **Compatibility**: Works with existing `requirements.txt` files
+
+### Legacy Support
+
+The project maintains backward compatibility with `requirements.txt` files in subdirectories while using `pyproject.toml` as the primary dependency source.
+
+### CI/CD Integration
+
+All GitHub Actions workflows have been updated to use UV for faster, more reliable builds:
+
+- **Quick Check**: Uses UV for dependency installation
+- **Deep Audit**: UV-powered conflict detection
+- **Evaluation Pipeline**: UV for ML dependencies (DSPy, PyTorch, etc.)
+- **RAGChecker**: UV for evaluation tools
+- **Maintenance Validation**: UV for maintenance scripts
+
+### Advanced UV Features
+
+#### UVX for One-off Tools
+```bash
+# Run tools without installing globally
+uvx black .                    # Format code
+uvx ruff check .               # Lint code
+uvx pytest tests/              # Run tests
+uvx bandit -r src/             # Security scan
+uvx pre-commit run --all-files # Run all pre-commit hooks
+```
+
+#### Requirements Export
+```bash
+# Export from pyproject.toml to requirements.txt
+python scripts/uv_export_requirements.py
+
+# Export with development dependencies
+python scripts/uv_export_requirements.py --dev
+
+# Export locked versions
+python scripts/uv_export_requirements.py --lock
+```
+
+#### UVX Tools Check
+```bash
+# Check available UVX tools
+bash scripts/uvx_tools.sh
+```
+
+### Advanced UV Features (Phase 4)
+
+#### Performance Monitoring
+```bash
+# Monitor UV performance
+python scripts/uv_performance_monitor.py
+
+# Check installation time
+python scripts/uv_performance_monitor.py --install-only
+
+# Full performance analysis
+python scripts/uv_performance_monitor.py --json
+```
+
+#### Dependency Management
+```bash
+# Analyze dependencies
+python scripts/uv_dependency_manager.py --analyze
+
+# Security scan
+python scripts/uv_dependency_manager.py --security
+
+# Full dependency report
+python scripts/uv_dependency_manager.py --full-report
+```
+
+#### Workflow Optimization
+```bash
+# Analyze workflow patterns
+python scripts/uv_workflow_optimizer.py --analyze
+
+# Create optimized scripts
+python scripts/uv_workflow_optimizer.py --create-scripts
+
+# Full workflow optimization
+python scripts/uv_workflow_optimizer.py --full-optimization
+```
+
+#### Team Onboarding
+```bash
+# Full team onboarding
+python scripts/uv_team_onboarding.py
+
+# Check prerequisites only
+python scripts/uv_team_onboarding.py --check-only
+
+# Install UV only
+python scripts/uv_team_onboarding.py --install-only
+```
+
+#### Shell Aliases
+```bash
+# Source optimized aliases
+source uv_aliases.sh
+
+# Use quick aliases
+uvd    # uv sync --extra dev
+uvt    # uv run pytest
+uvl    # uv run python -m lint
+uvf    # uvx black . && uvx isort .
+uvs    # uv run python scripts/system_health_check.py
+uvp    # python scripts/uv_performance_monitor.py
+```
+
+#### Automated Workflows
+```bash
+# Development setup
+./scripts/dev_setup.sh
+
+# Quick testing
+./scripts/quick_test.sh
+
+# Performance check
+./scripts/perf_check.sh
+
+# Daily maintenance
+python scripts/daily_maintenance.py
+
+# Weekly optimization
+python scripts/weekly_optimization.py
+```
 
 ## 🤝 Who This Is For
 
