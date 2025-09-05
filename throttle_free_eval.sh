@@ -22,14 +22,15 @@ export RAGCHECKER_COVERAGE_REWRITE=0              # Disable coverage rewrite
 
 # Reduce JSON Usage (Prevent Repair Loops)
 export RAGCHECKER_JSON_PROMPTS=0                  # Disable JSON prompts
-export RAGCHECKER_JSON_MAX_TOKENS=200             # Small token budget if JSON used
+export RAGCHECKER_JSON_MAX_TOKENS=200
 
 # Model + Region
 export BEDROCK_MODEL_ID=anthropic.claude-3-haiku-20240307-v1:0
 export AWS_REGION=us-east-1
 
 # Load stable configuration
-STABLE_ENV_FILE="${RAGCHECKER_ENV_FILE:-configs/stable_bedrock.env}"
+export RAGCHECKER_ENV_FILE="${RAGCHECKER_ENV_FILE:-configs/stable_bedrock.env}"
+STABLE_ENV_FILE="$RAGCHECKER_ENV_FILE"
 if [ -f "$STABLE_ENV_FILE" ]; then
   echo "📁 Loading stable config: $STABLE_ENV_FILE"
   # shellcheck source=configs/stable_bedrock.env
