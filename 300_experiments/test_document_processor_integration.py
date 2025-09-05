@@ -16,43 +16,6 @@ def test_smart_chunker_integration():
     """Test that document processor now uses smart chunking"""
 
     # Sample DSPy code file
-    dspy_code = '''
-class DSPyOptimizer:
-    """Optimizer for DSPy modules"""
-
-    def __init__(self, name: str):
-        self.name = name
-        self.learning_rate = 0.01
-
-    def compile(self, module, trainset):
-        """Compile the module with training data"""
-        # This should stay together as one chunk
-        processed_data = self._preprocess_trainset(trainset)
-        optimized_module = self._optimize_module(module, processed_data)
-        return self._validate_module(optimized_module)
-
-    def _preprocess_trainset(self, trainset):
-        """Preprocess training data"""
-        return [item for item in trainset if item is not None]
-
-    def _optimize_module(self, module, data):
-        """Optimize the module"""
-        # Core optimization logic
-        for epoch in range(100):
-            loss = self._compute_loss(module, data)
-            if loss < 0.001:
-                break
-        return module
-
-    def _validate_module(self, module):
-        """Validate the optimized module"""
-        return module
-
-# Usage example
-if __name__ == "__main__":
-    optimizer = DSPyOptimizer("test")
-    print("Optimizer created successfully")
-'''
 
     print("🧪 Testing Document Processor with Smart Chunker")
     print("=" * 55)

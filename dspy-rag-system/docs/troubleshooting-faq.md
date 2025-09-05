@@ -584,7 +584,7 @@ async with httpx.AsyncClient() as client:
 
 - Review the [API Reference](mcp-integration-api-reference.md)
 - Check the [DSPy Integration Guide](dspy-integration-guide.md)
-- Read the [System Overview](../../400_guides/400_system-overview.md)
+- Read the [System Overview](../../400_guides/400_03_system-overview-and-architecture.md)
 
 ### 2. Run Tests
 

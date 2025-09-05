@@ -23,7 +23,6 @@ import sys
 from dataclasses import dataclass
 from typing import Iterable, List, Tuple
 
-
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SCAN_DIRS = ["src", "dspy-rag-system", "scripts"]  # primary code locations
 

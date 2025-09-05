@@ -7,7 +7,7 @@
 # 📋 Backlog
 
 ## 🚀 **Core Methodology**
-- **[005_rag-tuning-protocol.md](005_rag-tuning-protocol.md)** - Industry-grade RAG performance optimization methodology
+- **[PRD_B-1059_retrieval-tuning-protocol.md](PRD_B-1059_retrieval-tuning-protocol.md)** - Industry-grade RAG performance optimization methodology
 
 ### **B-1061: Memory System Integration: Heuristic Extractor + Multi-Signal Guard for Overflow Compaction & Knowledge Graph Enhancement** 🆕 **NEW**
 - **Priority**: 🔥 **HIGH** - Essential for memory system optimization and knowledge graph enhancement

@@ -13,6 +13,7 @@ Prints a concise report and remediation hints.
 
 import os
 import sys
+
 import psycopg2
 
 

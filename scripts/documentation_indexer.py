@@ -31,7 +31,7 @@ _LOG = logging.getLogger("documentation_indexer")
 
 class DocumentationIndexer:
     """Indexes documentation files for RAG-based retrieval"""
-    
+
     def __init__(self, db_connection_string: str):
         self.db_conn_str = db_connection_string
         if HybridVectorStore is not None and get_database_manager is not None:
@@ -41,14 +41,14 @@ class DocumentationIndexer:
             self.vector_store = None
             self.db_manager = None
             _LOG.warning("DSPy modules unavailable; limited functionality (stats/index disabled)")
-        
+
         # Documentation file patterns
         self.doc_patterns = [
             "*.md",  # Markdown files
             "*.txt",  # Text files
             "*.rst",  # ReStructuredText files
         ]
-        
+
         # Exclude patterns
         self.exclude_patterns = [
             "node_modules/**",
@@ -63,7 +63,7 @@ class DocumentationIndexer:
             "*.tmp",
             "*.bak",
         ]
-        
+
         # Documentation categories
         self.doc_categories = {
             "core": ["100_*.md", "000_*.md", "400_*.md"],
@@ -73,34 +73,34 @@ class DocumentationIndexer:
             "guides": ["400_*-guide.md", "400_*-strategy.md"],
             "completion": ["500_*-completion-summary.md"],
         }
-    
+
     def scan_documentation_files(self, root_path: str = ".") -> List[Dict[str, Any]]:
         """Scan for documentation files and extract metadata"""
         docs = []
         root = Path(root_path)
-        
+
         _LOG.info(f"Scanning documentation files in {root}")
-        
+
         for pattern in self.doc_patterns:
             for file_path in root.rglob(pattern):
                 # Check if file should be excluded
                 if self._should_exclude(file_path):
                     continue
-                
+
                 try:
                     doc_info = self._extract_document_info(file_path)
                     if doc_info:
                         docs.append(doc_info)
                 except Exception as e:
                     _LOG.error(f"Error processing {file_path}: {e}")
-        
+
         _LOG.info(f"Found {len(docs)} documentation files")
         return docs
-    
+
     def _should_exclude(self, file_path: Path) -> bool:
         """Check if file should be excluded from indexing"""
         file_str = str(file_path)
-        
+
         # Check exclude patterns
         for pattern in self.exclude_patterns:
             if pattern.endswith("/**"):
@@ -116,22 +116,22 @@ class DocumentationIndexer:
                 # Exact pattern match
                 if pattern in file_str:
                     return True
-        
+
         return False
-    
+
     def _extract_document_info(self, file_path: Path) -> Optional[Dict[str, Any]]:
         """Extract metadata and content from a documentation file"""
         try:
             # Read file content
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
-            
+
             if not content.strip():
                 return None
-            
+
             # Generate file hash
             file_hash = hashlib.md5(content.encode()).hexdigest()
-            
+
             # Extract metadata from HTML comments and TL;DR/At-a-glance
             metadata = self._extract_metadata(content)
             tldr_text, at_a_glance = self._extract_tldr_and_at_a_glance(content)
@@ -139,16 +139,16 @@ class DocumentationIndexer:
                 metadata["tldr"] = tldr_text
             if at_a_glance:
                 metadata["at_a_glance"] = at_a_glance
-            
+
             # Determine category
             category = self._determine_category(file_path, content)
-            
+
             # Extract title and description
             title, description = self._extract_title_description(content)
-            
+
             # Split content into chunks
             chunks = self._split_content(content)
-            
+
             return {
                 "file_path": str(file_path),
                 "file_name": file_path.name,
@@ -162,11 +162,11 @@ class DocumentationIndexer:
                 "line_count": len(content.split('\n')),
                 "last_modified": datetime.fromtimestamp(file_path.stat().st_mtime).isoformat(),
             }
-            
+
         except Exception as e:
             _LOG.error(f"Error extracting info from {file_path}: {e}")
             return None
-    
+
     def _extract_metadata(self, content: str) -> Dict[str, Any]:
         """Extract minimal metadata: CONTEXT_REFERENCE, MODULE_REFERENCE[], CONTEXT_INDEX"""
         metadata: Dict[str, Any] = {"module_reference": []}
@@ -232,11 +232,11 @@ class DocumentationIndexer:
             return (tldr_text if tldr_text else None), at_a_glance
         except Exception:
             return None, None
-    
+
     def _determine_category(self, file_path: Path, content: str) -> str:
         """Determine the category of a documentation file"""
         file_name = file_path.name.lower()
-        
+
         # Check category patterns
         for category, patterns in self.doc_categories.items():
             for pattern in patterns:
@@ -248,7 +248,7 @@ class DocumentationIndexer:
                     # Filename pattern
                     if pattern.replace("*", "").lower() in file_name:
                         return category
-        
+
         # Default category based on content analysis
         if "research" in content.lower() or "500_" in file_name:
             return "research"
@@ -260,13 +260,13 @@ class DocumentationIndexer:
             return "workflow"
         else:
             return "core"
-    
+
     def _extract_title_description(self, content: str) -> Tuple[str, str]:
         """Extract title and description from content"""
         lines = content.split('\n')
         title = ""
         description = ""
-        
+
         # Look for title in first few lines
         for line in lines[:10]:
             line = line.strip()
@@ -276,27 +276,27 @@ class DocumentationIndexer:
             elif line.startswith('## '):
                 title = line[3:].strip()
                 break
-        
+
         # Look for description in first few lines
         for line in lines[:20]:
             line = line.strip()
             if line and not line.startswith('#') and not line.startswith('<!--'):
                 description = line[:200]  # First 200 chars
                 break
-        
+
         return title, description
-    
+
     def _split_content(self, content: str, max_chunk_size: int = 1000) -> List[Dict[str, Any]]:
         """Split content into chunks for indexing"""
         chunks = []
-        
+
         # Split by sections (headers)
         sections = re.split(r'(?=^#{1,6}\s)', content, flags=re.MULTILINE)
-        
+
         for i, section in enumerate(sections):
             if not section.strip():
                 continue
-            
+
             # Further split large sections
             if len(section) > max_chunk_size:
                 # Split by paragraphs
@@ -316,49 +316,49 @@ class DocumentationIndexer:
                     "start_line": self._find_start_line(content, section, i),
                     "end_line": self._find_end_line(content, section, i),
                 })
-        
+
         return chunks
-    
+
     def _find_start_line(self, full_content: str, section: str, section_index: int) -> int:
         """Find the starting line number of a section"""
         lines = full_content.split('\n')
         section_start = 0
-        
+
         for i, line in enumerate(lines):
             if section.strip() in line:
                 section_start = i + 1
                 break
-        
+
         return section_start
-    
+
     def _find_end_line(self, full_content: str, section: str, section_index: int) -> int:
         """Find the ending line number of a section"""
         lines = full_content.split('\n')
         section_end = len(lines)
-        
+
         # Find the next section or end of file
         for i, line in enumerate(lines):
             if line.strip().startswith('#') and i > section_index:
                 section_end = i
                 break
-        
+
         return section_end
-    
+
     def index_documentation(self, root_path: str = ".") -> Dict[str, Any]:
         """Index all documentation files"""
         _LOG.info("Starting documentation indexing...")
-        
+
         # Scan for documentation files
         docs = self.scan_documentation_files(root_path)
-        
+
         if not docs:
             _LOG.warning("No documentation files found")
             return {"status": "no_files_found", "count": 0}
-        
+
         # Index each document
         indexed_count = 0
         errors = []
-        
+
         for doc in docs:
             try:
                 self._index_document(doc)
@@ -368,7 +368,7 @@ class DocumentationIndexer:
                 error_msg = f"Error indexing {doc['file_name']}: {e}"
                 _LOG.error(error_msg)
                 errors.append(error_msg)
-        
+
         # Generate summary
         summary = {
             "status": "completed",
@@ -378,10 +378,10 @@ class DocumentationIndexer:
             "categories": self._count_categories(docs),
             "timestamp": datetime.now().isoformat(),
         }
-        
+
         _LOG.info(f"Indexing completed: {indexed_count}/{len(docs)} files indexed")
         return summary
-    
+
     def _index_document(self, doc: Dict[str, Any]) -> None:
         """Index a single document in the vector store"""
         # Store document metadata
@@ -397,7 +397,7 @@ class DocumentationIndexer:
             "last_modified": doc["last_modified"],
             "indexed_at": datetime.now().isoformat(),
         }
-        
+
         # Store each chunk
         for chunk in doc["chunks"]:
             chunk_metadata = metadata.copy()
@@ -407,14 +407,14 @@ class DocumentationIndexer:
                 "end_line": chunk["end_line"],
                 "chunk_size": len(chunk["content"]),
             })
-            
+
             # Store in vector store
             self.vector_store.forward(
                 operation="store_chunks",
                 chunks=[chunk["content"]],
                 metadata=chunk_metadata
             )
-    
+
     def _count_categories(self, docs: List[Dict[str, Any]]) -> Dict[str, int]:
         """Count documents by category"""
         categories = {}
@@ -422,28 +422,28 @@ class DocumentationIndexer:
             category = doc["category"]
             categories[category] = categories.get(category, 0) + 1
         return categories
-    
+
     def search_documentation(self, query: str, category: str = None, limit: int = 5) -> Dict[str, Any]:
         """Search documentation using the RAG system"""
         search_params = {
             "query": query,
             "limit": limit,
         }
-        
+
         if category:
             search_params["category"] = category
-        
+
         if not self.vector_store:
             return {"error": "Vector store unavailable"}
         results = self.vector_store.forward(operation="search", **search_params)
-        
+
         # Add search metadata
         results["search_query"] = query
         results["search_category"] = category
         results["search_timestamp"] = datetime.now().isoformat()
-        
+
         return results
-    
+
     def get_documentation_stats(self) -> Dict[str, Any]:
         """Get statistics about indexed documentation"""
         # This would query the database for statistics
@@ -456,26 +456,26 @@ class DocumentationIndexer:
 def main():
     """Main function for documentation indexing"""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Documentation Indexer for RAG System")
     parser.add_argument("--db-url", default=None, help="Database connection string")
     parser.add_argument("--root-path", default=".", help="Root path to scan for documentation")
     parser.add_argument("--search", help="Search query to test")
     parser.add_argument("--category", help="Category filter for search")
     parser.add_argument("--stats", action="store_true", help="Show indexing statistics")
-    
+
     args = parser.parse_args()
-    
+
     # Get database URL
     if args.db_url:
         db_url = args.db_url
     else:
         # Try to get from environment or use default
         db_url = os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
-    
+
     # Initialize indexer
     indexer = DocumentationIndexer(db_url)
-    
+
     if args.search:
         # Perform search
         results = indexer.search_documentation(args.search, args.category)

@@ -87,7 +87,6 @@ class UVTeamOnboarding:
 
         try:
             # Use the official UV installer
-            install_cmd = ["curl", "-LsSf", "https://astral.sh/uv/install.sh", "|", "sh"]
 
             # For Windows, we'd need a different approach
             if self.system_info["platform"] == "Windows":
@@ -97,7 +96,7 @@ class UVTeamOnboarding:
                 return False
 
             # Run the installer
-            result = subprocess.run(
+            subprocess.run(
                 "curl -LsSf https://astral.sh/uv/install.sh | sh",
                 shell=True,
                 capture_output=True,
@@ -159,12 +158,12 @@ class UVTeamOnboarding:
             self._log_step("Project directory check", True, "Found pyproject.toml")
 
             # Create virtual environment
-            result = subprocess.run(["uv", "venv", "--python", "3.12"], capture_output=True, text=True, check=True)
+            subprocess.run(["uv", "venv", "--python", "3.12"], capture_output=True, text=True, check=True)
 
             self._log_step("Virtual environment creation", True, "Created .venv with Python 3.12")
 
             # Install dependencies
-            result = subprocess.run(["uv", "sync", "--extra", "dev"], capture_output=True, text=True, check=True)
+            subprocess.run(["uv", "sync", "--extra", "dev"], capture_output=True, text=True, check=True)
 
             self._log_step("Dependency installation", True, "Installed all dependencies with dev extras")
 

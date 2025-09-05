@@ -14,7 +14,7 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
     return {
         "CRITICAL_FILES": [
             "100_cursor-memory-context.md",
-            "000_backlog.md", 
+            "000_backlog.md",
             "400_system-overview.md",
             "400_project-overview.md"
         ],
@@ -23,7 +23,7 @@ def get_documentation_inventory() -> Dict[str, List[str]]:
         ],
         "WORKFLOW_FILES": [
             "001_create-prd.md",
-            "002_generate-tasks.md", 
+            "002_generate-tasks.md",
             "003_process-task-list.md",
             "100_backlog-guide.md"
         ],
@@ -96,7 +96,7 @@ def get_context_guidance() -> Dict[str, List[str]]:
     return {
         "NEW_SESSIONS": [
             "100_cursor-memory-context.md - Current project state",
-            "000_backlog.md - Current priorities", 
+            "000_backlog.md - Current priorities",
             "400_system-overview.md - Technical architecture"
         ],
         "DEVELOPMENT_TASKS": {
@@ -138,15 +138,15 @@ def check_file_exists(file_path: str) -> bool:
 def display_documentation_inventory():
     """Display the complete documentation inventory"""
     inventory = get_documentation_inventory()
-    
+
     print("📚 Complete Documentation Inventory")
     print("=" * 60)
     print()
-    
+
     for category, files in inventory.items():
         print(f"🎯 {category.replace('_', ' ').title()}")
         print("-" * 40)
-        
+
         for file_path in files:
             if check_file_exists(file_path):
                 status = "✅"
@@ -159,15 +159,15 @@ def display_documentation_inventory():
 def display_context_guidance():
     """Display context-specific guidance"""
     guidance = get_context_guidance()
-    
+
     print("🎯 Context-Specific Guidance")
     print("=" * 60)
     print()
-    
+
     for context, files in guidance.items():
         print(f"📋 {context.replace('_', ' ').title()}")
         print("-" * 40)
-        
+
         if isinstance(files, dict):
             for subcategory, subfiles in files.items():
                 print(f"  🔧 {subcategory}:")
@@ -181,30 +181,30 @@ def display_context_guidance():
 def find_relevant_files(task_type: str) -> List[str]:
     """Find relevant files for a specific task type"""
     guidance = get_context_guidance()
-    
+
     relevant_files = []
-    
+
     # Map task types to guidance categories
     task_mapping = {
         "development": "DEVELOPMENT_TASKS",
-        "research": "RESEARCH_TASKS", 
+        "research": "RESEARCH_TASKS",
         "file_management": "FILE_MANAGEMENT",
         "system_integration": "SYSTEM_INTEGRATION",
         "context_engineering": "CONTEXT_ENGINEERING",
         "new_session": "NEW_SESSIONS"
     }
-    
+
     if task_type.lower() in task_mapping:
         category = task_mapping[task_type.lower()]
         files = guidance.get(category, [])
-        
+
         if isinstance(files, dict):
             # Flatten nested dictionary
             for subfiles in files.values():
                 relevant_files.extend(subfiles)
         else:
             relevant_files = files
-    
+
     return relevant_files
 
 def main():
@@ -220,9 +220,9 @@ def main():
         print()
         print("Task types: development, research, file_management, system_integration, context_engineering, new_session")
         return
-    
+
     command = sys.argv[1]
-    
+
     if command == "inventory":
         display_documentation_inventory()
     elif command == "guidance":
@@ -230,7 +230,7 @@ def main():
     elif command == "find" and len(sys.argv) > 2:
         task_type = sys.argv[2]
         relevant_files = find_relevant_files(task_type)
-        
+
         print(f"🎯 Relevant files for {task_type}:")
         print("=" * 40)
         for file in relevant_files:

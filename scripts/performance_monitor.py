@@ -1069,7 +1069,7 @@ def test_performance_monitor():
 
     # Test report generation
     print("\n📋 Testing report generation...")
-    report = monitor.generate_report()
+    monitor.generate_report()
     print("  Report generated successfully")
 
     # Test alert retrieval

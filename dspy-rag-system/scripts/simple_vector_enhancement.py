@@ -19,10 +19,10 @@ logger = get_logger(__name__)
 
 class SimpleVectorEnhancement:
     """Handles simple vector database enhancement"""
-    
+
     def __init__(self, db_connection_string: str):
         self.db_connection_string = db_connection_string
-        
+
     def create_vector_indexes_table(self):
         """Create the vector_indexes table"""
         sql = """
@@ -39,7 +39,7 @@ class SimpleVectorEnhancement:
         );
         """
         return self.execute_sql(sql, "vector_indexes table")
-    
+
     def create_vector_performance_metrics_table(self):
         """Create the vector_performance_metrics table"""
         sql = """
@@ -54,7 +54,7 @@ class SimpleVectorEnhancement:
         );
         """
         return self.execute_sql(sql, "vector_performance_metrics table")
-    
+
     def create_vector_cache_table(self):
         """Create the vector_cache table"""
         sql = """
@@ -68,7 +68,7 @@ class SimpleVectorEnhancement:
         );
         """
         return self.execute_sql(sql, "vector_cache table")
-    
+
     def create_vector_health_checks_table(self):
         """Create the vector_health_checks table"""
         sql = """
@@ -82,7 +82,7 @@ class SimpleVectorEnhancement:
         );
         """
         return self.execute_sql(sql, "vector_health_checks table")
-    
+
     def create_indexes(self):
         """Create essential indexes"""
         indexes = [
@@ -95,11 +95,11 @@ class SimpleVectorEnhancement:
             ("CREATE INDEX IF NOT EXISTS idx_vector_indexes_status ON vector_indexes(status);", "vector_indexes status index"),
             ("CREATE INDEX IF NOT EXISTS idx_vector_indexes_table_name ON vector_indexes(table_name);", "vector_indexes table_name index"),
         ]
-        
+
         for sql, description in indexes:
             if not self.execute_sql(sql, description):
                 logger.warning(f"Failed to create {description}")
-    
+
     def create_functions(self):
         """Create essential functions"""
         functions = [
@@ -124,7 +124,7 @@ class SimpleVectorEnhancement:
             END;
             $$ LANGUAGE plpgsql;
             """,
-            
+
             # Get vector health status
             """
             CREATE OR REPLACE FUNCTION get_vector_health_status() RETURNS JSONB AS $$
@@ -143,7 +143,7 @@ class SimpleVectorEnhancement:
             END;
             $$ LANGUAGE plpgsql;
             """,
-            
+
             # Clean expired cache
             """
             CREATE OR REPLACE FUNCTION clean_expired_vector_cache() RETURNS INTEGER AS $$
@@ -158,11 +158,11 @@ class SimpleVectorEnhancement:
             $$ LANGUAGE plpgsql;
             """
         ]
-        
+
         for sql in functions:
             if not self.execute_sql(sql, "function"):
                 logger.warning("Failed to create function")
-    
+
     def execute_sql(self, sql: str, description: str) -> bool:
         """Execute SQL statement with error handling"""
         try:
@@ -176,16 +176,16 @@ class SimpleVectorEnhancement:
         except Exception as e:
             logger.error(f"Failed to create {description}: {e}")
             return False
-    
+
     def validate_tables(self):
         """Validate that all tables were created successfully"""
         tables = [
             'vector_indexes',
-            'vector_performance_metrics', 
+            'vector_performance_metrics',
             'vector_cache',
             'vector_health_checks'
         ]
-        
+
         conn = psycopg2.connect(self.db_connection_string)
         with conn.cursor() as cursor:
             for table in tables:
@@ -199,11 +199,11 @@ class SimpleVectorEnhancement:
                     return False
         conn.close()
         return True
-    
+
     def run_enhancement(self):
         """Run the complete vector enhancement"""
         logger.info("Starting Simple Vector Database Enhancement")
-        
+
         # Create tables
         if not self.create_vector_indexes_table():
             return False
@@ -213,18 +213,18 @@ class SimpleVectorEnhancement:
             return False
         if not self.create_vector_health_checks_table():
             return False
-        
+
         # Create indexes
         self.create_indexes()
-        
+
         # Create functions
         self.create_functions()
-        
+
         # Validate
         if not self.validate_tables():
             logger.error("Validation failed")
             return False
-        
+
         logger.info("Vector enhancement completed successfully")
         return True
 
@@ -234,10 +234,10 @@ def main():
     if not db_connection_string:
         logger.error("POSTGRES_DSN environment variable not set")
         return False
-    
+
     enhancement = SimpleVectorEnhancement(db_connection_string)
     return enhancement.run_enhancement()
 
 if __name__ == "__main__":
     success = main()
-    sys.exit(0 if success else 1) 
+    sys.exit(0 if success else 1)

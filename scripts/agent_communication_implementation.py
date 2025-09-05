@@ -432,7 +432,7 @@ class AgentCoordinator:
             "step": workflow["current_step"],
         }
 
-        message_id = await self.communication_manager.send_message(
+        await self.communication_manager.send_message(
             session_id=workflow["session_id"],
             sender="coordinator",
             recipient=agent,

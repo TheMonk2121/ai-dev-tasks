@@ -19,6 +19,13 @@ from typing import Any, Dict
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
+# Apply litellm compatibility shim before importing DSPy
+try:
+    from litellm_compatibility_shim import patch_litellm_imports
+    patch_litellm_imports()
+except ImportError:
+    pass  # Shim not available, continue without it
+
 import dspy
 from dspy import InputField, Module, OutputField, Signature
 from dspy_modules.metrics_dashboard import get_metrics_dashboard

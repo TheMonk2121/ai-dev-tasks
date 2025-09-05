@@ -146,7 +146,7 @@ class TestLTSTIntegrationCore(unittest.TestCase):
 
         # Test context merging performance
         start_time = time.time()
-        merge_result = self.ltst_system.merge_contexts_database(self.existing_session)
+        self.ltst_system.merge_contexts_database(self.existing_session)
         merge_time = time.time() - start_time
 
         self.assertLess(merge_time, 1.0)  # Should complete in under 1 second
@@ -154,7 +154,7 @@ class TestLTSTIntegrationCore(unittest.TestCase):
 
         # Test memory rehydration performance
         start_time = time.time()
-        rehydration_result = self.ltst_system.rehydrate_memory_database(self.existing_session, self.existing_user)
+        self.ltst_system.rehydrate_memory_database(self.existing_session, self.existing_user)
         rehydration_time = time.time() - start_time
 
         self.assertLess(rehydration_time, 1.0)  # Should complete in under 1 second

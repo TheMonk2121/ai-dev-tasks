@@ -33,14 +33,14 @@ class AgentCapability(Enum):
     PERFORMANCE_RESEARCH = "performance_research"
     SECURITY_RESEARCH = "security_research"
     INDUSTRY_RESEARCH = "industry_research"
-    
+
     # Coder Agent Capabilities
     CODE_QUALITY_ASSESSMENT = "code_quality_assessment"
     PERFORMANCE_ANALYSIS = "performance_analysis"
     SECURITY_ANALYSIS = "security_analysis"
     REFACTORING_SUGGESTIONS = "refactoring_suggestions"
     BEST_PRACTICES_VALIDATION = "best_practices_validation"
-    
+
     # Documentation Agent Capabilities
     DOCUMENTATION_GENERATION = "documentation_generation"
     WRITING_ASSISTANCE = "writing_assistance"
@@ -82,7 +82,7 @@ class DocumentationContent:
 
 class BaseSpecializedAgent(ABC):
     """Abstract base class for specialized agents."""
-    
+
     def __init__(self, agent_type: str, capabilities: List[AgentCapability]):
         self.agent_type = agent_type
         self.capabilities = capabilities
@@ -91,17 +91,17 @@ class BaseSpecializedAgent(ABC):
         self.usage_count = 0
         self.error_count = 0
         self.processing_history: List[Dict[str, Any]] = []
-    
+
     @abstractmethod
     async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Process a specialized request and return results."""
         pass
-    
+
     @abstractmethod
     def can_handle(self, request: Dict[str, Any]) -> bool:
         """Check if this agent can handle the given request."""
         pass
-    
+
     def get_status(self) -> Dict[str, Any]:
         """Get agent status information."""
         return {
@@ -113,7 +113,7 @@ class BaseSpecializedAgent(ABC):
             "error_count": self.error_count,
             "processing_history_count": len(self.processing_history)
         }
-    
+
     def log_processing(self, request: Dict[str, Any], response: Dict[str, Any], processing_time: float):
         """Log processing information."""
         self.processing_history.append({
@@ -122,14 +122,14 @@ class BaseSpecializedAgent(ABC):
             "response": response,
             "processing_time": processing_time
         })
-        
+
         # Keep only last 100 entries
         if len(self.processing_history) > 100:
             self.processing_history = self.processing_history[-100:]
 
 class ResearchAgent(BaseSpecializedAgent):
     """Specialized agent for deep research and analysis capabilities."""
-    
+
     def __init__(self):
         super().__init__("research", [
             AgentCapability.TECHNICAL_RESEARCH,
@@ -141,20 +141,20 @@ class ResearchAgent(BaseSpecializedAgent):
         self.research_cache: Dict[str, ResearchData] = {}
         self.research_sources = [
             "technical_documentation",
-            "code_repositories", 
+            "code_repositories",
             "technical_blogs",
             "research_papers",
             "community_forums"
         ]
-    
+
     async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Process research request."""
         start_time = time.time()
-        
+
         try:
             query = request.get("query", "")
             analysis_type = request.get("analysis_type", "general")
-            
+
             # Check cache first
             cache_key = self._generate_cache_key(query, analysis_type)
             if cache_key in self.research_cache:
@@ -162,27 +162,27 @@ class ResearchAgent(BaseSpecializedAgent):
                 if time.time() - cached_data.timestamp < 3600:  # 1 hour cache
                     logger.info(f"Using cached research data for: {query}")
                     return self._format_research_response(cached_data)
-            
+
             # Perform research
             research_data = await self._perform_research(query, analysis_type)
-            
+
             # Cache the results
             self.research_cache[cache_key] = research_data
-            
+
             processing_time = time.time() - start_time
             self.usage_count += 1
             self.last_used = time.time()
-            
+
             response = self._format_research_response(research_data)
             self.log_processing(request, response, processing_time)
-            
+
             return response
-            
+
         except Exception as e:
             self.error_count += 1
             logger.error(f"Error in Research Agent: {e}")
             raise
-    
+
     def can_handle(self, request: Dict[str, Any]) -> bool:
         """Check if research agent can handle the request."""
         research_keywords = [
@@ -192,11 +192,11 @@ class ResearchAgent(BaseSpecializedAgent):
         ]
         query = request.get("query", "").lower()
         return any(keyword in query for keyword in research_keywords)
-    
+
     async def _perform_research(self, query: str, analysis_type: str) -> ResearchData:
         """Perform research analysis."""
         await asyncio.sleep(0.5)  # Simulate research time
-        
+
         # Simulate different types of research
         if analysis_type == "architecture":
             findings = {
@@ -230,7 +230,7 @@ class ResearchAgent(BaseSpecializedAgent):
             }
             sources = ["Technical Documentation", "Community Forums", "Research Papers"]
             confidence = 0.85
-        
+
         return ResearchData(
             query=query,
             findings=findings,
@@ -238,7 +238,7 @@ class ResearchAgent(BaseSpecializedAgent):
             confidence=confidence,
             analysis_type=analysis_type
         )
-    
+
     def _format_research_response(self, research_data: ResearchData) -> Dict[str, Any]:
         """Format research data into response."""
         return {
@@ -250,7 +250,7 @@ class ResearchAgent(BaseSpecializedAgent):
             "analysis_type": research_data.analysis_type,
             "timestamp": research_data.timestamp
         }
-    
+
     def _generate_cache_key(self, query: str, analysis_type: str) -> str:
         """Generate cache key for research data."""
         content = f"{query}:{analysis_type}"
@@ -258,7 +258,7 @@ class ResearchAgent(BaseSpecializedAgent):
 
 class CoderAgent(BaseSpecializedAgent):
     """Specialized agent for coding best practices and code quality improvements."""
-    
+
     def __init__(self):
         super().__init__("coder", [
             AgentCapability.CODE_QUALITY_ASSESSMENT,
@@ -275,16 +275,16 @@ class CoderAgent(BaseSpecializedAgent):
             "java": r"\.java$",
             "go": r"\.go$"
         }
-    
+
     async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Process coding request."""
         start_time = time.time()
-        
+
         try:
             file_path = request.get("file_path", "")
             code_content = request.get("code_content", "")
             analysis_type = request.get("analysis_type", "comprehensive")
-            
+
             # Check cache first
             cache_key = self._generate_cache_key(file_path, code_content)
             if cache_key in self.analysis_cache:
@@ -292,27 +292,27 @@ class CoderAgent(BaseSpecializedAgent):
                 if time.time() - cached_analysis.timestamp < 1800:  # 30 min cache
                     logger.info(f"Using cached analysis for: {file_path}")
                     return self._format_code_analysis_response(cached_analysis)
-            
+
             # Perform code analysis
             analysis = await self._analyze_code(file_path, code_content, analysis_type)
-            
+
             # Cache the results
             self.analysis_cache[cache_key] = analysis
-            
+
             processing_time = time.time() - start_time
             self.usage_count += 1
             self.last_used = time.time()
-            
+
             response = self._format_code_analysis_response(analysis)
             self.log_processing(request, response, processing_time)
-            
+
             return response
-            
+
         except Exception as e:
             self.error_count += 1
             logger.error(f"Error in Coder Agent: {e}")
             raise
-    
+
     def can_handle(self, request: Dict[str, Any]) -> bool:
         """Check if coder agent can handle the request."""
         coding_keywords = [
@@ -322,14 +322,14 @@ class CoderAgent(BaseSpecializedAgent):
         ]
         query = request.get("query", "").lower()
         return any(keyword in query for keyword in coding_keywords)
-    
+
     async def _analyze_code(self, file_path: str, code_content: str, analysis_type: str) -> CodeAnalysis:
         """Analyze code and provide suggestions."""
         await asyncio.sleep(0.3)  # Simulate code analysis time
-        
+
         # Detect language
         language = self._detect_language(file_path)
-        
+
         # Simulate different types of analysis
         if analysis_type == "quality":
             quality_score = 0.75
@@ -355,7 +355,7 @@ class CoderAgent(BaseSpecializedAgent):
             security_issues = ["Insecure random", "Weak encryption"]
             refactoring_suggestions = ["Use list comprehension", "Implement proper encryption"]
             best_practices = ["Follow SOLID principles", "Write unit tests"]
-        
+
         return CodeAnalysis(
             file_path=file_path,
             language=language,
@@ -365,7 +365,7 @@ class CoderAgent(BaseSpecializedAgent):
             refactoring_suggestions=refactoring_suggestions,
             best_practices=best_practices
         )
-    
+
     def _format_code_analysis_response(self, analysis: CodeAnalysis) -> Dict[str, Any]:
         """Format code analysis into response."""
         return {
@@ -379,14 +379,14 @@ class CoderAgent(BaseSpecializedAgent):
             "best_practices": analysis.best_practices,
             "timestamp": analysis.timestamp
         }
-    
+
     def _detect_language(self, file_path: str) -> str:
         """Detect programming language from file path."""
         for language, pattern in self.language_patterns.items():
             if re.search(pattern, file_path, re.IGNORECASE):
                 return language
         return "unknown"
-    
+
     def _generate_cache_key(self, file_path: str, code_content: str) -> str:
         """Generate cache key for code analysis."""
         content = f"{file_path}:{code_content}"
@@ -394,7 +394,7 @@ class CoderAgent(BaseSpecializedAgent):
 
 class DocumentationAgent(BaseSpecializedAgent):
     """Specialized agent for documentation assistance and writing help."""
-    
+
     def __init__(self):
         super().__init__("documentation", [
             AgentCapability.DOCUMENTATION_GENERATION,
@@ -405,17 +405,17 @@ class DocumentationAgent(BaseSpecializedAgent):
         ])
         self.documentation_cache: Dict[str, DocumentationContent] = {}
         self.supported_formats = ["markdown", "html", "pdf", "docx", "rst"]
-    
+
     async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Process documentation request."""
         start_time = time.time()
-        
+
         try:
             title = request.get("title", "")
             content = request.get("content", "")
             format_type = request.get("format_type", "markdown")
             doc_type = request.get("doc_type", "general")
-            
+
             # Check cache first
             cache_key = self._generate_cache_key(title, content, format_type)
             if cache_key in self.documentation_cache:
@@ -423,27 +423,27 @@ class DocumentationAgent(BaseSpecializedAgent):
                 if time.time() - cached_doc.timestamp < 7200:  # 2 hour cache
                     logger.info(f"Using cached documentation for: {title}")
                     return self._format_documentation_response(cached_doc)
-            
+
             # Generate documentation
             doc_content = await self._generate_documentation(title, content, format_type, doc_type)
-            
+
             # Cache the results
             self.documentation_cache[cache_key] = doc_content
-            
+
             processing_time = time.time() - start_time
             self.usage_count += 1
             self.last_used = time.time()
-            
+
             response = self._format_documentation_response(doc_content)
             self.log_processing(request, response, processing_time)
-            
+
             return response
-            
+
         except Exception as e:
             self.error_count += 1
             logger.error(f"Error in Documentation Agent: {e}")
             raise
-    
+
     def can_handle(self, request: Dict[str, Any]) -> bool:
         """Check if documentation agent can handle the request."""
         documentation_keywords = [
@@ -452,11 +452,11 @@ class DocumentationAgent(BaseSpecializedAgent):
         ]
         query = request.get("query", "").lower()
         return any(keyword in query for keyword in documentation_keywords)
-    
+
     async def _generate_documentation(self, title: str, content: str, format_type: str, doc_type: str) -> DocumentationContent:
         """Generate documentation content."""
         await asyncio.sleep(0.2)  # Simulate documentation generation time
-        
+
         # Simulate different types of documentation
         if doc_type == "api":
             generated_content = f"""# {title}
@@ -587,7 +587,7 @@ Configure the {title.lower()} with the following options:
 See the examples directory for complete working examples.
 """
             quality_score = 0.85
-        
+
         return DocumentationContent(
             title=title,
             content=generated_content,
@@ -599,7 +599,7 @@ See the examples directory for complete working examples.
             },
             quality_score=quality_score
         )
-    
+
     def _format_documentation_response(self, doc_content: DocumentationContent) -> Dict[str, Any]:
         """Format documentation content into response."""
         return {
@@ -611,7 +611,7 @@ See the examples directory for complete working examples.
             "quality_score": doc_content.quality_score,
             "timestamp": doc_content.timestamp
         }
-    
+
     def _generate_cache_key(self, title: str, content: str, format_type: str) -> str:
         """Generate cache key for documentation."""
         content_str = f"{title}:{content}:{format_type}"
@@ -619,48 +619,48 @@ See the examples directory for complete working examples.
 
 class SpecializedAgentFramework:
     """Main framework for managing specialized agents."""
-    
+
     def __init__(self):
         self.agents: Dict[str, BaseSpecializedAgent] = {}
         self.active_agent: Optional[str] = None
         self.agent_switching_enabled = True
-        
+
         # Initialize specialized agents
         self._initialize_agents()
-    
+
     def _initialize_agents(self):
         """Initialize all specialized agents."""
         self.agents["research"] = ResearchAgent()
         self.agents["coder"] = CoderAgent()
         self.agents["documentation"] = DocumentationAgent()
-        
+
         # Set research as default
         self.active_agent = "research"
-    
+
     async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Process request using the most appropriate specialized agent."""
         start_time = time.time()
-        
+
         try:
             # Determine the best agent for this request
             best_agent = await self._select_best_agent(request)
-            
+
             # Switch to the best agent if different from current
             if best_agent.agent_type != self.active_agent:
                 await self._switch_agent(best_agent)
-            
+
             # Process the request with the selected agent
             response = await best_agent.process_request(request)
-            
+
             processing_time = time.time() - start_time
             response["processing_time"] = processing_time
-            
+
             return response
-            
+
         except Exception as e:
             logger.error(f"Error processing request: {e}")
             raise
-    
+
     async def _select_best_agent(self, request: Dict[str, Any]) -> BaseSpecializedAgent:
         """Select the best specialized agent for the given request."""
         # Check which agents can handle this request
@@ -668,45 +668,45 @@ class SpecializedAgentFramework:
         for agent_type, agent in self.agents.items():
             if agent.can_handle(request):
                 capable_agents.append((agent_type, agent))
-        
+
         if not capable_agents:
             # Default to research agent if no specialized agent can handle it
             return self.agents["research"]
-        
+
         # Select the most appropriate agent based on request type
         query = request.get("query", "").lower()
-        
+
         if any(keyword in query for keyword in ["research", "analyze", "investigate"]):
             return self.agents["research"]
         elif any(keyword in query for keyword in ["code", "refactor", "optimize"]):
             return self.agents["coder"]
         elif any(keyword in query for keyword in ["document", "write", "explain"]):
             return self.agents["documentation"]
-        
+
         # Default to the first capable agent
         return capable_agents[0][1]
-    
+
     async def _switch_agent(self, new_agent: BaseSpecializedAgent):
         """Switch to a different specialized agent."""
         if not self.agent_switching_enabled:
             return
-        
+
         old_agent_type = self.active_agent
         self.active_agent = new_agent.agent_type
-        
+
         logger.info(f"Switched from {old_agent_type} to {new_agent.agent_type}")
-    
+
     def get_agent_status(self) -> Dict[str, Any]:
         """Get status of all specialized agents."""
         return {
             "active_agent": self.active_agent,
             "agents": {
-                agent_type: agent.get_status() 
+                agent_type: agent.get_status()
                 for agent_type, agent in self.agents.items()
             },
             "agent_switching_enabled": self.agent_switching_enabled
         }
-    
+
     async def enable_agent_switching(self, enabled: bool = True):
         """Enable or disable agent switching."""
         self.agent_switching_enabled = enabled
@@ -716,7 +716,7 @@ class SpecializedAgentFramework:
 async def main():
     """Example usage of the Specialized Agent Framework."""
     framework = SpecializedAgentFramework()
-    
+
     # Test different types of requests
     test_requests = [
         {
@@ -737,11 +737,11 @@ async def main():
             "doc_type": "api"
         }
     ]
-    
+
     for i, request in enumerate(test_requests, 1):
         print(f"\n--- Test Request {i} ---")
         print(f"Request: {request}")
-        
+
         try:
             response = await framework.process_request(request)
             print(f"Agent: {response['agent_type']}")
@@ -749,11 +749,11 @@ async def main():
             print(f"Processing Time: {response.get('processing_time', 0):.3f}s")
         except Exception as e:
             print(f"Error: {e}")
-    
+
     # Print agent status
     print("\n--- Agent Status ---")
     status = framework.get_agent_status()
     print(json.dumps(status, indent=2))
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

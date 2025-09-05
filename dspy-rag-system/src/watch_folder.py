@@ -66,11 +66,11 @@ class RAGFileHandler(FileSystemEventHandler):
         self.watch = watch
         self.processed = processed
         self.pool = pool
-        
+
         # Create folders if they don't exist
         self.watch.mkdir(exist_ok=True)
         self.processed.mkdir(exist_ok=True)
-        
+
         # Initialize notification system (optional)
         try:
             sys.path.append('.')
@@ -80,7 +80,7 @@ class RAGFileHandler(FileSystemEventHandler):
         except Exception as e:
             LOG.warning(f"⚠️  Notification system not available: {e}")
             self.notification_system = None
-        
+
         LOG.info("Watching %s", self.watch)
         LOG.info("Processed files will be moved to: %s", self.processed)
         LOG.info("Supported extensions: %s", ', '.join(SAFE_EXT))
@@ -105,14 +105,14 @@ class RAGFileHandler(FileSystemEventHandler):
             if not _is_file_ready(file_path):
                 LOG.warning("File not stable: %s", file_path)
                 return
-            
+
             LOG.info("Processing file: %s", file_path.name)
             res = _run_add_document(file_path)
-            
+
             if res.returncode == 0:
                 LOG.info("add_document success for %s", file_path.name,
                          extra={"stdout": res.stdout.strip()})
-                
+
                 # Send notification if available
                 if self.notification_system:
                     try:
@@ -123,25 +123,25 @@ class RAGFileHandler(FileSystemEventHandler):
                                 if "chunks stored:" in line:
                                     chunks_count = int(line.split("chunks stored:")[1].strip())
                                     break
-                        
+
                         file_size = os.path.getsize(file_path)
                         self.notification_system.notify_file_processed(
-                            file_path.name, 
-                            chunks_count, 
+                            file_path.name,
+                            chunks_count,
                             file_size
                         )
                     except Exception as e:
                         LOG.error("Failed to send notification: %s", e)
-                
+
                 # Move file to processed folder
                 processed_path = self.processed / file_path.name
                 shutil.move(str(file_path), str(processed_path))
                 LOG.info("Moved %s to processed folder", file_path.name)
-                
+
             else:
                 LOG.error("add_document failed for %s – %s",
                           file_path.name, res.stderr.strip())
-                
+
         except subprocess.TimeoutExpired:
             LOG.error("add_document timeout for %s", file_path.name)
         except Exception as exc:
@@ -173,31 +173,31 @@ def setup_watch_folder():
     """Legacy function for backward compatibility"""
     watch_folder = Path("watch_folder")
     processed_folder = Path("processed_documents")
-    
+
     # Create the handler with a single worker for legacy compatibility
     pool = ThreadPoolExecutor(max_workers=1)
     event_handler = RAGFileHandler(watch_folder, processed_folder, pool)
-    
+
     # Set up the observer
     observer = Observer()
     observer.schedule(event_handler, str(watch_folder), recursive=False)
-    
+
     return observer, watch_folder
 
 def main():
     """Main function to run the watch folder"""
-    
+
     LOG.info("🚀 DSPy RAG System - Watch Folder 2.0 starting", extra={
         'component': 'watch_folder',
         'action': 'startup',
         'version': '2.0'
     })
-    
+
     # Get configuration from environment variables
     watch_dir = os.getenv("WATCH_DIR", "watch_folder")
     processed_dir = os.getenv("PROCESSED_DIR", "processed_documents")
     workers = int(os.getenv("WORKERS", "4"))
-    
+
     LOG.info("📁 Watch folder configuration", extra={
         'component': 'watch_folder',
         'action': 'configuration',
@@ -206,7 +206,7 @@ def main():
         'workers': workers,
         'supported_extensions': list(SAFE_EXT)
     })
-    
+
     LOG.info("🔄 Watch folder workflow", extra={
         'component': 'watch_folder',
         'action': 'workflow_description',
@@ -218,7 +218,7 @@ def main():
             'Move them to the processed folder'
         ]
     })
-    
+
     with WatchService(watch_dir, processed_dir, workers):
         try:
             while True:
@@ -236,4 +236,4 @@ def main():
             })
 
 if __name__ == "__main__":
-    main() 
+    main()

@@ -10,8 +10,8 @@ Usage: python scripts/dependency_monitor.py [--dry-run] [--force] [--output-dir]
 
 # <!-- ANCHOR_KEY: dependency-monitor -->
 # <!-- ANCHOR_PRIORITY: 18 -->
-# 
-# 
+#
+#
 # <!-- ROLE_PINS: ["coder", "implementer"] -->
 
 import argparse

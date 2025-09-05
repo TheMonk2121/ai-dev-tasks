@@ -11,9 +11,9 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
-from typing import Dict, List, Set, Deque
 from collections import deque
+from pathlib import Path
+from typing import Deque, Dict, List, Set
 
 
 def load_graph(graph_path: Path) -> Dict:

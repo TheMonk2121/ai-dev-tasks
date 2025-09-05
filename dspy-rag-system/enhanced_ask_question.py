@@ -4,11 +4,7 @@ Enhanced DSPy RAG System - Interactive Question Interface
 Demonstrates pre-RAG query rewriting and post-RAG answer synthesis
 """
 
-import json
-import os
 import sys
-import time
-from pathlib import Path
 
 # Add src to path for imports
 sys.path.append('src')
@@ -56,104 +52,104 @@ def print_help():
 
 def analyze_and_display_query(query: str, domain: str = "general"):
     """Analyze query complexity and display recommendations"""
-    
+
     print(f"\n🔍 Query Analysis for: '{query}'")
     print("-" * 50)
-    
+
     # Analyze complexity
     analysis = analyze_query_complexity(query)
-    
-    print(f"📊 Complexity Metrics:")
+
+    print("📊 Complexity Metrics:")
     print(f"   Word count: {analysis['word_count']}")
     print(f"   Logical operators: {analysis['has_logical_operators']}")
     print(f"   Comparisons: {analysis['has_comparisons']}")
     print(f"   Multi-part: {analysis['has_multi_part']}")
     print(f"   Complexity score: {analysis['complexity_score']}/5")
-    
-    print(f"\n🎯 Recommended DSPy Modules:")
+
+    print("\n🎯 Recommended DSPy Modules:")
     recommendations = analysis['recommended_modules']
     print(f"   Query decomposition: {'✅' if recommendations['use_decomposition'] else '❌'}")
     print(f"   Chain-of-Thought: {'✅' if recommendations['use_cot'] else '❌'}")
     print(f"   ReAct reasoning: {'✅' if recommendations['use_react'] else '❌'}")
-    
+
     # Get domain context
     domain_context = create_domain_context(domain)
     print(f"\n🌍 Domain Context ({domain}):")
     print(f"   {domain_context}")
-    
+
     return analysis
 
 def display_response(response: dict, show_details: bool = True):
     """Display RAG response with enhanced details"""
-    
-    print(f"\n🎯 Answer:")
+
+    print("\n🎯 Answer:")
     print(f"   {response.get('answer', 'No answer generated')}")
-    
+
     if show_details:
-        print(f"\n📊 Response Details:")
+        print("\n📊 Response Details:")
         print(f"   Status: {response.get('status', 'unknown')}")
         print(f"   Confidence: {response.get('confidence', 0):.2f}")
         print(f"   Retrieved chunks: {response.get('retrieved_chunks', 0)}")
         print(f"   Latency: {response.get('latency_ms', 0)}ms")
-        
+
         if response.get('rewritten_query'):
-            print(f"\n🔄 Pre-RAG Processing:")
+            print("\n🔄 Pre-RAG Processing:")
             print(f"   Original: {response.get('question', '')}")
             print(f"   Rewritten: {response.get('rewritten_query', '')}")
-            
+
             if response.get('sub_queries'):
                 print(f"   Sub-queries: {len(response.get('sub_queries', []))}")
                 for i, sub_q in enumerate(response.get('sub_queries', [])):
                     print(f"     {i+1}. {sub_q}")
-        
+
         if response.get('reasoning'):
-            print(f"\n🧠 Post-RAG Reasoning:")
+            print("\n🧠 Post-RAG Reasoning:")
             print(f"   {response.get('reasoning', '')}")
-        
+
         if response.get('sources'):
-            print(f"\n📚 Sources:")
+            print("\n📚 Sources:")
             for i, source in enumerate(response.get('sources', [])[:3]):
                 print(f"   {i+1}. {source}")
 
 def main():
     """Main interactive interface"""
-    
+
     print_banner()
-    
+
     # Initialize enhanced RAG interface
     try:
         print("🔄 Initializing enhanced RAG system...")
         rag_interface = create_enhanced_rag_interface()
-        
+
         # Get initial stats
         stats = rag_interface.get_stats()
         if stats.get('error'):
             print(f"⚠️  Warning: {stats['error']}")
         else:
-            print(f"✅ Connected to RAG system")
+            print("✅ Connected to RAG system")
             print(f"📊 Knowledge base: {stats.get('total_chunks', 0)} chunks")
-        
+
         print("✅ Connected to Mistral 7B Instruct via Ollama")
         print("💡 Ask questions about your documents!")
         print("   Type 'help' for available commands")
         print("   Type 'quit' to exit")
         print("-" * 60)
-        
+
     except Exception as e:
         print(f"❌ Failed to initialize RAG system: {e}")
         print("Make sure your database and Ollama are running")
         return
-    
+
     # Interactive loop
     current_domain = "general"
-    
+
     while True:
         try:
             user_input = input("\n❓ Your question: ").strip()
-            
+
             if not user_input:
                 continue
-            
+
             # Handle commands
             if user_input.lower() == 'quit':
                 print("👋 Goodbye!")
@@ -163,7 +159,7 @@ def main():
                 continue
             elif user_input.lower() == 'stats':
                 stats = rag_interface.get_stats()
-                print(f"\n📊 System Statistics:")
+                print("\n📊 System Statistics:")
                 print(f"   Total documents: {stats.get('total_documents', 0)}")
                 print(f"   Total chunks: {stats.get('total_chunks', 0)}")
                 print(f"   Database: {'✅ Connected' if not stats.get('error') else '❌ Error'}")
@@ -199,32 +195,32 @@ def main():
                     # Analyze query first
                     analysis = analyze_query_complexity(question)
                     print(f"\n🔍 Query analysis: {analysis['complexity_score']}/5 complexity")
-                    
+
                     # Ask question with appropriate reasoning
                     use_cot = analysis['recommended_modules']['use_cot']
                     use_react = analysis['recommended_modules']['use_react']
-                    
+
                     print(f"🧠 Using: {'ReAct' if use_react else 'Chain-of-Thought' if use_cot else 'Standard'} reasoning")
-                    
+
                     response = rag_interface.ask(question, use_cot=use_cot, use_react=use_react)
                     display_response(response)
                 continue
-            
+
             # Default: treat as a question
-            print(f"\n🔍 Analyzing query complexity...")
+            print("\n🔍 Analyzing query complexity...")
             analysis = analyze_query_complexity(user_input)
-            
+
             # Determine reasoning approach
             use_cot = analysis['recommended_modules']['use_cot']
             use_react = analysis['recommended_modules']['use_react']
-            
+
             reasoning_type = "ReAct" if use_react else "Chain-of-Thought" if use_cot else "Standard"
             print(f"🧠 Using {reasoning_type} reasoning (complexity: {analysis['complexity_score']}/5)")
-            
+
             # Ask the question
             response = rag_interface.ask(user_input, use_cot=use_cot, use_react=use_react)
             display_response(response)
-            
+
         except KeyboardInterrupt:
             print("\n👋 Goodbye!")
             break
@@ -233,4 +229,4 @@ def main():
             LOG.exception("Interface error")
 
 if __name__ == "__main__":
-    main() 
+    main()

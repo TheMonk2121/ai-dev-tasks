@@ -184,7 +184,7 @@ class MinHashDeduplicator:
     def _get_ngrams(self, text: str) -> Set[str]:
         """Extract n-grams from text."""
         # Simple word-based n-grams
-        words = text.split()
+        text.split()
         ngrams = set()
 
         # Character n-grams for robustness

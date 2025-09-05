@@ -106,7 +106,6 @@ def test_performance_validation():
     for i in range(50):
         start_time = time.time()
         # Simple string formatting
-        prompt = f"You are a coder working on project_{i} with high detail level."
         baseline_context_times.append(time.time() - start_time)
 
     baseline_context_avg = statistics.mean(baseline_context_times)
@@ -134,7 +133,7 @@ def test_performance_validation():
             role_context=role_context,
         )
 
-        prompt = prompt_manager.generate_prompt(template_id="perf_template", context=context)
+        prompt_manager.generate_prompt(template_id="perf_template", context=context)
         context_times.append(time.time() - start_time)
 
     context_avg = statistics.mean(context_times)
@@ -169,7 +168,7 @@ def test_performance_validation():
     baseline_tool_times = []
     for i in range(50):
         start_time = time.time()
-        result = calculator(i, i + 1, "add")
+        calculator(i, i + 1, "add")
         baseline_tool_times.append(time.time() - start_time)
 
     baseline_tool_avg = statistics.mean(baseline_tool_times)
@@ -188,7 +187,7 @@ def test_performance_validation():
             role_context=None,
         )
 
-        result = tool_framework.execute_tool("calculator", i, i + 1, "add", user_context=tool_context)
+        tool_framework.execute_tool("calculator", i, i + 1, "add", user_context=tool_context)
         enhanced_tool_times.append(time.time() - start_time)
 
     enhanced_tool_avg = statistics.mean(enhanced_tool_times)
@@ -216,7 +215,7 @@ def test_performance_validation():
         preference_manager.set_user_preference(user_id, "style", "detailed")
         preference_manager.set_user_preference(user_id, "language", "python")
 
-        prefs = preference_manager.get_user_preferences(user_id)
+        preference_manager.get_user_preferences(user_id)
         pref_times.append(time.time() - start_time)
 
     pref_avg = statistics.mean(pref_times)
@@ -231,7 +230,7 @@ def test_performance_validation():
     for i in range(50):
         start_time = time.time()
         # Capture debugging context
-        debug_context = debugging_manager.capture_debugging_context(
+        debugging_manager.capture_debugging_context(
             variable_snapshot={"test_var": f"value_{i}", "index": i}
         )
         debug_times.append(time.time() - start_time)
@@ -248,10 +247,10 @@ def test_performance_validation():
     for i in range(50):
         start_time = time.time()
         # Create different types of errors
-        validation_error = ErrorFactory.create_validation_error(
+        ErrorFactory.create_validation_error(
             message=f"Test validation error {i}", validation_type="format", field_name="test_field"
         )
-        runtime_error = ErrorFactory.create_runtime_error(
+        ErrorFactory.create_runtime_error(
             message=f"Test runtime error {i}", operation="test_operation", resource="test_resource"
         )
         error_times.append(time.time() - start_time)
@@ -281,12 +280,12 @@ def test_performance_validation():
             role_context=None,
         )
 
-        prompt = prompt_manager.generate_prompt(template_id="perf_template", context=user_context)
+        prompt_manager.generate_prompt(template_id="perf_template", context=user_context)
 
         preference_manager.set_user_preference(f"workflow_user_{i}", "style", "detailed")
-        prefs = preference_manager.get_user_preferences(f"workflow_user_{i}")
+        preference_manager.get_user_preferences(f"workflow_user_{i}")
 
-        debug_context = debugging_manager.capture_debugging_context(
+        debugging_manager.capture_debugging_context(
             user_context=user_context, role_context=context, variable_snapshot={"workflow_step": i}
         )
 

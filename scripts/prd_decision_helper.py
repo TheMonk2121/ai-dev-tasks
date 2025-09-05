@@ -12,7 +12,7 @@ from typing import Optional, Tuple
 def parse_backlog_item(backlog_content: str, item_id: str) -> Optional[Tuple[int, float]]:
     """Parse backlog item to extract points and score"""
     lines = backlog_content.split('\n')
-    
+
     for i, line in enumerate(lines):
         if (item_id in line or item_id.replace('-', '‑') in line) and '|' in line:
             # Extract points from the table row
@@ -23,7 +23,7 @@ def parse_backlog_item(backlog_content: str, item_id: str) -> Optional[Tuple[int
                     points = int(points_str)
                 except ValueError:
                     continue
-                
+
                 # Look for score in the next few lines (comments)
                 score = 0.0
                 for j in range(i, min(i + 3, len(lines))):
@@ -31,9 +31,9 @@ def parse_backlog_item(backlog_content: str, item_id: str) -> Optional[Tuple[int
                     if score_match:
                         score = float(score_match.group(1))
                         break
-                
+
                 return points, score
-    
+
     return None
 
 def should_generate_prd(points: int, score: float) -> bool:
@@ -48,30 +48,30 @@ def main():
     if len(sys.argv) != 3:
         print("Usage: python prd_decision_helper.py <backlog_content> <item_id>")
         sys.exit(1)
-    
+
     backlog_content = sys.argv[1]
     item_id = sys.argv[2]
-    
+
     result = parse_backlog_item(backlog_content, item_id)
-    
+
     if result is None:
         print("ERROR: Could not parse backlog item")
         sys.exit(1)
-    
+
     points, score = result
     should_generate = should_generate_prd(points, score)
-    
+
     print(f"Item: {item_id}")
     print(f"Points: {points}")
     print(f"Score: {score}")
     print(f"Generate PRD: {should_generate}")
-    
+
     if not should_generate:
         print("Reason: points < 5 AND score >= 3.0 -> skip PRD")
     else:
         print("Reason: points >= 5 OR score < 3.0 -> generate PRD")
-    
+
     sys.exit(0 if should_generate else 1)
 
 if __name__ == "__main__":
-    main() 
+    main()

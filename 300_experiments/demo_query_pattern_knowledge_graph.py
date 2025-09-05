@@ -95,7 +95,7 @@ class QueryPatternKnowledgeGraphDemo:
         print("  📝 Creating demo session and queries...")
 
         # Create demo session
-        session = ConversationSession(
+        ConversationSession(
             session_id=self.demo_session_id,
             user_id=self.demo_user_id,
             session_name="Query Pattern Demo Session",

@@ -36,11 +36,11 @@ class ModelErrorResponse:
 
 class ModelSpecificHandler:
     """Handles model-specific errors and provides recovery strategies"""
-    
+
     def __init__(self):
         self.model_configs = self._load_model_configs()
         self.error_history = []
-        
+
     def _load_model_configs(self) -> Dict[str, ModelConfig]:
         """Load model-specific configurations"""
         configs = {
@@ -115,7 +115,7 @@ class ModelSpecificHandler:
                 }
             )
         }
-        
+
         # Load additional model configs from file if available
         try:
             config_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config', 'model_configs.json')
@@ -127,10 +127,10 @@ class ModelSpecificHandler:
                         configs[config.model_id] = config
         except Exception as e:
             logger.warning(f"Could not load custom model configs: {e}")
-            
+
         return configs
-    
-    def handle_model_error(self, error_message: str, model_id: str, 
+
+    def handle_model_error(self, error_message: str, model_id: str,
                           context: Dict[str, Any] = None) -> ModelErrorResponse:
         """
         Handle model-specific errors and provide recovery strategies
@@ -148,31 +148,31 @@ class ModelSpecificHandler:
         if not model_config:
             # Use default configuration
             model_config = self.model_configs.get("gpt-3.5-turbo")
-        
+
         # Determine error type
         error_type = self._classify_error(error_message)
-        
+
         # Get recovery action
         recovery_action = model_config.error_handling.get(error_type, "Check model configuration")
-        
+
         # Determine fallback model
         fallback_model = self._select_fallback_model(model_config, error_type, context)
-        
+
         # Adjust parameters based on error
         adjusted_parameters = self._adjust_parameters(model_config, error_type, context)
-        
+
         # Calculate confidence
         confidence = self._calculate_confidence(error_type, model_config)
-        
+
         # Estimate recovery time
         estimated_time = self._estimate_recovery_time(error_type, model_config)
-        
+
         # Log error handling
         logger.info(f"Model-specific error handling: {model_id} -> {error_type}")
         logger.info(f"Recovery action: {recovery_action}")
         if fallback_model:
             logger.info(f"Fallback model: {fallback_model}")
-        
+
         return ModelErrorResponse(
             recovery_action=recovery_action,
             fallback_model=fallback_model,
@@ -180,11 +180,11 @@ class ModelSpecificHandler:
             confidence=confidence,
             estimated_time=estimated_time
         )
-    
+
     def _classify_error(self, error_message: str) -> str:
         """Classify the type of error based on the message"""
         error_message_lower = error_message.lower()
-        
+
         if any(phrase in error_message_lower for phrase in ["context window", "token limit", "too many tokens"]):
             return "context_window_exceeded"
         elif any(phrase in error_message_lower for phrase in ["model not found", "model does not exist", "model unavailable"]):
@@ -199,42 +199,42 @@ class ModelSpecificHandler:
             return "quota_exceeded"
         else:
             return "unknown_error"
-    
-    def _select_fallback_model(self, model_config: ModelConfig, error_type: str, 
+
+    def _select_fallback_model(self, model_config: ModelConfig, error_type: str,
                               context: Dict[str, Any] = None) -> Optional[str]:
         """Select an appropriate fallback model"""
         if error_type == "model_not_found" and model_config.fallback_models:
             # Return the first available fallback
             return model_config.fallback_models[0]
-        
+
         # For other errors, only suggest fallback if context indicates it's appropriate
         if context and context.get('allow_fallback', False):
             return model_config.fallback_models[0] if model_config.fallback_models else None
-        
+
         return None
-    
-    def _adjust_parameters(self, model_config: ModelConfig, error_type: str, 
+
+    def _adjust_parameters(self, model_config: ModelConfig, error_type: str,
                           context: Dict[str, Any] = None) -> Dict[str, Any]:
         """Adjust model parameters based on error type"""
         adjustments = {}
-        
+
         if error_type == "context_window_exceeded":
             adjustments["max_tokens"] = model_config.max_tokens_per_request // 2
             adjustments["chunk_input"] = True
             adjustments["use_streaming"] = True
-        
+
         elif error_type == "timeout":
             adjustments["timeout_seconds"] = model_config.timeout_seconds * 2
             adjustments["max_tokens"] = model_config.max_tokens_per_request // 2
             adjustments["use_streaming"] = True
-        
+
         elif error_type == "rate_limit":
             adjustments["retry_delay"] = 60  # 1 minute delay
             adjustments["max_retries"] = 3
             adjustments["use_queue"] = True
-        
+
         return adjustments
-    
+
     def _calculate_confidence(self, error_type: str, model_config: ModelConfig) -> float:
         """Calculate confidence in the recovery strategy"""
         # Higher confidence for well-known error types
@@ -247,9 +247,9 @@ class ModelSpecificHandler:
             "quota_exceeded": 0.9,
             "unknown_error": 0.3
         }
-        
+
         return confidence_map.get(error_type, 0.5)
-    
+
     def _estimate_recovery_time(self, error_type: str, model_config: ModelConfig) -> str:
         """Estimate recovery time based on error type"""
         time_map = {
@@ -261,17 +261,17 @@ class ModelSpecificHandler:
             "quota_exceeded": "30-60 minutes",
             "unknown_error": "15-60 minutes"
         }
-        
+
         return time_map.get(error_type, "15-30 minutes")
-    
+
     def get_model_config(self, model_id: str) -> Optional[ModelConfig]:
         """Get configuration for a specific model"""
         return self.model_configs.get(model_id)
-    
+
     def list_available_models(self) -> List[str]:
         """List all available model configurations"""
         return list(self.model_configs.keys())
-    
+
     def update_model_config(self, model_id: str, config: ModelConfig):
         """Update model configuration"""
         self.model_configs[model_id] = config
@@ -280,7 +280,7 @@ class ModelSpecificHandler:
 # Global instance
 model_handler = ModelSpecificHandler()
 
-def handle_model_error(error_message: str, model_id: str, 
+def handle_model_error(error_message: str, model_id: str,
                       context: Dict[str, Any] = None) -> ModelErrorResponse:
     """
     Convenience function to handle model-specific errors
@@ -305,4 +305,4 @@ def list_available_models() -> List[str]:
 
 def update_model_config(model_id: str, config: ModelConfig):
     """Update model configuration"""
-    model_handler.update_model_config(model_id, config) 
+    model_handler.update_model_config(model_id, config)

@@ -164,7 +164,7 @@ class CacheInvalidationIntegration:
         """Background loop for automatic cache cleanup"""
         try:
             while self.running:
-                start_time = time.time()
+                time.time()
 
                 try:
                     # Perform comprehensive cache cleanup

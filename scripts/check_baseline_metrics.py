@@ -123,13 +123,11 @@ def extract_baseline_metrics(data: Dict) -> Dict[str, float]:
 def check_baseline_compliance(metrics: Dict[str, float]) -> Tuple[bool, List[str]]:
     """Check if metrics meet baseline targets."""
     violations = []
-    all_metrics_available = True
 
     for metric_name, target in BASELINE_TARGETS.items():
         current_value = metrics.get(metric_name)
 
         if current_value is None:
-            all_metrics_available = False
             continue
 
         # Check if metric meets target

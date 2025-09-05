@@ -48,7 +48,7 @@ def detect_tech_stack(context: Dict[str, Any]) -> List[str]:
     base_stack = ["Python 3.12"]  # Project default
 
     description = context.get("what", "").lower()
-    context_data = context.get("context", {})
+    context.get("context", {})
 
     # Database-related
     if any(word in description for word in ["database", "postgresql", "sql"]):

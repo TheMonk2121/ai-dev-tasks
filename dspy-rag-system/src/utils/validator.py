@@ -36,7 +36,7 @@ def sanitize_prompt(prompt: str, model_id: Optional[str] = None) -> str:
     """
     # Import the new prompt sanitizer
     from .prompt_sanitizer import sanitize_prompt as new_sanitize_prompt
-    
+
     try:
         return new_sanitize_prompt(prompt, model_id)
     except ImportError:
@@ -53,24 +53,24 @@ def _fallback_sanitize_prompt(prompt: str) -> str:
         "open(", "file(", "read(", "write(",
         "subprocess", "os.system", "eval("
     ]
-    
+
     prompt_lower = prompt.lower()
-    
+
     for pattern in blocklist:
         if pattern in prompt_lower:
             logger.warning(f"Blocked pattern detected in prompt: {pattern}")
             raise SecurityError(f"Blocked pattern detected: {pattern}")
-    
+
     # Additional sanitization
     prompt = prompt.strip()
-    
+
     # Remove null bytes
     prompt = prompt.replace('\x00', '')
-    
+
     # Limit length
     if len(prompt) > 10000:
         raise ValidationError("Prompt too long (max 10000 characters)")
-    
+
     return prompt
 
 def validate_file_path(file_path: str, allowed_extensions: Optional[List[str]] = None) -> bool:
@@ -89,31 +89,31 @@ def validate_file_path(file_path: str, allowed_extensions: Optional[List[str]] =
     """
     if allowed_extensions is None:
         allowed_extensions = [".txt", ".md", ".pdf", ".csv"]
-    
+
     # Convert to Path object for better handling
     path = Path(file_path)
-    
+
     # Check for path traversal attempts
     if ".." in str(path):
         logger.warning(f"Path traversal attempt detected: {file_path}")
         raise SecurityError("Path traversal not allowed")
-    
+
     # Check for absolute paths (if not allowed)
     if path.is_absolute():
         logger.warning(f"Absolute path not allowed: {file_path}")
         raise SecurityError("Absolute paths not allowed")
-    
+
     # Check file extension
     if path.suffix.lower() not in allowed_extensions:
         logger.warning(f"Invalid file extension: {path.suffix}")
         raise SecurityError(f"Invalid file extension: {path.suffix}")
-    
+
     # Check for suspicious characters
     suspicious_chars = ["<", ">", "|", "&", ";", "`", "$", "(", ")", "{", "}"]
     if any(char in str(path) for char in suspicious_chars):
         logger.warning(f"Suspicious characters in path: {file_path}")
         raise SecurityError("Suspicious characters in file path")
-    
+
     return True
 
 def validate_file_size(file_path: str, max_size_mb: int = 50) -> bool:
@@ -132,13 +132,13 @@ def validate_file_size(file_path: str, max_size_mb: int = 50) -> bool:
     """
     if not os.path.exists(file_path):
         raise ValidationError(f"File does not exist: {file_path}")
-    
+
     file_size_mb = os.path.getsize(file_path) / (1024 * 1024)
-    
+
     if file_size_mb > max_size_mb:
         logger.warning(f"File too large: {file_size_mb:.2f}MB > {max_size_mb}MB")
         raise ValidationError(f"File too large: {file_size_mb:.2f}MB (max {max_size_mb}MB)")
-    
+
     return True
 
 def validate_secrets(required_secrets: List[str]) -> None:
@@ -152,11 +152,11 @@ def validate_secrets(required_secrets: List[str]) -> None:
         ValidationError: If any required secret is missing
     """
     missing_secrets = []
-    
+
     for secret in required_secrets:
         if not os.getenv(secret):
             missing_secrets.append(secret)
-    
+
     if missing_secrets:
         logger.error(f"Missing required secrets: {missing_secrets}")
         raise ValidationError(f"Missing required secrets: {missing_secrets}")
@@ -174,17 +174,17 @@ def sanitize_filename(filename: str) -> str:
     # Remove or replace dangerous characters
     dangerous_chars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
     sanitized = filename
-    
+
     for char in dangerous_chars:
         sanitized = sanitized.replace(char, '_')
-    
+
     # Remove null bytes
     sanitized = sanitized.replace('\x00', '')
-    
+
     # Limit length
     if len(sanitized) > 255:
         sanitized = sanitized[:255]
-    
+
     return sanitized
 
 def validate_query_complexity(query: str, max_tokens: int = 1000) -> bool:
@@ -203,11 +203,11 @@ def validate_query_complexity(query: str, max_tokens: int = 1000) -> bool:
     """
     # Simple token estimation (rough count)
     estimated_tokens = len(query.split()) * 1.3  # Rough approximation
-    
+
     if estimated_tokens > max_tokens:
         logger.warning(f"Query too complex: ~{estimated_tokens:.0f} tokens > {max_tokens}")
         raise ValidationError(f"Query too complex: ~{estimated_tokens:.0f} tokens (max {max_tokens})")
-    
+
     return True
 
 def validate_url(url: str, allowed_domains: Optional[List[str]] = None) -> bool:
@@ -226,7 +226,7 @@ def validate_url(url: str, allowed_domains: Optional[List[str]] = None) -> bool:
     """
     if allowed_domains is None:
         allowed_domains = ["localhost", "127.0.0.1"]
-    
+
     # Basic URL validation
     url_pattern = re.compile(
         r'^https?://'  # http:// or https://
@@ -235,23 +235,23 @@ def validate_url(url: str, allowed_domains: Optional[List[str]] = None) -> bool:
         r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
         r'(?::\d+)?'  # optional port
         r'(?:/?|[/?]\S+)$', re.IGNORECASE)
-    
+
     if not url_pattern.match(url):
         logger.warning(f"Invalid URL format: {url}")
         raise SecurityError("Invalid URL format")
-    
+
     # Extract domain
     domain_match = re.search(r'https?://([^:/]+)', url, re.IGNORECASE)
     if not domain_match:
         raise SecurityError("Could not extract domain from URL")
-    
+
     domain = domain_match.group(1).lower()
-    
+
     # Check if domain is allowed
     if not any(allowed_domain in domain for allowed_domain in allowed_domains):
         logger.warning(f"Domain not allowed: {domain}")
         raise SecurityError(f"Domain not allowed: {domain}")
-    
+
     return True
 
 def validate_json_structure(data: dict, required_fields: List[str], optional_fields: Optional[List[str]] = None) -> bool:
@@ -271,16 +271,16 @@ def validate_json_structure(data: dict, required_fields: List[str], optional_fie
     """
     if not isinstance(data, dict):
         raise ValidationError("Data must be a dictionary")
-    
+
     missing_fields = []
     for field in required_fields:
         if field not in data:
             missing_fields.append(field)
-    
+
     if missing_fields:
         logger.warning(f"Missing required fields: {missing_fields}")
         raise ValidationError(f"Missing required fields: {missing_fields}")
-    
+
     return True
 
 def validate_string_length(text: str, min_length: int = 1, max_length: int = 10000) -> bool:
@@ -300,10 +300,10 @@ def validate_string_length(text: str, min_length: int = 1, max_length: int = 100
     """
     if len(text) < min_length:
         raise ValidationError(f"Text too short: {len(text)} chars (min {min_length})")
-    
+
     if len(text) > max_length:
         raise ValidationError(f"Text too long: {len(text)} chars (max {max_length})")
-    
+
     return True
 
 def validate_integer_range(value: int, min_value: int, max_value: int, field_name: str = "value") -> bool:
@@ -324,10 +324,10 @@ def validate_integer_range(value: int, min_value: int, max_value: int, field_nam
     """
     if not isinstance(value, int):
         raise ValidationError(f"{field_name} must be an integer")
-    
+
     if value < min_value or value > max_value:
         raise ValidationError(f"{field_name} out of range: {value} (min {min_value}, max {max_value})")
-    
+
     return True
 
 def validate_list_length(items: list, max_items: int, field_name: str = "list") -> bool:
@@ -347,10 +347,10 @@ def validate_list_length(items: list, max_items: int, field_name: str = "list") 
     """
     if not isinstance(items, list):
         raise ValidationError(f"{field_name} must be a list")
-    
+
     if len(items) > max_items:
         raise ValidationError(f"{field_name} too long: {len(items)} items (max {max_items})")
-    
+
     return True
 
 def validate_file_content(file_path: str, max_lines: int = 10000) -> bool:
@@ -369,15 +369,15 @@ def validate_file_content(file_path: str, max_lines: int = 10000) -> bool:
     """
     if not os.path.exists(file_path):
         raise ValidationError(f"File does not exist: {file_path}")
-    
+
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             line_count = sum(1 for _ in f)
-        
+
         if line_count > max_lines:
             logger.warning(f"File too many lines: {line_count} > {max_lines}")
             raise ValidationError(f"File too many lines: {line_count} (max {max_lines})")
-        
+
         return True
     except UnicodeDecodeError:
         raise ValidationError(f"File encoding error: {file_path}")
@@ -400,14 +400,14 @@ def validate_config_structure(config: dict, required_sections: List[str]) -> boo
     """
     if not isinstance(config, dict):
         raise ValidationError("Configuration must be a dictionary")
-    
+
     missing_sections = []
     for section in required_sections:
         if section not in config:
             missing_sections.append(section)
-    
+
     if missing_sections:
         logger.warning(f"Missing required configuration sections: {missing_sections}")
         raise ValidationError(f"Missing required configuration sections: {missing_sections}")
-    
-    return True 
+
+    return True

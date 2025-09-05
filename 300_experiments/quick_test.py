@@ -41,7 +41,7 @@ def test_bedrock_integration():
     try:
         from scripts.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
 
-        evaluator = OfficialRAGCheckerEvaluator()
+        OfficialRAGCheckerEvaluator()
         print("   ✅ RAGChecker integration ready")
     except Exception as e:
         print(f"   ⚠️ RAGChecker integration: {e}")

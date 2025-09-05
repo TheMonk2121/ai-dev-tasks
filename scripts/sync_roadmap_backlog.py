@@ -164,12 +164,12 @@ class RoadmapBacklogSync:
             for item in self.backlog_items.values()
             if item.status == "todo" and item.score_total and item.score_total >= 3.0
         ]
-        phase2_items = [
+        [
             item
             for item in self.backlog_items.values()
             if item.status == "todo" and item.score_total and 2.0 <= item.score_total < 3.0
         ]
-        phase3_items = [
+        [
             item
             for item in self.backlog_items.values()
             if item.status == "todo" and item.score_total and item.score_total < 2.0

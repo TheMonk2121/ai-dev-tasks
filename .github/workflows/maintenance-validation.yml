@@ -5,6 +5,11 @@ on:
     types: [opened, synchronize, reopened]
     branches: [main, develop]
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   maintenance-validation:
     name: Validate Repository Maintenance
@@ -28,6 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          uv venv
           uv pip install -r requirements.txt
 
       - name: Run maintenance validation (Dry-Run)
@@ -35,10 +41,10 @@ jobs:
           echo "🔍 Running maintenance validation in dry-run mode..."
 
                     # Run conflict audit (safe mode)
-          python scripts/conflict_audit.py --verbose || echo "⚠️ Conflict audit completed with warnings"
+          uv run python scripts/conflict_audit.py --verbose || echo "⚠️ Conflict audit completed with warnings"
 
           # Run documentation coherence validation
-          python scripts/doc_coherence_validator.py --dry-run || echo "⚠️ Documentation validation completed with warnings"
+          echo "⚠️ Documentation validation temporarily disabled - script archived" || echo "⚠️ Documentation validation completed with warnings"
 
           # Run quick conflict check
           git grep -nE "^(<<<<<<< |======= |>>>>>>> )" || echo "⚠️ Quick conflict check completed with warnings"
@@ -68,14 +74,11 @@ jobs:
           echo "🔍 Checking for critical issues..."
 
                     # Check for broken links in documentation
-          if python scripts/doc_coherence_validator.py --dry-run 2>/dev/null; then
-            echo "✅ No broken links found"
-          else
-            echo "⚠️ Some documentation links may need attention"
-          fi
+          echo "⚠️ Documentation validation temporarily disabled - script archived"
+          echo "⚠️ Some documentation links may need attention"
 
           # Check for duplicate files
-          if python scripts/find_duplicates.py 2>/dev/null; then
+          if uv run python scripts/find_duplicates.py 2>/dev/null; then
             echo "✅ No duplicate files detected"
           else
             echo "⚠️ Some duplicate files may exist"
@@ -104,7 +107,7 @@ jobs:
           echo "Any warnings should be addressed before merging." >> validation-report.md
 
       - name: Upload validation report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: maintenance-validation-report
           path: validation-report.md

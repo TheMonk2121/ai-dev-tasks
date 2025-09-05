@@ -246,7 +246,7 @@ class CachePerformanceMonitor:
         """Background loop for metrics collection"""
         try:
             while self.running:
-                start_time = time.time()
+                time.time()
 
                 try:
                     # Collect performance metrics

@@ -69,16 +69,16 @@ class WritingSuggestion:
 
 class DocumentationDatabase:
     """Database for storing documentation data and cache."""
-    
+
     def __init__(self, db_path: str = "documentation_agent.db"):
         self.db_path = db_path
         self._init_database()
-    
+
     def _init_database(self):
         """Initialize the documentation database."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         # Create documentation content table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS documentation_content (
@@ -94,7 +94,7 @@ class DocumentationDatabase:
                 timestamp REAL NOT NULL
             )
         """)
-        
+
         # Create writing suggestions table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS writing_suggestions (
@@ -109,21 +109,21 @@ class DocumentationDatabase:
                 FOREIGN KEY (content_id) REFERENCES documentation_content (id)
             )
         """)
-        
+
         # Create indexes
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_doc_title ON documentation_content(title)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_doc_type ON documentation_content(doc_type)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_doc_timestamp ON documentation_content(timestamp)")
-        
+
         conn.commit()
         conn.close()
         logger.info("Documentation database initialized")
-    
+
     def store_content(self, content: DocumentationContent) -> str:
         """Store documentation content in database."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         cursor.execute("""
             INSERT OR REPLACE INTO documentation_content 
             (id, title, content, format_type, doc_type, metadata, quality_score, word_count, sections, timestamp)
@@ -140,24 +140,24 @@ class DocumentationDatabase:
             content.sections,
             content.timestamp
         ))
-        
+
         conn.commit()
         conn.close()
         return content.id
-    
+
     def get_content(self, content_id: str) -> Optional[DocumentationContent]:
         """Get documentation content by ID."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         cursor.execute("""
             SELECT id, title, content, format_type, doc_type, metadata, quality_score, word_count, sections, timestamp
             FROM documentation_content WHERE id = ?
         """, (content_id,))
-        
+
         row = cursor.fetchone()
         conn.close()
-        
+
         if row:
             return DocumentationContent(
                 id=row[0],
@@ -171,12 +171,12 @@ class DocumentationDatabase:
                 sections=row[8],
                 timestamp=row[9]
             )
-        
+
         return None
 
 class DocumentationAgent:
     """Specialized agent for documentation assistance and writing help."""
-    
+
     def __init__(self):
         self.name = "Documentation Agent"
         self.capabilities = [
@@ -191,7 +191,7 @@ class DocumentationAgent:
         self.usage_count = 0
         self.error_count = 0
         self.last_used = time.time()
-        
+
         # Documentation templates
         self.templates = {
             "api": self._api_template,
@@ -200,7 +200,7 @@ class DocumentationAgent:
             "guide": self._guide_template,
             "reference": self._reference_template
         }
-        
+
         # Writing improvement patterns
         self.improvement_patterns = {
             "grammar": [
@@ -219,18 +219,18 @@ class DocumentationAgent:
                 (r'\b(?:obviously|clearly|obviously)\b', "Remove unnecessary qualifiers")
             ]
         }
-    
+
     async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Process documentation request."""
         start_time = time.time()
-        
+
         try:
             title = request.get("title", "")
             content = request.get("content", "")
             format_type = request.get("format_type", "markdown")
             doc_type = request.get("doc_type", "api")
             optimization_level = request.get("optimization_level", "standard")
-            
+
             # Check cache first
             cache_key = self._generate_cache_key(title, content, format_type, doc_type)
             if cache_key in self.documentation_cache:
@@ -238,30 +238,30 @@ class DocumentationAgent:
                 if time.time() - cached_doc.timestamp < 7200:  # 2 hour cache
                     logger.info(f"Using cached documentation for: {title}")
                     return self._format_documentation_response(cached_doc)
-            
+
             # Generate documentation
             doc_content = await self._generate_documentation(title, content, format_type, doc_type, optimization_level)
-            
+
             # Cache the results
             self.documentation_cache[cache_key] = doc_content
-            
+
             # Store in database
             self.database.store_content(doc_content)
-            
+
             processing_time = time.time() - start_time
             self.usage_count += 1
             self.last_used = time.time()
-            
+
             response = self._format_documentation_response(doc_content)
             response["processing_time"] = processing_time
-            
+
             return response
-            
+
         except Exception as e:
             self.error_count += 1
             logger.error(f"Error in Documentation Agent: {e}")
             raise
-    
+
     def can_handle(self, request: Dict[str, Any]) -> bool:
         """Check if documentation agent can handle the request."""
         documentation_keywords = [
@@ -270,12 +270,12 @@ class DocumentationAgent:
         ]
         query = request.get("query", "").lower()
         return any(keyword in query for keyword in documentation_keywords)
-    
-    async def _generate_documentation(self, title: str, content: str, format_type: str, 
+
+    async def _generate_documentation(self, title: str, content: str, format_type: str,
                                     doc_type: str, optimization_level: str) -> DocumentationContent:
         """Generate documentation content."""
         logger.info(f"Generating {doc_type} documentation for: {title}")
-        
+
         # Simulate generation time based on optimization level
         if optimization_level == "comprehensive":
             await asyncio.sleep(0.5)
@@ -283,20 +283,20 @@ class DocumentationAgent:
             await asyncio.sleep(0.3)
         else:
             await asyncio.sleep(0.2)
-        
+
         # Get template for document type
         template_func = self.templates.get(doc_type, self._api_template)
         generated_content = template_func(title, content)
-        
+
         # Optimize content if requested
         if optimization_level in ["detailed", "comprehensive"]:
             generated_content = self._optimize_content(generated_content)
-        
+
         # Calculate metrics
         word_count = len(generated_content.split())
         sections = len(generated_content.split("##"))
         quality_score = self._calculate_quality_score(generated_content)
-        
+
         return DocumentationContent(
             title=title,
             content=generated_content,
@@ -311,7 +311,7 @@ class DocumentationAgent:
             word_count=word_count,
             sections=sections
         )
-    
+
     def _api_template(self, title: str, content: str) -> str:
         """Generate API documentation template."""
         return f"""# {title}
@@ -375,7 +375,7 @@ Requests are limited to 1000 per hour per API key.
 ## Support
 For support, contact support@{title.lower()}.com
 """
-    
+
     def _tutorial_template(self, title: str, content: str) -> str:
         """Generate tutorial documentation template."""
         return f"""# {title} Tutorial
@@ -446,7 +446,7 @@ Common issues and solutions:
 - [GitHub Repository](https://github.com/{title.lower()})
 - [Community Forum](https://forum.{title.lower()}.com)
 """
-    
+
     def _readme_template(self, title: str, content: str) -> str:
         """Generate README documentation template."""
         return f"""# {title}
@@ -546,7 +546,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Issues](https://github.com/username/{title.lower()}/issues)
 - [Discussions](https://github.com/username/{title.lower()}/discussions)
 """
-    
+
     def _guide_template(self, title: str, content: str) -> str:
         """Generate guide documentation template."""
         return f"""# {title} Guide
@@ -639,7 +639,7 @@ Comprehensive testing strategies.
 - [Community Forum](https://forum.{title.lower()}.com)
 - [GitHub Repository](https://github.com/{title.lower()})
 """
-    
+
     def _reference_template(self, title: str, content: str) -> str:
         """Generate reference documentation template."""
         return f"""# {title} Reference
@@ -816,7 +816,7 @@ await instance.initialize();
 const result = await instance.process(data);
 ```
 """
-    
+
     def _optimize_content(self, content: str) -> str:
         """Optimize documentation content."""
         # Apply writing improvements
@@ -824,42 +824,42 @@ const result = await instance.process(data);
             for pattern, suggestion in patterns:
                 # This is a simplified optimization - in practice, you'd use more sophisticated NLP
                 content = re.sub(pattern, f"<!-- {suggestion} -->", content, flags=re.IGNORECASE)
-        
+
         return content
-    
+
     def _calculate_quality_score(self, content: str) -> float:
         """Calculate quality score for documentation content."""
         score = 1.0
-        
+
         # Check for common issues
         issues = 0
         total_checks = 0
-        
+
         # Check for proper structure
         if "##" not in content:
             issues += 1
         total_checks += 1
-        
+
         # Check for code examples
         if "```" not in content:
             issues += 1
         total_checks += 1
-        
+
         # Check for proper formatting
         if not re.search(r'#{1,6}\s+', content):
             issues += 1
         total_checks += 1
-        
+
         # Check for links
         if not re.search(r'\[.*\]\(.*\)', content):
             issues += 1
         total_checks += 1
-        
+
         # Calculate score
         score = max(0.0, 1.0 - (issues / total_checks))
-        
+
         return score
-    
+
     def _format_documentation_response(self, doc_content: DocumentationContent) -> Dict[str, Any]:
         """Format documentation content into response."""
         return {
@@ -874,12 +874,12 @@ const result = await instance.process(data);
             "sections": doc_content.sections,
             "timestamp": doc_content.timestamp
         }
-    
+
     def _generate_cache_key(self, title: str, content: str, format_type: str, doc_type: str) -> str:
         """Generate cache key for documentation."""
         content_str = f"{title}:{content}:{format_type}:{doc_type}"
         return hashlib.md5(content_str.encode()).hexdigest()
-    
+
     def get_status(self) -> Dict[str, Any]:
         """Get agent status information."""
         return {
@@ -896,7 +896,7 @@ const result = await instance.process(data);
 async def main():
     """Example usage of the Documentation Agent."""
     agent = DocumentationAgent()
-    
+
     # Test different types of documentation
     test_requests = [
         {
@@ -921,13 +921,13 @@ async def main():
             "optimization_level": "standard"
         }
     ]
-    
+
     for i, request in enumerate(test_requests, 1):
         print(f"\n--- Test Documentation Generation {i} ---")
         print(f"Title: {request['title']}")
         print(f"Type: {request['doc_type']}")
         print(f"Format: {request['format_type']}")
-        
+
         try:
             response = await agent.process_request(request)
             print(f"Agent: {response['agent_type']}")
@@ -938,11 +938,11 @@ async def main():
             print(f"Processing Time: {response.get('processing_time', 0):.3f}s")
         except Exception as e:
             print(f"Error: {e}")
-    
+
     # Print agent status
     print("\n--- Agent Status ---")
     status = agent.get_status()
     print(json.dumps(status, indent=2))
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

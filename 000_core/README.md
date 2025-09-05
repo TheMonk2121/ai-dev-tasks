@@ -24,13 +24,13 @@ with sophisticated documentation, automated workflows, and intelligent task mana
 
 ## 🎯 **Start Here** New to this project? Follow this quick path
 
-1. **Read the 5‑minute overview** → [../400_guides/400_project-overview.md](../400_guides/400_project-overview.md) ← **START HERE**
+1. **Read the 5‑minute overview** → [../400_guides/400_03_system-overview-and-architecture.md](../400_guides/400_03_system-overview-and-architecture.md) ← **START HERE**
 2. **Check current state** → [../100_memory/100_cursor-memory-context.md](../100_memory/100_cursor-memory-context.md)
 3. **See priorities/roadmap** → [000_backlog.md](000_backlog.md)
 4. **Understand architecture** → [../400_guides/400_03_system-overview-and-architecture.md](../400_guides/400_03_system-overview-and-architecture.md)
-5. **Learn navigation rules** → [../400_guides/400_context-priority-guide.md](../400_guides/400_context-priority-guide.md)
+5. **Learn navigation rules** → [../400_guides/400_guide-index.md](../400_guides/400_guide-index.md)
 
-**Want to understand what this is?** → **[../400_guides/400_project-overview.md](../400_guides/400_project-overview.md)** - 5-minute overview of the entire system
+**Want to understand what this is?** → **[../400_guides/400_03_system-overview-and-architecture.md](../400_guides/400_03_system-overview-and-architecture.md)** - 5-minute overview of the entire system
 **Want to see the current state?** → **[../100_memory/100_cursor-memory-context.md](../100_memory/100_cursor-memory-context.md)** - Instant project state
 **Want to see what's being built?** → **[000_backlog.md](000_backlog.md)** - Current priorities and roadmap
 
@@ -111,10 +111,10 @@ pip install -r dspy-rag-system/requirements.txt
 
 ### **Core Documentation**
 - **[README.md](README.md)** - Start here navigation
-- **[../400_guides/400_project-overview.md](../400_guides/400_project-overview.md)** - Main project overview
-- **[../400_guides/400_system-overview.md](../400_guides/400_system-overview.md)** - Technical architecture
+- **[../400_guides/400_03_system-overview-and-architecture.md](../400_guides/400_03_system-overview-and-architecture.md)** - Main project overview
+- **[../400_guides/400_03_system-overview-and-architecture.md](../400_guides/400_03_system-overview-and-architecture.md)** - Technical architecture
 - **[000_backlog.md](000_backlog.md)** - Current priorities and roadmap
-- **[../400_guides/400_documentation-retrieval-guide.md](../400_guides/400_documentation-retrieval-guide.md)** - Documentation search/index + validator quick start
+- **[../400_guides/400_guide-index.md](../400_guides/400_guide-index.md)** - Documentation search/index + validator quick start
 
 ### **Development Workflow**
 - **[Single Doorway System](../scripts/single_doorway.py)** - Automated workflow from backlog → PRD → tasks → execution → archive
@@ -122,18 +122,18 @@ pip install -r dspy-rag-system/requirements.txt
 - **[002_generate-tasks.md](002_generate-tasks.md)** - Generate executable tasks (manual)
 - **[003_process-task-list.md](003_process-task-list.md)** - Execute tasks with AI (manual)
 - **[004_development-roadmap.md](004_development-roadmap.md)** - Strategic roadmap and sprint planning
-- **[005_rag-tuning-protocol.md](005_rag-tuning-protocol.md)** - Industry-grade RAG performance optimization methodology
+- **[PRD_B-1059_retrieval-tuning-protocol.md](PRD_B-1059_retrieval-tuning-protocol.md)** - Industry-grade RAG performance optimization methodology
 - **[scripts/backlog_status_tracking.py](../scripts/backlog_status_tracking.py)** - Status tracking with timestamps
 
 ### **Setup & Configuration**
 - **[../200_setup/202_setup-requirements.md](../200_setup/202_setup-requirements.md)** - Environment setup
-- **[../400_guides/400_11_deployments-ops-and-observability.md](../400_guides/400_11_deployments-ops-and-observability.md)** - Deployments & Ops
+- **[../400_guides/400_11_performance-optimization.md](../400_guides/400_11_performance-optimization.md)** - Deployments & Ops
 
 ### **Quality & Standards**
-- **[../400_guides/400_contributing-guidelines.md](../400_guides/400_contributing-guidelines.md)** - Development standards
-- **[../400_guides/400_05_coding-and-prompting-standards.md](../400_guides/400_05_coding-and-prompting-standards.md)** - Coding & testing
-- **[../400_guides/400_10_security-compliance-and-access.md](../400_guides/400_10_security-compliance-and-access.md)** - Security guidelines
-- **[../400_guides/400_11_deployments-ops-and-observability.md](../400_guides/400_11_deployments-ops-and-observability.md)** - Performance & observability
+- **[../400_guides/400_04_development-workflow-and-standards.md](../400_guides/400_04_development-workflow-and-standards.md)** - Development standards
+- **[../400_guides/400_05_codebase-organization-patterns.md](../400_guides/400_05_codebase-organization-patterns.md)** - Coding & testing
+- **[../400_guides/400_10_integrations-models.md](../400_guides/400_10_integrations-models.md)** - Security guidelines
+- **[../400_guides/400_11_performance-optimization.md](../400_guides/400_11_performance-optimization.md)** - Performance & observability
 
 ## 🤖 **AI System Components**
 
@@ -203,8 +203,8 @@ python3 ../scripts/process_tasks.py status
 
 1. **Use this README (Start Here)** for navigation guidance
 2. **Check [000_backlog.md](000_backlog.md)** for current priorities
-3. **Review [../400_guides/400_system-overview.md](../400_guides/400_system-overview.md)** for technical context
-4. See [metadata guide](../400_guides/400_metadata-collection-guide.md) for quick reference
+3. **Review [../400_guides/400_03_system-overview-and-architecture.md](../400_guides/400_03_system-overview-and-architecture.md)** for technical context
+4. See [metadata guide](../400_guides/400_guide-index.md) for quick reference
 5. Use [../400_guides/400_metadata-collection-guide.md](../400_guides/400_metadata-collection-guide.md#) for detailed commands
 
 ---

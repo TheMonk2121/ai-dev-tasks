@@ -80,18 +80,18 @@ class ContextAccessLog:
 
 class ContextStore:
     """Database-backed context storage system."""
-    
+
     def __init__(self, db_path: str = "context_store.db"):
         self.db_path = db_path
         self.lock = threading.RLock()
         self._init_database()
-    
+
     def _init_database(self):
         """Initialize the database schema."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
-            
+
             # Create contexts table
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS contexts (
@@ -111,7 +111,7 @@ class ContextStore:
                     access_count INTEGER DEFAULT 0
                 )
             """)
-            
+
             # Create context relationships table
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS context_relationships (
@@ -127,7 +127,7 @@ class ContextStore:
                     UNIQUE(source_context_id, target_context_id, relationship_type)
                 )
             """)
-            
+
             # Create context access log table
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS context_access_log (
@@ -141,7 +141,7 @@ class ContextStore:
                     FOREIGN KEY (context_id) REFERENCES contexts (id)
                 )
             """)
-            
+
             # Create indexes
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_contexts_type ON contexts(type)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_contexts_source ON contexts(source)")
@@ -151,19 +151,19 @@ class ContextStore:
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_relationships_target ON context_relationships(target_context_id)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_access_log_context ON context_access_log(context_id)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_access_log_agent ON context_access_log(agent_id)")
-            
+
             conn.commit()
             conn.close()
-    
+
     def store_context(self, context: ContextData) -> str:
         """Store context in the database."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
-            
+
             # Calculate size
             context.size_bytes = len(json.dumps(context.content))
-            
+
             cursor.execute("""
                 INSERT OR REPLACE INTO contexts 
                 (id, type, source, content, relationships, metadata, created_at, updated_at, accessed_at, 
@@ -185,28 +185,28 @@ class ContextStore:
                 context.size_bytes,
                 context.access_count
             ))
-            
+
             conn.commit()
             conn.close()
-            
+
             logger.info(f"Stored context {context.id} of type {context.type.value}")
             return context.id
-    
+
     def get_context(self, context_id: str) -> Optional[ContextData]:
         """Get context by ID."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
-            
+
             cursor.execute("""
                 SELECT id, type, source, content, relationships, metadata, created_at, updated_at, accessed_at,
                        owner_id, permissions, visibility, size_bytes, access_count
                 FROM contexts WHERE id = ?
             """, (context_id,))
-            
+
             row = cursor.fetchone()
             conn.close()
-            
+
             if row:
                 context = ContextData(
                     id=row[0],
@@ -224,36 +224,36 @@ class ContextStore:
                     size_bytes=row[12],
                     access_count=row[13]
                 )
-                
+
                 # Update access count and timestamp
                 self._update_access(context_id)
                 return context
-            
+
             return None
-    
+
     def update_context(self, context_id: str, updates: Dict[str, Any]) -> bool:
         """Update existing context."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
-            
+
             # Get current context
             cursor.execute("SELECT content, metadata FROM contexts WHERE id = ?", (context_id,))
             row = cursor.fetchone()
-            
+
             if not row:
                 conn.close()
                 return False
-            
+
             current_content = json.loads(row[0])
             current_metadata = json.loads(row[1]) if row[1] else {}
-            
+
             # Apply updates
             if "content" in updates:
                 current_content.update(updates["content"])
             if "metadata" in updates:
                 current_metadata.update(updates["metadata"])
-            
+
             # Update context
             cursor.execute("""
                 UPDATE contexts 
@@ -266,37 +266,37 @@ class ContextStore:
                 time.time(),
                 context_id
             ))
-            
+
             conn.commit()
             conn.close()
-            
+
             logger.info(f"Updated context {context_id}")
             return True
-    
+
     def delete_context(self, context_id: str) -> bool:
         """Delete context by ID."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
-            
+
             cursor.execute("DELETE FROM contexts WHERE id = ?", (context_id,))
-            cursor.execute("DELETE FROM context_relationships WHERE source_context_id = ? OR target_context_id = ?", 
+            cursor.execute("DELETE FROM context_relationships WHERE source_context_id = ? OR target_context_id = ?",
                          (context_id, context_id))
             cursor.execute("DELETE FROM context_access_log WHERE context_id = ?", (context_id,))
-            
+
             conn.commit()
             conn.close()
-            
+
             logger.info(f"Deleted context {context_id}")
             return True
-    
-    def search_contexts(self, query: str, context_type: Optional[str] = None, 
+
+    def search_contexts(self, query: str, context_type: Optional[str] = None,
                        limit: int = 10) -> List[ContextData]:
         """Search contexts by query."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
-            
+
             sql = """
                 SELECT id, type, source, content, relationships, metadata, created_at, updated_at, accessed_at,
                        owner_id, permissions, visibility, size_bytes, access_count
@@ -304,18 +304,18 @@ class ContextStore:
                 WHERE content LIKE ?
             """
             params = [f"%{query}%"]
-            
+
             if context_type:
                 sql += " AND type = ?"
                 params.append(context_type)
-            
+
             sql += " ORDER BY accessed_at DESC LIMIT ?"
             params.append(limit)
-            
+
             cursor.execute(sql, params)
             rows = cursor.fetchall()
             conn.close()
-            
+
             contexts = []
             for row in rows:
                 context = ContextData(
@@ -335,34 +335,34 @@ class ContextStore:
                     access_count=row[13]
                 )
                 contexts.append(context)
-            
+
             return contexts
-    
+
     def _update_access(self, context_id: str):
         """Update access count and timestamp for context."""
         with self.lock:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
-            
+
             cursor.execute("""
                 UPDATE contexts 
                 SET accessed_at = ?, access_count = access_count + 1
                 WHERE id = ?
             """, (time.time(), context_id))
-            
+
             conn.commit()
             conn.close()
 
 class ContextCache:
     """In-memory cache for frequently accessed context data."""
-    
+
     def __init__(self, max_size: int = 1000, ttl: int = 3600):
         self.max_size = max_size
         self.ttl = ttl
         self.cache: Dict[str, Dict[str, Any]] = {}
         self.access_times: Dict[str, float] = {}
         self.lock = threading.RLock()
-    
+
     async def get(self, key: str) -> Optional[ContextData]:
         """Get context from cache."""
         with self.lock:
@@ -376,7 +376,7 @@ class ContextCache:
                     del self.cache[key]
                     del self.access_times[key]
             return None
-    
+
     async def set(self, key: str, context: ContextData):
         """Store context in cache."""
         with self.lock:
@@ -385,20 +385,20 @@ class ContextCache:
                 oldest_key = min(self.access_times.keys(), key=lambda k: self.access_times[k])
                 del self.cache[oldest_key]
                 del self.access_times[oldest_key]
-            
+
             self.cache[key] = {
                 "context": context,
                 "timestamp": time.time()
             }
             self.access_times[key] = time.time()
-    
+
     async def invalidate(self, key: str):
         """Invalidate cache entry."""
         with self.lock:
             if key in self.cache:
                 del self.cache[key]
                 del self.access_times[key]
-    
+
     async def clear(self):
         """Clear all cache entries."""
         with self.lock:
@@ -407,7 +407,7 @@ class ContextCache:
 
 class ContextManager:
     """Main context management system."""
-    
+
     def __init__(self, db_path: str = "context_store.db"):
         self.store = ContextStore(db_path)
         self.cache = ContextCache()
@@ -415,69 +415,69 @@ class ContextManager:
         self.lock = threading.RLock()
         # Ensure database is initialized
         self.store._init_database()
-    
+
     async def get_context(self, context_id: str) -> Optional[ContextData]:
         """Get context by ID with caching."""
         # Try cache first
         cached_context = await self.cache.get(context_id)
         if cached_context:
             return cached_context
-        
+
         # Get from store
         context = self.store.get_context(context_id)
         if context:
             # Cache the result
             await self.cache.set(context_id, context)
-        
+
         return context
-    
+
     async def store_context(self, context: ContextData) -> str:
         """Store context and return its ID."""
         # Store in database
         context_id = self.store.store_context(context)
-        
+
         # Cache the result
         await self.cache.set(context_id, context)
-        
+
         return context_id
-    
+
     async def update_context(self, context_id: str, updates: Dict[str, Any]) -> bool:
         """Update existing context."""
         success = self.store.update_context(context_id, updates)
         if success:
             # Invalidate cache
             await self.cache.invalidate(context_id)
-        
+
         return success
-    
+
     async def delete_context(self, context_id: str) -> bool:
         """Delete context by ID."""
         success = self.store.delete_context(context_id)
         if success:
             # Invalidate cache
             await self.cache.invalidate(context_id)
-        
+
         return success
-    
-    async def search_contexts(self, query: str, context_type: Optional[str] = None, 
+
+    async def search_contexts(self, query: str, context_type: Optional[str] = None,
                             limit: int = 10) -> List[ContextData]:
         """Search contexts by query."""
         return self.store.search_contexts(query, context_type, limit)
-    
+
     async def get_related_contexts(self, context_id: str) -> List[ContextData]:
         """Get contexts related to the given context."""
         with self.lock:
             related_ids = self.relationships.get(context_id, [])
             related_contexts = []
-            
+
             for related_id in related_ids:
                 context = await self.get_context(related_id)
                 if context:
                     related_contexts.append(context)
-            
+
             return related_contexts
-    
-    async def add_relationship(self, source_id: str, target_id: str, 
+
+    async def add_relationship(self, source_id: str, target_id: str,
                              relationship_type: str = "related", strength: float = 0.85):
         """Add a relationship between contexts."""
         with self.lock:
@@ -486,12 +486,12 @@ class ContextManager:
                 self.relationships[source_id] = []
             if target_id not in self.relationships:
                 self.relationships[target_id] = []
-            
+
             if target_id not in self.relationships[source_id]:
                 self.relationships[source_id].append(target_id)
             if source_id not in self.relationships[target_id]:
                 self.relationships[target_id].append(source_id)
-            
+
             # Store relationship in database
             relationship = ContextRelationship(
                 source_context_id=source_id,
@@ -499,10 +499,10 @@ class ContextManager:
                 relationship_type=relationship_type,
                 strength=strength
             )
-            
+
             conn = sqlite3.connect(self.store.db_path)
             cursor = conn.cursor()
-            
+
             cursor.execute("""
                 INSERT OR REPLACE INTO context_relationships 
                 (id, source_context_id, target_context_id, relationship_type, strength, metadata, created_at)
@@ -516,13 +516,13 @@ class ContextManager:
                 json.dumps(relationship.metadata),
                 relationship.created_at
             ))
-            
+
             conn.commit()
             conn.close()
-            
+
             logger.info(f"Added relationship between {source_id} and {target_id}")
-    
-    async def log_access(self, context_id: str, agent_id: str, operation: str, 
+
+    async def log_access(self, context_id: str, agent_id: str, operation: str,
                         user_id: Optional[str] = None, metadata: Optional[Dict[str, Any]] = None):
         """Log context access."""
         access_log = ContextAccessLog(
@@ -532,10 +532,10 @@ class ContextManager:
             user_id=user_id,
             metadata=metadata or {}
         )
-        
+
         conn = sqlite3.connect(self.store.db_path)
         cursor = conn.cursor()
-        
+
         cursor.execute("""
             INSERT INTO context_access_log 
             (id, context_id, agent_id, operation, user_id, metadata, created_at)
@@ -549,38 +549,38 @@ class ContextManager:
             json.dumps(access_log.metadata),
             access_log.created_at
         ))
-        
+
         conn.commit()
         conn.close()
-        
+
         logger.info(f"Logged {operation} access to {context_id} by {agent_id}")
-    
+
     async def get_context_stats(self) -> Dict[str, Any]:
         """Get context management statistics."""
         conn = sqlite3.connect(self.store.db_path)
         cursor = conn.cursor()
-        
+
         # Get total contexts
         cursor.execute("SELECT COUNT(*) FROM contexts")
         total_contexts = cursor.fetchone()[0]
-        
+
         # Get contexts by type
         cursor.execute("SELECT type, COUNT(*) FROM contexts GROUP BY type")
         contexts_by_type = dict(cursor.fetchall())
-        
+
         # Get total size
         cursor.execute("SELECT SUM(size_bytes) FROM contexts")
         total_size = cursor.fetchone()[0] or 0
-        
+
         # Get cache stats
         cache_stats = {
             "cache_size": len(self.cache.cache),
             "cache_hits": 0,  # Would need to track this
             "cache_misses": 0  # Would need to track this
         }
-        
+
         conn.close()
-        
+
         return {
             "total_contexts": total_contexts,
             "contexts_by_type": contexts_by_type,
@@ -592,10 +592,10 @@ class ContextManager:
 async def main():
     """Example usage of the Context Management System."""
     context_manager = ContextManager()
-    
+
     # Test context creation and storage
     print("--- Testing Context Management ---")
-    
+
     # Create test contexts
     project_context = ContextData(
         type=ContextType.PROJECT,
@@ -607,7 +607,7 @@ async def main():
         },
         metadata={"version": "1.0.0", "status": "active"}
     )
-    
+
     file_context = ContextData(
         type=ContextType.FILE,
         source="research",
@@ -618,40 +618,40 @@ async def main():
         },
         metadata={"lines": 450, "complexity": "medium"}
     )
-    
+
     # Store contexts
     project_id = await context_manager.store_context(project_context)
     file_id = await context_manager.store_context(file_context)
-    
+
     print(f"Stored project context: {project_id}")
     print(f"Stored file context: {file_id}")
-    
+
     # Add relationship
     await context_manager.add_relationship(project_id, file_id, "contains")
-    
+
     # Retrieve contexts
     retrieved_project = await context_manager.get_context(project_id)
     retrieved_file = await context_manager.get_context(file_id)
-    
+
     print(f"Retrieved project: {retrieved_project.content['project_name']}")
     print(f"Retrieved file: {retrieved_file.content['file_path']}")
-    
+
     # Get related contexts
     related_contexts = await context_manager.get_related_contexts(project_id)
     print(f"Related contexts for project: {len(related_contexts)}")
-    
+
     # Search contexts
     search_results = await context_manager.search_contexts("AI Development")
     print(f"Search results: {len(search_results)} contexts found")
-    
+
     # Log access
     await context_manager.log_access(project_id, "research", "read", "user123")
-    
+
     # Get stats
     stats = await context_manager.get_context_stats()
     print(f"Context stats: {stats}")
-    
+
     print("--- Context Management Test Complete ---")
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

@@ -103,7 +103,7 @@ def test_bedrock_runtime() -> bool:
 
     try:
         # Create Bedrock Runtime client
-        bedrock_runtime = boto3.client("bedrock-runtime", region_name="us-east-1")
+        boto3.client("bedrock-runtime", region_name="us-east-1")
 
         # Test with a simple prompt (without actually invoking to avoid costs)
         print("✅ Bedrock Runtime client created successfully")

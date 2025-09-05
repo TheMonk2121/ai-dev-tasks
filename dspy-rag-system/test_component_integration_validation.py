@@ -117,7 +117,7 @@ def test_comprehensive_integration():
     # Test context factory with invalid role - use a different approach since we can't pass invalid enum
     try:
         # Test with invalid parameters that will cause validation errors
-        invalid_context = context_factory.create_context(
+        context_factory.create_context(
             AIRole.PLANNER,
             session_id="test",
             project_scope="Short",  # This will cause validation error
@@ -164,7 +164,7 @@ def test_comprehensive_integration():
         print(f"✅ Template registered: {template_id}")
 
     # Generate prompts with context
-    user_context = PromptContext(
+    PromptContext(
         user_id="test_user",
         session_id="test_session",
         user_preferences={"detail_level": "high"},

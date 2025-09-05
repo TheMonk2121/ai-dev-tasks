@@ -382,10 +382,8 @@ class QueryPatternKnowledgeGraph:
         try:
             # Store in user preferences or a dedicated table
             # For now, we'll use conversation_context table
-            context_key = f"kg_metadata_{user_id}"
 
             # This would need a session_id - we'll create a system session
-            system_session_id = f"system_kg_{user_id}"
 
             # Simplified storage - in practice, you might want a dedicated metadata table
             logger.info(f"Knowledge graph metadata stored for user {user_id}")
@@ -399,7 +397,7 @@ class QueryPatternKnowledgeGraph:
             if user_id not in self.knowledge_graphs:
                 return
 
-            kg = self.knowledge_graphs[user_id]
+            self.knowledge_graphs[user_id]
 
             # Find similar existing queries
             similar_queries = self.vector_analyzer.find_query_neighborhoods(user_id, new_query)

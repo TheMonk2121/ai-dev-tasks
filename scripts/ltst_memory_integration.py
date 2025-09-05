@@ -222,7 +222,7 @@ class LTSTMemoryIntegration:
         """Background loop for cache warming"""
         try:
             while self.running:
-                start_time = time.time()
+                time.time()
 
                 try:
                     # Perform cache warming
@@ -250,7 +250,7 @@ class LTSTMemoryIntegration:
                 return
 
             # Get cache statistics to identify hot items
-            cache_stats = await self.cache_service.get_cache_statistics()
+            await self.cache_service.get_cache_statistics()
 
             # Simulate warming by accessing frequently used contexts
             warming_start = time.time()

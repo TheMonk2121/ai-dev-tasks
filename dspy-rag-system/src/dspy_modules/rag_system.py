@@ -11,6 +11,14 @@ import sys
 import time
 from typing import Any, Dict, Optional
 
+# Apply litellm compatibility shim before importing DSPy
+try:
+    sys.path.insert(0, "../../scripts")
+    from litellm_compatibility_shim import patch_litellm_imports
+    patch_litellm_imports()
+except ImportError:
+    pass  # Shim not available, continue without it
+
 import dspy
 import requests
 import tiktoken  # token aware truncation
