@@ -143,7 +143,7 @@ When **ANY** baseline metric falls below target:
 - **B-052-c**: Performance Optimization Suite (4 points)
 - **B-093**: Validator Performance Optimizations (3 points)
 - **B-096**: MCP Server Performance Optimization (2 points)
-- **[RAG Tuning Protocol](005_rag-tuning-protocol.md)**: Industry-grade methodology for systematic precision/recall optimization
+- **[RAG Tuning Protocol](PRD_B-1059_retrieval-tuning-protocol.md)**: Industry-grade methodology for systematic precision/recall optimization
 
 #### **Benchmarking & Monitoring**
 - **B-080**: Research-Based Performance Monitoring (3 points)

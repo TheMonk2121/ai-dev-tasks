@@ -405,15 +405,15 @@ It's like having a super-smart assistant who's read all your files, can answer a
 
 - [Bulk Processing Guide](./README_BULK_PROCESSING.md) - Bulk document processing system
 
-- [Watch Folder Guide](../400_watch-folder-guide.md) - Drag & drop functionality
+- [Watch Folder Guide](../400_guides/400_guide-index.md) - Drag & drop functionality
 
 - [System Service Guide](../400_system-service-guide.md) - Automatic background processing
 
-- [LTST Memory System Integration Guide](../400_ltst-memory-system-integration-guide.md) - Advanced conversation memory system
+- [LTST Memory System Integration Guide](../400_guides/400_01_memory-system-architecture.md) - Advanced conversation memory system
 
-- [LTST Memory System Deployment Guide](../400_ltst-memory-system-deployment-guide.md) - Production deployment and setup
+- [LTST Memory System Deployment Guide](../400_guides/400_11_performance-optimization.md) - Production deployment and setup
 
-- [LTST Memory System Performance Guide](../400_ltst-memory-system-performance-guide.md) - Performance benchmarks and optimization
+- [LTST Memory System Performance Guide](../400_guides/400_11_performance-optimization.md) - Performance benchmarks and optimization
 
 - [Version History](./docs/VERSION_HISTORY.md) - Complete development timeline
 
