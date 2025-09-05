@@ -3,18 +3,27 @@
 MEMORY_CONTEXT: HIGH
 ANCHOR_KEY: memory-context
 ANCHOR_PRIORITY: 0
-ROLE_PINS: ["planner", "implementer", "researcher", "coder"]
+ROLE_PINS:
+  - planner
+  - implementer
+  - researcher
+  - coder
 CONTENT_TYPE: guide
 COMPLEXITY: intermediate
-LAST_UPDATED: 2024-12-31
+LAST_UPDATED: 2025-09-04
 NEXT_REVIEW: 2025-01-31
-RELATED_FILES: ["400_01_memory-system-architecture.md", "400_02_memory-rehydration-context-management.md"]
+RELATED_FILES:
+  - 400_01_memory-system-architecture.md
+  - 400_02_memory-rehydration-context-management.md
+  - UV_MIGRATION_COMPLETE.md
+  - VENV_MAPPING_VERIFICATION.md
 ---
 
 <!-- CONTEXT_INDEX
 {
   "files": [
     {"path": "100_memory/100_cursor-memory-context.md", "role": "entry"},
+    {"path": "000_core/000_evaluation-system-entry-point.md", "role": "evaluation-entry"},
     {"path": "000_core/000_backlog.md", "role": "priorities"},
     {"path": "000_core/004_development-roadmap.md", "role": "roadmap"},
     {"path": "400_guides/400_00_getting-started-and-index.md", "role": "getting-started"},
@@ -180,6 +189,11 @@ python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "qu
 
 # Full memory context with all systems
 python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+
+# Episodic Memory System (Complete Learning System)
+python3 scripts/episodic_memory_system.py --query "implement database error handling" --role coder
+python3 scripts/episodic_memory_system.py --store-completion --task-description "implemented error handling" --input-text "database code" --output-text "error handling with retries" --agent cursor_ai --task-type database
+python3 scripts/episodic_memory_system.py --stats
 ```
 
 ### **DSPy Role Capabilities**
@@ -190,9 +204,22 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prim
 
 ### **Memory System Integration**
 - **Unified Memory Orchestrator**: Centralized access to all memory systems
+- **Episodic Memory System**: Complete learning system with three phases:
+  - **Phase 1**: Episodic Reflection Store (learns from completed tasks)
+  - **Phase 2**: Dynamic Few-Shot from Episodes (injects relevant context)
+  - **Phase 3**: Procedural Heuristics Pack (provides operational guidance)
 - **Role-Based Context**: Tailored information based on DSPy role perspective
 - **Mock Mode Support**: `POSTGRES_DSN="mock://test"` for testing without database
 - **JSON Output**: `--format json` for programmatic access and structured data
+
+### **Episodic Memory System Capabilities**
+- **Automatic Learning**: Stores reflections from completed tasks for future reference
+- **Context Enhancement**: Automatically injects relevant lessons into new tasks
+- **Operational Guidance**: Generates evidence-backed heuristics that evolve with your work
+- **Three Injection Methods**: guidance (bullet points), few_shot (detailed examples), compact (ultra-compressed)
+- **Confidence-Based Filtering**: Only applies high-confidence context to avoid noise
+- **Token Management**: Automatic compression to stay within limits
+- **Version Management**: Timestamped heuristics packs that update automatically
 
 ### **When to Use Each Role**
 - **Strategic Decisions**: Use Planner role for high-level analysis and planning
@@ -202,24 +229,53 @@ python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prim
 
 ## 🔧 Development Environment Setup {#dev-env}
 
-**Virtual Environment Management**: All development requires proper venv setup.
+**UV Package Management**: Project has migrated to UV for 100-600x faster package management.
 
 ```bash
-# Check venv status
-python3 scripts/venv_manager.py --check
+# Quick development setup
+uv sync --extra dev
 
-# Run workflows with automatic venv management
-python3 scripts/single_doorway.py generate "feature"
+# Run commands in UV environment
+uv run python scripts/system_health_check.py
+
+# Use shell aliases for common tasks
+source uv_aliases.sh
+uvd  # Quick dev setup
+uvt  # Run tests
+uvs  # System health check
+
+# Team onboarding automation
+python scripts/uv_team_onboarding.py
 ```
 
-**Required Dependencies**:
+**Required Dependencies** (managed via UV):
 - `psycopg2` - Database connectivity
 - `dspy` - Core AI framework
 - `pytest` - Testing framework
 - `ruff` - Code quality
 - `boto3` - AWS Bedrock integration (B-1046)
 
-See `scripts/README_venv_manager.md` for complete documentation.
+**UV Performance**: 100-600x faster than pip, with automated team onboarding and performance monitoring.
+
+See `UV_MIGRATION_COMPLETE.md` and `VENV_MAPPING_VERIFICATION.md` for complete documentation.
+
+## ⚡ UV Migration Complete {#uv-migration}
+
+**Status**: ✅ **COMPLETED** - Full migration from pip to UV package manager
+
+### **Performance Achievements**:
+- **100-600x faster** package installation
+- **10-60x faster** dependency resolution
+- **100% automated** team onboarding
+- **Real-time** performance monitoring
+
+### **Key Features**:
+- **Shell Aliases**: `uvd`, `uvt`, `uvl`, `uvf`, `uvs`, `uvp`
+- **Automated Scripts**: Team onboarding, performance monitoring, dependency management
+- **CI/CD Integration**: All GitHub Actions workflows updated
+- **Virtual Environment**: Properly mapped to `.venv`
+
+### **Verification**: All 6/6 checks passed - virtual environment mapping is correct.
 
 ## 🚀 B-1046 AWS Bedrock Integration & Results Management {#bedrock-integration}
 
@@ -789,6 +845,20 @@ for all AI operations
 
 This file serves as the **memory scaffold**for Cursor AI, providing instant context about the AI development ecosystem
 without requiring the AI to read multiple files.
+
+## 🔒 **Canonical Evaluation System (CRITICAL)**
+
+**🎯 PRIMARY ENTRY POINT**: `000_core/000_evaluation-system-entry-point.md`
+**📋 Standard Command**: `source throttle_free_eval.sh && python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable`
+**💨 Fast Testing**: `./scripts/run_ragchecker_smoke_test.sh`
+**🔧 Configuration**: `configs/stable_bedrock.env` (LOCKED - do not modify without versioning)
+**📖 Complete SOP**: `400_guides/400_canonical-evaluation-sop.md`
+
+**🚨 CRITICAL RULES:**
+- Always use `--stable` flag for evaluations
+- Never modify stable config without versioning
+- Check for throttling - fix configuration if any
+- Use smoke tests for fast iteration
 
 ## 📋 Current Project State
 
