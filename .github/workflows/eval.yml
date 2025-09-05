@@ -42,7 +42,7 @@ jobs:
 
       - name: Run Pyright type checking
         run: |
-          pyright --project pyrightconfig.json
+          uv run pyright --project pyrightconfig.json
 
       - name: Upload type check results
         uses: actions/upload-artifact@v4
@@ -77,7 +77,7 @@ jobs:
 
       - name: Run smoke test (retrieval evaluation)
         run: |
-          python scripts/eval/eval_retrieval.py \
+          uv run python scripts/eval/eval_retrieval.py \
             --dataset_config configs/eval/retrieval_quality.yaml \
             --out_dir artifacts/smoke-test || true
 
@@ -115,26 +115,26 @@ jobs:
 
       - name: Run retrieval evaluation
         run: |
-          python scripts/eval/eval_retrieval.py \
+          uv run python scripts/eval/eval_retrieval.py \
             --dataset_config configs/eval/retrieval_quality.yaml \
             --out_dir artifacts/nightly/retrieval
 
       - name: Run faithfulness evaluation
         run: |
-          python scripts/eval/eval_faithfulness.py \
+          uv run python scripts/eval/eval_faithfulness.py \
             --dataset_config configs/eval/faithfulness_quality.yaml \
             --out_dir artifacts/nightly/faithfulness
 
       - name: Run latency evaluation
         run: |
-          python scripts/eval/eval_retrieval.py \
+          uv run python scripts/eval/eval_retrieval.py \
             --dataset_config configs/eval/latency_quality.yaml \
             --out_dir artifacts/nightly/latency \
             --mode dense
 
       - name: Run robustness evaluation
         run: |
-          python scripts/eval/eval_retrieval.py \
+          uv run python scripts/eval/eval_retrieval.py \
             --dataset_config configs/eval/robustness_quality.yaml \
             --out_dir artifacts/nightly/robustness \
             --mode hybrid_rerank
