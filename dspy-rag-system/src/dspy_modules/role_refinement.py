@@ -11,7 +11,16 @@ import logging
 import time
 from dataclasses import dataclass, field
 from enum import Enum
+import sys
 from typing import Any, Dict, List
+
+# Apply litellm compatibility shim before importing DSPy
+try:
+    sys.path.insert(0, "../../scripts")
+    from litellm_compatibility_shim import patch_litellm_imports
+    patch_litellm_imports()
+except ImportError:
+    pass  # Shim not available, continue without it
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature

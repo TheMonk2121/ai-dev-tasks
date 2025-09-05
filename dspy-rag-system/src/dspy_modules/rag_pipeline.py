@@ -3,7 +3,17 @@
 RAG Pipeline Module - Enforces context consumption and provides citations
 """
 
+import sys
 from typing import Any, Dict, List
+
+# Apply litellm compatibility shim before importing DSPy
+try:
+    sys.path.insert(0, "../../scripts")
+    from litellm_compatibility_shim import patch_litellm_imports
+
+    patch_litellm_imports()
+except ImportError:
+    pass  # Shim not available, continue without it
 
 import dspy
 
@@ -219,8 +229,8 @@ class RAGModule(dspy.Module):
             files = []
             if discover_evaluation_commands is not None:
                 discovery = discover_evaluation_commands()
-                commands = (discovery.get("commands", []) or [])
-                files = (discovery.get("files", []) or [])
+                commands = discovery.get("commands", []) or []
+                files = discovery.get("files", []) or []
             if not commands:
                 commands = [
                     {
