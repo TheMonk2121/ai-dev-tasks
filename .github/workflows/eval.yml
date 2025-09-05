@@ -36,6 +36,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          uv venv
           uv pip install -r requirements.txt
           uv pip install pyright pyyaml
 
@@ -70,6 +71,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          uv venv
           uv pip install -r requirements.txt
           uv pip install pyyaml
 
@@ -107,6 +109,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          uv venv
           uv pip install -r requirements.txt
           uv pip install pyyaml
 
@@ -164,6 +167,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          uv venv
           uv pip install -r requirements.txt
           uv pip install pyyaml
 

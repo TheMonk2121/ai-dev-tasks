@@ -28,6 +28,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          uv venv
           uv pip install -r requirements.txt
 
       - name: Run maintenance validation (Dry-Run)
@@ -104,7 +105,7 @@ jobs:
           echo "Any warnings should be addressed before merging." >> validation-report.md
 
       - name: Upload validation report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: maintenance-validation-report
           path: validation-report.md

@@ -23,6 +23,7 @@ jobs:
           version: "latest"
       - name: Install Python deps
         run: |
+          uv venv
           uv pip install tqdm
       - name: Run quick conflict check (JSON)
         run: |
@@ -43,6 +44,7 @@ jobs:
           version: "latest"
       - name: Install validation deps
         run: |
+          uv venv
           uv pip install pytest
       - name: Validate docs (dry run)
         run: |
@@ -63,6 +65,7 @@ jobs:
           version: "latest"
       - name: Install pytest
         run: |
+          uv venv
           uv pip install pytest
       - name: Broken link validation
         run: |

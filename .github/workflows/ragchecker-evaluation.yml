@@ -45,6 +45,7 @@ jobs:
 
       - name: Install RAGChecker Dependencies
         run: |
+          uv venv
           uv pip install ragchecker==0.1.9
           uv pip install spacy
           python -m spacy download en_core_web_sm

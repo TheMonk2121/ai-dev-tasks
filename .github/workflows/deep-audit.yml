@@ -19,6 +19,7 @@ jobs:
           version: "latest"
       - name: Install Python deps
         run: |
+          uv venv
           uv pip install tqdm
       - name: Run deep conflict audit (JSON)
         run: |
