@@ -65,14 +65,14 @@ The venv manager checks for these essential packages:
 
 ### Venv Not Found
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
 ### Missing Dependencies
 ```bash
-source venv/bin/activate
+source .venv/bin/activate
 pip install psycopg2-binary dspy pytest ruff
 ```
 
