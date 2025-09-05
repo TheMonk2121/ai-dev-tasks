@@ -21,11 +21,11 @@ class PromptEvalConfig:
 
 class PromptEvaluator:
     """Evaluates prompts with cache-augmented generation support."""
-    
+
     def __init__(self, config: PromptEvalConfig):
         self.config = config
         self.logger = logging.getLogger(__name__)
-    
+
     def choose_threshold(self, prompt_category: str) -> float:
         """Choose dynamic threshold based on prompt category."""
         thresholds = {
@@ -35,13 +35,13 @@ class PromptEvaluator:
             'analysis': 0.92
         }
         return thresholds.get(prompt_category, self.config.sim_threshold)
-    
+
     def sweep_thresholds(self) -> List[Dict[str, Any]]:
         """Sweep similarity thresholds and record metrics."""
         results = []
         start, end = self.config.sweep_range
         step = (end - start) / (self.config.sweep_steps - 1)
-        
+
         for i in range(self.config.sweep_steps):
             threshold = start + (i * step)
             metrics = self.evaluate_threshold(threshold)
@@ -52,9 +52,9 @@ class PromptEvaluator:
                 'token_cost': metrics['tokens'],
                 'cache_hit_rate': metrics['cache_hits']
             })
-        
+
         return results
-    
+
     def evaluate_threshold(self, threshold: float) -> Dict[str, Any]:
         """Evaluate a single similarity threshold."""
         # Mock implementation - replace with actual evaluation
@@ -64,16 +64,16 @@ class PromptEvaluator:
             'tokens': 1000 - (threshold - 0.80) * 200,
             'cache_hits': 0.3 + (threshold - 0.80) * 0.4
         }
-    
+
     def run_evaluation(self, prompt_category: str = None) -> Dict[str, Any]:
         """Run prompt evaluation with current configuration."""
         if self.config.dynamic_threshold and prompt_category:
             threshold = self.choose_threshold(prompt_category)
         else:
             threshold = self.config.sim_threshold
-        
+
         metrics = self.evaluate_threshold(threshold)
-        
+
         return {
             'threshold': threshold,
             'prompt_category': prompt_category,
@@ -95,33 +95,33 @@ def main():
                        help="Prompt category for dynamic threshold selection")
     parser.add_argument("--output", type=str, default="prompt_eval_results.json",
                        help="Output file for results")
-    
+
     args = parser.parse_args()
-    
+
     config = PromptEvalConfig(
         sim_threshold=args.sim_threshold,
         dynamic_threshold=args.dynamic_threshold,
         cache_enabled=True
     )
-    
+
     evaluator = PromptEvaluator(config)
-    
+
     if args.sweep:
         results = evaluator.sweep_thresholds()
         print(f"Sweep results: {len(results)} thresholds evaluated")
-        
+
         # Find optimal threshold
         best_result = max(results, key=lambda x: x['f1_score'])
         print(f"Best F1: {best_result['f1_score']:.3f} at threshold {best_result['threshold']:.3f}")
-        
+
         with open(args.output, 'w') as f:
             json.dump(results, f, indent=2)
     else:
         result = evaluator.run_evaluation(args.prompt_category)
         print(f"Evaluation result: {result}")
-        
+
         with open(args.output, 'w') as f:
             json.dump(result, f, indent=2)
 
 if __name__ == "__main__":
-    main() 
+    main()

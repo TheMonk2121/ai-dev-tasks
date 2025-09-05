@@ -19,17 +19,17 @@ import numpy as np
 @dataclass
 class FreshnessConfig:
     """Configuration for freshness enhancement."""
-    
+
     # Time decay parameters
     enable_time_decay: bool = True
     decay_half_life_days: float = 30.0  # 30 days for 50% decay
     max_decay_factor: float = 0.3  # Minimum score multiplier
-    
-    # Recency prior parameters  
+
+    # Recency prior parameters
     enable_recency_prior: bool = True
     recency_boost_factor: float = 1.2  # 20% boost for recent docs
     recency_threshold_days: int = 7  # Docs within 7 days get boost
-    
+
     # Freshness detection
     date_patterns: List[str] = None
     news_keywords: List[str] = None
@@ -38,10 +38,10 @@ class FreshnessConfig:
 
 class FreshnessDetector:
     """Detects freshness-sensitive queries via patterns and keywords."""
-    
+
     def __init__(self, config: FreshnessConfig):
         self.config = config
-        
+
         # Default date patterns
         if not self.config.date_patterns:
             self.config.date_patterns = [
@@ -52,7 +52,7 @@ class FreshnessDetector:
                 r'\b(last|this|next)\s+(week|month|year|quarter)\b',  # Relative periods
                 r'\b\d{4}\b',  # Just year
             ]
-        
+
         # Default news keywords
         if not self.config.news_keywords:
             self.config.news_keywords = [
@@ -60,7 +60,7 @@ class FreshnessDetector:
                 'breaking', 'news', 'today', 'yesterday', 'this week',
                 'current', 'trending', 'hot', 'fresh', 'just in'
             ]
-    
+
     def detect_freshness_sensitivity(self, query: str) -> Tuple[bool, float, str]:
         """
         Detect if query is freshness-sensitive.
@@ -71,7 +71,7 @@ class FreshnessDetector:
         query_lower = query.lower()
         confidence = 0.0
         reasoning = []
-        
+
         # Check for date patterns
         date_matches = 0
         for pattern in self.config.date_patterns:
@@ -79,50 +79,50 @@ class FreshnessDetector:
             if matches:
                 date_matches += len(matches)
                 reasoning.append(f"Date pattern: {matches[0]}")
-        
+
         if date_matches > 0:
             confidence += 0.4
             confidence += min(0.2, date_matches * 0.1)
-        
+
         # Check for news keywords
         keyword_matches = 0
         for keyword in self.config.news_keywords:
             if keyword in query_lower:
                 keyword_matches += 1
                 reasoning.append(f"News keyword: {keyword}")
-        
+
         if keyword_matches > 0:
             confidence += 0.3
             confidence += min(0.2, keyword_matches * 0.1)
-        
+
         # Check for time-sensitive verbs
         time_verbs = ['announce', 'release', 'launch', 'publish', 'update', 'change']
         verb_matches = sum(1 for verb in time_verbs if verb in query_lower)
         if verb_matches > 0:
             confidence += 0.2
             reasoning.append(f"Time-sensitive verbs: {verb_matches}")
-        
+
         # Check for comparison with time
         time_comparisons = ['newer', 'older', 'recent', 'latest', 'previous', 'current']
         comparison_matches = sum(1 for comp in time_comparisons if comp in query_lower)
         if comparison_matches > 0:
             confidence += 0.1
             reasoning.append(f"Time comparisons: {comparison_matches}")
-        
+
         is_freshness_sensitive = confidence >= self.config.freshness_threshold
-        
+
         if not reasoning:
             reasoning = ["No freshness indicators detected"]
-        
+
         return is_freshness_sensitive, confidence, "; ".join(reasoning)
 
 
 class TimeDecayCalculator:
     """Calculates time-based decay factors for document scores."""
-    
+
     def __init__(self, config: FreshnessConfig):
         self.config = config
-    
+
     def calculate_decay_factor(self, doc_timestamp: Optional[float], current_time: Optional[float] = None) -> float:
         """
         Calculate decay factor based on document age.
@@ -136,24 +136,24 @@ class TimeDecayCalculator:
         """
         if not self.config.enable_time_decay or not doc_timestamp:
             return 1.0
-        
+
         if current_time is None:
             current_time = time.time()
-        
+
         # Calculate age in days
         age_days = (current_time - doc_timestamp) / (24 * 3600)
-        
+
         if age_days <= 0:
             return 1.0  # Future or current documents
-        
+
         # Exponential decay with half-life
         decay_factor = np.exp(-age_days * np.log(2) / self.config.decay_half_life_days)
-        
+
         # Apply minimum decay limit
         decay_factor = max(decay_factor, self.config.max_decay_factor)
-        
+
         return decay_factor
-    
+
     def calculate_recency_boost(self, doc_timestamp: Optional[float], current_time: Optional[float] = None) -> float:
         """
         Calculate recency boost factor for very recent documents.
@@ -167,29 +167,29 @@ class TimeDecayCalculator:
         """
         if not self.config.enable_recency_prior or not doc_timestamp:
             return 1.0
-        
+
         if current_time is None:
             current_time = time.time()
-        
+
         # Calculate age in days
         age_days = (current_time - doc_timestamp) / (24 * 3600)
-        
+
         if age_days <= self.config.recency_threshold_days:
             # Linear boost from 1.0 to recency_boost_factor
             boost_factor = 1.0 + (self.config.recency_boost_factor - 1.0) * (1.0 - age_days / self.config.recency_threshold_days)
             return boost_factor
-        
+
         return 1.0
 
 
 class FreshnessEnhancer:
     """Main freshness enhancement orchestrator."""
-    
+
     def __init__(self, config: FreshnessConfig):
         self.config = config
         self.detector = FreshnessDetector(config)
         self.decay_calculator = TimeDecayCalculator(config)
-    
+
     def enhance_retrieval_results(
         self,
         query: str,
@@ -209,25 +209,25 @@ class FreshnessEnhancer:
         """
         # Detect freshness sensitivity
         is_freshness_sensitive, confidence, reasoning = self.detector.detect_freshness_sensitivity(query)
-        
+
         enhancement_metadata = {
             'is_freshness_sensitive': is_freshness_sensitive,
             'confidence': confidence,
             'reasoning': reasoning,
             'enhancements_applied': []
         }
-        
+
         if not is_freshness_sensitive:
             return results, enhancement_metadata
-        
+
         enhanced_results = []
-        
+
         for result in results:
             enhanced_result = result.copy()
-            
+
             # Extract timestamp from result
             doc_timestamp = self._extract_timestamp(result)
-            
+
             # Apply time decay
             decay_factor = self.decay_calculator.calculate_decay_factor(doc_timestamp, current_time)
             if decay_factor != 1.0:
@@ -235,7 +235,7 @@ class FreshnessEnhancer:
                 enhanced_result['score'] *= decay_factor
                 enhanced_result['freshness_decay'] = decay_factor
                 enhancement_metadata['enhancements_applied'].append('time_decay')
-            
+
             # Apply recency boost
             recency_boost = self.decay_calculator.calculate_recency_boost(doc_timestamp, current_time)
             if recency_boost != 1.0:
@@ -243,7 +243,7 @@ class FreshnessEnhancer:
                 enhanced_result['score'] *= recency_boost
                 enhanced_result['recency_boost'] = recency_boost
                 enhancement_metadata['enhancements_applied'].append('recency_boost')
-            
+
             # Add freshness metadata
             enhanced_result['freshness_metadata'] = {
                 'doc_timestamp': doc_timestamp,
@@ -251,30 +251,30 @@ class FreshnessEnhancer:
                 'decay_factor': decay_factor,
                 'recency_boost': recency_boost
             }
-            
+
             enhanced_results.append(enhanced_result)
-        
+
         # Re-sort by enhanced scores
         enhanced_results.sort(key=lambda x: x.get('score', 0.0), reverse=True)
-        
+
         enhancement_metadata['total_results'] = len(enhanced_results)
         enhancement_metadata['enhanced_scores'] = [r.get('score', 0.0) for r in enhanced_results[:5]]
-        
+
         return enhanced_results, enhancement_metadata
-    
+
     def _extract_timestamp(self, result: Dict[str, Any]) -> Optional[float]:
         """Extract timestamp from result document."""
-        
+
         # Try various timestamp fields
         timestamp_fields = [
             'timestamp', 'created_at', 'updated_at', 'date', 'published_at',
             'last_modified', 'modified_at', 'created', 'updated'
         ]
-        
+
         for field in timestamp_fields:
             if field in result:
                 timestamp = result[field]
-                
+
                 # Handle different timestamp formats
                 if isinstance(timestamp, (int, float)):
                     return float(timestamp)
@@ -295,7 +295,7 @@ class FreshnessEnhancer:
                                     continue
                         except:
                             continue
-        
+
         # Try to extract from metadata
         metadata = result.get('metadata', {})
         for field in timestamp_fields:
@@ -303,14 +303,14 @@ class FreshnessEnhancer:
                 timestamp = metadata[field]
                 if isinstance(timestamp, (int, float)):
                     return float(timestamp)
-        
+
         return None
 
 
 def create_freshness_enhancer(config: Optional[FreshnessConfig] = None) -> FreshnessEnhancer:
     """Factory function to create a FreshnessEnhancer."""
-    
+
     if not config:
         config = FreshnessConfig()
-    
+
     return FreshnessEnhancer(config)

@@ -12,14 +12,14 @@ from datetime import datetime
 def run_daily_maintenance():
     """Run daily maintenance tasks."""
     print(f"🔧 Daily UV Maintenance - {datetime.now().strftime('%Y-%m-%d')}")
-    
+
     tasks = [
         ("Check for outdated packages", ["uv", "pip", "list", "--outdated"]),
         ("Update lock file", ["uv", "lock"]),
         ("Run security scan", ["python", "scripts/uv_dependency_manager.py", "--security"]),
         ("Performance check", ["python", "scripts/uv_performance_monitor.py"])
     ]
-    
+
     for task_name, cmd in tasks:
         print(f"\n📋 {task_name}...")
         try:

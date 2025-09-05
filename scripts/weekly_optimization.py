@@ -12,14 +12,14 @@ from datetime import datetime
 def run_weekly_optimization():
     """Run weekly optimization tasks."""
     print(f"⚡ Weekly UV Optimization - {datetime.now().strftime('%Y-%m-%d')}")
-    
+
     tasks = [
         ("Full dependency analysis", ["python", "scripts/uv_dependency_manager.py", "--full-report"]),
         ("Performance analysis", ["python", "scripts/uv_performance_monitor.py"]),
         ("Workflow optimization", ["python", "scripts/uv_workflow_optimizer.py"]),
         ("Clean cache", ["uv", "cache", "clean"])
     ]
-    
+
     for task_name, cmd in tasks:
         print(f"\n📋 {task_name}...")
         try:

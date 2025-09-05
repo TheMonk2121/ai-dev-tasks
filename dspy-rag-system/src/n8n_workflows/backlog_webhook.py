@@ -56,17 +56,17 @@ def backlog_scrubber_webhook():
             # Parse request
             if not request.is_json:
                 raise BadRequest("Request must be JSON")
-            
+
             data = request.get_json()
             action = data.get('action', 'scrub')
-            
+
             # Validate action
             if action not in ['scrub', 'stats', 'validate']:
                 raise BadRequest(f"Invalid action: {action}")
-            
+
             # Get scrubber instance
             scrubber_instance = get_scrubber()
-            
+
             # Handle different actions
             if action == 'scrub':
                 return handle_scrub_action(scrubber_instance, data)
@@ -74,7 +74,7 @@ def backlog_scrubber_webhook():
                 return handle_stats_action(scrubber_instance)
             elif action == 'validate':
                 return handle_validate_action(scrubber_instance, data)
-            
+
     except BadRequest as e:
         logger.error(f"Bad request: {e}")
         return jsonify({
@@ -82,7 +82,7 @@ def backlog_scrubber_webhook():
             "error": str(e),
             "timestamp": datetime.now().isoformat()
         }), 400
-        
+
     except Exception as e:
         logger.error(f"Webhook error: {e}")
         return jsonify({
@@ -94,13 +94,13 @@ def backlog_scrubber_webhook():
 def handle_scrub_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> Dict[str, Any]:
     """Handle scrub action."""
     dry_run = data.get('dry_run', False)
-    
+
     if dry_run:
         # Perform dry run
         content = scrubber.read_backlog()
         scores = scrubber.parse_score_metadata(content)
         validated_scores = scrubber.validate_scores(scores)
-        
+
         return jsonify({
             "success": True,
             "action": "scrub",
@@ -119,7 +119,7 @@ def handle_scrub_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> Dict
     else:
         # Perform actual scrub
         result = scrubber.scrub_backlog()
-        
+
         return jsonify({
             "success": result["success"],
             "action": "scrub",
@@ -133,7 +133,7 @@ def handle_scrub_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> Dict
 def handle_stats_action(scrubber: BacklogScrubber) -> Dict[str, Any]:
     """Handle stats action."""
     stats = scrubber.get_statistics()
-    
+
     return jsonify({
         "success": True,
         "action": "stats",
@@ -146,7 +146,7 @@ def handle_validate_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> D
     content = scrubber.read_backlog()
     scores = scrubber.parse_score_metadata(content)
     validated_scores = scrubber.validate_scores(scores)
-    
+
     # Check for validation issues
     validation_issues = []
     for score in scores:
@@ -156,7 +156,7 @@ def handle_validate_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> D
                 "components": score["components"],
                 "issue": "Invalid score components"
             })
-    
+
     return jsonify({
         "success": True,
         "action": "validate",
@@ -189,7 +189,7 @@ def get_stats():
     try:
         scrubber_instance = get_scrubber()
         stats = scrubber_instance.get_statistics()
-        
+
         return jsonify({
             "success": True,
             "statistics": stats,
@@ -205,23 +205,23 @@ def get_stats():
 def main():
     """Main entry point for the webhook server."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Backlog Scrubber Webhook Server")
     parser.add_argument("--host", default="0.0.0.0", help="Host to bind to")
     parser.add_argument("--port", type=int, default=5001, help="Port to bind to")
     parser.add_argument("--debug", action="store_true", help="Enable debug mode")
     parser.add_argument("--backlog-path", help="Path to backlog.md file")
-    
+
     args = parser.parse_args()
-    
+
     # Set environment variable if provided
     if args.backlog_path:
         os.environ["BACKLOG_PATH"] = args.backlog_path
-    
+
     # Set up logging
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
-    
+
     print("Starting Backlog Scrubber Webhook Server")
     print(f"Host: {args.host}")
     print(f"Port: {args.port}")
@@ -229,7 +229,7 @@ def main():
     print(f"Health Check: http://{args.host}:{args.port}/health")
     print(f"Statistics: http://{args.host}:{args.port}/stats")
     print()
-    
+
     # Run the server
     app.run(
         host=args.host,
@@ -238,4 +238,4 @@ def main():
     )
 
 if __name__ == "__main__":
-    main() 
+    main()

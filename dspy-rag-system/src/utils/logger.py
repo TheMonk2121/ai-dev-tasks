@@ -17,7 +17,7 @@ SENSITIVE_PATTERNS = ["password", "token", "secret", "key", "credential", "auth"
 
 class StructuredFormatter(logging.Formatter):
     """JSON formatter for structured logging with security and error handling"""
-    
+
     def format(self, record: logging.LogRecord) -> str:
         """Format log record as JSON with error handling and security"""
         try:
@@ -30,7 +30,7 @@ class StructuredFormatter(logging.Formatter):
                 "function": record.funcName,
                 "line": record.lineno
             }
-            
+
             # Add extra fields if present (dynamic, not hardcoded)
             if hasattr(record, '__dict__'):
                 for key, value in record.__dict__.items():
@@ -40,7 +40,7 @@ class StructuredFormatter(logging.Formatter):
                             log_entry[key] = "***REDACTED***"
                         else:
                             log_entry[key] = value
-            
+
             # Add exception info if present
             if record.exc_info:
                 log_entry['exception'] = {
@@ -48,9 +48,9 @@ class StructuredFormatter(logging.Formatter):
                     'message': str(record.exc_info[1]),
                     'traceback': traceback.format_exception(*record.exc_info)
                 }
-            
+
             return json.dumps(log_entry, default=str, ensure_ascii=False)
-            
+
         except Exception as e:
             # Fallback to plain text if JSON serialization fails
             try:
@@ -77,17 +77,17 @@ def get_logger(name: str, level: str = "INFO", log_file: Optional[str] = None) -
     with _cache_lock:
         if name in _logger_cache:
             return _logger_cache[name]
-        
+
         logger = logging.getLogger(name)
         logger.setLevel(getattr(logging, level.upper()))
-        
+
         # Only configure if not already configured
         if not logger.handlers:
             # Console handler
             console_handler = logging.StreamHandler(sys.stdout)
             console_handler.setFormatter(StructuredFormatter())
             logger.addHandler(console_handler)
-            
+
             # File handler (only if log_file is provided)
             if log_file:
                 try:
@@ -102,10 +102,10 @@ def get_logger(name: str, level: str = "INFO", log_file: Optional[str] = None) -
                 except Exception as e:
                     # Log to console if file handler fails
                     logger.warning(f"Failed to create file handler for {log_file}: {e}")
-            
+
             # Prevent propagation to avoid duplicate logs
             logger.propagate = False
-        
+
         _logger_cache[name] = logger
         return logger
 
@@ -129,7 +129,7 @@ def log_with_context(logger: logging.Logger, message: str, level: str = "INFO", 
     log_method = getattr(logger, level.lower(), logger.info)
     log_method(message, extra=context)
 
-def log_document_processing(logger: logging.Logger, document_id: str, stage: str, 
+def log_document_processing(logger: logging.Logger, document_id: str, stage: str,
                           message: str, level: str = "INFO", **context):
     """
     Log document processing events with standard context
@@ -148,7 +148,7 @@ def log_document_processing(logger: logging.Logger, document_id: str, stage: str
     })
     log_with_context(logger, message, level=level, **context)
 
-def log_error_with_context(logger: logging.Logger, error: Exception, 
+def log_error_with_context(logger: logging.Logger, error: Exception,
                          message: str = "Error occurred", **context):
     """
     Log errors with full context and traceback
@@ -164,16 +164,16 @@ def log_error_with_context(logger: logging.Logger, error: Exception,
 def configure_logging_from_env():
     """Configure logging from environment variables"""
     import os
-    
+
     log_level = os.getenv('LOG_LEVEL', 'INFO')
     log_file = os.getenv('LOG_FILE')
-    
+
     # Set up root logger
     root_logger = get_logger('root', level=log_level, log_file=log_file)
-    
+
     # Configure other common loggers
     get_logger('dspy_rag', level=log_level, log_file=log_file)
     get_logger('document_processor', level=log_level, log_file=log_file)
     get_logger('vector_store', level=log_level, log_file=log_file)
-    
-    return root_logger 
+
+    return root_logger

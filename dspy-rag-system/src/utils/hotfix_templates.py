@@ -27,11 +27,11 @@ class HotFixTemplate:
 
 class HotFixGenerator:
     """Generates HotFix templates based on error patterns"""
-    
+
     def __init__(self):
         self.templates = self._load_templates()
         self.template_stats = {}
-        
+
     def _load_templates(self) -> Dict[str, HotFixTemplate]:
         """Load HotFix templates"""
         templates = {
@@ -74,7 +74,7 @@ Database connection is timing out after {timeout_seconds} seconds.
                 prerequisites=["Database server is running", "Network connectivity is available"],
                 estimated_time="15-30 minutes"
             ),
-            
+
             "llm_rate_limit": HotFixTemplate(
                 template_id="llm_rate_limit",
                 name="LLM API Rate Limit Fix",
@@ -117,7 +117,7 @@ LLM API requests are being rate limited (HTTP 429).
                 prerequisites=["LLM API is accessible", "Valid API credentials"],
                 estimated_time="20-45 minutes"
             ),
-            
+
             "security_violation": HotFixTemplate(
                 template_id="security_violation",
                 name="Security Violation Fix",
@@ -164,34 +164,34 @@ Security validation failed: {violation_type}
                 estimated_time="30-60 minutes"
             )
         }
-        
+
         return templates
-    
+
     def generate_hotfix(self, error_analysis, context: Dict[str, Any] = None) -> Optional[HotFixTemplate]:
         """Generate a HotFix template based on error analysis"""
         if not error_analysis.matched_patterns:
             return None
-        
+
         # Find the most severe pattern
-        most_severe_pattern = max(error_analysis.matched_patterns, 
+        most_severe_pattern = max(error_analysis.matched_patterns,
                                 key=lambda p: self._get_severity_score(p.severity))
-        
+
         # Map pattern categories to template categories
         category_mapping = {
             "database": "db_connection_timeout",
             "llm": "llm_rate_limit",
             "security": "security_violation"
         }
-        
+
         template_id = category_mapping.get(most_severe_pattern.category)
         if template_id and template_id in self.templates:
             template = self.templates[template_id]
             self._update_template_stats(template_id)
             logger.info(f"Generated HotFix template: {template.name}")
             return template
-        
+
         return None
-    
+
     def _get_severity_score(self, severity: str) -> float:
         """Convert severity string to numeric score"""
         severity_map = {
@@ -201,7 +201,7 @@ Security validation failed: {violation_type}
             'critical': 1.0
         }
         return severity_map.get(severity.lower(), 0.5)
-    
+
     def _update_template_stats(self, template_id: str):
         """Update template usage statistics"""
         if template_id not in self.template_stats:
@@ -210,7 +210,7 @@ Security validation failed: {violation_type}
                 'first_used': datetime.now(),
                 'last_used': datetime.now()
             }
-        
+
         self.template_stats[template_id]['count'] += 1
         self.template_stats[template_id]['last_used'] = datetime.now()
 
@@ -227,4 +227,4 @@ def get_hotfix_statistics() -> Dict[str, Any]:
 
 def list_hotfix_templates() -> List[HotFixTemplate]:
     """List all available HotFix templates"""
-    return list(hotfix_generator.templates.values()) 
+    return list(hotfix_generator.templates.values())

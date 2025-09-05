@@ -61,16 +61,16 @@ class ResearchFinding:
 
 class ResearchDatabase:
     """Database for storing research data and cache."""
-    
+
     def __init__(self, db_path: str = "research_agent.db"):
         self.db_path = db_path
         self._init_database()
-    
+
     def _init_database(self):
         """Initialize the research database."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         # Create research findings table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS research_findings (
@@ -86,7 +86,7 @@ class ResearchDatabase:
                 timestamp REAL NOT NULL
             )
         """)
-        
+
         # Create research sources table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS research_sources (
@@ -99,22 +99,22 @@ class ResearchDatabase:
                 timestamp REAL NOT NULL
             )
         """)
-        
+
         # Create indexes
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_research_query ON research_findings(query)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_research_type ON research_findings(research_type)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_research_timestamp ON research_findings(timestamp)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_sources_url ON research_sources(url)")
-        
+
         conn.commit()
         conn.close()
         logger.info("Research database initialized")
-    
+
     def store_finding(self, finding: ResearchFinding) -> str:
         """Store research finding in database."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         cursor.execute("""
             INSERT OR REPLACE INTO research_findings 
             (id, query, research_type, findings, sources, confidence, analysis_summary, 
@@ -132,29 +132,29 @@ class ResearchDatabase:
             json.dumps(finding.trade_offs),
             finding.timestamp
         ))
-        
+
         conn.commit()
         conn.close()
         return finding.id
-    
+
     def get_finding(self, finding_id: str) -> Optional[ResearchFinding]:
         """Get research finding by ID."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         cursor.execute("""
             SELECT id, query, research_type, findings, sources, confidence, analysis_summary,
                    recommendations, trade_offs, timestamp
             FROM research_findings WHERE id = ?
         """, (finding_id,))
-        
+
         row = cursor.fetchone()
         conn.close()
-        
+
         if row:
             sources_data = json.loads(row[4]) if row[4] else []
             sources = [ResearchSource(**source_data) for source_data in sources_data]
-            
+
             return ResearchFinding(
                 id=row[0],
                 query=row[1],
@@ -167,34 +167,34 @@ class ResearchDatabase:
                 trade_offs=json.loads(row[8]) if row[8] else [],
                 timestamp=row[9]
             )
-        
+
         return None
-    
-    def search_findings(self, query: str, research_type: Optional[str] = None, 
+
+    def search_findings(self, query: str, research_type: Optional[str] = None,
                        limit: int = 10) -> List[ResearchFinding]:
         """Search research findings."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         sql = "SELECT * FROM research_findings WHERE query LIKE ?"
         params = [f"%{query}%"]
-        
+
         if research_type:
             sql += " AND research_type = ?"
             params.append(research_type)
-        
+
         sql += " ORDER BY timestamp DESC LIMIT ?"
         params.append(limit)
-        
+
         cursor.execute(sql, params)
         rows = cursor.fetchall()
         conn.close()
-        
+
         findings = []
         for row in rows:
             sources_data = json.loads(row[4]) if row[4] else []
             sources = [ResearchSource(**source_data) for source_data in sources_data]
-            
+
             finding = ResearchFinding(
                 id=row[0],
                 query=row[1],
@@ -208,17 +208,17 @@ class ResearchDatabase:
                 timestamp=row[9]
             )
             findings.append(finding)
-        
+
         return findings
 
 class ResearchAgent:
     """Specialized agent for deep research and analysis capabilities."""
-    
+
     def __init__(self):
         self.name = "Research Agent"
         self.capabilities = [
             "technical_research",
-            "architecture_analysis", 
+            "architecture_analysis",
             "performance_research",
             "security_research",
             "industry_research"
@@ -228,7 +228,7 @@ class ResearchAgent:
         self.usage_count = 0
         self.error_count = 0
         self.last_used = time.time()
-        
+
         # Research sources configuration
         self.research_sources = {
             "documentation": [
@@ -249,16 +249,16 @@ class ResearchAgent:
                 "https://github.com/"
             ]
         }
-    
+
     async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Process research request."""
         start_time = time.time()
-        
+
         try:
             query = request.get("query", "")
             research_type = request.get("research_type", "technical")
             analysis_depth = request.get("analysis_depth", "comprehensive")
-            
+
             # Check cache first
             cache_key = self._generate_cache_key(query, research_type, analysis_depth)
             if cache_key in self.research_cache:
@@ -266,30 +266,30 @@ class ResearchAgent:
                 if time.time() - cached_finding.timestamp < 3600:  # 1 hour cache
                     logger.info(f"Using cached research for: {query}")
                     return self._format_research_response(cached_finding)
-            
+
             # Perform research
             finding = await self._perform_research(query, research_type, analysis_depth)
-            
+
             # Cache the results
             self.research_cache[cache_key] = finding
-            
+
             # Store in database
             self.database.store_finding(finding)
-            
+
             processing_time = time.time() - start_time
             self.usage_count += 1
             self.last_used = time.time()
-            
+
             response = self._format_research_response(finding)
             response["processing_time"] = processing_time
-            
+
             return response
-            
+
         except Exception as e:
             self.error_count += 1
             logger.error(f"Error in Research Agent: {e}")
             raise
-    
+
     def can_handle(self, request: Dict[str, Any]) -> bool:
         """Check if research agent can handle the request."""
         research_keywords = [
@@ -299,11 +299,11 @@ class ResearchAgent:
         ]
         query = request.get("query", "").lower()
         return any(keyword in query for keyword in research_keywords)
-    
+
     async def _perform_research(self, query: str, research_type: str, analysis_depth: str) -> ResearchFinding:
         """Perform research analysis."""
         logger.info(f"Starting research on: {query}")
-        
+
         # Simulate research time based on depth
         if analysis_depth == "comprehensive":
             await asyncio.sleep(1.0)
@@ -311,7 +311,7 @@ class ResearchAgent:
             await asyncio.sleep(0.7)
         else:
             await asyncio.sleep(0.5)
-        
+
         # Generate research findings based on type
         if research_type == "architecture":
             findings = await self._research_architecture(query)
@@ -323,9 +323,9 @@ class ResearchAgent:
             findings = await self._research_industry(query)
         else:
             findings = await self._research_general(query)
-        
+
         return findings
-    
+
     async def _research_architecture(self, query: str) -> ResearchFinding:
         """Research architecture patterns and best practices."""
         sources = [
@@ -344,7 +344,7 @@ class ResearchAgent:
                 credibility_score=0.90
             )
         ]
-        
+
         findings = {
             "patterns": ["Microservices", "Event-Driven", "CQRS", "API Gateway"],
             "trade_offs": ["Scalability vs Complexity", "Performance vs Maintainability"],
@@ -359,7 +359,7 @@ class ResearchAgent:
                 "Monitoring and observability"
             ]
         }
-        
+
         return ResearchFinding(
             query=query,
             research_type=ResearchType.ARCHITECTURE,
@@ -370,7 +370,7 @@ class ResearchAgent:
             recommendations=findings["recommendations"],
             trade_offs=findings["trade_offs"]
         )
-    
+
     async def _research_performance(self, query: str) -> ResearchFinding:
         """Research performance optimization techniques."""
         sources = [
@@ -389,7 +389,7 @@ class ResearchAgent:
                 credibility_score=0.88
             )
         ]
-        
+
         findings = {
             "bottlenecks": ["Database queries", "Network latency", "Memory usage", "CPU utilization"],
             "optimizations": [
@@ -401,7 +401,7 @@ class ResearchAgent:
             "metrics": ["Response time", "Throughput", "Resource utilization", "Error rates"],
             "tools": ["Profiling tools", "Monitoring systems", "Load testing"]
         }
-        
+
         return ResearchFinding(
             query=query,
             research_type=ResearchType.PERFORMANCE,
@@ -412,7 +412,7 @@ class ResearchAgent:
             recommendations=findings["optimizations"],
             trade_offs=["Performance vs Complexity", "Speed vs Accuracy"]
         )
-    
+
     async def _research_security(self, query: str) -> ResearchFinding:
         """Research security best practices and vulnerabilities."""
         sources = [
@@ -431,7 +431,7 @@ class ResearchAgent:
                 credibility_score=0.90
             )
         ]
-        
+
         findings = {
             "vulnerabilities": ["SQL Injection", "XSS", "CSRF", "Authentication bypass"],
             "mitigations": [
@@ -448,7 +448,7 @@ class ResearchAgent:
             ],
             "tools": ["Static analysis", "Dynamic testing", "Vulnerability scanners"]
         }
-        
+
         return ResearchFinding(
             query=query,
             research_type=ResearchType.SECURITY,
@@ -459,7 +459,7 @@ class ResearchAgent:
             recommendations=findings["mitigations"],
             trade_offs=["Security vs Usability", "Protection vs Performance"]
         )
-    
+
     async def _research_industry(self, query: str) -> ResearchFinding:
         """Research industry trends and standards."""
         sources = [
@@ -478,14 +478,14 @@ class ResearchAgent:
                 credibility_score=0.80
             )
         ]
-        
+
         findings = {
             "trends": ["Cloud-native development", "AI/ML integration", "DevOps practices"],
             "standards": ["ISO 27001", "SOC 2", "GDPR compliance"],
             "technologies": ["Kubernetes", "Serverless", "GraphQL", "WebAssembly"],
             "practices": ["Agile methodologies", "CI/CD pipelines", "Infrastructure as Code"]
         }
-        
+
         return ResearchFinding(
             query=query,
             research_type=ResearchType.INDUSTRY,
@@ -496,7 +496,7 @@ class ResearchAgent:
             recommendations=findings["practices"],
             trade_offs=["Innovation vs Stability", "Adoption vs Maturity"]
         )
-    
+
     async def _research_general(self, query: str) -> ResearchFinding:
         """General research analysis."""
         sources = [
@@ -515,14 +515,14 @@ class ResearchAgent:
                 credibility_score=0.80
             )
         ]
-        
+
         findings = {
             "overview": f"Comprehensive analysis of {query}",
             "key_points": ["Point 1", "Point 2", "Point 3"],
             "recommendations": ["Recommendation 1", "Recommendation 2"],
             "considerations": ["Consideration 1", "Consideration 2"]
         }
-        
+
         return ResearchFinding(
             query=query,
             research_type=ResearchType.TECHNICAL,
@@ -533,7 +533,7 @@ class ResearchAgent:
             recommendations=findings["recommendations"],
             trade_offs=["Option A vs Option B"]
         )
-    
+
     def _format_research_response(self, finding: ResearchFinding) -> Dict[str, Any]:
         """Format research finding into response."""
         return {
@@ -548,12 +548,12 @@ class ResearchAgent:
             "trade_offs": finding.trade_offs,
             "timestamp": finding.timestamp
         }
-    
+
     def _generate_cache_key(self, query: str, research_type: str, analysis_depth: str) -> str:
         """Generate cache key for research data."""
         content = f"{query}:{research_type}:{analysis_depth}"
         return hashlib.md5(content.encode()).hexdigest()
-    
+
     def get_status(self) -> Dict[str, Any]:
         """Get agent status information."""
         return {
@@ -570,7 +570,7 @@ class ResearchAgent:
 async def main():
     """Example usage of the Research Agent."""
     agent = ResearchAgent()
-    
+
     # Test different types of research
     test_requests = [
         {
@@ -589,12 +589,12 @@ async def main():
             "analysis_depth": "comprehensive"
         }
     ]
-    
+
     for i, request in enumerate(test_requests, 1):
         print(f"\n--- Test Research Request {i} ---")
         print(f"Query: {request['query']}")
         print(f"Type: {request['research_type']}")
-        
+
         try:
             response = await agent.process_request(request)
             print(f"Agent: {response['agent_type']}")
@@ -605,11 +605,11 @@ async def main():
             print(f"Processing Time: {response.get('processing_time', 0):.3f}s")
         except Exception as e:
             print(f"Error: {e}")
-    
+
     # Print agent status
     print("\n--- Agent Status ---")
     status = agent.get_status()
     print(json.dumps(status, indent=2))
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())
