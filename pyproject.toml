@@ -7,6 +7,112 @@ name = "ai-dev-tasks"
 version = "0.1.0"
 description = "AI Development Tasks Ecosystem"
 requires-python = ">=3.12"
+dependencies = [
+    # Core system dependencies
+    "psutil>=5.9.0",
+    "click>=8.0.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
+
+    # Data processing and analysis
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+
+    # Documentation and validation
+    "markdown>=3.4.0",
+    "pydantic>=2.0.0",
+
+    # DSPy RAG System dependencies
+    "dspy==3.0.1",
+    "sentence-transformers>=5.0.0",
+    "huggingface-hub>=0.30.0",
+    "tiktoken>=0.7.0",
+
+    # Neural network and deep learning
+    "torch>=2.8.0",
+    "torchvision>=0.23.0",
+
+    # Database dependencies
+    "psycopg2-binary==2.9.7",
+    "pgvector==0.2.4",
+
+    # Document processing
+    "PyMuPDF==1.23.8",
+
+    # Web framework and real-time communication
+    "flask==2.3.3",
+    "flask-socketio==5.3.6",
+    "python-socketio==5.8.0",
+    "werkzeug>=2.3.0",
+
+    # HTTP and networking
+    "requests>=2.31.0",
+    "urllib3>=2.0.0",
+
+    # File system and process management
+    "watchdog==3.0.0",
+
+    # Security and auditing
+    "bandit>=1.7.5",
+    "safety>=2.3.0",
+    "pip-audit>=2.6.0",
+
+    # Additional utilities
+    "keyring>=24.0.0",
+
+    # OpenTelemetry for production monitoring
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.20.0",
+    "opentelemetry-instrumentation-requests>=0.40b0",
+    "opentelemetry-instrumentation-flask>=0.40b0",
+    "opentelemetry-instrumentation-logging>=0.40b0",
+
+    # Conflict detection tools
+    "pycycle>=0.0.8",
+    "pipdeptree>=2.0.0",
+
+    # Code quality tools
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "ruff>=0.1.0",
+
+    # Development tools
+    "pre-commit>=3.0.0",
+
+    # Performance monitoring
+    "memory-profiler>=0.60.0",
+    "py-spy>=0.3.0",
+
+    # Advanced analysis
+    "radon>=5.1.0",
+    "mccabe>=0.7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.10.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "ruff>=0.1.0",
+    "pre-commit>=3.0.0",
+    "memory-profiler>=0.60.0",
+    "py-spy>=0.3.0",
+    "radon>=5.1.0",
+    "mccabe>=0.7.0",
+]
+test = ["pytest>=7.4.3", "pytest-cov>=4.1.0", "pytest-mock>=3.10.0"]
+security = ["bandit>=1.7.5", "safety>=2.3.0", "pip-audit>=2.6.0"]
+ml = [
+    "dspy==3.0.1",
+    "sentence-transformers>=5.0.0",
+    "huggingface-hub>=0.30.0",
+    "tiktoken>=0.7.0",
+    "torch>=2.8.0",
+    "torchvision>=0.23.0",
+]
 
 
 [tool.black]

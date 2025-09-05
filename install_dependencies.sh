@@ -1,63 +1,69 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # AI Development Tasks - Dependency Installation Script
-# Uses consolidated requirements with constraints for version consistency
+# Uses UV for fast, reliable dependency management
 
 set -e
 
-echo "🚀 Installing AI Development Tasks Dependencies"
-echo "================================================"
+echo "🚀 Installing AI Development Tasks Dependencies with UV"
+echo "======================================================="
 
-# Check if virtual environment exists
-if [ ! -d "venv" ]; then
-    echo "📦 Creating virtual environment..."
-    python3 -m venv venv
+# Check if UV is installed
+if ! command -v uv &> /dev/null; then
+    echo "📦 Installing UV..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    source $HOME/.local/bin/env
 fi
 
-# Activate virtual environment
-echo "🔧 Activating virtual environment..."
-if [ -f "venv/bin/activate" ]; then
-    # shellcheck disable=SC1091
-    source venv/bin/activate
-else
-    echo "❌ Error: Virtual environment activate script not found"
-    exit 1
-fi
+# Create virtual environment with UV
+echo "📦 Creating virtual environment with Python 3.12..."
+uv venv --python 3.12
 
-# Upgrade pip
-echo "⬆️  Upgrading pip..."
-pip install --upgrade pip
+# Install dependencies using UV
+echo "📥 Installing dependencies from pyproject.toml..."
+uv sync
 
-# Install dependencies with constraints
-echo "📥 Installing dependencies with version constraints..."
-pip install -r requirements.txt -c requirements-constraints.txt
+# Install development dependencies
+echo "📥 Installing development dependencies..."
+uv sync --extra dev
 
-# Install subproject dependencies
+# Install subproject dependencies (legacy support)
 echo "📥 Installing DSPy RAG system dependencies..."
 cd dspy-rag-system
-pip install -r requirements.txt -c ../requirements-constraints.txt
+if [ -f "requirements.txt" ]; then
+    uv pip install -r requirements.txt
+fi
 cd ..
 
 echo "📥 Installing dashboard dependencies..."
 cd dashboard
-pip install -r requirements.txt -c ../requirements-constraints.txt
+if [ -f "requirements.txt" ]; then
+    uv pip install -r requirements.txt
+fi
 cd ..
 
 echo "📥 Installing conflict detection dependencies..."
 cd config
-pip install -r requirements-conflict-detection.txt -c ../requirements-constraints.txt
+if [ -f "requirements-conflict-detection.txt" ]; then
+    uv pip install -r requirements-conflict-detection.txt
+fi
 cd ..
 
 # Verify installation
 echo "✅ Verifying installation..."
-python -c "import dspy, flask, psycopg2, pytest; print('✅ Core dependencies verified')"
+uv run python -c "import dspy, flask, psycopg2, pytest; print('✅ Core dependencies verified')"
 
 echo ""
 echo "🎉 Installation complete!"
 echo "========================="
-echo "Virtual environment: ./venv"
-echo "Activate with: source venv/bin/activate"
+echo "Virtual environment: ./.venv"
+echo "Activate with: source .venv/bin/activate"
 echo ""
 echo "Available commands:"
-echo "  pytest dspy-rag-system/tests/    # Run DSPy tests"
-echo "  python dspy-rag-system/src/dashboard.py  # Start dashboard"
-echo "  python scripts/process_tasks.py   # Run task processor"
+echo "  uv run pytest dspy-rag-system/tests/    # Run DSPy tests"
+echo "  uv run python dspy-rag-system/src/dashboard.py  # Start dashboard"
+echo "  uv run python scripts/process_tasks.py   # Run task processor"
+echo ""
+echo "UV commands:"
+echo "  uv run <command>     # Run any command in the environment"
+echo "  uv sync              # Sync dependencies from lock file"
+echo "  uv lock              # Update lock file"

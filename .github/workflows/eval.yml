@@ -29,11 +29,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyright pyyaml
+          uv pip install -r requirements.txt
+          uv pip install pyright pyyaml
 
       - name: Run Pyright type checking
         run: |
@@ -59,11 +63,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyyaml
+          uv pip install -r requirements.txt
+          uv pip install pyyaml
 
       - name: Run smoke test (retrieval evaluation)
         run: |
@@ -92,11 +100,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyyaml
+          uv pip install -r requirements.txt
+          uv pip install pyyaml
 
       - name: Run retrieval evaluation
         run: |
@@ -145,11 +157,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyyaml
+          uv pip install -r requirements.txt
+          uv pip install pyyaml
 
       - name: Download smoke test results
         uses: actions/download-artifact@v4
