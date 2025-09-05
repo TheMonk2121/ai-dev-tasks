@@ -5,6 +5,8 @@ Implements the coach's two-stage retrieval strategy
 """
 
 import logging
+import asyncio
+import hashlib
 import time
 from dataclasses import dataclass
 from typing import Any, Dict, List

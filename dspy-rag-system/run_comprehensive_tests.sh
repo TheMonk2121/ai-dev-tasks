@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Comprehensive Test Suite Runner
 # T-4.1: Advanced Testing Framework Implementation
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Wake Up Nemo - Unified Startup Script
 #
 # This script launches all visualization components and dashboards

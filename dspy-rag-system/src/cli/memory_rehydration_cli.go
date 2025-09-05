@@ -481,8 +481,8 @@ func vectorSearch(query string, k int, dbDSN string) ([]SearchResult, error) {
 	// Placeholder implementation
 	// In practice, this would use pgvector's similarity search
 	rows, err := db.QueryContext(context.Background(), `
-		SELECT id, content, file_path, line_start, line_end, is_anchor, anchor_key
-		FROM document_chunks_compat
+		SELECT id, content, metadata->>'file_path' as file_path, metadata->>'line_start' as line_start, metadata->>'line_end' as line_end, metadata->>'is_anchor' as is_anchor, metadata->>'anchor_key' as anchor_key
+		FROM document_chunks
 		WHERE embedding IS NOT NULL
 		ORDER BY embedding <-> $1
 		LIMIT $2
@@ -550,9 +550,9 @@ func bm25Search(query string, k int, dbDSN string) ([]SearchResult, error) {
 	// Placeholder implementation
 	// In practice, this would use PostgreSQL's ts_rank_cd with content_tsv
 	rows, err := db.QueryContext(context.Background(), `
-		SELECT id, content, file_path, line_start, line_end, is_anchor, anchor_key,
+		SELECT id, content, metadata->>'file_path' as file_path, metadata->>'line_start' as line_start, metadata->>'line_end' as line_end, metadata->>'is_anchor' as is_anchor, metadata->>'anchor_key' as anchor_key,
 		       0.5 as score
-		FROM document_chunks_compat
+		FROM document_chunks
 		WHERE content ILIKE '%' || $1 || '%'
 		ORDER BY score DESC
 		LIMIT $2

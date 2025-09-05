@@ -46,7 +46,7 @@ _ROLE_GUCS = {
         "work_mem": os.getenv("DB_GUC_WORK_MEM_RETRIEVAL", "128MB"),
         "plan_cache_mode": os.getenv("DB_GUC_PLAN_CACHE_MODE_RETRIEVAL", "force_custom_plan"),
         # Example: restrict schema if desired
-        # "search_path": os.getenv("DB_GUC_SEARCH_PATH_RETRIEVAL", "public"),
+        # search_path wired below from DB_SCHEMA if provided
     },
     # Writers/background tasks: conservative memory
     "writer": {
@@ -108,6 +108,16 @@ def _apply_session_gucs(conn, *, role: Optional[str] = None, extra_gucs: Optiona
     # Merge role profile
     if role and role in _ROLE_GUCS:
         gucs.update({k: str(v) for k, v in _ROLE_GUCS[role].items()})
+
+    # Global schema control: if DB_SCHEMA is set, ensure search_path prefixes it
+    db_schema = os.getenv("DB_SCHEMA")
+    if db_schema:
+        # Respect any existing search_path by prefixing the custom schema
+        current_sp = gucs.get("search_path")
+        if current_sp:
+            gucs["search_path"] = f"{db_schema}, {current_sp}"
+        else:
+            gucs["search_path"] = f"{db_schema}, public"
 
     # Merge explicit overrides last
     if extra_gucs:

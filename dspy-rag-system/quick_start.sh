@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Quick Start Script for DSPy RAG Watch Folder
 
 echo "🚀 DSPy RAG Watch Folder - Quick Start"

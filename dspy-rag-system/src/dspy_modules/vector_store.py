@@ -285,12 +285,13 @@ class HybridVectorStore(Module):
                         except Exception:
                             pass
 
+                    # Base SQL using precomputed tsvector if available
                     sql = """
                         WITH vec AS (
                           SELECT
                             d.id         AS document_id,
                             d.filename   AS filename,
-                            dc.file_path AS file_path,
+                            COALESCE(dc.file_path, d.file_path) AS file_path,
                             dc.content   AS content,
                             dc.embedding <=> %s::vector AS dist,
                             'vec'        AS src
@@ -308,7 +309,7 @@ class HybridVectorStore(Module):
                           SELECT
                             d.id         AS document_id,
                             d.filename   AS filename,
-                            dc.file_path AS file_path,
+                            COALESCE(dc.file_path, d.file_path) AS file_path,
                             dc.content   AS content,
                             ts_rank_cd(dc.content_tsv, websearch_to_tsquery('english', %s)) AS bm25,
                             'bm25'       AS src
@@ -411,7 +412,21 @@ class HybridVectorStore(Module):
                     expected = len(re.findall(r"(?<!%)%s", sql))
                     actual = len(params)
                     assert expected == actual, f"Placeholders={expected}, args={actual}"
-                    cur.execute(sql, params)
+                    try:
+                        cur.execute(sql, params)
+                    except Exception as e:
+                        # Fallback if content_tsv is missing: compute tsvector on the fly
+                        if 'content_tsv' in str(e).lower():
+                            alt_sql = sql.replace(
+                                "ts_rank_cd(dc.content_tsv, websearch_to_tsquery('english', %s))",
+                                "ts_rank_cd(to_tsvector('english', dc.content), websearch_to_tsquery('english', %s))",
+                            ).replace(
+                                "dc.content_tsv @@ websearch_to_tsquery('english', %s)",
+                                "to_tsvector('english', dc.content) @@ websearch_to_tsquery('english', %s)",
+                            )
+                            cur.execute(alt_sql, params)
+                        else:
+                            raise
                     rows = cur.fetchall()
 
             return {
@@ -450,15 +465,24 @@ class HybridVectorStore(Module):
                     cur.execute(
                         """
                         SELECT
-                          id, document_id, chunk_index, file_path, line_start, line_end,
-                          content, is_anchor, anchor_key, metadata,
-                          (embedding <=> %s::vector) AS distance
-                        FROM document_chunks
-                        WHERE embedding IS NOT NULL
-                        ORDER BY embedding <=> %s::vector ASC,
-                                 file_path NULLS LAST,
-                                 chunk_index NULLS LAST,
-                                 id ASC
+                          dc.id AS id,
+                          dc.document_id AS document_id,
+                          dc.chunk_index AS chunk_index,
+                          COALESCE(dc.file_path, d.file_path) AS file_path,
+                          dc.line_start AS line_start,
+                          dc.line_end AS line_end,
+                          dc.content AS content,
+                          dc.is_anchor AS is_anchor,
+                          dc.anchor_key AS anchor_key,
+                          dc.metadata AS metadata,
+                          (dc.embedding <=> %s::vector) AS distance
+                        FROM document_chunks dc
+                        LEFT JOIN documents d ON d.id = dc.document_id
+                        WHERE dc.embedding IS NOT NULL
+                        ORDER BY dc.embedding <=> %s::vector ASC,
+                                 COALESCE(dc.file_path, d.file_path) NULLS LAST,
+                                 dc.chunk_index NULLS LAST,
+                                 dc.id ASC
                         LIMIT %s
                         """,
                         (q_emb, q_emb, limit),
@@ -477,22 +501,61 @@ class HybridVectorStore(Module):
         try:
             with db_manager.get_connection() as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                    cur.execute(
-                        """
-                        SELECT
-                          id, document_id, chunk_index, file_path, line_start, line_end,
-                          content, is_anchor, anchor_key, metadata,
-                          ts_rank_cd(content_tsv, websearch_to_tsquery('english', %s)) AS bm25
-                        FROM document_chunks
-                        WHERE content_tsv @@ websearch_to_tsquery('english', %s)
-                        ORDER BY bm25 DESC,
-                                 file_path NULLS LAST,
-                                 chunk_index NULLS LAST,
-                                 id ASC
-                        LIMIT %s
-                        """,
-                        (query, query, limit),
-                    )
+                    try:
+                        cur.execute(
+                            """
+                            SELECT
+                              dc.id AS id,
+                              dc.document_id AS document_id,
+                              dc.chunk_index AS chunk_index,
+                              COALESCE(dc.file_path, d.file_path) AS file_path,
+                              dc.line_start AS line_start,
+                              dc.line_end AS line_end,
+                              dc.content AS content,
+                              dc.is_anchor AS is_anchor,
+                              dc.anchor_key AS anchor_key,
+                              dc.metadata AS metadata,
+                              ts_rank_cd(dc.content_tsv, websearch_to_tsquery('english', %s)) AS bm25
+                            FROM document_chunks dc
+                            LEFT JOIN documents d ON d.id = dc.document_id
+                            WHERE dc.content_tsv @@ websearch_to_tsquery('english', %s)
+                            ORDER BY bm25 DESC,
+                                     COALESCE(dc.file_path, d.file_path) NULLS LAST,
+                                     dc.chunk_index NULLS LAST,
+                                     dc.id ASC
+                            LIMIT %s
+                            """,
+                            (query, query, limit),
+                        )
+                    except Exception as e:
+                        if 'content_tsv' in str(e).lower():
+                            cur.execute(
+                                """
+                                SELECT
+                                  dc.id AS id,
+                                  dc.document_id AS document_id,
+                                  dc.chunk_index AS chunk_index,
+                                  COALESCE(dc.file_path, d.file_path) AS file_path,
+                                  dc.line_start AS line_start,
+                                  dc.line_end AS line_end,
+                                  dc.content AS content,
+                                  dc.is_anchor AS is_anchor,
+                                  dc.anchor_key AS anchor_key,
+                                  dc.metadata AS metadata,
+                                  ts_rank_cd(to_tsvector('english', dc.content), websearch_to_tsquery('english', %s)) AS bm25
+                                FROM document_chunks dc
+                                LEFT JOIN documents d ON d.id = dc.document_id
+                                WHERE to_tsvector('english', dc.content) @@ websearch_to_tsquery('english', %s)
+                                ORDER BY bm25 DESC,
+                                         COALESCE(dc.file_path, d.file_path) NULLS LAST,
+                                         dc.chunk_index NULLS LAST,
+                                         dc.id ASC
+                                LIMIT %s
+                                """,
+                                (query, query, limit),
+                            )
+                        else:
+                            raise
                     rows = cur.fetchall()
 
             return {"status": "success", "search_type": "bm25", "results": list(rows)}

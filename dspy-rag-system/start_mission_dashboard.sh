@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Startup script for Real-time Mission Dashboard
 # Handles environment setup and launches the dashboard
 

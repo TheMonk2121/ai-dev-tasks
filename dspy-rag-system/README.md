@@ -79,7 +79,7 @@ MEMORY_STORE = "postgres_diff_no_tombstones"
 ```bash
 # Create and activate virtual environment
 python3 -m venv venv
-source venv/bin/activate
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -137,7 +137,7 @@ python3 add_document.py path/to/file.txt
 
 ```bash
 # Interactive question interface with DSPy analysis
-source venv/bin/activate && python3 enhanced_ask_question.py
+source .venv/bin/activate && python3 enhanced_ask_question.py
 
 # Available commands:
 # analyze "What is DSPy?"           # Analyze query complexity
@@ -427,7 +427,7 @@ It's like having a super-smart assistant who's read all your files, can answer a
 
 ```bash
 # Start the system
-source venv/bin/activate
+source .venv/bin/activate
 
 # Ask questions
 python3 ask_question.py

@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from utils.hybrid_retriever import create_hybrid_retriever
 from utils.smart_chunker import create_smart_chunker
+from utils.eval_discovery import discover_evaluation_commands
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,17 @@ class EnhancedRetrievalPipeline:
             # Get initial retrieval results
             retrieval_results = self.retriever.retrieve(query, query_type)
 
+            # Fallback if retrievers are not configured or no results returned
+            try:
+                stats = self.retriever.get_retrieval_stats()
+                components = stats.get("components_configured", {}) if isinstance(stats, dict) else {}
+                has_any_retriever = any(bool(components.get(k)) for k in ("bm25", "dense"))
+            except Exception:
+                has_any_retriever = True  # be permissive if stats unavailable
+
+            if not retrieval_results or not has_any_retriever:
+                return self._fallback_retrieval(query)
+
             # Apply chunk stitching if enabled
             if enable_stitching:
                 stitched_results = self._stitch_related_chunks(retrieval_results, query_type)
@@ -108,8 +120,25 @@ class EnhancedRetrievalPipeline:
 
     def _stitch_related_chunks(self, results: List[Any], query_type: str) -> List[Dict[str, Any]]:
         """Stitch related chunks for better context"""
-        # Convert to list of dicts if needed
-        dict_results = [dict(r) if hasattr(r, "__dict__") else r for r in results]
+        # Convert to list of dicts if needed (support dataclasses or objects)
+        dict_results: List[Dict[str, Any]] = []
+        for r in results:
+            if isinstance(r, dict):
+                dict_results.append(r)
+            elif hasattr(r, "__dict__"):
+                try:
+                    from dataclasses import asdict
+
+                    # asdict works for dataclasses; falls back to vars otherwise
+                    try:
+                        dict_results.append(asdict(r))
+                    except Exception:
+                        dict_results.append(vars(r))
+                except Exception:
+                    dict_results.append(vars(r))
+            else:
+                # last resort, represent as string
+                dict_results.append({"text": str(r), "metadata": {}, "chunk_type": "text"})
 
         if query_type == "implementation":
             # For implementation queries, prefer complete code units
@@ -152,8 +181,55 @@ class EnhancedRetrievalPipeline:
         return min(base_score, 1.0)
 
     def _fallback_retrieval(self, query: str) -> List[Dict]:
-        """Fallback retrieval method"""
+        """Fallback retrieval method.
+
+        If the query appears to ask about running evaluations, return
+        actionable commands discovered via filesystem scanning so agents
+        can proceed without RAG/DB access.
+        """
         logger.warning("Using fallback retrieval")
+
+        ql = (query or "").lower()
+        eval_keywords = [
+            "eval",
+            "evaluation",
+            "ragchecker",
+            "run the evals",
+            "run_evals",
+            "benchmark",
+            "tests for rag",
+        ]
+        if any(k in ql for k in eval_keywords):
+            discovery = discover_evaluation_commands()
+            commands = discovery.get("commands", [])
+            files = discovery.get("files", [])
+
+            # Build a concise, actionable text block
+            lines: List[str] = []
+            if commands:
+                lines.append("Recommended commands (primary first):")
+                for c in commands[:4]:
+                    lines.append(f"- {c['label']}: {c['cmd']}")
+            if files:
+                lines.append("")
+                lines.append("Relevant files:")
+                for f in files[:6]:
+                    lines.append(f"- {f['path']}: {f['reason']}")
+
+            return [
+                {
+                    "chunk_id": "fallback_eval_1",
+                    "text": "\n".join(lines) or "Evaluation entry points discovered.",
+                    "score": 0.99,
+                    "metadata": {
+                        "fallback": True,
+                        "discovery": discovery,
+                        "reason": "DB retrieval failed or schema mismatched; returned filesystem discovery",
+                    },
+                }
+            ]
+
+        # Generic minimal fallback
         return [
             {
                 "chunk_id": "fallback_1",

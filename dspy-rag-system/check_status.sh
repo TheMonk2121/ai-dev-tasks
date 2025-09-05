@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Check DSPy RAG System Status
 
 echo "🔍 DSPy RAG System Status Check"

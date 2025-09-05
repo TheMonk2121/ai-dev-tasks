@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Startup script for NiceGUI Graph Visualization Application.
 #
 # This script starts the NiceGUI graph visualization application that provides

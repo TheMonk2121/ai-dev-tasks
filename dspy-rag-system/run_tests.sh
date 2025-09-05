@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # DSPy RAG System Test Runner
 # Enhanced with marker-based test selection (Phase 1)
 

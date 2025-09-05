@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Sleep Nemo - Unified Shutdown Script (Optimized)
 #
 # This script stops all visualization components and dashboards

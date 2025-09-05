@@ -203,7 +203,21 @@ def run_hybrid_search(
     db = get_database_manager()
     with db.get_connection() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-            cur.execute(sql, params)
+            try:
+                cur.execute(sql, params)
+            except Exception as e:
+                # Fallback if content_tsv is missing: substitute computed tsvector
+                if 'content_tsv' in str(e).lower():
+                    alt_sql = sql.replace(
+                        "ts_rank_cd(dc.content_tsv, websearch_to_tsquery('english', %s))",
+                        "ts_rank_cd(to_tsvector('english', dc.content), websearch_to_tsquery('english', %s))",
+                    ).replace(
+                        "dc.content_tsv @@ websearch_to_tsquery('english', %s)",
+                        "to_tsvector('english', dc.content) @@ websearch_to_tsquery('english', %s)",
+                    )
+                    cur.execute(alt_sql, params)
+                else:
+                    raise
             rows = [dict(r) for r in cur.fetchall()]
 
             # Namespace seed fetch (independent query)

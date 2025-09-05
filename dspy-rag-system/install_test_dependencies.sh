@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Install test dependencies for DSPy RAG System
 
 echo "🔧 Installing test dependencies..."

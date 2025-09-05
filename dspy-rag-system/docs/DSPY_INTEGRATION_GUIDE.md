@@ -218,7 +218,7 @@ knows everything in your documents and can answer questions about them intellige
 
 # Activate virtual environment
 
-source venv/bin/activate
+source .venv/bin/activate
 
 # Start interactive question interface
 

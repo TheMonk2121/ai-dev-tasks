@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # DSPy RAG System Setup Script
 # This script sets up the DSPy RAG system with your existing infrastructure

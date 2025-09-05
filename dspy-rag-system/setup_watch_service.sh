@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Setup Watch Folder as System Service
 
 echo "🚀 Setting up Watch Folder as System Service..."

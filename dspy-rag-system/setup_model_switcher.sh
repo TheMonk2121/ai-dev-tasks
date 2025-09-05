@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Setup script for Model Switcher
 # Installs Ollama and pulls required models for the DSPy multi-agent system.
 

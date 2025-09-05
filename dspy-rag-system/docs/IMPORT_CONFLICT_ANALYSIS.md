@@ -59,9 +59,9 @@ export PYTHONPATH=dspy-rag-system/src
 #### **pyproject.toml Issues:**
 ```toml
 [tool.pyright]
-extraPaths = ["src", "tests", "../venv/lib/python3.*/site-packages"]
+extraPaths = ["src", "tests", "../.venv/lib/python3.*/site-packages"]
 include = ["src", "tests", "*.py"]
-exclude = ["venv", "600_archives", "**/__pycache__", ".pytest_cache"]  # Tests and archives excluded
+exclude = [".venv", "600_archives", "**/__pycache__", ".pytest_cache"]  # Tests and archives excluded
 ```
 
 #### **Conflicting Documentation:**

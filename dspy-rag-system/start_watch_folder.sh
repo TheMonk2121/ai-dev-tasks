@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # DSPy RAG System - Watch Folder Launcher
 
 echo "🚀 Starting DSPy RAG Watch Folder..."
