@@ -7,6 +7,7 @@ Uses POSTGRES_DSN or DATABASE_URL.
 
 import os
 import sys
+
 import psycopg2
 
 

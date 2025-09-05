@@ -20,8 +20,7 @@ import ast
 import json
 import os
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
-
+from typing import Dict, List, Optional, Tuple
 
 EXCLUDE_DIRS = {
     ".git",

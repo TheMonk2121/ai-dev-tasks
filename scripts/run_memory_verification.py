@@ -48,7 +48,7 @@ def generate_session_id(user_id: str) -> str:
 
 def seed_demo(conversation_storage, session_id: str, user_id: str) -> bool:
     try:
-        from utils.conversation_storage import ConversationSession, ConversationMessage  # type: ignore
+        from utils.conversation_storage import ConversationMessage, ConversationSession  # type: ignore
     except Exception as e:
         print(f"[FAIL] Could not import ConversationStorage models: {e}")
         return False

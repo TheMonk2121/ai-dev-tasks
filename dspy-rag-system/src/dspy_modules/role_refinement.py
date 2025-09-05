@@ -8,10 +8,10 @@ developer patterns and optimizes role performance.
 """
 
 import logging
+import sys
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-import sys
 from typing import Any, Dict, List
 
 # Apply litellm compatibility shim before importing DSPy

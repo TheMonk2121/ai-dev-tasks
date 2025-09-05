@@ -339,7 +339,7 @@ class N8nLTSTIntegration:
             }
 
             # Extract decisions from workflow outcomes
-            workflow_decisions = workflow_data.get("workflow_decisions", [])
+            workflow_data.get("workflow_decisions", [])
 
             # Store as decision in LTST memory
             decision_key = f"n8n_workflow_integration_{datetime.now().strftime('%Y%m%d_%H%M%S')}"

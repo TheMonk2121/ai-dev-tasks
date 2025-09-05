@@ -6,7 +6,6 @@ This script tests the unified data pipeline that combines all data sources
 for cross-source correlation and comprehensive context intelligence.
 """
 
-import json
 import sys
 from pathlib import Path
 
@@ -25,7 +24,7 @@ def test_unified_data_pipeline():
     # Database connection string
     db_connection_string = "postgresql://danieljacobs@localhost:5432/ai_agency"
 
-    print(f"\n📊 Testing unified data pipeline execution")
+    print("\n📊 Testing unified data pipeline execution")
     print("-" * 40)
 
     # Test 1: Complete pipeline execution

@@ -259,7 +259,7 @@ class CodeReviewIntegration:
 
                 review_core = CodeReviewCore()
 
-                review_metrics = review_core.start_review(review_id=review_id, target_paths=file_changes)
+                review_core.start_review(review_id=review_id, target_paths=file_changes)
 
                 logger.info(f"✅ Auto-triggered review: {review_id}")
                 return review_id
@@ -283,7 +283,7 @@ class CodeReviewIntegration:
             review_core = CodeReviewCore()
 
             # Start review
-            review_metrics = review_core.start_review(review_id, target_paths)
+            review_core.start_review(review_id, target_paths)
 
             # Run analyses
             security_issues = review_core.run_security_analysis()

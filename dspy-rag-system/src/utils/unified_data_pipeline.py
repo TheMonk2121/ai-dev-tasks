@@ -12,7 +12,7 @@ import logging
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 # Add the project root to the path for imports
 project_root = Path(__file__).parent.parent.parent.parent
@@ -103,7 +103,7 @@ class UnifiedDataPipeline:
             # Perform pattern recognition
             unified_data["pattern_recognition"] = self._recognize_patterns(unified_data)
 
-            logger.info(f"📊 Ingested data from all sources through unified pipeline")
+            logger.info("📊 Ingested data from all sources through unified pipeline")
             return unified_data
 
         except Exception as e:
@@ -130,7 +130,7 @@ class UnifiedDataPipeline:
                 "decision_impact_analysis": self._analyze_decision_impact(unified_data)
             }
 
-            logger.info(f"🔗 Performed cross-source correlation and enrichment")
+            logger.info("🔗 Performed cross-source correlation and enrichment")
             return correlation_data
 
         except Exception as e:
@@ -158,7 +158,7 @@ class UnifiedDataPipeline:
                 "correlation_context": self._build_correlation_context(unified_data)
             }
 
-            logger.info(f"🧠 Built comprehensive context intelligence")
+            logger.info("🧠 Built comprehensive context intelligence")
             return context_intelligence
 
         except Exception as e:
@@ -182,7 +182,7 @@ class UnifiedDataPipeline:
         try:
             # Create a comprehensive decision entry for the unified pipeline
             decision_data = {
-                "head": f"Unified data pipeline executed with cross-source correlation",
+                "head": "Unified data pipeline executed with cross-source correlation",
                 "rationale": self._create_unified_pipeline_rationale(unified_data, correlation_data, context_intelligence),
                 "confidence": 0.92,  # High confidence for comprehensive capture
                 "metadata": {
@@ -196,7 +196,7 @@ class UnifiedDataPipeline:
 
             # Store in LTST memory (this would typically call the decision storage API)
             # For now, we'll log the decision data
-            logger.info(f"💾 Stored unified data pipeline results in LTST memory")
+            logger.info("💾 Stored unified data pipeline results in LTST memory")
             logger.debug(f"Decision data: {json.dumps(decision_data, indent=2)}")
 
             return True
@@ -502,7 +502,7 @@ class UnifiedDataPipeline:
 
     def _recognize_correlation_patterns(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
         """Recognize correlation patterns."""
-        correlations = unified_data.get("cross_source_correlation", {})
+        unified_data.get("cross_source_correlation", {})
 
         return {
             "data_source_integration": "comprehensive",

@@ -442,7 +442,7 @@ class ErrorHandler:
     def _execute_permission_action(self, action: RecoveryAction,
                                  error_info: ErrorInfo) -> bool:
         """Execute a permission fix recovery action."""
-        chmod = action.parameters.get("chmod", "755")
+        action.parameters.get("chmod", "755")
 
         try:
             # Extract file path from error message if possible

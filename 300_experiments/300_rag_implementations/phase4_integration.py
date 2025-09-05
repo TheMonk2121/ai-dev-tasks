@@ -5,31 +5,24 @@ Integrates confidence calibration, selective answering, and feedback loops
 into the RAG system for production-ready uncertainty quantification.
 """
 
+import json
 import logging
 import time
-import json
-from typing import Dict, List, Tuple, Optional, Any, Union
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
 
-from uncertainty.confidence_calibration import (
-    ConfidenceCalibrator,
-    CalibrationConfig,
-    create_calibration_dataset
-)
-from uncertainty.selective_answering import (
-    SelectiveAnswering,
-    SelectiveAnsweringConfig,
-    EvidenceQuality
-)
+from uncertainty.confidence_calibration import CalibrationConfig, ConfidenceCalibrator, create_calibration_dataset
 from uncertainty.feedback_loops import (
     FeedbackCollector,
-    FeedbackProcessor,
     FeedbackConfig,
+    FeedbackPriority,
+    FeedbackProcessor,
     FeedbackType,
-    FeedbackPriority
 )
+from uncertainty.selective_answering import SelectiveAnswering, SelectiveAnsweringConfig
 
 logger = logging.getLogger(__name__)
 

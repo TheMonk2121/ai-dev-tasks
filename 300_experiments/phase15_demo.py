@@ -102,7 +102,7 @@ async def test_freshness_enhancement():
     print("=" * 50)
 
     try:
-        from retrieval.freshness_enhancer import create_freshness_enhancer, FreshnessConfig
+        from retrieval.freshness_enhancer import FreshnessConfig, create_freshness_enhancer
 
         # Test configuration
         config = FreshnessConfig(
@@ -163,9 +163,9 @@ async def test_freshness_enhancement():
         )
 
         print(f"  Enhancement applied: {metadata['enhancements_applied']}")
-        print(f"  No changes expected for evergreen queries")
+        print("  No changes expected for evergreen queries")
 
-        print(f"  ✅ Freshness enhancement working correctly")
+        print("  ✅ Freshness enhancement working correctly")
         return True
 
     except Exception as e:
@@ -180,7 +180,7 @@ async def test_intent_routing():
     print("=" * 50)
 
     try:
-        from retrieval.intent_router import create_intent_router, IntentRouterConfig
+        from retrieval.intent_router import IntentRouterConfig, create_intent_router
 
         # Test configuration
         config = IntentRouterConfig(
@@ -260,12 +260,12 @@ async def test_intent_routing():
         intent_accuracy = sum(1 for r in results if r['intent_correct']) / len(results)
         route_accuracy = sum(1 for r in results if r['route_correct']) / len(results)
 
-        print(f"\n  📊 Intent Routing Results:")
+        print("\n  📊 Intent Routing Results:")
         print(f"    Intent accuracy: {intent_accuracy:.1%} ({sum(1 for r in results if r['intent_correct'])}/{len(results)})")
         print(f"    Route accuracy: {route_accuracy:.1%} ({sum(1 for r in results if r['route_correct'])}/{len(results)})")
         print(f"    Average confidence: {sum(r['confidence'] for r in results) / len(results):.3f}")
 
-        print(f"  ✅ Intent routing working correctly")
+        print("  ✅ Intent routing working correctly")
         return intent_accuracy >= 0.8 and route_accuracy >= 0.8
 
     except Exception as e:
@@ -328,7 +328,7 @@ async def test_phase15_integration():
             else:
                 print(f"    Short-circuited to {intent_result.route_target} handler")
 
-        print(f"  ✅ Phase 1.5 integration working correctly")
+        print("  ✅ Phase 1.5 integration working correctly")
         return True
 
     except Exception as e:

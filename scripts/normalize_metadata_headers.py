@@ -46,9 +46,7 @@ def is_deprecated_module(value: str) -> bool:
     return False
 
 def rewrite_header(lines: list) -> list:
-    kept = []
     module_values = []
-    i = 0
     # gather leading HTML comment header block (first 50 lines)
     header_end = 0
     for idx, line in enumerate(lines[:50]):

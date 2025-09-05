@@ -25,11 +25,11 @@ def test_cross_encoder_availability():
         print("✅ Cross-encoder reranker imported successfully")
 
         # Test initialization
-        reranker = CrossEncoderReranker()
+        CrossEncoderReranker()
         print("✅ Cross-encoder reranker initialized")
 
         # Test enhanced filter
-        enhanced_filter = EnhancedEvidenceFilter()
+        EnhancedEvidenceFilter()
         print("✅ Enhanced evidence filter initialized")
 
         return True

@@ -207,7 +207,7 @@ class PerformanceOptimizer:
         """Background loop for performance monitoring"""
         try:
             while self.running:
-                start_time = time.time()
+                time.time()
 
                 try:
                     # Collect performance metrics

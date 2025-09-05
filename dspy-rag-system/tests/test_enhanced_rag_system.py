@@ -4,13 +4,9 @@ Comprehensive Test Suite for Enhanced DSPy RAG System
 Tests pre-RAG query rewriting and post-RAG answer synthesis
 """
 
-import json
-import os
 import sys
-import tempfile
 import time
-from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -389,7 +385,6 @@ class TestPerformance:
 
     def test_query_complexity_analysis_performance(self):
         """Test performance of query complexity analysis"""
-        import time
 
         start_time = time.time()
         for _ in range(100):
@@ -401,7 +396,6 @@ class TestPerformance:
 
     def test_domain_context_creation_performance(self):
         """Test performance of domain context creation"""
-        import time
 
         start_time = time.time()
         for _ in range(1000):

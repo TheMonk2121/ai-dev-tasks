@@ -275,7 +275,7 @@ Examples:
     index_parser.add_argument("--root-path", default=".", help="Root path to scan")
 
     # Stats command
-    stats_parser = subparsers.add_parser("stats", help="Get documentation statistics")
+    subparsers.add_parser("stats", help="Get documentation statistics")
 
     # Glance command
     glance_parser = subparsers.add_parser("glance", help="Show At-a-glance for files")

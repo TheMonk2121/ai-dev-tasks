@@ -17,6 +17,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from rag.phase3_integration import create_phase3_rag_system
+
 from training.domain_tuning_pipeline import DomainTuningConfig, create_domain_tuning_pipeline
 
 # Configure logging
@@ -424,7 +425,7 @@ def main():
         integration_success = demonstrate_phase3_integration()
 
         # Demonstrate configuration options
-        configs = demonstrate_configuration_options()
+        demonstrate_configuration_options()
 
         # Summary
         print("\n🎉 Phase 3 Demonstration Summary")

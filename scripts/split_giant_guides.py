@@ -83,9 +83,9 @@ class GiantGuideSplitter:
 
     def determine_splitting_strategy(self, analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Determine how to split the file based on its structure"""
-        file_path = analysis['file_path']
+        analysis['file_path']
         headers = analysis['headers']
-        lines = analysis['lines']
+        analysis['lines']
         total_lines = analysis['total_lines']
 
         # If file is under max_lines_per_module, don't split
@@ -111,7 +111,7 @@ class GiantGuideSplitter:
         """Split file by top-level sections (## headers)"""
         file_path = analysis['file_path']
         lines = analysis['lines']
-        content = analysis['content']
+        analysis['content']
 
         splits = []
 
@@ -251,7 +251,7 @@ class GiantGuideSplitter:
         """Split file by content chunks when no clear section structure exists"""
         file_path = analysis['file_path']
         lines = analysis['lines']
-        content = analysis['content']
+        analysis['content']
 
         splits = []
 

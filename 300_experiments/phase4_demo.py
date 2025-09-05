@@ -9,20 +9,18 @@ Demonstrates the Phase 4 RAG system capabilities including:
 - Continuous improvement through feedback analysis
 """
 
-import sys
-import os
 import logging
-import time
-import json
+import sys
 from pathlib import Path
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from rag.phase4_integration import Phase4RAGSystem, Phase4Config
+from rag.phase4_integration import Phase4Config, Phase4RAGSystem
+
 from uncertainty.confidence_calibration import CalibrationConfig
+from uncertainty.feedback_loops import FeedbackConfig, FeedbackPriority, FeedbackType
 from uncertainty.selective_answering import SelectiveAnsweringConfig
-from uncertainty.feedback_loops import FeedbackConfig, FeedbackType, FeedbackPriority
 
 # Configure logging
 logging.basicConfig(
@@ -141,7 +139,7 @@ def demo_confidence_calibration(phase4_system: Phase4RAGSystem):
     high_conf_total = sum(1 for d in mock_data if d["confidence_score"] > 0.8)
     high_conf_accuracy = high_conf_correct / high_conf_total if high_conf_total > 0 else 0
 
-    print(f"📈 Before calibration:")
+    print("📈 Before calibration:")
     print(f"   High confidence (>0.8) accuracy: {high_conf_accuracy:.1%}")
     print(f"   High confidence samples: {high_conf_total}")
 
@@ -155,7 +153,7 @@ def demo_confidence_calibration(phase4_system: Phase4RAGSystem):
         print(f"❌ Calibration failed: {calibration_results['error']}")
         return
 
-    print(f"✅ Calibration complete!")
+    print("✅ Calibration complete!")
     print(f"   Temperature parameter: {calibration_results['calibration_results']['temperature']:.4f}")
     print(f"   Calibration error: {calibration_results['calibration_results']['calibration_error']:.4f}")
     print(f"   ECE score: {calibration_results['calibration_results']['ece_score']:.4f}")
@@ -342,7 +340,7 @@ def demo_feedback_loops(phase4_system: Phase4RAGSystem):
     try:
         weekly_report = phase4_system.generate_feedback_report("weekly")
         if "error" not in weekly_report:
-            print(f"   ✅ Weekly report generated")
+            print("   ✅ Weekly report generated")
             print(f"      Period: {weekly_report.get('period', 'unknown')}")
             print(f"      Total feedback: {weekly_report.get('total_feedback', 0)}")
             print(f"      Recent feedback: {weekly_report.get('recent_feedback', 0)}")
@@ -459,7 +457,7 @@ def main():
     # Final system status
     try:
         final_status = phase4_system.get_system_status()
-        print(f"📊 Final System Status:")
+        print("📊 Final System Status:")
         print(f"   Phase: {final_status.get('phase', 'Unknown')}")
 
         components = final_status.get("components", {})
@@ -467,11 +465,11 @@ def main():
             if config.get("enabled", False):
                 print(f"   ✅ {component}: Active")
 
-        print(f"\n💡 Next Steps:")
-        print(f"   1. Review generated reports in metrics/phase4/")
-        print(f"   2. Check calibration models in models/phase4/calibration/")
-        print(f"   3. Monitor feedback database at data/feedback.db")
-        print(f"   4. Integrate with production RAG pipeline")
+        print("\n💡 Next Steps:")
+        print("   1. Review generated reports in metrics/phase4/")
+        print("   2. Check calibration models in models/phase4/calibration/")
+        print("   3. Monitor feedback database at data/feedback.db")
+        print("   4. Integrate with production RAG pipeline")
 
     except Exception as e:
         print(f"❌ Failed to get final status: {e}")

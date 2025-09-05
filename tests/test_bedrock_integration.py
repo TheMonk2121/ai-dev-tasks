@@ -291,8 +291,8 @@ class TestBedrockIntegration(unittest.TestCase):
         """Test complete integration workflow."""
         # 1. Initialize components
         client = BedrockClient(usage_log_file=self.usage_log_file)
-        monitor = BedrockCostMonitor(usage_log_file=self.usage_log_file)
-        processor = BedrockBatchProcessor(bedrock_client=client)
+        BedrockCostMonitor(usage_log_file=self.usage_log_file)
+        BedrockBatchProcessor(bedrock_client=client)
 
         # 2. Simulate usage (mock the actual API calls)
         with patch.object(client, "invoke_model") as mock_invoke:
@@ -317,7 +317,7 @@ class TestBedrockIntegration(unittest.TestCase):
             self.assertAlmostEqual(usage.total_cost, 0.001, places=6)
 
         # 5. Check session usage (should be updated by _update_usage call)
-        session_usage = client.get_session_usage()
+        client.get_session_usage()
         # Note: Session usage is only updated when _update_usage is called
         # which happens in the actual invoke_model method, not our mock
 

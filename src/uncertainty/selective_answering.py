@@ -6,12 +6,11 @@ prediction grounding for production-safe RAG responses.
 """
 
 import logging
-import numpy as np
-from typing import Dict, List, Tuple, Optional, Any, Union
 from dataclasses import dataclass
 from enum import Enum
-import json
-from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 

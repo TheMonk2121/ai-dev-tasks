@@ -104,7 +104,7 @@ async def test_phase2_components():
             sub_claims=["DSPy is a framework", "DSPy has optimization", "optimization uses metrics"]
         )
 
-        print(f"  ✅ Multi-hop planning completed")
+        print("  ✅ Multi-hop planning completed")
         print(f"    Hops executed: {result['planning_trace']['hops_executed']}")
         print(f"    Stop reason: {result['planning_trace']['stop_reason']}")
         print(f"    Final coverage: {result['planning_trace']['final_metrics'].coverage:.3f}")
@@ -191,7 +191,7 @@ async def test_phase2_integration():
 
         # Summary
         correct_decisions = sum(1 for r in results if r['correct_decision'])
-        print(f"\n  ✅ Phase 2 integration test completed")
+        print("\n  ✅ Phase 2 integration test completed")
         print(f"    Correct multihop decisions: {correct_decisions}/{len(results)}")
         print(f"    Average confidence: {sum(r['confidence'] for r in results) / len(results):.3f}")
 
@@ -207,7 +207,7 @@ async def test_gating_mechanisms():
 
     print("\n3. Testing Data-Driven Gating...")
     try:
-        from retrieval.multihop_planner import MultiHopPlanner, CoverageMetrics
+        from retrieval.multihop_planner import CoverageMetrics, MultiHopPlanner
 
         # Test coverage-based gating
         planner = MultiHopPlanner(
@@ -252,11 +252,11 @@ async def test_gating_mechanisms():
         )
 
         low_coverage_decision = planner._should_continue_multihop(state, low_coverage_metrics)
-        print(f"\n  Low coverage test:")
+        print("\n  Low coverage test:")
         print(f"  Coverage: {low_coverage_metrics.coverage:.3f}")
         print(f"  Should continue: {low_coverage_decision['should_continue']} (should be True)")
 
-        print(f"  ✅ Gating mechanisms working correctly")
+        print("  ✅ Gating mechanisms working correctly")
         return True
 
     except Exception as e:
@@ -285,7 +285,7 @@ async def test_configuration_loading():
                 print(f"  ❌ Missing config setting: {setting}")
                 return False
 
-        print(f"  ✅ Configuration loaded successfully")
+        print("  ✅ Configuration loaded successfully")
         print(f"    Max hops: {multihop_config['max_hops']}")
         print(f"    Token budget: {multihop_config['token_budget']}")
         print(f"    Coverage threshold: {multihop_config['coverage_threshold']}")

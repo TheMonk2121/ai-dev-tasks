@@ -270,7 +270,6 @@ class RepoMaintenance:
         """T-4: Validate PRD-skip rule wording."""
         self.log("Running T-4: Validate PRD-skip rule...")
 
-        expected_rule = "Skip PRD when points<5 AND score_total≥3.0"
         rule_variations = [
             r"skip.*items.*5.*pts.*score.*3\.0",
             r"points.*5.*score.*3\.0",

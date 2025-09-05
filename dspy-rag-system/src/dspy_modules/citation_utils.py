@@ -102,7 +102,7 @@ def score_hit(
     """Score a hit based on multiple criteria."""
     # Pull fields defensively
     filename = canon_filename(str(getattr_or_get(hit, "filename", "")))
-    file_path = str(getattr_or_get(hit, "file_path", "") or "")
+    str(getattr_or_get(hit, "file_path", "") or "")
     content = str(getattr_or_get(hit, "content", "") or "")
     base = float(getattr_or_get(hit, "score", 0.0) or 0.0)
 
@@ -191,7 +191,7 @@ def evaluate_citation_quality(citations: List[str], question: str, expected_cita
     explicit_file_recall = len(expected_files & cited_files) / len(expected_files) if expected_files else 1.0
 
     # Anchor coverage
-    anchors = anchor_terms_for_question(question)
+    anchor_terms_for_question(question)
     anchor_coverage = 0.0  # Would need content analysis for full implementation
 
     # Diversity (no duplicates)

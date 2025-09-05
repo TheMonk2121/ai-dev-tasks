@@ -12,9 +12,9 @@ from typing import Any, Dict, List, Optional
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from utils.eval_discovery import discover_evaluation_commands
 from utils.hybrid_retriever import create_hybrid_retriever
 from utils.smart_chunker import create_smart_chunker
-from utils.eval_discovery import discover_evaluation_commands
 
 logger = logging.getLogger(__name__)
 

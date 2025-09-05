@@ -5,8 +5,7 @@ Test suite for fast-path bypass functionality.
 
 import os
 import sys
-from typing import Any, Dict
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 

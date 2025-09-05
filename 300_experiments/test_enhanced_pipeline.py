@@ -85,7 +85,7 @@ def test_integration():
     print("\n🧪 Testing Integration")
     print("=" * 50)
 
-    pipeline = create_enhanced_pipeline()
+    create_enhanced_pipeline()
     generator = create_enhanced_generator()
 
     # Mock retrieval results (since we don't have real BM25/dense retrievers)
@@ -138,7 +138,7 @@ def main():
         print("=" * 60)
 
         # Test individual components
-        pipeline = test_enhanced_pipeline()
+        test_enhanced_pipeline()
         generator = test_enhanced_generator()
 
         # Test integration

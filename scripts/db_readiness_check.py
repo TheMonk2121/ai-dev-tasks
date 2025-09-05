@@ -13,16 +13,14 @@ Exits non-zero on failure; prints a concise summary for CI/PR gates.
 from __future__ import annotations
 
 import sys
-from typing import Iterable
 from pathlib import Path
+from typing import Iterable
 
 import psycopg2
-from psycopg2.extras import RealDictCursor
 
 # Add src to path for resolver import
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 from common.db_dsn import resolve_dsn  # noqa: E402
-
 
 CRITICAL_TABLES: tuple[str, ...] = (
     # LTST schema core

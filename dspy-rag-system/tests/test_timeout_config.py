@@ -8,8 +8,6 @@ import os
 import tempfile
 from unittest.mock import patch
 
-import pytest
-
 from src.utils.timeout_config import (
     TimeoutConfig,
     format_timeout_duration,
@@ -166,7 +164,6 @@ class TestTimeoutIntegration:
 
     def test_vector_store_timeout_integration(self):
         """Test that vector store uses timeout configuration"""
-        from src.dspy_modules.vector_store import _get_pool
 
         # Mock the timeout config
         with patch('src.dspy_modules.vector_store.get_timeout_config') as mock_get_config:

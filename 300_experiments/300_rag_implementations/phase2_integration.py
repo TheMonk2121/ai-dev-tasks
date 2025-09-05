@@ -20,7 +20,7 @@ except ImportError:
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).parent.parent))
 
-    from retrieval.multihop_planner import MultiHopPlanner, create_multihop_planner
+    from retrieval.multihop_planner import create_multihop_planner
     from telemetry.request_logger import log_rag_request
 
 

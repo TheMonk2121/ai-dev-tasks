@@ -9,8 +9,8 @@ context on-demand, solving context overload through intelligent retrieval.
 import json
 import logging
 import os
-from datetime import datetime
 import sys
+from datetime import datetime
 from typing import Any, Dict, List, Optional, cast
 
 # Apply litellm compatibility shim before importing DSPy

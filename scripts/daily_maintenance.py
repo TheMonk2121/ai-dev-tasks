@@ -6,8 +6,8 @@ Automated daily maintenance tasks for UV environment.
 """
 
 import subprocess
-import sys
 from datetime import datetime
+
 
 def run_daily_maintenance():
     """Run daily maintenance tasks."""
@@ -23,7 +23,7 @@ def run_daily_maintenance():
     for task_name, cmd in tasks:
         print(f"\n📋 {task_name}...")
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            subprocess.run(cmd, capture_output=True, text=True, check=True)
             print(f"✅ {task_name} completed")
         except subprocess.CalledProcessError as e:
             print(f"⚠️ {task_name} failed: {e}")

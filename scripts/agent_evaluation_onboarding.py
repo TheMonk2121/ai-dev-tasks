@@ -50,7 +50,7 @@ def check_aws_credentials():
     print_header("AWS Credentials Check")
 
     try:
-        result = subprocess.run(["aws", "sts", "get-caller-identity"], capture_output=True, text=True, check=True)
+        subprocess.run(["aws", "sts", "get-caller-identity"], capture_output=True, text=True, check=True)
         print("✅ AWS credentials configured")
         return True
     except (subprocess.CalledProcessError, FileNotFoundError):

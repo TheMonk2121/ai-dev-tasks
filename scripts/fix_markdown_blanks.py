@@ -16,7 +16,6 @@ import sys
 def ensure_code_fence_language(lines):
     out = []
     in_fence = False
-    fence_lang = None
     for line in lines:
         if line.strip().startswith("```"):
             ticks = line.strip()
@@ -26,10 +25,8 @@ def ensure_code_fence_language(lines):
                 if not lang:
                     line = "```text\n"
                 in_fence = True
-                fence_lang = lang or "text"
             else:
                 in_fence = False
-                fence_lang = None
         out.append(line)
     return out
 

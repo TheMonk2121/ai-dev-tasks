@@ -34,7 +34,7 @@ def test_n8n_ltst_integration():
 
         # Create test workflow data
         print("\n2. Creating test workflow data...")
-        test_workflow_data = create_test_workflow_data()
+        create_test_workflow_data()
         print("✅ Test workflow data created")
 
         # Test workflow capture

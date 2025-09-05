@@ -100,7 +100,7 @@ def test_realistic_performance():
             role_context=None,
         )
 
-        prompt = prompt_manager.generate_prompt(template_id="perf_template", context=context)
+        prompt_manager.generate_prompt(template_id="perf_template", context=context)
         prompt_times.append(time.time() - start_time)
 
     prompt_avg = statistics.mean(prompt_times)
@@ -168,7 +168,7 @@ def test_realistic_performance():
         preference_manager.set_user_preference(user_id, "style", "detailed")
         preference_manager.set_user_preference(user_id, "language", "python")
 
-        prefs = preference_manager.get_user_preferences(user_id)
+        preference_manager.get_user_preferences(user_id)
         pref_times.append(time.time() - start_time)
 
     pref_avg = statistics.mean(pref_times)
@@ -189,7 +189,7 @@ def test_realistic_performance():
     debug_times = []
     for i in range(50):
         start_time = time.time()
-        debug_context = debugging_manager.capture_debugging_context(
+        debugging_manager.capture_debugging_context(
             variable_snapshot={"test_var": f"value_{i}", "index": i}
         )
         debug_times.append(time.time() - start_time)
@@ -212,10 +212,10 @@ def test_realistic_performance():
     error_times = []
     for i in range(50):
         start_time = time.time()
-        validation_error = ErrorFactory.create_validation_error(
+        ErrorFactory.create_validation_error(
             message=f"Test validation error {i}", validation_type="format", field_name="test_field"
         )
-        runtime_error = ErrorFactory.create_runtime_error(
+        ErrorFactory.create_runtime_error(
             message=f"Test runtime error {i}", operation="test_operation", resource="test_resource"
         )
         error_times.append(time.time() - start_time)
@@ -252,12 +252,12 @@ def test_realistic_performance():
             role_context=None,
         )
 
-        prompt = prompt_manager.generate_prompt(template_id="perf_template", context=user_context)
+        prompt_manager.generate_prompt(template_id="perf_template", context=user_context)
 
         preference_manager.set_user_preference(f"workflow_user_{i}", "style", "detailed")
-        prefs = preference_manager.get_user_preferences(f"workflow_user_{i}")
+        preference_manager.get_user_preferences(f"workflow_user_{i}")
 
-        debug_context = debugging_manager.capture_debugging_context(
+        debugging_manager.capture_debugging_context(
             user_context=user_context, role_context=context, variable_snapshot={"workflow_step": i}
         )
 

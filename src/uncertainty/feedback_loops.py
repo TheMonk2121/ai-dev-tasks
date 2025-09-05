@@ -5,15 +5,16 @@ Implements user feedback integration and continuous improvement mechanisms
 for production RAG system confidence and quality.
 """
 
-import logging
 import json
+import logging
+import sqlite3
 import time
-from typing import Dict, List, Tuple, Optional, Any, Union
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
+from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-import sqlite3
-from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
 
 logger = logging.getLogger(__name__)

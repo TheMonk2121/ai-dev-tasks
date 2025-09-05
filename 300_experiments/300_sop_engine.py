@@ -4,12 +4,12 @@ SOP (Standard Operating Procedures) Engine with Graph-Based Process Representati
 Based on ChatGPT Pro's recommendations for lessons-learned → SOP conversion
 """
 
-import json
-import networkx as nx
-from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
-import hashlib
+from typing import Any, Dict, List, Optional, Tuple
+
+import networkx as nx
+
 
 class SOPNodeType(Enum):
     TASK = "task"
@@ -258,7 +258,7 @@ class SOPEngine:
 
             # Determine edge type based on node types
             source_type = graph.nodes[source]["node_type"]
-            target_type = graph.nodes[target]["node_type"]
+            graph.nodes[target]["node_type"]
 
             if source_type == "decision":
                 edge_type = SOPEdgeType.CONDITIONAL

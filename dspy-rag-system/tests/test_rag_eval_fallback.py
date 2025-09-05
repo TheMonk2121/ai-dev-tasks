@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import pytest
 
 from src.dspy_modules.rag_pipeline import RAGModule
 

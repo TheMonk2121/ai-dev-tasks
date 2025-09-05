@@ -300,7 +300,7 @@ class UVDependencyManager:
         unused = []
 
         try:
-            result = subprocess.run(
+            subprocess.run(
                 ["uv", "run", "python", "-c", "import sys; print('\\n'.join(sys.modules.keys()))"],
                 capture_output=True,
                 text=True,
