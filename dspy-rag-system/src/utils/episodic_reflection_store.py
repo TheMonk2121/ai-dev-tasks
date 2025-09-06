@@ -355,7 +355,12 @@ class EpisodicReflectionStore:
             # Offline/mock mode can return zeroed stats to keep system stable
             import os
 
-            if os.getenv("MEMORY_HEALTHCHECK_OFFLINE", "0") == "1" or os.getenv("EPISODIC_OFFLINE_OK", "0") == "1":
+            dsn = os.getenv("POSTGRES_DSN", "")
+            if (
+                os.getenv("MEMORY_HEALTHCHECK_OFFLINE", "0") == "1"
+                or os.getenv("EPISODIC_OFFLINE_OK", "0") == "1"
+                or dsn.startswith("mock://")
+            ):
                 return {
                     "total_reflections": 0,
                     "unique_agents": 0,

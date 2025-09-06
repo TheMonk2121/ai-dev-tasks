@@ -26,13 +26,19 @@ class CrossEncoderReranker:
         self.cache = {}
         self.cache_enabled = True
 
-        # Configuration from environment
-        self.top_n = int(os.getenv("RAGCHECKER_CROSS_ENCODER_TOP_N", "50"))
-        self.weight = float(os.getenv("RAGCHECKER_CROSS_ENCODER_WEIGHT", "0.15"))
+        # Configuration from environment (support both legacy and CE_* names)
+        top_n_str = os.getenv("RAGCHECKER_CROSS_ENCODER_TOP_N") or os.getenv("RAGCHECKER_CE_RERANK_TOPN") or "50"
+        weight_str = (
+            os.getenv("RAGCHECKER_CROSS_ENCODER_WEIGHT") or os.getenv("RAGCHECKER_CE_WEIGHT") or "0.15"
+        )
+        self.top_n = int(top_n_str)
+        self.weight = float(weight_str)
         self.cache_enabled = os.getenv("RAGCHECKER_CROSS_ENCODER_CACHE", "1") == "1"
 
-        # Initialize model if enabled
-        if os.getenv("RAGCHECKER_CROSS_ENCODER_ENABLED", "0") == "1":
+        # Initialize model if enabled (accept either env flag)
+        enabled_flag = os.getenv("RAGCHECKER_CROSS_ENCODER_ENABLED", "0")
+        enabled_alias = os.getenv("RAGCHECKER_CE_RERANK_ENABLE", "0")
+        if enabled_flag == "1" or enabled_alias == "1":
             self._initialize_model()
 
     def _initialize_model(self):

@@ -40,7 +40,7 @@ FENCE_COMPLETED_END = "<!-- AUTO:recently_completed:end -->"
 
 def parse_backlog_item(line: str, few_shot_loader: Optional[FewShotExampleLoader] = None) -> Optional[Dict[str, str]]:
     """Parse a single backlog item line with improved error handling and few-shot enhancement"""
-    if not line.strip() or "| B‑" not in line:
+    if not line.strip() or "| B-" not in line:
         return None
 
     try:
@@ -50,14 +50,22 @@ def parse_backlog_item(line: str, few_shot_loader: Optional[FewShotExampleLoader
 
         item_id = parts[1].strip()
         title = parts[2].strip()
-        points = parts[3].strip()
-        status = parts[4].strip() if len(parts) > 4 else ""
-        problem = parts[5].strip() if len(parts) > 5 else ""
+        priority = parts[3].strip()
+        points = parts[4].strip()
+        status = parts[5].strip() if len(parts) > 5 else ""
+        problem = parts[6].strip() if len(parts) > 6 else ""
 
         # Clean up the problem description
         problem = re.sub(r"<!--.*?-->", "", problem).strip()
 
-        result = {"id": item_id, "title": title, "points": points, "status": status, "problem": problem}
+        result = {
+            "id": item_id,
+            "title": title,
+            "priority": priority,
+            "points": points,
+            "status": status,
+            "problem": problem,
+        }
 
         # Apply few-shot enhancement if available
         if few_shot_loader:
@@ -66,8 +74,8 @@ def parse_backlog_item(line: str, few_shot_loader: Optional[FewShotExampleLoader
                 examples = few_shot_loader.load_examples_by_category("backlog_analysis")
                 patterns = few_shot_loader.extract_patterns(examples)
 
-                # Apply patterns to the line
-                few_shot_results = few_shot_loader.apply_patterns_to_content(line, patterns)
+                # Apply patterns to the line (use slightly lower threshold for backlog use-case)
+                few_shot_results = few_shot_loader.apply_patterns_to_content(line, patterns, threshold=0.2)
 
                 # Add few-shot insights to the result
                 if few_shot_results.get("matched_patterns"):

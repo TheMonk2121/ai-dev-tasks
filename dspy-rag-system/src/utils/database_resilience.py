@@ -18,11 +18,31 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from psycopg2.extras import RealDictCursor
-from psycopg2.pool import ThreadedConnectionPool
+# Optional psycopg2 imports to allow operation in environments without the package
+try:  # pragma: no cover - guarded import
+    from psycopg2.extras import RealDictCursor  # type: ignore
+    from psycopg2.pool import ThreadedConnectionPool  # type: ignore
+    HAVE_PSYCOPG2 = True
+except Exception:  # pragma: no cover
+    RealDictCursor = None  # type: ignore
+    HAVE_PSYCOPG2 = False
+    # Provide a placeholder class name so tests patching it don't crash on import
+    class ThreadedConnectionPool:  # type: ignore
+        pass
 
 from .logger import get_logger
-from .opentelemetry_config import add_span_attribute, trace_operation
+# Optional OpenTelemetry helpers; provide no-op fallbacks if unavailable
+try:  # pragma: no cover - optional tracing
+    from .opentelemetry_config import add_span_attribute, trace_operation  # type: ignore
+except Exception:  # pragma: no cover
+    from contextlib import contextmanager
+
+    def add_span_attribute(_k: str, _v: Any) -> None:
+        return None
+
+    @contextmanager
+    def trace_operation(_name: str, attributes: Optional[Dict[str, Any]] = None):
+        yield None
 from .retry_wrapper import retry
 
 logger = get_logger("database_resilience")
@@ -109,6 +129,9 @@ class DatabaseResilienceManager:
     def _initialize_pool(self) -> None:
         """Initialize the connection pool"""
         try:
+            # If psycopg2 isn't available, fall back to dummy pool for tests
+            if not HAVE_PSYCOPG2:
+                raise RuntimeError("psycopg2 not available")
             # If the pool class is patched (Mock), honor the patch and avoid real connections
             _tcpm = type(ThreadedConnectionPool)
             if getattr(_tcpm, "__module__", "").startswith("unittest.mock"):

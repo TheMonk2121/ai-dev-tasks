@@ -11,7 +11,16 @@ import os
 import time
 from typing import Any, Callable, Dict, List, Optional
 
-import psycopg2
+# Optional psycopg2 import so this module works without DB deps
+try:  # pragma: no cover - guarded import
+    import psycopg2  # type: ignore
+    _PSYCOPG2_AVAILABLE = True
+except Exception:  # pragma: no cover
+    _PSYCOPG2_AVAILABLE = False
+    class _Psycopg2Shim:  # type: ignore
+        class OperationalError(Exception):
+            pass
+    psycopg2 = _Psycopg2Shim()  # type: ignore
 from requests.exceptions import RequestException, Timeout
 
 # Import error pattern recognition

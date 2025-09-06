@@ -22,15 +22,36 @@ from typing import Any, Dict, List
 class FewShotExampleLoader:
     """Load and manage few-shot examples for AI pattern recognition."""
 
-    def __init__(self, examples_file: str = "400_guides/400_few-shot-context-examples.md"):
+    def __init__(self, examples_file: str = "data/few_shot_examples.jsonl"):
         self.examples_file = Path(examples_file)
         self._examples_cache = None
         self._patterns_cache = {}
+
+        # Check if file exists, if not, try the old markdown location
+        if not self.examples_file.exists():
+            # Try the old markdown location
+            old_file = Path("400_guides/400_few-shot-context-examples.md")
+            if old_file.exists():
+                self.examples_file = old_file
+                print(f"✅ Using few-shot examples from: {self.examples_file}")
+            else:
+                print(f"⚠️  Few-shot examples file not found: {self.examples_file}")
+                print("   Few-shot integration disabled - content covered by core guides")
+                self._disabled = True
+                return
+        else:
+            print(f"✅ Using few-shot examples from: {self.examples_file}")
+
+        self._disabled = False
 
     def load_examples(self) -> Dict[str, List[Dict[str, Any]]]:
         """Load all few-shot examples from the examples file."""
         if self._examples_cache is not None:
             return self._examples_cache
+
+        # If disabled, return empty examples
+        if hasattr(self, "_disabled") and self._disabled:
+            return {}
 
         if not self.examples_file.exists():
             print(f"⚠️  Few-shot examples file not found: {self.examples_file}")
@@ -46,9 +67,14 @@ class FewShotExampleLoader:
             return {}
 
     def _parse_examples(self, content: str) -> Dict[str, List[Dict[str, Any]]]:
-        """Parse examples from markdown content."""
+        """Parse examples from markdown or JSONL content."""
         examples = {"documentation_coherence": [], "backlog_analysis": [], "memory_context": []}
 
+        # Check if it's JSONL format
+        if self.examples_file.suffix == ".jsonl":
+            return self._parse_jsonl_examples(content)
+
+        # Otherwise parse as markdown
         current_category = None
         current_example = {}
 
@@ -138,6 +164,47 @@ class FewShotExampleLoader:
 
         return examples
 
+    def _parse_jsonl_examples(self, content: str) -> Dict[str, List[Dict[str, Any]]]:
+        """Parse examples from JSONL content."""
+        examples = {"documentation_coherence": [], "backlog_analysis": [], "memory_context": []}
+
+        try:
+            import json
+
+            lines = content.strip().split("\n")
+            for line in lines:
+                if line.strip():
+                    example = json.loads(line)
+
+                    # Normalize JSONL keys to match extract_patterns expectations
+                    example["input"] = example.get("input_example", "")
+                    example["validation"] = example.get("validation_criteria", "")
+                    example["title"] = example.get("pattern", "")
+                    # Keep original pattern for pattern_description
+                    example["pattern_description"] = example.get("pattern", "")
+
+                    category = example.get("category", "documentation_coherence")
+
+                    # Map categories to our expected categories
+                    if category in ["code_example", "documentation"]:
+                        examples["documentation_coherence"].append(example)
+                    elif category in ["backlog", "task"]:
+                        examples["backlog_analysis"].append(example)
+                    elif category in ["memory", "context"]:
+                        examples["memory_context"].append(example)
+                    else:
+                        # Default to documentation_coherence
+                        examples["documentation_coherence"].append(example)
+        except Exception as e:
+            print(f"❌ Error parsing JSONL examples: {e}")
+
+        # Log counts per category for diagnostics
+        for category, items in examples.items():
+            if items:
+                print(f"✅ Loaded {len(items)} few-shot examples for {category}")
+
+        return examples
+
     def load_examples_by_category(self, category: str) -> List[Dict[str, Any]]:
         """Load examples for a specific category."""
         examples = self.load_examples()
@@ -210,13 +277,18 @@ class FewShotExampleLoader:
 
         return rules
 
-    def apply_patterns_to_content(self, content: str, patterns: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Apply few-shot patterns to content for enhanced validation."""
+    def apply_patterns_to_content(
+        self, content: str, patterns: List[Dict[str, Any]], threshold: float = 0.3
+    ) -> Dict[str, Any]:
+        """Apply few-shot patterns to content for enhanced validation.
+
+        threshold: minimum confidence required to consider a pattern matched.
+        """
         results = {"matched_patterns": [], "validation_suggestions": [], "confidence_scores": {}}
 
         for pattern in patterns:
             confidence = self._calculate_pattern_confidence(content, pattern)
-            if confidence > 0.3:  # Threshold for pattern matching
+            if confidence > threshold:
                 results["matched_patterns"].append(
                     {"pattern": pattern["title"], "confidence": confidence, "context": pattern["context"]}
                 )
@@ -257,6 +329,14 @@ class FewShotExampleLoader:
                 if re.search(r"^#{1,6}\s+([^\n]+)$", content, re.MULTILINE):
                     confidence += 0.1
 
+        # Small base score if descriptive pattern text appears in content (case-insensitive)
+        try:
+            desc = (pattern.get("pattern_description", "") or "").strip()
+            if desc and desc.lower() in content.lower():
+                confidence += 0.1
+        except Exception:
+            pass
+
         return min(confidence, 1.0)
 
     def _generate_validation_suggestions(self, content: str, pattern: Dict[str, Any]) -> List[str]:
@@ -277,6 +357,7 @@ class FewShotExampleLoader:
                 suggestions.append("Validate memory context patterns")
 
         return suggestions
+
 
 def get_few_shot_loader() -> FewShotExampleLoader:
     """Get a configured few-shot example loader."""
