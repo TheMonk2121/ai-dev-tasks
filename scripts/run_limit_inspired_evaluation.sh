@@ -18,9 +18,14 @@ echo "🚀 Running LIMIT-inspired evaluation..."
 echo "Expected: Geometry routing, facet yield selection, Boolean logic handling"
 echo ""
 
-# Run the evaluation
+# Run the evaluation (respect RAGCHECKER_FAST_MODE)
+FAST_FLAG=
+if [ "${RAGCHECKER_FAST_MODE:-1}" = "1" ]; then
+  FAST_FLAG="--fast-mode"
+fi
+
 python3 scripts/ragchecker_limit_inspired_evaluation.py \
-    --fast-mode \
+    ${FAST_FLAG} \
     --output "metrics/baseline_evaluations/limit_inspired_evaluation_$(date +%s).json"
 
 echo ""

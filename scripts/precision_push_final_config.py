@@ -98,6 +98,22 @@ class PrecisionPushFinalConfig:
 
         return applied_configs
 
+    def merged_env(self) -> Dict[str, str]:
+        """Return a single dict of all env keys we manage (union of sections)."""
+        merged: Dict[str, str] = {}
+        for _name, cfg in self.config_sections.items():
+            merged.update(cfg)
+        return merged
+
+    def emit_exports(self) -> str:
+        """Render all managed env keys as shell export commands."""
+        lines = []
+        for k, v in self.merged_env().items():
+            # Quote values conservatively
+            vq = str(v).replace("\\", "\\\\").replace("\"", "\\\"")
+            lines.append(f'export {k}="{vq}"')
+        return "\n".join(lines) + "\n"
+
     def print_effective_config(self):
         """Print effective configuration values."""
         print("\n🔧 Precision Push Final Configuration")
@@ -146,6 +162,8 @@ def main():
     parser.add_argument("--apply", action="store_true", help="Apply precision push configuration")
     parser.add_argument("--print-config", action="store_true", help="Print effective configuration")
     parser.add_argument("--telemetry", action="store_true", help="Enable telemetry")
+    parser.add_argument("--emit-exports", action="store_true", help="Print shell export commands for this config")
+    parser.add_argument("--write-env", type=str, default=None, help="Write KEY=VALUE lines to the given env file")
 
     args = parser.parse_args()
 
@@ -165,6 +183,19 @@ def main():
         for key, value in telemetry_config.items():
             os.environ[key] = value
         print("📊 Telemetry enabled")
+
+    if args.emit_exports:
+        print(config_manager.emit_exports(), end="")
+
+    if args.write_env:
+        path = args.write_env
+        try:
+            with open(path, "w") as f:
+                for k, v in config_manager.merged_env().items():
+                    f.write(f"{k}={v}\n")
+            print(f"💾 Wrote env to {path}")
+        except Exception as e:
+            print(f"❌ Failed to write env file {path}: {e}")
 
 
 if __name__ == "__main__":

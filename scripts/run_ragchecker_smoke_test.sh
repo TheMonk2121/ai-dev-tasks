@@ -19,8 +19,8 @@ else
   exit 1
 fi
 
-# Set smoke test mode
-export RAGCHECKER_FAST_MODE=1
+# Set smoke test mode (respect pre-set RAGCHECKER_FAST_MODE)
+export RAGCHECKER_FAST_MODE="${RAGCHECKER_FAST_MODE:-1}"
 export RAGCHECKER_SMOKE_TEST=1
 
 echo "✅ Smoke Test Configuration Loaded"
@@ -31,7 +31,11 @@ echo "🚫 Max RPS: $BEDROCK_MAX_RPS"
 echo "🚫 Cooldown: ${BEDROCK_COOLDOWN_SEC}s"
 echo "🎯 Model: $BEDROCK_MODEL_ID"
 echo "🌍 Region: $AWS_REGION"
-echo "💨 Smoke Test Mode: ENABLED"
+if [ "${RAGCHECKER_FAST_MODE}" = "1" ]; then
+  echo "💨 Smoke Test Mode: ENABLED (fast mode)"
+else
+  echo "💨 Smoke Test Mode: DISABLED (full cases)"
+fi
 echo "🎯 Target: Fast iteration with representative subset"
 echo
 

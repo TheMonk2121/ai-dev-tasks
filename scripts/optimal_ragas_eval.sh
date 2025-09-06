@@ -12,6 +12,17 @@ elif [ -f "$REPO_ROOT/venv/bin/activate" ]; then
   . "$REPO_ROOT/venv/bin/activate"
 fi
 
+# Optionally load a precision/recall env file produced by precision_push_final_config.py
+PRECISION_ENV_FILE=${PRECISION_ENV_FILE:-"$REPO_ROOT/configs/precision_push.env"}
+if [ -f "$PRECISION_ENV_FILE" ]; then
+  echo "🔧 Loading precision env file: $PRECISION_ENV_FILE"
+  # Export all keys from the file safely
+  set -a
+  # shellcheck disable=SC1090
+  . "$PRECISION_ENV_FILE"
+  set +a
+fi
+
 # Bedrock caps (safe defaults)
 export BEDROCK_MAX_RPS=${BEDROCK_MAX_RPS:-0.3}
 export BEDROCK_MAX_IN_FLIGHT=${BEDROCK_MAX_IN_FLIGHT:-1}

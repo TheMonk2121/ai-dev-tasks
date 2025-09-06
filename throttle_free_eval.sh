@@ -5,30 +5,7 @@
 echo "🔒 Loading Canonical Stable Configuration"
 echo "=========================================="
 
-# Queue Client Concurrency Control (Critical for USE_BEDROCK_QUEUE=1)
-export USE_BEDROCK_QUEUE=1
-export ASYNC_MAX_CONCURRENCY=1                    # Single async operation at a time
-export BEDROCK_MAX_IN_FLIGHT=1                    # Single concurrent request (effective var)
-
-# Evaluator-Level Rate Limiting (Conservative)
-export BEDROCK_MAX_RPS=0.08                       # Very conservative rate
-export BEDROCK_COOLDOWN_SEC=20                    # Long cooldown after 429s
-export BEDROCK_MAX_RETRIES=8                      # More retries (effective var)
-export BEDROCK_BASE_BACKOFF=2.0                   # Exponential backoff (effective var)
-export BEDROCK_MAX_BACKOFF=16.0                   # Max sleep time (effective var)
-
-# Disable Coverage Rewrite (Major Source of Bedrock Calls)
-export RAGCHECKER_COVERAGE_REWRITE=0              # Disable coverage rewrite
-
-# Reduce JSON Usage (Prevent Repair Loops)
-export RAGCHECKER_JSON_PROMPTS=0                  # Disable JSON prompts
-export RAGCHECKER_JSON_MAX_TOKENS=200
-
-# Model + Region
-export BEDROCK_MODEL_ID=anthropic.claude-3-haiku-20240307-v1:0
-export AWS_REGION=us-east-1
-
-# Load stable configuration
+# Load stable configuration FIRST, then apply stricter overrides
 export RAGCHECKER_ENV_FILE="${RAGCHECKER_ENV_FILE:-configs/stable_bedrock.env}"
 STABLE_ENV_FILE="$RAGCHECKER_ENV_FILE"
 if [ -f "$STABLE_ENV_FILE" ]; then
@@ -41,6 +18,34 @@ else
   echo "💡 Run: cp configs/stable_bedrock.env.template configs/stable_bedrock.env"
   exit 1
 fi
+
+# Queue Client Concurrency Control (Critical for USE_BEDROCK_QUEUE=1)
+export USE_BEDROCK_QUEUE=1
+export ASYNC_MAX_CONCURRENCY=1
+# Standardize both names
+export BEDROCK_MAX_IN_FLIGHT=1
+export BEDROCK_MAX_CONCURRENCY=1
+
+# Evaluator-Level Rate Limiting (Throttle-free overrides)
+export BEDROCK_MAX_RPS=0.08
+export BEDROCK_COOLDOWN_SEC=20
+
+# Retries/backoff — set both legacy and standardized names to avoid alias pitfalls
+export BEDROCK_MAX_RETRIES=8
+export BEDROCK_RETRY_MAX=${BEDROCK_MAX_RETRIES}
+export BEDROCK_BASE_BACKOFF=2.0
+export BEDROCK_RETRY_BASE=${BEDROCK_BASE_BACKOFF}
+export BEDROCK_MAX_BACKOFF=16.0
+export BEDROCK_RETRY_MAX_SLEEP=${BEDROCK_MAX_BACKOFF}
+
+# Disable expensive features
+export RAGCHECKER_COVERAGE_REWRITE=0
+export RAGCHECKER_JSON_PROMPTS=0
+export RAGCHECKER_JSON_MAX_TOKENS=200
+
+# Model + Region (keep explicit for clarity)
+export BEDROCK_MODEL_ID=${BEDROCK_MODEL_ID:-anthropic.claude-3-haiku-20240307-v1:0}
+export AWS_REGION=${AWS_REGION:-us-east-1}
 
 # Verify lock status
 if [ "${RAGCHECKER_LOCK_ENV:-0}" = "1" ]; then
@@ -57,10 +62,9 @@ export AWS_REGION=us-east-1
 echo "✅ Throttle-Free Configuration Loaded"
 echo "🚫 Coverage Rewrite: DISABLED"
 echo "🚫 JSON Prompts: DISABLED"
-echo "🚫 Queue Concurrency: 1 (BEDROCK_MAX_IN_FLIGHT)"
-echo "🚫 Max RPS: ${BEDROCK_MAX_RPS}"
-echo "🚫 Cooldown: ${BEDROCK_COOLDOWN_SEC}s"
-echo "🧩 Backoff: base=${BEDROCK_BASE_BACKOFF}, max=${BEDROCK_MAX_BACKOFF}"
+echo "🚫 Queue Concurrency: IN_FLIGHT=${BEDROCK_MAX_IN_FLIGHT} (CONCURRENCY=${BEDROCK_MAX_CONCURRENCY})"
+echo "🚫 Max RPS: ${BEDROCK_MAX_RPS} (Cooldown: ${BEDROCK_COOLDOWN_SEC}s)"
+echo "🧩 Backoff: base=${BEDROCK_BASE_BACKOFF} (RETRY_BASE=${BEDROCK_RETRY_BASE}), max=${BEDROCK_MAX_BACKOFF} (RETRY_MAX_SLEEP=${BEDROCK_RETRY_MAX_SLEEP})"
 echo "🧠 Model: ${BEDROCK_MODEL_ID}"
 echo "🔒 Env lock file: ${RAGCHECKER_ENV_FILE}"
 echo "🎯 Target: Zero throttling, stable evaluation"

@@ -20,9 +20,14 @@ echo "Target: P ≥ 0.135, R ≥ 0.20, F1 ≥ 0.155"
 echo "Risk: ≤0.02 recall loss (maintain ≥0.20)"
 echo ""
 
-# Run the evaluation
+# Run the evaluation (respect RAGCHECKER_FAST_MODE)
+FAST_FLAG=
+if [ "${RAGCHECKER_FAST_MODE:-1}" = "1" ]; then
+  FAST_FLAG="--fast-mode"
+fi
+
 python3 scripts/ragchecker_final_precision_push_evaluation.py \
-    --fast-mode \
+    ${FAST_FLAG} \
     --output "metrics/baseline_evaluations/final_precision_push_evaluation_$(date +%s).json"
 
 echo ""

@@ -51,7 +51,11 @@ def main():
     output_file = input_dir / f"ragchecker_official_eval_bedrock_{timestamp}.json"
 
     # Build the command with fast mode defaults
-    fast_mode = os.getenv("FAST_MODE", "1") == "1"
+    # Honor RAGCHECKER_FAST_MODE if set; fallback to FAST_MODE; default = 1
+    fast_env = os.getenv("RAGCHECKER_FAST_MODE")
+    if fast_env is None:
+        fast_env = os.getenv("FAST_MODE")
+    fast_mode = (fast_env or "1") == "1"
 
     if fast_mode:
         # Fast mode: basic metrics, no joint checking

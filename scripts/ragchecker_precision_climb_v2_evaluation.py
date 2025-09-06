@@ -194,8 +194,17 @@ class PrecisionClimbV2Evaluator:
             logger.info("🔄 Using cross-encoder enhanced filtering")
             return self.enhanced_filter.filter_with_cross_encoder(answer, contexts, query)
 
-        # Fall back to risk-aware filtering
-        sents = re.split(r"(?<=[.!?])\s+", answer.strip())
+        # Fall back to risk-aware filtering with robust sentence splitting
+        main_answer = answer.split("Sources:", 1)[0].strip()
+        bullet_or_num = r"(?m)^\s*(?:[-*•–—]|\d+[\.)])\s+"
+        sents = re.split(fr"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
+        sents = [s for s in sents if s and s.strip()]
+        if len(sents) <= 1:
+            sents = re.split(r"\s*[;—–•·]\s*", main_answer)
+            sents = [s for s in sents if s.strip()]
+        if len(sents) <= 1:
+            sents = re.split(r"\s{2,}", main_answer)
+            sents = [s for s in sents if s.strip()]
         if not sents:
             return answer
 

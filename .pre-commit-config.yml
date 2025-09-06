@@ -134,6 +134,17 @@ repos:
         description:
           Check baseline metrics and warn about violations (soft gate until
           production-ready)
+      - id: lessons-quality-check
+        name: Lessons Quality Check
+        entry: bash scripts/hook_timer.sh
+        args:
+          - python3
+          - scripts/lessons_quality_check.py
+        language: system
+        pass_filenames: false
+        stages:
+          - pre-commit
+        description: Validate lessons JSONL, derived configs, and quality gates presence
       - id: uvx-tools-check
         name: UVX Tools Availability Check
         entry: bash scripts/hook_timer.sh

@@ -196,13 +196,25 @@ class ProductionRAGASEvaluator:
             print("🔄 Using NLI-enhanced filtering")
             return self.nli_enhanced_filter.filter_with_nli_gate(answer, contexts)
 
-        # Check if cross-encoder is enabled and available
-        if os.getenv("RAGCHECKER_CROSS_ENCODER_ENABLED", "0") == "1" and self.enhanced_filter and self.cross_encoder:
+        # Check if cross-encoder is enabled and available (support both env names)
+        ce_enabled = os.getenv("RAGCHECKER_CROSS_ENCODER_ENABLED", "0") == "1" or os.getenv(
+            "RAGCHECKER_CE_RERANK_ENABLE", "0"
+        ) == "1"
+        if ce_enabled and self.enhanced_filter and self.cross_encoder:
             print("🔄 Using cross-encoder enhanced filtering")
             return self.enhanced_filter.filter_with_cross_encoder(answer, contexts, query)
 
-        # Fall back to risk-aware filtering
-        sents = re.split(r"(?<=[.!?])\s+", answer.strip())
+        # Fall back to risk-aware filtering with robust sentence splitting
+        main_answer = answer.split("Sources:", 1)[0].strip()
+        bullet_or_num = r"(?m)^\s*(?:[-*•–—]|\d+[\.)])\s+"
+        sents = re.split(fr"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
+        sents = [s for s in sents if s and s.strip()]
+        if len(sents) <= 1:
+            sents = re.split(r"\s*[;—–•·]\s*", main_answer)
+            sents = [s for s in sents if s.strip()]
+        if len(sents) <= 1:
+            sents = re.split(r"\s{2,}", main_answer)
+            sents = [s for s in sents if s.strip()]
         if not sents:
             return answer
 
@@ -258,13 +270,38 @@ class ProductionRAGASEvaluator:
             self.print_case_start_config("production_evaluation_start")
 
             results = base_evaluator.run_official_evaluation(use_local_llm=False, local_api_base=None, use_bedrock=True)
+
+            # Harden: if metrics are missing or cases are zero, re-evaluate via fallback
+            try:
+                missing_overall = not isinstance(results.get("overall_metrics"), dict) or not results["overall_metrics"]
+                zero_cases = not results.get("case_results")
+            except Exception:
+                missing_overall, zero_cases = True, True
+
+            if missing_overall or zero_cases:
+                print("⚠️ Production eval missing metrics — running fallback in-process evaluation")
+                try:
+                    input_data = base_evaluator.prepare_official_input_data()
+                    results = base_evaluator.create_fallback_evaluation(
+                        input_data["results"] if isinstance(input_data, dict) and "results" in input_data else input_data
+                    )
+                    results["evaluation_type"] = "production_fallback_simplified"
+                except Exception as e:
+                    print(f"❌ Fallback evaluation failed: {e}")
+                    results = self._run_basic_evaluation()
         else:
             # Fallback to basic evaluation
             results = self._run_basic_evaluation()
 
         # Add production-specific metrics
-        results["production_metrics"] = self._calculate_production_metrics()
-        results["telemetry_summary"] = self._get_telemetry_summary()
+        try:
+            results["production_metrics"] = self._calculate_production_metrics()
+        except Exception:
+            results["production_metrics"] = {}
+        try:
+            results["telemetry_summary"] = self._get_telemetry_summary()
+        except Exception:
+            results["telemetry_summary"] = {}
 
         # Validate against RAGAS targets
         if self.config_manager:
@@ -284,6 +321,16 @@ class ProductionRAGASEvaluator:
                     else:
                         target_validation[metric] = False
                 results["target_validation"] = target_validation
+
+        # Normalize result shape so downstream tools never see empty/unknown metadata
+        if not isinstance(results, dict):
+            results = {}
+        cases = results.get("case_results") or []
+        if not isinstance(cases, list):
+            cases = []
+            results["case_results"] = cases
+        results.setdefault("total_cases", len(cases))
+        results.setdefault("evaluation_type", "production_ragas")
 
         return results
 
@@ -364,6 +411,11 @@ def main():
     parser.add_argument(
         "--validate-only", action="store_true", help="Only validate configuration without running evaluation"
     )
+    parser.add_argument(
+        "--force-fallback",
+        action="store_true",
+        help="Force simplified in-process fallback evaluation (bypass Bedrock/CLI)",
+    )
 
     args = parser.parse_args()
 
@@ -393,7 +445,16 @@ def main():
         return
 
     # Run evaluation
-    results = evaluator.run_production_evaluation()
+    if args.force_fallback and OfficialRAGCheckerEvaluator is not None:
+        print("⛔ Forcing simplified in-process fallback evaluation")
+        base = OfficialRAGCheckerEvaluator()
+        input_data = base.prepare_official_input_data()
+        results = base.create_fallback_evaluation(
+            input_data["results"] if isinstance(input_data, dict) and "results" in input_data else input_data
+        )
+        results["evaluation_type"] = "production_fallback_simplified"
+    else:
+        results = evaluator.run_production_evaluation()
 
     # Save results
     with open(args.output, "w") as f:

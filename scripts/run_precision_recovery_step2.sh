@@ -19,10 +19,15 @@ echo "🚀 Running precision recovery evaluation (Step 2)..."
 echo "Expected: +0.03-0.06 recall (precision neutral)"
 echo ""
 
-# Run the evaluation
+# Run the evaluation (respect RAGCHECKER_FAST_MODE)
+FAST_FLAG=
+if [ "${RAGCHECKER_FAST_MODE:-1}" = "1" ]; then
+  FAST_FLAG="--fast-mode"
+fi
+
 python3 scripts/ragchecker_precision_recovery_evaluation.py \
     --step 2 \
-    --fast-mode \
+    ${FAST_FLAG} \
     --output "metrics/baseline_evaluations/precision_recovery_step2_$(date +%s).json"
 
 echo ""

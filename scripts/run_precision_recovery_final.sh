@@ -32,10 +32,15 @@ echo "🚀 Running precision-focused evaluation..."
 echo "Expected: P rises to ≥0.135, R may dip slightly but stay above 0.160"
 echo ""
 
-# Run the evaluation
+# Run the evaluation (respect RAGCHECKER_FAST_MODE)
+FAST_FLAG=
+if [ "${RAGCHECKER_FAST_MODE:-1}" = "1" ]; then
+  FAST_FLAG="--fast-mode"
+fi
+
 python3 scripts/ragchecker_precision_recovery_evaluation.py \
     --step 1 \
-    --fast-mode \
+    ${FAST_FLAG} \
     --output "metrics/baseline_evaluations/precision_recovery_final_$(date +%s).json"
 
 echo ""
