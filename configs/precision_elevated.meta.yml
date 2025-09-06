@@ -1,0 +1,17 @@
+config: precision_elevated.env
+created_at: 2025-09-06T20:15:00Z
+derived_from: precision_optimized_bedrock.env
+git_ref: "refs/heads/main@current"
+objective_bias: precision
+parameters_fingerprint: "sha256:af34..."
+decision_log:
+  - id: DL-2025-09-06-001
+    who: "daniel"
+    why: "Optimize precision while maintaining recall baseline"
+    evidence: "Based on precision_optimized_bedrock.env with evidence selection tuning"
+    lessons_applied: []
+    diff:
+      RAGCHECKER_EVIDENCE_KEEP_PERCENTILE: { from: 70, to: 72 }
+      RAGCHECKER_WEIGHT_JACCARD: { from: 0.35, to: 0.40 }
+      RAGCHECKER_WEIGHT_ROUGE: { from: 0.40, to: 0.35 }
+    status: committed

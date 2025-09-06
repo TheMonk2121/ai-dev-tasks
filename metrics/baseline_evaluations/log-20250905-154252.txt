@@ -1,0 +1,168 @@
+✅ Using Enhanced Bedrock Queue Client with intelligent batching
+🔒 Loaded env from configs/stable_bedrock.env (applied 0 keys, lock=False)
+🔒 Loading stable configuration: configs/stable_bedrock.env
+🔒 Environment locked for regression tracking
+🔧 Applied 15 env keys from configs/stable_bedrock.env
+🛡️  SafeEval: enforcing stable settings for high-risk combos
+⚠️  SafeEval warning: RAGCHECKER_NUMERIC_MUST_MATCH=1 increases false negatives; disabling for eval (set RAGCHECKER_ALLOW_RISKY=1 to keep)
+⚠️  SafeEval warning: RAGCHECKER_ENTITY_MUST_MATCH=1 increases false negatives; disabling for eval (set RAGCHECKER_ALLOW_RISKY=1 to keep)
+⚠️  SafeEval warning: RAGCHECKER_RISKY_REQUIRE_ALL=1 increases false negatives; disabling for eval (set RAGCHECKER_ALLOW_RISKY=1 to keep)
+🧠 Official RAGChecker Evaluation
+============================================================
+📋 Following official RAGChecker methodology
+🎯 Using official metrics and procedures
+☁️ AWS Bedrock Mode: anthropic.claude-3-haiku-20240307-v1:0
+📊 Full evaluation mode: Using all 15 test cases
+🧠 Preparing Official RAGChecker Input Data
+==================================================
+🔍 Processing Test Case 1/15: memory_system_001
+[fallback] using extractive context answer
+   ✅ Response length: 73 characters
+🔍 Processing Test Case 2/15: dspy_integration_001
+[fallback] using extractive context answer
+   ✅ Response length: 75 characters
+🔍 Processing Test Case 3/15: role_context_001
+[fallback] using extractive context answer
+   ✅ Response length: 39 characters
+🔍 Processing Test Case 4/15: research_context_001
+[fallback] using extractive context answer
+   ✅ Response length: 64 characters
+🔍 Processing Test Case 5/15: architecture_001
+[fallback] using extractive context answer
+   ✅ Response length: 71 characters
+🔍 Processing Test Case 6/15: technical_implementation_001
+[fallback] using extractive context answer
+   ✅ Response length: 52 characters
+🔍 Processing Test Case 7/15: performance_optimization_001
+[fallback] using extractive context answer
+   ✅ Response length: 129 characters
+🔍 Processing Test Case 8/15: error_handling_001
+[fallback] using extractive context answer
+   ✅ Response length: 123 characters
+🔍 Processing Test Case 9/15: integration_patterns_001
+[fallback] using extractive context answer
+   ✅ Response length: 142 characters
+🔍 Processing Test Case 10/15: development_workflow_001
+[fallback] using extractive context answer
+   ✅ Response length: 133 characters
+🔍 Processing Test Case 11/15: configuration_management_001
+[fallback] using extractive context answer
+   ✅ Response length: 107 characters
+🔍 Processing Test Case 12/15: testing_validation_001
+[fallback] using extractive context answer
+   ✅ Response length: 110 characters
+🔍 Processing Test Case 13/15: troubleshooting_001
+[fallback] using extractive context answer
+   ✅ Response length: 55 characters
+🔍 Processing Test Case 14/15: advanced_features_001
+[fallback] using extractive context answer
+   ✅ Response length: 39 characters
+🔍 Processing Test Case 15/15: security_privacy_001
+[fallback] using extractive context answer
+   ✅ Response length: 150 characters
+💾 Official input data saved to: metrics/baseline_evaluations/ragchecker_official_input_20250905_154255.json
+⛔ Skipping ragchecker.cli (bypassed). Using in-process evaluation instead.
+⛔ CLI bypass enabled — running in-process official evaluation instead
+🏠 Running Local LLM Evaluation with comprehensive metrics
+✅ AWS Bedrock integration enabled (anthropic.claude-3-haiku-20240307-v1:0)
+✅ AWS Bedrock integration enabled (anthropic.claude-3-haiku-20240307-v1:0)
+✅ Semantic embeddings enabled (all-MiniLM-L6-v2)
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 364→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 327→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 330→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 324→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 372→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 341→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 411→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 350→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 370→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 358→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 368→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 354→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 343→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 337→80 tokens
+📊 Evidence selection mode: target_k
+📊 Dynamic-K: signal_delta=0.000, strength=weak, target_k=4
+📝 Evidence filtering: 1/1 sentences kept (enhanced multi-signal guard)
+💰 Bedrock JSON extraction: 358→80 tokens
+
+🧰 Active Bedrock caps: ASYNC_MAX_CONCURRENCY=1, BEDROCK_MAX_IN_FLIGHT=1, BEDROCK_MAX_RPS=0.15, BASE_BACKOFF=2.0, MAX_BACKOFF=16.0, MODEL_ID=anthropic.claude-3-haiku-20240307-v1:0
+🧪 Eval JSON: PROMPTS=0, MAX_TOKENS=200, COVERAGE_REWRITE=0
+
+💾 Official evaluation results saved to: metrics/baseline_evaluations/ragchecker_official_evaluation_20250905_154433.json
+
+============================================================
+📊 OFFICIAL RAGCHECKER EVALUATION SUMMARY
+============================================================
+🎯 Evaluation Type: in_process_official
+📋 Total Cases: 15
+📊 Overall Metrics:
+   Precision: 0.517
+   Recall: 0.157
+   F1 Score: 0.233
+
+⏱️ Timing:
+   Run Duration: 98.882s
+   Avg Per-Case: 0.000s
+
+🔍 Case-by-Case Results:
+   unknown: F1=0.229, P=0.522, R=0.147
+   unknown: F1=0.308, P=0.600, R=0.207
+   unknown: F1=0.186, P=0.800, R=0.105
+   unknown: F1=0.280, P=0.556, R=0.188
+   unknown: F1=0.162, P=0.300, R=0.111
+   unknown: F1=0.158, P=0.600, R=0.091
+   unknown: F1=0.263, P=0.408, R=0.194
+   unknown: F1=0.278, P=0.456, R=0.200
+   unknown: F1=0.396, P=0.667, R=0.282
+   unknown: F1=0.114, P=0.221, R=0.077
+   unknown: F1=0.191, P=0.261, R=0.150
+   unknown: F1=0.259, P=0.487, R=0.176
+   unknown: F1=0.125, P=0.333, R=0.077
+   unknown: F1=0.238, P=1.000, R=0.135
+   unknown: F1=0.312, P=0.537, R=0.220
+
+📦 Results directory: metrics/baseline_evaluations/
+🧭 Eval SOP: 000_core/000_evaluation-system-entry-point.md
