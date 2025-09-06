@@ -25,6 +25,9 @@ jobs:
         run: |
           uv venv
           uv pip install tqdm
+      - name: ABP validation (soft warnings)
+        run: |
+          uv run python scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --ci-mode || true
       - name: Run quick conflict check (JSON)
         run: |
           git grep -nE "^(<<<<<<< |======= |>>>>>>> )" || echo "No merge conflicts found"

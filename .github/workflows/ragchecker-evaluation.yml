@@ -66,6 +66,17 @@ jobs:
           echo "🔍 Running Official RAGChecker Evaluation..."
           uv run python3 scripts/run_eval.py
 
+      - name: Validate ABP and Baseline Freshness (soft warnings)
+        run: |
+          echo "🧾 Validating ABP & Baseline Manifest freshness..."
+          uv run python scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --ci-mode || true
+
+      - name: Release Branch ABP Validation (Hard Gate)
+        if: startsWith(github.ref, 'refs/heads/release/')
+        run: |
+          echo "🔒 Release branch hard gate: ABP & Baseline freshness must pass"
+          uv run python scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --strict
+
       - name: Validate Evaluation Results
         run: |
           echo "✅ Validating Evaluation Results..."

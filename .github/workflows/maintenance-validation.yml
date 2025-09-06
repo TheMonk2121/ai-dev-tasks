@@ -35,6 +35,8 @@ jobs:
         run: |
           uv venv
           uv pip install -r requirements.txt
+          # Ensure dependencies for maintenance scripts
+          uv pip install pyyaml
 
       - name: Run maintenance validation (Dry-Run)
         run: |
@@ -53,6 +55,21 @@ jobs:
           python scripts/system_health_check.py 2>/dev/null || echo "⚠️ System health check skipped (DSPy not available in CI)"
 
           echo "✅ Maintenance validation completed"
+
+      - name: Lessons + Evolution checks
+        run: |
+          echo "🔍 Running Lessons Quality Check..."
+          uv run python scripts/lessons_quality_check.py || echo "⚠️ Lessons quality check reported issues"
+          echo "🔄 Generating config evolution artifacts..."
+          uv run python scripts/evolution_tracker.py || echo "⚠️ Evolution tracker encountered issues"
+
+      - name: Upload evolution artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: evolution-artifacts
+          path: |
+            configs/EVOLUTION.json
+            configs/EVOLUTION.md
 
       - name: Validate repository structure
         run: |

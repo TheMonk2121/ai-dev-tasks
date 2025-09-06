@@ -42,6 +42,17 @@
     "python.linting.enabled": false,
     "python.linting.pylintEnabled": false,
     "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestArgs": [
+        "tests",
+        "dspy-rag-system/tests",
+        "-q",
+        "-x",
+        "--maxfail=1"
+    ],
+    "python.testing.pytestPath": "${workspaceFolder}/.venv/bin/pytest",
+    "python.terminal.activateEnvironment": true,
     // Use Black as the default formatter for Python files and run Ruff fixes/imports on save
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
@@ -81,6 +92,7 @@
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
+    // Terminal: use VS Code defaults (no custom configuration)
     // Search & Navigation
     "search.exclude": {
         "**/600_archives/**": true,
@@ -527,7 +539,20 @@
         "tightenings",
         "TOBG",
         "unsuffixed",
-        "virtualenv"
+        "virtualenv",
+        "DEHYPHENATE",
+        "mkdocs",
+        "mkytpe",
+        "nbytes",
+        "onclose",
+        "Prioritizer",
+        "spacy",
+        "SSOT",
+        "strftime",
+        "Tahoma",
+        "TOPN",
+        "unimport",
+        "Veranda"
     ],
     "cSpell.allowCompoundWords": true,
     "cSpell.ignorePaths": [
@@ -577,27 +602,6 @@
         "dspy-rag-system"
     ],
     "cursorpyright.analysis.typeCheckingMode": "basic",
-    // Terminal profiles with login shells and shell integration
-    "terminal.integrated.shellIntegration.enabled": true,
-    "terminal.integrated.defaultProfile.osx": "bash (homebrew, login)",
-    "terminal.integrated.profiles.osx": {
-        "zsh (login)": {
-            "path": "/bin/zsh",
-            "args": [
-                "-l"
-            ]
-        },
-        "bash (login)": {
-            "path": "/bin/bash",
-            "args": [
-                "-l"
-            ]
-        },
-        "bash (homebrew, login)": {
-            "path": "/opt/homebrew/bin/bash",
-            "args": [
-                "-l"
-            ]
-        }
-    }
+    // Terminal: use VS Code defaults (no custom configuration)
+    // All terminal settings removed to fix posix_spawnp error
 }
