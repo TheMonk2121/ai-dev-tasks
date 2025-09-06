@@ -9,6 +9,22 @@
 ## 🚀 **Core Methodology**
 - **[PRD_B-1059_retrieval-tuning-protocol.md](PRD_B-1059_retrieval-tuning-protocol.md)** - Industry-grade RAG performance optimization methodology
 
+## ✅ **Completed Major Features**
+
+### **B-XXXX: Closed-Loop Lessons Engine (CLLE) - COMPLETED** 🎉
+- **Priority**: 🔥 **HIGH** - Essential for systematic evaluation improvement
+- **Status**: ✅ **COMPLETED** - Production ready with full integration
+- **Description**: Systematic carryover of lessons learned between evaluation runs
+- **Components**:
+  - `lessons_extractor.py`: Post-run analysis to generate lessons
+  - `lessons_loader.py`: Pre-run lesson loading and configuration generation
+  - `evolution_tracker.py`: Configuration lineage tracking
+  - `lessons_quality_check.py`: System integrity validation
+- **Integration**: Full integration with `ragchecker_official_evaluation.py`
+- **Key Features**: Quality gate enforcement, scope-based filtering, conflict resolution, metadata persistence
+- **Documentation**: See `400_guides/400_lessons-engine-guide.md`
+- **Success Criteria**: ✅ Lessons extracted from runs, ✅ Applied to future configs, ✅ Quality gates enforced, ✅ Evolution tracked
+
 ### **B-1061: Memory System Integration: Heuristic Extractor + Multi-Signal Guard for Overflow Compaction & Knowledge Graph Enhancement** 🆕 **NEW**
 - **Priority**: 🔥 **HIGH** - Essential for memory system optimization and knowledge graph enhancement
 - **Points**: 5 - High complexity, strategic importance, system optimization
@@ -213,11 +229,60 @@
 - **Testing**: Edge cases, robustness, health monitoring, CI/CD integration
 - **Success Criteria**: ✅ **ACHIEVED** - Complete retrieval tuning protocol with production-grade reliability, comprehensive testing (10/10 tests passed), full governance compliance (1.00 score), and operational automation
 
+### **B-1072: Functional Multi-Agent Group Chat System** 🆕 **NEW**
+- **Priority**: 🔥 **HIGH** - Essential for AI agent collaboration and productivity
+- **Points**: 8 - High complexity, strategic importance, user-facing functionality
+- **Status**: 🆕 **NEW** - Ready for implementation
+- **Description**: Build a functional multi-agent group chat system that allows users to communicate directly with AI agents and have group conversations with multiple agents simultaneously. This addresses the current non-functional chat system and enables real AI-to-AI collaboration.
+- **Scope**: Complete chat system rebuild with four key phases:
+  - **Phase 1**: Fix existing chat infrastructure and connect DSPy agents
+  - **Phase 2**: Implement group chat functionality with multiple agents
+  - **Phase 3**: Integrate with existing LTST memory system
+  - **Phase 4**: Add user interface and multi-user support
+- **Key Components**:
+  - Functional WebSocket-based chat system
+  - DSPy agent integration and connection
+  - Group chat with multiple AI agents
+  - Integration with existing LTST memory system
+  - User interface for chat interaction
+  - Multi-user support and permissions
+- **Dependencies**: Existing LTST memory system, DSPy agents, multi-agent chat bridge
+- **Success Criteria**: Users can chat with individual AI agents, have group conversations with multiple agents, and all agents respond appropriately with access to memory system
+- **Integration Approach**: Leverage existing infrastructure (multi-agent chat bridge, LTST memory, DSPy agents) and fix connection issues
+
+
+  - **Backend Enhancements (effective vs. current)**:
+    - Identity: accept `user_id`, optional `token`, and `room` on WS query; echo in message envelope; maintain per-connection maps.
+    - Persistence: append messages to durable store (reuse `dspy-rag-system/src/utils/conversation_storage.py` or a lightweight SQLite). Add `/messages?since=cursor&agent=…&room=…`.
+    - LTST wiring: on inbound user messages, write-through to LTST; on agent send, fetch recent context via `src/retrieval/memory_integration.py` and attach to agent prompts/metadata.
+    - Routing/controls: keep broadcast default; support explicit `target_agents` and `@mentions`; add simple per-connection rate limit and denylist for noisy types.
+    - Health and tests: add pytest smoke for `/health`, `/send-message` ➜ `/messages`, and WS echo; basic load test for 100 msgs.
+    - Dev launcher: one script to start bridge (8004) + web UI (8006) together.
+
+  - **Frontend Enhancements (effective vs. current)**:
+    - Identity panel: small sign-in to set `user_id` and optional token; persist in `localStorage`; include on WS URL.
+    - Presence sidebar: list agents from `GET /agents`; click to insert @mention; live connection counts.
+    - Target chips: show resolved recipients when mentions exist; remove chips to revert to broadcast.
+    - Rooms: header dropdown bound to `GET /chat/rooms`; include `room` in WS query and filter history.
+    - History/paging: “Load more” using `/messages?since=`; maintain scroll position.
+    - Rendering: basic markdown (code/links), message badges (system/status/log), relative timestamps.
+    - UX polish: toast errors, connection quality indicator (ping RTT), per-room draft persistence, optional desktop notifications on mentions, agent mute toggles.
+
+  - **Security & Permissions**:
+    - Validate `token` on connect (pluggable hook); drop/Throttle on abuse; basic per-IP/`user_id` limits.
+
+  - **Acceptance Criteria (expanded)**:
+    - Two browsers (distinct `user_id`s) + 3 agent sockets can chat; @mentions route correctly; “@all” broadcasts.
+    - Refresh persists history and identity; “Load more” paginates; rooms filter works.
+    - Messages appear in durable store and LTST (spot-check via a simple query or log).
+    - CI smoke passes; manual test plan covers disconnect/reconnect, rate limiting, and malformed payloads.
+
 ## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |
 |---|---|---|
 
+| B-1072 | Functional Multi-Agent Group Chat System | 🔥 | 8 | todo | Build a functional multi-agent group chat system that allows users to communicate directly with AI agents and have group conversations with multiple agents simultaneously | Multi-Agent Chat + DSPy Integration + Group Chat + LTST Memory + User Interface | Existing LTST Memory System, DSPy Agents, Multi-Agent Chat Bridge |
 | B-1061 | Memory System Integration: Heuristic Extractor + Multi-Signal Guard for Overflow Compaction & Knowledge Graph Enhancement | 🔥 | 5 | todo | Integrate heuristic extractor + multi-signal guard for LTST memory overflow compaction, knowledge graph fact normalization, and unified quality gates with academic provenance | Heuristic Extractor + Multi-Signal Guard + Memory Overflow + Knowledge Graph + Academic Provenance | B-1060 Academic Citation Quality Gates |
 | B-1060 | Academic Citation Quality Gates & Research-Implementation Pipeline Enhancement | 🔥 | 5 | todo | Implement academic-grade quality gates and citation standards into research-implementation pipeline based on ReportBench insights, ensuring all backlog items meet rigorous academic citation requirements | Academic Citations + RAGChecker Gating + Quality Gates + Research Pipeline + Source Validation | B-1045 RAGChecker System, B-1046 AWS Bedrock Integration |
 | B-1046 | AWS Bedrock Integration for RAGChecker Performance Optimization | ⚡ | 4 | ✅ **COMPLETED** | Integrate AWS Bedrock Claude 3.5 Sonnet for 5x faster RAGChecker evaluations with production-grade reliability | AWS Bedrock + Claude 3.5 Sonnet + RAGChecker + Cost Monitoring | B-1045 RAGChecker System |
@@ -1024,18 +1089,20 @@ Integration: For a given PRD, system lists linked decisions/lessons; for a backl
 
   - Rollback
     - Flip FEATURE_* flags off to disable capture and emissions; tables remain inert; retrieval pipeline (B‑1025) unaffected.
-- B‑1027 — Role Voice I/O: Push‑to‑Talk, Wake‑Word, STT + TTS with Multi‑Agent Roundtable (score 8.8)
-<!--score: {bv:5, tc:4, rr:5, le:4, effort:4, deps:["B-1024","B-1025","B-1026"]}-->
-<!--score_total: 8.8-->
-<!-- do_next: Ship minimal voice loop (PTT + faster‑whisper + Piper) with per‑role voices; capture transcripts to lessons; add moderator hybrid (addressable + roundtable) behind flag -->
-<!-- est_hours: 16 -->
+- B‑1027 — Enhanced Role Voice I/O: Advanced Voice Processing with Noise Suppression, Speaker Adaptation, and Multi‑Agent Roundtable (score 9.2)
+<!--score: {bv:5, tc:5, rr:5, le:4, effort:5, deps:["B-1024","B-1025","B-1026"]}-->
+<!--score_total: 9.2-->
+<!-- do_next: Ship enhanced voice loop (PTT + faster‑whisper + Piper/VibeVoice + noise suppression + speaker adaptation) with per‑role voices; capture transcripts to lessons; add moderator hybrid (addressable + roundtable) behind flag -->
+<!-- est_hours: 20 -->
 <!-- acceptance:
 Live loop: push‑to‑talk and wake‑word both work; barge‑in interrupts TTS reliably.
-STT: faster‑whisper streaming or utterance mode; latency per 5‑8s utterance ≤ 800ms post‑endpoint on M‑series.
-TTS: Piper default (Coqui optional) with per‑role voices; p50 synthesis+playback < 500ms for 200‑400 chars.
+STT: faster‑whisper streaming with noise‑suppressed audio; latency per 5‑8s utterance ≤ 800ms post‑endpoint on M‑series.
+TTS: Piper default, VibeVoice alternative, Coqui optional with per‑role voices; p50 synthesis+playback < 500ms for 200‑400 chars.
+Noise Suppression: Hybrid neural + traditional filtering; real‑time processing with <100ms latency; configurable sensitivity.
+Speaker Adaptation: Automatic speaker identification and personalization; adaptation learning over time; <200ms identification + adaptation.
 Roundtable: hybrid moderator routes @addressed agents or selects top‑N by relevance; collects ≤2 responses within 2.2s.
-Traceability: transcripts stored and linked to runs/steps (B‑1026); each reply tagged with agent role and voice used.
-Flags: FEATURE_STT, FEATURE_TTS, FEATURE_VOICE_ROLES default off; one‑flip rollback; no impact when off.
+Enhanced Traceability: transcripts stored with noise suppression settings, speaker profiles, and adaptation data; each reply tagged with agent role and voice used.
+Flags: FEATURE_STT, FEATURE_TTS, FEATURE_VOICE_ROLES, FEATURE_NOISE_SUPPRESSION, FEATURE_SPEAKER_ADAPTATION, FEATURE_VIBEVOICE_TTS default off; one‑flip rollback; no impact when off.
 Security: VM‑safe mode available (no host control required); approval gate documented for any guarded host actions. -->
 <!-- lessons_applied: [
   "400_guides/400_comprehensive-coding-best-practices.md#minimal-incremental",
@@ -1044,50 +1111,80 @@ Security: VM‑safe mode available (no host control required); approval gate doc
 ] -->
 <!-- reference_cards: [
   "open‑source STT: faster‑whisper",
-  "open‑source TTS: Piper, Coqui TTS",
+  "open‑source TTS: Piper, VibeVoice, Coqui TTS",
   "open‑source wake word: openWakeWord",
+  "noise suppression: noisereduce, librosa, scipy",
+  "speaker adaptation: whisper‑speaker‑id, pyannote.audio",
   "asyncio structured concurrency best practices",
   "Apple Silicon performance tips (CTranslate2 Metal/MPS)"
 ] -->
-<!-- tech_footprint: Voice I/O + STT + TTS + Wake‑Word + VAD + asyncio + Roundtable Moderator + Per‑Role Voices + Lessons Integration + Feature Flags -->
-<!-- problem: Verbal collaboration with DSPy roles is not supported; rich discussions are text‑only and easily lost, slowing troubleshooting and planning. -->
-<!-- outcome: Voice interface that lets you speak to one or many roles, hear distinct agent voices, interrupt smoothly, and archive transcripts into the lessons/decisions loop to inform backlog prioritization. -->
+<!-- tech_footprint: Enhanced Voice I/O + STT + TTS + Wake‑Word + VAD + Noise Suppression + Speaker Adaptation + asyncio + Roundtable Moderator + Per‑Role Voices + Lessons Integration + Feature Flags -->
+<!-- problem: Verbal collaboration with DSPy roles is not supported; rich discussions are text‑only and easily lost, slowing troubleshooting and planning. Need advanced voice processing for real‑world environments with noise and multiple speakers. -->
+<!-- outcome: Advanced voice interface with noise suppression and speaker adaptation that lets you speak to one or many roles, hear distinct agent voices, interrupt smoothly, and archive transcripts into the lessons/decisions loop to inform backlog prioritization. -->
 
   - Feature flags
     - FEATURE_STT (default: off)
     - FEATURE_TTS (default: off)
     - FEATURE_VOICE_ROLES (default: off)
     - FEATURE_VOICE_ROUNDTABLE (default: off)
+    - FEATURE_NOISE_SUPPRESSION (default: off)
+    - FEATURE_SPEAKER_ADAPTATION (default: off)
+    - FEATURE_VIBEVOICE_TTS (default: off)
 
-  - Architecture (minimal, local‑first)
+  - Architecture (enhanced, local‑first)
     - STT: faster‑whisper (CTranslate2) with 16kHz mono, WebRTC VAD endpointing; wake‑word via openWakeWord
-    - TTS: Piper default (ONNX voices), optional Coqui TTS; per‑role voice mapping via `voices.yaml`
+    - TTS: Piper default (ONNX voices), VibeVoice alternative, optional Coqui TTS; per‑role voice mapping via `voices.yaml`
+    - Noise Suppression: Hybrid neural network + traditional filtering; real‑time processing with <100ms latency
+    - Speaker Adaptation: whisper‑speaker‑id or pyannote.audio for automatic speaker identification and personalization
     - Barge‑in: VAD/PTT activity triggers immediate TTS cancel
     - Moderator: asyncio hybrid mode = addressable (@coder) OR roundtable (top‑N by relevance) with 2.2s deadline
     - Safety: Mode A (VM‑only control) as default; no host clicks required; transcripts logged into B‑1026 tables
 
-  - Plan (phased, lean)
-    - Phase 0: Flags & Config
-      - Add env flags; create `voiceio.yaml` (PTT key/mode, wake‑word threshold, STT/TTS engine, per‑role voices)
-      - Add `voices.yaml` mapping role→voice (Piper .onnx or Coqui speaker)
-    - Phase 1: Minimal Loop (PTT + STT + TTS)
-      - Implement push‑to‑talk capture (pynput); WebRTC VAD with endpointing; faster‑whisper transcription
-      - Piper TTS playback with barge‑in; Coqui optional
-      - Performance target: p50 STT turnaround ≤ 800ms; TTS ≤ 500ms for short replies
-    - Phase 2: Wake‑Word + Barge‑in Polishing
+  - Plan (enhanced, phased)
+    - Phase 0: Enhanced Flags & Config (0.5h)
+      - Add env flags: FEATURE_NOISE_SUPPRESSION, FEATURE_SPEAKER_ADAPTATION, FEATURE_VIBEVOICE_TTS
+      - Create `voiceio.yaml` with noise suppression sensitivity, speaker profiles, TTS voice settings
+      - Add `voices.yaml` mapping role→voice (Piper .onnx, VibeVoice, or Coqui speaker)
+      - Add `speaker_profiles.yaml` for speaker adaptation settings
+    - Phase 1: Enhanced Minimal Loop (PTT + STT + TTS + Noise Suppression) (2h)
+      - Implement push‑to‑talk capture (pynput); WebRTC VAD with endpointing
+      - Add hybrid noise suppression pipeline (neural + traditional filtering)
+      - faster‑whisper transcription with noise‑suppressed audio
+      - VibeVoice TTS integration alongside Piper
+      - Piper TTS playback with barge‑in; VibeVoice as alternative
+      - Performance target: p50 STT turnaround ≤ 800ms; TTS ≤ 500ms for 200‑400 chars
+    - Phase 2: Speaker Adaptation & Advanced Features (2h)
+      - Integrate speaker identification using whisper‑speaker‑id or pyannote.audio
+      - Implement speaker adaptation for frequent users
+      - Add speaker profile learning and personalization
+      - Enhanced noise suppression with speaker‑aware processing
+      - Store speaker profiles and adaptation data
+    - Phase 3: Wake‑Word + Barge‑in Polishing (1h)
       - openWakeWord integration; smoothing + double‑hit; configurable threshold; ensure barge‑in instant cancel
-    - Phase 3: Hybrid Moderator (Addressable + Roundtable)
-      - asyncio roundtable: gather agent replies concurrently; deadline‑driven; max_speakers=2; synthesis optional
-      - Addressable routing when text begins with @role; otherwise roundtable selection by relevance gate
-    - Phase 4: Lessons/Decisions Integration (B‑1026)
-      - Store transcripts to `runs/steps` with role tags; attach lessons/decisions derived from voice sessions
+    - Phase 4: Enhanced Multi‑Agent Integration (1.5h)
+      - Hybrid moderator routes @addressed agents or selects top‑N by relevance
+      - Collects ≤2 responses within 2.2s
+      - Speaker‑aware agent selection based on voice characteristics
+      - Noise‑suppressed roundtable for better multi‑agent communication
+    - Phase 5: Advanced Features & Testing (1h)
+      - Real‑time noise suppression during live conversations
+      - Speaker adaptation feedback loop for continuous improvement
+      - VibeVoice voice cloning for role‑specific voices
+      - Unit tests for noise suppression, speaker adaptation, and flag rollback
+      - Performance benchmarking for enhanced features
+    - Phase 6: Lessons/Decisions Integration (B‑1026) (1h)
+      - Store transcripts to `runs/steps` with role tags, noise suppression settings, speaker profiles, and adaptation data
+      - Attach lessons/decisions derived from voice sessions
       - Link sessions to PRDs/backlog items; ensure provenance and citations recorded
-    - Phase 5: VM‑Safe Profile
+    - Phase 7: VM‑Safe Profile (0.5h)
       - Document Mode A (VM‑only) defaults; Mode B (host mirror) optional; Mode C (guarded host control) documented with HITL approvals
 
   - Performance targets
-    - STT endpoint→text: ≤ 800ms p50, ≤ 1500ms p90
-    - TTS 200–400 chars: ≤ 500ms p50, ≤ 900ms p90
+    - STT endpoint→text: ≤ 800ms p50, ≤ 1500ms p90 (with noise suppression)
+    - TTS 200–400 chars: ≤ 500ms p50, ≤ 900ms p90 (Piper/VibeVoice/Coqui)
+    - Noise Suppression: < 100ms real‑time processing latency
+    - Speaker Adaptation: < 200ms identification + adaptation
+    - VibeVoice TTS: ≤ 600ms for 200‑400 chars (alternative option)
     - Moderator collect: ≤ 2200ms deadline; ≤ 2 speakers returned; cancel stragglers
     - CPU/memory steady within local M‑series budget; no GPU hard requirement
 
@@ -1097,17 +1194,21 @@ Security: VM‑safe mode available (no host control required); approval gate doc
     - Opt‑out flag to disable recording; rotation + size caps
 
   - Observability
-    - Log per‑utterance: stt_ms, tts_ms, barge_in_count, selected_agents, replies_ms, wake_word score
-    - Store transcripts with run_id/step_idx; link to lessons (B‑1026)
+    - Log per‑utterance: stt_ms, tts_ms, barge_in_count, selected_agents, replies_ms, wake_word score, noise_suppression_ms, speaker_adaptation_ms, vibevoice_ms
+    - Store transcripts with run_id/step_idx, noise suppression settings, speaker profiles, and adaptation data; link to lessons (B‑1026)
+    - Enhanced metrics: noise suppression effectiveness, speaker adaptation accuracy, VibeVoice performance vs Piper
     - Cross‑links: reference B‑1024 (Dual‑Mode Troubleshooting) for View‑Only vs VM Privileged modes; reference B‑1025 (context accuracy) and B‑1026 (closed‑loop capture)
 
   - Rollback
-    - Flip FEATURE_STT/FEATURE_TTS/FEATURE_VOICE_ROLES/FEATURE_VOICE_ROUNDTABLE off; voice code inert; text workflows unchanged
+    - Flip FEATURE_STT/FEATURE_TTS/FEATURE_VOICE_ROLES/FEATURE_VOICE_ROUNDTABLE/FEATURE_NOISE_SUPPRESSION/FEATURE_SPEAKER_ADAPTATION/FEATURE_VIBEVOICE_TTS off; voice code inert; text workflows unchanged
 
   - Risks & mitigations
     - False wake‑word triggers → increase threshold, require double‑hit, prefer PTT mode by default
     - Latency spikes → use smaller STT models (base.en/small.en), int8 compute; pre‑render short TTS
     - Audio device issues → document macOS permissions and VM audio routing
+    - Noise suppression quality → fallback to traditional filtering, configurable sensitivity, real‑time monitoring
+    - Speaker adaptation accuracy → fallback to default profiles, learning rate adjustment, minimum sample requirements
+    - VibeVoice performance → fallback to Piper, performance monitoring, alternative TTS options
 
 <!--score: {bv:5, tc:5, rr:5, le:4, effort:5, deps:["B-1023"]}-->
 <!--score_total: 9.5-->

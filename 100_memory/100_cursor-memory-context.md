@@ -72,12 +72,206 @@ CONTEXT_INDEX -->
 
 ## 🔎 TL;DR {#tldr}
 
+:
+
+**🚨 MANDATORY FIRST STEP**: Run this command before any project work:
+```bash
+export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+```
+
+**📊 CURRENT PROJECT STATUS**:
+- **Lessons Engine**: ✅ **PRODUCTION READY** - Closed-Loop Lessons Engine (CLLE) fully implemented
+- **Key Components**: lessons_extractor.py, lessons_loader.py, evolution_tracker.py, lessons_quality_check.py
+- **Integration**: Full integration with ragchecker_official_evaluation.py
+- **CI Integration**: CI produces `configs/EVOLUTION.md` regularly; loader emits JSON-only stdout
+- **Current State**: System ready for evaluation runs with automatic lesson learning
+- **Next Steps**: Run evaluations to generate and apply lessons
+
+**🧠 LESSONS LEARNED**:
+- Check `metrics/lessons/lessons.jsonl` for current lessons
+- Check `metrics/derived_configs/` for generated configurations
+- Check `configs/EVOLUTION.md` for configuration evolution
+- Use `python3 scripts/lessons_quality_check.py` to verify system health
+
 | what this file is | read when | do next |
 |---|---|---|
 | Primary memory scaffold for AI rehydration and context management | Starting new session or need current project state
 | Check backlog and system overview for next priorities; access DSPy roles via Unified Memory Orchestrator |
 
 ## 🚨 Critical Policies (Read First) {#critical-policies}
+
+## 🚨 **CRITICAL: MEMORY REHYDRATION REQUIRED BEFORE ANY RESPONSE**
+
+**🚨 MANDATORY ENFORCEMENT**: You MUST execute this protocol at the start of every conversation:
+
+1. **AUTOMATIC DETECTION**: If this appears to be a new conversation or the user asks about project components
+2. **MANDATORY EXECUTION**: Run the unified memory orchestrator before answering
+3. **COMMAND**: `export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
+4. **OUTPUT INCLUSION**: Include the memory context output in your response
+5. **NO EXCEPTIONS**: Do not answer project questions without this context
+
+**TRIGGER CONDITIONS**:
+- New conversation detected
+- User mentions: RAGChecker, DSPy, memory systems, project status
+- User asks technical questions about the codebase
+- User requests information about project components
+- User says: "run evals", "run evaluation", "run the evals", "evaluation"
+
+## 🛤️ **CLEAR AGENT PATHS**
+
+### **Path 1: New Session/Project Questions**
+1. **MANDATORY**: Run memory rehydration command above
+2. **Read**: `000_core/000_backlog.md` for current priorities
+3. **Check**: `400_guides/400_system-overview.md` for architecture
+4. **Execute**: Follow workflow chain (backlog → PRD → tasks → execution)
+
+### **Path 2: Technical Implementation**
+1. **MANDATORY**: Run memory rehydration command above
+2. **Read**: `400_guides/400_lessons-engine-guide.md` for lessons system
+3. **Check**: `400_guides/400_04_development-workflow-and-standards.md` for standards
+4. **Follow**: Coding standards and testing requirements
+
+### **Path 3: Evaluation/RAGChecker Work**
+1. **MANDATORY**: Run memory rehydration command above
+2. **Read**: `000_core/000_evaluation-system-entry-point.md` for evaluation SOP
+3. **Use**: Lessons engine with `--lessons-mode advisory` first
+4. **Check**: Quality gates and baseline requirements
+5. **Command**: `python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile`
+6. **DOCUMENT**: Update `000_core/000_backlog.md` with evaluation results and lessons learned
+
+### **Path 4: Memory System Work**
+1. **MANDATORY**: Run memory rehydration command above
+2. **Read**: `400_guides/400_06_memory-and-context-systems.md` for memory architecture
+3. **Use**: Unified Memory Orchestrator for role-specific context
+4. **Follow**: Memory rehydration protocols
+
+## 🔄 **STATELESS RESUME PROTOCOL**
+
+**MANDATORY**: For stateless agents to determine current state and resume work:
+
+### **State Discovery Commands**
+```bash
+# Print lessons metadata
+jq '.run_config.lessons' $(ls -t metrics/baseline_evaluations/*.json | head -1)
+
+# Echo env snapshot keys if present
+jq '.run_config.env' $(ls -t metrics/baseline_evaluations/*.json | head -1)
+
+# Show docket path
+echo $DECISION_DOCKET  # (if set) or parse from JSON
+```
+
+### **Decision Tree**
+1. **If `apply_blocked == true`**: Read docket's "Quality Gates"; do not apply; open PR/task to address
+2. **If `lessons_mode == "advisory"`**: Human review docket; rerun with `--lessons-mode apply` if approved
+3. **If `lessons_mode == "apply"`**: Check results, document lessons learned
+
+### **Documentation Protocol (Tie-in to Backlog)**
+Add standard snippet to paste into `000_core/000_backlog.md`:
+- Run timestamp, applied_lessons or LESSONS_SUGGESTED, docket path, candidate env path, and mode
+- Acknowledge pre-commit hook and CI artifacts: "Lessons Quality Check runs on pre-commit; Evolution artifacts generated in CI and available under configs/EVOLUTION.*"
+
+## 📝 **DOCUMENTATION PROTOCOL**
+
+**MANDATORY**: After any evaluation run, document your work:
+
+1. **Update Backlog**: Add evaluation results to `000_core/000_backlog.md`
+2. **Record Lessons**: Note new lessons learned in the backlog
+3. **Update Status**: Mark completed items and add new priorities
+4. **Run Evolution Tracker**: Update configuration evolution
+5. **Verify System**: Run quality checks to ensure integrity
+
+**Example Documentation**:
+```markdown
+### **Evaluation Run - [DATE]**
+- **Command**: `python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile`
+- **Results**: [precision, recall, f1 scores]
+- **Lessons Generated**: [list of new lessons]
+- **Configurations Created**: [list of generated configs]
+- **Status**: ✅ Completed / ⚠️ Issues / ❌ Failed
+```
+
+## ⚡ **QUICK REFERENCE COMMANDS**
+
+### **Memory Rehydration (MANDATORY)**
+```bash
+export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"
+```
+
+### **Lessons Engine**
+```bash
+# Run evaluation with lessons
+python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
+
+# Check system health
+python3 scripts/lessons_quality_check.py
+
+# Generate evolution tracking
+python3 scripts/evolution_tracker.py
+```
+
+### **Complete Evaluation Workflow**
+```bash
+# 1. Check current lessons
+cat metrics/lessons/lessons.jsonl
+
+# 2. Run evaluation with lessons engine
+python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
+
+# 3. Check new lessons generated
+cat metrics/lessons/lessons.jsonl
+
+# 4. Check generated configurations
+ls -la metrics/derived_configs/
+
+# 5. Update evolution tracking
+python3 scripts/evolution_tracker.py
+
+# 6. Verify system health
+python3 scripts/lessons_quality_check.py
+```
+
+### **DSPy Role Access**
+```bash
+# Planner context
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role planner "query"
+
+# Coder context
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role coder "query"
+
+# Researcher context
+python3 scripts/unified_memory_orchestrator.py --systems cursor --role researcher "query"
+```
+
+### **System Health Checks**
+```bash
+# Memory health check
+python3 scripts/memory_healthcheck.py
+
+# Lessons quality check
+python3 scripts/lessons_quality_check.py
+
+# Update memory context
+python3 scripts/update_cursor_memory.py
+```
+
+### **State Check Commands**
+```bash
+# Check current lessons
+cat metrics/lessons/lessons.jsonl | tail -5
+
+# Check latest evaluation results
+ls -la metrics/baseline_evaluations/ | tail -5
+
+# Check generated configurations
+ls -la metrics/derived_configs/ | tail -5
+
+# Check evolution tracking
+cat configs/EVOLUTION.md | tail -20
+
+# Check system status
+python3 scripts/lessons_quality_check.py
+```
 
 **⚠️ SAFETY OPS**: Before any file operations, read these critical policies:
 
@@ -91,6 +285,34 @@ CONTEXT_INDEX -->
 8. **Monitoring**: Track context loss, safety violations, and doc integrity in ops
 9. **DSPy Role Communication**: Always access DSPy roles through Unified Memory Orchestrator; use role-specific context for targeted insights
 10. **Technical Artifacts Integration**: Ensure technical components, scripts, and implementation patterns are integrated into memory context for accurate technical guidance
+
+## 🧠 **LESSONS ENGINE SYSTEM**
+
+**NEW CORE COMPONENT**: The Closed-Loop Lessons Engine (CLLE) systematically learns from evaluation runs and applies those lessons to future runs.
+
+### **Key Components**
+- **lessons_extractor.py**: Post-run analysis to generate lessons from evaluation results
+- **lessons_loader.py**: Pre-run lesson loading and configuration generation
+- **evolution_tracker.py**: Configuration lineage tracking
+- **lessons_quality_check.py**: System integrity validation
+
+### **Usage**
+```bash
+# Run evaluation with lessons engine
+python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile
+
+# Check system health
+python3 scripts/lessons_quality_check.py
+
+# Generate evolution tracking
+python3 scripts/evolution_tracker.py
+```
+
+### **Integration Points**
+- Integrated into ragchecker_official_evaluation.py
+- Uses config/ragchecker_quality_gates.json for safety
+- Stores lessons in metrics/lessons/lessons.jsonl
+- Generates configs in metrics/derived_configs/
 
 ## 🚨 **CRITICAL OPERATIONAL PRINCIPLE: RAGChecker RED LINE BASELINE**
 
@@ -1085,20 +1307,17 @@ python3 scripts/generate_prd.py B-1061 --generate-prd
 <!-- AUTO:current_priorities:start -->
 ### **Current Priorities**
 
-1. **B‑091**: Strict Anchor Enforcement (Phase 2) (🔥 points)
-   - todo
+1. **B‑095**: MCP Server Role Auto-Detection (2 points)
+   - Enhance MCP server to automatically detect role based on conversation context
 
-2. **B‑094**: MCP Memory Rehydrator Server (🔥 points)
-   - todo
+2. **B‑1016**: RL-Enhanced DSPy Model Selection (7 points)
+   - Implement reinforcement learning to optimize model selection, hyperparameter tuning, and performance-based evolution in the existing DSPy multi-agent system
 
-3. **B‑095**: MCP Server Role Auto-Detection (🔥 points)
-   - todo
+3. **B‑1021**: Transformer Attention for Memory Orchestration (5 points)
+   - Add transformer attention mechanisms to memory merger for intelligent cross-system relationship learning and dynamic context prioritization
 
-4. **B‑043**: LangExtract Pilot w/ Stratified 20-doc Set (🔥 points)
-   - todo
-
-5. **B‑076**: Research-Based DSPy Assertions Implementation (🔥 points)
-   - todo
+4. **B‑1022**: Graph Neural Networks for Adaptive Memory Graphs (7 points)
+   - Implement GNN learning for entity and dependency graphs to enable adaptive graph structure learning and multi-hop reasoning
 <!-- AUTO:current_priorities:end -->
 
 <!-- AUTO:recently_completed:start -->

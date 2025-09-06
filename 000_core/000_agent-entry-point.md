@@ -41,6 +41,21 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --s
 - Evaluation SOP: `000_core/000_evaluation-system-entry-point.md`
 - Fast smoke: `./scripts/run_ragchecker_smoke_test.sh`
 
+#### 🔁 “Run the evals” (ABP‑validated quick path)
+```bash
+# 1) Ensure baseline manifest is fresh for this profile
+python3 scripts/update_baseline_manifest.py --profile precision_elevated
+
+# 2) Run evaluation with lessons (advisory mode)
+python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory
+
+# 3) Validate ABP & context sidecars
+python3 scripts/abp_validation.py --profile precision_elevated
+```
+Expected:
+- ABP in `metrics/briefings/` and context meta sidecar in `metrics/baseline_evaluations/`
+- Decision docket path printed; lessons applied/suggested recorded
+
 ### 3) Execute by Role (Choose One)
 ```bash
 # Planner – plan next steps

@@ -120,3 +120,41 @@ Example: `baseline_ragchecker_v1.0_20250830_150000.json`
 ---
 
 *This baseline evaluation system ensures reliable progress measurement of the memory system over time.*
+
+## ABP Validation & CI Gates
+
+To ensure stateless agents always have reliable context, the pipeline validates the Agent Briefing Pack (ABP) and Baseline Manifest.
+
+Tools
+- `scripts/update_baseline_manifest.py` — builds `config/baselines/<profile>.json` (targets, EMA, gates)
+- `scripts/abp_packer.py` — generates `metrics/briefings/<ts>_<profile>_ABP.md`
+- `scripts/abp_validation.py` — validates freshness/presence; supports CI warnings and strict mode
+- `scripts/abp_adoption_report.py` — reports ABP carry‑over and usage across recent runs
+
+Local usage
+```bash
+# Update manifest for a profile
+python3 scripts/update_baseline_manifest.py --profile precision_elevated
+
+# Validate (local)
+python3 scripts/abp_validation.py --profile precision_elevated --max-age-days 2
+
+# Strict (fail on stale/missing)
+python3 scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --strict
+
+# Adoption report (last 20 runs)
+python3 scripts/abp_adoption_report.py --window 20
+```
+
+CI integration
+- Quick checks (soft warnings): `.github/workflows/quick-check.yml`
+  - `uv run python scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --ci-mode`
+- Evaluation pipeline (soft warnings + release hard gate): `.github/workflows/ragchecker-evaluation.yml`
+  - Soft validation (all branches): same as above
+  - Hard gate for release/*: `uv run python scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --strict`
+
+Artifacts
+- ABP: `metrics/briefings/<ts>_<profile>_ABP.md`
+- Context meta sidecar: `metrics/baseline_evaluations/*_context_meta.json` (records ABP path, lessons applied/suggested, carry‑over)
+
+This validation stack provides soft guidance during development and enforces freshness on release branches.

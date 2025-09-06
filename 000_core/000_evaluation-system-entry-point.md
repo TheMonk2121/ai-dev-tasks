@@ -9,13 +9,21 @@
 
 ## 🚀 **Quick Start (For All Agents)**
 
-### **📋 Standard Evaluation Command**
+### **📋 Standard Evaluation Command (With Lessons Engine)**
+```bash
+source throttle_free_eval.sh
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
+```
+
+**This is the ONE command every agent should use for evaluations with automatic lesson learning.**
+
+### **📋 Legacy Evaluation Command (Without Lessons)**
 ```bash
 source throttle_free_eval.sh
 python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
 ```
 
-**This is the ONE command every agent should use for evaluations.**
+**Use this only if lessons engine is disabled or for baseline comparisons.**
 
 ### **💨 Fast Testing Command**
 ```bash
@@ -25,8 +33,62 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --s
 **Use this for quick iteration and testing changes.**
 
 ### 🧭 If you were told to "run the evals"
-- Do exactly the two commands above.
-- If Bedrock credentials are missing, run `./scripts/run_ragchecker_smoke_test.sh` and report results.
+- **MANDATORY**: Run memory rehydration first: `export POSTGRES_DSN="mock://test" && python3 scripts/unified_memory_orchestrator.py --systems ltst cursor go_cli prime --role planner "current project status and core documentation"`
+- **ABP‑validated quick sequence**:
+  ```bash
+  # 1) Update baseline manifest (fresh targets/EMA)
+  python3 scripts/update_baseline_manifest.py --profile precision_elevated
+
+  # 2) Run evaluation with lessons (advisory)
+  python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory
+
+  # 3) Validate ABP generation and context sidecars
+  python3 scripts/abp_validation.py --profile precision_elevated
+  ```
+- **Review the decision docket** printed in the output
+- **Document results** in `000_core/000_backlog.md`
+- If Bedrock credentials are missing, run `./scripts/run_ragchecker_smoke_test.sh` and report results
+
+### 🧠 **Lessons Engine Integration**
+
+#### **Advisory-First Approach**
+```bash
+# 1. Run with lessons in advisory mode (recommended)
+python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory --lessons-scope profile --lessons-window 5
+
+# 2. Review decision docket
+cat metrics/derived_configs/*_decision_docket.md
+
+# 3. Apply lessons if approved
+python3 scripts/ragchecker_official_evaluation.py --lessons-mode apply --lessons-scope profile
+```
+
+**Note**: Runner prints one-line summary when apply is blocked and exact "Decision docket:" path.
+
+#### **Interpret Output**
+- **Decision docket path**: Printed in output, contains lesson details and parameter changes
+- **Apply blocked**: If quality gates prevent apply, review docket for warnings
+- **Generated files**: Check `metrics/derived_configs/` for candidate configs and dockets
+- **New lessons**: Check `metrics/lessons/lessons.jsonl` for lessons learned
+
+#### **Minimal Resume Checklist**
+```bash
+# Get latest eval → parse .run_config.lessons → if docket present, open; if apply_blocked, keep base env
+LATEST_RESULTS=$(ls -t metrics/baseline_evaluations/*.json | head -1)
+jq '.run_config.lessons' "$LATEST_RESULTS"
+
+# If docket present, open and follow next steps
+# If apply_blocked == true, review gates and fix before applying
+# Attach docket link to backlog comment
+# Run quality checks and evolution tracking
+python3 scripts/lessons_quality_check.py
+python3 scripts/evolution_tracker.py
+```
+
+**Example jq snippet**:
+```bash
+jq '.run_config.lessons' $(ls -t metrics/baseline_evaluations/*.json | head -1)
+```
 
 ## 📍 **Where to Find Everything**
 

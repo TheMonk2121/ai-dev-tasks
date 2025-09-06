@@ -1,48 +1,34 @@
-# 🚦 Start Here for Agents (Zero‑Context)
+# 🚀 START HERE FOR AGENTS
 
-Primary SOP: `000_core/000_agent-entry-point.md`
+This is the one‑stop jump point for stateless agents. For the full path, open:
 
-Follow these exact steps to get the right context fast.
+- 000_core/000_agent-entry-point.md
 
-## 1) Load Working Context (Memory)
+Quick Evaluation (ABP‑validated)
 
-```bash
-# Start memory systems
-./scripts/memory_up.sh
-
-# Verify & pull core context into the session
-python3 scripts/unified_memory_orchestrator.py \
-  --systems ltst cursor go_cli prime \
-  --role planner "current project status and core documentation"
-```
-
-- Read next (5 min): `400_guides/400_01_memory-system-architecture.md`
-- Daily use: `400_guides/400_02_memory-rehydration-context-management.md`
-
-## 2) Run Evaluations (Single Source of Truth)
+When asked to “run the evals”, execute exactly these commands:
 
 ```bash
-source throttle_free_eval.sh
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
+# 1) Ensure baseline manifest is fresh for this profile
+python3 scripts/update_baseline_manifest.py --profile precision_elevated
+
+# 2) Run evaluation with lessons (advisory mode)
+python3 scripts/ragchecker_official_evaluation.py --lessons-mode advisory
+
+# 3) Validate ABP & context sidecars
+python3 scripts/abp_validation.py --profile precision_elevated
 ```
 
-- Evaluation SOP: `000_core/000_evaluation-system-entry-point.md`
+Expected outcome
+- ABP written to `metrics/briefings/`
+- Context meta sidecar in `metrics/baseline_evaluations/`
+- Decision docket path printed; lessons applied/suggested recorded
 
-## 3) Team/Env Onboarding (UV)
+Helpful references
+- Primary evaluation SOP: 000_core/000_evaluation-system-entry-point.md
+- Fast smoke test: scripts/run_ragchecker_smoke_test.sh
+- Adoption report: `python3 scripts/abp_adoption_report.py --window 20`
 
-```bash
-python3 scripts/uv_team_onboarding.py
-# or
-python3 scripts/uv_team_onboarding.py --check-only
-```
-
-- Dependency + workflow tools: `scripts/uv_dependency_manager.py`, `scripts/uv_workflow_optimizer.py`
-
-## 4) Quick Links (Choose Your Path)
-
-- Memory overview: `400_guides/400_00_memory-system-overview.md`
-- AI frameworks + DSPy quick start: `400_guides/400_09_ai-frameworks-dspy.md`
-- Integrations & models: `400_guides/400_10_integrations-models.md`
-- Performance & optimization: `400_guides/400_11_performance-optimization.md`
-
-If in doubt, re-run step 1 to rehydrate context, then step 2 for verification.
+Troubleshooting
+- If Bedrock creds are missing, run the smoke test and report results
+- If validation warns about stale manifest, rerun step (1) above
