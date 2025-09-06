@@ -660,3 +660,152 @@
 ✅ Starting server on port 3000...
    Press Ctrl+C to stop the server
 
+🚀 Starting MCP Memory Server...
+📦 Activating virtual environment...
+✅ Port 3000 is available
+🚀 Starting MCP Memory Server on port 3000...
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+
+✅ Patched litellm.ModelResponseStream for DSPy compatibility
+✅ Patched litellm.streaming submodule
+✅ Created comprehensive litellm mock for DSPy compatibility
+✅ Applied litellm compatibility shim for DSPy 3.0.1
+🚀 Starting MCP Memory Server on localhost:3000
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+INFO:     ::1:49188 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:49190 - "GET /mcp/tools HTTP/1.1" 200 OK
+INFO:     ::1:49197 - "POST /mcp/tools/call HTTP/1.1" 422 Unprocessable Entity
+INFO:     ::1:49199 - "POST /mcp/tools/call HTTP/1.1" 422 Unprocessable Entity
+INFO:     ::1:49201 - "GET /health HTTP/1.1" 200 OK
+🚀 Starting MCP Memory Server...
+📦 Activating virtual environment...
+✅ Port 3000 is available
+🚀 Starting MCP Memory Server on port 3000...
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+
+✅ Patched litellm.ModelResponseStream for DSPy compatibility
+✅ Patched litellm.streaming submodule
+✅ Created comprehensive litellm mock for DSPy compatibility
+✅ Applied litellm compatibility shim for DSPy 3.0.1
+🚀 Starting MCP Memory Server on localhost:3000
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+INFO:     ::1:49260 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:49286 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:49316 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:49445 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:49530 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:49539 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:49551 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:49581 - "GET /mcp/tools HTTP/1.1" 200 OK
+INFO:     ::1:49595 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:50407 - "GET /mcp/tools HTTP/1.1" 200 OK
+INFO:     ::1:50495 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:50496 - "GET /mcp/tools HTTP/1.1" 200 OK
+INFO:     ::1:50497 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:50498 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:51460 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:51462 - "GET /mcp/tools HTTP/1.1" 200 OK
+INFO:     ::1:51473 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:51499 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:51500 - "GET /mcp/tools HTTP/1.1" 200 OK
+INFO:     ::1:51501 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:51502 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:51586 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:51808 - "GET /mcp/tools HTTP/1.1" 200 OK
+INFO:     ::1:51811 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:51816 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:51817 - "GET /mcp/tools HTTP/1.1" 200 OK
+INFO:     ::1:51818 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:51819 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:52176 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:52358 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:52359 - "GET /logs HTTP/1.1" 404 Not Found
+INFO:     ::1:52360 - "GET /logs/mcp-server HTTP/1.1" 404 Not Found
+INFO:     ::1:52362 - "GET /mcp/tools HTTP/1.1" 200 OK
+INFO:     ::1:52415 - "GET /mcp/tools HTTP/1.1" 200 OK
+🚀 Starting MCP Memory Server...
+📦 Activating virtual environment...
+✅ Port 3000 is available
+🚀 Starting MCP Memory Server on port 3000...
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+
+2025-09-05 01:35:02,575 - WARNING - Could not import memory systems: cannot import name 'LTSTMemory' from 'ltst_memory_integration' (/Users/danieljacobs/Code/ai-dev-tasks/scripts/ltst_memory_integration.py)
+🚀 Starting MCP Memory Server on localhost:3000
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+🧩 PYTHONPATH=/Users/danieljacobs/Code/ai-dev-tasks/dspy-rag-system/src:/Users/danieljacobs/Code/ai-dev-tasks/scripts:/Users/danieljacobs/Code/ai-dev-tasks/dspy-rag-system/src
+🧭 sys.path[:3]=['/Users/danieljacobs/Code/ai-dev-tasks', '/Users/danieljacobs/Code/ai-dev-tasks', '/Users/danieljacobs/Code/ai-dev-tasks']
+INFO:     ::1:52431 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:52433 - "GET /mcp/tools HTTP/1.1" 500 Internal Server Error
+INFO:     ::1:52438 - "GET /mcp/tools HTTP/1.1" 500 Internal Server Error
+🚀 Starting MCP Memory Server...
+📦 Activating virtual environment...
+✅ Port 3000 is available
+🚀 Starting MCP Memory Server on port 3000...
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+
+2025-09-05 01:35:50,653 - WARNING - Could not import memory systems: cannot import name 'LTSTMemory' from 'ltst_memory_integration' (/Users/danieljacobs/Code/ai-dev-tasks/scripts/ltst_memory_integration.py)
+🚀 Starting MCP Memory Server on localhost:3000
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+🧩 PYTHONPATH=/Users/danieljacobs/Code/ai-dev-tasks/dspy-rag-system/src:/Users/danieljacobs/Code/ai-dev-tasks/scripts:/Users/danieljacobs/Code/ai-dev-tasks/dspy-rag-system/src
+🧭 sys.path[:3]=['/Users/danieljacobs/Code/ai-dev-tasks', '/Users/danieljacobs/Code/ai-dev-tasks', '/Users/danieljacobs/Code/ai-dev-tasks']
+INFO:     ::1:52456 - "GET /mcp/tools HTTP/1.1" 200 OK
+2025-09-05 01:35:59,511 - INFO - HTTP Request: GET http://localhost:8001/logs "HTTP/1.1 200 OK"
+INFO:     ::1:52458 - "GET /logs HTTP/1.1" 200 OK
+2025-09-05 01:36:03,392 - INFO - HTTP Request: GET http://localhost:8001/logs/mcp-server "HTTP/1.1 200 OK"
+INFO:     ::1:52463 - "GET /logs/mcp-server HTTP/1.1" 200 OK
+INFO:     ::1:52532 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+🚀 Starting MCP Memory Server...
+📦 Activating virtual environment...
+✅ Port 3000 is available
+🚀 Starting MCP Memory Server on port 3000...
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+
+2025-09-05 01:40:17,845 - WARNING - Could not import memory systems: cannot import name 'LTSTMemory' from 'ltst_memory_integration' (/Users/danieljacobs/Code/ai-dev-tasks/scripts/ltst_memory_integration.py)
+🚀 Starting MCP Memory Server on localhost:3000
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+🧩 PYTHONPATH=/Users/danieljacobs/Code/ai-dev-tasks/dspy-rag-system/src:/Users/danieljacobs/Code/ai-dev-tasks/scripts:/Users/danieljacobs/Code/ai-dev-tasks/dspy-rag-system/src
+🧭 sys.path[:3]=['/Users/danieljacobs/Code/ai-dev-tasks', '/Users/danieljacobs/Code/ai-dev-tasks', '/Users/danieljacobs/Code/ai-dev-tasks']
+INFO:     ::1:52566 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:52574 - "GET /mcp/tools HTTP/1.1" 200 OK
+2025-09-05 01:40:51,370 - INFO - HTTP Request: GET http://localhost:8001/logs "HTTP/1.1 200 OK"
+INFO:     ::1:52583 - "GET /logs HTTP/1.1" 200 OK
+INFO:     ::1:52585 - "GET /mcp/tools HTTP/1.1" 200 OK
+INFO:     ::1:52587 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:52613 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:52635 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:52661 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:52730 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:52956 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:52958 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:52959 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:53138 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+2025-09-05 01:48:16,256 - INFO - HTTP Request: GET http://localhost:8001/logs "HTTP/1.1 200 OK"
+INFO:     ::1:53156 - "GET /logs HTTP/1.1" 200 OK
+2025-09-05 01:48:16,270 - INFO - HTTP Request: GET http://localhost:8001/logs/mcp-server "HTTP/1.1 200 OK"
+INFO:     ::1:53158 - "GET /logs/mcp-server HTTP/1.1" 200 OK
+INFO:     ::1:53327 - "GET /health HTTP/1.1" 200 OK
+INFO:     ::1:53338 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+INFO:     ::1:53342 - "POST /mcp/tools/call HTTP/1.1" 200 OK
+🚀 Starting MCP Memory Server...
+📦 Activating virtual environment...
+✅ Port 3000 is available
+🚀 Starting MCP Memory Server on port 3000...
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+
+2025-09-06 14:36:39,091 - WARNING - Could not import memory systems: cannot import name 'LTSTMemory' from 'ltst_memory_integration' (/Users/danieljacobs/Code/ai-dev-tasks/scripts/ltst_memory_integration.py)
+🚀 Starting MCP Memory Server on localhost:3000
+📡 Health check: http://localhost:3000/health
+🔧 MCP tools: http://localhost:3000/mcp/tools
+🧩 PYTHONPATH=/Users/danieljacobs/Code/ai-dev-tasks/dspy-rag-system/src:/Users/danieljacobs/Code/ai-dev-tasks/scripts:/Users/danieljacobs/Code/ai-dev-tasks/dspy-rag-system/src
+🧭 sys.path[:3]=['/Users/danieljacobs/Code/ai-dev-tasks', '/Users/danieljacobs/Code/ai-dev-tasks', '/Users/danieljacobs/Code/ai-dev-tasks']

@@ -646,3 +646,160 @@ INFO:mcp_security_config:Loaded 5 API keys
 INFO:mcp_security_config:Loaded 5 API keys
 /Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 73:  6796 Terminated: 15          $PYTHON_CMD scripts/mcp_memory_server.py --port "$PORT"
 INFO:mcp_security_config:Loaded 5 API keys
+/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:341: UserWarning: Valid config keys have changed in V2:
+* 'underscore_attrs_are_private' has been removed
+  warnings.warn(message, UserWarning)
+WARNING:root:Could not import memory systems: cannot import name 'build_hydration_bundle' from 'unified_memory_orchestrator' (/Users/danieljacobs/Code/ai-dev-tasks/scripts/unified_memory_orchestrator.py)
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py:69: DeprecationWarning: There is no current event loop
+  start_time = asyncio.get_event_loop().time() if asyncio.get_event_loop().is_running() else 0
+INFO:     Started server process [2198]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://localhost:3000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2198]
+/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:341: UserWarning: Valid config keys have changed in V2:
+* 'underscore_attrs_are_private' has been removed
+  warnings.warn(message, UserWarning)
+WARNING:root:Could not import memory systems: cannot import name 'build_hydration_bundle' from 'unified_memory_orchestrator' (/Users/danieljacobs/Code/ai-dev-tasks/scripts/unified_memory_orchestrator.py)
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py:69: DeprecationWarning: There is no current event loop
+  start_time = asyncio.get_event_loop().time() if asyncio.get_event_loop().is_running() else 0
+INFO:     Started server process [2522]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://localhost:3000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2522]
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 48:  2522 Terminated: 15          python3 scripts/mcp_memory_server.py --port "$PORT"
+INFO:     Started server process [10543]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://localhost:3000 (Press CTRL+C to quit)
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/uvicorn/protocols/http/httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 520, in list_tools
+    "async": {"type": "boolean", "default": true},
+                                            ^^^^
+NameError: name 'true' is not defined. Did you mean: 'True'?
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/uvicorn/protocols/http/httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danieljacobs/Code/ai-dev-tasks/venv/lib/python3.12/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 520, in list_tools
+    "async": {"type": "boolean", "default": true},
+                                            ^^^^
+NameError: name 'true' is not defined. Did you mean: 'True'?
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [10543]
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 48: 10543 Terminated: 15          python3 scripts/mcp_memory_server.py --port "$PORT"
+INFO:     Started server process [11085]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://localhost:3000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [11085]
+/Users/danieljacobs/Code/ai-dev-tasks/scripts/start_mcp_server.sh: line 48: 11085 Terminated: 15          python3 scripts/mcp_memory_server.py --port "$PORT"
+INFO:     Started server process [11759]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://localhost:3000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [11759]
+INFO:     Started server process [680]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://localhost:3000 (Press CTRL+C to quit)
