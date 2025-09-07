@@ -13,7 +13,7 @@ export CLEAN_PATH="/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # Optional preflight diff in the current shell (helps spot global overrides)
 if [[ "${HERMITIC_PREFLIGHT:-1}" == "1" ]]; then
   if [[ -f scripts/preflight_env_diff.sh ]]; then
-    echo "\n🔎 Preflight (current shell vs throttle profile)"
+    printf "\n🔎 Preflight (current shell vs throttle profile)\n"
     bash scripts/preflight_env_diff.sh --profile throttle || true
     echo
   fi

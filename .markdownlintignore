@@ -1,0 +1,22 @@
+# Ignore generated/heavy documentation and logs
+
+# Explicit files called out
+000_core/000_backlog.md
+300_experiments/300_testing-methodology-log.md
+
+# Generated metrics and artifacts
+metrics/**
+artifacts/**
+
+# Archived or deprecated docs
+600_archives/**
+
+# Auto-generated or processed docs
+dspy-rag-system/docs/**
+dspy-rag-system/processed_documents/**
+
+# Evaluation outputs and derived configs
+metrics/baseline_evaluations/**
+metrics/derived_configs/**
+metrics/lessons/**
+
