@@ -1,0 +1,33 @@
+default:
+  w_path: 2.0
+  w_short: 1.8
+  w_title: 1.4
+  w_bm25: 1.0
+  w_vec: 1.1
+  adjacency_db: 0
+  per_file_cap: 4
+tags:
+  db_workflows:
+    w_path: 2.2
+    w_short: 2.0
+    w_title: 1.6
+    w_bm25: 1.1
+    w_vec: 1.2
+  ops_health:
+    w_path: 2.2
+    w_short: 2.0
+    w_title: 1.6
+    w_bm25: 1.0
+    w_vec: 1.1
+  meta_ops:
+    w_path: 2.1
+    w_short: 1.9
+    w_title: 1.6
+    w_bm25: 1.0
+    w_vec: 1.1
+  rag_qa_single:
+    w_path: 2.0
+    w_short: 1.8
+    w_title: 1.4
+    w_bm25: 1.0
+    w_vec: 1.2

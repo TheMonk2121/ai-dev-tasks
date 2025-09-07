@@ -97,7 +97,7 @@ def load_jsonl(path):
 
 
 def to_examples(rows):
-    # rows need keys: case_id, query, tag, answers
+    # rows should include: id/case_id (ignored here), query, tag, answers
     ex = []
     for r in rows:
         q = r["query"]

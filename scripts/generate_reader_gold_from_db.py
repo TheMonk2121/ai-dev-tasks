@@ -10,6 +10,7 @@ import random
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
+from datetime import datetime
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -20,6 +21,7 @@ from _bootstrap import ROOT, SRC  # noqa: F401
 sys.path.insert(0, str(SRC))
 
 from dspy_modules.retriever.query_rewrite import PHRASE_HINTS
+from common.case_id import canonical_case_id
 from dspy_modules.reader.sentence_select import select_sentences
 
 
@@ -180,14 +182,16 @@ def generate_question_answer_pair(content: str, file_path: str, filename: str, i
     except Exception:
         pass
 
-    safe_case_id = f"db_generated_{index}_{(filename or 'unknown').replace('.md','').replace(' ','_')[:60]}"
+    source_path = file_path or ""
+    case_id = canonical_case_id(question, source_path)
     return {
-        "case_id": safe_case_id,
+        "id": case_id,
         "query": question,
+        "source_path": source_path,
         "answers": answers,
         "tag": _guess_tag(file_path),
-        "file_path": file_path,
         "source": "database_generated",
+        "meta": {"dataset_version": datetime.utcnow().strftime("v%Y-%m-%d")},
     }
 
 

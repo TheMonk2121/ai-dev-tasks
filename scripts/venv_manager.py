@@ -46,11 +46,23 @@ class VenvManager:
         return None
 
     def validate_dependencies(self) -> Tuple[bool, list[str]]:
-        """Validate that required dependencies are installed in the venv."""
-        required_packages = ["psycopg2", "dspy", "pytest", "ruff"]
+        """Validate that required dependencies are installed in the venv.
 
-        missing_packages = []
+        Runtime vs dev mode controlled by env:
+        - VENV_VALIDATE_MINIMAL=1 → only runtime deps (psycopg2,dspy)
+        - VENV_REQUIRED_PACKAGES overrides as comma-separated list
+        """
+        if os.environ.get("VENV_DISABLE_IMPORT_CHECK", "0") == "1":
+            return True, []
+        # Allow override via env
+        override = os.environ.get("VENV_REQUIRED_PACKAGES")
+        if override:
+            required_packages = [p.strip() for p in override.split(",") if p.strip()]
+        else:
+            minimal = os.environ.get("VENV_VALIDATE_MINIMAL", "0") == "1"
+            required_packages = ["psycopg2", "dspy"] if minimal else ["psycopg2", "dspy", "pytest", "ruff"]
 
+        missing_packages: list[str] = []
         for package in required_packages:
             try:
                 __import__(package)

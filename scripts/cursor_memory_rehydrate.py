@@ -14,6 +14,15 @@ Usage in Cursor:
 import argparse
 import os
 import sys
+from pathlib import Path
+
+# Ensure writable cache locations ASAP to avoid import-time cache issues
+project_root = Path(__file__).parent.parent
+_cache_root = project_root / ".cache"
+(_cache_root / "mpl").mkdir(parents=True, exist_ok=True)
+(_cache_root / "dspy").mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(_cache_root / "mpl"))
+os.environ.setdefault("DSPY_CACHE_DIR", str(_cache_root / "dspy"))
 
 # Apply litellm compatibility shim before any DSPy imports
 try:
@@ -28,6 +37,9 @@ except ImportError:
 try:
     from venv_manager import ensure_venv_for_script
 
+    # Relax validation to runtime deps for rehydration and optionally skip import checks
+    os.environ.setdefault("VENV_VALIDATE_MINIMAL", "1")
+    os.environ.setdefault("VENV_DISABLE_IMPORT_CHECK", "1")
     if not ensure_venv_for_script():
         print("❌ Virtual environment not ready - cannot proceed")
         sys.exit(1)

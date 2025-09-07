@@ -26,6 +26,13 @@ dspy_root = project_root / "dspy-rag-system"
 if str(dspy_root) not in sys.path:
     sys.path.insert(0, str(dspy_root))
 
+# Ensure writable cache directories for Matplotlib and DSPy cache
+_cache_root = project_root / ".cache"
+(_cache_root / "mpl").mkdir(parents=True, exist_ok=True)
+(_cache_root / "dspy").mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(_cache_root / "mpl"))
+os.environ.setdefault("DSPY_CACHE_DIR", str(_cache_root / "dspy"))
+
 
 def _run(cmd: list[str], timeout: int = 20, env: Optional[Dict[str, str]] = None) -> tuple[bool, str, str]:
     try:
@@ -248,8 +255,16 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Memory Systems Healthcheck")
-    parser.add_argument("--format", choices=["text", "json"], default="text")
+    parser.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="Run in offline/mock mode (equivalent to MEMORY_HEALTHCHECK_OFFLINE=1)",
+    )
     args = parser.parse_args()
+
+    if args.offline:
+        os.environ["MEMORY_HEALTHCHECK_OFFLINE"] = "1"
 
     results: Dict[str, Any] = {"timestamp": time.time()}
 

@@ -19,6 +19,7 @@ from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 from evals.load_cases import load_eval_cases
 
 READER_GOLD = os.getenv("READER_GOLD_FILE", "evals/reader_gold.jsonl")
+READER_ID_MAP = os.getenv("READER_ID_MAP")  # optional mapping of old_id -> new_id during migration
 READER_CMD = os.getenv("READER_CMD")  # e.g., "python3 scripts/run_reader.py --model local"
 ALPHA = float(os.getenv("MMR_ALPHA", "0.85"))
 PER_FILE_CAP = int(os.getenv("PER_FILE_CAP", "5"))
@@ -26,6 +27,7 @@ PER_FILE_CAP = int(os.getenv("PER_FILE_CAP", "5"))
 MIN_F1_MICRO = float(os.getenv("READER_MIN_F1_MICRO", "0.35"))
 MIN_F1_TAG = float(os.getenv("READER_MIN_F1_TAG", "0.25"))
 MAX_REG_DROP = float(os.getenv("MAX_READER_REG_DROP", "0.05"))
+FAIL_ON_MISSING = bool(int(os.getenv("READER_FAIL_ON_MISSING_ID", "1")))
 
 BASELINE_FILE = os.getenv("READER_BASELINE_FILE", "evals/baseline_reader_metrics.json")
 OUT_FILE = os.getenv("LATEST_READER_FILE", "evals/latest_reader_metrics.json")
@@ -65,13 +67,32 @@ def f1_score(pred, golds):
 
 
 def load_reader_gold(path):
+    # Load optional id remapping (migration window)
+    id_map = {}
+    if READER_ID_MAP and os.path.exists(READER_ID_MAP):
+        try:
+            id_map = json.load(open(READER_ID_MAP, "r", encoding="utf-8"))
+        except Exception:
+            id_map = {}
+
     gold = {}
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             if not line.strip():
                 continue
             row = json.loads(line)
-            gold[row["case_id"]] = row
+            key = row.get("id") or row.get("case_id")
+            if not key:
+                continue
+            # Canonical key
+            gold[key] = row
+            # Add aliases if present
+            for alias in row.get("aliases", []):
+                gold.setdefault(alias, row)
+            # Add remap entries if provided
+            for old, new in id_map.items():
+                if new == key:
+                    gold.setdefault(old, row)
     return gold
 
 
@@ -95,11 +116,12 @@ def run_reader_cmd(query, context, tag, case_id):
 def eval_reader(cases, gold):
     tag_f1_sum, tag_cnt = defaultdict(float), defaultdict(int)
     f1_sum = 0.0
+    missing = 0
     for case in cases:
         g = gold.get(case.id)
         if not g:
-            # Skip if no reader gold for this case
-            continue
+            missing += 1
+            continue  # conservatively skip; handle after loop
         lim = load_limits(case.tag)
         qs = build_channel_queries(case.query, case.tag)
         # shortlist → MMR → cap → topk
@@ -120,7 +142,7 @@ def eval_reader(cases, gold):
     micro = f1_sum / total
     per_tag = {t: (tag_f1_sum[t] / max(1, tag_cnt[t])) for t in tag_cnt}
     macro = sum(per_tag.values()) / max(1, len(per_tag))
-    return {"micro": micro, "macro": macro, "per_tag": per_tag, "total_cases": total}
+    return {"micro": micro, "macro": macro, "per_tag": per_tag, "total_cases": total, "missing": missing}
 
 
 def load_baseline(path):
@@ -138,6 +160,12 @@ if __name__ == "__main__":
     cases = load_eval_cases("gold")  # uses CASES_FILE env under the hood
     gold = load_reader_gold(READER_GOLD)
     metrics = eval_reader(cases, gold)
+    if metrics.get("missing", 0):
+        print(f"[reader] missing gold cases for {metrics['missing']} retrieval ids")
+        if FAIL_ON_MISSING:
+            print("FAIL: missing reader gold entries; set READER_FAIL_ON_MISSING_ID=0 to bypass during migration")
+            save_json(OUT_FILE, metrics)
+            sys.exit(1)
     print(f"[reader] micro={metrics['micro']:.3f} macro={metrics['macro']:.3f}")
     for t, v in sorted(metrics["per_tag"].items()):
         print(f"[reader][tag] {t}: {v:.3f}")
