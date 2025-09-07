@@ -2383,18 +2383,18 @@ INTEGRATION POINTS:
 <!-- reference_cards: ["500_reference-cards.md#memory-rehydration", "500_reference-cards.md#dspy-integration"] -->
 <!-- PRD: PRD-B-035-Coder-Role-Implementation.md -->
 
-| B-101 | cSpell Automation Integration for Coder Role | 🔧 | 2 | ✅ done | Integrate automated cSpell word addition into coder role for frequent task automation | cSpell automation + coder role + development tooling | 100_memory/105_cspell-automation-memory.md |
+| B-101 | cSpell Manual Configuration for Coder Role | 🔧 | 2 | ✅ done | Manual cSpell word addition process for coder role to avoid automation errors | cSpell manual + coder role + development tooling | 100_memory/105_cspell-automation-memory.md |
 <!--score: {bv:4, tc:3, rr:4, le:3, effort:2, lessons:3, deps:[]}-->
 <!--score_total: 6.5-->
-<!-- do_next: Use cspell_automation.py script with coder role for word addition requests -->
-<!-- est_hours: 3 -->
-<!-- acceptance: User can request cSpell word addition and system automatically executes with coder role context -->
-<!-- lessons_applied: ["100_memory/105_cspell-automation-memory.md#automation-patterns", "400_guides/400_development-workflow.md#automation"] -->
-<!-- reference_cards: ["500_reference-cards.md#development-tooling", "500_reference-cards.md#automation-patterns"] -->
+<!-- do_next: Manually edit .vscode/settings.json cSpell.words array when user requests word addition -->
+<!-- est_hours: 1 -->
+<!-- acceptance: User can request cSpell word addition and system manually edits settings.json with coder role context -->
+<!-- lessons_applied: ["100_memory/105_cspell-automation-memory.md#manual-patterns", "400_guides/400_development-workflow.md#manual-configuration"] -->
+<!-- reference_cards: ["500_reference-cards.md#development-tooling", "500_reference-cards.md#manual-configuration"] -->
 <!-- completion_date: 2025-01-27 -->
 <!-- PRD: 600_archives/artifacts/prds/PRD-B-101-cSpell-Automation-Integration.md -->
 <!-- TASK_LIST: 600_archives/artifacts/task_lists/Task-List-B-101-cSpell-Automation-Integration.md -->
-<!-- implementation_notes: Successfully implemented cSpell automation integration with coder role. Created scripts/cspell_automation.py with comprehensive word addition capabilities, added cSpell automation to coder role responsibilities and tool usage, created 100_memory/105_cspell-automation-memory.md for pattern documentation, and added automation rule to .cursorrules. System now automatically detects cSpell requests and executes with coder role context, maintaining alphabetical order, preventing duplicates, and validating word format. Integration provides deterministic, fast automation for frequent development tooling tasks. -->
+<!-- implementation_notes: Converted from automation to manual process due to user preference. Removed scripts/cspell_automation.py script that was causing errors. Updated 100_memory/105_cspell-automation-memory.md to document manual configuration process. System now manually edits .vscode/settings.json cSpell.words array when user requests word addition, maintaining alphabetical order and avoiding automation complexity. Manual process provides reliable, user-controlled configuration without automation errors. -->
 
 | B-102 | Cursor Native AI Role Coordination System | 🔥 | 5 | todo | Implement role coordination system for Cursor Native AI to prevent unilateral decisions and ensure proper role consultation | Role coordination + decision protocols + cursor rules | 100_memory/100_cursor-memory-context.md |
 <!--score: {bv:5, tc:4, rr:5, le:4, effort:5, lessons:4, deps:[]}-->
