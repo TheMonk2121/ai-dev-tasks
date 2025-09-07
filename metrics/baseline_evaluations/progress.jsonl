@@ -1,0 +1,151 @@
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 0.0}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.0}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.0}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.0}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.0}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 0.5}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.5}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.5}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.5}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.5}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 0.5}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.5}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.5}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.5}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.5}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 0.5}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.5}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.5}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.5}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.5}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 0.148}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.034}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.015}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.031}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.011}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.668}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.099}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.021}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.154}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.123}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 1.447}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.064}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.023}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.064}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.047}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 1.389}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.071}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.119}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.066}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.049}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 1.724}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.088}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.135}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.124}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.067}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 1.304}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.087}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.046}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.081}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.057}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 1.28}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.066}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.023}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.069}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.039}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 1.357}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.071}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.029}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.071}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.05}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 1.661}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.067}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.025}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.081}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.048}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 1.396}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.092}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.137}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.081}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.065}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 1.322}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.084}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.14}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.151}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.815}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.696}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.718}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.675}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.076}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.816}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.695}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.722}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.675}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.178}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.82}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.702}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.725}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.673}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.1}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.815}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.698}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.721}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.676}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.245}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.813}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.674}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.696}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.497}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.112}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.803}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.668}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.686}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.424}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.123}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.71}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.68}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.702}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.503}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.039}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.808}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.688}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.718}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.497}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.087}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.735}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.653}
+{"type": "case", "query": "What is DSPy and how does it work?", "timing_sec": 2.043}
+{"type": "case", "query": "How do I implement a RAG system with DSPy?", "timing_sec": 0.838}
+{"type": "case", "query": "What are the key components of the memory system?", "timing_sec": 0.618}
+{"type": "case", "query": "How does the evaluation system work?", "timing_sec": 0.757}
+{"type": "case", "query": "What is the purpose of the fusion adapter?", "timing_sec": 0.688}
+{"type": "case", "query": "", "timing_sec": 2.788}
+{"type": "case", "query": "", "timing_sec": 0.286}
+{"type": "case", "query": "", "timing_sec": 0.291}
+{"type": "case", "query": "", "timing_sec": 1.318}
+{"type": "case", "query": "", "timing_sec": 0.012}
+{"type": "case", "query": "", "timing_sec": 0.01}
+{"type": "case", "query": "", "timing_sec": 1.316}
+{"type": "case", "query": "", "timing_sec": 0.013}
+{"type": "case", "query": "", "timing_sec": 0.011}
+{"type": "case", "query": "", "timing_sec": 1.285}
+{"type": "case", "query": "", "timing_sec": 0.01}
+{"type": "case", "query": "", "timing_sec": 0.008}
+{"type": "case", "query": "", "timing_sec": 1.821}
+{"type": "case", "query": "", "timing_sec": 0.374}
+{"type": "case", "query": "", "timing_sec": 0.28}
+{"type": "case", "query": "", "timing_sec": 1.356}
+{"type": "case", "query": "", "timing_sec": 0.012}
+{"type": "case", "query": "", "timing_sec": 0.01}
+{"type": "case", "query": "", "timing_sec": 1.941}
+{"type": "case", "query": "", "timing_sec": 0.282}
+{"type": "case", "query": "", "timing_sec": 0.281}
+{"type": "case", "query": "", "timing_sec": 1.757}
+{"type": "case", "query": "", "timing_sec": 0.368}
+{"type": "case", "query": "", "timing_sec": 0.277}
+{"type": "case", "query": "", "timing_sec": 1.827}
+{"type": "case", "query": "", "timing_sec": 0.394}
+{"type": "case", "query": "", "timing_sec": 0.306}
+{"type": "case", "query": "", "timing_sec": 1.717}
+{"type": "case", "query": "", "timing_sec": 0.397}
+{"type": "case", "query": "", "timing_sec": 0.305}
