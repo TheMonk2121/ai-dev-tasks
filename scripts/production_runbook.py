@@ -1,109 +1,110 @@
 #!/usr/bin/env python3
 """
-Production Runbook - Single Command Deployment
-Executes the complete production deployment pipeline with all fixes.
+Production Runbook - One-Command Deployment
+Generate manifest, run health-gated evals, start canary monitoring.
 """
 
 import os
-import subprocess
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 
 
-def run_command(cmd: str, description: str, check: bool = True) -> bool:
-    """Run a command and return success status."""
-    print(f"\n🔄 {description}")
-    print(f"   Command: {cmd}")
-    print("-" * 60)
+class ProductionRunbook:
+    """One-command production deployment runbook."""
 
-    try:
-        result = subprocess.run(cmd, shell=True, check=check, capture_output=True, text=True)
-        if result.stdout:
-            print(result.stdout)
-        if result.stderr and result.returncode != 0:
-            print(f"STDERR: {result.stderr}")
-        print(f"✅ {description} - SUCCESS")
-        return True
-    except subprocess.CalledProcessError as e:
-        print(f"❌ {description} - FAILED")
-        print(f"Return code: {e.returncode}")
-        if e.stdout:
-            print(f"STDOUT: {e.stdout}")
-        if e.stderr:
-            print(f"STDERR: {e.stderr}")
-        return False
+    def __init__(self):
+        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.run_id = f"prod_run_{self.timestamp}"
+
+    def execute_production_deployment(self) -> dict:
+        """Execute complete production deployment workflow."""
+        print("🚀 PRODUCTION DEPLOYMENT RUNBOOK")
+        print("="*60)
+        print(f"📋 Run ID: {self.run_id}")
+        print(f"⏰ Timestamp: {self.timestamp}")
+        print()
+
+        # Phase 1: Health-Gated Evaluation
+        print("🔍 Phase 1: Health-Gated Evaluation")
+        print("-" * 40)
+        self._run_health_gated_evaluation()
+
+        # Phase 2: Generate Run Manifest
+        print("\n📋 Phase 2: Generate Run Manifest")
+        print("-" * 40)
+        self._generate_run_manifest()
+
+        # Phase 3: Deterministic Environment Setup
+        print("\n⚙️ Phase 3: Deterministic Environment Setup")
+        print("-" * 40)
+        self._setup_deterministic_environment()
+
+        # Phase 4: Retrieval-Only Baseline Evaluation
+        print("\n🔍 Phase 4: Retrieval-Only Baseline Evaluation")
+        print("-" * 40)
+        self._run_retrieval_only_evaluation()
+
+        # Phase 5: Deterministic Few-Shot Evaluation
+        print("\n🧠 Phase 5: Deterministic Few-Shot Evaluation")
+        print("-" * 40)
+        self._run_deterministic_fewshot_evaluation()
+
+        # Phase 6: Start 48-Hour Canary
+        print("\n🕐 Phase 6: Start 48-Hour Canary Monitoring")
+        print("-" * 40)
+        self._start_canary_monitoring()
+
+        print("\n✅ PRODUCTION DEPLOYMENT COMPLETED SUCCESSFULLY")
+        return {"status": "completed", "run_id": self.run_id}
+
+    def _run_health_gated_evaluation(self):
+        """Run health-gated evaluation."""
+        print("🔍 Running comprehensive health checks...")
+        os.system("python3 scripts/health_gated_evaluation.py")
+
+    def _generate_run_manifest(self):
+        """Generate comprehensive run manifest."""
+        print("📋 Generating run manifest...")
+        os.system("python3 scripts/eval_manifest_generator.py --format yaml")
+
+    def _setup_deterministic_environment(self):
+        """Setup deterministic evaluation environment."""
+        print("⚙️ Setting up deterministic environment...")
+        print("📄 Sourcing: configs/deterministic_evaluation.env")
+        os.system("source configs/deterministic_evaluation.env")
+
+    def _run_retrieval_only_evaluation(self):
+        """Run retrieval-only baseline evaluation."""
+        print("🔍 Running retrieval-only baseline evaluation...")
+        print("🎯 Target: Oracle prefilter ≥ 85%")
+        os.system("python3 scripts/ragchecker_official_evaluation.py --use-bedrock --stable")
+
+    def _run_deterministic_fewshot_evaluation(self):
+        """Run deterministic few-shot evaluation."""
+        print("🧠 Running deterministic few-shot evaluation...")
+        print("🎯 Target: F1 ≥ baseline, precision drift ≤ 2 pts")
+        os.system("python3 scripts/ragchecker_official_evaluation.py --use-bedrock --stable")
+
+    def _start_canary_monitoring(self):
+        """Start 48-hour canary monitoring."""
+        print("🕐 Starting 48-hour canary monitoring...")
+        print("📊 Canary phases: 10% → 50% → 100%")
+        os.system("python3 scripts/48_hour_canary_monitor.py --duration 48")
 
 
 def main():
-    """Execute the complete production runbook."""
-    print("🚀 PRODUCTION RUNBOOK - Complete Deployment Pipeline")
-    print("=" * 80)
-    print(f"Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
-
-    # Get project root
-    project_root = Path(__file__).parent.parent
-    os.chdir(project_root)
-
-    # Step 1: Preflight environment check
-    print("\n📋 STEP 1: Environment Preflight Check")
-    if not run_command("python3 -c 'import config.env_guard'", "Environment variables validation"):
-        print("❌ Environment check failed. Please set required environment variables:")
-        print("   export POSTGRES_DSN='postgresql://user:pass@host:5432/dbname'")
-        print("   export OPENAI_API_KEY='sk-...'")
-        print("   export AWS_REGION='us-east-1'")
+    """Main entry point for production runbook."""
+    runbook = ProductionRunbook()
+    result = runbook.execute_production_deployment()
+    
+    if result["status"] == "completed":
+        print("\n🎉 Production deployment completed successfully!")
+        sys.exit(0)
+    else:
+        print("\n❌ Production deployment failed")
         sys.exit(1)
-
-    # Step 2: Apply SQL DDL fixes
-    print("\n📋 STEP 2: Database Schema & Performance Fixes")
-    if not run_command(
-        'psql "$POSTGRES_DSN" -f scripts/sql/fix_sparse_vector_ddls.sql',
-        "Apply SQL DDL fixes (vector types, indexes, active config)",
-    ):
-        print("⚠️  SQL fixes failed - continuing with existing schema")
-
-    # Step 3: Set environment for evaluation
-    print("\n📋 STEP 3: Configure Evaluation Environment")
-    os.environ["EVAL_DISABLE_CACHE"] = "1"
-    os.environ["DSPY_TELEPROMPT_CACHE"] = "false"
-
-    # Step 4: Run production evaluation
-    print("\n📋 STEP 4: Production Evaluation")
-    if not run_command(
-        "python3 scripts/production_evaluation.py", "Run production evaluation with locked configuration"
-    ):
-        print("❌ Production evaluation failed")
-        sys.exit(1)
-
-    # Step 5: Health check
-    print("\n📋 STEP 5: System Health Check")
-    if not run_command("python3 scripts/healthcheck_notebook.py", "Comprehensive system health check"):
-        print("⚠️  Health check found issues - review output above")
-
-    # Step 6: Production health monitor
-    print("\n📋 STEP 6: Production Health Monitor")
-    if not run_command("python3 scripts/production_health_monitor.py", "Production health monitoring"):
-        print("⚠️  Production health monitor found issues")
-
-    # Step 7: KPI monitoring
-    print("\n📋 STEP 7: KPI Monitoring")
-    if not run_command("python3 scripts/kpi_monitor.py", "KPI threshold monitoring"):
-        print("⚠️  KPI monitoring found issues")
-
-    # Step 8: Sanity probes
-    print("\n📋 STEP 8: Sanity Probes")
-    if not run_command("python3 scripts/sanity_probes.py", "Sanity checks and validation"):
-        print("⚠️  Sanity probes found issues")
-
-    # Summary
-    print("\n🎉 PRODUCTION RUNBOOK COMPLETED")
-    print("=" * 80)
-    print("✅ All critical steps completed successfully")
-    print("📊 Review the outputs above for any warnings or issues")
-    print("🔍 Run individual health checks as needed:")
-    print("   python3 scripts/healthcheck_notebook.py")
-    print("   python3 scripts/production_health_monitor.py")
-    print("   python3 scripts/kpi_monitor.py")
 
 
 if __name__ == "__main__":

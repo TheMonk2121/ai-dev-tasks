@@ -1,0 +1,198 @@
+name: dspy-compile-and-eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      config_hash:
+        description: 'Configuration hash for compilation'
+        required: false
+        type: string
+      ingest_run_id:
+        description: 'Ingest run ID for evaluation'
+        required: false
+        type: string
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'dspy-rag-system/**'
+      - 'scripts/**'
+      - 'datasets/**'
+      - 'configs/**'
+
+jobs:
+  compile-eval:
+    runs-on: ubuntu-latest
+    
+    env:
+      CONFIG_HASH: ${{ secrets.CONFIG_HASH || github.event.inputs.config_hash || 'default' }}
+      INGEST_RUN_ID: ${{ secrets.INGEST_RUN_ID || github.event.inputs.ingest_run_id || 'ci-run' }}
+      EVAL_DISABLE_CACHE: "1"
+      FEW_SHOT_K: "0"
+      EVAL_COT: "0"
+      TEMPERATURE: "0"
+      AWS_REGION: us-east-1
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v1
+        with:
+          version: "latest"
+      
+      - name: Install dependencies
+        run: |
+          uv sync
+          uv pip install -e .
+      
+      - name: Setup environment
+        run: |
+          echo "CONFIG_HASH=$CONFIG_HASH" >> $GITHUB_ENV
+          echo "INGEST_RUN_ID=$INGEST_RUN_ID" >> $GITHUB_ENV
+          echo "EVAL_DISABLE_CACHE=$EVAL_DISABLE_CACHE" >> $GITHUB_ENV
+          echo "FEW_SHOT_K=$FEW_SHOT_K" >> $GITHUB_ENV
+          echo "EVAL_COT=$EVAL_COT" >> $GITHUB_ENV
+          echo "TEMPERATURE=$TEMPERATURE" >> $GITHUB_ENV
+      
+      - name: Health-gated smoke evaluation
+        run: |
+          echo "🔍 Running health-gated smoke evaluation..."
+          uv run -- python scripts/health_gated_evaluation.py
+        continue-on-error: false
+      
+      - name: Baseline evaluation (retrieval-only)
+        run: |
+          echo "📊 Running baseline evaluation (retrieval-only)..."
+          uv run -- python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+        continue-on-error: false
+      
+      - name: Freeze baseline artifacts
+        run: |
+          echo "🔒 Freezing baseline artifacts..."
+          uv run -- python scripts/freeze_baseline_artifacts.py \
+            --action freeze \
+            --results-json metrics/baseline_evaluations/latest_results.json \
+            --eval-manifest metrics/baseline_evaluations/latest_manifest.yaml \
+            --datasets datasets/eval_cases.jsonl \
+            --config-hash $CONFIG_HASH \
+            --ingest-run-id $INGEST_RUN_ID
+        continue-on-error: false
+      
+      - name: DSPy compile
+        run: |
+          echo "🧠 Compiling DSPy RAG program..."
+          uv run -- python dspy_program.py \
+            --compile \
+            --trainset datasets/train.jsonl \
+            --valset datasets/val.jsonl \
+            --config-hash $CONFIG_HASH
+        continue-on-error: false
+      
+      - name: Evaluate compiled program
+        run: |
+          echo "📊 Evaluating compiled DSPy program..."
+          uv run -- python scripts/ragchecker_official_evaluation.py \
+            --use-bedrock \
+            --bypass-cli \
+            --compiled-artifacts compiled_artifacts/$CONFIG_HASH
+        continue-on-error: false
+      
+      - name: Gate and promote
+        run: |
+          echo "🚪 Running gate and promote checks..."
+          uv run -- python scripts/gate_and_promote.py \
+            --action gate \
+            --config-hash $CONFIG_HASH \
+            --evaluation-results metrics/baseline_evaluations/compiled_results.json \
+            --baseline-results metrics/baseline_evaluations/baseline_results.json
+        continue-on-error: false
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: evaluation-artifacts-${{ env.CONFIG_HASH }}-${{ env.INGEST_RUN_ID }}
+          path: |
+            metrics/baseline_evaluations/
+            compiled_artifacts/
+            promoted_artifacts/
+            baseline_artifacts/
+          retention-days: 30
+      
+      - name: Upload logs
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: evaluation-logs-${{ env.CONFIG_HASH }}-${{ env.INGEST_RUN_ID }}
+          path: |
+            logs/
+            *.log
+          retention-days: 7
+      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Read evaluation results
+            let results = '';
+            try {
+              const resultsPath = 'metrics/baseline_evaluations/latest_results.json';
+              if (fs.existsSync(resultsPath)) {
+                const resultsData = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+                const summary = resultsData.summary || {};
+                
+                results = `
+            ## 📊 Evaluation Results
+            
+            | Metric | Value | Status |
+            |--------|-------|--------|
+            | F1 Score | ${summary.f1_score?.toFixed(3) || 'N/A'} | ${summary.f1_score >= 0.22 ? '✅' : '❌'} |
+            | Precision | ${summary.precision?.toFixed(3) || 'N/A'} | ${summary.precision >= 0.20 ? '✅' : '❌'} |
+            | Recall | ${summary.recall?.toFixed(3) || 'N/A'} | ${summary.recall >= 0.45 ? '✅' : '❌'} |
+            | Oracle Prefilter | ${(summary.oracle_prefilter_rate * 100)?.toFixed(1) || 'N/A'}% | ${summary.oracle_prefilter_rate >= 0.85 ? '✅' : '❌'} |
+            | Reader Used Gold | ${(summary.reader_used_gold_rate * 100)?.toFixed(1) || 'N/A'}% | ${summary.reader_used_gold_rate >= 0.70 ? '✅' : '❌'} |
+            | P95 Latency | ${summary.p95_latency?.toFixed(2) || 'N/A'}s | ${summary.p95_latency <= 1.15 ? '✅' : '❌'} |
+            
+            **Config Hash**: \`${process.env.CONFIG_HASH}\`  
+            **Ingest Run ID**: \`${process.env.INGEST_RUN_ID}\`
+                `;
+              }
+            } catch (error) {
+              results = `❌ Error reading evaluation results: ${error.message}`;
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: results
+            });
+      
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `❌ **DSPy Compile and Eval Failed**
+              
+              The DSPy compilation and evaluation pipeline failed. Please check the logs for details.
+              
+              **Config Hash**: \`${process.env.CONFIG_HASH}\`  
+              **Ingest Run ID**: \`${process.env.INGEST_RUN_ID}\`
+              
+              [View workflow run](${context.payload.repository.html_url}/actions/runs/${context.runId})`
+            });
