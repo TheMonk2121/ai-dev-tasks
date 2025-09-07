@@ -16,7 +16,11 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from dspy_rag_system.src.utils.config_lock import (
+# Add dspy-rag-system to path
+dspy_rag_path = project_root / "dspy-rag-system"
+sys.path.insert(0, str(dspy_rag_path))
+
+from src.utils.config_lock import (
     ConfigLockManager,
     create_production_config,
     get_production_runbook,
@@ -33,15 +37,15 @@ def main():
     parser.add_argument("--baseline-metrics", help="Path to baseline metrics JSON file")
     parser.add_argument("--generate-runbook", action="store_true", help="Generate evaluation runbook")
     parser.add_argument("--promote", action="store_true", help="Promote to production")
-    
+
     args = parser.parse_args()
-    
+
     # Load baseline metrics if provided
     baseline_metrics = {}
     if args.baseline_metrics and Path(args.baseline_metrics).exists():
         with open(args.baseline_metrics, "r") as f:
             baseline_metrics = json.load(f)
-    
+
     print("🔒 Locking Production Configuration")
     print("=" * 50)
     print(f"Chunk size: {args.chunk_size}")
@@ -50,7 +54,7 @@ def main():
     print(f"Prefix policy: {args.prefix_policy}")
     print(f"Embedder: {args.embedder}")
     print()
-    
+
     # Create and lock configuration
     config = create_production_config(
         chunk_size=args.chunk_size,
@@ -60,12 +64,12 @@ def main():
         embedder_name=args.embedder,
         baseline_metrics=baseline_metrics,
     )
-    
+
     # Promote to production if requested
     if args.promote:
         manager = ConfigLockManager()
         manager.promote_to_production(config)
-    
+
     # Generate runbook if requested
     if args.generate_runbook:
         print("\n" + "=" * 60)
@@ -73,7 +77,7 @@ def main():
         print("=" * 60)
         runbook = get_production_runbook()
         print(runbook)
-        
+
         # Save runbook to file
         runbook_file = Path("production_evaluation_runbook.sh")
         with open(runbook_file, "w") as f:
@@ -82,13 +86,13 @@ def main():
             f.write(f"# Generated: {config.created_at}\n")
             f.write(f"# Config: {config.chunk_version}\n\n")
             f.write(runbook)
-        
+
         runbook_file.chmod(0o755)
         print(f"\n📝 Runbook saved to: {runbook_file}")
-    
+
     print(f"\n✅ Configuration locked: {config.chunk_version}")
     print(f"   Config hash: {config.get_config_hash()}")
-    print(f"   Lock file: config/locked_configs/active_config.json")
+    print("   Lock file: config/locked_configs/active_config.json")
 
 
 if __name__ == "__main__":

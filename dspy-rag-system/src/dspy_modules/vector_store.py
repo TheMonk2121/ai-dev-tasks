@@ -463,6 +463,9 @@ class HybridVectorStore(Module):
         elif chunk_variant:
             where_clause += " AND dc.metadata->>'chunk_variant' = %s"
             params.append(chunk_variant)  # chunk_variant for WHERE clause
+        else:
+            # Use active configuration when no explicit run_id is set
+            where_clause += " AND dc.metadata->>'ingest_run_id' = get_active_chunk_config()"
 
         params.append(q_emb)  # Second q_emb for ORDER BY
         params.append(limit)  # limit for LIMIT
@@ -534,6 +537,9 @@ class HybridVectorStore(Module):
         elif chunk_variant:
             where_clause = "AND dc.metadata->>'chunk_variant' = %s"
             params.append(chunk_variant)
+        else:
+            # Use active configuration when no explicit run_id is set
+            where_clause = "AND dc.metadata->>'ingest_run_id' = get_active_chunk_config()"
 
         params.append(limit)
 

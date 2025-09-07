@@ -28,7 +28,7 @@ class ChunkingConfig:
     ngram_size: int = 5
     jaccard_threshold: float = 0.8
     use_contextual_prefix: bool = True
-    
+
     # Production configuration metadata
     chunk_version: str = ""
     ingest_run_id: str = ""
@@ -36,19 +36,29 @@ class ChunkingConfig:
     def __post_init__(self):
         """Override with environment variables if set"""
         # Load from environment variables (production mode)
-        if os.getenv("CHUNK_SIZE"):
-            self.chunk_size = int(os.getenv("CHUNK_SIZE"))
-        if os.getenv("OVERLAP_RATIO"):
-            self.overlap_ratio = float(os.getenv("OVERLAP_RATIO"))
-        if os.getenv("JACCARD_THRESHOLD"):
-            self.jaccard_threshold = float(os.getenv("JACCARD_THRESHOLD"))
+        chunk_size_env = os.getenv("CHUNK_SIZE")
+        if chunk_size_env:
+            self.chunk_size = int(chunk_size_env)
+
+        overlap_ratio_env = os.getenv("OVERLAP_RATIO")
+        if overlap_ratio_env:
+            self.overlap_ratio = float(overlap_ratio_env)
+
+        jaccard_threshold_env = os.getenv("JACCARD_THRESHOLD")
+        if jaccard_threshold_env:
+            self.jaccard_threshold = float(jaccard_threshold_env)
+
         if os.getenv("PREFIX_POLICY"):
             # PREFIX_POLICY="A" means no prefix in BM25, "B" means prefix in both
             self.use_contextual_prefix = True
-        if os.getenv("CHUNK_VERSION"):
-            self.chunk_version = os.getenv("CHUNK_VERSION")
-        if os.getenv("INGEST_RUN_ID"):
-            self.ingest_run_id = os.getenv("INGEST_RUN_ID")
+
+        chunk_version_env = os.getenv("CHUNK_VERSION")
+        if chunk_version_env:
+            self.chunk_version = chunk_version_env
+
+        ingest_run_id_env = os.getenv("INGEST_RUN_ID")
+        if ingest_run_id_env:
+            self.ingest_run_id = ingest_run_id_env
 
 
 class EnhancedChunker:
