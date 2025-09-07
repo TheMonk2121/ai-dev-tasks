@@ -602,6 +602,28 @@ export RAGCHECKER_ENABLE_FUSED_SCORER=1
 - **Lessons Learned**: AsyncIO transformation provides massive performance benefits
 - **Status**: ✅ **COMPLETED**
 
+### **Phase 2.8: Synthetic Data Evaluation Discovery (CRITICAL - 2025-01-06)**
+- **Approach**: Integration of real DSPy RAG system with evaluation framework
+- **Results**: **CRITICAL DISCOVERY** - Entire evaluation system was using synthetic data, not real RAG
+- **Lessons Learned**: **ALWAYS verify evaluation systems test ACTUAL systems, not synthetic data. Synthetic baselines are meaningless and can lead to months of optimization on wrong metrics. The real system performance may be completely different from synthetic results.**
+- **Impact**: No true baseline established, all performance targets based on fake data
+- **Status**: 🚨 **CRITICAL - RECOVERY IN PROGRESS**
+
+#### **Synthetic Data Discovery Details**
+- **Date**: 2025-01-06
+- **Discovery**: `ragchecker_official_evaluation.py` uses hardcoded test cases instead of real DSPy RAG system
+- **Impact**:
+  - Retrieval Oracle Hit: 6.7% (from synthetic data, not real RAG)
+  - All performance metrics based on fake context
+  - No actual RAG system evaluation performed
+  - Baseline targets (Precision ≥0.20, Recall ≥0.45) meaningless without real data
+- **Root Cause**: Evaluation system calls `generate_answer_with_context()` with fake context, never calls actual `RAGModule.forward()`
+- **Recovery Actions**:
+  - [ ] Fix file corruption in evaluation system
+  - [ ] Integrate DSPy driver to connect evaluation to real RAG
+  - [ ] Establish true baseline with real system performance
+  - [ ] Update performance targets based on actual data
+
 ### **Phase 3: Learnable Hybrid Metrics (B-1065 - IN PROGRESS)**
 - **Approach**: Learnable weights with intent-aware optimization
 - **Results**: [To be filled after implementation]

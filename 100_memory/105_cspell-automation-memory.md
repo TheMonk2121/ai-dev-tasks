@@ -2,123 +2,117 @@
 <!-- ANCHOR_PRIORITY: 10 -->
 <!-- ROLE_PINS: ["coder"] -->
 
-# cSpell Automation Memory
+# cSpell Manual Configuration Memory
 
 ## 🔎 TL;DR {#tldr}
 
 | what this file is | read when | do next |
 |---|---|---|
-| Memory for automated cSpell word addition pattern | User requests cSpell word addition or mentions "missing definitions" | Use cspell_automation.py script with coder role |
+| Memory for manual cSpell word addition | User requests cSpell word addition | Manually edit .vscode/settings.json cSpell.words array |
 
 <!-- ANCHOR_KEY: tldr -->
 <!-- ANCHOR_PRIORITY: 0 -->
 <!-- ROLE_PINS: ["coder"] -->
 
-## 🎯 **Frequent Task Pattern**
+## 🎯 **Manual Configuration Pattern**
 
-The user frequently requests adding words to cSpell configuration in VS Code settings.json. This is a **deterministic, simple task** that should be automated.
+The user prefers **manual cSpell configuration** to avoid automation errors and maintain control over the word list.
 
 ### **Trigger Patterns**
+
 - "Add the following words to my cSpell in @settings.json"
 - "Look at missing definitions"
 - "Add words to cSpell"
 - "cSpell configuration"
 
-### **Automation Solution**
-Use the `scripts/cspell_automation.py` script with the **coder role**:
+### **Manual Solution**
 
-```bash
-# Direct word addition
-python3 scripts/cspell_automation.py "word1 word2 word3"
+Directly edit `.vscode/settings.json` in the `cSpell.words` array:
 
-# From file
-python3 scripts/cspell_automation.py --file word_list.txt
-
-# Dry run to preview
-python3 scripts/cspell_automation.py --dry-run "word1 word2"
+```json
+{
+    "cSpell": {
+        "words": [
+            "existing",
+            "words",
+            "newword1",
+            "newword2"
+        ]
+    }
+}
 ```
 
-### **Role Assignment**
-- **Primary Role**: `coder` (handles development tooling and configuration)
-- **Context**: VS Code settings, development environment configuration
-- **Validation**: `cspell_automation` in coder role validation list
+### **Manual Process**
 
-### **Script Features**
-- ✅ Maintains alphabetical order in word list
-- ✅ Prevents duplicate additions
-- ✅ Validates word format (alphanumeric + underscore/hyphen)
-- ✅ Preserves JSON structure and formatting
-- ✅ Dry-run mode for preview
-- ✅ File input support
+1. **Open**: `.vscode/settings.json`
+2. **Locate**: `cSpell.words` array
+3. **Add**: New words in alphabetical order
+4. **Validate**: JSON syntax is correct
+5. **Save**: File changes
 
-### **Integration Points**
-- **Memory Rehydrator**: coder role includes cSpell automation tools
-- **Tool Usage**: Listed in coder role tool_usage.cspell_automation
-- **Validation**: Added to coder role validation list
+### **Best Practices**
+
+- ✅ Maintain alphabetical order
+- ✅ Avoid duplicates
+- ✅ Use alphanumeric + underscore/hyphen only
+- ✅ Minimum 2 characters
+- ✅ Preserve JSON formatting
 
 ## 📋 **Usage Examples**
 
 ### **Simple Word Addition**
-```bash
-python3 scripts/cspell_automation.py "ssub untagging"
-```
+
+Add "ssub" and "untagging" to the cSpell.words array in alphabetical order.
 
 ### **Batch Addition**
-```bash
-python3 scripts/cspell_automation.py "word1 word2 word3 word4 word5"
-```
 
-### **Preview Changes**
-```bash
-python3 scripts/cspell_automation.py --dry-run "newword1 newword2"
-```
-
-### **From File**
-```bash
-echo "word1\nword2\nword3" > words.txt
-python3 scripts/cspell_automation.py --file words.txt
-```
+Add multiple words: "word1", "word2", "word3" maintaining alphabetical order.
 
 ## 🔧 **Technical Details**
 
 ### **File Location**
-- **Script**: `scripts/cspell_automation.py`
+
 - **Target**: `.vscode/settings.json`
 - **Section**: `cSpell.words` array
+- **Format**: JSON array of strings
 
 ### **Validation Rules**
+
 - Words must be alphanumeric with optional underscore/hyphen
 - Minimum length: 2 characters
-- Case-insensitive duplicate detection
-- Maintains alphabetical order
+- Case-sensitive (maintain exact casing)
+- Maintain alphabetical order for readability
 
-### **Error Handling**
-- File not found: Clear error message
-- Invalid words: Filtered out with notification
-- JSON corruption: Preserves existing structure
-- Duplicates: Automatically skipped
+### **Error Prevention**
+
+- Validate JSON syntax before saving
+- Check for duplicate entries
+- Maintain proper indentation
+- Use consistent casing
 
 ## 🎯 **Memory Context**
 
-This pattern is **frequently used** by the user and should be:
-- **Automatically detected** when user mentions cSpell or missing definitions
+This is a **manual process** that should be:
+
+- **Handled directly** when user mentions cSpell or missing definitions
 - **Executed with coder role** for proper context
-- **Fast and deterministic** - no need for complex planning
-- **Integrated into workflow** as a standard development tool
+- **Simple and controlled** - no automation complexity
+- **User-controlled** - maintains full control over word list
 
 ### **Related Patterns**
+
 - VS Code configuration management
 - Development environment setup
-- Automated tool configuration
-- Deterministic task automation
+- Manual tool configuration
+- User-controlled customization
 
 ## 📝 **Implementation Notes**
 
-- Script is executable and ready for use
-- Integrated into coder role tool_usage
-- Added to coder role validation list
-- Maintains project coding standards
-- Follows existing automation patterns
+- No automation script (removed due to errors)
+- Manual editing preferred for reliability
+- User maintains full control
+- Simple, predictable process
+- No complex tooling dependencies
 
 <!-- ANCHOR_KEY: implementation-notes -->
 <!-- ANCHOR_PRIORITY: 5 -->
