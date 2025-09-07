@@ -1,0 +1,80 @@
+[
+  {
+    "case_id": "What is DSPy according to 400_07_ai-frameworks-dspy.md?",
+    "query": "What is DSPy according to 400_07_ai-frameworks-dspy.md?",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "List the core workflow guides in 000_core.",
+    "query": "List the core workflow guides in 000_core.",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "According to 400_06_memory-and-context-systems.md, what is the memory system in this project?",
+    "query": "According to 400_06_memory-and-context-systems.md, what is the memory system in this project?",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "Where are the model configuration settings defined?",
+    "query": "Where are the model configuration settings defined?",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "What are the naming conventions used in this repo (see 200_setup)?",
+    "query": "What are the naming conventions used in this repo (see 200_setup)?",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "Show the DSPy development context TL;DR.",
+    "query": "Show the DSPy development context TL;DR.",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "Which file summarizes backlog and priorities?",
+    "query": "Which file summarizes backlog and priorities?",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "Which file defines the governance and AI constitution?",
+    "query": "Which file defines the governance and AI constitution?",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "Where are database troubleshooting patterns documented?",
+    "query": "Where are database troubleshooting patterns documented?",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "Which file describes the memory/context workflow?",
+    "query": "Which file describes the memory/context workflow?",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "Give the high-level getting started index.",
+    "query": "Give the high-level getting started index.",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "Show me the setup docs under 200_setup.",
+    "query": "Show me the setup docs under 200_setup.",
+    "tag": "rag_qa_single",
+    "qvec": []
+  },
+  {
+    "case_id": "Point me to memory-related guides under 100_memory.",
+    "query": "Point me to memory-related guides under 100_memory.",
+    "tag": "rag_qa_single",
+    "qvec": []
+  }
+]
