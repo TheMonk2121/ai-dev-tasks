@@ -416,7 +416,7 @@ class HybridVectorStore(Module):
                         cur.execute(sql, params)
                     except Exception as e:
                         # Fallback if content_tsv is missing: compute tsvector on the fly
-                        if 'content_tsv' in str(e).lower():
+                        if "content_tsv" in str(e).lower():
                             alt_sql = sql.replace(
                                 "ts_rank_cd(dc.content_tsv, websearch_to_tsquery('english', %s))",
                                 "ts_rank_cd(to_tsvector('english', dc.content), websearch_to_tsquery('english', %s))",
@@ -451,6 +451,22 @@ class HybridVectorStore(Module):
         """Raw vector search returning results with distance for canonicalization."""
         q_emb = _query_embedding(self.model_name, query)
 
+        # Add run ID gating for evaluations
+        run_id = os.getenv("INGEST_RUN_ID")
+        chunk_variant = os.getenv("CHUNK_VARIANT")
+        where_clause = "WHERE dc.embedding IS NOT NULL"
+        params: List[Any] = [q_emb]  # First q_emb for SELECT
+
+        if run_id:
+            where_clause += " AND dc.metadata->>'ingest_run_id' = %s"
+            params.append(run_id)  # run_id for WHERE clause
+        elif chunk_variant:
+            where_clause += " AND dc.metadata->>'chunk_variant' = %s"
+            params.append(chunk_variant)  # chunk_variant for WHERE clause
+
+        params.append(q_emb)  # Second q_emb for ORDER BY
+        params.append(limit)  # limit for LIMIT
+
         db_manager = get_database_manager()
         try:
             with db_manager.get_connection() as conn:
@@ -463,7 +479,7 @@ class HybridVectorStore(Module):
                             pass
 
                     cur.execute(
-                        """
+                        f"""
                         SELECT
                           dc.id AS id,
                           dc.document_id AS document_id,
@@ -472,20 +488,27 @@ class HybridVectorStore(Module):
                           dc.line_start AS line_start,
                           dc.line_end AS line_end,
                           dc.content AS content,
+                          dc.bm25_text AS bm25_text,
+                          dc.embedding_text AS embedding_text,
+                          dc.embedding_token_count AS embedding_token_count,
+                          dc.metadata->>'chunk_size' AS chunk_size,
+                          dc.metadata->>'overlap_ratio' AS overlap_ratio,
+                          dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                          dc.metadata->>'chunk_variant' AS chunk_variant,
                           dc.is_anchor AS is_anchor,
                           dc.anchor_key AS anchor_key,
                           dc.metadata AS metadata,
                           (dc.embedding <=> %s::vector) AS distance
                         FROM document_chunks dc
                         LEFT JOIN documents d ON d.id = dc.document_id
-                        WHERE dc.embedding IS NOT NULL
+                        {where_clause}
                         ORDER BY dc.embedding <=> %s::vector ASC,
                                  COALESCE(dc.file_path, d.file_path) NULLS LAST,
                                  dc.chunk_index NULLS LAST,
                                  dc.id ASC
                         LIMIT %s
                         """,
-                        (q_emb, q_emb, limit),
+                        params,
                     )
                     rows = cur.fetchall()
 
@@ -498,12 +521,28 @@ class HybridVectorStore(Module):
         """Raw BM25 search returning results with ts_rank for canonicalization."""
         db_manager = get_database_manager()
 
+        # Add run ID gating for evaluations
+        run_id = os.getenv("INGEST_RUN_ID")
+        chunk_variant = os.getenv("CHUNK_VARIANT")
+
+        where_clause = ""
+        params: List[Any] = [query, query]
+
+        if run_id:
+            where_clause = "AND dc.metadata->>'ingest_run_id' = %s"
+            params.append(run_id)
+        elif chunk_variant:
+            where_clause = "AND dc.metadata->>'chunk_variant' = %s"
+            params.append(chunk_variant)
+
+        params.append(limit)
+
         try:
             with db_manager.get_connection() as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
                     try:
                         cur.execute(
-                            """
+                            f"""
                             SELECT
                               dc.id AS id,
                               dc.document_id AS document_id,
@@ -512,6 +551,13 @@ class HybridVectorStore(Module):
                               dc.line_start AS line_start,
                               dc.line_end AS line_end,
                               dc.content AS content,
+                              dc.bm25_text AS bm25_text,
+                              dc.embedding_text AS embedding_text,
+                              dc.embedding_token_count AS embedding_token_count,
+                              dc.metadata->>'chunk_size' AS chunk_size,
+                              dc.metadata->>'overlap_ratio' AS overlap_ratio,
+                              dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                              dc.metadata->>'chunk_variant' AS chunk_variant,
                               dc.is_anchor AS is_anchor,
                               dc.anchor_key AS anchor_key,
                               dc.metadata AS metadata,
@@ -519,16 +565,17 @@ class HybridVectorStore(Module):
                             FROM document_chunks dc
                             LEFT JOIN documents d ON d.id = dc.document_id
                             WHERE dc.content_tsv @@ websearch_to_tsquery('english', %s)
+                            {where_clause}
                             ORDER BY bm25 DESC,
                                      COALESCE(dc.file_path, d.file_path) NULLS LAST,
                                      dc.chunk_index NULLS LAST,
                                      dc.id ASC
                             LIMIT %s
                             """,
-                            (query, query, limit),
+                            params,
                         )
                     except Exception as e:
-                        if 'content_tsv' in str(e).lower():
+                        if "content_tsv" in str(e).lower():
                             cur.execute(
                                 """
                                 SELECT

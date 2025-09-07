@@ -3,7 +3,10 @@
 RAG Pipeline Module - Enforces context consumption and provides citations
 """
 
+import hashlib
+import os
 import sys
+from collections import defaultdict
 from typing import Any, Dict, List
 
 # Apply litellm compatibility shim before importing DSPy
@@ -19,6 +22,242 @@ import dspy
 
 from .citation_utils import select_citations
 from .hit_adapter import _rescale, adapt_rows, pack_hits
+from .vector_store import HybridVectorStore
+
+
+# -------- Normalization helpers ---------------------------------------------
+def _sha10(s: str) -> str:
+    return hashlib.sha1((s or "").encode("utf-8")).hexdigest()[:10]
+
+
+def _pick(d: dict, keys):
+    for k in keys:
+        if k in d and d[k] is not None:
+            return d[k]
+    return None
+
+
+def _norm_candidates(raw):
+    """
+    Normalize retrieval results into list[(doc_id, score, text, meta)]
+    Accepts: list[dict], list[str], list[tuple], etc.
+    """
+    if isinstance(raw, dict) and "results" in raw:
+        raw = raw.get("results", [])
+
+    out = []
+    if not raw:
+        return out
+    for x in raw:
+        if isinstance(x, dict):
+            did = _pick(x, ("doc_id", "id", "_id", "uuid", "pk")) or _sha10(str(x))
+            score = float(_pick(x, ("score", "similarity", "rank", "_score", "bm25", "distance")) or 0.0)
+            # Handle dual-text storage: prefer bm25_text for retrieval, fallback to embedding_text
+            text = (
+                x.get("text")
+                or x.get("bm25_text")
+                or x.get("embedding_text")
+                or x.get("content")
+                or x.get("page_content")
+                or x.get("chunk")
+                or x.get("body")
+                or ""
+            )
+            meta = x
+        elif isinstance(x, (list, tuple)):
+            # best-effort: (id, score, text, *rest)
+            did = str(x[0]) if len(x) > 0 else _sha10(str(x))
+            score = float(x[1]) if len(x) > 1 else 0.0
+            text = str(x[2]) if len(x) > 2 else ""
+            meta = {}
+        else:
+            did = _sha10(str(x))
+            score = 0.0
+            text = str(x)
+            meta = {}
+        out.append((did, score, text, meta))
+    return out
+
+
+# -------- Channel autodetect -------------------------------------------------
+def _try_forward(retriever, route, **kwargs):
+    try:
+        return retriever.forward(route, **kwargs)
+    except Exception:
+        return None
+
+
+def _search_channel(retriever, channel: str, query: str, topk: int):
+    """
+    Try multiple ways to hit a channel on HybridVectorStore:
+      - forward('search_<channel>')
+      - forward('search', mode=<channel>)
+      - attribute-based .<channel>.search(...)
+    """
+    raw = None
+    # 1) dedicated routes
+    route_names = {
+        "bm25": ("search_bm25", "search_keyword", "bm25_search"),
+        "vec": ("search_vec", "search_vector", "vector_search"),
+        "other": ("search_other", "search_title", "search_metadata"),
+        "hybrid": ("search_hybrid", "search"),
+    }
+    for route in route_names.get(channel, ()):
+        raw = _try_forward(retriever, route, query=query, limit=topk)
+        if raw:
+            return _norm_candidates(raw)
+
+    # 2) generic 'search' with mode
+    raw = _try_forward(retriever, "search", query=query, limit=topk, mode=channel)
+    if raw:
+        return _norm_candidates(raw)
+
+    # 3) attribute-based fallbacks: .bm25.search, .keyword.search, .sparse.search, .vector.search
+    attr_map = {
+        "bm25": ("bm25", "keyword", "sparse"),
+        "vec": ("vec", "vector", "dense", "embeddings"),
+        "other": ("title", "meta", "metadata"),
+    }
+    for attr in attr_map.get(channel, ()):
+        obj = getattr(retriever, attr, None)
+        if obj and hasattr(obj, "search"):
+            try:
+                raw = obj.search(query=query, limit=topk)
+                if raw:
+                    return _norm_candidates(raw)
+            except Exception:
+                pass
+
+    # 4) last resort: generic search
+    raw = _try_forward(retriever, "search", query=query, limit=topk)
+    return _norm_candidates(raw) if raw else []
+
+
+# -------- RRF fusion ---------------------------------------------------------
+def _rrf_fuse(ranklists: dict, k: int = 60, weights: dict | None = None):
+    """
+    ranklists: {name: list[(doc_id, score, text, meta)]} ordered by rank
+    returns fused list of dicts: {"doc_id","score","text","source","meta"}
+    """
+    weights = weights or {}
+    agg = defaultdict(float)
+    payload = {}
+    for name, items in (ranklists or {}).items():
+        if not items:
+            continue
+        w = float(weights.get(name, 1.0))
+        for rnk, tup in enumerate(items, start=1):
+            did, _, text, meta = tup
+            agg[did] += w * (1.0 / (k + rnk))
+            if did not in payload:
+                payload[did] = (text, name, meta)
+    fused = []
+    for did, score in agg.items():
+        text, src, meta = payload[did]
+        fused.append({"doc_id": did, "score": float(score), "text": text, "source": src, "meta": meta})
+    fused.sort(key=lambda x: x["score"], reverse=True)
+    return fused
+
+
+# -------- Cross-encoder reranker --------------------------------------------
+_RERANKER = None
+
+
+def _load_reranker(model_name: str | None = None):
+    global _RERANKER
+    if _RERANKER is not None:
+        return _RERANKER
+    model_name = model_name or os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")
+    try:
+        from sentence_transformers import CrossEncoder
+
+        _RERANKER = CrossEncoder(model_name, trust_remote_code=True)
+    except Exception as e:
+        print(f"⚠️ Reranker load failed ({e}); continuing without reranking.")
+        _RERANKER = None
+    return _RERANKER
+
+
+def _rerank(query: str, candidates: list[dict], topn: int):
+    if os.getenv("RERANK_ENABLE", "1") != "1":
+        return candidates[:topn]
+    rr = _load_reranker()
+    if rr is None:
+        return candidates[:topn]
+    pairs = [(query, c.get("text", "")) for c in candidates]
+    try:
+        scores = rr.predict(pairs, convert_to_numpy=True, show_progress_bar=False)
+    except Exception as e:
+        print(f"⚠️ Rerank predict failed ({e}); using fused order.")
+        return candidates[:topn]
+    reranked = []
+    for c, s in zip(candidates, list(scores)):
+        d = dict(c)
+        d["score_ce"] = float(s)
+        reranked.append(d)
+    reranked.sort(key=lambda x: x["score_ce"], reverse=True)
+    return reranked[:topn]
+
+
+# -------- Unified retrieval adapter -----------------------------------------
+def _retrieve_with_fusion(retriever, query: str):
+    # knobs
+    K_VEC = int(os.getenv("RETR_TOPK_VEC", "140"))
+    K_BM25 = int(os.getenv("RETR_TOPK_BM25", "140"))
+    K_OTHER = int(os.getenv("RETR_TOPK_OTHER", "0"))
+    RRF_K = int(os.getenv("RRF_K", "60"))
+    RERANK_POOL = int(os.getenv("RERANK_POOL", "60"))
+    RERANK_TOPN = int(os.getenv("RERANK_TOPN", "18"))
+    CONTEXT_DOCS_MAX = int(os.getenv("CONTEXT_DOCS_MAX", "12"))
+    KEEP_TAIL = int(os.getenv("FUSE_TAIL_KEEP", "0"))
+
+    # Disable caches for evaluations
+    if os.getenv("EVAL_DISABLE_CACHE", "1") == "1":
+        # Clear any retrieval caches
+        if hasattr(retriever, "retrieval_cache"):
+            retriever.retrieval_cache = None
+
+    # breadth
+    bm25_results = _search_channel(retriever, "bm25", query, K_BM25)
+    vec_results = _search_channel(retriever, "vec", query, K_VEC)
+
+    ranklists = {
+        "bm25": bm25_results,
+        "vec": vec_results,
+    }
+    if K_OTHER > 0:
+        ranklists["other"] = _search_channel(retriever, "other", query, K_OTHER)
+
+    # adaptive weights: give BM25 a nudge on short/numeric queries
+    weights = (
+        {"bm25": 1.2, "vec": 1.0, "other": 0.9}
+        if (len(query) < 40 or any(ch.isdigit() for ch in query))
+        else {"bm25": 1.0, "vec": 1.0, "other": 0.9}
+    )
+
+    fused = _rrf_fuse(ranklists, k=RRF_K, weights=weights)
+    pool = fused[: min(len(fused), RERANK_POOL)]
+    reranked = _rerank(query, pool, topn=RERANK_TOPN)
+
+    if KEEP_TAIL > 0 and len(fused) > len(pool):
+        reranked = (reranked + fused[len(pool) : len(pool) + KEEP_TAIL])[:CONTEXT_DOCS_MAX]
+    else:
+        reranked = reranked[:CONTEXT_DOCS_MAX]
+
+    # compact snapshot for oracle/debug (id/src/score/text first 240 chars)
+    snapshot = []
+    for c in (pool if pool else fused)[: int(os.getenv("SNAPSHOT_MAX_ITEMS", "50"))]:
+        snapshot.append(
+            {
+                "id": c.get("doc_id") or _sha10(c.get("text", "")),
+                "src": c.get("source", "?"),
+                "score": float(c.get("score_ce", c.get("score", 0.0))),
+                "text": (c.get("text", "")[:240] if isinstance(c.get("text", ""), str) else ""),
+            }
+        )
+
+    return reranked, snapshot
+
 
 # Local retrieval utilities (heuristic rerank + packer)
 try:
@@ -28,7 +267,6 @@ try:
 except Exception:  # pragma: no cover
     heuristic_rerank = None  # type: ignore
     pack_candidates = None  # type: ignore
-from .vector_store import HybridVectorStore
 
 # Eval discovery fallback (filesystem-based), import resiliently
 try:  # running within src package
@@ -64,10 +302,74 @@ class RAGModule(dspy.Module):
     def forward(self, question: str) -> Dict[str, Any]:
         """Forward pass with retrieval, optional reranking, and context-aware generation."""
 
-        # 1) Retrieve with much higher limit for comprehensive coverage
-        result = self.retriever.forward(
-            "search", query=question, limit=max(3 * self.k, 36)
-        )  # Increased to 36 documents
+        # Unified retrieval: breadth → RRF fusion → cross-encoder rerank
+        candidates, snapshot = _retrieve_with_fusion(self.retriever, question)
+
+        # Adapt normalized candidates back to what downstream expects
+        result = {"status": "success", "results": []}
+        for c in candidates:
+            result["results"].append(
+                {
+                    "doc_id": c.get("doc_id"),
+                    "text": c.get("text", ""),
+                    "score": float(c.get("score_ce", c.get("score", 0.0))),
+                    "source": c.get("source", "fusion"),
+                    "meta": c.get("meta", {}),
+                }
+            )
+
+        # (Optional but useful) attach a snapshot for debugging/oracle
+        # If your RAGModule collects per-case info, store it:
+        try:
+            # Add fingerprinting to identify chunk variant
+            def _fp(d):
+                """Create fingerprint to identify chunk variant and run."""
+                if isinstance(d, dict):
+                    meta = d.get("meta", {})
+                    return {
+                        "id": d.get("doc_id"),
+                        "run": meta.get("ingest_run_id") or meta.get("chunk_variant") or "unknown",
+                        "sz": meta.get("chunk_size"),
+                        "ov": meta.get("overlap_ratio"),
+                        "tok": meta.get("embedding_token_count") or meta.get("token_count"),
+                    }
+                return {"id": "unknown", "run": "unknown", "sz": None, "ov": None, "tok": None}
+
+            # Enhanced snapshot with fingerprinting
+            snapshot_fp = [
+                {
+                    "id": c.get("doc_id"),
+                    "src": c.get("source", "?"),
+                    "score": float(c.get("score_ce", c.get("score", 0.0))),
+                    "fp": _fp(c),  # Add fingerprint
+                    "text": (c.get("text") or c.get("bm25_text") or c.get("embedding_text") or "")[:240],
+                }
+                for c in (candidates if candidates else [])[: int(os.getenv("SNAPSHOT_MAX_ITEMS", "50"))]
+            ]
+
+            self._last_retrieval_snapshot = snapshot_fp
+            # Ensure used_contexts has proper text field mapping
+            self.used_contexts = [
+                {
+                    "doc_id": c.get("doc_id"),
+                    "text": c.get("text") or c.get("bm25_text") or c.get("embedding_text") or "",
+                    "score": float(c.get("score_ce", c.get("score", 0.0))),
+                    "source": c.get("source", "fusion"),
+                    "meta": c.get("meta", {}),
+                    "fp": _fp(c),  # Add fingerprint to used_contexts too
+                    # Also add run ID at top level for assertion
+                    "ingest_run_id": c.get("meta", {}).get("ingest_run_id"),
+                }
+                for c in candidates
+            ]
+
+            # Tripwire: catch empty text fields immediately
+            assert all(
+                isinstance(u.get("text"), str) and len(u.get("text", "")) > 50 for u in self.used_contexts[:5]
+            ), f"Bad used_contexts payload: {[u.get('text', '')[:100] for u in self.used_contexts[:5]]}"
+        except Exception as e:
+            print(f"⚠️ RAGModule context mapping failed: {e}")
+            self.used_contexts = result["results"]
 
         if result["status"] != "success":
             fb = self._maybe_eval_fallback(question, force=True)
@@ -99,7 +401,7 @@ class RAGModule(dspy.Module):
 
                 cfg = yaml.safe_load(pathlib.Path("config/retrieval.yaml").read_text())
                 self._intent_router = IntentRouter(cfg.get("intent_routing", {}))
-            decision = self._intent_router.route(question) if self._intent_router else None
+            decision = getattr(self._intent_router, "route", lambda x: None)(question) if self._intent_router else None
             if decision:
                 alpha = float(getattr(decision, "rerank_alpha", alpha))
                 final_top_n = int(getattr(decision, "final_top_n", final_top_n))
