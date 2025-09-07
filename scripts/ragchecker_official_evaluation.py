@@ -32,9 +32,11 @@ import sys
 import threading
 import time
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FuturesTimeoutError
 from difflib import SequenceMatcher
 from pathlib import Path
-from typing import Any, Dict, List, Optional, TypedDict, Union
+from typing import Any, Dict, List, Optional, TextIO, TypedDict, Union, cast
 
 import numpy as np
 from jsonschema import ValidationError, validate
@@ -88,11 +90,15 @@ _embeddings_available = False
 _bedrock_available = False
 
 try:
+    # Allow hard-disable via env to bypass PyTorch dependency when incompatible
+    if os.getenv("RAGCHECKER_DISABLE_EMBEDDINGS", "0") == "1":
+        raise RuntimeError("Embeddings disabled by RAGCHECKER_DISABLE_EMBEDDINGS=1")
+
     from sentence_transformers import SentenceTransformer
 
     _embeddings_available = True
-except ImportError:
-    print("⚠️ sentence-transformers not available - semantic features disabled")
+except Exception as e:
+    print(f"⚠️ sentence-transformers disabled — semantic features off ({e})")
     SentenceTransformer = None
 
 try:
@@ -608,8 +614,21 @@ class LocalLLMIntegration:
             return text
         return self._call_ollama_llm(prompt, max_tokens)
 
+    def _with_deadline(self, fn, timeout_sec: float):
+        """Execute a blocking SDK call with a hard deadline."""
+        with ThreadPoolExecutor(max_workers=2) as ex:
+            fut = ex.submit(fn)
+            try:
+                return fut.result(timeout=timeout_sec)
+            except FuturesTimeoutError:
+                try:
+                    fut.cancel()
+                except Exception:
+                    pass
+                raise TimeoutError(f"Bedrock call exceeded {timeout_sec:.1f}s deadline")
+
     def _call_bedrock_llm(self, prompt: str, max_tokens: int = 1000) -> str:
-        """Call AWS Bedrock Claude 3.5 Sonnet with cool-down logic."""
+        """Call AWS Bedrock Claude 3.5 Sonnet with cool-down logic and hard deadline."""
         if not self.bedrock_client:
             return ""
 
@@ -619,37 +638,50 @@ class LocalLLMIntegration:
             return ""  # signal caller to try local JSON
 
         retries = self._bedrock_max_retries
+        deadline = float(os.getenv("BEDROCK_CALL_TIMEOUT_SEC", "35"))
         for attempt in range(retries + 1):
             if self._bedrock_rl:
                 self._bedrock_rl.wait()
             try:
+
+                def _json_call():
+                    return self.bedrock_client.invoke_with_json_prompt(
+                        prompt=prompt, max_tokens=max_tokens, temperature=0.1
+                    )
+
+                def _text_call():
+                    return self.bedrock_client.invoke_model(prompt=prompt, max_tokens=max_tokens, temperature=0.1)
+
                 if os.getenv("RAGCHECKER_JSON_PROMPTS", "1") == "1":
-                    text, usage = self.bedrock_client.invoke_with_json_prompt(
-                        prompt=prompt, max_tokens=max_tokens, temperature=0.1
-                    )
+                    text, usage = self._with_deadline(_json_call, deadline)
+                    print(f"💰 Bedrock JSON extraction: {usage.input_tokens}→{usage.output_tokens} tokens")
                 else:
-                    text, usage = self.bedrock_client.invoke_model(
-                        prompt=prompt, max_tokens=max_tokens, temperature=0.1
-                    )
-                print(f"💰 Bedrock JSON extraction: {usage.input_tokens}→{usage.output_tokens} tokens")
-                return text
+                    text, usage = self._with_deadline(_text_call, deadline)
+                    if os.getenv("RAGCHECKER_DEBUG_USAGE", "0") == "1":
+                        print(f"💬 Bedrock compose: {usage.input_tokens}→{usage.output_tokens} tokens")
+                return text or ""
             except Exception as e:
                 msg = str(e)
                 retryable = any(
                     t in msg
-                    for t in ("Throttling", "TooManyRequests", "Rate exceeded", "ModelCurrentlyLoading", "Timeout")
+                    for t in (
+                        "Throttling",
+                        "TooManyRequests",
+                        "Rate exceeded",
+                        "ModelCurrentlyLoading",
+                        "Timeout",
+                        "deadline",
+                    )
                 )
                 if retryable and attempt < retries:
                     sleep = min((self._bedrock_retry_base**attempt) + random.random(), self._bedrock_retry_max_sleep)
-                    print(f"⏳ Bedrock throttled; retrying in {sleep:.1f}s (attempt {attempt+1}/{retries})")
+                    print(f"⏳ Bedrock throttled/timeout; retrying in {sleep:.1f}s (attempt {attempt+1}/{retries})")
                     time.sleep(sleep)
                     continue
-
-                # set a short cool-down, but DO NOT flip use_bedrock globally
                 cd = float(os.getenv("BEDROCK_COOLDOWN_SEC", "8"))
                 self._bedrock_cooldown_until = time.monotonic() + cd
-                print(f"⚠️ Bedrock call failed ({e}); cooling down {cd:.1f}s and falling back for this call")
-                return ""  # signal caller to try local JSON
+                print(f"⚠️ Bedrock call failed ({e}); cooling down {cd:.1f}s")
+                return ""
 
         # exhausted retries
         self._bedrock_cooldown_until = time.monotonic() + float(os.getenv("BEDROCK_COOLDOWN_SEC", "8"))
@@ -665,24 +697,38 @@ class LocalLLMIntegration:
             return ""
 
         retries = self._bedrock_max_retries
+        deadline = float(os.getenv("BEDROCK_TEXT_TIMEOUT_SEC", "25"))
         for attempt in range(retries + 1):
             if self._bedrock_rl:
                 self._bedrock_rl.wait()
             try:
-                text, usage = self.bedrock_client.invoke_model(prompt=prompt, max_tokens=max_tokens, temperature=0.1)
+
+                def _text_call():
+                    return self.bedrock_client.invoke_model(prompt=prompt, max_tokens=max_tokens, temperature=0.1)
+
+                text, usage = self._with_deadline(_text_call, deadline)
                 # Optional: quieter logging for text compose; still print usage if env asks
                 if os.getenv("RAGCHECKER_DEBUG_USAGE", "0") == "1":
                     print(f"💬 Bedrock compose: {usage.input_tokens}→{usage.output_tokens} tokens")
-                return text
+                return text or ""
             except Exception as e:
                 msg = str(e)
                 retryable = any(
                     t in msg
-                    for t in ("Throttling", "TooManyRequests", "Rate exceeded", "ModelCurrentlyLoading", "Timeout")
+                    for t in (
+                        "Throttling",
+                        "TooManyRequests",
+                        "Rate exceeded",
+                        "ModelCurrentlyLoading",
+                        "Timeout",
+                        "deadline",
+                    )
                 )
                 if retryable and attempt < retries:
                     sleep = min((self._bedrock_retry_base**attempt) + random.random(), self._bedrock_retry_max_sleep)
-                    print(f"⏳ Bedrock (text) throttled; retrying in {sleep:.1f}s (attempt {attempt+1}/{retries})")
+                    print(
+                        f"⏳ Bedrock (text) throttled/timeout; retrying in {sleep:.1f}s (attempt {attempt+1}/{retries})"
+                    )
                     time.sleep(sleep)
                     continue
 
@@ -1088,8 +1134,11 @@ Now write the final answer (plain text, not JSON):
 
         async with self._bedrock_gate:
             try:
-                # reuse your sync implementation (with internal backoff)
-                return await asyncio.to_thread(self._call_bedrock_llm, prompt, max_tokens)
+                # reuse your sync implementation (with internal backoff) and add deadline
+                deadline = float(os.getenv("BEDROCK_CALL_TIMEOUT_SEC", "35"))
+                return await asyncio.wait_for(
+                    asyncio.to_thread(self._call_bedrock_llm, prompt, max_tokens), timeout=deadline
+                )
             except Exception:
                 # throttle/timeout → global cooldown; caller will choose fallback for THIS call only
                 cd = float(os.getenv("BEDROCK_COOLDOWN_SEC", "8"))
@@ -1992,11 +2041,16 @@ Context (top {context_topk} most relevant):
 
 Focused Answer:""".strip()
 
-        # Use main LLM path (Bedrock if configured; else local)
-        if self.use_bedrock and hasattr(self, "local_llm") and self.local_llm:
-            raw = self.local_llm.call_local_llm(prompt, max_tokens=1200)
-        else:
-            # Fallback to unified orchestrator if no local_llm
+        # Use main LLM path (Bedrock if configured; else local) when available
+        raw = ""
+        if getattr(self, "local_llm", None):
+            try:
+                # Prefer text mode for generation
+                raw = self.local_llm.call_text(prompt, max_tokens=1200)  # type: ignore[union-attr]
+            except Exception:
+                raw = ""
+        # Optional orchestrator fallback (disabled by default)
+        if not raw and os.getenv("RAGCHECKER_ENABLE_ORCHESTRATOR_FALLBACK", "0") == "1":
             raw = self._call_unified_orchestrator(query)
 
         # If no model/orchestrator output, optionally use extractive fallback
@@ -2641,6 +2695,7 @@ Do not summarize or be concise - provide thorough, detailed information."""
             # Build command with local LLM support
             cmd = [
                 "python3",
+                "-u",  # force unbuffered stdio for child process
                 "-m",
                 "ragchecker.cli",
                 f"--input_path={input_file}",
@@ -2688,6 +2743,14 @@ Do not summarize or be concise - provide thorough, detailed information."""
             env = dict(os.environ)
             # Ensure unbuffered Python I/O for immediate line streaming
             env.setdefault("PYTHONUNBUFFERED", "1")
+            # Hint downstream tools to avoid interactive prompts/spinners
+            env.setdefault("CI", "1")
+            env.setdefault("NO_COLOR", "1")
+            env.setdefault("FORCE_COLOR", "0")
+            env.setdefault("RAGCHECKER_NONINTERACTIVE", "1")
+            env.setdefault("PYTHONIOENCODING", "UTF-8")
+            # Some CLIs change behavior on dumb terminals (disables rich progress bars)
+            env.setdefault("TERM", "dumb")
 
             # Optional global timeout knobs (seconds)
             cli_timeout = float(os.getenv("RAGCHECKER_CLI_TIMEOUT_SEC", "600"))
@@ -2698,6 +2761,7 @@ Do not summarize or be concise - provide thorough, detailed information."""
                 cmd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
+                stdin=subprocess.DEVNULL,  # close stdin so any input() immediately EOFs
                 text=True,
                 bufsize=1,
                 universal_newlines=True,
@@ -2706,10 +2770,24 @@ Do not summarize or be concise - provide thorough, detailed information."""
             )
 
             # Stream output in real-time with idle/overall timeout watchdogs
+            # Use non-blocking reads + manual line buffering to avoid hangs on partial lines
             stdout_lines: list[str] = []
             sel = selectors.DefaultSelector()
             assert process.stdout is not None
+
+            # Set stdout to non-blocking so .read() never blocks on missing newline
+            try:
+                import fcntl  # POSIX only; safe on macOS/Linux (Cursor default)
+
+                fd = process.stdout.fileno()
+                fl = fcntl.fcntl(fd, fcntl.F_GETFL)
+                fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+            except Exception:
+                # If non-blocking set fails, we still proceed with selector-driven reads
+                pass
+
             sel.register(process.stdout, selectors.EVENT_READ)
+            _buf: str = ""
 
             start_t = time.monotonic()
             last_output_t = start_t
@@ -2735,14 +2813,38 @@ Do not summarize or be concise - provide thorough, detailed information."""
                     if not events:
                         continue
                     for key, _ in events:
-                        line = key.fileobj.readline()
-                        if line:
-                            print(f"📊 {line.rstrip()}")
-                            stdout_lines.append(line)
-                            last_output_t = time.monotonic()
-                        else:
-                            # EOF on this stream; allow loop to exit when process ends
-                            pass
+                        # key.fileobj can be an int (fd) or a file-like; guard for pyright and runtime
+                        fobj = key.fileobj
+                        chunk = ""
+                        try:
+                            # Prefer non-blocking chunked read when available
+                            if hasattr(fobj, "read"):
+                                chunk = getattr(fobj, "read")(4096)  # type: ignore[arg-type]
+                        except Exception:
+                            # As a last resort, try a single safe readline (may still block without non-blocking fd)
+                            try:
+                                if hasattr(fobj, "readline"):
+                                    chunk = getattr(fobj, "readline")()
+                            except Exception:
+                                chunk = ""
+
+                        if not chunk:
+                            continue
+
+                        _buf += chunk
+
+                        # Normalize carriage-return progress updates into discrete lines
+                        _buf = _buf.replace("\r", "\n")
+
+                        # Emit complete lines; keep trailing partial in buffer
+                        if "\n" in _buf:
+                            parts = _buf.split("\n")
+                            _buf = parts.pop()  # remainder (possibly partial)
+                            for ln in parts:
+                                if ln:
+                                    print(f"📊 {ln.rstrip()}")
+                                    stdout_lines.append(ln + "\n")
+                                    last_output_t = time.monotonic()
 
                 # If timed out or still running, terminate the process group
                 if timed_out and process.poll() is None:
@@ -2764,6 +2866,13 @@ Do not summarize or be concise - provide thorough, detailed information."""
                             os.killpg(process.pid, _signal.SIGKILL)
                         except Exception:
                             process.kill()
+
+                # Flush any remaining buffered output
+                if _buf.strip():
+                    for ln in _buf.splitlines():
+                        if ln:
+                            print(f"📊 {ln.rstrip()}")
+                            stdout_lines.append(ln + "\n")
 
                 # Final status
                 return_code = process.poll()
@@ -3670,6 +3779,18 @@ Evaluate and return ONLY the JSON object:"""
         else:
             print("☁️ Cloud LLM Mode (AWS Bedrock)")
 
+        # Initialize LLM integration BEFORE building input data so we don't hit heavy fallbacks
+        try:
+            # Default to Bedrock when neither flag is set (cloud mode)
+            effective_bedrock = use_bedrock or (not use_local_llm)
+            self.local_llm = LocalLLMIntegration(
+                api_base=(local_api_base or "http://localhost:11434"),
+                use_bedrock=effective_bedrock,
+            )
+            self.use_bedrock = effective_bedrock
+        except Exception as _llm_init_err:
+            print(f"⚠️ LLM init warning (will use extractive fallback if needed): {_llm_init_err}")
+
         # Step 1: Prepare input data in official format
         input_data = self.prepare_official_input_data()
 
@@ -3812,7 +3933,7 @@ Evaluate and return ONLY the JSON object:"""
 
             # Add lessons metadata if available
             if "lessons_metadata" in locals():
-                results["run_config"]["lessons"] = lessons_metadata
+                results["run_config"]["lessons"] = locals().get("lessons_metadata", {})
         except Exception:
             pass
 
@@ -4127,7 +4248,18 @@ def main():
             else:  # auto
                 lessons_cmd.extend(["--scope-level", "profile", "--scope-profile", "auto"])
 
-            result = subprocess.run(lessons_cmd, capture_output=True, text=True, cwd=os.getcwd())
+            try:
+                result = subprocess.run(
+                    lessons_cmd,
+                    capture_output=True,
+                    text=True,
+                    cwd=os.getcwd(),
+                    stdin=subprocess.DEVNULL,
+                    timeout=float(os.getenv("RAGCHECKER_POST_LESSONS_TIMEOUT_SEC", "45")),
+                )
+            except subprocess.TimeoutExpired:
+                print("⚠️ Lessons loader timed out; continuing without lesson application")
+                result = subprocess.CompletedProcess(lessons_cmd, returncode=124, stdout="", stderr="timeout")
 
             if result.returncode == 0:
                 lessons_info = json.loads(result.stdout)
@@ -4208,7 +4340,18 @@ def main():
                     if os.path.exists(pattern_cards):
                         abp_cmd.extend(["--pattern-cards", pattern_cards])
 
-                    abp_res = _sub.run(abp_cmd, capture_output=True, text=True, cwd=os.getcwd())
+                    try:
+                        abp_res = _sub.run(
+                            abp_cmd,
+                            capture_output=True,
+                            text=True,
+                            cwd=os.getcwd(),
+                            stdin=subprocess.DEVNULL,
+                            timeout=float(os.getenv("RAGCHECKER_ABP_TIMEOUT_SEC", "45")),
+                        )
+                    except _sub.TimeoutExpired:
+                        print("⚠️ ABP generation timed out; skipping")
+                        abp_res = _sub.CompletedProcess(abp_cmd, returncode=124, stdout="", stderr="timeout")
                     if abp_res.returncode == 0 and abp_res.stdout.strip():
                         abp_path = abp_res.stdout.strip().splitlines()[-1]
                         print(f"📄 Agent Briefing Pack: {abp_path}")
@@ -4302,7 +4445,20 @@ def main():
                     if progress_file:
                         extractor_cmd.append(progress_file)
 
-                    extractor_result = subprocess.run(extractor_cmd, capture_output=True, text=True, cwd=os.getcwd())
+                    try:
+                        extractor_result = subprocess.run(
+                            extractor_cmd,
+                            capture_output=True,
+                            text=True,
+                            cwd=os.getcwd(),
+                            stdin=subprocess.DEVNULL,
+                            timeout=float(os.getenv("RAGCHECKER_LESSONS_EXTRACT_TIMEOUT_SEC", "60")),
+                        )
+                    except subprocess.TimeoutExpired:
+                        print("⚠️ Lessons extractor timed out; skipping post-run extraction")
+                        extractor_result = subprocess.CompletedProcess(
+                            extractor_cmd, returncode=124, stdout="", stderr="timeout"
+                        )
 
                     if extractor_result.returncode == 0:
                         print("✅ Lessons extractor completed successfully")

@@ -19,8 +19,9 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 # Apply litellm compatibility shim before importing DSPy
 try:
-    sys.path.insert(0, "../../scripts")
+    sys.path.insert(0, "../../../scripts")
     from litellm_compatibility_shim import patch_litellm_imports
+
     patch_litellm_imports()
 except ImportError:
     pass  # Shim not available, continue without it

@@ -9,12 +9,13 @@ import logging
 import os
 import sys
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, cast
 
 # Apply litellm compatibility shim before importing DSPy
 try:
-    sys.path.insert(0, "../../scripts")
+    sys.path.insert(0, "../../../scripts")
     from litellm_compatibility_shim import patch_litellm_imports
+
     patch_litellm_imports()
 except ImportError:
     pass  # Shim not available, continue without it
@@ -231,13 +232,13 @@ class QueryRewriter(Module):
         query = _validate_input(query)
 
         # Use DSPy to rewrite the query with domain context in signature
-        result = self.predict(original_query=query, domain_context=domain_context)
+        result: Any = self.predict(original_query=query, domain_context=domain_context)
 
         return {
             "original_query": query,
-            "rewritten_query": result.rewritten_query,
-            "sub_queries": result.sub_queries,
-            "search_terms": result.search_terms,
+            "rewritten_query": getattr(result, "rewritten_query", query),
+            "sub_queries": getattr(result, "sub_queries", []) or [query],
+            "search_terms": getattr(result, "search_terms", ""),
         }
 
 
@@ -253,12 +254,13 @@ class QueryDecomposer(Module):
 
         query = _validate_input(query)
 
-        result = self.predict(
+        result: Any = self.predict(
             original_query=query,
             domain_context="Focus on breaking down complex questions into simpler, focused sub-questions",
         )
 
-        return result.sub_queries if result.sub_queries else [query]
+        subs = getattr(result, "sub_queries", None)
+        return subs if isinstance(subs, list) and subs else [query]
 
 
 # ---------- Post-RAG Modules ----------
@@ -284,27 +286,27 @@ class AnswerSynthesizer(Module):
             ]
         )
 
-        result = self.predict(question=question, retrieved_chunks=chunks_text)
+        result: Any = self.predict(question=question, retrieved_chunks=chunks_text)
 
         # Research-based validation (ICML 2023) - using proper validation instead of dspy.Assert
-        if not self.contains_citations(result.answer):
+        if not self.contains_citations(getattr(result, "answer", "")):
             raise ValueError("Answer must include source citations")
-        if len(result.answer) <= 50:
+        if len(getattr(result, "answer", "")) <= 50:
             raise ValueError("Answer must be comprehensive (at least 50 characters)")
-        if not self.has_span_references(result.answer):
+        if not self.has_span_references(getattr(result, "answer", "")):
             raise ValueError("Answer must reference specific spans")
 
         # Validate confidence score
-        confidence = float(result.confidence) if hasattr(result, "confidence") else 0.7
+        confidence = float(getattr(result, "confidence", 0.7))
         if not (0 <= confidence <= 1):
             raise ValueError("Confidence must be between 0 and 1")
 
         return {
-            "answer": result.answer,
+            "answer": getattr(result, "answer", ""),
             "confidence": confidence,
-            "sources": result.sources,
-            "reasoning": result.reasoning,
-            "citations": result.citations if hasattr(result, "citations") else [],
+            "sources": getattr(result, "sources", []),
+            "reasoning": getattr(result, "reasoning", ""),
+            "citations": getattr(result, "citations", []),
         }
 
     def contains_citations(self, answer: str) -> bool:
@@ -334,9 +336,9 @@ class ChainOfThoughtReasoner(Module):
 
         question = _validate_input(question)
 
-        result = self.predict(question=question, context=context)
+        result: Any = self.predict(question=question, context=context)
 
-        return {"answer": result.final_answer, "reasoning": result.reasoning_steps}
+        return {"answer": getattr(result, "final_answer", ""), "reasoning": getattr(result, "reasoning_steps", "")}
 
 
 class ReActReasoner(Module):
@@ -367,21 +369,22 @@ class ReActReasoner(Module):
         while steps < max_steps:
             try:
                 # Use DSPy for the reasoning step
-                result = self.predict(question=question, context=f"{thought}\n\n{context}\nQ:{question}")
+                result: Any = self.predict(question=question, context=f"{thought}\n\n{context}\nQ:{question}")
 
                 # Check for final answer indicator
-                if "FINAL" in result.answer or "final answer" in result.answer.lower():
+                answer_text = str(getattr(result, "answer", ""))
+                if "FINAL" in answer_text or "final answer" in answer_text.lower():
                     # Extract final answer
-                    if "FINAL:" in result.answer:
-                        answer = result.answer.split("FINAL:", 1)[1].strip()
+                    if "FINAL:" in answer_text:
+                        answer = answer_text.split("FINAL:", 1)[1].strip()
                     else:
-                        answer = result.answer
+                        answer = answer_text
                     return answer, thought, action, observation
 
                 # Accumulate reasoning
-                thought += result.thought + "\n"
-                action = result.action
-                observation = result.observation
+                thought += str(getattr(result, "thought", "")) + "\n"
+                action = str(getattr(result, "action", ""))
+                observation = str(getattr(result, "observation", ""))
                 steps += 1
 
             except Exception as e:
@@ -498,29 +501,29 @@ class EnhancedRAGSystem(Module):
 
             # === PRE-RAG: Query Rewriting and Decomposition ===
             _LOG.info("🔄 Pre-RAG: Rewriting query")
-            query_rewrite_result = self.query_rewriter(question)
+            query_rewrite_result = cast(Dict[str, Any], self.query_rewriter(question))
             rewritten_query = query_rewrite_result["rewritten_query"]
 
             # Check if query needs decomposition
             if len(question.split()) > 20 or "and" in question.lower() or "or" in question.lower():
                 _LOG.info("🔄 Pre-RAG: Decomposing complex query")
-                sub_queries = self.query_decomposer(question)
+                sub_queries = cast(List[str], self.query_decomposer(question))
                 _LOG.info(f"Generated {len(sub_queries)} sub-queries")
             else:
                 sub_queries = [rewritten_query]
 
             # === RAG: Retrieval ===
-            all_retrieved_chunks = []
+            all_retrieved_chunks: List[Dict[str, Any]] = []
 
             for sub_query in sub_queries:
                 _LOG.info(f"🔍 Retrieving for sub-query: {sub_query}")
-                search_results = self.vector_store("search", query=sub_query, limit=max_results)
+                search_results = cast(Dict[str, Any], self.vector_store("search", query=sub_query, limit=max_results))
 
                 if search_results["status"] == "success":
-                    all_retrieved_chunks.extend(search_results["results"])
+                    all_retrieved_chunks.extend(cast(List[Dict[str, Any]], search_results["results"]))
 
             # Remove duplicates and limit results
-            unique_chunks = []
+            unique_chunks: List[Dict[str, Any]] = []
             seen_content = set()
             for chunk in all_retrieved_chunks:
                 content_hash = hash(chunk.get("content", ""))
@@ -538,7 +541,7 @@ class EnhancedRAGSystem(Module):
                 }
 
             # Truncate context to token limit
-            context_chunks = [chunk.get("content", "") for chunk in unique_chunks]
+            context_chunks: List[str] = [chunk.get("content", "") for chunk in unique_chunks]
             context = "\n\n".join(context_chunks)
             context = _token_trim(context, self.ctx_limit)
 
@@ -548,17 +551,17 @@ class EnhancedRAGSystem(Module):
             # Use different reasoning patterns based on complexity
             if use_react and len(question.split()) > 15:
                 _LOG.info("Using ReAct reasoning for complex question")
-                synthesis_result = self.react_reasoner(question, context)
+                synthesis_result = cast(Dict[str, Any], self.react_reasoner(question, context))
                 answer = synthesis_result["answer"]
                 reasoning = synthesis_result.get("thought", "")
             elif use_cot:
                 _LOG.info("Using Chain-of-Thought reasoning")
-                synthesis_result = self.cot_reasoner(question, context)
+                synthesis_result = cast(Dict[str, Any], self.cot_reasoner(question, context))
                 answer = synthesis_result["answer"]
                 reasoning = synthesis_result.get("reasoning", "")
             else:
                 _LOG.info("Using standard answer synthesis")
-                synthesis_result = self.answer_synthesizer(question, unique_chunks)
+                synthesis_result = cast(Dict[str, Any], self.answer_synthesizer(question, unique_chunks))
                 answer = synthesis_result["answer"]
                 reasoning = synthesis_result.get("reasoning", "")
 
@@ -597,7 +600,7 @@ class EnhancedRAGSystem(Module):
             _LOG.info(f"⚡ Fast-path: Direct retrieval for '{question}'")
 
             # Direct retrieval without query rewriting
-            search_results = self.vector_store("search", query=question, limit=max_results)
+            search_results = cast(Dict[str, Any], self.vector_store("search", query=question, limit=max_results))
 
             if search_results["status"] != "success" or not search_results["results"]:
                 return {
@@ -610,8 +613,8 @@ class EnhancedRAGSystem(Module):
                 }
 
             # Simple answer synthesis without complex reasoning
-            retrieved_chunks = search_results["results"]
-            context_chunks = [chunk.get("content", "") for chunk in retrieved_chunks]
+            retrieved_chunks: List[Dict[str, Any]] = cast(List[Dict[str, Any]], search_results["results"])
+            context_chunks: List[str] = [chunk.get("content", "") for chunk in retrieved_chunks]
             context = "\n\n".join(context_chunks)
             context = _token_trim(context, self.ctx_limit)
 

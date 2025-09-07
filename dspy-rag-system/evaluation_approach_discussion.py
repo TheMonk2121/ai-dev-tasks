@@ -6,6 +6,15 @@ Discussion with DSPy agents about evaluation approach for memory system.
 import os
 import sys
 
+# Apply litellm compatibility shim FIRST, before any DSPy imports
+try:
+    sys.path.insert(0, "../scripts")
+    from litellm_compatibility_shim import patch_litellm_imports
+
+    patch_litellm_imports()
+except ImportError:
+    pass  # Shim not available, continue without it
+
 # Add the src directory to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 

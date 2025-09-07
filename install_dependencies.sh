@@ -11,7 +11,11 @@ echo "======================================================="
 if ! command -v uv &> /dev/null; then
     echo "📦 Installing UV..."
     curl -LsSf https://astral.sh/uv/install.sh | sh
-    source $HOME/.local/bin/env
+    # Source UV environment if it exists
+    if [ -f "$HOME/.local/bin/env" ]; then
+        # shellcheck source=/dev/null
+        source "$HOME/.local/bin/env"
+    fi
 fi
 
 # Create virtual environment with UV

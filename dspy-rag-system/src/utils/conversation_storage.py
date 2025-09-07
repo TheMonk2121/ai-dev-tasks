@@ -232,15 +232,41 @@ class ConversationStorage:
     ):
         """Log performance metrics."""
         try:
-            self.cursor.execute(
-                """
-                INSERT INTO memory_performance_metrics
-                (operation_type, execution_time_ms, result_count, cache_hit, error_message)
-                VALUES (%s, %s, %s, %s, %s)
-            """,
-                (operation_type, execution_time_ms, result_count, cache_hit, error_message),
-            )
-            self.connection.commit()
+            # Use a fresh cursor and ensure we are not in an aborted transaction
+            if self.connection is None:
+                return
+            try:
+                # If psycopg2 is available, check transaction status and rollback if needed
+                if psycopg2 is not None:  # type: ignore
+                    from psycopg2 import extensions  # type: ignore
+
+                    if self.connection.get_transaction_status() == extensions.STATUS_INERROR:  # type: ignore[attr-defined]
+                        self.connection.rollback()
+            except Exception:
+                # Best-effort rollback; continue
+                try:
+                    self.connection.rollback()
+                except Exception:
+                    pass
+
+            cur = None
+            try:
+                cur = self.connection.cursor()
+                cur.execute(
+                    """
+                    INSERT INTO memory_performance_metrics
+                    (operation_type, execution_time_ms, result_count, cache_hit, error_message)
+                    VALUES (%s, %s, %s, %s, %s)
+                """,
+                    (operation_type, execution_time_ms, result_count, cache_hit, error_message),
+                )
+                self.connection.commit()
+            finally:
+                try:
+                    if cur is not None:
+                        cur.close()
+                except Exception:
+                    pass
         except Exception as e:
             self.logger.warning(f"Failed to log performance metric: {e}")
 

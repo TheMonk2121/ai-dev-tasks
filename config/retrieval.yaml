@@ -218,6 +218,22 @@ canary:
   sample_pct: 10 # Percentage of traffic to canary
   tag_requests: true # Tag requests for before/after analysis
   store_ranks: true # Store before/after ranks for hard-negative mining
+
+# ------------------------------------------------------------
+# Optional Quick-Start Profile (commented): recall_boost
+# Usage: Copy these keys into the corresponding sections to
+# raise recall while guarding precision. See
+# 000_core/000_evaluation-system-entry-point.md (Recall Playbook).
+#
+# recall_boost:
+#   candidates:
+#     final_limit: 80       # increased from 50
+#   rerank:
+#     final_top_n: 12       # increased from 8
+#     alpha: 0.6            # decreased from 0.7 (more fused influence)
+#   prefilter:
+#     min_bm25_score: 0.05  # decreased from 0.10
+#     min_vector_score: 0.65 # decreased from 0.70
   comparison_metrics: ["ndcg_10", "latency_p95", "user_satisfaction"]
 
 # Advanced concurrency & resilience

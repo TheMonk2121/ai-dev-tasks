@@ -32,3 +32,44 @@ Helpful references
 Troubleshooting
 - If Bedrock creds are missing, run the smoke test and report results
 - If validation warns about stale manifest, rerun step (1) above
+
+### ⏩ One-liner (apply → smoke → eval)
+```bash
+source throttle_free_eval.sh && recall_boost_apply && \
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory
+```
+
+To revert quickly after testing:
+```bash
+source throttle_free_eval.sh && recall_boost_revert
+```
+
+## 🚨 Current Status: RED LINE BASELINE ENFORCEMENT
+
+**Current Performance** (2025-09-06): Precision: 0.129, Recall: 0.157, F1: 0.137
+**Targets**: Precision ≥0.20, Recall ≥0.45, F1 ≥0.22
+**Status**: All metrics below targets - NO NEW FEATURES until baseline restored
+
+### Quick Recall Boost (keep precision ≥0.149)
+```bash
+# 1. Increase breadth in config/retrieval.yaml:
+candidates.final_limit: 50 → 80
+rerank.final_top_n: 8 → 12
+rerank.alpha: 0.7 → 0.6
+
+# 2. Loosen filters:
+prefilter.min_bm25_score: 0.10 → 0.05
+prefilter.min_vector_score: 0.70 → 0.65
+
+# 3. Test incrementally:
+./scripts/run_ragchecker_smoke_test.sh
+# Abort if precision < 0.149 and recall gain < +0.03
+```
+
+### Apply Lessons (when safe)
+```bash
+# Review docket first, then:
+python3 scripts/ragchecker_official_evaluation.py --bypass-cli --lessons-mode apply --lessons-scope profile
+```
+
+**Full details**: See `000_core/000_evaluation-system-entry-point.md` sections 75-137

@@ -199,6 +199,26 @@ cp configs/stable_bedrock.env.template configs/stable_bedrock.env
 - **Skip smoke tests** for major changes
 - **Deploy without baseline validation**
 
+## ⚙️ Quick Recall Boost (Safe Toggle)
+
+When under RED LINE enforcement and recall needs improvement while guarding precision, use the safe toggle and aliases:
+
+```bash
+# Apply recall tuning, run smoke test, then evaluate
+source throttle_free_eval.sh && recall_boost_apply && \
+python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory
+
+# Revert tuning and re-check quickly
+source throttle_free_eval.sh && recall_boost_revert
+```
+
+Details:
+- Script: `scripts/toggle_recall_boost.py` (apply/revert atomically; backups under `metrics/derived_configs/recall_boost_backups/`)
+- Targets set: `candidates.final_limit=80`, `rerank.final_top_n=12`, `rerank.alpha=0.6`, `prefilter.min_bm25_score=0.05`, `prefilter.min_vector_score=0.65`
+- Guard: Abort changes if precision drops below your interim floor (e.g., ≥0.149) without ≥+0.03 recall gain.
+
+See also: `000_core/000_evaluation-system-entry-point.md` — Recall Improvement Playbook and Lessons Application.
+
 ## 🔄 **Automation Opportunities**
 
 ### **🤖 Cursor Tasks**
