@@ -28,12 +28,27 @@ class ChunkingConfig:
     ngram_size: int = 5
     jaccard_threshold: float = 0.8
     use_contextual_prefix: bool = True
+    
+    # Production configuration metadata
+    chunk_version: str = ""
+    ingest_run_id: str = ""
 
     def __post_init__(self):
         """Override with environment variables if set"""
-        jaccard_threshold_env = os.getenv("JACCARD_THRESHOLD")
-        if jaccard_threshold_env:
-            self.jaccard_threshold = float(jaccard_threshold_env)
+        # Load from environment variables (production mode)
+        if os.getenv("CHUNK_SIZE"):
+            self.chunk_size = int(os.getenv("CHUNK_SIZE"))
+        if os.getenv("OVERLAP_RATIO"):
+            self.overlap_ratio = float(os.getenv("OVERLAP_RATIO"))
+        if os.getenv("JACCARD_THRESHOLD"):
+            self.jaccard_threshold = float(os.getenv("JACCARD_THRESHOLD"))
+        if os.getenv("PREFIX_POLICY"):
+            # PREFIX_POLICY="A" means no prefix in BM25, "B" means prefix in both
+            self.use_contextual_prefix = True
+        if os.getenv("CHUNK_VERSION"):
+            self.chunk_version = os.getenv("CHUNK_VERSION")
+        if os.getenv("INGEST_RUN_ID"):
+            self.ingest_run_id = os.getenv("INGEST_RUN_ID")
 
 
 class EnhancedChunker:
@@ -233,9 +248,9 @@ class EnhancedChunker:
         contextual_prefix = self.create_contextual_prefix(metadata)
         embedding_text = contextual_prefix + chunk
 
-        # Check if we're in prefix policy B mode (prefix in both embeddings and BM25)
-        prefix_policy_b = os.getenv("PREFIX_POLICY_B", "0") == "1"
-        if prefix_policy_b:
+        # Check prefix policy from environment or config
+        prefix_policy = os.getenv("PREFIX_POLICY", "A")
+        if prefix_policy == "B":
             bm25_text = contextual_prefix + chunk  # Add prefix to BM25 too
         else:
             bm25_text = chunk  # Keep BM25 clean (policy A)
@@ -246,8 +261,12 @@ class EnhancedChunker:
             "bm25_token_count": self.token_len(bm25_text),
         }
 
-        # Create stable chunk ID based on content hash
-        chunk_id = hashlib.sha256(embedding_text.encode()).hexdigest()[:16]
+        # Create stable chunk ID based on content hash and configuration
+        content_hash = hashlib.sha256(embedding_text.encode()).hexdigest()[:16]
+        config_hash = hashlib.sha256(
+            f"{self.config.chunk_size}-{self.config.overlap_ratio}-{self.config.jaccard_threshold}-{prefix_policy}".encode()
+        ).hexdigest()[:8]
+        chunk_id = f"{content_hash}-{config_hash}"
 
         return embedding_text, bm25_text, token_counts, chunk_id
 
