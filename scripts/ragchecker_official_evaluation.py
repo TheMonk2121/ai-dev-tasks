@@ -307,6 +307,15 @@ class CleanRAGCheckerEvaluator:
 
         # Set evaluation path tag
         driver, tag = _make_eval_driver()
+
+        # Hard gate: Stop synthetic fallback if real RAG is requested
+        use_real = (
+            os.getenv("EVAL_DRIVER", "").lower() in ("dspy_rag", "dspy", "rag")
+            or os.getenv("RAGCHECKER_USE_REAL_RAG") == "1"
+        )
+        if use_real and tag != "dspy_rag":
+            raise RuntimeError("Evaluation requested real DSPy RAG, but driver is synthetic. Aborting.")
+
         self._eval_path_tag = tag
         if driver:
             print(f"🔗 Using real DSPy RAG system (driver: {tag})")
