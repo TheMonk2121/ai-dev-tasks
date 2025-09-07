@@ -228,6 +228,27 @@ def _retrieve_with_fusion(retriever, query: str):
     if K_OTHER > 0:
         ranklists["other"] = _search_channel(retriever, "other", query, K_OTHER)
 
+    # Escalate breadth when results are thin
+    total_initial = len(ranklists.get("bm25", [])) + len(ranklists.get("vec", []))
+    if total_initial < 30 and os.getenv("HYDE_ENABLE", "0") == "1":
+        try:
+            hyde_text = _generate_hyde(query, max_tokens=int(os.getenv("HYDE_TOKENS", "160")))
+            # blend embedding with hyde
+            vec2 = _search_channel(retriever, "vec", hyde_text, int(os.getenv("RETR_TOPK_VEC", "220")))
+            ranklists["vec"] = (ranklists.get("vec", []) or []) + vec2
+        except Exception as e:
+            print(f"HyDE escalation failed: {e}")
+
+    if total_initial < 30 and os.getenv("PRF_ENABLE", "0") == "1":
+        try:
+            bm25_seed = ranklists.get("bm25", [])[: int(os.getenv("PRF_TOPN", "8"))]
+            prf_terms = _top_terms_from(bm25_seed, int(os.getenv("PRF_TERMS", "10")))
+            bm25_q2 = query + " " + " ".join(prf_terms)
+            bm252 = _search_channel(retriever, "bm25", bm25_q2, int(os.getenv("RETR_TOPK_BM25", "220")))
+            ranklists["bm25"] = (ranklists.get("bm25", []) or []) + bm252
+        except Exception as e:
+            print(f"PRF escalation failed: {e}")
+
     # adaptive weights: give BM25 a nudge on short/numeric queries
     weights = (
         {"bm25": 1.2, "vec": 1.0, "other": 0.9}
@@ -246,14 +267,31 @@ def _retrieve_with_fusion(retriever, query: str):
 
     # compact snapshot for oracle/debug (id/src/score/text first 240 chars)
     snapshot = []
-    for c in (pool if pool else fused)[: int(os.getenv("SNAPSHOT_MAX_ITEMS", "50"))]:
+    for c in (pool if pool else fused)[: int(os.getenv("SNAPSHOT_MAX_ITEMS", "60"))]:
+        # Extract filename from metadata or use file_path
+        src = "?"
+        if c.get("meta") and isinstance(c.get("meta"), dict):
+            src = c.get("meta", {}).get("filename", "?")
+        elif c.get("metadata") and isinstance(c.get("metadata"), dict):
+            src = c.get("metadata", {}).get("filename", "?")
+        elif c.get("file_path"):
+            src = c.get("file_path")
+        elif c.get("source"):
+            src = c.get("source")
+
         snapshot.append(
             {
-                "id": c.get("doc_id") or _sha10(c.get("text", "")),
-                "src": c.get("source", "?"),
-                "score": float(c.get("score_ce", c.get("score", 0.0))),
+                "id": c.get("doc_id") or c.get("id") or _sha10(c.get("text", "")),
+                "src": src,
+                "score": float(c.get("score_ce", c.get("score", c.get("bm25", 0.0)))),
                 "text": (c.get("text", "")[:240] if isinstance(c.get("text", ""), str) else ""),
             }
+        )
+
+    # Debug print for fusion pipeline
+    if os.getenv("DEBUG_FUSION", "0") == "1":
+        print(
+            f"[FUSION] bm25={len(bm25_results)} vec={len(vec_results)} fused={len(fused)} pool={len(pool)} reranked={len(reranked)} snapshot={len(snapshot)}"
         )
 
     return reranked, snapshot
@@ -335,16 +373,16 @@ class RAGModule(dspy.Module):
                     }
                 return {"id": "unknown", "run": "unknown", "sz": None, "ov": None, "tok": None}
 
-            # Enhanced snapshot with fingerprinting
+            # Enhanced snapshot with fingerprinting - use full snapshot from fusion, not just candidates
             snapshot_fp = [
                 {
-                    "id": c.get("doc_id"),
-                    "src": c.get("source", "?"),
-                    "score": float(c.get("score_ce", c.get("score", 0.0))),
+                    "id": c.get("id"),
+                    "src": c.get("src", "?"),  # Use the src field from the snapshot
+                    "score": float(c.get("score", 0.0)),
                     "fp": _fp(c),  # Add fingerprint
-                    "text": (c.get("text") or c.get("bm25_text") or c.get("embedding_text") or "")[:240],
+                    "text": c.get("text", "")[:240],
                 }
-                for c in (candidates if candidates else [])[: int(os.getenv("SNAPSHOT_MAX_ITEMS", "50"))]
+                for c in (snapshot if snapshot else [])[: int(os.getenv("SNAPSHOT_MAX_ITEMS", "60"))]
             ]
 
             self._last_retrieval_snapshot = snapshot_fp
@@ -834,3 +872,111 @@ class RAGPipeline:
             }
         else:
             return {"status": "error", "error": result.get("error", "Unknown error")}
+
+
+def _generate_hyde(query: str, max_tokens: int = 160) -> str:
+    """Generate HyDE (Hypothetical Document Embeddings) text for query expansion."""
+    # Simple HyDE generation - in production this would use an LLM
+    # For now, we'll create a hypothetical document that might contain the answer
+    hyde_prompts = [
+        f"Here is a document that answers the question '{query}':",
+        f"This document explains {query}:",
+        f"To answer '{query}', this document states:",
+        f"Regarding {query}, this document provides:",
+    ]
+
+    # Simple template-based generation
+    import random
+
+    template = random.choice(hyde_prompts)
+
+    # Add some generic content that might be relevant
+    generic_content = [
+        "The key points are:",
+        "Important details include:",
+        "This involves several concepts:",
+        "The main aspects are:",
+    ]
+
+    content = template + " " + random.choice(generic_content)
+
+    # Truncate to max_tokens (rough approximation)
+    if len(content) > max_tokens:
+        content = content[:max_tokens] + "..."
+
+    return content
+
+
+def _top_terms_from(results: list, num_terms: int = 10) -> list:
+    """Extract top terms from BM25 results for PRF (Pseudo-Relevance Feedback)."""
+    if not results:
+        return []
+
+    # Simple term extraction from result text
+    all_text = []
+    for result in results:
+        text = result.get("text", "") or result.get("content", "") or result.get("bm25_text", "")
+        if text:
+            all_text.append(text)
+
+    if not all_text:
+        return []
+
+    # Simple word frequency counting
+    import re
+    from collections import Counter
+
+    # Combine all text and extract words
+    combined_text = " ".join(all_text)
+    words = re.findall(r"\b[a-zA-Z]{3,}\b", combined_text.lower())
+
+    # Filter out common stopwords
+    stopwords = {
+        "the",
+        "and",
+        "for",
+        "are",
+        "but",
+        "not",
+        "you",
+        "all",
+        "can",
+        "had",
+        "her",
+        "was",
+        "one",
+        "our",
+        "out",
+        "day",
+        "get",
+        "has",
+        "him",
+        "his",
+        "how",
+        "its",
+        "may",
+        "new",
+        "now",
+        "old",
+        "see",
+        "two",
+        "way",
+        "who",
+        "boy",
+        "did",
+        "man",
+        "men",
+        "put",
+        "say",
+        "she",
+        "too",
+        "use",
+    }
+
+    filtered_words = [w for w in words if w not in stopwords]
+
+    # Get most common terms
+    word_counts = Counter(filtered_words)
+    top_terms = [term for term, count in word_counts.most_common(num_terms)]
+
+    return top_terms

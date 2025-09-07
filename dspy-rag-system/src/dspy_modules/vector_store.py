@@ -19,6 +19,8 @@ import uuid
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
 
+LOG = logging.getLogger(__name__)
+
 try:
     from .hybrid_wrapper import run_hybrid_search
 except Exception:
@@ -547,6 +549,7 @@ class HybridVectorStore(Module):
             with db_manager.get_connection() as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
                     try:
+                        # Primary lexical path (websearch with generated tsvector)
                         cur.execute(
                             f"""
                             SELECT
@@ -567,15 +570,12 @@ class HybridVectorStore(Module):
                               dc.is_anchor AS is_anchor,
                               dc.anchor_key AS anchor_key,
                               dc.metadata AS metadata,
-                              ts_rank_cd(dc.content_tsv, websearch_to_tsquery('english', %s)) AS bm25
+                              ts_rank(dc.ts, websearch_to_tsquery('english', %s)) AS bm25
                             FROM document_chunks dc
                             LEFT JOIN documents d ON d.id = dc.document_id
-                            WHERE dc.content_tsv @@ websearch_to_tsquery('english', %s)
+                            WHERE dc.ts @@ websearch_to_tsquery('english', %s)
                             {where_clause}
-                            ORDER BY bm25 DESC,
-                                     COALESCE(dc.file_path, d.file_path) NULLS LAST,
-                                     dc.chunk_index NULLS LAST,
-                                     dc.id ASC
+                            ORDER BY ts_rank(dc.ts, websearch_to_tsquery('english', %s)) DESC
                             LIMIT %s
                             """,
                             params,
@@ -610,6 +610,48 @@ class HybridVectorStore(Module):
                         else:
                             raise
                     rows = cur.fetchall()
+
+                    # Trigram fallback if results are thin
+                    if len(rows) < limit and os.getenv("BM25_TRIGRAM_FALLBACK", "1") == "1":
+                        try:
+                            cur.execute(
+                                f"""
+                                SELECT
+                                  dc.id AS id,
+                                  dc.document_id AS document_id,
+                                  dc.chunk_index AS chunk_index,
+                                  COALESCE(dc.file_path, d.file_path) AS file_path,
+                                  dc.line_start AS line_start,
+                                  dc.line_end AS line_end,
+                                  dc.content AS content,
+                                  dc.bm25_text AS bm25_text,
+                                  dc.embedding_text AS embedding_text,
+                                  dc.embedding_token_count AS embedding_token_count,
+                                  dc.metadata->>'chunk_size' AS chunk_size,
+                                  dc.metadata->>'overlap_ratio' AS overlap_ratio,
+                                  dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                                  dc.metadata->>'chunk_variant' AS chunk_variant,
+                                  dc.is_anchor AS is_anchor,
+                                  dc.anchor_key AS anchor_key,
+                                  dc.metadata AS metadata,
+                                  similarity(dc.bm25_text, %s) AS bm25
+                                FROM document_chunks dc
+                                LEFT JOIN documents d ON d.id = dc.document_id
+                                WHERE dc.bm25_text % %s
+                                {where_clause}
+                                ORDER BY similarity(dc.bm25_text, %s) DESC
+                                LIMIT %s
+                                """,
+                                [query, query, query] + params[2:],  # Skip the first two query params
+                            )
+                            fallback_rows = cur.fetchall()
+                            # Merge results, avoiding duplicates
+                            existing_ids = {row["id"] for row in rows}
+                            for row in fallback_rows:
+                                if row["id"] not in existing_ids and len(rows) < limit:
+                                    rows.append(row)
+                        except Exception as e:
+                            LOG.warning(f"Trigram fallback failed: {e}")
 
             return {"status": "success", "search_type": "bm25", "results": list(rows)}
 
