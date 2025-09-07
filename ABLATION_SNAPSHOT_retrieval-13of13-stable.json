@@ -1,0 +1,170 @@
+{
+  "tag": "retrieval-13of13-stable",
+  "commit": "f2bea2500c709e80e4b24fc4aeb11e6e0ac6d8a8",
+  "timestamp": "2025-09-07T00:00:00Z",
+  "total_cases": 13,
+  "stages": [
+    {
+      "stage": "base",
+      "description": "Base retrieval (no optimizations)",
+      "config": {
+        "w_path": 1.0,
+        "w_short": 1.0,
+        "w_title": 1.0,
+        "w_bm25": 1.0,
+        "w_vec": 1.0,
+        "adjacency_db": false,
+        "per_file_cap": 10
+      },
+      "hits": 13,
+      "total_cases": 13,
+      "micro_avg": 1.0,
+      "macro_avg": 1.0,
+      "per_tag": {
+        "rag_qa_single": 1.0
+      },
+      "tag_hits": {
+        "rag_qa_single": 13
+      },
+      "tag_total": {
+        "rag_qa_single": 13
+      }
+    },
+    {
+      "stage": "path_tsv",
+      "description": "Base + path_tsv column",
+      "config": {
+        "w_path": 2.0,
+        "w_short": 1.0,
+        "w_title": 1.0,
+        "w_bm25": 1.0,
+        "w_vec": 1.0,
+        "adjacency_db": false,
+        "per_file_cap": 10
+      },
+      "hits": 13,
+      "total_cases": 13,
+      "micro_avg": 1.0,
+      "macro_avg": 1.0,
+      "per_tag": {
+        "rag_qa_single": 1.0
+      },
+      "tag_hits": {
+        "rag_qa_single": 13
+      },
+      "tag_total": {
+        "rag_qa_single": 13
+      }
+    },
+    {
+      "stage": "phrases",
+      "description": "Base + path_tsv + phrase hints",
+      "config": {
+        "w_path": 2.0,
+        "w_short": 1.8,
+        "w_title": 1.4,
+        "w_bm25": 1.0,
+        "w_vec": 1.0,
+        "adjacency_db": false,
+        "per_file_cap": 10
+      },
+      "hits": 13,
+      "total_cases": 13,
+      "micro_avg": 1.0,
+      "macro_avg": 1.0,
+      "per_tag": {
+        "rag_qa_single": 1.0
+      },
+      "tag_hits": {
+        "rag_qa_single": 13
+      },
+      "tag_total": {
+        "rag_qa_single": 13
+      }
+    },
+    {
+      "stage": "mmr_cap",
+      "description": "Base + path_tsv + phrases + MMR/cap",
+      "config": {
+        "w_path": 2.0,
+        "w_short": 1.8,
+        "w_title": 1.4,
+        "w_bm25": 1.0,
+        "w_vec": 1.0,
+        "adjacency_db": false,
+        "per_file_cap": 5
+      },
+      "hits": 13,
+      "total_cases": 13,
+      "micro_avg": 1.0,
+      "macro_avg": 1.0,
+      "per_tag": {
+        "rag_qa_single": 1.0
+      },
+      "tag_hits": {
+        "rag_qa_single": 13
+      },
+      "tag_total": {
+        "rag_qa_single": 13
+      }
+    },
+    {
+      "stage": "adjacency",
+      "description": "Base + path_tsv + phrases + MMR/cap + adjacency",
+      "config": {
+        "w_path": 2.0,
+        "w_short": 1.8,
+        "w_title": 1.4,
+        "w_bm25": 1.0,
+        "w_vec": 1.0,
+        "adjacency_db": true,
+        "per_file_cap": 5
+      },
+      "hits": 13,
+      "total_cases": 13,
+      "micro_avg": 1.0,
+      "macro_avg": 1.0,
+      "per_tag": {
+        "rag_qa_single": 1.0
+      },
+      "tag_hits": {
+        "rag_qa_single": 13
+      },
+      "tag_total": {
+        "rag_qa_single": 13
+      }
+    },
+    {
+      "stage": "fname_prior",
+      "description": "Base + path_tsv + phrases + MMR/cap + adjacency + fname_prior",
+      "config": {
+        "w_path": 2.0,
+        "w_short": 1.8,
+        "w_title": 1.4,
+        "w_bm25": 1.0,
+        "w_vec": 1.1,
+        "adjacency_db": true,
+        "per_file_cap": 4
+      },
+      "hits": 13,
+      "total_cases": 13,
+      "micro_avg": 1.0,
+      "macro_avg": 1.0,
+      "per_tag": {
+        "rag_qa_single": 1.0
+      },
+      "tag_hits": {
+        "rag_qa_single": 13
+      },
+      "tag_total": {
+        "rag_qa_single": 13
+      }
+    }
+  ],
+  "summary": {
+    "baseline_hits": 13,
+    "final_hits": 13,
+    "total_improvement": 0,
+    "improvement_pct": 0.0
+  }
+}

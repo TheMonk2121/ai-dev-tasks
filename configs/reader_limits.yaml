@@ -1,0 +1,29 @@
+---
+# Reader sentence budgets and limits
+default:
+  per_chunk: 2
+  total_sentences: 12
+  min_sentence_score: 0.1
+  abstain_threshold: 0.05
+
+tags:
+  db_workflows:
+    per_chunk: 2
+    total_sentences: 10
+    min_sentence_score: 0.15
+    abstain_threshold: 0.05
+  ops_health:
+    per_chunk: 3
+    total_sentences: 12
+    min_sentence_score: 0.1
+    abstain_threshold: 0.05
+  meta_ops:
+    per_chunk: 3
+    total_sentences: 12
+    min_sentence_score: 0.1
+    abstain_threshold: 0.05
+  rag_qa_single:
+    per_chunk: 2
+    total_sentences: 12
+    min_sentence_score: 0.1
+    abstain_threshold: 0.05
