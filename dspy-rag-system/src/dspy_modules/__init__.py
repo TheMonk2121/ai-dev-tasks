@@ -1,8 +1,2 @@
-#!/usr/bin/env python3
-"""
-DSPy Modules Package
+# Package marker for dspy_modules
 
-Core DSPy modules for the RAG system.
-"""
-
-__version__ = "1.0.0"

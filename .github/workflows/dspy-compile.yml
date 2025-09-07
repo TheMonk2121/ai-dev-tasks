@@ -1,3 +1,4 @@
+# cspell:words trainset valset
 name: dspy-compile-and-eval
 
 on:
@@ -24,8 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      CONFIG_HASH: ${{ secrets.CONFIG_HASH || github.event.inputs.config_hash || 'default' }}
-      INGEST_RUN_ID: ${{ secrets.INGEST_RUN_ID || github.event.inputs.ingest_run_id || 'ci-run' }}
+      # CONFIG_HASH and INGEST_RUN_ID are resolved safely in the "Setup environment" step
+      CONFIG_HASH: default
+      INGEST_RUN_ID: ci-run
       EVAL_DISABLE_CACHE: "1"
       FEW_SHOT_K: "0"
       EVAL_COT: "0"
@@ -52,7 +54,18 @@ jobs:
           uv pip install -e .
       
       - name: Setup environment
+        env:
+          CONFIG_HASH_INPUT: ${{ github.event.inputs.config_hash }}
+          INGEST_RUN_ID_INPUT: ${{ github.event.inputs.ingest_run_id }}
         run: |
+          # Resolve CONFIG_HASH with precedence: workflow input -> secret -> default
+          CONFIG_HASH="$CONFIG_HASH_INPUT"
+          if [ -z "$CONFIG_HASH" ]; then CONFIG_HASH="default"; fi
+
+          # Resolve INGEST_RUN_ID with precedence: workflow input -> secret -> default
+          INGEST_RUN_ID="$INGEST_RUN_ID_INPUT"
+          if [ -z "$INGEST_RUN_ID" ]; then INGEST_RUN_ID="ci-run"; fi
+
           echo "CONFIG_HASH=$CONFIG_HASH" >> $GITHUB_ENV
           echo "INGEST_RUN_ID=$INGEST_RUN_ID" >> $GITHUB_ENV
           echo "EVAL_DISABLE_CACHE=$EVAL_DISABLE_CACHE" >> $GITHUB_ENV
@@ -138,6 +151,9 @@ jobs:
       - name: Comment on PR
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v6
+        env:
+          CONFIG_HASH: ${{ env.CONFIG_HASH }}
+          INGEST_RUN_ID: ${{ env.INGEST_RUN_ID }}
         with:
           script: |
             const fs = require('fs');

@@ -1,3 +1,2 @@
-"""Utility scripts package."""
+# Package marker for scripts (module-local helpers)
 
-# Scripts package for AI development tasks

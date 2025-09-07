@@ -19,16 +19,10 @@ import uuid
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
 
-LOG = logging.getLogger(__name__)
-
-try:
-    from .hybrid_wrapper import run_hybrid_search
-except Exception:
-    run_hybrid_search = None  # wrapper optional
-
-# Third-party imports
 import numpy as np
 import torch
+
+# Third-party imports
 from dspy import Module
 from psycopg2 import errors
 from psycopg2.extras import RealDictCursor, execute_values
@@ -43,6 +37,12 @@ except ImportError:
     # Fallback for when running from outside src directory
     from ..utils.database_resilience import get_database_manager
     from ..utils.retry_wrapper import retry_database
+
+# Optional wrapper import kept at end of import section to satisfy linting rules
+try:
+    from .hybrid_wrapper import run_hybrid_search
+except Exception:
+    run_hybrid_search = None  # wrapper optional
 
 # Set up logging
 LOG = logging.getLogger(__name__)
@@ -70,6 +70,46 @@ def _cached_query_embedding_bytes(model_name: str, text: str) -> bytes:
 
 def _query_embedding(model_name: str, text: str) -> np.ndarray:
     return np.frombuffer(_cached_query_embedding_bytes(model_name, text), dtype=np.float32)
+
+
+def _derive_section_title(file_path: str, chunk_text: str, prior_heading: Optional[str] = None) -> str:
+    """Heuristic section title extraction based on file type and content."""
+    try:
+        fp = (file_path or "").lower()
+        # Markdown: use nearest heading if provided; else scan chunk
+        if fp.endswith(".md"):
+            if prior_heading:
+                return prior_heading
+            m = re.search(r"^(#{1,6})\s+(.*)$", chunk_text, re.MULTILINE)
+            if m:
+                return m.group(2).strip()
+        # Python
+        if fp.endswith(".py"):
+            m = re.search(r"^(class|def)\s+([A-Za-z0-9_]+)", chunk_text, re.MULTILINE)
+            if m:
+                return f"{m.group(1).title()}: {m.group(2)}"
+        # JS/TS
+        if fp.endswith(".js") or fp.endswith(".ts") or fp.endswith(".tsx"):
+            m = re.search(r"^(?:export\s+)?(class|function|const)\s+([A-Za-z0-9_]+)", chunk_text, re.MULTILINE)
+            if m:
+                return f"{m.group(1).title()}: {m.group(2)}"
+        # SQL
+        if fp.endswith(".sql"):
+            m = re.search(
+                r"^(CREATE|ALTER)\s+(INDEX|TABLE)\s+([A-Za-z0-9_\"]+)", chunk_text, re.MULTILINE | re.IGNORECASE
+            )
+            if m:
+                return f"{m.group(2).title()}: {m.group(3)}"
+        # YAML/TOML/JSON/ENV
+        if fp.endswith((".yml", ".yaml", ".toml", ".json", ".env")):
+            # crude: first two top-level keys as path
+            keys = re.findall(r"^([A-Za-z0-9_.-]+):", chunk_text, re.MULTILINE)
+            if keys:
+                return " › ".join(keys[:2])
+        # Fallback: filename
+        return os.path.basename(file_path) if file_path else ""
+    except Exception:
+        return os.path.basename(file_path) if file_path else ""
 
 
 # ---------------------------
@@ -490,6 +530,7 @@ class HybridVectorStore(Module):
                           dc.document_id AS document_id,
                           dc.chunk_index AS chunk_index,
                           COALESCE(dc.file_path, d.file_path) AS file_path,
+                          COALESCE(dc.file_path, d.file_path) AS filename,
                           dc.line_start AS line_start,
                           dc.line_end AS line_end,
                           dc.content AS content,
@@ -533,17 +574,28 @@ class HybridVectorStore(Module):
         where_clause = ""
         params: List[Any] = [query, query]
 
+        gating_param: Any | None = None
         if run_id:
             where_clause = "AND dc.metadata->>'ingest_run_id' = %s"
-            params.append(run_id)
+            gating_param = run_id
         elif chunk_variant:
             where_clause = "AND dc.metadata->>'chunk_variant' = %s"
-            params.append(chunk_variant)
+            gating_param = chunk_variant
         else:
             # Use active configuration when no explicit run_id is set
             where_clause = "AND dc.metadata->>'ingest_run_id' = get_active_chunk_config()"
 
-        params.append(limit)
+        # Build params in the exact order of placeholders in the SQL
+        # 1) SELECT ts_rank(... %s)
+        # 2) WHERE ... %s
+        # 3) optional gating %s (if where_clause includes it)
+        # 4) ORDER BY ts_rank(... %s)
+        # 5) LIMIT %s
+        ordered_params: List[Any] = [query, query]
+        if gating_param is not None:
+            ordered_params.append(gating_param)
+        ordered_params.append(query)
+        ordered_params.append(limit)
 
         try:
             with db_manager.get_connection() as conn:
@@ -557,6 +609,7 @@ class HybridVectorStore(Module):
                               dc.document_id AS document_id,
                               dc.chunk_index AS chunk_index,
                               COALESCE(dc.file_path, d.file_path) AS file_path,
+                              COALESCE(dc.file_path, d.file_path) AS filename,
                               dc.line_start AS line_start,
                               dc.line_end AS line_end,
                               dc.content AS content,
@@ -578,7 +631,7 @@ class HybridVectorStore(Module):
                             ORDER BY ts_rank(dc.ts, websearch_to_tsquery('english', %s)) DESC
                             LIMIT %s
                             """,
-                            params,
+                            ordered_params,
                         )
                     except Exception as e:
                         if "content_tsv" in str(e).lower():
@@ -589,6 +642,7 @@ class HybridVectorStore(Module):
                                   dc.document_id AS document_id,
                                   dc.chunk_index AS chunk_index,
                                   COALESCE(dc.file_path, d.file_path) AS file_path,
+                                  COALESCE(dc.file_path, d.file_path) AS filename,
                                   dc.line_start AS line_start,
                                   dc.line_end AS line_end,
                                   dc.content AS content,
@@ -621,6 +675,7 @@ class HybridVectorStore(Module):
                                   dc.document_id AS document_id,
                                   dc.chunk_index AS chunk_index,
                                   COALESCE(dc.file_path, d.file_path) AS file_path,
+                                  COALESCE(dc.file_path, d.file_path) AS filename,
                                   dc.line_start AS line_start,
                                   dc.line_end AS line_end,
                                   dc.content AS content,
@@ -654,6 +709,157 @@ class HybridVectorStore(Module):
                             LOG.warning(f"Trigram fallback failed: {e}")
 
             return {"status": "success", "search_type": "bm25", "results": list(rows)}
+
+        except Exception:
+            raise
+
+    def _search_title(self, query: str, limit: int = 5) -> Dict[str, Any]:
+        """Search using title/path full-text search with trigram fallback."""
+        db_manager = get_database_manager()
+
+        # Add run ID gating for evaluations
+        run_id = os.getenv("INGEST_RUN_ID")
+        chunk_variant = os.getenv("CHUNK_VARIANT")
+
+        where_clause = ""
+        params: List[Any] = [query, query]
+
+        gating_param: Any | None = None
+        if run_id:
+            where_clause = "AND dc.metadata->>'ingest_run_id' = %s"
+            gating_param = run_id
+        elif chunk_variant:
+            where_clause = "AND dc.metadata->>'chunk_variant' = %s"
+            gating_param = chunk_variant
+        else:
+            # Use active configuration when no explicit run_id is set
+            where_clause = "AND dc.metadata->>'ingest_run_id' = get_active_chunk_config()"
+
+        # Build params in the exact order of placeholders in the SQL
+        ordered_params: List[Any] = [query, query]
+        if gating_param is not None:
+            ordered_params.append(gating_param)
+        ordered_params.append(query)
+        ordered_params.append(limit)
+
+        try:
+            with db_manager.get_connection() as conn:
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    try:
+                        # Primary title search using websearch_to_tsquery
+                        cur.execute(
+                            f"""
+                            SELECT
+                              dc.id AS id,
+                              dc.document_id AS document_id,
+                              dc.chunk_index AS chunk_index,
+                              COALESCE(dc.file_path, d.file_path) AS file_path,
+                              COALESCE(dc.file_path, d.file_path) AS filename,
+                              dc.line_start AS line_start,
+                              dc.line_end AS line_end,
+                              dc.content AS content,
+                              dc.bm25_text AS bm25_text,
+                              dc.embedding_text AS embedding_text,
+                              dc.embedding_token_count AS embedding_token_count,
+                              dc.metadata->>'chunk_size' AS chunk_size,
+                              dc.metadata->>'overlap_ratio' AS overlap_ratio,
+                              dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                              dc.metadata->>'chunk_variant' AS chunk_variant,
+                              dc.is_anchor AS is_anchor,
+                              dc.anchor_key AS anchor_key,
+                              dc.metadata AS metadata,
+                              ts_rank(dc.title_ts, websearch_to_tsquery('simple', %s)) AS score
+                            FROM document_chunks dc
+                            LEFT JOIN documents d ON d.id = dc.document_id
+                            WHERE dc.title_ts @@ websearch_to_tsquery('simple', %s)
+                            {where_clause}
+                            ORDER BY ts_rank(dc.title_ts, websearch_to_tsquery('simple', %s)) DESC
+                            LIMIT %s
+                            """,
+                            ordered_params,
+                        )
+                    except Exception as e:
+                        if "title_ts" in str(e).lower():
+                            # Fallback to trigram similarity if title_ts column doesn't exist
+                            cur.execute(
+                                f"""
+                                SELECT
+                                  dc.id AS id,
+                                  dc.document_id AS document_id,
+                                  dc.chunk_index AS chunk_index,
+                                  COALESCE(dc.file_path, d.file_path) AS file_path,
+                                  COALESCE(dc.file_path, d.file_path) AS filename,
+                                  dc.line_start AS line_start,
+                                  dc.line_end AS line_end,
+                                  dc.content AS content,
+                                  dc.bm25_text AS bm25_text,
+                                  dc.embedding_text AS embedding_text,
+                                  dc.embedding_token_count AS embedding_token_count,
+                                  dc.metadata->>'chunk_size' AS chunk_size,
+                                  dc.metadata->>'overlap_ratio' AS overlap_ratio,
+                                  dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                                  dc.metadata->>'chunk_variant' AS chunk_variant,
+                                  dc.is_anchor AS is_anchor,
+                                  dc.anchor_key AS anchor_key,
+                                  dc.metadata AS metadata,
+                                  similarity(dc.file_path, %s) AS score
+                                FROM document_chunks dc
+                                LEFT JOIN documents d ON d.id = dc.document_id
+                                WHERE dc.file_path % %s
+                                {where_clause}
+                                ORDER BY similarity(dc.file_path, %s) DESC
+                                LIMIT %s
+                                """,
+                                [query, query, query] + params[2:],
+                            )
+                        else:
+                            raise
+                    rows = cur.fetchall()
+
+                    # Trigram fallback if results are thin
+                    if len(rows) < limit and os.getenv("TITLE_TRIGRAM_FALLBACK", "1") == "1":
+                        try:
+                            cur.execute(
+                                f"""
+                                SELECT
+                                  dc.id AS id,
+                                  dc.document_id AS document_id,
+                                  dc.chunk_index AS chunk_index,
+                                  COALESCE(dc.file_path, d.file_path) AS file_path,
+                                  COALESCE(dc.file_path, d.file_path) AS filename,
+                                  dc.line_start AS line_start,
+                                  dc.line_end AS line_end,
+                                  dc.content AS content,
+                                  dc.bm25_text AS bm25_text,
+                                  dc.embedding_text AS embedding_text,
+                                  dc.embedding_token_count AS embedding_token_count,
+                                  dc.metadata->>'chunk_size' AS chunk_size,
+                                  dc.metadata->>'overlap_ratio' AS overlap_ratio,
+                                  dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                                  dc.metadata->>'chunk_variant' AS chunk_variant,
+                                  dc.is_anchor AS is_anchor,
+                                  dc.anchor_key AS anchor_key,
+                                  dc.metadata AS metadata,
+                                  similarity(dc.file_path, %s) AS score
+                                FROM document_chunks dc
+                                LEFT JOIN documents d ON d.id = dc.document_id
+                                WHERE dc.file_path % %s
+                                {where_clause}
+                                ORDER BY similarity(dc.file_path, %s) DESC
+                                LIMIT %s
+                                """,
+                                [query, query, query] + params[2:],
+                            )
+                            fallback_rows = cur.fetchall()
+                            # Merge results, avoiding duplicates
+                            existing_ids = {row["id"] for row in rows}
+                            for row in fallback_rows:
+                                if row["id"] not in existing_ids and len(rows) < limit:
+                                    rows.append(row)
+                        except Exception as e:
+                            LOG.warning(f"Title trigram fallback failed: {e}")
+
+            return {"status": "success", "search_type": "title", "results": list(rows)}
 
         except Exception:
             raise
@@ -771,6 +977,214 @@ class HybridVectorStore(Module):
         except Exception:
             raise
 
+    def _search_section(self, query: str, limit: int = 5) -> Dict[str, Any]:
+        """Search section titles using full-text and trigram similarity with gating."""
+        db_manager = get_database_manager()
+
+        # Add run ID gating for evaluations
+        run_id = os.getenv("INGEST_RUN_ID")
+        chunk_variant = os.getenv("CHUNK_VARIANT")
+
+        where_clause = ""
+        params: List[Any] = [query, query]
+
+        gating_param: Any | None = None
+        if run_id:
+            where_clause = "AND dc.metadata->>'ingest_run_id' = %s"
+            gating_param = run_id
+        elif chunk_variant:
+            where_clause = "AND dc.metadata->>'chunk_variant' = %s"
+            gating_param = chunk_variant
+        else:
+            # Use active configuration when no explicit run_id is set
+            where_clause = "AND dc.metadata->>'ingest_run_id' = get_active_chunk_config()"
+
+        ordered_params: List[Any] = [query, query]
+        if gating_param is not None:
+            ordered_params.append(gating_param)
+        ordered_params.append(query)
+        ordered_params.append(limit)
+
+        try:
+            with db_manager.get_connection() as conn:
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    try:
+                        cur.execute(
+                            f"""
+                            SELECT
+                              dc.id AS id,
+                              dc.document_id AS document_id,
+                              dc.chunk_index AS chunk_index,
+                              COALESCE(dc.file_path, d.file_path) AS file_path,
+                              COALESCE(dc.file_path, d.file_path) AS filename,
+                              dc.section_title AS section_title,
+                              dc.content AS content,
+                              ts_rank(dc.section_ts, websearch_to_tsquery('simple', %s)) AS score
+                            FROM document_chunks dc
+                            LEFT JOIN documents d ON d.id = dc.document_id
+                            WHERE dc.section_ts @@ websearch_to_tsquery('simple', %s)
+                            {where_clause}
+                            ORDER BY ts_rank(dc.section_ts, websearch_to_tsquery('simple', %s)) DESC
+                            LIMIT %s
+                            """,
+                            ordered_params,
+                        )
+                    except Exception as e:
+                        if "section_ts" in str(e).lower():
+                            cur.execute(
+                                f"""
+                                SELECT
+                                  dc.id AS id,
+                                  dc.document_id AS document_id,
+                                  dc.chunk_index AS chunk_index,
+                                  COALESCE(dc.file_path, d.file_path) AS file_path,
+                                  COALESCE(dc.file_path, d.file_path) AS filename,
+                                  dc.section_title AS section_title,
+                                  dc.content AS content,
+                                  similarity(COALESCE(dc.section_title,''), %s) AS score
+                                FROM document_chunks dc
+                                LEFT JOIN documents d ON d.id = dc.document_id
+                                WHERE COALESCE(dc.section_title,'') % %s
+                                {where_clause}
+                                ORDER BY similarity(COALESCE(dc.section_title,''), %s) DESC
+                                LIMIT %s
+                                """,
+                                [query, query, query] + params[2:],
+                            )
+                        else:
+                            raise
+                    rows = cur.fetchall()
+
+                    # Trigram fallback if results are thin
+                    if len(rows) < limit:
+                        try:
+                            cur.execute(
+                                f"""
+                                SELECT
+                                  dc.id AS id,
+                                  dc.document_id AS document_id,
+                                  dc.chunk_index AS chunk_index,
+                                  COALESCE(dc.file_path, d.file_path) AS file_path,
+                                  COALESCE(dc.file_path, d.file_path) AS filename,
+                                  dc.section_title AS section_title,
+                                  dc.content AS content,
+                                  similarity(COALESCE(dc.section_title,''), %s) AS score
+                                FROM document_chunks dc
+                                LEFT JOIN documents d ON d.id = dc.document_id
+                                WHERE COALESCE(dc.section_title,'') % %s
+                                {where_clause}
+                                ORDER BY similarity(COALESCE(dc.section_title,''), %s) DESC
+                                LIMIT %s
+                                """,
+                                [query, query, query] + params[2:],
+                            )
+                            fallback_rows = cur.fetchall()
+                            existing_ids = {row["id"] for row in rows}
+                            for row in fallback_rows:
+                                if row["id"] not in existing_ids and len(rows) < limit:
+                                    rows.append(row)
+                        except Exception as e:
+                            LOG.warning(f"Section trigram fallback failed: {e}")
+
+            return {"status": "success", "search_type": "section", "results": list(rows)}
+
+        except Exception:
+            raise
+
+    def _search_short(self, query: str, limit: int = 5) -> Dict[str, Any]:
+        """Short-field search over section_title + filename basename (weighted)."""
+        db_manager = get_database_manager()
+
+        # Add run ID gating for evaluations
+        run_id = os.getenv("INGEST_RUN_ID")
+        chunk_variant = os.getenv("CHUNK_VARIANT")
+
+        where_clause = ""
+        gating_param: Any | None = None
+        if run_id:
+            where_clause = "AND dc.metadata->>'ingest_run_id' = %s"
+            gating_param = run_id
+        elif chunk_variant:
+            where_clause = "AND dc.metadata->>'chunk_variant' = %s"
+            gating_param = chunk_variant
+        else:
+            where_clause = "AND dc.metadata->>'ingest_run_id' = get_active_chunk_config()"
+
+        ordered_params: List[Any] = [query]
+        if gating_param is not None:
+            ordered_params.append(gating_param)
+        ordered_params.append(query)
+        ordered_params.append(limit)
+
+        try:
+            with db_manager.get_connection() as conn:
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    # Primary short_tsv query
+                    cur.execute(
+                        f"""
+                        SELECT
+                          dc.id AS id,
+                          dc.document_id AS document_id,
+                          dc.chunk_index AS chunk_index,
+                          COALESCE(dc.file_path, d.file_path) AS file_path,
+                          COALESCE(dc.filename, d.file_path) AS filename,
+                          dc.section_title AS section_title,
+                          dc.content AS content,
+                          ts_rank_cd(dc.short_tsv, websearch_to_tsquery('simple', %s)) AS score
+                        FROM document_chunks dc
+                        LEFT JOIN documents d ON d.id = dc.document_id
+                        WHERE dc.short_tsv @@ websearch_to_tsquery('simple', %s)
+                        {where_clause}
+                        ORDER BY score DESC
+                        LIMIT %s
+                        """,
+                        ordered_params,
+                    )
+                    rows = cur.fetchall()
+
+                    if len(rows) < limit:
+                        # Trigram fallback on section_title or filename basename
+                        fallback_params: List[Any] = [query, query]
+                        if gating_param is not None:
+                            fallback_params.append(gating_param)
+                        fallback_params.extend([query, limit - len(rows)])
+
+                        cur.execute(
+                            f"""
+                            SELECT
+                              dc.id AS id,
+                              dc.document_id AS document_id,
+                              dc.chunk_index AS chunk_index,
+                              COALESCE(dc.file_path, d.file_path) AS file_path,
+                              COALESCE(dc.filename, d.file_path) AS filename,
+                              dc.section_title AS section_title,
+                              dc.content AS content,
+                              GREATEST(
+                                similarity(dc.section_title, %s),
+                                similarity(regexp_replace(coalesce(dc.filename,''), '^.*/', ''), %s)
+                              ) AS score
+                            FROM document_chunks dc
+                            LEFT JOIN documents d ON d.id = dc.document_id
+                            WHERE dc.section_title % %s
+                               OR regexp_replace(coalesce(dc.filename,''), '^.*/', '') % %s
+                            {where_clause}
+                            ORDER BY score DESC
+                            LIMIT %s
+                            """,
+                            fallback_params,
+                        )
+                        frows = cur.fetchall()
+                        # Merge without duplicates
+                        seen = {r["id"] for r in rows}
+                        for r in frows:
+                            if r["id"] not in seen and len(rows) < limit:
+                                rows.append(r)
+
+            return {"status": "success", "search_type": "short", "results": list(rows)}
+
+        except Exception:
+            raise
+
     # ------------- Store -------------
 
     @retry_database
@@ -790,7 +1204,16 @@ class HybridVectorStore(Module):
             line_start = i * 10 + 1  # Approximate line numbers
             line_end = line_start + chunk.count("\n")
 
-            chunk_rows.append((doc_id, i, chunk, emb, line_start, line_end, json.dumps(metadata)))
+            # Derive section title
+            section_title = _derive_section_title(
+                metadata.get("file_path", metadata.get("filename", "")) or "", chunk, None
+            )
+
+            # Attach section_title into metadata copy for traceability
+            md = dict(metadata)
+            md["section_title"] = section_title
+
+            chunk_rows.append((doc_id, i, chunk, emb, line_start, line_end, json.dumps(md), section_title))
 
         return self._insert_with_spans(chunk_rows, metadata, doc_id, len(chunks))
 
@@ -835,13 +1258,14 @@ class HybridVectorStore(Module):
                     for chunk_row in chunk_rows:
                         updated_chunk_rows.append(
                             (
-                                document_id,
-                                chunk_row[1],
-                                chunk_row[2],
-                                chunk_row[3],
-                                chunk_row[4],
-                                chunk_row[5],
-                                chunk_row[6],
+                                chunk_row[0],  # document_id
+                                chunk_row[1],  # chunk_index
+                                chunk_row[2],  # content
+                                chunk_row[3],  # embedding
+                                chunk_row[4],  # line_start
+                                chunk_row[5],  # line_end
+                                chunk_row[6],  # metadata (with section_title)
+                                chunk_row[7],  # section_title
                             )
                         )
 
@@ -853,6 +1277,7 @@ class HybridVectorStore(Module):
                         is_anchor = chunk_metadata.get("is_anchor", False)
                         anchor_key = chunk_metadata.get("anchor_key")
                         file_path = chunk_metadata.get("file_path", metadata.get("file_path", metadata.get("filename")))
+                        section_title = chunk_row[7]
 
                         updated_chunk_rows_with_schema.append(
                             (
@@ -866,6 +1291,7 @@ class HybridVectorStore(Module):
                                 is_anchor,  # is_anchor (first-class column)
                                 anchor_key,  # anchor_key (first-class column)
                                 chunk_row[6],  # metadata (JSONB)
+                                section_title,  # section_title
                             )
                         )
 
@@ -875,11 +1301,11 @@ class HybridVectorStore(Module):
                         """
                         INSERT INTO document_chunks
                              (document_id, chunk_index, file_path, line_start, line_end,
-                              content, embedding, is_anchor, anchor_key, metadata)
+                              content, embedding, is_anchor, anchor_key, metadata, section_title)
                         VALUES %s
                         """,
                         updated_chunk_rows_with_schema,
-                        template="(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                        template="(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                     )
             return {
                 "status": "success",

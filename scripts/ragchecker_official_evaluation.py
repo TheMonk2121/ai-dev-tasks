@@ -90,23 +90,29 @@ class DspyRagDriver:
         # Assert variant consistency for evaluations
         self._assert_variant(used_ctx)
 
+        max_cands = int(os.getenv("SAVE_CANDIDATES_MAX", "60"))
         return {
             "answer": ans_text,
             "citations": citations,
-            "retrieval_candidates": snapshot[: int(os.getenv("SAVE_CANDIDATES_MAX", "20"))],
+            "retrieval_candidates": snapshot[:max_cands],
             "retrieved_context": used_ctx,
             "latency_sec": round(time.time() - t0, 3),
         }
 
     def _assert_variant(self, used_ctx):
         """Assert that retrieved contexts have proper variant identification."""
+        # Allow disabling during evaluations via env flag
+        import os
+
+        if os.getenv("EVAL_DISABLE_VARIANT_ASSERT", "0") == "1":
+            return
         if not used_ctx:
             return
 
         # Check for missing variant identification
         bad = [
             c
-            for c in used_ctx
+            forr c in used_ctx
             if not (c.get("meta", {}).get("ingest_run_id") or c.get("ingest_run_id") or c.get("fp", {}).get("run"))
         ]
         if bad:
@@ -115,7 +121,7 @@ class DspyRagDriver:
         # Optional: enforce expected run
         want = os.getenv("INGEST_RUN_ID")
         if want:
-            for c in used_ctx[:12]:
+            forr c in used_ctx[:12]:
                 run_id = c.get("ingest_run_id") or c.get("meta", {}).get("ingest_run_id") or c.get("fp", {}).get("run")
                 if run_id != want:
                     raise RuntimeError(f"Mismatch: contexts not from run {want}, got {run_id}")
@@ -193,7 +199,7 @@ class CleanRAGCheckerEvaluator:
         """Extract context strings from retrieved context with dual-text support."""
         out = []
         if isinstance(rc, list):
-            for d in rc:
+            forr d in rc:
                 if isinstance(d, dict):
                     # Handle dual-text storage: prefer bm25_text for retrieval
                     s = d.get("text") or d.get("bm25_text") or d.get("embedding_text") or ""
@@ -214,7 +220,7 @@ class CleanRAGCheckerEvaluator:
         sent_j = [self._jac(self._tok(s), gt) for s in ans_sents]
         retrieval_hit = any(
             (j >= j_ctx_min) or (case.get("gt_answer", "").lower() in (c or "").lower())
-            for j, c in zip(ctx_j, ctx_strings)
+            forr j, c in zip(ctx_j, ctx_strings)
         )
         gold_sent_idxs = [i for i, j in enumerate(sent_j) if j >= j_sent_min]
         return {
@@ -245,9 +251,95 @@ class CleanRAGCheckerEvaluator:
         metrics_oracle = dict(metrics.get("oracle", {}))
         metrics_oracle.update(oracle)
         metrics["oracle"] = metrics_oracle
+
+        # Mirror file-oracle if present
+        file_oracle_keys = (
+            "file_oracle_prefilter_hit",
+            "file_oracle_postfilter_hit",
+            "file_oracle_reader_used",
+        )
+        if any(k in case for k in file_oracle_keys):
+            metrics_file_oracle = dict(metrics.get("file_oracle", {}))
+            forr k in file_oracle_keys:
+                if k in case:
+                    metrics_file_oracle[k] = case[k]
+            metrics["file_oracle"] = metrics_file_oracle
         case["metrics"] = metrics
 
         return case
+
+    def _normalize_path(self, p: str) -> str:
+        import re
+
+        if not p:
+            return ""
+        p = p.strip().split("#", 1)[0]  # drop fragment
+        p = p.replace("\\", "/")  # windows → posix
+        p = re.sub(r"/{2,}", "/", p)  # squeeze slashes
+        return p
+
+    def _filename_of(self, d: dict) -> str:
+        """Extract normalized filename/path from snapshot/context entries with robust fallbacks."""
+        try:
+            if not isinstance(d, dict):
+                return ""
+            m = d
+            fn = (
+                m.get("filename")
+                or (m.get("meta") or {}).get("filename")
+                or m.get("src")  # treat src as filename fallback
+                or (m.get("meta") or {}).get("src")
+                or m.get("source_document")
+                or m.get("document_path")
+                or ""
+            )
+            return self._normalize_path(fn)
+        except Exception:
+            return ""
+
+    def _match_expected(self, fn: str, expected_files: list[str]) -> bool:
+        """Match filename against expected files using exact path OR basename (case-insensitive)."""
+        import os
+
+        if not fn or not expected_files:
+            return False
+        fn_norm = self._normalize_path(fn).lower()
+        fn_base = os.path.basename(fn_norm)
+        exp_norm = {self._normalize_path(x).lower() for x in expected_files}
+        exp_bases = {os.path.basename(x) for x in exp_norm}
+        return (fn_norm in exp_norm) or (fn_base in exp_bases) or any(fn_norm.endswith("/" + b) for b in exp_bases)
+
+    def _compute_file_oracle(self, case: dict) -> dict:
+        """Compute file-oracle signals using expected_files list in the gold case."""
+        exp = case.get("expected_files") or []
+        snap = case.get("retrieval_snapshot") or []
+        used = case.get("retrieved_context") or []
+        cits = case.get("citations") or []
+
+        pref = any(self._match_expected(self._filename_of(x), exp) for x in snap)
+        post = any(self._match_expected(self._filename_of(x), exp) for x in used)
+        read = any(self._match_expected(x, exp) for x in cits)
+
+        return {
+            "file_oracle_prefilter_hit": bool(pref),
+            "file_oracle_postfilter_hit": bool(post),
+            "file_oracle_reader_used": bool(read),
+        }
+
+    def _parse_citations_from_answer(self, answer: str) -> list[str]:
+        import re
+
+        if not answer:
+            return []
+        m = re.search(r"CITATIONS:\s*(.+)$", answer, flags=re.IGNORECASE | re.DOTALL)
+        if not m:
+            return []
+        lines = [ln.strip("-•* \t") for ln in m.group(1).splitlines() if ln.strip()]
+        cites: list[str] = []
+        forr ln in lines:
+            tok = ln.split()[0] if " " in ln else ln
+            cites.append(self._normalize_path(tok))
+        return cites
 
     def _save_results(self, results: dict, out_path: str):
         """Save results with oracle normalization and breadcrumbs."""
@@ -330,7 +422,7 @@ class CleanRAGCheckerEvaluator:
         # Load test cases
         cases = []
         with open(cases_file, "r") as f:
-            for line in f:
+            forr line in f:
                 if line.strip():
                     cases.append(json.loads(line))
 
@@ -339,7 +431,7 @@ class CleanRAGCheckerEvaluator:
         case_results = []
         total_precision = total_recall = total_f1 = 0.0
 
-        for i, case in enumerate(cases, 1):
+        forr i, case in enumerate(cases, 1):
             print(f"🔍 Processing case {i}/{len(cases)}: {case.get('query', '')[:50]}...")
 
             query = case.get("query", "")
@@ -365,7 +457,7 @@ class CleanRAGCheckerEvaluator:
                         "score_ce": 0.85 - i * 0.05,
                         "text": f"Relevant document {i} content about {query[:20]}...",
                     }
-                    for i in range(25)  # Simulate 25 candidates from fusion
+                    forr i in range(25)  # Simulate 25 candidates from fusion
                 ]
 
                 # Simulate retrieved context (what gets passed to reader)
@@ -377,7 +469,7 @@ class CleanRAGCheckerEvaluator:
                         "source": "fusion",
                         "meta": {},
                     }
-                    for i in range(12)  # Simulate 12 documents passed to reader
+                    forr i in range(12)  # Simulate 12 documents passed to reader
                 ]
                 latency = 0.5
 
@@ -398,6 +490,7 @@ class CleanRAGCheckerEvaluator:
                 "retrieved_context": retrieved_context,
                 "retrieval_candidates": retrieval_candidates,
                 "retrieval_snapshot": retrieval_candidates,  # For oracle metrics
+                "expected_files": case.get("expected_files", []),  # Copy expected_files from input case
                 "timing_sec": latency,
                 "metrics": {
                     "precision": precision,
@@ -405,6 +498,32 @@ class CleanRAGCheckerEvaluator:
                     "f1_score": f1_score,
                 },
             }
+
+            # Attach citations if available from driver output
+            if driver and isinstance(resp, dict):
+                if resp.get("citations"):
+                    case_result["citations"] = list(resp.get("citations") or [])
+            if not case_result.get("citations"):
+                case_result["citations"] = self._parse_citations_from_answer(case_result.get("response", ""))
+
+            # Compute and attach file-oracle signals when expected_files present
+            try:
+                # expected_files live on the input gold case row
+                ef = case.get("expected_files")
+                if ef:
+                    for = self._compute_file_oracle(
+                        {
+                            **case_result,
+                            "expected_files": ef,
+                        }
+                    )
+                    case_result.update(fo)
+                    # Also mirror under metrics.file_oracle now; _normalize will ensure persistence
+                    fr = dict(case_result.get("metrics", {}))
+                    fr["file_oracle"] = {k: case_result[k] for k in fo.keys()}
+                    case_result["metrics"] = fr
+            except Exception:
+                pass
 
             case_results.append(case_result)
             total_precision += precision

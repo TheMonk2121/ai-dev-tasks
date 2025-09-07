@@ -42,12 +42,20 @@ def eval_combo(ws: Dict[str, float], cases: List[Any]) -> tuple[int, Dict[str, i
         try:
             qs = build_channel_queries(case.query, case.tag)
             rows = run_fused_query(
-                qs["short"], qs["title"], qs["bm25"], case.qvec,
-                k=25, use_mmr=True, weights={k: v for k, v in ws.items() if k.startswith('w_')},
-                tag=case.tag, fname_regex=qs.get("fname_regex"), adjacency_db=bool(ws.get("adjacency_db", 0)),
-                cold_start=bool(qs.get("cold_start", False))
+                qs["short"],
+                qs["title"],
+                qs["bm25"],
+                case.qvec,
+                k=25,
+                use_mmr=True,
+                weights={k: v for k, v in ws.items() if k.startswith("w_")},
+                tag=case.tag,
+                fname_regex=qs.get("fname_regex"),
+                adjacency_db=bool(ws.get("adjacency_db", 0)),
+                cold_start=bool(qs.get("cold_start", False)),
             )
             from dspy_modules.retriever.rerank import per_file_cap as _cap
+
             rows = _cap(rows, cap=int(ws.get("per_file_cap", 5)))
             hit = int(gold_hit(case.id, rows))
             hits += hit

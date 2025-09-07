@@ -1,0 +1,13 @@
+{"case_id": "What is DSPy according to 400_07_ai-frameworks-dspy.md?", "file_paths": [], "globs": ["*/400_07_ai-frameworks-dspy.md"]}
+{"case_id": "List the core workflow guides in 000_core.", "file_paths": [], "globs": ["000_core/*"]}
+{"case_id": "According to 400_06_memory-and-context-systems.md, what is the memory system in this project?", "file_paths": [], "globs": ["*/400_06_memory-and-context-systems.md"]}
+{"case_id": "Where are the model configuration settings defined?", "file_paths": ["200_setup/201_model-configuration.md"], "globs": []}
+{"case_id": "What are the naming conventions used in this repo (see 200_setup)?", "file_paths": ["200_setup/200_naming-conventions.md"], "globs": []}
+{"case_id": "Show the DSPy development context TL;DR.", "file_paths": [], "globs": ["*/104_dspy-development-context.md"]}
+{"case_id": "Which file summarizes backlog and priorities?", "file_paths": [], "globs": ["*/000_backlog.md"]}
+{"case_id": "Which file defines the governance and AI constitution?", "file_paths": [], "globs": ["*/400_02_governance-and-ai-constitution.md"]}
+{"case_id": "Where are database troubleshooting patterns documented?", "file_paths": ["100_memory/100_database-troubleshooting-patterns.md"], "globs": []}
+{"case_id": "Which file describes the memory/context workflow?", "file_paths": [], "globs": ["*/103_memory-context-workflow.md"]}
+{"case_id": "Give the high-level getting started index.", "file_paths": [], "globs": ["*/400_00_getting-started-and-index.md"]}
+{"case_id": "Show me the setup docs under 200_setup.", "file_paths": [], "globs": ["200_setup/*"]}
+{"case_id": "Point me to memory-related guides under 100_memory.", "file_paths": [], "globs": ["100_memory/*"]}

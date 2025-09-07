@@ -5,6 +5,7 @@ RAG Pipeline Module - Enforces context consumption and provides citations
 
 import hashlib
 import os
+import re
 import sys
 from collections import defaultdict
 from typing import Any, Dict, List
@@ -27,7 +28,7 @@ from .vector_store import HybridVectorStore
 
 # -------- Normalization helpers ---------------------------------------------
 def _sha10(s: str) -> str:
-    return hashlib.sha1((s or "").encode("utf-8")).hexdigest()[:10]
+    return hashlib.sha1((s or "").encode("utf-8"), usedforsecurity=False).hexdigest()[:10]
 
 
 def _pick(d: dict, keys):
@@ -63,7 +64,32 @@ def _norm_candidates(raw):
                 or x.get("body")
                 or ""
             )
-            meta = x
+            # derive filename/path under a consistent key
+            filename = (
+                x.get("filename")
+                or (x.get("meta", {}) or {}).get("filename")
+                or (x.get("metadata", {}) or {}).get("filename")
+                or x.get("source_document")
+                or x.get("file_path")
+                or x.get("path")
+                or x.get("src")
+                or ""
+            )
+            meta = dict(x)
+            # ensure filename appears under both meta and metadata for downstream compatibility
+            if filename:
+                try:
+                    m = dict(meta.get("meta", {}) or {})
+                    m["filename"] = filename
+                    meta["meta"] = m
+                except Exception:
+                    meta["filename"] = filename
+                try:
+                    md = dict(meta.get("metadata", {}) or {})
+                    md["filename"] = filename
+                    meta["metadata"] = md
+                except Exception:
+                    meta["filename"] = filename
         elif isinstance(x, (list, tuple)):
             # best-effort: (id, score, text, *rest)
             did = str(x[0]) if len(x) > 0 else _sha10(str(x))
@@ -99,7 +125,10 @@ def _search_channel(retriever, channel: str, query: str, topk: int):
     route_names = {
         "bm25": ("search_bm25", "search_keyword", "bm25_search"),
         "vec": ("search_vec", "search_vector", "vector_search"),
-        "other": ("search_other", "search_title", "search_metadata"),
+        "title": ("search_title",),
+        "section": ("search_section",),
+        "short": ("search_short",),
+        "other": ("search_other", "search_metadata"),
         "hybrid": ("search_hybrid", "search"),
     }
     for route in route_names.get(channel, ()):
@@ -184,19 +213,128 @@ def _rerank(query: str, candidates: list[dict], topn: int):
     rr = _load_reranker()
     if rr is None:
         return candidates[:topn]
-    pairs = [(query, c.get("text", "")) for c in candidates]
+
+    def _get_meta(cand) -> tuple[str, str, str]:
+        # returns (filename, section_title, text)
+        if isinstance(cand, dict):
+            fn = cand.get("filename") or (cand.get("meta", {}) or {}).get("filename", "") or ""
+            sec = (cand.get("meta", {}) or {}).get("section_title", "") or cand.get("section_title", "") or ""
+            txt = cand.get("text") or cand.get("content") or ""
+            return str(fn), str(sec), str(txt)
+        if isinstance(cand, tuple):
+            # Expect (id, score, text, meta)
+            txt = ""
+            meta = {}
+            try:
+                if len(cand) >= 3:
+                    txt = str(cand[2] or "")
+                if len(cand) >= 4 and isinstance(cand[3], dict):
+                    meta = cand[3]
+            except Exception:
+                pass
+            fn = (meta.get("filename") or "") if isinstance(meta, dict) else ""
+            sec = (meta.get("section_title") or "") if isinstance(meta, dict) else ""
+            return fn, sec, txt
+        return "", "", str(cand)
+
+    # Prepend filename/section to text for better reranking
+    pairs = []
+    for c in candidates:
+        fn, sec, txt = _get_meta(c)
+        # Temporary shim for section
+        if not sec and txt:
+            m = re.search(r"^(#{1,6})\s+(.+)$", txt, re.MULTILINE)
+            if m:
+                sec = m.group(2).strip()
+            else:
+                for ln in txt.splitlines():
+                    ln = ln.strip()
+                    if ln:
+                        sec = ln[:120]
+                        break
+        prefix = ""
+        if fn:
+            prefix += f"FILE: {fn}\n"
+        if sec:
+            prefix += f"SECTION: {sec}\n"
+        text_with_meta = prefix + (txt or "")
+        pairs.append((query, text_with_meta))
+
     try:
         scores = rr.predict(pairs, convert_to_numpy=True, show_progress_bar=False)
     except Exception as e:
         print(f"⚠️ Rerank predict failed ({e}); using fused order.")
         return candidates[:topn]
+
+    def _normalize_cand(cand):
+        if isinstance(cand, dict):
+            return dict(cand)
+        if isinstance(cand, tuple):
+            # Attempt to map (id, score, text, meta)
+            out = {}
+            try:
+                if len(cand) >= 1:
+                    out["id"] = cand[0]
+                if len(cand) >= 3:
+                    out["text"] = cand[2]
+                if len(cand) >= 4 and isinstance(cand[3], dict):
+                    out["meta"] = cand[3]
+                    if cand[3].get("filename"):
+                        out["filename"] = cand[3].get("filename")
+                    if cand[3].get("section_title"):
+                        out["section_title"] = cand[3].get("section_title")
+            except Exception:
+                out["text"] = str(cand)
+            return out
+        return {"text": str(cand)}
+
     reranked = []
     for c, s in zip(candidates, list(scores)):
-        d = dict(c)
+        d = _normalize_cand(c)
         d["score_ce"] = float(s)
         reranked.append(d)
     reranked.sort(key=lambda x: x["score_ce"], reverse=True)
     return reranked[:topn]
+
+
+# ---- Query token expansion for title/section channels ----
+def _expand_query_tokens(q: str) -> list[str]:
+    raw = re.findall(r"[A-Za-z0-9_]+", q or "")
+    toks: set[str] = set()
+    for t in raw:
+        toks.add(t)
+        # camelCase / PascalCase splits
+        toks.update(re.findall(r"[A-Z]?[a-z]+|[A-Z]+(?![a-z])", t))
+        # snake/hyphen
+        toks.update(t.replace("-", "_").split("_"))
+    # aliases (domain-specific), controlled and small
+    alias = {
+        "ivfflat": ["ivf", "flat"],
+        "tsvector": ["fts", "ts", "vector"],
+        "to_tsvector": ["tsvector", "fts"],
+        "rerank": ["ce", "crossencoder"],
+        "rollback": ["revert", "restore"],
+    }
+    lower_set = {x.lower() for x in toks}
+    for k, v in alias.items():
+        if k in lower_set:
+            toks.update(v)
+    # drop single-char tokens; lowercase
+    return sorted({x.lower() for x in toks if len(x) > 1})
+
+
+def _title_query_for(query: str) -> str:
+    toks = set(_expand_query_tokens(query))
+    # optional global hints via env (comma-separated)
+    extra = os.getenv("GLOBAL_TITLE_HINTS", "").strip()
+    if extra:
+        toks.update([w.strip().lower() for w in extra.split(",") if w.strip()])
+    return " | ".join(sorted(toks))
+
+
+def _bm25_query_for(query: str) -> str:
+    # Revert: keep BM25 on raw user query to preserve tf-idf shape
+    return query
 
 
 # -------- Unified retrieval adapter -----------------------------------------
@@ -204,6 +342,7 @@ def _retrieve_with_fusion(retriever, query: str):
     # knobs
     K_VEC = int(os.getenv("RETR_TOPK_VEC", "140"))
     K_BM25 = int(os.getenv("RETR_TOPK_BM25", "140"))
+    K_TITLE = int(os.getenv("RETR_TOPK_TITLE", "80"))
     K_OTHER = int(os.getenv("RETR_TOPK_OTHER", "0"))
     RRF_K = int(os.getenv("RRF_K", "60"))
     RERANK_POOL = int(os.getenv("RERANK_POOL", "60"))
@@ -218,12 +357,27 @@ def _retrieve_with_fusion(retriever, query: str):
             retriever.retrieval_cache = None
 
     # breadth
-    bm25_results = _search_channel(retriever, "bm25", query, K_BM25)
+    bm25_q = _bm25_query_for(query)
+    bm25_results = _search_channel(retriever, "bm25", bm25_q, K_BM25)
     vec_results = _search_channel(retriever, "vec", query, K_VEC)
+    # Build smarter queries for title/section
+    title_q = _title_query_for(query)
+    if os.getenv("DEBUG_TITLE_QUERY", "0") == "1":
+        print(f"[TITLEQ] {title_q}")
+    title_results = _search_channel(retriever, "title", title_q, K_TITLE)
+    K_SECTION = int(os.getenv("RETR_TOPK_SECTION", "80"))
+    if os.getenv("DEBUG_SECTION_QUERY", "0") == "1":
+        print(f"[SECTQ]  {title_q}")
+    section_results = _search_channel(retriever, "section", title_q, K_SECTION)
+    K_SHORT = int(os.getenv("RETR_TOPK_SHORT", "80"))
+    short_results = _search_channel(retriever, "short", title_q, K_SHORT)
 
     ranklists = {
         "bm25": bm25_results,
         "vec": vec_results,
+        "title": title_results,
+        "section": section_results,
+        "short": short_results,
     }
     if K_OTHER > 0:
         ranklists["other"] = _search_channel(retriever, "other", query, K_OTHER)
@@ -249,44 +403,229 @@ def _retrieve_with_fusion(retriever, query: str):
         except Exception as e:
             print(f"PRF escalation failed: {e}")
 
-    # adaptive weights: give BM25 a nudge on short/numeric queries
+    # adaptive weights: give BM25 a nudge on short/numeric queries, title gets a boost
     weights = (
-        {"bm25": 1.2, "vec": 1.0, "other": 0.9}
+        {"bm25": 1.2, "vec": 1.0, "title": 1.4, "section": 1.6, "short": 2.0, "other": 0.9}
         if (len(query) < 40 or any(ch.isdigit() for ch in query))
-        else {"bm25": 1.0, "vec": 1.0, "other": 0.9}
+        else {"bm25": 1.0, "vec": 1.0, "title": 1.4, "section": 1.6, "short": 2.0, "other": 0.9}
     )
 
     fused = _rrf_fuse(ranklists, k=RRF_K, weights=weights)
-    pool = fused[: min(len(fused), RERANK_POOL)]
+
+    # Strict prefilter injection: include top-N unique basenames from 'short'
+    def _cand_filename(cand) -> str:
+        if isinstance(cand, dict):
+            return (cand.get("filename") or (cand.get("meta", {}) or {}).get("filename", "")) or ""
+        if isinstance(cand, tuple) and len(cand) >= 4 and isinstance(cand[3], dict):
+            return cand[3].get("filename") or ""
+        return ""
+
+    def _cand_id(cand) -> str:
+        if isinstance(cand, dict):
+            return str(cand.get("id") or cand.get("doc_id") or _sha10(cand.get("text", "")))
+        if isinstance(cand, tuple):
+            # tuple like (id, score, text, meta)
+            try:
+                return str(cand[0])
+            except Exception:
+                return _sha10(str(cand))
+        return _sha10(str(cand))
+
+    def unique_by_basename(items, max_count: int):
+        out: list = []
+        seen: set[str] = set()
+        for it in items or []:
+            fn = (_cand_filename(it) or "").lower()
+            base = os.path.basename(fn)
+            if base and base not in seen:
+                out.append(it)
+                seen.add(base)
+            if len(out) >= max_count:
+                break
+        return out
+
+    SHORT_PREFILTER_N = int(os.getenv("SHORT_PREFILTER_N", "12"))
+    shortlist = unique_by_basename(short_results or [], SHORT_PREFILTER_N)
+
+    # Additional hard inclusion for code/scripts by extension
+    def is_code_file(fn: str) -> bool:
+        fnl = fn.lower()
+        return fnl.endswith(".py") or fnl.endswith(".sh") or fnl.endswith(".sql")
+
+    CODE_PREFILTER_N = int(os.getenv("CODE_PREFILTER_N", "10"))
+    code_candidates = []
+    # Prefer short_results, fall back to fused
+    for src_list in (short_results or [], fused):
+        for it in src_list or []:
+            fn = (_cand_filename(it) or "").lower()
+            if fn and is_code_file(fn):
+                code_candidates.append(it)
+    code_shortlist = unique_by_basename(code_candidates, CODE_PREFILTER_N)
+
+    # Apply directory priors and demotion of boilerplate files
+    import json
+
+    DIR_PRIORS = json.loads(os.getenv("DIR_PRIORS", '{"scripts/sql":1.2,"configs":1.1,"dspy-rag-system/src":1.15}'))
+    DEMOTE_BASENAMES = {
+        b.strip().lower()
+        for b in os.getenv("DEMOTE_BASENAMES", "README.md,LICENSE,CONTRIBUTING.md,OPTIMIZATION_SUMMARY.md").split(",")
+    }
+
+    def apply_priors(c):
+        fn = (c.get("filename") or "").lower()
+        w = 1.0
+        for d, mult in DIR_PRIORS.items():
+            if f"{d.lower()}/" in fn:
+                w *= float(mult)
+        base = os.path.basename(fn)
+        if base in DEMOTE_BASENAMES:
+            w *= 0.5
+        # Artifact prior (tiny): favor code/scripts, SQL DDL; demote generic prose like readme/notes
+        prior = 0.0
+        if base.endswith((".py", ".sh", ".bash", ".zsh", ".sql", ".ipynb", ".yaml", ".yml", ".toml", ".ini")):
+            prior += 0.25
+        txt = c.get("text") or ""
+        try:
+            if isinstance(txt, str) and "```" in txt:
+                prior += 0.15
+            if isinstance(txt, str) and __import__("re").search(r"(?i)\b(CREATE|ALTER)\s+(INDEX|TABLE)\b", txt):
+                prior += 0.20
+        except Exception:
+            pass
+        if any(x in base for x in ("readme", "notes", "journal", "diary", "thoughts")):
+            prior -= 0.20
+        # Convert prior to a gentle multiplicative nudge (~±2–3%)
+        w *= 1.0 + (prior / 10.0)
+        c["score"] *= w
+
+    # Apply priors to fused results
+    for c in fused:
+        apply_priors(c)
+    fused.sort(key=lambda x: x["score"], reverse=True)
+
+    # Build pool by injecting shortlist then filling from fused
+    pool_seed: list = []
+    seen_ids: set[str] = set()
+    for it in shortlist:
+        idv = _cand_id(it)
+        if idv not in seen_ids:
+            pool_seed.append(it)
+            seen_ids.add(idv)
+    for it in code_shortlist:
+        idv = _cand_id(it)
+        if idv not in seen_ids:
+            pool_seed.append(it)
+            seen_ids.add(idv)
+    for it in fused:
+        idv = _cand_id(it)
+        if idv not in seen_ids:
+            pool_seed.append(it)
+            seen_ids.add(idv)
+        if len(pool_seed) >= RERANK_POOL:
+            break
+    pool = pool_seed[: min(len(pool_seed), RERANK_POOL)]
+
     reranked = _rerank(query, pool, topn=RERANK_TOPN)
+
+    # Apply a light novelty penalty per filename to avoid one-file dominance
+    if os.getenv("MMR_NOVELTY_ENABLE", "1") == "1":
+        novelty = float(os.getenv("MMR_NOVELTY_PENALTY", "0.10"))
+        seen_files: set[str] = set()
+        adjusted: list[dict] = []
+        for d in reranked:
+            fn = (d.get("filename") or "").lower()
+            s = float(d.get("score_ce", d.get("score", 0.0)))
+            if fn and fn in seen_files:
+                s *= 1.0 - novelty
+            else:
+                if fn:
+                    seen_files.add(fn)
+            and = dict(d)
+            and["score_ce"] = s
+            adjusted.append(nd)
+        adjusted.sort(key=lambda x: x.get("score_ce", 0.0), reverse=True)
+        reranked = adjusted
+
+    # Enforce diversity in used contexts (avoid one-file hog)
+    MAX_PER_BASENAME = int(os.getenv("EVIDENCE_PER_BASENAME_MAX", "3"))
+
+    def clip_by_basename(cands):
+        seen = {}
+        out = []
+        for c in cands:
+            base = os.path.basename((c.get("filename") or "").lower())
+            cnt = seen.get(base, 0)
+            if cnt < MAX_PER_BASENAME:
+                out.append(c)
+                seen[base] = cnt + 1
+            if len(out) >= CONTEXT_DOCS_MAX:
+                break
+        return out
+
+    # Additional directory-level diversity cap
+    MAX_PER_DIR = int(os.getenv("EVIDENCE_PER_DIR_MAX", "6"))
+
+    def clip_by_dir(cands):
+        seen = {}
+        out = []
+        for c in cands:
+            fn = (c.get("filename") or "").lower()
+            dname = os.path.dirname(fn)
+            cnt = seen.get(dname, 0)
+            if cnt < MAX_PER_DIR:
+                out.append(c)
+                seen[dname] = cnt + 1
+            if len(out) >= CONTEXT_DOCS_MAX:
+                break
+        return out
 
     if KEEP_TAIL > 0 and len(fused) > len(pool):
         reranked = (reranked + fused[len(pool) : len(pool) + KEEP_TAIL])[:CONTEXT_DOCS_MAX]
     else:
         reranked = reranked[:CONTEXT_DOCS_MAX]
 
-    # compact snapshot for oracle/debug (id/src/score/text first 240 chars)
+    # Apply diversity constraints
+    reranked = clip_by_basename(reranked)
+    reranked = clip_by_dir(reranked)
+
+    # compact snapshot for oracle/debug (id/src/filename/score/text first 240 chars)
+    def _snap_fields(cand) -> dict:
+        if isinstance(cand, dict):
+            filename = (
+                (cand.get("meta", {}) or {}).get("filename") or cand.get("filename") or cand.get("file_path") or ""
+            )
+            src = cand.get("source", cand.get("src", "?"))
+            score = float(cand.get("score_ce", cand.get("score", cand.get("bm25", 0.0))))
+            text = cand.get("text", "")
+            _id = cand.get("doc_id") or cand.get("id") or _sha10(text or "")
+            return {
+                "id": _id,
+                "src": src,
+                "filename": filename,
+                "score": score,
+                "text": (text[:240] if isinstance(text, str) else ""),
+            }
+        if isinstance(cand, tuple):
+            # (id, score, text, meta)
+            _id = cand[0] if len(cand) >= 1 else _sha10(str(cand))
+            score = float(cand[1]) if len(cand) >= 2 else 0.0
+            text = cand[2] if len(cand) >= 3 else ""
+            meta = cand[3] if len(cand) >= 4 and isinstance(cand[3], dict) else {}
+            filename = (meta.get("filename") or "") if isinstance(meta, dict) else ""
+            src = meta.get("source") if isinstance(meta, dict) else "?"
+            return {
+                "id": _id,
+                "src": src or "?",
+                "filename": filename,
+                "score": score,
+                "text": (text[:240] if isinstance(text, str) else ""),
+            }
+        # Fallback
+        return {"id": _sha10(str(cand)), "src": "?", "filename": "", "score": 0.0, "text": ""}
+
     snapshot = []
     for c in (pool if pool else fused)[: int(os.getenv("SNAPSHOT_MAX_ITEMS", "60"))]:
-        # Extract filename from metadata or use file_path
-        src = "?"
-        if c.get("meta") and isinstance(c.get("meta"), dict):
-            src = c.get("meta", {}).get("filename", "?")
-        elif c.get("metadata") and isinstance(c.get("metadata"), dict):
-            src = c.get("metadata", {}).get("filename", "?")
-        elif c.get("file_path"):
-            src = c.get("file_path")
-        elif c.get("source"):
-            src = c.get("source")
-
-        snapshot.append(
-            {
-                "id": c.get("doc_id") or c.get("id") or _sha10(c.get("text", "")),
-                "src": src,
-                "score": float(c.get("score_ce", c.get("score", c.get("bm25", 0.0)))),
-                "text": (c.get("text", "")[:240] if isinstance(c.get("text", ""), str) else ""),
-            }
-        )
+        snapshot.append(_snap_fields(c))
 
     # Debug print for fusion pipeline
     if os.getenv("DEBUG_FUSION", "0") == "1":
@@ -377,9 +716,12 @@ class RAGModule(dspy.Module):
             snapshot_fp = [
                 {
                     "id": c.get("id"),
-                    "src": c.get("src", "?"),  # Use the src field from the snapshot
+                    "src": c.get("src", "?"),
+                    "filename": c.get("filename")
+                    or (c.get("meta", {}) or {}).get("filename")
+                    or (c.get("metadata", {}) or {}).get("filename"),
                     "score": float(c.get("score", 0.0)),
-                    "fp": _fp(c),  # Add fingerprint
+                    "fp": _fp(c),
                     "text": c.get("text", "")[:240],
                 }
                 for c in (snapshot if snapshot else [])[: int(os.getenv("SNAPSHOT_MAX_ITEMS", "60"))]
@@ -390,6 +732,11 @@ class RAGModule(dspy.Module):
             self.used_contexts = [
                 {
                     "doc_id": c.get("doc_id"),
+                    "filename": (c.get("meta", {}) or {}).get("filename")
+                    or c.get("filename")
+                    or c.get("src")
+                    or c.get("file_path")
+                    or "",
                     "text": c.get("text") or c.get("bm25_text") or c.get("embedding_text") or "",
                     "score": float(c.get("score_ce", c.get("score", 0.0))),
                     "source": c.get("source", "fusion"),
@@ -400,6 +747,10 @@ class RAGModule(dspy.Module):
                 }
                 for c in candidates
             ]
+            # Ensure filename is set from src if missing in used_contexts
+            for ctx in self.used_contexts:
+                if not ctx.get("filename") and ctx.get("source") and ctx.get("source") != "fusion":
+                    ctx["filename"] = ctx["source"]
 
             # Tripwire: catch empty text fields immediately
             assert all(

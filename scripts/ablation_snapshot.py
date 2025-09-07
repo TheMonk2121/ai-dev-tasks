@@ -12,10 +12,11 @@ from typing import Any, Dict, List
 # bootstrap
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from _bootstrap import ROOT, SRC  # noqa: F401
-from evals.load_cases import load_eval_cases
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries
+
 from evals.gold import gold_hit
+from evals.load_cases import load_eval_cases
 
 # Ablation stages
 ABLATION_STAGES = [
@@ -30,7 +31,7 @@ ABLATION_STAGES = [
             "w_vec": 1.0,
             "adjacency_db": False,
             "per_file_cap": 10,
-        }
+        },
     },
     {
         "name": "path_tsv",
@@ -43,7 +44,7 @@ ABLATION_STAGES = [
             "w_vec": 1.0,
             "adjacency_db": False,
             "per_file_cap": 10,
-        }
+        },
     },
     {
         "name": "phrases",
@@ -56,7 +57,7 @@ ABLATION_STAGES = [
             "w_vec": 1.0,
             "adjacency_db": False,
             "per_file_cap": 10,
-        }
+        },
     },
     {
         "name": "mmr_cap",
@@ -69,7 +70,7 @@ ABLATION_STAGES = [
             "w_vec": 1.0,
             "adjacency_db": False,
             "per_file_cap": 5,
-        }
+        },
     },
     {
         "name": "adjacency",
@@ -82,7 +83,7 @@ ABLATION_STAGES = [
             "w_vec": 1.0,
             "adjacency_db": True,
             "per_file_cap": 5,
-        }
+        },
     },
     {
         "name": "fname_prior",
@@ -95,8 +96,8 @@ ABLATION_STAGES = [
             "w_vec": 1.1,
             "adjacency_db": True,
             "per_file_cap": 4,
-        }
-    }
+        },
+    },
 ]
 
 
@@ -106,7 +107,7 @@ def eval_stage(stage: Dict[str, Any], cases: List[Any]) -> Dict[str, Any]:
     hits = 0
     tag_hits = {}
     tag_total = {}
-    
+
     for case in cases:
         try:
             qs = build_channel_queries(case.query, case.tag)
@@ -123,34 +124,35 @@ def eval_stage(stage: Dict[str, Any], cases: List[Any]) -> Dict[str, Any]:
                 adjacency_db=config.get("adjacency_db", False),
                 cold_start=bool(qs.get("cold_start", False)),
             )
-            
+
             # Apply per-file cap
             from dspy_modules.retriever.rerank import per_file_cap
+
             rows = per_file_cap(rows, cap=config.get("per_file_cap", 5))
-            
+
             hit = int(gold_hit(case.id, rows))
             hits += hit
-            
+
             # Track per-tag
             if case.tag not in tag_hits:
                 tag_hits[case.tag] = 0
                 tag_total[case.tag] = 0
             tag_hits[case.tag] += hit
             tag_total[case.tag] += 1
-            
+
         except Exception as e:
             print(f"Error evaluating case {case.id}: {e}")
-    
+
     total_cases = len(cases)
     micro_avg = hits / total_cases if total_cases > 0 else 0.0
-    
+
     # Calculate per-tag averages
     per_tag = {}
     for tag in tag_total:
         per_tag[tag] = tag_hits[tag] / tag_total[tag] if tag_total[tag] > 0 else 0.0
-    
+
     macro_avg = sum(per_tag.values()) / len(per_tag) if per_tag else 0.0
-    
+
     return {
         "stage": stage["name"],
         "description": stage["description"],
@@ -169,36 +171,36 @@ def main():
     """Run ablation snapshot."""
     print("🔍 Running ablation snapshot for retrieval-13of13-stable...")
     print("=" * 60)
-    
+
     cases = load_eval_cases("gold")
     print(f"Loaded {len(cases)} evaluation cases")
-    
+
     results = []
     baseline_hits = None
-    
+
     for i, stage in enumerate(ABLATION_STAGES):
         print(f"\n[{i+1}/{len(ABLATION_STAGES)}] Testing: {stage['name']}")
         print(f"Description: {stage['description']}")
-        
+
         result = eval_stage(stage, cases)
         results.append(result)
-        
+
         if baseline_hits is None:
             baseline_hits = result["hits"]
-        
+
         delta = result["hits"] - baseline_hits
         print(f"Results: {result['hits']}/{result['total_cases']} hits (Δ{delta:+d})")
         print(f"Micro: {result['micro_avg']:.3f}, Macro: {result['macro_avg']:.3f}")
-        
+
         # Show per-tag breakdown
         for tag, avg in result["per_tag"].items():
             print(f"  {tag}: {avg:.3f}")
-    
+
     # Calculate deltas
     print("\n" + "=" * 60)
     print("📊 ABLATION SUMMARY")
     print("=" * 60)
-    
+
     for i, result in enumerate(results):
         if i == 0:
             delta = 0
@@ -206,30 +208,42 @@ def main():
         else:
             delta = result["hits"] - results[0]["hits"]
             delta_pct = (delta / results[0]["hits"]) * 100 if results[0]["hits"] > 0 else 0.0
-        
-        print(f"{result['stage']:12} | {result['hits']:2d}/{result['total_cases']:2d} | "
-              f"Δ{delta:+3d} ({delta_pct:+5.1f}%) | {result['micro_avg']:.3f} | {result['macro_avg']:.3f}")
-    
+
+        print(
+            f"{result['stage']:12} | {result['hits']:2d}/{result['total_cases']:2d} | "
+            f"Δ{delta:+3d} ({delta_pct:+5.1f}%) | {result['micro_avg']:.3f} | {result['macro_avg']:.3f}"
+        )
+
     # Save results
     output_file = "ABLATION_SNAPSHOT_retrieval-13of13-stable.json"
     with open(output_file, "w", encoding="utf-8") as f:
-        json.dump({
-            "tag": "retrieval-13of13-stable",
-            "commit": "f2bea2500c709e80e4b24fc4aeb11e6e0ac6d8a8",
-            "timestamp": "2025-09-07T00:00:00Z",
-            "total_cases": len(cases),
-            "stages": results,
-            "summary": {
-                "baseline_hits": results[0]["hits"],
-                "final_hits": results[-1]["hits"],
-                "total_improvement": results[-1]["hits"] - results[0]["hits"],
-                "improvement_pct": ((results[-1]["hits"] - results[0]["hits"]) / results[0]["hits"]) * 100 if results[0]["hits"] > 0 else 0.0
-            }
-        }, f, indent=2)
-    
+        json.dump(
+            {
+                "tag": "retrieval-13of13-stable",
+                "commit": "f2bea2500c709e80e4b24fc4aeb11e6e0ac6d8a8",
+                "timestamp": "2025-09-07T00:00:00Z",
+                "total_cases": len(cases),
+                "stages": results,
+                "summary": {
+                    "baseline_hits": results[0]["hits"],
+                    "final_hits": results[-1]["hits"],
+                    "total_improvement": results[-1]["hits"] - results[0]["hits"],
+                    "improvement_pct": (
+                        ((results[-1]["hits"] - results[0]["hits"]) / results[0]["hits"]) * 100
+                        if results[0]["hits"] > 0
+                        else 0.0
+                    ),
+                },
+            },
+            f,
+            indent=2,
+        )
+
     print(f"\n✅ Ablation snapshot saved to: {output_file}")
-    print(f"📈 Total improvement: {results[-1]['hits'] - results[0]['hits']:+d} hits "
-          f"({((results[-1]['hits'] - results[0]['hits']) / results[0]['hits']) * 100 if results[0]['hits'] > 0 else 0.0:+.1f}%)")
+    print(
+        f"📈 Total improvement: {results[-1]['hits'] - results[0]['hits']:+d} hits "
+        f"({((results[-1]['hits'] - results[0]['hits']) / results[0]['hits']) * 100 if results[0]['hits'] > 0 else 0.0:+.1f}%)"
+    )
 
 
 if __name__ == "__main__":

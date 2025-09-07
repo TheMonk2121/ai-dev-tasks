@@ -1,8 +1,8 @@
 {
-  "micro": 1.0,
-  "macro": 1.0,
+  "micro": 0.20689655172413793,
+  "macro": 0.20689655172413793,
   "per_tag": {
-    "rag_qa_single": 1.0
+    "rag_qa_single": 0.20689655172413793
   },
-  "total_cases": 3
+  "total_cases": 1
 }

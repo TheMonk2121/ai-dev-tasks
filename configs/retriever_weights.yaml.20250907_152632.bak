@@ -4,8 +4,7 @@ default:
   w_title: 1.4
   w_bm25: 1.0
   w_vec: 1.1
-  adjacency_db: 0
-  per_file_cap: 4
+
 tags:
   db_workflows:
     w_path: 2.2
@@ -31,3 +30,4 @@ tags:
     w_title: 1.4
     w_bm25: 1.0
     w_vec: 1.2
+

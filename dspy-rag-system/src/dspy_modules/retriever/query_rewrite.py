@@ -4,8 +4,8 @@ Query rewriting and channel-specific query building for RAG system.
 Implements the surgical patch to fix BM25 hinting issues.
 """
 
-from typing import Any, Dict
 import re
+from typing import Any, Dict
 
 TAG_HINTS = {
     "ops_health": ["setup", "shell", "zshrc", "zprofile", "integration"],
@@ -59,6 +59,7 @@ def _lex_sparse(q: str) -> bool:
     """Detect if query is lexically sparse (cold-start condition)."""
     toks = re.findall(r"[A-Za-z0-9_]{3,}", (q or ""))
     return len(toks) < 3
+
 
 def build_channel_queries(user_q: str, tag: str) -> Dict[str, Any]:
     """

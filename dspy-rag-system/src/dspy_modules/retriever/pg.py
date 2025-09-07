@@ -161,7 +161,7 @@ def run_fused_query(
     # Default or YAML-derived weights if not provided
     if weights is None:
         weights = load_weights(tag=tag, file_path=weights_file)
-    
+
     # Cold-start boost: increase w_vec when query is lexically sparse
     if cold_start:
         boost = float(os.getenv("COLD_START_WVEC_BOOST", "0.10"))

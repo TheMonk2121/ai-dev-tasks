@@ -34,7 +34,7 @@ class GateAndPromoteSystem:
         }
 
     def gate_and_promote(
-        self, config_hash: str, evaluation_results: Dict[str, Any], baseline_results: Dict[str, Any] = None
+        self, config_hash: str, evaluation_results: Dict[str, Any], baseline_results: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """Gate and promote compiled artifacts if thresholds pass."""
         print("🚪 GATE AND PROMOTE SYSTEM")
@@ -48,6 +48,8 @@ class GateAndPromoteSystem:
             print("🔍 Running gate checks only (no promotion)")
 
         # Run gate checks
+        if evaluation_results is None:
+            raise ValueError("evaluation_results is required")
         gate_results = self._run_gate_checks(evaluation_results, baseline_results)
 
         # Determine if promotion is allowed
@@ -88,7 +90,7 @@ class GateAndPromoteSystem:
         return result
 
     def _run_gate_checks(
-        self, evaluation_results: Dict[str, Any], baseline_results: Dict[str, Any] = None
+        self, evaluation_results: Dict[str, Any], baseline_results: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """Run all gate checks against thresholds."""
         print("🔍 Running gate checks...")
@@ -103,6 +105,36 @@ class GateAndPromoteSystem:
 
         # F1 Score Check (only for gold datasets with few-shot)
         if has_gold:
+            # Primary accuracy gates for repo-gold: file-oracle
+            try:
+                cases = evaluation_results.get("case_results", [])
+                n = max(1, len(cases))
+                fop = sum(1 for c in cases if c.get("file_oracle_prefilter_hit")) / n
+                foru = sum(1 for c in cases if c.get("file_oracle_reader_used")) / n
+            except Exception:
+                fop = 0.0
+                foru = 0.0
+
+            fop_min = float(os.getenv("FILE_ORACLE_PREFILTER_MIN", "0.85"))
+            foru_min = float(os.getenv("FILE_ORACLE_READER_MIN", "0.70"))
+
+            checks["file_oracle_prefilter"] = {
+                "metric": "file_oracle_prefilter_rate",
+                "value": fop,
+                "threshold": fop_min,
+                "passed": fop >= fop_min,
+                "message": f"File-oracle prefilter {fop:.2%} {'≥' if fop >= fop_min else '<'} {fop_min:.2%}",
+            }
+
+            checks["file_oracle_reader_used"] = {
+                "metric": "file_oracle_reader_used_rate",
+                "value": foru,
+                "threshold": foru_min,
+                "passed": foru >= foru_min,
+                "message": f"File-oracle reader used {foru:.2%} {'≥' if foru >= foru_min else '<'} {foru_min:.2%}",
+            }
+
+            # Keep F1 >= baseline
             f1_score = summary.get("f1_score", 0.0)
             checks["f1_score"] = {
                 "metric": "f1_score",
@@ -114,7 +146,7 @@ class GateAndPromoteSystem:
 
         # Precision Drift Check
         precision = summary.get("precision", 0.0)
-        if baseline_results:
+        if baseline_results is not None:
             baseline_precision = baseline_results.get("summary", {}).get("precision", 0.0)
             precision_drift = abs(precision - baseline_precision)
         else:
@@ -130,7 +162,7 @@ class GateAndPromoteSystem:
 
         # Latency Increase Check
         p95_latency = summary.get("p95_latency", 1.0)
-        if baseline_results:
+        if baseline_results is not None:
             baseline_latency = baseline_results.get("summary", {}).get("p95_latency", 1.0)
             latency_increase = (p95_latency - baseline_latency) / baseline_latency
         else:
@@ -144,26 +176,7 @@ class GateAndPromoteSystem:
             "message": f"Latency increase {latency_increase:.1%} {'≤' if latency_increase <= self.thresholds['latency_increase_max'] else '>'} threshold {self.thresholds['latency_increase_max']:.1%}",
         }
 
-        # Oracle Prefilter Check (only for gold datasets)
-        if has_gold:
-            oracle_prefilter = summary.get("oracle_prefilter_rate", 0.0)
-            checks["oracle_prefilter"] = {
-                "metric": "oracle_prefilter_rate",
-                "value": oracle_prefilter,
-                "threshold": self.thresholds["oracle_prefilter_min"],
-                "passed": oracle_prefilter >= self.thresholds["oracle_prefilter_min"],
-                "message": f"Oracle prefilter {oracle_prefilter:.2%} {'≥' if oracle_prefilter >= self.thresholds['oracle_prefilter_min'] else '<'} threshold {self.thresholds['oracle_prefilter_min']:.2%}",
-            }
-
-            # Reader Used Gold Check (only for gold datasets)
-            reader_used_gold = summary.get("reader_used_gold_rate", 0.0)
-            checks["reader_used_gold"] = {
-                "metric": "reader_used_gold_rate",
-                "value": reader_used_gold,
-                "threshold": self.thresholds["reader_used_gold_min"],
-                "passed": reader_used_gold >= self.thresholds["reader_used_gold_min"],
-                "message": f"Reader used gold {reader_used_gold:.2%} {'≥' if reader_used_gold >= self.thresholds['reader_used_gold_min'] else '<'} threshold {self.thresholds['reader_used_gold_min']:.2%}",
-            }
+        # Remove weak-oracle as gating metric for gold; keep as diagnostic only
 
         # Tool Schema Conformance Check
         tool_conformance = summary.get("tool_schema_conformance", 1.0)
