@@ -1,0 +1,47 @@
+name: Reader Gate CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  reader-gate:
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -r requirements.txt
+      - name: Run reader gate
+        env:
+          CASES_FILE: "evals/gold_cases.json"
+          READER_GOLD_FILE: "evals/reader_gold.jsonl"
+          READER_CMD: "python3 scripts/run_reader.py --model local"
+          READER_MIN_F1_MICRO: "0.35"
+          READER_MIN_F1_TAG: "0.25"
+          MAX_READER_REG_DROP: "0.05"
+          PGVECTOR_OPS: "cosine"
+          RETRIEVER_WEIGHTS_FILE: "configs/retriever_weights.yaml"
+          RETRIEVER_LIMITS_FILE: "configs/retriever_limits.yaml"
+          PER_FILE_CAP: "5"
+          MMR_ALPHA: "0.85"
+          READER_COMPACT: "1"
+        run: python3 scripts/ci_gate_reader.py
+
+  update-reader-baseline:
+    needs: reader-gate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update reader baseline
+        run: |
+          cp -f evals/latest_reader_metrics.json evals/baseline_reader_metrics.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add evals/baseline_reader_metrics.json
+          git commit -m "CI: update baseline reader metrics [skip ci]" || echo "No changes"
+          git push

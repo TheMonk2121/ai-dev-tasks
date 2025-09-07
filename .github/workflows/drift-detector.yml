@@ -1,0 +1,11 @@
+name: Weekly Drift Detector
+
+on:
+  schedule: [{ cron: "0 9 * * 1" }]  # Mondays 9:00 UTC
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/drift_detector.py
