@@ -540,8 +540,8 @@ def _retrieve_with_fusion(retriever, query: str):
             else:
                 if fn:
                     seen_files.add(fn)
-            and = dict(d)
-            and["score_ce"] = s
+            nd = dict(d)
+            nd["score_ce"] = s
             adjusted.append(nd)
         adjusted.sort(key=lambda x: x.get("score_ce", 0.0), reverse=True)
         reranked = adjusted

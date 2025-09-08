@@ -42,6 +42,55 @@ dspy_rag_path = os.getenv("DSPY_RAG_PATH", "dspy-rag-system/src")
 if dspy_rag_path and dspy_rag_path not in sys.path:
     sys.path.insert(0, dspy_rag_path)
 
+# Reader + snippetizer
+try:
+    from dspy_modules.reader.program import ExtractiveReader
+    from dspy_modules.reader.snippetizer import select_snippets
+    READER_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️ ExtractiveReader not available: {e}")
+    READER_AVAILABLE = False
+
+OPS_TAGS = {"meta_ops","ops_health"}
+
+
+def _assemble_passages(retrieval_rows, q, tag):
+    """Assemble passages using snippetizer for crisp sentences."""
+    passages = []
+    for r in retrieval_rows:
+        chunk = r.get("content", "")
+        # 6 high-signal sentences per chunk, biasing paths/functions
+        if READER_AVAILABLE:
+            passages.extend(select_snippets(chunk, q, k=6))
+        else:
+            # Fallback to simple chunk splitting
+            passages.append(chunk)
+        if len(passages) >= 30:  # keep context tight
+            break
+    return passages
+
+
+def load_cases_any(path: str):
+    """Load cases from either JSON or JSONL format."""
+    import pathlib
+    p = pathlib.Path(path)
+    text = p.read_text(encoding="utf-8").strip()
+    # JSONL?
+    if "\n{" in text or text.startswith("{") and "\n" in text:
+        # Heuristic: try JSONL first
+        try:
+            return [json.loads(line) for line in text.splitlines() if line.strip()]
+        except json.JSONDecodeError:
+            pass
+    # JSON array fallback
+    try:
+        obj = json.loads(text)
+        if isinstance(obj, list):
+            return obj
+    except json.JSONDecodeError:
+        raise
+    raise ValueError(f"Unsupported cases format: {path}")
+
 
 class DspyRagDriver:
     """Driver for real DSPy RAG system integration."""
@@ -62,8 +111,13 @@ class DspyRagDriver:
 
         # Import with proper path handling
         try:
+            import dspy
             rp = importlib.import_module("dspy_modules.rag_pipeline")
             from dspy_modules.vector_store import HybridVectorStore
+
+            # Configure DSPy with language model
+            model_name = os.getenv("DSPY_MODEL", "anthropic.claude-3-haiku-20240307-v1:0")
+            dspy.configure(lm=dspy.LM(model_name))
 
             # Initialize with proper retriever and database connection
             db_connection = "postgresql://danieljacobs@localhost:5432/ai_agency"
@@ -112,7 +166,7 @@ class DspyRagDriver:
         # Check for missing variant identification
         bad = [
             c
-            forr c in used_ctx
+            for c in used_ctx
             if not (c.get("meta", {}).get("ingest_run_id") or c.get("ingest_run_id") or c.get("fp", {}).get("run"))
         ]
         if bad:
@@ -121,7 +175,7 @@ class DspyRagDriver:
         # Optional: enforce expected run
         want = os.getenv("INGEST_RUN_ID")
         if want:
-            forr c in used_ctx[:12]:
+            for c in used_ctx[:12]:
                 run_id = c.get("ingest_run_id") or c.get("meta", {}).get("ingest_run_id") or c.get("fp", {}).get("run")
                 if run_id != want:
                     raise RuntimeError(f"Mismatch: contexts not from run {want}, got {run_id}")
@@ -199,7 +253,7 @@ class CleanRAGCheckerEvaluator:
         """Extract context strings from retrieved context with dual-text support."""
         out = []
         if isinstance(rc, list):
-            forr d in rc:
+            for d in rc:
                 if isinstance(d, dict):
                     # Handle dual-text storage: prefer bm25_text for retrieval
                     s = d.get("text") or d.get("bm25_text") or d.get("embedding_text") or ""
@@ -220,7 +274,7 @@ class CleanRAGCheckerEvaluator:
         sent_j = [self._jac(self._tok(s), gt) for s in ans_sents]
         retrieval_hit = any(
             (j >= j_ctx_min) or (case.get("gt_answer", "").lower() in (c or "").lower())
-            forr j, c in zip(ctx_j, ctx_strings)
+            for j, c in zip(ctx_j, ctx_strings)
         )
         gold_sent_idxs = [i for i, j in enumerate(sent_j) if j >= j_sent_min]
         return {
@@ -260,7 +314,7 @@ class CleanRAGCheckerEvaluator:
         )
         if any(k in case for k in file_oracle_keys):
             metrics_file_oracle = dict(metrics.get("file_oracle", {}))
-            forr k in file_oracle_keys:
+            for k in file_oracle_keys:
                 if k in case:
                     metrics_file_oracle[k] = case[k]
             metrics["file_oracle"] = metrics_file_oracle
@@ -336,7 +390,7 @@ class CleanRAGCheckerEvaluator:
             return []
         lines = [ln.strip("-•* \t") for ln in m.group(1).splitlines() if ln.strip()]
         cites: list[str] = []
-        forr ln in lines:
+        for ln in lines:
             tok = ln.split()[0] if " " in ln else ln
             cites.append(self._normalize_path(tok))
         return cites
@@ -392,7 +446,7 @@ class CleanRAGCheckerEvaluator:
             return len(response_words.intersection(gt_words)) / len(gt_words)
         return 0.0
 
-    def run_evaluation(self, cases_file: str, outdir: str, use_bedrock: bool = False) -> Dict[str, Any]:
+    def run_evaluation(self, cases_file: str, outdir: str, use_bedrock: bool = False, reader=None) -> Dict[str, Any]:
         """Run evaluation with real DSPy RAG system."""
         print("📊 EVALUATION SUMMARY (CLEAN HARNESS)")
         print("=" * 60)
@@ -419,19 +473,15 @@ class CleanRAGCheckerEvaluator:
         if progress_log:
             self._progress_open(progress_log)
 
-        # Load test cases
-        cases = []
-        with open(cases_file, "r") as f:
-            forr line in f:
-                if line.strip():
-                    cases.append(json.loads(line))
+        # Load test cases (auto-detect JSON vs JSONL)
+        cases = load_cases_any(cases_file)
 
         print(f"📋 Loaded {len(cases)} test cases")
 
         case_results = []
         total_precision = total_recall = total_f1 = 0.0
 
-        forr i, case in enumerate(cases, 1):
+        for i, case in enumerate(cases, 1):
             print(f"🔍 Processing case {i}/{len(cases)}: {case.get('query', '')[:50]}...")
 
             query = case.get("query", "")
@@ -440,10 +490,21 @@ class CleanRAGCheckerEvaluator:
             # Generate response using driver
             if driver:
                 resp = driver.answer(query)
-                response = resp["answer"]
                 retrieval_candidates = resp["retrieval_candidates"]
                 retrieved_context = resp["retrieved_context"]
                 latency = resp["latency_sec"]
+                
+                # Use extractive reader if available
+                if reader and READER_AVAILABLE:
+                    tag = case.get("tag", "general")
+                    passages = _assemble_passages(retrieved_context, query, tag)
+                    # Tag-aware override example (ops-focused abstain is slightly stricter)
+                    if tag in OPS_TAGS and hasattr(reader, "answerable_threshold"):
+                        reader.answerable_threshold = max(reader.answerable_threshold, 0.12)
+                    out = reader.forward(question=query, passages=passages, tag=tag)
+                    response = out.get("answer", "NOT_ANSWERABLE")
+                else:
+                    response = resp["answer"]
             else:
                 # Enhanced synthetic response that simulates real RAG structure
                 response = f"Based on the available documentation, {query.lower()}. This response is generated using the DSPy RAG system with fusion adapter and cross-encoder reranking."
@@ -457,7 +518,7 @@ class CleanRAGCheckerEvaluator:
                         "score_ce": 0.85 - i * 0.05,
                         "text": f"Relevant document {i} content about {query[:20]}...",
                     }
-                    forr i in range(25)  # Simulate 25 candidates from fusion
+                    for i in range(25)  # Simulate 25 candidates from fusion
                 ]
 
                 # Simulate retrieved context (what gets passed to reader)
@@ -469,7 +530,7 @@ class CleanRAGCheckerEvaluator:
                         "source": "fusion",
                         "meta": {},
                     }
-                    forr i in range(12)  # Simulate 12 documents passed to reader
+                    for i in range(12)  # Simulate 12 documents passed to reader
                 ]
                 latency = 0.5
 
@@ -511,7 +572,7 @@ class CleanRAGCheckerEvaluator:
                 # expected_files live on the input gold case row
                 ef = case.get("expected_files")
                 if ef:
-                    for = self._compute_file_oracle(
+                    file_oracle = self._compute_file_oracle(
                         {
                             **case_result,
                             "expected_files": ef,
@@ -560,6 +621,22 @@ class CleanRAGCheckerEvaluator:
         return results
 
 
+def _build_reader(args):
+    """Build reader based on CLI arguments."""
+    if args.reader == "extractive":
+        if not READER_AVAILABLE:
+            raise RuntimeError("ExtractiveReader not available - check imports")
+        return ExtractiveReader(answerable_threshold=args.answerable_threshold)
+    # (Keep old reader as fallback)
+    try:
+        from dspy_modules.reader.legacy_program import LegacyGenerativeReader
+        return LegacyGenerativeReader()
+    except ImportError:
+        # Fallback to basic reader if legacy not available
+        print("⚠️ Using basic fallback reader")
+        return None
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Clean RAGChecker Evaluation Harness")
@@ -568,11 +645,18 @@ def main():
     parser.add_argument("--use-bedrock", action="store_true", help="Use Bedrock (placeholder)")
     parser.add_argument("--stable", action="store_true", help="Use stable config (placeholder)")
     parser.add_argument("--bypass-cli", action="store_true", help="Bypass CLI (placeholder)")
+    parser.add_argument("--reader", choices=["extractive","generative"], default="extractive",
+                        help="Reader mode. Default: extractive.")
+    parser.add_argument("--answerable-threshold", type=float, default=0.12,
+                        help="Reader abstain threshold (tag overrides may apply).")
 
     args = parser.parse_args()
 
+    # Build reader based on CLI arguments
+    reader = _build_reader(args)
+    
     evaluator = CleanRAGCheckerEvaluator()
-    results = evaluator.run_evaluation(args.cases, args.outdir, args.use_bedrock)
+    results = evaluator.run_evaluation(args.cases, args.outdir, args.use_bedrock, reader=reader)
 
     return results
 
