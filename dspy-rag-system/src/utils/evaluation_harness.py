@@ -31,80 +31,41 @@ class DecisionRetrievalEvaluator:
 
     def create_gold_set(self) -> List[Dict[str, Any]]:
         """
-        Create a gold set of queries targeting decision retrieval
+        DEPRECATED: Load gold set from unified dataset instead of hardcoded values.
+
+        This method now loads decision cases from evals/gold/v1/gold_cases.jsonl
+        to ensure consistent evaluation across all systems.
 
         Returns:
             List of query-gold pairs for evaluation
         """
-        return [
-            {
-                "query": "postgresql",
-                "expected_decisions": ["use_postgresql_with_e586cb3c2389", "postgresql_with_pgvector_5931f6780a53"],
-                "description": "Database technology choice",
-            },
-            {
-                "query": "hybrid search",
-                "expected_decisions": ["implement_a_hybrid_bdfdbadd8cc2", "a_hybrid_search_417c35cf99d5"],
-                "description": "Search system architecture",
-            },
-            {
-                "query": "vector search",
-                "expected_decisions": ["use_postgresql_with_e586cb3c2389", "postgresql_with_pgvector_5931f6780a53"],
-                "description": "Vector search implementation",
-            },
-            {
-                "query": "database choice",
-                "expected_decisions": ["use_postgresql_with_e586cb3c2389"],
-                "description": "Database selection decision",
-            },
-            {
-                "query": "search optimization",
-                "expected_decisions": ["implement_a_hybrid_bdfdbadd8cc2"],
-                "description": "Search performance optimization",
-            },
-            {
-                "query": "pgvector",
-                "expected_decisions": ["use_postgresql_with_e586cb3c2389", "postgresql_with_pgvector_5931f6780a53"],
-                "description": "Vector extension choice",
-            },
-            {
-                "query": "BM25",
-                "expected_decisions": ["implement_a_hybrid_bdfdbadd8cc2"],
-                "description": "Text search algorithm",
-            },
-            {
-                "query": "memory system",
-                "expected_decisions": [],
-                "description": "Memory system architecture (no decisions yet)",
-            },
-            {"query": "API design", "expected_decisions": [], "description": "API design decisions (no decisions yet)"},
-            {
-                "query": "evaluation metrics",
-                "expected_decisions": [],
-                "description": "Evaluation methodology (no decisions yet)",
-            },
-            {"query": "supersedence", "expected_decisions": [], "description": "Supersedence logic (no decisions yet)"},
-            {
-                "query": "decision extraction",
-                "expected_decisions": [],
-                "description": "Decision extraction patterns (no decisions yet)",
-            },
-            {
-                "query": "confidence scoring",
-                "expected_decisions": [],
-                "description": "Confidence scoring methodology (no decisions yet)",
-            },
-            {
-                "query": "ranking algorithm",
-                "expected_decisions": [],
-                "description": "Ranking algorithm choice (no decisions yet)",
-            },
-            {
-                "query": "database schema",
-                "expected_decisions": [],
-                "description": "Database schema design (no decisions yet)",
-            },
-        ]
+        try:
+            from src.utils.gold_loader import filter_cases, load_gold_cases
+
+            # Load decision cases from unified dataset
+            cases = load_gold_cases("evals/gold/v1/gold_cases.jsonl")
+            decision_cases = filter_cases(cases, mode="decision")
+
+            # Convert to legacy format for compatibility
+            gold_set = []
+            for case in decision_cases:
+                gold_set.append(
+                    {
+                        "query": case.query,
+                        "expected_decisions": case.expected_decisions or [],
+                        "description": case.notes or f"Decision case: {case.query}",
+                    }
+                )
+
+            self.logger.info(f"Loaded {len(gold_set)} decision cases from unified dataset")
+            return gold_set
+
+        except ImportError:
+            self.logger.warning("New gold loader not available, returning empty set")
+            return []
+        except Exception as e:
+            self.logger.error(f"Failed to load gold cases: {e}")
+            return []
 
     def compute_recall_at_k(self, retrieved_decisions: List[str], expected_decisions: List[str], k: int) -> float:
         """

@@ -20,38 +20,14 @@ import psycopg2
 from dspy_modules.vector_store import HybridVectorStore
 from dspy_modules.wrapper_ns_helpers import extract_ns_tokens, normalize_ns_token
 
-# ---- Define a tiny gold set (filenames, ids, or namespace) ----
-GOLD: Dict[str, Dict[str, Any]] = {
-    "What is DSPy according to 400_07_ai-frameworks-dspy.md?": {"filenames": {"400_07_ai-frameworks-dspy.md"}},
-    "List the core workflow guides in 000_core.": {"namespace": "000_core"},
-}
-
-# Additional mixed probes (exact-file, path, namespace)
-ADDITIONAL_GOLD: Dict[str, Dict[str, Any]] = {
-    # exact-file targets
-    "According to 400_06_memory-and-context-systems.md, what is the memory system in this project?": {
-        "filenames": {"400_06_memory-and-context-systems.md"}
-    },
-    "Where are the model configuration settings defined?": {"paths": {"200_setup/201_model-configuration.md"}},
-    "What are the naming conventions used in this repo (see 200_setup)?": {
-        "paths": {"200_setup/200_naming-conventions.md"}
-    },
-    "What is DSPy according to 400_07_ai-frameworks-dspy.md?": {"filenames": {"400_07_ai-frameworks-dspy.md"}},
-    "Show the DSPy development context TL;DR.": {"filenames": {"104_dspy-development-context.md"}},
-    "Which file summarizes backlog and priorities?": {"filenames": {"000_backlog.md"}},
-    "Which file defines the governance and AI constitution?": {
-        "filenames": {"400_02_governance-and-ai-constitution.md"}
-    },
-    "Where are database troubleshooting patterns documented?": {
-        "paths": {"100_memory/100_database-troubleshooting-patterns.md"}
-    },
-    "Which file describes the memory/context workflow?": {"filenames": {"103_memory-context-workflow.md"}},
-    "Give the high-level getting started index.": {"filenames": {"400_00_getting-started-and-index.md"}},
-    # namespace-scoped (tests ns boosts + reserved slots)
-    "List the core workflow guides in 000_core.": {"namespace": "000_core"},
-    "Show me the setup docs under 200_setup.": {"namespace": "200_setup"},
-    "Point me to memory-related guides under 100_memory.": {"namespace": "100_memory"},
-}
+# ---- DEPRECATED: Gold cases now live in evals/gold/v1/gold_cases.jsonl ----
+# Use src/utils/gold_loader.py from evaluation scripts instead of these hardcoded dicts.
+#
+# These were migrated to the unified gold dataset system on 2025-09-08.
+# See evals/gold/v1/README.md for the new schema and usage.
+#
+# Legacy GOLD and ADDITIONAL_GOLD dicts removed to prevent drift and ensure
+# all evaluations use the same question distribution for consistent metrics.
 
 
 def match_gold(row: Dict[str, Any], gold: Dict[str, Any]) -> bool:
@@ -179,11 +155,35 @@ def main() -> int:
 
     store = HybridVectorStore(db_url)
     search_fn = make_search_fn(store)
-    # Merge additional probes
-    GOLD.update(ADDITIONAL_GOLD)
-    metrics = evaluate(search_fn, GOLD, top_k=10, at_k=3)
-    print(metrics)
-    return 0
+
+    # Load gold cases from unified dataset
+    try:
+        from src.utils.gold_loader import filter_cases, load_gold_cases
+
+        cases = load_gold_cases("evals/gold/v1/gold_cases.jsonl")
+        # Filter for retrieval mode cases
+        retrieval_cases = filter_cases(cases, mode="retrieval")
+
+        # Convert to legacy format for compatibility
+        gold_dict = {}
+        for case in retrieval_cases:
+            gold_dict[case.query] = {}
+            if case.expected_files:
+                gold_dict[case.query]["filenames"] = set(case.expected_files)
+            if case.globs:
+                gold_dict[case.query]["paths"] = set(case.globs)
+            if case.category == "namespace":
+                # Handle namespace cases
+                gold_dict[case.query]["namespace"] = case.query.split()[-1].rstrip(".")
+
+        metrics = evaluate(search_fn, gold_dict, top_k=10, at_k=3)
+        print(metrics)
+        return 0
+
+    except ImportError:
+        print("❌ New gold loader not available, falling back to empty evaluation")
+        print("📝 Install the new gold system: evals/gold/v1/")
+        return 1
 
 
 if __name__ == "__main__":
