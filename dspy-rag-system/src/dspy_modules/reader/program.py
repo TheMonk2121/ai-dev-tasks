@@ -1,8 +1,11 @@
 import re
+
 import dspy
+
 from .signatures import ExtractSpan
 
 OPS_TAGS = {"meta_ops", "ops_health"}
+
 
 def _normalize(ans: str, tag: str) -> str:
     a = ans.strip()
@@ -14,6 +17,7 @@ def _normalize(ans: str, tag: str) -> str:
         a = re.sub(r"\s+", " ", a)
         a = re.sub(r"^`|`$", "", a)
     return a
+
 
 class ExtractiveReader(dspy.Module):
     def __init__(self, answerable_threshold: float = 0.12):
@@ -31,7 +35,10 @@ class ExtractiveReader(dspy.Module):
         # Optional: if your scorer exposes confidence, gate it here.
         # For now, simple policy: if no overlap with context tokens, declare NOT_ANSWERABLE
         if ans and ans != "NOT_ANSWERABLE":
-            toks = set(re.findall(r"[A-Za-z0-9_/.-]+", joined.lower()))
-            if ans.lower() not in " ".join(toks):
+            # More lenient check: look for key terms from the answer in the context
+            ans_words = set(re.findall(r"[A-Za-z0-9_/.-]+", ans.lower()))
+            context_words = set(re.findall(r"[A-Za-z0-9_/.-]+", joined.lower()))
+            # If at least 50% of answer words are in context, accept it
+            if len(ans_words) > 0 and len(ans_words.intersection(context_words)) / len(ans_words) < 0.5:
                 ans = "NOT_ANSWERABLE"
         return {"answer": ans}

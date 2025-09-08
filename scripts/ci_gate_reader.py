@@ -15,12 +15,15 @@ from dspy_modules.retriever.limits import load_limits
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import PHRASE_HINTS, build_channel_queries
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
+from sentence_transformers import SentenceTransformer
 
 from evals.load_cases import load_eval_cases
 
 READER_GOLD = os.getenv("READER_GOLD_FILE", "evals/reader_gold.jsonl")
 READER_ID_MAP = os.getenv("READER_ID_MAP")  # optional mapping of old_id -> new_id during migration
-READER_CMD = os.getenv("READER_CMD")  # e.g., "python3 scripts/run_reader.py --model local"
+# Default to the new extractive reader CLI if not provided
+# You can still override via: export READER_CMD="python3 scripts/run_dspy_reader.py" (or custom)
+READER_CMD = os.getenv("READER_CMD", "python3 scripts/run_extractive_reader.py")
 ALPHA = float(os.getenv("MMR_ALPHA", "0.85"))
 PER_FILE_CAP = int(os.getenv("PER_FILE_CAP", "5"))
 
@@ -117,6 +120,10 @@ def eval_reader(cases, gold):
     tag_f1_sum, tag_cnt = defaultdict(float), defaultdict(int)
     f1_sum = 0.0
     missing = 0
+
+    # Initialize sentence transformer for query vector generation
+    model = SentenceTransformer("BAAI/bge-small-en-v1.5")
+
     for case in cases:
         g = gold.get(case.id)
         if not g:
@@ -124,9 +131,15 @@ def eval_reader(cases, gold):
             continue  # conservatively skip; handle after loop
         lim = load_limits(case.tag)
         qs = build_channel_queries(case.query, case.tag)
+
+        # Generate query vector if empty
+        qvec = case.qvec
+        if not qvec:
+            qvec = model.encode(case.query, normalize_embeddings=True)
+
         # shortlist → MMR → cap → topk
         rows = run_fused_query(
-            qs["short"], qs["title"], qs["bm25"], case.qvec, tag=case.tag, k=lim["shortlist"], return_components=True
+            qs["short"], qs["title"], qs["bm25"], qvec, tag=case.tag, k=lim["shortlist"], return_components=True
         )
         rows = mmr_rerank(rows, alpha=ALPHA, per_file_penalty=0.10, k=lim["shortlist"])
         rows = per_file_cap(rows, cap=PER_FILE_CAP)[: lim["topk"]]

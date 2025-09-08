@@ -36,8 +36,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv venv
-          uv pip install -r requirements.txt
+          uv sync
           uv pip install pyright pyyaml
 
       - name: Run Pyright type checking
@@ -72,8 +71,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv venv
-          uv pip install -r requirements.txt
+          uv sync
           uv pip install pyyaml
 
       - name: Run smoke test (retrieval evaluation)
@@ -110,8 +108,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv venv
-          uv pip install -r requirements.txt
+          uv sync
           uv pip install pyyaml
 
       - name: Run retrieval evaluation
@@ -168,8 +165,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv venv
-          uv pip install -r requirements.txt
+          uv sync
           uv pip install pyyaml
 
       - name: Download smoke test results (if available)

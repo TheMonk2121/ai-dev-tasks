@@ -12,13 +12,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: '3.11' }
-      - run: pip install -r requirements.txt
+        with: { python-version: '3.12' }
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+      - name: Install dependencies (uv)
+        run: |
+          uv sync
       - name: Run reader gate
         env:
           CASES_FILE: "evals/gold_cases.json"
           READER_GOLD_FILE: "evals/reader_gold.jsonl"
-          READER_CMD: "python3 scripts/run_reader.py --model local"
+          READER_CMD: "python3 scripts/run_extractive_reader.py"
           READER_MIN_F1_MICRO: "0.35"
           READER_MIN_F1_TAG: "0.25"
           MAX_READER_REG_DROP: "0.05"
@@ -28,7 +34,7 @@ jobs:
           PER_FILE_CAP: "5"
           MMR_ALPHA: "0.85"
           READER_COMPACT: "1"
-        run: python3 scripts/ci_gate_reader.py
+        run: uv run -- python scripts/ci_gate_reader.py
 
   update-reader-baseline:
     needs: reader-gate

@@ -15,6 +15,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
 
       - name: Cache pip
         uses: actions/cache@v4
@@ -24,13 +28,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Install deps
+      - name: Install deps (uv)
         run: |
-          python -m pip install --upgrade pip
-          pip install -r dspy-rag-system/requirements.txt || true
-          pip install -r dashboard/requirements.txt || true
-          pip install -r config/requirements-conflict-detection.txt || true
-          pip install "ruff~=0.5" "pyright~=1.1" "pytest~=8.3"
+          uv venv
+          uv pip install -r dspy-rag-system/requirements.txt || true
+          uv pip install -r dashboard/requirements.txt || true
+          uv pip install -r config/requirements-conflict-detection.txt || true
+          uv pip install "ruff~=0.5" "pyright~=1.1" "pytest~=8.3"
 
       - name: Ruff
         run: echo "⚠️ Ruff checking temporarily disabled for database migration branch"

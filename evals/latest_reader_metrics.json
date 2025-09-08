@@ -1,11 +1,11 @@
 {
-  "micro": 0.4997256967303051,
-  "macro": 0.3475742447516641,
+  "micro": 0.015873015873015876,
+  "macro": 0.03174603174603175,
   "per_tag": {
-    "rag_qa_single": 0.7708333333333334,
-    "meta_ops": 0.12903225806451615,
-    "ops_health": 0.14285714285714285
+    "rag_qa_single": 0.0,
+    "meta_ops": 0.09523809523809525,
+    "ops_health": 0.0
   },
-  "total_cases": 7,
-  "missing": 10
+  "total_cases": 6,
+  "missing": 11
 }

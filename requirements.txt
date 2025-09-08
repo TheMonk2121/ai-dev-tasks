@@ -35,6 +35,7 @@ dspy==3.0.1
 sentence-transformers>=5.0.0
 huggingface-hub>=0.30.0
 tiktoken>=0.7.0
+boto3>=1.40.25
 
 # Neural network and deep learning
 torch>=2.8.0            # PyTorch for neural networks and tensor operations

@@ -40,7 +40,12 @@ def build_reader_context(
             context_parts = []
             total_chars = 0
             for i, row in enumerate(rows[:10]):
-                content = row.get("embedding_text", "") or row.get("content", "")
+                content = (
+                    row.get("text_for_reader", "")
+                    or row.get("embedding_text", "")
+                    or row.get("bm25_text", "")
+                    or row.get("content", "")
+                )
                 if content:
                     filename = row.get("filename", f"doc_{i}")
                     context_parts.append(f"=== {filename} ===")
@@ -54,7 +59,12 @@ def build_reader_context(
         context_parts = []
         total_chars = 0
         for i, row in enumerate(rows[:10]):  # Limit to top 10 documents
-            content = row.get("embedding_text", "") or row.get("content", "")
+            content = (
+                row.get("text_for_reader", "")
+                or row.get("embedding_text", "")
+                or row.get("bm25_text", "")
+                or row.get("content", "")
+            )
             if content:
                 # Add document header
                 filename = row.get("filename", f"doc_{i}")

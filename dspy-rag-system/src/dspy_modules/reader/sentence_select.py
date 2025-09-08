@@ -104,7 +104,7 @@ def select_sentences(
     q_uni = set(_norm_tokens(query))
     picks: List[Tuple[float, Dict]] = []
     for r in rows:
-        text = r.get("embedding_text") or ""
+        text = r.get("text_for_reader") or r.get("embedding_text") or r.get("bm25_text") or r.get("content") or ""
         if not text:
             continue
         sents = _SENT_SPLIT.split(text) if len(text) < 4000 else text.split("\n")

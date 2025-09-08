@@ -1,7 +1,7 @@
 [
   {
-    "case_id": "What is DSPy according to 400_07_ai-frameworks-dspy.md?",
-    "query": "What is DSPy according to 400_07_ai-frameworks-dspy.md?",
+    "case_id": "What are the DSPy integration patterns in 400_09_ai-frameworks-dspy.md?",
+    "query": "What are the DSPy integration patterns in 400_09_ai-frameworks-dspy.md?",
     "tag": "rag_qa_single",
     "qvec": [],
     "file_paths": [

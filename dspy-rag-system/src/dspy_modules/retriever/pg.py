@@ -86,6 +86,7 @@ def run_fused_query(
         dc.content_tsv,
         dc.embedding,
         dc.embedding_text,
+        dc.bm25_text,
         d.file_path,
         d.path_tsv
       FROM document_chunks dc
@@ -96,6 +97,8 @@ def run_fused_query(
       b.filename,
       b.file_path,
       b.embedding,
+      b.embedding_text,
+      COALESCE(b.embedding_text, b.bm25_text) AS text_for_reader,
 
       -- Switch to ts_rank with normalization=32 to penalize long docs.
       COALESCE(%(w_path)s * ts_rank(b.path_tsv,  q.tsq_short, 32), 0.0)   AS s_path,
@@ -168,8 +171,13 @@ def run_fused_query(
         weights["w_vec"] = weights["w_vec"] * (1.0 + boost)
 
     # Format query vector as pgvector literal to avoid adapter issues
-    has_vec = bool(qvec)
-    if not qvec:
+    import numpy as np
+
+    if isinstance(qvec, np.ndarray):
+        has_vec = qvec.size > 0
+    else:
+        has_vec = bool(qvec) and len(qvec) > 0
+    if not has_vec:
         try:
             dim = int(os.getenv("EMBED_DIM", "384"))
         except Exception:
@@ -219,6 +227,7 @@ def run_fused_query(
                         dc.content_tsv,
                         dc.embedding,
                         dc.embedding_text,
+                        dc.bm25_text,
                         d.file_path,
                         to_tsvector('simple', replace(replace(coalesce(d.file_path,''), '/', ' '), '_', ' ')) AS path_tsv
                       FROM document_chunks dc
@@ -229,6 +238,8 @@ def run_fused_query(
                       b.filename,
                       b.file_path,
                       b.embedding,
+                      b.embedding_text,
+                      COALESCE(b.embedding_text, b.bm25_text) AS text_for_reader,
 
                       COALESCE(%(w_path)s * ts_rank(b.path_tsv,  q.tsq_short, 32), 0.0)   AS s_path,
                       COALESCE(%(w_short)s * ts_rank(b.short_tsv, q.tsq_short, 32), 0.0)  AS s_short,
