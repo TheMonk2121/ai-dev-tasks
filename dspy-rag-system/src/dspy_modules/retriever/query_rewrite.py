@@ -61,9 +61,15 @@ PHRASE_HINTS = {
         '"feature flag"',
     ],
     "rag_qa_single": [
-        '"vector store"', '"tsquery"', '"websearch_to_tsquery"',
-        '"integration patterns"', '"collaboration patterns"', '"communication patterns"',
-        '"role-specific"', '"multi-role"', '"context patterns"'
+        '"vector store"',
+        '"tsquery"',
+        '"websearch_to_tsquery"',
+        '"integration patterns"',
+        '"collaboration patterns"',
+        '"communication patterns"',
+        '"role-specific"',
+        '"multi-role"',
+        '"context patterns"',
     ],
 }
 

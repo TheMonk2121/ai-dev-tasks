@@ -403,6 +403,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## 📋 README Context
 
 ### Recent Implementations
+- **B-1073 Unified Gold Evaluation System**: Single source of truth for evaluation cases, eliminates dataset roulette
 - **Phase 0/1 RAG Enhancement**: Complete evaluation, telemetry, and retrieval optimization pipeline
 - **Phase 3 Domain Tuning**: Data-driven fine-tuning with hard negative mining for performance improvement
 - **Phase 4 Uncertainty & Calibration**: Production-ready uncertainty quantification with confidence calibration and selective answering
@@ -430,3 +431,34 @@ MIT License - see [LICENSE](LICENSE) for details.
 - Stanford NLP for DSPy
 - PostgreSQL + PGVector for the memory backbone
 - Cursor AI for IDE integration
+
+## Recent Implementation: Unified Gold Evaluation System (B-1073)
+
+**Date**: 2025-09-08
+**Status**: Implemented
+**Impact**: High - Eliminates dataset roulette for consistent 0.6 F1 tracking
+
+### What Was Built:
+- Single source of truth: `evals/gold/v1/gold_cases.jsonl` (68 test cases)
+- Unified loader: `src/utils/gold_loader.py` with stratified sampling
+- Updated evaluation scripts to use gold profiles
+- Removed hardcoded GOLD sets from Python files
+- Added validation script and unit tests
+
+### Key Benefits:
+- Consistent evaluation baselines
+- Deterministic sampling (same seed = same questions)
+- Mode-aware validation (retrieval/reader/decision)
+- CI protection against hardcoded regression
+
+### Usage:
+```bash
+# Run ops smoke test
+python3 scripts/ragchecker_official_evaluation.py --gold-profile ops_smoke --outdir metrics/baseline_evaluations --use-bedrock --bypass-cli
+
+# Run repo gold evaluation
+python3 scripts/ragchecker_official_evaluation.py --gold-profile repo_gold --outdir metrics/baseline_evaluations --use-bedrock --bypass-cli
+```
+
+**Implementation Location**: `evals/gold/v1/`, `src/utils/gold_loader.py`, updated evaluation scripts
+
