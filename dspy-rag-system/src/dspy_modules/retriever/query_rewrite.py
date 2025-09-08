@@ -60,7 +60,11 @@ PHRASE_HINTS = {
         '"deployment check"',
         '"feature flag"',
     ],
-    "rag_qa_single": ['"vector store"', '"tsquery"', '"websearch_to_tsquery"'],
+    "rag_qa_single": [
+        '"vector store"', '"tsquery"', '"websearch_to_tsquery"',
+        '"integration patterns"', '"collaboration patterns"', '"communication patterns"',
+        '"role-specific"', '"multi-role"', '"context patterns"'
+    ],
 }
 
 
