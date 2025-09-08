@@ -3,19 +3,40 @@
     "case_id": "What is DSPy according to 400_07_ai-frameworks-dspy.md?",
     "query": "What is DSPy according to 400_07_ai-frameworks-dspy.md?",
     "tag": "rag_qa_single",
-    "qvec": []
+    "qvec": [],
+    "file_paths": [
+      "400_guides/400_09_ai-frameworks-dspy.md"
+    ],
+    "globs": [
+      "400_guides/400_*dspy*.md"
+    ]
   },
   {
     "case_id": "List the core workflow guides in 000_core.",
     "query": "List the core workflow guides in 000_core.",
     "tag": "rag_qa_single",
-    "qvec": []
+    "qvec": [],
+    "file_paths": [
+      "000_core/README.md",
+      "000_core/000_evaluation-system-entry-point.md"
+    ],
+    "globs": [
+      "000_core/*.md"
+    ]
   },
   {
     "case_id": "According to 400_06_memory-and-context-systems.md, what is the memory system in this project?",
     "query": "According to 400_06_memory-and-context-systems.md, what is the memory system in this project?",
     "tag": "rag_qa_single",
-    "qvec": []
+    "qvec": [],
+    "file_paths": [
+      "400_guides/400_02_memory-rehydration-context-management.md",
+      "100_memory/100_cursor-memory-context.md"
+    ],
+    "globs": [
+      "400_guides/400_*memory*.md",
+      "100_memory/*.md"
+    ]
   },
   {
     "case_id": "Where are the model configuration settings defined?",
@@ -81,24 +102,49 @@
     "case_id": "doc_demote",
     "query": "Why do we demote docs/design subtrees slightly?",
     "tag": "meta_ops",
-    "qvec": []
+    "qvec": [],
+    "file_paths": [
+      "dspy-rag-system/src/dspy_modules/retriever/pg.py"
+    ],
+    "globs": [
+      "dspy-rag-system/src/dspy_modules/retriever/pg.py"
+    ]
   },
   {
     "case_id": "ops_bias_subtrees",
     "query": "Why do we bias ops/shell/setup subtrees for ops_health?",
     "tag": "ops_health",
-    "qvec": []
+    "qvec": [],
+    "file_paths": [
+      "dspy-rag-system/src/dspy_modules/retriever/rerank.py"
+    ],
+    "globs": [
+      "dspy-rag-system/src/dspy_modules/retriever/rerank.py"
+    ]
   },
   {
     "case_id": "ops_phrase_hints",
     "query": "Why do ops_health phrase hints include health check and shell init?",
     "tag": "ops_health",
-    "qvec": []
+    "qvec": [],
+    "file_paths": [
+      "dspy-rag-system/src/dspy_modules/retriever/query_rewrite.py"
+    ],
+    "globs": [
+      "*/retriever/*query*.py"
+    ]
   },
   {
     "case_id": "setup_steps_overview",
     "query": "What are the core steps emphasized under 200_setup?",
     "tag": "rag_qa_single",
-    "qvec": []
+    "qvec": [],
+    "file_paths": [
+      "200_setup/200_naming-conventions.md",
+      "CURSOR_MCP_SETUP.md"
+    ],
+    "globs": [
+      "200_setup/*.md"
+    ]
   }
 ]

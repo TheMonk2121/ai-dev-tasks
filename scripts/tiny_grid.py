@@ -182,10 +182,17 @@ def main():
                 best = (ws, score)
                 best_tag_hits = tag_hits
                 best_tag_total = tag_total
-            print(f"Progress: {i+1}/{total_combos} - Current best: {best[1]}/{len(cases)}")
+
+            current_best_score = best[1] if best else 0
+            print(f"Progress: {i+1}/{total_combos} - Current best: {current_best_score}/{len(cases)}")
 
     print("=" * 50)
     print("Baseline hits:", baseline_hits, "/", len(cases))
+
+    if best is None:
+        print("No valid weight combinations found!")
+        return None
+
     print("Best weights:", best[0])
     print("Prefilter hits:", best[1], "/", len(cases), f"(+{best[1]-baseline_hits})")
 

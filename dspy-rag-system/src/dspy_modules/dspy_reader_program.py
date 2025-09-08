@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from typing import Any, cast
 
 import dspy
 
@@ -8,6 +9,7 @@ import dspy
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from dspy_modules.reader.entrypoint import build_reader_context
+from dspy_modules.reader.span_picker import normalize_answer, pick_span
 from dspy_modules.retriever.limits import load_limits
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries
@@ -50,6 +52,18 @@ class RAGAnswer(dspy.Module):
         super().__init__()
         self.cls = dspy.Predict(IsAnswerableSig)
         self.gen = dspy.Predict(AnswerSig)
+        # Abstention/precision policy (tunable via env)
+        # READER_ABSTAIN: 1=enable IsAnswerable gate (default), 0=disable
+        # READER_ENFORCE_SPAN: 1=ensure answer substring appears in context (default), 0=disable
+        # READER_PRECHECK: 1=enable token-overlap precheck (default), 0=disable
+        # READER_PRECHECK_MIN_OVERLAP: float in [0,1], default 0.10
+        self.abstain_enabled = bool(int(os.getenv("READER_ABSTAIN", "1")))
+        self.enforce_span = bool(int(os.getenv("READER_ENFORCE_SPAN", "1")))
+        self.precheck_enabled = bool(int(os.getenv("READER_PRECHECK", "1")))
+        try:
+            self.precheck_min_overlap = float(os.getenv("READER_PRECHECK_MIN_OVERLAP", "0.10"))
+        except ValueError:
+            self.precheck_min_overlap = 0.10
 
     def forward(self, question: str, tag: str):
         limits = load_limits(tag)
@@ -65,36 +79,42 @@ class RAGAnswer(dspy.Module):
             return_components=True,
         )
         rows = mmr_rerank(
-            rows, alpha=float(os.getenv("MMR_ALPHA", "0.85")), per_file_penalty=0.10, k=limits["shortlist"]
+            rows, alpha=float(os.getenv("MMR_ALPHA", "0.85")), per_file_penalty=0.10, k=limits["shortlist"], tag=tag
         )
         rows = per_file_cap(rows, cap=int(os.getenv("PER_FILE_CAP", "5")))[: limits["topk"]]
         context, _meta = build_reader_context(rows, question, tag, compact=bool(int(os.getenv("READER_COMPACT", "1"))))
 
-        # Pre-check: likely answerable based on context overlap
-        if not self._likely_answerable(context, question):
+        # Rule-first: Try deterministic span extraction
+        span = pick_span(context, question, tag)
+        if span:
+            return dspy.Prediction(answer=normalize_answer(span, tag))
+
+        # Optional pre-check: likely answerable based on context overlap
+        if self.precheck_enabled and not self._likely_answerable(context, question, self.precheck_min_overlap):
             return dspy.Prediction(answer="I don't know")
 
-        # Stage 1: Check if answerable
-        y = self.cls(context=context, question=question).label.strip().lower()
-        if y != "yes":
-            return dspy.Prediction(answer="I don't know")
+        # Stage 1: Optional IsAnswerable gate
+        if self.abstain_enabled:
+            cls_pred = cast(Any, self.cls(context=context, question=question))
+            y = str(getattr(cls_pred, "label", "")).strip().lower()
+            if y != "yes":
+                return dspy.Prediction(answer="I don't know")
 
         # Stage 2: Generate extractive answer
-        out = self.gen(context=context, question=question)
-        ans = (out.answer or "").strip()
-        # If no overlap with context tokens, abstain (improves precision)
-        ctx_low = context.lower()
-        if ans and ans.lower() not in ctx_low:
+        gen_pred = cast(Any, self.gen(context=context, question=question))
+        ans = str(getattr(gen_pred, "answer", "")).strip()
+        # Optional span enforcement: require answer to be in context
+        if self.enforce_span and ans and (ans.lower() not in context.lower()):
             ans = "I don't know"
-        return dspy.Prediction(answer=ans)
+        return dspy.Prediction(answer=normalize_answer(ans, tag))
 
-    def _likely_answerable(self, context: str, question: str) -> bool:
+    def _likely_answerable(self, context: str, question: str, min_overlap: float = 0.10) -> bool:
         """Pre-check if question is likely answerable based on context overlap."""
         ctx = context.lower()
         q_tokens = set(question.lower().split())
         ctx_tokens = set(ctx.split())
         common = len(q_tokens & ctx_tokens)
-        return common / max(1, len(q_tokens)) >= 0.10
+        return common / max(1, len(q_tokens)) >= min_overlap
 
 
 # ---- Metric (SQuAD-style F1)
@@ -127,7 +147,7 @@ def f1(pred, golds):
 
 # ---- Data loaders
 def load_jsonl(path):
-    return [json.loads(l) for l in open(path, "r", encoding="utf-8") if l.strip()]
+    return [json.loads(line) for line in open(path, "r", encoding="utf-8") if line.strip()]
 
 
 def to_examples(rows):

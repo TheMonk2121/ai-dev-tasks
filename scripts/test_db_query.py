@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Test database query for reader gold generation."""
 
+from typing import Any, Dict
+
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -38,12 +40,14 @@ def test_query():
             print(f"Found {len(rows)} rows")
 
             for i, row in enumerate(rows):
+                # Type cast to help the type checker understand this is a dict-like object
+                row_dict: Dict[str, Any] = row  # type: ignore
                 print(f"\nRow {i+1}:")
-                print(f"  ID: {row['id']}")
-                print(f"  File: {row['filename']}")
-                print(f"  Path: {row['file_path']}")
-                print(f"  Content length: {row['content_length']}")
-                print(f"  Content preview: {row['content'][:100]}...")
+                print(f"  ID: {row_dict['id']}")
+                print(f"  File: {row_dict['filename']}")
+                print(f"  Path: {row_dict['file_path']}")
+                print(f"  Content length: {row_dict['content_length']}")
+                print(f"  Content preview: {row_dict['content'][:100]}...")
 
 
 if __name__ == "__main__":

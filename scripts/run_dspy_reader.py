@@ -2,6 +2,7 @@
 import json
 import os
 import sys
+from typing import Any
 
 sys.path.insert(0, "dspy-rag-system/src")
 import dspy
@@ -20,4 +21,10 @@ if __name__ == "__main__":
         prog = RAGAnswer()
 
     pred = prog(question=query, tag=tag)
-    print(json.dumps({"answer": pred.answer}))
+    # Handle both compiled and uncompiled program outputs
+    if hasattr(pred, "answer"):
+        answer = getattr(pred, "answer", "")
+    else:
+        # For compiled programs, the output might be different
+        answer = str(pred) if pred else "I don't know"
+    print(json.dumps({"answer": answer}))

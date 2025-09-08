@@ -18,7 +18,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'dspy-rag-system', 'src'))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
 
 try:
     from dspy_modules.vector_store import HybridVectorStore
@@ -28,6 +28,7 @@ except Exception as _e:
     get_database_manager = None  # type: ignore
 
 _LOG = logging.getLogger("documentation_indexer")
+
 
 class DocumentationIndexer:
     """Indexes documentation files for RAG-based retrieval"""
@@ -44,9 +45,21 @@ class DocumentationIndexer:
 
         # Documentation file patterns
         self.doc_patterns = [
-            "*.md",  # Markdown files
-            "*.txt",  # Text files
-            "*.rst",  # ReStructuredText files
+            "*.md",
+            "*.txt",
+            "*.rst",  # Documentation files
+            "*.py",
+            "*.sql",
+            "*.sh",
+            "*.bash",
+            "*.zsh",  # Code files
+            "*.js",
+            "*.ts",
+            "Dockerfile",
+            "*.toml",
+            "*.ini",
+            "*.yaml",
+            "*.yml",  # Config and other code
         ]
 
         # Exclude patterns
@@ -123,7 +136,7 @@ class DocumentationIndexer:
         """Extract metadata and content from a documentation file"""
         try:
             # Read file content
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
             if not content.strip():
@@ -159,7 +172,7 @@ class DocumentationIndexer:
                 "metadata": metadata,
                 "chunks": chunks,
                 "size_bytes": len(content.encode()),
-                "line_count": len(content.split('\n')),
+                "line_count": len(content.split("\n")),
                 "last_modified": datetime.fromtimestamp(file_path.stat().st_mtime).isoformat(),
             }
 
@@ -172,11 +185,11 @@ class DocumentationIndexer:
         metadata: Dict[str, Any] = {"module_reference": []}
 
         # Only capture CONTEXT_REFERENCE and MODULE_REFERENCE
-        m_ctx = re.findall(r'<!--\s*CONTEXT_REFERENCE:\s*([^>]+)\s*-->', content)
+        m_ctx = re.findall(r"<!--\s*CONTEXT_REFERENCE:\s*([^>]+)\s*-->", content)
         if m_ctx:
             metadata["context_reference"] = m_ctx[0].strip()
 
-        m_mods = re.findall(r'<!--\s*MODULE_REFERENCE:\s*([^>]+)\s*-->', content)
+        m_mods = re.findall(r"<!--\s*MODULE_REFERENCE:\s*([^>]+)\s*-->", content)
         for v in m_mods:
             v = v.strip()
             # Skip deprecated module references to split/advanced/lens variants
@@ -208,20 +221,25 @@ class DocumentationIndexer:
             # Find TL;DR heading (after optional explicit anchor)
             tldr_start = None
             # Look for the heading line
-            for m in re.finditer(r'^(?:<a\s+id="tldr"\s*>\s*</a>\s*\n)?##\s+🔎\s+TL;DR\s*$', content, flags=re.MULTILINE):
+            for m in re.finditer(
+                r'^(?:<a\s+id="tldr"\s*>\s*</a>\s*\n)?##\s+🔎\s+TL;DR\s*$', content, flags=re.MULTILINE
+            ):
                 tldr_start = m.end()
                 break
             if tldr_start is None:
                 return None, None
             # Capture until next H2 heading
             tldr_rest = content[tldr_start:]
-            next_h2 = re.search(r'^##\s+', tldr_rest, flags=re.MULTILINE)
-            tldr_block = tldr_rest[:next_h2.start()] if next_h2 else tldr_rest
+            next_h2 = re.search(r"^##\s+", tldr_rest, flags=re.MULTILINE)
+            tldr_block = tldr_rest[: next_h2.start()] if next_h2 else tldr_rest
             tldr_text = tldr_block.strip()
 
             # Parse At-a-glance table headers and first data row
-            table_match = re.search(r'^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$[\s\S]*?^\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*$',
-                                    tldr_block, flags=re.MULTILINE)
+            table_match = re.search(
+                r"^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$[\s\S]*?^\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*$",
+                tldr_block,
+                flags=re.MULTILINE,
+            )
             at_a_glance = None
             if table_match:
                 at_a_glance = {
@@ -263,35 +281,65 @@ class DocumentationIndexer:
 
     def _extract_title_description(self, content: str) -> Tuple[str, str]:
         """Extract title and description from content"""
-        lines = content.split('\n')
+        lines = content.split("\n")
         title = ""
         description = ""
 
         # Look for title in first few lines
         for line in lines[:10]:
             line = line.strip()
-            if line.startswith('# '):
+            if line.startswith("# "):
                 title = line[2:].strip()
                 break
-            elif line.startswith('## '):
+            elif line.startswith("## "):
                 title = line[3:].strip()
                 break
 
         # Look for description in first few lines
         for line in lines[:20]:
             line = line.strip()
-            if line and not line.startswith('#') and not line.startswith('<!--'):
+            if line and not line.startswith("#") and not line.startswith("<!--"):
                 description = line[:200]  # First 200 chars
                 break
 
         return title, description
 
+    def _split_code_python(self, content: str, max_chunk_size: int = 900) -> List[Dict[str, Any]]:
+        """Split Python code into function/class-aware chunks"""
+        chunks, cur, size = [], [], 0
+        lines = content.splitlines()
+
+        def flush():
+            nonlocal chunks, cur, size
+            if cur:
+                blob = "\n".join(cur).strip()
+                if len(blob) > 50:
+                    chunks.append(
+                        {"chunk_id": f"py_{len(chunks)}", "content": blob, "start_line": 1, "end_line": len(lines)}
+                    )
+            cur, size = [], 0
+
+        for ln in lines:
+            cur.append(ln)
+            size += len(ln) + 1
+            if ln.startswith(("def ", "class ")) and size > 0:
+                flush()
+            elif size >= max_chunk_size:
+                flush()
+        flush()
+
+        return chunks or [{"chunk_id": "py_0", "content": content.strip(), "start_line": 1, "end_line": len(lines)}]
+
     def _split_content(self, content: str, max_chunk_size: int = 1000) -> List[Dict[str, Any]]:
         """Split content into chunks for indexing"""
         chunks = []
 
+        # Code-aware path
+        if content.lstrip().startswith("#!") or content.strip().startswith(("import ", "from ", "class ", "def ")):
+            return self._split_code_python(content, max_chunk_size=900)
+
         # Split by sections (headers)
-        sections = re.split(r'(?=^#{1,6}\s)', content, flags=re.MULTILINE)
+        sections = re.split(r"(?=^#{1,6}\s)", content, flags=re.MULTILINE)
 
         for i, section in enumerate(sections):
             if not section.strip():
@@ -300,28 +348,32 @@ class DocumentationIndexer:
             # Further split large sections
             if len(section) > max_chunk_size:
                 # Split by paragraphs
-                paragraphs = re.split(r'\n\s*\n', section)
+                paragraphs = re.split(r"\n\s*\n", section)
                 for j, paragraph in enumerate(paragraphs):
                     if len(paragraph.strip()) > 50:  # Minimum chunk size
-                        chunks.append({
-                            "chunk_id": f"{i}_{j}",
-                            "content": paragraph.strip(),
-                            "start_line": self._find_start_line(content, section, i),
-                            "end_line": self._find_end_line(content, section, i),
-                        })
+                        chunks.append(
+                            {
+                                "chunk_id": f"{i}_{j}",
+                                "content": paragraph.strip(),
+                                "start_line": self._find_start_line(content, section, i),
+                                "end_line": self._find_end_line(content, section, i),
+                            }
+                        )
             else:
-                chunks.append({
-                    "chunk_id": str(i),
-                    "content": section.strip(),
-                    "start_line": self._find_start_line(content, section, i),
-                    "end_line": self._find_end_line(content, section, i),
-                })
+                chunks.append(
+                    {
+                        "chunk_id": str(i),
+                        "content": section.strip(),
+                        "start_line": self._find_start_line(content, section, i),
+                        "end_line": self._find_end_line(content, section, i),
+                    }
+                )
 
         return chunks
 
     def _find_start_line(self, full_content: str, section: str, section_index: int) -> int:
         """Find the starting line number of a section"""
-        lines = full_content.split('\n')
+        lines = full_content.split("\n")
         section_start = 0
 
         for i, line in enumerate(lines):
@@ -333,12 +385,12 @@ class DocumentationIndexer:
 
     def _find_end_line(self, full_content: str, section: str, section_index: int) -> int:
         """Find the ending line number of a section"""
-        lines = full_content.split('\n')
+        lines = full_content.split("\n")
         section_end = len(lines)
 
         # Find the next section or end of file
         for i, line in enumerate(lines):
-            if line.strip().startswith('#') and i > section_index:
+            if line.strip().startswith("#") and i > section_index:
                 section_end = i
                 break
 
@@ -401,19 +453,17 @@ class DocumentationIndexer:
         # Store each chunk
         for chunk in doc["chunks"]:
             chunk_metadata = metadata.copy()
-            chunk_metadata.update({
-                "chunk_id": chunk["chunk_id"],
-                "start_line": chunk["start_line"],
-                "end_line": chunk["end_line"],
-                "chunk_size": len(chunk["content"]),
-            })
+            chunk_metadata.update(
+                {
+                    "chunk_id": chunk["chunk_id"],
+                    "start_line": chunk["start_line"],
+                    "end_line": chunk["end_line"],
+                    "chunk_size": len(chunk["content"]),
+                }
+            )
 
             # Store in vector store
-            self.vector_store.forward(
-                operation="store_chunks",
-                chunks=[chunk["content"]],
-                metadata=chunk_metadata
-            )
+            self.vector_store.forward(operation="store_chunks", chunks=[chunk["content"]], metadata=chunk_metadata)
 
     def _count_categories(self, docs: List[Dict[str, Any]]) -> Dict[str, int]:
         """Count documents by category"""
@@ -453,6 +503,7 @@ class DocumentationIndexer:
             "vector_store_stats": (self.vector_store.get_stats() if self.vector_store else {}),
         }
 
+
 def main():
     """Main function for documentation indexing"""
     import argparse
@@ -488,6 +539,7 @@ def main():
         # Perform indexing
         summary = indexer.index_documentation(args.root_path)
         print(json.dumps(summary, indent=2))
+
 
 if __name__ == "__main__":
     main()

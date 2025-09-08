@@ -22,3 +22,10 @@
 {"case_id": "ops_bias_subtrees", "file_paths": [], "globs": ["*/retriever/*", "*/query_rewrite.py"]}
 {"case_id": "ops_phrase_hints", "file_paths": [], "globs": ["*/retriever/*", "*/query_rewrite.py"]}
 {"case_id": "setup_steps_overview", "file_paths": [], "globs": ["200_setup/*", "*/setup*"]}
+{"case_id": "What is DSPy according to 400_07_ai-frameworks-dspy.md?", "file_paths": ["400_guides/400_09_ai-frameworks-dspy.md"], "globs": ["400_guides/400_*dspy*.md"]}
+{"case_id": "List the core workflow guides in 000_core.", "file_paths": ["000_core/README.md", "000_core/000_evaluation-system-entry-point.md"], "globs": ["000_core/*.md"]}
+{"case_id": "According to 400_06_memory-and-context-systems.md, what is the memory system in this project?", "file_paths": ["400_guides/400_02_memory-rehydration-context-management.md", "100_memory/100_cursor-memory-context.md"], "globs": ["400_guides/400_*memory*.md", "100_memory/*.md"]}
+{"case_id": "doc_demote", "file_paths": ["dspy-rag-system/src/dspy_modules/retriever/rerank.py"], "globs": ["*/retriever/*rerank*.py"]}
+{"case_id": "ops_bias_subtrees", "file_paths": ["dspy-rag-system/src/dspy_modules/retriever/rerank.py"], "globs": ["*/retriever/*rerank*.py"]}
+{"case_id": "ops_phrase_hints", "file_paths": ["dspy-rag-system/src/dspy_modules/retriever/query_rewrite.py"], "globs": ["*/retriever/*query*.py"]}
+{"case_id": "setup_steps_overview", "file_paths": ["200_setup/200_naming-conventions.md", "CURSOR_MCP_SETUP.md"], "globs": ["200_setup/*.md"]}

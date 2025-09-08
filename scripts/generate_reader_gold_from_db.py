@@ -8,21 +8,24 @@ import json
 import os
 import random
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
-from datetime import datetime
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
 # Add project paths (repo root)
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 from _bootstrap import ROOT, SRC  # noqa: F401
+
 sys.path.insert(0, str(SRC))
 
-from dspy_modules.retriever.query_rewrite import PHRASE_HINTS
-from common.case_id import canonical_case_id
 from dspy_modules.reader.sentence_select import select_sentences
+from dspy_modules.retriever.query_rewrite import PHRASE_HINTS
+
+from common.case_id import canonical_case_id
 
 
 def get_db_connection():
@@ -65,9 +68,11 @@ def generate_reader_gold_cases(target_count: int = 20) -> List[Dict[str, Any]]:
 
             # Generate questions and answers for each chunk
             for i, row in enumerate(rows):
-                content = row.get("content_text") or ""
-                file_path = row.get("file_path") or ""
-                filename = row.get("filename") or ""
+                # Type cast to help the type checker understand this is a dict-like object
+                row_dict: Dict[str, Any] = row  # type: ignore
+                content = row_dict.get("content_text") or ""
+                file_path = row_dict.get("file_path") or ""
+                filename = row_dict.get("filename") or ""
 
                 # Skip if content is too short or too long
                 if len(content) < 100 or len(content) > 1500:
@@ -169,13 +174,15 @@ def generate_question_answer_pair(content: str, file_path: str, filename: str, i
     try:
         tag = _guess_tag(file_path)
         phrase_hints = PHRASE_HINTS.get(tag, [])
-        rows = [{
-            "file_path": file_path,
-            "filename": filename,
-            "embedding_text": content,
-            "chunk_id": index,
-            "score": 1.0,
-        }]
+        rows = [
+            {
+                "file_path": file_path,
+                "filename": filename,
+                "embedding_text": content,
+                "chunk_id": index,
+                "score": 1.0,
+            }
+        ]
         compact, chosen = select_sentences(rows, question, tag, phrase_hints, per_chunk=2, total=1)
         if chosen:
             answers = [chosen[0]["sentence"]]

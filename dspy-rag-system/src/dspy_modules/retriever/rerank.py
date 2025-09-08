@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Sequence
 
 
 def mmr_rerank(
-    rows: List[Dict[str, Any]], alpha: float = 0.85, per_file_penalty: float = 0.10, k: int = 25
+    rows: List[Dict[str, Any]], alpha: float = 0.85, per_file_penalty: float = 0.10, k: int = 25, tag: str = ""
 ) -> List[Dict[str, Any]]:
     """
     MMR rerank to avoid README clusters and reward novelty.
@@ -19,11 +19,16 @@ def mmr_rerank(
         alpha: MMR balance (0.85 = 85% relevance, 15% diversity)
         per_file_penalty: Penalty for multiple chunks from same file
         k: Number of results to return
+        tag: Tag for tag-specific penalties (ops tags get higher penalty)
 
     Returns:
         Reranked list of results
     """
     out, seen_by_file = [], defaultdict(int)
+    
+    # Tag-specific penalty adjustment
+    if tag in {"meta_ops", "ops_health"}:
+        per_file_penalty = 0.12  # Higher penalty for ops tags
 
     def _to_vec(v: Any) -> Sequence[float]:
         return v if isinstance(v, (list, tuple)) else ()

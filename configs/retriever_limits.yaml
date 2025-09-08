@@ -4,7 +4,12 @@ default:
   topk: 25 # final K after rerank/cap
 
 tags:
-  db_workflows: { shortlist: 60, topk: 25 }
-  ops_health: { shortlist: 60, topk: 25 }
-  meta_ops: { shortlist: 60, topk: 25 }
+  db_workflows: { shortlist: 60, topk: 20 }
+  ops_health: { shortlist: 60, topk: 22 }
+  meta_ops: { shortlist: 60, topk: 22 }
   rag_qa_single: { shortlist: 60, topk: 25 }
+
+answerability_thresholds:
+  rag_qa_single: 0.10
+  meta_ops: 0.10
+  ops_health: 0.10
