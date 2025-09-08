@@ -1,9 +1,32 @@
 #!/usr/bin/env python3
 import math
 import re
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
 
-_SENT_SPLIT = re.compile(r'(?<=[.!?])\s+(?=[A-Z0-9])')
+_SENT_SPLIT = re.compile(r"(?<=[.!?])\s+(?=[A-Z0-9])")
+
+SQL_TOKENS = {
+    "create",
+    "alter",
+    "drop",
+    "index",
+    "table",
+    "materialized",
+    "view",
+    "foreign",
+    "primary",
+    "using",
+    "gin",
+    "gist",
+    "ivfflat",
+    "to_tsvector",
+    "tsquery",
+    "websearch_to_tsquery",
+}
+
+
+def _is_sql_line(s):
+    return "```" in s.lower() or any(t in s.lower() for t in SQL_TOKENS)
 
 
 def _norm_tokens(s: str) -> List[str]:
@@ -27,7 +50,8 @@ def _score_sentence(sent: str, q_uni: set, phrase_list: List[str], fname_toks: s
             phrases = 0.4
             break
     fname_bonus = 0.2 if (s_uni & fname_toks) else 0.0
-    return overlap + phrases + fname_bonus
+    sql_bonus = 0.35 if _is_sql_line(sent) else 0.0
+    return overlap + phrases + fname_bonus + sql_bonus
 
 
 def select_sentences(
@@ -57,13 +81,18 @@ def select_sentences(
         for score, sent in scored[:per_chunk]:
             if not sent:
                 continue
-            picks.append((score + 1e-6 * float(r.get("score", 0.0) or 0.0), {
-                "file_path": r.get("file_path") or r.get("filename") or "",
-                "chunk_id": r.get("chunk_id"),
-                "sentence": sent,
-                "s_score": float(score),
-                "r_score": float(r.get("score", 0.0) or 0.0),
-            }))
+            picks.append(
+                (
+                    score + 1e-6 * float(r.get("score", 0.0) or 0.0),
+                    {
+                        "file_path": r.get("file_path") or r.get("filename") or "",
+                        "chunk_id": r.get("chunk_id"),
+                        "sentence": sent,
+                        "s_score": float(score),
+                        "r_score": float(r.get("score", 0.0) or 0.0),
+                    },
+                )
+            )
 
     picks.sort(key=lambda t: t[0], reverse=True)
     chosen = [m for _, m in picks[:total]]
@@ -74,4 +103,3 @@ def select_sentences(
         lines.append(f"[{anchor}] {m['sentence']}")
     compact = "\n".join(lines)
     return compact, chosen
-

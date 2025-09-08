@@ -27,18 +27,28 @@ def _lm():
 
 
 # ---- Signatures
-class AnswerSig(dspy.Signature):
-    """Answer the question using the provided context. Keep it concise."""
+class IsAnswerableSig(dspy.Signature):
+    """Is the answer explicitly present in the context? Reply 'yes' or 'no'."""
 
     context: str = dspy.InputField()
     question: str = dspy.InputField()
-    answer: str = dspy.OutputField(desc="short answer")
+    label: str = dspy.OutputField()
+
+
+class AnswerSig(dspy.Signature):
+    """Answer ONLY with a file path or a single SQL line copied verbatim.
+    If not present in context, reply exactly: I don't know."""
+
+    context: str = dspy.InputField()
+    question: str = dspy.InputField()
+    answer: str = dspy.OutputField()
 
 
 # ---- Program (baseline: retrieval → compact context → answer)
 class RAGAnswer(dspy.Module):
     def __init__(self):
         super().__init__()
+        self.cls = dspy.Predict(IsAnswerableSig)
         self.gen = dspy.Predict(AnswerSig)
 
     def forward(self, question: str, tag: str):
@@ -59,8 +69,32 @@ class RAGAnswer(dspy.Module):
         )
         rows = per_file_cap(rows, cap=int(os.getenv("PER_FILE_CAP", "5")))[: limits["topk"]]
         context, _meta = build_reader_context(rows, question, tag, compact=bool(int(os.getenv("READER_COMPACT", "1"))))
+
+        # Pre-check: likely answerable based on context overlap
+        if not self._likely_answerable(context, question):
+            return dspy.Prediction(answer="I don't know")
+
+        # Stage 1: Check if answerable
+        y = self.cls(context=context, question=question).label.strip().lower()
+        if y != "yes":
+            return dspy.Prediction(answer="I don't know")
+
+        # Stage 2: Generate extractive answer
         out = self.gen(context=context, question=question)
-        return dspy.Prediction(answer=out.answer)
+        ans = (out.answer or "").strip()
+        # If no overlap with context tokens, abstain (improves precision)
+        ctx_low = context.lower()
+        if ans and ans.lower() not in ctx_low:
+            ans = "I don't know"
+        return dspy.Prediction(answer=ans)
+
+    def _likely_answerable(self, context: str, question: str) -> bool:
+        """Pre-check if question is likely answerable based on context overlap."""
+        ctx = context.lower()
+        q_tokens = set(question.lower().split())
+        ctx_tokens = set(ctx.split())
+        common = len(q_tokens & ctx_tokens)
+        return common / max(1, len(q_tokens)) >= 0.10
 
 
 # ---- Metric (SQuAD-style F1)
@@ -108,7 +142,7 @@ def to_examples(rows):
 
 
 # ---- Compile (Teleprompt) and export
-def compile_and_save(dev_path="evals/dspy/dev.jsonl", out_dir="artifacts/dspy"):
+def compile_and_save(dev_path="../../evals/dspy/dev_curated.jsonl", out_dir="../../artifacts/dspy"):
     dspy.settings.configure(lm=_lm())
     os.makedirs(out_dir, exist_ok=True)
     dev = to_examples(load_jsonl(dev_path))

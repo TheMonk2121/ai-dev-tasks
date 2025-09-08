@@ -1,0 +1,15 @@
+{"case_id": "style_example_1", "query": "Where are the model configuration settings defined?", "answers": ["configs/retriever_weights.yaml; configs/reader_limits.yaml; DSPy model in dspy_reader_program.py _lm() function"], "tag": "rag_qa_single"}
+{"case_id": "style_example_2", "query": "What is the MCP server port number?", "answers": ["Port 3000", "localhost:3000", "3000"], "tag": "rag_qa_single"}
+{"case_id": "style_example_3", "query": "How do I run memory rehydration?", "answers": ["scripts/cursor_memory_rehydrate.py with role and task", "python3 scripts/cursor_memory_rehydrate.py implementer 'task'"], "tag": "rag_qa_single"}
+{"case_id": "style_example_4", "query": "What is the default MMR alpha value?", "answers": ["0.85", "MMR_ALPHA=0.85"], "tag": "rag_qa_single"}
+{"case_id": "style_example_5", "query": "What is the exact memory usage of the LTST system when processing 10,000 documents?", "answers": ["I don't know", "Cannot be determined from available information"], "tag": "rag_qa_single"}
+{"case_id": "style_example_6", "query": "How does the DSPy reader program work?", "answers": ["dspy_reader_program.py: RAGAnswer class uses retrieval → MMR rerank → per-file cap → sentence selection → AnswerSig prediction"], "tag": "rag_qa_single"}
+{"case_id": "style_example_7", "query": "What are the phrase hints for different tags?", "answers": ["dspy_modules/retriever/query_rewrite.py PHRASE_HINTS: db_workflows, ops_health, meta_ops, rag_qa_single"], "tag": "rag_qa_single"}
+{"case_id": "style_example_8", "query": "What is the sentence selection process?", "answers": ["dspy_modules/reader/sentence_select.py: scores by token overlap, phrase hits, filename tokens"], "tag": "rag_qa_single"}
+{"case_id": "style_example_9", "query": "What is the specific database password used for the ai_agency database?", "answers": ["I don't know", "Not disclosed in documentation"], "tag": "rag_qa_single"}
+{"case_id": "style_example_10", "query": "How do I test the MCP server health endpoint?", "answers": ["curl http://localhost:3000/health", "GET request to localhost:3000/health"], "tag": "rag_qa_single"}
+{"case_id": "db_workflows_shot_1", "query": "What SQL command creates an index?", "answers": ["CREATE INDEX", "create index"], "tag": "db_workflows"}
+{"case_id": "db_workflows_shot_2", "query": "How do I alter a table?", "answers": ["ALTER TABLE", "alter table"], "tag": "db_workflows"}
+{"case_id": "memory_shot_1", "query": "Where is the memory context system documented?", "answers": ["100_memory/100_cursor-memory-context.md", "100_memory/"], "tag": "rag_qa_single"}
+{"case_id": "memory_shot_2", "query": "What file contains DSPy development context?", "answers": ["100_memory/104_dspy-development-context.md", "104_dspy-development-context.md"], "tag": "rag_qa_single"}
+{"case_id": "unanswerable_shot", "query": "What is the exact memory usage of the LTST system?", "answers": ["I don't know", "Cannot be determined"], "tag": "rag_qa_single"}

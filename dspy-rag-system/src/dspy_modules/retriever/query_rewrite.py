@@ -18,6 +18,8 @@ PHRASE_HINTS = {
     "db_workflows": [
         '"create index"',
         '"create unique index"',
+        '"create <-> index"',
+        '"alter <-> table"',
         '"alter table"',
         '"create table"',
         '"create materialized view"',

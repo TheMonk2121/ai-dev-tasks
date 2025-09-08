@@ -76,5 +76,29 @@
     "query": "Point me to memory-related guides under 100_memory.",
     "tag": "rag_qa_single",
     "qvec": []
+  },
+  {
+    "case_id": "doc_demote",
+    "query": "Why do we demote docs/design subtrees slightly?",
+    "tag": "meta_ops",
+    "qvec": []
+  },
+  {
+    "case_id": "ops_bias_subtrees",
+    "query": "Why do we bias ops/shell/setup subtrees for ops_health?",
+    "tag": "ops_health",
+    "qvec": []
+  },
+  {
+    "case_id": "ops_phrase_hints",
+    "query": "Why do ops_health phrase hints include health check and shell init?",
+    "tag": "ops_health",
+    "qvec": []
+  },
+  {
+    "case_id": "setup_steps_overview",
+    "query": "What are the core steps emphasized under 200_setup?",
+    "tag": "rag_qa_single",
+    "qvec": []
   }
 ]
