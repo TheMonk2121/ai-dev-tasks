@@ -92,7 +92,7 @@ jobs:
           echo "📊 Latest evaluation: $LATEST_EVAL"
 
           # Validate JSON structure
-          python3 -c "
+          uv run python -c "
           import json
           import sys
 
@@ -133,7 +133,7 @@ jobs:
           # Get latest evaluation file
           LATEST_EVAL=$(ls -t metrics/baseline_evaluations/ragchecker_official_evaluation_*.json | head -1)
 
-          python3 -c "
+          uv run python -c "
           import json
           import sys
           import os
@@ -207,7 +207,7 @@ jobs:
           # Get latest evaluation file
           LATEST_EVAL=$(ls -t metrics/baseline_evaluations/ragchecker_official_evaluation_*.json | head -1)
 
-          python3 -c "
+          uv run python -c "
           import json
           import os
           from datetime import datetime

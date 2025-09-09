@@ -51,7 +51,7 @@ jobs:
           git grep -nE "^(<<<<<<< |======= |>>>>>>> )" || echo "⚠️ Quick conflict check completed with warnings"
 
           # Run system health check (skip if DSPy not available)
-          python scripts/system_health_check.py 2>/dev/null || echo "⚠️ System health check skipped (DSPy not available in CI)"
+          uv run python scripts/system_health_check.py 2>/dev/null || echo "⚠️ System health check skipped (DSPy not available in CI)"
 
           echo "✅ Maintenance validation completed"
 

@@ -17,15 +17,14 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.12'
     
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest
+        pipx install uv
+        uv sync --all-extras --dev
     
     - name: Set strict array validation
       run: |
@@ -34,19 +33,19 @@ jobs:
     
     - name: Run array validation tests
       run: |
-        pytest -q tests/test_ndarray_validation.py -v
+        uv run pytest -q tests/test_ndarray_validation.py -v
     
     - name: Run performance benchmarks
       run: |
-        pytest -q tests/bench/test_ndarray_pydantic_bench.py -v
+        uv run pytest -q tests/bench/test_ndarray_pydantic_bench.py -v
     
     - name: Validate feature artifacts schema
       run: |
-        pytest -q tests/test_feature_artifacts_schema.py -v
+        uv run pytest -q tests/test_feature_artifacts_schema.py -v
     
     - name: Test feature schema integration
       run: |
-        python3 -c "
+        uv run python -c "
         from dspy_modules.retriever.fusion_head import build_fusion_features_from_row
         from train.feature_io import write_feature
         
@@ -65,7 +64,7 @@ jobs:
     
     - name: Test training feature persistence
       run: |
-        python3 -c "
+        uv run python -c "
         from train.persist_training_features import persist_features_to_jsonl, load_features_from_jsonl
         import tempfile
         import os
@@ -99,7 +98,7 @@ jobs:
     
     - name: Test JSON serialization round-trip
       run: |
-        python3 -c "
+        uv run python -c "
         import sys
         sys.path.insert(0, 'dspy-rag-system/src')
         from dspy_modules.retriever.feature_schema import FusionFeatures
@@ -119,7 +118,7 @@ jobs:
     
     - name: Test strict mode enforcement
       run: |
-        python3 -c "
+        uv run python -c "
         import sys
         sys.path.insert(0, 'dspy-rag-system/src')
         from dspy_modules.retriever.feature_schema import FusionFeatures
@@ -139,6 +138,6 @@ jobs:
     
     - name: Check for linting errors
       run: |
-        python -m ruff check dspy-rag-system/src/utils/pyd_ndarray.py
-        python -m ruff check dspy-rag-system/src/dspy_modules/retriever/feature_schema.py
-        python -m ruff check dspy-rag-system/train/feature_io.py
+        uv run python -m ruff check dspy-rag-system/src/utils/pyd_ndarray.py
+        uv run python -m ruff check dspy-rag-system/src/dspy_modules/retriever/feature_schema.py
+        uv run python -m ruff check dspy-rag-system/train/feature_io.py

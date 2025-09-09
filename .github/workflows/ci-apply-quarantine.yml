@@ -17,10 +17,15 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: uv pip install pyyaml
 
       - name: Download nightly test-signal artifact
         uses: dawidd6/action-download-artifact@v3
@@ -30,7 +35,7 @@ jobs:
           path: metrics
 
       - name: Apply test dispositions
-        run: python scripts/apply_test_dispositions.py --prune-clusters --apply
+        run: uv run python scripts/apply_test_dispositions.py --prune-clusters --apply
 
       - name: Commit quarantine moves
         uses: stefanzweifel/git-auto-commit-action@v5

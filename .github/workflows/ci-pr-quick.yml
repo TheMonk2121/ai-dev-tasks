@@ -13,13 +13,17 @@ jobs:
         with: 
           python-version: "3.12"
       
+      - name: Install uv
+        run: |
+          pipx install uv
+      
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          uv sync --all-extras --dev
       
       - name: Test profile configuration
         run: |
-          python3 scripts/lib/config_loader.py --profile mock --help || true
+          uv run python scripts/lib/config_loader.py --profile mock --help || true
           echo "✅ Profile configuration test passed"
       
       - name: Eval (mock, low concurrency)
@@ -31,5 +35,5 @@ jobs:
         run: |
           echo "Testing profile validation..."
           # Test that mock profile works
-          python3 scripts/lib/config_loader.py --profile mock
+          uv run python scripts/lib/config_loader.py --profile mock
           echo "✅ Profile system validation passed"

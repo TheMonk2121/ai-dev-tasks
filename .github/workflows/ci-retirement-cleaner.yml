@@ -15,10 +15,15 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
 
       - name: Hard delete aged tests
-        run: python scripts/hard_delete_retired.py --days 14 --apply
+        run: uv run python scripts/hard_delete_retired.py --days 14 --apply
 
       - name: Commit deletions
         uses: stefanzweifel/git-auto-commit-action@v5

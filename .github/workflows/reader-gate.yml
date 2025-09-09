@@ -24,7 +24,7 @@ jobs:
         env:
           CASES_FILE: "evals/gold_cases.json"
           READER_GOLD_FILE: "evals/reader_gold.jsonl"
-          READER_CMD: "python3 scripts/run_extractive_reader.py"
+          READER_CMD: "uv run python scripts/run_extractive_reader.py"
           READER_MIN_F1_MICRO: "0.35"
           READER_MIN_F1_TAG: "0.25"
           MAX_READER_REG_DROP: "0.05"
