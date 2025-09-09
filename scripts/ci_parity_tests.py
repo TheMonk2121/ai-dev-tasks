@@ -12,7 +12,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -25,7 +25,7 @@ sys.path.insert(0, str(dspy_rag_path))
 from src.utils.config_lock import ConfigLockManager, LockedConfig
 
 
-def check_eval_path(eval_data: Dict[str, Any]) -> Dict[str, Any]:
+def check_eval_path(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check that eval_path is correct"""
     eval_path = eval_data.get("eval_path", "")
 
@@ -35,7 +35,7 @@ def check_eval_path(eval_data: Dict[str, Any]) -> Dict[str, Any]:
     return {"valid": True}
 
 
-def check_retrieval_snapshot_size(eval_data: Dict[str, Any]) -> Dict[str, Any]:
+def check_retrieval_snapshot_size(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check retrieval snapshot size"""
     case_results = eval_data.get("case_results", [])
     if not case_results:
@@ -63,7 +63,7 @@ def check_retrieval_snapshot_size(eval_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def check_oracle_metrics(eval_data: Dict[str, Any]) -> Dict[str, Any]:
+def check_oracle_metrics(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check oracle metrics are present"""
     case_results = eval_data.get("case_results", [])
     if not case_results:
@@ -91,7 +91,7 @@ def check_oracle_metrics(eval_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def check_token_budget_compliance(eval_data: Dict[str, Any]) -> Dict[str, Any]:
+def check_token_budget_compliance(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check token budget compliance"""
     case_results = eval_data.get("case_results", [])
     if not case_results:
@@ -125,7 +125,7 @@ def check_token_budget_compliance(eval_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def check_prefix_leakage(eval_data: Dict[str, Any]) -> Dict[str, Any]:
+def check_prefix_leakage(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check for prefix leakage in BM25"""
     case_results = eval_data.get("case_results", [])
     if not case_results:
@@ -155,7 +155,7 @@ def check_prefix_leakage(eval_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def check_chunk_id_determinism(eval_data: Dict[str, Any], config: LockedConfig) -> Dict[str, Any]:
+def check_chunk_id_determinism(eval_data: dict[str, Any], config: LockedConfig) -> dict[str, Any]:
     """Check chunk ID determinism"""
     case_results = eval_data.get("case_results", [])
     if not case_results:
@@ -192,7 +192,7 @@ def check_chunk_id_determinism(eval_data: Dict[str, Any], config: LockedConfig) 
     }
 
 
-def check_configuration_consistency(eval_data: Dict[str, Any], config: LockedConfig) -> Dict[str, Any]:
+def check_configuration_consistency(eval_data: dict[str, Any], config: LockedConfig) -> dict[str, Any]:
     """Check configuration consistency"""
     case_results = eval_data.get("case_results", [])
     if not case_results:
@@ -225,7 +225,7 @@ def check_configuration_consistency(eval_data: Dict[str, Any], config: LockedCon
     }
 
 
-def run_parity_tests(eval_data: Dict[str, Any], config: LockedConfig) -> Dict[str, Any]:
+def run_parity_tests(eval_data: dict[str, Any], config: LockedConfig) -> dict[str, Any]:
     """Run all parity tests"""
     print("🧪 Running CI Parity Tests")
     print("=" * 40)
@@ -253,7 +253,7 @@ def run_parity_tests(eval_data: Dict[str, Any], config: LockedConfig) -> Dict[st
     }
 
 
-def load_evaluation_results(results_dir: Path) -> Optional[Dict[str, Any]]:
+def load_evaluation_results(results_dir: Path) -> dict[str, Any] | None:
     """Load the latest evaluation results"""
     if not results_dir.exists():
         return None
@@ -266,7 +266,7 @@ def load_evaluation_results(results_dir: Path) -> Optional[Dict[str, Any]]:
     latest_file = max(eval_files, key=lambda f: f.stat().st_mtime)
 
     try:
-        with open(latest_file, "r") as f:
+        with open(latest_file) as f:
             return json.load(f)
     except Exception as e:
         print(f"❌ Error loading evaluation results: {e}")
