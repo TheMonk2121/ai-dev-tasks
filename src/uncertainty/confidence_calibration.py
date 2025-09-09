@@ -10,7 +10,7 @@ import logging
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import joblib
 import numpy as np
@@ -177,7 +177,7 @@ class ConfidenceCalibrator:
 
     def calibrate_confidence(
         self, scores: np.ndarray, labels: np.ndarray, method: str = "temperature"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Perform confidence calibration using specified method.
 
@@ -264,7 +264,7 @@ class ConfidenceCalibrator:
         # Return original scores if no calibration method available
         return scores
 
-    def _calculate_calibration_metrics(self, calibrated_scores: np.ndarray, labels: np.ndarray) -> Dict[str, float]:
+    def _calculate_calibration_metrics(self, calibrated_scores: np.ndarray, labels: np.ndarray) -> dict[str, float]:
         """Calculate calibration error and ECE score."""
         from sklearn.calibration import calibration_curve
 
@@ -338,7 +338,7 @@ class ConfidenceCalibrator:
             return
 
         # Load main calibrator data
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             save_data = json.load(f)
 
         self.config = CalibrationConfig(**save_data["config"])
@@ -359,7 +359,7 @@ class ConfidenceCalibrator:
         logger.info(f"Calibrator loaded from {filepath}")
 
 
-def create_calibration_dataset(evaluation_results: List[Dict[str, Any]]) -> Tuple[np.ndarray, np.ndarray]:
+def create_calibration_dataset(evaluation_results: list[dict[str, Any]]) -> tuple[np.ndarray, np.ndarray]:
     """
     Create calibration dataset from evaluation results.
 
