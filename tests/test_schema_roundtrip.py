@@ -1,5 +1,44 @@
 from __future__ import annotations
 
+from src.schemas.eval import CaseResult, ContextChunk, EvaluationRun, RerankerConfig, RetrievalCandidate
+
+
+def test_roundtrip_case_result():
+    chunk = ContextChunk(id="doc_1:0", source="/path/file.md", text="hello world", score=0.9, metadata={})
+    rc = RetrievalCandidate(query="q", chunk=chunk, rank=1, score=0.9, route="hybrid")
+    c = CaseResult(
+        id="case_1",
+        mode="retrieval",
+        tags=["smoke"],
+        query="q",
+        predicted_answer="a",
+        retrieved_context=[chunk],
+        retrieval_snapshot=[rc],
+        metrics={"precision": 0.1, "recall": 0.2, "f1": 0.13},
+        timings={"retrieval_ms": 10},
+    )
+    js = c.model_dump_json()
+    c2 = CaseResult.model_validate_json(js)
+    assert c2 == c
+
+
+def test_roundtrip_evaluation_run():
+    rr = RerankerConfig()
+    er = EvaluationRun(
+        profile="default",
+        driver="dspy_rag",
+        reranker=rr,
+        seed=42,
+        started_at="2025-01-01T00:00:00",
+        finished_at=None,
+        overall={"precision": 0.1},
+        artifact_paths={"results_json": "metrics/foo.json"},
+    )
+    js = er.model_dump_json()
+    er2 = EvaluationRun.model_validate_json(js)
+    assert er2 == er
+
+
 import json
 import sys
 

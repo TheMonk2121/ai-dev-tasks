@@ -1,8 +1,65 @@
-# src/schemas/eval.py
 from __future__ import annotations
 
+from typing import Literal, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class RerankerConfig(BaseModel):
+    model_config = ConfigDict(strict=True)
+    enable: bool = True
+    model: str = "bge-reranker-base"
+    input_topk: int = 50
+    keep: int = 10
+    batch: int = 16
+    device: str = "cpu"
+    cache: bool = True
+
+
+class ContextChunk(BaseModel):
+    model_config = ConfigDict(strict=True)
+    id: str
+    source: str
+    text: str
+    score: Optional[float] = None
+    metadata: dict = Field(default_factory=dict)
+
+
+class RetrievalCandidate(BaseModel):
+    model_config = ConfigDict(strict=True)
+    query: str
+    chunk: ContextChunk
+    rank: int
+    score: Optional[float] = None
+    route: Literal["bm25", "vector", "hybrid", "trigram", "title_trigram"] = "hybrid"
+
+
+class CaseResult(BaseModel):
+    model_config = ConfigDict(strict=True)
+    id: str
+    mode: str
+    tags: list[str] = Field(default_factory=list)
+    query: str
+    predicted_answer: str
+    retrieved_context: list[ContextChunk]
+    retrieval_snapshot: list[RetrievalCandidate]
+    metrics: dict
+    timings: dict
+
+
+class EvaluationRun(BaseModel):
+    model_config = ConfigDict(strict=True)
+    profile: str
+    driver: str
+    reranker: RerankerConfig
+    seed: int | None = None
+    started_at: str
+    finished_at: str | None = None
+    overall: dict
+    artifact_paths: dict
+
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Union
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 

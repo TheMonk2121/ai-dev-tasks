@@ -1,40 +1,54 @@
-# AI Dev Tasks Makefile
-# Provides convenient targets for common development tasks
+# AI Dev Tasks - Test Targets
+# 
+# test-fast: Run quick gate tests in host venv (macOS)
+# test-full: Run full test suite in container venv (Linux)
 
-.PHONY: help eval-real eval-gold eval-mock test-profiles
+.PHONY: test-fast test-full setup-host setup-container clean
 
-help:  ## Show this help message
+# Environment variables for deterministic runs
+export RAGCHECKER_BYPASS_CLI=1
+export TOKENIZERS_PARALLELISM=false
+export DSPY_CACHE=0
+export AWS_REGION=us-east-1
+export POSTGRES_DSN=mock://test
+
+# Quick gate tests in host venv (macOS)
+test-fast:
+	@echo "Running quick gate tests in host venv..."
+	uv run pytest -q tests/test_schema_roundtrip.py tests/test_doc_coherence_validator.py tests/test_coder_role.py
+
+# Full test suite in container venv (Linux)
+test-full:
+	@echo "Running full test suite in container venv..."
+	./scripts/docker_pytest.sh
+
+# Full test suite with caching (faster for repeated runs)
+test-full-cached:
+	@echo "Running full test suite with cached venv..."
+	./scripts/docker_pytest_cached.sh
+
+# Setup host environment for quick dev
+setup-host:
+	@echo "Setting up host venv for quick dev..."
+	./scripts/setup_host_venv.sh
+
+# Setup container environment for full testing
+setup-container:
+	@echo "Setting up container venv for full testing..."
+	./scripts/setup_container_venv.sh
+
+# Clean up virtual environments
+clean:
+	@echo "Cleaning up virtual environments..."
+	rm -rf .venv .venv-linux
+
+# Help target
+help:
 	@echo "Available targets:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
-
-eval-real:  ## Baseline/tuning on real RAG
-	./scripts/eval_real.sh
-
-eval-gold:  ## Real RAG + gold cases
-	./scripts/eval_gold.sh
-
-eval-mock:  ## Infra-only smoke (never for baselines)
-	./scripts/eval_mock.sh
-
-test-profiles:  ## Test all evaluation profiles
-	@echo "Testing profile configuration loader..."
-	@python3 scripts/lib/config_loader.py --profile real --help || true
-	@python3 scripts/lib/config_loader.py --profile gold --help || true
-	@python3 scripts/lib/config_loader.py --profile mock --help || true
-	@echo "✅ Profile tests completed"
-
-# Development targets
-install:  ## Install dependencies
-	pip install -r requirements.txt
-
-lint:  ## Run linting
-	ruff check .
-	pyright .
-
-test:  ## Run tests
-	pytest tests/ -v
-
-clean:  ## Clean temporary files
-	find . -type f -name "*.pyc" -delete
-	find . -type d -name "__pycache__" -delete
-	find . -type d -name "*.egg-info" -exec rm -rf {} +
+	@echo "  test-fast        - Run quick gate tests in host venv (macOS)"
+	@echo "  test-full        - Run full test suite in container venv (Linux)"
+	@echo "  test-full-cached - Run full test suite with cached venv (faster)"
+	@echo "  setup-host       - Setup host environment for quick dev"
+	@echo "  setup-container  - Setup container environment for full testing"
+	@echo "  clean            - Clean up virtual environments"
+	@echo "  help             - Show this help message"
