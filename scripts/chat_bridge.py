@@ -8,7 +8,7 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,11 +26,11 @@ app.add_middleware(
 )
 
 # Store active connections
-cursor_connections: List[WebSocket] = []
-codex_connections: List[WebSocket] = []
+cursor_connections: list[WebSocket] = []
+codex_connections: list[WebSocket] = []
 
 # Message history
-message_history: List[Dict] = []
+message_history: list[dict] = []
 
 
 class ChatMessage(BaseModel):
@@ -43,7 +43,7 @@ class ChatMessage(BaseModel):
 class StatusUpdate(BaseModel):
     agent: str
     status: str
-    details: Optional[Dict] = None
+    details: dict | None = None
     timestamp: float
 
 
