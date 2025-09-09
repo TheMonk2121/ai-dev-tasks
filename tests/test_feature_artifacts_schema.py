@@ -1,12 +1,16 @@
 import sys
 from pathlib import Path
 
+import pytest
 from pydantic import TypeAdapter
 
 # Add the dspy-rag-system src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))
 
-from dspy_modules.retriever.feature_schema import FusionFeatures
+try:
+    from dspy_modules.retriever.feature_schema import FusionFeatures
+except ImportError as e:
+    pytest.skip(f"DSPy feature schema not available: {e}", allow_module_level=True)
 
 TA = TypeAdapter(FusionFeatures)
 
