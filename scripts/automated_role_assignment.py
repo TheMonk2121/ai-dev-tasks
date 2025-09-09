@@ -11,7 +11,7 @@ and can update the memory rehydrator with the results.
 import argparse
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 # Add scripts directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
@@ -25,8 +25,8 @@ class AutomatedRoleAssignment:
     def __init__(self, archives_dir: str = "600_archives"):
         self.archives_dir = Path(archives_dir)
         self.metadata_system = RoleAssignmentMetadata()
-        self.assignments: Dict[str, RoleAssignment] = {}
-        self.conflicts: List[Dict] = []
+        self.assignments: dict[str, RoleAssignment] = {}
+        self.conflicts: list[dict] = []
         self.stats = {
             "total_files": 0,
             "processed_files": 0,
@@ -37,7 +37,7 @@ class AutomatedRoleAssignment:
             "errors": 0,
         }
 
-    def scan_archives(self, file_pattern: str = "*.md") -> List[Path]:
+    def scan_archives(self, file_pattern: str = "*.md") -> list[Path]:
         """
         Scan the archives directory for files to process.
 
@@ -66,7 +66,7 @@ class AutomatedRoleAssignment:
             RoleAssignment for the file
         """
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             assignment = self.metadata_system.assign_roles_to_file(file_path, content)
@@ -92,7 +92,7 @@ class AutomatedRoleAssignment:
             print(f"❌ Error processing {file_path}: {e}")
             return RoleAssignment(roles=set(), source="error", confidence=0.0, metadata={"error": str(e)})
 
-    def process_archives(self, file_pattern: str = "*.md", dry_run: bool = False) -> Dict:
+    def process_archives(self, file_pattern: str = "*.md", dry_run: bool = False) -> dict:
         """
         Process all files in the archives directory.
 
@@ -144,7 +144,7 @@ class AutomatedRoleAssignment:
     def _detect_conflicts(self):
         """Detect conflicts in role assignments."""
         # Group files by assigned roles
-        role_groups: Dict[Tuple, List[str]] = {}
+        role_groups: dict[tuple, list[str]] = {}
         for file_path, assignment in self.assignments.items():
             if assignment.roles:
                 roles_key = tuple(sorted(assignment.roles))
@@ -215,7 +215,7 @@ class AutomatedRoleAssignment:
                 roles_str = ", ".join(sorted(assignment.roles))
                 print(f"    • {file_path}: {roles_str}")
 
-    def generate_report(self, output_file: Optional[str] = None) -> str:
+    def generate_report(self, output_file: str | None = None) -> str:
         """
         Generate a detailed report of role assignments.
 
@@ -276,6 +276,7 @@ class AutomatedRoleAssignment:
 
         return report_content
 
+
 def main():
     """Main entry point for the automated role assignment script."""
     parser = argparse.ArgumentParser(description="Automated role assignment for 600_archives files")
@@ -302,6 +303,7 @@ def main():
     # Exit with error code if there were errors
     if stats["errors"] > 0:
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

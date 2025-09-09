@@ -20,14 +20,14 @@ import subprocess
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 
 class BacklogItem:
     """Represents a backlog item with enhanced tracking."""
 
     def __init__(
-        self, id: str, title: str, status: str, started_at: Optional[str] = None, last_updated: Optional[str] = None
+        self, id: str, title: str, status: str, started_at: str | None = None, last_updated: str | None = None
     ):
         self.id = id
         self.title = title
@@ -46,7 +46,7 @@ class BacklogItem:
         except ValueError:
             return False
 
-    def days_in_progress(self) -> Optional[int]:
+    def days_in_progress(self) -> int | None:
         """Get number of days item has been in progress."""
         if self.status != "in-progress" or not self.started_at:
             return None
@@ -66,7 +66,7 @@ class EnhancedBacklogTracker:
         self.content = self.backlog_file.read_text()
         self.items = self._parse_backlog_items()
 
-    def _parse_backlog_items(self) -> Dict[str, BacklogItem]:
+    def _parse_backlog_items(self) -> dict[str, BacklogItem]:
         """Parse backlog items from the markdown file."""
         items = {}
 
@@ -86,7 +86,7 @@ class EnhancedBacklogTracker:
 
         return items
 
-    def _extract_timestamp(self, item_id: str, field: str) -> Optional[str]:
+    def _extract_timestamp(self, item_id: str, field: str) -> str | None:
         """Extract timestamp from HTML comments for a specific item."""
         # Look for timestamp after the specific item
         item_pattern = rf"\| {re.escape(item_id)} \| [^|]+\| [^|]+\| [^|]+\| [^|]+\| [^|]+\| [^|]+\| [^|]+\|"
@@ -188,7 +188,7 @@ class EnhancedBacklogTracker:
         return True
 
     def _update_item_status(
-        self, item_id: str, new_status: str, started_at: Optional[str] = None, last_updated: Optional[str] = None
+        self, item_id: str, new_status: str, started_at: str | None = None, last_updated: str | None = None
     ) -> None:
         """Update item status and timestamps in the backlog file."""
         # Update status in table
@@ -220,7 +220,7 @@ class EnhancedBacklogTracker:
                 self.items[item_id].last_updated = last_updated
             self.items[item_id].status = new_status
 
-    def check_stale_items(self, stale_days: int = 7) -> List[BacklogItem]:
+    def check_stale_items(self, stale_days: int = 7) -> list[BacklogItem]:
         """Find items that have been in-progress too long."""
         stale_items = []
 
@@ -230,11 +230,11 @@ class EnhancedBacklogTracker:
 
         return stale_items
 
-    def list_in_progress(self) -> List[BacklogItem]:
+    def list_in_progress(self) -> list[BacklogItem]:
         """List all items currently in progress."""
         return [item for item in self.items.values() if item.status == "in-progress"]
 
-    def get_item_summary(self, item_id: str) -> Optional[str]:
+    def get_item_summary(self, item_id: str) -> str | None:
         """Get a summary of an item's tracking information."""
         if item_id not in self.items:
             return None

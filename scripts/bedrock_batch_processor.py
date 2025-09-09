@@ -9,7 +9,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from bedrock_client import BedrockClient, BedrockUsage
 
@@ -22,7 +22,7 @@ class BatchRequest:
     prompt: str
     max_tokens: int = 1000
     temperature: float = 0.1
-    system_prompt: Optional[str] = None
+    system_prompt: str | None = None
     use_json_prompt: bool = False
 
 
@@ -35,7 +35,7 @@ class BatchResponse:
     usage: BedrockUsage
     processing_time: float
     success: bool = True
-    error: Optional[str] = None
+    error: str | None = None
 
 
 class BedrockBatchProcessor:
@@ -52,7 +52,7 @@ class BedrockBatchProcessor:
 
     def __init__(
         self,
-        bedrock_client: Optional[BedrockClient] = None,
+        bedrock_client: BedrockClient | None = None,
         max_concurrent: int = 5,
         batch_size: int = 10,
         rate_limit_delay: float = 0.1,
@@ -77,7 +77,7 @@ class BedrockBatchProcessor:
         self.failed_requests = 0
         self.total_usage = BedrockUsage()
 
-    def process_batch_sync(self, requests: List[BatchRequest]) -> List[BatchResponse]:
+    def process_batch_sync(self, requests: list[BatchRequest]) -> list[BatchResponse]:
         """
         Process batch of requests synchronously with threading.
 
@@ -191,7 +191,7 @@ class BedrockBatchProcessor:
         self.total_usage.request_count += usage.request_count
         self.total_usage.total_cost += usage.total_cost
 
-    def process_ragchecker_batch(self, test_cases: List[Dict[str, Any]]) -> List[BatchResponse]:
+    def process_ragchecker_batch(self, test_cases: list[dict[str, Any]]) -> list[BatchResponse]:
         """
         Process RAGChecker test cases in batch.
 
@@ -220,7 +220,7 @@ class BedrockBatchProcessor:
 
         return self.process_batch_sync(batch_requests)
 
-    def _build_ragchecker_prompt(self, test_case: Dict[str, Any]) -> str:
+    def _build_ragchecker_prompt(self, test_case: dict[str, Any]) -> str:
         """Build RAGChecker evaluation prompt from test case."""
         query = test_case.get("query", "")
         context = test_case.get("retrieved_context", [])
@@ -249,7 +249,7 @@ Score range: 0.0 to 1.0
 """
         return prompt
 
-    def optimize_batch_size(self, sample_requests: List[BatchRequest], target_time: float = 60.0) -> int:
+    def optimize_batch_size(self, sample_requests: list[BatchRequest], target_time: float = 60.0) -> int:
         """
         Optimize batch size based on performance testing.
 
@@ -312,7 +312,7 @@ Score range: 0.0 to 1.0
         print(f"✅ Optimal batch size: {optimal_size}")
         return optimal_size
 
-    def get_performance_metrics(self) -> Dict[str, Any]:
+    def get_performance_metrics(self) -> dict[str, Any]:
         """Get comprehensive performance metrics."""
         return {
             "total_requests": self.total_requests,
@@ -335,7 +335,7 @@ Score range: 0.0 to 1.0
             },
         }
 
-    def export_results(self, responses: List[BatchResponse], output_file: str):
+    def export_results(self, responses: list[BatchResponse], output_file: str):
         """Export batch processing results to file."""
         results = {
             "batch_summary": {

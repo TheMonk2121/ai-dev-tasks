@@ -16,7 +16,7 @@ import sys
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 # Add the project root to the path for imports
 sys.path.append(str(Path(__file__).parent.parent))
@@ -146,7 +146,7 @@ class RerankerCollector:
         self.baseline_results = []
         self.reranked_results = []
 
-    async def measure_baseline_performance(self, queries: List[str]) -> float:
+    async def measure_baseline_performance(self, queries: list[str]) -> float:
         """Measure baseline retrieval performance without reranker."""
         # Simulate baseline retrieval
         baseline_scores = []
@@ -158,7 +158,7 @@ class RerankerCollector:
         self.baseline_results = baseline_scores
         return statistics.mean(baseline_scores)
 
-    async def measure_reranked_performance(self, queries: List[str]) -> float:
+    async def measure_reranked_performance(self, queries: list[str]) -> float:
         """Measure retrieval performance with reranker."""
         # Simulate reranked retrieval
         reranked_scores = []
@@ -351,7 +351,7 @@ class BaselineMetricsCollector:
         else:
             return "NEEDS_IMPROVEMENT"
 
-    def save_metrics(self, metrics: BaselineMetrics, output_file: "Optional[str]" = None):
+    def save_metrics(self, metrics: BaselineMetrics, output_file: "str | None" = None):
         """Save metrics to JSON file."""
         if not output_file:
             timestamp = int(metrics.timestamp)
