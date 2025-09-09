@@ -29,6 +29,7 @@ from typing import Any, Dict, List, Optional
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class ResearchFinding:
     """Represents a research finding with metadata."""
@@ -37,10 +38,11 @@ class ResearchFinding:
     topic: str
     key_insight: str
     implementation_impact: str
-    actionable_patterns: List[str]
-    citations: List[str]
+    actionable_patterns: list[str]
+    citations: list[str]
     confidence: float = 1.0
-    last_updated: Optional[str] = None
+    last_updated: str | None = None
+
 
 @dataclass
 class SchemaPattern:
@@ -48,11 +50,12 @@ class SchemaPattern:
 
     pattern_name: str
     description: str
-    research_basis: List[str]
+    research_basis: list[str]
     implementation: str
-    validation_criteria: List[str]
-    performance_benchmarks: Dict[str, Any]
-    content_types: List[str]
+    validation_criteria: list[str]
+    performance_benchmarks: dict[str, Any]
+    content_types: list[str]
+
 
 @dataclass
 class ExtractionSchema:
@@ -60,12 +63,13 @@ class ExtractionSchema:
 
     schema_id: str
     content_type: str
-    patterns: List[SchemaPattern]
-    validation_rules: List[str]
-    quality_metrics: Dict[str, Any]
+    patterns: list[SchemaPattern]
+    validation_rules: list[str]
+    quality_metrics: dict[str, Any]
     research_coverage: float
     created_at: str
     version: str = "1.0"
+
 
 class ResearchBasedSchemaDesign:
     """Handles research-based schema design for extraction."""
@@ -73,9 +77,9 @@ class ResearchBasedSchemaDesign:
     def __init__(self):
         self.research_dir = Path("500_research")
         self.schemas_dir = Path("schemas")
-        self.findings: List[ResearchFinding] = []
-        self.patterns: List[SchemaPattern] = []
-        self.schemas: Dict[str, ExtractionSchema] = {}
+        self.findings: list[ResearchFinding] = []
+        self.patterns: list[SchemaPattern] = []
+        self.schemas: dict[str, ExtractionSchema] = {}
 
         # Ensure directories exist
         self.schemas_dir.mkdir(exist_ok=True)
@@ -87,7 +91,7 @@ class ResearchBasedSchemaDesign:
         """Load existing schemas from the schemas directory."""
         for schema_file in self.schemas_dir.glob("*.json"):
             try:
-                with open(schema_file, "r", encoding="utf-8") as f:
+                with open(schema_file, encoding="utf-8") as f:
                     schema_data = json.load(f)
                     schema = ExtractionSchema(**schema_data)
                     self.schemas[schema.schema_id] = schema
@@ -95,7 +99,7 @@ class ResearchBasedSchemaDesign:
             except Exception as e:
                 logger.warning(f"Failed to load schema {schema_file}: {e}")
 
-    def analyze_research(self) -> Dict[str, Any]:
+    def analyze_research(self) -> dict[str, Any]:
         """Analyze research findings from 500_research/ directory."""
         logger.info("Starting research analysis...")
 
@@ -136,7 +140,7 @@ class ResearchBasedSchemaDesign:
         logger.info(f"Research analysis complete: {analysis_results['findings_extracted']} findings extracted")
         return analysis_results
 
-    def _extract_findings_from_file(self, file_path: Path) -> List[ResearchFinding]:
+    def _extract_findings_from_file(self, file_path: Path) -> list[ResearchFinding]:
         """Extract research findings from a markdown file."""
         findings = []
         content = file_path.read_text(encoding="utf-8")
@@ -182,7 +186,7 @@ class ResearchBasedSchemaDesign:
 
         return findings
 
-    def generate_schema_patterns(self) -> List[SchemaPattern]:
+    def generate_schema_patterns(self) -> list[SchemaPattern]:
         """Generate schema patterns based on research findings."""
         logger.info("Generating schema patterns from research findings...")
 
@@ -406,7 +410,7 @@ class ResearchBasedSchemaDesign:
         logger.info(f"Generated schema: {schema.schema_id} with {len(relevant_patterns)} patterns")
         return schema
 
-    def validate_schema(self, schema: ExtractionSchema) -> Dict[str, Any]:
+    def validate_schema(self, schema: ExtractionSchema) -> dict[str, Any]:
         """Validate a schema against research findings and quality criteria."""
         logger.info(f"Validating schema: {schema.schema_id}")
 
@@ -484,7 +488,7 @@ class ResearchBasedSchemaDesign:
 
         logger.info(f"Schema saved to: {schema_file}")
 
-    def load_schema(self, schema_id: str) -> Optional[ExtractionSchema]:
+    def load_schema(self, schema_id: str) -> ExtractionSchema | None:
         """Load a schema from disk."""
         schema_file = self.schemas_dir / f"{schema_id}.json"
 
@@ -493,7 +497,7 @@ class ResearchBasedSchemaDesign:
             return None
 
         try:
-            with open(schema_file, "r", encoding="utf-8") as f:
+            with open(schema_file, encoding="utf-8") as f:
                 schema_data = json.load(f)
 
             # Reconstruct patterns
@@ -512,7 +516,7 @@ class ResearchBasedSchemaDesign:
             logger.error(f"Error loading schema {schema_id}: {e}")
             return None
 
-    def get_schema_summary(self) -> Dict[str, Any]:
+    def get_schema_summary(self) -> dict[str, Any]:
         """Get a summary of all schemas."""
         summary = {"total_schemas": len(self.schemas), "schemas": {}, "research_coverage": 0.0, "average_patterns": 0.0}
 
@@ -536,6 +540,7 @@ class ResearchBasedSchemaDesign:
             summary["average_patterns"] = total_patterns / len(self.schemas)
 
         return summary
+
 
 def main():
     """Main entry point for research-based schema design."""
@@ -612,6 +617,7 @@ def main():
         print("  python3 scripts/research_based_schema_design.py --analyze-research")
         print("  python3 scripts/research_based_schema_design.py --generate-schema --content-type documentation")
         print("  python3 scripts/research_based_schema_design.py --validate-schema --schema-id documentation_schema_v1")
+
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,6 @@ import json
 import os
 import threading
 import time
-from typing import Optional
 
 import boto3
 import uvicorn

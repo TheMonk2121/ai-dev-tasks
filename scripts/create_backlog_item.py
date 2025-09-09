@@ -24,7 +24,6 @@ import re
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import List
 
 BACKLOG_PATH = Path("000_core/000_backlog.md")
 
@@ -44,7 +43,7 @@ def _load_backlog() -> str:
         sys.exit(1)
 
 
-def _extract_all_backlog_ids(text: str) -> List[int]:
+def _extract_all_backlog_ids(text: str) -> list[int]:
     # Robust: capture any B-#### occurrences anywhere in the file
     ids = re.findall(r"B-(\d{4})", text)
     return [int(x) for x in ids]

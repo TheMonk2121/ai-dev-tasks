@@ -2,7 +2,6 @@
 import json
 import os
 import sys
-from typing import Any
 
 sys.path.insert(0, "dspy-rag-system/src")
 import dspy

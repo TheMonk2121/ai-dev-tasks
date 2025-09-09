@@ -25,7 +25,7 @@ sys.path.insert(0, str(dspy_rag_path))
 from src.utils.config_lock import ConfigLockManager, LockedConfig
 
 
-def load_baseline_metrics(config: LockedConfig) -> Dict[str, float]:
+def load_baseline_metrics(config: LockedConfig) -> dict[str, float]:
     """Load baseline metrics from configuration"""
     baseline = config.baseline_metrics or {}
 
@@ -45,7 +45,7 @@ def load_baseline_metrics(config: LockedConfig) -> Dict[str, float]:
     return {**defaults, **baseline}
 
 
-def load_evaluation_results(results_dir: Path) -> Optional[Dict[str, Any]]:
+def load_evaluation_results(results_dir: Path) -> dict[str, Any] | None:
     """Load the latest evaluation results"""
     if not results_dir.exists():
         return None
@@ -58,14 +58,14 @@ def load_evaluation_results(results_dir: Path) -> Optional[Dict[str, Any]]:
     latest_file = max(eval_files, key=lambda f: f.stat().st_mtime)
 
     try:
-        with open(latest_file, "r") as f:
+        with open(latest_file) as f:
             return json.load(f)
     except Exception as e:
         print(f"❌ Error loading evaluation results: {e}")
         return None
 
 
-def calculate_retrieval_metrics(eval_data: Dict[str, Any]) -> Dict[str, float]:
+def calculate_retrieval_metrics(eval_data: dict[str, Any]) -> dict[str, float]:
     """Calculate retrieval metrics from evaluation data"""
     case_results = eval_data.get("case_results", [])
     if not case_results:
@@ -97,7 +97,7 @@ def calculate_retrieval_metrics(eval_data: Dict[str, Any]) -> Dict[str, float]:
     }
 
 
-def calculate_end_metrics(eval_data: Dict[str, Any]) -> Dict[str, float]:
+def calculate_end_metrics(eval_data: dict[str, Any]) -> dict[str, float]:
     """Calculate end-to-end metrics"""
     case_results = eval_data.get("case_results", [])
     if not case_results:
@@ -127,7 +127,7 @@ def calculate_end_metrics(eval_data: Dict[str, Any]) -> Dict[str, float]:
     }
 
 
-def calculate_data_quality_metrics(eval_data: Dict[str, Any]) -> Dict[str, Any]:
+def calculate_data_quality_metrics(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Calculate data quality metrics"""
     case_results = eval_data.get("case_results", [])
     if not case_results:
@@ -174,7 +174,7 @@ def calculate_data_quality_metrics(eval_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def check_kpi_thresholds(current_metrics: Dict[str, float], baseline_metrics: Dict[str, float]) -> Dict[str, Any]:
+def check_kpi_thresholds(current_metrics: dict[str, float], baseline_metrics: dict[str, float]) -> dict[str, Any]:
     """Check KPI thresholds against baseline"""
     alerts = []
     warnings = []
@@ -236,8 +236,8 @@ def check_kpi_thresholds(current_metrics: Dict[str, float], baseline_metrics: Di
 
 
 def generate_kpi_report(
-    config: LockedConfig, eval_data: Dict[str, Any], baseline_metrics: Dict[str, float]
-) -> Dict[str, Any]:
+    config: LockedConfig, eval_data: dict[str, Any], baseline_metrics: dict[str, float]
+) -> dict[str, Any]:
     """Generate comprehensive KPI report"""
 
     # Calculate current metrics

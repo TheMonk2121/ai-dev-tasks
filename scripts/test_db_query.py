@@ -41,7 +41,7 @@ def test_query():
 
             for i, row in enumerate(rows):
                 # Type cast to help the type checker understand this is a dict-like object
-                row_dict: Dict[str, Any] = row  # type: ignore
+                row_dict: dict[str, Any] = row  # type: ignore
                 print(f"\nRow {i+1}:")
                 print(f"  ID: {row_dict['id']}")
                 print(f"  File: {row_dict['filename']}")

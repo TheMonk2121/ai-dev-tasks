@@ -34,7 +34,7 @@ os.environ.setdefault("MPLCONFIGDIR", str(_cache_root / "mpl"))
 os.environ.setdefault("DSPY_CACHE_DIR", str(_cache_root / "dspy"))
 
 
-def _run(cmd: list[str], timeout: int = 20, env: Optional[Dict[str, str]] = None) -> tuple[bool, str, str]:
+def _run(cmd: list[str], timeout: int = 20, env: dict[str, str] | None = None) -> tuple[bool, str, str]:
     try:
         res = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=str(project_root), env=env)
         return res.returncode == 0, res.stdout.strip(), res.stderr.strip()
@@ -44,7 +44,7 @@ def _run(cmd: list[str], timeout: int = 20, env: Optional[Dict[str, str]] = None
         return False, "", str(e)
 
 
-def check_database() -> Dict[str, Any]:
+def check_database() -> dict[str, Any]:
     dsn = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_DSN") or ""
     offline = os.getenv("MEMORY_HEALTHCHECK_OFFLINE", "0") == "1" or dsn.startswith("mock://")
     if offline:
@@ -64,7 +64,7 @@ def check_database() -> Dict[str, Any]:
     }
 
 
-def check_ltst() -> Dict[str, Any]:
+def check_ltst() -> dict[str, Any]:
     start = time.time()
     try:
         from src.utils.ltst_memory_system import LTSTMemorySystem
@@ -87,7 +87,7 @@ def check_ltst() -> Dict[str, Any]:
         return {"component": "ltst", "status": "error", "error": str(e)}
 
 
-def check_episodic() -> Dict[str, Any]:
+def check_episodic() -> dict[str, Any]:
     start = time.time()
     try:
         from src.utils.episodic_reflection_store import EpisodicReflectionStore
@@ -119,7 +119,7 @@ def check_episodic() -> Dict[str, Any]:
         return {"component": "episodic", "status": "error", "error": str(e)}
 
 
-def check_cursor(role: str = "planner") -> Dict[str, Any]:
+def check_cursor(role: str = "planner") -> dict[str, Any]:
     ok, out, err = _run([sys.executable, "scripts/cursor_memory_rehydrate.py", role, "healthcheck ping"], timeout=20)
     return {
         "component": "cursor_rehydrator",
@@ -128,7 +128,7 @@ def check_cursor(role: str = "planner") -> Dict[str, Any]:
     }
 
 
-def check_go_cli() -> Dict[str, Any]:
+def check_go_cli() -> dict[str, Any]:
     bin_path = dspy_root / "src" / "cli" / "memory_rehydration_cli"
     if not bin_path.exists():
         return {"component": "go_cli", "status": "missing_binary", "path": str(bin_path)}
@@ -139,7 +139,7 @@ def check_go_cli() -> Dict[str, Any]:
     return {"component": "go_cli", "status": "healthy" if ok else "error", "output": out if ok else err}
 
 
-def check_prime(role: str = "planner") -> Dict[str, Any]:
+def check_prime(role: str = "planner") -> dict[str, Any]:
     ok, out, err = _run([sys.executable, "scripts/prime_cursor_chat.py", role, "healthcheck"], timeout=20)
     return {"component": "prime_cursor", "status": "healthy" if ok else "error", "output": out if ok else err}
 
@@ -151,7 +151,7 @@ class Recommendation:
     rationale: str
 
 
-def make_recommendations(results: Dict[str, Any]) -> list[Recommendation]:
+def make_recommendations(results: dict[str, Any]) -> list[Recommendation]:
     recs: list[Recommendation] = []
 
     db = results.get("database", {})
@@ -219,7 +219,7 @@ def make_recommendations(results: Dict[str, Any]) -> list[Recommendation]:
     return recs
 
 
-def format_text(results: Dict[str, Any], recs: list[Recommendation]) -> str:
+def format_text(results: dict[str, Any], recs: list[Recommendation]) -> str:
     lines: list[str] = []
     lines.append("🧠 Memory Systems Healthcheck")
     ok_count = sum(1 for k, v in results.items() if isinstance(v, dict) and v.get("status") == "healthy")
@@ -266,7 +266,7 @@ def main():
     if args.offline:
         os.environ["MEMORY_HEALTHCHECK_OFFLINE"] = "1"
 
-    results: Dict[str, Any] = {"timestamp": time.time()}
+    results: dict[str, Any] = {"timestamp": time.time()}
 
     # Ordered checks
     results["database"] = check_database()

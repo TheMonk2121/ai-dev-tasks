@@ -12,21 +12,21 @@ from typing import Any, Dict, List, Optional
 import yaml
 
 
-def load_config_metadata(config_path: str) -> Optional[Dict[str, Any]]:
+def load_config_metadata(config_path: str) -> dict[str, Any] | None:
     """Load metadata from a config sidecar file"""
     meta_path = config_path.replace(".env", ".meta.yml")
     if not os.path.exists(meta_path):
         return None
 
     try:
-        with open(meta_path, "r") as f:
+        with open(meta_path) as f:
             return yaml.safe_load(f)
     except Exception as e:
         print(f"Warning: Could not load metadata from {meta_path}: {e}")
         return None
 
 
-def scan_configs(configs_dir: str = "configs") -> List[Dict[str, Any]]:
+def scan_configs(configs_dir: str = "configs") -> list[dict[str, Any]]:
     """Scan all configuration files and their metadata"""
     configs = []
 
@@ -67,7 +67,7 @@ def scan_configs(configs_dir: str = "configs") -> List[Dict[str, Any]]:
     return configs
 
 
-def build_evolution_graph(configs: List[Dict[str, Any]]) -> Dict[str, Any]:
+def build_evolution_graph(configs: list[dict[str, Any]]) -> dict[str, Any]:
     """Build evolution graph from configuration metadata"""
     nodes = []
     edges = []
@@ -105,7 +105,7 @@ def build_evolution_graph(configs: List[Dict[str, Any]]) -> Dict[str, Any]:
     return {"nodes": nodes, "edges": edges, "generated_at": datetime.now().isoformat(), "total_configs": len(configs)}
 
 
-def generate_mermaid_diagram(evolution_graph: Dict[str, Any]) -> str:
+def generate_mermaid_diagram(evolution_graph: dict[str, Any]) -> str:
     """Generate Mermaid diagram from evolution graph"""
     mermaid = ["graph TD"]
 
@@ -122,7 +122,7 @@ def generate_mermaid_diagram(evolution_graph: Dict[str, Any]) -> str:
     return "\n".join(mermaid)
 
 
-def generate_evolution_report(evolution_graph: Dict[str, Any], output_dir: str = "configs") -> str:
+def generate_evolution_report(evolution_graph: dict[str, Any], output_dir: str = "configs") -> str:
     """Generate comprehensive evolution report"""
     report_lines = [
         "# Configuration Evolution Report",

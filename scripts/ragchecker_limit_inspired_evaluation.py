@@ -34,7 +34,7 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
         print("📊 Facet Calculator: yield-based selection enabled")
         print("📊 Boolean Parser: AND/OR/NOT logic handling enabled")
 
-    def evaluate_with_limit_features(self, test_cases: List[Any]) -> Dict[str, Any]:
+    def evaluate_with_limit_features(self, test_cases: list[Any]) -> dict[str, Any]:
         """Evaluate test cases with LIMIT-inspired features."""
 
         print("\n🔍 Running LIMIT-inspired evaluation")
@@ -60,7 +60,7 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
 
         return evaluation_report
 
-    def _evaluate_case_with_limit_features(self, test_case: Any) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    def _evaluate_case_with_limit_features(self, test_case: Any) -> tuple[dict[str, Any], dict[str, Any]]:
         """Evaluate a single test case with LIMIT-inspired features."""
 
         start_time = time.time()
@@ -137,7 +137,7 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
 
         return result, health_metrics
 
-    def _simulate_vector_scores(self, query: str) -> List[float]:
+    def _simulate_vector_scores(self, query: str) -> list[float]:
         """Simulate vector scores for geometry analysis (placeholder for real implementation)."""
         # In real implementation, this would come from actual vector retrieval
         import random
@@ -155,7 +155,7 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
 
         return sorted(scores, reverse=True)
 
-    def _simulate_facet_yields(self, query: str) -> List[Dict[str, Any]]:
+    def _simulate_facet_yields(self, query: str) -> list[dict[str, Any]]:
         """Simulate facet yields (placeholder for real implementation)."""
         # In real implementation, this would come from actual facet generation and evaluation
         import random
@@ -178,14 +178,14 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
 
         return facets
 
-    def _calculate_fusion_gain(self, facet_yields: List[Dict[str, Any]]) -> int:
+    def _calculate_fusion_gain(self, facet_yields: list[dict[str, Any]]) -> int:
         """Calculate fusion gain from facet yields."""
         # In real implementation, this would be the actual difference in retrieved docs
         kept_facets = [f for f in facet_yields if f["should_keep"]]
         total_new_docs = sum(f["new_docs_count"] for f in kept_facets)
         return total_new_docs
 
-    def _log_case_metrics(self, query_id: str, case_result: Dict[str, Any], health_metrics: Dict[str, Any]) -> None:
+    def _log_case_metrics(self, query_id: str, case_result: dict[str, Any], health_metrics: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
             "precision": case_result.get("precision", 0.0),
@@ -199,8 +199,8 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
         }
 
     def _generate_limit_evaluation_report(
-        self, results: List[Dict[str, Any]], health_metrics_summary: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, results: list[dict[str, Any]], health_metrics_summary: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Generate comprehensive LIMIT-inspired evaluation report."""
 
         # Calculate overall metrics
@@ -244,7 +244,7 @@ class LimitInspiredEvaluator(OfficialRAGCheckerEvaluator):
 
         return report
 
-    def _calculate_limit_statistics(self, health_metrics_summary: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _calculate_limit_statistics(self, health_metrics_summary: list[dict[str, Any]]) -> dict[str, Any]:
         """Calculate LIMIT-inspired statistics."""
 
         if not health_metrics_summary:

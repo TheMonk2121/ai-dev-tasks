@@ -104,12 +104,12 @@ class Task:
     status: TaskStatus
     description: str
     tech_footprint: str
-    dependencies: List[str]
-    score_total: Optional[float] = None
+    dependencies: list[str]
+    score_total: float | None = None
     human_required: bool = False
-    human_reason: Optional[str] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    human_reason: str | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 
 @dataclass
@@ -119,8 +119,8 @@ class ExecutionState:
     task_id: str
     status: TaskStatus
     started_at: datetime
-    completed_at: Optional[datetime] = None
-    error_message: Optional[str] = None
+    completed_at: datetime | None = None
+    error_message: str | None = None
     retry_count: int = 0
     progress: float = 0.0
 
@@ -128,7 +128,7 @@ class ExecutionState:
 class TaskExecutionEngine:
     """Main task execution engine."""
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: str | None = None):
         """Initialize the task execution engine."""
         self.config = self._load_config(config_path)
         self.state_db = self._init_state_database()
@@ -138,7 +138,7 @@ class TaskExecutionEngine:
 
         logger.info("Task execution engine initialized")
 
-    def _load_config(self, config_path: Optional[str]) -> Dict[str, Any]:
+    def _load_config(self, config_path: str | None) -> dict[str, Any]:
         """Load configuration from file or use defaults."""
         default_config = {
             "backlog_file": "000_core/000_backlog.md",
@@ -153,7 +153,7 @@ class TaskExecutionEngine:
 
         if config_path and os.path.exists(config_path):
             try:
-                with open(config_path, "r") as f:
+                with open(config_path) as f:
                     file_config = json.load(f)
                 default_config.update(file_config)
                 logger.info(f"Loaded configuration from {config_path}")
@@ -207,7 +207,7 @@ class TaskExecutionEngine:
         logger.info(f"State database initialized: {db_path}")
         return conn
 
-    def list_tasks(self, filter_status: Optional[str] = None, filter_priority: Optional[str] = None) -> List[Task]:
+    def list_tasks(self, filter_status: str | None = None, filter_priority: str | None = None) -> list[Task]:
         """List available tasks with optional filtering."""
         tasks = self.backlog_parser.parse_backlog(self.config["backlog_file"])
 
@@ -277,7 +277,7 @@ class TaskExecutionEngine:
             return False
 
     @retry(max_retries=2, backoff_factor=1.5)
-    def auto_execute(self, max_tasks: int = 5) -> List[str]:
+    def auto_execute(self, max_tasks: int = 5) -> list[str]:
         """Auto-execute the next priority tasks."""
         # Sanitize max_tasks input
         try:
@@ -302,7 +302,7 @@ class TaskExecutionEngine:
 
         return executed_tasks
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get current execution status."""
         cursor = self.state_db.cursor()
         cursor.execute(
@@ -355,7 +355,7 @@ class TaskExecutionEngine:
             logger.error(f"Failed to reset state: {e}")
             return False
 
-    def validate_dependencies(self) -> Dict[str, List[str]]:
+    def validate_dependencies(self) -> dict[str, list[str]]:
         """Validate task dependencies."""
         tasks = self.list_tasks()
         missing_dependencies = {}
@@ -387,7 +387,7 @@ class TaskExecutionEngine:
 
         return True
 
-    def _update_task_status(self, task_id: str, status: TaskStatus, error_message: Optional[str] = None) -> None:
+    def _update_task_status(self, task_id: str, status: TaskStatus, error_message: str | None = None) -> None:
         """Update task execution status in database."""
         try:
             cursor = self.state_db.cursor()
@@ -414,10 +414,10 @@ class TaskExecutionEngine:
 class BacklogParser:
     """Parser for backlog file."""
 
-    def parse_backlog(self, backlog_file: str) -> List[Task]:
+    def parse_backlog(self, backlog_file: str) -> list[Task]:
         """Parse the backlog file and extract tasks."""
         try:
-            with open(backlog_file, "r", encoding="utf-8") as f:
+            with open(backlog_file, encoding="utf-8") as f:
                 content = f.read()
 
             tasks = []
@@ -436,7 +436,7 @@ class BacklogParser:
             logger.error(f"Failed to parse backlog file: {e}")
             return []
 
-    def _parse_task_line(self, line: str, lines: List[str], line_index: int) -> Optional[Task]:
+    def _parse_task_line(self, line: str, lines: list[str], line_index: int) -> Task | None:
         """Parse a single task line from the backlog."""
         try:
             # Parse the main line
@@ -523,7 +523,7 @@ class BacklogParser:
 class TaskExecutor:
     """Task execution engine."""
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         """Initialize the task executor."""
         self.config = config
         logger.info("Task executor initialized")

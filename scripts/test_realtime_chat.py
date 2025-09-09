@@ -31,7 +31,7 @@ async def simulate_cursor_agent():
                     data = json.loads(response)
                     if data.get("sender") != "cursor":  # Don't echo our own messages
                         print(f"📥 Cursor received from {data.get('sender')}: {data.get('message')}")
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 print("⏰ Cursor timeout waiting for responses")
 
     except Exception as e:
@@ -61,7 +61,7 @@ async def simulate_codex_agent():
                     data = json.loads(response)
                     if data.get("sender") != "codex":  # Don't echo our own messages
                         print(f"📥 Codex received from {data.get('sender')}: {data.get('message')}")
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 print("⏰ Codex timeout waiting for responses")
 
     except Exception as e:
@@ -93,7 +93,7 @@ async def simulate_dspy_agent():
                     data = json.loads(response)
                     if data.get("sender") != "dspy_planner":
                         print(f"📥 DSPy Planner received from {data.get('sender')}: {data.get('message')}")
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 print("⏰ DSPy Planner timeout waiting for responses")
 
     except Exception as e:
@@ -115,7 +115,7 @@ async def main():
     # Run for 10 seconds
     try:
         await asyncio.wait_for(asyncio.gather(*tasks, return_exceptions=True), timeout=10)
-    except asyncio.TimeoutError:
+    except TimeoutError:
         print("\n⏰ Test completed (10 second timeout)")
 
     print("\n🎉 Real-time chat test completed!")

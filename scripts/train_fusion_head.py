@@ -13,7 +13,6 @@ import os
 import random
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
 
 import numpy as np
 import torch
@@ -83,7 +82,7 @@ def compute_pairwise_accuracy(pos_scores: torch.Tensor, neg_scores: torch.Tensor
 
 def train_epoch(
     model: nn.Module, dataloader: DataLoader, optimizer: optim.Optimizer, loss_fn: str, device: torch.device
-) -> Tuple[float, float]:
+) -> tuple[float, float]:
     """
     Train model for one epoch.
 
@@ -139,9 +138,7 @@ def train_epoch(
     return avg_loss, pairwise_acc
 
 
-def validate_epoch(
-    model: nn.Module, dataloader: DataLoader, loss_fn: str, device: torch.device
-) -> Tuple[float, float]:
+def validate_epoch(model: nn.Module, dataloader: DataLoader, loss_fn: str, device: torch.device) -> tuple[float, float]:
     """
     Validate model for one epoch.
 

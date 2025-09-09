@@ -33,7 +33,7 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
         print("📊 Aggressive precision tightening applied")
         print("🛡️ Recall guardrails maintained with slight tightening")
 
-    def evaluate_with_final_precision_push(self, test_cases: List[Any]) -> Dict[str, Any]:
+    def evaluate_with_final_precision_push(self, test_cases: list[Any]) -> dict[str, Any]:
         """Evaluate test cases with final precision push features."""
 
         print("\n🔍 Running final precision push evaluation")
@@ -59,7 +59,7 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
 
         return evaluation_report
 
-    def _evaluate_case_with_final_precision_push(self, test_case: Any) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    def _evaluate_case_with_final_precision_push(self, test_case: Any) -> tuple[dict[str, Any], dict[str, Any]]:
         """Evaluate a single test case with final precision push features."""
 
         start_time = time.time()
@@ -117,7 +117,7 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
 
         return result, final_metrics
 
-    def _simulate_final_precision_push_metrics(self, query: str) -> Dict[str, Any]:
+    def _simulate_final_precision_push_metrics(self, query: str) -> dict[str, Any]:
         """Simulate final precision push metrics (placeholder for real implementation)."""
         import random
 
@@ -150,7 +150,7 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
             },
         }
 
-    def _log_case_metrics(self, query_id: str, case_result: Dict[str, Any], final_metrics: Dict[str, Any]) -> None:
+    def _log_case_metrics(self, query_id: str, case_result: dict[str, Any], final_metrics: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
             "precision": case_result.get("precision", 0.0),
@@ -161,8 +161,8 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
         }
 
     def _generate_final_precision_push_report(
-        self, results: List[Dict[str, Any]], final_metrics_summary: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, results: list[dict[str, Any]], final_metrics_summary: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Generate comprehensive final precision push evaluation report."""
 
         # Calculate overall metrics
@@ -206,7 +206,7 @@ class FinalPrecisionPushEvaluator(OfficialRAGCheckerEvaluator):
 
         return report
 
-    def _calculate_final_precision_push_statistics(self, final_metrics_summary: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _calculate_final_precision_push_statistics(self, final_metrics_summary: list[dict[str, Any]]) -> dict[str, Any]:
         """Calculate final precision push statistics."""
 
         if not final_metrics_summary:

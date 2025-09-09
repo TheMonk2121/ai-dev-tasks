@@ -12,7 +12,7 @@ from limit_inspired_precision_recovery import LimitInspiredPrecisionRecovery
 class PrecisionLiftPackConfig(LimitInspiredPrecisionRecovery):
     """Precision lift pack with surgical tightenings for precision improvement."""
 
-    def _get_enhanced_config(self) -> Dict[str, Any]:
+    def _get_enhanced_config(self) -> dict[str, Any]:
         """Get enhanced configuration with precision lift pack."""
         # Start with base LIMIT configuration
         base_config = super()._get_enhanced_config()
@@ -51,7 +51,7 @@ class PrecisionLiftPackConfig(LimitInspiredPrecisionRecovery):
 
         return precision_config
 
-    def get_precision_lift_summary(self) -> Dict[str, Any]:
+    def get_precision_lift_summary(self) -> dict[str, Any]:
         """Get summary of precision lift pack changes."""
         return {
             "precision_lift_pack": {

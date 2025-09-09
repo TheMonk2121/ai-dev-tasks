@@ -8,15 +8,14 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional
 
 
-def get_active_backlog_id() -> Optional[str]:
+def get_active_backlog_id() -> str | None:
     """Get the currently active backlog ID."""
     state_file = Path(".ai_state.json")
     if state_file.exists():
         try:
-            with open(state_file, "r") as f:
+            with open(state_file) as f:
                 state = json.load(f)
             return state.get("backlog_id")
         except Exception:

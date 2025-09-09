@@ -12,7 +12,8 @@ import time
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
+from collections.abc import Callable
 
 # Add dspy-rag-system to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))
@@ -31,7 +32,7 @@ class PerformanceMetrics:
 
     operation_name: str
     execution_time: float
-    memory_usage: Optional[float] = None
+    memory_usage: float | None = None
     cache_hits: int = 0
     cache_misses: int = 0
     validation_count: int = 0
@@ -63,7 +64,7 @@ class ValidationCache:
         self.logger = logging.getLogger("validation_cache")
         self.logger.setLevel(logging.INFO)
 
-    def _generate_cache_key(self, data: Dict[str, Any], validation_type: str) -> str:
+    def _generate_cache_key(self, data: dict[str, Any], validation_type: str) -> str:
         """Generate cache key from data and validation type"""
         import hashlib
 
@@ -74,7 +75,7 @@ class ValidationCache:
         # Generate hash for consistent key length
         return hashlib.md5(key_data.encode()).hexdigest()
 
-    def get(self, data: Dict[str, Any], validation_type: str) -> Optional[Dict[str, Any]]:
+    def get(self, data: dict[str, Any], validation_type: str) -> dict[str, Any] | None:
         """Get cached validation result"""
         cache_key = self._generate_cache_key(data, validation_type)
 
@@ -95,7 +96,7 @@ class ValidationCache:
         self.stats["misses"] += 1
         return None
 
-    def set(self, data: Dict[str, Any], validation_type: str, result: Dict[str, Any]) -> None:
+    def set(self, data: dict[str, Any], validation_type: str, result: dict[str, Any]) -> None:
         """Cache validation result"""
         cache_key = self._generate_cache_key(data, validation_type)
 
@@ -117,7 +118,7 @@ class ValidationCache:
         self.stats["size"] = 0
         self.logger.info("Validation cache cleared")
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get cache statistics"""
         hit_rate = (
             (self.stats["hits"] / (self.stats["hits"] + self.stats["misses"]) * 100)
@@ -148,7 +149,7 @@ class ValidationOptimizer:
         self.cache = ValidationCache() if enable_caching else None
 
         # Performance tracking
-        self.performance_history: List[PerformanceMetrics] = []
+        self.performance_history: list[PerformanceMetrics] = []
         self.optimization_config = {
             "cache_enabled": enable_caching,
             "batching_enabled": enable_batching,
@@ -162,8 +163,8 @@ class ValidationOptimizer:
         self.logger.setLevel(logging.INFO)
 
     def optimize_validation_pipeline(
-        self, validation_func: Callable, data: Dict[str, Any], validation_type: str, args: tuple = (), **kwargs
-    ) -> Tuple[Dict[str, Any], PerformanceMetrics]:
+        self, validation_func: Callable, data: dict[str, Any], validation_type: str, args: tuple = (), **kwargs
+    ) -> tuple[dict[str, Any], PerformanceMetrics]:
         """Optimize validation pipeline with caching and performance tracking"""
         start_time = time.time()
         start_memory = self._get_memory_usage()
@@ -249,7 +250,7 @@ class ValidationOptimizer:
             self.logger.error(f"Validation failed for {validation_type}: {e}")
             raise
 
-    def _apply_optimization_strategies(self, data: Dict[str, Any], validation_type: str) -> Dict[str, Any]:
+    def _apply_optimization_strategies(self, data: dict[str, Any], validation_type: str) -> dict[str, Any]:
         """Apply optimization strategies to data"""
         optimized_data = data.copy()
 
@@ -266,7 +267,7 @@ class ValidationOptimizer:
 
         return optimized_data
 
-    def _minimize_data_for_validation(self, data: Dict[str, Any], validation_type: str) -> Dict[str, Any]:
+    def _minimize_data_for_validation(self, data: dict[str, Any], validation_type: str) -> dict[str, Any]:
         """Minimize data size for faster validation"""
         if validation_type == "input_validation":
             # Keep only essential fields for input validation
@@ -285,7 +286,7 @@ class ValidationOptimizer:
 
         return data
 
-    def _prioritize_critical_fields(self, data: Dict[str, Any], validation_type: str) -> Dict[str, Any]:
+    def _prioritize_critical_fields(self, data: dict[str, Any], validation_type: str) -> dict[str, Any]:
         """Prioritize critical fields for validation"""
         # Reorder fields to validate critical ones first
         if validation_type == "input_validation":
@@ -310,7 +311,7 @@ class ValidationOptimizer:
 
         return reordered_data
 
-    def _optimize_type_conversions(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _optimize_type_conversions(self, data: dict[str, Any]) -> dict[str, Any]:
         """Optimize type conversions for validation"""
         optimized_data = {}
 
@@ -335,8 +336,8 @@ class ValidationOptimizer:
         return optimized_data
 
     def batch_validate(
-        self, validation_func: Callable, data_batch: List[Dict[str, Any]], validation_type: str, **kwargs
-    ) -> Tuple[List[Dict[str, Any]], PerformanceMetrics]:
+        self, validation_func: Callable, data_batch: list[dict[str, Any]], validation_type: str, **kwargs
+    ) -> tuple[list[dict[str, Any]], PerformanceMetrics]:
         """Batch validate multiple data items for better performance"""
         if not self.enable_batching:
             # Fall back to individual validation
@@ -412,8 +413,8 @@ class ValidationOptimizer:
             return [{"error": str(e), "valid": False}] * len(data_batch), batch_metrics
 
     def _group_data_for_batching(
-        self, data_batch: List[Dict[str, Any]], validation_type: str
-    ) -> List[List[Dict[str, Any]]]:
+        self, data_batch: list[dict[str, Any]], validation_type: str
+    ) -> list[list[dict[str, Any]]]:
         """Group data for efficient batch processing"""
         if validation_type == "input_validation":
             # Group by query length ranges
@@ -455,8 +456,8 @@ class ValidationOptimizer:
             return list(groups.values())
 
     def _process_validation_group(
-        self, validation_func: Callable, group: List[Dict[str, Any]], validation_type: str, **kwargs
-    ) -> List[Dict[str, Any]]:
+        self, validation_func: Callable, group: list[dict[str, Any]], validation_type: str, **kwargs
+    ) -> list[dict[str, Any]]:
         """Process a group of data items for validation"""
         results = []
 
@@ -469,7 +470,7 @@ class ValidationOptimizer:
 
         return results
 
-    def _get_memory_usage(self) -> Optional[float]:
+    def _get_memory_usage(self) -> float | None:
         """Get current memory usage in MB"""
         try:
             import psutil
@@ -485,7 +486,7 @@ class ValidationOptimizer:
         self.optimization_config.update(config_updates)
         self.logger.info(f"Optimization config updated: {config_updates}")
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> dict[str, Any]:
         """Get performance optimization summary"""
         if not self.performance_history:
             return {"message": "No performance data available"}

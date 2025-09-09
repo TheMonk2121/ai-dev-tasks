@@ -14,7 +14,7 @@ lines = []
 
 # 1) Extract from dspy-rag-system/eval_gold.py
 try:
-    with open("dspy-rag-system/eval_gold.py", "r") as f:
+    with open("dspy-rag-system/eval_gold.py") as f:
         content = f.read()
 
     # Extract GOLD dict

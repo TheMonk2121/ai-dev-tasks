@@ -8,6 +8,7 @@ from scripts.doorway_utils import canonical_paths, render_md_with_anchors
 
 STATE_FILE = ".ai_state.json"
 
+
 def _load_state() -> dict:
     p = Path(STATE_FILE)
     if p.exists():
@@ -17,8 +18,10 @@ def _load_state() -> dict:
             return {}
     return {}
 
+
 def _save_state(state: dict) -> None:
     Path(STATE_FILE).write_text(json.dumps(state, indent=2), encoding="utf-8")
+
 
 def _determine_start_task(tasks_md: str, current_task: str | None) -> str:
     # Minimal heuristic: if current_task provided, use it; else start at first "- T-" line
@@ -31,6 +34,7 @@ def _determine_start_task(tasks_md: str, current_task: str | None) -> str:
             token = line.split()[1] if len(line.split()) > 1 else line[2:]
             return token
     return "T-1"
+
 
 def execute(backlog_id: str, telemetry: bool) -> None:
     # Locate active TASKS and RUN paths
@@ -91,12 +95,14 @@ def execute(backlog_id: str, telemetry: bool) -> None:
         print("[ERROR] Execution failed. Fix and run: continue", backlog_id)
         raise SystemExit(1) from None
 
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("backlog_id")
     ap.add_argument("--telemetry", action="store_true")
     args = ap.parse_args()
     execute(args.backlog_id, args.telemetry)
+
 
 if __name__ == "__main__":
     main()

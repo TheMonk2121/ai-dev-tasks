@@ -12,7 +12,6 @@ Implements the focused plan to convert three moves into production wins:
 
 import logging
 import os
-from typing import Dict
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -33,14 +32,14 @@ class ProductionRAGASConfig:
             "dynamic_k": self._get_dynamic_k_config(),
         }
 
-    def _get_router_config(self) -> Dict[str, str]:
+    def _get_router_config(self) -> dict[str, str]:
         """Router configuration."""
         return {
             "RAGCHECKER_ROUTE_BM25_MARGIN": "0.1",
             "RAGCHECKER_REWRITE_AGREE_STRONG": "0.5",
         }
 
-    def _get_fusion_config(self) -> Dict[str, str]:
+    def _get_fusion_config(self) -> dict[str, str]:
         """Fusion configuration."""
         return {
             "RAGCHECKER_RRF_K": "50",
@@ -49,7 +48,7 @@ class ProductionRAGASConfig:
             "RAGCHECKER_PER_DOC_LINE_CAP": "8",
         }
 
-    def _get_facets_config(self) -> Dict[str, str]:
+    def _get_facets_config(self) -> dict[str, str]:
         """Facets configuration."""
         return {
             "RAGCHECKER_REWRITE_K": "10",
@@ -57,7 +56,7 @@ class ProductionRAGASConfig:
             "RAGCHECKER_REWRITE_YIELD_MIN": "1.5",
         }
 
-    def _get_selection_config(self) -> Dict[str, str]:
+    def _get_selection_config(self) -> dict[str, str]:
         """Selection gates configuration."""
         return {
             "RAGCHECKER_EVIDENCE_JACCARD": "0.07",
@@ -68,7 +67,7 @@ class ProductionRAGASConfig:
             "COS_FLOOR": "0.58",
         }
 
-    def _get_binding_config(self) -> Dict[str, str]:
+    def _get_binding_config(self) -> dict[str, str]:
         """Claim binding configuration."""
         return {
             "RAGCHECKER_CLAIM_TOPK": "2",
@@ -77,7 +76,7 @@ class ProductionRAGASConfig:
             "RAGCHECKER_DROP_UNSUPPORTED": "0",
         }
 
-    def _get_ce_nli_config(self) -> Dict[str, str]:
+    def _get_ce_nli_config(self) -> dict[str, str]:
         """Cross-encoder and NLI configuration."""
         return {
             "RAGCHECKER_CE_RERANK_ENABLE": "1",
@@ -89,7 +88,7 @@ class ProductionRAGASConfig:
             "RAGCHECKER_NLI_P_THRESHOLD": "0.62",
         }
 
-    def _get_dynamic_k_config(self) -> Dict[str, str]:
+    def _get_dynamic_k_config(self) -> dict[str, str]:
         """Dynamic-K configuration."""
         return {
             "RAGCHECKER_EVIDENCE_KEEP_MODE": "target_k",
@@ -98,7 +97,7 @@ class ProductionRAGASConfig:
             "RAGCHECKER_TARGET_K_STRONG": "9",
         }
 
-    def apply_production_config(self) -> Dict[str, Dict[str, str]]:
+    def apply_production_config(self) -> dict[str, dict[str, str]]:
         """Apply production configuration and return applied configs."""
         applied_configs = {}
 
@@ -134,7 +133,7 @@ class ProductionRAGASConfig:
 
         print("\n" + "=" * 60)
 
-    def validate_config(self) -> Dict[str, bool]:
+    def validate_config(self) -> dict[str, bool]:
         """Validate that all configuration values are properly set."""
         validation = {}
 
@@ -150,7 +149,7 @@ class ProductionRAGASConfig:
 
         return validation
 
-    def get_precision_knobs(self) -> Dict[str, Dict[str, str]]:
+    def get_precision_knobs(self) -> dict[str, dict[str, str]]:
         """Get precision tuning knobs for fine-tuning."""
         return {
             "ce_weight_boost": {
@@ -167,7 +166,7 @@ class ProductionRAGASConfig:
             },
         }
 
-    def get_recall_knobs(self) -> Dict[str, Dict[str, str]]:
+    def get_recall_knobs(self) -> dict[str, dict[str, str]]:
         """Get recall tuning knobs for maintaining R@20 ≥ 0.65."""
         return {
             "adaptive_topk": {
@@ -178,7 +177,7 @@ class ProductionRAGASConfig:
             },
         }
 
-    def get_telemetry_config(self) -> Dict[str, str]:
+    def get_telemetry_config(self) -> dict[str, str]:
         """Get comprehensive telemetry configuration."""
         return {
             "RAGCHECKER_TELEMETRY_ENABLED": "1",
@@ -192,7 +191,7 @@ class ProductionRAGASConfig:
             "RAGCHECKER_LOG_CLAIMS_EXTRACTED_KEPT": "1",
         }
 
-    def get_ragas_targets(self) -> Dict[str, float]:
+    def get_ragas_targets(self) -> dict[str, float]:
         """Get RAGAS target metrics."""
         return {
             "precision": 0.20,
@@ -202,7 +201,7 @@ class ProductionRAGASConfig:
             "faithfulness": 0.60,
         }
 
-    def apply_precision_knob(self, knob_name: str) -> Dict[str, str]:
+    def apply_precision_knob(self, knob_name: str) -> dict[str, str]:
         """Apply a specific precision tuning knob."""
         knobs = self.get_precision_knobs()
         if knob_name not in knobs:
@@ -215,7 +214,7 @@ class ProductionRAGASConfig:
         logger.info(f"🎯 Applied precision knob '{knob_name}': {config}")
         return config
 
-    def apply_recall_knob(self, knob_name: str) -> Dict[str, str]:
+    def apply_recall_knob(self, knob_name: str) -> dict[str, str]:
         """Apply a specific recall tuning knob."""
         knobs = self.get_recall_knobs()
         if knob_name not in knobs:

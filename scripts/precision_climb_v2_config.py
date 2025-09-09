@@ -34,7 +34,7 @@ class PrecisionClimbV2Config:
             "cross_encoder": self._get_cross_encoder_config(),
         }
 
-    def _get_layer0_config(self) -> Dict[str, Any]:
+    def _get_layer0_config(self) -> dict[str, Any]:
         """Layer 0: Wire-through sanity - Ensure all knobs actually apply."""
         return {
             # Router configuration
@@ -64,7 +64,7 @@ class PrecisionClimbV2Config:
             "RAGCHECKER_TARGET_K_STRONG": "9",
         }
 
-    def _get_layer1_config(self) -> Dict[str, Any]:
+    def _get_layer1_config(self) -> dict[str, Any]:
         """Layer 1: Risk-aware sentence-level gates that raise P without killing R."""
         return {
             # Risk-aware support rules
@@ -86,7 +86,7 @@ class PrecisionClimbV2Config:
             "RAGCHECKER_UNIQUE_ANCHOR_MIN": "1",  # Each sentence must add new anchor
         }
 
-    def _get_layer2_config(self) -> Dict[str, Any]:
+    def _get_layer2_config(self) -> dict[str, Any]:
         """Layer 2: Fusion tweaks that favor truly relevant docs."""
         return {
             # Anchor-biased fusion (stronger)
@@ -100,7 +100,7 @@ class PrecisionClimbV2Config:
             "RAGCHECKER_FUSION_GAIN_THRESHOLD": "2",  # Threshold for sparse case detection
         }
 
-    def _get_layer3_config(self) -> Dict[str, Any]:
+    def _get_layer3_config(self) -> dict[str, Any]:
         """Layer 3: Claim binding that reduces Unsupported Claims without starving R."""
         return {
             # Soft-drop configuration
@@ -114,7 +114,7 @@ class PrecisionClimbV2Config:
             "RAGCHECKER_CLAIM_CONFIDENCE_WEIGHTS": "0.4,0.3,0.3",  # cosine, anchor, spans
         }
 
-    def _get_cross_encoder_config(self) -> Dict[str, Any]:
+    def _get_cross_encoder_config(self) -> dict[str, Any]:
         """Optional: Lightweight cross-encoder rerank for top-N candidates."""
         return {
             "RAGCHECKER_CROSS_ENCODER_ENABLED": "0",  # Disabled by default
@@ -124,7 +124,7 @@ class PrecisionClimbV2Config:
             "RAGCHECKER_CROSS_ENCODER_CACHE": "1",  # Cache embeddings
         }
 
-    def apply_layer(self, layer_name: str, enable_cross_encoder: bool = False) -> Dict[str, str]:
+    def apply_layer(self, layer_name: str, enable_cross_encoder: bool = False) -> dict[str, str]:
         """Apply configuration for a specific layer."""
         if layer_name not in self.config_layers:
             raise ValueError(f"Unknown layer: {layer_name}")
@@ -143,7 +143,7 @@ class PrecisionClimbV2Config:
 
         return config
 
-    def get_layer_config(self, layer_name: str, enable_cross_encoder: bool = False) -> Dict[str, str]:
+    def get_layer_config(self, layer_name: str, enable_cross_encoder: bool = False) -> dict[str, str]:
         """Get configuration for a specific layer without applying to environment."""
         if layer_name not in self.config_layers:
             raise ValueError(f"Unknown layer: {layer_name}")
@@ -159,8 +159,8 @@ class PrecisionClimbV2Config:
         return config
 
     def apply_progressive_config(
-        self, layers: List[str], enable_cross_encoder: bool = False
-    ) -> Dict[str, Dict[str, str]]:
+        self, layers: list[str], enable_cross_encoder: bool = False
+    ) -> dict[str, dict[str, str]]:
         """Apply multiple layers progressively."""
         applied_configs = {}
 
@@ -174,7 +174,7 @@ class PrecisionClimbV2Config:
 
         return applied_configs
 
-    def _log_effective_config(self, layer_name: str, config: Dict[str, str]) -> None:
+    def _log_effective_config(self, layer_name: str, config: dict[str, str]) -> None:
         """Log the effective configuration for debugging."""
         logger.info(f"📊 Effective {layer_name} configuration:")
         for key, value in sorted(config.items()):
@@ -202,7 +202,7 @@ class PrecisionClimbV2Config:
         logger.info("✅ Configuration validation passed")
         return True
 
-    def get_rollout_sequence(self) -> List[Dict[str, Any]]:
+    def get_rollout_sequence(self) -> list[dict[str, Any]]:
         """Get the recommended rollout sequence with expected improvements."""
         return [
             {
@@ -237,7 +237,7 @@ class PrecisionClimbV2Config:
             },
         ]
 
-    def generate_telemetry_config(self) -> Dict[str, str]:
+    def generate_telemetry_config(self) -> dict[str, str]:
         """Generate telemetry configuration for monitoring."""
         return {
             "RAGCHECKER_TELEMETRY_ENABLED": "1",
@@ -250,7 +250,7 @@ class PrecisionClimbV2Config:
             "RAGCHECKER_LOG_CE_RERANK_USED": "1",
         }
 
-    def get_promotion_gate_criteria(self) -> Dict[str, float]:
+    def get_promotion_gate_criteria(self) -> dict[str, float]:
         """Get the RAGAS-competitive promotion gate criteria."""
         return {
             "recall_at_20": 0.65,

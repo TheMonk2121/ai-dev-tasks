@@ -16,7 +16,6 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
 
 
 @dataclass
@@ -24,13 +23,13 @@ class AnchorMetadata:
     """Represents anchor metadata extracted from file headers."""
 
     file_path: str
-    anchor_key: Optional[str] = None
-    anchor_priority: Optional[int] = None
-    role_pins: Optional[List[str]] = None
-    context_reference: Optional[str] = None
-    module_reference: Optional[str] = None
-    memory_context: Optional[str] = None
-    database_sync: Optional[str] = None
+    anchor_key: str | None = None
+    anchor_priority: int | None = None
+    role_pins: list[str] | None = None
+    context_reference: str | None = None
+    module_reference: str | None = None
+    memory_context: str | None = None
+    database_sync: str | None = None
 
 
 class AnchorHeaderScanner:
@@ -57,7 +56,7 @@ class AnchorHeaderScanner:
         file_str = str(file_path)
         return any(pattern in file_str for pattern in self.exclude_patterns)
 
-    def find_markdown_files(self) -> List[Path]:
+    def find_markdown_files(self) -> list[Path]:
         """Find all markdown files in the project."""
         markdown_files = []
 
@@ -67,10 +66,10 @@ class AnchorHeaderScanner:
 
         return sorted(markdown_files)
 
-    def extract_anchor_metadata(self, file_path: Path) -> Optional[AnchorMetadata]:
+    def extract_anchor_metadata(self, file_path: Path) -> AnchorMetadata | None:
         """Extract anchor metadata from a single file."""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
         except Exception as e:
             print(f"Warning: Could not read {file_path}: {e}")
@@ -120,7 +119,7 @@ class AnchorHeaderScanner:
         # Only return metadata if we found at least an anchor key
         return metadata if metadata.anchor_key else None
 
-    def scan_all_files(self) -> List[AnchorMetadata]:
+    def scan_all_files(self) -> list[AnchorMetadata]:
         """Scan all markdown files and extract anchor metadata."""
         markdown_files = self.find_markdown_files()
         metadata_list = []
@@ -140,7 +139,7 @@ class AnchorHeaderScanner:
 class GuideGenerator:
     """Generates the context priority guide from anchor metadata."""
 
-    def __init__(self, metadata_list: List[AnchorMetadata]):
+    def __init__(self, metadata_list: list[AnchorMetadata]):
         self.metadata_list = metadata_list
         self.output_path = Path("400_guides/400_context-priority-guide.md")
 
@@ -155,7 +154,7 @@ class GuideGenerator:
         else:
             return "P3 (Low)"
 
-    def group_by_priority(self) -> Dict[str, List[AnchorMetadata]]:
+    def group_by_priority(self) -> dict[str, list[AnchorMetadata]]:
         """Group metadata by priority tiers."""
         grouped = {}
 
@@ -172,7 +171,7 @@ class GuideGenerator:
 
         return grouped
 
-    def group_by_role(self) -> Dict[str, List[AnchorMetadata]]:
+    def group_by_role(self) -> dict[str, list[AnchorMetadata]]:
         """Group metadata by role pins."""
         grouped = {}
 

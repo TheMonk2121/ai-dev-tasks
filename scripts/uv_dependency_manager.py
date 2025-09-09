@@ -11,7 +11,6 @@ import json
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 
 class UVDependencyManager:
@@ -23,7 +22,7 @@ class UVDependencyManager:
         self.lock_file = self.project_root / "uv.lock"
         self.requirements_file = self.project_root / "requirements.txt"
 
-    def analyze_dependencies(self) -> Dict:
+    def analyze_dependencies(self) -> dict:
         """Analyze project dependencies and provide insights."""
         print("🔍 Analyzing dependencies...")
 
@@ -97,7 +96,7 @@ class UVDependencyManager:
             print(f"❌ Dependency analysis failed: {e}")
             return analysis
 
-    def _check_outdated_packages(self) -> List[Dict]:
+    def _check_outdated_packages(self) -> list[dict]:
         """Check for outdated packages."""
         try:
             result = subprocess.run(["uv", "pip", "list", "--outdated"], capture_output=True, text=True, check=True)
@@ -116,7 +115,7 @@ class UVDependencyManager:
         except subprocess.CalledProcessError:
             return []
 
-    def _check_duplicates(self) -> List[Dict]:
+    def _check_duplicates(self) -> list[dict]:
         """Check for duplicate dependencies."""
         duplicates = []
 
@@ -134,7 +133,7 @@ class UVDependencyManager:
 
         return duplicates
 
-    def _generate_dependency_recommendations(self, analysis: Dict) -> List[str]:
+    def _generate_dependency_recommendations(self, analysis: dict) -> list[str]:
         """Generate dependency optimization recommendations."""
         recommendations = []
 
@@ -175,7 +174,7 @@ class UVDependencyManager:
 
         return recommendations
 
-    def security_scan(self) -> Dict:
+    def security_scan(self) -> dict:
         """Run security scans on dependencies."""
         print("🔒 Running security scans...")
 
@@ -231,7 +230,7 @@ class UVDependencyManager:
 
         return security_results
 
-    def _generate_security_recommendations(self, security_results: Dict) -> List[str]:
+    def _generate_security_recommendations(self, security_results: dict) -> list[str]:
         """Generate security recommendations."""
         recommendations = []
 
@@ -267,7 +266,7 @@ class UVDependencyManager:
 
         return recommendations
 
-    def optimize_dependencies(self) -> Dict:
+    def optimize_dependencies(self) -> dict:
         """Provide dependency optimization recommendations."""
         print("⚡ Analyzing dependency optimization opportunities...")
 
@@ -293,7 +292,7 @@ class UVDependencyManager:
 
         return optimization
 
-    def _find_unused_dependencies(self) -> List[Dict]:
+    def _find_unused_dependencies(self) -> list[dict]:
         """Find potentially unused dependencies."""
         # This is a simplified implementation
         # In practice, you'd use tools like unimport or vulture
@@ -317,7 +316,7 @@ class UVDependencyManager:
 
         return unused
 
-    def _find_consolidation_opportunities(self) -> List[Dict]:
+    def _find_consolidation_opportunities(self) -> list[dict]:
         """Find opportunities to consolidate dependencies."""
         opportunities = []
 
@@ -332,7 +331,7 @@ class UVDependencyManager:
 
         return opportunities
 
-    def _suggest_performance_improvements(self) -> List[Dict]:
+    def _suggest_performance_improvements(self) -> list[dict]:
         """Suggest performance improvements."""
         improvements = []
 
@@ -356,7 +355,7 @@ class UVDependencyManager:
 
         return improvements
 
-    def _generate_optimization_recommendations(self, optimization: Dict) -> List[str]:
+    def _generate_optimization_recommendations(self, optimization: dict) -> list[str]:
         """Generate optimization recommendations."""
         recommendations = []
 
@@ -385,7 +384,7 @@ class UVDependencyManager:
 
         return recommendations
 
-    def generate_report(self, analysis: Dict, security: Dict, optimization: Dict) -> str:
+    def generate_report(self, analysis: dict, security: dict, optimization: dict) -> str:
         """Generate a comprehensive dependency report."""
         report = f"""# 📊 UV Dependency Management Report
 

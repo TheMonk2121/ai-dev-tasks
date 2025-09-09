@@ -131,7 +131,7 @@ class MultiKeyLoadBalancer:
     Implements health-based routing and adaptive rate limiting.
     """
 
-    def __init__(self, api_keys: List[Dict[str, str]]):
+    def __init__(self, api_keys: list[dict[str, str]]):
         """
         Initialize load balancer with API key configurations.
 
@@ -139,7 +139,7 @@ class MultiKeyLoadBalancer:
             api_keys: List of dicts with 'key_id', 'region', 'access_key', 'secret_key'
         """
         self.api_keys = api_keys
-        self.key_metrics: Dict[str, KeyMetrics] = {}
+        self.key_metrics: dict[str, KeyMetrics] = {}
         self._lock = asyncio.Lock()
 
         # Initialize metrics for each key
@@ -149,7 +149,7 @@ class MultiKeyLoadBalancer:
 
         logger.info(f"MultiKeyLoadBalancer initialized with {len(api_keys)} keys")
 
-    async def get_best_key(self) -> Tuple[str, Dict[str, str]]:
+    async def get_best_key(self) -> tuple[str, dict[str, str]]:
         """Get the healthiest available API key."""
         async with self._lock:
             available_keys = [
@@ -185,7 +185,7 @@ class MultiKeyLoadBalancer:
                 else:
                     self.key_metrics[key_id].update_error(error_type)
 
-    def get_status_summary(self) -> Dict[str, Any]:
+    def get_status_summary(self) -> dict[str, Any]:
         """Get summary of all key statuses for monitoring."""
         return {
             key_id: {
@@ -276,7 +276,7 @@ class AdaptiveRateLimiter:
             self.circuit_open_until = time.time() + self.circuit_timeout
             logger.warning(f"Circuit breaker opened for {self.circuit_timeout}s due to {self.failure_count} failures")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get current rate limiter status."""
         return {
             "current_rps": self.current_rps,
@@ -307,11 +307,11 @@ class EnhancedBedrockClient:
 
     def __init__(
         self,
-        api_keys: Optional[List[Dict[str, str]]] = None,
+        api_keys: list[dict[str, str]] | None = None,
         model_id: str = "anthropic.claude-3-5-sonnet-20240620-v1:0",
         max_retries: int = 4,
         timeout: int = 300,
-        usage_log_file: Optional[str] = None,
+        usage_log_file: str | None = None,
     ):
         """
         Initialize enhanced Bedrock client.
@@ -357,7 +357,7 @@ class EnhancedBedrockClient:
 
         logger.info(f"EnhancedBedrockClient initialized with {len(api_keys)} keys")
 
-    def _load_api_keys_from_env(self) -> List[Dict[str, str]]:
+    def _load_api_keys_from_env(self) -> list[dict[str, str]]:
         """Load API key configurations from environment variables."""
         api_keys = []
 
@@ -415,8 +415,8 @@ class EnhancedBedrockClient:
         prompt: str,
         max_tokens: int = 150,
         temperature: float = 0.1,
-        system_prompt: Optional[str] = None,
-    ) -> Tuple[str, BedrockUsage]:
+        system_prompt: str | None = None,
+    ) -> tuple[str, BedrockUsage]:
         """
         Invoke Claude model with enhanced error handling and load balancing.
 
@@ -550,7 +550,7 @@ class EnhancedBedrockClient:
 
         raise Exception("All retry attempts failed")
 
-    def _create_bedrock_client(self, key_config: Dict[str, str]):
+    def _create_bedrock_client(self, key_config: dict[str, str]):
         """Create Bedrock client for specific API key configuration."""
         config = Config(
             region_name=key_config["region"],
@@ -569,8 +569,8 @@ class EnhancedBedrockClient:
         )
 
     def _prepare_request_body(
-        self, prompt: str, max_tokens: int, temperature: float, system_prompt: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, prompt: str, max_tokens: int, temperature: float, system_prompt: str | None = None
+    ) -> dict[str, Any]:
         """Prepare request body for Bedrock API with top-level system prompt."""
         body = {
             "anthropic_version": "bedrock-2023-05-31",
@@ -585,7 +585,7 @@ class EnhancedBedrockClient:
 
         return body
 
-    def _process_response(self, response) -> Tuple[str, BedrockUsage]:
+    def _process_response(self, response) -> tuple[str, BedrockUsage]:
         """Process Bedrock API response and extract text/usage."""
         response_body = json.loads(response["body"].read())
 
@@ -601,7 +601,7 @@ class EnhancedBedrockClient:
 
         return response_text, usage_info
 
-    def _extract_usage(self, response_body: Dict[str, Any]) -> BedrockUsage:
+    def _extract_usage(self, response_body: dict[str, Any]) -> BedrockUsage:
         """Extract usage information from response."""
         usage = response_body.get("usage", {})
 
@@ -631,7 +631,7 @@ class EnhancedBedrockClient:
 
     async def invoke_with_json_prompt(
         self, prompt: str, max_tokens: int = 150, temperature: float = 0.0
-    ) -> Tuple[str, BedrockUsage]:
+    ) -> tuple[str, BedrockUsage]:
         """Invoke model with structured JSON prompt for reliable parsing."""
         # JSON mode fast-path: temperature=0.0 by default for structured extraction
         json_system_prompt = (
@@ -690,7 +690,7 @@ class EnhancedBedrockClient:
         except Exception as e:
             logger.warning(f"Failed to log usage to file: {e}")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get comprehensive status of the enhanced client."""
         # Calculate average latency
         avg_latency = 0.0
@@ -723,14 +723,14 @@ class EnhancedBedrockClient:
         prompt: str,
         max_tokens: int = 150,
         temperature: float = 0.1,
-        system_prompt: Optional[str] = None,
-    ) -> Tuple[str, BedrockUsage]:
+        system_prompt: str | None = None,
+    ) -> tuple[str, BedrockUsage]:
         """Synchronous wrapper for invoke_model - for RAGChecker compatibility."""
         return asyncio.run(self.invoke_model(prompt, max_tokens, temperature, system_prompt))
 
     def invoke_with_json_prompt_sync(
         self, prompt: str, max_tokens: int = 150, temperature: float = 0.1
-    ) -> Tuple[str, BedrockUsage]:
+    ) -> tuple[str, BedrockUsage]:
         """Synchronous wrapper for invoke_with_json_prompt - for RAGChecker compatibility."""
         return asyncio.run(self.invoke_with_json_prompt(prompt, max_tokens, temperature))
 
@@ -746,14 +746,14 @@ class SyncBedrockClientWrapper:
         prompt: str,
         max_tokens: int = 150,
         temperature: float = 0.1,
-        system_prompt: Optional[str] = None,
-    ) -> Tuple[str, BedrockUsage]:
+        system_prompt: str | None = None,
+    ) -> tuple[str, BedrockUsage]:
         """Synchronous invoke_model for RAGChecker compatibility."""
         return asyncio.run(self._async_client.invoke_model(prompt, max_tokens, temperature, system_prompt))
 
     def invoke_with_json_prompt(
         self, prompt: str, max_tokens: int = 150, temperature: float = 0.1
-    ) -> Tuple[str, BedrockUsage]:
+    ) -> tuple[str, BedrockUsage]:
         """Synchronous invoke_with_json_prompt for RAGChecker compatibility."""
         return asyncio.run(self._async_client.invoke_with_json_prompt(prompt, max_tokens, temperature))
 
@@ -776,7 +776,7 @@ class SyncBedrockClientWrapper:
 
 
 # Convenience function for easy integration
-def create_enhanced_bedrock_client(api_keys: Optional[List[Dict[str, str]]] = None, **kwargs) -> EnhancedBedrockClient:
+def create_enhanced_bedrock_client(api_keys: list[dict[str, str]] | None = None, **kwargs) -> EnhancedBedrockClient:
     """Create and configure an enhanced Bedrock client."""
     return EnhancedBedrockClient(api_keys=api_keys, **kwargs)
 

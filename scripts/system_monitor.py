@@ -37,7 +37,7 @@ class SystemMonitor:
         self.production_monitor = ProductionMonitor()
         self.start_time = datetime.now()
 
-    def get_system_health(self) -> Dict[str, Any]:
+    def get_system_health(self) -> dict[str, Any]:
         """Get comprehensive system health status"""
         try:
             health_status = self.health_manager.get_health_status()
@@ -56,7 +56,7 @@ class SystemMonitor:
                 "overall_status": "unhealthy",
             }
 
-    def get_performance_metrics(self) -> Dict[str, Any]:
+    def get_performance_metrics(self) -> dict[str, Any]:
         """Get system performance metrics"""
         try:
             metrics = get_metrics()
@@ -71,7 +71,7 @@ class SystemMonitor:
         except Exception as e:
             return {"timestamp": datetime.now().isoformat(), "error": f"Metrics collection failed: {e}"}
 
-    def get_database_status(self) -> Dict[str, Any]:
+    def get_database_status(self) -> dict[str, Any]:
         """Get detailed database status"""
         try:
             import psycopg2
@@ -113,7 +113,7 @@ class SystemMonitor:
         except Exception as e:
             return {"timestamp": datetime.now().isoformat(), "status": "unhealthy", "error": str(e)}
 
-    def get_memory_system_status(self) -> Dict[str, Any]:
+    def get_memory_system_status(self) -> dict[str, Any]:
         """Get memory system status"""
         try:
             # Test memory rehydration
@@ -139,7 +139,7 @@ class SystemMonitor:
         except Exception as e:
             return {"timestamp": datetime.now().isoformat(), "status": "unhealthy", "error": str(e)}
 
-    def _calculate_avg_latency(self, metrics: Dict[str, Any]) -> float:
+    def _calculate_avg_latency(self, metrics: dict[str, Any]) -> float:
         """Calculate average request latency"""
         try:
             total = metrics.get("request_latency_seconds_sum", 0)
@@ -167,7 +167,7 @@ class SystemMonitor:
         else:
             return self._format_text_report(report)
 
-    def _format_text_report(self, report: Dict[str, Any]) -> str:
+    def _format_text_report(self, report: dict[str, Any]) -> str:
         """Format report as human-readable text"""
         lines = []
         lines.append("=" * 60)

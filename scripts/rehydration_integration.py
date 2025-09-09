@@ -14,7 +14,6 @@ import os
 import subprocess
 import time
 from pathlib import Path
-from typing import Optional
 
 STATE_PATH = Path(".rehydrate_state.json")
 
@@ -26,7 +25,7 @@ def _now_ts() -> float:
 def _load_state() -> dict:
     if STATE_PATH.exists():
         try:
-            with open(STATE_PATH, "r") as f:
+            with open(STATE_PATH) as f:
                 return json.load(f)
         except Exception:
             return {}
@@ -52,7 +51,7 @@ def get_debounce_minutes() -> int:
         return 10
 
 
-def should_trigger(backlog_id: Optional[str]) -> bool:
+def should_trigger(backlog_id: str | None) -> bool:
     if not is_enabled():
         return False
     if not backlog_id:
@@ -63,7 +62,7 @@ def should_trigger(backlog_id: Optional[str]) -> bool:
     return (_now_ts() - last_ts) >= window_sec
 
 
-def record_trigger(backlog_id: Optional[str]) -> None:
+def record_trigger(backlog_id: str | None) -> None:
     if not backlog_id:
         return
     state = _load_state()
@@ -72,7 +71,7 @@ def record_trigger(backlog_id: Optional[str]) -> None:
 
 
 def rehydrate_with_debounce(
-    backlog_id: Optional[str],
+    backlog_id: str | None,
     role: str = "planner",
     query: str = "current project status and core documentation",
 ) -> bool:

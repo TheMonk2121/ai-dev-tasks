@@ -43,7 +43,7 @@ def main():
     # Load baseline metrics if provided
     baseline_metrics = {}
     if args.baseline_metrics and Path(args.baseline_metrics).exists():
-        with open(args.baseline_metrics, "r") as f:
+        with open(args.baseline_metrics) as f:
             baseline_metrics = json.load(f)
 
     print("🔒 Locking Production Configuration")

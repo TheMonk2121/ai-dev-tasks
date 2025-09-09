@@ -16,7 +16,7 @@ class GeometryFailureRouter:
     def __init__(self, margin_threshold: float = 0.20):
         self.margin_threshold = margin_threshold
 
-    def calculate_top1_margin(self, scores: List[float]) -> float:
+    def calculate_top1_margin(self, scores: list[float]) -> float:
         """Calculate top-1 margin: (top1 - median(top10)) / (std(top10) + ε)"""
         if len(scores) < 10:
             return 0.0
@@ -33,7 +33,7 @@ class GeometryFailureRouter:
         margin = (top1 - median_top10) / (std_top10 + epsilon)
         return float(margin)
 
-    def calculate_entropy(self, scores: List[float]) -> float:
+    def calculate_entropy(self, scores: list[float]) -> float:
         """Calculate entropy of top-k scores (higher = flatter)."""
         if not scores:
             return 0.0
@@ -52,7 +52,7 @@ class GeometryFailureRouter:
         entropy = -np.sum(probs * np.log2(probs))
         return entropy
 
-    def should_route_to_bm25(self, vector_scores: List[float], rewrite_agreement: float = 0.0) -> bool:
+    def should_route_to_bm25(self, vector_scores: list[float], rewrite_agreement: float = 0.0) -> bool:
         """Determine if we should route to BM25 due to flat vectors."""
         margin = self.calculate_top1_margin(vector_scores)
         entropy = self.calculate_entropy(vector_scores)
@@ -90,7 +90,7 @@ class BooleanQueryParser:
         self.exclude_patterns = ["NOT", "not", "-", "exclude", "without"]
         self.or_patterns = ["OR", "or", "|", "either"]
 
-    def parse_boolean_logic(self, query: str) -> Dict[str, List[str]]:
+    def parse_boolean_logic(self, query: str) -> dict[str, list[str]]:
         """Parse Boolean logic from query."""
         tokens = query.split()
 
@@ -130,7 +130,7 @@ class LimitInspiredPrecisionRecovery:
         self.boolean_parser = BooleanQueryParser()
         self.config = self._get_enhanced_config()
 
-    def _get_enhanced_config(self) -> Dict[str, Any]:
+    def _get_enhanced_config(self) -> dict[str, Any]:
         """Get enhanced configuration with LIMIT-inspired features."""
         return {
             # Geometry routing
@@ -171,8 +171,8 @@ class LimitInspiredPrecisionRecovery:
             print(f"Set {key}={value}")
 
     def analyze_query_geometry(
-        self, query: str, vector_scores: List[float], rewrite_agreement: float = 0.0
-    ) -> Dict[str, Any]:
+        self, query: str, vector_scores: list[float], rewrite_agreement: float = 0.0
+    ) -> dict[str, Any]:
         """Analyze query geometry and determine routing strategy."""
 
         # Calculate geometry metrics
@@ -192,7 +192,7 @@ class LimitInspiredPrecisionRecovery:
             "geometry_healthy": margin >= 0.20 and entropy < 2.0,
         }
 
-    def calculate_facet_yields(self, facets: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def calculate_facet_yields(self, facets: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Calculate yields for all facets and determine which to keep."""
 
         enhanced_facets = []
@@ -209,8 +209,8 @@ class LimitInspiredPrecisionRecovery:
         return enhanced_facets
 
     def get_health_metrics(
-        self, query_id: str, geometry_analysis: Dict[str, Any], facet_yields: List[Dict[str, Any]], fusion_gain: int
-    ) -> Dict[str, Any]:
+        self, query_id: str, geometry_analysis: dict[str, Any], facet_yields: list[dict[str, Any]], fusion_gain: int
+    ) -> dict[str, Any]:
         """Get LIMIT-style health metrics for monitoring."""
 
         return {
@@ -231,7 +231,7 @@ class LimitInspiredPrecisionRecovery:
         }
 
     def should_promote_changes(
-        self, health_metrics: Dict[str, Any], precision: float, recall: float, f1_score: float
+        self, health_metrics: dict[str, Any], precision: float, recall: float, f1_score: float
     ) -> bool:
         """Determine if retrieval changes should be promoted based on health metrics."""
 

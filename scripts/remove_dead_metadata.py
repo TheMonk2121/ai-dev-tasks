@@ -13,7 +13,6 @@ These headers were found to be unused in the actual codebase and are considered 
 
 import re
 from pathlib import Path
-from typing import Tuple
 
 # Patterns to remove
 DEAD_METADATA_PATTERNS = [
@@ -69,7 +68,7 @@ def should_process_file(file_path: Path) -> bool:
     return True
 
 
-def remove_dead_metadata(content: str) -> Tuple[str, int]:
+def remove_dead_metadata(content: str) -> tuple[str, int]:
     """Remove dead metadata patterns from content."""
     removed_count = 0
 
@@ -85,10 +84,10 @@ def remove_dead_metadata(content: str) -> Tuple[str, int]:
     return content, removed_count
 
 
-def process_file(file_path: Path) -> Tuple[bool, int]:
+def process_file(file_path: Path) -> tuple[bool, int]:
     """Process a single file and remove dead metadata."""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content

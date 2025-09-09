@@ -36,7 +36,7 @@ SCHEMA = {
 def validate_json_syntax(config_path: str) -> bool:
     """Validate JSON syntax"""
     try:
-        with open(config_path, "r") as f:
+        with open(config_path) as f:
             json.load(f)
         return True
     except json.JSONDecodeError as e:
@@ -47,7 +47,7 @@ def validate_json_syntax(config_path: str) -> bool:
         return False
 
 
-def validate_schema(config: Dict[str, Any]) -> bool:
+def validate_schema(config: dict[str, Any]) -> bool:
     """Validate against our schema"""
     # Check required fields
     required_fields = ["version", "agents", "models", "memory", "error_policy", "fast_path", "security", "monitoring"]
@@ -99,7 +99,7 @@ def validate_schema(config: Dict[str, Any]) -> bool:
     return True
 
 
-def validate_agent_model_consistency(config: Dict[str, Any]) -> bool:
+def validate_agent_model_consistency(config: dict[str, Any]) -> bool:
     """Validate that all agents reference valid models"""
     models = config.get("models", {})
     agents = config.get("agents", {})
@@ -146,7 +146,7 @@ def dump_pydantic_schemas() -> None:
     out_dir = pathlib.Path("dspy-rag-system/config/database/schemas")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    models: List[type[BaseModel]] = [
+    models: list[type[BaseModel]] = [
         # RAGChecker models
         RAGCheckerInput,
         RAGCheckerMetrics,
@@ -165,7 +165,7 @@ def dump_pydantic_schemas() -> None:
         ValidationError,
     ]
 
-    combined: Dict[str, Any] = {
+    combined: dict[str, Any] = {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "title": "PydanticComponents",
         "components": {},
@@ -188,20 +188,20 @@ class ColumnInfo(TypedDict):
     is_nullable: bool
     is_pk: bool
     is_fk: bool
-    references: Optional[str]
+    references: str | None
 
 
 class IndexInfo(TypedDict):
     table: str
     index: str
-    columns: List[str]
+    columns: list[str]
     unique: bool
 
 
 class TableInfo(TypedDict):
     name: str
-    columns: List[ColumnInfo]
-    indexes: List[IndexInfo]
+    columns: list[ColumnInfo]
+    indexes: list[IndexInfo]
 
 
 def _dsn_from_env() -> str:
@@ -223,7 +223,7 @@ def dump_db_schema_json(schema: str = "public") -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     engine = create_engine(_dsn_from_env())
 
-    tables: List[str] = []
+    tables: list[str] = []
     with engine.connect() as conn:
         # Convert Sequence[Any] to List[str] as recommended in Pyright troubleshooting
         tables_result = (
@@ -241,7 +241,7 @@ def dump_db_schema_json(schema: str = "public") -> None:
         )
         tables = [str(table) for table in tables_result]
 
-        result: List[TableInfo] = []
+        result: list[TableInfo] = []
         for t in tables:
             cols = conn.execute(
                 text(
@@ -280,7 +280,7 @@ def dump_db_schema_json(schema: str = "public") -> None:
                 {"s": schema, "t": t},
             ).all()
 
-            columns: List[ColumnInfo] = [
+            columns: list[ColumnInfo] = [
                 {
                     "table": t,
                     "column": r[0],
@@ -315,7 +315,7 @@ def dump_db_schema_json(schema: str = "public") -> None:
                 {"s": schema, "t": t},
             ).all()
 
-            indexes: List[IndexInfo] = [
+            indexes: list[IndexInfo] = [
                 {
                     "table": t,
                     "index": r[0],
@@ -342,7 +342,7 @@ def main():
         sys.exit(1)
 
     # Load config
-    with open(config_path, "r") as f:
+    with open(config_path) as f:
         config = json.load(f)
 
     # Validate schema

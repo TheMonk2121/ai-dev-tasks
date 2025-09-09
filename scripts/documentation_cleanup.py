@@ -84,6 +84,7 @@ def analyze_guide_files():
 
     return categories, guide_files
 
+
 def check_cross_references():
     """Check cross-reference patterns between guides."""
     print("\n🔗 Cross-Reference Analysis")
@@ -98,7 +99,7 @@ def check_cross_references():
     for file_path in guides_dir.glob("400_*.md"):
         filename = file_path.name
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Find all references to other guides
@@ -126,6 +127,7 @@ def check_cross_references():
 
     return reference_counts, referenced_by
 
+
 def identify_redundant_content():
     """Identify potentially redundant content between guides."""
     print("\n🔄 Redundancy Analysis")
@@ -144,7 +146,7 @@ def identify_redundant_content():
     for file_path in guides_dir.glob("400_*.md"):
         filename = file_path.name
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Extract common patterns
@@ -171,6 +173,7 @@ def identify_redundant_content():
         print("✅ No obvious content duplications found")
 
     return duplicates
+
 
 def suggest_cleanup_actions(categories, reference_counts, referenced_by):
     """Suggest cleanup actions based on analysis."""
@@ -231,6 +234,7 @@ def suggest_cleanup_actions(categories, reference_counts, referenced_by):
 
     return recommendations
 
+
 def create_cleanup_report(categories, reference_counts, referenced_by, recommendations, duplicates):
     """Create a comprehensive cleanup report."""
     print("\n📋 Cleanup Report Generation")
@@ -264,6 +268,7 @@ def create_cleanup_report(categories, reference_counts, referenced_by, recommend
     print(f"✅ Cleanup report saved to {report_path}")
     return report
 
+
 def main():
     """Main documentation cleanup function."""
     print("🧹 Documentation Cleanup Analysis")
@@ -294,6 +299,7 @@ def main():
     print(f"  - Recommendations: {len(recommendations)}")
 
     return True
+
 
 if __name__ == "__main__":
     success = main()

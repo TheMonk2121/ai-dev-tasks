@@ -34,7 +34,7 @@ def fix_md007_list_indentation():
 
     for file_path in markdown_files:
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             original_content = content
@@ -99,6 +99,7 @@ def fix_md007_list_indentation():
         print(f"\n🎉 Successfully fixed {files_fixed} files!")
     else:
         print("\nℹ️  No files needed fixing.")
+
 
 if __name__ == "__main__":
     fix_md007_list_indentation()

@@ -39,9 +39,9 @@ class ValidationResult:
 
     validation_name: str
     status: str  # "passed", "failed", "warning"
-    details: Dict[str, Any]
+    details: dict[str, Any]
     duration_ms: float
-    error_message: Optional[str] = None
+    error_message: str | None = None
 
 
 @dataclass
@@ -73,12 +73,12 @@ class ProductionDeploymentValidator:
     def __init__(self, config: ProductionConfig):
         """Initialize validator"""
         self.config = config
-        self.validation_results: List[ValidationResult] = []
+        self.validation_results: list[ValidationResult] = []
 
         # Initialize systems for validation
-        self.cache_service: Optional[PostgreSQLCacheService] = None
-        self.performance_monitor: Optional[CachePerformanceMonitor] = None
-        self.ltst_integration: Optional[LTSTMemoryIntegration] = None
+        self.cache_service: PostgreSQLCacheService | None = None
+        self.performance_monitor: CachePerformanceMonitor | None = None
+        self.ltst_integration: LTSTMemoryIntegration | None = None
 
         logger.info("Production Deployment Validator initialized")
 
@@ -126,7 +126,7 @@ class ProductionDeploymentValidator:
             logger.error(f"Failed to initialize validator: {e}")
             raise
 
-    async def run_all_validations(self) -> Dict[str, Any]:
+    async def run_all_validations(self) -> dict[str, Any]:
         """Run all validation categories"""
         try:
             logger.info("Starting production deployment validation")
@@ -172,7 +172,7 @@ class ProductionDeploymentValidator:
             logger.error(f"Validation failed: {e}")
             return {"error": str(e)}
 
-    async def _validate_environment(self) -> Dict[str, Any]:
+    async def _validate_environment(self) -> dict[str, Any]:
         """Validate production environment"""
         try:
             results = {}
@@ -350,7 +350,7 @@ class ProductionDeploymentValidator:
                 error_message=str(e),
             )
 
-    async def _validate_configuration(self) -> Dict[str, Any]:
+    async def _validate_configuration(self) -> dict[str, Any]:
         """Validate production configuration"""
         try:
             results = {}
@@ -488,7 +488,7 @@ class ProductionDeploymentValidator:
                 error_message=str(e),
             )
 
-    async def _validate_performance(self) -> Dict[str, Any]:
+    async def _validate_performance(self) -> dict[str, Any]:
         """Validate performance under production load"""
         try:
             results = {}
@@ -628,7 +628,7 @@ class ProductionDeploymentValidator:
                 error_message=str(e),
             )
 
-    async def _validate_security(self) -> Dict[str, Any]:
+    async def _validate_security(self) -> dict[str, Any]:
         """Validate security measures"""
         try:
             results = {}
@@ -788,7 +788,7 @@ class ProductionDeploymentValidator:
                 error_message=str(e),
             )
 
-    async def _validate_deployment(self) -> Dict[str, Any]:
+    async def _validate_deployment(self) -> dict[str, Any]:
         """Validate deployment readiness"""
         try:
             results = {}
@@ -996,7 +996,7 @@ echo "✅ Production rollback completed successfully!"
 - Schedule post-mortem analysis
 """
 
-    def _generate_validation_summary(self, total_duration_ms: float) -> Dict[str, Any]:
+    def _generate_validation_summary(self, total_duration_ms: float) -> dict[str, Any]:
         """Generate validation summary"""
         try:
             # Count validation results by status
@@ -1038,7 +1038,7 @@ echo "✅ Production rollback completed successfully!"
             logger.error(f"Failed to generate validation summary: {e}")
             return {"error": str(e)}
 
-    def _generate_recommendations(self) -> List[str]:
+    def _generate_recommendations(self) -> list[str]:
         """Generate recommendations based on validation results"""
         recommendations = []
 

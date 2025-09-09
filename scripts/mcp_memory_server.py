@@ -59,13 +59,13 @@ class MemoryQuery(BaseModel):
     query: str
     role: str = "general"
     max_tokens: int = 1200
-    systems: List[str] = ["ltst", "cursor", "prime"]
+    systems: list[str] = ["ltst", "cursor", "prime"]
 
 
 class MemoryResponse(BaseModel):
     success: bool
-    data: Dict[str, Any]
-    error: Optional[str] = None
+    data: dict[str, Any]
+    error: str | None = None
 
 
 class HealthResponse(BaseModel):
@@ -82,7 +82,7 @@ class HealthResponse(BaseModel):
 start_time = time.monotonic()
 request_count = 0
 error_count = 0
-JOBS: Dict[str, Dict[str, Any]] = {}
+JOBS: dict[str, dict[str, Any]] = {}
 JOB_DIR = Path(tempfile.gettempdir()) / "mcp_jobs"
 JOB_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -144,7 +144,7 @@ async def proxy_logs_stream():
 
 class MCPToolCall(BaseModel):
     tool_name: str
-    arguments: Dict[str, Any]
+    arguments: dict[str, Any]
 
 
 @app.post("/mcp/tools/call", response_model=MemoryResponse)
@@ -177,7 +177,7 @@ async def call_mcp_tool(request: MCPToolCall):
         return MemoryResponse(success=False, data={}, error=str(e))
 
 
-async def query_memory_system(args: Dict[str, Any]) -> MemoryResponse:
+async def query_memory_system(args: dict[str, Any]) -> MemoryResponse:
     """Query the memory system using unified orchestrator"""
     if not memory_orchestrator:
         return MemoryResponse(success=False, data={}, error="Memory system not available")
@@ -206,7 +206,7 @@ async def query_memory_system(args: Dict[str, Any]) -> MemoryResponse:
         return MemoryResponse(success=False, data={}, error=f"Memory query failed: {str(e)}")
 
 
-async def get_project_context(args: Dict[str, Any]) -> MemoryResponse:
+async def get_project_context(args: dict[str, Any]) -> MemoryResponse:
     """Get current project context and status"""
     try:
         # Read key project files
@@ -221,19 +221,19 @@ async def get_project_context(args: Dict[str, Any]) -> MemoryResponse:
 
         # Try to read key files
         try:
-            with open(project_root / "000_core" / "000_backlog.md", "r") as f:
+            with open(project_root / "000_core" / "000_backlog.md") as f:
                 context["current_backlog"] = f.read()[:1000] + "..." if len(f.read()) > 1000 else f.read()
         except:
             pass
 
         try:
-            with open(project_root / "400_guides" / "400_system-overview.md", "r") as f:
+            with open(project_root / "400_guides" / "400_system-overview.md") as f:
                 context["system_overview"] = f.read()[:1000] + "..." if len(f.read()) > 1000 else f.read()
         except:
             pass
 
         try:
-            with open(project_root / "100_memory" / "100_cursor-memory-context.md", "r") as f:
+            with open(project_root / "100_memory" / "100_cursor-memory-context.md") as f:
                 context["memory_context"] = f.read()[:1000] + "..." if len(f.read()) > 1000 else f.read()
         except:
             pass
@@ -243,7 +243,7 @@ async def get_project_context(args: Dict[str, Any]) -> MemoryResponse:
         return MemoryResponse(success=False, data={}, error=f"Failed to get project context: {str(e)}")
 
 
-async def run_precision_evaluation(args: Dict[str, Any]) -> MemoryResponse:
+async def run_precision_evaluation(args: dict[str, Any]) -> MemoryResponse:
     """Run precision evaluation using your existing scripts"""
     try:
         config_file = args.get("config_file", "configs/precision_evidence_filter.env")
@@ -334,7 +334,7 @@ async def run_precision_evaluation(args: Dict[str, Any]) -> MemoryResponse:
         return MemoryResponse(success=False, data={}, error=f"Precision evaluation failed: {str(e)}")
 
 
-async def get_precision_eval_status(args: Dict[str, Any]) -> MemoryResponse:
+async def get_precision_eval_status(args: dict[str, Any]) -> MemoryResponse:
     job_id = args.get("job_id")
     if not job_id:
         return MemoryResponse(success=False, data={}, error="Unknown job_id")
@@ -347,7 +347,7 @@ async def get_precision_eval_status(args: Dict[str, Any]) -> MemoryResponse:
     else:
         # Fallback to persisted store
         try:
-            with open(JOB_DIR / f"{job_id}.json", "r", encoding="utf-8") as jf:
+            with open(JOB_DIR / f"{job_id}.json", encoding="utf-8") as jf:
                 job = json.load(jf)
         except Exception:
             return MemoryResponse(success=False, data={}, error="Unknown job_id")
@@ -383,7 +383,7 @@ async def get_precision_eval_status(args: Dict[str, Any]) -> MemoryResponse:
     )
 
 
-async def get_precision_eval_result(args: Dict[str, Any]) -> MemoryResponse:
+async def get_precision_eval_result(args: dict[str, Any]) -> MemoryResponse:
     job_id = args.get("job_id")
     if not job_id:
         return MemoryResponse(success=False, data={}, error="Unknown job_id")
@@ -398,15 +398,15 @@ async def get_precision_eval_result(args: Dict[str, Any]) -> MemoryResponse:
         rc = proc.returncode
     else:
         try:
-            with open(JOB_DIR / f"{job_id}.json", "r", encoding="utf-8") as jf:
+            with open(JOB_DIR / f"{job_id}.json", encoding="utf-8") as jf:
                 job = json.load(jf)
         except Exception:
             return MemoryResponse(success=False, data={}, error="Unknown job_id")
 
     try:
-        with open(job.get("stdout", ""), "r", encoding="utf-8", errors="replace") as fo:
+        with open(job.get("stdout", ""), encoding="utf-8", errors="replace") as fo:
             stdout = fo.read()
-        with open(job.get("stderr", ""), "r", encoding="utf-8", errors="replace") as fe:
+        with open(job.get("stderr", ""), encoding="utf-8", errors="replace") as fe:
             stderr = fe.read()
     except Exception as e:
         stdout, stderr = "", f"Failed to read logs: {e}"
@@ -424,7 +424,7 @@ async def get_precision_eval_result(args: Dict[str, Any]) -> MemoryResponse:
     )
 
 
-async def cancel_precision_eval(args: Dict[str, Any]) -> MemoryResponse:
+async def cancel_precision_eval(args: dict[str, Any]) -> MemoryResponse:
     job_id = args.get("job_id")
     if not job_id or job_id not in JOBS:
         return MemoryResponse(success=False, data={}, error="Unknown job_id")
@@ -439,7 +439,7 @@ async def cancel_precision_eval(args: Dict[str, Any]) -> MemoryResponse:
     return MemoryResponse(success=True, data={"job_id": job_id, "status": "already_finished"})
 
 
-async def process_files(args: Dict[str, Any]) -> MemoryResponse:
+async def process_files(args: dict[str, Any]) -> MemoryResponse:
     """Process a list of repo-relative file paths and return lightweight analyses.
 
     arguments:
@@ -453,7 +453,7 @@ async def process_files(args: Dict[str, Any]) -> MemoryResponse:
         if not isinstance(paths, list) or not paths:
             raise HTTPException(status_code=400, detail="paths must be a non-empty list of repo-relative paths")
 
-        results: List[Dict[str, Any]] = []
+        results: list[dict[str, Any]] = []
         for rel in paths:
             p = (project_root / rel).resolve()
             try:
@@ -491,7 +491,7 @@ async def process_files(args: Dict[str, Any]) -> MemoryResponse:
         return MemoryResponse(success=False, data={}, error=f"process_files failed: {str(e)}")
 
 
-async def analyze_file_content(args: Dict[str, Any]) -> MemoryResponse:
+async def analyze_file_content(args: dict[str, Any]) -> MemoryResponse:
     """Analyze a single dropped file provided as raw content.
 
     arguments:
@@ -515,7 +515,7 @@ async def analyze_file_content(args: Dict[str, Any]) -> MemoryResponse:
         is_markdown = file_ext in {".md"}
 
         # Very light “insights” for sidecar display
-        insights: Dict[str, Any] = {
+        insights: dict[str, Any] = {
             "filename": filename,
             "ext": file_ext,
             "lines": line_count,

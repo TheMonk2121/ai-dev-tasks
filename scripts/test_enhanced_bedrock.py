@@ -280,7 +280,7 @@ if __name__ == "__main__":
     config_file = "config/enhanced_bedrock_config.env"
     if os.path.exists(config_file):
         print(f"📁 Loading configuration from {config_file}")
-        with open(config_file, "r") as f:
+        with open(config_file) as f:
             for line in f:
                 line = line.strip()
                 if line and not line.startswith("#") and "=" in line:

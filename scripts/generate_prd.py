@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 
-def extract_backlog_context(backlog_id: str) -> Dict[str, Any]:
+def extract_backlog_context(backlog_id: str) -> dict[str, Any]:
     """Extract full context bundle from backlog ID using handoff script."""
     try:
         # Use the handoff script directly
@@ -43,7 +43,7 @@ def extract_backlog_context(backlog_id: str) -> Dict[str, Any]:
         sys.exit(3)
 
 
-def detect_tech_stack(context: Dict[str, Any]) -> List[str]:
+def detect_tech_stack(context: dict[str, Any]) -> list[str]:
     """Auto-detect tech stack from backlog context."""
     base_stack = ["Python 3.12"]  # Project default
 
@@ -69,7 +69,7 @@ def detect_tech_stack(context: Dict[str, Any]) -> List[str]:
     return list(set(base_stack))  # Remove duplicates
 
 
-def generate_prd_section_0(context: Dict[str, Any]) -> str:
+def generate_prd_section_0(context: dict[str, Any]) -> str:
     """Generate PRD Section 0 from backlog context."""
     tech_stack = detect_tech_stack(context)
     backlog_id = context["backlog_id"]
@@ -122,7 +122,7 @@ python3 scripts/workflow_orchestrator.py {backlog_id} --execute
 """
 
 
-def generate_prd_problem_statement(context: Dict[str, Any]) -> str:
+def generate_prd_problem_statement(context: dict[str, Any]) -> str:
     """Generate problem statement from backlog context."""
     context_data = context.get("context", {})
     problem = context_data.get("problem", "")
@@ -141,7 +141,7 @@ Implementing {description} will improve system reliability and user experience.
 """
 
 
-def generate_prd_solution_overview(context: Dict[str, Any]) -> str:
+def generate_prd_solution_overview(context: dict[str, Any]) -> str:
     """Generate solution overview from backlog context."""
     context_data = context.get("context", {})
     solution = context_data.get("solution", "")
@@ -163,7 +163,7 @@ def generate_prd_solution_overview(context: Dict[str, Any]) -> str:
 """
 
 
-def generate_full_prd(backlog_id: str, context: Dict[str, Any]) -> str:
+def generate_full_prd(backlog_id: str, context: dict[str, Any]) -> str:
     """Generate complete PRD from backlog context."""
     title = context.get("title", backlog_id)
 

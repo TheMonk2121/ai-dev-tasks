@@ -19,22 +19,22 @@ class EpisodicReflection:
     agent: str
     task_type: str
     summary: str
-    what_worked: List[str]
-    what_to_avoid: List[str]
-    outcome_metrics: Dict[str, Any]
-    source_refs: Dict[str, Any]
+    what_worked: list[str]
+    what_to_avoid: list[str]
+    outcome_metrics: dict[str, Any]
+    source_refs: dict[str, Any]
     span_hash: str
-    created_at: Optional[datetime] = None
-    id: Optional[int] = None
+    created_at: datetime | None = None
+    id: int | None = None
 
 
 @dataclass
 class EpisodicContext:
     """Context retrieved from episodic memory for current task."""
 
-    similar_episodes: List[EpisodicReflection]
-    what_worked_bullets: List[str]
-    what_to_avoid_bullets: List[str]
+    similar_episodes: list[EpisodicReflection]
+    what_worked_bullets: list[str]
+    what_to_avoid_bullets: list[str]
     confidence_score: float
     retrieval_time_ms: float
 
@@ -44,7 +44,7 @@ class MockEpisodicReflectionStore:
 
     def __init__(self):
         """Initialize the mock store."""
-        self.reflections: List[EpisodicReflection] = []
+        self.reflections: list[EpisodicReflection] = []
         self.next_id = 1
 
         # Configuration
@@ -139,8 +139,8 @@ class MockEpisodicReflectionStore:
             return False
 
     def retrieve_similar_episodes(
-        self, query: str, agent: Optional[str] = None, limit: Optional[int] = None
-    ) -> List[EpisodicReflection]:
+        self, query: str, agent: str | None = None, limit: int | None = None
+    ) -> list[EpisodicReflection]:
         """Retrieve similar episodes using simple keyword matching."""
         if limit is None:
             limit = self.max_episodes_retrieved
@@ -177,7 +177,7 @@ class MockEpisodicReflectionStore:
             print(f"❌ Failed to retrieve similar episodes: {e}")
             return []
 
-    def get_episodic_context(self, query: str, agent: Optional[str] = None) -> EpisodicContext:
+    def get_episodic_context(self, query: str, agent: str | None = None) -> EpisodicContext:
         """Get episodic context for a query, including compressed bullets."""
         start_time = time.time()
 
@@ -222,8 +222,8 @@ class MockEpisodicReflectionStore:
         output_text: str,
         agent: str = "cursor_ai",
         task_type: str = "general",
-        outcome_metrics: Optional[Dict[str, Any]] = None,
-        source_refs: Optional[Dict[str, Any]] = None,
+        outcome_metrics: dict[str, Any] | None = None,
+        source_refs: dict[str, Any] | None = None,
     ) -> EpisodicReflection:
         """Generate a reflection from a completed task."""
 
@@ -269,7 +269,7 @@ class MockEpisodicReflectionStore:
             span_hash=span_hash,
         )
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get statistics about stored reflections."""
         return {
             "total_reflections": len(self.reflections),

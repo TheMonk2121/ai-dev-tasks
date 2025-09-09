@@ -23,12 +23,12 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "src"))
 from retrieval.quality_gates import validate_evaluation_results
 
 
-def load_config(config_path: str = "config/retrieval.yaml") -> Dict[str, Any]:
+def load_config(config_path: str = "config/retrieval.yaml") -> dict[str, Any]:
     """Load retrieval configuration."""
     return yaml.safe_load(pathlib.Path(config_path).read_text())
 
 
-def generate_search_configs(config: Dict[str, Any]) -> List[Dict[str, Any]]:
+def generate_search_configs(config: dict[str, Any]) -> list[dict[str, Any]]:
     """Generate all combinations from search spaces."""
     search_spaces = config.get("tuning", {}).get("search_spaces", {})
 
@@ -92,7 +92,7 @@ def generate_search_configs(config: Dict[str, Any]) -> List[Dict[str, Any]]:
     return combinations
 
 
-def simulate_evaluation(config_variant: Dict[str, Any]) -> Dict[str, float]:
+def simulate_evaluation(config_variant: dict[str, Any]) -> dict[str, float]:
     """Simulate evaluation metrics for a config variant.
 
     In practice, this would run actual RAGChecker evaluation.

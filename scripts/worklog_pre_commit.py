@@ -20,7 +20,7 @@ def check_active_scribe_session() -> str | None:
         return None
 
     try:
-        with open(state_file, "r") as f:
+        with open(state_file) as f:
             state = json.load(f)
 
         backlog_id = state.get("backlog_id")

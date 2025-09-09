@@ -13,7 +13,6 @@ import time
 import traceback
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
 
 # Add project root to path
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
@@ -44,8 +43,8 @@ class SystemValidationReport:
     passed_tests: int
     failed_tests: int
     warning_tests: int
-    test_results: List[ValidationResult]
-    recommendations: List[str]
+    test_results: list[ValidationResult]
+    recommendations: list[str]
     timestamp: datetime
 
 
@@ -580,7 +579,7 @@ class EndToEndSystemValidator:
             timestamp=datetime.now(),
         )
 
-    def _generate_recommendations(self, results: List[ValidationResult]) -> List[str]:
+    def _generate_recommendations(self, results: list[ValidationResult]) -> list[str]:
         """Generate recommendations based on validation results"""
         recommendations = []
 

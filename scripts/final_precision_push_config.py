@@ -12,7 +12,7 @@ from precision_lift_pack_config import PrecisionLiftPackConfig
 class FinalPrecisionPushConfig(PrecisionLiftPackConfig):
     """Final precision push with aggressive tightening for P ≥ 0.135 target."""
 
-    def _get_enhanced_config(self) -> Dict[str, Any]:
+    def _get_enhanced_config(self) -> dict[str, Any]:
         """Get enhanced configuration with final precision push."""
         # Start with precision lift pack configuration
         base_config = super()._get_enhanced_config()
@@ -49,7 +49,7 @@ class FinalPrecisionPushConfig(PrecisionLiftPackConfig):
 
         return final_config
 
-    def get_final_precision_push_summary(self) -> Dict[str, Any]:
+    def get_final_precision_push_summary(self) -> dict[str, Any]:
         """Get summary of final precision push changes."""
         return {
             "final_precision_push": {

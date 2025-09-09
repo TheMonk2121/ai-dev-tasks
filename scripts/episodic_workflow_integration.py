@@ -35,8 +35,8 @@ class EpisodicWorkflowIntegration:
         output_text: str,
         agent: str = "cursor_ai",
         task_type: str = "general",
-        outcome_metrics: Optional[Dict[str, Any]] = None,
-        source_refs: Optional[Dict[str, Any]] = None,
+        outcome_metrics: dict[str, Any] | None = None,
+        source_refs: dict[str, Any] | None = None,
     ) -> bool:
         """Hook called when a task is completed."""
         try:
@@ -59,7 +59,7 @@ class EpisodicWorkflowIntegration:
             print(f"❌ Failed to store task completion: {e}")
             return False
 
-    def get_context_for_task(self, task_description: str, agent: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    def get_context_for_task(self, task_description: str, agent: str | None = None) -> dict[str, Any] | None:
         """Get episodic context for a new task."""
         try:
             context = self.store.get_episodic_context(task_description, agent)
@@ -97,7 +97,7 @@ class EpisodicWorkflowIntegration:
             print(f"❌ Failed to get episodic context: {e}")
             return None
 
-    def format_for_prompt(self, context: Dict[str, Any]) -> str:
+    def format_for_prompt(self, context: dict[str, Any]) -> str:
         """Format episodic context for inclusion in prompts."""
         if not context or "episodic_context" not in context:
             return ""

@@ -7,9 +7,8 @@ rich context about active Scribe sessions and their context tags.
 """
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Dict, List
 
 
 class SessionContextIntegrator:
@@ -18,13 +17,13 @@ class SessionContextIntegrator:
     def __init__(self, registry_path: str = "artifacts/session_registry.json"):
         self.registry_path = Path(registry_path)
 
-    def get_active_sessions_context(self) -> Dict:
+    def get_active_sessions_context(self) -> dict:
         """Get context about all active Scribe sessions."""
         if not self.registry_path.exists():
             return {"active_sessions": [], "session_count": 0}
 
         try:
-            with open(self.registry_path, "r") as f:
+            with open(self.registry_path) as f:
                 data = json.load(f)
 
             active_sessions = []
@@ -52,13 +51,13 @@ class SessionContextIntegrator:
         except Exception as e:
             return {"active_sessions": [], "session_count": 0, "error": str(e)}
 
-    def get_sessions_by_context(self, tags: List[str]) -> Dict:
+    def get_sessions_by_context(self, tags: list[str]) -> dict:
         """Get sessions that match specific context tags."""
         if not self.registry_path.exists():
             return {"matching_sessions": [], "count": 0}
 
         try:
-            with open(self.registry_path, "r") as f:
+            with open(self.registry_path) as f:
                 data = json.load(f)
 
             matching_sessions = []
@@ -103,7 +102,7 @@ class SessionContextIntegrator:
 
         return "\n".join(summary_lines)
 
-    def enhance_memory_context(self, base_context: Dict) -> Dict:
+    def enhance_memory_context(self, base_context: dict) -> dict:
         """Enhance existing memory context with session registry data."""
         session_context = self.get_active_sessions_context()
 
@@ -112,6 +111,7 @@ class SessionContextIntegrator:
         enhanced_context["session_summary"] = self.get_session_summary()
 
         return enhanced_context
+
 
 def integrate_with_memory_rehydrator():
     """Integration function for memory rehydrator."""
@@ -125,8 +125,9 @@ def integrate_with_memory_rehydrator():
     return {
         "session_registry": session_context,
         "session_summary": session_summary,
-        "integration_timestamp": datetime.now(timezone.utc).isoformat(),
+        "integration_timestamp": datetime.now(UTC).isoformat(),
     }
+
 
 def main():
     """CLI interface for session context integration."""
@@ -157,6 +158,7 @@ def main():
     elif args.command == "integrate":
         integration_data = integrate_with_memory_rehydrator()
         print(json.dumps(integration_data, indent=2))
+
 
 if __name__ == "__main__":
     main()

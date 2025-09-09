@@ -33,7 +33,7 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
         print("📊 Surgical precision tightenings applied")
         print("🛡️ Recall guardrails maintained")
 
-    def evaluate_with_precision_lift(self, test_cases: List[Any]) -> Dict[str, Any]:
+    def evaluate_with_precision_lift(self, test_cases: list[Any]) -> dict[str, Any]:
         """Evaluate test cases with precision lift pack features."""
 
         print("\n🔍 Running precision lift pack evaluation")
@@ -59,7 +59,7 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
 
         return evaluation_report
 
-    def _evaluate_case_with_precision_lift(self, test_case: Any) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    def _evaluate_case_with_precision_lift(self, test_case: Any) -> tuple[dict[str, Any], dict[str, Any]]:
         """Evaluate a single test case with precision lift pack features."""
 
         start_time = time.time()
@@ -117,7 +117,7 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
 
         return result, precision_metrics
 
-    def _simulate_precision_lift_metrics(self, query: str) -> Dict[str, Any]:
+    def _simulate_precision_lift_metrics(self, query: str) -> dict[str, Any]:
         """Simulate precision lift pack metrics (placeholder for real implementation)."""
         import random
 
@@ -153,7 +153,7 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
             },
         }
 
-    def _log_case_metrics(self, query_id: str, case_result: Dict[str, Any], precision_metrics: Dict[str, Any]) -> None:
+    def _log_case_metrics(self, query_id: str, case_result: dict[str, Any], precision_metrics: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
             "precision": case_result.get("precision", 0.0),
@@ -164,8 +164,8 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
         }
 
     def _generate_precision_lift_report(
-        self, results: List[Dict[str, Any]], precision_metrics_summary: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, results: list[dict[str, Any]], precision_metrics_summary: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Generate comprehensive precision lift pack evaluation report."""
 
         # Calculate overall metrics
@@ -209,7 +209,7 @@ class PrecisionLiftEvaluator(OfficialRAGCheckerEvaluator):
 
         return report
 
-    def _calculate_precision_lift_statistics(self, precision_metrics_summary: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _calculate_precision_lift_statistics(self, precision_metrics_summary: list[dict[str, Any]]) -> dict[str, Any]:
         """Calculate precision lift pack statistics."""
 
         if not precision_metrics_summary:

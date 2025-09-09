@@ -8,7 +8,6 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,7 +25,7 @@ app.add_middleware(
 )
 
 # Store active WebSocket connections
-active_connections: List[WebSocket] = []
+active_connections: list[WebSocket] = []
 
 
 @app.get("/")
@@ -51,7 +50,7 @@ async def get_recent_logs(lines: int = 50):
     for log_file in log_files:
         if Path(log_file).exists():
             try:
-                with open(log_file, "r") as f:
+                with open(log_file) as f:
                     file_lines = f.readlines()
                     recent_lines = file_lines[-lines:] if len(file_lines) > lines else file_lines
                     logs.extend(
@@ -78,7 +77,7 @@ async def stream_logs():
             for log_file in log_files:
                 if Path(log_file).exists():
                     try:
-                        with open(log_file, "r") as f:
+                        with open(log_file) as f:
                             # Read new lines since last check
                             f.seek(0, 2)  # Go to end of file
                             new_lines = f.readlines()
@@ -116,7 +115,7 @@ async def websocket_logs(websocket: WebSocket):
             for log_file in log_files:
                 if Path(log_file).exists():
                     try:
-                        with open(log_file, "r") as f:
+                        with open(log_file) as f:
                             f.seek(0, 2)  # Go to end of file
                             new_lines = f.readlines()
 

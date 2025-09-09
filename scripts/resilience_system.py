@@ -55,11 +55,11 @@ class VersionAlias:
     alias_id: str
     original_path: str
     current_path: str
-    version_history: List[str] = field(default_factory=list)
+    version_history: list[str] = field(default_factory=list)
     created_at: float = field(default_factory=time.time)
     last_accessed: float = field(default_factory=time.time)
     access_count: int = 0
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -70,10 +70,10 @@ class ChunkReference:
     file_path: str
     chunk_hash: str
     content_hash: str
-    references: List[str] = field(default_factory=list)
+    references: list[str] = field(default_factory=list)
     last_referenced: float = field(default_factory=time.time)
     reference_count: int = 0
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -88,9 +88,9 @@ class OrphanChunk:
     last_access: float
     access_count: int
     size_bytes: int
-    potential_owners: List[str] = field(default_factory=list)
+    potential_owners: list[str] = field(default_factory=list)
     cleanup_priority: float = 0.0
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -99,14 +99,14 @@ class MigrationPlan:
 
     migration_id: str
     strategy: MigrationStrategy
-    source_chunks: List[str]
-    target_chunks: List[str]
+    source_chunks: list[str]
+    target_chunks: list[str]
     estimated_duration: float
     risk_level: str
-    rollback_plan: Dict[str, Any]
+    rollback_plan: dict[str, Any]
     created_at: float = field(default_factory=time.time)
     status: str = "pending"
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -357,7 +357,7 @@ class ResilienceDatabase:
         )
         conn.commit()
 
-    def get_version_alias(self, path: str) -> Optional[VersionAlias]:
+    def get_version_alias(self, path: str) -> VersionAlias | None:
         """Get version alias by path"""
         conn = self._get_connection()
         cursor = conn.cursor()
@@ -386,7 +386,7 @@ class ResilienceDatabase:
             )
         return None
 
-    def get_orphan_chunks(self, limit: int = 100) -> List[OrphanChunk]:
+    def get_orphan_chunks(self, limit: int = 100) -> list[OrphanChunk]:
         """Get orphan chunks ordered by cleanup priority"""
         conn = self._get_connection()
         cursor = conn.cursor()
@@ -442,11 +442,9 @@ class VersionAliasManager:
     def __init__(self, database: ResilienceDatabase, config: ResilienceConfig):
         self.database = database
         self.config = config
-        self.alias_cache: Dict[str, VersionAlias] = {}
+        self.alias_cache: dict[str, VersionAlias] = {}
 
-    def create_alias(
-        self, original_path: str, new_path: str, metadata: Optional[Dict[str, Any]] = None
-    ) -> VersionAlias:
+    def create_alias(self, original_path: str, new_path: str, metadata: dict[str, Any] | None = None) -> VersionAlias:
         """Create a version alias for file rename/migration"""
         alias_id = self._generate_alias_id(original_path, new_path)
 
@@ -485,7 +483,7 @@ class VersionAliasManager:
         logger.info(f"Created version alias: {original_path} -> {new_path}")
         return alias
 
-    def resolve_alias(self, path: str) -> Optional[str]:
+    def resolve_alias(self, path: str) -> str | None:
         """Resolve a path to its current location"""
         alias = self.database.get_version_alias(path)
         if alias:
@@ -496,7 +494,7 @@ class VersionAliasManager:
             return alias.current_path
         return None
 
-    def get_alias_history(self, path: str) -> List[str]:
+    def get_alias_history(self, path: str) -> list[str]:
         """Get the version history for a path"""
         alias = self.database.get_version_alias(path)
         if alias:
@@ -540,7 +538,7 @@ class OrphanChunkDetector:
             self.detection_thread.join(timeout=5)
         logger.info("Orphan chunk detection stopped")
 
-    def detect_orphans(self) -> List[OrphanChunk]:
+    def detect_orphans(self) -> list[OrphanChunk]:
         """Detect orphaned chunks in the system"""
         # This would typically scan the file system and memory system
         # For now, we'll simulate orphan detection
@@ -650,8 +648,8 @@ class MigrationManager:
     def create_migration_plan(
         self,
         strategy: MigrationStrategy,
-        source_chunks: List[str],
-        target_chunks: List[str],
+        source_chunks: list[str],
+        target_chunks: list[str],
         risk_level: str = "medium",
     ) -> MigrationPlan:
         """Create a migration plan"""
@@ -753,7 +751,7 @@ class MigrationManager:
         multiplier = strategy_multipliers.get(strategy, 1.0)
         return base_duration * multiplier * (chunk_count / 10.0)
 
-    def _create_rollback_plan(self, source_chunks: List[str], target_chunks: List[str]) -> Dict[str, Any]:
+    def _create_rollback_plan(self, source_chunks: list[str], target_chunks: list[str]) -> dict[str, Any]:
         """Create a rollback plan for migration"""
         return {
             "source_backup": source_chunks.copy(),
@@ -816,7 +814,7 @@ class CleanupManager:
             self.cleanup_thread.join(timeout=5)
         logger.info("Cleanup processing stopped")
 
-    def cleanup_orphans(self, max_operations: Optional[int] = None) -> Dict[str, int]:
+    def cleanup_orphans(self, max_operations: int | None = None) -> dict[str, int]:
         """Clean up orphaned chunks"""
         if max_operations is None:
             max_operations = self.config.max_cleanup_operations
@@ -908,7 +906,7 @@ class CleanupManager:
 class ResilienceSystem:
     """Main resilience system that orchestrates all resilience patterns"""
 
-    def __init__(self, config: Optional[ResilienceConfig] = None):
+    def __init__(self, config: ResilienceConfig | None = None):
         self.config = config or ResilienceConfig()
         self.database = ResilienceDatabase(self.config.db_path)
 
@@ -955,7 +953,7 @@ class ResilienceSystem:
 
         logger.info("Resilience system stopped")
 
-    def get_system_status(self) -> Dict[str, Any]:
+    def get_system_status(self) -> dict[str, Any]:
         """Get comprehensive system status"""
         current_time = time.time()
 
@@ -984,7 +982,7 @@ class ResilienceSystem:
             },
         }
 
-    def run_resilience_check(self) -> Dict[str, Any]:
+    def run_resilience_check(self) -> dict[str, Any]:
         """Run a comprehensive resilience check"""
         logger.info("Running resilience check...")
 

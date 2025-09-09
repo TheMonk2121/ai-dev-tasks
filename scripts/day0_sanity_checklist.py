@@ -18,7 +18,7 @@ class Day0SanityChecklist:
     def __init__(self):
         self.checklist_results = {"timestamp": datetime.now().isoformat(), "checks": {}, "overall_status": "unknown"}
 
-    def run_day0_sanity_checklist(self) -> Dict[str, Any]:
+    def run_day0_sanity_checklist(self) -> dict[str, Any]:
         """Run complete Day-0 sanity checklist."""
         print("🔍 DAY-0 SANITY CHECKLIST")
         print("=" * 50)
@@ -67,7 +67,7 @@ class Day0SanityChecklist:
 
         return self.checklist_results
 
-    def _check_secrets_loaded(self) -> Dict[str, Any]:
+    def _check_secrets_loaded(self) -> dict[str, Any]:
         """Check secrets loaded & scoped."""
         required_secrets = {
             "POSTGRES_DSN": "Database connection string",
@@ -98,7 +98,7 @@ class Day0SanityChecklist:
             "message": f"Secrets: {len(present_secrets)}/{len(required_secrets)} present, DB user: {'least-priv' if is_least_priv else 'full-priv'}",
         }
 
-    def _check_active_pointer(self) -> Dict[str, Any]:
+    def _check_active_pointer(self) -> dict[str, Any]:
         """Check active pointer / run-id logging."""
         ingest_run_id = os.getenv("INGEST_RUN_ID")
         config_hash = os.getenv("CONFIG_HASH")
@@ -121,7 +121,7 @@ class Day0SanityChecklist:
             "message": f"Run ID: {ingest_run_id or 'missing'}, Config: {config_hash or 'missing'}, Pointer: {'exists' if pointer_exists else 'missing'}",
         }
 
-    def _check_cache_stance(self) -> Dict[str, Any]:
+    def _check_cache_stance(self) -> dict[str, Any]:
         """Check cache stance configuration."""
         eval_disable_cache = os.getenv("EVAL_DISABLE_CACHE", "0")
         cache_enabled_prod = os.getenv("CACHE_ENABLED_PROD", "1")
@@ -140,7 +140,7 @@ class Day0SanityChecklist:
             "message": f"Eval cache: {'disabled' if eval_cache_disabled else 'enabled'}, Prod cache: {'enabled' if prod_cache_enabled else 'disabled'}",
         }
 
-    def _check_reranker_prewarm(self) -> Dict[str, Any]:
+    def _check_reranker_prewarm(self) -> dict[str, Any]:
         """Check reranker prewarm configuration."""
         reranker_prewarm = os.getenv("RERANKER_PREWARM", "0")
         reranker_model = os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")
@@ -160,7 +160,7 @@ class Day0SanityChecklist:
             "message": f"Prewarm: {'enabled' if prewarm_enabled else 'disabled'}, Model: {reranker_model or 'missing'}",
         }
 
-    def _check_kill_switch(self) -> Dict[str, Any]:
+    def _check_kill_switch(self) -> dict[str, Any]:
         """Check kill switch configuration."""
         deploy_disable = os.getenv("DEPLOY_DISABLE_NEW_CONFIG", "0")
         kill_switch_doc = Path("docs/kill_switch.md")

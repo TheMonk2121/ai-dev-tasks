@@ -34,8 +34,8 @@ class RAGCheckerGovernanceIntegration:
         logger.info("RAGChecker Governance Integration initialized")
 
     def evaluate_with_governance(
-        self, pipeline_config: Optional[Dict[str, Any]] = None, use_bedrock: bool = True, num_cases: int = 5
-    ) -> Dict[str, Any]:
+        self, pipeline_config: dict[str, Any] | None = None, use_bedrock: bool = True, num_cases: int = 5
+    ) -> dict[str, Any]:
         """
         Run full RAGChecker evaluation with pipeline governance
         """
@@ -118,8 +118,8 @@ class RAGCheckerGovernanceIntegration:
             }
 
     def evaluate_pipeline_variants(
-        self, base_config: Dict[str, Any], num_variants: int = 5, use_bedrock: bool = True, num_cases: int = 3
-    ) -> List[Dict[str, Any]]:
+        self, base_config: dict[str, Any], num_variants: int = 5, use_bedrock: bool = True, num_cases: int = 3
+    ) -> list[dict[str, Any]]:
         """
         Evaluate multiple pipeline variants using real RAGChecker evaluation
         """
@@ -154,11 +154,11 @@ class RAGCheckerGovernanceIntegration:
 
         return variant_results
 
-    def get_pipeline_recommendations(self, requirements: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def get_pipeline_recommendations(self, requirements: dict[str, Any]) -> list[dict[str, Any]]:
         """Get pipeline recommendations based on requirements"""
         return self.governance.get_pipeline_recommendations(requirements)
 
-    def export_comprehensive_report(self) -> Dict[str, Any]:
+    def export_comprehensive_report(self) -> dict[str, Any]:
         """Export comprehensive report including governance and evaluation data"""
         governance_report = self.governance.export_governance_report()
 

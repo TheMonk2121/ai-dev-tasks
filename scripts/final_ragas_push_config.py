@@ -15,7 +15,6 @@ Target Metrics:
 
 import logging
 import os
-from typing import Dict, List
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -33,7 +32,7 @@ class FinalRAGASPushConfig:
             "recall_health": self._get_recall_health_config(),
         }
 
-    def _get_move1_config(self) -> Dict[str, str]:
+    def _get_move1_config(self) -> dict[str, str]:
         """Move 1: Risk-aware 3-of-3 (risky only) + multi-evidence."""
         return {
             # Risk-aware support rules
@@ -52,7 +51,7 @@ class FinalRAGASPushConfig:
             # Expected: +0.01–0.02 precision, Unsupported ↓, recall ≈ flat
         }
 
-    def _get_move2_config(self) -> Dict[str, str]:
+    def _get_move2_config(self) -> dict[str, str]:
         """Move 2: Lightweight cross-encoder rerank with decisive blending."""
         return {
             # Cross-encoder configuration
@@ -66,7 +65,7 @@ class FinalRAGASPushConfig:
             # Expected: +0.02–0.04 precision, minimal recall hit
         }
 
-    def _get_move3_config(self) -> Dict[str, str]:
+    def _get_move3_config(self) -> dict[str, str]:
         """Move 3: Borderline NLI gate for unsupported reduction."""
         return {
             # NLI configuration
@@ -77,7 +76,7 @@ class FinalRAGASPushConfig:
             # Expected: Unsupported → ≤15–18%, precision +~0.01, tiny recall cost
         }
 
-    def _get_recall_health_config(self) -> Dict[str, str]:
+    def _get_recall_health_config(self) -> dict[str, str]:
         """Recall health maintenance configuration."""
         return {
             # Anchor-biased fusion (retain)
@@ -101,7 +100,7 @@ class FinalRAGASPushConfig:
             "RAGCHECKER_TARGET_K_STRONG": "9",
         }
 
-    def apply_move(self, move_name: str) -> Dict[str, str]:
+    def apply_move(self, move_name: str) -> dict[str, str]:
         """Apply a specific move configuration."""
         if move_name not in self.move_configs:
             raise ValueError(f"Unknown move: {move_name}")
@@ -115,7 +114,7 @@ class FinalRAGASPushConfig:
         logger.info(f"✅ Applied {move_name} configuration: {len(config)} parameters")
         return config
 
-    def apply_all_moves(self) -> Dict[str, Dict[str, str]]:
+    def apply_all_moves(self) -> dict[str, dict[str, str]]:
         """Apply all moves in sequence."""
         applied_configs = {}
 
@@ -130,7 +129,7 @@ class FinalRAGASPushConfig:
 
         return applied_configs
 
-    def get_telemetry_config(self) -> Dict[str, str]:
+    def get_telemetry_config(self) -> dict[str, str]:
         """Get comprehensive telemetry configuration."""
         return {
             "RAGCHECKER_TELEMETRY_ENABLED": "1",
@@ -144,7 +143,7 @@ class FinalRAGASPushConfig:
             "RAGCHECKER_LOG_CLAIMS_EXTRACTED_KEPT": "1",
         }
 
-    def get_ragas_targets(self) -> Dict[str, float]:
+    def get_ragas_targets(self) -> dict[str, float]:
         """Get RAGAS target metrics."""
         return {
             "precision": 0.20,
@@ -154,7 +153,7 @@ class FinalRAGASPushConfig:
             "faithfulness": 0.60,
         }
 
-    def get_fallback_configs(self) -> Dict[str, Dict[str, str]]:
+    def get_fallback_configs(self) -> dict[str, dict[str, str]]:
         """Get fallback configurations if targets not met."""
         return {
             "precision_low": {
@@ -166,7 +165,7 @@ class FinalRAGASPushConfig:
             },
         }
 
-    def validate_targets(self, results: Dict[str, float]) -> Dict[str, bool]:
+    def validate_targets(self, results: dict[str, float]) -> dict[str, bool]:
         """Validate if results meet RAGAS targets."""
         targets = self.get_ragas_targets()
         validation = {}
@@ -179,7 +178,7 @@ class FinalRAGASPushConfig:
 
         return validation
 
-    def get_next_actions(self, validation: Dict[str, bool]) -> List[str]:
+    def get_next_actions(self, validation: dict[str, bool]) -> list[str]:
         """Get recommended next actions based on validation results."""
         actions = []
 

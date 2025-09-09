@@ -55,7 +55,7 @@ logger = logging.getLogger(__name__)
 class GenerationCacheSchemaMigration:
     """Database schema migration for generation cache implementation"""
 
-    def __init__(self, database_url: Optional[str] = None):
+    def __init__(self, database_url: str | None = None):
         """Initialize migration with database connection"""
         self.database_url = database_url or get_database_url()
         self.connection = None
@@ -113,7 +113,7 @@ class GenerationCacheSchemaMigration:
             logger.error(f"Error checking table existence: {e}")
             return False
 
-    def get_table_schema(self, table_name: str) -> Dict[str, Any]:
+    def get_table_schema(self, table_name: str) -> dict[str, Any]:
         """Get current table schema information"""
         try:
             self.cursor.execute(
@@ -271,7 +271,7 @@ class GenerationCacheSchemaMigration:
             logger.error(f"Error validating cache columns: {e}")
             return False
 
-    def measure_performance_impact(self) -> Dict[str, Any]:
+    def measure_performance_impact(self) -> dict[str, Any]:
         """Measure performance impact of schema changes"""
         try:
             # Get table size before changes

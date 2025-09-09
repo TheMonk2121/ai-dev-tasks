@@ -66,25 +66,25 @@ class TestResult:
     test_category: str
     status: str  # passed, failed, skipped
     duration_ms: float
-    details: Dict[str, Any]
-    error_message: Optional[str] = None
+    details: dict[str, Any]
+    error_message: str | None = None
     timestamp: float = field(default_factory=time.time)
 
 
 class ComprehensiveTestingSuite:
     """Comprehensive testing suite for the generation cache system"""
 
-    def __init__(self, config: Optional[TestConfig] = None):
+    def __init__(self, config: TestConfig | None = None):
         """Initialize testing suite"""
         self.config = config or TestConfig()
-        self.test_results: List[TestResult] = []
+        self.test_results: list[TestResult] = []
 
         # Initialize systems for testing
-        self.cache_service: Optional[PostgreSQLCacheService] = None
-        self.similarity_engine: Optional[SimilarityScoringEngine] = None
-        self.integration: Optional[CacheInvalidationIntegration] = None
-        self.ltst_integration: Optional[LTSTMemoryIntegration] = None
-        self.performance_monitor: Optional[CachePerformanceMonitor] = None
+        self.cache_service: PostgreSQLCacheService | None = None
+        self.similarity_engine: SimilarityScoringEngine | None = None
+        self.integration: CacheInvalidationIntegration | None = None
+        self.ltst_integration: LTSTMemoryIntegration | None = None
+        self.performance_monitor: CachePerformanceMonitor | None = None
 
         logger.info("Comprehensive Testing Suite initialized")
 
@@ -160,7 +160,7 @@ class ComprehensiveTestingSuite:
             logger.error(f"Failed to initialize testing suite: {e}")
             raise
 
-    async def run_all_tests(self) -> Dict[str, Any]:
+    async def run_all_tests(self) -> dict[str, Any]:
         """Run all test categories"""
         try:
             logger.info("Starting comprehensive testing suite")
@@ -205,7 +205,7 @@ class ComprehensiveTestingSuite:
             logger.error(f"Testing suite failed: {e}")
             return {"error": str(e)}
 
-    async def _run_unit_tests(self) -> Dict[str, Any]:
+    async def _run_unit_tests(self) -> dict[str, Any]:
         """Run unit tests for individual components"""
         try:
             results = {}
@@ -380,7 +380,7 @@ class ComprehensiveTestingSuite:
                 error_message=str(e),
             )
 
-    async def _run_integration_tests(self) -> Dict[str, Any]:
+    async def _run_integration_tests(self) -> dict[str, Any]:
         """Run integration tests for system interactions"""
         try:
             results = {}
@@ -561,7 +561,7 @@ class ComprehensiveTestingSuite:
                 error_message=str(e),
             )
 
-    async def _run_performance_tests(self) -> Dict[str, Any]:
+    async def _run_performance_tests(self) -> dict[str, Any]:
         """Run performance tests"""
         try:
             results = {}
@@ -756,7 +756,7 @@ class ComprehensiveTestingSuite:
                 error_message=str(e),
             )
 
-    async def _run_stress_tests(self) -> Dict[str, Any]:
+    async def _run_stress_tests(self) -> dict[str, Any]:
         """Run stress tests"""
         try:
             results = {}
@@ -893,7 +893,7 @@ class ComprehensiveTestingSuite:
                 error_message=str(e),
             )
 
-    def _generate_test_summary(self, total_duration_ms: float) -> Dict[str, Any]:
+    def _generate_test_summary(self, total_duration_ms: float) -> dict[str, Any]:
         """Generate comprehensive test summary"""
         try:
             # Collect all test results from nested dictionaries

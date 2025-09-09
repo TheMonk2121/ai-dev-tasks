@@ -11,19 +11,19 @@ from typing import Any, Dict, List
 from lessons_model import Lesson, append_lesson, new_lesson
 
 
-def load_run_metrics(run_json_path: str) -> Dict[str, Any]:
+def load_run_metrics(run_json_path: str) -> dict[str, Any]:
     """Load metrics from a run JSON file"""
-    with open(run_json_path, "r") as f:
+    with open(run_json_path) as f:
         return json.load(f)
 
 
-def load_progress_jsonl(progress_jsonl_path: str) -> List[Dict[str, Any]]:
+def load_progress_jsonl(progress_jsonl_path: str) -> list[dict[str, Any]]:
     """Load per-case results from progress JSONL"""
     cases = []
     if not os.path.exists(progress_jsonl_path):
         return cases
 
-    with open(progress_jsonl_path, "r") as f:
+    with open(progress_jsonl_path) as f:
         for line in f:
             line = line.strip()
             if line and not line.startswith("#"):
@@ -34,7 +34,7 @@ def load_progress_jsonl(progress_jsonl_path: str) -> List[Dict[str, Any]]:
     return cases
 
 
-def analyze_failure_modes(run_metrics: Dict[str, Any], cases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def analyze_failure_modes(run_metrics: dict[str, Any], cases: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Analyze failure modes from run metrics and case results"""
     failure_modes = []
 
@@ -84,7 +84,7 @@ def analyze_failure_modes(run_metrics: Dict[str, Any], cases: List[Dict[str, Any
     return failure_modes
 
 
-def analyze_case_patterns(cases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def analyze_case_patterns(cases: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Analyze patterns in individual case results"""
     patterns = []
 
@@ -118,9 +118,7 @@ def analyze_case_patterns(cases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return patterns
 
 
-def generate_lessons(
-    failure_modes: List[Dict[str, Any]], run_metrics: Dict[str, Any]
-) -> List[Lesson]:
+def generate_lessons(failure_modes: list[dict[str, Any]], run_metrics: dict[str, Any]) -> list[Lesson]:
     """Generate lessons from failure mode analysis"""
     lessons = []
 
@@ -219,9 +217,7 @@ def generate_lessons(
     return lessons
 
 
-def main(
-    run_json_path: str, progress_jsonl_path: str = None, out_jsonl: str = "metrics/lessons/lessons.jsonl"
-) -> None:
+def main(run_json_path: str, progress_jsonl_path: str = None, out_jsonl: str = "metrics/lessons/lessons.jsonl") -> None:
     """Main extraction function"""
     print(f"🧠 Extracting lessons from {run_json_path}")
 
@@ -267,7 +263,7 @@ def main(
         crkg = {}
         if os.path.exists(crkg_path):
             try:
-                with open(crkg_path, "r", encoding="utf-8") as f:
+                with open(crkg_path, encoding="utf-8") as f:
                     crkg = json.load(f)
             except Exception:
                 crkg = {}
@@ -347,13 +343,18 @@ def main(
         print(f"🧩 CRKG updated: {crkg_path}")
 
         # Simple pattern cards: summarize recent lessons' changes → predicted effects
-        cards: List[Dict[str, Any]] = []
+        cards: list[dict[str, Any]] = []
         for l in lessons:
-            changes = ", ".join(
-                f"{c.get('key')} {c.get('op')} {c.get('value')}" for c in l.recommendation.get("changes", [])
-            ) or "(no param changes)"
+            changes = (
+                ", ".join(f"{c.get('key')} {c.get('op')} {c.get('value')}" for c in l.recommendation.get("changes", []))
+                or "(no param changes)"
+            )
             effects = l.recommendation.get("predicted_effect", {}) or {}
-            scope = l.scope.level if hasattr(l.scope, "level") else (l.scope.get("level") if isinstance(l.scope, dict) else "")
+            scope = (
+                l.scope.level
+                if hasattr(l.scope, "level")
+                else (l.scope.get("level") if isinstance(l.scope, dict) else "")
+            )
             summary = (
                 f"Pattern {l.finding.get('pattern','?')} → {changes}; predicted: {effects}; "
                 f"scope={scope}; conf={l.confidence:.2f}"
@@ -364,7 +365,7 @@ def main(
         existing_cards = []
         if os.path.exists(pattern_cards_path):
             try:
-                with open(pattern_cards_path, "r", encoding="utf-8") as f:
+                with open(pattern_cards_path, encoding="utf-8") as f:
                     obj = json.load(f)
                     if isinstance(obj, dict) and "cards" in obj:
                         existing_cards = obj["cards"]

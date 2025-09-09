@@ -9,7 +9,6 @@ cover those files, based on coverage.json from the test signal system.
 import json
 import pathlib
 import sys
-from typing import Set
 
 import typer
 
@@ -21,7 +20,7 @@ def load_coverage() -> dict:
     if not COV_JSON.exists():
         print("Warning: metrics/coverage.json not found", file=sys.stderr)
         return {}
-    
+
     try:
         return json.loads(COV_JSON.read_text())
     except Exception as e:
@@ -29,10 +28,10 @@ def load_coverage() -> dict:
         return {}
 
 
-def get_tests_for_files(changed_files: Set[str], coverage_data: dict) -> Set[str]:
+def get_tests_for_files(changed_files: set[str], coverage_data: dict) -> set[str]:
     """Get test IDs that cover the changed files"""
     impacted_tests = set()
-    
+
     files = coverage_data.get("files", {})
     for file_path, file_data in files.items():
         # Check if this file is in our changed files
@@ -43,7 +42,7 @@ def get_tests_for_files(changed_files: Set[str], coverage_data: dict) -> Set[str
                     # Clean up test ID format
                     test_id = test.replace("::()::", "::")
                     impacted_tests.add(test_id)
-    
+
     return impacted_tests
 
 
@@ -53,37 +52,37 @@ def main(
     output_format: str = typer.Option("test_ids", "--format", help="Output format: test_ids, pytest_args"),
 ):
     """Select tests impacted by changed files"""
-    
+
     # Get changed files
     changed_files = set()
-    
+
     if files:
         file_path = pathlib.Path(files)
         if file_path.exists():
-            changed_files = set(file_path.read_text().strip().split('\n'))
+            changed_files = set(file_path.read_text().strip().split("\n"))
         else:
             print(f"Warning: File {files} not found", file=sys.stderr)
-    
+
     if file_list:
-        changed_files.update(file_list.split(','))
-    
+        changed_files.update(file_list.split(","))
+
     if not changed_files:
         print("No changed files specified", file=sys.stderr)
         return
-    
+
     # Load coverage data
     coverage_data = load_coverage()
     if not coverage_data:
         print("No coverage data available", file=sys.stderr)
         return
-    
+
     # Find impacted tests
     impacted_tests = get_tests_for_files(changed_files, coverage_data)
-    
+
     if not impacted_tests:
         print("No tests found for changed files", file=sys.stderr)
         return
-    
+
     # Output results
     if output_format == "pytest_args":
         # Output as pytest arguments

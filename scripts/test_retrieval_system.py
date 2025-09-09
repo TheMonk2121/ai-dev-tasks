@@ -24,7 +24,7 @@ from retrieval.test_hardening import run_comprehensive_tests
 def create_mock_retrieval_function():
     """Create a mock retrieval function for testing."""
 
-    def mock_retrieval(query: str) -> Dict[str, Any]:
+    def mock_retrieval(query: str) -> dict[str, Any]:
         """Mock retrieval function that simulates various behaviors."""
         # Simulate processing time
         time.sleep(0.01)  # 10ms base latency
@@ -50,7 +50,7 @@ def create_mock_retrieval_function():
     return mock_retrieval
 
 
-def run_failure_mode_tests(retrieval_fn) -> Dict[str, Any]:
+def run_failure_mode_tests(retrieval_fn) -> dict[str, Any]:
     """Test various failure modes and system limits."""
     failure_tests = [
         {
@@ -105,7 +105,7 @@ def run_failure_mode_tests(retrieval_fn) -> Dict[str, Any]:
     }
 
 
-def test_high_volume(retrieval_fn, num_queries: int = 100) -> Dict[str, Any]:
+def test_high_volume(retrieval_fn, num_queries: int = 100) -> dict[str, Any]:
     """Test system behavior under high query volume."""
     queries = [f"Test query {i} with various content" for i in range(num_queries)]
 
@@ -133,7 +133,7 @@ def test_high_volume(retrieval_fn, num_queries: int = 100) -> Dict[str, Any]:
     }
 
 
-def test_large_context(retrieval_fn) -> Dict[str, Any]:
+def test_large_context(retrieval_fn) -> dict[str, Any]:
     """Test handling of queries that might return large contexts."""
     large_queries = [
         "Explain the entire DSPy framework architecture in detail",
@@ -162,7 +162,7 @@ def test_large_context(retrieval_fn) -> Dict[str, Any]:
     }
 
 
-def test_concurrent_queries(retrieval_fn, num_concurrent: int = 10) -> Dict[str, Any]:
+def test_concurrent_queries(retrieval_fn, num_concurrent: int = 10) -> dict[str, Any]:
     """Test concurrent query handling (simplified single-threaded version)."""
     import random
 
@@ -220,7 +220,7 @@ def main() -> None:
     print("\n🧪 Phase 1: Test Hardening & Edge Cases")
     try:
         run_comprehensive_tests(retrieval_fn, "test_hardening_partial.json")
-        with open("test_hardening_partial.json", "r") as f:
+        with open("test_hardening_partial.json") as f:
             all_results["test_hardening"] = json.load(f)
         print("✅ Test hardening completed")
     except Exception as e:
@@ -277,7 +277,7 @@ def main() -> None:
         pass
 
 
-def generate_test_summary(results: Dict[str, Any]) -> Dict[str, Any]:
+def generate_test_summary(results: dict[str, Any]) -> dict[str, Any]:
     """Generate overall test summary."""
     summary = {"overall_status": "healthy", "components_tested": 0, "tests_passed": 0, "tests_failed": 0, "issues": []}
 

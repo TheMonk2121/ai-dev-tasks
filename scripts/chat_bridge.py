@@ -8,7 +8,6 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware

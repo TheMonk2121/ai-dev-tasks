@@ -22,18 +22,14 @@ class TinyHardeningSystem:
         self.config_dir.mkdir(parents=True, exist_ok=True)
         self.hardening_log_file = self.config_dir / "hardening_log.jsonl"
 
-    def run_tiny_hardening(self) -> Dict[str, Any]:
+    def run_tiny_hardening(self) -> dict[str, Any]:
         """Run tiny hardening improvements."""
         print("🔧 TINY HARDENING SYSTEM")
-        print("="*50)
+        print("=" * 50)
         print("🛡️ Small hardening improvements you'll thank yourself for")
         print()
 
-        hardening_result = {
-            "timestamp": datetime.now().isoformat(),
-            "improvements": {},
-            "overall_status": "unknown"
-        }
+        hardening_result = {"timestamp": datetime.now().isoformat(), "improvements": {}, "overall_status": "unknown"}
 
         # Improvement 1: Idempotent chunk IDs
         print("🆔 Improvement 1: Idempotent chunk IDs...")
@@ -72,15 +68,15 @@ class TinyHardeningSystem:
 
         return hardening_result
 
-    def _implement_idempotent_chunk_ids(self) -> Dict[str, Any]:
+    def _implement_idempotent_chunk_ids(self) -> dict[str, Any]:
         """Implement idempotent chunk IDs."""
         print("  🆔 Implementing idempotent chunk IDs...")
-        
+
         chunk_id_result = {
             "improvement_name": "idempotent_chunk_ids",
             "timestamp": datetime.now().isoformat(),
             "steps": {},
-            "success": False
+            "success": False,
         }
 
         try:
@@ -100,12 +96,12 @@ class TinyHardeningSystem:
             chunk_id_result["steps"]["idempotency_test"] = idempotency_test
 
             # Determine if improvement was successful
-            all_steps_successful = all(
-                step["success"] for step in chunk_id_result["steps"].values()
-            )
+            all_steps_successful = all(step["success"] for step in chunk_id_result["steps"].values())
             chunk_id_result["success"] = all_steps_successful
 
-            chunk_id_result["message"] = f"Idempotent chunk IDs: {'success' if all_steps_successful else 'failed'} - {len([s for s in chunk_id_result['steps'].values() if s['success']])}/{len(chunk_id_result['steps'])} steps successful"
+            chunk_id_result["message"] = (
+                f"Idempotent chunk IDs: {'success' if all_steps_successful else 'failed'} - {len([s for s in chunk_id_result['steps'].values() if s['success']])}/{len(chunk_id_result['steps'])} steps successful"
+            )
 
         except Exception as e:
             chunk_id_result["error"] = str(e)
@@ -113,15 +109,15 @@ class TinyHardeningSystem:
 
         return chunk_id_result
 
-    def _implement_few_shot_provenance(self) -> Dict[str, Any]:
+    def _implement_few_shot_provenance(self) -> dict[str, Any]:
         """Implement few-shot provenance tracking."""
         print("  📋 Implementing few-shot provenance...")
-        
+
         provenance_result = {
             "improvement_name": "few_shot_provenance",
             "timestamp": datetime.now().isoformat(),
             "steps": {},
-            "success": False
+            "success": False,
         }
 
         try:
@@ -141,12 +137,12 @@ class TinyHardeningSystem:
             provenance_result["steps"]["manifest_update"] = manifest_update
 
             # Determine if improvement was successful
-            all_steps_successful = all(
-                step["success"] for step in provenance_result["steps"].values()
-            )
+            all_steps_successful = all(step["success"] for step in provenance_result["steps"].values())
             provenance_result["success"] = all_steps_successful
 
-            provenance_result["message"] = f"Few-shot provenance: {'success' if all_steps_successful else 'failed'} - {len([s for s in provenance_result['steps'].values() if s['success']])}/{len(provenance_result['steps'])} steps successful"
+            provenance_result["message"] = (
+                f"Few-shot provenance: {'success' if all_steps_successful else 'failed'} - {len([s for s in provenance_result['steps'].values() if s['success']])}/{len(provenance_result['steps'])} steps successful"
+            )
 
         except Exception as e:
             provenance_result["error"] = str(e)
@@ -154,15 +150,15 @@ class TinyHardeningSystem:
 
         return provenance_result
 
-    def _implement_canary_guard(self) -> Dict[str, Any]:
+    def _implement_canary_guard(self) -> dict[str, Any]:
         """Implement canary guard for deployment safety."""
         print("  🛡️ Implementing canary guard...")
-        
+
         canary_result = {
             "improvement_name": "canary_guard",
             "timestamp": datetime.now().isoformat(),
             "steps": {},
-            "success": False
+            "success": False,
         }
 
         try:
@@ -182,12 +178,12 @@ class TinyHardeningSystem:
             canary_result["steps"]["deployment_blocking"] = deployment_blocking
 
             # Determine if improvement was successful
-            all_steps_successful = all(
-                step["success"] for step in canary_result["steps"].values()
-            )
+            all_steps_successful = all(step["success"] for step in canary_result["steps"].values())
             canary_result["success"] = all_steps_successful
 
-            canary_result["message"] = f"Canary guard: {'success' if all_steps_successful else 'failed'} - {len([s for s in canary_result['steps'].values() if s['success']])}/{len(canary_result['steps'])} steps successful"
+            canary_result["message"] = (
+                f"Canary guard: {'success' if all_steps_successful else 'failed'} - {len([s for s in canary_result['steps'].values() if s['success']])}/{len(canary_result['steps'])} steps successful"
+            )
 
         except Exception as e:
             canary_result["error"] = str(e)
@@ -195,7 +191,7 @@ class TinyHardeningSystem:
 
         return canary_result
 
-    def _generate_chunk_id_function(self) -> Dict[str, Any]:
+    def _generate_chunk_id_function(self) -> dict[str, Any]:
         """Generate idempotent chunk ID function."""
         try:
             # Generate the chunk ID function
@@ -212,25 +208,25 @@ def generate_idempotent_chunk_id(doc_id: str, byte_span: tuple, chunk_version: s
     
     return chunk_id
 """
-            
+
             # Save the function to a file
             function_file = Path("dspy-rag-system/src/utils/idempotent_chunk_ids.py")
             function_file.parent.mkdir(parents=True, exist_ok=True)
-            
+
             with open(function_file, "w") as f:
                 f.write(chunk_id_function)
-            
+
             return {
                 "success": True,
                 "function_file": str(function_file),
                 "function_code": chunk_id_function,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def _update_chunking_system(self) -> Dict[str, Any]:
+    def _update_chunking_system(self) -> dict[str, Any]:
         """Update chunking system to use idempotent chunk IDs."""
         try:
             # This would update the actual chunking system
@@ -239,25 +235,25 @@ def generate_idempotent_chunk_id(doc_id: str, byte_span: tuple, chunk_version: s
                 "chunk_id_generation": "idempotent",
                 "chunk_id_function": "generate_idempotent_chunk_id",
                 "chunk_version": "2025-09-07-v1",
-                "config_hash": os.getenv("CONFIG_HASH", "default")
+                "config_hash": os.getenv("CONFIG_HASH", "default"),
             }
-            
+
             # Save configuration
             config_file = Path("configs/idempotent_chunking.json")
             with open(config_file, "w") as f:
                 json.dump(config_update, f, indent=2)
-            
+
             return {
                 "success": True,
                 "config_file": str(config_file),
                 "config_update": config_update,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def _test_chunk_idempotency(self) -> Dict[str, Any]:
+    def _test_chunk_idempotency(self) -> dict[str, Any]:
         """Test chunk ID idempotency."""
         try:
             # Test idempotency
@@ -265,28 +261,28 @@ def generate_idempotent_chunk_id(doc_id: str, byte_span: tuple, chunk_version: s
             byte_span = (0, 1000)
             chunk_version = "2025-09-07-v1"
             config_hash = "test_config_hash"
-            
+
             # Generate chunk ID multiple times
             chunk_ids = []
             for _ in range(5):
                 input_string = f"{doc_id}|{byte_span[0]}:{byte_span[1]}|{chunk_version}|{config_hash}"
                 chunk_id = hashlib.sha1(input_string.encode()).hexdigest()
                 chunk_ids.append(chunk_id)
-            
+
             # Check if all IDs are the same
             all_same = all(chunk_id == chunk_ids[0] for chunk_id in chunk_ids)
-            
+
             return {
                 "success": all_same,
                 "chunk_ids": chunk_ids,
                 "all_same": all_same,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def _design_provenance_schema(self) -> Dict[str, Any]:
+    def _design_provenance_schema(self) -> dict[str, Any]:
         """Design few-shot provenance schema."""
         try:
             # Design provenance schema
@@ -297,28 +293,28 @@ def generate_idempotent_chunk_id(doc_id: str, byte_span: tuple, chunk_version: s
                     "selector_seed": 42,
                     "selection_method": "deterministic_knn",
                     "leakage_guard": True,
-                    "timestamp": datetime.now().isoformat()
+                    "timestamp": datetime.now().isoformat(),
                 }
             }
-            
+
             # Save schema
             schema_file = Path("schemas/few_shot_provenance.json")
             schema_file.parent.mkdir(parents=True, exist_ok=True)
-            
+
             with open(schema_file, "w") as f:
                 json.dump(provenance_schema, f, indent=2)
-            
+
             return {
                 "success": True,
                 "schema_file": str(schema_file),
                 "provenance_schema": provenance_schema,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def _implement_provenance_tracking(self) -> Dict[str, Any]:
+    def _implement_provenance_tracking(self) -> dict[str, Any]:
         """Implement few-shot provenance tracking."""
         try:
             # Create provenance tracking function
@@ -333,34 +329,34 @@ def track_few_shot_provenance(few_shot_ids: List[str], pool_version: str, select
         "leakage_guard": True
     }
 """
-            
+
             # Save tracking function
             tracking_file = Path("dspy-rag-system/src/utils/few_shot_provenance.py")
             tracking_file.parent.mkdir(parents=True, exist_ok=True)
-            
+
             with open(tracking_file, "w") as f:
                 f.write(tracking_function)
-            
+
             return {
                 "success": True,
                 "tracking_file": str(tracking_file),
                 "tracking_function": tracking_function,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def _update_eval_manifest(self) -> Dict[str, Any]:
+    def _update_eval_manifest(self) -> dict[str, Any]:
         """Update eval manifest to include provenance."""
         try:
             # Update eval manifest template
             manifest_template = Path("templates/eval_manifest_template.yaml")
-            
+
             if manifest_template.exists():
-                with open(manifest_template, "r") as f:
+                with open(manifest_template) as f:
                     content = f.read()
-                
+
                 # Add provenance section
                 provenance_section = """
 provenance:
@@ -372,26 +368,26 @@ provenance:
     pool_version: ${POOL_VERSION}
     selector_seed: ${SELECTOR_SEED}
 """
-                
+
                 # Append provenance section
                 updated_content = content + provenance_section
-                
+
                 with open(manifest_template, "w") as f:
                     f.write(updated_content)
-                
+
                 return {
                     "success": True,
                     "manifest_template": str(manifest_template),
                     "provenance_section": provenance_section,
-                    "timestamp": datetime.now().isoformat()
+                    "timestamp": datetime.now().isoformat(),
                 }
             else:
                 return {"success": False, "error": "Manifest template not found"}
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def _implement_canary_percentage_check(self) -> Dict[str, Any]:
+    def _implement_canary_percentage_check(self) -> dict[str, Any]:
         """Implement canary percentage check."""
         try:
             # Create canary percentage check function
@@ -400,23 +396,23 @@ def check_canary_percentage(current_percentage: int, max_percentage: int = 50) -
     \"\"\"Check if canary percentage is within limits.\"\"\"
     return current_percentage <= max_percentage
 """
-            
+
             # Save function
             check_file = Path("scripts/canary_percentage_check.py")
             with open(check_file, "w") as f:
                 f.write(percentage_check_function)
-            
+
             return {
                 "success": True,
                 "check_file": str(check_file),
                 "check_function": percentage_check_function,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def _implement_eval_pass_validation(self) -> Dict[str, Any]:
+    def _implement_eval_pass_validation(self) -> dict[str, Any]:
         """Implement eval pass validation."""
         try:
             # Create eval pass validation function
@@ -427,23 +423,23 @@ def validate_eval_passes(required_passes: int = 2) -> bool:
     # For now, return True as placeholder
     return True
 """
-            
+
             # Save function
             validation_file = Path("scripts/eval_pass_validation.py")
             with open(validation_file, "w") as f:
                 f.write(validation_function)
-            
+
             return {
                 "success": True,
                 "validation_file": str(validation_file),
                 "validation_function": validation_function,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def _implement_deployment_blocking(self) -> Dict[str, Any]:
+    def _implement_deployment_blocking(self) -> dict[str, Any]:
         """Implement deployment blocking for safety."""
         try:
             # Create deployment blocking function
@@ -463,30 +459,26 @@ def block_deployment_if_unsafe(canary_percentage: int, eval_passes: int) -> bool
     
     return True
 """
-            
+
             # Save function
             blocking_file = Path("scripts/deployment_blocking.py")
             with open(blocking_file, "w") as f:
                 f.write(blocking_function)
-            
+
             return {
                 "success": True,
                 "blocking_file": str(blocking_file),
                 "blocking_function": blocking_function,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         except Exception as e:
             return {"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def _log_hardening_results(self, hardening_result: Dict[str, Any]):
+    def _log_hardening_results(self, hardening_result: dict[str, Any]):
         """Log hardening results."""
-        log_entry = {
-            "timestamp": datetime.now().isoformat(),
-            "type": "tiny_hardening",
-            "data": hardening_result
-        }
-        
+        log_entry = {"timestamp": datetime.now().isoformat(), "type": "tiny_hardening", "data": hardening_result}
+
         with open(self.hardening_log_file, "a") as f:
             f.write(json.dumps(log_entry) + "\n")
 
@@ -495,7 +487,7 @@ def main():
     """Main entry point for tiny hardening system."""
     hardening_system = TinyHardeningSystem()
     result = hardening_system.run_tiny_hardening()
-    
+
     # Exit with appropriate code
     if result["overall_status"] == "completed":
         print("\n🎉 Tiny hardening completed successfully!")

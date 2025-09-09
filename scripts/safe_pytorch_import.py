@@ -65,7 +65,7 @@ def patch_inspect_for_pytorch():
             # Return minimal source for PyTorch custom ops
             return (["# PyTorch custom operation"], 0)
 
-    def safe_getmodule(obj: Any, file: Optional[str] = None) -> Optional[Any]:
+    def safe_getmodule(obj: Any, file: str | None = None) -> Any | None:
         """Safe wrapper for inspect.getmodule that handles PyTorch custom ops."""
         try:
             return original_functions["getmodule"](obj, file)
@@ -80,7 +80,7 @@ def patch_inspect_for_pytorch():
         except (TypeError, AttributeError):
             return "<pytorch_custom_op>"
 
-    def safe_getsourcefile(obj: Any) -> Optional[str]:
+    def safe_getsourcefile(obj: Any) -> str | None:
         """Safe wrapper for inspect.getsourcefile that handles PyTorch custom ops."""
         try:
             return original_functions["getsourcefile"](obj)

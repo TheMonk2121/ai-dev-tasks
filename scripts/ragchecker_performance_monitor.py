@@ -14,7 +14,8 @@ from collections import defaultdict, deque
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
+from collections.abc import Callable
 
 # Add dspy-rag-system to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))
@@ -58,7 +59,7 @@ class PerformanceSnapshot:
     average_execution_time: float = 0.0
     throughput: float = 0.0
     error_rate: float = 0.0
-    memory_usage: Optional[float] = None
+    memory_usage: float | None = None
     cache_hit_rate: float = 0.0
     active_operations: int = 0
 
@@ -79,7 +80,7 @@ class PerformanceMonitor:
 
     def __init__(
         self,
-        thresholds: Optional[PerformanceThresholds] = None,
+        thresholds: PerformanceThresholds | None = None,
         enable_alerting: bool = True,
         enable_logging: bool = True,
         enable_metrics_export: bool = True,
@@ -92,15 +93,15 @@ class PerformanceMonitor:
 
         # Performance tracking
         self.performance_history: deque = deque(maxlen=10000)  # Keep last 10k snapshots
-        self.current_metrics: Dict[str, Any] = {}
-        self.operation_counters: Dict[str, int] = defaultdict(int)
-        self.error_counters: Dict[str, int] = defaultdict(int)
-        self.timing_data: Dict[str, List[float]] = defaultdict(list)
+        self.current_metrics: dict[str, Any] = {}
+        self.operation_counters: dict[str, int] = defaultdict(int)
+        self.error_counters: dict[str, int] = defaultdict(int)
+        self.timing_data: dict[str, list[float]] = defaultdict(list)
 
         # Alerting system
-        self.active_alerts: List[PerformanceAlert] = []
-        self.alert_history: List[PerformanceAlert] = []
-        self.alert_callbacks: List[Callable] = []
+        self.active_alerts: list[PerformanceAlert] = []
+        self.alert_history: list[PerformanceAlert] = []
+        self.alert_callbacks: list[Callable] = []
 
         # Monitoring state
         self.monitoring_enabled = True
@@ -306,8 +307,8 @@ class PerformanceMonitor:
         operation_name: str,
         execution_time: float,
         success: bool = True,
-        error_type: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        error_type: str | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> None:
         """Record an operation for performance monitoring"""
         if not self.monitoring_enabled:
@@ -340,7 +341,7 @@ class PerformanceMonitor:
                 f"Operation recorded: {operation_name} - {execution_time:.4f}s - {'SUCCESS' if success else 'FAILED'}"
             )
 
-    def update_metrics(self, metrics: Dict[str, Any]) -> None:
+    def update_metrics(self, metrics: dict[str, Any]) -> None:
         """Update current performance metrics"""
         self.current_metrics.update(metrics)
 
@@ -372,7 +373,7 @@ class PerformanceMonitor:
                 return True
         return False
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> dict[str, Any]:
         """Get comprehensive performance summary"""
         if not self.performance_history:
             return {"message": "No performance data available"}
@@ -424,8 +425,8 @@ class PerformanceMonitor:
         }
 
     def get_performance_history(
-        self, start_time: Optional[datetime] = None, end_time: Optional[datetime] = None, max_points: int = 100
-    ) -> List[Dict[str, Any]]:
+        self, start_time: datetime | None = None, end_time: datetime | None = None, max_points: int = 100
+    ) -> list[dict[str, Any]]:
         """Get performance history within a time range"""
         if not self.performance_history:
             return []
@@ -481,7 +482,7 @@ class PerformanceMonitor:
         except Exception as e:
             self.logger.error(f"Failed to export metrics: {e}")
 
-    def _get_memory_usage(self) -> Optional[float]:
+    def _get_memory_usage(self) -> float | None:
         """Get current memory usage in MB"""
         try:
             import psutil
@@ -528,7 +529,7 @@ class PerformanceMonitor:
 
 
 def create_performance_monitor(
-    thresholds: Optional[PerformanceThresholds] = None,
+    thresholds: PerformanceThresholds | None = None,
     enable_alerting: bool = True,
     enable_logging: bool = True,
     enable_metrics_export: bool = True,

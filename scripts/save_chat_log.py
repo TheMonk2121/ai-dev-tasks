@@ -22,14 +22,14 @@ import re
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 
 def read_clipboard() -> str:
     try:
-        return subprocess.check_output(['pbpaste'], text=True)
+        return subprocess.check_output(["pbpaste"], text=True)
     except Exception:
         return ""
+
 
 def sanitize(text: str) -> str:
     """Minimal scrubbing of obvious secrets; non-destructive otherwise."""
@@ -44,7 +44,8 @@ def sanitize(text: str) -> str:
         masked = re.sub(pat, lambda m: f"{m.group(1) if m.lastindex and m.lastindex>=1 else ''}=[REDACTED]", masked)
     return masked
 
-def save_markdown(content: str, title: Optional[str], tags: Optional[str]) -> Path:
+
+def save_markdown(content: str, title: str | None, tags: str | None) -> Path:
     ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     safe_title = (title or "chat").strip().replace(" ", "-")[:80]
     fname = f"{ts}_{safe_title}.md" if safe_title else f"{ts}_chat.md"
@@ -58,8 +59,9 @@ def save_markdown(content: str, title: Optional[str], tags: Optional[str]) -> Pa
     header_lines.append("")
 
     body = "\n".join(header_lines) + content.strip() + "\n"
-    out_path.write_text(body, encoding='utf-8')
+    out_path.write_text(body, encoding="utf-8")
     return out_path
+
 
 def main():
     parser = argparse.ArgumentParser(description="Manually save a chat transcript to docs/chat_logs/")
@@ -75,14 +77,14 @@ def main():
         if not p.exists():
             print(f"❌ File not found: {p}")
             return
-        text = p.read_text(encoding='utf-8')
+        text = p.read_text(encoding="utf-8")
     elif args.clipboard:
         text = read_clipboard()
     else:
         # Read stdin
         try:
             if not os.isatty(0):
-                text = os.fdopen(0, 'r', encoding='utf-8').read()
+                text = os.fdopen(0, "r", encoding="utf-8").read()
         except Exception:
             pass
 
@@ -94,6 +96,6 @@ def main():
     out_path = save_markdown(content, args.title, args.tags)
     print(f"✅ Chat saved to {out_path}")
 
+
 if __name__ == "__main__":
     main()
-

@@ -9,9 +9,8 @@ Provides centralized session tracking and context-aware session management.
 import argparse
 import json
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Dict, List, Optional, Set
 
 import psutil
 
@@ -20,11 +19,11 @@ import psutil
 class SessionContext:
     """Represents context tags and metadata for a session."""
 
-    tags: Set[str]
+    tags: set[str]
     session_type: str  # brainstorming, implementation, debug, planning
     priority: str  # high, medium, low
-    description: Optional[str] = None
-    related_sessions: Optional[List[str]] = None
+    description: str | None = None
+    related_sessions: list[str] | None = None
 
 
 @dataclass
@@ -37,7 +36,7 @@ class SessionInfo:
     worklog_path: str
     status: str  # active, completed, paused
     context: SessionContext
-    last_activity: Optional[str] = None
+    last_activity: str | None = None
     idle_timeout: int = 1800  # 30 minutes default
 
 
@@ -47,14 +46,14 @@ class SessionRegistry:
     def __init__(self, registry_path: str = "artifacts/session_registry.json"):
         self.registry_path = Path(registry_path)
         self.registry_path.parent.mkdir(parents=True, exist_ok=True)
-        self.sessions: Dict[str, SessionInfo] = {}
+        self.sessions: dict[str, SessionInfo] = {}
         self.load_registry()
 
     def load_registry(self) -> None:
         """Load session registry from file."""
         if self.registry_path.exists():
             try:
-                with open(self.registry_path, "r") as f:
+                with open(self.registry_path) as f:
                     data = json.load(f)
                     for backlog_id, session_data in data.get("sessions", {}).items():
                         # Convert context data back to SessionContext
@@ -85,7 +84,7 @@ class SessionRegistry:
         """Save session registry to file."""
         # Convert sessions to serializable format
         data = {
-            "last_updated": datetime.now(timezone.utc).isoformat(),
+            "last_updated": datetime.now(UTC).isoformat(),
             "total_sessions": len(self.sessions),
             "active_sessions": len([s for s in self.sessions.values() if s.status == "active"]),
             "sessions": {},
@@ -107,7 +106,7 @@ class SessionRegistry:
         worklog_path: str,
         session_type: str = "brainstorming",
         priority: str = "medium",
-        tags: Optional[List[str]] = None,
+        tags: list[str] | None = None,
     ) -> None:
         """Register a new Scribe session."""
         context = SessionContext(tags=set(tags or []), session_type=session_type, priority=priority)
@@ -115,7 +114,7 @@ class SessionRegistry:
         session_info = SessionInfo(
             backlog_id=backlog_id,
             pid=pid,
-            start_time=datetime.now(timezone.utc).isoformat(),
+            start_time=datetime.now(UTC).isoformat(),
             worklog_path=worklog_path,
             status="active",
             context=context,
@@ -148,13 +147,13 @@ class SessionRegistry:
         if backlog_id in self.sessions:
             self.sessions[backlog_id].status = status
             if status == "completed":
-                self.sessions[backlog_id].last_activity = datetime.now(timezone.utc).isoformat()
+                self.sessions[backlog_id].last_activity = datetime.now(UTC).isoformat()
             self.save_registry()
             print(f"✅ Updated session {backlog_id} status to {status}")
         else:
             print(f"⚠️ Session {backlog_id} not found in registry")
 
-    def add_context_tags(self, backlog_id: str, tags: List[str]) -> None:
+    def add_context_tags(self, backlog_id: str, tags: list[str]) -> None:
         """Add context tags to a session."""
         if backlog_id in self.sessions:
             self.sessions[backlog_id].context.tags.update(tags)
@@ -163,7 +162,7 @@ class SessionRegistry:
         else:
             print(f"⚠️ Session {backlog_id} not found in registry")
 
-    def remove_context_tags(self, backlog_id: str, tags: List[str]) -> None:
+    def remove_context_tags(self, backlog_id: str, tags: list[str]) -> None:
         """Remove context tags from a session."""
         if backlog_id in self.sessions:
             self.sessions[backlog_id].context.tags.difference_update(tags)
@@ -172,11 +171,11 @@ class SessionRegistry:
         else:
             print(f"⚠️ Session {backlog_id} not found in registry")
 
-    def get_active_sessions(self) -> List[SessionInfo]:
+    def get_active_sessions(self) -> list[SessionInfo]:
         """Get all active sessions."""
         return [s for s in self.sessions.values() if s.status == "active"]
 
-    def get_sessions_by_context(self, tags: List[str]) -> List[SessionInfo]:
+    def get_sessions_by_context(self, tags: list[str]) -> list[SessionInfo]:
         """Get sessions that match any of the given context tags."""
         matching_sessions = []
         for session in self.sessions.values():
@@ -184,13 +183,13 @@ class SessionRegistry:
                 matching_sessions.append(session)
         return matching_sessions
 
-    def get_session_info(self, backlog_id: str) -> Optional[SessionInfo]:
+    def get_session_info(self, backlog_id: str) -> SessionInfo | None:
         """Get detailed information about a specific session."""
         return self.sessions.get(backlog_id)
 
     def cleanup_completed_sessions(self) -> None:
         """Remove completed sessions older than 7 days."""
-        cutoff_time = datetime.now(timezone.utc).timestamp() - (7 * 24 * 3600)
+        cutoff_time = datetime.now(UTC).timestamp() - (7 * 24 * 3600)
         to_remove = []
 
         for backlog_id, session in self.sessions.items():
@@ -224,7 +223,7 @@ class SessionRegistry:
 
         self.save_registry()
 
-    def list_sessions(self, show_context: bool = True, status_filter: Optional[str] = None) -> None:
+    def list_sessions(self, show_context: bool = True, status_filter: str | None = None) -> None:
         """List all sessions with optional filtering."""
         sessions = self.sessions.values()
         if status_filter:

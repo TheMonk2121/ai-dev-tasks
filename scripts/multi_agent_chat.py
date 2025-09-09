@@ -8,7 +8,6 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,7 +25,7 @@ app.add_middleware(
 )
 
 # Store active connections by agent type
-agent_connections: Dict[str, List[WebSocket]] = {
+agent_connections: dict[str, list[WebSocket]] = {
     "user": [],
     "cursor": [],
     "codex": [],
@@ -44,10 +43,10 @@ agent_connections: Dict[str, List[WebSocket]] = {
 }
 
 # Message history
-message_history: List[Dict] = []
+message_history: list[dict] = []
 
 # Agent metadata
-agent_metadata: Dict[str, Dict] = {
+agent_metadata: dict[str, dict] = {
     "user": {"name": "User", "role": "Human User", "color": "#6C757D"},
     "cursor": {"name": "Cursor Agent", "role": "Code Editor Assistant", "color": "#007ACC"},
     "codex": {"name": "Codex", "role": "AI Code Generator", "color": "#00D4AA"},
@@ -70,16 +69,16 @@ class ChatMessage(BaseModel):
     message: str
     timestamp: float
     message_type: str = "chat"  # "chat", "status", "log", "command", "system"
-    target_agents: Optional[List[str]] = None  # None = broadcast to all
+    target_agents: list[str] | None = None  # None = broadcast to all
     priority: str = "normal"  # "low", "normal", "high", "urgent"
-    metadata: Optional[Dict] = None
+    metadata: dict | None = None
 
 
 class AgentStatus(BaseModel):
     agent: str
     status: str  # "connected", "disconnected", "busy", "idle"
     last_seen: float
-    metadata: Optional[Dict] = None
+    metadata: dict | None = None
 
 
 @app.get("/")
@@ -124,7 +123,7 @@ async def get_agents():
 
 
 @app.get("/messages")
-async def get_messages(limit: int = 50, agent: Optional[str] = None):
+async def get_messages(limit: int = 50, agent: str | None = None):
     """Get recent message history, optionally filtered by agent"""
     messages = message_history
     if agent:
@@ -286,14 +285,14 @@ async def websocket_endpoint(websocket: WebSocket, agent: str):
         await broadcast_message(goodbye_message)
 
 
-async def broadcast_message(message: Dict):
+async def broadcast_message(message: dict):
     """Broadcast message to appropriate agents"""
     target_agents = message.get("target_agents")
     sender = message.get("sender")
 
     if isinstance(target_agents, list) and target_agents:
         # Send to specific agents and always echo to sender
-        delivery_agents: Set[str] = set(target_agents)
+        delivery_agents: set[str] = set(target_agents)
         if sender:
             delivery_agents.add(sender)
         for agent in delivery_agents:

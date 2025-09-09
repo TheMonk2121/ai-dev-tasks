@@ -13,7 +13,6 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 
 class UVPerformanceMonitor:
@@ -24,11 +23,11 @@ class UVPerformanceMonitor:
         self.metrics_file.parent.mkdir(exist_ok=True)
         self.metrics = self._load_metrics()
 
-    def _load_metrics(self) -> Dict:
+    def _load_metrics(self) -> dict:
         """Load existing performance metrics."""
         if self.metrics_file.exists():
             try:
-                with open(self.metrics_file, "r") as f:
+                with open(self.metrics_file) as f:
                     return json.load(f)
             except (json.JSONDecodeError, FileNotFoundError):
                 pass
@@ -46,7 +45,7 @@ class UVPerformanceMonitor:
         with open(self.metrics_file, "w") as f:
             json.dump(self.metrics, f, indent=2)
 
-    def measure_install_time(self, packages: List[str] | None = None) -> float:
+    def measure_install_time(self, packages: list[str] | None = None) -> float:
         """Measure UV installation time."""
         start_time = time.time()
 
@@ -115,7 +114,7 @@ class UVPerformanceMonitor:
 
             raise
 
-    def check_cache_status(self) -> Dict:
+    def check_cache_status(self) -> dict:
         """Check UV cache status and statistics."""
         try:
             # Get cache info
@@ -152,7 +151,7 @@ class UVPerformanceMonitor:
         except subprocess.CalledProcessError:
             return 0
 
-    def generate_recommendations(self) -> List[str]:
+    def generate_recommendations(self) -> list[str]:
         """Generate performance optimization recommendations."""
         recommendations = []
 
@@ -213,7 +212,7 @@ class UVPerformanceMonitor:
         self.metrics["optimization_recommendations"] = recommendations
         return recommendations
 
-    def run_full_analysis(self) -> Dict:
+    def run_full_analysis(self) -> dict:
         """Run a complete performance analysis."""
         print("🔍 Running UV Performance Analysis...")
 
@@ -263,7 +262,7 @@ class UVPerformanceMonitor:
 
         return analysis
 
-    def print_report(self, analysis: Dict):
+    def print_report(self, analysis: dict):
         """Print a formatted performance report."""
         print("\n" + "=" * 60)
         print("📊 UV PERFORMANCE REPORT")

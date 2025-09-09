@@ -17,7 +17,7 @@ def run_weekly_optimization():
         ("Full dependency analysis", ["python", "scripts/uv_dependency_manager.py", "--full-report"]),
         ("Performance analysis", ["python", "scripts/uv_performance_monitor.py"]),
         ("Workflow optimization", ["python", "scripts/uv_workflow_optimizer.py"]),
-        ("Clean cache", ["uv", "cache", "clean"])
+        ("Clean cache", ["uv", "cache", "clean"]),
     ]
 
     for task_name, cmd in tasks:
@@ -27,6 +27,7 @@ def run_weekly_optimization():
             print(f"✅ {task_name} completed")
         except subprocess.CalledProcessError as e:
             print(f"⚠️ {task_name} failed: {e}")
+
 
 if __name__ == "__main__":
     run_weekly_optimization()

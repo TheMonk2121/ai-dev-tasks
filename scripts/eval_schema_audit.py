@@ -21,11 +21,11 @@ class SchemaInfo:
     file_path: str
     schema_name: str
     schema_type: str  # "dataclass", "pydantic", "typeddict"
-    fields: Dict[str, str]  # field_name -> field_type
+    fields: dict[str, str]  # field_name -> field_type
     is_evaluation: bool = False
 
 
-def audit_schemas() -> List[SchemaInfo]:
+def audit_schemas() -> list[SchemaInfo]:
     """Audit all schemas in the evaluation system"""
     schemas = []
 
@@ -113,7 +113,7 @@ def audit_schemas() -> List[SchemaInfo]:
     return schemas
 
 
-def analyze_schema_inconsistencies(schemas: List[SchemaInfo]) -> Dict[str, Any]:
+def analyze_schema_inconsistencies(schemas: list[SchemaInfo]) -> dict[str, Any]:
     """Analyze schema inconsistencies"""
     analysis = {
         "field_naming_inconsistencies": [],

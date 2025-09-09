@@ -14,7 +14,7 @@ MAX_READ_DRIFT = float(os.getenv("MAX_READ_WEEKLY_DRIFT", "0.03"))
 
 
 def load(path):
-    return json.load(open(path, "r", encoding="utf-8")) if os.path.exists(path) else None
+    return json.load(open(path, encoding="utf-8")) if os.path.exists(path) else None
 
 
 def drift(latest, base):

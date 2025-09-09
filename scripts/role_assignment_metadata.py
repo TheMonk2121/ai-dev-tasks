@@ -11,7 +11,6 @@ and provides functions to parse and validate role assignments.
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Set
 
 # Valid roles in the system
 VALID_ROLES = {"planner", "implementer", "researcher", "coder", "documentation"}
@@ -51,14 +50,16 @@ FILE_EXTENSION_TYPES = {
     ".log": "artifact",
 }
 
+
 @dataclass
 class RoleAssignment:
     """Represents a role assignment for a file."""
 
-    roles: Set[str]
+    roles: set[str]
     source: str  # "metadata", "content_analysis", "default", "manual"
     confidence: float  # 0.0 to 1.0
-    metadata: Optional[Dict] = None
+    metadata: dict | None = None
+
 
 class RoleAssignmentMetadata:
     """Handles metadata parsing and role assignment for archived files."""
@@ -71,9 +72,9 @@ class RoleAssignmentMetadata:
     ROLES_PATTERN = re.compile(r"<!--\s*ROLES:\s*([^-->]+)\s*-->", re.IGNORECASE)
 
     def __init__(self):
-        self.validation_errors: List[str] = []
+        self.validation_errors: list[str] = []
 
-    def parse_role_access_metadata(self, content: str) -> Optional[Set[str]]:
+    def parse_role_access_metadata(self, content: str) -> set[str] | None:
         """
         Parse role access metadata from file content.
 
@@ -97,7 +98,7 @@ class RoleAssignmentMetadata:
 
         return None
 
-    def _parse_roles_list(self, roles_str: str) -> Set[str]:
+    def _parse_roles_list(self, roles_str: str) -> set[str]:
         """
         Parse a comma-separated list of roles.
 
@@ -124,7 +125,7 @@ class RoleAssignmentMetadata:
 
         return valid_roles
 
-    def get_default_roles_for_file(self, file_path: Path) -> Set[str]:
+    def get_default_roles_for_file(self, file_path: Path) -> set[str]:
         """
         Get default role assignments based on file path and type.
 
@@ -163,7 +164,7 @@ class RoleAssignmentMetadata:
         # Default fallback
         return {"planner", "implementer"}
 
-    def analyze_content_for_roles(self, content: str, file_path: Path) -> Set[str]:
+    def analyze_content_for_roles(self, content: str, file_path: Path) -> set[str]:
         """
         Analyze file content to suggest appropriate roles.
 
@@ -305,7 +306,7 @@ class RoleAssignmentMetadata:
             metadata={"validation_errors": self.validation_errors.copy()},
         )
 
-    def generate_metadata_template(self, roles: Set[str]) -> str:
+    def generate_metadata_template(self, roles: set[str]) -> str:
         """
         Generate metadata template for role access specification.
 
@@ -346,6 +347,7 @@ class RoleAssignmentMetadata:
 
         return True
 
+
 def main():
     """Test the role assignment metadata system."""
     metadata_system = RoleAssignmentMetadata()
@@ -368,6 +370,7 @@ def main():
 
     if metadata_system.validation_errors:
         print(f"Validation errors: {metadata_system.validation_errors}")
+
 
 if __name__ == "__main__":
     main()

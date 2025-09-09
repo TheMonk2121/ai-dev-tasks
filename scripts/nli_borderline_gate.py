@@ -91,7 +91,7 @@ class BorderlineNLIGate:
             logger.warning(f"⚠️ NLI prediction failed: {e}")
             return 0.0
 
-    def _find_best_evidence_snippet(self, sentence: str, contexts: List[str]) -> Optional[str]:
+    def _find_best_evidence_snippet(self, sentence: str, contexts: list[str]) -> str | None:
         """Find the best evidence snippet for a sentence."""
         if not contexts:
             return None
@@ -110,7 +110,7 @@ class BorderlineNLIGate:
 
         return best_context
 
-    def _is_borderline_sentence(self, sentence: str, contexts: List[str], base_score: float, threshold: float) -> bool:
+    def _is_borderline_sentence(self, sentence: str, contexts: list[str], base_score: float, threshold: float) -> bool:
         """Check if a sentence is within the borderline band."""
         if not self.borderline_only:
             return True
@@ -119,8 +119,8 @@ class BorderlineNLIGate:
         return abs(base_score - threshold) <= self.borderline_band
 
     def filter_borderline_sentences(
-        self, sentences: List[str], contexts: List[str], base_scores: List[float], threshold: float
-    ) -> List[bool]:
+        self, sentences: list[str], contexts: list[str], base_scores: list[float], threshold: float
+    ) -> list[bool]:
         """Filter borderline sentences using NLI gate."""
         if not self.enabled or not self.model:
             # Return all True if NLI not available
@@ -158,7 +158,7 @@ class BorderlineNLIGate:
         logger.info(f"✅ NLI gate completed: {nli_used_count} sentences checked, {sum(keep_decisions)} kept")
         return keep_decisions
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """Get cache statistics."""
         return {
             "cache_size": len(self.cache),
@@ -182,7 +182,7 @@ class EnhancedEvidenceFilterWithNLI:
     def __init__(self):
         self.nli_gate = BorderlineNLIGate()
 
-    def filter_with_nli_gate(self, answer: str, contexts: List[str]) -> str:
+    def filter_with_nli_gate(self, answer: str, contexts: list[str]) -> str:
         """Filter evidence with NLI borderline gate."""
         # Split into sentences
         sentences = self._split_sentences(answer)
@@ -209,12 +209,12 @@ class EnhancedEvidenceFilterWithNLI:
 
         return " ".join(filtered_sentences)
 
-    def _split_sentences(self, text: str) -> List[str]:
+    def _split_sentences(self, text: str) -> list[str]:
         """Split text into sentences."""
         sentences = re.split(r"(?<=[.!?])\s+", text.strip())
         return [s.strip() for s in sentences if s.strip()]
 
-    def _calculate_base_evidence_score(self, sentence: str, contexts: List[str]) -> float:
+    def _calculate_base_evidence_score(self, sentence: str, contexts: list[str]) -> float:
         """Calculate base evidence score using existing methods."""
         # This would integrate with the existing evidence scoring logic
         # For now, return a simple token overlap score

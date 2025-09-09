@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 
-def check_lessons_file(lessons_path: str) -> Dict[str, Any]:
+def check_lessons_file(lessons_path: str) -> dict[str, Any]:
     """Check lessons JSONL file for quality issues"""
     issues = []
     stats = {"total": 0, "valid": 0, "invalid": 0}
@@ -18,7 +18,7 @@ def check_lessons_file(lessons_path: str) -> Dict[str, Any]:
     if not os.path.exists(lessons_path):
         return {"status": "missing", "issues": ["Lessons file does not exist"], "stats": stats}
 
-    with open(lessons_path, "r") as f:
+    with open(lessons_path) as f:
         for line_num, line in enumerate(f, 1):
             line = line.strip()
             if not line or line.startswith("#"):
@@ -101,7 +101,7 @@ def check_lessons_file(lessons_path: str) -> Dict[str, Any]:
     return {"status": status, "issues": issues, "stats": stats}
 
 
-def check_config_metadata(configs_dir: str = "configs") -> Dict[str, Any]:
+def check_config_metadata(configs_dir: str = "configs") -> dict[str, Any]:
     """Check configuration metadata completeness"""
     issues = []
     stats = {"total": 0, "with_metadata": 0, "without_metadata": 0}
@@ -121,7 +121,7 @@ def check_config_metadata(configs_dir: str = "configs") -> Dict[str, Any]:
                 try:
                     import yaml
 
-                    with open(meta_file, "r") as f:
+                    with open(meta_file) as f:
                         metadata = yaml.safe_load(f)
 
                     # Check required fields
@@ -146,7 +146,7 @@ def check_config_metadata(configs_dir: str = "configs") -> Dict[str, Any]:
     return {"status": status, "issues": issues, "stats": stats}
 
 
-def check_derived_configs(derived_dir: str = "metrics/derived_configs") -> Dict[str, Any]:
+def check_derived_configs(derived_dir: str = "metrics/derived_configs") -> dict[str, Any]:
     """Check derived configuration files"""
     issues = []
     stats = {"total": 0, "valid": 0, "invalid": 0}
@@ -177,7 +177,7 @@ def check_derived_configs(derived_dir: str = "metrics/derived_configs") -> Dict[
     return {"status": status, "issues": issues, "stats": stats}
 
 
-def check_quality_gates() -> Dict[str, Any]:
+def check_quality_gates() -> dict[str, Any]:
     """Check if quality gates are properly configured"""
     issues = []
 
@@ -188,7 +188,7 @@ def check_quality_gates() -> Dict[str, Any]:
         return {"status": "missing", "issues": issues}
 
     try:
-        with open(gates_file, "r") as f:
+        with open(gates_file) as f:
             gates = json.load(f)
 
         # Check required gate fields

@@ -22,7 +22,7 @@ from dspy_modules.retriever.limits import load_limits
 ## Cases now come from evals/load_cases with CASES_FILE env var
 
 
-def pretty_row(r: Dict[str, Any]) -> str:
+def pretty_row(r: dict[str, Any]) -> str:
     return (
         f"{(r.get('file_path') or r.get('filename') or '')} | score={r.get('score',0):.3f} "
         f"path={r.get('s_path',0):.3f} short={r.get('s_short',0):.3f} "
@@ -30,7 +30,7 @@ def pretty_row(r: Dict[str, Any]) -> str:
     )
 
 
-def run_case(case: Any) -> tuple[str, List[Dict[str, Any]]]:
+def run_case(case: Any) -> tuple[str, list[dict[str, Any]]]:
     """
     Run a single evaluation case.
 
@@ -44,19 +44,26 @@ def run_case(case: Any) -> tuple[str, List[Dict[str, Any]]]:
         qs = build_channel_queries(case.query, case.tag)
         lim = load_limits(case.tag)
         rows = run_fused_query(
-            qs["short"], qs["title"], qs["bm25"], case.qvec,
-            k=lim["shortlist"], use_mmr=False, tag=case.tag, return_components=True,
-            fname_regex=qs.get("fname_regex"), adjacency_db=True
+            qs["short"],
+            qs["title"],
+            qs["bm25"],
+            case.qvec,
+            k=lim["shortlist"],
+            use_mmr=False,
+            tag=case.tag,
+            return_components=True,
+            fname_regex=qs.get("fname_regex"),
+            adjacency_db=True,
         )
         rows = mmr_rerank(rows, alpha=0.85, per_file_penalty=0.10, k=lim["shortlist"])
-        rows = per_file_cap(rows, cap=5)[:lim["topk"]]
+        rows = per_file_cap(rows, cap=5)[: lim["topk"]]
         if not rows:
             print(f"Case {case.id}: 0 rows (empty query? q_short='{qs['short'][:80]}', q_bm25='{qs['bm25'][:80]}')")
         return case.id, rows
     except Exception as e:
         print(f"Error running case {getattr(case,'id',None)}: {e}")
         print(traceback.format_exc())
-        return getattr(case, 'id', 'unknown'), []
+        return getattr(case, "id", "unknown"), []
 
 
 def main():

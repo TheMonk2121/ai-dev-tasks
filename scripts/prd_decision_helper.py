@@ -6,17 +6,16 @@ Determines whether to generate a PRD for a backlog item based on points and scor
 
 import re
 import sys
-from typing import Optional, Tuple
 
 
-def parse_backlog_item(backlog_content: str, item_id: str) -> Optional[Tuple[int, float]]:
+def parse_backlog_item(backlog_content: str, item_id: str) -> tuple[int, float] | None:
     """Parse backlog item to extract points and score"""
-    lines = backlog_content.split('\n')
+    lines = backlog_content.split("\n")
 
     for i, line in enumerate(lines):
-        if (item_id in line or item_id.replace('-', '‑') in line) and '|' in line:
+        if (item_id in line or item_id.replace("-", "‑") in line) and "|" in line:
             # Extract points from the table row
-            parts = line.split('|')
+            parts = line.split("|")
             if len(parts) >= 5:
                 points_str = parts[4].strip()
                 try:
@@ -27,7 +26,7 @@ def parse_backlog_item(backlog_content: str, item_id: str) -> Optional[Tuple[int
                 # Look for score in the next few lines (comments)
                 score = 0.0
                 for j in range(i, min(i + 3, len(lines))):
-                    score_match = re.search(r'<!--score_total:\s*([\d.]+)-->', lines[j])
+                    score_match = re.search(r"<!--score_total:\s*([\d.]+)-->", lines[j])
                     if score_match:
                         score = float(score_match.group(1))
                         break
@@ -36,12 +35,14 @@ def parse_backlog_item(backlog_content: str, item_id: str) -> Optional[Tuple[int
 
     return None
 
+
 def should_generate_prd(points: int, score: float) -> bool:
     """Determine if PRD should be generated based on decision rule"""
     # Rule: points < 5 AND score >= 3.0 -> skip PRD
     if points < 5 and score >= 3.0:
         return False
     return True
+
 
 def main():
     """Main function"""
@@ -72,6 +73,7 @@ def main():
         print("Reason: points >= 5 OR score < 3.0 -> generate PRD")
 
     sys.exit(0 if should_generate else 1)
+
 
 if __name__ == "__main__":
     main()

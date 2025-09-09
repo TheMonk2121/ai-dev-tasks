@@ -29,7 +29,7 @@ from src.utils.config_lock import (
 )
 
 
-def check_config_health(config: LockedConfig) -> Dict[str, Any]:
+def check_config_health(config: LockedConfig) -> dict[str, Any]:
     """Check configuration health"""
     guardrails = ProductionGuardrails(config)
     validation = guardrails.validate_config()
@@ -42,7 +42,7 @@ def check_config_health(config: LockedConfig) -> Dict[str, Any]:
     }
 
 
-def check_retrieval_health(eval_results_dir: Path) -> Dict[str, Any]:
+def check_retrieval_health(eval_results_dir: Path) -> dict[str, Any]:
     """Check retrieval health from evaluation results"""
     if not eval_results_dir.exists():
         return {"error": "Evaluation results directory not found"}
@@ -55,7 +55,7 @@ def check_retrieval_health(eval_results_dir: Path) -> Dict[str, Any]:
     latest_file = max(eval_files, key=lambda f: f.stat().st_mtime)
 
     try:
-        with open(latest_file, "r") as f:
+        with open(latest_file) as f:
             eval_data = json.load(f)
 
         case_results = eval_data.get("case_results", [])
@@ -98,7 +98,7 @@ def check_retrieval_health(eval_results_dir: Path) -> Dict[str, Any]:
         return {"error": f"Error processing evaluation results: {e}"}
 
 
-def check_ingest_health(ingest_run_id: str) -> Dict[str, Any]:
+def check_ingest_health(ingest_run_id: str) -> dict[str, Any]:
     """Check ingest health for a specific run"""
     # This would typically query your database
     # For now, we'll return a placeholder
@@ -113,10 +113,10 @@ def check_ingest_health(ingest_run_id: str) -> Dict[str, Any]:
 
 
 def generate_health_report(
-    config_health: Dict[str, Any],
-    retrieval_health: Dict[str, Any],
-    ingest_health: Dict[str, Any],
-) -> Dict[str, Any]:
+    config_health: dict[str, Any],
+    retrieval_health: dict[str, Any],
+    ingest_health: dict[str, Any],
+) -> dict[str, Any]:
     """Generate comprehensive health report"""
 
     overall_healthy = (
@@ -137,10 +137,10 @@ def generate_health_report(
 
 
 def generate_alerts(
-    config_health: Dict[str, Any],
-    retrieval_health: Dict[str, Any],
-    ingest_health: Dict[str, Any],
-) -> List[str]:
+    config_health: dict[str, Any],
+    retrieval_health: dict[str, Any],
+    ingest_health: dict[str, Any],
+) -> list[str]:
     """Generate alerts for health issues"""
     alerts = []
 

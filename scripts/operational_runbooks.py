@@ -30,7 +30,7 @@ class OperationalRunbook:
         self.memory_integrator = MemoryIntegrator()
         self.robustness_checker = RobustnessChecker()
 
-    def daily_health_check(self) -> Dict[str, Any]:
+    def daily_health_check(self) -> dict[str, Any]:
         """Perform daily health check routine."""
         print("🌅 Daily Health Check - Starting")
         print("=" * 40)
@@ -128,7 +128,7 @@ class OperationalRunbook:
 
         return results
 
-    def weekly_maintenance(self) -> Dict[str, Any]:
+    def weekly_maintenance(self) -> dict[str, Any]:
         """Perform weekly maintenance routine."""
         print("🗓️ Weekly Maintenance - Starting")
         print("=" * 40)
@@ -220,7 +220,7 @@ class OperationalRunbook:
 
         return results
 
-    def emergency_response(self, issue_type: str) -> Dict[str, Any]:
+    def emergency_response(self, issue_type: str) -> dict[str, Any]:
         """Execute emergency response procedures."""
         print(f"🚨 Emergency Response - {issue_type}")
         print("=" * 50)
@@ -244,7 +244,7 @@ class OperationalRunbook:
         except Exception as e:
             return {"success": False, "error": str(e), "procedure": issue_type}
 
-    def _handle_high_latency(self) -> Dict[str, Any]:
+    def _handle_high_latency(self) -> dict[str, Any]:
         """Handle high latency emergency."""
         print("⚡ Investigating high latency...")
 
@@ -293,7 +293,7 @@ class OperationalRunbook:
             ],
         }
 
-    def _handle_high_error_rate(self) -> Dict[str, Any]:
+    def _handle_high_error_rate(self) -> dict[str, Any]:
         """Handle high error rate emergency."""
         print("❌ Investigating high error rate...")
 
@@ -339,7 +339,7 @@ class OperationalRunbook:
             ],
         }
 
-    def _handle_component_failure(self) -> Dict[str, Any]:
+    def _handle_component_failure(self) -> dict[str, Any]:
         """Handle component failure emergency."""
         print("🔧 Handling component failure...")
 
@@ -379,7 +379,7 @@ class OperationalRunbook:
             ],
         }
 
-    def _handle_configuration_error(self) -> Dict[str, Any]:
+    def _handle_configuration_error(self) -> dict[str, Any]:
         """Handle configuration error emergency."""
         print("⚙️ Handling configuration error...")
 
@@ -418,7 +418,7 @@ class OperationalRunbook:
             ],
         }
 
-    def generate_status_report(self) -> Dict[str, Any]:
+    def generate_status_report(self) -> dict[str, Any]:
         """Generate comprehensive system status report."""
         print("📋 Generating System Status Report")
         print("=" * 40)

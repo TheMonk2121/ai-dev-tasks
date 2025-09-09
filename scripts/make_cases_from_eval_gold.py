@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json, os, sys, pathlib, re
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SRC = ROOT / "dspy-rag-system" / "src"
 sys.path.insert(0, str(SRC))
@@ -61,4 +62,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

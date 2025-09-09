@@ -15,15 +15,14 @@ import os
 import re
 import subprocess  # nosec B404
 import sys
-from typing import Optional
 
 HEADER_PATTERN = re.compile(r"<!--\s*parent_backlog:\s*(B-\d{4,})\s*-->")
 ID_PATTERN = re.compile(r"\b(B-\d{4,})\b")
 
 
-def read_header_for_id(file_path: str) -> Optional[str]:
+def read_header_for_id(file_path: str) -> str | None:
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             for _ in range(50):
                 line = f.readline()
                 if not line:
@@ -36,7 +35,7 @@ def read_header_for_id(file_path: str) -> Optional[str]:
     return None
 
 
-def git_introducing_commit_id(file_path: str) -> Optional[str]:
+def git_introducing_commit_id(file_path: str) -> str | None:
     try:
         cmd = [
             "git",

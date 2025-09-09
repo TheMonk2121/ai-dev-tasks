@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Iterable
+from collections.abc import Iterable
 
 import psycopg2
 
@@ -142,4 +142,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

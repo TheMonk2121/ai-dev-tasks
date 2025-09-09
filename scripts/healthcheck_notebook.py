@@ -43,18 +43,18 @@ class HealthCheck:
     name: str
     status: HealthStatus
     message: str
-    details: Optional[Dict[str, Any]] = None
-    latency_ms: Optional[float] = None
+    details: dict[str, Any] | None = None
+    latency_ms: float | None = None
 
 
 class HealthcheckNotebook:
     """Comprehensive health monitoring for RAG system components."""
 
-    def __init__(self, db_connection_string: Optional[str] = None):
+    def __init__(self, db_connection_string: str | None = None):
         self.db_connection_string = db_connection_string or os.getenv(
             "POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency?sslmode=disable"
         )
-        self.checks: List[HealthCheck] = []
+        self.checks: list[HealthCheck] = []
 
     def add_check(self, check: HealthCheck):
         """Add a health check result."""

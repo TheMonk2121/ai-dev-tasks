@@ -14,7 +14,6 @@ Usage:
 import shutil
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 # Migration mapping based on 200_naming-conventions.md
 MIGRATION_MAP = {
@@ -33,7 +32,8 @@ MIGRATION_MAP = {
     "C10_COMPLETION_SUMMARY.md": "500_c10-completion-summary.md",
 }
 
-def get_migration_plan() -> List[Tuple[str, str]]:
+
+def get_migration_plan() -> list[tuple[str, str]]:
     """Get the migration plan with file existence checks."""
     plan = []
     root_dir = Path(".")
@@ -48,6 +48,7 @@ def get_migration_plan() -> List[Tuple[str, str]]:
             print(f"⚠️  Warning: {old_name} not found, skipping")
 
     return plan
+
 
 def update_file_references(old_name: str, new_name: str) -> None:
     """Update references to the old filename in other files."""
@@ -75,6 +76,7 @@ def update_file_references(old_name: str, new_name: str) -> None:
             except Exception as e:
                 print(f"  ⚠️  Warning: Could not update {ref_file}: {e}")
 
+
 def preview_migration() -> None:
     """Preview the migration without making changes."""
     print("🔍 **Migration Preview**")
@@ -94,6 +96,7 @@ def preview_migration() -> None:
 
     print()
     print("💡 Run with --execute to perform the migration")
+
 
 def execute_migration() -> None:
     """Execute the migration."""
@@ -138,6 +141,7 @@ def execute_migration() -> None:
     print("🎉 Migration completed!")
     print(f"📦 Backup files available in: {backup_dir}")
 
+
 def main():
     """Main function."""
     if len(sys.argv) != 2 or sys.argv[1] not in ["--dry-run", "--execute"]:
@@ -154,6 +158,7 @@ def main():
         preview_migration()
     elif mode == "--execute":
         execute_migration()
+
 
 if __name__ == "__main__":
     main()

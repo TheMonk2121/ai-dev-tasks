@@ -21,10 +21,10 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 
-def load_governance_config(config_path: str = "../config/rag_pipeline_governance.json") -> Dict[str, Any]:
+def load_governance_config(config_path: str = "../config/rag_pipeline_governance.json") -> dict[str, Any]:
     """Load governance configuration"""
     try:
-        with open(config_path, "r") as f:
+        with open(config_path) as f:
             return json.load(f)
     except FileNotFoundError:
         logger.warning(f"Configuration file not found: {config_path}, using defaults")
@@ -32,8 +32,8 @@ def load_governance_config(config_path: str = "../config/rag_pipeline_governance
 
 
 def run_governed_evaluation(
-    governance: RAGCheckerPipelineGovernance, config: Dict[str, Any], pipeline_config: Optional[Dict[str, Any]] = None
-) -> Dict[str, Any]:
+    governance: RAGCheckerPipelineGovernance, config: dict[str, Any], pipeline_config: dict[str, Any] | None = None
+) -> dict[str, Any]:
     """Run RAGChecker evaluation with governance validation"""
 
     # Use default pipeline config if none provided
@@ -110,8 +110,8 @@ def run_governed_evaluation(
 
 
 def generate_pipeline_variants(
-    governance: RAGCheckerPipelineGovernance, base_config: Dict[str, Any], num_variants: int = 5
-) -> List[Dict[str, Any]]:
+    governance: RAGCheckerPipelineGovernance, base_config: dict[str, Any], num_variants: int = 5
+) -> list[dict[str, Any]]:
     """Generate and evaluate pipeline variants"""
 
     logger.info(f"🔄 Generating {num_variants} pipeline variants...")
@@ -161,7 +161,7 @@ def main():
     pipeline_config = None
     if args.pipeline_config:
         try:
-            with open(args.pipeline_config, "r") as f:
+            with open(args.pipeline_config) as f:
                 pipeline_config = json.load(f)
         except FileNotFoundError:
             logger.error(f"Pipeline configuration file not found: {args.pipeline_config}")

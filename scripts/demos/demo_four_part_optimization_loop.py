@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 # Apply litellm compatibility shim before importing DSPy
 try:
     from litellm_compatibility_shim import patch_litellm_imports
+
     patch_litellm_imports()
 except ImportError:
     pass  # Shim not available, continue without it
@@ -57,7 +58,7 @@ class OptimizedModule(Module):
         super().__init__()
         self.predictor = dspy.Predict(TestSignature)
 
-    def forward(self, input_field: str) -> Dict[str, Any]:
+    def forward(self, input_field: str) -> dict[str, Any]:
         """
         Forward pass with comprehensive quality improvements
 

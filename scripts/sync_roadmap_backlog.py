@@ -17,7 +17,6 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
 
 # Configuration
 BACKLOG_PATH = Path("000_core/000_backlog.md")
@@ -33,6 +32,7 @@ SCORE_TOTAL_RE = re.compile(r"<!--\s*score_total:\s*([0-9]+(?:\.[0-9]+)?)\s*-->"
 STATUS_RE = re.compile(r"<!--\s*status:\s*(.*?)\s*-->", re.IGNORECASE)
 COMPLETION_DATE_RE = re.compile(r"<!--\s*completion_date:\s*(\d{4}-\d{2}-\d{2})\s*-->", re.IGNORECASE)
 
+
 @dataclass
 class BacklogItem:
     """Represents a backlog item with its metadata."""
@@ -44,17 +44,18 @@ class BacklogItem:
     status: str
     desc: str
     line_idx: int
-    score_total: Optional[float] = None
-    completion_date: Optional[str] = None
+    score_total: float | None = None
+    completion_date: str | None = None
+
 
 class RoadmapBacklogSync:
     """Handles synchronization between roadmap and backlog."""
 
     def __init__(self, dry_run: bool = False):
         self.dry_run = dry_run
-        self.backlog_items: Dict[str, BacklogItem] = {}
+        self.backlog_items: dict[str, BacklogItem] = {}
         self.roadmap_content: str = ""
-        self.changes_made: List[str] = []
+        self.changes_made: list[str] = []
 
     def parse_backlog(self) -> None:
         """Parse the backlog file and extract items."""
@@ -96,7 +97,7 @@ class RoadmapBacklogSync:
             self.backlog_items[item.id] = item
             i += 1
 
-    def _find_region(self, lines: List[str], start_idx: int) -> str:
+    def _find_region(self, lines: list[str], start_idx: int) -> str:
         """Capture metadata lines until next table row or blank line break."""
         buff = []
         i = start_idx + 1
@@ -362,6 +363,7 @@ class RoadmapBacklogSync:
             print(f"Error during validation: {e}")
             sys.exit(1)
 
+
 def main():
     parser = argparse.ArgumentParser(description="Synchronize roadmap with backlog")
     parser.add_argument("--dry-run", action="store_true", help="Show what would be changed without making changes")
@@ -377,6 +379,7 @@ def main():
         sync.validate()
     else:
         sync.sync()
+
 
 if __name__ == "__main__":
     main()

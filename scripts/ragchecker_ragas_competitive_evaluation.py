@@ -56,7 +56,7 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
             f"📊 Targets: R@20≥{self.ragas_targets['recall_at_20']}, P≥{self.ragas_targets['precision']}, F1≥{self.ragas_targets['f1_score']}"
         )
 
-    def evaluate_ragas_competitive(self, test_cases: List[Any]) -> Dict[str, Any]:
+    def evaluate_ragas_competitive(self, test_cases: list[Any]) -> dict[str, Any]:
         """Run RAGAS-competitive evaluation with LIMIT features."""
         print(f"\n🚀 Starting RAGAS-Competitive Evaluation with {len(test_cases)} test cases")
 
@@ -88,7 +88,7 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
         print(f"\n⏱️ Evaluation completed in {evaluation_time:.2f} seconds")
         return evaluation_report
 
-    def _evaluate_case_ragas_competitive(self, test_case: Any) -> Dict[str, Any]:
+    def _evaluate_case_ragas_competitive(self, test_case: Any) -> dict[str, Any]:
         """Evaluate a single test case with RAGAS-competitive features."""
         start_time = time.time()
 
@@ -181,7 +181,7 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
         recall_at_20 = random.uniform(0.4, 0.8)
         return recall_at_20
 
-    def _calculate_overall_metrics(self, results: List[Dict[str, Any]]) -> Dict[str, float]:
+    def _calculate_overall_metrics(self, results: list[dict[str, Any]]) -> dict[str, float]:
         """Calculate overall metrics across all test cases."""
         if not results:
             return {}
@@ -195,7 +195,7 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
 
         return overall
 
-    def _check_promotion_gates(self, overall_metrics: Dict[str, float]) -> Dict[str, Any]:
+    def _check_promotion_gates(self, overall_metrics: dict[str, float]) -> dict[str, Any]:
         """Check if metrics meet promotion gate requirements."""
         gate_results = {}
 
@@ -223,8 +223,8 @@ class RAGASCompetitiveEvaluator(EnhancedRAGCheckerWithLimitFeatures):
         return gate_results
 
     def _generate_ragas_report(
-        self, results: List[Dict[str, Any]], overall_metrics: Dict[str, float], gate_results: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, results: list[dict[str, Any]], overall_metrics: dict[str, float], gate_results: dict[str, Any]
+    ) -> dict[str, Any]:
         """Generate comprehensive RAGAS evaluation report."""
         return {
             "evaluation_type": "ragas_competitive",

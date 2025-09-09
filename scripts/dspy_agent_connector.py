@@ -8,7 +8,6 @@ import json
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Optional
 
 import websockets
 from pydantic import BaseModel
@@ -50,7 +49,7 @@ class DSPyAgent:
             print(f"❌ Failed to connect {self.agent_type}: {e}")
             return False
 
-    async def send_message(self, message: str, target_agents: Optional[List[str]] = None, priority: str = "normal"):
+    async def send_message(self, message: str, target_agents: list[str] | None = None, priority: str = "normal"):
         """Send a message to the chat system"""
         if not self.websocket:
             return False
@@ -69,7 +68,7 @@ class DSPyAgent:
             print(f"❌ Failed to send message from {self.agent_type}: {e}")
             return False
 
-    async def send_status_update(self, status: str, details: Optional[Dict] = None):
+    async def send_status_update(self, status: str, details: dict | None = None):
         """Send a status update"""
         message = f"📊 Status update: {status}"
         if details:
@@ -82,14 +81,14 @@ class DSPyAgent:
         message = f"✅ Task completed: {task}\n📋 Result: {result}"
         return await self.send_message(message, priority="high")
 
-    async def send_error_report(self, error: str, context: Optional[str] = None):
+    async def send_error_report(self, error: str, context: str | None = None):
         """Send error report"""
         message = f"🚨 Error: {error}"
         if context:
             message += f"\n🔍 Context: {context}"
         return await self.send_message(message, priority="urgent")
 
-    async def request_help(self, help_topic: str, target_agents: Optional[List[str]] = None):
+    async def request_help(self, help_topic: str, target_agents: list[str] | None = None):
         """Request help from other agents"""
         message = f"🆘 Help needed: {help_topic}"
         return await self.send_message(message, target_agents=target_agents, priority="high")
@@ -110,7 +109,7 @@ class DSPyAgent:
             print(f"❌ Error in {self.agent_type} listener: {e}")
             self.running = False
 
-    async def handle_message(self, data: Dict):
+    async def handle_message(self, data: dict):
         """Handle incoming messages"""
         message_type = data.get("type", "chat")
         sender = data.get("sender", "unknown")
@@ -123,7 +122,7 @@ class DSPyAgent:
         elif message_type == "system":
             await self.process_system_message(sender, message, data)
 
-    async def process_chat_message(self, sender: str, message: str, data: Dict):
+    async def process_chat_message(self, sender: str, message: str, data: dict):
         """Process chat messages"""
         # Check if message is directed to this agent
         target_agents = data.get("target_agents")
@@ -139,11 +138,11 @@ class DSPyAgent:
             response = await self.generate_helpful_response(message, sender)
             await self.send_message(response)
 
-    async def process_status_message(self, sender: str, message: str, data: Dict):
+    async def process_status_message(self, sender: str, message: str, data: dict):
         """Process status messages"""
         print(f"📊 {sender}: {message}")
 
-    async def process_system_message(self, sender: str, message: str, data: Dict):
+    async def process_system_message(self, sender: str, message: str, data: dict):
         """Process system messages"""
         print(f"🔔 System: {message}")
 
@@ -236,7 +235,7 @@ class DSPyAgent:
 class DSPyAgentManager:
     def __init__(self, chat_url: str = "ws://localhost:8004"):
         self.chat_url = chat_url
-        self.agents: Dict[str, DSPyAgent] = {}
+        self.agents: dict[str, DSPyAgent] = {}
         self.running = False
 
     def add_agent(self, agent_type: str) -> DSPyAgent:

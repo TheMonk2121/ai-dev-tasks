@@ -33,9 +33,9 @@ def find_latest_evaluation_file(metrics_dir: str) -> str:
     return str(latest_file)
 
 
-def validate_evaluation_file(file_path: str) -> Dict[str, Any]:
+def validate_evaluation_file(file_path: str) -> dict[str, Any]:
     """Validate evaluation file against real RAG requirements."""
-    with open(file_path, "r") as f:
+    with open(file_path) as f:
         results = json.load(f)
 
     validation_results = {"file_path": file_path, "checks": {}, "overall_status": "PASS", "issues": []}
@@ -112,7 +112,7 @@ def validate_evaluation_file(file_path: str) -> Dict[str, Any]:
     # Check 6: progress file exists and has sufficient lines
     progress_log = os.getenv("RAGCHECKER_PROGRESS_LOG", "metrics/baseline_evaluations/progress.jsonl")
     if os.path.exists(progress_log):
-        with open(progress_log, "r") as f:
+        with open(progress_log) as f:
             progress_lines = sum(1 for line in f if line.strip())
 
         if progress_lines >= len(case_results):
@@ -145,7 +145,7 @@ def validate_evaluation_file(file_path: str) -> Dict[str, Any]:
     return validation_results
 
 
-def print_validation_results(results: Dict[str, Any]):
+def print_validation_results(results: dict[str, Any]):
     """Print validation results in a readable format."""
     print("🔍 REAL RAG PARITY VALIDATION")
     print("=" * 50)

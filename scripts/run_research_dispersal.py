@@ -32,7 +32,7 @@ def main():
     print(f"📖 Reading research from: {research_file}")
 
     try:
-        with open(research_file, 'r', encoding='utf-8') as f:
+        with open(research_file, encoding="utf-8") as f:
             research_content = f.read()
 
         print(f"✅ Loaded {len(research_content)} characters of research content")
@@ -50,9 +50,9 @@ def main():
         print(f"  New backlog items: {len(results['backlog_items'])}")
         print(f"  Errors: {len(results['errors'])}")
 
-        if results['errors']:
+        if results["errors"]:
             print("\n❌ ERRORS:")
-            for error in results['errors']:
+            for error in results["errors"]:
                 print(f"  - {error}")
 
         print("\n📋 SUMMARY REPORT: RESEARCH_DISPERSAL_SUMMARY.md")
@@ -61,6 +61,7 @@ def main():
     except Exception as e:
         print(f"❌ Error running dispersal: {e}")
         return
+
 
 if __name__ == "__main__":
     main()

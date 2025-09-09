@@ -35,8 +35,8 @@ class BenchmarkResult:
     context_efficiency: float
     timestamp: datetime
     model_availability: bool = True
-    token_breakdown: Optional[Dict[str, int]] = None
-    context_utilization: Optional[Dict[str, float]] = None
+    token_breakdown: dict[str, int] | None = None
+    context_utilization: dict[str, float] | None = None
 
 
 @dataclass
@@ -49,8 +49,8 @@ class ModelSpecificMetrics:
     avg_input_tokens: int
     avg_latency: float
     context_efficiency: float
-    token_breakdown: Dict[str, int]
-    context_utilization: Dict[str, float]
+    token_breakdown: dict[str, int]
+    context_utilization: dict[str, float]
     performance_consistency: float
     model_availability_rate: float
     test_count: int
@@ -60,8 +60,8 @@ class MemoryBenchmark:
     """Enhanced benchmark harness for testing memory context structures with model-specific testing framework"""
 
     def __init__(self):
-        self.results: List[BenchmarkResult] = []
-        self.model_metrics: Dict[str, ModelSpecificMetrics] = {}
+        self.results: list[BenchmarkResult] = []
+        self.model_metrics: dict[str, ModelSpecificMetrics] = {}
 
         self.test_structures = {"A": "Flat list + HTML comments", "B": "Three-tier hierarchy + YAML front-matter"}
 
@@ -121,13 +121,13 @@ class MemoryBenchmark:
         # For now, we'll simulate availability
         return True
 
-    def get_fallback_model(self, model: str) -> Optional[str]:
+    def get_fallback_model(self, model: str) -> str | None:
         """Get fallback model if primary model is unavailable"""
         if model in self.test_models:
             return self.test_models[model]["fallback_model"]
         return None
 
-    def run_model_specific_test(self, model: str, structure: str = None) -> List[BenchmarkResult]:
+    def run_model_specific_test(self, model: str, structure: str = None) -> list[BenchmarkResult]:
         """Run comprehensive testing for a specific model type"""
         print(f"🧪 Running model-specific tests for {model}")
 
@@ -154,7 +154,7 @@ class MemoryBenchmark:
 
         return results
 
-    def _calculate_model_metrics(self, model: str, results: List[BenchmarkResult]) -> Optional[ModelSpecificMetrics]:
+    def _calculate_model_metrics(self, model: str, results: list[BenchmarkResult]) -> ModelSpecificMetrics | None:
         """Calculate comprehensive metrics for a specific model"""
         if not results:
             return None
@@ -201,7 +201,7 @@ class MemoryBenchmark:
             test_count=len(model_results),
         )
 
-    def _analyze_token_breakdown(self, results: List[BenchmarkResult]) -> Dict[str, int]:
+    def _analyze_token_breakdown(self, results: list[BenchmarkResult]) -> dict[str, int]:
         """Analyze token usage breakdown across different test structures"""
         breakdown = {}
         for result in results:
@@ -213,7 +213,7 @@ class MemoryBenchmark:
         # Calculate averages
         return {structure: int(sum(tokens) / len(tokens)) for structure, tokens in breakdown.items()}
 
-    def _analyze_context_utilization(self, results: List[BenchmarkResult], context_window: int) -> Dict[str, float]:
+    def _analyze_context_utilization(self, results: list[BenchmarkResult], context_window: int) -> dict[str, float]:
         """Analyze context utilization patterns"""
         utilization = {}
         for result in results:
@@ -225,7 +225,7 @@ class MemoryBenchmark:
         # Calculate averages
         return {structure: sum(util) / len(util) for structure, util in utilization.items()}
 
-    def run_cross_model_validation(self) -> Dict[str, Any]:
+    def run_cross_model_validation(self) -> dict[str, Any]:
         """Run cross-model validation to ensure consistency"""
         print("🔍 Running cross-model validation")
 
@@ -246,8 +246,8 @@ class MemoryBenchmark:
         return validation_results
 
     def _validate_model_performance(
-        self, model: str, results: List[BenchmarkResult], thresholds: Dict[str, float]
-    ) -> Dict[str, Any]:
+        self, model: str, results: list[BenchmarkResult], thresholds: dict[str, float]
+    ) -> dict[str, Any]:
         """Validate model performance against thresholds"""
         if not results:
             return {"valid": False, "error": "No results available"}
@@ -274,7 +274,7 @@ class MemoryBenchmark:
             "test_count": len(results),
         }
 
-    def generate_model_specific_report(self, model: Optional[str] = None) -> Dict[str, Any]:
+    def generate_model_specific_report(self, model: str | None = None) -> dict[str, Any]:
         """Generate detailed report for specific model(s)"""
         if model is not None:
             models_to_report = [model] if model in self.model_metrics else []
@@ -302,7 +302,7 @@ class MemoryBenchmark:
 
         return report
 
-    def _compare_models_across_metrics(self, model_types: List[str]) -> Dict[str, Any]:
+    def _compare_models_across_metrics(self, model_types: list[str]) -> dict[str, Any]:
         """Compare performance across different models"""
         comparison = {}
 
@@ -314,7 +314,7 @@ class MemoryBenchmark:
 
         return comparison
 
-    def _generate_model_specific_recommendations(self, model_types: List[str]) -> Dict[str, Any]:
+    def _generate_model_specific_recommendations(self, model_types: list[str]) -> dict[str, Any]:
         """Generate recommendations based on model-specific performance"""
         recommendations = {}
 
@@ -423,7 +423,7 @@ model_adaptations:
 - 400_context-priority-guide.md - Context priority guide for memory rehydration
 """
 
-    def simulate_model_response(self, content: str, model: str) -> Dict[str, Any]:
+    def simulate_model_response(self, content: str, model: str) -> dict[str, Any]:
         """Simulate model response for benchmarking"""
 
         # Simulate different model capabilities
@@ -498,7 +498,7 @@ model_adaptations:
         self.results.append(benchmark_result)
         return benchmark_result
 
-    def run_full_benchmark(self) -> Dict[str, Any]:
+    def run_full_benchmark(self) -> dict[str, Any]:
         """Run complete benchmark across all structures and models"""
 
         print("🚀 Starting Memory Context System Architecture Benchmark")
@@ -510,7 +510,7 @@ model_adaptations:
 
         return self.generate_report()
 
-    def generate_report(self) -> Dict[str, Any]:
+    def generate_report(self) -> dict[str, Any]:
         """Generate comprehensive benchmark report"""
 
         report = {"timestamp": datetime.now().isoformat(), "summary": {}, "detailed_results": [], "recommendations": []}
@@ -558,7 +558,7 @@ model_adaptations:
 
         return report
 
-    def _generate_recommendations(self, report: Dict[str, Any]):
+    def _generate_recommendations(self, report: dict[str, Any]):
         """Generate recommendations based on benchmark results"""
 
         recommendations = []
@@ -603,7 +603,7 @@ model_adaptations:
 
         report["recommendations"] = recommendations
 
-    def save_report(self, report: Dict[str, Any], filename: str = "500_memory-arch-benchmarks.md"):
+    def save_report(self, report: dict[str, Any], filename: str = "500_memory-arch-benchmarks.md"):
         """Save benchmark report to file"""
 
         output = f"""# Memory Context System Architecture Benchmark Results

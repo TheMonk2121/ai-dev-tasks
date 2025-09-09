@@ -66,14 +66,14 @@ class RAGCheckerDebugContext(PydanticModel):
     evaluation_id: str = PydField(..., description="Unique evaluation identifier")
     evaluation_type: str = PydField(..., description="Type of evaluation (input, metrics, result)")
     validation_stage: str = PydField(..., description="Current validation stage")
-    pydantic_validation_context: Dict[str, Any] = PydField(
+    pydantic_validation_context: dict[str, Any] = PydField(
         default_factory=dict, description="Pydantic validation context"
     )
-    constitution_validation_context: Dict[str, Any] = PydField(
+    constitution_validation_context: dict[str, Any] = PydField(
         default_factory=dict, description="Constitution validation context"
     )
-    error_taxonomy_context: Dict[str, Any] = PydField(default_factory=dict, description="Error taxonomy context")
-    performance_metrics: Dict[str, Any] = PydField(default_factory=dict, description="Performance metrics")
+    error_taxonomy_context: dict[str, Any] = PydField(default_factory=dict, description="Error taxonomy context")
+    performance_metrics: dict[str, Any] = PydField(default_factory=dict, description="Performance metrics")
     timestamp: datetime = PydField(default_factory=datetime.now, description="Context timestamp")
 
 
@@ -86,7 +86,7 @@ class RAGCheckerDebugManager:
         self.capture_variables = capture_variables
 
         # Initialize enhanced debugging manager if available
-        self.debug_manager: Optional[Any] = None
+        self.debug_manager: Any | None = None
         self.enhanced_debugging_enabled = False
 
         if EnhancedDebuggingManager is not None:
@@ -122,7 +122,7 @@ class RAGCheckerDebugManager:
         return context
 
     def log_pydantic_validation(
-        self, context: RAGCheckerDebugContext, validation_result: Dict[str, Any], performance_overhead: float
+        self, context: RAGCheckerDebugContext, validation_result: dict[str, Any], performance_overhead: float
     ) -> None:
         """Log Pydantic validation with enhanced debugging"""
         # Update context with validation results
@@ -153,7 +153,7 @@ class RAGCheckerDebugManager:
             )
 
     def log_constitution_validation(
-        self, context: RAGCheckerDebugContext, validation_result: Dict[str, Any], compliance_score: float
+        self, context: RAGCheckerDebugContext, validation_result: dict[str, Any], compliance_score: float
     ) -> None:
         """Log constitution validation with enhanced debugging"""
         # Update context with validation results
@@ -184,7 +184,7 @@ class RAGCheckerDebugManager:
             )
 
     def log_error_taxonomy_mapping(
-        self, context: RAGCheckerDebugContext, mapping_result: Dict[str, Any], categorization_success_rate: float
+        self, context: RAGCheckerDebugContext, mapping_result: dict[str, Any], categorization_success_rate: float
     ) -> None:
         """Log error taxonomy mapping with enhanced debugging"""
         # Update context with mapping results
@@ -214,7 +214,7 @@ class RAGCheckerDebugManager:
                 source="ragchecker_error_taxonomy",
             )
 
-    def log_performance_metrics(self, context: RAGCheckerDebugContext, metrics: Dict[str, float]) -> None:
+    def log_performance_metrics(self, context: RAGCheckerDebugContext, metrics: dict[str, float]) -> None:
         """Log performance metrics with enhanced debugging"""
         # Update context with performance metrics
         context.performance_metrics.update(metrics)
@@ -240,7 +240,7 @@ class RAGCheckerDebugManager:
             )
 
     def log_validation_error(
-        self, context: RAGCheckerDebugContext, error: Exception, error_type: str, error_details: Dict[str, Any]
+        self, context: RAGCheckerDebugContext, error: Exception, error_type: str, error_details: dict[str, Any]
     ) -> None:
         """Log validation errors with enhanced debugging"""
         # Log to standard logger
@@ -271,7 +271,7 @@ class RAGCheckerDebugManager:
             )
 
     def log_validation_warning(
-        self, context: RAGCheckerDebugContext, warning_message: str, warning_details: Dict[str, Any]
+        self, context: RAGCheckerDebugContext, warning_message: str, warning_details: dict[str, Any]
     ) -> None:
         """Log validation warnings with enhanced debugging"""
         # Log to standard logger
@@ -293,7 +293,7 @@ class RAGCheckerDebugManager:
                 source="ragchecker_validation_warning",
             )
 
-    def get_debugging_summary(self) -> Dict[str, Any]:
+    def get_debugging_summary(self) -> dict[str, Any]:
         """Get debugging summary for RAGChecker workflows"""
         summary = {
             "ragchecker_contexts": [],
@@ -308,7 +308,7 @@ class RAGCheckerDebugManager:
 
         return summary
 
-    def _convert_to_debugging_context(self, context: RAGCheckerDebugContext) -> Optional[Any]:
+    def _convert_to_debugging_context(self, context: RAGCheckerDebugContext) -> Any | None:
         """Convert RAGChecker context to enhanced debugging context"""
         if not self.enhanced_debugging_enabled or not self.debug_manager:
             return None

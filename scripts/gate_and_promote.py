@@ -34,8 +34,8 @@ class GateAndPromoteSystem:
         }
 
     def gate_and_promote(
-        self, config_hash: str, evaluation_results: Dict[str, Any], baseline_results: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        self, config_hash: str, evaluation_results: dict[str, Any], baseline_results: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Gate and promote compiled artifacts if thresholds pass."""
         print("🚪 GATE AND PROMOTE SYSTEM")
         print("=" * 50)
@@ -90,8 +90,8 @@ class GateAndPromoteSystem:
         return result
 
     def _run_gate_checks(
-        self, evaluation_results: Dict[str, Any], baseline_results: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        self, evaluation_results: dict[str, Any], baseline_results: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Run all gate checks against thresholds."""
         print("🔍 Running gate checks...")
 
@@ -271,7 +271,7 @@ class GateAndPromoteSystem:
             "failed_checks": sum(1 for check in checks.values() if not check["passed"]),
         }
 
-    def _promote_artifacts(self, compiled_path: Path, config_hash: str) -> Dict[str, Any]:
+    def _promote_artifacts(self, compiled_path: Path, config_hash: str) -> dict[str, Any]:
         """Promote compiled artifacts to production."""
         print("🚀 Promoting artifacts to production...")
 
@@ -327,7 +327,7 @@ class GateAndPromoteSystem:
 
         print(f"📍 Active pointer updated to: {promotion_id}")
 
-    def _save_gate_result(self, result: Dict[str, Any]):
+    def _save_gate_result(self, result: dict[str, Any]):
         """Save gate and promote result."""
         result_file = (
             self.promoted_artifacts_dir
@@ -336,7 +336,7 @@ class GateAndPromoteSystem:
         with open(result_file, "w") as f:
             json.dump(result, f, indent=2)
 
-    def get_promotion_history(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_promotion_history(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get promotion history."""
         promotions = []
 
@@ -344,7 +344,7 @@ class GateAndPromoteSystem:
             if promotion_dir.is_dir() and promotion_dir.name.startswith("promoted_"):
                 manifest_file = promotion_dir / "promotion_manifest.json"
                 if manifest_file.exists():
-                    with open(manifest_file, "r") as f:
+                    with open(manifest_file) as f:
                         manifest = json.load(f)
                     promotions.append(manifest)
 
@@ -352,14 +352,14 @@ class GateAndPromoteSystem:
         promotions.sort(key=lambda x: x["promotion_time"], reverse=True)
         return promotions[:limit]
 
-    def get_active_promotion(self) -> Optional[Dict[str, Any]]:
+    def get_active_promotion(self) -> dict[str, Any] | None:
         """Get currently active promotion."""
         pointer_file = self.promoted_artifacts_dir / "active_pointer.json"
 
         if not pointer_file.exists():
             return None
 
-        with open(pointer_file, "r") as f:
+        with open(pointer_file) as f:
             pointer_config = json.load(f)
 
         if not pointer_config.get("active", False):
@@ -375,7 +375,7 @@ class GateAndPromoteSystem:
         if not manifest_file.exists():
             return None
 
-        with open(manifest_file, "r") as f:
+        with open(manifest_file) as f:
             return json.load(f)
 
 
@@ -400,13 +400,13 @@ def main():
             sys.exit(1)
 
         # Load evaluation results
-        with open(args.evaluation_results, "r") as f:
+        with open(args.evaluation_results) as f:
             evaluation_results = json.load(f)
 
         # Load baseline results if provided
         baseline_results = None
         if args.baseline_results:
-            with open(args.baseline_results, "r") as f:
+            with open(args.baseline_results) as f:
                 baseline_results = json.load(f)
 
         result = gate_system.gate_and_promote(

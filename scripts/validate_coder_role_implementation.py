@@ -25,7 +25,7 @@ class CoderRoleValidator:
     def __init__(self, project_root: Path):
         """Initialize the validator with project root."""
         self.project_root = project_root
-        self.results: Dict[str, Any] = {
+        self.results: dict[str, Any] = {
             "timestamp": datetime.now().isoformat(),
             "overall_status": "PENDING",
             "tests_passed": 0,
@@ -34,7 +34,7 @@ class CoderRoleValidator:
             "validation_results": {},
         }
 
-    def validate_memory_rehydration_system(self) -> Dict[str, Any]:
+    def validate_memory_rehydration_system(self) -> dict[str, Any]:
         """Validate memory rehydration system functionality."""
         print("🔍 Validating Memory Rehydration System...")
 
@@ -84,7 +84,7 @@ class CoderRoleValidator:
 
         return results
 
-    def validate_role_instructions(self) -> Dict[str, Any]:
+    def validate_role_instructions(self) -> dict[str, Any]:
         """Validate role instructions in memory rehydrator."""
         print("🔍 Validating Role Instructions...")
 
@@ -161,7 +161,7 @@ class CoderRoleValidator:
 
         return results
 
-    def validate_documentation_enhancements(self) -> Dict[str, Any]:
+    def validate_documentation_enhancements(self) -> dict[str, Any]:
         """Validate documentation enhancements."""
         print("🔍 Validating Documentation Enhancements...")
 
@@ -280,7 +280,7 @@ class CoderRoleValidator:
 
         return results
 
-    def validate_metadata_tags(self) -> Dict[str, Any]:
+    def validate_metadata_tags(self) -> dict[str, Any]:
         """Validate metadata tags for coder role inclusion."""
         print("🔍 Validating Metadata Tags...")
 
@@ -321,7 +321,7 @@ class CoderRoleValidator:
 
         return results
 
-    def run_integration_tests(self) -> Dict[str, Any]:
+    def run_integration_tests(self) -> dict[str, Any]:
         """Run integration tests and collect results."""
         print("🔍 Running Integration Tests...")
 
@@ -473,6 +473,7 @@ Overall Status: {self.results['overall_status']}
 
         return report
 
+
 def main():
     """Main entry point for the validation script."""
     project_root = Path(__file__).parent.parent
@@ -487,6 +488,7 @@ def main():
         sys.exit(0)
     else:
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

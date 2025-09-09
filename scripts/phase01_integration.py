@@ -88,9 +88,9 @@ class Phase01Pipeline:
         print(f"  Deduplication: {self.deduplicator is not None}")
         print(f"  Cross-encoder: {cross_encoder_config.get('enabled', False)}")
 
-    def _load_config(self, config_path: str) -> Dict[str, Any]:
+    def _load_config(self, config_path: str) -> dict[str, Any]:
         """Load configuration from YAML file."""
-        with open(config_path, "r") as f:
+        with open(config_path) as f:
             return yaml.safe_load(f)
 
     def _create_retriever(self) -> HybridRetriever:
@@ -226,7 +226,7 @@ class Phase01Pipeline:
                 slice_tags=[],
             )
 
-    async def evaluate_golden_set(self, golden_dir: str) -> Dict[str, Any]:
+    async def evaluate_golden_set(self, golden_dir: str) -> dict[str, Any]:
         """
         Evaluate against golden query sets with comprehensive metrics.
 

@@ -23,11 +23,11 @@ class RAGCheckerInput(BaseModel):
 
     response: str = Field(description="Generated response to be evaluated", min_length=1, max_length=50000)
 
-    retrieved_context: List[str] = Field(description="List of retrieved context strings for evaluation")
+    retrieved_context: list[str] = Field(description="List of retrieved context strings for evaluation")
 
     @field_validator("retrieved_context")
     @classmethod
-    def validate_context_items(cls, v: List[str]) -> List[str]:
+    def validate_context_items(cls, v: list[str]) -> list[str]:
         """Validate that context items are non-empty strings."""
         for i, context in enumerate(v):
             if not context.strip():
@@ -89,13 +89,13 @@ class RAGCheckerResult(BaseModel):
 
     custom_score: float = Field(description="Custom evaluation score", ge=0.0, le=1.0)
 
-    ragchecker_scores: Dict[str, float] = Field(
+    ragchecker_scores: dict[str, float] = Field(
         description="Dictionary of RAGChecker metric scores", default_factory=dict
     )
 
     ragchecker_overall: float = Field(description="Overall RAGChecker score", ge=0.0, le=1.0)
 
-    comparison: Dict[str, Any] = Field(
+    comparison: dict[str, Any] = Field(
         description="Comparison data between custom and RAGChecker evaluation", default_factory=dict
     )
 
@@ -103,7 +103,7 @@ class RAGCheckerResult(BaseModel):
 
     @field_validator("ragchecker_scores")
     @classmethod
-    def validate_scores(cls, v: Dict[str, float]) -> Dict[str, float]:
+    def validate_scores(cls, v: dict[str, float]) -> dict[str, float]:
         """Validate that all scores are in valid range."""
         for metric, score in v.items():
             if score < 0.0 or score > 1.0:
@@ -125,7 +125,7 @@ class RAGCheckerResult(BaseModel):
 
 # Backward compatibility functions
 def create_ragchecker_input(
-    query_id: str, query: str, gt_answer: str, response: str, retrieved_context: List[str]
+    query_id: str, query: str, gt_answer: str, response: str, retrieved_context: list[str]
 ) -> RAGCheckerInput:
     """Create RAGCheckerInput with backward compatibility."""
     return RAGCheckerInput(
@@ -164,9 +164,9 @@ def create_ragchecker_result(
     test_case_name: str,
     query: str,
     custom_score: float,
-    ragchecker_scores: Dict[str, float],
+    ragchecker_scores: dict[str, float],
     ragchecker_overall: float,
-    comparison: Dict[str, Any],
+    comparison: dict[str, Any],
     recommendation: str,
 ) -> RAGCheckerResult:
     """Create RAGCheckerResult with backward compatibility."""

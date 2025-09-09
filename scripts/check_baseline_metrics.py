@@ -10,7 +10,6 @@ Once you reach the baseline, this will become a hard gate.
 import json
 import sys
 from pathlib import Path
-from typing import Optional
 
 # Baseline targets (from NEW_BASELINE_MILESTONE_2025.md)
 BASELINE_TARGETS = {

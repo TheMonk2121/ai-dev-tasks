@@ -2,7 +2,7 @@
 """
 Specialized Agent Framework Implementation
 
-This module implements the specialized agent framework with Research, Coder, and 
+This module implements the specialized agent framework with Research, Coder, and
 Documentation agents as specified in the B-011 requirements.
 
 Author: AI Development Team
@@ -25,8 +25,10 @@ from typing import Any, Dict, List, Optional
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class AgentCapability(Enum):
     """Enumeration of agent capabilities."""
+
     # Research Agent Capabilities
     TECHNICAL_RESEARCH = "technical_research"
     ARCHITECTURE_ANALYSIS = "architecture_analysis"
@@ -48,61 +50,68 @@ class AgentCapability(Enum):
     CONTENT_OPTIMIZATION = "content_optimization"
     FORMAT_SUPPORT = "format_support"
 
+
 @dataclass
 class ResearchData:
     """Data structure for research findings."""
+
     query: str
-    findings: Dict[str, Any]
-    sources: List[str]
+    findings: dict[str, Any]
+    sources: list[str]
     confidence: float
     analysis_type: str
     timestamp: float = field(default_factory=time.time)
 
+
 @dataclass
 class CodeAnalysis:
     """Data structure for code analysis results."""
+
     file_path: str
     language: str
     quality_score: float
-    performance_issues: List[str]
-    security_issues: List[str]
-    refactoring_suggestions: List[str]
-    best_practices: List[str]
+    performance_issues: list[str]
+    security_issues: list[str]
+    refactoring_suggestions: list[str]
+    best_practices: list[str]
     timestamp: float = field(default_factory=time.time)
+
 
 @dataclass
 class DocumentationContent:
     """Data structure for documentation content."""
+
     title: str
     content: str
     format_type: str
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
     quality_score: float
     timestamp: float = field(default_factory=time.time)
+
 
 class BaseSpecializedAgent(ABC):
     """Abstract base class for specialized agents."""
 
-    def __init__(self, agent_type: str, capabilities: List[AgentCapability]):
+    def __init__(self, agent_type: str, capabilities: list[AgentCapability]):
         self.agent_type = agent_type
         self.capabilities = capabilities
         self.is_available = True
         self.last_used = time.time()
         self.usage_count = 0
         self.error_count = 0
-        self.processing_history: List[Dict[str, Any]] = []
+        self.processing_history: list[dict[str, Any]] = []
 
     @abstractmethod
-    async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process a specialized request and return results."""
         pass
 
     @abstractmethod
-    def can_handle(self, request: Dict[str, Any]) -> bool:
+    def can_handle(self, request: dict[str, Any]) -> bool:
         """Check if this agent can handle the given request."""
         pass
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get agent status information."""
         return {
             "agent_type": self.agent_type,
@@ -111,43 +120,44 @@ class BaseSpecializedAgent(ABC):
             "last_used": self.last_used,
             "usage_count": self.usage_count,
             "error_count": self.error_count,
-            "processing_history_count": len(self.processing_history)
+            "processing_history_count": len(self.processing_history),
         }
 
-    def log_processing(self, request: Dict[str, Any], response: Dict[str, Any], processing_time: float):
+    def log_processing(self, request: dict[str, Any], response: dict[str, Any], processing_time: float):
         """Log processing information."""
-        self.processing_history.append({
-            "timestamp": time.time(),
-            "request": request,
-            "response": response,
-            "processing_time": processing_time
-        })
+        self.processing_history.append(
+            {"timestamp": time.time(), "request": request, "response": response, "processing_time": processing_time}
+        )
 
         # Keep only last 100 entries
         if len(self.processing_history) > 100:
             self.processing_history = self.processing_history[-100:]
 
+
 class ResearchAgent(BaseSpecializedAgent):
     """Specialized agent for deep research and analysis capabilities."""
 
     def __init__(self):
-        super().__init__("research", [
-            AgentCapability.TECHNICAL_RESEARCH,
-            AgentCapability.ARCHITECTURE_ANALYSIS,
-            AgentCapability.PERFORMANCE_RESEARCH,
-            AgentCapability.SECURITY_RESEARCH,
-            AgentCapability.INDUSTRY_RESEARCH
-        ])
-        self.research_cache: Dict[str, ResearchData] = {}
+        super().__init__(
+            "research",
+            [
+                AgentCapability.TECHNICAL_RESEARCH,
+                AgentCapability.ARCHITECTURE_ANALYSIS,
+                AgentCapability.PERFORMANCE_RESEARCH,
+                AgentCapability.SECURITY_RESEARCH,
+                AgentCapability.INDUSTRY_RESEARCH,
+            ],
+        )
+        self.research_cache: dict[str, ResearchData] = {}
         self.research_sources = [
             "technical_documentation",
             "code_repositories",
             "technical_blogs",
             "research_papers",
-            "community_forums"
+            "community_forums",
         ]
 
-    async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process research request."""
         start_time = time.time()
 
@@ -183,12 +193,22 @@ class ResearchAgent(BaseSpecializedAgent):
             logger.error(f"Error in Research Agent: {e}")
             raise
 
-    def can_handle(self, request: Dict[str, Any]) -> bool:
+    def can_handle(self, request: dict[str, Any]) -> bool:
         """Check if research agent can handle the request."""
         research_keywords = [
-            "research", "analyze", "investigate", "compare", "study",
-            "architecture", "performance", "security", "best practices",
-            "trends", "patterns", "benchmarks", "evaluation"
+            "research",
+            "analyze",
+            "investigate",
+            "compare",
+            "study",
+            "architecture",
+            "performance",
+            "security",
+            "best practices",
+            "trends",
+            "patterns",
+            "benchmarks",
+            "evaluation",
         ]
         query = request.get("query", "").lower()
         return any(keyword in query for keyword in research_keywords)
@@ -202,7 +222,7 @@ class ResearchAgent(BaseSpecializedAgent):
             findings = {
                 "patterns": ["Microservices", "Event-Driven", "CQRS"],
                 "trade_offs": ["Scalability vs Complexity", "Performance vs Maintainability"],
-                "recommendations": ["Use event sourcing for audit trails", "Implement circuit breakers"]
+                "recommendations": ["Use event sourcing for audit trails", "Implement circuit breakers"],
             }
             sources = ["Martin Fowler's Blog", "AWS Architecture Center", "Microsoft Docs"]
             confidence = 0.92
@@ -210,7 +230,7 @@ class ResearchAgent(BaseSpecializedAgent):
             findings = {
                 "bottlenecks": ["Database queries", "Network latency", "Memory usage"],
                 "optimizations": ["Caching strategies", "Database indexing", "CDN usage"],
-                "metrics": ["Response time", "Throughput", "Resource utilization"]
+                "metrics": ["Response time", "Throughput", "Resource utilization"],
             }
             sources = ["Performance Engineering Blog", "Google PageSpeed Insights", "WebPageTest"]
             confidence = 0.88
@@ -218,7 +238,7 @@ class ResearchAgent(BaseSpecializedAgent):
             findings = {
                 "vulnerabilities": ["SQL Injection", "XSS", "CSRF"],
                 "mitigations": ["Input validation", "Output encoding", "CSRF tokens"],
-                "best_practices": ["OWASP Top 10", "Security headers", "Regular audits"]
+                "best_practices": ["OWASP Top 10", "Security headers", "Regular audits"],
             }
             sources = ["OWASP", "Security Headers", "Snyk Blog"]
             confidence = 0.90
@@ -226,20 +246,16 @@ class ResearchAgent(BaseSpecializedAgent):
             findings = {
                 "overview": f"Comprehensive analysis of {query}",
                 "key_points": ["Point 1", "Point 2", "Point 3"],
-                "recommendations": ["Recommendation 1", "Recommendation 2"]
+                "recommendations": ["Recommendation 1", "Recommendation 2"],
             }
             sources = ["Technical Documentation", "Community Forums", "Research Papers"]
             confidence = 0.85
 
         return ResearchData(
-            query=query,
-            findings=findings,
-            sources=sources,
-            confidence=confidence,
-            analysis_type=analysis_type
+            query=query, findings=findings, sources=sources, confidence=confidence, analysis_type=analysis_type
         )
 
-    def _format_research_response(self, research_data: ResearchData) -> Dict[str, Any]:
+    def _format_research_response(self, research_data: ResearchData) -> dict[str, Any]:
         """Format research data into response."""
         return {
             "agent_type": self.agent_type,
@@ -248,7 +264,7 @@ class ResearchAgent(BaseSpecializedAgent):
             "sources": research_data.sources,
             "confidence": research_data.confidence,
             "analysis_type": research_data.analysis_type,
-            "timestamp": research_data.timestamp
+            "timestamp": research_data.timestamp,
         }
 
     def _generate_cache_key(self, query: str, analysis_type: str) -> str:
@@ -256,27 +272,31 @@ class ResearchAgent(BaseSpecializedAgent):
         content = f"{query}:{analysis_type}"
         return hashlib.md5(content.encode()).hexdigest()
 
+
 class CoderAgent(BaseSpecializedAgent):
     """Specialized agent for coding best practices and code quality improvements."""
 
     def __init__(self):
-        super().__init__("coder", [
-            AgentCapability.CODE_QUALITY_ASSESSMENT,
-            AgentCapability.PERFORMANCE_ANALYSIS,
-            AgentCapability.SECURITY_ANALYSIS,
-            AgentCapability.REFACTORING_SUGGESTIONS,
-            AgentCapability.BEST_PRACTICES_VALIDATION
-        ])
-        self.analysis_cache: Dict[str, CodeAnalysis] = {}
+        super().__init__(
+            "coder",
+            [
+                AgentCapability.CODE_QUALITY_ASSESSMENT,
+                AgentCapability.PERFORMANCE_ANALYSIS,
+                AgentCapability.SECURITY_ANALYSIS,
+                AgentCapability.REFACTORING_SUGGESTIONS,
+                AgentCapability.BEST_PRACTICES_VALIDATION,
+            ],
+        )
+        self.analysis_cache: dict[str, CodeAnalysis] = {}
         self.language_patterns = {
             "python": r"\.py$",
             "javascript": r"\.js$",
             "typescript": r"\.ts$",
             "java": r"\.java$",
-            "go": r"\.go$"
+            "go": r"\.go$",
         }
 
-    async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process coding request."""
         start_time = time.time()
 
@@ -313,12 +333,22 @@ class CoderAgent(BaseSpecializedAgent):
             logger.error(f"Error in Coder Agent: {e}")
             raise
 
-    def can_handle(self, request: Dict[str, Any]) -> bool:
+    def can_handle(self, request: dict[str, Any]) -> bool:
         """Check if coder agent can handle the request."""
         coding_keywords = [
-            "code", "refactor", "optimize", "quality", "performance",
-            "security", "best practices", "pattern", "architecture",
-            "review", "analyze", "improve", "fix"
+            "code",
+            "refactor",
+            "optimize",
+            "quality",
+            "performance",
+            "security",
+            "best practices",
+            "pattern",
+            "architecture",
+            "review",
+            "analyze",
+            "improve",
+            "fix",
         ]
         query = request.get("query", "").lower()
         return any(keyword in query for keyword in coding_keywords)
@@ -363,10 +393,10 @@ class CoderAgent(BaseSpecializedAgent):
             performance_issues=performance_issues,
             security_issues=security_issues,
             refactoring_suggestions=refactoring_suggestions,
-            best_practices=best_practices
+            best_practices=best_practices,
         )
 
-    def _format_code_analysis_response(self, analysis: CodeAnalysis) -> Dict[str, Any]:
+    def _format_code_analysis_response(self, analysis: CodeAnalysis) -> dict[str, Any]:
         """Format code analysis into response."""
         return {
             "agent_type": self.agent_type,
@@ -377,7 +407,7 @@ class CoderAgent(BaseSpecializedAgent):
             "security_issues": analysis.security_issues,
             "refactoring_suggestions": analysis.refactoring_suggestions,
             "best_practices": analysis.best_practices,
-            "timestamp": analysis.timestamp
+            "timestamp": analysis.timestamp,
         }
 
     def _detect_language(self, file_path: str) -> str:
@@ -392,21 +422,25 @@ class CoderAgent(BaseSpecializedAgent):
         content = f"{file_path}:{code_content}"
         return hashlib.md5(content.encode()).hexdigest()
 
+
 class DocumentationAgent(BaseSpecializedAgent):
     """Specialized agent for documentation assistance and writing help."""
 
     def __init__(self):
-        super().__init__("documentation", [
-            AgentCapability.DOCUMENTATION_GENERATION,
-            AgentCapability.WRITING_ASSISTANCE,
-            AgentCapability.EXPLANATION_GENERATION,
-            AgentCapability.CONTENT_OPTIMIZATION,
-            AgentCapability.FORMAT_SUPPORT
-        ])
-        self.documentation_cache: Dict[str, DocumentationContent] = {}
+        super().__init__(
+            "documentation",
+            [
+                AgentCapability.DOCUMENTATION_GENERATION,
+                AgentCapability.WRITING_ASSISTANCE,
+                AgentCapability.EXPLANATION_GENERATION,
+                AgentCapability.CONTENT_OPTIMIZATION,
+                AgentCapability.FORMAT_SUPPORT,
+            ],
+        )
+        self.documentation_cache: dict[str, DocumentationContent] = {}
         self.supported_formats = ["markdown", "html", "pdf", "docx", "rst"]
 
-    async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process documentation request."""
         start_time = time.time()
 
@@ -444,16 +478,27 @@ class DocumentationAgent(BaseSpecializedAgent):
             logger.error(f"Error in Documentation Agent: {e}")
             raise
 
-    def can_handle(self, request: Dict[str, Any]) -> bool:
+    def can_handle(self, request: dict[str, Any]) -> bool:
         """Check if documentation agent can handle the request."""
         documentation_keywords = [
-            "document", "write", "explain", "describe", "comment",
-            "readme", "api", "tutorial", "guide", "help", "manual"
+            "document",
+            "write",
+            "explain",
+            "describe",
+            "comment",
+            "readme",
+            "api",
+            "tutorial",
+            "guide",
+            "help",
+            "manual",
         ]
         query = request.get("query", "").lower()
         return any(keyword in query for keyword in documentation_keywords)
 
-    async def _generate_documentation(self, title: str, content: str, format_type: str, doc_type: str) -> DocumentationContent:
+    async def _generate_documentation(
+        self, title: str, content: str, format_type: str, doc_type: str
+    ) -> DocumentationContent:
         """Generate documentation content."""
         await asyncio.sleep(0.2)  # Simulate documentation generation time
 
@@ -595,12 +640,12 @@ See the examples directory for complete working examples.
             metadata={
                 "doc_type": doc_type,
                 "word_count": len(generated_content.split()),
-                "sections": len(generated_content.split("##"))
+                "sections": len(generated_content.split("##")),
             },
-            quality_score=quality_score
+            quality_score=quality_score,
         )
 
-    def _format_documentation_response(self, doc_content: DocumentationContent) -> Dict[str, Any]:
+    def _format_documentation_response(self, doc_content: DocumentationContent) -> dict[str, Any]:
         """Format documentation content into response."""
         return {
             "agent_type": self.agent_type,
@@ -609,7 +654,7 @@ See the examples directory for complete working examples.
             "format_type": doc_content.format_type,
             "metadata": doc_content.metadata,
             "quality_score": doc_content.quality_score,
-            "timestamp": doc_content.timestamp
+            "timestamp": doc_content.timestamp,
         }
 
     def _generate_cache_key(self, title: str, content: str, format_type: str) -> str:
@@ -617,12 +662,13 @@ See the examples directory for complete working examples.
         content_str = f"{title}:{content}:{format_type}"
         return hashlib.md5(content_str.encode()).hexdigest()
 
+
 class SpecializedAgentFramework:
     """Main framework for managing specialized agents."""
 
     def __init__(self):
-        self.agents: Dict[str, BaseSpecializedAgent] = {}
-        self.active_agent: Optional[str] = None
+        self.agents: dict[str, BaseSpecializedAgent] = {}
+        self.active_agent: str | None = None
         self.agent_switching_enabled = True
 
         # Initialize specialized agents
@@ -637,7 +683,7 @@ class SpecializedAgentFramework:
         # Set research as default
         self.active_agent = "research"
 
-    async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process request using the most appropriate specialized agent."""
         start_time = time.time()
 
@@ -661,7 +707,7 @@ class SpecializedAgentFramework:
             logger.error(f"Error processing request: {e}")
             raise
 
-    async def _select_best_agent(self, request: Dict[str, Any]) -> BaseSpecializedAgent:
+    async def _select_best_agent(self, request: dict[str, Any]) -> BaseSpecializedAgent:
         """Select the best specialized agent for the given request."""
         # Check which agents can handle this request
         capable_agents = []
@@ -696,21 +742,19 @@ class SpecializedAgentFramework:
 
         logger.info(f"Switched from {old_agent_type} to {new_agent.agent_type}")
 
-    def get_agent_status(self) -> Dict[str, Any]:
+    def get_agent_status(self) -> dict[str, Any]:
         """Get status of all specialized agents."""
         return {
             "active_agent": self.active_agent,
-            "agents": {
-                agent_type: agent.get_status()
-                for agent_type, agent in self.agents.items()
-            },
-            "agent_switching_enabled": self.agent_switching_enabled
+            "agents": {agent_type: agent.get_status() for agent_type, agent in self.agents.items()},
+            "agent_switching_enabled": self.agent_switching_enabled,
         }
 
     async def enable_agent_switching(self, enabled: bool = True):
         """Enable or disable agent switching."""
         self.agent_switching_enabled = enabled
         logger.info(f"Agent switching {'enabled' if enabled else 'disabled'}")
+
 
 # Example usage and testing
 async def main():
@@ -719,23 +763,20 @@ async def main():
 
     # Test different types of requests
     test_requests = [
-        {
-            "query": "Research microservices architecture patterns",
-            "analysis_type": "architecture"
-        },
+        {"query": "Research microservices architecture patterns", "analysis_type": "architecture"},
         {
             "query": "Analyze this Python code for performance issues",
             "file_path": "main.py",
             "code_content": "def fibonacci(n): return n if n <= 1 else fibonacci(n-1) + fibonacci(n-2)",
-            "analysis_type": "performance"
+            "analysis_type": "performance",
         },
         {
             "query": "Generate API documentation for user management",
             "title": "User Management API",
             "content": "API for managing users",
             "format_type": "markdown",
-            "doc_type": "api"
-        }
+            "doc_type": "api",
+        },
     ]
 
     for i, request in enumerate(test_requests, 1):
@@ -754,6 +795,7 @@ async def main():
     print("\n--- Agent Status ---")
     status = framework.get_agent_status()
     print(json.dumps(status, indent=2))
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -6,7 +6,6 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Dict, Optional
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -66,7 +65,7 @@ VANILLA_RAG_BENCHMARKS = {
 }
 
 
-def run_your_system_evaluation() -> Dict:
+def run_your_system_evaluation() -> dict:
     """Run your optimized system evaluation."""
     logger.info("Running your optimized system evaluation...")
 
@@ -98,7 +97,7 @@ def run_your_system_evaluation() -> Dict:
     return your_results
 
 
-def calculate_improvements(your_results: Dict, baseline: Dict) -> Dict:
+def calculate_improvements(your_results: dict, baseline: dict) -> dict:
     """Calculate improvement metrics against a baseline."""
     improvements = {}
 
@@ -136,7 +135,7 @@ def calculate_improvements(your_results: Dict, baseline: Dict) -> Dict:
     return improvements
 
 
-def generate_comparison_report(your_results: Dict) -> Dict:
+def generate_comparison_report(your_results: dict) -> dict:
     """Generate comprehensive comparison report."""
     report = {
         "timestamp": time.time(),
@@ -198,7 +197,7 @@ def generate_comparison_report(your_results: Dict) -> Dict:
     return report
 
 
-def print_comparison_summary(report: Dict):
+def print_comparison_summary(report: dict):
     """Print a human-readable comparison summary."""
     print("\n" + "=" * 80)
     print("🚀 RAG SYSTEM PERFORMANCE COMPARISON: YOUR SYSTEM vs VANILLA RAG")
@@ -250,7 +249,7 @@ def print_comparison_summary(report: Dict):
             print(f"         Improvement: {imp['percentage_improvement']:+.1f}%")
 
 
-def save_comparison_report(report: Dict, filepath: Optional[str] = None) -> str:
+def save_comparison_report(report: dict, filepath: str | None = None) -> str:
     """Save the comparison report to a file."""
     if filepath is None:
         timestamp = int(time.time())

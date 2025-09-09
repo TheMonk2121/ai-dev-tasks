@@ -145,7 +145,6 @@ try:
     RAGCheckerInput = getattr(_impl_mod, "RAGCheckerInput")  # type: ignore[assignment]
 except Exception:
     from dataclasses import dataclass
-    from typing import List
 
     @dataclass
     class RAGCheckerInput:  # type: ignore[no-redef]
@@ -153,17 +152,17 @@ except Exception:
         query: str
         gt_answer: str
         response: str
-        retrieved_context: List[str]
+        retrieved_context: list[str]
 
 
 class OfficialRAGCheckerEvaluator:
     """Proxy to experiment implementation with broader interface forwarding used by tests."""
 
     def __init__(self):
+        # Lazy-load implementation to avoid importing heavy deps during import-only tests
         self._impl = None
-        self._ensure_impl()
-        # Provide direct attribute expected by tests
-        self.metrics_dir = getattr(self._impl, "metrics_dir", Path("metrics/baseline_evaluations"))
+        # Provide direct attribute expected by tests without loading impl
+        self.metrics_dir = Path("metrics/baseline_evaluations")
 
     def _ensure_impl(self):
         if self._impl is not None:

@@ -17,33 +17,33 @@ def migrate_subdirectory_files():
         {
             "source": "dspy-rag-system/docs/DSPY_INTEGRATION_GUIDE.md",
             "target": "400_dspy-integration-guide.md",
-            "category": "Documentation"
+            "category": "Documentation",
         },
         {
             "source": "dspy-rag-system/docs/mistral7b_instruct_integration_guide.md",
             "target": "400_mistral7b-instruct-integration-guide.md",
-            "category": "Documentation"
+            "category": "Documentation",
         },
         {
             "source": "dspy-rag-system/docs/N8N_SETUP_GUIDE.md",
             "target": "400_n8n-setup-guide.md",
-            "category": "Documentation"
+            "category": "Documentation",
         },
         {
             "source": "dspy-rag-system/docs/MISSION_DASHBOARD_GUIDE.md",
             "target": "400_mission-dashboard-guide.md",
-            "category": "Documentation"
+            "category": "Documentation",
         },
         {
             "source": "dspy-rag-system/docs/N8N_BACKLOG_SCRUBBER_GUIDE.md",
             "target": "400_n8n-backlog-scrubber-guide.md",
-            "category": "Documentation"
+            "category": "Documentation",
         },
         {
             "source": "dspy-rag-system/docs/CURRENT_STATUS.md",
             "target": "400_current-status.md",
-            "category": "Documentation"
-        }
+            "category": "Documentation",
+        },
     ]
 
     print("🚀 **Subdirectory File Migration**")
@@ -83,24 +83,26 @@ def migrate_subdirectory_files():
     else:
         print("\nℹ️  No files to migrate")
 
+
 def update_file_references(file_path, old_name, new_name):
     """Update references to the old filename in the migrated file"""
 
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         # Update any internal references
         if old_name in content:
             new_content = content.replace(old_name, new_name)
 
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(new_content)
 
             print(f"  ✅ Updated references in {file_path.name}")
 
     except Exception as e:
         print(f"  ⚠️  Error updating {file_path.name}: {e}")
+
 
 if __name__ == "__main__":
     migrate_subdirectory_files()

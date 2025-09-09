@@ -95,7 +95,7 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
         self.support_validator["evidence_jaccard"] = float(precision_config["RAGCHECKER_EVIDENCE_JACCARD"])
         self.support_validator["evidence_coverage"] = float(precision_config["RAGCHECKER_EVIDENCE_COVERAGE"])
 
-    def _apply_support_validation(self, docs: List[Dict[str, Any]], query: str) -> List[Dict[str, Any]]:
+    def _apply_support_validation(self, docs: list[dict[str, Any]], query: str) -> list[dict[str, Any]]:
         """Apply enhanced support validation with precision focus."""
         validated_docs = []
 
@@ -122,7 +122,7 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
         print(f"[precision_support] {len(docs)} → {len(validated_docs)} docs passed strict validation")
         return validated_docs
 
-    def _validate_numeric_entity_match_strict(self, doc: Dict[str, Any], query: str) -> bool:
+    def _validate_numeric_entity_match_strict(self, doc: dict[str, Any], query: str) -> bool:
         """Apply stricter numeric and entity validation."""
         if self.support_validator["numeric_must_match"]:
             has_numbers = any(c.isdigit() for c in doc["content"])
@@ -139,8 +139,8 @@ class PrecisionOptimizedRAGChecker(EnhancedRAGCheckerWithLimitFeatures):
         return True
 
     def _simulate_hybrid_retrieval(
-        self, query: str, boolean_logic: Dict[str, List[str]], facets: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+        self, query: str, boolean_logic: dict[str, list[str]], facets: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         """Simulate precision-focused hybrid retrieval."""
         # Simulate BM25 results with precision focus
         bm25_docs = self._simulate_bm25_retrieval(query, boolean_logic)

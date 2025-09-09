@@ -31,7 +31,7 @@ class Heuristic:
     text: str
     evidence_count: int
     last_seen: datetime
-    example_episode_ids: List[int]
+    example_episode_ids: list[int]
     confidence_score: float
     category: str
     created_at: datetime
@@ -47,8 +47,8 @@ class HeuristicsPack:
     created_at: datetime
     updated_at: datetime
     total_episodes: int
-    heuristics: List[Heuristic]
-    categories: Dict[str, int]
+    heuristics: list[Heuristic]
+    categories: dict[str, int]
     confidence_threshold: float
 
 
@@ -112,7 +112,7 @@ class HeuristicsPackGenerator:
             print(f"❌ Failed to generate heuristics pack: {e}")
             return self._create_empty_pack(agent)
 
-    def _get_agent_reflections(self, agent: str) -> List[Dict[str, Any]]:
+    def _get_agent_reflections(self, agent: str) -> list[dict[str, Any]]:
         """Get all reflections for a specific agent."""
         try:
             # In a real implementation, this would query the database
@@ -141,7 +141,7 @@ class HeuristicsPackGenerator:
             print(f"❌ Failed to get agent reflections: {e}")
             return []
 
-    def _extract_heuristics(self, reflections: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _extract_heuristics(self, reflections: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Extract heuristics from reflections."""
         heuristics = []
 
@@ -175,8 +175,8 @@ class HeuristicsPackGenerator:
         return heuristics
 
     def _score_heuristics(
-        self, heuristics: List[Dict[str, Any]], reflections: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+        self, heuristics: list[dict[str, Any]], reflections: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         """Score heuristics based on frequency, recency, and outcome success."""
         # Group similar heuristics
         heuristic_groups = defaultdict(list)
@@ -225,7 +225,7 @@ class HeuristicsPackGenerator:
 
         return scored_heuristics
 
-    def _calculate_recency_score(self, heuristics: List[Dict[str, Any]]) -> float:
+    def _calculate_recency_score(self, heuristics: list[dict[str, Any]]) -> float:
         """Calculate recency score (higher for more recent heuristics)."""
         if not heuristics:
             return 0.0
@@ -244,7 +244,7 @@ class HeuristicsPackGenerator:
         else:
             return 2.0
 
-    def _calculate_success_score(self, heuristics: List[Dict[str, Any]]) -> float:
+    def _calculate_success_score(self, heuristics: list[dict[str, Any]]) -> float:
         """Calculate success score based on outcome metrics."""
         if not heuristics:
             return 0.0
@@ -259,7 +259,7 @@ class HeuristicsPackGenerator:
 
         return (success_count / total_count) * 10.0
 
-    def _calculate_diversity_score(self, heuristics: List[Dict[str, Any]]) -> float:
+    def _calculate_diversity_score(self, heuristics: list[dict[str, Any]]) -> float:
         """Calculate diversity score based on task type variety."""
         if not heuristics:
             return 0.0
@@ -267,7 +267,7 @@ class HeuristicsPackGenerator:
         task_types = set(h["task_type"] for h in heuristics)
         return min(len(task_types) * 2.0, 10.0)
 
-    def _categorize_heuristic(self, heuristic: Dict[str, Any]) -> str:
+    def _categorize_heuristic(self, heuristic: dict[str, Any]) -> str:
         """Categorize a heuristic based on its content."""
         text = heuristic["text"].lower()
         # task_type = heuristic["task_type"].lower()  # Unused variable removed
@@ -288,7 +288,7 @@ class HeuristicsPackGenerator:
         else:
             return "general"
 
-    def _select_top_heuristics(self, scored_heuristics: List[Dict[str, Any]]) -> List[Heuristic]:
+    def _select_top_heuristics(self, scored_heuristics: list[dict[str, Any]]) -> list[Heuristic]:
         """Select the top heuristics for the pack."""
         # Sort by confidence score
         sorted_heuristics = sorted(scored_heuristics, key=lambda x: x["confidence_score"], reverse=True)
@@ -313,7 +313,7 @@ class HeuristicsPackGenerator:
 
         return heuristics
 
-    def _categorize_heuristics(self, heuristics: List[Heuristic]) -> Dict[str, int]:
+    def _categorize_heuristics(self, heuristics: list[Heuristic]) -> dict[str, int]:
         """Count heuristics by category."""
         categories = Counter(h.category for h in heuristics)
         return dict(categories)
@@ -439,10 +439,10 @@ class HeuristicsPackGenerator:
             print(f"❌ Failed to save heuristics pack: {e}")
             return False
 
-    def load_heuristics_pack(self, input_path: str) -> Optional[HeuristicsPack]:
+    def load_heuristics_pack(self, input_path: str) -> HeuristicsPack | None:
         """Load heuristics pack from file."""
         try:
-            with open(input_path, "r") as f:
+            with open(input_path) as f:
                 data = json.load(f)
 
             heuristics = []

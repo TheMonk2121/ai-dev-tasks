@@ -28,9 +28,7 @@ class CrossEncoderReranker:
 
         # Configuration from environment (support both legacy and CE_* names)
         top_n_str = os.getenv("RAGCHECKER_CROSS_ENCODER_TOP_N") or os.getenv("RAGCHECKER_CE_RERANK_TOPN") or "50"
-        weight_str = (
-            os.getenv("RAGCHECKER_CROSS_ENCODER_WEIGHT") or os.getenv("RAGCHECKER_CE_WEIGHT") or "0.15"
-        )
+        weight_str = os.getenv("RAGCHECKER_CROSS_ENCODER_WEIGHT") or os.getenv("RAGCHECKER_CE_WEIGHT") or "0.15"
         self.top_n = int(top_n_str)
         self.weight = float(weight_str)
         self.cache_enabled = os.getenv("RAGCHECKER_CROSS_ENCODER_CACHE", "1") == "1"
@@ -84,7 +82,7 @@ class CrossEncoderReranker:
             logger.warning(f"⚠️ Cross-encoder scoring failed: {e}")
             return 0.0
 
-    def rerank_candidates(self, query: str, candidates: List[str], contexts: List[str]) -> List[Tuple[str, float]]:
+    def rerank_candidates(self, query: str, candidates: list[str], contexts: list[str]) -> list[tuple[str, float]]:
         """Rerank candidates using cross-encoder scores."""
         if not self.model or not candidates:
             return [(candidate, 0.0) for candidate in candidates]
@@ -109,7 +107,7 @@ class CrossEncoderReranker:
         logger.info(f"✅ Reranked {len(scored_candidates)} candidates")
         return scored_candidates
 
-    def _find_best_context(self, candidate: str, contexts: List[str]) -> Optional[str]:
+    def _find_best_context(self, candidate: str, contexts: list[str]) -> str | None:
         """Find the most relevant context for a candidate."""
         if not contexts:
             return None
@@ -129,8 +127,8 @@ class CrossEncoderReranker:
         return best_context
 
     def enhance_sentence_scores(
-        self, sentences: List[str], contexts: List[str], query: str = ""
-    ) -> List[Tuple[str, float]]:
+        self, sentences: list[str], contexts: list[str], query: str = ""
+    ) -> list[tuple[str, float]]:
         """Enhance sentence scores with cross-encoder reranking."""
         if not self.model or not sentences:
             return [(sentence, 0.0) for sentence in sentences]
@@ -153,7 +151,7 @@ class CrossEncoderReranker:
 
         return enhanced_scores
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """Get cache statistics."""
         return {
             "cache_size": len(self.cache),
@@ -176,7 +174,7 @@ class EnhancedEvidenceFilter:
     def __init__(self):
         self.cross_encoder = CrossEncoderReranker()
 
-    def filter_with_cross_encoder(self, answer: str, contexts: List[str], query: str = "") -> str:
+    def filter_with_cross_encoder(self, answer: str, contexts: list[str], query: str = "") -> str:
         """Filter evidence with cross-encoder enhancement."""
         if not self.cross_encoder.model:
             # Fall back to basic filtering
@@ -198,14 +196,14 @@ class EnhancedEvidenceFilter:
 
         return " ".join(filtered_sentences)
 
-    def _split_sentences(self, text: str) -> List[str]:
+    def _split_sentences(self, text: str) -> list[str]:
         """Split text into sentences."""
         import re
 
         sentences = re.split(r"(?<=[.!?])\s+", text.strip())
         return [s.strip() for s in sentences if s.strip()]
 
-    def _should_keep_sentence(self, sentence: str, contexts: List[str], ce_score: float) -> bool:
+    def _should_keep_sentence(self, sentence: str, contexts: list[str], ce_score: float) -> bool:
         """Determine if a sentence should be kept based on cross-encoder score."""
         # Get base evidence score
         base_score = self._calculate_base_evidence_score(sentence, contexts)
@@ -217,7 +215,7 @@ class EnhancedEvidenceFilter:
         threshold = float(os.getenv("RAGCHECKER_EVIDENCE_JACCARD", "0.07"))
         return combined_score >= threshold
 
-    def _calculate_base_evidence_score(self, sentence: str, contexts: List[str]) -> float:
+    def _calculate_base_evidence_score(self, sentence: str, contexts: list[str]) -> float:
         """Calculate base evidence score using existing methods."""
         # This would integrate with the existing evidence scoring logic
         # For now, return a simple token overlap score
@@ -232,7 +230,7 @@ class EnhancedEvidenceFilter:
 
         return max_overlap / len(sentence_tokens) if sentence_tokens else 0.0
 
-    def _basic_filter(self, answer: str, contexts: List[str]) -> str:
+    def _basic_filter(self, answer: str, contexts: list[str]) -> str:
         """Basic filtering without cross-encoder."""
         sentences = self._split_sentences(answer)
         filtered_sentences = []

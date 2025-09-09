@@ -69,18 +69,18 @@ class CacheConfig:
 class CacheEntry:
     """Represents a cache entry"""
 
-    id: Optional[int] = None
-    user_id: Optional[str] = None
-    model_type: Optional[str] = None
-    prompt: Optional[str] = None
-    response: Optional[str] = None
-    tokens_used: Optional[int] = None
+    id: int | None = None
+    user_id: str | None = None
+    model_type: str | None = None
+    prompt: str | None = None
+    response: str | None = None
+    tokens_used: int | None = None
     cache_hit: bool = False
     similarity_score: float = 0.0
-    last_verified: Optional[datetime] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
-    embedding: Optional[List[float]] = None
+    last_verified: datetime | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    embedding: list[float] | None = None
 
 
 @dataclass
@@ -112,11 +112,11 @@ class CacheMetrics:
 class PostgreSQLCacheService:
     """Core PostgreSQL cache service with async support and vector similarity search"""
 
-    def __init__(self, database_url: Optional[str] = None, config: Optional[CacheConfig] = None):
+    def __init__(self, database_url: str | None = None, config: CacheConfig | None = None):
         """Initialize PostgreSQL cache service"""
         self.database_url = database_url or get_database_url()
         self.config = config or CacheConfig()
-        self.pool: Optional[Pool] = None
+        self.pool: Pool | None = None
         self.metrics = CacheMetrics()
         self.initialized = False
 
@@ -127,7 +127,7 @@ class PostgreSQLCacheService:
         # Parse connection parameters
         self.connection_params = self._parse_connection_url()
 
-    def _parse_connection_url(self) -> Dict[str, Any]:
+    def _parse_connection_url(self) -> dict[str, Any]:
         """Parse PostgreSQL connection URL into connection parameters"""
         try:
             parsed = urlparse(self.database_url)
@@ -272,7 +272,7 @@ class PostgreSQLCacheService:
         except Exception as e:
             logger.warning(f"Could not verify extensions: {e}")
 
-    async def _get_connection(self) -> Union[Pool, Connection]:
+    async def _get_connection(self) -> Pool | Connection:
         """Get database connection from pool or create new one"""
         if self.pool:
             return self.pool
@@ -348,8 +348,8 @@ class PostgreSQLCacheService:
             raise
 
     async def retrieve_cache_entry(
-        self, prompt: str, user_id: Optional[str] = None, similarity_threshold: Optional[float] = None
-    ) -> Optional[CacheEntry]:
+        self, prompt: str, user_id: str | None = None, similarity_threshold: float | None = None
+    ) -> CacheEntry | None:
         """Retrieve a cache entry entry by prompt similarity"""
         try:
             start_time = time.time()
@@ -474,7 +474,7 @@ class PostgreSQLCacheService:
 
     async def search_similar_entries(
         self, prompt: str, limit: int = 10, similarity_threshold: float = 0.5
-    ) -> List[CacheEntry]:
+    ) -> list[CacheEntry]:
         """Search for similar cache entries"""
         try:
             conn = await self._get_connection()
@@ -543,7 +543,7 @@ class PostgreSQLCacheService:
             logger.error(f"Error searching similar entries: {e}")
             raise
 
-    async def update_cache_entry(self, entry_id: int, updates: Dict[str, Any]) -> bool:
+    async def update_cache_entry(self, entry_id: int, updates: dict[str, Any]) -> bool:
         """Update an existing cache entry"""
         try:
             conn = await self._get_connection()
@@ -616,7 +616,7 @@ class PostgreSQLCacheService:
             logger.error(f"Error deleting cache entry: {e}")
             raise
 
-    async def get_cache_statistics(self) -> Dict[str, Any]:
+    async def get_cache_statistics(self) -> dict[str, Any]:
         """Get comprehensive cache statistics"""
         try:
             conn = await self._get_connection()
@@ -700,7 +700,7 @@ class PostgreSQLCacheService:
         except Exception as e:
             logger.error(f"Error updating metrics: {e}")
 
-    async def health_check(self) -> Dict[str, Any]:
+    async def health_check(self) -> dict[str, Any]:
         """Perform health check on the cache service"""
         try:
             health_status = {
@@ -755,7 +755,7 @@ class PostgreSQLCacheService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def get_connection_pool_info(self) -> Dict[str, Any]:
+    async def get_connection_pool_info(self) -> dict[str, Any]:
         """Return basic connection pool information for validators."""
         try:
             return {

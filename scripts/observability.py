@@ -15,7 +15,7 @@ from typing import Any, Optional
 _logfire = None
 
 
-def _lazy_configure() -> Optional[Any]:
+def _lazy_configure() -> Any | None:
     global _logfire
     if _logfire is not None:
         return _logfire
@@ -52,7 +52,7 @@ def get_logfire():
     return _lazy_configure()
 
 
-def _with_span(name: str, attributes: Optional[dict] = None):
+def _with_span(name: str, attributes: dict | None = None):
     lf = _lazy_configure()
     if not lf:
         # context manager shim doing nothing

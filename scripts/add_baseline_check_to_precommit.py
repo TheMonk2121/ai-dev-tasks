@@ -20,7 +20,7 @@ def add_baseline_check_to_precommit():
         return False
 
     # Read current configuration
-    with open(config_file, "r") as f:
+    with open(config_file) as f:
         config = yaml.safe_load(f)
 
     # Check if baseline check already exists

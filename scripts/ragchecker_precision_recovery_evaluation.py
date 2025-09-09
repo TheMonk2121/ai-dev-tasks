@@ -36,7 +36,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
         print(f"🎯 Precision Recovery Evaluator initialized (Step {recovery_step})")
         print(f"📊 Judge floors: {self.config.get_judge_floors('haiku')}")
 
-    def evaluate_with_enhanced_logging(self, test_cases: List[Any]) -> Dict[str, Any]:
+    def evaluate_with_enhanced_logging(self, test_cases: list[Any]) -> dict[str, Any]:
         """Evaluate test cases with enhanced logging for precision recovery analysis."""
 
         print(f"\n🔍 Running precision recovery evaluation (Step {self.recovery_step})")
@@ -67,7 +67,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
 
         return evaluation_report
 
-    def _evaluate_case_with_logging(self, test_case: Any) -> Dict[str, Any]:
+    def _evaluate_case_with_logging(self, test_case: Any) -> dict[str, Any]:
         """Evaluate a single test case with comprehensive logging."""
 
         start_time = time.time()
@@ -149,7 +149,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
 
         return result
 
-    def _extract_retrieval_metrics(self, query: str) -> Dict[str, Any]:
+    def _extract_retrieval_metrics(self, query: str) -> dict[str, Any]:
         """Extract retrieval-specific metrics."""
         return {
             "hybrid_enabled": os.getenv("RAGCHECKER_RETRIEVAL_HYBRID", "0") == "1",
@@ -161,7 +161,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             "dense_weight": 0.35,  # From hybrid retriever
         }
 
-    def _extract_facet_metrics(self, query: str) -> Dict[str, Any]:
+    def _extract_facet_metrics(self, query: str) -> dict[str, Any]:
         """Extract facet query decomposition metrics."""
         return {
             "rewrite_k": int(os.getenv("RAGCHECKER_REWRITE_K", "0")),
@@ -173,7 +173,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             "entity_overlap": 0.0,  # Will be populated by actual implementation
         }
 
-    def _extract_fusion_metrics(self, query: str) -> Dict[str, Any]:
+    def _extract_fusion_metrics(self, query: str) -> dict[str, Any]:
         """Extract fusion gain metrics."""
         return {
             "fusion_gain": 0,  # docs in fused top-K not in single-query top-K
@@ -182,7 +182,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             "new_docs_added": 0,  # fusion_gain = fused_docs - single_query_docs
         }
 
-    def _extract_dynamic_k_metrics(self, query: str) -> Dict[str, Any]:
+    def _extract_dynamic_k_metrics(self, query: str) -> dict[str, Any]:
         """Extract dynamic K selection metrics."""
         return {
             "strength": "unknown",  # Will be determined by actual implementation
@@ -192,7 +192,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             "target_k_weak": int(os.getenv("RAGCHECKER_TARGET_K_WEAK", "3")),
         }
 
-    def _extract_binding_metrics(self, query: str) -> Dict[str, Any]:
+    def _extract_binding_metrics(self, query: str) -> dict[str, Any]:
         """Extract claim binding metrics."""
         return {
             "claims_extracted": 0,  # Will be populated by actual implementation
@@ -202,7 +202,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             "min_words_after_binding": int(os.getenv("RAGCHECKER_MIN_WORDS_AFTER_BINDING", "140")),
         }
 
-    def _extract_pruning_metrics(self, query: str) -> Dict[str, Any]:
+    def _extract_pruning_metrics(self, query: str) -> dict[str, Any]:
         """Extract pruning metrics."""
         return {
             "redundant_pruned": 0,  # Will be populated by actual implementation
@@ -211,7 +211,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             "per_chunk_cap": int(os.getenv("RAGCHECKER_PER_CHUNK_CAP", "2")),
         }
 
-    def _extract_judge_metrics(self) -> Dict[str, Any]:
+    def _extract_judge_metrics(self) -> dict[str, Any]:
         """Extract judge mode metrics."""
         return {
             "judge_mode": os.getenv("RAGCHECKER_JUDGE_MODE", "haiku"),
@@ -220,7 +220,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             "fallback_used": False,  # Will be determined by actual implementation
         }
 
-    def _log_case_metrics(self, query_id: str, case_result: Dict[str, Any]) -> None:
+    def _log_case_metrics(self, query_id: str, case_result: dict[str, Any]) -> None:
         """Log metrics for a specific case."""
         self.logging_data[query_id] = {
             "precision": case_result.get("precision", 0.0),
@@ -236,7 +236,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
             "judge_metrics": case_result.get("judge_metrics", {}),
         }
 
-    def _generate_evaluation_report(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _generate_evaluation_report(self, results: list[dict[str, Any]]) -> dict[str, Any]:
         """Generate comprehensive evaluation report."""
 
         # Calculate overall metrics
@@ -280,7 +280,7 @@ class PrecisionRecoveryEvaluator(OfficialRAGCheckerEvaluator):
 
         return report
 
-    def _generate_summary_statistics(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _generate_summary_statistics(self, results: list[dict[str, Any]]) -> dict[str, Any]:
         """Generate summary statistics for analysis."""
 
         # Identify weak cases

@@ -13,13 +13,12 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional, Tuple
 
 
 class VenvManager:
     """Manages virtual environment activation and validation."""
 
-    def __init__(self, project_root: Optional[Path] = None):
+    def __init__(self, project_root: Path | None = None):
         self.project_root = project_root or Path.cwd()
         self.venv_path = self.project_root / "venv"
         self.venv_python = self.venv_path / "bin" / "python3"
@@ -39,13 +38,13 @@ class VenvManager:
         """Check if the virtual environment exists."""
         return self.venv_path.exists() and self.venv_python.exists()
 
-    def get_venv_python_path(self) -> Optional[Path]:
+    def get_venv_python_path(self) -> Path | None:
         """Get the path to the venv Python executable."""
         if self.venv_exists():
             return self.venv_python
         return None
 
-    def validate_dependencies(self) -> Tuple[bool, list[str]]:
+    def validate_dependencies(self) -> tuple[bool, list[str]]:
         """Validate that required dependencies are installed in the venv.
 
         Runtime vs dev mode controlled by env:
@@ -152,7 +151,7 @@ def ensure_venv_for_script() -> bool:
     return manager.ensure_venv_active()
 
 
-def get_venv_python() -> Optional[str]:
+def get_venv_python() -> str | None:
     """Get the path to the venv Python executable."""
     manager = VenvManager()
     python_path = manager.get_venv_python_path()

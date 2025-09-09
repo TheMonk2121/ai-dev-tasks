@@ -34,13 +34,13 @@ class EpisodicMemorySystem:
 
     def get_enhanced_context(
         self,
-        systems: Optional[List[str]] = None,
+        systems: list[str] | None = None,
         role: str = "planner",
         query: str = "",
         include_episodic: bool = True,
         include_heuristics: bool = True,
         context_type: str = "guidance",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get fully enhanced context with episodic memory and heuristics."""
         if systems is None:
             systems = ["ltst", "cursor"]
@@ -68,8 +68,8 @@ class EpisodicMemorySystem:
         output_text: str,
         agent: str = "cursor_ai",
         task_type: str = "general",
-        outcome_metrics: Optional[Dict[str, Any]] = None,
-        source_refs: Optional[Dict[str, Any]] = None,
+        outcome_metrics: dict[str, Any] | None = None,
+        source_refs: dict[str, Any] | None = None,
     ) -> bool:
         """Store a task completion for future episodic learning."""
         return self.orchestrator.store_task_completion(
@@ -87,7 +87,7 @@ class EpisodicMemorySystem:
         pack = self.orchestrator.regenerate_heuristics_pack(agent)
         return pack is not None
 
-    def get_system_stats(self) -> Dict[str, Any]:
+    def get_system_stats(self) -> dict[str, Any]:
         """Get comprehensive system statistics."""
         stats = {
             "episodic_stats": self.orchestrator.get_episodic_stats(),

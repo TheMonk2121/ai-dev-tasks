@@ -34,14 +34,14 @@ def fix_md018_heading_spaces():
 
     for file_path in markdown_files:
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             original_content = content
 
             # Fix headings without space after hash: #Heading → # Heading
             # Pattern: # followed by non-space character
-            content = re.sub(r'^(#{1,6})([^#\s])', r'\1 \2', content, flags=re.MULTILINE)
+            content = re.sub(r"^(#{1,6})([^#\s])", r"\1 \2", content, flags=re.MULTILINE)
 
             # Write back if changed
             if content != original_content:
@@ -49,8 +49,8 @@ def fix_md018_heading_spaces():
                     f.write(content)
 
                 # Count the number of fixes
-                original_issues = len(re.findall(r'^(#{1,6})([^#\s])', original_content, flags=re.MULTILINE))
-                new_issues = len(re.findall(r'^(#{1,6})([^#\s])', content, flags=re.MULTILINE))
+                original_issues = len(re.findall(r"^(#{1,6})([^#\s])", original_content, flags=re.MULTILINE))
+                new_issues = len(re.findall(r"^(#{1,6})([^#\s])", content, flags=re.MULTILINE))
                 fixes = original_issues - new_issues
 
                 print(f"✅ Fixed: {file_path} ({fixes} headings)")
@@ -74,6 +74,7 @@ def fix_md018_heading_spaces():
         print(f"\n🎉 Successfully fixed {files_fixed} files!")
     else:
         print("\nℹ️  No files needed fixing.")
+
 
 if __name__ == "__main__":
     fix_md018_heading_spaces()

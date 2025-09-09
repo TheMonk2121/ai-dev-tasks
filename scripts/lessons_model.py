@@ -7,7 +7,7 @@ import json
 import os
 import uuid
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Any, Dict, List, Optional
 
 
@@ -26,15 +26,15 @@ class Lesson:
 
     id: str
     created_at: str
-    scope: Dict[str, Any]
-    context: Dict[str, Any]
-    finding: Dict[str, Any]
-    recommendation: Dict[str, Any]
+    scope: dict[str, Any]
+    context: dict[str, Any]
+    finding: dict[str, Any]
+    recommendation: dict[str, Any]
     confidence: float
     status: str = "proposed"
-    conflicts_with: List[str] = None
-    supersedes: List[str] = None
-    notes: Optional[str] = None
+    conflicts_with: list[str] = None
+    supersedes: list[str] = None
+    notes: str | None = None
 
     def __post_init__(self):
         if self.conflicts_with is None:
@@ -44,17 +44,17 @@ class Lesson:
 
 
 def new_lesson(
-    scope: Dict[str, Any],
-    context: Dict[str, Any],
-    finding: Dict[str, Any],
-    recommendation: Dict[str, Any],
+    scope: dict[str, Any],
+    context: dict[str, Any],
+    finding: dict[str, Any],
+    recommendation: dict[str, Any],
     confidence: float = 0.5,
-    notes: Optional[str] = None,
+    notes: str | None = None,
 ) -> Lesson:
     """Create a new lesson with auto-generated ID and timestamp"""
     return Lesson(
-        id=f"LL-{datetime.now(timezone.utc).strftime('%Y-%m-%d')}-{uuid.uuid4().hex[:4]}",
-        created_at=datetime.now(timezone.utc).isoformat(),
+        id=f"LL-{datetime.now(UTC).strftime('%Y-%m-%d')}-{uuid.uuid4().hex[:4]}",
+        created_at=datetime.now(UTC).isoformat(),
         scope=scope,
         context=context,
         finding=finding,
@@ -70,13 +70,13 @@ def append_lesson(path: str, lesson: Lesson) -> None:
         f.write(json.dumps(asdict(lesson)) + "\n")
 
 
-def load_lessons(path: str) -> List[Lesson]:
+def load_lessons(path: str) -> list[Lesson]:
     """Load all lessons from a JSONL file"""
     lessons = []
     if not path or not os.path.exists(path):
         return lessons
 
-    with open(path, "r") as f:
+    with open(path) as f:
         for line in f:
             line = line.strip()
             if line and not line.startswith("#"):
@@ -89,7 +89,7 @@ def load_lessons(path: str) -> List[Lesson]:
     return lessons
 
 
-def filter_lessons(lessons: List[Lesson], scope_filters: Dict[str, Any]) -> List[Lesson]:
+def filter_lessons(lessons: list[Lesson], scope_filters: dict[str, Any]) -> list[Lesson]:
     """Filter lessons by scope criteria"""
     filtered = []
     for lesson in lessons:

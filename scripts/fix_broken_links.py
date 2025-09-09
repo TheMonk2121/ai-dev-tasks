@@ -12,7 +12,6 @@ import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Union
 
 
 @dataclass
@@ -21,6 +20,7 @@ class BrokenLink:
     broken_reference: str
     line_number: int = 0
     context: str = ""
+
 
 class BrokenLinksFixer:
     def __init__(self, dry_run: bool = True):
@@ -71,8 +71,8 @@ class BrokenLinksFixer:
             "@000_core/003_process-task-list.md": "400_guides/400_project-overview.md",
             "@MyFeature-PRD.md": "MyFeature-PRD.md",
             # Fix relative paths
-                "../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md": (
-        "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md"
+            "../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md": (
+                "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md"
             ),
             # Remove command references
             "markdownlint ./*.md": None,  # This is a command, not a file
@@ -105,9 +105,9 @@ class BrokenLinksFixer:
             ".github/copilot-instructions.md": None,
         }
 
-    def load_broken_links(self, json_file: str) -> List[BrokenLink]:
+    def load_broken_links(self, json_file: str) -> list[BrokenLink]:
         """Load broken links from validation results."""
-        with open(json_file, "r") as f:
+        with open(json_file) as f:
             data = json.load(f)
 
         broken_links = []
@@ -121,7 +121,7 @@ class BrokenLinksFixer:
 
         return broken_links
 
-    def find_file_in_project(self, filename: str) -> Union[str, None]:
+    def find_file_in_project(self, filename: str) -> str | None:
         """Find a file in the project using git ls-files."""
         try:
             result = subprocess.run(["git", "ls-files", f"*{filename}"], capture_output=True, text=True, timeout=10)
@@ -151,7 +151,7 @@ class BrokenLinksFixer:
 
         # Read the file content
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
         except Exception as e:
             print(f"  ❌ Could not read {file_path}: {e}")
@@ -222,6 +222,7 @@ class BrokenLinksFixer:
             if len(self.fixes_made) > 10:
                 print(f"  ... and {len(self.fixes_made) - 10} more")
 
+
 def main():
     parser = argparse.ArgumentParser(description="Fix broken file references in documentation")
     parser.add_argument(
@@ -246,6 +247,7 @@ def main():
         print("\n💡 To apply fixes, run: python3 scripts/fix_broken_links.py --apply")
 
     return 0
+
 
 if __name__ == "__main__":
     exit(main())

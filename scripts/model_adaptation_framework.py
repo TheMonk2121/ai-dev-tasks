@@ -69,10 +69,10 @@ class AdaptationResult:
     adapted_model: ModelType
     adaptation_reason: str
     context_size: int
-    performance_metrics: Dict[str, Any]
+    performance_metrics: dict[str, Any]
     adaptation_timestamp: float
     success: bool
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class ContextSizeDetector:
@@ -151,7 +151,7 @@ class PerformanceBasedAdapter:
     def __init__(self, config: AdaptationConfig):
         self.config = config
         self.logger = logging.getLogger(f"{__name__}.PerformanceBasedAdapter")
-        self.performance_history: Dict[ModelType, List[float]] = {model: [] for model in ModelType}
+        self.performance_history: dict[ModelType, list[float]] = {model: [] for model in ModelType}
 
     def record_performance(self, model: ModelType, f1_score: float, latency: float):
         """Record performance metrics for a model"""
@@ -188,7 +188,7 @@ class PerformanceBasedAdapter:
 
         return weighted_sum / total_weight if total_weight > 0 else 0.5
 
-    def recommend_adaptation(self, current_model: ModelType, context_size: int) -> Optional[ModelType]:
+    def recommend_adaptation(self, current_model: ModelType, context_size: int) -> ModelType | None:
         """
         Recommend model adaptation based on performance
 
@@ -319,12 +319,12 @@ class HybridAdapter:
 class ModelAdaptationFramework:
     """Main model adaptation framework orchestrator"""
 
-    def __init__(self, config: Optional[AdaptationConfig] = None):
+    def __init__(self, config: AdaptationConfig | None = None):
         self.config = config or AdaptationConfig()
         self.context_detector = ContextSizeDetector(self.config)
         self.performance_adapter = PerformanceBasedAdapter(self.config)
         self.hybrid_adapter = HybridAdapter(self.config)
-        self.adaptation_history: List[AdaptationResult] = []
+        self.adaptation_history: list[AdaptationResult] = []
         self.last_adaptation_time: float = 0
         self.logger = logging.getLogger(f"{__name__}.ModelAdaptationFramework")
 
@@ -336,8 +336,8 @@ class ModelAdaptationFramework:
         current_model: ModelType,
         context_size: int,
         strategy: AdaptationStrategy = AdaptationStrategy.HYBRID,
-        f1_score: Optional[float] = None,
-        latency: Optional[float] = None,
+        f1_score: float | None = None,
+        latency: float | None = None,
     ) -> AdaptationResult:
         """
         Adapt model based on specified strategy
@@ -458,7 +458,7 @@ class ModelAdaptationFramework:
 
         return result
 
-    def get_adaptation_history(self, limit: Optional[int] = None) -> List[AdaptationResult]:
+    def get_adaptation_history(self, limit: int | None = None) -> list[AdaptationResult]:
         """Get adaptation history"""
         if limit is None:
             return self.adaptation_history
@@ -475,7 +475,7 @@ class ModelAdaptationFramework:
         self.model_capabilities[custom_model] = capabilities
         self.logger.info(f"Added custom model: {model_type}")
 
-    def get_adaptation_statistics(self) -> Dict[str, Any]:
+    def get_adaptation_statistics(self) -> dict[str, Any]:
         """Get adaptation framework statistics"""
         if not self.adaptation_history:
             return {"total_adaptations": 0, "successful_adaptations": 0}

@@ -18,7 +18,7 @@ def main():
         sys.exit(1)
     sql_path = os.path.join(os.path.dirname(__file__), "migrations", "add_content_tsv.sql")
     try:
-        with open(sql_path, "r", encoding="utf-8") as f:
+        with open(sql_path, encoding="utf-8") as f:
             sql = f.read()
     except Exception as e:
         print(f"❌ Could not read SQL file: {e}")
@@ -37,4 +37,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

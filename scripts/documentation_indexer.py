@@ -87,7 +87,7 @@ class DocumentationIndexer:
             "completion": ["500_*-completion-summary.md"],
         }
 
-    def scan_documentation_files(self, root_path: str = ".") -> List[Dict[str, Any]]:
+    def scan_documentation_files(self, root_path: str = ".") -> list[dict[str, Any]]:
         """Scan for documentation files and extract metadata"""
         docs = []
         root = Path(root_path)
@@ -132,11 +132,11 @@ class DocumentationIndexer:
 
         return False
 
-    def _extract_document_info(self, file_path: Path) -> Optional[Dict[str, Any]]:
+    def _extract_document_info(self, file_path: Path) -> dict[str, Any] | None:
         """Extract metadata and content from a documentation file"""
         try:
             # Read file content
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             if not content.strip():
@@ -180,9 +180,9 @@ class DocumentationIndexer:
             _LOG.error(f"Error extracting info from {file_path}: {e}")
             return None
 
-    def _extract_metadata(self, content: str) -> Dict[str, Any]:
+    def _extract_metadata(self, content: str) -> dict[str, Any]:
         """Extract minimal metadata: CONTEXT_REFERENCE, MODULE_REFERENCE[], CONTEXT_INDEX"""
-        metadata: Dict[str, Any] = {"module_reference": []}
+        metadata: dict[str, Any] = {"module_reference": []}
 
         # Only capture CONTEXT_REFERENCE and MODULE_REFERENCE
         m_ctx = re.findall(r"<!--\s*CONTEXT_REFERENCE:\s*([^>]+)\s*-->", content)
@@ -215,7 +215,7 @@ class DocumentationIndexer:
 
         return metadata
 
-    def _extract_tldr_and_at_a_glance(self, content: str) -> Tuple[Optional[str], Optional[Dict[str, str]]]:
+    def _extract_tldr_and_at_a_glance(self, content: str) -> tuple[str | None, dict[str, str] | None]:
         """Extract TL;DR text and the At-a-glance table (what/read/do_next)."""
         try:
             # Find TL;DR heading (after optional explicit anchor)
@@ -279,7 +279,7 @@ class DocumentationIndexer:
         else:
             return "core"
 
-    def _extract_title_description(self, content: str) -> Tuple[str, str]:
+    def _extract_title_description(self, content: str) -> tuple[str, str]:
         """Extract title and description from content"""
         lines = content.split("\n")
         title = ""
@@ -304,7 +304,7 @@ class DocumentationIndexer:
 
         return title, description
 
-    def _split_code_python(self, content: str, max_chunk_size: int = 900) -> List[Dict[str, Any]]:
+    def _split_code_python(self, content: str, max_chunk_size: int = 900) -> list[dict[str, Any]]:
         """Split Python code into function/class-aware chunks"""
         chunks, cur, size = [], [], 0
         lines = content.splitlines()
@@ -330,7 +330,7 @@ class DocumentationIndexer:
 
         return chunks or [{"chunk_id": "py_0", "content": content.strip(), "start_line": 1, "end_line": len(lines)}]
 
-    def _split_content(self, content: str, max_chunk_size: int = 1000) -> List[Dict[str, Any]]:
+    def _split_content(self, content: str, max_chunk_size: int = 1000) -> list[dict[str, Any]]:
         """Split content into chunks for indexing"""
         chunks = []
 
@@ -396,7 +396,7 @@ class DocumentationIndexer:
 
         return section_end
 
-    def index_documentation(self, root_path: str = ".") -> Dict[str, Any]:
+    def index_documentation(self, root_path: str = ".") -> dict[str, Any]:
         """Index all documentation files"""
         _LOG.info("Starting documentation indexing...")
 
@@ -434,7 +434,7 @@ class DocumentationIndexer:
         _LOG.info(f"Indexing completed: {indexed_count}/{len(docs)} files indexed")
         return summary
 
-    def _index_document(self, doc: Dict[str, Any]) -> None:
+    def _index_document(self, doc: dict[str, Any]) -> None:
         """Index a single document in the vector store"""
         # Store document metadata
         metadata = {
@@ -465,7 +465,7 @@ class DocumentationIndexer:
             # Store in vector store
             self.vector_store.forward(operation="store_chunks", chunks=[chunk["content"]], metadata=chunk_metadata)
 
-    def _count_categories(self, docs: List[Dict[str, Any]]) -> Dict[str, int]:
+    def _count_categories(self, docs: list[dict[str, Any]]) -> dict[str, int]:
         """Count documents by category"""
         categories = {}
         for doc in docs:
@@ -473,7 +473,7 @@ class DocumentationIndexer:
             categories[category] = categories.get(category, 0) + 1
         return categories
 
-    def search_documentation(self, query: str, category: str = None, limit: int = 5) -> Dict[str, Any]:
+    def search_documentation(self, query: str, category: str = None, limit: int = 5) -> dict[str, Any]:
         """Search documentation using the RAG system"""
         search_params = {
             "query": query,
@@ -494,7 +494,7 @@ class DocumentationIndexer:
 
         return results
 
-    def get_documentation_stats(self) -> Dict[str, Any]:
+    def get_documentation_stats(self) -> dict[str, Any]:
         """Get statistics about indexed documentation"""
         # This would query the database for statistics
         # For now, return basic info

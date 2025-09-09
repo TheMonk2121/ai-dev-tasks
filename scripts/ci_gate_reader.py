@@ -74,12 +74,12 @@ def load_reader_gold(path):
     id_map = {}
     if READER_ID_MAP and os.path.exists(READER_ID_MAP):
         try:
-            id_map = json.load(open(READER_ID_MAP, "r", encoding="utf-8"))
+            id_map = json.load(open(READER_ID_MAP, encoding="utf-8"))
         except Exception:
             id_map = {}
 
     gold = {}
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         for line in f:
             if not line.strip():
                 continue
@@ -161,7 +161,7 @@ def eval_reader(cases, gold):
 def load_baseline(path):
     if not os.path.exists(path):
         return None
-    return json.load(open(path, "r", encoding="utf-8"))
+    return json.load(open(path, encoding="utf-8"))
 
 
 def save_json(path, obj):

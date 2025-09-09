@@ -38,7 +38,7 @@ async def cursor_status():
     try:
         # Check recent MCP server activity
         if Path(".mcp-server.out").exists():
-            with open(".mcp-server.out", "r") as f:
+            with open(".mcp-server.out") as f:
                 lines = f.readlines()
                 recent_lines = [line for line in lines[-10:] if "POST /mcp/tools/call" in line]
                 last_activity = lines[-1].strip() if lines else "No activity"
@@ -64,7 +64,7 @@ async def codex_status():
     try:
         # Check for Codex-specific activity in logs
         if Path(".mcp-server.out").exists():
-            with open(".mcp-server.out", "r") as f:
+            with open(".mcp-server.out") as f:
                 lines = f.readlines()
                 # Look for patterns that might indicate Codex activity
                 codex_indicators = ["GET /health", "GET /mcp/tools", "POST /mcp/tools/call"]
@@ -111,14 +111,14 @@ async def get_recent_logs():
         logs = []
 
         if Path(".mcp-server.out").exists():
-            with open(".mcp-server.out", "r") as f:
+            with open(".mcp-server.out") as f:
                 lines = f.readlines()
                 for line in lines[-10:]:
                     if line.strip():
                         logs.append({"file": "stdout", "line": line.strip(), "timestamp": time.time()})
 
         if Path(".mcp-server.err").exists():
-            with open(".mcp-server.err", "r") as f:
+            with open(".mcp-server.err") as f:
                 lines = f.readlines()
                 for line in lines[-5:]:
                     if line.strip() and "INFO:" in line:

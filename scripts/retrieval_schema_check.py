@@ -31,7 +31,7 @@ def main() -> None:
     with get_conn(role="writer") as conn:
         with conn.cursor() as cur:
             # Enable pgvector extension
-            cur.execute("CREATE EXTENSION IF NOT EXISTS \"vector\";")
+            cur.execute('CREATE EXTENSION IF NOT EXISTS "vector";')
 
             # document_chunks.content_tsv (GIN)
             cur.execute(
@@ -73,4 +73,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

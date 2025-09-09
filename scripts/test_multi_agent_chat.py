@@ -35,7 +35,7 @@ async def test_agent_connection(agent_name: str, chat_url: str = "ws://localhost
                     data = json.loads(message)
                     print(f"📥 {agent_name} received: {data.get('message', '')[:50]}...")
                     break  # Just get one message for testing
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 print(f"⏰ {agent_name} timeout waiting for response")
 
             return True

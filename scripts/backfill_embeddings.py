@@ -8,9 +8,11 @@ DSN = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_age
 MODEL_NAME = os.getenv("EMBED_MODEL", "BAAI/bge-small-en-v1.5")  # 384-dim, fast, great for code+docs
 BATCH = int(os.getenv("EMBED_BATCH", "64"))
 
+
 def ensure_schema(cur, dim):
     cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
-    cur.execute("""
+    cur.execute(
+        """
         DO $$
         BEGIN
             IF NOT EXISTS (
@@ -21,22 +23,31 @@ def ensure_schema(cur, dim):
                 USING %s;
             END IF;
         END$$;
-    """, (dim, dim))
+    """,
+        (dim, dim),
+    )
     # Index tuned light; bump lists if corpus grows
-    cur.execute("""
+    cur.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_chunks_embedding
         ON document_chunks USING ivfflat (embedding vector_cosine_ops) WITH (lists = 200);
-    """)
+    """
+    )
+
 
 def fetch_missing(cur, limit=5000):
-    cur.execute("""
+    cur.execute(
+        """
         SELECT id, COALESCE(embedding_text, content) AS txt
         FROM document_chunks
         WHERE embedding IS NULL
           AND length(COALESCE(embedding_text, content)) > 0
         LIMIT %s;
-    """, (limit,))
+    """,
+        (limit,),
+    )
     return cur.fetchall()
+
 
 def main():
     m = SentenceTransformer(MODEL_NAME)
@@ -55,10 +66,7 @@ def main():
             embs = m.encode(texts, batch_size=BATCH, normalize_embeddings=True)
             # Upsert embeddings
             for r, emb in zip(rows, embs):
-                cur.execute(
-                    "UPDATE document_chunks SET embedding = %s::vector WHERE id = %s",
-                    (emb.tolist(), r[0])
-                )
+                cur.execute("UPDATE document_chunks SET embedding = %s::vector WHERE id = %s", (emb.tolist(), r[0]))
             conn.commit()
             total += len(rows)
             # Low, polite pacing
@@ -68,6 +76,7 @@ def main():
         conn.commit()
     dt = time.time() - t0
     print(f"Backfilled {total} chunks in {dt:.1f}s")
+
 
 if __name__ == "__main__":
     main()

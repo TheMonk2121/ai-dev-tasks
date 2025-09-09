@@ -38,31 +38,27 @@ class RelaxedDocValidator(DocCoherenceValidator):
                 if self.heading_increment_pattern.match(line):
                     current_level = len(line.split()[0])  # Count #s
                     if prev_heading_level > 0 and current_level > prev_heading_level + 1:
-                        markdown_issues.append({
-                            'file': str(file_path),
-                            'line': line_num,
-                            'rule': 'MD001',
-                            'issue': 'Heading levels should only increment by one level'
-                        })
+                        markdown_issues.append(
+                            {
+                                "file": str(file_path),
+                                "line": line_num,
+                                "rule": "MD001",
+                                "issue": "Heading levels should only increment by one level",
+                            }
+                        )
                     prev_heading_level = current_level
 
                 # MD009: Trailing spaces
                 if self.trailing_spaces_pattern.search(line):
-                    markdown_issues.append({
-                        'file': str(file_path),
-                        'line': line_num,
-                        'rule': 'MD009',
-                        'issue': 'Trailing spaces detected'
-                    })
+                    markdown_issues.append(
+                        {"file": str(file_path), "line": line_num, "rule": "MD009", "issue": "Trailing spaces detected"}
+                    )
 
                 # MD010: Hard tabs
                 if self.hard_tabs_pattern.search(line):
-                    markdown_issues.append({
-                        'file': str(file_path),
-                        'line': line_num,
-                        'rule': 'MD010',
-                        'issue': 'Hard tabs detected'
-                    })
+                    markdown_issues.append(
+                        {"file": str(file_path), "line": line_num, "rule": "MD010", "issue": "Hard tabs detected"}
+                    )
 
                 # MD013: Line length (IGNORED in relaxed mode)
                 # We skip this check by not having the pattern
@@ -76,6 +72,7 @@ class RelaxedDocValidator(DocCoherenceValidator):
         else:
             self.log("All files pass critical VS Code markdown rules (line length ignored)", "INFO")
             return True
+
 
 def main():
     """Main entry point for relaxed validation."""
@@ -106,7 +103,7 @@ def main():
         safe_fix=args.safe_fix,
         only_changed=args.only_changed,
         rules_path=args.rules_path,
-        strict_anchors=args.strict_anchors
+        strict_anchors=args.strict_anchors,
     )
 
     # Run validation
@@ -118,6 +115,7 @@ def main():
     else:
         print("❌ Relaxed validation failed (critical issues found)")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

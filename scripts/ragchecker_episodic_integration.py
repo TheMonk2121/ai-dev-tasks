@@ -28,7 +28,7 @@ class RAGCheckerEpisodicIntegration:
         self.episodic_integration = EpisodicWorkflowIntegration()
         print("🧠 RAGChecker Episodic Integration initialized")
 
-    def enhance_query_with_episodic_context(self, query: str, agent: str = "cursor_ai") -> Dict[str, Any]:
+    def enhance_query_with_episodic_context(self, query: str, agent: str = "cursor_ai") -> dict[str, Any]:
         """Enhance a query with episodic context for RAGChecker evaluation."""
         try:
             # Get episodic context
@@ -59,7 +59,7 @@ class RAGCheckerEpisodicIntegration:
             print(f"❌ Failed to enhance query with episodic context: {e}")
             return {"original_query": query, "episodic_context": None, "enhanced_query": query}
 
-    def _create_enhanced_query(self, original_query: str, episodic_context: Dict[str, Any]) -> str:
+    def _create_enhanced_query(self, original_query: str, episodic_context: dict[str, Any]) -> str:
         """Create an enhanced query that includes episodic context."""
         enhanced_parts = [original_query]
 
@@ -80,7 +80,7 @@ class RAGCheckerEpisodicIntegration:
         query: str,
         original_response: str,
         enhanced_response: str,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         agent: str = "ragchecker",
     ) -> bool:
         """Store the results of an episodic-enhanced evaluation."""
@@ -127,7 +127,7 @@ class RAGCheckerEpisodicIntegration:
             print(f"❌ Failed to store evaluation result: {e}")
             return False
 
-    def run_ablation_study(self, queries: list, agent: str = "cursor_ai") -> Dict[str, Any]:
+    def run_ablation_study(self, queries: list, agent: str = "cursor_ai") -> dict[str, Any]:
         """Run an ablation study comparing queries with and without episodic context."""
         results = {
             "total_queries": len(queries),
@@ -200,7 +200,7 @@ def main():
             sys.exit(1)
 
         try:
-            with open(args.queries_file, "r") as f:
+            with open(args.queries_file) as f:
                 queries = [line.strip() for line in f if line.strip()]
 
             results = integration.run_ablation_study(queries, args.agent)

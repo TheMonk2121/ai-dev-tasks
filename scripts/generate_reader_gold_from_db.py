@@ -37,7 +37,7 @@ def get_db_connection():
     return psycopg2.connect(dsn, cursor_factory=RealDictCursor)
 
 
-def generate_reader_gold_cases(target_count: int = 20) -> List[Dict[str, Any]]:
+def generate_reader_gold_cases(target_count: int = 20) -> list[dict[str, Any]]:
     """Generate reader gold cases from database chunks."""
     cases = []
 
@@ -69,7 +69,7 @@ def generate_reader_gold_cases(target_count: int = 20) -> List[Dict[str, Any]]:
             # Generate questions and answers for each chunk
             for i, row in enumerate(rows):
                 # Type cast to help the type checker understand this is a dict-like object
-                row_dict: Dict[str, Any] = row  # type: ignore
+                row_dict: dict[str, Any] = row  # type: ignore
                 content = row_dict.get("content_text") or ""
                 file_path = row_dict.get("file_path") or ""
                 filename = row_dict.get("filename") or ""
@@ -98,7 +98,7 @@ def _guess_tag(file_path: str) -> str:
     return "rag_qa_single"
 
 
-def generate_question_answer_pair(content: str, file_path: str, filename: str, index: int) -> Dict[str, Any]:
+def generate_question_answer_pair(content: str, file_path: str, filename: str, index: int) -> dict[str, Any]:
     """Generate a question-answer pair from content."""
 
     # Extract key information from content

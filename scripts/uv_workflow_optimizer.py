@@ -10,7 +10,6 @@ import argparse
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 
 class UVWorkflowOptimizer:
@@ -21,7 +20,7 @@ class UVWorkflowOptimizer:
         self.optimization_log = []
         self.workflow_patterns = {}
 
-    def analyze_workflow_patterns(self) -> Dict:
+    def analyze_workflow_patterns(self) -> dict:
         """Analyze common workflow patterns and suggest optimizations."""
         print("🔍 Analyzing workflow patterns...")
 
@@ -47,7 +46,7 @@ class UVWorkflowOptimizer:
 
         return patterns
 
-    def _analyze_common_commands(self) -> Dict:
+    def _analyze_common_commands(self) -> dict:
         """Analyze commonly used UV commands."""
         common_commands = {
             "uv_sync": {
@@ -74,7 +73,7 @@ class UVWorkflowOptimizer:
 
         return common_commands
 
-    def _identify_bottlenecks(self) -> List[Dict]:
+    def _identify_bottlenecks(self) -> list[dict]:
         """Identify workflow performance bottlenecks."""
         bottlenecks = []
 
@@ -108,7 +107,7 @@ class UVWorkflowOptimizer:
 
         return bottlenecks
 
-    def _find_automation_opportunities(self) -> List[Dict]:
+    def _find_automation_opportunities(self) -> list[dict]:
         """Find opportunities for workflow automation."""
         opportunities = []
 
@@ -150,7 +149,7 @@ class UVWorkflowOptimizer:
 
         return opportunities
 
-    def _generate_workflow_suggestions(self, patterns: Dict) -> List[str]:
+    def _generate_workflow_suggestions(self, patterns: dict) -> list[str]:
         """Generate workflow optimization suggestions."""
         suggestions = []
 
@@ -169,7 +168,7 @@ class UVWorkflowOptimizer:
 
         return suggestions
 
-    def create_optimized_scripts(self) -> Dict:
+    def create_optimized_scripts(self) -> dict:
         """Create optimized workflow scripts."""
         print("🛠️ Creating optimized workflow scripts...")
 
@@ -189,7 +188,7 @@ class UVWorkflowOptimizer:
 
         return scripts_created
 
-    def _create_shell_aliases(self) -> List[Dict]:
+    def _create_shell_aliases(self) -> list[dict]:
         """Create shell aliases for common UV commands."""
         aliases = [
             {"alias": "uvd", "command": "uv sync --extra dev", "description": "Quick development environment setup"},
@@ -220,7 +219,7 @@ class UVWorkflowOptimizer:
 
         return aliases
 
-    def _create_wrapper_scripts(self) -> List[Dict]:
+    def _create_wrapper_scripts(self) -> list[dict]:
         """Create wrapper scripts for common workflows."""
         scripts = []
 
@@ -306,7 +305,7 @@ echo "✅ Performance checks completed!"
 
         return scripts
 
-    def _create_automation_scripts(self) -> List[Dict]:
+    def _create_automation_scripts(self) -> list[dict]:
         """Create automation scripts for regular tasks."""
         automation = []
 
@@ -404,7 +403,7 @@ if __name__ == "__main__":
 
         return automation
 
-    def generate_workflow_guide(self, patterns: Dict, scripts: Dict) -> str:
+    def generate_workflow_guide(self, patterns: dict, scripts: dict) -> str:
         """Generate a comprehensive workflow optimization guide."""
         guide = f"""# 🚀 UV Workflow Optimization Guide
 

@@ -33,7 +33,7 @@ class OptimizedConflictAuditor:
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{timestamp}] [{level}] {message}")
 
-    def check_dependency_conflicts_parallel(self) -> Dict[str, Any]:
+    def check_dependency_conflicts_parallel(self) -> dict[str, Any]:
         """Check for dependency conflicts in parallel."""
         self.log("Checking for dependency conflicts...", "INFO")
         results = {}
@@ -57,7 +57,7 @@ class OptimizedConflictAuditor:
 
         return results
 
-    def _check_python_deps(self) -> Dict[str, Any]:
+    def _check_python_deps(self) -> dict[str, Any]:
         """Check Python dependencies."""
         try:
             result = subprocess.run(
@@ -72,7 +72,7 @@ class OptimizedConflictAuditor:
         except Exception as e:
             return {"status": "error", "details": str(e)}
 
-    def _check_nodejs_deps(self) -> Dict[str, Any]:
+    def _check_nodejs_deps(self) -> dict[str, Any]:
         """Check Node.js dependencies."""
         try:
             result = subprocess.run(["npm", "ls", "--all"], capture_output=True, text=True, timeout=30)  # Add timeout
@@ -85,7 +85,7 @@ class OptimizedConflictAuditor:
         except Exception as e:
             return {"status": "error", "details": str(e)}
 
-    def check_circular_dependencies_optimized(self) -> Dict[str, Any]:
+    def check_circular_dependencies_optimized(self) -> dict[str, Any]:
         """Optimized circular dependency check with early exit."""
         self.log("Checking for circular dependencies...", "INFO")
 
@@ -115,7 +115,7 @@ class OptimizedConflictAuditor:
         except Exception as e:
             return {"status": "error", "details": str(e)}
 
-    def check_import_conflicts_parallel(self) -> Dict[str, Any]:
+    def check_import_conflicts_parallel(self) -> dict[str, Any]:
         """Check for import conflicts in parallel."""
         self.log("Checking for import conflicts...", "INFO")
 
@@ -129,10 +129,10 @@ class OptimizedConflictAuditor:
 
         results = {"conflicts": [], "checked_files": len(python_files)}
 
-        def check_single_file(file_path: Path) -> List[str]:
+        def check_single_file(file_path: Path) -> list[str]:
             """Check a single file for import issues."""
             try:
-                with open(file_path, "r") as f:
+                with open(file_path) as f:
                     content = f.read()
 
                 issues = []
@@ -165,7 +165,7 @@ class OptimizedConflictAuditor:
 
         return results
 
-    def run_optimized_audit(self) -> Dict[str, Any]:
+    def run_optimized_audit(self) -> dict[str, Any]:
         """Run optimized conflict audit with progress reporting."""
         self.log("Starting optimized conflict audit...", "INFO")
 
@@ -209,6 +209,7 @@ class OptimizedConflictAuditor:
             "all_passed": len(self.issues) == 0,
         }
 
+
 def main():
     parser = argparse.ArgumentParser(description="Optimized conflict audit")
     parser.add_argument("--full", action="store_true", help="Run full audit")
@@ -236,6 +237,7 @@ def main():
             print("\nWarnings:")
             for warning in results["warnings"]:
                 print(f"  ⚠️ {warning}")
+
 
 if __name__ == "__main__":
     main()

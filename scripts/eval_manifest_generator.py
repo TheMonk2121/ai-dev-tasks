@@ -25,7 +25,7 @@ class EvalManifestGenerator:
         self.manifest_id = str(uuid.uuid4())[:8]
         self.timestamp = datetime.now().isoformat()
 
-    def generate_manifest(self, config_overrides: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def generate_manifest(self, config_overrides: dict[str, Any] | None = None) -> dict[str, Any]:
         """Generate comprehensive evaluation manifest."""
         config_overrides = config_overrides or {}
 
@@ -34,38 +34,29 @@ class EvalManifestGenerator:
             "timestamp": self.timestamp,
             "run_type": "production_evaluation",
             "version": "1.0",
-            
             # Model Configuration
             "models": self._capture_model_config(),
-            
             # System Configuration
             "system_config": self._capture_system_config(config_overrides),
-            
             # Data Configuration
             "data_config": self._capture_data_config(),
-            
             # Evaluation Configuration
             "eval_config": self._capture_eval_config(config_overrides),
-            
             # Infrastructure Configuration
             "infrastructure": self._capture_infrastructure_config(),
-            
             # Quality Gates
             "quality_gates": self._capture_quality_gates(),
-            
             # Deterministic Settings
             "deterministic_settings": self._capture_deterministic_settings(),
-            
             # Health Checks
             "health_checks": self._capture_health_checks(),
-            
             # Audit Trail
             "audit_trail": self._capture_audit_trail(),
         }
 
         return manifest
 
-    def _capture_model_config(self) -> Dict[str, Any]:
+    def _capture_model_config(self) -> dict[str, Any]:
         """Capture model configuration and IDs."""
         return {
             "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
@@ -76,10 +67,10 @@ class EvalManifestGenerator:
             "model_versions": {
                 "embedding": self._get_model_version(os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")),
                 "rerank": self._get_model_version(os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")),
-            }
+            },
         }
 
-    def _capture_system_config(self, overrides: Dict[str, Any]) -> Dict[str, Any]:
+    def _capture_system_config(self, overrides: dict[str, Any]) -> dict[str, Any]:
         """Capture system configuration with hash generation."""
         config = {
             # Retrieval Configuration
@@ -90,7 +81,6 @@ class EvalManifestGenerator:
                 "fusion_method": os.getenv("FUSION_METHOD", "RRF"),
                 "rrf_k": int(os.getenv("RRF_K", "60")),
             },
-            
             # Reranking Configuration
             "reranking": {
                 "enabled": os.getenv("RERANK_ENABLE", "1") == "1",
@@ -98,34 +88,32 @@ class EvalManifestGenerator:
                 "pool_size": int(os.getenv("RERANK_POOL", "60")),
                 "topn": int(os.getenv("RERANK_TOPN", "18")),
             },
-            
             # Context Configuration
             "context": {
                 "max_docs": int(os.getenv("CONTEXT_DOCS_MAX", "12")),
                 "max_chars": int(os.getenv("CONTEXT_MAX_CHARS", "1600")),
                 "tail_keep": int(os.getenv("FUSE_TAIL_KEEP", "0")),
             },
-            
             # Performance Configuration
             "performance": {
                 "workers": int(os.getenv("PIPELINE_WORKERS", "2")),
                 "max_in_flight": int(os.getenv("BEDROCK_MAX_IN_FLIGHT", "1")),
                 "max_rps": float(os.getenv("BEDROCK_MAX_RPS", "0.12")),
                 "timeout_sec": int(os.getenv("BEDROCK_CALL_TIMEOUT_SEC", "35")),
-            }
+            },
         }
-        
+
         # Apply overrides
         config.update(overrides)
-        
+
         # Generate configuration hash
         config_str = json.dumps(config, sort_keys=True)
         config_hash = hashlib.sha256(config_str.encode()).hexdigest()[:16]
         config["config_hash"] = config_hash
-        
+
         return config
 
-    def _capture_data_config(self) -> Dict[str, Any]:
+    def _capture_data_config(self) -> dict[str, Any]:
         """Capture data configuration and run IDs."""
         return {
             "ingest_run_id": os.getenv("INGEST_RUN_ID", "unknown"),
@@ -135,7 +123,7 @@ class EvalManifestGenerator:
             "data_checksum": self._get_data_checksum(),
         }
 
-    def _capture_eval_config(self, overrides: Dict[str, Any]) -> Dict[str, Any]:
+    def _capture_eval_config(self, overrides: dict[str, Any]) -> dict[str, Any]:
         """Capture evaluation configuration."""
         return {
             "eval_driver": os.getenv("EVAL_DRIVER", "dspy_rag"),
@@ -147,7 +135,7 @@ class EvalManifestGenerator:
             "snapshot_max_items": int(os.getenv("SNAPSHOT_MAX_ITEMS", "50")),
         }
 
-    def _capture_infrastructure_config(self) -> Dict[str, Any]:
+    def _capture_infrastructure_config(self) -> dict[str, Any]:
         """Capture infrastructure configuration."""
         return {
             "python_version": os.sys.version,
@@ -158,7 +146,7 @@ class EvalManifestGenerator:
             "environment": os.getenv("ENVIRONMENT", "development"),
         }
 
-    def _capture_quality_gates(self) -> Dict[str, Any]:
+    def _capture_quality_gates(self) -> dict[str, Any]:
         """Capture quality gate thresholds."""
         return {
             "precision_min": float(os.getenv("PRECISION_MIN", "0.20")),
@@ -170,7 +158,7 @@ class EvalManifestGenerator:
             "reader_used_gold_min": float(os.getenv("READER_USED_GOLD_MIN", "0.70")),
         }
 
-    def _capture_deterministic_settings(self) -> Dict[str, Any]:
+    def _capture_deterministic_settings(self) -> dict[str, Any]:
         """Capture deterministic evaluation settings."""
         return {
             "temperature": float(os.getenv("TEMPERATURE", "0.0")),
@@ -182,7 +170,7 @@ class EvalManifestGenerator:
             "seed": int(os.getenv("RANDOM_SEED", "42")),
         }
 
-    def _capture_health_checks(self) -> Dict[str, Any]:
+    def _capture_health_checks(self) -> dict[str, Any]:
         """Capture health check configuration."""
         return {
             "env_validation": os.getenv("HEALTH_CHECK_ENV", "1") == "1",
@@ -193,7 +181,7 @@ class EvalManifestGenerator:
             "model_availability": os.getenv("HEALTH_CHECK_MODELS", "1") == "1",
         }
 
-    def _capture_audit_trail(self) -> Dict[str, Any]:
+    def _capture_audit_trail(self) -> dict[str, Any]:
         """Capture audit trail information."""
         return {
             "git_commit": self._get_git_commit(),
@@ -229,6 +217,7 @@ class EvalManifestGenerator:
         """Get current git commit hash."""
         try:
             import subprocess
+
             result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
             return result.stdout.strip()[:8] if result.returncode == 0 else "unknown"
         except Exception:
@@ -238,17 +227,24 @@ class EvalManifestGenerator:
         """Get current git branch."""
         try:
             import subprocess
+
             result = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
             return result.stdout.strip() if result.returncode == 0 else "unknown"
         except Exception:
             return "unknown"
 
-    def _get_relevant_env_vars(self) -> Dict[str, str]:
+    def _get_relevant_env_vars(self) -> dict[str, str]:
         """Get relevant environment variables for audit trail."""
         relevant_vars = [
-            "DSPY_RAG_PATH", "EVAL_DRIVER", "RAGCHECKER_USE_REAL_RAG",
-            "RETR_TOPK_VEC", "RETR_TOPK_BM25", "RERANK_ENABLE",
-            "BEDROCK_MAX_RPS", "AWS_REGION", "ENVIRONMENT"
+            "DSPY_RAG_PATH",
+            "EVAL_DRIVER",
+            "RAGCHECKER_USE_REAL_RAG",
+            "RETR_TOPK_VEC",
+            "RETR_TOPK_BM25",
+            "RERANK_ENABLE",
+            "BEDROCK_MAX_RPS",
+            "AWS_REGION",
+            "ENVIRONMENT",
         ]
         return {var: os.getenv(var, "not_set") for var in relevant_vars}
 
@@ -260,7 +256,7 @@ class EvalManifestGenerator:
                 return f"{parts[0]}://***"
         return data
 
-    def save_manifest(self, manifest: Dict[str, Any], format: str = "yaml") -> str:
+    def save_manifest(self, manifest: dict[str, Any], format: str = "yaml") -> str:
         """Save manifest to file."""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"eval_manifest_{timestamp}_{self.manifest_id}.{format}"
@@ -277,9 +273,9 @@ class EvalManifestGenerator:
 
         return str(filepath)
 
-    def load_manifest(self, filepath: str) -> Dict[str, Any]:
+    def load_manifest(self, filepath: str) -> dict[str, Any]:
         """Load manifest from file."""
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             if filepath.endswith(".yaml") or filepath.endswith(".yml"):
                 return yaml.safe_load(f)
             elif filepath.endswith(".json"):
@@ -291,35 +287,35 @@ class EvalManifestGenerator:
 def main():
     """Main entry point for manifest generation."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Generate evaluation manifest")
     parser.add_argument("--output-dir", default="metrics/manifests", help="Output directory for manifests")
     parser.add_argument("--format", choices=["yaml", "json"], default="yaml", help="Output format")
     parser.add_argument("--config-file", help="Configuration file to load overrides from")
-    
+
     args = parser.parse_args()
-    
+
     # Load configuration overrides if provided
     config_overrides = {}
     if args.config_file:
-        with open(args.config_file, "r") as f:
+        with open(args.config_file) as f:
             if args.config_file.endswith(".yaml") or args.config_file.endswith(".yml"):
                 config_overrides = yaml.safe_load(f)
             elif args.config_file.endswith(".json"):
                 config_overrides = json.load(f)
-    
+
     # Generate manifest
     generator = EvalManifestGenerator(args.output_dir)
     manifest = generator.generate_manifest(config_overrides)
-    
+
     # Save manifest
     filepath = generator.save_manifest(manifest, args.format)
-    
+
     print(f"✅ Evaluation manifest generated: {filepath}")
     print(f"📋 Manifest ID: {manifest['manifest_id']}")
     print(f"🔧 Config Hash: {manifest['system_config']['config_hash']}")
     print(f"📊 Data Checksum: {manifest['data_config']['data_checksum']}")
-    
+
     return filepath
 
 

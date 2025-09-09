@@ -7,10 +7,9 @@ This script fixes the duplicate paths that were created by the previous broken l
 
 import re
 from pathlib import Path
-from typing import List
 
 
-def find_files_with_duplicate_paths() -> List[str]:
+def find_files_with_duplicate_paths() -> list[str]:
     """Find files that contain duplicate path patterns."""
     duplicate_patterns = [
         r"100_memory/100_memory/",
@@ -42,6 +41,7 @@ def find_files_with_duplicate_paths() -> List[str]:
             continue
 
     return files_to_fix
+
 
 def fix_duplicate_paths(file_path: str) -> bool:
     """Fix duplicate paths in a file."""
@@ -75,6 +75,7 @@ def fix_duplicate_paths(file_path: str) -> bool:
         print(f"  ❌ Error fixing {file_path}: {e}")
         return False
 
+
 def main():
     print("🔧 Finding files with duplicate paths...")
     files_to_fix = find_files_with_duplicate_paths()
@@ -94,6 +95,7 @@ def main():
     print("\n📊 Summary:")
     print(f"  Files processed: {len(files_to_fix)}")
     print(f"  Files fixed: {fixed_count}")
+
 
 if __name__ == "__main__":
     main()

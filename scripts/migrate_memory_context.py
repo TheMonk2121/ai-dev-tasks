@@ -9,7 +9,6 @@ modular memory context system with focused modules.
 import glob
 import os
 import re
-from typing import Dict, List, Tuple
 
 
 class MemoryContextMigrator:
@@ -22,42 +21,37 @@ class MemoryContextMigrator:
             "101_memory-context-safety.md",
             "102_memory-context-state.md",
             "103_memory-context-workflow.md",
-            "104_memory-context-guidance.md"
+            "104_memory-context-guidance.md",
         ]
 
         # Mapping of old references to new modular references
         self.reference_mapping = {
             # Direct file references
             "100_cursor-memory-context.md": "100_cursor-memory-context.md",
-
             # Context-specific references
             "memory scaffold": "100_cursor-memory-context.md",
             "memory context": "100_cursor-memory-context.md",
             "cursor memory context": "100_cursor-memory-context.md",
-
             # Safety and requirements
             "CRITICAL SAFETY REQUIREMENTS": "101_memory-context-safety.md",
             "file analysis guide": "101_memory-context-safety.md",
             "documentation inventory": "101_memory-context-safety.md",
-
             # State and priorities
             "current project state": "102_memory-context-state.md",
             "current priorities": "102_memory-context-state.md",
             "infrastructure status": "102_memory-context-state.md",
             "recently completed": "102_memory-context-state.md",
-
             # Workflow and process
             "development workflow": "103_memory-context-workflow.md",
             "when to read what": "103_memory-context-workflow.md",
             "context-specific guidance": "103_memory-context-workflow.md",
-
             # Guidance and reference
             "quick reference": "104_memory-context-guidance.md",
             "documentation utilization": "104_memory-context-guidance.md",
-            "task-specific guidance": "104_memory-context-guidance.md"
+            "task-specific guidance": "104_memory-context-guidance.md",
         }
 
-    def find_files_to_update(self) -> List[str]:
+    def find_files_to_update(self) -> list[str]:
         """Find all files that need to be updated."""
         files_to_update = []
 
@@ -71,10 +65,10 @@ class MemoryContextMigrator:
 
         return files_to_update
 
-    def update_file_references(self, file_path: str) -> Tuple[bool, List[str]]:
+    def update_file_references(self, file_path: str) -> tuple[bool, list[str]]:
         """Update references in a single file."""
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             original_content = content
@@ -96,27 +90,20 @@ class MemoryContextMigrator:
                             if "<!--" in content:
                                 # Add after existing comments
                                 content = re.sub(
-                                    r'(<!--[^>]*-->\s*)+',
-                                    r'\g<0>' + module_comment + '\n',
-                                    content,
-                                    count=1
+                                    r"(<!--[^>]*-->\s*)+", r"\g<0>" + module_comment + "\n", content, count=1
                                 )
                             else:
                                 # Add at the beginning
-                                content = module_comment + '\n' + content
+                                content = module_comment + "\n" + content
 
                         changes.append(f"Added module reference: {new_ref}")
 
             # Update any remaining references to the old file
-            content = re.sub(
-                r'100_cursor-memory-context\.md',
-                '100_cursor-memory-context.md',
-                content
-            )
+            content = re.sub(r"100_cursor-memory-context\.md", "100_cursor-memory-context.md", content)
 
             # Only write if content changed
             if content != original_content:
-                with open(file_path, 'w', encoding='utf-8') as f:
+                with open(file_path, "w", encoding="utf-8") as f:
                     f.write(content)
                 return True, changes
 
@@ -130,7 +117,7 @@ class MemoryContextMigrator:
         # Update core file to reference modules
         core_file = self.new_core_file
         if os.path.exists(core_file):
-            with open(core_file, 'r', encoding='utf-8') as f:
+            with open(core_file, encoding="utf-8") as f:
                 content = f.read()
 
             # Add module references if not already present
@@ -144,19 +131,14 @@ class MemoryContextMigrator:
                 if "<!-- MODULE_REFERENCE:" not in content:
                     # Add after existing comments
                     if "<!--" in content:
-                        content = re.sub(
-                            r'(<!--[^>]*-->\s*)+',
-                            r'\g<0>' + module_section + '\n',
-                            content,
-                            count=1
-                        )
+                        content = re.sub(r"(<!--[^>]*-->\s*)+", r"\g<0>" + module_section + "\n", content, count=1)
                     else:
-                        content = module_section + '\n' + content
+                        content = module_section + "\n" + content
 
-                with open(core_file, 'w', encoding='utf-8') as f:
+                with open(core_file, "w", encoding="utf-8") as f:
                     f.write(content)
 
-    def create_migration_summary(self, updated_files: List[str], errors: List[str]) -> str:
+    def create_migration_summary(self, updated_files: list[str], errors: list[str]) -> str:
         """Create a summary of the migration."""
         summary = "# Memory Context Migration Summary\n\n"
         summary += f"**Migration Date**: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n"
@@ -185,7 +167,7 @@ class MemoryContextMigrator:
 
         return summary
 
-    def run_migration(self) -> Dict:
+    def run_migration(self) -> dict:
         """Run the complete migration process."""
         print("🔄 Starting Memory Context Migration...")
 
@@ -218,7 +200,7 @@ class MemoryContextMigrator:
         summary = self.create_migration_summary(updated_files, errors)
 
         # Write summary to file
-        with open("500_b071-migration-summary.md", 'w', encoding='utf-8') as f:
+        with open("500_b071-migration-summary.md", "w", encoding="utf-8") as f:
             f.write(summary)
 
         print("\n✅ Migration complete!")
@@ -230,23 +212,21 @@ class MemoryContextMigrator:
             for error in errors:
                 print(f"   - {error}")
 
-        return {
-            'updated_files': updated_files,
-            'errors': errors,
-            'summary': summary
-        }
+        return {"updated_files": updated_files, "errors": errors, "summary": summary}
+
 
 def main():
     """Main function to run the migration."""
     migrator = MemoryContextMigrator()
     result = migrator.run_migration()
 
-    print("\n" + "="*50)
+    print("\n" + "=" * 50)
     print("MIGRATION SUMMARY")
-    print("="*50)
+    print("=" * 50)
     print(f"Files Updated: {len(result['updated_files'])}")
     print(f"Errors: {len(result['errors'])}")
-    print("="*50)
+    print("=" * 50)
+
 
 if __name__ == "__main__":
     main()

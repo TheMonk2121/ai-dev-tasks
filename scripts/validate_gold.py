@@ -10,10 +10,9 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import List, Set, Tuple
 
 
-def check_hardcoded_gold() -> List[str]:
+def check_hardcoded_gold() -> list[str]:
     """Check for hardcoded GOLD sets in Python files."""
     violations = []
 
@@ -36,7 +35,7 @@ def check_hardcoded_gold() -> List[str]:
                 continue
 
             try:
-                with open(file_path, "r") as f:
+                with open(file_path) as f:
                     content = f.read()
 
                 for pattern in patterns:
@@ -48,7 +47,7 @@ def check_hardcoded_gold() -> List[str]:
     return violations
 
 
-def validate_gold_dataset() -> List[str]:
+def validate_gold_dataset() -> list[str]:
     """Validate the gold dataset structure and content."""
     issues = []
 

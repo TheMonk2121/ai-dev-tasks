@@ -13,13 +13,13 @@ from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 from dspy_modules.retriever.limits import load_limits
 
 PREFILTER_MIN_MICRO = float(os.getenv("PREFILTER_MIN_MICRO", "0.85"))
-PREFILTER_MIN_TAG   = float(os.getenv("PREFILTER_MIN_TAG",   "0.75"))
-MAX_REG_DROP        = float(os.getenv("MAX_REG_DROP",        "0.05"))
-K_CAP               = int(os.getenv("PER_FILE_CAP", "5"))
-ALPHA               = float(os.getenv("MMR_ALPHA", "0.85"))
+PREFILTER_MIN_TAG = float(os.getenv("PREFILTER_MIN_TAG", "0.75"))
+MAX_REG_DROP = float(os.getenv("MAX_REG_DROP", "0.05"))
+K_CAP = int(os.getenv("PER_FILE_CAP", "5"))
+ALPHA = float(os.getenv("MMR_ALPHA", "0.85"))
 
 BASELINE_FILE = os.getenv("BASELINE_METRICS_FILE", "evals/baseline_metrics.json")
-OUT_FILE      = os.getenv("LATEST_METRICS_FILE",   "evals/latest_retrieval_metrics.json")
+OUT_FILE = os.getenv("LATEST_METRICS_FILE", "evals/latest_retrieval_metrics.json")
 
 
 def eval_once(cases):
@@ -28,27 +28,25 @@ def eval_once(cases):
     for case in cases:
         lim = load_limits(case.tag)
         qs = build_channel_queries(case.query, case.tag)
-        rows = run_fused_query(qs["short"], qs["title"], qs["bm25"], case.qvec,
-                               tag=case.tag, k=lim["shortlist"], return_components=True)
+        rows = run_fused_query(
+            qs["short"], qs["title"], qs["bm25"], case.qvec, tag=case.tag, k=lim["shortlist"], return_components=True
+        )
         rows = mmr_rerank(rows, alpha=ALPHA, per_file_penalty=0.10, k=lim["shortlist"])
-        rows = per_file_cap(rows, cap=K_CAP)[:lim["topk"]]
+        rows = per_file_cap(rows, cap=K_CAP)[: lim["topk"]]
         hit = gold_hit(case.id, rows)
         tag_total[case.tag] += 1
-        tag_hits[case.tag]  += int(hit)
+        tag_hits[case.tag] += int(hit)
         hits_total += int(hit)
     micro = hits_total / max(1, sum(tag_total.values()))
     tag_rates = {t: tag_hits[t] / max(1, tag_total[t]) for t in tag_total}
     macro = sum(tag_rates.values()) / max(1, len(tag_rates))
-    return {
-        "micro": micro, "macro": macro,
-        "per_tag": tag_rates, "total_cases": int(sum(tag_total.values()))
-    }
+    return {"micro": micro, "macro": macro, "per_tag": tag_rates, "total_cases": int(sum(tag_total.values()))}
 
 
 def load_baseline(path):
     if not os.path.exists(path):
         return None
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -71,11 +69,13 @@ if __name__ == "__main__":
     # Floors
     if metrics["micro"] < PREFILTER_MIN_MICRO:
         print(f"FAIL: micro {metrics['micro']:.3f} < {PREFILTER_MIN_MICRO}")
-        save_json(OUT_FILE, metrics); sys.exit(1)
+        save_json(OUT_FILE, metrics)
+        sys.exit(1)
     low_tags = [t for t, v in metrics["per_tag"].items() if v < PREFILTER_MIN_TAG]
     if low_tags:
         print(f"FAIL: per-tag floor {PREFILTER_MIN_TAG} violated: {low_tags}")
-        save_json(OUT_FILE, metrics); sys.exit(1)
+        save_json(OUT_FILE, metrics)
+        sys.exit(1)
 
     # Regression guard vs baseline
     baseline = load_baseline(BASELINE_FILE)
@@ -83,9 +83,9 @@ if __name__ == "__main__":
         drop = baseline["micro"] - metrics["micro"]
         if drop > MAX_REG_DROP:
             print(f"FAIL: regression {drop:.3f} > {MAX_REG_DROP} (baseline {baseline['micro']:.3f})")
-            save_json(OUT_FILE, metrics); sys.exit(1)
+            save_json(OUT_FILE, metrics)
+            sys.exit(1)
 
     print("PASS ✅")
     save_json(OUT_FILE, metrics)
     # tip: copy latest → baseline in CI after main merges
-

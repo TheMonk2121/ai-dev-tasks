@@ -46,12 +46,12 @@ class EnhancedMemoryOrchestrator(UnifiedMemoryOrchestrator):
 
     def get_enhanced_context(
         self,
-        systems: List[str],
+        systems: list[str],
         role: str = "planner",
         query: str = "",
         include_episodic: bool = True,
         context_type: str = "guidance",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get enhanced context with episodic memory injection."""
         start_time = time.time()
 
@@ -133,8 +133,8 @@ class EnhancedMemoryOrchestrator(UnifiedMemoryOrchestrator):
         output_text: str,
         agent: str = "cursor_ai",
         task_type: str = "general",
-        outcome_metrics: Optional[Dict[str, Any]] = None,
-        source_refs: Optional[Dict[str, Any]] = None,
+        outcome_metrics: dict[str, Any] | None = None,
+        source_refs: dict[str, Any] | None = None,
     ) -> bool:
         """Store a task completion for future episodic learning."""
         if not self.episodic_injector:
@@ -162,7 +162,7 @@ class EnhancedMemoryOrchestrator(UnifiedMemoryOrchestrator):
             print(f"❌ Failed to store task completion: {e}")
             return False
 
-    def get_episodic_stats(self) -> Dict[str, Any]:
+    def get_episodic_stats(self) -> dict[str, Any]:
         """Get statistics about episodic memory usage."""
         if not self.episodic_injector:
             return {"error": "Episodic injector not available"}

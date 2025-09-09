@@ -6,7 +6,6 @@ Apply risk-aware precision optimizations to push past 0.20 while maintaining rec
 
 import logging
 import os
-from typing import Dict
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -24,14 +23,14 @@ class PrecisionPushFinalConfig:
             "unsupported_fix": self._get_unsupported_fix_config(),
         }
 
-    def _get_faithfulness_fix_config(self) -> Dict[str, str]:
+    def _get_faithfulness_fix_config(self) -> dict[str, str]:
         """Fix faithfulness wiring bug."""
         return {
             "RAGCHECKER_ENABLE_FUSED_SCORER": "1",
             "RAGCHECKER_JSON_PROMPTS": "1",
         }
 
-    def _get_precision_push_config(self) -> Dict[str, str]:
+    def _get_precision_push_config(self) -> dict[str, str]:
         """Risk-aware precision push configuration."""
         return {
             # Risk-aware gates (keep non-risky unchanged)
@@ -57,7 +56,7 @@ class PrecisionPushFinalConfig:
             "COS_FLOOR": "0.58",
         }
 
-    def _get_recall_retention_config(self) -> Dict[str, str]:
+    def _get_recall_retention_config(self) -> dict[str, str]:
         """Fusion bias toward anchored docs (recall-safe)."""
         return {
             "RAGCHECKER_RRF_K": "50",
@@ -75,14 +74,14 @@ class PrecisionPushFinalConfig:
             "RAGCHECKER_CONTEXT_TOPK_MAX": "22",
         }
 
-    def _get_unsupported_fix_config(self) -> Dict[str, str]:
+    def _get_unsupported_fix_config(self) -> dict[str, str]:
         """Fix unsupported claims calculation."""
         return {
             "RAGCHECKER_MIN_WORDS_AFTER_BINDING": "160",
             "RAGCHECKER_DROP_UNSUPPORTED": "0",  # Keep soft-drop
         }
 
-    def apply_all_configs(self) -> Dict[str, Dict[str, str]]:
+    def apply_all_configs(self) -> dict[str, dict[str, str]]:
         """Apply all precision push configurations."""
         applied_configs = {}
 
@@ -98,9 +97,9 @@ class PrecisionPushFinalConfig:
 
         return applied_configs
 
-    def merged_env(self) -> Dict[str, str]:
+    def merged_env(self) -> dict[str, str]:
         """Return a single dict of all env keys we manage (union of sections)."""
-        merged: Dict[str, str] = {}
+        merged: dict[str, str] = {}
         for _name, cfg in self.config_sections.items():
             merged.update(cfg)
         return merged
@@ -110,7 +109,7 @@ class PrecisionPushFinalConfig:
         lines = []
         for k, v in self.merged_env().items():
             # Quote values conservatively
-            vq = str(v).replace("\\", "\\\\").replace("\"", "\\\"")
+            vq = str(v).replace("\\", "\\\\").replace('"', '\\"')
             lines.append(f'export {k}="{vq}"')
         return "\n".join(lines) + "\n"
 
@@ -128,7 +127,7 @@ class PrecisionPushFinalConfig:
 
         print("\n" + "=" * 60)
 
-    def get_telemetry_config(self) -> Dict[str, str]:
+    def get_telemetry_config(self) -> dict[str, str]:
         """Get comprehensive telemetry configuration."""
         return {
             "RAGCHECKER_TELEMETRY_ENABLED": "1",
@@ -143,7 +142,7 @@ class PrecisionPushFinalConfig:
             "RAGCHECKER_LOG_REWRITE_AGREEMENT": "1",
         }
 
-    def get_ragas_targets(self) -> Dict[str, float]:
+    def get_ragas_targets(self) -> dict[str, float]:
         """Get RAGAS target metrics."""
         return {
             "precision": 0.20,

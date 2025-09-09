@@ -12,7 +12,6 @@ import platform
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict
 
 
 class UVTeamOnboarding:
@@ -22,7 +21,7 @@ class UVTeamOnboarding:
         self.system_info = self._get_system_info()
         self.setup_log = []
 
-    def _get_system_info(self) -> Dict:
+    def _get_system_info(self) -> dict:
         """Get system information for platform-specific setup."""
         return {
             "platform": platform.system(),

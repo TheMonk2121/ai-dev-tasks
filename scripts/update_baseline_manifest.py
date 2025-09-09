@@ -20,17 +20,17 @@ from statistics import median
 from typing import Any, Dict, List, Optional
 
 
-def _safe_load(path: str) -> Optional[Dict[str, Any]]:
+def _safe_load(path: str) -> dict[str, Any] | None:
     try:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             return json.load(f)
     except Exception:
         return None
 
 
-def _collect_results(results_dir: str, window: int) -> List[Dict[str, Any]]:
+def _collect_results(results_dir: str, window: int) -> list[dict[str, Any]]:
     files = sorted(glob(os.path.join(results_dir, "*.json")), key=os.path.getmtime, reverse=True)
-    out: List[Dict[str, Any]] = []
+    out: list[dict[str, Any]] = []
     for fp in files[: max(window, 1)]:
         data = _safe_load(fp)
         if data:
@@ -38,7 +38,7 @@ def _collect_results(results_dir: str, window: int) -> List[Dict[str, Any]]:
     return out
 
 
-def _get_overall(metrics_obj: Dict[str, Any]) -> Dict[str, float]:
+def _get_overall(metrics_obj: dict[str, Any]) -> dict[str, float]:
     overall = metrics_obj.get("overall_metrics", {})
     # Normalize keys
     return {
@@ -50,7 +50,7 @@ def _get_overall(metrics_obj: Dict[str, Any]) -> Dict[str, float]:
     }
 
 
-def _ema(values: List[float], alpha: float = 0.3) -> float:
+def _ema(values: list[float], alpha: float = 0.3) -> float:
     if not values:
         return 0.0
     acc = values[0]
@@ -76,28 +76,16 @@ def main() -> int:
     recent = _collect_results(args.results_dir, args.window)
 
     # Gather series
-    prec = [
-        _get_overall(r).get("precision", 0.0)
-        for r in recent
-        if isinstance(r, dict)
-    ]
-    rec = [
-        _get_overall(r).get("recall", 0.0)
-        for r in recent
-        if isinstance(r, dict)
-    ]
-    f1 = [
-        _get_overall(r).get("f1", 0.0)
-        for r in recent
-        if isinstance(r, dict)
-    ]
+    prec = [_get_overall(r).get("precision", 0.0) for r in recent if isinstance(r, dict)]
+    rec = [_get_overall(r).get("recall", 0.0) for r in recent if isinstance(r, dict)]
+    f1 = [_get_overall(r).get("f1", 0.0) for r in recent if isinstance(r, dict)]
     lat_ms = [
         _get_overall(r).get("latency_ms", 0.0)
         for r in recent
         if isinstance(r, dict) and _get_overall(r).get("latency_ms", 0.0) > 0
     ]
 
-    manifest: Dict[str, Any] = {
+    manifest: dict[str, Any] = {
         "targets": {},
         "ema": {},
         "gates": gates,
@@ -142,4 +130,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

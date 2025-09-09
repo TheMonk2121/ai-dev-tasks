@@ -19,31 +19,37 @@ import sqlite3
 import time
 from dataclasses import asdict, dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class CodeQualityLevel(Enum):
     """Enumeration of code quality levels."""
+
     EXCELLENT = "excellent"
     GOOD = "good"
     FAIR = "fair"
     POOR = "poor"
     CRITICAL = "critical"
 
+
 class AnalysisType(Enum):
     """Enumeration of analysis types."""
+
     QUALITY = "quality"
     PERFORMANCE = "performance"
     SECURITY = "security"
     COMPREHENSIVE = "comprehensive"
 
+
 @dataclass
 class CodeIssue:
     """Data structure for code issues."""
+
     line_number: int
     issue_type: str
     severity: str  # "low", "medium", "high", "critical"
@@ -51,9 +57,11 @@ class CodeIssue:
     suggestion: str
     category: str  # "quality", "performance", "security"
 
+
 @dataclass
 class CodeAnalysis:
     """Data structure for code analysis results."""
+
     id: str = field(default_factory=lambda: str(uuid4()))
     file_path: str = ""
     language: str = ""
@@ -61,15 +69,17 @@ class CodeAnalysis:
     performance_score: float = 0.0
     security_score: float = 0.0
     maintainability_score: float = 0.0
-    issues: List[CodeIssue] = field(default_factory=list)
-    suggestions: List[str] = field(default_factory=list)
-    best_practices: List[str] = field(default_factory=list)
-    complexity_metrics: Dict[str, Any] = field(default_factory=dict)
+    issues: list[CodeIssue] = field(default_factory=list)
+    suggestions: list[str] = field(default_factory=list)
+    best_practices: list[str] = field(default_factory=list)
+    complexity_metrics: dict[str, Any] = field(default_factory=dict)
     timestamp: float = field(default_factory=time.time)
+
 
 @dataclass
 class RefactoringSuggestion:
     """Data structure for refactoring suggestions."""
+
     id: str = field(default_factory=lambda: str(uuid4()))
     original_code: str = ""
     suggested_code: str = ""
@@ -77,6 +87,7 @@ class RefactoringSuggestion:
     impact: str = "low"  # "low", "medium", "high"
     effort: str = "low"  # "low", "medium", "high"
     category: str = "quality"
+
 
 class CoderDatabase:
     """Database for storing code analysis data and cache."""
@@ -91,7 +102,8 @@ class CoderDatabase:
         cursor = conn.cursor()
 
         # Create code analysis table
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS code_analysis (
                 id TEXT PRIMARY KEY,
                 file_path TEXT NOT NULL,
@@ -106,10 +118,12 @@ class CoderDatabase:
                 complexity_metrics TEXT,
                 timestamp REAL NOT NULL
             )
-        """)
+        """
+        )
 
         # Create refactoring suggestions table
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS refactoring_suggestions (
                 id TEXT PRIMARY KEY,
                 analysis_id TEXT NOT NULL,
@@ -122,7 +136,8 @@ class CoderDatabase:
                 timestamp REAL NOT NULL,
                 FOREIGN KEY (analysis_id) REFERENCES code_analysis (id)
             )
-        """)
+        """
+        )
 
         # Create indexes
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_analysis_file ON code_analysis(file_path)")
@@ -138,40 +153,46 @@ class CoderDatabase:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT OR REPLACE INTO code_analysis 
             (id, file_path, language, quality_score, performance_score, security_score,
              maintainability_score, issues, suggestions, best_practices, complexity_metrics, timestamp)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            analysis.id,
-            analysis.file_path,
-            analysis.language,
-            analysis.quality_score,
-            analysis.performance_score,
-            analysis.security_score,
-            analysis.maintainability_score,
-            json.dumps([asdict(issue) for issue in analysis.issues]),
-            json.dumps(analysis.suggestions),
-            json.dumps(analysis.best_practices),
-            json.dumps(analysis.complexity_metrics),
-            analysis.timestamp
-        ))
+        """,
+            (
+                analysis.id,
+                analysis.file_path,
+                analysis.language,
+                analysis.quality_score,
+                analysis.performance_score,
+                analysis.security_score,
+                analysis.maintainability_score,
+                json.dumps([asdict(issue) for issue in analysis.issues]),
+                json.dumps(analysis.suggestions),
+                json.dumps(analysis.best_practices),
+                json.dumps(analysis.complexity_metrics),
+                analysis.timestamp,
+            ),
+        )
 
         conn.commit()
         conn.close()
         return analysis.id
 
-    def get_analysis(self, analysis_id: str) -> Optional[CodeAnalysis]:
+    def get_analysis(self, analysis_id: str) -> CodeAnalysis | None:
         """Get code analysis by ID."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT id, file_path, language, quality_score, performance_score, security_score,
                    maintainability_score, issues, suggestions, best_practices, complexity_metrics, timestamp
             FROM code_analysis WHERE id = ?
-        """, (analysis_id,))
+        """,
+            (analysis_id,),
+        )
 
         row = cursor.fetchone()
         conn.close()
@@ -192,10 +213,11 @@ class CoderDatabase:
                 suggestions=json.loads(row[8]) if row[8] else [],
                 best_practices=json.loads(row[9]) if row[9] else [],
                 complexity_metrics=json.loads(row[10]) if row[10] else {},
-                timestamp=row[11]
+                timestamp=row[11],
             )
 
         return None
+
 
 class CoderAgent:
     """Specialized agent for coding best practices and code quality improvements."""
@@ -207,10 +229,10 @@ class CoderAgent:
             "performance_analysis",
             "security_analysis",
             "refactoring_suggestions",
-            "best_practices_validation"
+            "best_practices_validation",
         ]
         self.database = CoderDatabase()
-        self.analysis_cache: Dict[str, CodeAnalysis] = {}
+        self.analysis_cache: dict[str, CodeAnalysis] = {}
         self.usage_count = 0
         self.error_count = 0
         self.last_used = time.time()
@@ -221,41 +243,41 @@ class CoderAgent:
                 "file_extension": r"\.py$",
                 "complexity_patterns": [
                     r"if.*and.*and",  # Multiple conditions
-                    r"for.*for",      # Nested loops
-                    r"def.*def",       # Nested functions
+                    r"for.*for",  # Nested loops
+                    r"def.*def",  # Nested functions
                 ],
                 "quality_patterns": [
-                    r"import \*",     # Wildcard imports
-                    r"print\(",       # Debug prints
-                    r"TODO|FIXME",    # TODO comments
+                    r"import \*",  # Wildcard imports
+                    r"print\(",  # Debug prints
+                    r"TODO|FIXME",  # TODO comments
                 ],
                 "security_patterns": [
-                    r"eval\(",        # Dangerous eval
-                    r"exec\(",        # Dangerous exec
-                    r"input\(",       # Unsafe input
-                ]
+                    r"eval\(",  # Dangerous eval
+                    r"exec\(",  # Dangerous exec
+                    r"input\(",  # Unsafe input
+                ],
             },
             "javascript": {
                 "file_extension": r"\.js$",
                 "complexity_patterns": [
-                    r"if.*&&.*&&",    # Multiple conditions
-                    r"for.*for",      # Nested loops
-                    r"function.*function", # Nested functions
+                    r"if.*&&.*&&",  # Multiple conditions
+                    r"for.*for",  # Nested loops
+                    r"function.*function",  # Nested functions
                 ],
                 "quality_patterns": [
                     r"console\.log",  # Debug logs
-                    r"var ",          # Old var declarations
-                    r"TODO|FIXME",    # TODO comments
+                    r"var ",  # Old var declarations
+                    r"TODO|FIXME",  # TODO comments
                 ],
                 "security_patterns": [
-                    r"eval\(",        # Dangerous eval
-                    r"innerHTML",     # XSS risk
-                    r"document\.write", # XSS risk
-                ]
-            }
+                    r"eval\(",  # Dangerous eval
+                    r"innerHTML",  # XSS risk
+                    r"document\.write",  # XSS risk
+                ],
+            },
         }
 
-    async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process coding request."""
         start_time = time.time()
 
@@ -295,12 +317,22 @@ class CoderAgent:
             logger.error(f"Error in Coder Agent: {e}")
             raise
 
-    def can_handle(self, request: Dict[str, Any]) -> bool:
+    def can_handle(self, request: dict[str, Any]) -> bool:
         """Check if coder agent can handle the request."""
         coding_keywords = [
-            "code", "refactor", "optimize", "quality", "performance",
-            "security", "best practices", "pattern", "architecture",
-            "review", "analyze", "improve", "fix"
+            "code",
+            "refactor",
+            "optimize",
+            "quality",
+            "performance",
+            "security",
+            "best practices",
+            "pattern",
+            "architecture",
+            "review",
+            "analyze",
+            "improve",
+            "fix",
         ]
         query = request.get("query", "").lower()
         return any(keyword in query for keyword in coding_keywords)
@@ -342,40 +374,46 @@ class CoderAgent:
         best_practices = []
 
         # Check for common quality issues
-        lines = code_content.split('\n')
+        lines = code_content.split("\n")
         for i, line in enumerate(lines, 1):
             # Check for TODO/FIXME comments
-            if re.search(r'TODO|FIXME', line, re.IGNORECASE):
-                issues.append(CodeIssue(
-                    line_number=i,
-                    issue_type="quality",
-                    severity="medium",
-                    description="TODO/FIXME comment found",
-                    suggestion="Remove or implement the TODO/FIXME",
-                    category="quality"
-                ))
+            if re.search(r"TODO|FIXME", line, re.IGNORECASE):
+                issues.append(
+                    CodeIssue(
+                        line_number=i,
+                        issue_type="quality",
+                        severity="medium",
+                        description="TODO/FIXME comment found",
+                        suggestion="Remove or implement the TODO/FIXME",
+                        category="quality",
+                    )
+                )
 
             # Check for long lines
             if len(line) > 120:
-                issues.append(CodeIssue(
-                    line_number=i,
-                    issue_type="quality",
-                    severity="low",
-                    description="Line too long",
-                    suggestion="Break long line into multiple lines",
-                    category="quality"
-                ))
+                issues.append(
+                    CodeIssue(
+                        line_number=i,
+                        issue_type="quality",
+                        severity="low",
+                        description="Line too long",
+                        suggestion="Break long line into multiple lines",
+                        category="quality",
+                    )
+                )
 
             # Check for debug statements
-            if re.search(r'print\(|console\.log', line):
-                issues.append(CodeIssue(
-                    line_number=i,
-                    issue_type="quality",
-                    severity="low",
-                    description="Debug statement found",
-                    suggestion="Remove debug statement for production",
-                    category="quality"
-                ))
+            if re.search(r"print\(|console\.log", line):
+                issues.append(
+                    CodeIssue(
+                        line_number=i,
+                        issue_type="quality",
+                        severity="low",
+                        description="Debug statement found",
+                        suggestion="Remove debug statement for production",
+                        category="quality",
+                    )
+                )
 
         # Calculate quality score
         total_lines = len(lines)
@@ -386,14 +424,14 @@ class CoderAgent:
             "Add type hints for better code clarity",
             "Use meaningful variable and function names",
             "Add docstrings for functions and classes",
-            "Follow PEP 8 style guidelines"
+            "Follow PEP 8 style guidelines",
         ]
 
         best_practices = [
             "Write self-documenting code",
             "Keep functions small and focused",
             "Use meaningful comments",
-            "Follow consistent naming conventions"
+            "Follow consistent naming conventions",
         ]
 
         return CodeAnalysis(
@@ -407,8 +445,8 @@ class CoderAgent:
             complexity_metrics={
                 "lines_of_code": total_lines,
                 "issue_count": len(issues),
-                "quality_issues": len([i for i in issues if i.category == "quality"])
-            }
+                "quality_issues": len([i for i in issues if i.category == "quality"]),
+            },
         )
 
     async def _analyze_performance(self, code_content: str, language: str) -> CodeAnalysis:
@@ -418,42 +456,46 @@ class CoderAgent:
         best_practices = []
 
         # Check for performance issues
-        lines = code_content.split('\n')
+        lines = code_content.split("\n")
         for i, line in enumerate(lines, 1):
             # Check for inefficient patterns
-            if re.search(r'for.*for', line):  # Nested loops
-                issues.append(CodeIssue(
-                    line_number=i,
-                    issue_type="performance",
-                    severity="medium",
-                    description="Nested loop detected",
-                    suggestion="Consider using list comprehension or vectorization",
-                    category="performance"
-                ))
+            if re.search(r"for.*for", line):  # Nested loops
+                issues.append(
+                    CodeIssue(
+                        line_number=i,
+                        issue_type="performance",
+                        severity="medium",
+                        description="Nested loop detected",
+                        suggestion="Consider using list comprehension or vectorization",
+                        category="performance",
+                    )
+                )
 
             # Check for string concatenation in loops
             if re.search(r'\+=.*["\']', line):
-                issues.append(CodeIssue(
-                    line_number=i,
-                    issue_type="performance",
-                    severity="low",
-                    description="String concatenation in loop",
-                    suggestion="Use join() or list comprehension",
-                    category="performance"
-                ))
+                issues.append(
+                    CodeIssue(
+                        line_number=i,
+                        issue_type="performance",
+                        severity="low",
+                        description="String concatenation in loop",
+                        suggestion="Use join() or list comprehension",
+                        category="performance",
+                    )
+                )
 
         suggestions = [
             "Use list comprehensions instead of loops where possible",
             "Implement caching for expensive operations",
             "Use generators for large datasets",
-            "Profile code to identify bottlenecks"
+            "Profile code to identify bottlenecks",
         ]
 
         best_practices = [
             "Avoid premature optimization",
             "Measure performance before optimizing",
             "Use appropriate data structures",
-            "Consider algorithmic complexity"
+            "Consider algorithmic complexity",
         ]
 
         return CodeAnalysis(
@@ -466,8 +508,8 @@ class CoderAgent:
             best_practices=best_practices,
             complexity_metrics={
                 "lines_of_code": len(lines),
-                "performance_issues": len([i for i in issues if i.category == "performance"])
-            }
+                "performance_issues": len([i for i in issues if i.category == "performance"]),
+            },
         )
 
     async def _analyze_security(self, code_content: str, language: str) -> CodeAnalysis:
@@ -477,42 +519,46 @@ class CoderAgent:
         best_practices = []
 
         # Check for security issues
-        lines = code_content.split('\n')
+        lines = code_content.split("\n")
         for i, line in enumerate(lines, 1):
             # Check for dangerous functions
-            if re.search(r'eval\(|exec\(', line):
-                issues.append(CodeIssue(
-                    line_number=i,
-                    issue_type="security",
-                    severity="critical",
-                    description="Dangerous function call",
-                    suggestion="Avoid eval() and exec() for security",
-                    category="security"
-                ))
+            if re.search(r"eval\(|exec\(", line):
+                issues.append(
+                    CodeIssue(
+                        line_number=i,
+                        issue_type="security",
+                        severity="critical",
+                        description="Dangerous function call",
+                        suggestion="Avoid eval() and exec() for security",
+                        category="security",
+                    )
+                )
 
             # Check for SQL injection patterns
             if re.search(r'f".*SELECT|f".*INSERT', line, re.IGNORECASE):
-                issues.append(CodeIssue(
-                    line_number=i,
-                    issue_type="security",
-                    severity="high",
-                    description="Potential SQL injection",
-                    suggestion="Use parameterized queries",
-                    category="security"
-                ))
+                issues.append(
+                    CodeIssue(
+                        line_number=i,
+                        issue_type="security",
+                        severity="high",
+                        description="Potential SQL injection",
+                        suggestion="Use parameterized queries",
+                        category="security",
+                    )
+                )
 
         suggestions = [
             "Use parameterized queries to prevent SQL injection",
             "Validate and sanitize all inputs",
             "Use secure authentication methods",
-            "Implement proper error handling"
+            "Implement proper error handling",
         ]
 
         best_practices = [
             "Follow OWASP security guidelines",
             "Use HTTPS for all communications",
             "Implement proper access controls",
-            "Regular security audits"
+            "Regular security audits",
         ]
 
         return CodeAnalysis(
@@ -525,8 +571,8 @@ class CoderAgent:
             best_practices=best_practices,
             complexity_metrics={
                 "lines_of_code": len(lines),
-                "security_issues": len([i for i in issues if i.category == "security"])
-            }
+                "security_issues": len([i for i in issues if i.category == "security"]),
+            },
         )
 
     async def _analyze_comprehensive(self, code_content: str, language: str) -> CodeAnalysis:
@@ -540,31 +586,37 @@ class CoderAgent:
         all_issues = quality_analysis.issues + performance_analysis.issues + security_analysis.issues
 
         # Combine suggestions
-        all_suggestions = list(set(quality_analysis.suggestions +
-                                 performance_analysis.suggestions +
-                                 security_analysis.suggestions))
+        all_suggestions = list(
+            set(quality_analysis.suggestions + performance_analysis.suggestions + security_analysis.suggestions)
+        )
 
         # Combine best practices
-        all_best_practices = list(set(quality_analysis.best_practices +
-                                    performance_analysis.best_practices +
-                                    security_analysis.best_practices))
+        all_best_practices = list(
+            set(
+                quality_analysis.best_practices + performance_analysis.best_practices + security_analysis.best_practices
+            )
+        )
 
         # Calculate average scores
-        quality_score = (quality_analysis.quality_score +
-                        performance_analysis.quality_score +
-                        security_analysis.quality_score) / 3
+        quality_score = (
+            quality_analysis.quality_score + performance_analysis.quality_score + security_analysis.quality_score
+        ) / 3
 
-        performance_score = (quality_analysis.performance_score +
-                           performance_analysis.performance_score +
-                           security_analysis.performance_score) / 3
+        performance_score = (
+            quality_analysis.performance_score
+            + performance_analysis.performance_score
+            + security_analysis.performance_score
+        ) / 3
 
-        security_score = (quality_analysis.security_score +
-                         performance_analysis.security_score +
-                         security_analysis.security_score) / 3
+        security_score = (
+            quality_analysis.security_score + performance_analysis.security_score + security_analysis.security_score
+        ) / 3
 
-        maintainability_score = (quality_analysis.maintainability_score +
-                               performance_analysis.maintainability_score +
-                               security_analysis.maintainability_score) / 3
+        maintainability_score = (
+            quality_analysis.maintainability_score
+            + performance_analysis.maintainability_score
+            + security_analysis.maintainability_score
+        ) / 3
 
         return CodeAnalysis(
             quality_score=quality_score,
@@ -575,12 +627,12 @@ class CoderAgent:
             suggestions=all_suggestions,
             best_practices=all_best_practices,
             complexity_metrics={
-                "lines_of_code": len(code_content.split('\n')),
+                "lines_of_code": len(code_content.split("\n")),
                 "total_issues": len(all_issues),
                 "quality_issues": len([i for i in all_issues if i.category == "quality"]),
                 "performance_issues": len([i for i in all_issues if i.category == "performance"]),
-                "security_issues": len([i for i in all_issues if i.category == "security"])
-            }
+                "security_issues": len([i for i in all_issues if i.category == "security"]),
+            },
         )
 
     def _detect_language(self, file_path: str) -> str:
@@ -590,7 +642,7 @@ class CoderAgent:
                 return language
         return "unknown"
 
-    def _format_analysis_response(self, analysis: CodeAnalysis) -> Dict[str, Any]:
+    def _format_analysis_response(self, analysis: CodeAnalysis) -> dict[str, Any]:
         """Format code analysis into response."""
         return {
             "agent_type": "coder",
@@ -604,7 +656,7 @@ class CoderAgent:
             "suggestions": analysis.suggestions,
             "best_practices": analysis.best_practices,
             "complexity_metrics": analysis.complexity_metrics,
-            "timestamp": analysis.timestamp
+            "timestamp": analysis.timestamp,
         }
 
     def _generate_cache_key(self, file_path: str, code_content: str, analysis_type: str) -> str:
@@ -612,7 +664,7 @@ class CoderAgent:
         content = f"{file_path}:{code_content}:{analysis_type}"
         return hashlib.md5(content.encode()).hexdigest()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get agent status information."""
         return {
             "agent_type": "coder",
@@ -621,8 +673,9 @@ class CoderAgent:
             "usage_count": self.usage_count,
             "error_count": self.error_count,
             "last_used": self.last_used,
-            "cache_size": len(self.analysis_cache)
+            "cache_size": len(self.analysis_cache),
         }
+
 
 # Example usage and testing
 async def main():
@@ -646,7 +699,7 @@ for i in range(10):
     result = calculate_fibonacci(i)
     print(f"Fibonacci({i}) = {result}")
 """,
-            "analysis_type": "quality"
+            "analysis_type": "quality",
         },
         {
             "file_path": "performance_example.py",
@@ -663,7 +716,7 @@ def nested_loops():
             for k in range(100):
                 pass  # Triple nested loop
 """,
-            "analysis_type": "performance"
+            "analysis_type": "performance",
         },
         {
             "file_path": "security_example.py",
@@ -677,8 +730,8 @@ def unsafe_query(user_input):
 def unsafe_exec(code):
     exec(code)  # Dangerous exec usage
 """,
-            "analysis_type": "security"
-        }
+            "analysis_type": "security",
+        },
     ]
 
     for i, request in enumerate(test_requests, 1):
@@ -703,6 +756,7 @@ def unsafe_exec(code):
     print("\n--- Agent Status ---")
     status = agent.get_status()
     print(json.dumps(status, indent=2))
+
 
 if __name__ == "__main__":
     asyncio.run(main())

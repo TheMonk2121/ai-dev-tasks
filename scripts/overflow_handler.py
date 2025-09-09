@@ -30,7 +30,7 @@ class CompressionResult:
     f1_score: float
     degradation: float
     strategy_used: str
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
 class SlidingWindowSummarizer:
@@ -86,7 +86,7 @@ class SlidingWindowSummarizer:
 
         return result
 
-    def _split_into_chunks(self, content: str) -> List[str]:
+    def _split_into_chunks(self, content: str) -> list[str]:
         """Split content into manageable chunks"""
         # Split by sections (headers)
         sections = re.split(r"(^#+\s+.+$)", content, flags=re.MULTILINE)
@@ -109,7 +109,7 @@ class SlidingWindowSummarizer:
 
         return chunks
 
-    def _summarize_window(self, chunks: List[str]) -> str:
+    def _summarize_window(self, chunks: list[str]) -> str:
         """Summarize a window of chunks"""
         if not chunks:
             return ""
@@ -215,7 +215,7 @@ class HierarchyBasedCompressor:
 
         return compressed
 
-    def _parse_hierarchy(self, content: str) -> Dict[str, Any]:
+    def _parse_hierarchy(self, content: str) -> dict[str, Any]:
         """Parse content into hierarchical structure"""
         lines = content.split("\n")
         hierarchy = {"title": "", "sections": [], "metadata": {}}
@@ -288,7 +288,7 @@ class HierarchyBasedCompressor:
 
         return priority
 
-    def _apply_hierarchical_compression(self, hierarchy: Dict[str, Any], target_tokens: int) -> str:
+    def _apply_hierarchical_compression(self, hierarchy: dict[str, Any], target_tokens: int) -> str:
         """Apply hierarchical compression based on priority"""
         # Sort sections by priority
         hierarchy["sections"].sort(key=lambda x: x["priority"], reverse=True)
@@ -316,7 +316,7 @@ class HierarchyBasedCompressor:
 
         return "\n\n".join(compressed_parts)
 
-    def _estimate_section_tokens(self, section: Dict[str, Any]) -> int:
+    def _estimate_section_tokens(self, section: dict[str, Any]) -> int:
         """Estimate token count for a section"""
         tokens = len(section["title"]) // 4  # Title tokens
 
@@ -330,7 +330,7 @@ class HierarchyBasedCompressor:
 
         return tokens
 
-    def _compress_section(self, section: Dict[str, Any]) -> str:
+    def _compress_section(self, section: dict[str, Any]) -> str:
         """Compress a single section"""
         parts = [f"## {section['title']}"]
 
@@ -354,7 +354,7 @@ class HierarchyBasedCompressor:
 class OverflowHandler:
     """Main overflow handling orchestrator"""
 
-    def __init__(self, config: Optional[OverflowConfig] = None):
+    def __init__(self, config: OverflowConfig | None = None):
         self.config = config or OverflowConfig()
         self.summarizer = SlidingWindowSummarizer(self.config)
         self.compressor = HierarchyBasedCompressor(self.config)

@@ -110,16 +110,16 @@ class ProductionRAGASEvaluator:
 
         return has_numeric or has_proper_nouns
 
-    def calculate_sentence_support_signals(self, sentence: str, contexts: List[str]) -> Dict[str, float]:
+    def calculate_sentence_support_signals(self, sentence: str, contexts: list[str]) -> dict[str, float]:
         """Calculate all support signals for a sentence."""
 
-        def _tokens(s: str) -> List[str]:
+        def _tokens(s: str) -> list[str]:
             return re.findall(r"[a-z0-9]+", s.lower())
 
         def _jaccard(a: set[str], b: set[str]) -> float:
             return (len(a & b) / len(a | b)) if (a or b) else 0.0
 
-        def _lcs_len(a: List[str], b: List[str]) -> int:
+        def _lcs_len(a: list[str], b: list[str]) -> int:
             m, n = len(a), len(b)
             dp = [0] * (n + 1)
             for i in range(1, m + 1):
@@ -151,7 +151,7 @@ class ProductionRAGASEvaluator:
 
         return {"jaccard": jaccard_score, "rouge": rouge_score, "cosine": cosine_score}
 
-    def risk_aware_sentence_filter(self, sentence: str, contexts: List[str]) -> bool:
+    def risk_aware_sentence_filter(self, sentence: str, contexts: list[str]) -> bool:
         """Apply risk-aware sentence filtering (3-of-3 for risky, 2-of-3 for non-risky)."""
         is_risky = self.detect_risky_sentences(sentence)
         signals = self.calculate_sentence_support_signals(sentence, contexts)
@@ -189,7 +189,7 @@ class ProductionRAGASEvaluator:
                 self.telemetry_data["non_risky_sentences_failed"].append(1)
                 return False
 
-    def enhanced_evidence_filter(self, answer: str, contexts: List[str], query: str = "") -> str:
+    def enhanced_evidence_filter(self, answer: str, contexts: list[str], query: str = "") -> str:
         """Enhanced evidence filter with all three moves."""
         # Check if NLI gate is enabled and available
         if os.getenv("RAGCHECKER_NLI_ENABLE", "0") == "1" and self.nli_enhanced_filter and self.nli_gate:
@@ -197,9 +197,10 @@ class ProductionRAGASEvaluator:
             return self.nli_enhanced_filter.filter_with_nli_gate(answer, contexts)
 
         # Check if cross-encoder is enabled and available (support both env names)
-        ce_enabled = os.getenv("RAGCHECKER_CROSS_ENCODER_ENABLED", "0") == "1" or os.getenv(
-            "RAGCHECKER_CE_RERANK_ENABLE", "0"
-        ) == "1"
+        ce_enabled = (
+            os.getenv("RAGCHECKER_CROSS_ENCODER_ENABLED", "0") == "1"
+            or os.getenv("RAGCHECKER_CE_RERANK_ENABLE", "0") == "1"
+        )
         if ce_enabled and self.enhanced_filter and self.cross_encoder:
             print("🔄 Using cross-encoder enhanced filtering")
             return self.enhanced_filter.filter_with_cross_encoder(answer, contexts, query)
@@ -207,7 +208,7 @@ class ProductionRAGASEvaluator:
         # Fall back to risk-aware filtering with robust sentence splitting
         main_answer = answer.split("Sources:", 1)[0].strip()
         bullet_or_num = r"(?m)^\s*(?:[-*•–—]|\d+[\.)])\s+"
-        sents = re.split(fr"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
+        sents = re.split(rf"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
         sents = [s for s in sents if s and s.strip()]
         if len(sents) <= 1:
             sents = re.split(r"\s*[;—–•·]\s*", main_answer)
@@ -236,7 +237,7 @@ class ProductionRAGASEvaluator:
 
         return filtered_answer
 
-    def run_production_evaluation(self) -> Dict[str, Any]:
+    def run_production_evaluation(self) -> dict[str, Any]:
         """Run production RAGAS evaluation with wire-through checklist."""
         print("🚀 Starting Production RAGAS Evaluation")
         print("🎯 Target: Precision ≥ 0.20, Recall@20 ≥ 0.65, F1 ≥ 0.175, Unsupported ≤ 15%")
@@ -283,7 +284,9 @@ class ProductionRAGASEvaluator:
                 try:
                     input_data = base_evaluator.prepare_official_input_data()
                     results = base_evaluator.create_fallback_evaluation(
-                        input_data["results"] if isinstance(input_data, dict) and "results" in input_data else input_data
+                        input_data["results"]
+                        if isinstance(input_data, dict) and "results" in input_data
+                        else input_data
                     )
                     results["evaluation_type"] = "production_fallback_simplified"
                 except Exception as e:
@@ -334,7 +337,7 @@ class ProductionRAGASEvaluator:
 
         return results
 
-    def _run_basic_evaluation(self) -> Dict[str, Any]:
+    def _run_basic_evaluation(self) -> dict[str, Any]:
         """Fallback basic evaluation if base evaluator is not available."""
         return {
             "precision": 0.0,
@@ -345,7 +348,7 @@ class ProductionRAGASEvaluator:
             "evaluation_mode": "basic_fallback",
         }
 
-    def _calculate_production_metrics(self) -> Dict[str, Any]:
+    def _calculate_production_metrics(self) -> dict[str, Any]:
         """Calculate production-specific metrics."""
         metrics = {}
 
@@ -390,7 +393,7 @@ class ProductionRAGASEvaluator:
 
         return metrics
 
-    def _get_telemetry_summary(self) -> Dict[str, Any]:
+    def _get_telemetry_summary(self) -> dict[str, Any]:
         """Get summary of telemetry data."""
         summary = {}
         for key, values in self.telemetry_data.items():

@@ -21,7 +21,7 @@ class PrecisionRecoveryConfig:
         self.step = step
         self.config = self._get_step_config(step)
 
-    def _get_step_config(self, step: int) -> Dict[str, Any]:
+    def _get_step_config(self, step: int) -> dict[str, Any]:
         """Get configuration for specific recovery step."""
 
         if step == 1:
@@ -82,7 +82,7 @@ class PrecisionRecoveryConfig:
             os.environ[key] = str(value)
             print(f"Set {key}={value}")
 
-    def get_case_specific_overrides(self, query_id: str) -> Dict[str, str]:
+    def get_case_specific_overrides(self, query_id: str) -> dict[str, str]:
         """Get case-specific overrides for problematic cases."""
 
         # The three worst cases that need special handling
@@ -106,7 +106,7 @@ class PrecisionRecoveryConfig:
 
         return {}
 
-    def get_judge_floors(self, judge_mode: str = "haiku") -> Dict[str, float]:
+    def get_judge_floors(self, judge_mode: str = "haiku") -> dict[str, float]:
         """Get baseline floors for specific judge mode."""
 
         if judge_mode == "haiku":
@@ -126,7 +126,7 @@ class PrecisionRecoveryConfig:
                 "faithfulness": 0.60,
             }
 
-    def get_logging_config(self) -> Dict[str, Any]:
+    def get_logging_config(self) -> dict[str, Any]:
         """Get configuration for enhanced logging."""
         return {
             "log_facet_yield": True,  # unique docs contributed, entity overlap

@@ -26,8 +26,10 @@ from uuid import uuid4
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class DocumentType(Enum):
     """Enumeration of document types."""
+
     API = "api"
     TUTORIAL = "tutorial"
     README = "readme"
@@ -36,36 +38,43 @@ class DocumentType(Enum):
     CHANGELOG = "changelog"
     CONTRIBUTING = "contributing"
 
+
 class FormatType(Enum):
     """Enumeration of format types."""
+
     MARKDOWN = "markdown"
     HTML = "html"
     RST = "rst"
     ASCIIDOC = "asciidoc"
     JSON = "json"
 
+
 @dataclass
 class DocumentationContent:
     """Data structure for documentation content."""
+
     id: str = field(default_factory=lambda: str(uuid4()))
     title: str = ""
     content: str = ""
     format_type: FormatType = FormatType.MARKDOWN
     doc_type: DocumentType = DocumentType.API
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     quality_score: float = 0.0
     word_count: int = 0
     sections: int = 0
     timestamp: float = field(default_factory=time.time)
 
+
 @dataclass
 class WritingSuggestion:
     """Data structure for writing suggestions."""
+
     line_number: int
     suggestion_type: str  # "grammar", "style", "clarity", "structure"
     description: str
     suggestion: str
     severity: str  # "low", "medium", "high"
+
 
 class DocumentationDatabase:
     """Database for storing documentation data and cache."""
@@ -80,7 +89,8 @@ class DocumentationDatabase:
         cursor = conn.cursor()
 
         # Create documentation content table
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS documentation_content (
                 id TEXT PRIMARY KEY,
                 title TEXT NOT NULL,
@@ -93,10 +103,12 @@ class DocumentationDatabase:
                 sections INTEGER NOT NULL,
                 timestamp REAL NOT NULL
             )
-        """)
+        """
+        )
 
         # Create writing suggestions table
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS writing_suggestions (
                 id TEXT PRIMARY KEY,
                 content_id TEXT NOT NULL,
@@ -108,7 +120,8 @@ class DocumentationDatabase:
                 timestamp REAL NOT NULL,
                 FOREIGN KEY (content_id) REFERENCES documentation_content (id)
             )
-        """)
+        """
+        )
 
         # Create indexes
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_doc_title ON documentation_content(title)")
@@ -124,36 +137,42 @@ class DocumentationDatabase:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT OR REPLACE INTO documentation_content 
             (id, title, content, format_type, doc_type, metadata, quality_score, word_count, sections, timestamp)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            content.id,
-            content.title,
-            content.content,
-            content.format_type.value,
-            content.doc_type.value,
-            json.dumps(content.metadata),
-            content.quality_score,
-            content.word_count,
-            content.sections,
-            content.timestamp
-        ))
+        """,
+            (
+                content.id,
+                content.title,
+                content.content,
+                content.format_type.value,
+                content.doc_type.value,
+                json.dumps(content.metadata),
+                content.quality_score,
+                content.word_count,
+                content.sections,
+                content.timestamp,
+            ),
+        )
 
         conn.commit()
         conn.close()
         return content.id
 
-    def get_content(self, content_id: str) -> Optional[DocumentationContent]:
+    def get_content(self, content_id: str) -> DocumentationContent | None:
         """Get documentation content by ID."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT id, title, content, format_type, doc_type, metadata, quality_score, word_count, sections, timestamp
             FROM documentation_content WHERE id = ?
-        """, (content_id,))
+        """,
+            (content_id,),
+        )
 
         row = cursor.fetchone()
         conn.close()
@@ -169,10 +188,11 @@ class DocumentationDatabase:
                 quality_score=row[6],
                 word_count=row[7],
                 sections=row[8],
-                timestamp=row[9]
+                timestamp=row[9],
             )
 
         return None
+
 
 class DocumentationAgent:
     """Specialized agent for documentation assistance and writing help."""
@@ -184,10 +204,10 @@ class DocumentationAgent:
             "writing_assistance",
             "explanation_generation",
             "content_optimization",
-            "format_support"
+            "format_support",
         ]
         self.database = DocumentationDatabase()
-        self.documentation_cache: Dict[str, DocumentationContent] = {}
+        self.documentation_cache: dict[str, DocumentationContent] = {}
         self.usage_count = 0
         self.error_count = 0
         self.last_used = time.time()
@@ -198,29 +218,29 @@ class DocumentationAgent:
             "tutorial": self._tutorial_template,
             "readme": self._readme_template,
             "guide": self._guide_template,
-            "reference": self._reference_template
+            "reference": self._reference_template,
         }
 
         # Writing improvement patterns
         self.improvement_patterns = {
             "grammar": [
-                (r'\b(?:is|are|was|were)\s+(?:a|an)\s+', "Check article usage"),
-                (r'\b(?:this|that|these|those)\s+(?:is|are)\s+', "Check subject-verb agreement"),
-                (r'\b(?:will|would|could|should)\s+(?:be|have)\s+', "Check modal verb usage")
+                (r"\b(?:is|are|was|were)\s+(?:a|an)\s+", "Check article usage"),
+                (r"\b(?:this|that|these|those)\s+(?:is|are)\s+", "Check subject-verb agreement"),
+                (r"\b(?:will|would|could|should)\s+(?:be|have)\s+", "Check modal verb usage"),
             ],
             "style": [
-                (r'\b(?:very|really|quite)\s+', "Consider stronger alternatives"),
-                (r'\b(?:thing|stuff|something)\b', "Use more specific terms"),
-                (r'\b(?:good|bad|nice)\b', "Use more descriptive adjectives")
+                (r"\b(?:very|really|quite)\s+", "Consider stronger alternatives"),
+                (r"\b(?:thing|stuff|something)\b", "Use more specific terms"),
+                (r"\b(?:good|bad|nice)\b", "Use more descriptive adjectives"),
             ],
             "clarity": [
-                (r'\b(?:it|this|that)\b', "Ensure clear antecedents"),
-                (r'\b(?:etc|and so on)\b', "Provide specific examples"),
-                (r'\b(?:obviously|clearly|obviously)\b', "Remove unnecessary qualifiers")
-            ]
+                (r"\b(?:it|this|that)\b", "Ensure clear antecedents"),
+                (r"\b(?:etc|and so on)\b", "Provide specific examples"),
+                (r"\b(?:obviously|clearly|obviously)\b", "Remove unnecessary qualifiers"),
+            ],
         }
 
-    async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_request(self, request: dict[str, Any]) -> dict[str, Any]:
         """Process documentation request."""
         start_time = time.time()
 
@@ -262,17 +282,27 @@ class DocumentationAgent:
             logger.error(f"Error in Documentation Agent: {e}")
             raise
 
-    def can_handle(self, request: Dict[str, Any]) -> bool:
+    def can_handle(self, request: dict[str, Any]) -> bool:
         """Check if documentation agent can handle the request."""
         documentation_keywords = [
-            "document", "write", "explain", "describe", "comment",
-            "readme", "api", "tutorial", "guide", "help", "manual"
+            "document",
+            "write",
+            "explain",
+            "describe",
+            "comment",
+            "readme",
+            "api",
+            "tutorial",
+            "guide",
+            "help",
+            "manual",
         ]
         query = request.get("query", "").lower()
         return any(keyword in query for keyword in documentation_keywords)
 
-    async def _generate_documentation(self, title: str, content: str, format_type: str,
-                                    doc_type: str, optimization_level: str) -> DocumentationContent:
+    async def _generate_documentation(
+        self, title: str, content: str, format_type: str, doc_type: str, optimization_level: str
+    ) -> DocumentationContent:
         """Generate documentation content."""
         logger.info(f"Generating {doc_type} documentation for: {title}")
 
@@ -302,14 +332,10 @@ class DocumentationAgent:
             content=generated_content,
             format_type=FormatType(format_type),
             doc_type=DocumentType(doc_type),
-            metadata={
-                "optimization_level": optimization_level,
-                "original_content": content,
-                "template_used": doc_type
-            },
+            metadata={"optimization_level": optimization_level, "original_content": content, "template_used": doc_type},
             quality_score=quality_score,
             word_count=word_count,
-            sections=sections
+            sections=sections,
         )
 
     def _api_template(self, title: str, content: str) -> str:
@@ -846,12 +872,12 @@ const result = await instance.process(data);
         total_checks += 1
 
         # Check for proper formatting
-        if not re.search(r'#{1,6}\s+', content):
+        if not re.search(r"#{1,6}\s+", content):
             issues += 1
         total_checks += 1
 
         # Check for links
-        if not re.search(r'\[.*\]\(.*\)', content):
+        if not re.search(r"\[.*\]\(.*\)", content):
             issues += 1
         total_checks += 1
 
@@ -860,7 +886,7 @@ const result = await instance.process(data);
 
         return score
 
-    def _format_documentation_response(self, doc_content: DocumentationContent) -> Dict[str, Any]:
+    def _format_documentation_response(self, doc_content: DocumentationContent) -> dict[str, Any]:
         """Format documentation content into response."""
         return {
             "agent_type": "documentation",
@@ -872,7 +898,7 @@ const result = await instance.process(data);
             "quality_score": doc_content.quality_score,
             "word_count": doc_content.word_count,
             "sections": doc_content.sections,
-            "timestamp": doc_content.timestamp
+            "timestamp": doc_content.timestamp,
         }
 
     def _generate_cache_key(self, title: str, content: str, format_type: str, doc_type: str) -> str:
@@ -880,7 +906,7 @@ const result = await instance.process(data);
         content_str = f"{title}:{content}:{format_type}:{doc_type}"
         return hashlib.md5(content_str.encode()).hexdigest()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get agent status information."""
         return {
             "agent_type": "documentation",
@@ -889,8 +915,9 @@ const result = await instance.process(data);
             "usage_count": self.usage_count,
             "error_count": self.error_count,
             "last_used": self.last_used,
-            "cache_size": len(self.documentation_cache)
+            "cache_size": len(self.documentation_cache),
         }
+
 
 # Example usage and testing
 async def main():
@@ -904,22 +931,22 @@ async def main():
             "content": "API for managing users in the system",
             "format_type": "markdown",
             "doc_type": "api",
-            "optimization_level": "comprehensive"
+            "optimization_level": "comprehensive",
         },
         {
             "title": "Getting Started Tutorial",
             "content": "Learn how to use our platform",
             "format_type": "markdown",
             "doc_type": "tutorial",
-            "optimization_level": "detailed"
+            "optimization_level": "detailed",
         },
         {
             "title": "Project README",
             "content": "A comprehensive AI development ecosystem",
             "format_type": "markdown",
             "doc_type": "readme",
-            "optimization_level": "standard"
-        }
+            "optimization_level": "standard",
+        },
     ]
 
     for i, request in enumerate(test_requests, 1):
@@ -943,6 +970,7 @@ async def main():
     print("\n--- Agent Status ---")
     status = agent.get_status()
     print(json.dumps(status, indent=2))
+
 
 if __name__ == "__main__":
     asyncio.run(main())

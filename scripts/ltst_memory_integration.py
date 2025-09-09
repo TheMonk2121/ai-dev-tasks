@@ -101,12 +101,12 @@ class LTSTContext:
 
     context_id: str
     content: str
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
     created_at: float
     last_accessed: float
     access_count: int = 0
     cache_hit: bool = False
-    similarity_score: Optional[float] = None
+    similarity_score: float | None = None
 
     def __post_init__(self):
         """Update last accessed timestamp"""
@@ -160,22 +160,22 @@ class LTSTIntegrationMetrics:
 class LTSTMemoryIntegration:
     """Integration layer between LTST memory system and generation cache"""
 
-    def __init__(self, config: Optional[LTSTIntegrationConfig] = None):
+    def __init__(self, config: LTSTIntegrationConfig | None = None):
         """Initialize LTST memory integration"""
         self.config = config or LTSTIntegrationConfig()
         self.metrics = LTSTIntegrationMetrics()
 
         # Initialize systems
-        self.cache_service: Optional[PostgreSQLCacheService] = None
-        self.similarity_engine: Optional[SimilarityScoringEngine] = None
-        self.integration: Optional[CacheInvalidationIntegration] = None
+        self.cache_service: PostgreSQLCacheService | None = None
+        self.similarity_engine: SimilarityScoringEngine | None = None
+        self.integration: CacheInvalidationIntegration | None = None
 
         # Cache warming
-        self.warming_task: Optional[asyncio.Task] = None
+        self.warming_task: asyncio.Task | None = None
         self.running = False
 
         # Context cache for frequently accessed items
-        self.context_cache: Dict[str, LTSTContext] = {}
+        self.context_cache: dict[str, LTSTContext] = {}
         self.max_context_cache_size = 1000
 
         logger.info("LTST Memory Integration initialized")
@@ -287,7 +287,7 @@ class LTSTMemoryIntegration:
         except Exception as e:
             logger.error(f"Cache warming failed: {e}")
 
-    async def retrieve_context(self, query: str, user_id: Optional[str] = None) -> Optional[LTSTContext]:
+    async def retrieve_context(self, query: str, user_id: str | None = None) -> LTSTContext | None:
         """Retrieve context using cache-aware strategy"""
         start_time = time.time()
 
@@ -352,7 +352,7 @@ class LTSTMemoryIntegration:
             self.metrics.cache_misses += 1
             return None
 
-    async def _retrieve_from_cache(self, query: str, user_id: Optional[str] = None) -> Optional[CacheEntry]:
+    async def _retrieve_from_cache(self, query: str, user_id: str | None = None) -> CacheEntry | None:
         """Retrieve context from generation cache"""
         try:
             if not self.cache_service:
@@ -387,7 +387,7 @@ class LTSTMemoryIntegration:
             similarity_score=cache_entry.similarity_score,
         )
 
-    async def _fallback_to_direct_retrieval(self, query: str, user_id: Optional[str] = None) -> Optional[LTSTContext]:
+    async def _fallback_to_direct_retrieval(self, query: str, user_id: str | None = None) -> LTSTContext | None:
         """Fallback to direct memory retrieval"""
         try:
             # This would typically involve:
@@ -443,7 +443,7 @@ class LTSTMemoryIntegration:
         except Exception as e:
             logger.error(f"Failed to update response time metrics: {e}")
 
-    async def store_context(self, context: LTSTContext, user_id: Optional[str] = None) -> bool:
+    async def store_context(self, context: LTSTContext, user_id: str | None = None) -> bool:
         """Store context in the generation cache"""
         try:
             if not self.cache_service:
@@ -475,8 +475,8 @@ class LTSTMemoryIntegration:
             return False
 
     async def search_similar_contexts(
-        self, query: str, limit: int = 10, threshold: Optional[float] = None
-    ) -> List[LTSTContext]:
+        self, query: str, limit: int = 10, threshold: float | None = None
+    ) -> list[LTSTContext]:
         """Search for similar contexts using cache and similarity engine"""
         try:
             threshold = threshold or self.config.warming_similarity_threshold
@@ -506,7 +506,7 @@ class LTSTMemoryIntegration:
             logger.error(f"Similar context search failed: {e}")
             return []
 
-    async def get_integration_metrics(self) -> Dict[str, Any]:
+    async def get_integration_metrics(self) -> dict[str, Any]:
         """Get comprehensive integration metrics"""
         try:
             # Get cache service metrics

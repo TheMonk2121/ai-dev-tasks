@@ -44,8 +44,8 @@ class RAGCheckerConstitutionValidator(BaseModel):
     model_config = {"arbitrary_types_allowed": True}
 
     enabled: bool = Field(default=True, description="Whether constitution validation is enabled")
-    validation_rules: List[Any] = Field(default_factory=list, description="Active validation rules")
-    error_mapper: Optional[Any] = Field(None, description="Error taxonomy mapper")
+    validation_rules: list[Any] = Field(default_factory=list, description="Active validation rules")
+    error_mapper: Any | None = Field(None, description="Error taxonomy mapper")
 
     def __init__(self, **data):
         super().__init__(**data)
@@ -99,7 +99,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
         if ConstitutionErrorMapper is not None:
             self.error_mapper = ConstitutionErrorMapper()
 
-    def validate_ragchecker_input(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_ragchecker_input(self, input_data: dict[str, Any]) -> dict[str, Any]:
         """Validate RAGChecker input data with constitution awareness"""
         if not self.enabled:
             return {"valid": True, "compliance": None, "errors": []}
@@ -150,7 +150,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return validation_results
 
-    def validate_ragchecker_metrics(self, metrics_data: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_ragchecker_metrics(self, metrics_data: dict[str, Any]) -> dict[str, Any]:
         """Validate RAGChecker metrics with constitution awareness"""
         if not self.enabled:
             return {"valid": True, "compliance": None, "errors": []}
@@ -191,7 +191,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return validation_results
 
-    def validate_ragchecker_result(self, result_data: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_ragchecker_result(self, result_data: dict[str, Any]) -> dict[str, Any]:
         """Validate RAGChecker result with constitution awareness"""
         if not self.enabled:
             return {"valid": True, "compliance": None, "errors": []}
@@ -232,7 +232,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return validation_results
 
-    def _validate_input_quality(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_input_quality(self, input_data: dict[str, Any]) -> dict[str, Any]:
         """Validate input data quality"""
         validation = {"valid": True, "errors": []}
 
@@ -277,7 +277,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return validation
 
-    def _validate_input_security(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_input_security(self, input_data: dict[str, Any]) -> dict[str, Any]:
         """Validate input data security"""
         validation = {"valid": True, "errors": []}
 
@@ -302,7 +302,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return validation
 
-    def _validate_input_coherence(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_input_coherence(self, input_data: dict[str, Any]) -> dict[str, Any]:
         """Validate input data coherence"""
         validation = {"valid": True, "warnings": []}
 
@@ -325,7 +325,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return validation
 
-    def _validate_metrics_coherence(self, metrics_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_metrics_coherence(self, metrics_data: dict[str, Any]) -> dict[str, Any]:
         """Validate metrics coherence"""
         validation = {"valid": True, "errors": []}
 
@@ -353,7 +353,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return validation
 
-    def _validate_metrics_quality(self, metrics_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_metrics_quality(self, metrics_data: dict[str, Any]) -> dict[str, Any]:
         """Validate metrics quality thresholds"""
         validation = {"valid": True, "warnings": []}
 
@@ -373,7 +373,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return validation
 
-    def _validate_result_quality(self, result_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_result_quality(self, result_data: dict[str, Any]) -> dict[str, Any]:
         """Validate result quality"""
         validation = {"valid": True, "errors": []}
 
@@ -407,7 +407,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return validation
 
-    def _validate_result_consistency(self, result_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_result_consistency(self, result_data: dict[str, Any]) -> dict[str, Any]:
         """Validate result consistency"""
         validation = {"valid": True, "warnings": []}
 
@@ -430,7 +430,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return validation
 
-    def map_validation_error_to_taxonomy(self, error_data: Dict[str, Any]) -> Dict[str, Any]:
+    def map_validation_error_to_taxonomy(self, error_data: dict[str, Any]) -> dict[str, Any]:
         """Map validation errors to error taxonomy categories."""
         # Ensure taxonomy classes are available before attempting categorization
         if not self.error_mapper or any(
@@ -509,7 +509,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
         }
         return severity_mapping.get(severity.lower(), TaxonomyErrorSeverity.MEDIUM)
 
-    def enhance_validation_with_taxonomy(self, validation_results: Dict[str, Any]) -> Dict[str, Any]:
+    def enhance_validation_with_taxonomy(self, validation_results: dict[str, Any]) -> dict[str, Any]:
         """Enhance validation results with error taxonomy categorization."""
         enhanced_results = validation_results.copy()
 
@@ -543,7 +543,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return enhanced_results
 
-    def _calculate_categorization_success_rate(self, validation_results: Dict[str, Any]) -> float:
+    def _calculate_categorization_success_rate(self, validation_results: dict[str, Any]) -> float:
         """Calculate the success rate of error categorization."""
         total_errors = 0
         categorized_errors = 0
@@ -557,7 +557,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
 
         return categorized_errors / total_errors if total_errors > 0 else 1.0
 
-    def _get_error_type_distribution(self, validation_results: Dict[str, Any]) -> Dict[str, int]:
+    def _get_error_type_distribution(self, validation_results: dict[str, Any]) -> dict[str, int]:
         """Get distribution of error types across validation results."""
         error_types = {}
 

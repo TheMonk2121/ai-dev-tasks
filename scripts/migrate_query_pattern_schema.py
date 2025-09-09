@@ -46,7 +46,7 @@ def migrate_query_pattern_schema(dry_run: bool = False) -> bool:
             return False
 
         # Read schema
-        with open(schema_file, "r") as f:
+        with open(schema_file) as f:
             schema_sql = f.read()
 
         logger.info(f"Loaded schema from: {schema_file}")

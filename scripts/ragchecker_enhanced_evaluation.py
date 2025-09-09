@@ -47,8 +47,8 @@ class EnhancedRAGCheckerEvaluator:
         logger.info("Enhanced RAGChecker evaluator initialized")
 
     def evaluate_query(
-        self, query: str, query_type: Optional[str] = None, enable_enhanced_features: bool = True
-    ) -> Dict[str, Any]:
+        self, query: str, query_type: str | None = None, enable_enhanced_features: bool = True
+    ) -> dict[str, Any]:
         """
         Evaluate a single query with enhanced features
         """
@@ -117,7 +117,7 @@ class EnhancedRAGCheckerEvaluator:
                 "error": str(e),
             }
 
-    def run_enhanced_evaluation(self, test_cases: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def run_enhanced_evaluation(self, test_cases: list[dict[str, Any]]) -> dict[str, Any]:
         """
         Run enhanced evaluation on test cases
         """
@@ -155,7 +155,7 @@ class EnhancedRAGCheckerEvaluator:
             "avg_time_per_case": total_time / len(test_cases) if test_cases else 0,
         }
 
-    def _calculate_enhanced_summary(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _calculate_enhanced_summary(self, results: list[dict[str, Any]]) -> dict[str, Any]:
         """
         Calculate enhanced evaluation summary
         """
@@ -200,7 +200,7 @@ class EnhancedRAGCheckerEvaluator:
             "generator_stats": self.generator.get_generator_stats(),
         }
 
-    def save_evaluation_results(self, results: Dict[str, Any], filepath: Optional[str] = None) -> str:
+    def save_evaluation_results(self, results: dict[str, Any], filepath: str | None = None) -> str:
         """
         Save evaluation results to file
         """

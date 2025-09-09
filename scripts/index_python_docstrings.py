@@ -28,8 +28,8 @@ class SymbolDoc:
     doc: str
 
 
-def extract_from_file(py_file: Path) -> List[SymbolDoc]:
-    symbols: List[SymbolDoc] = []
+def extract_from_file(py_file: Path) -> list[SymbolDoc]:
+    symbols: list[SymbolDoc] = []
     try:
         text = py_file.read_text(encoding="utf-8", errors="ignore")
         tree = ast.parse(text)
@@ -63,18 +63,18 @@ def main() -> int:
     # Simple inclusion: index repo Python files excluding common vendor dirs
     exclude_parts = {"venv", ".venv", "node_modules", "__pycache__", "dist", "build"}
 
-    py_files: List[Path] = []
+    py_files: list[Path] = []
     for p in repo_root.rglob("*.py"):
         parts = set(p.parts)
         if exclude_parts & parts:
             continue
         py_files.append(p)
 
-    symbols: List[SymbolDoc] = []
+    symbols: list[SymbolDoc] = []
     for f in py_files:
         symbols.extend(extract_from_file(f))
 
-    payload: Dict[str, Any] = {
+    payload: dict[str, Any] = {
         "files_indexed": len(py_files),
         "symbols": [asdict(s) for s in symbols],
     }

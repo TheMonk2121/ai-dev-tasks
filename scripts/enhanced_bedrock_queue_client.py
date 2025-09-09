@@ -30,7 +30,7 @@ class QueuedRequest:
     prompt: str
     max_tokens: int
     temperature: float
-    system_prompt: Optional[str]
+    system_prompt: str | None
     future: asyncio.Future
     loop: asyncio.AbstractEventLoop
     timestamp: float
@@ -46,7 +46,7 @@ class IntelligentBedrockQueue:
     4. Provides fallback mechanisms
     """
 
-    def __init__(self, api_keys: List[Dict[str, str]]):
+    def __init__(self, api_keys: list[dict[str, str]]):
         self.api_keys = api_keys
         self.request_queue = Queue()
         self.processing = False
@@ -101,9 +101,9 @@ class IntelligentBedrockQueue:
         prompt: str,
         max_tokens: int = 1000,
         temperature: float = 0.1,
-        system_prompt: Optional[str] = None,
+        system_prompt: str | None = None,
         priority: int = 0,
-    ) -> Tuple[str, "BedrockUsage"]:
+    ) -> tuple[str, "BedrockUsage"]:
         """Submit a request to the queue and return the (text, usage)."""
         request_id = f"req_{int(time.time() * 1000)}"
         loop = asyncio.get_running_loop()
@@ -175,7 +175,7 @@ class IntelligentBedrockQueue:
                         request.future.set_exception(e)
                 batch = []
 
-    def _process_batch(self, batch: List[QueuedRequest]):
+    def _process_batch(self, batch: list[QueuedRequest]):
         """Process a batch of requests"""
         logger.info(f"Processing batch of {len(batch)} requests")
 
@@ -228,9 +228,9 @@ class IntelligentBedrockQueue:
 
         return delay
 
-    def _process_single_request(self, request: QueuedRequest) -> Tuple[str, "BedrockUsage"]:
+    def _process_single_request(self, request: QueuedRequest) -> tuple[str, "BedrockUsage"]:
         """Process a single request using round-robin keys with retries. Returns (text, usage)."""
-        last_error: Optional[Exception] = None
+        last_error: Exception | None = None
 
         for attempt in range(self.max_retries):
             # Select key via round-robin
@@ -244,7 +244,7 @@ class IntelligentBedrockQueue:
                 connect_timeout=10,
             )
 
-            client_kwargs: Dict[str, Any] = {
+            client_kwargs: dict[str, Any] = {
                 "service_name": "bedrock-runtime",
                 "config": config,
                 "region_name": key_config.get("region", os.getenv("AWS_REGION", "us-east-1")),
@@ -342,12 +342,12 @@ class IntelligentBedrockQueue:
         raise last_error
 
     def _prepare_request_body(
-        self, prompt: str, max_tokens: int, temperature: float, system_prompt: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, prompt: str, max_tokens: int, temperature: float, system_prompt: str | None = None
+    ) -> dict[str, Any]:
         """Prepare request body for Bedrock API"""
         messages = [{"role": "user", "content": prompt}]
 
-        body: Dict[str, Any] = {
+        body: dict[str, Any] = {
             "anthropic_version": "bedrock-2023-05-31",
             "max_tokens": max_tokens,
             "temperature": temperature,
@@ -359,7 +359,7 @@ class IntelligentBedrockQueue:
 
         return body
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get queue statistics"""
         return {
             "queue_size": self.request_queue.qsize(),
@@ -381,7 +381,7 @@ class BedrockUsage:
     total_cost: float = 0.0
     timestamp: str = ""
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "input_tokens": self.input_tokens,
             "output_tokens": self.output_tokens,
@@ -395,7 +395,7 @@ class BedrockUsage:
 class SyncBedrockQueueClient:
     """Synchronous wrapper for the async queue client"""
 
-    def __init__(self, api_keys: Optional[List[Dict[str, str]]] = None, **kwargs):
+    def __init__(self, api_keys: list[dict[str, str]] | None = None, **kwargs):
         """Initialize with graceful fallback for RAGChecker compatibility"""
         try:
             if api_keys is None:
@@ -416,7 +416,7 @@ class SyncBedrockQueueClient:
             self.queue = None
             # Don't raise exception - allow graceful fallback
 
-    def _load_api_keys_from_env(self) -> List[Dict[str, str]]:
+    def _load_api_keys_from_env(self) -> list[dict[str, str]]:
         """Load API key configurations from environment variables."""
         api_keys = []
 
@@ -468,9 +468,9 @@ class SyncBedrockQueueClient:
         prompt: str,
         max_tokens: int = 1000,
         temperature: float = 0.1,
-        system_prompt: Optional[str] = None,
+        system_prompt: str | None = None,
         **kwargs,
-    ) -> Tuple[str, BedrockUsage]:
+    ) -> tuple[str, BedrockUsage]:
         """Synchronous model invocation that returns (text, usage)."""
         if not self.initialized or self.queue is None:
             raise RuntimeError("Queue client not properly initialized - cannot invoke model")
@@ -490,9 +490,9 @@ class SyncBedrockQueueClient:
         prompt: str,
         max_tokens: int = 1000,
         temperature: float = 0.1,
-        system_prompt: Optional[str] = None,
+        system_prompt: str | None = None,
         **kwargs,
-    ) -> Tuple[str, BedrockUsage]:
+    ) -> tuple[str, BedrockUsage]:
         """Synchronous JSON prompt invocation (returns text, usage)."""
         json_system_prompt = (
             "You are a helpful assistant that always responds with valid JSON. "
@@ -506,7 +506,7 @@ class SyncBedrockQueueClient:
         """Test if the client is properly initialized and can connect"""
         return self.initialized and self.queue is not None
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get queue statistics"""
         if not self.initialized or self.queue is None:
             return {"error": "Queue client not initialized", "initialized": False}

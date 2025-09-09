@@ -104,7 +104,7 @@ class DebuggingEffectivenessTracker:
                 (json.dumps(patterns), session_id),
             )
 
-    def record_context_retrieval(self, session_id: str, context_items: List[str], utilized: bool):
+    def record_context_retrieval(self, session_id: str, context_items: list[str], utilized: bool):
         """Record context retrieval and utilization."""
         with sqlite3.connect(self.db_path) as conn:
             conn.execute(
@@ -117,7 +117,7 @@ class DebuggingEffectivenessTracker:
             )
 
     def complete_session(
-        self, session_id: str, success: bool, iterations: int, performance_improvement: Optional[str] = None
+        self, session_id: str, success: bool, iterations: int, performance_improvement: str | None = None
     ):
         """Mark a debugging session as complete."""
         resolution_time = datetime.now().isoformat()
@@ -133,7 +133,7 @@ class DebuggingEffectivenessTracker:
                 (resolution_time, success, iterations, performance_improvement, session_id),
             )
 
-    def analyze_pattern_effectiveness(self) -> Dict[str, Any]:
+    def analyze_pattern_effectiveness(self) -> dict[str, Any]:
         """Analyze the effectiveness of different troubleshooting patterns."""
         with sqlite3.connect(self.db_path) as conn:
             # Get all sessions with patterns
@@ -234,7 +234,7 @@ class DebuggingEffectivenessTracker:
 
         return report
 
-    def detect_debugging_patterns(self, text: str) -> List[str]:
+    def detect_debugging_patterns(self, text: str) -> list[str]:
         """Detect troubleshooting patterns in text."""
         patterns = [
             r"I can see the issue",
@@ -258,7 +258,7 @@ class DebuggingEffectivenessTracker:
 
         return detected
 
-    def update_memory_system(self, insights: Dict[str, Any]):
+    def update_memory_system(self, insights: dict[str, Any]):
         """Update memory system based on effectiveness insights."""
         # This would integrate with the existing memory system
         # For now, we'll just log the insights

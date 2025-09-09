@@ -8,10 +8,9 @@ instead of creating redundant tools.
 
 import sys
 from pathlib import Path
-from typing import Dict, List
 
 
-def find_existing_tools(keyword: str) -> List[str]:
+def find_existing_tools(keyword: str) -> list[str]:
     """Find existing tools that match the given keyword."""
 
     search_paths = [
@@ -38,7 +37,7 @@ def find_existing_tools(keyword: str) -> List[str]:
     return existing_tools
 
 
-def get_tool_mapping() -> Dict[str, List[str]]:
+def get_tool_mapping() -> dict[str, list[str]]:
     """Get mapping of common tasks to existing tools."""
 
     return {
@@ -82,7 +81,7 @@ def get_tool_mapping() -> Dict[str, List[str]]:
     }
 
 
-def suggest_existing_tools(task_description: str) -> Dict[str, List[str]]:
+def suggest_existing_tools(task_description: str) -> dict[str, list[str]]:
     """Suggest existing tools based on task description."""
 
     tool_mapping = get_tool_mapping()
@@ -139,7 +138,7 @@ def force_tool_usage(task_description: str, dry_run: bool = False) -> bool:
     return True
 
 
-def check_tool_duplication(new_tool_name: str) -> List[str]:
+def check_tool_duplication(new_tool_name: str) -> list[str]:
     """Check if a new tool would duplicate existing functionality."""
 
     similar_tools = []

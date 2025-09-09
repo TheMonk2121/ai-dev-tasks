@@ -50,7 +50,7 @@ class PerformanceMetric:
     value: float
     model: str
     context_size: int
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -65,7 +65,7 @@ class Alert:
     threshold: float
     model: str
     context_size: int
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -82,7 +82,7 @@ class PerformanceSnapshot:
     context_utilization: float
     adaptation_success_rate: float
     overflow_frequency: float
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -290,7 +290,7 @@ class PerformanceDatabase:
         )
         conn.commit()
 
-    def get_recent_metrics(self, metric_type: MetricType, hours: int = 24) -> List[PerformanceMetric]:
+    def get_recent_metrics(self, metric_type: MetricType, hours: int = 24) -> list[PerformanceMetric]:
         """Get recent metrics of a specific type"""
         cutoff_time = time.time() - (hours * 3600)
 
@@ -321,7 +321,7 @@ class PerformanceDatabase:
 
         return metrics
 
-    def get_recent_alerts(self, level: Optional[AlertLevel] = None, hours: int = 24) -> List[Alert]:
+    def get_recent_alerts(self, level: AlertLevel | None = None, hours: int = 24) -> list[Alert]:
         """Get recent alerts, optionally filtered by level"""
         cutoff_time = time.time() - (hours * 3600)
 
@@ -367,7 +367,7 @@ class PerformanceDatabase:
 
         return alerts
 
-    def get_recent_snapshots(self, model: Optional[str] = None, hours: int = 24) -> List[PerformanceSnapshot]:
+    def get_recent_snapshots(self, model: str | None = None, hours: int = 24) -> list[PerformanceSnapshot]:
         """Get recent performance snapshots, optionally filtered by model"""
         cutoff_time = time.time() - (hours * 3600)
 
@@ -460,7 +460,7 @@ class AlertManager:
         """Add an alert handler function"""
         self.alert_handlers.append(handler)
 
-    def check_metrics(self, metrics: List[PerformanceMetric]) -> List[Alert]:
+    def check_metrics(self, metrics: list[PerformanceMetric]) -> list[Alert]:
         """Check metrics against thresholds and generate alerts"""
         alerts = []
 
@@ -487,7 +487,7 @@ class AlertManager:
 
         return alerts
 
-    def _check_f1_score(self, metric: PerformanceMetric) -> Optional[Alert]:
+    def _check_f1_score(self, metric: PerformanceMetric) -> Alert | None:
         """Check F1 score against thresholds"""
         if metric.value <= self.config.f1_score_critical:
             return Alert(
@@ -528,7 +528,7 @@ class AlertManager:
 
         return None
 
-    def _check_latency(self, metric: PerformanceMetric) -> Optional[Alert]:
+    def _check_latency(self, metric: PerformanceMetric) -> Alert | None:
         """Check latency against thresholds"""
         if metric.value >= self.config.latency_critical:
             return Alert(
@@ -569,7 +569,7 @@ class AlertManager:
 
         return None
 
-    def _check_token_usage(self, metric: PerformanceMetric) -> Optional[Alert]:
+    def _check_token_usage(self, metric: PerformanceMetric) -> Alert | None:
         """Check token usage against thresholds"""
         if metric.value >= self.config.token_usage_critical:
             return Alert(
@@ -641,7 +641,7 @@ class PerformanceDashboard:
         self.database = database
         self.config = config
 
-    def get_dashboard_data(self) -> Dict[str, Any]:
+    def get_dashboard_data(self) -> dict[str, Any]:
         """Get comprehensive dashboard data"""
         current_time = time.time()
 
@@ -673,7 +673,7 @@ class PerformanceDashboard:
             "recent_snapshots": [asdict(snapshot) for snapshot in recent_snapshots[:20]],
         }
 
-    def _calculate_summary_stats(self, snapshots: List[PerformanceSnapshot]) -> Dict[str, Any]:
+    def _calculate_summary_stats(self, snapshots: list[PerformanceSnapshot]) -> dict[str, Any]:
         """Calculate summary statistics from snapshots"""
         if not snapshots:
             return {}
@@ -695,7 +695,7 @@ class PerformanceDashboard:
             "max_token_usage": max(token_usages),
         }
 
-    def _calculate_trends(self, snapshots: List[PerformanceSnapshot]) -> Dict[str, Any]:
+    def _calculate_trends(self, snapshots: list[PerformanceSnapshot]) -> dict[str, Any]:
         """Calculate performance trends"""
         if len(snapshots) < 2:
             return {}
@@ -725,7 +725,7 @@ class PerformanceDashboard:
             "latency_direction": "improving" if latency_trend < 0 else "degrading",
         }
 
-    def _get_model_performance(self, snapshots: List[PerformanceSnapshot]) -> Dict[str, Any]:
+    def _get_model_performance(self, snapshots: list[PerformanceSnapshot]) -> dict[str, Any]:
         """Get performance breakdown by model"""
         model_stats = {}
 
@@ -752,7 +752,7 @@ class PerformanceDashboard:
 
         return model_stats
 
-    def _get_alert_summary(self, alerts: List[Alert]) -> Dict[str, Any]:
+    def _get_alert_summary(self, alerts: list[Alert]) -> dict[str, Any]:
         """Get summary of recent alerts"""
         alert_counts = {level.value: 0 for level in AlertLevel}
 
@@ -853,15 +853,15 @@ class PerformanceDashboard:
 class PerformanceMonitor:
     """Main performance monitoring system"""
 
-    def __init__(self, config: Optional[MonitoringConfig] = None):
+    def __init__(self, config: MonitoringConfig | None = None):
         self.config = config or MonitoringConfig()
         self.database = PerformanceDatabase(self.config.db_path)
         self.alert_manager = AlertManager(self.config, self.database)
         self.dashboard = PerformanceDashboard(self.database, self.config)
 
         # Performance data collection
-        self.metrics_buffer: List[PerformanceMetric] = []
-        self.snapshots_buffer: List[PerformanceSnapshot] = []
+        self.metrics_buffer: list[PerformanceMetric] = []
+        self.snapshots_buffer: list[PerformanceSnapshot] = []
 
         # Monitoring state
         self.is_monitoring = False
@@ -903,7 +903,7 @@ class PerformanceMonitor:
         self.snapshots_buffer.append(snapshot)
         self.database.store_snapshot(snapshot)
 
-    def get_dashboard_data(self) -> Dict[str, Any]:
+    def get_dashboard_data(self) -> dict[str, Any]:
         """Get current dashboard data"""
         return self.dashboard.get_dashboard_data()
 
@@ -911,11 +911,11 @@ class PerformanceMonitor:
         """Generate dashboard report"""
         return self.dashboard.generate_dashboard_report()
 
-    def get_recent_alerts(self, level: Optional[AlertLevel] = None, hours: int = 24) -> List[Alert]:
+    def get_recent_alerts(self, level: AlertLevel | None = None, hours: int = 24) -> list[Alert]:
         """Get recent alerts"""
         return self.database.get_recent_alerts(level, hours)
 
-    def get_recent_metrics(self, metric_type: MetricType, hours: int = 24) -> List[PerformanceMetric]:
+    def get_recent_metrics(self, metric_type: MetricType, hours: int = 24) -> list[PerformanceMetric]:
         """Get recent metrics"""
         return self.database.get_recent_metrics(metric_type, hours)
 

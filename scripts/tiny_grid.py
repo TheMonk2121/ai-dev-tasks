@@ -32,7 +32,7 @@ GRID = {
 }
 
 
-def eval_combo(ws: Dict[str, float], cases: List[Any]) -> tuple[int, Dict[str, int], Dict[str, int]]:
+def eval_combo(ws: dict[str, float], cases: list[Any]) -> tuple[int, dict[str, int], dict[str, int]]:
     """Evaluate a weight combination and return hits, tag_hits, tag_total."""
     hits = 0
     tag_hits = defaultdict(int)
@@ -69,7 +69,7 @@ def eval_combo(ws: Dict[str, float], cases: List[Any]) -> tuple[int, Dict[str, i
 
 
 def apply_best_weights(
-    best_weights: Dict[str, float], min_delta: int = 0, baseline_hits: int = 0, best_hits: int = 0
+    best_weights: dict[str, float], min_delta: int = 0, baseline_hits: int = 0, best_hits: int = 0
 ) -> bool:
     """Apply best weights to retriever_weights.yaml with safety rails."""
     if (best_hits - baseline_hits) < min_delta:
@@ -87,7 +87,7 @@ def apply_best_weights(
     # Load existing config
     data = {}
     if os.path.exists(cfg_path):
-        with open(cfg_path, "r") as f:
+        with open(cfg_path) as f:
             data = yaml.safe_load(f) or {}
 
     # Update default block only, preserve per-tag overrides
@@ -104,7 +104,7 @@ def apply_best_weights(
     return True
 
 
-def print_tag_metrics(tag_hits: Dict[str, int], tag_total: Dict[str, int], k: int = 25):
+def print_tag_metrics(tag_hits: dict[str, int], tag_total: dict[str, int], k: int = 25):
     """Print per-tag hit@K metrics with macro/micro averages."""
     print("\n📊 Per-Tag Performance:")
     print("-" * 40)

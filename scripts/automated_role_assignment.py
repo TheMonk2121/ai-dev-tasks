@@ -11,7 +11,6 @@ and can update the memory rehydrator with the results.
 import argparse
 import sys
 from pathlib import Path
-from typing import Optional
 
 # Add scripts directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))

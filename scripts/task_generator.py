@@ -16,6 +16,7 @@ from scripts.doorway_utils import (
 
 PY = sys.executable
 
+
 def _generate_tasks_body_from_prd(prd_path: str, timeout_s: int = 12) -> str:
     # Delegate to the existing automation if available; otherwise produce a minimal stub.
     try:
@@ -36,6 +37,7 @@ def _generate_tasks_body_from_prd(prd_path: str, timeout_s: int = 12) -> str:
         return "\n\n## Tasks\n\n- T-1 Implement\n- T-2 Test\n"
     except Exception:
         return "\n\n## Tasks\n\n- T-1 Do the thing\n- T-2 Verify with tests\n"
+
 
 def generate(backlog_id: str, timeout_s: int = 12) -> str:
     # Derive paths by finding the PRD path for this backlog_id
@@ -68,12 +70,14 @@ def generate(backlog_id: str, timeout_s: int = 12) -> str:
     print(f"[TASKS] Created {out_path.name}")
     return str(out_path)
 
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("backlog_id")
     ap.add_argument("--timeout", type=int, default=12)  # NEW
     args = ap.parse_args()
     generate(args.backlog_id, args.timeout)
+
 
 if __name__ == "__main__":
     main()

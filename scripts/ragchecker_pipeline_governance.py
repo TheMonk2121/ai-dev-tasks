@@ -129,7 +129,7 @@ class RAGCheckerPipelineGovernance:
 
         logger.info(f"Initialized {len(self.governance.known_good_patterns)} known good pipeline patterns")
 
-    def validate_ragchecker_pipeline(self, pipeline_config: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_ragchecker_pipeline(self, pipeline_config: dict[str, Any]) -> dict[str, Any]:
         """Validate a RAGChecker pipeline configuration"""
 
         # Create a temporary pipeline ID for validation
@@ -160,7 +160,7 @@ class RAGCheckerPipelineGovernance:
 
         return validation_results
 
-    def optimize_ragchecker_pipeline(self, current_config: Dict[str, Any]) -> Dict[str, Any]:
+    def optimize_ragchecker_pipeline(self, current_config: dict[str, Any]) -> dict[str, Any]:
         """Optimize a RAGChecker pipeline configuration using governance insights"""
 
         # Validate current configuration
@@ -188,7 +188,7 @@ class RAGCheckerPipelineGovernance:
             logger.info("Optimized pipeline by auto-filling missing steps")
             return optimized_config
 
-    def generate_pipeline_variants(self, base_config: Dict[str, Any], num_variants: int = 5) -> List[Dict[str, Any]]:
+    def generate_pipeline_variants(self, base_config: dict[str, Any], num_variants: int = 5) -> list[dict[str, Any]]:
         """Generate augmented pipeline variants for training and optimization"""
 
         # Create base pipeline
@@ -210,7 +210,7 @@ class RAGCheckerPipelineGovernance:
 
         return variants
 
-    def evaluate_pipeline_performance(self, pipeline_config: Dict[str, Any], test_queries: List[str]) -> Dict[str, Any]:
+    def evaluate_pipeline_performance(self, pipeline_config: dict[str, Any], test_queries: list[str]) -> dict[str, Any]:
         """Evaluate pipeline performance using RAGChecker metrics"""
 
         # Validate pipeline first
@@ -266,7 +266,7 @@ class RAGCheckerPipelineGovernance:
             "success_rate": len(successful_results) / len(test_queries),
         }
 
-    def _simulate_ragchecker_evaluation(self, query: str, pipeline_config: Dict[str, Any]) -> Dict[str, Any]:
+    def _simulate_ragchecker_evaluation(self, query: str, pipeline_config: dict[str, Any]) -> dict[str, Any]:
         """Simulate RAGChecker evaluation (placeholder for actual integration)"""
 
         # This would integrate with your actual RAGChecker evaluation
@@ -292,7 +292,7 @@ class RAGCheckerPipelineGovernance:
             "pipeline_params": {"chunk_size": chunk_size, "top_k": top_k, "temperature": temperature},
         }
 
-    def get_pipeline_recommendations(self, requirements: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def get_pipeline_recommendations(self, requirements: dict[str, Any]) -> list[dict[str, Any]]:
         """Get pipeline recommendations based on requirements"""
 
         recommendations = []
@@ -319,7 +319,7 @@ class RAGCheckerPipelineGovernance:
 
         return recommendations
 
-    def _calculate_requirement_match(self, requirements: Dict[str, Any], metadata: Dict[str, Any]) -> float:
+    def _calculate_requirement_match(self, requirements: dict[str, Any], metadata: dict[str, Any]) -> float:
         """Calculate how well a pipeline matches given requirements"""
 
         match_score = 0.0
@@ -357,7 +357,7 @@ class RAGCheckerPipelineGovernance:
 
         return match_score
 
-    def export_governance_report(self) -> Dict[str, Any]:
+    def export_governance_report(self) -> dict[str, Any]:
         """Export comprehensive governance report"""
 
         return {

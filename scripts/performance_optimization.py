@@ -77,7 +77,7 @@ class OptimizationConfig:
     enable_performance_monitoring: bool = True
     monitoring_interval_seconds: int = 30
     enable_alerting: bool = True
-    performance_thresholds: Dict[str, float] = field(
+    performance_thresholds: dict[str, float] = field(
         default_factory=lambda: {
             "max_response_time_ms": 100.0,
             "min_cache_hit_rate": 0.8,
@@ -116,7 +116,7 @@ class PerformanceMetrics:
     algorithm_cache_hit_rate: float = 0.0
 
     # Performance alerts
-    alerts: List[str] = field(default_factory=list)
+    alerts: list[str] = field(default_factory=list)
 
     @property
     def response_time_variance(self) -> float:
@@ -129,18 +129,18 @@ class PerformanceMetrics:
 class PerformanceOptimizer:
     """Performance optimization engine for the generation cache system"""
 
-    def __init__(self, config: Optional[OptimizationConfig] = None):
+    def __init__(self, config: OptimizationConfig | None = None):
         """Initialize performance optimizer"""
         self.config = config or OptimizationConfig()
         self.metrics = PerformanceMetrics()
 
         # Initialize systems with optimized configurations
-        self.cache_service: Optional[PostgreSQLCacheService] = None
-        self.similarity_engine: Optional[SimilarityScoringEngine] = None
-        self.integration: Optional[CacheInvalidationIntegration] = None
+        self.cache_service: PostgreSQLCacheService | None = None
+        self.similarity_engine: SimilarityScoringEngine | None = None
+        self.integration: CacheInvalidationIntegration | None = None
 
         # Performance monitoring
-        self.monitoring_task: Optional[asyncio.Task] = None
+        self.monitoring_task: asyncio.Task | None = None
         self.running = False
 
         logger.info("Performance Optimizer initialized")
@@ -421,7 +421,7 @@ class PerformanceOptimizer:
         except Exception:
             return 0.0
 
-    async def run_performance_benchmark(self, iterations: int = 100) -> Dict[str, Any]:
+    async def run_performance_benchmark(self, iterations: int = 100) -> dict[str, Any]:
         """Run comprehensive performance benchmark"""
         try:
             logger.info(f"Starting performance benchmark with {iterations} iterations")
@@ -453,7 +453,7 @@ class PerformanceOptimizer:
             logger.error(f"Performance benchmark failed: {e}")
             return {"error": str(e)}
 
-    async def _benchmark_cache_service(self, iterations: int) -> Dict[str, Any]:
+    async def _benchmark_cache_service(self, iterations: int) -> dict[str, Any]:
         """Benchmark cache service performance"""
         try:
             start_time = time.time()
@@ -484,7 +484,7 @@ class PerformanceOptimizer:
             logger.error(f"Cache service benchmark failed: {e}")
             return {"error": str(e)}
 
-    async def _benchmark_similarity_engine(self, iterations: int) -> Dict[str, Any]:
+    async def _benchmark_similarity_engine(self, iterations: int) -> dict[str, Any]:
         """Benchmark similarity engine performance"""
         try:
             start_time = time.time()
@@ -525,7 +525,7 @@ class PerformanceOptimizer:
             logger.error(f"Similarity engine benchmark failed: {e}")
             return {"error": str(e)}
 
-    async def _benchmark_integration(self, iterations: int) -> Dict[str, Any]:
+    async def _benchmark_integration(self, iterations: int) -> dict[str, Any]:
         """Benchmark integration performance"""
         try:
             start_time = time.time()
@@ -556,7 +556,7 @@ class PerformanceOptimizer:
             logger.error(f"Integration benchmark failed: {e}")
             return {"error": str(e)}
 
-    def _calculate_overall_benchmark(self, benchmark_results: Dict[str, Any]) -> Dict[str, Any]:
+    def _calculate_overall_benchmark(self, benchmark_results: dict[str, Any]) -> dict[str, Any]:
         """Calculate overall benchmark metrics"""
         try:
             overall = {
@@ -583,7 +583,7 @@ class PerformanceOptimizer:
             logger.error(f"Overall benchmark calculation failed: {e}")
             return {"error": str(e)}
 
-    async def get_optimization_report(self) -> Dict[str, Any]:
+    async def get_optimization_report(self) -> dict[str, Any]:
         """Get comprehensive optimization report"""
         try:
             return {

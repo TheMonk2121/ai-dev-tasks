@@ -10,7 +10,6 @@ import argparse
 import json
 import pathlib
 import sys
-from typing import List
 
 import yaml
 
@@ -31,7 +30,7 @@ TARGETS = {
 }
 
 
-def run(cfg_path: str) -> List[RunMetrics]:
+def run(cfg_path: str) -> list[RunMetrics]:
     """Run retrieval evaluation with quality gates"""
 
     # Load configuration
@@ -42,7 +41,7 @@ def run(cfg_path: str) -> List[RunMetrics]:
     rc = RAGCheckerAdapter()
 
     # Run evaluations for different modes
-    runs: List[RunMetrics] = []
+    runs: list[RunMetrics] = []
 
     # Dense retrieval
     dense = rc.evaluate_retrieval(dataset=ds, mode="dense")

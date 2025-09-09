@@ -61,7 +61,7 @@ def _require_pydantic_evals():
         sys.exit(2)
 
 
-def _resolve_dsn() -> Optional[str]:
+def _resolve_dsn() -> str | None:
     """Resolve a database DSN via canonical helper with safe fallback."""
     try:
         from src.common.db_dsn import resolve_dsn
@@ -84,7 +84,7 @@ def _rag_task_factory():
     rp = importlib.import_module("dspy_modules.rag_pipeline")
     pipe = rp.RAGPipeline(dsn)
 
-    def task(question: str) -> Dict[str, Any]:
+    def task(question: str) -> dict[str, Any]:
         # Preferred: full RAG answer (requires DSPy LM configured)
         try:
             return pipe.answer(question)
@@ -101,7 +101,7 @@ def _rag_task_factory():
     return task
 
 
-def _load_unit_cases() -> List[Dict[str, Any]]:
+def _load_unit_cases() -> list[dict[str, Any]]:
     """Load unit-style cases from eval/test_cases.json.
 
     Schema example:
@@ -113,7 +113,7 @@ def _load_unit_cases() -> List[Dict[str, Any]]:
     return json.loads(p.read_text())
 
 
-def _load_gold_cases() -> List[Dict[str, Any]]:
+def _load_gold_cases() -> list[dict[str, Any]]:
     """Load gold cases from evals/gold_cases.json.
 
     Schema example:
@@ -130,7 +130,7 @@ def build_unit_dataset():
     from pydantic_evals.evaluators import Evaluator, EvaluatorContext, IsInstance
 
     unit = _load_unit_cases()
-    cases: List[Case[str, Dict[str, Any], Dict[str, Any]]] = []
+    cases: list[Case[str, dict[str, Any], dict[str, Any]]] = []
 
     for i, row in enumerate(unit):
         q = str(row.get("query", "")).strip()
@@ -139,8 +139,8 @@ def build_unit_dataset():
         cases.append(Case(name=f"unit_{i+1}", inputs=q, expected_output=expected, metadata=meta))
 
     # Custom evaluator: answer equals/contains expected
-    class AnswerMatches(Evaluator[Dict[str, Any], str]):
-        def evaluate(self, ctx: EvaluatorContext[Dict[str, Any], str]) -> float:
+    class AnswerMatches(Evaluator[dict[str, Any], str]):
+        def evaluate(self, ctx: EvaluatorContext[dict[str, Any], str]) -> float:
             out = ctx.output or {}
             ans = str(out.get("answer", ""))
             exp = str(ctx.expected_output or "")
@@ -153,8 +153,8 @@ def build_unit_dataset():
             return 0.0
 
     # Custom evaluator: mentions any provided context spans
-    class MentionsContext(Evaluator[Dict[str, Any], str]):
-        def evaluate(self, ctx: EvaluatorContext[Dict[str, Any], str]) -> float:
+    class MentionsContext(Evaluator[dict[str, Any], str]):
+        def evaluate(self, ctx: EvaluatorContext[dict[str, Any], str]) -> float:
             out = ctx.output or {}
             ans = str(out.get("answer", ""))
             ctx_list = list((ctx.metadata or {}).get("context") or [])
@@ -175,7 +175,7 @@ def build_gold_dataset():
     from pydantic_evals.evaluators import Evaluator, EvaluatorContext, IsInstance
 
     gold = _load_gold_cases()
-    cases: List[Case[str, List[str], Dict[str, Any]]] = []
+    cases: list[Case[str, list[str], dict[str, Any]]] = []
 
     for row in gold:
         q = str(row.get("query", "")).strip()
@@ -186,13 +186,14 @@ def build_gold_dataset():
         cases.append(Case(name=name, inputs=q, expected_output=exp_files, metadata=meta))
 
     # Custom evaluator: any expected file appears in citations
-    class CitationsHit(Evaluator[Dict[str, Any], List[str]]):
-        def evaluate(self, ctx: EvaluatorContext[Dict[str, Any], List[str]]) -> float:
+    class CitationsHit(Evaluator[dict[str, Any], list[str]]):
+        def evaluate(self, ctx: EvaluatorContext[dict[str, Any], list[str]]) -> float:
             out = ctx.output or {}
             cites = [str(x) for x in (out.get("citations") or [])]
             expected = [str(x) for x in (ctx.expected_output or [])]
             if not expected:
                 return 0.0
+
             # Match on full path or basename containment
             def match(one: str, two: str) -> bool:
                 from os.path import basename

@@ -151,17 +151,18 @@ STRATEGIC_ALIGNMENT_STEPS = {
 # Required roles for PR closure (including stakeholder)
 REQUIRED_ROLES_V2 = ["stakeholder", "planner", "implementer", "coder", "researcher"]
 
+
 class PRSignOffSystemV2:
     """Enhanced multi-role PR sign-off system with 5-step strategic alignment."""
 
-    def __init__(self, pr_number: str, backlog_id: Optional[str] = None):
+    def __init__(self, pr_number: str, backlog_id: str | None = None):
         self.pr_number = pr_number
         self.backlog_id = backlog_id or self._extract_backlog_id()
         self.signoff_file = f"artifacts/pr_signoffs/PR-{pr_number}-signoff-v2.json"
         self.worklog_path = f"artifacts/worklogs/{self.backlog_id}.md" if self.backlog_id else None
         self.lessons_file = f"artifacts/lessons_learned/PR-{pr_number}-lessons.md"
 
-    def _extract_backlog_id(self) -> Optional[str]:
+    def _extract_backlog_id(self) -> str | None:
         """Extract backlog ID from PR title or description."""
         try:
             result = subprocess.run(
@@ -178,10 +179,10 @@ class PRSignOffSystemV2:
         except (subprocess.CalledProcessError, json.JSONDecodeError, FileNotFoundError):
             return None
 
-    def _load_signoff_state(self) -> Dict[str, Any]:
+    def _load_signoff_state(self) -> dict[str, Any]:
         """Load existing sign-off state."""
         if os.path.exists(self.signoff_file):
-            with open(self.signoff_file, "r") as f:
+            with open(self.signoff_file) as f:
                 return json.load(f)
         return {
             "pr_number": self.pr_number,
@@ -194,13 +195,13 @@ class PRSignOffSystemV2:
             "status": "pending",
         }
 
-    def _save_signoff_state(self, state: Dict[str, Any]) -> None:
+    def _save_signoff_state(self, state: dict[str, Any]) -> None:
         """Save sign-off state to file."""
         os.makedirs(os.path.dirname(self.signoff_file), exist_ok=True)
         with open(self.signoff_file, "w") as f:
             json.dump(state, f, indent=2)
 
-    def strategic_alignment(self, step: str, answers: Dict[str, Any], notes: str = "") -> Dict[str, Any]:
+    def strategic_alignment(self, step: str, answers: dict[str, Any], notes: str = "") -> dict[str, Any]:
         """Complete a step in the 5-step strategic alignment process."""
         if step not in STRATEGIC_ALIGNMENT_STEPS:
             raise ValueError(f"Invalid step: {step}. Must be one of {list(STRATEGIC_ALIGNMENT_STEPS.keys())}")
@@ -229,7 +230,7 @@ class PRSignOffSystemV2:
 
     def create_milestone(
         self, milestone_name: str, description: str, required_roles: list, due_date: str = None
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Create a milestone for role check-ins."""
         state = self._load_signoff_state()
 
@@ -249,7 +250,7 @@ class PRSignOffSystemV2:
 
     def approve_milestone(
         self, milestone_name: str, role: str, approved: bool = True, notes: str = ""
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Approve a milestone for a specific role."""
         state = self._load_signoff_state()
 
@@ -274,7 +275,7 @@ class PRSignOffSystemV2:
         self._save_signoff_state(state)
         return approval_data
 
-    def _run_role_validation(self, role: str) -> Dict[str, Any]:
+    def _run_role_validation(self, role: str) -> dict[str, Any]:
         """Run validation checks for a specific role."""
         validation_results = {
             "role": role,
@@ -296,7 +297,7 @@ class PRSignOffSystemV2:
 
         return validation_results
 
-    def _run_single_check(self, role: str, responsibility: str) -> Dict[str, Any]:
+    def _run_single_check(self, role: str, responsibility: str) -> dict[str, Any]:
         """Run a single validation check for a role responsibility."""
         check_result = {"status": "pending", "details": "", "recommendations": []}
 
@@ -317,7 +318,7 @@ class PRSignOffSystemV2:
 
         return check_result
 
-    def _run_stakeholder_check(self, responsibility: str) -> Dict[str, Any]:
+    def _run_stakeholder_check(self, responsibility: str) -> dict[str, Any]:
         """Run stakeholder role validation checks."""
         result = {"status": "pending", "details": "", "recommendations": []}
 
@@ -339,7 +340,7 @@ class PRSignOffSystemV2:
 
         return result
 
-    def _run_planner_check(self, responsibility: str) -> Dict[str, Any]:
+    def _run_planner_check(self, responsibility: str) -> dict[str, Any]:
         """Run planner role validation checks."""
         result = {"status": "pending", "details": "", "recommendations": []}
 
@@ -364,7 +365,7 @@ class PRSignOffSystemV2:
 
         return result
 
-    def _run_implementer_check(self, responsibility: str) -> Dict[str, Any]:
+    def _run_implementer_check(self, responsibility: str) -> dict[str, Any]:
         """Run implementer role validation checks."""
         result = {"status": "pending", "details": "", "recommendations": []}
 
@@ -403,7 +404,7 @@ class PRSignOffSystemV2:
 
         return result
 
-    def _run_coder_check(self, responsibility: str) -> Dict[str, Any]:
+    def _run_coder_check(self, responsibility: str) -> dict[str, Any]:
         """Run coder role validation checks."""
         result = {"status": "pending", "details": "", "recommendations": []}
 
@@ -441,13 +442,13 @@ class PRSignOffSystemV2:
 
         return result
 
-    def _run_researcher_check(self, responsibility: str) -> Dict[str, Any]:
+    def _run_researcher_check(self, responsibility: str) -> dict[str, Any]:
         """Run researcher role validation checks."""
         result = {"status": "pending", "details": "", "recommendations": []}
 
         if responsibility == "knowledge_extraction":
             if self.worklog_path and os.path.exists(self.worklog_path):
-                with open(self.worklog_path, "r") as f:
+                with open(self.worklog_path) as f:
                     content = f.read()
                     if len(content.strip()) > 100:
                         result["status"] = "passed"
@@ -467,7 +468,7 @@ class PRSignOffSystemV2:
 
         return result
 
-    def sign_off(self, role: str, approved: bool = True, notes: str = "") -> Dict[str, Any]:
+    def sign_off(self, role: str, approved: bool = True, notes: str = "") -> dict[str, Any]:
         """Sign off on PR closure for a specific role."""
         if role not in REQUIRED_ROLES_V2:
             raise ValueError(f"Invalid role: {role}. Must be one of {REQUIRED_ROLES_V2}")
@@ -502,7 +503,7 @@ class PRSignOffSystemV2:
         self._save_signoff_state(state)
         return signoff_entry
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get current sign-off status."""
         state = self._load_signoff_state()
 
@@ -539,7 +540,7 @@ class PRSignOffSystemV2:
 
         return status_summary
 
-    def generate_lessons_learned(self) -> Dict[str, Any]:
+    def generate_lessons_learned(self) -> dict[str, Any]:
         """Generate lessons learned artifact."""
         if not self.get_status()["can_close"]:
             raise ValueError("Cannot generate lessons learned - PR not fully approved")
@@ -591,7 +592,7 @@ class PRSignOffSystemV2:
 
         return lessons_data
 
-    def _generate_recommendations(self, lessons_data: Dict[str, Any]) -> list:
+    def _generate_recommendations(self, lessons_data: dict[str, Any]) -> list:
         """Generate recommendations based on lessons learned."""
         recommendations = []
 
@@ -619,7 +620,7 @@ class PRSignOffSystemV2:
 
         return recommendations
 
-    def perform_cleanup(self) -> Dict[str, Any]:
+    def perform_cleanup(self) -> dict[str, Any]:
         """Perform automated cleanup after PR approval."""
         if not self.get_status()["can_close"]:
             raise ValueError("Cannot perform cleanup - PR not fully approved")
@@ -681,7 +682,7 @@ class PRSignOffSystemV2:
     def _add_deprecation_header(self, file_path: Path) -> None:
         """Add deprecation header to archived file."""
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 content = f.read()
 
             deprecation_header = f"""<!-- ARCHIVED/DEPRECATED - do not edit -->
@@ -714,6 +715,7 @@ class PRSignOffSystemV2:
                 os.remove(self.signoff_file)
         except Exception as e:
             print(f"Warning: Could not clean up sign-off file: {e}")
+
 
 def main():
     """Main CLI interface for v2.0."""
@@ -816,6 +818,7 @@ def main():
         except ValueError as e:
             print(f"❌ Cleanup failed: {e}")
             sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

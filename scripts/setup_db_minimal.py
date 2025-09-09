@@ -31,7 +31,7 @@ def ensure_retrieval_schema() -> None:
     # Reuse the dedicated script logic inline to avoid import coupling
     with get_conn(role="writer") as conn:
         with conn.cursor() as cur:
-            cur.execute("CREATE EXTENSION IF NOT EXISTS \"vector\";")
+            cur.execute('CREATE EXTENSION IF NOT EXISTS "vector";')
             cur.execute(
                 """
                 CREATE INDEX IF NOT EXISTS idx_dc_content_tsv
@@ -65,9 +65,7 @@ def ensure_performance_helpers() -> None:
     with get_conn(role="writer") as conn:
         with conn.cursor() as cur:
             # Call helper to create next 7 days of partitions if the function exists
-            cur.execute(
-                "SELECT 1 FROM pg_proc WHERE proname='ensure_future_performance_partitions';"
-            )
+            cur.execute("SELECT 1 FROM pg_proc WHERE proname='ensure_future_performance_partitions';")
             if cur.fetchone():
                 cur.execute("SELECT ensure_future_performance_partitions(7);")
         conn.commit()
@@ -87,4 +85,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

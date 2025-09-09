@@ -17,7 +17,7 @@ def run_daily_maintenance():
         ("Check for outdated packages", ["uv", "pip", "list", "--outdated"]),
         ("Update lock file", ["uv", "lock"]),
         ("Run security scan", ["python", "scripts/uv_dependency_manager.py", "--security"]),
-        ("Performance check", ["python", "scripts/uv_performance_monitor.py"])
+        ("Performance check", ["python", "scripts/uv_performance_monitor.py"]),
     ]
 
     for task_name, cmd in tasks:
@@ -27,6 +27,7 @@ def run_daily_maintenance():
             print(f"✅ {task_name} completed")
         except subprocess.CalledProcessError as e:
             print(f"⚠️ {task_name} failed: {e}")
+
 
 if __name__ == "__main__":
     run_daily_maintenance()

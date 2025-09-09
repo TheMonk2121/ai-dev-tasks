@@ -48,14 +48,14 @@ class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
 
     def get_enhanced_context_with_heuristics(
         self,
-        systems: List[str],
+        systems: list[str],
         role: str = "planner",
         query: str = "",
         include_episodic: bool = True,
         include_heuristics: bool = True,
         context_type: str = "guidance",
         regenerate_heuristics: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get enhanced context with both episodic memory and heuristics pack."""
         start_time = time.time()
 
@@ -143,7 +143,7 @@ class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
             print(f"❌ Failed to enhance system prompt with heuristics: {e}")
             return enhanced_prompt
 
-    def regenerate_heuristics_pack(self, agent: str = "cursor_ai") -> Optional[HeuristicsPack]:
+    def regenerate_heuristics_pack(self, agent: str = "cursor_ai") -> HeuristicsPack | None:
         """Regenerate the heuristics pack for an agent."""
         if not self.heuristics_generator:
             print("⚠️  Heuristics generator not available")
@@ -185,7 +185,7 @@ class EnhancedMemoryOrchestratorWithHeuristics(EnhancedMemoryOrchestrator):
             print(f"❌ Failed to load heuristics pack: {e}")
             return False
 
-    def get_heuristics_stats(self) -> Dict[str, Any]:
+    def get_heuristics_stats(self) -> dict[str, Any]:
         """Get statistics about the current heuristics pack."""
         if not self.current_heuristics_pack:
             return {"error": "No heuristics pack loaded"}

@@ -39,9 +39,9 @@ class RAGCheckerResult(BaseModel):
     test_case_name: str = Field(..., min_length=1, description="Name of the test case")
     query: str = Field(..., min_length=1, description="The query that was evaluated")
     custom_score: float = Field(..., ge=0.0, le=1.0, description="Custom evaluation score (0-1)")
-    ragchecker_scores: Dict[str, float] = Field(..., description="Dictionary of RAGChecker metric scores")
+    ragchecker_scores: dict[str, float] = Field(..., description="Dictionary of RAGChecker metric scores")
     ragchecker_overall: float = Field(..., ge=0.0, le=1.0, description="Overall RAGChecker score (0-1)")
-    comparison: Dict[str, Any] = Field(..., description="Comparison data between custom and RAGChecker scores")
+    comparison: dict[str, Any] = Field(..., description="Comparison data between custom and RAGChecker scores")
     recommendation: str = Field(..., min_length=1, description="Recommendation based on evaluation results")
 
     @field_validator("test_case_name")
@@ -105,7 +105,7 @@ class RAGCheckerEvaluator:
         # We'll use it in a limited capacity for metrics that don't require LLM
         self.ragchecker = RAGChecker()
 
-    def run_memory_query(self, query: str, role: str = "planner") -> Dict[str, Any]:
+    def run_memory_query(self, query: str, role: str = "planner") -> dict[str, Any]:
         """Run memory query using our existing orchestrator."""
         try:
             result = subprocess.run(
@@ -135,7 +135,7 @@ class RAGCheckerEvaluator:
         except Exception as e:
             return {"success": False, "output": "", "error": str(e)}
 
-    def extract_ragchecker_data(self, response: Dict[str, Any], query: str) -> RAGResult:
+    def extract_ragchecker_data(self, response: dict[str, Any], query: str) -> RAGResult:
         """Extract data in RAGChecker format from memory system response."""
         try:
             # Parse the response
@@ -183,7 +183,7 @@ class RAGCheckerEvaluator:
                 retrieved_context=[],
             )
 
-    def run_ragchecker_evaluation(self, rag_result: RAGResult) -> Dict[str, float]:
+    def run_ragchecker_evaluation(self, rag_result: RAGResult) -> dict[str, float]:
         """Run RAGChecker evaluation on the data."""
         try:
             # Create RAGResults object
@@ -195,7 +195,7 @@ class RAGCheckerEvaluator:
             results = self.ragchecker.evaluate(rag_results, metrics="faithfulness")  # type: ignore
 
             # Extract scores
-            ragchecker_scores: Dict[str, float] = {}
+            ragchecker_scores: dict[str, float] = {}
             for metric_name, score in results.items():
                 try:
                     if isinstance(score, (int, float)):
@@ -212,9 +212,9 @@ class RAGCheckerEvaluator:
             # Return basic metrics that we can calculate manually
             return self._calculate_basic_metrics(rag_result)
 
-    def _calculate_basic_metrics(self, rag_result: RAGResult) -> Dict[str, float]:
+    def _calculate_basic_metrics(self, rag_result: RAGResult) -> dict[str, float]:
         """Calculate basic metrics that don't require LLM or ground truth."""
-        metrics: Dict[str, float] = {}
+        metrics: dict[str, float] = {}
 
         # Response length (normalized)
         response_length = len(rag_result.response)
@@ -240,7 +240,7 @@ class RAGCheckerEvaluator:
 
     @optimize_validation("constitution_validation")
     @with_error_recovery("constitution_validation")
-    def validate_with_constitution(self, evaluation_data: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_with_constitution(self, evaluation_data: dict[str, Any]) -> dict[str, Any]:
         """Validate RAGChecker evaluation data with constitution awareness."""
         import time
 
@@ -433,7 +433,7 @@ class RAGCheckerEvaluator:
 
         return validation_results
 
-    def validate_with_constitution_and_taxonomy(self, evaluation_data: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_with_constitution_and_taxonomy(self, evaluation_data: dict[str, Any]) -> dict[str, Any]:
         """Validate RAGChecker evaluation data with constitution awareness and error taxonomy."""
         # First, perform constitution validation
         validation_results = self.validate_with_constitution(evaluation_data)
@@ -443,7 +443,7 @@ class RAGCheckerEvaluator:
 
         return enhanced_results
 
-    def _extract_compliance_score(self, validation_result: Dict[str, Any]) -> float:
+    def _extract_compliance_score(self, validation_result: dict[str, Any]) -> float:
         """Extract compliance score from validation result safely."""
         try:
             if validation_result.get("compliance"):
@@ -456,7 +456,7 @@ class RAGCheckerEvaluator:
         except Exception:
             return 0.0
 
-    def _extract_recommendations(self, validation_results: Dict[str, Any]) -> List[str]:
+    def _extract_recommendations(self, validation_results: dict[str, Any]) -> list[str]:
         """Extract recommendations from validation results."""
         recommendations = []
 
@@ -469,27 +469,27 @@ class RAGCheckerEvaluator:
 
         return list(set(recommendations))  # Remove duplicates
 
-    def get_debugging_summary(self) -> Dict[str, Any]:
+    def get_debugging_summary(self) -> dict[str, Any]:
         """Get debugging summary for RAGChecker evaluation workflows"""
         return self.debug_manager.get_debugging_summary()
 
-    def get_debug_context(self, evaluation_id: str) -> Optional[Any]:
+    def get_debug_context(self, evaluation_id: str) -> Any | None:
         """Get debug context for a specific evaluation"""
         # This would need to be implemented based on how we store contexts
         # For now, return the debug manager summary
         return self.debug_manager.get_debugging_summary()
 
-    def get_error_recovery_statistics(self) -> Dict[str, Any]:
+    def get_error_recovery_statistics(self) -> dict[str, Any]:
         """Get error recovery statistics and performance metrics"""
         return self.error_recovery.get_recovery_statistics()
 
     def recover_from_validation_error(
-        self, error: Exception, error_type: str, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, error: Exception, error_type: str, context: dict[str, Any]
+    ) -> dict[str, Any]:
         """Recover from a validation error using the error recovery system"""
         return self.error_recovery.recover_from_error(error=error, error_type=error_type, context=context)
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> dict[str, Any]:
         """Get performance optimization summary"""
         return self.validation_optimizer.get_performance_summary()
 
@@ -502,21 +502,21 @@ class RAGCheckerEvaluator:
         self.validation_optimizer.clear_performance_history()
 
     def batch_validate_with_constitution(
-        self, evaluation_data_batch: List[Dict[str, Any]]
-    ) -> Tuple[List[Dict[str, Any]], Any]:
+        self, evaluation_data_batch: list[dict[str, Any]]
+    ) -> tuple[list[dict[str, Any]], Any]:
         """Batch validate multiple evaluation data items with constitution awareness"""
         return self.validation_optimizer.batch_validate(
             self.constitution_validator.validate_ragchecker_input, evaluation_data_batch, "constitution_validation"
         )
 
     # Performance Monitoring Methods
-    def get_performance_monitoring_summary(self) -> Dict[str, Any]:
+    def get_performance_monitoring_summary(self) -> dict[str, Any]:
         """Get comprehensive performance monitoring summary."""
         return self.performance_monitor.get_performance_summary()
 
     def get_performance_history(
-        self, start_time: Optional[datetime] = None, end_time: Optional[datetime] = None, max_points: int = 100
-    ) -> List[Dict[str, Any]]:
+        self, start_time: datetime | None = None, end_time: datetime | None = None, max_points: int = 100
+    ) -> list[dict[str, Any]]:
         """Get performance history within a time range."""
         return self.performance_monitor.get_performance_history(start_time, end_time, max_points)
 
@@ -556,7 +556,7 @@ class RAGCheckerEvaluator:
         """Stop performance monitoring."""
         self.performance_monitor.stop_monitoring()
 
-    def calculate_ragchecker_overall(self, ragchecker_scores: Dict[str, float]) -> float:
+    def calculate_ragchecker_overall(self, ragchecker_scores: dict[str, float]) -> float:
         """Calculate overall RAGChecker score (weighted average)."""
         if not ragchecker_scores:
             return 0.0
@@ -584,7 +584,7 @@ class RAGCheckerEvaluator:
         else:
             return 0.0
 
-    def compare_evaluations(self, custom_score: float, ragchecker_overall: float) -> Dict[str, Any]:
+    def compare_evaluations(self, custom_score: float, ragchecker_overall: float) -> dict[str, Any]:
         """Compare custom vs RAGChecker evaluation results."""
         difference = custom_score - ragchecker_overall
         percentage_diff = (difference / custom_score * 100) if custom_score > 0 else 0
@@ -680,7 +680,7 @@ class RAGCheckerEvaluator:
             recommendation=comparison["recommendation"],
         )
 
-    def run_ragchecker_evaluation_suite(self) -> Dict[str, Any]:
+    def run_ragchecker_evaluation_suite(self) -> dict[str, Any]:
         """Run RAGChecker evaluation on all baseline test cases."""
 
         print("🧠 Starting RAGChecker Evaluation")

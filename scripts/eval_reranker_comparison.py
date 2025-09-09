@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 
-def run_evaluation_with_config(config_name: str, config_file: str, output_dir: str) -> Dict[str, Any]:
+def run_evaluation_with_config(config_name: str, config_file: str, output_dir: str) -> dict[str, Any]:
     """Run evaluation with a specific configuration"""
     print(f"\n🧪 Running evaluation: {config_name}")
     print(f"📁 Config: {config_file}")
@@ -44,7 +44,7 @@ def run_evaluation_with_config(config_name: str, config_file: str, output_dir: s
         print(f"✅ Evaluation completed: {actual_output}")
 
         # Load results
-        with open(actual_output, "r") as f:
+        with open(actual_output) as f:
             results = json.load(f)
 
         return {
@@ -60,7 +60,7 @@ def run_evaluation_with_config(config_name: str, config_file: str, output_dir: s
         return {"status": "failed", "config_name": config_name, "error": e.stderr, "timestamp": timestamp}
 
 
-def compare_results(results_with_reranker: Dict[str, Any], results_without_reranker: Dict[str, Any]) -> Dict[str, Any]:
+def compare_results(results_with_reranker: dict[str, Any], results_without_reranker: dict[str, Any]) -> dict[str, Any]:
     """Compare results between reranker enabled and disabled"""
     comparison = {
         "reranker_enabled": results_with_reranker,

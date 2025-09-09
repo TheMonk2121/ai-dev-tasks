@@ -21,7 +21,7 @@ sys.path.insert(0, str(dspy_rag_path))
 import config.env_guard
 
 
-def run_evaluation_pass(pass_name: str, config: Dict[str, Any], output_file: str) -> Dict[str, Any]:
+def run_evaluation_pass(pass_name: str, config: dict[str, Any], output_file: str) -> dict[str, Any]:
     """Run a single evaluation pass with specific configuration."""
     print(f"\n🔄 Running {pass_name}")
     print("=" * 60)
@@ -104,7 +104,7 @@ def run_evaluation_pass(pass_name: str, config: Dict[str, Any], output_file: str
         return error_result
 
 
-def analyze_results(results: List[Dict[str, Any]]) -> Dict[str, Any]:
+def analyze_results(results: list[dict[str, Any]]) -> dict[str, Any]:
     """Analyze evaluation results and check pass criteria."""
     print("\n📊 Analysis Results")
     print("=" * 60)

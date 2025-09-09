@@ -13,7 +13,7 @@ def migrate_core_workflow():
         "00_backlog.md": "000_backlog.md",
         "01_create-prd.md": "001_create-prd.md",
         "02_generate-tasks.md": "002_generate-tasks.md",
-        "03_process-task-list.md": "003_process-task-list.md"
+        "03_process-task-list.md": "003_process-task-list.md",
     }
 
     print("🚀 **Core Workflow Migration**")
@@ -49,6 +49,7 @@ def migrate_core_workflow():
     else:
         print("\nℹ️  No files to migrate")
 
+
 def update_file_references(old_name, new_name):
     """Update references to the old filename in other markdown files."""
 
@@ -64,7 +65,7 @@ def update_file_references(old_name, new_name):
             continue  # Skip the file being renamed
 
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Check if file contains reference to old name
@@ -73,7 +74,7 @@ def update_file_references(old_name, new_name):
                 new_content = content.replace(old_name, new_name)
 
                 # Write updated content
-                with open(file_path, 'w', encoding='utf-8') as f:
+                with open(file_path, "w", encoding="utf-8") as f:
                     f.write(new_content)
 
                 updated_files.append(file_path.name)
@@ -84,6 +85,7 @@ def update_file_references(old_name, new_name):
 
     if updated_files:
         print(f"  📝 Updated {len(updated_files)} files")
+
 
 if __name__ == "__main__":
     migrate_core_workflow()

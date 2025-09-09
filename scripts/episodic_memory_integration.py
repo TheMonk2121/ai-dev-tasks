@@ -66,8 +66,8 @@ class EpisodicMemoryIntegration:
         output_text: str,
         agent: str = "cursor_ai",
         task_type: str = "general",
-        outcome_metrics: Optional[Dict[str, Any]] = None,
-        source_refs: Optional[Dict[str, Any]] = None,
+        outcome_metrics: dict[str, Any] | None = None,
+        source_refs: dict[str, Any] | None = None,
     ) -> bool:
         """Store a reflection for a completed task."""
         if not self.store:
@@ -96,7 +96,7 @@ class EpisodicMemoryIntegration:
             print(f"❌ Task completion storage failed: {e}")
             return False
 
-    def get_episodic_context(self, query: str, agent: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    def get_episodic_context(self, query: str, agent: str | None = None) -> dict[str, Any] | None:
         """Get episodic context for a query."""
         if not self.store:
             print("❌ Episodic store not available")
@@ -134,7 +134,7 @@ class EpisodicMemoryIntegration:
             print(f"❌ Episodic context retrieval failed: {e}")
             return None
 
-    def get_stats(self) -> Optional[Dict[str, Any]]:
+    def get_stats(self) -> dict[str, Any] | None:
         """Get statistics about stored reflections."""
         if not self.store:
             print("❌ Episodic store not available")

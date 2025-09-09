@@ -49,14 +49,14 @@ class DependencyMonitor:
         with open(self.change_log_file, "a") as f:
             f.write(f"[{timestamp}] [{level}] {message}\n")
 
-    def _load_previous_state(self) -> Dict[str, Any]:
+    def _load_previous_state(self) -> dict[str, Any]:
         """Load previous dependency state for comparison."""
         previous_state = {}
 
         # Load dependency tree state
         if self.dependency_file.exists():
             try:
-                with open(self.dependency_file, "r") as f:
+                with open(self.dependency_file) as f:
                     previous_state["dependency_tree"] = json.load(f)
             except Exception as e:
                 self.log(f"Failed to load dependency tree state: {e}", "WARNING")
@@ -64,7 +64,7 @@ class DependencyMonitor:
         # Load circular dependencies state
         if self.circular_file.exists():
             try:
-                with open(self.circular_file, "r") as f:
+                with open(self.circular_file) as f:
                     previous_state["circular_dependencies"] = json.load(f)
             except Exception as e:
                 self.log(f"Failed to load circular dependencies state: {e}", "WARNING")
@@ -72,14 +72,14 @@ class DependencyMonitor:
         # Load import conflicts state
         if self.import_conflicts_file.exists():
             try:
-                with open(self.import_conflicts_file, "r") as f:
+                with open(self.import_conflicts_file) as f:
                     previous_state["import_conflicts"] = json.load(f)
             except Exception as e:
                 self.log(f"Failed to load import conflicts state: {e}", "WARNING")
 
         return previous_state
 
-    def _save_state(self, state: Dict[str, Any], filename: Path):
+    def _save_state(self, state: dict[str, Any], filename: Path):
         """Save state to file."""
         if self.dry_run:
             self.log(f"DRY RUN: Would save to {filename}")
@@ -92,7 +92,7 @@ class DependencyMonitor:
         except Exception as e:
             self.log(f"Failed to save state to {filename}: {e}", "ERROR")
 
-    def generate_dependency_tree(self) -> Optional[Dict[str, Any]]:
+    def generate_dependency_tree(self) -> dict[str, Any] | None:
         """Generate dependency tree using pipdeptree."""
         try:
             self.log("Generating dependency tree with pipdeptree...")
@@ -119,7 +119,7 @@ class DependencyMonitor:
             self.log(f"Failed to parse pipdeptree output: {e}", "ERROR")
             return None
 
-    def check_circular_dependencies(self) -> Optional[Dict[str, Any]]:
+    def check_circular_dependencies(self) -> dict[str, Any] | None:
         """Check for circular dependencies using pycycle."""
         # Skip circular dependency check by default due to performance issues
         # This can be enabled with --force flag for manual runs
@@ -164,7 +164,7 @@ class DependencyMonitor:
             self.log(f"pycycle check failed: {e}", "ERROR")
             return None
 
-    def analyze_import_conflicts(self) -> Optional[Dict[str, Any]]:
+    def analyze_import_conflicts(self) -> dict[str, Any] | None:
         """Analyze import conflicts using existing scripts."""
         try:
             self.log("Analyzing import conflicts...")
@@ -192,7 +192,7 @@ class DependencyMonitor:
             self.log(f"Import conflict analysis failed: {e}", "ERROR")
             return None
 
-    def detect_changes(self, current_state: Dict[str, Any], previous_state: Dict[str, Any]) -> Dict[str, Any]:
+    def detect_changes(self, current_state: dict[str, Any], previous_state: dict[str, Any]) -> dict[str, Any]:
         """Detect changes between current and previous states."""
         changes = {"timestamp": datetime.now().isoformat(), "changes_detected": False, "details": {}}
 
@@ -224,7 +224,7 @@ class DependencyMonitor:
 
         return changes
 
-    def run_analysis(self) -> Dict[str, Any]:
+    def run_analysis(self) -> dict[str, Any]:
         """Run complete dependency analysis."""
         self.log("Starting dependency analysis...")
 
@@ -259,7 +259,7 @@ class DependencyMonitor:
         self.log("Dependency analysis completed")
         return current_state
 
-    def generate_summary(self, analysis_result: Dict[str, Any]) -> str:
+    def generate_summary(self, analysis_result: dict[str, Any]) -> str:
         """Generate human-readable summary."""
         summary = []
         summary.append("=" * 60)
@@ -299,6 +299,7 @@ class DependencyMonitor:
         summary.append("=" * 60)
         return "\n".join(summary)
 
+
 def main():
     parser = argparse.ArgumentParser(description="Dependency Graph Monitor")
     parser.add_argument("--dry-run", action="store_true", help="Preview changes without saving")
@@ -323,6 +324,7 @@ def main():
     except Exception as e:
         monitor.log(f"Analysis failed: {e}", "ERROR")
         sys.exit(2)
+
 
 if __name__ == "__main__":
     main()

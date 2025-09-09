@@ -36,7 +36,7 @@ def norm(s: str) -> str:
 
 
 def load_cases(path):
-    data = json.load(open(path, "r", encoding="utf-8"))
+    data = json.load(open(path, encoding="utf-8"))
     # cases: list of {case_id, query, tag, ...}
     m = {}
     per_tag = defaultdict(int)
@@ -54,7 +54,7 @@ def load_cases(path):
 
 def load_reader_gold(path):
     rows = []
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         for line in f:
             if not line.strip():
                 continue

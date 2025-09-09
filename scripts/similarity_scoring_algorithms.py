@@ -67,7 +67,7 @@ class SimilarityConfig:
 
     # Normalization
     normalize_scores: bool = True
-    score_range: Tuple[float, float] = (0.0, 1.0)
+    score_range: tuple[float, float] = (0.0, 1.0)
 
     # A/B testing
     enable_ab_testing: bool = False
@@ -82,7 +82,7 @@ class SimilarityResult:
     algorithm: str
     confidence: float = 1.0
     processing_time_ms: float = 0.0
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Validate and normalize score"""
@@ -107,7 +107,7 @@ class SimilarityMetrics:
     cache_hits: int = 0
     cache_misses: int = 0
 
-    algorithm_performance: Dict[str, List[float]] = field(default_factory=dict)
+    algorithm_performance: dict[str, list[float]] = field(default_factory=dict)
 
     @property
     def cache_hit_rate(self) -> float:
@@ -128,7 +128,7 @@ class SimilarityMetrics:
 class SimilarityScoringEngine:
     """Engine for calculating similarity scores using multiple algorithms"""
 
-    def __init__(self, config: Optional[SimilarityConfig] = None):
+    def __init__(self, config: SimilarityConfig | None = None):
         """Initialize similarity scoring engine"""
         self.config = config or SimilarityConfig()
         self.metrics = SimilarityMetrics()
@@ -156,7 +156,7 @@ class SimilarityScoringEngine:
             logger.warning(f"Failed to initialize TF-IDF vectorizer: {e}")
             self.vectorizer = None
 
-    def calculate_similarity(self, text1: str, text2: str, algorithm: Optional[str] = None) -> SimilarityResult:
+    def calculate_similarity(self, text1: str, text2: str, algorithm: str | None = None) -> SimilarityResult:
         """Calculate similarity between two text inputs"""
         start_time = time.time()
 
@@ -347,7 +347,7 @@ class SimilarityScoringEngine:
             self.metrics.algorithm_performance[algorithm] = []
         self.metrics.algorithm_performance[algorithm].append(processing_time)
 
-    def batch_similarity(self, texts: List[str], algorithm: Optional[str] = None) -> List[SimilarityResult]:
+    def batch_similarity(self, texts: list[str], algorithm: str | None = None) -> list[SimilarityResult]:
         """Calculate similarity for multiple text pairs"""
         results = []
 
@@ -361,10 +361,10 @@ class SimilarityScoringEngine:
     def find_most_similar(
         self,
         query_text: str,
-        candidate_texts: List[str],
-        algorithm: Optional[str] = None,
-        threshold: Optional[float] = None,
-    ) -> List[Tuple[int, SimilarityResult]]:
+        candidate_texts: list[str],
+        algorithm: str | None = None,
+        threshold: float | None = None,
+    ) -> list[tuple[int, SimilarityResult]]:
         """Find most similar texts above threshold"""
         threshold = threshold or self.config.similarity_threshold
         results = []
@@ -378,7 +378,7 @@ class SimilarityScoringEngine:
         results.sort(key=lambda x: x[1].score, reverse=True)
         return results
 
-    def get_performance_metrics(self) -> Dict[str, Any]:
+    def get_performance_metrics(self) -> dict[str, Any]:
         """Get comprehensive performance metrics"""
         return {
             "total_calculations": self.metrics.total_calculations,

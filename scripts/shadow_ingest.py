@@ -11,7 +11,6 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -44,7 +43,7 @@ def run_command(cmd: str, cwd: Path = None) -> subprocess.CompletedProcess:
     return result
 
 
-def setup_environment(config: LockedConfig) -> Dict[str, str]:
+def setup_environment(config: LockedConfig) -> dict[str, str]:
     """Setup environment variables for locked configuration"""
     shadow_manager = ShadowIndexManager(config)
     ingest_run_id = shadow_manager.get_ingest_run_id()

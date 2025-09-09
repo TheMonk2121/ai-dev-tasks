@@ -14,7 +14,6 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -130,7 +129,7 @@ class UnifiedMemoryOrchestrator:
         """Check if virtual environment is active."""
         return hasattr(sys, "real_prefix") or (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix)
 
-    def run_command(self, cmd: List[str], timeout: int = 30) -> Tuple[bool, str, str]:
+    def run_command(self, cmd: list[str], timeout: int = 30) -> tuple[bool, str, str]:
         """Run a command and return success, stdout, stderr."""
         try:
             # Ensure venv is active for the command
@@ -149,7 +148,7 @@ class UnifiedMemoryOrchestrator:
         except Exception as e:
             return False, "", str(e)
 
-    def get_ltst_memory(self, query: str, role: str = "planner") -> Dict:
+    def get_ltst_memory(self, query: str, role: str = "planner") -> dict:
         """Get memory from LTST system."""
         if not LTST_AVAILABLE:
             return {
@@ -197,7 +196,7 @@ class UnifiedMemoryOrchestrator:
         except Exception as e:
             return {"source": "LTST Memory System", "status": "error", "error": str(e), "timestamp": time.time()}
 
-    def get_cursor_memory(self, query: str, role: str = "planner") -> Dict:
+    def get_cursor_memory(self, query: str, role: str = "planner") -> dict:
         """Get memory from Cursor memory rehydrator."""
         cmd = [sys.executable, "scripts/cursor_memory_rehydrate.py", role, query]
         success, stdout, stderr = self.run_command(cmd)
@@ -209,7 +208,7 @@ class UnifiedMemoryOrchestrator:
             "timestamp": time.time(),
         }
 
-    def get_go_cli_memory(self, query: str) -> Dict:
+    def get_go_cli_memory(self, query: str) -> dict:
         """Get memory from Go CLI."""
         go_cli_path = self.project_root / "dspy-rag-system" / "src" / "cli" / "memory_rehydration_cli"
 
@@ -231,7 +230,7 @@ class UnifiedMemoryOrchestrator:
             "timestamp": time.time(),
         }
 
-    def get_prime_cursor_output(self, query: str, role: str = "planner") -> Dict:
+    def get_prime_cursor_output(self, query: str, role: str = "planner") -> dict:
         """Get formatted output from prime cursor chat."""
         cmd = [sys.executable, "scripts/prime_cursor_chat.py", role, query]
         success, stdout, stderr = self.run_command(cmd)
@@ -251,7 +250,7 @@ class UnifiedMemoryOrchestrator:
         include_cursor: bool = True,
         include_go: bool = True,
         include_prime: bool = True,
-    ) -> Dict:
+    ) -> dict:
         """Orchestrate all memory systems with automatic venv and database handling."""
 
         print("🧠 Unified Memory Orchestrator")
@@ -317,7 +316,7 @@ class UnifiedMemoryOrchestrator:
         print()
         return results
 
-    def format_for_cursor(self, results: Dict) -> str:
+    def format_for_cursor(self, results: dict) -> str:
         """Format results for easy copying into Cursor chat."""
         output = []
         output.append("🧠 **Unified Memory Context Bundle**")

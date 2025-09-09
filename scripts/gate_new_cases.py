@@ -39,7 +39,7 @@ def token_overlap(a, b):
 
 
 def main():
-    cand = [json.loads(l) for l in open(CASE_FILE, "r", encoding="utf-8") if l.strip()]
+    cand = [json.loads(l) for l in open(CASE_FILE, encoding="utf-8") if l.strip()]
     out = []
     for row in cand:
         q, tag = row["query"], row.get("tag", "rag_qa_single")

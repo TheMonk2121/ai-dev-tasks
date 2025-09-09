@@ -106,16 +106,16 @@ class FinalRAGASPushEvaluator:
 
         return has_numeric or has_proper_nouns
 
-    def calculate_sentence_support_signals(self, sentence: str, contexts: List[str]) -> Dict[str, float]:
+    def calculate_sentence_support_signals(self, sentence: str, contexts: list[str]) -> dict[str, float]:
         """Calculate all support signals for a sentence."""
 
-        def _tokens(s: str) -> List[str]:
+        def _tokens(s: str) -> list[str]:
             return re.findall(r"[a-z0-9]+", s.lower())
 
         def _jaccard(a: set[str], b: set[str]) -> float:
             return (len(a & b) / len(a | b)) if (a or b) else 0.0
 
-        def _lcs_len(a: List[str], b: List[str]) -> int:
+        def _lcs_len(a: list[str], b: list[str]) -> int:
             m, n = len(a), len(b)
             dp = [0] * (n + 1)
             for i in range(1, m + 1):
@@ -147,7 +147,7 @@ class FinalRAGASPushEvaluator:
 
         return {"jaccard": jaccard_score, "rouge": rouge_score, "cosine": cosine_score}
 
-    def risk_aware_sentence_filter(self, sentence: str, contexts: List[str]) -> bool:
+    def risk_aware_sentence_filter(self, sentence: str, contexts: list[str]) -> bool:
         """Apply risk-aware sentence filtering (3-of-3 for risky, 2-of-3 for non-risky)."""
         is_risky = self.detect_risky_sentences(sentence)
         signals = self.calculate_sentence_support_signals(sentence, contexts)
@@ -185,7 +185,7 @@ class FinalRAGASPushEvaluator:
                 self.telemetry_data["non_risky_sentences_failed"].append(1)
                 return False
 
-    def enhanced_evidence_filter(self, answer: str, contexts: List[str], query: str = "") -> str:
+    def enhanced_evidence_filter(self, answer: str, contexts: list[str], query: str = "") -> str:
         """Enhanced evidence filter with all three moves."""
         # Check if NLI gate is enabled and available
         if os.getenv("RAGCHECKER_NLI_ENABLE", "0") == "1" and self.nli_enhanced_filter and self.nli_gate:
@@ -200,7 +200,7 @@ class FinalRAGASPushEvaluator:
         # Fall back to risk-aware filtering with robust sentence splitting
         main_answer = answer.split("Sources:", 1)[0].strip()
         bullet_or_num = r"(?m)^\s*(?:[-*•–—]|\d+[\.)])\s+"
-        sents = re.split(fr"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
+        sents = re.split(rf"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
         sents = [s for s in sents if s and s.strip()]
         if len(sents) <= 1:
             sents = re.split(r"\s*[;—–•·]\s*", main_answer)
@@ -229,7 +229,7 @@ class FinalRAGASPushEvaluator:
 
         return filtered_answer
 
-    def run_final_ragas_push_evaluation(self) -> Dict[str, Any]:
+    def run_final_ragas_push_evaluation(self) -> dict[str, Any]:
         """Run final RAGAS push evaluation with all three moves."""
         print("🚀 Starting Final RAGAS Push Evaluation")
         print("🎯 Target: Precision ≥ 0.20, Recall@20 ≥ 0.65, F1 ≥ 0.175, Unsupported ≤ 15%")
@@ -265,7 +265,7 @@ class FinalRAGASPushEvaluator:
 
         return results
 
-    def _run_basic_evaluation(self) -> Dict[str, Any]:
+    def _run_basic_evaluation(self) -> dict[str, Any]:
         """Fallback basic evaluation if base evaluator is not available."""
         return {
             "precision": 0.0,
@@ -276,7 +276,7 @@ class FinalRAGASPushEvaluator:
             "evaluation_mode": "basic_fallback",
         }
 
-    def _calculate_final_ragas_metrics(self) -> Dict[str, Any]:
+    def _calculate_final_ragas_metrics(self) -> dict[str, Any]:
         """Calculate final RAGAS push specific metrics."""
         metrics = {}
 
@@ -321,7 +321,7 @@ class FinalRAGASPushEvaluator:
 
         return metrics
 
-    def _get_telemetry_summary(self) -> Dict[str, Any]:
+    def _get_telemetry_summary(self) -> dict[str, Any]:
         """Get summary of telemetry data."""
         summary = {}
         for key, values in self.telemetry_data.items():

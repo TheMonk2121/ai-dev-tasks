@@ -9,7 +9,6 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import List, Optional, Set
 
 # File patterns to monitor
 MONITOR_PATTERNS = [
@@ -25,17 +24,17 @@ MONITOR_PATTERNS = [
 class ScribeFileWatcher:
     """Monitors file changes and triggers Scribe updates."""
 
-    def __init__(self, project_root: Optional[Path] = None):
+    def __init__(self, project_root: Path | None = None):
         self.project_root = project_root or Path.cwd()
         self.state_file = self.project_root / ".ai_state.json"
         self.last_check = time.time()
-        self.known_files: Set[str] = set()
+        self.known_files: set[str] = set()
 
-    def get_active_backlog_id(self) -> Optional[str]:
+    def get_active_backlog_id(self) -> str | None:
         """Get the currently active backlog ID from state file."""
         try:
             if self.state_file.exists():
-                with open(self.state_file, "r") as f:
+                with open(self.state_file) as f:
                     state = json.load(f)
                 return state.get("backlog_id")
         except Exception:
@@ -46,7 +45,7 @@ class ScribeFileWatcher:
         """Check if a file should be monitored."""
         return any(pattern in file_path for pattern in MONITOR_PATTERNS)
 
-    def get_changed_files(self) -> List[str]:
+    def get_changed_files(self) -> list[str]:
         """Get list of changed files since last check."""
         try:
             # Get all changed files (staged and unstaged)
@@ -64,7 +63,7 @@ class ScribeFileWatcher:
             print(f"Error getting changed files: {e}")
             return []
 
-    def trigger_scribe_update(self, files: List[str], backlog_id: str) -> bool:
+    def trigger_scribe_update(self, files: list[str], backlog_id: str) -> bool:
         """Trigger Scribe update for changed files."""
         try:
             file_list = ", ".join(files[:5])  # Limit to first 5 files

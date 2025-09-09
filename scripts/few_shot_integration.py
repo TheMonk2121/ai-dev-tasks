@@ -44,7 +44,7 @@ class FewShotExampleLoader:
 
         self._disabled = False
 
-    def load_examples(self) -> Dict[str, List[Dict[str, Any]]]:
+    def load_examples(self) -> dict[str, list[dict[str, Any]]]:
         """Load all few-shot examples from the examples file."""
         if self._examples_cache is not None:
             return self._examples_cache
@@ -66,7 +66,7 @@ class FewShotExampleLoader:
             print(f"❌ Error loading few-shot examples: {e}")
             return {}
 
-    def _parse_examples(self, content: str) -> Dict[str, List[Dict[str, Any]]]:
+    def _parse_examples(self, content: str) -> dict[str, list[dict[str, Any]]]:
         """Parse examples from markdown or JSONL content."""
         examples = {"documentation_coherence": [], "backlog_analysis": [], "memory_context": []}
 
@@ -164,7 +164,7 @@ class FewShotExampleLoader:
 
         return examples
 
-    def _parse_jsonl_examples(self, content: str) -> Dict[str, List[Dict[str, Any]]]:
+    def _parse_jsonl_examples(self, content: str) -> dict[str, list[dict[str, Any]]]:
         """Parse examples from JSONL content."""
         examples = {"documentation_coherence": [], "backlog_analysis": [], "memory_context": []}
 
@@ -205,12 +205,12 @@ class FewShotExampleLoader:
 
         return examples
 
-    def load_examples_by_category(self, category: str) -> List[Dict[str, Any]]:
+    def load_examples_by_category(self, category: str) -> list[dict[str, Any]]:
         """Load examples for a specific category."""
         examples = self.load_examples()
         return examples.get(category, [])
 
-    def extract_patterns(self, examples: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def extract_patterns(self, examples: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Extract patterns from examples for pattern matching."""
         patterns = []
 
@@ -227,7 +227,7 @@ class FewShotExampleLoader:
 
         return patterns
 
-    def _extract_input_pattern(self, input_text: str) -> Dict[str, Any]:
+    def _extract_input_pattern(self, input_text: str) -> dict[str, Any]:
         """Extract input pattern from example input."""
         patterns = {
             "file_naming": r'filename:\s*"([^"]+)"',
@@ -246,7 +246,7 @@ class FewShotExampleLoader:
 
         return extracted
 
-    def _extract_output_pattern(self, output_text: str) -> Dict[str, Any]:
+    def _extract_output_pattern(self, output_text: str) -> dict[str, Any]:
         """Extract output pattern from example expected output."""
         # Look for JSON structures in the output
         json_patterns = re.findall(r"\{[^{}]*\}", output_text)
@@ -259,7 +259,7 @@ class FewShotExampleLoader:
 
         return {"raw_output": output_text.strip()}
 
-    def _extract_validation_rules(self, validation_text: str) -> List[str]:
+    def _extract_validation_rules(self, validation_text: str) -> list[str]:
         """Extract validation rules from example validation."""
         rules = []
 
@@ -278,8 +278,8 @@ class FewShotExampleLoader:
         return rules
 
     def apply_patterns_to_content(
-        self, content: str, patterns: List[Dict[str, Any]], threshold: float = 0.3
-    ) -> Dict[str, Any]:
+        self, content: str, patterns: list[dict[str, Any]], threshold: float = 0.3
+    ) -> dict[str, Any]:
         """Apply few-shot patterns to content for enhanced validation.
 
         threshold: minimum confidence required to consider a pattern matched.
@@ -301,7 +301,7 @@ class FewShotExampleLoader:
 
         return results
 
-    def _calculate_pattern_confidence(self, content: str, pattern: Dict[str, Any]) -> float:
+    def _calculate_pattern_confidence(self, content: str, pattern: dict[str, Any]) -> float:
         """Calculate confidence score for pattern matching."""
         confidence = 0.0
 
@@ -339,7 +339,7 @@ class FewShotExampleLoader:
 
         return min(confidence, 1.0)
 
-    def _generate_validation_suggestions(self, content: str, pattern: Dict[str, Any]) -> List[str]:
+    def _generate_validation_suggestions(self, content: str, pattern: dict[str, Any]) -> list[str]:
         """Generate validation suggestions based on matched patterns."""
         suggestions = []
         validation_rules = pattern.get("validation_rules", [])

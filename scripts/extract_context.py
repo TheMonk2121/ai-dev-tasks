@@ -22,7 +22,6 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
 
 # Add validation support
 try:
@@ -43,7 +42,7 @@ def _read_backlog_text() -> str:
         sys.exit(1)
 
 
-def _find_section(text: str, backlog_id: str) -> Optional[str]:
+def _find_section(text: str, backlog_id: str) -> str | None:
     # Headings look like: ### **B-1071: Title** ...
     # We capture from this heading to the next backlog heading or EOF
     heading_pattern = re.compile(rf"^### \*\*{re.escape(backlog_id)}:.*$", re.MULTILINE)
@@ -59,7 +58,7 @@ def _find_section(text: str, backlog_id: str) -> Optional[str]:
     return text[start:end].strip()
 
 
-def _extract_field_lines(section: str, prefix: str) -> List[str]:
+def _extract_field_lines(section: str, prefix: str) -> list[str]:
     lines = []
     for line in section.splitlines():
         if line.strip().startswith(prefix):
@@ -67,7 +66,7 @@ def _extract_field_lines(section: str, prefix: str) -> List[str]:
     return lines
 
 
-def _extract_value_after_prefix(section: str, prefix: str) -> Optional[str]:
+def _extract_value_after_prefix(section: str, prefix: str) -> str | None:
     for line in section.splitlines():
         stripped = line.strip()
         if stripped.startswith(prefix):
@@ -78,7 +77,7 @@ def _extract_value_after_prefix(section: str, prefix: str) -> Optional[str]:
     return None
 
 
-def _extract_context_bundle_json(section: str) -> Optional[Dict[str, object]]:
+def _extract_context_bundle_json(section: str) -> dict[str, object] | None:
     # Heuristically find a JSON-like block after a "Context Bundle" label
     if "Context Bundle" not in section:
         return None
@@ -96,7 +95,7 @@ def _extract_context_bundle_json(section: str) -> Optional[Dict[str, object]]:
         return None
 
     # Collect until the matching closing brace on its own line or section end
-    buf: List[str] = []
+    buf: list[str] = []
     brace_depth = 0
     started = False
     for k in range(start_idx, len(lines)):
@@ -116,8 +115,8 @@ def _extract_context_bundle_json(section: str) -> Optional[Dict[str, object]]:
         return None
 
 
-def _extract_next_steps(section: str) -> List[str]:
-    steps: List[str] = []
+def _extract_next_steps(section: str) -> list[str]:
+    steps: list[str] = []
     in_next = False
     for line in section.splitlines():
         stripped = line.strip()
@@ -137,7 +136,7 @@ def _extract_next_steps(section: str) -> List[str]:
     return steps
 
 
-def build_handoff_bundle(section: str, backlog_id: str) -> Dict[str, object]:
+def build_handoff_bundle(section: str, backlog_id: str) -> dict[str, object]:
     title_match = re.search(rf"^### \*\*{re.escape(backlog_id)}: (.+?)\*\*", section, re.MULTILINE)
     title = title_match.group(1) if title_match else backlog_id
 
@@ -151,7 +150,7 @@ def build_handoff_bundle(section: str, backlog_id: str) -> Dict[str, object]:
 
     context_json = _extract_context_bundle_json(section) or {}
 
-    bundle: Dict[str, object] = {
+    bundle: dict[str, object] = {
         "backlog_id": backlog_id,
         "title": title,
         "what": description,

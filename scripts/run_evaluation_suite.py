@@ -39,11 +39,11 @@ class EvaluationSuiteRunner:
             },
         }
 
-    def load_env_config(self, env_file: str) -> Dict[str, str]:
+    def load_env_config(self, env_file: str) -> dict[str, str]:
         """Load environment configuration from file."""
         config = {}
         if os.path.exists(env_file):
-            with open(env_file, "r") as f:
+            with open(env_file) as f:
                 for line in f:
                     line = line.strip()
                     if line and not line.startswith("#") and "=" in line:
@@ -51,7 +51,7 @@ class EvaluationSuiteRunner:
                         config[key] = value
         return config
 
-    def set_environment(self, config: Dict[str, str]):
+    def set_environment(self, config: dict[str, str]):
         """Set environment variables from config."""
         for key, value in config.items():
             os.environ[key] = value
@@ -81,7 +81,7 @@ class EvaluationSuiteRunner:
                 return False
         return True
 
-    def run_evaluation(self, eval_type: str) -> Dict[str, Any]:
+    def run_evaluation(self, eval_type: str) -> dict[str, Any]:
         """Run evaluation for specified type."""
         config_info = self.configs[eval_type]
         print(f"\n🚀 Running {eval_type.upper()} Evaluation")
@@ -136,7 +136,7 @@ class EvaluationSuiteRunner:
             print(f"✅ Evaluation completed: {actual_output}")
 
             # Load results
-            with open(actual_output, "r") as f:
+            with open(actual_output) as f:
                 results = json.load(f)
 
             return {
@@ -151,7 +151,7 @@ class EvaluationSuiteRunner:
             print(f"❌ Evaluation failed: {e.stderr}")
             return {"status": "failed", "eval_type": eval_type, "error": e.stderr, "timestamp": timestamp}
 
-    def run_gate_validation(self, eval_type: str, results: Dict[str, Any]) -> Dict[str, Any]:
+    def run_gate_validation(self, eval_type: str, results: dict[str, Any]) -> dict[str, Any]:
         """Run gate validation for evaluation results."""
         config_info = self.configs[eval_type]
 
@@ -195,7 +195,7 @@ class EvaluationSuiteRunner:
 
         return {"status": "skipped", "reason": "no_gates_for_ops_smoke"}
 
-    def run_full_suite(self, eval_types: List[str] = None) -> Dict[str, Any]:
+    def run_full_suite(self, eval_types: list[str] = None) -> dict[str, Any]:
         """Run full evaluation suite."""
         if eval_types is None:
             eval_types = ["ops_smoke", "repo_gold"]

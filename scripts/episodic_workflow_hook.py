@@ -54,7 +54,7 @@ class EpisodicWorkflowHook:
             task_type=task_type,
         )
 
-    def get_context_for_task(self, task_description: str, agent: str = "cursor_ai") -> Optional[Dict[str, Any]]:
+    def get_context_for_task(self, task_description: str, agent: str = "cursor_ai") -> dict[str, Any] | None:
         """Get episodic context for a task."""
         return self.injector.episodic_integration.get_context_for_task(task_description, agent)
 

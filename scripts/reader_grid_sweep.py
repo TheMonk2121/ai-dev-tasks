@@ -26,6 +26,7 @@ from typing import Any, Dict, List, Tuple
 # Bootstrap path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from _bootstrap import ROOT, SRC  # noqa: F401
+
 sys.path.insert(0, str(SRC))
 
 from evals.load_cases import load_eval_cases
@@ -35,10 +36,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from scripts.ci_gate_reader import load_reader_gold, eval_reader  # type: ignore
 
 
-Config = Dict[str, Any]
+Config = dict[str, Any]
 
 
-def run_config(config: Config, cases, gold) -> Dict[str, Any]:
+def run_config(config: Config, cases, gold) -> dict[str, Any]:
     """Run reader eval for a single env config and return metrics + timing."""
     # Save and set env vars
     keys = [
@@ -66,13 +67,13 @@ def run_config(config: Config, cases, gold) -> Dict[str, Any]:
                 os.environ[k] = v
 
 
-def default_grid(cmd: str) -> List[Config]:
+def default_grid(cmd: str) -> list[Config]:
     base = {
         "READER_CMD": cmd,
         "READER_COMPACT": os.getenv("READER_COMPACT", "1"),
     }
     # Small, targeted sweep: toggle abstention + span enforcement + precheck threshold
-    configs: List[Config] = []
+    configs: list[Config] = []
     for abstain in (1, 0):
         for enforce in (1, 0):
             for precheck, overlap in ((1, 0.10), (1, 0.05), (0, 0.0)):
@@ -105,7 +106,7 @@ def main() -> None:
     configs = default_grid(args.cmd)
 
     # Evaluate each config
-    results: List[Tuple[Config, Dict[str, Any]]] = []
+    results: list[tuple[Config, dict[str, Any]]] = []
     for cfg in configs:
         metrics = run_config(cfg, cases, gold)
         results.append((cfg, metrics))
@@ -139,9 +140,7 @@ def main() -> None:
         os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
         payload = {
             "baseline_micro": baseline_micro,
-            "results": [
-                {"config": cfg, "metrics": met} for cfg, met in results
-            ],
+            "results": [{"config": cfg, "metrics": met} for cfg, met in results],
         }
         with open(args.out, "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=2)
@@ -149,4 +148,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

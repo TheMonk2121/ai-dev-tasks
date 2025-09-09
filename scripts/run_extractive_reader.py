@@ -12,7 +12,6 @@ new extractive reader without changing their call pattern.
 import json
 import os
 import sys
-from typing import List
 
 # Ensure module imports work when called from repo root
 sys.path.insert(0, "dspy-rag-system/src")
@@ -22,7 +21,7 @@ from dspy_modules.reader import READER  # pre-configured ExtractiveReader instan
 from dspy_modules.dspy_reader_program import _lm  # reuse shared LM configuration
 
 
-def _context_to_passages(context: str) -> List[str]:
+def _context_to_passages(context: str) -> list[str]:
     """Convert context text into a list of short passages/sentences.
 
     Works for both compact (sentence-selected) and fallback (concatenated files) contexts.
@@ -67,4 +66,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

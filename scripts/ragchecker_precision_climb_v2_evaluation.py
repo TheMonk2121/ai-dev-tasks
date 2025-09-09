@@ -36,10 +36,10 @@ class EvalItem(TypedDict, total=False):
     response: str
     gt_answer: str
     query: str
-    query_id: Optional[str]
+    query_id: str | None
 
 
-def normalize_item(raw: Union[str, Dict[str, Any]]) -> EvalItem:
+def normalize_item(raw: str | dict[str, Any]) -> EvalItem:
     """Coerce raw items (str or dict-like) into a uniform dict shape."""
     if isinstance(raw, str):
         return {"response": raw, "gt_answer": "", "query": "", "query_id": None}
@@ -108,16 +108,16 @@ class PrecisionClimbV2Evaluator:
 
         return has_numeric or has_proper_nouns
 
-    def calculate_sentence_support_signals(self, sentence: str, contexts: List[str]) -> Dict[str, float]:
+    def calculate_sentence_support_signals(self, sentence: str, contexts: list[str]) -> dict[str, float]:
         """Calculate all support signals for a sentence."""
 
-        def _tokens(s: str) -> List[str]:
+        def _tokens(s: str) -> list[str]:
             return re.findall(r"[a-z0-9]+", s.lower())
 
         def _jaccard(a: set[str], b: set[str]) -> float:
             return (len(a & b) / len(a | b)) if (a or b) else 0.0
 
-        def _lcs_len(a: List[str], b: List[str]) -> int:
+        def _lcs_len(a: list[str], b: list[str]) -> int:
             m, n = len(a), len(b)
             dp = [0] * (n + 1)
             for i in range(1, m + 1):
@@ -149,7 +149,7 @@ class PrecisionClimbV2Evaluator:
 
         return {"jaccard": jaccard_score, "rouge": rouge_score, "cosine": cosine_score}
 
-    def risk_aware_sentence_filter(self, sentence: str, contexts: List[str]) -> bool:
+    def risk_aware_sentence_filter(self, sentence: str, contexts: list[str]) -> bool:
         """Apply risk-aware sentence filtering (3-of-3 for risky, 2-of-3 for non-risky)."""
         is_risky = self.detect_risky_sentences(sentence)
         signals = self.calculate_sentence_support_signals(sentence, contexts)
@@ -187,7 +187,7 @@ class PrecisionClimbV2Evaluator:
                 self.telemetry_data["non_risky_sentences_failed"].append(1)
                 return False
 
-    def enhanced_evidence_filter(self, answer: str, contexts: List[str], query: str = "") -> str:
+    def enhanced_evidence_filter(self, answer: str, contexts: list[str], query: str = "") -> str:
         """Enhanced evidence filter with risk-aware sentence filtering and cross-encoder."""
         # Check if cross-encoder is enabled and available
         if os.getenv("RAGCHECKER_CROSS_ENCODER_ENABLED", "0") == "1" and self.enhanced_filter and self.cross_encoder:
@@ -197,7 +197,7 @@ class PrecisionClimbV2Evaluator:
         # Fall back to risk-aware filtering with robust sentence splitting
         main_answer = answer.split("Sources:", 1)[0].strip()
         bullet_or_num = r"(?m)^\s*(?:[-*•–—]|\d+[\.)])\s+"
-        sents = re.split(fr"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
+        sents = re.split(rf"{bullet_or_num}|(?<=[.!?\]])\s+|\n+", main_answer)
         sents = [s for s in sents if s and s.strip()]
         if len(sents) <= 1:
             sents = re.split(r"\s*[;—–•·]\s*", main_answer)
@@ -226,7 +226,7 @@ class PrecisionClimbV2Evaluator:
 
         return filtered_answer
 
-    def calculate_claim_confidence(self, claim: str, contexts: List[str], top_k: int = 2) -> float:
+    def calculate_claim_confidence(self, claim: str, contexts: list[str], top_k: int = 2) -> float:
         """Calculate per-claim confidence score."""
         signals = self.calculate_sentence_support_signals(claim, contexts)
 
@@ -245,7 +245,7 @@ class PrecisionClimbV2Evaluator:
         confidence = cosine_component + anchor_component + spans_component
         return confidence
 
-    def enhanced_claim_binding(self, answer: str, contexts: List[str]) -> str:
+    def enhanced_claim_binding(self, answer: str, contexts: list[str]) -> str:
         """Enhanced claim binding with confidence-based ordering."""
         if not os.getenv("RAGCHECKER_CLAIM_CONFIDENCE_ENABLED", "0") == "1":
             # Fall back to base claim binding if not enabled
@@ -281,7 +281,7 @@ class PrecisionClimbV2Evaluator:
 
     def run_precision_climb_evaluation(
         self, layer: str = "layer1", enable_cross_encoder: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Run evaluation with precision-climb configuration."""
         print(f"🚀 Starting Precision-Climb v2 evaluation with {layer}")
 
@@ -310,7 +310,7 @@ class PrecisionClimbV2Evaluator:
 
         return results
 
-    def _run_basic_evaluation(self) -> Dict[str, Any]:
+    def _run_basic_evaluation(self) -> dict[str, Any]:
         """Fallback basic evaluation if base evaluator is not available."""
         # This would implement a basic evaluation loop
         # For now, return a placeholder
@@ -323,7 +323,7 @@ class PrecisionClimbV2Evaluator:
             "evaluation_mode": "basic_fallback",
         }
 
-    def _calculate_precision_climb_metrics(self) -> Dict[str, Any]:
+    def _calculate_precision_climb_metrics(self) -> dict[str, Any]:
         """Calculate precision-climb specific metrics."""
         metrics = {}
 
@@ -357,7 +357,7 @@ class PrecisionClimbV2Evaluator:
 
         return metrics
 
-    def _get_telemetry_summary(self) -> Dict[str, Any]:
+    def _get_telemetry_summary(self) -> dict[str, Any]:
         """Get summary of telemetry data."""
         summary = {}
         for key, values in self.telemetry_data.items():
@@ -368,7 +368,7 @@ class PrecisionClimbV2Evaluator:
                 }
         return summary
 
-    def run_staged_evaluation(self, layers: List[str] = None, enable_cross_encoder: bool = False) -> Dict[str, Any]:
+    def run_staged_evaluation(self, layers: list[str] = None, enable_cross_encoder: bool = False) -> dict[str, Any]:
         """Run staged evaluation across multiple layers."""
         if layers is None:
             layers = ["layer1", "layer2", "layer3"]

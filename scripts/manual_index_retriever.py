@@ -14,7 +14,7 @@ from psycopg2.extras import RealDictCursor
 def get_file_content(file_path):
     """Read file content"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             return f.read()
     except Exception as e:
         print(f"Error reading {file_path}: {e}")

@@ -6,13 +6,12 @@ Adds language specifications to code blocks that don't have them.
 
 import glob
 import re
-from typing import Dict, List
 
 
 def detect_code_language(content: str) -> str:
     """Attempt to detect the language based on content patterns."""
     # Common patterns for different languages
-    patterns: Dict[str, List[str]] = {
+    patterns: dict[str, list[str]] = {
         "python": [
             r"import\s+\w+",
             r"def\s+\w+\s*\(",
@@ -83,7 +82,7 @@ def detect_code_language(content: str) -> str:
     }
 
     # Count matches for each language
-    language_scores: Dict[str, int] = {}
+    language_scores: dict[str, int] = {}
     for lang, lang_patterns in patterns.items():
         score = 0
         for pattern in lang_patterns:
@@ -96,6 +95,7 @@ def detect_code_language(content: str) -> str:
     if language_scores:
         return max(language_scores.keys(), key=lambda k: language_scores[k])
     return "text"
+
 
 def fix_md040_code_languages():
     """Fix MD040 violations by adding language specifications to code blocks."""
@@ -123,7 +123,7 @@ def fix_md040_code_languages():
 
     for file_path in markdown_files:
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             original_content = content
@@ -171,6 +171,7 @@ def fix_md040_code_languages():
         print(f"\n🎉 Successfully fixed {files_fixed} files!")
     else:
         print("\nℹ️  No files needed fixing.")
+
 
 if __name__ == "__main__":
     fix_md040_code_languages()

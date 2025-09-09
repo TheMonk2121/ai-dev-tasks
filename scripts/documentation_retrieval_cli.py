@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 # Add the dspy-rag-system to the path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'dspy-rag-system', 'src'))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
 
 try:
     from dspy_modules.documentation_retrieval import (
@@ -36,6 +36,7 @@ from documentation_indexer import DocumentationIndexer
 logging.basicConfig(level=logging.INFO)
 _LOG = logging.getLogger("documentation_retrieval_cli")
 
+
 class DocumentationRetrievalCLI:
     """Command-line interface for documentation retrieval"""
 
@@ -44,7 +45,11 @@ class DocumentationRetrievalCLI:
             db_connection_string = os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
 
         self.db_conn_str = db_connection_string
-        self.service = create_documentation_retrieval_service(db_connection_string) if create_documentation_retrieval_service else None
+        self.service = (
+            create_documentation_retrieval_service(db_connection_string)
+            if create_documentation_retrieval_service
+            else None
+        )
         self.indexer = DocumentationIndexer(db_connection_string)
 
     def search(self, query: str, category: str = None, limit: int = 5, format_output: str = "json") -> None:
@@ -71,7 +76,9 @@ class DocumentationRetrievalCLI:
             _LOG.error(f"Context retrieval failed: {e}")
             print(f"Error: {e}")
 
-    def get_task_context(self, task_description: str, task_type: str = "development", format_output: str = "json") -> None:
+    def get_task_context(
+        self, task_description: str, task_type: str = "development", format_output: str = "json"
+    ) -> None:
         """Get context for a specific task"""
         try:
             if not self.service:
@@ -101,7 +108,7 @@ class DocumentationRetrievalCLI:
             _LOG.error(f"Stats retrieval failed: {e}")
             print(f"Error: {e}")
 
-    def _print_results(self, results: Dict[str, Any], format_output: str) -> None:
+    def _print_results(self, results: dict[str, Any], format_output: str) -> None:
         """Print results in the specified format"""
         if format_output == "json":
             print(json.dumps(results, indent=2))
@@ -112,7 +119,7 @@ class DocumentationRetrievalCLI:
         else:
             print(json.dumps(results, indent=2))
 
-    def _print_text_results(self, results: Dict[str, Any]) -> None:
+    def _print_text_results(self, results: dict[str, Any]) -> None:
         """Print results in human-readable text format"""
         if "error" in results:
             print(f"Error: {results['error']}")
@@ -145,7 +152,9 @@ class DocumentationRetrievalCLI:
                     # Attempt to show At-a-glance for each local source
                     ag = self._read_at_a_glance_for_file(source)
                     if ag:
-                        print(f"    At-a-glance: {ag.get('what','')} | {ag.get('read_when','')} | {ag.get('do_next','')}")
+                        print(
+                            f"    At-a-glance: {ag.get('what','')} | {ag.get('read_when','')} | {ag.get('do_next','')}"
+                        )
                 print()
 
             if "categories" in metadata and metadata["categories"]:
@@ -163,28 +172,36 @@ class DocumentationRetrievalCLI:
                     print(chunk["content"][:200] + "..." if len(chunk["content"]) > 200 else chunk["content"])
                     print()
 
-    def _read_at_a_glance_for_file(self, file_path_str: str) -> Optional[Dict[str, str]]:
+    def _read_at_a_glance_for_file(self, file_path_str: str) -> dict[str, str] | None:
         """Read a local file and extract the At-a-glance table (what/read/do_next)."""
         try:
             p = Path(file_path_str)
-            if not p.exists() and (Path('.')/file_path_str).exists():
-                p = Path('.')/file_path_str
-            if not p.exists() or p.suffix.lower() != '.md':
+            if not p.exists() and (Path(".") / file_path_str).exists():
+                p = Path(".") / file_path_str
+            if not p.exists() or p.suffix.lower() != ".md":
                 return None
-            content = p.read_text(encoding='utf-8')
+            content = p.read_text(encoding="utf-8")
             # Find TL;DR block
-            m = re.search(r'^(?:<a\s+id="tldr"\s*>\s*</a>\s*\n)?##\s+🔎\s+TL;DR\s*$([\s\S]*?)(?=^##\s+|\Z)', content, flags=re.MULTILINE)
+            m = re.search(
+                r'^(?:<a\s+id="tldr"\s*>\s*</a>\s*\n)?##\s+🔎\s+TL;DR\s*$([\s\S]*?)(?=^##\s+|\Z)',
+                content,
+                flags=re.MULTILINE,
+            )
             if not m:
                 return None
             tldr_block = m.group(1)
-            t = re.search(r'^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$[\s\S]*?^\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*$', tldr_block, flags=re.MULTILINE)
+            t = re.search(
+                r"^\|\s*what this file is\s*\|\s*read when\s*\|\s*do next\s*\|\s*$[\s\S]*?^\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*$",
+                tldr_block,
+                flags=re.MULTILINE,
+            )
             if not t:
                 return None
             return {"what": t.group(1).strip(), "read_when": t.group(2).strip(), "do_next": t.group(3).strip()}
         except Exception:
             return None
 
-    def _print_summary_results(self, results: Dict[str, Any]) -> None:
+    def _print_summary_results(self, results: dict[str, Any]) -> None:
         """Print a summary of results"""
         if "error" in results:
             print(f"❌ Error: {results['error']}")
@@ -215,6 +232,7 @@ class DocumentationRetrievalCLI:
         if "results" in results:
             print(f"📄 Retrieved: {len(results['results'])} chunks")
 
+
 def main():
     """Main CLI function"""
     parser = argparse.ArgumentParser(
@@ -239,13 +257,12 @@ Examples:
   
   # Show At-a-glance for specific files
   python documentation_retrieval_cli.py glance 100_cursor-memory-context.md 400_project-overview.md
-        """
+        """,
     )
 
     # Global arguments
     parser.add_argument("--db-url", help="Database connection string")
-    parser.add_argument("--format", choices=["json", "text", "summary"], default="json",
-                       help="Output format")
+    parser.add_argument("--format", choices=["json", "text", "summary"], default="json", help="Output format")
 
     # Subcommands
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -259,16 +276,22 @@ Examples:
     # Context command
     context_parser = subparsers.add_parser("context", help="Get relevant context")
     context_parser.add_argument("query", help="Query for context")
-    context_parser.add_argument("--type", default="general",
-                               choices=["general", "workflow", "research", "implementation", "core", "guides"],
-                               help="Context type")
+    context_parser.add_argument(
+        "--type",
+        default="general",
+        choices=["general", "workflow", "research", "implementation", "core", "guides"],
+        help="Context type",
+    )
 
     # Task context command
     task_parser = subparsers.add_parser("task", help="Get task-specific context")
     task_parser.add_argument("description", help="Task description")
-    task_parser.add_argument("--task-type", default="development",
-                            choices=["development", "research", "workflow", "planning", "testing", "deployment"],
-                            help="Task type")
+    task_parser.add_argument(
+        "--task-type",
+        default="development",
+        choices=["development", "research", "workflow", "planning", "testing", "deployment"],
+        help="Task type",
+    )
 
     # Index command
     index_parser = subparsers.add_parser("index", help="Index documentation")
@@ -316,6 +339,7 @@ Examples:
     except Exception as e:
         _LOG.error(f"CLI error: {e}")
         print(f"Error: {e}")
+
 
 if __name__ == "__main__":
     main()

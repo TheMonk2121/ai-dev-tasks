@@ -24,7 +24,7 @@ sys.path.insert(0, str(dspy_rag_path))
 from src.utils.config_lock import ConfigLockManager, LockedConfig
 
 
-def load_evaluation_results(results_dir: Path) -> Optional[Dict[str, Any]]:
+def load_evaluation_results(results_dir: Path) -> dict[str, Any] | None:
     """Load the latest evaluation results"""
     if not results_dir.exists():
         return None
@@ -37,14 +37,14 @@ def load_evaluation_results(results_dir: Path) -> Optional[Dict[str, Any]]:
     latest_file = max(eval_files, key=lambda f: f.stat().st_mtime)
 
     try:
-        with open(latest_file, "r") as f:
+        with open(latest_file) as f:
             return json.load(f)
     except Exception as e:
         print(f"❌ Error loading evaluation results: {e}")
         return None
 
 
-def check_run_variant_fingerprints(eval_data: Dict[str, Any], expected_config: LockedConfig) -> Dict[str, Any]:
+def check_run_variant_fingerprints(eval_data: dict[str, Any], expected_config: LockedConfig) -> dict[str, Any]:
     """Check that the right run/variant is in artifacts"""
     print("🔍 Checking run/variant fingerprints...")
 
@@ -95,7 +95,7 @@ def check_run_variant_fingerprints(eval_data: Dict[str, Any], expected_config: L
     }
 
 
-def check_breadth_and_usage(eval_data: Dict[str, Any]) -> Dict[str, Any]:
+def check_breadth_and_usage(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check breadth and usage metrics"""
     print("🔍 Checking breadth and usage...")
 
@@ -140,7 +140,7 @@ def check_breadth_and_usage(eval_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def check_oracle_path(eval_data: Dict[str, Any]) -> Dict[str, Any]:
+def check_oracle_path(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check oracle path is alive"""
     print("🔍 Checking oracle path...")
 
@@ -182,7 +182,7 @@ def check_oracle_path(eval_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def check_prefix_leakage(eval_data: Dict[str, Any]) -> Dict[str, Any]:
+def check_prefix_leakage(eval_data: dict[str, Any]) -> dict[str, Any]:
     """Check for prefix leakage in BM25"""
     print("🔍 Checking prefix leakage...")
 
@@ -217,7 +217,7 @@ def check_prefix_leakage(eval_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def check_token_budget_compliance(eval_data: Dict[str, Any], max_tokens: int = 1024) -> Dict[str, Any]:
+def check_token_budget_compliance(eval_data: dict[str, Any], max_tokens: int = 1024) -> dict[str, Any]:
     """Check token budget compliance"""
     print("🔍 Checking token budget compliance...")
 
@@ -264,7 +264,7 @@ def check_token_budget_compliance(eval_data: Dict[str, Any], max_tokens: int = 1
     }
 
 
-def run_sanity_probes(results_dir: Path, config: LockedConfig) -> Dict[str, Any]:
+def run_sanity_probes(results_dir: Path, config: LockedConfig) -> dict[str, Any]:
     """Run all sanity probes"""
     print("🔍 Running Sanity Probes")
     print("=" * 40)

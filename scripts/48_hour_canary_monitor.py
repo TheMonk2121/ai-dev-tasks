@@ -333,7 +333,7 @@ class CanaryMonitor:
         print(f"{status_emoji} Overall Status: {status.upper()}")
 
         # KPI Results
-        print(f"\n📈 KPI Results:")
+        print("\n📈 KPI Results:")
         for kpi_name, result in monitoring_result["kpi_check_results"].items():
             status_emoji = "✅" if result["status"] == "pass" else "❌"
             print(f"  {status_emoji} {kpi_name}: {result['message']}")
@@ -357,9 +357,9 @@ class CanaryMonitor:
 
         # Rollback status
         if monitoring_result["rollback_required"]:
-            print(f"\n🚨 ROLLBACK REQUIRED!")
+            print("\n🚨 ROLLBACK REQUIRED!")
         else:
-            print(f"\n✅ Canary monitoring healthy")
+            print("\n✅ Canary monitoring healthy")
 
         print("=" * 60)
 

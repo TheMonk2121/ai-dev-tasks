@@ -45,12 +45,12 @@ TARGET = {
 }
 
 
-def _load_yaml(path: Path) -> Dict[str, Any]:
+def _load_yaml(path: Path) -> dict[str, Any]:
     with path.open("r") as f:
         return yaml.safe_load(f) or {}
 
 
-def _dump_yaml(path: Path, data: Dict[str, Any]) -> None:
+def _dump_yaml(path: Path, data: dict[str, Any]) -> None:
     with path.open("w") as f:
         yaml.safe_dump(data, f, sort_keys=False)
 
@@ -67,11 +67,11 @@ def _backup_file(src: Path) -> Path:
     return dst
 
 
-def _get(d: Dict[str, Any], k1: str, k2: str) -> Any:
+def _get(d: dict[str, Any], k1: str, k2: str) -> Any:
     return (d.get(k1) or {}).get(k2)
 
 
-def _set(d: Dict[str, Any], k1: str, k2: str, val: Any) -> None:
+def _set(d: dict[str, Any], k1: str, k2: str, val: Any) -> None:
     if k1 not in d or not isinstance(d[k1], dict):
         d[k1] = {}
     d[k1][k2] = val
@@ -87,7 +87,7 @@ def apply() -> None:
     data = _load_yaml(RETRIEVAL_YAML)
 
     # Capture previous values to state (for precise revert)
-    prev: Dict[str, Any] = {}
+    prev: dict[str, Any] = {}
     for (k1, k2), target_val in TARGET.items():
         prev[(k1, k2)] = _get(data, k1, k2)
         _set(data, k1, k2, target_val)
@@ -113,7 +113,7 @@ def revert() -> None:
         raise FileNotFoundError("No state file found — nothing to revert. Run apply first.")
 
     state = json.loads(STATE_FILE.read_text())
-    prev_values: Dict[str, Any] = state.get("previous_values", {})
+    prev_values: dict[str, Any] = state.get("previous_values", {})
 
     data = _load_yaml(RETRIEVAL_YAML)
 
@@ -150,4 +150,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

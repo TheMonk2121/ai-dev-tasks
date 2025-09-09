@@ -21,7 +21,7 @@ class GameDayDrillsSystem:
         self.config_dir.mkdir(parents=True, exist_ok=True)
         self.drills_log_file = self.config_dir / "drills_log.jsonl"
 
-    def run_game_day_drills(self) -> Dict[str, Any]:
+    def run_game_day_drills(self) -> dict[str, Any]:
         """Run complete game-day drills."""
         print("🎯 GAME-DAY DRILLS")
         print("=" * 50)
@@ -65,7 +65,7 @@ class GameDayDrillsSystem:
 
         return drills_result
 
-    def _run_rollback_drill(self) -> Dict[str, Any]:
+    def _run_rollback_drill(self) -> dict[str, Any]:
         """Run brownout/rollback drill."""
         print("  🔄 Testing emergency rollback...")
 
@@ -124,7 +124,7 @@ class GameDayDrillsSystem:
 
         return drill_result
 
-    def _run_negative_control_audit(self) -> Dict[str, Any]:
+    def _run_negative_control_audit(self) -> dict[str, Any]:
         """Run negative control audit."""
         print("  🚫 Testing negative control cases...")
 
@@ -168,7 +168,7 @@ class GameDayDrillsSystem:
 
         return drill_result
 
-    def _run_prefix_guard_drill(self) -> Dict[str, Any]:
+    def _run_prefix_guard_drill(self) -> dict[str, Any]:
         """Run prefix guard drill."""
         print("  🛡️ Testing prefix leakage guard...")
 
@@ -209,7 +209,7 @@ class GameDayDrillsSystem:
 
         return drill_result
 
-    def _verify_active_pointer_flip(self) -> Dict[str, Any]:
+    def _verify_active_pointer_flip(self) -> dict[str, Any]:
         """Verify active pointer flips during rollback."""
         try:
             # Check if active pointer file exists and has been updated
@@ -218,7 +218,7 @@ class GameDayDrillsSystem:
             if not active_pointer_file.exists():
                 return {"success": False, "error": "Active pointer file not found"}
 
-            with open(active_pointer_file, "r") as f:
+            with open(active_pointer_file) as f:
                 pointer_data = json.load(f)
 
             # Check if pointer has rollback flag
@@ -235,7 +235,7 @@ class GameDayDrillsSystem:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _verify_cache_clear(self) -> Dict[str, Any]:
+    def _verify_cache_clear(self) -> dict[str, Any]:
         """Verify cache clears during rollback."""
         try:
             # Check if cache directories are empty or don't exist
@@ -259,7 +259,7 @@ class GameDayDrillsSystem:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _verify_smoke_eval_green(self) -> Dict[str, Any]:
+    def _verify_smoke_eval_green(self) -> dict[str, Any]:
         """Verify smoke evaluation stays green after rollback."""
         try:
             # Run smoke evaluation
@@ -276,7 +276,7 @@ class GameDayDrillsSystem:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _verify_audit_log_written(self) -> Dict[str, Any]:
+    def _verify_audit_log_written(self) -> dict[str, Any]:
         """Verify audit log is written during rollback."""
         try:
             # Check if rollback log file exists and has recent entries
@@ -286,7 +286,7 @@ class GameDayDrillsSystem:
                 return {"success": False, "error": "Rollback log file not found"}
 
             # Check for recent rollback entries
-            with open(rollback_log_file, "r") as f:
+            with open(rollback_log_file) as f:
                 lines = f.readlines()
 
             recent_rollbacks = []
@@ -307,7 +307,7 @@ class GameDayDrillsSystem:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _run_negative_case(self, case: Dict[str, Any]) -> Dict[str, Any]:
+    def _run_negative_case(self, case: dict[str, Any]) -> dict[str, Any]:
         """Run a single negative test case."""
         try:
             # This would run the case through your actual RAG system
@@ -338,7 +338,7 @@ class GameDayDrillsSystem:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    def _run_prefix_leakage_sql_check(self) -> Dict[str, Any]:
+    def _run_prefix_leakage_sql_check(self) -> dict[str, Any]:
         """Run prefix leakage SQL check."""
         try:
             # This would run the actual SQL check
@@ -362,7 +362,7 @@ class GameDayDrillsSystem:
         except Exception as e:
             return {"success": False, "error": str(e), "passed": False}
 
-    def _verify_bm25_prefix_clean(self) -> Dict[str, Any]:
+    def _verify_bm25_prefix_clean(self) -> dict[str, Any]:
         """Verify BM25 text is clean of prefixes."""
         try:
             # This would check actual BM25 text in the database
@@ -374,7 +374,7 @@ class GameDayDrillsSystem:
         except Exception as e:
             return {"success": False, "error": str(e), "passed": False}
 
-    def _verify_prefix_guard_active(self) -> Dict[str, Any]:
+    def _verify_prefix_guard_active(self) -> dict[str, Any]:
         """Verify prefix guard is active."""
         try:
             # Check if prefix guard is enabled in configuration
@@ -385,7 +385,7 @@ class GameDayDrillsSystem:
         except Exception as e:
             return {"success": False, "error": str(e), "passed": False}
 
-    def _log_drill_results(self, drills_result: Dict[str, Any]):
+    def _log_drill_results(self, drills_result: dict[str, Any]):
         """Log drill results."""
         log_entry = {"timestamp": datetime.now().isoformat(), "type": "game_day_drills", "data": drills_result}
 

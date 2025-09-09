@@ -25,7 +25,7 @@ import sys
 from typing import Any, Dict
 
 
-def get_context_bundle(backlog_id: str) -> Dict[str, Any]:
+def get_context_bundle(backlog_id: str) -> dict[str, Any]:
     """Get context bundle using handoff script."""
     try:
         result = subprocess.run(
@@ -43,7 +43,7 @@ def get_context_bundle(backlog_id: str) -> Dict[str, Any]:
         sys.exit(2)
 
 
-def should_create_prd(context: Dict[str, Any]) -> bool:
+def should_create_prd(context: dict[str, Any]) -> bool:
     """Determine if PRD creation is needed based on context."""
     # Simple heuristic: if priority is HIGH/CRITICAL and description is detailed
     priority = context.get("priority", "").lower()
@@ -52,7 +52,7 @@ def should_create_prd(context: Dict[str, Any]) -> bool:
     return ("high" in priority or "critical" in priority) and len(description) > 50
 
 
-def generate_prd_if_needed(backlog_id: str, context: Dict[str, Any]) -> str | None:
+def generate_prd_if_needed(backlog_id: str, context: dict[str, Any]) -> str | None:
     """Generate PRD if complexity warrants it."""
     if not should_create_prd(context):
         return None
@@ -74,7 +74,7 @@ def generate_prd_if_needed(backlog_id: str, context: Dict[str, Any]) -> str | No
         return None
 
 
-def create_execution_plan(backlog_id: str, context: Dict[str, Any], prd_path: str | None) -> Dict[str, Any]:
+def create_execution_plan(backlog_id: str, context: dict[str, Any], prd_path: str | None) -> dict[str, Any]:
     """Create execution plan with next steps."""
     next_action = context.get("next", "")
     priority = context.get("priority", "")
@@ -109,7 +109,7 @@ def create_execution_plan(backlog_id: str, context: Dict[str, Any], prd_path: st
     }
 
 
-def format_execution_output(context: Dict[str, Any], execution_plan: Dict[str, Any]) -> str:
+def format_execution_output(context: dict[str, Any], execution_plan: dict[str, Any]) -> str:
     """Format clean execution output for immediate use."""
     backlog_id = execution_plan["backlog_id"]
     title = context.get("title", "")

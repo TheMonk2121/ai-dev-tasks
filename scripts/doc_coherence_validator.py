@@ -13,8 +13,6 @@ import re
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
-
 
 MD_INCLUDE_DIRS = [
     Path("."),

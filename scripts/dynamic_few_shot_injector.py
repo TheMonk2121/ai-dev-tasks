@@ -33,7 +33,7 @@ class DynamicFewShotInjector:
 
     def inject_episodic_context(
         self, query: str, agent: str = "cursor_ai", context_type: str = "few_shot"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Inject episodic context into a query or system prompt."""
         start_time = time.time()
 
@@ -101,7 +101,7 @@ class DynamicFewShotInjector:
                 "processing_time_ms": (time.time() - start_time) * 1000,
             }
 
-    def _inject_as_few_shot(self, query: str, episodic: Dict[str, Any]) -> Tuple[str, int]:
+    def _inject_as_few_shot(self, query: str, episodic: dict[str, Any]) -> tuple[str, int]:
         """Inject episodic context as few-shot examples."""
         enhanced_parts = [query]
         token_count = len(query.split())  # Rough token estimate
@@ -133,7 +133,7 @@ class DynamicFewShotInjector:
 
         return "\n".join(enhanced_parts), token_count
 
-    def _inject_as_guidance(self, query: str, episodic: Dict[str, Any]) -> Tuple[str, int]:
+    def _inject_as_guidance(self, query: str, episodic: dict[str, Any]) -> tuple[str, int]:
         """Inject episodic context as guidance bullets."""
         enhanced_parts = [query]
         token_count = len(query.split())
@@ -155,7 +155,7 @@ class DynamicFewShotInjector:
 
         return "\n".join(enhanced_parts), token_count
 
-    def _inject_as_compact(self, query: str, episodic: Dict[str, Any]) -> Tuple[str, int]:
+    def _inject_as_compact(self, query: str, episodic: dict[str, Any]) -> tuple[str, int]:
         """Inject episodic context in compact format."""
         enhanced_parts = [query]
         token_count = len(query.split())
@@ -175,7 +175,7 @@ class DynamicFewShotInjector:
 
         return "\n".join(enhanced_parts), token_count
 
-    def _compress_context(self, enhanced_query: str, episodic: Dict[str, Any]) -> Tuple[str, int]:
+    def _compress_context(self, enhanced_query: str, episodic: dict[str, Any]) -> tuple[str, int]:
         """Compress context to fit within token limits."""
         # Take only the most important bullets
         compressed_parts = [enhanced_query.split("\n")[0]]  # Keep original query
@@ -231,7 +231,7 @@ class DynamicFewShotInjector:
             print(f"❌ Failed to enhance system prompt: {e}")
             return base_prompt
 
-    def get_injection_stats(self) -> Dict[str, Any]:
+    def get_injection_stats(self) -> dict[str, Any]:
         """Get statistics about injection performance."""
         try:
             stats = self.episodic_integration.store.get_stats()

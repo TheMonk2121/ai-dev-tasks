@@ -97,7 +97,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
             print(f"⚠️ LIMIT features failed, falling back to standard response: {e}")
             return self.get_memory_system_response(query, role)
 
-    def _parse_boolean_logic(self, query: str) -> Dict[str, List[str]]:
+    def _parse_boolean_logic(self, query: str) -> dict[str, list[str]]:
         """Parse Boolean logic from query."""
         tokens = query.split()
 
@@ -130,7 +130,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
             "or": or_terms,
         }
 
-    def _generate_facets_with_yield_selection(self, query: str) -> List[Dict[str, Any]]:
+    def _generate_facets_with_yield_selection(self, query: str) -> list[dict[str, Any]]:
         """Generate facets with yield-based selection."""
         # Simulate facet generation (in real implementation, this would use LLM)
         facets = []
@@ -158,8 +158,8 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         return kept_facets
 
     def _hybrid_retrieval_with_geometry_routing(
-        self, query: str, boolean_logic: Dict[str, List[str]], facets: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+        self, query: str, boolean_logic: dict[str, list[str]], facets: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         """Perform hybrid retrieval with geometry routing."""
         # Simulate vector scores for geometry analysis
         vector_scores = self._simulate_vector_scores(query)
@@ -188,7 +188,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
 
         return docs
 
-    def _simulate_vector_scores(self, query: str) -> List[float]:
+    def _simulate_vector_scores(self, query: str) -> list[float]:
         """Simulate vector scores for geometry analysis."""
         np.random.seed(hash(query) % 2**32)
 
@@ -202,7 +202,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
 
         return sorted(scores, reverse=True)
 
-    def _calculate_top1_margin(self, scores: List[float]) -> float:
+    def _calculate_top1_margin(self, scores: list[float]) -> float:
         """Calculate top-1 margin: (top1 - median(top10)) / (std(top10) + ε)."""
         if len(scores) < 10:
             return 0.0
@@ -219,7 +219,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         margin = (top1 - median_top10) / (std_top10 + epsilon)
         return float(margin)
 
-    def _calculate_entropy(self, scores: List[float]) -> float:
+    def _calculate_entropy(self, scores: list[float]) -> float:
         """Calculate entropy of top-k scores (higher = flatter)."""
         if not scores:
             return 0.0
@@ -237,7 +237,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         entropy = -np.sum(probs * np.log2(probs))
         return entropy
 
-    def _simulate_bm25_retrieval(self, query: str, boolean_logic: Dict[str, List[str]]) -> List[Dict[str, Any]]:
+    def _simulate_bm25_retrieval(self, query: str, boolean_logic: dict[str, list[str]]) -> list[dict[str, Any]]:
         """Simulate BM25-only retrieval."""
         docs = []
         for i in range(16):  # CONTEXT_TOPK
@@ -253,8 +253,8 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         return sorted(docs, key=lambda x: x["score"], reverse=True)
 
     def _simulate_hybrid_retrieval(
-        self, query: str, boolean_logic: Dict[str, List[str]], facets: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+        self, query: str, boolean_logic: dict[str, list[str]], facets: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         """Simulate hybrid retrieval with RRF fusion."""
         # Simulate BM25 results
         bm25_docs = self._simulate_bm25_retrieval(query, boolean_logic)
@@ -305,7 +305,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
 
         return final_docs[: int(os.getenv("RAGCHECKER_CONTEXT_TOPK", "14"))]
 
-    def _apply_rrf_fusion(self, docs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _apply_rrf_fusion(self, docs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Apply Reciprocal Rank Fusion."""
         rrf_k = int(os.getenv("RAGCHECKER_RRF_K", "60"))
 
@@ -326,7 +326,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         sorted_docs = sorted(doc_scores.items(), key=lambda x: x[1], reverse=True)
         return [doc_objects[doc_id] for doc_id, _ in sorted_docs]
 
-    def _apply_mmr_diversification(self, docs: List[Dict[str, Any]], query: str) -> List[Dict[str, Any]]:
+    def _apply_mmr_diversification(self, docs: list[dict[str, Any]], query: str) -> list[dict[str, Any]]:
         """Apply Maximal Marginal Relevance diversification."""
         mmr_lambda = float(os.getenv("RAGCHECKER_MMR_LAMBDA", "0.65"))
 
@@ -346,7 +346,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
 
         return sorted(diversified, key=lambda x: x["score"], reverse=True)
 
-    def _enforce_per_doc_line_cap(self, docs: List[Dict[str, Any]], cap: int) -> List[Dict[str, Any]]:
+    def _enforce_per_doc_line_cap(self, docs: list[dict[str, Any]], cap: int) -> list[dict[str, Any]]:
         """Enforce per-document line cap."""
         doc_counts = Counter()
         result = []
@@ -359,7 +359,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
 
         return result
 
-    def _apply_support_validation(self, docs: List[Dict[str, Any]], query: str) -> List[Dict[str, Any]]:
+    def _apply_support_validation(self, docs: list[dict[str, Any]], query: str) -> list[dict[str, Any]]:
         """Apply two-of-three support gate and validation."""
         validated_docs = []
 
@@ -386,7 +386,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
         print(f"[support] {len(docs)} → {len(validated_docs)} docs passed two-of-three + validation")
         return validated_docs
 
-    def _validate_numeric_entity_match(self, doc: Dict[str, Any], query: str) -> bool:
+    def _validate_numeric_entity_match(self, doc: dict[str, Any], query: str) -> bool:
         """Validate numeric and entity must-match requirements."""
         # Simulate validation (in real implementation, this would check actual content)
         if self.support_validator["numeric_must_match"]:
@@ -405,7 +405,7 @@ class EnhancedRAGCheckerWithLimitFeatures(OfficialRAGCheckerEvaluator):
 
         return True  # No special validation needed
 
-    def _generate_enhanced_response(self, query: str, validated_docs: List[Dict[str, Any]], role: str) -> str:
+    def _generate_enhanced_response(self, query: str, validated_docs: list[dict[str, Any]], role: str) -> str:
         """Generate enhanced response using validated documents."""
         # Use the standard memory system response but with enhanced context
         enhanced_query = f"""ENHANCED CONTEXT AVAILABLE: {query}
@@ -417,7 +417,7 @@ Please provide a comprehensive response that utilizes this enhanced context."""
 
         return self.get_memory_system_response(enhanced_query, role)
 
-    def create_fallback_evaluation_with_limit_features(self, input_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def create_fallback_evaluation_with_limit_features(self, input_data: list[dict[str, Any]]) -> dict[str, Any]:
         """Create fallback evaluation with LIMIT features applied."""
         print("🔄 Running Enhanced Fallback Evaluation with LIMIT Features")
 

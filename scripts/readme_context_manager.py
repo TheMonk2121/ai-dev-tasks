@@ -10,7 +10,6 @@ import json
 import re
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 
 class READMEContextManager:
@@ -20,7 +19,7 @@ class READMEContextManager:
         self.readme_path = Path(readme_path)
         self.backlog_path = Path("000_core/000_backlog.md")
 
-    def analyze_backlog_items(self, days: int = 30) -> Dict[str, Dict]:
+    def analyze_backlog_items(self, days: int = 30) -> dict[str, dict]:
         """Analyze backlog items and categorize them for documentation."""
         import subprocess
 
@@ -46,7 +45,7 @@ class READMEContextManager:
 
         return backlog_items
 
-    def calculate_impact_score(self, backlog_id: str, commits: List[str]) -> int:
+    def calculate_impact_score(self, backlog_id: str, commits: list[str]) -> int:
         """Calculate impact score based on commit patterns."""
         score = 0
 
@@ -91,7 +90,7 @@ class READMEContextManager:
 
         return min(score, 10)  # Cap at 10
 
-    def calculate_complexity_score(self, backlog_id: str, commits: List[str]) -> int:
+    def calculate_complexity_score(self, backlog_id: str, commits: list[str]) -> int:
         """Calculate complexity score based on file changes."""
         import subprocess
 
@@ -136,7 +135,7 @@ class READMEContextManager:
         # - Both medium (score >= 4 each)
         return impact_score >= 6 or complexity_score >= 6 or (impact_score >= 4 and complexity_score >= 4)
 
-    def generate_consolidated_context(self, backlog_items: Dict[str, Dict]) -> str:
+    def generate_consolidated_context(self, backlog_items: dict[str, dict]) -> str:
         """Generate consolidated context for high-priority items."""
         high_priority = []
         medium_priority = []
@@ -164,7 +163,7 @@ class READMEContextManager:
 
         return "\n\n".join(context)
 
-    def generate_full_context(self, backlog_id: str, data: Dict) -> str:
+    def generate_full_context(self, backlog_id: str, data: dict) -> str:
         """Generate full context for high-priority item."""
         latest_commit = data["commits"][0] if data["commits"] else "Unknown commit"
 
@@ -179,7 +178,7 @@ class READMEContextManager:
 - **Performance Impact**: [Add performance metrics]
 - **Integration Points**: [Add integration details]"""
 
-    def generate_consolidated_summary(self, medium_priority: List[Tuple[str, Dict]]) -> str:
+    def generate_consolidated_summary(self, medium_priority: list[tuple[str, dict]]) -> str:
         """Generate consolidated summary for medium-priority items."""
         summary = f"""#### **Consolidated Medium-Impact Changes** ({datetime.now().strftime('%Y-%m-%d')})
 **Items**: {', '.join(item[0] for item in medium_priority[:10])}
@@ -194,7 +193,7 @@ class READMEContextManager:
 
         return summary
 
-    def cleanup_old_context(self, max_age_days: int = 90) -> List[str]:
+    def cleanup_old_context(self, max_age_days: int = 90) -> list[str]:
         """Identify old context entries for potential cleanup."""
         if not self.readme_path.exists():
             return []
@@ -218,7 +217,7 @@ class READMEContextManager:
 
         return old_entries
 
-    def suggest_consolidation(self) -> Dict[str, List[str]]:
+    def suggest_consolidation(self) -> dict[str, list[str]]:
         """Suggest consolidation strategies for README context."""
         suggestions = {"archive_old": [], "consolidate_similar": [], "prioritize_recent": []}
 
