@@ -27,7 +27,7 @@ import sys
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -94,7 +94,7 @@ class IntegrationMetrics:
     cache_size_before_mb: float = 0.0
     cache_size_after_mb: float = 0.0
 
-    performance_alerts: List[str] = field(default_factory=list)
+    performance_alerts: list[str] = field(default_factory=list)
 
     @property
     def total_cleanup_time_seconds(self) -> float:
@@ -110,17 +110,17 @@ class IntegrationMetrics:
 class CacheInvalidationIntegration:
     """Integration layer between cache invalidation system and PostgreSQL cache service"""
 
-    def __init__(self, config: Optional[IntegrationConfig] = None):
+    def __init__(self, config: IntegrationConfig | None = None):
         """Initialize cache invalidation integration"""
         self.config = config or IntegrationConfig()
         self.metrics = IntegrationMetrics()
 
         # Initialize systems
-        self.cache_service: Optional[PostgreSQLCacheService] = None
-        self.invalidation_system: Optional[CacheInvalidationSystem] = None
+        self.cache_service: PostgreSQLCacheService | None = None
+        self.invalidation_system: CacheInvalidationSystem | None = None
 
         # Background task management
-        self.cleanup_task: Optional[asyncio.Task] = None
+        self.cleanup_task: asyncio.Task | None = None
         self.running = False
 
         logger.info("Cache Invalidation Integration initialized")
@@ -270,7 +270,7 @@ class CacheInvalidationIntegration:
             logger.error(f"Frequency-based invalidation failed: {e}")
             return 0
 
-    async def manual_invalidation(self, entry_ids: List[int]) -> int:
+    async def manual_invalidation(self, entry_ids: list[int]) -> int:
         """Manually invalidate specific cache entries"""
         try:
             if not self.invalidation_system:
@@ -319,7 +319,7 @@ class CacheInvalidationIntegration:
         except Exception as e:
             logger.error(f"Performance threshold check failed: {e}")
 
-    def _extract_cache_size_mb(self, stats: Dict[str, Any]) -> float:
+    def _extract_cache_size_mb(self, stats: dict[str, Any]) -> float:
         """Extract cache size in MB from statistics"""
         try:
             table_size_str = stats.get("table_size", "0 bytes")
@@ -335,7 +335,7 @@ class CacheInvalidationIntegration:
         except Exception:
             return 0.0
 
-    async def get_integration_metrics(self) -> Dict[str, Any]:
+    async def get_integration_metrics(self) -> dict[str, Any]:
         """Get comprehensive integration metrics"""
         try:
             # Get cache service metrics

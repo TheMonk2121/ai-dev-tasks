@@ -9,10 +9,9 @@ across all documentation files in the project.
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import List, Tuple
 
 
-def find_files_with_old_timestamp(root_dir: Path) -> List[Tuple[Path, str]]:
+def find_files_with_old_timestamp(root_dir: Path) -> list[tuple[Path, str]]:
     """Find all files containing the old timestamp."""
     old_timestamp_pattern = r"Last Updated: 2024-08-07"
     files_to_update = []
@@ -36,7 +35,7 @@ def find_files_with_old_timestamp(root_dir: Path) -> List[Tuple[Path, str]]:
 
         for file_path in dir_path.rglob("*.md"):
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 if re.search(old_timestamp_pattern, content):
@@ -48,7 +47,7 @@ def find_files_with_old_timestamp(root_dir: Path) -> List[Tuple[Path, str]]:
     # Also check root level files
     for file_path in root_dir.glob("*.md"):
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             if re.search(old_timestamp_pattern, content):
