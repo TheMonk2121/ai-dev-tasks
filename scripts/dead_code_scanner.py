@@ -21,7 +21,7 @@ import re
 import subprocess
 import sys
 from dataclasses import dataclass
-from typing import Iterable, List, Tuple
+from collections.abc import Iterable
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SCAN_DIRS = ["src", "dspy-rag-system", "scripts"]  # primary code locations
@@ -63,15 +63,15 @@ class Symbol:
     line: int
 
 
-def collect_symbols(pyfile: str) -> List[Symbol]:
-    with open(pyfile, "r", encoding="utf-8", errors="ignore") as f:
+def collect_symbols(pyfile: str) -> list[Symbol]:
+    with open(pyfile, encoding="utf-8", errors="ignore") as f:
         src = f.read()
     try:
         tree = ast.parse(src, filename=pyfile)
     except SyntaxError:
         return []
 
-    symbols: List[Symbol] = []
+    symbols: list[Symbol] = []
     for node in tree.body:
         if isinstance(node, ast.FunctionDef):
             symbols.append(Symbol("function", node.name, pyfile, node.lineno))
@@ -82,7 +82,7 @@ def collect_symbols(pyfile: str) -> List[Symbol]:
     return symbols
 
 
-def rg_search(pattern: str, root: str) -> List[Tuple[str, int, str]]:
+def rg_search(pattern: str, root: str) -> list[tuple[str, int, str]]:
     """Run ripgrep and return list of (file, line, text)."""
     try:
         cmd = [
@@ -104,7 +104,7 @@ def rg_search(pattern: str, root: str) -> List[Tuple[str, int, str]]:
         out = subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
         return []
-    results: List[Tuple[str, int, str]] = []
+    results: list[tuple[str, int, str]] = []
     for line in out.splitlines():
         # Format: path:line:match
         parts = line.split(":", 2)
@@ -127,12 +127,12 @@ def is_interesting(name: str) -> bool:
     return True
 
 
-def find_potentially_dead(root: str) -> List[Tuple[Symbol, List[Tuple[str, int, str]]]]:
-    symbols: List[Symbol] = []
+def find_potentially_dead(root: str) -> list[tuple[Symbol, list[tuple[str, int, str]]]]:
+    symbols: list[Symbol] = []
     for py in iter_target_files(root):
         symbols.extend(collect_symbols(py))
 
-    candidates: List[Tuple[Symbol, List[Tuple[str, int, str]]]] = []
+    candidates: list[tuple[Symbol, list[tuple[str, int, str]]]] = []
     for sym in symbols:
         if not is_interesting(sym.name):
             continue

@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import os
 import sys
-from typing import List
 
 # Ensure imports from dspy-rag-system
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -61,7 +60,7 @@ def ensure_setup() -> None:
 
 def check_decisions_indexes() -> None:
     print("\n[Checks] decisions indexes + triggers")
-    expected_indexes: List[str] = [
+    expected_indexes: list[str] = [
         "idx_decisions_session_id",
         "idx_decisions_decision_key",
         "idx_decisions_superseded",
@@ -75,9 +74,7 @@ def check_decisions_indexes() -> None:
         with conn.cursor() as cur:
             cur.execute("SELECT extname FROM pg_extension WHERE extname='pg_trgm';")
             has_trgm = bool(cur.fetchone())
-            cur.execute(
-                "SELECT indexname FROM pg_indexes WHERE tablename='decisions';"
-            )
+            cur.execute("SELECT indexname FROM pg_indexes WHERE tablename='decisions';")
             present = {row[0] for row in cur.fetchall()}
 
             missing = [i for i in expected_indexes if i not in present]
@@ -124,9 +121,7 @@ def check_performance_helpers() -> None:
     print("\n[Checks] performance helpers")
     with get_conn(role="retrieval") as conn:
         with conn.cursor() as cur:
-            cur.execute(
-                "SELECT 1 FROM pg_proc WHERE proname='ensure_future_performance_partitions';"
-            )
+            cur.execute("SELECT 1 FROM pg_proc WHERE proname='ensure_future_performance_partitions';")
             has_fn = bool(cur.fetchone())
     print(f"ensure_future_performance_partitions={'present' if has_fn else 'missing'}")
 
