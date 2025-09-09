@@ -17,12 +17,13 @@ import sqlite3
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any
 from uuid import uuid4
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class MessageType(Enum):
     """Enumeration of message types."""
@@ -33,6 +34,7 @@ class MessageType(Enum):
     ERROR = "error"
     HEARTBEAT = "heartbeat"
 
+
 class AgentRole(Enum):
     """Enumeration of agent roles."""
 
@@ -42,6 +44,7 @@ class AgentRole(Enum):
     DOCUMENTATION = "documentation"
     NATIVE_AI = "native_ai"
 
+
 @dataclass
 class AgentMessage:
     """Data structure for agent messages."""
@@ -50,22 +53,24 @@ class AgentMessage:
     message_type: MessageType = MessageType.REQUEST
     sender: str = ""
     recipient: str = ""
-    content: Dict[str, Any] = field(default_factory=dict)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    content: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     timestamp: float = field(default_factory=time.time)
     priority: int = 1  # 1=low, 2=medium, 3=high, 4=critical
+
 
 @dataclass
 class AgentSession:
     """Data structure for agent communication sessions."""
 
     id: str = field(default_factory=lambda: str(uuid4()))
-    participants: List[str] = field(default_factory=list)
-    context: Dict[str, Any] = field(default_factory=dict)
-    messages: List[AgentMessage] = field(default_factory=list)
+    participants: list[str] = field(default_factory=list)
+    context: dict[str, Any] = field(default_factory=dict)
+    messages: list[AgentMessage] = field(default_factory=list)
     created_at: float = field(default_factory=time.time)
     updated_at: float = field(default_factory=time.time)
     status: str = "active"  # "active", "paused", "completed"
+
 
 class CommunicationDatabase:
     """Database for storing communication data and session history."""
@@ -176,15 +181,16 @@ class CommunicationDatabase:
         conn.close()
         return message.id
 
+
 class AgentCommunicationManager:
     """Manages communication between agents."""
 
     def __init__(self):
         self.database = CommunicationDatabase()
-        self.active_sessions: Dict[str, AgentSession] = {}
-        self.agent_registry: Dict[str, Any] = {}
-        self.message_queue: List[AgentMessage] = []
-        self.routing_rules: Dict[str, List[str]] = {}
+        self.active_sessions: dict[str, AgentSession] = {}
+        self.agent_registry: dict[str, Any] = {}
+        self.message_queue: list[AgentMessage] = []
+        self.routing_rules: dict[str, list[str]] = {}
 
         # Initialize routing rules
         self._init_routing_rules()
@@ -199,7 +205,7 @@ class AgentCommunicationManager:
             "coordinator": ["research", "coder", "documentation", "native_ai"],
         }
 
-    async def register_agent(self, agent_id: str, agent_instance: Any, capabilities: List[str]):
+    async def register_agent(self, agent_id: str, agent_instance: Any, capabilities: list[str]):
         """Register an agent for communication."""
         self.agent_registry[agent_id] = {
             "instance": agent_instance,
@@ -215,7 +221,7 @@ class AgentCommunicationManager:
             del self.agent_registry[agent_id]
             logger.info(f"Unregistered agent: {agent_id}")
 
-    async def create_session(self, participants: List[str], context: Dict[str, Any] = None) -> str:
+    async def create_session(self, participants: list[str], context: dict[str, Any] = None) -> str:
         """Create a new communication session."""
         session = AgentSession(participants=participants, context=context or {})
 
@@ -230,10 +236,10 @@ class AgentCommunicationManager:
         session_id: str,
         sender: str,
         recipient: str,
-        content: Dict[str, Any],
+        content: dict[str, Any],
         message_type: MessageType = MessageType.REQUEST,
         priority: int = 1,
-        metadata: Dict[str, Any] = None,
+        metadata: dict[str, Any] = None,
     ) -> str:
         """Send a message between agents."""
         message = AgentMessage(
@@ -289,10 +295,10 @@ class AgentCommunicationManager:
         self,
         session_id: str,
         sender: str,
-        content: Dict[str, Any],
+        content: dict[str, Any],
         message_type: MessageType = MessageType.NOTIFICATION,
         exclude_sender: bool = True,
-    ) -> List[str]:
+    ) -> list[str]:
         """Broadcast a message to all participants in a session."""
         if session_id not in self.active_sessions:
             logger.error(f"Session {session_id} not found")
@@ -318,7 +324,7 @@ class AgentCommunicationManager:
             message = self.message_queue.pop(0)
             await self.route_message(message)
 
-    async def get_session_messages(self, session_id: str, limit: int = 50) -> List[AgentMessage]:
+    async def get_session_messages(self, session_id: str, limit: int = 50) -> list[AgentMessage]:
         """Get messages for a session."""
         if session_id not in self.active_sessions:
             return []
@@ -326,7 +332,7 @@ class AgentCommunicationManager:
         session = self.active_sessions[session_id]
         return session.messages[-limit:] if session.messages else []
 
-    async def get_agent_status(self) -> Dict[str, Any]:
+    async def get_agent_status(self) -> dict[str, Any]:
         """Get status of all registered agents."""
         status = {}
         for agent_id, agent_info in self.agent_registry.items():
@@ -337,13 +343,14 @@ class AgentCommunicationManager:
             }
         return status
 
+
 class AgentCoordinator:
     """Coordinates communication between agents and manages workflows."""
 
     def __init__(self):
         self.communication_manager = AgentCommunicationManager()
-        self.workflow_templates: Dict[str, Dict[str, Any]] = {}
-        self.active_workflows: Dict[str, Dict[str, Any]] = {}
+        self.workflow_templates: dict[str, dict[str, Any]] = {}
+        self.active_workflows: dict[str, dict[str, Any]] = {}
 
         # Initialize workflow templates
         self._init_workflow_templates()
@@ -378,7 +385,7 @@ class AgentCoordinator:
             },
         }
 
-    async def start_workflow(self, workflow_type: str, context: Dict[str, Any]) -> str:
+    async def start_workflow(self, workflow_type: str, context: dict[str, Any]) -> str:
         """Start a new workflow."""
         if workflow_type not in self.workflow_templates:
             raise ValueError(f"Unknown workflow type: {workflow_type}")
@@ -445,7 +452,7 @@ class AgentCoordinator:
 
         return True
 
-    async def get_workflow_status(self, workflow_id: str) -> Dict[str, Any]:
+    async def get_workflow_status(self, workflow_id: str) -> dict[str, Any]:
         """Get status of a workflow."""
         if workflow_id not in self.active_workflows:
             return {"error": "Workflow not found"}
@@ -461,11 +468,12 @@ class AgentCoordinator:
             "created_at": workflow["created_at"],
         }
 
-    async def get_all_workflows(self) -> Dict[str, Dict[str, Any]]:
+    async def get_all_workflows(self) -> dict[str, dict[str, Any]]:
         """Get all active workflows."""
         return {
             workflow_id: await self.get_workflow_status(workflow_id) for workflow_id in self.active_workflows.keys()
         }
+
 
 # Example usage and testing
 async def main():
@@ -544,6 +552,7 @@ async def main():
     print(f"Workflow status: {json.dumps(workflow_status, indent=2)}")
 
     print("--- Agent Communication Test Complete ---")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -31,7 +31,7 @@ try:
     logfire = get_logfire()
 except Exception:
     logfire = None
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 # Bootstrap sys.path relative to this file so imports work regardless of CWD
 try:
@@ -533,7 +533,7 @@ class CleanRAGCheckerEvaluator:
 
     def run_evaluation(
         self, cases_file: str, outdir: str, use_bedrock: bool = False, reader=None, args=None
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Run evaluation with real DSPy RAG system."""
         start_wall = time.strftime("%Y-%m-%dT%H:%M:%S")
         print("📊 EVALUATION SUMMARY (CLEAN HARNESS)")

@@ -14,7 +14,7 @@ import sys
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -27,7 +27,7 @@ sys.path.insert(0, str(dspy_rag_path))
 from src.utils.config_lock import ConfigLockManager, LockedConfig
 
 
-def run_command(cmd: str, cwd: Optional[Path] = None) -> subprocess.CompletedProcess:
+def run_command(cmd: str, cwd: Path | None = None) -> subprocess.CompletedProcess:
     """Run a command and return the result"""
     print(f"🔧 Running: {cmd}")
     result = subprocess.run(
@@ -232,7 +232,7 @@ def generate_bakeoff_report(
     kpi_success: bool,
     ci_success: bool,
     canary_success: bool,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Generate comprehensive bakeoff report"""
 
     overall_success = all(

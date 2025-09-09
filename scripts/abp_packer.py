@@ -20,27 +20,27 @@ import json
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 
 # --- Data helpers ---
 
 
-def _safe_load_json(path: str) -> Optional[Dict[str, Any]]:
+def _safe_load_json(path: str) -> dict[str, Any] | None:
     try:
         if path and os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, encoding="utf-8") as f:
                 return json.load(f)
     except Exception:
         return None
     return None
 
 
-def _parse_lessons_jsonl(path: str) -> List[Dict[str, Any]]:
-    lessons: List[Dict[str, Any]] = []
+def _parse_lessons_jsonl(path: str) -> list[dict[str, Any]]:
+    lessons: list[dict[str, Any]] = []
     if not path or not os.path.exists(path):
         return lessons
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line or line.startswith("#"):
@@ -53,7 +53,7 @@ def _parse_lessons_jsonl(path: str) -> List[Dict[str, Any]]:
     return lessons
 
 
-def _parse_effect_value(effect: Any) -> Tuple[Optional[float], Optional[float]]:
+def _parse_effect_value(effect: Any) -> tuple[float | None, float | None]:
     # Returns (min_delta, max_delta) if parsable, else (None, None)
     if effect is None:
         return None, None
@@ -70,7 +70,7 @@ def _parse_effect_value(effect: Any) -> Tuple[Optional[float], Optional[float]]:
         return None, None
 
 
-def _lesson_score(lesson: Dict[str, Any]) -> float:
+def _lesson_score(lesson: dict[str, Any]) -> float:
     # score = 0.5*recency + 0.3*confidence + 0.2*effect_size
     # Recency: use created_at timestamp if present
     recency = 0.0
@@ -103,16 +103,16 @@ def _lesson_score(lesson: Dict[str, Any]) -> float:
 @dataclass
 class ABPInputs:
     profile: str
-    manifest: Optional[Dict[str, Any]]
-    gates: Optional[Dict[str, Any]]
-    lessons: List[Dict[str, Any]]
-    pattern_cards: Optional[List[Dict[str, Any]]]
-    decision_docket: Optional[str]
+    manifest: dict[str, Any] | None
+    gates: dict[str, Any] | None
+    lessons: list[dict[str, Any]]
+    pattern_cards: list[dict[str, Any]] | None
+    decision_docket: str | None
     token_budget: int
 
 
-def _format_constraints(manifest: Optional[Dict[str, Any]], gates: Optional[Dict[str, Any]]) -> str:
-    lines: List[str] = ["## Constraints & Targets"]
+def _format_constraints(manifest: dict[str, Any] | None, gates: dict[str, Any] | None) -> str:
+    lines: list[str] = ["## Constraints & Targets"]
     if manifest:
         targets = manifest.get("targets", {})
         ema = manifest.get("ema", {})
@@ -121,7 +121,7 @@ def _format_constraints(manifest: Optional[Dict[str, Any]], gates: Optional[Dict
             lines.append("- EMA: " + ", ".join(f"{k}={v}" for k, v in ema.items()))
     if gates:
         # Flatten min/max gates
-        gparts: List[str] = []
+        gparts: list[str] = []
         for k, v in gates.items():
             if isinstance(v, dict):
                 if "min" in v:
@@ -133,10 +133,10 @@ def _format_constraints(manifest: Optional[Dict[str, Any]], gates: Optional[Dict
     return "\n".join(lines) + "\n\n"
 
 
-def _format_lessons(lessons: List[Dict[str, Any]], max_items: int = 8) -> str:
+def _format_lessons(lessons: list[dict[str, Any]], max_items: int = 8) -> str:
     if not lessons:
         return ""
-    lines: List[str] = ["## Recent Lessons"]
+    lines: list[str] = ["## Recent Lessons"]
     # Sort by score desc
     ranked = sorted(lessons, key=_lesson_score, reverse=True)[:max_items]
     for l in ranked:
@@ -149,10 +149,10 @@ def _format_lessons(lessons: List[Dict[str, Any]], max_items: int = 8) -> str:
     return "\n".join(lines) + "\n\n"
 
 
-def _format_patterns(cards: Optional[List[Dict[str, Any]]], max_items: int = 6) -> str:
+def _format_patterns(cards: list[dict[str, Any]] | None, max_items: int = 6) -> str:
     if not cards:
         return ""
-    lines: List[str] = ["## Pattern Cards"]
+    lines: list[str] = ["## Pattern Cards"]
     for card in cards[:max_items]:
         summary = card.get("summary") or card.get("text") or json.dumps(card, ensure_ascii=False)[:240]
         lines.append(f"- {summary}")
@@ -241,4 +241,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

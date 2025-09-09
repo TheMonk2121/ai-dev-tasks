@@ -17,7 +17,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 import numpy as np
 
@@ -56,8 +56,8 @@ class UsagePattern:
     confidence: float
     impact_score: float
     description: str
-    recommendations: List[str]
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    recommendations: list[str]
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -69,7 +69,7 @@ class PerformanceMetric:
     value: float
     unit: str
     timestamp: float
-    context: Dict[str, Any] = field(default_factory=dict)
+    context: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -84,8 +84,8 @@ class OptimizationOpportunity:
     effort_required: str
     priority: InsightLevel
     description: str
-    implementation_steps: List[str]
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    implementation_steps: list[str]
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -98,9 +98,9 @@ class TrendAnalysis:
     trend_strength: float
     confidence: float
     time_period: str
-    data_points: List[PerformanceMetric]
-    prediction: Optional[float] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    data_points: list[PerformanceMetric]
+    prediction: float | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -121,7 +121,7 @@ class AnalyticsConfig:
 
     # Optimization settings
     optimization_threshold: float = 0.15  # 15% improvement threshold
-    effort_priority_mapping: Dict[str, float] = field(default_factory=lambda: {"low": 0.3, "medium": 0.6, "high": 0.9})
+    effort_priority_mapping: dict[str, float] = field(default_factory=lambda: {"low": 0.3, "medium": 0.6, "high": 0.9})
 
     # ML settings
     enable_ml_predictions: bool = True
@@ -347,7 +347,7 @@ class AnalyticsDatabase:
         conn.commit()
         conn.close()
 
-    def get_performance_metrics(self, metric_name: str, days: int = 30) -> List[PerformanceMetric]:
+    def get_performance_metrics(self, metric_name: str, days: int = 30) -> list[PerformanceMetric]:
         """Get performance metrics for a specific metric name"""
         cutoff_time = time.time() - (days * 24 * 3600)
 
@@ -379,7 +379,7 @@ class AnalyticsDatabase:
         conn.close()
         return metrics
 
-    def get_usage_patterns(self, pattern_type: Optional[str] = None) -> List[UsagePattern]:
+    def get_usage_patterns(self, pattern_type: str | None = None) -> list[UsagePattern]:
         """Get usage patterns"""
         conn = self._get_connection()
         cursor = conn.cursor()
@@ -422,7 +422,7 @@ class AnalyticsDatabase:
         conn.close()
         return patterns
 
-    def get_optimization_opportunities(self, priority: Optional[InsightLevel] = None) -> List[OptimizationOpportunity]:
+    def get_optimization_opportunities(self, priority: InsightLevel | None = None) -> list[OptimizationOpportunity]:
         """Get optimization opportunities"""
         conn = self._get_connection()
         cursor = conn.cursor()
@@ -469,7 +469,7 @@ class AnalyticsDatabase:
         conn.close()
         return opportunities
 
-    def get_trend_analysis(self) -> List[TrendAnalysis]:
+    def get_trend_analysis(self) -> list[TrendAnalysis]:
         """Get trend analysis results"""
         conn = self._get_connection()
         cursor = conn.cursor()
@@ -523,7 +523,7 @@ class UsagePatternAnalyzer:
         self.database = database
         self.config = config
 
-    def analyze_usage_patterns(self, metrics: List[PerformanceMetric]) -> List[UsagePattern]:
+    def analyze_usage_patterns(self, metrics: list[PerformanceMetric]) -> list[UsagePattern]:
         """Analyze usage patterns from performance metrics"""
         patterns = []
 
@@ -542,7 +542,7 @@ class UsagePatternAnalyzer:
 
         return patterns
 
-    def _analyze_hourly_patterns(self, metrics: List[PerformanceMetric]) -> List[UsagePattern]:
+    def _analyze_hourly_patterns(self, metrics: list[PerformanceMetric]) -> list[UsagePattern]:
         """Analyze hourly usage patterns"""
         patterns = []
 
@@ -586,7 +586,7 @@ class UsagePatternAnalyzer:
 
         return patterns
 
-    def _analyze_daily_patterns(self, metrics: List[PerformanceMetric]) -> List[UsagePattern]:
+    def _analyze_daily_patterns(self, metrics: list[PerformanceMetric]) -> list[UsagePattern]:
         """Analyze daily usage patterns"""
         patterns = []
 
@@ -622,7 +622,7 @@ class UsagePatternAnalyzer:
 
         return patterns
 
-    def _analyze_weekly_patterns(self, metrics: List[PerformanceMetric]) -> List[UsagePattern]:
+    def _analyze_weekly_patterns(self, metrics: list[PerformanceMetric]) -> list[UsagePattern]:
         """Analyze weekly usage patterns"""
         patterns = []
 
@@ -655,7 +655,7 @@ class UsagePatternAnalyzer:
 
         return patterns
 
-    def _calculate_pattern_confidence(self, values: List[float]) -> float:
+    def _calculate_pattern_confidence(self, values: list[float]) -> float:
         """Calculate confidence level for a pattern"""
         if len(values) < 2:
             return 0.0
@@ -680,7 +680,7 @@ class OptimizationAnalyzer:
         self.database = database
         self.config = config
 
-    def identify_optimization_opportunities(self, metrics: List[PerformanceMetric]) -> List[OptimizationOpportunity]:
+    def identify_optimization_opportunities(self, metrics: list[PerformanceMetric]) -> list[OptimizationOpportunity]:
         """Identify optimization opportunities from performance metrics"""
         opportunities = []
 
@@ -704,8 +704,8 @@ class OptimizationAnalyzer:
         return opportunities
 
     def _analyze_metric_opportunities(
-        self, metric_name: str, metrics: List[PerformanceMetric]
-    ) -> List[OptimizationOpportunity]:
+        self, metric_name: str, metrics: list[PerformanceMetric]
+    ) -> list[OptimizationOpportunity]:
         """Analyze a specific metric for optimization opportunities"""
         opportunities = []
 
@@ -815,7 +815,7 @@ class TrendAnalyzer:
         self.database = database
         self.config = config
 
-    def analyze_trends(self, metrics: List[PerformanceMetric]) -> List[TrendAnalysis]:
+    def analyze_trends(self, metrics: list[PerformanceMetric]) -> list[TrendAnalysis]:
         """Analyze performance trends from metrics"""
         trends = []
 
@@ -836,7 +836,7 @@ class TrendAnalyzer:
 
         return trends
 
-    def _analyze_metric_trend(self, metric_name: str, metrics: List[PerformanceMetric]) -> Optional[TrendAnalysis]:
+    def _analyze_metric_trend(self, metric_name: str, metrics: list[PerformanceMetric]) -> TrendAnalysis | None:
         """Analyze trend for a specific metric"""
         # Sort metrics by timestamp
         sorted_metrics = sorted(metrics, key=lambda x: x.timestamp)
@@ -883,7 +883,7 @@ class TrendAnalyzer:
 
         return trend
 
-    def _calculate_trend_direction(self, timestamps: List[float], values: List[float]) -> Tuple[str, float]:
+    def _calculate_trend_direction(self, timestamps: list[float], values: list[float]) -> tuple[str, float]:
         """Calculate trend direction and strength"""
         if len(values) < 2:
             return "stable", 0.0
@@ -912,7 +912,7 @@ class TrendAnalyzer:
 
         return direction, float(r_squared)
 
-    def _calculate_trend_confidence(self, values: List[float]) -> float:
+    def _calculate_trend_confidence(self, values: list[float]) -> float:
         """Calculate confidence in trend analysis"""
         if len(values) < 2:
             return 0.0
@@ -929,7 +929,7 @@ class TrendAnalyzer:
         confidence = max(0, 1 - cv)
         return min(confidence, 1.0)
 
-    def _make_prediction(self, timestamps: List[float], values: List[float]) -> Optional[float]:
+    def _make_prediction(self, timestamps: list[float], values: list[float]) -> float | None:
         """Make a prediction for future values"""
         if len(values) < self.config.min_training_data:
             return None
@@ -959,7 +959,7 @@ class TrendAnalyzer:
 class AdvancedAnalyticsSystem:
     """Main analytics system that orchestrates all analytics components"""
 
-    def __init__(self, config: Optional[AnalyticsConfig] = None):
+    def __init__(self, config: AnalyticsConfig | None = None):
         self.config = config or AnalyticsConfig()
         self.database = AnalyticsDatabase(self.config.db_path)
 
@@ -1003,7 +1003,7 @@ class AdvancedAnalyticsSystem:
 
         logger.info("Advanced analytics system stopped")
 
-    def run_comprehensive_analysis(self) -> Dict[str, Any]:
+    def run_comprehensive_analysis(self) -> dict[str, Any]:
         """Run a comprehensive analysis of the system"""
         logger.info("Running comprehensive analytics analysis...")
 
@@ -1033,7 +1033,7 @@ class AdvancedAnalyticsSystem:
             "insights": insights,
         }
 
-    def _collect_performance_metrics(self) -> List[PerformanceMetric]:
+    def _collect_performance_metrics(self) -> list[PerformanceMetric]:
         """Collect performance metrics from the system"""
         # This would typically collect real metrics from the memory system
         # For now, we'll simulate some metrics
@@ -1081,8 +1081,8 @@ class AdvancedAnalyticsSystem:
         return metrics
 
     def _generate_insights(
-        self, patterns: List[UsagePattern], opportunities: List[OptimizationOpportunity], trends: List[TrendAnalysis]
-    ) -> List[Dict[str, Any]]:
+        self, patterns: list[UsagePattern], opportunities: list[OptimizationOpportunity], trends: list[TrendAnalysis]
+    ) -> list[dict[str, Any]]:
         """Generate actionable insights from analysis results"""
         insights = []
 
@@ -1147,7 +1147,7 @@ class AdvancedAnalyticsSystem:
                 logger.error(f"Error in analysis loop: {e}")
                 time.sleep(60)  # Wait before retrying
 
-    def get_system_status(self) -> Dict[str, Any]:
+    def get_system_status(self) -> dict[str, Any]:
         """Get comprehensive system status"""
         current_time = time.time()
 

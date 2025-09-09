@@ -8,7 +8,7 @@ This script adds TL;DR sections to markdown files that are missing them.
 import argparse
 import re
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 
 class TLDRAdder:
@@ -129,7 +129,7 @@ class TLDRAdder:
             },
         }
 
-    def get_tldr_template(self, file_path: Path) -> Optional[Dict]:
+    def get_tldr_template(self, file_path: Path) -> dict | None:
         """Get TL;DR template for a specific file."""
         # Try exact path match first
         for category, files in self.tldr_templates.items():
@@ -195,7 +195,7 @@ class TLDRAdder:
             print(f"❌ Error processing {file_path}: {e}")
             return False
 
-    def process_files(self, file_list: List[str]) -> None:
+    def process_files(self, file_list: list[str]) -> None:
         """Process a list of files to add TL;DR sections."""
         for file_path_str in file_list:
             file_path = Path(file_path_str)
