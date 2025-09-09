@@ -3,7 +3,7 @@ Unit tests for base MCP server infrastructure.
 """
 
 import tempfile
-from typing import List
+
 
 import pytest
 from pydantic import ValidationError
@@ -160,7 +160,7 @@ class TestMCPServer:
             """Mock content type support."""
             return content_type in ["txt", "md", "py"]
 
-        def get_supported_types(self) -> List[str]:
+        def get_supported_types(self) -> list[str]:
             """Mock supported types."""
             return ["txt", "md", "py"]
 
@@ -305,7 +305,7 @@ class TestMCPProtocolUtils:
     def test_detect_encoding(self):
         """Test encoding detection."""
         # Test with UTF-8 content
-        utf8_content = "Hello, world!".encode("utf-8")
+        utf8_content = b"Hello, world!"
         encoding = MCPProtocolUtils.detect_encoding(utf8_content)
         assert encoding in ["utf-8", "ascii"]  # chardet might detect ascii for simple text
 

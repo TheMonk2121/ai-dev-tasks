@@ -7,7 +7,6 @@ This is safer than manual removal because it checks if imports are actually used
 import ast
 import sys
 from pathlib import Path
-from typing import Set
 
 
 def get_used_names(file_path: Path) -> set[str]:

@@ -156,7 +156,7 @@ Final Recommendations: Ranked fixes for ensuring engineering robustness.
             # Run the review through the RAG pipeline
             result = rag_pipeline.answer(review_prompt)
 
-            # Extract the answer - RAGPipeline.answer() returns Dict[str, Any]
+            # Extract the answer - RAGPipeline.answer() returns dict[str, Any]
             if result is None:
                 answer = "No result"
                 context_info = ""

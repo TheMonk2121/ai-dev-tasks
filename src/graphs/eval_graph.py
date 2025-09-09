@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import Optional
 from collections.abc import Iterable
+
 
 try:
     from pydantic_graph.graph import Graph

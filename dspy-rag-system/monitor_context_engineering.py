@@ -10,16 +10,17 @@ import os
 import sys
 import time
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 # Add the src directory to the path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
 from dspy_modules.cursor_model_router import create_validated_cursor_model_router
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class ContextEngineeringMonitor:
     """Real-time monitor for context engineering system"""
@@ -35,10 +36,10 @@ class ContextEngineeringMonitor:
             "model_distribution": {},
             "average_confidence": 0.0,
             "average_latency": 0.0,
-            "recent_queries": []
+            "recent_queries": [],
         }
 
-    def process_query(self, query: str, expected_model: str = None) -> Dict[str, Any]:
+    def process_query(self, query: str, expected_model: str = None) -> dict[str, Any]:
         """Process a query and return detailed results"""
 
         start_time = time.time()
@@ -56,8 +57,9 @@ class ContextEngineeringMonitor:
 
             # Update model distribution
             selected_model = result["selected_model"]
-            self.monitoring_data["model_distribution"][selected_model] = \
+            self.monitoring_data["model_distribution"][selected_model] = (
                 self.monitoring_data["model_distribution"].get(selected_model, 0) + 1
+            )
 
             # Check for hallucination
             if "validation" in result and result["validation"]["hallucination_detected"]:
@@ -84,8 +86,9 @@ class ContextEngineeringMonitor:
         if total_queries == 1:
             self.monitoring_data["average_confidence"] = new_confidence
         else:
-            self.monitoring_data["average_confidence"] = \
-                (current_avg * (total_queries - 1) + new_confidence) / total_queries
+            self.monitoring_data["average_confidence"] = (
+                current_avg * (total_queries - 1) + new_confidence
+            ) / total_queries
 
     def _update_average_latency(self, new_latency: float):
         """Update running average latency"""
@@ -95,10 +98,9 @@ class ContextEngineeringMonitor:
         if total_queries == 1:
             self.monitoring_data["average_latency"] = new_latency
         else:
-            self.monitoring_data["average_latency"] = \
-                (current_avg * (total_queries - 1) + new_latency) / total_queries
+            self.monitoring_data["average_latency"] = (current_avg * (total_queries - 1) + new_latency) / total_queries
 
-    def _add_recent_query(self, query: str, result: Dict[str, Any], latency_ms: float):
+    def _add_recent_query(self, query: str, result: dict[str, Any], latency_ms: float):
         """Add query to recent queries list"""
         recent_query = {
             "timestamp": datetime.now().isoformat(),
@@ -106,7 +108,7 @@ class ContextEngineeringMonitor:
             "selected_model": result.get("selected_model", "unknown"),
             "confidence": result.get("confidence", 0.0),
             "latency_ms": latency_ms,
-            "hallucination_detected": result.get("validation", {}).get("hallucination_detected", False)
+            "hallucination_detected": result.get("validation", {}).get("hallucination_detected", False),
         }
 
         self.monitoring_data["recent_queries"].append(recent_query)
@@ -115,7 +117,7 @@ class ContextEngineeringMonitor:
         if len(self.monitoring_data["recent_queries"]) > 10:
             self.monitoring_data["recent_queries"] = self.monitoring_data["recent_queries"][-10:]
 
-    def get_status_report(self) -> Dict[str, Any]:
+    def get_status_report(self) -> dict[str, Any]:
         """Get comprehensive status report"""
 
         uptime_seconds = time.time() - self.monitoring_data["start_time"]
@@ -127,7 +129,9 @@ class ContextEngineeringMonitor:
 
         hallucination_rate = 0.0
         if self.monitoring_data["successful_routes"] > 0:
-            hallucination_rate = self.monitoring_data["hallucination_detections"] / self.monitoring_data["successful_routes"]
+            hallucination_rate = (
+                self.monitoring_data["hallucination_detections"] / self.monitoring_data["successful_routes"]
+            )
 
         return {
             "system_status": {
@@ -136,11 +140,11 @@ class ContextEngineeringMonitor:
                 "success_rate": round(success_rate, 3),
                 "hallucination_rate": round(hallucination_rate, 3),
                 "average_confidence": round(self.monitoring_data["average_confidence"], 3),
-                "average_latency_ms": round(self.monitoring_data["average_latency"], 1)
+                "average_latency_ms": round(self.monitoring_data["average_latency"], 1),
             },
             "model_distribution": self.monitoring_data["model_distribution"],
             "recent_queries": self.monitoring_data["recent_queries"],
-            "comprehensive_report": self.router.get_comprehensive_report()
+            "comprehensive_report": self.router.get_comprehensive_report(),
         }
 
     def print_status_dashboard(self):
@@ -171,7 +175,9 @@ class ContextEngineeringMonitor:
         for i, query in enumerate(report["recent_queries"][-5:], 1):
             hallucination_indicator = "🚨" if query["hallucination_detected"] else "✅"
             print(f"  {i}. {hallucination_indicator} {query['query']}")
-            print(f"     Model: {query['selected_model']} | Confidence: {query['confidence']:.2f} | Latency: {query['latency_ms']:.1f}ms")
+            print(
+                f"     Model: {query['selected_model']} | Confidence: {query['confidence']:.2f} | Latency: {query['latency_ms']:.1f}ms"
+            )
 
         # Comprehensive report
         comp_report = report["comprehensive_report"]
@@ -183,6 +189,7 @@ class ContextEngineeringMonitor:
             print(f"  Average Confidence: {val_stats.get('average_confidence', 0):.3f}")
 
         print("=" * 80)
+
 
 def interactive_monitoring():
     """Interactive monitoring session"""
@@ -197,13 +204,13 @@ def interactive_monitoring():
         try:
             user_input = input("\n🎯 Enter query (or command): ").strip()
 
-            if user_input.lower() == 'quit':
+            if user_input.lower() == "quit":
                 print("👋 Exiting monitor...")
                 break
-            elif user_input.lower() == 'status':
+            elif user_input.lower() == "status":
                 monitor.print_status_dashboard()
                 continue
-            elif user_input.lower() == 'help':
+            elif user_input.lower() == "help":
                 print("Commands:")
                 print("  <query> - Test the context engineering system")
                 print("  status  - Show monitoring dashboard")
@@ -245,6 +252,7 @@ def interactive_monitoring():
     print("\n📊 Final Report:")
     monitor.print_status_dashboard()
 
+
 def batch_test_monitoring():
     """Run batch tests to populate monitoring data"""
 
@@ -264,7 +272,7 @@ def batch_test_monitoring():
         "Create a Python class for handling database connections",
         "Debug this authentication issue",
         "Plan a comprehensive testing strategy",
-        "Optimize this algorithm for better performance"
+        "Optimize this algorithm for better performance",
     ]
 
     for i, query in enumerate(test_queries, 1):
@@ -285,15 +293,15 @@ def batch_test_monitoring():
 
     return monitor
 
+
 def main():
     """Main function"""
 
     import argparse
+
     parser = argparse.ArgumentParser(description="Cursor Context Engineering Monitor")
-    parser.add_argument("--mode", choices=["interactive", "batch"], default="interactive",
-                       help="Monitoring mode")
-    parser.add_argument("--save-report", action="store_true",
-                       help="Save monitoring report to file")
+    parser.add_argument("--mode", choices=["interactive", "batch"], default="interactive", help="Monitoring mode")
+    parser.add_argument("--save-report", action="store_true", help="Save monitoring report to file")
 
     args = parser.parse_args()
 
@@ -307,6 +315,7 @@ def main():
             with open("monitoring_report.json", "w") as f:
                 json.dump(report, f, indent=2)
             print("📁 Report saved to monitoring_report.json")
+
 
 if __name__ == "__main__":
     main()

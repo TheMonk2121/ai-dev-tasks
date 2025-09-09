@@ -7,7 +7,7 @@ and consistency with existing Pydantic infrastructure (B-1007).
 """
 
 import re
-from typing import Any, Dict, List
+from typing import Any
 
 from pydantic import BaseModel, Field, ValidationInfo, field_validator
 

@@ -22,7 +22,7 @@ def add_deprecation_notice(file_path: str, replacement: str):
     """Add deprecation notice to a file."""
 
     # Read the current content
-    with open(file_path, "r", encoding="utf-8") as f:
+    with open(file_path, encoding="utf-8") as f:
         content = f.read()
 
     # Create deprecation notice

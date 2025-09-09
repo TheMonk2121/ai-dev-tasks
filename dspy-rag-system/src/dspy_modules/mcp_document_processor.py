@@ -12,7 +12,7 @@ import sys
 import time
 import uuid
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from dspy import Module
 
@@ -35,7 +35,7 @@ class MCPDocumentProcessor(Module):
         chunk_size: int = 300,
         chunk_overlap: int = 50,
         config_path: str = "config/metadata_rules.yaml",
-        allowed_paths: Optional[List[str]] = None,
+        allowed_paths: list[str] | None = None,
         mcp_timeout: int = 30,
         enable_cache: bool = True,
     ):
@@ -99,7 +99,7 @@ class MCPDocumentProcessor(Module):
             self.logger.error(f"Failed to initialize MCP servers: {e}")
             raise
 
-    def forward(self, document_source: str, **kwargs) -> Dict[str, Any]:
+    def forward(self, document_source: str, **kwargs) -> dict[str, Any]:
         """Process a document using appropriate MCP server based on source type"""
         start_time = time.perf_counter_ns()
         document_id = f"mcp_doc_{uuid.uuid4().hex}"
@@ -191,7 +191,7 @@ class MCPDocumentProcessor(Module):
             pass
         return "unknown"
 
-    def _determine_fallback_server(self, document_source: str) -> Optional[str]:
+    def _determine_fallback_server(self, document_source: str) -> str | None:
         """Determine fallback server based on source characteristics"""
         source_lower = document_source.lower()
 
@@ -209,7 +209,7 @@ class MCPDocumentProcessor(Module):
 
     async def _process_with_server(
         self, server: Any, document_source: str, document_id: str, **kwargs
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Process document using the selected MCP server"""
         try:
             # Process document with MCP server
@@ -238,7 +238,7 @@ class MCPDocumentProcessor(Module):
             self.logger.error(f"Server processing failed: {e}")
             raise
 
-    def _create_chunks_from_content(self, content: str, document_id: str) -> List[Dict[str, Any]]:
+    def _create_chunks_from_content(self, content: str, document_id: str) -> list[dict[str, Any]]:
         """Create chunks from processed content using token-aware chunking"""
         try:
             # Simple chunking for now - could be enhanced with token-aware chunking
@@ -277,7 +277,7 @@ class MCPDocumentProcessor(Module):
                 }
             ]
 
-    def _prepare_metadata(self, processed_doc: Any, document_source: str, document_id: str) -> Dict[str, Any]:
+    def _prepare_metadata(self, processed_doc: Any, document_source: str, document_id: str) -> dict[str, Any]:
         """Prepare metadata from processed document"""
         try:
             metadata = {
@@ -372,7 +372,7 @@ class MCPDocumentProcessor(Module):
         if server_type in self.processing_stats["server_usage"]:
             self.processing_stats["server_usage"][server_type] += 1
 
-    def get_processing_stats(self) -> Dict[str, Any]:
+    def get_processing_stats(self) -> dict[str, Any]:
         """Get current processing statistics"""
         stats = self.processing_stats.copy()
 
@@ -386,7 +386,7 @@ class MCPDocumentProcessor(Module):
 
         return stats
 
-    def get_server_info(self) -> Dict[str, Any]:
+    def get_server_info(self) -> dict[str, Any]:
         """Get information about all MCP servers"""
         server_info = {}
 
@@ -438,7 +438,7 @@ class MCPDocumentIngestionPipeline(Module):
         chunk_size: int = 300,
         chunk_overlap: int = 50,
         config_path: str = "config/metadata_rules.yaml",
-        allowed_paths: Optional[List[str]] = None,
+        allowed_paths: list[str] | None = None,
         mcp_timeout: int = 30,
         enable_cache: bool = True,
     ):
@@ -453,7 +453,7 @@ class MCPDocumentIngestionPipeline(Module):
         )
         self.logger = get_logger("mcp_document_pipeline")
 
-    def forward(self, document_source: str, vector_store: Any = None, **kwargs) -> Dict[str, Any]:
+    def forward(self, document_source: str, vector_store: Any = None, **kwargs) -> dict[str, Any]:
         """Complete MCP-based document ingestion pipeline"""
         start_time = time.perf_counter_ns()
 
@@ -467,7 +467,7 @@ class MCPDocumentIngestionPipeline(Module):
             )
 
             # Process document using MCP processor
-            result: Dict[str, Any] = self.processor.forward(document_source, **kwargs)
+            result: dict[str, Any] = self.processor.forward(document_source, **kwargs)
 
             # Store in vector database (if provided)
             if vector_store and hasattr(vector_store, "store_chunks"):
@@ -534,11 +534,11 @@ class MCPDocumentIngestionPipeline(Module):
             )
             raise
 
-    def get_processing_stats(self) -> Dict[str, Any]:
+    def get_processing_stats(self) -> dict[str, Any]:
         """Get processing statistics from the MCP processor"""
         return self.processor.get_processing_stats()
 
-    def get_server_info(self) -> Dict[str, Any]:
+    def get_server_info(self) -> dict[str, Any]:
         """Get server information from the MCP processor"""
         return self.processor.get_server_info()
 
@@ -563,7 +563,7 @@ if __name__ == "__main__":
     for source in test_sources:
         try:
             print(f"\nTesting source: {source}")
-            result: Dict[str, Any] = processor.forward(source)
+            result: dict[str, Any] = processor.forward(source)
             print(f"✅ Success: {result['total_chunks']} chunks created")
             print(f"Server type: {result.get('server_type', 'unknown')}")
         except Exception as e:

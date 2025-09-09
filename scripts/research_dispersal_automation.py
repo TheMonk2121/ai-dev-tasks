@@ -7,7 +7,7 @@ Automates the process of dispersing research findings to appropriate documentati
 import os
 import re
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 
 class ResearchDispersalAutomation:

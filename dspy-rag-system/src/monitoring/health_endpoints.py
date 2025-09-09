@@ -11,7 +11,8 @@ import sys
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
+from collections.abc import Callable
 
 from flask import jsonify
 
@@ -34,14 +35,14 @@ class DependencyStatus:
     response_time: float
     last_check: datetime
     endpoint: str
-    error_message: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    error_message: str | None = None
+    metadata: dict[str, Any] | None = None
 
 
 class HealthEndpointManager:
     """Manages health check endpoints for production deployment"""
 
-    def __init__(self, production_monitor: Optional[ProductionMonitor] = None):
+    def __init__(self, production_monitor: ProductionMonitor | None = None):
         """
         Initialize the health endpoint manager.
 
@@ -49,8 +50,8 @@ class HealthEndpointManager:
             production_monitor: Production monitor instance (optional)
         """
         self.production_monitor = production_monitor or ProductionMonitor()
-        self.dependencies: Dict[str, DependencyStatus] = {}
-        self.health_check_callbacks: List[Callable] = []
+        self.dependencies: dict[str, DependencyStatus] = {}
+        self.health_check_callbacks: list[Callable] = []
 
         # Register default dependencies
         self._register_default_dependencies()
@@ -73,7 +74,7 @@ class HealthEndpointManager:
         )
         setattr(self, f"_check_{name}_dependency", check_func)
 
-    def register_health_callback(self, callback: Callable[[Dict[str, Any]], None]) -> None:
+    def register_health_callback(self, callback: Callable[[dict[str, Any]], None]) -> None:
         """Register a callback for health check results"""
         self.health_check_callbacks.append(callback)
 
@@ -132,7 +133,7 @@ class HealthEndpointManager:
             with open(test_file, "w") as f:
                 f.write("health_check")
 
-            with open(test_file, "r") as f:
+            with open(test_file) as f:
                 content = f.read()
 
             os.remove(test_file)
@@ -165,7 +166,7 @@ class HealthEndpointManager:
                 error_message=str(e),
             )
 
-    def run_dependency_checks(self) -> Dict[str, DependencyStatus]:
+    def run_dependency_checks(self) -> dict[str, DependencyStatus]:
         """Run all dependency health checks"""
         results = {}
 
@@ -196,7 +197,7 @@ class HealthEndpointManager:
 
         return results
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """Get comprehensive health status including dependencies"""
         with trace_operation("health_status_check"):
             # Get production monitor health
@@ -245,7 +246,7 @@ class HealthEndpointManager:
 
             return health_status
 
-    def get_ready_status(self) -> Dict[str, Any]:
+    def get_ready_status(self) -> dict[str, Any]:
         """Get readiness status for Kubernetes"""
         health_status = self.get_health_status()
 
@@ -266,7 +267,7 @@ class HealthEndpointManager:
 
 
 # Global instance
-_health_manager: Optional[HealthEndpointManager] = None
+_health_manager: HealthEndpointManager | None = None
 
 
 def get_health_manager() -> HealthEndpointManager:
@@ -277,7 +278,7 @@ def get_health_manager() -> HealthEndpointManager:
     return _health_manager
 
 
-def initialize_health_endpoints(production_monitor: Optional[ProductionMonitor] = None) -> HealthEndpointManager:
+def initialize_health_endpoints(production_monitor: ProductionMonitor | None = None) -> HealthEndpointManager:
     """Initialize health endpoints"""
     global _health_manager
     _health_manager = HealthEndpointManager(production_monitor)

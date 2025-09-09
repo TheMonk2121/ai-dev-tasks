@@ -10,7 +10,7 @@ import os
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .context_merger import ContextMerger, ContextMergeRequest
 from .conversation_storage import ConversationStorage
@@ -33,8 +33,8 @@ class PerformanceMetrics:
     database_queries: int = 0
     memory_usage_mb: float = 0.0
     error_count: int = 0
-    timestamp: Optional[datetime] = None
-    metadata: Optional[Dict[str, Any]] = None
+    timestamp: datetime | None = None
+    metadata: dict[str, Any] | None = None
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -58,8 +58,8 @@ class PerformanceBenchmark:
     cache_hit_rate: float
     database_query_count: int
     memory_usage_mb: float
-    timestamp: Optional[datetime] = None
-    details: Optional[Dict[str, Any]] = None
+    timestamp: datetime | None = None
+    details: dict[str, Any] | None = None
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -74,9 +74,9 @@ class LTSTPerformanceOptimizer:
 
     def __init__(
         self,
-        conversation_storage: Optional[ConversationStorage] = None,
-        context_merger: Optional[ContextMerger] = None,
-        session_manager: Optional[SessionManager] = None,
+        conversation_storage: ConversationStorage | None = None,
+        context_merger: ContextMerger | None = None,
+        session_manager: SessionManager | None = None,
     ):
         """Initialize performance optimizer."""
         self.conversation_storage = conversation_storage or ConversationStorage()
@@ -90,11 +90,11 @@ class LTSTPerformanceOptimizer:
         self.db_manager = DatabaseManager(connection_string)
 
         # Performance tracking
-        self.performance_metrics: List[PerformanceMetrics] = []
-        self.benchmarks: Dict[str, PerformanceBenchmark] = {}
+        self.performance_metrics: list[PerformanceMetrics] = []
+        self.benchmarks: dict[str, PerformanceBenchmark] = {}
         self.cache_stats = {"hits": 0, "misses": 0}
 
-    def optimize_database_queries(self) -> Dict[str, Any]:
+    def optimize_database_queries(self) -> dict[str, Any]:
         """Optimize database queries for better performance."""
         try:
             optimization_results = {}
@@ -121,7 +121,7 @@ class LTSTPerformanceOptimizer:
             logger.error(f"Failed to optimize database queries: {e}")
             return {"error": str(e)}
 
-    def _optimize_storage_queries(self) -> Dict[str, Any]:
+    def _optimize_storage_queries(self) -> dict[str, Any]:
         """Optimize conversation storage queries."""
         try:
             optimizations = {}
@@ -186,7 +186,7 @@ class LTSTPerformanceOptimizer:
             logger.error(f"Failed to optimize storage queries: {e}")
             return {"error": str(e)}
 
-    def _optimize_merger_queries(self) -> Dict[str, Any]:
+    def _optimize_merger_queries(self) -> dict[str, Any]:
         """Optimize context merger queries."""
         try:
             optimizations = {}
@@ -224,7 +224,7 @@ class LTSTPerformanceOptimizer:
             logger.error(f"Failed to optimize merger queries: {e}")
             return {"error": str(e)}
 
-    def _optimize_session_queries(self) -> Dict[str, Any]:
+    def _optimize_session_queries(self) -> dict[str, Any]:
         """Optimize session manager queries."""
         try:
             optimizations = {}
@@ -262,7 +262,7 @@ class LTSTPerformanceOptimizer:
             logger.error(f"Failed to optimize session queries: {e}")
             return {"error": str(e)}
 
-    def _identify_missing_indexes(self, cursor) -> List[Dict[str, Any]]:
+    def _identify_missing_indexes(self, cursor) -> list[dict[str, Any]]:
         """Identify potentially missing indexes."""
         try:
             missing_indexes = []
@@ -320,7 +320,7 @@ class LTSTPerformanceOptimizer:
         except Exception as e:
             logger.error(f"Failed to update database statistics: {e}")
 
-    def implement_caching_strategies(self) -> Dict[str, Any]:
+    def implement_caching_strategies(self) -> dict[str, Any]:
         """Implement caching strategies for context retrieval."""
         try:
             caching_results = {}
@@ -344,7 +344,7 @@ class LTSTPerformanceOptimizer:
             logger.error(f"Failed to implement caching strategies: {e}")
             return {"error": str(e)}
 
-    def _optimize_merger_cache(self) -> Dict[str, Any]:
+    def _optimize_merger_cache(self) -> dict[str, Any]:
         """Optimize context merger cache."""
         try:
             # Clean up expired cache entries
@@ -373,7 +373,7 @@ class LTSTPerformanceOptimizer:
             logger.error(f"Failed to optimize merger cache: {e}")
             return {"error": str(e)}
 
-    def _optimize_session_cache(self) -> Dict[str, Any]:
+    def _optimize_session_cache(self) -> dict[str, Any]:
         """Optimize session manager cache."""
         try:
             # Clean up expired sessions
@@ -394,7 +394,7 @@ class LTSTPerformanceOptimizer:
             logger.error(f"Failed to optimize session cache: {e}")
             return {"error": str(e)}
 
-    def _optimize_storage_cache(self) -> Dict[str, Any]:
+    def _optimize_storage_cache(self) -> dict[str, Any]:
         """Optimize conversation storage cache."""
         try:
             # Clean up expired data
@@ -408,7 +408,7 @@ class LTSTPerformanceOptimizer:
             logger.error(f"Failed to optimize storage cache: {e}")
             return {"error": str(e)}
 
-    def benchmark_memory_rehydration(self, test_queries: List[str], user_id: str = "test_user") -> PerformanceBenchmark:
+    def benchmark_memory_rehydration(self, test_queries: list[str], user_id: str = "test_user") -> PerformanceBenchmark:
         """Benchmark memory rehydration performance."""
         try:
             start_time = time.time()
@@ -563,7 +563,7 @@ class LTSTPerformanceOptimizer:
             )
 
     def benchmark_context_merging(
-        self, session_id: str, user_id: str, test_messages: List[str]
+        self, session_id: str, user_id: str, test_messages: list[str]
     ) -> PerformanceBenchmark:
         """Benchmark context merging performance."""
         try:
@@ -636,7 +636,7 @@ class LTSTPerformanceOptimizer:
                 details={"error": str(e)},
             )
 
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """Generate comprehensive performance report."""
         try:
             report = {
@@ -664,7 +664,7 @@ class LTSTPerformanceOptimizer:
             logger.error(f"Failed to generate performance report: {e}")
             return {"error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def _get_system_health(self) -> Dict[str, Any]:
+    def _get_system_health(self) -> dict[str, Any]:
         """Get system health metrics."""
         try:
             health_metrics = {
@@ -710,7 +710,7 @@ class LTSTPerformanceOptimizer:
         except Exception as e:
             logger.error(f"Failed to track performance metric: {e}")
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> dict[str, Any]:
         """Get performance summary statistics."""
         try:
             if not self.performance_metrics:

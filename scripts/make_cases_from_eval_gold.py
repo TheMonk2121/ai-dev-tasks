@@ -32,7 +32,7 @@ def to_case(q, target):
                 paths += [f"{v}/*"]
             else:
                 paths += v
-    elif isinstance(target, (list, tuple)):
+    elif isinstance(target, list | tuple):
         paths = list(target)
     else:
         paths = [str(target)]

@@ -16,7 +16,7 @@ import hashlib
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .conversation_storage import ConversationSession, ConversationStorage, UserPreference
 
@@ -33,7 +33,7 @@ class SessionState:
     context_count: int
     preference_count: int
     session_duration: timedelta
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -50,8 +50,8 @@ class SessionSummary:
     total_contexts: int
     total_preferences: int
     session_duration: timedelta
-    learning_insights: List[str]
-    preference_updates: List[Dict[str, Any]]
+    learning_insights: list[str]
+    preference_updates: list[dict[str, Any]]
     created_at: datetime
     last_updated: datetime
 
@@ -59,7 +59,7 @@ class SessionSummary:
 class SessionManager:
     """Manages conversation sessions and user preference learning."""
 
-    def __init__(self, conversation_storage: Optional[ConversationStorage] = None):
+    def __init__(self, conversation_storage: ConversationStorage | None = None):
         """Initialize session manager."""
         if conversation_storage is None:
             self.conversation_storage = ConversationStorage()
@@ -69,7 +69,7 @@ class SessionManager:
         self.logger = logging.getLogger(__name__)
 
         # Session state cache
-        self.active_sessions: Dict[str, SessionState] = {}
+        self.active_sessions: dict[str, SessionState] = {}
         self.session_cache_ttl = timedelta(hours=1)
 
         # Learning configuration
@@ -84,9 +84,9 @@ class SessionManager:
     def create_session(
         self,
         user_id: str,
-        session_name: Optional[str] = None,
+        session_name: str | None = None,
         session_type: str = "conversation",
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
     ) -> str:
         """Create a new conversation session."""
         try:
@@ -133,7 +133,7 @@ class SessionManager:
             self.logger.error(f"Failed to create session for user {user_id}: {e}")
             raise
 
-    def get_session_state(self, session_id: str) -> Optional[SessionState]:
+    def get_session_state(self, session_id: str) -> SessionState | None:
         """Get current session state."""
         try:
             # Check cache first
@@ -203,7 +203,7 @@ class SessionManager:
 
             # Update session duration (accumulate time delta since previous activity)
             if isinstance(prev_last, datetime):
-                session_state.session_duration += (now - prev_last)
+                session_state.session_duration += now - prev_last
 
             # Update cache
             self.active_sessions[session_id] = session_state
@@ -244,7 +244,7 @@ class SessionManager:
         except Exception as e:
             self.logger.error(f"Failed to learn from activity for session {session_id}: {e}")
 
-    def _extract_preferences_from_messages(self, messages: List[Dict[str, Any]]) -> List[UserPreference]:
+    def _extract_preferences_from_messages(self, messages: list[dict[str, Any]]) -> list[UserPreference]:
         """Extract user preferences from conversation messages."""
         preferences = []
 
@@ -309,10 +309,10 @@ class SessionManager:
             self.logger.error(f"Failed to extract preferences from messages: {e}")
             return []
 
-    def get_user_sessions(self, user_id: str, limit: int = 20, active_only: bool = False) -> List[SessionSummary]:
+    def get_user_sessions(self, user_id: str, limit: int = 20, active_only: bool = False) -> list[SessionSummary]:
         """Get sessions for a user with DB fallback when cache is cold."""
         try:
-            sessions: List[SessionSummary] = []
+            sessions: list[SessionSummary] = []
 
             # 1) From in-memory cache
             for session_id, session_state in self.active_sessions.items():
@@ -342,6 +342,7 @@ class SessionManager:
                     last_activity = row.get("last_activity")
                     if isinstance(last_activity, str):
                         from datetime import datetime as _dt
+
                         try:
                             last_activity_dt = _dt.fromisoformat(last_activity)
                         except Exception:
@@ -440,7 +441,7 @@ class SessionManager:
             self.logger.error(f"Failed to cleanup expired sessions: {e}")
             return 0
 
-    def get_session_insights(self, session_id: str) -> Dict[str, Any]:
+    def get_session_insights(self, session_id: str) -> dict[str, Any]:
         """Get insights and learning from a session."""
         try:
             session_state = self.get_session_state(session_id)
@@ -473,7 +474,7 @@ class SessionManager:
             self.logger.error(f"Failed to get session insights for {session_id}: {e}")
             return {"error": str(e)}
 
-    def _extract_conversation_topics(self, messages: List[Dict[str, Any]]) -> List[str]:
+    def _extract_conversation_topics(self, messages: list[dict[str, Any]]) -> list[str]:
         """Extract main topics from conversation messages."""
         topics = []
 
@@ -525,7 +526,7 @@ class SessionManager:
             self.logger.error(f"Failed to calculate engagement score: {e}")
             return 0.0
 
-    def _identify_learning_opportunities(self, messages: List[Dict[str, Any]]) -> List[str]:
+    def _identify_learning_opportunities(self, messages: list[dict[str, Any]]) -> list[str]:
         """Identify potential learning opportunities from conversation."""
         opportunities = []
 
@@ -553,7 +554,7 @@ class SessionManager:
             self.logger.error(f"Failed to identify learning opportunities: {e}")
             return []
 
-    def get_performance_metrics(self) -> Dict[str, Any]:
+    def get_performance_metrics(self) -> dict[str, Any]:
         """Get performance metrics for the session manager."""
         try:
             return {

@@ -9,7 +9,7 @@ metadata handling, and error handling for corrupted files.
 
 import os
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 from urllib.parse import urlparse
 
 import httpx
@@ -56,16 +56,16 @@ class OfficeServerConfig(BaseModel):
 class OfficeDocumentInfo(BaseModel):
     """Office document information."""
 
-    title: Optional[str] = None
-    author: Optional[str] = None
-    subject: Optional[str] = None
-    keywords: List[str] = Field(default_factory=list)
-    created_date: Optional[str] = None
-    modified_date: Optional[str] = None
-    version: Optional[str] = None
-    page_count: Optional[int] = None
-    word_count: Optional[int] = None
-    character_count: Optional[int] = None
+    title: str | None = None
+    author: str | None = None
+    subject: str | None = None
+    keywords: list[str] = Field(default_factory=list)
+    created_date: str | None = None
+    modified_date: str | None = None
+    version: str | None = None
+    page_count: int | None = None
+    word_count: int | None = None
+    character_count: int | None = None
 
     model_config = {"extra": "forbid"}
 
@@ -76,7 +76,7 @@ class OfficeMCPServer(MCPServer):
     def __init__(self, config: MCPConfig):
         super().__init__(config)
         self.office_config = OfficeServerConfig()
-        self._session: Optional[httpx.AsyncClient] = None
+        self._session: httpx.AsyncClient | None = None
 
         # Check for required dependencies
         self._check_dependencies()
@@ -111,7 +111,7 @@ class OfficeMCPServer(MCPServer):
         """Check if this server supports the given content type."""
         return content_type in self.supported_types
 
-    def get_supported_types(self) -> List[str]:
+    def get_supported_types(self) -> list[str]:
         """Get list of supported content types."""
         return list(self.supported_types.keys())
 
@@ -157,7 +157,7 @@ class OfficeMCPServer(MCPServer):
         else:
             return "unknown"
 
-    def _extract_word_content(self, file_path: str) -> Dict[str, Any]:
+    def _extract_word_content(self, file_path: str) -> dict[str, Any]:
         """Extract content from Word document."""
         if not DOCX_AVAILABLE:
             raise MCPError("python-docx library not available. Install with: pip install python-docx")
@@ -211,7 +211,7 @@ class OfficeMCPServer(MCPServer):
             else:
                 raise MCPError(f"Failed to process Word document: {e}")
 
-    def _extract_excel_content(self, file_path: str) -> Dict[str, Any]:
+    def _extract_excel_content(self, file_path: str) -> dict[str, Any]:
         """Extract content from Excel spreadsheet."""
         if not OPENPYXL_AVAILABLE:
             raise MCPError("openpyxl library not available. Install with: pip install openpyxl")
@@ -265,7 +265,7 @@ class OfficeMCPServer(MCPServer):
             else:
                 raise MCPError(f"Failed to process Excel spreadsheet: {e}")
 
-    def _extract_powerpoint_content(self, file_path: str) -> Dict[str, Any]:
+    def _extract_powerpoint_content(self, file_path: str) -> dict[str, Any]:
         """Extract content from PowerPoint presentation."""
         if not PPTX_AVAILABLE:
             raise MCPError("python-pptx library not available. Install with: pip install python-pptx")
@@ -403,7 +403,7 @@ class OfficeMCPServer(MCPServer):
         except Exception as e:
             raise MCPError(f"Office document processing failed: {e}")
 
-    def get_server_info(self) -> Dict[str, Any]:
+    def get_server_info(self) -> dict[str, Any]:
         """Get server information."""
         return {
             "name": self.config.server_name,

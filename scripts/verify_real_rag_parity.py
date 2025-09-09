@@ -14,7 +14,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 def find_latest_evaluation_file(metrics_dir: str) -> str:

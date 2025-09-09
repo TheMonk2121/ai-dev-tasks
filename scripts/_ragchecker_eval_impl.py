@@ -31,7 +31,7 @@ try:
     logfire = get_logfire()
 except Exception:
     logfire = None
-from typing import Any, Optional, Union
+from typing import Any
 
 # Bootstrap sys.path relative to this file so imports work regardless of CWD
 try:
@@ -177,7 +177,7 @@ class DspyRagDriver:
     def answer(self, question: str) -> dict:
         """Get answer from real DSPy RAG system."""
         t0 = time.time()
-        out = self.module(question)  # Returns Dict[str, Any]
+        out = self.module(question)  # Returns dict[str, Any]
         ans_text = out.get("answer", "") if isinstance(out, dict) else str(out)
         citations = out.get("citations", []) if isinstance(out, dict) else []
         snapshot = getattr(self.module, "_last_retrieval_snapshot", []) or []

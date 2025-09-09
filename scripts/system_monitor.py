@@ -15,7 +15,7 @@ import os
 import sys
 import time
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 # Add DSPy RAG system to path
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))

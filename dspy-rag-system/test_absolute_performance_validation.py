@@ -189,9 +189,7 @@ def test_realistic_performance():
     debug_times = []
     for i in range(50):
         start_time = time.time()
-        debugging_manager.capture_debugging_context(
-            variable_snapshot={"test_var": f"value_{i}", "index": i}
-        )
+        debugging_manager.capture_debugging_context(variable_snapshot={"test_var": f"value_{i}", "index": i})
         debug_times.append(time.time() - start_time)
 
     debug_avg = statistics.mean(debug_times)

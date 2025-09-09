@@ -12,7 +12,7 @@ final_score = alpha * rerank_score + (1 - alpha) * normalized_fused_score
 from __future__ import annotations
 
 import re
-from typing import Optional
+
 
 DocId = str
 Score = float

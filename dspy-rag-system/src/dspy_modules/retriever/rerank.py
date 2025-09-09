@@ -5,12 +5,13 @@ Lightweight MMR rerank with per-file diversity for reader lift.
 
 import math
 from collections import defaultdict
-from typing import Any, Dict, List, Sequence
+from typing import Any
+from collections.abc import Sequence
 
 
 def mmr_rerank(
-    rows: List[Dict[str, Any]], alpha: float = 0.85, per_file_penalty: float = 0.10, k: int = 25, tag: str = ""
-) -> List[Dict[str, Any]]:
+    rows: list[dict[str, Any]], alpha: float = 0.85, per_file_penalty: float = 0.10, k: int = 25, tag: str = ""
+) -> list[dict[str, Any]]:
     """
     MMR rerank to avoid README clusters and reward novelty.
 
@@ -25,13 +26,13 @@ def mmr_rerank(
         Reranked list of results
     """
     out, seen_by_file = [], defaultdict(int)
-    
+
     # Tag-specific penalty adjustment
     if tag in {"meta_ops", "ops_health"}:
         per_file_penalty = 0.12  # Higher penalty for ops tags
 
     def _to_vec(v: Any) -> Sequence[float]:
-        return v if isinstance(v, (list, tuple)) else ()
+        return v if isinstance(v, list | tuple) else ()
 
     def cos(v1: Any, v2: Any) -> float:
         """Cosine similarity between two vectors; 0.0 if invalid."""
@@ -62,10 +63,10 @@ def mmr_rerank(
     return out
 
 
-def per_file_cap(rows: List[Dict[str, Any]], cap: int = 5) -> List[Dict[str, Any]]:
+def per_file_cap(rows: list[dict[str, Any]], cap: int = 5) -> list[dict[str, Any]]:
     """Limit the number of chunks per file to `cap`, preserving order."""
-    out: List[Dict[str, Any]] = []
-    seen: Dict[str, int] = defaultdict(int)
+    out: list[dict[str, Any]] = []
+    seen: dict[str, int] = defaultdict(int)
     for r in rows:
         key = (r.get("file_path") or r.get("filename") or "").lower()
         seen[key] += 1

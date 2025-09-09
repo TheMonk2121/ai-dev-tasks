@@ -21,7 +21,7 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from cryptography.fernet import Fernet
 
@@ -36,7 +36,7 @@ class PrivacyConfig:
     enable_pii_redaction: bool = True
     enable_encryption: bool = False
     encryption_key_file: str = ".privacy_key"
-    redaction_patterns: List[str] = field(
+    redaction_patterns: list[str] = field(
         default_factory=lambda: [
             r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",  # Email
             r"\b\d{3}-\d{2}-\d{4}\b",  # SSN
@@ -66,7 +66,7 @@ class PrivacyConfig:
 class PIIRedactor:
     """Handles PII redaction in text and data structures."""
 
-    def __init__(self, patterns: Optional[List[str]] = None):
+    def __init__(self, patterns: list[str] | None = None):
         """Initialize PII redactor with patterns."""
         self.patterns = patterns or [
             r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",  # Email
@@ -89,7 +89,7 @@ class PIIRedactor:
 
         return redacted_text
 
-    def redact_dict(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def redact_dict(self, data: dict[str, Any]) -> dict[str, Any]:
         """Redact PII from dictionary recursively."""
         if not data:
             return data
@@ -146,13 +146,13 @@ class LocalStorageManager:
         except Exception as e:
             self.logger.error(f"Failed to validate local storage: {e}")
 
-    def store_data(self, key: str, data: Any, encrypted: bool = False, encryption_key: Optional[bytes] = None) -> bool:
+    def store_data(self, key: str, data: Any, encrypted: bool = False, encryption_key: bytes | None = None) -> bool:
         """Store data locally with optional encryption."""
         try:
             file_path = self.storage_path / f"{key}.json"
 
             # Prepare data for storage
-            if isinstance(data, (dict, list)):
+            if isinstance(data, dict | list):
                 storage_data = json.dumps(data, default=str)
             else:
                 storage_data = str(data)
@@ -172,7 +172,7 @@ class LocalStorageManager:
             self.logger.error(f"Failed to store data {key}: {e}")
             return False
 
-    def retrieve_data(self, key: str, encrypted: bool = False, encryption_key: Optional[bytes] = None) -> Optional[Any]:
+    def retrieve_data(self, key: str, encrypted: bool = False, encryption_key: bytes | None = None) -> Any | None:
         """Retrieve data from local storage."""
         try:
             file_path = self.storage_path / f"{key}.json"
@@ -181,7 +181,7 @@ class LocalStorageManager:
                 return None
 
             # Read from local file
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 storage_data = f.read()
 
             # Decrypt if needed
@@ -219,7 +219,7 @@ class LocalStorageManager:
             self.logger.error(f"Failed to decrypt data: {e}")
             return encrypted_data
 
-    def list_stored_keys(self) -> List[str]:
+    def list_stored_keys(self) -> list[str]:
         """List all stored data keys."""
         try:
             keys = []
@@ -247,7 +247,7 @@ class LocalStorageManager:
 class PrivacyManager:
     """Main privacy manager for local-first handling and PII protection."""
 
-    def __init__(self, config: Optional[PrivacyConfig] = None):
+    def __init__(self, config: PrivacyConfig | None = None):
         """Initialize privacy manager."""
         self.config = config or PrivacyConfig()
         self.logger = logging.getLogger(__name__)
@@ -266,7 +266,7 @@ class PrivacyManager:
         self.encryption_operations = 0
         self.storage_operations = 0
 
-    def _load_or_generate_key(self) -> Optional[bytes]:
+    def _load_or_generate_key(self) -> bytes | None:
         """Load existing encryption key or generate new one."""
         try:
             key_file = Path(self.config.encryption_key_file)
@@ -287,7 +287,7 @@ class PrivacyManager:
             self.logger.error(f"Failed to load/generate encryption key: {e}")
             return None
 
-    def store_conversation(self, conversation_id: str, conversation_data: Dict[str, Any]) -> bool:
+    def store_conversation(self, conversation_id: str, conversation_data: dict[str, Any]) -> bool:
         """Store conversation with privacy controls."""
         try:
             # Redact PII if enabled
@@ -315,7 +315,7 @@ class PrivacyManager:
             self.logger.error(f"Failed to store conversation {conversation_id}: {e}")
             return False
 
-    def retrieve_conversation(self, conversation_id: str) -> Optional[Dict[str, Any]]:
+    def retrieve_conversation(self, conversation_id: str) -> dict[str, Any] | None:
         """Retrieve conversation with privacy controls."""
         try:
             encrypted = self.config.enable_encryption and self.encryption_key is not None
@@ -353,7 +353,7 @@ class PrivacyManager:
         else:
             return data
 
-    def validate_privacy_compliance(self) -> Dict[str, Any]:
+    def validate_privacy_compliance(self) -> dict[str, Any]:
         """Validate privacy compliance."""
         compliance_report = {
             "local_only_storage": self.config.local_only_storage,
@@ -389,7 +389,7 @@ class PrivacyManager:
         except Exception:
             return False
 
-    def get_privacy_statistics(self) -> Dict[str, Any]:
+    def get_privacy_statistics(self) -> dict[str, Any]:
         """Get privacy operation statistics."""
         return {
             "redaction_operations": self.redaction_operations,
@@ -426,7 +426,7 @@ class PrivacyManager:
             return 0
 
 
-def create_privacy_manager(config: Optional[PrivacyConfig] = None) -> PrivacyManager:
+def create_privacy_manager(config: PrivacyConfig | None = None) -> PrivacyManager:
     """
     Factory function to create a privacy manager.
 

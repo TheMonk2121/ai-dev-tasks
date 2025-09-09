@@ -11,7 +11,7 @@ import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 from urllib.parse import urlparse
 
 from pydantic import BaseModel, Field
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class MCPError(Exception):
     """Base exception for MCP-related errors."""
 
-    def __init__(self, message: str, error_code: str = "MCP_ERROR", details: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, error_code: str = "MCP_ERROR", details: dict[str, Any] | None = None):
         super().__init__(message)
         self.error_code = error_code
         self.details = details or {}
@@ -53,17 +53,17 @@ class DocumentMetadata:
     content_type: str = field(metadata={"description": "Content type (txt, pdf, html, etc.)"})
     size: int = field(default=0, metadata={"description": "Document size in bytes"})
     encoding: str = field(default="utf-8", metadata={"description": "Document encoding"})
-    created_at: Optional[str] = field(default=None, metadata={"description": "Creation timestamp"})
-    modified_at: Optional[str] = field(default=None, metadata={"description": "Modification timestamp"})
-    author: Optional[str] = field(default=None, metadata={"description": "Document author"})
-    title: Optional[str] = field(default=None, metadata={"description": "Document title"})
-    language: Optional[str] = field(default=None, metadata={"description": "Document language"})
-    page_count: Optional[int] = field(default=None, metadata={"description": "Number of pages"})
-    word_count: Optional[int] = field(default=None, metadata={"description": "Number of words"})
+    created_at: str | None = field(default=None, metadata={"description": "Creation timestamp"})
+    modified_at: str | None = field(default=None, metadata={"description": "Modification timestamp"})
+    author: str | None = field(default=None, metadata={"description": "Document author"})
+    title: str | None = field(default=None, metadata={"description": "Document title"})
+    language: str | None = field(default=None, metadata={"description": "Document language"})
+    page_count: int | None = field(default=None, metadata={"description": "Number of pages"})
+    word_count: int | None = field(default=None, metadata={"description": "Number of words"})
     processing_time: float = field(default=0.0, metadata={"description": "Processing time in seconds"})
     error_count: int = field(default=0, metadata={"description": "Number of processing errors"})
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert metadata to dictionary."""
         return {
             "source": self.source,
@@ -89,10 +89,10 @@ class ProcessedDocument:
     content: str = field(metadata={"description": "Processed document content"})
     metadata: DocumentMetadata = field(metadata={"description": "Document metadata"})
     success: bool = field(default=True, metadata={"description": "Processing success status"})
-    error_message: Optional[str] = field(default=None, metadata={"description": "Error message if failed"})
-    warnings: List[str] = field(default_factory=list, metadata={"description": "Processing warnings"})
+    error_message: str | None = field(default=None, metadata={"description": "Error message if failed"})
+    warnings: list[str] = field(default_factory=list, metadata={"description": "Processing warnings"})
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert processed document to dictionary."""
         return {
             "content": self.content,
@@ -109,7 +109,7 @@ class MCPServer(ABC):
     def __init__(self, config: MCPConfig):
         self.config = config
         self.logger = logging.getLogger(f"mcp.{config.server_name}")
-        self._cache: Dict[str, Any] = {}
+        self._cache: dict[str, Any] = {}
         self._start_time = time.time()
 
         if config.enable_logging:
@@ -134,7 +134,7 @@ class MCPServer(ABC):
         pass
 
     @abstractmethod
-    def get_supported_types(self) -> List[str]:
+    def get_supported_types(self) -> list[str]:
         """Get list of supported content types."""
         pass
 
@@ -154,7 +154,7 @@ class MCPServer(ABC):
         params = sorted(kwargs.items())
         return f"{source}:{hash(str(params))}"
 
-    def get_cached_result(self, cache_key: str) -> Optional[ProcessedDocument]:
+    def get_cached_result(self, cache_key: str) -> ProcessedDocument | None:
         """Get cached result if available and not expired."""
         if not self.config.cache_enabled:
             return None
@@ -202,7 +202,7 @@ class MCPServer(ABC):
             error_message=str(last_error),
         )
 
-    def get_server_info(self) -> Dict[str, Any]:
+    def get_server_info(self) -> dict[str, Any]:
         """Get server information and statistics."""
         return {
             "name": self.config.server_name,

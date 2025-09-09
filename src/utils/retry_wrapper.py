@@ -3,9 +3,9 @@ from __future__ import annotations
 import json
 import random
 import time
-from functools import wraps
-from typing import Any, Optional
 from collections.abc import Callable, Iterable
+from functools import wraps
+from typing import Any
 
 try:
     from requests.exceptions import Timeout

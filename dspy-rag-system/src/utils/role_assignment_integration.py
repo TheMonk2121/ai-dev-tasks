@@ -10,7 +10,7 @@ mapping based on automated role assignments from 600_archives.
 
 import sys
 from pathlib import Path
-from typing import Dict, Tuple
+
 
 # Add the project root to the path for imports
 project_root = Path(__file__).parent.parent.parent.parent
@@ -34,7 +34,7 @@ class RoleAssignmentIntegration:
         # Backup path for the memory rehydrator
         self.backup_path = self.memory_rehydrator_path.with_suffix(".py.backup")
 
-    def get_current_role_files(self) -> Dict[str, Tuple[str, ...]]:
+    def get_current_role_files(self) -> dict[str, tuple[str, ...]]:
         """
         Get current ROLE_FILES mapping from memory rehydrator.
 
@@ -95,7 +95,7 @@ class RoleAssignmentIntegration:
             ),
         }
 
-    def update_role_files_with_assignments(self, assignments: Dict[str, RoleAssignment]) -> Dict[str, Tuple[str, ...]]:
+    def update_role_files_with_assignments(self, assignments: dict[str, RoleAssignment]) -> dict[str, tuple[str, ...]]:
         """
         Update ROLE_FILES mapping with automated assignments.
 
@@ -125,7 +125,7 @@ class RoleAssignmentIntegration:
         # Convert back to tuples
         return {role: tuple(files) for role, files in updated_role_files.items()}
 
-    def generate_role_files_code(self, role_files: Dict[str, Tuple[str, ...]]) -> str:
+    def generate_role_files_code(self, role_files: dict[str, tuple[str, ...]]) -> str:
         """
         Generate Python code for the ROLE_FILES mapping.
 
@@ -148,7 +148,7 @@ class RoleAssignmentIntegration:
 
         return "\n".join(lines)
 
-    def update_memory_rehydrator(self, assignments: Dict[str, RoleAssignment], dry_run: bool = False) -> bool:
+    def update_memory_rehydrator(self, assignments: dict[str, RoleAssignment], dry_run: bool = False) -> bool:
         """
         Update the memory rehydrator with new role assignments.
 
@@ -161,7 +161,7 @@ class RoleAssignmentIntegration:
         """
         try:
             # Read current memory rehydrator
-            with open(self.memory_rehydrator_path, "r", encoding="utf-8") as f:
+            with open(self.memory_rehydrator_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Update role files
@@ -263,7 +263,7 @@ class RoleAssignmentIntegration:
 
         try:
             # Restore from backup
-            with open(self.backup_path, "r", encoding="utf-8") as f:
+            with open(self.backup_path, encoding="utf-8") as f:
                 backup_content = f.read()
 
             with open(self.memory_rehydrator_path, "w", encoding="utf-8") as f:

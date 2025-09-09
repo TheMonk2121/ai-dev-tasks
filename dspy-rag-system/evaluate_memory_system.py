@@ -5,7 +5,7 @@ RAGAS evaluation script for DSPy RAG memory system.
 
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 from datasets import Dataset
 from langchain_ollama import OllamaLLM
@@ -24,7 +24,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 from dspy_modules.model_switcher import ModelSwitcher
 
 
-def create_test_queries() -> List[Dict[str, Any]]:
+def create_test_queries() -> list[dict[str, Any]]:
     """Create test queries for evaluating the DSPy memory system."""
 
     test_queries = [
@@ -58,7 +58,7 @@ def create_test_queries() -> List[Dict[str, Any]]:
     return test_queries
 
 
-def create_evaluation_dataset(test_queries: List[Dict[str, Any]]) -> Dataset:
+def create_evaluation_dataset(test_queries: list[dict[str, Any]]) -> Dataset:
     """Create a RAGAS evaluation dataset from test queries."""
 
     # Convert to RAGAS format

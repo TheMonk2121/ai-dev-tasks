@@ -5,7 +5,7 @@ Final evaluation summary for DSPy RAG memory system.
 
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 # Add the src directory to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
@@ -13,7 +13,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 from dspy_modules.model_switcher import ModelSwitcher
 
 
-def create_final_test_queries() -> List[Dict[str, Any]]:
+def create_final_test_queries() -> list[dict[str, Any]]:
     """Create final test queries that focus on what we know works."""
 
     test_queries = [
@@ -47,7 +47,7 @@ def create_final_test_queries() -> List[Dict[str, Any]]:
     return test_queries
 
 
-def evaluate_response_quality(response: str, expected_keywords: List[str]) -> Dict[str, Any]:
+def evaluate_response_quality(response: str, expected_keywords: list[str]) -> dict[str, Any]:
     """Evaluate the quality of a response based on expected keywords."""
 
     response_lower = response.lower()

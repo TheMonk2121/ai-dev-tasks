@@ -10,7 +10,7 @@ and data export capabilities.
 import json
 import sqlite3
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 from urllib.parse import urlparse
 
 import httpx
@@ -38,12 +38,12 @@ class DatabaseTable(BaseModel):
     """Database table information."""
 
     name: str
-    table_schema: Optional[str] = Field(default=None, description="Database schema name")
-    columns: List[Dict[str, Any]] = Field(default_factory=list)
-    row_count: Optional[int] = None
-    size_bytes: Optional[int] = None
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    table_schema: str | None = Field(default=None, description="Database schema name")
+    columns: list[dict[str, Any]] = Field(default_factory=list)
+    row_count: int | None = None
+    size_bytes: int | None = None
+    created_at: str | None = None
+    updated_at: str | None = None
 
     model_config = {"extra": "forbid"}
 
@@ -52,10 +52,10 @@ class DatabaseSchema(BaseModel):
     """Database schema information."""
 
     database_name: str
-    tables: List[DatabaseTable] = Field(default_factory=list)
-    views: List[Dict[str, Any]] = Field(default_factory=list)
-    indexes: List[Dict[str, Any]] = Field(default_factory=list)
-    foreign_keys: List[Dict[str, Any]] = Field(default_factory=list)
+    tables: list[DatabaseTable] = Field(default_factory=list)
+    views: list[dict[str, Any]] = Field(default_factory=list)
+    indexes: list[dict[str, Any]] = Field(default_factory=list)
+    foreign_keys: list[dict[str, Any]] = Field(default_factory=list)
 
     model_config = {"extra": "forbid"}
 
@@ -63,8 +63,8 @@ class DatabaseSchema(BaseModel):
 class QueryResult(BaseModel):
     """Database query result."""
 
-    columns: List[str] = Field(default_factory=list)
-    rows: List[List[Any]] = Field(default_factory=list)
+    columns: list[str] = Field(default_factory=list)
+    rows: list[list[Any]] = Field(default_factory=list)
     row_count: int = 0
     execution_time_ms: float = 0.0
     query: str = ""
@@ -78,8 +78,8 @@ class DatabaseMCPServer(MCPServer):
     def __init__(self, config: MCPConfig):
         super().__init__(config)
         self.db_config = DatabaseServerConfig()
-        self._connections: Dict[str, Any] = {}
-        self._session: Optional[httpx.AsyncClient] = None
+        self._connections: dict[str, Any] = {}
+        self._session: httpx.AsyncClient | None = None
 
         # Supported content types
         self.supported_types = {
@@ -94,7 +94,7 @@ class DatabaseMCPServer(MCPServer):
         """Check if this server supports the given content type."""
         return content_type in self.supported_types
 
-    def get_supported_types(self) -> List[str]:
+    def get_supported_types(self) -> list[str]:
         """Get list of supported content types."""
         return list(self.supported_types.keys())
 
@@ -241,7 +241,7 @@ class DatabaseMCPServer(MCPServer):
         except Exception as e:
             raise MCPError(f"Query execution failed: {e}")
 
-    def _get_sample_data_sqlite(self, conn: sqlite3.Connection, table_name: str) -> List[Dict[str, Any]]:
+    def _get_sample_data_sqlite(self, conn: sqlite3.Connection, table_name: str) -> list[dict[str, Any]]:
         """Get sample data from SQLite table."""
         try:
             cursor = conn.cursor()
@@ -394,7 +394,7 @@ class DatabaseMCPServer(MCPServer):
         except Exception as e:
             raise MCPError(f"Export failed: {e}")
 
-    def get_server_info(self) -> Dict[str, Any]:
+    def get_server_info(self) -> dict[str, Any]:
         """Get server information."""
         return {
             "name": self.config.server_name,

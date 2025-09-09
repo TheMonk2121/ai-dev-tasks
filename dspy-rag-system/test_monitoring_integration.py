@@ -162,7 +162,7 @@ def test_metrics_persistence():
             print(f"✅ Metrics file created: {metrics_file}")
 
             # Read and validate file
-            with open(metrics_file, "r") as f:
+            with open(metrics_file) as f:
                 data = json.load(f)
 
             if "current_metrics" in data and "timestamp" in data:

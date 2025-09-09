@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import json
 import sys
-from typing import Any, Dict
+from typing import Any
 
 
 def load(path: str) -> dict[str, Any]:
@@ -60,7 +60,7 @@ def main() -> None:
         b_val = base.get(key, 0.0)
         v_val = var.get(key, 0.0)
 
-        if isinstance(b_val, (int, float)) and isinstance(v_val, (int, float)):
+        if isinstance(b_val, int | float) and isinstance(v_val, int | float):
             delta = pct(b_val, v_val)
             print(f"| {label} | {b_val:.3f} | {v_val:.3f} | {delta} |")
         else:

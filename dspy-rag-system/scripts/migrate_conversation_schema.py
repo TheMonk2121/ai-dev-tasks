@@ -16,7 +16,7 @@ import logging
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import psycopg2
 from psycopg2.extensions import connection, cursor
@@ -26,14 +26,14 @@ from psycopg2.extras import RealDictCursor
 class LTSTMigrationManager:
     """Manages LTST memory system database migration."""
 
-    def __init__(self, database_url: Optional[str] = None, dry_run: bool = False):
+    def __init__(self, database_url: str | None = None, dry_run: bool = False):
         """Initialize migration manager."""
         self.database_url = database_url or os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
         self.dry_run = dry_run
-        self.connection: Optional[connection] = None
-        self.cursor: Optional[cursor] = None
-        self.migration_log: List[Dict[str, Any]] = []
-        self.rollback_queries: List[str] = []
+        self.connection: connection | None = None
+        self.cursor: cursor | None = None
+        self.migration_log: list[dict[str, Any]] = []
+        self.rollback_queries: list[str] = []
 
         # Setup logging
         logging.basicConfig(
@@ -65,7 +65,7 @@ class LTSTMigrationManager:
         self.logger.info("Database connection closed")
 
     def log_migration_step(
-        self, step: str, query: Optional[str] = None, success: bool = True, error: Optional[str] = None
+        self, step: str, query: str | None = None, success: bool = True, error: str | None = None
     ) -> None:
         """Log migration step for audit trail."""
         log_entry = {
@@ -93,13 +93,13 @@ class LTSTMigrationManager:
             return False
         return True
 
-    def _get_cursor(self) -> Optional[cursor]:
+    def _get_cursor(self) -> cursor | None:
         """Get cursor if available, None otherwise."""
         if self._ensure_cursor():
             return self.cursor
         return None
 
-    def check_prerequisites(self) -> Dict[str, Any]:
+    def check_prerequisites(self) -> dict[str, Any]:
         """Check migration prerequisites."""
         self.logger.info("Checking migration prerequisites...")
 
@@ -210,7 +210,7 @@ class LTSTMigrationManager:
             if not os.path.exists(schema_file):
                 raise FileNotFoundError(f"Schema file not found: {schema_file}")
 
-            with open(schema_file, "r") as f:
+            with open(schema_file) as f:
                 sql_content = f.read()
 
             # Split by semicolon and execute each statement
@@ -267,7 +267,7 @@ class LTSTMigrationManager:
                 self.connection.rollback()
             return False
 
-    def validate_migration(self) -> Dict[str, Any]:
+    def validate_migration(self) -> dict[str, Any]:
         """Validate the migration results."""
         self.logger.info("Validating migration results...")
 
@@ -453,7 +453,7 @@ class LTSTMigrationManager:
                 self.connection.rollback()
             return False
 
-    def save_migration_log(self, filename: Optional[str] = None) -> None:
+    def save_migration_log(self, filename: str | None = None) -> None:
         """Save migration log to file."""
         if not filename:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

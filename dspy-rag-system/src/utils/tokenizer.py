@@ -8,7 +8,8 @@ import logging
 import re
 import unicodedata
 from functools import lru_cache
-from typing import Any, Dict, Iterator, List
+from typing import Any
+from collections.abc import Iterator
 
 import tiktoken
 
@@ -21,8 +22,9 @@ TOKENIZER_MAPPING = {
     "gpt-3.5-turbo": ("tiktoken", "cl100k_base"),
     "mistral-7b": ("tiktoken", "cl100k_base"),  # Fallback for now
     "llama3-70b": ("tiktoken", "cl100k_base"),  # Fallback for now
-    "default": ("tiktoken", "cl100k_base")
+    "default": ("tiktoken", "cl100k_base"),
 }
+
 
 class GenericEncoder:
     """Unified wrapper for different tokenizer types"""
@@ -30,16 +32,14 @@ class GenericEncoder:
     def __init__(self, model_name: str):
         """
         Initialize encoder for specific model
-        
+
         Args:
             model_name: Model name (e.g., 'gpt-4o', 'mistral-7b')
         """
         self.model_name = model_name
 
         # Get encoder configuration
-        encoder_type, encoder_name = TOKENIZER_MAPPING.get(
-            model_name, TOKENIZER_MAPPING["default"]
-        )
+        encoder_type, encoder_name = TOKENIZER_MAPPING.get(model_name, TOKENIZER_MAPPING["default"])
 
         if encoder_type == "tiktoken":
             try:
@@ -57,19 +57,20 @@ class GenericEncoder:
             # Future: Add SentencePiece support
             raise NotImplementedError(f"Encoder type {encoder_type} not yet supported")
 
+
 @lru_cache(maxsize=8)
 def get_encoder(model_name: str) -> GenericEncoder:
     """Get cached encoder instance"""
     return GenericEncoder(model_name)
 
+
 class TokenAwareChunker:
     """Token-aware text chunking with sentence boundary awareness"""
 
-    def __init__(self, model_name: str = "gpt-4o", max_tokens: int = 300,
-                 overlap_tokens: int = 50):
+    def __init__(self, model_name: str = "gpt-4o", max_tokens: int = 300, overlap_tokens: int = 50):
         """
         Initialize the token-aware chunker
-        
+
         Args:
             model_name: Model name for tokenizer selection
             max_tokens: Maximum tokens per chunk
@@ -82,10 +83,12 @@ class TokenAwareChunker:
 
         # Compile regex patterns once
         self.sentence_end_pattern = re.compile(r'[.!?]+["\']?\s+')
-        self.abbreviation_pattern = re.compile(r'\b[A-Z]\.\s*[A-Z]\.')
+        self.abbreviation_pattern = re.compile(r"\b[A-Z]\.\s*[A-Z]\.")
 
-        logger.info(f"Initialized TokenAwareChunker for {model_name} "
-                   f"(max_tokens={max_tokens}, overlap_tokens={overlap_tokens})")
+        logger.info(
+            f"Initialized TokenAwareChunker for {model_name} "
+            f"(max_tokens={max_tokens}, overlap_tokens={overlap_tokens})"
+        )
 
     def count_tokens(self, text: str) -> int:
         """Count tokens in text"""
@@ -94,12 +97,12 @@ class TokenAwareChunker:
     def find_sentence_boundary(self, text: str, start_pos: int, target_pos: int) -> int:
         """
         Find the best sentence boundary near the target position
-        
+
         Args:
             text: Full text to search in
             start_pos: Start position of current chunk
             target_pos: Target end position
-            
+
         Returns:
             Best sentence boundary position
         """
@@ -118,13 +121,13 @@ class TokenAwareChunker:
 
         return target_pos
 
-    def create_chunks(self, text: str) -> List[str]:
+    def create_chunks(self, text: str) -> list[str]:
         """
         Create token-aware chunks with optimized single encoding
-        
+
         Args:
             text: Text to chunk
-            
+
         Returns:
             List of text chunks
         """
@@ -162,9 +165,7 @@ class TokenAwareChunker:
 
                     # Only do boundary detection if the search window is reasonable
                     if (target_char_pos - start_char_pos) < 1000:  # Limit search window
-                        boundary_char_pos = self.find_sentence_boundary(
-                            text, start_char_pos, target_char_pos
-                        )
+                        boundary_char_pos = self.find_sentence_boundary(text, start_char_pos, target_char_pos)
 
                         # Convert back to token position
                         if boundary_char_pos > start_char_pos:
@@ -173,8 +174,7 @@ class TokenAwareChunker:
                             boundary_token_idx = len(boundary_tokens)
 
                             # Only use boundary if it's reasonable
-                            if (boundary_token_idx > start_token_idx and
-                                boundary_token_idx <= end_token_idx + 10):
+                            if boundary_token_idx > start_token_idx and boundary_token_idx <= end_token_idx + 10:
                                 end_token_idx = boundary_token_idx
                                 chunk_tokens = all_tokens[start_token_idx:end_token_idx]
                                 chunk_text = self.encoder.decode(chunk_tokens)
@@ -198,15 +198,14 @@ class TokenAwareChunker:
             return chunks
 
         except Exception as e:
-            logger.error(f"Error in create_chunks: {e}", extra={
-                'model_name': self.model_name,
-                'text_length': len(text),
-                'max_tokens': self.max_tokens
-            })
+            logger.error(
+                f"Error in create_chunks: {e}",
+                extra={"model_name": self.model_name, "text_length": len(text), "max_tokens": self.max_tokens},
+            )
             # Fallback to simple character-based chunking
             return self._fallback_chunking(text)
 
-    def _fallback_chunking(self, text: str) -> List[str]:
+    def _fallback_chunking(self, text: str) -> list[str]:
         """Fallback chunking method when token-based chunking fails"""
         logger.warning("Using fallback character-based chunking")
 
@@ -231,10 +230,10 @@ class TokenAwareChunker:
     def _clean_text(self, text: str) -> str:
         """
         Clean and normalize text with improved Unicode handling
-        
+
         Args:
             text: Text to clean
-            
+
         Returns:
             Cleaned text
         """
@@ -242,23 +241,23 @@ class TokenAwareChunker:
             return ""
 
         # Normalize Unicode
-        text = unicodedata.normalize('NFKC', text)
+        text = unicodedata.normalize("NFKC", text)
 
         # Remove control characters (Cc) and format characters (Cf)
         cleaned_chars = []
         for char in text:
             category = unicodedata.category(char)
-            if category not in ['Cc', 'Cf']:  # Keep everything except control/format
+            if category not in ["Cc", "Cf"]:  # Keep everything except control/format
                 cleaned_chars.append(char)
 
-        text = ''.join(cleaned_chars)
+        text = "".join(cleaned_chars)
 
         # Remove extra whitespace
-        text = re.sub(r'\s+', ' ', text)
+        text = re.sub(r"\s+", " ", text)
 
         return text.strip()
 
-    def get_chunk_stats(self, text: str) -> Dict[str, Any]:
+    def get_chunk_stats(self, text: str) -> dict[str, Any]:
         """Get statistics about chunking"""
         try:
             chunks = self.create_chunks(text)
@@ -266,39 +265,34 @@ class TokenAwareChunker:
             chunk_tokens = [self.count_tokens(chunk) for chunk in chunks]
 
             return {
-                'total_chunks': len(chunks),
-                'total_tokens': total_tokens,
-                'avg_chunk_tokens': sum(chunk_tokens) / len(chunk_tokens) if chunk_tokens else 0,
-                'min_chunk_tokens': min(chunk_tokens) if chunk_tokens else 0,
-                'max_chunk_tokens': max(chunk_tokens) if chunk_tokens else 0,
-                'chunk_tokens': chunk_tokens,
-                'model_name': self.model_name,
-                'max_tokens': self.max_tokens,
-                'overlap_tokens': self.overlap_tokens
+                "total_chunks": len(chunks),
+                "total_tokens": total_tokens,
+                "avg_chunk_tokens": sum(chunk_tokens) / len(chunk_tokens) if chunk_tokens else 0,
+                "min_chunk_tokens": min(chunk_tokens) if chunk_tokens else 0,
+                "max_chunk_tokens": max(chunk_tokens) if chunk_tokens else 0,
+                "chunk_tokens": chunk_tokens,
+                "model_name": self.model_name,
+                "max_tokens": self.max_tokens,
+                "overlap_tokens": self.overlap_tokens,
             }
         except Exception as e:
             logger.error(f"Error getting chunk stats: {e}")
-            return {
-                'error': str(e),
-                'total_chunks': 0,
-                'total_tokens': 0
-            }
+            return {"error": str(e), "total_chunks": 0, "total_tokens": 0}
 
     def create_chunks_generator(self, text: str) -> Iterator[str]:
         """
         Generator version for memory-efficient processing of large texts
-        
+
         Args:
             text: Text to chunk
-            
+
         Yields:
             Text chunks
         """
         chunks = self.create_chunks(text)
-        for chunk in chunks:
-            yield chunk
+        yield from chunks
 
-def create_chunker(model_name: str = "gpt-4o", max_tokens: int = 300,
-                  overlap_tokens: int = 50) -> TokenAwareChunker:
+
+def create_chunker(model_name: str = "gpt-4o", max_tokens: int = 300, overlap_tokens: int = 50) -> TokenAwareChunker:
     """Factory function to create a token-aware chunker"""
     return TokenAwareChunker(model_name, max_tokens, overlap_tokens)

@@ -8,22 +8,25 @@ This module provides automated HotFix template generation for common error scena
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class HotFixTemplate:
     """Represents a HotFix template"""
+
     template_id: str
     name: str
     description: str
     category: str
     severity: str
     template_content: str
-    variables: List[str]
-    prerequisites: List[str]
+    variables: list[str]
+    prerequisites: list[str]
     estimated_time: str
+
 
 class HotFixGenerator:
     """Generates HotFix templates based on error patterns"""
@@ -32,7 +35,7 @@ class HotFixGenerator:
         self.templates = self._load_templates()
         self.template_stats = {}
 
-    def _load_templates(self) -> Dict[str, HotFixTemplate]:
+    def _load_templates(self) -> dict[str, HotFixTemplate]:
         """Load HotFix templates"""
         templates = {
             "db_connection_timeout": HotFixTemplate(
@@ -72,9 +75,8 @@ Database connection is timing out after {timeout_seconds} seconds.
 """,
                 variables=["timeout_seconds", "db_host", "db_port", "new_timeout"],
                 prerequisites=["Database server is running", "Network connectivity is available"],
-                estimated_time="15-30 minutes"
+                estimated_time="15-30 minutes",
             ),
-
             "llm_rate_limit": HotFixTemplate(
                 template_id="llm_rate_limit",
                 name="LLM API Rate Limit Fix",
@@ -115,9 +117,8 @@ LLM API requests are being rate limited (HTTP 429).
 """,
                 variables=["model_id", "requests_per_minute", "backoff_factor"],
                 prerequisites=["LLM API is accessible", "Valid API credentials"],
-                estimated_time="20-45 minutes"
+                estimated_time="20-45 minutes",
             ),
-
             "security_violation": HotFixTemplate(
                 template_id="security_violation",
                 name="Security Violation Fix",
@@ -161,26 +162,25 @@ Security validation failed: {violation_type}
 """,
                 variables=["violation_type", "blocklist_patterns", "alert_config"],
                 prerequisites=["Security monitoring is active", "Alerting system is configured"],
-                estimated_time="30-60 minutes"
-            )
+                estimated_time="30-60 minutes",
+            ),
         }
 
         return templates
 
-    def generate_hotfix(self, error_analysis, context: Dict[str, Any] = None) -> Optional[HotFixTemplate]:
+    def generate_hotfix(self, error_analysis, context: dict[str, Any] = None) -> HotFixTemplate | None:
         """Generate a HotFix template based on error analysis"""
         if not error_analysis.matched_patterns:
             return None
 
         # Find the most severe pattern
-        most_severe_pattern = max(error_analysis.matched_patterns,
-                                key=lambda p: self._get_severity_score(p.severity))
+        most_severe_pattern = max(error_analysis.matched_patterns, key=lambda p: self._get_severity_score(p.severity))
 
         # Map pattern categories to template categories
         category_mapping = {
             "database": "db_connection_timeout",
             "llm": "llm_rate_limit",
-            "security": "security_violation"
+            "security": "security_violation",
         }
 
         template_id = category_mapping.get(most_severe_pattern.category)
@@ -194,37 +194,32 @@ Security validation failed: {violation_type}
 
     def _get_severity_score(self, severity: str) -> float:
         """Convert severity string to numeric score"""
-        severity_map = {
-            'low': 0.25,
-            'medium': 0.5,
-            'high': 0.75,
-            'critical': 1.0
-        }
+        severity_map = {"low": 0.25, "medium": 0.5, "high": 0.75, "critical": 1.0}
         return severity_map.get(severity.lower(), 0.5)
 
     def _update_template_stats(self, template_id: str):
         """Update template usage statistics"""
         if template_id not in self.template_stats:
-            self.template_stats[template_id] = {
-                'count': 0,
-                'first_used': datetime.now(),
-                'last_used': datetime.now()
-            }
+            self.template_stats[template_id] = {"count": 0, "first_used": datetime.now(), "last_used": datetime.now()}
 
-        self.template_stats[template_id]['count'] += 1
-        self.template_stats[template_id]['last_used'] = datetime.now()
+        self.template_stats[template_id]["count"] += 1
+        self.template_stats[template_id]["last_used"] = datetime.now()
+
 
 # Global instance
 hotfix_generator = HotFixGenerator()
 
-def generate_hotfix_template(error_analysis, context: Dict[str, Any] = None) -> Optional[HotFixTemplate]:
+
+def generate_hotfix_template(error_analysis, context: dict[str, Any] = None) -> HotFixTemplate | None:
     """Generate HotFix templates based on error analysis"""
     return hotfix_generator.generate_hotfix(error_analysis, context)
 
-def get_hotfix_statistics() -> Dict[str, Any]:
+
+def get_hotfix_statistics() -> dict[str, Any]:
     """Get HotFix template statistics"""
     return hotfix_generator.get_template_statistics()
 
-def list_hotfix_templates() -> List[HotFixTemplate]:
+
+def list_hotfix_templates() -> list[HotFixTemplate]:
     """List all available HotFix templates"""
     return list(hotfix_generator.templates.values())

@@ -13,7 +13,7 @@ import json
 import pathlib
 import sys
 import time
-from typing import Any, Dict, List
+from typing import Any
 
 import yaml  # type: ignore
 

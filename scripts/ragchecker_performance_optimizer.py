@@ -12,7 +12,7 @@ import time
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 from collections.abc import Callable
 
 # Add dspy-rag-system to path for imports
@@ -433,7 +433,7 @@ class ValidationOptimizer:
             # Group by metric types
             groups = defaultdict(list)
             for data in data_batch:
-                metric_types = [k for k in data.keys() if isinstance(data[k], (int, float))]
+                metric_types = [k for k in data.keys() if isinstance(data[k], int | float)]
                 if "precision" in metric_types and "recall" in metric_types:
                     groups["precision_recall"].append(data)
                 elif "f1_score" in metric_types:

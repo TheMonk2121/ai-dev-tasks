@@ -10,12 +10,12 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import List
+
 
 from src.schemas.eval import GoldCase as Case  # legacy import path
 
 
-def load_eval_cases(profile: str | Path = "gold") -> List[Case]:
+def load_eval_cases(profile: str | Path = "gold") -> list[Case]:
     """Load evaluation cases based on a simple profile or explicit path.
 
     - If `profile` is "gold" or startswith "gold", load from env CASES_FILE or default 'evals/gold_cases.json'.
@@ -23,7 +23,7 @@ def load_eval_cases(profile: str | Path = "gold") -> List[Case]:
     - The file is expected to be JSON array of objects compatible with Case.
     """
     # Resolve path
-    if isinstance(profile, (str, Path)) and str(profile).startswith("gold"):
+    if isinstance(profile, str | Path) and str(profile).startswith("gold"):
         path = os.getenv("CASES_FILE", "evals/gold_cases.json")
     else:
         path = str(profile)

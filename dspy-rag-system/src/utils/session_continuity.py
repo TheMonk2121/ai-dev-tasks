@@ -19,7 +19,7 @@ import json
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .conversation_storage import ConversationStorage, UserPreference
 from .session_manager import SessionManager
@@ -33,10 +33,10 @@ class SessionContinuityState:
 
     session_id: str
     user_id: str
-    last_messages: List[Dict[str, Any]] = field(default_factory=list)
-    last_decisions: List[Dict[str, Any]] = field(default_factory=list)
-    active_preferences: Dict[str, Any] = field(default_factory=dict)
-    session_metadata: Dict[str, Any] = field(default_factory=dict)
+    last_messages: list[dict[str, Any]] = field(default_factory=list)
+    last_decisions: list[dict[str, Any]] = field(default_factory=list)
+    active_preferences: dict[str, Any] = field(default_factory=dict)
+    session_metadata: dict[str, Any] = field(default_factory=dict)
     last_activity: datetime = field(default_factory=datetime.now)
     continuity_hash: str = ""
 
@@ -64,15 +64,15 @@ class PreferenceLearningResult:
 
     preferences_learned: int
     preferences_applied: int
-    confidence_scores: Dict[str, float]
-    learning_insights: List[str]
+    confidence_scores: dict[str, float]
+    learning_insights: list[str]
     conflicts_resolved: int
 
 
 class SessionContinuityManager:
     """Manages session continuity and preference learning across sessions."""
 
-    def __init__(self, conversation_storage: Optional[ConversationStorage] = None):
+    def __init__(self, conversation_storage: ConversationStorage | None = None):
         """Initialize session continuity manager."""
         if conversation_storage is None:
             self.conversation_storage = ConversationStorage()
@@ -150,7 +150,7 @@ class SessionContinuityManager:
             self.logger.error(f"Failed to persist session state for {session_id}: {e}")
             return False
 
-    def restore_session_state(self, user_id: str, session_id: Optional[str] = None) -> Optional[SessionContinuityState]:
+    def restore_session_state(self, user_id: str, session_id: str | None = None) -> SessionContinuityState | None:
         """
         Restore session state for continuity across restarts.
 
@@ -215,7 +215,7 @@ class SessionContinuityManager:
             self.logger.error(f"Failed to restore session state for user {user_id}: {e}")
             return None
 
-    def learn_and_apply_preferences(self, session_id: str, messages: List[Dict[str, Any]]) -> PreferenceLearningResult:
+    def learn_and_apply_preferences(self, session_id: str, messages: list[dict[str, Any]]) -> PreferenceLearningResult:
         """
         Learn preferences from session activity and apply them.
 
@@ -264,7 +264,7 @@ class SessionContinuityManager:
             self.logger.error(f"Failed to learn preferences for session {session_id}: {e}")
             return PreferenceLearningResult(0, 0, {}, [f"Error: {str(e)}"], 0)
 
-    def resume_session_with_context(self, user_id: str, session_id: Optional[str] = None) -> Dict[str, Any]:
+    def resume_session_with_context(self, user_id: str, session_id: str | None = None) -> dict[str, Any]:
         """
         Resume session with last 10 messages + last 2 decisions + preferences.
 
@@ -311,7 +311,7 @@ class SessionContinuityManager:
             self.logger.error(f"Failed to resume session for user {user_id}: {e}")
             return {"error": str(e)}
 
-    def _get_last_decisions(self, session_id: str) -> List[Dict[str, Any]]:
+    def _get_last_decisions(self, session_id: str) -> list[dict[str, Any]]:
         """Get last decisions from conversation context."""
         try:
             decision_contexts = self.conversation_storage.retrieve_context(
@@ -340,7 +340,7 @@ class SessionContinuityManager:
             self.logger.error(f"Failed to get last decisions for session {session_id}: {e}")
             return []
 
-    def _get_active_preferences(self, user_id: str) -> Dict[str, Any]:
+    def _get_active_preferences(self, user_id: str) -> dict[str, Any]:
         """Get active preferences for user."""
         try:
             preferences = self.conversation_storage.retrieve_user_preferences(user_id, limit=50)
@@ -381,7 +381,7 @@ class SessionContinuityManager:
             self.logger.error(f"Failed to validate continuity state: {e}")
             return False
 
-    def _extract_preferences_from_messages(self, messages: List[Dict[str, Any]], user_id: str) -> List[UserPreference]:
+    def _extract_preferences_from_messages(self, messages: list[dict[str, Any]], user_id: str) -> list[UserPreference]:
         """Extract preferences from conversation messages."""
         preferences = []
 
@@ -454,7 +454,7 @@ class SessionContinuityManager:
             self.logger.error(f"Failed to extract preferences from messages: {e}")
             return []
 
-    def _apply_preferences_to_session(self, session_id: str, preferences: List[UserPreference]) -> List[UserPreference]:
+    def _apply_preferences_to_session(self, session_id: str, preferences: list[UserPreference]) -> list[UserPreference]:
         """Apply preferences to current session."""
         applied_preferences = []
 
@@ -480,7 +480,7 @@ class SessionContinuityManager:
             self.logger.error(f"Failed to apply preferences to session {session_id}: {e}")
             return []
 
-    def _resolve_preference_conflicts(self, user_id: str, new_preferences: List[UserPreference]) -> int:
+    def _resolve_preference_conflicts(self, user_id: str, new_preferences: list[UserPreference]) -> int:
         """Resolve conflicts between new and existing preferences."""
         conflicts_resolved = 0
 
@@ -515,8 +515,8 @@ class SessionContinuityManager:
             return 0
 
     def _generate_learning_insights(
-        self, learned_preferences: List[UserPreference], applied_preferences: List[UserPreference]
-    ) -> List[str]:
+        self, learned_preferences: list[UserPreference], applied_preferences: list[UserPreference]
+    ) -> list[str]:
         """Generate insights from preference learning."""
         insights = []
 
@@ -543,7 +543,7 @@ class SessionContinuityManager:
             return [f"Error generating insights: {str(e)}"]
 
     def _apply_preferences_to_resume_context(
-        self, resume_context: Dict[str, Any], active_preferences: Dict[str, Any]
+        self, resume_context: dict[str, Any], active_preferences: dict[str, Any]
     ) -> None:
         """Apply preferences to resume context."""
         try:
@@ -557,7 +557,7 @@ class SessionContinuityManager:
         except Exception as e:
             self.logger.error(f"Failed to apply preferences to resume context: {e}")
 
-    def get_session_continuity_stats(self, user_id: str) -> Dict[str, Any]:
+    def get_session_continuity_stats(self, user_id: str) -> dict[str, Any]:
         """Get session continuity statistics for user."""
         try:
             sessions = self.session_manager.get_user_sessions(user_id, limit=50)

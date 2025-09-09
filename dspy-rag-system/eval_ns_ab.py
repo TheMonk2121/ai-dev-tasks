@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import os
 import sys
-from typing import Dict, List, Set
+
 
 from dotenv import load_dotenv
 
@@ -16,14 +16,14 @@ sys.path.append("src")
 from dspy_modules.vector_store import HybridVectorStore
 
 
-def _hit_at_k(rows: List[dict], gold_ids: Set[int] | None, k: int = 3):
+def _hit_at_k(rows: list[dict], gold_ids: set[int] | None, k: int = 3):
     if not gold_ids:
         return None
     top = rows[:k]
     return 1.0 if any(r.get("document_id") in gold_ids for r in top) else 0.0
 
 
-def _ns_at_k(rows: List[dict], ns_token: str | None, k: int = 3):
+def _ns_at_k(rows: list[dict], ns_token: str | None, k: int = 3):
     if not ns_token:
         return None
     ns = ns_token.lower()
@@ -37,16 +37,16 @@ def _ns_at_k(rows: List[dict], ns_token: str | None, k: int = 3):
 
 
 def evaluate_config(
-    queries: List[str],
+    queries: list[str],
     search_fn,
-    ns_token_map: Dict[str, str],
-    gold_map: Dict[str, Set[int]] | None,
+    ns_token_map: dict[str, str],
+    gold_map: dict[str, set[int]] | None,
     ns_reserved: int = 2,
     limit: int = 8,
 ):
     assert 0 <= ns_reserved <= limit, "ns_reserved must be ≤ limit"
-    hit_vals: List[float] = []
-    ns_vals: List[float] = []
+    hit_vals: list[float] = []
+    ns_vals: list[float] = []
     per_query = []
 
     for q in queries:
@@ -66,7 +66,7 @@ def evaluate_config(
 
 
 def run_ab_test(
-    queries: List[str], search_fn, ns_token_map: Dict[str, str], gold_map: Dict[str, Set[int]] | None, limit: int = 8
+    queries: list[str], search_fn, ns_token_map: dict[str, str], gold_map: dict[str, set[int]] | None, limit: int = 8
 ):
     cfg2 = evaluate_config(queries, search_fn, ns_token_map, gold_map, ns_reserved=2, limit=limit)
     cfg3 = evaluate_config(queries, search_fn, ns_token_map, gold_map, ns_reserved=3, limit=limit)

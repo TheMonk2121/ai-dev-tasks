@@ -13,7 +13,7 @@ Reference: https://arxiv.org/abs/2408.08067
 import json
 import subprocess
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -72,7 +72,7 @@ class RAGCheckerResult(BaseModel):
             raise ValueError("ragchecker_scores cannot be empty")
         # Validate all scores are in 0-1 range
         for score_name, score_value in v.items():
-            if not isinstance(score_value, (int, float)) or score_value < 0.0 or score_value > 1.0:
+            if not isinstance(score_value, int | float) or score_value < 0.0 or score_value > 1.0:
                 raise ValueError(f"Score {score_name} must be between 0.0 and 1.0, got {score_value}")
         return v
 
@@ -198,7 +198,7 @@ class RAGCheckerEvaluator:
             ragchecker_scores: dict[str, float] = {}
             for metric_name, score in results.items():
                 try:
-                    if isinstance(score, (int, float)):
+                    if isinstance(score, int | float):
                         ragchecker_scores[metric_name] = float(score)
                     else:
                         ragchecker_scores[metric_name] = 0.0

@@ -15,12 +15,7 @@ import os
 
 from psycopg2.pool import ThreadedConnectionPool
 
-try:
-    # Optional typing only
-    from typing import Dict, Optional
-except Exception:  # pragma: no cover
-    Dict = dict  # type: ignore
-    Optional = object  # type: ignore
+
 
 log = logging.getLogger("db_pool")
 
@@ -91,13 +86,13 @@ def close_pool() -> None:
         _POOL = None
 
 
-def _apply_session_gucs(conn, *, role: Optional[str] = None, extra_gucs: Optional[Dict[str, str]] = None) -> None:
+def _apply_session_gucs(conn, *, role: str | None = None, extra_gucs: dict[str, str] | None = None) -> None:
     """Apply per-session and per-role GUCs on a live connection.
 
     This is called on every checkout to ensure predictability even after
     server-side resets. Ignores unsupported GUCs safely.
     """
-    gucs: Dict[str, str] = {}
+    gucs: dict[str, str] = {}
     # Timeouts apply to all roles
     gucs["statement_timeout"] = str(_DEFAULTS["DB_STATEMENT_TIMEOUT_MS"])  # ms
     gucs["idle_in_transaction_session_timeout"] = str(_DEFAULTS["DB_IDLE_IN_TX_TIMEOUT_MS"])  # ms
@@ -134,7 +129,7 @@ def _apply_session_gucs(conn, *, role: Optional[str] = None, extra_gucs: Optiona
 
 
 @contextlib.contextmanager
-def get_conn(*, role: Optional[str] = None, extra_gucs: Optional[Dict[str, str]] = None):
+def get_conn(*, role: str | None = None, extra_gucs: dict[str, str] | None = None):
     """Yield a dedicated psycopg2 connection from the pool.
     Applies per-role GUCs and timeouts on checkout.
     """

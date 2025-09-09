@@ -11,7 +11,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from .context_merger import ContextMerger, ContextMergeResult
 from .conversation_storage import ConversationContext, ConversationMessage, ConversationSession, ConversationStorage
@@ -49,8 +49,8 @@ class MemoryOperation:
     timestamp: datetime
     duration_ms: float
     success: bool
-    error_message: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    error_message: str | None = None
+    metadata: dict[str, Any] | None = None
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -71,13 +71,13 @@ class SystemHealth:
     error_rate: float
     average_response_time_ms: float
     last_health_check: datetime
-    component_status: Dict[str, bool]
+    component_status: dict[str, bool]
 
 
 class LTSTMemorySystem:
     """Main integration class for the LTST Memory System."""
 
-    def __init__(self, db_manager: Optional[DatabaseResilienceManager] = None):
+    def __init__(self, db_manager: DatabaseResilienceManager | None = None):
         """Initialize the LTST Memory System."""
         if db_manager is None:
             # Use DSN resolver for unified database connection management
@@ -117,7 +117,7 @@ class LTSTMemorySystem:
         self.session_continuity = SessionContinuityManager(self.conversation_storage)  # type: ignore
 
         # Performance monitoring
-        self.operation_history: List[MemoryOperation] = []
+        self.operation_history: list[MemoryOperation] = []
         self.max_operation_history = 1000
         self.health_check_interval = timedelta(minutes=5)
         self.last_health_check = datetime.now()
@@ -153,7 +153,7 @@ class LTSTMemorySystem:
         role: str,
         content: str,
         message_type: str = "message",
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
     ) -> bool:
         """
         Store a conversation message.
@@ -230,7 +230,7 @@ class LTSTMemorySystem:
         context_key: str,
         context_value: str,
         relevance_score: float = 0.8,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
     ) -> bool:
         """
         Store conversation context.
@@ -306,7 +306,7 @@ class LTSTMemorySystem:
 
     def retrieve_conversation_history(
         self, session_id: str, limit: int = 50, offset: int = 0
-    ) -> List[ConversationMessage]:
+    ) -> list[ConversationMessage]:
         """
         Retrieve conversation history for a session.
 
@@ -352,9 +352,9 @@ class LTSTMemorySystem:
     def merge_contexts(
         self,
         session_id: str,
-        context_type: Optional[str] = None,
-        relevance_threshold: Optional[float] = None,
-        similarity_threshold: Optional[float] = None,
+        context_type: str | None = None,
+        relevance_threshold: float | None = None,
+        similarity_threshold: float | None = None,
     ) -> ContextMergeResult:
         """
         Merge contexts for a session.
@@ -458,8 +458,8 @@ class LTSTMemorySystem:
         self,
         session_id: str,
         user_id: str,
-        current_message: Optional[str] = None,
-        context_types: Optional[List[str]] = None,
+        current_message: str | None = None,
+        context_types: list[str] | None = None,
         max_context_length: int = 10000,
         include_conversation_history: bool = True,
         history_limit: int = 20,
@@ -574,8 +574,8 @@ class LTSTMemorySystem:
             raise
 
     def search_conversations(
-        self, query: str, session_id: Optional[str] = None, limit: int = 10, threshold: float = 0.7
-    ) -> List[Tuple[ConversationMessage, float]]:
+        self, query: str, session_id: str | None = None, limit: int = 10, threshold: float = 0.7
+    ) -> list[tuple[ConversationMessage, float]]:
         """
         Search conversations using semantic similarity.
 
@@ -632,7 +632,7 @@ class LTSTMemorySystem:
             logger.error(f"Error searching conversations: {e}")
             return []
 
-    def get_session_summary(self, session_id: str) -> Optional[Dict[str, Any]]:
+    def get_session_summary(self, session_id: str) -> dict[str, Any] | None:
         """
         Get session summary statistics.
 
@@ -710,7 +710,7 @@ class LTSTMemorySystem:
             logger.error(f"Exception persisting session state for {session_id}: {e}")
             return False
 
-    def restore_session_state(self, user_id: str, session_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    def restore_session_state(self, user_id: str, session_id: str | None = None) -> dict[str, Any] | None:
         """
         Restore session state for continuity across restarts.
 
@@ -762,7 +762,7 @@ class LTSTMemorySystem:
             logger.error(f"Exception restoring session state for user {user_id}: {e}")
             return None
 
-    def resume_session_with_context(self, user_id: str, session_id: Optional[str] = None) -> Dict[str, Any]:
+    def resume_session_with_context(self, user_id: str, session_id: str | None = None) -> dict[str, Any]:
         """
         Resume session with last 10 messages + last 2 decisions + preferences.
 
@@ -814,7 +814,7 @@ class LTSTMemorySystem:
             logger.error(f"Exception resuming session for user {user_id}: {e}")
             return {"error": str(e)}
 
-    def learn_and_apply_preferences(self, session_id: str, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def learn_and_apply_preferences(self, session_id: str, messages: list[dict[str, Any]]) -> dict[str, Any]:
         """
         Learn preferences from session activity and apply them.
 
@@ -879,7 +879,7 @@ class LTSTMemorySystem:
             logger.error(f"Exception learning preferences for session {session_id}: {e}")
             return {"error": str(e)}
 
-    def get_session_continuity_stats(self, user_id: str) -> Dict[str, Any]:
+    def get_session_continuity_stats(self, user_id: str) -> dict[str, Any]:
         """
         Get session continuity statistics for user.
 
@@ -907,7 +907,7 @@ class LTSTMemorySystem:
             logger.error(f"Exception getting session continuity stats for user {user_id}: {e}")
             return {"error": str(e)}
 
-    def cleanup_expired_data(self) -> Dict[str, Any]:
+    def cleanup_expired_data(self) -> dict[str, Any]:
         """
         Clean up expired data across all components.
 
@@ -1016,8 +1016,8 @@ class LTSTMemorySystem:
         user_id: str,
         duration_ms: float,
         success: bool,
-        error_message: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        error_message: str | None = None,
+        metadata: dict[str, Any] | None = None,
     ):
         """Record a memory operation for monitoring."""
         if not self.enable_monitoring:
@@ -1067,7 +1067,7 @@ class LTSTMemorySystem:
         except Exception:
             return 0
 
-    def get_system_statistics(self) -> Dict[str, Any]:
+    def get_system_statistics(self) -> dict[str, Any]:
         """Get comprehensive system statistics."""
         try:
             health = self.get_system_health()
@@ -1116,7 +1116,7 @@ class LTSTMemorySystem:
             return {"error": str(e)}
 
     # Privacy-aware methods
-    def store_conversation_with_privacy(self, conversation_id: str, conversation_data: Dict[str, Any]) -> bool:
+    def store_conversation_with_privacy(self, conversation_id: str, conversation_data: dict[str, Any]) -> bool:
         """
         Store conversation with privacy controls.
 
@@ -1133,7 +1133,7 @@ class LTSTMemorySystem:
             logger.error(f"Failed to store conversation with privacy: {e}")
             return False
 
-    def retrieve_conversation_with_privacy(self, conversation_id: str) -> Optional[Dict[str, Any]]:
+    def retrieve_conversation_with_privacy(self, conversation_id: str) -> dict[str, Any] | None:
         """
         Retrieve conversation with privacy controls.
 
@@ -1165,7 +1165,7 @@ class LTSTMemorySystem:
             logger.error(f"Failed to redact log message: {e}")
             return message
 
-    def validate_privacy_compliance(self) -> Dict[str, Any]:
+    def validate_privacy_compliance(self) -> dict[str, Any]:
         """
         Validate privacy compliance.
 
@@ -1178,7 +1178,7 @@ class LTSTMemorySystem:
             logger.error(f"Failed to validate privacy compliance: {e}")
             return {"error": str(e), "compliant": False}
 
-    def get_privacy_statistics(self) -> Dict[str, Any]:
+    def get_privacy_statistics(self) -> dict[str, Any]:
         """
         Get privacy operation statistics.
 
@@ -1208,7 +1208,7 @@ class LTSTMemorySystem:
             return 0
 
     # Dashboard methods
-    def get_dashboard_metrics(self) -> Dict[str, Any]:
+    def get_dashboard_metrics(self) -> dict[str, Any]:
         """
         Get dashboard metrics for visualization.
 
@@ -1221,7 +1221,7 @@ class LTSTMemorySystem:
             logger.error(f"Failed to get dashboard metrics: {e}")
             return {}
 
-    def get_dashboard_decisions(self, limit: int = 20) -> List[Dict[str, Any]]:
+    def get_dashboard_decisions(self, limit: int = 20) -> list[dict[str, Any]]:
         """
         Get top decisions for dashboard display.
 
@@ -1238,7 +1238,7 @@ class LTSTMemorySystem:
             logger.error(f"Failed to get dashboard decisions: {e}")
             return []
 
-    def get_dashboard_queries(self, limit: int = 50) -> List[Dict[str, Any]]:
+    def get_dashboard_queries(self, limit: int = 50) -> list[dict[str, Any]]:
         """
         Get recent queries for dashboard display.
 
@@ -1255,7 +1255,7 @@ class LTSTMemorySystem:
             logger.error(f"Failed to get dashboard queries: {e}")
             return []
 
-    def get_dashboard_supersedence_graph(self) -> Dict[str, List[str]]:
+    def get_dashboard_supersedence_graph(self) -> dict[str, list[str]]:
         """
         Get supersedence graph for dashboard visualization.
 
@@ -1275,7 +1275,7 @@ class LTSTMemorySystem:
         except Exception as e:
             logger.error(f"Failed to update dashboard data: {e}")
 
-    def get_dashboard_statistics(self) -> Dict[str, Any]:
+    def get_dashboard_statistics(self) -> dict[str, Any]:
         """
         Get dashboard statistics.
 

@@ -9,7 +9,7 @@ performance improvements against Adam LK transcript benchmarks.
 import os
 import sys
 import unittest
-from typing import Any, Dict
+from typing import Any
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -39,7 +39,7 @@ class TaskAnalysisModule(Module):
         super().__init__()
         self.predictor = dspy.Predict(TaskAnalysisSignature)
 
-    def forward(self, task_description: str, complexity: str = "moderate") -> Dict[str, Any]:
+    def forward(self, task_description: str, complexity: str = "moderate") -> dict[str, Any]:
         """Analyze a task and provide recommendations"""
         result = self.predictor(task_description=task_description, complexity=complexity)
 
@@ -69,7 +69,7 @@ class CodeReviewModule(Module):
         super().__init__()
         self.predictor = dspy.Predict(CodeReviewSignature)
 
-    def forward(self, code_snippet: str, review_focus: str = "general") -> Dict[str, Any]:
+    def forward(self, code_snippet: str, review_focus: str = "general") -> dict[str, Any]:
         """Review code and provide quality assessment"""
         result = self.predictor(code_snippet=code_snippet, review_focus=review_focus)
 
@@ -89,7 +89,7 @@ class DocumentationQueryModule(Module):
         super().__init__()
         self.processor = DocumentationQueryProcessor()
 
-    def forward(self, user_query: str, context_type: str = "general") -> Dict[str, Any]:
+    def forward(self, user_query: str, context_type: str = "general") -> dict[str, Any]:
         """Process documentation queries"""
         result = self.processor.forward(user_query=user_query, context_type=context_type)
 

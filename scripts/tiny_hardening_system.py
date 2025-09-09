@@ -11,7 +11,7 @@ import random
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class TinyHardeningSystem:
@@ -319,7 +319,7 @@ def generate_idempotent_chunk_id(doc_id: str, byte_span: tuple, chunk_version: s
         try:
             # Create provenance tracking function
             tracking_function = """
-def track_few_shot_provenance(few_shot_ids: List[str], pool_version: str, selector_seed: int) -> Dict[str, Any]:
+def track_few_shot_provenance(few_shot_ids: list[str], pool_version: str, selector_seed: int) -> dict[str, Any]:
     \"\"\"Track few-shot provenance information.\"\"\"
     return {
         "few_shot_ids": few_shot_ids,

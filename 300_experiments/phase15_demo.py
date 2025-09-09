@@ -10,7 +10,7 @@ Tests the lightweight Phase 1.5 additions:
 import asyncio
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 # Add paths
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -27,48 +27,48 @@ class MockRetriever:
         day_seconds = 24 * 3600
 
         self.knowledge = {
-            'dspy': [
+            "dspy": [
                 {
-                    'text': 'DSPy is a framework for algorithmically optimizing language model prompts and weights',
-                    'score': 0.9,
-                    'timestamp': current_time - (5 * day_seconds),  # 5 days ago
-                    'document_id': 'dspy_intro_001',
-                    'source': 'dspy_docs.md'
+                    "text": "DSPy is a framework for algorithmically optimizing language model prompts and weights",
+                    "score": 0.9,
+                    "timestamp": current_time - (5 * day_seconds),  # 5 days ago
+                    "document_id": "dspy_intro_001",
+                    "source": "dspy_docs.md",
                 },
                 {
-                    'text': 'DSPy uses optimizers to automatically tune prompts based on validation metrics',
-                    'score': 0.8,
-                    'timestamp': current_time - (30 * day_seconds),  # 30 days ago
-                    'document_id': 'dspy_optimizers_002',
-                    'source': 'optimization_guide.md'
+                    "text": "DSPy uses optimizers to automatically tune prompts based on validation metrics",
+                    "score": 0.8,
+                    "timestamp": current_time - (30 * day_seconds),  # 30 days ago
+                    "document_id": "dspy_optimizers_002",
+                    "source": "optimization_guide.md",
                 },
                 {
-                    'text': 'DSPy signatures define input/output specifications for language model tasks',
-                    'score': 0.7,
-                    'timestamp': current_time - (60 * day_seconds),  # 60 days ago
-                    'document_id': 'dspy_signatures_003',
-                    'source': 'signatures_tutorial.md'
-                }
+                    "text": "DSPy signatures define input/output specifications for language model tasks",
+                    "score": 0.7,
+                    "timestamp": current_time - (60 * day_seconds),  # 60 days ago
+                    "document_id": "dspy_signatures_003",
+                    "source": "signatures_tutorial.md",
+                },
             ],
-            'optimization': [
+            "optimization": [
                 {
-                    'text': 'DSPy optimizers include BootstrapFewShot and Copro for prompt optimization',
-                    'score': 0.8,
-                    'timestamp': current_time - (2 * day_seconds),  # 2 days ago (recent!)
-                    'document_id': 'optimizers_recent_004',
-                    'source': 'latest_optimizers.md'
+                    "text": "DSPy optimizers include BootstrapFewShot and Copro for prompt optimization",
+                    "score": 0.8,
+                    "timestamp": current_time - (2 * day_seconds),  # 2 days ago (recent!)
+                    "document_id": "optimizers_recent_004",
+                    "source": "latest_optimizers.md",
                 },
                 {
-                    'text': 'Optimization in DSPy uses metrics to evaluate and improve prompt performance',
-                    'score': 0.7,
-                    'timestamp': current_time - (45 * day_seconds),  # 45 days ago
-                    'document_id': 'optimization_metrics_005',
-                    'source': 'metrics_guide.md'
-                }
-            ]
+                    "text": "Optimization in DSPy uses metrics to evaluate and improve prompt performance",
+                    "score": 0.7,
+                    "timestamp": current_time - (45 * day_seconds),  # 45 days ago
+                    "document_id": "optimization_metrics_005",
+                    "source": "metrics_guide.md",
+                },
+            ],
         }
 
-    def retrieve(self, query: str) -> List[Dict[str, Any]]:
+    def retrieve(self, query: str) -> list[dict[str, Any]]:
         """Mock retrieval based on query keywords."""
         query_lower = query.lower()
         results = []
@@ -82,16 +82,16 @@ class MockRetriever:
         if not results:
             results = [
                 {
-                    'text': f'General information related to: {query}',
-                    'score': 0.5,
-                    'timestamp': time.time(),
-                    'document_id': 'general_fallback',
-                    'source': 'fallback.md'
+                    "text": f"General information related to: {query}",
+                    "score": 0.5,
+                    "timestamp": time.time(),
+                    "document_id": "general_fallback",
+                    "source": "fallback.md",
                 }
             ]
 
         # Sort by original score
-        results.sort(key=lambda x: x.get('score', 0.0), reverse=True)
+        results.sort(key=lambda x: x.get("score", 0.0), reverse=True)
         return results[:5]
 
 
@@ -111,7 +111,7 @@ async def test_freshness_enhancement():
             max_decay_factor=0.3,
             enable_recency_prior=True,
             recency_boost_factor=1.2,
-            recency_threshold_days=7
+            recency_threshold_days=7,
         )
 
         freshness_enhancer = create_freshness_enhancer(config)
@@ -139,14 +139,16 @@ async def test_freshness_enhancement():
         # Show score changes
         print("  Score changes:")
         for i, result in enumerate(enhanced_results[:3]):
-            original = result.get('original_score', result.get('score', 0.0))
-            enhanced = result.get('score', 0.0)
-            decay = result.get('freshness_decay', 1.0)
-            boost = result.get('recency_boost', 1.0)
-            age_days = result.get('freshness_metadata', {}).get('doc_age_days', 0)
+            original = result.get("original_score", result.get("score", 0.0))
+            enhanced = result.get("score", 0.0)
+            decay = result.get("freshness_decay", 1.0)
+            boost = result.get("recency_boost", 1.0)
+            age_days = result.get("freshness_metadata", {}).get("doc_age_days", 0)
 
-            print(f"    {i+1}. {result['document_id']}: {original:.3f} → {enhanced:.3f} "
-                  f"(decay: {decay:.3f}, boost: {boost:.3f}, age: {age_days:.1f}d)")
+            print(
+                f"    {i+1}. {result['document_id']}: {original:.3f} → {enhanced:.3f} "
+                f"(decay: {decay:.3f}, boost: {boost:.3f}, age: {age_days:.1f}d)"
+            )
 
         # Test 2: Non-freshness query
         print("\n2. Testing non-freshness query...")
@@ -187,7 +189,7 @@ async def test_intent_routing():
             structured_confidence_threshold=0.7,
             hybrid_confidence_threshold=0.5,
             enable_structured_routing=True,
-            enable_hybrid_routing=True
+            enable_hybrid_routing=True,
         )
 
         intent_router = create_intent_router(config)
@@ -195,41 +197,41 @@ async def test_intent_routing():
         # Test queries
         test_queries = [
             {
-                'query': 'Count all users in the system',
-                'expected_intent': 'structured',
-                'expected_route': 'sql',
-                'description': 'SQL lookup query'
+                "query": "Count all users in the system",
+                "expected_intent": "structured",
+                "expected_route": "sql",
+                "description": "SQL lookup query",
             },
             {
-                'query': 'Find documents created between 2024-01-01 and 2024-12-31',
-                'expected_intent': 'structured',
-                'expected_route': 'sql',
-                'description': 'Date range query'
+                "query": "Find documents created between 2024-01-01 and 2024-12-31",
+                "expected_intent": "structured",
+                "expected_route": "sql",
+                "description": "Date range query",
             },
             {
-                'query': 'What is the average performance of model A vs model B?',
-                'expected_intent': 'structured',
-                'expected_route': 'sql',
-                'description': 'Metric comparison query'
+                "query": "What is the average performance of model A vs model B?",
+                "expected_intent": "structured",
+                "expected_route": "sql",
+                "description": "Metric comparison query",
             },
             {
-                'query': 'Show me the relationship between user files and PRDs',
-                'expected_intent': 'structured',
-                'expected_route': 'kg',
-                'description': 'Knowledge graph query'
+                "query": "Show me the relationship between user files and PRDs",
+                "expected_intent": "structured",
+                "expected_route": "kg",
+                "description": "Knowledge graph query",
             },
             {
-                'query': 'Explain how DSPy optimization works with examples',
-                'expected_intent': 'text_rag',
-                'expected_route': 'rag',
-                'description': 'Explanatory text query'
+                "query": "Explain how DSPy optimization works with examples",
+                "expected_intent": "text_rag",
+                "expected_route": "rag",
+                "description": "Explanatory text query",
             },
             {
-                'query': 'Compare the performance of different optimization strategies and explain why they work',
-                'expected_intent': 'hybrid',
-                'expected_route': 'hybrid',
-                'description': 'Hybrid query (comparison + explanation)'
-            }
+                "query": "Compare the performance of different optimization strategies and explain why they work",
+                "expected_intent": "hybrid",
+                "expected_route": "hybrid",
+                "description": "Hybrid query (comparison + explanation)",
+            },
         ]
 
         results = []
@@ -237,7 +239,7 @@ async def test_intent_routing():
             print(f"\n  Testing: {test_case['description']}")
             print(f"  Query: {test_case['query'][:50]}...")
 
-            classification = intent_router.classify_intent(test_case['query'])
+            classification = intent_router.classify_intent(test_case["query"])
 
             print(f"    Intent: {classification.intent_type} (expected: {test_case['expected_intent']})")
             print(f"    Route: {classification.route_target} (expected: {test_case['expected_route']})")
@@ -246,23 +248,29 @@ async def test_intent_routing():
             print(f"    Reasoning: {classification.reasoning[:100]}...")
 
             # Check if routing decision is correct
-            intent_correct = classification.intent_type == test_case['expected_intent']
-            route_correct = classification.route_target == test_case['expected_route']
+            intent_correct = classification.intent_type == test_case["expected_intent"]
+            route_correct = classification.route_target == test_case["expected_route"]
 
-            results.append({
-                'query': test_case['query'],
-                'intent_correct': intent_correct,
-                'route_correct': route_correct,
-                'confidence': classification.confidence
-            })
+            results.append(
+                {
+                    "query": test_case["query"],
+                    "intent_correct": intent_correct,
+                    "route_correct": route_correct,
+                    "confidence": classification.confidence,
+                }
+            )
 
         # Summary
-        intent_accuracy = sum(1 for r in results if r['intent_correct']) / len(results)
-        route_accuracy = sum(1 for r in results if r['route_correct']) / len(results)
+        intent_accuracy = sum(1 for r in results if r["intent_correct"]) / len(results)
+        route_accuracy = sum(1 for r in results if r["route_correct"]) / len(results)
 
         print("\n  📊 Intent Routing Results:")
-        print(f"    Intent accuracy: {intent_accuracy:.1%} ({sum(1 for r in results if r['intent_correct'])}/{len(results)})")
-        print(f"    Route accuracy: {route_accuracy:.1%} ({sum(1 for r in results if r['route_correct'])}/{len(results)})")
+        print(
+            f"    Intent accuracy: {intent_accuracy:.1%} ({sum(1 for r in results if r['intent_correct'])}/{len(results)})"
+        )
+        print(
+            f"    Route accuracy: {route_accuracy:.1%} ({sum(1 for r in results if r['route_correct'])}/{len(results)})"
+        )
         print(f"    Average confidence: {sum(r['confidence'] for r in results) / len(results):.3f}")
 
         print("  ✅ Intent routing working correctly")
@@ -291,17 +299,11 @@ async def test_phase15_integration():
         # Test integrated pipeline
         test_queries = [
             {
-                'query': 'What are the latest DSPy updates from this month?',
-                'description': 'Freshness + intent routing test'
+                "query": "What are the latest DSPy updates from this month?",
+                "description": "Freshness + intent routing test",
             },
-            {
-                'query': 'Count all documents created in 2024',
-                'description': 'Structured query test'
-            },
-            {
-                'query': 'Explain how DSPy works with recent examples',
-                'description': 'Hybrid query test'
-            }
+            {"query": "Count all documents created in 2024", "description": "Structured query test"},
+            {"query": "Explain how DSPy works with recent examples", "description": "Hybrid query test"},
         ]
 
         for test_case in test_queries:
@@ -309,18 +311,18 @@ async def test_phase15_integration():
             print(f"  Query: {test_case['query']}")
 
             # Step 1: Intent classification
-            intent_result = intent_router.classify_intent(test_case['query'])
+            intent_result = intent_router.classify_intent(test_case["query"])
             print(f"    Intent: {intent_result.intent_type} → {intent_result.route_target}")
             print(f"    Short-circuit: {intent_result.should_short_circuit}")
 
             # Step 2: Retrieval (if not short-circuited)
             if not intent_result.should_short_circuit:
-                results = mock_retriever.retrieve(test_case['query'])
+                results = mock_retriever.retrieve(test_case["query"])
                 print(f"    Retrieved: {len(results)} documents")
 
                 # Step 3: Freshness enhancement
                 enhanced_results, freshness_metadata = freshness_enhancer.enhance_retrieval_results(
-                    test_case['query'], results
+                    test_case["query"], results
                 )
 
                 print(f"    Freshness enhanced: {len(freshness_metadata['enhancements_applied'])} enhancements")
@@ -345,7 +347,7 @@ async def main():
     tests = [
         ("Freshness Enhancement", test_freshness_enhancement),
         ("Intent Routing", test_intent_routing),
-        ("Phase 1.5 Integration", test_phase15_integration)
+        ("Phase 1.5 Integration", test_phase15_integration),
     ]
 
     results = {}

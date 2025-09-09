@@ -3,7 +3,7 @@
 DSPy Signatures for MCP-based document processing
 """
 
-from typing import Any, Dict, List
+from typing import Any
 
 from dspy import InputField, OutputField, Signature
 
@@ -20,5 +20,5 @@ class MCPDocumentSignature(Signature):
     """
 
     document_source: str = InputField(desc="Path or URL identifying the document to process")
-    chunks: List[str] = OutputField(desc="Extracted text chunks from the document")
-    metadata: Dict[str, Any] = OutputField(desc="Processing metadata such as content_type and server_type")
+    chunks: list[str] = OutputField(desc="Extracted text chunks from the document")
+    metadata: dict[str, Any] = OutputField(desc="Processing metadata such as content_type and server_type")

@@ -10,7 +10,7 @@ import json
 import os
 import pathlib
 import sys
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, TypedDict
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, text
@@ -225,7 +225,7 @@ def dump_db_schema_json(schema: str = "public") -> None:
 
     tables: list[str] = []
     with engine.connect() as conn:
-        # Convert Sequence[Any] to List[str] as recommended in Pyright troubleshooting
+        # Convert Sequence[Any] to list[str] as recommended in Pyright troubleshooting
         tables_result = (
             conn.execute(
                 text(

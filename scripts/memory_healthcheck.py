@@ -15,7 +15,7 @@ import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 project_root = Path(__file__).parent.parent
 if str(project_root) not in sys.path:

@@ -6,7 +6,7 @@ Wrap pipeline as DSPy program and compile prompts/few-shots against metric.
 
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 # Add DSPy RAG system to path
 sys.path.insert(0, "dspy-rag-system/src")
@@ -26,14 +26,14 @@ class RetrieveSig(dspy.Signature):
     """Retrieve k passages for the question."""
 
     question: str = dspy.InputField()
-    passages: List[str] = dspy.OutputField()
+    passages: list[str] = dspy.OutputField()
 
 
 class AnswerSig(dspy.Signature):
     """Answer faithfully using the passages."""
 
     question: str = dspy.InputField()
-    passages: List[str] = dspy.InputField()
+    passages: list[str] = dspy.InputField()
     answer: str = dspy.OutputField()
 
 
@@ -45,7 +45,7 @@ class Retrieve(dspy.Module):
         self.retriever = retriever
         self.k = k
 
-    def forward(self, question: str) -> List[str]:
+    def forward(self, question: str) -> list[str]:
         """Retrieve passages using fusion adapter."""
         # Use your existing fusion adapter
         candidates, _ = _retrieve_with_fusion(self.retriever, question)
@@ -62,7 +62,7 @@ class Answer(dspy.Module):
         super().__init__()
         self.predict = dspy.Predict(AnswerSig)
 
-    def forward(self, question: str, passages: List[str]) -> str:
+    def forward(self, question: str, passages: list[str]) -> str:
         """Generate answer from passages."""
         result = self.predict(question=question, passages=passages)
         return result.answer
@@ -83,7 +83,7 @@ class RAGProgram(dspy.Module):
         return answer
 
 
-def metric(example: Dict[str, Any], pred: Any, trace=None) -> float:
+def metric(example: dict[str, Any], pred: Any, trace=None) -> float:
     """Bridge to your oracle/F1 metric. Returns scalar higher-is-better."""
     # This would integrate with your existing evaluation metrics
     # For now, return a placeholder score
@@ -108,7 +108,7 @@ def metric(example: Dict[str, Any], pred: Any, trace=None) -> float:
 
 
 def compile_rag(
-    trainset: List[Dict[str, Any]], valset: List[Dict[str, Any]], retriever: HybridVectorStore, config_hash: str = None
+    trainset: list[dict[str, Any]], valset: list[dict[str, Any]], retriever: HybridVectorStore, config_hash: str = None
 ) -> dspy.Module:
     """Compile RAG program with DSPy teleprompter."""
 
@@ -165,7 +165,7 @@ def load_compiled(config_hash: str) -> dspy.Module:
     if not compiled_file.exists():
         raise FileNotFoundError(f"Compiled artifacts not found for config_hash: {config_hash}")
 
-    with open(compiled_file, "r") as f:
+    with open(compiled_file) as f:
         artifacts = json.load(f)
 
     # In a real implementation, you would reconstruct the compiled program
@@ -197,10 +197,10 @@ def main():
         # Load datasets
         import json
 
-        with open(args.trainset, "r") as f:
+        with open(args.trainset) as f:
             trainset = [json.loads(line) for line in f if line.strip()]
 
-        with open(args.valset, "r") as f:
+        with open(args.valset) as f:
             valset = [json.loads(line) for line in f if line.strip()]
 
         # Initialize retriever

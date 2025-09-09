@@ -8,7 +8,7 @@ import hashlib
 import logging
 import os
 import sqlite3
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 try:
     from src.rag import reranker_env as RENV  # SSOT env shim
@@ -52,7 +52,7 @@ def _get_torch():
 
 def _device():
     """Determine the best available device for inference"""
-    device = (RENV.TORCH_DEVICE if RENV else os.getenv("TORCH_DEVICE", "cpu"))
+    device = RENV.TORCH_DEVICE if RENV else os.getenv("TORCH_DEVICE", "cpu")
 
     if device == "mps":  # Apple Silicon
         torch = _get_torch()
@@ -79,7 +79,7 @@ def _model():
     """Get or create the cross-encoder model"""
     global _MODEL, _MODEL_NAME
 
-    model_name = (RENV.RERANKER_MODEL if RENV else os.getenv("RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2"))
+    model_name = RENV.RERANKER_MODEL if RENV else os.getenv("RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
 
     # Return cached model if name hasn't changed
     if _MODEL is not None and _MODEL_NAME == model_name:
@@ -107,7 +107,11 @@ def _model():
 
 def _get_cache_db():
     """Get or create the SQLite cache database"""
-    cache_dir = (RENV.RERANK_CACHE_PATH if (RENV and RENV.RERANK_CACHE_BACKEND == "sqlite") else os.getenv("RERANKER_CACHE_DIR", "cache"))
+    cache_dir = (
+        RENV.RERANK_CACHE_PATH
+        if (RENV and RENV.RERANK_CACHE_BACKEND == "sqlite")
+        else os.getenv("RERANKER_CACHE_DIR", "cache")
+    )
     # Backwards-compat for existing layout: RERANKER_CACHE_DIR expects a directory
     if cache_dir and cache_dir.endswith(".sqlite"):
         # user provided a full sqlite path; derive directory
@@ -155,7 +159,7 @@ def _query_hash(query: str) -> str:
     return hashlib.md5(query.encode("utf-8")).hexdigest()
 
 
-def _get_cached_scores(model_name: str, query_hash: str, chunk_ids: List[str]) -> Dict[str, float]:
+def _get_cached_scores(model_name: str, query_hash: str, chunk_ids: list[str]) -> dict[str, float]:
     """Get cached scores for the given query and chunks"""
     conn = _get_cache_db()
     try:
@@ -169,7 +173,7 @@ def _get_cached_scores(model_name: str, query_hash: str, chunk_ids: List[str]) -
         conn.close()
 
 
-def _cache_scores(model_name: str, query_hash: str, scores: Dict[str, float]):
+def _cache_scores(model_name: str, query_hash: str, scores: dict[str, float]):
     """Cache scores for the given query and chunks"""
     conn = _get_cache_db()
     try:
@@ -183,8 +187,8 @@ def _cache_scores(model_name: str, query_hash: str, scores: Dict[str, float]):
 
 
 def rerank(
-    query: str, candidates: List[Tuple[str, str]], topk_keep: int = 12, batch_size: int = 8
-) -> List[Tuple[str, str, float]]:
+    query: str, candidates: list[tuple[str, str]], topk_keep: int = 12, batch_size: int = 8
+) -> list[tuple[str, str, float]]:
     """
     Rerank candidates using a cross-encoder model.
 
@@ -205,7 +209,7 @@ def rerank(
         logger.warning("Reranker model not available, returning candidates unchanged")
         return [(cid, txt, 0.0) for cid, txt in candidates[:topk_keep]]
 
-    model_name = (RENV.RERANKER_MODEL if RENV else os.getenv("RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2"))
+    model_name = RENV.RERANKER_MODEL if RENV else os.getenv("RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
     query_hash = _query_hash(query)
     chunk_ids = [cid for cid, _ in candidates]
 
@@ -262,7 +266,7 @@ def is_available() -> bool:
     return _get_sentence_transformers() is not None and _get_torch() is not None
 
 
-def get_model_info() -> Dict[str, Any]:
+def get_model_info() -> dict[str, Any]:
     """Get information about the current reranker configuration"""
     model = _model()
     if model is None:
@@ -270,7 +274,9 @@ def get_model_info() -> Dict[str, Any]:
 
     return {
         "available": True,
-        "model_name": (RENV.RERANKER_MODEL if RENV else os.getenv("RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")),
+        "model_name": (
+            RENV.RERANKER_MODEL if RENV else os.getenv("RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
+        ),
         "device": _device(),
         "batch_size": (RENV.RERANK_BATCH if RENV else int(os.getenv("RERANK_BATCH", "8"))),
         "input_topk": (RENV.RERANK_INPUT_TOPK if RENV else int(os.getenv("RERANK_INPUT_TOPK", "50"))),

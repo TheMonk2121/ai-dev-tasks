@@ -9,7 +9,7 @@ Dataset Design Traps
 import json
 import random
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from .config_lock import LockedConfig
 
@@ -17,19 +17,19 @@ from .config_lock import LockedConfig
 @dataclass
 class TestCase:
     """Individual test case"""
-    
+
     id: str
     question: str
     answer: str
-    context: List[str]
+    context: list[str]
     category: str
     difficulty: str
     expected_retrieval_size: int
     has_answer: bool
     is_adversarial: bool = False
     is_negative_control: bool = False
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "id": self.id,
@@ -47,15 +47,15 @@ class TestCase:
 
 class DatasetTrapManager:
     """Manages dataset design traps and test case generation"""
-    
+
     def __init__(self, config: LockedConfig):
         self.config = config
-        self.test_cases: List[TestCase] = []
-        
+        self.test_cases: list[TestCase] = []
+
         # Coverage grid categories
         self.categories = [
             "ops_healthchecks",
-            "db_workflows", 
+            "db_workflows",
             "rag_qa",
             "meta_ops",
             "needle_in_haystack",
@@ -63,51 +63,51 @@ class DatasetTrapManager:
             "date_numeric",
             "negative_control",
         ]
-        
+
         # Difficulty levels
         self.difficulties = ["easy", "medium", "hard", "expert"]
-    
-    def generate_coverage_grid(self, num_cases_per_category: int = 5) -> List[TestCase]:
+
+    def generate_coverage_grid(self, num_cases_per_category: int = 5) -> list[TestCase]:
         """Generate comprehensive coverage grid"""
         print("🎯 Generating Coverage Grid")
         print("=" * 40)
-        
+
         test_cases = []
-        
+
         # Ops/Healthchecks
         test_cases.extend(self._generate_ops_healthcheck_cases(num_cases_per_category))
-        
+
         # DB Workflows
         test_cases.extend(self._generate_db_workflow_cases(num_cases_per_category))
-        
+
         # RAG QA
         test_cases.extend(self._generate_rag_qa_cases(num_cases_per_category))
-        
+
         # Meta-ops
         test_cases.extend(self._generate_meta_ops_cases(num_cases_per_category))
-        
+
         # Needle in haystack
         test_cases.extend(self._generate_needle_cases(num_cases_per_category))
-        
+
         # Multi-hop
         test_cases.extend(self._generate_multi_hop_cases(num_cases_per_category))
-        
+
         # Date/Numeric
         test_cases.extend(self._generate_date_numeric_cases(num_cases_per_category))
-        
+
         # Negative controls
         test_cases.extend(self._generate_negative_control_cases(num_cases_per_category))
-        
+
         self.test_cases = test_cases
-        
+
         print(f"✅ Generated {len(test_cases)} test cases across {len(self.categories)} categories")
-        
+
         return test_cases
-    
-    def _generate_ops_healthcheck_cases(self, num_cases: int) -> List[TestCase]:
+
+    def _generate_ops_healthcheck_cases(self, num_cases: int) -> list[TestCase]:
         """Generate ops/healthcheck test cases"""
         cases = []
-        
+
         ops_questions = [
             "Is the document index present and healthy?",
             "Are there any prefix leakage issues in BM25?",
@@ -118,7 +118,7 @@ class DatasetTrapManager:
             "What is the current ingest run ID?",
             "Are there any token budget violations?",
         ]
-        
+
         for i, question in enumerate(ops_questions[:num_cases]):
             case = TestCase(
                 id=f"ops_healthcheck_{i+1}",
@@ -131,13 +131,13 @@ class DatasetTrapManager:
                 has_answer=True,
             )
             cases.append(case)
-        
+
         return cases
-    
-    def _generate_db_workflow_cases(self, num_cases: int) -> List[TestCase]:
+
+    def _generate_db_workflow_cases(self, num_cases: int) -> list[TestCase]:
         """Generate database workflow test cases"""
         cases = []
-        
+
         db_questions = [
             "How do I troubleshoot database connection issues?",
             "What are the steps to perform a database backup?",
@@ -148,7 +148,7 @@ class DatasetTrapManager:
             "How do I handle database migrations?",
             "What are the database connection pool settings?",
         ]
-        
+
         for i, question in enumerate(db_questions[:num_cases]):
             case = TestCase(
                 id=f"db_workflow_{i+1}",
@@ -161,13 +161,13 @@ class DatasetTrapManager:
                 has_answer=True,
             )
             cases.append(case)
-        
+
         return cases
-    
-    def _generate_rag_qa_cases(self, num_cases: int) -> List[TestCase]:
+
+    def _generate_rag_qa_cases(self, num_cases: int) -> list[TestCase]:
         """Generate RAG QA test cases"""
         cases = []
-        
+
         rag_questions = [
             "What is DSPy and how does it work?",
             "How does the RAG system retrieve relevant documents?",
@@ -178,7 +178,7 @@ class DatasetTrapManager:
             "What are the benefits of contextual prefixes?",
             "How does the Jaccard similarity threshold work?",
         ]
-        
+
         for i, question in enumerate(rag_questions[:num_cases]):
             case = TestCase(
                 id=f"rag_qa_{i+1}",
@@ -191,13 +191,13 @@ class DatasetTrapManager:
                 has_answer=True,
             )
             cases.append(case)
-        
+
         return cases
-    
-    def _generate_meta_ops_cases(self, num_cases: int) -> List[TestCase]:
+
+    def _generate_meta_ops_cases(self, num_cases: int) -> list[TestCase]:
         """Generate meta-ops test cases"""
         cases = []
-        
+
         meta_questions = [
             "Explain the tool schema for the configuration system",
             "Generate an evaluation runbook for the current setup",
@@ -208,7 +208,7 @@ class DatasetTrapManager:
             "What are the tool timeout and retry policies?",
             "How do I monitor tool usage and performance?",
         ]
-        
+
         for i, question in enumerate(meta_questions[:num_cases]):
             case = TestCase(
                 id=f"meta_ops_{i+1}",
@@ -221,13 +221,13 @@ class DatasetTrapManager:
                 has_answer=True,
             )
             cases.append(case)
-        
+
         return cases
-    
-    def _generate_needle_cases(self, num_cases: int) -> List[TestCase]:
+
+    def _generate_needle_cases(self, num_cases: int) -> list[TestCase]:
         """Generate needle-in-haystack test cases"""
         cases = []
-        
+
         needle_questions = [
             "What is the exact value of the Jaccard threshold in the current configuration?",
             "What is the specific chunk size used in the enhanced chunking system?",
@@ -238,7 +238,7 @@ class DatasetTrapManager:
             "What is the exact config hash for the locked configuration?",
             "What is the specific shadow table name for the current rollout?",
         ]
-        
+
         for i, question in enumerate(needle_questions[:num_cases]):
             case = TestCase(
                 id=f"needle_{i+1}",
@@ -252,13 +252,13 @@ class DatasetTrapManager:
                 is_adversarial=True,
             )
             cases.append(case)
-        
+
         return cases
-    
-    def _generate_multi_hop_cases(self, num_cases: int) -> List[TestCase]:
+
+    def _generate_multi_hop_cases(self, num_cases: int) -> list[TestCase]:
         """Generate multi-hop reasoning test cases"""
         cases = []
-        
+
         multi_hop_questions = [
             "If the chunk size is 450 and overlap ratio is 0.10, what is the effective overlap in tokens?",
             "Given that the Jaccard threshold is 0.8 and ngram size is 5, how many similar chunks would be deduplicated?",
@@ -269,7 +269,7 @@ class DatasetTrapManager:
             "If the retrieval snapshot size is 50 and we have 12 context documents, what is the utilization rate?",
             "Given the current chunk version and config hash, what is the complete ingest run ID?",
         ]
-        
+
         for i, question in enumerate(multi_hop_questions[:num_cases]):
             case = TestCase(
                 id=f"multi_hop_{i+1}",
@@ -282,13 +282,13 @@ class DatasetTrapManager:
                 has_answer=True,
             )
             cases.append(case)
-        
+
         return cases
-    
-    def _generate_date_numeric_cases(self, num_cases: int) -> List[TestCase]:
+
+    def _generate_date_numeric_cases(self, num_cases: int) -> list[TestCase]:
         """Generate date/numeric test cases"""
         cases = []
-        
+
         date_numeric_questions = [
             "What was the configuration created on 2025-09-07?",
             "How many chunks were processed in the last ingest run?",
@@ -299,7 +299,7 @@ class DatasetTrapManager:
             "What is the maximum token count observed in the system?",
             "How many evaluation runs were performed this week?",
         ]
-        
+
         for i, question in enumerate(date_numeric_questions[:num_cases]):
             case = TestCase(
                 id=f"date_numeric_{i+1}",
@@ -312,13 +312,13 @@ class DatasetTrapManager:
                 has_answer=True,
             )
             cases.append(case)
-        
+
         return cases
-    
-    def _generate_negative_control_cases(self, num_cases: int) -> List[TestCase]:
+
+    def _generate_negative_control_cases(self, num_cases: int) -> list[TestCase]:
         """Generate negative control test cases (no answer in corpus)"""
         cases = []
-        
+
         negative_questions = [
             "What is the weather like today?",
             "How do I cook a perfect steak?",
@@ -329,7 +329,7 @@ class DatasetTrapManager:
             "What are the best restaurants in Tokyo?",
             "How do I build a rocket ship?",
         ]
-        
+
         for i, question in enumerate(negative_questions[:num_cases]):
             case = TestCase(
                 id=f"negative_control_{i+1}",
@@ -343,64 +343,64 @@ class DatasetTrapManager:
                 is_negative_control=True,
             )
             cases.append(case)
-        
+
         return cases
-    
-    def add_adversarial_placement(self, test_cases: List[TestCase]) -> List[TestCase]:
+
+    def add_adversarial_placement(self, test_cases: list[TestCase]) -> list[TestCase]:
         """Add adversarial placement to catch 'lost-in-the-middle' effects"""
         print("🎯 Adding Adversarial Placement")
         print("=" * 40)
-        
+
         # Find cases that should have middle-placed gold
         adversarial_cases = []
-        
+
         for case in test_cases:
             if case.has_answer and not case.is_negative_control:
                 # Mark some cases as adversarial (gold in middle)
                 if random.random() < 0.3:  # 30% of cases
                     case.is_adversarial = True
                     adversarial_cases.append(case)
-        
+
         print(f"✅ Marked {len(adversarial_cases)} cases as adversarial (gold in middle)")
-        
+
         return test_cases
-    
-    def validate_dataset_coverage(self) -> Dict[str, Any]:
+
+    def validate_dataset_coverage(self) -> dict[str, Any]:
         """Validate dataset coverage"""
         if not self.test_cases:
             return {"valid": False, "error": "No test cases generated"}
-        
+
         coverage = {}
         issues = []
         warnings = []
-        
+
         # Check category coverage
         for category in self.categories:
             category_cases = [case for case in self.test_cases if case.category == category]
             coverage[category] = len(category_cases)
-            
+
             if len(category_cases) == 0:
                 issues.append(f"No test cases for category: {category}")
             elif len(category_cases) < 3:
                 warnings.append(f"Low coverage for category {category}: {len(category_cases)} cases")
-        
+
         # Check difficulty distribution
         difficulty_counts = {}
         for case in self.test_cases:
             difficulty_counts[case.difficulty] = difficulty_counts.get(case.difficulty, 0) + 1
-        
+
         # Check negative controls
         negative_controls = [case for case in self.test_cases if case.is_negative_control]
         if len(negative_controls) == 0:
             issues.append("No negative control cases")
         elif len(negative_controls) < 3:
             warnings.append(f"Low negative control coverage: {len(negative_controls)} cases")
-        
+
         # Check adversarial cases
         adversarial_cases = [case for case in self.test_cases if case.is_adversarial]
         if len(adversarial_cases) == 0:
             warnings.append("No adversarial placement cases")
-        
+
         return {
             "valid": len(issues) == 0,
             "issues": issues,
@@ -411,7 +411,7 @@ class DatasetTrapManager:
             "negative_controls": len(negative_controls),
             "adversarial_cases": len(adversarial_cases),
         }
-    
+
     def save_test_cases(self, filepath: str) -> None:
         """Save test cases to file"""
         test_data = {
@@ -426,14 +426,13 @@ class DatasetTrapManager:
             "test_cases": [case.to_dict() for case in self.test_cases],
             "coverage_validation": self.validate_dataset_coverage(),
         }
-        
+
         with open(filepath, "w") as f:
             json.dump(test_data, f, indent=2)
-        
+
         print(f"📝 Test cases saved to: {filepath}")
 
 
 def create_dataset_trap_manager(config: LockedConfig) -> DatasetTrapManager:
     """Create a dataset trap manager for the given configuration"""
     return DatasetTrapManager(config)
-

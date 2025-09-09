@@ -164,7 +164,7 @@ Provide specific code examples of what's missing or could be improved.
             # Run the specific review through the RAG pipeline
             result = rag_pipeline.answer(specific_prompt)
 
-            # Extract the answer - RAGPipeline.answer() returns Dict[str, Any]
+            # Extract the answer - RAGPipeline.answer() returns dict[str, Any]
             if result is None:
                 answer = "No result"
                 context_info = ""

@@ -1,6 +1,7 @@
 # src/utils/rag_compatibility_shim.py
 import os
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
+from collections.abc import Callable
 
 # Primary retrieval path (dashboard expectation)
 try:
@@ -16,13 +17,14 @@ except Exception:
 
 FALLBACK_MODE = os.getenv("RAG_SHIM_FALLBACK", "none").lower()  # "none" | "enhanced"
 
+
 class _RAGShim:
-    def __init__(self, db_dsn: Optional[str], _legacy_url: Optional[str], model: Optional[str]):
+    def __init__(self, db_dsn: str | None, _legacy_url: str | None, model: str | None):
         self.db_dsn = db_dsn
         self.model = model or "cursor-native-ai"
         self._hybrid = None
         self._enhanced = None
-        self._embed_fn: Optional[Callable[[str], List[float]]] = None
+        self._embed_fn: Callable[[str], list[float]] | None = None
         self._enhanced_dim = 384  # EnhancedVectorStore default dimension
 
         # Primary: HybridVectorStore (expected by dashboard)
@@ -49,7 +51,7 @@ class _RAGShim:
             except Exception:
                 self._enhanced = None
 
-    def ask(self, question: str, use_cot: bool = False, use_react: bool = False) -> Dict[str, Any]:
+    def ask(self, question: str, use_cot: bool = False, use_react: bool = False) -> dict[str, Any]:
         q = (question or "").strip()
         if not q:
             return {"status": "error", "error": "Empty question."}
@@ -119,8 +121,8 @@ class _RAGShim:
 
         return False, []
 
-    def _fmt(self, res: Any) -> List[str]:
-        out: List[str] = []
+    def _fmt(self, res: Any) -> list[str]:
+        out: list[str] = []
         if isinstance(res, dict):
             items = res.get("results") or res.get("chunks") or res.get("hits") or []
             return self._fmt(items)
@@ -132,13 +134,14 @@ class _RAGShim:
                     idx = r.get("chunk_index")
                     score = r.get("similarity_score") or r.get("score")
                     label = f"doc={doc}" + (f"#{idx}" if idx is not None else "")
-                    meta = f" score={score:.3f}" if isinstance(score, (int, float)) else ""
+                    meta = f" score={score:.3f}" if isinstance(score, int | float) else ""
                     out.append((label + meta + (f" | {txt[:160]}..." if txt else "")).strip())
                 else:
                     out.append(str(r))
         return out[:5]
 
+
 def create_rag_interface(
-    db_dsn: Optional[str] = None, _legacy_url: Optional[str] = None, model: Optional[str] = None
+    db_dsn: str | None = None, _legacy_url: str | None = None, model: str | None = None
 ) -> _RAGShim:
     return _RAGShim(db_dsn, _legacy_url, model)

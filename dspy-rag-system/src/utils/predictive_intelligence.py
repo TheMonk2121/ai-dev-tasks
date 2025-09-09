@@ -12,7 +12,7 @@ import sys
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -25,7 +25,7 @@ from utils.unified_retrieval_api import UnifiedRetrievalAPI
 class PredictiveIntelligence:
     """Predictive intelligence layer for development outcomes and system optimization"""
 
-    def __init__(self, db_connection_string: str, project_root: Optional[Path] = None):
+    def __init__(self, db_connection_string: str, project_root: Path | None = None):
         """
         Initialize predictive intelligence layer.
 
@@ -46,7 +46,7 @@ class PredictiveIntelligence:
         self.trend_data = {}
         self.anomaly_thresholds = {}
 
-    def recognize_recurring_patterns(self, time_window_days: int = 30) -> Dict[str, Any]:
+    def recognize_recurring_patterns(self, time_window_days: int = 30) -> dict[str, Any]:
         """
         Implement pattern recognition for recurring issues.
 
@@ -109,7 +109,7 @@ class PredictiveIntelligence:
                 "pattern_insights": [],
             }
 
-    def analyze_trends_for_capacity_planning(self, time_window_days: int = 90) -> Dict[str, Any]:
+    def analyze_trends_for_capacity_planning(self, time_window_days: int = 90) -> dict[str, Any]:
         """
         Add trend analysis for capacity planning and optimization.
 
@@ -172,7 +172,7 @@ class PredictiveIntelligence:
                 "trend_insights": [],
             }
 
-    def detect_anomalies_for_early_warning(self, time_window_days: int = 7) -> Dict[str, Any]:
+    def detect_anomalies_for_early_warning(self, time_window_days: int = 7) -> dict[str, Any]:
         """
         Build anomaly detection for early warning systems.
 
@@ -236,7 +236,7 @@ class PredictiveIntelligence:
                 "anomaly_insights": [],
             }
 
-    def create_predictive_models(self, model_type: str = "development_outcomes") -> Dict[str, Any]:
+    def create_predictive_models(self, model_type: str = "development_outcomes") -> dict[str, Any]:
         """
         Create predictive models for development outcomes.
 
@@ -307,10 +307,10 @@ class PredictiveIntelligence:
 
     def store_in_ltst_memory(
         self,
-        pattern_data: Dict[str, Any],
-        trend_data: Dict[str, Any],
-        anomaly_data: Dict[str, Any],
-        model_data: Dict[str, Any],
+        pattern_data: dict[str, Any],
+        trend_data: dict[str, Any],
+        anomaly_data: dict[str, Any],
+        model_data: dict[str, Any],
     ) -> bool:
         """
         Store predictive intelligence data in LTST memory system.
@@ -398,7 +398,7 @@ class PredictiveIntelligence:
             print(f"Error storing in LTST memory: {e}")
             return False
 
-    def _analyze_decision_patterns(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _analyze_decision_patterns(self, decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Analyze patterns in decision data"""
         patterns = []
 
@@ -423,7 +423,7 @@ class PredictiveIntelligence:
 
         return patterns
 
-    def _identify_recurring_issues(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _identify_recurring_issues(self, decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Identify recurring issues from decision data"""
         recurring_issues = []
 
@@ -461,7 +461,7 @@ class PredictiveIntelligence:
 
         return recurring_issues
 
-    def _analyze_workflow_patterns(self) -> List[Dict[str, Any]]:
+    def _analyze_workflow_patterns(self) -> list[dict[str, Any]]:
         """Analyze workflow execution patterns"""
         patterns = []
 
@@ -479,7 +479,7 @@ class PredictiveIntelligence:
 
         return patterns
 
-    def _analyze_error_patterns(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _analyze_error_patterns(self, decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Analyze error patterns from decisions"""
         error_patterns = []
 
@@ -500,7 +500,7 @@ class PredictiveIntelligence:
 
         return error_patterns
 
-    def _generate_pattern_insights(self, pattern_data: Dict[str, Any]) -> List[str]:
+    def _generate_pattern_insights(self, pattern_data: dict[str, Any]) -> list[str]:
         """Generate insights from pattern analysis"""
         insights = []
 
@@ -519,7 +519,7 @@ class PredictiveIntelligence:
 
         return insights
 
-    def _analyze_development_trends(self, decisions: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_development_trends(self, decisions: list[dict[str, Any]]) -> dict[str, Any]:
         """Analyze development trends over time"""
         trends = {"decision_volume": {}, "decision_types": {}, "quality_metrics": {}}
 
@@ -541,7 +541,7 @@ class PredictiveIntelligence:
 
         return trends
 
-    def _calculate_capacity_metrics(self, decisions: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _calculate_capacity_metrics(self, decisions: list[dict[str, Any]]) -> dict[str, Any]:
         """Calculate capacity planning metrics"""
         metrics = {"decision_processing_capacity": 0, "system_load": 0, "bottlenecks": []}
 
@@ -555,7 +555,7 @@ class PredictiveIntelligence:
 
         return metrics
 
-    def _identify_optimization_opportunities(self, trend_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _identify_optimization_opportunities(self, trend_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Identify optimization opportunities from trend data"""
         opportunities = []
 
@@ -585,7 +585,7 @@ class PredictiveIntelligence:
 
         return opportunities
 
-    def _generate_forecast_data(self, trend_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _generate_forecast_data(self, trend_data: dict[str, Any]) -> dict[str, Any]:
         """Generate forecast data based on trends"""
         forecast = {"predicted_decision_volume": 0, "capacity_requirements": {}, "forecast_confidence": "medium"}
 
@@ -603,7 +603,7 @@ class PredictiveIntelligence:
 
         return forecast
 
-    def _generate_trend_insights(self, trend_data: Dict[str, Any]) -> List[str]:
+    def _generate_trend_insights(self, trend_data: dict[str, Any]) -> list[str]:
         """Generate insights from trend analysis"""
         insights = []
 
@@ -623,7 +623,7 @@ class PredictiveIntelligence:
 
         return insights
 
-    def _detect_decision_anomalies(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _detect_decision_anomalies(self, decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Detect anomalies in decision patterns"""
         anomalies = []
 
@@ -644,7 +644,7 @@ class PredictiveIntelligence:
 
         return anomalies
 
-    def _detect_workflow_anomalies(self) -> List[Dict[str, Any]]:
+    def _detect_workflow_anomalies(self) -> list[dict[str, Any]]:
         """Detect anomalies in workflow patterns"""
         anomalies = []
 
@@ -661,7 +661,7 @@ class PredictiveIntelligence:
 
         return anomalies
 
-    def _detect_error_anomalies(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _detect_error_anomalies(self, decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Detect anomalies in error patterns"""
         anomalies = []
 
@@ -680,7 +680,7 @@ class PredictiveIntelligence:
 
         return anomalies
 
-    def _generate_warning_alerts(self, anomalies: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _generate_warning_alerts(self, anomalies: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Generate warning alerts from anomalies"""
         alerts = []
 
@@ -706,7 +706,7 @@ class PredictiveIntelligence:
 
         return alerts
 
-    def _analyze_anomaly_patterns(self, anomalies: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_anomaly_patterns(self, anomalies: list[dict[str, Any]]) -> dict[str, Any]:
         """Analyze patterns in detected anomalies"""
         patterns = {
             "anomaly_types": defaultdict(int),
@@ -723,7 +723,7 @@ class PredictiveIntelligence:
 
         return patterns
 
-    def _generate_anomaly_insights(self, anomaly_data: Dict[str, Any]) -> List[str]:
+    def _generate_anomaly_insights(self, anomaly_data: dict[str, Any]) -> list[str]:
         """Generate insights from anomaly detection"""
         insights = []
 
@@ -740,7 +740,7 @@ class PredictiveIntelligence:
 
         return insights
 
-    def _predict_development_outcomes(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _predict_development_outcomes(self, decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Predict development outcomes based on historical data"""
         predictions = []
 
@@ -769,7 +769,7 @@ class PredictiveIntelligence:
 
         return predictions
 
-    def _predict_capacity_needs(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _predict_capacity_needs(self, decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Predict capacity needs based on historical data"""
         predictions = []
 
@@ -786,7 +786,7 @@ class PredictiveIntelligence:
 
         return predictions
 
-    def _predict_risks(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _predict_risks(self, decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Predict risks based on historical data"""
         predictions = []
 
@@ -815,7 +815,7 @@ class PredictiveIntelligence:
 
         return predictions
 
-    def _calculate_model_performance(self, predictions: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _calculate_model_performance(self, predictions: list[dict[str, Any]]) -> dict[str, Any]:
         """Calculate performance metrics for predictive models"""
         performance = {"accuracy": 0.0, "precision": 0.0, "recall": 0.0, "f1_score": 0.0}
 
@@ -828,7 +828,7 @@ class PredictiveIntelligence:
 
         return performance
 
-    def _calculate_confidence_scores(self, predictions: List[Dict[str, Any]]) -> Dict[str, float]:
+    def _calculate_confidence_scores(self, predictions: list[dict[str, Any]]) -> dict[str, float]:
         """Calculate confidence scores for predictions"""
         confidence_scores = {}
 
@@ -839,7 +839,7 @@ class PredictiveIntelligence:
 
         return confidence_scores
 
-    def _generate_model_insights(self, model_data: Dict[str, Any]) -> List[str]:
+    def _generate_model_insights(self, model_data: dict[str, Any]) -> list[str]:
         """Generate insights from predictive models"""
         insights = []
 
@@ -855,7 +855,7 @@ class PredictiveIntelligence:
 
         return insights
 
-    def _calculate_time_span(self, decisions: List[Dict[str, Any]]) -> str:
+    def _calculate_time_span(self, decisions: list[dict[str, Any]]) -> str:
         """Calculate time span for a list of decisions"""
         if not decisions:
             return "unknown"

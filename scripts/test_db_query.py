@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Test database query for reader gold generation."""
 
-from typing import Any, Dict
+from typing import Any
 
 import psycopg2
 from psycopg2.extras import RealDictCursor

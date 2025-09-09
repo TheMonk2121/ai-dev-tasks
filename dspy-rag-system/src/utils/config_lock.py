@@ -13,7 +13,7 @@ import os
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 
 @dataclass
@@ -35,19 +35,19 @@ class LockedConfig:
     # Metadata
     created_at: str
     created_by: str
-    baseline_metrics: Dict[str, Any]
+    baseline_metrics: dict[str, Any]
 
     # Production flags
     is_locked: bool = True
     is_production: bool = False
-    shadow_table: Optional[str] = None
+    shadow_table: str | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for storage"""
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "LockedConfig":
+    def from_dict(cls, data: dict[str, Any]) -> "LockedConfig":
         """Create from dictionary"""
         return cls(**data)
 
@@ -80,7 +80,7 @@ class ConfigLockManager:
         jaccard_threshold: float = 0.8,
         prefix_policy: str = "A",
         embedder_name: str = "BAAI/bge-large-en-v1.5",
-        baseline_metrics: Optional[Dict[str, Any]] = None,
+        baseline_metrics: dict[str, Any] | None = None,
     ) -> LockedConfig:
         """Create a new locked configuration"""
 
@@ -127,13 +127,13 @@ class ConfigLockManager:
         print(f"   Prefix policy: {config.prefix_policy}")
         print(f"   Embedder: {config.embedder_name}")
 
-    def get_active_config(self) -> Optional[LockedConfig]:
+    def get_active_config(self) -> LockedConfig | None:
         """Get the currently active locked configuration"""
         if not self.lock_file.exists():
             return None
 
         try:
-            with open(self.lock_file, "r") as f:
+            with open(self.lock_file) as f:
                 data = json.load(f)
             return LockedConfig.from_dict(data)
         except Exception as e:
@@ -152,7 +152,7 @@ class ConfigLockManager:
         print(f"🚀 Configuration promoted to production: {config.chunk_version}")
         print(f"   Shadow table: {config.shadow_table}")
 
-    def _get_tokenizer_info(self, embedder_name: str) -> Tuple[str, str]:
+    def _get_tokenizer_info(self, embedder_name: str) -> tuple[str, str]:
         """Get tokenizer name and hash for embedder"""
         try:
             from transformers import AutoTokenizer
@@ -200,7 +200,7 @@ class ProductionGuardrails:
         self.metrics_file = Path("metrics/production_guardrails.json")
         self.metrics_file.parent.mkdir(parents=True, exist_ok=True)
 
-    def validate_config(self) -> Dict[str, Any]:
+    def validate_config(self) -> dict[str, Any]:
         """Validate configuration against production requirements"""
         issues = []
         warnings = []
@@ -226,7 +226,7 @@ class ProductionGuardrails:
             "config_hash": self.config.get_config_hash(),
         }
 
-    def check_retrieval_health(self, retrieval_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def check_retrieval_health(self, retrieval_results: list[dict[str, Any]]) -> dict[str, Any]:
         """Check retrieval health metrics"""
         if not retrieval_results:
             return {"healthy": False, "error": "No retrieval results"}
@@ -250,7 +250,7 @@ class ProductionGuardrails:
             "total_results": len(retrieval_results),
         }
 
-    def save_metrics(self, metrics: Dict[str, Any]) -> None:
+    def save_metrics(self, metrics: dict[str, Any]) -> None:
         """Save production metrics"""
         data = {
             "timestamp": datetime.now().isoformat(),
@@ -352,7 +352,7 @@ def create_production_config(
     jaccard_threshold: float = 0.8,
     prefix_policy: str = "A",
     embedder_name: str = "BAAI/bge-large-en-v1.5",
-    baseline_metrics: Optional[Dict[str, Any]] = None,
+    baseline_metrics: dict[str, Any] | None = None,
 ) -> LockedConfig:
     """Create and lock a production configuration"""
 

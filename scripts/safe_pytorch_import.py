@@ -9,7 +9,7 @@ functions before PyTorch imports.
 
 import inspect
 import sys
-from typing import Any, Optional
+from typing import Any
 
 
 def patch_inspect_for_pytorch():

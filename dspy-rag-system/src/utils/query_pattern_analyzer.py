@@ -11,7 +11,7 @@ import os
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
@@ -29,9 +29,7 @@ logger = setup_logger(__name__)
 class QueryPatternAnalyzer:
     """Analyzes query patterns and builds knowledge graph relationships."""
 
-    def __init__(
-        self, conversation_storage: Optional[ConversationStorage] = None, model_name: str = "all-MiniLM-L6-v2"
-    ):
+    def __init__(self, conversation_storage: ConversationStorage | None = None, model_name: str = "all-MiniLM-L6-v2"):
         """Initialize the query pattern analyzer.
 
         Args:
@@ -47,7 +45,7 @@ class QueryPatternAnalyzer:
         self.sequence_min_length = 3
         self.recurring_min_count = 2
 
-    def analyze_query_sequence(self, user_id: str, time_window: int = 30) -> Dict[str, Any]:
+    def analyze_query_sequence(self, user_id: str, time_window: int = 30) -> dict[str, Any]:
         """Analyze patterns in user's query sequences.
 
         Args:
@@ -93,7 +91,7 @@ class QueryPatternAnalyzer:
             logger.error(f"Error analyzing query sequence for user {user_id}: {e}")
             return self._empty_pattern_result()
 
-    def _get_recent_queries(self, user_id: str, days: int) -> List[Dict[str, Any]]:
+    def _get_recent_queries(self, user_id: str, days: int) -> list[dict[str, Any]]:
         """Get recent queries for a user."""
         try:
             since_date = (datetime.now() - timedelta(days=days)).isoformat()
@@ -128,7 +126,7 @@ class QueryPatternAnalyzer:
             logger.error(f"Error getting recent queries for user {user_id}: {e}")
             return []
 
-    def _detect_topic_evolution(self, queries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _detect_topic_evolution(self, queries: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Detect how topics evolve over the conversation."""
         if len(queries) < 3:
             return []
@@ -161,7 +159,7 @@ class QueryPatternAnalyzer:
 
         return evolutions
 
-    def _detect_recurring_themes(self, queries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _detect_recurring_themes(self, queries: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Detect recurring themes in user queries."""
         if len(queries) < self.recurring_min_count:
             return []
@@ -213,7 +211,7 @@ class QueryPatternAnalyzer:
 
         return themes
 
-    def _detect_question_sequences(self, queries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _detect_question_sequences(self, queries: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Detect common question sequences and progressions."""
         if len(queries) < self.sequence_min_length:
             return []
@@ -265,7 +263,7 @@ class QueryPatternAnalyzer:
 
         return sequences
 
-    def _detect_context_shifts(self, queries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _detect_context_shifts(self, queries: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Detect significant context shifts in conversations."""
         if len(queries) < 2:
             return []
@@ -295,7 +293,7 @@ class QueryPatternAnalyzer:
 
         return shifts
 
-    def _analyze_intention_patterns(self, queries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _analyze_intention_patterns(self, queries: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Analyze patterns in user intentions."""
         intention_patterns = []
 
@@ -350,7 +348,7 @@ class QueryPatternAnalyzer:
 
         return intention_patterns
 
-    def _analyze_temporal_patterns(self, queries: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_temporal_patterns(self, queries: list[dict[str, Any]]) -> dict[str, Any]:
         """Analyze temporal patterns in user queries."""
         if len(queries) < 2:
             return {}
@@ -380,7 +378,7 @@ class QueryPatternAnalyzer:
             "consistency_score": self._calculate_temporal_consistency(intervals),
         }
 
-    def _store_patterns(self, user_id: str, patterns: Dict[str, Any]) -> None:
+    def _store_patterns(self, user_id: str, patterns: dict[str, Any]) -> None:
         """Store detected patterns in the database."""
         try:
             # Store query patterns
@@ -394,7 +392,7 @@ class QueryPatternAnalyzer:
         except Exception as e:
             logger.error(f"Error storing patterns for user {user_id}: {e}")
 
-    def _store_pattern(self, user_id: str, pattern_type: str, pattern: Dict[str, Any]) -> None:
+    def _store_pattern(self, user_id: str, pattern_type: str, pattern: dict[str, Any]) -> None:
         """Store a single pattern in the database."""
         try:
             # Generate pattern signature and embedding
@@ -437,7 +435,7 @@ class QueryPatternAnalyzer:
             logger.error(f"Error storing pattern: {e}")
 
     # Helper methods
-    def _empty_pattern_result(self) -> Dict[str, Any]:
+    def _empty_pattern_result(self) -> dict[str, Any]:
         """Return empty pattern result structure."""
         return {
             "topic_evolution": [],
@@ -449,7 +447,7 @@ class QueryPatternAnalyzer:
             "analysis_metadata": {"error": "Insufficient data for analysis"},
         }
 
-    def _generate_embedding(self, text: str) -> List[float]:
+    def _generate_embedding(self, text: str) -> list[float]:
         """Generate embedding for text."""
         try:
             embedding = self.model.encode([text])[0]
@@ -458,7 +456,7 @@ class QueryPatternAnalyzer:
             logger.error(f"Error generating embedding: {e}")
             return [0.0] * 384  # Return zero vector as fallback
 
-    def _cosine_similarity(self, embedding1: List[float], embedding2: List[float]) -> float:
+    def _cosine_similarity(self, embedding1: list[float], embedding2: list[float]) -> float:
         """Calculate cosine similarity between two embeddings."""
         try:
             vec1 = np.array(embedding1)
@@ -467,7 +465,7 @@ class QueryPatternAnalyzer:
         except Exception:
             return 0.0
 
-    def _classify_evolution_type(self, window: List[Dict[str, Any]], drift_scores: List[float]) -> str:
+    def _classify_evolution_type(self, window: list[dict[str, Any]], drift_scores: list[float]) -> str:
         """Classify the type of topic evolution."""
         avg_drift = np.mean(drift_scores)
 
@@ -480,7 +478,7 @@ class QueryPatternAnalyzer:
         else:
             return "continuation"
 
-    def _generate_theme_signature(self, queries: List[Dict[str, Any]]) -> str:
+    def _generate_theme_signature(self, queries: list[dict[str, Any]]) -> str:
         """Generate a signature for a recurring theme."""
         contents = [q["content"] for q in queries]
         combined_text = " ".join(contents)
@@ -492,7 +490,7 @@ class QueryPatternAnalyzer:
 
         return " ".join(common_words)
 
-    def _calculate_group_coherence(self, embeddings: List[List[float]]) -> float:
+    def _calculate_group_coherence(self, embeddings: list[list[float]]) -> float:
         """Calculate coherence score for a group of embeddings."""
         if len(embeddings) < 2:
             return 1.0
@@ -505,7 +503,7 @@ class QueryPatternAnalyzer:
 
         return np.mean(similarities) if similarities else 0.0
 
-    def _analyze_recurrence_pattern(self, timestamps: List[datetime]) -> Dict[str, Any]:
+    def _analyze_recurrence_pattern(self, timestamps: list[datetime]) -> dict[str, Any]:
         """Analyze the recurrence pattern of timestamps."""
         if len(timestamps) < 2:
             return {"pattern": "single_occurrence"}
@@ -534,7 +532,7 @@ class QueryPatternAnalyzer:
             "total_occurrences": len(timestamps),
         }
 
-    def _classify_sequence_type(self, queries: List[Dict[str, Any]]) -> str:
+    def _classify_sequence_type(self, queries: list[dict[str, Any]]) -> str:
         """Classify the type of question sequence."""
         # Simple heuristic based on content analysis
         contents = [q["content"].lower() for q in queries]
@@ -549,7 +547,7 @@ class QueryPatternAnalyzer:
         else:
             return "general_sequence"
 
-    def _analyze_progression_pattern(self, queries: List[Dict[str, Any]]) -> str:
+    def _analyze_progression_pattern(self, queries: list[dict[str, Any]]) -> str:
         """Analyze how queries progress in a sequence."""
         # Simplified analysis of query complexity or specificity
         word_counts = [len(q["content"].split()) for q in queries]
@@ -590,7 +588,7 @@ class QueryPatternAnalyzer:
         else:
             return "general"
 
-    def _detect_burst_periods(self, timestamps: List[datetime]) -> List[Dict[str, Any]]:
+    def _detect_burst_periods(self, timestamps: list[datetime]) -> list[dict[str, Any]]:
         """Detect periods of high query activity."""
         if len(timestamps) < 3:
             return []
@@ -609,7 +607,7 @@ class QueryPatternAnalyzer:
 
         return sorted(bursts, key=lambda x: x["query_count"], reverse=True)
 
-    def _calculate_temporal_consistency(self, intervals: List[float]) -> float:
+    def _calculate_temporal_consistency(self, intervals: list[float]) -> float:
         """Calculate how consistent the user's query timing is."""
         if not intervals:
             return 0.0
@@ -627,7 +625,7 @@ class QueryPatternAnalyzer:
 
         return min(1.0, consistency)
 
-    def _calculate_pattern_strength(self, pattern_type: str, pattern: Dict[str, Any]) -> float:
+    def _calculate_pattern_strength(self, pattern_type: str, pattern: dict[str, Any]) -> float:
         """Calculate strength score for a pattern."""
         if pattern_type == "recurring_themes":
             return pattern.get("coherence_score", 0.0)

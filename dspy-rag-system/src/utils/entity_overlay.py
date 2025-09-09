@@ -13,7 +13,7 @@ from __future__ import annotations
 import re
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -26,17 +26,19 @@ class Entity:
     start_pos: int
     end_pos: int
 
+
 @dataclass
 class ExpansionResult:
     """Result of entity expansion operation."""
 
-    entities: List[Entity]
-    expanded_chunks: List[Dict[str, Any]]
+    entities: list[Entity]
+    expanded_chunks: list[dict[str, Any]]
     expansion_latency_ms: float
     k_related: int
     stability_threshold: float
 
-def extract_entities_from_query(query: str) -> List[Entity]:
+
+def extract_entities_from_query(query: str) -> list[Entity]:
     """
     Extract entities from query text using pattern matching and heuristics.
 
@@ -121,7 +123,8 @@ def extract_entities_from_query(query: str) -> List[Entity]:
 
     return entities
 
-def _deduplicate_entities(entities: List[Entity]) -> List[Entity]:
+
+def _deduplicate_entities(entities: list[Entity]) -> list[Entity]:
     """
     Remove overlapping entities, keeping the highest confidence ones.
 
@@ -151,6 +154,7 @@ def _deduplicate_entities(entities: List[Entity]) -> List[Entity]:
 
     return deduplicated
 
+
 def calculate_adaptive_k_related(base_k: int, entity_count: int) -> int:
     """
     Calculate adaptive k_related based on entity count.
@@ -167,9 +171,10 @@ def calculate_adaptive_k_related(base_k: int, entity_count: int) -> int:
     adaptive_k = min(8, base_k + entity_count * 2)
     return max(1, adaptive_k)  # Ensure minimum of 1
 
+
 def fetch_entity_adjacent_chunks(
-    entities: List[Entity], k_per_entity: int = 2, stability_threshold: float = 0.7, db_dsn: Optional[str] = None
-) -> List[Dict[str, Any]]:
+    entities: list[Entity], k_per_entity: int = 2, stability_threshold: float = 0.7, db_dsn: str | None = None
+) -> list[dict[str, Any]]:
     """
     Fetch chunks that are semantically related to the extracted entities.
 
@@ -227,13 +232,14 @@ def fetch_entity_adjacent_chunks(
 
     return related_chunks
 
+
 def populate_related_entities(
-    base_chunks: List[Dict[str, Any]],
-    entities: List[Entity],
+    base_chunks: list[dict[str, Any]],
+    entities: list[Entity],
     k_related: int,
     stability_threshold: float = 0.7,
-    db_dsn: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    db_dsn: str | None = None,
+) -> list[dict[str, Any]]:
     """
     Populate base chunks with entity-related chunks.
 
@@ -282,7 +288,8 @@ def populate_related_entities(
 
     return combined_chunks
 
-def extract_entities_from_chunks(chunks: List[Dict[str, Any]]) -> List[Entity]:
+
+def extract_entities_from_chunks(chunks: list[dict[str, Any]]) -> list[Entity]:
     """
     Extract entities from chunk text for analysis.
 
@@ -303,9 +310,10 @@ def extract_entities_from_chunks(chunks: List[Dict[str, Any]]) -> List[Entity]:
     # Deduplicate across all chunks
     return _deduplicate_entities(all_entities)
 
+
 def validate_entity_expansion(
-    base_chunks: List[Dict[str, Any]], expanded_chunks: List[Dict[str, Any]], entities: List[Entity]
-) -> Dict[str, Any]:
+    base_chunks: list[dict[str, Any]], expanded_chunks: list[dict[str, Any]], entities: list[Entity]
+) -> dict[str, Any]:
     """
     Validate entity expansion results.
 

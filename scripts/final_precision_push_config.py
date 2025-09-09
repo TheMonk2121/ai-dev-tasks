@@ -4,7 +4,7 @@ Final Precision Push Configuration
 Aggressive precision tightening to achieve P ≥ 0.135 target with minimal recall loss.
 """
 
-from typing import Any, Dict
+from typing import Any
 
 from precision_lift_pack_config import PrecisionLiftPackConfig
 

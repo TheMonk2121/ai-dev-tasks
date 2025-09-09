@@ -18,6 +18,7 @@ from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
+
 class VectorEnhancementMigration:
     """Handles the vector database enhancement migration"""
 
@@ -58,7 +59,7 @@ class VectorEnhancementMigration:
     def backup_existing_data(self) -> bool:
         """Create backup of existing data before migration"""
         try:
-            backup_tables = ['document_chunks', 'documents']
+            backup_tables = ["document_chunks", "documents"]
             backup_data = {}
 
             with psycopg2.connect(self.db_connection_string) as conn:
@@ -88,16 +89,16 @@ class VectorEnhancementMigration:
         """Apply the vector enhancement migration"""
         try:
             # Read migration SQL
-            with open(self.migration_file, 'r') as f:
+            with open(self.migration_file) as f:
                 migration_sql = f.read()
 
             # Split into individual statements
-            statements = [stmt.strip() for stmt in migration_sql.split(';') if stmt.strip()]
+            statements = [stmt.strip() for stmt in migration_sql.split(";") if stmt.strip()]
 
             with psycopg2.connect(self.db_connection_string) as conn:
                 with conn.cursor() as cursor:
                     for i, statement in enumerate(statements):
-                        if statement.startswith('--') or not statement:
+                        if statement.startswith("--") or not statement:
                             continue
 
                         try:
@@ -128,8 +129,14 @@ class VectorEnhancementMigration:
                 ("vector_performance_metrics", "SELECT COUNT(*) FROM vector_performance_metrics"),
                 ("vector_cache", "SELECT COUNT(*) FROM vector_cache"),
                 ("vector_health_checks", "SELECT COUNT(*) FROM vector_health_checks"),
-                ("hnsw_index", "SELECT indexname FROM pg_indexes WHERE indexname = 'idx_document_chunks_embedding_hnsw'"),
-                ("functions", "SELECT routine_name FROM information_schema.routines WHERE routine_name LIKE 'update_vector_index_stats'"),
+                (
+                    "hnsw_index",
+                    "SELECT indexname FROM pg_indexes WHERE indexname = 'idx_document_chunks_embedding_hnsw'",
+                ),
+                (
+                    "functions",
+                    "SELECT routine_name FROM information_schema.routines WHERE routine_name LIKE 'update_vector_index_stats'",
+                ),
             ]
 
             with psycopg2.connect(self.db_connection_string) as conn:
@@ -213,7 +220,7 @@ class VectorEnhancementMigration:
 
             with psycopg2.connect(self.db_connection_string) as conn:
                 with conn.cursor() as cursor:
-                    for statement in rollback_sql.split(';'):
+                    for statement in rollback_sql.split(";"):
                         if statement.strip():
                             cursor.execute(statement)
                     conn.commit()
@@ -258,10 +265,11 @@ class VectorEnhancementMigration:
         logger.info("Vector Database Enhancement Migration completed successfully")
         return True
 
+
 def main():
     """Main entry point"""
     # Get database connection string from environment
-    db_connection_string = os.getenv('POSTGRES_DSN')
+    db_connection_string = os.getenv("POSTGRES_DSN")
     if not db_connection_string:
         logger.error("POSTGRES_DSN environment variable not set")
         sys.exit(1)
@@ -276,6 +284,7 @@ def main():
     else:
         logger.error("Migration failed")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

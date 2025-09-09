@@ -7,7 +7,7 @@ and the PostgreSQL functions for context merging and memory rehydration.
 
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from psycopg2.extras import RealDictCursor
 
@@ -25,7 +25,7 @@ class DatabaseMergeResult:
     source_context_count: int
     avg_relevance: float
     merge_quality_score: float
-    context_types: List[str]
+    context_types: list[str]
 
 
 @dataclass
@@ -46,7 +46,7 @@ class DatabaseRehydrationResult:
 class LTSTDatabaseIntegration:
     """Integration layer for PostgreSQL LTST functions."""
 
-    def __init__(self, db_manager: Optional[DatabaseResilienceManager] = None):
+    def __init__(self, db_manager: DatabaseResilienceManager | None = None):
         """Initialize database integration."""
         if db_manager is None:
             import os
@@ -176,7 +176,7 @@ class LTSTDatabaseIntegration:
             logger.error(f"Error in database memory rehydration: {e}")
             raise
 
-    def get_session_continuity(self, session_id: str, continuity_window_hours: int = 24) -> Dict[str, Any]:
+    def get_session_continuity(self, session_id: str, continuity_window_hours: int = 24) -> dict[str, Any]:
         """
         Get session continuity information.
 
@@ -215,7 +215,7 @@ class LTSTDatabaseIntegration:
             logger.error(f"Error getting session continuity: {e}")
             raise
 
-    def get_context_statistics(self, session_id: Optional[str] = None) -> Dict[str, Any]:
+    def get_context_statistics(self, session_id: str | None = None) -> dict[str, Any]:
         """
         Get context merging statistics.
 
@@ -253,7 +253,7 @@ class LTSTDatabaseIntegration:
             logger.error(f"Error getting context statistics: {e}")
             raise
 
-    def get_rehydration_statistics(self, session_id: Optional[str] = None) -> Dict[str, Any]:
+    def get_rehydration_statistics(self, session_id: str | None = None) -> dict[str, Any]:
         """
         Get memory rehydration statistics.
 
@@ -292,7 +292,7 @@ class LTSTDatabaseIntegration:
             logger.error(f"Error getting rehydration statistics: {e}")
             raise
 
-    def optimize_caches(self) -> Dict[str, Any]:
+    def optimize_caches(self) -> dict[str, Any]:
         """
         Optimize both context and rehydration caches.
 
@@ -319,7 +319,7 @@ class LTSTDatabaseIntegration:
             logger.error(f"Error optimizing caches: {e}")
             raise
 
-    def test_database_functions(self) -> Dict[str, bool]:
+    def test_database_functions(self) -> dict[str, bool]:
         """
         Test all database functions.
 

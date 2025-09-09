@@ -1,0 +1,32 @@
+name: Ruff Pyupgrade Guard
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: ["main"]
+
+jobs:
+  pyupgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: pipx install uv
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Run ruff pyupgrade checks
+        run: |
+          # Limit scope to active code; exclude vendored/venv dirs
+          uv run ruff check \
+            --select UP007,UP035,UP031,UP028 \
+            scripts src dspy-rag-system tests evals 300_evals evals_300 300_experiments config
+

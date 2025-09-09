@@ -15,7 +15,7 @@ Based on:
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 from .logger import get_logger
 
@@ -28,8 +28,8 @@ class CritiqueResult:
 
     is_sufficient: bool
     confidence_score: float  # 0.0-1.0
-    missing_context: List[str]
-    suggestions: List[str]
+    missing_context: list[str]
+    suggestions: list[str]
     critique_text: str
     verification_passed: bool
 
@@ -109,7 +109,7 @@ Focus on:
                 verification_passed=False,
             )
 
-    def _extract_echo_verification(self, bundle_text: str) -> Dict[str, Any]:
+    def _extract_echo_verification(self, bundle_text: str) -> dict[str, Any]:
         """Extract echo verification from bundle text"""
         try:
             # Find echo verification section
@@ -141,7 +141,7 @@ Focus on:
             return {}
 
     def _simulate_critique(
-        self, bundle_text: str, task: str, role: str, echo_verification: Dict[str, Any]
+        self, bundle_text: str, task: str, role: str, echo_verification: dict[str, Any]
     ) -> CritiqueResult:
         """Simulate critique for testing (replace with actual LLM call)"""
 

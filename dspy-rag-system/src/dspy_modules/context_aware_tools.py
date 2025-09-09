@@ -10,7 +10,8 @@ import time
 import traceback
 import uuid
 from datetime import datetime
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
+from collections.abc import Callable
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -29,11 +30,11 @@ class ToolExecutionContext(BaseModel):
 
     execution_id: str = Field(..., description="Unique execution identifier")
     tool_name: str = Field(..., description="Name of the tool being executed")
-    user_context: Optional[PromptContext] = Field(None, description="User context for the execution")
-    role_context: Optional[BaseContext] = Field(None, description="Role-specific context")
+    user_context: PromptContext | None = Field(None, description="User context for the execution")
+    role_context: BaseContext | None = Field(None, description="Role-specific context")
     execution_timestamp: datetime = Field(default_factory=datetime.now, description="Execution timestamp")
-    parameters: Dict[str, Any] = Field(default_factory=dict, description="Tool execution parameters")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+    parameters: dict[str, Any] = Field(default_factory=dict, description="Tool execution parameters")
+    metadata: dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
 
     @field_validator("execution_id")
     @classmethod
@@ -59,10 +60,10 @@ class ToolExecutionResult(BaseModel):
     success: bool = Field(..., description="Whether execution was successful")
     result: Any = Field(..., description="Tool execution result")
     execution_time: float = Field(..., description="Execution time in seconds")
-    error_message: Optional[str] = Field(None, description="Error message if failed")
-    context_adaptations: List[str] = Field(default_factory=list, description="Context adaptations applied")
-    mlflow_run_id: Optional[str] = Field(None, description="MLflow run ID if tracking enabled")
-    debugging_info: Dict[str, Any] = Field(default_factory=dict, description="Debugging information")
+    error_message: str | None = Field(None, description="Error message if failed")
+    context_adaptations: list[str] = Field(default_factory=list, description="Context adaptations applied")
+    mlflow_run_id: str | None = Field(None, description="MLflow run ID if tracking enabled")
+    debugging_info: dict[str, Any] = Field(default_factory=dict, description="Debugging information")
 
     @field_validator("execution_time")
     @classmethod
@@ -78,7 +79,7 @@ class MLflowIntegration(BaseModel):
 
     enabled: bool = Field(default=True, description="Whether MLflow tracking is enabled")
     experiment_name: str = Field(default="dspy-tools", description="MLflow experiment name")
-    tracking_uri: Optional[str] = Field(None, description="MLflow tracking URI")
+    tracking_uri: str | None = Field(None, description="MLflow tracking URI")
     log_parameters: bool = Field(default=True, description="Whether to log parameters")
     log_metrics: bool = Field(default=True, description="Whether to log metrics")
     log_artifacts: bool = Field(default=False, description="Whether to log artifacts")
@@ -101,8 +102,8 @@ class ContextAwareToolDecorator:
     def __init__(
         self,
         tool_name: str,
-        mlflow_config: Optional[MLflowIntegration] = None,
-        preference_manager: Optional[UserPreferenceManager] = None,
+        mlflow_config: MLflowIntegration | None = None,
+        preference_manager: UserPreferenceManager | None = None,
         enable_debugging: bool = True,
     ):
         """Initialize context-aware tool decorator"""
@@ -194,7 +195,7 @@ class ContextAwareToolDecorator:
 
         return wrapper
 
-    def _extract_context(self, args: tuple, kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_context(self, args: tuple, kwargs: dict[str, Any]) -> dict[str, Any]:
         """Extract context from function arguments"""
         context = {}
 
@@ -218,13 +219,13 @@ class ContextAwareToolDecorator:
 
         return context
 
-    def _extract_parameters(self, args: tuple, kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_parameters(self, args: tuple, kwargs: dict[str, Any]) -> dict[str, Any]:
         """Extract tool parameters from arguments"""
         parameters = {}
 
         # Add positional arguments
         for i, arg in enumerate(args):
-            if not isinstance(arg, (PromptContext, BaseContext)):
+            if not isinstance(arg, PromptContext | BaseContext):
                 parameters[f"arg_{i}"] = str(arg)
 
         # Add keyword arguments
@@ -234,7 +235,7 @@ class ContextAwareToolDecorator:
 
         return parameters
 
-    def _extract_metadata(self, context: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_metadata(self, context: dict[str, Any]) -> dict[str, Any]:
         """Extract metadata from context"""
         metadata = {}
 
@@ -247,7 +248,7 @@ class ContextAwareToolDecorator:
 
         return metadata
 
-    def _start_mlflow_run(self, exec_context: ToolExecutionContext) -> Optional[str]:
+    def _start_mlflow_run(self, exec_context: ToolExecutionContext) -> str | None:
         """Start MLflow run for tracking"""
         try:
             # Try to import mlflow, but handle gracefully if not available
@@ -277,7 +278,7 @@ class ContextAwareToolDecorator:
             _LOG.error(f"Failed to start MLflow run: {e}")
             return None
 
-    def _adapt_arguments(self, args: tuple, kwargs: Dict[str, Any], context: Dict[str, Any]) -> tuple:
+    def _adapt_arguments(self, args: tuple, kwargs: dict[str, Any], context: dict[str, Any]) -> tuple:
         """Adapt arguments based on context"""
         adapted_args = list(args)
         adapted_kwargs = kwargs.copy()
@@ -298,7 +299,7 @@ class ContextAwareToolDecorator:
 
         return tuple(adapted_args), adapted_kwargs
 
-    def _adapt_response(self, result: Any, context: Dict[str, Any]) -> Any:
+    def _adapt_response(self, result: Any, context: dict[str, Any]) -> Any:
         """Adapt response based on context"""
         if not context.get("user_context"):
             return result
@@ -321,7 +322,7 @@ class ContextAwareToolDecorator:
 
         return result
 
-    def _get_context_adaptations(self, context: Dict[str, Any]) -> List[str]:
+    def _get_context_adaptations(self, context: dict[str, Any]) -> list[str]:
         """Get list of context adaptations applied"""
         adaptations = []
 
@@ -338,7 +339,7 @@ class ContextAwareToolDecorator:
 
     def _capture_debugging_info(
         self, exec_context: ToolExecutionContext, result: Any, execution_time: float
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Capture debugging information"""
         debugging_info = {
             "execution_id": exec_context.execution_id,
@@ -419,7 +420,7 @@ class ContextAwareToolDecorator:
             # Log debugging info as parameters
             if self.mlflow_config.log_parameters:
                 for key, value in tool_result.debugging_info.items():
-                    if isinstance(value, (str, int, float, bool)):
+                    if isinstance(value, str | int | float | bool):
                         mlflow.log_param(f"debug_{key}", value)
 
             # Log artifacts if enabled
@@ -455,14 +456,14 @@ class ContextAwareToolFramework:
 
     def __init__(
         self,
-        mlflow_config: Optional[MLflowIntegration] = None,
-        preference_manager: Optional[UserPreferenceManager] = None,
+        mlflow_config: MLflowIntegration | None = None,
+        preference_manager: UserPreferenceManager | None = None,
     ):
         """Initialize tool framework"""
         self.mlflow_config = mlflow_config or MLflowIntegration(tracking_uri=None)
         self.preference_manager = preference_manager
-        self.tools: Dict[str, Callable] = {}
-        self.execution_history: List[ToolExecutionResult] = []
+        self.tools: dict[str, Callable] = {}
+        self.execution_history: list[ToolExecutionResult] = []
 
     def register_tool(self, tool_name: str, tool_func: Callable, enable_debugging: bool = True) -> None:
         """Register a tool with context awareness"""
@@ -491,13 +492,13 @@ class ContextAwareToolFramework:
 
         return result
 
-    def get_execution_history(self, tool_name: Optional[str] = None) -> List[ToolExecutionResult]:
+    def get_execution_history(self, tool_name: str | None = None) -> list[ToolExecutionResult]:
         """Get execution history for tools"""
         if tool_name:
             return [result for result in self.execution_history if result.execution_id.startswith(tool_name)]
         return self.execution_history
 
-    def get_performance_metrics(self) -> Dict[str, Any]:
+    def get_performance_metrics(self) -> dict[str, Any]:
         """Get performance metrics for all tools"""
         metrics = {
             "total_executions": len(self.execution_history),
@@ -533,9 +534,7 @@ class ContextAwareToolFramework:
 # ---------- Backward Compatibility Layer ----------
 
 
-def context_aware_tool(
-    tool_name: str, mlflow_config: Optional[MLflowIntegration] = None, enable_debugging: bool = True
-):
+def context_aware_tool(tool_name: str, mlflow_config: MLflowIntegration | None = None, enable_debugging: bool = True):
     """Decorator for making tools context-aware with backward compatibility"""
 
     def decorator(func: Callable) -> Callable:
@@ -550,7 +549,7 @@ def context_aware_tool(
 # ---------- Example Tool Adaptations ----------
 
 
-def adapt_tool_for_context(tool_func: Callable, context: Dict[str, Any]) -> Callable:
+def adapt_tool_for_context(tool_func: Callable, context: dict[str, Any]) -> Callable:
     """Adapt a tool function for specific context"""
 
     @functools.wraps(tool_func)

@@ -20,7 +20,7 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Optional, TypedDict, Union
+from typing import Any, TypedDict
 
 # Add the precision climb config
 sys.path.insert(0, str(Path(__file__).parent))
@@ -364,7 +364,7 @@ class PrecisionClimbV2Evaluator:
             if values:
                 summary[key] = {
                     "count": len(values),
-                    "total": sum(values) if isinstance(values[0], (int, float)) else len(values),
+                    "total": sum(values) if isinstance(values[0], int | float) else len(values),
                 }
         return summary
 

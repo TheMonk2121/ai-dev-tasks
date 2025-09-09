@@ -15,7 +15,7 @@ Features:
 import logging
 import time
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Protocol
+from typing import Any, Protocol
 
 from dspy import Signature
 
@@ -27,8 +27,8 @@ class ValidationResult:
     """Result of signature validation"""
 
     is_valid: bool
-    errors: List[str] = field(default_factory=list)
-    warnings: List[str] = field(default_factory=list)
+    errors: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
     execution_time: float = 0.0
     input_tokens: int = 0
     output_tokens: int = 0
@@ -44,23 +44,23 @@ class SignatureMetrics:
     output_tokens: int
     success_count: int = 0
     error_count: int = 0
-    validation_errors: List[str] = field(default_factory=list)
+    validation_errors: list[str] = field(default_factory=list)
     timestamp: float = field(default_factory=time.time)
 
 
 class SignatureValidator(Protocol):
     """Protocol for signature validation"""
 
-    def validate_inputs(self, signature: Signature, inputs: Dict[str, Any]) -> ValidationResult:
+    def validate_inputs(self, signature: Signature, inputs: dict[str, Any]) -> ValidationResult:
         """Validate signature inputs"""
         ...
 
-    def validate_outputs(self, signature: Signature, outputs: Dict[str, Any]) -> ValidationResult:
+    def validate_outputs(self, signature: Signature, outputs: dict[str, Any]) -> ValidationResult:
         """Validate signature outputs"""
         ...
 
     def validate_signature(
-        self, signature: Signature, inputs: Dict[str, Any], outputs: Dict[str, Any]
+        self, signature: Signature, inputs: dict[str, Any], outputs: dict[str, Any]
     ) -> ValidationResult:
         """Validate both inputs and outputs"""
         ...
@@ -70,10 +70,10 @@ class DSPySignatureValidator:
     """Runtime validator for DSPy signatures"""
 
     def __init__(self):
-        self.metrics: Dict[str, List[SignatureMetrics]] = {}
-        self.validation_history: List[ValidationResult] = []
+        self.metrics: dict[str, list[SignatureMetrics]] = {}
+        self.validation_history: list[ValidationResult] = []
 
-    def validate_inputs(self, signature: Signature, inputs: Dict[str, Any]) -> ValidationResult:
+    def validate_inputs(self, signature: Signature, inputs: dict[str, Any]) -> ValidationResult:
         """Validate signature input fields"""
         start_time = time.time()
         errors = []
@@ -120,7 +120,7 @@ class DSPySignatureValidator:
             input_tokens=input_tokens,
         )
 
-    def validate_outputs(self, signature: Signature, outputs: Dict[str, Any]) -> ValidationResult:
+    def validate_outputs(self, signature: Signature, outputs: dict[str, Any]) -> ValidationResult:
         """Validate signature output fields"""
         start_time = time.time()
         errors = []
@@ -168,7 +168,7 @@ class DSPySignatureValidator:
         )
 
     def validate_signature(
-        self, signature: Signature, inputs: Dict[str, Any], outputs: Dict[str, Any]
+        self, signature: Signature, inputs: dict[str, Any], outputs: dict[str, Any]
     ) -> ValidationResult:
         """Validate both inputs and outputs for a signature"""
         start_time = time.time()
@@ -224,7 +224,7 @@ class DSPySignatureValidator:
         self.metrics[signature_name].append(metrics)
         self.validation_history.append(result)
 
-    def get_signature_performance(self, signature_name: str) -> Dict[str, Any]:
+    def get_signature_performance(self, signature_name: str) -> dict[str, Any]:
         """Get performance metrics for a signature"""
         if signature_name not in self.metrics:
             return {}
@@ -246,7 +246,7 @@ class DSPySignatureValidator:
             "most_common_errors": self._get_most_common_errors(executions),
         }
 
-    def _get_most_common_errors(self, executions: List[SignatureMetrics]) -> List[str]:
+    def _get_most_common_errors(self, executions: list[SignatureMetrics]) -> list[str]:
         """Get most common validation errors"""
         error_counts = {}
         for execution in executions:
@@ -257,7 +257,7 @@ class DSPySignatureValidator:
         sorted_errors = sorted(error_counts.items(), key=lambda x: x[1], reverse=True)
         return [error for error, count in sorted_errors[:5]]
 
-    def get_validation_summary(self) -> Dict[str, Any]:
+    def get_validation_summary(self) -> dict[str, Any]:
         """Get overall validation summary"""
         total_validations = len(self.validation_history)
         successful_validations = sum(1 for r in self.validation_history if r.is_valid)
@@ -285,17 +285,17 @@ def get_signature_validator() -> DSPySignatureValidator:
     return _signature_validator
 
 
-def validate_signature_io(signature: Signature, inputs: Dict[str, Any], outputs: Dict[str, Any]) -> ValidationResult:
+def validate_signature_io(signature: Signature, inputs: dict[str, Any], outputs: dict[str, Any]) -> ValidationResult:
     """Convenience function to validate signature I/O"""
     return _signature_validator.validate_signature(signature, inputs, outputs)
 
 
-def get_signature_performance(signature_name: str) -> Dict[str, Any]:
+def get_signature_performance(signature_name: str) -> dict[str, Any]:
     """Get performance metrics for a signature"""
     return _signature_validator.get_signature_performance(signature_name)
 
 
-def get_validation_summary() -> Dict[str, Any]:
+def get_validation_summary() -> dict[str, Any]:
     """Get overall validation summary"""
     return _signature_validator.get_validation_summary()
 

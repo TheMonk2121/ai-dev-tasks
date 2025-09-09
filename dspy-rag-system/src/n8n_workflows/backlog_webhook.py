@@ -10,13 +10,13 @@ import logging
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import BadRequest
 
 # Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from backlog_scrubber import BacklogScrubber
 
@@ -31,6 +31,7 @@ app = Flask(__name__)
 # Global scrubber instance
 scrubber = None
 
+
 def get_scrubber() -> BacklogScrubber:
     """Get or create the backlog scrubber instance."""
     global scrubber
@@ -39,11 +40,12 @@ def get_scrubber() -> BacklogScrubber:
         scrubber = BacklogScrubber(backlog_path)
     return scrubber
 
-@app.route('/webhook/backlog-scrubber', methods=['POST'])
+
+@app.route("/webhook/backlog-scrubber", methods=["POST"])
 def backlog_scrubber_webhook():
     """
     Webhook endpoint for backlog scrubbing.
-    
+
     Expected payload:
     {
         "action": "scrub",
@@ -58,42 +60,35 @@ def backlog_scrubber_webhook():
                 raise BadRequest("Request must be JSON")
 
             data = request.get_json()
-            action = data.get('action', 'scrub')
+            action = data.get("action", "scrub")
 
             # Validate action
-            if action not in ['scrub', 'stats', 'validate']:
+            if action not in ["scrub", "stats", "validate"]:
                 raise BadRequest(f"Invalid action: {action}")
 
             # Get scrubber instance
             scrubber_instance = get_scrubber()
 
             # Handle different actions
-            if action == 'scrub':
+            if action == "scrub":
                 return handle_scrub_action(scrubber_instance, data)
-            elif action == 'stats':
+            elif action == "stats":
                 return handle_stats_action(scrubber_instance)
-            elif action == 'validate':
+            elif action == "validate":
                 return handle_validate_action(scrubber_instance, data)
 
     except BadRequest as e:
         logger.error(f"Bad request: {e}")
-        return jsonify({
-            "success": False,
-            "error": str(e),
-            "timestamp": datetime.now().isoformat()
-        }), 400
+        return jsonify({"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}), 400
 
     except Exception as e:
         logger.error(f"Webhook error: {e}")
-        return jsonify({
-            "success": False,
-            "error": str(e),
-            "timestamp": datetime.now().isoformat()
-        }), 500
+        return jsonify({"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}), 500
 
-def handle_scrub_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> Dict[str, Any]:
+
+def handle_scrub_action(scrubber: BacklogScrubber, data: dict[str, Any]) -> dict[str, Any]:
     """Handle scrub action."""
-    dry_run = data.get('dry_run', False)
+    dry_run = data.get("dry_run", False)
 
     if dry_run:
         # Perform dry run
@@ -101,47 +96,45 @@ def handle_scrub_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> Dict
         scores = scrubber.parse_score_metadata(content)
         validated_scores = scrubber.validate_scores(scores)
 
-        return jsonify({
-            "success": True,
-            "action": "scrub",
-            "dry_run": True,
-            "items_processed": len(validated_scores),
-            "errors_found": scrubber.stats["errors_found"],
-            "scores": [
-                {
-                    "score_total": score["score_total"],
-                    "components": score["components"]
-                }
-                for score in validated_scores
-            ],
-            "timestamp": datetime.now().isoformat()
-        })
+        return jsonify(
+            {
+                "success": True,
+                "action": "scrub",
+                "dry_run": True,
+                "items_processed": len(validated_scores),
+                "errors_found": scrubber.stats["errors_found"],
+                "scores": [
+                    {"score_total": score["score_total"], "components": score["components"]}
+                    for score in validated_scores
+                ],
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
     else:
         # Perform actual scrub
         result = scrubber.scrub_backlog()
 
-        return jsonify({
-            "success": result["success"],
-            "action": "scrub",
-            "dry_run": False,
-            "items_processed": result["items_processed"],
-            "scores_updated": result["scores_updated"],
-            "errors_found": result["errors_found"],
-            "timestamp": datetime.now().isoformat()
-        })
+        return jsonify(
+            {
+                "success": result["success"],
+                "action": "scrub",
+                "dry_run": False,
+                "items_processed": result["items_processed"],
+                "scores_updated": result["scores_updated"],
+                "errors_found": result["errors_found"],
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
 
-def handle_stats_action(scrubber: BacklogScrubber) -> Dict[str, Any]:
+
+def handle_stats_action(scrubber: BacklogScrubber) -> dict[str, Any]:
     """Handle stats action."""
     stats = scrubber.get_statistics()
 
-    return jsonify({
-        "success": True,
-        "action": "stats",
-        "statistics": stats,
-        "timestamp": datetime.now().isoformat()
-    })
+    return jsonify({"success": True, "action": "stats", "statistics": stats, "timestamp": datetime.now().isoformat()})
 
-def handle_validate_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> Dict[str, Any]:
+
+def handle_validate_action(scrubber: BacklogScrubber, data: dict[str, Any]) -> dict[str, Any]:
     """Handle validate action."""
     content = scrubber.read_backlog()
     scores = scrubber.parse_score_metadata(content)
@@ -151,56 +144,45 @@ def handle_validate_action(scrubber: BacklogScrubber, data: Dict[str, Any]) -> D
     validation_issues = []
     for score in scores:
         if score not in validated_scores:
-            validation_issues.append({
-                "position": score["position"],
-                "components": score["components"],
-                "issue": "Invalid score components"
-            })
+            validation_issues.append(
+                {"position": score["position"], "components": score["components"], "issue": "Invalid score components"}
+            )
 
-    return jsonify({
-        "success": True,
-        "action": "validate",
-        "total_scores": len(scores),
-        "valid_scores": len(validated_scores),
-        "validation_issues": validation_issues,
-        "timestamp": datetime.now().isoformat()
-    })
+    return jsonify(
+        {
+            "success": True,
+            "action": "validate",
+            "total_scores": len(scores),
+            "valid_scores": len(validated_scores),
+            "validation_issues": validation_issues,
+            "timestamp": datetime.now().isoformat(),
+        }
+    )
 
-@app.route('/health', methods=['GET'])
+
+@app.route("/health", methods=["GET"])
 def health_check():
     """Health check endpoint."""
     try:
         get_scrubber()  # Verify scrubber is available
-        return jsonify({
-            "status": "healthy",
-            "service": "backlog-scrubber-webhook",
-            "timestamp": datetime.now().isoformat()
-        })
+        return jsonify(
+            {"status": "healthy", "service": "backlog-scrubber-webhook", "timestamp": datetime.now().isoformat()}
+        )
     except Exception as e:
-        return jsonify({
-            "status": "unhealthy",
-            "error": str(e),
-            "timestamp": datetime.now().isoformat()
-        }), 500
+        return jsonify({"status": "unhealthy", "error": str(e), "timestamp": datetime.now().isoformat()}), 500
 
-@app.route('/stats', methods=['GET'])
+
+@app.route("/stats", methods=["GET"])
 def get_stats():
     """Get statistics endpoint."""
     try:
         scrubber_instance = get_scrubber()
         stats = scrubber_instance.get_statistics()
 
-        return jsonify({
-            "success": True,
-            "statistics": stats,
-            "timestamp": datetime.now().isoformat()
-        })
+        return jsonify({"success": True, "statistics": stats, "timestamp": datetime.now().isoformat()})
     except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": str(e),
-            "timestamp": datetime.now().isoformat()
-        }), 500
+        return jsonify({"success": False, "error": str(e), "timestamp": datetime.now().isoformat()}), 500
+
 
 def main():
     """Main entry point for the webhook server."""
@@ -231,11 +213,8 @@ def main():
     print()
 
     # Run the server
-    app.run(
-        host=args.host,
-        port=args.port,
-        debug=args.debug
-    )
+    app.run(host=args.host, port=args.port, debug=args.debug)
+
 
 if __name__ == "__main__":
     main()

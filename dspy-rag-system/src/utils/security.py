@@ -16,9 +16,11 @@ import os
 import secrets
 import subprocess
 import sys
-from typing import Any, Dict, List
+from typing import Any
+from datetime import UTC
 
 logger = logging.getLogger(__name__)
+
 
 class SecurityScanner:
     """Security scanner for dependency and code analysis"""
@@ -32,7 +34,7 @@ class SecurityScanner:
             "vulnerability_threshold": "medium",
         }
 
-    def check_dependencies(self) -> Dict[str, Any]:
+    def check_dependencies(self) -> dict[str, Any]:
         """Check dependencies for known vulnerabilities using safety"""
         try:
             result = subprocess.run(
@@ -54,7 +56,7 @@ class SecurityScanner:
             logger.error(f"Safety check exception: {e}")
             return {"status": "error", "error": str(e), "vulnerabilities": []}
 
-    def run_bandit_scan(self) -> Dict[str, Any]:
+    def run_bandit_scan(self) -> dict[str, Any]:
         """Run bandit security scan on the codebase"""
         try:
             result = subprocess.run(
@@ -66,7 +68,7 @@ class SecurityScanner:
 
             if result.returncode in [0, 1]:  # Bandit returns 1 for issues found
                 try:
-                    with open("bandit-report.json", "r") as f:
+                    with open("bandit-report.json") as f:
                         report = json.load(f)
 
                     issues = report.get("results", [])
@@ -88,7 +90,7 @@ class SecurityScanner:
             logger.error(f"Bandit scan exception: {e}")
             return {"status": "error", "error": str(e), "issues": []}
 
-    def run_pip_audit(self) -> Dict[str, Any]:
+    def run_pip_audit(self) -> dict[str, Any]:
         """Run pip-audit for dependency vulnerability checking"""
         try:
             result = subprocess.run(
@@ -111,7 +113,7 @@ class SecurityScanner:
             logger.error(f"Pip-audit exception: {e}")
             return {"status": "error", "error": str(e), "vulnerabilities": []}
 
-    def _count_severities(self, issues: List[Dict]) -> Dict[str, int]:
+    def _count_severities(self, issues: list[dict]) -> dict[str, int]:
         """Count issues by severity level"""
         counts = {"LOW": 0, "MEDIUM": 0, "HIGH": 0}
         for issue in issues:
@@ -119,7 +121,7 @@ class SecurityScanner:
             counts[severity] = counts.get(severity, 0) + 1
         return counts
 
-    def generate_security_report(self) -> Dict[str, Any]:
+    def generate_security_report(self) -> dict[str, Any]:
         """Generate comprehensive security report"""
         logger.info("Generating security report")
 
@@ -146,6 +148,7 @@ class SecurityScanner:
 
         return report
 
+
 def generate_secure_hash(data: str, salt: str = None) -> str:
     """Generate a secure hash of data with optional salt"""
     if salt is None:
@@ -153,6 +156,7 @@ def generate_secure_hash(data: str, salt: str = None) -> str:
 
     hash_obj = hashlib.pbkdf2_hmac("sha256", data.encode(), salt.encode(), 100000)
     return f"{salt}:{hash_obj.hex()}"
+
 
 def verify_secure_hash(data: str, hash_string: str) -> bool:
     """Verify a secure hash"""
@@ -163,9 +167,11 @@ def verify_secure_hash(data: str, hash_string: str) -> bool:
     except Exception:
         return False
 
+
 def generate_secure_token(length: int = 32) -> str:
     """Generate a secure random token"""
     return secrets.token_urlsafe(length)
+
 
 def validate_file_hash(file_path: str, expected_hash: str) -> bool:
     """Validate file integrity using SHA-256 hash"""
@@ -177,6 +183,7 @@ def validate_file_hash(file_path: str, expected_hash: str) -> bool:
         logger.error(f"File hash validation failed: {e}")
         return False
 
+
 def sanitize_filename(filename: str) -> str:
     """Sanitize filename for security"""
     import re
@@ -187,6 +194,7 @@ def sanitize_filename(filename: str) -> str:
     if len(sanitized) > 255:
         sanitized = sanitized[:255]
     return sanitized
+
 
 def validate_url(url: str) -> bool:
     """Validate URL for security"""
@@ -208,15 +216,17 @@ def validate_url(url: str) -> bool:
         """Get current timestamp in ISO format"""
         from datetime import datetime, timezone
 
-        return datetime.now(timezone.utc).isoformat()
+        return datetime.now(UTC).isoformat()
+
 
 def _get_timestamp() -> str:
     """Get current timestamp in ISO format"""
     from datetime import datetime, timezone
 
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
-def create_security_config() -> Dict[str, Any]:
+
+def create_security_config() -> dict[str, Any]:
     """Create security configuration"""
     return {
         "security": {
@@ -233,7 +243,8 @@ def create_security_config() -> Dict[str, Any]:
         }
     }
 
-def validate_security_config(config: Dict[str, Any]) -> bool:
+
+def validate_security_config(config: dict[str, Any]) -> bool:
     """Validate security configuration"""
     required_keys = ["enabled", "scan_on_startup", "vulnerability_threshold"]
 

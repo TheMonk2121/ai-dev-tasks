@@ -17,7 +17,7 @@ import re
 import time
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 _LOG = logging.getLogger("context_security")
 
@@ -33,7 +33,7 @@ class SecurityEvent:
     user_agent: str = ""
     role: str = ""
     task: str = ""
-    details: Dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
     blocked: bool = False
     reason: str = ""
 
@@ -141,7 +141,7 @@ class InputValidator:
         escaped_patterns = [re.escape(pattern) for pattern in self.dangerous_patterns]
         self.dangerous_regex = re.compile("|".join(escaped_patterns), re.IGNORECASE)
 
-    def validate_role(self, role: str) -> Tuple[bool, str]:
+    def validate_role(self, role: str) -> tuple[bool, str]:
         """Validate role input"""
         if not role:
             return False, "Role cannot be empty"
@@ -157,7 +157,7 @@ class InputValidator:
 
         return True, "Valid role"
 
-    def validate_task(self, task: str) -> Tuple[bool, str]:
+    def validate_task(self, task: str) -> tuple[bool, str]:
         """Validate task input"""
         if not task:
             return False, "Task cannot be empty"
@@ -208,7 +208,7 @@ class RateLimiter:
         self.blocked_ips = set()
         self.block_duration = 3600  # 1 hour block
 
-    def is_allowed(self, identifier: str, role: str = "") -> Tuple[bool, str]:
+    def is_allowed(self, identifier: str, role: str = "") -> tuple[bool, str]:
         """Check if request is allowed"""
         current_time = time.time()
 
@@ -232,7 +232,7 @@ class RateLimiter:
 
         return True, "Request allowed"
 
-    def get_stats(self, identifier: str) -> Dict[str, Any]:
+    def get_stats(self, identifier: str) -> dict[str, Any]:
         """Get rate limiting stats for identifier"""
         current_time = time.time()
 
@@ -317,12 +317,12 @@ class SecurityMonitor:
                 self.alerts.append(alert)
                 _LOG.warning(f"SECURITY ALERT: {alert['message']}")
 
-    def get_recent_events(self, hours: int = 24) -> List[SecurityEvent]:
+    def get_recent_events(self, hours: int = 24) -> list[SecurityEvent]:
         """Get recent security events"""
         cutoff_time = time.time() - (hours * 3600)
         return [e for e in self.events if e.timestamp > cutoff_time]
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get security monitoring statistics"""
         current_time = time.time()
         hour_ago = current_time - 3600
@@ -362,7 +362,7 @@ class SecurityValidator:
         self.security_monitor = SecurityMonitor()
         self.security_enabled = True
 
-    def validate_request(self, role: str, task: str, identifier: str = "default") -> Tuple[bool, str, SecurityEvent]:
+    def validate_request(self, role: str, task: str, identifier: str = "default") -> tuple[bool, str, SecurityEvent]:
         """Validate a context request"""
         current_time = time.time()
 
@@ -403,7 +403,7 @@ class SecurityValidator:
 
         return True, "Request validated", event
 
-    def get_security_stats(self) -> Dict[str, Any]:
+    def get_security_stats(self) -> dict[str, Any]:
         """Get comprehensive security statistics"""
         return {
             "input_validation": {
@@ -438,7 +438,7 @@ def get_security_validator() -> SecurityValidator:
     return _security_validator
 
 
-def validate_context_request(role: str, task: str, identifier: str = "default") -> Tuple[bool, str]:
+def validate_context_request(role: str, task: str, identifier: str = "default") -> tuple[bool, str]:
     """Validate a context request using the global security validator"""
     validator = get_security_validator()
     if not validator.security_enabled:
@@ -448,7 +448,7 @@ def validate_context_request(role: str, task: str, identifier: str = "default") 
     return is_valid, message
 
 
-def get_security_stats() -> Dict[str, Any]:
+def get_security_stats() -> dict[str, Any]:
     """Get security statistics"""
     validator = get_security_validator()
     return validator.get_security_stats()

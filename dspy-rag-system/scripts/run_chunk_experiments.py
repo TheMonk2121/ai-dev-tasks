@@ -13,12 +13,12 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from dotenv import load_dotenv
 
 
-def run_evaluation() -> Dict[str, Any]:
+def run_evaluation() -> dict[str, Any]:
     """Run RAGChecker evaluation and return results"""
     print("Running RAGChecker evaluation...")
 

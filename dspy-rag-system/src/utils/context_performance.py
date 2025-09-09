@@ -19,7 +19,7 @@ import time
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import psutil
 
@@ -63,7 +63,7 @@ class LRUCache:
         self.misses = 0
         self.evictions = 0
 
-    def get(self, key: str) -> Optional[str]:
+    def get(self, key: str) -> str | None:
         """Get value from cache with access tracking"""
         if key in self.cache:
             entry = self.cache[key]
@@ -132,7 +132,7 @@ class LRUCache:
 
         _LOG.debug(f"Evicted cache entry: {least_valuable_key} (score: {scores[least_valuable_key]:.3f})")
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get cache statistics"""
         return {
             "size": len(self.cache),
@@ -165,8 +165,8 @@ class ConnectionPool:
         self.connection_times = []
 
     async def execute_subprocess(
-        self, cmd: List[str], cwd: str, env: Dict[str, str], timeout: float
-    ) -> Tuple[int, str, str]:
+        self, cmd: list[str], cwd: str, env: dict[str, str], timeout: float
+    ) -> tuple[int, str, str]:
         """Execute subprocess with connection pooling"""
         async with self.connection_semaphore:
             self.active_connections += 1
@@ -185,7 +185,7 @@ class ConnectionPool:
             finally:
                 self.active_connections -= 1
 
-    def _run_subprocess(self, cmd: List[str], cwd: str, env: Dict[str, str], timeout: float) -> Tuple[int, str, str]:
+    def _run_subprocess(self, cmd: list[str], cwd: str, env: dict[str, str], timeout: float) -> tuple[int, str, str]:
         """Run subprocess in thread"""
         import subprocess
 
@@ -197,7 +197,7 @@ class ConnectionPool:
         except Exception as e:
             return -1, "", str(e)
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get connection pool statistics"""
         if not self.connection_times:
             avg_time = 0
@@ -222,7 +222,7 @@ class MemoryOptimizer:
         self.memory_threshold_mb = 500  # 500MB threshold
         self.gc_threshold = 0.8  # 80% memory usage triggers GC
 
-    def get_memory_usage(self) -> Dict[str, float]:
+    def get_memory_usage(self) -> dict[str, float]:
         """Get current memory usage"""
         memory_info = self.process.memory_info()
         return {
@@ -236,7 +236,7 @@ class MemoryOptimizer:
         memory_usage = self.get_memory_usage()
         return memory_usage["rss_mb"] > self.memory_threshold_mb or memory_usage["percent"] > self.gc_threshold * 100
 
-    def optimize_memory(self) -> Dict[str, Any]:
+    def optimize_memory(self) -> dict[str, Any]:
         """Perform memory optimization"""
         import gc
 
@@ -266,7 +266,7 @@ class MemoryOptimizer:
 class LoadBalancer:
     """Load balancer for multiple memory rehydrator instances"""
 
-    def __init__(self, instances: Optional[List[str]] = None):
+    def __init__(self, instances: list[str] | None = None):
         """
         Initialize load balancer.
 
@@ -313,7 +313,7 @@ class LoadBalancer:
         else:
             stats["avg_time"] = (stats["avg_time"] * (stats["requests"] - 1) + response_time) / stats["requests"]
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get load balancer statistics"""
         return {
             "instances": len(self.instances),
@@ -417,7 +417,7 @@ class PerformanceOptimizer:
         """Get fallback context when retrieval fails"""
         return f"PROJECT CONTEXT (FALLBACK): You are a {role} working on an AI development project."
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get comprehensive performance statistics"""
         return {
             "cache": self.cache.get_stats(),
@@ -451,7 +451,7 @@ async def get_optimized_context(role: str, task: str) -> str:
     return await optimizer.get_optimized_context(role, task)
 
 
-def get_performance_stats() -> Dict[str, Any]:
+def get_performance_stats() -> dict[str, Any]:
     """Get performance statistics"""
     optimizer = get_performance_optimizer()
     return optimizer.get_performance_stats()

@@ -7,12 +7,12 @@ Apply AFTER doc-diversity and BEFORE ns promotion. SQL remains unchanged.
 from __future__ import annotations
 
 import re
-from typing import Dict, List
+
 
 FILE_TOKEN_RE = re.compile(r"[A-Za-z0-9_\-]+\.(md|mdx|pdf|txt)$", re.IGNORECASE)
 
 
-def _filename_match_flags(query: str, filename: str) -> Dict[str, bool]:
+def _filename_match_flags(query: str, filename: str) -> dict[str, bool]:
     q = (query or "").lower()
     f = (filename or "").lower()
     exact_tokens = set(q.split())
@@ -24,7 +24,7 @@ def _filename_match_flags(query: str, filename: str) -> Dict[str, bool]:
 
 
 def apply_fusion_nudge(
-    rows: List[Dict],
+    rows: list[dict],
     query: str,
     *,
     bonus_path: float = 0.12,
@@ -32,7 +32,7 @@ def apply_fusion_nudge(
     bonus_exact: float = 0.08,
     bonus_partial: float = 0.04,
     score_key: str = "score",
-) -> List[Dict]:
+) -> list[dict]:
     for r in rows:
         s = float(r.get(score_key, 0.0))
         if r.get("src") == "path":

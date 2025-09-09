@@ -167,7 +167,7 @@ def f1(pred, golds):
 
 # ---- Data loaders
 def load_jsonl(path):
-    return [json.loads(line) for line in open(path, "r", encoding="utf-8") if line.strip()]
+    return [json.loads(line) for line in open(path, encoding="utf-8") if line.strip()]
 
 
 def to_examples(rows):

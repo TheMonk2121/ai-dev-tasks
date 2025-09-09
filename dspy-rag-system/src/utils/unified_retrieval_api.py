@@ -13,7 +13,7 @@ This eliminates duplicate SQL and ensures consistency across all clients.
 import logging
 import os
 import sys
-from typing import Any, Dict, Optional
+from typing import Any
 
 # Add the src directory to the path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -35,10 +35,10 @@ class UnifiedRetrievalAPI:
         self,
         query: str,
         limit: int = 10,
-        session_id: Optional[str] = None,
+        session_id: str | None = None,
         include_superseded: bool = False,
         debug: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Unified decision search entrypoint for all clients
 
@@ -115,7 +115,7 @@ class UnifiedRetrievalAPI:
                 "error": str(e),
             }
 
-    def get_decision_by_key(self, decision_key: str) -> Optional[Dict[str, Any]]:
+    def get_decision_by_key(self, decision_key: str) -> dict[str, Any] | None:
         """
         Get a specific decision by its key
 
@@ -151,7 +151,7 @@ class UnifiedRetrievalAPI:
             self.logger.error(f"Error getting decision by key {decision_key}: {e}")
             return None
 
-    def get_decision_stats(self) -> Dict[str, Any]:
+    def get_decision_stats(self) -> dict[str, Any]:
         """
         Get statistics about decisions in the system
 
@@ -201,7 +201,7 @@ class UnifiedRetrievalAPI:
 _unified_api = None
 
 
-def get_unified_api(db_connection_string: Optional[str] = None) -> UnifiedRetrievalAPI:
+def get_unified_api(db_connection_string: str | None = None) -> UnifiedRetrievalAPI:
     """
     Get or create the global unified API instance
 
@@ -226,11 +226,11 @@ def get_unified_api(db_connection_string: Optional[str] = None) -> UnifiedRetrie
 def search_decisions(
     query: str,
     limit: int = 10,
-    session_id: Optional[str] = None,
+    session_id: str | None = None,
     include_superseded: bool = False,
     debug: bool = False,
-    db_connection_string: Optional[str] = None,
-) -> Dict[str, Any]:
+    db_connection_string: str | None = None,
+) -> dict[str, Any]:
     """
     Convenience function for decision search
 

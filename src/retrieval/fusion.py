@@ -18,8 +18,8 @@ Returns:
 
 from __future__ import annotations
 
-from typing import Optional, Union
 from collections.abc import Mapping, Sequence
+
 
 DocId = str
 Rank = int
@@ -44,7 +44,7 @@ def _as_rank_map(items: Sequence[DocId] | Sequence[tuple[DocId, Score]] | Mappin
         return rank_map
 
     first = items[0]  # type: ignore[index]
-    if isinstance(first, tuple) and len(first) == 2:  # Sequence[Tuple[DocId, Score]]
+    if isinstance(first, tuple) and len(first) == 2:  # Sequence[tuple[DocId, Score]]
         pairs = list(items)  # type: ignore[assignment]
         pairs.sort(key=lambda kv: kv[1], reverse=True)
         for idx, (doc_id, _score) in enumerate(pairs, start=1):

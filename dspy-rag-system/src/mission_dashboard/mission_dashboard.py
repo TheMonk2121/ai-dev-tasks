@@ -10,7 +10,7 @@ import sys
 import time
 from collections import defaultdict
 from datetime import datetime
-from typing import Any, Dict, cast
+from typing import Any, cast
 
 # Flask imports
 # Optional dependency: realtime features require Flask-SocketIO
@@ -158,7 +158,7 @@ class DashboardState:
         except Exception as e:
             LOG.error(f"Error handling mission update: {e}")
 
-    def _mission_to_dict(self, mission) -> Dict[str, Any]:
+    def _mission_to_dict(self, mission) -> dict[str, Any]:
         """Convert mission to dictionary for JSON serialization"""
         return {
             "id": mission.id,
@@ -180,7 +180,7 @@ class DashboardState:
             "cost_estimate": mission.cost_estimate,
         }
 
-    def _metrics_to_dict(self, metrics) -> Dict[str, Any]:
+    def _metrics_to_dict(self, metrics) -> dict[str, Any]:
         """Convert metrics to dictionary for JSON serialization"""
         return {
             "total_missions": metrics.total_missions,

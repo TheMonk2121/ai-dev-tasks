@@ -14,7 +14,7 @@ import re
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from dspy import Module
 
@@ -64,7 +64,7 @@ class AssertionResult:
     severity: AssertionSeverity
     passed: bool
     message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
     execution_time: float = 0.0
     timestamp: float = field(default_factory=time.time)
 
@@ -80,8 +80,8 @@ class ValidationReport:
     critical_failures: int
     reliability_score: float
     execution_time: float
-    results: List[AssertionResult] = field(default_factory=list)
-    recommendations: List[str] = field(default_factory=list)
+    results: list[AssertionResult] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
     timestamp: float = field(default_factory=time.time)
 
     @property
@@ -355,7 +355,7 @@ class LogicValidator:
 class PerformanceValidator:
     """Validates performance aspects"""
 
-    def validate_execution_time(self, module: Module, test_inputs: List[Dict[str, Any]]) -> AssertionResult:
+    def validate_execution_time(self, module: Module, test_inputs: list[dict[str, Any]]) -> AssertionResult:
         """Validate execution time performance"""
         start_time = time.time()
 
@@ -491,7 +491,7 @@ class DSPyAssertionFramework:
 
         _LOG.info("DSPy Assertion Framework initialized")
 
-    def validate_module(self, module: Any, test_inputs: Optional[List[Dict[str, Any]]] = None) -> ValidationReport:
+    def validate_module(self, module: Any, test_inputs: list[dict[str, Any]] | None = None) -> ValidationReport:
         """
         Validate a DSPy module comprehensively
 
@@ -576,7 +576,7 @@ class DSPyAssertionFramework:
 
         return report
 
-    def _generate_recommendations(self, results: List[AssertionResult]) -> List[str]:
+    def _generate_recommendations(self, results: list[AssertionResult]) -> list[str]:
         """Generate recommendations based on validation results"""
         recommendations = []
 
@@ -601,7 +601,7 @@ class DSPyAssertionFramework:
 
         return recommendations
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get framework statistics"""
         if not self.reliability_history:
             return {
@@ -662,7 +662,7 @@ def get_assertion_framework() -> DSPyAssertionFramework:
     return _assertion_framework
 
 
-def validate_dspy_module(module: Any, test_inputs: Optional[List[Dict[str, Any]]] = None) -> ValidationReport:
+def validate_dspy_module(module: Any, test_inputs: list[dict[str, Any]] | None = None) -> ValidationReport:
     """
     Convenience function to validate a DSPy module
 

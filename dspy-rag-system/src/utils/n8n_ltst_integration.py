@@ -11,7 +11,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -24,7 +24,7 @@ from utils.unified_retrieval_api import UnifiedRetrievalAPI
 class N8nLTSTIntegration:
     """Integrates n8n workflow execution data with LTST memory system"""
 
-    def __init__(self, db_connection_string: str, project_root: Optional[Path] = None):
+    def __init__(self, db_connection_string: str, project_root: Path | None = None):
         """
         Initialize n8n LTST integration.
 
@@ -43,7 +43,7 @@ class N8nLTSTIntegration:
         # n8n workflow paths
         self.n8n_workflows_dir = self.project_root / "dspy-rag-system" / "src" / "n8n_workflows"
 
-    def capture_workflow_executions(self, since: Optional[str] = None, until: Optional[str] = None) -> Dict[str, Any]:
+    def capture_workflow_executions(self, since: str | None = None, until: str | None = None) -> dict[str, Any]:
         """
         Capture n8n workflow execution data.
 
@@ -123,8 +123,8 @@ class N8nLTSTIntegration:
             }
 
     def correlate_with_development_context(
-        self, workflow_data: Dict[str, Any], conversation_context: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, workflow_data: dict[str, Any], conversation_context: str | None = None
+    ) -> dict[str, Any]:
         """
         Correlate workflow outcomes with development context.
 
@@ -198,7 +198,7 @@ class N8nLTSTIntegration:
                 "correlation_insights": [],
             }
 
-    def track_workflow_effectiveness(self, workflow_data: Dict[str, Any]) -> Dict[str, Any]:
+    def track_workflow_effectiveness(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
         """
         Track workflow effectiveness and optimization opportunities.
 
@@ -310,7 +310,7 @@ class N8nLTSTIntegration:
             }
 
     def store_in_ltst_memory(
-        self, workflow_data: Dict[str, Any], correlation_data: Dict[str, Any], effectiveness_data: Dict[str, Any]
+        self, workflow_data: dict[str, Any], correlation_data: dict[str, Any], effectiveness_data: dict[str, Any]
     ) -> bool:
         """
         Store workflow data in LTST memory system.
@@ -388,7 +388,7 @@ class N8nLTSTIntegration:
             print(f"Error storing in LTST memory: {e}")
             return False
 
-    def _analyze_workflow_patterns(self, executions: List[Dict], events: List[Dict]) -> Dict[str, Any]:
+    def _analyze_workflow_patterns(self, executions: list[dict], events: list[dict]) -> dict[str, Any]:
         """Analyze workflow execution patterns"""
         patterns = {"execution_frequency": {}, "workflow_dependencies": {}, "time_patterns": {}, "error_patterns": {}}
 
@@ -414,7 +414,7 @@ class N8nLTSTIntegration:
 
         return patterns
 
-    def _extract_workflow_decisions(self, executions: List[Dict], events: List[Dict]) -> List[Dict]:
+    def _extract_workflow_decisions(self, executions: list[dict], events: list[dict]) -> list[dict]:
         """Extract decisions from workflow outcomes"""
         decisions = []
 
@@ -450,8 +450,8 @@ class N8nLTSTIntegration:
         return decisions
 
     def _generate_correlation_insights(
-        self, workflow_data: Dict[str, Any], correlation_data: Dict[str, Any]
-    ) -> List[str]:
+        self, workflow_data: dict[str, Any], correlation_data: dict[str, Any]
+    ) -> list[str]:
         """Generate insights from workflow-development correlations"""
         insights = []
 

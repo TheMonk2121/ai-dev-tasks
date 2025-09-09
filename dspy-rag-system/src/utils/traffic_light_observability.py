@@ -10,7 +10,7 @@ import time
 from dataclasses import asdict, dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 LOG = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class MetricValue:
     status: TrafficLightStatus
     threshold: MetricThreshold
     timestamp: float
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -54,10 +54,10 @@ class MetricValue:
 class TrafficLightObservability:
     """Traffic light aligned observability system."""
 
-    def __init__(self, config_file: Optional[str] = None):
-        self.metrics: Dict[str, MetricValue] = {}
-        self.thresholds: Dict[str, MetricThreshold] = {}
-        self.alerts: List[Dict[str, Any]] = []
+    def __init__(self, config_file: str | None = None):
+        self.metrics: dict[str, MetricValue] = {}
+        self.thresholds: dict[str, MetricThreshold] = {}
+        self.alerts: list[dict[str, Any]] = []
 
         # Load configuration
         self._load_config(config_file)
@@ -65,10 +65,10 @@ class TrafficLightObservability:
         # Initialize default thresholds
         self._initialize_default_thresholds()
 
-    def _load_config(self, config_file: Optional[str]):
+    def _load_config(self, config_file: str | None):
         """Load configuration from file."""
         if config_file and Path(config_file).exists():
-            with open(config_file, "r") as f:
+            with open(config_file) as f:
                 config = json.load(f)
                 self.thresholds = {
                     name: MetricThreshold(**threshold) for name, threshold in config.get("thresholds", {}).items()
@@ -143,7 +143,7 @@ class TrafficLightObservability:
             if name not in self.thresholds:
                 self.thresholds[name] = threshold
 
-    def evaluate_metric(self, name: str, value: float, metadata: Dict[str, Any] = None) -> MetricValue:
+    def evaluate_metric(self, name: str, value: float, metadata: dict[str, Any] = None) -> MetricValue:
         """Evaluate a metric value against thresholds."""
         if name not in self.thresholds:
             LOG.warning(f"No threshold defined for metric: {name}")
@@ -206,7 +206,7 @@ class TrafficLightObservability:
             self.alerts.append(alert)
             LOG.warning(f"ALERT: {alert['message']}")
 
-    def get_retrieval_metrics(self) -> Dict[str, Any]:
+    def get_retrieval_metrics(self) -> dict[str, Any]:
         """Get retrieval-specific metrics."""
         retrieval_metrics = [
             "retrieval_snapshot_size",
@@ -223,7 +223,7 @@ class TrafficLightObservability:
             ),
         }
 
-    def get_data_quality_metrics(self) -> Dict[str, Any]:
+    def get_data_quality_metrics(self) -> dict[str, Any]:
         """Get data quality metrics."""
         quality_metrics = ["max_embedding_token_count", "dedup_rate", "prefix_leakage"]
 
@@ -235,7 +235,7 @@ class TrafficLightObservability:
             ),
         }
 
-    def get_infrastructure_metrics(self) -> Dict[str, Any]:
+    def get_infrastructure_metrics(self) -> dict[str, Any]:
         """Get infrastructure metrics."""
         infra_metrics = ["reranker_cold_start_rate", "bedrock_timeout_rate", "p95_latency_ms"]
 
@@ -247,7 +247,7 @@ class TrafficLightObservability:
             ),
         }
 
-    def get_agent_tool_metrics(self) -> Dict[str, Any]:
+    def get_agent_tool_metrics(self) -> dict[str, Any]:
         """Get agent tool use metrics."""
         tool_metrics = ["tool_intent_log_rate", "dry_run_rate", "schema_conformance_rate"]
 
@@ -259,7 +259,7 @@ class TrafficLightObservability:
             ),
         }
 
-    def _get_category_status(self, metric_names: List[str]) -> str:
+    def _get_category_status(self, metric_names: list[str]) -> str:
         """Get overall status for a category of metrics."""
         statuses = [self.metrics[name].status for name in metric_names if name in self.metrics]
 
@@ -273,7 +273,7 @@ class TrafficLightObservability:
         else:
             return TrafficLightStatus.GREEN.value
 
-    def get_overall_status(self) -> Dict[str, Any]:
+    def get_overall_status(self) -> dict[str, Any]:
         """Get overall system status."""
         all_metrics = list(self.metrics.keys())
         overall_status = self._get_category_status(all_metrics)
@@ -295,7 +295,7 @@ class TrafficLightObservability:
             "last_updated": max([m.timestamp for m in self.metrics.values()], default=0),
         }
 
-    def generate_dashboard_data(self) -> Dict[str, Any]:
+    def generate_dashboard_data(self) -> dict[str, Any]:
         """Generate complete dashboard data."""
         return {
             "timestamp": time.time(),
@@ -375,7 +375,7 @@ def get_observability() -> TrafficLightObservability:
     return _observability
 
 
-def track_metric(name: str, value: float, metadata: Dict[str, Any] = None) -> MetricValue:
+def track_metric(name: str, value: float, metadata: dict[str, Any] = None) -> MetricValue:
     """Convenience function for tracking a metric."""
     return get_observability().evaluate_metric(name, value, metadata)
 

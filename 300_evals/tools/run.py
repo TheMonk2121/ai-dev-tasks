@@ -4,7 +4,7 @@ import os
 import subprocess
 import time
 from pathlib import Path
-from typing import Dict
+
 
 import typer
 
@@ -17,7 +17,7 @@ LATEST_DIR.mkdir(parents=True, exist_ok=True)
 app = typer.Typer()
 
 
-def _load_layer(name: str) -> Dict[str, str]:
+def _load_layer(name: str) -> dict[str, str]:
     env = {}
     f = LAYER_DIR / f"{name}.env"
     if f.exists():
@@ -29,8 +29,8 @@ def _load_layer(name: str) -> Dict[str, str]:
     return env
 
 
-def _materialize_env(layers, overrides) -> Dict[str, str]:
-    env: Dict[str, str] = {}
+def _materialize_env(layers, overrides) -> dict[str, str]:
+    env: dict[str, str] = {}
     for layer in layers:
         env.update(_load_layer(layer))
     env.update({k: str(v) for k, v in overrides.items()})

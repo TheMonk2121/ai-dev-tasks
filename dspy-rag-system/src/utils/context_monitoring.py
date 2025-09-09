@@ -11,9 +11,9 @@ import logging
 import time
 from collections import defaultdict, deque
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 _LOG = logging.getLogger("context_monitoring")
 
@@ -48,9 +48,9 @@ class ContextMetrics:
     cache_evictions: int = 0
 
     # Role-specific metrics
-    role_requests: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
-    role_errors: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
-    role_avg_times: Dict[str, float] = field(default_factory=lambda: defaultdict(float))
+    role_requests: dict[str, int] = field(default_factory=lambda: defaultdict(int))
+    role_errors: dict[str, int] = field(default_factory=lambda: defaultdict(int))
+    role_avg_times: dict[str, float] = field(default_factory=lambda: defaultdict(float))
 
 
 class ContextMonitor:
@@ -82,7 +82,7 @@ class ContextMonitor:
         success: bool,
         response_time: float,
         cache_hit: bool = False,
-        error_type: Optional[str] = None,
+        error_type: str | None = None,
         fallback_used: bool = False,
     ):
         """
@@ -169,9 +169,9 @@ class ContextMonitor:
         """Record memory usage metrics."""
         self.current_metrics.memory_usage_mb = memory_mb
 
-    def _check_alerts(self, role: str, response_time_ms: float, success: bool, error_type: Optional[str]):
+    def _check_alerts(self, role: str, response_time_ms: float, success: bool, error_type: str | None):
         """Check for alert conditions."""
-        timestamp = datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(UTC).isoformat()
 
         # High response time alert
         if response_time_ms > 10000:  # 10 seconds
@@ -218,16 +218,16 @@ class ContextMonitor:
                 self.alerts.append(alert)
                 _LOG.error(f"ALERT: {alert['message']}")
 
-    def get_metrics_summary(self) -> Dict[str, Any]:
+    def get_metrics_summary(self) -> dict[str, Any]:
         """Get a summary of current metrics."""
         return {
             "current_metrics": asdict(self.current_metrics),
             "alerts": self.alerts[-10:],  # Last 10 alerts
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "uptime": self._calculate_uptime(),
         }
 
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """Get a detailed performance report."""
         if not self.response_times:
             return {"error": "No data available"}
@@ -278,7 +278,7 @@ class ContextMonitor:
         """Load metrics from file."""
         if self.metrics_file.exists():
             try:
-                with open(self.metrics_file, "r") as f:
+                with open(self.metrics_file) as f:
                     data = json.load(f)
                     # Load historical data if available
                     if "historical_data" in data:
@@ -293,7 +293,7 @@ class ContextMonitor:
                 "current_metrics": asdict(self.current_metrics),
                 "historical_data": list(self.historical_data),
                 "alerts": self.alerts[-50:],  # Keep last 50 alerts
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
             }
 
             with open(self.metrics_file, "w") as f:
@@ -343,7 +343,7 @@ class ContextMonitor:
 
         writer.writerow(
             [
-                datetime.now(timezone.utc).isoformat(),
+                datetime.now(UTC).isoformat(),
                 metrics.total_requests,
                 metrics.successful_requests,
                 metrics.failed_requests,
@@ -375,7 +375,7 @@ def record_context_request(
     success: bool,
     response_time: float,
     cache_hit: bool = False,
-    error_type: Optional[str] = None,
+    error_type: str | None = None,
     fallback_used: bool = False,
 ):
     """Record a context request using the global monitor."""
@@ -383,13 +383,13 @@ def record_context_request(
     monitor.record_request(role, task, start_time, success, response_time, cache_hit, error_type, fallback_used)
 
 
-def get_context_metrics() -> Dict[str, Any]:
+def get_context_metrics() -> dict[str, Any]:
     """Get current context metrics."""
     monitor = get_context_monitor()
     return monitor.get_metrics_summary()
 
 
-def get_performance_report() -> Dict[str, Any]:
+def get_performance_report() -> dict[str, Any]:
     """Get detailed performance report."""
     monitor = get_context_monitor()
     return monitor.get_performance_report()

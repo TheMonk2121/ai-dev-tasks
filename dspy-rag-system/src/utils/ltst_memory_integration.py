@@ -7,7 +7,7 @@ system to provide conversation history and user preferences in memory bundles.
 
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .context_merger import ContextMerger
 from .conversation_storage import ConversationMessage, ConversationStorage
@@ -23,13 +23,13 @@ class LTSTMemoryBundle:
     """Extended memory bundle with LTST conversation context."""
 
     original_bundle: HydrationBundle
-    conversation_history: List[Dict[str, Any]]
-    user_preferences: Dict[str, Any]
-    session_context: Optional[Dict[str, Any]] = None
-    context_relevance_scores: Optional[Dict[str, float]] = None
+    conversation_history: list[dict[str, Any]]
+    user_preferences: dict[str, Any]
+    session_context: dict[str, Any] | None = None
+    context_relevance_scores: dict[str, float] | None = None
     conversation_continuity_score: float = 0.0
     user_preference_confidence: float = 0.0
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -38,7 +38,7 @@ class LTSTMemoryBundle:
         if self.metadata is None:
             self.metadata = {}
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "original_bundle": asdict(self.original_bundle),
@@ -57,9 +57,9 @@ class LTSTMemoryIntegration:
 
     def __init__(
         self,
-        conversation_storage: Optional[ConversationStorage] = None,
-        context_merger: Optional[ContextMerger] = None,
-        session_manager: Optional[SessionManager] = None,
+        conversation_storage: ConversationStorage | None = None,
+        context_merger: ContextMerger | None = None,
+        session_manager: SessionManager | None = None,
     ):
         """Initialize LTST memory integration."""
         self.conversation_storage = conversation_storage or ConversationStorage()
@@ -70,7 +70,7 @@ class LTSTMemoryIntegration:
         self,
         query: str,
         user_id: str,
-        session_id: Optional[str] = None,
+        session_id: str | None = None,
         include_conversation_history: bool = True,
         include_user_preferences: bool = True,
         include_session_context: bool = True,
@@ -162,7 +162,7 @@ class LTSTMemoryIntegration:
                 metadata={"error": str(e)},
             )
 
-    def _get_or_create_session(self, user_id: str, query: str) -> Optional[str]:
+    def _get_or_create_session(self, user_id: str, query: str) -> str | None:
         """Get existing session or create new one."""
         try:
             # Try to find recent active session
@@ -182,7 +182,7 @@ class LTSTMemoryIntegration:
             logger.error(f"Failed to get or create session: {e}")
             return None
 
-    def _get_conversation_history(self, session_id: str, limit: int = 10) -> List[Dict[str, Any]]:
+    def _get_conversation_history(self, session_id: str, limit: int = 10) -> list[dict[str, Any]]:
         """Get conversation history for the session."""
         try:
             messages = self.conversation_storage.get_messages(session_id, limit=limit)
@@ -206,11 +206,11 @@ class LTSTMemoryIntegration:
             logger.error(f"Failed to get conversation history for session {session_id}: {e}")
             return []
 
-    def _get_user_preferences(self, user_id: str) -> Dict[str, Any]:
+    def _get_user_preferences(self, user_id: str) -> dict[str, Any]:
         """Get user preferences for context."""
         try:
             rows = self.conversation_storage.retrieve_user_preferences(user_id, limit=100)
-            preferences: Dict[str, Dict[str, Any]] = {}
+            preferences: dict[str, dict[str, Any]] = {}
             for row in rows:
                 pref_type = row.get("preference_type", "general")
                 if pref_type not in preferences:
@@ -225,7 +225,7 @@ class LTSTMemoryIntegration:
             logger.error(f"Failed to get user preferences for {user_id}: {e}")
             return {}
 
-    def _get_session_context(self, session_id: str, query: str) -> Optional[Dict[str, Any]]:
+    def _get_session_context(self, session_id: str, query: str) -> dict[str, Any] | None:
         """Get session context using context merger."""
         try:
             # Use context summary from ContextMerger for a robust, DB-light path
@@ -236,7 +236,7 @@ class LTSTMemoryIntegration:
             logger.error(f"Failed to get session context for session {session_id}: {e}")
             return None
 
-    def _calculate_conversation_continuity(self, conversation_history: List[Dict[str, Any]], query: str) -> float:
+    def _calculate_conversation_continuity(self, conversation_history: list[dict[str, Any]], query: str) -> float:
         """Calculate conversation continuity score."""
         try:
             if not conversation_history:
@@ -267,7 +267,7 @@ class LTSTMemoryIntegration:
             logger.error(f"Failed to calculate conversation continuity: {e}")
             return 0.0
 
-    def _calculate_preference_confidence(self, user_preferences: Dict[str, Any]) -> float:
+    def _calculate_preference_confidence(self, user_preferences: dict[str, Any]) -> float:
         """Calculate overall user preference confidence."""
         try:
             if not user_preferences:
@@ -287,7 +287,7 @@ class LTSTMemoryIntegration:
             logger.error(f"Failed to calculate preference confidence: {e}")
             return 0.0
 
-    def _calculate_context_relevance(self, session_context: Optional[Dict[str, Any]], query: str) -> Dict[str, float]:
+    def _calculate_context_relevance(self, session_context: dict[str, Any] | None, query: str) -> dict[str, float]:
         """Calculate context relevance scores."""
         try:
             if not session_context:
@@ -315,7 +315,7 @@ class LTSTMemoryIntegration:
             return {}
 
     def store_conversation_response(
-        self, session_id: str, response: str, metadata: Optional[Dict[str, Any]] = None
+        self, session_id: str, response: str, metadata: dict[str, Any] | None = None
     ) -> bool:
         """Store AI response in conversation history."""
         try:
@@ -340,7 +340,7 @@ class LTSTMemoryIntegration:
             logger.error(f"Failed to store conversation response: {e}")
             return False
 
-    def get_conversation_summary(self, session_id: str) -> Optional[Dict[str, Any]]:
+    def get_conversation_summary(self, session_id: str) -> dict[str, Any] | None:
         """Get conversation summary for a session."""
         try:
             if not session_id:
@@ -372,7 +372,7 @@ class LTSTMemoryIntegration:
             logger.error(f"Failed to get conversation summary for session {session_id}: {e}")
             return None
 
-    def update_user_preferences_from_conversation(self, user_id: str, conversation_data: Dict[str, Any]) -> bool:
+    def update_user_preferences_from_conversation(self, user_id: str, conversation_data: dict[str, Any]) -> bool:
         """Update user preferences based on conversation analysis."""
         try:
             # Extract preferences from conversation
@@ -444,7 +444,7 @@ class LTSTMemoryIntegration:
             logger.error(f"Failed to cleanup old conversations: {e}")
             return 0
 
-    def get_integration_health(self) -> Dict[str, Any]:
+    def get_integration_health(self) -> dict[str, Any]:
         """Get health metrics for the LTST memory integration."""
         try:
             health_metrics = {

@@ -9,17 +9,21 @@ import json
 import logging
 import os
 import time
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
+from collections.abc import Callable
 
 # Optional psycopg2 import so this module works without DB deps
 try:  # pragma: no cover - guarded import
     import psycopg2  # type: ignore
+
     _PSYCOPG2_AVAILABLE = True
 except Exception:  # pragma: no cover
     _PSYCOPG2_AVAILABLE = False
+
     class _Psycopg2Shim:  # type: ignore
         class OperationalError(Exception):
             pass
+
     psycopg2 = _Psycopg2Shim()  # type: ignore
 from requests.exceptions import RequestException, Timeout
 
@@ -35,46 +39,54 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
+
 class RetryableError(Exception):
     """Base class for errors that should trigger retries"""
 
     pass
+
 
 class FatalError(Exception):
     """Base class for errors that should not trigger retries"""
 
     pass
 
+
 class TimeoutError(RetryableError):
     """Request timeout error"""
 
     pass
+
 
 class DataStoreError(FatalError):
     """Database connection or operation error"""
 
     pass
 
+
 class AuthenticationError(FatalError):
     """Authentication or authorization error"""
 
     pass
+
 
 class ResourceBusyError(FatalError):
     """Resource is busy or unavailable"""
 
     pass
 
+
 class ConfigurationError(FatalError):
     """Configuration or setup error"""
 
     pass
 
-def load_error_policy() -> Dict[str, Any]:
+
+def load_error_policy() -> dict[str, Any]:
     """Load error policy from system configuration"""
     try:
         config_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "config", "system.json")
-        with open(config_path, "r") as f:
+        with open(config_path) as f:
             config = json.load(f)
 
         error_policy = config.get("error_policy", {})
@@ -97,6 +109,7 @@ def load_error_policy() -> Dict[str, Any]:
             "fatal_errors": ["ResourceBusyError", "AuthenticationError"],
         }
 
+
 def get_llm_timeout(model_id: str = None) -> int:
     """Get LLM-specific timeout based on model type"""
     policy = load_error_policy()
@@ -116,7 +129,8 @@ def get_llm_timeout(model_id: str = None) -> int:
     # Default timeout for other models
     return policy.get("timeout_seconds", 30)
 
-def is_fatal_error(exception: Exception, fatal_errors: List[str]) -> bool:
+
+def is_fatal_error(exception: Exception, fatal_errors: list[str]) -> bool:
     """Check if an exception is a fatal error that should not trigger retries"""
     exception_type = type(exception).__name__
     exception_str = str(type(exception))
@@ -135,11 +149,12 @@ def is_fatal_error(exception: Exception, fatal_errors: List[str]) -> bool:
 
     return any(isinstance(exception, fatal_type) for fatal_type in fatal_exception_types)
 
+
 def retry(
-    max_retries: Optional[int] = None,
-    backoff_factor: Optional[float] = None,
-    timeout_seconds: Optional[int] = None,
-    fatal_errors: Optional[List[str]] = None,
+    max_retries: int | None = None,
+    backoff_factor: float | None = None,
+    timeout_seconds: int | None = None,
+    fatal_errors: list[str] | None = None,
     jitter: bool = True,
 ):
     """
@@ -255,6 +270,7 @@ def retry(
 
     return decorator
 
+
 # Convenience functions for common retry scenarios
 def retry_http(func: Callable) -> Callable:
     """Retry decorator for HTTP requests"""
@@ -262,11 +278,13 @@ def retry_http(func: Callable) -> Callable:
         max_retries=3, backoff_factor=2.0, timeout_seconds=30, fatal_errors=["AuthenticationError", "DataStoreError"]
     )(func)
 
+
 def retry_database(func: Callable) -> Callable:
     """Retry decorator for database operations"""
     return retry(
         max_retries=3, backoff_factor=1.5, timeout_seconds=60, fatal_errors=["DataStoreError", "ConfigurationError"]
     )(func)
+
 
 def retry_llm(func: Callable) -> Callable:
     """Retry decorator for LLM API calls with model-specific timeouts"""
@@ -298,6 +316,7 @@ def retry_llm(func: Callable) -> Callable:
 
     return decorator_with_model_timeout(func)
 
+
 def retry_with_timeout(timeout_seconds: int = 30):
     """Retry decorator with specific timeout"""
 
@@ -327,6 +346,7 @@ def retry_with_timeout(timeout_seconds: int = 30):
 
     return decorator
 
+
 # Utility functions for error handling
 def handle_retryable_errors(func: Callable, *args, **kwargs) -> Any:
     """Execute function with retry logic for retryable errors"""
@@ -339,7 +359,8 @@ def handle_retryable_errors(func: Callable, *args, **kwargs) -> Any:
         logger.error(f"Non-retryable error encountered: {e}")
         raise
 
-def get_retry_stats() -> Dict[str, Any]:
+
+def get_retry_stats() -> dict[str, Any]:
     """Get retry statistics for monitoring"""
     # This would be implemented with a metrics collector
     return {"total_retries": 0, "successful_retries": 0, "failed_retries": 0, "fatal_errors": 0}

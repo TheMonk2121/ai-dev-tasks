@@ -21,7 +21,7 @@ class TestLTSTMemorySchema:
         self.cursor = self.conn.cursor()
 
         # Load schema
-        with open("config/database/ltst_memory_schema.sql", "r") as f:
+        with open("config/database/ltst_memory_schema.sql") as f:
             schema_sql = f.read()
 
         # Execute schema creation

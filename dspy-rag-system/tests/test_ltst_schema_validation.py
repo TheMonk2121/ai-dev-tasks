@@ -13,7 +13,7 @@ are properly handled with null checks at runtime.
 
 import os
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import psycopg2
 import pytest
@@ -23,7 +23,7 @@ from psycopg2.extras import RealDictCursor
 class LTSTSchemaValidator:
     """Validator for LTST memory system schema."""
 
-    def __init__(self, database_url: Optional[str] = None):
+    def __init__(self, database_url: str | None = None):
         """Initialize validator with database connection."""
         self.database_url = database_url or os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
         self.connection = None
@@ -49,7 +49,7 @@ class LTSTSchemaValidator:
     def execute_sql_file(self, file_path: str) -> bool:
         """Execute SQL file and return success status."""
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 sql_content = f.read()
 
             # Split by semicolon and execute each statement
@@ -84,7 +84,7 @@ class LTSTSchemaValidator:
             print(f"Table validation failed for {table_name}: {e}")
             return False
 
-    def validate_table_structure(self, table_name: str, expected_columns: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def validate_table_structure(self, table_name: str, expected_columns: list[dict[str, Any]]) -> dict[str, Any]:
         """Validate table structure against expected columns."""
         try:
             self.cursor.execute(
@@ -116,7 +116,7 @@ class LTSTSchemaValidator:
             print(f"Structure validation failed for {table_name}: {e}")
             return {"valid": False, "error": str(e)}
 
-    def validate_indexes(self, table_name: str, expected_indexes: List[str]) -> Dict[str, Any]:
+    def validate_indexes(self, table_name: str, expected_indexes: list[str]) -> dict[str, Any]:
         """Validate that expected indexes exist."""
         try:
             self.cursor.execute(
@@ -142,7 +142,7 @@ class LTSTSchemaValidator:
             print(f"Index validation failed for {table_name}: {e}")
             return {"valid": False, "error": str(e)}
 
-    def validate_foreign_keys(self, table_name: str, expected_fks: List[Dict[str, str]]) -> Dict[str, Any]:
+    def validate_foreign_keys(self, table_name: str, expected_fks: list[dict[str, str]]) -> dict[str, Any]:
         """Validate foreign key constraints."""
         try:
             self.cursor.execute(
@@ -185,7 +185,7 @@ class LTSTSchemaValidator:
             print(f"Foreign key validation failed for {table_name}: {e}")
             return {"valid": False, "error": str(e)}
 
-    def test_data_insertion(self, table_name: str, test_data: Dict[str, Any]) -> Dict[str, Any]:
+    def test_data_insertion(self, table_name: str, test_data: dict[str, Any]) -> dict[str, Any]:
         """Test data insertion and retrieval."""
         try:
             # Insert test data
@@ -213,7 +213,7 @@ class LTSTSchemaValidator:
             self.connection.rollback()
             return {"valid": False, "error": str(e), "message": "Data insertion test failed"}
 
-    def validate_performance(self, table_name: str) -> Dict[str, Any]:
+    def validate_performance(self, table_name: str) -> dict[str, Any]:
         """Validate basic performance characteristics."""
         try:
             # Test basic query performance

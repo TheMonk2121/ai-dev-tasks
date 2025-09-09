@@ -7,7 +7,7 @@ Target: Boost RAG quality from 66% to 85%+
 import json
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 # Add src to path
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
@@ -22,7 +22,7 @@ class RAGQualityImprover:
         self.switcher = ModelSwitcher()
         self.rag_pipeline = self.switcher.rag_pipeline
 
-    def improve_citation_matching(self) -> Dict[str, Any]:
+    def improve_citation_matching(self) -> dict[str, Any]:
         """Improve citation matching by enhancing retrieval and citation extraction"""
 
         print("🔧 IMPROVING CITATION MATCHING")
@@ -71,7 +71,7 @@ class RAGQualityImprover:
 
         return improvements
 
-    def improve_keyword_usage(self) -> Dict[str, Any]:
+    def improve_keyword_usage(self) -> dict[str, Any]:
         """Improve keyword usage in generated answers"""
 
         print("🔧 IMPROVING KEYWORD USAGE")
@@ -107,7 +107,7 @@ class RAGQualityImprover:
 
         return improvements
 
-    def improve_retrieval_quality(self) -> Dict[str, Any]:
+    def improve_retrieval_quality(self) -> dict[str, Any]:
         """Improve overall retrieval quality"""
 
         print("🔧 IMPROVING RETRIEVAL QUALITY")
@@ -152,7 +152,7 @@ class RAGQualityImprover:
 
         return improvements
 
-    def implement_quick_fixes(self) -> List[Dict[str, Any]]:
+    def implement_quick_fixes(self) -> list[dict[str, Any]]:
         """Implement quick fixes for immediate improvement"""
 
         print("⚡ IMPLEMENTING QUICK FIXES")
@@ -192,7 +192,7 @@ class RAGQualityImprover:
 
         return fixes
 
-    def create_enhanced_test_queries(self) -> List[Dict[str, Any]]:
+    def create_enhanced_test_queries(self) -> list[dict[str, Any]]:
         """Create enhanced test queries with better expected results"""
 
         print("📝 CREATING ENHANCED TEST QUERIES")
@@ -238,7 +238,7 @@ class RAGQualityImprover:
 
         return enhanced_queries
 
-    def generate_improvement_plan(self) -> Dict[str, Any]:
+    def generate_improvement_plan(self) -> dict[str, Any]:
         """Generate comprehensive improvement plan"""
 
         print("📋 GENERATING IMPROVEMENT PLAN")
@@ -260,7 +260,7 @@ class RAGQualityImprover:
 
         return plan
 
-    def save_improvement_plan(self, plan: Dict[str, Any], filename: str = "rag_improvement_plan.json"):
+    def save_improvement_plan(self, plan: dict[str, Any], filename: str = "rag_improvement_plan.json"):
         """Save improvement plan to file"""
 
         with open(filename, "w") as f:

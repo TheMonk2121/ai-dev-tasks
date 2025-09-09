@@ -9,7 +9,8 @@ import json
 import logging
 import traceback
 from datetime import datetime
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
+from collections.abc import Callable
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -26,12 +27,12 @@ class DebuggingContext(BaseModel):
     """Model for debugging context information"""
 
     context_id: str = Field(..., description="Unique debugging context identifier")
-    user_context: Optional[PromptContext] = Field(None, description="User context at time of debugging")
-    role_context: Optional[BaseContext] = Field(None, description="Role context at time of debugging")
-    execution_stack: List[str] = Field(default_factory=list, description="Execution stack trace")
-    variable_snapshot: Dict[str, Any] = Field(default_factory=dict, description="Variable state snapshot")
+    user_context: PromptContext | None = Field(None, description="User context at time of debugging")
+    role_context: BaseContext | None = Field(None, description="Role context at time of debugging")
+    execution_stack: list[str] = Field(default_factory=list, description="Execution stack trace")
+    variable_snapshot: dict[str, Any] = Field(default_factory=dict, description="Variable state snapshot")
     timestamp: datetime = Field(default_factory=datetime.now, description="Debugging context timestamp")
-    correlation_id: Optional[str] = Field(None, description="Correlation ID for tracing")
+    correlation_id: str | None = Field(None, description="Correlation ID for tracing")
 
     @field_validator("context_id")
     @classmethod
@@ -50,11 +51,11 @@ class RichErrorMessage(BaseModel):
     error_message: str = Field(..., description="Human-readable error message")
     technical_details: str = Field(..., description="Technical error details")
     user_friendly_message: str = Field(..., description="User-friendly error message")
-    debugging_context: Optional[DebuggingContext] = Field(None, description="Debugging context")
-    suggested_actions: List[str] = Field(default_factory=list, description="Suggested actions to resolve")
+    debugging_context: DebuggingContext | None = Field(None, description="Debugging context")
+    suggested_actions: list[str] = Field(default_factory=list, description="Suggested actions to resolve")
     severity: ErrorSeverity = Field(..., description="Error severity level")
     timestamp: datetime = Field(default_factory=datetime.now, description="Error timestamp")
-    correlation_data: Dict[str, Any] = Field(default_factory=dict, description="Correlation data")
+    correlation_data: dict[str, Any] = Field(default_factory=dict, description="Correlation data")
 
     @field_validator("error_id")
     @classmethod
@@ -78,8 +79,8 @@ class ContextCorrelation(BaseModel):
 
     correlation_id: str = Field(..., description="Unique correlation identifier")
     primary_context: DebuggingContext = Field(..., description="Primary debugging context")
-    related_contexts: List[DebuggingContext] = Field(default_factory=list, description="Related contexts")
-    correlation_patterns: List[str] = Field(default_factory=list, description="Identified correlation patterns")
+    related_contexts: list[DebuggingContext] = Field(default_factory=list, description="Related contexts")
+    correlation_patterns: list[str] = Field(default_factory=list, description="Identified correlation patterns")
     confidence_score: float = Field(..., ge=0.0, le=1.0, description="Correlation confidence score")
     analysis_timestamp: datetime = Field(default_factory=datetime.now, description="Analysis timestamp")
 
@@ -106,10 +107,10 @@ class StructuredLogEntry(BaseModel):
     log_id: str = Field(..., description="Unique log entry identifier")
     level: str = Field(..., description="Log level")
     message: str = Field(..., description="Log message")
-    context_data: Dict[str, Any] = Field(default_factory=dict, description="Context data")
+    context_data: dict[str, Any] = Field(default_factory=dict, description="Context data")
     timestamp: datetime = Field(default_factory=datetime.now, description="Log timestamp")
     source: str = Field(..., description="Source of the log entry")
-    correlation_id: Optional[str] = Field(None, description="Correlation ID for tracing")
+    correlation_id: str | None = Field(None, description="Correlation ID for tracing")
 
     @field_validator("log_id")
     @classmethod
@@ -139,16 +140,16 @@ class EnhancedDebuggingManager:
         """Initialize debugging manager"""
         self.enable_privacy = enable_privacy
         self.max_context_history = max_context_history
-        self.context_history: List[DebuggingContext] = []
-        self.error_history: List[RichErrorMessage] = []
-        self.correlation_cache: Dict[str, ContextCorrelation] = {}
+        self.context_history: list[DebuggingContext] = []
+        self.error_history: list[RichErrorMessage] = []
+        self.correlation_cache: dict[str, ContextCorrelation] = {}
 
     def capture_debugging_context(
         self,
-        user_context: Optional[PromptContext] = None,
-        role_context: Optional[BaseContext] = None,
-        variable_snapshot: Optional[Dict[str, Any]] = None,
-        correlation_id: Optional[str] = None,
+        user_context: PromptContext | None = None,
+        role_context: BaseContext | None = None,
+        variable_snapshot: dict[str, Any] | None = None,
+        correlation_id: str | None = None,
     ) -> DebuggingContext:
         """Capture debugging context information"""
         import uuid
@@ -180,9 +181,9 @@ class EnhancedDebuggingManager:
     def create_rich_error_message(
         self,
         error: Exception,
-        debugging_context: Optional[DebuggingContext] = None,
-        user_context: Optional[PromptContext] = None,
-        role_context: Optional[BaseContext] = None,
+        debugging_context: DebuggingContext | None = None,
+        user_context: PromptContext | None = None,
+        role_context: BaseContext | None = None,
     ) -> RichErrorMessage:
         """Create rich error message with full context"""
         import uuid
@@ -261,9 +262,9 @@ class EnhancedDebuggingManager:
         self,
         level: str,
         message: str,
-        context_data: Optional[Dict[str, Any]] = None,
+        context_data: dict[str, Any] | None = None,
         source: str = "enhanced_debugging",
-        correlation_id: Optional[str] = None,
+        correlation_id: str | None = None,
     ) -> StructuredLogEntry:
         """Create structured log entry"""
         import uuid
@@ -289,7 +290,7 @@ class EnhancedDebuggingManager:
 
         return log_entry
 
-    def get_debugging_summary(self) -> Dict[str, Any]:
+    def get_debugging_summary(self) -> dict[str, Any]:
         """Get debugging summary and statistics"""
         return {
             "total_contexts": len(self.context_history),
@@ -300,7 +301,7 @@ class EnhancedDebuggingManager:
             "correlation_insights": self._get_correlation_insights(),
         }
 
-    def _capture_execution_stack(self) -> List[str]:
+    def _capture_execution_stack(self) -> list[str]:
         """Capture current execution stack"""
         try:
             # Get current stack trace
@@ -316,7 +317,7 @@ class EnhancedDebuggingManager:
         except Exception:
             return ["Unable to capture stack trace"]
 
-    def _sanitize_variables(self, variables: Dict[str, Any]) -> Dict[str, Any]:
+    def _sanitize_variables(self, variables: dict[str, Any]) -> dict[str, Any]:
         """Sanitize variables for privacy and security"""
         if not self.enable_privacy:
             return variables
@@ -334,7 +335,7 @@ class EnhancedDebuggingManager:
             elif isinstance(value, str) and len(value) > 100:
                 # Truncate long strings
                 sanitized[key] = value[:100] + "..."
-            elif isinstance(value, (dict, list)) and len(str(value)) > 200:
+            elif isinstance(value, dict | list) and len(str(value)) > 200:
                 # Truncate large objects
                 sanitized[key] = f"[{type(value).__name__} - {len(value)} items]"
             else:
@@ -404,7 +405,7 @@ class EnhancedDebuggingManager:
         else:
             return f"An unexpected error occurred: {error_type}. Please try again or contact support if the problem persists."
 
-    def _generate_suggested_actions(self, error: Exception, error_type: str) -> List[str]:
+    def _generate_suggested_actions(self, error: Exception, error_type: str) -> list[str]:
         """Generate suggested actions to resolve the error"""
         error_message = str(error).lower()
         actions = []
@@ -445,7 +446,7 @@ class EnhancedDebuggingManager:
 
         return actions
 
-    def _extract_correlation_data(self, debugging_context: DebuggingContext) -> Dict[str, Any]:
+    def _extract_correlation_data(self, debugging_context: DebuggingContext) -> dict[str, Any]:
         """Extract correlation data from debugging context"""
         correlation_data = {
             "context_id": debugging_context.context_id,
@@ -462,7 +463,7 @@ class EnhancedDebuggingManager:
 
         return correlation_data
 
-    def _find_related_contexts(self, primary_context: DebuggingContext) -> List[DebuggingContext]:
+    def _find_related_contexts(self, primary_context: DebuggingContext) -> list[DebuggingContext]:
         """Find related debugging contexts"""
         related_contexts = []
 
@@ -494,8 +495,8 @@ class EnhancedDebuggingManager:
         return related_contexts
 
     def _identify_correlation_patterns(
-        self, primary_context: DebuggingContext, related_contexts: List[DebuggingContext]
-    ) -> List[str]:
+        self, primary_context: DebuggingContext, related_contexts: list[DebuggingContext]
+    ) -> list[str]:
         """Identify correlation patterns between contexts"""
         patterns = []
 
@@ -530,7 +531,7 @@ class EnhancedDebuggingManager:
         return patterns
 
     def _calculate_correlation_confidence(
-        self, primary_context: DebuggingContext, related_contexts: List[DebuggingContext], patterns: List[str]
+        self, primary_context: DebuggingContext, related_contexts: list[DebuggingContext], patterns: list[str]
     ) -> float:
         """Calculate correlation confidence score"""
         if not related_contexts:
@@ -577,7 +578,7 @@ class EnhancedDebuggingManager:
         elif log_entry.level == "CRITICAL":
             _LOG.critical(log_message)
 
-    def _get_error_distribution(self) -> Dict[str, int]:
+    def _get_error_distribution(self) -> dict[str, int]:
         """Get error distribution by type"""
         distribution = {}
         for error in self.error_history:
@@ -585,7 +586,7 @@ class EnhancedDebuggingManager:
             distribution[error_type] = distribution.get(error_type, 0) + 1
         return distribution
 
-    def _get_context_timeline(self) -> List[Dict[str, Any]]:
+    def _get_context_timeline(self) -> list[dict[str, Any]]:
         """Get context timeline"""
         timeline = []
         for context in self.context_history[-20:]:  # Last 20 contexts
@@ -599,7 +600,7 @@ class EnhancedDebuggingManager:
             )
         return timeline
 
-    def _get_correlation_insights(self) -> Dict[str, Any]:
+    def _get_correlation_insights(self) -> dict[str, Any]:
         """Get correlation insights"""
         if not self.correlation_cache:
             return {"message": "No correlations found"}
@@ -672,7 +673,7 @@ def enhanced_debugging(enable_privacy: bool = True, capture_variables: bool = Tr
 # ---------- Context Correlation Utilities ----------
 
 
-def correlate_errors(error_messages: List[RichErrorMessage]) -> List[ContextCorrelation]:
+def correlate_errors(error_messages: list[RichErrorMessage]) -> list[ContextCorrelation]:
     """Correlate multiple error messages for analysis"""
     debugging_manager = EnhancedDebuggingManager()
     correlations = []
@@ -685,7 +686,7 @@ def correlate_errors(error_messages: List[RichErrorMessage]) -> List[ContextCorr
     return correlations
 
 
-def analyze_error_patterns(error_messages: List[RichErrorMessage]) -> Dict[str, Any]:
+def analyze_error_patterns(error_messages: list[RichErrorMessage]) -> dict[str, Any]:
     """Analyze patterns in error messages"""
     if not error_messages:
         return {"message": "No error messages to analyze"}

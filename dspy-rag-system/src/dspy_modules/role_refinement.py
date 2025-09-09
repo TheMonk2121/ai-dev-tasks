@@ -12,12 +12,13 @@ import sys
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any
 
 # Apply litellm compatibility shim before importing DSPy
 try:
     sys.path.insert(0, "../../scripts")
     from litellm_compatibility_shim import patch_litellm_imports
+
     patch_litellm_imports()
 except ImportError:
     pass  # Shim not available, continue without it
@@ -69,11 +70,11 @@ class RoleDefinition:
     role_type: RoleType
     focus: str
     context: str
-    responsibilities: List[str] = field(default_factory=list)
-    validation_rules: List[str] = field(default_factory=list)
-    required_standards: List[str] = field(default_factory=list)
-    quality_gates: List[str] = field(default_factory=list)
-    performance_metrics: Dict[str, float] = field(default_factory=dict)
+    responsibilities: list[str] = field(default_factory=list)
+    validation_rules: list[str] = field(default_factory=list)
+    required_standards: list[str] = field(default_factory=list)
+    quality_gates: list[str] = field(default_factory=list)
+    performance_metrics: dict[str, float] = field(default_factory=dict)
     solo_developer_optimized: bool = False
     corporate_patterns_removed: bool = False
 
@@ -86,8 +87,8 @@ class RoleRefinementResult:
     original_definition: RoleDefinition
     refined_definition: RoleDefinition
     improvement_score: float
-    changes_made: List[str]
-    performance_improvements: Dict[str, float]
+    changes_made: list[str]
+    performance_improvements: dict[str, float]
     validation_passed: bool
     refinement_time: float
     status: RefinementStatus
@@ -115,10 +116,10 @@ class RoleRefinementModule(Module):
     def forward(
         self,
         role_type: str,
-        current_definition: Dict[str, Any],
-        performance_metrics: Dict[str, float],
+        current_definition: dict[str, Any],
+        performance_metrics: dict[str, float],
         solo_developer_context: str,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Refine a role definition for solo developer workflow
 
@@ -167,7 +168,7 @@ class RoleRefinementSystem:
         self.metrics_dashboard = get_metrics_dashboard()
 
         self.refinement_module = RoleRefinementModule()
-        self.refinement_history: List[RoleRefinementResult] = []
+        self.refinement_history: list[RoleRefinementResult] = []
 
         _LOG.info("Role Refinement System initialized")
 
@@ -230,7 +231,7 @@ class RoleRefinementSystem:
 
         return result
 
-    def _analyze_current_role(self, role_type: RoleType, current_definition: RoleDefinition) -> Dict[str, Any]:
+    def _analyze_current_role(self, role_type: RoleType, current_definition: RoleDefinition) -> dict[str, Any]:
         """Analyze current role definition for improvement opportunities"""
 
         analysis = {
@@ -294,7 +295,7 @@ class RoleRefinementSystem:
 
     def _optimize_role_definition(
         self, role_type: RoleType, current_definition: RoleDefinition, solo_developer_context: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Optimize role definition using DSPy optimization"""
 
         # Prepare optimization inputs
@@ -356,7 +357,7 @@ class RoleRefinementSystem:
                 "error": "Optimization cycle failed",
             }
 
-    def _validate_refined_role(self, role_type: RoleType, refined_definition_str: str) -> Dict[str, Any]:
+    def _validate_refined_role(self, role_type: RoleType, refined_definition_str: str) -> dict[str, Any]:
         """Validate refined role definition"""
 
         try:
@@ -378,7 +379,7 @@ class RoleRefinementSystem:
         except Exception as e:
             return {"passed": False, "error": str(e), "reliability_score": 0.0, "validation_details": []}
 
-    def _deploy_refined_role(self, role_type: RoleType, refined_definition: RoleDefinition) -> Dict[str, Any]:
+    def _deploy_refined_role(self, role_type: RoleType, refined_definition: RoleDefinition) -> dict[str, Any]:
         """Deploy refined role definition"""
 
         try:
@@ -414,7 +415,7 @@ class RoleRefinementSystem:
             corporate_patterns_removed=True,
         )
 
-    def _definition_to_dict(self, definition: RoleDefinition) -> Dict[str, Any]:
+    def _definition_to_dict(self, definition: RoleDefinition) -> dict[str, Any]:
         """Convert RoleDefinition to dictionary"""
         return {
             "role_type": definition.role_type.value,
@@ -429,7 +430,7 @@ class RoleRefinementSystem:
             "corporate_patterns_removed": definition.corporate_patterns_removed,
         }
 
-    def _extract_changes(self, justification: str) -> List[str]:
+    def _extract_changes(self, justification: str) -> list[str]:
         """Extract changes from improvement justification"""
         changes = []
         lines = justification.split("\n")
@@ -478,11 +479,11 @@ class RoleRefinementSystem:
                     metadata={"role_type": result.role_type.value, "refinement_time": result.refinement_time},
                 )
 
-    def get_refinement_history(self) -> List[RoleRefinementResult]:
+    def get_refinement_history(self) -> list[RoleRefinementResult]:
         """Get refinement history"""
         return self.refinement_history
 
-    def get_role_performance_summary(self) -> Dict[str, Any]:
+    def get_role_performance_summary(self) -> dict[str, Any]:
         """Get summary of role performance improvements"""
         if not self.refinement_history:
             return {"message": "No refinements performed yet"}
@@ -522,7 +523,7 @@ def refine_role(
     return system.refine_role(role_type, current_definition, solo_developer_context)
 
 
-def get_refinement_summary() -> Dict[str, Any]:
+def get_refinement_summary() -> dict[str, Any]:
     """Get refinement summary"""
     system = get_role_refinement_system()
     return system.get_role_performance_summary()

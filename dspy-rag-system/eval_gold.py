@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import os
 import sys
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -30,7 +30,7 @@ from dspy_modules.wrapper_ns_helpers import extract_ns_tokens, normalize_ns_toke
 # all evaluations use the same question distribution for consistent metrics.
 
 
-def match_gold(row: Dict[str, Any], gold: Dict[str, Any]) -> bool:
+def match_gold(row: dict[str, Any], gold: dict[str, Any]) -> bool:
     if "doc_ids" in gold and row.get("document_id") in gold["doc_ids"]:
         return True
     if "filenames" in gold and row.get("filename") in gold["filenames"]:
@@ -46,13 +46,13 @@ def match_gold(row: Dict[str, Any], gold: Dict[str, Any]) -> bool:
     return False
 
 
-def ns_flag(row: Dict[str, Any], namespace: str) -> bool:
+def ns_flag(row: dict[str, Any], namespace: str) -> bool:
     ns = str(namespace).rstrip("/")
     fp = row.get("file_path") or ""
     return fp.split("/", 1)[0] == ns
 
 
-def _get_existing_namespaces(db_url: str) -> Set[str]:
+def _get_existing_namespaces(db_url: str) -> set[str]:
     try:
         with psycopg2.connect(db_url) as conn:
             with conn.cursor() as cur:
@@ -62,7 +62,7 @@ def _get_existing_namespaces(db_url: str) -> Set[str]:
         return set()
 
 
-def _intent_set(q: str, existing_namespaces: Set[str]) -> Set[str]:
+def _intent_set(q: str, existing_namespaces: set[str]) -> set[str]:
     tokens = set(extract_ns_tokens(q))
     for w in q.lower().replace("\n", " ").split():
         nt = normalize_ns_token(w)
@@ -71,22 +71,22 @@ def _intent_set(q: str, existing_namespaces: Set[str]) -> Set[str]:
     return {t for t in tokens if t in existing_namespaces}
 
 
-def evaluate(search_fn, gold: Dict[str, Dict[str, Any]], top_k: int = 10, at_k: int = 3) -> Dict[str, float]:
+def evaluate(search_fn, gold: dict[str, dict[str, Any]], top_k: int = 10, at_k: int = 3) -> dict[str, float]:
     total = len(gold)
     hit_at_k = 0
     ns_at_k = 0
     mrr_sum = 0.0
     intent_hits = 0
     scoped = 0
-    dup_rates: List[float] = []
-    latencies: List[float] = []
+    dup_rates: list[float] = []
+    latencies: list[float] = []
 
     db_url = os.getenv("DATABASE_URL", "")
     existing_namespaces = _get_existing_namespaces(db_url) if db_url else set()
 
     for q, g in gold.items():
         t0 = time.time()
-        rows: List[Dict[str, Any]] = search_fn(q, top_k)
+        rows: list[dict[str, Any]] = search_fn(q, top_k)
         latencies.append(max(0.0, time.time() - t0))
 
         topk = rows[:at_k]
@@ -108,7 +108,7 @@ def evaluate(search_fn, gold: Dict[str, Dict[str, Any]], top_k: int = 10, at_k: 
         unique = len({i for i in ids if i is not None}) or 1
         dup_rates.append(1.0 - (unique / max(1, len(ids))))
 
-        rr: Optional[float] = None
+        rr: float | None = None
         for i, r in enumerate(rows[:top_k]):
             if match_gold(r, g):
                 rr = 1.0 / (i + 1)
@@ -136,7 +136,7 @@ def evaluate(search_fn, gold: Dict[str, Dict[str, Any]], top_k: int = 10, at_k: 
 
 
 def make_search_fn(store: HybridVectorStore):
-    def search_fn(query: str, top_k: int = 10) -> List[Dict[str, Any]]:
+    def search_fn(query: str, top_k: int = 10) -> list[dict[str, Any]]:
         out = store("search", query=query, limit=top_k)
         return out.get("results", []) if isinstance(out, dict) else []
 

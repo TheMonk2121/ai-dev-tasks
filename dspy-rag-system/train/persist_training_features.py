@@ -5,14 +5,14 @@ This ensures all training data is validated and JSON-safe.
 """
 
 import json
-from typing import Any, Dict, List
+from typing import Any
 
 from feature_io import write_feature
 
 from dspy_modules.retriever.feature_schema import FusionFeatures
 
 
-def persist_features_to_jsonl(features: List[Dict[str, Any]], output_path: str, validate: bool = True) -> int:
+def persist_features_to_jsonl(features: list[dict[str, Any]], output_path: str, validate: bool = True) -> int:
     """
     Persist a list of feature dictionaries to JSONL using FusionFeatures schema.
 
@@ -48,7 +48,7 @@ def persist_features_to_jsonl(features: List[Dict[str, Any]], output_path: str, 
     return written_count
 
 
-def load_features_from_jsonl(input_path: str) -> List[FusionFeatures]:
+def load_features_from_jsonl(input_path: str) -> list[FusionFeatures]:
     """
     Load features from JSONL file with schema validation.
 
@@ -61,7 +61,7 @@ def load_features_from_jsonl(input_path: str) -> List[FusionFeatures]:
     from feature_io import read_feature
 
     features = []
-    with open(input_path, "r") as f:
+    with open(input_path) as f:
         for line_num, line in enumerate(f, 1):
             line = line.strip()
             if not line:
@@ -90,7 +90,7 @@ def main():
     args = parser.parse_args()
 
     # Load features from JSON
-    with open(args.input, "r") as f:
+    with open(args.input) as f:
         features = json.load(f)
 
     # Persist to JSONL with validation

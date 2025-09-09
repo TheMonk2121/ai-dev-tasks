@@ -13,7 +13,7 @@ import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

@@ -7,7 +7,7 @@ Implements the coach's strategy for pushing F1 over 20%
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -62,8 +62,8 @@ class EnhancedRetrievalPipeline:
         )
 
     def retrieve_with_context(
-        self, query: str, query_type: Optional[str] = None, enable_stitching: bool = True
-    ) -> List[Dict[str, Any]]:
+        self, query: str, query_type: str | None = None, enable_stitching: bool = True
+    ) -> list[dict[str, Any]]:
         """
         Enhanced retrieval with context-aware processing
         """
@@ -118,10 +118,10 @@ class EnhancedRetrievalPipeline:
         else:
             return "general"
 
-    def _stitch_related_chunks(self, results: List[Any], query_type: str) -> List[Dict[str, Any]]:
+    def _stitch_related_chunks(self, results: list[Any], query_type: str) -> list[dict[str, Any]]:
         """Stitch related chunks for better context"""
         # Convert to list of dicts if needed (support dataclasses or objects)
-        dict_results: List[Dict[str, Any]] = []
+        dict_results: list[dict[str, Any]] = []
         for r in results:
             if isinstance(r, dict):
                 dict_results.append(r)
@@ -147,7 +147,7 @@ class EnhancedRetrievalPipeline:
             # For other queries, use standard stitching
             return self.chunker.stitch_adjacent_chunks(dict_results)
 
-    def _enhance_with_metadata(self, results: List[Any], query: str, query_type: str) -> List[Dict[str, Any]]:
+    def _enhance_with_metadata(self, results: list[Any], query: str, query_type: str) -> list[dict[str, Any]]:
         """Enhance results with metadata for answer generation"""
         enhanced = []
 
@@ -180,7 +180,7 @@ class EnhancedRetrievalPipeline:
 
         return min(base_score, 1.0)
 
-    def _fallback_retrieval(self, query: str) -> List[Dict]:
+    def _fallback_retrieval(self, query: str) -> list[dict]:
         """Fallback retrieval method.
 
         If the query appears to ask about running evaluations, return
@@ -205,7 +205,7 @@ class EnhancedRetrievalPipeline:
             files = discovery.get("files", [])
 
             # Build a concise, actionable text block
-            lines: List[str] = []
+            lines: list[str] = []
             if commands:
                 lines.append("Recommended commands (primary first):")
                 for c in commands[:4]:
@@ -239,7 +239,7 @@ class EnhancedRetrievalPipeline:
             }
         ]
 
-    def get_pipeline_stats(self) -> Dict[str, Any]:
+    def get_pipeline_stats(self) -> dict[str, Any]:
         """Get pipeline statistics"""
         return {
             "chunker_config": {

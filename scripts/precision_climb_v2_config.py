@@ -15,7 +15,7 @@ Optional: Cross-encoder rerank for top-N candidates
 import logging
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")

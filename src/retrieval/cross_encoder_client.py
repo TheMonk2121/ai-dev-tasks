@@ -15,7 +15,7 @@ import asyncio
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 try:
     import numpy as np

@@ -15,7 +15,7 @@ import logging
 import os
 import sys
 from datetime import datetime
-from typing import Optional
+
 
 # Add src to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -26,7 +26,7 @@ from utils.conversation_storage import ConversationStorage
 class DecisionIntelligenceMigration:
     """Manages the migration to add decision intelligence features."""
 
-    def __init__(self, database_url: Optional[str] = None):
+    def __init__(self, database_url: str | None = None):
         """Initialize migration manager."""
         self.database_url = database_url
         self.storage = ConversationStorage(database_url)
@@ -75,7 +75,7 @@ class DecisionIntelligenceMigration:
             )
 
             result = self.storage.cursor.fetchone()
-            table_exists = result[0] if isinstance(result, (list, tuple)) else result.get("exists") if result else False
+            table_exists = result[0] if isinstance(result, list | tuple) else result.get("exists") if result else False
             if not table_exists:
                 self.logger.error("Prerequisites check failed: conversation_context table does not exist")
                 return False
@@ -90,7 +90,7 @@ class DecisionIntelligenceMigration:
             result = self.storage.cursor.fetchone()
             can_alter = (
                 result[0]
-                if isinstance(result, (list, tuple))
+                if isinstance(result, list | tuple)
                 else result.get("has_table_privilege") if result else False
             )
             if not can_alter:
@@ -124,7 +124,7 @@ class DecisionIntelligenceMigration:
             # Get row count
             self.storage.cursor.execute(f"SELECT COUNT(*) FROM {backup_table}")
             result = self.storage.cursor.fetchone()
-            row_count = result[0] if isinstance(result, (list, tuple)) else result.get("count") if result else 0
+            row_count = result[0] if isinstance(result, list | tuple) else result.get("count") if result else 0
 
             self.storage.connection.commit()
             self.logger.info(f"Backup created: {backup_table} with {row_count} rows")
@@ -158,7 +158,7 @@ class DecisionIntelligenceMigration:
 
                 result = self.storage.cursor.fetchone()
                 column_exists = (
-                    result[0] if isinstance(result, (list, tuple)) else result.get("exists") if result else False
+                    result[0] if isinstance(result, list | tuple) else result.get("exists") if result else False
                 )
                 if not column_exists:
                     self.storage.cursor.execute(
@@ -260,7 +260,7 @@ class DecisionIntelligenceMigration:
 
                 result = self.storage.cursor.fetchone()
                 column_exists = (
-                    result[0] if isinstance(result, (list, tuple)) else result.get("exists") if result else False
+                    result[0] if isinstance(result, list | tuple) else result.get("exists") if result else False
                 )
                 if not column_exists:
                     self.logger.error(f"Validation failed: column {column} does not exist")
@@ -287,7 +287,7 @@ class DecisionIntelligenceMigration:
 
                 result = self.storage.cursor.fetchone()
                 index_exists = (
-                    result[0] if isinstance(result, (list, tuple)) else result.get("exists") if result else False
+                    result[0] if isinstance(result, list | tuple) else result.get("exists") if result else False
                 )
                 if not index_exists:
                     self.logger.error(f"Validation failed: index {index} does not exist")

@@ -6,7 +6,7 @@ Integrates with the existing retriever configuration system.
 
 import os
 from functools import lru_cache
-from typing import Any, Dict, Optional
+from typing import Any
 
 import yaml
 
@@ -28,7 +28,7 @@ DEFAULT_RERANKER_CONFIG = {
 
 
 @lru_cache(maxsize=32)
-def load_reranker_config(tag: str = "", file_path: Optional[str] = None) -> Dict[str, Any]:
+def load_reranker_config(tag: str = "", file_path: str | None = None) -> dict[str, Any]:
     """
     Load reranker configuration from YAML file with tag-specific overrides.
 
@@ -44,7 +44,7 @@ def load_reranker_config(tag: str = "", file_path: Optional[str] = None) -> Dict
 
     try:
         if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
 
             # Load default reranker config
@@ -103,7 +103,7 @@ def load_reranker_config(tag: str = "", file_path: Optional[str] = None) -> Dict
     return config
 
 
-def get_reranker_env_vars(config: Dict[str, Any]) -> Dict[str, str]:
+def get_reranker_env_vars(config: dict[str, Any]) -> dict[str, str]:
     """
     Convert reranker config to environment variables for the reranker module.
 
@@ -131,7 +131,7 @@ def get_reranker_env_vars(config: Dict[str, Any]) -> Dict[str, str]:
     return env_vars
 
 
-def apply_reranker_config(config: Dict[str, Any]):
+def apply_reranker_config(config: dict[str, Any]):
     """
     Apply reranker configuration by setting environment variables.
 

@@ -14,7 +14,7 @@ import re
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
 
 
 @dataclass
@@ -80,7 +80,7 @@ class EnhancedChunker:
                 except Exception:
                     pass  # Tokenizer might not be ready yet
 
-    def _init_tokenizer(self) -> Union[Any, None]:
+    def _init_tokenizer(self) -> Any | None:
         """Initialize tokenizer once - embedder-first approach"""
         try:
             from transformers import AutoTokenizer
@@ -117,7 +117,7 @@ class EnhancedChunker:
                     return max(1, round(len(s) / 4))
         return max(1, round(len(s) / 4))  # last-resort heuristic
 
-    def window_by_tokens(self, text: str, max_tokens: int, overlap: int) -> List[str]:
+    def window_by_tokens(self, text: str, max_tokens: int, overlap: int) -> list[str]:
         """Window text by tokens, not characters"""
         if not self.tokenizer:
             # Fallback to character-based windowing
@@ -150,7 +150,7 @@ class EnhancedChunker:
 
         return chunks
 
-    def _window_by_chars(self, text: str, max_tokens: int, overlap: int) -> List[str]:
+    def _window_by_chars(self, text: str, max_tokens: int, overlap: int) -> list[str]:
         """Fallback character-based windowing"""
         # Rough estimate: 4 chars per token
         max_chars = max_tokens * 4
@@ -166,7 +166,7 @@ class EnhancedChunker:
 
         return chunks
 
-    def split_by_structure(self, text: str) -> List[str]:
+    def split_by_structure(self, text: str) -> list[str]:
         """Split by document structure (headings, code blocks)"""
         # Keep fenced code intact
         blocks = re.split(r"(\n```.*?\n```)", text, flags=re.DOTALL)
@@ -182,12 +182,12 @@ class EnhancedChunker:
 
         return sections
 
-    def split_by_paragraphs(self, text: str) -> List[str]:
+    def split_by_paragraphs(self, text: str) -> list[str]:
         """Split by paragraph boundaries"""
         paras = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
         return paras
 
-    def split_by_sentences(self, text: str) -> List[str]:
+    def split_by_sentences(self, text: str) -> list[str]:
         """Split by sentence boundaries"""
         sentences = re.split(r"(?<=[.!?])\s+", text)
         return [s.strip() for s in sentences if s.strip()]
@@ -200,7 +200,7 @@ class EnhancedChunker:
             return any(line.strip().startswith("#") for line in lines)
         return False
 
-    def protect_structure(self, chunks: List[str]) -> List[str]:
+    def protect_structure(self, chunks: list[str]) -> list[str]:
         """Protect pathological sections from being split"""
         protected = []
         for chunk in chunks:
@@ -220,7 +220,7 @@ class EnhancedChunker:
         words = text.split()
         return {tuple(words[i : i + n]) for i in range(0, max(0, len(words) - n + 1))}
 
-    def dedup_chunks(self, chunks: List[str]) -> List[str]:
+    def dedup_chunks(self, chunks: list[str]) -> list[str]:
         """Remove near-duplicate chunks using Jaccard threshold"""
         kept, signatures = [], []
 
@@ -236,7 +236,7 @@ class EnhancedChunker:
 
         return kept
 
-    def create_contextual_prefix(self, metadata: Dict[str, Any]) -> str:
+    def create_contextual_prefix(self, metadata: dict[str, Any]) -> str:
         """Create contextual prefix for embedding augmentation"""
         if not self.config.use_contextual_prefix:
             return ""
@@ -253,7 +253,7 @@ class EnhancedChunker:
             return "\n".join(prefix_parts) + "\n\n"
         return ""
 
-    def create_chunk_pair(self, chunk: str, metadata: Dict[str, Any]) -> Tuple[str, str, Dict[str, int], str]:
+    def create_chunk_pair(self, chunk: str, metadata: dict[str, Any]) -> tuple[str, str, dict[str, int], str]:
         """Create dual-text pair: embedding_text (with context) and bm25_text (clean or with prefix)"""
         contextual_prefix = self.create_contextual_prefix(metadata)
         embedding_text = contextual_prefix + chunk
@@ -280,7 +280,7 @@ class EnhancedChunker:
 
         return embedding_text, bm25_text, token_counts, chunk_id
 
-    def recursive_split(self, content: str, metadata: Dict[str, Any]) -> List[Tuple[str, str, Dict[str, int], str]]:
+    def recursive_split(self, content: str, metadata: dict[str, Any]) -> list[tuple[str, str, dict[str, int], str]]:
         """Recursive splitting with hard cap enforcement"""
         # Level 1: Split by document structure
         sections = self.split_by_structure(content)
@@ -318,7 +318,7 @@ class EnhancedChunker:
 
         return chunk_pairs
 
-    def _process_paragraphs(self, paragraphs: List[str]) -> List[str]:
+    def _process_paragraphs(self, paragraphs: list[str]) -> list[str]:
         """Process paragraphs with overlap"""
         chunks = []
         current_chunk = []
@@ -348,7 +348,7 @@ class EnhancedChunker:
 
         return chunks
 
-    def chunk_document(self, file_path: Path, content: str) -> Dict[str, Any]:
+    def chunk_document(self, file_path: Path, content: str) -> dict[str, Any]:
         """Chunk a document and return results with metadata"""
         start_time = time.time()
 
@@ -398,7 +398,7 @@ class EnhancedChunker:
             },
         }
 
-    def validate_chunking(self, chunk_pairs: List[Tuple[str, str]]) -> Dict[str, Any]:
+    def validate_chunking(self, chunk_pairs: list[tuple[str, str]]) -> dict[str, Any]:
         """Validate chunking results"""
         bm25_texts = [pair[1] for pair in chunk_pairs]
         token_counts = [self.token_len(text) for text in bm25_texts]

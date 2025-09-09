@@ -124,7 +124,7 @@ This is a valid README file.
         assert result
         assert test_file.exists()
 
-        with open(test_file, "r") as f:
+        with open(test_file) as f:
             content = f.read()
         assert content == test_content
 

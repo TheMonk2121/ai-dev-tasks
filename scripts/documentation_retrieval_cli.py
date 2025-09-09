@@ -13,7 +13,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 # Add the dspy-rag-system to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))

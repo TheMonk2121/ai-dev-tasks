@@ -16,12 +16,13 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
 
 try:
     from dspy_modules.vector_store import HybridVectorStore
+
     from utils.database_resilience import get_database_manager
 except Exception as _e:
     HybridVectorStore = None  # type: ignore

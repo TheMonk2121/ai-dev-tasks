@@ -16,7 +16,7 @@ import os
 import sys
 import time
 from datetime import datetime, timedelta
-from typing import Any, Dict, List
+from typing import Any
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
 
@@ -42,7 +42,7 @@ class LTSTPerformanceOptimizer:
         self.benchmark_results = {}
         self.optimization_suggestions = []
 
-    def optimize_database_queries(self) -> Dict[str, Any]:
+    def optimize_database_queries(self) -> dict[str, Any]:
         """Optimize database queries for better performance."""
         logger.info("🔧 Optimizing database queries...")
 
@@ -128,7 +128,7 @@ class LTSTPerformanceOptimizer:
 
         return optimizations
 
-    def implement_caching_strategies(self) -> Dict[str, Any]:
+    def implement_caching_strategies(self) -> dict[str, Any]:
         """Implement caching strategies for context retrieval."""
         logger.info("💾 Implementing caching strategies...")
 
@@ -147,7 +147,7 @@ class LTSTPerformanceOptimizer:
         logger.info("✅ Caching strategies implemented")
         return caching_config
 
-    def benchmark_memory_rehydration(self) -> Dict[str, Any]:
+    def benchmark_memory_rehydration(self) -> dict[str, Any]:
         """Benchmark memory rehydration performance."""
         logger.info("⚡ Benchmarking memory rehydration performance...")
 
@@ -211,7 +211,7 @@ class LTSTPerformanceOptimizer:
 
         return benchmarks
 
-    def benchmark_conversation_retrieval(self) -> Dict[str, Any]:
+    def benchmark_conversation_retrieval(self) -> dict[str, Any]:
         """Benchmark conversation retrieval performance."""
         logger.info("💬 Benchmarking conversation retrieval performance...")
 
@@ -261,7 +261,7 @@ class LTSTPerformanceOptimizer:
 
         return benchmarks
 
-    def benchmark_context_merging(self) -> Dict[str, Any]:
+    def benchmark_context_merging(self) -> dict[str, Any]:
         """Benchmark context merging performance."""
         logger.info("🔗 Benchmarking context merging performance...")
 
@@ -326,7 +326,7 @@ class LTSTPerformanceOptimizer:
 
         return benchmarks
 
-    def generate_performance_report(self) -> Dict[str, Any]:
+    def generate_performance_report(self) -> dict[str, Any]:
         """Generate comprehensive performance report."""
         logger.info("📊 Generating performance report...")
 
@@ -397,7 +397,7 @@ class LTSTPerformanceOptimizer:
         logger.info("✅ Performance report generated")
         return report
 
-    def _generate_recommendations(self, performance_status: Dict[str, Any]) -> List[str]:
+    def _generate_recommendations(self, performance_status: dict[str, Any]) -> list[str]:
         """Generate performance improvement recommendations."""
         recommendations = []
 

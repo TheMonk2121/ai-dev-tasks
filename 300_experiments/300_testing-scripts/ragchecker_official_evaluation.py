@@ -18,12 +18,18 @@ import json
 import os
 import random
 import subprocess
+import sys
 import threading
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, TypedDict, Union
+from typing import Any, TypedDict
 
 from pydantic import BaseModel, Field, TypeAdapter, field_validator
+
+# Add project root to path for imports
+project_root = Path(__file__).resolve().parents[2]
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 # Use canonical schemas
 from src.schemas.eval import EvaluationResult, GoldCase, Mode
@@ -37,10 +43,10 @@ class EvalItem(TypedDict, total=False):
     response: str
     gt_answer: str
     query: str
-    query_id: Optional[str]
+    query_id: str | None
 
 
-def normalize_item(raw: Union[str, Dict[str, Any]]) -> EvalItem:
+def normalize_item(raw: str | dict[str, Any]) -> EvalItem:
     """
     Coerce raw items (str or dict-like) into a uniform dict shape.
     Ensures keys exist so later code can assume item['response']/['gt_answer']/['query'].
@@ -170,7 +176,7 @@ class RAGCheckerInput(BaseModel):
     query: str = Field(..., min_length=1, description="The input query text")
     gt_answer: str = Field(..., description="Ground truth answer for evaluation")
     response: str = Field(..., description="Generated response to evaluate")
-    retrieved_context: List[str] = Field(..., description="List of context strings retrieved for the query")
+    retrieved_context: list[str] = Field(..., description="List of context strings retrieved for the query")
 
 
 # JSON Schema models for coverage-first generation
@@ -178,18 +184,18 @@ class FactItem(BaseModel):
     """Individual fact extracted from context with evidence citations."""
 
     fact: str = Field(..., min_length=1, description="Single atomic statement")
-    evidence: List[int] = Field(default_factory=list, description="Context indices supporting this fact")
+    evidence: list[int] = Field(default_factory=list, description="Context indices supporting this fact")
 
 
 class ScoreJSON(BaseModel):
     """JSON response for scoring prompts with validation."""
 
     score: float = Field(..., ge=0.0, le=1.0, description="Score between 0.0 and 1.0")
-    reasoning: Optional[str] = Field(None, description="Optional reasoning for the score")
+    reasoning: str | None = Field(None, description="Optional reasoning for the score")
 
 
 # Type adapters for runtime validation
-FactsAdapter = TypeAdapter(List[FactItem])
+FactsAdapter = TypeAdapter(list[FactItem])
 ScoreAdapter = TypeAdapter(ScoreJSON)
 
 
@@ -355,7 +361,7 @@ class LocalLLMIntegration:
             print(f"⚠️ Local LLM call failed: {e}")
             return ""
 
-    def build_concise_prompt(self, query: str, context: List[str]) -> str:
+    def build_concise_prompt(self, query: str, context: list[str]) -> str:
         """Build concise prompt for focused response generation."""
         max_words = int(os.getenv("RAGCHECKER_MAX_WORDS", "1000"))
         require_citations = os.getenv("RAGCHECKER_REQUIRE_CITATIONS", "1") == "1"
@@ -384,7 +390,7 @@ Context (top {context_topk} most relevant):
 
 Focused Answer:""".strip()
 
-    def apply_word_limit(self, text: str, max_words: Optional[int] = None) -> str:
+    def apply_word_limit(self, text: str, max_words: int | None = None) -> str:
         """Apply hard word limit to generated text."""
         if max_words is None:
             max_words = int(os.getenv("RAGCHECKER_MAX_WORDS", "1000"))
@@ -745,9 +751,11 @@ Now write the final answer (plain text, not JSON):
                     score = lambda_param * relevance - (1 - lambda_param) * diversity
                     if score > max_score:
                         best, max_score = i, score
+                if best is None:
+                    break
                 selected.append(best)
                 pool.remove(best)
-            return [candidates[i] for i in selected]
+                return [candidates[i] for i in selected]
 
         def normalize_scores(scores):
             """Normalize scores to 0-1 range using min-max normalization."""
@@ -980,7 +988,7 @@ Now write the final answer (plain text, not JSON):
                 s = obj[0].get("score", None)
             else:
                 s = None
-            if isinstance(s, (int, float)):
+            if isinstance(s, int | float):
                 return max(0.0, min(1.0, float(s)))
         except Exception as e:
             print(f"⚠️ JSON scorer failed: {e}")
@@ -997,7 +1005,7 @@ Now write the final answer (plain text, not JSON):
                 pass
         return 0.5
 
-    def rank_context_by_query_similarity(self, query: str, context_list: List[str]) -> List[str]:
+    def rank_context_by_query_similarity(self, query: str, context_list: list[str]) -> list[str]:
         """Rank context chunks by semantic similarity to query."""
         if not self.embedding_model or not context_list:
             return context_list
@@ -1067,7 +1075,7 @@ Now write the final answer (plain text, not JSON):
                 return 0.0
             return len(query_words & response_words) / len(query_words)
 
-    def extract_claims(self, query: str, response: str, context: List[str]) -> List[str]:
+    def extract_claims(self, query: str, response: str, context: list[str]) -> list[str]:
         """Extract claims from response using local LLM."""
         context_text = "\n".join(context)
         prompt = f"""
@@ -1083,7 +1091,7 @@ Claims:
         claims = [line.strip() for line in result.split("\n") if line.strip()]
         return claims
 
-    def check_claim_factuality(self, claim: str, context: List[str]) -> float:
+    def check_claim_factuality(self, claim: str, context: list[str]) -> float:
         """Check if a claim is factual based on context using local LLM."""
         context_text = "\n".join(context)
         prompt = f"""
@@ -1108,8 +1116,8 @@ Score range: 0.0 (completely false) to 1.0 (completely true)
             return 0.5  # Default to neutral if parsing fails
 
     def evaluate_comprehensive_metrics(
-        self, query: str, response: str, context: List[str], gt_answer: str
-    ) -> Dict[str, float]:
+        self, query: str, response: str, context: list[str], gt_answer: str
+    ) -> dict[str, float]:
         """Evaluate comprehensive RAGChecker metrics using one-shot JSON evaluation."""
 
         # One-shot prompt for all metrics to reduce Bedrock calls by 6x
@@ -1184,8 +1192,8 @@ Evaluate and return ONLY the JSON object:"""
             return self._evaluate_comprehensive_metrics_fallback(query, response, context, gt_answer)
 
     def _evaluate_comprehensive_metrics_fallback(
-        self, query: str, response: str, context: List[str], gt_answer: str
-    ) -> Dict[str, float]:
+        self, query: str, response: str, context: list[str], gt_answer: str
+    ) -> dict[str, float]:
         """Fallback evaluation method using individual calls."""
         context_text = "\n".join(context)
 
@@ -1335,7 +1343,7 @@ Score range: 0.0 (misses all relevant claims) to 1.0 (includes all relevant clai
             if json_match:
                 obj = json.loads(json_match.group(0))
                 s = obj.get("score", obj.get("Score", obj.get("confidence")))
-                if isinstance(s, (int, float)):
+                if isinstance(s, int | float):
                     return _clamp01(float(s))
                 if isinstance(s, str) and s.strip():
                     # Handle percentage in JSON
@@ -1419,7 +1427,7 @@ class OfficialRAGCheckerEvaluator:
         f1 = (2 * p * r / (p + r)) if (p + r) > 0 else 0.0
         return f1, p, r
 
-    def generate_query_expansions(self, original_query: str, k: int = 6) -> List[str]:
+    def generate_query_expansions(self, original_query: str, k: int = 6) -> list[str]:
         """Generate multiple query reformulations for better retrieval coverage."""
         if not self.local_llm or not hasattr(self.local_llm, "bedrock_client"):
             return [original_query]  # Fallback to original
@@ -1433,10 +1441,10 @@ Return a JSON array of strings with exactly {k} reformulations:
 ["reformulation 1", "reformulation 2", ...]"""
 
         try:
+            payload = {"messages": [{"role": "user", "content": expansion_prompt}], "max_tokens": 500}
             response = self.local_llm.bedrock_client.invoke_model_with_retries(
                 "anthropic.claude-3-5-sonnet-20240620-v1:0",
-                {"messages": [{"role": "user", "content": expansion_prompt}]},
-                max_tokens=500,
+                payload,
             )
 
             import json
@@ -1449,7 +1457,7 @@ Return a JSON array of strings with exactly {k} reformulations:
 
         return [original_query]  # Fallback
 
-    def extract_and_bind_claims(self, response: str, contexts: List[str]) -> str:
+    def extract_and_bind_claims(self, response: str, contexts: list[str]) -> str:
         """Extract claims from response and bind them to supporting evidence."""
         if not os.getenv("RAGCHECKER_CLAIM_BINDING", "0") == "1":
             return response  # Skip if not enabled
@@ -1518,7 +1526,7 @@ Return format: ["claim 1", "claim 2", ...]"""
             print(f"⚠️ Claim binding failed: {e}")
             return response  # Fallback
 
-    def create_official_test_cases(self) -> List[RAGCheckerInput]:
+    def create_official_test_cases(self) -> list[RAGCheckerInput]:
         """Create test cases following RAGChecker official format."""
         test_cases = []
 
@@ -1815,10 +1823,10 @@ Do not summarize or be concise - provide thorough, detailed information."""
         except Exception as e:
             return f"Error: {str(e)}"
 
-    def prepare_official_input_data(self) -> Dict[str, Any]:
+    def prepare_official_input_data(self) -> dict[str, Any]:
         """Prepare input data in official RAGChecker RAGResults JSON format."""
         test_cases = self.create_official_test_cases()
-        results_list: List[Dict[str, Any]] = []
+        results_list: list[dict[str, Any]] = []
 
         print("🧠 Preparing Official RAGChecker Input Data")
         print("=" * 50)
@@ -1860,7 +1868,7 @@ Do not summarize or be concise - provide thorough, detailed information."""
             print(f"   ✅ Response length: {len(response)} characters")
 
         # RAGResults container
-        rag_results_obj: Dict[str, Any] = {
+        rag_results_obj: dict[str, Any] = {
             "results": results_list,
             "metrics": {
                 "overall_metrics": {},
@@ -1871,7 +1879,7 @@ Do not summarize or be concise - provide thorough, detailed information."""
 
         return rag_results_obj
 
-    def save_official_input_data(self, input_data: Dict[str, Any]) -> str:
+    def save_official_input_data(self, input_data: dict[str, Any]) -> str:
         """Save input data in official RAGChecker RAGResults format."""
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         input_file = self.metrics_dir / f"ragchecker_official_input_{timestamp}.json"
@@ -1883,8 +1891,8 @@ Do not summarize or be concise - provide thorough, detailed information."""
         return str(input_file)
 
     def run_official_ragchecker_cli(
-        self, input_file: str, use_local_llm: bool = False, local_api_base: Optional[str] = None
-    ) -> Optional[str]:
+        self, input_file: str, use_local_llm: bool = False, local_api_base: str | None = None
+    ) -> str | None:
         """Run official RAGChecker CLI with support for local LLMs."""
         # Hard bypass path: if we are using local LLM OR explicitly requested, don't call the CLI.
         if use_local_llm or os.getenv("RAGCHECKER_BYPASS_CLI", "1") == "1":
@@ -2076,8 +2084,8 @@ Do not summarize or be concise - provide thorough, detailed information."""
         return 0.0
 
     def run_local_llm_evaluation(
-        self, input_data: Union[List[Dict[str, Any]], Dict[str, Any]], local_api_base: str, use_bedrock: bool = False
-    ) -> Dict[str, Any]:
+        self, input_data: list[dict[str, Any]] | dict[str, Any], local_api_base: str, use_bedrock: bool = False
+    ) -> dict[str, Any]:
         """Run evaluation using local LLM or Bedrock integration."""
         print("🏠 Running Local LLM Evaluation with comprehensive metrics")
 
@@ -2097,7 +2105,7 @@ Do not summarize or be concise - provide thorough, detailed information."""
         total_f1 = 0.0
 
         # Extract results list from RAGResults format if needed
-        cases_iter: List[Dict[str, Any]] = []
+        cases_iter: list[dict[str, Any]] = []
         if isinstance(input_data, dict) and "results" in input_data:
             cases_iter = input_data["results"]
         elif isinstance(input_data, list):
@@ -2438,7 +2446,7 @@ Evaluate and return ONLY the JSON object:"""
                 "claim_recall": 0.5,
             }
 
-    def create_fallback_evaluation(self, input_data: Union[List[Dict[str, Any]], Dict[str, Any]]) -> Dict[str, Any]:
+    def create_fallback_evaluation(self, input_data: list[dict[str, Any]] | dict[str, Any]) -> dict[str, Any]:
         """Create fallback evaluation when LLM integration fails."""
         print("🔄 Running Fallback Evaluation (simplified metrics)")
 
@@ -2454,11 +2462,11 @@ Evaluate and return ONLY the JSON object:"""
             cases = input_data
 
         # Normalize each case to guarantee dict structure
-        normalized_cases: List[EvalItem] = [normalize_item(case) for case in cases]
+        normalized_cases: list[EvalItem] = [normalize_item(case) for case in cases]
 
         for case in normalized_cases:
             # Type assertion to help Pyright understand the structure
-            case_dict = case  # type: Dict[str, str]
+            case_dict = case  # type: dict[str, str]
 
             # Generate response using memory system
             case_dict["response"] = self.get_memory_system_response(case_dict["query"])
@@ -2497,8 +2505,8 @@ Evaluate and return ONLY the JSON object:"""
         }
 
     def run_official_evaluation(
-        self, use_local_llm: bool = False, local_api_base: Optional[str] = None, use_bedrock: bool = False
-    ) -> Dict[str, Any]:
+        self, use_local_llm: bool = False, local_api_base: str | None = None, use_bedrock: bool = False
+    ) -> dict[str, Any]:
         """Run complete official RAGChecker evaluation with hybrid LLM support."""
         print("🧠 Official RAGChecker Evaluation")
         print("=" * 60)
@@ -2524,7 +2532,7 @@ Evaluate and return ONLY the JSON object:"""
         if output_file and os.path.exists(output_file):
             # Step 4: Load official results
             try:
-                with open(output_file, "r") as f:
+                with open(output_file) as f:
                     results = json.load(f)
                 results["evaluation_type"] = "official_ragchecker_cli"
                 results["input_file"] = input_file
@@ -2624,7 +2632,7 @@ Evaluate and return ONLY the JSON object:"""
         return results
 
     def _to_context_strings(self, raw_list) -> list[str]:
-        """Coerce a retrieved_context list that may contain strings or {text: ...} dicts into List[str]."""
+        """Coerce a retrieved_context list that may contain strings or {text: ...} dicts into list[str]."""
         out: list[str] = []
         if not raw_list:
             return out
@@ -2639,7 +2647,7 @@ Evaluate and return ONLY the JSON object:"""
                 out.append(s)
         return out
 
-    def print_evaluation_summary(self, results: Dict[str, Any]):
+    def print_evaluation_summary(self, results: dict[str, Any]):
         """Print evaluation summary following official format."""
         print("\n" + "=" * 60)
         print("📊 OFFICIAL RAGCHECKER EVALUATION SUMMARY")

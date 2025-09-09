@@ -4,7 +4,7 @@ Precision Lift Pack Configuration
 Surgical tightenings for +0.01-0.03 precision with minimal recall loss.
 """
 
-from typing import Any, Dict
+from typing import Any
 
 from limit_inspired_precision_recovery import LimitInspiredPrecisionRecovery
 

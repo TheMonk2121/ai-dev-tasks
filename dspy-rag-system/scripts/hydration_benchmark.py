@@ -89,6 +89,7 @@ def benchmark_bundle_creation():
         },
     }
 
+
 def benchmark_memory_usage():
     """Benchmark memory usage during bundle creation"""
     print("\n📊 Benchmarking Memory Usage")
@@ -146,6 +147,7 @@ def benchmark_memory_usage():
         print("💡 To enable memory benchmarking, install psutil:")
         print("   pip install psutil")
         return None
+
 
 def stress_test_concurrent_bundles():
     """Stress test with concurrent bundle creation"""
@@ -249,6 +251,7 @@ def stress_test_concurrent_bundles():
         print(f"❌ Stress test failed: {e}")
         return None
 
+
 def benchmark_token_budgets():
     """Benchmark different token budgets"""
     print("\n💰 Benchmarking Token Budgets")
@@ -305,6 +308,7 @@ def benchmark_token_budgets():
         print(f"  Average creation time: {avg_time:.3f}s")
 
     return results
+
 
 def generate_performance_report():
     """Generate comprehensive performance report"""
@@ -405,6 +409,7 @@ def generate_performance_report():
 
     return summary
 
+
 def main():
     """Main benchmark runner"""
     print("🚀 Hydration Performance Benchmark Suite")
@@ -431,6 +436,7 @@ def main():
 
         traceback.print_exc()
         return 1
+
 
 if __name__ == "__main__":
     exit(main())

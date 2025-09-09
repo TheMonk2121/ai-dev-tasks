@@ -25,7 +25,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add the project root to the path for imports
 project_root = Path(__file__).parent.parent

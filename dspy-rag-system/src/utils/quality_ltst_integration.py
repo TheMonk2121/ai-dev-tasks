@@ -12,7 +12,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -25,7 +25,7 @@ from utils.unified_retrieval_api import UnifiedRetrievalAPI
 class QualityLTSTIntegration:
     """Integrates quality and testing data with LTST memory system"""
 
-    def __init__(self, db_connection_string: str, project_root: Optional[Path] = None):
+    def __init__(self, db_connection_string: str, project_root: Path | None = None):
         """
         Initialize quality LTST integration.
 
@@ -45,7 +45,7 @@ class QualityLTSTIntegration:
         self.test_results_dir = self.project_root / "test_results"
         self.coverage_dir = self.project_root / "htmlcov"
 
-    def capture_test_results(self, test_command: str = "pytest") -> Dict[str, Any]:
+    def capture_test_results(self, test_command: str = "pytest") -> dict[str, Any]:
         """
         Capture test results and coverage data.
 
@@ -107,8 +107,8 @@ class QualityLTSTIntegration:
             }
 
     def link_failures_to_development_context(
-        self, test_data: Dict[str, Any], conversation_context: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, test_data: dict[str, Any], conversation_context: str | None = None
+    ) -> dict[str, Any]:
         """
         Link test failures to development decisions and context.
 
@@ -180,7 +180,7 @@ class QualityLTSTIntegration:
                 "linking_insights": [],
             }
 
-    def track_quality_trends(self, test_data: Dict[str, Any]) -> Dict[str, Any]:
+    def track_quality_trends(self, test_data: dict[str, Any]) -> dict[str, Any]:
         """
         Track quality trends and improvement opportunities.
 
@@ -268,7 +268,7 @@ class QualityLTSTIntegration:
             }
 
     def store_in_ltst_memory(
-        self, test_data: Dict[str, Any], linking_data: Dict[str, Any], trends_data: Dict[str, Any]
+        self, test_data: dict[str, Any], linking_data: dict[str, Any], trends_data: dict[str, Any]
     ) -> bool:
         """
         Store quality and testing data in LTST memory system.
@@ -410,7 +410,7 @@ class QualityLTSTIntegration:
         match = re.search(r"in (\d+\.?\d*)s", stdout)
         return float(match.group(1)) if match else 0.0
 
-    def _extract_error_logs(self, stderr: str) -> List[Dict[str, Any]]:
+    def _extract_error_logs(self, stderr: str) -> list[dict[str, Any]]:
         """Extract error logs from test stderr"""
         error_logs = []
         lines = stderr.split("\n")
@@ -442,7 +442,7 @@ class QualityLTSTIntegration:
 
         return "UnknownError"
 
-    def _analyze_exception_patterns(self, stderr: str) -> Dict[str, int]:
+    def _analyze_exception_patterns(self, stderr: str) -> dict[str, int]:
         """Analyze exception patterns in test output"""
         patterns = {}
         error_logs = self._extract_error_logs(stderr)
@@ -453,7 +453,7 @@ class QualityLTSTIntegration:
 
         return patterns
 
-    def _capture_coverage_data(self) -> Dict[str, Any]:
+    def _capture_coverage_data(self) -> dict[str, Any]:
         """Capture coverage data from htmlcov directory"""
         coverage_data = {"total_coverage": 0, "file_coverage": {}, "missing_lines": []}
 
@@ -464,7 +464,7 @@ class QualityLTSTIntegration:
 
         return coverage_data
 
-    def _calculate_quality_metrics(self, test_results: Dict[str, Any]) -> Dict[str, Any]:
+    def _calculate_quality_metrics(self, test_results: dict[str, Any]) -> dict[str, Any]:
         """Calculate quality metrics from test results"""
         total_tests = test_results.get("total_tests", 0)
         passed_tests = test_results.get("passed_tests", 0)
@@ -480,7 +480,7 @@ class QualityLTSTIntegration:
             "execution_efficiency": "fast" if test_results.get("execution_time", 0) < 30 else "slow",
         }
 
-    def _extract_failed_test_names(self, stdout: str) -> List[str]:
+    def _extract_failed_test_names(self, stdout: str) -> list[str]:
         """Extract names of failed tests from pytest output"""
         import re
 
@@ -497,13 +497,13 @@ class QualityLTSTIntegration:
 
         return failed_tests
 
-    def _extract_module_name(self, test_name: str) -> Optional[str]:
+    def _extract_module_name(self, test_name: str) -> str | None:
         """Extract module name from test name"""
         if "::" in test_name:
             return test_name.split("::")[0]
         return None
 
-    def _analyze_failure_patterns(self, failed_tests: List[str], error_logs: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_failure_patterns(self, failed_tests: list[str], error_logs: list[dict[str, Any]]) -> dict[str, Any]:
         """Analyze patterns in test failures"""
         patterns = {"failure_by_module": {}, "failure_by_error_type": {}, "common_failure_patterns": []}
 
@@ -520,7 +520,7 @@ class QualityLTSTIntegration:
 
         return patterns
 
-    def _generate_linking_insights(self, test_data: Dict[str, Any], linking_data: Dict[str, Any]) -> List[str]:
+    def _generate_linking_insights(self, test_data: dict[str, Any], linking_data: dict[str, Any]) -> list[str]:
         """Generate insights from test failure linking"""
         insights = []
 

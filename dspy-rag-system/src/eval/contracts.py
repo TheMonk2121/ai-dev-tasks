@@ -6,7 +6,7 @@ Eliminates magical dicts and provides clear interfaces.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List, Literal, Optional, Protocol, TypedDict
+from typing import Literal, Protocol, TypedDict
 
 # Type aliases for clarity
 Split = Literal["train", "dev", "test"]
@@ -34,10 +34,10 @@ class QuerySample(TypedDict):
     id: str
     question: str
     # Optional gold labels depending on task
-    gold_doc_ids: Optional[List[str]]
-    gold_pages: Optional[List[str]]
-    claim: Optional[str]
-    expected_answer: Optional[str]
+    gold_doc_ids: list[str] | None
+    gold_pages: list[str] | None
+    claim: str | None
+    expected_answer: str | None
 
 
 @dataclass(frozen=True)
@@ -56,7 +56,7 @@ class RunMetrics:
 
     dataset: str
     mode: RunMode
-    metrics: Dict[MetricName, float]
+    metrics: dict[MetricName, float]
     samples_evaluated: int
     timestamp: float
 
@@ -84,13 +84,13 @@ class QualityTargets:
 class Retriever(Protocol):
     """Protocol for retrieval components"""
 
-    def retrieve(self, query: str, k: int = 20) -> List[str]: ...
+    def retrieve(self, query: str, k: int = 20) -> list[str]: ...
 
 
 class ReRanker(Protocol):
     """Protocol for reranking components"""
 
-    def rerank(self, query: str, doc_ids: List[str], top_m: int = 10) -> List[str]: ...
+    def rerank(self, query: str, doc_ids: list[str], top_m: int = 10) -> list[str]: ...
 
 
 class RAGChecker(Protocol):
@@ -109,7 +109,7 @@ class QualityGate(Protocol):
     """Protocol for quality gate evaluation"""
 
     def evaluate(self, metrics: RunMetrics, targets: QualityTargets) -> bool: ...
-    def get_failures(self, metrics: RunMetrics, targets: QualityTargets) -> List[str]: ...
+    def get_failures(self, metrics: RunMetrics, targets: QualityTargets) -> list[str]: ...
 
 
 @dataclass
@@ -119,5 +119,5 @@ class EvaluationResult:
     metrics: RunMetrics
     targets: QualityTargets
     passed: bool
-    failures: List[str]
-    warnings: List[str]
+    failures: list[str]
+    warnings: list[str]

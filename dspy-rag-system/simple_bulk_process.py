@@ -51,7 +51,7 @@ def process_document_simple(doc_info, conn):
         relative_path = doc_info["relative_path"]
 
         # Read the file content
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         # Split content into chunks (simple approach)

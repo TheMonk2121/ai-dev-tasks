@@ -50,7 +50,7 @@ class TestDependencyMonitor:
         log_file = Path(temp_dir) / "dependency_changes.log"
         assert log_file.exists()
 
-        with open(log_file, "r") as f:
+        with open(log_file) as f:
             content = f.read()
             assert "Test message" in content
             assert "[INFO]" in content
@@ -208,9 +208,10 @@ class TestDependencyMonitor:
         # File should be created
         assert filename.exists()
 
-        with open(filename, "r") as f:
+        with open(filename) as f:
             saved_state = json.load(f)
             assert saved_state == state
+
 
 class TestDependencyMonitorIntegration:
     """Integration tests for DependencyMonitor."""
@@ -247,6 +248,7 @@ class TestDependencyMonitorIntegration:
         assert not (Path(temp_dir) / "circular_dependencies.json").exists()  # Not created when skipped
         assert (Path(temp_dir) / "import_conflicts.json").exists()
         assert (Path(temp_dir) / "dependency_changes.log").exists()
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

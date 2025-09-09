@@ -10,7 +10,7 @@ import logging
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from .context_merger import ContextMerger
 from .conversation_storage import ConversationContext, ConversationStorage
@@ -31,7 +31,7 @@ class EvaluationResult:
     latency_p99: float
     supersedence_leakage: float
     execution_time: float
-    details: Dict[str, Any]
+    details: dict[str, Any]
 
 
 @dataclass
@@ -39,8 +39,8 @@ class TestCase:
     """A test case for decision evaluation"""
 
     query: str
-    expected_decisions: List[str]
-    expected_entities: Optional[List[str]] = None
+    expected_decisions: list[str]
+    expected_entities: list[str] | None = None
     complexity: str = "medium"  # low, medium, high
     category: str = "general"  # decision, entity, supersedence, performance
 
@@ -70,7 +70,7 @@ class DecisionEvaluator:
         self.supersedence_leakage_threshold = 0.01  # 1%
 
     def evaluate_decision_retrieval(
-        self, test_cases: List[TestCase], session_id: Optional[str] = None, warm_cache: bool = True
+        self, test_cases: list[TestCase], session_id: str | None = None, warm_cache: bool = True
     ) -> EvaluationResult:
         """
         Run comprehensive evaluation of decision retrieval quality.
@@ -159,8 +159,8 @@ class DecisionEvaluator:
         return result
 
     def _retrieve_decisions_for_query(
-        self, query: str, expected_entities: Optional[List[str]], session_id: Optional[str]
-    ) -> List[ConversationContext]:
+        self, query: str, expected_entities: list[str] | None, session_id: str | None
+    ) -> list[ConversationContext]:
         """Retrieve decisions for a specific query using direct search"""
         try:
             # Use direct search with session_id=None for cross-thread evaluation
@@ -229,7 +229,7 @@ class DecisionEvaluator:
             files=getattr(merged_ctx, "files", None),
         )
 
-    def _calculate_recall_at_k(self, retrieved: List[ConversationContext], expected: List[str]) -> float:
+    def _calculate_recall_at_k(self, retrieved: list[ConversationContext], expected: list[str]) -> float:
         """Calculate recall at K for decision retrieval using decision_key"""
         if not expected:
             return 1.0  # Perfect recall if no expectations
@@ -242,7 +242,7 @@ class DecisionEvaluator:
 
         return found_count / len(expected)
 
-    def _calculate_precision_at_k(self, retrieved: List[ConversationContext], expected: List[str]) -> float:
+    def _calculate_precision_at_k(self, retrieved: list[ConversationContext], expected: list[str]) -> float:
         """Calculate precision at K for decision retrieval using decision_key"""
         if not retrieved:
             return 0.0
@@ -288,7 +288,7 @@ class DecisionEvaluator:
 
         return False
 
-    def _calculate_failure_at_20(self, recalls: List[float]) -> float:
+    def _calculate_failure_at_20(self, recalls: list[float]) -> float:
         """Calculate Failure@20 metric (1 - average recall)"""
         if not recalls:
             return 1.0  # 100% failure if no recalls
@@ -296,7 +296,7 @@ class DecisionEvaluator:
         avg_recall = sum(recalls) / len(recalls)
         return 1.0 - avg_recall
 
-    def _calculate_latency_percentiles(self, latencies: List[float]) -> Tuple[float, float, float]:
+    def _calculate_latency_percentiles(self, latencies: list[float]) -> tuple[float, float, float]:
         """Calculate p50, p95, and p99 latency percentiles"""
         if not latencies:
             return 0.0, 0.0, 0.0
@@ -314,7 +314,7 @@ class DecisionEvaluator:
 
         return p50, p95, p99
 
-    def _has_supersedence_leakage(self, retrieved_decisions: List[ConversationContext]) -> bool:
+    def _has_supersedence_leakage(self, retrieved_decisions: list[ConversationContext]) -> bool:
         """Check if superseded decisions are being returned inappropriately"""
         for decision in retrieved_decisions:
             if hasattr(decision, "decision_status") and decision.decision_status == "superseded":
@@ -324,7 +324,7 @@ class DecisionEvaluator:
                     return True
         return False
 
-    def validate_performance_targets(self, result: EvaluationResult) -> Dict[str, bool]:
+    def validate_performance_targets(self, result: EvaluationResult) -> dict[str, bool]:
         """Validate if performance targets are met"""
         targets = (
             self.latency_thresholds["warm"]
@@ -401,7 +401,7 @@ class DecisionEvaluator:
             self.logger.error(f"Error saving evaluation result: {e}")
 
 
-def create_default_test_cases() -> List[TestCase]:
+def create_default_test_cases() -> list[TestCase]:
     """Create a set of default test cases for evaluation"""
     return [
         # Simple decision queries

@@ -7,7 +7,7 @@ Implements the coach's strategy: extractive-first, citations, abstention
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -42,8 +42,8 @@ class EnhancedAnswerGenerator:
         )
 
     def generate_enhanced_answer(
-        self, query: str, retrieved_chunks: List[Dict[str, Any]], query_type: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, query: str, retrieved_chunks: list[dict[str, Any]], query_type: str | None = None
+    ) -> dict[str, Any]:
         """
         Generate enhanced answer with discipline
         """
@@ -76,7 +76,7 @@ class EnhancedAnswerGenerator:
             logger.error(f"Answer generation failed: {e}")
             return self._generate_error_response(query, str(e))
 
-    def _has_sufficient_context(self, chunks: List[Dict]) -> bool:
+    def _has_sufficient_context(self, chunks: list[dict]) -> bool:
         """Check if we have sufficient context for a quality answer"""
         if not chunks:
             return False
@@ -93,7 +93,7 @@ class EnhancedAnswerGenerator:
 
         return True
 
-    def _generate_abstention_response(self, query: str) -> Dict[str, Any]:
+    def _generate_abstention_response(self, query: str) -> dict[str, Any]:
         """Generate abstention response when context is insufficient"""
         abstention_text = (
             f"I cannot provide a complete answer to '{query}' based on the available context. "
@@ -111,7 +111,7 @@ class EnhancedAnswerGenerator:
             "metadata": {"query_type": "abstention", "chunks_used": 0, "citations_count": 0, "abstention": True},
         }
 
-    def _generate_structured_answer(self, query: str, chunks: List[Dict], query_type: Optional[str]) -> str:
+    def _generate_structured_answer(self, query: str, chunks: list[dict], query_type: str | None) -> str:
         """Generate structured answer with proper formatting"""
 
         # Start with direct answer
@@ -128,7 +128,7 @@ class EnhancedAnswerGenerator:
 
         return answer
 
-    def _generate_implementation_answer(self, query: str, chunks: List[Dict]) -> str:
+    def _generate_implementation_answer(self, query: str, chunks: list[dict]) -> str:
         """Generate implementation-focused answer"""
         # Find code chunks first
         code_chunks = [c for c in chunks if c.get("chunk_type", "").startswith("code")]
@@ -150,7 +150,7 @@ class EnhancedAnswerGenerator:
 
         return answer
 
-    def _generate_explanatory_answer(self, query: str, chunks: List[Dict]) -> str:
+    def _generate_explanatory_answer(self, query: str, chunks: list[dict]) -> str:
         """Generate explanatory answer"""
         answer = f"Here's what I found about {query}:\n\n"
 
@@ -161,7 +161,7 @@ class EnhancedAnswerGenerator:
 
         return answer
 
-    def _add_citations(self, chunks: List[Dict]) -> str:
+    def _add_citations(self, chunks: list[dict]) -> str:
         """Add citations to the answer"""
         citations = []
 
@@ -182,7 +182,7 @@ class EnhancedAnswerGenerator:
         else:
             return "\n**Sources:** No specific sources identified.\n"
 
-    def _add_confidence_statement(self, chunks: List[Dict]) -> str:
+    def _add_confidence_statement(self, chunks: list[dict]) -> str:
         """Add confidence statement based on context quality"""
         total_chunks = len(chunks)
         avg_completeness = sum(chunk.get("metadata", {}).get("completeness_score", 0.5) for chunk in chunks) / max(
@@ -198,7 +198,7 @@ class EnhancedAnswerGenerator:
 
         return f"\n**Confidence:** {confidence.capitalize()} (based on {total_chunks} context chunks)"
 
-    def _validate_answer_quality(self, answer: str, chunks: List[Dict]) -> Dict[str, Any]:
+    def _validate_answer_quality(self, answer: str, chunks: list[dict]) -> dict[str, Any]:
         """Validate answer quality"""
         citations_count = answer.count("[") // 2  # Rough count of [X] citations
 
@@ -212,7 +212,7 @@ class EnhancedAnswerGenerator:
 
         return validation
 
-    def _generate_error_response(self, query: str, error_msg: str) -> Dict[str, Any]:
+    def _generate_error_response(self, query: str, error_msg: str) -> dict[str, Any]:
         """Generate error response"""
         return {
             "answer": f"Error generating answer for '{query}': {error_msg}",
@@ -226,7 +226,7 @@ class EnhancedAnswerGenerator:
             },
         }
 
-    def get_generator_stats(self) -> Dict[str, Any]:
+    def get_generator_stats(self) -> dict[str, Any]:
         """Get generator statistics"""
         return {
             "min_citations": self.min_citations,

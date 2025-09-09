@@ -11,7 +11,7 @@ import os
 import sys
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
@@ -33,9 +33,9 @@ class QueryPredictor:
 
     def __init__(
         self,
-        conversation_storage: Optional[ConversationStorage] = None,
-        pattern_analyzer: Optional[QueryPatternAnalyzer] = None,
-        vector_analyzer: Optional[QueryVectorAnalyzer] = None,
+        conversation_storage: ConversationStorage | None = None,
+        pattern_analyzer: QueryPatternAnalyzer | None = None,
+        vector_analyzer: QueryVectorAnalyzer | None = None,
         model_name: str = "all-MiniLM-L6-v2",
     ):
         """Initialize the query predictor.
@@ -58,8 +58,8 @@ class QueryPredictor:
         self.context_window_size = 3
 
     def predict_next_query_topics(
-        self, user_id: str, current_context: str, max_predictions: Optional[int] = None, include_rationale: bool = True
-    ) -> List[Dict[str, Any]]:
+        self, user_id: str, current_context: str, max_predictions: int | None = None, include_rationale: bool = True
+    ) -> list[dict[str, Any]]:
         """Predict what the user is likely to ask next.
 
         Args:
@@ -138,7 +138,7 @@ class QueryPredictor:
 
     def proactive_information_surfacing(
         self, user_id: str, context: str, max_suggestions: int = 3
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Surface relevant information before user asks.
 
         Args:
@@ -188,7 +188,7 @@ class QueryPredictor:
             logger.error(f"Error surfacing proactive information for user {user_id}: {e}")
             return []
 
-    def analyze_prediction_accuracy(self, user_id: str, days_back: int = 30) -> Dict[str, Any]:
+    def analyze_prediction_accuracy(self, user_id: str, days_back: int = 30) -> dict[str, Any]:
         """Analyze accuracy of previous predictions.
 
         Args:
@@ -284,8 +284,8 @@ class QueryPredictor:
 
     # Prediction methods
     def _predict_from_sequences(
-        self, sequences: List[Dict[str, Any]], current_context: str, current_embedding: np.ndarray
-    ) -> List[Dict[str, Any]]:
+        self, sequences: list[dict[str, Any]], current_context: str, current_embedding: np.ndarray
+    ) -> list[dict[str, Any]]:
         """Predict next queries based on sequence patterns."""
         predictions = []
 
@@ -325,8 +325,8 @@ class QueryPredictor:
         return predictions
 
     def _predict_topic_evolution(
-        self, evolutions: List[Dict[str, Any]], current_embedding: np.ndarray, user_id: str
-    ) -> List[Dict[str, Any]]:
+        self, evolutions: list[dict[str, Any]], current_embedding: np.ndarray, user_id: str
+    ) -> list[dict[str, Any]]:
         """Predict topic evolution based on historical patterns."""
         predictions = []
 
@@ -361,8 +361,8 @@ class QueryPredictor:
         return predictions
 
     def _predict_recurring_themes(
-        self, themes: List[Dict[str, Any]], current_context: str, current_embedding: np.ndarray
-    ) -> List[Dict[str, Any]]:
+        self, themes: list[dict[str, Any]], current_context: str, current_embedding: np.ndarray
+    ) -> list[dict[str, Any]]:
         """Predict based on recurring themes."""
         predictions = []
 
@@ -395,7 +395,7 @@ class QueryPredictor:
 
         return predictions
 
-    def _predict_context_shifts(self, user_id: str, current_embedding: np.ndarray) -> List[Dict[str, Any]]:
+    def _predict_context_shifts(self, user_id: str, current_embedding: np.ndarray) -> list[dict[str, Any]]:
         """Predict potential context shifts."""
         predictions = []
 
@@ -424,8 +424,8 @@ class QueryPredictor:
         return predictions
 
     def _predict_from_intentions(
-        self, intention_patterns: List[Dict[str, Any]], current_context: str
-    ) -> List[Dict[str, Any]]:
+        self, intention_patterns: list[dict[str, Any]], current_context: str
+    ) -> list[dict[str, Any]]:
         """Predict based on intention patterns."""
         predictions = []
 
@@ -452,7 +452,7 @@ class QueryPredictor:
 
         return predictions
 
-    def _merge_and_rank_predictions(self, predictions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _merge_and_rank_predictions(self, predictions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Merge similar predictions and rank by confidence."""
         if not predictions:
             return []
@@ -478,7 +478,7 @@ class QueryPredictor:
         # Sort by confidence
         return sorted(unique_predictions, key=lambda x: x["confidence"], reverse=True)
 
-    def _store_predictions(self, user_id: str, current_context: str, predictions: List[Dict[str, Any]]) -> None:
+    def _store_predictions(self, user_id: str, current_context: str, predictions: list[dict[str, Any]]) -> None:
         """Store predictions for accuracy tracking."""
         try:
             # Get current context message ID (if it exists)
@@ -511,7 +511,7 @@ class QueryPredictor:
             logger.error(f"Error storing predictions: {e}")
 
     # Helper methods
-    def _find_similar_historical_contexts(self, user_id: str, context: str, limit: int = 5) -> List[Dict[str, Any]]:
+    def _find_similar_historical_contexts(self, user_id: str, context: str, limit: int = 5) -> list[dict[str, Any]]:
         """Find similar historical contexts for the user."""
         try:
             context_embedding = self.model.encode([context])[0]
@@ -552,7 +552,7 @@ class QueryPredictor:
             logger.error(f"Error finding similar contexts: {e}")
             return []
 
-    def _get_follow_up_queries(self, session_id: str, message_id: int, limit: int = 5) -> List[Dict[str, Any]]:
+    def _get_follow_up_queries(self, session_id: str, message_id: int, limit: int = 5) -> list[dict[str, Any]]:
         """Get follow-up queries after a specific message."""
         try:
             query = """
@@ -576,7 +576,7 @@ class QueryPredictor:
             logger.error(f"Error getting follow-up queries: {e}")
             return []
 
-    def _extract_resolution_information(self, query: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def _extract_resolution_information(self, query: dict[str, Any]) -> dict[str, Any] | None:
         """Extract information that helped resolve a query."""
         # Simplified implementation - in practice, this would analyze
         # the conversation following the query to identify helpful information
@@ -608,7 +608,7 @@ class QueryPredictor:
         except Exception:
             return 0.5  # Default medium relevance
 
-    def _get_predictions_with_outcomes(self, user_id: str, days_back: int) -> List[Dict[str, Any]]:
+    def _get_predictions_with_outcomes(self, user_id: str, days_back: int) -> list[dict[str, Any]]:
         """Get predictions with their actual outcomes."""
         try:
             since_date = (datetime.now() - timedelta(days=days_back)).isoformat()
@@ -685,7 +685,7 @@ class QueryPredictor:
             logger.error(f"Error calculating prediction accuracy: {e}")
             return 0.0
 
-    def _get_recent_queries_with_embeddings(self, user_id: str, limit: int = 10) -> List[Dict[str, Any]]:
+    def _get_recent_queries_with_embeddings(self, user_id: str, limit: int = 10) -> list[dict[str, Any]]:
         """Get recent queries with embeddings."""
         try:
             query = """
@@ -715,7 +715,7 @@ class QueryPredictor:
             logger.error(f"Error getting recent queries: {e}")
             return []
 
-    def _calculate_evolution_trajectory(self, queries: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _calculate_evolution_trajectory(self, queries: list[dict[str, Any]]) -> dict[str, Any]:
         """Calculate the current evolution trajectory."""
         if len(queries) < 2:
             return {}
@@ -733,7 +733,7 @@ class QueryPredictor:
             "direction": "evolving" if trajectory_magnitude > 0.3 else "stable",
         }
 
-    def _extrapolate_topic_evolution(self, trajectory: Dict[str, Any], evolution_type: str, drift: float) -> str:
+    def _extrapolate_topic_evolution(self, trajectory: dict[str, Any], evolution_type: str, drift: float) -> str:
         """Extrapolate topic evolution based on trajectory."""
         # Simplified implementation - in practice, this would be more sophisticated
 
@@ -746,7 +746,7 @@ class QueryPredictor:
         else:
             return "Continued exploration of current topic"
 
-    def _get_context_shift_patterns(self, user_id: str) -> List[Dict[str, Any]]:
+    def _get_context_shift_patterns(self, user_id: str) -> list[dict[str, Any]]:
         """Get user's context shift patterns from database."""
         try:
             query = """
@@ -810,7 +810,7 @@ class QueryPredictor:
         else:
             return "general"
 
-    def _get_latest_message_id(self, user_id: str) -> Optional[int]:
+    def _get_latest_message_id(self, user_id: str) -> int | None:
         """Get the latest message ID for a user."""
         try:
             query = """
@@ -830,7 +830,7 @@ class QueryPredictor:
             logger.error(f"Error getting latest message ID: {e}")
             return None
 
-    def _parse_embedding(self, embedding_data: Any) -> List[float]:
+    def _parse_embedding(self, embedding_data: Any) -> list[float]:
         """Parse embedding from database format."""
         if isinstance(embedding_data, list):
             return embedding_data
@@ -851,7 +851,7 @@ class QueryPredictor:
         except Exception:
             return 0.0
 
-    def _generate_prediction_rationale(self, prediction: Dict[str, Any]) -> str:
+    def _generate_prediction_rationale(self, prediction: dict[str, Any]) -> str:
         """Generate human-readable rationale for a prediction."""
         method = prediction.get("prediction_method", "unknown")
         confidence = prediction.get("confidence", 0.0)

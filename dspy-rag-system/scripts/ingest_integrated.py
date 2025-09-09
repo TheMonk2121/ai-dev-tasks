@@ -10,7 +10,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List
+
 
 import psycopg2
 import psycopg2.extras
@@ -50,21 +50,20 @@ DDL = [
       updated_at   TIMESTAMP DEFAULT now()
     );
     """,
-    """
+    f"""
     CREATE TABLE IF NOT EXISTS document_chunks (
       id           SERIAL PRIMARY KEY,
       document_id  INT NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
       chunk_index  INT NOT NULL,
       content      TEXT NOT NULL,
-      embedding    VECTOR(%d),
+      embedding    VECTOR({EMBED_DIM}),
       content_tsv  tsvector,
-      metadata     JSONB DEFAULT '{}'::jsonb,
+      metadata     JSONB DEFAULT '{{}}'::jsonb,
       created_at   TIMESTAMP DEFAULT now(),
       updated_at   TIMESTAMP DEFAULT now(),
       UNIQUE(document_id, chunk_index)
     );
-    """
-    % EMBED_DIM,
+    """,
     "CREATE INDEX IF NOT EXISTS idx_doc_chunks_tsv ON document_chunks USING GIN (content_tsv);",
     "CREATE INDEX IF NOT EXISTS idx_doc_chunks_embedding_hnsw ON document_chunks USING hnsw (embedding vector_l2_ops);",
 ]
@@ -130,7 +129,7 @@ def approx_tokens(s: str) -> int:
     return max(1, len(s.split()))
 
 
-def pack_with_overlap(parts: List[str], target: int, overlap: int) -> List[str]:
+def pack_with_overlap(parts: list[str], target: int, overlap: int) -> list[str]:
     chunks, cur, cur_tok = [], [], 0
     for part in parts:
         t = approx_tokens(part)
@@ -149,10 +148,10 @@ def pack_with_overlap(parts: List[str], target: int, overlap: int) -> List[str]:
     return [c for c in chunks if approx_tokens(c) > 30]
 
 
-def split_markdown(text: str, target=900, overlap=120) -> List[str]:
+def split_markdown(text: str, target=900, overlap=120) -> list[str]:
     # keep fenced code intact; then split on headings
     blocks = re.split(r"(\n```.*?\n```)", text, flags=re.DOTALL)
-    sections: List[str] = []
+    sections: list[str] = []
     for i, blk in enumerate(blocks):
         if i % 2 == 1:
             sections.append(blk)
@@ -162,19 +161,19 @@ def split_markdown(text: str, target=900, overlap=120) -> List[str]:
     return pack_with_overlap(sections, target, overlap)
 
 
-def split_text(text: str, target=900, overlap=120) -> List[str]:
+def split_text(text: str, target=900, overlap=120) -> list[str]:
     paras = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
     return pack_with_overlap(paras, target, overlap)
 
 
-def chunk_for(p: Path, text: str, target=900, overlap=120) -> List[str]:
+def chunk_for(p: Path, text: str, target=900, overlap=120) -> list[str]:
     return split_markdown(text, target, overlap) if p.suffix.lower() in MD_TYPES else split_text(text, target, overlap)
 
 
 # ---------- embeddings ----------
 
 
-def embed_chunks(model, chunks: List[str], batch: int = 64):
+def embed_chunks(model, chunks: list[str], batch: int = 64):
     if not chunks:
         return []
     vecs = []
@@ -195,7 +194,7 @@ def ensure_schema():
         conn.commit()
 
 
-def upsert_document(meta: Dict) -> int:
+def upsert_document(meta: dict) -> int:
     with get_conn() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             cur.execute(UPSERT_DOCUMENT, meta)
@@ -211,7 +210,7 @@ def clear_doc_chunks(doc_id: int):
         conn.commit()
 
 
-def upsert_doc_chunks(doc_id: int, filename: str, chunks: List[str], embeddings):
+def upsert_doc_chunks(doc_id: int, filename: str, chunks: list[str], embeddings):
     rows = []
     for idx, (c, e) in enumerate(zip(chunks, embeddings)):
         meta = psycopg2.extras.Json({"filename": filename})
@@ -235,7 +234,7 @@ def fetch_existing(file_path: str):
 # ---------- main ----------
 
 
-def discover(globs_str: str) -> List[Path]:
+def discover(globs_str: str) -> list[Path]:
     paths = []
     for g in [x.strip() for x in globs_str.split(",") if x.strip()]:
         paths.extend(Path(p) for p in glob.glob(g, recursive=True))

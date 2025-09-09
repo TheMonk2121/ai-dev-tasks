@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import Annotated, Optional, Tuple
+from typing import Annotated
 
 import numpy as np
 from numpy.typing import NDArray
@@ -24,7 +24,7 @@ def _check_finite(a: NDArray[np.floating]) -> NDArray[np.floating]:
     return a
 
 
-def _check_shape(expected: Optional[Tuple[int, ...]] = None):
+def _check_shape(expected: tuple[int, ...] | None = None):
     def _validate(a: NDArray[np.floating]) -> NDArray[np.floating]:
         if expected and a.shape != expected:
             raise ValueError(f"expected shape {expected}, got {a.shape}")

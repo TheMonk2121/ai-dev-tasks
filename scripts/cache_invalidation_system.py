@@ -21,7 +21,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 import psycopg2
 from psycopg2.extras import RealDictCursor

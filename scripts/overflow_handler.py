@@ -6,7 +6,7 @@ Implements sliding-window summarizers and hierarchy-based compression
 
 import re
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass

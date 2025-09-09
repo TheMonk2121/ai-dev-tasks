@@ -8,7 +8,7 @@ import logging
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature
@@ -19,6 +19,7 @@ _LOG = logging.getLogger("cursor_model_router")
 
 # ---------- Cursor Native AI Models ----------
 
+
 class CursorModel(Enum):
     """Available Cursor native AI models"""
 
@@ -27,6 +28,7 @@ class CursorModel(Enum):
     MIXTRAL_8X7B = "mixtral-8x7b"
     MISTRAL_7B_INSTRUCT = "mistral-7b-instruct"
     AUTO = "auto"
+
 
 @dataclass
 class ModelCapabilities:
@@ -38,7 +40,8 @@ class ModelCapabilities:
     code_generation: float  # 0-1
     speed: float  # 0-1 (higher = faster)
     cost_efficiency: float  # 0-1 (higher = cheaper)
-    best_for: List[str]
+    best_for: list[str]
+
 
 # ---------- Model Capabilities Configuration ----------
 
@@ -83,6 +86,7 @@ CURSOR_MODEL_CAPABILITIES = {
 
 # ---------- DSPy Signatures for Model Routing ----------
 
+
 class ModelRoutingSignature(Signature):
     """Signature for intelligent model routing based on context engineering"""
 
@@ -96,6 +100,7 @@ class ModelRoutingSignature(Signature):
     confidence = OutputField(desc="Confidence in selection (0-1)")
     context_engineering = OutputField(desc="Context engineering strategy for the model")
 
+
 class ContextEngineeringSignature(Signature):
     """Signature for generating context engineering strategies"""
 
@@ -106,6 +111,7 @@ class ContextEngineeringSignature(Signature):
     engineered_context = OutputField(desc="Context engineering strategy")
     prompt_pattern = OutputField(desc="Recommended prompt pattern")
     model_instructions = OutputField(desc="Specific instructions for the model")
+
 
 # ---------- Context Engineering Patterns ----------
 
@@ -138,6 +144,7 @@ CONTEXT_ENGINEERING_PATTERNS = {
 
 # ---------- DSPy Modules ----------
 
+
 # @dspy.assert_transform_module  # Not available in DSPy 2.6.27
 class CursorModelRouter(Module):
     """Intelligent model router for Cursor native AI models"""
@@ -150,11 +157,11 @@ class CursorModelRouter(Module):
     def forward(
         self,
         query: str,
-        context_size: Optional[int] = None,
-        task_type: Optional[str] = None,
+        context_size: int | None = None,
+        task_type: str | None = None,
         urgency: str = "medium",
-        complexity: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        complexity: str | None = None,
+    ) -> dict[str, Any]:
         """Route to the best Cursor model using context engineering"""
 
         # Sanitize and validate input
@@ -216,7 +223,7 @@ class CursorModelRouter(Module):
         else:
             return "general"
 
-    def _analyze_complexity(self, query: str, context_size: Optional[int] = None) -> str:
+    def _analyze_complexity(self, query: str, context_size: int | None = None) -> str:
         """Analyze query complexity"""
         word_count = len(query.split())
 
@@ -233,6 +240,7 @@ class CursorModelRouter(Module):
         """Estimate context size in tokens (rough approximation)"""
         # Rough estimation: 1 token ≈ 4 characters
         return len(query) // 4
+
 
 class ContextEngineeredPrompt(Module):
     """Generates context-engineered prompts for specific models"""
@@ -256,7 +264,9 @@ class ContextEngineeredPrompt(Module):
 
         return engineered_prompt
 
+
 # ---------- Main Router Interface ----------
+
 
 class CursorModelRouterInterface:
     """Main interface for Cursor model routing with context engineering"""
@@ -266,7 +276,7 @@ class CursorModelRouterInterface:
         self.prompt_engineer = ContextEngineeredPrompt()
         self.routing_history = []
 
-    def route_query(self, query: str, **kwargs) -> Dict[str, Any]:
+    def route_query(self, query: str, **kwargs) -> dict[str, Any]:
         """Route a query to the best Cursor model with context engineering"""
 
         start_time = time.time()
@@ -316,7 +326,7 @@ class CursorModelRouterInterface:
                 "latency_ms": int((time.time() - start_time) * 1000),
             }
 
-    def get_routing_stats(self) -> Dict[str, Any]:
+    def get_routing_stats(self) -> dict[str, Any]:
         """Get routing statistics"""
         if not self.routing_history:
             return {"total_routes": 0, "model_distribution": {}}
@@ -332,13 +342,17 @@ class CursorModelRouterInterface:
             "average_confidence": sum(r["confidence"] for r in self.routing_history) / len(self.routing_history),
         }
 
+
 # ---------- Factory Function ----------
+
 
 def create_cursor_model_router() -> CursorModelRouterInterface:
     """Create a Cursor model router interface"""
     return CursorModelRouterInterface()
 
+
 # ---------- Validation & Monitoring Utilities ----------
+
 
 class ModelRoutingValidator:
     """Validates model routing decisions and detects hallucination"""
@@ -352,8 +366,8 @@ class ModelRoutingValidator:
         }
 
     def validate_routing_decision(
-        self, routing_result: Dict[str, Any], query: str, expected_model: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, routing_result: dict[str, Any], query: str, expected_model: str | None = None
+    ) -> dict[str, Any]:
         """Validate a routing decision for accuracy and potential hallucination"""
 
         validation_result = {
@@ -506,7 +520,7 @@ class ModelRoutingValidator:
 
         return min(1.0, keyword_matches / len(keywords))
 
-    def get_validation_stats(self) -> Dict[str, Any]:
+    def get_validation_stats(self) -> dict[str, Any]:
         """Get validation statistics"""
         if not self.validation_history:
             return {"total_validations": 0, "hallucination_rate": 0.0}
@@ -521,6 +535,7 @@ class ModelRoutingValidator:
             / total,
             "recent_validations": self.validation_history[-10:],  # Last 10
         }
+
 
 class ModelRoutingMonitor:
     """Monitors model routing performance and detects anomalies"""
@@ -539,9 +554,9 @@ class ModelRoutingMonitor:
     def log_routing_attempt(
         self,
         query: str,
-        routing_result: Dict[str, Any],
+        routing_result: dict[str, Any],
         latency_ms: float,
-        validation_result: Optional[Dict[str, Any]] = None,
+        validation_result: dict[str, Any] | None = None,
     ):
         """Log a routing attempt for monitoring"""
 
@@ -577,7 +592,7 @@ class ModelRoutingMonitor:
             self.performance_metrics["anomaly_count"] += 1
             _LOG.warning(f"Anomaly detected in routing: {entry}")
 
-    def _detect_anomaly(self, entry: Dict[str, Any]) -> bool:
+    def _detect_anomaly(self, entry: dict[str, Any]) -> bool:
         """Detect routing anomalies"""
 
         # Anomaly indicators
@@ -604,7 +619,7 @@ class ModelRoutingMonitor:
 
         return len(anomalies) > 0
 
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """Generate a performance report"""
 
         if not self.routing_history:
@@ -621,7 +636,9 @@ class ModelRoutingMonitor:
             "recent_activity": self.routing_history[-10:],  # Last 10 entries
         }
 
+
 # ---------- Enhanced Router Interface with Validation ----------
+
 
 class ValidatedCursorModelRouterInterface(CursorModelRouterInterface):
     """Enhanced router interface with validation and monitoring"""
@@ -631,7 +648,7 @@ class ValidatedCursorModelRouterInterface(CursorModelRouterInterface):
         self.validator = ModelRoutingValidator()
         self.monitor = ModelRoutingMonitor()
 
-    def route_query(self, query: str, **kwargs) -> Dict[str, Any]:
+    def route_query(self, query: str, **kwargs) -> dict[str, Any]:
         """Route a query with validation and monitoring"""
 
         start_time = time.time()
@@ -653,15 +670,15 @@ class ValidatedCursorModelRouterInterface(CursorModelRouterInterface):
 
         return routing_result
 
-    def get_validation_stats(self) -> Dict[str, Any]:
+    def get_validation_stats(self) -> dict[str, Any]:
         """Get validation statistics"""
         return self.validator.get_validation_stats()
 
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """Get performance report"""
         return self.monitor.get_performance_report()
 
-    def get_comprehensive_report(self) -> Dict[str, Any]:
+    def get_comprehensive_report(self) -> dict[str, Any]:
         """Get comprehensive routing report"""
         return {
             "routing_stats": self.get_routing_stats(),
@@ -669,7 +686,9 @@ class ValidatedCursorModelRouterInterface(CursorModelRouterInterface):
             "performance_report": self.get_performance_report(),
         }
 
+
 # ---------- Updated Factory Function ----------
+
 
 def create_validated_cursor_model_router() -> ValidatedCursorModelRouterInterface:
     """Create a validated Cursor model router interface"""

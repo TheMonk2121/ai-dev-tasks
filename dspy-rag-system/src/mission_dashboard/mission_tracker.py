@@ -15,22 +15,26 @@ from collections import deque
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
+from collections.abc import Callable
 
 # Add src to path for imports
-sys.path.append('src')
+sys.path.append("src")
 
 try:
     from utils.database_resilience import get_database_manager
     from utils.logger import get_logger
+
     LOG = get_logger("mission_tracker")
 except ImportError as e:
     logging.basicConfig(level=logging.INFO)
     LOG = logging.getLogger("mission_tracker")
     LOG.warning(f"Some components not available: {e}")
 
+
 class MissionStatus(Enum):
     """Mission execution status"""
+
     PENDING = "pending"
     RUNNING = "running"
     COMPLETED = "completed"
@@ -38,37 +42,43 @@ class MissionStatus(Enum):
     CANCELLED = "cancelled"
     TIMEOUT = "timeout"
 
+
 class MissionPriority(Enum):
     """Mission priority levels"""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
     CRITICAL = "critical"
 
+
 @dataclass
 class Mission:
     """Mission/task execution data"""
+
     id: str
     title: str
     description: str
     status: MissionStatus
     priority: MissionPriority
     created_at: datetime
-    started_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
-    duration: Optional[float] = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    duration: float | None = None
     progress: float = 0.0
-    error_message: Optional[str] = None
-    result: Optional[Dict[str, Any]] = None
-    metadata: Optional[Dict[str, Any]] = None
-    agent_type: Optional[str] = None
-    model_used: Optional[str] = None
-    tokens_used: Optional[int] = None
-    cost_estimate: Optional[float] = None
+    error_message: str | None = None
+    result: dict[str, Any] | None = None
+    metadata: dict[str, Any] | None = None
+    agent_type: str | None = None
+    model_used: str | None = None
+    tokens_used: int | None = None
+    cost_estimate: float | None = None
+
 
 @dataclass
 class MissionMetrics:
     """Mission execution metrics"""
+
     total_missions: int = 0
     completed_missions: int = 0
     failed_missions: int = 0
@@ -78,19 +88,20 @@ class MissionMetrics:
     total_tokens: int = 0
     total_cost: float = 0.0
 
+
 class MissionTracker:
     """Real-time mission tracking and management"""
 
-    def __init__(self, max_history: int = 1000, update_callbacks: List[Callable] = None):
+    def __init__(self, max_history: int = 1000, update_callbacks: list[Callable] = None):
         self.max_history = max_history
         self.update_callbacks = update_callbacks or []
 
         # Mission storage
-        self.missions: Dict[str, Mission] = {}
+        self.missions: dict[str, Mission] = {}
         self.mission_history: deque = deque(maxlen=max_history)
 
         # Real-time state
-        self.running_missions: Dict[str, Mission] = {}
+        self.running_missions: dict[str, Mission] = {}
         self.pending_missions: deque = deque()
 
         # Metrics
@@ -110,7 +121,7 @@ class MissionTracker:
             LOG.warning(f"Database not available: {e}")
 
         # Start cleanup thread (skip during testing)
-        if not os.getenv('TESTING'):
+        if not os.getenv("TESTING"):
             self._start_cleanup_thread()
 
     def _init_database(self):
@@ -122,7 +133,8 @@ class MissionTracker:
             with self.db_manager.get_connection() as conn:
                 with conn.cursor() as cursor:
                     # Mission tracking table
-                    cursor.execute("""
+                    cursor.execute(
+                        """
                         CREATE TABLE IF NOT EXISTS missions (
                             id VARCHAR(255) PRIMARY KEY,
                             title TEXT NOT NULL,
@@ -142,10 +154,12 @@ class MissionTracker:
                             tokens_used INTEGER,
                             cost_estimate FLOAT
                         )
-                    """)
+                    """
+                    )
 
                     # Mission metrics table
-                    cursor.execute("""
+                    cursor.execute(
+                        """
                         CREATE TABLE IF NOT EXISTS mission_metrics (
                             id SERIAL PRIMARY KEY,
                             timestamp TIMESTAMP NOT NULL,
@@ -158,21 +172,28 @@ class MissionTracker:
                             total_tokens INTEGER,
                             total_cost FLOAT
                         )
-                    """)
+                    """
+                    )
 
                     # Create indexes
-                    cursor.execute("""
+                    cursor.execute(
+                        """
                         CREATE INDEX IF NOT EXISTS idx_missions_status 
                         ON missions(status)
-                    """)
-                    cursor.execute("""
+                    """
+                    )
+                    cursor.execute(
+                        """
                         CREATE INDEX IF NOT EXISTS idx_missions_created_at 
                         ON missions(created_at)
-                    """)
-                    cursor.execute("""
+                    """
+                    )
+                    cursor.execute(
+                        """
                         CREATE INDEX IF NOT EXISTS idx_missions_priority 
                         ON missions(priority)
-                    """)
+                    """
+                    )
 
                     conn.commit()
                     LOG.info("Mission tracking database initialized")
@@ -203,8 +224,11 @@ class MissionTracker:
         with self.lock:
             missions_to_remove = []
             for mission_id, mission in self.missions.items():
-                if (mission.status in [MissionStatus.COMPLETED, MissionStatus.FAILED, MissionStatus.CANCELLED] and
-                    mission.completed_at and mission.completed_at < cutoff_time):
+                if (
+                    mission.status in [MissionStatus.COMPLETED, MissionStatus.FAILED, MissionStatus.CANCELLED]
+                    and mission.completed_at
+                    and mission.completed_at < cutoff_time
+                ):
                     missions_to_remove.append(mission_id)
 
             for mission_id in missions_to_remove:
@@ -234,7 +258,7 @@ class MissionTracker:
                 average_duration=avg_duration,
                 success_rate=success_rate,
                 total_tokens=total_tokens,
-                total_cost=total_cost
+                total_cost=total_cost,
             )
 
     def _save_metrics_to_db(self):
@@ -245,23 +269,36 @@ class MissionTracker:
         try:
             with self.db_manager.get_connection() as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute("""
+                    cursor.execute(
+                        """
                         INSERT INTO mission_metrics (
                             timestamp, total_missions, completed_missions, failed_missions,
                             running_missions, average_duration, success_rate, total_tokens, total_cost
                         ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """, (
-                        datetime.now(), self.metrics.total_missions, self.metrics.completed_missions,
-                        self.metrics.failed_missions, self.metrics.running_missions,
-                        self.metrics.average_duration, self.metrics.success_rate,
-                        self.metrics.total_tokens, self.metrics.total_cost
-                    ))
+                    """,
+                        (
+                            datetime.now(),
+                            self.metrics.total_missions,
+                            self.metrics.completed_missions,
+                            self.metrics.failed_missions,
+                            self.metrics.running_missions,
+                            self.metrics.average_duration,
+                            self.metrics.success_rate,
+                            self.metrics.total_tokens,
+                            self.metrics.total_cost,
+                        ),
+                    )
                     conn.commit()
         except Exception as e:
             LOG.error(f"Failed to save metrics to database: {e}")
 
-    def create_mission(self, title: str, description: str, priority: MissionPriority = MissionPriority.MEDIUM,
-                      metadata: Optional[Dict[str, Any]] = None) -> str:
+    def create_mission(
+        self,
+        title: str,
+        description: str,
+        priority: MissionPriority = MissionPriority.MEDIUM,
+        metadata: dict[str, Any] | None = None,
+    ) -> str:
         """Create a new mission"""
         mission_id = str(uuid.uuid4())
 
@@ -272,7 +309,7 @@ class MissionTracker:
             status=MissionStatus.PENDING,
             priority=priority,
             created_at=datetime.now(),
-            metadata=metadata or {}
+            metadata=metadata or {},
         )
 
         with self.lock:
@@ -316,8 +353,7 @@ class MissionTracker:
         LOG.info(f"Started mission: {mission.title} (ID: {mission_id})")
         return True
 
-    def update_mission_progress(self, mission_id: str, progress: float,
-                              result: Optional[Dict[str, Any]] = None) -> bool:
+    def update_mission_progress(self, mission_id: str, progress: float, result: dict[str, Any] | None = None) -> bool:
         """Update mission progress"""
         with self.lock:
             if mission_id not in self.missions:
@@ -337,8 +373,13 @@ class MissionTracker:
 
         return True
 
-    def complete_mission(self, mission_id: str, result: Optional[Dict[str, Any]] = None,
-                        tokens_used: Optional[int] = None, cost_estimate: Optional[float] = None) -> bool:
+    def complete_mission(
+        self,
+        mission_id: str,
+        result: dict[str, Any] | None = None,
+        tokens_used: int | None = None,
+        cost_estimate: float | None = None,
+    ) -> bool:
         """Complete a mission successfully"""
         with self.lock:
             if mission_id not in self.missions:
@@ -424,13 +465,12 @@ class MissionTracker:
         LOG.info(f"Cancelled mission: {mission.title} (ID: {mission_id})")
         return True
 
-    def get_mission(self, mission_id: str) -> Optional[Mission]:
+    def get_mission(self, mission_id: str) -> Mission | None:
         """Get a mission by ID"""
         with self.lock:
             return self.missions.get(mission_id)
 
-    def get_all_missions(self, status: Optional[MissionStatus] = None,
-                        limit: int = 100) -> List[Mission]:
+    def get_all_missions(self, status: MissionStatus | None = None, limit: int = 100) -> list[Mission]:
         """Get all missions with optional filtering"""
         with self.lock:
             missions = list(self.missions.values())
@@ -443,7 +483,7 @@ class MissionTracker:
 
             return missions[:limit]
 
-    def get_running_missions(self) -> List[Mission]:
+    def get_running_missions(self) -> list[Mission]:
         """Get all currently running missions"""
         with self.lock:
             return list(self.running_missions.values())
@@ -461,20 +501,34 @@ class MissionTracker:
         try:
             with self.db_manager.get_connection() as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute("""
+                    cursor.execute(
+                        """
                         INSERT INTO missions (
                             id, title, description, status, priority, created_at,
                             started_at, completed_at, duration, progress, error_message,
                             result, metadata, agent_type, model_used, tokens_used, cost_estimate
                         ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """, (
-                        mission.id, mission.title, mission.description, mission.status.value,
-                        mission.priority.value, mission.created_at, mission.started_at,
-                        mission.completed_at, mission.duration, mission.progress,
-                        mission.error_message, json.dumps(mission.result) if mission.result else None,
-                        json.dumps(mission.metadata) if mission.metadata else None,
-                        mission.agent_type, mission.model_used, mission.tokens_used, mission.cost_estimate
-                    ))
+                    """,
+                        (
+                            mission.id,
+                            mission.title,
+                            mission.description,
+                            mission.status.value,
+                            mission.priority.value,
+                            mission.created_at,
+                            mission.started_at,
+                            mission.completed_at,
+                            mission.duration,
+                            mission.progress,
+                            mission.error_message,
+                            json.dumps(mission.result) if mission.result else None,
+                            json.dumps(mission.metadata) if mission.metadata else None,
+                            mission.agent_type,
+                            mission.model_used,
+                            mission.tokens_used,
+                            mission.cost_estimate,
+                        ),
+                    )
                     conn.commit()
         except Exception as e:
             LOG.error(f"Failed to save mission to database: {e}")
@@ -487,21 +541,31 @@ class MissionTracker:
         try:
             with self.db_manager.get_connection() as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute("""
+                    cursor.execute(
+                        """
                         UPDATE missions SET
                             status = %s, started_at = %s, completed_at = %s,
                             duration = %s, progress = %s, error_message = %s,
                             result = %s, metadata = %s, agent_type = %s,
                             model_used = %s, tokens_used = %s, cost_estimate = %s
                         WHERE id = %s
-                    """, (
-                        mission.status.value, mission.started_at, mission.completed_at,
-                        mission.duration, mission.progress, mission.error_message,
-                        json.dumps(mission.result) if mission.result else None,
-                        json.dumps(mission.metadata) if mission.metadata else None,
-                        mission.agent_type, mission.model_used, mission.tokens_used,
-                        mission.cost_estimate, mission.id
-                    ))
+                    """,
+                        (
+                            mission.status.value,
+                            mission.started_at,
+                            mission.completed_at,
+                            mission.duration,
+                            mission.progress,
+                            mission.error_message,
+                            json.dumps(mission.result) if mission.result else None,
+                            json.dumps(mission.metadata) if mission.metadata else None,
+                            mission.agent_type,
+                            mission.model_used,
+                            mission.tokens_used,
+                            mission.cost_estimate,
+                            mission.id,
+                        ),
+                    )
                     conn.commit()
         except Exception as e:
             LOG.error(f"Failed to update mission in database: {e}")
@@ -525,8 +589,10 @@ class MissionTracker:
             self._cleanup_thread.join(timeout=5)
         LOG.info("Mission tracker shutdown complete")
 
+
 # Global mission tracker instance
 _mission_tracker = None
+
 
 def get_mission_tracker() -> MissionTracker:
     """Get the global mission tracker instance"""
@@ -534,6 +600,7 @@ def get_mission_tracker() -> MissionTracker:
     if _mission_tracker is None:
         _mission_tracker = MissionTracker()
     return _mission_tracker
+
 
 def shutdown_mission_tracker():
     """Shutdown the global mission tracker"""

@@ -6,7 +6,7 @@ Lessons Extractor - Post-run analysis to extract lessons from evaluation artifac
 import json
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 from lessons_model import Lesson, append_lesson, new_lesson
 

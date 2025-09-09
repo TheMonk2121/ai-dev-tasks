@@ -15,7 +15,7 @@ system integration, and role refinement.
 import os
 import sys
 import time
-from typing import Any, Dict
+from typing import Any
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
@@ -50,7 +50,7 @@ class TaskExecutionModule(Module):
         super().__init__()
         self.predictor = dspy.Predict(TaskSignature)
 
-    def forward(self, task_description: str, task_type: str, complexity: str) -> Dict[str, Any]:
+    def forward(self, task_description: str, task_type: str, complexity: str) -> dict[str, Any]:
         """Execute a task with optimization"""
         try:
             result = self.predictor(task_description=task_description, task_type=task_type, complexity=complexity)

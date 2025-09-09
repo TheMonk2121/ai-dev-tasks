@@ -11,9 +11,9 @@ import json
 import logging
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add the project root to the path for imports
 project_root = Path(__file__).parent.parent.parent.parent
@@ -44,7 +44,7 @@ class GitLTSTIntegration:
     - Real-time decision extraction from commit messages
     """
 
-    def __init__(self, db_connection_string: str, project_root: Optional[Path] = None):
+    def __init__(self, db_connection_string: str, project_root: Path | None = None):
         """
         Initialize the Git-LTST integration.
 
@@ -71,7 +71,7 @@ class GitLTSTIntegration:
 
         logger.info(f"✅ Git-LTST Integration initialized for {self.project_root}")
 
-    def capture_git_operations(self, since: Optional[str] = None, until: Optional[str] = None) -> Dict[str, Any]:
+    def capture_git_operations(self, since: str | None = None, until: str | None = None) -> dict[str, Any]:
         """
         Capture comprehensive git operations data.
 
@@ -84,7 +84,7 @@ class GitLTSTIntegration:
         """
         try:
             git_data = {
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "repository": self._get_repository_info(),
                 "current_branch": self._get_current_branch(),
                 "recent_commits": self._get_recent_commits(since, until),
@@ -102,8 +102,8 @@ class GitLTSTIntegration:
             return {"error": str(e)}
 
     def correlate_with_conversations(
-        self, git_data: Dict[str, Any], conversation_context: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, git_data: dict[str, Any], conversation_context: str | None = None
+    ) -> dict[str, Any]:
         """
         Correlate git operations with conversation context in LTST memory.
 
@@ -151,7 +151,7 @@ class GitLTSTIntegration:
                 "git_operations": git_data,
                 "related_conversations": unique_conversations,
                 "insights": insights,
-                "correlated_at": datetime.now(timezone.utc).isoformat(),
+                "correlated_at": datetime.now(UTC).isoformat(),
                 "correlation_type": "git_operations_to_conversation",
             }
 
@@ -162,7 +162,7 @@ class GitLTSTIntegration:
             logger.error(f"❌ Error correlating git operations: {e}")
             return {"error": str(e)}
 
-    def track_code_evolution(self, since: Optional[str] = None) -> Dict[str, Any]:
+    def track_code_evolution(self, since: str | None = None) -> dict[str, Any]:
         """
         Track code evolution patterns and decisions.
 
@@ -188,7 +188,7 @@ class GitLTSTIntegration:
             logger.error(f"❌ Error tracking code evolution: {e}")
             return {"error": str(e)}
 
-    def store_in_ltst_memory(self, git_data: Dict[str, Any], correlation_data: Dict[str, Any]) -> bool:
+    def store_in_ltst_memory(self, git_data: dict[str, Any], correlation_data: dict[str, Any]) -> bool:
         """
         Store git operations and correlation data in LTST memory.
 
@@ -209,7 +209,7 @@ class GitLTSTIntegration:
                     "git_data": git_data,
                     "correlation_data": correlation_data,
                     "capture_method": "git_ltst_integration",
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 },
             }
 
@@ -234,7 +234,7 @@ class GitLTSTIntegration:
         except Exception:
             return False
 
-    def _get_repository_info(self) -> Dict[str, Any]:
+    def _get_repository_info(self) -> dict[str, Any]:
         """Get repository information."""
         try:
             # Get remote URL
@@ -266,7 +266,7 @@ class GitLTSTIntegration:
             logger.error(f"Error getting current branch: {e}")
             return "unknown"
 
-    def _get_recent_commits(self, since: Optional[str] = None, until: Optional[str] = None) -> List[Dict[str, Any]]:
+    def _get_recent_commits(self, since: str | None = None, until: str | None = None) -> list[dict[str, Any]]:
         """Get recent commits with detailed information."""
         try:
             # Build git log command
@@ -303,7 +303,7 @@ class GitLTSTIntegration:
             logger.error(f"Error getting recent commits: {e}")
             return []
 
-    def _get_branch_changes(self, since: Optional[str] = None, until: Optional[str] = None) -> List[Dict[str, Any]]:
+    def _get_branch_changes(self, since: str | None = None, until: str | None = None) -> list[dict[str, Any]]:
         """Get branch changes and switches."""
         try:
             # Get branch history
@@ -330,9 +330,7 @@ class GitLTSTIntegration:
             logger.error(f"Error getting branch changes: {e}")
             return []
 
-    def _get_file_change_summary(
-        self, since: Optional[str] = None, until: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+    def _get_file_change_summary(self, since: str | None = None, until: str | None = None) -> list[dict[str, Any]]:
         """Get summary of file changes."""
         try:
             # Get file change statistics
@@ -364,7 +362,7 @@ class GitLTSTIntegration:
             logger.error(f"Error getting file change summary: {e}")
             return []
 
-    def _analyze_commit_patterns(self, since: Optional[str] = None, until: Optional[str] = None) -> Dict[str, Any]:
+    def _analyze_commit_patterns(self, since: str | None = None, until: str | None = None) -> dict[str, Any]:
         """Analyze commit patterns and frequency."""
         commits = self._get_recent_commits(since, until)
 
@@ -390,9 +388,7 @@ class GitLTSTIntegration:
             "most_common_pattern": max(message_patterns.items(), key=lambda x: x[1])[0] if message_patterns else "none",
         }
 
-    def _extract_commit_decisions(
-        self, since: Optional[str] = None, until: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+    def _extract_commit_decisions(self, since: str | None = None, until: str | None = None) -> list[dict[str, Any]]:
         """Extract decisions from commit messages."""
         commits = self._get_recent_commits(since, until)
         decisions = []
@@ -433,8 +429,8 @@ class GitLTSTIntegration:
         return decisions
 
     def _extract_correlation_insights(
-        self, git_data: Dict[str, Any], conversations: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, git_data: dict[str, Any], conversations: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Extract insights from git-conversation correlation."""
         insights = {
             "total_commits": len(git_data.get("recent_commits", [])),
@@ -449,7 +445,7 @@ class GitLTSTIntegration:
 
         return insights
 
-    def _create_git_rationale(self, git_data: Dict[str, Any], correlation_data: Dict[str, Any]) -> str:
+    def _create_git_rationale(self, git_data: dict[str, Any], correlation_data: dict[str, Any]) -> str:
         """Create a rationale for the git operations decision."""
         insights = correlation_data.get("insights", {})
 
@@ -470,7 +466,7 @@ class GitLTSTIntegration:
 
         return rationale.strip()
 
-    def _analyze_commit_frequency(self, since: Optional[str] = None) -> Dict[str, Any]:
+    def _analyze_commit_frequency(self, since: str | None = None) -> dict[str, Any]:
         """Analyze commit frequency patterns."""
         commits = self._get_recent_commits(since)
 
@@ -485,7 +481,7 @@ class GitLTSTIntegration:
             "pattern": "consistent" if commit_count > 10 else "sporadic",
         }
 
-    def _analyze_file_evolution(self, since: Optional[str] = None) -> Dict[str, Any]:
+    def _analyze_file_evolution(self, since: str | None = None) -> dict[str, Any]:
         """Analyze file evolution patterns."""
         file_changes = self._get_file_change_summary(since)
 
@@ -508,7 +504,7 @@ class GitLTSTIntegration:
             "evolution": "active" if len(file_changes) > 10 else "moderate" if len(file_changes) > 5 else "minimal",
         }
 
-    def _analyze_branch_evolution(self, since: Optional[str] = None) -> Dict[str, Any]:
+    def _analyze_branch_evolution(self, since: str | None = None) -> dict[str, Any]:
         """Analyze branch evolution patterns."""
         branch_changes = self._get_branch_changes(since)
 
@@ -521,7 +517,7 @@ class GitLTSTIntegration:
             "evolution": "active" if len(branch_changes) > 3 else "stable",
         }
 
-    def _extract_code_patterns(self, since: Optional[str] = None) -> Dict[str, Any]:
+    def _extract_code_patterns(self, since: str | None = None) -> dict[str, Any]:
         """Extract code patterns from commits."""
         commits = self._get_recent_commits(since)
 
@@ -550,7 +546,7 @@ class GitLTSTIntegration:
 
         return patterns
 
-    def _track_decision_evolution(self, since: Optional[str] = None) -> Dict[str, Any]:
+    def _track_decision_evolution(self, since: str | None = None) -> dict[str, Any]:
         """Track decision evolution over time."""
         decisions = self._extract_commit_decisions(since)
 
@@ -564,10 +560,10 @@ class GitLTSTIntegration:
 # Convenience functions for easy integration
 def integrate_git_operations(
     db_connection_string: str,
-    project_root: Optional[Path] = None,
-    since: Optional[str] = None,
-    until: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_root: Path | None = None,
+    since: str | None = None,
+    until: str | None = None,
+) -> dict[str, Any]:
     """
     Convenience function to integrate git operations with LTST memory.
 
@@ -595,8 +591,8 @@ def integrate_git_operations(
 
 
 def track_code_evolution(
-    db_connection_string: str, project_root: Optional[Path] = None, since: Optional[str] = None
-) -> Dict[str, Any]:
+    db_connection_string: str, project_root: Path | None = None, since: str | None = None
+) -> dict[str, Any]:
     """
     Track code evolution patterns.
 

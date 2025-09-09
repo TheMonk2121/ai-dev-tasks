@@ -10,7 +10,7 @@ Implements span-level grounding and controlled generation for precise fact extra
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import dspy
 from dspy import InputField, Module, OutputField, Signature
@@ -27,8 +27,8 @@ class ExtractionSchema:
     """Research-based extraction schema for structured data extraction"""
 
     name: str
-    fields: List[Dict[str, Any]]
-    validation_rules: List[str]
+    fields: list[dict[str, Any]]
+    validation_rules: list[str]
     span_tracking: bool = True
     confidence_threshold: float = 0.8
 
@@ -86,7 +86,7 @@ class EntityExtractor(Module):
         super().__init__()
         self.predict = dspy.Predict(EntityExtractionSignature)
 
-    def forward(self, text: str, entity_types: List[str]) -> Dict[str, Any]:
+    def forward(self, text: str, entity_types: list[str]) -> dict[str, Any]:
         """Extract entities with span-level grounding"""
 
         text = sanitize_prompt(text)
@@ -115,7 +115,7 @@ class EntityExtractor(Module):
 
         # Validate confidence
         confidence = result.confidence
-        if not isinstance(confidence, (int, float)) or confidence < 0 or confidence > 1:
+        if not isinstance(confidence, int | float) or confidence < 0 or confidence > 1:
             confidence = 0.5  # Default confidence if invalid
 
         return {
@@ -125,7 +125,7 @@ class EntityExtractor(Module):
             "extraction_type": "entities",
         }
 
-    def validate_entities(self, entities: List[Dict]) -> bool:
+    def validate_entities(self, entities: list[dict]) -> bool:
         """Validate extracted entities"""
         if not isinstance(entities, list):
             return False
@@ -138,7 +138,7 @@ class EntityExtractor(Module):
 
         return True
 
-    def validate_spans(self, spans: List[Dict], text: str) -> bool:
+    def validate_spans(self, spans: list[dict], text: str) -> bool:
         """Validate character spans"""
         if not isinstance(spans, list):
             return False
@@ -163,7 +163,7 @@ class RelationExtractor(Module):
         super().__init__()
         self.predict = dspy.Predict(RelationExtractionSignature)
 
-    def forward(self, text: str, relation_types: List[str]) -> Dict[str, Any]:
+    def forward(self, text: str, relation_types: list[str]) -> dict[str, Any]:
         """Extract relations with span-level grounding"""
 
         text = sanitize_prompt(text)
@@ -192,7 +192,7 @@ class RelationExtractor(Module):
 
         # Validate confidence
         confidence = result.confidence
-        if not isinstance(confidence, (int, float)) or confidence < 0 or confidence > 1:
+        if not isinstance(confidence, int | float) or confidence < 0 or confidence > 1:
             confidence = 0.5  # Default confidence if invalid
 
         return {
@@ -202,7 +202,7 @@ class RelationExtractor(Module):
             "extraction_type": "relations",
         }
 
-    def validate_relations(self, relations: List[Dict]) -> bool:
+    def validate_relations(self, relations: list[dict]) -> bool:
         """Validate extracted relations"""
         if not isinstance(relations, list):
             return False
@@ -215,7 +215,7 @@ class RelationExtractor(Module):
 
         return True
 
-    def validate_spans(self, spans: List[Dict], text: str) -> bool:
+    def validate_spans(self, spans: list[dict], text: str) -> bool:
         """Validate character spans"""
         if not isinstance(spans, list):
             return False
@@ -240,7 +240,7 @@ class FactExtractor(Module):
         super().__init__()
         self.predict = dspy.Predict(FactExtractionSignature)
 
-    def forward(self, text: str, fact_schema: ExtractionSchema) -> Dict[str, Any]:
+    def forward(self, text: str, fact_schema: ExtractionSchema) -> dict[str, Any]:
         """Extract facts with span-level grounding"""
 
         text = sanitize_prompt(text)
@@ -271,7 +271,7 @@ class FactExtractor(Module):
 
         # Validate confidence
         confidence = result.confidence
-        if not isinstance(confidence, (int, float)) or confidence < 0 or confidence > 1:
+        if not isinstance(confidence, int | float) or confidence < 0 or confidence > 1:
             confidence = 0.5  # Default confidence if invalid
 
         return {
@@ -282,7 +282,7 @@ class FactExtractor(Module):
             "schema": fact_schema.name,
         }
 
-    def validate_facts(self, facts: List[Dict], schema: ExtractionSchema) -> bool:
+    def validate_facts(self, facts: list[dict], schema: ExtractionSchema) -> bool:
         """Validate extracted facts against schema"""
         if not isinstance(facts, list):
             return False
@@ -298,7 +298,7 @@ class FactExtractor(Module):
 
         return True
 
-    def validate_spans(self, spans: List[Dict], text: str) -> bool:
+    def validate_spans(self, spans: list[dict], text: str) -> bool:
         """Validate character spans"""
         if not isinstance(spans, list):
             return False
@@ -331,7 +331,7 @@ class LangExtractSystem(Module):
         # Predefined schemas for common extraction tasks
         self.schemas = self._initialize_schemas()
 
-    def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
+    def forward(self, operation: str, **kwargs) -> dict[str, Any]:
         """Main entry point for LangExtract operations"""
 
         if operation == "extract_entities":
@@ -345,7 +345,7 @@ class LangExtractSystem(Module):
         else:
             raise ValueError(f"Unknown operation: {operation}")
 
-    def _extract_entities(self, text: str, entity_types: Union[List[str], None] = None) -> Dict[str, Any]:
+    def _extract_entities(self, text: str, entity_types: list[str] | None = None) -> dict[str, Any]:
         """Extract entities with span-level grounding"""
 
         if entity_types is None:
@@ -361,7 +361,7 @@ class LangExtractSystem(Module):
             "count": len(result["entities"]),
         }
 
-    def _extract_relations(self, text: str, relation_types: Union[List[str], None] = None) -> Dict[str, Any]:
+    def _extract_relations(self, text: str, relation_types: list[str] | None = None) -> dict[str, Any]:
         """Extract relations with span-level grounding"""
 
         if relation_types is None:
@@ -377,7 +377,7 @@ class LangExtractSystem(Module):
             "count": len(result["relations"]),
         }
 
-    def _extract_facts(self, text: str, schema_name: str = "general") -> Dict[str, Any]:
+    def _extract_facts(self, text: str, schema_name: str = "general") -> dict[str, Any]:
         """Extract facts with span-level grounding"""
 
         schema = self.schemas.get(schema_name, self.schemas["general"])
@@ -392,7 +392,7 @@ class LangExtractSystem(Module):
             "count": len(result["facts"]),
         }
 
-    def _extract_all(self, text: str) -> Dict[str, Any]:
+    def _extract_all(self, text: str) -> dict[str, Any]:
         """Extract all types of structured information"""
 
         entities = self._extract_entities(text)
@@ -407,7 +407,7 @@ class LangExtractSystem(Module):
             "total_extractions": entities["count"] + relations["count"] + facts["count"],
         }
 
-    def _initialize_schemas(self) -> Dict[str, ExtractionSchema]:
+    def _initialize_schemas(self) -> dict[str, ExtractionSchema]:
         """Initialize predefined extraction schemas"""
 
         schemas = {}
@@ -468,7 +468,7 @@ class LangExtractInterface:
     def __init__(self):
         self.system = LangExtractSystem()
 
-    def extract(self, text: str, extraction_type: ExtractionType = ExtractionType.ENTITIES, **kwargs) -> Dict[str, Any]:
+    def extract(self, text: str, extraction_type: ExtractionType = ExtractionType.ENTITIES, **kwargs) -> dict[str, Any]:
         """Extract structured information from text"""
 
         if extraction_type == ExtractionType.ENTITIES:
@@ -480,7 +480,7 @@ class LangExtractInterface:
         else:
             return self.system.forward("extract_all", text=text)
 
-    def get_schemas(self) -> Dict[str, ExtractionSchema]:
+    def get_schemas(self) -> dict[str, ExtractionSchema]:
         """Get available extraction schemas"""
         return self.system.schemas
 
@@ -493,7 +493,7 @@ def create_lang_extract_interface() -> LangExtractInterface:
 # ---------- Research-Based Performance Metrics ----------
 
 
-def evaluate_extraction_quality(extractions: List[Dict], ground_truth: List[Dict]) -> Dict[str, float]:
+def evaluate_extraction_quality(extractions: list[dict], ground_truth: list[dict]) -> dict[str, float]:
     """Evaluate extraction quality using research-based metrics"""
 
     # Precision: How many extracted items are correct

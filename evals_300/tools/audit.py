@@ -2,7 +2,7 @@ import json
 import subprocess
 import time
 from pathlib import Path
-from typing import Optional, Tuple
+
 
 STATE_DIR = Path("evals_300/_state")
 VERSIONS = STATE_DIR / "versions.json"
@@ -33,7 +33,7 @@ def suite_file_path() -> str:
     return "evals_300/ssot/registry_core.py"
 
 
-def created_updated_from_git(search_token: str, path: str) -> Tuple[Optional[str], Optional[str]]:
+def created_updated_from_git(search_token: str, path: str) -> tuple[str | None, str | None]:
     """Return ISO timestamps for first and last commits touching token."""
     try:
         log = _git(["git", "log", "-S", search_token, "--format=%H %cI", "--", path])
@@ -58,7 +58,7 @@ def save_versions(data: dict) -> None:
     VERSIONS.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
-def bump_version(old: Optional[str], scope: str) -> str:
+def bump_version(old: str | None, scope: str) -> str:
     """Scope: major (run), minor (metrics), patch (config)."""
     maj, minr, pat = (1, 0, 0) if not old else [int(x) for x in old.split(".")]
     if scope == "major":

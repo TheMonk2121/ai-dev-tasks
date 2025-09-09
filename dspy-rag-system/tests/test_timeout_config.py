@@ -33,11 +33,9 @@ class TestTimeoutConfig:
 
     def test_environment_variable_loading(self):
         """Test loading configuration from environment variables"""
-        with patch.dict(os.environ, {
-            'DB_CONNECT_TIMEOUT': '15',
-            'HTTP_READ_TIMEOUT': '45',
-            'LLM_REQUEST_TIMEOUT': '180'
-        }):
+        with patch.dict(
+            os.environ, {"DB_CONNECT_TIMEOUT": "15", "HTTP_READ_TIMEOUT": "45", "LLM_REQUEST_TIMEOUT": "180"}
+        ):
             config = load_timeout_config()
 
             assert config.db_connect_timeout == 15
@@ -47,18 +45,12 @@ class TestTimeoutConfig:
     def test_system_json_loading(self):
         """Test loading configuration from system.json"""
         # Create temporary system.json
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
-            json.dump({
-                "timeouts": {
-                    "db_connect_timeout": 20,
-                    "http_read_timeout": 60,
-                    "llm_request_timeout": 240
-                }
-            }, f)
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            json.dump({"timeouts": {"db_connect_timeout": 20, "http_read_timeout": 60, "llm_request_timeout": 240}}, f)
             temp_config_path = f.name
 
         try:
-            with patch('src.utils.timeout_config.os.path.join') as mock_join:
+            with patch("src.utils.timeout_config.os.path.join") as mock_join:
                 mock_join.return_value = temp_config_path
                 config = load_timeout_config()
 
@@ -104,34 +96,26 @@ class TestTimeoutConfig:
     def test_environment_override_system_json(self):
         """Test that environment variables override system.json"""
         # Create temporary system.json
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
-            json.dump({
-                "timeouts": {
-                    "db_connect_timeout": 20,
-                    "http_read_timeout": 60
-                }
-            }, f)
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            json.dump({"timeouts": {"db_connect_timeout": 20, "http_read_timeout": 60}}, f)
             temp_config_path = f.name
 
         try:
-            with patch('src.utils.timeout_config.os.path.join') as mock_join:
+            with patch("src.utils.timeout_config.os.path.join") as mock_join:
                 mock_join.return_value = temp_config_path
 
                 # Environment should override system.json
-                with patch.dict(os.environ, {
-                    'DB_CONNECT_TIMEOUT': '25',
-                    'HTTP_READ_TIMEOUT': '75'
-                }):
+                with patch.dict(os.environ, {"DB_CONNECT_TIMEOUT": "25", "HTTP_READ_TIMEOUT": "75"}):
                     config = load_timeout_config()
 
                     assert config.db_connect_timeout == 25  # From env
-                    assert config.http_read_timeout == 75   # From env
+                    assert config.http_read_timeout == 75  # From env
         finally:
             os.unlink(temp_config_path)
 
     def test_missing_system_json_handling(self):
         """Test graceful handling of missing system.json"""
-        with patch('src.utils.timeout_config.os.path.exists') as mock_exists:
+        with patch("src.utils.timeout_config.os.path.exists") as mock_exists:
             mock_exists.return_value = False
 
             config = load_timeout_config()
@@ -143,12 +127,12 @@ class TestTimeoutConfig:
     def test_invalid_system_json_handling(self):
         """Test graceful handling of invalid system.json"""
         # Create invalid JSON file
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             f.write('{"invalid": json}')
             temp_config_path = f.name
 
         try:
-            with patch('src.utils.timeout_config.os.path.join') as mock_join:
+            with patch("src.utils.timeout_config.os.path.join") as mock_join:
                 mock_join.return_value = temp_config_path
 
                 config = load_timeout_config()
@@ -159,6 +143,7 @@ class TestTimeoutConfig:
         finally:
             os.unlink(temp_config_path)
 
+
 class TestTimeoutIntegration:
     """Test timeout configuration integration with other components"""
 
@@ -166,7 +151,7 @@ class TestTimeoutIntegration:
         """Test that vector store uses timeout configuration"""
 
         # Mock the timeout config
-        with patch('src.dspy_modules.vector_store.get_timeout_config') as mock_get_config:
+        with patch("src.dspy_modules.vector_store.get_timeout_config") as mock_get_config:
             mock_config = TimeoutConfig()
             mock_config.db_read_timeout = 45
             mock_config.db_write_timeout = 90
@@ -181,7 +166,7 @@ class TestTimeoutIntegration:
         from src.dspy_modules.enhanced_rag_system import MistralLLM
 
         # Mock the timeout config
-        with patch('src.dspy_modules.enhanced_rag_system.get_timeout_config') as mock_get_config:
+        with patch("src.dspy_modules.enhanced_rag_system.get_timeout_config") as mock_get_config:
             mock_config = TimeoutConfig()
             mock_config.llm_request_timeout = 180
             mock_config.http_connect_timeout = 15

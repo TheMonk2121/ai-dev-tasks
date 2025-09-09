@@ -10,7 +10,7 @@ import sys
 import time
 from datetime import datetime
 from functools import wraps
-from typing import Any, Dict, List, Optional
+from typing import Any
 from collections.abc import Callable
 
 # Add dspy-rag-system to path for imports

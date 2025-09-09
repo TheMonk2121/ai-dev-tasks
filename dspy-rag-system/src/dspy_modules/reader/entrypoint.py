@@ -3,14 +3,14 @@
 Reader entrypoint for building context from retrieved documents.
 """
 
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from .sentence_select import select_sentences
 
 
 def build_reader_context(
-    rows: List[Dict[str, Any]], query: str, tag: str, compact: bool = True
-) -> Tuple[str, Dict[str, Any]]:
+    rows: list[dict[str, Any]], query: str, tag: str, compact: bool = True
+) -> tuple[str, dict[str, Any]]:
     """
     Build reader context from retrieved documents.
 

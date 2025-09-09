@@ -6,7 +6,7 @@ Eliminates magical dicts and provides clear interfaces.
 from __future__ import annotations
 
 import time
-from typing import Any, Dict, List
+from typing import Any
 
 # Import existing RAGChecker components
 try:
@@ -14,7 +14,7 @@ try:
 
     _ragchecker_evaluator = RAGCheckerEvaluator()
 
-    def run_ragchecker_evaluation(test_queries: List[Dict[str, Any]]) -> Dict[str, float]:
+    def run_ragchecker_evaluation(test_queries: list[dict[str, Any]]) -> dict[str, float]:
         """Run RAGChecker evaluation using the evaluator instance."""
         # This is a simplified version - in practice you'd need to convert test_queries to RAGResult
         return {
@@ -31,7 +31,7 @@ try:
 
 except ImportError:
     # Fallback for when ragchecker_evaluation is not available
-    def run_ragchecker_evaluation(test_queries: List[Dict[str, Any]]) -> Dict[str, float]:
+    def run_ragchecker_evaluation(test_queries: list[dict[str, Any]]) -> dict[str, float]:
         """Fallback implementation when ragchecker_evaluation is not available."""
         return {
             "recall": 0.675,
@@ -64,7 +64,7 @@ class RAGCheckerAdapter(RAGChecker):
         ragchecker_results = run_ragchecker_evaluation(test_queries)
 
         # Map to strongly typed metrics
-        metrics: Dict[MetricName, float] = {
+        metrics: dict[MetricName, float] = {
             "R@20": float(ragchecker_results.get("recall", 0.675)),  # Current value
             "R@10": float(ragchecker_results.get("recall", 0.675)),
             "MRR@10": float(ragchecker_results.get("mrr", 0.0)),
@@ -92,7 +92,7 @@ class RAGCheckerAdapter(RAGChecker):
         ragchecker_results = run_ragchecker_evaluation(test_queries)
 
         # Map to strongly typed metrics
-        metrics: Dict[MetricName, float] = {
+        metrics: dict[MetricName, float] = {
             "faithfulness": float(ragchecker_results.get("faithfulness", 0.538)),  # Current value
             "unsupported_rate": float(1.0 - ragchecker_results.get("faithfulness", 0.538)),  # Inverse
             "evidence_precision": float(ragchecker_results.get("context_precision", 0.500)),
@@ -123,7 +123,7 @@ class RAGCheckerAdapter(RAGChecker):
         p50_latency = statistics.median(latencies) if latencies else 0.0
         p95_latency = np.percentile(latencies, 95) if latencies else 0.0
 
-        metrics: Dict[MetricName, float] = {
+        metrics: dict[MetricName, float] = {
             "latency_p50_ms": float(p50_latency * 1000),  # Convert to ms
             "latency_p95_ms": float(p95_latency * 1000),  # Convert to ms
         }
@@ -147,7 +147,7 @@ class RAGCheckerAdapter(RAGChecker):
         # Test graceful degradation (placeholder for future implementation)
         _ = self._test_graceful_degradation()
 
-        metrics: Dict[MetricName, float] = {
+        metrics: dict[MetricName, float] = {
             "query_rewrite_improvement": query_rewrite_improvement or 0.0,
             "latency_p50_ms": 2.59,  # Current value
             "latency_p95_ms": 10.0,  # Current value
@@ -185,7 +185,7 @@ class RAGCheckerAdapter(RAGChecker):
             metrics=metrics, targets=self._quality_targets, passed=passed, failures=failures, warnings=warnings
         )
 
-    def _create_test_queries(self, dataset: DatasetConfig) -> List[Dict[str, Any]]:
+    def _create_test_queries(self, dataset: DatasetConfig) -> list[dict[str, Any]]:
         """Create test queries based on dataset configuration"""
 
         # Use existing test query creation logic
@@ -198,17 +198,17 @@ class RAGCheckerAdapter(RAGChecker):
         # Limit to max_queries
         return base_queries[: dataset.max_queries]
 
-    def _calculate_reranker_lift(self, test_queries: List[Dict[str, Any]]) -> float | None:
+    def _calculate_reranker_lift(self, test_queries: list[dict[str, Any]]) -> float | None:
         """Calculate reranker lift (to be implemented)"""
         # Placeholder - implement when reranker is added
         return None
 
-    def _measure_latencies(self, test_queries: List[Dict[str, Any]]) -> List[float]:
+    def _measure_latencies(self, test_queries: list[dict[str, Any]]) -> list[float]:
         """Measure response latencies"""
         # Use current latency measurements
         return [0.00259, 0.003, 0.004, 0.005, 0.008]  # Sample latencies in seconds
 
-    def _test_query_rewrite_improvement(self, test_queries: List[Dict[str, Any]]) -> float | None:
+    def _test_query_rewrite_improvement(self, test_queries: list[dict[str, Any]]) -> float | None:
         """Test query rewrite improvement (to be implemented)"""
         # Placeholder - implement when query rewrite is added
         return None
@@ -218,7 +218,7 @@ class RAGCheckerAdapter(RAGChecker):
         # Placeholder - implement graceful degradation testing
         return True
 
-    def _get_quality_gate_failures(self, metrics: RunMetrics, targets: QualityTargets) -> List[str]:
+    def _get_quality_gate_failures(self, metrics: RunMetrics, targets: QualityTargets) -> list[str]:
         """Get quality gate failures"""
         failures: list[str] = []
 
@@ -257,7 +257,7 @@ class RAGCheckerAdapter(RAGChecker):
 
         return failures
 
-    def _get_quality_gate_warnings(self, metrics: RunMetrics, targets: QualityTargets) -> List[str]:
+    def _get_quality_gate_warnings(self, metrics: RunMetrics, targets: QualityTargets) -> list[str]:
         """Get quality gate warnings (close to failing)"""
         warnings: list[str] = []
 

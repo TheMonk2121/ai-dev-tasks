@@ -151,7 +151,7 @@ class TestCoderRoleIntegration(unittest.TestCase):
 
                 # Only process actual files
                 if os.path.isfile(full_path):
-                    with open(full_path, "r") as f:
+                    with open(full_path) as f:
                         content = f.read().lower()
 
                         # At least one coding keyword should be present

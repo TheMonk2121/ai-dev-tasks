@@ -5,12 +5,12 @@ Falls back to LLM only when deterministic extraction fails.
 """
 
 import re
-from typing import Optional
+
 
 SQL_HINTS = r"(create|alter|drop|index|table|materialized|view|foreign key|primary key|using|gin|gist|ivfflat|to_tsvector|tsquery|websearch_to_tsquery)"
 
 
-def pick_span(context: str, question: str, tag: str) -> Optional[str]:
+def pick_span(context: str, question: str, tag: str) -> str | None:
     """
     Deterministically extract the best answer span from context.
 

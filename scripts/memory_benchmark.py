@@ -19,7 +19,7 @@ import statistics
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass

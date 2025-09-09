@@ -6,7 +6,7 @@ Importing this module will immediately check for required environment variables.
 
 import os
 import sys
-from typing import List
+
 
 # Required environment variables for production
 REQUIRED_ENV_VARS = ["POSTGRES_DSN", "OPENAI_API_KEY", "AWS_REGION"]
@@ -31,7 +31,7 @@ def check_required_env_vars() -> None:
         sys.exit(1)
 
 
-def check_recommended_env_vars() -> List[str]:
+def check_recommended_env_vars() -> list[str]:
     """Check for recommended environment variables and warn if missing."""
     missing_vars = [var for var in RECOMMENDED_ENV_VARS if not os.getenv(var)]
 

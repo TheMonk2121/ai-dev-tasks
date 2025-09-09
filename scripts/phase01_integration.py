@@ -20,7 +20,7 @@ import asyncio
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 # Add project paths
 sys.path.insert(0, str(Path(__file__).parent.parent))

@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from .performance_schema import PerformanceSchema
 
@@ -42,12 +42,12 @@ class QualityGateRule:
 
     name: str
     gate_type: QualityGateType
-    threshold: Union[float, int]
+    threshold: float | int
     operator: str = "lte"  # lte, gte, eq, ne
     severity: str = "warn"  # warn, fail, error
     description: str = ""
     enabled: bool = True
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -57,12 +57,12 @@ class QualityGateResult:
     rule_name: str
     gate_type: QualityGateType
     status: QualityGateStatus
-    actual_value: Union[float, int]
-    threshold: Union[float, int]
+    actual_value: float | int
+    threshold: float | int
     operator: str
     message: str
     timestamp: datetime = field(default_factory=datetime.utcnow)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -71,15 +71,15 @@ class QualityGateSuite:
 
     name: str
     description: str = ""
-    rules: List[QualityGateRule] = field(default_factory=list)
+    rules: list[QualityGateRule] = field(default_factory=list)
     enabled: bool = True
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class QualityGateEvaluator:
     """Evaluates quality gates against performance data"""
 
-    def __init__(self, schema: Optional[PerformanceSchema] = None):
+    def __init__(self, schema: PerformanceSchema | None = None):
         self.schema = schema or PerformanceSchema()
         self.default_suite = self._create_default_suite()
 
@@ -140,7 +140,7 @@ class QualityGateEvaluator:
             ],
         )
 
-    def evaluate_workflow(self, workflow_analysis: Dict[str, Any]) -> List[QualityGateResult]:
+    def evaluate_workflow(self, workflow_analysis: dict[str, Any]) -> list[QualityGateResult]:
         """Evaluate all quality gates against workflow analysis"""
         results = []
 
@@ -167,7 +167,7 @@ class QualityGateEvaluator:
 
         return results
 
-    def _evaluate_rule(self, rule: QualityGateRule, workflow_analysis: Dict[str, Any]) -> QualityGateResult:
+    def _evaluate_rule(self, rule: QualityGateRule, workflow_analysis: dict[str, Any]) -> QualityGateResult:
         """Evaluate a single quality gate rule"""
 
         if rule.gate_type == QualityGateType.DURATION_LIMIT:
@@ -195,7 +195,7 @@ class QualityGateEvaluator:
                 message=f"Unknown gate type: {rule.gate_type}",
             )
 
-    def _evaluate_duration_limit(self, rule: QualityGateRule, workflow_analysis: Dict[str, Any]) -> QualityGateResult:
+    def _evaluate_duration_limit(self, rule: QualityGateRule, workflow_analysis: dict[str, Any]) -> QualityGateResult:
         """Evaluate duration limit quality gate"""
         actual_duration = workflow_analysis.get("total_duration_ms", 0)
         passed = self._compare_values(actual_duration, rule.threshold, rule.operator)
@@ -211,7 +211,7 @@ class QualityGateEvaluator:
         )
 
     def _evaluate_performance_threshold(
-        self, rule: QualityGateRule, workflow_analysis: Dict[str, Any]
+        self, rule: QualityGateRule, workflow_analysis: dict[str, Any]
     ) -> QualityGateResult:
         """Evaluate performance threshold quality gate"""
         actual_score = workflow_analysis.get("performance_score", 0)
@@ -227,7 +227,7 @@ class QualityGateEvaluator:
             message=f"Performance score: {actual_score:.1f} {'≥' if rule.operator == 'gte' else '≤'} {rule.threshold}",
         )
 
-    def _evaluate_error_rate(self, rule: QualityGateRule, workflow_analysis: Dict[str, Any]) -> QualityGateResult:
+    def _evaluate_error_rate(self, rule: QualityGateRule, workflow_analysis: dict[str, Any]) -> QualityGateResult:
         """Evaluate error rate quality gate"""
         error_count = workflow_analysis.get("error_count", 0)
         total_points = len(workflow_analysis.get("collection_points", []))
@@ -245,7 +245,7 @@ class QualityGateEvaluator:
             message=f"Error rate: {error_rate:.3f} ({error_count}/{total_points}) {'≤' if rule.operator == 'lte' else '≥'} {rule.threshold}",
         )
 
-    def _evaluate_success_rate(self, rule: QualityGateRule, workflow_analysis: Dict[str, Any]) -> QualityGateResult:
+    def _evaluate_success_rate(self, rule: QualityGateRule, workflow_analysis: dict[str, Any]) -> QualityGateResult:
         """Evaluate success rate quality gate"""
         success = workflow_analysis.get("success", False)
         success_rate = 1.0 if success else 0.0
@@ -262,7 +262,7 @@ class QualityGateEvaluator:
         )
 
     def _evaluate_bottleneck_detection(
-        self, rule: QualityGateRule, workflow_analysis: Dict[str, Any]
+        self, rule: QualityGateRule, workflow_analysis: dict[str, Any]
     ) -> QualityGateResult:
         """Evaluate bottleneck detection quality gate"""
         bottlenecks = workflow_analysis.get("bottlenecks", [])
@@ -280,7 +280,7 @@ class QualityGateEvaluator:
         )
 
     def _evaluate_collection_point_limit(
-        self, rule: QualityGateRule, workflow_analysis: Dict[str, Any]
+        self, rule: QualityGateRule, workflow_analysis: dict[str, Any]
     ) -> QualityGateResult:
         """Evaluate collection point duration limit quality gate"""
         collection_points = workflow_analysis.get("collection_points", [])
@@ -302,7 +302,7 @@ class QualityGateEvaluator:
             message=f"Max collection point duration: {max_duration:.1f}ms {'≤' if rule.operator == 'lte' else '≥'} {rule.threshold}ms",
         )
 
-    def _evaluate_memory_usage(self, rule: QualityGateRule, workflow_analysis: Dict[str, Any]) -> QualityGateResult:
+    def _evaluate_memory_usage(self, rule: QualityGateRule, workflow_analysis: dict[str, Any]) -> QualityGateResult:
         """Evaluate memory usage quality gate"""
         memory_usage = workflow_analysis.get("memory_usage_mb", 0)
         passed = self._compare_values(memory_usage, rule.threshold, rule.operator)
@@ -317,7 +317,7 @@ class QualityGateEvaluator:
             message=f"Memory usage: {memory_usage:.1f}MB {'≤' if rule.operator == 'lte' else '≥'} {rule.threshold}MB",
         )
 
-    def _compare_values(self, actual: Union[float, int], threshold: Union[float, int], operator: str) -> bool:
+    def _compare_values(self, actual: float | int, threshold: float | int, operator: str) -> bool:
         """Compare actual value against threshold using specified operator"""
         if operator == "lte":
             return actual <= threshold
@@ -358,7 +358,7 @@ class QualityGateEnforcer:
             QualityGateStatus.WARN: self._handle_warn,
         }
 
-    def enforce_quality_gates(self, workflow_analysis: Dict[str, Any]) -> Dict[str, Any]:
+    def enforce_quality_gates(self, workflow_analysis: dict[str, Any]) -> dict[str, Any]:
         """Enforce quality gates and return enforcement results"""
         enforcement_result = {
             "workflow_id": workflow_analysis.get("workflow_id"),
@@ -398,7 +398,7 @@ class QualityGateEnforcer:
 
         return enforcement_result
 
-    def _handle_fail(self, result: QualityGateResult, workflow_analysis: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def _handle_fail(self, result: QualityGateResult, workflow_analysis: dict[str, Any]) -> dict[str, Any] | None:
         """Handle failed quality gate"""
         logger.warning(f"Quality gate failed: {result.rule_name} - {result.message}")
 
@@ -409,7 +409,7 @@ class QualityGateEnforcer:
             "severity": "high",
         }
 
-    def _handle_error(self, result: QualityGateResult, workflow_analysis: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def _handle_error(self, result: QualityGateResult, workflow_analysis: dict[str, Any]) -> dict[str, Any] | None:
         """Handle error in quality gate evaluation"""
         logger.error(f"Quality gate error: {result.rule_name} - {result.message}")
 
@@ -420,7 +420,7 @@ class QualityGateEnforcer:
             "severity": "critical",
         }
 
-    def _handle_warn(self, result: QualityGateResult, workflow_analysis: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def _handle_warn(self, result: QualityGateResult, workflow_analysis: dict[str, Any]) -> dict[str, Any] | None:
         """Handle warning in quality gate"""
         logger.info(f"Quality gate warning: {result.rule_name} - {result.message}")
 
@@ -432,8 +432,8 @@ class QualityGateEnforcer:
         }
 
     def _generate_recommendations(
-        self, gate_results: List[QualityGateResult], workflow_analysis: Dict[str, Any]
-    ) -> List[str]:
+        self, gate_results: list[QualityGateResult], workflow_analysis: dict[str, Any]
+    ) -> list[str]:
         """Generate recommendations based on quality gate results"""
         recommendations = []
 
@@ -466,15 +466,15 @@ class QualityGateEnforcer:
 class QualityGateManager:
     """Manages quality gates and provides high-level interface"""
 
-    def __init__(self, schema: Optional[PerformanceSchema] = None):
+    def __init__(self, schema: PerformanceSchema | None = None):
         self.evaluator = QualityGateEvaluator(schema)
         self.enforcer = QualityGateEnforcer(self.evaluator)
 
-    def validate_workflow(self, workflow_analysis: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_workflow(self, workflow_analysis: dict[str, Any]) -> dict[str, Any]:
         """Validate workflow against quality gates"""
         return self.enforcer.enforce_quality_gates(workflow_analysis)
 
-    def get_quality_gate_summary(self, workflow_analysis: Dict[str, Any]) -> Dict[str, Any]:
+    def get_quality_gate_summary(self, workflow_analysis: dict[str, Any]) -> dict[str, Any]:
         """Get summary of quality gate results"""
         enforcement_result = self.validate_workflow(workflow_analysis)
 
@@ -492,7 +492,7 @@ class QualityGateManager:
 
         return summary
 
-    def is_workflow_approved(self, workflow_analysis: Dict[str, Any]) -> bool:
+    def is_workflow_approved(self, workflow_analysis: dict[str, Any]) -> bool:
         """Check if workflow passes all critical quality gates"""
         enforcement_result = self.validate_workflow(workflow_analysis)
         return enforcement_result["overall_status"] not in [QualityGateStatus.FAIL, QualityGateStatus.ERROR]
@@ -503,17 +503,17 @@ quality_gate_manager = QualityGateManager()
 
 
 # Convenience functions for easy integration
-def validate_workflow_quality(workflow_analysis: Dict[str, Any]) -> Dict[str, Any]:
+def validate_workflow_quality(workflow_analysis: dict[str, Any]) -> dict[str, Any]:
     """Validate workflow against quality gates"""
     return quality_gate_manager.validate_workflow(workflow_analysis)
 
 
-def get_quality_summary(workflow_analysis: Dict[str, Any]) -> Dict[str, Any]:
+def get_quality_summary(workflow_analysis: dict[str, Any]) -> dict[str, Any]:
     """Get quality gate summary for workflow"""
     return quality_gate_manager.get_quality_gate_summary(workflow_analysis)
 
 
-def is_workflow_approved(workflow_analysis: Dict[str, Any]) -> bool:
+def is_workflow_approved(workflow_analysis: dict[str, Any]) -> bool:
     """Check if workflow is approved by quality gates"""
     return quality_gate_manager.is_workflow_approved(workflow_analysis)
 
@@ -521,7 +521,7 @@ def is_workflow_approved(workflow_analysis: Dict[str, Any]) -> bool:
 def add_custom_quality_gate(
     name: str,
     gate_type: QualityGateType,
-    threshold: Union[float, int],
+    threshold: float | int,
     operator: str = "lte",
     severity: str = "warn",
     description: str = "",

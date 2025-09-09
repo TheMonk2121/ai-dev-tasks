@@ -9,7 +9,7 @@ This allows us to test the implementation logic before setting up the full datab
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass

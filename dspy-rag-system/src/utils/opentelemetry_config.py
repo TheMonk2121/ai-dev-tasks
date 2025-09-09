@@ -8,7 +8,7 @@ import logging
 import os
 import uuid
 from contextlib import contextmanager
-from typing import Any, Dict, Optional
+from typing import Any
 
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
@@ -20,6 +20,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 
 logger = logging.getLogger(__name__)
+
 
 class OpenTelemetryConfig:
     """Centralized OpenTelemetry configuration manager"""
@@ -35,7 +36,7 @@ class OpenTelemetryConfig:
         service_name: str = "ai-dev-tasks",
         service_version: str = "0.3.1",
         environment: str = "development",
-        otlp_endpoint: Optional[str] = None,
+        otlp_endpoint: str | None = None,
         enable_console_exporter: bool = True,
         enable_requests_instrumentation: bool = True,
         enable_flask_instrumentation: bool = True,
@@ -126,7 +127,7 @@ class OpenTelemetryConfig:
         self._correlation_id = correlation_id
         return correlation_id
 
-    def get_correlation_id(self) -> Optional[str]:
+    def get_correlation_id(self) -> str | None:
         """Get the current correlation ID"""
         return self._correlation_id
 
@@ -135,7 +136,7 @@ class OpenTelemetryConfig:
         self._correlation_id = correlation_id
 
     @contextmanager
-    def trace_operation(self, operation_name: str, attributes: Optional[Dict[str, Any]] = None):
+    def trace_operation(self, operation_name: str, attributes: dict[str, Any] | None = None):
         """
         Context manager for tracing operations.
 
@@ -183,42 +184,52 @@ class OpenTelemetryConfig:
             self._initialized = False
             logger.info("OpenTelemetry shutdown complete")
 
+
 # Global OpenTelemetry configuration instance
 ot_config = OpenTelemetryConfig()
+
 
 def initialize_opentelemetry(**kwargs) -> None:
     """Initialize OpenTelemetry with the given configuration"""
     ot_config.initialize(**kwargs)
 
+
 def get_tracer() -> trace.Tracer:
     """Get the configured tracer"""
     return ot_config.get_tracer()
 
-def get_correlation_id() -> Optional[str]:
+
+def get_correlation_id() -> str | None:
     """Get the current correlation ID"""
     return ot_config.get_correlation_id()
+
 
 def set_correlation_id(correlation_id: str) -> None:
     """Set the correlation ID for the current context"""
     ot_config.set_correlation_id(correlation_id)
 
+
 def generate_correlation_id() -> str:
     """Generate a unique correlation ID"""
     return ot_config.generate_correlation_id()
 
+
 @contextmanager
-def trace_operation(operation_name: str, attributes: Optional[Dict[str, Any]] = None):
+def trace_operation(operation_name: str, attributes: dict[str, Any] | None = None):
     """Context manager for tracing operations"""
     with ot_config.trace_operation(operation_name, attributes) as span:
         yield span
+
 
 def add_span_attribute(key: str, value: Any) -> None:
     """Add an attribute to the current span"""
     ot_config.add_span_attribute(key, value)
 
+
 def record_exception(exception: Exception) -> None:
     """Record an exception in the current span"""
     ot_config.record_exception(exception)
+
 
 def shutdown_opentelemetry() -> None:
     """Shutdown OpenTelemetry"""

@@ -209,7 +209,7 @@ class TestBedrockClient(unittest.TestCase):
         # Verify file was created and contains correct data
         self.assertTrue(os.path.exists(self.usage_log_file))
 
-        with open(self.usage_log_file, "r") as f:
+        with open(self.usage_log_file) as f:
             logged_data = json.load(f)
 
         self.assertEqual(len(logged_data), 2)

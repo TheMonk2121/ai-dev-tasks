@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import contextlib
 import os
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Optional
-from collections.abc import Iterable
+from typing import Any
 
 try:
     # Optional dependency; file guards runtime if missing

@@ -9,7 +9,7 @@ import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, List, Set
+from typing import Any
 
 sys.path.append(".")
 
@@ -39,13 +39,13 @@ def audit_schemas() -> list[SchemaInfo]:
                 "id": "str",
                 "mode": "str",
                 "query": "str",
-                "tags": "List[str]",
-                "category": "Optional[str]",
-                "gt_answer": "Optional[str]",
-                "expected_files": "Optional[List[str]]",
-                "globs": "Optional[List[str]]",
-                "expected_decisions": "Optional[List[str]]",
-                "notes": "Optional[str]",
+                "tags": "list[str]",
+                "category": "str | None",
+                "gt_answer": "str | None",
+                "expected_files": "list[str] | None",
+                "globs": "list[str] | None",
+                "expected_decisions": "list[str] | None",
+                "notes": "str | None",
             },
             is_evaluation=True,
         )
@@ -72,9 +72,9 @@ def audit_schemas() -> list[SchemaInfo]:
                 "test_case_name": "str",
                 "query": "str",
                 "custom_score": "float",
-                "ragchecker_scores": "Dict[str, float]",
+                "ragchecker_scores": "dict[str, float]",
                 "ragchecker_overall": "float",
-                "comparison": "Dict[str, Any]",
+                "comparison": "dict[str, Any]",
                 "recommendation": "str",
             },
             is_evaluation=True,
@@ -90,10 +90,10 @@ def audit_schemas() -> list[SchemaInfo]:
             fields={
                 "id": "str",
                 "question": "str",
-                "gold_doc_ids": "Optional[List[str]]",
-                "gold_pages": "Optional[List[str]]",
-                "claim": "Optional[str]",
-                "expected_answer": "Optional[str]",
+                "gold_doc_ids": "list[str] | None",
+                "gold_pages": "list[str] | None",
+                "claim": "str | None",
+                "expected_answer": "str | None",
             },
             is_evaluation=True,
         )
@@ -105,7 +105,7 @@ def audit_schemas() -> list[SchemaInfo]:
             file_path="300_experiments/300_testing-scripts/ragchecker_official_evaluation.py",
             schema_name="EvalItem",
             schema_type="typeddict",
-            fields={"response": "str", "gt_answer": "str", "query": "str", "query_id": "Optional[str]"},
+            fields={"response": "str", "gt_answer": "str", "query": "str", "query_id": "str | None"},
             is_evaluation=True,
         )
     )

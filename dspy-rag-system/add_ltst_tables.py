@@ -31,7 +31,7 @@ def add_ltst_tables():
         print(f"Schema file not found: {schema_file}")
         return False
 
-    with open(schema_file, "r") as f:
+    with open(schema_file) as f:
         schema_sql = f.read()
 
     print("Adding LTST Memory System tables to database...")

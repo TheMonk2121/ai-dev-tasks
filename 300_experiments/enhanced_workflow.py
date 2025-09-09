@@ -7,7 +7,7 @@ Integrates assertion framework and gate system into daily workflow usage
 import os
 import sys
 import time
-from typing import Any, Dict
+from typing import Any
 
 # Add src to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), "dspy-rag-system", "src"))
@@ -55,7 +55,7 @@ class EnhancedWorkflow:
             print(f"⚠️ Original orchestrate function import failed: {e}")
             self.original_orchestrate = None
 
-    def execute_task(self, task: str, task_type: str = "moderate_coding", role: str = "coder") -> Dict[str, Any]:
+    def execute_task(self, task: str, task_type: str = "moderate_coding", role: str = "coder") -> dict[str, Any]:
         """
         Execute task with integrated frameworks
 
@@ -117,7 +117,7 @@ class EnhancedWorkflow:
             and self.gate_manager is not None
         )
 
-    def get_initialization_status(self) -> Dict[str, bool]:
+    def get_initialization_status(self) -> dict[str, bool]:
         """Get the initialization status of each component"""
         return {
             "original_orchestrate": self.original_orchestrate is not None,
@@ -125,7 +125,7 @@ class EnhancedWorkflow:
             "gate_manager": self.gate_manager is not None,
         }
 
-    def _validate_with_gates(self, task: str, role: str) -> Dict[str, Any]:
+    def _validate_with_gates(self, task: str, role: str) -> dict[str, Any]:
         """Validate request with gate system"""
         if not self.gate_manager:
             return {"success": True, "execution_time": 0.0}
@@ -148,7 +148,7 @@ class EnhancedWorkflow:
             print(f"⚠️ Gate system error: {e}")
             return {"success": True, "execution_time": 0.0}
 
-    def _validate_with_assertions(self, result: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_with_assertions(self, result: dict[str, Any]) -> dict[str, Any]:
         """Validate result with assertion framework"""
         if not self.assertion_framework:
             return {"error": "Assertion framework not available"}
@@ -172,7 +172,7 @@ class EnhancedWorkflow:
         except Exception as e:
             return {"error": str(e)}
 
-    def get_framework_stats(self) -> Dict[str, Any]:
+    def get_framework_stats(self) -> dict[str, Any]:
         """Get statistics from both frameworks"""
         stats = {
             "assertion_framework": {
@@ -206,7 +206,7 @@ def get_enhanced_workflow() -> EnhancedWorkflow:
     return _enhanced_workflow
 
 
-def enhanced_execute_task(task: str, task_type: str = "moderate_coding", role: str = "coder") -> Dict[str, Any]:
+def enhanced_execute_task(task: str, task_type: str = "moderate_coding", role: str = "coder") -> dict[str, Any]:
     """
     Enhanced task execution with integrated frameworks
 
@@ -249,7 +249,7 @@ def quick_task(task: str, task_type: str = "moderate_coding") -> str:
         return f"Error: {result.get('error', 'Unknown error')}"
 
 
-def get_workflow_stats() -> Dict[str, Any]:
+def get_workflow_stats() -> dict[str, Any]:
     """Get current workflow statistics"""
     workflow = get_enhanced_workflow()
     return workflow.get_framework_stats()

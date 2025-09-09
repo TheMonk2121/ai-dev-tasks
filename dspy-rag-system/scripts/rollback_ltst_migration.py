@@ -16,7 +16,7 @@ import logging
 import os
 import sys
 from datetime import datetime
-from typing import Optional
+
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -25,7 +25,7 @@ from psycopg2.extras import RealDictCursor
 class LTSTRollbackManager:
     """Manages LTST memory system rollback."""
 
-    def __init__(self, database_url: Optional[str] = None, dry_run: bool = False):
+    def __init__(self, database_url: str | None = None, dry_run: bool = False):
         """Initialize rollback manager."""
         self.database_url = database_url or os.getenv("DATABASE_URL", "postgresql://localhost/dspy_rag")
         self.dry_run = dry_run
@@ -60,9 +60,7 @@ class LTSTRollbackManager:
             self.connection.close()
         self.logger.info("Database connection closed")
 
-    def log_rollback_step(
-        self, step: str, query: Optional[str] = None, success: bool = True, error: Optional[str] = None
-    ):
+    def log_rollback_step(self, step: str, query: str | None = None, success: bool = True, error: str | None = None):
         """Log rollback step for audit trail."""
         log_entry = {
             "timestamp": datetime.now().isoformat(),
@@ -259,7 +257,7 @@ class LTSTRollbackManager:
             self.logger.error(f"Rollback validation failed: {e}")
             return False
 
-    def save_rollback_log(self, filename: Optional[str] = None):
+    def save_rollback_log(self, filename: str | None = None):
         """Save rollback log to file."""
         if not filename:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

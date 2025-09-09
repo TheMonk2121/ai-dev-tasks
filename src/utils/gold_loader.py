@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import random
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from src.schemas.eval import GoldCase, Mode
 

@@ -10,7 +10,7 @@ import json
 import os
 import sys
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import networkx as nx
 import numpy as np
@@ -50,9 +50,7 @@ logger = setup_logger(__name__)
 class QueryVectorAnalyzer:
     """Advanced vector analysis for query pattern recognition."""
 
-    def __init__(
-        self, conversation_storage: Optional[ConversationStorage] = None, model_name: str = "all-MiniLM-L6-v2"
-    ):
+    def __init__(self, conversation_storage: ConversationStorage | None = None, model_name: str = "all-MiniLM-L6-v2"):
         """Initialize the query vector analyzer.
 
         Args:
@@ -79,8 +77,8 @@ class QueryVectorAnalyzer:
             logger.warning("scikit-learn not available. Some analysis features will be limited.")
 
     def detect_query_clusters(
-        self, user_id: str, min_cluster_size: Optional[int] = None, time_window_days: int = 90
-    ) -> List[Dict[str, Any]]:
+        self, user_id: str, min_cluster_size: int | None = None, time_window_days: int = 90
+    ) -> list[dict[str, Any]]:
         """Detect clusters of semantically similar queries.
 
         Args:
@@ -119,7 +117,7 @@ class QueryVectorAnalyzer:
             logger.error(f"Error detecting query clusters for user {user_id}: {e}")
             return []
 
-    def analyze_query_evolution_vectors(self, user_id: str, time_window_days: int = 60) -> Dict[str, Any]:
+    def analyze_query_evolution_vectors(self, user_id: str, time_window_days: int = 60) -> dict[str, Any]:
         """Analyze how query vectors evolve over time.
 
         Args:
@@ -223,7 +221,7 @@ class QueryVectorAnalyzer:
             return {}
 
     def build_query_similarity_graph(
-        self, user_id: str, similarity_threshold: Optional[float] = None, time_window_days: int = 90
+        self, user_id: str, similarity_threshold: float | None = None, time_window_days: int = 90
     ) -> nx.Graph:
         """Build graph of query similarities above threshold.
 
@@ -288,7 +286,7 @@ class QueryVectorAnalyzer:
             logger.error(f"Error building similarity graph for user {user_id}: {e}")
             return nx.Graph()
 
-    def find_query_neighborhoods(self, user_id: str, target_query: str, k: int = 5) -> List[Dict[str, Any]]:
+    def find_query_neighborhoods(self, user_id: str, target_query: str, k: int = 5) -> list[dict[str, Any]]:
         """Find k most similar queries to a target query.
 
         Args:
@@ -337,7 +335,7 @@ class QueryVectorAnalyzer:
             logger.error(f"Error finding query neighborhoods for user {user_id}: {e}")
             return []
 
-    def analyze_query_embedding_space(self, user_id: str, time_window_days: int = 90) -> Dict[str, Any]:
+    def analyze_query_embedding_space(self, user_id: str, time_window_days: int = 90) -> dict[str, Any]:
         """Analyze the structure of user's query embedding space.
 
         Args:
@@ -378,7 +376,7 @@ class QueryVectorAnalyzer:
             return {}
 
     # Helper methods
-    def _get_user_query_embeddings(self, user_id: str, time_window_days: int = 90) -> List[Dict[str, Any]]:
+    def _get_user_query_embeddings(self, user_id: str, time_window_days: int = 90) -> list[dict[str, Any]]:
         """Get user's query embeddings from database."""
         try:
             since_date = (datetime.now() - timedelta(days=time_window_days)).isoformat()
@@ -411,7 +409,7 @@ class QueryVectorAnalyzer:
             logger.error(f"Error getting user query embeddings: {e}")
             return []
 
-    def _get_chronological_queries(self, user_id: str, time_window_days: int = 60) -> List[Dict[str, Any]]:
+    def _get_chronological_queries(self, user_id: str, time_window_days: int = 60) -> list[dict[str, Any]]:
         """Get user queries in chronological order."""
         return self._get_user_query_embeddings(user_id, time_window_days)
 
@@ -461,7 +459,7 @@ class QueryVectorAnalyzer:
 
         return cluster_labels
 
-    def _build_cluster_info(self, query_data: List[Dict[str, Any]], cluster_labels: np.ndarray) -> List[Dict[str, Any]]:
+    def _build_cluster_info(self, query_data: list[dict[str, Any]], cluster_labels: np.ndarray) -> list[dict[str, Any]]:
         """Build cluster information from labels."""
         clusters = []
         unique_labels = set(cluster_labels)
@@ -510,7 +508,7 @@ class QueryVectorAnalyzer:
 
         return clusters
 
-    def _store_clusters(self, user_id: str, clusters: List[Dict[str, Any]]) -> None:
+    def _store_clusters(self, user_id: str, clusters: list[dict[str, Any]]) -> None:
         """Store cluster information in database."""
         try:
             for cluster in clusters:
@@ -553,7 +551,7 @@ class QueryVectorAnalyzer:
         except Exception:
             return 0.0
 
-    def _parse_embedding(self, embedding_data: Any) -> List[float]:
+    def _parse_embedding(self, embedding_data: Any) -> list[float]:
         """Parse embedding from database format."""
         if isinstance(embedding_data, list):
             return embedding_data
@@ -565,7 +563,7 @@ class QueryVectorAnalyzer:
         else:
             return [0.0] * self.embedding_dim
 
-    def _calculate_cluster_coherence(self, embeddings: List[List[float]]) -> float:
+    def _calculate_cluster_coherence(self, embeddings: list[list[float]]) -> float:
         """Calculate coherence score for a cluster."""
         if len(embeddings) < 2:
             return 1.0
@@ -578,7 +576,7 @@ class QueryVectorAnalyzer:
 
         return np.mean(similarities) if similarities else 0.0
 
-    def _calculate_time_span(self, queries: List[Dict[str, Any]]) -> int:
+    def _calculate_time_span(self, queries: list[dict[str, Any]]) -> int:
         """Calculate time span in days for a cluster."""
         if len(queries) < 2:
             return 0
@@ -598,7 +596,7 @@ class QueryVectorAnalyzer:
 
         return (max(timestamps) - min(timestamps)).days
 
-    def _calculate_recurrence_frequency(self, queries: List[Dict[str, Any]]) -> float:
+    def _calculate_recurrence_frequency(self, queries: list[dict[str, Any]]) -> float:
         """Calculate recurrence frequency for a cluster."""
         time_span = self._calculate_time_span(queries)
         if time_span == 0:
@@ -606,13 +604,13 @@ class QueryVectorAnalyzer:
 
         return len(queries) / max(1, time_span)
 
-    def _estimate_success_rate(self, queries: List[Dict[str, Any]]) -> float:
+    def _estimate_success_rate(self, queries: list[dict[str, Any]]) -> float:
         """Estimate success rate for queries in cluster (placeholder)."""
         # This would require more sophisticated analysis of follow-up queries
         # For now, return a baseline estimate
         return 0.7
 
-    def _generate_cluster_signature(self, queries: List[Dict[str, Any]]) -> str:
+    def _generate_cluster_signature(self, queries: list[dict[str, Any]]) -> str:
         """Generate a signature for a cluster."""
         # Simple approach: combine first few words from queries
         words = []
@@ -645,7 +643,7 @@ class QueryVectorAnalyzer:
         except Exception:
             return 0.0
 
-    def _analyze_complexity_evolution(self, queries: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_complexity_evolution(self, queries: list[dict[str, Any]]) -> dict[str, Any]:
         """Analyze how query complexity evolves."""
         if len(queries) < 2:
             return {}
@@ -665,7 +663,7 @@ class QueryVectorAnalyzer:
             "complexity_progression": complexities,
         }
 
-    def _analyze_learning_progression(self, queries: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_learning_progression(self, queries: list[dict[str, Any]]) -> dict[str, Any]:
         """Analyze learning progression in queries."""
         # Simplified analysis based on question types and specificity
         learning_indicators = []
@@ -690,7 +688,7 @@ class QueryVectorAnalyzer:
             "learning_progression": learning_indicators,
         }
 
-    def _analyze_dimensionality(self, embeddings: np.ndarray) -> Dict[str, Any]:
+    def _analyze_dimensionality(self, embeddings: np.ndarray) -> dict[str, Any]:
         """Analyze dimensionality characteristics of embeddings."""
         if not SKLEARN_AVAILABLE:
             return {"error": "scikit-learn not available"}
@@ -710,7 +708,7 @@ class QueryVectorAnalyzer:
             "top_10_components_variance": pca.explained_variance_ratio_[:10].tolist(),
         }
 
-    def _analyze_density(self, embeddings: np.ndarray) -> Dict[str, Any]:
+    def _analyze_density(self, embeddings: np.ndarray) -> dict[str, Any]:
         """Analyze density characteristics of embedding space."""
         # Calculate pairwise distances
         distances = []
@@ -727,7 +725,7 @@ class QueryVectorAnalyzer:
             "distance_distribution_quartiles": np.percentile(distances, [25, 50, 75]).tolist(),
         }
 
-    def _calculate_coherence_metrics(self, embeddings: np.ndarray) -> Dict[str, Any]:
+    def _calculate_coherence_metrics(self, embeddings: np.ndarray) -> dict[str, Any]:
         """Calculate coherence metrics for embedding space."""
         return {
             "overall_coherence": self._calculate_cluster_coherence([emb.tolist() for emb in embeddings]),
@@ -736,7 +734,7 @@ class QueryVectorAnalyzer:
             ),
         }
 
-    def _calculate_diversity_metrics(self, embeddings: np.ndarray) -> Dict[str, Any]:
+    def _calculate_diversity_metrics(self, embeddings: np.ndarray) -> dict[str, Any]:
         """Calculate diversity metrics for embedding space."""
         # Calculate maximum distance between any two embeddings
         max_distance = 0.0
@@ -752,7 +750,7 @@ class QueryVectorAnalyzer:
             ),
         }
 
-    def _analyze_temporal_dynamics(self, queries: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_temporal_dynamics(self, queries: list[dict[str, Any]]) -> dict[str, Any]:
         """Analyze temporal dynamics of embedding evolution."""
         if len(queries) < 3:
             return {}

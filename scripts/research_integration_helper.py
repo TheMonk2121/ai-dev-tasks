@@ -4,7 +4,7 @@ Research Integration Helper
 Assists in dispersing research findings to appropriate documentation files
 """
 
-from typing import Any, Dict, List
+from typing import Any
 
 
 def get_research_integration_map() -> dict[str, list[str]]:

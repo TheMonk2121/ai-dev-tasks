@@ -15,6 +15,7 @@ from src.utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 
+
 class TestPerformance:
     """Performance test suite"""
 
@@ -71,7 +72,9 @@ class TestPerformance:
 
         assert memory_increase < 100.0, f"Memory increase {memory_increase}MB exceeds 100MB threshold"
 
-        logger.info(f"✅ Memory usage - Initial: {initial_memory:.1f}MB, Final: {final_memory:.1f}MB, Increase: {memory_increase:.1f}MB")
+        logger.info(
+            f"✅ Memory usage - Initial: {initial_memory:.1f}MB, Final: {final_memory:.1f}MB, Increase: {memory_increase:.1f}MB"
+        )
 
     def test_cpu_usage(self):
         """Test CPU usage during operation"""
@@ -79,8 +82,9 @@ class TestPerformance:
 
         # Monitor CPU usage during query
         cpu_percentages = []
+
         def monitor_cpu():
-            while not hasattr(self, '_stop_monitoring'):
+            while not hasattr(self, "_stop_monitoring"):
                 cpu_percentages.append(psutil.cpu_percent(interval=0.1))
 
         monitor_thread = threading.Thread(target=monitor_cpu)

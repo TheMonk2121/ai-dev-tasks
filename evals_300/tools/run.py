@@ -5,7 +5,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Dict, Optional
+
 
 # Optional Typer import with graceful fallback for library use without CLI deps
 try:
@@ -58,7 +58,7 @@ LATEST_DIR.mkdir(parents=True, exist_ok=True)
 app = typer.Typer() if _HAS_TYPER else typer  # type: ignore
 
 
-def _load_layer(name: str) -> Dict[str, str]:
+def _load_layer(name: str) -> dict[str, str]:
     env = {}
     f = LAYER_DIR / f"{name}.env"
     if f.exists():
@@ -70,8 +70,8 @@ def _load_layer(name: str) -> Dict[str, str]:
     return env
 
 
-def _materialize_env(layers, overrides) -> Dict[str, str]:
-    env: Dict[str, str] = {}
+def _materialize_env(layers, overrides) -> dict[str, str]:
+    env: dict[str, str] = {}
     for layer in layers:
         env.update(_load_layer(layer))
     env.update({k: str(v) for k, v in overrides.items()})
@@ -91,7 +91,7 @@ def _write_latest_metrics(pass_id: str, payload: dict):
     p.write_text(json.dumps(existing, indent=2))
 
 
-def _latest_summary_for_pass(pass_name: str) -> Optional[Path]:
+def _latest_summary_for_pass(pass_name: str) -> Path | None:
     """Find the most recent summary.json for a given pass by folder mtime."""
     hist = Path("metrics/history")
     candidates = sorted(
@@ -111,13 +111,13 @@ def _run_ablation_suite_impl(suite: str, seed: int, concurrency: int):
     on_id = "reranker_ablation_on"
 
     # Run OFF then ON via implementation (avoid decorator typing noise for type checkers)
-    run_impl(suite=suite, pass_id=off_id, out=str(""), seed=seed, concurrency=concurrency)
-    run_impl(suite=suite, pass_id=on_id, out=str(""), seed=seed, concurrency=concurrency)
+    run_impl(suite=suite, pass_id=off_id, out="", seed=seed, concurrency=concurrency)
+    run_impl(suite=suite, pass_id=on_id, out="", seed=seed, concurrency=concurrency)
 
     off_p = _latest_summary_for_pass(off_id)
     on_p = _latest_summary_for_pass(on_id)
 
-    def _metrics(p: Optional[Path]) -> dict:
+    def _metrics(p: Path | None) -> dict:
         if not p or not p.exists():
             return {}
         data = json.loads(p.read_text())
@@ -152,8 +152,8 @@ def run_impl(
     suite: str,
     pass_id: str,
     out: str = "",
-    seed: Optional[int] = None,
-    concurrency: Optional[int] = None,
+    seed: int | None = None,
+    concurrency: int | None = None,
 ) -> None:
     # Currently we only support the single SSOT suite defined in registry_core
     if suite != SUITE.id:
@@ -344,10 +344,8 @@ def run(
     suite: str = typer.Option(..., "--suite", "-s", help="Evaluation suite id (e.g., 300_core)"),
     pass_id: str = typer.Option(..., "--pass", "-p", help="Evaluation pass id"),
     out: str = typer.Option("", "--out", help="Optional output directory for artifacts"),
-    seed: Optional[int] = typer.Option(None, "--seed", help="Optional random seed to export as SEED/FEW_SHOT_SEED"),
-    concurrency: Optional[int] = typer.Option(
-        None, "--concurrency", help="Optional max workers to export as MAX_WORKERS"
-    ),
+    seed: int | None = typer.Option(None, "--seed", help="Optional random seed to export as SEED/FEW_SHOT_SEED"),
+    concurrency: int | None = typer.Option(None, "--concurrency", help="Optional max workers to export as MAX_WORKERS"),
 ) -> None:
     # Delegate to implementation (keeps internal calls type-checkable)
     run_impl(suite=suite, pass_id=pass_id, out=(out or ""), seed=seed, concurrency=concurrency)

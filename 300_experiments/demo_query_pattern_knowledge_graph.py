@@ -15,7 +15,7 @@ import logging
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
@@ -469,7 +469,7 @@ class QueryPatternKnowledgeGraphDemo:
         else:
             print("❌ Export failed")
 
-    def _show_interactive_results(self, result: Dict[str, Any]) -> None:
+    def _show_interactive_results(self, result: dict[str, Any]) -> None:
         """Show processing results in interactive mode."""
         if "error" in result:
             print(f"❌ Error: {result['error']}")

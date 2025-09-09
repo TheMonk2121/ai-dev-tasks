@@ -10,7 +10,7 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -23,20 +23,20 @@ logger = logging.getLogger(__name__)
 class Phase3RAGSystem:
     """Phase 3 RAG System with domain-tuned models."""
 
-    def __init__(self, config: Optional[DomainTuningConfig] = None):
+    def __init__(self, config: DomainTuningConfig | None = None):
         """Initialize Phase 3 RAG system."""
         self.config = config or DomainTuningConfig()
         self.domain_pipeline = create_domain_tuning_pipeline(self.config)
 
         # Model snapshots (will be populated after training)
-        self.model_snapshots: Dict[str, str] = {}
+        self.model_snapshots: dict[str, str] = {}
 
         # Training results
-        self.training_results: Optional[Dict[str, Any]] = None
+        self.training_results: dict[str, Any] | None = None
 
         logger.info("Phase 3 RAG System initialized")
 
-    def train_domain_models(self, evaluation_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def train_domain_models(self, evaluation_results: list[dict[str, Any]]) -> dict[str, Any]:
         """Train domain-specific models using the tuning pipeline."""
         logger.info("🎯 Starting Phase 3 domain model training...")
 
@@ -55,7 +55,7 @@ class Phase3RAGSystem:
             logger.error(f"❌ Domain model training failed: {e}")
             raise
 
-    def evaluate_on_frozen_slices(self, test_cases: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def evaluate_on_frozen_slices(self, test_cases: list[dict[str, Any]]) -> dict[str, Any]:
         """Evaluate fine-tuned models on frozen Phase 0 slices."""
         logger.info("📊 Evaluating fine-tuned models on frozen slices...")
 
@@ -91,7 +91,7 @@ class Phase3RAGSystem:
         logger.info("✅ Frozen slice evaluation completed")
         return evaluation_results
 
-    def _identify_query_type_slices(self, test_cases: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
+    def _identify_query_type_slices(self, test_cases: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
         """Identify different query type slices for evaluation."""
         slices = {}
 
@@ -103,7 +103,7 @@ class Phase3RAGSystem:
 
         return slices
 
-    def _evaluate_slice(self, slice_cases: List[Dict[str, Any]], slice_name: str) -> Dict[str, Any]:
+    def _evaluate_slice(self, slice_cases: list[dict[str, Any]], slice_name: str) -> dict[str, Any]:
         """Evaluate a specific slice of test cases."""
         slice_results = {"slice_name": slice_name, "case_count": len(slice_cases), "metrics": {}, "case_details": []}
 
@@ -117,7 +117,7 @@ class Phase3RAGSystem:
 
         return slice_results
 
-    def _evaluate_single_case(self, case: Dict[str, Any]) -> Dict[str, Any]:
+    def _evaluate_single_case(self, case: dict[str, Any]) -> dict[str, Any]:
         """Evaluate a single test case."""
         query = case.get("query", "")
         query_type = case.get("type", "general")
@@ -141,7 +141,7 @@ class Phase3RAGSystem:
             "evaluation_status": "completed",
         }
 
-    def _calculate_slice_metrics(self, case_details: List[Dict[str, Any]]) -> Dict[str, float]:
+    def _calculate_slice_metrics(self, case_details: list[dict[str, Any]]) -> dict[str, float]:
         """Calculate aggregate metrics for a slice."""
         if not case_details:
             return {}
@@ -156,7 +156,7 @@ class Phase3RAGSystem:
 
         return slice_metrics
 
-    def _calculate_overall_metrics(self, slice_evaluations: Dict[str, Any]) -> Dict[str, float]:
+    def _calculate_overall_metrics(self, slice_evaluations: dict[str, Any]) -> dict[str, float]:
         """Calculate overall metrics across all slices."""
         overall_metrics = {}
         metrics = ["precision", "recall", "f1_score", "ndcg_at_10", "coverage", "faithfulness"]
@@ -172,7 +172,7 @@ class Phase3RAGSystem:
 
         return overall_metrics
 
-    def compare_with_baseline(self, baseline_metrics: Dict[str, float]) -> Dict[str, Any]:
+    def compare_with_baseline(self, baseline_metrics: dict[str, float]) -> dict[str, Any]:
         """Compare Phase 3 results with baseline Phase 0/1 metrics."""
         if not self.training_results:
             raise ValueError("No training results available for comparison.")
@@ -222,7 +222,7 @@ class Phase3RAGSystem:
 
         return comparison
 
-    def generate_phase3_report(self) -> Dict[str, Any]:
+    def generate_phase3_report(self) -> dict[str, Any]:
         """Generate comprehensive Phase 3 report."""
         if not self.training_results:
             raise ValueError("No training results available for report generation.")
@@ -239,7 +239,7 @@ class Phase3RAGSystem:
 
         return report
 
-    def _generate_executive_summary(self) -> Dict[str, Any]:
+    def _generate_executive_summary(self) -> dict[str, Any]:
         """Generate executive summary of Phase 3 results."""
         training_data = self.training_results.get("data_pipeline", {})
         models = self.training_results.get("models", {})
@@ -258,7 +258,7 @@ class Phase3RAGSystem:
             ),
         }
 
-    def _generate_recommendations(self) -> List[str]:
+    def _generate_recommendations(self) -> list[str]:
         """Generate recommendations based on training results."""
         recommendations = []
 
@@ -289,7 +289,7 @@ class Phase3RAGSystem:
 
         return recommendations
 
-    def _identify_next_steps(self) -> List[str]:
+    def _identify_next_steps(self) -> list[str]:
         """Identify next steps for Phase 4 and beyond."""
         next_steps = [
             "Phase 4: Implement uncertainty calibration and feedback loops",
@@ -305,7 +305,7 @@ class Phase3RAGSystem:
         """Get current timestamp string."""
         return time.strftime("%Y-%m-%d %H:%M:%S")
 
-    def save_phase3_report(self, report: Dict[str, Any], filepath: Optional[str] = None) -> str:
+    def save_phase3_report(self, report: dict[str, Any], filepath: str | None = None) -> str:
         """Save Phase 3 report to file."""
         if filepath is None:
             timestamp = int(time.time())
@@ -321,7 +321,7 @@ class Phase3RAGSystem:
         return filepath
 
 
-def create_phase3_rag_system(config: Optional[DomainTuningConfig] = None) -> Phase3RAGSystem:
+def create_phase3_rag_system(config: DomainTuningConfig | None = None) -> Phase3RAGSystem:
     """Create a Phase 3 RAG system with domain tuning capabilities."""
     return Phase3RAGSystem(config)
 

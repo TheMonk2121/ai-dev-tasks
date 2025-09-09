@@ -24,4 +24,3 @@ def test_ragmodule_eval_fallback_on_error():
         assert out.get("fallback") == "eval_discovery"
         ans = out.get("answer", "")
         assert "ragchecker_official_evaluation.py" in ans or "run_evals.sh" in ans
-

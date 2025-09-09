@@ -12,7 +12,7 @@ import logging
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add the src directory to the path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -29,7 +29,7 @@ class DecisionRetrievalEvaluator:
         self.db_connection_string = db_connection_string
         self.logger = logging.getLogger("decision_retrieval_evaluator")
 
-    def create_gold_set(self) -> List[Dict[str, Any]]:
+    def create_gold_set(self) -> list[dict[str, Any]]:
         """
         DEPRECATED: Load gold set from unified dataset instead of hardcoded values.
 
@@ -67,7 +67,7 @@ class DecisionRetrievalEvaluator:
             self.logger.error(f"Failed to load gold cases: {e}")
             return []
 
-    def compute_recall_at_k(self, retrieved_decisions: List[str], expected_decisions: List[str], k: int) -> float:
+    def compute_recall_at_k(self, retrieved_decisions: list[str], expected_decisions: list[str], k: int) -> float:
         """
         Compute Recall@K metric
 
@@ -90,7 +90,7 @@ class DecisionRetrievalEvaluator:
 
         return len(relevant_retrieved) / len(expected_decisions)
 
-    def compute_precision_at_k(self, retrieved_decisions: List[str], expected_decisions: List[str], k: int) -> float:
+    def compute_precision_at_k(self, retrieved_decisions: list[str], expected_decisions: list[str], k: int) -> float:
         """
         Compute Precision@K metric
 
@@ -117,7 +117,7 @@ class DecisionRetrievalEvaluator:
 
         return len(relevant_retrieved) / len(top_k_retrieved)
 
-    def compute_failure_at_k(self, retrieved_decisions: List[str], expected_decisions: List[str], k: int) -> float:
+    def compute_failure_at_k(self, retrieved_decisions: list[str], expected_decisions: list[str], k: int) -> float:
         """
         Compute Failure@K metric (fraction of queries with no relevant results in top K)
 
@@ -140,7 +140,7 @@ class DecisionRetrievalEvaluator:
 
         return 1.0 if len(relevant_retrieved) == 0 else 0.0
 
-    def evaluate_query(self, query: str, expected_decisions: List[str]) -> Dict[str, Any]:
+    def evaluate_query(self, query: str, expected_decisions: list[str]) -> dict[str, Any]:
         """
         Evaluate a single query
 
@@ -188,7 +188,7 @@ class DecisionRetrievalEvaluator:
                 "error": str(e),
             }
 
-    def run_evaluation(self) -> Dict[str, Any]:
+    def run_evaluation(self) -> dict[str, Any]:
         """
         Run the complete evaluation
 
@@ -249,7 +249,7 @@ class DecisionRetrievalEvaluator:
 
         return evaluation_results
 
-    def save_artifacts(self, results: Dict[str, Any], output_dir: str = "evaluation_artifacts") -> None:
+    def save_artifacts(self, results: dict[str, Any], output_dir: str = "evaluation_artifacts") -> None:
         """
         Save evaluation artifacts as JSON and CSV
 
@@ -304,7 +304,7 @@ class DecisionRetrievalEvaluator:
         print(f"  CSV: {csv_file}")
 
 
-def run_evaluation(db_connection_string: Optional[str] = None) -> Dict[str, Any]:
+def run_evaluation(db_connection_string: str | None = None) -> dict[str, Any]:
     """
     Convenience function to run evaluation
 

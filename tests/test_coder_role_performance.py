@@ -130,6 +130,7 @@ class TestCoderRolePerformance(unittest.TestCase):
         avg_time = total_time / 1000
         self.assertLess(avg_time, 0.001, f"Average access time {avg_time:.6f}s, should be under 1ms")
 
+
 class TestCoderRoleBenchmarks(unittest.TestCase):
     """Benchmark tests for coder role performance."""
 
@@ -193,6 +194,7 @@ class TestCoderRoleBenchmarks(unittest.TestCase):
         self.assertLess(
             memory_used, 5 * 1024 * 1024, f"Total memory usage {memory_used / 1024 / 1024:.1f}MB, should be under 5MB"
         )
+
 
 if __name__ == "__main__":
     unittest.main()

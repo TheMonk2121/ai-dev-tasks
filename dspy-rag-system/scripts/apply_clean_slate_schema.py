@@ -30,7 +30,7 @@ def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
         print(f"❌ Schema file not found: {schema_path}")
         return False
 
-    with open(schema_path, "r") as f:
+    with open(schema_path) as f:
         schema_sql = f.read()
 
     print("🧠 Applying clean-slate database schema...")
@@ -87,6 +87,7 @@ def apply_clean_slate_schema(dry_run: bool = False, backup: bool = False):
         print("3. Ensure you have write permissions to the database")
         return False
 
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Apply clean-slate database schema")
@@ -98,6 +99,7 @@ def main():
     success = apply_clean_slate_schema(dry_run=args.dry_run, backup=args.backup)
 
     sys.exit(0 if success else 1)
+
 
 if __name__ == "__main__":
     main()

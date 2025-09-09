@@ -5,7 +5,7 @@ Implements the coach's hybrid retrieval strategy for RAGChecker baseline improve
 """
 
 import os
-from typing import Any, Dict
+from typing import Any
 
 
 class PrecisionRecoveryConfig:

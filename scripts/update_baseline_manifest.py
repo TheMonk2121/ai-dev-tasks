@@ -17,7 +17,7 @@ import json
 import os
 from glob import glob
 from statistics import median
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 def _safe_load(path: str) -> dict[str, Any] | None:

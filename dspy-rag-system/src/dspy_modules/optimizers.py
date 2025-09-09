@@ -14,7 +14,7 @@ Based on Adam LK's DSPy deep dive transcript implementation patterns.
 import logging
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Protocol
+from typing import Any, Protocol
 
 from dspy import Example, Module
 
@@ -38,8 +38,8 @@ class OptimizationResult:
     performance_improvement: float
     examples_used: int
     optimization_time: float
-    error_message: Optional[str] = None
-    metrics: Optional[Dict[str, Any]] = None
+    error_message: str | None = None
+    metrics: dict[str, Any] | None = None
 
 
 class LabeledFewShotOptimizer:
@@ -60,13 +60,13 @@ class LabeledFewShotOptimizer:
         """
         self.k = k
         self.metric_threshold = metric_threshold
-        self.examples: List[Example] = []
-        self.optimization_history: List[OptimizationResult] = []
-        self.current_program: Optional[HasForward] = None
+        self.examples: list[Example] = []
+        self.optimization_history: list[OptimizationResult] = []
+        self.current_program: HasForward | None = None
 
         _LOG.info(f"Initialized LabeledFewShot optimizer with k={k}")
 
-    def add_examples(self, examples: List[Example]) -> None:
+    def add_examples(self, examples: list[Example]) -> None:
         """
         Add examples to the optimizer.
 
@@ -79,9 +79,9 @@ class LabeledFewShotOptimizer:
     def optimize_program(
         self,
         program: HasForward,
-        train_data: List[Example],
+        train_data: list[Example],
         metric_func,
-        validation_data: Optional[List[Example]] = None,
+        validation_data: list[Example] | None = None,
     ) -> OptimizationResult:
         """
         Optimize a DSPy program using LabeledFewShot technique.
@@ -166,7 +166,7 @@ class LabeledFewShotOptimizer:
                 error_message=error_msg,
             )
 
-    def _select_examples(self, train_data: List[Example], k: int) -> List[Example]:
+    def _select_examples(self, train_data: list[Example], k: int) -> list[Example]:
         """
         Select k examples from training data.
 
@@ -186,7 +186,7 @@ class LabeledFewShotOptimizer:
         _LOG.debug(f"Selected {len(selected)} examples from {len(train_data)} available")
         return selected
 
-    def _create_optimized_program(self, program: HasForward, examples: List[Example]) -> HasForward:
+    def _create_optimized_program(self, program: HasForward, examples: list[Example]) -> HasForward:
         """
         Create optimized program with examples.
 
@@ -202,7 +202,7 @@ class LabeledFewShotOptimizer:
         _LOG.debug(f"Created optimized program with {len(examples)} examples (integration pending)")
         return program
 
-    def _measure_performance(self, program: HasForward, test_data: List[Example], metric_func) -> float:
+    def _measure_performance(self, program: HasForward, test_data: list[Example], metric_func) -> float:
         """
         Measure program performance on test data.
 
@@ -255,7 +255,7 @@ class LabeledFewShotOptimizer:
             _LOG.error(f"Performance measurement failed: {e}")
             raise  # Re-raise the exception so it can be caught by the optimizer
 
-    def get_optimization_stats(self) -> Dict[str, Any]:
+    def get_optimization_stats(self) -> dict[str, Any]:
         """
         Get optimization statistics.
 
@@ -287,9 +287,9 @@ class DSPyOptimizerManager:
 
     def __init__(self):
         """Initialize optimizer manager."""
-        self.optimizers: Dict[str, Any] = {}
-        self.active_optimizer: Optional[str] = None
-        self.optimization_config: Dict[str, Any] = {}
+        self.optimizers: dict[str, Any] = {}
+        self.active_optimizer: str | None = None
+        self.optimization_config: dict[str, Any] = {}
 
         _LOG.info("Initialized DSPy optimizer manager")
 
@@ -304,7 +304,7 @@ class DSPyOptimizerManager:
         self.optimizers[name] = optimizer
         _LOG.info(f"Registered optimizer: {name}")
 
-    def get_optimizer(self, name: str) -> Optional[Any]:
+    def get_optimizer(self, name: str) -> Any | None:
         """
         Get optimizer by name.
 
@@ -335,7 +335,7 @@ class DSPyOptimizerManager:
             return False
 
     def optimize_program(
-        self, program: Module, train_data: List[Example], metric_func, optimizer_name: Optional[str] = None
+        self, program: Module, train_data: list[Example], metric_func, optimizer_name: str | None = None
     ) -> OptimizationResult:
         """
         Optimize program using specified or active optimizer.
@@ -416,7 +416,7 @@ def create_labeled_few_shot_optimizer(k: int = 16, metric_threshold: float = 0.5
 
 
 def optimize_program(
-    program: Module, train_data: List[Example], metric_func, optimizer_name: str = "labeled_few_shot"
+    program: Module, train_data: list[Example], metric_func, optimizer_name: str = "labeled_few_shot"
 ) -> OptimizationResult:
     """
     Convenience function to optimize a program.

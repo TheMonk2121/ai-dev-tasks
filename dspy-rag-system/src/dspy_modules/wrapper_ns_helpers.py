@@ -6,7 +6,8 @@ Robust namespace helpers: extraction, validation, ns-seed fetch, and debug loggi
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Sequence
+from typing import Any
+from collections.abc import Sequence
 
 import psycopg2.extras
 
@@ -53,9 +54,9 @@ def path_to_ns(path: str) -> str | None:
     return m.group(2) if m else None
 
 
-def extract_ns_tokens(query: str) -> List[str]:
+def extract_ns_tokens(query: str) -> list[str]:
     q = (query or "").lower()
-    tokens: List[str] = []
+    tokens: list[str] = []
     # exact and loose forms
     for m in re.finditer(r"\b(\d{3})[_\- ]([a-z0-9\-]+)\b", q):
         candidate = f"{m.group(1)}_{m.group(2)}"
@@ -68,7 +69,7 @@ def extract_ns_tokens(query: str) -> List[str]:
             tokens.append(mapped)
     # dedupe preserve order
     seen = set()
-    out: List[str] = []
+    out: list[str] = []
     for t in tokens:
         if t not in seen:
             seen.add(t)
@@ -76,7 +77,7 @@ def extract_ns_tokens(query: str) -> List[str]:
     return out
 
 
-def validate_ns_tokens(conn, tokens: Sequence[str]) -> List[str]:
+def validate_ns_tokens(conn, tokens: Sequence[str]) -> list[str]:
     if not tokens:
         return []
     sql = """
@@ -89,7 +90,7 @@ def validate_ns_tokens(conn, tokens: Sequence[str]) -> List[str]:
         return [r["namespace"] for r in cur.fetchall()]
 
 
-def fetch_ns_seed(conn, ns_tokens: Sequence[str], top_n: int = 80, fuzzy_fallback: bool = True) -> List[Dict[str, Any]]:
+def fetch_ns_seed(conn, ns_tokens: Sequence[str], top_n: int = 80, fuzzy_fallback: bool = True) -> list[dict[str, Any]]:
     if not ns_tokens:
         return []
     strict = [t for t in (normalize_ns_token(t) for t in ns_tokens) if t]

@@ -17,7 +17,7 @@ import glob
 import json
 import os
 import time
-from typing import Any, Optional
+from typing import Any
 
 
 def _fresh(path: str, max_age_days: int) -> bool:

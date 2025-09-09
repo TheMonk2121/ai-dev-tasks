@@ -316,5 +316,6 @@ class TestScribeSessionIntegration:
         registry.cleanup_completed_sessions()
         assert "B-1000" not in registry.sessions
 
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

@@ -7,7 +7,7 @@ Tests the surgical patch implementation with low concurrency.
 import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Dict, List
+from typing import Any
 from _bootstrap import ROOT, SRC  # ensure imports work
 from evals.load_cases import load_eval_cases
 

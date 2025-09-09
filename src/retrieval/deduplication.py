@@ -11,7 +11,7 @@ Supports both cosine similarity (fast, embedding-based) and MinHash
 from __future__ import annotations
 
 import hashlib
-from typing import Any, Optional
+from typing import Any
 
 try:
     import numpy as np

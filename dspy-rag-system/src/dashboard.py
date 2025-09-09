@@ -17,7 +17,8 @@ from collections import defaultdict, deque
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Protocol, cast, runtime_checkable
+from typing import Any, Protocol, cast, runtime_checkable
+from collections.abc import Callable
 
 # Flask imports
 from flask import Flask, jsonify, render_template, request
@@ -50,8 +51,8 @@ from utils.validator import (
 )
 
 # Optional monitoring callables (names are always defined for the linter)
-create_health_endpoints: Optional[Callable[[Any], Any]] = None
-initialize_production_monitoring: Optional[Callable[..., Any]] = None
+create_health_endpoints: Callable[[Any], Any] | None = None
+initialize_production_monitoring: Callable[..., Any] | None = None
 try:
     from monitoring.health_endpoints import create_health_endpoints as _create_health_endpoints
     from monitoring.production_monitor import initialize_production_monitoring as _init_prod_monitoring
@@ -68,7 +69,7 @@ LOG = get_logger("dashboard")
 # ── Structural typing for linter (interfaces we actually use) ───────────────────
 @runtime_checkable
 class VectorStoreProtocol(Protocol):
-    def get_statistics(self) -> Dict[str, Any]: ...
+    def get_statistics(self) -> dict[str, Any]: ...
     def store_document(
         self,
         *,
@@ -77,24 +78,24 @@ class VectorStoreProtocol(Protocol):
         file_type: str,
         file_size: int,
         chunk_count: int,
-        metadata: Dict[str, Any],
+        metadata: dict[str, Any],
     ) -> Any: ...
     def store_chunk(
-        self, *, document_id: str, chunk_index: int, content: str, embedding: Optional[List[float]]
+        self, *, document_id: str, chunk_index: int, content: str, embedding: list[float] | None
     ) -> Any: ...
-    def get_documents(self) -> List[Dict[str, Any]]: ...
+    def get_documents(self) -> list[dict[str, Any]]: ...
 
 
 @runtime_checkable
 class DocumentProcessorProtocol(Protocol):
-    def process_document(self, file_path: Path) -> Dict[str, Any]: ...
+    def process_document(self, file_path: Path) -> dict[str, Any]: ...
 
 
 @runtime_checkable
 class ProductionMonitorProtocol(Protocol):
     def start_monitoring(self, interval_seconds: int) -> None: ...
-    def get_health_status(self) -> Dict[str, Any]: ...
-    def get_security_events(self, hours: int) -> List[Dict[str, Any]]: ...
+    def get_health_status(self) -> dict[str, Any]: ...
+    def get_security_events(self, hours: int) -> list[dict[str, Any]]: ...
     def get_system_metrics(self, minutes: int) -> Any: ...
 
 
@@ -172,13 +173,13 @@ class DashboardState:
     """Global dashboard state management"""
 
     def __init__(self):
-        self.processing_files: Dict[str, Dict] = {}
+        self.processing_files: dict[str, dict] = {}
         self.processing_lock = threading.Lock()
-        self.rag_interface: Optional[Any] = None
-        self.vector_store: Optional[VectorStoreProtocol] = None
-        self.document_processor: Optional[DocumentProcessorProtocol] = None
-        self.metadata_extractor: Optional[MetadataExtractor] = None
-        self.graph_data_provider: Optional[Any] = None
+        self.rag_interface: Any | None = None
+        self.vector_store: VectorStoreProtocol | None = None
+        self.document_processor: DocumentProcessorProtocol | None = None
+        self.metadata_extractor: MetadataExtractor | None = None
+        self.graph_data_provider: Any | None = None
 
         # Thread-safe executor with proper shutdown (D-4)
         self.executor = ThreadPoolExecutor(max_workers=DashboardConfig.MAX_WORKERS)
@@ -203,7 +204,7 @@ class DashboardState:
         self.history_lock = threading.Lock()
 
     def update_processing_file(
-        self, filename: str, status: str, progress: int = 0, chunks: int = 0, error: Optional[str] = None
+        self, filename: str, status: str, progress: int = 0, chunks: int = 0, error: str | None = None
     ):
         """Update processing file status"""
         with self.processing_lock:
@@ -226,7 +227,7 @@ class DashboardState:
             if filename in self.processing_files:
                 del self.processing_files[filename]
 
-    def add_query_to_history(self, query: str, response: str, sources: List[str], response_time: float):
+    def add_query_to_history(self, query: str, response: str, sources: list[str], response_time: float):
         """Add query to history with thread safety (D-3)"""
         with self.history_lock:
             self.query_history.append(

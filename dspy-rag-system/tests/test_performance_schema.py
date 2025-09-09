@@ -101,7 +101,7 @@ class TestPerformanceSchema:
             assert "description" in config
             assert "expected_duration_ms" in config
             assert "critical" in config
-            assert isinstance(config["expected_duration_ms"], (int, float))
+            assert isinstance(config["expected_duration_ms"], int | float)
             assert isinstance(config["critical"], bool)
 
 

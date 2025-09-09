@@ -8,7 +8,7 @@ import logging
 import os
 import sys
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any
 
 # Add dspy-rag-system to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))

@@ -104,7 +104,7 @@ def run_reader_cmd(query, context, tag, case_id):
         raise RuntimeError("READER_CMD not set (e.g., export READER_CMD='python3 scripts/run_reader.py --model local')")
     payload = json.dumps({"query": query, "context": context, "tag": tag, "case_id": case_id})
     proc = subprocess.run(
-        shlex.split(READER_CMD), input=payload.encode("utf-8"), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        shlex.split(READER_CMD), input=payload.encode("utf-8"), capture_output=True
     )
     if proc.returncode != 0:
         raise RuntimeError(f"Reader failed: {proc.stderr.decode('utf-8', 'ignore')}")

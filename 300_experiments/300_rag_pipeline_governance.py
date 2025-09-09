@@ -6,7 +6,7 @@ Based on ChatGPT Pro's recommendations for treating RAG workflows as sequential 
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import networkx as nx
 
@@ -40,10 +40,10 @@ class PipelineNode:
 
     node_id: str
     node_type: PipelineNodeType
-    stage: Optional[PipelineStage]
+    stage: PipelineStage | None
     label: str
-    parameters: Dict[str, Any]
-    metadata: Dict[str, Any]
+    parameters: dict[str, Any]
+    metadata: dict[str, Any]
 
 
 @dataclass
@@ -53,8 +53,8 @@ class PipelineEdge:
     source_id: str
     target_id: str
     edge_type: PipelineEdgeType
-    condition: Optional[str] = None
-    metadata: Dict[str, Any] = None
+    condition: str | None = None
+    metadata: dict[str, Any] = None
 
 
 class RAGPipelineGovernance:
@@ -66,7 +66,7 @@ class RAGPipelineGovernance:
         self.similarity_model = None
         self.known_good_patterns = set()
 
-    def create_pipeline_graph(self, pipeline_config: Dict[str, Any], pipeline_id: str) -> str:
+    def create_pipeline_graph(self, pipeline_config: dict[str, Any], pipeline_id: str) -> str:
         """Create a semantic graph representation of a RAG pipeline"""
         graph = nx.DiGraph()
 
@@ -191,7 +191,7 @@ class RAGPipelineGovernance:
         for node_id in graph.nodes():
             if graph.nodes[node_id]["node_type"] == "parameter":
                 params = graph.nodes[node_id]["parameters"]
-                if "value" in params and isinstance(params["value"], (int, float)):
+                if "value" in params and isinstance(params["value"], int | float):
                     # Add small variation to numeric parameters
                     params["value"] = params["value"] * (0.9 + 0.2 * hash(augmented_id) % 100 / 100)
 
@@ -238,7 +238,7 @@ class RAGPipelineGovernance:
 
         return augmented_id
 
-    def validate_pipeline(self, pipeline_id: str) -> Dict[str, Any]:
+    def validate_pipeline(self, pipeline_id: str) -> dict[str, Any]:
         """Validate a pipeline against known good patterns"""
         if pipeline_id not in self.pipeline_graphs:
             return {"valid": False, "errors": ["Pipeline not found"]}
@@ -279,7 +279,7 @@ class RAGPipelineGovernance:
 
         return validation_results
 
-    def suggest_pipeline_variant(self, pipeline_id: str) -> Optional[str]:
+    def suggest_pipeline_variant(self, pipeline_id: str) -> str | None:
         """Suggest a known-good variant of a pipeline"""
         if pipeline_id not in self.pipeline_graphs:
             return None
@@ -368,7 +368,7 @@ class RAGPipelineGovernance:
 
         return False
 
-    def _check_parameter_ranges(self, graph: nx.DiGraph) -> List[str]:
+    def _check_parameter_ranges(self, graph: nx.DiGraph) -> list[str]:
         """Check if parameters are within reasonable ranges"""
         warnings = []
 
@@ -418,7 +418,7 @@ class RAGPipelineGovernance:
 
         return intersection / union if union > 0 else 0.0
 
-    def _get_default_stage_parameters(self, stage: PipelineStage) -> Dict[str, Any]:
+    def _get_default_stage_parameters(self, stage: PipelineStage) -> dict[str, Any]:
         """Get default parameters for a pipeline stage"""
         defaults = {
             PipelineStage.INGEST: {"batch_size": 100, "encoding": "utf-8"},
@@ -431,7 +431,7 @@ class RAGPipelineGovernance:
 
         return defaults.get(stage, {})
 
-    def export_pipeline(self, pipeline_id: str) -> Dict[str, Any]:
+    def export_pipeline(self, pipeline_id: str) -> dict[str, Any]:
         """Export pipeline for analysis or persistence"""
         if pipeline_id not in self.pipeline_graphs:
             return {}

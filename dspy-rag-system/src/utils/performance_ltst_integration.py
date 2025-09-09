@@ -12,9 +12,9 @@ import logging
 import os
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import psutil
 
@@ -50,7 +50,7 @@ class PerformanceLTSTIntegration:
     - Real-time decision extraction from performance data
     """
 
-    def __init__(self, db_connection_string: str, project_root: Optional[Path] = None):
+    def __init__(self, db_connection_string: str, project_root: Path | None = None):
         """
         Initialize the Performance-LTST integration.
 
@@ -84,7 +84,7 @@ class PerformanceLTSTIntegration:
 
         logger.info(f"✅ Performance-LTST Integration initialized for {self.project_root}")
 
-    def capture_performance_data(self, duration: int = 60) -> Dict[str, Any]:
+    def capture_performance_data(self, duration: int = 60) -> dict[str, Any]:
         """
         Capture comprehensive performance data over a specified duration.
 
@@ -96,7 +96,7 @@ class PerformanceLTSTIntegration:
         """
         try:
             performance_data = {
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "system_info": self._get_system_info(),
                 "performance_metrics": self._capture_metrics(duration),
                 "resource_usage": self._get_resource_usage(),
@@ -114,8 +114,8 @@ class PerformanceLTSTIntegration:
             return {"error": str(e)}
 
     def correlate_with_conversations(
-        self, performance_data: Dict[str, Any], conversation_context: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, performance_data: dict[str, Any], conversation_context: str | None = None
+    ) -> dict[str, Any]:
         """
         Correlate performance data with conversation context in LTST memory.
 
@@ -169,7 +169,7 @@ class PerformanceLTSTIntegration:
                 "performance_data": performance_data,
                 "related_conversations": unique_conversations,
                 "insights": insights,
-                "correlated_at": datetime.now(timezone.utc).isoformat(),
+                "correlated_at": datetime.now(UTC).isoformat(),
                 "correlation_type": "performance_data_to_conversation",
             }
 
@@ -180,7 +180,7 @@ class PerformanceLTSTIntegration:
             logger.error(f"❌ Error correlating performance data: {e}")
             return {"error": str(e)}
 
-    def track_optimization_opportunities(self, performance_data: Dict[str, Any]) -> Dict[str, Any]:
+    def track_optimization_opportunities(self, performance_data: dict[str, Any]) -> dict[str, Any]:
         """
         Track optimization opportunities and decisions.
 
@@ -207,7 +207,7 @@ class PerformanceLTSTIntegration:
             logger.error(f"❌ Error tracking optimization opportunities: {e}")
             return {"error": str(e)}
 
-    def store_in_ltst_memory(self, performance_data: Dict[str, Any], correlation_data: Dict[str, Any]) -> bool:
+    def store_in_ltst_memory(self, performance_data: dict[str, Any], correlation_data: dict[str, Any]) -> bool:
         """
         Store performance data and correlation information in LTST memory.
 
@@ -228,7 +228,7 @@ class PerformanceLTSTIntegration:
                     "performance_data": performance_data,
                     "correlation_data": correlation_data,
                     "capture_method": "performance_ltst_integration",
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 },
             }
 
@@ -243,7 +243,7 @@ class PerformanceLTSTIntegration:
             logger.error(f"❌ Error storing in LTST memory: {e}")
             return False
 
-    def _get_system_info(self) -> Dict[str, Any]:
+    def _get_system_info(self) -> dict[str, Any]:
         """Get system information."""
         try:
             return {
@@ -258,7 +258,7 @@ class PerformanceLTSTIntegration:
             logger.error(f"Error getting system info: {e}")
             return {"error": str(e)}
 
-    def _capture_metrics(self, duration: int) -> Dict[str, Any]:
+    def _capture_metrics(self, duration: int) -> dict[str, Any]:
         """Capture performance metrics over time."""
         try:
             metrics = {"cpu_samples": [], "memory_samples": [], "disk_samples": [], "network_samples": []}
@@ -270,15 +270,13 @@ class PerformanceLTSTIntegration:
             while time.time() - start_time < duration and sample_count < 10:
                 # CPU metrics
                 cpu_percent = psutil.cpu_percent(interval=1)
-                metrics["cpu_samples"].append(
-                    {"timestamp": datetime.now(timezone.utc).isoformat(), "cpu_percent": cpu_percent}
-                )
+                metrics["cpu_samples"].append({"timestamp": datetime.now(UTC).isoformat(), "cpu_percent": cpu_percent})
 
                 # Memory metrics
                 memory = psutil.virtual_memory()
                 metrics["memory_samples"].append(
                     {
-                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "timestamp": datetime.now(UTC).isoformat(),
                         "memory_percent": memory.percent,
                         "memory_used": memory.used,
                         "memory_available": memory.available,
@@ -289,7 +287,7 @@ class PerformanceLTSTIntegration:
                 disk = psutil.disk_usage("/")
                 metrics["disk_samples"].append(
                     {
-                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "timestamp": datetime.now(UTC).isoformat(),
                         "disk_percent": (disk.used / disk.total) * 100,
                         "disk_used": disk.used,
                         "disk_free": disk.free,
@@ -300,7 +298,7 @@ class PerformanceLTSTIntegration:
                 network = psutil.net_io_counters()
                 metrics["network_samples"].append(
                     {
-                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "timestamp": datetime.now(UTC).isoformat(),
                         "bytes_sent": network.bytes_sent,
                         "bytes_recv": network.bytes_recv,
                         "packets_sent": network.packets_sent,
@@ -317,7 +315,7 @@ class PerformanceLTSTIntegration:
             logger.error(f"Error capturing metrics: {e}")
             return {"error": str(e)}
 
-    def _get_resource_usage(self) -> Dict[str, Any]:
+    def _get_resource_usage(self) -> dict[str, Any]:
         """Get current resource usage."""
         try:
             cpu_percent = psutil.cpu_percent(interval=1)
@@ -337,7 +335,7 @@ class PerformanceLTSTIntegration:
             logger.error(f"Error getting resource usage: {e}")
             return {"error": str(e)}
 
-    def _get_application_metrics(self) -> Dict[str, Any]:
+    def _get_application_metrics(self) -> dict[str, Any]:
         """Get application-specific metrics."""
         try:
             # Get current process metrics
@@ -358,7 +356,7 @@ class PerformanceLTSTIntegration:
             logger.error(f"Error getting application metrics: {e}")
             return {"error": str(e)}
 
-    def _identify_optimization_opportunities(self) -> List[Dict[str, Any]]:
+    def _identify_optimization_opportunities(self) -> list[dict[str, Any]]:
         """Identify optimization opportunities based on current metrics."""
         opportunities = []
 
@@ -410,7 +408,7 @@ class PerformanceLTSTIntegration:
             logger.error(f"Error identifying optimization opportunities: {e}")
             return []
 
-    def _detect_performance_issues(self) -> List[Dict[str, Any]]:
+    def _detect_performance_issues(self) -> list[dict[str, Any]]:
         """Detect performance issues based on current metrics."""
         issues = []
 
@@ -459,7 +457,7 @@ class PerformanceLTSTIntegration:
             logger.error(f"Error detecting performance issues: {e}")
             return []
 
-    def _extract_performance_decisions(self) -> List[Dict[str, Any]]:
+    def _extract_performance_decisions(self) -> list[dict[str, Any]]:
         """Extract decisions from performance data."""
         decisions = []
 
@@ -516,8 +514,8 @@ class PerformanceLTSTIntegration:
         return decisions
 
     def _extract_correlation_insights(
-        self, performance_data: Dict[str, Any], conversations: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, performance_data: dict[str, Any], conversations: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Extract insights from performance-conversation correlation."""
         insights = {
             "total_conversations": len(conversations),
@@ -532,7 +530,7 @@ class PerformanceLTSTIntegration:
 
         return insights
 
-    def _create_performance_rationale(self, performance_data: Dict[str, Any], correlation_data: Dict[str, Any]) -> str:
+    def _create_performance_rationale(self, performance_data: dict[str, Any], correlation_data: dict[str, Any]) -> str:
         """Create a rationale for the performance data decision."""
         insights = correlation_data.get("insights", {})
         resource_usage = insights.get("resource_usage", {})
@@ -556,7 +554,7 @@ class PerformanceLTSTIntegration:
 
         return rationale.strip()
 
-    def _analyze_cpu_optimizations(self, performance_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_cpu_optimizations(self, performance_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze CPU optimization opportunities."""
         cpu_samples = performance_data.get("performance_metrics", {}).get("cpu_samples", [])
 
@@ -580,7 +578,7 @@ class PerformanceLTSTIntegration:
             "trend": "high" if avg_cpu > 70 else "moderate" if avg_cpu > 40 else "low",
         }
 
-    def _analyze_memory_optimizations(self, performance_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_memory_optimizations(self, performance_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze memory optimization opportunities."""
         memory_samples = performance_data.get("performance_metrics", {}).get("memory_samples", [])
 
@@ -604,7 +602,7 @@ class PerformanceLTSTIntegration:
             "trend": "high" if avg_memory > 70 else "moderate" if avg_memory > 40 else "low",
         }
 
-    def _analyze_disk_optimizations(self, performance_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_disk_optimizations(self, performance_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze disk optimization opportunities."""
         disk_samples = performance_data.get("performance_metrics", {}).get("disk_samples", [])
 
@@ -628,7 +626,7 @@ class PerformanceLTSTIntegration:
             "trend": "high" if avg_disk > 80 else "moderate" if avg_disk > 60 else "low",
         }
 
-    def _analyze_network_optimizations(self, performance_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_network_optimizations(self, performance_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze network optimization opportunities."""
         network_samples = performance_data.get("performance_metrics", {}).get("network_samples", [])
 
@@ -646,7 +644,7 @@ class PerformanceLTSTIntegration:
             "trend": "active" if total_bytes_sent + total_bytes_recv > 1000000 else "low",
         }
 
-    def _analyze_application_optimizations(self, performance_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_application_optimizations(self, performance_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze application-specific optimization opportunities."""
         app_metrics = performance_data.get("application_metrics", {})
 
@@ -668,7 +666,7 @@ class PerformanceLTSTIntegration:
             "open_files": app_metrics.get("process_open_files", 0),
         }
 
-    def _analyze_performance_trends(self, performance_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_performance_trends(self, performance_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze performance trends over time."""
         metrics = performance_data.get("performance_metrics", {})
 
@@ -699,8 +697,8 @@ class PerformanceLTSTIntegration:
 
 # Convenience functions for easy integration
 def integrate_performance_data(
-    db_connection_string: str, project_root: Optional[Path] = None, duration: int = 60
-) -> Dict[str, Any]:
+    db_connection_string: str, project_root: Path | None = None, duration: int = 60
+) -> dict[str, Any]:
     """
     Convenience function to integrate performance data with LTST memory.
 
@@ -726,7 +724,7 @@ def integrate_performance_data(
     return {"success": storage_success, "performance_data": performance_data, "correlation_data": correlation_data}
 
 
-def track_optimization_opportunities(db_connection_string: str, project_root: Optional[Path] = None) -> Dict[str, Any]:
+def track_optimization_opportunities(db_connection_string: str, project_root: Path | None = None) -> dict[str, Any]:
     """
     Track optimization opportunities.
 

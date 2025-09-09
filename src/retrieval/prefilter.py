@@ -13,7 +13,7 @@ Key principles:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from sklearn.feature_extraction.text import TfidfVectorizer

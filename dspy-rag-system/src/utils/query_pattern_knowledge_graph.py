@@ -10,7 +10,7 @@ import json
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any
 
 import networkx as nx
 import numpy as np
@@ -34,8 +34,8 @@ class QueryPatternKnowledgeGraph:
 
     def __init__(
         self,
-        conversation_storage: Optional[ConversationStorage] = None,
-        ltst_integration: Optional[LTSTMemoryIntegration] = None,
+        conversation_storage: ConversationStorage | None = None,
+        ltst_integration: LTSTMemoryIntegration | None = None,
     ):
         """Initialize the query pattern knowledge graph system.
 
@@ -101,7 +101,7 @@ class QueryPatternKnowledgeGraph:
             logger.error(f"Error initializing knowledge graph for user {user_id}: {e}")
             return False
 
-    def process_new_query(self, user_id: str, query: str, session_id: Optional[str] = None) -> Dict[str, Any]:
+    def process_new_query(self, user_id: str, query: str, session_id: str | None = None) -> dict[str, Any]:
         """Process a new query and update knowledge graph.
 
         Args:
@@ -158,7 +158,7 @@ class QueryPatternKnowledgeGraph:
             logger.error(f"Error processing new query for user {user_id}: {e}")
             return {"error": str(e), "query_processed": query, "user_id": user_id, "knowledge_graph_updated": False}
 
-    def get_enhanced_memory_bundle(self, user_id: str, query: str, session_id: Optional[str] = None) -> Dict[str, Any]:
+    def get_enhanced_memory_bundle(self, user_id: str, query: str, session_id: str | None = None) -> dict[str, Any]:
         """Get enhanced memory bundle with query pattern insights.
 
         Args:
@@ -213,7 +213,7 @@ class QueryPatternKnowledgeGraph:
             logger.error(f"Error creating enhanced memory bundle for user {user_id}: {e}")
             return {"error": str(e), "user_id": user_id, "query": query}
 
-    def analyze_user_query_patterns(self, user_id: str) -> Dict[str, Any]:
+    def analyze_user_query_patterns(self, user_id: str) -> dict[str, Any]:
         """Comprehensive analysis of user query patterns.
 
         Args:
@@ -315,7 +315,7 @@ class QueryPatternKnowledgeGraph:
             logger.error(f"Error updating prediction feedback: {e}")
             return False
 
-    def export_user_knowledge_graph(self, user_id: str, format: str = "json") -> Optional[str]:
+    def export_user_knowledge_graph(self, user_id: str, format: str = "json") -> str | None:
         """Export user's complete knowledge graph.
 
         Args:
@@ -357,7 +357,7 @@ class QueryPatternKnowledgeGraph:
             )
 
             if os.path.exists(schema_file):
-                with open(schema_file, "r") as f:
+                with open(schema_file) as f:
                     schema_sql = f.read()
 
                 # Execute schema (split by semicolon and execute each statement)
@@ -377,7 +377,7 @@ class QueryPatternKnowledgeGraph:
         except Exception as e:
             logger.error(f"Error ensuring schema exists: {e}")
 
-    def _store_knowledge_graph_metadata(self, user_id: str, metadata: Dict[str, Any]) -> None:
+    def _store_knowledge_graph_metadata(self, user_id: str, metadata: dict[str, Any]) -> None:
         """Store knowledge graph metadata."""
         try:
             # Store in user preferences or a dedicated table
@@ -414,7 +414,7 @@ class QueryPatternKnowledgeGraph:
         except Exception as e:
             logger.error(f"Error updating knowledge graph incrementally: {e}")
 
-    def _calculate_knowledge_graph_metrics(self, user_id: str) -> Dict[str, Any]:
+    def _calculate_knowledge_graph_metrics(self, user_id: str) -> dict[str, Any]:
         """Calculate metrics for user's knowledge graph."""
         try:
             if user_id not in self.knowledge_graphs:
@@ -467,7 +467,7 @@ class QueryPatternKnowledgeGraph:
             logger.error(f"Error getting user query count: {e}")
             return 0
 
-    def _graph_to_json(self, graph: nx.Graph) -> Dict[str, Any]:
+    def _graph_to_json(self, graph: nx.Graph) -> dict[str, Any]:
         """Convert NetworkX graph to JSON format."""
         try:
             return {
@@ -496,7 +496,7 @@ class QueryPatternKnowledgeGraph:
 
 
 # Convenience function for easy integration
-def create_query_pattern_knowledge_graph(database_url: Optional[str] = None) -> QueryPatternKnowledgeGraph:
+def create_query_pattern_knowledge_graph(database_url: str | None = None) -> QueryPatternKnowledgeGraph:
     """Create a QueryPatternKnowledgeGraph instance with default configuration.
 
     Args:

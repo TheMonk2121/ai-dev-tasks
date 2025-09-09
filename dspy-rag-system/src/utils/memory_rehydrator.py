@@ -11,7 +11,7 @@ import logging
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .context_merger import ContextMerger, MergedContext
 from .conversation_storage import ConversationContext, ConversationMessage, ConversationStorage
@@ -118,11 +118,10 @@ ROLE_FILES = {
         "400_guides/400_05_codebase-organization-patterns.md",
         "400_guides/400_11_performance-optimization.md",
         "100_memory/104_dspy-development-context.md",
-        # Additional files for comprehensive coder support
-        "Task-List-Chunk-Relationship-Visualization.md",
-        "scripts/dependency_monitor.py",
-        "400_guides/400_graph-visualization-guide.md",
-        "dspy-rag-system/src/utils/graph_data_provider.py",
+        # Additional files for comprehensive coder support - pointing to existing core docs
+        "000_core/003_process-task-list.md",  # Task processing guide
+        "000_core/004_development-roadmap.md",  # Development roadmap
+        "000_core/011_evaluation-profiles-guide.md",  # Evaluation guide
     ],
     # Other roles present for interface compatibility
     "planner": [],
@@ -137,14 +136,14 @@ class RehydrationRequest:
 
     session_id: str
     user_id: str
-    current_message: Optional[str] = None
-    context_types: Optional[List[str]] = None
+    current_message: str | None = None
+    context_types: list[str] | None = None
     max_context_length: int = 10000
     include_conversation_history: bool = True
     history_limit: int = 20
     relevance_threshold: float = 0.7
     similarity_threshold: float = 0.8
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -161,16 +160,16 @@ class RehydrationResult:
     session_id: str
     user_id: str
     rehydrated_context: str
-    conversation_history: List[ConversationMessage]
-    user_preferences: Dict[str, Any]
-    project_context: Dict[str, Any]
-    relevant_contexts: List[ConversationContext]
-    merged_contexts: List[MergedContext]
+    conversation_history: list[ConversationMessage]
+    user_preferences: dict[str, Any]
+    project_context: dict[str, Any]
+    relevant_contexts: list[ConversationContext]
+    merged_contexts: list[MergedContext]
     session_continuity_score: float
-    context_relevance_scores: Dict[str, float]
+    context_relevance_scores: dict[str, float]
     rehydration_time_ms: float
     cache_hit: bool
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -181,7 +180,7 @@ class RehydrationResult:
 class MemoryRehydrator:
     """Handles automatic memory rehydration for the LTST Memory System."""
 
-    def __init__(self, conversation_storage: Optional[ConversationStorage] = None):
+    def __init__(self, conversation_storage: ConversationStorage | None = None):
         """Initialize memory rehydrator."""
         if conversation_storage is None:
             self.conversation_storage = ConversationStorage()
@@ -203,7 +202,7 @@ class MemoryRehydrator:
         self.max_context_length = 10000
         self.session_continuity_window = timedelta(hours=24)
 
-    def _get_cached_rehydration(self, request: RehydrationRequest) -> Optional[RehydrationResult]:
+    def _get_cached_rehydration(self, request: RehydrationRequest) -> RehydrationResult | None:
         """Get rehydration result from cache if available and fresh."""
         cache_key = self._generate_cache_key(request)
 
@@ -276,7 +275,7 @@ class MemoryRehydrator:
             logger.error(f"Session continuity detection failed: {e}")
             return 0.0
 
-    def _get_session_info(self, session_id: str) -> Optional[Dict[str, Any]]:
+    def _get_session_info(self, session_id: str) -> dict[str, Any] | None:
         """Get session information."""
         try:
             # Get session summary using ConversationStorage
@@ -295,7 +294,7 @@ class MemoryRehydrator:
             logger.error(f"Failed to get session info: {e}")
             return None
 
-    def _calculate_session_similarity(self, session1: Dict[str, Any], session2: Dict[str, Any]) -> float:
+    def _calculate_session_similarity(self, session1: dict[str, Any], session2: dict[str, Any]) -> float:
         """Calculate similarity between two sessions."""
         try:
             # Simple text-based similarity for session names and context
@@ -332,7 +331,7 @@ class MemoryRehydrator:
             logger.error(f"Session similarity calculation failed: {e}")
             return 0.0
 
-    def _get_conversation_history(self, session_id: str, limit: int) -> List[ConversationMessage]:
+    def _get_conversation_history(self, session_id: str, limit: int) -> list[ConversationMessage]:
         """Get conversation history for a session."""
         try:
             # Get messages using ConversationStorage
@@ -358,7 +357,7 @@ class MemoryRehydrator:
             logger.error(f"Failed to get conversation history: {e}")
             return []
 
-    def _get_user_preferences(self, user_id: str) -> Dict[str, Any]:
+    def _get_user_preferences(self, user_id: str) -> dict[str, Any]:
         """Get user preferences for context rehydration."""
         try:
             # Get user preferences using ConversationStorage
@@ -381,7 +380,7 @@ class MemoryRehydrator:
             logger.error(f"Failed to get user preferences: {e}")
             return {}
 
-    def _get_project_context(self, session_id: str) -> Dict[str, Any]:
+    def _get_project_context(self, session_id: str) -> dict[str, Any]:
         """Get project context for the session."""
         try:
             contexts = self.context_merger.merge_contexts(
@@ -402,7 +401,7 @@ class MemoryRehydrator:
             logger.error(f"Failed to get project context: {e}")
             return {}
 
-    def _get_relevant_contexts(self, request: RehydrationRequest) -> List[ConversationContext]:
+    def _get_relevant_contexts(self, request: RehydrationRequest) -> list[ConversationContext]:
         """Get relevant contexts based on the request."""
         try:
             relevant_contexts = []
@@ -431,7 +430,7 @@ class MemoryRehydrator:
             logger.error(f"Failed to get relevant contexts: {e}")
             return []
 
-    def _get_decision_contexts(self, request: RehydrationRequest) -> List[ConversationContext]:
+    def _get_decision_contexts(self, request: RehydrationRequest) -> list[ConversationContext]:
         """Get decision contexts with decision intelligence scoring."""
         try:
             # Extract entities from current message for entity overlap scoring
@@ -477,7 +476,7 @@ class MemoryRehydrator:
             logger.error(f"Failed to get decision contexts: {e}")
             return []
 
-    def _extract_entities_from_message(self, message: str) -> List[str]:
+    def _extract_entities_from_message(self, message: str) -> list[str]:
         """Extract potential entities from a message for decision context scoring."""
         try:
             if not message:
@@ -521,7 +520,7 @@ class MemoryRehydrator:
             logger.warning(f"Failed to extract entities from message: {e}")
             return []
 
-    def _get_decision_insights(self, session_id: str) -> Dict[str, Any]:
+    def _get_decision_insights(self, session_id: str) -> dict[str, Any]:
         """Get insights about decisions for a session."""
         try:
             # Get decision contexts
@@ -588,12 +587,12 @@ class MemoryRehydrator:
 
     def _calculate_context_relevance_scores(
         self,
-        conversation_history: List[ConversationMessage],
-        user_preferences: Dict[str, Any],
-        project_context: Dict[str, Any],
-        relevant_contexts: List[ConversationContext],
-        current_message: Optional[str],
-    ) -> Dict[str, float]:
+        conversation_history: list[ConversationMessage],
+        user_preferences: dict[str, Any],
+        project_context: dict[str, Any],
+        relevant_contexts: list[ConversationContext],
+        current_message: str | None,
+    ) -> dict[str, float]:
         """Calculate relevance scores for different context types."""
         try:
             scores = {}
@@ -637,11 +636,11 @@ class MemoryRehydrator:
 
     def _merge_rehydrated_context(
         self,
-        conversation_history: List[ConversationMessage],
-        user_preferences: Dict[str, Any],
-        project_context: Dict[str, Any],
-        relevant_contexts: List[ConversationContext],
-        current_message: Optional[str],
+        conversation_history: list[ConversationMessage],
+        user_preferences: dict[str, Any],
+        project_context: dict[str, Any],
+        relevant_contexts: list[ConversationContext],
+        current_message: str | None,
         max_length: int,
     ) -> str:
         """Merge all rehydrated context into a single string."""
@@ -841,9 +840,9 @@ class MemoryRehydrator:
         self,
         query: str,
         limit: int = 5,
-        user_id: Optional[str] = None,
-        session_id: Optional[str] = None,
-        context_types: Optional[List[str]] = None,
+        user_id: str | None = None,
+        session_id: str | None = None,
+        context_types: list[str] | None = None,
         include_history: bool = True,
         include_preferences: bool = True,
         include_project_context: bool = True,
@@ -892,7 +891,7 @@ class MemoryRehydrator:
         self,
         session_id: str,
         user_id: str,
-        current_message: Optional[str] = None,
+        current_message: str | None = None,
         max_decisions: int = 10,
         include_metadata: bool = True,
     ) -> RehydrationResult:
@@ -980,8 +979,8 @@ class MemoryRehydrator:
 
     def _build_decision_context(
         self,
-        merged_decisions: List[MergedContext],
-        decision_insights: Dict[str, Any],
+        merged_decisions: list[MergedContext],
+        decision_insights: dict[str, Any],
         max_decisions: int,
         include_metadata: bool,
     ) -> str:
@@ -1035,7 +1034,7 @@ class MemoryRehydrator:
             logger.error(f"Failed to build decision context: {e}")
             return "Error building decision context"
 
-    def get_rehydration_statistics(self) -> Dict[str, Any]:
+    def get_rehydration_statistics(self) -> dict[str, Any]:
         """Get statistics about rehydration operations."""
         try:
             return {
@@ -1052,7 +1051,7 @@ class MemoryRehydrator:
             logger.error(f"Failed to get rehydration statistics: {e}")
             return {"error": str(e)}
 
-    def get_session_insights_for_rehydration(self, session_id: str, user_id: str) -> Dict[str, Any]:
+    def get_session_insights_for_rehydration(self, session_id: str, user_id: str) -> dict[str, Any]:
         """Get session insights to enhance rehydration context."""
         try:
             # Get session insights using SessionManager
@@ -1092,7 +1091,7 @@ class MemoryRehydrator:
             logger.error(f"Failed to get session insights for rehydration: {e}")
             return {}
 
-    def _infer_communication_style(self, insights: Dict[str, Any]) -> str:
+    def _infer_communication_style(self, insights: dict[str, Any]) -> str:
         """Infer user communication style from session insights."""
         try:
             engagement = insights.get("user_engagement", 0.0)
@@ -1143,7 +1142,7 @@ class HydrationBundle:
     """Bundle containing rehydrated memory content and metadata."""
 
     text: str
-    meta: Dict[str, Any]
+    meta: dict[str, Any]
 
 
 def build_hydration_bundle(

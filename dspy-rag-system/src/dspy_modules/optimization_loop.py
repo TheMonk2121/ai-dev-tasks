@@ -13,7 +13,7 @@ import logging
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional, Protocol, Union, cast
+from typing import Any, Protocol, cast
 
 from dspy import Example, Module
 
@@ -63,10 +63,10 @@ class PhaseResult:
     status: OptimizationStatus
     start_time: float
     end_time: float
-    inputs: Dict[str, Any] = field(default_factory=dict)
-    outputs: Dict[str, Any] = field(default_factory=dict)
-    metrics: Dict[str, Any] = field(default_factory=dict)
-    error_message: Optional[str] = None
+    inputs: dict[str, Any] = field(default_factory=dict)
+    outputs: dict[str, Any] = field(default_factory=dict)
+    metrics: dict[str, Any] = field(default_factory=dict)
+    error_message: str | None = None
 
     @property
     def duration(self) -> float:
@@ -85,11 +85,11 @@ class OptimizationCycle:
 
     cycle_id: str
     start_time: float
-    end_time: Optional[float] = None
-    phases: List[PhaseResult] = field(default_factory=list)
+    end_time: float | None = None
+    phases: list[PhaseResult] = field(default_factory=list)
     overall_status: OptimizationStatus = OptimizationStatus.PENDING
-    overall_metrics: Dict[str, Any] = field(default_factory=dict)
-    rollback_data: Optional[Dict[str, Any]] = None
+    overall_metrics: dict[str, Any] = field(default_factory=dict)
+    rollback_data: dict[str, Any] | None = None
 
     @property
     def duration(self) -> float:
@@ -104,7 +104,7 @@ class OptimizationCycle:
         return self.overall_status == OptimizationStatus.COMPLETED
 
     @property
-    def completed_phases(self) -> List[PhaseResult]:
+    def completed_phases(self) -> list[PhaseResult]:
         """Get list of completed phases"""
         return [phase for phase in self.phases if phase.success]
 
@@ -116,7 +116,7 @@ class CreatePhase:
         self.name = "Create"
         self.description = "Define DSPy programs and optimization objectives"
 
-    def execute(self, inputs: Dict[str, Any]) -> PhaseResult:
+    def execute(self, inputs: dict[str, Any]) -> PhaseResult:
         """Execute the Create phase"""
         start_time = time.time()
 
@@ -184,7 +184,7 @@ class CreatePhase:
                 error_message=str(e),
             )
 
-    def _get_baseline_metrics(self, module: Union[Module, HasForward]) -> Dict[str, Any]:
+    def _get_baseline_metrics(self, module: Module | HasForward) -> dict[str, Any]:
         """Get baseline metrics for the module"""
         try:
             # Use assertion framework to get baseline metrics
@@ -212,7 +212,7 @@ class EvaluatePhase:
         self.name = "Evaluate"
         self.description = "Measure current performance and identify improvement areas"
 
-    def execute(self, inputs: Dict[str, Any]) -> PhaseResult:
+    def execute(self, inputs: dict[str, Any]) -> PhaseResult:
         """Execute the Evaluate phase"""
         start_time = time.time()
 
@@ -280,7 +280,7 @@ class EvaluatePhase:
                 error_message=str(e),
             )
 
-    def _evaluate_module(self, module: Union[Module, HasForward], test_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _evaluate_module(self, module: Module | HasForward, test_data: list[dict[str, Any]]) -> dict[str, Any]:
         """Comprehensive module evaluation"""
         results = {}
 
@@ -318,7 +318,7 @@ class EvaluatePhase:
 
         return results
 
-    def _evaluate_performance(self, module: Union[Module, HasForward], test_data: List[Dict[str, Any]]) -> float:
+    def _evaluate_performance(self, module: Module | HasForward, test_data: list[dict[str, Any]]) -> float:
         """Evaluate module performance"""
         if not test_data:
             return 0.0
@@ -349,7 +349,7 @@ class EvaluatePhase:
 
         return performance_score
 
-    def _evaluate_quality(self, module: Union[Module, HasForward]) -> float:
+    def _evaluate_quality(self, module: Module | HasForward) -> float:
         """Evaluate module quality"""
         try:
             # Simple quality metrics based on module attributes
@@ -389,7 +389,7 @@ class EvaluatePhase:
         except Exception:
             return 0.0
 
-    def _analyze_gaps(self, evaluation_results: Dict[str, Any], objectives: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_gaps(self, evaluation_results: dict[str, Any], objectives: dict[str, Any]) -> dict[str, Any]:
         """Analyze gaps between current performance and objectives"""
         gaps = {}
 
@@ -408,7 +408,7 @@ class EvaluatePhase:
 
         return gaps
 
-    def _identify_improvement_areas(self, gap_analysis: Dict[str, Any]) -> List[str]:
+    def _identify_improvement_areas(self, gap_analysis: dict[str, Any]) -> list[str]:
         """Identify areas that need improvement"""
         improvement_areas = []
 
@@ -419,7 +419,7 @@ class EvaluatePhase:
 
         return improvement_areas
 
-    def _generate_recommendations(self, improvement_areas: List[str]) -> List[str]:
+    def _generate_recommendations(self, improvement_areas: list[str]) -> list[str]:
         """Generate improvement recommendations"""
         recommendations = []
 
@@ -441,7 +441,7 @@ class OptimizePhase:
         self.name = "Optimize"
         self.description = "Apply optimization techniques to improve performance"
 
-    def execute(self, inputs: Dict[str, Any]) -> PhaseResult:
+    def execute(self, inputs: dict[str, Any]) -> PhaseResult:
         """Execute the Optimize phase"""
         start_time = time.time()
 
@@ -506,8 +506,8 @@ class OptimizePhase:
             )
 
     def _apply_optimizations(
-        self, module: Union[Module, HasForward], improvement_areas: List[str], test_data: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+        self, module: Module | HasForward, improvement_areas: list[str], test_data: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         """Apply optimizations based on improvement areas"""
         results = []
 
@@ -531,9 +531,7 @@ class OptimizePhase:
 
         return results
 
-    def _optimize_reliability(
-        self, module: Union[Module, HasForward], test_data: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+    def _optimize_reliability(self, module: Module | HasForward, test_data: list[dict[str, Any]]) -> dict[str, Any]:
         """Optimize module reliability using assertion framework"""
         try:
             # Validate module has forward method (satisfies HasForward protocol)
@@ -591,19 +589,17 @@ class OptimizePhase:
             _LOG.warning(f"Reliability optimization failed: {e}")
             return {"success": False, "error": str(e)}
 
-    def _optimize_performance(self, module: Union[Module, HasForward]) -> Dict[str, Any]:
+    def _optimize_performance(self, module: Module | HasForward) -> dict[str, Any]:
         """Optimize module performance"""
         # Placeholder for performance optimization
         return {"success": True, "improvement": 0.1, "method": "caching_optimization"}  # 10% improvement
 
-    def _optimize_quality(self, module: Union[Module, HasForward]) -> Dict[str, Any]:
+    def _optimize_quality(self, module: Module | HasForward) -> dict[str, Any]:
         """Optimize module quality"""
         # Placeholder for quality optimization
         return {"success": True, "improvement": 0.15, "method": "code_quality_enhancement"}  # 15% improvement
 
-    def _measure_improvements(
-        self, module: Union[Module, HasForward], test_data: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+    def _measure_improvements(self, module: Module | HasForward, test_data: list[dict[str, Any]]) -> dict[str, Any]:
         """Measure improvements after optimization"""
         improvements = {}
 
@@ -639,7 +635,7 @@ class OptimizePhase:
 
         return improvements
 
-    def _evaluate_performance(self, module: Union[Module, HasForward], test_data: List[Dict[str, Any]]) -> float:
+    def _evaluate_performance(self, module: Module | HasForward, test_data: list[dict[str, Any]]) -> float:
         """Evaluate module performance (same as EvaluatePhase)"""
         if not test_data:
             return 0.0
@@ -669,7 +665,7 @@ class OptimizePhase:
 
         return performance_score
 
-    def _evaluate_quality(self, module: Union[Module, HasForward]) -> float:
+    def _evaluate_quality(self, module: Module | HasForward) -> float:
         """Evaluate module quality (same as EvaluatePhase)"""
         try:
             quality_score = 0.0
@@ -712,7 +708,7 @@ class DeployPhase:
         self.name = "Deploy"
         self.description = "Deploy optimized module and monitor performance"
 
-    def execute(self, inputs: Dict[str, Any]) -> PhaseResult:
+    def execute(self, inputs: dict[str, Any]) -> PhaseResult:
         """Execute the Deploy phase"""
         start_time = time.time()
 
@@ -778,7 +774,7 @@ class DeployPhase:
                 error_message=str(e),
             )
 
-    def _deploy_module(self, module: Union[Module, HasForward], config: Dict[str, Any]) -> Dict[str, Any]:
+    def _deploy_module(self, module: Module | HasForward, config: dict[str, Any]) -> dict[str, Any]:
         """Deploy the optimized module"""
         try:
             # Simulate deployment process
@@ -801,7 +797,7 @@ class DeployPhase:
         except Exception as e:
             return {"success": False, "error": str(e), "deployment_time": 0.0}
 
-    def _setup_monitoring(self, module: Union[Module, HasForward]) -> Dict[str, Any]:
+    def _setup_monitoring(self, module: Module | HasForward) -> dict[str, Any]:
         """Set up monitoring for the deployed module"""
         try:
             # Simulate monitoring setup
@@ -817,7 +813,7 @@ class DeployPhase:
         except Exception as e:
             return {"active": False, "error": str(e)}
 
-    def _validate_deployment(self, module: Union[Module, HasForward]) -> Dict[str, Any]:
+    def _validate_deployment(self, module: Module | HasForward) -> dict[str, Any]:
         """Validate the deployment"""
         try:
             # Basic validation checks
@@ -848,12 +844,12 @@ class FourPartOptimizationLoop:
             OptimizationPhase.DEPLOY: DeployPhase(),
         }
 
-        self.cycles: List[OptimizationCycle] = []
-        self.current_cycle: Optional[OptimizationCycle] = None
+        self.cycles: list[OptimizationCycle] = []
+        self.current_cycle: OptimizationCycle | None = None
 
         _LOG.info("Four-Part Optimization Loop initialized")
 
-    def run_cycle(self, inputs: Dict[str, Any]) -> OptimizationCycle:
+    def run_cycle(self, inputs: dict[str, Any]) -> OptimizationCycle:
         """
         Run a complete optimization cycle
 
@@ -928,12 +924,12 @@ class FourPartOptimizationLoop:
         self.cycles.append(cycle)
         return cycle
 
-    def _run_phase(self, phase: OptimizationPhase, inputs: Dict[str, Any]) -> PhaseResult:
+    def _run_phase(self, phase: OptimizationPhase, inputs: dict[str, Any]) -> PhaseResult:
         """Run a single optimization phase"""
         phase_impl = self.phases[phase]
         return phase_impl.execute(inputs)
 
-    def _calculate_overall_metrics(self, cycle: OptimizationCycle) -> Dict[str, Any]:
+    def _calculate_overall_metrics(self, cycle: OptimizationCycle) -> dict[str, Any]:
         """Calculate overall metrics for the cycle"""
         metrics = {
             "total_duration": cycle.duration,
@@ -950,7 +946,7 @@ class FourPartOptimizationLoop:
 
         return metrics
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get optimization loop statistics"""
         if not self.cycles:
             return {"total_cycles": 0, "successful_cycles": 0, "success_rate": 0.0, "average_duration": 0.0}
@@ -996,7 +992,7 @@ def get_optimization_loop() -> FourPartOptimizationLoop:
     return _optimization_loop
 
 
-def run_optimization_cycle(inputs: Dict[str, Any]) -> OptimizationCycle:
+def run_optimization_cycle(inputs: dict[str, Any]) -> OptimizationCycle:
     """
     Convenience function to run an optimization cycle
 

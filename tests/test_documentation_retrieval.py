@@ -111,6 +111,7 @@ class TestDocumentationRetrievalService(unittest.TestCase):
             self.assertIn("error", result)
             self.assertEqual(result["error"], "Test error")
 
+
 class TestDocumentationQueryProcessor(unittest.TestCase):
     """Test cases for the DocumentationQueryProcessor class."""
 
@@ -142,6 +143,7 @@ class TestDocumentationQueryProcessor(unittest.TestCase):
         self.assertEqual(result["original_query"], "test query")
         self.assertEqual(result["context_type"], "workflow")
         self.assertEqual(result["query_type"], "search")
+
 
 class TestDocumentationRetriever(unittest.TestCase):
     """Test cases for the DocumentationRetriever class."""
@@ -215,6 +217,7 @@ class TestDocumentationRetriever(unittest.TestCase):
         self.assertEqual(len(metadata["categories"]), 2)  # Unique categories
         self.assertEqual(metadata["chunk_count"], 3)
 
+
 class TestContextSynthesizer(unittest.TestCase):
     """Test cases for the ContextSynthesizer class."""
 
@@ -260,6 +263,7 @@ class TestContextSynthesizer(unittest.TestCase):
         self.assertEqual(result["context_priority"], [])
         self.assertEqual(result["context_coverage"], "No context available")
 
+
 class TestUtilityFunctions(unittest.TestCase):
     """Test cases for utility functions."""
 
@@ -301,6 +305,7 @@ class TestUtilityFunctions(unittest.TestCase):
         mock_create_service.assert_called_once()
         mock_service.get_context_for_task.assert_called_once_with("test task", "development")
         self.assertEqual(result["context"], "task context")
+
 
 class TestIntegration(unittest.TestCase):
     """Integration tests for the documentation retrieval system."""
@@ -361,6 +366,7 @@ class TestIntegration(unittest.TestCase):
             self.assertIn("synthesis", result)
             self.assertEqual(result["query"], "test query")
             self.assertEqual(result["context_type"], "workflow")
+
 
 if __name__ == "__main__":
     unittest.main()

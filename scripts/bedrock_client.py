@@ -10,7 +10,7 @@ import os
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 import boto3
 from botocore.config import Config

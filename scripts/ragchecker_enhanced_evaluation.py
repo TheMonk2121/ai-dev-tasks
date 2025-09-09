@@ -9,7 +9,7 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add src to path for enhanced components
 sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system" / "src"))

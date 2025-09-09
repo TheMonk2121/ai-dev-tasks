@@ -16,7 +16,7 @@ import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+
 
 import psutil
 
@@ -51,7 +51,7 @@ class PerformanceBenchmark:
     """Comprehensive performance benchmarking for MCP integration."""
 
     def __init__(self):
-        self.results: List[BenchmarkResult] = []
+        self.results: list[BenchmarkResult] = []
         self.base_config = MCPConfig(
             server_name="benchmark_server",
             max_file_size=10 * 1024 * 1024,  # 10MB

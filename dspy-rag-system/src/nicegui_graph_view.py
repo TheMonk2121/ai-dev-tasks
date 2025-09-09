@@ -10,7 +10,7 @@ advanced graph visualization capabilities.
 import json
 import logging
 import os
-from typing import Any, Dict, Optional, cast
+from typing import Any, cast
 
 import httpx
 
@@ -31,11 +31,12 @@ logger = logging.getLogger(__name__)
 DASHBOARD_URL = os.getenv("DASHBOARD_URL", "http://localhost:5000")
 GRAPH_DATA_ENDPOINT = f"{DASHBOARD_URL}/graph-data"
 
+
 class GraphVisualizationApp:
     """NiceGUI application for graph visualization."""
 
     def __init__(self):
-        self.current_data: Optional[Dict[str, Any]] = None
+        self.current_data: dict[str, Any] | None = None
         self.cytoscape_container = None
         self.stats_container = None
         self.controls_container = None
@@ -226,7 +227,7 @@ class GraphVisualizationApp:
             if ui and self.loading_indicator:
                 self.loading_indicator.classes(replace="hidden")
 
-    async def update_graph_visualization(self, data: Dict[str, Any]):
+    async def update_graph_visualization(self, data: dict[str, Any]):
         """Update the graph visualization with new data."""
         # Convert data to JSON string for JavaScript
         data_json = json.dumps(data)
@@ -245,11 +246,13 @@ class GraphVisualizationApp:
         if ui:
             ui.run_javascript(f"window.open('{DASHBOARD_URL}', '_blank')")
 
+
 def create_app() -> GraphVisualizationApp:
     """Create and configure the NiceGUI application."""
     app_instance = GraphVisualizationApp()
     app_instance.create_ui()
     return app_instance
+
 
 # Main application entry point
 if __name__ == "__main__":

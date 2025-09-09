@@ -9,7 +9,7 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 # Add src to path
 sys.path.append(str(Path(__file__).parent.parent))
@@ -19,6 +19,7 @@ from src.utils.memory_rehydrator import build_hydration_bundle
 
 logger = get_logger(__name__)
 
+
 class HydrationMonitor:
     """Monitors hydration system health and performance"""
 
@@ -27,7 +28,7 @@ class HydrationMonitor:
         self.alerts = []
         self.last_check = None
 
-    def check_system_health(self) -> Dict[str, Any]:
+    def check_system_health(self) -> dict[str, Any]:
         """Check overall system health"""
         logger.info("Checking hydration system health")
 
@@ -182,7 +183,7 @@ class HydrationMonitor:
             self.alerts.append(f"Quality check error: {e}")
             return False
 
-    def generate_health_report(self) -> Dict[str, Any]:
+    def generate_health_report(self) -> dict[str, Any]:
         """Generate comprehensive health report"""
         health_status = self.check_system_health()
 
@@ -198,7 +199,7 @@ class HydrationMonitor:
 
         return report
 
-    def _generate_recommendations(self, health_status: Dict[str, Any]) -> List[str]:
+    def _generate_recommendations(self, health_status: dict[str, Any]) -> list[str]:
         """Generate recommendations based on health status"""
         recommendations = []
 
@@ -219,7 +220,8 @@ class HydrationMonitor:
 
         return recommendations
 
-def create_n8n_webhook_payload(health_report: Dict[str, Any]) -> Dict[str, Any]:
+
+def create_n8n_webhook_payload(health_report: dict[str, Any]) -> dict[str, Any]:
     """Create n8n webhook payload format"""
     return {
         "webhook_type": "hydration_health_check",
@@ -233,6 +235,7 @@ def create_n8n_webhook_payload(health_report: Dict[str, Any]) -> Dict[str, Any]:
         "details": health_report,
         "action_required": health_report["status"] == "unhealthy",
     }
+
 
 def main():
     """Main monitoring function for n8n integration"""
@@ -255,6 +258,7 @@ def main():
         logger.warning(f"Alerts: {health_report['alerts']}")
 
     return 0 if health_report["status"] == "healthy" else 1
+
 
 if __name__ == "__main__":
     exit(main())

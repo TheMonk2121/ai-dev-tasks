@@ -15,7 +15,7 @@ import time
 from dataclasses import dataclass
 from enum import Enum
 from importlib import import_module
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any
 
 # Apply litellm compatibility shim before importing DSPy
 try:
@@ -295,7 +295,7 @@ def get_context_for_role(role: str, task: str) -> str:
     return _get_fallback_context(role, task)
 
 
-def _format_scribe_context(scribe_data: Dict[str, Any], role: str) -> str:
+def _format_scribe_context(scribe_data: dict[str, Any], role: str) -> str:
     """
     Format Scribe context data into a readable string for DSPy roles.
 
@@ -517,7 +517,7 @@ class ModelCapabilities:
     code_generation: float  # 0-1
     speed: float  # 0-1 (higher = faster)
     memory_usage_gb: float
-    best_for: List[str]
+    best_for: list[str]
     load_time_seconds: float
 
 
@@ -586,9 +586,9 @@ class ModelSwitcher:
             ollama_base_url: Base URL for Ollama API
         """
         self.ollama_base_url = ollama_base_url
-        self.current_model: Optional[LocalModel] = None
-        self.current_lm: Optional[LM] = None
-        self.model_load_times: Dict[LocalModel, float] = {}
+        self.current_model: LocalModel | None = None
+        self.current_lm: LM | None = None
+        self.model_load_times: dict[LocalModel, float] = {}
         self.switch_count = 0
 
         # Initialize optimizer system
@@ -769,9 +769,7 @@ class ModelSwitcher:
         # Default to Llama 3.1 8B for general tasks (best overall capability)
         return LocalModel.LLAMA_3_1_8B
 
-    def select_model_for_task(
-        self, task: str, task_type: Optional[str] = None, role: Optional[str] = None
-    ) -> LocalModel:
+    def select_model_for_task(self, task: str, task_type: str | None = None, role: str | None = None) -> LocalModel:
         """
         Select the best model for a task using intelligent analysis.
 
@@ -794,7 +792,7 @@ class ModelSwitcher:
         # Priority 3: Content analysis
         return self._analyze_task_content(task)
 
-    def orchestrate_task(self, task: str, task_type: str, role: str) -> Dict[str, Any]:
+    def orchestrate_task(self, task: str, task_type: str, role: str) -> dict[str, Any]:
         """
         Orchestrate a task using the specified role with intelligent model selection.
 
@@ -862,7 +860,7 @@ class ModelSwitcher:
 
         return results
 
-    def answer_with_rag(self, question: str, role: str) -> Dict[str, Any]:
+    def answer_with_rag(self, question: str, role: str) -> dict[str, Any]:
         """
         Answer a question using RAG pipeline for roles that should use context.
 
@@ -895,7 +893,7 @@ class ModelSwitcher:
             # Fallback to direct LM
             return self._answer_with_direct_lm(question, role)
 
-    def _answer_with_direct_lm(self, question: str, role: str) -> Dict[str, Any]:
+    def _answer_with_direct_lm(self, question: str, role: str) -> dict[str, Any]:
         """
         Answer a question using direct LM (for coder/reviewer or RAG fallback).
 
@@ -1055,7 +1053,7 @@ Please respond to this task: {task}
 Provide a detailed response based on your role's expertise and the project's standards.""",
         )
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get model switching statistics."""
         stats = {
             "current_model": self.current_model.value if self.current_model else None,
@@ -1118,8 +1116,8 @@ Provide a detailed response based on your role's expertise and the project's sta
         return True
 
     def optimize_program(
-        self, program: Module, train_data: List, metric_func, optimizer_name: Optional[str] = None
-    ) -> Optional[OptimizationResult]:
+        self, program: Module, train_data: list, metric_func, optimizer_name: str | None = None
+    ) -> OptimizationResult | None:
         """
         Optimize a program using the active optimizer.
 
@@ -1149,7 +1147,7 @@ Provide a detailed response based on your role's expertise and the project's sta
             _LOG.error(f"Program optimization failed: {e}")
             return None
 
-    def get_optimizer_stats(self) -> Dict[str, Any]:
+    def get_optimizer_stats(self) -> dict[str, Any]:
         """
         Get optimizer statistics.
 
@@ -1172,7 +1170,7 @@ Provide a detailed response based on your role's expertise and the project's sta
         else:
             return {"enabled": False, "active_optimizer": None}
 
-    def validate_current_module(self, test_inputs: Optional[List[Dict[str, Any]]] = None) -> Optional[Any]:
+    def validate_current_module(self, test_inputs: list[dict[str, Any]] | None = None) -> Any | None:
         """
         Validate the current active module using the assertion framework
 
@@ -1215,7 +1213,7 @@ Provide a detailed response based on your role's expertise and the project's sta
             _LOG.error(f"Module validation failed: {e}")
             return None
 
-    def get_validation_stats(self) -> Dict[str, Any]:
+    def get_validation_stats(self) -> dict[str, Any]:
         """Get validation statistics"""
         if not self.validation_history:
             return {
@@ -1280,13 +1278,13 @@ Provide a detailed response based on your role's expertise and the project's sta
 
         return improvement >= target_improvement
 
-    def _get_current_module(self) -> Optional[Module]:
+    def _get_current_module(self) -> Module | None:
         """Get the current active module for validation"""
         # This is a placeholder - in a real implementation, you would
         # return the actual current module being used
         return None
 
-    def get_comprehensive_stats(self) -> Dict[str, Any]:
+    def get_comprehensive_stats(self) -> dict[str, Any]:
         """Get comprehensive statistics including validation data"""
         # Get base stats
         base_stats = {
@@ -1315,7 +1313,7 @@ class IntelligentModelSelector(Module):
 
     def forward(
         self, task: str, task_type: str, complexity: str = "moderate", context_size: int = 1000
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Select the best model for a task with reasoning"""
         result = self.predict(task=task, task_type=task_type, complexity=complexity, context_size=context_size)
         return {
@@ -1334,7 +1332,7 @@ class LocalTaskExecutor(Module):
         self.model_switcher = model_switcher
         self.predict = dspy.Predict(LocalTaskSignature)
 
-    def forward(self, task: str, task_type: str, role: str, complexity: str = "moderate") -> Dict[str, Any]:
+    def forward(self, task: str, task_type: str, role: str, complexity: str = "moderate") -> dict[str, Any]:
         """Execute a task with local model using structured DSPy signature"""
 
         # Get context for the role and task
@@ -1398,7 +1396,7 @@ class MultiModelOrchestrator(Module):
         self.model_switcher = model_switcher
         self.predict = dspy.Predict(MultiModelOrchestrationSignature)
 
-    def forward(self, task: str, task_type: str, role: str) -> Dict[str, Any]:
+    def forward(self, task: str, task_type: str, role: str) -> dict[str, Any]:
         """Orchestrate a task across multiple models with structured output"""
 
         # Perform multi-model orchestration
@@ -1470,7 +1468,7 @@ Please provide a detailed response following the project's coding standards and 
 # ---------- Cursor AI Integration Functions ----------
 
 
-def cursor_execute_task(task: str, task_type: str = "moderate_coding", role: str = "coder") -> Dict[str, Any]:
+def cursor_execute_task(task: str, task_type: str = "moderate_coding", role: str = "coder") -> dict[str, Any]:
     """
     Cursor AI integration function - execute task with local models
 
@@ -1487,7 +1485,7 @@ def cursor_execute_task(task: str, task_type: str = "moderate_coding", role: str
 
     try:
         result = executor(task, task_type, role)
-        # Type cast to ensure result is treated as Dict[str, Any]
+        # Type cast to ensure result is treated as dict[str, Any]
         result_dict = result if isinstance(result, dict) else {}
         return {
             "success": True,
@@ -1500,7 +1498,7 @@ def cursor_execute_task(task: str, task_type: str = "moderate_coding", role: str
         return {"success": False, "error": str(e), "fallback": "Using Cursor AI fallback"}
 
 
-def cursor_orchestrate_task(task: str, task_type: str = "moderate_coding", role: str = "coder") -> Dict[str, Any]:
+def cursor_orchestrate_task(task: str, task_type: str = "moderate_coding", role: str = "coder") -> dict[str, Any]:
     """
     Cursor AI integration function - orchestrate task using the specified role with RAG-first approach
 

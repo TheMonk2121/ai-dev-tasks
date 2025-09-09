@@ -7,7 +7,7 @@ Implements typed context models with role-specific validation for B-1007
 import logging
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -34,17 +34,15 @@ class BaseContext(BaseModel):
     role: AIRole = Field(..., description="AI role for this context")
     session_id: str = Field(..., description="Unique session identifier")
     timestamp: datetime = Field(default_factory=datetime.now, description="Context creation timestamp")
-    user_id: Optional[str] = Field(None, description="User identifier if available")
+    user_id: str | None = Field(None, description="User identifier if available")
 
     # Vector-based system mapping integration fields
     vector_enhancement_enabled: bool = Field(default=True, description="Enable vector-based context enhancement")
-    vector_components: List[Dict[str, Any]] = Field(
+    vector_components: list[dict[str, Any]] = Field(
         default_factory=list, description="Vector-based component recommendations"
     )
-    vector_insights: Dict[str, Any] = Field(default_factory=dict, description="Role-specific vector insights")
-    vector_enhancement_timestamp: Optional[datetime] = Field(
-        None, description="When vector enhancement was last applied"
-    )
+    vector_insights: dict[str, Any] = Field(default_factory=dict, description="Role-specific vector insights")
+    vector_enhancement_timestamp: datetime | None = Field(None, description="When vector enhancement was last applied")
 
     @field_validator("session_id")
     @classmethod
@@ -62,13 +60,13 @@ class BaseContext(BaseModel):
             raise ValueError("Timestamp cannot be in the future")
         return v
 
-    def update_vector_insights(self, components: List[Dict[str, Any]], insights: Dict[str, Any]) -> None:
+    def update_vector_insights(self, components: list[dict[str, Any]], insights: dict[str, Any]) -> None:
         """Update vector-based insights and components."""
         self.vector_components = components
         self.vector_insights = insights
         self.vector_enhancement_timestamp = datetime.now()
 
-    def get_vector_enhancement_status(self) -> Dict[str, Any]:
+    def get_vector_enhancement_status(self) -> dict[str, Any]:
         """Get current vector enhancement status."""
         return {
             "enabled": self.vector_enhancement_enabled,
@@ -89,19 +87,19 @@ class PlannerContext(BaseContext):
     role: AIRole = Field(default=AIRole.PLANNER, description="Planner role")
     project_scope: str = Field(..., description="Current project scope and objectives")
     backlog_priority: str = Field(..., description="Current backlog priority level")
-    strategic_goals: List[str] = Field(default_factory=list, description="Strategic goals for this session")
-    constraints: Dict[str, Any] = Field(default_factory=dict, description="Project constraints and limitations")
-    dependencies: List[str] = Field(default_factory=list, description="Dependencies and blockers")
+    strategic_goals: list[str] = Field(default_factory=list, description="Strategic goals for this session")
+    constraints: dict[str, Any] = Field(default_factory=dict, description="Project constraints and limitations")
+    dependencies: list[str] = Field(default_factory=list, description="Dependencies and blockers")
 
     # Vector-based planning insights
-    architecture_insights: List[Dict[str, Any]] = Field(
+    architecture_insights: list[dict[str, Any]] = Field(
         default_factory=list, description="Vector-based architecture insights"
     )
-    impact_analysis: List[Dict[str, Any]] = Field(default_factory=list, description="Vector-based impact analysis")
-    complexity_assessment: List[Dict[str, Any]] = Field(
+    impact_analysis: list[dict[str, Any]] = Field(default_factory=list, description="Vector-based impact analysis")
+    complexity_assessment: list[dict[str, Any]] = Field(
         default_factory=list, description="Vector-based complexity assessment"
     )
-    strategic_recommendations: List[Dict[str, Any]] = Field(
+    strategic_recommendations: list[dict[str, Any]] = Field(
         default_factory=list, description="Vector-based strategic recommendations"
     )
 
@@ -124,7 +122,7 @@ class PlannerContext(BaseContext):
 
     @field_validator("strategic_goals")
     @classmethod
-    def validate_strategic_goals(cls, v: List[str]) -> List[str]:
+    def validate_strategic_goals(cls, v: list[str]) -> list[str]:
         """Validate strategic goals are meaningful"""
         if len(v) > 10:
             raise ValueError("Cannot have more than 10 strategic goals")
@@ -136,18 +134,18 @@ class CoderContext(BaseContext):
 
     role: AIRole = Field(default=AIRole.CODER, description="Coder role")
     codebase_path: str = Field(..., description="Path to current codebase")
-    file_context: List[str] = Field(default_factory=list, description="Relevant files for current task")
+    file_context: list[str] = Field(default_factory=list, description="Relevant files for current task")
     language: str = Field(..., description="Primary programming language")
-    framework: Optional[str] = Field(None, description="Framework being used")
-    testing_requirements: Dict[str, Any] = Field(default_factory=dict, description="Testing requirements")
-    performance_constraints: Dict[str, Any] = Field(default_factory=dict, description="Performance constraints")
+    framework: str | None = Field(None, description="Framework being used")
+    testing_requirements: dict[str, Any] = Field(default_factory=dict, description="Testing requirements")
+    performance_constraints: dict[str, Any] = Field(default_factory=dict, description="Performance constraints")
 
     # Cursor-specific fields for enhanced context
     cursor_knowledge_enabled: bool = Field(default=True, description="Enable Cursor's codebase knowledge")
-    current_file: Optional[str] = Field(None, description="Currently active file in Cursor")
-    imports_context: List[str] = Field(default_factory=list, description="Current file imports and dependencies")
-    cursor_model: Optional[str] = Field(None, description="Cursor AI model being used")
-    ide_context: Dict[str, Any] = Field(default_factory=dict, description="IDE-specific context and settings")
+    current_file: str | None = Field(None, description="Currently active file in Cursor")
+    imports_context: list[str] = Field(default_factory=list, description="Current file imports and dependencies")
+    cursor_model: str | None = Field(None, description="Cursor AI model being used")
+    ide_context: dict[str, Any] = Field(default_factory=dict, description="IDE-specific context and settings")
 
     @field_validator("codebase_path")
     @classmethod
@@ -170,7 +168,7 @@ class CoderContext(BaseContext):
 
     @field_validator("file_context")
     @classmethod
-    def validate_file_context(cls, v: List[str]) -> List[str]:
+    def validate_file_context(cls, v: list[str]) -> list[str]:
         """Validate file context paths"""
         import os
 
@@ -182,7 +180,7 @@ class CoderContext(BaseContext):
                 _LOG.warning(f"File context path does not exist: {file_path}")
         return valid_files
 
-    def get_cursor_context(self) -> Dict[str, Any]:
+    def get_cursor_context(self) -> dict[str, Any]:
         """Get Cursor-specific context for enhanced coding assistance"""
         return {
             "role": self.role.value,
@@ -195,7 +193,7 @@ class CoderContext(BaseContext):
             "cursor_knowledge_enabled": self.cursor_knowledge_enabled,
         }
 
-    def get_vector_enhanced_context(self) -> Dict[str, Any]:
+    def get_vector_enhanced_context(self) -> dict[str, Any]:
         """Get vector-enhanced context for intelligent coding assistance"""
         return {
             "role": self.role.value,
@@ -216,18 +214,18 @@ class ResearcherContext(BaseContext):
 
     role: AIRole = Field(default=AIRole.RESEARCHER, description="Researcher role")
     research_topic: str = Field(..., description="Current research topic")
-    sources: List[str] = Field(default_factory=list, description="Research sources and references")
+    sources: list[str] = Field(default_factory=list, description="Research sources and references")
     methodology: str = Field(..., description="Research methodology being used")
-    hypotheses: List[str] = Field(default_factory=list, description="Research hypotheses")
-    constraints: Dict[str, Any] = Field(default_factory=dict, description="Research constraints")
+    hypotheses: list[str] = Field(default_factory=list, description="Research hypotheses")
+    constraints: dict[str, Any] = Field(default_factory=dict, description="Research constraints")
 
     # Vector-based research insights
-    pattern_analysis: List[Dict[str, Any]] = Field(default_factory=list, description="Vector-based pattern analysis")
-    technology_insights: List[Dict[str, Any]] = Field(
+    pattern_analysis: list[dict[str, Any]] = Field(default_factory=list, description="Vector-based pattern analysis")
+    technology_insights: list[dict[str, Any]] = Field(
         default_factory=list, description="Vector-based technology insights"
     )
-    best_practices: List[Dict[str, Any]] = Field(default_factory=list, description="Vector-based best practices")
-    research_opportunities: List[Dict[str, Any]] = Field(
+    best_practices: list[dict[str, Any]] = Field(default_factory=list, description="Vector-based best practices")
+    research_opportunities: list[dict[str, Any]] = Field(
         default_factory=list, description="Vector-based research opportunities"
     )
 
@@ -255,21 +253,21 @@ class ImplementerContext(BaseContext):
     role: AIRole = Field(default=AIRole.IMPLEMENTER, description="Implementer role")
     implementation_plan: str = Field(..., description="Implementation plan and approach")
     target_environment: str = Field(..., description="Target deployment environment")
-    integration_points: List[str] = Field(default_factory=list, description="Integration points")
-    rollback_strategy: Optional[str] = Field(None, description="Rollback strategy if needed")
-    monitoring_requirements: Dict[str, Any] = Field(default_factory=dict, description="Monitoring requirements")
+    integration_points: list[str] = Field(default_factory=list, description="Integration points")
+    rollback_strategy: str | None = Field(None, description="Rollback strategy if needed")
+    monitoring_requirements: dict[str, Any] = Field(default_factory=dict, description="Monitoring requirements")
 
     # Vector-based implementation insights
-    integration_patterns: List[Dict[str, Any]] = Field(
+    integration_patterns: list[dict[str, Any]] = Field(
         default_factory=list, description="Vector-based integration patterns"
     )
-    dependency_mapping: List[Dict[str, Any]] = Field(
+    dependency_mapping: list[dict[str, Any]] = Field(
         default_factory=list, description="Vector-based dependency mapping"
     )
-    architecture_compliance: List[Dict[str, Any]] = Field(
+    architecture_compliance: list[dict[str, Any]] = Field(
         default_factory=list, description="Vector-based architecture compliance"
     )
-    implementation_strategy: List[Dict[str, Any]] = Field(
+    implementation_strategy: list[dict[str, Any]] = Field(
         default_factory=list, description="Vector-based implementation strategy"
     )
 
@@ -332,7 +330,7 @@ class LegacyContextAdapter:
     """Adapter for backward compatibility with existing API calls"""
 
     @staticmethod
-    def from_dict(data: Dict[str, Any]) -> BaseContext:
+    def from_dict(data: dict[str, Any]) -> BaseContext:
         """Convert dictionary to appropriate context model"""
 
         # Extract role from data
@@ -351,7 +349,7 @@ class LegacyContextAdapter:
         return ContextFactory.create_context(role, **data_copy)
 
     @staticmethod
-    def to_dict(context: BaseContext) -> Dict[str, Any]:
+    def to_dict(context: BaseContext) -> dict[str, Any]:
         """Convert context model to dictionary"""
         data = context.model_dump()
         # Convert AIRole enum to string for backward compatibility
@@ -366,7 +364,7 @@ class ContextValidationBenchmark:
     """Benchmarking utilities for context validation performance"""
 
     @staticmethod
-    def benchmark_validation_overhead(context: BaseContext, iterations: int = 1000) -> Dict[str, float]:
+    def benchmark_validation_overhead(context: BaseContext, iterations: int = 1000) -> dict[str, float]:
         """Benchmark validation overhead"""
         import time
 

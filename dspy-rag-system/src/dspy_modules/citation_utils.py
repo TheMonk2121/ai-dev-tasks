@@ -9,13 +9,13 @@ with answer/question overlap, anchor cues, and better evaluation metrics.
 
 import re
 from difflib import SequenceMatcher
-from typing import Dict, List, Set
+
 
 WORD_RE = re.compile(r"[A-Za-z0-9_]+")
 FILE_TOKEN_RE = re.compile(r"\b\d{3}_[A-Za-z0-9-]+(?:\.md)?\b")
 
 
-def _tokens(s: str) -> Set[str]:
+def _tokens(s: str) -> set[str]:
     """Extract tokens from string."""
     return set(w.lower() for w in WORD_RE.findall(s or ""))
 
@@ -64,7 +64,7 @@ def derive_expected_from_question(question: str, alias_map=None, filename_to_doc
     return docids, names
 
 
-def anchor_terms_for_question(question: str) -> Set[str]:
+def anchor_terms_for_question(question: str) -> set[str]:
     """Lightweight anchors: customize per repo flavor."""
     q = (question or "").lower()
     anchors = set()
@@ -97,7 +97,7 @@ def anchor_terms_for_question(question: str) -> Set[str]:
 
 
 def score_hit(
-    hit, question: str, answer: str, expected_docids: Set, expected_names: Set, weights: Dict[str, float]
+    hit, question: str, answer: str, expected_docids: set, expected_names: set, weights: dict[str, float]
 ) -> float:
     """Score a hit based on multiple criteria."""
     # Pull fields defensively
@@ -139,7 +139,7 @@ def score_hit(
     return score
 
 
-def select_citations(hits: List, question: str, answer: str, filename_to_docid=None, max_cites: int = 3) -> List:
+def select_citations(hits: list, question: str, answer: str, filename_to_docid=None, max_cites: int = 3) -> list:
     """Select citations using advanced scoring."""
     # 1) expected set
     expected_docids, expected_names = derive_expected_from_question(
@@ -180,7 +180,7 @@ def select_citations(hits: List, question: str, answer: str, filename_to_docid=N
     return picked
 
 
-def evaluate_citation_quality(citations: List[str], question: str, expected_citations: List[str]) -> Dict[str, float]:
+def evaluate_citation_quality(citations: list[str], question: str, expected_citations: list[str]) -> dict[str, float]:
     """Evaluate citation quality with detailed metrics."""
     if not citations:
         return {"explicit_file_recall": 0.0, "anchor_coverage": 0.0, "diversity_ok": 1.0, "overall_score": 0.0}

@@ -2,7 +2,7 @@ import hashlib
 import os
 import re
 import unicodedata
-from typing import Optional
+
 
 
 def _slugify(text: str, max_len: int = 60) -> str:
@@ -11,7 +11,7 @@ def _slugify(text: str, max_len: int = 60) -> str:
     return text[:max_len]
 
 
-def canonical_case_id(query: str, source_path: str, variant: Optional[str] = None) -> str:
+def canonical_case_id(query: str, source_path: str, variant: str | None = None) -> str:
     """Return a stable, human-readable case id based on query and source.
 
     The ID is a slug of the query plus a short hash of the tuple
@@ -21,4 +21,3 @@ def canonical_case_id(query: str, source_path: str, variant: Optional[str] = Non
     base = f"{(query or '').strip()}|{norm_path}|{variant or ''}"
     short = hashlib.sha1(base.encode("utf-8")).hexdigest()[:8]
     return f"{_slugify(query or '')}-{short}"
-

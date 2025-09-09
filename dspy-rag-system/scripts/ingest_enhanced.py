@@ -15,7 +15,7 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
 
 from dotenv import load_dotenv
 from tqdm import tqdm
@@ -58,7 +58,7 @@ DDL = [
       ) STORED
     );
     """,
-    """
+    f"""
     CREATE TABLE IF NOT EXISTS document_chunks (
       id           SERIAL PRIMARY KEY,
       document_id  INT NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
@@ -69,17 +69,16 @@ DDL = [
       content      TEXT NOT NULL,
       embedding_text TEXT,  -- For embedding (with context)
       bm25_text    TEXT,    -- For BM25 (clean)
-      embedding    VECTOR(%d),
+      embedding    VECTOR({EMBED_DIM}),
       is_anchor    BOOLEAN DEFAULT FALSE,
       anchor_key   TEXT,
-      metadata     JSONB DEFAULT '{}',
+      metadata     JSONB DEFAULT '{{}}',
       content_tsv  tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(bm25_text, content))) STORED,
       created_at   TIMESTAMP DEFAULT now(),
       updated_at   TIMESTAMP DEFAULT now(),
       UNIQUE(document_id, chunk_index)
     );
-    """
-    % EMBED_DIM,
+    """,
     "CREATE INDEX IF NOT EXISTS idx_doc_chunks_tsv ON document_chunks USING GIN (content_tsv);",
     "CREATE INDEX IF NOT EXISTS idx_doc_chunks_embedding_hnsw ON document_chunks USING hnsw (embedding vector_l2_ops);",
     "CREATE INDEX IF NOT EXISTS idx_doc_chunks_anchor_key ON document_chunks (anchor_key);",
@@ -146,11 +145,11 @@ def read_text(path: Path) -> str:
             reader = PdfReader(f)
             return "\n".join(page.extract_text() for page in reader.pages)
     else:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             return f.read()
 
 
-def embed_chunks(model, chunks: List[str], batch: int = 64) -> List[List[float]]:
+def embed_chunks(model, chunks: list[str], batch: int = 64) -> list[list[float]]:
     """Embed chunks using sentence transformer"""
     if not chunks:
         return []
@@ -172,7 +171,7 @@ def ensure_schema():
         conn.commit()
 
 
-def fetch_existing(file_path: str) -> Optional[Dict[str, Any]]:
+def fetch_existing(file_path: str) -> dict[str, Any] | None:
     """Fetch existing document info"""
     with get_conn() as conn:
         with conn.cursor() as cur:
@@ -183,7 +182,7 @@ def fetch_existing(file_path: str) -> Optional[Dict[str, Any]]:
     return None
 
 
-def upsert_document(meta: Dict[str, Any]) -> int:
+def upsert_document(meta: dict[str, Any]) -> int:
     """Upsert document and return ID"""
     with get_conn() as conn:
         with conn.cursor() as cur:
@@ -204,9 +203,9 @@ def clear_doc_chunks(doc_id: int):
 def upsert_doc_chunks(
     doc_id: int,
     filename: str,
-    chunk_pairs: List[Tuple],
-    embeddings: List[List[float]],
-    metadata: Dict[str, Any],
+    chunk_pairs: list[tuple],
+    embeddings: list[list[float]],
+    metadata: dict[str, Any],
     use_enhanced: bool = False,
 ):
     """Upsert document chunks with dual-text storage"""
@@ -263,7 +262,7 @@ def upsert_doc_chunks(
         conn.commit()
 
 
-def collect_files(globs_str: str) -> List[Path]:
+def collect_files(globs_str: str) -> list[Path]:
     """Collect files matching glob patterns"""
     paths = []
     for g in [x.strip() for x in globs_str.split(",") if x.strip()]:
@@ -275,7 +274,7 @@ def collect_files(globs_str: str) -> List[Path]:
     )
 
 
-def log_ingest_metrics(file_path: str, metrics: Dict[str, Any], config: ChunkingConfig):
+def log_ingest_metrics(file_path: str, metrics: dict[str, Any], config: ChunkingConfig):
     """Log ingest metrics for analysis"""
     log_entry = {
         "timestamp": time.time(),
@@ -298,8 +297,8 @@ def log_ingest_metrics(file_path: str, metrics: Dict[str, Any], config: Chunking
 
 
 def validate_chunking_results(
-    chunk_pairs: Union[List[Tuple[str, str]], List[Tuple[str, str, Dict[str, int], str]]], config: ChunkingConfig
-) -> Dict[str, Any]:
+    chunk_pairs: list[tuple[str, str]] | list[tuple[str, str, dict[str, int], str]], config: ChunkingConfig
+) -> dict[str, Any]:
     """Validate chunking results"""
     # Extract bm25_text from either format: (embedding_text, bm25_text) or (embedding_text, bm25_text, token_counts, chunk_id)
     bm25_texts = [pair[1] for pair in chunk_pairs]
@@ -386,7 +385,7 @@ def main():
     print("✅ Done.")
 
 
-def process_files(files: List[Path], model, chunker, args, config: ChunkingConfig):
+def process_files(files: list[Path], model, chunker, args, config: ChunkingConfig):
     """Process files with enhanced chunking"""
     for path in tqdm(files, desc="Ingesting"):
         try:

@@ -16,7 +16,7 @@ import sys
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 # Add the project root to the path for imports
 sys.path.append(str(Path(__file__).parent.parent))

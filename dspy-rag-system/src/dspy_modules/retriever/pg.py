@@ -5,7 +5,7 @@ Implements the surgical patch SQL query.
 """
 
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -23,7 +23,7 @@ def get_db_connection():
     return psycopg2.connect(dsn, cursor_factory=RealDictCursor)
 
 
-def fetch_doc_chunks_by_slug(doc_slug: str, limit: int = 12) -> List[Dict[str, Any]]:
+def fetch_doc_chunks_by_slug(doc_slug: str, limit: int = 12) -> list[dict[str, Any]]:
     """Prefetch top chunks from a specific document identified by slug.
 
     The slug should be like '400_12_advanced-configurations'.
@@ -67,17 +67,17 @@ def run_fused_query(
     q_short: str,
     q_title: str,
     q_bm25: str,
-    qvec: List[float],
+    qvec: list[float],
     k: int = 25,
     use_mmr: bool = True,
     tag: str = "",
-    weights: Optional[Dict[str, float]] = None,
-    weights_file: Optional[str] = None,
+    weights: dict[str, float] | None = None,
+    weights_file: str | None = None,
     return_components: bool = True,
-    fname_regex: Optional[str] = None,
+    fname_regex: str | None = None,
     adjacency_db: bool = False,
     cold_start: bool = False,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Run the fused SQL query with multiplicative prior weight.
 
@@ -378,7 +378,7 @@ def run_fused_query(
     return rows[:k]
 
 
-def gold_hit(case_id: str, retrieved_rows: List[Dict[str, Any]]) -> bool:
+def gold_hit(case_id: str, retrieved_rows: list[dict[str, Any]]) -> bool:
     """
     Check if any of the retrieved chunks match the gold standard for a case.
 

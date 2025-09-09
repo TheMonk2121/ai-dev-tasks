@@ -12,7 +12,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -27,7 +27,7 @@ class ScribeContextProvider:
     to DSPy roles for better decision-making and strategic planning.
     """
 
-    def __init__(self, project_root: Optional[Path] = None):
+    def __init__(self, project_root: Path | None = None):
         """
         Initialize the Scribe Context Provider.
 
@@ -41,7 +41,7 @@ class ScribeContextProvider:
         # Ensure directories exist
         self.worklogs_path.mkdir(parents=True, exist_ok=True)
 
-    def fetch_scribe_context(self) -> Dict[str, Any]:
+    def fetch_scribe_context(self) -> dict[str, Any]:
         """
         Fetches real-time session data from the Scribe system.
 
@@ -62,7 +62,7 @@ class ScribeContextProvider:
             logger.error(f"Error fetching Scribe context: {e}")
             return {"error": str(e), "timestamp": datetime.now().isoformat()}
 
-    def get_active_session(self) -> Dict[str, Any]:
+    def get_active_session(self) -> dict[str, Any]:
         """
         Retrieves active session information from the Session Registry.
 
@@ -79,7 +79,7 @@ class ScribeContextProvider:
             logger.error(f"Error retrieving active session: {e}")
             return {}
 
-    def get_role_specific_context(self, role: str) -> Dict[str, Any]:
+    def get_role_specific_context(self, role: str) -> dict[str, Any]:
         """
         Get context specific to a particular DSPy role.
 
@@ -118,7 +118,7 @@ class ScribeContextProvider:
         except Exception as e:
             logger.error(f"Error integrating with ModelSwitcher: {e}")
 
-    def _get_active_sessions(self) -> List[Dict[str, Any]]:
+    def _get_active_sessions(self) -> list[dict[str, Any]]:
         """Get list of currently active Scribe sessions."""
         try:
             # Run scribe status command
@@ -149,7 +149,7 @@ class ScribeContextProvider:
             logger.error(f"Error getting active sessions: {e}")
             return []
 
-    def _get_recent_worklogs(self) -> List[Dict[str, Any]]:
+    def _get_recent_worklogs(self) -> list[dict[str, Any]]:
         """Get recent worklog entries."""
         try:
             worklogs = []
@@ -168,11 +168,11 @@ class ScribeContextProvider:
             logger.error(f"Error getting recent worklogs: {e}")
             return []
 
-    def _get_session_registry(self) -> Dict[str, Any]:
+    def _get_session_registry(self) -> dict[str, Any]:
         """Get session registry data."""
         try:
             if self.session_registry_path.exists():
-                with open(self.session_registry_path, "r") as f:
+                with open(self.session_registry_path) as f:
                     return json.load(f)
             return {}
         except Exception as e:
@@ -190,7 +190,7 @@ class ScribeContextProvider:
             logger.error(f"Error getting current branch: {e}")
             return "unknown"
 
-    def _get_recent_changes(self) -> List[str]:
+    def _get_recent_changes(self) -> list[str]:
         """Get recent file changes."""
         try:
             result = subprocess.run(
@@ -203,7 +203,7 @@ class ScribeContextProvider:
             logger.error(f"Error getting recent changes: {e}")
             return []
 
-    def _get_role_focus(self, role: str) -> Dict[str, Any]:
+    def _get_role_focus(self, role: str) -> dict[str, Any]:
         """Get focus areas for a specific role."""
         role_focus = {
             "planner": {
@@ -234,7 +234,7 @@ class ScribeContextProvider:
         }
         return role_focus.get(role, {"focus": "general", "key_metrics": [], "context_priority": "low"})
 
-    def _get_relevant_sessions_for_role(self, role: str) -> List[Dict[str, Any]]:
+    def _get_relevant_sessions_for_role(self, role: str) -> list[dict[str, Any]]:
         """Get sessions relevant to a specific role."""
         try:
             sessions = self._get_active_sessions()
@@ -259,7 +259,7 @@ class ScribeContextProvider:
             logger.error(f"Error getting relevant sessions for role {role}: {e}")
             return []
 
-    def _get_current_work_for_role(self, role: str) -> Dict[str, Any]:
+    def _get_current_work_for_role(self, role: str) -> dict[str, Any]:
         """Get current work context for a specific role."""
         try:
             current_work = {
@@ -276,7 +276,7 @@ class ScribeContextProvider:
 
 
 # Convenience function for easy integration
-def get_scribe_context_for_role(role: str) -> Dict[str, Any]:
+def get_scribe_context_for_role(role: str) -> dict[str, Any]:
     """
     Convenience function to get Scribe context for a specific role.
 

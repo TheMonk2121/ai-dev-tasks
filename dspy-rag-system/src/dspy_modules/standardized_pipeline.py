@@ -8,7 +8,7 @@ import time
 import uuid
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from dspy import Module
 
@@ -33,9 +33,9 @@ class PipelineProgress:
     processed_documents: int = 0
     successful_documents: int = 0
     failed_documents: int = 0
-    current_document: Optional[str] = None
-    start_time: Optional[float] = None
-    estimated_completion: Optional[float] = None
+    current_document: str | None = None
+    start_time: float | None = None
+    estimated_completion: float | None = None
     status: PipelineStatus = PipelineStatus.PENDING
 
     @property
@@ -74,9 +74,9 @@ class PipelineResult:
     pipeline_id: str
     status: PipelineStatus
     progress: PipelineProgress
-    results: List[Dict[str, Any]] = field(default_factory=list)
-    errors: List[Dict[str, Any]] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    results: list[dict[str, Any]] = field(default_factory=list)
+    errors: list[dict[str, Any]] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
     def is_complete(self) -> bool:
@@ -130,8 +130,8 @@ class StandardizedIngestionPipeline(Module):
         )
 
         # Pipeline state
-        self.active_pipelines: Dict[str, PipelineResult] = {}
-        self.pipeline_history: List[PipelineResult] = []
+        self.active_pipelines: dict[str, PipelineResult] = {}
+        self.pipeline_history: list[PipelineResult] = []
 
         # Performance monitoring
         self.pipeline_stats = {
@@ -145,9 +145,9 @@ class StandardizedIngestionPipeline(Module):
 
     def forward(
         self,
-        document_sources: Union[str, List[str]],
-        vector_store: Optional[Any] = None,
-        pipeline_id: Optional[str] = None,
+        document_sources: str | list[str],
+        vector_store: Any | None = None,
+        pipeline_id: str | None = None,
         **kwargs,
     ) -> PipelineResult:
         """Process documents through standardized pipeline."""
@@ -225,7 +225,7 @@ class StandardizedIngestionPipeline(Module):
             self.pipeline_history.append(pipeline_result)
 
     def _process_single_document(
-        self, document_source: str, vector_store: Optional[Any], pipeline_result: PipelineResult, **kwargs
+        self, document_source: str, vector_store: Any | None, pipeline_result: PipelineResult, **kwargs
     ) -> None:
         """Process a single document."""
         try:
@@ -234,7 +234,7 @@ class StandardizedIngestionPipeline(Module):
             pipeline_result.progress.processed_documents += 1
 
             # Process document
-            result: Dict[str, Any] = self.processor.forward(document_source, **kwargs)
+            result: dict[str, Any] = self.processor.forward(document_source, **kwargs)
 
             # Store in vector database if provided
             if vector_store and hasattr(vector_store, "store_chunks"):
@@ -274,7 +274,7 @@ class StandardizedIngestionPipeline(Module):
                 pipeline_result.progress.update_estimated_completion()
 
     def _process_batch_documents(
-        self, document_sources: List[str], vector_store: Optional[Any], pipeline_result: PipelineResult, **kwargs
+        self, document_sources: list[str], vector_store: Any | None, pipeline_result: PipelineResult, **kwargs
     ) -> None:
         """Process multiple documents in batches."""
 
@@ -307,18 +307,18 @@ class StandardizedIngestionPipeline(Module):
             total_time = sum(p.elapsed_time for p in self.pipeline_history)
             self.pipeline_stats["average_processing_time"] = total_time / self.pipeline_stats["total_pipelines"]
 
-    def get_pipeline_status(self, pipeline_id: str) -> Optional[PipelineResult]:
+    def get_pipeline_status(self, pipeline_id: str) -> PipelineResult | None:
         """Get status of a specific pipeline."""
         return self.active_pipelines.get(pipeline_id)
 
-    def get_pipeline_history(self, limit: Optional[int] = None) -> List[PipelineResult]:
+    def get_pipeline_history(self, limit: int | None = None) -> list[PipelineResult]:
         """Get pipeline history."""
         history = self.pipeline_history.copy()
         if limit:
             history = history[-limit:]
         return history
 
-    def get_pipeline_stats(self) -> Dict[str, Any]:
+    def get_pipeline_stats(self) -> dict[str, Any]:
         """Get pipeline statistics."""
         stats = self.pipeline_stats.copy()
 

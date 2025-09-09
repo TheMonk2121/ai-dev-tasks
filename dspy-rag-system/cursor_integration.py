@@ -8,7 +8,7 @@ Provides clean function calls that Cursor can easily invoke.
 
 import os
 import sys
-from typing import Any, Dict
+from typing import Any
 
 # Add src to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
@@ -37,7 +37,7 @@ def quick_task(task: str, task_type: str = "moderate_coding") -> str:
         return f"Error: {str(e)}"
 
 
-def smart_orchestration(task: str, task_type: str = "moderate_coding") -> Dict[str, Any]:
+def smart_orchestration(task: str, task_type: str = "moderate_coding") -> dict[str, Any]:
     """
     Smart multi-model orchestration for Cursor AI
 
@@ -113,7 +113,7 @@ def planning_task(description: str) -> str:
     return quick_task(task, "planning")
 
 
-def get_system_status() -> Dict[str, Any]:
+def get_system_status() -> dict[str, Any]:
     """
     Get current system status and available models
 
@@ -134,7 +134,7 @@ def get_system_status() -> Dict[str, Any]:
         return {"success": False, "error": str(e)}
 
 
-def switch_to_model(model_name: str) -> Dict[str, Any]:
+def switch_to_model(model_name: str) -> dict[str, Any]:
     """
     Manually switch to a specific model
 

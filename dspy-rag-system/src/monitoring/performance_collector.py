@@ -10,7 +10,8 @@ import time
 from contextlib import asynccontextmanager, contextmanager
 from datetime import datetime
 from functools import wraps
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
+from collections.abc import Callable
 from uuid import uuid4
 
 from .performance_schema import (
@@ -29,19 +30,19 @@ logger = logging.getLogger(__name__)
 class PerformanceCollector:
     """Lightweight performance collector with async support"""
 
-    def __init__(self, schema: Optional[PerformanceSchema] = None):
+    def __init__(self, schema: PerformanceSchema | None = None):
         self.schema = schema or PerformanceSchema()
         self.validator = PerformanceValidator(self.schema)
         self.analyzer = PerformanceAnalyzer(self.schema)
         self.enabled = True
-        self._current_workflow: Optional[WorkflowPerformanceData] = None
-        self._collection_queue: List[PerformanceMetric] = []
+        self._current_workflow: WorkflowPerformanceData | None = None
+        self._collection_queue: list[PerformanceMetric] = []
         self._error_count = 0
 
     def start_workflow(
         self,
-        backlog_item_id: Optional[str] = None,
-        prd_file_path: Optional[str] = None,
+        backlog_item_id: str | None = None,
+        prd_file_path: str | None = None,
         task_count: int = 0,
     ) -> WorkflowPerformanceData:
         """Start performance tracking for a new workflow"""
@@ -79,7 +80,7 @@ class PerformanceCollector:
             self._error_count += 1
             return WorkflowPerformanceData()
 
-    def end_workflow(self, success: bool = True) -> Optional[WorkflowPerformanceData]:
+    def end_workflow(self, success: bool = True) -> WorkflowPerformanceData | None:
         """End performance tracking for current workflow"""
         if not self.enabled or not self._current_workflow:
             return None
@@ -130,9 +131,9 @@ class PerformanceCollector:
         collection_point: CollectionPoint,
         duration_ms: float,
         workflow_phase: WorkflowPhase = WorkflowPhase.PRD_CREATION,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
         success: bool = True,
-        error_message: Optional[str] = None,
+        error_message: str | None = None,
     ) -> bool:
         """Add a collection point to the current workflow"""
         if not self.enabled or not self._current_workflow:
@@ -167,11 +168,11 @@ class PerformanceCollector:
             self._error_count += 1
             return False
 
-    def get_current_workflow(self) -> Optional[WorkflowPerformanceData]:
+    def get_current_workflow(self) -> WorkflowPerformanceData | None:
         """Get current workflow data"""
         return self._current_workflow
 
-    def analyze_current_workflow(self) -> Optional[Dict[str, Any]]:
+    def analyze_current_workflow(self) -> dict[str, Any] | None:
         """Analyze current workflow performance"""
         if not self._current_workflow:
             return None
@@ -182,7 +183,7 @@ class PerformanceCollector:
             logger.error(f"Failed to analyze workflow: {e}")
             return None
 
-    def get_collection_stats(self) -> Dict[str, Any]:
+    def get_collection_stats(self) -> dict[str, Any]:
         """Get collection statistics"""
         if not self._current_workflow:
             return {"enabled": self.enabled, "active": False}
@@ -267,7 +268,7 @@ def performance_hook(
 def performance_context(
     collection_point: CollectionPoint,
     workflow_phase: WorkflowPhase = WorkflowPhase.PRD_CREATION,
-    metadata: Optional[Dict[str, Any]] = None,
+    metadata: dict[str, Any] | None = None,
 ):
     """Context manager for performance collection"""
     start_time = time.time()
@@ -296,7 +297,7 @@ def performance_context(
 async def async_performance_context(
     collection_point: CollectionPoint,
     workflow_phase: WorkflowPhase = WorkflowPhase.PRD_CREATION,
-    metadata: Optional[Dict[str, Any]] = None,
+    metadata: dict[str, Any] | None = None,
 ):
     """Async context manager for performance collection"""
     start_time = time.time()
@@ -324,13 +325,13 @@ async def async_performance_context(
 class PerformanceTracker:
     """High-level performance tracking interface"""
 
-    def __init__(self, collector: Optional[PerformanceCollector] = None):
+    def __init__(self, collector: PerformanceCollector | None = None):
         self.collector = collector or performance_collector
 
     def track_workflow(
         self,
-        backlog_item_id: Optional[str] = None,
-        prd_file_path: Optional[str] = None,
+        backlog_item_id: str | None = None,
+        prd_file_path: str | None = None,
         task_count: int = 0,
     ):
         """Context manager for tracking complete workflows"""
@@ -388,7 +389,7 @@ class PerformanceTracker:
 
     def track_validation(
         self,
-        validation_rules: Optional[List[str]] = None,
+        validation_rules: list[str] | None = None,
         quality_gates: int = 0,
     ):
         """Context manager for tracking validation"""
@@ -408,8 +409,8 @@ class WorkflowTracker:
     def __init__(
         self,
         collector: PerformanceCollector,
-        backlog_item_id: Optional[str] = None,
-        prd_file_path: Optional[str] = None,
+        backlog_item_id: str | None = None,
+        prd_file_path: str | None = None,
         task_count: int = 0,
     ):
         self.collector = collector
@@ -435,15 +436,15 @@ class WorkflowTracker:
         self.workflow_data = self.collector.end_workflow(success=self.success)
         return False  # Don't suppress exceptions
 
-    def get_analysis(self) -> Optional[Dict[str, Any]]:
+    def get_analysis(self) -> dict[str, Any] | None:
         """Get workflow performance analysis"""
         return self.collector.analyze_current_workflow()
 
 
 # Convenience functions for easy integration
 def start_workflow_tracking(
-    backlog_item_id: Optional[str] = None,
-    prd_file_path: Optional[str] = None,
+    backlog_item_id: str | None = None,
+    prd_file_path: str | None = None,
     task_count: int = 0,
 ) -> WorkflowPerformanceData:
     """Start workflow performance tracking"""
@@ -454,17 +455,17 @@ def start_workflow_tracking(
     )
 
 
-def end_workflow_tracking(success: bool = True) -> Optional[WorkflowPerformanceData]:
+def end_workflow_tracking(success: bool = True) -> WorkflowPerformanceData | None:
     """End workflow performance tracking"""
     return performance_collector.end_workflow(success=success)
 
 
-def get_workflow_analysis() -> Optional[Dict[str, Any]]:
+def get_workflow_analysis() -> dict[str, Any] | None:
     """Get current workflow performance analysis"""
     return performance_collector.analyze_current_workflow()
 
 
-def get_collection_stats() -> Dict[str, Any]:
+def get_collection_stats() -> dict[str, Any]:
     """Get performance collection statistics"""
     return performance_collector.get_collection_stats()
 

@@ -10,7 +10,7 @@ import os
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any
 
 LOG = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ class ToolCall:
     tool_name: str
     intent: ToolIntent
     reason: str
-    expected_schema: Dict[str, Any]
+    expected_schema: dict[str, Any]
     validate_only: bool = False
     timestamp: float = None
 
@@ -41,7 +41,7 @@ class ToolCall:
         if self.timestamp is None:
             self.timestamp = time.time()
 
-    def to_log_entry(self) -> Dict[str, Any]:
+    def to_log_entry(self) -> dict[str, Any]:
         """Convert to structured log entry."""
         return {
             "tool_name": self.tool_name,
@@ -58,9 +58,9 @@ class AgentBehaviorLock:
 
     def __init__(self, strict_mode: bool = True):
         self.strict_mode = strict_mode
-        self.tool_registry: Dict[str, Dict[str, Any]] = {}
-        self.health_status: Dict[str, Any] = {}
-        self.dry_run_results: Dict[str, Any] = {}
+        self.tool_registry: dict[str, dict[str, Any]] = {}
+        self.health_status: dict[str, Any] = {}
+        self.dry_run_results: dict[str, Any] = {}
 
         # Load tool registry
         self._load_tool_registry()
@@ -69,7 +69,7 @@ class AgentBehaviorLock:
         """Load tool registry with schemas and validation rules."""
         registry_file = Path("config/tool_registry_template.json")
         if registry_file.exists():
-            with open(registry_file, "r") as f:
+            with open(registry_file) as f:
                 self.tool_registry = json.load(f)
         else:
             # Default registry
@@ -129,7 +129,7 @@ class AgentBehaviorLock:
             self.dry_run_results[tool_call.tool_name] = []
         self.dry_run_results[tool_call.tool_name].append(log_entry)
 
-    def validate_tool_schema(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_tool_schema(self, tool_name: str, params: dict[str, Any]) -> dict[str, Any]:
         """Validate tool parameters against schema."""
         if tool_name not in self.tool_registry:
             return {
@@ -215,7 +215,7 @@ class AgentBehaviorLock:
             print(f"❌ Health check error: {e}")
             return False
 
-    def dry_run_tool(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    def dry_run_tool(self, tool_name: str, params: dict[str, Any]) -> dict[str, Any]:
         """Perform dry run validation for mutating tools."""
         if tool_name not in self.tool_registry:
             return {"valid": False, "error": f"Unknown tool: {tool_name}", "dry_run": False}
@@ -251,7 +251,7 @@ class AgentBehaviorLock:
                 "message": "Non-mutating tool - dry run not required",
             }
 
-    def _estimate_impact(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    def _estimate_impact(self, tool_name: str, params: dict[str, Any]) -> dict[str, Any]:
         """Estimate impact of tool operation."""
         impact_map = {
             "evaluation": {
@@ -279,7 +279,7 @@ class AgentBehaviorLock:
             {"resource_usage": "Unknown", "duration": "Unknown", "side_effects": "Unknown", "risk_level": "Unknown"},
         )
 
-    def _get_recommendations(self, tool_name: str, params: Dict[str, Any]) -> List[str]:
+    def _get_recommendations(self, tool_name: str, params: dict[str, Any]) -> list[str]:
         """Get recommendations for tool operation."""
         recommendations = []
 
@@ -303,7 +303,7 @@ class AgentBehaviorLock:
 
         return recommendations
 
-    def execute_tool(self, tool_name: str, params: Dict[str, Any], force: bool = False) -> Dict[str, Any]:
+    def execute_tool(self, tool_name: str, params: dict[str, Any], force: bool = False) -> dict[str, Any]:
         """Execute tool with full validation and logging."""
         # Create tool call record
         tool_call = ToolCall(
@@ -347,7 +347,7 @@ class AgentBehaviorLock:
             LOG.error(f"Tool execution failed: {e}")
             return {"success": False, "error": str(e), "tool_call": tool_call.to_log_entry()}
 
-    def _execute_tool_implementation(self, tool_name: str, params: Dict[str, Any]) -> Any:
+    def _execute_tool_implementation(self, tool_name: str, params: dict[str, Any]) -> Any:
         """Execute the actual tool implementation."""
         # This would be implemented based on your specific tools
         # For now, return a placeholder
@@ -367,7 +367,7 @@ def get_behavior_lock() -> AgentBehaviorLock:
     return _behavior_lock
 
 
-def log_tool_intent(tool_name: str, reason: str, expected_schema: Dict[str, Any], validate_only: bool = False):
+def log_tool_intent(tool_name: str, reason: str, expected_schema: dict[str, Any], validate_only: bool = False):
     """Convenience function for logging tool intent."""
     behavior_lock = get_behavior_lock()
     tool_call = ToolCall(

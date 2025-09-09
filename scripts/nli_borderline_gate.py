@@ -13,7 +13,7 @@ Keep borderline sentences only if entailment ≥ 0.60.
 import logging
 import os
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")

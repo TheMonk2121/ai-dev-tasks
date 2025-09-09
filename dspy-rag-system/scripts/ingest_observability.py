@@ -12,7 +12,7 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import psycopg2
 from dotenv import load_dotenv
@@ -23,7 +23,7 @@ def get_db_connection():
     return psycopg2.connect(os.getenv("DATABASE_URL"))
 
 
-def log_ingest_metrics(file_path: str, metrics: Dict[str, Any], config: Dict[str, Any]) -> None:
+def log_ingest_metrics(file_path: str, metrics: dict[str, Any], config: dict[str, Any]) -> None:
     """Log comprehensive ingest metrics"""
     log_entry = {
         "timestamp": time.time(),
@@ -45,7 +45,7 @@ def log_ingest_metrics(file_path: str, metrics: Dict[str, Any], config: Dict[str
         f.write(json.dumps(log_entry) + "\n")
 
 
-def validate_chunking_quality() -> Dict[str, Any]:
+def validate_chunking_quality() -> dict[str, Any]:
     """Validate overall chunking quality"""
     with get_db_connection() as conn:
         with conn.cursor() as cur:
@@ -121,7 +121,7 @@ def validate_chunking_quality() -> Dict[str, Any]:
     }
 
 
-def monitor_ingest_performance() -> Dict[str, Any]:
+def monitor_ingest_performance() -> dict[str, Any]:
     """Monitor ingest performance metrics"""
     log_file = Path("logs/ingest_observability.jsonl")
 
@@ -160,7 +160,7 @@ def monitor_ingest_performance() -> Dict[str, Any]:
     }
 
 
-def generate_health_report() -> Dict[str, Any]:
+def generate_health_report() -> dict[str, Any]:
     """Generate comprehensive health report"""
     print("Generating ingest health report...")
 
@@ -186,7 +186,7 @@ def generate_health_report() -> Dict[str, Any]:
     return report
 
 
-def print_health_summary(report: Dict[str, Any]) -> None:
+def print_health_summary(report: dict[str, Any]) -> None:
     """Print human-readable health summary"""
     print("\n" + "=" * 60)
     print("INGEST HEALTH REPORT")

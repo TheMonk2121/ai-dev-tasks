@@ -8,29 +8,34 @@ import logging
 import os
 import re
 from pathlib import Path
-from typing import List, Optional
+
 
 logger = logging.getLogger(__name__)
 
+
 class SecurityError(Exception):
     """Raised when security validation fails"""
+
     pass
+
 
 class ValidationError(Exception):
     """Raised when input validation fails"""
+
     pass
 
-def sanitize_prompt(prompt: str, model_id: Optional[str] = None) -> str:
+
+def sanitize_prompt(prompt: str, model_id: str | None = None) -> str:
     """
     Sanitize user prompt to prevent injection attacks using regex-based validation.
-    
+
     Args:
         prompt: User input prompt
         model_id: Optional model ID for model-specific validation
-    
+
     Returns:
         Sanitized prompt string
-    
+
     Raises:
         SecurityError: If blocked pattern is detected
     """
@@ -44,14 +49,29 @@ def sanitize_prompt(prompt: str, model_id: Optional[str] = None) -> str:
         logger.warning("New prompt sanitizer not available, using fallback")
         return _fallback_sanitize_prompt(prompt)
 
+
 def _fallback_sanitize_prompt(prompt: str) -> str:
     """Fallback sanitization using old block-list approach"""
     blocklist = [
-        "<script>", "javascript:", "eval(", "exec(",
-        "import ", "from ", "__import__", "globals()",
-        "locals()", "vars()", "dir()", "type(",
-        "open(", "file(", "read(", "write(",
-        "subprocess", "os.system", "eval("
+        "<script>",
+        "javascript:",
+        "eval(",
+        "exec(",
+        "import ",
+        "from ",
+        "__import__",
+        "globals()",
+        "locals()",
+        "vars()",
+        "dir()",
+        "type(",
+        "open(",
+        "file(",
+        "read(",
+        "write(",
+        "subprocess",
+        "os.system",
+        "eval(",
     ]
 
     prompt_lower = prompt.lower()
@@ -65,7 +85,7 @@ def _fallback_sanitize_prompt(prompt: str) -> str:
     prompt = prompt.strip()
 
     # Remove null bytes
-    prompt = prompt.replace('\x00', '')
+    prompt = prompt.replace("\x00", "")
 
     # Limit length
     if len(prompt) > 10000:
@@ -73,17 +93,18 @@ def _fallback_sanitize_prompt(prompt: str) -> str:
 
     return prompt
 
-def validate_file_path(file_path: str, allowed_extensions: Optional[List[str]] = None) -> bool:
+
+def validate_file_path(file_path: str, allowed_extensions: list[str] | None = None) -> bool:
     """
     Validate file path to prevent path traversal attacks.
-    
+
     Args:
         file_path: File path to validate
         allowed_extensions: List of allowed file extensions
-    
+
     Returns:
         True if path is valid
-    
+
     Raises:
         SecurityError: If path traversal or invalid extension detected
     """
@@ -116,17 +137,18 @@ def validate_file_path(file_path: str, allowed_extensions: Optional[List[str]] =
 
     return True
 
+
 def validate_file_size(file_path: str, max_size_mb: int = 50) -> bool:
     """
     Validate file size to prevent memory issues.
-    
+
     Args:
         file_path: Path to file to check
         max_size_mb: Maximum file size in MB
-    
+
     Returns:
         True if file size is acceptable
-    
+
     Raises:
         ValidationError: If file is too large
     """
@@ -141,13 +163,14 @@ def validate_file_size(file_path: str, max_size_mb: int = 50) -> bool:
 
     return True
 
-def validate_secrets(required_secrets: List[str]) -> None:
+
+def validate_secrets(required_secrets: list[str]) -> None:
     """
     Validate that all required secrets are present.
-    
+
     Args:
         required_secrets: List of required secret environment variables
-    
+
     Raises:
         ValidationError: If any required secret is missing
     """
@@ -161,25 +184,26 @@ def validate_secrets(required_secrets: List[str]) -> None:
         logger.error(f"Missing required secrets: {missing_secrets}")
         raise ValidationError(f"Missing required secrets: {missing_secrets}")
 
+
 def sanitize_filename(filename: str) -> str:
     """
     Sanitize filename to prevent security issues.
-    
+
     Args:
         filename: Original filename
-    
+
     Returns:
         Sanitized filename
     """
     # Remove or replace dangerous characters
-    dangerous_chars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
+    dangerous_chars = ["<", ">", ":", '"', "/", "\\", "|", "?", "*"]
     sanitized = filename
 
     for char in dangerous_chars:
-        sanitized = sanitized.replace(char, '_')
+        sanitized = sanitized.replace(char, "_")
 
     # Remove null bytes
-    sanitized = sanitized.replace('\x00', '')
+    sanitized = sanitized.replace("\x00", "")
 
     # Limit length
     if len(sanitized) > 255:
@@ -187,17 +211,18 @@ def sanitize_filename(filename: str) -> str:
 
     return sanitized
 
+
 def validate_query_complexity(query: str, max_tokens: int = 1000) -> bool:
     """
     Validate query complexity to prevent resource exhaustion.
-    
+
     Args:
         query: User query to validate
         max_tokens: Maximum number of tokens allowed
-    
+
     Returns:
         True if query complexity is acceptable
-    
+
     Raises:
         ValidationError: If query is too complex
     """
@@ -210,17 +235,18 @@ def validate_query_complexity(query: str, max_tokens: int = 1000) -> bool:
 
     return True
 
-def validate_url(url: str, allowed_domains: Optional[List[str]] = None) -> bool:
+
+def validate_url(url: str, allowed_domains: list[str] | None = None) -> bool:
     """
     Validate URL to prevent SSRF attacks.
-    
+
     Args:
         url: URL to validate
         allowed_domains: List of allowed domains (defaults to localhost)
-    
+
     Returns:
         True if URL is valid
-    
+
     Raises:
         SecurityError: If URL is not allowed
     """
@@ -229,19 +255,21 @@ def validate_url(url: str, allowed_domains: Optional[List[str]] = None) -> bool:
 
     # Basic URL validation
     url_pattern = re.compile(
-        r'^https?://'  # http:// or https://
-        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|'  # domain...
-        r'localhost|'  # localhost...
-        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
-        r'(?::\d+)?'  # optional port
-        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+        r"^https?://"  # http:// or https://
+        r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|"  # domain...
+        r"localhost|"  # localhost...
+        r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"  # ...or ip
+        r"(?::\d+)?"  # optional port
+        r"(?:/?|[/?]\S+)$",
+        re.IGNORECASE,
+    )
 
     if not url_pattern.match(url):
         logger.warning(f"Invalid URL format: {url}")
         raise SecurityError("Invalid URL format")
 
     # Extract domain
-    domain_match = re.search(r'https?://([^:/]+)', url, re.IGNORECASE)
+    domain_match = re.search(r"https?://([^:/]+)", url, re.IGNORECASE)
     if not domain_match:
         raise SecurityError("Could not extract domain from URL")
 
@@ -254,18 +282,19 @@ def validate_url(url: str, allowed_domains: Optional[List[str]] = None) -> bool:
 
     return True
 
-def validate_json_structure(data: dict, required_fields: List[str], optional_fields: Optional[List[str]] = None) -> bool:
+
+def validate_json_structure(data: dict, required_fields: list[str], optional_fields: list[str] | None = None) -> bool:
     """
     Validate JSON structure to ensure required fields are present.
-    
+
     Args:
         data: JSON data to validate
         required_fields: List of required field names
         optional_fields: List of optional field names
-    
+
     Returns:
         True if structure is valid
-    
+
     Raises:
         ValidationError: If required fields are missing
     """
@@ -283,18 +312,19 @@ def validate_json_structure(data: dict, required_fields: List[str], optional_fie
 
     return True
 
+
 def validate_string_length(text: str, min_length: int = 1, max_length: int = 10000) -> bool:
     """
     Validate string length to prevent buffer overflow.
-    
+
     Args:
         text: Text to validate
         min_length: Minimum allowed length
         max_length: Maximum allowed length
-    
+
     Returns:
         True if length is acceptable
-    
+
     Raises:
         ValidationError: If length is outside bounds
     """
@@ -306,19 +336,20 @@ def validate_string_length(text: str, min_length: int = 1, max_length: int = 100
 
     return True
 
+
 def validate_integer_range(value: int, min_value: int, max_value: int, field_name: str = "value") -> bool:
     """
     Validate integer is within acceptable range.
-    
+
     Args:
         value: Integer value to validate
         min_value: Minimum allowed value
         max_value: Maximum allowed value
         field_name: Name of the field for error messages
-    
+
     Returns:
         True if value is within range
-    
+
     Raises:
         ValidationError: If value is outside range
     """
@@ -330,18 +361,19 @@ def validate_integer_range(value: int, min_value: int, max_value: int, field_nam
 
     return True
 
+
 def validate_list_length(items: list, max_items: int, field_name: str = "list") -> bool:
     """
     Validate list length to prevent memory issues.
-    
+
     Args:
         items: List to validate
         max_items: Maximum number of items allowed
         field_name: Name of the field for error messages
-    
+
     Returns:
         True if length is acceptable
-    
+
     Raises:
         ValidationError: If list is too long
     """
@@ -353,17 +385,18 @@ def validate_list_length(items: list, max_items: int, field_name: str = "list") 
 
     return True
 
+
 def validate_file_content(file_path: str, max_lines: int = 10000) -> bool:
     """
     Validate file content to prevent resource exhaustion.
-    
+
     Args:
         file_path: Path to file to validate
         max_lines: Maximum number of lines allowed
-    
+
     Returns:
         True if file content is acceptable
-    
+
     Raises:
         ValidationError: If file has too many lines
     """
@@ -371,7 +404,7 @@ def validate_file_content(file_path: str, max_lines: int = 10000) -> bool:
         raise ValidationError(f"File does not exist: {file_path}")
 
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, encoding="utf-8") as f:
             line_count = sum(1 for _ in f)
 
         if line_count > max_lines:
@@ -384,17 +417,18 @@ def validate_file_content(file_path: str, max_lines: int = 10000) -> bool:
     except Exception as e:
         raise ValidationError(f"Error reading file: {e}")
 
-def validate_config_structure(config: dict, required_sections: List[str]) -> bool:
+
+def validate_config_structure(config: dict, required_sections: list[str]) -> bool:
     """
     Validate configuration structure.
-    
+
     Args:
         config: Configuration dictionary to validate
         required_sections: List of required configuration sections
-    
+
     Returns:
         True if configuration is valid
-    
+
     Raises:
         ValidationError: If required sections are missing
     """

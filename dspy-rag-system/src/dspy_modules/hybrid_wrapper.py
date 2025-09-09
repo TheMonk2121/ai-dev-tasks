@@ -7,7 +7,7 @@ Builds params in exact placeholder order and guards placeholder/arg count.
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import psycopg2.extras
 
@@ -52,23 +52,23 @@ def _count_placeholders(sql: str) -> int:
 
 def _mk_patterns(
     ns_token: str | None, filename_exact: str | None, filename_partial: str | None
-) -> Tuple[str | None, str | None, str | None]:
+) -> tuple[str | None, str | None, str | None]:
     ns_like = f"%/{ns_token.strip('/')}/%" if ns_token else None
     file_eq = filename_exact or None
     file_like = f"%{filename_partial}%" if filename_partial else None
     return ns_like, file_eq, file_like
 
 
-def _infer_ns_from_query(query: str) -> List[str]:
+def _infer_ns_from_query(query: str) -> list[str]:
     """Infer namespace from 3-digit prefix tokens in the query (e.g., 000_, 100_, 400_)."""
     q = (query or "").lower()
-    inferred: List[str] = []
+    inferred: list[str] = []
     for pref, ns in (("000", "000_core"), ("100", "100_memory"), ("400", "400_guides")):
         if f"{pref}_" in q:
             inferred.append(ns)
     # dedupe preserve order
     seen = set()
-    out: List[str] = []
+    out: list[str] = []
     for t in inferred:
         if t not in seen:
             seen.add(t)
@@ -86,7 +86,7 @@ def run_hybrid_search(
     ns_reserved: int = 2,
     pool_ns: int = 80,
     debug: bool = False,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     qv = q_emb.tolist() if hasattr(q_emb, "tolist") else q_emb
     ns_like, file_eq, file_like = _mk_patterns(ns_token, filename_exact, filename_partial)
     use_ns_union = any([ns_like, file_eq, file_like])
@@ -207,7 +207,7 @@ def run_hybrid_search(
                 cur.execute(sql, params)
             except Exception as e:
                 # Fallback if content_tsv is missing: substitute computed tsvector
-                if 'content_tsv' in str(e).lower():
+                if "content_tsv" in str(e).lower():
                     alt_sql = sql.replace(
                         "ts_rank_cd(dc.content_tsv, websearch_to_tsquery('english', %s))",
                         "ts_rank_cd(to_tsvector('english', dc.content), websearch_to_tsquery('english', %s))",
@@ -221,7 +221,7 @@ def run_hybrid_search(
             rows = [dict(r) for r in cur.fetchall()]
 
             # Namespace seed fetch (independent query)
-            ns_tokens: List[str] = []
+            ns_tokens: list[str] = []
             if extract_ns_tokens is not None:
                 auto_tokens = list(extract_ns_tokens(query))
                 if ns_token:
@@ -261,7 +261,7 @@ def run_hybrid_search(
         ns_tokens.add(t)
 
     if promote_ns_reserved is not None and ns_tokens:
-        promoted_rows: List[Dict[str, Any]] = promote_ns_reserved(rows, ns_tokens, k=limit, ns_reserved=ns_reserved)
+        promoted_rows: list[dict[str, Any]] = promote_ns_reserved(rows, ns_tokens, k=limit, ns_reserved=ns_reserved)
         # optional debug print
         # if debug_print:
         #     debug_print(query, promoted_rows, ns_tokens, k=min(10, limit))

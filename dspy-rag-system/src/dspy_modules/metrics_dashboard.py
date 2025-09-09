@@ -12,7 +12,7 @@ import time
 from collections import defaultdict
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .optimization_loop import (
     FourPartOptimizationLoop,
@@ -52,9 +52,9 @@ class MetricPoint:
 
     timestamp: float
     value: float
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization"""
         return {"timestamp": self.timestamp, "value": self.value, "metadata": self.metadata}
 
@@ -64,10 +64,10 @@ class MetricSeries:
     """A series of metric data points"""
 
     metric_type: MetricType
-    data_points: List[MetricPoint] = field(default_factory=list)
+    data_points: list[MetricPoint] = field(default_factory=list)
     max_points: int = 1000  # Limit memory usage
 
-    def add_point(self, value: float, metadata: Optional[Dict[str, Any]] = None):
+    def add_point(self, value: float, metadata: dict[str, Any] | None = None):
         """Add a new data point to the series"""
         point = MetricPoint(timestamp=time.time(), value=value, metadata=metadata or {})
 
@@ -77,13 +77,13 @@ class MetricSeries:
         if len(self.data_points) > self.max_points:
             self.data_points.pop(0)
 
-    def get_latest_value(self) -> Optional[float]:
+    def get_latest_value(self) -> float | None:
         """Get the most recent value"""
         if self.data_points:
             return self.data_points[-1].value
         return None
 
-    def get_average(self, window_minutes: int = 60) -> Optional[float]:
+    def get_average(self, window_minutes: int = 60) -> float | None:
         """Get average value over a time window"""
         if not self.data_points:
             return None
@@ -96,7 +96,7 @@ class MetricSeries:
 
         return sum(p.value for p in recent_points) / len(recent_points)
 
-    def get_trend(self, window_minutes: int = 60) -> Optional[float]:
+    def get_trend(self, window_minutes: int = 60) -> float | None:
         """Get trend (slope) over a time window"""
         if not self.data_points:
             return None
@@ -124,7 +124,7 @@ class MetricSeries:
         slope = (n * sum_xy - sum_x * sum_y) / denominator
         return slope
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization"""
         return {
             "metric_type": self.metric_type.value,
@@ -146,7 +146,7 @@ class Alert:
     timestamp: float
     acknowledged: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization"""
         return {
             "alert_id": self.alert_id,
@@ -166,10 +166,10 @@ class MetricsDashboard:
     def __init__(self, max_history_days: int = 30):
         """Initialize the metrics dashboard"""
         self.max_history_days = max_history_days
-        self.metric_series: Dict[MetricType, MetricSeries] = {}
-        self.alerts: List[Alert] = []
-        self.optimization_loop: Optional[FourPartOptimizationLoop] = None
-        self.alert_thresholds: Dict[MetricType, Dict[str, float]] = {
+        self.metric_series: dict[MetricType, MetricSeries] = {}
+        self.alerts: list[Alert] = []
+        self.optimization_loop: FourPartOptimizationLoop | None = None
+        self.alert_thresholds: dict[MetricType, dict[str, float]] = {
             MetricType.RELIABILITY: {"critical": 50.0, "high": 70.0, "medium": 85.0},
             MetricType.PERFORMANCE: {"critical": 0.3, "high": 0.5, "medium": 0.7},
             MetricType.QUALITY: {"critical": 0.3, "high": 0.5, "medium": 0.7},
@@ -314,7 +314,7 @@ class MetricsDashboard:
         self.alerts.append(alert)
         _LOG.warning(f"Alert created: {message}")
 
-    def get_dashboard_data(self, view: DashboardView = DashboardView.OVERVIEW) -> Dict[str, Any]:
+    def get_dashboard_data(self, view: DashboardView = DashboardView.OVERVIEW) -> dict[str, Any]:
         """Get dashboard data for the specified view"""
         if view == DashboardView.OVERVIEW:
             return self._get_overview_data()
@@ -329,7 +329,7 @@ class MetricsDashboard:
         else:
             return {"error": f"Unknown view: {view}"}
 
-    def _get_overview_data(self) -> Dict[str, Any]:
+    def _get_overview_data(self) -> dict[str, Any]:
         """Get overview dashboard data"""
         data = {
             "timestamp": time.time(),
@@ -379,7 +379,7 @@ class MetricsDashboard:
 
         return data
 
-    def _get_detailed_data(self) -> Dict[str, Any]:
+    def _get_detailed_data(self) -> dict[str, Any]:
         """Get detailed dashboard data"""
         data = {"timestamp": time.time(), "view": "detailed", "metrics": {}, "phases": {}, "cycles": {}}
 
@@ -431,7 +431,7 @@ class MetricsDashboard:
 
         return data
 
-    def _get_historical_data(self) -> Dict[str, Any]:
+    def _get_historical_data(self) -> dict[str, Any]:
         """Get historical dashboard data"""
         data = {
             "timestamp": time.time(),
@@ -459,7 +459,7 @@ class MetricsDashboard:
 
         return data
 
-    def _get_comparison_data(self) -> Dict[str, Any]:
+    def _get_comparison_data(self) -> dict[str, Any]:
         """Get comparison dashboard data"""
         data = {"timestamp": time.time(), "view": "comparison", "comparisons": {}}
 
@@ -492,7 +492,7 @@ class MetricsDashboard:
 
         return data
 
-    def _get_alerts_data(self) -> Dict[str, Any]:
+    def _get_alerts_data(self) -> dict[str, Any]:
         """Get alerts dashboard data"""
         data = {
             "timestamp": time.time(),
@@ -511,7 +511,7 @@ class MetricsDashboard:
 
         return data
 
-    def _get_alerts_by_severity(self) -> Dict[str, int]:
+    def _get_alerts_by_severity(self) -> dict[str, int]:
         """Get alert counts by severity"""
         severity_counts = defaultdict(int)
         for alert in self.alerts:
@@ -558,7 +558,7 @@ class MetricsDashboard:
             else:
                 return "good"
 
-    def _get_last_cycle_time(self) -> Optional[float]:
+    def _get_last_cycle_time(self) -> float | None:
         """Get the timestamp of the last optimization cycle"""
         if self.optimization_loop and self.optimization_loop.cycles:
             return self.optimization_loop.cycles[-1].start_time
@@ -593,7 +593,7 @@ class MetricsDashboard:
         else:
             raise ValueError(f"Unsupported export format: {format}")
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get dashboard statistics"""
         stats = {
             "total_metrics": len(self.metric_series),
@@ -631,7 +631,7 @@ def record_optimization_metrics(cycle: OptimizationCycle):
     dashboard.record_cycle_metrics(cycle)
 
 
-def get_dashboard_view(view: DashboardView = DashboardView.OVERVIEW) -> Dict[str, Any]:
+def get_dashboard_view(view: DashboardView = DashboardView.OVERVIEW) -> dict[str, Any]:
     """Convenience function to get dashboard view"""
     dashboard = get_metrics_dashboard()
     return dashboard.get_dashboard_data(view)

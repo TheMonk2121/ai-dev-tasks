@@ -10,7 +10,7 @@ Based on the proven approach used by RAGAS leaders to achieve P≥0.20.
 
 import logging
 import os
-from typing import Any, Optional
+from typing import Any
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")

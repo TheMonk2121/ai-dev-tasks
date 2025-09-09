@@ -17,7 +17,7 @@ And standardizes them to:
 """
 
 import sys
-from typing import Any, Dict
+from typing import Any
 
 # Add src to path
 sys.path.append("src")
@@ -34,7 +34,7 @@ except ImportError as e:
 logger = setup_logger("path_cleanup")
 
 
-def analyze_path_issues() -> Dict[str, Any]:
+def analyze_path_issues() -> dict[str, Any]:
     """Analyze current path issues in the database"""
     try:
         db = get_database_manager()
@@ -115,7 +115,7 @@ def fix_path_format(file_path: str) -> str:
     return file_path
 
 
-def cleanup_database_paths(dry_run: bool = True) -> Dict[str, Any]:
+def cleanup_database_paths(dry_run: bool = True) -> dict[str, Any]:
     """Clean up path names in the database"""
     try:
         db = get_database_manager()
@@ -184,7 +184,7 @@ def cleanup_database_paths(dry_run: bool = True) -> Dict[str, Any]:
         return {"success": False, "error": str(e)}
 
 
-def verify_cleanup() -> Dict[str, Any]:
+def verify_cleanup() -> dict[str, Any]:
     """Verify that the cleanup was successful"""
     try:
         db = get_database_manager()

@@ -15,7 +15,7 @@ import psycopg2
 def check_postgresql_installed():
     """Check if PostgreSQL is installed"""
     try:
-        result = subprocess.run(['psql', '--version'], capture_output=True, text=True)
+        result = subprocess.run(["psql", "--version"], capture_output=True, text=True)
         if result.returncode == 0:
             print(f"PostgreSQL found: {result.stdout.strip()}")
             return True
@@ -26,17 +26,12 @@ def check_postgresql_installed():
         print("PostgreSQL not found")
         return False
 
+
 def create_test_database():
     """Create a test database for migration testing"""
     try:
         # Try to connect to default PostgreSQL
-        conn = psycopg2.connect(
-            host="localhost",
-            port="5432",
-            user="postgres",
-            password="",
-            database="postgres"
-        )
+        conn = psycopg2.connect(host="localhost", port="5432", user="postgres", password="", database="postgres")
 
         # Set autocommit to True for CREATE DATABASE
         conn.autocommit = True
@@ -61,6 +56,7 @@ def create_test_database():
             print(f"Database creation error: {e}")
             return False
 
+
 def setup_test_environment():
     """Set up the test environment"""
     print("Setting up test environment for Vector Enhancement Migration")
@@ -77,10 +73,11 @@ def setup_test_environment():
         return False
 
     # Set environment variable for the test database
-    os.environ['POSTGRES_DSN'] = "postgresql://postgres@localhost:5432/vector_test_db"
+    os.environ["POSTGRES_DSN"] = "postgresql://postgres@localhost:5432/vector_test_db"
     print(f"Set POSTGRES_DSN to: {os.environ['POSTGRES_DSN']}")
 
     return True
+
 
 def apply_base_schema():
     """Apply the base schema to the test database"""
@@ -92,16 +89,16 @@ def apply_base_schema():
             return False
 
         # Read and apply base schema
-        with open(schema_file, 'r') as f:
+        with open(schema_file) as f:
             schema_sql = f.read()
 
-        conn = psycopg2.connect(os.environ['POSTGRES_DSN'])
+        conn = psycopg2.connect(os.environ["POSTGRES_DSN"])
         with conn.cursor() as cursor:
             # Split and execute statements
-            statements = [stmt.strip() for stmt in schema_sql.split(';') if stmt.strip()]
+            statements = [stmt.strip() for stmt in schema_sql.split(";") if stmt.strip()]
 
             for i, statement in enumerate(statements):
-                if statement.startswith('--') or not statement:
+                if statement.startswith("--") or not statement:
                     continue
 
                 try:
@@ -123,6 +120,7 @@ def apply_base_schema():
         print(f"Error applying base schema: {e}")
         return False
 
+
 def main():
     """Main entry point"""
     print("Vector Enhancement Migration - Test Database Setup")
@@ -143,6 +141,7 @@ def main():
     print("  python3 scripts/apply_vector_enhancement.py")
     print("\nOr run the tests:")
     print("  python3 tests/test_vector_enhancement_migration.py")
+
 
 if __name__ == "__main__":
     main()

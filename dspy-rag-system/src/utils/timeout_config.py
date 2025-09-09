@@ -15,6 +15,7 @@ from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class TimeoutConfig:
     """Global timeout configuration"""
@@ -43,6 +44,7 @@ class TimeoutConfig:
     health_check_timeout: int = 10
     metrics_timeout: int = 5
     startup_timeout: int = 60
+
 
 def load_timeout_config() -> TimeoutConfig:
     """Load timeout configuration from environment variables and system.json"""
@@ -74,33 +76,36 @@ def load_timeout_config() -> TimeoutConfig:
     # Try to load from system.json if available
     try:
         import json
-        config_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config', 'system.json')
+
+        config_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "config", "system.json")
         if os.path.exists(config_path):
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 system_config = json.load(f)
 
             # Override with system.json timeouts if present
-            if 'timeouts' in system_config:
-                timeouts = system_config['timeouts']
-                config.db_connect_timeout = timeouts.get('db_connect_timeout', config.db_connect_timeout)
-                config.db_read_timeout = timeouts.get('db_read_timeout', config.db_read_timeout)
-                config.db_write_timeout = timeouts.get('db_write_timeout', config.db_write_timeout)
-                config.db_pool_timeout = timeouts.get('db_pool_timeout', config.db_pool_timeout)
+            if "timeouts" in system_config:
+                timeouts = system_config["timeouts"]
+                config.db_connect_timeout = timeouts.get("db_connect_timeout", config.db_connect_timeout)
+                config.db_read_timeout = timeouts.get("db_read_timeout", config.db_read_timeout)
+                config.db_write_timeout = timeouts.get("db_write_timeout", config.db_write_timeout)
+                config.db_pool_timeout = timeouts.get("db_pool_timeout", config.db_pool_timeout)
 
-                config.http_connect_timeout = timeouts.get('http_connect_timeout', config.http_connect_timeout)
-                config.http_read_timeout = timeouts.get('http_read_timeout', config.http_read_timeout)
-                config.http_total_timeout = timeouts.get('http_total_timeout', config.http_total_timeout)
+                config.http_connect_timeout = timeouts.get("http_connect_timeout", config.http_connect_timeout)
+                config.http_read_timeout = timeouts.get("http_read_timeout", config.http_read_timeout)
+                config.http_total_timeout = timeouts.get("http_total_timeout", config.http_total_timeout)
 
-                config.pdf_processing_timeout = timeouts.get('pdf_processing_timeout', config.pdf_processing_timeout)
-                config.file_upload_timeout = timeouts.get('file_upload_timeout', config.file_upload_timeout)
-                config.chunk_processing_timeout = timeouts.get('chunk_processing_timeout', config.chunk_processing_timeout)
+                config.pdf_processing_timeout = timeouts.get("pdf_processing_timeout", config.pdf_processing_timeout)
+                config.file_upload_timeout = timeouts.get("file_upload_timeout", config.file_upload_timeout)
+                config.chunk_processing_timeout = timeouts.get(
+                    "chunk_processing_timeout", config.chunk_processing_timeout
+                )
 
-                config.llm_request_timeout = timeouts.get('llm_request_timeout', config.llm_request_timeout)
-                config.llm_stream_timeout = timeouts.get('llm_stream_timeout', config.llm_stream_timeout)
+                config.llm_request_timeout = timeouts.get("llm_request_timeout", config.llm_request_timeout)
+                config.llm_stream_timeout = timeouts.get("llm_stream_timeout", config.llm_stream_timeout)
 
-                config.health_check_timeout = timeouts.get('health_check_timeout', config.health_check_timeout)
-                config.metrics_timeout = timeouts.get('metrics_timeout', config.metrics_timeout)
-                config.startup_timeout = timeouts.get('startup_timeout', config.startup_timeout)
+                config.health_check_timeout = timeouts.get("health_check_timeout", config.health_check_timeout)
+                config.metrics_timeout = timeouts.get("metrics_timeout", config.metrics_timeout)
+                config.startup_timeout = timeouts.get("startup_timeout", config.startup_timeout)
 
     except Exception as e:
         logger.warning(f"Could not load timeout config from system.json: {e}")
@@ -108,12 +113,15 @@ def load_timeout_config() -> TimeoutConfig:
     logger.info(f"Loaded timeout configuration: {config}")
     return config
 
+
 # Global timeout configuration instance
 TIMEOUT_CONFIG = load_timeout_config()
+
 
 def get_timeout_config() -> TimeoutConfig:
     """Get the global timeout configuration"""
     return TIMEOUT_CONFIG
+
 
 def validate_timeout_config(config: TimeoutConfig) -> bool:
     """Validate timeout configuration values"""
@@ -166,6 +174,7 @@ def validate_timeout_config(config: TimeoutConfig) -> bool:
 
     logger.info("Timeout configuration validation passed")
     return True
+
 
 def format_timeout_duration(seconds: int) -> str:
     """Format timeout duration for logging"""

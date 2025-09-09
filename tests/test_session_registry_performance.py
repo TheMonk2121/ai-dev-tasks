@@ -328,5 +328,6 @@ class TestSessionRegistryPerformance:
         # Memory assertion: 50 sessions should use less than 1000MB (realistic for test environment)
         assert memory_usage_mb < 1000, f"Memory usage: {memory_usage_mb:.2f}MB, expected < 1000MB"
 
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

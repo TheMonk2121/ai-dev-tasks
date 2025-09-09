@@ -12,7 +12,7 @@ import os
 import random
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Set
+from typing import Any
 
 from .config_lock import LockedConfig
 
@@ -39,7 +39,7 @@ class DeterminismConfig:
     max_retrieved_context: int = 12
     oracle_sanity_check: bool = True
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "temperature": self.temperature,
@@ -62,7 +62,7 @@ class PromptAudit:
     """Prompt audit information"""
 
     prompt_hash: str
-    few_shot_ids: List[str]
+    few_shot_ids: list[str]
     cot_enabled: bool
     prompt_tokens: int
     model_name: str
@@ -72,7 +72,7 @@ class PromptAudit:
     chunk_version: str
     config_hash: str
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "prompt_hash": self.prompt_hash,
@@ -94,8 +94,8 @@ class DeterminismManager:
     def __init__(self, config: LockedConfig):
         self.config = config
         self.determinism_config = DeterminismConfig()
-        self.prompt_audits: List[PromptAudit] = []
-        self.few_shot_queries: Set[str] = set()
+        self.prompt_audits: list[PromptAudit] = []
+        self.few_shot_queries: set[str] = set()
 
         # Set global determinism
         self._set_global_determinism()
@@ -122,7 +122,7 @@ class DeterminismManager:
     def audit_prompt(
         self,
         prompt: str,
-        few_shot_examples: List[Dict[str, Any]] = None,
+        few_shot_examples: list[dict[str, Any]] = None,
         cot_enabled: bool = False,
         model_name: str = "unknown",
     ) -> PromptAudit:
@@ -167,7 +167,7 @@ class DeterminismManager:
 
         return audit
 
-    def _check_few_shot_leakage(self, prompt: str, few_shot_examples: List[Dict[str, Any]] = None) -> None:
+    def _check_few_shot_leakage(self, prompt: str, few_shot_examples: list[dict[str, Any]] = None) -> None:
         """Check for few-shot/CoT leakage"""
         if few_shot_examples:
             for example in few_shot_examples:
@@ -178,7 +178,7 @@ class DeterminismManager:
         if prompt in self.few_shot_queries:
             print("⚠️  Few-shot leakage detected: eval query matches few-shot example")
 
-    def validate_retrieval_breadth(self, retrieval_snapshot: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def validate_retrieval_breadth(self, retrieval_snapshot: list[dict[str, Any]]) -> dict[str, Any]:
         """Validate retrieval breadth"""
         snapshot_size = len(retrieval_snapshot)
 
@@ -200,7 +200,7 @@ class DeterminismManager:
             "min_required": self.determinism_config.min_retrieval_snapshot_size,
         }
 
-    def validate_oracle_sanity(self, oracle_hit: float) -> Dict[str, Any]:
+    def validate_oracle_sanity(self, oracle_hit: float) -> dict[str, Any]:
         """Validate oracle sanity"""
         if oracle_hit <= 0:
             return {
@@ -221,7 +221,7 @@ class DeterminismManager:
             "oracle_hit": oracle_hit,
         }
 
-    def validate_run_id_gating(self, retrieval_snapshot: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def validate_run_id_gating(self, retrieval_snapshot: list[dict[str, Any]]) -> dict[str, Any]:
         """Validate run-ID gating"""
         expected_run_id = f"{self.config.chunk_version}-{self.config.get_config_hash()[:8]}"
         expected_chunk_size = self.config.chunk_size
@@ -248,7 +248,7 @@ class DeterminismManager:
             "expected_chunk_size": expected_chunk_size,
         }
 
-    def get_prompt_audit_summary(self) -> Dict[str, Any]:
+    def get_prompt_audit_summary(self) -> dict[str, Any]:
         """Get summary of prompt audits"""
         if not self.prompt_audits:
             return {"total_audits": 0}

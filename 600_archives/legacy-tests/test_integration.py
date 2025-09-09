@@ -10,6 +10,7 @@ from src.dspy_modules.vector_store import HybridVectorStore
 # Test configuration
 CONNECTION_STRING = "postgresql://danieljacobs@localhost:5432/ai_agency"
 
+
 class TestDocumentRetriever(dspy.Module):
     """Test document retriever using optimized vector store"""
 
@@ -22,6 +23,7 @@ class TestDocumentRetriever(dspy.Module):
         """Retrieve documents for a query"""
         results = self.vector_store.forward(operation="search", query=query, limit=self.k)
         return results
+
 
 def test_dspy_integration():
     """Test DSPy integration with optimized vector store"""
@@ -59,6 +61,7 @@ def test_dspy_integration():
 
     print("\n✅ DSPy Integration Test Completed Successfully!")
 
+
 def test_vector_store_operations():
     """Test all vector store operations"""
     print("\n🔧 Testing Vector Store Operations")
@@ -95,6 +98,7 @@ def test_vector_store_operations():
     print(f"   Message: {delete_result['message']}")
 
     print("\n✅ Vector Store Operations Test Completed Successfully!")
+
 
 def test_performance_characteristics():
     """Test performance characteristics"""
@@ -142,6 +146,7 @@ def test_performance_characteristics():
 
     print("\n✅ Performance Characteristics Test Completed Successfully!")
 
+
 def main():
     """Run all integration tests"""
     print("🚀 Starting Integration Tests for Optimized Vector Store")
@@ -175,6 +180,7 @@ def main():
         return 1
 
     return 0
+
 
 if __name__ == "__main__":
     exit(main())

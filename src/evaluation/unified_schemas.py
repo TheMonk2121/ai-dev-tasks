@@ -8,7 +8,7 @@ across the entire evaluation system.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Literal, Optional, Union
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 

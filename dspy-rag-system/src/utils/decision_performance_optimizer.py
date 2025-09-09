@@ -12,7 +12,7 @@ import time
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from .context_merger import ContextMerger, MergedContext
 from .conversation_storage import ConversationStorage
@@ -27,7 +27,7 @@ class PerformanceMetrics:
     execution_time_ms: float
     result_count: int
     cache_hit: bool
-    session_id: Optional[str] = None
+    session_id: str | None = None
     query_complexity: str = "simple"  # simple, medium, complex
     warm_cache: bool = True
 
@@ -39,11 +39,11 @@ class BenchmarkResult:
     benchmark_name: str
     timestamp: datetime
     total_operations: int
-    warm_cache_metrics: List[PerformanceMetrics]
-    cold_cache_metrics: List[PerformanceMetrics]
+    warm_cache_metrics: list[PerformanceMetrics]
+    cold_cache_metrics: list[PerformanceMetrics]
     cache_hit_rate: float
-    performance_targets_met: Dict[str, bool]
-    recommendations: List[str]
+    performance_targets_met: dict[str, bool]
+    recommendations: list[str]
 
 
 class DecisionPerformanceOptimizer:
@@ -78,8 +78,8 @@ class DecisionPerformanceOptimizer:
         self.regression_threshold = 1.5  # 50% performance degradation
 
     def optimize_decision_retrieval(
-        self, session_id: str, query_entities: Optional[List[str]] = None, use_cache: bool = True
-    ) -> Tuple[List[MergedContext], bool]:
+        self, session_id: str, query_entities: list[str] | None = None, use_cache: bool = True
+    ) -> tuple[list[MergedContext], bool]:
         """
         Optimized decision retrieval with caching and performance monitoring.
 
@@ -129,12 +129,12 @@ class DecisionPerformanceOptimizer:
             self.logger.error(f"Error in optimized decision retrieval: {e}")
             return [], cache_hit
 
-    def _generate_cache_key(self, session_id: str, query_entities: Optional[List[str]]) -> str:
+    def _generate_cache_key(self, session_id: str, query_entities: list[str] | None) -> str:
         """Generate cache key for decision retrieval"""
         entities_str = "_".join(sorted(query_entities or []))
         return f"decisions:{session_id}:{entities_str}"
 
-    def _get_from_cache(self, cache_key: str) -> Optional[List[MergedContext]]:
+    def _get_from_cache(self, cache_key: str) -> list[MergedContext] | None:
         """Get decision results from cache"""
         if cache_key in self.decision_cache:
             cached_data = self.decision_cache[cache_key]
@@ -145,7 +145,7 @@ class DecisionPerformanceOptimizer:
                 del self.decision_cache[cache_key]
         return None
 
-    def _add_to_cache(self, cache_key: str, decisions: List[MergedContext]) -> None:
+    def _add_to_cache(self, cache_key: str, decisions: list[MergedContext]) -> None:
         """Add decision results to cache"""
         # Implement LRU eviction if cache is full
         if len(self.decision_cache) >= self.max_cache_size:
@@ -161,7 +161,7 @@ class DecisionPerformanceOptimizer:
         execution_time_ms: float,
         result_count: int,
         cache_hit: bool,
-        session_id: Optional[str] = None,
+        session_id: str | None = None,
     ) -> None:
         """Record performance metric for monitoring"""
         metric = PerformanceMetrics(
@@ -233,7 +233,7 @@ class DecisionPerformanceOptimizer:
 
         return result
 
-    def _run_benchmark_iterations(self, session_id: str, iterations: int, warm_cache: bool) -> List[PerformanceMetrics]:
+    def _run_benchmark_iterations(self, session_id: str, iterations: int, warm_cache: bool) -> list[PerformanceMetrics]:
         """Run benchmark iterations and collect metrics"""
         metrics = []
 
@@ -270,7 +270,7 @@ class DecisionPerformanceOptimizer:
 
         return metrics
 
-    def _generate_test_entities(self, complexity: str) -> List[str]:
+    def _generate_test_entities(self, complexity: str) -> list[str]:
         """Generate test entities based on complexity"""
         base_entities = ["python", "database", "debug", "performance"]
 
@@ -282,8 +282,8 @@ class DecisionPerformanceOptimizer:
             return base_entities
 
     def _validate_benchmark_targets(
-        self, warm_metrics: List[PerformanceMetrics], cold_metrics: List[PerformanceMetrics]
-    ) -> Dict[str, bool]:
+        self, warm_metrics: list[PerformanceMetrics], cold_metrics: list[PerformanceMetrics]
+    ) -> dict[str, bool]:
         """Validate if benchmark results meet performance targets"""
         validation = {}
 
@@ -315,7 +315,7 @@ class DecisionPerformanceOptimizer:
 
         return validation
 
-    def _calculate_percentile(self, values: List[float], percentile: int) -> float:
+    def _calculate_percentile(self, values: list[float], percentile: int) -> float:
         """Calculate percentile from list of values"""
         if not values:
             return 0.0
@@ -326,10 +326,10 @@ class DecisionPerformanceOptimizer:
 
     def _generate_performance_recommendations(
         self,
-        warm_metrics: List[PerformanceMetrics],
-        cold_metrics: List[PerformanceMetrics],
-        targets_met: Dict[str, bool],
-    ) -> List[str]:
+        warm_metrics: list[PerformanceMetrics],
+        cold_metrics: list[PerformanceMetrics],
+        targets_met: dict[str, bool],
+    ) -> list[str]:
         """Generate performance improvement recommendations"""
         recommendations = []
 
@@ -375,7 +375,7 @@ class DecisionPerformanceOptimizer:
 
         return recommendations
 
-    def detect_performance_regression(self, operation_type: str = "decision_retrieval") -> Optional[Dict[str, Any]]:
+    def detect_performance_regression(self, operation_type: str = "decision_retrieval") -> dict[str, Any] | None:
         """
         Detect performance regression by comparing recent vs historical performance.
 
@@ -417,7 +417,7 @@ class DecisionPerformanceOptimizer:
 
         return None
 
-    def get_performance_summary(self, operation_type: str = "decision_retrieval") -> Dict[str, Any]:
+    def get_performance_summary(self, operation_type: str = "decision_retrieval") -> dict[str, Any]:
         """Get performance summary for a specific operation type"""
         if operation_type not in self.performance_history:
             return {}
@@ -442,7 +442,7 @@ class DecisionPerformanceOptimizer:
             "last_updated": metrics[-1].timestamp.isoformat() if metrics else None,
         }
 
-    def clear_performance_history(self, operation_type: Optional[str] = None) -> None:
+    def clear_performance_history(self, operation_type: str | None = None) -> None:
         """Clear performance history for specific operation type or all"""
         if operation_type:
             if operation_type in self.performance_history:
@@ -488,7 +488,7 @@ class DecisionPerformanceOptimizer:
             self.logger.error(f"Error exporting performance data: {e}")
 
 
-def create_performance_benchmark_config() -> Dict[str, Any]:
+def create_performance_benchmark_config() -> dict[str, Any]:
     """Create default performance benchmark configuration"""
     return {
         "benchmark_iterations": 100,

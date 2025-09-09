@@ -9,7 +9,7 @@ import logging
 import os
 import sys
 import time
-from typing import Any, Dict, List, Optional, Tuple, cast
+from typing import Any, cast
 
 # Apply litellm compatibility shim before importing DSPy
 try:
@@ -167,7 +167,7 @@ def _expensive_selector(key: str) -> str:
 
 
 # ---------- Safe Complexity Score (SIG-2) ----------
-def _complexity(chunks: List[str]) -> float:
+def _complexity(chunks: list[str]) -> float:
     """Safe complexity score calculation with zero-division guard"""
     if not chunks:
         return 0.0
@@ -180,7 +180,7 @@ def _complexity(chunks: List[str]) -> float:
     return total_tokens / max(len(chunks), 1)
 
 
-def _should_use_fast_path(query: str, config: Dict[str, Any]) -> bool:
+def _should_use_fast_path(query: str, config: dict[str, Any]) -> bool:
     """Determine if query should use fast-path bypass"""
     if not config.get("enabled", True):
         return False
@@ -200,12 +200,12 @@ def _should_use_fast_path(query: str, config: Dict[str, Any]) -> bool:
     return True
 
 
-def _load_fast_path_config() -> Dict[str, Any]:
+def _load_fast_path_config() -> dict[str, Any]:
     """Load fast-path configuration from system.json"""
     try:
         config_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "config", "system.json")
         if os.path.exists(config_path):
-            with open(config_path, "r") as f:
+            with open(config_path) as f:
                 system_config = json.load(f)
                 return system_config.get("fast_path", {})
     except Exception as e:
@@ -225,7 +225,7 @@ class QueryRewriter(Module):
         super().__init__()
         self.predict = dspy.Predict(QueryRewriteSignature)
 
-    def forward(self, query: str, domain_context: str = "") -> Dict[str, Any]:
+    def forward(self, query: str, domain_context: str = "") -> dict[str, Any]:
         """Rewrite query for better retrieval"""
 
         # Comprehensive input validation
@@ -249,7 +249,7 @@ class QueryDecomposer(Module):
         super().__init__()
         self.predict = dspy.Predict(QueryRewriteSignature)
 
-    def forward(self, query: str) -> List[str]:
+    def forward(self, query: str) -> list[str]:
         """Decompose complex query into sub-queries"""
 
         query = _validate_input(query)
@@ -273,7 +273,7 @@ class AnswerSynthesizer(Module):
         super().__init__()
         self.predict = dspy.Predict(AnswerSynthesisSignature)
 
-    def forward(self, question: str, retrieved_chunks: List[Dict]) -> Dict[str, Any]:
+    def forward(self, question: str, retrieved_chunks: list[dict]) -> dict[str, Any]:
         """Synthesize answer from retrieved chunks with research-based validation"""
 
         question = _validate_input(question)
@@ -331,7 +331,7 @@ class ChainOfThoughtReasoner(Module):
         super().__init__()
         self.predict = dspy.Predict(ChainOfThoughtSignature)
 
-    def forward(self, question: str, context: str) -> Dict[str, Any]:
+    def forward(self, question: str, context: str) -> dict[str, Any]:
         """Apply Chain-of-Thought reasoning"""
 
         question = _validate_input(question)
@@ -348,7 +348,7 @@ class ReActReasoner(Module):
         super().__init__()
         self.predict = dspy.Predict(ReActSignature)
 
-    def forward(self, question: str, context: str) -> Dict[str, Any]:
+    def forward(self, question: str, context: str) -> dict[str, Any]:
         """Apply ReAct reasoning pattern with loop guard"""
 
         question = _validate_input(question)
@@ -358,7 +358,7 @@ class ReActReasoner(Module):
 
         return {"answer": answer, "thought": thought, "action": action, "observation": observation}
 
-    def _run_react_with_guard(self, question: str, context: str, max_steps: int = 5) -> Tuple[str, str, str, str]:
+    def _run_react_with_guard(self, question: str, context: str, max_steps: int = 5) -> tuple[str, str, str, str]:
         """ReAct implementation with loop guard to prevent infinite loops"""
 
         thought = ""
@@ -405,7 +405,7 @@ class MistralLLM(dspy.Module):
         self,
         base_url: str = "http://localhost:11434",
         model: str = "mistral:7b-instruct",
-        timeout: Optional[int] = None,
+        timeout: int | None = None,
     ):
         super().__init__()
         self.base_url = base_url
@@ -478,7 +478,7 @@ class EnhancedRAGSystem(Module):
 
     def forward(
         self, question: str, max_results: int = 5, use_cot: bool = True, use_react: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Enhanced RAG pipeline with pre-RAG and post-RAG DSPy logic"""
 
         # Initialize start_time at the beginning
@@ -501,29 +501,29 @@ class EnhancedRAGSystem(Module):
 
             # === PRE-RAG: Query Rewriting and Decomposition ===
             _LOG.info("🔄 Pre-RAG: Rewriting query")
-            query_rewrite_result = cast(Dict[str, Any], self.query_rewriter(question))
+            query_rewrite_result = cast(dict[str, Any], self.query_rewriter(question))
             rewritten_query = query_rewrite_result["rewritten_query"]
 
             # Check if query needs decomposition
             if len(question.split()) > 20 or "and" in question.lower() or "or" in question.lower():
                 _LOG.info("🔄 Pre-RAG: Decomposing complex query")
-                sub_queries = cast(List[str], self.query_decomposer(question))
+                sub_queries = cast(list[str], self.query_decomposer(question))
                 _LOG.info(f"Generated {len(sub_queries)} sub-queries")
             else:
                 sub_queries = [rewritten_query]
 
             # === RAG: Retrieval ===
-            all_retrieved_chunks: List[Dict[str, Any]] = []
+            all_retrieved_chunks: list[dict[str, Any]] = []
 
             for sub_query in sub_queries:
                 _LOG.info(f"🔍 Retrieving for sub-query: {sub_query}")
-                search_results = cast(Dict[str, Any], self.vector_store("search", query=sub_query, limit=max_results))
+                search_results = cast(dict[str, Any], self.vector_store("search", query=sub_query, limit=max_results))
 
                 if search_results["status"] == "success":
-                    all_retrieved_chunks.extend(cast(List[Dict[str, Any]], search_results["results"]))
+                    all_retrieved_chunks.extend(cast(list[dict[str, Any]], search_results["results"]))
 
             # Remove duplicates and limit results
-            unique_chunks: List[Dict[str, Any]] = []
+            unique_chunks: list[dict[str, Any]] = []
             seen_content = set()
             for chunk in all_retrieved_chunks:
                 content_hash = hash(chunk.get("content", ""))
@@ -541,7 +541,7 @@ class EnhancedRAGSystem(Module):
                 }
 
             # Truncate context to token limit
-            context_chunks: List[str] = [chunk.get("content", "") for chunk in unique_chunks]
+            context_chunks: list[str] = [chunk.get("content", "") for chunk in unique_chunks]
             context = "\n\n".join(context_chunks)
             context = _token_trim(context, self.ctx_limit)
 
@@ -551,17 +551,17 @@ class EnhancedRAGSystem(Module):
             # Use different reasoning patterns based on complexity
             if use_react and len(question.split()) > 15:
                 _LOG.info("Using ReAct reasoning for complex question")
-                synthesis_result = cast(Dict[str, Any], self.react_reasoner(question, context))
+                synthesis_result = cast(dict[str, Any], self.react_reasoner(question, context))
                 answer = synthesis_result["answer"]
                 reasoning = synthesis_result.get("thought", "")
             elif use_cot:
                 _LOG.info("Using Chain-of-Thought reasoning")
-                synthesis_result = cast(Dict[str, Any], self.cot_reasoner(question, context))
+                synthesis_result = cast(dict[str, Any], self.cot_reasoner(question, context))
                 answer = synthesis_result["answer"]
                 reasoning = synthesis_result.get("reasoning", "")
             else:
                 _LOG.info("Using standard answer synthesis")
-                synthesis_result = cast(Dict[str, Any], self.answer_synthesizer(question, unique_chunks))
+                synthesis_result = cast(dict[str, Any], self.answer_synthesizer(question, unique_chunks))
                 answer = synthesis_result["answer"]
                 reasoning = synthesis_result.get("reasoning", "")
 
@@ -593,14 +593,14 @@ class EnhancedRAGSystem(Module):
                 "latency_ms": int((time.time() - start_time) * 1000),
             }
 
-    def _fast_path_query(self, question: str, max_results: int, start_time: float) -> Dict[str, Any]:
+    def _fast_path_query(self, question: str, max_results: int, start_time: float) -> dict[str, Any]:
         """Fast-path bypass for simple queries - direct retrieval and synthesis"""
 
         try:
             _LOG.info(f"⚡ Fast-path: Direct retrieval for '{question}'")
 
             # Direct retrieval without query rewriting
-            search_results = cast(Dict[str, Any], self.vector_store("search", query=question, limit=max_results))
+            search_results = cast(dict[str, Any], self.vector_store("search", query=question, limit=max_results))
 
             if search_results["status"] != "success" or not search_results["results"]:
                 return {
@@ -613,8 +613,8 @@ class EnhancedRAGSystem(Module):
                 }
 
             # Simple answer synthesis without complex reasoning
-            retrieved_chunks: List[Dict[str, Any]] = cast(List[Dict[str, Any]], search_results["results"])
-            context_chunks: List[str] = [chunk.get("content", "") for chunk in retrieved_chunks]
+            retrieved_chunks: list[dict[str, Any]] = cast(list[dict[str, Any]], search_results["results"])
+            context_chunks: list[str] = [chunk.get("content", "") for chunk in retrieved_chunks]
             context = "\n\n".join(context_chunks)
             context = _token_trim(context, self.ctx_limit)
 
@@ -647,7 +647,7 @@ class EnhancedRAGSystem(Module):
                 "fast_path": True,
             }
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get system statistics"""
         try:
             return self.vector_store.get_statistics()
@@ -665,17 +665,17 @@ class EnhancedRAGQueryInterface:
     def __init__(self, db_connection_string: str, mistral_url: str = "http://localhost:11434"):
         self.rag_system = EnhancedRAGSystem(db_connection_string, mistral_url)
 
-    def ask(self, question: str, use_cot: bool = True, use_react: bool = False) -> Dict[str, Any]:
+    def ask(self, question: str, use_cot: bool = True, use_react: bool = False) -> dict[str, Any]:
         """Ask a question with enhanced DSPy processing"""
         return self.rag_system.forward(question, use_cot=use_cot, use_react=use_react)
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get system statistics"""
         return self.rag_system.get_stats()
 
 
 def create_enhanced_rag_interface(
-    db_url: Optional[str] = None, mistral_url: str = "http://localhost:11434"
+    db_url: str | None = None, mistral_url: str = "http://localhost:11434"
 ) -> EnhancedRAGQueryInterface:
     """Create enhanced RAG interface with pre-RAG and post-RAG DSPy logic"""
 
@@ -688,7 +688,7 @@ def create_enhanced_rag_interface(
 # ---------- Utility Functions ----------
 
 
-def analyze_query_complexity(query: str) -> Dict[str, Any]:
+def analyze_query_complexity(query: str) -> dict[str, Any]:
     """Analyze query complexity to determine appropriate DSPy modules"""
 
     word_count = len(query.split())

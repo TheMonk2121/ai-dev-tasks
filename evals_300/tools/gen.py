@@ -2,7 +2,7 @@
 import csv
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -62,8 +62,8 @@ def _prepare_versions():
                     "metrics": [m.model_dump() for m in p.metrics],
                     "config": p.config.model_dump(),
                 },
-                "updated_at": datetime.now(timezone.utc).isoformat(),
-                "created_at": rec.get("created_at") or datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(UTC).isoformat(),
+                "created_at": rec.get("created_at") or datetime.now(UTC).isoformat(),
             }
             changed = True
         else:
@@ -72,8 +72,8 @@ def _prepare_versions():
                 state[pid] = {
                     **rec,
                     "version": "1.0.0",
-                    "updated_at": datetime.now(timezone.utc).isoformat(),
-                    "created_at": rec.get("created_at") or datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(UTC).isoformat(),
+                    "created_at": rec.get("created_at") or datetime.now(UTC).isoformat(),
                 }
                 changed = True
     if changed:
@@ -100,7 +100,7 @@ def render_markdown(versions: dict):
         repo=repo_head(),
         suite_created=suite_created,
         suite_updated=suite_updated,
-        generated_at=datetime.now(timezone.utc).isoformat(),
+        generated_at=datetime.now(UTC).isoformat(),
     )
     (OUT / "300_core.md").write_text(md, encoding="utf-8")
 
@@ -112,7 +112,7 @@ def write_manifest_json(versions: dict):
     manifest = {
         "suite_id": SUITE.id,
         "title": SUITE.title,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "git": head,
         "suite_created_at": suite_created,
         "suite_updated_at": suite_updated,

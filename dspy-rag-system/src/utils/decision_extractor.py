@@ -10,7 +10,7 @@ import hashlib
 import logging
 import re
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -96,7 +96,7 @@ class DecisionExtractor:
         self.db_connection_string = db_connection_string
         self.logger = logging.getLogger("decision_extractor")
 
-    def extract_decisions_from_text(self, text: str, session_id: str, role: str = "user") -> List[Dict[str, Any]]:
+    def extract_decisions_from_text(self, text: str, session_id: str, role: str = "user") -> list[dict[str, Any]]:
         """
         Extract decisions from conversation text
 
@@ -128,7 +128,7 @@ class DecisionExtractor:
 
     def _create_decision_from_match(
         self, match, pattern_type: str, full_text: str, session_id: str, role: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Create a decision object from a regex match"""
         try:
             # Extract the decision content
@@ -233,7 +233,7 @@ class DecisionExtractor:
 
         return f"{prefix}_{hash_value}"
 
-    def store_decisions(self, decisions: List[Dict[str, Any]]) -> bool:
+    def store_decisions(self, decisions: list[dict[str, Any]]) -> bool:
         """
         Store decisions in the database
 
@@ -326,7 +326,7 @@ class DecisionExtractor:
             self.logger.error(f"Error storing decisions: {e}")
             return False
 
-    def search_decisions(self, query: str, limit: int = 10, session_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    def search_decisions(self, query: str, limit: int = 10, session_id: str | None = None) -> list[dict[str, Any]]:
         """
         Search decisions in the database
 
@@ -378,7 +378,7 @@ class DecisionExtractor:
             self.logger.error(f"Error searching decisions: {e}")
             return []
 
-    def process_conversation_turn(self, session_id: str, role: str, text: str) -> List[Dict[str, Any]]:
+    def process_conversation_turn(self, session_id: str, role: str, text: str) -> list[dict[str, Any]]:
         """
         Process a conversation turn and extract decisions
 
@@ -438,7 +438,7 @@ def create_decisions_table(db_connection_string: str) -> bool:
         with ctx as conn:  # type: ignore
             with conn.cursor() as cursor:
                 # Useful extensions for text search acceleration (idempotent)
-                cursor.execute("CREATE EXTENSION IF NOT EXISTS \"pg_trgm\";")
+                cursor.execute('CREATE EXTENSION IF NOT EXISTS "pg_trgm";')
 
                 cursor.execute(
                     """

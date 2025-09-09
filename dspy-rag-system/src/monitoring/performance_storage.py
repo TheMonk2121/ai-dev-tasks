@@ -7,7 +7,7 @@ Integrates performance collector with database storage and LTST memory system.
 import json
 import logging
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 from uuid import UUID
 
 try:
@@ -39,13 +39,13 @@ class PerformanceStorage:
         database_url: str,
         pool_size: int = 10,
         max_overflow: int = 20,
-        collector: Optional[PerformanceCollector] = None,
+        collector: PerformanceCollector | None = None,
     ):
         self.database_url = database_url
         self.pool_size = pool_size
         self.max_overflow = max_overflow
         self.collector = collector or PerformanceCollector()
-        self.pool: Optional[Any] = None  # Use Any instead of Pool to avoid type issues
+        self.pool: Any | None = None  # Use Any instead of Pool to avoid type issues
         self.enabled = True
 
     async def initialize(self) -> bool:
@@ -155,7 +155,7 @@ class PerformanceStorage:
             logger.error(f"Failed to store workflow data: {e}")
             return False
 
-    async def store_metric(self, metric: PerformanceMetric, workflow_id: Union[str, UUID]) -> bool:
+    async def store_metric(self, metric: PerformanceMetric, workflow_id: str | UUID) -> bool:
         """Store a single performance metric"""
         if not self.enabled or not self.pool or not ASYNCPG_AVAILABLE:
             return False
@@ -186,7 +186,7 @@ class PerformanceStorage:
             logger.error(f"Failed to store metric: {e}")
             return False
 
-    async def get_workflow_performance(self, workflow_id: Union[str, UUID]) -> Optional[Dict[str, Any]]:
+    async def get_workflow_performance(self, workflow_id: str | UUID) -> dict[str, Any] | None:
         """Get workflow performance data"""
         if not self.enabled or not self.pool or not ASYNCPG_AVAILABLE:
             return None
@@ -212,9 +212,7 @@ class PerformanceStorage:
             logger.error(f"Failed to get workflow performance: {e}")
             return None
 
-    async def get_recent_workflows(
-        self, limit: int = 50, backlog_item_id: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+    async def get_recent_workflows(self, limit: int = 50, backlog_item_id: str | None = None) -> list[dict[str, Any]]:
         """Get recent workflow performance data"""
         if not self.enabled or not self.pool or not ASYNCPG_AVAILABLE:
             return []
@@ -250,10 +248,10 @@ class PerformanceStorage:
 
     async def get_collection_point_performance(
         self,
-        collection_point: Optional[CollectionPoint] = None,
-        workflow_phase: Optional[WorkflowPhase] = None,
+        collection_point: CollectionPoint | None = None,
+        workflow_phase: WorkflowPhase | None = None,
         days: int = 7,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Get collection point performance statistics"""
         if not self.enabled or not self.pool or not ASYNCPG_AVAILABLE:
             return []
@@ -264,7 +262,7 @@ class PerformanceStorage:
                     SELECT * FROM collection_point_performance
                     WHERE timestamp >= $1
                 """
-                params: List[Any] = [datetime.utcnow() - timedelta(days=days)]
+                params: list[Any] = [datetime.utcnow() - timedelta(days=days)]
 
                 if collection_point:
                     query += " AND collection_point = $2"
@@ -284,8 +282,8 @@ class PerformanceStorage:
             return []
 
     async def get_performance_trends(
-        self, days: int = 30, workflow_phase: Optional[WorkflowPhase] = None
-    ) -> List[Dict[str, Any]]:
+        self, days: int = 30, workflow_phase: WorkflowPhase | None = None
+    ) -> list[dict[str, Any]]:
         """Get performance trends data"""
         if not self.enabled or not self.pool or not ASYNCPG_AVAILABLE:
             return []
@@ -296,7 +294,7 @@ class PerformanceStorage:
                     SELECT * FROM performance_trends
                     WHERE date >= $1
                 """
-                params: List[Any] = [datetime.utcnow().date() - timedelta(days=days)]
+                params: list[Any] = [datetime.utcnow().date() - timedelta(days=days)]
 
                 if workflow_phase:
                     query += " AND workflow_phase = $2"
@@ -311,7 +309,7 @@ class PerformanceStorage:
             logger.error(f"Failed to get performance trends: {e}")
             return []
 
-    async def get_recent_alerts(self, limit: int = 50, acknowledged: Optional[bool] = None) -> List[Dict[str, Any]]:
+    async def get_recent_alerts(self, limit: int = 50, acknowledged: bool | None = None) -> list[dict[str, Any]]:
         """Get recent performance alerts"""
         if not self.enabled or not self.pool or not ASYNCPG_AVAILABLE:
             return []
@@ -319,7 +317,7 @@ class PerformanceStorage:
         try:
             async with self.pool.acquire() as conn:
                 query = "SELECT * FROM recent_alerts"
-                params: List[Any] = []
+                params: list[Any] = []
 
                 if acknowledged is not None:
                     query += " WHERE acknowledged = $1"
@@ -335,7 +333,7 @@ class PerformanceStorage:
             logger.error(f"Failed to get recent alerts: {e}")
             return []
 
-    async def acknowledge_alert(self, alert_id: Union[str, UUID], acknowledged_by: str) -> bool:
+    async def acknowledge_alert(self, alert_id: str | UUID, acknowledged_by: str) -> bool:
         """Acknowledge a performance alert"""
         if not self.enabled or not self.pool or not ASYNCPG_AVAILABLE:
             return False
@@ -382,7 +380,7 @@ class PerformanceStorage:
             logger.error(f"Failed to cleanup old data: {e}")
             return 0
 
-    async def update_trends(self, date: Optional[datetime] = None) -> bool:
+    async def update_trends(self, date: datetime | None = None) -> bool:
         """Update performance trends for a specific date"""
         if not self.enabled or not self.pool or not ASYNCPG_AVAILABLE:
             return False
@@ -420,9 +418,9 @@ class AsyncPerformanceCollector(PerformanceCollector):
         collection_point: CollectionPoint,
         duration_ms: float,
         workflow_phase: WorkflowPhase = WorkflowPhase.PRD_CREATION,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
         success: bool = True,
-        error_message: Optional[str] = None,
+        error_message: str | None = None,
     ) -> bool:
         """Add collection point and store to database"""
         # Add to local collector
@@ -454,14 +452,14 @@ class AsyncPerformanceCollector(PerformanceCollector):
 
 
 # Global storage instance
-performance_storage: Optional[PerformanceStorage] = None
+performance_storage: PerformanceStorage | None = None
 
 
 async def init_performance_storage(
     database_url: str,
     pool_size: int = 10,
     enabled: bool = True,
-) -> Optional[PerformanceStorage]:
+) -> PerformanceStorage | None:
     """Initialize global performance storage"""
     global performance_storage
 
@@ -499,21 +497,21 @@ async def store_workflow_data(workflow_data: WorkflowPerformanceData) -> bool:
     return False
 
 
-async def get_workflow_performance(workflow_id: Union[str, UUID]) -> Optional[Dict[str, Any]]:
+async def get_workflow_performance(workflow_id: str | UUID) -> dict[str, Any] | None:
     """Get workflow performance from database"""
     if performance_storage:
         return await performance_storage.get_workflow_performance(workflow_id)
     return None
 
 
-async def get_recent_workflows(limit: int = 50) -> List[Dict[str, Any]]:
+async def get_recent_workflows(limit: int = 50) -> list[dict[str, Any]]:
     """Get recent workflows from database"""
     if performance_storage:
         return await performance_storage.get_recent_workflows(limit)
     return []
 
 
-async def get_performance_trends(days: int = 30) -> List[Dict[str, Any]]:
+async def get_performance_trends(days: int = 30) -> list[dict[str, Any]]:
     """Get performance trends from database"""
     if performance_storage:
         return await performance_storage.get_performance_trends(days)

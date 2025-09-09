@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import math
 import re
-from typing import Dict, List, Tuple
+
 
 _SENT_SPLIT = re.compile(r"(?<=[.!?])\s+(?=[A-Z0-9])")
 
@@ -56,16 +56,16 @@ def _tag_bonus(sent: str, tag: str) -> float:
     return 0.0
 
 
-def _norm_tokens(s: str) -> List[str]:
+def _norm_tokens(s: str) -> list[str]:
     return re.findall(r"[A-Za-z0-9_./-]+", (s or "").lower())
 
 
-def _filename_tokens(fp: str) -> List[str]:
+def _filename_tokens(fp: str) -> list[str]:
     name = (fp or "").split("/")[-1].lower()
     return [t for t in re.findall(r"[A-Za-z0-9_.-]{3,}", name) if not t.isdigit()]
 
 
-def _score_sentence(sent: str, q_uni: set, phrase_list: List[str], fname_toks: set, tag: str = "") -> float:
+def _score_sentence(sent: str, q_uni: set, phrase_list: list[str], fname_toks: set, tag: str = "") -> float:
     if not sent:
         return 0.0
     s_uni = set(_norm_tokens(sent))
@@ -90,26 +90,26 @@ def _score_sentence(sent: str, q_uni: set, phrase_list: List[str], fname_toks: s
 
 
 def select_sentences(
-    rows: List[Dict],
+    rows: list[dict],
     query: str,
     tag: str,
-    phrase_hints: List[str],
+    phrase_hints: list[str],
     per_chunk: int = 2,
     total: int = 10,
-) -> Tuple[str, List[Dict]]:
+) -> tuple[str, list[dict]]:
     """
     rows: retrieved items with keys: file_path/filename, embedding_text (chunk text), score,...
     returns (compact_context, selections_meta)
     """
     q_uni = set(_norm_tokens(query))
-    picks: List[Tuple[float, Dict]] = []
+    picks: list[tuple[float, dict]] = []
     for r in rows:
         text = r.get("text_for_reader") or r.get("embedding_text") or r.get("bm25_text") or r.get("content") or ""
         if not text:
             continue
         sents = _SENT_SPLIT.split(text) if len(text) < 4000 else text.split("\n")
         fname_set = set(_filename_tokens(r.get("file_path") or r.get("filename") or ""))
-        scored: List[Tuple[float, str]] = []
+        scored: list[tuple[float, str]] = []
         for s in sents:
             scored.append((_score_sentence(s, q_uni, phrase_hints, fname_set, tag), s.strip()))
         scored.sort(key=lambda t: t[0], reverse=True)
@@ -132,7 +132,7 @@ def select_sentences(
     picks.sort(key=lambda t: t[0], reverse=True)
     chosen = [m for _, m in picks[:total]]
 
-    lines: List[str] = []
+    lines: list[str] = []
     for m in chosen:
         anchor = f"{m['file_path']}#chunk:{m['chunk_id']}"
         lines.append(f"[{anchor}] {m['sentence']}")

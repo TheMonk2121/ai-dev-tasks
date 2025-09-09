@@ -143,7 +143,7 @@ Final Recommendations: prioritized list of fixes (quick wins vs. deep restructur
             # Run the audit through the RAG pipeline
             result = rag_pipeline.answer(audit_prompt)
 
-            # Extract the answer - RAGPipeline.answer() returns Dict[str, Any]
+            # Extract the answer - RAGPipeline.answer() returns dict[str, Any]
             if result is None:
                 answer = "No result"
                 context_info = ""

@@ -8,7 +8,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 from uuid import uuid4
 
 
@@ -44,8 +44,8 @@ class PerformanceMetric:
     workflow_phase: WorkflowPhase = WorkflowPhase.PRD_CREATION
     duration_ms: float = 0.0
     success: bool = True
-    error_message: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    error_message: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -54,14 +54,14 @@ class WorkflowPerformanceData:
 
     workflow_id: str = field(default_factory=lambda: str(uuid4()))
     start_time: datetime = field(default_factory=datetime.utcnow)
-    end_time: Optional[datetime] = None
+    end_time: datetime | None = None
     total_duration_ms: float = 0.0
-    phase_durations: Dict[WorkflowPhase, float] = field(default_factory=dict)
-    collection_points: List[PerformanceMetric] = field(default_factory=list)
+    phase_durations: dict[WorkflowPhase, float] = field(default_factory=dict)
+    collection_points: list[PerformanceMetric] = field(default_factory=list)
     success: bool = True
     error_count: int = 0
-    backlog_item_id: Optional[str] = None
-    prd_file_path: Optional[str] = None
+    backlog_item_id: str | None = None
+    prd_file_path: str | None = None
     task_count: int = 0
     context_size_bytes: int = 0
 
@@ -85,10 +85,10 @@ class PerformanceSchema:
     max_workflows_per_day: int = 1000  # Max workflows per day
 
     # Validation rules
-    required_fields: List[str] = field(default_factory=lambda: ["collection_point", "workflow_phase"])
+    required_fields: list[str] = field(default_factory=lambda: ["collection_point", "workflow_phase"])
 
     # Collection point definitions
-    collection_points: Dict[CollectionPoint, Dict[str, Any]] = field(
+    collection_points: dict[CollectionPoint, dict[str, Any]] = field(
         default_factory=lambda: {
             CollectionPoint.WORKFLOW_START: {
                 "description": "Workflow initialization",
@@ -135,7 +135,7 @@ class PerformanceValidator:
     def __init__(self, schema: PerformanceSchema):
         self.schema = schema
 
-    def validate_metric(self, metric: PerformanceMetric) -> List[str]:
+    def validate_metric(self, metric: PerformanceMetric) -> list[str]:
         """Validate a single performance metric"""
         errors = []
 
@@ -164,7 +164,7 @@ class PerformanceValidator:
 
         return errors
 
-    def validate_workflow_data(self, workflow_data: WorkflowPerformanceData) -> List[str]:
+    def validate_workflow_data(self, workflow_data: WorkflowPerformanceData) -> list[str]:
         """Validate complete workflow performance data"""
         errors = []
 
@@ -198,7 +198,7 @@ class PerformanceAnalyzer:
     def __init__(self, schema: PerformanceSchema):
         self.schema = schema
 
-    def analyze_workflow_performance(self, workflow_data: WorkflowPerformanceData) -> Dict[str, Any]:
+    def analyze_workflow_performance(self, workflow_data: WorkflowPerformanceData) -> dict[str, Any]:
         """Analyze workflow performance and return insights"""
         analysis = {
             "workflow_id": workflow_data.workflow_id,
@@ -274,7 +274,7 @@ def get_schema_overhead_ms() -> float:
     return overhead_ms
 
 
-def validate_schema_performance() -> Dict[str, Any]:
+def validate_schema_performance() -> dict[str, Any]:
     """Validate that schema meets performance requirements"""
     overhead_ms = get_schema_overhead_ms()
 

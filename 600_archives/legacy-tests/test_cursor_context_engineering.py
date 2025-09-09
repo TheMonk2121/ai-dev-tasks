@@ -14,6 +14,7 @@ pytestmark = pytest.mark.deprecated
 
 from src.dspy_modules.cursor_model_router import CursorModel, create_cursor_model_router
 
+
 @pytest.mark.tier1
 @pytest.mark.integration
 def test_context_engineering():
@@ -146,6 +147,7 @@ def test_context_engineering():
 
     return results
 
+
 @pytest.mark.tier1
 @pytest.mark.unit
 def test_context_engineering_patterns():
@@ -194,6 +196,7 @@ def test_context_engineering_patterns():
         else:
             print(f"❌ Failed: {result.get('error', 'Unknown error')}")
 
+
 def test_complexity_analysis():
     """Test complexity analysis and its impact on model selection"""
 
@@ -232,6 +235,7 @@ def test_complexity_analysis():
             print(f"🤖 Selected model: {selected_model}")
             print(f"🧠 Reasoning: {result['reasoning']}")
 
+
 def main():
     """Run all context engineering tests"""
 
@@ -263,6 +267,7 @@ def main():
         return 1
 
     return 0
+
 
 if __name__ == "__main__":
     exit(main())

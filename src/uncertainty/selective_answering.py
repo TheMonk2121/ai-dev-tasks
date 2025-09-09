@@ -8,7 +8,7 @@ prediction grounding for production-safe RAG responses.
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 

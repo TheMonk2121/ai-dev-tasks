@@ -11,12 +11,14 @@ import psycopg2
 
 DB_DSN = "postgresql://danieljacobs@localhost:5432/ai_agency"
 
+
 def get_file_size(file_path):
     """Get the size of a file in bytes."""
     try:
         return os.path.getsize(file_path)
     except OSError:
         return 0
+
 
 def check_database_consistency():
     """Check database consistency with repository files."""
@@ -29,7 +31,10 @@ def check_database_consistency():
         ("../000_core/000_backlog.md", "000_backlog.md"),
         ("../400_guides/400_02_governance-and-ai-constitution.md", "400_ai-constitution.md"),
         ("../400_guides/400_code-criticality-guide.md", "400_code-criticality-guide.md"),
-        ("../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md", "400_comprehensive-coding-best-practices.md"),
+        (
+            "../600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md",
+            "400_comprehensive-coding-best-practices.md",
+        ),
         ("../400_guides/400_06_memory-and-context-systems.md", "400_context-priority-guide.md"),
         ("../400_guides/400_01_documentation-playbook.md", "400_file-analysis-guide.md"),
         ("../400_guides/400_project-overview.md", "400_project-overview.md"),
@@ -158,6 +163,7 @@ def check_database_consistency():
         print(f"❌ Error checking database consistency: {e}")
         return None
 
+
 def update_outdated_files(outdated_files):
     """Update outdated files in the database."""
     if not outdated_files:
@@ -175,7 +181,7 @@ def update_outdated_files(outdated_files):
         for file_path, filename, db_size, repo_size, updated_at in outdated_files:
             try:
                 # Read current file
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 current_size = len(content)
@@ -264,6 +270,7 @@ def update_outdated_files(outdated_files):
         print(f"❌ Error in update process: {e}")
         return False
 
+
 def main():
     """Main database maintenance function."""
     print("🗄️ Database Maintenance Script")
@@ -310,6 +317,7 @@ def main():
     print(f"  Missing: {len(missing_files)}")
 
     return True
+
 
 if __name__ == "__main__":
     success = main()

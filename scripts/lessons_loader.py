@@ -9,7 +9,7 @@ import json
 import os
 import sys
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from lessons_model import Lesson, filter_lessons, load_lessons
 

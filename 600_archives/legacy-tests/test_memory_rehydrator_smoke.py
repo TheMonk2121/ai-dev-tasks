@@ -9,6 +9,7 @@ import pytest
 # Mark all tests in this file as deprecated
 pytestmark = pytest.mark.deprecated
 
+
 @pytest.mark.tier1
 @pytest.mark.smoke
 def test_planner_role():
@@ -55,6 +56,7 @@ def test_planner_role():
         traceback.print_exc()
         raise
 
+
 @pytest.mark.tier1
 @pytest.mark.smoke
 def test_implementer_role():
@@ -100,6 +102,7 @@ def test_implementer_role():
         traceback.print_exc()
         raise
 
+
 def test_tier1_guard():
     """Test that Tier-1 modules are included for implementer tasks"""
     print("\n🧪 Testing Tier-1 Guard")
@@ -138,6 +141,7 @@ def test_tier1_guard():
         traceback.print_exc()
         raise
 
+
 def test_fusion_configuration():
     """Test different fusion configurations"""
     print("\n🧪 Testing Fusion Configuration")
@@ -160,6 +164,7 @@ def test_fusion_configuration():
 
         traceback.print_exc()
         raise
+
 
 def test_token_budget():
     """Test token budget enforcement"""
@@ -194,6 +199,7 @@ def test_token_budget():
 
         traceback.print_exc()
         raise
+
 
 def test_json_output():
     """Test JSON output format"""
@@ -242,6 +248,7 @@ def test_json_output():
         traceback.print_exc()
         raise
 
+
 def main():
     """Run all smoke tests"""
     print("🚀 Memory Rehydrator Smoke Tests")
@@ -277,6 +284,7 @@ def main():
     else:
         print("⚠️  Some tests failed. Check the output above.")
         return 1
+
 
 if __name__ == "__main__":
     exit(main())

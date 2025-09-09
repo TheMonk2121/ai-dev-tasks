@@ -7,7 +7,6 @@ per-document caps and overall character budget.
 
 from __future__ import annotations
 
-
 DocId = str
 Score = float
 Document = str

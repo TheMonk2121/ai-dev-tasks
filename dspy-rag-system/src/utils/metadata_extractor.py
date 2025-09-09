@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 from dateutil import parser as date_parser
@@ -48,17 +48,20 @@ logger = logging.getLogger(__name__)
 # Regex safety guard (M-2)
 _BAD_RE = re.compile(r"\.[\*\+]\]?\(")  # crude but fast heuristic
 
+
 def _compile_safe(pattern: str) -> re.Pattern:
     """Compile regex pattern with safety check"""
     if _BAD_RE.search(pattern):
         raise ValueError(f"Unsafe regex: {pattern}")
     return re.compile(pattern, re.IGNORECASE)
 
+
 # LRU cache for date parsing (M-3)
 @lru_cache(maxsize=1024)
 def _cached_parse(date_str: str):
     """Cached date parsing for performance"""
     return date_parser.parse(date_str, fuzzy=True)
+
 
 class ConfigDrivenMetadataExtractor:
     """Config-driven metadata extraction with scoring and ranking"""
@@ -74,10 +77,10 @@ class ConfigDrivenMetadataExtractor:
         self.config = self._load_config()
         self._compile_patterns()
 
-    def _load_config(self) -> Dict[str, Any]:
+    def _load_config(self) -> dict[str, Any]:
         """Load configuration from YAML file with proper error handling and schema validation (M-1)"""
         try:
-            with open(self.config_path, "r") as f:
+            with open(self.config_path) as f:
                 config = yaml.safe_load(f)
 
             # Schema validation (M-1)
@@ -100,7 +103,7 @@ class ConfigDrivenMetadataExtractor:
             logger.error(f"Failed to load metadata configuration: {e}")
             return self._get_default_config()
 
-    def _get_default_config(self) -> Dict[str, Any]:
+    def _get_default_config(self) -> dict[str, Any]:
         """Get default configuration if YAML loading fails"""
         return {
             "categories": [{"name": "Uncategorized", "priority": "medium", "weight": 0, "keywords": [], "tags": []}],
@@ -140,7 +143,7 @@ class ConfigDrivenMetadataExtractor:
                 logger.error(f"Unsafe regex pattern in version_patterns: {e}")
                 raise
 
-    def extract_metadata(self, document_path: str, content_preview: str = None) -> Dict[str, Any]:
+    def extract_metadata(self, document_path: str, content_preview: str = None) -> dict[str, Any]:
         """
         Extract metadata from document using config-driven rules
 
@@ -225,7 +228,7 @@ class ConfigDrivenMetadataExtractor:
             logger.error(f"Error extracting metadata for {document_path}: {e}")
             raise
 
-    def _extract_category_with_scoring(self, filename: str) -> Dict[str, Any]:
+    def _extract_category_with_scoring(self, filename: str) -> dict[str, Any]:
         """Extract category using scoring system with improved accuracy"""
         filename_lower = filename.lower()
 
@@ -266,7 +269,7 @@ class ConfigDrivenMetadataExtractor:
 
         return {"category": best_category, "tags": all_tags, "confidence_score": confidence}
 
-    def _extract_file_type_metadata(self, file_type: str, filename: str) -> Dict[str, Any]:
+    def _extract_file_type_metadata(self, file_type: str, filename: str) -> dict[str, Any]:
         """Extract file type specific metadata"""
         file_type_config = self.config.get("file_types", {}).get(file_type, {})
 
@@ -285,7 +288,7 @@ class ConfigDrivenMetadataExtractor:
 
         return metadata
 
-    def _extract_priority(self, filename: str) -> Dict[str, Any]:
+    def _extract_priority(self, filename: str) -> dict[str, Any]:
         """Extract priority with reasons"""
         filename_lower = filename.lower()
         priority = "medium"
@@ -307,7 +310,7 @@ class ConfigDrivenMetadataExtractor:
 
         return {"priority": priority, "reasons": reasons}
 
-    def _extract_dates_and_versions(self, filename: str) -> Dict[str, Any]:
+    def _extract_dates_and_versions(self, filename: str) -> dict[str, Any]:
         """Extract dates and versions from filename with improved error handling and caching (M-3)"""
         metadata = {}
 
@@ -354,7 +357,7 @@ class ConfigDrivenMetadataExtractor:
         else:
             return "large"
 
-    def _extract_content_metadata(self, content: str) -> Dict[str, Any]:
+    def _extract_content_metadata(self, content: str) -> dict[str, Any]:
         """Extract metadata from content preview with proper implementation"""
         content_lower = content.lower()
         tags = set()
@@ -372,16 +375,17 @@ class ConfigDrivenMetadataExtractor:
         self._compile_patterns()
         logger.info("Metadata configuration reloaded")
 
-    def get_category_info(self, category_name: str) -> Optional[Dict[str, Any]]:
+    def get_category_info(self, category_name: str) -> dict[str, Any] | None:
         """Get information about a specific category"""
         for category in self.config.get("categories", []):
             if category["name"] == category_name:
                 return category
         return None
 
-    def list_categories(self) -> List[Dict[str, Any]]:
+    def list_categories(self) -> list[dict[str, Any]]:
         """List all available categories"""
         return self.config.get("categories", [])
+
 
 # Alias for backward compatibility
 MetadataExtractor = ConfigDrivenMetadataExtractor

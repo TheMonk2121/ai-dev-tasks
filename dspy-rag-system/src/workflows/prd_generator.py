@@ -7,7 +7,7 @@ Integrates performance collection with PRD generation process.
 import logging
 import os
 import re
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
 try:
     from ..monitoring.performance_collector import PerformanceTracker
@@ -32,9 +32,9 @@ class PRDGenerator:
     def generate_prd(
         self,
         backlog_item_id: str,
-        backlog_data: Dict[str, Any],
-        output_path: Optional[str] = None,
-    ) -> Tuple[str, Dict[str, Any]]:
+        backlog_data: dict[str, Any],
+        output_path: str | None = None,
+    ) -> tuple[str, dict[str, Any]]:
         """Generate PRD with performance tracking"""
 
         # Start performance tracking
@@ -111,12 +111,12 @@ class PRDGenerator:
     def _load_template(self) -> str:
         """Load template content"""
         try:
-            with open(self.template_path, "r", encoding="utf-8") as f:
+            with open(self.template_path, encoding="utf-8") as f:
                 return f.read()
         except FileNotFoundError:
             raise FileNotFoundError(f"Template not found: {self.template_path}")
 
-    def _parse_template_sections(self, template_content: str) -> Dict[str, str]:
+    def _parse_template_sections(self, template_content: str) -> dict[str, str]:
         """Parse template into sections"""
         sections = {}
 
@@ -129,7 +129,7 @@ class PRDGenerator:
 
         return sections
 
-    def _extract_context_data(self, backlog_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_context_data(self, backlog_data: dict[str, Any]) -> dict[str, Any]:
         """Extract context data from backlog item"""
         context = {
             "backlog_item_id": backlog_data.get("id"),
@@ -145,8 +145,8 @@ class PRDGenerator:
 
     def _generate_prd_content(
         self,
-        template_sections: Dict[str, str],
-        context_data: Dict[str, Any],
+        template_sections: dict[str, str],
+        context_data: dict[str, Any],
         backlog_item_id: str,
     ) -> str:
         """Generate PRD content from template and context"""
@@ -216,7 +216,7 @@ poetry run python src/main.py
 
         return prd_content
 
-    def _generate_sections(self, context_data: Dict[str, Any]) -> Dict[str, str]:
+    def _generate_sections(self, context_data: dict[str, Any]) -> dict[str, str]:
         """Generate PRD sections based on context data"""
         sections = {}
 
@@ -243,7 +243,7 @@ poetry run python src/main.py
 
         return sections
 
-    def _generate_problem_statement(self, context_data: Dict[str, Any]) -> str:
+    def _generate_problem_statement(self, context_data: dict[str, Any]) -> str:
         """Generate problem statement section"""
         title = context_data.get("title", "Unknown")
         description = context_data.get("description", "")
@@ -257,7 +257,7 @@ This backlog item addresses a critical need in the AI development ecosystem work
 ### What's the opportunity?
 Successfully implementing {title} will improve workflow efficiency and developer productivity."""
 
-    def _generate_solution_overview(self, context_data: Dict[str, Any]) -> str:
+    def _generate_solution_overview(self, context_data: dict[str, Any]) -> str:
         """Generate solution overview section"""
         title = context_data.get("title", "Unknown")
 
@@ -272,7 +272,7 @@ The solution will integrate with existing workflow components and follow establi
 - Feature 2: [To be defined based on specific backlog item]
 - Feature 3: [To be defined based on specific backlog item]"""
 
-    def _generate_acceptance_criteria(self, context_data: Dict[str, Any]) -> str:
+    def _generate_acceptance_criteria(self, context_data: dict[str, Any]) -> str:
         """Generate acceptance criteria section"""
         # Use points in the generated content
         points = context_data.get("points", 0)
@@ -296,7 +296,7 @@ The solution will integrate with existing workflow components and follow establi
 - [ ] Performance benchmarks met
 - [ ] Documentation updated"""
 
-    def _generate_technical_approach(self, context_data: Dict[str, Any]) -> str:
+    def _generate_technical_approach(self, context_data: dict[str, Any]) -> str:
         """Generate technical approach section"""
         return """### What technology?
 - Python 3.12 for backend logic
@@ -314,7 +314,7 @@ The solution will integrate with existing workflow components and follow establi
 - Performance overhead must be <5%
 - Must work in local-first environment"""
 
-    def _generate_risks_mitigation(self, context_data: Dict[str, Any]) -> str:
+    def _generate_risks_mitigation(self, context_data: dict[str, Any]) -> str:
         """Generate risks and mitigation section"""
         return """### What could go wrong?
 - **Risk 1**: Performance impact on existing workflows
@@ -331,7 +331,7 @@ The solution will integrate with existing workflow components and follow establi
 - Integration complexity with specific components
 - User adoption and feedback"""
 
-    def _generate_testing_strategy(self, context_data: Dict[str, Any]) -> str:
+    def _generate_testing_strategy(self, context_data: dict[str, Any]) -> str:
         """Generate testing strategy section"""
         return """### What needs testing?
 - Performance impact on workflow execution
@@ -350,7 +350,7 @@ The solution will integrate with existing workflow components and follow establi
 - 100% coverage for critical paths
 - Performance regression testing"""
 
-    def _generate_implementation_plan(self, context_data: Dict[str, Any]) -> str:
+    def _generate_implementation_plan(self, context_data: dict[str, Any]) -> str:
         """Generate implementation plan section"""
         points = context_data.get("points", 0)
         estimated_hours = points * 2  # Rough estimate: 2 hours per point
@@ -370,7 +370,7 @@ The solution will integrate with existing workflow components and follow establi
 - Dependencies: {', '.join(context_data.get('dependencies', []))}
 - Target completion: Based on priority and resource availability"""
 
-    def _validate_prd(self, prd_content: str) -> Dict[str, Any]:
+    def _validate_prd(self, prd_content: str) -> dict[str, Any]:
         """Validate PRD content"""
         validation_result = {
             "valid": True,
@@ -417,7 +417,7 @@ The solution will integrate with existing workflow components and follow establi
 
         logger.info(f"PRD saved to: {output_path}")
 
-    def _generate_performance_summary(self, analysis: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    def _generate_performance_summary(self, analysis: dict[str, Any] | None) -> dict[str, Any]:
         """Generate performance summary for PRD"""
         if not analysis:
             return {
@@ -463,7 +463,7 @@ The solution will integrate with existing workflow components and follow establi
             "quality_score": (quality_gates_passed / max(quality_gates_total, 1)) * 100,
         }
 
-    def _add_performance_summary(self, prd_content: str, performance_summary: Dict[str, Any]) -> str:
+    def _add_performance_summary(self, prd_content: str, performance_summary: dict[str, Any]) -> str:
         """Add performance summary to PRD"""
         summary_template = f"""
 
@@ -501,9 +501,9 @@ The solution will integrate with existing workflow components and follow establi
 # Convenience function for easy integration
 def generate_prd_with_performance(
     backlog_item_id: str,
-    backlog_data: Dict[str, Any],
-    output_path: Optional[str] = None,
-) -> Tuple[str, Dict[str, Any]]:
+    backlog_data: dict[str, Any],
+    output_path: str | None = None,
+) -> tuple[str, dict[str, Any]]:
     """Generate PRD with performance tracking"""
     generator = PRDGenerator()
     return generator.generate_prd(backlog_item_id, backlog_data, output_path)

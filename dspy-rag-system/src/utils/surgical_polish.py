@@ -10,7 +10,7 @@ import logging
 import re
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 LOG = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class ChunkID:
     """Idempotent chunk ID with versioning."""
 
     doc_id: str
-    byte_span: Tuple[int, int]
+    byte_span: tuple[int, int]
     chunk_version: str
     config_hash: str
     content_hash: str
@@ -70,8 +70,8 @@ class SurgicalPolish:
     """High-ROI production optimizations."""
 
     def __init__(self):
-        self.rrf_weights: Dict[QueryType, RRFWeights] = {}
-        self.content_overrides: Dict[ContentType, ContentTypeOverride] = {}
+        self.rrf_weights: dict[QueryType, RRFWeights] = {}
+        self.content_overrides: dict[ContentType, ContentTypeOverride] = {}
         self.chunk_version = "v1.0"
 
         # Initialize default configurations
@@ -229,7 +229,7 @@ class SurgicalPolish:
         return self.content_overrides.get(content_type, self.content_overrides[ContentType.UNKNOWN])
 
     def generate_idempotent_chunk_id(
-        self, doc_id: str, content: str, byte_span: Tuple[int, int], config_hash: str
+        self, doc_id: str, content: str, byte_span: tuple[int, int], config_hash: str
     ) -> ChunkID:
         """Generate idempotent chunk ID with versioning."""
 
@@ -238,7 +238,7 @@ class SurgicalPolish:
 
         # Create chunk ID components
         chunk_id = hashlib.sha256(
-            f"{doc_id}|{byte_span[0]}-{byte_span[1]}|{self.chunk_version}|{config_hash}|{content_hash}".encode("utf-8")
+            f"{doc_id}|{byte_span[0]}-{byte_span[1]}|{self.chunk_version}|{config_hash}|{content_hash}".encode()
         ).hexdigest()[:16]
 
         return ChunkID(
@@ -251,8 +251,8 @@ class SurgicalPolish:
         )
 
     def apply_query_optimizations(
-        self, query: str, dense_results: List[Dict], sparse_results: List[Dict]
-    ) -> List[Dict]:
+        self, query: str, dense_results: list[dict], sparse_results: list[dict]
+    ) -> list[dict]:
         """Apply query-specific optimizations to results."""
         # Get RRF weights for this query type
         rrf_weights = self.get_rrf_weights(query)
@@ -270,8 +270,8 @@ class SurgicalPolish:
         return fused_results
 
     def _apply_rrf_fusion(
-        self, dense_results: List[Dict], sparse_results: List[Dict], dense_weight: float, sparse_weight: float
-    ) -> List[Dict]:
+        self, dense_results: list[dict], sparse_results: list[dict], dense_weight: float, sparse_weight: float
+    ) -> list[dict]:
         """Apply RRF fusion with custom weights."""
         # Create result maps
         dense_map = {f"{r['document_id']}_{r['chunk_index']}": r for r in dense_results}
@@ -306,7 +306,7 @@ class SurgicalPolish:
 
         return fused_results
 
-    def get_chunking_config_for_content(self, content: str, base_config: Dict[str, Any]) -> Dict[str, Any]:
+    def get_chunking_config_for_content(self, content: str, base_config: dict[str, Any]) -> dict[str, Any]:
         """Get chunking configuration overrides for specific content."""
         content_override = self.get_content_override(content)
 
@@ -326,7 +326,7 @@ class SurgicalPolish:
 
         return config
 
-    def validate_chunk_id(self, chunk_id: str, expected_components: Dict[str, str]) -> bool:
+    def validate_chunk_id(self, chunk_id: str, expected_components: dict[str, str]) -> bool:
         """Validate chunk ID against expected components."""
         try:
             # Parse chunk ID components (this would depend on your actual chunk ID format)
@@ -343,7 +343,7 @@ class SurgicalPolish:
             LOG.error(f"Chunk ID validation failed: {e}")
             return False
 
-    def get_optimization_summary(self) -> Dict[str, Any]:
+    def get_optimization_summary(self) -> dict[str, Any]:
         """Get summary of all optimizations."""
         return {
             "rrf_weights": {
@@ -385,12 +385,12 @@ def get_surgical_polish() -> SurgicalPolish:
     return _surgical_polish
 
 
-def optimize_query(query: str, dense_results: List[Dict], sparse_results: List[Dict]) -> List[Dict]:
+def optimize_query(query: str, dense_results: list[dict], sparse_results: list[dict]) -> list[dict]:
     """Convenience function for query optimization."""
     return get_surgical_polish().apply_query_optimizations(query, dense_results, sparse_results)
 
 
-def get_chunking_config(content: str, base_config: Dict[str, Any]) -> Dict[str, Any]:
+def get_chunking_config(content: str, base_config: dict[str, Any]) -> dict[str, Any]:
     """Convenience function for content-specific chunking config."""
     return get_surgical_polish().get_chunking_config_for_content(content, base_config)
 

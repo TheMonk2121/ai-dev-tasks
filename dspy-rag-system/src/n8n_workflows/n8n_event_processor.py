@@ -13,7 +13,7 @@ import time
 from datetime import datetime
 
 # Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from n8n_workflows.n8n_integration import create_event, get_n8n_manager
 from utils.database_resilience import get_database_manager
@@ -21,13 +21,14 @@ from utils.logger import get_logger
 
 logger = get_logger("n8n_event_processor")
 
+
 class N8nEventProcessor:
     """Background service for processing n8n workflow events"""
 
     def __init__(self, poll_interval: int = 30, max_events_per_cycle: int = 10):
         """
         Initialize the n8n event processor.
-        
+
         Args:
             poll_interval: Polling interval in seconds
             max_events_per_cycle: Maximum events to process per cycle
@@ -40,12 +41,7 @@ class N8nEventProcessor:
         # Service state
         self.running = False
         self.thread = None
-        self.stats = {
-            "events_processed": 0,
-            "events_failed": 0,
-            "last_poll": None,
-            "start_time": None
-        }
+        self.stats = {"events_processed": 0, "events_failed": 0, "last_poll": None, "start_time": None}
 
         # Signal handling
         signal.signal(signal.SIGINT, self._signal_handler)
@@ -117,19 +113,18 @@ class N8nEventProcessor:
             "events_processed": self.stats["events_processed"],
             "events_failed": self.stats["events_failed"],
             "last_poll": self.stats["last_poll"].isoformat() if self.stats["last_poll"] else None,
-            "poll_interval": self.poll_interval
+            "poll_interval": self.poll_interval,
         }
 
-    def create_system_event(self, event_type: str, event_data: dict,
-                          priority: int = 0) -> int:
+    def create_system_event(self, event_type: str, event_data: dict, priority: int = 0) -> int:
         """
         Create a system event for processing.
-        
+
         Args:
             event_type: Type of event
             event_data: Event data
             priority: Event priority
-            
+
         Returns:
             Event ID
         """
@@ -144,46 +139,35 @@ class N8nEventProcessor:
     def trigger_backlog_scrubber(self) -> int:
         """Trigger backlog scrubber workflow"""
         return self.create_system_event(
-            "backlog-scrubber",
-            {"trigger": "manual", "timestamp": datetime.now().isoformat()},
-            priority=1
+            "backlog-scrubber", {"trigger": "manual", "timestamp": datetime.now().isoformat()}, priority=1
         )
 
     def trigger_document_processing(self, file_path: str) -> int:
         """Trigger document processing workflow"""
         return self.create_system_event(
-            "document-processor",
-            {"file_path": file_path, "trigger": "file_watch"},
-            priority=2
+            "document-processor", {"file_path": file_path, "trigger": "file_watch"}, priority=2
         )
 
     def trigger_system_health_check(self) -> int:
         """Trigger system health check workflow"""
         return self.create_system_event(
-            "system-monitor",
-            {"trigger": "scheduled", "timestamp": datetime.now().isoformat()},
-            priority=0
+            "system-monitor", {"trigger": "scheduled", "timestamp": datetime.now().isoformat()}, priority=0
         )
+
 
 def main():
     """Main entry point for the n8n event processor service"""
     import argparse
 
     parser = argparse.ArgumentParser(description="n8n Event Processor Service")
-    parser.add_argument("--poll-interval", type=int, default=30,
-                       help="Polling interval in seconds")
-    parser.add_argument("--max-events", type=int, default=10,
-                       help="Maximum events to process per cycle")
-    parser.add_argument("--daemon", action="store_true",
-                       help="Run as daemon service")
+    parser.add_argument("--poll-interval", type=int, default=30, help="Polling interval in seconds")
+    parser.add_argument("--max-events", type=int, default=10, help="Maximum events to process per cycle")
+    parser.add_argument("--daemon", action="store_true", help="Run as daemon service")
 
     args = parser.parse_args()
 
     # Initialize processor
-    processor = N8nEventProcessor(
-        poll_interval=args.poll_interval,
-        max_events_per_cycle=args.max_events
-    )
+    processor = N8nEventProcessor(poll_interval=args.poll_interval, max_events_per_cycle=args.max_events)
 
     try:
         # Start the service
@@ -205,6 +189,7 @@ def main():
         print("\nShutting down...")
     finally:
         processor.stop()
+
 
 if __name__ == "__main__":
     main()

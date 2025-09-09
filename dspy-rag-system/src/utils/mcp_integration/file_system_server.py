@@ -10,7 +10,7 @@ import io
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import List
+
 
 from .base_server import DocumentMetadata, MCPConfig, MCPError, MCPProtocolUtils, MCPServer, ProcessedDocument
 
@@ -86,7 +86,7 @@ class FileSystemMCPServer(MCPServer):
         """Check if this server supports the given content type."""
         return content_type in self.supported_extensions.values()
 
-    def get_supported_types(self) -> List[str]:
+    def get_supported_types(self) -> list[str]:
         """Get list of supported content types."""
         return list(self.supported_extensions.values())
 
@@ -359,7 +359,7 @@ class FileSystemMCPServer(MCPServer):
 
         return "\n".join(processed_lines)
 
-    def get_supported_extensions(self) -> List[str]:
+    def get_supported_extensions(self) -> list[str]:
         """Get list of supported file extensions."""
         return list(self.supported_extensions.keys())
 

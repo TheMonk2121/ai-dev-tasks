@@ -111,5 +111,6 @@ def benchmark_entity_expansion():
 
     return results
 
+
 if __name__ == "__main__":
     benchmark_entity_expansion()

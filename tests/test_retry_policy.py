@@ -93,6 +93,7 @@ class TestRetryDecorator:
         assert delays[1] >= 2.0  # 2^1 = 2 seconds
         assert delays[2] >= 4.0  # 2^2 = 4 seconds
 
+
 class TestErrorPolicyLoading:
     """Test error policy loading from configuration"""
 
@@ -135,6 +136,7 @@ class TestErrorPolicyLoading:
 
             assert policy["max_retries"] == 3
             assert policy["backoff_factor"] == 2.0
+
 
 class TestFatalErrorHandling:
     """Test that fatal errors don't retry"""
@@ -187,6 +189,7 @@ class TestFatalErrorHandling:
 
         assert call_count == 1  # Should not retry
 
+
 class TestRetryConvenienceFunctions:
     """Test convenience retry functions"""
 
@@ -235,6 +238,7 @@ class TestRetryConvenienceFunctions:
 
         assert call_count == 3  # 2 retries + 1 initial
 
+
 class TestIsFatalError:
     """Test fatal error detection"""
 
@@ -266,6 +270,7 @@ class TestIsFatalError:
         fatal_errors = ["ValueError", "TypeError"]
 
         assert not is_fatal_error(error, fatal_errors)
+
 
 class TestJitter:
     """Test jitter functionality"""
@@ -304,6 +309,7 @@ class TestJitter:
         assert abs(delays[0] - 1.0) < 0.1  # Should be close to 1 second
         assert abs(delays[1] - 1.0) < 0.1  # Should be close to 1 second
 
+
 class TestErrorHandling:
     """Test error handling utilities"""
 
@@ -333,6 +339,7 @@ class TestErrorHandling:
 
         with pytest.raises(ValueError):
             handle_retryable_errors(fatal_func)
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

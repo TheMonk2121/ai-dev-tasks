@@ -7,12 +7,12 @@ for learning optimal fusion weights.
 
 import json
 import logging
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-def load_gold_cases(path: str) -> List[Dict[str, Any]]:
+def load_gold_cases(path: str) -> list[dict[str, Any]]:
     """
     Load gold cases from JSONL file.
 
@@ -23,14 +23,14 @@ def load_gold_cases(path: str) -> List[Dict[str, Any]]:
         List of gold case dictionaries
     """
     cases = []
-    with open(path, "r") as f:
+    with open(path) as f:
         for line in f:
             if line.strip():
                 cases.append(json.loads(line))
     return cases
 
 
-def gold_match(row: Dict[str, Any], gold: Dict[str, Any]) -> bool:
+def gold_match(row: dict[str, Any], gold: dict[str, Any]) -> bool:
     """
     Check if a retrieved row matches the gold standard for a case.
 
@@ -63,7 +63,7 @@ def gold_match(row: Dict[str, Any], gold: Dict[str, Any]) -> bool:
     return False
 
 
-def make_query_parts(user_q: str, tag: str = "") -> Tuple[str, str, str]:
+def make_query_parts(user_q: str, tag: str = "") -> tuple[str, str, str]:
     """
     Extract query components using the query rewrite module.
 
@@ -85,7 +85,7 @@ def make_query_parts(user_q: str, tag: str = "") -> Tuple[str, str, str]:
         return user_q, user_q, user_q
 
 
-def embed_query(user_q: str, model_name: str) -> List[float]:
+def embed_query(user_q: str, model_name: str) -> list[float]:
     """
     Embed query using sentence transformers.
 
@@ -110,7 +110,7 @@ def embed_query(user_q: str, model_name: str) -> List[float]:
         return []
 
 
-def collect_candidates(user_q: str, tag: str, k: int) -> List[Dict[str, Any]]:
+def collect_candidates(user_q: str, tag: str, k: int) -> list[dict[str, Any]]:
     """
     Collect retrieval candidates for a query.
 
@@ -155,8 +155,8 @@ def collect_candidates(user_q: str, tag: str, k: int) -> List[Dict[str, Any]]:
 
 
 def build_pairs(
-    cases: List[Dict[str, Any]], pairs_per_query: int, k_pool: int, model_name: str, feature_names: List[str]
-) -> List[Tuple[List[float], List[float]]]:
+    cases: list[dict[str, Any]], pairs_per_query: int, k_pool: int, model_name: str, feature_names: list[str]
+) -> list[tuple[list[float], list[float]]]:
     """
     Build positive/negative training pairs from gold cases.
 
@@ -225,7 +225,7 @@ def build_pairs(
     return pairs
 
 
-def extract_features(row: Dict[str, Any], feature_names: List[str]) -> List[float]:
+def extract_features(row: dict[str, Any], feature_names: list[str]) -> list[float]:
     """
     Extract features from a retrieval result row.
 
@@ -290,7 +290,7 @@ def extract_features(row: Dict[str, Any], feature_names: List[str]) -> List[floa
     return features
 
 
-def build_fusion_features_for_training(row: Dict[str, Any]):
+def build_fusion_features_for_training(row: dict[str, Any]):
     """
     Build a FusionFeatures object from a retrieval result row for training data.
     This provides schema validation and JSON-safe serialization.

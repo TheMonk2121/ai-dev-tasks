@@ -20,7 +20,7 @@ import os
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class CompatibilityConfig:
         """Load configuration from file."""
         try:
             if os.path.exists(self.config_file):
-                with open(self.config_file, "r") as f:
+                with open(self.config_file) as f:
                     config_data = json.load(f)
                     for key, value in config_data.items():
                         if hasattr(self, key):
@@ -73,7 +73,7 @@ class CompatibilityConfig:
 class BackwardCompatibilityManager:
     """Manages backward compatibility between static files and LTST memory."""
 
-    def __init__(self, config: Optional[CompatibilityConfig] = None):
+    def __init__(self, config: CompatibilityConfig | None = None):
         """Initialize backward compatibility manager."""
         self.config = config or CompatibilityConfig()
         self.logger = logging.getLogger(__name__)
@@ -97,7 +97,7 @@ class BackwardCompatibilityManager:
         if not ltst_path.exists():
             self.logger.warning(f"LTST memory path does not exist: {ltst_path}")
 
-    def get_memory_content(self, query: str, user_id: str = "default") -> Dict[str, Any]:
+    def get_memory_content(self, query: str, user_id: str = "default") -> dict[str, Any]:
         """
         Get memory content using the configured path (LTST or static).
 
@@ -148,7 +148,7 @@ class BackwardCompatibilityManager:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    def _get_ltst_memory_content(self, query: str, user_id: str) -> Optional[Dict[str, Any]]:
+    def _get_ltst_memory_content(self, query: str, user_id: str) -> dict[str, Any] | None:
         """Get memory content from LTST memory system."""
         try:
             # Import LTST memory system
@@ -193,7 +193,7 @@ class BackwardCompatibilityManager:
             self.logger.error(f"Error accessing LTST memory: {e}")
             return None
 
-    def _get_static_memory_content(self, query: str, user_id: str) -> Optional[Dict[str, Any]]:
+    def _get_static_memory_content(self, query: str, user_id: str) -> dict[str, Any] | None:
         """Get memory content from static files."""
         try:
             static_path = Path(self.config.static_files_path)
@@ -210,7 +210,7 @@ class BackwardCompatibilityManager:
             for file_path in memory_files:
                 if file_path.exists():
                     try:
-                        with open(file_path, "r", encoding="utf-8") as f:
+                        with open(file_path, encoding="utf-8") as f:
                             file_content = f.read()
                             content[file_path.name] = file_content
                     except Exception as e:
@@ -267,7 +267,7 @@ class BackwardCompatibilityManager:
             self.logger.error(f"Failed to toggle LTST memory: {e}")
             return False
 
-    def validate_agent_compatibility(self) -> Dict[str, Any]:
+    def validate_agent_compatibility(self) -> dict[str, Any]:
         """
         Validate that agents work correctly with current configuration.
 
@@ -324,7 +324,7 @@ class BackwardCompatibilityManager:
             validation_results["overall_status"] = "error"
             return validation_results
 
-    def get_usage_statistics(self) -> Dict[str, Any]:
+    def get_usage_statistics(self) -> dict[str, Any]:
         """Get usage statistics for backward compatibility."""
         return {
             "ltst_path_usage": self.ltst_path_usage,
@@ -358,7 +358,7 @@ class BackwardCompatibilityManager:
         self.logger.info("Backward compatibility statistics reset")
 
 
-def create_backward_compatibility_manager(config: Optional[CompatibilityConfig] = None) -> BackwardCompatibilityManager:
+def create_backward_compatibility_manager(config: CompatibilityConfig | None = None) -> BackwardCompatibilityManager:
     """
     Factory function to create a backward compatibility manager.
 

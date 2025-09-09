@@ -6,7 +6,7 @@ Based on the research paper and ChatGPT Pro's recommendations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import networkx as nx
 
@@ -32,8 +32,8 @@ class SemanticNode:
     node_id: str
     node_type: NodeType
     content: str
-    metadata: Dict[str, Any]
-    embedding: Optional[List[float]] = None
+    metadata: dict[str, Any]
+    embedding: list[float] | None = None
 
 
 @dataclass
@@ -44,7 +44,7 @@ class SemanticEdge:
     target_id: str
     edge_type: EdgeType
     weight: float
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
 class EnhancedQueryPatternGraph:
@@ -55,7 +55,7 @@ class EnhancedQueryPatternGraph:
         self.node_metadata = {}
         self.edge_metadata = {}
 
-    def add_query_pattern(self, query: str, intent: str, context: Dict[str, Any]) -> str:
+    def add_query_pattern(self, query: str, intent: str, context: dict[str, Any]) -> str:
         """Add a query pattern as a semantic process graph"""
         pattern_id = f"pattern_{len(self.graph.nodes)}"
 
@@ -224,7 +224,7 @@ class EnhancedQueryPatternGraph:
 
         return " ".join(words)
 
-    def generate_triplets(self, num_triplets: int = 100) -> List[Tuple[str, str, str]]:
+    def generate_triplets(self, num_triplets: int = 100) -> list[tuple[str, str, str]]:
         """Generate (anchor, positive, negative) triplets for training"""
         triplets = []
         pattern_ids = list(set([n.split("_")[0] for n in self.graph.nodes if "_" in n]))
@@ -245,7 +245,7 @@ class EnhancedQueryPatternGraph:
 
         return triplets
 
-    def export_graph(self) -> Dict[str, Any]:
+    def export_graph(self) -> dict[str, Any]:
         """Export graph for analysis or persistence"""
         return {
             "nodes": dict(self.graph.nodes(data=True)),

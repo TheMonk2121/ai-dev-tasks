@@ -124,7 +124,7 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]
+select = ["E", "F", "I", "UP"]
 ignore = [
     "E501", # Line too long - handled by black
     "E402", # Module level import not at top of file - common in scripts

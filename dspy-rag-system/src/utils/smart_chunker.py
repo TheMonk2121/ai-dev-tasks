@@ -8,7 +8,7 @@ import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 try:
     from .tokenizer import TokenAwareChunker
@@ -26,7 +26,7 @@ class ChunkBoundary:
     end_pos: int
     chunk_type: str  # 'code_function', 'code_class', 'markdown_heading', 'prose', 'code_fence'
     content: str
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
 class SmartCodeAwareChunker:
@@ -66,7 +66,7 @@ class SmartCodeAwareChunker:
             f"overlap_tokens={overlap_tokens}, preserve_code={preserve_code_units}"
         )
 
-    def create_smart_chunks(self, text: str, file_path: Optional[str] = None) -> List[Dict[str, Any]]:
+    def create_smart_chunks(self, text: str, file_path: str | None = None) -> list[dict[str, Any]]:
         """
         Create smart chunks that preserve code structure
         Returns chunks with metadata for stitching
@@ -86,7 +86,7 @@ class SmartCodeAwareChunker:
             # Fallback to base chunker
             return self._fallback_to_base_chunker(text)
 
-    def _chunk_code_file(self, text: str, file_path: Optional[str]) -> List[Dict[str, Any]]:
+    def _chunk_code_file(self, text: str, file_path: str | None) -> list[dict[str, Any]]:
         """Chunk code files preserving function/class boundaries"""
         chunks = []
 
@@ -102,7 +102,7 @@ class SmartCodeAwareChunker:
 
         return chunks
 
-    def _find_code_boundaries(self, text: str) -> List[ChunkBoundary]:
+    def _find_code_boundaries(self, text: str) -> list[ChunkBoundary]:
         """Find all code boundaries in the text"""
         boundaries = []
 
@@ -146,7 +146,7 @@ class SmartCodeAwareChunker:
         boundaries.sort(key=lambda x: x.start_pos)
         return boundaries
 
-    def _group_code_boundaries(self, boundaries: List[ChunkBoundary]) -> List[Dict[str, Any]]:
+    def _group_code_boundaries(self, boundaries: list[ChunkBoundary]) -> list[dict[str, Any]]:
         """Group boundaries into logical units (function + docstring + body)"""
         units = []
 
@@ -173,7 +173,7 @@ class SmartCodeAwareChunker:
 
         return units
 
-    def _chunk_code_logical_unit(self, unit: Dict[str, Any], text: str) -> List[Dict[str, Any]]:
+    def _chunk_code_logical_unit(self, unit: dict[str, Any], text: str) -> list[dict[str, Any]]:
         """Chunk a logical code unit (e.g., function) while preserving structure"""
         unit_text = text[unit["start_pos"] : unit["end_pos"]]
 
@@ -215,7 +215,7 @@ class SmartCodeAwareChunker:
 
         return chunks
 
-    def _chunk_markdown_file(self, text: str, file_path: Optional[str]) -> List[Dict[str, Any]]:
+    def _chunk_markdown_file(self, text: str, file_path: str | None) -> list[dict[str, Any]]:
         """Chunk markdown files preserving heading structure"""
         chunks = []
 
@@ -231,7 +231,7 @@ class SmartCodeAwareChunker:
 
         return chunks
 
-    def _find_markdown_boundaries(self, text: str) -> List[ChunkBoundary]:
+    def _find_markdown_boundaries(self, text: str) -> list[ChunkBoundary]:
         """Find all markdown heading boundaries in the text"""
         boundaries = []
         for match in self.patterns["markdown_heading"].finditer(text):
@@ -246,7 +246,7 @@ class SmartCodeAwareChunker:
             )
         return boundaries
 
-    def _group_markdown_boundaries(self, boundaries: List[ChunkBoundary], text: str) -> List[Dict[str, Any]]:
+    def _group_markdown_boundaries(self, boundaries: list[ChunkBoundary], text: str) -> list[dict[str, Any]]:
         """Group markdown boundaries into logical units (heading + content)"""
         units = []
         current_unit = {"heading": "Introduction", "content": [], "boundaries": [], "start_pos": 0}
@@ -292,7 +292,7 @@ class SmartCodeAwareChunker:
 
         return units
 
-    def _chunk_markdown_logical_unit(self, unit: Dict[str, Any], text: str) -> List[Dict[str, Any]]:
+    def _chunk_markdown_logical_unit(self, unit: dict[str, Any], text: str) -> list[dict[str, Any]]:
         """Chunk a logical markdown unit (e.g., heading + content) while preserving structure"""
         unit_text = text[unit["start_pos"] : unit["end_pos"]]
 
@@ -334,7 +334,7 @@ class SmartCodeAwareChunker:
 
         return chunks
 
-    def _chunk_generic_text(self, text: str, file_path: Optional[str]) -> List[Dict[str, Any]]:
+    def _chunk_generic_text(self, text: str, file_path: str | None) -> list[dict[str, Any]]:
         """Chunk generic text files"""
         chunks = []
         base_chunks = self.base_chunker.create_chunks(text)
@@ -352,8 +352,8 @@ class SmartCodeAwareChunker:
         return chunks
 
     def stitch_adjacent_chunks(
-        self, chunks: List[Dict[str, Any]], query_type: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+        self, chunks: list[dict[str, Any]], query_type: str | None = None
+    ) -> list[dict[str, Any]]:
         """
         Stitch adjacent chunks when re-ranking
         Implements the coach's stitching strategy
@@ -401,7 +401,7 @@ class SmartCodeAwareChunker:
         logger.info(f"Stitched {len(chunks)} chunks into {len(stitched_chunks)} chunks")
         return stitched_chunks
 
-    def _fallback_to_base_chunker(self, text: str) -> List[Dict[str, Any]]:
+    def _fallback_to_base_chunker(self, text: str) -> list[dict[str, Any]]:
         """Fallback to base chunker if smart chunking fails"""
         logger.warning("Falling back to base chunker")
         base_chunks = self.base_chunker.create_chunks(text)

@@ -17,7 +17,7 @@ import logging
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 # Optional psycopg2 import to allow importing this module without DB deps
 try:  # pragma: no cover - guarded import
@@ -36,8 +36,8 @@ class ConversationMessage:
     role: str  # 'human', 'ai', 'system'
     content: str
     message_type: str = "message"
-    metadata: Optional[Dict[str, Any]] = None
-    parent_message_id: Optional[int] = None
+    metadata: dict[str, Any] | None = None
+    parent_message_id: int | None = None
     is_context_message: bool = False
     relevance_score: float = 0.5
 
@@ -52,11 +52,11 @@ class ConversationSession:
 
     session_id: str
     user_id: str
-    session_name: Optional[str] = None
+    session_name: str | None = None
     session_type: str = "conversation"
     status: str = "active"
-    metadata: Optional[Dict[str, Any]] = None
-    context_summary: Optional[str] = None
+    metadata: dict[str, Any] | None = None
+    context_summary: str | None = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -72,15 +72,15 @@ class ConversationContext:
     context_key: str
     context_value: str
     relevance_score: float = 0.0
-    metadata: Optional[Dict[str, Any]] = None
-    expires_at: Optional[datetime] = None
+    metadata: dict[str, Any] | None = None
+    expires_at: datetime | None = None
 
     # Decision intelligence fields
-    decision_head: Optional[str] = None  # Normalized decision summary
+    decision_head: str | None = None  # Normalized decision summary
     decision_status: str = "open"  # 'open', 'closed', 'superseded'
-    superseded_by: Optional[str] = None  # ID of superseding decision
-    entities: Optional[List[str]] = None  # JSONB array of entity names
-    files: Optional[List[str]] = None  # JSONB array of file paths
+    superseded_by: str | None = None  # ID of superseding decision
+    entities: list[str] | None = None  # JSONB array of entity names
+    files: list[str] | None = None  # JSONB array of file paths
 
     def __post_init__(self):
         if self.metadata is None:
@@ -160,7 +160,7 @@ class ConversationStorage:
         # Attribute present for compatibility with tests asserting/patching it
         self.db_manager = _DBShim()
 
-    def get_user_sessions(self, user_id: str, limit: int = 20, active_only: bool = False) -> List[Dict[str, Any]]:
+    def get_user_sessions(self, user_id: str, limit: int = 20, active_only: bool = False) -> list[dict[str, Any]]:
         """Return recent sessions for a user from the database.
 
         Uses the conversation_sessions table and orders by last_activity desc.
@@ -176,7 +176,7 @@ class ConversationStorage:
                 "FROM conversation_sessions",
                 "WHERE user_id = %s",
             ]
-            params: List[Any] = [user_id]
+            params: list[Any] = [user_id]
             if active_only:
                 query.append("AND status = 'active'")
             query.append("ORDER BY last_activity DESC LIMIT %s")
@@ -316,7 +316,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to create session: {e}")
             return False
 
-    def store_message(self, message: ConversationMessage, embedding: Optional[List[float]] = None) -> bool:
+    def store_message(self, message: ConversationMessage, embedding: list[float] | None = None) -> bool:
         """Store a conversation message."""
         start_time = datetime.now()
 
@@ -384,7 +384,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to store message: {e}")
             return False
 
-    def retrieve_session_messages(self, session_id: str, limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:
+    def retrieve_session_messages(self, session_id: str, limit: int = 50, offset: int = 0) -> list[dict[str, Any]]:
         """Retrieve messages for a session."""
         start_time = datetime.now()
 
@@ -418,10 +418,10 @@ class ConversationStorage:
             self.logger.error(f"Failed to retrieve messages: {e}")
             return []
 
-    def get_messages(self, session_id: str, limit: int = 50, offset: int = 0) -> List[ConversationMessage]:
+    def get_messages(self, session_id: str, limit: int = 50, offset: int = 0) -> list[ConversationMessage]:
         """Adapter that returns ConversationMessage objects for a session."""
         rows = self.retrieve_session_messages(session_id, limit=limit, offset=offset)
-        out: List[ConversationMessage] = []
+        out: list[ConversationMessage] = []
         for r in rows:
             try:
                 out.append(
@@ -442,11 +442,11 @@ class ConversationStorage:
 
     def search_messages_semantic(
         self,
-        query_embedding: List[float],
-        session_id: Optional[str] = None,
+        query_embedding: list[float],
+        session_id: str | None = None,
         limit: int = 10,
         similarity_threshold: float = 0.7,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Search messages using semantic similarity."""
         start_time = datetime.now()
 
@@ -504,10 +504,10 @@ class ConversationStorage:
     def search_messages(
         self,
         query: str,
-        session_id: Optional[str] = None,
+        session_id: str | None = None,
         limit: int = 10,
         similarity_threshold: float = 0.7,
-    ) -> List[Tuple[Dict[str, Any], float]]:
+    ) -> list[tuple[dict[str, Any], float]]:
         """Lightweight text search adapter that does not require embeddings.
 
         Returns list of (message_dict, similarity_score) tuples.
@@ -518,7 +518,7 @@ class ConversationStorage:
                 return []
             window = max(limit * 5, 50)
             candidates = self.retrieve_session_messages(session_id, limit=window)
-            results: List[Tuple[Dict[str, Any], float]] = []
+            results: list[tuple[dict[str, Any], float]] = []
             q_tokens = set(q.split())
             for msg in candidates:
                 text = str(msg.get("content", "")).lower()
@@ -546,12 +546,12 @@ class ConversationStorage:
         context_key: str,
         context_value: str,
         relevance_score: float = 0.0,
-        expires_at: Optional[datetime] = None,
-        decision_head: Optional[str] = None,
+        expires_at: datetime | None = None,
+        decision_head: str | None = None,
         decision_status: str = "open",
-        superseded_by: Optional[str] = None,
-        entities: Optional[List[str]] = None,
-        files: Optional[List[str]] = None,
+        superseded_by: str | None = None,
+        entities: list[str] | None = None,
+        files: list[str] | None = None,
     ) -> bool:
         """Store conversation context with decision intelligence support."""
         start_time = datetime.now()
@@ -609,8 +609,8 @@ class ConversationStorage:
             return False
 
     def retrieve_context(
-        self, session_id: str, context_type: Optional[str] = None, limit: int = 20
-    ) -> List[Dict[str, Any]]:
+        self, session_id: str, context_type: str | None = None, limit: int = 20
+    ) -> list[dict[str, Any]]:
         """Retrieve conversation context."""
         start_time = datetime.now()
 
@@ -707,8 +707,8 @@ class ConversationStorage:
             return False
 
     def retrieve_user_preferences(
-        self, user_id: str, preference_type: Optional[str] = None, limit: int = 50
-    ) -> List[Dict[str, Any]]:
+        self, user_id: str, preference_type: str | None = None, limit: int = 50
+    ) -> list[dict[str, Any]]:
         """Retrieve user preferences."""
         start_time = datetime.now()
 
@@ -754,7 +754,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to retrieve preferences: {e}")
             return []
 
-    def get_session_summary(self, session_id: str) -> Optional[Dict[str, Any]]:
+    def get_session_summary(self, session_id: str) -> dict[str, Any] | None:
         """Get session summary information."""
         start_time = datetime.now()
 
@@ -782,7 +782,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to get session summary: {e}")
             return None
 
-    def cleanup_expired_data(self) -> Tuple[int, int]:
+    def cleanup_expired_data(self) -> tuple[int, int]:
         """Clean up expired context and cache entries."""
         start_time = datetime.now()
 
@@ -815,7 +815,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to cleanup expired data: {e}")
             return 0, 0
 
-    def get_performance_metrics(self, hours: int = 24) -> Dict[str, Any]:
+    def get_performance_metrics(self, hours: int = 24) -> dict[str, Any]:
         """Get performance metrics for the specified time period."""
         try:
             if self.cursor is None:
@@ -915,10 +915,10 @@ class ConversationStorage:
         decision_head: str,
         context_value: str,
         decision_status: str = "open",
-        entities: Optional[List[str]] = None,
-        files: Optional[List[str]] = None,
+        entities: list[str] | None = None,
+        files: list[str] | None = None,
         relevance_score: float = 0.8,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
         auto_supersede: bool = True,
     ) -> bool:
         """Store a decision context with decision intelligence fields and automatic supersedence."""
@@ -994,7 +994,7 @@ class ConversationStorage:
             return False
 
     def _check_and_mark_superseded(
-        self, session_id: str, new_decision_head: str, new_entities: Optional[List[str]]
+        self, session_id: str, new_decision_head: str, new_entities: list[str] | None
     ) -> None:
         """Check for conflicting decisions and mark them as superseded."""
         try:
@@ -1058,7 +1058,7 @@ class ConversationStorage:
             # Don't raise the exception - just log it
 
     def _is_decision_conflicting(
-        self, new_head: str, new_entities: List[str], existing_head: str, existing_entities: Optional[List[str]]
+        self, new_head: str, new_entities: list[str], existing_head: str, existing_entities: list[str] | None
     ) -> bool:
         """Determine if two decisions are conflicting."""
         try:
@@ -1171,11 +1171,11 @@ class ConversationStorage:
 
     def retrieve_decisions(
         self,
-        session_id: Optional[str] = None,
-        decision_status: Optional[str] = None,
-        entities: Optional[List[str]] = None,
+        session_id: str | None = None,
+        decision_status: str | None = None,
+        entities: list[str] | None = None,
         limit: int = 20,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Retrieve decisions with filtering options."""
         start_time = datetime.now()
 
@@ -1337,7 +1337,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to mark decision as superseded: {e}")
             return False
 
-    def search_decisions(self, query: str, session_id: Optional[str] = None, limit: int = 20) -> List[Dict[str, Any]]:
+    def search_decisions(self, query: str, session_id: str | None = None, limit: int = 20) -> list[dict[str, Any]]:
         """Search decisions using query-conditioned retrieval with BM25 and vector search."""
         start_time = datetime.now()
 
@@ -1380,7 +1380,7 @@ class ConversationStorage:
 
             trigram_enabled = _os.getenv("DECISION_TRIGRAM_ENABLED", "true").lower() in ("1", "true", "yes")
             vector_query = None
-            vector_params: List[Any] = []
+            vector_params: list[Any] = []
             if trigram_enabled:
                 vector_query = """
                     SELECT
@@ -1447,7 +1447,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to search decisions: {e}")
             return []
 
-    def get_supersedence_chain(self, decision_head: str, session_id: str) -> List[Dict[str, Any]]:
+    def get_supersedence_chain(self, decision_head: str, session_id: str) -> list[dict[str, Any]]:
         """Get the chain of supersedence for a decision."""
         start_time = datetime.now()
 
@@ -1495,7 +1495,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to get supersedence chain: {e}")
             return []
 
-    def resolve_supersedence_conflicts(self, session_id: str) -> Dict[str, Any]:
+    def resolve_supersedence_conflicts(self, session_id: str) -> dict[str, Any]:
         """Resolve any supersedence conflicts and return summary."""
         start_time = datetime.now()
 
@@ -1573,7 +1573,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to resolve supersedence conflicts: {e}")
             return {"error": str(e)}
 
-    def get_decision_analytics(self, session_id: Optional[str] = None, time_range_days: int = 30) -> Dict[str, Any]:
+    def get_decision_analytics(self, session_id: str | None = None, time_range_days: int = 30) -> dict[str, Any]:
         """Get comprehensive analytics for decisions."""
         start_time = datetime.now()
 
@@ -1638,7 +1638,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to get decision analytics: {e}")
             return {"error": str(e)}
 
-    def _analyze_decision_patterns(self, decisions: List) -> Dict[str, Any]:
+    def _analyze_decision_patterns(self, decisions: list) -> dict[str, Any]:
         """Analyze patterns in decision data."""
         try:
             patterns = {
@@ -1734,7 +1734,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to analyze decision patterns: {e}")
             return {}
 
-    def _analyze_decision_trends(self, decisions: List, time_range_days: int) -> Dict[str, Any]:
+    def _analyze_decision_trends(self, decisions: list, time_range_days: int) -> dict[str, Any]:
         """Analyze decision trends over time."""
         try:
             trends = {
@@ -1792,7 +1792,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to analyze decision trends: {e}")
             return {}
 
-    def _analyze_entity_relationships(self, decisions: List) -> Dict[str, Any]:
+    def _analyze_entity_relationships(self, decisions: list) -> dict[str, Any]:
         """Analyze relationships between entities in decisions."""
         try:
             relationships = {
@@ -1857,7 +1857,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to analyze entity relationships: {e}")
             return {}
 
-    def _analyze_decision_effectiveness(self, decisions: List) -> Dict[str, Any]:
+    def _analyze_decision_effectiveness(self, decisions: list) -> dict[str, Any]:
         """Analyze decision effectiveness metrics."""
         try:
             effectiveness = {
@@ -1947,7 +1947,7 @@ class ConversationStorage:
             self.logger.error(f"Failed to analyze decision effectiveness: {e}")
             return {}
 
-    def get_decision_recommendations(self, session_id: Optional[str] = None, limit: int = 5) -> Dict[str, Any]:
+    def get_decision_recommendations(self, session_id: str | None = None, limit: int = 5) -> dict[str, Any]:
         """Get decision recommendations based on analytics and patterns."""
         start_time = datetime.now()
 

@@ -6,7 +6,7 @@ Integrates existing constitution validation with RAGChecker Pydantic models.
 
 import os
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add dspy-rag-system to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))
@@ -360,7 +360,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
         # Check for extremely low scores that might indicate issues
         low_threshold = 0.1
         for metric_name, score in metrics_data.items():
-            if isinstance(score, (int, float)) and 0.0 <= score <= 1.0:
+            if isinstance(score, int | float) and 0.0 <= score <= 1.0:
                 if score < low_threshold:
                     validation["warnings"].append(
                         {
@@ -394,7 +394,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
         # Check score ranges
         if "custom_score" in result_data:
             score = result_data["custom_score"]
-            if not isinstance(score, (int, float)) or score < 0.0 or score > 1.0:
+            if not isinstance(score, int | float) or score < 0.0 or score > 1.0:
                 validation["valid"] = False
                 validation["errors"].append(
                     {
@@ -416,7 +416,7 @@ class RAGCheckerConstitutionValidator(BaseModel):
             custom_score = result_data["custom_score"]
             ragchecker_score = result_data["ragchecker_overall"]
 
-            if isinstance(custom_score, (int, float)) and isinstance(ragchecker_score, (int, float)):
+            if isinstance(custom_score, int | float) and isinstance(ragchecker_score, int | float):
                 difference = abs(custom_score - ragchecker_score)
                 if difference > 0.3:  # More than 30% difference
                     validation["warnings"].append(

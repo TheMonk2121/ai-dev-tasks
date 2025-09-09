@@ -11,7 +11,7 @@ import re
 import time
 import xml.etree.ElementTree as ET
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 from urllib.parse import urlparse
 
 import httpx
@@ -41,9 +41,9 @@ class RSSFeedItem(BaseModel):
     title: str
     description: str
     link: str
-    pub_date: Optional[str] = None
-    author: Optional[str] = None
-    category: Optional[str] = None
+    pub_date: str | None = None
+    author: str | None = None
+    category: str | None = None
 
     model_config = {"extra": "forbid"}
 
@@ -54,8 +54,8 @@ class RSSFeed(BaseModel):
     title: str
     description: str
     link: str
-    language: Optional[str] = None
-    items: List[RSSFeedItem] = Field(default_factory=list)
+    language: str | None = None
+    items: list[RSSFeedItem] = Field(default_factory=list)
 
     model_config = {"extra": "forbid"}
 
@@ -67,8 +67,8 @@ class WebMCPServer(MCPServer):
         super().__init__(config)
         self.web_config = WebServerConfig()
         self._last_request_time = 0
-        self._session: Optional[httpx.AsyncClient] = None
-        self._robots_cache: Dict[str, Any] = {}
+        self._session: httpx.AsyncClient | None = None
+        self._robots_cache: dict[str, Any] = {}
 
         # Supported content types
         self.supported_types = {
@@ -119,7 +119,7 @@ class WebMCPServer(MCPServer):
         """Check if this server supports the given content type."""
         return content_type in self.supported_types
 
-    def get_supported_types(self) -> List[str]:
+    def get_supported_types(self) -> list[str]:
         """Get list of supported content types."""
         return list(self.supported_types.keys())
 
@@ -555,7 +555,7 @@ class WebMCPServer(MCPServer):
             self._session = None
         super().cleanup()
 
-    def get_web_config(self) -> Dict[str, Any]:
+    def get_web_config(self) -> dict[str, Any]:
         """Get web server configuration."""
         return self.web_config.model_dump()
 

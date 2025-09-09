@@ -8,7 +8,7 @@ deduplication, and decision-first retrieval with supersedence penalties.
 
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -29,7 +29,7 @@ class SupersedenceRetrieval:
         self.db_connection_string = db_connection_string
         self.logger = logging.getLogger("supersedence_retrieval")
 
-    def detect_conflicts(self, new_decision: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def detect_conflicts(self, new_decision: dict[str, Any]) -> list[dict[str, Any]]:
         """
         Detect conflicting decisions for supersedence
 
@@ -85,7 +85,7 @@ class SupersedenceRetrieval:
             self.logger.error(f"Error detecting conflicts: {e}")
             return []
 
-    def _extract_key_terms(self, text: str) -> List[str]:
+    def _extract_key_terms(self, text: str) -> list[str]:
         """Extract key terms from decision text"""
         # Remove common words and extract meaningful terms
         common_words = {
@@ -158,7 +158,7 @@ class SupersedenceRetrieval:
 
         return key_terms[:10]  # Limit to top 10 terms
 
-    def _is_conflicting(self, decision1: Dict[str, Any], decision2: Dict[str, Any]) -> bool:
+    def _is_conflicting(self, decision1: dict[str, Any], decision2: dict[str, Any]) -> bool:
         """Check if two decisions are conflicting"""
         # Extract key terms from both decisions
         terms1 = set(self._extract_key_terms(decision1["head"]))
@@ -243,8 +243,8 @@ class SupersedenceRetrieval:
             return False
 
     def hybrid_search_decisions(
-        self, query: str, limit: int = 10, session_id: Optional[str] = None, include_superseded: bool = False
-    ) -> List[Dict[str, Any]]:
+        self, query: str, limit: int = 10, session_id: str | None = None, include_superseded: bool = False
+    ) -> list[dict[str, Any]]:
         """
         Hybrid BM25 + Vector search for decisions with supersedence handling
 
@@ -329,7 +329,7 @@ class SupersedenceRetrieval:
             self.logger.error(f"Error in hybrid search: {e}")
             return []
 
-    def pack_decisions_first(self, query: str, limit: int = 10, session_id: Optional[str] = None) -> Dict[str, Any]:
+    def pack_decisions_first(self, query: str, limit: int = 10, session_id: str | None = None) -> dict[str, Any]:
         """
         Pack decisions first in retrieval results
 
@@ -384,7 +384,7 @@ class SupersedenceRetrieval:
             "include_superseded": False,
         }
 
-    def get_supersedence_stats(self) -> Dict[str, Any]:
+    def get_supersedence_stats(self) -> dict[str, Any]:
         """Get statistics about supersedence"""
         try:
             # Use pooled connection if available

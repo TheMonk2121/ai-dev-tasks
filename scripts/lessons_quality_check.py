@@ -7,7 +7,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 
 def check_lessons_file(lessons_path: str) -> dict[str, Any]:
@@ -48,7 +48,7 @@ def check_lessons_file(lessons_path: str) -> dict[str, Any]:
 
                 # Check confidence range
                 confidence = lesson.get("confidence", 0)
-                if not isinstance(confidence, (int, float)) or confidence < 0 or confidence > 1:
+                if not isinstance(confidence, int | float) or confidence < 0 or confidence > 1:
                     issues.append(f"Line {line_num}: Invalid confidence value: {confidence}")
                     stats["invalid"] += 1
                     continue

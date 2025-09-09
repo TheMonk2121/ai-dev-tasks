@@ -7,7 +7,7 @@ Implements structured error taxonomy with constitution mapping for B-1007
 import logging
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -46,9 +46,9 @@ class PydanticError(BaseModel):
     severity: ErrorSeverity = Field(..., description="Error severity level")
     message: str = Field(..., description="Human-readable error message")
     timestamp: datetime = Field(default_factory=datetime.now, description="Error occurrence timestamp")
-    context: Dict[str, Any] = Field(default_factory=dict, description="Error context information")
-    stack_trace: Optional[str] = Field(None, description="Stack trace if available")
-    error_code: Optional[str] = Field(None, description="Error code for programmatic handling")
+    context: dict[str, Any] = Field(default_factory=dict, description="Error context information")
+    stack_trace: str | None = Field(None, description="Stack trace if available")
+    error_code: str | None = Field(None, description="Error code for programmatic handling")
 
     @field_validator("message")
     @classmethod
@@ -60,7 +60,7 @@ class PydanticError(BaseModel):
 
     @field_validator("error_code")
     @classmethod
-    def validate_error_code(cls, v: Optional[str]) -> Optional[str]:
+    def validate_error_code(cls, v: str | None) -> str | None:
         """Validate error code format"""
         if v is not None:
             if not v.strip() or len(v.strip()) < 3:
@@ -76,14 +76,14 @@ class ValidationError(PydanticError):
     """Validation error for input/output validation failures"""
 
     error_type: ErrorType = Field(default=ErrorType.VALIDATION_ERROR, description="Validation error")
-    field_name: Optional[str] = Field(None, description="Field that failed validation")
-    expected_value: Optional[str] = Field(None, description="Expected value or format")
-    actual_value: Optional[str] = Field(None, description="Actual value that failed validation")
-    validation_rule: Optional[str] = Field(None, description="Validation rule that was violated")
+    field_name: str | None = Field(None, description="Field that failed validation")
+    expected_value: str | None = Field(None, description="Expected value or format")
+    actual_value: str | None = Field(None, description="Actual value that failed validation")
+    validation_rule: str | None = Field(None, description="Validation rule that was violated")
 
     @field_validator("field_name")
     @classmethod
-    def validate_field_name(cls, v: Optional[str]) -> Optional[str]:
+    def validate_field_name(cls, v: str | None) -> str | None:
         """Validate field name format"""
         if v is not None and not v.strip():
             raise ValueError("Field name cannot be empty")
@@ -94,13 +94,13 @@ class CoherenceError(PydanticError):
     """Coherence error for logical consistency failures"""
 
     error_type: ErrorType = Field(default=ErrorType.COHERENCE_ERROR, description="Coherence error")
-    conflicting_elements: List[str] = Field(default_factory=list, description="Elements that are in conflict")
-    coherence_rule: Optional[str] = Field(None, description="Coherence rule that was violated")
-    suggested_resolution: Optional[str] = Field(None, description="Suggested resolution approach")
+    conflicting_elements: list[str] = Field(default_factory=list, description="Elements that are in conflict")
+    coherence_rule: str | None = Field(None, description="Coherence rule that was violated")
+    suggested_resolution: str | None = Field(None, description="Suggested resolution approach")
 
     @field_validator("conflicting_elements")
     @classmethod
-    def validate_conflicting_elements(cls, v: List[str]) -> List[str]:
+    def validate_conflicting_elements(cls, v: list[str]) -> list[str]:
         """Validate conflicting elements list"""
         return [elem.strip() for elem in v if elem.strip()]
 
@@ -109,20 +109,20 @@ class DependencyError(PydanticError):
     """Dependency error for missing or incompatible dependencies"""
 
     error_type: ErrorType = Field(default=ErrorType.DEPENDENCY_ERROR, description="Dependency error")
-    missing_dependencies: List[str] = Field(default_factory=list, description="Missing dependencies")
-    incompatible_dependencies: List[str] = Field(default_factory=list, description="Incompatible dependencies")
-    dependency_type: Optional[str] = Field(None, description="Type of dependency (module, service, etc.)")
-    resolution_steps: List[str] = Field(default_factory=list, description="Steps to resolve dependency issues")
+    missing_dependencies: list[str] = Field(default_factory=list, description="Missing dependencies")
+    incompatible_dependencies: list[str] = Field(default_factory=list, description="Incompatible dependencies")
+    dependency_type: str | None = Field(None, description="Type of dependency (module, service, etc.)")
+    resolution_steps: list[str] = Field(default_factory=list, description="Steps to resolve dependency issues")
 
     @field_validator("missing_dependencies")
     @classmethod
-    def validate_missing_dependencies(cls, v: List[str]) -> List[str]:
+    def validate_missing_dependencies(cls, v: list[str]) -> list[str]:
         """Validate missing dependencies list"""
         return [dep.strip() for dep in v if dep.strip()]
 
     @field_validator("incompatible_dependencies")
     @classmethod
-    def validate_incompatible_dependencies(cls, v: List[str]) -> List[str]:
+    def validate_incompatible_dependencies(cls, v: list[str]) -> list[str]:
         """Validate incompatible dependencies list"""
         return [dep.strip() for dep in v if dep.strip()]
 
@@ -131,8 +131,8 @@ class RuntimeError(PydanticError):
     """Runtime error for execution-time failures"""
 
     error_type: ErrorType = Field(default=ErrorType.RUNTIME_ERROR, description="Runtime error")
-    operation: Optional[str] = Field(None, description="Operation that failed")
-    resource: Optional[str] = Field(None, description="Resource that caused the error")
+    operation: str | None = Field(None, description="Operation that failed")
+    resource: str | None = Field(None, description="Resource that caused the error")
     retry_count: int = Field(default=0, description="Number of retry attempts")
     max_retries: int = Field(default=3, description="Maximum retry attempts")
 
@@ -157,20 +157,20 @@ class ConfigurationError(PydanticError):
     """Configuration error for setup and configuration failures"""
 
     error_type: ErrorType = Field(default=ErrorType.CONFIGURATION_ERROR, description="Configuration error")
-    config_file: Optional[str] = Field(None, description="Configuration file that caused the error")
-    config_section: Optional[str] = Field(None, description="Configuration section with the error")
-    missing_config: List[str] = Field(default_factory=list, description="Missing configuration items")
-    invalid_config: List[str] = Field(default_factory=list, description="Invalid configuration items")
+    config_file: str | None = Field(None, description="Configuration file that caused the error")
+    config_section: str | None = Field(None, description="Configuration section with the error")
+    missing_config: list[str] = Field(default_factory=list, description="Missing configuration items")
+    invalid_config: list[str] = Field(default_factory=list, description="Invalid configuration items")
 
     @field_validator("missing_config")
     @classmethod
-    def validate_missing_config(cls, v: List[str]) -> List[str]:
+    def validate_missing_config(cls, v: list[str]) -> list[str]:
         """Validate missing config list"""
         return [config.strip() for config in v if config.strip()]
 
     @field_validator("invalid_config")
     @classmethod
-    def validate_invalid_config(cls, v: List[str]) -> List[str]:
+    def validate_invalid_config(cls, v: list[str]) -> list[str]:
         """Validate invalid config list"""
         return [config.strip() for config in v if config.strip()]
 
@@ -179,14 +179,14 @@ class SecurityError(PydanticError):
     """Security error for security-related failures"""
 
     error_type: ErrorType = Field(default=ErrorType.SECURITY_ERROR, description="Security error")
-    security_violation: Optional[str] = Field(None, description="Type of security violation")
-    affected_resource: Optional[str] = Field(None, description="Resource affected by security issue")
-    threat_level: Optional[str] = Field(None, description="Threat level assessment")
-    mitigation_steps: List[str] = Field(default_factory=list, description="Steps to mitigate security issue")
+    security_violation: str | None = Field(None, description="Type of security violation")
+    affected_resource: str | None = Field(None, description="Resource affected by security issue")
+    threat_level: str | None = Field(None, description="Threat level assessment")
+    mitigation_steps: list[str] = Field(default_factory=list, description="Steps to mitigate security issue")
 
     @field_validator("mitigation_steps")
     @classmethod
-    def validate_mitigation_steps(cls, v: List[str]) -> List[str]:
+    def validate_mitigation_steps(cls, v: list[str]) -> list[str]:
         """Validate mitigation steps list"""
         return [step.strip() for step in v if step.strip()]
 
@@ -201,10 +201,10 @@ class ErrorFactory:
     def create_validation_error(
         message: str,
         severity: ErrorSeverity = ErrorSeverity.MEDIUM,
-        field_name: Optional[str] = None,
-        expected_value: Optional[str] = None,
-        actual_value: Optional[str] = None,
-        validation_rule: Optional[str] = None,
+        field_name: str | None = None,
+        expected_value: str | None = None,
+        actual_value: str | None = None,
+        validation_rule: str | None = None,
         **kwargs,
     ) -> ValidationError:
         """Create a validation error"""
@@ -222,9 +222,9 @@ class ErrorFactory:
     def create_coherence_error(
         message: str,
         severity: ErrorSeverity = ErrorSeverity.HIGH,
-        conflicting_elements: Optional[List[str]] = None,
-        coherence_rule: Optional[str] = None,
-        suggested_resolution: Optional[str] = None,
+        conflicting_elements: list[str] | None = None,
+        coherence_rule: str | None = None,
+        suggested_resolution: str | None = None,
         **kwargs,
     ) -> CoherenceError:
         """Create a coherence error"""
@@ -241,10 +241,10 @@ class ErrorFactory:
     def create_dependency_error(
         message: str,
         severity: ErrorSeverity = ErrorSeverity.HIGH,
-        missing_dependencies: Optional[List[str]] = None,
-        incompatible_dependencies: Optional[List[str]] = None,
-        dependency_type: Optional[str] = None,
-        resolution_steps: Optional[List[str]] = None,
+        missing_dependencies: list[str] | None = None,
+        incompatible_dependencies: list[str] | None = None,
+        dependency_type: str | None = None,
+        resolution_steps: list[str] | None = None,
         **kwargs,
     ) -> DependencyError:
         """Create a dependency error"""
@@ -262,8 +262,8 @@ class ErrorFactory:
     def create_runtime_error(
         message: str,
         severity: ErrorSeverity = ErrorSeverity.MEDIUM,
-        operation: Optional[str] = None,
-        resource: Optional[str] = None,
+        operation: str | None = None,
+        resource: str | None = None,
         retry_count: int = 0,
         max_retries: int = 3,
         **kwargs,
@@ -283,10 +283,10 @@ class ErrorFactory:
     def create_configuration_error(
         message: str,
         severity: ErrorSeverity = ErrorSeverity.HIGH,
-        config_file: Optional[str] = None,
-        config_section: Optional[str] = None,
-        missing_config: Optional[List[str]] = None,
-        invalid_config: Optional[List[str]] = None,
+        config_file: str | None = None,
+        config_section: str | None = None,
+        missing_config: list[str] | None = None,
+        invalid_config: list[str] | None = None,
         **kwargs,
     ) -> ConfigurationError:
         """Create a configuration error"""
@@ -304,10 +304,10 @@ class ErrorFactory:
     def create_security_error(
         message: str,
         severity: ErrorSeverity = ErrorSeverity.CRITICAL,
-        security_violation: Optional[str] = None,
-        affected_resource: Optional[str] = None,
-        threat_level: Optional[str] = None,
-        mitigation_steps: Optional[List[str]] = None,
+        security_violation: str | None = None,
+        affected_resource: str | None = None,
+        threat_level: str | None = None,
+        mitigation_steps: list[str] | None = None,
         **kwargs,
     ) -> SecurityError:
         """Create a security error"""
@@ -359,7 +359,7 @@ class ConstitutionErrorMapper:
         return factory(message=message, severity=severity, **kwargs)
 
     @staticmethod
-    def get_error_classification_stats(errors: List[PydanticError]) -> Dict[str, int]:
+    def get_error_classification_stats(errors: list[PydanticError]) -> dict[str, int]:
         """Get statistics on error classification"""
         stats = {}
         for error in errors:
@@ -375,7 +375,7 @@ class ErrorClassifier:
     """Classifies errors for measurable improvement in error handling"""
 
     @staticmethod
-    def classify_error_by_severity(errors: List[PydanticError]) -> Dict[ErrorSeverity, List[PydanticError]]:
+    def classify_error_by_severity(errors: list[PydanticError]) -> dict[ErrorSeverity, list[PydanticError]]:
         """Classify errors by severity level"""
         classification = {}
         for error in errors:
@@ -386,7 +386,7 @@ class ErrorClassifier:
         return classification
 
     @staticmethod
-    def classify_error_by_type(errors: List[PydanticError]) -> Dict[ErrorType, List[PydanticError]]:
+    def classify_error_by_type(errors: list[PydanticError]) -> dict[ErrorType, list[PydanticError]]:
         """Classify errors by error type"""
         classification = {}
         for error in errors:
@@ -397,7 +397,7 @@ class ErrorClassifier:
         return classification
 
     @staticmethod
-    def get_error_handling_metrics(errors: List[PydanticError]) -> Dict[str, Any]:
+    def get_error_handling_metrics(errors: list[PydanticError]) -> dict[str, Any]:
         """Get comprehensive error handling metrics"""
         if not errors:
             return {

@@ -10,7 +10,7 @@ import logging
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .conversation_storage import ConversationContext, ConversationStorage
 
@@ -24,25 +24,25 @@ class MergedContext:
     session_id: str
     context_type: str
     merged_content: str
-    source_contexts: List[ConversationContext]
+    source_contexts: list[ConversationContext]
     relevance_score: float
     semantic_similarity: float
     merge_timestamp: datetime
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
     # Decision intelligence fields for compatibility
-    decision_head: Optional[str] = None  # Normalized decision summary
+    decision_head: str | None = None  # Normalized decision summary
     decision_status: str = "open"  # 'open', 'closed', 'superseded'
-    superseded_by: Optional[str] = None  # ID of superseding decision
-    entities: Optional[List[str]] = None  # JSONB array of entity names
-    files: Optional[List[str]] = None  # JSONB array of file paths
-    context_key: Optional[str] = None  # For compatibility with ConversationContext
-    context_value: Optional[str] = None  # For compatibility with ConversationContext
+    superseded_by: str | None = None  # ID of superseding decision
+    entities: list[str] | None = None  # JSONB array of entity names
+    files: list[str] | None = None  # JSONB array of file paths
+    context_key: str | None = None  # For compatibility with ConversationContext
+    context_value: str | None = None  # For compatibility with ConversationContext
 
     # Optional fields for compatibility with higher-level integrations/tests
-    conversation_history: Optional[List[Dict[str, Any]]] = None
-    user_preferences: Optional[Dict[str, Any]] = None
-    relevance_scores: Optional[Dict[str, float]] = None
+    conversation_history: list[dict[str, Any]] | None = None
+    user_preferences: dict[str, Any] | None = None
+    relevance_scores: dict[str, float] | None = None
 
     def __post_init__(self):
         """Initialize computed fields."""
@@ -101,7 +101,7 @@ class ContextMergeRequest:
     session_id: str
     user_id: str
     current_message: str
-    context_types: Optional[List[str]] = None
+    context_types: list[str] | None = None
     max_context_length: int = 2000
     relevance_threshold: float = 0.7
 
@@ -110,7 +110,7 @@ class ContextMergeRequest:
 class ContextMergeResult:
     """Result of context merging operation."""
 
-    merged_contexts: List[MergedContext]
+    merged_contexts: list[MergedContext]
     total_contexts_processed: int
     contexts_merged: int
     contexts_preserved: int
@@ -122,7 +122,7 @@ class ContextMergeResult:
 class ContextMerger:
     """Handles intelligent context merging for the LTST Memory System."""
 
-    def __init__(self, arg: Optional[Any] = None):
+    def __init__(self, arg: Any | None = None):
         """Initialize context merger.
 
         Compatible with older tests that pass a `db_manager`, and with newer
@@ -189,7 +189,7 @@ class ContextMerger:
         self.max_merge_content_length = 5000
         self.logger = logging.getLogger(__name__)
 
-    def _get_cached_contexts(self, session_id: str, context_type: Optional[str]) -> Optional[List[Dict[str, Any]]]:
+    def _get_cached_contexts(self, session_id: str, context_type: str | None) -> list[dict[str, Any]] | None:
         """Get contexts from cache if available and fresh."""
         cache_key = f"{session_id}:{context_type or 'all'}"
 
@@ -200,7 +200,7 @@ class ContextMerger:
 
         return None
 
-    def _cache_contexts(self, session_id: str, context_type: Optional[str], contexts: List[Dict[str, Any]]):
+    def _cache_contexts(self, session_id: str, context_type: str | None, contexts: list[dict[str, Any]]):
         """Cache contexts for future use."""
         cache_key = f"{session_id}:{context_type or 'all'}"
         self.context_cache[cache_key] = contexts
@@ -251,7 +251,7 @@ class ContextMerger:
         return min(1.0, max(0.0, base_score))  # Clamp between 0 and 1
 
     def _calculate_entity_overlap_score(
-        self, context: ConversationContext, query_entities: Optional[List[str]] = None
+        self, context: ConversationContext, query_entities: list[str] | None = None
     ) -> float:
         """Calculate entity overlap score for decision contexts."""
         if not hasattr(context, "entities") or not context.entities:
@@ -280,7 +280,7 @@ class ContextMerger:
             self.logger.warning(f"Failed to calculate entity overlap: {e}")
             return 0.0
 
-    def _merge_context_content(self, contexts: List[ConversationContext]) -> str:
+    def _merge_context_content(self, contexts: list[ConversationContext]) -> str:
         """Merge context content intelligently."""
         if not contexts:
             return ""
@@ -307,10 +307,10 @@ class ContextMerger:
 
     def _select_relevant_contexts(
         self,
-        contexts: List[ConversationContext],
+        contexts: list[ConversationContext],
         relevance_threshold: float,
-        query_entities: Optional[List[str]] = None,
-    ) -> List[ConversationContext]:
+        query_entities: list[str] | None = None,
+    ) -> list[ConversationContext]:
         """Select contexts based on decision-aware relevance threshold."""
         # Calculate decision-aware scores for all contexts
         scored_contexts = []
@@ -354,8 +354,8 @@ class ContextMerger:
         return relevant_contexts[: self.max_contexts_per_merge]
 
     def _group_similar_contexts(
-        self, contexts: List[ConversationContext], similarity_threshold: float
-    ) -> List[List[ConversationContext]]:
+        self, contexts: list[ConversationContext], similarity_threshold: float
+    ) -> list[list[ConversationContext]]:
         """Group contexts by semantic similarity."""
         if not contexts:
             return []
@@ -388,9 +388,9 @@ class ContextMerger:
     def merge_contexts(
         self,
         session_id: str,
-        context_type: Optional[str] = None,
-        relevance_threshold: Optional[float] = None,
-        similarity_threshold: Optional[float] = None,
+        context_type: str | None = None,
+        relevance_threshold: float | None = None,
+        similarity_threshold: float | None = None,
     ) -> ContextMergeResult:
         """
         Merge contexts for a session based on relevance and similarity.
@@ -557,26 +557,27 @@ class ContextMerger:
             history_msgs = []
 
         # Retrieve user preferences through db_manager (tests patch this)
-        user_prefs: Dict[str, Any] = {}
+        user_prefs: dict[str, Any] = {}
         try:
             with self.db_manager.get_connection() as conn:  # type: ignore[attr-defined]
                 with conn.cursor() as cur:
-                    cur.execute("SELECT preference_key, preference_value FROM user_preferences WHERE user_id = %s LIMIT 100", (request.user_id,))
+                    cur.execute(
+                        "SELECT preference_key, preference_value FROM user_preferences WHERE user_id = %s LIMIT 100",
+                        (request.user_id,),
+                    )
                     rows = cur.fetchall() or []
                     for r in rows:
                         # Accept both dict-like and tuple-like rows
                         if isinstance(r, dict):
                             user_prefs[r.get("preference_key")] = r.get("preference_value")
-                        elif isinstance(r, (list, tuple)) and len(r) >= 2:
+                        elif isinstance(r, list | tuple) and len(r) >= 2:
                             user_prefs[r[0]] = r[1]
         except Exception:
             # It's fine if preferences are unavailable in test env
             user_prefs = {}
 
         # Compute simplistic relevance scores placeholder
-        relevance_scores = self._calculate_relevance_scores(
-            history_msgs, user_prefs, {}, [], request.current_message
-        )
+        relevance_scores = self._calculate_relevance_scores(history_msgs, user_prefs, {}, [], request.current_message)
 
         # Build merged content (current message + last utterance if any)
         recent_texts = [m.content for m in history_msgs if hasattr(m, "content")]
@@ -602,12 +603,12 @@ class ContextMerger:
     # Compatibility helpers expected by tests
     def _calculate_relevance_scores(
         self,
-        conversation_history: List[Any],
-        user_preferences: Dict[str, Any],
-        project_context: Dict[str, Any],
-        relevant_contexts: List[Any],
+        conversation_history: list[Any],
+        user_preferences: dict[str, Any],
+        project_context: dict[str, Any],
+        relevant_contexts: list[Any],
         current_message: str,
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """Very lightweight relevance scoring placeholder for tests."""
         if not conversation_history and not relevant_contexts:
             return {"overall": 0.0}
@@ -647,7 +648,7 @@ class ContextMerger:
         except Exception:
             return False
 
-    def merge_conversation_context(self, session_id: str, max_context_length: Optional[int] = None) -> Optional[str]:
+    def merge_conversation_context(self, session_id: str, max_context_length: int | None = None) -> str | None:
         """
         Merge conversation context into a single string for AI consumption.
 
@@ -706,7 +707,7 @@ class ContextMerger:
             logger.error(f"Cache cleanup failed: {e}")
             return 0
 
-    def get_merge_statistics(self) -> Dict[str, Any]:
+    def get_merge_statistics(self) -> dict[str, Any]:
         """Get statistics about context merging operations."""
         try:
             return {
@@ -723,7 +724,7 @@ class ContextMerger:
             return {"error": str(e)}
 
     def merge_with_user_preferences(
-        self, session_id: str, user_id: str, context_type: Optional[str] = None
+        self, session_id: str, user_id: str, context_type: str | None = None
     ) -> ContextMergeResult:
         """
         Merge contexts while considering user preferences for relevance scoring.
@@ -776,7 +777,7 @@ class ContextMerger:
             raise
 
     def _adjust_relevance_with_preferences(
-        self, context: ConversationContext, preference_weights: Dict[str, float]
+        self, context: ConversationContext, preference_weights: dict[str, float]
     ) -> float:
         """Adjust context relevance score based on user preferences."""
         base_score = context.relevance_score
@@ -797,7 +798,7 @@ class ContextMerger:
         adjusted_score = min(1.0, base_score + preference_boost)
         return adjusted_score
 
-    def _merge_contexts_internal(self, contexts: List[ConversationContext]) -> ContextMergeResult:
+    def _merge_contexts_internal(self, contexts: list[ConversationContext]) -> ContextMergeResult:
         """Internal method to merge contexts with standard algorithm."""
         start_time = time.time()
 
@@ -883,9 +884,9 @@ class ContextMerger:
     def merge_decision_contexts(
         self,
         session_id: str,
-        query_entities: Optional[List[str]] = None,
-        relevance_threshold: Optional[float] = None,
-        similarity_threshold: Optional[float] = None,
+        query_entities: list[str] | None = None,
+        relevance_threshold: float | None = None,
+        similarity_threshold: float | None = None,
     ) -> ContextMergeResult:
         """
         Merge decision contexts with decision intelligence scoring.
@@ -1041,7 +1042,7 @@ class ContextMerger:
             logger.error(f"Decision context merging failed for session {session_id}: {e}")
             raise
 
-    def get_context_summary(self, session_id: str, context_types: Optional[List[str]] = None) -> Dict[str, Any]:
+    def get_context_summary(self, session_id: str, context_types: list[str] | None = None) -> dict[str, Any]:
         """
         Get summary of contexts for a session.
 

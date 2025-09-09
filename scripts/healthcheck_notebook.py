@@ -12,7 +12,7 @@ import time
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 # Add project paths
 project_root = Path(__file__).parent.parent

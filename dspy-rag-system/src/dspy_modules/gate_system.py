@@ -12,7 +12,7 @@ import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -56,14 +56,14 @@ class Gate(ABC):
         self.total_execution_time = 0.0
 
     @abstractmethod
-    def check(self, request: Dict[str, Any]) -> GateResult:
+    def check(self, request: dict[str, Any]) -> GateResult:
         """Check if gate passes for the given request"""
         pass
 
     def __str__(self) -> str:
         return f"Gate({self.name}, enabled={self.enabled})"
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get performance statistics for this gate"""
         avg_time = self.total_execution_time / self.execution_count if self.execution_count > 0 else 0.0
         return {
@@ -80,7 +80,7 @@ class InputValidationGate(Gate):
         super().__init__("input_validation")
         self.valid_roles = {"planner", "implementer", "researcher", "coder", "reviewer"}
 
-    def check(self, request: Dict[str, Any]) -> GateResult:
+    def check(self, request: dict[str, Any]) -> GateResult:
         start_time = time.time()
 
         try:
@@ -154,11 +154,11 @@ class SecurityMonitoringGate(Gate):
             "drop",
             "truncate",
         ]
-        self.request_history: Dict[str, List[datetime]] = {}
+        self.request_history: dict[str, list[datetime]] = {}
         self.max_requests_per_minute = 100
         self.security_blocks = 0
 
-    def check(self, request: Dict[str, Any]) -> GateResult:
+    def check(self, request: dict[str, Any]) -> GateResult:
         start_time = time.time()
 
         try:
@@ -236,7 +236,7 @@ class SecurityMonitoringGate(Gate):
         self.execution_count += 1
         self.total_execution_time += execution_time
 
-    def get_security_stats(self) -> Dict[str, Any]:
+    def get_security_stats(self) -> dict[str, Any]:
         """Get security-specific statistics"""
         stats = self.get_performance_stats()
         stats["security_blocks"] = self.security_blocks
@@ -249,12 +249,12 @@ class FailureThresholdGate(Gate):
     def __init__(self, max_failures: int = 3):
         super().__init__("failure_threshold")
         self.max_failures = max_failures
-        self.failure_count: Dict[str, int] = {}
-        self.last_failure_time: Dict[str, datetime] = {}
+        self.failure_count: dict[str, int] = {}
+        self.last_failure_time: dict[str, datetime] = {}
         self.reset_interval = timedelta(minutes=5)
         self.threshold_exceeded = 0
 
-    def check(self, request: Dict[str, Any]) -> GateResult:
+    def check(self, request: dict[str, Any]) -> GateResult:
         start_time = time.time()
 
         try:
@@ -313,7 +313,7 @@ class FailureThresholdGate(Gate):
         self.execution_count += 1
         self.total_execution_time += execution_time
 
-    def get_failure_stats(self) -> Dict[str, Any]:
+    def get_failure_stats(self) -> dict[str, Any]:
         """Get failure-specific statistics"""
         stats = self.get_performance_stats()
         stats["threshold_exceeded"] = self.threshold_exceeded
@@ -327,12 +327,12 @@ class CacheTTLGate(Gate):
     def __init__(self, ttl_seconds: int = 300):  # 5 minutes default
         super().__init__("cache_ttl")
         self.ttl_seconds = ttl_seconds
-        self.cache: Dict[str, Dict[str, Any]] = {}
+        self.cache: dict[str, dict[str, Any]] = {}
         self.cache_hits = 0
         self.cache_misses = 0
         self.cache_evictions = 0
 
-    def check(self, request: Dict[str, Any]) -> GateResult:
+    def check(self, request: dict[str, Any]) -> GateResult:
         start_time = time.time()
 
         try:
@@ -385,7 +385,7 @@ class CacheTTLGate(Gate):
         """Set a cache entry"""
         self.cache[key] = {"value": value, "timestamp": datetime.now()}
 
-    def get_cache(self, key: str) -> Optional[Any]:
+    def get_cache(self, key: str) -> Any | None:
         """Get a cache entry if it exists and is valid"""
         if key in self.cache:
             entry = self.cache[key]
@@ -401,7 +401,7 @@ class CacheTTLGate(Gate):
         self.execution_count += 1
         self.total_execution_time += execution_time
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """Get cache-specific statistics"""
         stats = self.get_performance_stats()
         total_requests = self.cache_hits + self.cache_misses
@@ -435,9 +435,9 @@ class GateManager:
     """Manages the execution of gates with advanced performance optimization"""
 
     def __init__(self):
-        self.gates: List[Gate] = []
+        self.gates: list[Gate] = []
         self.logger = logging.getLogger("gate_manager")
-        self.execution_history: List[GateResult] = []
+        self.execution_history: list[GateResult] = []
         self.performance_metrics = PerformanceMetrics(
             total_executions=0,
             successful_executions=0,
@@ -455,7 +455,7 @@ class GateManager:
         self.gates.append(gate)
         self.logger.info(f"Registered gate: {gate}")
 
-    def execute_gates(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    def execute_gates(self, request: dict[str, Any]) -> dict[str, Any]:
         """Execute all gates for a request with performance tracking"""
         start_time = time.time()
         results = []
@@ -512,7 +512,7 @@ class GateManager:
 
         return {"success": True, "message": "All gates passed", "results": results, "execution_time": total_time}
 
-    def _update_performance_metrics(self, results: List[GateResult], total_time: float, success: bool):
+    def _update_performance_metrics(self, results: list[GateResult], total_time: float, success: bool):
         """Update performance metrics"""
         self.performance_metrics.total_executions += 1
         self.performance_metrics.total_execution_time += total_time
@@ -540,7 +540,7 @@ class GateManager:
             cache_stats = cache_gate.get_cache_stats()
             self.performance_metrics.cache_hit_rate = cache_stats.get("cache_hit_rate", 0.0)
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get comprehensive gate execution statistics"""
         if not self.execution_history:
             return {"total_executions": 0, "success_rate": 0.0}
@@ -591,7 +591,7 @@ class GateManager:
 
         return stats
 
-    async def execute_gates_async(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    async def execute_gates_async(self, request: dict[str, Any]) -> dict[str, Any]:
         """Execute gates asynchronously for better performance"""
         start_time = time.time()
         results = []
@@ -651,7 +651,7 @@ class GateManager:
 
         return {"success": True, "message": "All gates passed", "results": results, "execution_time": total_time}
 
-    async def _execute_gate_async(self, gate: Gate, request: Dict[str, Any]) -> GateResult:
+    async def _execute_gate_async(self, gate: Gate, request: dict[str, Any]) -> GateResult:
         """Execute a single gate asynchronously"""
         start_time = time.time()
         try:

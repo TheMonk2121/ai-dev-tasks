@@ -8,7 +8,7 @@ to retrieval results at runtime.
 import json
 import logging
 import os
-from typing import Any, Dict, List
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ CODE_EXTENSIONS = {
 }
 
 
-def load_feature_spec(path: str) -> List[str]:
+def load_feature_spec(path: str) -> list[str]:
     """
     Load feature specification from JSON file.
 
@@ -57,7 +57,7 @@ def load_feature_spec(path: str) -> List[str]:
         ValueError: If spec file is invalid
     """
     try:
-        with open(path, "r") as f:
+        with open(path) as f:
             spec = json.load(f)
 
         if not isinstance(spec, list):
@@ -75,7 +75,7 @@ def load_feature_spec(path: str) -> List[str]:
         raise
 
 
-def build_features_from_row(row: Dict[str, Any], feature_names: List[str]) -> List[float]:
+def build_features_from_row(row: dict[str, Any], feature_names: list[str]) -> list[float]:
     """
     Extract features from a retrieval result row.
 
@@ -114,7 +114,7 @@ def build_features_from_row(row: Dict[str, Any], feature_names: List[str]) -> Li
     return features
 
 
-def build_fusion_features_from_row(row: Dict[str, Any]):
+def build_fusion_features_from_row(row: dict[str, Any]):
     """
     Build a FusionFeatures object from a retrieval result row.
     This provides schema validation and JSON-safe serialization.
@@ -198,8 +198,8 @@ def load_head(checkpoint_path: str, in_dim: int, hidden: int = 0, device: str = 
 
 
 def score_rows(
-    rows: List[Dict[str, Any]], feature_names: List[str], head: Any, device: str = "cpu"
-) -> List[Dict[str, Any]]:
+    rows: list[dict[str, Any]], feature_names: list[str], head: Any, device: str = "cpu"
+) -> list[dict[str, Any]]:
     """
     Score a batch of retrieval results using the fusion head.
 

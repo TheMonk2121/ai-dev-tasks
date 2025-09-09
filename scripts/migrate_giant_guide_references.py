@@ -11,7 +11,7 @@ import os
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 _LOG = logging.getLogger("giant_guide_migration")
 

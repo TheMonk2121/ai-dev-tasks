@@ -19,7 +19,7 @@ import logging
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 try:
     from nicegui import ui
@@ -54,8 +54,8 @@ class DecisionSummary:
     created_at: datetime
     session_id: str
     user_id: str
-    superseded_by: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    superseded_by: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -70,7 +70,7 @@ class QueryMetrics:
     timestamp: datetime
     session_id: str
     user_id: str
-    debug_info: Dict[str, Any] = field(default_factory=dict)
+    debug_info: dict[str, Any] = field(default_factory=dict)
 
 
 class DashboardManager:
@@ -82,10 +82,10 @@ class DashboardManager:
         self.logger = logging.getLogger(__name__)
 
         # Dashboard state
-        self.metrics_history: List[DashboardMetrics] = []
-        self.recent_decisions: List[DecisionSummary] = []
-        self.recent_queries: List[QueryMetrics] = []
-        self.supersedence_graph: Dict[str, List[str]] = {}
+        self.metrics_history: list[DashboardMetrics] = []
+        self.recent_decisions: list[DecisionSummary] = []
+        self.recent_queries: list[QueryMetrics] = []
+        self.supersedence_graph: dict[str, list[str]] = {}
 
         # Configuration
         self.max_history_points = 100
@@ -129,7 +129,7 @@ class DashboardManager:
             self.logger.error(f"Failed to get current metrics: {e}")
             return DashboardMetrics()
 
-    def get_top_decisions(self, limit: int = 20) -> List[DecisionSummary]:
+    def get_top_decisions(self, limit: int = 20) -> list[DecisionSummary]:
         """Get top decisions for dashboard display."""
         try:
             if self.ltst_system:
@@ -174,7 +174,7 @@ class DashboardManager:
             self.logger.error(f"Failed to get top decisions: {e}")
             return []
 
-    def get_recent_queries(self, limit: int = 50) -> List[QueryMetrics]:
+    def get_recent_queries(self, limit: int = 50) -> list[QueryMetrics]:
         """Get recent queries for detailed view."""
         try:
             if self.ltst_system:
@@ -212,7 +212,7 @@ class DashboardManager:
             self.logger.error(f"Failed to get recent queries: {e}")
             return []
 
-    def get_supersedence_graph(self) -> Dict[str, List[str]]:
+    def get_supersedence_graph(self) -> dict[str, list[str]]:
         """Get supersedence graph data."""
         try:
             if self.ltst_system:
@@ -439,7 +439,7 @@ class DashboardManager:
 
             ui.html(graph_html)
 
-    def get_dashboard_statistics(self) -> Dict[str, Any]:
+    def get_dashboard_statistics(self) -> dict[str, Any]:
         """Get dashboard statistics."""
         return {
             "load_time_ms": round(self.dashboard_load_time * 1000, 2),

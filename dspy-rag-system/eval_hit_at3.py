@@ -10,7 +10,7 @@ Prints a simple table of query, expected, hit@3 before, hit@3 after.
 
 import os
 import sys
-from typing import Dict, List, Tuple
+
 
 from dotenv import load_dotenv
 
@@ -21,7 +21,7 @@ from dspy_modules.vector_store import HybridVectorStore
 
 def select_top3_with_cap(hits, max_per_doc: int = 2):
     selected = []
-    per_doc: Dict[str, int] = {}
+    per_doc: dict[str, int] = {}
     for h in hits:
         doc_id = str(h.metadata.get("document_id"))
         cnt = per_doc.get(doc_id, 0)
@@ -34,7 +34,7 @@ def select_top3_with_cap(hits, max_per_doc: int = 2):
     return selected
 
 
-def hit_at3(filenames: List[str], expected_sub: str) -> bool:
+def hit_at3(filenames: list[str], expected_sub: str) -> bool:
     exp = expected_sub.lower()
     return any((f or "").lower().find(exp) != -1 for f in filenames)
 
@@ -49,7 +49,7 @@ def main() -> int:
     retriever = HybridVectorStore(db_url)
 
     # 15 queries with expected filename substring (editable ground truth)
-    cases: List[Tuple[str, str]] = [
+    cases: list[tuple[str, str]] = [
         ("What is DSPy according to 400_07_ai-frameworks-dspy.md?", "400_07_ai-frameworks-dspy.md"),
         ("List the core workflow guides in 000_core.", "000_core"),
         ("What is the CONTEXT_INDEX?", "100_cursor-memory-context.md"),

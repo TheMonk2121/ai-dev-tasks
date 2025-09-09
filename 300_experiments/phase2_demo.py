@@ -12,7 +12,7 @@ Tests the complete Phase 2 data-driven multi-hop system with:
 import asyncio
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 # Add paths
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -26,30 +26,36 @@ class MockRetriever:
     def __init__(self):
         # Mock knowledge base
         self.knowledge = {
-            'dspy': [
-                {'text': 'DSPy is a framework for algorithmically optimizing language model prompts and weights', 'score': 0.9},
-                {'text': 'DSPy uses optimizers to automatically tune prompts based on validation metrics', 'score': 0.8},
-                {'text': 'DSPy signatures define input/output specifications for language model tasks', 'score': 0.7}
+            "dspy": [
+                {
+                    "text": "DSPy is a framework for algorithmically optimizing language model prompts and weights",
+                    "score": 0.9,
+                },
+                {
+                    "text": "DSPy uses optimizers to automatically tune prompts based on validation metrics",
+                    "score": 0.8,
+                },
+                {"text": "DSPy signatures define input/output specifications for language model tasks", "score": 0.7},
             ],
-            'optimization': [
-                {'text': 'DSPy optimizers include BootstrapFewShot and Copro for prompt optimization', 'score': 0.8},
-                {'text': 'Optimization in DSPy uses metrics to evaluate and improve prompt performance', 'score': 0.7}
+            "optimization": [
+                {"text": "DSPy optimizers include BootstrapFewShot and Copro for prompt optimization", "score": 0.8},
+                {"text": "Optimization in DSPy uses metrics to evaluate and improve prompt performance", "score": 0.7},
             ],
-            'prompts': [
-                {'text': 'DSPy prompts are automatically generated and optimized using training data', 'score': 0.8},
-                {'text': 'Prompt engineering in DSPy is done algorithmically rather than manually', 'score': 0.6}
+            "prompts": [
+                {"text": "DSPy prompts are automatically generated and optimized using training data", "score": 0.8},
+                {"text": "Prompt engineering in DSPy is done algorithmically rather than manually", "score": 0.6},
             ],
-            'framework': [
-                {'text': 'DSPy framework provides modules and signatures for structured LM programming', 'score': 0.9},
-                {'text': 'The framework enables composable and optimizable language model programs', 'score': 0.7}
+            "framework": [
+                {"text": "DSPy framework provides modules and signatures for structured LM programming", "score": 0.9},
+                {"text": "The framework enables composable and optimizable language model programs", "score": 0.7},
             ],
-            'metrics': [
-                {'text': 'DSPy uses validation metrics to guide the optimization process', 'score': 0.8},
-                {'text': 'Metrics in DSPy can be task-specific accuracy measures or custom evaluators', 'score': 0.6}
-            ]
+            "metrics": [
+                {"text": "DSPy uses validation metrics to guide the optimization process", "score": 0.8},
+                {"text": "Metrics in DSPy can be task-specific accuracy measures or custom evaluators", "score": 0.6},
+            ],
         }
 
-    def retrieve(self, query: str) -> List[Dict[str, Any]]:
+    def retrieve(self, query: str) -> list[dict[str, Any]]:
         """Mock retrieval based on query keywords."""
         query_lower = query.lower()
         results = []
@@ -58,17 +64,17 @@ class MockRetriever:
         for topic, docs in self.knowledge.items():
             if topic in query_lower:
                 for doc in docs:
-                    results.append({
-                        **doc,
-                        'document_id': f"{topic}_{len(results)}",
-                        'source': f"mock_doc_{topic}.md"
-                    })
+                    results.append({**doc, "document_id": f"{topic}_{len(results)}", "source": f"mock_doc_{topic}.md"})
 
         # Default fallback
         if not results:
             results = [
-                {'text': f'General information related to: {query}', 'score': 0.5,
-                 'document_id': 'general_fallback', 'source': 'fallback.md'}
+                {
+                    "text": f"General information related to: {query}",
+                    "score": 0.5,
+                    "document_id": "general_fallback",
+                    "source": "fallback.md",
+                }
             ]
 
         return results[:5]  # Top 5 results
@@ -85,12 +91,9 @@ async def test_phase2_components():
     try:
         from retrieval.multihop_planner import create_multihop_planner
 
-        planner = create_multihop_planner({
-            'max_hops': 2,
-            'token_budget': 300,
-            'coverage_threshold': 0.6,
-            'concentration_threshold': 0.5
-        })
+        planner = create_multihop_planner(
+            {"max_hops": 2, "token_budget": 300, "coverage_threshold": 0.6, "concentration_threshold": 0.5}
+        )
 
         mock_retriever = MockRetriever()
 
@@ -101,7 +104,7 @@ async def test_phase2_components():
         result = await planner.plan_multihop_retrieval(
             query="What is DSPy and how does its optimization work?",
             retrieval_fn=mock_retrieval_fn,
-            sub_claims=["DSPy is a framework", "DSPy has optimization", "optimization uses metrics"]
+            sub_claims=["DSPy is a framework", "DSPy has optimization", "optimization uses metrics"],
         )
 
         print("  ✅ Multi-hop planning completed")
@@ -127,34 +130,26 @@ async def test_phase2_integration():
 
         mock_retriever = MockRetriever()
         config = {
-            'multihop': {
-                'max_hops': 2,
-                'coverage_threshold': 0.6,
-                'concentration_threshold': 0.5
-            },
-            'enable_midgen_callbacks': True,
-            'enable_telemetry': False  # Disable for demo
+            "multihop": {"max_hops": 2, "coverage_threshold": 0.6, "concentration_threshold": 0.5},
+            "enable_midgen_callbacks": True,
+            "enable_telemetry": False,  # Disable for demo
         }
 
         phase2_system = create_phase2_rag_system(mock_retriever, config)
 
         # Test queries of varying complexity
         test_queries = [
+            {"query": "What is DSPy?", "expected_multihop": False, "description": "Simple query (single-hop)"},
             {
-                'query': "What is DSPy?",
-                'expected_multihop': False,
-                'description': "Simple query (single-hop)"
+                "query": "What is DSPy and how does it optimize prompts and what metrics does it use?",
+                "expected_multihop": True,
+                "description": "Complex multi-part query (multi-hop)",
             },
             {
-                'query': "What is DSPy and how does it optimize prompts and what metrics does it use?",
-                'expected_multihop': True,
-                'description': "Complex multi-part query (multi-hop)"
+                "query": "Compare DSPy optimization with traditional prompt engineering",
+                "expected_multihop": True,
+                "description": "Comparison query (multi-hop)",
             },
-            {
-                'query': "Compare DSPy optimization with traditional prompt engineering",
-                'expected_multihop': True,
-                'description': "Comparison query (multi-hop)"
-            }
         ]
 
         results = []
@@ -163,34 +158,35 @@ async def test_phase2_integration():
             print(f"  Query: {test_case['query'][:50]}...")
 
             result = await phase2_system.query_with_multihop(
-                query=test_case['query'],
-                sub_claims=["framework definition", "optimization process", "metric usage"]
+                query=test_case["query"], sub_claims=["framework definition", "optimization process", "metric usage"]
             )
 
-            multihop_used = result.get('multihop_used', False)
-            confidence = result.get('confidence', 0.0)
-            latency = result.get('total_latency_ms', 0)
+            multihop_used = result.get("multihop_used", False)
+            confidence = result.get("confidence", 0.0)
+            latency = result.get("total_latency_ms", 0)
 
             print(f"    Multi-hop used: {multihop_used} (expected: {test_case['expected_multihop']})")
             print(f"    Confidence: {confidence:.3f}")
             print(f"    Latency: {latency:.1f}ms")
             print(f"    Answer length: {len(result.get('answer', ''))}")
 
-            if 'planning_trace' in result:
-                trace = result['planning_trace']
+            if "planning_trace" in result:
+                trace = result["planning_trace"]
                 print(f"    Hops executed: {trace.get('hops_executed', 0)}")
                 print(f"    Stop reason: {trace.get('stop_reason', 'N/A')}")
 
-            results.append({
-                'query': test_case['query'],
-                'multihop_used': multihop_used,
-                'expected': test_case['expected_multihop'],
-                'confidence': confidence,
-                'correct_decision': multihop_used == test_case['expected_multihop']
-            })
+            results.append(
+                {
+                    "query": test_case["query"],
+                    "multihop_used": multihop_used,
+                    "expected": test_case["expected_multihop"],
+                    "confidence": confidence,
+                    "correct_decision": multihop_used == test_case["expected_multihop"],
+                }
+            )
 
         # Summary
-        correct_decisions = sum(1 for r in results if r['correct_decision'])
+        correct_decisions = sum(1 for r in results if r["correct_decision"])
         print("\n  ✅ Phase 2 integration test completed")
         print(f"    Correct multihop decisions: {correct_decisions}/{len(results)}")
         print(f"    Average confidence: {sum(r['confidence'] for r in results) / len(results):.3f}")
@@ -210,11 +206,7 @@ async def test_gating_mechanisms():
         from retrieval.multihop_planner import CoverageMetrics, MultiHopPlanner
 
         # Test coverage-based gating
-        planner = MultiHopPlanner(
-            coverage_threshold=0.8,  # High threshold
-            concentration_threshold=0.6,
-            max_hops=3
-        )
+        planner = MultiHopPlanner(coverage_threshold=0.8, concentration_threshold=0.6, max_hops=3)  # High threshold
 
         # Mock state with high coverage
         class MockState:
@@ -231,7 +223,7 @@ async def test_gating_mechanisms():
             coverage=0.85,  # High coverage
             concentration=0.75,  # Good concentration
             novelty=0.9,  # High novelty
-            token_budget_remaining=400
+            token_budget_remaining=400,
         )
 
         # Test gating decision
@@ -245,10 +237,7 @@ async def test_gating_mechanisms():
 
         # Test with low coverage (should continue)
         low_coverage_metrics = CoverageMetrics(
-            coverage=0.2,  # Low coverage
-            concentration=0.75,
-            novelty=0.9,
-            token_budget_remaining=400
+            coverage=0.2, concentration=0.75, novelty=0.9, token_budget_remaining=400  # Low coverage
         )
 
         low_coverage_decision = planner._should_continue_multihop(state, low_coverage_metrics)
@@ -270,14 +259,19 @@ async def test_configuration_loading():
     print("\n4. Testing Configuration Loading...")
     try:
         # Load config
-        with open('config/retrieval.yaml', 'r') as f:
+        with open("config/retrieval.yaml") as f:
             config = yaml.safe_load(f)
 
-        multihop_config = config.get('multihop', {})
+        multihop_config = config.get("multihop", {})
 
         expected_settings = [
-            'enabled', 'max_hops', 'token_budget', 'coverage_threshold',
-            'concentration_threshold', 'novelty_threshold', 'min_evidence_score'
+            "enabled",
+            "max_hops",
+            "token_budget",
+            "coverage_threshold",
+            "concentration_threshold",
+            "novelty_threshold",
+            "min_evidence_score",
         ]
 
         for setting in expected_settings:
@@ -308,7 +302,7 @@ async def main():
         ("Multi-Hop Components", test_phase2_components),
         ("Phase 2 Integration", test_phase2_integration),
         ("Gating Mechanisms", test_gating_mechanisms),
-        ("Configuration Loading", test_configuration_loading)
+        ("Configuration Loading", test_configuration_loading),
     ]
 
     results = {}

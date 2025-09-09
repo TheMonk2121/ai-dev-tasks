@@ -12,7 +12,7 @@ import json
 import pathlib
 import sys
 import time
-from typing import Any, Dict
+from typing import Any
 
 # Add src to path for retrieval modules
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "src"))

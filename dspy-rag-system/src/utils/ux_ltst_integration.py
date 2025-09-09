@@ -11,7 +11,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -24,7 +24,7 @@ from utils.unified_retrieval_api import UnifiedRetrievalAPI
 class UXLTSTIntegration:
     """Integrates user experience data with LTST memory system"""
 
-    def __init__(self, db_connection_string: str, project_root: Optional[Path] = None):
+    def __init__(self, db_connection_string: str, project_root: Path | None = None):
         """
         Initialize UX LTST integration.
 
@@ -44,7 +44,7 @@ class UXLTSTIntegration:
         self.ux_logs_dir = self.project_root / "ux_logs"
         self.feedback_dir = self.project_root / "feedback"
 
-    def capture_user_interactions(self, session_id: Optional[str] = None) -> Dict[str, Any]:
+    def capture_user_interactions(self, session_id: str | None = None) -> dict[str, Any]:
         """
         Capture user interaction patterns and behavior analytics.
 
@@ -165,8 +165,8 @@ class UXLTSTIntegration:
             }
 
     def correlate_ux_feedback_with_decisions(
-        self, ux_data: Dict[str, Any], conversation_context: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, ux_data: dict[str, Any], conversation_context: str | None = None
+    ) -> dict[str, Any]:
         """
         Correlate UX feedback with development decisions.
 
@@ -234,7 +234,7 @@ class UXLTSTIntegration:
                 "improvement_opportunities": [],
             }
 
-    def monitor_user_satisfaction(self, ux_data: Dict[str, Any]) -> Dict[str, Any]:
+    def monitor_user_satisfaction(self, ux_data: dict[str, Any]) -> dict[str, Any]:
         """
         Monitor user satisfaction and pain points.
 
@@ -314,7 +314,7 @@ class UXLTSTIntegration:
             }
 
     def store_in_ltst_memory(
-        self, ux_data: Dict[str, Any], correlation_data: Dict[str, Any], satisfaction_data: Dict[str, Any]
+        self, ux_data: dict[str, Any], correlation_data: dict[str, Any], satisfaction_data: dict[str, Any]
     ) -> bool:
         """
         Store UX data in LTST memory system.
@@ -418,7 +418,7 @@ class UXLTSTIntegration:
         else:
             return "poor"
 
-    def _generate_improvement_opportunities(self, ux_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _generate_improvement_opportunities(self, ux_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Generate improvement opportunities from UX data"""
         opportunities = []
 
@@ -469,7 +469,7 @@ class UXLTSTIntegration:
 
         return opportunities
 
-    def _generate_user_insights(self, ux_data: Dict[str, Any]) -> List[str]:
+    def _generate_user_insights(self, ux_data: dict[str, Any]) -> list[str]:
         """Generate insights from UX data"""
         insights = []
 

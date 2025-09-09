@@ -8,7 +8,7 @@ import os
 import re
 import sys
 from collections import defaultdict
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 try:
     # Canonical DTOs for retrieval candidates
@@ -118,7 +118,7 @@ def _norm_candidates(raw):
                     meta["metadata"] = md
                 except Exception:
                     meta["filename"] = filename
-        elif isinstance(x, (list, tuple)):
+        elif isinstance(x, list | tuple):
             # best-effort: (id, score, text, *rest)
             did = str(x[0]) if len(x) > 0 else _sha10(str(x))
             score = float(x[1]) if len(x) > 1 else 0.0
@@ -220,7 +220,7 @@ def _rrf_fuse(ranklists: dict, k: int = 60, weights: dict | None = None):
 _RERANKER = None
 
 
-def _load_reranker(model_name: Optional[str] = None):
+def _load_reranker(model_name: str | None = None):
     global _RERANKER
     if _RERANKER is not None:
         return _RERANKER
@@ -346,7 +346,7 @@ def _rerank_with_torch(query: str, candidates: list[dict], topn: int):
             if original_cand:
                 from typing import cast
 
-                d = cast(Dict[str, Any], _normalize_cand(original_cand))
+                d = cast(dict[str, Any], _normalize_cand(original_cand))
                 d["score_ce"] = float(score)
                 reranked.append(d)
 
@@ -818,7 +818,7 @@ class QAWithContext(dspy.Signature):
     question: str = dspy.InputField()
     context: str = dspy.InputField()
     answer: str = dspy.OutputField()
-    citations: List[str] = dspy.OutputField()
+    citations: list[str] = dspy.OutputField()
 
 
 class RAGModule(dspy.Module):
@@ -833,7 +833,7 @@ class RAGModule(dspy.Module):
         # Intent router is loaded lazily to avoid hard dependency on project src
         self._intent_router = None
 
-    def forward(self, question: str) -> Dict[str, Any]:
+    def forward(self, question: str) -> dict[str, Any]:
         """Forward pass with retrieval, optional reranking, and context-aware generation."""
 
         # Unified retrieval: breadth → RRF fusion → cross-encoder rerank
@@ -1105,7 +1105,7 @@ class RAGModule(dspy.Module):
                 "generation_error": str(e),
             }
 
-    def _maybe_eval_fallback(self, question: str, force: bool = False) -> Dict[str, Any] | None:
+    def _maybe_eval_fallback(self, question: str, force: bool = False) -> dict[str, Any] | None:
         """If the question is about running evals, return filesystem discovery as answer."""
         ql = (question or "").lower()
         eval_keywords = [
@@ -1155,7 +1155,7 @@ class RAGModule(dspy.Module):
                     },
                     {"path": "run_evals.sh", "reason": "Canonical wrapper script"},
                 ]
-            lines: List[str] = []
+            lines: list[str] = []
             if commands:
                 lines.append("Recommended commands (primary first):")
                 for c in commands[:4]:
@@ -1176,7 +1176,7 @@ class RAGModule(dspy.Module):
         except Exception:
             return None
 
-    def _smart_select_hits(self, hits: List, question: str) -> List:
+    def _smart_select_hits(self, hits: list, question: str) -> list:
         """Smart selection of hits prioritizing expected citations."""
         if not hits:
             return hits[: self.k]
@@ -1206,7 +1206,7 @@ class RAGModule(dspy.Module):
         selected_hits = priority_hits + regular_hits
         return selected_hits[: self.k]
 
-    def _get_expected_citations(self, question: str) -> List[str]:
+    def _get_expected_citations(self, question: str) -> list[str]:
         """Get expected citations based on question content with comprehensive matching."""
         expected = []
         question_lower = question.lower()
@@ -1303,7 +1303,7 @@ class RAGModule(dspy.Module):
 
         return unique_expected
 
-    def _extract_enhanced_citations(self, hits: List, question: str, answer: str = "") -> List[str]:
+    def _extract_enhanced_citations(self, hits: list, question: str, answer: str = "") -> list[str]:
         """Enhanced citation extraction with advanced scoring from ChatGPT's analysis."""
         if not hits:
             return []
@@ -1410,11 +1410,11 @@ class RAGPipeline:
 
         return BootstrapFewShot(metric=grounding_metric, max_bootstrapped_demos=6)
 
-    def answer(self, question: str) -> Dict[str, Any]:
+    def answer(self, question: str) -> dict[str, Any]:
         """Answer a question using the RAG pipeline."""
         return self.rag_module.forward(question)
 
-    def debug_retrieval(self, question: str, k: int = 5) -> Dict[str, Any]:
+    def debug_retrieval(self, question: str, k: int = 5) -> dict[str, Any]:
         """Debug retrieval without generation."""
         result = self.retriever.forward("search", query=question, limit=k)
 
@@ -1475,7 +1475,7 @@ def _top_terms_from(results: list, num_terms: int = 10) -> list:
         return []
 
     # Simple term extraction from result text
-    all_text: List[str] = []
+    all_text: list[str] = []
     for result in results:
         try:
             text = result.get("text", "") or result.get("content", "") or result.get("bm25_text", "")

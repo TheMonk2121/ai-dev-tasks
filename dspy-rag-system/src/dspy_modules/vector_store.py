@@ -17,7 +17,7 @@ import os
 import re
 import uuid
 from functools import lru_cache
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 try:
     # DTO validation for retrieval candidates
@@ -82,7 +82,7 @@ def _query_embedding(model_name: str, text: str) -> np.ndarray:
     return np.frombuffer(_cached_query_embedding_bytes(model_name, text), dtype=np.float32)
 
 
-def _derive_section_title(file_path: str, chunk_text: str, prior_heading: Optional[str] = None) -> str:
+def _derive_section_title(file_path: str, chunk_text: str, prior_heading: str | None = None) -> str:
     """Heuristic section title extraction based on file type and content."""
     try:
         fp = (file_path or "").lower()
@@ -127,7 +127,7 @@ def _derive_section_title(file_path: str, chunk_text: str, prior_heading: Option
 # ---------------------------
 
 
-def _extract_intent_namespace_and_filename(query: str) -> Tuple[str, str, str]:
+def _extract_intent_namespace_and_filename(query: str) -> tuple[str, str, str]:
     """Extract optional namespace token and filename hints from a natural-language query.
 
     Returns (ns_token, file_exact, file_partial). Empty strings if not present.
@@ -147,7 +147,7 @@ def _extract_intent_namespace_and_filename(query: str) -> Tuple[str, str, str]:
 # ---------------------------
 
 
-def _zscore(scores: List[float]) -> List[float]:
+def _zscore(scores: list[float]) -> list[float]:
     if not scores:
         return []
     mu = float(np.mean(scores))
@@ -158,20 +158,20 @@ def _zscore(scores: List[float]) -> List[float]:
     return [(s - mu) / sigma for s in scores]
 
 
-def _rrf_ranks(scores: List[float]) -> Dict[int, int]:
+def _rrf_ranks(scores: list[float]) -> dict[int, int]:
     # Higher score = better rank 1..N
     order = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
     return {idx: rank + 1 for rank, idx in enumerate(order)}
 
 
 def _fuse_dense_sparse(
-    rows_dense: List[Dict[str, Any]],
-    rows_sparse: List[Dict[str, Any]],
+    rows_dense: list[dict[str, Any]],
+    rows_sparse: list[dict[str, Any]],
     limit: int,
     method: str = "zscore",  # or "rrf"
     w_dense: float = 0.6,
     w_sparse: float = 0.4,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Merge by key=(document_id, chunk_index) with either zscore fusion or RRF.
     Ensures comparable scales across modalities.
@@ -191,7 +191,7 @@ def _fuse_dense_sparse(
     dense_scores = [d_map.get(k, {}).get("score_dense", 0.0) for k in all_keys]
     sparse_scores = [s_map.get(k, {}).get("score_sparse", 0.0) for k in all_keys]
 
-    fused_scores: List[float] = []
+    fused_scores: list[float] = []
 
     if method == "rrf":
         # Reciprocal Rank Fusion (stable when distributions are weird)
@@ -209,7 +209,7 @@ def _fuse_dense_sparse(
         fused_scores = [w_dense * zd[i] + w_sparse * zs[i] for i in range(len(all_keys))]
 
     # Construct merged rows
-    merged: List[Dict[str, Any]] = []
+    merged: list[dict[str, Any]] = []
     for i, k in enumerate(all_keys):
         d = d_map.get(k)
         s = s_map.get(k)
@@ -247,8 +247,8 @@ class HybridVectorStore(Module):
         fusion: str = "zscore",  # "zscore" or "rrf"
         w_dense: float = 0.6,
         w_sparse: float = 0.4,
-        ivfflat_probes: Optional[int] = None,  # e.g., 10, only if using IVF
-        hnsw_ef_search: Optional[int] = None,  # e.g., 80, only if using HNSW
+        ivfflat_probes: int | None = None,  # e.g., 10, only if using IVF
+        hnsw_ef_search: int | None = None,  # e.g., 80, only if using HNSW
         use_websearch_tsquery: bool = True,
     ):
         super().__init__()
@@ -270,7 +270,7 @@ class HybridVectorStore(Module):
         except Exception:
             self.ns_reserved = 2
 
-    def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
+    def forward(self, operation: str, **kwargs) -> dict[str, Any]:
         if operation == "store_chunks":
             return self._store_chunks_with_spans(**kwargs)
         elif operation == "search_vector":
@@ -288,7 +288,7 @@ class HybridVectorStore(Module):
 
     # ------------- Search -------------
 
-    def _hybrid_search(self, query: str, limit: int = 5) -> Dict[str, Any]:
+    def _hybrid_search(self, query: str, limit: int = 5) -> dict[str, Any]:
         """Hybrid search with guaranteed SQL aliasing and consistent column names."""
         q_emb = _query_embedding(self.model_name, query)
         ns_token, file_exact, file_partial = _extract_intent_namespace_and_filename(query)
@@ -525,11 +525,11 @@ class HybridVectorStore(Module):
                 "results": [],
             }
 
-    def _vector_search(self, query: str, limit: int) -> List[Dict[str, Any]]:
+    def _vector_search(self, query: str, limit: int) -> list[dict[str, Any]]:
         """Dense vector search using pgvector with spans included."""
         return self._search_dense(query, limit)
 
-    def _search_vector(self, query: str, limit: int = 5) -> Dict[str, Any]:
+    def _search_vector(self, query: str, limit: int = 5) -> dict[str, Any]:
         """Raw vector search returning results with distance for canonicalization."""
         q_emb = _query_embedding(self.model_name, query)
 
@@ -537,7 +537,7 @@ class HybridVectorStore(Module):
         run_id = os.getenv("INGEST_RUN_ID")
         chunk_variant = os.getenv("CHUNK_VARIANT")
         where_clause = "WHERE dc.embedding IS NOT NULL"
-        params: List[Any] = [q_emb]  # First q_emb for SELECT
+        params: list[Any] = [q_emb]  # First q_emb for SELECT
 
         if run_id:
             where_clause += " AND dc.metadata->>'ingest_run_id' = %s"
@@ -603,7 +603,7 @@ class HybridVectorStore(Module):
         except Exception:
             raise
 
-    def _search_bm25(self, query: str, limit: int = 5) -> Dict[str, Any]:
+    def _search_bm25(self, query: str, limit: int = 5) -> dict[str, Any]:
         """Raw BM25 search returning results with ts_rank for canonicalization."""
         db_manager = get_database_manager()
 
@@ -612,7 +612,7 @@ class HybridVectorStore(Module):
         chunk_variant = os.getenv("CHUNK_VARIANT")
 
         where_clause = ""
-        params: List[Any] = [query, query]
+        params: list[Any] = [query, query]
 
         gating_param: Any | None = None
         if run_id:
@@ -631,7 +631,7 @@ class HybridVectorStore(Module):
         # 3) optional gating %s (if where_clause includes it)
         # 4) ORDER BY ts_rank(... %s)
         # 5) LIMIT %s
-        ordered_params: List[Any] = [query, query]
+        ordered_params: list[Any] = [query, query]
         if gating_param is not None:
             ordered_params.append(gating_param)
         ordered_params.append(query)
@@ -769,7 +769,7 @@ class HybridVectorStore(Module):
         except Exception:
             raise
 
-    def _search_title(self, query: str, limit: int = 5) -> Dict[str, Any]:
+    def _search_title(self, query: str, limit: int = 5) -> dict[str, Any]:
         """Search using title/path full-text search with trigram fallback."""
         db_manager = get_database_manager()
 
@@ -778,7 +778,7 @@ class HybridVectorStore(Module):
         chunk_variant = os.getenv("CHUNK_VARIANT")
 
         where_clause = ""
-        params: List[Any] = [query, query]
+        params: list[Any] = [query, query]
 
         gating_param: Any | None = None
         if run_id:
@@ -792,7 +792,7 @@ class HybridVectorStore(Module):
             where_clause = "AND dc.metadata->>'ingest_run_id' = get_active_chunk_config()"
 
         # Build params in the exact order of placeholders in the SQL
-        ordered_params: List[Any] = [query, query]
+        ordered_params: list[Any] = [query, query]
         if gating_param is not None:
             ordered_params.append(gating_param)
         ordered_params.append(query)
@@ -930,7 +930,7 @@ class HybridVectorStore(Module):
             raise
 
     @retry_database
-    def _search_dense(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
+    def _search_dense(self, query: str, limit: int = 5) -> list[dict[str, Any]]:
         q_emb = _query_embedding(self.model_name, query)
 
         # Choose distance operator according to metric
@@ -976,7 +976,7 @@ class HybridVectorStore(Module):
                     rows = cur.fetchall()
 
             # Normalize shape
-            out: List[Dict[str, Any]] = []
+            out: list[dict[str, Any]] = []
             for r in rows:
                 out.append(
                     {
@@ -996,7 +996,7 @@ class HybridVectorStore(Module):
         except Exception:
             raise
 
-    def _text_search(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
+    def _text_search(self, query: str, limit: int = 5) -> list[dict[str, Any]]:
         """Sparse text search using PostgreSQL full-text search (with spans)."""
         db_manager = get_database_manager()
         ts_fn = "websearch_to_tsquery" if self.use_websearch_tsquery else "plainto_tsquery"
@@ -1024,7 +1024,7 @@ class HybridVectorStore(Module):
                     )
                     rows = cur.fetchall()
 
-            out: List[Dict[str, Any]] = []
+            out: list[dict[str, Any]] = []
             for r in rows:
                 out.append(
                     {
@@ -1046,7 +1046,7 @@ class HybridVectorStore(Module):
         except Exception:
             raise
 
-    def _search_section(self, query: str, limit: int = 5) -> Dict[str, Any]:
+    def _search_section(self, query: str, limit: int = 5) -> dict[str, Any]:
         """Search section titles using full-text and trigram similarity with gating."""
         db_manager = get_database_manager()
 
@@ -1055,7 +1055,7 @@ class HybridVectorStore(Module):
         chunk_variant = os.getenv("CHUNK_VARIANT")
 
         where_clause = ""
-        params: List[Any] = [query, query]
+        params: list[Any] = [query, query]
 
         gating_param: Any | None = None
         if run_id:
@@ -1068,7 +1068,7 @@ class HybridVectorStore(Module):
             # Use active configuration when no explicit run_id is set
             where_clause = "AND dc.metadata->>'ingest_run_id' = get_active_chunk_config()"
 
-        ordered_params: List[Any] = [query, query]
+        ordered_params: list[Any] = [query, query]
         if gating_param is not None:
             ordered_params.append(gating_param)
         ordered_params.append(query)
@@ -1166,7 +1166,7 @@ class HybridVectorStore(Module):
         except Exception:
             raise
 
-    def _search_short(self, query: str, limit: int = 5) -> Dict[str, Any]:
+    def _search_short(self, query: str, limit: int = 5) -> dict[str, Any]:
         """Short-field search over section_title + filename basename (weighted)."""
         db_manager = get_database_manager()
 
@@ -1185,7 +1185,7 @@ class HybridVectorStore(Module):
         else:
             where_clause = "AND dc.metadata->>'ingest_run_id' = get_active_chunk_config()"
 
-        ordered_params: List[Any] = [query]
+        ordered_params: list[Any] = [query]
         if gating_param is not None:
             ordered_params.append(gating_param)
         ordered_params.append(query)
@@ -1221,7 +1221,7 @@ class HybridVectorStore(Module):
 
                     if len(rows) < limit:
                         # Trigram fallback on section_title or filename basename
-                        fallback_params: List[Any] = [query, query]
+                        fallback_params: list[Any] = [query, query]
                         if gating_param is not None:
                             fallback_params.append(gating_param)
                         fallback_params.extend([query, limit - len(rows)])
@@ -1267,12 +1267,12 @@ class HybridVectorStore(Module):
     # ------------- Store -------------
 
     @retry_database
-    def _store_chunks_with_spans(self, chunks: List[str], metadata: Dict[str, Any]) -> Dict[str, Any]:
+    def _store_chunks_with_spans(self, chunks: list[str], metadata: dict[str, Any]) -> dict[str, Any]:
         """Store document chunks with embeddings and span information."""
         embeddings = self.model.encode(chunks, convert_to_numpy=True)
         doc_id = metadata.get("document_id") or uuid.uuid4().hex
 
-        chunk_rows: List[Tuple] = []
+        chunk_rows: list[tuple] = []
         for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
             if isinstance(emb, torch.Tensor):
                 emb = emb.detach().cpu().numpy()
@@ -1298,11 +1298,11 @@ class HybridVectorStore(Module):
 
     def _insert_with_spans(
         self,
-        chunk_rows: List[Tuple],
-        metadata: Dict[str, Any],
+        chunk_rows: list[tuple],
+        metadata: dict[str, Any],
         doc_id: str,
         chunk_count: int,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         db_manager = get_database_manager()
         try:
             with db_manager.get_connection() as conn:
@@ -1398,7 +1398,7 @@ class HybridVectorStore(Module):
 
     # ------------- Admin -------------
 
-    def _delete_document(self, document_id: str) -> Dict[str, Any]:
+    def _delete_document(self, document_id: str) -> dict[str, Any]:
         try:
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -1409,7 +1409,7 @@ class HybridVectorStore(Module):
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
-    def _get_document_chunks(self, document_id: str) -> Dict[str, Any]:
+    def _get_document_chunks(self, document_id: str) -> dict[str, Any]:
         try:
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -1436,7 +1436,7 @@ class HybridVectorStore(Module):
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         try:
             db_manager = get_database_manager()
             with db_manager.get_connection() as conn:
@@ -1462,7 +1462,7 @@ class HybridVectorStore(Module):
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Alias for get_stats() to align with dashboard API"""
         return self.get_stats()
 
@@ -1474,7 +1474,7 @@ class VectorStorePipeline(Module):
         super().__init__()
         self.vector_store = HybridVectorStore(db_connection_string)
 
-    def forward(self, operation: str, **kwargs) -> Dict[str, Any]:
+    def forward(self, operation: str, **kwargs) -> dict[str, Any]:
         result = self.vector_store(operation, **kwargs)
         if isinstance(result, dict):
             return result

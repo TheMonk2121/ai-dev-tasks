@@ -17,7 +17,7 @@ import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add src to path
 sys.path.append("src")
@@ -47,10 +47,10 @@ class DocumentInfo:
     last_modified: float
     priority_score: float = 0.0
     in_database: bool = False
-    database_id: Optional[int] = None
+    database_id: int | None = None
 
 
-def get_core_document_files() -> List[DocumentInfo]:
+def get_core_document_files() -> list[DocumentInfo]:
     """Get all core documentation files that should be in the memory rehydrator"""
     core_dirs = ["../000_core", "../100_memory", "../400_guides", "../200_setup"]
 
@@ -134,7 +134,7 @@ def calculate_priority_score(file_path: str) -> float:
     return max(score, 0.0)
 
 
-def analyze_database_gap(core_documents: List[DocumentInfo]) -> Dict[str, Any]:
+def analyze_database_gap(core_documents: list[DocumentInfo]) -> dict[str, Any]:
     """Analyze the gap between core documents and what's in the database"""
     try:
         db = get_database_manager()
@@ -196,7 +196,7 @@ def analyze_database_gap(core_documents: List[DocumentInfo]) -> Dict[str, Any]:
         }
 
 
-def print_inventory_report(analysis: Dict[str, Any]):
+def print_inventory_report(analysis: dict[str, Any]):
     """Print a comprehensive inventory report"""
     print("\n" + "=" * 80)
     print("📊 CORE DOCUMENT INVENTORY ANALYSIS")
@@ -227,7 +227,7 @@ def print_inventory_report(analysis: Dict[str, Any]):
     print("\n" + "=" * 80)
 
 
-def process_documents_bulk(documents: List[DocumentInfo], max_workers: int = 4, batch_size: int = 10) -> Dict[str, Any]:
+def process_documents_bulk(documents: list[DocumentInfo], max_workers: int = 4, batch_size: int = 10) -> dict[str, Any]:
     """Process documents in bulk with concurrent processing"""
     logger.info(f"Starting bulk processing of {len(documents)} documents")
 
@@ -280,7 +280,7 @@ def process_documents_bulk(documents: List[DocumentInfo], max_workers: int = 4, 
 
 def process_single_document(
     doc: DocumentInfo, pipeline: DocumentIngestionPipeline, vector_store: HybridVectorStore
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Process a single document"""
     try:
         # Process through pipeline with vector store

@@ -10,7 +10,7 @@ Lightweight observability helpers.
 Safe to import when Logfire/Pydantic AI are not installed; functions become no-ops.
 """
 
-from typing import Any, Optional
+from typing import Any
 
 _logfire = None
 

@@ -6,7 +6,7 @@ Implements user preference storage, retrieval, and customization for B-1007
 
 import logging
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -24,7 +24,7 @@ class UserPreference(BaseModel):
     preference_value: Any = Field(..., description="Preference value")
     preference_type: str = Field(..., description="Type of preference (string, int, bool, etc.)")
     category: str = Field(..., description="Preference category")
-    description: Optional[str] = Field(None, description="Preference description")
+    description: str | None = Field(None, description="Preference description")
     created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
     updated_at: datetime = Field(default_factory=datetime.now, description="Last update timestamp")
     is_active: bool = Field(default=True, description="Whether preference is active")
@@ -58,7 +58,7 @@ class UserPreferenceSet(BaseModel):
     """Model for a set of user preferences"""
 
     user_id: str = Field(..., description="User identifier")
-    preferences: Dict[str, UserPreference] = Field(default_factory=dict, description="User preferences")
+    preferences: dict[str, UserPreference] = Field(default_factory=dict, description="User preferences")
     last_sync: datetime = Field(default_factory=datetime.now, description="Last sync timestamp")
     cache_expires: datetime = Field(..., description="Cache expiration timestamp")
 
@@ -75,7 +75,7 @@ class PreferenceCache(BaseModel):
     """Model for preference caching"""
 
     cache_key: str = Field(..., description="Cache key")
-    preference_data: Dict[str, Any] = Field(..., description="Cached preference data")
+    preference_data: dict[str, Any] = Field(..., description="Cached preference data")
     created_at: datetime = Field(default_factory=datetime.now, description="Cache creation timestamp")
     expires_at: datetime = Field(..., description="Cache expiration timestamp")
     hit_count: int = Field(default=0, description="Number of cache hits")
@@ -147,7 +147,7 @@ class DefaultPreferences:
     }
 
     @classmethod
-    def get_default_preferences(cls, user_id: str) -> List[UserPreference]:
+    def get_default_preferences(cls, user_id: str) -> list[UserPreference]:
         """Get default preferences for a new user"""
         preferences = []
 
@@ -176,11 +176,11 @@ class UserPreferenceManager:
         """Initialize preference manager"""
         self.db_connection = db_connection
         self.cache_ttl = cache_ttl
-        self._cache: Dict[str, PreferenceCache] = {}
-        self._preference_sets: Dict[str, UserPreferenceSet] = {}
-        self._preferences: Dict[str, Dict[str, Any]] = {}  # In-memory storage for testing
+        self._cache: dict[str, PreferenceCache] = {}
+        self._preference_sets: dict[str, UserPreferenceSet] = {}
+        self._preferences: dict[str, dict[str, Any]] = {}  # In-memory storage for testing
 
-    def get_user_preferences(self, user_id: str, force_refresh: bool = False) -> Dict[str, Any]:
+    def get_user_preferences(self, user_id: str, force_refresh: bool = False) -> dict[str, Any]:
         """Get user preferences with caching"""
         cache_key = f"preferences_{user_id}"
 
@@ -204,7 +204,7 @@ class UserPreferenceManager:
         preference_key: str,
         preference_value: Any,
         category: str = "general",
-        description: Optional[str] = None,
+        description: str | None = None,
     ) -> UserPreference:
         """Set a user preference"""
         # Determine preference type
@@ -249,12 +249,12 @@ class UserPreferenceManager:
 
         return success
 
-    def get_preferences_by_category(self, user_id: str, category: str) -> Dict[str, Any]:
+    def get_preferences_by_category(self, user_id: str, category: str) -> dict[str, Any]:
         """Get user preferences by category"""
         preferences = self.get_user_preferences(user_id)
         return {k: v for k, v in preferences.items() if self._get_preference_category(k) == category}
 
-    def update_preferences_batch(self, user_id: str, preferences: Dict[str, Any]) -> List[UserPreference]:
+    def update_preferences_batch(self, user_id: str, preferences: dict[str, Any]) -> list[UserPreference]:
         """Update multiple preferences at once"""
         updated_preferences = []
 
@@ -264,7 +264,7 @@ class UserPreferenceManager:
 
         return updated_preferences
 
-    def _load_user_preferences(self, user_id: str) -> Dict[str, Any]:
+    def _load_user_preferences(self, user_id: str) -> dict[str, Any]:
         """Load user preferences from database or create defaults"""
         # Check in-memory storage first
         if user_id in self._preferences:
@@ -289,7 +289,7 @@ class UserPreferenceManager:
         self._preferences[user_id] = preferences_dict
         return preferences_dict
 
-    def _load_from_database(self, user_id: str) -> Optional[Dict[str, Any]]:
+    def _load_from_database(self, user_id: str) -> dict[str, Any] | None:
         """Load preferences from database"""
         if not self.db_connection:
             # Mock database for testing
@@ -342,7 +342,7 @@ class UserPreferenceManager:
             _LOG.error(f"Error deleting preference from database: {e}")
             return False
 
-    def _get_cached_preferences(self, cache_key: str) -> Optional[Dict[str, Any]]:
+    def _get_cached_preferences(self, cache_key: str) -> dict[str, Any] | None:
         """Get cached preferences"""
         if cache_key in self._cache:
             cache_entry = self._cache[cache_key]
@@ -355,7 +355,7 @@ class UserPreferenceManager:
 
         return None
 
-    def _cache_preferences(self, cache_key: str, preferences: Dict[str, Any]) -> None:
+    def _cache_preferences(self, cache_key: str, preferences: dict[str, Any]) -> None:
         """Cache user preferences"""
         expires_at = datetime.now() + timedelta(seconds=self.cache_ttl)
 
@@ -412,7 +412,7 @@ class ResponseCustomizer:
         else:
             return base_response
 
-    def _customize_text_response(self, response: str, preferences: Dict[str, Any]) -> str:
+    def _customize_text_response(self, response: str, preferences: dict[str, Any]) -> str:
         """Customize text response based on preferences"""
         # Apply style preference
         style = preferences.get("style", "concise")
@@ -438,7 +438,7 @@ class ResponseCustomizer:
 
         return response
 
-    def _customize_code_response(self, response: str, preferences: Dict[str, Any]) -> str:
+    def _customize_code_response(self, response: str, preferences: dict[str, Any]) -> str:
         """Customize code response based on preferences"""
         # Apply code formatting preference
         formatting = preferences.get("code_formatting", "black")
@@ -459,7 +459,7 @@ class ResponseCustomizer:
 
         return response
 
-    def _customize_documentation_response(self, response: str, preferences: Dict[str, Any]) -> str:
+    def _customize_documentation_response(self, response: str, preferences: dict[str, Any]) -> str:
         """Customize documentation response based on preferences"""
         # Apply documentation style preference
         doc_style = preferences.get("documentation_style", "markdown")
@@ -501,7 +501,7 @@ class PreferencePerformanceMetrics(BaseModel):
     cache_hits: int = Field(default=0, description="Number of cache hits")
     cache_misses: int = Field(default=0, description="Number of cache misses")
     avg_lookup_time: float = Field(default=0.0, description="Average lookup time in seconds")
-    lookup_times: List[float] = Field(default_factory=list, description="Lookup times")
+    lookup_times: list[float] = Field(default_factory=list, description="Lookup times")
 
     @property
     def cache_hit_rate(self) -> float:

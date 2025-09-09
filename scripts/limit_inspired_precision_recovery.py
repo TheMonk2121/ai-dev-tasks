@@ -5,7 +5,7 @@ Implements the transcript's key insights for hybrid retrieval with geometry-fail
 """
 
 import os
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 

@@ -8,7 +8,7 @@ Comprehensive test suite for the Create → Evaluate → Optimize → Deploy wor
 import os
 import sys
 import unittest
-from typing import Any, Dict
+from typing import Any
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -58,7 +58,7 @@ class OptimizedModule(Module):
         super().__init__()
         self.predictor = dspy.Predict(TestSignature)
 
-    def forward(self, input_field: str) -> Dict[str, Any]:
+    def forward(self, input_field: str) -> dict[str, Any]:
         """
         Forward pass with comprehensive quality improvements
 

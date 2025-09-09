@@ -11,7 +11,7 @@ import logging
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -24,7 +24,7 @@ def _maybe_json_loads(val: Any) -> Any:
 
     Psycopg2 with JSONB may already return Python types. Avoid double-parsing.
     """
-    if isinstance(val, (dict, list)):
+    if isinstance(val, dict | list):
         return val
     if isinstance(val, str):
         try:
@@ -41,22 +41,22 @@ class EpisodicReflection:
     agent: str
     task_type: str
     summary: str
-    what_worked: List[str]
-    what_to_avoid: List[str]
-    outcome_metrics: Dict[str, Any]
-    source_refs: Dict[str, Any]
+    what_worked: list[str]
+    what_to_avoid: list[str]
+    outcome_metrics: dict[str, Any]
+    source_refs: dict[str, Any]
     span_hash: str
-    created_at: Optional[datetime] = None
-    id: Optional[int] = None
+    created_at: datetime | None = None
+    id: int | None = None
 
 
 @dataclass
 class EpisodicContext:
     """Context retrieved from episodic memory for current task."""
 
-    similar_episodes: List[EpisodicReflection]
-    what_worked_bullets: List[str]
-    what_to_avoid_bullets: List[str]
+    similar_episodes: list[EpisodicReflection]
+    what_worked_bullets: list[str]
+    what_to_avoid_bullets: list[str]
     confidence_score: float
     retrieval_time_ms: float
 
@@ -105,7 +105,7 @@ class EpisodicReflectionStore:
         combined = f"{input_text}|{output_text}"
         return hashlib.sha256(combined.encode()).hexdigest()[:16]
 
-    def _generate_embedding(self, text: str) -> List[float]:
+    def _generate_embedding(self, text: str) -> list[float]:
         """Generate embedding for text."""
         embedder = self._get_embedder()
         if embedder == "mock_embedder":
@@ -168,8 +168,8 @@ class EpisodicReflectionStore:
             return False
 
     def retrieve_similar_episodes(
-        self, query: str, agent: Optional[str] = None, limit: Optional[int] = None
-    ) -> List[EpisodicReflection]:
+        self, query: str, agent: str | None = None, limit: int | None = None
+    ) -> list[EpisodicReflection]:
         """Retrieve similar episodes using hybrid search (vector + text)."""
         if limit is None:
             limit = self.max_episodes_retrieved
@@ -235,7 +235,7 @@ class EpisodicReflectionStore:
             logger.error(f"Failed to retrieve similar episodes: {e}")
             return []
 
-    def get_episodic_context(self, query: str, agent: Optional[str] = None) -> EpisodicContext:
+    def get_episodic_context(self, query: str, agent: str | None = None) -> EpisodicContext:
         """Get episodic context for a query, including compressed bullets."""
         start_time = time.time()
 
@@ -281,8 +281,8 @@ class EpisodicReflectionStore:
         output_text: str,
         agent: str = "cursor_ai",
         task_type: str = "general",
-        outcome_metrics: Optional[Dict[str, Any]] = None,
-        source_refs: Optional[Dict[str, Any]] = None,
+        outcome_metrics: dict[str, Any] | None = None,
+        source_refs: dict[str, Any] | None = None,
     ) -> EpisodicReflection:
         """Generate a reflection from a completed task."""
 
@@ -315,7 +315,7 @@ class EpisodicReflectionStore:
             span_hash=span_hash,
         )
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get statistics about stored reflections."""
         try:
             conn = self._get_db_connection()

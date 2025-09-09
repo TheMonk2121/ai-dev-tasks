@@ -21,7 +21,7 @@ import sys
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 from urllib.parse import urlparse
 
 import asyncpg
@@ -431,7 +431,7 @@ class PostgreSQLCacheService:
                     # Update cache hit metrics
                     self._update_metrics(start_time, cache_hit=True)
 
-                    # Update last_verified timestamp (guard Optional[int])
+                    # Update last_verified timestamp (guard int | None)
                     if cache_entry.id is not None:
                         await self._update_cache_verification(int(cache_entry.id))
 

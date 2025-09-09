@@ -54,7 +54,9 @@ class ExtractiveReader(dspy.Module):
         except Exception as e:  # Defensive: keep evaluation running even if adapter path throws
             if _LOGFIRE is not None:
                 try:
-                    _LOGFIRE.warning("reader.predict.error", error=str(e), tag=tag, qlen=len(question), clen=len(joined))
+                    _LOGFIRE.warning(
+                        "reader.predict.error", error=str(e), tag=tag, qlen=len(question), clen=len(joined)
+                    )
                 except Exception:
                     pass
             # Minimal safe fallback

@@ -90,7 +90,9 @@ def test_unified_data_pipeline():
 
         print(f"   💻 Development Context: {dev_context.get('development_intensity', 'Unknown')} intensity")
         print(f"   🖥️ System Context: {sys_context.get('system_health', 'Unknown')} health")
-        print(f"   📊 Performance Context: {perf_context.get('cpu_usage', 0)}% CPU, {perf_context.get('memory_usage', 0)}% Memory")
+        print(
+            f"   📊 Performance Context: {perf_context.get('cpu_usage', 0)}% CPU, {perf_context.get('memory_usage', 0)}% Memory"
+        )
         print(f"   ⏰ Temporal Context: {temp_context.get('data_freshness', 'Unknown')} data")
         print(f"   🔗 Correlation Context: {corr_context.get('overall_correlation_strength', 'Unknown')} strength")
 
@@ -139,26 +141,26 @@ def test_unified_data_pipeline():
 
     # Quality Gate 1: Data Ingestion
     data_ingestion_ok = (
-        ingested_data.get("data_sources") is not None and
-        len(ingested_data.get("data_sources", {})) >= 2 and  # At least 2 data sources
-        ingested_data.get("cross_source_correlation") is not None
+        ingested_data.get("data_sources") is not None
+        and len(ingested_data.get("data_sources", {})) >= 2  # At least 2 data sources
+        and ingested_data.get("cross_source_correlation") is not None
     )
     print(f"   📊 Data Ingestion: {'✅ PASS' if data_ingestion_ok else '❌ FAIL'}")
 
     # Quality Gate 2: Cross-Source Correlation
     cross_source_correlation_ok = (
-        correlation_data.get("correlation_insights") is not None and
-        correlation_data.get("enriched_context") is not None and
-        correlation_data.get("cross_source_patterns") is not None
+        correlation_data.get("correlation_insights") is not None
+        and correlation_data.get("enriched_context") is not None
+        and correlation_data.get("cross_source_patterns") is not None
     )
     print(f"   🔗 Cross-Source Correlation: {'✅ PASS' if cross_source_correlation_ok else '❌ FAIL'}")
 
     # Quality Gate 3: Context Intelligence
     context_intelligence_ok = (
-        context_intelligence.get("development_context") is not None and
-        context_intelligence.get("system_context") is not None and
-        context_intelligence.get("performance_context") is not None and
-        context_intelligence.get("temporal_context") is not None
+        context_intelligence.get("development_context") is not None
+        and context_intelligence.get("system_context") is not None
+        and context_intelligence.get("performance_context") is not None
+        and context_intelligence.get("temporal_context") is not None
     )
     print(f"   🧠 Context Intelligence: {'✅ PASS' if context_intelligence_ok else '❌ FAIL'}")
 
@@ -173,7 +175,8 @@ def test_unified_data_pipeline():
     source_status = {
         "scribe": data_sources.get("scribe") is not None and not data_sources.get("scribe", {}).get("error"),
         "git": data_sources.get("git") is not None and not data_sources.get("git", {}).get("error"),
-        "performance": data_sources.get("performance") is not None and not data_sources.get("performance", {}).get("error")
+        "performance": data_sources.get("performance") is not None
+        and not data_sources.get("performance", {}).get("error"),
     }
 
     print(f"   📝 Scribe Integration: {'✅ Active' if source_status['scribe'] else '❌ Inactive'}")

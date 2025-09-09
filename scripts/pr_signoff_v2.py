@@ -13,7 +13,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 # Enhanced role definitions with stakeholder role
 PR_CLOSURE_WORKFLOW_V2 = {

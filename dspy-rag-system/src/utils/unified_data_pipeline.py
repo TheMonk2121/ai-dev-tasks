@@ -10,9 +10,9 @@ context intelligence.
 import json
 import logging
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 # Add the project root to the path for imports
 project_root = Path(__file__).parent.parent.parent.parent
@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 class UnifiedDataPipeline:
     """
     Unified data pipeline for cross-source correlation and comprehensive context intelligence.
-    
+
     This class provides:
     - Single ingestion point for all data sources
     - Cross-source correlation and enrichment
@@ -41,10 +41,10 @@ class UnifiedDataPipeline:
     - Unified data fusion and analysis
     """
 
-    def __init__(self, db_connection_string: str, project_root: Optional[Path] = None):
+    def __init__(self, db_connection_string: str, project_root: Path | None = None):
         """
         Initialize the Unified Data Pipeline.
-        
+
         Args:
             db_connection_string: Database connection string for LTST memory
             project_root: Path to project root (defaults to current directory)
@@ -62,33 +62,33 @@ class UnifiedDataPipeline:
 
         logger.info(f"✅ Unified Data Pipeline initialized for {self.project_root}")
 
-    def ingest_all_data_sources(self, backlog_id: Optional[str] = None,
-                               since: Optional[str] = None,
-                               performance_duration: int = 60) -> Dict[str, Any]:
+    def ingest_all_data_sources(
+        self, backlog_id: str | None = None, since: str | None = None, performance_duration: int = 60
+    ) -> dict[str, Any]:
         """
         Ingest data from all sources through a single entry point.
-        
+
         Args:
             backlog_id: Optional backlog ID for Scribe integration
             since: Optional start date for Git and performance data
             performance_duration: Duration for performance data capture
-            
+
         Returns:
             dict: Unified data from all sources
         """
         try:
             unified_data = {
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "pipeline_version": "1.0",
                 "data_sources": {
                     "scribe": self._ingest_scribe_data(backlog_id),
                     "git": self._ingest_git_data(since),
-                    "performance": self._ingest_performance_data(performance_duration)
+                    "performance": self._ingest_performance_data(performance_duration),
                 },
                 "cross_source_correlation": {},
                 "comprehensive_context": {},
                 "temporal_alignment": {},
-                "pattern_recognition": {}
+                "pattern_recognition": {},
             }
 
             # Perform cross-source correlation
@@ -110,24 +110,24 @@ class UnifiedDataPipeline:
             logger.error(f"❌ Error ingesting data from all sources: {e}")
             return {"error": str(e)}
 
-    def correlate_and_enrich(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def correlate_and_enrich(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """
         Perform cross-source correlation and enrichment.
-        
+
         Args:
             unified_data: The unified data from all sources
-            
+
         Returns:
             dict: Correlated and enriched data
         """
         try:
             correlation_data = {
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "correlation_insights": self._extract_correlation_insights(unified_data),
                 "enriched_context": self._enrich_context(unified_data),
                 "cross_source_patterns": self._identify_cross_source_patterns(unified_data),
                 "temporal_relationships": self._analyze_temporal_relationships(unified_data),
-                "decision_impact_analysis": self._analyze_decision_impact(unified_data)
+                "decision_impact_analysis": self._analyze_decision_impact(unified_data),
             }
 
             logger.info("🔗 Performed cross-source correlation and enrichment")
@@ -137,25 +137,25 @@ class UnifiedDataPipeline:
             logger.error(f"❌ Error correlating and enriching data: {e}")
             return {"error": str(e)}
 
-    def build_context_intelligence(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def build_context_intelligence(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """
         Build comprehensive context intelligence from unified data.
-        
+
         Args:
             unified_data: The unified data from all sources
-            
+
         Returns:
             dict: Comprehensive context intelligence
         """
         try:
             context_intelligence = {
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "development_context": self._build_development_context(unified_data),
                 "system_context": self._build_system_context(unified_data),
                 "decision_context": self._build_decision_context(unified_data),
                 "performance_context": self._build_performance_context(unified_data),
                 "temporal_context": self._build_temporal_context(unified_data),
-                "correlation_context": self._build_correlation_context(unified_data)
+                "correlation_context": self._build_correlation_context(unified_data),
             }
 
             logger.info("🧠 Built comprehensive context intelligence")
@@ -165,17 +165,17 @@ class UnifiedDataPipeline:
             logger.error(f"❌ Error building context intelligence: {e}")
             return {"error": str(e)}
 
-    def store_unified_data(self, unified_data: Dict[str, Any],
-                          correlation_data: Dict[str, Any],
-                          context_intelligence: Dict[str, Any]) -> bool:
+    def store_unified_data(
+        self, unified_data: dict[str, Any], correlation_data: dict[str, Any], context_intelligence: dict[str, Any]
+    ) -> bool:
         """
         Store unified data, correlation, and context intelligence in LTST memory.
-        
+
         Args:
             unified_data: The unified data from all sources
             correlation_data: The cross-source correlation data
             context_intelligence: The comprehensive context intelligence
-            
+
         Returns:
             bool: True if successfully stored
         """
@@ -183,15 +183,17 @@ class UnifiedDataPipeline:
             # Create a comprehensive decision entry for the unified pipeline
             decision_data = {
                 "head": "Unified data pipeline executed with cross-source correlation",
-                "rationale": self._create_unified_pipeline_rationale(unified_data, correlation_data, context_intelligence),
+                "rationale": self._create_unified_pipeline_rationale(
+                    unified_data, correlation_data, context_intelligence
+                ),
                 "confidence": 0.92,  # High confidence for comprehensive capture
                 "metadata": {
                     "unified_data": unified_data,
                     "correlation_data": correlation_data,
                     "context_intelligence": context_intelligence,
                     "capture_method": "unified_data_pipeline",
-                    "timestamp": datetime.now(timezone.utc).isoformat()
-                }
+                    "timestamp": datetime.now(UTC).isoformat(),
+                },
             }
 
             # Store in LTST memory (this would typically call the decision storage API)
@@ -205,7 +207,7 @@ class UnifiedDataPipeline:
             logger.error(f"❌ Error storing unified data: {e}")
             return False
 
-    def _ingest_scribe_data(self, backlog_id: Optional[str] = None) -> Dict[str, Any]:
+    def _ingest_scribe_data(self, backlog_id: str | None = None) -> dict[str, Any]:
         """Ingest data from Scribe system."""
         try:
             if backlog_id:
@@ -217,7 +219,7 @@ class UnifiedDataPipeline:
             logger.error(f"Error ingesting Scribe data: {e}")
             return {"error": str(e)}
 
-    def _ingest_git_data(self, since: Optional[str] = None) -> Dict[str, Any]:
+    def _ingest_git_data(self, since: str | None = None) -> dict[str, Any]:
         """Ingest data from Git operations."""
         try:
             return self.git_integration.capture_git_operations(since=since)
@@ -225,7 +227,7 @@ class UnifiedDataPipeline:
             logger.error(f"Error ingesting Git data: {e}")
             return {"error": str(e)}
 
-    def _ingest_performance_data(self, duration: int) -> Dict[str, Any]:
+    def _ingest_performance_data(self, duration: int) -> dict[str, Any]:
         """Ingest data from performance monitoring."""
         try:
             return self.performance_integration.capture_performance_data(duration)
@@ -233,7 +235,7 @@ class UnifiedDataPipeline:
             logger.error(f"Error ingesting performance data: {e}")
             return {"error": str(e)}
 
-    def _correlate_data_sources(self, data_sources: Dict[str, Any]) -> Dict[str, Any]:
+    def _correlate_data_sources(self, data_sources: dict[str, Any]) -> dict[str, Any]:
         """Correlate data across different sources."""
         try:
             correlations = {
@@ -241,7 +243,7 @@ class UnifiedDataPipeline:
                 "scribe_performance_correlation": self._correlate_scribe_performance(data_sources),
                 "git_performance_correlation": self._correlate_git_performance(data_sources),
                 "temporal_correlation": self._correlate_temporal_data(data_sources),
-                "decision_correlation": self._correlate_decisions(data_sources)
+                "decision_correlation": self._correlate_decisions(data_sources),
             }
 
             return correlations
@@ -250,7 +252,7 @@ class UnifiedDataPipeline:
             logger.error(f"Error correlating data sources: {e}")
             return {"error": str(e)}
 
-    def _correlate_scribe_git(self, data_sources: Dict[str, Any]) -> Dict[str, Any]:
+    def _correlate_scribe_git(self, data_sources: dict[str, Any]) -> dict[str, Any]:
         """Correlate Scribe and Git data."""
         scribe_data = data_sources.get("scribe", {})
         git_data = data_sources.get("git", {})
@@ -260,7 +262,7 @@ class UnifiedDataPipeline:
             "git_commits": len(git_data.get("recent_commits", [])),
             "file_changes": len(git_data.get("file_changes", [])),
             "session_commit_ratio": 0,
-            "correlation_strength": "low"
+            "correlation_strength": "low",
         }
 
         if correlation["development_sessions"] > 0 and correlation["git_commits"] > 0:
@@ -269,16 +271,18 @@ class UnifiedDataPipeline:
 
         return correlation
 
-    def _correlate_scribe_performance(self, data_sources: Dict[str, Any]) -> Dict[str, Any]:
+    def _correlate_scribe_performance(self, data_sources: dict[str, Any]) -> dict[str, Any]:
         """Correlate Scribe and Performance data."""
         scribe_data = data_sources.get("scribe", {})
         performance_data = data_sources.get("performance", {})
 
         correlation = {
-            "work_intensity": scribe_data.get("development_patterns", {}).get("work_intensity", {}).get("intensity", "unknown"),
+            "work_intensity": scribe_data.get("development_patterns", {})
+            .get("work_intensity", {})
+            .get("intensity", "unknown"),
             "system_load": performance_data.get("resource_usage", {}).get("cpu_percent", 0),
             "memory_usage": performance_data.get("resource_usage", {}).get("memory_percent", 0),
-            "correlation_strength": "low"
+            "correlation_strength": "low",
         }
 
         # Determine correlation strength based on work intensity and system load
@@ -289,7 +293,7 @@ class UnifiedDataPipeline:
 
         return correlation
 
-    def _correlate_git_performance(self, data_sources: Dict[str, Any]) -> Dict[str, Any]:
+    def _correlate_git_performance(self, data_sources: dict[str, Any]) -> dict[str, Any]:
         """Correlate Git and Performance data."""
         git_data = data_sources.get("git", {})
         performance_data = data_sources.get("performance", {})
@@ -298,7 +302,7 @@ class UnifiedDataPipeline:
             "commit_frequency": git_data.get("commit_patterns", {}).get("frequency", "unknown"),
             "system_performance": "optimal" if performance_data.get("performance_issues", []) == [] else "suboptimal",
             "resource_usage": performance_data.get("resource_usage", {}),
-            "correlation_strength": "low"
+            "correlation_strength": "low",
         }
 
         # Determine correlation strength based on commit frequency and system performance
@@ -309,7 +313,7 @@ class UnifiedDataPipeline:
 
         return correlation
 
-    def _correlate_temporal_data(self, data_sources: Dict[str, Any]) -> Dict[str, Any]:
+    def _correlate_temporal_data(self, data_sources: dict[str, Any]) -> dict[str, Any]:
         """Correlate data based on temporal relationships."""
         scribe_data = data_sources.get("scribe", {})
         git_data = data_sources.get("git", {})
@@ -320,14 +324,14 @@ class UnifiedDataPipeline:
             "git_timestamp": git_data.get("timestamp"),
             "performance_timestamp": performance_data.get("timestamp"),
             "temporal_alignment": "synchronized",
-            "time_differences": {}
+            "time_differences": {},
         }
 
         # Calculate time differences between data sources
         timestamps = [
             ("scribe", scribe_data.get("timestamp")),
             ("git", git_data.get("timestamp")),
-            ("performance", performance_data.get("timestamp"))
+            ("performance", performance_data.get("timestamp")),
         ]
 
         # Find the most recent timestamp
@@ -338,7 +342,7 @@ class UnifiedDataPipeline:
 
         return temporal_correlation
 
-    def _correlate_decisions(self, data_sources: Dict[str, Any]) -> Dict[str, Any]:
+    def _correlate_decisions(self, data_sources: dict[str, Any]) -> dict[str, Any]:
         """Correlate decisions across data sources."""
         scribe_decisions = data_sources.get("scribe", {}).get("decisions", [])
         git_decisions = data_sources.get("git", {}).get("decisions", [])
@@ -352,12 +356,12 @@ class UnifiedDataPipeline:
             "git_decisions": len(git_decisions),
             "performance_decisions": len(performance_decisions),
             "decision_sources": list(set([d.get("source", "unknown") for d in all_decisions])),
-            "decision_types": list(set([d.get("type", "unknown") for d in all_decisions]))
+            "decision_types": list(set([d.get("type", "unknown") for d in all_decisions])),
         }
 
         return correlation
 
-    def _build_comprehensive_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _build_comprehensive_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Build comprehensive context from unified data."""
         try:
             context = {
@@ -365,7 +369,7 @@ class UnifiedDataPipeline:
                 "system_context": self._extract_system_context(unified_data),
                 "performance_context": self._extract_performance_context(unified_data),
                 "temporal_context": self._extract_temporal_context(unified_data),
-                "correlation_context": self._extract_correlation_context(unified_data)
+                "correlation_context": self._extract_correlation_context(unified_data),
             }
 
             return context
@@ -374,7 +378,7 @@ class UnifiedDataPipeline:
             logger.error(f"Error building comprehensive context: {e}")
             return {"error": str(e)}
 
-    def _extract_development_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_development_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Extract development context from unified data."""
         scribe_data = unified_data.get("data_sources", {}).get("scribe", {})
         git_data = unified_data.get("data_sources", {}).get("git", {})
@@ -383,10 +387,12 @@ class UnifiedDataPipeline:
             "active_sessions": scribe_data.get("session_registry") is not None,
             "commit_activity": git_data.get("commit_patterns", {}).get("frequency", "unknown"),
             "file_changes": len(git_data.get("file_changes", [])),
-            "development_intensity": "high" if git_data.get("commit_patterns", {}).get("total_commits", 0) > 10 else "moderate"
+            "development_intensity": (
+                "high" if git_data.get("commit_patterns", {}).get("total_commits", 0) > 10 else "moderate"
+            ),
         }
 
-    def _extract_system_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_system_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Extract system context from unified data."""
         performance_data = unified_data.get("data_sources", {}).get("performance", {})
         system_info = performance_data.get("system_info", {})
@@ -396,10 +402,10 @@ class UnifiedDataPipeline:
             "cpu_count": system_info.get("cpu_count", 0),
             "memory_total_gb": system_info.get("memory_total", 0) / (1024**3) if system_info.get("memory_total") else 0,
             "disk_total_gb": system_info.get("disk_total", 0) / (1024**3) if system_info.get("disk_total") else 0,
-            "system_health": "optimal" if not performance_data.get("performance_issues") else "suboptimal"
+            "system_health": "optimal" if not performance_data.get("performance_issues") else "suboptimal",
         }
 
-    def _extract_performance_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_performance_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Extract performance context from unified data."""
         performance_data = unified_data.get("data_sources", {}).get("performance", {})
         resource_usage = performance_data.get("resource_usage", {})
@@ -409,36 +415,42 @@ class UnifiedDataPipeline:
             "memory_usage": resource_usage.get("memory_percent", 0),
             "disk_usage": resource_usage.get("disk_percent", 0),
             "performance_issues": len(performance_data.get("performance_issues", [])),
-            "optimization_opportunities": len(performance_data.get("optimization_opportunities", []))
+            "optimization_opportunities": len(performance_data.get("optimization_opportunities", [])),
         }
 
-    def _extract_temporal_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_temporal_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Extract temporal context from unified data."""
         return {
             "pipeline_execution_time": unified_data.get("timestamp"),
             "data_freshness": "recent",
-            "temporal_coverage": "comprehensive"
+            "temporal_coverage": "comprehensive",
         }
 
-    def _extract_correlation_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_correlation_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Extract correlation context from unified data."""
         correlations = unified_data.get("cross_source_correlation", {})
 
         return {
-            "scribe_git_correlation": correlations.get("scribe_git_correlation", {}).get("correlation_strength", "unknown"),
-            "scribe_performance_correlation": correlations.get("scribe_performance_correlation", {}).get("correlation_strength", "unknown"),
-            "git_performance_correlation": correlations.get("git_performance_correlation", {}).get("correlation_strength", "unknown"),
-            "overall_correlation_strength": "moderate"
+            "scribe_git_correlation": correlations.get("scribe_git_correlation", {}).get(
+                "correlation_strength", "unknown"
+            ),
+            "scribe_performance_correlation": correlations.get("scribe_performance_correlation", {}).get(
+                "correlation_strength", "unknown"
+            ),
+            "git_performance_correlation": correlations.get("git_performance_correlation", {}).get(
+                "correlation_strength", "unknown"
+            ),
+            "overall_correlation_strength": "moderate",
         }
 
-    def _align_temporal_data(self, data_sources: Dict[str, Any]) -> Dict[str, Any]:
+    def _align_temporal_data(self, data_sources: dict[str, Any]) -> dict[str, Any]:
         """Align data based on temporal relationships."""
         try:
             alignment = {
                 "temporal_analysis": self._analyze_temporal_patterns(data_sources),
                 "synchronization_status": "synchronized",
                 "temporal_gaps": [],
-                "temporal_relationships": {}
+                "temporal_relationships": {},
             }
 
             return alignment
@@ -447,13 +459,9 @@ class UnifiedDataPipeline:
             logger.error(f"Error aligning temporal data: {e}")
             return {"error": str(e)}
 
-    def _analyze_temporal_patterns(self, data_sources: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_temporal_patterns(self, data_sources: dict[str, Any]) -> dict[str, Any]:
         """Analyze temporal patterns across data sources."""
-        patterns = {
-            "data_freshness": {},
-            "update_frequency": {},
-            "temporal_coverage": {}
-        }
+        patterns = {"data_freshness": {}, "update_frequency": {}, "temporal_coverage": {}}
 
         for source, data in data_sources.items():
             if data and not data.get("error"):
@@ -463,14 +471,14 @@ class UnifiedDataPipeline:
 
         return patterns
 
-    def _recognize_patterns(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _recognize_patterns(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Recognize patterns across data sources."""
         try:
             patterns = {
                 "development_patterns": self._recognize_development_patterns(unified_data),
                 "performance_patterns": self._recognize_performance_patterns(unified_data),
                 "correlation_patterns": self._recognize_correlation_patterns(unified_data),
-                "temporal_patterns": self._recognize_temporal_patterns(unified_data)
+                "temporal_patterns": self._recognize_temporal_patterns(unified_data),
             }
 
             return patterns
@@ -479,143 +487,153 @@ class UnifiedDataPipeline:
             logger.error(f"Error recognizing patterns: {e}")
             return {"error": str(e)}
 
-    def _recognize_development_patterns(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _recognize_development_patterns(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Recognize development patterns."""
         git_data = unified_data.get("data_sources", {}).get("git", {})
         scribe_data = unified_data.get("data_sources", {}).get("scribe", {})
 
         return {
             "commit_pattern": git_data.get("commit_patterns", {}).get("most_common_pattern", "unknown"),
-            "work_intensity": scribe_data.get("development_patterns", {}).get("work_intensity", {}).get("intensity", "unknown"),
-            "development_style": "agile" if git_data.get("commit_patterns", {}).get("total_commits", 0) > 5 else "traditional"
+            "work_intensity": scribe_data.get("development_patterns", {})
+            .get("work_intensity", {})
+            .get("intensity", "unknown"),
+            "development_style": (
+                "agile" if git_data.get("commit_patterns", {}).get("total_commits", 0) > 5 else "traditional"
+            ),
         }
 
-    def _recognize_performance_patterns(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _recognize_performance_patterns(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Recognize performance patterns."""
         performance_data = unified_data.get("data_sources", {}).get("performance", {})
 
         return {
             "resource_utilization": "optimal" if not performance_data.get("performance_issues") else "suboptimal",
             "performance_trend": "stable",
-            "optimization_needs": len(performance_data.get("optimization_opportunities", []))
+            "optimization_needs": len(performance_data.get("optimization_opportunities", [])),
         }
 
-    def _recognize_correlation_patterns(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _recognize_correlation_patterns(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Recognize correlation patterns."""
         unified_data.get("cross_source_correlation", {})
 
         return {
             "data_source_integration": "comprehensive",
             "correlation_strength": "moderate",
-            "cross_source_insights": "available"
+            "cross_source_insights": "available",
         }
 
-    def _recognize_temporal_patterns(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _recognize_temporal_patterns(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Recognize temporal patterns."""
         return {
             "data_synchronization": "synchronized",
             "temporal_coverage": "comprehensive",
-            "update_frequency": "continuous"
+            "update_frequency": "continuous",
         }
 
-    def _extract_correlation_insights(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_correlation_insights(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Extract insights from cross-source correlation."""
         correlations = unified_data.get("cross_source_correlation", {})
 
         return {
             "total_correlations": len(correlations),
-            "strong_correlations": len([c for c in correlations.values() if isinstance(c, dict) and c.get("correlation_strength") == "high"]),
-            "moderate_correlations": len([c for c in correlations.values() if isinstance(c, dict) and c.get("correlation_strength") == "moderate"]),
-            "weak_correlations": len([c for c in correlations.values() if isinstance(c, dict) and c.get("correlation_strength") == "low"])
+            "strong_correlations": len(
+                [c for c in correlations.values() if isinstance(c, dict) and c.get("correlation_strength") == "high"]
+            ),
+            "moderate_correlations": len(
+                [
+                    c
+                    for c in correlations.values()
+                    if isinstance(c, dict) and c.get("correlation_strength") == "moderate"
+                ]
+            ),
+            "weak_correlations": len(
+                [c for c in correlations.values() if isinstance(c, dict) and c.get("correlation_strength") == "low"]
+            ),
         }
 
-    def _enrich_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _enrich_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Enrich context with additional insights."""
         return {
             "enriched_development_context": self._enrich_development_context(unified_data),
             "enriched_system_context": self._enrich_system_context(unified_data),
-            "enriched_performance_context": self._enrich_performance_context(unified_data)
+            "enriched_performance_context": self._enrich_performance_context(unified_data),
         }
 
-    def _enrich_development_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _enrich_development_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Enrich development context."""
         return {
             "development_efficiency": "high",
             "code_quality_indicators": "positive",
-            "collaboration_patterns": "individual"
+            "collaboration_patterns": "individual",
         }
 
-    def _enrich_system_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _enrich_system_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Enrich system context."""
-        return {
-            "system_reliability": "high",
-            "resource_efficiency": "optimal",
-            "scalability_indicators": "positive"
-        }
+        return {"system_reliability": "high", "resource_efficiency": "optimal", "scalability_indicators": "positive"}
 
-    def _enrich_performance_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _enrich_performance_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Enrich performance context."""
         return {
             "performance_optimization_potential": "low",
             "system_health_score": "excellent",
-            "resource_utilization_efficiency": "high"
+            "resource_utilization_efficiency": "high",
         }
 
-    def _identify_cross_source_patterns(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _identify_cross_source_patterns(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Identify patterns that span multiple data sources."""
         return {
             "development_performance_correlation": "positive",
             "system_development_synergy": "high",
-            "cross_source_insights": "comprehensive"
+            "cross_source_insights": "comprehensive",
         }
 
-    def _analyze_temporal_relationships(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_temporal_relationships(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze temporal relationships between data sources."""
         return {
             "temporal_synchronization": "synchronized",
             "data_freshness": "recent",
-            "temporal_coverage": "comprehensive"
+            "temporal_coverage": "comprehensive",
         }
 
-    def _analyze_decision_impact(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_decision_impact(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze the impact of decisions across data sources."""
         return {
             "decision_coverage": "comprehensive",
             "decision_impact_assessment": "positive",
-            "decision_intelligence": "high"
+            "decision_intelligence": "high",
         }
 
-    def _build_development_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _build_development_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Build development context from unified data."""
         return self._extract_development_context(unified_data)
 
-    def _build_system_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _build_system_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Build system context from unified data."""
         return self._extract_system_context(unified_data)
 
-    def _build_decision_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _build_decision_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Build decision context from unified data."""
         return {
             "decision_sources": ["scribe", "git", "performance"],
             "decision_coverage": "comprehensive",
-            "decision_quality": "high"
+            "decision_quality": "high",
         }
 
-    def _build_performance_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _build_performance_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Build performance context from unified data."""
         return self._extract_performance_context(unified_data)
 
-    def _build_temporal_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _build_temporal_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Build temporal context from unified data."""
         return self._extract_temporal_context(unified_data)
 
-    def _build_correlation_context(self, unified_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _build_correlation_context(self, unified_data: dict[str, Any]) -> dict[str, Any]:
         """Build correlation context from unified data."""
         return self._extract_correlation_context(unified_data)
 
-    def _create_unified_pipeline_rationale(self, unified_data: Dict[str, Any],
-                                         correlation_data: Dict[str, Any],
-                                         context_intelligence: Dict[str, Any]) -> str:
+    def _create_unified_pipeline_rationale(
+        self, unified_data: dict[str, Any], correlation_data: dict[str, Any], context_intelligence: dict[str, Any]
+    ) -> str:
         """Create a rationale for the unified pipeline decision."""
         data_sources = unified_data.get("data_sources", {})
 
@@ -646,21 +664,23 @@ class UnifiedDataPipeline:
 
 
 # Convenience functions for easy integration
-def execute_unified_pipeline(db_connection_string: str,
-                           project_root: Optional[Path] = None,
-                           backlog_id: Optional[str] = None,
-                           since: Optional[str] = None,
-                           performance_duration: int = 60) -> Dict[str, Any]:
+def execute_unified_pipeline(
+    db_connection_string: str,
+    project_root: Path | None = None,
+    backlog_id: str | None = None,
+    since: str | None = None,
+    performance_duration: int = 60,
+) -> dict[str, Any]:
     """
     Execute the complete unified data pipeline.
-    
+
     Args:
         db_connection_string: Database connection string
         project_root: Optional project root path
         backlog_id: Optional backlog ID for Scribe integration
         since: Optional start date for Git and performance data
         performance_duration: Duration for performance data capture
-        
+
     Returns:
         dict: Complete unified pipeline results
     """
@@ -682,7 +702,7 @@ def execute_unified_pipeline(db_connection_string: str,
         "success": storage_success,
         "unified_data": unified_data,
         "correlation_data": correlation_data,
-        "context_intelligence": context_intelligence
+        "context_intelligence": context_intelligence,
     }
 
 

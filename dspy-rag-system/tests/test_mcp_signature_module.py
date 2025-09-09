@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-from typing import Any, Dict
+from typing import Any
 
 sys.path.append("src")
 
@@ -25,7 +25,7 @@ class TestMCPDocumentSignatureModule:
         module = MCPDocumentModule()
 
         # Monkeypatch the class-level __call__ to avoid actual server work
-        def fake_forward(self, document_source: str, **kwargs) -> Dict[str, Any]:  # type: ignore[no-redef]
+        def fake_forward(self, document_source: str, **kwargs) -> dict[str, Any]:  # type: ignore[no-redef]
             return {
                 "chunks": [
                     {"text": "chunk one"},

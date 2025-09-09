@@ -9,9 +9,9 @@ enabling automatic capture of development sessions, diffs, and decisions.
 import json
 import logging
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add the project root to the path for imports
 project_root = Path(__file__).parent.parent.parent.parent
@@ -41,7 +41,7 @@ class ScribeLTSTIntegration:
     - Real-time decision extraction from development sessions
     """
 
-    def __init__(self, db_connection_string: str, project_root: Optional[Path] = None):
+    def __init__(self, db_connection_string: str, project_root: Path | None = None):
         """
         Initialize the Scribe-LTST integration.
 
@@ -70,7 +70,7 @@ class ScribeLTSTIntegration:
 
         logger.info(f"✅ Scribe-LTST Integration initialized for {self.project_root}")
 
-    def capture_session_data(self, backlog_id: str) -> Dict[str, Any]:
+    def capture_session_data(self, backlog_id: str) -> dict[str, Any]:
         """
         Capture comprehensive session data from Scribe system.
 
@@ -83,7 +83,7 @@ class ScribeLTSTIntegration:
         try:
             session_data = {
                 "backlog_id": backlog_id,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "worklog": self._read_worklog(backlog_id),
                 "session_registry": self._get_session_info(backlog_id),
                 "file_changes": self._get_file_changes(backlog_id),
@@ -99,8 +99,8 @@ class ScribeLTSTIntegration:
             return {"error": str(e), "backlog_id": backlog_id}
 
     def link_to_conversation_context(
-        self, session_data: Dict[str, Any], conversation_id: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, session_data: dict[str, Any], conversation_id: str | None = None
+    ) -> dict[str, Any]:
         """
         Link Scribe session data to conversation context in LTST memory.
 
@@ -130,7 +130,7 @@ class ScribeLTSTIntegration:
                 "conversation_id": conversation_id,
                 "related_conversations": related_conversations.get("decisions", []),
                 "insights": insights,
-                "linked_at": datetime.now(timezone.utc).isoformat(),
+                "linked_at": datetime.now(UTC).isoformat(),
                 "link_type": "scribe_session_to_conversation",
             }
 
@@ -141,7 +141,7 @@ class ScribeLTSTIntegration:
             logger.error(f"❌ Error linking session to conversation: {e}")
             return {"error": str(e)}
 
-    def extract_development_patterns(self, backlog_id: str) -> Dict[str, Any]:
+    def extract_development_patterns(self, backlog_id: str) -> dict[str, Any]:
         """
         Extract development patterns from Scribe session data.
 
@@ -171,7 +171,7 @@ class ScribeLTSTIntegration:
             logger.error(f"❌ Error extracting development patterns: {e}")
             return {"error": str(e)}
 
-    def store_in_ltst_memory(self, session_data: Dict[str, Any], linking_data: Dict[str, Any]) -> bool:
+    def store_in_ltst_memory(self, session_data: dict[str, Any], linking_data: dict[str, Any]) -> bool:
         """
         Store session data and linking information in LTST memory.
 
@@ -193,7 +193,7 @@ class ScribeLTSTIntegration:
                     "session_data": session_data,
                     "linking_data": linking_data,
                     "capture_method": "scribe_ltst_integration",
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 },
             }
 
@@ -208,14 +208,14 @@ class ScribeLTSTIntegration:
             logger.error(f"❌ Error storing in LTST memory: {e}")
             return False
 
-    def _read_worklog(self, backlog_id: str) -> Optional[str]:
+    def _read_worklog(self, backlog_id: str) -> str | None:
         """Read worklog content for a given backlog ID."""
         worklog_path = self.worklogs_path / f"{backlog_id}.md"
         if worklog_path.exists():
             return worklog_path.read_text(encoding="utf-8")
         return None
 
-    def _get_session_info(self, backlog_id: str) -> Optional[Dict[str, Any]]:
+    def _get_session_info(self, backlog_id: str) -> dict[str, Any] | None:
         """Get session information from the session registry."""
         if not self.session_registry_path.exists():
             return None
@@ -227,7 +227,7 @@ class ScribeLTSTIntegration:
             logger.error(f"Error reading session registry: {e}")
             return None
 
-    def _get_file_changes(self, backlog_id: str) -> List[Dict[str, Any]]:
+    def _get_file_changes(self, backlog_id: str) -> list[dict[str, Any]]:
         """Extract file changes from worklog content."""
         worklog_content = self._read_worklog(backlog_id)
         if not worklog_content:
@@ -248,7 +248,7 @@ class ScribeLTSTIntegration:
 
         return file_changes
 
-    def _extract_development_patterns(self, backlog_id: str) -> Dict[str, Any]:
+    def _extract_development_patterns(self, backlog_id: str) -> dict[str, Any]:
         """Extract development patterns from worklog content."""
         worklog_content = self._read_worklog(backlog_id)
         if not worklog_content:
@@ -263,7 +263,7 @@ class ScribeLTSTIntegration:
 
         return patterns
 
-    def _extract_session_decisions(self, backlog_id: str) -> List[Dict[str, Any]]:
+    def _extract_session_decisions(self, backlog_id: str) -> list[dict[str, Any]]:
         """Extract decisions from session worklog using the decision extractor."""
         worklog_content = self._read_worklog(backlog_id)
         if not worklog_content:
@@ -278,7 +278,7 @@ class ScribeLTSTIntegration:
                 for decision in decisions:
                     decision["session_id"] = backlog_id
                     decision["source"] = "scribe_worklog"
-                    decision["extracted_at"] = datetime.now(timezone.utc).isoformat()
+                    decision["extracted_at"] = datetime.now(UTC).isoformat()
 
                 return decisions
             else:
@@ -290,7 +290,7 @@ class ScribeLTSTIntegration:
                         "confidence": 0.7,
                         "session_id": backlog_id,
                         "source": "scribe_worklog",
-                        "extracted_at": datetime.now(timezone.utc).isoformat(),
+                        "extracted_at": datetime.now(UTC).isoformat(),
                     }
                 ]
 
@@ -298,7 +298,7 @@ class ScribeLTSTIntegration:
             logger.error(f"Error extracting decisions from session {backlog_id}: {e}")
             return []
 
-    def _extract_session_insights(self, session_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_session_insights(self, session_data: dict[str, Any]) -> dict[str, Any]:
         """Extract key insights from session data."""
         insights = {
             "session_duration": self._calculate_session_duration(session_data["backlog_id"]),
@@ -312,7 +312,7 @@ class ScribeLTSTIntegration:
 
         return insights
 
-    def _create_session_rationale(self, session_data: Dict[str, Any], linking_data: Dict[str, Any]) -> str:
+    def _create_session_rationale(self, session_data: dict[str, Any], linking_data: dict[str, Any]) -> str:
         """Create a rationale for the session decision."""
         backlog_id = session_data["backlog_id"]
         insights = linking_data.get("insights", {})
@@ -334,7 +334,7 @@ class ScribeLTSTIntegration:
 
         return rationale.strip()
 
-    def _analyze_commit_frequency(self, worklog_content: str) -> Dict[str, Any]:
+    def _analyze_commit_frequency(self, worklog_content: str) -> dict[str, Any]:
         """Analyze commit frequency patterns."""
         lines = worklog_content.split("\n")
         commit_lines = [line for line in lines if "committed" in line.lower()]
@@ -348,7 +348,7 @@ class ScribeLTSTIntegration:
             "pattern": "frequent" if len(commit_lines) > 5 else "moderate",
         }
 
-    def _analyze_file_changes(self, worklog_content: str) -> Dict[str, Any]:
+    def _analyze_file_changes(self, worklog_content: str) -> dict[str, Any]:
         """Analyze file change patterns."""
         lines = worklog_content.split("\n")
         change_lines = [line for line in lines if "Changes:" in line]
@@ -366,7 +366,7 @@ class ScribeLTSTIntegration:
             "pattern": "frequent" if len(change_lines) > 3 else "moderate",
         }
 
-    def _analyze_work_sessions(self, worklog_content: str) -> List[Dict[str, Any]]:
+    def _analyze_work_sessions(self, worklog_content: str) -> list[dict[str, Any]]:
         """Analyze work session patterns."""
         lines = worklog_content.split("\n")
         sessions = []
@@ -386,7 +386,7 @@ class ScribeLTSTIntegration:
 
         return sessions
 
-    def _extract_decision_points(self, worklog_content: str) -> List[str]:
+    def _extract_decision_points(self, worklog_content: str) -> list[str]:
         """Extract decision points from worklog."""
         lines = worklog_content.split("\n")
         decision_points = []
@@ -397,7 +397,7 @@ class ScribeLTSTIntegration:
 
         return decision_points
 
-    def _extract_progress_markers(self, worklog_content: str) -> List[str]:
+    def _extract_progress_markers(self, worklog_content: str) -> list[str]:
         """Extract progress markers from worklog."""
         lines = worklog_content.split("\n")
         progress_markers = []
@@ -408,7 +408,7 @@ class ScribeLTSTIntegration:
 
         return progress_markers
 
-    def _extract_timestamp_from_context(self, lines: List[str], line_index: int) -> Optional[str]:
+    def _extract_timestamp_from_context(self, lines: list[str], line_index: int) -> str | None:
         """Extract timestamp from context around a line."""
         # Look for timestamp in nearby lines
         for i in range(max(0, line_index - 5), min(len(lines), line_index + 5)):
@@ -428,7 +428,7 @@ class ScribeLTSTIntegration:
         except (ValueError, AttributeError):
             return 0
 
-    def _extract_timestamp_from_line(self, line: str) -> Optional[str]:
+    def _extract_timestamp_from_line(self, line: str) -> str | None:
         """Extract timestamp from a line."""
         try:
             import re
@@ -439,7 +439,7 @@ class ScribeLTSTIntegration:
         except (ValueError, AttributeError):
             return None
 
-    def _calculate_session_duration(self, backlog_id: str) -> Optional[str]:
+    def _calculate_session_duration(self, backlog_id: str) -> str | None:
         """Calculate session duration from start time to now."""
         session_info = self._get_session_info(backlog_id)
         if not session_info or not session_info.get("start_time"):
@@ -447,12 +447,12 @@ class ScribeLTSTIntegration:
 
         try:
             start_time = datetime.fromisoformat(session_info["start_time"].replace("Z", "+00:00"))
-            duration = datetime.now(timezone.utc) - start_time
+            duration = datetime.now(UTC) - start_time
             return str(duration)
         except (ValueError, TypeError):
             return None
 
-    def _calculate_work_intensity(self, session_data: Dict[str, Any]) -> str:
+    def _calculate_work_intensity(self, session_data: dict[str, Any]) -> str:
         """Calculate work intensity based on session data."""
         commit_count = len(
             [line for line in session_data.get("worklog", "").split("\n") if "committed" in line.lower()]
@@ -468,7 +468,7 @@ class ScribeLTSTIntegration:
         else:
             return "low"
 
-    def _analyze_commit_patterns(self, worklog_content: str) -> Dict[str, Any]:
+    def _analyze_commit_patterns(self, worklog_content: str) -> dict[str, Any]:
         """Analyze commit patterns from worklog."""
         lines = worklog_content.split("\n")
         commit_lines = [line for line in lines if "committed" in line.lower()]
@@ -479,7 +479,7 @@ class ScribeLTSTIntegration:
             "last_commit": commit_lines[-1] if commit_lines else None,
         }
 
-    def _analyze_work_intensity(self, worklog_content: str) -> Dict[str, Any]:
+    def _analyze_work_intensity(self, worklog_content: str) -> dict[str, Any]:
         """Analyze work intensity patterns."""
         lines = worklog_content.split("\n")
         activity_lines = [
@@ -494,7 +494,7 @@ class ScribeLTSTIntegration:
             "activity_types": list(set([line.split()[0] for line in activity_lines if line.split()])),
         }
 
-    def _analyze_file_focus(self, worklog_content: str) -> Dict[str, Any]:
+    def _analyze_file_focus(self, worklog_content: str) -> dict[str, Any]:
         """Analyze file focus patterns."""
         lines = worklog_content.split("\n")
         file_lines = [line for line in lines if "file(s)" in line]
@@ -508,8 +508,8 @@ class ScribeLTSTIntegration:
 
 # Convenience functions for easy integration
 def integrate_scribe_session(
-    backlog_id: str, db_connection_string: str, project_root: Optional[Path] = None
-) -> Dict[str, Any]:
+    backlog_id: str, db_connection_string: str, project_root: Path | None = None
+) -> dict[str, Any]:
     """
     Convenience function to integrate a Scribe session with LTST memory.
 
@@ -541,8 +541,8 @@ def integrate_scribe_session(
 
 
 def extract_scribe_insights(
-    backlog_id: str, db_connection_string: str, project_root: Optional[Path] = None
-) -> Dict[str, Any]:
+    backlog_id: str, db_connection_string: str, project_root: Path | None = None
+) -> dict[str, Any]:
     """
     Extract insights from a Scribe session.
 
@@ -563,7 +563,7 @@ def extract_scribe_insights(
         "backlog_id": backlog_id,
         "development_patterns": patterns,
         "decisions": decisions,
-        "extracted_at": datetime.now(timezone.utc).isoformat(),
+        "extracted_at": datetime.now(UTC).isoformat(),
     }
 
 

@@ -7,7 +7,7 @@ repository files, issues, pull requests, and documentation with GitHub API integ
 
 import asyncio
 import base64
-from typing import Any, Dict, List, Optional
+from typing import Any
 from urllib.parse import urlparse
 
 import httpx
@@ -19,7 +19,7 @@ from .base_server import DocumentMetadata, MCPConfig, MCPError, MCPProtocolUtils
 class GitHubServerConfig(BaseModel):
     """Configuration specific to GitHub MCP server."""
 
-    api_token: Optional[str] = Field(default=None, description="GitHub API token for authenticated requests")
+    api_token: str | None = Field(default=None, description="GitHub API token for authenticated requests")
     rate_limit_delay: float = Field(default=1.0, description="Delay between API requests in seconds")
     max_file_size: int = Field(default=1024 * 1024, description="Maximum file size to download")  # 1MB
     include_issues: bool = Field(default=True, description="Include issues in repository processing")
@@ -37,14 +37,14 @@ class GitHubRepository(BaseModel):
 
     name: str
     full_name: str
-    description: Optional[str] = None
-    language: Optional[str] = None
+    description: str | None = None
+    language: str | None = None
     stars: int = 0
     forks: int = 0
     issues_count: int = 0
     pull_requests_count: int = 0
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    created_at: str | None = None
+    updated_at: str | None = None
     default_branch: str = "main"
 
     model_config = {"extra": "forbid"}
@@ -55,13 +55,13 @@ class GitHubIssue(BaseModel):
 
     number: int
     title: str
-    body: Optional[str] = None
+    body: str | None = None
     state: str
-    author: Optional[str] = None
-    assignees: List[str] = Field(default_factory=list)
-    labels: List[str] = Field(default_factory=list)
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    author: str | None = None
+    assignees: list[str] = Field(default_factory=list)
+    labels: list[str] = Field(default_factory=list)
+    created_at: str | None = None
+    updated_at: str | None = None
     comments_count: int = 0
 
     model_config = {"extra": "forbid"}
@@ -72,13 +72,13 @@ class GitHubPullRequest(BaseModel):
 
     number: int
     title: str
-    body: Optional[str] = None
+    body: str | None = None
     state: str
-    author: Optional[str] = None
-    assignees: List[str] = Field(default_factory=list)
-    labels: List[str] = Field(default_factory=list)
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    author: str | None = None
+    assignees: list[str] = Field(default_factory=list)
+    labels: list[str] = Field(default_factory=list)
+    created_at: str | None = None
+    updated_at: str | None = None
     comments_count: int = 0
     review_comments_count: int = 0
     commits_count: int = 0
@@ -93,7 +93,7 @@ class GitHubMCPServer(MCPServer):
     def __init__(self, config: MCPConfig):
         super().__init__(config)
         self.github_config = GitHubServerConfig()
-        self._session: Optional[httpx.AsyncClient] = None
+        self._session: httpx.AsyncClient | None = None
         self._last_request_time = 0
 
         # Supported content types
@@ -144,7 +144,7 @@ class GitHubMCPServer(MCPServer):
         """Check if this server supports the given content type."""
         return content_type in self.supported_types
 
-    def get_supported_types(self) -> List[str]:
+    def get_supported_types(self) -> list[str]:
         """Get list of supported content types."""
         return list(self.supported_types.keys())
 
@@ -169,7 +169,7 @@ class GitHubMCPServer(MCPServer):
             self.logger.error(f"Source validation failed: {e}")
             return False
 
-    def _parse_github_url(self, url: str) -> Dict[str, str]:
+    def _parse_github_url(self, url: str) -> dict[str, str]:
         """Parse GitHub URL to extract repository and path information."""
         try:
             parsed = urlparse(url)
@@ -214,7 +214,7 @@ class GitHubMCPServer(MCPServer):
         except Exception as e:
             raise MCPError(f"Failed to parse GitHub URL: {e}", error_code="URL_PARSING_ERROR")
 
-    async def _detect_content_type(self, url: str, repo_info: Dict[str, str]) -> str:
+    async def _detect_content_type(self, url: str, repo_info: dict[str, str]) -> str:
         """Detect content type from GitHub URL."""
         return f"github/{repo_info['type']}"
 
@@ -248,7 +248,7 @@ class GitHubMCPServer(MCPServer):
 
         self._last_request_time = time.time()
 
-    async def _make_api_request(self, endpoint: str) -> Dict[str, Any]:
+    async def _make_api_request(self, endpoint: str) -> dict[str, Any]:
         """Make a GitHub API request."""
         await self._rate_limit()
 
@@ -269,7 +269,7 @@ class GitHubMCPServer(MCPServer):
         except httpx.RequestError as e:
             raise MCPError(f"GitHub API request failed: {e}", error_code="REQUEST_ERROR")
 
-    async def _process_repository(self, url: str, repo_info: Dict[str, str], **kwargs) -> ProcessedDocument:
+    async def _process_repository(self, url: str, repo_info: dict[str, str], **kwargs) -> ProcessedDocument:
         """Process a GitHub repository."""
         try:
             # Get repository information
@@ -358,7 +358,7 @@ class GitHubMCPServer(MCPServer):
         except Exception as e:
             raise MCPError(f"Repository processing failed: {e}", error_code="PROCESSING_ERROR")
 
-    async def _process_file(self, url: str, repo_info: Dict[str, str], **kwargs) -> ProcessedDocument:
+    async def _process_file(self, url: str, repo_info: dict[str, str], **kwargs) -> ProcessedDocument:
         """Process a GitHub repository file."""
         try:
             # Get file content
@@ -392,7 +392,7 @@ class GitHubMCPServer(MCPServer):
         except Exception as e:
             raise MCPError(f"File processing failed: {e}", error_code="PROCESSING_ERROR")
 
-    async def _process_issue(self, url: str, repo_info: Dict[str, str], **kwargs) -> ProcessedDocument:
+    async def _process_issue(self, url: str, repo_info: dict[str, str], **kwargs) -> ProcessedDocument:
         """Process a GitHub issue."""
         try:
             issue_number = repo_info.get("issue_number")
@@ -441,7 +441,7 @@ class GitHubMCPServer(MCPServer):
         except Exception as e:
             raise MCPError(f"Issue processing failed: {e}", error_code="PROCESSING_ERROR")
 
-    async def _process_pull_request(self, url: str, repo_info: Dict[str, str], **kwargs) -> ProcessedDocument:
+    async def _process_pull_request(self, url: str, repo_info: dict[str, str], **kwargs) -> ProcessedDocument:
         """Process a GitHub pull request."""
         try:
             pr_number = repo_info.get("pr_number")
@@ -492,7 +492,7 @@ class GitHubMCPServer(MCPServer):
         except Exception as e:
             raise MCPError(f"Pull request processing failed: {e}", error_code="PROCESSING_ERROR")
 
-    async def _process_wiki(self, url: str, repo_info: Dict[str, str], **kwargs) -> ProcessedDocument:
+    async def _process_wiki(self, url: str, repo_info: dict[str, str], **kwargs) -> ProcessedDocument:
         """Process a GitHub wiki page."""
         try:
             page_name = repo_info.get("page", "Home")
@@ -515,7 +515,7 @@ class GitHubMCPServer(MCPServer):
         except Exception as e:
             raise MCPError(f"Wiki processing failed: {e}", error_code="PROCESSING_ERROR")
 
-    async def _format_issues(self, issues_data: List[Dict[str, Any]]) -> str:
+    async def _format_issues(self, issues_data: list[dict[str, Any]]) -> str:
         """Format issues data into readable text."""
         if not issues_data:
             return "No issues found."
@@ -536,7 +536,7 @@ class GitHubMCPServer(MCPServer):
 
         return "\n".join(lines)
 
-    async def _format_pull_requests(self, prs_data: List[Dict[str, Any]]) -> str:
+    async def _format_pull_requests(self, prs_data: list[dict[str, Any]]) -> str:
         """Format pull requests data into readable text."""
         if not prs_data:
             return "No pull requests found."
@@ -559,7 +559,7 @@ class GitHubMCPServer(MCPServer):
 
         return "\n".join(lines)
 
-    def get_github_config(self) -> Dict[str, Any]:
+    def get_github_config(self) -> dict[str, Any]:
         """Get GitHub server configuration."""
         return self.github_config.model_dump()
 

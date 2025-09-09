@@ -9,7 +9,7 @@ import hashlib
 import logging
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +19,9 @@ class SingleflightCache:
 
     def __init__(self, ttl_seconds: int = 30):
         self.ttl_seconds = ttl_seconds
-        self._cache: Dict[str, Any] = {}
-        self._timestamps: Dict[str, float] = {}
-        self._locks: Dict[str, asyncio.Lock] = {}
+        self._cache: dict[str, Any] = {}
+        self._timestamps: dict[str, float] = {}
+        self._locks: dict[str, asyncio.Lock] = {}
 
     def _get_cache_key(self, query: str) -> str:
         """Generate cache key for query."""
@@ -83,7 +83,7 @@ class RetrievalResult:
     text: str
     score: float
     source: str  # 'bm25', 'dense', 'hybrid'
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
 class HybridRetriever:
@@ -164,7 +164,7 @@ class HybridRetriever:
 
         logger.info("Retrievers configured")
 
-    def retrieve(self, query: str, query_type: str = None) -> List[RetrievalResult]:
+    def retrieve(self, query: str, query_type: str = None) -> list[RetrievalResult]:
         """
         Main retrieval method implementing the coach's strategy
         """
@@ -186,7 +186,7 @@ class HybridRetriever:
             # Fallback to stage 1 only
             return self._stage1_hybrid_retrieval(query)[: self.stage2_top_k]
 
-    def _stage1_hybrid_retrieval(self, query: str) -> List[RetrievalResult]:
+    def _stage1_hybrid_retrieval(self, query: str) -> list[RetrievalResult]:
         """Stage 1: BM25 ∪ dense with weighted hybrid scoring"""
 
         # Get BM25 results
@@ -205,7 +205,7 @@ class HybridRetriever:
         scored_results.sort(key=lambda x: x.score, reverse=True)
         return scored_results[: self.stage1_top_k]
 
-    def _get_bm25_results(self, query: str) -> List[RetrievalResult]:
+    def _get_bm25_results(self, query: str) -> list[RetrievalResult]:
         """Get BM25 lexical search results"""
         if not self.bm25_retriever:
             logger.warning("BM25 retriever not configured, returning empty results")
@@ -229,7 +229,7 @@ class HybridRetriever:
             logger.error(f"BM25 retrieval failed: {e}")
             return []
 
-    def _get_dense_results(self, query: str) -> List[RetrievalResult]:
+    def _get_dense_results(self, query: str) -> list[RetrievalResult]:
         """Get dense embedding search results"""
         if not self.dense_retriever:
             logger.warning("Dense retriever not configured, returning empty results")
@@ -254,8 +254,8 @@ class HybridRetriever:
             return []
 
     def _fuse_results_with_rrf(
-        self, bm25_results: List[RetrievalResult], dense_results: List[RetrievalResult]
-    ) -> List[RetrievalResult]:
+        self, bm25_results: list[RetrievalResult], dense_results: list[RetrievalResult]
+    ) -> list[RetrievalResult]:
         """Fuse results using weighted Reciprocal Rank Fusion"""
 
         # Create lookup for scores
@@ -293,7 +293,7 @@ class HybridRetriever:
 
         return fused_results
 
-    def _apply_metadata_scoring(self, results: List[RetrievalResult], query: str) -> List[RetrievalResult]:
+    def _apply_metadata_scoring(self, results: list[RetrievalResult], query: str) -> list[RetrievalResult]:
         """Apply metadata-based scoring (recency, relevance, etc.)"""
 
         for result in results:
@@ -322,7 +322,7 @@ class HybridRetriever:
 
         return results
 
-    async def _stage2_reranking(self, query: str, stage1_results: List[RetrievalResult]) -> List[RetrievalResult]:
+    async def _stage2_reranking(self, query: str, stage1_results: list[RetrievalResult]) -> list[RetrievalResult]:
         """Stage 2: Enhanced cross-encoder reranking with windowing, dedup, and telemetry"""
 
         if not self.reranker:
@@ -442,7 +442,7 @@ class HybridRetriever:
             logger.error(f"Enhanced reranking failed: {e}")
             return stage1_results[: self.stage2_top_k]
 
-    def _rerank_with_cross_encoder_fallback(self, query: str, windows: List) -> List[float]:
+    def _rerank_with_cross_encoder_fallback(self, query: str, windows: list) -> list[float]:
         """Fallback heuristic reranking for windows"""
 
         # Import here to avoid circular dependencies
@@ -468,7 +468,7 @@ class HybridRetriever:
 
         return scores
 
-    def get_retrieval_stats(self) -> Dict[str, Any]:
+    def get_retrieval_stats(self) -> dict[str, Any]:
         """Get retrieval statistics for monitoring"""
         return {
             "bm25_weight": self.bm25_weight,

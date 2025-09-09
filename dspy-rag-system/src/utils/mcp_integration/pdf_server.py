@@ -6,7 +6,7 @@ metadata parsing, and content formatting with OCR capabilities.
 """
 
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -47,13 +47,13 @@ class PDFPageInfo(BaseModel):
 class PDFDocumentInfo(BaseModel):
     """Information about a PDF document."""
 
-    title: Optional[str] = None
-    author: Optional[str] = None
-    subject: Optional[str] = None
-    creator: Optional[str] = None
-    producer: Optional[str] = None
-    creation_date: Optional[str] = None
-    modification_date: Optional[str] = None
+    title: str | None = None
+    author: str | None = None
+    subject: str | None = None
+    creator: str | None = None
+    producer: str | None = None
+    creation_date: str | None = None
+    modification_date: str | None = None
     page_count: int = 0
     total_word_count: int = 0
     total_image_count: int = 0
@@ -111,7 +111,7 @@ class PDFMCPServer(MCPServer):
         """Check if this server supports the given content type."""
         return content_type in self.supported_types
 
-    def get_supported_types(self) -> List[str]:
+    def get_supported_types(self) -> list[str]:
         """Get list of supported content types."""
         return list(self.supported_types.keys())
 
@@ -375,7 +375,7 @@ class PDFMCPServer(MCPServer):
                 word_count=MCPProtocolUtils.calculate_word_count(text_content),
             )
 
-    def get_pdf_config(self) -> Dict[str, Any]:
+    def get_pdf_config(self) -> dict[str, Any]:
         """Get PDF server configuration."""
         return self.pdf_config.model_dump()
 
@@ -385,7 +385,7 @@ class PDFMCPServer(MCPServer):
             if hasattr(self.pdf_config, key):
                 setattr(self.pdf_config, key, value)
 
-    async def get_page_info(self, source: str, page_num: int) -> Optional[PDFPageInfo]:
+    async def get_page_info(self, source: str, page_num: int) -> PDFPageInfo | None:
         """Get information about a specific page."""
         try:
             if fitz is None:
@@ -412,7 +412,7 @@ class PDFMCPServer(MCPServer):
             self.logger.error(f"Failed to get page info: {e}")
             return None
 
-    async def extract_tables(self, source: str) -> List[Dict[str, Any]]:
+    async def extract_tables(self, source: str) -> list[dict[str, Any]]:
         """Extract tables from PDF."""
         try:
             # This would require additional libraries like tabula-py or camelot-py
@@ -424,7 +424,7 @@ class PDFMCPServer(MCPServer):
             self.logger.error(f"Table extraction failed: {e}")
             return []
 
-    async def extract_images(self, source: str) -> List[Dict[str, Any]]:
+    async def extract_images(self, source: str) -> list[dict[str, Any]]:
         """Extract images from PDF."""
         try:
             # This would require additional libraries like pdf2image

@@ -13,7 +13,7 @@ import threading
 import time
 from dataclasses import dataclass
 from queue import Empty, Queue
-from typing import Any, Optional
+from typing import Any
 
 import boto3
 from botocore.config import Config

@@ -6,7 +6,7 @@ Fixes the "Score=None / Title=None → reranker/packer drop everything" cascade.
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 log = logging.getLogger(__name__)
 
@@ -17,10 +17,10 @@ class Hit:
 
     text: str
     score: float
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
-def _row_to_hit(row: Dict[str, Any]) -> Hit:
+def _row_to_hit(row: dict[str, Any]) -> Hit:
     """Convert database row to Hit with guaranteed fields."""
     # Required fields (fail early if SQL aliasing broke)
     doc_id = row.get("document_id") or row.get("id")
@@ -50,7 +50,7 @@ def _row_to_hit(row: Dict[str, Any]) -> Hit:
     )
 
 
-def adapt_rows(rows: List[Dict[str, Any]]) -> List[Hit]:
+def adapt_rows(rows: list[dict[str, Any]]) -> list[Hit]:
     """Adapt database rows to Hits with guaranteed fields."""
     hits = []
     for r in rows:
@@ -67,7 +67,7 @@ def adapt_rows(rows: List[Dict[str, Any]]) -> List[Hit]:
     return hits
 
 
-def pack_hits(hits: List[Hit], max_chars: int = 8000, max_per_document: int = 2) -> str:
+def pack_hits(hits: list[Hit], max_chars: int = 8000, max_per_document: int = 2) -> str:
     """Pack hits into context with guaranteed headers and per-document cap."""
     import re
 
@@ -79,7 +79,7 @@ def pack_hits(hits: List[Hit], max_chars: int = 8000, max_per_document: int = 2)
 
     blocks = []
     used = 0
-    per_doc_count: Dict[str, int] = {}
+    per_doc_count: dict[str, int] = {}
 
     for h in hits:
         doc_id = str(h.metadata.get("document_id"))
@@ -102,7 +102,7 @@ def pack_hits(hits: List[Hit], max_chars: int = 8000, max_per_document: int = 2)
     return "\n\n".join(blocks)
 
 
-def _rescale(hits: List[Hit]) -> List[Hit]:
+def _rescale(hits: list[Hit]) -> list[Hit]:
     """Simple per-source min-max normalization to balance vector vs BM25 scores."""
     # Group by source
     by_src = {}

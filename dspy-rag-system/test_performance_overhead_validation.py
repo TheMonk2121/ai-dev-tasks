@@ -230,9 +230,7 @@ def test_performance_validation():
     for i in range(50):
         start_time = time.time()
         # Capture debugging context
-        debugging_manager.capture_debugging_context(
-            variable_snapshot={"test_var": f"value_{i}", "index": i}
-        )
+        debugging_manager.capture_debugging_context(variable_snapshot={"test_var": f"value_{i}", "index": i})
         debug_times.append(time.time() - start_time)
 
     debug_avg = statistics.mean(debug_times)

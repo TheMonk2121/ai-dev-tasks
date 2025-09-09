@@ -6,7 +6,7 @@ Implements constitution-aware validation with existing Pydantic infrastructure f
 
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -26,8 +26,8 @@ class ConstitutionCompliance(BaseModel):
 
     is_compliant: bool = Field(..., description="Whether the output complies with constitution")
     compliance_score: float = Field(..., ge=0.0, le=1.0, description="Compliance score (0-1)")
-    violations: List[str] = Field(default_factory=list, description="List of constitution violations")
-    recommendations: List[str] = Field(default_factory=list, description="Recommendations for improvement")
+    violations: list[str] = Field(default_factory=list, description="List of constitution violations")
+    recommendations: list[str] = Field(default_factory=list, description="Recommendations for improvement")
     validation_timestamp: datetime = Field(default_factory=datetime.now, description="Validation timestamp")
 
     @field_validator("compliance_score")
@@ -40,13 +40,13 @@ class ConstitutionCompliance(BaseModel):
 
     @field_validator("violations")
     @classmethod
-    def validate_violations(cls, v: List[str]) -> List[str]:
+    def validate_violations(cls, v: list[str]) -> list[str]:
         """Validate violations list"""
         return [violation.strip() for violation in v if violation.strip()]
 
     @field_validator("recommendations")
     @classmethod
-    def validate_recommendations(cls, v: List[str]) -> List[str]:
+    def validate_recommendations(cls, v: list[str]) -> list[str]:
         """Validate recommendations list"""
         return [rec.strip() for rec in v if rec.strip()]
 
@@ -56,9 +56,9 @@ class ProgramOutput(BaseModel):
 
     output_content: str = Field(..., description="The program output content")
     output_type: str = Field(..., description="Type of output (text, code, data, etc.)")
-    context: Optional[BaseContext] = Field(None, description="Context for the output")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Output metadata")
-    constitution_compliance: Optional[ConstitutionCompliance] = Field(
+    context: BaseContext | None = Field(None, description="Context for the output")
+    metadata: dict[str, Any] = Field(default_factory=dict, description="Output metadata")
+    constitution_compliance: ConstitutionCompliance | None = Field(
         None, description="Constitution compliance validation"
     )
 
@@ -116,7 +116,7 @@ class ConstitutionRuleSet(BaseModel):
     ruleset_id: str = Field(..., description="Unique ruleset identifier")
     ruleset_name: str = Field(..., description="Human-readable ruleset name")
     ruleset_description: str = Field(..., description="Ruleset description")
-    rules: List[ConstitutionRule] = Field(default_factory=list, description="List of rules in this ruleset")
+    rules: list[ConstitutionRule] = Field(default_factory=list, description="List of rules in this ruleset")
     version: str = Field(default="1.0.0", description="Ruleset version")
 
     @field_validator("ruleset_id")
@@ -129,7 +129,7 @@ class ConstitutionRuleSet(BaseModel):
 
     @field_validator("rules")
     @classmethod
-    def validate_rules(cls, v: List[ConstitutionRule]) -> List[ConstitutionRule]:
+    def validate_rules(cls, v: list[ConstitutionRule]) -> list[ConstitutionRule]:
         """Validate rules list"""
         if not v:
             raise ValueError("Ruleset must contain at least one rule")
@@ -180,7 +180,7 @@ class ConstitutionValidator:
             recommendations=recommendations,
         )
 
-    def _apply_rule(self, rule: ConstitutionRule, output: ProgramOutput) -> Dict[str, Any]:
+    def _apply_rule(self, rule: ConstitutionRule, output: ProgramOutput) -> dict[str, Any]:
         """Apply a specific rule to the output"""
 
         # This is a simplified rule application - in practice, this would be more sophisticated
@@ -197,7 +197,7 @@ class ConstitutionValidator:
         else:
             return {"compliant": True, "reason": "Unknown rule type", "recommendation": None}
 
-    def _apply_validation_rule(self, rule: ConstitutionRule, output: ProgramOutput) -> Dict[str, Any]:
+    def _apply_validation_rule(self, rule: ConstitutionRule, output: ProgramOutput) -> dict[str, Any]:
         """Apply validation rule"""
         # Example validation: check output content length
         if len(output.output_content) < 10:
@@ -208,7 +208,7 @@ class ConstitutionValidator:
             }
         return {"compliant": True, "reason": None, "recommendation": None}
 
-    def _apply_coherence_rule(self, rule: ConstitutionRule, output: ProgramOutput) -> Dict[str, Any]:
+    def _apply_coherence_rule(self, rule: ConstitutionRule, output: ProgramOutput) -> dict[str, Any]:
         """Apply coherence rule"""
         # Example coherence: check for logical consistency
         if output.context and hasattr(output.context, "role"):
@@ -221,7 +221,7 @@ class ConstitutionValidator:
                 }
         return {"compliant": True, "reason": None, "recommendation": None}
 
-    def _apply_security_rule(self, rule: ConstitutionRule, output: ProgramOutput) -> Dict[str, Any]:
+    def _apply_security_rule(self, rule: ConstitutionRule, output: ProgramOutput) -> dict[str, Any]:
         """Apply security rule"""
         # Example security: check for sensitive information
         sensitive_patterns = ["password", "secret", "key", "token"]
@@ -236,7 +236,7 @@ class ConstitutionValidator:
                 }
         return {"compliant": True, "reason": None, "recommendation": None}
 
-    def _apply_quality_rule(self, rule: ConstitutionRule, output: ProgramOutput) -> Dict[str, Any]:
+    def _apply_quality_rule(self, rule: ConstitutionRule, output: ProgramOutput) -> dict[str, Any]:
         """Apply quality rule"""
         # Example quality: check for proper formatting
         if output.output_type == "code" and not output.output_content.strip().startswith(
@@ -384,7 +384,7 @@ class ConstitutionValidationMetrics(BaseModel):
     compliant_outputs: int = Field(default=0, description="Number of compliant outputs")
     non_compliant_outputs: int = Field(default=0, description="Number of non-compliant outputs")
     avg_compliance_score: float = Field(default=0.0, description="Average compliance score")
-    validation_times: List[float] = Field(default_factory=list, description="Validation execution times")
+    validation_times: list[float] = Field(default_factory=list, description="Validation execution times")
 
     @property
     def compliance_rate(self) -> float:

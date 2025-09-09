@@ -6,7 +6,7 @@ Provides real-time visualization of performance metrics using NiceGUI.
 
 import asyncio
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 try:
     from nicegui import ui
@@ -266,7 +266,7 @@ class PerformanceDashboard:
         except Exception as e:
             logger.error(f"Error updating dashboard data: {e}")
 
-    async def _update_current_workflow_card(self, stats: Dict[str, Any]):
+    async def _update_current_workflow_card(self, stats: dict[str, Any]):
         """Update current workflow status card"""
         if not hasattr(self, "current_workflow_card") or not NICEGUI_AVAILABLE:
             return
@@ -297,7 +297,7 @@ class PerformanceDashboard:
                     ui.label("⏸️ No Active Workflow").classes("text-h6 text-gray-600")
                     ui.label("Waiting for workflow to start...").classes("text-body2 text-gray-500")
 
-    async def _update_recent_workflows_table(self, workflows: List[Dict[str, Any]]):
+    async def _update_recent_workflows_table(self, workflows: list[dict[str, Any]]):
         """Update recent workflows table"""
         if not hasattr(self, "recent_workflows_table") or not NICEGUI_AVAILABLE:
             return
@@ -319,7 +319,7 @@ class PerformanceDashboard:
         if hasattr(self.recent_workflows_table, "rows"):
             self.recent_workflows_table.rows = table_data
 
-    async def _update_trends_chart(self, trends: List[Dict[str, Any]]):
+    async def _update_trends_chart(self, trends: list[dict[str, Any]]):
         """Update performance trends chart"""
         if not hasattr(self, "trends_chart") or not trends or not NICEGUI_AVAILABLE:
             return
@@ -337,7 +337,7 @@ class PerformanceDashboard:
         # Update chart - this would need to be implemented based on the chart library used
         logger.debug(f"Updating trends chart with {len(dates)} data points")
 
-    async def _update_collection_points_chart(self, collection_points: List[Dict[str, Any]]):
+    async def _update_collection_points_chart(self, collection_points: list[dict[str, Any]]):
         """Update collection points breakdown chart"""
         if not hasattr(self, "collection_points_chart") or not NICEGUI_AVAILABLE:
             return
@@ -478,7 +478,7 @@ class PerformanceWidget:
             )
             return ui.html(fallback_html)
 
-    async def update_widget(self, performance_data: Dict[str, Any]):
+    async def update_widget(self, performance_data: dict[str, Any]):
         """Update widget with new performance data"""
         self.widget_data = performance_data
 

@@ -8,7 +8,7 @@ import json
 import random
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class TrapCategory(Enum):
@@ -29,11 +29,11 @@ class TrapCase:
     category: TrapCategory
     question: str
     expected_behavior: str
-    success_criteria: List[str]
-    oracle_answer: Optional[str] = None
+    success_criteria: list[str]
+    oracle_answer: str | None = None
     context_required: bool = True
     difficulty: str = "medium"  # easy, medium, hard
-    tags: List[str] = None
+    tags: list[str] = None
 
     def __post_init__(self):
         if self.tags is None:
@@ -44,7 +44,7 @@ class ComprehensiveTrapGrid:
     """Comprehensive trap grid for evaluation coverage."""
 
     def __init__(self):
-        self.traps: List[TrapCase] = []
+        self.traps: list[TrapCase] = []
         self._initialize_traps()
 
     def _initialize_traps(self):
@@ -294,19 +294,19 @@ class ComprehensiveTrapGrid:
         # Combine all traps
         self.traps = ops_health_traps + db_workflow_traps + rag_qa_traps + meta_ops_traps + negative_control_traps
 
-    def get_traps_by_category(self, category: TrapCategory) -> List[TrapCase]:
+    def get_traps_by_category(self, category: TrapCategory) -> list[TrapCase]:
         """Get traps filtered by category."""
         return [trap for trap in self.traps if trap.category == category]
 
-    def get_traps_by_difficulty(self, difficulty: str) -> List[TrapCase]:
+    def get_traps_by_difficulty(self, difficulty: str) -> list[TrapCase]:
         """Get traps filtered by difficulty."""
         return [trap for trap in self.traps if trap.difficulty == difficulty]
 
-    def get_traps_by_tags(self, tags: List[str]) -> List[TrapCase]:
+    def get_traps_by_tags(self, tags: list[str]) -> list[TrapCase]:
         """Get traps that match any of the specified tags."""
         return [trap for trap in self.traps if any(tag in trap.tags for tag in tags)]
 
-    def get_balanced_sample(self, n_per_category: int = 2) -> List[TrapCase]:
+    def get_balanced_sample(self, n_per_category: int = 2) -> list[TrapCase]:
         """Get a balanced sample of traps across all categories."""
         balanced_sample = []
 
@@ -322,7 +322,7 @@ class ComprehensiveTrapGrid:
 
         return balanced_sample
 
-    def export_to_jsonl(self, filename: str, traps: Optional[List[TrapCase]] = None):
+    def export_to_jsonl(self, filename: str, traps: list[TrapCase] | None = None):
         """Export traps to JSONL format for evaluation."""
         if traps is None:
             traps = self.traps
@@ -342,7 +342,7 @@ class ComprehensiveTrapGrid:
                 }
                 f.write(json.dumps(trap_dict) + "\n")
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get statistics about the trap grid."""
         stats = {
             "total_traps": len(self.traps),

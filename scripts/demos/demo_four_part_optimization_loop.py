@@ -9,7 +9,7 @@ measurement and metrics as described in the Adam LK transcript.
 import os
 import sys
 import time
-from typing import Any, Dict
+from typing import Any
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))

@@ -11,7 +11,7 @@ import logging
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from dspy import Module
 
@@ -74,7 +74,7 @@ class IntegrationConfig:
 
     # Alert configuration
     enable_alerts: bool = True
-    alert_thresholds: Dict[str, float] = field(
+    alert_thresholds: dict[str, float] = field(
         default_factory=lambda: {"reliability": 0.7, "performance": 0.6, "quality": 0.8}
     )
 
@@ -84,13 +84,13 @@ class SystemStatus:
     """System status information"""
 
     health: SystemHealth
-    components: Dict[str, bool]
-    metrics: Dict[str, float]
-    alerts: List[str]
+    components: dict[str, bool]
+    metrics: dict[str, float]
+    alerts: list[str]
     last_update: float
     integration_mode: IntegrationMode
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization"""
         return {
             "health": self.health.value,
@@ -105,15 +105,15 @@ class SystemStatus:
 class DSPySystemIntegration:
     """Main system integration class for DSPy v2 optimization"""
 
-    def __init__(self, config: Optional[IntegrationConfig] = None):
+    def __init__(self, config: IntegrationConfig | None = None):
         """Initialize the DSPy system integration"""
         self.config = config or IntegrationConfig()
-        self.model_switcher: Optional[ModelSwitcher] = None
+        self.model_switcher: ModelSwitcher | None = None
         self.optimizer_manager = None
-        self.assertion_framework: Optional[Any] = None
-        self.optimization_loop: Optional[FourPartOptimizationLoop] = None
-        self.metrics_dashboard: Optional[MetricsDashboard] = None
-        self.task_executor: Optional[LocalTaskExecutor] = None
+        self.assertion_framework: Any | None = None
+        self.optimization_loop: FourPartOptimizationLoop | None = None
+        self.metrics_dashboard: MetricsDashboard | None = None
+        self.task_executor: LocalTaskExecutor | None = None
 
         # System status
         self.status = SystemStatus(
@@ -194,7 +194,7 @@ class DSPySystemIntegration:
 
         self.status.last_update = time.time()
 
-    def execute_task(self, task: str, task_type: str, role: str, complexity: str = "moderate") -> Dict[str, Any]:
+    def execute_task(self, task: str, task_type: str, role: str, complexity: str = "moderate") -> dict[str, Any]:
         """Execute a task with full DSPy v2 optimization integration"""
 
         start_time = time.time()
@@ -254,7 +254,7 @@ class DSPySystemIntegration:
 
         return result
 
-    def _apply_optimization(self, task: str, task_type: str, role: str) -> Optional[OptimizationResult]:
+    def _apply_optimization(self, task: str, task_type: str, role: str) -> OptimizationResult | None:
         """Apply optimization to the task"""
         if not self.optimizer_manager:
             return None
@@ -300,7 +300,7 @@ class DSPySystemIntegration:
 
         return None
 
-    def _validate_task(self, task: str, task_type: str, role: str) -> Optional[Any]:
+    def _validate_task(self, task: str, task_type: str, role: str) -> Any | None:
         """Validate the task execution"""
         if not self.assertion_framework:
             return None
@@ -351,7 +351,7 @@ class DSPySystemIntegration:
         except Exception as e:
             _LOG.warning(f"Metrics recording failed: {e}")
 
-    def run_optimization_cycle(self, inputs: Dict[str, Any]) -> Optional[OptimizationCycle]:
+    def run_optimization_cycle(self, inputs: dict[str, Any]) -> OptimizationCycle | None:
         """Run a complete optimization cycle"""
         if not self.optimization_loop:
             return None
@@ -389,7 +389,7 @@ class DSPySystemIntegration:
 
         return self.status
 
-    def get_dashboard_data(self, view: str = "overview") -> Dict[str, Any]:
+    def get_dashboard_data(self, view: str = "overview") -> dict[str, Any]:
         """Get dashboard data"""
         if not self.metrics_dashboard:
             return {"error": "Metrics dashboard not available"}
@@ -412,7 +412,7 @@ class DSPySystemIntegration:
         except Exception as e:
             return {"error": f"Failed to get dashboard data: {e}"}
 
-    def validate_module(self, module: Module, test_inputs: Optional[List[Dict[str, Any]]] = None) -> Optional[Any]:
+    def validate_module(self, module: Module, test_inputs: list[dict[str, Any]] | None = None) -> Any | None:
         """Validate a DSPy module using the assertion framework"""
         if not self.assertion_framework:
             return None
@@ -423,9 +423,7 @@ class DSPySystemIntegration:
             _LOG.error(f"Module validation failed: {e}")
             return None
 
-    def optimize_program(
-        self, program: Module, test_data: List[Dict[str, Any]], metric
-    ) -> Optional[OptimizationResult]:
+    def optimize_program(self, program: Module, test_data: list[dict[str, Any]], metric) -> OptimizationResult | None:
         """Optimize a DSPy program using the optimizer manager"""
         if not self.optimizer_manager:
             return None
@@ -450,7 +448,7 @@ class DSPySystemIntegration:
             _LOG.error(f"Model switching failed: {e}")
             return False
 
-    def get_model_for_task(self, task_type: str, complexity: str = "moderate") -> Optional[LocalModel]:
+    def get_model_for_task(self, task_type: str, complexity: str = "moderate") -> LocalModel | None:
         """Get the best model for a specific task"""
         if not self.model_switcher:
             return None
@@ -497,7 +495,7 @@ class DSPySystemIntegration:
 _system_integration = None
 
 
-def get_system_integration(config: Optional[IntegrationConfig] = None) -> DSPySystemIntegration:
+def get_system_integration(config: IntegrationConfig | None = None) -> DSPySystemIntegration:
     """Get the global system integration instance"""
     global _system_integration
     if _system_integration is None:
@@ -507,13 +505,13 @@ def get_system_integration(config: Optional[IntegrationConfig] = None) -> DSPySy
 
 def execute_task_with_optimization(
     task: str, task_type: str, role: str, complexity: str = "moderate"
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Convenience function to execute a task with full optimization"""
     integration = get_system_integration()
     return integration.execute_task(task, task_type, role, complexity)
 
 
-def run_optimization_cycle(inputs: Dict[str, Any]) -> Optional[OptimizationCycle]:
+def run_optimization_cycle(inputs: dict[str, Any]) -> OptimizationCycle | None:
     """Convenience function to run an optimization cycle"""
     integration = get_system_integration()
     return integration.run_optimization_cycle(inputs)

@@ -22,7 +22,7 @@ import argparse
 import json
 import subprocess
 import sys
-from typing import Any, Dict
+from typing import Any
 
 
 def get_context_bundle(backlog_id: str) -> dict[str, Any]:

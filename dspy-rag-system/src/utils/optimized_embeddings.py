@@ -10,7 +10,7 @@ Optimized Embedding Generation
 import logging
 import os
 import time
-from typing import List, Optional
+
 
 import torch
 from sentence_transformers import SentenceTransformer
@@ -24,7 +24,7 @@ class OptimizedEmbedder:
     def __init__(
         self,
         model_name: str = "all-MiniLM-L6-v2",
-        device: Optional[str] = None,
+        device: str | None = None,
         batch_size: int = 64,
         max_sequence_length: int = 512,
     ):
@@ -91,7 +91,7 @@ class OptimizedEmbedder:
             else:
                 raise
 
-    def encode_single(self, text: str) -> List[float]:
+    def encode_single(self, text: str) -> list[float]:
         """Encode a single text with optimized settings."""
         if not text or not text.strip():
             # Return zero vector for empty text
@@ -107,7 +107,7 @@ class OptimizedEmbedder:
             # Return zero vector as fallback
             return [0.0] * 384
 
-    def encode_batch(self, texts: List[str]) -> List[List[float]]:
+    def encode_batch(self, texts: list[str]) -> list[list[float]]:
         """Encode a batch of texts efficiently."""
         if not texts:
             return []
@@ -190,7 +190,7 @@ class OptimizedEmbedder:
 
 
 # Global instance for reuse
-_embedder_instance: Optional[OptimizedEmbedder] = None
+_embedder_instance: OptimizedEmbedder | None = None
 
 
 def get_embedder() -> OptimizedEmbedder:
@@ -207,12 +207,12 @@ def get_embedder() -> OptimizedEmbedder:
     return _embedder_instance
 
 
-def encode_text(text: str) -> List[float]:
+def encode_text(text: str) -> list[float]:
     """Convenience function for single text encoding."""
     return get_embedder().encode_single(text)
 
 
-def encode_texts(texts: List[str]) -> List[List[float]]:
+def encode_texts(texts: list[str]) -> list[list[float]]:
     """Convenience function for batch text encoding."""
     return get_embedder().encode_batch(texts)
 

@@ -33,12 +33,12 @@ class TestRepoMaintenance:
         """Test that model references are correctly replaced."""
         # Create a test markdown file
         test_file = temp_dir / "test.md"
-        test_content = '''
+        test_content = """
         # Test File
         "defaultModel": "mistral"
         "defaultModel": "yi-coder"
         Some other content
-        '''
+        """
         test_file.write_text(test_content)
 
         # Override markdown_files to only include our test file
@@ -70,12 +70,12 @@ class TestRepoMaintenance:
         """Test that word boundary regex works correctly."""
         # Create a test file with simple cases
         test_file = temp_dir / "test.md"
-        test_content = '''
+        test_content = """
         # Test File
         This should be replaced: 003 optional
         And this too: 003 optional
         But this should not: 003 optional copy archived
-        '''
+        """
         test_file.write_text(test_content)
 
         # Override markdown_files to only include our test file
@@ -188,6 +188,7 @@ class TestRepoMaintenance:
         # Check that same content produces same hash
         hash2 = maintenance.calculate_file_hash(test_file)
         assert hash_result == hash2
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

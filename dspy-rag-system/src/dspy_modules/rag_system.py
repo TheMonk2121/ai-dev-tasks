@@ -9,7 +9,7 @@ import logging
 import os
 import sys
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 # Apply litellm compatibility shim before importing DSPy
 try:
@@ -111,7 +111,7 @@ class RAGSystem(Module):
         self.pred = dspy.Predict(RAGSignature)
         self.ctx_limit = ctx_token_limit
 
-    def forward(self, question: str, max_results: int = 5) -> Dict[str, Any]:
+    def forward(self, question: str, max_results: int = 5) -> dict[str, Any]:
         """Answer a question using RAG system with caching and optimizations"""
 
         try:
@@ -173,7 +173,7 @@ class RAGSystem(Module):
             _LOG.error("RAG system error: %s", e, exc_info=True)
             return {"status": "error", "error": str(e), "question": question}
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get system statistics"""
         return self.vector_store.get_stats()
 
@@ -184,18 +184,16 @@ class RAGQueryInterface:
     def __init__(self, db_connection_string: str, mistral_url: str = "http://localhost:11434"):
         self.rag_system = RAGSystem(db_connection_string, mistral_url)
 
-    def ask(self, question: str) -> Dict[str, Any]:
+    def ask(self, question: str) -> dict[str, Any]:
         """Ask a question and get an answer"""
         return self.rag_system.forward(question)
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get system statistics"""
         return self.rag_system.get_stats()
 
 
-def create_rag_interface(
-    db_url: Optional[str] = None, mistral_url: str = "http://localhost:11434"
-) -> RAGQueryInterface:
+def create_rag_interface(db_url: str | None = None, mistral_url: str = "http://localhost:11434") -> RAGQueryInterface:
     """Create a RAG query interface"""
 
     if db_url is None:

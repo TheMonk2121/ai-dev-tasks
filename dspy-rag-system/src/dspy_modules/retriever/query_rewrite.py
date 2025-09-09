@@ -16,7 +16,7 @@ Implements the surgical patch to fix BM25 hinting issues.
 """
 
 import re
-from typing import Any, Dict
+from typing import Any
 
 TAG_HINTS = {
     "ops_health": ["setup", "shell", "zshrc", "zprofile", "integration"],
@@ -96,7 +96,7 @@ def filename_regex_from_query(q: str) -> str:
     if not toks:
         return "^$"
     toks = toks[:6]
-    return r"(?:%s)" % "|".join(re.escape(t) for t in toks)
+    return rf"(?:{'|'.join(re.escape(t) for t in toks)})"
 
 
 def _lex_sparse(q: str) -> bool:
@@ -105,7 +105,7 @@ def _lex_sparse(q: str) -> bool:
     return len(toks) < 3
 
 
-def build_channel_queries(user_q: str, tag: str) -> Dict[str, Any]:
+def build_channel_queries(user_q: str, tag: str) -> dict[str, Any]:
     """
     Build channel-specific queries with hints only for short/title channels.
 

@@ -10,7 +10,7 @@ import os
 import sys
 import time
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 # Add src to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
@@ -95,7 +95,7 @@ class ModelComparisonTester:
         self.cursor_ai = CursorAITester()
         self.results = []
 
-    def test_single_model(self, task: str, model: LocalModel, role: str = "coder") -> Dict[str, Any]:
+    def test_single_model(self, task: str, model: LocalModel, role: str = "coder") -> dict[str, Any]:
         """Test a single model on a task"""
         start_time = time.time()
 
@@ -137,7 +137,7 @@ class ModelComparisonTester:
                 "error": str(e),
             }
 
-    def test_cursor_ai(self, task: str) -> Dict[str, Any]:
+    def test_cursor_ai(self, task: str) -> dict[str, Any]:
         """Test Cursor AI on a task"""
         start_time = time.time()
 

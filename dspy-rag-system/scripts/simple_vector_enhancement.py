@@ -17,6 +17,7 @@ from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
+
 class SimpleVectorEnhancement:
     """Handles simple vector database enhancement"""
 
@@ -86,14 +87,38 @@ class SimpleVectorEnhancement:
     def create_indexes(self):
         """Create essential indexes"""
         indexes = [
-            ("CREATE INDEX IF NOT EXISTS idx_vector_performance_metrics_created_at ON vector_performance_metrics(created_at);", "vector_performance_metrics created_at index"),
-            ("CREATE INDEX IF NOT EXISTS idx_vector_performance_metrics_execution_time ON vector_performance_metrics(execution_time_ms);", "vector_performance_metrics execution_time index"),
-            ("CREATE INDEX IF NOT EXISTS idx_vector_cache_last_accessed ON vector_cache(last_accessed);", "vector_cache last_accessed index"),
-            ("CREATE INDEX IF NOT EXISTS idx_vector_cache_expires_at ON vector_cache(expires_at);", "vector_cache expires_at index"),
-            ("CREATE INDEX IF NOT EXISTS idx_vector_health_checks_status ON vector_health_checks(status);", "vector_health_checks status index"),
-            ("CREATE INDEX IF NOT EXISTS idx_vector_health_checks_created_at ON vector_health_checks(created_at);", "vector_health_checks created_at index"),
-            ("CREATE INDEX IF NOT EXISTS idx_vector_indexes_status ON vector_indexes(status);", "vector_indexes status index"),
-            ("CREATE INDEX IF NOT EXISTS idx_vector_indexes_table_name ON vector_indexes(table_name);", "vector_indexes table_name index"),
+            (
+                "CREATE INDEX IF NOT EXISTS idx_vector_performance_metrics_created_at ON vector_performance_metrics(created_at);",
+                "vector_performance_metrics created_at index",
+            ),
+            (
+                "CREATE INDEX IF NOT EXISTS idx_vector_performance_metrics_execution_time ON vector_performance_metrics(execution_time_ms);",
+                "vector_performance_metrics execution_time index",
+            ),
+            (
+                "CREATE INDEX IF NOT EXISTS idx_vector_cache_last_accessed ON vector_cache(last_accessed);",
+                "vector_cache last_accessed index",
+            ),
+            (
+                "CREATE INDEX IF NOT EXISTS idx_vector_cache_expires_at ON vector_cache(expires_at);",
+                "vector_cache expires_at index",
+            ),
+            (
+                "CREATE INDEX IF NOT EXISTS idx_vector_health_checks_status ON vector_health_checks(status);",
+                "vector_health_checks status index",
+            ),
+            (
+                "CREATE INDEX IF NOT EXISTS idx_vector_health_checks_created_at ON vector_health_checks(created_at);",
+                "vector_health_checks created_at index",
+            ),
+            (
+                "CREATE INDEX IF NOT EXISTS idx_vector_indexes_status ON vector_indexes(status);",
+                "vector_indexes status index",
+            ),
+            (
+                "CREATE INDEX IF NOT EXISTS idx_vector_indexes_table_name ON vector_indexes(table_name);",
+                "vector_indexes table_name index",
+            ),
         ]
 
         for sql, description in indexes:
@@ -124,7 +149,6 @@ class SimpleVectorEnhancement:
             END;
             $$ LANGUAGE plpgsql;
             """,
-
             # Get vector health status
             """
             CREATE OR REPLACE FUNCTION get_vector_health_status() RETURNS JSONB AS $$
@@ -143,7 +167,6 @@ class SimpleVectorEnhancement:
             END;
             $$ LANGUAGE plpgsql;
             """,
-
             # Clean expired cache
             """
             CREATE OR REPLACE FUNCTION clean_expired_vector_cache() RETURNS INTEGER AS $$
@@ -156,7 +179,7 @@ class SimpleVectorEnhancement:
                 RETURN v_deleted_count;
             END;
             $$ LANGUAGE plpgsql;
-            """
+            """,
         ]
 
         for sql in functions:
@@ -179,12 +202,7 @@ class SimpleVectorEnhancement:
 
     def validate_tables(self):
         """Validate that all tables were created successfully"""
-        tables = [
-            'vector_indexes',
-            'vector_performance_metrics',
-            'vector_cache',
-            'vector_health_checks'
-        ]
+        tables = ["vector_indexes", "vector_performance_metrics", "vector_cache", "vector_health_checks"]
 
         conn = psycopg2.connect(self.db_connection_string)
         with conn.cursor() as cursor:
@@ -228,15 +246,17 @@ class SimpleVectorEnhancement:
         logger.info("Vector enhancement completed successfully")
         return True
 
+
 def main():
     """Main function"""
-    db_connection_string = os.environ.get('POSTGRES_DSN')
+    db_connection_string = os.environ.get("POSTGRES_DSN")
     if not db_connection_string:
         logger.error("POSTGRES_DSN environment variable not set")
         return False
 
     enhancement = SimpleVectorEnhancement(db_connection_string)
     return enhancement.run_enhancement()
+
 
 if __name__ == "__main__":
     success = main()

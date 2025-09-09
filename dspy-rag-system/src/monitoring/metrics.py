@@ -7,7 +7,7 @@ Implements monitoring and observability for production deployment.
 import logging
 import time
 from functools import wraps
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +116,7 @@ def track_tokens(count: int):
     TOKEN_COUNT.inc(count)
 
 
-def get_metrics() -> Dict[str, Any]:
+def get_metrics() -> dict[str, Any]:
     """Get current metrics as dictionary"""
     return {
         "request_total": REQUEST_COUNT.get_value(),

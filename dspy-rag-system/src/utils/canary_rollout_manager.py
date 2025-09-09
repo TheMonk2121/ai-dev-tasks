@@ -10,7 +10,7 @@ import time
 from dataclasses import asdict, dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 LOG = logging.getLogger(__name__)
 
@@ -74,9 +74,9 @@ class RolloutState:
     traffic_percentage: float
     start_time: float
     last_check_time: float
-    metrics_history: List[RolloutMetrics]
-    alerts: List[Dict[str, Any]]
-    rollback_reason: Optional[str] = None
+    metrics_history: list[RolloutMetrics]
+    alerts: list[dict[str, Any]]
+    rollback_reason: str | None = None
 
 
 class CanaryRolloutManager:
@@ -84,8 +84,8 @@ class CanaryRolloutManager:
 
     def __init__(self, state_file: str = "metrics/canary_rollout_state.json"):
         self.state_file = Path(state_file)
-        self.state: Optional[RolloutState] = None
-        self.config: Optional[RolloutConfig] = None
+        self.state: RolloutState | None = None
+        self.config: RolloutConfig | None = None
 
         # Load existing state
         self._load_state()
@@ -104,7 +104,7 @@ class CanaryRolloutManager:
         """Load rollout state from file."""
         if self.state_file.exists():
             try:
-                with open(self.state_file, "r") as f:
+                with open(self.state_file) as f:
                     data = json.load(f)
                     self.state = RolloutState(**data)
                     LOG.info(f"Loaded rollout state: {self.state.stage.value}")
@@ -119,7 +119,7 @@ class CanaryRolloutManager:
             with open(self.state_file, "w") as f:
                 json.dump(asdict(self.state), f, indent=2)
 
-    def start_rollout(self, config: RolloutConfig) -> Dict[str, Any]:
+    def start_rollout(self, config: RolloutConfig) -> dict[str, Any]:
         """Start a new canary rollout."""
         if self.state and self.state.status == RolloutStatus.IN_PROGRESS:
             return {"success": False, "error": "Rollout already in progress", "current_stage": self.state.stage.value}
@@ -149,7 +149,7 @@ class CanaryRolloutManager:
             "start_time": self.state.start_time,
         }
 
-    def advance_stage(self) -> Dict[str, Any]:
+    def advance_stage(self) -> dict[str, Any]:
         """Advance to the next rollout stage."""
         if not self.state or self.state.status != RolloutStatus.IN_PROGRESS:
             return {"success": False, "error": "No active rollout to advance"}
@@ -201,7 +201,7 @@ class CanaryRolloutManager:
         }
         return traffic_map.get(self.state.stage, 0.0)
 
-    def rollback(self, reason: str) -> Dict[str, Any]:
+    def rollback(self, reason: str) -> dict[str, Any]:
         """Instant rollback to previous configuration."""
         if not self.state:
             return {"success": False, "error": "No active rollout to rollback"}
@@ -252,7 +252,7 @@ class CanaryRolloutManager:
             LOG.error(f"Rollback execution failed: {e}")
             return False
 
-    def update_metrics(self, metrics: RolloutMetrics) -> Dict[str, Any]:
+    def update_metrics(self, metrics: RolloutMetrics) -> dict[str, Any]:
         """Update rollout metrics and check for alerts."""
         if not self.state:
             return {"success": False, "error": "No active rollout"}
@@ -275,7 +275,7 @@ class CanaryRolloutManager:
             "total_alerts": len(self.state.alerts),
         }
 
-    def _check_metrics_alerts(self, metrics: RolloutMetrics) -> List[Dict[str, Any]]:
+    def _check_metrics_alerts(self, metrics: RolloutMetrics) -> list[dict[str, Any]]:
         """Check metrics against alert thresholds."""
         alerts = []
 
@@ -368,7 +368,7 @@ class CanaryRolloutManager:
 
         return alerts
 
-    def _get_baseline_metrics(self) -> Optional[RolloutMetrics]:
+    def _get_baseline_metrics(self) -> RolloutMetrics | None:
         """Get baseline metrics for comparison."""
         if len(self.state.metrics_history) < 2:
             return None
@@ -395,7 +395,7 @@ class CanaryRolloutManager:
         # Additional health checks could be added here
         return True
 
-    def get_rollout_status(self) -> Dict[str, Any]:
+    def get_rollout_status(self) -> dict[str, Any]:
         """Get current rollout status."""
         if not self.state:
             return {"active": False, "message": "No active rollout"}
@@ -414,7 +414,7 @@ class CanaryRolloutManager:
             "config": asdict(self.config) if self.config else None,
         }
 
-    def get_rollout_report(self) -> Dict[str, Any]:
+    def get_rollout_report(self) -> dict[str, Any]:
         """Generate comprehensive rollout report."""
         if not self.state:
             return {"error": "No active rollout"}

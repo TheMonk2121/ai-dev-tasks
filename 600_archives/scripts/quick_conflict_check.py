@@ -244,6 +244,7 @@ class OptimizedQuickConflictChecker:
             "all_passed": len(self.issues) == 0,
         }
 
+
 def main():
     parser = argparse.ArgumentParser(description="Optimized quick conflict check")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
@@ -271,6 +272,7 @@ def main():
             print("\nWarnings:")
             for warning in results["warnings"]:
                 print(f"  ⚠️ {warning}")
+
 
 if __name__ == "__main__":
     main()

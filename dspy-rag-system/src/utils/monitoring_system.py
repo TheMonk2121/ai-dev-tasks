@@ -13,7 +13,7 @@ import sys
 import time
 from collections import deque
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Add the src directory to the path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -67,7 +67,7 @@ class PerformanceMetrics:
         """Record Failure@20 rate from evaluation"""
         self.failure_at_20_history.append(failure_rate)
 
-    def get_latency_percentiles(self) -> Dict[str, float]:
+    def get_latency_percentiles(self) -> dict[str, float]:
         """Get p50, p95, p99 latency"""
         if not self.latency_history:
             return {"p50": 0.0, "p95": 0.0, "p99": 0.0}
@@ -112,7 +112,7 @@ class SLOMonitor:
         }
         self.alerts = []
 
-    def check_slos(self, metrics: PerformanceMetrics) -> List[Dict[str, Any]]:
+    def check_slos(self, metrics: PerformanceMetrics) -> list[dict[str, Any]]:
         """Check SLOs and return violations"""
         violations = []
 
@@ -188,7 +188,7 @@ class MonitoringSystem:
         self.slo_monitor = SLOMonitor()
         self.logger = logging.getLogger("monitoring_system")
 
-    def instrumented_search(self, query: str, limit: int = 10, **kwargs) -> Dict[str, Any]:
+    def instrumented_search(self, query: str, limit: int = 10, **kwargs) -> dict[str, Any]:
         """Instrumented search with performance tracking"""
         start_time = time.time()
 
@@ -244,7 +244,7 @@ class MonitoringSystem:
         except Exception as e:
             self.logger.error(f"Error in periodic evaluation: {e}")
 
-    def get_metrics_summary(self) -> Dict[str, Any]:
+    def get_metrics_summary(self) -> dict[str, Any]:
         """Get comprehensive metrics summary"""
         percentiles = self.metrics.get_latency_percentiles()
 
@@ -350,7 +350,7 @@ class NiceGUIDashboard:
             ui.notify(f"Error updating dashboard: {e}", type="negative")
 
 
-def start_monitoring_dashboard(db_connection_string: Optional[str] = None, port: int = 8080):
+def start_monitoring_dashboard(db_connection_string: str | None = None, port: int = 8080):
     """Start the monitoring dashboard"""
     if db_connection_string is None:
         db_connection_string = "postgresql://danieljacobs@localhost:5432/ai_agency"

@@ -15,7 +15,7 @@ Usage:
 import os
 import sys
 import time
-from typing import Any, Dict
+from typing import Any
 
 
 def add_src_to_path() -> None:

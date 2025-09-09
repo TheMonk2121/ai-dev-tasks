@@ -9,7 +9,8 @@ import hashlib
 import logging
 import time
 from datetime import datetime, timedelta
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
+from collections.abc import Callable
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -26,7 +27,7 @@ class PromptTemplate(BaseModel):
     template_id: str = Field(..., description="Unique template identifier")
     template_name: str = Field(..., description="Human-readable template name")
     base_prompt: str = Field(..., description="Base prompt template with placeholders")
-    placeholders: List[str] = Field(default_factory=list, description="Available placeholders")
+    placeholders: list[str] = Field(default_factory=list, description="Available placeholders")
     context_aware: bool = Field(default=True, description="Whether template uses context")
     user_preference_aware: bool = Field(default=True, description="Whether template uses user preferences")
     version: str = Field(default="1.0.0", description="Template version")
@@ -52,11 +53,11 @@ class PromptTemplate(BaseModel):
 class PromptContext(BaseModel):
     """Model for prompt context injection"""
 
-    user_id: Optional[str] = Field(None, description="User identifier")
+    user_id: str | None = Field(None, description="User identifier")
     session_id: str = Field(..., description="Session identifier")
-    role_context: Optional[BaseContext] = Field(None, description="Role-specific context")
-    user_preferences: Dict[str, Any] = Field(default_factory=dict, description="User preferences")
-    dynamic_variables: Dict[str, Any] = Field(default_factory=dict, description="Dynamic variables")
+    role_context: BaseContext | None = Field(None, description="Role-specific context")
+    user_preferences: dict[str, Any] = Field(default_factory=dict, description="User preferences")
+    dynamic_variables: dict[str, Any] = Field(default_factory=dict, description="Dynamic variables")
     timestamp: datetime = Field(default_factory=datetime.now, description="Context timestamp")
 
     @field_validator("session_id")
@@ -97,7 +98,7 @@ class DynamicPromptDecorator:
         """Initialize decorator with template and cache TTL"""
         self.template = template
         self.cache_ttl = cache_ttl
-        self._cache: Dict[str, PromptCache] = {}
+        self._cache: dict[str, PromptCache] = {}
 
     def __call__(self, func: Callable) -> Callable:
         """Apply decorator to function"""
@@ -115,7 +116,7 @@ class DynamicPromptDecorator:
 
         return wrapper
 
-    def _extract_context(self, args: tuple, kwargs: Dict[str, Any]) -> PromptContext:
+    def _extract_context(self, args: tuple, kwargs: dict[str, Any]) -> PromptContext:
         """Extract context from function arguments"""
         # Look for context in kwargs first
         context = kwargs.get("context")
@@ -181,7 +182,7 @@ class DynamicPromptDecorator:
         context_str = str(sorted(context_data.items()))
         return hashlib.md5(context_str.encode()).hexdigest()
 
-    def _get_cached_prompt(self, cache_key: str) -> Optional[str]:
+    def _get_cached_prompt(self, cache_key: str) -> str | None:
         """Get cached prompt if available and not expired"""
         if cache_key in self._cache:
             cache_entry = self._cache[cache_key]
@@ -335,7 +336,7 @@ class PromptPerformanceMetrics(BaseModel):
     cache_hits: int = Field(default=0, description="Number of cache hits")
     cache_misses: int = Field(default=0, description="Number of cache misses")
     avg_generation_time: float = Field(default=0.0, description="Average generation time in seconds")
-    generation_times: List[float] = Field(default_factory=list, description="Generation times")
+    generation_times: list[float] = Field(default_factory=list, description="Generation times")
 
     @property
     def cache_hit_rate(self) -> float:
@@ -359,7 +360,7 @@ class DynamicPromptManager:
 
     def __init__(self):
         """Initialize prompt manager"""
-        self.templates: Dict[str, PromptTemplate] = {}
+        self.templates: dict[str, PromptTemplate] = {}
         self.sanitizer = PromptSanitizer()
         self.metrics = PromptPerformanceMetrics()
 
@@ -397,7 +398,7 @@ class DynamicPromptManager:
 
         return prompt
 
-    def _update_metrics(self, generation_time: float, cache: Dict[str, PromptCache]) -> None:
+    def _update_metrics(self, generation_time: float, cache: dict[str, PromptCache]) -> None:
         """Update performance metrics"""
         self.metrics.total_generations += 1
         self.metrics.generation_times.append(generation_time)
@@ -418,7 +419,7 @@ class DynamicPromptManager:
 # ---------- Default Prompt Templates ----------
 
 
-def create_default_prompt_templates() -> List[PromptTemplate]:
+def create_default_prompt_templates() -> list[PromptTemplate]:
     """Create default prompt templates"""
     templates = [
         PromptTemplate(
