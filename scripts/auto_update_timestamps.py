@@ -10,10 +10,9 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Set
 
 
-def get_staged_markdown_files() -> Set[Path]:
+def get_staged_markdown_files() -> set[Path]:
     """Get all staged markdown files that are being committed."""
     import subprocess
 
@@ -59,7 +58,7 @@ def update_timestamp_in_content(content: str) -> str:
 def update_file_timestamp(file_path: Path) -> bool:
     """Update timestamp in a single file."""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         updated_content = update_timestamp_in_content(content)

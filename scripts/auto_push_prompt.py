@@ -13,10 +13,9 @@ import argparse
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 
-def run_git_command(args: List[str], capture_output: bool = True) -> Tuple[int, str, str]:
+def run_git_command(args: list[str], capture_output: bool = True) -> tuple[int, str, str]:
     """Run a git command and return exit code, stdout, stderr"""
     try:
         result = subprocess.run(["git"] + args, capture_output=capture_output, text=True, cwd=Path.cwd())
@@ -24,7 +23,8 @@ def run_git_command(args: List[str], capture_output: bool = True) -> Tuple[int, 
     except Exception as e:
         return 1, "", str(e)
 
-def check_git_status() -> Tuple[bool, str]:
+
+def check_git_status() -> tuple[bool, str]:
     """Check git status and return if there are changes to commit"""
     exit_code, stdout, stderr = run_git_command(["status", "--porcelain"])
 
@@ -39,7 +39,8 @@ def check_git_status() -> Tuple[bool, str]:
 
     return True, stdout
 
-def get_staged_files() -> List[str]:
+
+def get_staged_files() -> list[str]:
     """Get list of staged files"""
     exit_code, stdout, stderr = run_git_command(["diff", "--cached", "--name-only"])
 
@@ -48,7 +49,8 @@ def get_staged_files() -> List[str]:
 
     return [line.strip() for line in stdout.split("\n") if line.strip()]
 
-def get_unstaged_files() -> List[str]:
+
+def get_unstaged_files() -> list[str]:
     """Get list of unstaged files"""
     exit_code, stdout, stderr = run_git_command(["diff", "--name-only"])
 
@@ -57,7 +59,8 @@ def get_unstaged_files() -> List[str]:
 
     return [line.strip() for line in stdout.split("\n") if line.strip()]
 
-def get_untracked_files() -> List[str]:
+
+def get_untracked_files() -> list[str]:
     """Get list of untracked files"""
     exit_code, stdout, stderr = run_git_command(["ls-files", "--others", "--exclude-standard"])
 
@@ -65,6 +68,7 @@ def get_untracked_files() -> List[str]:
         return []
 
     return [line.strip() for line in stdout.split("\n") if line.strip()]
+
 
 def stage_all_changes() -> bool:
     """Stage all changes (modified, deleted, untracked files)"""
@@ -78,6 +82,7 @@ def stage_all_changes() -> bool:
 
     return True
 
+
 def commit_changes(message: str) -> bool:
     """Commit staged changes with the given message"""
     print(f"💾 Committing changes: {message}")
@@ -89,6 +94,7 @@ def commit_changes(message: str) -> bool:
 
     print("✅ Changes committed successfully")
     return True
+
 
 def push_changes() -> bool:
     """Push changes to remote repository"""
@@ -111,6 +117,7 @@ def push_changes() -> bool:
     print(f"✅ Changes pushed to {current_branch}")
     return True
 
+
 def get_commit_message() -> str:
     """Get commit message from user or use default"""
     print("\n📝 Enter commit message (or press Enter for default):")
@@ -122,6 +129,7 @@ def get_commit_message() -> str:
         message = "Auto-push: Maintenance updates"
 
     return message
+
 
 def confirm_push(changes_summary: str) -> bool:
     """Get user confirmation to push changes"""
@@ -140,6 +148,7 @@ def confirm_push(changes_summary: str) -> bool:
             return False
         else:
             print("Please enter 'y' for yes or 'n' for no")
+
 
 def display_changes_summary() -> str:
     """Display a summary of changes to be committed"""
@@ -179,6 +188,7 @@ def display_changes_summary() -> str:
         summary.append("ℹ️  No changes detected")
 
     return "\n".join(summary)
+
 
 def main():
     """Main function"""
@@ -239,6 +249,7 @@ def main():
 
     print("\n🎉 Auto-push completed successfully!")
     print("✅ Changes have been committed and pushed to GitHub")
+
 
 if __name__ == "__main__":
     main()
