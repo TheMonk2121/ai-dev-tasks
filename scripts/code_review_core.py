@@ -13,11 +13,12 @@ import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class CodeReviewMetrics:
@@ -25,7 +26,7 @@ class CodeReviewMetrics:
 
     review_id: str
     start_time: datetime
-    end_time: Optional[datetime] = None
+    end_time: datetime | None = None
     files_reviewed: int = 0
     lines_reviewed: int = 0
     issues_found: int = 0
@@ -33,6 +34,7 @@ class CodeReviewMetrics:
     review_duration_seconds: float = 0.0
     performance_score: float = 0.0
     quality_score: float = 0.0
+
 
 @dataclass
 class CodeReviewIssue:
@@ -47,6 +49,7 @@ class CodeReviewIssue:
     suggestion: str
     status: str = "open"  # open, resolved, ignored
 
+
 class CodeReviewCore:
     """Core code review process implementation."""
 
@@ -54,8 +57,8 @@ class CodeReviewCore:
         self.project_root = Path(project_root) if project_root else Path.cwd()
         self.reviews_dir = self.project_root / ".cache" / "code_reviews"
         self.reviews_dir.mkdir(parents=True, exist_ok=True)
-        self.current_review: Optional[CodeReviewMetrics] = None
-        self.issues: List[CodeReviewIssue] = []
+        self.current_review: CodeReviewMetrics | None = None
+        self.issues: list[CodeReviewIssue] = []
 
         # Performance monitoring
         self.performance_monitor = None
@@ -66,7 +69,7 @@ class CodeReviewCore:
         except ImportError:
             logger.warning("Performance monitoring not available")
 
-    def start_review(self, review_id: str, target_paths: List[str] = None) -> CodeReviewMetrics:
+    def start_review(self, review_id: str, target_paths: list[str] = None) -> CodeReviewMetrics:
         """Start a new code review session."""
         logger.info(f"🔍 Starting code review: {review_id}")
 
@@ -82,7 +85,7 @@ class CodeReviewCore:
 
         return self.current_review
 
-    def _start_review_internal(self, review_id: str, target_paths: List[str] = None):
+    def _start_review_internal(self, review_id: str, target_paths: list[str] = None):
         """Internal review start implementation."""
         if target_paths is None:
             target_paths = ["scripts/", "dspy-rag-system/src/"]
@@ -94,7 +97,7 @@ class CodeReviewCore:
 
         logger.info(f"📁 Reviewing {len(files_to_review)} files ({self.current_review.lines_reviewed} lines)")
 
-    def _get_files_to_review(self, target_paths: List[str]) -> List[Path]:
+    def _get_files_to_review(self, target_paths: list[str]) -> list[Path]:
         """Get list of files to review."""
         files = []
         for path in target_paths:
@@ -110,13 +113,13 @@ class CodeReviewCore:
     def _count_lines(self, file_path: Path) -> int:
         """Count lines in a file."""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 return len(f.readlines())
         except Exception as e:
             logger.warning(f"Could not count lines in {file_path}: {e}")
             return 0
 
-    def run_security_analysis(self) -> List[CodeReviewIssue]:
+    def run_security_analysis(self) -> list[CodeReviewIssue]:
         """Run security analysis on the codebase."""
         logger.info("🔒 Running security analysis...")
 
@@ -136,7 +139,7 @@ class CodeReviewCore:
 
         return issues
 
-    def _run_security_tools(self) -> List[CodeReviewIssue]:
+    def _run_security_tools(self) -> list[CodeReviewIssue]:
         """Run external security analysis tools."""
         issues = []
 
@@ -171,7 +174,7 @@ class CodeReviewCore:
 
         return issues
 
-    def _run_custom_security_checks(self) -> List[CodeReviewIssue]:
+    def _run_custom_security_checks(self) -> list[CodeReviewIssue]:
         """Run custom security validation checks."""
         issues = []
 
@@ -227,7 +230,7 @@ class CodeReviewCore:
 
         return issues
 
-    def run_performance_analysis(self) -> List[CodeReviewIssue]:
+    def run_performance_analysis(self) -> list[CodeReviewIssue]:
         """Run performance analysis on the codebase."""
         logger.info("⚡ Running performance analysis...")
 
@@ -246,7 +249,7 @@ class CodeReviewCore:
 
         return issues
 
-    def _analyze_performance_patterns(self) -> List[CodeReviewIssue]:
+    def _analyze_performance_patterns(self) -> list[CodeReviewIssue]:
         """Analyze code for performance anti-patterns."""
         issues = []
 
@@ -292,7 +295,7 @@ class CodeReviewCore:
 
         return issues
 
-    def _run_performance_benchmarks(self) -> List[CodeReviewIssue]:
+    def _run_performance_benchmarks(self) -> list[CodeReviewIssue]:
         """Run performance benchmarks on critical components."""
         issues = []
 
@@ -335,7 +338,7 @@ class CodeReviewCore:
 
         return issues
 
-    def run_code_quality_analysis(self) -> List[CodeReviewIssue]:
+    def run_code_quality_analysis(self) -> list[CodeReviewIssue]:
         """Run code quality analysis."""
         logger.info("📊 Running code quality analysis...")
 
@@ -358,7 +361,7 @@ class CodeReviewCore:
 
         return issues
 
-    def _run_linting_checks(self) -> List[CodeReviewIssue]:
+    def _run_linting_checks(self) -> list[CodeReviewIssue]:
         """Run code linting checks."""
         issues = []
 
@@ -393,7 +396,7 @@ class CodeReviewCore:
 
         return issues
 
-    def _analyze_code_complexity(self) -> List[CodeReviewIssue]:
+    def _analyze_code_complexity(self) -> list[CodeReviewIssue]:
         """Analyze code complexity."""
         issues = []
 
@@ -431,7 +434,7 @@ class CodeReviewCore:
 
         return issues
 
-    def _check_documentation_quality(self) -> List[CodeReviewIssue]:
+    def _check_documentation_quality(self) -> list[CodeReviewIssue]:
         """Check documentation quality."""
         issues = []
 
@@ -502,7 +505,7 @@ class CodeReviewCore:
 
         return issues
 
-    def complete_review(self) -> Dict[str, Any]:
+    def complete_review(self) -> dict[str, Any]:
         """Complete the code review and generate report."""
         if not self.current_review:
             raise ValueError("No active review to complete")
@@ -567,7 +570,7 @@ class CodeReviewCore:
 
         return max(0.0, min(100.0, score))
 
-    def _generate_review_report(self) -> Dict[str, Any]:
+    def _generate_review_report(self) -> dict[str, Any]:
         """Generate comprehensive review report."""
         if not self.current_review:
             return {}
@@ -610,7 +613,7 @@ class CodeReviewCore:
 
         return report
 
-    def _generate_recommendations(self) -> List[str]:
+    def _generate_recommendations(self) -> list[str]:
         """Generate actionable recommendations."""
         recommendations = []
 
@@ -655,7 +658,7 @@ class CodeReviewCore:
         except Exception as e:
             logger.error(f"Failed to save review data: {e}")
 
-    def print_review_summary(self, report: Dict[str, Any]):
+    def print_review_summary(self, report: dict[str, Any]):
         """Print a formatted review summary."""
         if not report:
             return
@@ -684,6 +687,7 @@ class CodeReviewCore:
             print("\n💡 **Recommendations:**")
             for i, rec in enumerate(recommendations, 1):
                 print(f"   {i}. {rec}")
+
 
 def main():
     """Main function for code review core."""
@@ -729,6 +733,7 @@ def main():
     except Exception as e:
         logger.error(f"Code review failed: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
