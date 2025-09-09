@@ -7,7 +7,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ ROLE_GUCS = {
 class RoleGUCManager:
     """Manages PostgreSQL GUC settings based on workload roles."""
 
-    def __init__(self, dsn: Optional[str] = None):
+    def __init__(self, dsn: str | None = None):
         """Initialize the GUC manager."""
         if dsn is None:
             # Try to resolve DSN
@@ -57,7 +57,7 @@ class RoleGUCManager:
 
         self.dsn = dsn
         self.current_role = "default"
-        self.applied_settings: Dict[str, str] = {}
+        self.applied_settings: dict[str, str] = {}
 
     def set_role(self, role: str) -> bool:
         """Set the current workload role and apply corresponding GUCs."""
@@ -152,11 +152,11 @@ class RoleGUCManager:
             logger.error(f"Exception applying runtime GUC {guc_name}: {e}")
             return False
 
-    def get_current_settings(self) -> Dict[str, str]:
+    def get_current_settings(self) -> dict[str, str]:
         """Get the currently applied GUC settings."""
         return self.applied_settings.copy()
 
-    def get_role_config(self, role: Optional[str] = None) -> Dict[str, str]:
+    def get_role_config(self, role: str | None = None) -> dict[str, str]:
         """Get the GUC configuration for a specific role."""
         if role is None:
             role = self.current_role
@@ -186,7 +186,7 @@ class RoleGUCManager:
 
         return "\n".join(config_lines)
 
-    def save_config(self, filepath: Optional[str] = None) -> str:
+    def save_config(self, filepath: str | None = None) -> str:
         """Save the current role configuration to a file."""
         if filepath is None:
             timestamp = int(time.time())

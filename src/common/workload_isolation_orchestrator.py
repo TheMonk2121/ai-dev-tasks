@@ -6,7 +6,7 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -20,12 +20,12 @@ logger = logging.getLogger(__name__)
 class WorkloadIsolationOrchestrator:
     """Orchestrates workload isolation through GUCs and cache separation."""
 
-    def __init__(self, dsn: Optional[str] = None):
+    def __init__(self, dsn: str | None = None):
         """Initialize the workload isolation orchestrator."""
         self.guc_manager = RoleGUCManager(dsn)
         self.cache_manager = CacheSeparationManager()
         self.current_role = "default"
-        self.isolation_status: Dict[str, Dict[str, Any]] = {}
+        self.isolation_status: dict[str, dict[str, Any]] = {}
 
         logger.info("WorkloadIsolationOrchestrator initialized")
 
@@ -136,7 +136,7 @@ class WorkloadIsolationOrchestrator:
             logger.error(f"Database connectivity verification failed: {e}")
             return False
 
-    def get_isolation_status(self, role: Optional[str] = None) -> Dict[str, Any]:
+    def get_isolation_status(self, role: str | None = None) -> dict[str, Any]:
         """Get the isolation status for a specific role or current role."""
         if role is None:
             role = self.current_role
@@ -154,7 +154,7 @@ class WorkloadIsolationOrchestrator:
 
         return status
 
-    def get_all_isolation_statuses(self) -> Dict:
+    def get_all_isolation_statuses(self) -> dict:
         """Get isolation status for all roles."""
         all_statuses = {}
 
@@ -190,7 +190,7 @@ class WorkloadIsolationOrchestrator:
             logger.error(f"Error resetting isolation: {e}")
             return False
 
-    def create_isolation_report(self, filepath: Optional[str] = None) -> str:
+    def create_isolation_report(self, filepath: str | None = None) -> str:
         """Create a comprehensive isolation report."""
         if filepath is None:
             timestamp = int(time.time())

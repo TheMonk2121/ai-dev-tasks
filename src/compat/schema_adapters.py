@@ -1,7 +1,7 @@
 # src/compat/schema_adapters.py
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -12,7 +12,7 @@ from src.schemas.eval import EvaluationResult, GoldCase
 # we provide a dict shape they expect. Replace gradually.
 
 
-def goldcase_to_legacy_case_dict(gc: GoldCase) -> Dict[str, Any]:
+def goldcase_to_legacy_case_dict(gc: GoldCase) -> dict[str, Any]:
     """Map canonical -> legacy minimal Case dict."""
     return {
         "id": gc.id,
@@ -29,7 +29,7 @@ def goldcase_to_legacy_case_dict(gc: GoldCase) -> Dict[str, Any]:
     }
 
 
-def legacy_payload_to_goldcase(payload: Dict[str, Any]) -> GoldCase:
+def legacy_payload_to_goldcase(payload: dict[str, Any]) -> GoldCase:
     """Accept any legacy keys (question, case_id, tag, response, expected_answer, etc.)."""
     return GoldCase.parse_obj(payload)
 
@@ -37,7 +37,7 @@ def legacy_payload_to_goldcase(payload: Dict[str, Any]) -> GoldCase:
 # ---- DSPy / RAGChecker TypedDicts ------------------------------------------
 
 
-def goldcase_for_dspy(gc: GoldCase) -> Dict[str, Any]:
+def goldcase_for_dspy(gc: GoldCase) -> dict[str, Any]:
     # Some DSPy utils expect "question" and "id"
     return {
         "id": gc.id,
@@ -53,6 +53,6 @@ def goldcase_for_dspy(gc: GoldCase) -> Dict[str, Any]:
     }
 
 
-def goldcase_for_ragchecker(gc: GoldCase) -> Dict[str, Any]:
+def goldcase_for_ragchecker(gc: GoldCase) -> dict[str, Any]:
     # RAGChecker variants sometimes use "query" and "gt_answer"
     return gc.dict(by_alias=True, exclude_none=True)

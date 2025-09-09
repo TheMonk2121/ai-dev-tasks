@@ -7,7 +7,7 @@ import os
 import shutil
 import time
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ CACHE_CONFIGS = {
 class CacheSeparationManager:
     """Manages separate cache directories for different workloads."""
 
-    def __init__(self, project_root: Optional[str] = None):
+    def __init__(self, project_root: str | None = None):
         """Initialize the cache separation manager."""
         if project_root is None:
             # Try to find project root
@@ -52,7 +52,7 @@ class CacheSeparationManager:
 
         self.project_root = Path(project_root)
         self.current_role = "default"
-        self.cache_dirs: Dict[str, Path] = {}
+        self.cache_dirs: dict[str, Path] = {}
 
         # Initialize cache directories
         self._initialize_cache_dirs()
@@ -82,7 +82,7 @@ class CacheSeparationManager:
         logger.info(f"Cache role set to: {role}")
         return True
 
-    def get_cache_dir(self, role: Optional[str] = None, subdir: Optional[str] = None) -> Path:
+    def get_cache_dir(self, role: str | None = None, subdir: str | None = None) -> Path:
         """Get the cache directory for a specific role and optional subdirectory."""
         if role is None:
             role = self.current_role
@@ -103,7 +103,7 @@ class CacheSeparationManager:
 
         return cache_dir
 
-    def get_cache_info(self, role: Optional[str] = None) -> Dict:
+    def get_cache_info(self, role: str | None = None) -> dict:
         """Get information about a cache directory."""
         if role is None:
             role = self.current_role
@@ -145,7 +145,7 @@ class CacheSeparationManager:
 
         return total_size
 
-    def cleanup_cache(self, role: Optional[str] = None, force: bool = False) -> bool:
+    def cleanup_cache(self, role: str | None = None, force: bool = False) -> bool:
         """Clean up cache for a specific role."""
         if role is None:
             role = self.current_role
@@ -199,9 +199,7 @@ class CacheSeparationManager:
         except Exception as e:
             logger.warning(f"Error cleaning up subdirectory {subdir_path}: {e}")
 
-    def get_cache_path(
-        self, role: Optional[str] = None, subdir: Optional[str] = None, filename: Optional[str] = None
-    ) -> Path:
+    def get_cache_path(self, role: str | None = None, subdir: str | None = None, filename: str | None = None) -> Path:
         """Get a specific cache file path."""
         cache_dir = self.get_cache_dir(role, subdir)
 
@@ -209,7 +207,7 @@ class CacheSeparationManager:
             return cache_dir / filename
         return cache_dir
 
-    def list_cache_files(self, role: Optional[str] = None, subdir: Optional[str] = None) -> List[Path]:
+    def list_cache_files(self, role: str | None = None, subdir: str | None = None) -> list[Path]:
         """List all files in a cache directory."""
         cache_dir = self.get_cache_dir(role, subdir)
 
@@ -234,7 +232,7 @@ class CacheSeparationManager:
 
         return success
 
-    def get_cache_status_summary(self) -> Dict:
+    def get_cache_status_summary(self) -> dict:
         """Get a summary of all cache statuses."""
         summary = {"total_caches": len(CACHE_CONFIGS), "caches": {}, "total_size_mb": 0, "overall_status": "healthy"}
 
@@ -248,7 +246,7 @@ class CacheSeparationManager:
 
         return summary
 
-    def save_cache_report(self, filepath: Optional[str] = None) -> str:
+    def save_cache_report(self, filepath: str | None = None) -> str:
         """Save a cache status report to a file."""
         if filepath is None:
             timestamp = int(time.time())
