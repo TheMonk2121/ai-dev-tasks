@@ -27,7 +27,7 @@ import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -130,30 +130,30 @@ class OptimizationInsight:
 class CachePerformanceMonitor:
     """Comprehensive cache performance monitoring system"""
 
-    def __init__(self, config: Optional[MonitoringConfig] = None):
+    def __init__(self, config: MonitoringConfig | None = None):
         """Initialize cache performance monitor"""
         self.config = config or MonitoringConfig()
 
         # Initialize systems
-        self.cache_service: Optional[PostgreSQLCacheService] = None
-        self.similarity_engine: Optional[SimilarityScoringEngine] = None
-        self.integration: Optional[CacheInvalidationIntegration] = None
-        self.ltst_integration: Optional[LTSTMemoryIntegration] = None
+        self.cache_service: PostgreSQLCacheService | None = None
+        self.similarity_engine: SimilarityScoringEngine | None = None
+        self.integration: CacheInvalidationIntegration | None = None
+        self.ltst_integration: LTSTMemoryIntegration | None = None
 
         # Monitoring state
-        self.monitoring_task: Optional[asyncio.Task] = None
-        self.dashboard_task: Optional[asyncio.Task] = None
-        self.trend_analysis_task: Optional[asyncio.Task] = None
+        self.monitoring_task: asyncio.Task | None = None
+        self.dashboard_task: asyncio.Task | None = None
+        self.trend_analysis_task: asyncio.Task | None = None
         self.running = False
 
         # Performance data
-        self.performance_history: List[Dict[str, Any]] = []
-        self.alerts: List[PerformanceAlert] = []
-        self.trends: List[PerformanceTrend] = []
-        self.insights: List[OptimizationInsight] = []
+        self.performance_history: list[dict[str, Any]] = []
+        self.alerts: list[PerformanceAlert] = []
+        self.trends: list[PerformanceTrend] = []
+        self.insights: list[OptimizationInsight] = []
 
         # Alert management
-        self.alert_cooldowns: Dict[str, float] = {}
+        self.alert_cooldowns: dict[str, float] = {}
         self.alerts_this_hour: int = 0
         self.last_hour_reset: float = time.time()
 
@@ -409,7 +409,7 @@ class CachePerformanceMonitor:
         except Exception as e:
             logger.error(f"Performance threshold check failed: {e}")
 
-    async def _check_cache_hit_rate(self, metrics: Dict[str, Any]):
+    async def _check_cache_hit_rate(self, metrics: dict[str, Any]):
         """Check cache hit rate thresholds"""
         try:
             cache_service = metrics.get("cache_service", {})
@@ -440,7 +440,7 @@ class CachePerformanceMonitor:
         except Exception as e:
             logger.error(f"Cache hit rate check failed: {e}")
 
-    async def _check_response_time(self, metrics: Dict[str, Any]):
+    async def _check_response_time(self, metrics: dict[str, Any]):
         """Check response time thresholds"""
         try:
             cache_service = metrics.get("cache_service", {})
@@ -471,7 +471,7 @@ class CachePerformanceMonitor:
         except Exception as e:
             logger.error(f"Response time check failed: {e}")
 
-    async def _check_memory_usage(self, metrics: Dict[str, Any]):
+    async def _check_memory_usage(self, metrics: dict[str, Any]):
         """Check memory usage thresholds"""
         try:
             system = metrics.get("system", {})
@@ -562,7 +562,7 @@ class CachePerformanceMonitor:
         except Exception as e:
             logger.error(f"Failed to generate optimization insights: {e}")
 
-    async def _analyze_cache_performance(self, latest: Dict[str, Any], previous: Dict[str, Any]):
+    async def _analyze_cache_performance(self, latest: dict[str, Any], previous: dict[str, Any]):
         """Analyze cache performance for insights"""
         try:
             latest_cache = latest.get("cache_service", {}).get("performance", {})
@@ -589,7 +589,7 @@ class CachePerformanceMonitor:
         except Exception as e:
             logger.error(f"Cache performance analysis failed: {e}")
 
-    async def _analyze_similarity_performance(self, latest: Dict[str, Any], previous: Dict[str, Any]):
+    async def _analyze_similarity_performance(self, latest: dict[str, Any], previous: dict[str, Any]):
         """Analyze similarity engine performance for insights"""
         try:
             latest_similarity = latest.get("similarity_engine", {}).get("processing_performance", {})
@@ -616,7 +616,7 @@ class CachePerformanceMonitor:
         except Exception as e:
             logger.error(f"Similarity performance analysis failed: {e}")
 
-    async def _analyze_memory_usage(self, latest: Dict[str, Any], previous: Dict[str, Any]):
+    async def _analyze_memory_usage(self, latest: dict[str, Any], previous: dict[str, Any]):
         """Analyze memory usage for insights"""
         try:
             latest_system = latest.get("system", {})
@@ -657,7 +657,7 @@ class CachePerformanceMonitor:
         except Exception as e:
             logger.error(f"Performance trend analysis failed: {e}")
 
-    async def _calculate_trend(self, metric: str, component: str, subcomponent: Optional[str] = None):
+    async def _calculate_trend(self, metric: str, component: str, subcomponent: str | None = None):
         """Calculate trend for a specific metric"""
         try:
             # Get data points for the metric
@@ -770,7 +770,7 @@ class CachePerformanceMonitor:
         except Exception:
             return 0.0
 
-    async def get_monitoring_dashboard(self) -> Dict[str, Any]:
+    async def get_monitoring_dashboard(self) -> dict[str, Any]:
         """Get comprehensive monitoring dashboard data"""
         try:
             if not self.performance_history:
