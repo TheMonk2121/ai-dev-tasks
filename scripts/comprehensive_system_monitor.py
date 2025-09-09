@@ -13,7 +13,7 @@ import time
 from collections import defaultdict, deque
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 import psutil
 import psycopg2
@@ -56,8 +56,8 @@ class SystemHealth:
 
     status: str  # healthy, warning, critical
     score: float  # 0.0 to 1.0
-    issues: List[str]
-    recommendations: List[str]
+    issues: list[str]
+    recommendations: list[str]
     timestamp: datetime
 
 
@@ -320,7 +320,7 @@ class MonitoringDashboard:
                 logger.error(f"Monitoring loop error: {e}")
                 time.sleep(10)
 
-    def get_current_metrics(self) -> Dict[str, Any]:
+    def get_current_metrics(self) -> dict[str, Any]:
         """Get current system metrics for dashboard display"""
         try:
             # Get latest metrics from queue

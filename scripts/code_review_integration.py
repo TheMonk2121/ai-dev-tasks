@@ -20,12 +20,13 @@ import time
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class IntegrationConfig:
@@ -40,15 +41,16 @@ class IntegrationConfig:
     review_threshold_files: int = 10
     review_threshold_lines: int = 1000
 
+
 @dataclass
 class IntegrationEvent:
     """Event data for integration workflows."""
 
-    event_id: Optional[str] = None
+    event_id: str | None = None
     event_type: str = "code_review"
-    timestamp: Optional[datetime] = None
-    data: Optional[Dict[str, Any]] = None
-    metadata: Optional[Dict[str, Any]] = None
+    timestamp: datetime | None = None
+    data: dict[str, Any] | None = None
+    metadata: dict[str, Any] | None = None
 
     def __post_init__(self):
         if self.event_id is None:
@@ -60,10 +62,11 @@ class IntegrationEvent:
         if self.metadata is None:
             self.metadata = {}
 
+
 class CodeReviewIntegration:
     """Main integration class for code review process."""
 
-    def __init__(self, config: Optional[IntegrationConfig] = None):
+    def __init__(self, config: IntegrationConfig | None = None):
         self.config = config or IntegrationConfig()
         self.project_root = Path.cwd()
 
@@ -117,7 +120,7 @@ class CodeReviewIntegration:
             except ImportError:
                 logger.warning("Database manager not available")
 
-    def integrate_with_n8n_workflows(self, review_data: Dict[str, Any]) -> bool:
+    def integrate_with_n8n_workflows(self, review_data: dict[str, Any]) -> bool:
         """Integrate code review with n8n workflows."""
         if not self.n8n_manager:
             logger.warning("n8n workflow manager not available")
@@ -143,7 +146,7 @@ class CodeReviewIntegration:
             logger.error(f"❌ n8n workflow integration failed: {e}")
             return False
 
-    def integrate_with_cursor_ai(self, review_issues: List[Dict[str, Any]]) -> bool:
+    def integrate_with_cursor_ai(self, review_issues: list[dict[str, Any]]) -> bool:
         """Integrate code review issues with Cursor AI for automated fixes."""
         if not self.cursor_ai_framework:
             logger.warning("Cursor AI integration framework not available")
@@ -167,7 +170,7 @@ class CodeReviewIntegration:
             logger.error(f"❌ Cursor AI integration failed: {e}")
             return False
 
-    def integrate_with_monitoring(self, metrics: Dict[str, Any]) -> bool:
+    def integrate_with_monitoring(self, metrics: dict[str, Any]) -> bool:
         """Integrate code review metrics with monitoring system."""
         if not self.metrics_exporter:
             logger.warning("Metrics exporter not available")
@@ -184,7 +187,7 @@ class CodeReviewIntegration:
             logger.error(f"❌ Monitoring integration failed: {e}")
             return False
 
-    def integrate_with_database(self, review_data: Dict[str, Any]) -> bool:
+    def integrate_with_database(self, review_data: dict[str, Any]) -> bool:
         """Integrate code review data with database logging."""
         if not self.db_manager:
             logger.warning("Database manager not available")
@@ -221,7 +224,7 @@ class CodeReviewIntegration:
             logger.error(f"❌ Database integration failed: {e}")
             return False
 
-    def run_quality_gates(self, review_data: Dict[str, Any]) -> bool:
+    def run_quality_gates(self, review_data: dict[str, Any]) -> bool:
         """Run quality gates as part of integration."""
         if not self.config.enable_quality_gates:
             logger.info("Quality gates disabled")
@@ -244,7 +247,7 @@ class CodeReviewIntegration:
             logger.error(f"❌ Quality gates failed: {e}")
             return False
 
-    def auto_trigger_review(self, file_changes: List[str]) -> Optional[str]:
+    def auto_trigger_review(self, file_changes: list[str]) -> str | None:
         """Automatically trigger code review based on file changes."""
         if not self.config.auto_trigger_reviews:
             return None
@@ -269,7 +272,7 @@ class CodeReviewIntegration:
 
         return None
 
-    def integrate_review_workflow(self, review_id: str, target_paths: Optional[List[str]] = None) -> Dict[str, Any]:
+    def integrate_review_workflow(self, review_id: str, target_paths: list[str] | None = None) -> dict[str, Any]:
         """Complete integration workflow for code review."""
         logger.info(f"🚀 Starting integrated code review: {review_id}")
 
@@ -322,7 +325,7 @@ class CodeReviewIntegration:
             logger.error(f"❌ Integrated review workflow failed: {e}")
             raise
 
-    def get_integration_status(self) -> Dict[str, Any]:
+    def get_integration_status(self) -> dict[str, Any]:
         """Get status of all integration components."""
         return {
             "n8n_workflows": self.n8n_manager is not None,
@@ -332,6 +335,7 @@ class CodeReviewIntegration:
             "quality_gates": self.config.enable_quality_gates,
             "auto_trigger": self.config.auto_trigger_reviews,
         }
+
 
 def main():
     """Main function for testing integration."""
@@ -348,7 +352,7 @@ def main():
     # Load configuration
     config = IntegrationConfig()
     if args.config:
-        with open(args.config, "r") as f:
+        with open(args.config) as f:
             config_data = json.load(f)
             for key, value in config_data.items():
                 if hasattr(config, key):
@@ -383,6 +387,7 @@ def main():
         print("ℹ️ Use --review-id to run a review workflow")
 
     return 0
+
 
 if __name__ == "__main__":
     exit(main())
