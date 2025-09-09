@@ -10,7 +10,7 @@ Once you reach the baseline, this will become a hard gate.
 import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 # Baseline targets (from NEW_BASELINE_MILESTONE_2025.md)
 BASELINE_TARGETS = {
@@ -25,7 +25,7 @@ BASELINE_TARGETS = {
 CURRENT_STATUS = "DEVELOPMENT_PHASE"  # Will become "PRODUCTION_READY" when baseline is hit
 
 
-def find_latest_evaluation() -> Optional[Path]:
+def find_latest_evaluation() -> Path | None:
     """Find the latest RAGChecker evaluation file."""
     metrics_dir = Path("metrics/baseline_evaluations")
     if not metrics_dir.exists():
@@ -41,10 +41,10 @@ def find_latest_evaluation() -> Optional[Path]:
     return latest_file
 
 
-def parse_evaluation_file(file_path: Path) -> Dict:
+def parse_evaluation_file(file_path: Path) -> dict:
     """Parse the evaluation file and extract metrics."""
     try:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             data = json.load(f)
         return data
     except (json.JSONDecodeError, FileNotFoundError) as e:
@@ -52,7 +52,7 @@ def parse_evaluation_file(file_path: Path) -> Dict:
         return {}
 
 
-def extract_metrics(data: Dict) -> Dict[str, float]:
+def extract_metrics(data: dict) -> dict[str, float]:
     """Extract relevant metrics from evaluation data."""
     metrics = {}
 
@@ -81,7 +81,7 @@ def extract_metrics(data: Dict) -> Dict[str, float]:
     return metrics
 
 
-def find_latest_baseline_metrics() -> Optional[Path]:
+def find_latest_baseline_metrics() -> Path | None:
     """Find the latest baseline metrics file."""
     metrics_dir = Path("metrics/baseline_evaluations")
     if not metrics_dir.exists():
@@ -97,7 +97,7 @@ def find_latest_baseline_metrics() -> Optional[Path]:
     return latest_file
 
 
-def extract_baseline_metrics(data: Dict) -> Dict[str, float]:
+def extract_baseline_metrics(data: dict) -> dict[str, float]:
     """Extract metrics from baseline metrics file."""
     metrics = {}
 
@@ -120,7 +120,7 @@ def extract_baseline_metrics(data: Dict) -> Dict[str, float]:
     return metrics
 
 
-def check_baseline_compliance(metrics: Dict[str, float]) -> Tuple[bool, List[str]]:
+def check_baseline_compliance(metrics: dict[str, float]) -> tuple[bool, list[str]]:
     """Check if metrics meet baseline targets."""
     violations = []
 
@@ -143,7 +143,7 @@ def check_baseline_compliance(metrics: Dict[str, float]) -> Tuple[bool, List[str
     return len(violations) == 0, violations
 
 
-def print_status(metrics: Dict[str, float], violations: List[str], file_path: Optional[Path]):
+def print_status(metrics: dict[str, float], violations: list[str], file_path: Path | None):
     """Print the current status and any violations."""
     print("🔍 Baseline Metrics Pre-commit Check")
     print("=" * 50)
