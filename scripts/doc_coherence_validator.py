@@ -13,7 +13,7 @@ import re
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 
 MD_INCLUDE_DIRS = [
@@ -32,16 +32,18 @@ EXCLUDE_PATTERNS = (
 @dataclass
 class DocCoherenceValidator:
     dry_run: bool = True
-    markdown_files: List[Path] = field(default_factory=list)
-    validation_results: Dict[str, bool] = field(default_factory=dict)
-    errors: List[str] = field(default_factory=list)
-    warnings: List[str] = field(default_factory=list)
+    markdown_files: list[Path] = field(default_factory=list)
+    validation_results: dict[str, bool] = field(default_factory=dict)
+    errors: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
     cursor_ai_enabled: bool = False
-    priority_files: Dict[str, List[str]] = field(default_factory=lambda: {
-        "memory_context": [
-            "100_memory/100_cursor-memory-context.md",
-        ]
-    })
+    priority_files: dict[str, list[str]] = field(
+        default_factory=lambda: {
+            "memory_context": [
+                "100_memory/100_cursor-memory-context.md",
+            ]
+        }
+    )
 
     def __post_init__(self) -> None:
         if not self.markdown_files:
@@ -53,8 +55,8 @@ class DocCoherenceValidator:
             self.cursor_ai_enabled = False
 
     # ------------- IO helpers -------------
-    def _discover_markdown_files(self) -> List[Path]:
-        out: List[Path] = []
+    def _discover_markdown_files(self) -> list[Path]:
+        out: list[Path] = []
         for root in MD_INCLUDE_DIRS:
             if not root.exists():
                 continue
@@ -67,7 +69,7 @@ class DocCoherenceValidator:
         s = str(path)
         return any(x in s for x in EXCLUDE_PATTERNS)
 
-    def read_file(self, path: Path) -> Optional[str]:
+    def read_file(self, path: Path) -> str | None:
         try:
             if not path.exists():
                 raise FileNotFoundError(str(path))
@@ -117,7 +119,11 @@ class DocCoherenceValidator:
             name = p.name
             if not valid_re.match(name):
                 # Allow many real docs; only fail when clearly off-pattern, as in tests
-                if name.endswith('.md') and not name.startswith(('000_', '100_', '200_', '300_', '400_', '500_', '600_')) and name != 'README.md':
+                if (
+                    name.endswith(".md")
+                    and not name.startswith(("000_", "100_", "200_", "300_", "400_", "500_", "600_"))
+                    and name != "README.md"
+                ):
                     ok = False
                     self.warnings.append(f"naming_warn:{name}")
         self.validation_results["File naming conventions"] = ok
@@ -159,7 +165,7 @@ class DocCoherenceValidator:
         except Exception:
             return False
 
-    def _validate_file_with_cursor_ai(self, path: Path, category: str) -> List[Dict[str, str]]:
+    def _validate_file_with_cursor_ai(self, path: Path, category: str) -> list[dict[str, str]]:
         """Mockable integration with Cursor AI. Returns list of issue dicts."""
         content = self.read_file(path) or ""
         try:
@@ -168,13 +174,15 @@ class DocCoherenceValidator:
                 return [{"type": "error", "issue": r.stderr.strip(), "category": category}]
             payload = json.loads(r.stdout or "{}")
             issues = payload.get("issues", [])
-            out: List[Dict[str, str]] = []
+            out: list[dict[str, str]] = []
             for it in issues:
-                out.append({
-                    "type": it.get("type", "warning"),
-                    "issue": it.get("description", "unknown"),
-                    "category": category,
-                })
+                out.append(
+                    {
+                        "type": it.get("type", "warning"),
+                        "issue": it.get("description", "unknown"),
+                        "category": category,
+                    }
+                )
             return out
         except Exception as e:
             return [{"type": "error", "issue": str(e), "category": category}]
@@ -216,7 +224,7 @@ class DocCoherenceValidator:
 
     def run_all_validations(self) -> bool:
         # Execute each task and record its result with stable keys
-        results: List[bool] = []
+        results: list[bool] = []
         results.append(self.task_1_validate_cross_references())
         self.validation_results.setdefault("Cross-reference validation", results[-1])
         results.append(self.task_2_validate_file_naming_conventions())
