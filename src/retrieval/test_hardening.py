@@ -9,11 +9,11 @@ from __future__ import annotations
 
 import json
 import pathlib
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 
 # Test case validation
-def validate_test_cases(test_cases: List[Dict[str, Any]]) -> Tuple[bool, List[str]]:
+def validate_test_cases(test_cases: list[dict[str, Any]]) -> tuple[bool, list[str]]:
     """Validate test case format and completeness."""
     errors = []
 
@@ -60,7 +60,7 @@ def validate_test_cases(test_cases: List[Dict[str, Any]]) -> Tuple[bool, List[st
     return len(errors) == 0, errors
 
 
-def generate_edge_cases() -> List[Dict[str, Any]]:
+def generate_edge_cases() -> list[dict[str, Any]]:
     """Generate edge case test scenarios."""
     edge_cases = [
         {
@@ -121,7 +121,7 @@ def generate_edge_cases() -> List[Dict[str, Any]]:
     return edge_cases
 
 
-def test_retrieval_robustness(retrieval_fn, test_cases: List[Dict[str, Any]]) -> Dict[str, Any]:
+def test_retrieval_robustness(retrieval_fn, test_cases: list[dict[str, Any]]) -> dict[str, Any]:
     """Test retrieval pipeline robustness with edge cases."""
     results = {"total_cases": len(test_cases), "passed": 0, "failed": 0, "errors": 0, "case_results": []}
 
@@ -196,7 +196,7 @@ def test_retrieval_robustness(retrieval_fn, test_cases: List[Dict[str, Any]]) ->
     return results
 
 
-def validate_pipeline_components(config_path: str = "config/retrieval.yaml") -> Dict[str, Any]:
+def validate_pipeline_components(config_path: str = "config/retrieval.yaml") -> dict[str, Any]:
     """Validate that all pipeline components are properly configured."""
     try:
         import yaml
