@@ -1,0 +1,154 @@
+---
+name: PR Test Lanes
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-xdist
+
+      - name: Smoke tests (critical only)
+        run: |
+          pytest -m "critical" -q --maxfail=3
+
+  impact:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-xdist
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          git diff --name-only origin/main...HEAD | \
+            grep -E '^(src|dspy-rag-system/src|configs)/' > changed_files.txt
+          echo "files=$(cat changed_files.txt | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+      - name: Run impacted tests
+        run: |
+          if [ -s changed_files.txt ]; then
+            python scripts/select_impacted_tests.py --files changed_files.txt | \
+              xargs pytest -q --maxfail=5
+          else
+            echo "No relevant files changed, skipping impact tests"
+          fi
+
+  critical:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-xdist
+
+      - name: Critical tests (no legacy)
+        run: |
+          pytest -m "critical and not legacy" -q --maxfail=2
+
+  full-signal:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-xdist pytest-randomly \
+            coverage radon datasketch
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Full test signal collection
+        run: |
+          mkdir -p metrics
+          coverage erase
+          pytest -n auto --cov=src --cov=dspy-rag-system/src \
+            --cov-branch --cov-context=test -q || true
+          coverage combine
+          coverage json -o metrics/coverage.json
+
+      - name: Durations
+        run: |
+          pytest --durations=1000 -q > metrics/durations.txt || true
+
+      - name: JUnit (latest)
+        run: |
+          pytest -q --junitxml=metrics/junit_latest.xml || true
+
+      - name: Churn
+        run: |
+          git log --pretty=format: --name-only | \
+            rg -N '^(src|dspy-rag-system/src|configs)/' | \
+            sort | uniq -c > metrics/churn.txt
+
+      - name: Complexity
+        run: |
+          radon cc -s -j src dspy-rag-system/src > metrics/complexity.json
+
+      - name: Flake sampling
+        run: |
+          pytest -n 3 --randomly-seed=42,43,44,45,46 \
+            --randomly-dont-reorganize -q > metrics/flake_sample.txt || true
+
+      - name: Build signal report
+        run: |
+          python scripts/test_signal_report.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-signal-main
+          path: metrics/tests_signal.csv

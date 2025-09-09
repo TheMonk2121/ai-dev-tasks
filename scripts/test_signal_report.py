@@ -17,6 +17,7 @@ DUR_TXT = pathlib.Path("metrics/durations.txt")
 CHURN_TXT = pathlib.Path("metrics/churn.txt")
 CC_JSON = pathlib.Path("metrics/complexity.json")
 JUNIT_XML = pathlib.Path("metrics/junit_latest.xml")
+FLAKE_TXT = pathlib.Path("metrics/flake_sample.txt")
 OUT_CSV = pathlib.Path("metrics/tests_signal.csv")
 
 
@@ -90,6 +91,33 @@ def parse_junit_fail_rate():
     return fr
 
 
+def parse_flake_rates():
+    """Parse flake rates from pytest-randomly output"""
+    flake_rates = defaultdict(list)
+    if not FLAKE_TXT.exists():
+        return {}
+    
+    # Simple parsing - count failures per test across multiple runs
+    # This is a basic implementation; could be enhanced with more sophisticated parsing
+    current_test = None
+    for line in FLAKE_TXT.read_text().splitlines():
+        if "FAILED" in line or "PASSED" in line:
+            # Extract test name from pytest output
+            m = re.search(r'([^:]+::[^:]+) - (FAILED|PASSED)', line)
+            if m:
+                test_name = m.group(1)
+                status = m.group(2)
+                flake_rates[test_name].append(1.0 if status == "FAILED" else 0.0)
+    
+    # Calculate average failure rate per test
+    result = {}
+    for test_name, failures in flake_rates.items():
+        if failures:
+            result[test_name] = sum(failures) / len(failures)
+    
+    return result
+
+
 def normalize(vals: dict):
     if not vals:
         return {}
@@ -103,6 +131,7 @@ def main():
     churn = parse_churn()
     cc = parse_complexity()
     fail_rate = parse_junit_fail_rate()
+    flake_rate = parse_flake_rates()
 
     unique_counts = {}
     weighted_unique = {}
@@ -160,7 +189,6 @@ def main():
     W_COST = -0.08
     W_FLAKE = -0.12
 
-    flake_rate = defaultdict(float)
     mutation_score = defaultdict(float)
 
     N_wuniq = normalize(weighted_unique)
@@ -192,6 +220,7 @@ def main():
                 "weighted_unique": round(weighted_unique.get(tid, 0), 2),
                 "runtime_sec": round(dur.get(tid, 0.0), 3),
                 "fail_rate": N_fr.get(tid, 0.0),
+                "flake_rate": flake_rate.get(tid, 0.0),
                 "avg_churn": round(avg_churn.get(tid, 0), 2),
                 "cluster_rep": rep,
                 "decision": decision,

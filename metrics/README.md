@@ -14,6 +14,7 @@ The main output of the test signal analysis system. Contains test scoring and de
 - `weighted_unique`: Uniqueness weighted by file churn and complexity
 - `runtime_sec`: Test execution time in seconds
 - `fail_rate`: Historical failure rate (0.0-1.0)
+- `flake_rate`: Flakiness rate from pytest-randomly sampling (0.0-1.0)
 - `avg_churn`: Average churn of files covered by this test
 - `cluster_rep`: Whether this test is a cluster representative (0/1)
 - `decision`: Recommended action (`keep`, `quarantine`, `retire`)
@@ -29,6 +30,7 @@ The main output of the test signal analysis system. Contains test scoring and de
 - `churn.txt`: File change frequency from git log
 - `complexity.json`: Cyclomatic complexity from radon
 - `junit_latest.xml`: Latest test results from pytest
+- `flake_sample.txt`: Flakiness data from pytest-randomly sampling
 
 ## Usage
 
