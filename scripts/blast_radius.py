@@ -13,13 +13,12 @@ import argparse
 import json
 from collections import deque
 from pathlib import Path
-from typing import Deque, Dict, List, Set
 
 
-def load_graph(graph_path: Path) -> Dict:
+def load_graph(graph_path: Path) -> dict:
     data = json.loads(graph_path.read_text(encoding="utf-8"))
     # Build reverse-adjacency
-    rev: Dict[str, Set[str]] = {}
+    rev: dict[str, set[str]] = {}
     for node in data.get("nodes", []):
         nid = node.get("id")
         if nid is not None:
@@ -33,14 +32,14 @@ def load_graph(graph_path: Path) -> Dict:
     return {"graph": data, "reverse": rev}
 
 
-def transitive_dependents(reverse: Dict[str, Set[str]], seeds: List[str]) -> Set[str]:
-    visited: Set[str] = set()
-    q: Deque[str] = deque()
+def transitive_dependents(reverse: dict[str, set[str]], seeds: list[str]) -> set[str]:
+    visited: set[str] = set()
+    q: deque[str] = deque()
     for s in seeds:
         if s in reverse:
             q.append(s)
             visited.add(s)
-    result: Set[str] = set()
+    result: set[str] = set()
     while q:
         cur = q.popleft()
         for dep in reverse.get(cur, set()):
@@ -73,7 +72,9 @@ def main() -> None:
         seeds.append(rp)
 
     impacted = sorted(transitive_dependents(reverse, seeds))
-    tests = sorted([p for p in impacted if "/tests/" in p or p.startswith("tests/") or Path(p).name.startswith("test_")])
+    tests = sorted(
+        [p for p in impacted if "/tests/" in p or p.startswith("tests/") or Path(p).name.startswith("test_")]
+    )
 
     summary = {
         "seeds": seeds,
@@ -101,4 +102,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

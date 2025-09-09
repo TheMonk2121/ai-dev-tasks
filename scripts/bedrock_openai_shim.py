@@ -3,7 +3,7 @@ import json
 import os
 import threading
 import time
-from typing import List, Optional
+from typing import Optional
 
 import boto3
 import uvicorn
@@ -43,9 +43,9 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     model: str
-    messages: List[Message]
-    max_tokens: Optional[int] = 512
-    temperature: Optional[float] = 0.2
+    messages: list[Message]
+    max_tokens: int | None = 512
+    temperature: float | None = 0.2
 
 
 @app.post("/v1/chat/completions")
