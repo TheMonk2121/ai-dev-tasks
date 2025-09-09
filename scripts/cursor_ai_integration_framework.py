@@ -18,7 +18,7 @@ import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 # Configure logging
@@ -38,6 +38,7 @@ except Exception:
         CODER = "coder"
         DOCUMENTATION = "documentation"
 
+
 class ContextType(Enum):
     """Enumeration of context types."""
 
@@ -46,6 +47,7 @@ class ContextType(Enum):
     USER = "user"
     AGENT = "agent"
 
+
 @dataclass
 class ContextData:
     """Data structure for context information."""
@@ -53,12 +55,13 @@ class ContextData:
     id: str = field(default_factory=lambda: str(uuid4()))
     type: ContextType = ContextType.FILE
     source: str = "cursor"
-    content: Dict[str, Any] = field(default_factory=dict)
-    relationships: Dict[str, Any] = field(default_factory=dict)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    content: dict[str, Any] = field(default_factory=dict)
+    relationships: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
     updated_at: float = field(default_factory=time.time)
     accessed_at: float = field(default_factory=time.time)
+
 
 @dataclass
 class AgentRequest:
@@ -67,10 +70,11 @@ class AgentRequest:
     id: str = field(default_factory=lambda: str(uuid4()))
     agent_type: AgentType = AgentType.NATIVE_AI
     query: str = ""
-    context: Optional[ContextData] = None
-    user_id: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    context: ContextData | None = None
+    user_id: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
+
 
 @dataclass
 class AgentResponse:
@@ -80,11 +84,12 @@ class AgentResponse:
     request_id: str = ""
     agent_type: AgentType = AgentType.NATIVE_AI
     content: str = ""
-    context_updates: Optional[ContextData] = None
+    context_updates: ContextData | None = None
     confidence: float = 0.0
     processing_time: float = 0.0
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
+
 
 class BaseAgent(ABC):
     """Abstract base class for all agents."""
@@ -107,7 +112,7 @@ class BaseAgent(ABC):
         """Check if this agent can handle the given request."""
         pass
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get agent status information."""
         return {
             "agent_type": self.agent_type.value,
@@ -117,6 +122,7 @@ class BaseAgent(ABC):
             "usage_count": self.usage_count,
             "error_count": self.error_count,
         }
+
 
 class CursorNativeAIAgent(BaseAgent):
     """Agent for Cursor's native AI capabilities."""
@@ -173,6 +179,7 @@ class CursorNativeAIAgent(BaseAgent):
             return f"Native AI: Let me explain: {request.query}"
         else:
             return f"Native AI: I can help with: {request.query}"
+
 
 class ResearchAgent(BaseAgent):
     """Agent for deep research and analysis capabilities."""
@@ -233,6 +240,7 @@ class ResearchAgent(BaseAgent):
 
         return f"Research Agent: I've analyzed {request.query} and found the following insights..."
 
+
 class CoderAgent(BaseAgent):
     """Agent for coding best practices and code quality improvements."""
 
@@ -291,6 +299,7 @@ class CoderAgent(BaseAgent):
         await asyncio.sleep(0.3)  # Simulate code analysis time
 
         return "Coder Agent: I've analyzed your code and suggest the following improvements..."
+
 
 class DocumentationAgent(BaseAgent):
     """Agent for documentation assistance and writing help."""
@@ -352,14 +361,15 @@ class DocumentationAgent(BaseAgent):
 
         return f"Documentation Agent: I've created comprehensive documentation for {request.query}..."
 
+
 class ContextManager:
     """Manages shared context between agents."""
 
     def __init__(self):
-        self.contexts: Dict[str, ContextData] = {}
-        self.context_relationships: Dict[str, List[str]] = {}
+        self.contexts: dict[str, ContextData] = {}
+        self.context_relationships: dict[str, list[str]] = {}
 
-    async def get_context(self, context_id: str) -> Optional[ContextData]:
+    async def get_context(self, context_id: str) -> ContextData | None:
         """Get context by ID."""
         return self.contexts.get(context_id)
 
@@ -368,7 +378,7 @@ class ContextManager:
         self.contexts[context.id] = context
         return context.id
 
-    async def update_context(self, context_id: str, updates: Dict[str, Any]) -> bool:
+    async def update_context(self, context_id: str, updates: dict[str, Any]) -> bool:
         """Update existing context."""
         if context_id in self.contexts:
             context = self.contexts[context_id]
@@ -379,18 +389,19 @@ class ContextManager:
             return True
         return False
 
-    async def get_related_contexts(self, context_id: str) -> List[ContextData]:
+    async def get_related_contexts(self, context_id: str) -> list[ContextData]:
         """Get contexts related to the given context."""
         related_ids = self.context_relationships.get(context_id, [])
         return [self.contexts[cid] for cid in related_ids if cid in self.contexts]
+
 
 class CursorAIIntegrationFramework:
     """Main integration framework for Cursor AI and specialized agents."""
 
     def __init__(self):
-        self.agents: Dict[AgentType, BaseAgent] = {}
+        self.agents: dict[AgentType, BaseAgent] = {}
         self.context_manager = ContextManager()
-        self.active_agent: Optional[AgentType] = None
+        self.active_agent: AgentType | None = None
         # Env-configurable toggles (defaults: enabled)
         self.agent_switching_enabled = _env_bool("AGENT_SWITCHING_ENABLED", True)
         self.fallback_to_native = _env_bool("FALLBACK_TO_NATIVE", True)
@@ -464,7 +475,7 @@ class CursorAIIntegrationFramework:
             return self.agents.get(AgentType.DOCUMENTATION, self.agents[AgentType.NATIVE_AI])
 
         # Check which agents can handle this request
-        capable_agents: List[BaseAgent] = []
+        capable_agents: list[BaseAgent] = []
         for agent in self.agents.values():
             if agent.can_handle(request):
                 capable_agents.append(agent)
@@ -530,7 +541,7 @@ class CursorAIIntegrationFramework:
         self.active_agent = AgentType.NATIVE_AI
         return await native_agent.process_request(request)
 
-    def get_agent_status(self) -> Dict[str, Any]:
+    def get_agent_status(self) -> dict[str, Any]:
         """Get status of all agents."""
         return {
             "active_agent": self.active_agent.value if self.active_agent else None,
@@ -549,12 +560,14 @@ class CursorAIIntegrationFramework:
         self.fallback_to_native = enabled
         logger.info(f"Fallback to native AI {'enabled' if enabled else 'disabled'}")
 
+
 def _env_bool(name: str, default: bool) -> bool:
     """Read boolean from environment with sensible defaults."""
     val = os.getenv(name)
     if val is None:
         return default
     return str(val).strip().lower() in {"1", "true", "yes", "on"}
+
 
 # Example usage and testing
 async def main():
@@ -587,6 +600,7 @@ async def main():
     print("\n--- Agent Status ---")
     status = framework.get_agent_status()
     print(json.dumps(status, indent=2))
+
 
 if __name__ == "__main__":
     asyncio.run(main())
