@@ -18,22 +18,21 @@ Returns:
 
 from __future__ import annotations
 
-from typing import Dict, List, Mapping, Optional, Sequence, Tuple, Union
+from typing import Optional, Union
+from collections.abc import Mapping, Sequence
 
 DocId = str
 Rank = int
 Score = float
 
 
-def _as_rank_map(
-    items: Union[Sequence[DocId], Sequence[Tuple[DocId, Score]], Mapping[DocId, Score]]
-) -> Dict[DocId, Rank]:
+def _as_rank_map(items: Sequence[DocId] | Sequence[tuple[DocId, Score]] | Mapping[DocId, Score]) -> dict[DocId, Rank]:
     """Normalize various input formats into a 1-indexed rank map.
 
     - If items is a sequence of doc_ids, use their order as rank.
     - If items is (doc_id, score) pairs or a mapping, sort by score desc then assign ranks.
     """
-    rank_map: Dict[DocId, Rank] = {}
+    rank_map: dict[DocId, Rank] = {}
 
     if isinstance(items, dict):  # Mapping[DocId, Score]
         sorted_items = sorted(items.items(), key=lambda kv: kv[1], reverse=True)
@@ -58,7 +57,7 @@ def _as_rank_map(
     return rank_map
 
 
-def _rrf(rank: Optional[Rank], k: int) -> float:
+def _rrf(rank: Rank | None, k: int) -> float:
     """Reciprocal rank contribution for a given rank (1-indexed).
 
     If rank is None (doc not present), return 0.
@@ -69,14 +68,14 @@ def _rrf(rank: Optional[Rank], k: int) -> float:
 
 
 def weighted_rrf(
-    bm25: Union[Sequence[DocId], Sequence[Tuple[DocId, Score]], Mapping[DocId, Score]],
-    vector: Union[Sequence[DocId], Sequence[Tuple[DocId, Score]], Mapping[DocId, Score]],
+    bm25: Sequence[DocId] | Sequence[tuple[DocId, Score]] | Mapping[DocId, Score],
+    vector: Sequence[DocId] | Sequence[tuple[DocId, Score]] | Mapping[DocId, Score],
     *,
     k: int = 60,
     lambda_lex: float = 0.6,
     lambda_sem: float = 0.4,
-    limit: Optional[int] = None,
-) -> List[Tuple[DocId, Score]]:
+    limit: int | None = None,
+) -> list[tuple[DocId, Score]]:
     """Fuse two ranked lists using weighted RRF.
 
     Args:
@@ -103,7 +102,7 @@ def weighted_rrf(
 
     all_ids = set(bm25_ranks.keys()) | set(vec_ranks.keys())
 
-    fused: List[Tuple[DocId, Score]] = []
+    fused: list[tuple[DocId, Score]] = []
     for doc_id in all_ids:
         r_lex = bm25_ranks.get(doc_id)
         r_sem = vec_ranks.get(doc_id)

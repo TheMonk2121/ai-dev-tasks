@@ -15,7 +15,7 @@ import asyncio
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 try:
     import numpy as np
@@ -41,11 +41,11 @@ class RerankResult:
     """Result from cross-encoder reranking."""
 
     query: str
-    candidates: List[Dict[str, Any]]
-    scores: List[float]
+    candidates: list[dict[str, Any]]
+    scores: list[float]
     method: str  # "cross_encoder", "heuristic", "timeout_fallback"
     latency_ms: float
-    error: Optional[str] = None
+    error: str | None = None
 
 
 class CircuitBreaker:
@@ -121,7 +121,7 @@ class ONNXCrossEncoder:
         self.input_names = [input.name for input in self.session.get_inputs()]
         self.output_names = [output.name for output in self.session.get_outputs()]
 
-    def encode_pairs(self, query_doc_pairs: List[Tuple[str, str]]) -> Dict[str, np.ndarray]:
+    def encode_pairs(self, query_doc_pairs: list[tuple[str, str]]) -> dict[str, np.ndarray]:
         """Tokenize query-document pairs for ONNX model."""
 
         queries = [pair[0] for pair in query_doc_pairs]
@@ -134,7 +134,7 @@ class ONNXCrossEncoder:
 
         return {name: encoded[name] for name in self.input_names if name in encoded}
 
-    def predict_scores(self, inputs: Dict[str, np.ndarray]) -> np.ndarray:
+    def predict_scores(self, inputs: dict[str, np.ndarray]) -> np.ndarray:
         """Run ONNX inference to get relevance scores."""
 
         outputs = self.session.run(self.output_names, inputs)
@@ -154,7 +154,7 @@ class ONNXCrossEncoder:
 
         return scores
 
-    def rerank(self, query: str, candidates: List[Dict[str, Any]], text_field: str = "text") -> List[float]:
+    def rerank(self, query: str, candidates: list[dict[str, Any]], text_field: str = "text") -> list[float]:
         """Rerank candidates using cross-encoder."""
 
         if not candidates:
@@ -179,7 +179,7 @@ class CrossEncoderClient:
     def __init__(
         self,
         model_name: str = "BAAI/bge-reranker-base",
-        onnx_path: Optional[str] = None,
+        onnx_path: str | None = None,
         micro_batch_size: int = 32,
         timeout_ms: int = 400,
         max_timeout_ms: int = 600,
@@ -196,7 +196,7 @@ class CrossEncoderClient:
         # Initialize components
         self.executor = ThreadPoolExecutor(max_workers=workers)
         self.circuit_breaker = CircuitBreaker() if enable_circuit_breaker else None
-        self.cross_encoder: Optional[ONNXCrossEncoder] = None
+        self.cross_encoder: ONNXCrossEncoder | None = None
 
         # Initialize ONNX model if available
         if onnx_path and HAS_ONNX and HAS_TRANSFORMERS:
@@ -207,7 +207,7 @@ class CrossEncoderClient:
                 self.cross_encoder = None
 
     async def rerank_async(
-        self, query: str, candidates: List[Dict[str, Any]], text_field: str = "text"
+        self, query: str, candidates: list[dict[str, Any]], text_field: str = "text"
     ) -> RerankResult:
         """Async reranking with timeout and fallback."""
 
@@ -251,7 +251,7 @@ class CrossEncoderClient:
                 error=str(e),
             )
 
-    async def _rerank_with_timeout(self, query: str, candidates: List[Dict[str, Any]], text_field: str) -> List[float]:
+    async def _rerank_with_timeout(self, query: str, candidates: list[dict[str, Any]], text_field: str) -> list[float]:
         """Run cross-encoder with timeout."""
 
         if not self.cross_encoder:
@@ -267,10 +267,10 @@ class CrossEncoderClient:
 
             return scores
 
-        except asyncio.TimeoutError:
+        except TimeoutError:
             raise Exception(f"Reranking timeout after {self.max_timeout_ms}ms")
 
-    def _rerank_batch(self, query: str, candidates: List[Dict[str, Any]], text_field: str) -> List[float]:
+    def _rerank_batch(self, query: str, candidates: list[dict[str, Any]], text_field: str) -> list[float]:
         """Synchronous batch reranking with micro-batching."""
 
         if not candidates:
@@ -286,7 +286,7 @@ class CrossEncoderClient:
 
         return all_scores
 
-    async def _heuristic_fallback(self, query: str, candidates: List[Dict[str, Any]], text_field: str) -> List[float]:
+    async def _heuristic_fallback(self, query: str, candidates: list[dict[str, Any]], text_field: str) -> list[float]:
         """Simple heuristic reranking fallback."""
 
         # Import here to avoid circular dependencies
@@ -315,7 +315,7 @@ class CrossEncoderClient:
             self.executor.shutdown(wait=True)
 
 
-async def create_cross_encoder_client(config: Dict[str, Any]) -> CrossEncoderClient:
+async def create_cross_encoder_client(config: dict[str, Any]) -> CrossEncoderClient:
     """Factory function to create a cross-encoder client from config."""
 
     return CrossEncoderClient(

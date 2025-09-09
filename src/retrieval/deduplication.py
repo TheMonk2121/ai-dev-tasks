@@ -11,7 +11,7 @@ Supports both cosine similarity (fast, embedding-based) and MinHash
 from __future__ import annotations
 
 import hashlib
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Optional
 
 try:
     import numpy as np
@@ -30,7 +30,7 @@ class CosineDeduplicator:
     """Fast cosine similarity-based deduplication using TF-IDF vectors."""
 
     def __init__(
-        self, threshold: float = 0.9, max_features: int = 1000, min_df: int = 1, ngram_range: Tuple[int, int] = (1, 2)
+        self, threshold: float = 0.9, max_features: int = 1000, min_df: int = 1, ngram_range: tuple[int, int] = (1, 2)
     ):
         if not HAS_SKLEARN:
             raise ImportError("sklearn required for CosineDeduplicator")
@@ -40,7 +40,7 @@ class CosineDeduplicator:
             max_features=max_features, min_df=min_df, ngram_range=ngram_range, stop_words="english", lowercase=True
         )
 
-    def deduplicate(self, candidates: List[Dict[str, Any]], text_field: str = "text") -> List[Dict[str, Any]]:
+    def deduplicate(self, candidates: list[dict[str, Any]], text_field: str = "text") -> list[dict[str, Any]]:
         """
         Remove near-duplicates using cosine similarity.
 
@@ -108,7 +108,7 @@ class MinHashDeduplicator:
         self.num_hashes = num_hashes
         self.ngram_size = ngram_size
 
-    def deduplicate(self, candidates: List[Dict[str, Any]], text_field: str = "text") -> List[Dict[str, Any]]:
+    def deduplicate(self, candidates: list[dict[str, Any]], text_field: str = "text") -> list[dict[str, Any]]:
         """
         Remove near-duplicates using MinHash signatures.
 
@@ -156,7 +156,7 @@ class MinHashDeduplicator:
 
         return [candidates[i] for i in range(n) if i not in to_remove]
 
-    def _compute_minhash(self, text: str) -> List[int]:
+    def _compute_minhash(self, text: str) -> list[int]:
         """Compute MinHash signature for text."""
         if not text.strip():
             return [0] * self.num_hashes
@@ -181,7 +181,7 @@ class MinHashDeduplicator:
 
         return signature
 
-    def _get_ngrams(self, text: str) -> Set[str]:
+    def _get_ngrams(self, text: str) -> set[str]:
         """Extract n-grams from text."""
         # Simple word-based n-grams
         text.split()
@@ -195,7 +195,7 @@ class MinHashDeduplicator:
 
         return ngrams
 
-    def _jaccard_similarity(self, sig1: List[int], sig2: List[int]) -> float:
+    def _jaccard_similarity(self, sig1: list[int], sig2: list[int]) -> float:
         """Compute Jaccard similarity from MinHash signatures."""
         if len(sig1) != len(sig2):
             return 0.0
@@ -210,7 +210,7 @@ class SimpleHashDeduplicator:
     def __init__(self, threshold: float = 1.0):
         self.threshold = threshold  # 1.0 = exact matches only
 
-    def deduplicate(self, candidates: List[Dict[str, Any]], text_field: str = "text") -> List[Dict[str, Any]]:
+    def deduplicate(self, candidates: list[dict[str, Any]], text_field: str = "text") -> list[dict[str, Any]]:
         """Remove exact duplicates using text hashing."""
         seen_hashes = set()
         unique_candidates = []
@@ -246,8 +246,8 @@ class NearDuplicateFilter:
             self.deduplicator = SimpleHashDeduplicator(threshold=1.0)
 
     def filter_duplicates(
-        self, candidates: List[Dict[str, Any]], text_field: str = "text", preserve_order: bool = True
-    ) -> List[Dict[str, Any]]:
+        self, candidates: list[dict[str, Any]], text_field: str = "text", preserve_order: bool = True
+    ) -> list[dict[str, Any]]:
         """
         Filter near-duplicates from candidates.
 
@@ -281,7 +281,7 @@ class NearDuplicateFilter:
         return filtered
 
 
-def create_deduplicator(config: Optional[Dict[str, Any]] = None) -> NearDuplicateFilter:
+def create_deduplicator(config: dict[str, Any] | None = None) -> NearDuplicateFilter:
     """Factory function to create a deduplicator from config."""
 
     if not config:
