@@ -31,16 +31,22 @@ else
   echo "ℹ️ aws CLI not found; will try local LLM fallback"
 fi
 
+# Choose python launcher (prefer uv-managed env)
+if command -v uv >/dev/null 2>&1; then
+  PY="uv run python"
+else
+  PY="python3"
+fi
+
 # Run evaluation
 if [ "$USE_BEDROCK" = "1" ]; then
   echo "🚀 Running stable Bedrock evaluation..."
-  python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
+  $PY scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
 else
   echo "🚀 Running stable local-LLM evaluation..."
-  python3 scripts/ragchecker_official_evaluation.py --use-local-llm --bypass-cli --stable
+  $PY scripts/ragchecker_official_evaluation.py --use-local-llm --bypass-cli --stable
 fi
 
 echo
 echo "📦 Results are written under: metrics/baseline_evaluations/"
 echo "🧭 SOP: 000_core/000_evaluation-system-entry-point.md"
-

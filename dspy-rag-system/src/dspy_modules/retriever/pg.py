@@ -23,6 +23,37 @@ def get_db_connection():
     return psycopg2.connect(dsn, cursor_factory=RealDictCursor)
 
 
+def fetch_doc_chunks_by_slug(doc_slug: str, limit: int = 12) -> List[Dict[str, Any]]:
+    """Prefetch top chunks from a specific document identified by slug.
+
+    The slug should be like '400_12_advanced-configurations'.
+    Returns rows compatible with fused results (including text_for_reader, score).
+    """
+    if not doc_slug:
+        return []
+    sql = """
+    SELECT
+      dc.chunk_id,
+      dc.filename,
+      d.file_path,
+      dc.embedding,
+      dc.embedding_text,
+      COALESCE(dc.embedding_text, dc.bm25_text, dc.content) AS text_for_reader,
+      100.0::float AS score
+    FROM document_chunks dc
+    LEFT JOIN documents d ON d.id = dc.document_id
+    WHERE lower(replace(coalesce(dc.filename,''), '.md','')) = %(slug)s
+       OR d.file_path ILIKE '%%' || %(slug)s || '%%'
+    ORDER BY dc.chunk_id
+    LIMIT %(limit)s
+    """
+    params = {"slug": doc_slug.lower(), "limit": int(limit)}
+    with get_db_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql, params)
+            return [dict(row) for row in cur.fetchall()]
+
+
 def _vec_expr() -> str:
     ops = (os.getenv("PGVECTOR_OPS", "cosine") or "cosine").lower()
     if ops == "l2":
@@ -87,6 +118,8 @@ def run_fused_query(
         dc.embedding,
         dc.embedding_text,
         dc.bm25_text,
+        dc.metadata->>'ingest_run_id' AS ingest_run_id,
+        dc.metadata->>'chunk_variant' AS chunk_variant,
         d.file_path,
         d.path_tsv
       FROM document_chunks dc
@@ -95,6 +128,8 @@ def run_fused_query(
     SELECT
       b.chunk_id,
       b.filename,
+      b.ingest_run_id,
+      b.chunk_variant,
       b.file_path,
       b.embedding,
       b.embedding_text,

@@ -16,8 +16,7 @@ def load_gold_cases(path: str | Path) -> List[GoldCase]:
             if not line.strip():
                 continue
             try:
-                obj = json.loads(line)
-                out.append(GoldCase.parse_obj(obj))
+                out.append(GoldCase.model_validate_json(line))
             except Exception as e:
                 raise ValueError(f"{p}:{i}: {e}")
     # uniqueness
@@ -27,6 +26,15 @@ def load_gold_cases(path: str | Path) -> List[GoldCase]:
             raise ValueError(f"Duplicate id detected: {c.id}")
         seen.add(c.id)
     return out
+
+
+def write_gold_cases(path: str | Path, cases: List[GoldCase]) -> None:
+    """Write gold cases to JSONL using stable Pydantic v2 serialization."""
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", encoding="utf-8") as f:
+        for c in cases:
+            f.write(c.model_dump_json(exclude_none=True) + "\n")
 
 
 def filter_cases(

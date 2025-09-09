@@ -29,13 +29,15 @@ def main():
     rows = list(csv.DictReader(QUEUE.open()))
     today = datetime.date.today()
 
-    to_delete = []
+    to_delete_set = set()
     for r in rows:
         if r.get("status") != "quarantined" or r.get("reinstated", "no") == "yes":
             continue
         fq = datetime.date.fromisoformat(r["first_quarantined_at"])
         if (today - fq).days >= args.days:
-            to_delete.append(r["file"])
+            to_delete_set.add(r["file"])
+
+    to_delete = sorted(to_delete_set)
 
     if not to_delete:
         print("Nothing to delete.")

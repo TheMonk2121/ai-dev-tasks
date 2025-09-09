@@ -17,6 +17,20 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+
+# Setup observability if available
+try:
+    from scripts.observability import (
+        get_logfire,
+        log_eval_metrics,
+        log_reader_span,
+        log_retrieval_span,
+        log_scoring_span,
+    )
+
+    logfire = get_logfire()
+except Exception:
+    logfire = None
 from typing import Any, Dict, List, Optional, Union
 
 # Bootstrap sys.path relative to this file so imports work regardless of CWD
@@ -32,6 +46,18 @@ except Exception:
 
 # Import profile configuration loader
 from scripts.lib.config_loader import resolve_config
+
+try:
+    from src.settings import load_eval_settings
+except Exception:
+    load_eval_settings = None  # type: ignore
+
+try:
+    # Pydantic DTOs for stable artifacts
+    from src.schemas.eval import EvaluationRun, RerankerConfig
+except Exception:
+    EvaluationRun = None  # type: ignore
+    RerankerConfig = None  # type: ignore
 
 # Apply safe PyTorch import patch first (before any PyTorch imports)
 try:
@@ -129,12 +155,19 @@ class DspyRagDriver:
             rp = importlib.import_module("dspy_modules.rag_pipeline")
             from dspy_modules.vector_store import HybridVectorStore
 
-            # Configure DSPy with language model
+            # Configure DSPy with language model and a stable completion adapter
             model_name = os.getenv("DSPY_MODEL", "anthropic.claude-3-haiku-20240307-v1:0")
-            dspy.configure(lm=dspy.LM(model_name))
+            try:
+                from dspy.adapters import CompletionAdapter  # type: ignore
+
+                dspy.configure(lm=dspy.LM(model_name), adapter=CompletionAdapter())
+            except Exception:
+                # Fallback: configure without explicit adapter (keeps previous behavior)
+                dspy.configure(lm=dspy.LM(model_name))
 
             # Initialize with proper retriever and database connection
-            db_connection = "postgresql://danieljacobs@localhost:5432/ai_agency"
+            # Respect POSTGRES_DSN if provided; fall back to a local default for dev
+            db_connection = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
             retriever = HybridVectorStore(db_connection)
             self.module = rp.RAGModule(retriever=retriever)
         except Exception as e:
@@ -144,7 +177,7 @@ class DspyRagDriver:
     def answer(self, question: str) -> dict:
         """Get answer from real DSPy RAG system."""
         t0 = time.time()
-        out = self.module.forward(question)  # Returns Dict[str, Any]
+        out = self.module(question)  # Returns Dict[str, Any]
         ans_text = out.get("answer", "") if isinstance(out, dict) else str(out)
         citations = out.get("citations", []) if isinstance(out, dict) else []
         snapshot = getattr(self.module, "_last_retrieval_snapshot", []) or []
@@ -502,6 +535,7 @@ class CleanRAGCheckerEvaluator:
         self, cases_file: str, outdir: str, use_bedrock: bool = False, reader=None, args=None
     ) -> Dict[str, Any]:
         """Run evaluation with real DSPy RAG system."""
+        start_wall = time.strftime("%Y-%m-%dT%H:%M:%S")
         print("📊 EVALUATION SUMMARY (CLEAN HARNESS)")
         print("=" * 60)
 
@@ -510,7 +544,8 @@ class CleanRAGCheckerEvaluator:
 
         # Hard gate: Stop synthetic fallback if real RAG is requested
         use_real = (
-            os.getenv("EVAL_DRIVER", "").lower() in ("dspy_rag", "dspy", "rag")
+            (load_eval_settings().EVAL_DRIVER.lower() in ("dspy_rag", "dspy", "rag") if load_eval_settings else False)
+            or os.getenv("EVAL_DRIVER", "").lower() in ("dspy_rag", "dspy", "rag")
             or os.getenv("RAGCHECKER_USE_REAL_RAG") == "1"
         )
         if use_real and tag != "dspy_rag":
@@ -591,6 +626,10 @@ class CleanRAGCheckerEvaluator:
                 retrieved_context = resp["retrieved_context"]
                 latency = resp["latency_sec"]
 
+                # Log retrieval span
+                if logfire:
+                    log_retrieval_span(logfire, query, len(retrieval_candidates), latency * 1000)
+
                 # Use extractive reader if available
                 if reader and READER_AVAILABLE:
                     tag = case.get("tag", "general")
@@ -598,8 +637,20 @@ class CleanRAGCheckerEvaluator:
                     # Tag-aware override example (ops-focused abstain is slightly stricter)
                     if tag in OPS_TAGS and hasattr(reader, "answerable_threshold"):
                         reader.answerable_threshold = max(reader.answerable_threshold, 0.12)
-                    out = reader.forward(question=query, passages=passages, tag=tag)
-                    response = out.get("answer", "NOT_ANSWERABLE")
+                    try:
+                        out = reader(question=query, passages=passages, tag=tag)
+                        response = out.get("answer", "NOT_ANSWERABLE")
+
+                        # Log reader span
+                        if logfire:
+                            log_reader_span(logfire, query, len(response), True)
+                    except Exception as e:
+                        print(f"⚠️ Reader invocation failed ({e}); falling back to generator answer")
+                        response = resp["answer"]
+
+                        # Log reader failure
+                        if logfire:
+                            log_reader_span(logfire, query, len(response), False)
                 else:
                     response = resp["answer"]
             else:
@@ -689,6 +740,11 @@ class CleanRAGCheckerEvaluator:
             total_precision += precision
             total_recall += recall
             total_f1 += f1_score
+
+            # Log scoring span
+            if logfire:
+                case_id = case.get("id", f"case_{i}")
+                log_scoring_span(logfire, case_id, precision, recall, f1_score)
             try:
                 total_faithfulness
             except NameError:
@@ -722,6 +778,69 @@ class CleanRAGCheckerEvaluator:
 
         print(f"✅ Evaluation complete. Results saved to: {out_file}")
         print(f"📊 Overall metrics: P={total_precision/n:.3f}, R={total_recall/n:.3f}, F1={total_f1/n:.3f}")
+
+        # Log overall metrics
+        if logfire:
+            log_eval_metrics(
+                logfire,
+                {
+                    "precision": total_precision / n,
+                    "recall": total_recall / n,
+                    "f1_score": total_f1 / n,
+                    "faithfulness": total_faithfulness / n,
+                    "total_cases": n,
+                },
+            )
+
+        # Emit summary artifact using Pydantic model (stable contract) if available
+        try:
+            if EvaluationRun is not None and RerankerConfig is not None:
+                # Build reranker config from env/optional RENV, falling back to defaults
+                rr_cfg = {
+                    "enable": (
+                        int(getattr(RENV, "RERANK_ENABLE", int(os.getenv("RERANK_ENABLE", "1")))) == 1
+                        if "RENV" in globals()
+                        else (os.getenv("RERANK_ENABLE", "1") == "1")
+                    ),
+                    "model": (
+                        getattr(RENV, "RERANKER_MODEL", os.getenv("RERANK_MODEL", "bge-reranker-base"))
+                        if "RENV" in globals()
+                        else os.getenv("RERANK_MODEL", "bge-reranker-base")
+                    ),
+                    "input_topk": (
+                        getattr(RENV, "RERANK_INPUT_TOPK", int(os.getenv("RERANK_POOL", "60")))
+                        if "RENV" in globals()
+                        else int(os.getenv("RERANK_POOL", "60"))
+                    ),
+                    "keep": (
+                        getattr(RENV, "RERANK_KEEP", int(os.getenv("RERANK_TOPN", "18")))
+                        if "RENV" in globals()
+                        else int(os.getenv("RERANK_TOPN", "18"))
+                    ),
+                    "batch": (
+                        getattr(RENV, "RERANK_BATCH", int(os.getenv("RERANK_BATCH", "8")))
+                        if "RENV" in globals()
+                        else int(os.getenv("RERANK_BATCH", "8"))
+                    ),
+                    "device": os.getenv("TORCH_DEVICE", "cpu"),
+                    "cache": bool(os.getenv("RERANK_CACHE_BACKEND", "1")),
+                }
+                erun = EvaluationRun(
+                    profile=os.getenv("EVAL_PROFILE", "default"),
+                    driver=tag,
+                    reranker=RerankerConfig(**rr_cfg),
+                    seed=int(os.getenv("SEED", str(getattr(args, "seed", 0) or 0))) or None,
+                    started_at=start_wall,
+                    finished_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
+                    overall=results.get("overall_metrics", {}),
+                    artifact_paths={
+                        "results_json": str(out_file),
+                    },
+                )
+                (Path(outdir) / "evaluation_run.json").write_text(erun.model_dump_json(indent=2, exclude_none=True))
+        except Exception as e:
+            # Do not fail the run if summary emission fails
+            print(f"⚠️ Failed to emit EvaluationRun summary: {e}")
 
         return results
 
@@ -758,7 +877,12 @@ def main():
         pass
 
     # Concurrency default from env; your executor can read this
-    os.environ.setdefault("EVAL_CONCURRENCY", resolved.get("EVAL_CONCURRENCY", "3"))
+    try:
+        _typed = load_eval_settings() if load_eval_settings else None
+        default_cc = str(getattr(_typed, "EVAL_CONCURRENCY", "") or resolved.get("EVAL_CONCURRENCY", "3"))
+    except Exception:
+        default_cc = resolved.get("EVAL_CONCURRENCY", "3")
+    os.environ.setdefault("EVAL_CONCURRENCY", default_cc)
     concurrency = int(os.environ["EVAL_CONCURRENCY"])
     print(f"▶ Using concurrency={concurrency}")
 

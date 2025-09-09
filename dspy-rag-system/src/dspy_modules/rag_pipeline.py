@@ -5,10 +5,20 @@ RAG Pipeline Module - Enforces context consumption and provides citations
 
 import hashlib
 import os
-from typing import Optional, Any, Dict, List
 import re
 import sys
 from collections import defaultdict
+from typing import Any, Dict, List, Optional
+
+try:
+    # Canonical DTOs for retrieval candidates
+    from pydantic import TypeAdapter
+
+    from src.schemas.eval import RetrievalCandidate
+
+    _RC_LIST = TypeAdapter(list[RetrievalCandidate])
+except Exception:
+    _RC_LIST = None  # type: ignore
 
 # Apply litellm compatibility shim before importing DSPy
 try:
@@ -248,7 +258,7 @@ def _rerank(query: str, candidates: list[dict], topn: int):
     except Exception:
         pass
 
-    enabled = (RENV.RERANK_ENABLE if RENV else (os.getenv("RERANK_ENABLE", "1") == "1"))
+    enabled = RENV.RERANK_ENABLE if RENV else (os.getenv("RERANK_ENABLE", "1") == "1")
     if not enabled:
         return candidates[:topn]
 
@@ -320,7 +330,7 @@ def _rerank_with_torch(query: str, candidates: list[dict], topn: int):
 
     try:
         # Use PyTorch reranker
-        batch = (RENV.RERANK_BATCH if RENV else int(os.getenv("RERANK_BATCH", "8")))
+        batch = RENV.RERANK_BATCH if RENV else int(os.getenv("RERANK_BATCH", "8"))
         reranked_results = torch_rerank(query, torch_candidates, topk_keep=topn, batch_size=batch)
 
         # Convert back to expected format
@@ -335,6 +345,7 @@ def _rerank_with_torch(query: str, candidates: list[dict], topn: int):
 
             if original_cand:
                 from typing import cast
+
                 d = cast(Dict[str, Any], _normalize_cand(original_cand))
                 d["score_ce"] = float(score)
                 reranked.append(d)
@@ -485,8 +496,8 @@ def _retrieve_with_fusion(retriever, query: str):
     K_TITLE = int(os.getenv("RETR_TOPK_TITLE", "80"))
     K_OTHER = int(os.getenv("RETR_TOPK_OTHER", "0"))
     RRF_K = int(os.getenv("RRF_K", "60"))
-    RERANK_POOL = (RENV.RERANK_INPUT_TOPK if RENV else int(os.getenv("RERANK_POOL", "60")))
-    RERANK_TOPN = (RENV.RERANK_KEEP if RENV else int(os.getenv("RERANK_TOPN", "18")))
+    RERANK_POOL = RENV.RERANK_INPUT_TOPK if RENV else int(os.getenv("RERANK_POOL", "60"))
+    RERANK_TOPN = RENV.RERANK_KEEP if RENV else int(os.getenv("RERANK_TOPN", "18"))
     CONTEXT_DOCS_MAX = int(os.getenv("CONTEXT_DOCS_MAX", "12"))
     KEEP_TAIL = int(os.getenv("FUSE_TAIL_KEEP", "0"))
 
@@ -647,16 +658,22 @@ def _retrieve_with_fusion(retriever, query: str):
     pool_seed: list = []
     seen_ids: set[str] = set()
     for it in shortlist:
+        if not isinstance(it, dict):
+            continue
         idv = _cand_id(it)
         if idv not in seen_ids:
             pool_seed.append(it)
             seen_ids.add(idv)
     for it in code_shortlist:
+        if not isinstance(it, dict):
+            continue
         idv = _cand_id(it)
         if idv not in seen_ids:
             pool_seed.append(it)
             seen_ids.add(idv)
     for it in fused:
+        if not isinstance(it, dict):
+            continue
         idv = _cand_id(it)
         if idv not in seen_ids:
             pool_seed.append(it)
@@ -868,10 +885,66 @@ class RAGModule(dspy.Module):
             ]
 
             self._last_retrieval_snapshot = snapshot_fp
+
+            # Build canonical RetrievalCandidate DTOs (validated) if schema available
+            try:
+                # Prepare raw candidate dicts matching RetrievalCandidate shape
+                def _route_for(src: str) -> str:
+                    s = (src or "").lower()
+                    if s in ("bm25", "keyword", "sparse"):
+                        return "bm25"
+                    if s in ("vec", "vector", "dense"):
+                        return "vector"
+                    if s in ("title", "section", "short"):
+                        return "title_trigram" if s == "title" else "trigram"
+                    return "hybrid"
+
+                raw_rcs = []
+                for idx, c in enumerate(candidates, start=1):
+                    chunk = {
+                        "id": str(c.get("doc_id") or c.get("id") or _sha10(c.get("text", ""))),
+                        "source": str(
+                            (c.get("meta", {}) or {}).get("filename")
+                            or c.get("filename")
+                            or c.get("file_path")
+                            or c.get("source")
+                            or ""
+                        ),
+                        "text": c.get("text") or c.get("bm25_text") or c.get("embedding_text") or "",
+                        "score": float(c.get("score_ce", c.get("score", 0.0))),
+                        "metadata": dict(c.get("meta", {}) or {}),
+                    }
+                    raw_rcs.append(
+                        {
+                            "query": str(question),
+                            "chunk": chunk,
+                            "rank": int(idx),
+                            "score": float(c.get("score_ce", c.get("score", 0.0))),
+                            "route": _route_for(str(c.get("source", c.get("src", "hybrid")))),
+                        }
+                    )
+
+                if _RC_LIST is not None:
+                    self._last_retrieval_candidates_dto = _RC_LIST.validate_python(raw_rcs)  # type: ignore
+                else:
+                    self._last_retrieval_candidates_dto = raw_rcs  # best-effort
+            except Exception:
+                self._last_retrieval_candidates_dto = []
             # Ensure used_contexts has proper text field mapping
             self.used_contexts = [
                 {
                     "doc_id": c.get("doc_id"),
+                    "ingest_run_id": (
+                        os.getenv("INGEST_RUN_ID")
+                        or c.get("ingest_run_id")
+                        or (c.get("meta", {}) or {}).get("ingest_run_id")
+                        or (c.get("fp", {}) or {}).get("run")
+                    ),
+                    "chunk_variant": (
+                        os.getenv("CHUNK_VARIANT")
+                        or c.get("chunk_variant")
+                        or (c.get("meta", {}) or {}).get("chunk_variant")
+                    ),
                     "filename": (c.get("meta", {}) or {}).get("filename")
                     or c.get("filename")
                     or c.get("src")
@@ -881,9 +954,7 @@ class RAGModule(dspy.Module):
                     "score": float(c.get("score_ce", c.get("score", 0.0))),
                     "source": c.get("source", "fusion"),
                     "meta": c.get("meta", {}),
-                    "fp": _fp(c),  # Add fingerprint to used_contexts too
-                    # Also add run ID at top level for assertion
-                    "ingest_run_id": c.get("meta", {}).get("ingest_run_id"),
+                    "fp": _fp(c),
                 }
                 for c in candidates
             ]

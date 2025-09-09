@@ -1,7 +1,7 @@
 
 # Core Evaluation Suite
 
-> SSOT: `300_core` • Generated 2025-09-09T04:21:29.309531+00:00 • Commit: 3032316e6ed59d50f87fbdc5d1041cbe2ba75519 (test-signal-implementation)
+> SSOT: `300_core` • Generated 2025-09-09T07:51:27.179295+00:00 • Commit: f8d03ee7f2e5cfc334e4f9a7b7b08055d900484d (test-signal-implementation)
 >
 > Suite created: 2025-09-08T19:57:59-05:00 • updated: 2025-09-08T19:57:59-05:00
 
@@ -38,7 +38,7 @@ Confirms retrieval/rerank/chunk config (450/10%/J=0.8/prefix-A).
 **Timestamps**
 - **Created**: 2025-09-08T23:07:29.017097
 - **Updated**: 2025-09-09T00:55:48.551858+00:00
-- **Last run**: 2025-09-08T18:17:39
+- **Last run**: 2025-09-09T02:51:26
 
 
 **Gates**
@@ -57,7 +57,7 @@ python -m evals_300.tools.run --suite 300_core --pass retrieval_only_baseline
 
 **Latest Results**
 ```json
-{'precision': 0.09648873348208593, 'recall': 0.0627661633300274, 'f1': 0.06312759563341493, 'faithfulness': 0.2294817210181416, 'artifact_path': 'metrics/history/retrieval_only_baseline_1757373457/ragchecker_clean_evaluation_20250908_181738.json', 'timestamp': '2025-09-08T18:17:39'}
+{'precision': 0.0, 'recall': 0.0, 'f1': 0.0, 'faithfulness': 0.0032499751352009095, 'artifact_path': 'metrics/history/retrieval_only_baseline_1757404273/ragchecker_clean_evaluation_20250909_025126.json', 'timestamp': '2025-09-09T02:51:26'}
 ```
 
 

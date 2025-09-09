@@ -5,14 +5,15 @@ Integrates with the existing retriever configuration system.
 """
 
 import os
-try:
-    from src.rag import reranker_env as RENV
-except Exception:
-    RENV = None
 from functools import lru_cache
 from typing import Any, Dict, Optional
 
 import yaml
+
+try:
+    from src.rag import reranker_env as RENV
+except Exception:
+    RENV = None
 
 DEFAULT_RERANKER_CONFIG = {
     "enabled": False,

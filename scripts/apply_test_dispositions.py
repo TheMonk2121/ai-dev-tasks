@@ -47,6 +47,14 @@ def main():
     assert CSV_IN.exists(), f"Missing {CSV_IN}"
     LEG_DIR.mkdir(parents=True, exist_ok=True)
     sentinels = load_sentinels()
+    # Warn on missing sentinels to keep list fresh
+    missing = [s for s in sentinels if not pathlib.Path(s).exists()]
+    if missing:
+        print("⚠️  Sentinel entries not found on disk (please update tests/sentinels.yml):")
+        for s in missing[:10]:
+            print("   -", s)
+        if len(missing) > 10:
+            print(f"   ... and {len(missing)-10} more")
 
     rows = list(csv.DictReader(CSV_IN.open()))
     moves = []
@@ -103,10 +111,12 @@ def main():
     new_queue = []
     if QUEUE.exists():
         new_queue.extend(list(csv.DictReader(QUEUE.open())))
-    existing = {(r["file"], r.get("status", "")) for r in new_queue}
+    # Track existing quarantined files to avoid duplicates across runs
+    existing_quarantined_files = {r["file"] for r in new_queue if r.get("status") == "quarantined"}
 
     for src, dest, reason, score in moves:
-        if (dest, "quarantined") in existing:
+        # Avoid adding more than one row per destination file
+        if dest in existing_quarantined_files:
             continue
         new_queue.append(
             {
@@ -119,9 +129,20 @@ def main():
                 "deleted_at": "",
             }
         )
+        existing_quarantined_files.add(dest)
 
     with QUEUE.open("w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(new_queue[0].keys()))
+        # Keep a stable column ordering
+        fieldnames = [
+            "file",
+            "status",
+            "first_quarantined_at",
+            "score",
+            "reason",
+            "reinstated",
+            "deleted_at",
+        ]
+        w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
         w.writerows(new_queue)
 

@@ -19,6 +19,16 @@ import uuid
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
 
+try:
+    # DTO validation for retrieval candidates
+    from pydantic import TypeAdapter
+
+    from src.schemas.eval import RetrievalCandidate
+
+    _RC_ADAPTER = TypeAdapter(list[RetrievalCandidate])
+except Exception:
+    _RC_ADAPTER = None  # type: ignore
+
 import numpy as np
 import torch
 
@@ -450,7 +460,7 @@ class HybridVectorStore(Module):
                         # rest limit (1)
                         limit,
                     )
-                    # Pre-execute guard on raw SQL
+                    # Pre-execute guard on raw SQL (uses params)
                     expected = len(re.findall(r"(?<!%)%s", sql))
                     actual = len(params)
                     assert expected == actual, f"Placeholders={expected}, args={actual}"
@@ -471,11 +481,41 @@ class HybridVectorStore(Module):
                             raise
                     rows = cur.fetchall()
 
-            return {
+            payload = {
                 "status": "success",
                 "search_type": "hybrid",
                 "results": list(rows),
             }
+
+            # Optional: validate candidate rows into DTOs for downstream if requested
+            try:
+                if _RC_ADAPTER is not None and os.getenv("VALIDATE_CANDIDATES", "0") == "1":
+                    raw = []
+                    for idx, r in enumerate(payload["results"], start=1):
+                        raw.append(
+                            {
+                                "query": str(query),
+                                "chunk": {
+                                    "id": f"{r.get('document_id')}:{r.get('chunk_index')}",
+                                    "source": str(r.get("file_path") or r.get("filename") or ""),
+                                    "text": str(r.get("content") or ""),
+                                    "score": float(r.get("score", 0.0)),
+                                    "metadata": {
+                                        "document_id": r.get("document_id"),
+                                        "chunk_index": r.get("chunk_index"),
+                                    },
+                                },
+                                "rank": idx,
+                                "score": float(r.get("score", 0.0)),
+                                "route": "hybrid",
+                            }
+                        )
+                    # Store validated snapshot for debugging/consumers
+                    self._last_candidates_validated = _RC_ADAPTER.validate_python(raw)
+            except Exception:
+                self._last_candidates_validated = []
+
+            return payload
 
         except Exception as e:
             LOG.error(f"Hybrid search failed: {e}")
@@ -668,6 +708,22 @@ class HybridVectorStore(Module):
                     # Trigram fallback if results are thin
                     if len(rows) < limit and os.getenv("BM25_TRIGRAM_FALLBACK", "1") == "1":
                         try:
+                            # Build fallback params explicitly to match placeholders:
+                            # SELECT similarity(..., %s)
+                            # WHERE dc.bm25_text % %s
+                            # {where_clause}  # may introduce a gating %s
+                            # ORDER BY similarity(..., %s)
+                            # LIMIT %s
+                            fb_params = [query, query]
+                            if "%s" in where_clause:
+                                # ordered_params layout: [query, query, (gating)?, query, limit]
+                                # pick gating if present
+                                try:
+                                    gating = ordered_params[2]
+                                    fb_params.append(gating)
+                                except Exception:
+                                    pass
+                            fb_params.extend([query, ordered_params[-1]])
                             cur.execute(
                                 f"""
                                 SELECT
@@ -697,7 +753,7 @@ class HybridVectorStore(Module):
                                 ORDER BY similarity(dc.bm25_text, %s) DESC
                                 LIMIT %s
                                 """,
-                                [query, query, query] + params[2:],  # Skip the first two query params
+                                fb_params,
                             )
                             fallback_rows = cur.fetchall()
                             # Merge results, avoiding duplicates
@@ -781,6 +837,15 @@ class HybridVectorStore(Module):
                     except Exception as e:
                         if "title_ts" in str(e).lower():
                             # Fallback to trigram similarity if title_ts column doesn't exist
+                            # Build fallback params explicitly (see note above)
+                            fb_params = [query, query]
+                            if "%s" in where_clause:
+                                try:
+                                    gating = ordered_params[2]
+                                    fb_params.append(gating)
+                                except Exception:
+                                    pass
+                            fb_params.extend([query, ordered_params[-1]])
                             cur.execute(
                                 f"""
                                 SELECT
@@ -810,7 +875,7 @@ class HybridVectorStore(Module):
                                 ORDER BY similarity(dc.file_path, %s) DESC
                                 LIMIT %s
                                 """,
-                                [query, query, query] + params[2:],
+                                fb_params,
                             )
                         else:
                             raise
@@ -947,6 +1012,8 @@ class HybridVectorStore(Module):
                             content,
                             line_start,
                             line_end,
+                            metadata->>'ingest_run_id' AS ingest_run_id,
+                            metadata->>'chunk_variant' AS chunk_variant,
                             ts_rank(to_tsvector('english', content), {ts_fn}('english', %s)) AS score_sparse
                         FROM document_chunks
                         WHERE to_tsvector('english', content) @@ {ts_fn}('english', %s)
@@ -970,6 +1037,8 @@ class HybridVectorStore(Module):
                         ),
                         "score_dense": 0.0,
                         "score_sparse": float(r["score_sparse"]),
+                        "ingest_run_id": r.get("ingest_run_id"),
+                        "chunk_variant": r.get("chunk_variant"),
                     }
                 )
             return out
@@ -1019,6 +1088,8 @@ class HybridVectorStore(Module):
                               COALESCE(dc.file_path, d.file_path) AS filename,
                               dc.section_title AS section_title,
                               dc.content AS content,
+                              dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                              dc.metadata->>'chunk_variant' AS chunk_variant,
                               ts_rank(dc.section_ts, websearch_to_tsquery('simple', %s)) AS score
                             FROM document_chunks dc
                             LEFT JOIN documents d ON d.id = dc.document_id
@@ -1041,6 +1112,8 @@ class HybridVectorStore(Module):
                                   COALESCE(dc.file_path, d.file_path) AS filename,
                                   dc.section_title AS section_title,
                                   dc.content AS content,
+                                  dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                                  dc.metadata->>'chunk_variant' AS chunk_variant,
                                   similarity(COALESCE(dc.section_title,''), %s) AS score
                                 FROM document_chunks dc
                                 LEFT JOIN documents d ON d.id = dc.document_id
@@ -1068,6 +1141,8 @@ class HybridVectorStore(Module):
                                   COALESCE(dc.file_path, d.file_path) AS filename,
                                   dc.section_title AS section_title,
                                   dc.content AS content,
+                                  dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                                  dc.metadata->>'chunk_variant' AS chunk_variant,
                                   similarity(COALESCE(dc.section_title,''), %s) AS score
                                 FROM document_chunks dc
                                 LEFT JOIN documents d ON d.id = dc.document_id
@@ -1130,6 +1205,8 @@ class HybridVectorStore(Module):
                           COALESCE(dc.filename, d.file_path) AS filename,
                           dc.section_title AS section_title,
                           dc.content AS content,
+                          dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                          dc.metadata->>'chunk_variant' AS chunk_variant,
                           ts_rank_cd(dc.short_tsv, websearch_to_tsquery('simple', %s)) AS score
                         FROM document_chunks dc
                         LEFT JOIN documents d ON d.id = dc.document_id
@@ -1159,6 +1236,8 @@ class HybridVectorStore(Module):
                               COALESCE(dc.filename, d.file_path) AS filename,
                               dc.section_title AS section_title,
                               dc.content AS content,
+                              dc.metadata->>'ingest_run_id' AS ingest_run_id,
+                              dc.metadata->>'chunk_variant' AS chunk_variant,
                               GREATEST(
                                 similarity(dc.section_title, %s),
                                 similarity(regexp_replace(coalesce(dc.filename,''), '^.*/', ''), %s)

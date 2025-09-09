@@ -11,8 +11,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from dspy_modules.reader.entrypoint import build_reader_context
 from dspy_modules.reader.span_picker import normalize_answer, pick_span
 from dspy_modules.retriever.limits import load_limits
-from dspy_modules.retriever.pg import run_fused_query
-from dspy_modules.retriever.query_rewrite import build_channel_queries
+from dspy_modules.retriever.pg import fetch_doc_chunks_by_slug, run_fused_query
+from dspy_modules.retriever.query_rewrite import build_channel_queries, parse_doc_hint
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 
 
@@ -69,6 +69,15 @@ class RAGAnswer(dspy.Module):
         limits = load_limits(tag)
         qs = build_channel_queries(question, tag)
         # For now, use empty vector - the retrieval system will handle this safely
+        # Detect slug hint and prefetch its chunks to guarantee coverage for filename queries
+        hint = parse_doc_hint(question)
+        rows_prefetch = []
+        if hint:
+            try:
+                rows_prefetch = fetch_doc_chunks_by_slug(hint, limit=int(os.getenv("HINT_PREFETCH_LIMIT", "8")))
+            except Exception:
+                rows_prefetch = []
+
         rows = run_fused_query(
             qs["short"],
             qs["title"],
@@ -78,6 +87,17 @@ class RAGAnswer(dspy.Module):
             k=limits["shortlist"],
             return_components=True,
         )
+        if rows_prefetch:
+            combined = rows_prefetch + rows
+            seen = set()
+            merged = []
+            for r in combined:
+                key = (r.get("chunk_id"), r.get("file_path"))
+                if key in seen:
+                    continue
+                seen.add(key)
+                merged.append(r)
+            rows = merged
         rows = mmr_rerank(
             rows, alpha=float(os.getenv("MMR_ALPHA", "0.85")), per_file_penalty=0.10, k=limits["shortlist"], tag=tag
         )

@@ -19,6 +19,26 @@ from .session_manager import SessionManager
 
 logger = logging.getLogger(__name__)
 
+# Minimal role-to-file mapping for tests expecting ROLE_FILES
+# Keys must include at least: coder, planner, implementer, researcher
+# Values are project-relative markdown paths.
+ROLE_FILES = {
+    "coder": [
+        "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md",
+        # Use existing docs focused on workflow, organization, and performance
+        "400_guides/400_code-criticality-guide.md",
+        "400_guides/400_testing-strategy-guide.md",
+        "400_guides/400_04_development-workflow-and-standards.md",
+        "400_guides/400_05_codebase-organization-patterns.md",
+        "400_guides/400_11_performance-optimization.md",
+        "100_memory/104_dspy-development-context.md",
+    ],
+    # Other roles present for interface compatibility
+    "planner": [],
+    "implementer": [],
+    "researcher": [],
+}
+
 
 @dataclass
 class RehydrationRequest:

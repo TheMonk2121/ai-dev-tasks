@@ -1,3 +1,14 @@
+import re
+
+# Match repo slugs like 400_12_advanced-configurations (with optional .md)
+SLUG_RE = re.compile(r"\b(?P<slug>\d{3}_\d{2}_[a-z0-9\-]+)(?:\.md)?\b", re.I)
+
+
+def parse_doc_hint(q: str) -> str | None:
+    m = SLUG_RE.search(q or "")
+    return m.group("slug").lower() if m else None
+
+
 #!/usr/bin/env python3
 """
 Query rewriting and channel-specific query building for RAG system.

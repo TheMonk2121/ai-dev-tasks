@@ -121,7 +121,7 @@ make test-profiles
 ```bash
 # Test each profile
 python3 scripts/lib/config_loader.py --profile real
-python3 scripts/lib/config_loader.py --profile gold  
+python3 scripts/lib/config_loader.py --profile gold
 python3 scripts/lib/config_loader.py --profile mock
 ```
 
@@ -234,7 +234,7 @@ feature = FusionFeatures(
 # Strict validation (CI/Production)
 export EVAL_STRICT_ARRAYS=1
 
-# Permissive mode (Development)  
+# Permissive mode (Development)
 export EVAL_STRICT_ARRAYS=0
 ```
 
@@ -253,7 +253,7 @@ feature = read_feature(jsonl_line)
 ### **Available Vector Types**
 
 - `Vector384` - all-MiniLM-L6-v2 (your default)
-- `Vector768` - all-mpnet-base-v2, all-distilroberta-v1  
+- `Vector768` - all-mpnet-base-v2, all-distilroberta-v1
 - `Vector1024` - intfloat/e5-large-v2
 - `Vector1536` - text-embedding-ada-002
 

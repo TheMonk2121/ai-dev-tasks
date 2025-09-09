@@ -12,24 +12,30 @@ import os
 import sys
 from pathlib import Path
 
+# Setup observability if available
+try:
+    from scripts.observability import get_logfire, init_observability
+
+    logfire = get_logfire()
+    try:
+        init_observability(service="ai-dev-tasks")
+    except Exception:
+        pass
+except Exception:
+    logfire = None
+
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
 
-
-def _strip_args(args, keys):
-    out = []
-    skip_next = False
-    for i, a in enumerate(args):
-        if skip_next:
-            skip_next = False
-            continue
-        if a in keys or any(a.startswith(k + "=") for k in keys):
-            if a in keys and i + 1 < len(args) and not args[i + 1].startswith("-"):
-                skip_next = True
-            continue
-        out.append(a)
-    return out
+    if "--help" in argv or "-h" in argv:
+        print("Usage: scripts/ragchecker_official_evaluation.py [--profile real|gold|mock] [args]")
+        print("")
+        print("Profiles:")
+        print("  real  - Baseline/tuning on real RAG")
+        print("  gold  - Real RAG + gold cases")
+        print("  mock  - Infra-only, synthetic")
+        return 0
 
     # Resolve profile and print banner if possible
     profile = None
@@ -44,14 +50,10 @@ def _strip_args(args, keys):
             # Surface clear error for profile misuse
             print(e)
             return 1
-    except Exception:
+    except Exception as e:
+        print(f"Warning: Could not load config loader: {e}")
+        # Keep going even if loader isn't available in this environment
         pass
-
-    if "--help" in argv or "-h" in argv:
-        print("Usage: scripts/ragchecker_official_evaluation.py [--profile real|gold|mock] [args]")
-        if profile:
-            print(f"Profile: {profile}")
-        return 0
 
     # When invoked by the SSOT runner, we receive an --outdir argument.
     # In that case, run the official evaluator inline and write results there.
@@ -95,7 +97,15 @@ def _strip_args(args, keys):
     print("[DEPRECATION] Use evals_300.tools.run; forwarding…")
 
     # Forward into SSOT runner programmatically (avoid CLI parsing conflicts) for standalone calls
-    from evals_300.tools.run import run as ssot_run
+    try:
+        # Ensure repository root is on sys.path so 'evals_300' is importable
+        repo_root = Path(__file__).resolve().parents[1]
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from evals_300.tools.run import run as ssot_run
+    except Exception as e:
+        print(f"Failed to import SSOT runner: {e}")
+        return 3
 
     suite = os.environ.get("EVAL_SUITE", "300_core")
     pass_id = os.environ.get("EVAL_PASS", "reranker_ablation_suite")
@@ -110,17 +120,50 @@ def _strip_args(args, keys):
     return 0
 
 
-# --- Minimal shim for compatibility ---
-class OfficialRAGCheckerEvaluator:
-    """Thin proxy to the experiment implementation of OfficialRAGCheckerEvaluator.
+def _strip_args(args, keys):
+    out = []
+    skip_next = False
+    for i, a in enumerate(args):
+        if skip_next:
+            skip_next = False
+            continue
+        if a in keys or any(a.startswith(k + "=") for k in keys):
+            if a in keys and i + 1 < len(args) and not args[i + 1].startswith("-"):
+                skip_next = True
+            continue
+        out.append(a)
+    return out
 
-    Loads the class from 300_experiments/300_testing-scripts/ragchecker_official_evaluation.py
-    at runtime and forwards the small subset of methods used by callers.
-    """
+
+# --- Minimal shims for compatibility ---
+# Expose RAGCheckerInput for tests; prefer experiment definition, else fallback dataclass
+try:
+    from importlib.machinery import SourceFileLoader as _SFL
+
+    _impl_path = Path("300_experiments/300_testing-scripts/ragchecker_official_evaluation.py").resolve()
+    _impl_mod = _SFL("ragchecker_official_eval_impl", str(_impl_path)).load_module()
+    RAGCheckerInput = getattr(_impl_mod, "RAGCheckerInput")  # type: ignore[assignment]
+except Exception:
+    from dataclasses import dataclass
+    from typing import List
+
+    @dataclass
+    class RAGCheckerInput:  # type: ignore[no-redef]
+        query_id: str
+        query: str
+        gt_answer: str
+        response: str
+        retrieved_context: List[str]
+
+
+class OfficialRAGCheckerEvaluator:
+    """Proxy to experiment implementation with broader interface forwarding used by tests."""
 
     def __init__(self):
         self._impl = None
         self._ensure_impl()
+        # Provide direct attribute expected by tests
+        self.metrics_dir = getattr(self._impl, "metrics_dir", Path("metrics/baseline_evaluations"))
 
     def _ensure_impl(self):
         if self._impl is not None:
@@ -134,7 +177,7 @@ class OfficialRAGCheckerEvaluator:
         except Exception as e:
             raise RuntimeError(f"Failed to load OfficialRAGCheckerEvaluator implementation: {e}")
 
-    # Forward the minimal interface used by callers
+    # Forward full interface used by tests; gracefully degrade if missing
     def create_official_test_cases(self):  # noqa: D401
         self._ensure_impl()
         return self._impl.create_official_test_cases()
@@ -142,6 +185,26 @@ class OfficialRAGCheckerEvaluator:
     def create_fallback_evaluation(self, data):  # noqa: D401
         self._ensure_impl()
         return self._impl.create_fallback_evaluation(data)
+
+    def get_memory_system_response(self, *args, **kwargs):
+        self._ensure_impl()
+        return self._impl.get_memory_system_response(*args, **kwargs)
+
+    def prepare_official_input_data(self, *args, **kwargs):
+        self._ensure_impl()
+        return self._impl.prepare_official_input_data(*args, **kwargs)
+
+    def save_official_input_data(self, *args, **kwargs):
+        self._ensure_impl()
+        return self._impl.save_official_input_data(*args, **kwargs)
+
+    def run_official_ragchecker_cli(self, *args, **kwargs):
+        self._ensure_impl()
+        return self._impl.run_official_ragchecker_cli(*args, **kwargs)
+
+    def run_official_evaluation(self, *args, **kwargs):
+        self._ensure_impl()
+        return self._impl.run_official_evaluation(*args, **kwargs)
 
 
 if __name__ == "__main__":
