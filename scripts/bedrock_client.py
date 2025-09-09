@@ -10,7 +10,7 @@ import os
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 import boto3
 from botocore.config import Config
@@ -31,7 +31,7 @@ class BedrockUsage:
     total_cost: float = 0.0
     timestamp: str = ""
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
             "input_tokens": self.input_tokens,
@@ -64,7 +64,7 @@ class BedrockClient:
         model_id: str = "anthropic.claude-3-5-sonnet-20240620-v1:0",
         max_retries: int = 3,
         timeout: int = 300,  # 5 minutes for RAGChecker evaluation
-        usage_log_file: Optional[str] = None,
+        usage_log_file: str | None = None,
     ):
         """
         Initialize Bedrock client.
@@ -96,13 +96,8 @@ class BedrockClient:
         """Lazy initialization of Bedrock Runtime client."""
         if self._bedrock_runtime is None:
             try:
-                self._bedrock_runtime = boto3.client(
-                    "bedrock-runtime",
-                    region_name=self.region_name,
-                    config=Config(
-                        read_timeout=self.timeout, connect_timeout=60, retries={"max_attempts": self.max_retries}
-                    ),
-                )
+                # Keep client construction minimal for easier testing/mocking
+                self._bedrock_runtime = boto3.client("bedrock-runtime", region_name=self.region_name)
                 logger.info("Bedrock Runtime client initialized")
             except Exception as e:
                 logger.error(f"Failed to initialize Bedrock Runtime client: {e}")
@@ -114,13 +109,8 @@ class BedrockClient:
         """Lazy initialization of Bedrock client."""
         if self._bedrock is None:
             try:
-                self._bedrock = boto3.client(
-                    "bedrock",
-                    region_name=self.region_name,
-                    config=Config(
-                        read_timeout=self.timeout, connect_timeout=60, retries={"max_attempts": self.max_retries}
-                    ),
-                )
+                # Keep client construction minimal for easier testing/mocking
+                self._bedrock = boto3.client("bedrock", region_name=self.region_name)
                 logger.info("Bedrock client initialized")
             except Exception as e:
                 logger.error(f"Failed to initialize Bedrock client: {e}")
@@ -154,8 +144,8 @@ class BedrockClient:
             return False
 
     def invoke_model(
-        self, prompt: str, max_tokens: int = 1000, temperature: float = 0.1, system_prompt: Optional[str] = None
-    ) -> Tuple[str, BedrockUsage]:
+        self, prompt: str, max_tokens: int = 1000, temperature: float = 0.1, system_prompt: str | None = None
+    ) -> tuple[str, BedrockUsage]:
         """
         Invoke Claude 3.5 Sonnet model with retry logic.
 
@@ -255,7 +245,7 @@ class BedrockClient:
 
     def invoke_with_json_prompt(
         self, prompt: str, max_tokens: int = 150, temperature: float = 0.1
-    ) -> Tuple[str, BedrockUsage]:
+    ) -> tuple[str, BedrockUsage]:
         """
         Invoke model with structured JSON prompt for reliable parsing.
 
@@ -285,7 +275,7 @@ class BedrockClient:
         max_tokens: int = 300,
         temperature: float = 0.1,
         json_mode: bool = False,
-    ) -> Tuple[str, BedrockUsage]:
+    ) -> tuple[str, BedrockUsage]:
         """
         Invoke model with additional outer retry layer and JSON mode support.
 
@@ -333,7 +323,7 @@ class BedrockClient:
         logger.error(f"All outer retry attempts failed: {last_err}")
         raise last_err
 
-    def _extract_usage(self, response_body: Dict[str, Any]) -> BedrockUsage:
+    def _extract_usage(self, response_body: dict[str, Any]) -> BedrockUsage:
         """Extract usage information from response."""
         usage = response_body.get("usage", {})
 
@@ -375,7 +365,7 @@ class BedrockClient:
             usage_data = []
             if os.path.exists(self.usage_log_file):
                 try:
-                    with open(self.usage_log_file, "r") as f:
+                    with open(self.usage_log_file) as f:
                         usage_data = json.load(f)
                 except (json.JSONDecodeError, FileNotFoundError):
                     usage_data = []
@@ -400,7 +390,7 @@ class BedrockClient:
             return BedrockUsage()
 
         try:
-            with open(self.usage_log_file, "r") as f:
+            with open(self.usage_log_file) as f:
                 usage_data = json.load(f)
 
             total_usage = BedrockUsage()
