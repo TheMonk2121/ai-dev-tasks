@@ -13,7 +13,7 @@ import argparse
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 def get_active_worklogs() -> list[str]:
