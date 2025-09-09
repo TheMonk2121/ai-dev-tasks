@@ -6,7 +6,6 @@ Tests different overlap thresholds on dev set and reports best F1 per tag.
 import json
 import os
 import sys
-from typing import Dict, List
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
@@ -33,7 +32,7 @@ def token_overlap(a, b):
     return len(A & B) / max(1, len(A))
 
 
-def calculate_f1(predictions: List[str], gold_answers: List[List[str]]) -> float:
+def calculate_f1(predictions: list[str], gold_answers: list[list[str]]) -> float:
     """Calculate micro F1 score."""
     if not predictions or not gold_answers:
         return 0.0
@@ -57,7 +56,7 @@ def calculate_f1(predictions: List[str], gold_answers: List[List[str]]) -> float
     return f1
 
 
-def test_threshold(threshold: float, cases: List[Dict], tag: str) -> float:
+def test_threshold(threshold: float, cases: list[dict], tag: str) -> float:
     """Test a specific threshold on cases for a given tag."""
     predictions = []
     gold_answers = []
