@@ -2,13 +2,12 @@ from __future__ import annotations
 import os
 import json
 from pathlib import Path
-from typing import Dict, List
 
 from src.rag import reranker_env as RENV
 
 
-def load_layer_file(path: str) -> Dict[str, str]:
-    out: Dict[str, str] = {}
+def load_layer_file(path: str) -> dict[str, str]:
+    out: dict[str, str] = {}
     text = Path(path).read_text(encoding="utf-8")
     for line in text.splitlines():
         line = line.strip()
@@ -19,8 +18,8 @@ def load_layer_file(path: str) -> Dict[str, str]:
     return out
 
 
-def compose_layers(layer_paths: List[str]) -> Dict[str, str]:
-    env: Dict[str, str] = {}
+def compose_layers(layer_paths: list[str]) -> dict[str, str]:
+    env: dict[str, str] = {}
     for p in layer_paths:
         env.update(load_layer_file(p))
     # CLI / os.environ wins over layers; explicit precedence for known prefixes
@@ -30,7 +29,7 @@ def compose_layers(layer_paths: List[str]) -> Dict[str, str]:
     return env
 
 
-def effective_rerank_config() -> Dict[str, object]:
+def effective_rerank_config() -> dict[str, object]:
     # Always read through shim so legacy/canonical names are normalized
     return {
         "enable": int(getattr(RENV, "RERANK_ENABLE", False)),
@@ -41,4 +40,3 @@ def effective_rerank_config() -> Dict[str, object]:
         "device": getattr(RENV, "TORCH_DEVICE", None),
         "cache": getattr(RENV, "RERANK_CACHE_BACKEND", None),
     }
-
