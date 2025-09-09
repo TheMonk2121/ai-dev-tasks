@@ -19,8 +19,19 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-# Add scripts to path for litellm compatibility
-sys.path.insert(0, "scripts")
+# Bootstrap sys.path relative to this file so imports work regardless of CWD
+try:
+    _ROOT = Path(__file__).resolve().parents[1]  # repository root
+    if str(_ROOT) not in sys.path:
+        sys.path.insert(0, str(_ROOT))
+    _DSPY_SRC = _ROOT / "dspy-rag-system" / "src"
+    if _DSPY_SRC.exists() and str(_DSPY_SRC) not in sys.path:
+        sys.path.insert(0, str(_DSPY_SRC))
+except Exception:
+    pass
+
+# Import profile configuration loader
+from scripts.lib.config_loader import resolve_config
 
 # Apply safe PyTorch import patch first (before any PyTorch imports)
 try:
@@ -37,7 +48,7 @@ try:
 except ImportError:
     pass
 
-# Add DSPy RAG system to path
+# Add DSPy RAG system to path (env override still respected)
 dspy_rag_path = os.getenv("DSPY_RAG_PATH", "dspy-rag-system/src")
 if dspy_rag_path and dspy_rag_path not in sys.path:
     sys.path.insert(0, dspy_rag_path)
@@ -105,7 +116,6 @@ class DspyRagDriver:
 
         # Apply litellm compatibility shim
         try:
-            sys.path.insert(0, "scripts")
             from litellm_compatibility_shim import patch_litellm_imports
 
             patch_litellm_imports()
@@ -488,7 +498,9 @@ class CleanRAGCheckerEvaluator:
             return len(response_words.intersection(gt_words)) / len(gt_words)
         return 0.0
 
-    def run_evaluation(self, cases_file: str, outdir: str, use_bedrock: bool = False, reader=None, args=None) -> Dict[str, Any]:
+    def run_evaluation(
+        self, cases_file: str, outdir: str, use_bedrock: bool = False, reader=None, args=None
+    ) -> Dict[str, Any]:
         """Run evaluation with real DSPy RAG system."""
         print("📊 EVALUATION SUMMARY (CLEAN HARNESS)")
         print("=" * 60)
@@ -543,7 +555,7 @@ class CleanRAGCheckerEvaluator:
                 )
             else:
                 # Direct filtering
-                tags = (gold_tags.split(",") if isinstance(gold_tags, str) and gold_tags else None)
+                tags = gold_tags.split(",") if isinstance(gold_tags, str) and gold_tags else None
                 cases = filter_cases(cases, include_tags=tags, mode=gold_mode, size=gold_size, seed=seed)
 
             # Convert GoldCase objects to dict format for compatibility
@@ -734,6 +746,22 @@ def _build_reader(args):
 
 def main():
     """Main entry point."""
+    # Resolve profile + env and refuse foot-guns up front
+    profile, resolved = resolve_config()
+
+    # Optional: branch guard (block mock on main)
+    try:
+        branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).decode().strip()
+        if branch == "main" and profile == "mock":
+            raise SystemExit("❌ Refusing to run mock profile on main branch.")
+    except Exception:
+        pass
+
+    # Concurrency default from env; your executor can read this
+    os.environ.setdefault("EVAL_CONCURRENCY", resolved.get("EVAL_CONCURRENCY", "3"))
+    concurrency = int(os.environ["EVAL_CONCURRENCY"])
+    print(f"▶ Using concurrency={concurrency}")
+
     parser = argparse.ArgumentParser(description="Clean RAGChecker Evaluation Harness")
     parser.add_argument("--cases", help="Path to JSONL test cases file (legacy)")
     parser.add_argument("--gold-file", default="evals/gold/v1/gold_cases.jsonl", help="Path to gold cases file")
@@ -761,6 +789,53 @@ def main():
 
     evaluator = CleanRAGCheckerEvaluator()
     results = evaluator.run_evaluation(args.cases, args.outdir, args.use_bedrock, reader=reader, args=args)
+
+    # After computing final scores, create profile-aware output directory
+    from datetime import datetime
+
+    # Extract metrics from results
+    overall_metrics = results.get("overall_metrics", {})
+    f1_micro = overall_metrics.get("f1", 0.0)
+    precision_micro = overall_metrics.get("precision", 0.0)
+    recall_micro = overall_metrics.get("recall", 0.0)
+
+    # Create profile-aware run tag
+    run_tag = (
+        f"{datetime.now():%Y%m%d_%H%M%S}"
+        f"__{profile}"
+        f"__driver-{os.environ.get('EVAL_DRIVER', '?')}"
+        f"__f1-{f1_micro:.3f}__p-{precision_micro:.3f}__r-{recall_micro:.3f}"
+    )
+
+    # Create new output directory with profile information
+    profile_outdir = Path("metrics") / "runs" / run_tag
+    profile_outdir.mkdir(parents=True, exist_ok=True)
+
+    # Write provenance information
+    provenance = {
+        "profile": profile,
+        "scores": {"micro": {"f1": f1_micro, "precision": precision_micro, "recall": recall_micro}},
+        "env": {
+            "EVAL_DRIVER": os.environ.get("EVAL_DRIVER"),
+            "RAGCHECKER_USE_REAL_RAG": os.environ.get("RAGCHECKER_USE_REAL_RAG"),
+            "POSTGRES_DSN": os.environ.get("POSTGRES_DSN", "<unset>")[:32] + "…",  # redact
+            "EVAL_CONCURRENCY": os.environ.get("EVAL_CONCURRENCY"),
+        },
+        "timestamp": datetime.now().isoformat(),
+        "original_outdir": args.outdir,
+    }
+
+    (profile_outdir / "summary.json").write_text(json.dumps(provenance, indent=2))
+
+    # Copy original results to profile directory
+    original_results_file = Path(args.outdir) / "ragchecker_clean_evaluation_results.json"
+    if original_results_file.exists():
+        import shutil
+
+        shutil.copy2(original_results_file, profile_outdir / "evaluation_results.json")
+
+    print(f"📦 Profile artifacts → {profile_outdir}")
+    print(f"📦 Original artifacts → {args.outdir}")
 
     return results
 
