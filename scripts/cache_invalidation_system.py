@@ -21,7 +21,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -73,7 +73,7 @@ class InvalidationConfig:
 class CacheInvalidationSystem:
     """Cache invalidation system with multiple strategies"""
 
-    def __init__(self, database_url: Optional[str] = None, config: Optional[InvalidationConfig] = None):
+    def __init__(self, database_url: str | None = None, config: InvalidationConfig | None = None):
         """Initialize cache invalidation system"""
         self.database_url = database_url or get_database_url()
         self.config = config or InvalidationConfig()
@@ -124,7 +124,7 @@ class CacheInvalidationSystem:
             self.connection.close()
         logger.info("Database connection closed")
 
-    def get_cache_statistics(self) -> Dict[str, Any]:
+    def get_cache_statistics(self) -> dict[str, Any]:
         """Get current cache statistics"""
         try:
             # Get total cache entries
@@ -219,7 +219,7 @@ class CacheInvalidationSystem:
             self.connection.rollback()
             return 0
 
-    def invalidate_by_similarity_threshold(self, threshold: Optional[float] = None) -> int:
+    def invalidate_by_similarity_threshold(self, threshold: float | None = None) -> int:
         """Invalidate cache entries below similarity threshold"""
         try:
             similarity_threshold = threshold or self.config.similarity_threshold
@@ -322,7 +322,7 @@ class CacheInvalidationSystem:
             self.connection.rollback()
             return 0
 
-    def manual_invalidation(self, entry_ids: List[int]) -> int:
+    def manual_invalidation(self, entry_ids: list[int]) -> int:
         """Manually invalidate specific cache entries"""
         try:
             if not entry_ids:
@@ -356,7 +356,7 @@ class CacheInvalidationSystem:
             self.connection.rollback()
             return 0
 
-    def cleanup_cache(self) -> Dict[str, Any]:
+    def cleanup_cache(self) -> dict[str, Any]:
         """Perform comprehensive cache cleanup"""
         try:
             logger.info("Starting comprehensive cache cleanup")
@@ -401,7 +401,7 @@ class CacheInvalidationSystem:
             logger.error(f"Error during cache cleanup: {e}")
             return {}
 
-    def _calculate_cache_hit_rate(self, stats: Dict[str, Any]) -> float:
+    def _calculate_cache_hit_rate(self, stats: dict[str, Any]) -> float:
         """Calculate cache hit rate from statistics"""
         total_entries = stats.get("total_entries", 0)
         cache_hits = stats.get("cache_hits", 0)
@@ -443,7 +443,7 @@ class CacheInvalidationSystem:
                 logger.error(f"Error in background cleanup loop: {e}")
                 time.sleep(60)  # Wait 1 minute before retrying
 
-    def get_invalidation_report(self) -> Dict[str, Any]:
+    def get_invalidation_report(self) -> dict[str, Any]:
         """Generate comprehensive invalidation report"""
         try:
             current_stats = self.get_cache_statistics()
@@ -467,7 +467,7 @@ class CacheInvalidationSystem:
             logger.error(f"Error generating invalidation report: {e}")
             return {}
 
-    def _generate_recommendations(self, stats: Dict[str, Any]) -> List[str]:
+    def _generate_recommendations(self, stats: dict[str, Any]) -> list[str]:
         """Generate recommendations based on current cache statistics"""
         recommendations = []
 
