@@ -85,6 +85,36 @@ uv run python scripts/single_doorway.py generate "Add user authentication system
 # ✅ Archives with context + lessons learned
 ```
 
+## 🔄 Implementation Context
+
+### Recent Major Features (December 2024)
+
+**Test Signal System Implementation** - Complete test analysis and prioritization system:
+- **Coverage Analysis**: Per-test coverage contexts with pytest-cov integration
+- **Test Scoring**: Multi-factor scoring based on uniqueness, failure rate, churn, complexity
+- **Decision Classification**: Automated keep/quarantine/retire recommendations
+- **Nightly Automation**: CI workflow for continuous test signal collection
+- **LSH Clustering**: Redundant test detection using datasketch
+- **Self-Describing Summaries**: Reranker config logging in evaluation runs
+
+**Key Files Added:**
+- `.coveragerc` - Branch coverage + parallel runs configuration
+- `pytest.ini` - Test markers (legacy, critical, slow, flaky)
+- `scripts/test_signal_report.py` - Comprehensive test analysis engine
+- `.github/workflows/ci-nightly-test-signal.yml` - Automated nightly collection
+- `metrics/README.md` - Test signal interpretation guide
+
+**Integration Points:**
+- `evals_300/tools/run.py` - Enhanced with --out, --seed, --concurrency flags
+- `src/config/resolve.py` - Self-describing reranker configuration logging
+- Test pipeline supports 8,335+ tests with data-driven prioritization
+
+### Current Development Focus
+- **RAGChecker Baseline Compliance**: Precision ≥0.20, Recall ≥0.45, F1 ≥0.22
+- **Test Signal Optimization**: PR lanes workflow (smoke + impact + critical)
+- **Flake Sampling**: Persistent flakiness tracking and scoring
+- **Mutation Testing**: File-level mutation score integration
+
 ## 📚 Documentation Strategy
 
 Our documentation follows a structured 00-12 system designed for different user needs:

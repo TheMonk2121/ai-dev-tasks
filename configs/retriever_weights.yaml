@@ -6,6 +6,12 @@ default:
   w_vec: 1.1
   adjacency_db: 0
   per_file_cap: 4
+  # Reranker configuration
+  reranker_enabled: false
+  reranker_model: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+  reranker_input_topk: 50
+  reranker_keep: 12
+  reranker_batch: 8
 tags:
   db_workflows:
     w_path: 2.2

@@ -25,6 +25,10 @@ from typing import Any, Dict, List, Optional, TypedDict, Union
 
 from pydantic import BaseModel, Field, TypeAdapter, field_validator
 
+# Use canonical schemas
+from src.schemas.eval import EvaluationResult, GoldCase, Mode
+from src.utils.gold_loader import load_gold_cases, stratified_sample
+
 
 # Type definitions for evaluation items
 class EvalItem(TypedDict, total=False):

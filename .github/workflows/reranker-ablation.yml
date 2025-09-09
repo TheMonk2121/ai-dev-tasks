@@ -1,0 +1,77 @@
+name: Reranker Ablation
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main ]
+
+jobs:
+  reranker-ablation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      HF_HOME: ${{ runner.temp }}/hf
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: Cache HuggingFace
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.HF_HOME }}
+          key: ${{ runner.os }}-hf-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: ${{ runner.os }}-hf-
+
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt
+          pip install jinja2 typer
+
+      - name: OFF pass (reranker disabled)
+        run: |
+          python -m evals_300.tools.run \
+            --suite 300_core \
+            --pass reranker_ablation_off \
+            --out metrics/rerank_off \
+            --seed 42 \
+            --concurrency 3
+
+      - name: ON pass (reranker enabled)
+        run: |
+          python -m evals_300.tools.run \
+            --suite 300_core \
+            --pass reranker_ablation_on \
+            --out metrics/rerank_on \
+            --seed 42 \
+            --concurrency 3
+
+      - name: Gate uplift (Δ micro-F1 ≥ 0.01)
+        run: |
+          python scripts/ci_check_reranker_uplift.py \
+            --threshold 0.01 \
+            metrics/rerank_off/summary.json \
+            metrics/rerank_on/summary.json
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reranker-ablation-${{ github.sha }}
+          path: |
+            metrics/rerank_off/**
+            metrics/rerank_on/**
+

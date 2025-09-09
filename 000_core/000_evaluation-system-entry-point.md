@@ -9,13 +9,28 @@
 
 ## 🚀 **Quick Start (For All Agents)**
 
+### **🚨 NEW: Code-as-SSOT Evaluation System (Recommended)**
+```bash
+# Generate evaluation documentation and artifacts
+python -m evals_300.tools.gen
+
+# Run specific evaluation passes
+python -m evals_300.tools.run --suite 300_core --pass retrieval_only_baseline
+python -m evals_300.tools.run --suite 300_core --pass deterministic_few_shot
+
+# View generated documentation
+cat evals_300/_generated/300_core.md
+```
+
+**This is the NEW standardized evaluation system with auto-generated documentation and configuration management.**
+
 ### **📋 Standard Evaluation Command (With Lessons Engine)**
 ```bash
 source throttle_free_eval.sh
 python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable --lessons-mode advisory --lessons-scope profile --lessons-window 5
 ```
 
-**This is the ONE command every agent should use for evaluations with automatic lesson learning.**
+**This is the legacy command for evaluations with automatic lesson learning.**
 
 ### **📋 Legacy Evaluation Command (Without Lessons)**
 ```bash

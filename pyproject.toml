@@ -71,6 +71,9 @@ dependencies = [
     "radon>=5.1.0",
     "mccabe>=0.7.0",
     "boto3>=1.40.25",
+    "pytest-cov>=6.2.1",
+    "pytest-xdist>=3.8.0",
+    "coverage>=7.10.6",
 ]
 
 [project.optional-dependencies]

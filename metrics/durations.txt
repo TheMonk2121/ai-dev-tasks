@@ -1,0 +1,4 @@
+slowest durations:
+0.15s call     test_mcp_for_codex.py::test_mcp_connection
+0.12s call     test_mcp_for_codex.py::test_project_context_tool
+0.08s call     test_mcp_for_codex.py::test_precision_eval_tool

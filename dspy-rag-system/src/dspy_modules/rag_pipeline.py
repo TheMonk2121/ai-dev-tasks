@@ -5,6 +5,7 @@ RAG Pipeline Module - Enforces context consumption and provides citations
 
 import hashlib
 import os
+from typing import Optional
 import re
 import sys
 from collections import defaultdict
@@ -192,15 +193,30 @@ def _rrf_fuse(ranklists: dict, k: int = 60, weights: dict | None = None):
 _RERANKER = None
 
 
-def _load_reranker(model_name: str | None = None):
+def _load_reranker(model_name: Optional[str] = None):
     global _RERANKER
     if _RERANKER is not None:
         return _RERANKER
-    model_name = model_name or os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base")
+
+    # Try to load the new PyTorch reranker first
+    try:
+        from .retriever.reranker_torch import _model, is_available
+
+        if is_available():
+            _RERANKER = _model()
+            if _RERANKER is not None:
+                print("✅ Loaded PyTorch reranker")
+                return _RERANKER
+    except Exception as e:
+        print(f"⚠️ PyTorch reranker load failed ({e}); trying legacy reranker.")
+
+    # Fallback to legacy reranker
+    model_name = model_name or (os.getenv("RERANK_MODEL", "BAAI/bge-reranker-base"))
     try:
         from sentence_transformers import CrossEncoder
 
         _RERANKER = CrossEncoder(model_name, trust_remote_code=True)
+        print("✅ Loaded legacy reranker")
     except Exception as e:
         print(f"⚠️ Reranker load failed ({e}); continuing without reranking.")
         _RERANKER = None
@@ -208,8 +224,111 @@ def _load_reranker(model_name: str | None = None):
 
 
 def _rerank(query: str, candidates: list[dict], topn: int):
-    if os.getenv("RERANK_ENABLE", "1") != "1":
+    # Log resolved config once per run
+    try:
+        (RENV and RENV.log_config(logger_print=print))
+    except Exception:
+        pass
+
+    enabled = (RENV.RERANK_ENABLE if RENV else (os.getenv("RERANK_ENABLE", "1") == "1"))
+    if not enabled:
         return candidates[:topn]
+
+    # Try to use the new PyTorch reranker first
+    try:
+        from .retriever.reranker_torch import is_available
+
+        if is_available():
+            return _rerank_with_torch(query, candidates, topn)
+    except Exception as e:
+        print(f"⚠️ PyTorch reranker failed ({e}); trying legacy reranker.")
+
+    # Fallback to legacy reranker
+    return _rerank_legacy(query, candidates, topn)
+
+
+def _rerank_with_torch(query: str, candidates: list[dict], topn: int):
+    """Rerank using the new PyTorch reranker"""
+    from .retriever.reranker_torch import rerank as torch_rerank
+
+    def _get_meta(cand) -> tuple[str, str, str]:
+        # returns (filename, section_title, text)
+        if isinstance(cand, dict):
+            fn = cand.get("filename") or (cand.get("meta", {}) or {}).get("filename", "") or ""
+            sec = (cand.get("meta", {}) or {}).get("section_title", "") or cand.get("section_title", "") or ""
+            txt = cand.get("text") or cand.get("content") or ""
+            return str(fn), str(sec), str(txt)
+        if isinstance(cand, tuple):
+            # Expect (id, score, text, meta)
+            txt = ""
+            meta = {}
+            try:
+                if len(cand) >= 3:
+                    txt = str(cand[2] or "")
+                if len(cand) >= 4 and isinstance(cand[3], dict):
+                    meta = cand[3]
+            except Exception:
+                pass
+            fn = (meta.get("filename") or "") if isinstance(meta, dict) else ""
+            sec = (meta.get("section_title") or "") if isinstance(meta, dict) else ""
+            return fn, sec, txt
+        return "", "", str(cand)
+
+    # Prepare candidates for PyTorch reranker
+    torch_candidates = []
+    for c in candidates:
+        fn, sec, txt = _get_meta(c)
+        # Temporary shim for section
+        if not sec and txt:
+            m = re.search(r"^(#{1,6})\s+(.+)$", txt, re.MULTILINE)
+            if m:
+                sec = m.group(2).strip()
+            else:
+                for ln in txt.splitlines():
+                    ln = ln.strip()
+                    if ln:
+                        sec = ln[:120]
+                        break
+        prefix = ""
+        if fn:
+            prefix += f"FILE: {fn}\n"
+        if sec:
+            prefix += f"SECTION: {sec}\n"
+        text_with_meta = prefix + (txt or "")
+
+        # Get chunk ID
+        chunk_id = _cand_id(c)
+        torch_candidates.append((chunk_id, text_with_meta))
+
+    try:
+        # Use PyTorch reranker
+        batch = (RENV.RERANK_BATCH if RENV else int(os.getenv("RERANK_BATCH", "8")))
+        reranked_results = torch_rerank(query, torch_candidates, topk_keep=topn, batch_size=batch)
+
+        # Convert back to expected format
+        reranked = []
+        for chunk_id, text, score in reranked_results:
+            # Find original candidate
+            original_cand = None
+            for c in candidates:
+                if _cand_id(c) == chunk_id:
+                    original_cand = c
+                    break
+
+            if original_cand:
+                d = _normalize_cand(original_cand)
+                d["score_ce"] = float(score)
+                reranked.append(d)
+
+        return reranked
+
+    except Exception as e:
+        print(f"⚠️ PyTorch rerank failed ({e}); falling back to legacy.")
+        return _rerank_legacy(query, candidates, topn)
+
+
+def _rerank_legacy(query: str, candidates: list[dict], topn: int):
+    """Legacy reranking implementation"""
     rr = _load_reranker()
     if rr is None:
         return candidates[:topn]
@@ -266,28 +385,6 @@ def _rerank(query: str, candidates: list[dict], topn: int):
         print(f"⚠️ Rerank predict failed ({e}); using fused order.")
         return candidates[:topn]
 
-    def _normalize_cand(cand):
-        if isinstance(cand, dict):
-            return dict(cand)
-        if isinstance(cand, tuple):
-            # Attempt to map (id, score, text, meta)
-            out = {}
-            try:
-                if len(cand) >= 1:
-                    out["id"] = cand[0]
-                if len(cand) >= 3:
-                    out["text"] = cand[2]
-                if len(cand) >= 4 and isinstance(cand[3], dict):
-                    out["meta"] = cand[3]
-                    if cand[3].get("filename"):
-                        out["filename"] = cand[3].get("filename")
-                    if cand[3].get("section_title"):
-                        out["section_title"] = cand[3].get("section_title")
-            except Exception:
-                out["text"] = str(cand)
-            return out
-        return {"text": str(cand)}
-
     reranked = []
     for c, s in zip(candidates, list(scores)):
         d = _normalize_cand(c)
@@ -295,6 +392,30 @@ def _rerank(query: str, candidates: list[dict], topn: int):
         reranked.append(d)
     reranked.sort(key=lambda x: x["score_ce"], reverse=True)
     return reranked[:topn]
+
+
+def _normalize_cand(cand):
+    """Normalize candidate to dict format"""
+    if isinstance(cand, dict):
+        return dict(cand)
+    if isinstance(cand, tuple):
+        # Attempt to map (id, score, text, meta)
+        out = {}
+        try:
+            if len(cand) >= 1:
+                out["id"] = cand[0]
+            if len(cand) >= 3:
+                out["text"] = cand[2]
+            if len(cand) >= 4 and isinstance(cand[3], dict):
+                out["meta"] = cand[3]
+                if cand[3].get("filename"):
+                    out["filename"] = cand[3].get("filename")
+                if cand[3].get("section_title"):
+                    out["section_title"] = cand[3].get("section_title")
+        except Exception:
+            out["text"] = str(cand)
+        return out
+    return {"text": str(cand)}
 
 
 # ---- Query token expansion for title/section channels ----
@@ -345,8 +466,8 @@ def _retrieve_with_fusion(retriever, query: str):
     K_TITLE = int(os.getenv("RETR_TOPK_TITLE", "80"))
     K_OTHER = int(os.getenv("RETR_TOPK_OTHER", "0"))
     RRF_K = int(os.getenv("RRF_K", "60"))
-    RERANK_POOL = int(os.getenv("RERANK_POOL", "60"))
-    RERANK_TOPN = int(os.getenv("RERANK_TOPN", "18"))
+    RERANK_POOL = (RENV.RERANK_INPUT_TOPK if RENV else int(os.getenv("RERANK_POOL", "60")))
+    RERANK_TOPN = (RENV.RERANK_KEEP if RENV else int(os.getenv("RERANK_TOPN", "18")))
     CONTEXT_DOCS_MAX = int(os.getenv("CONTEXT_DOCS_MAX", "12"))
     KEEP_TAIL = int(os.getenv("FUSE_TAIL_KEEP", "0"))
 
@@ -1323,6 +1444,10 @@ def _top_terms_from(results: list, num_terms: int = 10) -> list:
         "too",
         "use",
     }
+try:
+    from src.rag import reranker_env as RENV
+except Exception:
+    RENV = None
 
     filtered_words = [w for w in words if w not in stopwords]
 

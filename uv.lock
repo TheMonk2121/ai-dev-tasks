@@ -15,6 +15,7 @@ dependencies = [
     { name = "black" },
     { name = "boto3" },
     { name = "click" },
+    { name = "coverage" },
     { name = "dspy" },
     { name = "flask" },
     { name = "flask-socketio" },
@@ -42,6 +43,8 @@ dependencies = [
     { name = "pycycle" },
     { name = "pydantic" },
     { name = "pymupdf" },
+    { name = "pytest-cov" },
+    { name = "pytest-xdist" },
     { name = "python-dotenv" },
     { name = "python-socketio" },
     { name = "pyyaml" },
@@ -99,6 +102,7 @@ requires-dist = [
     { name = "black", marker = "extra == 'dev'", specifier = ">=23.0.0" },
     { name = "boto3", specifier = ">=1.40.25" },
     { name = "click", specifier = ">=8.0.0" },
+    { name = "coverage", specifier = ">=7.10.6" },
     { name = "dspy", specifier = "==3.0.1" },
     { name = "dspy", marker = "extra == 'ml'", specifier = "==3.0.1" },
     { name = "flask", specifier = "==2.3.3" },
@@ -136,10 +140,12 @@ requires-dist = [
     { name = "pymupdf", specifier = "==1.23.8" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.4.3" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=7.4.3" },
+    { name = "pytest-cov", specifier = ">=6.2.1" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
     { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=4.1.0" },
     { name = "pytest-mock", marker = "extra == 'dev'", specifier = ">=3.10.0" },
     { name = "pytest-mock", marker = "extra == 'test'", specifier = ">=3.10.0" },
+    { name = "pytest-xdist", specifier = ">=3.8.0" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
     { name = "python-socketio", specifier = "==5.8.0" },
     { name = "pyyaml", specifier = ">=6.0" },
@@ -789,6 +795,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/70/cb/4bfb5345e230e33b0fa4f18c16fe646395a081a48c6feb314e6993a86bb1/dspy-3.0.1.tar.gz", hash = "sha256:92220584eb7c3587746cac76209f7f167dbf6f38f5f05a7019d610ededc1eede", size = 213285, upload-time = "2025-08-14T17:39:32.415Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c1/b4/ef2706be57daf78562b8aa811cdfe184616becb6659522ace85919202b21/dspy-3.0.1-py3-none-any.whl", hash = "sha256:a9afb6eedaab063e9ca6d46840fad85b97ab45e79b4bf9371e6bf3a5666ef5c6", size = 259011, upload-time = "2025-08-14T17:39:30.901Z" },
+]
+
+[[package]]
+name = "execnet"
+version = "2.1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bb/ff/b4c0dc78fbe20c3e59c0c7334de0c27eb4001a2b2017999af398bf730817/execnet-2.1.1.tar.gz", hash = "sha256:5189b52c6121c24feae288166ab41b32549c7e2348652736540b9e6e7d4e72e3", size = 166524, upload-time = "2024-04-08T09:04:19.245Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/43/09/2aea36ff60d16dd8879bdb2f5b3ee0ba8d08cbbdcdfe870e695ce3784385/execnet-2.1.1-py3-none-any.whl", hash = "sha256:26dee51f1b80cebd6d0ca8e74dd8745419761d3bef34163928cbebbdc4749fdc", size = 40612, upload-time = "2024-04-08T09:04:17.414Z" },
 ]
 
 [[package]]
@@ -2493,6 +2508,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/61/99/3323ee5c16b3637b4d941c362182d3e749c11e400bea31018c42219f3a98/pytest_mock-3.15.0.tar.gz", hash = "sha256:ab896bd190316b9d5d87b277569dfcdf718b2d049a2ccff5f7aca279c002a1cf", size = 33838, upload-time = "2025-09-04T20:57:48.679Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2b/b3/7fefc43fb706380144bcd293cc6e446e6f637ddfa8b83f48d1734156b529/pytest_mock-3.15.0-py3-none-any.whl", hash = "sha256:ef2219485fb1bd256b00e7ad7466ce26729b30eadfc7cbcdb4fa9a92ca68db6f", size = 10050, upload-time = "2025-09-04T20:57:47.274Z" },
+]
+
+[[package]]
+name = "pytest-xdist"
+version = "3.8.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "execnet" },
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/78/b4/439b179d1ff526791eb921115fca8e44e596a13efeda518b9d845a619450/pytest_xdist-3.8.0.tar.gz", hash = "sha256:7e578125ec9bc6050861aa93f2d59f1d8d085595d6551c2c90b6f4fad8d3a9f1", size = 88069, upload-time = "2025-07-01T13:30:59.346Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ca/31/d4e37e9e550c2b92a9cbc2e4d0b7420a27224968580b5a447f420847c975/pytest_xdist-3.8.0-py3-none-any.whl", hash = "sha256:202ca578cfeb7370784a8c33d6d05bc6e13b4f25b5053c30a152269fd10f0b88", size = 46396, upload-time = "2025-07-01T13:30:56.632Z" },
 ]
 
 [[package]]
