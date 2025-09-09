@@ -80,7 +80,7 @@ class TestCoderRoleIntegration:
         # Check for key files that should be included (updated to match actual ROLE_FILES)
         required_files = [
             "000_core/003_process-task-list.md",
-            "000_core/004_development-roadmap.md", 
+            "000_core/004_development-roadmap.md",
             "000_core/011_evaluation-profiles-guide.md",
         ]
 
@@ -164,7 +164,7 @@ class TestCoderRoleIntegration:
         """Test that memory rehydration command executes successfully for coder role."""
         try:
             result = subprocess.run(
-                ["bash", str(memory_rehydrator_path), "-r", "coder", "-q", "test integration"],
+                [sys.executable, "scripts/unified_memory_orchestrator.py", "--role", "coder", "test integration"],
                 capture_output=True,
                 text=True,
                 timeout=30,
@@ -177,8 +177,8 @@ class TestCoderRoleIntegration:
             assert result.stdout, "Memory rehydration produced no output"
 
             # Should contain expected content
-            assert "UNIFIED MEMORY CONTEXT BUNDLE" in result.stdout, "Missing bundle header in output"
-            assert "Project Overview" in result.stdout, "Missing project overview in output"
+            assert "Unified Memory Context Bundle" in result.stdout, "Missing bundle header in output"
+            assert "Unified Memory Orchestrator" in result.stdout, "Missing orchestrator header in output"
 
         except subprocess.TimeoutExpired:
             pytest.fail("Memory rehydration command timed out")
@@ -260,6 +260,7 @@ class TestCoderRoleIntegration:
 
         for step in safety_steps:
             assert step in content, f"Missing safety step: {step}"
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
