@@ -14,13 +14,13 @@ from typing import Any, Dict, List, Optional, Tuple
 from lessons_model import Lesson, filter_lessons, load_lessons
 
 
-def env_to_dict(env_path: str) -> Dict[str, str]:
+def env_to_dict(env_path: str) -> dict[str, str]:
     """Load environment variables from .env file"""
     env_dict = {}
     if not os.path.exists(env_path):
         return env_dict
 
-    with open(env_path, "r") as f:
+    with open(env_path) as f:
         for line in f:
             line = line.strip()
             if not line or line.startswith("#"):
@@ -36,7 +36,7 @@ def env_to_dict(env_path: str) -> Dict[str, str]:
     return env_dict
 
 
-def dict_to_env(env_dict: Dict[str, str], header: str = None) -> str:
+def dict_to_env(env_dict: dict[str, str], header: str = None) -> str:
     """Convert dictionary to .env file content"""
     lines = []
     if header:
@@ -49,7 +49,7 @@ def dict_to_env(env_dict: Dict[str, str], header: str = None) -> str:
     return "\n".join(lines)
 
 
-def apply_changes(base_env: Dict[str, str], changes: List[Dict[str, Any]]) -> Dict[str, str]:
+def apply_changes(base_env: dict[str, str], changes: list[dict[str, Any]]) -> dict[str, str]:
     """Apply parameter changes to environment dictionary"""
     env = copy.deepcopy(base_env)
 
@@ -80,7 +80,7 @@ def apply_changes(base_env: Dict[str, str], changes: List[Dict[str, Any]]) -> Di
     return env
 
 
-def _parse_effect(effect: Any) -> Tuple[Optional[float], Optional[float], bool]:
+def _parse_effect(effect: Any) -> tuple[float | None, float | None, bool]:
     """Parse a predicted effect value into (min_delta, max_delta, is_percent).
 
     Supports strings like "+0.03~+0.06", "-0.02", "+10~15%". Returns None if unparsable.
@@ -90,7 +90,7 @@ def _parse_effect(effect: Any) -> Tuple[Optional[float], Optional[float], bool]:
     is_percent = False
     try:
         # If already numeric, treat as symmetric delta
-        if isinstance(effect, (int, float)):
+        if isinstance(effect, int | float):
             val = float(effect)
             return val, val, False
 
@@ -109,7 +109,7 @@ def _parse_effect(effect: Any) -> Tuple[Optional[float], Optional[float], bool]:
         return None, None, is_percent
 
 
-def resolve_conflicts(lessons: List[Lesson]) -> List[Lesson]:
+def resolve_conflicts(lessons: list[Lesson]) -> list[Lesson]:
     """Resolve conflicts between lessons using deterministic rules"""
 
     # Sort by recency, then confidence, then evidence strength
@@ -163,10 +163,10 @@ def resolve_conflicts(lessons: List[Lesson]) -> List[Lesson]:
 
 def generate_decision_docket(
     base_env_path: str,
-    applied_lessons: List[Lesson],
-    candidate_env: Dict[str, str],
-    base_env: Dict[str, str],
-    gate_warnings: Optional[List[str]] = None,
+    applied_lessons: list[Lesson],
+    candidate_env: dict[str, str],
+    base_env: dict[str, str],
+    gate_warnings: list[str] | None = None,
     apply_blocked: bool = False,
 ) -> str:
     """Generate a decision docket markdown file"""
@@ -257,10 +257,10 @@ def main(
     base_env_path: str,
     lessons_jsonl: str,
     mode: str = "advisory",
-    scope_filters: Optional[Dict[str, Any]] = None,
+    scope_filters: dict[str, Any] | None = None,
     out_dir: str = "metrics/derived_configs",
     window_size: int = 5,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Main loader function"""
     print(f"🧠 Loading lessons for {os.path.basename(base_env_path)}", file=sys.stderr)
 
@@ -301,17 +301,17 @@ def main(
         applied_lessons.append(lesson)
 
     # Check quality gates before applying (if in apply mode)
-    _gate_violations: List[str] = []
+    _gate_violations: list[str] = []
     _apply_blocked = False
     if mode == "apply":
         quality_gates_path = "config/ragchecker_quality_gates.json"
         if os.path.exists(quality_gates_path):
             try:
-                with open(quality_gates_path, "r") as f:
+                with open(quality_gates_path) as f:
                     quality_gates = json.load(f)
 
                 # Conservative safety: block apply if predicted effects clearly move against gates
-                violations: List[str] = []
+                violations: list[str] = []
                 for lesson in applied_lessons:
                     predicted_effects = lesson.recommendation.get("predicted_effect", {})
                     for metric, effect in predicted_effects.items():
@@ -325,9 +325,7 @@ def main(
                         # Metrics with a minimum gate (e.g., precision/recall/f1/faithfulness):
                         # if worst-case predicts decrease (hi <= 0), block apply
                         if "min" in gate and hi <= 0:
-                            violations.append(
-                                f"{metric}: predicted {effect} may reduce below minimum; block apply"
-                            )
+                            violations.append(f"{metric}: predicted {effect} may reduce below minimum; block apply")
                         # Metrics with a maximum gate (e.g., latency): if any increase is predicted, block
                         if "max" in gate and hi > 0:
                             # If percent, be conservative and block on any positive increase

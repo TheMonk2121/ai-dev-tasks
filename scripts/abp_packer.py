@@ -58,7 +58,7 @@ def _parse_effect_value(effect: Any) -> tuple[float | None, float | None]:
     if effect is None:
         return None, None
     try:
-        if isinstance(effect, (int, float)):
+        if isinstance(effect, int | float):
             v = float(effect)
             return v, v
         s = str(effect).strip().rstrip("%")
