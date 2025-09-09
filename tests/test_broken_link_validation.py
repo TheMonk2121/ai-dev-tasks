@@ -98,8 +98,15 @@ class TestBrokenLinkValidation:
 
     def resolve_relative_path(self, source_file: str, link_url: str) -> str:
         """Resolve relative path from source file to target."""
-        source_dir = Path(source_file).parent
-        target_path = source_dir / link_url
+        # If the link starts with a directory name (like "200_setup/", "400_guides/", etc.),
+        # treat it as relative to the project root, not the source file's directory
+        if "/" in link_url and not link_url.startswith("../") and not link_url.startswith("./"):
+            # This looks like a project-root-relative path
+            target_path = Path(link_url)
+        else:
+            # This is a file-relative path
+            source_dir = Path(source_file).parent
+            target_path = source_dir / link_url
         return str(target_path.resolve())
 
     def is_relative_link(self, url: Union[str, None]) -> bool:
