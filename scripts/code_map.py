@@ -20,7 +20,7 @@ import ast
 import json
 import os
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 EXCLUDE_DIRS = {
     ".git",
@@ -37,8 +37,8 @@ EXCLUDE_DIRS = {
 }
 
 
-def iter_python_files(root: Path, includes: Optional[List[Path]] = None) -> List[Path]:
-    files: List[Path] = []
+def iter_python_files(root: Path, includes: list[Path] | None = None) -> list[Path]:
+    files: list[Path] = []
     # If includes provided, walk each include path; otherwise, walk the root
     roots = [root]
     if includes:
@@ -60,7 +60,7 @@ def iter_python_files(root: Path, includes: Optional[List[Path]] = None) -> List
     return files
 
 
-def safe_parse(path: Path) -> Optional[ast.AST]:
+def safe_parse(path: Path) -> ast.AST | None:
     try:
         text = path.read_text(encoding="utf-8", errors="ignore")
         return ast.parse(text, filename=str(path))
@@ -68,11 +68,11 @@ def safe_parse(path: Path) -> Optional[ast.AST]:
         return None
 
 
-def collect_imports(tree: ast.AST) -> List[Tuple[str, int, int]]:
+def collect_imports(tree: ast.AST) -> list[tuple[str, int, int]]:
     """Returns list of (imported_module, level, lineno).
     level=0 for absolute, >0 for relative.
     """
-    out: List[Tuple[str, int, int]] = []
+    out: list[tuple[str, int, int]] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
@@ -84,7 +84,7 @@ def collect_imports(tree: ast.AST) -> List[Tuple[str, int, int]]:
     return out
 
 
-def resolve_relative_import(src: Path, root: Path, module: str, level: int) -> Optional[Path]:
+def resolve_relative_import(src: Path, root: Path, module: str, level: int) -> Path | None:
     """Resolve a relative import to a file path if possible.
     Example: from .utils import x with level=1.
     """
@@ -97,11 +97,11 @@ def resolve_relative_import(src: Path, root: Path, module: str, level: int) -> O
             break
     target = base
     if module:
-        for part in module.split('.'):
+        for part in module.split("."):
             target = target / part
 
     # Try file.py then pkg/__init__.py
-    candidates = [target.with_suffix('.py'), target / "__init__.py"]
+    candidates = [target.with_suffix(".py"), target / "__init__.py"]
     for cand in candidates:
         try:
             cand.relative_to(root)
@@ -113,13 +113,13 @@ def resolve_relative_import(src: Path, root: Path, module: str, level: int) -> O
     return None
 
 
-def resolve_absolute_import(root: Path, module: str) -> Optional[Path]:
+def resolve_absolute_import(root: Path, module: str) -> Path | None:
     """Resolve an absolute import to a repo file using best-effort heuristics."""
     if not module:
         return None
 
     # Try progressively shorter tails of the module path to find a file.
-    parts = module.split('.')
+    parts = module.split(".")
     # Walk from full to shorter prefixes for package/__init__.py
     for end in range(len(parts), 0, -1):
         pkg_path = root.joinpath(*parts[:end])
@@ -127,18 +127,18 @@ def resolve_absolute_import(root: Path, module: str) -> Optional[Path]:
         if init_py.exists():
             return init_py
     # Try module.py using full path
-    mod_file = root.joinpath(*parts).with_suffix('.py')
+    mod_file = root.joinpath(*parts).with_suffix(".py")
     if mod_file.exists():
         return mod_file
 
     # If not found, try to locate by tail match (e.g., scripts.x)
     tail = parts[-1]
-    matches: List[Path] = [p for p in root.rglob(f"{tail}.py") if is_repo_path(root, p)]
+    matches: list[Path] = [p for p in root.rglob(f"{tail}.py") if is_repo_path(root, p)]
     if len(matches) == 1:
         return matches[0]
     # If multiple matches, try to match more of the path
     for end in range(len(parts), 1, -1):
-        tail_path = Path(*parts[-end:]).with_suffix('.py')
+        tail_path = Path(*parts[-end:]).with_suffix(".py")
         deeper = [p for p in root.rglob(str(tail_path)) if is_repo_path(root, p)]
         if len(deeper) == 1:
             return deeper[0]
@@ -153,10 +153,10 @@ def is_repo_path(root: Path, p: Path) -> bool:
     return not any(part in EXCLUDE_DIRS for part in rel.parts)
 
 
-def build_graph(root: Path, includes: Optional[List[Path]] = None) -> Dict:
+def build_graph(root: Path, includes: list[Path] | None = None) -> dict:
     py_files = iter_python_files(root, includes)
-    nodes: Dict[str, Dict] = {}
-    edges: List[Dict] = []
+    nodes: dict[str, dict] = {}
+    edges: list[dict] = []
 
     # Pre-populate nodes
     for f in py_files:
@@ -176,7 +176,7 @@ def build_graph(root: Path, includes: Optional[List[Path]] = None) -> Dict:
             continue
         imports = collect_imports(tree)
         for mod, level, lineno in imports:
-            target: Optional[Path] = None
+            target: Path | None = None
             if level > 0:
                 target = resolve_relative_import(f, root, mod, level)
             else:
@@ -186,17 +186,19 @@ def build_graph(root: Path, includes: Optional[List[Path]] = None) -> Dict:
                 if rel_tgt not in nodes:
                     # might be a package __init__.py that wasn't picked up if empty
                     nodes[rel_tgt] = {"id": rel_tgt, "imports": 0, "imported_by": 0, "type": "file"}
-                edges.append({
-                    "source": rel_src,
-                    "target": rel_tgt,
-                    "type": "import",
-                    "line": lineno,
-                    "import_type": "relative" if level > 0 else "absolute",
-                })
+                edges.append(
+                    {
+                        "source": rel_src,
+                        "target": rel_tgt,
+                        "type": "import",
+                        "line": lineno,
+                        "import_type": "relative" if level > 0 else "absolute",
+                    }
+                )
 
     # Compute basic stats
-    out_edges_by_src: Dict[str, int] = {k: 0 for k in nodes}
-    in_edges_by_tgt: Dict[str, int] = {k: 0 for k in nodes}
+    out_edges_by_src: dict[str, int] = {k: 0 for k in nodes}
+    in_edges_by_tgt: dict[str, int] = {k: 0 for k in nodes}
     for e in edges:
         out_edges_by_src[e["source"]] = out_edges_by_src.get(e["source"], 0) + 1
         in_edges_by_tgt[e["target"]] = in_edges_by_tgt.get(e["target"], 0) + 1
@@ -220,14 +222,16 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Build repo import graph")
     parser.add_argument("--root", type=str, default=".", help="Repo root (default: .)")
     parser.add_argument("--out", type=str, default="metrics/visualizations/import_graph.json", help="Output JSON path")
-    parser.add_argument("--include", type=str, default="", help="Comma-separated subpaths to include (relative to root)")
+    parser.add_argument(
+        "--include", type=str, default="", help="Comma-separated subpaths to include (relative to root)"
+    )
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    includes = [Path(p.strip()) for p in args.include.split(',') if p.strip()]
+    includes = [Path(p.strip()) for p in args.include.split(",") if p.strip()]
     graph = build_graph(root, includes if includes else None)
     out_path.write_text(json.dumps(graph, indent=2), encoding="utf-8")
     print(f"Wrote {out_path} with {graph['stats']['nodes']} nodes and {graph['stats']['edges']} edges")

@@ -18,7 +18,6 @@ from __future__ import annotations
 import csv
 import datetime as dt
 import pathlib
-, List
 
 QUEUE = pathlib.Path("metrics/retirement_queue.csv")
 
