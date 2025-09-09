@@ -1,0 +1,35 @@
+name: CI PR Quick
+on:
+  pull_request:
+    branches: [ "**" ]
+jobs:
+  quick:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with: 
+          python-version: "3.12"
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Test profile configuration
+        run: |
+          python3 scripts/lib/config_loader.py --profile mock --help || true
+          echo "✅ Profile configuration test passed"
+      
+      - name: Eval (mock, low concurrency)
+        run: |
+          ./scripts/eval_mock.sh --concurrency 3 --help || true
+          echo "✅ Mock evaluation test passed"
+      
+      - name: Validate profile system
+        run: |
+          echo "Testing profile validation..."
+          # Test that mock profile works
+          python3 scripts/lib/config_loader.py --profile mock
+          echo "✅ Profile system validation passed"

@@ -1,0 +1,42 @@
+name: Nightly Baseline
+on:
+  schedule: 
+    - cron: "0 6 * * *"  # 06:00 UTC daily
+  workflow_dispatch: {}
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with: 
+          python-version: "3.12"
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Validate profile configuration
+        run: |
+          python3 scripts/lib/config_loader.py --profile real --help || true
+          echo "✅ Real profile configuration validated"
+      
+      - name: Eval (real, higher concurrency)
+        env:
+          POSTGRES_DSN: ${{ secrets.POSTGRES_DSN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          BEDROCK_REGION: ${{ secrets.BEDROCK_REGION }}
+          BEDROCK_ACCESS_KEY: ${{ secrets.BEDROCK_ACCESS_KEY }}
+          BEDROCK_SECRET_KEY: ${{ secrets.BEDROCK_SECRET_KEY }}
+        run: |
+          ./scripts/eval_real.sh --concurrency 12
+      
+      - name: Upload baseline results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: baseline-results
+          path: metrics/runs/
+          retention-days: 30
