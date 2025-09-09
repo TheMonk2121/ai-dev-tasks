@@ -20,7 +20,7 @@ import time
 import uuid
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import aiofiles
 
@@ -32,34 +32,34 @@ class RequestLog:
     # Request identification
     request_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     timestamp: float = field(default_factory=time.time)
-    canary_tag: Optional[str] = None
+    canary_tag: str | None = None
 
     # Pipeline stages
     query: str = ""
-    intent: Optional[str] = None
+    intent: str | None = None
 
     # Retrieval results
-    bm25_candidates: List[Dict[str, Any]] = field(default_factory=list)
-    vector_candidates: List[Dict[str, Any]] = field(default_factory=list)
-    fusion_ranks: List[Dict[str, Any]] = field(default_factory=list)
+    bm25_candidates: list[dict[str, Any]] = field(default_factory=list)
+    vector_candidates: list[dict[str, Any]] = field(default_factory=list)
+    fusion_ranks: list[dict[str, Any]] = field(default_factory=list)
 
     # Reranking
-    rerank_scores: List[Dict[str, Any]] = field(default_factory=list)
-    selected_spans: List[Dict[str, Any]] = field(default_factory=list)
+    rerank_scores: list[dict[str, Any]] = field(default_factory=list)
+    selected_spans: list[dict[str, Any]] = field(default_factory=list)
 
     # Generation
     answer: str = ""
-    confidence: Optional[float] = None
+    confidence: float | None = None
     abstain: bool = False
-    abstain_reason: Optional[str] = None
+    abstain_reason: str | None = None
 
     # User feedback (when available)
-    user_action: Optional[str] = None  # thumbs_up, thumbs_down, edit, etc.
-    user_feedback: Optional[str] = None
+    user_action: str | None = None  # thumbs_up, thumbs_down, edit, etc.
+    user_feedback: str | None = None
 
     # Performance metrics
-    stage_timings: Dict[str, float] = field(default_factory=dict)
-    total_latency_ms: Optional[float] = None
+    stage_timings: dict[str, float] = field(default_factory=dict)
+    total_latency_ms: float | None = None
 
 
 class RequestLogger:
@@ -77,9 +77,9 @@ class RequestLogger:
         self.buffer_size = buffer_size
         self.flush_interval = flush_interval
 
-        self._buffer: List[RequestLog] = []
+        self._buffer: list[RequestLog] = []
         self._buffer_lock = asyncio.Lock()
-        self._flush_task: Optional[asyncio.Task] = None
+        self._flush_task: asyncio.Task | None = None
 
         # Ensure log directory exists
         if self.enabled:
@@ -173,16 +173,16 @@ class CanaryTagger:
         hash_val = hash(request_id) % 100
         return hash_val < self.sample_pct
 
-    def get_tag(self, request_id: str) -> Optional[str]:
+    def get_tag(self, request_id: str) -> str | None:
         """Get canary tag for a request."""
         return self.tag_name if self.should_tag_request(request_id) else None
 
 
 # Global logger instance (initialized on first use)
-_global_logger: Optional[RequestLogger] = None
+_global_logger: RequestLogger | None = None
 
 
-def get_request_logger(config: Optional[Dict[str, Any]] = None) -> RequestLogger:
+def get_request_logger(config: dict[str, Any] | None = None) -> RequestLogger:
     """Get or create the global request logger."""
     global _global_logger
 
@@ -204,10 +204,10 @@ async def log_rag_request(
     query: str,
     answer: str,
     *,
-    request_id: Optional[str] = None,
-    canary_tag: Optional[str] = None,
-    confidence: Optional[float] = None,
-    stage_timings: Optional[Dict[str, float]] = None,
+    request_id: str | None = None,
+    canary_tag: str | None = None,
+    confidence: float | None = None,
+    stage_timings: dict[str, float] | None = None,
     **kwargs: Any,
 ) -> str:
     """
