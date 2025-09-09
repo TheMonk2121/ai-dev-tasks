@@ -4,7 +4,8 @@ import contextlib
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Iterable, List, Optional, Tuple
+from typing import Any, Optional
+from collections.abc import Iterable
 
 try:
     # Optional dependency; file guards runtime if missing
@@ -144,7 +145,7 @@ class PgStatePersistence(BaseStatePersistence):  # type: ignore[misc]
                         )
                     conn.commit()
 
-    def load_all(self) -> List[dict]:  # type: ignore[override]
+    def load_all(self) -> list[dict]:  # type: ignore[override]
         with _connect_dsn() as conn:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:  # type: ignore[arg-type]
                 cur.execute(

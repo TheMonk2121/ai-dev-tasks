@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Iterable, List, Optional
+from typing import Optional
+from collections.abc import Iterable
 
 try:
     from pydantic_graph.graph import Graph
@@ -14,8 +15,8 @@ except Exception:
 from src.schemas.eval import CaseResult, ContextChunk, RetrievalCandidate
 
 
-class LoadCases(Node[List[dict]]):  # returns list of raw case dicts
-    def run(self, gold_file: str) -> List[dict]:
+class LoadCases(Node[list[dict]]):  # returns list of raw case dicts
+    def run(self, gold_file: str) -> list[dict]:
         from src.utils.gold_loader import load_gold_cases
 
         cases = load_gold_cases(gold_file)
@@ -23,8 +24,8 @@ class LoadCases(Node[List[dict]]):  # returns list of raw case dicts
         return [c.model_dump() for c in cases]
 
 
-class Retrieve(Node[List[RetrievalCandidate]]):
-    def run(self, question: str) -> List[RetrievalCandidate]:
+class Retrieve(Node[list[RetrievalCandidate]]):
+    def run(self, question: str) -> list[RetrievalCandidate]:
         # Use RAG pipeline module directly
         import os
 
@@ -42,10 +43,10 @@ class Score(Node[CaseResult]):
         self,
         case_id: str,
         mode: str,
-        tags: List[str],
+        tags: list[str],
         query: str,
-        candidates: List[RetrievalCandidate],
-        used: Optional[List[ContextChunk]] = None,
+        candidates: list[RetrievalCandidate],
+        used: list[ContextChunk] | None = None,
     ) -> CaseResult:
         # Minimal scoring using existing harness logic (Jaccard-based metrics)
         from scripts._ragchecker_eval_impl import CleanRAGCheckerEvaluator

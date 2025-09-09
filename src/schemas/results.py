@@ -1,7 +1,7 @@
 # src/schemas/results.py
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -10,9 +10,9 @@ from src.schemas.eval import Mode
 
 class CaseMetrics(BaseModel):
     is_correct: bool
-    precision_contrib: Optional[float] = None
-    recall_contrib: Optional[float] = None
-    f1_contrib: Optional[float] = None
+    precision_contrib: float | None = None
+    recall_contrib: float | None = None
+    f1_contrib: float | None = None
 
 
 class SuiteMetrics(BaseModel):
@@ -28,15 +28,15 @@ class SuiteMetrics(BaseModel):
 class CaseResult(BaseModel):
     id: str
     mode: Mode
-    tag: Optional[str] = None
+    tag: str | None = None
     is_correct: bool
-    error_reason: Optional[str] = None
-    runtime_ms: Optional[int] = None
+    error_reason: str | None = None
+    runtime_ms: int | None = None
 
 
 class EvaluationSuiteResult(BaseModel):
     suite_name: str
     seed: int
-    profile: Optional[str] = None
+    profile: str | None = None
     metrics: SuiteMetrics
-    cases: List[CaseResult]
+    cases: list[CaseResult]

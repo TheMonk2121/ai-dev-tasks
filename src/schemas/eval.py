@@ -21,7 +21,7 @@ class ContextChunk(BaseModel):
     id: str
     source: str
     text: str
-    score: Optional[float] = None
+    score: float | None = None
     metadata: dict = Field(default_factory=dict)
 
 
@@ -30,7 +30,7 @@ class RetrievalCandidate(BaseModel):
     query: str
     chunk: ContextChunk
     rank: int
-    score: Optional[float] = None
+    score: float | None = None
     route: Literal["bm25", "vector", "hybrid", "trigram", "title_trigram"] = "hybrid"
 
 
@@ -58,8 +58,9 @@ class EvaluationRun(BaseModel):
     overall: dict
     artifact_paths: dict
 
+
 from enum import Enum
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -79,7 +80,7 @@ KNOWN_TAGS = {"ops_health", "meta_ops", "rag_qa_single", "rag_qa_multi", "db_wor
 # ---- Helpers ---------------------------------------------------------------
 
 
-def _ensure_list(v: Union[str, List[str], None]) -> Optional[List[str]]:
+def _ensure_list(v: str | list[str] | None) -> list[str] | None:
     if v is None:
         return None
     if isinstance(v, list):
@@ -107,22 +108,22 @@ class GoldCase(BaseModel):
     query: str = Field(..., alias="query")
 
     # Accept plural and singular
-    tags: List[str] = Field(..., alias="tags")
+    tags: list[str] = Field(..., alias="tags")
 
-    category: Optional[str] = None
+    category: str | None = None
 
     # Reader supervision
-    gt_answer: Optional[str] = Field(None, alias="gt_answer")
+    gt_answer: str | None = Field(None, alias="gt_answer")
 
     # Retrieval supervision
-    expected_files: Optional[List[str]] = None
-    globs: Optional[List[str]] = None
+    expected_files: list[str] | None = None
+    globs: list[str] | None = None
 
     # Decision supervision
-    expected_decisions: Optional[List[str]] = None
+    expected_decisions: list[str] | None = None
 
     # Free-form
-    notes: Optional[str] = None
+    notes: str | None = None
 
     # --- Aliases / normalization bridge (legacy fields) ---
     # We accept extra and remap in a root validator.
@@ -134,7 +135,7 @@ class GoldCase(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def _normalize_legacy(cls, values: Dict[str, Any]) -> Dict[str, Any]:
+    def _normalize_legacy(cls, values: dict[str, Any]) -> dict[str, Any]:
         # id aliases
         values.setdefault("id", values.get("case_id", values.get("query_id")))
         # query aliases
@@ -166,7 +167,7 @@ class GoldCase(BaseModel):
 
     @field_validator("tags")
     @classmethod
-    def _dedupe_tags(cls, v: List[str]) -> List[str]:
+    def _dedupe_tags(cls, v: list[str]) -> list[str]:
         # Keep order, dedupe
         out, seen = [], set()
         for t in v:
@@ -176,7 +177,7 @@ class GoldCase(BaseModel):
         return out or ["rag_qa_single"]
 
     @model_validator(mode="after")
-    def _mode_requirements(self) -> "GoldCase":
+    def _mode_requirements(self) -> GoldCase:
         mode: Mode = self.mode
         has_reader = bool(self.gt_answer)
         has_retr = bool(self.expected_files or self.globs)
@@ -198,10 +199,10 @@ class GoldCase(BaseModel):
 
 class EvidenceSpan(BaseModel):
     text: str
-    score: Optional[float] = None
-    source_file: Optional[str] = None
-    start_idx: Optional[int] = None
-    end_idx: Optional[int] = None
+    score: float | None = None
+    source_file: str | None = None
+    start_idx: int | None = None
+    end_idx: int | None = None
 
 
 class RetrievalHit(BaseModel):
@@ -212,21 +213,21 @@ class RetrievalHit(BaseModel):
 class EvaluationResult(BaseModel):
     id: str
     mode: Mode
-    tags: List[str] = []
+    tags: list[str] = []
     query: str
 
     # Reader predictions
-    predicted_answer: Optional[str] = None
-    answer_confidence: Optional[float] = None
-    evidence: Optional[List[EvidenceSpan]] = None
+    predicted_answer: str | None = None
+    answer_confidence: float | None = None
+    evidence: list[EvidenceSpan] | None = None
 
     # Retrieval predictions
-    retrieved: Optional[List[RetrievalHit]] = None
+    retrieved: list[RetrievalHit] | None = None
 
     # Decision predictions
-    predicted_decisions: Optional[List[str]] = None
+    predicted_decisions: list[str] | None = None
 
     # Scoring / bookkeeping
-    is_correct: Optional[bool] = None
-    error_reason: Optional[str] = None
-    runtime_ms: Optional[int] = None
+    is_correct: bool | None = None
+    error_reason: str | None = None
+    runtime_ms: int | None = None

@@ -3,14 +3,14 @@ from __future__ import annotations
 import json
 import random
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from src.schemas.eval import GoldCase, Mode
 
 
-def load_gold_cases(path: str | Path) -> List[GoldCase]:
+def load_gold_cases(path: str | Path) -> list[GoldCase]:
     p = Path(path)
-    out: List[GoldCase] = []
+    out: list[GoldCase] = []
     with p.open("r", encoding="utf-8") as f:
         for i, line in enumerate(f, 1):
             if not line.strip():
@@ -28,7 +28,7 @@ def load_gold_cases(path: str | Path) -> List[GoldCase]:
     return out
 
 
-def write_gold_cases(path: str | Path, cases: List[GoldCase]) -> None:
+def write_gold_cases(path: str | Path, cases: list[GoldCase]) -> None:
     """Write gold cases to JSONL using stable Pydantic v2 serialization."""
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
@@ -38,12 +38,12 @@ def write_gold_cases(path: str | Path, cases: List[GoldCase]) -> None:
 
 
 def filter_cases(
-    cases: List[GoldCase],
-    include_tags: Optional[List[str]] = None,
-    mode: Optional[str] = None,
-    size: Optional[int] = None,
-    seed: Optional[int] = None,
-) -> List[GoldCase]:
+    cases: list[GoldCase],
+    include_tags: list[str] | None = None,
+    mode: str | None = None,
+    size: int | None = None,
+    seed: int | None = None,
+) -> list[GoldCase]:
     """Filter cases by tags, mode, and optionally sample."""
     pool = cases
     if include_tags:
@@ -59,15 +59,15 @@ def filter_cases(
 
 
 def stratified_sample(
-    cases: List[GoldCase],
-    strata: Dict[str, float],
+    cases: list[GoldCase],
+    strata: dict[str, float],
     size: int,
     seed: int,
-    mode: Optional[Mode] = None,
-) -> List[GoldCase]:
+    mode: Mode | None = None,
+) -> list[GoldCase]:
     rng = random.Random(seed)
     # bucket by first matching tag in strata
-    buckets: Dict[str, List[GoldCase]] = {t: [] for t in strata}
+    buckets: dict[str, list[GoldCase]] = {t: [] for t in strata}
     for c in cases:
         if mode and c.mode != mode:
             continue
@@ -75,7 +75,7 @@ def stratified_sample(
             if t in buckets:
                 buckets[t].append(c)
                 break
-    out: List[GoldCase] = []
+    out: list[GoldCase] = []
     for t, frac in strata.items():
         bucket = buckets[t]
         rng.shuffle(bucket)
@@ -88,7 +88,7 @@ def stratified_sample(
     return out[:size]
 
 
-def load_manifest(path: str | Path = "evals/gold/v1/manifest.json") -> Dict[str, Any]:
+def load_manifest(path: str | Path = "evals/gold/v1/manifest.json") -> dict[str, Any]:
     """Load evaluation manifest with profiles."""
     with open(path) as f:
         return json.load(f)
