@@ -26,7 +26,7 @@ try:
         create_enhanced_rag_interface,
     )
 except ImportError as e:
-    pytest.skip(f"Enhanced RAG system not available: {e}")
+    pytest.skip(f"Enhanced RAG system not available: {e}", allow_module_level=True)
 
 # Test data
 SAMPLE_QUERIES = {

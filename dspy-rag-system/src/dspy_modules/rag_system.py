@@ -27,7 +27,7 @@ from dspy import InputField, Module, OutputField, Signature
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from .vector_store import VectorStore  # type: ignore
+from .vector_store import HybridVectorStore as VectorStore  # type: ignore
 
 _LOG = logging.getLogger("rag_system")
 
