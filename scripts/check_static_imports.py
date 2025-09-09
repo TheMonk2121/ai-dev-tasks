@@ -11,15 +11,14 @@ import ast
 import importlib
 import sys
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
 
 
-def extract_imports(file_path: Path) -> Set[str]:
+def extract_imports(file_path: Path) -> set[str]:
     """Extract all import statements from a Python file."""
     imports = set()
 
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         tree = ast.parse(content)
@@ -38,7 +37,7 @@ def extract_imports(file_path: Path) -> Set[str]:
     return imports
 
 
-def check_import_availability(module_name: str) -> Tuple[bool, str]:
+def check_import_availability(module_name: str) -> tuple[bool, str]:
     """Check if a module can be imported."""
     try:
         importlib.import_module(module_name)
@@ -49,7 +48,7 @@ def check_import_availability(module_name: str) -> Tuple[bool, str]:
         return False, f"Unexpected error: {e}"
 
 
-def analyze_scripts_directory(scripts_dir: Path, exclude_tests: bool = True) -> Dict[str, List[Tuple[str, str]]]:
+def analyze_scripts_directory(scripts_dir: Path, exclude_tests: bool = True) -> dict[str, list[tuple[str, str]]]:
     """Analyze all Python files in the scripts directory."""
     results = {
         "missing_external": [],  # (module, error)
@@ -113,7 +112,7 @@ def analyze_scripts_directory(scripts_dir: Path, exclude_tests: bool = True) -> 
     return results
 
 
-def print_results(results: Dict[str, List[Tuple[str, str]]], verbose: bool = False):
+def print_results(results: dict[str, list[tuple[str, str]]], verbose: bool = False):
     """Print the analysis results in a readable format."""
 
     print("\n" + "=" * 60)
@@ -157,7 +156,7 @@ def print_results(results: Dict[str, List[Tuple[str, str]]], verbose: bool = Fal
     print(f"  Total issues: {total_missing + len(results['parse_errors'])}")
 
 
-def generate_csv_report(results: Dict[str, List[Tuple[str, str]]], output_file: Path):
+def generate_csv_report(results: dict[str, list[tuple[str, str]]], output_file: Path):
     """Generate a CSV report of missing dependencies."""
     import csv
 
