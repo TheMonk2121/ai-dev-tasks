@@ -142,9 +142,11 @@ class EvaluationBatch(BaseModel):
 def convert_legacy_case(legacy_data: Dict[str, Any]) -> UnifiedGoldCase:
     """Convert legacy case data to unified schema"""
     # Handle different legacy formats
-    case_id = legacy_data.get("id") or legacy_data.get("case_id") or legacy_data.get("query_id")
+    case_id = legacy_data.get("id") or legacy_data.get("case_id") or legacy_data.get("query_id") or ""
     query = legacy_data.get("query") or legacy_data.get("question", "")
     tags = legacy_data.get("tags", [])
+    if isinstance(tags, str):
+        tags = [tags]
 
     # Handle singular tag field
     if not tags and "tag" in legacy_data:

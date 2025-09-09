@@ -1,22 +1,22 @@
 
 # Core Evaluation Suite
 
-> SSOT: `300_core` • Generated 2025-09-09T00:57:37.202585+00:00 • Commit: faf572511a04e942c5d9381f3ffc6314b734073f (test-signal-implementation)
+> SSOT: `300_core` • Generated 2025-09-09T04:21:29.309531+00:00 • Commit: 3032316e6ed59d50f87fbdc5d1041cbe2ba75519 (test-signal-implementation)
 >
-> Suite created: n/a • updated: n/a
+> Suite created: 2025-09-08T19:57:59-05:00 • updated: 2025-09-08T19:57:59-05:00
 
 
 ---
 ## 1. Retrieval-Only Baseline
 **ID:** `retrieval_only_baseline` • **Version:** 3.0.0 • **Tags:** retrieval, baseline
 
-**Purpose**
+**Purpose**  
 Confirms retrieval/rerank/chunk config (450/10%/J=0.8/prefix-A).
 
-**Run Spec**
-- Kind: `ragchecker`
-- Script: `scripts/_ragchecker_eval_impl.py`
-- CLI Args: `(none)`
+**Run Spec**  
+- Kind: `ragchecker`  
+- Script: `scripts/_ragchecker_eval_impl.py`  
+- CLI Args: `(none)`  
 
 **Config Layers**: base + stable
 
@@ -65,13 +65,13 @@ python -m evals_300.tools.run --suite 300_core --pass retrieval_only_baseline
 ## 2. Deterministic Few-Shot (k=5, knn, seed=42)
 **ID:** `deterministic_few_shot` • **Version:** 3.0.0 • **Tags:** reader, fewshot
 
-**Purpose**
+**Purpose**  
 Records prompt_audit.few_shot_ids, prompt_hash, CoT disabled.
 
-**Run Spec**
-- Kind: `ragchecker`
-- Script: `scripts/_ragchecker_eval_impl.py`
-- CLI Args: `(none)`
+**Run Spec**  
+- Kind: `ragchecker`  
+- Script: `scripts/_ragchecker_eval_impl.py`  
+- CLI Args: `(none)`  
 
 **Config Layers**: base + stable + delta_fewshot
 
@@ -119,13 +119,13 @@ python -m evals_300.tools.run --suite 300_core --pass deterministic_few_shot
 ## 3. Calibrate Answerable Thresholds
 **ID:** `calibrate_thresholds` • **Version:** 2.0.0 • **Tags:** calibration
 
-**Purpose**
+**Purpose**  
 Runs calibration; writes metrics/calibration/thresholds.json.
 
-**Run Spec**
-- Kind: `calibrate`
-- Script: `scripts/calibrate_answerable_threshold.py`
-- CLI Args: `(none)`
+**Run Spec**  
+- Kind: `calibrate`  
+- Script: `scripts/calibrate_answerable_threshold.py`  
+- CLI Args: `(none)`  
 
 **Config Layers**: base + stable
 
@@ -166,13 +166,13 @@ python -m evals_300.tools.run --suite 300_core --pass calibrate_thresholds
 ## 4. Reader Debug A/B
 **ID:** `reader_debug_ab` • **Version:** 2.0.0 • **Tags:** debug, reader
 
-**Purpose**
+**Purpose**  
 Debug parity between teleprompt configs. See reader_debug outputs.
 
-**Run Spec**
-- Kind: `reader_debug`
-- Script: `scripts/reader_debug_ab.py`
-- CLI Args: `(none)`
+**Run Spec**  
+- Kind: `reader_debug`  
+- Script: `scripts/reader_debug_ab.py`  
+- CLI Args: `(none)`  
 
 **Config Layers**: base + stable
 
@@ -213,13 +213,13 @@ python -m evals_300.tools.run --suite 300_core --pass reader_debug_ab
 ## 5. Reranker Ablation (OFF)
 **ID:** `reranker_ablation_off` • **Version:** 3.0.0 • **Tags:** retrieval, reranker, ablation
 
-**Purpose**
+**Purpose**  
 Retrieval with reranker disabled to establish baseline for uplift.
 
-**Run Spec**
-- Kind: `ragchecker`
-- Script: `scripts/_ragchecker_eval_impl.py`
-- CLI Args: `(none)`
+**Run Spec**  
+- Kind: `ragchecker`  
+- Script: `scripts/_ragchecker_eval_impl.py`  
+- CLI Args: `(none)`  
 
 **Config Layers**: base + stable + reranker_off
 
@@ -241,7 +241,7 @@ Retrieval with reranker disabled to establish baseline for uplift.
 **Timestamps**
 - **Created**: 2025-09-08T23:41:23.566608+00:00
 - **Updated**: 2025-09-09T00:55:48.552085+00:00
-- **Last run**: never
+- **Last run**: 2025-09-08T23:14:49
 
 
 **Gates**
@@ -260,7 +260,7 @@ python -m evals_300.tools.run --suite 300_core --pass reranker_ablation_off
 
 **Latest Results**
 ```json
-{}
+{'precision': 0.09648873348208598, 'recall': 0.0627661633300274, 'f1': 0.06312759563341493, 'faithfulness': 0.22948172101814165, 'artifact_path': 'metrics/history/reranker_ablation_off_1757391287/ragchecker_clean_evaluation_20250908_231448.json', 'timestamp': '2025-09-08T23:14:49'}
 ```
 
 
@@ -268,13 +268,13 @@ python -m evals_300.tools.run --suite 300_core --pass reranker_ablation_off
 ## 6. Reranker Ablation (ON)
 **ID:** `reranker_ablation_on` • **Version:** 3.0.0 • **Tags:** retrieval, reranker, ablation
 
-**Purpose**
+**Purpose**  
 Retrieval with cross-encoder reranker enabled to measure uplift.
 
-**Run Spec**
-- Kind: `ragchecker`
-- Script: `scripts/_ragchecker_eval_impl.py`
-- CLI Args: `(none)`
+**Run Spec**  
+- Kind: `ragchecker`  
+- Script: `scripts/_ragchecker_eval_impl.py`  
+- CLI Args: `(none)`  
 
 **Config Layers**: base + stable + reranker_on
 
@@ -296,7 +296,7 @@ Retrieval with cross-encoder reranker enabled to measure uplift.
 **Timestamps**
 - **Created**: 2025-09-08T23:41:23.566632+00:00
 - **Updated**: 2025-09-09T00:55:48.552102+00:00
-- **Last run**: never
+- **Last run**: 2025-09-08T23:14:51
 
 
 **Gates**
@@ -315,6 +315,6 @@ python -m evals_300.tools.run --suite 300_core --pass reranker_ablation_on
 
 **Latest Results**
 ```json
-{}
+{'precision': 0.09648873348208598, 'recall': 0.0627661633300274, 'f1': 0.06312759563341493, 'faithfulness': 0.22948172101814165, 'artifact_path': 'metrics/history/reranker_ablation_on_1757391289/ragchecker_clean_evaluation_20250908_231450.json', 'timestamp': '2025-09-08T23:14:51'}
 ```
 

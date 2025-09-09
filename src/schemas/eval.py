@@ -119,22 +119,21 @@ class GoldCase(BaseModel):
         return out or ["rag_qa_single"]
 
     @model_validator(mode="after")
-    @classmethod
-    def _mode_requirements(cls, values) -> "GoldCase":
-        mode: Mode = values.mode
-        has_reader = bool(values.gt_answer)
-        has_retr = bool(values.expected_files or values.globs)
-        has_dec = bool(values.expected_decisions)
+    def _mode_requirements(self) -> "GoldCase":
+        mode: Mode = self.mode
+        has_reader = bool(self.gt_answer)
+        has_retr = bool(self.expected_files or self.globs)
+        has_dec = bool(self.expected_decisions)
 
         if mode == Mode.reader and not has_reader:
-            raise ValueError(f"{values.id}: reader mode requires gt_answer")
+            raise ValueError(f"{self.id}: reader mode requires gt_answer")
         # Retrieval mode can have cases without explicit targets (they test general retrieval)
         # if mode == Mode.retrieval and not has_retr:
-        #     raise ValueError(f"{values.id}: retrieval mode requires expected_files or globs")
+        #     raise ValueError(f"{self.id}: retrieval mode requires expected_files or globs")
         # Decision mode can have empty expected_decisions (means no decisions yet)
         # if mode == Mode.decision and not has_dec:
-        #     raise ValueError(f"{values.id}: decision mode requires expected_decisions")
-        return values
+        #     raise ValueError(f"{self.id}: decision mode requires expected_decisions")
+        return self
 
 
 # ---- Canonical per-case result --------------------------------------------
