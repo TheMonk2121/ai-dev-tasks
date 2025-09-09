@@ -8,15 +8,15 @@ to ensure retrieval performance meets minimum standards.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 @dataclass
 class QualityGateResult:
     passed: bool
-    warnings: List[str]
-    errors: List[str]
-    metrics: Dict[str, float]
+    warnings: list[str]
+    errors: list[str]
+    metrics: dict[str, float]
 
     def format_report(self) -> str:
         """Format validation result as human-readable report."""
@@ -50,11 +50,11 @@ class QualityGateResult:
 class QualityGateValidator:
     """Validates evaluation metrics against configured thresholds."""
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         self.soft_gates = config.get("soft", {})
         self.hard_gates = config.get("hard", {})
 
-    def validate(self, metrics: Dict[str, float]) -> QualityGateResult:
+    def validate(self, metrics: dict[str, float]) -> QualityGateResult:
         """Validate metrics against soft and hard gates.
 
         Args:
@@ -81,7 +81,7 @@ class QualityGateValidator:
         return QualityGateResult(passed=len(errors) == 0, warnings=warnings, errors=errors, metrics=metrics.copy())
 
 
-def load_quality_gates(config_path: str = "config/retrieval.yaml") -> Optional[QualityGateValidator]:
+def load_quality_gates(config_path: str = "config/retrieval.yaml") -> QualityGateValidator | None:
     """Load quality gate configuration from YAML file."""
     try:
         import pathlib
@@ -100,7 +100,7 @@ def load_quality_gates(config_path: str = "config/retrieval.yaml") -> Optional[Q
 
 
 def validate_evaluation_results(
-    metrics: Dict[str, float], config_path: str = "config/retrieval.yaml"
+    metrics: dict[str, float], config_path: str = "config/retrieval.yaml"
 ) -> QualityGateResult:
     """Convenience function to validate metrics against configured gates."""
     validator = load_quality_gates(config_path)

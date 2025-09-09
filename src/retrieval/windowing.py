@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 try:
     import tiktoken
@@ -20,7 +20,7 @@ try:
     def count_tokens(text: str) -> int:
         return len(ENCODER.encode(text))
 
-    def decode_tokens(tokens: List[int]) -> str:
+    def decode_tokens(tokens: list[int]) -> str:
         return ENCODER.decode(tokens)
 
 except ImportError:
@@ -28,7 +28,7 @@ except ImportError:
     def count_tokens(text: str) -> int:
         return len(text.split()) * 1.3  # rough token approximation
 
-    def decode_tokens(tokens: List[int]) -> str:
+    def decode_tokens(tokens: list[int]) -> str:
         return ""  # not implemented for fallback
 
 
@@ -45,12 +45,12 @@ class DocumentWindow:
     original_score: float  # score from fusion/previous stage
 
     # Citation support
-    start_char: Optional[int] = None  # character offset for citation
-    end_char: Optional[int] = None  # character offset for citation
+    start_char: int | None = None  # character offset for citation
+    end_char: int | None = None  # character offset for citation
 
     # Context preservation
-    doc_title: Optional[str] = None
-    doc_metadata: Optional[Dict[str, Any]] = None
+    doc_title: str | None = None
+    doc_metadata: dict[str, Any] | None = None
 
 
 class DocumentWindower:
@@ -73,7 +73,7 @@ class DocumentWindower:
         # Stride for non-overlapping portion
         self.stride_tokens = self.window_size_tokens - self.overlap_tokens
 
-    def create_windows(self, candidates: List[Dict[str, Any]], max_windows_per_doc: int = 3) -> List[DocumentWindow]:
+    def create_windows(self, candidates: list[dict[str, Any]], max_windows_per_doc: int = 3) -> list[DocumentWindow]:
         """
         Create windows from a list of candidate documents.
 
@@ -109,9 +109,9 @@ class DocumentWindower:
         document_id: str,
         text: str,
         original_score: float,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
         max_windows: int = 3,
-    ) -> List[DocumentWindow]:
+    ) -> list[DocumentWindow]:
         """Create overlapping windows for a single document."""
 
         if not text.strip():
@@ -170,10 +170,10 @@ class DocumentWindower:
         segment: str,
         document_id: str,
         original_score: float,
-        metadata: Optional[Dict[str, Any]],
+        metadata: dict[str, Any] | None,
         start_token_offset: int = 0,
         start_window_index: int = 0,
-    ) -> List[DocumentWindow]:
+    ) -> list[DocumentWindow]:
         """Create overlapping windows for a text segment."""
 
         segment_tokens = count_tokens(segment)
@@ -244,7 +244,7 @@ class DocumentWindower:
 
         return windows
 
-    def _split_by_paragraphs(self, text: str) -> List[str]:
+    def _split_by_paragraphs(self, text: str) -> list[str]:
         """Split text into paragraphs while preserving structure."""
 
         # Split on double newlines (paragraph boundaries)
@@ -273,11 +273,11 @@ class DocumentWindower:
         return merged or [text]  # fallback to original text
 
     def restore_document_context(
-        self, ranked_windows: List[Tuple[DocumentWindow, float]]
-    ) -> Dict[str, List[Tuple[DocumentWindow, float]]]:
+        self, ranked_windows: list[tuple[DocumentWindow, float]]
+    ) -> dict[str, list[tuple[DocumentWindow, float]]]:
         """Group ranked windows back by document for context assembly."""
 
-        doc_groups: Dict[str, List[Tuple[DocumentWindow, float]]] = {}
+        doc_groups: dict[str, list[tuple[DocumentWindow, float]]] = {}
 
         for window, score in ranked_windows:
             doc_id = window.document_id
@@ -292,7 +292,7 @@ class DocumentWindower:
         return doc_groups
 
 
-def create_windower(config: Optional[Dict[str, Any]] = None) -> DocumentWindower:
+def create_windower(config: dict[str, Any] | None = None) -> DocumentWindower:
     """Factory function to create a DocumentWindower from config."""
 
     if not config:

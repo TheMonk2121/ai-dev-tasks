@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List
+from typing import Any
+from collections.abc import Callable
 
 
 @dataclass
@@ -17,10 +18,10 @@ class HealthCheckResult:
     component: str
     status: str  # "healthy", "degraded", "unhealthy"
     latency_ms: float
-    details: Dict[str, Any]
+    details: dict[str, Any]
     timestamp: float
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
             "component": self.component,
@@ -44,7 +45,7 @@ class RobustnessChecker:
     """Monitors retrieval pipeline health and performance."""
 
     def __init__(self):
-        self.latency_history: List[float] = []
+        self.latency_history: list[float] = []
         self.error_count = 0
         self.success_count = 0
         self.last_health_check = 0.0
@@ -127,7 +128,7 @@ class RobustnessChecker:
             throughput_qps=throughput,
         )
 
-    def check_performance_degradation(self) -> Dict[str, Any]:
+    def check_performance_degradation(self) -> dict[str, Any]:
         """Check for performance degradation indicators."""
         metrics = self.get_performance_metrics()
         issues = []
@@ -162,7 +163,7 @@ class RobustnessChecker:
             },
         }
 
-    def run_comprehensive_health_check(self) -> Dict[str, Any]:
+    def run_comprehensive_health_check(self) -> dict[str, Any]:
         """Run comprehensive health check across all components."""
         health_results = []
         overall_status = "healthy"
@@ -254,7 +255,7 @@ class RobustnessChecker:
         }
 
 
-def test_error_recovery(retrieval_fn) -> Dict[str, Any]:
+def test_error_recovery(retrieval_fn) -> dict[str, Any]:
     """Test error recovery capabilities."""
     recovery_tests = [
         {"name": "empty_query", "query": "", "expected": "graceful_handling"},

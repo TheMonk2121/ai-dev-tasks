@@ -12,14 +12,14 @@ final_score = alpha * rerank_score + (1 - alpha) * normalized_fused_score
 from __future__ import annotations
 
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 DocId = str
 Score = float
 Document = str
 
 
-def _normalize_scores(candidates: List[Tuple[DocId, Score]]) -> Dict[DocId, float]:
+def _normalize_scores(candidates: list[tuple[DocId, Score]]) -> dict[DocId, float]:
     if not candidates:
         return {}
     scores = [s for _id, s in candidates]
@@ -29,7 +29,7 @@ def _normalize_scores(candidates: List[Tuple[DocId, Score]]) -> Dict[DocId, floa
     return {doc_id: (score - s_min) / (s_max - s_min) for doc_id, score in candidates}
 
 
-def _tokenize(text: str) -> List[str]:
+def _tokenize(text: str) -> list[str]:
     return re.findall(r"[A-Za-z0-9_]+", text.lower())
 
 
@@ -62,12 +62,12 @@ def _score_rerank(query: str, doc_text: str) -> float:
 
 def heuristic_rerank(
     query: str,
-    candidates: List[Tuple[DocId, Score]],
-    documents: Dict[DocId, Document],
+    candidates: list[tuple[DocId, Score]],
+    documents: dict[DocId, Document],
     *,
     alpha: float = 0.7,
-    top_m: Optional[int] = None,
-) -> List[Tuple[DocId, Score]]:
+    top_m: int | None = None,
+) -> list[tuple[DocId, Score]]:
     """Rerank fused candidates with simple heuristics.
 
     Args:
@@ -80,7 +80,7 @@ def heuristic_rerank(
     alpha = max(0.0, min(1.0, alpha))
 
     norm = _normalize_scores(candidates)
-    scored: List[Tuple[DocId, Score]] = []
+    scored: list[tuple[DocId, Score]] = []
     for doc_id, fused_score in candidates:
         doc_text = documents.get(doc_id, "")
         rerank_score = _score_rerank(query, doc_text)
