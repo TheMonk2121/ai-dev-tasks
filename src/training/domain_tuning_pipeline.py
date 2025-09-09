@@ -17,7 +17,7 @@ import logging
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -31,9 +31,9 @@ class TrainingExample:
 
     query: str
     positive_context: str
-    negative_contexts: List[str] = field(default_factory=list)
+    negative_contexts: list[str] = field(default_factory=list)
     query_type: str = "general"
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -57,7 +57,7 @@ class DomainTuningConfig:
     query_rewrite_model: str = "t5-small"
 
     # Evaluation
-    eval_metrics: List[str] = field(default_factory=lambda: ["recall@50", "ndcg@10"])
+    eval_metrics: list[str] = field(default_factory=lambda: ["recall@50", "ndcg@10"])
     improvement_threshold: float = 0.02  # 2% improvement required
 
 
@@ -66,10 +66,10 @@ class DataPipeline:
 
     def __init__(self, config: DomainTuningConfig):
         self.config = config
-        self.positive_examples: List[TrainingExample] = []
-        self.hard_negative_examples: List[TrainingExample] = []
+        self.positive_examples: list[TrainingExample] = []
+        self.hard_negative_examples: list[TrainingExample] = []
 
-    def mine_positive_examples(self, evaluation_results: List[Dict[str, Any]]) -> List[TrainingExample]:
+    def mine_positive_examples(self, evaluation_results: list[dict[str, Any]]) -> list[TrainingExample]:
         """Mine positive examples from accepted answers and golden set."""
         positive_examples = []
 
@@ -100,7 +100,7 @@ class DataPipeline:
         logger.info(f"Mined {len(positive_examples)} positive examples")
         return positive_examples
 
-    def mine_hard_negatives(self, evaluation_results: List[Dict[str, Any]]) -> List[TrainingExample]:
+    def mine_hard_negatives(self, evaluation_results: list[dict[str, Any]]) -> list[TrainingExample]:
         """Mine hard negative examples from high-scoring but non-cited contexts."""
         hard_negatives = []
 
@@ -132,7 +132,7 @@ class DataPipeline:
         logger.info(f"Mined {len(hard_negatives)} hard negative examples")
         return hard_negatives
 
-    def _extract_supporting_context(self, answer: str, retrieved_chunks: List[Dict[str, Any]]) -> Optional[str]:
+    def _extract_supporting_context(self, answer: str, retrieved_chunks: list[dict[str, Any]]) -> str | None:
         """Extract supporting context from answer and retrieved chunks."""
         # Simplified context extraction - in practice would use citation parsing
         if not retrieved_chunks:
@@ -142,7 +142,7 @@ class DataPipeline:
         best_chunk = max(retrieved_chunks, key=lambda x: x.get("score", 0.0))
         return best_chunk.get("content", best_chunk.get("text", ""))
 
-    def create_training_dataset(self) -> Tuple[List[TrainingExample], List[TrainingExample]]:
+    def create_training_dataset(self) -> tuple[list[TrainingExample], list[TrainingExample]]:
         """Create balanced training dataset."""
         # Balance positive and hard negative examples
         target_negatives = len(self.positive_examples) * self.config.hard_negative_ratio
@@ -168,8 +168,8 @@ class DualEncoderTrainer:
         self.model_name = config.dual_encoder_model
 
     def prepare_training_data(
-        self, positive_examples: List[TrainingExample], negative_examples: List[TrainingExample]
-    ) -> List[Dict[str, Any]]:
+        self, positive_examples: list[TrainingExample], negative_examples: list[TrainingExample]
+    ) -> list[dict[str, Any]]:
         """Prepare training data for contrastive learning."""
         training_data = []
 
@@ -193,7 +193,7 @@ class DualEncoderTrainer:
 
         return training_data
 
-    def train(self, training_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def train(self, training_data: list[dict[str, Any]]) -> dict[str, Any]:
         """Train the dual-encoder model."""
         logger.info(f"Training dual-encoder model: {self.model_name}")
         logger.info(f"Training examples: {len(training_data)}")
@@ -226,8 +226,8 @@ class CrossEncoderTrainer:
         self.model_name = config.cross_encoder_model
 
     def prepare_training_data(
-        self, positive_examples: List[TrainingExample], negative_examples: List[TrainingExample]
-    ) -> List[Dict[str, Any]]:
+        self, positive_examples: list[TrainingExample], negative_examples: list[TrainingExample]
+    ) -> list[dict[str, Any]]:
         """Prepare training data for pairwise ranking."""
         training_data = []
 
@@ -245,7 +245,7 @@ class CrossEncoderTrainer:
 
         return training_data
 
-    def train(self, training_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def train(self, training_data: list[dict[str, Any]]) -> dict[str, Any]:
         """Train the cross-encoder model."""
         logger.info(f"Training cross-encoder model: {self.model_name}")
         logger.info(f"Training examples: {len(training_data)}")
@@ -277,7 +277,7 @@ class QueryRewriteTrainer:
         self.config = config
         self.model_name = config.query_rewrite_model
 
-    def prepare_training_data(self, positive_examples: List[TrainingExample]) -> List[Dict[str, Any]]:
+    def prepare_training_data(self, positive_examples: list[TrainingExample]) -> list[dict[str, Any]]:
         """Prepare training data for query rewriting."""
         training_data = []
 
@@ -316,7 +316,7 @@ class QueryRewriteTrainer:
 
         return training_data
 
-    def train(self, training_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def train(self, training_data: list[dict[str, Any]]) -> dict[str, Any]:
         """Train the query rewrite model."""
         logger.info(f"Training query rewrite model: {self.model_name}")
         logger.info(f"Training examples: {len(training_data)}")
@@ -348,9 +348,9 @@ class DomainTuningPipeline:
         self.query_rewrite_trainer = QueryRewriteTrainer(config)
 
         # Training results
-        self.training_results: Dict[str, Any] = {}
+        self.training_results: dict[str, Any] = {}
 
-    def run_full_pipeline(self, evaluation_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def run_full_pipeline(self, evaluation_results: list[dict[str, Any]]) -> dict[str, Any]:
         """Run the complete domain tuning pipeline."""
         logger.info("🚀 Starting Phase 3: Domain Tuning Pipeline")
 
@@ -423,7 +423,7 @@ class DomainTuningPipeline:
             }
             raise
 
-    def save_training_results(self, filepath: Optional[str] = None) -> str:
+    def save_training_results(self, filepath: str | None = None) -> str:
         """Save training results to file."""
         if filepath is None:
             timestamp = int(time.time())
@@ -438,7 +438,7 @@ class DomainTuningPipeline:
         logger.info(f"Training results saved to: {filepath}")
         return filepath
 
-    def get_model_snapshots(self) -> Dict[str, str]:
+    def get_model_snapshots(self) -> dict[str, str]:
         """Get paths to trained model snapshots."""
         # In practice, these would be actual model files
         return {
@@ -448,7 +448,7 @@ class DomainTuningPipeline:
         }
 
 
-def create_domain_tuning_pipeline(config: Optional[DomainTuningConfig] = None) -> DomainTuningPipeline:
+def create_domain_tuning_pipeline(config: DomainTuningConfig | None = None) -> DomainTuningPipeline:
     """Create a domain tuning pipeline with default or custom configuration."""
     if config is None:
         config = DomainTuningConfig()
