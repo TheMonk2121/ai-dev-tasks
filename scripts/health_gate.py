@@ -11,7 +11,7 @@ from subprocess import run
 
 
 def main() -> int:
-    result = run(["python3", "scripts/system_monitor.py", "--format", "json"], capture_output=True, text=True)
+    result = run(["uv", "run", "python", "scripts/system_monitor.py", "--format", "json"], capture_output=True, text=True)
     if result.returncode != 0:
         print("health_gate: system_monitor failed", file=sys.stderr)
         print(result.stderr.strip(), file=sys.stderr)

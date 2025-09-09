@@ -22,8 +22,8 @@ from evals.load_cases import load_eval_cases
 READER_GOLD = os.getenv("READER_GOLD_FILE", "evals/reader_gold.jsonl")
 READER_ID_MAP = os.getenv("READER_ID_MAP")  # optional mapping of old_id -> new_id during migration
 # Default to the new extractive reader CLI if not provided
-# You can still override via: export READER_CMD="python3 scripts/run_dspy_reader.py" (or custom)
-READER_CMD = os.getenv("READER_CMD", "python3 scripts/run_extractive_reader.py")
+# You can still override via: export READER_CMD="uv run python scripts/run_dspy_reader.py" (or custom)
+READER_CMD = os.getenv("READER_CMD", "uv run python scripts/run_extractive_reader.py")
 ALPHA = float(os.getenv("MMR_ALPHA", "0.85"))
 PER_FILE_CAP = int(os.getenv("PER_FILE_CAP", "5"))
 
@@ -101,7 +101,7 @@ def load_reader_gold(path):
 
 def run_reader_cmd(query, context, tag, case_id):
     if not READER_CMD:
-        raise RuntimeError("READER_CMD not set (e.g., export READER_CMD='python3 scripts/run_reader.py --model local')")
+        raise RuntimeError("READER_CMD not set (e.g., export READER_CMD='uv run python scripts/run_reader.py --model local')")
     payload = json.dumps({"query": query, "context": context, "tag": tag, "case_id": case_id})
     proc = subprocess.run(
         shlex.split(READER_CMD), input=payload.encode("utf-8"), capture_output=True

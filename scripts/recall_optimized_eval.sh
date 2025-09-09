@@ -27,7 +27,7 @@ echo "🧠 Model: ${BEDROCK_MODEL_ID} | Region: ${AWS_REGION}"
 echo "📈 RPS=${BEDROCK_MAX_RPS}, InFlight=${BEDROCK_MAX_IN_FLIGHT}, JSON=${RAGCHECKER_JSON_PROMPTS}, COVERAGE=${RAGCHECKER_COVERAGE_REWRITE}"
 echo "🧪 Running evaluation..."
 
-python3 "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" \
+uv run python "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" \
   --use-bedrock \
   --bypass-cli \
   --profile recall

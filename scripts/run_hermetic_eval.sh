@@ -43,5 +43,5 @@ env -i \
           echo
         fi
         echo '🚀 Starting evaluation with clean environment...'
-        python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli \"\$@\"
+        uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli \"\$@\"
     " "$@"

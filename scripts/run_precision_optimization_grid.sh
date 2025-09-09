@@ -81,7 +81,7 @@ for ce_weight in "${CE_WEIGHTS[@]}"; do
 
             # Run evaluation
             echo "   Running evaluation..."
-            python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli > "/tmp/grid_${config_name}.log" 2>&1
+            uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli > "/tmp/grid_${config_name}.log" 2>&1
 
             # Extract results from log
             if grep -q "Overall Metrics:" "/tmp/grid_${config_name}.log"; then

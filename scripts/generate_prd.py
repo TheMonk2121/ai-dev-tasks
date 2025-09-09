@@ -102,23 +102,23 @@ ai-dev-tasks/
 ### Local Development
 ```bash
 # Get context bundle for any backlog item
-python3 scripts/extract_context.py {backlog_id}
+uv run python scripts/extract_context.py {backlog_id}
 
 # Auto-generate PRD from backlog context
-python3 scripts/generate_prd.py {backlog_id} --generate-prd
+uv run python scripts/generate_prd.py {backlog_id} --generate-prd
 
 # Create new backlog items with auto-ID
-echo "your idea" | python3 scripts/create_backlog_item.py
+echo "your idea" | uv run python scripts/create_backlog_item.py
 
 # Complete workflow orchestration
-python3 scripts/workflow_orchestrator.py {backlog_id} --execute
+uv run python scripts/workflow_orchestrator.py {backlog_id} --execute
 ```
 
 ### Common Tasks
-- **Context Pickup**: `python3 scripts/extract_context.py <B-ID>`
-- **Idea Capture**: `echo "idea" | python3 scripts/create_backlog_item.py`
-- **PRD Generation**: `python3 scripts/generate_prd.py <B-ID> --generate-prd`
-- **Workflow Setup**: `python3 scripts/workflow_orchestrator.py <B-ID> --execute`
+- **Context Pickup**: `uv run python scripts/extract_context.py <B-ID>`
+- **Idea Capture**: `echo "idea" | uv run python scripts/create_backlog_item.py`
+- **PRD Generation**: `uv run python scripts/generate_prd.py <B-ID> --generate-prd`
+- **Workflow Setup**: `uv run python scripts/workflow_orchestrator.py <B-ID> --execute`
 """
 
 
