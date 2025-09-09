@@ -5,11 +5,10 @@ RAG Pipeline Module - Enforces context consumption and provides citations
 
 import hashlib
 import os
-from typing import Optional
+from typing import Optional, Any, Dict, List
 import re
 import sys
 from collections import defaultdict
-from typing import Any, Dict, List
 
 # Apply litellm compatibility shim before importing DSPy
 try:
@@ -26,6 +25,12 @@ from .citation_utils import select_citations
 from .hit_adapter import _rescale, adapt_rows, pack_hits
 from .vector_store import HybridVectorStore
 
+# Optional reranker environment (configuration values)
+try:
+    from src.rag import reranker_env as RENV  # type: ignore
+except Exception:
+    RENV = None
+
 
 # -------- Normalization helpers ---------------------------------------------
 def _sha10(s: str) -> str:
@@ -37,6 +42,18 @@ def _pick(d: dict, keys):
         if k in d and d[k] is not None:
             return d[k]
     return None
+
+
+def _cand_id(cand) -> str:
+    """Derive a stable chunk/candidate id used across reranking stages."""
+    if isinstance(cand, dict):
+        return str(cand.get("id") or cand.get("doc_id") or _sha10(cand.get("text", "")))
+    if isinstance(cand, tuple):
+        try:
+            return str(cand[0])
+        except Exception:
+            return _sha10(str(cand))
+    return _sha10(str(cand))
 
 
 def _norm_candidates(raw):
@@ -226,7 +243,8 @@ def _load_reranker(model_name: Optional[str] = None):
 def _rerank(query: str, candidates: list[dict], topn: int):
     # Log resolved config once per run
     try:
-        (RENV and RENV.log_config(logger_print=print))
+        if RENV:
+            RENV.log_config(logger_print=print)
     except Exception:
         pass
 
@@ -316,7 +334,8 @@ def _rerank_with_torch(query: str, candidates: list[dict], topn: int):
                     break
 
             if original_cand:
-                d = _normalize_cand(original_cand)
+                from typing import cast
+                d = cast(Dict[str, Any], _normalize_cand(original_cand))
                 d["score_ce"] = float(score)
                 reranked.append(d)
 
@@ -1385,17 +1404,18 @@ def _top_terms_from(results: list, num_terms: int = 10) -> list:
         return []
 
     # Simple term extraction from result text
-    all_text = []
+    all_text: List[str] = []
     for result in results:
-        text = result.get("text", "") or result.get("content", "") or result.get("bm25_text", "")
+        try:
+            text = result.get("text", "") or result.get("content", "") or result.get("bm25_text", "")
+        except AttributeError:
+            text = ""
         if text:
             all_text.append(text)
 
     if not all_text:
         return []
 
-    # Simple word frequency counting
-    import re
     from collections import Counter
 
     # Combine all text and extract words
@@ -1444,10 +1464,6 @@ def _top_terms_from(results: list, num_terms: int = 10) -> list:
         "too",
         "use",
     }
-try:
-    from src.rag import reranker_env as RENV
-except Exception:
-    RENV = None
 
     filtered_words = [w for w in words if w not in stopwords]
 

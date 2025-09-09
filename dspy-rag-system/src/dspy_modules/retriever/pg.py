@@ -307,8 +307,37 @@ def run_fused_query(
                 else:
                     raise
 
-    # Apply MMR reranking if requested
-    if use_mmr and len(rows) > k:
+    # Apply learned fusion head if enabled
+    enabled = os.getenv("FUSION_HEAD_ENABLE", "0") == "1"
+    ckpt = os.getenv("FUSION_HEAD_PATH", "")
+    spec_path = os.getenv("FUSION_FEATURE_SPEC", "configs/feature_spec_v1.json")
+    hidden = int(os.getenv("FUSION_HIDDEN", "0"))
+    device = os.getenv("FUSION_DEVICE", "cpu")
+
+    if enabled and ckpt and os.path.exists(ckpt):
+        try:
+            from .fusion_head import load_feature_spec, load_head, score_rows
+
+            feature_names = load_feature_spec(spec_path)
+            head = load_head(ckpt, in_dim=len(feature_names), hidden=hidden, device=device)
+            rows = score_rows(rows, feature_names, head, device=device)
+
+            # Replace fusion score with learned score
+            for row in rows:
+                row["score"] = row.get("score_learned", row.get("score", 0.0))
+
+            # Sort by learned score and truncate to k
+            rows = sorted(rows, key=lambda x: x["score"], reverse=True)[:k]
+
+        except Exception as e:
+            # Log error but continue with original behavior
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Fusion head failed, falling back to original scoring: {e}")
+
+    # Apply MMR reranking if requested (only if fusion head not used)
+    if use_mmr and len(rows) > k and not (enabled and ckpt and os.path.exists(ckpt)):
         return mmr_rerank(rows, k=k)
 
     return rows[:k]
