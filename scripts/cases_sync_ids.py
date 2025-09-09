@@ -16,31 +16,32 @@ import argparse
 import json
 import os
 import sys
-from typing import List, Dict, Any
+from typing import Any
 
 # Add project paths (repo root)
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from _bootstrap import ROOT, SRC  # noqa: F401
+
 sys.path.insert(0, str(SRC))
 
 from common.case_id import canonical_case_id
 
 
-def load_jsonl(path: str) -> List[Dict[str, Any]]:
-    with open(path, "r", encoding="utf-8") as f:
+def load_jsonl(path: str) -> list[dict[str, Any]]:
+    with open(path, encoding="utf-8") as f:
         return [json.loads(line) for line in f if line.strip()]
 
 
-def dump_jsonl(path: str, rows: List[Dict[str, Any]]) -> None:
+def dump_jsonl(path: str, rows: list[dict[str, Any]]) -> None:
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         for r in rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
 
-def load_json_or_jsonl(path: str) -> List[Dict[str, Any]]:
+def load_json_or_jsonl(path: str) -> list[dict[str, Any]]:
     # Detect JSONL by peeking first non-empty line
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         head = ""
         for line in f:
             if line.strip():
@@ -49,7 +50,7 @@ def load_json_or_jsonl(path: str) -> List[Dict[str, Any]]:
     if head.startswith("{") and head.endswith("}"):
         # Could be either; try full JSON first
         try:
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
             if isinstance(data, list):
                 return data
@@ -71,7 +72,7 @@ def main() -> None:
     reader = load_jsonl(args.reader)
 
     # Build canonical from gold (trust its vocabulary)
-    gold_by_canonical: Dict[str, Dict[str, Any]] = {}
+    gold_by_canonical: dict[str, dict[str, Any]] = {}
     for g in gold:
         q = g.get("query")
         sp = g.get("source_path") or g.get("file_path") or g.get("path") or ""
@@ -79,8 +80,8 @@ def main() -> None:
         g["id"] = cid
         gold_by_canonical[cid] = g
 
-    id_map: Dict[str, str] = {}
-    fixed_reader: List[Dict[str, Any]] = []
+    id_map: dict[str, str] = {}
+    fixed_reader: list[dict[str, Any]] = []
     for r in reader:
         q = r.get("query")
         sp = r.get("source_path") or r.get("file_path") or r.get("path") or ""
@@ -109,4 +110,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
