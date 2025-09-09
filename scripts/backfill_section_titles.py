@@ -12,7 +12,6 @@ Requires POSTGRES_DSN in env.
 import os
 import re
 import sys
-from typing import Tuple
 
 import psycopg2
 import psycopg2.extras
@@ -23,7 +22,7 @@ JS = re.compile(r"^(?:export\s+)?(class|function|const)\s+([A-Za-z_]\w*)", re.MU
 SQL = re.compile(r"(?is)\b(CREATE|ALTER)\s+(INDEX|TABLE|VIEW)\s+(\"?[\w\.]+\"?)")
 
 
-def derive_section_title(filename: str | None, text: str) -> Tuple[str, str]:
+def derive_section_title(filename: str | None, text: str) -> tuple[str, str]:
     fp = (filename or "").lower()
     # Markdown
     if fp.endswith(".md"):
