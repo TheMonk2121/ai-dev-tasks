@@ -11,7 +11,7 @@ echo "================================="
 export AWS_REGION=us-east-1
 
 echo "📋 Applying precision lift pack configuration..."
-python3 scripts/precision_lift_pack_config.py
+bin/py scripts/precision_lift_pack_config.py
 
 echo ""
 echo "🚀 Running precision lift pack evaluation..."
@@ -25,7 +25,7 @@ if [ "${RAGCHECKER_FAST_MODE:-1}" = "1" ]; then
   FAST_FLAG="--fast-mode"
 fi
 
-python3 scripts/ragchecker_precision_lift_evaluation.py \
+bin/py scripts/ragchecker_precision_lift_evaluation.py \
     ${FAST_FLAG} \
     --output "metrics/baseline_evaluations/precision_lift_pack_evaluation_$(date +%s).json"
 

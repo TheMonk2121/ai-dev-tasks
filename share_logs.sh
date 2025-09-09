@@ -36,7 +36,7 @@ stream_logs() {
     echo "================================================"
 
     # Start log monitor in background
-    python3 scripts/log_monitor.py &
+    bin/py scripts/log_monitor.py &
     MONITOR_PID=$!
 
     # Wait a moment for server to start
@@ -115,7 +115,7 @@ case "${1:-show}" in
         ;;
     "monitor")
         echo "🚀 Starting Log Monitor Server..."
-        python3 scripts/log_monitor.py
+        bin/py scripts/log_monitor.py
         ;;
     *)
         echo "Usage: $0 [show|stream|summary|monitor]"

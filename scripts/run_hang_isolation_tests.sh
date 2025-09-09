@@ -13,12 +13,12 @@ echo "=================================="
 # Test A: Bypass Bedrock and embeddings
 echo ""
 echo "🧪 Test A: Bypass Bedrock and embeddings (should complete if hang is Bedrock/embeddings)"
-echo "Command: export RAGCHECKER_BYPASS_CLI=1 && export RAGCHECKER_DISABLE_EMBEDDINGS=1 && python3 scripts/ragchecker_official_evaluation.py --use-local-llm --stable"
+echo "Command: export RAGCHECKER_BYPASS_CLI=1 && export RAGCHECKER_DISABLE_EMBEDDINGS=1 && bin/py scripts/ragchecker_official_evaluation.py --use-local-llm --stable"
 
 export RAGCHECKER_BYPASS_CLI=1
 export RAGCHECKER_DISABLE_EMBEDDINGS=1
 
-if timeout 300 python3 "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" --use-local-llm --stable; then
+if timeout 300 bin/py "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" --use-local-llm --stable; then
     echo "✅ Test A PASSED - No hang with local LLM"
     TEST_A_RESULT="PASS"
 else
@@ -28,14 +28,14 @@ fi
 
 echo ""
 echo "🧪 Test B: Use Bedrock but keep everything else the same"
-echo "Command: export RAGCHECKER_BYPASS_CLI=1 && export RAGCHECKER_DISABLE_EMBEDDINGS=1 && export BEDROCK_MAX_IN_FLIGHT=1 && export BEDROCK_MAX_RPS=0.12 && python3 scripts/ragchecker_official_evaluation.py --use-bedrock --stable"
+echo "Command: export RAGCHECKER_BYPASS_CLI=1 && export RAGCHECKER_DISABLE_EMBEDDINGS=1 && export BEDROCK_MAX_IN_FLIGHT=1 && export BEDROCK_MAX_RPS=0.12 && bin/py scripts/ragchecker_official_evaluation.py --use-bedrock --stable"
 
 export RAGCHECKER_BYPASS_CLI=1
 export RAGCHECKER_DISABLE_EMBEDDINGS=1
 export BEDROCK_MAX_IN_FLIGHT=1
 export BEDROCK_MAX_RPS=0.12
 
-if timeout 300 python3 "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" --use-bedrock --stable; then
+if timeout 300 bin/py "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" --use-bedrock --stable; then
     echo "✅ Test B PASSED - No hang with Bedrock"
     TEST_B_RESULT="PASS"
 else
@@ -45,11 +45,11 @@ fi
 
 echo ""
 echo "🧪 Test C: Disable semantic features completely"
-echo "Command: export RAGCHECKER_SEMANTIC_FEATURES=0 && python3 scripts/ragchecker_official_evaluation.py --use-bedrock --stable"
+echo "Command: export RAGCHECKER_SEMANTIC_FEATURES=0 && bin/py scripts/ragchecker_official_evaluation.py --use-bedrock --stable"
 
 export RAGCHECKER_SEMANTIC_FEATURES=0
 
-if timeout 300 python3 "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" --use-bedrock --stable; then
+if timeout 300 bin/py "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" --use-bedrock --stable; then
     echo "✅ Test C PASSED - No hang with semantic features disabled"
     TEST_C_RESULT="PASS"
 else

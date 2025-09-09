@@ -27,7 +27,7 @@ echo ""
 
 # Run evaluation with optimized configuration
 echo "🚀 Running evaluation with precision optimized configuration..."
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
+bin/py scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --stable
 
 echo ""
 echo "📊 Check results for:"

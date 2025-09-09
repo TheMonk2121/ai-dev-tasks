@@ -12,7 +12,7 @@ export AWS_REGION=us-east-1
 
 # Apply Step 2 configuration
 echo "📋 Applying Step 2 configuration..."
-python3 scripts/precision_recovery_config.py 2
+bin/py scripts/precision_recovery_config.py 2
 
 echo ""
 echo "🚀 Running precision recovery evaluation (Step 2)..."
@@ -25,7 +25,7 @@ if [ "${RAGCHECKER_FAST_MODE:-1}" = "1" ]; then
   FAST_FLAG="--fast-mode"
 fi
 
-python3 scripts/ragchecker_precision_recovery_evaluation.py \
+bin/py scripts/ragchecker_precision_recovery_evaluation.py \
     --step 2 \
     ${FAST_FLAG} \
     --output "metrics/baseline_evaluations/precision_recovery_step2_$(date +%s).json"

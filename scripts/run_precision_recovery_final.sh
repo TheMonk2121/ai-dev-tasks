@@ -12,7 +12,7 @@ export AWS_REGION=us-east-1
 
 # Apply tighter precision-focused configuration
 echo "📋 Applying precision-focused configuration..."
-python3 scripts/precision_recovery_config.py 1
+bin/py scripts/precision_recovery_config.py 1
 
 # Tighten selection parameters for precision
 export RAGCHECKER_REDUNDANCY_TRIGRAM_MAX=0.40     # 0.45 → 0.40 (tighter)
@@ -38,7 +38,7 @@ if [ "${RAGCHECKER_FAST_MODE:-1}" = "1" ]; then
   FAST_FLAG="--fast-mode"
 fi
 
-python3 scripts/ragchecker_precision_recovery_evaluation.py \
+bin/py scripts/ragchecker_precision_recovery_evaluation.py \
     --step 1 \
     ${FAST_FLAG} \
     --output "metrics/baseline_evaluations/precision_recovery_final_$(date +%s).json"

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Python wrapper that ensures consistent uv environment usage
+# Usage: bin/py [python-args...]
+
+set -e
+
+# Ensure we use the project's .venv environment
+export UV_PROJECT_ENVIRONMENT=.venv
+
+# Run python via uv with all passed arguments
+exec uv run python "$@"
