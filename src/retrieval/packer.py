@@ -7,7 +7,6 @@ per-document caps and overall character budget.
 
 from __future__ import annotations
 
-from typing import Dict, List, Tuple
 
 DocId = str
 Score = float
@@ -23,8 +22,8 @@ def _first_two_sentences(s: str, max_chars: int = 600) -> str:
 
 
 def pack_candidates(
-    candidates: List[Tuple[DocId, Score]],
-    documents: Dict[DocId, Document],
+    candidates: list[tuple[DocId, Score]],
+    documents: dict[DocId, Document],
     *,
     max_chars: int = 1600,
     max_per_document: int = 2,
@@ -34,9 +33,9 @@ def pack_candidates(
     Each block:
         [doc:<doc_id>] <first two sentences>
     """
-    blocks: List[str] = []
+    blocks: list[str] = []
     used = 0
-    per_doc_count: Dict[str, int] = {}
+    per_doc_count: dict[str, int] = {}
 
     for doc_id, _score in candidates:
         cnt = per_doc_count.get(doc_id, 0)

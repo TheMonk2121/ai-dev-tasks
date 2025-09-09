@@ -12,7 +12,7 @@ import pathlib
 import subprocess
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 
 @dataclass
@@ -20,7 +20,7 @@ class MemoryContext:
     """Context information from memory systems."""
 
     system_name: str
-    context_data: Dict[str, Any]
+    context_data: dict[str, Any]
     timestamp: float
     status: str  # "healthy", "degraded", "unavailable"
 
@@ -30,10 +30,10 @@ class MemoryIntegrator:
 
     def __init__(self, config_path: str = "config/retrieval.yaml"):
         self.config_path = config_path
-        self.memory_contexts: Dict[str, MemoryContext] = {}
+        self.memory_contexts: dict[str, MemoryContext] = {}
         self.last_sync = 0.0
 
-    def sync_with_memory_orchestrator(self) -> Dict[str, Any]:
+    def sync_with_memory_orchestrator(self) -> dict[str, Any]:
         """Sync retrieval system state with memory orchestrator."""
         try:
             # Run memory orchestrator to get current context
@@ -72,7 +72,7 @@ class MemoryIntegrator:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _update_memory_contexts(self, memory_data: Dict[str, Any]) -> None:
+    def _update_memory_contexts(self, memory_data: dict[str, Any]) -> None:
         """Update memory contexts from orchestrator data."""
         timestamp = time.time()
 
@@ -87,7 +87,7 @@ class MemoryIntegrator:
                 )
                 self.memory_contexts[system_name] = context
 
-    def get_retrieval_context(self) -> Dict[str, Any]:
+    def get_retrieval_context(self) -> dict[str, Any]:
         """Get retrieval-relevant context from memory systems."""
         context = {"current_priorities": [], "system_status": {}, "configuration_state": {}, "recent_changes": []}
 
@@ -117,7 +117,7 @@ class MemoryIntegrator:
 
         return context
 
-    def update_memory_with_retrieval_status(self, status: Dict[str, Any]) -> bool:
+    def update_memory_with_retrieval_status(self, status: dict[str, Any]) -> bool:
         """Update memory systems with current retrieval status."""
         try:
             # Create retrieval status entry
@@ -148,7 +148,7 @@ class GovernanceAutomator:
         self.config_path = config_path
         self.governance_rules = self._load_governance_rules()
 
-    def _load_governance_rules(self) -> Dict[str, Any]:
+    def _load_governance_rules(self) -> dict[str, Any]:
         """Load governance rules from configuration."""
         return {
             "configuration_validation": {
@@ -184,7 +184,7 @@ class GovernanceAutomator:
             },
         }
 
-    def validate_configuration(self, config_path: Optional[str] = None) -> Dict[str, Any]:
+    def validate_configuration(self, config_path: str | None = None) -> dict[str, Any]:
         """Validate configuration against governance rules."""
         config_path = config_path or self.config_path
 
@@ -229,11 +229,11 @@ class GovernanceAutomator:
 
         return validation_result
 
-    def _check_field_exists(self, config: Dict[str, Any], field_path: str) -> bool:
+    def _check_field_exists(self, config: dict[str, Any], field_path: str) -> bool:
         """Check if a nested field exists in config."""
         return self._get_nested_value(config, field_path) is not None
 
-    def _get_nested_value(self, config: Dict[str, Any], field_path: str) -> Any:
+    def _get_nested_value(self, config: dict[str, Any], field_path: str) -> Any:
         """Get nested value from config using dot notation."""
         parts = field_path.split(".")
         current = config
@@ -246,7 +246,7 @@ class GovernanceAutomator:
 
         return current
 
-    def generate_compliance_report(self) -> Dict[str, Any]:
+    def generate_compliance_report(self) -> dict[str, Any]:
         """Generate comprehensive compliance report."""
         report = {
             "timestamp": time.time(),
@@ -279,7 +279,7 @@ class GovernanceAutomator:
 
         return report
 
-    def _check_testing_compliance(self) -> Dict[str, Any]:
+    def _check_testing_compliance(self) -> dict[str, Any]:
         """Check testing compliance against governance rules."""
 
         # Check if test files exist
@@ -307,7 +307,7 @@ class GovernanceAutomator:
 
         return compliance
 
-    def _check_operational_compliance(self) -> Dict[str, Any]:
+    def _check_operational_compliance(self) -> dict[str, Any]:
         """Check operational compliance against governance rules."""
         rules = self.governance_rules["operational_standards"]
 
@@ -338,7 +338,7 @@ class GovernanceAutomator:
 
         return compliance
 
-    def automated_maintenance(self) -> Dict[str, Any]:
+    def automated_maintenance(self) -> dict[str, Any]:
         """Perform automated maintenance tasks."""
         maintenance_results = {
             "timestamp": time.time(),

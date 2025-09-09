@@ -13,7 +13,7 @@ Key principles:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 if TYPE_CHECKING:
     from sklearn.feature_extraction.text import TfidfVectorizer
@@ -53,15 +53,15 @@ class PrefilterConfig:
 class RecallFriendlyPrefilter:
     """Applies conservative pre-filtering to maintain high recall."""
 
-    def __init__(self, config: Optional[PrefilterConfig] = None):
+    def __init__(self, config: PrefilterConfig | None = None):
         self.config = config or PrefilterConfig()
-        self._tfidf_vectorizer: Optional[Any] = None
+        self._tfidf_vectorizer: Any | None = None
 
     def filter_bm25_results(
         self,
-        results: List[Tuple[DocId, Score]],
-        documents: Dict[DocId, Document],
-    ) -> List[Tuple[DocId, Score]]:
+        results: list[tuple[DocId, Score]],
+        documents: dict[DocId, Document],
+    ) -> list[tuple[DocId, Score]]:
         """Filter BM25 results by score and document quality."""
         filtered = []
 
@@ -81,9 +81,9 @@ class RecallFriendlyPrefilter:
 
     def filter_vector_results(
         self,
-        results: List[Tuple[DocId, Score]],
-        documents: Dict[DocId, Document],
-    ) -> List[Tuple[DocId, Score]]:
+        results: list[tuple[DocId, Score]],
+        documents: dict[DocId, Document],
+    ) -> list[tuple[DocId, Score]]:
         """Filter vector results by similarity and document quality."""
         filtered = []
 
@@ -103,9 +103,9 @@ class RecallFriendlyPrefilter:
 
     def apply_diversity_filter(
         self,
-        results: List[Tuple[DocId, Score]],
-        documents: Dict[DocId, Document],
-    ) -> List[Tuple[DocId, Score]]:
+        results: list[tuple[DocId, Score]],
+        documents: dict[DocId, Document],
+    ) -> list[tuple[DocId, Score]]:
         """Remove near-duplicate documents while preserving highest scores."""
         if not self.config.enable_diversity or len(results) <= 1:
             return results
@@ -139,7 +139,7 @@ class RecallFriendlyPrefilter:
             return results
 
         # Greedy selection: keep highest scoring documents that aren't too similar
-        kept_indices: Set[int] = set()
+        kept_indices: set[int] = set()
 
         # Sort by score (descending) to prioritize highest-scoring documents
         indexed_results = [(i, doc_id, score) for i, (doc_id, score) in enumerate(results) if doc_id in doc_ids]
@@ -169,10 +169,10 @@ class RecallFriendlyPrefilter:
 
     def prefilter_all(
         self,
-        bm25_results: List[Tuple[DocId, Score]],
-        vector_results: List[Tuple[DocId, Score]],
-        documents: Dict[DocId, Document],
-    ) -> Tuple[List[Tuple[DocId, Score]], List[Tuple[DocId, Score]]]:
+        bm25_results: list[tuple[DocId, Score]],
+        vector_results: list[tuple[DocId, Score]],
+        documents: dict[DocId, Document],
+    ) -> tuple[list[tuple[DocId, Score]], list[tuple[DocId, Score]]]:
         """Apply all pre-filtering steps to both result sets."""
         # Filter by score and quality
         filtered_bm25 = self.filter_bm25_results(bm25_results, documents)
@@ -195,11 +195,11 @@ class RecallFriendlyPrefilter:
 
     def get_filter_stats(
         self,
-        original_bm25: List[Tuple[DocId, Score]],
-        original_vector: List[Tuple[DocId, Score]],
-        filtered_bm25: List[Tuple[DocId, Score]],
-        filtered_vector: List[Tuple[DocId, Score]],
-    ) -> Dict[str, Union[int, float]]:
+        original_bm25: list[tuple[DocId, Score]],
+        original_vector: list[tuple[DocId, Score]],
+        filtered_bm25: list[tuple[DocId, Score]],
+        filtered_vector: list[tuple[DocId, Score]],
+    ) -> dict[str, int | float]:
         """Return filtering statistics for monitoring."""
         return {
             "bm25_original": len(original_bm25),
@@ -211,7 +211,7 @@ class RecallFriendlyPrefilter:
         }
 
 
-def create_prefilter_from_config(config_dict: Dict) -> RecallFriendlyPrefilter:
+def create_prefilter_from_config(config_dict: dict) -> RecallFriendlyPrefilter:
     """Create prefilter from configuration dictionary."""
     prefilter_config = config_dict.get("prefilter", {})
 
