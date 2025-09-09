@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List
-
 from src.schemas.eval import (
     CaseResult,
     ContextChunk,
@@ -27,8 +25,8 @@ def make_candidate(q: str = "q", i: int = 0) -> RetrievalCandidate:
 
 
 def make_case_result(case_id: str = "case_1", q: str = "q", k: int = 3) -> CaseResult:
-    cands: List[RetrievalCandidate] = [make_candidate(q, i) for i in range(k)]
-    chunks: List[ContextChunk] = [c.chunk for c in cands]
+    cands: list[RetrievalCandidate] = [make_candidate(q, i) for i in range(k)]
+    chunks: list[ContextChunk] = [c.chunk for c in cands]
     return CaseResult(
         id=case_id,
         mode="retrieval",

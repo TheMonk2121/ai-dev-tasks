@@ -12,7 +12,6 @@ import re
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
 
 import pytest
 
@@ -78,7 +77,7 @@ class TestBrokenLinkValidation:
             file_path.parent.mkdir(parents=True, exist_ok=True)
             file_path.write_text(content)
 
-    def extract_markdown_links(self, file_path: str) -> List[Tuple[str, str]]:
+    def extract_markdown_links(self, file_path: str) -> list[tuple[str, str]]:
         """Extract markdown links from a file.
 
         Returns:
@@ -109,7 +108,7 @@ class TestBrokenLinkValidation:
             target_path = source_dir / link_url
         return str(target_path.resolve())
 
-    def is_relative_link(self, url: Union[str, None]) -> bool:
+    def is_relative_link(self, url: str | None) -> bool:
         """Check if URL is a relative file link (not external/anchor)."""
         # Handle empty or None URLs
         if not url or not isinstance(url, str):
@@ -130,7 +129,7 @@ class TestBrokenLinkValidation:
         # Only consider .md files or files with clear extensions
         return url.endswith(".md")
 
-    def validate_file_links(self, file_path: str) -> List[str]:
+    def validate_file_links(self, file_path: str) -> list[str]:
         """Validate all links in a markdown file.
 
         Returns:
@@ -222,7 +221,7 @@ class TestBrokenLinkValidation:
     def test_comprehensive_validation_function(self):
         """Test the main validation function that checks all files."""
 
-        def validate_all_markdown_files(root_dir: str = ".") -> Dict[str, List[str]]:
+        def validate_all_markdown_files(root_dir: str = ".") -> dict[str, list[str]]:
             """Validate all markdown files in directory."""
             all_errors = {}
 
@@ -242,6 +241,7 @@ class TestBrokenLinkValidation:
         assert any("mixed_links.md" in path for path in all_errors.keys())
         assert any("subfolder_test.md" in path for path in all_errors.keys())
 
+
 class TestRealProjectBrokenLinks:
     """Test broken links in the actual project (if run from project root)."""
 
@@ -249,7 +249,7 @@ class TestRealProjectBrokenLinks:
     def test_no_broken_links_in_project(self):
         """Test that the real project has no broken links."""
 
-        def validate_project_links() -> Dict[str, List[str]]:
+        def validate_project_links() -> dict[str, list[str]]:
             """Validate links in actual project files."""
             # Create validator instance directly to avoid circular import
             validator = TestBrokenLinkValidation()
@@ -273,6 +273,7 @@ class TestRealProjectBrokenLinks:
 
         # If this fails, it means we have broken links in the project
         assert len(project_errors) == 0, f"Found broken links in project: {project_errors}"
+
 
 if __name__ == "__main__":
     # Allow running this test directly

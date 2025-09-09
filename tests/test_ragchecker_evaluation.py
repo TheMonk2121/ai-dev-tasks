@@ -183,7 +183,7 @@ class TestOfficialRAGCheckerEvaluator:
         assert Path(input_file).exists()
 
         # Verify file contains correct data
-        with open(input_file, "r") as f:
+        with open(input_file) as f:
             saved_data = json.load(f)
 
         assert saved_data == test_data
@@ -337,7 +337,7 @@ class TestRAGCheckerIntegration:
         metric_fields = ["precision", "recall", "f1_score"]
         for field in metric_fields:
             assert field in metrics
-            assert isinstance(metrics[field], (int, float))
+            assert isinstance(metrics[field], int | float)
 
     def test_evaluation_file_creation(self):
         """Test that evaluation files are created correctly."""
@@ -359,7 +359,7 @@ class TestRAGCheckerIntegration:
         # Verify file exists and is valid JSON
         assert Path(input_file).exists()
 
-        with open(input_file, "r") as f:
+        with open(input_file) as f:
             data = json.load(f)
             assert data == test_data
 
