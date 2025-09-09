@@ -19,19 +19,110 @@ from .session_manager import SessionManager
 
 logger = logging.getLogger(__name__)
 
+# Role instructions for different AI roles
+ROLE_INSTRUCTIONS = {
+    "coder": {
+        "focus": "Code implementation, debugging, and technical problem-solving",
+        "context": "Understand the codebase structure, existing patterns, and project requirements",
+        "approach": "Write clean, efficient code following project standards",
+        "priorities": ["Functionality", "Performance", "Maintainability"],
+        "validation": "Ensure code passes all tests and meets quality standards",
+        "required_standards": [
+            "Follow existing code patterns and conventions",
+            "Write comprehensive tests for new functionality",
+            "Optimize for readability and performance",
+            "Handle edge cases and error conditions",
+        ],
+        "safety_protocol": [
+            "read_core_memory_context",
+            "check_current_backlog",
+            "understand_file_organization",
+            "apply_tier_based_analysis",
+            "run_conflict_detection",
+            "validate_documentation",
+        ],
+        "quality_gates": [
+            "Code review requirements",
+            "Test coverage thresholds",
+            "Performance benchmarks",
+            "Security validations",
+        ],
+        "testing_guide": {
+            "unit_tests": "Test individual functions and methods",
+            "integration_tests": "Test component interactions",
+            "performance_tests": "Validate performance requirements",
+            "security_tests": "Check for security vulnerabilities",
+            "system_tests": "End-to-end system validation",
+        },
+        "tool_usage": {
+            "code_quality": "Use linting and formatting tools",
+            "validation": "Run validation scripts and checks",
+            "development": "Use development environment tools",
+            "testing": "Execute test suites and coverage analysis",
+            "monitoring": "Monitor system performance and logs",
+            "pre_commit": "Run pre-commit hooks and checks",
+            "memory_rehydration": "Use memory rehydration for context",
+            "search_and_analysis": "Search codebase and analyze patterns",
+        },
+        "guidelines": [
+            "Follow existing code patterns and conventions",
+            "Write comprehensive tests for new functionality",
+            "Optimize for readability and performance",
+            "Handle edge cases and error conditions",
+        ],
+    },
+    "planner": {
+        "focus": "Strategic planning, task breakdown, and project organization",
+        "approach": "Break down complex problems into manageable tasks",
+        "priorities": ["Clarity", "Feasibility", "Dependencies"],
+        "guidelines": [
+            "Create clear, actionable task lists",
+            "Identify dependencies and blockers",
+            "Estimate effort and complexity",
+            "Plan for testing and validation",
+        ],
+    },
+    "implementer": {
+        "focus": "Executing planned tasks and integrating components",
+        "approach": "Implement solutions following established patterns",
+        "priorities": ["Completeness", "Integration", "Quality"],
+        "guidelines": [
+            "Follow the established development workflow",
+            "Ensure proper integration with existing systems",
+            "Maintain code quality and documentation",
+            "Test thoroughly before marking complete",
+        ],
+    },
+    "researcher": {
+        "focus": "Investigation, analysis, and knowledge discovery",
+        "approach": "Gather information and provide insights",
+        "priorities": ["Accuracy", "Completeness", "Relevance"],
+        "guidelines": [
+            "Research thoroughly before making recommendations",
+            "Cite sources and provide evidence",
+            "Consider multiple perspectives and approaches",
+            "Document findings clearly and concisely",
+        ],
+    },
+}
+
 # Minimal role-to-file mapping for tests expecting ROLE_FILES
 # Keys must include at least: coder, planner, implementer, researcher
 # Values are project-relative markdown paths.
 ROLE_FILES = {
     "coder": [
-        "600_archives/consolidated-guides/400_comprehensive-coding-best-practices.md",
+        "400_guides/400_04_development-workflow-and-standards.md",
         # Use existing docs focused on workflow, organization, and performance
         "400_guides/400_code-criticality-guide.md",
         "400_guides/400_testing-strategy-guide.md",
-        "400_guides/400_04_development-workflow-and-standards.md",
         "400_guides/400_05_codebase-organization-patterns.md",
         "400_guides/400_11_performance-optimization.md",
         "100_memory/104_dspy-development-context.md",
+        # Additional files for comprehensive coder support
+        "Task-List-Chunk-Relationship-Visualization.md",
+        "scripts/dependency_monitor.py",
+        "400_guides/400_graph-visualization-guide.md",
+        "dspy-rag-system/src/utils/graph_data_provider.py",
     ],
     # Other roles present for interface compatibility
     "planner": [],
@@ -1152,13 +1243,15 @@ def rehydrate(query: str, role: str = "planner", **config: Any) -> HydrationBund
             "use_entity_expansion",
         ]
         extra_meta = {k: config[k] for k in passthrough_keys if k in config}
-        bundle.meta.update({
-            "query": query,
-            "requested_role": role,
-            "limit": limit,
-            "token_budget": token_budget,
-            **extra_meta,
-        })
+        bundle.meta.update(
+            {
+                "query": query,
+                "requested_role": role,
+                "limit": limit,
+                "token_budget": token_budget,
+                **extra_meta,
+            }
+        )
         return bundle
     except Exception as e:
         # Fall back to a minimal bundle
