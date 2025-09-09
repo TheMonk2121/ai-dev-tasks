@@ -11,10 +11,9 @@ import json
 import os
 import shutil
 from pathlib import Path
-from typing import List, Tuple
 
 
-def find_zero_byte_files(directories: List[str]) -> List[Path]:
+def find_zero_byte_files(directories: list[str]) -> list[Path]:
     """Find all zero-byte JSON/JSONL files in the specified directories."""
     zero_byte_files = []
 
@@ -34,7 +33,7 @@ def find_zero_byte_files(directories: List[str]) -> List[Path]:
     return zero_byte_files
 
 
-def find_invalid_json_files(directories: List[str]) -> List[Path]:
+def find_invalid_json_files(directories: list[str]) -> list[Path]:
     """Find JSON/JSONL files with invalid JSON content."""
     invalid_files = []
 
@@ -48,7 +47,7 @@ def find_invalid_json_files(directories: List[str]) -> List[Path]:
                 continue  # Skip zero-byte files (handled separately)
 
             try:
-                with open(file_path, "r") as f:
+                with open(file_path) as f:
                     json.load(f)
             except (json.JSONDecodeError, UnicodeDecodeError):
                 invalid_files.append(file_path)
@@ -58,7 +57,7 @@ def find_invalid_json_files(directories: List[str]) -> List[Path]:
                 continue  # Skip zero-byte files (handled separately)
 
             try:
-                with open(file_path, "r") as f:
+                with open(file_path) as f:
                     for line_num, line in enumerate(f, 1):
                         if line.strip():  # Skip empty lines
                             json.loads(line)
