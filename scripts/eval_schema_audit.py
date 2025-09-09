@@ -9,7 +9,7 @@ import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Set
+from typing import Any, List, Set
 
 sys.path.append(".")
 

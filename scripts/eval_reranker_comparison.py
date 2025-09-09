@@ -11,7 +11,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 
 def run_evaluation_with_config(config_name: str, config_file: str, output_dir: str) -> dict[str, Any]:
