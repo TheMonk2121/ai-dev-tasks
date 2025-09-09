@@ -7,7 +7,7 @@ Runs progressive feature ablation to establish provenance.
 import json
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 # bootstrap
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -101,7 +101,7 @@ ABLATION_STAGES = [
 ]
 
 
-def eval_stage(stage: Dict[str, Any], cases: List[Any]) -> Dict[str, Any]:
+def eval_stage(stage: dict[str, Any], cases: list[Any]) -> dict[str, Any]:
     """Evaluate a single ablation stage."""
     config = stage["config"]
     hits = 0
