@@ -8,7 +8,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 # Optional imports for visualization
 try:
@@ -29,7 +29,7 @@ class CostAlert:
     period: str  # "daily", "weekly", "monthly"
     alert_type: str  # "budget", "spike", "trend"
     enabled: bool = True
-    last_triggered: Optional[str] = None
+    last_triggered: str | None = None
 
 
 @dataclass
@@ -43,7 +43,7 @@ class UsageSummary:
     total_cost: float
     avg_cost_per_request: float
     avg_tokens_per_request: float
-    peak_usage_hour: Optional[str] = None
+    peak_usage_hour: str | None = None
 
 
 class BedrockCostMonitor:
@@ -84,7 +84,7 @@ class BedrockCostMonitor:
         self.INPUT_TOKEN_COST = 3.00 / 1_000_000  # $3.00 per 1M input tokens
         self.OUTPUT_TOKEN_COST = 15.00 / 1_000_000  # $15.00 per 1M output tokens
 
-    def _load_config(self) -> Dict[str, Any]:
+    def _load_config(self) -> dict[str, Any]:
         """Load cost monitoring configuration."""
         default_config = {
             "budget_alerts": {
@@ -106,7 +106,7 @@ class BedrockCostMonitor:
 
         if self.config_file.exists():
             try:
-                with open(self.config_file, "r") as f:
+                with open(self.config_file) as f:
                     config = json.load(f)
                 # Merge with defaults
                 for key, value in default_config.items():
@@ -122,13 +122,13 @@ class BedrockCostMonitor:
 
         return default_config
 
-    def load_usage_data(self) -> List[Dict[str, Any]]:
+    def load_usage_data(self) -> list[dict[str, Any]]:
         """Load usage data from log file."""
         if not self.usage_log_file.exists():
             return []
 
         try:
-            with open(self.usage_log_file, "r") as f:
+            with open(self.usage_log_file) as f:
                 return json.load(f)
         except Exception as e:
             print(f"⚠️ Failed to load usage data: {e}")
@@ -207,7 +207,7 @@ class BedrockCostMonitor:
         # Find peak usage hour
         peak_usage_hour = None
         if filtered_data:
-            hourly_usage: Dict[str, float] = {}
+            hourly_usage: dict[str, float] = {}
             for entry in filtered_data:
                 try:
                     hour = datetime.fromisoformat(entry["timestamp"]).strftime("%H:00")
@@ -229,7 +229,7 @@ class BedrockCostMonitor:
             peak_usage_hour=peak_usage_hour,
         )
 
-    def check_budget_alerts(self) -> List[Dict[str, Any]]:
+    def check_budget_alerts(self) -> list[dict[str, Any]]:
         """Check for budget threshold violations and return alerts."""
         alerts = []
 
@@ -283,7 +283,7 @@ class BedrockCostMonitor:
 
         return alerts
 
-    def generate_cost_report(self, period: str = "week") -> Dict[str, Any]:
+    def generate_cost_report(self, period: str = "week") -> dict[str, Any]:
         """Generate comprehensive cost report."""
         summary = self.get_usage_summary(period)
         alerts = self.check_budget_alerts()
@@ -315,7 +315,7 @@ class BedrockCostMonitor:
 
         return report
 
-    def _get_cost_breakdown(self, period: str) -> Dict[str, Any]:
+    def _get_cost_breakdown(self, period: str) -> dict[str, Any]:
         """Get detailed cost breakdown by component."""
         usage_data = self.load_usage_data()
 
@@ -342,7 +342,7 @@ class BedrockCostMonitor:
             "total": summary.total_cost,
         }
 
-    def get_optimization_recommendations(self) -> List[Dict[str, Any]]:
+    def get_optimization_recommendations(self) -> list[dict[str, Any]]:
         """Generate cost optimization recommendations."""
         recommendations = []
 
