@@ -16,7 +16,7 @@ import json
 import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 import numpy as np
 
@@ -43,10 +43,10 @@ class EvaluationMetrics:
     ece: float = 0.0
 
     # Slice-specific metrics
-    slice_metrics: Dict[str, Dict[str, float]] = None
+    slice_metrics: dict[str, dict[str, float]] = None
 
     # Calibration info
-    temperature_param: Optional[float] = None
+    temperature_param: float | None = None
     calibrated: bool = False
 
 
@@ -57,19 +57,19 @@ class QueryResult:
     query: str
     expected_answer: str
     predicted_answer: str
-    expected_spans: List[str]
-    retrieved_spans: List[str]
-    sub_claims: List[str]
-    supported_claims: List[str]
-    confidence: Optional[float]
-    slice_tags: List[str]
+    expected_spans: list[str]
+    retrieved_spans: list[str]
+    sub_claims: list[str]
+    supported_claims: list[str]
+    confidence: float | None
+    slice_tags: list[str]
 
 
 class NDCGCalculator:
     """Calculator for Normalized Discounted Cumulative Gain."""
 
     @staticmethod
-    def dcg(relevances: List[float], k: int = 10) -> float:
+    def dcg(relevances: list[float], k: int = 10) -> float:
         """Calculate DCG@k."""
         dcg = 0.0
         for i, rel in enumerate(relevances[:k]):
@@ -80,7 +80,7 @@ class NDCGCalculator:
         return dcg
 
     @staticmethod
-    def ndcg(relevances: List[float], ideal_relevances: List[float], k: int = 10) -> float:
+    def ndcg(relevances: list[float], ideal_relevances: list[float], k: int = 10) -> float:
         """Calculate NDCG@k."""
         dcg_score = NDCGCalculator.dcg(relevances, k)
         idcg_score = NDCGCalculator.dcg(sorted(ideal_relevances, reverse=True), k)
@@ -96,8 +96,8 @@ class CoverageCalculator:
 
     @staticmethod
     def calculate_coverage(
-        sub_claims: List[str], retrieved_spans: List[str], threshold: float = 0.3  # Token overlap threshold
-    ) -> Tuple[float, List[str]]:
+        sub_claims: list[str], retrieved_spans: list[str], threshold: float = 0.3  # Token overlap threshold
+    ) -> tuple[float, list[str]]:
         """
         Calculate coverage of sub-claims by retrieved spans.
 
@@ -139,7 +139,7 @@ class SpanMatcher:
         return predicted.strip().lower() == expected.strip().lower()
 
     @staticmethod
-    def span_support(predicted_answer: str, retrieved_spans: List[str], min_overlap: float = 0.5) -> float:
+    def span_support(predicted_answer: str, retrieved_spans: list[str], min_overlap: float = 0.5) -> float:
         """
         Calculate fraction of predicted answer supported by spans.
 
@@ -175,7 +175,7 @@ class TemperatureScaler:
         self.fitted = False
 
     def fit(
-        self, confidences: List[float], correctness: List[bool], method: str = "isotonic"  # "platt" or "isotonic"
+        self, confidences: list[float], correctness: list[bool], method: str = "isotonic"  # "platt" or "isotonic"
     ) -> float:
         """
         Fit temperature scaling to calibrate confidences.
@@ -260,7 +260,7 @@ class ECECalculator:
     """Expected Calibration Error calculator."""
 
     @staticmethod
-    def calculate_ece(confidences: List[float], correctness: List[bool], n_bins: int = 10) -> float:
+    def calculate_ece(confidences: list[float], correctness: list[bool], n_bins: int = 10) -> float:
         """
         Calculate Expected Calibration Error.
 
@@ -311,7 +311,7 @@ class EnhancedEvaluator:
     def __init__(self):
         self.temperature_scaler = TemperatureScaler()
 
-    def evaluate_batch(self, query_results: List[QueryResult], slice_breakdown: bool = True) -> EvaluationMetrics:
+    def evaluate_batch(self, query_results: list[QueryResult], slice_breakdown: bool = True) -> EvaluationMetrics:
         """
         Evaluate a batch of query results with all metrics.
 
@@ -338,7 +338,7 @@ class EnhancedEvaluator:
         correctness = []
 
         # Per-slice tracking
-        slice_results: Dict[str, List[QueryResult]] = {}
+        slice_results: dict[str, list[QueryResult]] = {}
 
         for result in query_results:
             # NDCG calculation (simplified - would need ranking info in practice)
@@ -430,7 +430,7 @@ class EnhancedEvaluator:
             json.dump(results, f, indent=2)
 
 
-def load_golden_queries(golden_path: str) -> List[QueryResult]:
+def load_golden_queries(golden_path: str) -> list[QueryResult]:
     """Load golden evaluation queries from JSONL file."""
     queries = []
 
@@ -438,7 +438,7 @@ def load_golden_queries(golden_path: str) -> List[QueryResult]:
     if not golden_file.exists():
         return queries
 
-    with open(golden_file, "r") as f:
+    with open(golden_file) as f:
         for line in f:
             data = json.loads(line.strip())
 

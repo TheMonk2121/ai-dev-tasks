@@ -8,7 +8,7 @@ across the entire evaluation system.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Literal, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -38,22 +38,22 @@ class UnifiedGoldCase:
     id: str
     mode: EvaluationMode
     query: str
-    tags: List[str]
+    tags: list[str]
 
     # Optional metadata
-    category: Optional[str] = None
-    notes: Optional[str] = None
+    category: str | None = None
+    notes: str | None = None
 
     # Ground truth data (mode-dependent)
-    gt_answer: Optional[str] = None  # For reader mode
-    expected_files: Optional[List[str]] = None  # For retrieval mode
-    globs: Optional[List[str]] = None  # For retrieval mode
-    expected_decisions: Optional[List[str]] = None  # For decision mode
+    gt_answer: str | None = None  # For reader mode
+    expected_files: list[str] | None = None  # For retrieval mode
+    globs: list[str] | None = None  # For retrieval mode
+    expected_decisions: list[str] | None = None  # For decision mode
 
     # Legacy compatibility fields (deprecated)
-    qvec: Optional[List[float]] = None  # Deprecated: use embeddings instead
-    file_path: Optional[str] = None  # Deprecated: use expected_files instead
-    answers: Optional[List[str]] = None  # Deprecated: use gt_answer instead
+    qvec: list[float] | None = None  # Deprecated: use embeddings instead
+    file_path: str | None = None  # Deprecated: use expected_files instead
+    answers: list[str] | None = None  # Deprecated: use gt_answer instead
 
     @field_validator("id")
     @classmethod
@@ -71,7 +71,7 @@ class UnifiedGoldCase:
 
     @field_validator("tags")
     @classmethod
-    def validate_tags(cls, v: List[str]) -> List[str]:
+    def validate_tags(cls, v: list[str]) -> list[str]:
         if not v:
             raise ValueError("Tags cannot be empty")
         return [tag.strip() for tag in v if tag.strip()]
@@ -89,21 +89,21 @@ class EvaluationResult(BaseModel):
 
     # Scores and metrics
     overall_score: float = Field(..., ge=0.0, le=1.0, description="Overall evaluation score (0-1)")
-    metrics: Dict[str, float] = Field(..., description="Individual metric scores")
+    metrics: dict[str, float] = Field(..., description="Individual metric scores")
 
     # Detailed results
-    response: Optional[str] = Field(None, description="System response")
-    retrieved_docs: Optional[List[str]] = Field(None, description="Retrieved document IDs")
-    evidence: Optional[List[str]] = Field(None, description="Evidence used in response")
+    response: str | None = Field(None, description="System response")
+    retrieved_docs: list[str] | None = Field(None, description="Retrieved document IDs")
+    evidence: list[str] | None = Field(None, description="Evidence used in response")
 
     # Metadata
     evaluation_mode: EvaluationMode = Field(..., description="Type of evaluation performed")
-    timestamp: Optional[str] = Field(None, description="Evaluation timestamp")
-    model_used: Optional[str] = Field(None, description="Model used for evaluation")
+    timestamp: str | None = Field(None, description="Evaluation timestamp")
+    model_used: str | None = Field(None, description="Model used for evaluation")
 
     # Analysis
-    reasoning: Optional[str] = Field(None, description="Reasoning for the score")
-    recommendations: Optional[List[str]] = Field(None, description="Improvement recommendations")
+    reasoning: str | None = Field(None, description="Reasoning for the score")
+    recommendations: list[str] | None = Field(None, description="Improvement recommendations")
 
     @field_validator("case_id")
     @classmethod
@@ -126,20 +126,20 @@ class EvaluationBatch(BaseModel):
     """
 
     batch_id: str = Field(..., description="Unique batch identifier")
-    cases: List[EvaluationResult] = Field(..., description="Individual case results")
-    summary_metrics: Dict[str, float] = Field(..., description="Aggregated metrics")
+    cases: list[EvaluationResult] = Field(..., description="Individual case results")
+    summary_metrics: dict[str, float] = Field(..., description="Aggregated metrics")
     timestamp: str = Field(..., description="Batch evaluation timestamp")
 
     @field_validator("cases")
     @classmethod
-    def validate_cases(cls, v: List[EvaluationResult]) -> List[EvaluationResult]:
+    def validate_cases(cls, v: list[EvaluationResult]) -> list[EvaluationResult]:
         if not v:
             raise ValueError("Batch must contain at least one case")
         return v
 
 
 # Legacy compatibility functions
-def convert_legacy_case(legacy_data: Dict[str, Any]) -> UnifiedGoldCase:
+def convert_legacy_case(legacy_data: dict[str, Any]) -> UnifiedGoldCase:
     """Convert legacy case data to unified schema"""
     # Handle different legacy formats
     case_id = legacy_data.get("id") or legacy_data.get("case_id") or legacy_data.get("query_id") or ""
@@ -184,7 +184,7 @@ def convert_legacy_case(legacy_data: Dict[str, Any]) -> UnifiedGoldCase:
     )
 
 
-def convert_legacy_result(legacy_data: Dict[str, Any]) -> EvaluationResult:
+def convert_legacy_result(legacy_data: dict[str, Any]) -> EvaluationResult:
     """Convert legacy result data to unified schema"""
     return EvaluationResult(
         case_id=legacy_data.get("test_case_name") or legacy_data.get("case_id", ""),
