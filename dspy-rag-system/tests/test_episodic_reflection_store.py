@@ -15,7 +15,7 @@ def test_maybe_json_loads_parses_json_string_and_passes_through_python_types():
 
     # JSON strings should parse
     assert _maybe_json_loads('{"x": 2}') == {"x": 2}
-    assert _maybe_json_loads('[1,2]') == [1, 2]
+    assert _maybe_json_loads("[1,2]") == [1, 2]
 
     # Non-JSON strings should return as-is
     assert _maybe_json_loads("not-json") == "not-json"

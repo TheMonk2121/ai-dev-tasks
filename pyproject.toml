@@ -148,7 +148,7 @@ markers = [
     "fast: Fast running tests",
     "deprecated: Deprecated tests (do not run)",
 ]
-testpaths = ["tests", "dspy-rag-system/tests"]
+testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -161,7 +161,7 @@ norecursedirs = [
     "tests/legacy",
 ]
 # Exclude specific problematic files that cause Torch conflicts
-addopts = "--ignore=dspy-rag-system/baseline_rag_performance_test.py --ignore=dspy-rag-system/complex_test.py --ignore=dspy-rag-system/simple_test.py --ignore=dspy-rag-system/quality_comparison_test.py"
+addopts = "--ignore=dspy-rag-system/baseline_rag_performance_test.py --ignore=dspy-rag-system/complex_test.py --ignore=dspy-rag-system/simple_test.py --ignore=dspy-rag-system/quality_comparison_test.py --ignore=dspy-rag-system/tests/"
 
 # Exclude legacy duplicates that conflict with demo tests
 [tool.pyright]
