@@ -10,7 +10,7 @@ import random
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
