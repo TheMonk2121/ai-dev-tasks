@@ -13,9 +13,9 @@ from typing import Any
 # bootstrap
 script_dir = os.path.dirname(os.path.abspath(__file__))
 repo_root = os.path.dirname(script_dir)
-dspy_src = os.path.join(repo_root, "dspy-rag-system", "src")
+src_dir = os.path.join(repo_root, "src")
 sys.path.insert(0, repo_root)
-sys.path.insert(0, dspy_src)
+sys.path.insert(0, src_dir)
 
 from _bootstrap import ROOT, SRC  # ensure imports work
 from dspy_modules.retriever.limits import load_limits
