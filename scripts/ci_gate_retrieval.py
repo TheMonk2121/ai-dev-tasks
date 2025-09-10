@@ -5,7 +5,11 @@ import sys
 from collections import defaultdict
 
 # bootstrap
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+script_dir = os.path.dirname(os.path.abspath(__file__))
+repo_root = os.path.dirname(script_dir)
+dspy_src = os.path.join(repo_root, "dspy-rag-system", "src")
+sys.path.insert(0, repo_root)
+sys.path.insert(0, dspy_src)
 from _bootstrap import ROOT, SRC  # noqa: F401
 from dspy_modules.retriever.limits import load_limits
 from dspy_modules.retriever.pg import run_fused_query

@@ -7,12 +7,21 @@ import argparse
 import itertools
 import os
 import shutil
+import sys
 import time
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
 import yaml
+
+# bootstrap
+script_dir = os.path.dirname(os.path.abspath(__file__))
+repo_root = os.path.dirname(script_dir)
+dspy_src = os.path.join(repo_root, "dspy-rag-system", "src")
+sys.path.insert(0, repo_root)
+sys.path.insert(0, dspy_src)
+
 from _bootstrap import ROOT, SRC
 from dspy_modules.retriever.pg import run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries
@@ -40,7 +49,12 @@ def eval_combo(ws: dict[str, float], cases: list[Any]) -> tuple[int, dict[str, i
 
     for case in cases:
         try:
-            qs = build_channel_queries(case.query, case.tag)
+            # Support both legacy 'tag' and newer 'tags' fields
+            tag = getattr(case, "tag", None)
+            if tag is None:
+                tags_list = getattr(case, "tags", []) or []
+                tag = tags_list[0] if tags_list else ""
+            qs = build_channel_queries(case.query, tag)
             rows = run_fused_query(
                 qs["short"],
                 qs["title"],
@@ -49,7 +63,7 @@ def eval_combo(ws: dict[str, float], cases: list[Any]) -> tuple[int, dict[str, i
                 k=25,
                 use_mmr=True,
                 weights={k: v for k, v in ws.items() if k.startswith("w_")},
-                tag=case.tag,
+                tag=tag,
                 fname_regex=qs.get("fname_regex"),
                 adjacency_db=bool(ws.get("adjacency_db", 0)),
                 cold_start=bool(qs.get("cold_start", False)),
@@ -59,11 +73,11 @@ def eval_combo(ws: dict[str, float], cases: list[Any]) -> tuple[int, dict[str, i
             rows = _cap(rows, cap=int(ws.get("per_file_cap", 5)))
             hit = int(gold_hit(case.id, rows))
             hits += hit
-            tag_total[case.tag] += 1
-            tag_hits[case.tag] += hit
+            tag_total[tag] += 1
+            tag_hits[tag] += hit
         except Exception as e:
             print(f"Error evaluating case {getattr(case,'id',None) or case.get('id')}: {e}")
-            tag_total[case.tag] += 1  # Count as miss
+            tag_total[tag] += 1  # Count as miss
 
     return hits, dict(tag_hits), dict(tag_total)
 
@@ -143,7 +157,15 @@ def main():
 
     # Filter cases by tag if specified
     if args.tag_filter:
-        cases = [case for case in cases if case.tag == args.tag_filter]
+        filtered = []
+        for case in cases:
+            tag = getattr(case, "tag", None)
+            if tag is None:
+                tags_list = getattr(case, "tags", []) or []
+                tag = tags_list[0] if tags_list else ""
+            if tag == args.tag_filter:
+                filtered.append(case)
+        cases = filtered
         print(f"Filtered to {len(cases)} cases for tag: {args.tag_filter}")
     else:
         print(f"Loaded {len(cases)} evaluation cases")
