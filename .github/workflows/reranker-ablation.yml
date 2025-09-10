@@ -48,7 +48,7 @@ jobs:
         env:
           HF_HOME: ${{ runner.temp }}/hf
         run: |
-          python -m evals_300.tools.run \
+          uv run python -m evals_300.tools.run \
             --suite 300_core \
             --pass reranker_ablation_off \
             --out metrics/rerank_off \
@@ -59,7 +59,7 @@ jobs:
         env:
           HF_HOME: ${{ runner.temp }}/hf
         run: |
-          python -m evals_300.tools.run \
+          uv run python -m evals_300.tools.run \
             --suite 300_core \
             --pass reranker_ablation_on \
             --out metrics/rerank_on \
