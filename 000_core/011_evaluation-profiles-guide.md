@@ -259,9 +259,9 @@ feature = read_feature(jsonl_line)
 
 ## 📚 **Related Documentation**
 
-- [Naming Conventions](200_setup/200_naming-conventions.md) - File naming standards
-- [System Overview](400_guides/400_system-overview.md) - Overall system architecture
-- [Testing Methodology](300_experiments/300_testing-methodology-log.md) - Testing approaches
+- [Naming Conventions](../200_setup/200_naming-conventions.md) - File naming standards
+- [System Overview](../400_guides/400_03_system-overview-and-architecture.md) - Overall system architecture
+- [Testing Methodology](../300_experiments/300_testing-methodology-log.md) - Testing approaches
 
 ---
 
