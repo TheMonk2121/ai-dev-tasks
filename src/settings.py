@@ -1,33 +1,40 @@
 from __future__ import annotations
 
-from pydantic import SecretStr
+from pydantic import ConfigDict, SecretStr
 from pydantic_settings import BaseSettings
 
 
 class EvalSettings(BaseSettings):
+    model_config = ConfigDict(strict=True, extra="ignore", env_file=".env", env_prefix="")
+
     # Core eval controls
     EVAL_PROFILE: str = "default"
     EVAL_DRIVER: str = "local"
-    RAGCHECKER_USE_REAL_RAG: bool = True
+    RAGCHECKER_USE_REAL_RAG: int = 1
     POSTGRES_DSN: SecretStr | None = None
-    EVAL_CONCURRENCY: int = 3
+    EVAL_CONCURRENCY: int = 8
 
-    # Reranker
-    RERANKER_MODEL: str = "bge-reranker-base"
-    RERANKER_TOPK: int = 50
+    # Reranker defaults
+    RERANKER_MODEL: str = "bge-reranker-v2"
+    RERANKER_TOPK: int = 40
     RERANKER_KEEP: int = 10
-    RERANKER_DEVICE: str = "cpu"
-    RERANKER_CACHE: bool = True
+    RERANKER_DEVICE: str | None = None
+    RERANKER_CACHE: int = 1
 
-    # Model routing
-    DSPY_MODEL: str = "gpt-4o-mini"
+    # LLM
+    DSPY_MODEL: str = "openai:gpt-4o-mini"
+
+    # Ollama configuration
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    OLLAMA_DEFAULT_MODEL: str = "llama3.1:8b"
+    OLLAMA_TIMEOUT: int = 30
+
+    # Logfire
+    LOGFIRE_TOKEN: SecretStr | None = None
 
     # Optional timeseries sinks (default off)
     EVAL_TIMESERIES_SINK: bool = False
     EVAL_TIMESERIES_CASES: bool = False
-
-    class Config:
-        env_file = ".env"
 
 
 def load_eval_settings() -> EvalSettings:

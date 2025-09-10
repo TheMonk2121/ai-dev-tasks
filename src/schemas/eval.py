@@ -1,66 +1,87 @@
 from __future__ import annotations
 
-from typing import Literal
+from collections.abc import Sequence
+from datetime import datetime
+from typing import Annotated, Literal
+from uuid import UUID, uuid4
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, SecretStr, computed_field
+from pydantic.functional_validators import AfterValidator
+
+# Reusable constraints
+NonEmptyStr = Annotated[str, AfterValidator(lambda s: s.strip() or (_ for _ in ()).throw(ValueError("empty")))]
 
 
 class RerankerConfig(BaseModel):
-    model_config = ConfigDict(strict=True)
-    enable: bool = True
-    model: str = "bge-reranker-base"
-    input_topk: int = 50
+    model_config = ConfigDict(strict=True, extra="forbid")
+    enable: bool = Field(default=True)
+    model: NonEmptyStr = "bge-reranker-v2"
+    input_topk: int = 40
     keep: int = 10
     batch: int = 16
-    device: str = "cpu"
+    device: Literal["cpu", "cuda", "mps"] | None = None
     cache: bool = True
 
 
 class ContextChunk(BaseModel):
-    model_config = ConfigDict(strict=True)
-    id: str
-    source: str
-    text: str
-    score: float | None = None
-    metadata: dict = Field(default_factory=dict)
+    model_config = ConfigDict(strict=True, extra="forbid")
+    source_id: NonEmptyStr
+    text: NonEmptyStr
+    start: int | None = None
+    end: int | None = None
 
 
 class RetrievalCandidate(BaseModel):
-    model_config = ConfigDict(strict=True)
-    query: str
-    chunk: ContextChunk
-    rank: int
-    score: float | None = None
-    route: Literal["bm25", "vector", "hybrid", "trigram", "title_trigram"] = "hybrid"
+    model_config = ConfigDict(strict=True, extra="forbid")
+    doc_id: NonEmptyStr
+    score: float
+    title: str | None = None
+    url: str | None = None
+    chunk: str
 
 
 class CaseResult(BaseModel):
-    model_config = ConfigDict(strict=True)
-    id: str
-    mode: str
-    tags: list[str] = Field(default_factory=list)
-    query: str
-    predicted_answer: str
-    retrieved_context: list[ContextChunk]
-    retrieval_snapshot: list[RetrievalCandidate]
-    metrics: dict
-    timings: dict
+    model_config = ConfigDict(strict=True, extra="forbid")
+    case_id: NonEmptyStr
+    mode: Literal["rag", "baseline", "oracle"]
+    query: NonEmptyStr
+    predicted_answer: str | None = None
+    retrieved_context: list[ContextChunk] = []
+    retrieval_snapshot: list[RetrievalCandidate] = []
+    precision: float | None = None
+    recall: float | None = None
+    f1: float | None = None
+    faithfulness: float | None = None
+    answer_latency_ms: int | None = None
 
 
 class EvaluationRun(BaseModel):
-    model_config = ConfigDict(strict=True)
-    profile: str
-    driver: str
+    model_config = ConfigDict(strict=True, extra="forbid")
+    run_id: UUID = Field(default_factory=uuid4)
+    started_at: datetime
+    finished_at: datetime | None = None
+    profile: NonEmptyStr
+    pass_id: NonEmptyStr
     reranker: RerankerConfig
+    cases: list[CaseResult] = []
+    artifact_path: str | None = None
+    git_sha: str | None = None
+    tags: list[str] = []
+    # Additional fields used by callers
+    driver: str | None = None
     seed: int | None = None
-    started_at: str
-    finished_at: str | None = None
-    overall: dict
-    artifact_paths: dict
+    overall: dict[str, float] | None = None
+    artifact_paths: dict[str, str] | None = None
+
+    @computed_field  # included in dumps/schemas without storing on disk
+    @property
+    def n_cases(self) -> int:
+        return len(self.cases)
 
 
 from enum import Enum
-from typing import Any
+from pathlib import Path
+from typing import Any, Optional
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -73,9 +94,12 @@ class Mode(str, Enum):
     decision = "decision"
 
 
+# Import settings for dynamic tag validation
+from src.schemas.settings import settings
+
 # Optional but useful to catch typos in tags;
 # keep open-ended by not enforcing at type level.
-KNOWN_TAGS = {"ops_health", "meta_ops", "rag_qa_single", "rag_qa_multi", "db_workflows", "negatives"}
+KNOWN_TAGS = set(settings.known_tags)
 
 # ---- Helpers ---------------------------------------------------------------
 
@@ -192,6 +216,53 @@ class GoldCase(BaseModel):
         # if mode == Mode.decision and not has_dec:
         #     raise ValueError(f"{self.id}: decision mode requires expected_decisions")
         return self
+
+    def validate_case(self, config=None):
+        """Validate this case against configuration rules."""
+        from src.schemas.validation import ValidationConfig, ValidationResult
+
+        if config is None:
+            config = ValidationConfig()
+
+        result = ValidationResult(is_valid=True)
+
+        # Check required fields
+        if not self.id:
+            result.add_error(f"Case {self.id}: Missing required field 'id'")
+        if not self.query:
+            result.add_error(f"Case {self.id}: Missing required field 'query'")
+        if not self.tags:
+            result.add_error(f"Case {self.id}: Missing required field 'tags'")
+
+        # Check mode requirements if enabled
+        if config.validate_mode_requirements:
+            if self.mode == Mode.reader and not self.gt_answer:
+                if config.strict_mode:
+                    result.add_error(f"Case {self.id}: reader mode requires gt_answer")
+                else:
+                    result.add_warning(f"Case {self.id}: reader mode missing gt_answer")
+
+        # Check for unknown tags
+        if config.unknown_tag_warning:
+            unknown_tags = config.get_unknown_tags(self.tags)
+            if unknown_tags:
+                result.add_unknown_tags(self.id, unknown_tags)
+                if config.strict_mode:
+                    result.add_error(f"Case {self.id}: unknown tags {unknown_tags}")
+                else:
+                    result.add_warning(f"Case {self.id}: unknown tags {unknown_tags}")
+
+        # Check file existence if enabled
+        if config.check_file_existence and not config.allow_missing_files:
+            for file_path in self.expected_files or []:
+                if not Path(file_path).exists():
+                    result.add_missing_file(self.id, file_path, "file")
+                    if config.strict_mode:
+                        result.add_error(f"Case {self.id}: missing file {file_path}")
+                    else:
+                        result.add_warning(f"Case {self.id}: missing file {file_path}")
+
+        return result
 
 
 # ---- Canonical per-case result --------------------------------------------

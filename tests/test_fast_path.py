@@ -10,7 +10,7 @@ from unittest.mock import Mock, patch
 import pytest
 
 # Add project root to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))
+# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
 
 try:
     from dspy_modules.enhanced_rag_system import EnhancedRAGSystem, _load_fast_path_config, _should_use_fast_path

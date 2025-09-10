@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 # Add the dspy-rag-system src to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "dspy-rag-system" / "src"))
+# sys.path.insert(0, str(Path(__file__).parent.parent.parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
 
 try:
     from dspy_modules.retriever.feature_schema import FusionFeatures

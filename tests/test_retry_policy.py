@@ -10,7 +10,7 @@ import time
 from unittest.mock import patch
 
 # Add the dspy-rag-system directory to the Python path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))
+# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))  # REMOVED: DSPy venv consolidated into main project
 
 import pytest
 from requests.exceptions import Timeout

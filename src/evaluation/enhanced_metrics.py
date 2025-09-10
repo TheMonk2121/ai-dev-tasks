@@ -214,8 +214,8 @@ class TemperatureScaler:
             best_nll = float("inf")
 
             for temp in np.linspace(0.1, 10.0, 100):
-                calibrated = self._apply_temperature(confidences, temp)
-                nll = self._negative_log_likelihood(calibrated, correctness)
+                calibrated = self._apply_temperature(np.array(confidences), temp)
+                nll = self._negative_log_likelihood(calibrated, np.array(correctness))
 
                 if nll < best_nll:
                     best_nll = nll
@@ -245,7 +245,7 @@ class TemperatureScaler:
         eps = 1e-7
         probs = np.clip(probs, eps, 1 - eps)
         nll = -np.mean(targets * np.log(probs) + (1 - targets) * np.log(1 - probs))
-        return nll
+        return float(nll.item())
 
     def calibrate(self, confidence: float) -> float:
         """Apply temperature scaling to a single confidence score."""
@@ -387,13 +387,13 @@ class EnhancedEvaluator:
 
         # Calculate aggregate metrics
         metrics = EvaluationMetrics(
-            ndcg_10=np.mean(ndcg_scores),
-            coverage=np.mean(coverage_scores),
-            exact_match=np.mean(exact_matches),
-            span_support=np.mean(span_supports),
-            precision=np.mean(precisions),
-            recall=np.mean(recalls),
-            f1_score=np.mean(f1_scores),
+            ndcg_10=float(np.mean(ndcg_scores).item()),
+            coverage=float(np.mean(coverage_scores).item()),
+            exact_match=float(np.mean(exact_matches).item()),
+            span_support=float(np.mean(span_supports).item()),
+            precision=float(np.mean(precisions).item()),
+            recall=float(np.mean(recalls).item()),
+            f1_score=float(np.mean(f1_scores).item()),
         )
 
         # Temperature scaling and ECE
