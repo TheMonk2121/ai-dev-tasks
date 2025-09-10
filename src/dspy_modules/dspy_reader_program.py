@@ -15,6 +15,103 @@ from dspy_modules.retriever.pg import fetch_doc_chunks_by_slug, run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries, parse_doc_hint
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 
+# Import reranker environment and cross-encoder
+from src.rag import reranker_env as RENV
+
+
+def _apply_cross_encoder_rerank(query: str, rows: list[dict[str, Any]], input_topk: int, keep: int) -> tuple[list[dict[str, Any]], str]:
+    """Apply cross-encoder reranking if enabled and available.
+    
+    Returns:
+        tuple: (reranked_rows, method_used)
+    """
+    if not RENV.RERANK_ENABLE:
+        return rows, "disabled"
+    
+    # Try to use cross-encoder reranking
+    try:
+        from src.retrieval.cross_encoder_client import CrossEncoderClient
+        
+        # Initialize cross-encoder client
+        client = CrossEncoderClient(
+            model_name=RENV.RERANKER_MODEL,
+            device=RENV.TORCH_DEVICE,
+            max_timeout_ms=5000,  # 5 second timeout
+            micro_batch_size=RENV.RERANK_BATCH
+        )
+        
+        # Prepare candidates for reranking
+        candidates = []
+        for row in rows[:input_topk]:  # Only rerank top input_topk
+            text = row.get("text_for_reader", row.get("embedding_text", ""))
+            candidates.append({
+                "chunk_id": row.get("chunk_id", ""),
+                "text": text
+            })
+        
+        if not candidates:
+            return rows, "no_candidates"
+        
+        # Apply cross-encoder reranking
+        scores = client.rerank(query, candidates, text_field="text")
+        
+        # Update scores and reorder
+        for i, (row, score) in enumerate(zip(rows[:input_topk], scores)):
+            row["rerank_score"] = score
+            row["final_score"] = score  # Use rerank score as final score
+        
+        # Sort by rerank score and keep top results
+        reranked = sorted(rows[:input_topk], key=lambda x: x.get("rerank_score", 0.0), reverse=True)[:keep]
+        
+        # Add remaining rows (beyond input_topk) with original scores
+        remaining = rows[input_topk:]
+        for row in remaining:
+            row["rerank_score"] = 0.0
+            row["final_score"] = row.get("score", 0.0)
+        
+        final_rows = reranked + remaining
+        
+        return final_rows, "cross_encoder"
+        
+    except Exception as e:
+        # Fallback to heuristic reranking
+        try:
+            from src.retrieval.reranker import heuristic_rerank
+            
+            # Prepare candidates for heuristic reranking
+            candidates = [(row.get("chunk_id", ""), row.get("score", 0.0)) for row in rows[:input_topk]]
+            documents = {row.get("chunk_id", ""): row.get("text_for_reader", row.get("embedding_text", "")) 
+                        for row in rows[:input_topk]}
+            
+            # Apply heuristic reranking
+            reranked_candidates = heuristic_rerank(query, candidates, documents, top_m=keep)
+            
+            # Create new rows with reranked order
+            reranked_rows = []
+            reranked_ids = {doc_id for doc_id, _ in reranked_candidates}
+            
+            # Add reranked rows
+            for doc_id, score in reranked_candidates:
+                for row in rows:
+                    if row.get("chunk_id") == doc_id:
+                        row["rerank_score"] = score
+                        row["final_score"] = score
+                        reranked_rows.append(row)
+                        break
+            
+            # Add remaining rows (beyond input_topk)
+            for row in rows[input_topk:]:
+                if row.get("chunk_id") not in reranked_ids:
+                    row["rerank_score"] = 0.0
+                    row["final_score"] = row.get("score", 0.0)
+                    reranked_rows.append(row)
+            
+            return reranked_rows, "heuristic"
+            
+        except Exception as e2:
+            # If both fail, return original rows
+            return rows, f"fallback_error: {str(e2)}"
+
 
 # ---- Model config (swap as needed)
 def _lm():
@@ -78,13 +175,15 @@ class RAGAnswer(dspy.Module):
             except Exception:
                 rows_prefetch = []
 
+        # Get more candidates for reranking if enabled
+        input_topk = RENV.RERANK_INPUT_TOPK if RENV.RERANK_ENABLE else limits["shortlist"]
         rows = run_fused_query(
             qs["short"],
             qs["title"],
             qs["bm25"],
             qvec=[],  # empty vector for now
             tag=tag,
-            k=limits["shortlist"],
+            k=input_topk,  # Get more candidates for reranking
             return_components=True,
         )
         if rows_prefetch:
@@ -98,9 +197,20 @@ class RAGAnswer(dspy.Module):
                 seen.add(key)
                 merged.append(r)
             rows = merged
-        rows = mmr_rerank(
-            rows, alpha=float(os.getenv("MMR_ALPHA", "0.85")), per_file_penalty=0.10, k=limits["shortlist"], tag=tag
-        )
+        
+        # Apply cross-encoder reranking if enabled
+        rerank_keep = RENV.RERANK_KEEP if RENV.RERANK_ENABLE else limits["shortlist"]
+        rows, rerank_method = _apply_cross_encoder_rerank(question, rows, input_topk, rerank_keep)
+        
+        # Log reranker method for debugging
+        if RENV.RERANK_ENABLE:
+            print(f"[reranker] method={rerank_method} input_topk={input_topk} keep={rerank_keep}")
+        
+        # Apply MMR reranking only if cross-encoder reranking is disabled
+        if not RENV.RERANK_ENABLE:
+            rows = mmr_rerank(
+                rows, alpha=float(os.getenv("MMR_ALPHA", "0.85")), per_file_penalty=0.10, k=limits["shortlist"], tag=tag
+            )
         rows = per_file_cap(rows, cap=int(os.getenv("PER_FILE_CAP", "5")))[: limits["topk"]]
         context, _meta = build_reader_context(rows, question, tag, compact=bool(int(os.getenv("READER_COMPACT", "1"))))
 
