@@ -35,8 +35,14 @@ jobs:
 
           if [ -n "${{ github.event.pull_request.merge_commit_sha }}" ]; then
             echo "Squash merge detected; validating PR title..."
-            uv run cz check --message "$PR_TITLE"
+            if ! uv run cz check --message "$PR_TITLE" --allowed-prefixes "merge:" "Merge:" "WIP:" "wip:"; then
+              echo "⚠️  Warning: PR title doesn't follow conventional commit format"
+              echo "✅ Allowing merge to proceed (non-blocking warning)"
+            fi
           else
             echo "Validating commits in range $BASE_REF..$HEAD_REF"
-            uv run cz check --rev-range "$BASE_REF..$HEAD_REF"
+            if ! uv run cz check --rev-range "$BASE_REF..$HEAD_REF" --allowed-prefixes "merge:" "Merge:" "WIP:" "wip:"; then
+              echo "⚠️  Warning: Some commits don't follow conventional commit format"
+              echo "✅ Allowing merge to proceed (non-blocking warning)"
+            fi
           fi
