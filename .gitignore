@@ -27,6 +27,8 @@ dist/
 downloads/
 eggs/
 .eggs/
+# Exception: Allow scripts/lib/ directory
+!scripts/lib/
 lib/
 lib64/
 parts/
