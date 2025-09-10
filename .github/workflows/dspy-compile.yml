@@ -23,6 +23,23 @@ on:
 jobs:
   compile-eval:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ai_agency
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd "pg_isready -U postgres -d ai_agency"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     
     env:
       # CONFIG_HASH and INGEST_RUN_ID are resolved safely in the "Setup environment" step
@@ -53,10 +70,18 @@ jobs:
           uv sync
           uv pip install -e .
       
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+      
       - name: Setup environment
         env:
           CONFIG_HASH_INPUT: ${{ github.event.inputs.config_hash }}
           INGEST_RUN_ID_INPUT: ${{ github.event.inputs.ingest_run_id }}
+          PGPORT: ${{ job.services.postgres.ports[5432] }}
+          OPENAI: ${{ secrets.OPENAI_API_KEY }}
         run: |
           # Resolve CONFIG_HASH with precedence: workflow input -> secret -> default
           CONFIG_HASH="$CONFIG_HASH_INPUT"
@@ -72,6 +97,40 @@ jobs:
           echo "FEW_SHOT_K=$FEW_SHOT_K" >> $GITHUB_ENV
           echo "EVAL_COT=$EVAL_COT" >> $GITHUB_ENV
           echo "TEMPERATURE=$TEMPERATURE" >> $GITHUB_ENV
+          # Compute DSN from service container published port
+          echo "POSTGRES_DSN=postgresql://postgres:postgres@localhost:${PGPORT}/ai_agency" >> $GITHUB_ENV
+          # Other app secrets and region
+          echo "OPENAI_API_KEY=${OPENAI}" >> $GITHUB_ENV
+          if [ -z "${AWS_REGION:-}" ]; then echo "AWS_REGION=us-east-1" >> $GITHUB_ENV; else echo "AWS_REGION=$AWS_REGION" >> $GITHUB_ENV; fi
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Initialize database schema
+        env:
+          PGPORT: ${{ job.services.postgres.ports[5432] }}
+        run: |
+          export PGPASSWORD=postgres
+          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -v ON_ERROR_STOP=1 -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;" || true
+          # 'vector' extension may not be available in default image; ignore errors
+          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -c "CREATE EXTENSION IF NOT EXISTS vector;" || true
+          psql -h localhost -p ${PGPORT} -U postgres -d ai_agency -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE TABLE IF NOT EXISTS episodic_logs (
+            id SERIAL PRIMARY KEY,
+            user_id TEXT,
+            model_type TEXT,
+            prompt TEXT,
+            response TEXT,
+            tokens_used INTEGER,
+            cache_hit BOOLEAN DEFAULT FALSE,
+            similarity_score DOUBLE PRECISION DEFAULT 0.0,
+            last_verified TIMESTAMPTZ,
+            created_at TIMESTAMPTZ DEFAULT NOW(),
+            updated_at TIMESTAMPTZ DEFAULT NOW()
+          );
+          SQL
       
       - name: Health-gated smoke evaluation
         run: |

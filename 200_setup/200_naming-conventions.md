@@ -46,6 +46,18 @@ This table clarifies the buckets for our numeric prefixes, making it easier to c
 | `600-999` | Archives & Legacy | Deprecated files, historical archives, and legacy documentation. | `600_archives/`,
 `docs/legacy/` |
 
+## Evaluations: Profiles, Scripts, Outputs
+
+**Profiles**: `real`, `gold`, `mock` (single responsibility)
+- Env files: `configs/profiles/{profile}.env`
+- Entry scripts: `scripts/eval_{profile}.sh`
+- Orchestrator: `scripts/ragchecker_official_evaluation.py` (uses `--profile`)
+
+**Output folders**:
+`metrics/runs/{YYYYMMDD_HHMMSS}__{profile}__driver-{driver}__f1-{f1}__p-{p}__r-{r}/`
+
+**Never** use `mock` for baselines or main branch.
+
 ### Integration with Development Workflow
 
 The naming system **integrates seamlessly**with our development workflow. When creating new files, the process is:

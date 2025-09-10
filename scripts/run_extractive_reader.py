@@ -15,7 +15,7 @@ import sys
 from typing import List
 
 # Ensure module imports work when called from repo root
-sys.path.insert(0, "dspy-rag-system/src")
+sys.path.insert(0, "src")
 
 import dspy  # type: ignore
 from dspy_modules.reader import READER  # pre-configured ExtractiveReader instance

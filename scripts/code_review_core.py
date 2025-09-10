@@ -85,7 +85,7 @@ class CodeReviewCore:
     def _start_review_internal(self, review_id: str, target_paths: List[str] = None):
         """Internal review start implementation."""
         if target_paths is None:
-            target_paths = ["scripts/", "dspy-rag-system/src/"]
+            target_paths = ["scripts/", "src/"]
 
         # Analyze target files
         files_to_review = self._get_files_to_review(target_paths)
@@ -183,7 +183,7 @@ class CodeReviewCore:
             critical_files = [
                 "scripts/single_doorway.py",
                 "scripts/process_tasks.py",
-                "dspy-rag-system/src/dspy_modules/cursor_model_router.py",
+                "src/dspy_modules/cursor_model_router.py",
             ]
 
             for file_path in critical_files:

@@ -18,7 +18,7 @@ def main():
     patch_litellm_imports()
 
     # Set up DSPy system path
-    sys.path.insert(0, "dspy-rag-system/src")
+    sys.path.insert(0, "src")
 
     # Create feedback directory
     feedback_dir = Path("metrics/agent_feedback")

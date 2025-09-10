@@ -152,7 +152,7 @@ class EvalManifestGenerator:
         return {
             "python_version": os.sys.version,
             "platform": os.name,
-            "dspy_rag_path": os.getenv("DSPY_RAG_PATH", "dspy-rag-system/src"),
+            "dspy_rag_path": os.getenv("DSPY_RAG_PATH", "src"),
             "database_url": self._mask_sensitive_data(os.getenv("DATABASE_URL", "postgresql://***")),
             "aws_region": os.getenv("AWS_REGION", "us-east-1"),
             "environment": os.getenv("ENVIRONMENT", "development"),

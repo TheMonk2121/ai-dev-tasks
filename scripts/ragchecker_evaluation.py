@@ -28,6 +28,10 @@ from scripts.ragchecker_official_evaluation import OfficialRAGCheckerEvaluator
 from scripts.ragchecker_performance_monitor import create_performance_monitor
 from scripts.ragchecker_performance_optimizer import create_validation_optimizer, optimize_validation
 
+# Use canonical schemas
+from src.schemas.eval import EvaluationResult, GoldCase, Mode
+from src.utils.gold_loader import load_gold_cases, stratified_sample
+
 
 class RAGCheckerResult(BaseModel):
     """Result of RAGChecker evaluation with Pydantic validation."""

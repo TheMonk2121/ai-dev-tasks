@@ -4,7 +4,7 @@ import os
 import sys
 from typing import Any
 
-sys.path.insert(0, "dspy-rag-system/src")
+sys.path.insert(0, "src")
 import dspy
 from dspy_modules.dspy_reader_program import RAGAnswer, _lm
 

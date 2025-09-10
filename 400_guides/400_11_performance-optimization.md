@@ -132,14 +132,28 @@ metrics/baseline_evaluations/input_onecase.json
 ```
 
 **How to Run RAGChecker Evaluation**:
+
+**🚨 NEW: Code-as-SSOT Evaluation System** - All evaluation runs now use the standardized evaluation system in `evals_300/`:
+
 ```bash
-# Bedrock evaluation (bypass CLI for stability)
+# Generate evaluation documentation and artifacts
+python -m evals_300.tools.gen
+
+# Run specific evaluation passes
+python -m evals_300.tools.run --suite 300_core --pass retrieval_only_baseline
+python -m evals_300.tools.run --suite 300_core --pass deterministic_few_shot
+
+# Legacy direct script execution (still supported)
 export AWS_REGION=us-east-1
 python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
-
-# Local evaluation (Ollama)
-python3 scripts/ragchecker_official_evaluation.py --use-local-llm --local-api-base http://localhost:11434 --bypass-cli
 ```
+
+**Evaluation System Features**:
+- **Code-as-SSOT**: All evaluation definitions in code, documentation auto-generated
+- **Layered Configuration**: Base + Stable + Delta environment layers
+- **Standardized Output**: `metrics/latest/metrics.json` and `metrics/history/`
+- **Pre-commit Enforcement**: Prevents manual editing of generated documentation
+- **CI Validation**: Ensures generated artifacts stay in sync with code definitions
 
 ### **🧪 Comprehensive Testing & Methodology Coverage**
 

@@ -218,7 +218,7 @@ def restore_table(backup_file: Path, table_name: str):
             backup_data = json.load(f)
         
         # Import database utilities
-        sys.path.insert(0, "dspy-rag-system/src")
+        sys.path.insert(0, "src")
         from utils.database_resilience import get_database_manager
         
         db_manager = get_database_manager()

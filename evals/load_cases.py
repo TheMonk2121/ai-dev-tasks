@@ -1,35 +1,40 @@
-#!/usr/bin/env python3
+# evals/load_cases.py
 """
-Load evaluation cases from a JSON file.
+Lightweight loader shim for evaluation cases used by various scripts.
+Prefer src.utils.gold_loader in new code; this module provides a stable
+interface for older scripts that import load_eval_cases.
 """
+
+from __future__ import annotations
+
 import json
 import os
-from dataclasses import dataclass
+from pathlib import Path
 from typing import List
 
-
-@dataclass
-class Case:
-    id: str
-    query: str
-    tag: str
-    qvec: list
+from src.schemas.eval import GoldCase as Case  # legacy import path
 
 
-def load_eval_cases(name: str) -> List[Case]:
-    """Load evaluation cases from file specified by CASES_FILE or evals/{name}_cases.json"""
-    path = os.getenv("CASES_FILE", f"evals/{name}_cases.json")
-    with open(path, "r", encoding="utf-8") as f:
+def load_eval_cases(profile: str | Path = "gold") -> List[Case]:
+    """Load evaluation cases based on a simple profile or explicit path.
+
+    - If `profile` is "gold" or startswith "gold", load from env CASES_FILE or default 'evals/gold_cases.json'.
+    - If `profile` is a path, load that file.
+    - The file is expected to be JSON array of objects compatible with Case.
+    """
+    # Resolve path
+    if isinstance(profile, (str, Path)) and str(profile).startswith("gold"):
+        path = os.getenv("CASES_FILE", "evals/gold_cases.json")
+    else:
+        path = str(profile)
+
+    p = Path(path)
+    with p.open("r", encoding="utf-8") as f:
         data = json.load(f)
-    out: List[Case] = []
-    for row in data:
-        out.append(
-            Case(
-                id=row.get("case_id") or row.get("id"),
-                query=row["query"],
-                tag=row.get("tag", ""),
-                qvec=row.get("qvec", []),
-            )
-        )
-    return out
 
+    # Normalize iterable to list
+    if isinstance(data, dict):
+        data = [data]
+
+    # Build models with Pydantic normalizations for legacy fields
+    return [Case.parse_obj(obj) for obj in data]

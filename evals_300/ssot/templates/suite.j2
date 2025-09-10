@@ -1,0 +1,53 @@
+{# 300_evals/ssot/templates/suite.j2 #}
+# {{ suite.title }}
+
+> SSOT: `{{ suite.id }}` • Generated {{ generated_at }} • Commit: {{ repo.commit }} ({{ repo.branch }})
+>
+> Suite created: {{ suite_created or "n/a" }} • updated: {{ suite_updated or "n/a" }}
+
+{% for p in suite.passes %}
+---
+## {{ loop.index }}. {{ p.name }}
+**ID:** `{{ p.id }}` • **Version:** {{ versions.get(p.id, {}).get("version") or "1.0.0" }} • **Tags:** {{ p.tags|join(", ") }}
+
+**Purpose**  
+{{ p.description }}
+
+**Run Spec**  
+- Kind: `{{ p.run.kind }}`  
+- Script: `{{ p.run.script }}`  
+- CLI Args: `{{ p.run.args | join(" ") or "(none)" }}`  
+
+**Config Layers**: {{ p.config_layers|join(" + ") }}
+
+**Config (effective)**:
+```json
+{{ p.config.model_dump_json(indent=2) }}
+```
+
+**Timestamps**
+- **Created**: {{ (versions.get(p.id, {}).get("created_at")) or "git-derived" }}
+- **Updated**: {{ (versions.get(p.id, {}).get("updated_at")) or "git-derived" }}
+- **Last run**: {{ results_map.get(p.id, {}).get("timestamp") or "never" }}
+
+{% if p.metrics %}
+**Gates**
+
+| Metric | Target | Direction |
+|--------|--------|-----------|
+{% for m in p.metrics -%}
+| {{ m.key }} | {{ "%.3f"|format(m.target or 0.0) }} | {{ m.direction }} |
+{% endfor %}
+{% endif %}
+
+**Reproduce**
+```bash
+python -m evals_300.tools.run --suite {{ suite.id }} --pass {{ p.id }}
+```
+
+**Latest Results**
+```json
+{{ results_map.get(p.id, "{}") }}
+```
+
+{% endfor %}

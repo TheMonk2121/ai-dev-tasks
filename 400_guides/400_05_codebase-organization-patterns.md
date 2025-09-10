@@ -535,8 +535,18 @@ python3 scripts/system_health_check.py --schema-drift
 - **Status**: ✅ **FULLY INTEGRATED** - All phases complete and tested
 
 #### **RAGChecker Testing Commands**
+
+**🚨 NEW: Code-as-SSOT Evaluation System** - Use the standardized evaluation system:
+
 ```bash
-# Run Official RAGChecker evaluation
+# Generate evaluation documentation and artifacts
+python -m evals_300.tools.gen
+
+# Run specific evaluation passes
+python -m evals_300.tools.run --suite 300_core --pass retrieval_only_baseline
+python -m evals_300.tools.run --suite 300_core --pass deterministic_few_shot
+
+# Legacy direct execution (still supported)
 python3 scripts/ragchecker_official_evaluation.py
 
 # Verify installation
@@ -1158,7 +1168,7 @@ Brief description
 Content here
 
 ---
-*Last Updated: 2025-09-03*
+*Last Updated: 2025-09-08*
 ```
 
 **Expected Output**:

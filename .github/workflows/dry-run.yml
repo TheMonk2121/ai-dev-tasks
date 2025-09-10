@@ -40,7 +40,7 @@ jobs:
         run: echo "⚠️ Ruff checking temporarily disabled for database migration branch"
 
       - name: Pyright
-        run: pyright
+        run: uv run pyright
 
       - name: Pytest
-        run: pytest -q --import-mode=importlib --ignore=600_archives --ignore=docs/legacy --ignore=600_archives/legacy-tests
+        run: uv run pytest -q --import-mode=importlib --ignore=600_archives --ignore=docs/legacy --ignore=600_archives/legacy-tests

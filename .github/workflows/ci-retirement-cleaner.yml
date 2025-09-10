@@ -1,0 +1,28 @@
+---
+name: Retirement Cleaner
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Hard delete aged tests
+        run: python scripts/hard_delete_retired.py --days 14 --apply
+
+      - name: Commit deletions
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(tests): hard-delete aged quarantined tests"
+          commit_user_name: "Test Signal Bot"
+          commit_user_email: "test-signal@ai-dev-tasks.local"

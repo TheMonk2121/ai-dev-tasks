@@ -105,7 +105,7 @@ class MockEpisodicReflectionStore:
                     "Avoid optimizing without measuring baseline performance",
                 ],
                 "outcome_metrics": {"success": True, "performance_improvement": "25%"},
-                "source_refs": {"files": ["dspy-rag-system/src/optimizer.py"]},
+                "source_refs": {"files": ["src/optimizer.py"]},
             },
         ]
 

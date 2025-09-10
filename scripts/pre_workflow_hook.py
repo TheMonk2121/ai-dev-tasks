@@ -101,7 +101,7 @@ def check_existing_tools(keyword: str) -> bool:
     print(f"🔍 CHECKING EXISTING TOOLS FOR: {keyword}")
 
     # Search for existing tools
-    search_paths = ["scripts/", "dspy-rag-system/scripts/", "dspy-rag-system/src/"]
+    search_paths = ["scripts/", "dspy-rag-system/scripts/", "src/"]
     existing_tools = []
 
     for search_path in search_paths:

@@ -18,6 +18,8 @@
 - `400_guides/400_12_advanced-configurations.md`
 
 ## Evaluations
-- SOP entry: `000_core/000_evaluation-system-entry-point.md`
-- Runner: `scripts/ragchecker_official_evaluation.py`
+- **Code-as-SSOT System**: `evals_300/` - Standardized evaluation system with auto-generated documentation
+- **Generated Docs**: `evals_300/_generated/300_core.md` - Human-readable evaluation documentation
+- **Legacy SOP**: `000_core/000_evaluation-system-entry-point.md`
+- **Legacy Runner**: `scripts/ragchecker_official_evaluation.py`
 

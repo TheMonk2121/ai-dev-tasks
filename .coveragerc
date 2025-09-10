@@ -1,0 +1,11 @@
+[run]
+branch = True
+parallel = True
+concurrency = thread
+
+[report]
+omit =
+    */site-packages/*
+    tests/*
+precision = 2
+

@@ -7,7 +7,7 @@ import json
 import os
 import sys
 
-sys.path.insert(0, "dspy-rag-system/src")
+sys.path.insert(0, "src")
 import dspy
 from dspy_modules.dspy_reader_program import RAGAnswer, _lm
 from dspy_modules.reader.entrypoint import build_reader_context

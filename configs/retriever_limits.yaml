@@ -2,6 +2,9 @@
 default:
   shortlist: 60 # retrieve this many, then MMR+cap
   topk: 25 # final K after rerank/cap
+  # Reranker limits
+  rerank_input_topk: 50 # candidates to send to reranker
+  rerank_keep: 12 # final results after reranking
 
 tags:
   db_workflows: { shortlist: 60, topk: 20 }

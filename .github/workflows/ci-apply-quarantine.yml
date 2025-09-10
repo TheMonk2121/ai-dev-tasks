@@ -1,0 +1,40 @@
+---
+name: Apply Quarantine Moves
+
+on:
+  workflow_run:
+    workflows: ["Nightly Test Signal"]
+    types: [completed]
+
+jobs:
+  apply:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Download nightly test-signal artifact
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          run_id: ${{ github.event.workflow_run.id }}
+          name: tests-signal
+          path: metrics
+
+      - name: Apply test dispositions
+        run: python scripts/apply_test_dispositions.py --prune-clusters --apply
+
+      - name: Commit quarantine moves
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(tests): quarantine low-signal tests"
+          commit_user_name: "Test Signal Bot"
+          commit_user_email: "test-signal@ai-dev-tasks.local"
