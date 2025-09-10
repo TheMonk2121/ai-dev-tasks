@@ -15,7 +15,11 @@ from dspy_modules.retriever.pg import fetch_doc_chunks_by_slug, run_fused_query
 from dspy_modules.retriever.query_rewrite import build_channel_queries, parse_doc_hint
 from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 
+# Cross-encoder singleton handle
+_CE_SINGLETON = None
+
 # Import reranker environment and cross-encoder
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 from src.rag import reranker_env as RENV
 
 
@@ -33,7 +37,9 @@ def _apply_cross_encoder_rerank(
     Returns:
         tuple: (reranked_rows, method_used)
     """
+    print(f"[reranker] RERANK_ENABLE={RENV.RERANK_ENABLE}, input_topk={input_topk}, keep={keep}")
     if not RENV.RERANK_ENABLE:
+        print("[reranker] Reranking disabled, returning original rows")
         return rows, "disabled"
 
     # Prepare candidates for reranking (only top input_topk)
@@ -43,10 +49,15 @@ def _apply_cross_encoder_rerank(
 
     # Try cross-encoder reranking with sentence-transformers
     try:
+        print(f"[reranker] Attempting cross-encoder with model: {RENV.RERANKER_MODEL}")
         from sentence_transformers import CrossEncoder
 
-        # Initialize cross-encoder model
-        model = CrossEncoder(RENV.RERANKER_MODEL)
+        # Lazy singleton init
+        global _CE_SINGLETON
+        if "_CE_SINGLETON" not in globals() or _CE_SINGLETON is None:
+            _CE_SINGLETON = CrossEncoder(RENV.RERANKER_MODEL)
+            print("[reranker] Cross-encoder model loaded successfully")
+        model = _CE_SINGLETON
 
         # Prepare query-document pairs for reranking
         pairs = []
@@ -78,10 +89,12 @@ def _apply_cross_encoder_rerank(
             row["final_score"] = row.get("score", 0.0)
 
         final_rows = reranked + remaining
+        print("[reranker] Cross-encoder hybrid reranking completed, method=cross_encoder_hybrid")
 
         return final_rows, "cross_encoder_hybrid"
 
     except Exception as e:
+        print(f"[reranker] Cross-encoder failed: {e}")
         # Fallback to heuristic reranking
         try:
             from src.retrieval.reranker import heuristic_rerank
@@ -208,8 +221,11 @@ class RAGAnswer(dspy.Module):
             rows = merged
 
         # Apply cross-encoder reranking if enabled
+        print(f"[debug] About to call reranker: RENV.RERANK_ENABLE={RENV.RERANK_ENABLE}, input_topk={input_topk}")
         rerank_keep = RENV.RERANK_KEEP if RENV.RERANK_ENABLE else limits["shortlist"]
+        print(f"[debug] rerank_keep={rerank_keep}, calling _apply_cross_encoder_rerank")
         rows, rerank_method = _apply_cross_encoder_rerank(question, rows, input_topk, rerank_keep)
+        print(f"[debug] Reranker returned: method={rerank_method}")
 
         # Log reranker method for debugging
         if RENV.RERANK_ENABLE:

@@ -35,15 +35,14 @@ def test_ltst_import():
     print("\n🔍 Testing LTST Memory System Import...")
 
     try:
-        # Try to import the updated LTST system
-# sys.path.insert(0, str(Path(__file__).parent / "dspy-rag-system" / "src"))  # REMOVED: DSPy venv consolidated into main project
-        from utils.ltst_memory_system import LTSTMemorySystem
+        # Import the current LTST integration layer
+        from scripts.ltst_memory_integration import LTSTMemoryIntegration
 
-        print("✅ LTST Memory System imported successfully")
+        print("✅ LTST Memory Integration imported successfully")
 
         # Try to create an instance
-        print("🔍 Creating LTST Memory System instance...")
-        ltst = LTSTMemorySystem()
+        print("🔍 Creating LTST Memory Integration instance...")
+        ltst = LTSTMemoryIntegration()
         print("✅ LTST Memory System instance created successfully")
 
         # Check what connection string it's using
@@ -54,7 +53,7 @@ def test_ltst_import():
 
         return ltst
     except Exception as e:
-        print(f"❌ LTST Memory System failed: {e}")
+        print(f"❌ LTST Memory Integration failed: {e}")
         return None
 
 

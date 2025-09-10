@@ -46,10 +46,10 @@ try:
 except ImportError:
     print("⚠️  venv_manager not available - continuing without venv check")
 
-# Add the dspy-rag-system src to path
-# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
+# Ensure the repo's src/ is importable for utils.memory_rehydrator
+sys.path.insert(0, str(project_root / "src"))
 
-# Note: Import of memory_rehydrator functions moved to main() where they're actually used
+# Note: Import of memory_rehydrator happens in main() after path setup
 
 
 def detect_role_from_task(task):
@@ -166,18 +166,13 @@ def main():
 
     args = parser.parse_args()
 
-    # Import memory rehydrator compatibility wrapper
+    # Import memory rehydrator wrapper
     try:
-        from dspy_rag_system.src.utils.memory_rehydrator import rehydrate
+        from utils.memory_rehydrator import rehydrate
     except ImportError:
-        try:
-            # Fallback to direct path
-# sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system", "src"))  # REMOVED: DSPy venv consolidated into main project
-            from utils.memory_rehydrator import rehydrate
-        except ImportError:
-            print("❌ Error: Could not import memory_rehydrator module")
-            print("Make sure you're running from the project root directory")
-            sys.exit(1)
+        print("❌ Error: Could not import memory_rehydrator module from src/utils.")
+        print("Make sure you're running from the project root and have src on PYTHONPATH.")
+        sys.exit(1)
 
     # Auto-detect role if not specified
     if args.role == "planner" and args.task != "general project context and current state":

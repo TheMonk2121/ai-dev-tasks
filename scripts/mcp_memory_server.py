@@ -33,14 +33,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 # Import your existing systems
 try:
-    from ltst_memory_integration import LTSTMemory
+    from ltst_memory_integration import LTSTMemoryIntegration
     from unified_memory_orchestrator import UnifiedMemoryOrchestrator
 
     memory_orchestrator = UnifiedMemoryOrchestrator()
 except ImportError as e:
     logging.warning(f"Could not import memory systems: {e}")
     memory_orchestrator = None
-    LTSTMemory = None
+    LTSTMemoryIntegration = None
 
 app = FastAPI(title="MCP Memory Server", version="1.0.0")
 

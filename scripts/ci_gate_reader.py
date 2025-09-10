@@ -143,10 +143,27 @@ def eval_reader(cases, gold):
         if not qvec:
             qvec = model.encode(case.query, normalize_embeddings=True)
 
-        # shortlist → MMR → cap → topk
+        # shortlist → Cross-encoder rerank (if enabled) → MMR → cap → topk
         rows = run_fused_query(
             qs["short"], qs["title"], qs["bm25"], qvec, tag=tag, k=lim["shortlist"], return_components=True
         )
+
+        # Apply cross-encoder reranking if enabled
+        rerank_enable = bool(int(os.getenv("RERANK_ENABLE", "0")))
+        if rerank_enable:
+            try:
+                from src.dspy_modules.dspy_reader_program import _apply_cross_encoder_rerank
+
+                input_topk = int(os.getenv("RERANK_INPUT_TOPK", "40"))
+                rerank_keep = int(os.getenv("RERANK_KEEP", "10"))
+                print(
+                    f"[reranker] Applying cross-encoder reranking: input_topk={input_topk}, rerank_keep={rerank_keep}"
+                )
+                rows, rerank_method = _apply_cross_encoder_rerank(case.query, rows, input_topk, rerank_keep)
+                print(f"[reranker] Cross-encoder method: {rerank_method}")
+            except Exception as e:
+                print(f"[reranker] Cross-encoder failed, falling back to MMR: {e}")
+
         rows = mmr_rerank(rows, alpha=ALPHA, per_file_penalty=0.10, k=lim["shortlist"])
         rows = per_file_cap(rows, cap=PER_FILE_CAP)[: lim["topk"]]
         context, _meta = build_reader_context(
