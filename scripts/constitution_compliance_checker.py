@@ -11,7 +11,8 @@ this checker ensures persistent rule enforcement across all AI operations.
 
 import json
 from dataclasses import dataclass
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 from datetime import datetime
 
 
