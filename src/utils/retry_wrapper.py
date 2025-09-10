@@ -1,159 +1,364 @@
-from __future__ import annotations
+#!/usr/bin/env python3
+"""
+Retry wrapper utility for DSPy RAG system.
+Implements configurable retry logic with exponential backoff.
+"""
 
+import functools
 import json
-import random
+import logging
+import os
 import time
-from collections.abc import Callable, Iterable
-from functools import wraps
+from collections.abc import Callable
 from typing import Any
 
+# Optional psycopg2 import so this module works without DB deps
+try:  # pragma: no cover - guarded import
+    import psycopg2  # type: ignore
+
+    _PSYCOPG2_AVAILABLE = True
+except Exception:  # pragma: no cover
+    _PSYCOPG2_AVAILABLE = False
+
+    class _Psycopg2Shim:  # type: ignore
+        class OperationalError(Exception):
+            pass
+
+    psycopg2 = _Psycopg2Shim()  # type: ignore
+from requests.exceptions import RequestException, Timeout
+
+# Import error pattern recognition
 try:
-    from requests.exceptions import Timeout
-except Exception:  # requests may not be installed in some lanes
+    from .error_pattern_recognition import analyze_error_pattern, suggest_recovery_strategy
+    from .hotfix_templates import generate_hotfix_template
+    from .model_specific_handling import handle_model_error
 
-    class Timeout(Exception):  # type: ignore
-        pass
+    ERROR_PATTERN_ANALYSIS_AVAILABLE = True
+except ImportError:
+    ERROR_PATTERN_ANALYSIS_AVAILABLE = False
+
+logger = logging.getLogger(__name__)
 
 
-# Domain-specific error types used by tests and callers
 class RetryableError(Exception):
+    """Base class for errors that should trigger retries"""
+
     pass
 
 
-class AuthenticationError(Exception):
+class FatalError(Exception):
+    """Base class for errors that should not trigger retries"""
+
     pass
 
 
-class DataStoreError(Exception):
+class TimeoutError(RetryableError):
+    """Request timeout error"""
+
     pass
 
 
-DEFAULT_POLICY = {
-    "max_retries": 3,
-    "backoff_factor": 2.0,
-    "timeout_seconds": 30,
-    "fatal_errors": [
-        "AuthenticationError",
-        "PermissionError",
-        "ResourceBusyError",
-        "KeyboardInterrupt",
-    ],
-}
+class DataStoreError(FatalError):
+    """Database connection or operation error"""
+
+    pass
 
 
-def load_error_policy(path: str = "configs/system.json") -> dict:
-    """
-    Load retry/error policy from JSON file. Returns defaults on error.
-    Tests patch builtins.open to simulate various cases.
-    """
+class AuthenticationError(FatalError):
+    """Authentication or authorization error"""
+
+    pass
+
+
+class ResourceBusyError(FatalError):
+    """Resource is busy or unavailable"""
+
+    pass
+
+
+class ConfigurationError(FatalError):
+    """Configuration or setup error"""
+
+    pass
+
+
+def load_error_policy() -> dict[str, Any]:
+    """Load error policy from pydantic-settings"""
     try:
-        with open(path, encoding="utf-8") as f:
-            data = json.loads(f.read())
-        policy = data.get("error_policy", {})
-        out = DEFAULT_POLICY.copy()
-        out.update({k: v for k, v in policy.items() if k in out})
-        return out
-    except Exception:
-        return DEFAULT_POLICY.copy()
+        from ..config import get_settings
+
+        settings = get_settings()
+
+        # Set defaults if not present
+        return {
+            "max_retries": 3,  # Could be added to settings if needed
+            "backoff_factor": 2.0,  # Could be added to settings if needed
+            "timeout_seconds": settings.performance.http_total_timeout,
+            "llm_timeout_seconds": settings.performance.llm_request_timeout,
+            "fatal_errors": ["ResourceBusyError", "AuthenticationError"],  # Could be added to settings if needed
+        }
+    except Exception as e:
+        logger.warning(f"Could not load error policy from config: {e}. Using defaults.")
+        return {
+            "max_retries": 3,
+            "backoff_factor": 2.0,
+            "timeout_seconds": 30,
+            "llm_timeout_seconds": 90,
+            "fatal_errors": ["ResourceBusyError", "AuthenticationError"],
+        }
 
 
-def is_fatal_error(err: BaseException, fatal_names: Iterable[str]) -> bool:
-    name = type(err).__name__
-    for pat in fatal_names:
-        if pat in name:
-            return True
-    # Built-in fatal classes
-    if isinstance(err, AuthenticationError | DataStoreError):
+def get_llm_timeout(model_id: str = None) -> int:
+    """Get LLM-specific timeout based on model type"""
+    policy = load_error_policy()
+
+    # Check environment variable override
+    env_timeout = os.getenv("LLM_TIMEOUT_SEC")
+    if env_timeout:
+        try:
+            return int(env_timeout)
+        except ValueError:
+            logger.warning(f"Invalid LLM_TIMEOUT_SEC value: {env_timeout}")
+
+    # Use model-specific timeout for large models
+    if model_id and model_id.startswith("mixtral"):
+        return policy.get("llm_timeout_seconds", 90)
+
+    # Default timeout for other models
+    return policy.get("timeout_seconds", 30)
+
+
+def is_fatal_error(exception: Exception, fatal_errors: list[str]) -> bool:
+    """Check if an exception is a fatal error that should not trigger retries"""
+    exception_type = type(exception).__name__
+    exception_str = str(type(exception))
+
+    # Check exact type name match
+    if exception_type in fatal_errors:
         return True
-    return False
 
+    # Check if any fatal error string is in the exception type string
+    for fatal_error in fatal_errors:
+        if fatal_error in exception_str:
+            return True
 
-def _sleep_with_jitter(base: float, jitter: bool) -> None:
-    delay = base
-    if jitter:
-        delay += random.random()  # up to +1s random jitter
-    time.sleep(delay)
+    # Check for specific exception types
+    fatal_exception_types = [AuthenticationError, DataStoreError, ResourceBusyError, ConfigurationError]
+
+    return any(isinstance(exception, fatal_type) for fatal_type in fatal_exception_types)
 
 
 def retry(
-    *,
     max_retries: int | None = None,
     backoff_factor: float | None = None,
-    fatal_errors: Iterable[str] | None = None,
+    timeout_seconds: int | None = None,
+    fatal_errors: list[str] | None = None,
     jitter: bool = True,
-) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
-    """Generic retry decorator with exponential backoff and optional jitter."""
+):
+    """
+    Retry decorator with exponential backoff.
 
-    policy = load_error_policy()
-    max_r = policy["max_retries"] if max_retries is None else max_retries
-    factor = policy["backoff_factor"] if backoff_factor is None else backoff_factor
-    fatal = list(policy["fatal_errors"]) if fatal_errors is None else list(fatal_errors)
+    Args:
+        max_retries: Maximum number of retry attempts
+        backoff_factor: Exponential backoff multiplier
+        timeout_seconds: Timeout for each attempt
+        fatal_errors: List of error types that should not trigger retries
+        jitter: Add random jitter to prevent thundering herd
+    """
 
-    def decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
-        @wraps(fn)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:
-            attempts = 0
-            while True:
+    def decorator(func: Callable) -> Callable:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # Load default policy if not specified
+            policy = load_error_policy()
+            max_retries_actual = max_retries or policy["max_retries"]
+            backoff_factor_actual = backoff_factor or policy["backoff_factor"]
+            fatal_errors_actual = fatal_errors or policy["fatal_errors"]
+
+            last_exception = None
+
+            for attempt in range(max_retries_actual + 1):
                 try:
-                    return fn(*args, **kwargs)
-                except Exception as e:  # noqa: BLE001 - intentional broad catch for retry wrapper
-                    if is_fatal_error(e, fatal):
-                        raise
-                    if attempts >= max_r:
-                        raise
-                    # backoff: factor^attempts seconds (1,2,4,...)
-                    base = (factor or 1.0) ** attempts
-                    attempts += 1
-                    _sleep_with_jitter(base, jitter)
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    last_exception = e
+
+                    # Analyze error pattern if available
+                    if ERROR_PATTERN_ANALYSIS_AVAILABLE:
+                        try:
+                            # Extract context from function and arguments
+                            context = {
+                                "function_name": func.__name__,
+                                "attempt": attempt + 1,
+                                "model_id": kwargs.get("model_id") or kwargs.get("model"),
+                            }
+
+                            analysis = analyze_error_pattern(str(e), type(e).__name__, context)
+
+                            if analysis.matched_patterns:
+                                logger.info(
+                                    f"Error pattern analysis: {len(analysis.matched_patterns)} patterns matched, "
+                                    f"severity: {analysis.severity_score:.2f}"
+                                )
+
+                                # Log recovery suggestions
+                                recovery_strategies = suggest_recovery_strategy(analysis)
+                                if recovery_strategies:
+                                    logger.info(f"Recovery suggestions: {', '.join(recovery_strategies[:3])}")
+
+                                # Apply model-specific handling if available
+                                if analysis.model_specific_handling:
+                                    logger.info(f"Applying model-specific handling: {analysis.model_specific_handling}")
+
+                                # Generate HotFix template if available
+                                try:
+                                    hotfix_template = generate_hotfix_template(analysis, context)
+                                    if hotfix_template:
+                                        logger.info(f"Generated HotFix template: {hotfix_template.name}")
+                                        logger.info(f"Template category: {hotfix_template.category}")
+                                        logger.info(f"Estimated time: {hotfix_template.estimated_time}")
+                                except Exception as hotfix_error:
+                                    logger.warning(f"HotFix template generation failed: {hotfix_error}")
+
+                                # Apply model-specific handling if model_id is available
+                                try:
+                                    model_id = context.get("model_id") if context else None
+                                    if model_id:
+                                        model_response = handle_model_error(str(e), model_id, context)
+                                        logger.info(f"Model-specific recovery: {model_response.recovery_action}")
+                                        if model_response.fallback_model:
+                                            logger.info(f"Suggested fallback: {model_response.fallback_model}")
+                                        logger.info(f"Recovery confidence: {model_response.confidence:.2f}")
+                                        logger.info(f"Estimated time: {model_response.estimated_time}")
+                                except Exception as model_error:
+                                    logger.warning(f"Model-specific handling failed: {model_error}")
+
+                        except Exception as analysis_error:
+                            logger.warning(f"Error pattern analysis failed: {analysis_error}")
+
+                    # Check if this is a fatal error
+                    if is_fatal_error(e, fatal_errors_actual):
+                        logger.error(f"Fatal error encountered: {type(e).__name__}: {e}")
+                        raise e
+
+                    # Check if we should retry
+                    if attempt < max_retries_actual:
+                        wait_time = backoff_factor_actual**attempt
+
+                        # Add jitter to prevent thundering herd
+                        if jitter:
+                            import random
+
+                            jitter_amount = random.uniform(0, 0.1 * wait_time)
+                            wait_time += jitter_amount
+
+                        logger.warning(
+                            f"Attempt {attempt + 1} failed: {type(e).__name__}: {e}. Retrying in {wait_time:.2f}s..."
+                        )
+                        time.sleep(wait_time)
+                    else:
+                        logger.error(
+                            f"All {max_retries_actual} retry attempts failed. Last error: {type(e).__name__}: {e}"
+                        )
+                        raise last_exception
+
+            return None  # Should never reach here
 
         return wrapper
 
     return decorator
 
 
-# Convenience retry presets used by code/tests
-def retry_http(fn: Callable[..., Any]) -> Callable[..., Any]:
-    @wraps(fn)
-    def inner(*args: Any, **kwargs: Any) -> Any:
-        @retry(max_retries=3, backoff_factor=1.5, fatal_errors=["AuthenticationError"])  # presets
-        def _wrapped() -> Any:
+# Convenience functions for common retry scenarios
+def retry_http(func: Callable) -> Callable:
+    """Retry decorator for HTTP requests"""
+    return retry(
+        max_retries=3, backoff_factor=2.0, timeout_seconds=30, fatal_errors=["AuthenticationError", "DataStoreError"]
+    )(func)
+
+
+def retry_database(func: Callable) -> Callable:
+    """Retry decorator for database operations"""
+    return retry(
+        max_retries=3, backoff_factor=1.5, timeout_seconds=60, fatal_errors=["DataStoreError", "ConfigurationError"]
+    )(func)
+
+
+def retry_llm(func: Callable) -> Callable:
+    """Retry decorator for LLM API calls with model-specific timeouts"""
+
+    def decorator_with_model_timeout(func: Callable) -> Callable:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # Try to extract model_id from kwargs or first argument
+            model_id = kwargs.get("model_id") or kwargs.get("model")
+            if not model_id and args:
+                # Check if first arg is a string that might be model_id
+                if isinstance(args[0], str) and (
+                    "mistral" in args[0].lower() or "mixtral" in args[0].lower() or "yi-coder" in args[0].lower()
+                ):
+                    model_id = args[0]
+
+            # Get model-specific timeout
+            timeout = get_llm_timeout(model_id)
+
+            # Use the retry decorator with model-specific timeout
+            return retry(
+                max_retries=2,
+                backoff_factor=2.0,
+                timeout_seconds=timeout,
+                fatal_errors=["AuthenticationError", "ResourceBusyError"],
+            )(func)(*args, **kwargs)
+
+        return wrapper
+
+    return decorator_with_model_timeout(func)
+
+
+def retry_with_timeout(timeout_seconds: int = 30):
+    """Retry decorator with specific timeout"""
+
+    def decorator(func: Callable) -> Callable:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            import signal
+
+            def timeout_handler(signum, frame):
+                raise TimeoutError(f"Function timed out after {timeout_seconds} seconds")
+
+            # Set up timeout
+            old_handler = signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(timeout_seconds)
+
             try:
-                return fn(*args, **kwargs)
-            except Timeout as e:  # map to retryable
-                raise RetryableError(str(e))
+                result = func(*args, **kwargs)
+                signal.alarm(0)  # Cancel timeout
+                return result
+            except TimeoutError:
+                signal.alarm(0)
+                raise
+            finally:
+                signal.signal(signal.SIGALRM, old_handler)
 
-        return _wrapped()
+        return wrapper
 
-    return inner
-
-
-def retry_database(fn: Callable[..., Any]) -> Callable[..., Any]:
-    @wraps(fn)
-    def inner(*args: Any, **kwargs: Any) -> Any:
-        @retry(max_retries=3, backoff_factor=1.5, fatal_errors=["DataStoreError"])  # db preset
-        def _wrapped() -> Any:
-            return fn(*args, **kwargs)
-
-        return _wrapped()
-
-    return inner
+    return decorator
 
 
-def retry_llm(fn: Callable[..., Any]) -> Callable[..., Any]:
-    @wraps(fn)
-    def inner(*args: Any, **kwargs: Any) -> Any:
-        @retry(max_retries=2, backoff_factor=1.0, fatal_errors=["AuthenticationError"])  # llm preset
-        def _wrapped() -> Any:
-            return fn(*args, **kwargs)
-
-        return _wrapped()
-
-    return inner
-
-
-def handle_retryable_errors(callable_fn: Callable[[], Any]) -> Any:
-    """Wrap a callable and raise RetryableError for transient conditions (e.g., Timeout)."""
+# Utility functions for error handling
+def handle_retryable_errors(func: Callable, *args, **kwargs) -> Any:
+    """Execute function with retry logic for retryable errors"""
     try:
-        return callable_fn()
-    except Timeout as e:
-        raise RetryableError(str(e))
+        return func(*args, **kwargs)
+    except (Timeout, RequestException, psycopg2.OperationalError) as e:
+        logger.warning(f"Retryable error encountered: {e}")
+        raise RetryableError(f"Retryable error: {e}") from e
+    except Exception as e:
+        logger.error(f"Non-retryable error encountered: {e}")
+        raise
+
+
+def get_retry_stats() -> dict[str, Any]:
+    """Get retry statistics for monitoring"""
+    # This would be implemented with a metrics collector
+    return {"total_retries": 0, "successful_retries": 0, "failed_retries": 0, "fatal_errors": 0}

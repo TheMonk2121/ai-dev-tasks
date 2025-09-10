@@ -43,7 +43,9 @@ repos:
         name: Auto Update Documentation Timestamps
         entry: bash scripts/hook_timer.sh
         args:
-          - python3
+          - uv
+          - run
+          - python
           - scripts/auto_update_timestamps.py
         language: system
         files: \.md$
@@ -72,17 +74,20 @@ repos:
       #   pass_filenames: false
       #   stages:
       #     - pre-commit
-      #   description: Prevent commits on non-main branches without explicit permission
+      #   description: Prevent commits on non-main branches without explicit
+      #   permission
       - id: ensure-venv-active
         name: Ensure venv is active
         entry: bash scripts/hook_timer.sh
         args:
           - bash
           - -c
-          - >
-            if [ -z "$VIRTUAL_ENV" ] || [[ "$VIRTUAL_ENV" != */.venv ]]; then
-            echo "Virtual environment not active. Run: source .venv/bin/activate"
-            exit 1
+          - |
+            if [ -z "$VIRTUAL_ENV" ] || \
+               [[ "$VIRTUAL_ENV" != */.venv ]]; then
+              echo "Virtual environment not active. Run: " \
+                   "source .venv/bin/activate"
+              exit 1
             fi
         language: system
         pass_filenames: false
@@ -113,7 +118,9 @@ repos:
         name: README Context Manager Analysis
         entry: bash scripts/hook_timer.sh
         args:
-          - python3
+          - uv
+          - run
+          - python
           - scripts/readme_context_manager.py
           - --analyze
         language: system
@@ -133,7 +140,9 @@ repos:
         name: Baseline Metrics Check
         entry: bash scripts/hook_timer.sh
         args:
-          - python3
+          - uv
+          - run
+          - python
           - scripts/check_baseline_metrics.py
         language: system
         pass_filenames: false
@@ -146,7 +155,9 @@ repos:
         name: Lessons Quality Check
         entry: bash scripts/hook_timer.sh
         args:
-          - python3
+          - uv
+          - run
+          - python
           - scripts/lessons_quality_check.py
         language: system
         pass_filenames: false
@@ -172,7 +183,8 @@ repos:
           - bash
           - -c
           - >
-            python3 -m evals_300.tools.gen && git diff --quiet -- evals_300/_generated ||
+            uv run python -m evals_300.tools.gen && \
+            git diff --quiet -- evals_300/_generated ||
             (echo "Evals docs stale. Run gen." && exit 1)
         language: system
         pass_filenames: false
@@ -181,7 +193,8 @@ repos:
           ^configs/evals_layers/|
           ^metrics/latest/metrics\.json$
         description: |
-          Rebuild evaluation documentation when evals_300 sources or latest metrics change
+          Rebuild evaluation documentation when evals_300 sources or latest
+          metrics change
       - id: forbid-manual-md
         name: Forbid manual edits to generated eval docs (evals_300)
         entry: bash scripts/hook_timer.sh
@@ -189,13 +202,16 @@ repos:
           - bash
           - -c
           - >
-            git diff --cached --name-only | grep -E "^evals_300/_generated/.*\\.md$" &&
-            echo "Do not edit generated eval docs. Update evals_300/ssot or tools and regenerate." &&
+            git diff --cached --name-only | \
+            grep -E "^evals_300/_generated/.*\\.md$" &&
+            echo "Do not edit generated eval docs. Update evals_300/ssot or " \
+                 "tools and regenerate." &&
             exit 1 || true
         language: system
         pass_filenames: false
         description: |
-          Prevent manual editing of generated evaluation markdown under evals_300/_generated
+          Prevent manual editing of generated evaluation markdown under
+          evals_300/_generated
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.30.0
     hooks:

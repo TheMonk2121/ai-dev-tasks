@@ -1,0 +1,60 @@
+---
+# Production environment configuration
+# Optimized for performance, reliability, and security
+
+env: prod
+
+# Production database settings
+db:
+  dsn: "postgresql://danieljacobs@localhost:5432/ai_agency?sslmode=require"
+  pool_size: 16 # Larger pool for production
+  timeout_ms: 10000 # Longer timeouts for production
+  connect_timeout: 15
+  read_timeout: 60
+  write_timeout: 120
+  pool_timeout: 30
+
+# Production RAG settings
+rag:
+  fast_path_enabled: true
+  prefetch_workers: 6 # More workers for production
+  chunk_size: 450 # Optimal chunk size
+  topk: 25 # Full retrieval
+
+# Production evaluation settings
+eval:
+  use_bedrock: true # Use real Bedrock in production
+  bypass_cli: false
+  lessons_mode: "enforcement" # Enforce lessons in production
+
+# Production observability
+obs:
+  log_level: "INFO"
+  metrics_enabled: true
+  metrics_port: 8080
+
+# Production performance settings
+performance:
+  max_memory_usage_mb: 16384 # Higher memory limit for production
+  max_concurrent_requests: 20
+  http_total_timeout: 180 # Longer timeouts for production
+  llm_request_timeout: 180
+  llm_stream_timeout: 600
+
+# Production memory settings
+memory:
+  ltst_enabled: true
+  ltst_ttl_hours: 48 # Longer TTL for production
+  ltst_max_items: 50000 # More items for production
+  cursor_auto_rehydrate: true
+  go_cli_mock_mode: false # Use real Go CLI in production
+  prime_auto_start: true
+
+# Production development settings
+dev:
+  environment: "prod"
+  debug_mode: false
+  hot_reload: false
+  enable_profiling: false
+  enable_debugging: false
+  watch_files: false
