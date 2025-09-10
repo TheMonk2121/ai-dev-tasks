@@ -12,7 +12,7 @@ This script:
 import os
 import re
 from pathlib import Path
-from typing import List, Tuple
+from typing import Optional
 
 
 def find_dspy_venv_references() -> list[tuple[str, int, str]]:

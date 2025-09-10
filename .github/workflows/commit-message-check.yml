@@ -24,8 +24,8 @@ jobs:
         with:
           version: "latest"
 
-      - name: Install Commitizen
-        run: uv sync --dev
+      - name: Install dependencies
+        run: uv sync
 
       - name: Validate Commit Messages / PR Title
         run: |
