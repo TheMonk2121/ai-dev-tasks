@@ -61,6 +61,17 @@ python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli --s
 
 **Use this for quick iteration and testing changes.**
 
+### **🔧 Environment Setup Command**
+```bash
+# Set up all required environment variables for evaluation system
+source scripts/setup_evaluation_env.sh
+
+# Verify environment is configured
+uv run python scripts/health_gated_evaluation.py --check-only
+```
+
+**Use this to configure the evaluation system environment and verify all components are working.**
+
 ### ✅ Standard Evaluation Sequence
 1) `python3 scripts/update_baseline_manifest.py --profile precision_elevated`
 2) `python3 scripts/ragchecker_official_evaluation.py --bypass-cli --lessons-mode advisory`
@@ -172,6 +183,8 @@ Tip: capture each change as a lesson note in the docket or commit message for pr
 - **`configs/stable_bedrock.env`** - Locked evaluation settings (DO NOT MODIFY)
 - **`throttle_free_eval.sh`** - Loads stable configuration
 - **`scripts/ragchecker_official_evaluation.py`** - Main evaluation script
+- **`scripts/setup_evaluation_env.sh`** - Environment variables setup for evaluation system
+- **`dspy-rag-system/src/`** - DSPy RAG system components for evaluation
 
 ### **📊 Results & Documentation**
 - **`metrics/baseline_evaluations/`** - All evaluation results
@@ -182,6 +195,15 @@ Tip: capture each change as a lesson note in the docket or commit message for pr
 - **`throttle_free_eval.sh`** - Load stable config
 - **`scripts/run_ragchecker_smoke_test.sh`** - Fast smoke testing
 - **`scripts/ragchecker_official_evaluation.py`** - Full evaluation
+- **`scripts/setup_evaluation_env.sh`** - Environment setup
+- **`dspy-rag-system/src/rag_system.py`** - DSPy RAG system interface
+
+### **🤖 DSPy RAG System Components**
+- **`dspy-rag-system/src/rag_system.py`** - Main RAG system interface
+- **`dspy-rag-system/src/dspy_modules/`** - DSPy-specific modules and programs
+- **`dspy-rag-system/src/rag/`** - RAG pipeline components
+- **`dspy-rag-system/src/schemas/`** - Pydantic data models
+- **`dspy-rag-system/src/common/`** - Common utilities and database connections
 
 ## 🎯 **Agent Workflow**
 
