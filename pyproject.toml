@@ -221,8 +221,8 @@ name = "cz_conventional_commits"
 version = "0.0.0"
 tag_format = "v$version"
 update_changelog_on_bump = true
-allow_unconventional_commits = false
+allow_unconventional_commits = true
 
 [tool.commitizen.customize]
-allowed_types = ["feat", "fix", "refactor", "docs", "chore", "ci", "test"]
+allowed_types = ["feat", "fix", "refactor", "docs", "chore", "ci", "test", "build", "bump", "perf", "revert", "style", "merge"]
 message_template = "{type}{scope}: {subject}\n\n{body}\n\n{footer}"
