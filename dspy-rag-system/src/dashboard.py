@@ -14,11 +14,11 @@ import sys
 import threading
 import time
 from collections import defaultdict, deque
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Protocol, cast, runtime_checkable
-from collections.abc import Callable
 
 # Flask imports
 from flask import Flask, jsonify, render_template, request

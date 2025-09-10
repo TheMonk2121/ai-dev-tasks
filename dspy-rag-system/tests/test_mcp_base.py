@@ -4,7 +4,6 @@ Unit tests for base MCP server infrastructure.
 
 import tempfile
 
-
 import pytest
 from pydantic import ValidationError
 

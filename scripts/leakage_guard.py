@@ -142,7 +142,7 @@ def main():
             return
 
         validation = guard.validate_evaluation_set(args.eval_file)
-        print(f"📊 Validation Results:")
+        print("📊 Validation Results:")
         print(f"  • Total eval records: {validation['total_eval_records']}")
         print(f"  • Total few-shot IDs: {validation['total_few_shot_ids']}")
         print(f"  • Leakage count: {validation['leakage_count']}")

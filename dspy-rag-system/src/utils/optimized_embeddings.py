@@ -11,7 +11,6 @@ import logging
 import os
 import time
 
-
 import torch
 from sentence_transformers import SentenceTransformer
 

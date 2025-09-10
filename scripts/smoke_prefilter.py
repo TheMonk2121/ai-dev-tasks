@@ -6,18 +6,18 @@ Tests the surgical patch implementation with low concurrency.
 
 import os
 import sys
+import traceback
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
+
 from _bootstrap import ROOT, SRC  # ensure imports work
-from evals.load_cases import load_eval_cases
-
-from dspy_modules.retriever.pg import run_fused_query
-import traceback
-from dspy_modules.retriever.query_rewrite import build_channel_queries
-from evals.gold import gold_hit
-from dspy_modules.retriever.rerank import per_file_cap, mmr_rerank
 from dspy_modules.retriever.limits import load_limits
+from dspy_modules.retriever.pg import run_fused_query
+from dspy_modules.retriever.query_rewrite import build_channel_queries
+from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 
+from evals.gold import gold_hit
+from evals.load_cases import load_eval_cases
 
 ## Cases now come from evals/load_cases with CASES_FILE env var
 

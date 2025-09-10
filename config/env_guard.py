@@ -7,7 +7,6 @@ Importing this module will immediately check for required environment variables.
 import os
 import sys
 
-
 # Required environment variables for production
 REQUIRED_ENV_VARS = ["POSTGRES_DSN", "OPENAI_API_KEY", "AWS_REGION"]
 

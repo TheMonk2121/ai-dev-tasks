@@ -4,12 +4,12 @@ Gold standard evaluation utilities with JSON/JSONL loader and glob support.
 """
 
 import fnmatch
+import importlib.util
 import json
 import os
+import sys
 from pathlib import PurePosixPath
 from typing import Any
-import importlib.util
-import sys
 
 
 def _norm(p: str) -> str:

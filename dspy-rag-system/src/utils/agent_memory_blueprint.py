@@ -8,10 +8,9 @@ Agent Memory Blueprint
 """
 
 import json
-import time
-from dataclasses import dataclass, field
-from typing import Any
+from dataclasses import dataclass
 from datetime import datetime, timedelta
+from typing import Any
 
 
 @dataclass
@@ -241,7 +240,7 @@ class AgentMemoryManager:
     def set_working_set(self, working_set: WorkingSet) -> None:
         """Set working set for current episode"""
         self.working_set = working_set
-        print(f"🎯 Working set updated:")
+        print("🎯 Working set updated:")
         print(f"   Model: {working_set.model_name}")
         print(f"   Chunk size: {working_set.chunk_size}")
         print(f"   Prompt hash: {working_set.prompt_hash}")

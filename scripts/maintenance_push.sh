@@ -24,4 +24,4 @@ fi
 
 # Pass all arguments to the Python script
 echo "🚀 Running maintenance push prompt..."
-python3 scripts/auto_push_prompt.py "$@"
+uv run python scripts/auto_push_prompt.py "$@"

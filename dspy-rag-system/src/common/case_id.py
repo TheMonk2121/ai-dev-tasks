@@ -4,7 +4,6 @@ import re
 import unicodedata
 
 
-
 def _slugify(text: str, max_len: int = 60) -> str:
     text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
     text = re.sub(r"[^a-zA-Z0-9]+", "-", text.lower()).strip("-")

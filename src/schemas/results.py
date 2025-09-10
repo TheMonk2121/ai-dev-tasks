@@ -1,8 +1,6 @@
 # src/schemas/results.py
 from __future__ import annotations
 
-
-
 from pydantic import BaseModel
 
 from src.schemas.eval import Mode

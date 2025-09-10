@@ -3,8 +3,8 @@
 Convert JSON array to JSONL format for evaluation datasets.
 """
 import json
-import sys
 import pathlib
+import sys
 
 
 def main():

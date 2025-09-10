@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import re
 
-
 FILE_TOKEN_RE = re.compile(r"[A-Za-z0-9_\-]+\.(md|mdx|pdf|txt)$", re.IGNORECASE)
 
 

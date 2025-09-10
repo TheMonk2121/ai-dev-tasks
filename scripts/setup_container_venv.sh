@@ -34,7 +34,7 @@ docker run --rm -t --platform linux/amd64 \
     uv sync --all-extras --dev
     
     echo 'Downloading spaCy model (if network available)...'
-    python -m spacy download en_core_web_sm || echo 'spaCy model download failed, continuing...'
+    uv run python -m spacy download en_core_web_sm || echo 'spaCy model download failed, continuing...'
     
     echo 'Container venv setup complete!'
     echo 'To run tests: ./scripts/docker_pytest.sh [test_files...]'

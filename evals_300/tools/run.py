@@ -6,7 +6,6 @@ import sys
 import time
 from pathlib import Path
 
-
 # Optional Typer import with graceful fallback for library use without CLI deps
 try:
     import typer  # type: ignore

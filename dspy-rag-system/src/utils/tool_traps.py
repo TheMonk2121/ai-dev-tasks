@@ -9,9 +9,9 @@ Tool-Use Traps
 
 import json
 import time
-from dataclasses import dataclass, field
-from typing import Any
+from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 
 class ToolStatus(Enum):

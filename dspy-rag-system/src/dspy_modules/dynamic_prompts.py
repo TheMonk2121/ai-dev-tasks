@@ -8,9 +8,9 @@ import functools
 import hashlib
 import logging
 import time
+from collections.abc import Callable
 from datetime import datetime, timedelta
 from typing import Any
-from collections.abc import Callable
 
 from pydantic import BaseModel, Field, field_validator
 

@@ -6,8 +6,8 @@ Robust namespace helpers: extraction, validation, ns-seed fetch, and debug loggi
 from __future__ import annotations
 
 import re
-from typing import Any
 from collections.abc import Sequence
+from typing import Any
 
 import psycopg2.extras
 

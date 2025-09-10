@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import re
 
-
 DocId = str
 Score = float
 Document = str

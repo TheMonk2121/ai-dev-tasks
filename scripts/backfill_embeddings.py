@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-import os, sys, time, math
+import math
+import os
+import sys
+import time
+
 import psycopg2
 from psycopg2.extras import execute_values
 from sentence_transformers import SentenceTransformer

@@ -75,7 +75,7 @@ class BaselineArtifactFreezer:
         with open(manifest_file, "w") as f:
             json.dump(baseline_manifest, f, indent=2)
 
-        print(f"✅ Baseline artifacts frozen successfully")
+        print("✅ Baseline artifacts frozen successfully")
         print(f"📋 Manifest: {manifest_file}")
         print(f"🔒 Baseline checksum: {baseline_manifest['integrity']['baseline_checksum']}")
 

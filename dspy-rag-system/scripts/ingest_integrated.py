@@ -11,7 +11,6 @@ import re
 import sys
 from pathlib import Path
 
-
 import psycopg2
 import psycopg2.extras
 from dotenv import load_dotenv

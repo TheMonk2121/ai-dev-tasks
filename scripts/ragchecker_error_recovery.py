@@ -8,10 +8,10 @@ import logging
 import os
 import sys
 import time
+from collections.abc import Callable
 from datetime import datetime
 from functools import wraps
 from typing import Any
-from collections.abc import Callable
 
 # Add dspy-rag-system to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "dspy-rag-system"))

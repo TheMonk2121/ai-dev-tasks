@@ -9,8 +9,8 @@ import json
 import logging
 import os
 import time
-from typing import Any
 from collections.abc import Callable
+from typing import Any
 
 # Optional psycopg2 import so this module works without DB deps
 try:  # pragma: no cover - guarded import

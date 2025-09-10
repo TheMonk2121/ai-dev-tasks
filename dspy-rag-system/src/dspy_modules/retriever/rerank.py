@@ -5,8 +5,8 @@ Lightweight MMR rerank with per-file diversity for reader lift.
 
 import math
 from collections import defaultdict
-from typing import Any
 from collections.abc import Sequence
+from typing import Any
 
 
 def mmr_rerank(

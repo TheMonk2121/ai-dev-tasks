@@ -3,7 +3,6 @@ import subprocess
 import time
 from pathlib import Path
 
-
 STATE_DIR = Path("evals_300/_state")
 VERSIONS = STATE_DIR / "versions.json"
 CHANGELOG = STATE_DIR / "changelog.ndjson"

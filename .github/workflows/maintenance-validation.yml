@@ -34,8 +34,6 @@ jobs:
       - name: Install dependencies
         run: |
           uv sync
-          # Ensure dependencies for maintenance scripts
-          uv pip install pyyaml
 
       - name: Run maintenance validation (Dry-Run)
         run: |

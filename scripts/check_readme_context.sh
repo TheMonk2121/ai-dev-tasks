@@ -150,12 +150,12 @@ validate_readme_context_pattern() {
     fi
 
     # Run README context manager analysis if available
-    if command -v python3 >/dev/null 2>&1 && [[ -f "scripts/readme_context_manager.py" ]]; then
+    if [[ -f "scripts/readme_context_manager.py" ]]; then
         log_suggestion "Running README context analysis..."
 
         # Get quick analysis for this specific change
         local analysis_output
-        analysis_output=$(python3 scripts/readme_context_manager.py --analyze 7 2>/dev/null || true)
+        analysis_output=$(uv run python scripts/readme_context_manager.py --analyze 7 2>/dev/null || true)
 
         if [[ -n "$analysis_output" ]]; then
             echo "$analysis_output" | while IFS= read -r line; do
@@ -196,7 +196,7 @@ main() {
         echo
         log_suggestion "💡 To fix README context issues:"
         log_suggestion "   1. Run: ./scripts/suggest_readme_update.sh 7"
-        log_suggestion "   2. Run: python3 scripts/readme_context_manager.py --report"
+        log_suggestion "   2. Run: uv run python scripts/readme_context_manager.py --report"
         log_suggestion "   3. Add implementation details to README.md context section"
         log_suggestion "   4. Use --no-verify for emergency commits (document within 24h)"
         echo

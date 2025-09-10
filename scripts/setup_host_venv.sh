@@ -11,6 +11,8 @@ export RAGCHECKER_BYPASS_CLI=1
 export TOKENIZERS_PARALLELISM=false
 export DSPY_CACHE=0
 export AWS_REGION=us-east-1
+# Enforce local uv environment path
+export UV_PROJECT_ENVIRONMENT=.venv
 
 # Remove existing venv to ensure clean state
 if [ -d ".venv" ]; then
@@ -18,7 +20,7 @@ if [ -d ".venv" ]; then
     rm -rf .venv
 fi
 
-echo "Installing dependencies with uv..."
+echo "Installing dependencies with uv (target: $UV_PROJECT_ENVIRONMENT)..."
 uv sync --all-extras --dev
 
 echo "Downloading spaCy model (if network available)..."

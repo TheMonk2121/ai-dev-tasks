@@ -10,7 +10,7 @@ fi
 
 # Check if PostgreSQL is running
 echo "🔍 Checking database connection..."
-python3 -c "
+uv run python -c "
 import psycopg2
 try:
     conn = psycopg2.connect(
@@ -25,12 +25,6 @@ except Exception as e:
     exit(1)
 "
 
-# Install requirements if needed
-if [ ! -d "venv" ]; then
-    echo "📦 Installing requirements..."
-    python3 -m pip install -r requirements.txt
-fi
-
 # Start the dashboard
 echo "🌐 Starting Flask dashboard on http://localhost:5001"
 echo "📊 Dashboard will be available at: http://localhost:5001"
@@ -38,4 +32,4 @@ echo "🔍 Health check: http://localhost:5001/health"
 echo "⏹️  Press Ctrl+C to stop"
 echo ""
 
-python3 dashboard.py 
+uv run python dashboard.py 

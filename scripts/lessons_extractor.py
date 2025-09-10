@@ -89,7 +89,7 @@ def analyze_case_patterns(cases: list[dict[str, Any]]) -> list[dict[str, Any]]:
     patterns = []
 
     # Count different failure types with safe defaults
-    no_answer_found = sum(1 for case in cases if case.get("answer_found", True) == False)
+    no_answer_found = sum(1 for case in cases if not case.get("answer_found", True))
     low_evidence_score = sum(1 for case in cases if case.get("evidence_score", 1.0) < 0.3)
     high_retrieval_count = sum(1 for case in cases if case.get("retrieval_count", 0) > 20)
 

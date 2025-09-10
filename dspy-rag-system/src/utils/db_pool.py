@@ -15,8 +15,6 @@ import os
 
 from psycopg2.pool import ThreadedConnectionPool
 
-
-
 log = logging.getLogger("db_pool")
 
 _POOL = None

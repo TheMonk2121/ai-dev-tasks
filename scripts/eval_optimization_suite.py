@@ -23,12 +23,12 @@ sys.path.insert(0, str(project_root))
 dspy_rag_path = project_root / "dspy-rag-system"
 sys.path.insert(0, str(dspy_rag_path))
 
-from src.utils.config_lock import ConfigLockManager, LockedConfig
-from src.utils.eval_determinism import DeterminismManager, create_determinism_manager
-from src.utils.dataset_traps import DatasetTrapManager, create_dataset_trap_manager
-from src.utils.tool_traps import ToolTrapManager, create_tool_trap_manager, ToolSchema, ToolCall
-from src.utils.observability_traps import ObservabilityManager, create_observability_manager
 from src.utils.agent_memory_blueprint import AgentMemoryManager, create_agent_memory_manager
+from src.utils.config_lock import ConfigLockManager, LockedConfig
+from src.utils.dataset_traps import DatasetTrapManager, create_dataset_trap_manager
+from src.utils.eval_determinism import DeterminismManager, create_determinism_manager
+from src.utils.observability_traps import ObservabilityManager, create_observability_manager
+from src.utils.tool_traps import ToolCall, ToolSchema, ToolTrapManager, create_tool_trap_manager
 
 
 def setup_determinism_switches(config: LockedConfig) -> DeterminismManager:
@@ -46,10 +46,10 @@ def setup_determinism_switches(config: LockedConfig) -> DeterminismManager:
     os.environ["CONFIG_HASH"] = config.get_config_hash()
 
     print("✅ Determinism switches configured")
-    print(f"   Temperature: 0.0")
-    print(f"   Seed: 42")
-    print(f"   Cache disabled: True")
-    print(f"   Eval path: dspy_rag")
+    print("   Temperature: 0.0")
+    print("   Seed: 42")
+    print("   Cache disabled: True")
+    print("   Eval path: dspy_rag")
 
     return determinism_manager
 
@@ -70,7 +70,7 @@ def setup_dataset_traps(config: LockedConfig) -> DatasetTrapManager:
     # Validate coverage
     coverage_validation = dataset_manager.validate_dataset_coverage()
 
-    print(f"✅ Dataset traps configured")
+    print("✅ Dataset traps configured")
     print(f"   Total test cases: {len(test_cases)}")
     print(f"   Categories covered: {len(coverage_validation['coverage'])}")
     print(f"   Negative controls: {coverage_validation['negative_controls']}")
@@ -149,11 +149,11 @@ def setup_tool_traps() -> ToolTrapManager:
     for tool in tools:
         tool_manager.register_tool(tool)
 
-    print(f"✅ Tool traps configured")
+    print("✅ Tool traps configured")
     print(f"   Registered tools: {len(tools)}")
-    print(f"   Schema fidelity: Enabled")
-    print(f"   Dry-run mode: Enabled")
-    print(f"   Circuit breakers: Enabled")
+    print("   Schema fidelity: Enabled")
+    print("   Dry-run mode: Enabled")
+    print("   Circuit breakers: Enabled")
 
     return tool_manager
 
@@ -168,11 +168,11 @@ def setup_observability_traps() -> ObservabilityManager:
     # Run initial health checks
     health_checks = observability_manager.run_health_checks()
 
-    print(f"✅ Observability traps configured")
+    print("✅ Observability traps configured")
     print(f"   Health checks: {len(health_checks)}")
-    print(f"   Tracing: Enabled")
-    print(f"   Performance monitoring: Enabled")
-    print(f"   Circuit breaker monitoring: Enabled")
+    print("   Tracing: Enabled")
+    print("   Performance monitoring: Enabled")
+    print("   Circuit breaker monitoring: Enabled")
 
     return observability_manager
 
@@ -215,10 +215,10 @@ def setup_agent_memory_blueprint() -> AgentMemoryManager:
         )
         memory_manager.register_tool(tool_def)
 
-    print(f"✅ Agent memory blueprint configured")
+    print("✅ Agent memory blueprint configured")
     print(f"   Tool registry: {len(memory_manager.tool_registry)} tools")
-    print(f"   Memory types: Operational, Task/Episodic, Retrieval")
-    print(f"   Lifecycle management: Enabled")
+    print("   Memory types: Operational, Task/Episodic, Retrieval")
+    print("   Lifecycle management: Enabled")
 
     return memory_manager
 
@@ -435,7 +435,7 @@ def main():
 
         print("\n🔧 Optimization Components:")
         components = report["optimization_components"]
-        print(f"  Determinism: ✅ Enabled")
+        print("  Determinism: ✅ Enabled")
         print(f"  Dataset traps: {components['dataset_traps']['total_cases']} cases")
         print(f"  Tool traps: {components['tool_traps']['registered_tools']} tools")
         print(f"  Observability: {components['observability']['health_status']}")

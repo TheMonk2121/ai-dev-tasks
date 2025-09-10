@@ -79,7 +79,7 @@ echo ""
 
 # Run evaluation with outlier fixes
 echo "🚀 Running evaluation with outlier fixes..."
-python3 scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
+uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --bypass-cli
 
 echo ""
 echo "📊 Check results for improvements in:"

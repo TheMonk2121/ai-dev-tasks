@@ -17,8 +17,8 @@ import sys
 sys.path.insert(0, "dspy-rag-system/src")
 
 import dspy  # type: ignore
-from dspy_modules.reader import READER  # pre-configured ExtractiveReader instance
 from dspy_modules.dspy_reader_program import _lm  # reuse shared LM configuration
+from dspy_modules.reader import READER  # pre-configured ExtractiveReader instance
 
 
 def _context_to_passages(context: str) -> list[str]:

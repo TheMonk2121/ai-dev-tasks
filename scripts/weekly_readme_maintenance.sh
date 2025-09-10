@@ -38,8 +38,8 @@ is_ci_environment() {
 run_context_analysis() {
     log_info "Running README context analysis..."
 
-    if command -v python3 >/dev/null 2>&1 && [[ -f "scripts/readme_context_manager.py" ]]; then
-        python3 scripts/readme_context_manager.py --report
+    if [[ -f "scripts/readme_context_manager.py" ]]; then
+        uv run python scripts/readme_context_manager.py --report
     else
         log_warning "README context manager not available"
     fi
@@ -49,9 +49,9 @@ run_context_analysis() {
 check_consolidation() {
     log_info "Checking for consolidation opportunities..."
 
-    if command -v python3 >/dev/null 2>&1 && [[ -f "scripts/readme_context_manager.py" ]]; then
+    if [[ -f "scripts/readme_context_manager.py" ]]; then
         local consolidation_output
-        consolidation_output=$(python3 scripts/readme_context_manager.py --consolidate 2>/dev/null || true)
+        consolidation_output=$(uv run python scripts/readme_context_manager.py --consolidate 2>/dev/null || true)
 
         if [[ -n "$consolidation_output" ]]; then
             log_info "Consolidation suggestions:"

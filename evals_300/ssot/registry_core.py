@@ -1,5 +1,5 @@
 # 300_evals/ssot/registry_core.py
-from .schema import EvalSuite, EvalPass, PassConfig, MetricSpec, RunSpec
+from .schema import EvalPass, EvalSuite, MetricSpec, PassConfig, RunSpec
 
 SUITE = EvalSuite(
     id="300_core",

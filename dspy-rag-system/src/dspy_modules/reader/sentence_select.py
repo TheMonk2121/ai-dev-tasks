@@ -2,7 +2,6 @@
 import math
 import re
 
-
 _SENT_SPLIT = re.compile(r"(?<=[.!?])\s+(?=[A-Z0-9])")
 
 SQL_TOKENS = {

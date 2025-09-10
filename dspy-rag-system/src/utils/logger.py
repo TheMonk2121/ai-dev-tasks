@@ -9,7 +9,7 @@ import logging
 import sys
 import threading
 import traceback
-from datetime import datetime, timezone, UTC
+from datetime import UTC, datetime
 from typing import Any
 
 # Sensitive field patterns for redaction

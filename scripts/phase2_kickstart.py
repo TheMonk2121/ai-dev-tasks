@@ -50,7 +50,7 @@ class Phase2KickstartSystem:
         kickstart_result["overall_status"] = "completed" if all_phases_passed else "failed"
 
         # Print summary
-        print(f"\n📊 Phase-2 Kickstart Summary:")
+        print("\n📊 Phase-2 Kickstart Summary:")
         for phase_name, phase_result in kickstart_result["phases"].items():
             status_emoji = "✅" if phase_result["success"] else "❌"
             print(f"  {status_emoji} {phase_name}: {phase_result['message']}")

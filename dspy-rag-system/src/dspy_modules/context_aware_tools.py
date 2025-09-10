@@ -9,9 +9,9 @@ import logging
 import time
 import traceback
 import uuid
+from collections.abc import Callable
 from datetime import datetime
 from typing import Any
-from collections.abc import Callable
 
 from pydantic import BaseModel, Field, field_validator
 

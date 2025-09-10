@@ -7,11 +7,11 @@ Implements async patterns for non-blocking collection with LTST memory integrati
 import asyncio
 import logging
 import time
+from collections.abc import Callable
 from contextlib import asynccontextmanager, contextmanager
 from datetime import datetime
 from functools import wraps
 from typing import Any
-from collections.abc import Callable
 from uuid import uuid4
 
 from .performance_schema import (

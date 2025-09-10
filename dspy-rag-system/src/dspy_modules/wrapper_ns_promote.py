@@ -7,8 +7,8 @@ up to ns_reserved items into the top-k after ranking.
 from __future__ import annotations
 
 import re
-from typing import Any
 from collections.abc import Iterable
+from typing import Any
 
 NS_REGEX = re.compile(r"\b\d{3}_[A-Za-z0-9\-]+\b")
 

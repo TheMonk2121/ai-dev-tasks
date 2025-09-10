@@ -7,7 +7,7 @@ rich context about active Scribe sessions and their context tags.
 """
 
 import json
-from datetime import datetime, timezone, UTC
+from datetime import UTC, datetime, timezone
 from pathlib import Path
 
 

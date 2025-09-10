@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-
 try:
     from pydantic_graph.graph import Graph
     from pydantic_graph.nodes import End, Node

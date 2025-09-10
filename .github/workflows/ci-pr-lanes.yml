@@ -20,9 +20,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install uv
-        run: |
-          pipx install uv
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: latest
 
       - name: Install deps
         run: |
@@ -44,9 +45,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install uv
-        run: |
-          pipx install uv
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: latest
 
       - name: Install deps
         run: |
@@ -82,9 +84,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install uv
-        run: |
-          pipx install uv
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: latest
 
       - name: Install deps
         run: |
@@ -106,9 +109,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install uv
-        run: |
-          pipx install uv
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: latest
 
       - name: Install deps
         run: |

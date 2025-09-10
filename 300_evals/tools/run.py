@@ -5,7 +5,6 @@ import subprocess
 import time
 from pathlib import Path
 
-
 import typer
 
 from ..ssot.registry_core import SUITE

@@ -12,11 +12,11 @@ import threading
 import time
 import uuid
 from collections import deque
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any
-from collections.abc import Callable
 
 # Add src to path for imports
 sys.path.append("src")

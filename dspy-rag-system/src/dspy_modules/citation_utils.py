@@ -10,7 +10,6 @@ with answer/question overlap, anchor cues, and better evaluation metrics.
 import re
 from difflib import SequenceMatcher
 
-
 WORD_RE = re.compile(r"[A-Za-z0-9_]+")
 FILE_TOKEN_RE = re.compile(r"\b\d{3}_[A-Za-z0-9-]+(?:\.md)?\b")
 

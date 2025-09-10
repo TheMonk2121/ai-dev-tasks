@@ -158,7 +158,7 @@ class OnCallReadySystem:
         dod_result["overall_status"] = "passed" if all_criteria_passed else "failed"
 
         # Print summary
-        print(f"\n📊 Definition of Done Summary:")
+        print("\n📊 Definition of Done Summary:")
         for criterion_name, criterion_result in dod_result["criteria"].items():
             status_emoji = "✅" if criterion_result["passed"] else "❌"
             print(f"  {status_emoji} {criterion_name}: {criterion_result['message']}")

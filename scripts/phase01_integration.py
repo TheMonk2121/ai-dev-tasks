@@ -28,7 +28,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system/src"))
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import yaml
-from utils.hybrid_retriever import HybridRetriever
 
 from evaluation.enhanced_metrics import EnhancedEvaluator, QueryResult, load_golden_queries
 from retrieval.cross_encoder_client import create_cross_encoder_client
@@ -37,6 +36,7 @@ from retrieval.windowing import create_windower
 
 # Import our Phase 0/1 components
 from telemetry.request_logger import CanaryTagger, RequestLogger, log_rag_request
+from utils.hybrid_retriever import HybridRetriever
 
 # Import existing components
 try:

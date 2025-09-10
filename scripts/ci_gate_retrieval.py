@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
-import os, json, sys
+import json
+import os
+import sys
 from collections import defaultdict
 
 # bootstrap
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from _bootstrap import ROOT, SRC  # noqa: F401
-from evals.load_cases import load_eval_cases
-from evals.gold import gold_hit
-from dspy_modules.retriever.query_rewrite import build_channel_queries
-from dspy_modules.retriever.pg import run_fused_query
-from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
 from dspy_modules.retriever.limits import load_limits
+from dspy_modules.retriever.pg import run_fused_query
+from dspy_modules.retriever.query_rewrite import build_channel_queries
+from dspy_modules.retriever.rerank import mmr_rerank, per_file_cap
+
+from evals.gold import gold_hit
+from evals.load_cases import load_eval_cases
 
 PREFILTER_MIN_MICRO = float(os.getenv("PREFILTER_MIN_MICRO", "0.85"))
 PREFILTER_MIN_TAG = float(os.getenv("PREFILTER_MIN_TAG", "0.75"))

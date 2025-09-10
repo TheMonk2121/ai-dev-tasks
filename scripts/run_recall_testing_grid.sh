@@ -10,12 +10,8 @@ REPO_ROOT="${SCRIPT_DIR%/scripts}"
 echo "🧪 Running 6-run recall testing grid..."
 echo "======================================"
 
-# Ensure virtual environment is active
-if [[ -z "${VIRTUAL_ENV:-}" ]]; then
-    echo "⚠️ Activating virtual environment..."
-    # shellcheck disable=SC1091  # Virtual environment activation script
-    source "${REPO_ROOT}/venv/bin/activate"
-fi
+# Use uv-managed environment
+export UV_PROJECT_ENVIRONMENT=.venv
 
 # Function to run evaluation with specific config
 run_eval() {
@@ -26,10 +22,10 @@ run_eval() {
     echo ""
     echo "🧪 Running: $description"
     echo "Config: $config_name"
-    echo "Command: source $config_file && python3 scripts/ragchecker_official_evaluation.py --use-bedrock --stable"
+    echo "Command: source $config_file && uv run python scripts/ragchecker_official_evaluation.py --use-bedrock --stable"
 
     # shellcheck disable=SC1090  # Dynamic config file sourcing is intentional
-    if source "$config_file" && python3 "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" --use-bedrock --stable; then
+    if source "$config_file" && uv run python "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" --use-bedrock --stable; then
         echo "✅ $config_name completed successfully"
         return 0
     else

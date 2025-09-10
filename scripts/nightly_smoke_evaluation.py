@@ -507,7 +507,7 @@ class NightlySmokeEvaluator:
         print(f"⏱️ Duration: {evaluation_summary['duration_seconds']:.1f} seconds")
 
         # Category results
-        print(f"\n📊 Category Results:")
+        print("\n📊 Category Results:")
         for category, result in evaluation_summary["categories"].items():
             status_emoji = "✅" if result["status"] == "pass" else "❌"
             print(f"  {status_emoji} {category}: {result['status'].upper()}")
@@ -522,20 +522,20 @@ class NightlySmokeEvaluator:
 
         # Deltas
         if evaluation_summary["deltas"]:
-            print(f"\n📈 Deltas:")
+            print("\n📈 Deltas:")
             deltas = evaluation_summary["deltas"]
             print(f"  • New failures: {deltas['new_failures']}")
             print(f"  • Resolved failures: {deltas['resolved_failures']}")
 
         # Regressions
         if evaluation_summary["regressions"]:
-            print(f"\n📉 Top Regressions:")
+            print("\n📉 Top Regressions:")
             for regression in evaluation_summary["regressions"]:
                 severity_emoji = "🔴" if regression["severity"] == "high" else "🟡"
                 print(f"  {severity_emoji} {regression['category']}.{regression['test']}: {regression['description']}")
 
         # Recommendations
-        print(f"\n💡 Recommendations:")
+        print("\n💡 Recommendations:")
         for recommendation in evaluation_summary["recommendations"]:
             print(f"  • {recommendation}")
 

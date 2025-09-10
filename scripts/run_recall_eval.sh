@@ -18,10 +18,9 @@ fi
 # If you want backend-agnostic recall tuning, you can also do:
 #   --env-file configs/recall_optimized.env
 
-exec python3 "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" \
+exec uv run python "${REPO_ROOT}/scripts/ragchecker_official_evaluation.py" \
   "${BACKEND_FLAG}" \
   --profile recall \
   --stable \
   "$@"
-
 

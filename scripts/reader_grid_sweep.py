@@ -33,8 +33,7 @@ from evals.load_cases import load_eval_cases
 
 # Import reader gate helpers
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from scripts.ci_gate_reader import load_reader_gold, eval_reader  # type: ignore
-
+from scripts.ci_gate_reader import eval_reader, load_reader_gold  # type: ignore
 
 Config = dict[str, Any]
 

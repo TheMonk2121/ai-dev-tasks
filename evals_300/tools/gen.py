@@ -2,7 +2,7 @@
 import csv
 import hashlib
 import json
-from datetime import datetime, timezone, UTC
+from datetime import UTC, datetime, timezone
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader

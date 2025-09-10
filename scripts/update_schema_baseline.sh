@@ -8,7 +8,7 @@ echo "🔄 Updating schema baseline..."
 
 # Generate fresh snapshots
 echo "📋 Generating fresh schema snapshots..."
-python3 scripts/validate_config.py --dump-schemas
+uv run python scripts/validate_config.py --dump-schemas
 
 # Update baseline
 echo "📝 Updating baseline..."

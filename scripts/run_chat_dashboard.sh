@@ -11,14 +11,8 @@ if [ ! -f "scripts/multi_agent_chat.py" ]; then
     exit 1
 fi
 
-# Activate virtual environment if present
-if [ -f "venv/bin/activate" ]; then
-  echo "📦 Activating virtual environment..."
-  # shellcheck disable=SC1091
-  source venv/bin/activate
-else
-  echo "⚠️  No venv detected at venv/bin/activate — continuing with system Python"
-fi
+# Use uv-managed project environment
+export UV_PROJECT_ENVIRONMENT=.venv
 
 # Kill any existing processes on these apps
 echo "🧹 Cleaning up existing processes..."
@@ -29,7 +23,7 @@ sleep 2
 
 # Start the backend bridge (port 8004)
 echo "🔧 Starting backend bridge on port 8004..."
-python3 scripts/multi_agent_chat.py &
+uv run python scripts/multi_agent_chat.py &
 BACKEND_PID=$!
 
 # Wait a moment for backend to start
@@ -55,12 +49,12 @@ fi
 
 if [ "$UI_MODE" = "fancy" ]; then
   echo "🌐 Starting fancy dashboard on port 8005..."
-  python3 scripts/chat_web_interface.py &
+  uv run python scripts/chat_web_interface.py &
   DASHBOARD_PID=$!
   DASHBOARD_PORT=8005
 else
   echo "🌐 Starting simple dashboard on port 8006..."
-  python3 scripts/simple_chat_web.py &
+  uv run python scripts/simple_chat_web.py &
   DASHBOARD_PID=$!
   DASHBOARD_PORT=8006
 fi
@@ -90,7 +84,7 @@ echo ""
 echo "💡 Tips:"
 echo "   - Use 'Connect as User/Codex/Cursor' buttons"
 echo "   - Open multiple browser tabs to simulate multiple agents"
-echo "   - Terminal client: python3 scripts/terminal_chat_client.py [agent]"
+echo "   - Terminal client: uv run python scripts/terminal_chat_client.py [agent]"
 echo ""
 echo "🛑 To stop: Press Ctrl+C or run 'pkill -f multi_agent_chat.py && pkill -f \"simple_chat_web.py|chat_web_interface.py\"'"
 echo ""

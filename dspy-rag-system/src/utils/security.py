@@ -16,8 +16,8 @@ import os
 import secrets
 import subprocess
 import sys
-from typing import Any
 from datetime import UTC
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -214,14 +214,14 @@ def validate_url(url: str) -> bool:
 
     def _get_timestamp(self) -> str:
         """Get current timestamp in ISO format"""
-        from datetime import datetime, timezone
+        from datetime import datetime
 
         return datetime.now(UTC).isoformat()
 
 
 def _get_timestamp() -> str:
     """Get current timestamp in ISO format"""
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     return datetime.now(UTC).isoformat()
 

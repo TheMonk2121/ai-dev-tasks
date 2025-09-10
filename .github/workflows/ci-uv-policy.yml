@@ -1,0 +1,34 @@
+name: UV Policy Guard
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: ["main"]
+
+jobs:
+  forbid-uv-pip-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Enforce no "uv pip install" usage
+        run: |
+          set -euo pipefail
+          MATCHES=$(rg -n -S '\\buv\\s+pip\\s+install\\b' \
+            --glob '!000_core/**' \
+            --glob '!**/*.md' \
+            --glob '!.ci-venv/**' \
+            --glob '!**/site-packages/**' \
+            --glob '!scripts/uv_performance_monitor.py' \
+            --glob '!.github/workflows/ci-uv-policy.yml' \
+            --hidden || true)
+          if [ -n "$MATCHES" ]; then
+            echo "❌ Found forbidden 'uv pip install' usage:" >&2
+            echo "$MATCHES" >&2
+            exit 1
+          fi
+          echo "✅ No 'uv pip install' usage detected"

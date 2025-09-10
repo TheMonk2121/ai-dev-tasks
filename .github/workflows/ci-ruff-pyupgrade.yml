@@ -17,8 +17,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install uv
-        run: pipx install uv
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: latest
 
       - name: Install dependencies
         run: uv sync --all-extras --dev
@@ -29,4 +31,3 @@ jobs:
           uv run ruff check \
             --select UP007,UP035,UP031,UP028 \
             scripts src dspy-rag-system tests evals 300_evals evals_300 300_experiments config
-

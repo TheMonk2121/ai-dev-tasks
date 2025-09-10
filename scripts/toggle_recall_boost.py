@@ -29,7 +29,6 @@ from typing import Any
 
 import yaml
 
-
 RETRIEVAL_YAML = Path("config/retrieval.yaml")
 BACKUP_DIR = Path("metrics/derived_configs/recall_boost_backups")
 STATE_FILE = Path("metrics/derived_configs/recall_boost_state.json")

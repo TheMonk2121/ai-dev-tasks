@@ -10,7 +10,7 @@ context intelligence.
 import json
 import logging
 import sys
-from datetime import datetime, timezone, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 

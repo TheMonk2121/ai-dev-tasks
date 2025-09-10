@@ -2,7 +2,6 @@
 import os
 from functools import lru_cache
 
-
 import yaml
 
 DEFAULT_LIMITS: dict[str, int] = {"shortlist": 60, "topk": 25}

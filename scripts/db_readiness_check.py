@@ -13,8 +13,8 @@ Exits non-zero on failure; prints a concise summary for CI/PR gates.
 from __future__ import annotations
 
 import sys
-from pathlib import Path
 from collections.abc import Iterable
+from pathlib import Path
 
 import psycopg2
 

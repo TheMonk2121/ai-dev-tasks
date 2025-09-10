@@ -612,7 +612,6 @@ class HybridVectorStore(Module):
         chunk_variant = os.getenv("CHUNK_VARIANT")
 
         where_clause = ""
-        params: list[Any] = [query, query]
 
         gating_param: Any | None = None
         if run_id:

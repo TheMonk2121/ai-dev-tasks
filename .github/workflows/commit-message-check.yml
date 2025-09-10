@@ -25,7 +25,7 @@ jobs:
           version: "latest"
 
       - name: Install Commitizen
-        run: uv pip install commitizen
+        run: uv sync --dev
 
       - name: Validate Commit Messages / PR Title
         run: |

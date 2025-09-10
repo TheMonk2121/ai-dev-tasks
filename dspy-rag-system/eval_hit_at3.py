@@ -11,7 +11,6 @@ Prints a simple table of query, expected, hit@3 before, hit@3 after.
 import os
 import sys
 
-
 from dotenv import load_dotenv
 
 sys.path.append("src")

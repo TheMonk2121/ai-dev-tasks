@@ -25,7 +25,7 @@ jobs:
           version: "latest"
 
       - name: Install dependencies
-        run: uv pip install pyyaml
+        run: uv sync
 
       - name: Download nightly test-signal artifact
         uses: dawidd6/action-download-artifact@v3

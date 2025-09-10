@@ -23,8 +23,7 @@ jobs:
           version: "latest"
       - name: Install Python deps
         run: |
-          uv venv
-          uv pip install tqdm
+          uv sync --dev
       - name: ABP validation (soft warnings)
         run: |
           uv run python scripts/abp_validation.py --profile precision_elevated --max-age-days 2 --ci-mode || true
@@ -47,8 +46,7 @@ jobs:
           version: "latest"
       - name: Install validation deps
         run: |
-          uv venv
-          uv pip install pytest
+          uv sync --dev
       - name: Validate docs (dry run)
         run: |
           echo "⚠️ Documentation validation temporarily disabled - script archived"
@@ -68,8 +66,7 @@ jobs:
           version: "latest"
       - name: Install pytest
         run: |
-          uv venv
-          uv pip install pytest
+          uv sync --dev
       - name: Broken link validation
         run: |
           uv run python -m pytest tests/test_broken_link_validation.py::TestRealProjectBrokenLinks::test_no_broken_links_in_project -v --tb=short

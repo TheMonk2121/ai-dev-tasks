@@ -30,27 +30,19 @@ uv sync
 echo "📥 Installing development dependencies..."
 uv sync --extra dev
 
-# Install subproject dependencies (legacy support)
-echo "📥 Installing DSPy RAG system dependencies..."
-cd dspy-rag-system
-if [ -f "requirements.txt" ]; then
-    uv pip install -r requirements.txt
+# Install subproject dependencies where pyproject exists
+echo "📥 Installing DSPy RAG system dependencies (reusing root .venv)..."
+if [ -d dspy-rag-system ]; then
+  pushd dspy-rag-system >/dev/null
+  if [ -f "pyproject.toml" ]; then
+    # Reuse the repository root .venv; avoid creating a nested env
+    UV_PROJECT_ENVIRONMENT=../.venv uv sync
+  fi
+  popd >/dev/null
 fi
-cd ..
 
-echo "📥 Installing dashboard dependencies..."
-cd dashboard
-if [ -f "requirements.txt" ]; then
-    uv pip install -r requirements.txt
-fi
-cd ..
-
-echo "📥 Installing conflict detection dependencies..."
-cd config
-if [ -f "requirements-conflict-detection.txt" ]; then
-    uv pip install -r requirements-conflict-detection.txt
-fi
-cd ..
+# Dashboard and conflict detection reference root requirements; root uv sync already covers them.
+# If these subfolders gain their own pyproject.toml later, add a similar uv sync block.
 
 # Verify installation
 echo "✅ Verifying installation..."

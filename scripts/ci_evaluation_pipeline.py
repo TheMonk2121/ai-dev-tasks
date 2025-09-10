@@ -207,7 +207,7 @@ def main():
     if results.get("repo_gold", {}).get("status") == "failed":
         exit_code = 2
 
-    print(f"\n📊 CI EVALUATION SUMMARY")
+    print("\n📊 CI EVALUATION SUMMARY")
     print("=" * 50)
     print(f"🔧 Environment: {'✅' if report['environment']['virtual_env'] else '❌'}")
     print(f"📁 Datasets: {'✅' if report['summary']['datasets_validated'] else '❌'}")

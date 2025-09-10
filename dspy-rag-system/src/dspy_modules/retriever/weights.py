@@ -2,7 +2,6 @@
 import os
 from functools import lru_cache
 
-
 import yaml
 
 DEFAULT: dict[str, float] = {"w_path": 2.0, "w_short": 1.8, "w_title": 1.4, "w_bm25": 1.0, "w_vec": 1.1}

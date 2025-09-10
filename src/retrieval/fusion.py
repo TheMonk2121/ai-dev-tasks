@@ -20,7 +20,6 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 
-
 DocId = str
 Rank = int
 Score = float

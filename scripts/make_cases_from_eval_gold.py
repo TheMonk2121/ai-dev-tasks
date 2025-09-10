@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-import json, os, sys, pathlib, re
+import json
+import os
+import pathlib
+import re
+import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SRC = ROOT / "dspy-rag-system" / "src"
 sys.path.insert(0, str(SRC))
 # import the existing gold
-from eval_gold import GOLD, ADDITIONAL_GOLD  # existing dicts
+from eval_gold import ADDITIONAL_GOLD, GOLD  # existing dicts
 
 
 def guess_tag(paths):

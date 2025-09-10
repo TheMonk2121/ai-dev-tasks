@@ -101,11 +101,11 @@ def load_reader_gold(path):
 
 def run_reader_cmd(query, context, tag, case_id):
     if not READER_CMD:
-        raise RuntimeError("READER_CMD not set (e.g., export READER_CMD='uv run python scripts/run_reader.py --model local')")
+        raise RuntimeError(
+            "READER_CMD not set (e.g., export READER_CMD='uv run python scripts/run_reader.py --model local')"
+        )
     payload = json.dumps({"query": query, "context": context, "tag": tag, "case_id": case_id})
-    proc = subprocess.run(
-        shlex.split(READER_CMD), input=payload.encode("utf-8"), capture_output=True
-    )
+    proc = subprocess.run(shlex.split(READER_CMD), input=payload.encode("utf-8"), capture_output=True)
     if proc.returncode != 0:
         raise RuntimeError(f"Reader failed: {proc.stderr.decode('utf-8', 'ignore')}")
     out = proc.stdout.decode("utf-8", "ignore").strip()

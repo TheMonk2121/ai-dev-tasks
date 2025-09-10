@@ -10,14 +10,8 @@ echo "🚀 Starting MCP Memory Server..."
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-# Activate virtual environment
-if [ -f "venv/bin/activate" ]; then
-    echo "📦 Activating virtual environment..."
-    # shellcheck source=venv/bin/activate
-    source venv/bin/activate
-else
-    echo "⚠️  Virtual environment not found, using system Python"
-fi
+# Use uv-managed environment
+export UV_PROJECT_ENVIRONMENT=.venv
 
 # Set environment variables
 export PYTHONPATH="$PROJECT_ROOT/dspy-rag-system/src:$PROJECT_ROOT/scripts:$PYTHONPATH"
@@ -46,4 +40,4 @@ echo "📡 Health check: http://localhost:$PORT/health"
 echo "🔧 MCP tools: http://localhost:$PORT/mcp/tools"
 echo ""
 
-python3 scripts/mcp_memory_server.py --port "$PORT"
+uv run python scripts/mcp_memory_server.py --port "$PORT"

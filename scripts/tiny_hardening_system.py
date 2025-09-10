@@ -53,7 +53,7 @@ class TinyHardeningSystem:
         hardening_result["overall_status"] = "completed" if all_improvements_successful else "failed"
 
         # Print summary
-        print(f"\n📊 Tiny Hardening Summary:")
+        print("\n📊 Tiny Hardening Summary:")
         for improvement_name, improvement_result in hardening_result["improvements"].items():
             status_emoji = "✅" if improvement_result["success"] else "❌"
             print(f"  {status_emoji} {improvement_name}: {improvement_result['message']}")

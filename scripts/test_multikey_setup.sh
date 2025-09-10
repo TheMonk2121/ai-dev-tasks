@@ -10,17 +10,8 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 echo "🔑 Testing Multi-Key Bedrock Configuration"
 echo "=========================================="
 
-# Activate virtual environment (prefer .venv, then venv) under repo root
-VENV_DIR="${VENV_DIR:-$REPO_ROOT/.venv}"
-if [ -f "$VENV_DIR/bin/activate" ]; then
-  # shellcheck disable=SC1091
-  . "$VENV_DIR/bin/activate"
-elif [ -f "$REPO_ROOT/venv/bin/activate" ]; then
-  # shellcheck disable=SC1091
-  . "$REPO_ROOT/venv/bin/activate"
-else
-  echo "⚠️  No virtualenv found at .venv/ or venv/. Continuing without activation." >&2
-fi
+# Use uv-managed project environment
+export UV_PROJECT_ENVIRONMENT=.venv
 
 # Load multi-key configuration from env file if available
 MULTI_ENV="$REPO_ROOT/config/multi_key_bedrock.env"
@@ -61,7 +52,7 @@ fi
 
 # Test configuration
 echo "🧪 Testing Enhanced Bedrock Client with 3 keys..."
-PYTHONPATH="$REPO_ROOT" python3 - <<'PY'
+PYTHONPATH="$REPO_ROOT" uv run python - <<'PY'
 from scripts.enhanced_bedrock_client import SyncBedrockClientWrapper
 import os
 import json

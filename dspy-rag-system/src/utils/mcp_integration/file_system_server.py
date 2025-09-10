@@ -11,7 +11,6 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-
 from .base_server import DocumentMetadata, MCPConfig, MCPError, MCPProtocolUtils, MCPServer, ProcessedDocument
 
 

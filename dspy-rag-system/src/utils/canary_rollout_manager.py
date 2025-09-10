@@ -383,7 +383,7 @@ class CanaryRolloutManager:
             return True  # No metrics yet, assume healthy
 
         # Get recent metrics (last 3 measurements)
-        recent_metrics = self.state.metrics_history[-3:]
+        self.state.metrics_history[-3:]
 
         # Check for critical alerts in recent metrics
         recent_alerts = [alert for alert in self.state.alerts[-10:] if alert["severity"] == "CRITICAL"]

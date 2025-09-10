@@ -11,7 +11,6 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-
 # Typing aliases that should become built-in generics (PEP 585)
 DEPRECATED = {
     "List": "list",
