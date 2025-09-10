@@ -24,8 +24,8 @@ jobs:
         with:
           version: "latest"
 
-      - name: Install Commitizen
-        run: uv pip install commitizen
+      - name: Install dependencies
+        run: uv sync
 
       - name: Validate Commit Messages / PR Title
         run: |
@@ -35,8 +35,8 @@ jobs:
 
           if [ -n "${{ github.event.pull_request.merge_commit_sha }}" ]; then
             echo "Squash merge detected; validating PR title..."
-            cz check --message "$PR_TITLE"
+            uv run cz check --message "$PR_TITLE"
           else
             echo "Validating commits in range $BASE_REF..$HEAD_REF"
-            cz check --rev-range "$BASE_REF..$HEAD_REF"
+            uv run cz check --rev-range "$BASE_REF..$HEAD_REF"
           fi

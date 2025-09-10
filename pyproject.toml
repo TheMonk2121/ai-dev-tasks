@@ -64,6 +64,7 @@ dependencies = [
     "ruff>=0.1.0",
     # Development tools
     "pre-commit>=3.0.0",
+    "commitizen>=3.0.0",
     # Performance monitoring
     "memory-profiler>=0.60.0",
     "py-spy>=0.3.0",
