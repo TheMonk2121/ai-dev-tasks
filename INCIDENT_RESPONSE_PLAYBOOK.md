@@ -90,11 +90,12 @@ CASES_FILE=evals/gold_cases.json python3 scripts/smoke_prefilter.py --verbose
 
 # Check specific tag performance
 python3 -c "
-from evals.load_cases import load_eval_cases
+from scripts.migrate_to_pydantic_evals import load_eval_cases
 cases = load_eval_cases('gold')
 tag_counts = {}
 for case in cases:
-    tag_counts[case.tag] = tag_counts.get(case.tag, 0) + 1
+    for tag in case.tags:
+        tag_counts[tag] = tag_counts.get(tag, 0) + 1
 print('Tag distribution:', tag_counts)
 "
 ```

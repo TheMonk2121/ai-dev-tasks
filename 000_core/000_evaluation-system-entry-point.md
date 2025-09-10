@@ -9,7 +9,21 @@
 
 ## 🚀 **Quick Start (For All Agents)**
 
-### **🚨 NEW: Code-as-SSOT Evaluation System (Recommended)**
+### **🚨 NEW: Pydantic Evals Framework (Recommended)**
+```bash
+# Run Pydantic Evals integration demo
+python3 scripts/pydantic_evals_integration.py
+
+# Run retrieval evaluation with Pydantic Evals
+python3 300_evals/retrieval_eval.py
+
+# Run legacy compatibility test
+python3 -c "from scripts.migrate_to_pydantic_evals import load_eval_cases; print(f'Loaded {len(load_eval_cases(\"gold\"))} cases')"
+```
+
+**This is the NEW Pydantic Evals framework with type-safe evaluation, Logfire observability, and full legacy compatibility.**
+
+### **📋 Legacy Evaluation System (Deprecated)**
 ```bash
 # Generate evaluation documentation and artifacts
 python -m evals_300.tools.gen
@@ -22,7 +36,7 @@ python -m evals_300.tools.run --suite 300_core --pass deterministic_few_shot
 cat evals_300/_generated/300_core.md
 ```
 
-**This is the NEW standardized evaluation system with auto-generated documentation and configuration management.**
+**This is the legacy evaluation system. Use Pydantic Evals framework for new development.**
 
 ### **📋 Standard Evaluation Command (With Lessons Engine)**
 ```bash
