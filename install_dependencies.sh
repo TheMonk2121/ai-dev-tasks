@@ -30,13 +30,8 @@ uv sync
 echo "📥 Installing development dependencies..."
 uv sync --extra dev
 
-# Install subproject dependencies (legacy support)
-echo "📥 Installing DSPy RAG system dependencies..."
-cd dspy-rag-system
-if [ -f "requirements.txt" ]; then
-    uv pip install -r requirements.txt
-fi
-cd ..
+# DSPy RAG system modules moved to main src directory
+echo "📥 DSPy RAG system modules are now in src/ directory"
 
 echo "📥 Installing dashboard dependencies..."
 cd dashboard
@@ -63,8 +58,7 @@ echo "Virtual environment: ./.venv"
 echo "Activate with: source .venv/bin/activate"
 echo ""
 echo "Available commands:"
-echo "  uv run pytest dspy-rag-system/tests/    # Run DSPy tests"
-echo "  uv run python dspy-rag-system/src/dashboard.py  # Start dashboard"
+echo "  uv run pytest tests/                    # Run tests"
 echo "  uv run python scripts/process_tasks.py   # Run task processor"
 echo ""
 echo "UV commands:"

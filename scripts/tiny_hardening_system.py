@@ -214,7 +214,7 @@ def generate_idempotent_chunk_id(doc_id: str, byte_span: tuple, chunk_version: s
 """
             
             # Save the function to a file
-            function_file = Path("dspy-rag-system/src/utils/idempotent_chunk_ids.py")
+            function_file = Path("src/utils/idempotent_chunk_ids.py")
             function_file.parent.mkdir(parents=True, exist_ok=True)
             
             with open(function_file, "w") as f:
@@ -335,7 +335,7 @@ def track_few_shot_provenance(few_shot_ids: List[str], pool_version: str, select
 """
             
             # Save tracking function
-            tracking_file = Path("dspy-rag-system/src/utils/few_shot_provenance.py")
+            tracking_file = Path("src/utils/few_shot_provenance.py")
             tracking_file.parent.mkdir(parents=True, exist_ok=True)
             
             with open(tracking_file, "w") as f:

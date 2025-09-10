@@ -105,7 +105,7 @@ class HealthGatedEvaluator:
         print("  📊 Checking index presence...")
         
         # Check if DSPy RAG system path exists
-        dspy_rag_path = os.getenv("DSPY_RAG_PATH", "dspy-rag-system/src")
+        dspy_rag_path = os.getenv("DSPY_RAG_PATH", "src")
         if not os.path.exists(dspy_rag_path):
             self.failed_checks.append(f"DSPy RAG system path not found: {dspy_rag_path}")
             return

@@ -77,7 +77,7 @@ def update_memory_rehydration_integration() -> Dict[str, Any]:
     """Ensure summaries are properly integrated into memory rehydration."""
     try:
         # Check if summaries directory is in memory rehydrator
-        memory_rehydrator_path = Path("dspy-rag-system/src/utils/memory_rehydrator.py")
+        memory_rehydrator_path = Path("src/utils/memory_rehydrator.py")
 
         if not memory_rehydrator_path.exists():
             return {"status": "error", "error": "Memory rehydrator not found"}

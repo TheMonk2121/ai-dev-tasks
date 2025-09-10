@@ -803,3 +803,111 @@ INFO:     Started server process [680]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://localhost:3000 (Press CTRL+C to quit)
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'
+Traceback (most recent call last):
+  File "/Users/danieljacobs/Code/ai-dev-tasks/scripts/mcp_memory_server.py", line 24, in <module>
+    import httpx
+ModuleNotFoundError: No module named 'httpx'

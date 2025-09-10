@@ -82,7 +82,7 @@ class TestCoderRoleIntegration:
             "Task-List-Chunk-Relationship-Visualization.md",
             "scripts/dependency_monitor.py",
             "400_guides/400_graph-visualization-guide.md",
-            "dspy-rag-system/src/utils/graph_data_provider.py",
+            "src/utils/graph_data_provider.py",
         ]
 
         for file_path in required_files:

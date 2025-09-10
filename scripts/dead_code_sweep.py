@@ -19,7 +19,7 @@ def run(cmd):
 
 def main():
     ap = argparse.ArgumentParser(description="Find dead code using vulture")
-    ap.add_argument("--paths", nargs="+", default=["src", "dspy-rag-system/src"])
+    ap.add_argument("--paths", nargs="+", default=["src", "src"])
     ap.add_argument("--min-confidence", type=int, default=80)
     ap.add_argument("--out", default="metrics/dead_code.jsonl")
     args = ap.parse_args()

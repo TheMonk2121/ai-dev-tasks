@@ -448,7 +448,7 @@ Overall Status: {self.results['overall_status']}
 - Project Root: {self.project_root}
 - Integration Test File: tests/test_coder_role_integration.py
 - Memory Rehydrator: scripts/memory_up.sh
-- DSPy Rehydrator: dspy-rag-system/src/utils/memory_rehydrator.py
+- DSPy Rehydrator: src/utils/memory_rehydrator.py
 
 ================================================================================
 """

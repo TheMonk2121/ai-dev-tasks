@@ -126,7 +126,7 @@ def index_file(file_path, dsn):
 
 def main():
     dsn = os.getenv("POSTGRES_DSN", "postgresql://danieljacobs@localhost:5432/ai_agency")
-    retriever_dir = Path("dspy-rag-system/src/dspy_modules/retriever")
+    retriever_dir = Path("src/dspy_modules/retriever")
 
     if not retriever_dir.exists():
         print(f"❌ Directory {retriever_dir} does not exist")

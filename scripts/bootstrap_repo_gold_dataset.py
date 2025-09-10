@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 # Add DSPy RAG system to path
-sys.path.insert(0, "dspy-rag-system/src")
+sys.path.insert(0, "src")
 
 try:
     from litellm_compatibility_shim import patch_litellm_imports
@@ -26,7 +26,7 @@ try:
     from utils.database_resilience import get_database_manager
 except ImportError:
     # Fallback for when running from outside src directory
-    sys.path.insert(0, "dspy-rag-system/src")
+    sys.path.insert(0, "src")
     from utils.database_resilience import get_database_manager
 
 
@@ -157,7 +157,7 @@ class RepoGoldDatasetBootstrap:
             "000_core/001_create-prd.md",
             "400_guides/400_system-overview.md",
             "scripts/ragchecker_official_evaluation.py",
-            "dspy-rag-system/src/dspy_modules/rag_pipeline.py"
+            "src/dspy_modules/rag_pipeline.py"
         ]
         
         chunks = []

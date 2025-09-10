@@ -24,7 +24,8 @@ try:
     _ROOT = Path(__file__).resolve().parents[1]  # repository root
     if str(_ROOT) not in sys.path:
         sys.path.insert(0, str(_ROOT))
-    _DSPY_SRC = _ROOT / "dspy-rag-system" / "src"
+    # DSPy modules moved to main src directory
+    _DSPY_SRC = _ROOT / "src"
     if _DSPY_SRC.exists() and str(_DSPY_SRC) not in sys.path:
         sys.path.insert(0, str(_DSPY_SRC))
 except Exception:
@@ -49,7 +50,7 @@ except ImportError:
     pass
 
 # Add DSPy RAG system to path (env override still respected)
-dspy_rag_path = os.getenv("DSPY_RAG_PATH", "dspy-rag-system/src")
+dspy_rag_path = os.getenv("DSPY_RAG_PATH", "src")
 if dspy_rag_path and dspy_rag_path not in sys.path:
     sys.path.insert(0, dspy_rag_path)
 
@@ -110,7 +111,7 @@ class DspyRagDriver:
     """Driver for real DSPy RAG system integration."""
 
     def __init__(self):
-        rag_path = os.getenv("DSPY_RAG_PATH", "dspy-rag-system/src")
+        rag_path = os.getenv("DSPY_RAG_PATH", "src")
         if rag_path and rag_path not in sys.path:
             sys.path.insert(0, rag_path)
 
@@ -445,7 +446,7 @@ class CleanRAGCheckerEvaluator:
         results["tech_manifest"] = {
             "eval_driver": getattr(self, "_eval_path_tag", "unknown"),
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "dspy_rag_path": os.getenv("DSPY_RAG_PATH", "dspy-rag-system/src"),
+            "dspy_rag_path": os.getenv("DSPY_RAG_PATH", "src"),
             "fusion_enabled": os.getenv("RERANK_ENABLE", "1") == "1",
             "retrieval_topk_vec": int(os.getenv("RETR_TOPK_VEC", "140")),
             "retrieval_topk_bm25": int(os.getenv("RETR_TOPK_BM25", "140")),

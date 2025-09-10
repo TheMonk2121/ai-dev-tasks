@@ -84,7 +84,7 @@ def audit_schemas() -> List[SchemaInfo]:
     # 4. DSPy RAG Contracts
     schemas.append(
         SchemaInfo(
-            file_path="dspy-rag-system/src/eval/contracts.py",
+            file_path="src/eval/contracts.py",
             schema_name="QuerySample",
             schema_type="typeddict",
             fields={

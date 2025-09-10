@@ -3,7 +3,7 @@ import time
 from pathlib import Path
 
 # Add the dspy-rag-system src to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "dspy-rag-system" / "src"))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 from dspy_modules.retriever.feature_schema import FusionFeatures
 

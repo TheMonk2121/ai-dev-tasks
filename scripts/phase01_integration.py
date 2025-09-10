@@ -24,7 +24,7 @@ from typing import Any, Dict
 
 # Add project paths
 sys.path.insert(0, str(Path(__file__).parent.parent))
-sys.path.insert(0, str(Path(__file__).parent.parent / "dspy-rag-system/src"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import yaml
